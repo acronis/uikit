@@ -31,3 +31,4 @@ jobs:
         uses: phucbm/publish-npm-action@v1  # Docs https://github.com/phucbm/publish-npm-action
         with:
           skip-tests: ${{ github.event.inputs.skip-tests || 'false' }}
+          pnpm-version: 10.27.0
