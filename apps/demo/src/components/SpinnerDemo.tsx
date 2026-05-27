@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   SpinnerBasic,
   SpinnerSizes,
@@ -11,28 +11,29 @@ import {
   SpinnerColors,
   SpinnerGrid,
   SpinnerSkeleton,
-} from '@acronis-platform/shadcn-uikit-demos/spinner'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/spinner';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import spinnerBasicCode from '../../../demos/src/spinner/SpinnerBasic.tsx?raw'
-import spinnerSizesCode from '../../../demos/src/spinner/SpinnerSizes.tsx?raw'
-import spinnerWithTextCode from '../../../demos/src/spinner/SpinnerWithText.tsx?raw'
-import spinnerButtonCode from '../../../demos/src/spinner/SpinnerButton.tsx?raw'
-import spinnerCenteredCode from '../../../demos/src/spinner/SpinnerCentered.tsx?raw'
-import spinnerCardCode from '../../../demos/src/spinner/SpinnerCard.tsx?raw'
-import spinnerInlineCode from '../../../demos/src/spinner/SpinnerInline.tsx?raw'
-import spinnerOverlayCode from '../../../demos/src/spinner/SpinnerOverlay.tsx?raw'
-import spinnerColorsCode from '../../../demos/src/spinner/SpinnerColors.tsx?raw'
-import spinnerGridCode from '../../../demos/src/spinner/SpinnerGrid.tsx?raw'
-import spinnerSkeletonCode from '../../../demos/src/spinner/SpinnerSkeleton.tsx?raw'
+import spinnerBasicCode from '../../../demos/src/spinner/SpinnerBasic.tsx?raw';
+import spinnerSizesCode from '../../../demos/src/spinner/SpinnerSizes.tsx?raw';
+import spinnerWithTextCode from '../../../demos/src/spinner/SpinnerWithText.tsx?raw';
+import spinnerButtonCode from '../../../demos/src/spinner/SpinnerButton.tsx?raw';
+import spinnerCenteredCode from '../../../demos/src/spinner/SpinnerCentered.tsx?raw';
+import spinnerCardCode from '../../../demos/src/spinner/SpinnerCard.tsx?raw';
+import spinnerInlineCode from '../../../demos/src/spinner/SpinnerInline.tsx?raw';
+import spinnerOverlayCode from '../../../demos/src/spinner/SpinnerOverlay.tsx?raw';
+import spinnerColorsCode from '../../../demos/src/spinner/SpinnerColors.tsx?raw';
+import spinnerGridCode from '../../../demos/src/spinner/SpinnerGrid.tsx?raw';
+import spinnerSkeletonCode from '../../../demos/src/spinner/SpinnerSkeleton.tsx?raw';
 
 export function SpinnerDemo() {
   return (
     <section className="demo-section">
       <h2>Spinner (Loading) Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Loading indicators to show progress and inform users that content is being loaded.
+        Loading indicators to show progress and inform users that content is
+        being loaded.
       </p>
 
       <div className="space-y-8">
@@ -125,5 +126,5 @@ export function SpinnerDemo() {
         </DemoWithCode>
       </div>
     </section>
-  )
+  );
 }

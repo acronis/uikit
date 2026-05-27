@@ -1,6 +1,6 @@
-export { FieldBasic } from './FieldBasic'
-export { FieldWithError } from './FieldWithError'
-export { FieldHorizontal } from './FieldHorizontal'
-export { FieldGroupDemo } from './FieldGroupDemo'
-export { FieldSetDemo } from './FieldSetDemo'
-export { FieldTanstackForm } from './FieldTanstackForm'
+export { FieldBasic } from './FieldBasic';
+export { FieldWithError } from './FieldWithError';
+export { FieldHorizontal } from './FieldHorizontal';
+export { FieldGroupDemo } from './FieldGroupDemo';
+export { FieldSetDemo } from './FieldSetDemo';
+export { FieldTanstackForm } from './FieldTanstackForm';

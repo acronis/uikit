@@ -7,13 +7,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 import {
   CalendarIcon,
   FileTextIcon,
   HomeFolderIcon,
   MailboxIcon,
-} from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit';
 export function SidebarWithBadges() {
   return (
     <div className="h-[400px] border rounded-lg overflow-hidden flex">
@@ -66,5 +66,5 @@ export function SidebarWithBadges() {
         </div>
       </SidebarProvider>
     </div>
-  )
+  );
 }

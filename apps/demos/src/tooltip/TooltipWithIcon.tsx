@@ -4,8 +4,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
   TooltipArrow,
-} from '@acronis-platform/shadcn-uikit/react'
-import { InfoIcon } from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit/react';
+import { InfoIcon } from '@acronis-platform/shadcn-uikit';
 export function TooltipWithIcon() {
   return (
     <TooltipProvider>

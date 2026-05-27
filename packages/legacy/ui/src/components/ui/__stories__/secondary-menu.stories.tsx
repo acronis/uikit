@@ -1,6 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import * as React from 'react'
-import { SettingsIcon, ShieldIcon, DbIcon, FileTextIcon, BellIcon, UsersIcon, HelpCircleIcon } from '@/components/icons'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import * as React from 'react';
+import {
+  SettingsIcon,
+  ShieldIcon,
+  DbIcon,
+  FileTextIcon,
+  BellIcon,
+  UsersIcon,
+  HelpCircleIcon,
+} from '@/components/icons';
 import {
   SecondaryMenu,
   SecondaryMenuHeader,
@@ -8,17 +16,17 @@ import {
   SecondaryMenuGroup,
   SecondaryMenuItem,
   SecondaryMenuFooter,
-} from '../secondary-menu'
+} from '../secondary-menu';
 
 const meta = {
   title: 'UI/SecondaryMenu',
   component: SecondaryMenu,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof SecondaryMenu>
+} satisfies Meta<typeof SecondaryMenu>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {} as React.ComponentProps<typeof SecondaryMenu>,
@@ -29,12 +37,8 @@ export const Default: Story = {
           <SecondaryMenuItem icon={<ShieldIcon />} active>
             Protection
           </SecondaryMenuItem>
-          <SecondaryMenuItem icon={<DbIcon />}>
-            Backups
-          </SecondaryMenuItem>
-          <SecondaryMenuItem icon={<FileTextIcon />}>
-            Reports
-          </SecondaryMenuItem>
+          <SecondaryMenuItem icon={<DbIcon />}>Backups</SecondaryMenuItem>
+          <SecondaryMenuItem icon={<FileTextIcon />}>Reports</SecondaryMenuItem>
         </SecondaryMenuGroup>
         <SecondaryMenuGroup>
           <SecondaryMenuItem icon={<SettingsIcon />}>
@@ -44,7 +48,7 @@ export const Default: Story = {
       </SecondaryMenuContent>
     </SecondaryMenu>
   ),
-}
+};
 
 export const WithHeader: Story = {
   args: {} as React.ComponentProps<typeof SecondaryMenu>,
@@ -58,17 +62,13 @@ export const WithHeader: Story = {
           <SecondaryMenuItem icon={<ShieldIcon />} active>
             Overview
           </SecondaryMenuItem>
-          <SecondaryMenuItem icon={<DbIcon />}>
-            Backup Plans
-          </SecondaryMenuItem>
+          <SecondaryMenuItem icon={<DbIcon />}>Backup Plans</SecondaryMenuItem>
           <SecondaryMenuItem icon={<FileTextIcon />}>
             Activity
           </SecondaryMenuItem>
         </SecondaryMenuGroup>
         <SecondaryMenuGroup title="Account">
-          <SecondaryMenuItem icon={<UsersIcon />}>
-            Users
-          </SecondaryMenuItem>
+          <SecondaryMenuItem icon={<UsersIcon />}>Users</SecondaryMenuItem>
           <SecondaryMenuItem icon={<BellIcon />}>
             Notifications
           </SecondaryMenuItem>
@@ -79,7 +79,7 @@ export const WithHeader: Story = {
       </SecondaryMenuContent>
     </SecondaryMenu>
   ),
-}
+};
 
 export const WithFooter: Story = {
   args: {} as React.ComponentProps<typeof SecondaryMenu>,
@@ -90,12 +90,8 @@ export const WithFooter: Story = {
           <SecondaryMenuItem icon={<ShieldIcon />} active>
             Protection
           </SecondaryMenuItem>
-          <SecondaryMenuItem icon={<DbIcon />}>
-            Backups
-          </SecondaryMenuItem>
-          <SecondaryMenuItem icon={<FileTextIcon />}>
-            Reports
-          </SecondaryMenuItem>
+          <SecondaryMenuItem icon={<DbIcon />}>Backups</SecondaryMenuItem>
+          <SecondaryMenuItem icon={<FileTextIcon />}>Reports</SecondaryMenuItem>
           <SecondaryMenuItem icon={<SettingsIcon />}>
             Settings
           </SecondaryMenuItem>
@@ -108,7 +104,7 @@ export const WithFooter: Story = {
       </SecondaryMenuFooter>
     </SecondaryMenu>
   ),
-}
+};
 
 export const WithTags: Story = {
   args: {} as React.ComponentProps<typeof SecondaryMenu>,
@@ -132,4 +128,4 @@ export const WithTags: Story = {
       </SecondaryMenuContent>
     </SecondaryMenu>
   ),
-}
+};

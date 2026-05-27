@@ -1,17 +1,17 @@
-import * as React from 'react'
-import { Dialog as BaseDialog } from '@base-ui/react'
-import { CloseIcon } from '@/components/icons'
+import * as React from 'react';
+import { Dialog as BaseDialog } from '@base-ui/react';
+import { CloseIcon } from '@/components/icons';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 // Re-export Root as Dialog so callers use <Dialog open={...}> identical to Radix usage
-const Dialog = BaseDialog.Root
+const Dialog = BaseDialog.Root;
 
-const DialogTrigger = BaseDialog.Trigger
+const DialogTrigger = BaseDialog.Trigger;
 
-const DialogPortal = BaseDialog.Portal
+const DialogPortal = BaseDialog.Portal;
 
-const DialogClose = BaseDialog.Close
+const DialogClose = BaseDialog.Close;
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof BaseDialog.Backdrop>,
@@ -25,13 +25,13 @@ const DialogOverlay = React.forwardRef<
     )}
     {...props}
   />
-))
-DialogOverlay.displayName = 'DialogOverlay'
+));
+DialogOverlay.displayName = 'DialogOverlay';
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof BaseDialog.Popup>,
   React.ComponentPropsWithoutRef<typeof BaseDialog.Popup> & {
-    portal?: boolean
+    portal?: boolean;
   }
 >(({ className, children, portal = true, ...props }, ref) => {
   // Base UI requires Popup to be rendered inside a Portal for proper stacking context.
@@ -50,13 +50,16 @@ const DialogContent = React.forwardRef<
         {children}
       </BaseDialog.Popup>
     </>
-  )
+  );
 
-  return portal ? <BaseDialog.Portal>{popup}</BaseDialog.Portal> : popup
-})
-DialogContent.displayName = 'DialogContent'
+  return portal ? <BaseDialog.Portal>{popup}</BaseDialog.Portal> : popup;
+});
+DialogContent.displayName = 'DialogContent';
 
-const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const DialogHeader = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
       'flex h-16 items-center gap-4 border-b border-border bg-card px-5 py-4',
@@ -64,10 +67,13 @@ const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
     )}
     {...props}
   />
-)
-DialogHeader.displayName = 'DialogHeader'
+);
+DialogHeader.displayName = 'DialogHeader';
 
-const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const DialogFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
       'flex h-16 items-center justify-end gap-4 border-t border-border bg-card px-6 py-4',
@@ -75,8 +81,8 @@ const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
     )}
     {...props}
   />
-)
-DialogFooter.displayName = 'DialogFooter'
+);
+DialogFooter.displayName = 'DialogFooter';
 
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof BaseDialog.Title>,
@@ -90,8 +96,8 @@ const DialogTitle = React.forwardRef<
     )}
     {...props}
   />
-))
-DialogTitle.displayName = 'DialogTitle'
+));
+DialogTitle.displayName = 'DialogTitle';
 
 const DialogCloseButton = React.forwardRef<
   React.ElementRef<typeof BaseDialog.Close>,
@@ -108,13 +114,16 @@ const DialogCloseButton = React.forwardRef<
     <CloseIcon className="h-6 w-6" />
     <span className="sr-only">Close</span>
   </BaseDialog.Close>
-))
-DialogCloseButton.displayName = 'DialogCloseButton'
+));
+DialogCloseButton.displayName = 'DialogCloseButton';
 
-const DialogBody = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const DialogBody = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn('flex-1 overflow-auto p-6', className)} {...props} />
-)
-DialogBody.displayName = 'DialogBody'
+);
+DialogBody.displayName = 'DialogBody';
 
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof BaseDialog.Description>,
@@ -125,8 +134,8 @@ const DialogDescription = React.forwardRef<
     className={cn('text-sm text-muted-foreground', className)}
     {...props}
   />
-))
-DialogDescription.displayName = 'DialogDescription'
+));
+DialogDescription.displayName = 'DialogDescription';
 
 export {
   Dialog,
@@ -141,4 +150,4 @@ export {
   DialogTitle,
   DialogBody,
   DialogDescription,
-}
+};

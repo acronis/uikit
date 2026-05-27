@@ -1,4 +1,4 @@
-import { Checkbox, Label } from '@acronis-platform/shadcn-uikit/react'
+import { Checkbox, Label } from '@acronis-platform/shadcn-uikit/react';
 
 export function CheckboxMultipleSelection() {
   return (
@@ -12,13 +12,19 @@ export function CheckboxMultipleSelection() {
       </div>
       <div className="flex items-center space-x-2">
         <Checkbox id="development" />
-        <Label htmlFor="development" className="text-sm font-normal cursor-pointer">
+        <Label
+          htmlFor="development"
+          className="text-sm font-normal cursor-pointer"
+        >
           Development
         </Label>
       </div>
       <div className="flex items-center space-x-2">
         <Checkbox id="marketing" />
-        <Label htmlFor="marketing" className="text-sm font-normal cursor-pointer">
+        <Label
+          htmlFor="marketing"
+          className="text-sm font-normal cursor-pointer"
+        >
           Marketing
         </Label>
       </div>
@@ -29,5 +35,5 @@ export function CheckboxMultipleSelection() {
         </Label>
       </div>
     </div>
-  )
+  );
 }

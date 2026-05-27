@@ -1,29 +1,29 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   CardContent,
   Input,
   Button,
-} from '@acronis-platform/shadcn-uikit/react'
-import { useChatFlowStore } from '../store/useChatFlowStore'
+} from '@acronis-platform/shadcn-uikit/react';
+import { useChatFlowStore } from '../store/useChatFlowStore';
 
 export function LoginPage() {
-  const navigate = useNavigate()
-  const login = useChatFlowStore((state) => state.login)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const navigate = useNavigate();
+  const login = useChatFlowStore((state) => state.login);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSignIn = () => {
-    login()
-    navigate('/demo/cyberchat-flow/app')
-  }
+    login();
+    navigate('/demo/cyberchat-flow/app');
+  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleSignIn()
+      handleSignIn();
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F5F7FA]">
@@ -72,5 +72,5 @@ export function LoginPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

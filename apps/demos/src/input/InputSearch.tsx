@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { SearchIcon } from '@acronis-platform/shadcn-uikit'
+import { useState } from 'react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { SearchIcon } from '@acronis-platform/shadcn-uikit';
 export function InputSearch() {
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState('');
 
   return (
     <div className="space-y-4">
@@ -22,5 +22,5 @@ export function InputSearch() {
         </p>
       )}
     </div>
-  )
+  );
 }

@@ -1,5 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { ShieldIcon, WarningCircleIcon, HeartbeatIcon } from '@/components/icons'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import {
+  ShieldIcon,
+  WarningCircleIcon,
+  HeartbeatIcon,
+} from '@/components/icons';
 import {
   Widget,
   WidgetHeader,
@@ -11,26 +15,65 @@ import {
   WidgetValue,
   WidgetLabel,
   WidgetDivider,
-} from '../widget'
-import { Button } from '../button'
+} from '../widget';
+import { Button } from '../button';
 
 const BarChart3Icon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M3 3v18h18" />
+    <path d="M18 17V9" />
+    <path d="M13 17V5" />
+    <path d="M8 17v-3" />
   </svg>
-)
+);
 
 const MoreVerticalIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <circle cx="12" cy="12" r="1" />
+    <circle cx="12" cy="5" r="1" />
+    <circle cx="12" cy="19" r="1" />
   </svg>
-)
+);
 
 const TrendingUpIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+    <polyline points="16 7 22 7 22 13" />
   </svg>
-)
+);
 
 const meta = {
   title: 'UI/Widget',
@@ -46,10 +89,10 @@ const meta = {
       control: 'boolean',
     },
   },
-} satisfies Meta<typeof Widget>
+} satisfies Meta<typeof Widget>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -66,14 +109,16 @@ export const Default: Story = {
         </WidgetActions>
       </WidgetHeader>
       <WidgetContent>
-        <p className="text-sm text-muted-foreground">Widget content goes here.</p>
+        <p className="text-sm text-muted-foreground">
+          Widget content goes here.
+        </p>
       </WidgetContent>
       <WidgetFooter>
         <p className="text-xs text-muted-foreground">Last updated: just now</p>
       </WidgetFooter>
     </Widget>
   ),
-}
+};
 
 export const SizeSmall: Story = {
   render: () => (
@@ -86,7 +131,7 @@ export const SizeSmall: Story = {
       </WidgetContent>
     </Widget>
   ),
-}
+};
 
 export const SizeMedium: Story = {
   render: () => (
@@ -100,7 +145,7 @@ export const SizeMedium: Story = {
       </WidgetContent>
     </Widget>
   ),
-}
+};
 
 export const SizeLarge: Story = {
   render: () => (
@@ -120,7 +165,7 @@ export const SizeLarge: Story = {
       </WidgetFooter>
     </Widget>
   ),
-}
+};
 
 export const SizeXL: Story = {
   render: () => (
@@ -154,7 +199,7 @@ export const SizeXL: Story = {
       </WidgetFooter>
     </Widget>
   ),
-}
+};
 
 export const Interactive: Story = {
   render: () => (
@@ -174,7 +219,7 @@ export const Interactive: Story = {
       </WidgetFooter>
     </Widget>
   ),
-}
+};
 
 export const WithIconAndActions: Story = {
   render: () => (
@@ -196,7 +241,7 @@ export const WithIconAndActions: Story = {
       </WidgetContent>
     </Widget>
   ),
-}
+};
 
 export const ValueDisplay: Story = {
   render: () => (
@@ -210,7 +255,7 @@ export const ValueDisplay: Story = {
       </WidgetContent>
     </Widget>
   ),
-}
+};
 
 export const WithDivider: Story = {
   render: () => (
@@ -243,7 +288,7 @@ export const WithDivider: Story = {
       </WidgetContent>
     </Widget>
   ),
-}
+};
 
 export const Minimal: Story = {
   render: () => (
@@ -255,7 +300,7 @@ export const Minimal: Story = {
       </WidgetContent>
     </Widget>
   ),
-}
+};
 
 export const HeaderOnly: Story = {
   render: () => (
@@ -273,7 +318,7 @@ export const HeaderOnly: Story = {
       </WidgetHeader>
     </Widget>
   ),
-}
+};
 
 export const DashboardGrid: Story = {
   parameters: { layout: 'padded' },
@@ -331,7 +376,9 @@ export const DashboardGrid: Story = {
           </WidgetActions>
         </WidgetHeader>
         <WidgetContent>
-          <p className="text-sm text-muted-foreground">Chart placeholder — visualization content area</p>
+          <p className="text-sm text-muted-foreground">
+            Chart placeholder — visualization content area
+          </p>
         </WidgetContent>
         <WidgetFooter>
           <p className="text-xs text-muted-foreground">Last 30 days</p>
@@ -364,7 +411,7 @@ export const DashboardGrid: Story = {
       </Widget>
     </div>
   ),
-}
+};
 
 export const AllSizes: Story = {
   parameters: { layout: 'padded' },
@@ -383,4 +430,4 @@ export const AllSizes: Story = {
       ))}
     </div>
   ),
-}
+};

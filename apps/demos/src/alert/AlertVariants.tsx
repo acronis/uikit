@@ -4,7 +4,7 @@ import {
   AlertContent,
   AlertTitle,
   AlertDescription,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 import {
   SuccessIcon,
   WarningIcon,
@@ -12,8 +12,8 @@ import {
   DangerIcon,
   InfrastructureIcon,
   InfoIcon,
-  AiSparklesIcon
-} from '@acronis-platform/shadcn-uikit/react'
+  AiSparklesIcon,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function AlertVariants() {
   return (
@@ -23,7 +23,9 @@ export function AlertVariants() {
           <AiSparklesIcon />
         </AlertIcon>
         <AlertContent>
-          <AlertDescription>This is an AI-powered alert message.</AlertDescription>
+          <AlertDescription>
+            This is an AI-powered alert message.
+          </AlertDescription>
         </AlertContent>
       </Alert>
 
@@ -32,7 +34,9 @@ export function AlertVariants() {
           <InfrastructureIcon />
         </AlertIcon>
         <AlertContent>
-          <AlertDescription>This is a neutral informational alert message.</AlertDescription>
+          <AlertDescription>
+            This is a neutral informational alert message.
+          </AlertDescription>
         </AlertContent>
       </Alert>
 
@@ -50,7 +54,9 @@ export function AlertVariants() {
           <WarningIcon />
         </AlertIcon>
         <AlertContent>
-          <AlertDescription>Please review this warning before proceeding.</AlertDescription>
+          <AlertDescription>
+            Please review this warning before proceeding.
+          </AlertDescription>
         </AlertContent>
       </Alert>
 
@@ -70,7 +76,9 @@ export function AlertVariants() {
           <DangerIcon />
         </AlertIcon>
         <AlertContent>
-          <AlertDescription>Danger! This action cannot be undone.</AlertDescription>
+          <AlertDescription>
+            Danger! This action cannot be undone.
+          </AlertDescription>
         </AlertContent>
       </Alert>
 
@@ -86,5 +94,5 @@ export function AlertVariants() {
         </AlertContent>
       </Alert>
     </div>
-  )
+  );
 }

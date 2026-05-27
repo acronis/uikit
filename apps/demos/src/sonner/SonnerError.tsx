@@ -1,5 +1,5 @@
-import { toast } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { toast } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function SonnerError() {
   return (
@@ -8,12 +8,13 @@ export function SonnerError() {
       <Button
         onClick={() =>
           toast.error('Failed to save', {
-            description: 'There was an error saving your changes. Please try again.',
+            description:
+              'There was an error saving your changes. Please try again.',
           })
         }
       >
         Error with Description
       </Button>
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { AppPage } from '../components/AppPage'
+import { AppPage } from '../components/AppPage';
 
 export default function CyberChatFlowAppRoute() {
-  return <AppPage />
+  return <AppPage />;
 }

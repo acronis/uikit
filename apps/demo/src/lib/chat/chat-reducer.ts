@@ -1,8 +1,8 @@
-import { ChatState, ChatAction, ChatMessage } from './types'
+import { ChatState, ChatAction, ChatMessage } from './types';
 
 const generateSessionId = (): string => {
-  return `chat-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-}
+  return `chat-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+};
 
 const createInitialState = (): ChatState => ({
   messages: [],
@@ -15,7 +15,7 @@ const createInitialState = (): ChatState => ({
     lastActivity: new Date(),
     messageCount: 0,
   },
-})
+});
 
 export const chatReducer = (
   state: ChatState = createInitialState(),
@@ -29,7 +29,7 @@ export const chatReducer = (
         sender: 'user',
         timestamp: new Date(),
         type: 'text',
-      }
+      };
 
       return {
         ...state,
@@ -41,7 +41,7 @@ export const chatReducer = (
           lastActivity: new Date(),
           messageCount: state.metadata.messageCount + 1,
         },
-      }
+      };
     }
 
     case 'RECEIVE_MESSAGE': {
@@ -53,35 +53,35 @@ export const chatReducer = (
           ...state.metadata,
           lastActivity: new Date(),
         },
-      }
+      };
     }
 
     case 'SET_BOT_MODE': {
       return {
         ...state,
         botMode: action.payload,
-      }
+      };
     }
 
     case 'SET_TYPING': {
       return {
         ...state,
         isTyping: action.payload,
-      }
+      };
     }
 
     case 'SET_INPUT_MODE': {
       return {
         ...state,
         inputMode: action.payload,
-      }
+      };
     }
 
     case 'SET_USER_INPUT': {
       return {
         ...state,
         userInput: action.payload,
-      }
+      };
     }
 
     case 'ANSWER_QUESTION': {
@@ -91,7 +91,7 @@ export const chatReducer = (
         sender: 'user',
         timestamp: new Date(),
         type: 'text',
-      }
+      };
 
       return {
         ...state,
@@ -102,34 +102,34 @@ export const chatReducer = (
           lastActivity: new Date(),
           messageCount: state.metadata.messageCount + 1,
         },
-      }
+      };
     }
 
     case 'CLEAR_ERROR': {
       return {
         ...state,
         error: undefined,
-      }
+      };
     }
 
     case 'SET_ERROR': {
       return {
         ...state,
         error: action.payload,
-      }
+      };
     }
 
     case 'LOAD_SESSION': {
-      return action.payload
+      return action.payload;
     }
 
     case 'CLEAR_SESSION': {
-      return createInitialState()
+      return createInitialState();
     }
 
     default:
-      return state
+      return state;
   }
-}
+};
 
-export { createInitialState }
+export { createInitialState };

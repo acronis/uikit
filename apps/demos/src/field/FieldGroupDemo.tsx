@@ -1,20 +1,20 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Field,
   FieldLabel,
   FieldDescription,
   FieldGroup,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { Textarea } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { Textarea } from '@acronis-platform/shadcn-uikit/react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function FieldGroupDemo() {
   return (
@@ -47,12 +47,16 @@ export function FieldGroupDemo() {
 
         <Field>
           <FieldLabel htmlFor="fg-bio">Bio</FieldLabel>
-          <Textarea id="fg-bio" placeholder="A short bio…" className="resize-none" />
+          <Textarea
+            id="fg-bio"
+            placeholder="A short bio…"
+            className="resize-none"
+          />
           <FieldDescription>Up to 160 characters.</FieldDescription>
         </Field>
 
         <Button>Save</Button>
       </FieldGroup>
     </div>
-  )
+  );
 }

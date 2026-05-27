@@ -1,16 +1,19 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import {
   SecondaryMenu,
   SecondaryMenuContent,
   SecondaryMenuGroup,
   SecondaryMenuItem,
-} from '@acronis-platform/shadcn-uikit/react'
-import { ChevronRightIcon } from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit/react';
+import { ChevronRightIcon } from '@acronis-platform/shadcn-uikit';
 export function SecondaryMenuWithRightIcons() {
-  const [activeItem, setActiveItem] = useState('nav1')
+  const [activeItem, setActiveItem] = useState('nav1');
 
   return (
-    <div className="border rounded-lg overflow-hidden" style={{ height: '400px' }}>
+    <div
+      className="border rounded-lg overflow-hidden"
+      style={{ height: '400px' }}
+    >
       <SecondaryMenu>
         <SecondaryMenuContent>
           <SecondaryMenuGroup title="Navigation">
@@ -50,5 +53,5 @@ export function SecondaryMenuWithRightIcons() {
         </SecondaryMenuContent>
       </SecondaryMenu>
     </div>
-  )
+  );
 }

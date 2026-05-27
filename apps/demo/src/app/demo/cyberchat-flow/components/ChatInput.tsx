@@ -1,51 +1,51 @@
-import { useRef, useEffect } from 'react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { GlobeIcon } from '@acronis-platform/shadcn-uikit'
-import { PaperclipIcon } from '@/components/icons/missing-icons'
-import { useChatFlowStore } from '../store/useChatFlowStore'
+import { useRef, useEffect } from 'react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { GlobeIcon } from '@acronis-platform/shadcn-uikit';
+import { PaperclipIcon } from '@/components/icons/missing-icons';
+import { useChatFlowStore } from '../store/useChatFlowStore';
 
 export function ChatInput() {
-  const inputValue = useChatFlowStore((state) => state.inputValue)
-  const setInputValue = useChatFlowStore((state) => state.setInputValue)
-  const sendMessage = useChatFlowStore((state) => state.sendMessage)
-  const webSearchEnabled = useChatFlowStore((state) => state.webSearchEnabled)
-  const toggleWebSearch = useChatFlowStore((state) => state.toggleWebSearch)
-  const selectedModel = useChatFlowStore((state) => state.selectedModel)
+  const inputValue = useChatFlowStore((state) => state.inputValue);
+  const setInputValue = useChatFlowStore((state) => state.setInputValue);
+  const sendMessage = useChatFlowStore((state) => state.sendMessage);
+  const webSearchEnabled = useChatFlowStore((state) => state.webSearchEnabled);
+  const toggleWebSearch = useChatFlowStore((state) => state.toggleWebSearch);
+  const selectedModel = useChatFlowStore((state) => state.selectedModel);
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Auto-resize textarea
   useEffect(() => {
-    const textarea = textareaRef.current
+    const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto'
-      const newHeight = Math.min(textarea.scrollHeight, 200)
-      textarea.style.height = `${newHeight}px`
+      textarea.style.height = 'auto';
+      const newHeight = Math.min(textarea.scrollHeight, 200);
+      textarea.style.height = `${newHeight}px`;
     }
-  }, [inputValue])
+  }, [inputValue]);
 
   // Focus input when suggestion is selected
   useEffect(() => {
     if (inputValue && textareaRef.current) {
-      textareaRef.current.focus()
+      textareaRef.current.focus();
     }
-  }, [inputValue])
+  }, [inputValue]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
+      e.preventDefault();
+      handleSend();
     }
-  }
+  };
 
   const handleSend = () => {
     if (inputValue.trim()) {
-      sendMessage()
+      sendMessage();
       if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto'
+        textareaRef.current.style.height = 'auto';
       }
     }
-  }
+  };
 
   return (
     <div className="border-t border-border bg-background px-6 py-6">
@@ -99,7 +99,13 @@ export function ChatInput() {
               >
                 <span>{selectedModel}</span>
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path
+                    d="M3 4.5L6 7.5L9 4.5"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </Button>
               <Button
@@ -109,7 +115,13 @@ export function ChatInput() {
                 disabled={!inputValue.trim()}
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M8 3L8 13M8 3L5 6M8 3L11 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path
+                    d="M8 3L8 13M8 3L5 6M8 3L11 6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </Button>
             </div>
@@ -117,5 +129,5 @@ export function ChatInput() {
         </div>
       </div>
     </div>
-  )
+  );
 }

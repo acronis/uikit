@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import {
   Form,
   FormControl,
@@ -9,17 +9,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Textarea } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Textarea } from '@acronis-platform/shadcn-uikit/react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -37,7 +37,7 @@ const formSchema = z.object({
   priority: z.enum(['low', 'medium', 'high'], {
     message: 'Please select a priority level.',
   }),
-})
+});
 
 export function FormContact() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,11 +48,11 @@ export function FormContact() {
       subject: '',
       message: '',
     },
-  })
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    alert(JSON.stringify(values, null, 2))
+    console.log(values);
+    alert(JSON.stringify(values, null, 2));
   }
 
   return (
@@ -91,7 +91,10 @@ export function FormContact() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Priority</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select priority level" />
@@ -141,5 +144,5 @@ export function FormContact() {
         </form>
       </Form>
     </div>
-  )
+  );
 }

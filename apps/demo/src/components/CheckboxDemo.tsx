@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   CheckboxBasic,
   CheckboxWithLabel,
@@ -11,28 +11,29 @@ import {
   CheckboxMultipleSelection,
   CheckboxList,
   CheckboxStates,
-} from '@acronis-platform/shadcn-uikit-demos/checkbox'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/checkbox';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import checkboxBasicCode from '../../../demos/src/checkbox/CheckboxBasic.tsx?raw'
-import checkboxWithLabelCode from '../../../demos/src/checkbox/CheckboxWithLabel.tsx?raw'
-import checkboxWithDescriptionCode from '../../../demos/src/checkbox/CheckboxWithDescription.tsx?raw'
-import checkboxControlledCode from '../../../demos/src/checkbox/CheckboxControlled.tsx?raw'
-import checkboxIndeterminateCode from '../../../demos/src/checkbox/CheckboxIndeterminate.tsx?raw'
-import checkboxDisabledCode from '../../../demos/src/checkbox/CheckboxDisabled.tsx?raw'
-import checkboxParentChildCode from '../../../demos/src/checkbox/CheckboxParentChild.tsx?raw'
-import checkboxFormCode from '../../../demos/src/checkbox/CheckboxForm.tsx?raw'
-import checkboxMultipleSelectionCode from '../../../demos/src/checkbox/CheckboxMultipleSelection.tsx?raw'
-import checkboxListCode from '../../../demos/src/checkbox/CheckboxList.tsx?raw'
-import checkboxStatesCode from '../../../demos/src/checkbox/CheckboxStates.tsx?raw'
+import checkboxBasicCode from '../../../demos/src/checkbox/CheckboxBasic.tsx?raw';
+import checkboxWithLabelCode from '../../../demos/src/checkbox/CheckboxWithLabel.tsx?raw';
+import checkboxWithDescriptionCode from '../../../demos/src/checkbox/CheckboxWithDescription.tsx?raw';
+import checkboxControlledCode from '../../../demos/src/checkbox/CheckboxControlled.tsx?raw';
+import checkboxIndeterminateCode from '../../../demos/src/checkbox/CheckboxIndeterminate.tsx?raw';
+import checkboxDisabledCode from '../../../demos/src/checkbox/CheckboxDisabled.tsx?raw';
+import checkboxParentChildCode from '../../../demos/src/checkbox/CheckboxParentChild.tsx?raw';
+import checkboxFormCode from '../../../demos/src/checkbox/CheckboxForm.tsx?raw';
+import checkboxMultipleSelectionCode from '../../../demos/src/checkbox/CheckboxMultipleSelection.tsx?raw';
+import checkboxListCode from '../../../demos/src/checkbox/CheckboxList.tsx?raw';
+import checkboxStatesCode from '../../../demos/src/checkbox/CheckboxStates.tsx?raw';
 
 export function CheckboxDemo() {
   return (
     <section className="demo-section">
       <h2>Checkbox Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        A control that allows the user to toggle between checked and not checked states.
+        A control that allows the user to toggle between checked and not checked
+        states.
       </p>
 
       <div className="space-y-8">
@@ -125,5 +126,5 @@ export function CheckboxDemo() {
         </DemoWithCode>
       </div>
     </section>
-  )
+  );
 }

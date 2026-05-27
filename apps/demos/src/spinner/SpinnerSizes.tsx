@@ -1,4 +1,4 @@
-import { Spinner } from '@acronis-platform/shadcn-uikit/react'
+import { Spinner } from '@acronis-platform/shadcn-uikit/react';
 
 export function SpinnerSizes() {
   return (
@@ -20,5 +20,5 @@ export function SpinnerSizes() {
         <span className="text-xs text-muted-foreground">Extra Large</span>
       </div>
     </div>
-  )
+  );
 }

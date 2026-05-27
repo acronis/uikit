@@ -1,1 +1,1 @@
-export { ChartAll } from './ChartAll'
+export { ChartAll } from './ChartAll';

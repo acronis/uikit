@@ -1,5 +1,9 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Popover, PopoverContent, PopoverTrigger } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function PopoverAlignments() {
   return (
@@ -31,5 +35,5 @@ export function PopoverAlignments() {
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }

@@ -1,43 +1,46 @@
-import * as React from 'react'
-import { useForm } from '@tanstack/react-form'
-import { zodValidator } from '@tanstack/zod-form-adapter'
-import * as z from 'zod'
+import * as React from 'react';
+import { useForm } from '@tanstack/react-form';
+import { zodValidator } from '@tanstack/zod-form-adapter';
+import * as z from 'zod';
 import {
   Field,
   FieldLabel,
   FieldDescription,
   FieldError,
   FieldGroup,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { Textarea } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { Textarea } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 const schema = z.object({
-  username: z.string().min(2, 'At least 2 characters.').max(30, 'Max 30 characters.'),
+  username: z
+    .string()
+    .min(2, 'At least 2 characters.')
+    .max(30, 'Max 30 characters.'),
   email: z.string().email('Enter a valid email address.'),
   role: z.string().min(1, 'Please select a role.'),
   bio: z.string().max(160, 'Max 160 characters.').optional(),
-})
+});
 
-type FormValues = z.infer<typeof schema>
+type FormValues = z.infer<typeof schema>;
 
 export function FieldTanstackForm() {
-  const [submitted, setSubmitted] = React.useState<FormValues | null>(null)
+  const [submitted, setSubmitted] = React.useState<FormValues | null>(null);
 
   const form = useForm({
     defaultValues: { username: '', email: '', role: '', bio: '' },
     validatorAdapter: zodValidator(),
     validators: { onChange: schema },
     onSubmit: async ({ value }) => setSubmitted(value as FormValues),
-  })
+  });
 
   if (submitted) {
     return (
@@ -50,22 +53,32 @@ export function FieldTanstackForm() {
           Edit again
         </Button>
       </div>
-    )
+    );
   }
 
   return (
     <div className="w-full max-w-md">
       <form
         onSubmit={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          form.handleSubmit()
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
         }}
       >
         <FieldGroup>
-          <form.Field name="username" validators={{ onChange: schema.shape.username }}>
+          <form.Field
+            name="username"
+            validators={{ onChange: schema.shape.username }}
+          >
             {(field) => (
-              <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0 ? 'true' : undefined}>
+              <Field
+                data-invalid={
+                  field.state.meta.isTouched &&
+                  field.state.meta.errors.length > 0
+                    ? 'true'
+                    : undefined
+                }
+              >
                 <FieldLabel htmlFor={field.name}>Username</FieldLabel>
                 <Input
                   id={field.name}
@@ -73,19 +86,36 @@ export function FieldTanstackForm() {
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   onBlur={field.handleBlur}
-                  aria-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                  aria-invalid={
+                    field.state.meta.isTouched &&
+                    field.state.meta.errors.length > 0
+                  }
                 />
                 <FieldDescription>Your public display name.</FieldDescription>
                 {field.state.meta.isTouched && (
-                  <FieldError errors={field.state.meta.errors.map((e) => ({ message: e?.toString() }))} />
+                  <FieldError
+                    errors={field.state.meta.errors.map((e) => ({
+                      message: e?.toString(),
+                    }))}
+                  />
                 )}
               </Field>
             )}
           </form.Field>
 
-          <form.Field name="email" validators={{ onChange: schema.shape.email }}>
+          <form.Field
+            name="email"
+            validators={{ onChange: schema.shape.email }}
+          >
             {(field) => (
-              <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0 ? 'true' : undefined}>
+              <Field
+                data-invalid={
+                  field.state.meta.isTouched &&
+                  field.state.meta.errors.length > 0
+                    ? 'true'
+                    : undefined
+                }
+              >
                 <FieldLabel htmlFor={field.name}>Email</FieldLabel>
                 <Input
                   id={field.name}
@@ -94,10 +124,17 @@ export function FieldTanstackForm() {
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   onBlur={field.handleBlur}
-                  aria-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                  aria-invalid={
+                    field.state.meta.isTouched &&
+                    field.state.meta.errors.length > 0
+                  }
                 />
                 {field.state.meta.isTouched && (
-                  <FieldError errors={field.state.meta.errors.map((e) => ({ message: e?.toString() }))} />
+                  <FieldError
+                    errors={field.state.meta.errors.map((e) => ({
+                      message: e?.toString(),
+                    }))}
+                  />
                 )}
               </Field>
             )}
@@ -105,7 +142,14 @@ export function FieldTanstackForm() {
 
           <form.Field name="role" validators={{ onChange: schema.shape.role }}>
             {(field) => (
-              <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0 ? 'true' : undefined}>
+              <Field
+                data-invalid={
+                  field.state.meta.isTouched &&
+                  field.state.meta.errors.length > 0
+                    ? 'true'
+                    : undefined
+                }
+              >
                 <FieldLabel htmlFor={field.name}>Role</FieldLabel>
                 <Select
                   value={field.state.value}
@@ -121,7 +165,11 @@ export function FieldTanstackForm() {
                   </SelectContent>
                 </Select>
                 {field.state.meta.isTouched && (
-                  <FieldError errors={field.state.meta.errors.map((e) => ({ message: e?.toString() }))} />
+                  <FieldError
+                    errors={field.state.meta.errors.map((e) => ({
+                      message: e?.toString(),
+                    }))}
+                  />
                 )}
               </Field>
             )}
@@ -141,7 +189,11 @@ export function FieldTanstackForm() {
                 />
                 <FieldDescription>Up to 160 characters.</FieldDescription>
                 {field.state.meta.isTouched && (
-                  <FieldError errors={field.state.meta.errors.map((e) => ({ message: e?.toString() }))} />
+                  <FieldError
+                    errors={field.state.meta.errors.map((e) => ({
+                      message: e?.toString(),
+                    }))}
+                  />
                 )}
               </Field>
             )}
@@ -157,5 +209,5 @@ export function FieldTanstackForm() {
         </FieldGroup>
       </form>
     </div>
-  )
+  );
 }

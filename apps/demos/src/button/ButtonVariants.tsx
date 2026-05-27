@@ -1,4 +1,4 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function ButtonVariants() {
   return (
@@ -10,5 +10,5 @@ export function ButtonVariants() {
       <Button variant="ghost">Ghost</Button>
       <Button variant="link">Link</Button>
     </div>
-  )
+  );
 }

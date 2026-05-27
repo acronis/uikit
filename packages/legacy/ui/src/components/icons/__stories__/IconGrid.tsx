@@ -1,21 +1,21 @@
-import React from 'react'
-import { AutoIcons, type IconSize } from '../auto-generated'
+import React from 'react';
+import { AutoIcons, type IconSize } from '../auto-generated';
 
-const VALID_SIZES = new Set([16, 24, 32, 48, 72, 96])
+const VALID_SIZES = new Set([16, 24, 32, 48, 72, 96]);
 
 /**
  * Parse an icon entry like "user-16" into { baseName: "user", size: 16 }.
  * The trailing number must be a valid design-system size.
  */
 function parseIconEntry(entry: string): { baseName: string; size: number } {
-  const match = entry.match(/^(.+)-(\d+)$/)
+  const match = entry.match(/^(.+)-(\d+)$/);
   if (match) {
-    const size = parseInt(match[2], 10)
+    const size = parseInt(match[2], 10);
     if (VALID_SIZES.has(size)) {
-      return { baseName: match[1], size }
+      return { baseName: match[1], size };
     }
   }
-  return { baseName: entry, size: 0 }
+  return { baseName: entry, size: 0 };
 }
 
 /**
@@ -33,8 +33,10 @@ export function IconGrid({ entries }: { entries: string[] }) {
       }}
     >
       {entries.map((entry) => {
-        const { baseName, size } = parseIconEntry(entry)
-        const Icon = (AutoIcons as Record<string, React.ComponentType<any>>)[baseName]
+        const { baseName, size } = parseIconEntry(entry);
+        const Icon = (AutoIcons as Record<string, React.ComponentType<any>>)[
+          baseName
+        ];
 
         if (!Icon) {
           return (
@@ -52,11 +54,17 @@ export function IconGrid({ entries }: { entries: string[] }) {
               }}
             >
               <div style={{ width: 32, height: 32 }} />
-              <span style={{ fontSize: 10, textAlign: 'center', wordBreak: 'break-all' }}>
+              <span
+                style={{
+                  fontSize: 10,
+                  textAlign: 'center',
+                  wordBreak: 'break-all',
+                }}
+              >
                 {entry} (missing)
               </span>
             </div>
-          )
+          );
         }
 
         return (
@@ -88,8 +96,8 @@ export function IconGrid({ entries }: { entries: string[] }) {
               {entry}
             </span>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

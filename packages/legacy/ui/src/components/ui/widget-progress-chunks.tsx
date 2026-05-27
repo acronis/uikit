@@ -1,6 +1,6 @@
-import * as React from 'react'
+import * as React from 'react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 /**
  * WidgetProgressChunks — Chunked progress visualization widget.
@@ -21,31 +21,33 @@ import { cn } from '@/lib/utils'
  */
 
 export interface ProgressChunk {
-  label: string
-  value: number
-  total: number
-  color: string
+  label: string;
+  value: number;
+  total: number;
+  color: string;
 }
 
 export interface WidgetProgressChunksProps extends React.HTMLAttributes<HTMLDivElement> {
-  interactive?: boolean
+  interactive?: boolean;
 }
 
-const WidgetProgressChunks = React.forwardRef<HTMLDivElement, WidgetProgressChunksProps>(
-  ({ className, interactive, ...props }, ref) => (
-    <div
-      ref={ref}
-      tabIndex={interactive ? 0 : undefined}
-      className={cn(
-        'relative flex flex-col rounded-lg border border-[var(--av-brand-light)] bg-[var(--av-inversed-primary)] text-[var(--av-fixed-primary)] transition-colors',
-        interactive && 'cursor-pointer hover:bg-[var(--av-el-secondary-hover)] active:bg-[var(--av-el-secondary-active)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--av-fixed-focus)]',
-        className
-      )}
-      {...props}
-    />
-  )
-)
-WidgetProgressChunks.displayName = 'WidgetProgressChunks'
+const WidgetProgressChunks = React.forwardRef<
+  HTMLDivElement,
+  WidgetProgressChunksProps
+>(({ className, interactive, ...props }, ref) => (
+  <div
+    ref={ref}
+    tabIndex={interactive ? 0 : undefined}
+    className={cn(
+      'relative flex flex-col rounded-lg border border-[var(--av-brand-light)] bg-[var(--av-inversed-primary)] text-[var(--av-fixed-primary)] transition-colors',
+      interactive &&
+        'cursor-pointer hover:bg-[var(--av-el-secondary-hover)] active:bg-[var(--av-el-secondary-active)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--av-fixed-focus)]',
+      className
+    )}
+    {...props}
+  />
+));
+WidgetProgressChunks.displayName = 'WidgetProgressChunks';
 
 const WidgetProgressChunksHeader = React.forwardRef<
   HTMLDivElement,
@@ -56,8 +58,8 @@ const WidgetProgressChunksHeader = React.forwardRef<
     className={cn('flex items-center gap-2 px-6 pt-4 pb-2', className)}
     {...props}
   />
-))
-WidgetProgressChunksHeader.displayName = 'WidgetProgressChunksHeader'
+));
+WidgetProgressChunksHeader.displayName = 'WidgetProgressChunksHeader';
 
 const WidgetProgressChunksTitle = React.forwardRef<
   HTMLDivElement,
@@ -68,8 +70,8 @@ const WidgetProgressChunksTitle = React.forwardRef<
     className={cn('flex-1 truncate text-sm font-semibold leading-6', className)}
     {...props}
   />
-))
-WidgetProgressChunksTitle.displayName = 'WidgetProgressChunksTitle'
+));
+WidgetProgressChunksTitle.displayName = 'WidgetProgressChunksTitle';
 
 const WidgetProgressChunksIcon = React.forwardRef<
   HTMLDivElement,
@@ -77,11 +79,14 @@ const WidgetProgressChunksIcon = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('flex-shrink-0 text-[var(--av-fixed-link)] [&>svg]:h-4 [&>svg]:w-4', className)}
+    className={cn(
+      'flex-shrink-0 text-[var(--av-fixed-link)] [&>svg]:h-4 [&>svg]:w-4',
+      className
+    )}
     {...props}
   />
-))
-WidgetProgressChunksIcon.displayName = 'WidgetProgressChunksIcon'
+));
+WidgetProgressChunksIcon.displayName = 'WidgetProgressChunksIcon';
 
 const WidgetProgressChunksBody = React.forwardRef<
   HTMLDivElement,
@@ -92,26 +97,45 @@ const WidgetProgressChunksBody = React.forwardRef<
     className={cn('flex flex-col gap-2 px-6 py-2', className)}
     {...props}
   />
-))
-WidgetProgressChunksBody.displayName = 'WidgetProgressChunksBody'
+));
+WidgetProgressChunksBody.displayName = 'WidgetProgressChunksBody';
 
 export interface WidgetProgressChunkRowProps extends React.HTMLAttributes<HTMLDivElement> {
-  label: string
-  value: number
-  total: number
-  color: string
-  formatValue?: (value: number) => string
-  formatTotal?: (total: number) => string
+  label: string;
+  value: number;
+  total: number;
+  color: string;
+  formatValue?: (value: number) => string;
+  formatTotal?: (total: number) => string;
 }
 
-const WidgetProgressChunkRow = React.forwardRef<HTMLDivElement, WidgetProgressChunkRowProps>(
-  ({ className, label, value, total, color, formatValue, formatTotal, ...props }, ref) => {
-    const pct = total > 0 ? (value / total) * 100 : 0
-    const displayValue = formatValue ? formatValue(value) : String(value)
-    const displayTotal = formatTotal ? formatTotal(total) : String(total)
+const WidgetProgressChunkRow = React.forwardRef<
+  HTMLDivElement,
+  WidgetProgressChunkRowProps
+>(
+  (
+    {
+      className,
+      label,
+      value,
+      total,
+      color,
+      formatValue,
+      formatTotal,
+      ...props
+    },
+    ref
+  ) => {
+    const pct = total > 0 ? (value / total) * 100 : 0;
+    const displayValue = formatValue ? formatValue(value) : String(value);
+    const displayTotal = formatTotal ? formatTotal(total) : String(total);
 
     return (
-      <div ref={ref} className={cn('flex flex-col gap-1', className)} {...props}>
+      <div
+        ref={ref}
+        className={cn('flex flex-col gap-1', className)}
+        {...props}
+      >
         <div className="flex items-center justify-between text-xs">
           <span className="text-[var(--av-fixed-primary)]">{label}</span>
           <span className="font-semibold tabular-nums">
@@ -128,10 +152,10 @@ const WidgetProgressChunkRow = React.forwardRef<HTMLDivElement, WidgetProgressCh
           />
         </div>
       </div>
-    )
+    );
   }
-)
-WidgetProgressChunkRow.displayName = 'WidgetProgressChunkRow'
+);
+WidgetProgressChunkRow.displayName = 'WidgetProgressChunkRow';
 
 const WidgetProgressChunksFooter = React.forwardRef<
   HTMLDivElement,
@@ -145,8 +169,8 @@ const WidgetProgressChunksFooter = React.forwardRef<
     )}
     {...props}
   />
-))
-WidgetProgressChunksFooter.displayName = 'WidgetProgressChunksFooter'
+));
+WidgetProgressChunksFooter.displayName = 'WidgetProgressChunksFooter';
 
 export {
   WidgetProgressChunks,
@@ -156,4 +180,4 @@ export {
   WidgetProgressChunksBody,
   WidgetProgressChunkRow,
   WidgetProgressChunksFooter,
-}
+};

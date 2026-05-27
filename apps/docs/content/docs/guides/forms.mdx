@@ -11,9 +11,7 @@ import {
   FormBasic,
   FormSettings,
 } from '@/components/demos/form';
-import {
-  FieldTanstackForm,
-} from '@/components/demos/field';
+import { FieldTanstackForm } from '@/components/demos/field';
 import { DemoPreview } from '@/components/DemoPreview';
 
 ## Overview
@@ -28,16 +26,16 @@ Forms in Acronis UIKit are built from composable primitives. The library ships t
 
 ## Choosing a form library
 
-| | React Hook Form | TanStack Form | Native (no lib) |
-|---|---|---|---|
-| **Maturity** | Very mature, large ecosystem | Stable v1 | N/A |
-| **Bundle size** | ~25 kB | ~12 kB | 0 kB |
-| **Validation** | Via resolver (Zod, Yup…) | Inline validators or adapters | `required`, `pattern`, custom |
-| **Async validation** | Via `validate` + resolver | First-class, built-in | Manual |
-| **Server errors** | Manual `setError` calls | `form.setFieldMeta` | Manual |
-| **Re-renders** | Subscription-based, minimal | Subscription-based, minimal | — |
-| **Type safety** | Good with Zod inference | Excellent, fully typed | — |
-| **When to prefer** | Default choice for most apps | Large, complex forms; fine-grained field subscriptions | Simple one-off forms |
+|                      | React Hook Form              | TanStack Form                                          | Native (no lib)               |
+| -------------------- | ---------------------------- | ------------------------------------------------------ | ----------------------------- |
+| **Maturity**         | Very mature, large ecosystem | Stable v1                                              | N/A                           |
+| **Bundle size**      | ~25 kB                       | ~12 kB                                                 | 0 kB                          |
+| **Validation**       | Via resolver (Zod, Yup…)     | Inline validators or adapters                          | `required`, `pattern`, custom |
+| **Async validation** | Via `validate` + resolver    | First-class, built-in                                  | Manual                        |
+| **Server errors**    | Manual `setError` calls      | `form.setFieldMeta`                                    | Manual                        |
+| **Re-renders**       | Subscription-based, minimal  | Subscription-based, minimal                            | —                             |
+| **Type safety**      | Good with Zod inference      | Excellent, fully typed                                 | —                             |
+| **When to prefer**   | Default choice for most apps | Large, complex forms; fine-grained field subscriptions | Simple one-off forms          |
 
 **TL;DR**: Use **React Hook Form** by default. Switch to **TanStack Form** when you need fine-grained re-render control, per-field async validation, or a more functional composition style.
 
@@ -52,9 +50,7 @@ Forms are UI. Layout choices affect comprehension and completion rates as much a
 The default. One field per row, scanned top-to-bottom. Use for short forms (≤ 6 fields), login, checkout, or any form where the user must read each field carefully.
 
 ```tsx
-<form className="space-y-4 max-w-md">
-  {/* fields stacked vertically */}
-</form>
+<form className="space-y-4 max-w-md">{/* fields stacked vertically */}</form>
 ```
 
 ### Two-column grid
@@ -85,7 +81,9 @@ Long forms (settings pages, account setup, multi-topic data entry) benefit from 
   <section className="space-y-4">
     <div>
       <h3 className="text-base font-semibold">Profile</h3>
-      <p className="text-sm text-muted-foreground">Update your public profile.</p>
+      <p className="text-sm text-muted-foreground">
+        Update your public profile.
+      </p>
     </div>
     {/* fields */}
   </section>
@@ -116,17 +114,17 @@ Label and control on the same row. Works well for key–value edit UIs or compac
 
 Every form control in UIKit has a consistent anatomy. The table below shows how to wire each one inside `FormItem`.
 
-| Component | Import | `FormControl` wraps | Notes |
-|-----------|--------|---------------------|-------|
-| `Input` | `@acronis-platform/shadcn-uikit/react` | `<Input {...field} />` | Spread `field` directly |
-| `Textarea` | same | `<Textarea {...field} />` | Add `className="resize-none"` when height is fixed |
-| `Select` | same | `<SelectTrigger>` | Wrap outer `<Select>` with `onValueChange={field.onChange}` |
-| `Checkbox` | same | `<Checkbox checked={field.value} onCheckedChange={field.onChange} />` | Use `checked` not `value` |
-| `Switch` | same | `<Switch checked={field.value} onCheckedChange={field.onChange} />` | Same as Checkbox |
-| `RadioGroup` | same | `<RadioGroup onValueChange={field.onChange} defaultValue={field.value}>` | Wrap `RadioGroupItem`s inside |
-| `Combobox` | same | `<Combobox value={field.value} onValueChange={field.onChange} />` | — |
-| `DatePicker` | same | `<DatePicker value={field.value} onValueChange={field.onChange} />` | Value is `Date \| undefined` |
-| `NumberField` | same | `<NumberField value={field.value} onChange={field.onChange} />` | Value is `number` |
+| Component     | Import                                 | `FormControl` wraps                                                      | Notes                                                       |
+| ------------- | -------------------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| `Input`       | `@acronis-platform/shadcn-uikit/react` | `<Input {...field} />`                                                   | Spread `field` directly                                     |
+| `Textarea`    | same                                   | `<Textarea {...field} />`                                                | Add `className="resize-none"` when height is fixed          |
+| `Select`      | same                                   | `<SelectTrigger>`                                                        | Wrap outer `<Select>` with `onValueChange={field.onChange}` |
+| `Checkbox`    | same                                   | `<Checkbox checked={field.value} onCheckedChange={field.onChange} />`    | Use `checked` not `value`                                   |
+| `Switch`      | same                                   | `<Switch checked={field.value} onCheckedChange={field.onChange} />`      | Same as Checkbox                                            |
+| `RadioGroup`  | same                                   | `<RadioGroup onValueChange={field.onChange} defaultValue={field.value}>` | Wrap `RadioGroupItem`s inside                               |
+| `Combobox`    | same                                   | `<Combobox value={field.value} onValueChange={field.onChange} />`        | —                                                           |
+| `DatePicker`  | same                                   | `<DatePicker value={field.value} onValueChange={field.onChange} />`      | Value is `Date \| undefined`                                |
+| `NumberField` | same                                   | `<NumberField value={field.value} onChange={field.onChange} />`          | Value is `number`                                           |
 
 ### FormItem anatomy
 
@@ -168,33 +166,38 @@ The `Form` component in UIKit is a thin wrapper around React Hook Form's `FormPr
 ### Setup pattern
 
 ```tsx
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import {
-  Form, FormField, FormItem, FormLabel,
-  FormControl, FormDescription, FormMessage,
-} from '@acronis-platform/shadcn-uikit/react'
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from '@acronis-platform/shadcn-uikit/react';
 
 // 1. Define schema
 const schema = z.object({
   email: z.string().email('Invalid email address.'),
   password: z.string().min(8, 'At least 8 characters.'),
-})
+});
 
 // 2. Infer types
-type FormValues = z.infer<typeof schema>
+type FormValues = z.infer<typeof schema>;
 
 export function LoginForm() {
   // 3. Initialise hook
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { email: '', password: '' },
-  })
+  });
 
   // 4. Handle submit
   function onSubmit(values: FormValues) {
-    console.log(values)
+    console.log(values);
   }
 
   return (
@@ -207,7 +210,9 @@ export function LoginForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
-              <FormControl><Input type="email" {...field} /></FormControl>
+              <FormControl>
+                <Input type="email" {...field} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
@@ -215,7 +220,7 @@ export function LoginForm() {
         <Button type="submit">Log in</Button>
       </form>
     </Form>
-  )
+  );
 }
 ```
 
@@ -223,10 +228,10 @@ export function LoginForm() {
 
 ```tsx
 async function onSubmit(values: FormValues) {
-  const result = await loginUser(values)
+  const result = await loginUser(values);
   if (result.error) {
-    form.setError('email', { message: result.error })
-    return
+    form.setError('email', { message: result.error });
+    return;
   }
 }
 ```
@@ -262,16 +267,20 @@ TanStack Form has no React Hook Form context, so use the **[Field](/docs/compone
 ### Setup pattern
 
 ```tsx
-import { useForm } from '@tanstack/react-form'
-import { zodValidator } from '@tanstack/zod-form-adapter'
-import * as z from 'zod'
+import { useForm } from '@tanstack/react-form';
+import { zodValidator } from '@tanstack/zod-form-adapter';
+import * as z from 'zod';
 import {
-  Field, FieldLabel, FieldDescription, FieldError, FieldGroup,
-} from '@acronis-platform/shadcn-uikit/react'
+  Field,
+  FieldLabel,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+} from '@acronis-platform/shadcn-uikit/react';
 
 const schema = z.object({
   email: z.string().email('Invalid email address.'),
-})
+});
 
 export function TanstackLoginForm() {
   const form = useForm({
@@ -279,14 +288,25 @@ export function TanstackLoginForm() {
     validatorAdapter: zodValidator(),
     validators: { onChange: schema },
     onSubmit: async ({ value }) => console.log(value),
-  })
+  });
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); form.handleSubmit() }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+    >
       <FieldGroup>
         <form.Field name="email" validators={{ onChange: schema.shape.email }}>
           {(field) => (
-            <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0 ? 'true' : undefined}>
+            <Field
+              data-invalid={
+                field.state.meta.isTouched && field.state.meta.errors.length > 0
+                  ? 'true'
+                  : undefined
+              }
+            >
               <FieldLabel htmlFor={field.name}>Email</FieldLabel>
               <Input
                 id={field.name}
@@ -294,10 +314,17 @@ export function TanstackLoginForm() {
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                aria-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                aria-invalid={
+                  field.state.meta.isTouched &&
+                  field.state.meta.errors.length > 0
+                }
               />
               {field.state.meta.isTouched && (
-                <FieldError errors={field.state.meta.errors.map((e) => ({ message: e?.toString() }))} />
+                <FieldError
+                  errors={field.state.meta.errors.map((e) => ({
+                    message: e?.toString(),
+                  }))}
+                />
               )}
             </Field>
           )}
@@ -312,7 +339,7 @@ export function TanstackLoginForm() {
         </form.Subscribe>
       </FieldGroup>
     </form>
-  )
+  );
 }
 ```
 
@@ -337,29 +364,31 @@ Validation errors surface automatically via `<FormMessage />` (RHF) or `field.st
 ```tsx
 form.setError('root.serverError', {
   message: 'Something went wrong. Please try again.',
-})
+});
 // or target a specific field:
-form.setError('email', { message: 'Email already in use.' })
+form.setError('email', { message: 'Email already in use.' });
 ```
 
 Display a root error:
 
 ```tsx
-{form.formState.errors.root?.serverError && (
-  <p className="text-sm text-destructive">
-    {form.formState.errors.root.serverError.message}
-  </p>
-)}
+{
+  form.formState.errors.root?.serverError && (
+    <p className="text-sm text-destructive">
+      {form.formState.errors.root.serverError.message}
+    </p>
+  );
+}
 ```
 
 ### Validation timing
 
-| Strategy | RHF mode | TanStack validators key |
-|----------|----------|------------------------|
-| On submit only | `mode: 'onSubmit'` (default) | `onSubmit` |
-| On blur | `mode: 'onBlur'` | `onBlur` |
-| On change (after first submit) | `mode: 'onTouched'` | `onChange` + check `isTouched` |
-| On every keystroke | `mode: 'onChange'` | `onChange` |
+| Strategy                       | RHF mode                     | TanStack validators key        |
+| ------------------------------ | ---------------------------- | ------------------------------ |
+| On submit only                 | `mode: 'onSubmit'` (default) | `onSubmit`                     |
+| On blur                        | `mode: 'onBlur'`             | `onBlur`                       |
+| On change (after first submit) | `mode: 'onTouched'`          | `onChange` + check `isTouched` |
+| On every keystroke             | `mode: 'onChange'`           | `onChange`                     |
 
 Prefer **onSubmit** or **onTouched** for most forms — validating on every keystroke disrupts the user before they finish typing.
 
@@ -376,15 +405,21 @@ All form controls in UIKit are built on Base UI primitives that follow the WAI-A
 - **Required fields.** Pass `required` to the control and mark the label visually (`*` or "(required)").
 
 ```tsx
-<FormField name="email" render={({ field }) => (
-  <FormItem>
-    <FormLabel>
-      Email <span aria-hidden="true" className="text-destructive">*</span>
-    </FormLabel>
-    <FormControl>
-      <Input type="email" required aria-required="true" {...field} />
-    </FormControl>
-    <FormMessage />
-  </FormItem>
-)} />
+<FormField
+  name="email"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Email{' '}
+        <span aria-hidden="true" className="text-destructive">
+          *
+        </span>
+      </FormLabel>
+      <FormControl>
+        <Input type="email" required aria-required="true" {...field} />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
 ```

@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import { Chip } from '@acronis-platform/shadcn-uikit/react'
-import { CheckCircleIcon } from '@acronis-platform/shadcn-uikit'
-import { TagIcon, ZapIcon } from '../icons/missing-icons'
+import { useState } from 'react';
+import { Chip } from '@acronis-platform/shadcn-uikit/react';
+import { CheckCircleIcon } from '@acronis-platform/shadcn-uikit';
+import { TagIcon, ZapIcon } from '../icons/missing-icons';
 export function ChipWithIconsRemovable() {
   const [selectedChips, setSelectedChips] = useState([
     { id: 1, label: 'Design', icon: <TagIcon className="h-4 w-4" /> },
     { id: 2, label: 'Development', icon: <ZapIcon className="h-4 w-4" /> },
     { id: 3, label: 'Testing', icon: <CheckCircleIcon className="h-4 w-4" /> },
-  ])
+  ]);
 
   const handleRemoveSelectedChip = (id: number) => {
-    setSelectedChips(selectedChips.filter((chip) => chip.id !== id))
-  }
+    setSelectedChips(selectedChips.filter((chip) => chip.id !== id));
+  };
 
   return (
     <div className="space-y-2">
@@ -30,5 +30,5 @@ export function ChipWithIconsRemovable() {
         <p className="text-sm text-muted-foreground">All chips removed!</p>
       )}
     </div>
-  )
+  );
 }

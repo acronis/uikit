@@ -1,4 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function TabsDocumentation() {
   return (
@@ -41,9 +46,11 @@ export function TabsDocumentation() {
       <TabsContent value="faq" className="mt-4">
         <div className="space-y-4 rounded-lg border p-6">
           <h4 className="font-semibold">Frequently Asked Questions</h4>
-          <p className="text-sm text-muted-foreground">Find answers to common questions.</p>
+          <p className="text-sm text-muted-foreground">
+            Find answers to common questions.
+          </p>
         </div>
       </TabsContent>
     </Tabs>
-  )
+  );
 }

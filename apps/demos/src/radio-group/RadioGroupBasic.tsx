@@ -1,4 +1,8 @@
-import { Label, RadioGroup, RadioGroupItem } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Label,
+  RadioGroup,
+  RadioGroupItem,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function RadioGroupBasic() {
   return (
@@ -16,5 +20,5 @@ export function RadioGroupBasic() {
         <Label htmlFor="option-three">Option Three</Label>
       </div>
     </RadioGroup>
-  )
+  );
 }

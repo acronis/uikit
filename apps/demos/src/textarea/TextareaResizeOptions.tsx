@@ -1,4 +1,4 @@
-import { Textarea } from '@acronis-platform/shadcn-uikit/react'
+import { Textarea } from '@acronis-platform/shadcn-uikit/react';
 
 export function TextareaResizeOptions() {
   return (
@@ -8,13 +8,23 @@ export function TextareaResizeOptions() {
         <Textarea className="resize-none" placeholder="Cannot be resized" />
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium text-[#243143]">Vertical Resize</label>
-        <Textarea className="resize-y" placeholder="Can be resized vertically" />
+        <label className="text-sm font-medium text-[#243143]">
+          Vertical Resize
+        </label>
+        <Textarea
+          className="resize-y"
+          placeholder="Can be resized vertically"
+        />
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium text-[#243143]">Both Directions</label>
-        <Textarea className="resize" placeholder="Can be resized in both directions" />
+        <label className="text-sm font-medium text-[#243143]">
+          Both Directions
+        </label>
+        <Textarea
+          className="resize"
+          placeholder="Can be resized in both directions"
+        />
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Select,
   SelectContent,
@@ -21,5 +21,5 @@ export function BasicSelect() {
         <SelectItem value="pineapple">Pineapple</SelectItem>
       </SelectContent>
     </Select>
-  )
+  );
 }

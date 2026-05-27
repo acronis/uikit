@@ -1,4 +1,4 @@
-import { Spinner } from '@acronis-platform/shadcn-uikit/react'
+import { Spinner } from '@acronis-platform/shadcn-uikit/react';
 
 export function SpinnerColors() {
   return (
@@ -24,5 +24,5 @@ export function SpinnerColors() {
         <span className="text-xs text-muted-foreground">Purple</span>
       </div>
     </div>
-  )
+  );
 }

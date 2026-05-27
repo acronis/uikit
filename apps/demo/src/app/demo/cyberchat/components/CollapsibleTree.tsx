@@ -1,12 +1,15 @@
-import { ChevronDownIcon, ChevronRightIcon } from '@acronis-platform/shadcn-uikit'
-import type { Project } from '../types'
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+} from '@acronis-platform/shadcn-uikit';
+import type { Project } from '../types';
 
 interface CollapsibleTreeProps {
-  items: Project[]
-  expandedIds: string[]
-  onToggle: (id: string) => void
-  searchQuery?: string
-  level?: number
+  items: Project[];
+  expandedIds: string[];
+  onToggle: (id: string) => void;
+  searchQuery?: string;
+  level?: number;
 }
 
 export function CollapsibleTree({
@@ -16,14 +19,14 @@ export function CollapsibleTree({
   searchQuery = '',
   level = 0,
 }: CollapsibleTreeProps) {
-  const hasSearchQuery = searchQuery.trim().length > 0
+  const hasSearchQuery = searchQuery.trim().length > 0;
 
   return (
     <div className="space-y-1">
       {items.map((item) => {
-        const isExpanded = expandedIds.includes(item.id)
-        const hasChildren = item.children && item.children.length > 0
-        const shouldShowChildren = isExpanded || hasSearchQuery
+        const isExpanded = expandedIds.includes(item.id);
+        const hasChildren = item.children && item.children.length > 0;
+        const shouldShowChildren = isExpanded || hasSearchQuery;
 
         return (
           <div key={item.id}>
@@ -66,8 +69,8 @@ export function CollapsibleTree({
               </div>
             )}
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Button } from '@/components/react/components/button/button.tsx'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from '@/components/react/components/button/button.tsx';
 
 const meta: Meta<typeof Button> = {
   title: 'React/Button',
@@ -28,10 +28,10 @@ const meta: Meta<typeof Button> = {
       control: 'boolean',
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof Button>
+export default meta;
+type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
   args: {
@@ -39,63 +39,63 @@ export const Default: Story = {
     size: 'default',
     children: 'Default Button',
   },
-}
+};
 
 export const Secondary: Story = {
   args: {
     variant: 'secondary',
     children: 'Secondary Button',
   },
-}
+};
 
 export const Destructive: Story = {
   args: {
     variant: 'destructive',
     children: 'Destructive Button',
   },
-}
+};
 
 export const Outline: Story = {
   args: {
     variant: 'outline',
     children: 'Outline Button',
   },
-}
+};
 
 export const Ghost: Story = {
   args: {
     variant: 'ghost',
     children: 'Ghost Button',
   },
-}
+};
 
 export const Link: Story = {
   args: {
     variant: 'link',
     children: 'Link Button',
   },
-}
+};
 
 export const Success: Story = {
   args: {
     variant: 'success',
     children: 'Success Button',
   },
-}
+};
 
 export const Warning: Story = {
   args: {
     variant: 'warning',
     children: 'Warning Button',
   },
-}
+};
 
 export const Info: Story = {
   args: {
     variant: 'info',
     children: 'Info Button',
   },
-}
+};
 
 export const Small: Story = {
   args: {
@@ -103,7 +103,7 @@ export const Small: Story = {
     size: 'sm',
     children: 'Small Button',
   },
-}
+};
 
 export const Large: Story = {
   args: {
@@ -111,7 +111,7 @@ export const Large: Story = {
     size: 'lg',
     children: 'Large Button',
   },
-}
+};
 
 export const Disabled: Story = {
   args: {
@@ -119,4 +119,4 @@ export const Disabled: Story = {
     disabled: true,
     children: 'Disabled Button',
   },
-}
+};

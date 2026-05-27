@@ -1,4 +1,4 @@
-import { Progress } from '@acronis-platform/shadcn-uikit/react'
+import { Progress } from '@acronis-platform/shadcn-uikit/react';
 
 export function ProgressInCards() {
   return (
@@ -51,5 +51,5 @@ export function ProgressInCards() {
         </div>
       </div>
     </div>
-  )
+  );
 }

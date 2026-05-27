@@ -1,4 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function TabsBasic() {
   return (
@@ -18,5 +23,5 @@ export function TabsBasic() {
         <p>Content for Tab 3</p>
       </TabsContent>
     </Tabs>
-  )
+  );
 }

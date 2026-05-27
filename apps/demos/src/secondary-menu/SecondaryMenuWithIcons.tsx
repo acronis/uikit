@@ -1,22 +1,25 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import {
   SecondaryMenu,
   SecondaryMenuContent,
   SecondaryMenuGroup,
   SecondaryMenuItem,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 import {
   BellIcon,
   HomeFolderIcon,
   MailIcon,
   SettingsIcon,
   UserIcon,
-} from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit';
 export function SecondaryMenuWithIcons() {
-  const [activeItem, setActiveItem] = useState('home')
+  const [activeItem, setActiveItem] = useState('home');
 
   return (
-    <div className="border rounded-lg overflow-hidden" style={{ height: '400px' }}>
+    <div
+      className="border rounded-lg overflow-hidden"
+      style={{ height: '400px' }}
+    >
       <SecondaryMenu>
         <SecondaryMenuContent>
           <SecondaryMenuGroup>
@@ -59,5 +62,5 @@ export function SecondaryMenuWithIcons() {
         </SecondaryMenuContent>
       </SecondaryMenu>
     </div>
-  )
+  );
 }

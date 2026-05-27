@@ -43,11 +43,19 @@ try {
   );
 
   // Clean up intermediate file
-  try { unlinkSync(tempCssPath); } catch { /* ignore */ }
+  try {
+    unlinkSync(tempCssPath);
+  } catch {
+    /* ignore */
+  }
 
   console.log('✓ Generated full unpurged CSS bundle');
 } catch (error) {
   console.error('Error generating full CSS:', error);
-  try { unlinkSync(tempCssPath); } catch { /* ignore */ }
+  try {
+    unlinkSync(tempCssPath);
+  } catch {
+    /* ignore */
+  }
   process.exit(1);
 }

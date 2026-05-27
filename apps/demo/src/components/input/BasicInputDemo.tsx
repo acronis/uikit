@@ -18,5 +18,5 @@ export function BasicInputDemo() {
         </DemoWithCode>
       </div>
     </section>
-  )
+  );
 }

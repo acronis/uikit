@@ -1,11 +1,13 @@
-import { Spinner, Button } from '@acronis-platform/shadcn-uikit/react'
+import { Spinner, Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function SpinnerGrid() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="rounded-lg border p-6 flex flex-col items-center justify-center gap-3">
         <Spinner size="md" />
-        <p className="text-sm text-center text-muted-foreground">Data is loading</p>
+        <p className="text-sm text-center text-muted-foreground">
+          Data is loading
+        </p>
       </div>
       <div className="rounded-lg border p-6 flex flex-col items-center justify-center gap-3">
         <Spinner size="md" />
@@ -46,5 +48,5 @@ export function SpinnerGrid() {
         </div>
       </div>
     </div>
-  )
+  );
 }

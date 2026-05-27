@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { cn } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { cn } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   Command,
   CommandEmpty,
@@ -8,10 +8,14 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Popover, PopoverContent, PopoverTrigger } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
-import { CheckIcon, ChevronUpdownIcon } from '@acronis-platform/shadcn-uikit'
+import { CheckIcon, ChevronUpdownIcon } from '@acronis-platform/shadcn-uikit';
 const frameworks = [
   { value: 'next.js', label: 'Next.js' },
   { value: 'sveltekit', label: 'SvelteKit' },
@@ -21,7 +25,7 @@ const frameworks = [
   { value: 'react', label: 'React' },
   { value: 'vue', label: 'Vue' },
   { value: 'angular', label: 'Angular' },
-]
+];
 
 const languages = [
   { value: 'javascript', label: 'JavaScript' },
@@ -32,11 +36,11 @@ const languages = [
   { value: 'go', label: 'Go' },
   { value: 'rust', label: 'Rust' },
   { value: 'php', label: 'PHP' },
-]
+];
 
 export function ComboboxForm() {
-  const [frameworkOpen, setFrameworkOpen] = React.useState(false)
-  const [frameworkValue, setFrameworkValue] = React.useState('')
+  const [frameworkOpen, setFrameworkOpen] = React.useState(false);
+  const [frameworkValue, setFrameworkValue] = React.useState('');
 
   return (
     <div className="max-w-md space-y-4 rounded-lg border p-6">
@@ -57,7 +61,9 @@ export function ComboboxForm() {
             }
           >
             {frameworkValue
-              ? frameworks.find((framework) => framework.value === frameworkValue)?.label
+              ? frameworks.find(
+                  (framework) => framework.value === frameworkValue
+                )?.label
               : 'Select framework...'}
             <ChevronUpdownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </PopoverTrigger>
@@ -72,14 +78,18 @@ export function ComboboxForm() {
                       key={framework.value}
                       value={framework.value}
                       onSelect={(currentValue) => {
-                        setFrameworkValue(currentValue === frameworkValue ? '' : currentValue)
-                        setFrameworkOpen(false)
+                        setFrameworkValue(
+                          currentValue === frameworkValue ? '' : currentValue
+                        );
+                        setFrameworkOpen(false);
                       }}
                     >
                       <CheckIcon
                         className={cn(
                           'mr-2 h-4 w-4',
-                          frameworkValue === framework.value ? 'opacity-100' : 'opacity-0'
+                          frameworkValue === framework.value
+                            ? 'opacity-100'
+                            : 'opacity-0'
                         )}
                       />
                       {framework.label}
@@ -130,8 +140,10 @@ export function ComboboxForm() {
             </Command>
           </PopoverContent>
         </Popover>
-        <p className="text-sm text-gray-500">Select your preferred programming language.</p>
+        <p className="text-sm text-gray-500">
+          Select your preferred programming language.
+        </p>
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Field,
   FieldLabel,
@@ -7,9 +7,12 @@ import {
   FieldLegend,
   FieldGroup,
   FieldContent,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Switch } from '@acronis-platform/shadcn-uikit/react'
-import { RadioGroup, RadioGroupItem } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Switch } from '@acronis-platform/shadcn-uikit/react';
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function FieldSetDemo() {
   return (
@@ -22,7 +25,9 @@ export function FieldSetDemo() {
             <FieldLabel htmlFor="notif-email">
               <FieldContent>
                 <span>Email</span>
-                <FieldDescription>Account activity and updates.</FieldDescription>
+                <FieldDescription>
+                  Account activity and updates.
+                </FieldDescription>
               </FieldContent>
             </FieldLabel>
             <Switch id="notif-email" defaultChecked />
@@ -40,7 +45,9 @@ export function FieldSetDemo() {
             <FieldLabel htmlFor="notif-marketing">
               <FieldContent>
                 <span>Marketing</span>
-                <FieldDescription>New features and promotions.</FieldDescription>
+                <FieldDescription>
+                  New features and promotions.
+                </FieldDescription>
               </FieldContent>
             </FieldLabel>
             <Switch id="notif-marketing" />
@@ -67,5 +74,5 @@ export function FieldSetDemo() {
         </RadioGroup>
       </FieldSet>
     </div>
-  )
+  );
 }

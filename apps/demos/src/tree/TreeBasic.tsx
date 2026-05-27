@@ -1,4 +1,4 @@
-import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react'
+import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react';
 
 const organizationData: TreeNode[] = [
   {
@@ -45,8 +45,8 @@ const organizationData: TreeNode[] = [
       },
     ],
   },
-]
+];
 
 export function TreeBasic() {
-  return <Tree data={organizationData} defaultExpanded={['company']} />
+  return <Tree data={organizationData} defaultExpanded={['company']} />;
 }

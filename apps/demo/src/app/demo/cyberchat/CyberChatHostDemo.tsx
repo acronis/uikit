@@ -1,20 +1,24 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
-import { applyTheme, getCurrentTheme, type ThemeName } from '@uikit-utils/theme-switcher'
-import { CyberChatPage } from './CyberChatPage'
+import { useState, useRef, useCallback, useEffect } from 'react';
+import {
+  applyTheme,
+  getCurrentTheme,
+  type ThemeName,
+} from '@uikit-utils/theme-switcher';
+import { CyberChatPage } from './CyberChatPage';
 
 const THEMES: { value: ThemeName; label: string }[] = [
   { value: 'acronis-default', label: 'Default' },
   { value: 'acronis-ocean', label: 'Ocean' },
   { value: 'purple', label: 'White Label' },
   { value: 'cyber-chat', label: 'Cyber Chat' },
-]
+];
 
 function getThemeClasses(el: HTMLElement | null): string {
-  if (!el) return '—'
-  const classes = Array.from(el.classList).filter(
-    (c) => c.startsWith('theme-')
-  )
-  return classes.length ? classes.join(' ') : '—'
+  if (!el) return '—';
+  const classes = Array.from(el.classList).filter((c) =>
+    c.startsWith('theme-')
+  );
+  return classes.length ? classes.join(' ') : '—';
 }
 
 /**
@@ -25,33 +29,39 @@ function getThemeClasses(el: HTMLElement | null): string {
  * in production with shadow DOM roots.
  */
 export function CyberChatHostDemo() {
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const [activeTheme, setActiveTheme] = useState<ThemeName>(() => getCurrentTheme() ?? 'acronis-default')
-  const [applyToContainer, setApplyToContainer] = useState(true)
-  const [documentClasses, setDocumentClasses] = useState('—')
-  const [containerClasses, setContainerClasses] = useState('—')
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [activeTheme, setActiveTheme] = useState<ThemeName>(
+    () => getCurrentTheme() ?? 'acronis-default'
+  );
+  const [applyToContainer, setApplyToContainer] = useState(true);
+  const [documentClasses, setDocumentClasses] = useState('—');
+  const [containerClasses, setContainerClasses] = useState('—');
 
-  const applySelectedTheme = useCallback((theme: ThemeName, toContainer: boolean) => {
-    const extraRoots = (toContainer && containerRef.current) ? [containerRef.current] : []
-    applyTheme(theme, true, extraRoots)
-    setActiveTheme(theme)
-    setDocumentClasses(getThemeClasses(document.documentElement))
-    setContainerClasses(getThemeClasses(containerRef.current))
-  }, [])
+  const applySelectedTheme = useCallback(
+    (theme: ThemeName, toContainer: boolean) => {
+      const extraRoots =
+        toContainer && containerRef.current ? [containerRef.current] : [];
+      applyTheme(theme, true, extraRoots);
+      setActiveTheme(theme);
+      setDocumentClasses(getThemeClasses(document.documentElement));
+      setContainerClasses(getThemeClasses(containerRef.current));
+    },
+    []
+  );
 
   useEffect(() => {
-    applySelectedTheme(activeTheme, applyToContainer)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    applySelectedTheme(activeTheme, applyToContainer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleThemeChange = (theme: ThemeName) => {
-    applySelectedTheme(theme, applyToContainer)
-  }
+    applySelectedTheme(theme, applyToContainer);
+  };
 
   const handleContainerToggle = (checked: boolean) => {
-    setApplyToContainer(checked)
-    applySelectedTheme(activeTheme, checked)
-  }
+    setApplyToContainer(checked);
+    applySelectedTheme(activeTheme, checked);
+  };
 
   return (
     <div className="flex flex-col h-screen bg-muted">
@@ -87,7 +97,11 @@ export function CyberChatHostDemo() {
           />
           Apply to inner container
           <span className="text-xs text-muted-foreground">
-            ({applyToContainer ? 'extraRoots enabled' : 'document.documentElement only'})
+            (
+            {applyToContainer
+              ? 'extraRoots enabled'
+              : 'document.documentElement only'}
+            )
           </span>
         </label>
       </div>
@@ -111,5 +125,5 @@ export function CyberChatHostDemo() {
         </div>
       </div>
     </div>
-  )
+  );
 }

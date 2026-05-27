@@ -1,4 +1,4 @@
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
 
 export function SeparatorVertical() {
   return (
@@ -9,5 +9,5 @@ export function SeparatorVertical() {
       <Separator orientation="vertical" />
       <div className="text-sm">Item 3</div>
     </div>
-  )
+  );
 }

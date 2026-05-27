@@ -1,30 +1,33 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   type CarouselApi,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Card, CardContent } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { ChevronLeftIcon, ChevronRightIcon } from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Card, CardContent } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from '@acronis-platform/shadcn-uikit';
 export function CarouselWithDots() {
-  const [api, setApi] = React.useState<CarouselApi>()
-  const [current, setCurrent] = React.useState(0)
-  const [count, setCount] = React.useState(0)
+  const [api, setApi] = React.useState<CarouselApi>();
+  const [current, setCurrent] = React.useState(0);
+  const [count, setCount] = React.useState(0);
 
   React.useEffect(() => {
     if (!api) {
-      return
+      return;
     }
 
-    setCount(api.scrollSnapList().length)
-    setCurrent(api.selectedScrollSnap() + 1)
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
 
     api.on('select', () => {
-      setCurrent(api.selectedScrollSnap() + 1)
-    })
-  }, [api])
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  }, [api]);
 
   return (
     <div className="w-full max-w-xs mx-auto">
@@ -80,5 +83,5 @@ export function CarouselWithDots() {
         </Button>
       </div>
     </div>
-  )
+  );
 }

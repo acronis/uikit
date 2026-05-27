@@ -7,8 +7,8 @@ import {
   WidgetFooter,
   WidgetValue,
   WidgetLabel,
-} from '@acronis-platform/shadcn-uikit/react'
-import { TrendingUpIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit/react';
+import { TrendingUpIcon } from '../icons/missing-icons';
 export function WidgetInteractive() {
   return (
     <div className="flex gap-4 flex-wrap">
@@ -40,5 +40,5 @@ export function WidgetInteractive() {
         </WidgetContent>
       </Widget>
     </div>
-  )
+  );
 }

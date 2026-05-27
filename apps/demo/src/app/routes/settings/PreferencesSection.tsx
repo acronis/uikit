@@ -1,33 +1,49 @@
-import * as React from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Label } from '@acronis-platform/shadcn-uikit/react'
-import { Switch } from '@acronis-platform/shadcn-uikit/react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@acronis-platform/shadcn-uikit/react'
-import type { UserPreferences } from '../../types'
-import { toast } from 'sonner'
+import * as React from 'react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Label } from '@acronis-platform/shadcn-uikit/react';
+import { Switch } from '@acronis-platform/shadcn-uikit/react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@acronis-platform/shadcn-uikit/react';
+import type { UserPreferences } from '../../types';
+import { toast } from 'sonner';
 
 interface PreferencesSectionProps {
-  preferences: UserPreferences
-  onUpdate: (preferences: Partial<UserPreferences>) => Promise<void>
-  isLoading?: boolean
+  preferences: UserPreferences;
+  onUpdate: (preferences: Partial<UserPreferences>) => Promise<void>;
+  isLoading?: boolean;
 }
 
-export function PreferencesSection({ preferences, onUpdate, isLoading = false }: PreferencesSectionProps) {
-  const [localPreferences, setLocalPreferences] = React.useState(preferences)
-  const [isSaving, setIsSaving] = React.useState(false)
+export function PreferencesSection({
+  preferences,
+  onUpdate,
+  isLoading = false,
+}: PreferencesSectionProps) {
+  const [localPreferences, setLocalPreferences] = React.useState(preferences);
+  const [isSaving, setIsSaving] = React.useState(false);
 
   const handleSave = async () => {
-    setIsSaving(true)
+    setIsSaving(true);
     try {
-      await onUpdate(localPreferences)
-      toast.success('Preferences updated successfully')
+      await onUpdate(localPreferences);
+      toast.success('Preferences updated successfully');
     } catch {
-      toast.error('Failed to update preferences')
+      toast.error('Failed to update preferences');
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   return (
     <Card>
@@ -44,7 +60,10 @@ export function PreferencesSection({ preferences, onUpdate, isLoading = false }:
             <Select
               value={localPreferences.theme}
               onValueChange={(value) =>
-                setLocalPreferences({ ...localPreferences, theme: value as 'light' | 'dark' | 'system' })
+                setLocalPreferences({
+                  ...localPreferences,
+                  theme: value as 'light' | 'dark' | 'system',
+                })
               }
               disabled={isLoading || isSaving}
             >
@@ -87,7 +106,10 @@ export function PreferencesSection({ preferences, onUpdate, isLoading = false }:
               onValueChange={(value) =>
                 setLocalPreferences({
                   ...localPreferences,
-                  display: { ...localPreferences.display, density: value as 'comfortable' | 'compact' }
+                  display: {
+                    ...localPreferences.display,
+                    density: value as 'comfortable' | 'compact',
+                  },
                 })
               }
               disabled={isLoading || isSaving}
@@ -119,7 +141,10 @@ export function PreferencesSection({ preferences, onUpdate, isLoading = false }:
               onCheckedChange={(checked) =>
                 setLocalPreferences({
                   ...localPreferences,
-                  notifications: { ...localPreferences.notifications, email: checked }
+                  notifications: {
+                    ...localPreferences.notifications,
+                    email: checked,
+                  },
                 })
               }
               disabled={isLoading || isSaving}
@@ -139,7 +164,10 @@ export function PreferencesSection({ preferences, onUpdate, isLoading = false }:
               onCheckedChange={(checked) =>
                 setLocalPreferences({
                   ...localPreferences,
-                  notifications: { ...localPreferences.notifications, push: checked }
+                  notifications: {
+                    ...localPreferences.notifications,
+                    push: checked,
+                  },
                 })
               }
               disabled={isLoading || isSaving}
@@ -147,7 +175,9 @@ export function PreferencesSection({ preferences, onUpdate, isLoading = false }:
           </div>
 
           <div>
-            <Label htmlFor="notification-frequency">Notification Frequency</Label>
+            <Label htmlFor="notification-frequency">
+              Notification Frequency
+            </Label>
             <Select
               value={localPreferences.notifications.frequency}
               onValueChange={(value) =>
@@ -155,8 +185,8 @@ export function PreferencesSection({ preferences, onUpdate, isLoading = false }:
                   ...localPreferences,
                   notifications: {
                     ...localPreferences.notifications,
-                    frequency: value as 'realtime' | 'daily' | 'weekly'
-                  }
+                    frequency: value as 'realtime' | 'daily' | 'weekly',
+                  },
                 })
               }
               disabled={isLoading || isSaving}
@@ -178,5 +208,5 @@ export function PreferencesSection({ preferences, onUpdate, isLoading = false }:
         </Button>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import {
   Form,
   FormControl,
@@ -10,10 +10,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Textarea } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Textarea } from '@acronis-platform/shadcn-uikit/react';
 
 const formSchema = z.object({
   username: z
@@ -33,7 +33,7 @@ const formSchema = z.object({
       message: 'Bio must not be longer than 160 characters.',
     })
     .optional(),
-})
+});
 
 export function FormProfile() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -43,11 +43,11 @@ export function FormProfile() {
       email: '',
       bio: '',
     },
-  })
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    alert(JSON.stringify(values, null, 2))
+    console.log(values);
+    alert(JSON.stringify(values, null, 2));
   }
 
   return (
@@ -64,7 +64,8 @@ export function FormProfile() {
                   <Input placeholder="johndoe" {...field} />
                 </FormControl>
                 <FormDescription>
-                  This is your public display name. It can be your real name or a pseudonym.
+                  This is your public display name. It can be your real name or
+                  a pseudonym.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -77,7 +78,11 @@ export function FormProfile() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="john@example.com" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="john@example.com"
+                    {...field}
+                  />
                 </FormControl>
                 <FormDescription>
                   We&apos;ll never share your email with anyone else.
@@ -99,7 +104,9 @@ export function FormProfile() {
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>You can write up to 160 characters.</FormDescription>
+                <FormDescription>
+                  You can write up to 160 characters.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -108,5 +115,5 @@ export function FormProfile() {
         </form>
       </Form>
     </div>
-  )
+  );
 }

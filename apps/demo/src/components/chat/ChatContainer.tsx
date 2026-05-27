@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@acronis-platform/shadcn-uikit/react'
+import { cn } from '@acronis-platform/shadcn-uikit/react';
 import { ChatContainerProps } from '../../lib/chat/types';
 import { ChatInterface } from './ChatInterface';
 
@@ -9,14 +9,14 @@ export function ChatContainer({
   onMessageSent,
   onModeChange,
   initialMode = 'eliza',
-  maxHeight
+  maxHeight,
 }: ChatContainerProps) {
   const containerClasses = cn(
     'bg-background border rounded-lg shadow-xs flex flex-col',
     {
       'h-full': layout === 'full',
       'h-96': layout === 'dialog',
-      'h-80 max-h-96': layout === 'popover'
+      'h-80 max-h-96': layout === 'popover',
     },
     className
   );

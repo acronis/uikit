@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { useState } from 'react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,14 +12,14 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   DropdownMenuShortcut,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 import {
   ChevronDownIcon,
   CloudIcon,
   MailIcon,
   MessagesIcon,
   UserIcon,
-} from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit';
 import {
   CreditCardIcon,
   ExternalLinkIcon,
@@ -27,16 +27,16 @@ import {
   LogOutIcon,
   PlusCircleIcon,
   UserPlusIcon,
-} from '../icons/missing-icons'
+} from '../icons/missing-icons';
 export function DropdownMenuComplex() {
-  const [showStatusBar, setShowStatusBar] = useState(true)
-  const [showActivityBar, setShowActivityBar] = useState(false)
+  const [showStatusBar, setShowStatusBar] = useState(true);
+  const [showActivityBar, setShowActivityBar] = useState(false);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger render={<Button variant="outline" />}>
-          Advanced Menu
-          <ChevronDownIcon className="ml-2 h-4 w-4" />
+        Advanced Menu
+        <ChevronDownIcon className="ml-2 h-4 w-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-64">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -54,7 +54,10 @@ export function DropdownMenuComplex() {
         <DropdownMenuSeparator />
         <DropdownMenuLabel>Preferences</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuCheckboxItem checked={showStatusBar} onCheckedChange={setShowStatusBar}>
+        <DropdownMenuCheckboxItem
+          checked={showStatusBar}
+          onCheckedChange={setShowStatusBar}
+        >
           <span>Status Bar</span>
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
@@ -105,5 +108,5 @@ export function DropdownMenuComplex() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

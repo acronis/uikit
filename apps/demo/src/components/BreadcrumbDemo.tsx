@@ -1,25 +1,26 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   BreadcrumbBasic,
   BreadcrumbWithIcons,
   BreadcrumbWithEllipsis,
   BreadcrumbIconsEllipsis,
-} from '@acronis-platform/shadcn-uikit-demos/breadcrumb'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/breadcrumb';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import breadcrumbBasicCode from '../../../demos/src/breadcrumb/BreadcrumbBasic.tsx?raw'
-import breadcrumbWithIconsCode from '../../../demos/src/breadcrumb/BreadcrumbWithIcons.tsx?raw'
-import breadcrumbWithEllipsisCode from '../../../demos/src/breadcrumb/BreadcrumbEllipsis.tsx?raw'
-import breadcrumbIconsEllipsisCode from '../../../demos/src/breadcrumb/BreadcrumbIconsEllipsis.tsx?raw'
+import breadcrumbBasicCode from '../../../demos/src/breadcrumb/BreadcrumbBasic.tsx?raw';
+import breadcrumbWithIconsCode from '../../../demos/src/breadcrumb/BreadcrumbWithIcons.tsx?raw';
+import breadcrumbWithEllipsisCode from '../../../demos/src/breadcrumb/BreadcrumbEllipsis.tsx?raw';
+import breadcrumbIconsEllipsisCode from '../../../demos/src/breadcrumb/BreadcrumbIconsEllipsis.tsx?raw';
 
 export function BreadcrumbDemo() {
   return (
     <section className="demo-section">
       <h2>Breadcrumb Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Used to help the user to see the entire path from the parent section to the section where
-        the user is currently located with the possibility to navigate to any level back.
+        Used to help the user to see the entire path from the parent section to
+        the section where the user is currently located with the possibility to
+        navigate to any level back.
       </p>
 
       <div className="space-y-8">
@@ -56,5 +57,5 @@ export function BreadcrumbDemo() {
         </DemoWithCode>
       </div>
     </section>
-  )
+  );
 }

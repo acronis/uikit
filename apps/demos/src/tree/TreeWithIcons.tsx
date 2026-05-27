@@ -1,11 +1,11 @@
-import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react'
+import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react';
 import {
   FileIcon,
   FileTextIcon,
   FolderIcon,
   ImageIcon,
-} from '@acronis-platform/shadcn-uikit'
-import { MusicIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit';
+import { MusicIcon } from '../icons/missing-icons';
 const fileSystemData: TreeNode[] = [
   {
     id: '1',
@@ -103,8 +103,8 @@ const fileSystemData: TreeNode[] = [
       },
     ],
   },
-]
+];
 
 export function TreeWithIcons() {
-  return <Tree data={fileSystemData} showIcon defaultExpanded={['1', '2']} />
+  return <Tree data={fileSystemData} showIcon defaultExpanded={['1', '2']} />;
 }

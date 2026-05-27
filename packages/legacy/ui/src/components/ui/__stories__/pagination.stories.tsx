@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   Pagination,
   PaginationContent,
@@ -7,17 +7,17 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '../pagination'
+} from '../pagination';
 
 const meta = {
   title: 'UI/Pagination',
   component: Pagination,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof Pagination>
+} satisfies Meta<typeof Pagination>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -30,7 +30,9 @@ export const Default: Story = {
           <PaginationLink href="#">1</PaginationLink>
         </PaginationItem>
         <PaginationItem>
-          <PaginationLink href="#" isActive>2</PaginationLink>
+          <PaginationLink href="#" isActive>
+            2
+          </PaginationLink>
         </PaginationItem>
         <PaginationItem>
           <PaginationLink href="#">3</PaginationLink>
@@ -41,7 +43,7 @@ export const Default: Story = {
       </PaginationContent>
     </Pagination>
   ),
-}
+};
 
 export const WithEllipsis: Story = {
   render: () => (
@@ -60,7 +62,9 @@ export const WithEllipsis: Story = {
           <PaginationLink href="#">4</PaginationLink>
         </PaginationItem>
         <PaginationItem>
-          <PaginationLink href="#" isActive>5</PaginationLink>
+          <PaginationLink href="#" isActive>
+            5
+          </PaginationLink>
         </PaginationItem>
         <PaginationItem>
           <PaginationLink href="#">6</PaginationLink>
@@ -77,7 +81,7 @@ export const WithEllipsis: Story = {
       </PaginationContent>
     </Pagination>
   ),
-}
+};
 
 export const FirstPage: Story = {
   render: () => (
@@ -87,7 +91,9 @@ export const FirstPage: Story = {
           <PaginationPrevious href="#" aria-disabled />
         </PaginationItem>
         <PaginationItem>
-          <PaginationLink href="#" isActive>1</PaginationLink>
+          <PaginationLink href="#" isActive>
+            1
+          </PaginationLink>
         </PaginationItem>
         <PaginationItem>
           <PaginationLink href="#">2</PaginationLink>
@@ -107,4 +113,4 @@ export const FirstPage: Story = {
       </PaginationContent>
     </Pagination>
   ),
-}
+};

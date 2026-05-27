@@ -1,4 +1,4 @@
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
 
 export function SeparatorInCards() {
   return (
@@ -6,19 +6,25 @@ export function SeparatorInCards() {
       <div className="space-y-4">
         <div>
           <h4 className="font-semibold">Card Header</h4>
-          <p className="text-sm text-muted-foreground">This is the header section</p>
+          <p className="text-sm text-muted-foreground">
+            This is the header section
+          </p>
         </div>
         <Separator />
         <div>
           <h4 className="font-semibold">Card Content</h4>
-          <p className="text-sm text-muted-foreground">This is the main content area</p>
+          <p className="text-sm text-muted-foreground">
+            This is the main content area
+          </p>
         </div>
         <Separator />
         <div>
           <h4 className="font-semibold">Card Footer</h4>
-          <p className="text-sm text-muted-foreground">This is the footer section</p>
+          <p className="text-sm text-muted-foreground">
+            This is the footer section
+          </p>
         </div>
       </div>
     </div>
-  )
+  );
 }

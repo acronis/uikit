@@ -1,6 +1,6 @@
-import * as React from 'react'
+import * as React from 'react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 /**
  * AuthLayout — A centered card layout for login/signup/forgot-password flows.
@@ -25,8 +25,8 @@ const AuthLayout = React.forwardRef<
     )}
     {...props}
   />
-))
-AuthLayout.displayName = 'AuthLayout'
+));
+AuthLayout.displayName = 'AuthLayout';
 
 const AuthLayoutCard = React.forwardRef<
   HTMLDivElement,
@@ -40,8 +40,8 @@ const AuthLayoutCard = React.forwardRef<
     )}
     {...props}
   />
-))
-AuthLayoutCard.displayName = 'AuthLayoutCard'
+));
+AuthLayoutCard.displayName = 'AuthLayoutCard';
 
 const AuthLayoutLogo = React.forwardRef<
   HTMLDivElement,
@@ -52,8 +52,8 @@ const AuthLayoutLogo = React.forwardRef<
     className={cn('mb-6 flex justify-center', className)}
     {...props}
   />
-))
-AuthLayoutLogo.displayName = 'AuthLayoutLogo'
+));
+AuthLayoutLogo.displayName = 'AuthLayoutLogo';
 
 const AuthLayoutFooter = React.forwardRef<
   HTMLDivElement,
@@ -61,13 +61,10 @@ const AuthLayoutFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      'mt-6 text-center text-sm text-muted-foreground',
-      className
-    )}
+    className={cn('mt-6 text-center text-sm text-muted-foreground', className)}
     {...props}
   />
-))
-AuthLayoutFooter.displayName = 'AuthLayoutFooter'
+));
+AuthLayoutFooter.displayName = 'AuthLayoutFooter';
 
-export { AuthLayout, AuthLayoutCard, AuthLayoutLogo, AuthLayoutFooter }
+export { AuthLayout, AuthLayoutCard, AuthLayoutLogo, AuthLayoutFooter };

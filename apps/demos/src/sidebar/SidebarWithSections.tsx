@@ -8,9 +8,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-} from '@acronis-platform/shadcn-uikit/react'
-import { HomeFolderIcon, SearchIcon, SettingsIcon } from '@acronis-platform/shadcn-uikit'
-import { BarChartIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  HomeFolderIcon,
+  SearchIcon,
+  SettingsIcon,
+} from '@acronis-platform/shadcn-uikit';
+import { BarChartIcon } from '../icons/missing-icons';
 export function SidebarWithSections() {
   return (
     <div className="h-[400px] border rounded-lg overflow-hidden flex">
@@ -67,5 +71,5 @@ export function SidebarWithSections() {
         </div>
       </SidebarProvider>
     </div>
-  )
+  );
 }

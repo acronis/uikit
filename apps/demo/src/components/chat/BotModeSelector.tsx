@@ -1,30 +1,30 @@
 import React from 'react';
 import { BotModeSelectorProps, BotMode } from '@/lib/chat/types';
 import { Button } from '@acronis-platform/shadcn-uikit/react';
-import { cn } from '@acronis-platform/shadcn-uikit/react'
+import { cn } from '@acronis-platform/shadcn-uikit/react';
 
 const BOT_INFO = {
   eliza: {
     name: 'ELIZA',
     avatar: '🧑‍⚕️',
-    description: 'Classic psychotherapist'
+    description: 'Classic psychotherapist',
   },
   hal9000: {
     name: 'HAL 9000',
     avatar: '🔴',
-    description: '2001: A Space Odyssey AI'
+    description: '2001: A Space Odyssey AI',
   },
   conversation: {
     name: 'ELIZA ↔ HAL',
     avatar: '💬',
-    description: 'Watch them talk'
-  }
+    description: 'Watch them talk',
+  },
 };
 
 export function BotModeSelector({
   currentMode,
   onModeChange,
-  className
+  className,
 }: BotModeSelectorProps) {
   return (
     <div className={cn('flex items-center gap-2', className)}>

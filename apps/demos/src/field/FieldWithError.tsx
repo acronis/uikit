@@ -1,11 +1,11 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Field,
   FieldLabel,
   FieldDescription,
   FieldError,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
 
 export function FieldWithError() {
   return (
@@ -19,7 +19,9 @@ export function FieldWithError() {
           defaultValue="notanemail"
           aria-invalid
         />
-        <FieldError errors={[{ message: 'Please enter a valid email address.' }]} />
+        <FieldError
+          errors={[{ message: 'Please enter a valid email address.' }]}
+        />
       </Field>
 
       {/* Multiple errors */}
@@ -40,5 +42,5 @@ export function FieldWithError() {
         />
       </Field>
     </div>
-  )
+  );
 }

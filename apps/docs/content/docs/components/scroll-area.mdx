@@ -11,9 +11,7 @@ import { ScrollArea, ScrollBar } from '@acronis-platform/shadcn-uikit';
 
 ```tsx
 <ScrollArea className="h-72 w-48 rounded-md border">
-  <div className="p-4">
-    {/* Scrollable content */}
-  </div>
+  <div className="p-4">{/* Scrollable content */}</div>
 </ScrollArea>
 ```
 
@@ -27,9 +25,7 @@ Add a horizontal `ScrollBar` to enable horizontal scroll:
 
 ```tsx
 <ScrollArea className="w-96 whitespace-nowrap rounded-md border">
-  <div className="flex gap-4 p-4">
-    {/* Wide content */}
-  </div>
+  <div className="flex gap-4 p-4">{/* Wide content */}</div>
   <ScrollBar orientation="horizontal" />
 </ScrollArea>
 ```
@@ -44,7 +40,7 @@ Wraps `ScrollArea.Root` from Base UI. Accepts all props from the underlying prim
 
 Controls scrollbar orientation and visibility.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
+| Prop          | Type                           | Default      | Description                   |
+| ------------- | ------------------------------ | ------------ | ----------------------------- |
 | `orientation` | `"vertical"` \| `"horizontal"` | `"vertical"` | The scrollbar axis direction. |
-| `className` | `string` | — | Additional CSS class names. |
+| `className`   | `string`                       | —            | Additional CSS class names.   |

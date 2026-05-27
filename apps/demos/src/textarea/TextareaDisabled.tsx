@@ -1,4 +1,4 @@
-import { Textarea } from '@acronis-platform/shadcn-uikit/react'
+import { Textarea } from '@acronis-platform/shadcn-uikit/react';
 
 export function TextareaDisabled() {
   return (
@@ -10,5 +10,5 @@ export function TextareaDisabled() {
         disabled
       />
     </div>
-  )
+  );
 }

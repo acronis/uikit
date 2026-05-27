@@ -1,13 +1,17 @@
-import * as React from 'react'
-import { format } from 'date-fns'
-import { cn } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Calendar } from '@acronis-platform/shadcn-uikit/react'
-import { Popover, PopoverContent, PopoverTrigger } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { format } from 'date-fns';
+import { cn } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Calendar } from '@acronis-platform/shadcn-uikit/react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
-import { CalendarIcon } from '@acronis-platform/shadcn-uikit'
+import { CalendarIcon } from '@acronis-platform/shadcn-uikit';
 export function DatePickerBasic() {
-  const [date, setDate] = React.useState<Date>()
+  const [date, setDate] = React.useState<Date>();
 
   return (
     <Popover>
@@ -26,8 +30,13 @@ export function DatePickerBasic() {
         {date ? format(date, 'PPP') : <span>Pick a date</span>}
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          initialFocus
+        />
       </PopoverContent>
     </Popover>
-  )
+  );
 }

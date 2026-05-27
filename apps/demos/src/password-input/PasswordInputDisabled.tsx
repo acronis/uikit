@@ -1,5 +1,5 @@
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { HideIcon } from '@acronis-platform/shadcn-uikit'
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { HideIcon } from '@acronis-platform/shadcn-uikit';
 export function PasswordInputDisabled() {
   return (
     <div className="space-y-4">
@@ -47,5 +47,5 @@ export function PasswordInputDisabled() {
         </p>
       </div>
     </div>
-  )
+  );
 }

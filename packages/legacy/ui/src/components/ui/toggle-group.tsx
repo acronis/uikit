@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { ToggleGroup as ToggleGroupPrimitive, Toggle } from '@base-ui/react'
+import * as React from 'react';
+import { ToggleGroup as ToggleGroupPrimitive, Toggle } from '@base-ui/react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 const ToggleGroup = React.forwardRef<
   React.ComponentRef<typeof ToggleGroupPrimitive>,
@@ -16,8 +16,8 @@ const ToggleGroup = React.forwardRef<
     )}
     {...props}
   />
-))
-ToggleGroup.displayName = 'ToggleGroup'
+));
+ToggleGroup.displayName = 'ToggleGroup';
 
 const ToggleGroupItem = React.forwardRef<
   React.ComponentRef<typeof Toggle>,
@@ -38,7 +38,7 @@ const ToggleGroupItem = React.forwardRef<
     )}
     {...props}
   />
-))
-ToggleGroupItem.displayName = 'ToggleGroupItem'
+));
+ToggleGroupItem.displayName = 'ToggleGroupItem';
 
-export { ToggleGroup, ToggleGroupItem }
+export { ToggleGroup, ToggleGroupItem };

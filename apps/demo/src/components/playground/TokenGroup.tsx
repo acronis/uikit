@@ -1,21 +1,27 @@
-import { ColorToken } from '@/types/playground'
-import { ColorEditor } from './ColorEditor'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@acronis-platform/shadcn-uikit/react'
+import { ColorToken } from '@/types/playground';
+import { ColorEditor } from './ColorEditor';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@acronis-platform/shadcn-uikit/react';
 
 interface TokenItem {
-  key: string
-  label: string
-  description?: string
-  contrastWith?: string
+  key: string;
+  label: string;
+  description?: string;
+  contrastWith?: string;
 }
 
 interface TokenGroupProps {
-  title: string
-  description?: string
-  tokens: Record<string, ColorToken>
-  items: TokenItem[]
-  onChange: (key: string, color: ColorToken) => void
-  className?: string
+  title: string;
+  description?: string;
+  tokens: Record<string, ColorToken>;
+  items: TokenItem[];
+  onChange: (key: string, color: ColorToken) => void;
+  className?: string;
 }
 
 export const TokenGroup: React.FC<TokenGroupProps> = ({
@@ -40,10 +46,12 @@ export const TokenGroup: React.FC<TokenGroupProps> = ({
             description={item.description}
             color={tokens[item.key]}
             onChange={(color) => onChange(item.key, color)}
-            contrastWith={item.contrastWith ? tokens[item.contrastWith] : undefined}
+            contrastWith={
+              item.contrastWith ? tokens[item.contrastWith] : undefined
+            }
           />
         ))}
       </CardContent>
     </Card>
-  )
-}
+  );
+};

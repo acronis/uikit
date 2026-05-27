@@ -1,4 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function TabsDisabled() {
   return (
@@ -20,5 +25,5 @@ export function TabsDisabled() {
         <p>Another available tab.</p>
       </TabsContent>
     </Tabs>
-  )
+  );
 }

@@ -1,8 +1,27 @@
-import * as React from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@acronis-platform/shadcn-uikit/react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@acronis-platform/shadcn-uikit/react'
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@acronis-platform/shadcn-uikit/react'
-import { getChartColors, addColorsToData, CHART_COLORS_SEMANTIC } from '@/lib/chart-colors'
+import * as React from 'react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  getChartColors,
+  addColorsToData,
+  CHART_COLORS_SEMANTIC,
+} from '@/lib/chart-colors';
 import {
   LineChart,
   Line,
@@ -24,7 +43,7 @@ import {
   Scatter,
   ComposedChart,
   Treemap,
-} from 'recharts'
+} from 'recharts';
 
 const lineData = [
   { month: 'Jan', sales: 4000, revenue: 2400, profit: 2400 },
@@ -34,7 +53,7 @@ const lineData = [
   { month: 'May', sales: 1890, revenue: 4800, profit: 2181 },
   { month: 'Jun', sales: 2390, revenue: 3800, profit: 2500 },
   { month: 'Jul', sales: 3490, revenue: 4300, profit: 2100 },
-]
+];
 
 const areaData = [
   { date: '2024-01-01', desktop: 186, mobile: 80, tablet: 30 },
@@ -43,7 +62,7 @@ const areaData = [
   { date: '2024-01-04', desktop: 373, mobile: 290, tablet: 80 },
   { date: '2024-01-05', desktop: 309, mobile: 330, tablet: 100 },
   { date: '2024-01-06', desktop: 245, mobile: 380, tablet: 120 },
-]
+];
 
 const barData = [
   { product: 'Product A', sales: 4000, returns: 240 },
@@ -51,14 +70,14 @@ const barData = [
   { product: 'Product C', sales: 2000, returns: 980 },
   { product: 'Product D', sales: 2780, returns: 390 },
   { product: 'Product E', sales: 1890, returns: 480 },
-]
+];
 
 const pieData = addColorsToData([
   { name: 'Desktop', value: 400 },
   { name: 'Mobile', value: 300 },
   { name: 'Tablet', value: 200 },
   { name: 'Other', value: 100 },
-])
+]);
 
 const radialData = addColorsToData(
   [
@@ -69,7 +88,7 @@ const radialData = addColorsToData(
     { name: '40-49', uv: 8.63 },
   ],
   'fill'
-)
+);
 
 const scatterData = [
   { x: 100, y: 200, z: 200 },
@@ -78,7 +97,7 @@ const scatterData = [
   { x: 140, y: 250, z: 280 },
   { x: 150, y: 400, z: 500 },
   { x: 110, y: 280, z: 200 },
-]
+];
 
 const composedData = [
   { name: 'Jan', uv: 4000, pv: 2400, amt: 2400 },
@@ -88,7 +107,7 @@ const composedData = [
   { name: 'May', uv: 1890, pv: 4800, amt: 2181 },
   { name: 'Jun', uv: 2390, pv: 3800, amt: 2500 },
   { name: 'Jul', uv: 3490, pv: 4300, amt: 2100 },
-]
+];
 
 const treemapData = [
   {
@@ -150,27 +169,27 @@ const treemapData = [
       },
     ],
   },
-]
+];
 
 const CustomTreemapContent = (props: any) => {
-  const { x, y, width, height, name, status, description } = props
+  const { x, y, width, height, name, status, description } = props;
 
   const colorMap: Record<string, string> = {
     danger: CHART_COLORS_SEMANTIC.danger,
     critical: CHART_COLORS_SEMANTIC.critical,
     warning: CHART_COLORS_SEMANTIC.warning,
     success: CHART_COLORS_SEMANTIC.success,
-  }
+  };
 
   const textColorMap: Record<string, string> = {
     danger: '#FFFFFF',
     critical: 'rgba(36, 49, 67, 0.9)',
     warning: 'rgba(36, 49, 67, 0.9)',
     success: 'rgba(36, 49, 67, 0.9)',
-  }
+  };
 
-  const fill = colorMap[status] || CHART_COLORS_SEMANTIC.primary
-  const textColor = textColorMap[status] || '#FFFFFF'
+  const fill = colorMap[status] || CHART_COLORS_SEMANTIC.primary;
+  const textColor = textColorMap[status] || '#FFFFFF';
 
   return (
     <g>
@@ -219,12 +238,12 @@ const CustomTreemapContent = (props: any) => {
         </text>
       )}
     </g>
-  )
-}
+  );
+};
 
 export function ChartAll() {
-  const lineColors = getChartColors(3)
-  const areaColors = getChartColors(3)
+  const lineColors = getChartColors(3);
+  const areaColors = getChartColors(3);
 
   return (
     <div className="space-y-6">
@@ -387,7 +406,10 @@ export function ChartAll() {
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <Legend />
                     <Bar dataKey="sales" fill={CHART_COLORS_SEMANTIC.primary} />
-                    <Bar dataKey="returns" fill={CHART_COLORS_SEMANTIC.danger} />
+                    <Bar
+                      dataKey="returns"
+                      fill={CHART_COLORS_SEMANTIC.danger}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>
@@ -399,7 +421,9 @@ export function ChartAll() {
           <Card>
             <CardHeader>
               <CardTitle>Pie Chart</CardTitle>
-              <CardDescription>Device distribution across different platforms</CardDescription>
+              <CardDescription>
+                Device distribution across different platforms
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <ChartContainer config={{}} className="h-[400px] w-full">
@@ -410,13 +434,18 @@ export function ChartAll() {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, percent }) =>
+                        `${name} ${(percent * 100).toFixed(0)}%`
+                      }
                       outerRadius={120}
                       fill="#8884d8"
                       dataKey="value"
                     >
                       {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={(entry as any).color} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={(entry as any).color}
+                        />
                       ))}
                     </Pie>
                     <ChartTooltip content={<ChartTooltipContent />} />
@@ -474,8 +503,18 @@ export function ChartAll() {
                   <ResponsiveContainer width="100%" height="100%">
                     <ScatterChart>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="x" type="number" name="stature" unit="cm" />
-                      <YAxis dataKey="y" type="number" name="weight" unit="kg" />
+                      <XAxis
+                        dataKey="x"
+                        type="number"
+                        name="stature"
+                        unit="cm"
+                      />
+                      <YAxis
+                        dataKey="y"
+                        type="number"
+                        name="weight"
+                        unit="kg"
+                      />
                       <ChartTooltip content={<ChartTooltipContent />} />
                       <Scatter
                         name="A school"
@@ -491,7 +530,9 @@ export function ChartAll() {
             <Card>
               <CardHeader>
                 <CardTitle>Composed Chart</CardTitle>
-                <CardDescription>Combination of line and bar charts</CardDescription>
+                <CardDescription>
+                  Combination of line and bar charts
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <ChartContainer
@@ -529,7 +570,9 @@ export function ChartAll() {
             <Card>
               <CardHeader>
                 <CardTitle>Treemap</CardTitle>
-                <CardDescription>Data protection map - 15 Organizations</CardDescription>
+                <CardDescription>
+                  Data protection map - 15 Organizations
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <ChartContainer config={{}} className="h-[400px] w-full">
@@ -551,5 +594,5 @@ export function ChartAll() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

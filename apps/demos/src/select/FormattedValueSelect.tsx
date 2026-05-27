@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Select,
   SelectContent,
@@ -6,21 +6,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@acronis-platform/shadcn-uikit';
-import { Label } from '@acronis-platform/shadcn-uikit/react'
+import { Label } from '@acronis-platform/shadcn-uikit/react';
 
 export function FormattedValueSelect() {
-  const [value, setValue] = React.useState<string>('')
+  const [value, setValue] = React.useState<string>('');
 
   const _formatValue = (val: string) => {
-    if (!val) return ''
-    return `Selected: ${val.toUpperCase()}`
-  }
+    if (!val) return '';
+    return `Selected: ${val.toUpperCase()}`;
+  };
 
   return (
     <div className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="color">Color</Label>
-        <Select value={value} onValueChange={(newValue) => setValue(newValue as string)}>
+        <Select
+          value={value}
+          onValueChange={(newValue) => setValue(newValue as string)}
+        >
           <SelectTrigger id="color" className="w-[280px]">
             <SelectValue placeholder="Select a color">
               {value && (
@@ -63,5 +66,5 @@ export function FormattedValueSelect() {
         </Select>
       </div>
     </div>
-  )
+  );
 }

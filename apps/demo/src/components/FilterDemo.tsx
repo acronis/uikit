@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   FilterBasic,
   FilterWithCounter,
@@ -9,26 +9,27 @@ import {
   FilterMultipleGroups,
   FilterInToolbar,
   FilterDisabled,
-} from '@acronis-platform/shadcn-uikit-demos/filter'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/filter';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import filterBasicCode from '../../../demos/src/filter/FilterBasic.tsx?raw'
-import filterWithCounterCode from '../../../demos/src/filter/FilterWithCounter.tsx?raw'
-import filterActiveStateCode from '../../../demos/src/filter/FilterActiveState.tsx?raw'
-import filterVariantsCode from '../../../demos/src/filter/FilterVariants.tsx?raw'
-import filterInteractiveCode from '../../../demos/src/filter/FilterInteractive.tsx?raw'
-import filterWithDropdownCode from '../../../demos/src/filter/FilterWithDropdown.tsx?raw'
-import filterMultipleGroupsCode from '../../../demos/src/filter/FilterMultipleGroups.tsx?raw'
-import filterInToolbarCode from '../../../demos/src/filter/FilterInToolbar.tsx?raw'
-import filterDisabledCode from '../../../demos/src/filter/FilterDisabled.tsx?raw'
+import filterBasicCode from '../../../demos/src/filter/FilterBasic.tsx?raw';
+import filterWithCounterCode from '../../../demos/src/filter/FilterWithCounter.tsx?raw';
+import filterActiveStateCode from '../../../demos/src/filter/FilterActiveState.tsx?raw';
+import filterVariantsCode from '../../../demos/src/filter/FilterVariants.tsx?raw';
+import filterInteractiveCode from '../../../demos/src/filter/FilterInteractive.tsx?raw';
+import filterWithDropdownCode from '../../../demos/src/filter/FilterWithDropdown.tsx?raw';
+import filterMultipleGroupsCode from '../../../demos/src/filter/FilterMultipleGroups.tsx?raw';
+import filterInToolbarCode from '../../../demos/src/filter/FilterInToolbar.tsx?raw';
+import filterDisabledCode from '../../../demos/src/filter/FilterDisabled.tsx?raw';
 
 export function FilterDemo() {
   return (
     <section className="demo-section">
       <h2>Filter Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        A filter button component with optional counter badge for displaying active filter counts.
+        A filter button component with optional counter badge for displaying
+        active filter counts.
       </p>
 
       <div className="space-y-8">

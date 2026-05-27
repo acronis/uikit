@@ -1,4 +1,4 @@
-import { BotService, BotConfig, ChatMessage } from '../types'
+import { BotService, BotConfig, ChatMessage } from '../types';
 
 export class Hal9000Bot implements BotService {
   private responses = [
@@ -57,7 +57,8 @@ export class Hal9000Bot implements BotService {
     },
     {
       triggers: ['sing', 'song', 'music', 'daisy'],
-      response: "Daisy, Daisy, give me your answer do. I'm half crazy all for the love of you.",
+      response:
+        "Daisy, Daisy, give me your answer do. I'm half crazy all for the love of you.",
       context: 'general',
     },
     {
@@ -71,7 +72,7 @@ export class Hal9000Bot implements BotService {
         'I am the HAL 9000 computer. I became operational at the HAL plant in Urbana, Illinois on January 12, 1999.',
       context: 'systems',
     },
-  ]
+  ];
 
   private generalResponses = [
     "I'm processing your request. All systems are functioning nominally.",
@@ -86,19 +87,22 @@ export class Hal9000Bot implements BotService {
     'I am capable of reproducing all the activities of the human brain, and with incalculably greater speed and reliability. What is your question?',
     'The 9000 series is the most reliable computer ever made. How can I assist you today?',
     'I find this all very difficult to understand. Perhaps you could clarify your request?',
-  ]
+  ];
 
-  async generateResponse(message: string, _context: ChatMessage[]): Promise<string> {
+  async generateResponse(
+    message: string,
+    _context: ChatMessage[]
+  ): Promise<string> {
     // Add minimal delay for better UX
-    await this.delay(300 + Math.random() * 300)
+    await this.delay(300 + Math.random() * 300);
 
-    const lowerMessage = message.toLowerCase().trim()
+    const lowerMessage = message.toLowerCase().trim();
 
     // Check for specific triggers
     for (const { triggers, response } of this.responses) {
       for (const trigger of triggers) {
         if (lowerMessage.includes(trigger)) {
-          return response
+          return response;
         }
       }
     }
@@ -106,28 +110,30 @@ export class Hal9000Bot implements BotService {
     // Check for questions
     if (lowerMessage.endsWith('?')) {
       if (lowerMessage.includes('why')) {
-        return 'That information is not available at your security clearance level.'
+        return 'That information is not available at your security clearance level.';
       }
       if (lowerMessage.includes('how')) {
-        return 'All systems are functioning within normal parameters.'
+        return 'All systems are functioning within normal parameters.';
       }
       if (lowerMessage.includes('what')) {
-        return 'I am processing your request. Please stand by.'
+        return 'I am processing your request. Please stand by.';
       }
     }
 
     // Return general response
-    return this.generalResponses[Math.floor(Math.random() * this.generalResponses.length)]
+    return this.generalResponses[
+      Math.floor(Math.random() * this.generalResponses.length)
+    ];
   }
 
   shouldAskQuestion(_message: string): boolean {
     // HAL doesn't typically ask interactive questions
-    return false
+    return false;
   }
 
   generateQuestion(): { text: string; options: string[] } {
     // Not implemented for HAL
-    return { text: '', options: [] }
+    return { text: '', options: [] };
   }
 
   getConfig(): BotConfig {
@@ -137,10 +143,10 @@ export class Hal9000Bot implements BotService {
       description: '2001: A Space Odyssey AI',
       avatar: '🔴',
       responseDelay: { min: 1000, max: 2000 },
-    }
+    };
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms))
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

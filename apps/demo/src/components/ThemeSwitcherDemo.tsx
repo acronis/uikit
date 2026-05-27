@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import {
   applyTheme,
   getCurrentTheme,
@@ -6,34 +6,35 @@ import {
   getCurrentColorMode,
   toggleColorMode,
   type ThemeName,
-} from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit';
 
 export function ThemeSwitcherDemo() {
-  const [theme, setTheme] = useState<ThemeName>('acronis-default')
-  const [isDark, setIsDark] = useState(false)
+  const [theme, setTheme] = useState<ThemeName>('acronis-default');
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const current = getCurrentTheme()
-    if (current) setTheme(current)
-    setIsDark(getCurrentColorMode() === 'dark')
-  }, [])
+    const current = getCurrentTheme();
+    if (current) setTheme(current);
+    setIsDark(getCurrentColorMode() === 'dark');
+  }, []);
 
   const handleThemeChange = (newTheme: ThemeName) => {
-    applyTheme(newTheme)
-    setTheme(newTheme)
-  }
+    applyTheme(newTheme);
+    setTheme(newTheme);
+  };
 
   const handleToggleDarkMode = () => {
-    const newMode = toggleColorMode()
-    setIsDark(newMode === 'dark')
-  }
+    const newMode = toggleColorMode();
+    setIsDark(newMode === 'dark');
+  };
 
   return (
     <div className="space-y-6 p-6 bg-card rounded-lg border">
       <div>
         <h2 className="text-2xl font-bold mb-4">Theme Switcher Demo</h2>
         <p className="text-muted-foreground mb-4">
-          Try switching between different themes and color modes to see the changes in real-time.
+          Try switching between different themes and color modes to see the
+          changes in real-time.
         </p>
       </div>
 
@@ -68,22 +69,36 @@ export function ThemeSwitcherDemo() {
       <div className="space-y-3 pt-4 border-t">
         <h3 className="font-semibold">Color Preview</h3>
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 bg-primary text-primary-foreground rounded">Primary</div>
-          <div className="p-3 bg-secondary text-secondary-foreground rounded">Secondary</div>
-          <div className="p-3 bg-accent text-accent-foreground rounded">Accent</div>
-          <div className="p-3 bg-muted text-muted-foreground rounded">Muted</div>
+          <div className="p-3 bg-primary text-primary-foreground rounded">
+            Primary
+          </div>
+          <div className="p-3 bg-secondary text-secondary-foreground rounded">
+            Secondary
+          </div>
+          <div className="p-3 bg-accent text-accent-foreground rounded">
+            Accent
+          </div>
+          <div className="p-3 bg-muted text-muted-foreground rounded">
+            Muted
+          </div>
         </div>
       </div>
 
       <div className="space-y-2 pt-4 border-t">
         <h3 className="font-semibold">Status Colors</h3>
         <div className="grid grid-cols-2 gap-2 text-sm">
-          <div className="p-2 bg-success text-success-foreground rounded">Success</div>
-          <div className="p-2 bg-warning text-warning-foreground rounded">Warning</div>
-          <div className="p-2 bg-danger text-danger-foreground rounded">Danger</div>
+          <div className="p-2 bg-success text-success-foreground rounded">
+            Success
+          </div>
+          <div className="p-2 bg-warning text-warning-foreground rounded">
+            Warning
+          </div>
+          <div className="p-2 bg-danger text-danger-foreground rounded">
+            Danger
+          </div>
           <div className="p-2 bg-info text-info-foreground rounded">Info</div>
         </div>
       </div>
     </div>
-  )
+  );
 }

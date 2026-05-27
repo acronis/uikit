@@ -1,22 +1,22 @@
-import * as React from 'react'
-import { cn } from '@/lib/utils'
-import { Badge } from '@/components/ui/badge'
+import * as React from 'react';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 export interface SecondaryMenuProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export interface SecondaryMenuGroupProps extends React.HTMLAttributes<HTMLDivElement> {
-  title?: string
-  children: React.ReactNode
+  title?: string;
+  children: React.ReactNode;
 }
 
 export interface SecondaryMenuItemProps extends React.ComponentPropsWithoutRef<'button'> {
-  active?: boolean
-  icon?: React.ReactNode
-  iconPosition?: 'left' | 'right'
-  tag?: string
-  asChild?: boolean
+  active?: boolean;
+  icon?: React.ReactNode;
+  iconPosition?: 'left' | 'right';
+  tag?: string;
+  asChild?: boolean;
 }
 
 const SecondaryMenu = React.forwardRef<HTMLDivElement, SecondaryMenuProps>(
@@ -32,34 +32,41 @@ const SecondaryMenu = React.forwardRef<HTMLDivElement, SecondaryMenuProps>(
       >
         {children}
       </div>
-    )
+    );
   }
-)
-SecondaryMenu.displayName = 'SecondaryMenu'
+);
+SecondaryMenu.displayName = 'SecondaryMenu';
 
-const SecondaryMenuGroup = React.forwardRef<HTMLDivElement, SecondaryMenuGroupProps>(
-  ({ className, title, children, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={cn('flex flex-col border-b border-[rgba(38,104,197,0.1)]', className)}
-        {...props}
-      >
-        {title && (
-          <div className="flex items-center px-6 pt-4 pb-2">
-            <h3 className="text-[11px] font-bold leading-4 tracking-wider uppercase text-[rgba(36,49,67,0.7)]">
-              {title}
-            </h3>
-          </div>
-        )}
-        {children}
-      </div>
-    )
-  }
-)
-SecondaryMenuGroup.displayName = 'SecondaryMenuGroup'
+const SecondaryMenuGroup = React.forwardRef<
+  HTMLDivElement,
+  SecondaryMenuGroupProps
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        'flex flex-col border-b border-[rgba(38,104,197,0.1)]',
+        className
+      )}
+      {...props}
+    >
+      {title && (
+        <div className="flex items-center px-6 pt-4 pb-2">
+          <h3 className="text-[11px] font-bold leading-4 tracking-wider uppercase text-[rgba(36,49,67,0.7)]">
+            {title}
+          </h3>
+        </div>
+      )}
+      {children}
+    </div>
+  );
+});
+SecondaryMenuGroup.displayName = 'SecondaryMenuGroup';
 
-const SecondaryMenuItem = React.forwardRef<HTMLButtonElement, SecondaryMenuItemProps>(
+const SecondaryMenuItem = React.forwardRef<
+  HTMLButtonElement,
+  SecondaryMenuItemProps
+>(
   (
     {
       className,
@@ -84,7 +91,7 @@ const SecondaryMenuItem = React.forwardRef<HTMLButtonElement, SecondaryMenuItemP
       >
         {icon}
       </div>
-    )
+    );
 
     const tagElement = tag && (
       <Badge
@@ -93,7 +100,7 @@ const SecondaryMenuItem = React.forwardRef<HTMLButtonElement, SecondaryMenuItemP
       >
         {tag}
       </Badge>
-    )
+    );
 
     return (
       <button
@@ -102,7 +109,9 @@ const SecondaryMenuItem = React.forwardRef<HTMLButtonElement, SecondaryMenuItemP
         className={cn(
           'flex w-full items-center gap-4 px-6 py-3 text-left text-sm font-semibold leading-6 transition-colors',
           active && 'bg-[rgba(38,104,197,0.05)] text-[#243143]',
-          !active && !disabled && 'text-[#2668C5] hover:bg-[rgba(38,104,197,0.02)]',
+          !active &&
+            !disabled &&
+            'text-[#2668C5] hover:bg-[rgba(38,104,197,0.02)]',
           disabled && 'cursor-not-allowed text-[rgba(36,49,67,0.7)] opacity-70',
           className
         )}
@@ -113,10 +122,10 @@ const SecondaryMenuItem = React.forwardRef<HTMLButtonElement, SecondaryMenuItemP
         {tag && tagElement}
         {iconPosition === 'right' && iconElement}
       </button>
-    )
+    );
   }
-)
-SecondaryMenuItem.displayName = 'SecondaryMenuItem'
+);
+SecondaryMenuItem.displayName = 'SecondaryMenuItem';
 
 const SecondaryMenuContent = React.forwardRef<
   HTMLDivElement,
@@ -130,9 +139,9 @@ const SecondaryMenuContent = React.forwardRef<
     >
       {children}
     </div>
-  )
-})
-SecondaryMenuContent.displayName = 'SecondaryMenuContent'
+  );
+});
+SecondaryMenuContent.displayName = 'SecondaryMenuContent';
 
 const SecondaryMenuHeader = React.forwardRef<
   HTMLDivElement,
@@ -141,14 +150,17 @@ const SecondaryMenuHeader = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn('flex items-center border-b border-[rgba(38,104,197,0.1)] px-6 py-4', className)}
+      className={cn(
+        'flex items-center border-b border-[rgba(38,104,197,0.1)] px-6 py-4',
+        className
+      )}
       {...props}
     >
       {children}
     </div>
-  )
-})
-SecondaryMenuHeader.displayName = 'SecondaryMenuHeader'
+  );
+});
+SecondaryMenuHeader.displayName = 'SecondaryMenuHeader';
 
 const SecondaryMenuFooter = React.forwardRef<
   HTMLDivElement,
@@ -157,14 +169,17 @@ const SecondaryMenuFooter = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn('flex items-center border-t border-[rgba(38,104,197,0.1)] px-6 py-4', className)}
+      className={cn(
+        'flex items-center border-t border-[rgba(38,104,197,0.1)] px-6 py-4',
+        className
+      )}
       {...props}
     >
       {children}
     </div>
-  )
-})
-SecondaryMenuFooter.displayName = 'SecondaryMenuFooter'
+  );
+});
+SecondaryMenuFooter.displayName = 'SecondaryMenuFooter';
 
 export {
   SecondaryMenu,
@@ -173,4 +188,4 @@ export {
   SecondaryMenuContent,
   SecondaryMenuHeader,
   SecondaryMenuFooter,
-}
+};

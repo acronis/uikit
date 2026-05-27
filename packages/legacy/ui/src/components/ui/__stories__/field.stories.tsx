@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   Field,
   FieldContent,
@@ -9,50 +9,59 @@ import {
   FieldLegend,
   FieldSeparator,
   FieldSet,
-} from '../field'
-import { Input } from '../input'
-import { Textarea } from '../textarea'
-import { Button } from '../button'
-import { Checkbox } from '../checkbox'
-import { Switch } from '../switch'
-import { RadioGroup, RadioGroupItem } from '../radio-group'
+} from '../field';
+import { Input } from '../input';
+import { Textarea } from '../textarea';
+import { Button } from '../button';
+import { Checkbox } from '../checkbox';
+import { Switch } from '../switch';
+import { RadioGroup, RadioGroupItem } from '../radio-group';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../select'
+} from '../select';
 
 const meta = {
   title: 'UI/Field',
   component: Field,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof Field>
+} satisfies Meta<typeof Field>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
     <Field className="w-[320px]">
       <FieldLabel htmlFor="email">Email</FieldLabel>
       <Input id="email" placeholder="Enter your email" />
-      <FieldDescription>We&apos;ll never share your email with anyone.</FieldDescription>
+      <FieldDescription>
+        We&apos;ll never share your email with anyone.
+      </FieldDescription>
     </Field>
   ),
-}
+};
 
 export const WithError: Story = {
   render: () => (
     <Field className="w-[320px]" data-invalid="true">
       <FieldLabel htmlFor="email-err">Email</FieldLabel>
-      <Input id="email-err" type="email" defaultValue="notanemail" aria-invalid />
-      <FieldError errors={[{ message: 'Please enter a valid email address.' }]} />
+      <Input
+        id="email-err"
+        type="email"
+        defaultValue="notanemail"
+        aria-invalid
+      />
+      <FieldError
+        errors={[{ message: 'Please enter a valid email address.' }]}
+      />
     </Field>
   ),
-}
+};
 
 export const MultipleErrors: Story = {
   render: () => (
@@ -68,7 +77,7 @@ export const MultipleErrors: Story = {
       />
     </Field>
   ),
-}
+};
 
 export const Horizontal: Story = {
   render: () => (
@@ -79,11 +88,16 @@ export const Horizontal: Story = {
       </Field>
       <Field orientation="horizontal">
         <FieldLabel htmlFor="h-email">Email</FieldLabel>
-        <Input id="h-email" type="email" placeholder="you@example.com" className="max-w-xs" />
+        <Input
+          id="h-email"
+          type="email"
+          placeholder="you@example.com"
+          className="max-w-xs"
+        />
       </Field>
     </div>
   ),
-}
+};
 
 export const HorizontalWithSwitch: Story = {
   render: () => (
@@ -92,7 +106,9 @@ export const HorizontalWithSwitch: Story = {
         <FieldLabel htmlFor="sw-email">
           <FieldContent>
             <span>Email notifications</span>
-            <FieldDescription>Get notified about account activity.</FieldDescription>
+            <FieldDescription>
+              Get notified about account activity.
+            </FieldDescription>
           </FieldContent>
         </FieldLabel>
         <Switch id="sw-email" defaultChecked />
@@ -101,14 +117,16 @@ export const HorizontalWithSwitch: Story = {
         <FieldLabel htmlFor="sw-marketing">
           <FieldContent>
             <span>Marketing emails</span>
-            <FieldDescription>Receive updates on new features.</FieldDescription>
+            <FieldDescription>
+              Receive updates on new features.
+            </FieldDescription>
           </FieldContent>
         </FieldLabel>
         <Switch id="sw-marketing" />
       </Field>
     </div>
   ),
-}
+};
 
 export const HorizontalWithCheckbox: Story = {
   render: () => (
@@ -117,7 +135,9 @@ export const HorizontalWithCheckbox: Story = {
         <FieldLabel htmlFor="cb-terms">
           <FieldContent>
             <span>Accept terms</span>
-            <FieldDescription>You agree to our terms of service.</FieldDescription>
+            <FieldDescription>
+              You agree to our terms of service.
+            </FieldDescription>
           </FieldContent>
         </FieldLabel>
         <Checkbox id="cb-terms" />
@@ -133,7 +153,7 @@ export const HorizontalWithCheckbox: Story = {
       </Field>
     </div>
   ),
-}
+};
 
 export const Responsive: Story = {
   render: () => (
@@ -150,7 +170,7 @@ export const Responsive: Story = {
       </FieldGroup>
     </div>
   ),
-}
+};
 
 export const WithSelect: Story = {
   render: () => (
@@ -169,17 +189,21 @@ export const WithSelect: Story = {
       <FieldDescription>Controls what this user can access.</FieldDescription>
     </Field>
   ),
-}
+};
 
 export const WithTextarea: Story = {
   render: () => (
     <Field className="w-[320px]">
       <FieldLabel htmlFor="bio-ta">Bio</FieldLabel>
-      <Textarea id="bio-ta" placeholder="A short bio…" className="resize-none" />
+      <Textarea
+        id="bio-ta"
+        placeholder="A short bio…"
+        className="resize-none"
+      />
       <FieldDescription>Up to 160 characters.</FieldDescription>
     </Field>
   ),
-}
+};
 
 export const GroupBasic: Story = {
   render: () => (
@@ -192,17 +216,23 @@ export const GroupBasic: Story = {
         <Field>
           <FieldLabel htmlFor="g-email">Email</FieldLabel>
           <Input id="g-email" type="email" placeholder="jane@example.com" />
-          <FieldDescription>We&apos;ll never share your email.</FieldDescription>
+          <FieldDescription>
+            We&apos;ll never share your email.
+          </FieldDescription>
         </Field>
         <Field>
           <FieldLabel htmlFor="g-bio">Bio</FieldLabel>
-          <Textarea id="g-bio" placeholder="A short bio…" className="resize-none" />
+          <Textarea
+            id="g-bio"
+            placeholder="A short bio…"
+            className="resize-none"
+          />
         </Field>
         <Button>Save</Button>
       </FieldGroup>
     </div>
   ),
-}
+};
 
 export const SetWithSwitches: Story = {
   render: () => (
@@ -214,7 +244,9 @@ export const SetWithSwitches: Story = {
             <FieldLabel htmlFor="fs-sw1">
               <FieldContent>
                 <span>Email</span>
-                <FieldDescription>Account activity and updates.</FieldDescription>
+                <FieldDescription>
+                  Account activity and updates.
+                </FieldDescription>
               </FieldContent>
             </FieldLabel>
             <Switch id="fs-sw1" defaultChecked />
@@ -232,7 +264,9 @@ export const SetWithSwitches: Story = {
             <FieldLabel htmlFor="fs-sw3">
               <FieldContent>
                 <span>Marketing</span>
-                <FieldDescription>New features and promotions.</FieldDescription>
+                <FieldDescription>
+                  New features and promotions.
+                </FieldDescription>
               </FieldContent>
             </FieldLabel>
             <Switch id="fs-sw3" />
@@ -241,7 +275,7 @@ export const SetWithSwitches: Story = {
       </FieldSet>
     </div>
   ),
-}
+};
 
 export const SetWithRadio: Story = {
   render: () => (
@@ -265,7 +299,7 @@ export const SetWithRadio: Story = {
       </FieldSet>
     </div>
   ),
-}
+};
 
 export const WithSeparator: Story = {
   render: () => (
@@ -283,14 +317,19 @@ export const WithSeparator: Story = {
       </FieldGroup>
     </div>
   ),
-}
+};
 
 export const Disabled: Story = {
   render: () => (
     <Field className="w-[320px]" data-disabled="true">
       <FieldLabel htmlFor="dis-input">Display name</FieldLabel>
-      <Input id="dis-input" placeholder="Readonly value" disabled defaultValue="Jane Doe" />
+      <Input
+        id="dis-input"
+        placeholder="Readonly value"
+        disabled
+        defaultValue="Jane Doe"
+      />
       <FieldDescription>You cannot change this field.</FieldDescription>
     </Field>
   ),
-}
+};

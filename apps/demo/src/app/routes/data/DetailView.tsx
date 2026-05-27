@@ -1,44 +1,58 @@
-import * as React from 'react'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Badge } from '@acronis-platform/shadcn-uikit/react'
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
-import { EditIcon, TrashOIcon } from '@acronis-platform/shadcn-uikit'
-import { format } from 'date-fns'
-import type { DataRow } from '../../types'
+import * as React from 'react';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Badge } from '@acronis-platform/shadcn-uikit/react';
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
+import { EditIcon, TrashOIcon } from '@acronis-platform/shadcn-uikit';
+import { format } from 'date-fns';
+import type { DataRow } from '../../types';
 
 interface DetailViewProps {
-  row: DataRow | null
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onEdit: (row: DataRow) => void
-  onDelete: (id: string) => void
+  row: DataRow | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onEdit: (row: DataRow) => void;
+  onDelete: (id: string) => void;
 }
 
-export function DetailView({ row, open, onOpenChange, onEdit, onDelete }: DetailViewProps) {
-  if (!row) return null
+export function DetailView({
+  row,
+  open,
+  onOpenChange,
+  onEdit,
+  onDelete,
+}: DetailViewProps) {
+  if (!row) return null;
 
   const statusColors = {
     active: 'bg-green-500',
     inactive: 'bg-gray-500',
     pending: 'bg-yellow-500',
-  }
+  };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="sm:max-w-[540px]">
         <SheetHeader>
           <SheetTitle>{row.name}</SheetTitle>
-          <SheetDescription>
-            View and manage data row details
-          </SheetDescription>
+          <SheetDescription>View and manage data row details</SheetDescription>
         </SheetHeader>
 
         <div className="mt-6 space-y-6">
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-3">Status</h3>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3">
+              Status
+            </h3>
             <Badge variant="outline" className="capitalize">
-              <span className={`mr-2 h-2 w-2 rounded-full ${statusColors[row.status]}`} />
+              <span
+                className={`mr-2 h-2 w-2 rounded-full ${statusColors[row.status]}`}
+              />
               {row.status}
             </Badge>
           </div>
@@ -46,20 +60,28 @@ export function DetailView({ row, open, onOpenChange, onEdit, onDelete }: Detail
           <Separator />
 
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-3">Details</h3>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3">
+              Details
+            </h3>
             <dl className="space-y-3">
               <div>
                 <dt className="text-sm font-medium">Category</dt>
-                <dd className="text-sm text-muted-foreground">{row.category}</dd>
+                <dd className="text-sm text-muted-foreground">
+                  {row.category}
+                </dd>
               </div>
               <div>
                 <dt className="text-sm font-medium">Value</dt>
-                <dd className="text-sm text-muted-foreground">${row.value.toLocaleString()}</dd>
+                <dd className="text-sm text-muted-foreground">
+                  ${row.value.toLocaleString()}
+                </dd>
               </div>
               {row.description && (
                 <div>
                   <dt className="text-sm font-medium">Description</dt>
-                  <dd className="text-sm text-muted-foreground">{row.description}</dd>
+                  <dd className="text-sm text-muted-foreground">
+                    {row.description}
+                  </dd>
                 </div>
               )}
               {row.tags && row.tags.length > 0 && (
@@ -80,7 +102,9 @@ export function DetailView({ row, open, onOpenChange, onEdit, onDelete }: Detail
           <Separator />
 
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-3">Metadata</h3>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3">
+              Metadata
+            </h3>
             <dl className="space-y-3">
               <div>
                 <dt className="text-sm font-medium">Created</dt>
@@ -96,7 +120,9 @@ export function DetailView({ row, open, onOpenChange, onEdit, onDelete }: Detail
               </div>
               <div>
                 <dt className="text-sm font-medium">ID</dt>
-                <dd className="text-sm text-muted-foreground font-mono">{row.id}</dd>
+                <dd className="text-sm text-muted-foreground font-mono">
+                  {row.id}
+                </dd>
               </div>
             </dl>
           </div>
@@ -111,8 +137,8 @@ export function DetailView({ row, open, onOpenChange, onEdit, onDelete }: Detail
             <Button
               variant="destructive"
               onClick={() => {
-                onDelete(row.id)
-                onOpenChange(false)
+                onDelete(row.id);
+                onOpenChange(false);
               }}
               className="flex-1"
             >
@@ -123,5 +149,5 @@ export function DetailView({ row, open, onOpenChange, onEdit, onDelete }: Detail
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }

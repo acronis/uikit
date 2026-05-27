@@ -1,8 +1,12 @@
-import { useEffect, useRef } from 'react'
-import { Button, Switch, Separator } from '@acronis-platform/shadcn-uikit/react'
-import { ChevronDownIcon } from '@acronis-platform/shadcn-uikit'
-import { useCyberChatStore } from '../store/useCyberChatStore'
-import { RadialProgress } from './RadialProgress'
+import { useEffect, useRef } from 'react';
+import {
+  Button,
+  Switch,
+  Separator,
+} from '@acronis-platform/shadcn-uikit/react';
+import { ChevronDownIcon } from '@acronis-platform/shadcn-uikit';
+import { useCyberChatStore } from '../store/useCyberChatStore';
+import { RadialProgress } from './RadialProgress';
 
 export function ModelSelector() {
   const {
@@ -13,28 +17,32 @@ export function ModelSelector() {
     setSelectedModel,
     toggleAutoModel,
     toggleModelDropdown,
-  } = useCyberChatStore()
+  } = useCyberChatStore();
 
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         if (modelDropdownOpen) {
-          toggleModelDropdown()
+          toggleModelDropdown();
         }
       }
-    }
+    };
 
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [modelDropdownOpen, toggleModelDropdown])
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [modelDropdownOpen, toggleModelDropdown]);
 
-  const selectedModelName = models.find((m) => m.id === selectedModel)?.name || 'Auto'
+  const selectedModelName =
+    models.find((m) => m.id === selectedModel)?.name || 'Auto';
 
-  const premiumModels = models.filter((m) => m.tier === 'premium')
-  const defaultModels = models.filter((m) => m.tier === 'default')
+  const premiumModels = models.filter((m) => m.tier === 'premium');
+  const defaultModels = models.filter((m) => m.tier === 'default');
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -73,8 +81,8 @@ export function ModelSelector() {
               <button
                 key={model.id}
                 onClick={() => {
-                  setSelectedModel(model.id)
-                  toggleModelDropdown()
+                  setSelectedModel(model.id);
+                  toggleModelDropdown();
                 }}
                 disabled={autoModelEnabled}
                 className={`
@@ -107,8 +115,8 @@ export function ModelSelector() {
               <button
                 key={model.id}
                 onClick={() => {
-                  setSelectedModel(model.id)
-                  toggleModelDropdown()
+                  setSelectedModel(model.id);
+                  toggleModelDropdown();
                 }}
                 disabled={autoModelEnabled}
                 className={`
@@ -124,5 +132,5 @@ export function ModelSelector() {
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { ThemeMode, PlaygroundState } from '@/types/playground'
+import { ThemeMode, PlaygroundState } from '@/types/playground';
 
 /**
  * Default playground state
@@ -19,4 +19,4 @@ export const DEFAULT_STATE: PlaygroundState = {
     showCodeSnippets: true,
     viewportSize: 'desktop',
   },
-}
+};

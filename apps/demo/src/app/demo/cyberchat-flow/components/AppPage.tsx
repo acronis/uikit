@@ -1,24 +1,24 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useChatFlowStore } from '../store/useChatFlowStore'
-import { ChatHeader } from './ChatHeader'
-import { Sidebar } from './Sidebar'
-import { LandingState } from './LandingState'
-import { ChatMessages } from './ChatMessages'
-import { ChatInput } from './ChatInput'
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useChatFlowStore } from '../store/useChatFlowStore';
+import { ChatHeader } from './ChatHeader';
+import { Sidebar } from './Sidebar';
+import { LandingState } from './LandingState';
+import { ChatMessages } from './ChatMessages';
+import { ChatInput } from './ChatInput';
 
 export function AppPage() {
-  const navigate = useNavigate()
-  const isAuthenticated = useChatFlowStore((state) => state.isAuthenticated)
-  const messages = useChatFlowStore((state) => state.messages)
+  const navigate = useNavigate();
+  const isAuthenticated = useChatFlowStore((state) => state.isAuthenticated);
+  const messages = useChatFlowStore((state) => state.messages);
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/demo/cyberchat-flow')
+      navigate('/demo/cyberchat-flow');
     }
-  }, [isAuthenticated, navigate])
+  }, [isAuthenticated, navigate]);
 
-  const hasMessages = messages.length > 0
+  const hasMessages = messages.length > 0;
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
@@ -40,5 +40,5 @@ export function AppPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

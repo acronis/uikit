@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Select,
   SelectContent,
@@ -37,5 +37,5 @@ export function GroupedSelect() {
         </SelectGroup>
       </SelectContent>
     </Select>
-  )
+  );
 }

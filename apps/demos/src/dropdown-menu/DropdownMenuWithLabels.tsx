@@ -1,4 +1,4 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,9 +7,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuShortcut,
-} from '@acronis-platform/shadcn-uikit/react'
-import { SettingsIcon, UserIcon } from '@acronis-platform/shadcn-uikit'
-import { CreditCardIcon, KeyboardIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit/react';
+import { SettingsIcon, UserIcon } from '@acronis-platform/shadcn-uikit';
+import { CreditCardIcon, KeyboardIcon } from '../icons/missing-icons';
 export function DropdownMenuWithLabels() {
   return (
     <DropdownMenu>
@@ -41,5 +41,5 @@ export function DropdownMenuWithLabels() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

@@ -1,15 +1,15 @@
 interface RadialProgressProps {
-  value: number
-  size?: number
-  strokeWidth?: number
-  color?: 'green' | 'yellow' | 'red'
+  value: number;
+  size?: number;
+  strokeWidth?: number;
+  color?: 'green' | 'yellow' | 'red';
 }
 
 const colorMap = {
   green: '#65BA74',
   yellow: '#FFBA18',
   red: '#E5484D',
-}
+};
 
 export function RadialProgress({
   value,
@@ -17,12 +17,15 @@ export function RadialProgress({
   strokeWidth = 2,
   color = 'green',
 }: RadialProgressProps) {
-  const radius = (size - strokeWidth) / 2
-  const circumference = radius * 2 * Math.PI
-  const offset = circumference - (value / 100) * circumference
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const offset = circumference - (value / 100) * circumference;
 
   return (
-    <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
+    <div
+      className="relative inline-flex items-center justify-center"
+      style={{ width: size, height: size }}
+    >
       <svg width={size} height={size} className="transform -rotate-90">
         {/* Background circle */}
         <circle
@@ -48,5 +51,5 @@ export function RadialProgress({
         />
       </svg>
     </div>
-  )
+  );
 }

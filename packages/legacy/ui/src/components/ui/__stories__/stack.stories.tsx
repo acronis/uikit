@@ -1,21 +1,21 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Stack } from '../stack'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Stack } from '../stack';
 
 const meta = {
   title: 'UI/Stack',
   component: Stack,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof Stack>
+} satisfies Meta<typeof Stack>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 const Box = ({ label }: { label: string }) => (
   <div className="flex h-10 w-20 items-center justify-center rounded-md bg-muted text-sm font-medium">
     {label}
   </div>
-)
+);
 
 export const Vertical: Story = {
   render: () => (
@@ -25,7 +25,7 @@ export const Vertical: Story = {
       <Box label="Item 3" />
     </Stack>
   ),
-}
+};
 
 export const Horizontal: Story = {
   render: () => (
@@ -35,7 +35,7 @@ export const Horizontal: Story = {
       <Box label="Item 3" />
     </Stack>
   ),
-}
+};
 
 export const Gaps: Story = {
   render: () => (
@@ -72,16 +72,21 @@ export const Gaps: Story = {
       </Stack>
     </Stack>
   ),
-}
+};
 
 export const JustifyBetween: Story = {
   render: () => (
-    <Stack direction="horizontal" justify="between" align="center" className="w-[400px] border rounded-md p-4">
+    <Stack
+      direction="horizontal"
+      justify="between"
+      align="center"
+      className="w-[400px] border rounded-md p-4"
+    >
       <Box label="Left" />
       <Box label="Right" />
     </Stack>
   ),
-}
+};
 
 export const Wrap: Story = {
   render: () => (
@@ -91,4 +96,4 @@ export const Wrap: Story = {
       ))}
     </Stack>
   ),
-}
+};

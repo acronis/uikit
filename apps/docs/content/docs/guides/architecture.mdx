@@ -93,7 +93,8 @@ const buttonVariants = cva('base-classes', {
 });
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
 }
@@ -121,7 +122,7 @@ Themes are SCSS files that define CSS custom properties on the `:root`. They use
 :root {
   --av-background: 0 0% 100%;
   --av-foreground: 222 84% 5%;
-  --av-primary: 213 94% 51%;    /* Acronis Blue */
+  --av-primary: 213 94% 51%; /* Acronis Blue */
   --av-success: 142 76% 36%;
   --av-warning: 38 92% 50%;
   --av-info: 199 89% 48%;

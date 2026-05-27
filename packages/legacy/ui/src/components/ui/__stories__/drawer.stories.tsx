@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { userEvent, within } from 'storybook/test';
 import {
   Drawer,
@@ -7,18 +7,18 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '../drawer'
-import { Button } from '../button'
+} from '../drawer';
+import { Button } from '../button';
 
 const meta = {
   title: 'UI/Drawer',
   component: Drawer,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof Drawer>
+} satisfies Meta<typeof Drawer>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -37,7 +37,7 @@ export const Default: Story = {
       </DrawerContent>
     </Drawer>
   ),
-}
+};
 
 export const Open: Story = {
   render: () => (

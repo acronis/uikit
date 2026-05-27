@@ -25,7 +25,7 @@ documented per workspace.
 - **Imports at the top of the file.** Never inline an import mid-file.
 - Don't disable ESLint rules to silence warnings — fix the underlying issue.
 - Don't add comments that restate what the code does. Comments should
-  explain *why* (a non-obvious constraint, a workaround, an invariant).
+  explain _why_ (a non-obvious constraint, a workaround, an invariant).
 - Don't add features, refactors, or abstractions beyond what the task
   requires. A bug fix is a bug fix.
 - Don't add backwards-compatibility shims, "removed" stubs, or

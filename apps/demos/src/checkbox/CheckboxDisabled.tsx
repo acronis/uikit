@@ -1,4 +1,4 @@
-import { Checkbox, Label } from '@acronis-platform/shadcn-uikit/react'
+import { Checkbox, Label } from '@acronis-platform/shadcn-uikit/react';
 
 export function CheckboxDisabled() {
   return (
@@ -22,5 +22,5 @@ export function CheckboxDisabled() {
         </Label>
       </div>
     </div>
-  )
+  );
 }

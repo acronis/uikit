@@ -1,13 +1,13 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Field,
   FieldLabel,
   FieldContent,
   FieldDescription,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { Switch } from '@acronis-platform/shadcn-uikit/react'
-import { Checkbox } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { Switch } from '@acronis-platform/shadcn-uikit/react';
+import { Checkbox } from '@acronis-platform/shadcn-uikit/react';
 
 export function FieldHorizontal() {
   return (
@@ -23,7 +23,9 @@ export function FieldHorizontal() {
         <FieldLabel htmlFor="h-switch">
           <FieldContent>
             <span>Email notifications</span>
-            <FieldDescription>Get notified about account activity.</FieldDescription>
+            <FieldDescription>
+              Get notified about account activity.
+            </FieldDescription>
           </FieldContent>
         </FieldLabel>
         <Switch id="h-switch" defaultChecked />
@@ -34,11 +36,13 @@ export function FieldHorizontal() {
         <FieldLabel htmlFor="h-checkbox">
           <FieldContent>
             <span>Marketing emails</span>
-            <FieldDescription>Receive updates on new features.</FieldDescription>
+            <FieldDescription>
+              Receive updates on new features.
+            </FieldDescription>
           </FieldContent>
         </FieldLabel>
         <Checkbox id="h-checkbox" />
       </Field>
     </div>
-  )
+  );
 }

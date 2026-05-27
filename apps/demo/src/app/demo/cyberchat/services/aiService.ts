@@ -4,21 +4,25 @@
  * based on keywords and patterns in the user's input
  */
 
-type BadgeVariant = 'default' | 'outline' | 'secondary'
+type BadgeVariant = 'default' | 'outline' | 'secondary';
 
 interface AIResponse {
-  content: string
-  badges?: Array<{ text: string; variant?: BadgeVariant }>
+  content: string;
+  badges?: Array<{ text: string; variant?: BadgeVariant }>;
 }
 
 /**
  * Generate a realistic AI response based on user input
  */
-export async function generateAIResponse(userMessage: string): Promise<AIResponse> {
+export async function generateAIResponse(
+  userMessage: string
+): Promise<AIResponse> {
   // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000))
+  await new Promise((resolve) =>
+    setTimeout(resolve, 1500 + Math.random() * 1000)
+  );
 
-  const lowerMessage = userMessage.toLowerCase()
+  const lowerMessage = userMessage.toLowerCase();
 
   // Contextual responses based on keywords
   if (lowerMessage.includes('feedback') || lowerMessage.includes('triage')) {
@@ -59,11 +63,14 @@ The Kano Model is underrated for understanding which features will actually move
 Are you building this from scratch or integrating with existing tools?`,
         badges: [{ text: 'AI/ML', variant: 'outline' }],
       },
-    ]
-    return responses[Math.floor(Math.random() * responses.length)]
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
   }
 
-  if (lowerMessage.includes('security') || lowerMessage.includes('cybersecurity')) {
+  if (
+    lowerMessage.includes('security') ||
+    lowerMessage.includes('cybersecurity')
+  ) {
     const responses: AIResponse[] = [
       {
         content: `Cybersecurity in 2025 is wild. Zero Trust isn't just a buzzword anymore - it's basically mandatory if you're handling any sensitive data.
@@ -100,11 +107,15 @@ Defense in depth is your strategy - multiple layers of security so a single fail
 What specific area are you most concerned about?`,
         badges: [{ text: 'Best Practices', variant: 'outline' }],
       },
-    ]
-    return responses[Math.floor(Math.random() * responses.length)]
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
   }
 
-  if (lowerMessage.includes('design') || lowerMessage.includes('ui') || lowerMessage.includes('ux')) {
+  if (
+    lowerMessage.includes('design') ||
+    lowerMessage.includes('ui') ||
+    lowerMessage.includes('ux')
+  ) {
     const responses: AIResponse[] = [
       {
         content: `UI/UX design right now is all about systems thinking. You can't just design screens anymore - you need a whole design system or you'll end up with inconsistent garbage.
@@ -148,11 +159,15 @@ Micro-interactions matter more than you think. That little animation when you cl
 Are you designing for web, mobile, or both?`,
         badges: [{ text: 'UX', variant: 'outline' }],
       },
-    ]
-    return responses[Math.floor(Math.random() * responses.length)]
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
   }
 
-  if (lowerMessage.includes('code') || lowerMessage.includes('programming') || lowerMessage.includes('development')) {
+  if (
+    lowerMessage.includes('code') ||
+    lowerMessage.includes('programming') ||
+    lowerMessage.includes('development')
+  ) {
     const responses: AIResponse[] = [
       {
         content: `Development best practices! Alright, let's talk about what actually matters vs what people argue about on Twitter.
@@ -202,12 +217,12 @@ Tech stack recommendations:
 What's your stack looking like?`,
         badges: [{ text: 'Best Practices', variant: 'outline' }],
       },
-    ]
-    return responses[Math.floor(Math.random() * responses.length)]
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
   }
 
   // ELIZA-style responses for unknown messages
-  return generateElizaResponse(userMessage)
+  return generateElizaResponse(userMessage);
 }
 
 /**
@@ -215,7 +230,7 @@ What's your stack looking like?`,
  * Based on classic pattern matching and reflection techniques
  */
 function generateElizaResponse(input: string): AIResponse {
-  const lowerInput = input.toLowerCase()
+  const lowerInput = input.toLowerCase();
 
   // Pattern: "I am/I'm ..."
   if (lowerInput.match(/\b(i am|i'm)\b/)) {
@@ -223,39 +238,39 @@ function generateElizaResponse(input: string): AIResponse {
       `How long have you been ${input.toLowerCase().replace(/.*\b(i am|i'm)\s+/, '')}?`,
       `Why do you tell me you're ${input.toLowerCase().replace(/.*\b(i am|i'm)\s+/, '')}?`,
       `Do you believe it's normal to be ${input.toLowerCase().replace(/.*\b(i am|i'm)\s+/, '')}?`,
-    ]
+    ];
     return {
       content: responses[Math.floor(Math.random() * responses.length)],
-    }
+    };
   }
 
   // Pattern: "I feel ..."
   if (lowerInput.match(/\bi feel\b/)) {
     return {
       content: `Tell me more about these feelings. What makes you feel this way?`,
-    }
+    };
   }
 
   // Pattern: "I need ..."
   if (lowerInput.match(/\bi need\b/)) {
-    const need = input.toLowerCase().replace(/.*\bi need\s+/, '')
+    const need = input.toLowerCase().replace(/.*\bi need\s+/, '');
     return {
       content: `Why do you need ${need}? What would having ${need} mean to you?`,
-    }
+    };
   }
 
   // Pattern: "Why ..."
   if (lowerInput.startsWith('why')) {
     return {
       content: `That's an interesting question. Why do you think that might be? What's your intuition telling you?`,
-    }
+    };
   }
 
   // Pattern: "Can you ..."
   if (lowerInput.match(/\bcan you\b/)) {
     return {
       content: `I can certainly try to help. What specific aspect would you like me to focus on? The more details you provide, the better I can assist you.`,
-    }
+    };
   }
 
   // Pattern: Questions with "what", "how", "when", "where"
@@ -264,10 +279,10 @@ function generateElizaResponse(input: string): AIResponse {
       `That's a thoughtful question. Let me help you explore this. Could you provide more context about what you're trying to achieve?`,
       `Interesting question! To give you the most relevant answer, could you tell me more about your specific situation or use case?`,
       `I'd be happy to help with that. What's the broader context? Understanding your goals will help me provide better guidance.`,
-    ]
+    ];
     return {
       content: responses[Math.floor(Math.random() * responses.length)],
-    }
+    };
   }
 
   // Pattern: Short inputs (1-3 words)
@@ -276,10 +291,10 @@ function generateElizaResponse(input: string): AIResponse {
       `Could you elaborate on that? I'd like to understand better so I can provide more helpful insights.`,
       `Tell me more about what you mean by "${input}". What specific aspect interests you?`,
       `That's quite concise! Could you expand on what you'd like to know about "${input}"?`,
-    ]
+    ];
     return {
       content: responses[Math.floor(Math.random() * responses.length)],
-    }
+    };
   }
 
   // Default conversational response
@@ -326,7 +341,7 @@ The more context you provide, the more tailored and useful my response can be!`,
 
 Feel free to share as much or as little as you'd like - I'll adapt my response accordingly!`,
     },
-  ]
+  ];
 
-  return defaultResponses[Math.floor(Math.random() * defaultResponses.length)]
+  return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
 }

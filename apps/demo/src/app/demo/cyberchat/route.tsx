@@ -1,5 +1,5 @@
-import { CyberChatPage } from './CyberChatPage'
+import { CyberChatPage } from './CyberChatPage';
 
 export default function CyberChatRoute() {
-  return <CyberChatPage />
+  return <CyberChatPage />;
 }

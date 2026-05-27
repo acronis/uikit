@@ -1,4 +1,4 @@
-import { Filter } from '@acronis-platform/shadcn-uikit/react'
+import { Filter } from '@acronis-platform/shadcn-uikit/react';
 
 export function FilterDisabled() {
   return (
@@ -8,5 +8,5 @@ export function FilterDisabled() {
         Disabled with Count
       </Filter>
     </div>
-  )
+  );
 }

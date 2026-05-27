@@ -1,4 +1,4 @@
-import { Badge } from '@acronis-platform/shadcn-uikit/react'
+import { Badge } from '@acronis-platform/shadcn-uikit/react';
 
 export function BadgeStatusIndicators() {
   return (
@@ -24,5 +24,5 @@ export function BadgeStatusIndicators() {
         <Badge variant="danger">Down</Badge>
       </div>
     </div>
-  )
+  );
 }

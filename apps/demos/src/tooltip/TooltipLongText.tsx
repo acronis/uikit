@@ -1,11 +1,11 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
   TooltipArrow,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function TooltipLongText() {
   return (
@@ -16,12 +16,12 @@ export function TooltipLongText() {
         </TooltipTrigger>
         <TooltipContent className="max-w-xs">
           <p>
-            This is a longer tooltip text that provides more detailed information about the
-            element.
+            This is a longer tooltip text that provides more detailed
+            information about the element.
           </p>
           <TooltipArrow />
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  )
+  );
 }

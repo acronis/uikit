@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   SecondaryMenuBasic,
   SecondaryMenuWithIcons,
@@ -8,27 +8,28 @@ import {
   SecondaryMenuWithDisabled,
   SecondaryMenuComplete,
   SecondaryMenuSpecs,
-} from '@acronis-platform/shadcn-uikit-demos/secondary-menu'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/secondary-menu';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import secondaryMenuBasicCode from '../../../demos/src/secondary-menu/SecondaryMenuBasic.tsx?raw'
-import secondaryMenuWithIconsCode from '../../../demos/src/secondary-menu/SecondaryMenuWithIcons.tsx?raw'
-import secondaryMenuWithGroupsCode from '../../../demos/src/secondary-menu/SecondaryMenuWithGroups.tsx?raw'
-import secondaryMenuWithTagsCode from '../../../demos/src/secondary-menu/SecondaryMenuWithTags.tsx?raw'
-import secondaryMenuWithRightIconsCode from '../../../demos/src/secondary-menu/SecondaryMenuWithRightIcons.tsx?raw'
-import secondaryMenuWithDisabledCode from '../../../demos/src/secondary-menu/SecondaryMenuWithDisabled.tsx?raw'
-import secondaryMenuCompleteCode from '../../../demos/src/secondary-menu/SecondaryMenuComplete.tsx?raw'
-import secondaryMenuSpecsCode from '../../../demos/src/secondary-menu/SecondaryMenuSpecs.tsx?raw'
+import secondaryMenuBasicCode from '../../../demos/src/secondary-menu/SecondaryMenuBasic.tsx?raw';
+import secondaryMenuWithIconsCode from '../../../demos/src/secondary-menu/SecondaryMenuWithIcons.tsx?raw';
+import secondaryMenuWithGroupsCode from '../../../demos/src/secondary-menu/SecondaryMenuWithGroups.tsx?raw';
+import secondaryMenuWithTagsCode from '../../../demos/src/secondary-menu/SecondaryMenuWithTags.tsx?raw';
+import secondaryMenuWithRightIconsCode from '../../../demos/src/secondary-menu/SecondaryMenuWithRightIcons.tsx?raw';
+import secondaryMenuWithDisabledCode from '../../../demos/src/secondary-menu/SecondaryMenuWithDisabled.tsx?raw';
+import secondaryMenuCompleteCode from '../../../demos/src/secondary-menu/SecondaryMenuComplete.tsx?raw';
+import secondaryMenuSpecsCode from '../../../demos/src/secondary-menu/SecondaryMenuSpecs.tsx?raw';
 
 export function SecondaryMenuDemo() {
   return (
     <section className="demo-section">
       <h2>Secondary Menu Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        A tertiary navigation menu component designed to work alongside the main sidebar. Can be used
-        for sub-navigation, filtering, or organizing content into categories. Based on Acronis Design
-        System specifications from Figma.
+        A tertiary navigation menu component designed to work alongside the main
+        sidebar. Can be used for sub-navigation, filtering, or organizing
+        content into categories. Based on Acronis Design System specifications
+        from Figma.
       </p>
 
       <div className="space-y-8">

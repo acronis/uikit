@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   WidgetAll,
   WidgetBasic,
@@ -9,25 +9,26 @@ import {
   WidgetWithDivider,
   WidgetMinimal,
   WidgetDashboardGrid,
-} from '@acronis-platform/shadcn-uikit-demos/widget'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/widget';
+import { DemoWithCode } from './DemoWithCode';
 
-import widgetAllCode from '../../../demos/src/widget/WidgetAll.tsx?raw'
-import widgetBasicCode from '../../../demos/src/widget/WidgetBasic.tsx?raw'
-import widgetSizesCode from '../../../demos/src/widget/WidgetSizes.tsx?raw'
-import widgetInteractiveCode from '../../../demos/src/widget/WidgetInteractive.tsx?raw'
-import widgetWithIconCode from '../../../demos/src/widget/WidgetWithIcon.tsx?raw'
-import widgetValueDisplayCode from '../../../demos/src/widget/WidgetValueDisplay.tsx?raw'
-import widgetWithDividerCode from '../../../demos/src/widget/WidgetWithDivider.tsx?raw'
-import widgetMinimalCode from '../../../demos/src/widget/WidgetMinimal.tsx?raw'
-import widgetDashboardGridCode from '../../../demos/src/widget/WidgetDashboardGrid.tsx?raw'
+import widgetAllCode from '../../../demos/src/widget/WidgetAll.tsx?raw';
+import widgetBasicCode from '../../../demos/src/widget/WidgetBasic.tsx?raw';
+import widgetSizesCode from '../../../demos/src/widget/WidgetSizes.tsx?raw';
+import widgetInteractiveCode from '../../../demos/src/widget/WidgetInteractive.tsx?raw';
+import widgetWithIconCode from '../../../demos/src/widget/WidgetWithIcon.tsx?raw';
+import widgetValueDisplayCode from '../../../demos/src/widget/WidgetValueDisplay.tsx?raw';
+import widgetWithDividerCode from '../../../demos/src/widget/WidgetWithDivider.tsx?raw';
+import widgetMinimalCode from '../../../demos/src/widget/WidgetMinimal.tsx?raw';
+import widgetDashboardGridCode from '../../../demos/src/widget/WidgetDashboardGrid.tsx?raw';
 
 export function WidgetDemo() {
   return (
     <section className="demo-section">
       <h2>Dashboard Widgets</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Chart widgets, progress indicators, alerts, data tables, and text metrics for dashboards.
+        Chart widgets, progress indicators, alerts, data tables, and text
+        metrics for dashboards.
       </p>
 
       <div className="space-y-8">

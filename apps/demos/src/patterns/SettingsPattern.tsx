@@ -1,27 +1,51 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
-  AppShell, AppShellSidebar, AppShellBody, AppShellHeader, AppShellMain,
-  PageHeader, PageHeaderTitle, PageHeaderDescription,
-  Section, SectionHeader, SectionTitle, SectionDescription, SectionContent,
+  AppShell,
+  AppShellSidebar,
+  AppShellBody,
+  AppShellHeader,
+  AppShellMain,
+  PageHeader,
+  PageHeaderTitle,
+  PageHeaderDescription,
+  Section,
+  SectionHeader,
+  SectionTitle,
+  SectionDescription,
+  SectionContent,
   PageContent,
-  Tabs, TabsList, TabsTrigger, TabsContent,
-  Card, CardContent,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  Card,
+  CardContent,
   Button,
   Input,
   Label,
   Switch,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function SettingsPattern() {
-  const [notifications, setNotifications] = React.useState(true)
-  const [marketing, setMarketing] = React.useState(false)
+  const [notifications, setNotifications] = React.useState(true);
+  const [marketing, setMarketing] = React.useState(false);
 
   return (
     <AppShell>
       <AppShellSidebar className="w-56 border-r bg-muted/20 p-4 flex-shrink-0">
         <nav className="space-y-1">
-          {['Dashboard', 'Devices', 'Backups', 'Alerts', 'Reports', 'Settings'].map((item) => (
-            <div key={item} className={`px-3 py-2 rounded-md text-sm cursor-pointer ${item === 'Settings' ? 'bg-accent font-medium' : 'hover:bg-accent/50'}`}>
+          {[
+            'Dashboard',
+            'Devices',
+            'Backups',
+            'Alerts',
+            'Reports',
+            'Settings',
+          ].map((item) => (
+            <div
+              key={item}
+              className={`px-3 py-2 rounded-md text-sm cursor-pointer ${item === 'Settings' ? 'bg-accent font-medium' : 'hover:bg-accent/50'}`}
+            >
               {item}
             </div>
           ))}
@@ -35,7 +59,9 @@ export function SettingsPattern() {
           <PageContent>
             <PageHeader>
               <PageHeaderTitle>Settings</PageHeaderTitle>
-              <PageHeaderDescription>Manage your account preferences and configuration.</PageHeaderDescription>
+              <PageHeaderDescription>
+                Manage your account preferences and configuration.
+              </PageHeaderDescription>
             </PageHeader>
 
             <Tabs defaultValue="profile">
@@ -49,7 +75,9 @@ export function SettingsPattern() {
                 <Section>
                   <SectionHeader>
                     <SectionTitle>Personal Information</SectionTitle>
-                    <SectionDescription>Update your name and email address.</SectionDescription>
+                    <SectionDescription>
+                      Update your name and email address.
+                    </SectionDescription>
                   </SectionHeader>
                   <SectionContent>
                     <Card>
@@ -66,7 +94,11 @@ export function SettingsPattern() {
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="email">Email</Label>
-                          <Input id="email" type="email" defaultValue="john.doe@company.com" />
+                          <Input
+                            id="email"
+                            type="email"
+                            defaultValue="john.doe@company.com"
+                          />
                         </div>
                         <Button>Save Changes</Button>
                       </CardContent>
@@ -79,7 +111,9 @@ export function SettingsPattern() {
                 <Section>
                   <SectionHeader>
                     <SectionTitle>Email Notifications</SectionTitle>
-                    <SectionDescription>Choose which emails you want to receive.</SectionDescription>
+                    <SectionDescription>
+                      Choose which emails you want to receive.
+                    </SectionDescription>
                   </SectionHeader>
                   <SectionContent>
                     <Card>
@@ -87,16 +121,28 @@ export function SettingsPattern() {
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-sm font-medium">Backup alerts</p>
-                            <p className="text-xs text-muted-foreground">Get notified when backups complete or fail.</p>
+                            <p className="text-xs text-muted-foreground">
+                              Get notified when backups complete or fail.
+                            </p>
                           </div>
-                          <Switch checked={notifications} onCheckedChange={setNotifications} />
+                          <Switch
+                            checked={notifications}
+                            onCheckedChange={setNotifications}
+                          />
                         </div>
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm font-medium">Marketing emails</p>
-                            <p className="text-xs text-muted-foreground">News and product updates.</p>
+                            <p className="text-sm font-medium">
+                              Marketing emails
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              News and product updates.
+                            </p>
                           </div>
-                          <Switch checked={marketing} onCheckedChange={setMarketing} />
+                          <Switch
+                            checked={marketing}
+                            onCheckedChange={setMarketing}
+                          />
                         </div>
                         <Button>Save Preferences</Button>
                       </CardContent>
@@ -109,7 +155,9 @@ export function SettingsPattern() {
                 <Section>
                   <SectionHeader>
                     <SectionTitle>Change Password</SectionTitle>
-                    <SectionDescription>Update your password to keep your account secure.</SectionDescription>
+                    <SectionDescription>
+                      Update your password to keep your account secure.
+                    </SectionDescription>
                   </SectionHeader>
                   <SectionContent>
                     <Card>
@@ -137,5 +185,5 @@ export function SettingsPattern() {
         </AppShellMain>
       </AppShellBody>
     </AppShell>
-  )
+  );
 }

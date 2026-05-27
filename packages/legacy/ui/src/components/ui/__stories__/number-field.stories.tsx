@@ -1,21 +1,21 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   NumberFieldRoot,
   NumberFieldGroup,
   NumberFieldInput,
   NumberFieldDecrement,
   NumberFieldIncrement,
-} from '../number-field'
+} from '../number-field';
 
 const meta = {
   title: 'UI/NumberField',
   component: NumberFieldRoot,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof NumberFieldRoot>
+} satisfies Meta<typeof NumberFieldRoot>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: { defaultValue: 0 },
@@ -28,7 +28,7 @@ export const Default: Story = {
       </NumberFieldGroup>
     </NumberFieldRoot>
   ),
-}
+};
 
 export const WithMinMax: Story = {
   args: { defaultValue: 5, min: 0, max: 10 },
@@ -41,7 +41,7 @@ export const WithMinMax: Story = {
       </NumberFieldGroup>
     </NumberFieldRoot>
   ),
-}
+};
 
 export const Disabled: Story = {
   args: { defaultValue: 42, disabled: true },
@@ -54,4 +54,4 @@ export const Disabled: Story = {
       </NumberFieldGroup>
     </NumberFieldRoot>
   ),
-}
+};

@@ -1,4 +1,8 @@
-import { Label, RadioGroup, RadioGroupItem } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Label,
+  RadioGroup,
+  RadioGroupItem,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function RadioGroupDisabled() {
   return (
@@ -24,5 +28,5 @@ export function RadioGroupDisabled() {
         </Label>
       </div>
     </RadioGroup>
-  )
+  );
 }

@@ -1,25 +1,32 @@
-import * as React from 'react'
-import { Tooltip } from '@base-ui/react'
+import * as React from 'react';
+import { Tooltip } from '@base-ui/react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
-const TooltipProvider = Tooltip.Provider
+const TooltipProvider = Tooltip.Provider;
 
-const TooltipRoot = Tooltip.Root
+const TooltipRoot = Tooltip.Root;
 
-const TooltipTrigger = Tooltip.Trigger
+const TooltipTrigger = Tooltip.Trigger;
 
-type PositionerProps = React.ComponentPropsWithoutRef<typeof Tooltip.Positioner>
+type PositionerProps = React.ComponentPropsWithoutRef<
+  typeof Tooltip.Positioner
+>;
 
-export interface TooltipContentProps extends React.ComponentPropsWithoutRef<typeof Tooltip.Popup> {
-  sideOffset?: number
-  side?: PositionerProps['side']
-  align?: PositionerProps['align']
-  className?: string
+export interface TooltipContentProps extends React.ComponentPropsWithoutRef<
+  typeof Tooltip.Popup
+> {
+  sideOffset?: number;
+  side?: PositionerProps['side'];
+  align?: PositionerProps['align'];
+  className?: string;
 }
 
 const TooltipContent = React.forwardRef<HTMLDivElement, TooltipContentProps>(
-  ({ className, sideOffset = 5, side = 'top', align, children, ...props }, ref) => (
+  (
+    { className, sideOffset = 5, side = 'top', align, children, ...props },
+    ref
+  ) => (
     <Tooltip.Portal>
       <Tooltip.Positioner sideOffset={sideOffset} side={side} align={align}>
         <Tooltip.Popup
@@ -39,18 +46,25 @@ const TooltipContent = React.forwardRef<HTMLDivElement, TooltipContentProps>(
       </Tooltip.Positioner>
     </Tooltip.Portal>
   )
-)
-TooltipContent.displayName = 'TooltipContent'
+);
+TooltipContent.displayName = 'TooltipContent';
 
-const TooltipArrow = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof Tooltip.Arrow>>(
-  ({ className, ...props }, ref) => (
-    <Tooltip.Arrow
-      ref={ref}
-      className={cn('fill-popover', className)}
-      {...props}
-    />
-  )
-)
-TooltipArrow.displayName = 'TooltipArrow'
+const TooltipArrow = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentPropsWithoutRef<typeof Tooltip.Arrow>
+>(({ className, ...props }, ref) => (
+  <Tooltip.Arrow
+    ref={ref}
+    className={cn('fill-popover', className)}
+    {...props}
+  />
+));
+TooltipArrow.displayName = 'TooltipArrow';
 
-export { TooltipRoot as Tooltip, TooltipTrigger, TooltipContent, TooltipArrow, TooltipProvider }
+export {
+  TooltipRoot as Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipArrow,
+  TooltipProvider,
+};

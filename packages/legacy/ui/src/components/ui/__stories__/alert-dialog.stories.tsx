@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { within, userEvent } from 'storybook/test'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { within, userEvent } from 'storybook/test';
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -10,17 +10,17 @@ import {
   AlertDialogDescription,
   AlertDialogAction,
   AlertDialogCancel,
-} from '../alert-dialog'
+} from '../alert-dialog';
 
 const meta = {
   title: 'UI/AlertDialog',
   component: AlertDialog,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof AlertDialog>
+} satisfies Meta<typeof AlertDialog>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -30,8 +30,8 @@ export const Default: Story = {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your account and remove your
-            data from our servers.
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -42,10 +42,10 @@ export const Default: Story = {
     </AlertDialog>
   ),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    await userEvent.click(canvas.getByText('Open Dialog'))
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByText('Open Dialog'));
   },
-}
+};
 
 export const Destructive: Story = {
   render: () => (
@@ -55,8 +55,8 @@ export const Destructive: Story = {
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Account</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete your account. All your data will be lost and cannot be
-            recovered.
+            This will permanently delete your account. All your data will be
+            lost and cannot be recovered.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -69,7 +69,7 @@ export const Destructive: Story = {
     </AlertDialog>
   ),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    await userEvent.click(canvas.getByText('Delete Account'))
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByText('Delete Account'));
   },
-}
+};

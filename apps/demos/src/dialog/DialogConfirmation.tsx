@@ -7,9 +7,9 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { ExclamationCircleIcon } from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { ExclamationCircleIcon } from '@acronis-platform/shadcn-uikit';
 export function DialogConfirmation() {
   return (
     <Dialog>
@@ -29,8 +29,8 @@ export function DialogConfirmation() {
                 Are you sure you want to delete this item?
               </p>
               <p className="text-sm text-gray-600">
-                This action cannot be undone. This will permanently delete the item and remove
-                all associated data.
+                This action cannot be undone. This will permanently delete the
+                item and remove all associated data.
               </p>
             </div>
           </div>
@@ -43,5 +43,5 @@ export function DialogConfirmation() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

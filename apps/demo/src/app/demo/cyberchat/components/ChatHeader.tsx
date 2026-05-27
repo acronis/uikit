@@ -1,8 +1,8 @@
-import { Button, Switch } from '@acronis-platform/shadcn-uikit/react'
-import { ChevronDownIcon } from '@acronis-platform/shadcn-uikit'
-import { useCyberChatStore } from '../store/useCyberChatStore'
-import { ThemeSwitcher } from '@/components/playground/ThemeSwitcher'
-import { TokenSelector } from '@/components/playground/TokenSelector'
+import { Button, Switch } from '@acronis-platform/shadcn-uikit/react';
+import { ChevronDownIcon } from '@acronis-platform/shadcn-uikit';
+import { useCyberChatStore } from '../store/useCyberChatStore';
+import { ThemeSwitcher } from '@/components/playground/ThemeSwitcher';
+import { TokenSelector } from '@/components/playground/TokenSelector';
 
 export function ChatHeader() {
   const {
@@ -12,10 +12,10 @@ export function ChatHeader() {
     setTempChatEnabled,
     shareDropdownOpen,
     toggleShareDropdown,
-  } = useCyberChatStore()
+  } = useCyberChatStore();
 
-  const currentChat = chats.find((chat) => chat.id === activeChat)
-  const chatTitle = currentChat?.title || 'Chat'
+  const currentChat = chats.find((chat) => chat.id === activeChat);
+  const chatTitle = currentChat?.title || 'Chat';
 
   return (
     <div className="h-14 border-b border-border/50 px-6 flex items-center justify-between bg-background">
@@ -32,11 +32,7 @@ export function ChatHeader() {
         <TokenSelector />
         <ThemeSwitcher variant="dropdown" size="sm" />
         <div className="relative">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={toggleShareDropdown}
-          >
+          <Button variant="outline" size="sm" onClick={toggleShareDropdown}>
             Share & Export
             <ChevronDownIcon className="ml-2 h-4 w-4" />
           </Button>
@@ -59,5 +55,5 @@ export function ChatHeader() {
         </div>
       </div>
     </div>
-  )
+  );
 }

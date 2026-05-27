@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   AppShell,
   AppShellSidebar,
@@ -6,32 +6,36 @@ import {
   AppShellHeader,
   AppShellMain,
   AppShellFooter,
-} from '../app-shell'
+} from '../app-shell';
 
 const meta = {
   title: 'UI/AppShell',
   component: AppShell,
   parameters: { layout: 'fullscreen' },
   tags: ['autodocs'],
-} satisfies Meta<typeof AppShell>
+} satisfies Meta<typeof AppShell>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
     <AppShell className="h-screen">
       <AppShellSidebar className="w-56 border-r bg-muted">
-        <div className="flex h-16 items-center border-b px-4 font-semibold">Logo</div>
+        <div className="flex h-16 items-center border-b px-4 font-semibold">
+          Logo
+        </div>
         <nav className="p-2 space-y-1">
-          {['Dashboard', 'Backups', 'Devices', 'Reports', 'Settings'].map((item) => (
-            <div
-              key={item}
-              className="rounded-md px-3 py-2 text-sm hover:bg-background cursor-pointer"
-            >
-              {item}
-            </div>
-          ))}
+          {['Dashboard', 'Backups', 'Devices', 'Reports', 'Settings'].map(
+            (item) => (
+              <div
+                key={item}
+                className="rounded-md px-3 py-2 text-sm hover:bg-background cursor-pointer"
+              >
+                {item}
+              </div>
+            )
+          )}
         </nav>
       </AppShellSidebar>
       <AppShellBody>
@@ -56,7 +60,7 @@ export const Default: Story = {
       </AppShellBody>
     </AppShell>
   ),
-}
+};
 
 export const WithoutSidebar: Story = {
   render: () => (
@@ -71,4 +75,4 @@ export const WithoutSidebar: Story = {
       </AppShellMain>
     </AppShell>
   ),
-}
+};

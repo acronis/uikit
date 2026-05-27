@@ -3,7 +3,12 @@ import { useChat } from '../../lib/chat/chat-service';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 import { BotModeSelector } from './BotModeSelector';
-import { Card, CardContent, CardHeader, CardTitle } from '@acronis-platform/shadcn-uikit/react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@acronis-platform/shadcn-uikit/react';
 import { Separator } from '@acronis-platform/shadcn-uikit/react';
 import { BotMode } from '../../lib/chat/types';
 
@@ -25,7 +30,7 @@ export function ChatInterface({
     // getBotMode,
     getState,
     answerQuestion,
-    subscribe
+    subscribe,
   } = useChat();
 
   const [inputValue, setInputValue] = useState('');

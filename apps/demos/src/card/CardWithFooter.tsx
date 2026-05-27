@@ -5,8 +5,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function CardWithFooter() {
   return (
@@ -24,5 +24,5 @@ export function CardWithFooter() {
         <Button>Create</Button>
       </CardFooter>
     </Card>
-  )
+  );
 }

@@ -1,22 +1,22 @@
-import * as React from 'react'
+import * as React from 'react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 const Section = React.forwardRef<
   HTMLElement,
   React.HTMLAttributes<HTMLElement>
 >(({ className, ...props }, ref) => (
   <section ref={ref} className={cn('space-y-4', className)} {...props} />
-))
-Section.displayName = 'Section'
+));
+Section.displayName = 'Section';
 
 const SectionHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div ref={ref} className={cn('space-y-1', className)} {...props} />
-))
-SectionHeader.displayName = 'SectionHeader'
+));
+SectionHeader.displayName = 'SectionHeader';
 
 const SectionTitle = React.forwardRef<
   HTMLHeadingElement,
@@ -24,11 +24,14 @@ const SectionTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h2
     ref={ref}
-    className={cn('text-lg font-semibold leading-none tracking-tight', className)}
+    className={cn(
+      'text-lg font-semibold leading-none tracking-tight',
+      className
+    )}
     {...props}
   />
-))
-SectionTitle.displayName = 'SectionTitle'
+));
+SectionTitle.displayName = 'SectionTitle';
 
 const SectionDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -39,16 +42,16 @@ const SectionDescription = React.forwardRef<
     className={cn('text-sm text-muted-foreground', className)}
     {...props}
   />
-))
-SectionDescription.displayName = 'SectionDescription'
+));
+SectionDescription.displayName = 'SectionDescription';
 
 const SectionContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div ref={ref} className={cn('pt-2', className)} {...props} />
-))
-SectionContent.displayName = 'SectionContent'
+));
+SectionContent.displayName = 'SectionContent';
 
 export {
   Section,
@@ -56,4 +59,4 @@ export {
   SectionTitle,
   SectionDescription,
   SectionContent,
-}
+};

@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { PageContent } from '../page-content'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { PageContent } from '../page-content';
 
 const meta = {
   title: 'UI/PageContent',
   component: PageContent,
   parameters: { layout: 'fullscreen' },
   tags: ['autodocs'],
-} satisfies Meta<typeof PageContent>
+} satisfies Meta<typeof PageContent>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -22,7 +22,7 @@ export const Default: Story = {
       </PageContent>
     </div>
   ),
-}
+};
 
 export const WithHeader: Story = {
   render: () => (
@@ -34,11 +34,13 @@ export const WithHeader: Story = {
           <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
           <div className="grid grid-cols-3 gap-4">
             {Array.from({ length: 6 }, (_, i) => (
-              <div key={i} className="rounded-md border bg-card p-4 text-sm">Card {i + 1}</div>
+              <div key={i} className="rounded-md border bg-card p-4 text-sm">
+                Card {i + 1}
+              </div>
             ))}
           </div>
         </PageContent>
       </div>
     </div>
   ),
-}
+};

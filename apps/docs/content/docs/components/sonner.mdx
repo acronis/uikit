@@ -3,7 +3,16 @@ title: Sonner
 description: A toast notification system for displaying brief, non-intrusive messages.
 ---
 
-import { SonnerBasic, SonnerWithDescription, SonnerSuccess, SonnerError, SonnerWarning, SonnerWithAction, SonnerPromise, SonnerPositions } from '@/components/demos/sonner';
+import {
+  SonnerBasic,
+  SonnerWithDescription,
+  SonnerSuccess,
+  SonnerError,
+  SonnerWarning,
+  SonnerWithAction,
+  SonnerPromise,
+  SonnerPositions,
+} from '@/components/demos/sonner';
 import { DemoPreview } from '@/components/DemoPreview';
 
 ## Usage
@@ -82,6 +91,9 @@ Toasts displayed at different screen positions.
 
 ### Toaster
 
-<AutoTypeTable path="../../packages/legacy/ui/src/components/ui/sonner.tsx" name="ToasterProps" />
+<AutoTypeTable
+  path="../../packages/legacy/ui/src/components/ui/sonner.tsx"
+  name="ToasterProps"
+/>
 
 The `Toaster` component pre-configures theme integration, custom icons for each toast type, and Acronis-branded styling. Use the `toast()` function to trigger notifications: `toast()`, `toast.success()`, `toast.error()`, `toast.warning()`, `toast.info()`, `toast.loading()`, `toast.promise()`.

@@ -1,4 +1,4 @@
-import { Filter } from '@acronis-platform/shadcn-uikit/react'
+import { Filter } from '@acronis-platform/shadcn-uikit/react';
 
 export function FilterActiveState() {
   return (
@@ -8,5 +8,5 @@ export function FilterActiveState() {
         Active
       </Filter>
     </div>
-  )
+  );
 }

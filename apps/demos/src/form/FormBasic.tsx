@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import {
   Form,
   FormControl,
@@ -10,15 +10,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 const formSchema = z.object({
   username: z.string().min(2, {
     message: 'Username must be at least 2 characters.',
   }),
-})
+});
 
 export function FormBasic() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -26,11 +26,11 @@ export function FormBasic() {
     defaultValues: {
       username: '',
     },
-  })
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    alert(JSON.stringify(values, null, 2))
+    console.log(values);
+    alert(JSON.stringify(values, null, 2));
   }
 
   return (
@@ -46,7 +46,9 @@ export function FormBasic() {
                 <FormControl>
                   <Input placeholder="Enter username" {...field} />
                 </FormControl>
-                <FormDescription>This is your public display name.</FormDescription>
+                <FormDescription>
+                  This is your public display name.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -55,5 +57,5 @@ export function FormBasic() {
         </form>
       </Form>
     </div>
-  )
+  );
 }

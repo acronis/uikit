@@ -1,10 +1,10 @@
-import * as React from 'react'
-import { Switch, Label } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { Switch, Label } from '@acronis-platform/shadcn-uikit/react';
 
 export function SwitchForm() {
-  const [notifications, setNotifications] = React.useState(true)
-  const [marketing, setMarketing] = React.useState(false)
-  const [social, setSocial] = React.useState(true)
+  const [notifications, setNotifications] = React.useState(true);
+  const [marketing, setMarketing] = React.useState(false);
+  const [social, setSocial] = React.useState(true);
 
   return (
     <div className="max-w-md space-y-6 rounded-lg border p-6">
@@ -32,7 +32,11 @@ export function SwitchForm() {
                 Receive emails about new products and features.
               </p>
             </div>
-            <Switch id="marketing" checked={marketing} onCheckedChange={setMarketing} />
+            <Switch
+              id="marketing"
+              checked={marketing}
+              onCheckedChange={setMarketing}
+            />
           </div>
 
           <div className="flex items-center justify-between">
@@ -47,5 +51,5 @@ export function SwitchForm() {
         </div>
       </div>
     </div>
-  )
+  );
 }

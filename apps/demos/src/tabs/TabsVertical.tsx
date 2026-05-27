@@ -1,5 +1,10 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@acronis-platform/shadcn-uikit/react'
-import { Button, Input, Label } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button, Input, Label } from '@acronis-platform/shadcn-uikit/react';
 
 export function TabsVertical() {
   return (
@@ -36,9 +41,11 @@ export function TabsVertical() {
       <TabsContent value="team" className="mt-4">
         <div className="rounded-lg border p-6">
           <h4 className="mb-4 font-semibold">Team Management</h4>
-          <p className="text-sm text-muted-foreground">Invite and manage team members.</p>
+          <p className="text-sm text-muted-foreground">
+            Invite and manage team members.
+          </p>
         </div>
       </TabsContent>
     </Tabs>
-  )
+  );
 }

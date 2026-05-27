@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { Calendar } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { Calendar } from '@acronis-platform/shadcn-uikit/react';
 
 export function CalendarMinMax() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date())
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   return (
     <div>
@@ -19,5 +19,5 @@ export function CalendarMinMax() {
         Only dates within the next 3 months can be selected.
       </p>
     </div>
-  )
+  );
 }

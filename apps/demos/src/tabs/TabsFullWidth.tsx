@@ -1,4 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function TabsFullWidth() {
   return (
@@ -26,5 +31,5 @@ export function TabsFullWidth() {
         <p>Last tab content</p>
       </TabsContent>
     </Tabs>
-  )
+  );
 }

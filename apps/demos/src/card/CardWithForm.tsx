@@ -5,8 +5,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button, Input, Label } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button, Input, Label } from '@acronis-platform/shadcn-uikit/react';
 
 export function CardWithForm() {
   return (
@@ -29,5 +29,5 @@ export function CardWithForm() {
         <Button>Save changes</Button>
       </CardFooter>
     </Card>
-  )
+  );
 }

@@ -1,10 +1,10 @@
-import * as React from 'react'
-import { CloseIcon } from '@/components/icons'
-import { cn } from '@/lib/utils'
+import * as React from 'react';
+import { CloseIcon } from '@/components/icons';
+import { cn } from '@/lib/utils';
 
 export interface ChipProps extends React.HTMLAttributes<HTMLDivElement> {
-  onRemove?: () => void
-  icon?: React.ReactNode
+  onRemove?: () => void;
+  icon?: React.ReactNode;
 }
 
 const Chip = React.forwardRef<HTMLDivElement, ChipProps>(
@@ -19,7 +19,11 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>(
         )}
         {...props}
       >
-        {icon && <span className="flex h-4 w-4 items-center justify-center">{icon}</span>}
+        {icon && (
+          <span className="flex h-4 w-4 items-center justify-center">
+            {icon}
+          </span>
+        )}
         <span className="font-normal">{children}</span>
         {onRemove && (
           <button
@@ -32,9 +36,9 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>(
           </button>
         )}
       </div>
-    )
+    );
   }
-)
-Chip.displayName = 'Chip'
+);
+Chip.displayName = 'Chip';
 
-export { Chip }
+export { Chip };

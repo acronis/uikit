@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { Filter } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { Filter } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,20 +7,29 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function FilterWithDropdown() {
-  const [statusFilters, setStatusFilters] = React.useState<string[]>([])
+  const [statusFilters, setStatusFilters] = React.useState<string[]>([]);
 
   const toggleStatusFilter = (status: string) => {
     setStatusFilters((prev) =>
-      prev.includes(status) ? prev.filter((s) => s !== status) : [...prev, status]
-    )
-  }
+      prev.includes(status)
+        ? prev.filter((s) => s !== status)
+        : [...prev, status]
+    );
+  };
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<Filter count={statusFilters.length} active={statusFilters.length > 0} />}>
+      <DropdownMenuTrigger
+        render={
+          <Filter
+            count={statusFilters.length}
+            active={statusFilters.length > 0}
+          />
+        }
+      >
         Status
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -52,5 +61,5 @@ export function FilterWithDropdown() {
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

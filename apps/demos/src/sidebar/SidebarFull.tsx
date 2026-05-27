@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +14,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarProvider,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 import {
   CalendarIcon,
   ChevronRightIcon,
@@ -27,10 +27,10 @@ import {
   ShieldIcon,
   UserIcon,
   UsersIcon,
-} from '@acronis-platform/shadcn-uikit'
-import { BarChartIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit';
+import { BarChartIcon } from '../icons/missing-icons';
 export function SidebarFull() {
-  const [activeItem, setActiveItem] = useState('home')
+  const [activeItem, setActiveItem] = useState('home');
 
   const mainNavItems = [
     { id: 'home', title: 'Home', icon: HomeFolderIcon },
@@ -38,7 +38,7 @@ export function SidebarFull() {
     { id: 'calendar', title: 'Calendar', icon: CalendarIcon },
     { id: 'search', title: 'Search', icon: SearchIcon },
     { id: 'settings', title: 'Settings', icon: SettingsIcon },
-  ]
+  ];
 
   const projectNavItems = [
     {
@@ -61,13 +61,13 @@ export function SidebarFull() {
         { id: 'team-permissions', title: 'Permissions' },
       ],
     },
-  ]
+  ];
 
   const analyticsNavItems = [
     { id: 'analytics', title: 'Analytics', icon: BarChartIcon },
     { id: 'reports', title: 'Reports', icon: FileTextIcon },
     { id: 'security', title: 'Security', icon: ShieldIcon, tag: 'NEW' },
-  ]
+  ];
 
   return (
     <div className="h-[600px] border rounded-lg overflow-hidden">
@@ -80,7 +80,9 @@ export function SidebarFull() {
               </div>
               <div className="flex flex-col">
                 <span className="text-sm font-semibold">Acronis UIKit</span>
-                <span className="text-xs text-sidebar-foreground/70">Demo Application</span>
+                <span className="text-xs text-sidebar-foreground/70">
+                  Demo Application
+                </span>
               </div>
             </div>
           </SidebarHeader>
@@ -198,7 +200,8 @@ export function SidebarFull() {
                   projectNavItems
                     .flatMap((item) => item.subItems || [])
                     .find((item) => item.id === activeItem)?.title ||
-                  analyticsNavItems.find((item) => item.id === activeItem)?.title ||
+                  analyticsNavItems.find((item) => item.id === activeItem)
+                    ?.title ||
                   'Dashboard'}
               </h1>
             </div>
@@ -212,5 +215,5 @@ export function SidebarFull() {
         </div>
       </SidebarProvider>
     </div>
-  )
+  );
 }

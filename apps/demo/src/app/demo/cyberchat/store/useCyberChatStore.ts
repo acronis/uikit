@@ -1,18 +1,14 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import type {
-  CyberChatState,
-  CyberChatActions,
-  Message,
-} from '../types'
-import { mockChats } from '../data/mockChats'
-import { mockProjects } from '../data/mockProjects'
-import { mockSkills } from '../data/mockSkills'
-import { mockMessages } from '../data/mockMessages'
-import { mockModels } from '../data/mockModels'
-import { generateAIResponse } from '../services/aiService'
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { CyberChatState, CyberChatActions, Message } from '../types';
+import { mockChats } from '../data/mockChats';
+import { mockProjects } from '../data/mockProjects';
+import { mockSkills } from '../data/mockSkills';
+import { mockMessages } from '../data/mockMessages';
+import { mockModels } from '../data/mockModels';
+import { generateAIResponse } from '../services/aiService';
 
-type CyberChatStore = CyberChatState & CyberChatActions
+type CyberChatStore = CyberChatState & CyberChatActions;
 
 export const useCyberChatStore = create<CyberChatStore>()(
   persist(
@@ -43,22 +39,22 @@ export const useCyberChatStore = create<CyberChatStore>()(
 
       toggleProjectExpanded: (projectId) =>
         set((state) => {
-          const expanded = state.expandedProjects.includes(projectId)
+          const expanded = state.expandedProjects.includes(projectId);
           return {
             expandedProjects: expanded
               ? state.expandedProjects.filter((id) => id !== projectId)
               : [...state.expandedProjects, projectId],
-          }
+          };
         }),
 
       toggleSkillExpanded: (skillId) =>
         set((state) => {
-          const expanded = state.expandedSkills.includes(skillId)
+          const expanded = state.expandedSkills.includes(skillId);
           return {
             expandedSkills: expanded
               ? state.expandedSkills.filter((id) => id !== skillId)
               : [...state.expandedSkills, skillId],
-          }
+          };
         }),
 
       setActiveChat: (chatId) => set({ activeChat: chatId }),
@@ -156,27 +152,27 @@ export const useCyberChatStore = create<CyberChatStore>()(
 
       // Complex actions
       sendMessage: async () => {
-        const state = get()
-        if (!state.inputValue.trim()) return
+        const state = get();
+        if (!state.inputValue.trim()) return;
 
-        const userInput = state.inputValue
+        const userInput = state.inputValue;
 
         const userMessage: Message = {
           id: `msg-${Date.now()}`,
           type: 'user',
           content: userInput,
           timestamp: new Date(),
-        }
+        };
 
         set({
           messages: [...state.messages, userMessage],
           inputValue: '',
           isTyping: true,
-        })
+        });
 
         try {
-          const response = await generateAIResponse(userInput)
-          
+          const response = await generateAIResponse(userInput);
+
           const aiMessage: Message = {
             id: `msg-${Date.now()}-ai`,
             type: 'ai',
@@ -190,26 +186,27 @@ export const useCyberChatStore = create<CyberChatStore>()(
               { type: 'share', label: 'Share' },
               { type: 'regenerate', label: 'Regenerate' },
             ],
-          }
+          };
 
           set((state) => ({
             messages: [...state.messages, aiMessage],
             isTyping: false,
-          }))
+          }));
         } catch (error) {
-          console.error('Failed to generate AI response:', error)
-          
+          console.error('Failed to generate AI response:', error);
+
           const errorMessage: Message = {
             id: `msg-${Date.now()}-error`,
             type: 'ai',
-            content: 'I apologize, but I encountered an error generating a response. Please try again.',
+            content:
+              'I apologize, but I encountered an error generating a response. Please try again.',
             timestamp: new Date(),
-          }
+          };
 
           set((state) => ({
             messages: [...state.messages, errorMessage],
             isTyping: false,
-          }))
+          }));
         }
       },
 
@@ -218,27 +215,29 @@ export const useCyberChatStore = create<CyberChatStore>()(
           activeChat: chatId,
           messages: mockMessages,
           isTyping: false,
-        })
+        });
       },
 
       regenerateMessage: async (messageId) => {
-        set({ isTyping: true })
+        set({ isTyping: true });
 
-        const state = get()
-        const messageIndex = state.messages.findIndex(msg => msg.id === messageId)
-        
+        const state = get();
+        const messageIndex = state.messages.findIndex(
+          (msg) => msg.id === messageId
+        );
+
         // Find the previous user message for context
-        let userContext = 'Please provide more details'
+        let userContext = 'Please provide more details';
         for (let i = messageIndex - 1; i >= 0; i--) {
           if (state.messages[i].type === 'user') {
-            userContext = state.messages[i].content as string
-            break
+            userContext = state.messages[i].content as string;
+            break;
           }
         }
 
         try {
-          const response = await generateAIResponse(userContext)
-          
+          const response = await generateAIResponse(userContext);
+
           const newMessage: Message = {
             id: `msg-${Date.now()}-regenerated`,
             type: 'ai',
@@ -252,17 +251,17 @@ export const useCyberChatStore = create<CyberChatStore>()(
               { type: 'share', label: 'Share' },
               { type: 'regenerate', label: 'Regenerate' },
             ],
-          }
+          };
 
           set((state) => ({
             messages: state.messages.map((msg) =>
               msg.id === messageId ? newMessage : msg
             ),
             isTyping: false,
-          }))
+          }));
         } catch (error) {
-          console.error('Failed to regenerate response:', error)
-          set({ isTyping: false })
+          console.error('Failed to regenerate response:', error);
+          set({ isTyping: false });
         }
       },
     }),
@@ -277,4 +276,4 @@ export const useCyberChatStore = create<CyberChatStore>()(
       }),
     }
   )
-)
+);

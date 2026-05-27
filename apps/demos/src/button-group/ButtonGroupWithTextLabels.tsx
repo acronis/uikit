@@ -1,6 +1,6 @@
-import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react'
-import { ListIcon } from '@acronis-platform/shadcn-uikit'
-import { ListOrderedIcon } from '../icons/missing-icons'
+import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react';
+import { ListIcon } from '@acronis-platform/shadcn-uikit';
+import { ListOrderedIcon } from '../icons/missing-icons';
 export function ButtonGroupWithTextLabels() {
   return (
     <ButtonGroup>
@@ -13,5 +13,5 @@ export function ButtonGroupWithTextLabels() {
         Numbered List
       </Button>
     </ButtonGroup>
-  )
+  );
 }

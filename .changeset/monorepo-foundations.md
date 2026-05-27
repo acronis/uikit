@@ -1,5 +1,5 @@
 ---
-"@acronis-platform/shadcn-uikit": patch
+'@acronis-platform/shadcn-uikit': patch
 ---
 
 Internal: relocate the library to `packages/legacy/ui` as part of the monorepo

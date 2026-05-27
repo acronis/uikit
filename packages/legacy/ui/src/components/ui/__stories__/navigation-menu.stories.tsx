@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -6,17 +6,17 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
   NavigationMenuLink,
-} from '../navigation-menu'
+} from '../navigation-menu';
 
 const meta = {
   title: 'UI/NavigationMenu',
   component: NavigationMenu,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof NavigationMenu>
+} satisfies Meta<typeof NavigationMenu>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -32,9 +32,12 @@ export const Default: Story = {
                     href="#"
                     className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent"
                   >
-                    <div className="text-sm font-medium leading-none">Introduction</div>
+                    <div className="text-sm font-medium leading-none">
+                      Introduction
+                    </div>
                     <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                      Re-usable components built using Radix UI and Tailwind CSS.
+                      Re-usable components built using Radix UI and Tailwind
+                      CSS.
                     </p>
                   </a>
                 </NavigationMenuLink>
@@ -45,4 +48,4 @@ export const Default: Story = {
       </NavigationMenuList>
     </NavigationMenu>
   ),
-}
+};

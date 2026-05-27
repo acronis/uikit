@@ -5,7 +5,7 @@ import {
   WidgetContent,
   WidgetValue,
   WidgetLabel,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function WidgetSizes() {
   return (
@@ -22,5 +22,5 @@ export function WidgetSizes() {
         </Widget>
       ))}
     </div>
-  )
+  );
 }

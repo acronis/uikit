@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Sidebar, SidebarContent, SidebarProvider } from '../sidebar'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Sidebar, SidebarContent, SidebarProvider } from '../sidebar';
 
 const meta = {
   title: 'UI/Sidebar',
@@ -13,10 +13,10 @@ const meta = {
       </SidebarProvider>
     ),
   ],
-} satisfies Meta<typeof Sidebar>
+} satisfies Meta<typeof Sidebar>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -24,4 +24,4 @@ export const Default: Story = {
       <SidebarContent />
     </Sidebar>
   ),
-}
+};

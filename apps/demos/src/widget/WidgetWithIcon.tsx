@@ -7,10 +7,10 @@ import {
   WidgetContent,
   WidgetValue,
   WidgetLabel,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { ShieldIcon } from '@acronis-platform/shadcn-uikit'
-import { MoreVerticalIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { ShieldIcon } from '@acronis-platform/shadcn-uikit';
+import { MoreVerticalIcon } from '../icons/missing-icons';
 export function WidgetWithIcon() {
   return (
     <Widget className="w-[350px]">
@@ -30,5 +30,5 @@ export function WidgetWithIcon() {
         <WidgetLabel>No issues detected</WidgetLabel>
       </WidgetContent>
     </Widget>
-  )
+  );
 }

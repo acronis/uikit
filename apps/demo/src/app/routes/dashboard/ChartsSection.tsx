@@ -1,15 +1,43 @@
-import * as React from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@acronis-platform/shadcn-uikit/react'
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@acronis-platform/shadcn-uikit/react'
-import { LineChart, Line, BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts'
-import type { TimeSeriesData, CategoryData, DistributionData } from '../../types'
-import {CHART_COLORS_SEMANTIC} from "@/lib/chart-colors.ts";
+import * as React from 'react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  AreaChart,
+  Area,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+} from 'recharts';
+import type {
+  TimeSeriesData,
+  CategoryData,
+  DistributionData,
+} from '../../types';
+import { CHART_COLORS_SEMANTIC } from '@/lib/chart-colors.ts';
 
 interface ChartsSectionProps {
-  timeSeriesData: TimeSeriesData
-  categoryData: CategoryData
-  distributionData: DistributionData
-  isLoading?: boolean
+  timeSeriesData: TimeSeriesData;
+  categoryData: CategoryData;
+  distributionData: DistributionData;
+  isLoading?: boolean;
 }
 
 const chartConfig = {
@@ -17,9 +45,14 @@ const chartConfig = {
     label: 'Value',
     color: 'hsl(var(--primary))',
   },
-}
+};
 
-export function ChartsSection({ timeSeriesData, categoryData, distributionData, isLoading = false }: ChartsSectionProps) {
+export function ChartsSection({
+  timeSeriesData,
+  categoryData,
+  distributionData,
+  isLoading = false,
+}: ChartsSectionProps) {
   if (isLoading) {
     return (
       <div className="grid gap-4 md:grid-cols-2">
@@ -34,7 +67,7 @@ export function ChartsSection({ timeSeriesData, categoryData, distributionData, 
           </Card>
         ))}
       </div>
-    )
+    );
   }
 
   return (
@@ -42,7 +75,9 @@ export function ChartsSection({ timeSeriesData, categoryData, distributionData, 
       <Card className="col-span-2 md:col-span-1">
         <CardHeader>
           <CardTitle>User Activity</CardTitle>
-          <CardDescription>Daily active users over the last 30 days</CardDescription>
+          <CardDescription>
+            Daily active users over the last 30 days
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px] w-full">
@@ -51,7 +86,12 @@ export function ChartsSection({ timeSeriesData, categoryData, distributionData, 
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis
                   dataKey="date"
-                  tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  tickFormatter={(value) =>
+                    new Date(value).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                    })
+                  }
                   className="text-xs"
                 />
                 <YAxis className="text-xs" />
@@ -72,7 +112,9 @@ export function ChartsSection({ timeSeriesData, categoryData, distributionData, 
       <Card>
         <CardHeader>
           <CardTitle>Sales by Category</CardTitle>
-          <CardDescription>Revenue breakdown by product category</CardDescription>
+          <CardDescription>
+            Revenue breakdown by product category
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px] w-full">
@@ -82,7 +124,11 @@ export function ChartsSection({ timeSeriesData, categoryData, distributionData, 
                 <XAxis dataKey="category" className="text-xs" />
                 <YAxis className="text-xs" />
                 <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="value" fill={CHART_COLORS_SEMANTIC.danger} radius={[4, 4, 0, 0]} />
+                <Bar
+                  dataKey="value"
+                  fill={CHART_COLORS_SEMANTIC.danger}
+                  radius={[4, 4, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
@@ -101,7 +147,12 @@ export function ChartsSection({ timeSeriesData, categoryData, distributionData, 
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis
                   dataKey="date"
-                  tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  tickFormatter={(value) =>
+                    new Date(value).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                    })
+                  }
                   className="text-xs"
                 />
                 <YAxis className="text-xs" />
@@ -133,7 +184,9 @@ export function ChartsSection({ timeSeriesData, categoryData, distributionData, 
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) =>
+                    `${name} ${(percent * 100).toFixed(0)}%`
+                  }
                   outerRadius={80}
                   fill={CHART_COLORS_SEMANTIC.success}
                   stroke={CHART_COLORS_SEMANTIC.primary}
@@ -151,5 +204,5 @@ export function ChartsSection({ timeSeriesData, categoryData, distributionData, 
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

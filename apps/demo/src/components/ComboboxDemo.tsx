@@ -1,27 +1,27 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   ComboboxBasic,
   ComboboxWidths,
   ComboboxSmall,
   ComboboxForm,
   ComboboxDisabled,
-} from '@acronis-platform/shadcn-uikit-demos/combobox'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/combobox';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import comboboxBasicCode from '../../../demos/src/combobox/ComboboxBasic.tsx?raw'
-import comboboxWidthsCode from '../../../demos/src/combobox/ComboboxWidths.tsx?raw'
-import comboboxSmallCode from '../../../demos/src/combobox/ComboboxSmall.tsx?raw'
-import comboboxFormCode from '../../../demos/src/combobox/ComboboxForm.tsx?raw'
-import comboboxDisabledCode from '../../../demos/src/combobox/ComboboxDisabled.tsx?raw'
+import comboboxBasicCode from '../../../demos/src/combobox/ComboboxBasic.tsx?raw';
+import comboboxWidthsCode from '../../../demos/src/combobox/ComboboxWidths.tsx?raw';
+import comboboxSmallCode from '../../../demos/src/combobox/ComboboxSmall.tsx?raw';
+import comboboxFormCode from '../../../demos/src/combobox/ComboboxForm.tsx?raw';
+import comboboxDisabledCode from '../../../demos/src/combobox/ComboboxDisabled.tsx?raw';
 
 export function ComboboxDemo() {
   return (
     <section className="demo-section">
       <h2>Combobox Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Allows users not only to select a value from a list of predefined values but also to enter
-        data manually.
+        Allows users not only to select a value from a list of predefined values
+        but also to enter data manually.
       </p>
 
       <div className="space-y-8">

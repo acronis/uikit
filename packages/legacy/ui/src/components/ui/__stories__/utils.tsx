@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 
 /**
  * Storybook decorator that applies dark mode (and an optional theme class) to
@@ -10,25 +10,24 @@ import { useEffect } from 'react'
  *
  * @param themeClass – Optional Tailwind/CSS theme class (e.g. `'theme-cyber-chat'`).
  */
-export const withDarkMode =
-  (themeClass?: string) =>
+export const withDarkMode = (themeClass?: string) =>
   function DarkModeDecorator(Story: React.FC) {
     useEffect(() => {
-      const classes: string[] = ['dark']
-      if (themeClass) classes.push(themeClass)
-      document.documentElement.classList.add(...classes)
+      const classes: string[] = ['dark'];
+      if (themeClass) classes.push(themeClass);
+      document.documentElement.classList.add(...classes);
       return () => {
-        document.documentElement.classList.remove(...classes)
-      }
-    }, [])
+        document.documentElement.classList.remove(...classes);
+      };
+    }, []);
 
     const wrapperClass = ['dark', 'bg-background', 'p-8', themeClass]
       .filter(Boolean)
-      .join(' ')
+      .join(' ');
 
     return (
       <div className={wrapperClass}>
         <Story />
       </div>
-    )
-  }
+    );
+  };

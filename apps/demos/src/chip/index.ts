@@ -1,5 +1,5 @@
-export { ChipBasic } from './ChipBasic'
-export { ChipWithIcons } from './ChipWithIcons'
-export { ChipRemovable } from './ChipRemovable'
-export { ChipWithIconsRemovable } from './ChipWithIconsRemovable'
-export { ChipFilters } from './ChipFilters'
+export { ChipBasic } from './ChipBasic';
+export { ChipWithIcons } from './ChipWithIcons';
+export { ChipRemovable } from './ChipRemovable';
+export { ChipWithIconsRemovable } from './ChipWithIconsRemovable';
+export { ChipFilters } from './ChipFilters';

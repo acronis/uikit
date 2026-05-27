@@ -1,20 +1,23 @@
-import { useState } from 'react'
-import { Input, Button } from '@acronis-platform/shadcn-uikit/react'
-import { LockIcon, MailIcon } from '@acronis-platform/shadcn-uikit'
+import { useState } from 'react';
+import { Input, Button } from '@acronis-platform/shadcn-uikit/react';
+import { LockIcon, MailIcon } from '@acronis-platform/shadcn-uikit';
 export function InputForm() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   return (
     <form
       className="space-y-4"
       onSubmit={(e) => {
-        e.preventDefault()
-        alert(`Form submitted!\nEmail: ${email}\nPassword: ${password}`)
+        e.preventDefault();
+        alert(`Form submitted!\nEmail: ${email}\nPassword: ${password}`);
       }}
     >
       <div className="space-y-2">
-        <label htmlFor="form-email" className="text-sm font-medium text-[#243143]">
+        <label
+          htmlFor="form-email"
+          className="text-sm font-medium text-[#243143]"
+        >
           Email <span className="text-red-500">*</span>
         </label>
         <div className="relative">
@@ -31,7 +34,10 @@ export function InputForm() {
         </div>
       </div>
       <div className="space-y-2">
-        <label htmlFor="form-password" className="text-sm font-medium text-[#243143]">
+        <label
+          htmlFor="form-password"
+          className="text-sm font-medium text-[#243143]"
+        >
           Password <span className="text-red-500">*</span>
         </label>
         <div className="relative">
@@ -51,5 +57,5 @@ export function InputForm() {
         Sign In
       </Button>
     </form>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,9 +6,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
-import { MailIcon, MessagesIcon, SettingsIcon } from '@acronis-platform/shadcn-uikit'
-import { KeyboardIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  MailIcon,
+  MessagesIcon,
+  SettingsIcon,
+} from '@acronis-platform/shadcn-uikit';
+import { KeyboardIcon } from '../icons/missing-icons';
 export function DropdownMenuMultipleSections() {
   return (
     <DropdownMenu>
@@ -39,5 +43,5 @@ export function DropdownMenuMultipleSections() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

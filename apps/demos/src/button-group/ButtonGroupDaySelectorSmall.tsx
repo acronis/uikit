@@ -1,9 +1,9 @@
-import * as React from 'react'
-import { ButtonGroup } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { ButtonGroup } from '@acronis-platform/shadcn-uikit/react';
 
 export function ButtonGroupDaySelectorSmall() {
-  const [selectedDay, setSelectedDay] = React.useState<string>('Mon')
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  const [selectedDay, setSelectedDay] = React.useState<string>('Mon');
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
   return (
     <ButtonGroup className="border border-border/30 rounded bg-background p-1 h-8">
@@ -21,5 +21,5 @@ export function ButtonGroupDaySelectorSmall() {
         </button>
       ))}
     </ButtonGroup>
-  )
+  );
 }

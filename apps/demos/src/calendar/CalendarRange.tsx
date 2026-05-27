@@ -1,13 +1,13 @@
-import * as React from 'react'
-import { Calendar } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { Calendar } from '@acronis-platform/shadcn-uikit/react';
 
-type DateRange = { from: Date | undefined; to?: Date | undefined }
+type DateRange = { from: Date | undefined; to?: Date | undefined };
 
 export function CalendarRange() {
   const [rangeDate, setRangeDate] = React.useState<DateRange | undefined>({
     from: undefined,
     to: undefined,
-  })
+  });
 
   return (
     <div>
@@ -15,7 +15,9 @@ export function CalendarRange() {
         <Calendar
           mode="range"
           selected={rangeDate}
-          onSelect={(range) => setRangeDate(range || { from: undefined, to: undefined })}
+          onSelect={(range) =>
+            setRangeDate(range || { from: undefined, to: undefined })
+          }
         />
       </div>
       {rangeDate.from && (
@@ -28,5 +30,5 @@ export function CalendarRange() {
         </p>
       )}
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Card,
   CardContent,
@@ -21,45 +21,45 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Treemap } from 'recharts'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Treemap } from 'recharts';
 // colors managed via colorPalette constant
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 interface TreemapItem {
-  name: string
-  children?: TreemapItem[]
-  [key: string]: unknown
+  name: string;
+  children?: TreemapItem[];
+  [key: string]: unknown;
 }
 
 interface TreemapDataSource {
-  name: string
-  data: TreemapItem[]
-  dataKey: string
-  nameKey: string
-  description: string
+  name: string;
+  data: TreemapItem[];
+  dataKey: string;
+  nameKey: string;
+  description: string;
 }
 
 interface CategoryConfig {
-  color?: string
-  hidden?: boolean
+  color?: string;
+  hidden?: boolean;
 }
 
 // Content renderer props from recharts TreemapNode
 interface ContentProps {
-  x: number
-  y: number
-  width: number
-  height: number
-  name: string
-  depth: number
-  index: number
-  value: number
-  children: unknown[] | null
-  parent?: { index: number; name: string }
-  root?: { value: number }
-  [k: string]: unknown
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  name: string;
+  depth: number;
+  index: number;
+  value: number;
+  children: unknown[] | null;
+  parent?: { index: number; name: string };
+  root?: { value: number };
+  [k: string]: unknown;
 }
 
 // ─── Data Sources ────────────────────────────────────────────────────────────
@@ -222,127 +222,159 @@ const treemapDataSources: Record<string, TreemapDataSource> = {
     nameKey: 'name',
     description: 'Portfolio allocation in $K',
   },
-}
+};
 
-type DataSourceKey = keyof typeof treemapDataSources
+type DataSourceKey = keyof typeof treemapDataSources;
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const colorPalette = [
-  '#4169e1', '#2db89a', '#d946ef', '#ef5350', '#d4c92a',
-  '#38bdf8', '#a57c52', '#7c3aed', '#9ca3af', '#93c5fd',
-]
+  '#4169e1',
+  '#2db89a',
+  '#d946ef',
+  '#ef5350',
+  '#d4c92a',
+  '#38bdf8',
+  '#a57c52',
+  '#7c3aed',
+  '#9ca3af',
+  '#93c5fd',
+];
 
 const indicatorTypes = [
   { value: 'dot', label: 'dot - Small square' },
   { value: 'line', label: 'line - Vertical bar' },
   { value: 'dashed', label: 'dashed - Dashed line' },
-]
+];
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function TreemapChartPlayground() {
   // ── Data tab state ──────────────────────────────────────────────────────
-  const [dataSource, setDataSource] = React.useState<DataSourceKey>('techStack')
-  const currentSource = treemapDataSources[dataSource]
-  const [categoryConfigs, setCategoryConfigs] = React.useState<Record<string, CategoryConfig>>({})
+  const [dataSource, setDataSource] =
+    React.useState<DataSourceKey>('techStack');
+  const currentSource = treemapDataSources[dataSource];
+  const [categoryConfigs, setCategoryConfigs] = React.useState<
+    Record<string, CategoryConfig>
+  >({});
 
   // Reset on data source change
   React.useEffect(() => {
-    setCategoryConfigs({})
-  }, [dataSource])
+    setCategoryConfigs({});
+  }, [dataSource]);
 
-  const updateCategoryConfig = (catName: string, key: string, value: unknown) => {
+  const updateCategoryConfig = (
+    catName: string,
+    key: string,
+    value: unknown
+  ) => {
     setCategoryConfigs((prev) => ({
       ...prev,
       [catName]: { ...prev[catName], [key]: value },
-    }))
-  }
+    }));
+  };
 
   const getCategoryColor = (catName: string, idx: number): string => {
-    return categoryConfigs[catName]?.color ?? colorPalette[idx % colorPalette.length]
-  }
+    return (
+      categoryConfigs[catName]?.color ?? colorPalette[idx % colorPalette.length]
+    );
+  };
 
   // ── Treemap tab state ───────────────────────────────────────────────────
-  const [treemapType, setTreemapType] = React.useState<'flat' | 'nest'>('flat')
-  const [aspectRatio, setAspectRatio] = React.useState(4 / 3)
-  const [fill, setFill] = React.useState('#8884d8')
-  const [stroke, setStroke] = React.useState('#ffffff')
-  const [strokeWidth, setStrokeWidth] = React.useState(2)
+  const [treemapType, setTreemapType] = React.useState<'flat' | 'nest'>('flat');
+  const [aspectRatio, setAspectRatio] = React.useState(4 / 3);
+  const [fill, setFill] = React.useState('#8884d8');
+  const [stroke, setStroke] = React.useState('#ffffff');
+  const [strokeWidth, setStrokeWidth] = React.useState(2);
 
   // Content / Labels
-  const [showLabels, setShowLabels] = React.useState(true)
-  const [labelMinWidth, setLabelMinWidth] = React.useState(50)
-  const [labelMinHeight, setLabelMinHeight] = React.useState(30)
-  const [labelContent, setLabelContent] = React.useState<'name' | 'value' | 'name-value' | 'percent'>('name')
-  const [categoryFontSize, setCategoryFontSize] = React.useState(14)
-  const [leafFontSize, setLeafFontSize] = React.useState(11)
-  const [labelColor, setLabelColor] = React.useState('#ffffff')
+  const [showLabels, setShowLabels] = React.useState(true);
+  const [labelMinWidth, setLabelMinWidth] = React.useState(50);
+  const [labelMinHeight, setLabelMinHeight] = React.useState(30);
+  const [labelContent, setLabelContent] = React.useState<
+    'name' | 'value' | 'name-value' | 'percent'
+  >('name');
+  const [categoryFontSize, setCategoryFontSize] = React.useState(14);
+  const [leafFontSize, setLeafFontSize] = React.useState(11);
+  const [labelColor, setLabelColor] = React.useState('#ffffff');
 
   // Depth styling
-  const [leafOpacity, setLeafOpacity] = React.useState(0.7)
-  const [showCategoryLabels, setShowCategoryLabels] = React.useState(false)
+  const [leafOpacity, setLeafOpacity] = React.useState(0.7);
+  const [showCategoryLabels, setShowCategoryLabels] = React.useState(false);
 
   // Animation
-  const [isAnimationActive, setIsAnimationActive] = React.useState(true)
-  const [isUpdateAnimationActive, setIsUpdateAnimationActive] = React.useState(true)
-  const [animationDuration, setAnimationDuration] = React.useState(1500)
-  const [animationBegin, setAnimationBegin] = React.useState(0)
-  const [animationEasing, setAnimationEasing] = React.useState<'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out'>('linear')
+  const [isAnimationActive, setIsAnimationActive] = React.useState(true);
+  const [isUpdateAnimationActive, setIsUpdateAnimationActive] =
+    React.useState(true);
+  const [animationDuration, setAnimationDuration] = React.useState(1500);
+  const [animationBegin, setAnimationBegin] = React.useState(0);
+  const [animationEasing, setAnimationEasing] = React.useState<
+    'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out'
+  >('linear');
 
   // ── Chart tab state ─────────────────────────────────────────────────────
-  const [showTooltip, setShowTooltip] = React.useState(true)
-  const [tooltipIndicator, setTooltipIndicator] = React.useState<'dot' | 'line' | 'dashed'>('dot')
+  const [showTooltip, setShowTooltip] = React.useState(true);
+  const [tooltipIndicator, setTooltipIndicator] = React.useState<
+    'dot' | 'line' | 'dashed'
+  >('dot');
 
   // ── Derived ─────────────────────────────────────────────────────────────
 
   const visibleData = React.useMemo(() => {
-    return currentSource.data.filter((cat) => !categoryConfigs[cat.name]?.hidden)
-  }, [currentSource.data, categoryConfigs])
+    return currentSource.data.filter(
+      (cat) => !categoryConfigs[cat.name]?.hidden
+    );
+  }, [currentSource.data, categoryConfigs]);
 
   const totalValue = React.useMemo(() => {
-    let total = 0
+    let total = 0;
     visibleData.forEach((cat) => {
       cat.children?.forEach((child) => {
-        total += (child[currentSource.dataKey] as number) ?? 0
-      })
-    })
-    return total
-  }, [visibleData, currentSource.dataKey])
+        total += (child[currentSource.dataKey] as number) ?? 0;
+      });
+    });
+    return total;
+  }, [visibleData, currentSource.dataKey]);
 
   const config = React.useMemo(() => {
-    const cfg: Record<string, { label: string; color: string }> = {}
+    const cfg: Record<string, { label: string; color: string }> = {};
     visibleData.forEach((cat, idx) => {
-      const key = cat.name.toLowerCase().replace(/[^a-z0-9]/g, '')
-      cfg[key] = { label: cat.name, color: getCategoryColor(cat.name, idx) }
-    })
-    return cfg
+      const key = cat.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+      cfg[key] = { label: cat.name, color: getCategoryColor(cat.name, idx) };
+    });
+    return cfg;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visibleData, categoryConfigs])
+  }, [visibleData, categoryConfigs]);
 
   // ── Custom content renderer ─────────────────────────────────────────────
 
   const renderContent = React.useCallback(
     (props: ContentProps) => {
-      const { x, y, width, height, name, depth, index, value } = props
-      const parentIndex = props.parent?.index ?? index
+      const { x, y, width, height, name, depth, index, value } = props;
+      const parentIndex = props.parent?.index ?? index;
       const catColor = getCategoryColor(
         visibleData[depth === 1 ? index : parentIndex]?.name ?? '',
-        depth === 1 ? index : parentIndex,
-      )
-      const fillOpacity = depth >= 2 ? leafOpacity : 1
-      const isCategory = depth === 1
-      const canShowLabel = showLabels && width > labelMinWidth && height > labelMinHeight
+        depth === 1 ? index : parentIndex
+      );
+      const fillOpacity = depth >= 2 ? leafOpacity : 1;
+      const isCategory = depth === 1;
+      const canShowLabel =
+        showLabels && width > labelMinWidth && height > labelMinHeight;
 
       const formatLabel = () => {
-        const pct = totalValue > 0 ? `${((value / totalValue) * 100).toFixed(1)}%` : '0%'
+        const pct =
+          totalValue > 0 ? `${((value / totalValue) * 100).toFixed(1)}%` : '0%';
         switch (labelContent) {
-          case 'value': return String((value ?? 0).toLocaleString())
-          case 'name-value': return `${name}: ${(value ?? 0).toLocaleString()}`
-          case 'percent': return pct
-          default: return name
+          case 'value':
+            return String((value ?? 0).toLocaleString());
+          case 'name-value':
+            return `${name}: ${(value ?? 0).toLocaleString()}`;
+          case 'percent':
+            return pct;
+          default:
+            return name;
         }
-      }
+      };
 
       return (
         <g>
@@ -373,40 +405,59 @@ export function TreemapChartPlayground() {
             </text>
           )}
         </g>
-      )
+      );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [visibleData, categoryConfigs, showLabels, labelMinWidth, labelMinHeight, labelContent, categoryFontSize, leafFontSize, labelColor, leafOpacity, showCategoryLabels, stroke, strokeWidth, totalValue],
-  )
+    [
+      visibleData,
+      categoryConfigs,
+      showLabels,
+      labelMinWidth,
+      labelMinHeight,
+      labelContent,
+      categoryFontSize,
+      leafFontSize,
+      labelColor,
+      leafOpacity,
+      showCategoryLabels,
+      stroke,
+      strokeWidth,
+      totalValue,
+    ]
+  );
 
   // ── Code generation ─────────────────────────────────────────────────────
 
   const generateCode = () => {
-    const lines: string[] = []
-    lines.push(`<ChartContainer config={config} className="h-[400px] w-full">`)
+    const lines: string[] = [];
+    lines.push(`<ChartContainer config={config} className="h-[400px] w-full">`);
 
-    const tp: string[] = ['data={data}', `dataKey="${currentSource.dataKey}"`]
-    if (treemapType !== 'flat') tp.push(`type="${treemapType}"`)
-    if (aspectRatio !== 4 / 3) tp.push(`aspectRatio={${aspectRatio}}`)
-    if (fill !== '#8884d8') tp.push(`fill="${fill}"`)
-    if (stroke !== '#ffffff') tp.push(`stroke="${stroke}"`)
-    if (!isAnimationActive) tp.push('isAnimationActive={false}')
-    if (!isUpdateAnimationActive) tp.push('isUpdateAnimationActive={false}')
-    if (animationBegin !== 0) tp.push(`animationBegin={${animationBegin}}`)
-    if (animationDuration !== 1500) tp.push(`animationDuration={${animationDuration}}`)
-    if (animationEasing !== 'linear') tp.push(`animationEasing="${animationEasing}"`)
-    tp.push('content={<CustomizedContent />}')
+    const tp: string[] = ['data={data}', `dataKey="${currentSource.dataKey}"`];
+    if (treemapType !== 'flat') tp.push(`type="${treemapType}"`);
+    if (aspectRatio !== 4 / 3) tp.push(`aspectRatio={${aspectRatio}}`);
+    if (fill !== '#8884d8') tp.push(`fill="${fill}"`);
+    if (stroke !== '#ffffff') tp.push(`stroke="${stroke}"`);
+    if (!isAnimationActive) tp.push('isAnimationActive={false}');
+    if (!isUpdateAnimationActive) tp.push('isUpdateAnimationActive={false}');
+    if (animationBegin !== 0) tp.push(`animationBegin={${animationBegin}}`);
+    if (animationDuration !== 1500)
+      tp.push(`animationDuration={${animationDuration}}`);
+    if (animationEasing !== 'linear')
+      tp.push(`animationEasing="${animationEasing}"`);
+    tp.push('content={<CustomizedContent />}');
 
-    lines.push(`  <Treemap ${tp.join(' ')}>`)
+    lines.push(`  <Treemap ${tp.join(' ')}>`);
 
     if (showTooltip) {
-      lines.push(`    <ChartTooltip content={<ChartTooltipContent indicator="${tooltipIndicator}" />} />`)
+      lines.push(
+        `    <ChartTooltip content={<ChartTooltipContent indicator="${tooltipIndicator}" />} />`
+      );
     }
 
-    lines.push(`  </Treemap>`)
-    lines.push(`</ChartContainer>`)
-    return lines.join('\n')
-  }
+    lines.push(`  </Treemap>`);
+    lines.push(`</ChartContainer>`);
+    return lines.join('\n');
+  };
 
   // ── Render ──────────────────────────────────────────────────────────────
 
@@ -415,7 +466,8 @@ export function TreemapChartPlayground() {
       <div>
         <h2 className="text-2xl font-bold">TreemapChart Playground</h2>
         <p className="text-muted-foreground">
-          Hierarchical data as nested rectangles - great for showing proportions within categories
+          Hierarchical data as nested rectangles - great for showing proportions
+          within categories
         </p>
       </div>
 
@@ -424,7 +476,9 @@ export function TreemapChartPlayground() {
         <Card>
           <CardHeader>
             <CardTitle>Live Preview</CardTitle>
-            <CardDescription>Chart updates as you change settings</CardDescription>
+            <CardDescription>
+              Chart updates as you change settings
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer config={config} className="h-[400px] w-full">
@@ -446,7 +500,12 @@ export function TreemapChartPlayground() {
               >
                 {showTooltip && (
                   <ChartTooltip
-                    content={(props) => <ChartTooltipContent {...props} indicator={tooltipIndicator} />}
+                    content={(props) => (
+                      <ChartTooltipContent
+                        {...props}
+                        indicator={tooltipIndicator}
+                      />
+                    )}
                   />
                 )}
               </Treemap>
@@ -458,7 +517,9 @@ export function TreemapChartPlayground() {
         <Card>
           <CardHeader>
             <CardTitle>Settings</CardTitle>
-            <CardDescription>Toggle to see what each setting does</CardDescription>
+            <CardDescription>
+              Toggle to see what each setting does
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="data" className="w-full">
@@ -473,45 +534,75 @@ export function TreemapChartPlayground() {
               <TabsContent value="data" className="space-y-4 pt-4">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Data Source</Label>
-                  <Select value={dataSource} onValueChange={(v) => setDataSource(v as DataSourceKey)}>
+                  <Select
+                    value={dataSource}
+                    onValueChange={(v) => setDataSource(v as DataSourceKey)}
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.entries(treemapDataSources).map(([key, src]) => (
-                        <SelectItem key={key} value={key}>{src.name}</SelectItem>
+                        <SelectItem key={key} value={key}>
+                          {src.name}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <p className="text-xs text-muted-foreground">{currentSource.description}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {currentSource.description}
+                  </p>
                 </div>
 
                 <Separator />
 
                 <div className="space-y-2">
-                  <p className="text-xs font-medium text-muted-foreground">Categories ({visibleData.length} of {currentSource.data.length})</p>
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Categories ({visibleData.length} of{' '}
+                    {currentSource.data.length})
+                  </p>
                   {currentSource.data.map((cat, idx) => {
-                    const hidden = categoryConfigs[cat.name]?.hidden
-                    const color = getCategoryColor(cat.name, idx)
-                    const catTotal = cat.children?.reduce((sum, c) => sum + ((c[currentSource.dataKey] as number) ?? 0), 0) ?? 0
+                    const hidden = categoryConfigs[cat.name]?.hidden;
+                    const color = getCategoryColor(cat.name, idx);
+                    const catTotal =
+                      cat.children?.reduce(
+                        (sum, c) =>
+                          sum + ((c[currentSource.dataKey] as number) ?? 0),
+                        0
+                      ) ?? 0;
                     return (
                       <div
                         key={cat.name}
                         className={`rounded-lg border p-3 transition ${hidden ? 'opacity-40' : ''}`}
-                        style={{ borderLeftColor: hidden ? '#9ca3af' : color, borderLeftWidth: 4 }}
+                        style={{
+                          borderLeftColor: hidden ? '#9ca3af' : color,
+                          borderLeftWidth: 4,
+                        }}
                       >
                         <div className="flex items-center justify-between">
-                          <button className="text-left" onClick={() => updateCategoryConfig(cat.name, 'hidden', !hidden)}>
+                          <button
+                            className="text-left"
+                            onClick={() =>
+                              updateCategoryConfig(cat.name, 'hidden', !hidden)
+                            }
+                          >
                             <p className="text-sm font-medium">{cat.name}</p>
                             <p className="text-xs text-muted-foreground">
-                              {cat.children?.length ?? 0} items, total: {catTotal.toLocaleString()}
+                              {cat.children?.length ?? 0} items, total:{' '}
+                              {catTotal.toLocaleString()}
                             </p>
                           </button>
                           <div className="flex items-center gap-2">
                             <input
                               type="color"
                               value={color}
-                              onChange={(e) => updateCategoryConfig(cat.name, 'color', e.target.value)}
+                              onChange={(e) =>
+                                updateCategoryConfig(
+                                  cat.name,
+                                  'color',
+                                  e.target.value
+                                )
+                              }
                               className="h-6 w-6 cursor-pointer rounded border-0 bg-transparent p-0"
                             />
                           </div>
@@ -519,17 +610,28 @@ export function TreemapChartPlayground() {
                         {!hidden && (
                           <div className="mt-2 space-y-1">
                             {cat.children?.map((child) => (
-                              <div key={child.name} className="flex justify-between text-xs text-muted-foreground">
+                              <div
+                                key={child.name}
+                                className="flex justify-between text-xs text-muted-foreground"
+                              >
                                 <span>{child.name}</span>
-                                <span>{((child[currentSource.dataKey] as number) ?? 0).toLocaleString()}</span>
+                                <span>
+                                  {(
+                                    (child[currentSource.dataKey] as number) ??
+                                    0
+                                  ).toLocaleString()}
+                                </span>
                               </div>
                             ))}
                           </div>
                         )}
                       </div>
-                    )
+                    );
                   })}
-                  <p className="text-xs text-muted-foreground">Click a category to hide/show. Use color picker to customize.</p>
+                  <p className="text-xs text-muted-foreground">
+                    Click a category to hide/show. Use color picker to
+                    customize.
+                  </p>
                 </div>
               </TabsContent>
 
@@ -539,9 +641,14 @@ export function TreemapChartPlayground() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-sm font-medium">Type</Label>
-                    <p className="text-xs text-muted-foreground">Flat shows all; Nest allows drill-down</p>
+                    <p className="text-xs text-muted-foreground">
+                      Flat shows all; Nest allows drill-down
+                    </p>
                   </div>
-                  <Select value={treemapType} onValueChange={(v) => setTreemapType(v as 'flat' | 'nest')}>
+                  <Select
+                    value={treemapType}
+                    onValueChange={(v) => setTreemapType(v as 'flat' | 'nest')}
+                  >
                     <SelectTrigger className="w-24 h-8">
                       <SelectValue />
                     </SelectTrigger>
@@ -558,8 +665,12 @@ export function TreemapChartPlayground() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="text-sm font-medium">Aspect Ratio</Label>
-                      <p className="text-xs text-muted-foreground">Preferred rectangle shape ({aspectRatio.toFixed(2)})</p>
+                      <Label className="text-sm font-medium">
+                        Aspect Ratio
+                      </Label>
+                      <p className="text-xs text-muted-foreground">
+                        Preferred rectangle shape ({aspectRatio.toFixed(2)})
+                      </p>
                     </div>
                   </div>
                   <div className="flex gap-2">
@@ -581,7 +692,11 @@ export function TreemapChartPlayground() {
                   <Input
                     type="number"
                     value={aspectRatio}
-                    onChange={(e) => setAspectRatio(Math.max(0.1, Number(e.target.value) || 1.33))}
+                    onChange={(e) =>
+                      setAspectRatio(
+                        Math.max(0.1, Number(e.target.value) || 1.33)
+                      )
+                    }
                     step={0.1}
                     min={0.1}
                     max={5}
@@ -595,29 +710,67 @@ export function TreemapChartPlayground() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-sm font-medium">Animation</Label>
-                    <p className="text-xs text-muted-foreground">Animate on load</p>
+                    <p className="text-xs text-muted-foreground">
+                      Animate on load
+                    </p>
                   </div>
-                  <Switch checked={isAnimationActive} onCheckedChange={setIsAnimationActive} />
+                  <Switch
+                    checked={isAnimationActive}
+                    onCheckedChange={setIsAnimationActive}
+                  />
                 </div>
                 {isAnimationActive && (
                   <>
                     <div className="flex items-center justify-between pl-4">
                       <span className="text-sm">Delay (ms)</span>
-                      <Input type="number" value={animationBegin} onChange={(e) => setAnimationBegin(Math.max(0, Number(e.target.value) || 0))} min={0} max={5000} className="w-24 h-8" />
+                      <Input
+                        type="number"
+                        value={animationBegin}
+                        onChange={(e) =>
+                          setAnimationBegin(
+                            Math.max(0, Number(e.target.value) || 0)
+                          )
+                        }
+                        min={0}
+                        max={5000}
+                        className="w-24 h-8"
+                      />
                     </div>
                     <div className="flex items-center justify-between pl-4">
                       <span className="text-sm">Duration (ms)</span>
-                      <Input type="number" value={animationDuration} onChange={(e) => setAnimationDuration(Number(e.target.value) || 1500)} min={0} max={5000} className="w-24 h-8" />
+                      <Input
+                        type="number"
+                        value={animationDuration}
+                        onChange={(e) =>
+                          setAnimationDuration(Number(e.target.value) || 1500)
+                        }
+                        min={0}
+                        max={5000}
+                        className="w-24 h-8"
+                      />
                     </div>
                     <div className="flex items-center justify-between pl-4">
                       <span className="text-sm">Easing</span>
-                      <Select value={animationEasing} onValueChange={(v) => setAnimationEasing(v as typeof animationEasing)}>
+                      <Select
+                        value={animationEasing}
+                        onValueChange={(v) =>
+                          setAnimationEasing(v as typeof animationEasing)
+                        }
+                      >
                         <SelectTrigger className="w-32 h-8">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {['linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out'].map((e) => (
-                            <SelectItem key={e} value={e}>{e}</SelectItem>
+                          {[
+                            'linear',
+                            'ease',
+                            'ease-in',
+                            'ease-out',
+                            'ease-in-out',
+                          ].map((e) => (
+                            <SelectItem key={e} value={e}>
+                              {e}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -630,10 +783,17 @@ export function TreemapChartPlayground() {
                 {/* Update Animation */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-sm font-medium">Update Animation</Label>
-                    <p className="text-xs text-muted-foreground">Animate when data changes</p>
+                    <Label className="text-sm font-medium">
+                      Update Animation
+                    </Label>
+                    <p className="text-xs text-muted-foreground">
+                      Animate when data changes
+                    </p>
                   </div>
-                  <Switch checked={isUpdateAnimationActive} onCheckedChange={setIsUpdateAnimationActive} />
+                  <Switch
+                    checked={isUpdateAnimationActive}
+                    onCheckedChange={setIsUpdateAnimationActive}
+                  />
                 </div>
               </TabsContent>
 
@@ -642,10 +802,22 @@ export function TreemapChartPlayground() {
                 {/* Fill */}
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Default Fill</Label>
-                  <p className="text-xs text-muted-foreground">Fallback color when content renderer is not used</p>
+                  <p className="text-xs text-muted-foreground">
+                    Fallback color when content renderer is not used
+                  </p>
                   <div className="flex items-center gap-2">
-                    <input type="color" value={fill} onChange={(e) => setFill(e.target.value)} className="h-6 w-8 cursor-pointer rounded border-0 bg-transparent p-0" />
-                    <Input type="text" value={fill} onChange={(e) => setFill(e.target.value)} className="flex-1 h-8" />
+                    <input
+                      type="color"
+                      value={fill}
+                      onChange={(e) => setFill(e.target.value)}
+                      className="h-6 w-8 cursor-pointer rounded border-0 bg-transparent p-0"
+                    />
+                    <Input
+                      type="text"
+                      value={fill}
+                      onChange={(e) => setFill(e.target.value)}
+                      className="flex-1 h-8"
+                    />
                   </div>
                 </div>
 
@@ -655,12 +827,31 @@ export function TreemapChartPlayground() {
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Stroke (border)</Label>
                   <div className="flex items-center gap-2">
-                    <input type="color" value={stroke} onChange={(e) => setStroke(e.target.value)} className="h-6 w-8 cursor-pointer rounded border-0 bg-transparent p-0" />
-                    <Input type="text" value={stroke} onChange={(e) => setStroke(e.target.value)} className="flex-1 h-8" />
+                    <input
+                      type="color"
+                      value={stroke}
+                      onChange={(e) => setStroke(e.target.value)}
+                      className="h-6 w-8 cursor-pointer rounded border-0 bg-transparent p-0"
+                    />
+                    <Input
+                      type="text"
+                      value={stroke}
+                      onChange={(e) => setStroke(e.target.value)}
+                      className="flex-1 h-8"
+                    />
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">Width</span>
-                    <Input type="number" value={strokeWidth} onChange={(e) => setStrokeWidth(Number(e.target.value) || 0)} min={0} max={10} className="w-20 h-8" />
+                    <Input
+                      type="number"
+                      value={strokeWidth}
+                      onChange={(e) =>
+                        setStrokeWidth(Number(e.target.value) || 0)
+                      }
+                      min={0}
+                      max={10}
+                      className="w-20 h-8"
+                    />
                   </div>
                 </div>
 
@@ -670,9 +861,23 @@ export function TreemapChartPlayground() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-sm font-medium">Leaf Opacity</Label>
-                    <p className="text-xs text-muted-foreground">Opacity for child/leaf rectangles ({leafOpacity})</p>
+                    <p className="text-xs text-muted-foreground">
+                      Opacity for child/leaf rectangles ({leafOpacity})
+                    </p>
                   </div>
-                  <Input type="number" value={leafOpacity} onChange={(e) => setLeafOpacity(Math.min(1, Math.max(0, Number(e.target.value) || 0.7)))} step={0.1} min={0} max={1} className="w-20 h-8" />
+                  <Input
+                    type="number"
+                    value={leafOpacity}
+                    onChange={(e) =>
+                      setLeafOpacity(
+                        Math.min(1, Math.max(0, Number(e.target.value) || 0.7))
+                      )
+                    }
+                    step={0.1}
+                    min={0}
+                    max={1}
+                    className="w-20 h-8"
+                  />
                 </div>
 
                 <Separator />
@@ -681,48 +886,106 @@ export function TreemapChartPlayground() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-sm font-medium">Show Labels</Label>
-                    <p className="text-xs text-muted-foreground">Text inside rectangles</p>
+                    <p className="text-xs text-muted-foreground">
+                      Text inside rectangles
+                    </p>
                   </div>
-                  <Switch checked={showLabels} onCheckedChange={setShowLabels} />
+                  <Switch
+                    checked={showLabels}
+                    onCheckedChange={setShowLabels}
+                  />
                 </div>
                 {showLabels && (
                   <>
                     <div className="flex items-center justify-between pl-4">
                       <span className="text-sm">Content</span>
-                      <Select value={labelContent} onValueChange={(v) => setLabelContent(v as typeof labelContent)}>
+                      <Select
+                        value={labelContent}
+                        onValueChange={(v) =>
+                          setLabelContent(v as typeof labelContent)
+                        }
+                      >
                         <SelectTrigger className="w-32 h-8">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="name">Name only</SelectItem>
                           <SelectItem value="value">Value only</SelectItem>
-                          <SelectItem value="name-value">Name: Value</SelectItem>
+                          <SelectItem value="name-value">
+                            Name: Value
+                          </SelectItem>
                           <SelectItem value="percent">Percent</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="flex items-center justify-between pl-4">
                       <span className="text-sm">Min Width (px)</span>
-                      <Input type="number" value={labelMinWidth} onChange={(e) => setLabelMinWidth(Number(e.target.value) || 30)} min={10} max={200} className="w-20 h-8" />
+                      <Input
+                        type="number"
+                        value={labelMinWidth}
+                        onChange={(e) =>
+                          setLabelMinWidth(Number(e.target.value) || 30)
+                        }
+                        min={10}
+                        max={200}
+                        className="w-20 h-8"
+                      />
                     </div>
                     <div className="flex items-center justify-between pl-4">
                       <span className="text-sm">Min Height (px)</span>
-                      <Input type="number" value={labelMinHeight} onChange={(e) => setLabelMinHeight(Number(e.target.value) || 20)} min={10} max={200} className="w-20 h-8" />
+                      <Input
+                        type="number"
+                        value={labelMinHeight}
+                        onChange={(e) =>
+                          setLabelMinHeight(Number(e.target.value) || 20)
+                        }
+                        min={10}
+                        max={200}
+                        className="w-20 h-8"
+                      />
                     </div>
                     <div className="space-y-1 pl-4">
                       <span className="text-sm">Text Color</span>
                       <div className="flex items-center gap-2">
-                        <input type="color" value={labelColor} onChange={(e) => setLabelColor(e.target.value)} className="h-6 w-8 cursor-pointer rounded border-0 p-0" />
-                        <Input type="text" value={labelColor} onChange={(e) => setLabelColor(e.target.value)} className="flex-1 h-8" />
+                        <input
+                          type="color"
+                          value={labelColor}
+                          onChange={(e) => setLabelColor(e.target.value)}
+                          className="h-6 w-8 cursor-pointer rounded border-0 p-0"
+                        />
+                        <Input
+                          type="text"
+                          value={labelColor}
+                          onChange={(e) => setLabelColor(e.target.value)}
+                          className="flex-1 h-8"
+                        />
                       </div>
                     </div>
                     <div className="flex items-center justify-between pl-4">
                       <span className="text-sm">Category Font Size</span>
-                      <Input type="number" value={categoryFontSize} onChange={(e) => setCategoryFontSize(Number(e.target.value) || 14)} min={8} max={24} className="w-20 h-8" />
+                      <Input
+                        type="number"
+                        value={categoryFontSize}
+                        onChange={(e) =>
+                          setCategoryFontSize(Number(e.target.value) || 14)
+                        }
+                        min={8}
+                        max={24}
+                        className="w-20 h-8"
+                      />
                     </div>
                     <div className="flex items-center justify-between pl-4">
                       <span className="text-sm">Leaf Font Size</span>
-                      <Input type="number" value={leafFontSize} onChange={(e) => setLeafFontSize(Number(e.target.value) || 11)} min={8} max={24} className="w-20 h-8" />
+                      <Input
+                        type="number"
+                        value={leafFontSize}
+                        onChange={(e) =>
+                          setLeafFontSize(Number(e.target.value) || 11)
+                        }
+                        min={8}
+                        max={24}
+                        className="w-20 h-8"
+                      />
                     </div>
 
                     <Separator />
@@ -730,9 +993,14 @@ export function TreemapChartPlayground() {
                     <div className="flex items-center justify-between pl-4">
                       <div>
                         <span className="text-sm">Category Labels</span>
-                        <p className="text-xs text-muted-foreground">Show text on depth-1 (parent) rects</p>
+                        <p className="text-xs text-muted-foreground">
+                          Show text on depth-1 (parent) rects
+                        </p>
                       </div>
-                      <Switch checked={showCategoryLabels} onCheckedChange={setShowCategoryLabels} />
+                      <Switch
+                        checked={showCategoryLabels}
+                        onCheckedChange={setShowCategoryLabels}
+                      />
                     </div>
                   </>
                 )}
@@ -744,20 +1012,32 @@ export function TreemapChartPlayground() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-sm font-medium">Show Tooltip</Label>
-                    <p className="text-xs text-muted-foreground">{'<ChartTooltip />'}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {'<ChartTooltip />'}
+                    </p>
                   </div>
-                  <Switch checked={showTooltip} onCheckedChange={setShowTooltip} />
+                  <Switch
+                    checked={showTooltip}
+                    onCheckedChange={setShowTooltip}
+                  />
                 </div>
                 {showTooltip && (
                   <div className="space-y-2 pl-4">
                     <Label className="text-sm">Indicator</Label>
-                    <Select value={tooltipIndicator} onValueChange={(v) => setTooltipIndicator(v as 'dot' | 'line' | 'dashed')}>
+                    <Select
+                      value={tooltipIndicator}
+                      onValueChange={(v) =>
+                        setTooltipIndicator(v as 'dot' | 'line' | 'dashed')
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         {indicatorTypes.map((t) => (
-                          <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                          <SelectItem key={t.value} value={t.value}>
+                            {t.label}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -767,7 +1047,14 @@ export function TreemapChartPlayground() {
                 <Separator />
 
                 <div className="rounded border border-blue-500 bg-blue-50 dark:bg-blue-950/20 p-3 text-xs text-muted-foreground">
-                  <p><strong className="text-blue-700 dark:text-blue-400">Note:</strong> Treemap does not support Legend or standard axis components. Color coding is managed via the custom content renderer. Use the Data tab to customize per-category colors.</p>
+                  <p>
+                    <strong className="text-blue-700 dark:text-blue-400">
+                      Note:
+                    </strong>{' '}
+                    Treemap does not support Legend or standard axis components.
+                    Color coding is managed via the custom content renderer. Use
+                    the Data tab to customize per-category colors.
+                  </p>
                 </div>
               </TabsContent>
             </Tabs>
@@ -779,7 +1066,9 @@ export function TreemapChartPlayground() {
       <Card>
         <CardHeader>
           <CardTitle>Generated Code</CardTitle>
-          <CardDescription>Copy this code to use your current configuration</CardDescription>
+          <CardDescription>
+            Copy this code to use your current configuration
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <pre className="overflow-x-auto rounded-lg bg-muted p-4 text-sm">
@@ -793,7 +1082,8 @@ export function TreemapChartPlayground() {
         <CardHeader>
           <CardTitle>Raw Data</CardTitle>
           <CardDescription>
-            {currentSource.name} — {visibleData.length} categories, total value: {totalValue.toLocaleString()}
+            {currentSource.name} — {visibleData.length} categories, total value:{' '}
+            {totalValue.toLocaleString()}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -808,7 +1098,9 @@ export function TreemapChartPlayground() {
         <Card>
           <CardHeader>
             <CardTitle>Data Format</CardTitle>
-            <CardDescription>Required data structure for Treemap</CardDescription>
+            <CardDescription>
+              Required data structure for Treemap
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <pre className="overflow-x-auto rounded-lg bg-muted p-4 text-sm">
@@ -838,11 +1130,25 @@ const config: ChartConfig = {
             <div className="space-y-2 text-sm">
               <p className="font-medium">Requirements:</p>
               <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                <li><strong>name</strong> (or nameKey) - Label for each rectangle</li>
-                <li><strong>size/value</strong> (dataKey) - Numeric value for leaf nodes</li>
-                <li><strong>children</strong> - Array of nested items (1-2 levels ideal)</li>
-                <li><strong>Positive values</strong> - All leaf sizes must be &gt; 0</li>
-                <li><strong>Flat data also works</strong> - Array of items without children</li>
+                <li>
+                  <strong>name</strong> (or nameKey) - Label for each rectangle
+                </li>
+                <li>
+                  <strong>size/value</strong> (dataKey) - Numeric value for leaf
+                  nodes
+                </li>
+                <li>
+                  <strong>children</strong> - Array of nested items (1-2 levels
+                  ideal)
+                </li>
+                <li>
+                  <strong>Positive values</strong> - All leaf sizes must be &gt;
+                  0
+                </li>
+                <li>
+                  <strong>Flat data also works</strong> - Array of items without
+                  children
+                </li>
               </ul>
             </div>
           </CardContent>
@@ -857,21 +1163,45 @@ const config: ChartConfig = {
             <div>
               <p className="font-medium mb-1">Treemap Component</p>
               <ul className="list-disc list-inside text-muted-foreground space-y-0.5">
-                <li><code className="text-xs">dataKey</code> - Field for rectangle size (default &quot;value&quot;)</li>
-                <li><code className="text-xs">nameKey</code> - Field for rectangle label (default &quot;name&quot;)</li>
-                <li><code className="text-xs">type</code> - &quot;flat&quot; (all visible) or &quot;nest&quot; (drill-down)</li>
-                <li><code className="text-xs">aspectRatio</code> - Preferred shape of rectangles (default 4/3)</li>
-                <li><code className="text-xs">fill</code> - Default fill color</li>
-                <li><code className="text-xs">stroke</code> - Border color between rectangles</li>
+                <li>
+                  <code className="text-xs">dataKey</code> - Field for rectangle
+                  size (default &quot;value&quot;)
+                </li>
+                <li>
+                  <code className="text-xs">nameKey</code> - Field for rectangle
+                  label (default &quot;name&quot;)
+                </li>
+                <li>
+                  <code className="text-xs">type</code> - &quot;flat&quot; (all
+                  visible) or &quot;nest&quot; (drill-down)
+                </li>
+                <li>
+                  <code className="text-xs">aspectRatio</code> - Preferred shape
+                  of rectangles (default 4/3)
+                </li>
+                <li>
+                  <code className="text-xs">fill</code> - Default fill color
+                </li>
+                <li>
+                  <code className="text-xs">stroke</code> - Border color between
+                  rectangles
+                </li>
               </ul>
             </div>
             <Separator />
             <div>
               <p className="font-medium mb-1">Content Renderer</p>
               <ul className="list-disc list-inside text-muted-foreground space-y-0.5">
-                <li><code className="text-xs">content</code> - Custom render function for each rectangle</li>
-                <li>Receives: x, y, width, height, name, depth, index, value</li>
-                <li>Controls: colors, labels, borders, opacity per rectangle</li>
+                <li>
+                  <code className="text-xs">content</code> - Custom render
+                  function for each rectangle
+                </li>
+                <li>
+                  Receives: x, y, width, height, name, depth, index, value
+                </li>
+                <li>
+                  Controls: colors, labels, borders, opacity per rectangle
+                </li>
                 <li>Depth 1 = category, depth 2 = leaf item</li>
               </ul>
             </div>
@@ -879,8 +1209,14 @@ const config: ChartConfig = {
             <div>
               <p className="font-medium mb-1">Nest Mode</p>
               <ul className="list-disc list-inside text-muted-foreground space-y-0.5">
-                <li><code className="text-xs">nestIndexContent</code> - Custom breadcrumb renderer</li>
-                <li><code className="text-xs">colorPanel</code> - Color array for nested levels</li>
+                <li>
+                  <code className="text-xs">nestIndexContent</code> - Custom
+                  breadcrumb renderer
+                </li>
+                <li>
+                  <code className="text-xs">colorPanel</code> - Color array for
+                  nested levels
+                </li>
                 <li>Click a category to zoom in, breadcrumb to go back</li>
               </ul>
             </div>
@@ -888,11 +1224,26 @@ const config: ChartConfig = {
             <div>
               <p className="font-medium mb-1">Animation</p>
               <ul className="list-disc list-inside text-muted-foreground space-y-0.5">
-                <li><code className="text-xs">isAnimationActive</code> - Enable/disable initial animation</li>
-                <li><code className="text-xs">isUpdateAnimationActive</code> - Animate data changes</li>
-                <li><code className="text-xs">animationBegin</code> - Delay in ms (default 0)</li>
-                <li><code className="text-xs">animationDuration</code> - Duration in ms (default 1500)</li>
-                <li><code className="text-xs">animationEasing</code> - Timing function (default &quot;linear&quot;)</li>
+                <li>
+                  <code className="text-xs">isAnimationActive</code> -
+                  Enable/disable initial animation
+                </li>
+                <li>
+                  <code className="text-xs">isUpdateAnimationActive</code> -
+                  Animate data changes
+                </li>
+                <li>
+                  <code className="text-xs">animationBegin</code> - Delay in ms
+                  (default 0)
+                </li>
+                <li>
+                  <code className="text-xs">animationDuration</code> - Duration
+                  in ms (default 1500)
+                </li>
+                <li>
+                  <code className="text-xs">animationEasing</code> - Timing
+                  function (default &quot;linear&quot;)
+                </li>
               </ul>
             </div>
           </CardContent>
@@ -907,27 +1258,45 @@ const config: ChartConfig = {
             <ul className="space-y-2 text-muted-foreground">
               <li className="flex gap-2">
                 <span className="text-destructive">-</span>
-                <span><strong>Deep nesting (3+ levels)</strong> - Becomes very hard to read and interact with</span>
+                <span>
+                  <strong>Deep nesting (3+ levels)</strong> - Becomes very hard
+                  to read and interact with
+                </span>
               </li>
               <li className="flex gap-2">
                 <span className="text-destructive">-</span>
-                <span><strong>Many small items</strong> - Labels cannot fit, rectangles become invisible</span>
+                <span>
+                  <strong>Many small items</strong> - Labels cannot fit,
+                  rectangles become invisible
+                </span>
               </li>
               <li className="flex gap-2">
                 <span className="text-destructive">-</span>
-                <span><strong>No built-in legend</strong> - Color coding must be communicated via custom content or documentation</span>
+                <span>
+                  <strong>No built-in legend</strong> - Color coding must be
+                  communicated via custom content or documentation
+                </span>
               </li>
               <li className="flex gap-2">
                 <span className="text-destructive">-</span>
-                <span><strong>No comparison over time</strong> - Shows a single snapshot</span>
+                <span>
+                  <strong>No comparison over time</strong> - Shows a single
+                  snapshot
+                </span>
               </li>
               <li className="flex gap-2">
                 <span className="text-destructive">-</span>
-                <span><strong>Poor exact value comparison</strong> - Area is harder to compare than length (use BarChart)</span>
+                <span>
+                  <strong>Poor exact value comparison</strong> - Area is harder
+                  to compare than length (use BarChart)
+                </span>
               </li>
               <li className="flex gap-2">
                 <span className="text-destructive">-</span>
-                <span><strong>Layout instability</strong> - Adding/removing items reshuffles all rectangles</span>
+                <span>
+                  <strong>Layout instability</strong> - Adding/removing items
+                  reshuffles all rectangles
+                </span>
               </li>
             </ul>
           </CardContent>
@@ -966,7 +1335,9 @@ const config: ChartConfig = {
                 <li>Use color to indicate categories, not values</li>
                 <li>Limit to 2 levels of nesting maximum</li>
                 <li>Group small items into an &quot;Other&quot; category</li>
-                <li>Set labelMinWidth/Height to avoid tiny unreadable labels</li>
+                <li>
+                  Set labelMinWidth/Height to avoid tiny unreadable labels
+                </li>
                 <li>Use leaf opacity to distinguish parents from children</li>
                 <li>Use nest mode for explorable deep hierarchies</li>
               </ul>
@@ -979,7 +1350,9 @@ const config: ChartConfig = {
       <Card>
         <CardHeader>
           <CardTitle>Treemap Anatomy</CardTitle>
-          <CardDescription>How the squarified layout algorithm works</CardDescription>
+          <CardDescription>
+            How the squarified layout algorithm works
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-sm">
           <div className="grid gap-4 md:grid-cols-3">
@@ -995,16 +1368,25 @@ const config: ChartConfig = {
             <div className="space-y-2">
               <p className="font-medium">Depth Levels</p>
               <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                <li><strong>Depth 0:</strong> Root container (the chart)</li>
-                <li><strong>Depth 1:</strong> Top-level categories</li>
-                <li><strong>Depth 2:</strong> Leaf items within categories</li>
+                <li>
+                  <strong>Depth 0:</strong> Root container (the chart)
+                </li>
+                <li>
+                  <strong>Depth 1:</strong> Top-level categories
+                </li>
+                <li>
+                  <strong>Depth 2:</strong> Leaf items within categories
+                </li>
                 <li>Use opacity/font to distinguish levels</li>
               </ul>
             </div>
             <div className="space-y-2">
               <p className="font-medium">Custom Content</p>
               <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                <li>The <code className="text-xs">content</code> prop replaces default rendering</li>
+                <li>
+                  The <code className="text-xs">content</code> prop replaces
+                  default rendering
+                </li>
                 <li>Receives TreemapNode with all positioning data</li>
                 <li>Return SVG elements (rect, text, g)</li>
                 <li>Use depth to apply different styles per level</li>
@@ -1013,7 +1395,14 @@ const config: ChartConfig = {
           </div>
           <Separator />
           <div className="rounded border border-blue-500 bg-blue-50 dark:bg-blue-950/20 p-3 text-xs text-muted-foreground">
-            <p><strong className="text-blue-700 dark:text-blue-400">Tip:</strong> The <code className="text-xs">content</code> prop is the most powerful feature of Treemap. It receives the full TreemapNode including x, y, width, height, depth, name, value, and parent reference. Use depth to apply category colors at depth=1 and lighter shades at depth=2.</p>
+            <p>
+              <strong className="text-blue-700 dark:text-blue-400">Tip:</strong>{' '}
+              The <code className="text-xs">content</code> prop is the most
+              powerful feature of Treemap. It receives the full TreemapNode
+              including x, y, width, height, depth, name, value, and parent
+              reference. Use depth to apply category colors at depth=1 and
+              lighter shades at depth=2.
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -1021,7 +1410,9 @@ const config: ChartConfig = {
       <Card>
         <CardHeader>
           <CardTitle>Flat vs Nest Mode</CardTitle>
-          <CardDescription>Two rendering approaches for hierarchical data</CardDescription>
+          <CardDescription>
+            Two rendering approaches for hierarchical data
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-sm">
           <div className="grid gap-4 md:grid-cols-2">
@@ -1040,18 +1431,32 @@ const config: ChartConfig = {
               <ul className="list-disc list-inside text-muted-foreground space-y-1">
                 <li>Click a parent to zoom into its children</li>
                 <li>Breadcrumb navigation to go back up</li>
-                <li>Use <code className="text-xs">nestIndexContent</code> for custom breadcrumbs</li>
-                <li>Use <code className="text-xs">colorPanel</code> for level-based colors</li>
+                <li>
+                  Use <code className="text-xs">nestIndexContent</code> for
+                  custom breadcrumbs
+                </li>
+                <li>
+                  Use <code className="text-xs">colorPanel</code> for
+                  level-based colors
+                </li>
                 <li>Better for deep or large hierarchies</li>
               </ul>
             </div>
           </div>
           <Separator />
           <div className="rounded border border-amber-500 bg-amber-50 dark:bg-amber-950/20 p-3 text-xs text-muted-foreground">
-            <p><strong className="text-amber-700 dark:text-amber-400">Note:</strong> In nest mode, the custom content renderer may behave differently. The breadcrumb navigation is built-in but can be customized with <code className="text-xs">nestIndexContent</code>. Test both modes to see which fits your use case.</p>
+            <p>
+              <strong className="text-amber-700 dark:text-amber-400">
+                Note:
+              </strong>{' '}
+              In nest mode, the custom content renderer may behave differently.
+              The breadcrumb navigation is built-in but can be customized with{' '}
+              <code className="text-xs">nestIndexContent</code>. Test both modes
+              to see which fits your use case.
+            </p>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

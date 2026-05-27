@@ -1,4 +1,4 @@
-import { Tag } from '@acronis-platform/shadcn-uikit/react'
+import { Tag } from '@acronis-platform/shadcn-uikit/react';
 
 export function TagVersion() {
   return (
@@ -16,5 +16,5 @@ export function TagVersion() {
         Deprecated
       </Tag>
     </div>
-  )
+  );
 }

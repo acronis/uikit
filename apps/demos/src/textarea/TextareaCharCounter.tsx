@@ -1,14 +1,17 @@
-import { useState } from 'react'
-import { Textarea } from '@acronis-platform/shadcn-uikit/react'
+import { useState } from 'react';
+import { Textarea } from '@acronis-platform/shadcn-uikit/react';
 
 export function TextareaCharCounter() {
-  const [feedback, setFeedback] = useState('')
-  const charLimit = 500
+  const [feedback, setFeedback] = useState('');
+  const charLimit = 500;
 
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <label htmlFor="limited-text" className="text-sm font-medium text-[#243143]">
+        <label
+          htmlFor="limited-text"
+          className="text-sm font-medium text-[#243143]"
+        >
           Feedback ({feedback.length}/{charLimit})
         </label>
         <Textarea
@@ -17,7 +20,7 @@ export function TextareaCharCounter() {
           value={feedback}
           onChange={(e) => {
             if (e.target.value.length <= charLimit) {
-              setFeedback(e.target.value)
+              setFeedback(e.target.value);
             }
           }}
           maxLength={charLimit}
@@ -27,5 +30,5 @@ export function TextareaCharCounter() {
         </p>
       </div>
     </div>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react'
-import { ListIcon } from '@acronis-platform/shadcn-uikit'
+import * as React from 'react';
+import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react';
+import { ListIcon } from '@acronis-platform/shadcn-uikit';
 import {
   AlignCenterIcon,
   AlignLeftIcon,
@@ -11,16 +11,18 @@ import {
   RedoIcon,
   UnderlineIcon,
   UndoIcon,
-} from '../icons/missing-icons'
+} from '../icons/missing-icons';
 export function ButtonGroupComplexToolbar() {
-  const [alignment, setAlignment] = React.useState<string>('left')
-  const [textFormat, setTextFormat] = React.useState<string[]>([])
+  const [alignment, setAlignment] = React.useState<string>('left');
+  const [textFormat, setTextFormat] = React.useState<string[]>([]);
 
   const toggleFormat = (format: string) => {
     setTextFormat((prev) =>
-      prev.includes(format) ? prev.filter((f) => f !== format) : [...prev, format]
-    )
-  }
+      prev.includes(format)
+        ? prev.filter((f) => f !== format)
+        : [...prev, format]
+    );
+  };
 
   return (
     <div className="flex flex-wrap gap-4">
@@ -92,5 +94,5 @@ export function ButtonGroupComplexToolbar() {
         </Button>
       </ButtonGroup>
     </div>
-  )
+  );
 }

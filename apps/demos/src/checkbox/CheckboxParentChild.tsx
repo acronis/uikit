@@ -1,16 +1,20 @@
-import * as React from 'react'
-import { Checkbox, Label } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { Checkbox, Label } from '@acronis-platform/shadcn-uikit/react';
 
 export function CheckboxParentChild() {
   const [items, setItems] = React.useState([
     { id: '1', label: 'Item 1', checked: false },
     { id: '2', label: 'Item 2', checked: false },
     { id: '3', label: 'Item 3', checked: false },
-  ])
+  ]);
 
-  const allChecked = items.every((item) => item.checked)
-  const someChecked = items.some((item) => item.checked)
-  const parentChecked = allChecked ? true : someChecked ? 'indeterminate' : false
+  const allChecked = items.every((item) => item.checked);
+  const someChecked = items.some((item) => item.checked);
+  const parentChecked = allChecked
+    ? true
+    : someChecked
+      ? 'indeterminate'
+      : false;
 
   return (
     <div className="space-y-2">
@@ -19,8 +23,8 @@ export function CheckboxParentChild() {
           id="parent"
           checked={parentChecked}
           onCheckedChange={(checked) => {
-            const newChecked = checked === true
-            setItems(items.map((item) => ({ ...item, checked: newChecked })))
+            const newChecked = checked === true;
+            setItems(items.map((item) => ({ ...item, checked: newChecked })));
           }}
         />
         <Label htmlFor="parent" className="text-sm font-medium cursor-pointer">
@@ -38,15 +42,18 @@ export function CheckboxParentChild() {
                   items.map((i) =>
                     i.id === item.id ? { ...i, checked: checked === true } : i
                   )
-                )
+                );
               }}
             />
-            <Label htmlFor={item.id} className="text-sm font-normal cursor-pointer">
+            <Label
+              htmlFor={item.id}
+              className="text-sm font-normal cursor-pointer"
+            >
               {item.label}
             </Label>
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }

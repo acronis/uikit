@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Select,
   SelectContent,
@@ -6,10 +6,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@acronis-platform/shadcn-uikit';
-import { Label } from '@acronis-platform/shadcn-uikit/react'
+import { Label } from '@acronis-platform/shadcn-uikit/react';
 
 export function MultipleSelect() {
-  const [values, setValues] = React.useState<string[]>([])
+  const [values, setValues] = React.useState<string[]>([]);
 
   return (
     <div className="space-y-4">
@@ -39,5 +39,5 @@ export function MultipleSelect() {
         </div>
       )}
     </div>
-  )
+  );
 }

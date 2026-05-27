@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   Sheet,
   SheetContent,
@@ -6,18 +6,18 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '../sheet'
-import { Button } from '../button'
+} from '../sheet';
+import { Button } from '../button';
 
 const meta = {
   title: 'UI/Sheet',
   component: Sheet,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof Sheet>
+} satisfies Meta<typeof Sheet>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -34,7 +34,7 @@ export const Default: Story = {
       </SheetContent>
     </Sheet>
   ),
-}
+};
 
 export const Left: Story = {
   render: () => (
@@ -48,4 +48,4 @@ export const Left: Story = {
       </SheetContent>
     </Sheet>
   ),
-}
+};

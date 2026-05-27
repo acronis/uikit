@@ -1,7 +1,4 @@
-import {
-  Widget,
-  WidgetContent,
-} from '@acronis-platform/shadcn-uikit/react'
+import { Widget, WidgetContent } from '@acronis-platform/shadcn-uikit/react';
 
 export function WidgetMinimal() {
   return (
@@ -20,5 +17,5 @@ export function WidgetMinimal() {
         </WidgetContent>
       </Widget>
     </div>
-  )
+  );
 }

@@ -1,11 +1,11 @@
-import { ClockIcon } from '@acronis-platform/shadcn-uikit'
-import type { Chat } from '../types'
-import { formatRelativeTime } from '../utils/dateUtils'
+import { ClockIcon } from '@acronis-platform/shadcn-uikit';
+import type { Chat } from '../types';
+import { formatRelativeTime } from '../utils/dateUtils';
 
 interface ChatListItemProps {
-  chat: Chat
-  isActive: boolean
-  onClick: () => void
+  chat: Chat;
+  isActive: boolean;
+  onClick: () => void;
 }
 
 export function ChatListItem({ chat, isActive, onClick }: ChatListItemProps) {
@@ -37,5 +37,5 @@ export function ChatListItem({ chat, isActive, onClick }: ChatListItemProps) {
         {formatRelativeTime(chat.lastActivity)}
       </p>
     </button>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react'
-import { BoldIcon, ItalicIcon, UnderlineIcon } from '../icons/missing-icons'
+import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react';
+import { BoldIcon, ItalicIcon, UnderlineIcon } from '../icons/missing-icons';
 export function ButtonGroupWithIcons() {
   return (
     <ButtonGroup>
@@ -13,5 +13,5 @@ export function ButtonGroupWithIcons() {
         <UnderlineIcon className="h-4 w-4" />
       </Button>
     </ButtonGroup>
-  )
+  );
 }

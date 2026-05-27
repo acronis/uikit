@@ -1,14 +1,22 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { CopyIcon, RotateIcon, EllipsisHIcon } from '@acronis-platform/shadcn-uikit'
-import { ThumbsUpIcon, ThumbsDownIcon, Share2Icon } from '@/components/icons/missing-icons'
-import { toast } from 'sonner'
-import type { MessageAction } from '../../types'
-import { useCyberChatStore } from '../../store/useCyberChatStore'
-import { copyToClipboard } from '../../utils/helpers'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import {
+  CopyIcon,
+  RotateIcon,
+  EllipsisHIcon,
+} from '@acronis-platform/shadcn-uikit';
+import {
+  ThumbsUpIcon,
+  ThumbsDownIcon,
+  Share2Icon,
+} from '@/components/icons/missing-icons';
+import { toast } from 'sonner';
+import type { MessageAction } from '../../types';
+import { useCyberChatStore } from '../../store/useCyberChatStore';
+import { copyToClipboard } from '../../utils/helpers';
 
 interface MessageActionsProps {
-  messageId: string
-  actions: MessageAction[]
+  messageId: string;
+  actions: MessageAction[];
 }
 
 const iconMap = {
@@ -18,50 +26,53 @@ const iconMap = {
   share: Share2Icon,
   regenerate: RotateIcon,
   more: EllipsisHIcon,
-}
+};
 
 export function MessageActions({ messageId, actions }: MessageActionsProps) {
-  const { toggleMessageAction, regenerateMessage, messages } = useCyberChatStore()
+  const { toggleMessageAction, regenerateMessage, messages } =
+    useCyberChatStore();
 
   const handleAction = async (actionType: string) => {
     switch (actionType) {
       case 'copy': {
-        const message = messages.find((m) => m.id === messageId)
+        const message = messages.find((m) => m.id === messageId);
         if (message && typeof message.content === 'string') {
           try {
-            await copyToClipboard(message.content)
-            toast.success('Copied to clipboard')
+            await copyToClipboard(message.content);
+            toast.success('Copied to clipboard');
           } catch {
-            toast.error('Failed to copy')
+            toast.error('Failed to copy');
           }
         }
-        break
+        break;
       }
       case 'like':
       case 'dislike':
-        toggleMessageAction(messageId, actionType)
+        toggleMessageAction(messageId, actionType);
         toast.success(
-          actionType === 'like' ? 'Thanks for your feedback!' : 'Feedback recorded'
-        )
-        break
+          actionType === 'like'
+            ? 'Thanks for your feedback!'
+            : 'Feedback recorded'
+        );
+        break;
       case 'share':
-        toast.info('Share functionality coming soon')
-        break
+        toast.info('Share functionality coming soon');
+        break;
       case 'regenerate':
-        regenerateMessage(messageId)
-        toast.info('Regenerating response...')
-        break
+        regenerateMessage(messageId);
+        toast.info('Regenerating response...');
+        break;
       case 'more':
-        toast.info('More options coming soon')
-        break
+        toast.info('More options coming soon');
+        break;
     }
-  }
+  };
 
   return (
     <div className="flex items-center gap-1">
       {actions.map((action) => {
-        const Icon = iconMap[action.type as keyof typeof iconMap]
-        if (!Icon) return null
+        const Icon = iconMap[action.type as keyof typeof iconMap];
+        if (!Icon) return null;
 
         return (
           <Button
@@ -74,8 +85,8 @@ export function MessageActions({ messageId, actions }: MessageActionsProps) {
           >
             <Icon className="h-4 w-4" />
           </Button>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

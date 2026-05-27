@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   EmptyBasic,
   EmptyWithAction,
@@ -8,18 +8,18 @@ import {
   EmptyError,
   EmptyVariousStates,
   EmptyDiscoveryAgent,
-} from '@acronis-platform/shadcn-uikit-demos/empty'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/empty';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import emptyBasicCode from '../../../demos/src/empty/EmptyBasic.tsx?raw'
-import emptyWithActionCode from '../../../demos/src/empty/EmptyWithAction.tsx?raw'
-import emptyWithButtonAndLinkCode from '../../../demos/src/empty/EmptyWithButtonAndLink.tsx?raw'
-import emptyWithMultipleLinksCode from '../../../demos/src/empty/EmptyWithMultipleLinks.tsx?raw'
-import emptyOnlyLinksCode from '../../../demos/src/empty/EmptyOnlyLinks.tsx?raw'
-import emptyErrorCode from '../../../demos/src/empty/EmptyError.tsx?raw'
-import emptyVariousStatesCode from '../../../demos/src/empty/EmptyVariousStates.tsx?raw'
-import emptyDiscoveryAgentCode from '../../../demos/src/empty/EmptyDiscoveryAgent.tsx?raw'
+import emptyBasicCode from '../../../demos/src/empty/EmptyBasic.tsx?raw';
+import emptyWithActionCode from '../../../demos/src/empty/EmptyWithAction.tsx?raw';
+import emptyWithButtonAndLinkCode from '../../../demos/src/empty/EmptyWithButtonAndLink.tsx?raw';
+import emptyWithMultipleLinksCode from '../../../demos/src/empty/EmptyWithMultipleLinks.tsx?raw';
+import emptyOnlyLinksCode from '../../../demos/src/empty/EmptyOnlyLinks.tsx?raw';
+import emptyErrorCode from '../../../demos/src/empty/EmptyError.tsx?raw';
+import emptyVariousStatesCode from '../../../demos/src/empty/EmptyVariousStates.tsx?raw';
+import emptyDiscoveryAgentCode from '../../../demos/src/empty/EmptyDiscoveryAgent.tsx?raw';
 
 export function EmptyDemo() {
   return (

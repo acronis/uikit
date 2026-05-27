@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Themes/Chart Colors',
   parameters: { layout: 'fullscreen' },
   tags: ['autodocs'],
-} satisfies Meta
+} satisfies Meta;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 const CHART_TOKENS = [
   { token: '--av-chart-1', label: 'chart-1' },
@@ -32,11 +32,18 @@ const CHART_TOKENS = [
   { token: '--av-chart-violet', label: 'chart-violet' },
   { token: '--av-chart-warning', label: 'chart-warning' },
   { token: '--av-chart-yellow', label: 'chart-yellow' },
-]
+];
 
 function ChartSwatch({ token, label }: { token: string; label: string }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 120 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 4,
+        minWidth: 120,
+      }}
+    >
       <div
         style={{
           width: '100%',
@@ -56,12 +63,12 @@ function ChartSwatch({ token, label }: { token: string; label: string }) {
         {label}
       </span>
     </div>
-  )
+  );
 }
 
 function AllChartColors() {
-  const numbered = CHART_TOKENS.filter((t) => /chart-\d/.test(t.token))
-  const named = CHART_TOKENS.filter((t) => !/chart-\d/.test(t.token))
+  const numbered = CHART_TOKENS.filter((t) => /chart-\d/.test(t.token));
+  const named = CHART_TOKENS.filter((t) => !/chart-\d/.test(t.token));
 
   return (
     <div
@@ -122,9 +129,9 @@ function AllChartColors() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export const Default: Story = {
   render: () => <AllChartColors />,
-}
+};

@@ -1,8 +1,8 @@
-export { PopoverBasic } from './PopoverBasic'
-export { PopoverWithForm } from './PopoverWithForm'
-export { PopoverWithCalendar } from './PopoverWithCalendar'
-export { PopoverWithActions } from './PopoverWithActions'
-export { PopoverPlacements } from './PopoverPlacements'
-export { PopoverAlignments } from './PopoverAlignments'
-export { PopoverIconTriggers } from './PopoverIconTriggers'
-export { PopoverFilter } from './PopoverFilter'
+export { PopoverBasic } from './PopoverBasic';
+export { PopoverWithForm } from './PopoverWithForm';
+export { PopoverWithCalendar } from './PopoverWithCalendar';
+export { PopoverWithActions } from './PopoverWithActions';
+export { PopoverPlacements } from './PopoverPlacements';
+export { PopoverAlignments } from './PopoverAlignments';
+export { PopoverIconTriggers } from './PopoverIconTriggers';
+export { PopoverFilter } from './PopoverFilter';

@@ -1,4 +1,4 @@
-import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react'
+import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react';
 
 const deepData: TreeNode[] = [
   {
@@ -29,8 +29,13 @@ const deepData: TreeNode[] = [
       },
     ],
   },
-]
+];
 
 export function TreeDeepNesting() {
-  return <Tree data={deepData} defaultExpanded={['level1', 'level2', 'level3', 'level4']} />
+  return (
+    <Tree
+      data={deepData}
+      defaultExpanded={['level1', 'level2', 'level3', 'level4']}
+    />
+  );
 }

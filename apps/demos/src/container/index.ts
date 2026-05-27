@@ -1,1 +1,1 @@
-export { ContainerResponsive } from './ContainerResponsive'
+export { ContainerResponsive } from './ContainerResponsive';

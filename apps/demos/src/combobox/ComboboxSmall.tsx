@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { cn } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { cn } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   Command,
   CommandEmpty,
@@ -8,20 +8,24 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Popover, PopoverContent, PopoverTrigger } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
-import { CheckIcon, ChevronUpdownIcon } from '@acronis-platform/shadcn-uikit'
+import { CheckIcon, ChevronUpdownIcon } from '@acronis-platform/shadcn-uikit';
 const statuses = [
   { value: 'active', label: 'Active' },
   { value: 'inactive', label: 'Inactive' },
   { value: 'pending', label: 'Pending' },
   { value: 'archived', label: 'Archived' },
-]
+];
 
 export function ComboboxSmall() {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState('')
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState('');
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -51,8 +55,8 @@ export function ComboboxSmall() {
                   key={status.value}
                   value={status.value}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? '' : currentValue)
-                    setOpen(false)
+                    setValue(currentValue === value ? '' : currentValue);
+                    setOpen(false);
                   }}
                 >
                   <CheckIcon
@@ -69,5 +73,5 @@ export function ComboboxSmall() {
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }

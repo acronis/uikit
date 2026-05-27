@@ -5,7 +5,7 @@ import {
   WidgetContent,
   WidgetValue,
   WidgetLabel,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function WidgetValueDisplay() {
   return (
@@ -40,5 +40,5 @@ export function WidgetValueDisplay() {
         </WidgetContent>
       </Widget>
     </div>
-  )
+  );
 }

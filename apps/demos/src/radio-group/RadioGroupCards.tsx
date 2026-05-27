@@ -1,8 +1,12 @@
-import * as React from 'react'
-import { Label, RadioGroup, RadioGroupItem } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import {
+  Label,
+  RadioGroup,
+  RadioGroupItem,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function RadioGroupCards() {
-  const [value, setValue] = React.useState('card')
+  const [value, setValue] = React.useState('card');
 
   return (
     <RadioGroup value={value} onValueChange={setValue}>
@@ -19,7 +23,9 @@ export function RadioGroupCards() {
               <Label htmlFor="plan-card" className="cursor-pointer">
                 Card View
               </Label>
-              <p className="text-sm text-muted-foreground">Display items as cards</p>
+              <p className="text-sm text-muted-foreground">
+                Display items as cards
+              </p>
             </div>
           </div>
         </div>
@@ -36,7 +42,9 @@ export function RadioGroupCards() {
               <Label htmlFor="plan-list" className="cursor-pointer">
                 List View
               </Label>
-              <p className="text-sm text-muted-foreground">Display items as a list</p>
+              <p className="text-sm text-muted-foreground">
+                Display items as a list
+              </p>
             </div>
           </div>
         </div>
@@ -53,11 +61,13 @@ export function RadioGroupCards() {
               <Label htmlFor="plan-grid" className="cursor-pointer">
                 Grid View
               </Label>
-              <p className="text-sm text-muted-foreground">Display items in a grid</p>
+              <p className="text-sm text-muted-foreground">
+                Display items in a grid
+              </p>
             </div>
           </div>
         </div>
       </div>
     </RadioGroup>
-  )
+  );
 }

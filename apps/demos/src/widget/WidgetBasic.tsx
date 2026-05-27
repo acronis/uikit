@@ -4,7 +4,7 @@ import {
   WidgetTitle,
   WidgetContent,
   WidgetFooter,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function WidgetBasic() {
   return (
@@ -21,5 +21,5 @@ export function WidgetBasic() {
         <p className="text-xs text-muted-foreground">Last updated: just now</p>
       </WidgetFooter>
     </Widget>
-  )
+  );
 }

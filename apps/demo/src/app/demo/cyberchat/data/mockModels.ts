@@ -1,4 +1,4 @@
-import type { AIModel } from '../types'
+import type { AIModel } from '../types';
 
 export const mockModels: AIModel[] = [
   {
@@ -37,4 +37,4 @@ export const mockModels: AIModel[] = [
     name: 'ChatGPT 5.1 Mini',
     tier: 'default',
   },
-]
+];

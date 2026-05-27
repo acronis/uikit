@@ -1,6 +1,6 @@
-import { Tag } from '@acronis-platform/shadcn-uikit/react'
-import { StarIcon } from '@acronis-platform/shadcn-uikit'
-import { ZapIcon } from '../icons/missing-icons'
+import { Tag } from '@acronis-platform/shadcn-uikit/react';
+import { StarIcon } from '@acronis-platform/shadcn-uikit';
+import { ZapIcon } from '../icons/missing-icons';
 export function TagFeature() {
   return (
     <div className="flex flex-wrap gap-3">
@@ -17,5 +17,5 @@ export function TagFeature() {
         Legacy
       </Tag>
     </div>
-  )
+  );
 }

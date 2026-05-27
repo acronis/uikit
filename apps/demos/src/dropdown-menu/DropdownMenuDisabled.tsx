@@ -1,17 +1,17 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 import {
   CloudIcon,
   MailIcon,
   SettingsIcon,
   UserIcon,
-} from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit';
 export function DropdownMenuDisabled() {
   return (
     <DropdownMenu>
@@ -38,5 +38,5 @@ export function DropdownMenuDisabled() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

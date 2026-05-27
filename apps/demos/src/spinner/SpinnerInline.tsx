@@ -1,4 +1,4 @@
-import { Spinner } from '@acronis-platform/shadcn-uikit/react'
+import { Spinner } from '@acronis-platform/shadcn-uikit/react';
 
 export function SpinnerInline() {
   return (
@@ -12,5 +12,5 @@ export function SpinnerInline() {
         <Spinner size="sm" className="inline-block align-middle ml-2" />
       </p>
     </div>
-  )
+  );
 }

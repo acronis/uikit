@@ -1,6 +1,6 @@
-import * as React from 'react'
+import * as React from 'react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 const PageHeader = React.forwardRef<
   HTMLDivElement,
@@ -12,8 +12,8 @@ const PageHeader = React.forwardRef<
     className={cn('flex flex-col gap-1 pb-4', className)}
     {...props}
   />
-))
-PageHeader.displayName = 'PageHeader'
+));
+PageHeader.displayName = 'PageHeader';
 
 const PageHeaderBreadcrumb = React.forwardRef<
   HTMLElement,
@@ -25,8 +25,8 @@ const PageHeaderBreadcrumb = React.forwardRef<
     className={cn('text-sm text-muted-foreground', className)}
     {...props}
   />
-))
-PageHeaderBreadcrumb.displayName = 'PageHeaderBreadcrumb'
+));
+PageHeaderBreadcrumb.displayName = 'PageHeaderBreadcrumb';
 
 const PageHeaderTitle = React.forwardRef<
   HTMLHeadingElement,
@@ -37,8 +37,8 @@ const PageHeaderTitle = React.forwardRef<
     className={cn('text-2xl font-bold leading-none tracking-tight', className)}
     {...props}
   />
-))
-PageHeaderTitle.displayName = 'PageHeaderTitle'
+));
+PageHeaderTitle.displayName = 'PageHeaderTitle';
 
 const PageHeaderDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -49,8 +49,8 @@ const PageHeaderDescription = React.forwardRef<
     className={cn('text-sm text-muted-foreground', className)}
     {...props}
   />
-))
-PageHeaderDescription.displayName = 'PageHeaderDescription'
+));
+PageHeaderDescription.displayName = 'PageHeaderDescription';
 
 const PageHeaderActions = React.forwardRef<
   HTMLDivElement,
@@ -61,8 +61,8 @@ const PageHeaderActions = React.forwardRef<
     className={cn('flex items-center gap-2 pt-2', className)}
     {...props}
   />
-))
-PageHeaderActions.displayName = 'PageHeaderActions'
+));
+PageHeaderActions.displayName = 'PageHeaderActions';
 
 export {
   PageHeader,
@@ -70,4 +70,4 @@ export {
   PageHeaderTitle,
   PageHeaderDescription,
   PageHeaderActions,
-}
+};

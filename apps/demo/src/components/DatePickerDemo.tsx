@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   DatePickerBasic,
   DatePickerSmall,
@@ -8,18 +8,18 @@ import {
   DatePickerFormats,
   DatePickerPresets,
   DatePickerDisabled,
-} from '@acronis-platform/shadcn-uikit-demos/date-picker'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/date-picker';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import datePickerBasicCode from '../../../demos/src/date-picker/DatePickerBasic.tsx?raw'
-import datePickerSmallCode from '../../../demos/src/date-picker/DatePickerSmall.tsx?raw'
-import datePickerWithLabelCode from '../../../demos/src/date-picker/DatePickerWithLabel.tsx?raw'
-import datePickerRangeCode from '../../../demos/src/date-picker/DatePickerRange.tsx?raw'
-import datePickerFormCode from '../../../demos/src/date-picker/DatePickerForm.tsx?raw'
-import datePickerFormatsCode from '../../../demos/src/date-picker/DatePickerFormats.tsx?raw'
-import datePickerPresetsCode from '../../../demos/src/date-picker/DatePickerPresets.tsx?raw'
-import datePickerDisabledCode from '../../../demos/src/date-picker/DatePickerDisabled.tsx?raw'
+import datePickerBasicCode from '../../../demos/src/date-picker/DatePickerBasic.tsx?raw';
+import datePickerSmallCode from '../../../demos/src/date-picker/DatePickerSmall.tsx?raw';
+import datePickerWithLabelCode from '../../../demos/src/date-picker/DatePickerWithLabel.tsx?raw';
+import datePickerRangeCode from '../../../demos/src/date-picker/DatePickerRange.tsx?raw';
+import datePickerFormCode from '../../../demos/src/date-picker/DatePickerForm.tsx?raw';
+import datePickerFormatsCode from '../../../demos/src/date-picker/DatePickerFormats.tsx?raw';
+import datePickerPresetsCode from '../../../demos/src/date-picker/DatePickerPresets.tsx?raw';
+import datePickerDisabledCode from '../../../demos/src/date-picker/DatePickerDisabled.tsx?raw';
 
 export function DatePickerDemo() {
   return (

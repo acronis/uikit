@@ -1,4 +1,4 @@
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
 
 export function SeparatorInNavigation() {
   return (
@@ -19,5 +19,5 @@ export function SeparatorInNavigation() {
         Contact
       </a>
     </div>
-  )
+  );
 }

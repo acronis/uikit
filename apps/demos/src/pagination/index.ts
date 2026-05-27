@@ -1,5 +1,5 @@
-export { PaginationFirstPage } from './PaginationFirstPage'
-export { PaginationMiddlePage } from './PaginationMiddlePage'
-export { PaginationLastPage } from './PaginationLastPage'
-export { PaginationSimple } from './PaginationSimple'
-export { PaginationCompact } from './PaginationCompact'
+export { PaginationFirstPage } from './PaginationFirstPage';
+export { PaginationMiddlePage } from './PaginationMiddlePage';
+export { PaginationLastPage } from './PaginationLastPage';
+export { PaginationSimple } from './PaginationSimple';
+export { PaginationCompact } from './PaginationCompact';

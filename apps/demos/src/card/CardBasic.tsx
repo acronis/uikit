@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function CardBasic() {
   return (
@@ -17,5 +17,5 @@ export function CardBasic() {
         <p>This is the card content area.</p>
       </CardContent>
     </Card>
-  )
+  );
 }

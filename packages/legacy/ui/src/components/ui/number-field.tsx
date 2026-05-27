@@ -1,15 +1,19 @@
-import * as React from 'react'
-import { NumberField } from '@base-ui/react/number-field'
+import * as React from 'react';
+import { NumberField } from '@base-ui/react/number-field';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 const NumberFieldRoot = React.forwardRef<
   React.ElementRef<typeof NumberField.Root>,
   React.ComponentPropsWithoutRef<typeof NumberField.Root>
 >(({ className, ...props }, ref) => (
-  <NumberField.Root ref={ref} className={cn('flex flex-col gap-1', className)} {...props} />
-))
-NumberFieldRoot.displayName = 'NumberFieldRoot'
+  <NumberField.Root
+    ref={ref}
+    className={cn('flex flex-col gap-1', className)}
+    {...props}
+  />
+));
+NumberFieldRoot.displayName = 'NumberFieldRoot';
 
 const NumberFieldGroup = React.forwardRef<
   React.ElementRef<typeof NumberField.Group>,
@@ -17,11 +21,14 @@ const NumberFieldGroup = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <NumberField.Group
     ref={ref}
-    className={cn('flex h-12 w-full rounded border border-input bg-background', className)}
+    className={cn(
+      'flex h-12 w-full rounded border border-input bg-background',
+      className
+    )}
     {...props}
   />
-))
-NumberFieldGroup.displayName = 'NumberFieldGroup'
+));
+NumberFieldGroup.displayName = 'NumberFieldGroup';
 
 const NumberFieldInput = React.forwardRef<
   React.ElementRef<typeof NumberField.Input>,
@@ -35,8 +42,8 @@ const NumberFieldInput = React.forwardRef<
     )}
     {...props}
   />
-))
-NumberFieldInput.displayName = 'NumberFieldInput'
+));
+NumberFieldInput.displayName = 'NumberFieldInput';
 
 const NumberFieldDecrement = React.forwardRef<
   React.ElementRef<typeof NumberField.Decrement>,
@@ -52,8 +59,8 @@ const NumberFieldDecrement = React.forwardRef<
   >
     {children ?? <span aria-hidden>−</span>}
   </NumberField.Decrement>
-))
-NumberFieldDecrement.displayName = 'NumberFieldDecrement'
+));
+NumberFieldDecrement.displayName = 'NumberFieldDecrement';
 
 const NumberFieldIncrement = React.forwardRef<
   React.ElementRef<typeof NumberField.Increment>,
@@ -69,8 +76,8 @@ const NumberFieldIncrement = React.forwardRef<
   >
     {children ?? <span aria-hidden>+</span>}
   </NumberField.Increment>
-))
-NumberFieldIncrement.displayName = 'NumberFieldIncrement'
+));
+NumberFieldIncrement.displayName = 'NumberFieldIncrement';
 
 export {
   NumberFieldRoot,
@@ -78,4 +85,4 @@ export {
   NumberFieldInput,
   NumberFieldDecrement,
   NumberFieldIncrement,
-}
+};

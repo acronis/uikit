@@ -1,11 +1,11 @@
-import { Tag } from '@acronis-platform/shadcn-uikit/react'
+import { Tag } from '@acronis-platform/shadcn-uikit/react';
 import {
   CheckCircleIcon,
   CircleIcon,
   ClockIcon,
   TimesCircleIcon,
   WarningCircleIcon,
-} from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit';
 export function TagStatus() {
   return (
     <div className="flex flex-wrap gap-3">
@@ -25,5 +25,5 @@ export function TagStatus() {
         Draft
       </Tag>
     </div>
-  )
+  );
 }

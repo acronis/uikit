@@ -1,27 +1,27 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   ChipBasic,
   ChipWithIcons,
   ChipRemovable,
   ChipWithIconsRemovable,
   ChipFilters,
-} from '@acronis-platform/shadcn-uikit-demos/chip'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/chip';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import chipBasicCode from '../../../demos/src/chip/ChipBasic.tsx?raw'
-import chipWithIconsCode from '../../../demos/src/chip/ChipWithIcons.tsx?raw'
-import chipRemovableCode from '../../../demos/src/chip/ChipRemovable.tsx?raw'
-import chipWithIconsRemovableCode from '../../../demos/src/chip/ChipWithIconsRemovable.tsx?raw'
-import chipFiltersCode from '../../../demos/src/chip/ChipFilters.tsx?raw'
+import chipBasicCode from '../../../demos/src/chip/ChipBasic.tsx?raw';
+import chipWithIconsCode from '../../../demos/src/chip/ChipWithIcons.tsx?raw';
+import chipRemovableCode from '../../../demos/src/chip/ChipRemovable.tsx?raw';
+import chipWithIconsRemovableCode from '../../../demos/src/chip/ChipWithIconsRemovable.tsx?raw';
+import chipFiltersCode from '../../../demos/src/chip/ChipFilters.tsx?raw';
 
 export function ChipDemo() {
   return (
     <section className="demo-section">
       <h2>Chip Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Used to represent a list of selected items. Chips are compact elements that represent an
-        input, attribute, or action.
+        Used to represent a list of selected items. Chips are compact elements
+        that represent an input, attribute, or action.
       </p>
 
       <div className="space-y-8">
@@ -66,5 +66,5 @@ export function ChipDemo() {
         </DemoWithCode>
       </div>
     </section>
-  )
+  );
 }

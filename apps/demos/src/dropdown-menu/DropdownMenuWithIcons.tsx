@@ -1,18 +1,18 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 import {
   CopyIcon,
   DownloadIcon,
   EditIcon,
   TrashOIcon,
-} from '@acronis-platform/shadcn-uikit'
-import { MoreVerticalIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit';
+import { MoreVerticalIcon } from '../icons/missing-icons';
 export function DropdownMenuWithIcons() {
   return (
     <DropdownMenu>
@@ -39,5 +39,5 @@ export function DropdownMenuWithIcons() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

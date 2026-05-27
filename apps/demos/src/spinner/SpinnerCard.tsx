@@ -1,13 +1,21 @@
-import * as React from 'react'
-import { Spinner, Button, Card, CardHeader, CardTitle, CardDescription, CardContent } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import {
+  Spinner,
+  Button,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function SpinnerCard() {
-  const [dataLoading, setDataLoading] = React.useState(false)
+  const [dataLoading, setDataLoading] = React.useState(false);
 
   const simulateDataLoad = () => {
-    setDataLoading(true)
-    setTimeout(() => setDataLoading(false), 2000)
-  }
+    setDataLoading(true);
+    setTimeout(() => setDataLoading(false), 2000);
+  };
 
   return (
     <Card className="w-full max-w-md">
@@ -33,12 +41,16 @@ export function SpinnerCard() {
               <p className="text-sm font-medium">Email</p>
               <p className="text-sm text-muted-foreground">john@example.com</p>
             </div>
-            <Button onClick={simulateDataLoad} variant="outline" className="w-full">
+            <Button
+              onClick={simulateDataLoad}
+              variant="outline"
+              className="w-full"
+            >
               Reload Data
             </Button>
           </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

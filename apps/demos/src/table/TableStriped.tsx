@@ -5,15 +5,45 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 const users = [
-  { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active' },
-  { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User', status: 'Active' },
-  { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'User', status: 'Inactive' },
-  { id: 4, name: 'Alice Williams', email: 'alice@example.com', role: 'Editor', status: 'Active' },
-  { id: 5, name: 'Charlie Brown', email: 'charlie@example.com', role: 'User', status: 'Active' },
-]
+  {
+    id: 1,
+    name: 'John Doe',
+    email: 'john@example.com',
+    role: 'Admin',
+    status: 'Active',
+  },
+  {
+    id: 2,
+    name: 'Jane Smith',
+    email: 'jane@example.com',
+    role: 'User',
+    status: 'Active',
+  },
+  {
+    id: 3,
+    name: 'Bob Johnson',
+    email: 'bob@example.com',
+    role: 'User',
+    status: 'Inactive',
+  },
+  {
+    id: 4,
+    name: 'Alice Williams',
+    email: 'alice@example.com',
+    role: 'Editor',
+    status: 'Active',
+  },
+  {
+    id: 5,
+    name: 'Charlie Brown',
+    email: 'charlie@example.com',
+    role: 'User',
+    status: 'Active',
+  },
+];
 
 export function TableStriped() {
   return (
@@ -29,7 +59,10 @@ export function TableStriped() {
         </TableHeader>
         <TableBody>
           {users.map((user, index) => (
-            <TableRow key={user.id} className={index % 2 === 0 ? 'bg-muted/50' : ''}>
+            <TableRow
+              key={user.id}
+              className={index % 2 === 0 ? 'bg-muted/50' : ''}
+            >
               <TableCell className="font-medium">{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.role}</TableCell>
@@ -39,5 +72,5 @@ export function TableStriped() {
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }

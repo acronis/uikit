@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function CardMultiple() {
   return (
@@ -37,5 +37,5 @@ export function CardMultiple() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

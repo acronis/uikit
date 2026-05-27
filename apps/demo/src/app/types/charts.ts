@@ -1,23 +1,23 @@
 export interface TimeSeriesDataPoint {
-  date: string
-  value: number
-  label?: string
+  date: string;
+  value: number;
+  label?: string;
 }
 
-export type TimeSeriesData = TimeSeriesDataPoint[]
+export type TimeSeriesData = TimeSeriesDataPoint[];
 
 export interface CategoryDataPoint {
-  category: string
-  value: number
-  fill?: string
+  category: string;
+  value: number;
+  fill?: string;
 }
 
-export type CategoryData = CategoryDataPoint[]
+export type CategoryData = CategoryDataPoint[];
 
 export interface DistributionDataPoint {
-  name: string
-  value: number
-  fill?: string
+  name: string;
+  value: number;
+  fill?: string;
 }
 
-export type DistributionData = DistributionDataPoint[]
+export type DistributionData = DistributionDataPoint[];

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import {
   Avatar,
   AvatarFallback,
@@ -13,7 +13,7 @@ import {
   ScrollArea,
   Separator,
   Switch,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 import {
   SendIcon,
   RotateIcon,
@@ -26,23 +26,25 @@ import {
   ChevronDownIcon,
   FileTextIcon,
   GlobeIcon,
-} from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit';
 import {
   ThumbsUpIcon,
   ThumbsDownIcon,
   Share2Icon,
   BrainIcon,
-} from '@/components/icons/missing-icons'
+} from '@/components/icons/missing-icons';
 
 export const ChatComponentsShowcase: React.FC = () => {
-  const [isTyping, setIsTyping] = useState(false)
-  const [message, setMessage] = useState('')
-  const [tempChatEnabled, setTempChatEnabled] = useState(true)
+  const [isTyping, setIsTyping] = useState(false);
+  const [message, setMessage] = useState('');
+  const [tempChatEnabled, setTempChatEnabled] = useState(true);
 
   return (
     <div className="space-y-8">
       <section className="space-y-4">
-        <h3 className="text-2xl font-bold my-2">CyberChat Components Showcase</h3>
+        <h3 className="text-2xl font-bold my-2">
+          CyberChat Components Showcase
+        </h3>
         <p className="text-sm text-muted-foreground">
           All components used in the CyberChat application, demonstrating the
           cyber-chat theme.
@@ -675,4 +677,4 @@ export const ChatComponentsShowcase: React.FC = () => {
       </section>
     </div>
   );
-}
+};

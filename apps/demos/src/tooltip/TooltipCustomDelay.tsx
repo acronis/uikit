@@ -1,11 +1,11 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
   TooltipArrow,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function TooltipCustomDelay() {
   return (
@@ -20,5 +20,5 @@ export function TooltipCustomDelay() {
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  )
+  );
 }

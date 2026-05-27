@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import * as React from 'react'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import * as React from 'react';
 import {
   Bar,
   BarChart,
@@ -13,7 +13,7 @@ import {
   PieChart,
   XAxis,
   YAxis,
-} from 'recharts'
+} from 'recharts';
 import {
   ChartContainer,
   ChartTooltip,
@@ -21,17 +21,17 @@ import {
   ChartLegend,
   ChartLegendContent,
   type ChartConfig,
-} from '../chart'
+} from '../chart';
 
 const meta = {
   title: 'UI/Chart',
   component: ChartContainer,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof ChartContainer>
+} satisfies Meta<typeof ChartContainer>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 const barData = [
   { month: 'Jan', desktop: 186, mobile: 80 },
@@ -40,12 +40,12 @@ const barData = [
   { month: 'Apr', desktop: 73, mobile: 190 },
   { month: 'May', desktop: 209, mobile: 130 },
   { month: 'Jun', desktop: 214, mobile: 140 },
-]
+];
 
 const barConfig = {
   desktop: { label: 'Desktop', color: 'hsl(var(--chart-1))' },
   mobile: { label: 'Mobile', color: 'hsl(var(--chart-2))' },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export const Bar_: Story = {
   args: {} as React.ComponentProps<typeof ChartContainer>,
@@ -56,12 +56,22 @@ export const Bar_: Story = {
         <XAxis dataKey="month" tickLine={false} axisLine={false} />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} isAnimationActive={false} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} isAnimationActive={false} />
+        <Bar
+          dataKey="desktop"
+          fill="var(--color-desktop)"
+          radius={4}
+          isAnimationActive={false}
+        />
+        <Bar
+          dataKey="mobile"
+          fill="var(--color-mobile)"
+          radius={4}
+          isAnimationActive={false}
+        />
       </BarChart>
     </ChartContainer>
   ),
-}
+};
 
 export const Line_: Story = {
   args: {} as React.ComponentProps<typeof ChartContainer>,
@@ -73,12 +83,26 @@ export const Line_: Story = {
         <YAxis tickLine={false} axisLine={false} />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
-        <Line type="monotone" dataKey="desktop" stroke="var(--color-desktop)" strokeWidth={2} dot={false} isAnimationActive={false} />
-        <Line type="monotone" dataKey="mobile" stroke="var(--color-mobile)" strokeWidth={2} dot={false} isAnimationActive={false} />
+        <Line
+          type="monotone"
+          dataKey="desktop"
+          stroke="var(--color-desktop)"
+          strokeWidth={2}
+          dot={false}
+          isAnimationActive={false}
+        />
+        <Line
+          type="monotone"
+          dataKey="mobile"
+          stroke="var(--color-mobile)"
+          strokeWidth={2}
+          dot={false}
+          isAnimationActive={false}
+        />
       </LineChart>
     </ChartContainer>
   ),
-}
+};
 
 export const Area_: Story = {
   args: {} as React.ComponentProps<typeof ChartContainer>,
@@ -90,19 +114,35 @@ export const Area_: Story = {
         <YAxis tickLine={false} axisLine={false} />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
-        <Area type="monotone" dataKey="desktop" stroke="var(--color-desktop)" fill="var(--color-desktop)" fillOpacity={0.2} strokeWidth={2} isAnimationActive={false} />
-        <Area type="monotone" dataKey="mobile" stroke="var(--color-mobile)" fill="var(--color-mobile)" fillOpacity={0.2} strokeWidth={2} isAnimationActive={false} />
+        <Area
+          type="monotone"
+          dataKey="desktop"
+          stroke="var(--color-desktop)"
+          fill="var(--color-desktop)"
+          fillOpacity={0.2}
+          strokeWidth={2}
+          isAnimationActive={false}
+        />
+        <Area
+          type="monotone"
+          dataKey="mobile"
+          stroke="var(--color-mobile)"
+          fill="var(--color-mobile)"
+          fillOpacity={0.2}
+          strokeWidth={2}
+          isAnimationActive={false}
+        />
       </AreaChart>
     </ChartContainer>
   ),
-}
+};
 
 const pieData = [
   { name: 'Chrome', value: 400 },
   { name: 'Firefox', value: 300 },
   { name: 'Safari', value: 200 },
   { name: 'Edge', value: 100 },
-]
+];
 
 const pieConfig = {
   Chrome: { label: 'Chrome', color: 'var(--av-chart-blue)' },
@@ -143,13 +183,13 @@ const stackedData = [
   { month: 'Apr', desktop: 73, mobile: 190, tablet: 30 },
   { month: 'May', desktop: 209, mobile: 130, tablet: 70 },
   { month: 'Jun', desktop: 214, mobile: 140, tablet: 80 },
-]
+];
 
 const stackedConfig = {
   desktop: { label: 'Desktop', color: 'hsl(var(--chart-1))' },
   mobile: { label: 'Mobile', color: 'hsl(var(--chart-2))' },
   tablet: { label: 'Tablet', color: 'hsl(var(--chart-3))' },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export const StackedBar: Story = {
   args: {} as React.ComponentProps<typeof ChartContainer>,
@@ -160,10 +200,26 @@ export const StackedBar: Story = {
         <XAxis dataKey="month" tickLine={false} axisLine={false} />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="desktop" stackId="a" fill="var(--color-desktop)" isAnimationActive={false} />
-        <Bar dataKey="mobile" stackId="a" fill="var(--color-mobile)" isAnimationActive={false} />
-        <Bar dataKey="tablet" stackId="a" fill="var(--color-tablet)" radius={[4, 4, 0, 0]} isAnimationActive={false} />
+        <Bar
+          dataKey="desktop"
+          stackId="a"
+          fill="var(--color-desktop)"
+          isAnimationActive={false}
+        />
+        <Bar
+          dataKey="mobile"
+          stackId="a"
+          fill="var(--color-mobile)"
+          isAnimationActive={false}
+        />
+        <Bar
+          dataKey="tablet"
+          stackId="a"
+          fill="var(--color-tablet)"
+          radius={[4, 4, 0, 0]}
+          isAnimationActive={false}
+        />
       </BarChart>
     </ChartContainer>
   ),
-}
+};

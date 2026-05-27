@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Select,
   SelectContent,
@@ -55,7 +55,7 @@ const countries = [
   { code: 'uk', name: 'United Kingdom' },
   { code: 'us', name: 'United States' },
   { code: 'vn', name: 'Vietnam' },
-]
+];
 
 export function ScrollableSelect() {
   return (
@@ -71,5 +71,5 @@ export function ScrollableSelect() {
         ))}
       </SelectContent>
     </Select>
-  )
+  );
 }

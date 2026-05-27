@@ -1,22 +1,22 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '../carousel'
-import { Card, CardContent } from '../card'
+} from '../carousel';
+import { Card, CardContent } from '../card';
 
 const meta = {
   title: 'UI/Carousel',
   component: Carousel,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof Carousel>
+} satisfies Meta<typeof Carousel>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -36,7 +36,7 @@ export const Default: Story = {
       <CarouselNext />
     </Carousel>
   ),
-}
+};
 
 export const MultipleItems: Story = {
   render: () => (
@@ -56,4 +56,4 @@ export const MultipleItems: Story = {
       <CarouselNext />
     </Carousel>
   ),
-}
+};

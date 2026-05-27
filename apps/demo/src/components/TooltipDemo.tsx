@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   TooltipBasic,
   TooltipWithIcon,
@@ -6,24 +6,25 @@ import {
   TooltipLongText,
   TooltipCustomDelay,
   TooltipMultiple,
-} from '@acronis-platform/shadcn-uikit-demos/tooltip'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/tooltip';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import tooltipBasicCode from '../../../demos/src/tooltip/TooltipBasic.tsx?raw'
-import tooltipWithIconCode from '../../../demos/src/tooltip/TooltipWithIcon.tsx?raw'
-import tooltipPositionsCode from '../../../demos/src/tooltip/TooltipPositions.tsx?raw'
-import tooltipLongTextCode from '../../../demos/src/tooltip/TooltipLongText.tsx?raw'
-import tooltipCustomDelayCode from '../../../demos/src/tooltip/TooltipCustomDelay.tsx?raw'
-import tooltipMultipleCode from '../../../demos/src/tooltip/TooltipMultiple.tsx?raw'
+import tooltipBasicCode from '../../../demos/src/tooltip/TooltipBasic.tsx?raw';
+import tooltipWithIconCode from '../../../demos/src/tooltip/TooltipWithIcon.tsx?raw';
+import tooltipPositionsCode from '../../../demos/src/tooltip/TooltipPositions.tsx?raw';
+import tooltipLongTextCode from '../../../demos/src/tooltip/TooltipLongText.tsx?raw';
+import tooltipCustomDelayCode from '../../../demos/src/tooltip/TooltipCustomDelay.tsx?raw';
+import tooltipMultipleCode from '../../../demos/src/tooltip/TooltipMultiple.tsx?raw';
 
 export function TooltipDemo() {
   return (
     <section className="demo-section">
       <h2>Tooltip Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Used as an overlay object that provides context or explains the function of a UI element. It
-        cannot contain a clickable element inside itself and is called on hovering.
+        Used as an overlay object that provides context or explains the function
+        of a UI element. It cannot contain a clickable element inside itself and
+        is called on hovering.
       </p>
 
       <div className="space-y-8">

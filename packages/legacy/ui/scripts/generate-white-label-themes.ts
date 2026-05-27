@@ -14,7 +14,13 @@
  *   pnpm run generate:themes
  */
 
-import { writeFileSync, readFileSync, mkdirSync, readdirSync, existsSync } from 'fs';
+import {
+  writeFileSync,
+  readFileSync,
+  mkdirSync,
+  readdirSync,
+  existsSync,
+} from 'fs';
 import { resolve, join, basename, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -39,21 +45,54 @@ const __dirname = dirname(__filename);
  * If your ui-syntax checkout lives elsewhere, update this path.
  */
 const UI_SYNTAX_BRANDS_DIR = resolve(
-  __dirname, '..', '..', '..', '..', '..', 'ui-syntax', 'packages', 'tokens', 'src', 'tokens', 'brands'
+  __dirname,
+  '..',
+  '..',
+  '..',
+  '..',
+  '..',
+  'ui-syntax',
+  'packages',
+  'tokens',
+  'src',
+  'tokens',
+  'brands'
 );
 
-const OUTPUT_FILE = resolve(__dirname, '..', 'src', 'styles', 'themes', 'acronis-white-label.scss');
+const OUTPUT_FILE = resolve(
+  __dirname,
+  '..',
+  'src',
+  'styles',
+  'themes',
+  'acronis-white-label.scss'
+);
 
 const EXCLUDED_BRANDS = ['dark', 'website', 'default'];
 const REFERENCE_BRAND = 'purple'; // Used for shared base tokens
 
 // Brands list (in order)
 const BRAND_ORDER = [
-  'purple', 'brown', 'sand', 'light-gray', 'dark-gray',
-  'ingram-micro', 'red-fire-brick', 'yellow-1c', 'deep-sky-itkontoret',
-  'blue-yellow-uss-signal', 'red-home-pl', 'orange-tsukaeru-helpox',
-  'green-also-choise-df', 'light-blue-hp', 'purple-fusion-media',
-  'virtual-one', 'telstra', 'deep-purple', 'pinky', 'virtuozzo',
+  'purple',
+  'brown',
+  'sand',
+  'light-gray',
+  'dark-gray',
+  'ingram-micro',
+  'red-fire-brick',
+  'yellow-1c',
+  'deep-sky-itkontoret',
+  'blue-yellow-uss-signal',
+  'red-home-pl',
+  'orange-tsukaeru-helpox',
+  'green-also-choise-df',
+  'light-blue-hp',
+  'purple-fusion-media',
+  'virtual-one',
+  'telstra',
+  'deep-purple',
+  'pinky',
+  'virtuozzo',
 ];
 
 // Tokens that keep alpha (output as `hsl(H S% L% / A)`)
@@ -84,7 +123,9 @@ interface RGB {
 }
 
 /** Parse OKLch CSS string: "oklch(L% C H)" or "oklch(L% C H / A)" */
-function parseOklch(value: string): { L: number; C: number; H: number; a?: number } | null {
+function parseOklch(
+  value: string
+): { L: number; C: number; H: number; a?: number } | null {
   // Skip gradients
   if (value.startsWith('linear-gradient')) return null;
 
@@ -102,16 +143,24 @@ function parseOklch(value: string): { L: number; C: number; H: number; a?: numbe
 }
 
 /** OKLch → OKLab */
-function oklchToOklab(L: number, C: number, H: number): [number, number, number] {
+function oklchToOklab(
+  L: number,
+  C: number,
+  H: number
+): [number, number, number] {
   const hRad = (H * Math.PI) / 180;
   return [L, C * Math.cos(hRad), C * Math.sin(hRad)];
 }
 
 /** OKLab → linear sRGB */
-function oklabToLinearSrgb(L: number, a: number, b: number): [number, number, number] {
+function oklabToLinearSrgb(
+  L: number,
+  a: number,
+  b: number
+): [number, number, number] {
   const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
   const m_ = L - 0.1055613458 * a - 0.0638541728 * b;
-  const s_ = L - 0.0894841775 * a - 1.2914855480 * b;
+  const s_ = L - 0.0894841775 * a - 1.291485548 * b;
 
   const l = l_ * l_ * l_;
   const m = m_ * m_ * m_;
@@ -120,7 +169,7 @@ function oklabToLinearSrgb(L: number, a: number, b: number): [number, number, nu
   return [
     +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
     -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
-    -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s,
+    -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
   ];
 }
 
@@ -147,7 +196,9 @@ function oklchToRgb(value: string): RGB | null {
 }
 
 function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
-  r /= 255; g /= 255; b /= 255;
+  r /= 255;
+  g /= 255;
+  b /= 255;
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
   const delta = max - min;
@@ -219,12 +270,18 @@ interface TokenLeaf {
 }
 
 /** Recursively flatten nested brand JSON into a flat token map */
-function flattenTokenJson(obj: Record<string, unknown>, result: TokenMap): void {
+function flattenTokenJson(
+  obj: Record<string, unknown>,
+  result: TokenMap
+): void {
   for (const value of Object.values(obj)) {
     if (value && typeof value === 'object') {
       const record = value as Record<string, unknown>;
       // Leaf node: has both originalName and value
-      if (typeof record.originalName === 'string' && typeof record.value === 'string') {
+      if (
+        typeof record.originalName === 'string' &&
+        typeof record.value === 'string'
+      ) {
         const leaf = record as unknown as TokenLeaf;
         result.set(`--${leaf.originalName}`, leaf.value);
       } else {
@@ -264,12 +321,13 @@ const NAV_TOKEN_MAP: Record<string, string> = {
 
 function convertOklchValue(
   oklchValue: string,
-  targetVar: string,
+  targetVar: string
 ): { cssValue: string; comment: string } | null {
   const rgb = oklchToRgb(oklchValue);
   if (!rgb) return null; // Skip gradients or unparseable values
 
-  const keepAlpha = ALPHA_TOKENS.has(targetVar) && rgb.a !== undefined && rgb.a < 1;
+  const keepAlpha =
+    ALPHA_TOKENS.has(targetVar) && rgb.a !== undefined && rgb.a < 1;
   const cssValue = keepAlpha ? toHslAlpha(rgb) : toBareHsl(rgb);
   const comment = keepAlpha
     ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`
@@ -293,7 +351,10 @@ function generateBaseMixin(tokens: TokenMap): string {
   lines.push('     ============================================ */');
   lines.push('');
 
-  const primitiveGroups: Array<{ label: string; mappings: Array<[string, string]> }> = [
+  const primitiveGroups: Array<{
+    label: string;
+    mappings: Array<[string, string]>;
+  }> = [
     {
       label: 'Brand Colors',
       mappings: [
@@ -349,10 +410,15 @@ function generateBaseMixin(tokens: TokenMap): string {
     lines.push(`  /* ${group.label} */`);
     for (const [srcName, targetVar] of group.mappings) {
       const oklchVal = tokens.get(srcName);
-      if (!oklchVal) { lines.push(`  /* MISSING: ${srcName} → ${targetVar} */`); continue; }
+      if (!oklchVal) {
+        lines.push(`  /* MISSING: ${srcName} → ${targetVar} */`);
+        continue;
+      }
       const converted = convertOklchValue(oklchVal, targetVar);
       if (!converted) continue;
-      lines.push(`  ${targetVar}: ${converted.cssValue}; /* ${converted.comment} - ${srcName} */`);
+      lines.push(
+        `  ${targetVar}: ${converted.cssValue}; /* ${converted.comment} - ${srcName} */`
+      );
     }
     lines.push('');
   }
@@ -378,7 +444,15 @@ function generateBaseMixin(tokens: TokenMap): string {
 
   // Opacity modifiers
   lines.push('  /* Opacity Modifiers */');
-  for (const [k, v] of [['10', '0.1'], ['20', '0.2'], ['30', '0.3'], ['40', '0.4'], ['50', '0.5'], ['70', '0.7'], ['90', '0.9']]) {
+  for (const [k, v] of [
+    ['10', '0.1'],
+    ['20', '0.2'],
+    ['30', '0.3'],
+    ['40', '0.4'],
+    ['50', '0.5'],
+    ['70', '0.7'],
+    ['90', '0.9'],
+  ]) {
     lines.push(`  --opacity-${k}: ${v};`);
   }
   lines.push('');
@@ -431,7 +505,9 @@ function generateBaseMixin(tokens: TokenMap): string {
   // Borders (derived from brand hue)
   const brandOklch = tokens.get('--av-brand-primary');
   const brandRgb = brandOklch ? oklchToRgb(brandOklch) : null;
-  const brandHsl = brandRgb ? rgbToHsl(brandRgb.r, brandRgb.g, brandRgb.b) : [210, 8, 32];
+  const brandHsl = brandRgb
+    ? rgbToHsl(brandRgb.r, brandRgb.g, brandRgb.b)
+    : [210, 8, 32];
   const borderH = brandHsl[0];
 
   lines.push('  /* Borders */');
@@ -447,8 +523,14 @@ function generateBaseMixin(tokens: TokenMap): string {
   lines.push('  --av-fixed-link: var(--color-brand-secondary);');
   const linkLightOklch = tokens.get('--av-fixed-link-light');
   if (linkLightOklch) {
-    const converted = convertOklchValue(linkLightOklch, '--av-fixed-link-light');
-    if (converted) lines.push(`  --av-fixed-link-light: ${converted.cssValue}; /* ${converted.comment} */`);
+    const converted = convertOklchValue(
+      linkLightOklch,
+      '--av-fixed-link-light'
+    );
+    if (converted)
+      lines.push(
+        `  --av-fixed-link-light: ${converted.cssValue}; /* ${converted.comment} */`
+      );
   }
   lines.push('');
 
@@ -462,7 +544,10 @@ function generateBaseMixin(tokens: TokenMap): string {
     const oklch = tokens.get(srcName);
     if (oklch) {
       const converted = convertOklchValue(oklch, targetVar);
-      if (converted) lines.push(`  ${targetVar}: ${converted.cssValue}; /* ${converted.comment} - ${srcName} */`);
+      if (converted)
+        lines.push(
+          `  ${targetVar}: ${converted.cssValue}; /* ${converted.comment} - ${srcName} */`
+        );
     }
   }
   lines.push('  --av-interactive-disabled: var(--color-text-tertiary);');
@@ -476,7 +561,10 @@ function generateBaseMixin(tokens: TokenMap): string {
     const oklch = tokens.get(srcName);
     if (oklch) {
       const converted = convertOklchValue(oklch, targetVar);
-      if (converted) lines.push(`  ${targetVar}: ${converted.cssValue}; /* ${converted.comment} */`);
+      if (converted)
+        lines.push(
+          `  ${targetVar}: ${converted.cssValue}; /* ${converted.comment} */`
+        );
     }
   }
 
@@ -489,10 +577,15 @@ function generateBaseMixin(tokens: TokenMap): string {
   const scrollOklch = tokens.get('--av-scroll-thumb');
   if (scrollOklch) {
     const converted = convertOklchValue(scrollOklch, '--av-scroll-thumb');
-    if (converted) lines.push(`  --av-scroll-thumb: ${converted.cssValue}; /* ${converted.comment} */`);
+    if (converted)
+      lines.push(
+        `  --av-scroll-thumb: ${converted.cssValue}; /* ${converted.comment} */`
+      );
   }
   // scroll-thumb-inverse default (overridden per nav variant)
-  lines.push('  --av-scroll-thumb-inverse: hsl(0 0% 100% / 0.4); /* default, overridden by nav variant */');
+  lines.push(
+    '  --av-scroll-thumb-inverse: hsl(0 0% 100% / 0.4); /* default, overridden by nav variant */'
+  );
   lines.push('');
 
   // Status semantic
@@ -644,7 +737,9 @@ function generateNavMixin(brandName: string, tokens: TokenMap): string {
     const converted = convertOklchValue(oklchVal, targetVar);
     if (!converted) continue;
 
-    lines.push(`  ${targetVar}: ${converted.cssValue}; /* ${converted.comment} */`);
+    lines.push(
+      `  ${targetVar}: ${converted.cssValue}; /* ${converted.comment} */`
+    );
   }
 
   // Brand-specific extra overrides
@@ -659,7 +754,9 @@ function generateNavMixin(brandName: string, tokens: TokenMap): string {
       const converted = convertOklchValue(oklchVal, targetVar);
       if (!converted) continue;
       lines.push(`  /* ${brandName}-specific override */`);
-      lines.push(`  ${targetVar}: ${converted.cssValue}; /* ${converted.comment} */`);
+      lines.push(
+        `  ${targetVar}: ${converted.cssValue}; /* ${converted.comment} */`
+      );
     }
   }
 
@@ -694,36 +791,47 @@ function generateThemeClasses(brands: string[]): string {
 
 function main() {
   if (!existsSync(UI_SYNTAX_BRANDS_DIR)) {
-    console.error(`\u274C ui-syntax brands not found at: ${UI_SYNTAX_BRANDS_DIR}`);
-    console.error('   Expected sibling repo layout: <parent>/shadcn-uikit + <parent>/ui-syntax');
-    console.error('   Update UI_SYNTAX_BRANDS_DIR in this script if your checkout is elsewhere.');
+    console.error(
+      `\u274C ui-syntax brands not found at: ${UI_SYNTAX_BRANDS_DIR}`
+    );
+    console.error(
+      '   Expected sibling repo layout: <parent>/shadcn-uikit + <parent>/ui-syntax'
+    );
+    console.error(
+      '   Update UI_SYNTAX_BRANDS_DIR in this script if your checkout is elsewhere.'
+    );
     process.exit(1);
   }
 
   // Read all brand JSON files
   const brandFiles = readdirSync(UI_SYNTAX_BRANDS_DIR)
-    .filter(f => f.endsWith('.json'))
-    .map(f => ({ name: basename(f, '.json'), path: join(UI_SYNTAX_BRANDS_DIR, f) }))
-    .filter(f => !EXCLUDED_BRANDS.includes(f.name));
+    .filter((f) => f.endsWith('.json'))
+    .map((f) => ({
+      name: basename(f, '.json'),
+      path: join(UI_SYNTAX_BRANDS_DIR, f),
+    }))
+    .filter((f) => !EXCLUDED_BRANDS.includes(f.name));
 
   console.log(`Found ${brandFiles.length} brand files in ui-syntax`);
 
   // Determine which brands to generate
-  const availableBrands = new Set(brandFiles.map(f => f.name));
-  const brandsToGenerate = BRAND_ORDER.filter(b => availableBrands.has(b));
-  const missing = BRAND_ORDER.filter(b => !availableBrands.has(b));
+  const availableBrands = new Set(brandFiles.map((f) => f.name));
+  const brandsToGenerate = BRAND_ORDER.filter((b) => availableBrands.has(b));
+  const missing = BRAND_ORDER.filter((b) => !availableBrands.has(b));
   if (missing.length) {
     console.warn(`Missing brands: ${missing.join(', ')}`);
   }
 
   // Read reference brand for base tokens
-  const refFile = brandFiles.find(f => f.name === REFERENCE_BRAND);
+  const refFile = brandFiles.find((f) => f.name === REFERENCE_BRAND);
   if (!refFile) {
     console.error(`Reference brand "${REFERENCE_BRAND}" not found`);
     process.exit(1);
   }
   const refTokens = readBrandTokens(refFile.path);
-  console.log(`Read reference brand "${REFERENCE_BRAND}" (${refTokens.size} tokens)`);
+  console.log(
+    `Read reference brand "${REFERENCE_BRAND}" (${refTokens.size} tokens)`
+  );
 
   // Ensure output directory exists
   mkdirSync(dirname(OUTPUT_FILE), { recursive: true });
@@ -734,11 +842,15 @@ function main() {
   parts.push('/**');
   parts.push(' * Acronis White-Label Theme (auto-generated)');
   parts.push(' *');
-  parts.push(' * DO NOT EDIT — generated by scripts/generate-white-label-themes.ts');
+  parts.push(
+    ' * DO NOT EDIT — generated by scripts/generate-white-label-themes.ts'
+  );
   parts.push(' * Source: ui-syntax/packages/tokens/src/tokens/brands/*.json');
   parts.push(' *');
   parts.push(' * Each partner brand is a standalone .theme-{brand} CSS class.');
-  parts.push(' * All classes share the same base/dark tokens and differ only in nav colors.');
+  parts.push(
+    ' * All classes share the same base/dark tokens and differ only in nav colors.'
+  );
   parts.push(' */');
   parts.push('');
 
@@ -748,7 +860,7 @@ function main() {
 
   // Nav mixins (all inline)
   for (const brand of brandsToGenerate) {
-    const brandFile = brandFiles.find(f => f.name === brand)!;
+    const brandFile = brandFiles.find((f) => f.name === brand)!;
     const brandTokens = readBrandTokens(brandFile.path);
     parts.push(generateNavMixin(brand, brandTokens));
     parts.push('');

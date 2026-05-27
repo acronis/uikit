@@ -1,4 +1,4 @@
-import { Spinner } from '@acronis-platform/shadcn-uikit/react'
+import { Spinner } from '@acronis-platform/shadcn-uikit/react';
 
 export function SpinnerCentered() {
   return (
@@ -11,5 +11,5 @@ export function SpinnerCentered() {
         </p>
       </div>
     </div>
-  )
+  );
 }

@@ -1,11 +1,24 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { HeartbeatIcon } from '@/components/icons'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { HeartbeatIcon } from '@/components/icons';
 
 const MoreVerticalIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <circle cx="12" cy="12" r="1" />
+    <circle cx="12" cy="5" r="1" />
+    <circle cx="12" cy="19" r="1" />
   </svg>
-)
+);
 import {
   WidgetProgressChunks,
   WidgetProgressChunksHeader,
@@ -14,23 +27,25 @@ import {
   WidgetProgressChunksBody,
   WidgetProgressChunkRow,
   WidgetProgressChunksFooter,
-} from '../widget-progress-chunks'
+} from '../widget-progress-chunks';
 
 const meta = {
   title: 'UI/WidgetProgressChunks',
   component: WidgetProgressChunks,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof WidgetProgressChunks>
+} satisfies Meta<typeof WidgetProgressChunks>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
     <WidgetProgressChunks className="w-[360px]">
       <WidgetProgressChunksHeader>
-        <WidgetProgressChunksIcon><HeartbeatIcon /></WidgetProgressChunksIcon>
+        <WidgetProgressChunksIcon>
+          <HeartbeatIcon />
+        </WidgetProgressChunksIcon>
         <WidgetProgressChunksTitle>Backup Progress</WidgetProgressChunksTitle>
         <MoreVerticalIcon className="h-4 w-4 ml-auto text-muted-foreground" />
       </WidgetProgressChunksHeader>
@@ -56,13 +71,15 @@ export const Default: Story = {
       </WidgetProgressChunksBody>
     </WidgetProgressChunks>
   ),
-}
+};
 
 export const WithFooter: Story = {
   render: () => (
     <WidgetProgressChunks className="w-[360px]">
       <WidgetProgressChunksHeader>
-        <WidgetProgressChunksIcon><HeartbeatIcon /></WidgetProgressChunksIcon>
+        <WidgetProgressChunksIcon>
+          <HeartbeatIcon />
+        </WidgetProgressChunksIcon>
         <WidgetProgressChunksTitle>Storage Usage</WidgetProgressChunksTitle>
       </WidgetProgressChunksHeader>
       <WidgetProgressChunksBody>
@@ -96,14 +113,18 @@ export const WithFooter: Story = {
       </WidgetProgressChunksFooter>
     </WidgetProgressChunks>
   ),
-}
+};
 
 export const Interactive: Story = {
   render: () => (
     <WidgetProgressChunks interactive className="w-[360px]">
       <WidgetProgressChunksHeader>
-        <WidgetProgressChunksIcon><HeartbeatIcon /></WidgetProgressChunksIcon>
-        <WidgetProgressChunksTitle>Protection Coverage</WidgetProgressChunksTitle>
+        <WidgetProgressChunksIcon>
+          <HeartbeatIcon />
+        </WidgetProgressChunksIcon>
+        <WidgetProgressChunksTitle>
+          Protection Coverage
+        </WidgetProgressChunksTitle>
       </WidgetProgressChunksHeader>
       <WidgetProgressChunksBody>
         <WidgetProgressChunkRow
@@ -125,4 +146,4 @@ export const Interactive: Story = {
       </WidgetProgressChunksBody>
     </WidgetProgressChunks>
   ),
-}
+};

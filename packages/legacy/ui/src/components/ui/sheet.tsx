@@ -1,20 +1,20 @@
-'use client'
+'use client';
 
-import * as React from 'react'
-import { Dialog } from '@base-ui/react'
-import { cva, type VariantProps } from 'class-variance-authority'
-import { CloseIcon } from '@/components/icons'
+import * as React from 'react';
+import { Dialog } from '@base-ui/react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { CloseIcon } from '@/components/icons';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 // Dialog.Root is the component function, not the namespace export
-const Sheet = Dialog.Root
+const Sheet = Dialog.Root;
 
-const SheetTrigger = Dialog.Trigger
+const SheetTrigger = Dialog.Trigger;
 
-const SheetClose = Dialog.Close
+const SheetClose = Dialog.Close;
 
-const SheetPortal = Dialog.Portal
+const SheetPortal = Dialog.Portal;
 
 const SheetOverlay = React.forwardRef<
   HTMLDivElement,
@@ -28,8 +28,8 @@ const SheetOverlay = React.forwardRef<
     {...props}
     ref={ref}
   />
-))
-SheetOverlay.displayName = 'SheetOverlay'
+));
+SheetOverlay.displayName = 'SheetOverlay';
 
 const sheetVariants = cva(
   'fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[open]:animate-in data-[closed]:animate-out data-[closed]:duration-300 data-[open]:duration-500',
@@ -48,12 +48,13 @@ const sheetVariants = cva(
       side: 'right',
     },
   }
-)
+);
 
 interface SheetContentProps
-  extends React.ComponentPropsWithoutRef<typeof Dialog.Popup>,
+  extends
+    React.ComponentPropsWithoutRef<typeof Dialog.Popup>,
     VariantProps<typeof sheetVariants> {
-  portal?: boolean
+  portal?: boolean;
 }
 
 const SheetContent = React.forwardRef<HTMLDivElement, SheetContentProps>(
@@ -61,7 +62,11 @@ const SheetContent = React.forwardRef<HTMLDivElement, SheetContentProps>(
     const element = (
       <>
         <SheetOverlay />
-        <Dialog.Popup ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
+        <Dialog.Popup
+          ref={ref}
+          className={cn(sheetVariants({ side }), className)}
+          {...props}
+        >
           {children}
           <Dialog.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[open]:bg-secondary">
             <CloseIcon className="h-4 w-4" />
@@ -69,25 +74,40 @@ const SheetContent = React.forwardRef<HTMLDivElement, SheetContentProps>(
           </Dialog.Close>
         </Dialog.Popup>
       </>
-    )
+    );
 
-    return portal ? <SheetPortal>{element}</SheetPortal> : element
+    return portal ? <SheetPortal>{element}</SheetPortal> : element;
   }
-)
-SheetContent.displayName = 'SheetContent'
+);
+SheetContent.displayName = 'SheetContent';
 
-const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex flex-col space-y-2 text-center sm:text-left', className)} {...props} />
-)
-SheetHeader.displayName = 'SheetHeader'
-
-const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const SheetHeader = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
+    className={cn(
+      'flex flex-col space-y-2 text-center sm:text-left',
+      className
+    )}
     {...props}
   />
-)
-SheetFooter.displayName = 'SheetFooter'
+);
+SheetHeader.displayName = 'SheetHeader';
+
+const SheetFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
+      className
+    )}
+    {...props}
+  />
+);
+SheetFooter.displayName = 'SheetFooter';
 
 const SheetTitle = React.forwardRef<
   HTMLHeadingElement,
@@ -98,8 +118,8 @@ const SheetTitle = React.forwardRef<
     className={cn('text-lg font-semibold text-foreground', className)}
     {...props}
   />
-))
-SheetTitle.displayName = 'SheetTitle'
+));
+SheetTitle.displayName = 'SheetTitle';
 
 const SheetDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -110,8 +130,8 @@ const SheetDescription = React.forwardRef<
     className={cn('text-sm text-muted-foreground', className)}
     {...props}
   />
-))
-SheetDescription.displayName = 'SheetDescription'
+));
+SheetDescription.displayName = 'SheetDescription';
 
 export {
   Sheet,
@@ -124,4 +144,4 @@ export {
   SheetFooter,
   SheetTitle,
   SheetDescription,
-}
+};

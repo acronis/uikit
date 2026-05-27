@@ -1,58 +1,69 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { PlaygroundState, ThemeMode, TokenSet, DeepPartial } from '@/types/playground/index.ts'
-import { DEFAULT_STATE, PREDEFINED_TOKEN_SETS } from '@/constants/playground/index.ts'
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import {
+  PlaygroundState,
+  ThemeMode,
+  TokenSet,
+  DeepPartial,
+} from '@/types/playground/index.ts';
+import {
+  DEFAULT_STATE,
+  PREDEFINED_TOKEN_SETS,
+} from '@/constants/playground/index.ts';
 
 interface PlaygroundStore extends PlaygroundState {
   // Theme actions
-  setTheme: (mode: ThemeMode) => void
-  toggleTheme: () => void
+  setTheme: (mode: ThemeMode) => void;
+  toggleTheme: () => void;
 
   // Token actions
-  setActiveTokenSet: (id: string) => void
-  updateCustomTokens: (updates: DeepPartial<TokenSet>) => void
-  resetCustomTokens: () => void
-  addTokenSet: (tokenSet: TokenSet) => void
-  removeTokenSet: (id: string) => void
+  setActiveTokenSet: (id: string) => void;
+  updateCustomTokens: (updates: DeepPartial<TokenSet>) => void;
+  resetCustomTokens: () => void;
+  addTokenSet: (tokenSet: TokenSet) => void;
+  removeTokenSet: (id: string) => void;
 
   // UI actions
-  setTokenEditorOpen: (open: boolean) => void
-  setShowcaseMode: (mode: 'grid' | 'detail') => void
-  setSelectedComponent: (componentId?: string) => void
-  setSearchQuery: (query: string) => void
-  setFilterCategory: (category?: string) => void
+  setTokenEditorOpen: (open: boolean) => void;
+  setShowcaseMode: (mode: 'grid' | 'detail') => void;
+  setSelectedComponent: (componentId?: string) => void;
+  setSearchQuery: (query: string) => void;
+  setFilterCategory: (category?: string) => void;
 
   // Preferences actions
-  setAutoApplyChanges: (value: boolean) => void
-  setShowCodeSnippets: (value: boolean) => void
-  setViewportSize: (size: 'mobile' | 'tablet' | 'desktop') => void
+  setAutoApplyChanges: (value: boolean) => void;
+  setShowCodeSnippets: (value: boolean) => void;
+  setViewportSize: (size: 'mobile' | 'tablet' | 'desktop') => void;
 
   // Persistence
-  saveToLocalStorage: () => void
-  loadFromLocalStorage: () => void
+  saveToLocalStorage: () => void;
+  loadFromLocalStorage: () => void;
 }
 
 const applyThemeToDocument = (mode: ThemeMode) => {
-  const root = document.documentElement
-  root.classList.remove('light', 'dark')
+  const root = document.documentElement;
+  root.classList.remove('light', 'dark');
 
   if (mode === ThemeMode.SYSTEM) {
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-    root.classList.add(systemTheme)
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+      .matches
+      ? 'dark'
+      : 'light';
+    root.classList.add(systemTheme);
   } else {
-    root.classList.add(mode)
+    root.classList.add(mode);
   }
-}
+};
 
 // Apply theme immediately on load from localStorage before store initialization
 if (typeof window !== 'undefined') {
   try {
-    const stored = localStorage.getItem('playground-storage')
+    const stored = localStorage.getItem('playground-storage');
     if (stored) {
-      const parsed = JSON.parse(stored)
-      const themeMode = parsed.state?.theme?.mode
+      const parsed = JSON.parse(stored);
+      const themeMode = parsed.state?.theme?.mode;
       if (themeMode) {
-        applyThemeToDocument(themeMode)
+        applyThemeToDocument(themeMode);
       }
     }
   } catch {
@@ -68,23 +79,23 @@ export const usePlaygroundStore = create<PlaygroundStore>()(
 
       // Theme actions
       setTheme: (mode: ThemeMode) => {
-        set({ theme: { mode } })
-        applyThemeToDocument(mode)
+        set({ theme: { mode } });
+        applyThemeToDocument(mode);
       },
 
       toggleTheme: () => {
-        const currentMode = get().theme.mode
-        let newMode: ThemeMode
+        const currentMode = get().theme.mode;
+        let newMode: ThemeMode;
 
         if (currentMode === ThemeMode.LIGHT) {
-          newMode = ThemeMode.DARK
+          newMode = ThemeMode.DARK;
         } else if (currentMode === ThemeMode.DARK) {
-          newMode = ThemeMode.SYSTEM
+          newMode = ThemeMode.SYSTEM;
         } else {
-          newMode = ThemeMode.LIGHT
+          newMode = ThemeMode.LIGHT;
         }
 
-        get().setTheme(newMode)
+        get().setTheme(newMode);
       },
 
       // Token actions
@@ -92,45 +103,49 @@ export const usePlaygroundStore = create<PlaygroundStore>()(
         set({
           activeTokenSetId: id,
           customTokenSet: undefined, // Clear custom tokens when switching presets
-        })
+        });
       },
 
       updateCustomTokens: (updates: DeepPartial<TokenSet>) => {
-        const currentCustom = get().customTokenSet
-        const activeTokenSet = get().tokenSets[get().activeTokenSetId]
+        const currentCustom = get().customTokenSet;
+        const activeTokenSet = get().tokenSets[get().activeTokenSetId];
 
-        const baseTokenSet = currentCustom || activeTokenSet
+        const baseTokenSet = currentCustom || activeTokenSet;
 
         const mergeDeep = (target: any, source: any): any => {
-          const output = { ...target }
+          const output = { ...target };
           for (const key in source) {
-            if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-              output[key] = mergeDeep(target[key] || {}, source[key])
+            if (
+              source[key] &&
+              typeof source[key] === 'object' &&
+              !Array.isArray(source[key])
+            ) {
+              output[key] = mergeDeep(target[key] || {}, source[key]);
             } else {
-              output[key] = source[key]
+              output[key] = source[key];
             }
           }
-          return output
-        }
+          return output;
+        };
 
-        const updatedTokenSet: TokenSet = mergeDeep(baseTokenSet, updates)
+        const updatedTokenSet: TokenSet = mergeDeep(baseTokenSet, updates);
 
         if (!updatedTokenSet.id) {
-          updatedTokenSet.id = 'custom'
-          updatedTokenSet.name = 'Custom'
+          updatedTokenSet.id = 'custom';
+          updatedTokenSet.name = 'Custom';
         }
 
         set({
           customTokenSet: updatedTokenSet,
           activeTokenSetId: 'custom',
-        })
+        });
       },
 
       resetCustomTokens: () => {
         set({
           customTokenSet: undefined,
           activeTokenSetId: 'default',
-        })
+        });
       },
 
       addTokenSet: (tokenSet: TokenSet) => {
@@ -139,69 +154,72 @@ export const usePlaygroundStore = create<PlaygroundStore>()(
             ...state.tokenSets,
             [tokenSet.id]: tokenSet,
           },
-        }))
+        }));
       },
 
       removeTokenSet: (id: string) => {
-        if (id === 'default') return
+        if (id === 'default') return;
 
         set((state) => {
-          const { [id]: _removed, ...rest } = state.tokenSets
+          const { [id]: _removed, ...rest } = state.tokenSets;
           return {
             tokenSets: rest,
-            activeTokenSetId: state.activeTokenSetId === id ? 'default' : state.activeTokenSetId,
-          }
-        })
+            activeTokenSetId:
+              state.activeTokenSetId === id
+                ? 'default'
+                : state.activeTokenSetId,
+          };
+        });
       },
 
       // UI actions
       setTokenEditorOpen: (open: boolean) => {
         set((state) => ({
           ui: { ...state.ui, tokenEditorOpen: open },
-        }))
+        }));
       },
 
       setShowcaseMode: (mode: 'grid' | 'detail') => {
         set((state) => ({
           ui: { ...state.ui, showcaseMode: mode },
-        }))
+        }));
       },
 
       setSelectedComponent: (componentId?: string) => {
         set((state) => ({
           ui: { ...state.ui, selectedComponent: componentId },
-        }))
+        }));
       },
 
       setSearchQuery: (query: string) => {
         set((state) => ({
           ui: { ...state.ui, searchQuery: query },
-        }))
+        }));
       },
 
       setFilterCategory: (category?: string) => {
         set((state) => ({
           ui: { ...state.ui, filterCategory: category },
-        }))
+        }));
       },
 
       // Preferences actions
       setAutoApplyChanges: (value: boolean) => {
         set((state) => ({
           preferences: { ...state.preferences, autoApplyChanges: value },
-        }))
+        }));
       },
 
       setShowCodeSnippets: (value: boolean) => {
         set((state) => ({
           preferences: { ...state.preferences, showCodeSnippets: value },
-        }))
+        }));
       },
 
       setViewportSize: (size: 'mobile' | 'tablet' | 'desktop') => {
         set((state) => ({
           preferences: { ...state.preferences, viewportSize: size },
-        }))
+        }));
       },
 
       // Persistence
@@ -224,19 +242,21 @@ export const usePlaygroundStore = create<PlaygroundStore>()(
       onRehydrateStorage: () => (state) => {
         // Apply theme after store has been hydrated from localStorage (backup)
         if (state) {
-          applyThemeToDocument(state.theme.mode)
+          applyThemeToDocument(state.theme.mode);
         }
       },
     }
   )
-)
+);
 
 // Listen for system theme changes
 if (typeof window !== 'undefined') {
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    const currentMode = usePlaygroundStore.getState().theme.mode
-    if (currentMode === ThemeMode.SYSTEM) {
-      applyThemeToDocument(ThemeMode.SYSTEM)
-    }
-  })
+  window
+    .matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', () => {
+      const currentMode = usePlaygroundStore.getState().theme.mode;
+      if (currentMode === ThemeMode.SYSTEM) {
+        applyThemeToDocument(ThemeMode.SYSTEM);
+      }
+    });
 }

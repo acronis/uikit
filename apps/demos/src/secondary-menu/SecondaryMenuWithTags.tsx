@@ -1,16 +1,19 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import {
   SecondaryMenu,
   SecondaryMenuContent,
   SecondaryMenuGroup,
   SecondaryMenuItem,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function SecondaryMenuWithTags() {
-  const [activeItem, setActiveItem] = useState('feature1')
+  const [activeItem, setActiveItem] = useState('feature1');
 
   return (
-    <div className="border rounded-lg overflow-hidden" style={{ height: '400px' }}>
+    <div
+      className="border rounded-lg overflow-hidden"
+      style={{ height: '400px' }}
+    >
       <SecondaryMenu>
         <SecondaryMenuContent>
           <SecondaryMenuGroup title="Features">
@@ -44,5 +47,5 @@ export function SecondaryMenuWithTags() {
         </SecondaryMenuContent>
       </SecondaryMenu>
     </div>
-  )
+  );
 }

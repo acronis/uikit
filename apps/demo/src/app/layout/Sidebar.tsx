@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import * as React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
   TableIcon,
   SettingsIcon,
@@ -7,22 +7,22 @@ import {
   ChevronRightIcon,
   ChatIcon,
 } from '@acronis-platform/shadcn-uikit';
-import { LayoutDashboardIcon } from '@/components/icons/missing-icons'
-import { cn } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
-import { useLocale } from '../context/LocaleContext'
+import { LayoutDashboardIcon } from '@/components/icons/missing-icons';
+import { cn } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
+import { useLocale } from '../context/LocaleContext';
 
 interface SidebarProps {
-  isCollapsed: boolean
-  onCollapse: (collapsed: boolean) => void
-  className?: string
+  isCollapsed: boolean;
+  onCollapse: (collapsed: boolean) => void;
+  className?: string;
 }
 
 interface NavItem {
-  titleKey: string
-  href: string
-  icon: React.ComponentType<{ className?: string }>
+  titleKey: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 const navItems: NavItem[] = [
@@ -37,8 +37,8 @@ const navItems: NavItem[] = [
 ];
 
 export function Sidebar({ isCollapsed, onCollapse, className }: SidebarProps) {
-  const { t } = useLocale()
-  const location = useLocation()
+  const { t } = useLocale();
+  const location = useLocation();
 
   return (
     <aside
@@ -68,8 +68,8 @@ export function Sidebar({ isCollapsed, onCollapse, className }: SidebarProps) {
 
       <nav className="flex-1 space-y-1 p-2">
         {navItems.map((item) => {
-          const Icon = item.icon
-          const isActive = location.pathname === item.href
+          const Icon = item.icon;
+          const isActive = location.pathname === item.href;
 
           return (
             <Link
@@ -86,7 +86,7 @@ export function Sidebar({ isCollapsed, onCollapse, className }: SidebarProps) {
               <Icon className="h-5 w-5 shrink-0" />
               {!isCollapsed && <span>{t(item.titleKey)}</span>}
             </Link>
-          )
+          );
         })}
       </nav>
 
@@ -101,5 +101,5 @@ export function Sidebar({ isCollapsed, onCollapse, className }: SidebarProps) {
         )}
       </div>
     </aside>
-  )
+  );
 }

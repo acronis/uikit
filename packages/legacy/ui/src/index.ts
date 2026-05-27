@@ -1,6 +1,6 @@
 // Main entry point - exports both React and Vue components
-export * from './react'
-export * from './lib/utils'
+export * from './react';
+export * from './lib/utils';
 export {
   applyTheme,
   getCurrentTheme,
@@ -13,5 +13,5 @@ export {
   initializeThemeSystem,
   type ThemeName,
   type ColorMode,
-} from './utils'
-export * from './types'
+} from './utils';
+export * from './types';

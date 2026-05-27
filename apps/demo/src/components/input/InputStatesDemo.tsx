@@ -1,4 +1,4 @@
-import { Input } from '@acronis-platform/shadcn-uikit/react'
+import { Input } from '@acronis-platform/shadcn-uikit/react';
 
 export function InputStatesDemo() {
   return (
@@ -13,10 +13,14 @@ export function InputStatesDemo() {
           <h3>Disabled Inputs</h3>
           <div className="space-y-4">
             <Input placeholder="Disabled input" disabled />
-            <Input placeholder="Disabled with value" defaultValue="Cannot edit this" disabled />
+            <Input
+              placeholder="Disabled with value"
+              defaultValue="Cannot edit this"
+              disabled
+            />
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,15 +1,42 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite';
 const BarChart3Icon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M3 3v18h18" />
+    <path d="M18 17V9" />
+    <path d="M13 17V5" />
+    <path d="M8 17v-3" />
   </svg>
-)
+);
 
 const MoreVerticalIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <circle cx="12" cy="12" r="1" />
+    <circle cx="12" cy="5" r="1" />
+    <circle cx="12" cy="19" r="1" />
   </svg>
-)
+);
 import {
   WidgetText,
   WidgetTextHeader,
@@ -21,23 +48,25 @@ import {
   WidgetTextTrend,
   WidgetTextDivider,
   WidgetTextFooter,
-} from '../widget-text'
+} from '../widget-text';
 
 const meta = {
   title: 'UI/WidgetText',
   component: WidgetText,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof WidgetText>
+} satisfies Meta<typeof WidgetText>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
     <WidgetText className="w-[240px]">
       <WidgetTextHeader>
-        <WidgetTextIcon><BarChart3Icon /></WidgetTextIcon>
+        <WidgetTextIcon>
+          <BarChart3Icon />
+        </WidgetTextIcon>
         <WidgetTextTitle>Total Backups</WidgetTextTitle>
         <MoreVerticalIcon className="h-4 w-4 ml-auto text-muted-foreground" />
       </WidgetTextHeader>
@@ -47,13 +76,15 @@ export const Default: Story = {
       </WidgetTextContent>
     </WidgetText>
   ),
-}
+};
 
 export const WithTrendUp: Story = {
   render: () => (
     <WidgetText className="w-[240px]">
       <WidgetTextHeader>
-        <WidgetTextIcon><BarChart3Icon /></WidgetTextIcon>
+        <WidgetTextIcon>
+          <BarChart3Icon />
+        </WidgetTextIcon>
         <WidgetTextTitle>Protected Devices</WidgetTextTitle>
       </WidgetTextHeader>
       <WidgetTextContent>
@@ -63,13 +94,15 @@ export const WithTrendUp: Story = {
       </WidgetTextContent>
     </WidgetText>
   ),
-}
+};
 
 export const WithTrendDown: Story = {
   render: () => (
     <WidgetText className="w-[240px]">
       <WidgetTextHeader>
-        <WidgetTextIcon><BarChart3Icon /></WidgetTextIcon>
+        <WidgetTextIcon>
+          <BarChart3Icon />
+        </WidgetTextIcon>
         <WidgetTextTitle>Failed Backups</WidgetTextTitle>
       </WidgetTextHeader>
       <WidgetTextContent>
@@ -79,13 +112,15 @@ export const WithTrendDown: Story = {
       </WidgetTextContent>
     </WidgetText>
   ),
-}
+};
 
 export const WithDividerAndFooter: Story = {
   render: () => (
     <WidgetText className="w-[240px]">
       <WidgetTextHeader>
-        <WidgetTextIcon><BarChart3Icon /></WidgetTextIcon>
+        <WidgetTextIcon>
+          <BarChart3Icon />
+        </WidgetTextIcon>
         <WidgetTextTitle>Storage Used</WidgetTextTitle>
       </WidgetTextHeader>
       <WidgetTextContent>
@@ -97,14 +132,16 @@ export const WithDividerAndFooter: Story = {
       <WidgetTextFooter>Updated 5 min ago</WidgetTextFooter>
     </WidgetText>
   ),
-}
+};
 
 export const MultipleMetrics: Story = {
   render: () => (
     <div className="flex gap-3">
       <WidgetText className="w-[200px]">
         <WidgetTextHeader>
-          <WidgetTextIcon><BarChart3Icon /></WidgetTextIcon>
+          <WidgetTextIcon>
+            <BarChart3Icon />
+          </WidgetTextIcon>
           <WidgetTextTitle>Backups</WidgetTextTitle>
         </WidgetTextHeader>
         <WidgetTextContent>
@@ -114,7 +151,9 @@ export const MultipleMetrics: Story = {
       </WidgetText>
       <WidgetText className="w-[200px]">
         <WidgetTextHeader>
-          <WidgetTextIcon><BarChart3Icon /></WidgetTextIcon>
+          <WidgetTextIcon>
+            <BarChart3Icon />
+          </WidgetTextIcon>
           <WidgetTextTitle>Failures</WidgetTextTitle>
         </WidgetTextHeader>
         <WidgetTextContent>
@@ -124,7 +163,9 @@ export const MultipleMetrics: Story = {
       </WidgetText>
       <WidgetText className="w-[200px]">
         <WidgetTextHeader>
-          <WidgetTextIcon><BarChart3Icon /></WidgetTextIcon>
+          <WidgetTextIcon>
+            <BarChart3Icon />
+          </WidgetTextIcon>
           <WidgetTextTitle>Devices</WidgetTextTitle>
         </WidgetTextHeader>
         <WidgetTextContent>
@@ -134,13 +175,15 @@ export const MultipleMetrics: Story = {
       </WidgetText>
     </div>
   ),
-}
+};
 
 export const Interactive: Story = {
   render: () => (
     <WidgetText interactive className="w-[240px]">
       <WidgetTextHeader>
-        <WidgetTextIcon><BarChart3Icon /></WidgetTextIcon>
+        <WidgetTextIcon>
+          <BarChart3Icon />
+        </WidgetTextIcon>
         <WidgetTextTitle>Click for details</WidgetTextTitle>
       </WidgetTextHeader>
       <WidgetTextContent>
@@ -149,4 +192,4 @@ export const Interactive: Story = {
       </WidgetTextContent>
     </WidgetText>
   ),
-}
+};

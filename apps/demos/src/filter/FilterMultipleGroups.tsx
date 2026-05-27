@@ -1,7 +1,12 @@
-import * as React from 'react'
-import { Filter } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Card, CardContent, CardHeader, CardTitle } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { Filter } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,30 +14,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function FilterMultipleGroups() {
-  const [statusFilters, setStatusFilters] = React.useState<string[]>([])
-  const [categoryFilters, setCategoryFilters] = React.useState<string[]>([])
+  const [statusFilters, setStatusFilters] = React.useState<string[]>([]);
+  const [categoryFilters, setCategoryFilters] = React.useState<string[]>([]);
 
   const toggleStatusFilter = (status: string) => {
     setStatusFilters((prev) =>
-      prev.includes(status) ? prev.filter((s) => s !== status) : [...prev, status]
-    )
-  }
+      prev.includes(status)
+        ? prev.filter((s) => s !== status)
+        : [...prev, status]
+    );
+  };
 
   const toggleCategoryFilter = (category: string) => {
     setCategoryFilters((prev) =>
-      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
-    )
-  }
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    );
+  };
 
   const clearAllFilters = () => {
-    setStatusFilters([])
-    setCategoryFilters([])
-  }
+    setStatusFilters([]);
+    setCategoryFilters([]);
+  };
 
-  const totalFilters = statusFilters.length + categoryFilters.length
+  const totalFilters = statusFilters.length + categoryFilters.length;
 
   return (
     <Card>
@@ -55,42 +64,66 @@ export function FilterMultipleGroups() {
         <div className="space-y-6">
           <div className="flex gap-2 flex-wrap">
             <DropdownMenu>
-              <DropdownMenuTrigger render={<Filter count={statusFilters.length} active={statusFilters.length > 0} />}>
+              <DropdownMenuTrigger
+                render={
+                  <Filter
+                    count={statusFilters.length}
+                    active={statusFilters.length > 0}
+                  />
+                }
+              >
                 Status
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {['Active', 'Pending', 'Completed', 'Cancelled'].map((status) => (
-                  <DropdownMenuCheckboxItem
-                    key={status}
-                    checked={statusFilters.includes(status.toLowerCase())}
-                    onCheckedChange={() => toggleStatusFilter(status.toLowerCase())}
-                  >
-                    {status}
-                  </DropdownMenuCheckboxItem>
-                ))}
+                {['Active', 'Pending', 'Completed', 'Cancelled'].map(
+                  (status) => (
+                    <DropdownMenuCheckboxItem
+                      key={status}
+                      checked={statusFilters.includes(status.toLowerCase())}
+                      onCheckedChange={() =>
+                        toggleStatusFilter(status.toLowerCase())
+                      }
+                    >
+                      {status}
+                    </DropdownMenuCheckboxItem>
+                  )
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
             <DropdownMenu>
-              <DropdownMenuTrigger render={<Filter count={categoryFilters.length} active={categoryFilters.length > 0} />}>
+              <DropdownMenuTrigger
+                render={
+                  <Filter
+                    count={categoryFilters.length}
+                    active={categoryFilters.length > 0}
+                  />
+                }
+              >
                 Category
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>Filter by Category</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {['Electronics', 'Clothing', 'Books', 'Home & Garden', 'Sports'].map(
-                  (category) => (
-                    <DropdownMenuCheckboxItem
-                      key={category}
-                      checked={categoryFilters.includes(category.toLowerCase())}
-                      onCheckedChange={() => toggleCategoryFilter(category.toLowerCase())}
-                    >
-                      {category}
-                    </DropdownMenuCheckboxItem>
-                  )
-                )}
+                {[
+                  'Electronics',
+                  'Clothing',
+                  'Books',
+                  'Home & Garden',
+                  'Sports',
+                ].map((category) => (
+                  <DropdownMenuCheckboxItem
+                    key={category}
+                    checked={categoryFilters.includes(category.toLowerCase())}
+                    onCheckedChange={() =>
+                      toggleCategoryFilter(category.toLowerCase())
+                    }
+                  >
+                    {category}
+                  </DropdownMenuCheckboxItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -112,5 +145,5 @@ export function FilterMultipleGroups() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

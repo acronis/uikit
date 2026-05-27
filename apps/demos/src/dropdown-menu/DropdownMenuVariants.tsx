@@ -1,11 +1,11 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function DropdownMenuVariants() {
   return (
@@ -46,5 +46,5 @@ export function DropdownMenuVariants() {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
+  );
 }

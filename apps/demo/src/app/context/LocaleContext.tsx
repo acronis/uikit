@@ -3,7 +3,10 @@ import i18n from 'i18next';
 import { initReactI18next, useTranslation } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { Language } from '../../types/locale';
-import { SUPPORTED_LANGUAGES, setUserPreference } from '../services/localeService';
+import {
+  SUPPORTED_LANGUAGES,
+  setUserPreference,
+} from '../services/localeService';
 
 import enCommon from '../../locales/en/common.json';
 import esCommon from '../../locales/es/common.json';
@@ -34,31 +37,31 @@ i18n
   .use(initReactI18next)
   .init({
     resources: {
-      en: { 
+      en: {
         common: enCommon,
         dashboard: enDashboard,
         data: enData,
         settings: enSettings,
       },
-      es: { 
+      es: {
         common: esCommon,
         dashboard: esDashboard,
         data: esData,
         settings: esSettings,
       },
-      fr: { 
+      fr: {
         common: frCommon,
         dashboard: frDashboard,
         data: frData,
         settings: frSettings,
       },
-      de: { 
+      de: {
         common: deCommon,
         dashboard: deDashboard,
         data: deData,
         settings: deSettings,
       },
-      ja: { 
+      ja: {
         common: jaCommon,
         dashboard: jaDashboard,
         data: jaData,
@@ -67,7 +70,7 @@ i18n
     },
     fallbackLng: 'en',
     defaultNS: 'common',
-    supportedLngs: SUPPORTED_LANGUAGES.map(lang => lang.code),
+    supportedLngs: SUPPORTED_LANGUAGES.map((lang) => lang.code),
     detection: {
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
@@ -95,11 +98,13 @@ interface LocaleContextValue {
   isLanguageSupported: (code: string) => boolean;
 }
 
-const LocaleContext = React.createContext<LocaleContextValue | undefined>(undefined);
+const LocaleContext = React.createContext<LocaleContextValue | undefined>(
+  undefined
+);
 
 /**
  * LocaleProvider - Provides internationalization (i18n) context to the application
- * 
+ *
  * Features:
  * - Automatic browser language detection on first visit
  * - 5 supported languages: English, Spanish, French, German, Japanese
@@ -107,25 +112,25 @@ const LocaleContext = React.createContext<LocaleContextValue | undefined>(undefi
  * - Fallback to English for unsupported languages or missing translations
  * - Multiple translation namespaces: common, dashboard, data, settings
  * - Loading and error states with UI feedback
- * 
+ *
  * Usage:
  * ```tsx
  * // Wrap your app with LocaleProvider
  * <LocaleProvider>
  *   <App />
  * </LocaleProvider>
- * 
+ *
  * // Use the useLocale hook in components
  * function MyComponent() {
  *   const { t, currentLanguage, changeLanguage } = useLocale();
  *   return <div>{t('navigation.dashboard')}</div>;
  * }
- * 
+ *
  * // Use specific namespaces
  * const { t } = useTranslation('dashboard');
  * return <h1>{t('title')}</h1>;
  * ```
- * 
+ *
  * @see useLocale - Hook to access locale context
  * @see LanguageSelector - Component for language switching UI
  */
@@ -135,26 +140,29 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = React.useState<Error | null>(null);
 
   // All hooks must be called before any conditional returns
-  const changeLanguage = React.useCallback(async (code: string) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      await i18nInstance.changeLanguage(code);
-      setUserPreference(code, 'user-selected');
-    } catch (err) {
-      setError(err as Error);
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [i18nInstance]);
+  const changeLanguage = React.useCallback(
+    async (code: string) => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        await i18nInstance.changeLanguage(code);
+        setUserPreference(code, 'user-selected');
+      } catch (err) {
+        setError(err as Error);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [i18nInstance]
+  );
 
   const getLanguageByCode = React.useCallback((code: string) => {
-    return SUPPORTED_LANGUAGES.find(lang => lang.code === code);
+    return SUPPORTED_LANGUAGES.find((lang) => lang.code === code);
   }, []);
 
   const isLanguageSupported = React.useCallback((code: string) => {
-    return SUPPORTED_LANGUAGES.some(lang => lang.code === code);
+    return SUPPORTED_LANGUAGES.some((lang) => lang.code === code);
   }, []);
 
   // Show loading state while i18next initializes
@@ -192,7 +200,9 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     isLanguageSupported,
   };
 
-  return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
+  return (
+    <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>
+  );
 }
 
 export function useLocale() {

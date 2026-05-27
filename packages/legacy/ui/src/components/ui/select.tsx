@@ -1,14 +1,14 @@
-import * as React from 'react'
-import { Select as BaseSelect } from '@base-ui/react/select'
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@/components/icons'
+import * as React from 'react';
+import { Select as BaseSelect } from '@base-ui/react/select';
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@/components/icons';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
-const Select = BaseSelect.Root
+const Select = BaseSelect.Root;
 
-const SelectGroup = BaseSelect.Group
-const SelectValue = BaseSelect.Value
-const SelectPortal = BaseSelect.Portal
+const SelectGroup = BaseSelect.Group;
+const SelectValue = BaseSelect.Value;
+const SelectPortal = BaseSelect.Portal;
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof BaseSelect.Trigger>,
@@ -32,8 +32,8 @@ const SelectTrigger = React.forwardRef<
       <ChevronDownIcon className="h-4 w-4" />
     </BaseSelect.Icon>
   </BaseSelect.Trigger>
-))
-SelectTrigger.displayName = 'SelectTrigger'
+));
+SelectTrigger.displayName = 'SelectTrigger';
 
 // Base UI uses ScrollUpArrow/ScrollDownArrow instead of Radix's ScrollUpButton/ScrollDownButton
 const SelectScrollUpButton = React.forwardRef<
@@ -51,8 +51,8 @@ const SelectScrollUpButton = React.forwardRef<
   >
     <ChevronUpIcon className="h-3.5 w-3.5" />
   </BaseSelect.ScrollUpArrow>
-))
-SelectScrollUpButton.displayName = 'SelectScrollUpButton'
+));
+SelectScrollUpButton.displayName = 'SelectScrollUpButton';
 
 const SelectScrollDownButton = React.forwardRef<
   React.ElementRef<typeof BaseSelect.ScrollDownArrow>,
@@ -69,51 +69,64 @@ const SelectScrollDownButton = React.forwardRef<
   >
     <ChevronDownIcon className="h-3.5 w-3.5" />
   </BaseSelect.ScrollDownArrow>
-))
-SelectScrollDownButton.displayName = 'SelectScrollDownButton'
+));
+SelectScrollDownButton.displayName = 'SelectScrollDownButton';
 
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof BaseSelect.Popup>,
   React.ComponentPropsWithoutRef<typeof BaseSelect.Popup> & {
-    alignItemWithTrigger?: boolean
-    side?: 'top' | 'bottom'
-    sideOffset?: number
-    portal?: boolean
+    alignItemWithTrigger?: boolean;
+    side?: 'top' | 'bottom';
+    sideOffset?: number;
+    portal?: boolean;
   }
->(({ className, children, alignItemWithTrigger = false, side, sideOffset = 4, portal = true, ...props }, ref) => {
-  const element = (
-    <BaseSelect.Positioner
-      alignItemWithTrigger={alignItemWithTrigger}
-      side={side}
-      sideOffset={sideOffset}
-      className="z-50"
-    >
-      <BaseSelect.Popup
-        ref={ref}
-        className={cn(
-          'relative max-h-96 w-[var(--anchor-width)] overflow-hidden rounded-lg border border-border bg-popover text-popover-foreground shadow-lg',
-          'data-[open]:animate-in data-[closed]:animate-out',
-          'data-[closed]:fade-out-0 data-[open]:fade-in-0',
-          'data-[closed]:zoom-out-95 data-[open]:zoom-in-95',
-          'data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2',
-          'data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-          'origin-[var(--transform-origin)]',
-          className
-        )}
-        {...props}
+>(
+  (
+    {
+      className,
+      children,
+      alignItemWithTrigger = false,
+      side,
+      sideOffset = 4,
+      portal = true,
+      ...props
+    },
+    ref
+  ) => {
+    const element = (
+      <BaseSelect.Positioner
+        alignItemWithTrigger={alignItemWithTrigger}
+        side={side}
+        sideOffset={sideOffset}
+        className="z-50"
       >
-        <SelectScrollUpButton />
-        <BaseSelect.List className="p-1.5 overflow-y-auto max-h-[inherit]">
-          {children}
-        </BaseSelect.List>
-        <SelectScrollDownButton />
-      </BaseSelect.Popup>
-    </BaseSelect.Positioner>
-  )
+        <BaseSelect.Popup
+          ref={ref}
+          className={cn(
+            'relative max-h-96 w-[var(--anchor-width)] overflow-hidden rounded-lg border border-border bg-popover text-popover-foreground shadow-lg',
+            'data-[open]:animate-in data-[closed]:animate-out',
+            'data-[closed]:fade-out-0 data-[open]:fade-in-0',
+            'data-[closed]:zoom-out-95 data-[open]:zoom-in-95',
+            'data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2',
+            'data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+            'origin-[var(--transform-origin)]',
+            className
+          )}
+          {...props}
+        >
+          <SelectScrollUpButton />
+          <BaseSelect.List className="p-1.5 overflow-y-auto max-h-[inherit]">
+            {children}
+          </BaseSelect.List>
+          <SelectScrollDownButton />
+        </BaseSelect.Popup>
+      </BaseSelect.Positioner>
+    );
 
-  return portal ? <BaseSelect.Portal>{element}</BaseSelect.Portal> : element
-})
-SelectContent.displayName = 'SelectContent'
+    return portal ? <BaseSelect.Portal>{element}</BaseSelect.Portal> : element;
+  }
+);
+SelectContent.displayName = 'SelectContent';
 
 const SelectLabel = React.forwardRef<
   React.ElementRef<typeof BaseSelect.GroupLabel>,
@@ -127,8 +140,8 @@ const SelectLabel = React.forwardRef<
     )}
     {...props}
   />
-))
-SelectLabel.displayName = 'SelectLabel'
+));
+SelectLabel.displayName = 'SelectLabel';
 
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof BaseSelect.Item>,
@@ -152,10 +165,10 @@ const SelectItem = React.forwardRef<
     </BaseSelect.ItemIndicator>
     <BaseSelect.ItemText className="flex-1">{children}</BaseSelect.ItemText>
   </BaseSelect.Item>
-))
-SelectItem.displayName = 'SelectItem'
+));
+SelectItem.displayName = 'SelectItem';
 
-const SelectItemText = BaseSelect.ItemText
+const SelectItemText = BaseSelect.ItemText;
 
 const SelectSeparator = React.forwardRef<
   React.ElementRef<typeof BaseSelect.Separator>,
@@ -166,8 +179,8 @@ const SelectSeparator = React.forwardRef<
     className={cn('my-1.5 h-px bg-border', className)}
     {...props}
   />
-))
-SelectSeparator.displayName = 'SelectSeparator'
+));
+SelectSeparator.displayName = 'SelectSeparator';
 
 export {
   Select,
@@ -182,4 +195,4 @@ export {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-}
+};

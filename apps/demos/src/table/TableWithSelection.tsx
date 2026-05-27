@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Table,
   TableBody,
@@ -6,29 +6,61 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Checkbox } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Checkbox } from '@acronis-platform/shadcn-uikit/react';
 
 const users = [
-  { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active' },
-  { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User', status: 'Active' },
-  { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'User', status: 'Inactive' },
-  { id: 4, name: 'Alice Williams', email: 'alice@example.com', role: 'Editor', status: 'Active' },
-  { id: 5, name: 'Charlie Brown', email: 'charlie@example.com', role: 'User', status: 'Active' },
-]
+  {
+    id: 1,
+    name: 'John Doe',
+    email: 'john@example.com',
+    role: 'Admin',
+    status: 'Active',
+  },
+  {
+    id: 2,
+    name: 'Jane Smith',
+    email: 'jane@example.com',
+    role: 'User',
+    status: 'Active',
+  },
+  {
+    id: 3,
+    name: 'Bob Johnson',
+    email: 'bob@example.com',
+    role: 'User',
+    status: 'Inactive',
+  },
+  {
+    id: 4,
+    name: 'Alice Williams',
+    email: 'alice@example.com',
+    role: 'Editor',
+    status: 'Active',
+  },
+  {
+    id: 5,
+    name: 'Charlie Brown',
+    email: 'charlie@example.com',
+    role: 'User',
+    status: 'Active',
+  },
+];
 
 export function TableWithSelection() {
-  const [selectedRows, setSelectedRows] = React.useState<number[]>([])
+  const [selectedRows, setSelectedRows] = React.useState<number[]>([]);
 
   const toggleRow = (id: number) => {
     setSelectedRows((prev) =>
       prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
-    )
-  }
+    );
+  };
 
   const toggleAll = () => {
-    setSelectedRows((prev) => (prev.length === users.length ? [] : users.map((u) => u.id)))
-  }
+    setSelectedRows((prev) =>
+      prev.length === users.length ? [] : users.map((u) => u.id)
+    );
+  };
 
   return (
     <div>
@@ -50,7 +82,10 @@ export function TableWithSelection() {
           </TableHeader>
           <TableBody>
             {users.map((user) => (
-              <TableRow key={user.id} data-state={selectedRows.includes(user.id) && 'selected'}>
+              <TableRow
+                key={user.id}
+                data-state={selectedRows.includes(user.id) && 'selected'}
+              >
                 <TableCell>
                   <Checkbox
                     checked={selectedRows.includes(user.id)}
@@ -72,5 +107,5 @@ export function TableWithSelection() {
         </p>
       )}
     </div>
-  )
+  );
 }

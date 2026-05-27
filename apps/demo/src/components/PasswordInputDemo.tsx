@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   PasswordInputDefault,
   PasswordInputFilled,
@@ -6,16 +6,16 @@ import {
   PasswordInputError,
   PasswordInputDisabled,
   PasswordInputSpecs,
-} from '@acronis-platform/shadcn-uikit-demos/password-input'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/password-input';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import passwordInputDefaultCode from '../../../demos/src/password-input/PasswordInputDefault.tsx?raw'
-import passwordInputFilledCode from '../../../demos/src/password-input/PasswordInputFilled.tsx?raw'
-import passwordInputWithHintCode from '../../../demos/src/password-input/PasswordInputWithHint.tsx?raw'
-import passwordInputErrorCode from '../../../demos/src/password-input/PasswordInputError.tsx?raw'
-import passwordInputDisabledCode from '../../../demos/src/password-input/PasswordInputDisabled.tsx?raw'
-import passwordInputSpecsCode from '../../../demos/src/password-input/PasswordInputSpecs.tsx?raw'
+import passwordInputDefaultCode from '../../../demos/src/password-input/PasswordInputDefault.tsx?raw';
+import passwordInputFilledCode from '../../../demos/src/password-input/PasswordInputFilled.tsx?raw';
+import passwordInputWithHintCode from '../../../demos/src/password-input/PasswordInputWithHint.tsx?raw';
+import passwordInputErrorCode from '../../../demos/src/password-input/PasswordInputError.tsx?raw';
+import passwordInputDisabledCode from '../../../demos/src/password-input/PasswordInputDisabled.tsx?raw';
+import passwordInputSpecsCode from '../../../demos/src/password-input/PasswordInputSpecs.tsx?raw';
 
 export function PasswordInputDemo() {
   return (

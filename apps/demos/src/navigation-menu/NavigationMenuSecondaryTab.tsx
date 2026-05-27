@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { cn } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { cn } from '@acronis-platform/shadcn-uikit/react';
 
 export function NavigationMenuSecondaryTab() {
-  const [activeTab, setActiveTab] = React.useState('overview')
+  const [activeTab, setActiveTab] = React.useState('overview');
 
   return (
     <div className="rounded-lg border">
@@ -75,7 +75,8 @@ export function NavigationMenuSecondaryTab() {
           <div>
             <h4 className="mb-2 font-semibold">Overview Content</h4>
             <p className="text-sm text-gray-600">
-              This is the overview section with general information about your dashboard.
+              This is the overview section with general information about your
+              dashboard.
             </p>
           </div>
         )}
@@ -83,7 +84,8 @@ export function NavigationMenuSecondaryTab() {
           <div>
             <h4 className="mb-2 font-semibold">Analytics Content</h4>
             <p className="text-sm text-gray-600">
-              View detailed analytics and metrics. You have 5 new reports to review.
+              View detailed analytics and metrics. You have 5 new reports to
+              review.
             </p>
           </div>
         )}
@@ -99,11 +101,12 @@ export function NavigationMenuSecondaryTab() {
           <div>
             <h4 className="mb-2 font-semibold">Settings Content</h4>
             <p className="text-sm text-gray-600">
-              Configure your preferences and account settings. 3 settings need attention.
+              Configure your preferences and account settings. 3 settings need
+              attention.
             </p>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }

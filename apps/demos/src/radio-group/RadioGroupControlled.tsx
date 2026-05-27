@@ -1,8 +1,12 @@
-import * as React from 'react'
-import { Label, RadioGroup, RadioGroupItem } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import {
+  Label,
+  RadioGroup,
+  RadioGroupItem,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function RadioGroupControlled() {
-  const [value, setValue] = React.useState('option-one')
+  const [value, setValue] = React.useState('option-one');
 
   return (
     <div className="space-y-4">
@@ -22,5 +26,5 @@ export function RadioGroupControlled() {
       </RadioGroup>
       <p className="text-sm text-gray-600">Selected: {value}</p>
     </div>
-  )
+  );
 }

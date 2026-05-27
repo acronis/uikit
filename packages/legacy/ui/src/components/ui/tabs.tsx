@@ -1,11 +1,11 @@
-import * as React from 'react'
-import { Tabs as TabsPrimitive } from '@base-ui/react'
+import * as React from 'react';
+import { Tabs as TabsPrimitive } from '@base-ui/react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 // Export Root directly as Tabs so consumers can use <Tabs defaultValue="..."> without
 // accessing the namespace object. TabsPrimitive retains the namespace for internal use.
-const Tabs = TabsPrimitive.Root
+const Tabs = TabsPrimitive.Root;
 
 const TabsList = React.forwardRef<HTMLDivElement, TabsPrimitive.List.Props>(
   ({ className, ...props }, ref) => (
@@ -15,8 +15,8 @@ const TabsList = React.forwardRef<HTMLDivElement, TabsPrimitive.List.Props>(
       {...props}
     />
   )
-)
-TabsList.displayName = 'TabsList'
+);
+TabsList.displayName = 'TabsList';
 
 const TabsTrigger = React.forwardRef<HTMLElement, TabsPrimitive.Tab.Props>(
   ({ className, ...props }, ref) => (
@@ -29,8 +29,8 @@ const TabsTrigger = React.forwardRef<HTMLElement, TabsPrimitive.Tab.Props>(
       {...props}
     />
   )
-)
-TabsTrigger.displayName = 'TabsTrigger'
+);
+TabsTrigger.displayName = 'TabsTrigger';
 
 const TabsContent = React.forwardRef<HTMLDivElement, TabsPrimitive.Panel.Props>(
   ({ className, ...props }, ref) => (
@@ -43,7 +43,7 @@ const TabsContent = React.forwardRef<HTMLDivElement, TabsPrimitive.Panel.Props>(
       {...props}
     />
   )
-)
-TabsContent.displayName = 'TabsContent'
+);
+TabsContent.displayName = 'TabsContent';
 
-export { Tabs, TabsList, TabsTrigger, TabsContent }
+export { Tabs, TabsList, TabsTrigger, TabsContent };

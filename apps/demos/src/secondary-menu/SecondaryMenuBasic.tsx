@@ -1,16 +1,19 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import {
   SecondaryMenu,
   SecondaryMenuContent,
   SecondaryMenuGroup,
   SecondaryMenuItem,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function SecondaryMenuBasic() {
-  const [activeItem, setActiveItem] = useState('dashboard')
+  const [activeItem, setActiveItem] = useState('dashboard');
 
   return (
-    <div className="border rounded-lg overflow-hidden" style={{ height: '400px' }}>
+    <div
+      className="border rounded-lg overflow-hidden"
+      style={{ height: '400px' }}
+    >
       <SecondaryMenu>
         <SecondaryMenuContent>
           <SecondaryMenuGroup>
@@ -42,5 +45,5 @@ export function SecondaryMenuBasic() {
         </SecondaryMenuContent>
       </SecondaryMenu>
     </div>
-  )
+  );
 }

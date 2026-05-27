@@ -5,8 +5,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function CardWithImage() {
   return (
@@ -25,5 +25,5 @@ export function CardWithImage() {
         <Button variant="outline">View Gallery</Button>
       </CardFooter>
     </Card>
-  )
+  );
 }

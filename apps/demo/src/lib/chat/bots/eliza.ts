@@ -1,4 +1,4 @@
-import { BotService, BotConfig, ChatMessage } from '../types'
+import { BotService, BotConfig, ChatMessage } from '../types';
 
 export class ElizaBot implements BotService {
   private patterns = [
@@ -150,7 +150,7 @@ export class ElizaBot implements BotService {
         'How does feeling {0} affect you?',
       ],
     },
-  ]
+  ];
 
   private fallbacks = [
     'Please tell me more about that.',
@@ -167,7 +167,7 @@ export class ElizaBot implements BotService {
     "Help me understand what you're experiencing.",
     "That's worth exploring. Go on.",
     'What would you like to discuss about that?',
-  ]
+  ];
 
   private reflections: Map<string, string> = new Map([
     ['I', 'you'],
@@ -180,44 +180,48 @@ export class ElizaBot implements BotService {
     ['am', 'are'],
     ['was', 'were'],
     ['i', 'you'],
-  ])
+  ]);
 
-  async generateResponse(message: string, _context: ChatMessage[]): Promise<string> {
+  async generateResponse(
+    message: string,
+    _context: ChatMessage[]
+  ): Promise<string> {
     // Add minimal delay for better UX
-    await this.delay(200 + Math.random() * 200)
+    await this.delay(200 + Math.random() * 200);
 
-    const lowerMessage = message.toLowerCase().trim()
+    const lowerMessage = message.toLowerCase().trim();
 
     // Check for patterns
     for (const { pattern, responses } of this.patterns) {
-      const match = message.match(pattern)
+      const match = message.match(pattern);
       if (match) {
-        const response = responses[Math.floor(Math.random() * responses.length)]
-        return this.processResponse(response, match)
+        const response =
+          responses[Math.floor(Math.random() * responses.length)];
+        return this.processResponse(response, match);
       }
     }
 
     // Check for keywords
     if (lowerMessage.includes('help')) {
-      return 'How can I help you today?'
+      return 'How can I help you today?';
     }
 
     if (lowerMessage.includes('thank')) {
-      return "You're welcome. Is there anything else you'd like to discuss?"
+      return "You're welcome. Is there anything else you'd like to discuss?";
     }
 
     // Return fallback response
-    return this.fallbacks[Math.floor(Math.random() * this.fallbacks.length)]
+    return this.fallbacks[Math.floor(Math.random() * this.fallbacks.length)];
   }
 
   shouldAskQuestion(_message: string): boolean {
     // ELIZA doesn't typically ask questions with options
-    return false
+    return false;
   }
 
   generateQuestion(): { text: string; options: string[] } {
     // Not implemented for ELIZA
-    return { text: '', options: [] }
+    return { text: '', options: [] };
   }
 
   getConfig(): BotConfig {
@@ -227,28 +231,28 @@ export class ElizaBot implements BotService {
       description: 'Classic psychotherapist chatbot',
       avatar: '🧑‍⚕️',
       responseDelay: { min: 800, max: 1500 },
-    }
+    };
   }
 
   private processResponse(template: string, match: RegExpMatchArray): string {
-    let response = template
+    let response = template;
 
     // Replace placeholders with captured groups
     for (let i = 1; i < match.length; i++) {
-      response = response.replace(new RegExp(`\\{${i - 1}\\}`, 'g'), match[i])
+      response = response.replace(new RegExp(`\\{${i - 1}\\}`, 'g'), match[i]);
     }
 
     // Apply reflections
-    const words = response.split(' ')
+    const words = response.split(' ');
     const reflectedWords = words.map((word) => {
-      const cleanWord = word.toLowerCase().replace(/[^\w]/g, '')
-      return this.reflections.get(cleanWord) || word
-    })
+      const cleanWord = word.toLowerCase().replace(/[^\w]/g, '');
+      return this.reflections.get(cleanWord) || word;
+    });
 
-    return reflectedWords.join(' ')
+    return reflectedWords.join(' ');
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms))
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

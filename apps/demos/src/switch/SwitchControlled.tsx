@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { Switch, Label } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { Switch, Label } from '@acronis-platform/shadcn-uikit/react';
 
 export function SwitchControlled() {
-  const [enabled, setEnabled] = React.useState(false)
+  const [enabled, setEnabled] = React.useState(false);
 
   return (
     <div className="space-y-4">
@@ -14,5 +14,5 @@ export function SwitchControlled() {
         Status: {enabled ? 'Enabled' : 'Disabled'}
       </p>
     </div>
-  )
+  );
 }

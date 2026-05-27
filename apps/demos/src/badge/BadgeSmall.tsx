@@ -1,4 +1,4 @@
-import { Badge } from '@acronis-platform/shadcn-uikit/react'
+import { Badge } from '@acronis-platform/shadcn-uikit/react';
 
 export function BadgeSmall() {
   return (
@@ -22,5 +22,5 @@ export function BadgeSmall() {
         TAG
       </Badge>
     </div>
-  )
+  );
 }

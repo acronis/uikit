@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { cva, type VariantProps } from 'class-variance-authority'
+import * as React from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 /**
  * Widget — A dashboard card container for charts, progress indicators, and data displays.
@@ -37,10 +37,11 @@ const widgetVariants = cva(
       interactive: false,
     },
   }
-)
+);
 
 export interface WidgetProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof widgetVariants> {}
 
 const Widget = React.forwardRef<HTMLDivElement, WidgetProps>(
@@ -52,8 +53,8 @@ const Widget = React.forwardRef<HTMLDivElement, WidgetProps>(
       {...props}
     />
   )
-)
-Widget.displayName = 'Widget'
+);
+Widget.displayName = 'Widget';
 
 const WidgetHeader = React.forwardRef<
   HTMLDivElement,
@@ -61,14 +62,11 @@ const WidgetHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      'flex items-center gap-2 px-6 pt-4 pb-0',
-      className
-    )}
+    className={cn('flex items-center gap-2 px-6 pt-4 pb-0', className)}
     {...props}
   />
-))
-WidgetHeader.displayName = 'WidgetHeader'
+));
+WidgetHeader.displayName = 'WidgetHeader';
 
 const WidgetIcon = React.forwardRef<
   HTMLDivElement,
@@ -82,8 +80,8 @@ const WidgetIcon = React.forwardRef<
     )}
     {...props}
   />
-))
-WidgetIcon.displayName = 'WidgetIcon'
+));
+WidgetIcon.displayName = 'WidgetIcon';
 
 const WidgetTitle = React.forwardRef<
   HTMLDivElement,
@@ -91,14 +89,11 @@ const WidgetTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      'flex-1 truncate text-sm font-semibold leading-6',
-      className
-    )}
+    className={cn('flex-1 truncate text-sm font-semibold leading-6', className)}
     {...props}
   />
-))
-WidgetTitle.displayName = 'WidgetTitle'
+));
+WidgetTitle.displayName = 'WidgetTitle';
 
 const WidgetActions = React.forwardRef<
   HTMLDivElement,
@@ -112,32 +107,24 @@ const WidgetActions = React.forwardRef<
     )}
     {...props}
   />
-))
-WidgetActions.displayName = 'WidgetActions'
+));
+WidgetActions.displayName = 'WidgetActions';
 
 const WidgetContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn('flex-1 px-6 py-2', className)}
-    {...props}
-  />
-))
-WidgetContent.displayName = 'WidgetContent'
+  <div ref={ref} className={cn('flex-1 px-6 py-2', className)} {...props} />
+));
+WidgetContent.displayName = 'WidgetContent';
 
 const WidgetFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn('px-6 pb-4 pt-0', className)}
-    {...props}
-  />
-))
-WidgetFooter.displayName = 'WidgetFooter'
+  <div ref={ref} className={cn('px-6 pb-4 pt-0', className)} {...props} />
+));
+WidgetFooter.displayName = 'WidgetFooter';
 
 const WidgetValue = React.forwardRef<
   HTMLDivElement,
@@ -148,8 +135,8 @@ const WidgetValue = React.forwardRef<
     className={cn('text-2xl font-semibold leading-8 tabular-nums', className)}
     {...props}
   />
-))
-WidgetValue.displayName = 'WidgetValue'
+));
+WidgetValue.displayName = 'WidgetValue';
 
 const WidgetLabel = React.forwardRef<
   HTMLDivElement,
@@ -157,11 +144,14 @@ const WidgetLabel = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('text-sm text-[var(--av-fixed-primary)] leading-6', className)}
+    className={cn(
+      'text-sm text-[var(--av-fixed-primary)] leading-6',
+      className
+    )}
     {...props}
   />
-))
-WidgetLabel.displayName = 'WidgetLabel'
+));
+WidgetLabel.displayName = 'WidgetLabel';
 
 const WidgetDivider = React.forwardRef<
   HTMLHRElement,
@@ -172,8 +162,8 @@ const WidgetDivider = React.forwardRef<
     className={cn('border-t border-[var(--av-brand-accent)] mx-6', className)}
     {...props}
   />
-))
-WidgetDivider.displayName = 'WidgetDivider'
+));
+WidgetDivider.displayName = 'WidgetDivider';
 
 export {
   Widget,
@@ -187,4 +177,4 @@ export {
   WidgetLabel,
   WidgetDivider,
   widgetVariants,
-}
+};

@@ -1,24 +1,31 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Themes/Color Tokens',
   parameters: { layout: 'fullscreen' },
   tags: ['autodocs'],
-} satisfies Meta
+} satisfies Meta;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 interface SwatchProps {
-  token: string
-  label?: string
-  textColor?: string
+  token: string;
+  label?: string;
+  textColor?: string;
 }
 
 function Swatch({ token, label, textColor }: SwatchProps) {
-  const isChart = token.startsWith('--av-chart-')
+  const isChart = token.startsWith('--av-chart-');
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 120 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 4,
+        minWidth: 120,
+      }}
+    >
       <div
         style={{
           width: '100%',
@@ -39,12 +46,12 @@ function Swatch({ token, label, textColor }: SwatchProps) {
         {label || token}
       </span>
     </div>
-  )
+  );
 }
 
 interface SwatchGroupProps {
-  title: string
-  tokens: Array<{ token: string; label?: string }>
+  title: string;
+  tokens: Array<{ token: string; label?: string }>;
 }
 
 function SwatchGroup({ title, tokens }: SwatchGroupProps) {
@@ -74,7 +81,7 @@ function SwatchGroup({ title, tokens }: SwatchGroupProps) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 function AllTokens() {
@@ -121,7 +128,10 @@ function AllTokens() {
           { token: '--av-accent-foreground', label: 'accent-foreground' },
           { token: '--av-brand-foreground', label: 'brand-foreground' },
           { token: '--av-text-inverse', label: 'text-inverse' },
-          { token: '--av-destructive-foreground', label: 'destructive-foreground' },
+          {
+            token: '--av-destructive-foreground',
+            label: 'destructive-foreground',
+          },
         ]}
       />
 
@@ -157,9 +167,9 @@ function AllTokens() {
         ]}
       />
     </div>
-  )
+  );
 }
 
 export const Default: Story = {
   render: () => <AllTokens />,
-}
+};

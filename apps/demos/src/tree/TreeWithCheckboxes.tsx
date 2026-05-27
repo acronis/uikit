@@ -1,4 +1,4 @@
-import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react'
+import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react';
 
 const organizationData: TreeNode[] = [
   {
@@ -45,7 +45,7 @@ const organizationData: TreeNode[] = [
       },
     ],
   },
-]
+];
 
 export function TreeWithCheckboxes() {
   return (
@@ -55,5 +55,5 @@ export function TreeWithCheckboxes() {
       defaultExpanded={['company', 'engineering']}
       defaultChecked={['john', 'jane']}
     />
-  )
+  );
 }

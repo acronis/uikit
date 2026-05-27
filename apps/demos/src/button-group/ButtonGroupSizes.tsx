@@ -1,4 +1,4 @@
-import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react'
+import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react';
 
 export function ButtonGroupSizes() {
   return (
@@ -40,5 +40,5 @@ export function ButtonGroupSizes() {
         </ButtonGroup>
       </div>
     </div>
-  )
+  );
 }

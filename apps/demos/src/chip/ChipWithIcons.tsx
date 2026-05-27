@@ -1,11 +1,11 @@
-import { Chip } from '@acronis-platform/shadcn-uikit/react'
+import { Chip } from '@acronis-platform/shadcn-uikit/react';
 import {
   CheckCircleIcon,
   MailIcon,
   StarIcon,
   UserIcon,
-} from '@acronis-platform/shadcn-uikit'
-import { HeartIcon, TagIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit';
+import { HeartIcon, TagIcon } from '../icons/missing-icons';
 export function ChipWithIcons() {
   return (
     <div className="flex flex-wrap gap-2">
@@ -16,5 +16,5 @@ export function ChipWithIcons() {
       <Chip icon={<HeartIcon className="h-4 w-4" />}>Like</Chip>
       <Chip icon={<CheckCircleIcon className="h-4 w-4" />}>Verified</Chip>
     </div>
-  )
+  );
 }

@@ -5,8 +5,12 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@acronis-platform/shadcn-uikit/react'
-import { FileIcon, FolderIcon, HomeFolderIcon } from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  FileIcon,
+  FolderIcon,
+  HomeFolderIcon,
+} from '@acronis-platform/shadcn-uikit';
 export function BreadcrumbWithIcons() {
   return (
     <Breadcrumb>
@@ -33,5 +37,5 @@ export function BreadcrumbWithIcons() {
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import {
   Pagination,
   PaginationContent,
@@ -7,10 +7,10 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function PaginationMiddlePage() {
-  const [currentPage, setCurrentPage] = useState(14)
+  const [currentPage, setCurrentPage] = useState(14);
 
   return (
     <div className="space-y-4">
@@ -20,8 +20,8 @@ export function PaginationMiddlePage() {
             <PaginationPrevious
               href="#"
               onClick={(e) => {
-                e.preventDefault()
-                if (currentPage > 1) setCurrentPage(currentPage - 1)
+                e.preventDefault();
+                if (currentPage > 1) setCurrentPage(currentPage - 1);
               }}
             />
           </PaginationItem>
@@ -29,8 +29,8 @@ export function PaginationMiddlePage() {
             <PaginationLink
               href="#"
               onClick={(e) => {
-                e.preventDefault()
-                setCurrentPage(1)
+                e.preventDefault();
+                setCurrentPage(1);
               }}
             >
               1
@@ -44,8 +44,8 @@ export function PaginationMiddlePage() {
               <PaginationLink
                 href="#"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setCurrentPage(page)
+                  e.preventDefault();
+                  setCurrentPage(page);
                 }}
                 isActive={currentPage === page}
               >
@@ -60,8 +60,8 @@ export function PaginationMiddlePage() {
             <PaginationLink
               href="#"
               onClick={(e) => {
-                e.preventDefault()
-                setCurrentPage(20)
+                e.preventDefault();
+                setCurrentPage(20);
               }}
             >
               20
@@ -71,8 +71,8 @@ export function PaginationMiddlePage() {
             <PaginationNext
               href="#"
               onClick={(e) => {
-                e.preventDefault()
-                if (currentPage < 20) setCurrentPage(currentPage + 1)
+                e.preventDefault();
+                if (currentPage < 20) setCurrentPage(currentPage + 1);
               }}
             />
           </PaginationItem>
@@ -82,5 +82,5 @@ export function PaginationMiddlePage() {
         Current page: {currentPage} of 20
       </div>
     </div>
-  )
+  );
 }

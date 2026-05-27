@@ -1,10 +1,10 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function DropdownMenuAlignments() {
   return (
@@ -42,5 +42,5 @@ export function DropdownMenuAlignments() {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
+  );
 }

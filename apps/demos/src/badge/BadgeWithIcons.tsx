@@ -1,4 +1,4 @@
-import { Badge } from '@acronis-platform/shadcn-uikit/react'
+import { Badge } from '@acronis-platform/shadcn-uikit/react';
 
 export function BadgeWithIcons() {
   return (
@@ -16,5 +16,5 @@ export function BadgeWithIcons() {
         <span className="text-xs">✕</span> Danger
       </Badge>
     </div>
-  )
+  );
 }

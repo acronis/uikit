@@ -20,12 +20,12 @@ Only the library is published; the apps are private.
 
 ## Workspaces
 
-| Path | Package | Published? | Stack | Workspace docs |
-|---|---|---|---|---|
-| `packages/legacy/ui/` | `@acronis-platform/shadcn-uikit` | **yes** | Vite library, Storybook 10, Vitest + RTL | [AGENTS.md](packages/legacy/ui/AGENTS.md) |
-| `apps/demo/` | `@acronis-platform/shadcn-uikit-demo` | no | Vite SPA, React Router v7, Zustand | [AGENTS.md](apps/demo/AGENTS.md) |
-| `apps/docs/` | `@acronis-platform/shadcn-uikit-docs` | no | Next.js 15 + Fumadocs | [AGENTS.md](apps/docs/AGENTS.md) |
-| `apps/demos/` | `@acronis-platform/shadcn-uikit-demos` | no | source-only (no build, no dev server) | [AGENTS.md](apps/demos/AGENTS.md) |
+| Path                  | Package                                | Published? | Stack                                    | Workspace docs                            |
+| --------------------- | -------------------------------------- | ---------- | ---------------------------------------- | ----------------------------------------- |
+| `packages/legacy/ui/` | `@acronis-platform/shadcn-uikit`       | **yes**    | Vite library, Storybook 10, Vitest + RTL | [AGENTS.md](packages/legacy/ui/AGENTS.md) |
+| `apps/demo/`          | `@acronis-platform/shadcn-uikit-demo`  | no         | Vite SPA, React Router v7, Zustand       | [AGENTS.md](apps/demo/AGENTS.md)          |
+| `apps/docs/`          | `@acronis-platform/shadcn-uikit-docs`  | no         | Next.js 15 + Fumadocs                    | [AGENTS.md](apps/docs/AGENTS.md)          |
+| `apps/demos/`         | `@acronis-platform/shadcn-uikit-demos` | no         | source-only (no build, no dev server)    | [AGENTS.md](apps/demos/AGENTS.md)         |
 
 `packages/legacy/` is a parent directory housing the current single
 published workspace. The `legacy` prefix anticipates a future split into

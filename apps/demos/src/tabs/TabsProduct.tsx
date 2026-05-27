@@ -1,4 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function TabsProduct() {
   return (
@@ -12,8 +17,9 @@ export function TabsProduct() {
         <div className="space-y-2">
           <h4 className="font-semibold">Product Description</h4>
           <p className="text-sm text-muted-foreground">
-            This is a high-quality product designed to meet your needs. It features advanced
-            technology and premium materials for long-lasting durability.
+            This is a high-quality product designed to meet your needs. It
+            features advanced technology and premium materials for long-lasting
+            durability.
           </p>
         </div>
       </TabsContent>
@@ -37,5 +43,5 @@ export function TabsProduct() {
         </div>
       </TabsContent>
     </Tabs>
-  )
+  );
 }

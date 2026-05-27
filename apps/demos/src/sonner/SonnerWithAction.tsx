@@ -1,5 +1,5 @@
-import { toast } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { toast } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function SonnerWithAction() {
   return (
@@ -16,5 +16,5 @@ export function SonnerWithAction() {
     >
       Toast with Action
     </Button>
-  )
+  );
 }

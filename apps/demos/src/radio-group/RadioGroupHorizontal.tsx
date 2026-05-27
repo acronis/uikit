@@ -1,4 +1,8 @@
-import { Label, RadioGroup, RadioGroupItem } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Label,
+  RadioGroup,
+  RadioGroupItem,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function RadioGroupHorizontal() {
   return (
@@ -16,5 +20,5 @@ export function RadioGroupHorizontal() {
         <Label htmlFor="r4-maybe">Maybe</Label>
       </div>
     </RadioGroup>
-  )
+  );
 }

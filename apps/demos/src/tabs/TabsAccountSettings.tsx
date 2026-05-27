@@ -1,5 +1,10 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@acronis-platform/shadcn-uikit/react'
-import { Button, Input, Label } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button, Input, Label } from '@acronis-platform/shadcn-uikit/react';
 
 export function TabsAccountSettings() {
   return (
@@ -31,5 +36,5 @@ export function TabsAccountSettings() {
         <Button>Change password</Button>
       </TabsContent>
     </Tabs>
-  )
+  );
 }

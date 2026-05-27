@@ -6,11 +6,18 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   flexRender,
-} from '@tanstack/react-table'
-import { useState } from 'react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Checkbox } from '@acronis-platform/shadcn-uikit/react'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@acronis-platform/shadcn-uikit/react'
+} from '@tanstack/react-table';
+import { useState } from 'react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Checkbox } from '@acronis-platform/shadcn-uikit/react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,22 +25,22 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Badge } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Badge } from '@acronis-platform/shadcn-uikit/react';
 import {
   DataTableColumnHeader,
   DataTablePagination,
   DataTableToolbar,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
-import { EllipsisHIcon } from '@acronis-platform/shadcn-uikit'
+import { EllipsisHIcon } from '@acronis-platform/shadcn-uikit';
 export type Payment = {
-  id: string
-  amount: number
-  status: 'pending' | 'processing' | 'success' | 'failed'
-  email: string
-  date: string
-}
+  id: string;
+  amount: number;
+  status: 'pending' | 'processing' | 'success' | 'failed';
+  email: string;
+  date: string;
+};
 
 const data: Payment[] = [
   {
@@ -141,7 +148,7 @@ const data: Payment[] = [
     email: 'olivia.jackson@email.net',
     date: '2024-01-01',
   },
-]
+];
 
 const columns: ColumnDef<Payment>[] = [
   {
@@ -149,7 +156,8 @@ const columns: ColumnDef<Payment>[] = [
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() ? 'indeterminate' : false)
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() ? 'indeterminate' : false)
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -167,9 +175,11 @@ const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
     cell: ({ row }) => {
-      const status = row.getValue('status') as string
+      const status = row.getValue('status') as string;
       const variant =
         status === 'success'
           ? 'default'
@@ -177,54 +187,64 @@ const columns: ColumnDef<Payment>[] = [
             ? 'secondary'
             : status === 'pending'
               ? 'outline'
-              : 'destructive'
+              : 'destructive';
 
       return (
         <Badge variant={variant} className="capitalize">
           {status}
         </Badge>
-      )
+      );
     },
   },
   {
     accessorKey: 'email',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Email" />
+    ),
   },
   {
     accessorKey: 'amount',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Amount" />
+    ),
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('amount'))
+      const amount = parseFloat(row.getValue('amount'));
       const formatted = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
-      }).format(amount)
+      }).format(amount);
 
-      return <div className="font-medium">{formatted}</div>
+      return <div className="font-medium">{formatted}</div>;
     },
   },
   {
     accessorKey: 'date',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Date" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Date" />
+    ),
     cell: ({ row }) => {
-      const date = new Date(row.getValue('date'))
-      return <div>{date.toLocaleDateString()}</div>
+      const date = new Date(row.getValue('date'));
+      return <div>{date.toLocaleDateString()}</div>;
     },
   },
   {
     id: 'actions',
     cell: ({ row }) => {
-      const payment = row.original
+      const payment = row.original;
 
       return (
         <DropdownMenu>
-          <DropdownMenuTrigger render={<Button variant="ghost" className="h-8 w-8 p-0" />}>
+          <DropdownMenuTrigger
+            render={<Button variant="ghost" className="h-8 w-8 p-0" />}
+          >
             <span className="sr-only">Open menu</span>
             <EllipsisHIcon className="h-4 w-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(payment.id)}
+            >
               Copy payment ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -232,17 +252,17 @@ const columns: ColumnDef<Payment>[] = [
             <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
 
 export function DataTableFull() {
-  const [tableData] = useState<Payment[]>(data)
-  const [sorting, setSorting] = useState<any[]>([])
-  const [columnFilters, setColumnFilters] = useState<any[]>([])
-  const [columnVisibility, setColumnVisibility] = useState({})
-  const [rowSelection, setRowSelection] = useState({})
+  const [tableData] = useState<Payment[]>(data);
+  const [sorting, setSorting] = useState<any[]>([]);
+  const [columnFilters, setColumnFilters] = useState<any[]>([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data: tableData,
@@ -261,11 +281,15 @@ export function DataTableFull() {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} searchKey="email" searchPlaceholder="Filter emails..." />
+      <DataTableToolbar
+        table={table}
+        searchKey="email"
+        searchPlaceholder="Filter emails..."
+      />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -276,9 +300,12 @@ export function DataTableFull() {
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -286,17 +313,26 @@ export function DataTableFull() {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>
@@ -306,5 +342,5 @@ export function DataTableFull() {
       </div>
       <DataTablePagination table={table} />
     </div>
-  )
+  );
 }

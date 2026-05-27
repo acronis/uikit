@@ -1,4 +1,8 @@
-import { Label, RadioGroup, RadioGroupItem } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Label,
+  RadioGroup,
+  RadioGroupItem,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function RadioGroupSizes() {
   return (
@@ -20,5 +24,5 @@ export function RadioGroupSizes() {
         <Label htmlFor="size-xlarge">X-Large</Label>
       </div>
     </RadioGroup>
-  )
+  );
 }

@@ -5,8 +5,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button, Label, Switch } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button, Label, Switch } from '@acronis-platform/shadcn-uikit/react';
 
 export function CardSettings() {
   return (
@@ -33,5 +33,5 @@ export function CardSettings() {
         <Button className="w-full">Save Preferences</Button>
       </CardFooter>
     </Card>
-  )
+  );
 }

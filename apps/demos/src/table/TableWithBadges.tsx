@@ -5,8 +5,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Badge } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Badge } from '@acronis-platform/shadcn-uikit/react';
 
 const invoices = [
   {
@@ -51,7 +51,7 @@ const invoices = [
     totalAmount: '$300.00',
     paymentMethod: 'Credit Card',
   },
-]
+];
 
 export function TableWithBadges() {
   return (
@@ -83,11 +83,13 @@ export function TableWithBadges() {
                 </Badge>
               </TableCell>
               <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+              <TableCell className="text-right">
+                {invoice.totalAmount}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }

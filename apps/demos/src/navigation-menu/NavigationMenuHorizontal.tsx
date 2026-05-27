@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { Link } from 'react-router-dom'
+import * as React from 'react';
+import { Link } from 'react-router-dom';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -8,14 +8,15 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from '@acronis-platform/shadcn-uikit/react'
-import { cn } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { cn } from '@acronis-platform/shadcn-uikit/react';
 
 const components: { title: string; href: string; description: string }[] = [
   {
     title: 'Alert Dialog',
     href: '/alert',
-    description: 'A modal dialog that interrupts the user with important content.',
+    description:
+      'A modal dialog that interrupts the user with important content.',
   },
   {
     title: 'Button',
@@ -30,42 +31,47 @@ const components: { title: string; href: string; description: string }[] = [
   {
     title: 'Dialog',
     href: '/dialog',
-    description: 'A window overlaid on either the primary window or another dialog.',
+    description:
+      'A window overlaid on either the primary window or another dialog.',
   },
   {
     title: 'Input',
     href: '/input',
-    description: 'Displays a form input field or a component that looks like an input field.',
+    description:
+      'Displays a form input field or a component that looks like an input field.',
   },
   {
     title: 'Tooltip',
     href: '/tooltip',
     description: 'A popup that displays information related to an element.',
   },
-]
+];
 
-const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
-  ({ className, title, children, ...props }, ref) => {
-    return (
-      <li>
-        <NavigationMenuLink asChild>
-          <a
-            ref={ref}
-            className={cn(
-              'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-              className
-            )}
-            {...props}
-          >
-            <div className="text-sm font-medium leading-none">{title}</div>
-            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
-          </a>
-        </NavigationMenuLink>
-      </li>
-    )
-  }
-)
-ListItem.displayName = 'ListItem'
+const ListItem = React.forwardRef<
+  React.ElementRef<'a'>,
+  React.ComponentPropsWithoutRef<'a'>
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  );
+});
+ListItem.displayName = 'ListItem';
 
 export function NavigationMenuHorizontal() {
   return (
@@ -82,9 +88,12 @@ export function NavigationMenuHorizontal() {
                       className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                       href="/"
                     >
-                      <div className="mb-2 mt-4 text-lg font-medium">shadcn/ui</div>
+                      <div className="mb-2 mt-4 text-lg font-medium">
+                        shadcn/ui
+                      </div>
                       <p className="text-sm leading-tight text-muted-foreground">
-                        Beautifully designed components built with Radix UI and Tailwind CSS.
+                        Beautifully designed components built with Radix UI and
+                        Tailwind CSS.
                       </p>
                     </a>
                   </NavigationMenuLink>
@@ -106,7 +115,11 @@ export function NavigationMenuHorizontal() {
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                 {components.map((component) => (
-                  <ListItem key={component.title} title={component.title} href={component.href}>
+                  <ListItem
+                    key={component.title}
+                    title={component.title}
+                    href={component.href}
+                  >
                     {component.description}
                   </ListItem>
                 ))}
@@ -123,5 +136,5 @@ export function NavigationMenuHorizontal() {
         </NavigationMenuList>
       </NavigationMenu>
     </div>
-  )
+  );
 }

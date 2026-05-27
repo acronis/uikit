@@ -1,21 +1,25 @@
-import React from 'react'
-import { SunIcon, MoonIcon, MonitorIcon } from '@/components/icons/missing-icons'
-import { usePlaygroundStore } from '@/store/playground/playgroundStore.ts'
-import { ThemeMode } from '@/types/playground/index.ts'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import React from 'react';
+import {
+  SunIcon,
+  MoonIcon,
+  MonitorIcon,
+} from '@/components/icons/missing-icons';
+import { usePlaygroundStore } from '@/store/playground/playgroundStore.ts';
+import { ThemeMode } from '@/types/playground/index.ts';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 interface ThemeSwitcherProps {
-  variant?: 'button' | 'dropdown'
-  size?: 'sm' | 'default' | 'lg'
-  showLabel?: boolean
-  className?: string
-  onThemeChange?: (theme: ThemeMode) => void
+  variant?: 'button' | 'dropdown';
+  size?: 'sm' | 'default' | 'lg';
+  showLabel?: boolean;
+  className?: string;
+  onThemeChange?: (theme: ThemeMode) => void;
 }
 
 export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
@@ -25,34 +29,34 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
   className = '',
   onThemeChange,
 }) => {
-  const { theme, setTheme } = usePlaygroundStore()
+  const { theme, setTheme } = usePlaygroundStore();
 
   const handleThemeChange = (mode: ThemeMode) => {
-    setTheme(mode)
-    onThemeChange?.(mode)
-  }
+    setTheme(mode);
+    onThemeChange?.(mode);
+  };
 
   const getIcon = () => {
     switch (theme.mode) {
       case ThemeMode.LIGHT:
-        return <SunIcon className="h-5 w-5" />
+        return <SunIcon className="h-5 w-5" />;
       case ThemeMode.DARK:
-        return <MoonIcon className="h-5 w-5" />
+        return <MoonIcon className="h-5 w-5" />;
       case ThemeMode.SYSTEM:
-        return <MonitorIcon className="h-5 w-5" />
+        return <MonitorIcon className="h-5 w-5" />;
     }
-  }
+  };
 
   const getLabel = () => {
     switch (theme.mode) {
       case ThemeMode.LIGHT:
-        return 'Light'
+        return 'Light';
       case ThemeMode.DARK:
-        return 'Dark'
+        return 'Dark';
       case ThemeMode.SYSTEM:
-        return 'System'
+        return 'System';
     }
-  }
+  };
 
   if (variant === 'button') {
     return (
@@ -65,8 +69,8 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
               ? ThemeMode.DARK
               : theme.mode === ThemeMode.DARK
                 ? ThemeMode.SYSTEM
-                : ThemeMode.LIGHT
-          handleThemeChange(nextMode)
+                : ThemeMode.LIGHT;
+          handleThemeChange(nextMode);
         }}
         className={className}
         aria-label="Toggle theme"
@@ -74,12 +78,21 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
         {getIcon()}
         {showLabel && <span className="ml-2">{getLabel()}</span>}
       </Button>
-    )
+    );
   }
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<Button variant="outline" size={size} className={className} aria-label="Select theme" />}>
+      <DropdownMenuTrigger
+        render={
+          <Button
+            variant="outline"
+            size={size}
+            className={className}
+            aria-label="Select theme"
+          />
+        }
+      >
         {getIcon()}
         {showLabel && <span className="ml-2">{getLabel()}</span>}
       </DropdownMenuTrigger>
@@ -107,5 +120,5 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};

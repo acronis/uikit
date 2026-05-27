@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { useState } from 'react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,10 +8,10 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function DropdownMenuWithRadio() {
-  const [position, setPosition] = useState('bottom')
+  const [position, setPosition] = useState('bottom');
 
   return (
     <DropdownMenu>
@@ -28,5 +28,5 @@ export function DropdownMenuWithRadio() {
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

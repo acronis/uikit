@@ -4,7 +4,7 @@ import {
   PaginationItem,
   PaginationNext,
   PaginationPrevious,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function PaginationSimple() {
   return (
@@ -18,5 +18,5 @@ export function PaginationSimple() {
         </PaginationItem>
       </PaginationContent>
     </Pagination>
-  )
+  );
 }

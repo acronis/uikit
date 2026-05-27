@@ -1,6 +1,6 @@
-import * as React from 'react'
+import * as React from 'react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 /**
  * WidgetPlaceholder — Empty state / placeholder widget for dashboard.
@@ -15,24 +15,26 @@ import { cn } from '@/lib/utils'
  */
 
 export interface WidgetPlaceholderProps extends React.HTMLAttributes<HTMLDivElement> {
-  interactive?: boolean
+  interactive?: boolean;
 }
 
-const WidgetPlaceholder = React.forwardRef<HTMLDivElement, WidgetPlaceholderProps>(
-  ({ className, interactive, ...props }, ref) => (
-    <div
-      ref={ref}
-      tabIndex={interactive ? 0 : undefined}
-      className={cn(
-        'relative flex flex-col rounded-lg border border-[var(--av-brand-light)] bg-[var(--av-inversed-primary)] text-[var(--av-fixed-primary)] transition-colors',
-        interactive && 'cursor-pointer hover:bg-[var(--av-el-secondary-hover)] active:bg-[var(--av-el-secondary-active)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--av-fixed-focus)]',
-        className
-      )}
-      {...props}
-    />
-  )
-)
-WidgetPlaceholder.displayName = 'WidgetPlaceholder'
+const WidgetPlaceholder = React.forwardRef<
+  HTMLDivElement,
+  WidgetPlaceholderProps
+>(({ className, interactive, ...props }, ref) => (
+  <div
+    ref={ref}
+    tabIndex={interactive ? 0 : undefined}
+    className={cn(
+      'relative flex flex-col rounded-lg border border-[var(--av-brand-light)] bg-[var(--av-inversed-primary)] text-[var(--av-fixed-primary)] transition-colors',
+      interactive &&
+        'cursor-pointer hover:bg-[var(--av-el-secondary-hover)] active:bg-[var(--av-el-secondary-active)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--av-fixed-focus)]',
+      className
+    )}
+    {...props}
+  />
+));
+WidgetPlaceholder.displayName = 'WidgetPlaceholder';
 
 const WidgetPlaceholderHeader = React.forwardRef<
   HTMLDivElement,
@@ -43,8 +45,8 @@ const WidgetPlaceholderHeader = React.forwardRef<
     className={cn('flex items-center gap-2 px-6 pt-4 pb-2', className)}
     {...props}
   />
-))
-WidgetPlaceholderHeader.displayName = 'WidgetPlaceholderHeader'
+));
+WidgetPlaceholderHeader.displayName = 'WidgetPlaceholderHeader';
 
 const WidgetPlaceholderTitle = React.forwardRef<
   HTMLDivElement,
@@ -55,8 +57,8 @@ const WidgetPlaceholderTitle = React.forwardRef<
     className={cn('flex-1 truncate text-sm font-semibold leading-6', className)}
     {...props}
   />
-))
-WidgetPlaceholderTitle.displayName = 'WidgetPlaceholderTitle'
+));
+WidgetPlaceholderTitle.displayName = 'WidgetPlaceholderTitle';
 
 const WidgetPlaceholderIcon = React.forwardRef<
   HTMLDivElement,
@@ -64,11 +66,14 @@ const WidgetPlaceholderIcon = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('flex-shrink-0 text-[var(--av-fixed-link)] [&>svg]:h-4 [&>svg]:w-4', className)}
+    className={cn(
+      'flex-shrink-0 text-[var(--av-fixed-link)] [&>svg]:h-4 [&>svg]:w-4',
+      className
+    )}
     {...props}
   />
-))
-WidgetPlaceholderIcon.displayName = 'WidgetPlaceholderIcon'
+));
+WidgetPlaceholderIcon.displayName = 'WidgetPlaceholderIcon';
 
 const WidgetPlaceholderContent = React.forwardRef<
   HTMLDivElement,
@@ -82,8 +87,8 @@ const WidgetPlaceholderContent = React.forwardRef<
     )}
     {...props}
   />
-))
-WidgetPlaceholderContent.displayName = 'WidgetPlaceholderContent'
+));
+WidgetPlaceholderContent.displayName = 'WidgetPlaceholderContent';
 
 const WidgetPlaceholderImage = React.forwardRef<
   HTMLDivElement,
@@ -97,8 +102,8 @@ const WidgetPlaceholderImage = React.forwardRef<
     )}
     {...props}
   />
-))
-WidgetPlaceholderImage.displayName = 'WidgetPlaceholderImage'
+));
+WidgetPlaceholderImage.displayName = 'WidgetPlaceholderImage';
 
 const WidgetPlaceholderText = React.forwardRef<
   HTMLDivElement,
@@ -106,11 +111,14 @@ const WidgetPlaceholderText = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('text-sm leading-6 text-[var(--av-fixed-primary)]', className)}
+    className={cn(
+      'text-sm leading-6 text-[var(--av-fixed-primary)]',
+      className
+    )}
     {...props}
   />
-))
-WidgetPlaceholderText.displayName = 'WidgetPlaceholderText'
+));
+WidgetPlaceholderText.displayName = 'WidgetPlaceholderText';
 
 const WidgetPlaceholderAction = React.forwardRef<
   HTMLDivElement,
@@ -124,8 +132,8 @@ const WidgetPlaceholderAction = React.forwardRef<
     )}
     {...props}
   />
-))
-WidgetPlaceholderAction.displayName = 'WidgetPlaceholderAction'
+));
+WidgetPlaceholderAction.displayName = 'WidgetPlaceholderAction';
 
 const WidgetPlaceholderFooter = React.forwardRef<
   HTMLDivElement,
@@ -136,8 +144,8 @@ const WidgetPlaceholderFooter = React.forwardRef<
     className={cn('px-6 pb-4 pt-0 text-xs', className)}
     {...props}
   />
-))
-WidgetPlaceholderFooter.displayName = 'WidgetPlaceholderFooter'
+));
+WidgetPlaceholderFooter.displayName = 'WidgetPlaceholderFooter';
 
 export {
   WidgetPlaceholder,
@@ -149,4 +157,4 @@ export {
   WidgetPlaceholderText,
   WidgetPlaceholderAction,
   WidgetPlaceholderFooter,
-}
+};

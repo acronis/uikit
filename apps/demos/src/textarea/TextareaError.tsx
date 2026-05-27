@@ -1,10 +1,13 @@
-import { Textarea } from '@acronis-platform/shadcn-uikit/react'
+import { Textarea } from '@acronis-platform/shadcn-uikit/react';
 
 export function TextareaError() {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <label htmlFor="error-message" className="text-sm font-medium text-[#243143]">
+        <label
+          htmlFor="error-message"
+          className="text-sm font-medium text-[#243143]"
+        >
           Message
         </label>
         <Textarea
@@ -12,10 +15,15 @@ export function TextareaError() {
           placeholder="Enter your message..."
           className="border-red-500 focus-visible:border-red-500"
         />
-        <p className="text-xs text-red-500">Message is required and cannot be empty</p>
+        <p className="text-xs text-red-500">
+          Message is required and cannot be empty
+        </p>
       </div>
       <div className="space-y-2">
-        <label htmlFor="error-description" className="text-sm font-medium text-[#243143]">
+        <label
+          htmlFor="error-description"
+          className="text-sm font-medium text-[#243143]"
+        >
           Description
         </label>
         <Textarea
@@ -29,5 +37,5 @@ export function TextareaError() {
         </p>
       </div>
     </div>
-  )
+  );
 }

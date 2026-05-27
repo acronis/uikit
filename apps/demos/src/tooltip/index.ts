@@ -1,6 +1,6 @@
-export { TooltipBasic } from './TooltipBasic'
-export { TooltipWithIcon } from './TooltipWithIcon'
-export { TooltipPositions } from './TooltipPositions'
-export { TooltipLongText } from './TooltipLongText'
-export { TooltipCustomDelay } from './TooltipCustomDelay'
-export { TooltipMultiple } from './TooltipMultiple'
+export { TooltipBasic } from './TooltipBasic';
+export { TooltipWithIcon } from './TooltipWithIcon';
+export { TooltipPositions } from './TooltipPositions';
+export { TooltipLongText } from './TooltipLongText';
+export { TooltipCustomDelay } from './TooltipCustomDelay';
+export { TooltipMultiple } from './TooltipMultiple';

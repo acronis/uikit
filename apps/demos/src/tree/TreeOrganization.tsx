@@ -1,4 +1,4 @@
-import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react'
+import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react';
 
 const organizationData: TreeNode[] = [
   {
@@ -45,7 +45,7 @@ const organizationData: TreeNode[] = [
       },
     ],
   },
-]
+];
 
 export function TreeOrganization() {
   return (
@@ -54,5 +54,5 @@ export function TreeOrganization() {
       defaultExpanded={['company', 'engineering', 'design']}
       onNodeSelect={(id) => console.log('Selected employee:', id)}
     />
-  )
+  );
 }

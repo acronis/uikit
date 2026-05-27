@@ -1,4 +1,4 @@
-import type { Skill } from '../types'
+import type { Skill } from '../types';
 
 export const mockSkills: Skill[] = [
   {
@@ -111,4 +111,4 @@ export const mockSkills: Skill[] = [
       },
     ],
   },
-]
+];

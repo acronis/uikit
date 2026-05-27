@@ -1,6 +1,10 @@
-import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react'
-import { FolderIcon, ImageIcon, VideosIcon } from '@acronis-platform/shadcn-uikit'
-import { MusicIcon } from '../icons/missing-icons'
+import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react';
+import {
+  FolderIcon,
+  ImageIcon,
+  VideosIcon,
+} from '@acronis-platform/shadcn-uikit';
+import { MusicIcon } from '../icons/missing-icons';
 const mixedData: TreeNode[] = [
   {
     id: 'media',
@@ -55,7 +59,7 @@ const mixedData: TreeNode[] = [
       },
     ],
   },
-]
+];
 
 export function TreeMixedContent() {
   return (
@@ -65,5 +69,5 @@ export function TreeMixedContent() {
       showCheckbox
       defaultExpanded={['media', 'videos', 'images']}
     />
-  )
+  );
 }

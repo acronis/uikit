@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   ChartContainer,
   ChartTooltip,
@@ -26,7 +26,7 @@ import {
   CartesianGrid,
   RadialBarChart,
   RadialBar,
-} from 'recharts'
+} from 'recharts';
 
 const barChartData = [
   { month: 'Jan', desktop: 186, mobile: 80 },
@@ -35,7 +35,7 @@ const barChartData = [
   { month: 'Apr', desktop: 73, mobile: 190 },
   { month: 'May', desktop: 209, mobile: 130 },
   { month: 'Jun', desktop: 214, mobile: 140 },
-]
+];
 
 const lineChartData = [
   { month: 'Jan', revenue: 4000, expenses: 2400 },
@@ -44,7 +44,7 @@ const lineChartData = [
   { month: 'Apr', revenue: 2780, expenses: 3908 },
   { month: 'May', revenue: 1890, expenses: 4800 },
   { month: 'Jun', revenue: 2390, expenses: 3800 },
-]
+];
 
 const areaChartData = [
   { month: 'Jan', users: 400 },
@@ -53,20 +53,20 @@ const areaChartData = [
   { month: 'Apr', users: 800 },
   { month: 'May', users: 500 },
   { month: 'Jun', users: 700 },
-]
+];
 
 const pieChartData = [
   { name: 'Chrome', value: 400, fill: 'var(--color-chrome)' },
   { name: 'Safari', value: 300, fill: 'var(--color-safari)' },
   { name: 'Firefox', value: 200, fill: 'var(--color-firefox)' },
   { name: 'Edge', value: 100, fill: 'var(--color-edge)' },
-]
+];
 
 const radialChartData = [
   { name: 'Desktop', value: 75, fill: 'var(--color-desktop)' },
   { name: 'Mobile', value: 60, fill: 'var(--color-mobile)' },
   { name: 'Tablet', value: 45, fill: 'var(--color-tablet)' },
-]
+];
 
 const barChartConfig = {
   desktop: {
@@ -77,7 +77,7 @@ const barChartConfig = {
     label: 'Mobile',
     color: 'hsl(var(--av-info))',
   },
-}
+};
 
 const lineChartConfig = {
   revenue: {
@@ -88,14 +88,14 @@ const lineChartConfig = {
     label: 'Expenses',
     color: 'hsl(var(--av-destructive))',
   },
-}
+};
 
 const areaChartConfig = {
   users: {
     label: 'Users',
     color: 'hsl(var(--av-primary))',
   },
-}
+};
 
 const pieChartConfig = {
   chrome: {
@@ -114,7 +114,7 @@ const pieChartConfig = {
     label: 'Edge',
     color: 'hsl(var(--av-success))',
   },
-}
+};
 
 const radialChartConfig = {
   desktop: {
@@ -129,7 +129,7 @@ const radialChartConfig = {
     label: 'Tablet',
     color: 'hsl(var(--av-warning))',
   },
-}
+};
 
 export const ChartsShowcase: React.FC = () => {
   return (
@@ -305,4 +305,4 @@ export const ChartsShowcase: React.FC = () => {
       </Card>
     </div>
   );
-}
+};

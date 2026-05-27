@@ -1,28 +1,28 @@
-import * as React from 'react'
-import { Menu } from '@base-ui/react'
-import { CheckIcon, ChevronRightIcon, CircleIcon } from '@/components/icons'
+import * as React from 'react';
+import { Menu } from '@base-ui/react';
+import { CheckIcon, ChevronRightIcon, CircleIcon } from '@/components/icons';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
-const DropdownMenu = Menu.Root
+const DropdownMenu = Menu.Root;
 
-const DropdownMenuTrigger = Menu.Trigger
+const DropdownMenuTrigger = Menu.Trigger;
 
-const DropdownMenuGroup = Menu.Group
+const DropdownMenuGroup = Menu.Group;
 
-const DropdownMenuPortal = Menu.Portal
+const DropdownMenuPortal = Menu.Portal;
 
 // Base UI uses Menu.SubmenuRoot instead of a flat Sub component.
 // SubmenuTrigger must be a direct child of the parent Menu.Popup,
 // and it must be wrapped in Menu.SubmenuRoot to establish the submenu context.
-const DropdownMenuSub = Menu.SubmenuRoot
+const DropdownMenuSub = Menu.SubmenuRoot;
 
-const DropdownMenuRadioGroup = Menu.RadioGroup
+const DropdownMenuRadioGroup = Menu.RadioGroup;
 
 const DropdownMenuSubTrigger = React.forwardRef<
   HTMLElement,
   Omit<Menu.SubmenuTrigger.Props, 'ref'> & {
-    inset?: boolean
+    inset?: boolean;
   }
 >(({ className, inset, children, ...props }, ref) => (
   <Menu.SubmenuTrigger
@@ -37,13 +37,13 @@ const DropdownMenuSubTrigger = React.forwardRef<
     {children}
     <ChevronRightIcon className="ml-auto" />
   </Menu.SubmenuTrigger>
-))
-DropdownMenuSubTrigger.displayName = 'DropdownMenuSubTrigger'
+));
+DropdownMenuSubTrigger.displayName = 'DropdownMenuSubTrigger';
 
 const DropdownMenuSubContent = React.forwardRef<
   HTMLDivElement,
   Omit<Menu.Popup.Props, 'ref'> & {
-    sideOffset?: number
+    sideOffset?: number;
   }
 >(({ className, sideOffset = 4, ...props }, ref) => (
   <Menu.Positioner sideOffset={sideOffset}>
@@ -56,39 +56,44 @@ const DropdownMenuSubContent = React.forwardRef<
       {...props}
     />
   </Menu.Positioner>
-))
-DropdownMenuSubContent.displayName = 'DropdownMenuSubContent'
+));
+DropdownMenuSubContent.displayName = 'DropdownMenuSubContent';
 
 const DropdownMenuContent = React.forwardRef<
   HTMLDivElement,
   Omit<Menu.Popup.Props, 'ref'> & {
-    portal?: boolean
-    sideOffset?: number
-    align?: 'start' | 'center' | 'end'
-    side?: 'top' | 'bottom' | 'left' | 'right' | 'inline-end' | 'inline-start'
+    portal?: boolean;
+    sideOffset?: number;
+    align?: 'start' | 'center' | 'end';
+    side?: 'top' | 'bottom' | 'left' | 'right' | 'inline-end' | 'inline-start';
   }
->(({ className, portal = true, sideOffset = 4, align, side, ...props }, ref) => {
-  const positioner = (
-    <Menu.Positioner sideOffset={sideOffset} align={align} side={side}>
-      <Menu.Popup
-        ref={ref}
-        className={cn(
-          'z-50 min-w-[8rem] overflow-y-auto overflow-x-hidden rounded bg-popover py-2 text-popover-foreground shadow-[0px_10px_20px_rgba(36,49,67,0.2)] data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-          className
-        )}
-        {...props}
-      />
-    </Menu.Positioner>
-  )
+>(
+  (
+    { className, portal = true, sideOffset = 4, align, side, ...props },
+    ref
+  ) => {
+    const positioner = (
+      <Menu.Positioner sideOffset={sideOffset} align={align} side={side}>
+        <Menu.Popup
+          ref={ref}
+          className={cn(
+            'z-50 min-w-[8rem] overflow-y-auto overflow-x-hidden rounded bg-popover py-2 text-popover-foreground shadow-[0px_10px_20px_rgba(36,49,67,0.2)] data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+            className
+          )}
+          {...props}
+        />
+      </Menu.Positioner>
+    );
 
-  return portal ? <Menu.Portal>{positioner}</Menu.Portal> : positioner
-})
-DropdownMenuContent.displayName = 'DropdownMenuContent'
+    return portal ? <Menu.Portal>{positioner}</Menu.Portal> : positioner;
+  }
+);
+DropdownMenuContent.displayName = 'DropdownMenuContent';
 
 const DropdownMenuItem = React.forwardRef<
   HTMLElement,
   Omit<Menu.Item.Props, 'ref'> & {
-    inset?: boolean
+    inset?: boolean;
   }
 >(({ className, inset, ...props }, ref) => (
   <Menu.Item
@@ -100,8 +105,8 @@ const DropdownMenuItem = React.forwardRef<
     )}
     {...props}
   />
-))
-DropdownMenuItem.displayName = 'DropdownMenuItem'
+));
+DropdownMenuItem.displayName = 'DropdownMenuItem';
 
 const DropdownMenuCheckboxItem = React.forwardRef<
   HTMLElement,
@@ -123,8 +128,8 @@ const DropdownMenuCheckboxItem = React.forwardRef<
     </span>
     {children}
   </Menu.CheckboxItem>
-))
-DropdownMenuCheckboxItem.displayName = 'DropdownMenuCheckboxItem'
+));
+DropdownMenuCheckboxItem.displayName = 'DropdownMenuCheckboxItem';
 
 const DropdownMenuRadioItem = React.forwardRef<
   HTMLElement,
@@ -145,24 +150,28 @@ const DropdownMenuRadioItem = React.forwardRef<
     </span>
     {children}
   </Menu.RadioItem>
-))
-DropdownMenuRadioItem.displayName = 'DropdownMenuRadioItem'
+));
+DropdownMenuRadioItem.displayName = 'DropdownMenuRadioItem';
 
 // Menu.GroupLabel requires a Menu.Group parent (Base UI constraint), but shadcn's
 // DropdownMenuLabel is used standalone. Render a plain div to match the original API.
 const DropdownMenuLabel = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    inset?: boolean
+    inset?: boolean;
   }
 >(({ className, inset, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('px-4 py-2 text-sm font-semibold leading-6', inset && 'pl-8', className)}
+    className={cn(
+      'px-4 py-2 text-sm font-semibold leading-6',
+      inset && 'pl-8',
+      className
+    )}
     {...props}
   />
-))
-DropdownMenuLabel.displayName = 'DropdownMenuLabel'
+));
+DropdownMenuLabel.displayName = 'DropdownMenuLabel';
 
 // Base UI has no built-in Separator in Menu — render a plain div with role="separator"
 const DropdownMenuSeparator = React.forwardRef<
@@ -175,13 +184,21 @@ const DropdownMenuSeparator = React.forwardRef<
     className={cn('-mx-1 my-1 h-px bg-muted', className)}
     {...props}
   />
-))
-DropdownMenuSeparator.displayName = 'DropdownMenuSeparator'
+));
+DropdownMenuSeparator.displayName = 'DropdownMenuSeparator';
 
-const DropdownMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
-  return <span className={cn('ml-auto text-xs tracking-widest opacity-60', className)} {...props} />
-}
-DropdownMenuShortcut.displayName = 'DropdownMenuShortcut'
+const DropdownMenuShortcut = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLSpanElement>) => {
+  return (
+    <span
+      className={cn('ml-auto text-xs tracking-widest opacity-60', className)}
+      {...props}
+    />
+  );
+};
+DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';
 
 export {
   DropdownMenu,
@@ -199,4 +216,4 @@ export {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
-}
+};

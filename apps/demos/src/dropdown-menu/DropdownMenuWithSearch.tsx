@@ -1,15 +1,15 @@
-import { useState } from 'react'
-import { Button, Input } from '@acronis-platform/shadcn-uikit/react'
+import { useState } from 'react';
+import { Button, Input } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
-import { ChevronDownIcon, SearchIcon } from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit/react';
+import { ChevronDownIcon, SearchIcon } from '@acronis-platform/shadcn-uikit';
 export function DropdownMenuWithSearch() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState('');
 
   const menuItems = [
     'First value',
@@ -20,11 +20,11 @@ export function DropdownMenuWithSearch() {
     'Sixth value',
     'Seventh value',
     'Eighth value',
-  ]
+  ];
 
   const filteredItems = menuItems.filter((item) =>
     item.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  );
 
   return (
     <DropdownMenu>
@@ -58,5 +58,5 @@ export function DropdownMenuWithSearch() {
         )}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

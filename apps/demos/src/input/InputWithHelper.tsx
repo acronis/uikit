@@ -1,10 +1,13 @@
-import { Input } from '@acronis-platform/shadcn-uikit/react'
+import { Input } from '@acronis-platform/shadcn-uikit/react';
 
 export function InputWithHelper() {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <label htmlFor="username" className="text-sm font-medium text-[#243143]">
+        <label
+          htmlFor="username"
+          className="text-sm font-medium text-[#243143]"
+        >
           Username
         </label>
         <Input id="username" type="text" placeholder="Enter username" />
@@ -18,5 +21,5 @@ export function InputWithHelper() {
         <p className="text-xs text-gray-500">Include country code</p>
       </div>
     </div>
-  )
+  );
 }

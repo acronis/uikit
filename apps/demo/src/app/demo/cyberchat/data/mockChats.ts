@@ -1,4 +1,4 @@
-import type { Chat } from '../types'
+import type { Chat } from '../types';
 
 export const mockChats: Chat[] = [
   {
@@ -71,4 +71,4 @@ export const mockChats: Chat[] = [
     lastActivity: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 1 week ago
     preview: 'Sprint retrospective notes and action items...',
   },
-]
+];

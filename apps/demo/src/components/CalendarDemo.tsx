@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   CalendarSingle,
   CalendarMultiple,
@@ -12,30 +12,30 @@ import {
   CalendarFixedWeeks,
   CalendarWeekStart,
   CalendarMinMax,
-} from '@acronis-platform/shadcn-uikit-demos/calendar'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/calendar';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import calendarSingleCode from '../../../demos/src/calendar/CalendarSingle.tsx?raw'
-import calendarMultipleCode from '../../../demos/src/calendar/CalendarMultiple.tsx?raw'
-import calendarRangeCode from '../../../demos/src/calendar/CalendarRange.tsx?raw'
-import calendarDualMonthCode from '../../../demos/src/calendar/CalendarDualMonth.tsx?raw'
-import calendarDropdownCode from '../../../demos/src/calendar/CalendarDropdown.tsx?raw'
-import calendarDisabledCode from '../../../demos/src/calendar/CalendarDisabled.tsx?raw'
-import calendarWeekNumbersCode from '../../../demos/src/calendar/CalendarWeekNumbers.tsx?raw'
-import calendarCustomStartCode from '../../../demos/src/calendar/CalendarCustomStart.tsx?raw'
-import calendarNoOutsideCode from '../../../demos/src/calendar/CalendarNoOutside.tsx?raw'
-import calendarFixedWeeksCode from '../../../demos/src/calendar/CalendarFixedWeeks.tsx?raw'
-import calendarWeekStartCode from '../../../demos/src/calendar/CalendarWeekStart.tsx?raw'
-import calendarMinMaxCode from '../../../demos/src/calendar/CalendarMinMax.tsx?raw'
+import calendarSingleCode from '../../../demos/src/calendar/CalendarSingle.tsx?raw';
+import calendarMultipleCode from '../../../demos/src/calendar/CalendarMultiple.tsx?raw';
+import calendarRangeCode from '../../../demos/src/calendar/CalendarRange.tsx?raw';
+import calendarDualMonthCode from '../../../demos/src/calendar/CalendarDualMonth.tsx?raw';
+import calendarDropdownCode from '../../../demos/src/calendar/CalendarDropdown.tsx?raw';
+import calendarDisabledCode from '../../../demos/src/calendar/CalendarDisabled.tsx?raw';
+import calendarWeekNumbersCode from '../../../demos/src/calendar/CalendarWeekNumbers.tsx?raw';
+import calendarCustomStartCode from '../../../demos/src/calendar/CalendarCustomStart.tsx?raw';
+import calendarNoOutsideCode from '../../../demos/src/calendar/CalendarNoOutside.tsx?raw';
+import calendarFixedWeeksCode from '../../../demos/src/calendar/CalendarFixedWeeks.tsx?raw';
+import calendarWeekStartCode from '../../../demos/src/calendar/CalendarWeekStart.tsx?raw';
+import calendarMinMaxCode from '../../../demos/src/calendar/CalendarMinMax.tsx?raw';
 
 export function CalendarDemo() {
   return (
     <section className="demo-section">
       <h2>Calendar Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        A date calendar component that allows users to select dates with various modes and
-        configurations.
+        A date calendar component that allows users to select dates with various
+        modes and configurations.
       </p>
 
       <div className="space-y-8">

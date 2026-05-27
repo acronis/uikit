@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function CardWithShadow() {
   return (
@@ -22,10 +22,11 @@ export function CardWithShadow() {
             <span className="font-medium">Jane Smith</span> liked your post
           </p>
           <p className="text-sm">
-            <span className="font-medium">Bob Johnson</span> commented on your photo
+            <span className="font-medium">Bob Johnson</span> commented on your
+            photo
           </p>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

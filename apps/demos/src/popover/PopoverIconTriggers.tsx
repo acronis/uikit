@@ -1,11 +1,15 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Popover, PopoverContent, PopoverTrigger } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 import {
   BellIcon,
   HelpCircleIcon,
   SettingsIcon,
   UserIcon,
-} from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit';
 export function PopoverIconTriggers() {
   return (
     <div className="flex flex-wrap justify-center gap-4 rounded-lg border p-8">
@@ -17,8 +21,8 @@ export function PopoverIconTriggers() {
           <div className="space-y-2">
             <h4 className="font-semibold">Help</h4>
             <p className="text-sm text-muted-foreground">
-              Need assistance? Click here to access our help documentation and support
-              resources.
+              Need assistance? Click here to access our help documentation and
+              support resources.
             </p>
           </div>
         </PopoverContent>
@@ -66,5 +70,5 @@ export function PopoverIconTriggers() {
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }

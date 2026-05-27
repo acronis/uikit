@@ -1,4 +1,4 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,14 +8,18 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
-import { CloudIcon, MailIcon, MessagesIcon } from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  CloudIcon,
+  MailIcon,
+  MessagesIcon,
+} from '@acronis-platform/shadcn-uikit';
 import {
   ExternalLinkIcon,
   LifeBuoyIcon,
   PlusCircleIcon,
   UserPlusIcon,
-} from '../icons/missing-icons'
+} from '../icons/missing-icons';
 export function DropdownMenuWithSubmenu() {
   return (
     <DropdownMenu>
@@ -68,5 +72,5 @@ export function DropdownMenuWithSubmenu() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

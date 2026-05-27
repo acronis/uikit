@@ -1,19 +1,22 @@
-import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
   SecondaryMenu,
   SecondaryMenuContent,
   SecondaryMenuGroup,
   SecondaryMenuItem,
-} from '@acronis-platform/shadcn-uikit/react'
-import { ExclamationCircleIcon, MailIcon } from '@acronis-platform/shadcn-uikit'
-import { RulerIcon } from '@/components/icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  ExclamationCircleIcon,
+  MailIcon,
+} from '@acronis-platform/shadcn-uikit';
+import { RulerIcon } from '@/components/icons/missing-icons';
 export function InputLayout() {
-  const navigate = useNavigate()
-  const location = useLocation()
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const isActive = (path: string) => {
-    return location.pathname === path || location.pathname === `/input${path}`
-  }
+    return location.pathname === path || location.pathname === `/input${path}`;
+  };
 
   return (
     <div className="flex h-full">
@@ -91,5 +94,5 @@ export function InputLayout() {
         <Outlet />
       </div>
     </div>
-  )
+  );
 }

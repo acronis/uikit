@@ -1,4 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function TabsCompact() {
   return (
@@ -30,5 +35,5 @@ export function TabsCompact() {
         <p className="text-sm">Showing archived items</p>
       </TabsContent>
     </Tabs>
-  )
+  );
 }

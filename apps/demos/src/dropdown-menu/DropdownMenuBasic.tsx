@@ -1,13 +1,13 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
-import { SettingsIcon, UserIcon } from '@acronis-platform/shadcn-uikit'
-import { CreditCardIcon, LogOutIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit/react';
+import { SettingsIcon, UserIcon } from '@acronis-platform/shadcn-uikit';
+import { CreditCardIcon, LogOutIcon } from '../icons/missing-icons';
 export function DropdownMenuBasic() {
   return (
     <DropdownMenu>
@@ -34,5 +34,5 @@ export function DropdownMenuBasic() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

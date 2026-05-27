@@ -1,6 +1,6 @@
-import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react'
-import { PauseIcon, PlayIcon } from '@acronis-platform/shadcn-uikit'
-import { SkipBackIcon, SkipForwardIcon } from '../icons/missing-icons'
+import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react';
+import { PauseIcon, PlayIcon } from '@acronis-platform/shadcn-uikit';
+import { SkipBackIcon, SkipForwardIcon } from '../icons/missing-icons';
 export function ButtonGroupMediaControls() {
   return (
     <ButtonGroup>
@@ -17,5 +17,5 @@ export function ButtonGroupMediaControls() {
         <SkipForwardIcon className="h-4 w-4" />
       </Button>
     </ButtonGroup>
-  )
+  );
 }

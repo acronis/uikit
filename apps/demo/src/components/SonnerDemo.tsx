@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { Toaster } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { Toaster } from '@acronis-platform/shadcn-uikit/react';
 import {
   SonnerBasic,
   SonnerWithDescription,
@@ -17,33 +17,34 @@ import {
   SonnerDismissible,
   SonnerPositions,
   SonnerRealWorld,
-} from '@acronis-platform/shadcn-uikit-demos/sonner'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/sonner';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import sonnerBasicCode from '../../../demos/src/sonner/SonnerBasic.tsx?raw'
-import sonnerWithDescriptionCode from '../../../demos/src/sonner/SonnerWithDescription.tsx?raw'
-import sonnerSuccessCode from '../../../demos/src/sonner/SonnerSuccess.tsx?raw'
-import sonnerInfoCode from '../../../demos/src/sonner/SonnerInfo.tsx?raw'
-import sonnerWarningCode from '../../../demos/src/sonner/SonnerWarning.tsx?raw'
-import sonnerErrorCode from '../../../demos/src/sonner/SonnerError.tsx?raw'
-import sonnerLoadingCode from '../../../demos/src/sonner/SonnerLoading.tsx?raw'
-import sonnerWithActionCode from '../../../demos/src/sonner/SonnerWithAction.tsx?raw'
-import sonnerWithCancelCode from '../../../demos/src/sonner/SonnerWithCancel.tsx?raw'
-import sonnerPromiseCode from '../../../demos/src/sonner/SonnerPromise.tsx?raw'
-import sonnerCustomDurationCode from '../../../demos/src/sonner/SonnerCustomDuration.tsx?raw'
-import sonnerRichContentCode from '../../../demos/src/sonner/SonnerRichContent.tsx?raw'
-import sonnerMultipleCode from '../../../demos/src/sonner/SonnerMultiple.tsx?raw'
-import sonnerDismissibleCode from '../../../demos/src/sonner/SonnerDismissible.tsx?raw'
-import sonnerPositionsCode from '../../../demos/src/sonner/SonnerPositions.tsx?raw'
-import sonnerRealWorldCode from '../../../demos/src/sonner/SonnerRealWorld.tsx?raw'
+import sonnerBasicCode from '../../../demos/src/sonner/SonnerBasic.tsx?raw';
+import sonnerWithDescriptionCode from '../../../demos/src/sonner/SonnerWithDescription.tsx?raw';
+import sonnerSuccessCode from '../../../demos/src/sonner/SonnerSuccess.tsx?raw';
+import sonnerInfoCode from '../../../demos/src/sonner/SonnerInfo.tsx?raw';
+import sonnerWarningCode from '../../../demos/src/sonner/SonnerWarning.tsx?raw';
+import sonnerErrorCode from '../../../demos/src/sonner/SonnerError.tsx?raw';
+import sonnerLoadingCode from '../../../demos/src/sonner/SonnerLoading.tsx?raw';
+import sonnerWithActionCode from '../../../demos/src/sonner/SonnerWithAction.tsx?raw';
+import sonnerWithCancelCode from '../../../demos/src/sonner/SonnerWithCancel.tsx?raw';
+import sonnerPromiseCode from '../../../demos/src/sonner/SonnerPromise.tsx?raw';
+import sonnerCustomDurationCode from '../../../demos/src/sonner/SonnerCustomDuration.tsx?raw';
+import sonnerRichContentCode from '../../../demos/src/sonner/SonnerRichContent.tsx?raw';
+import sonnerMultipleCode from '../../../demos/src/sonner/SonnerMultiple.tsx?raw';
+import sonnerDismissibleCode from '../../../demos/src/sonner/SonnerDismissible.tsx?raw';
+import sonnerPositionsCode from '../../../demos/src/sonner/SonnerPositions.tsx?raw';
+import sonnerRealWorldCode from '../../../demos/src/sonner/SonnerRealWorld.tsx?raw';
 
 export function SonnerDemo() {
   return (
     <section className="demo-section">
       <h2>Sonner (Toast) Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Toast notifications for displaying temporary messages to users using Sonner library.
+        Toast notifications for displaying temporary messages to users using
+        Sonner library.
       </p>
 
       <Toaster position="top-right" />

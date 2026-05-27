@@ -1,18 +1,18 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { ScrollArea, ScrollBar } from '../scroll-area'
-import { Separator } from '../separator'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ScrollArea, ScrollBar } from '../scroll-area';
+import { Separator } from '../separator';
 
 const meta = {
   title: 'UI/ScrollArea',
   component: ScrollArea,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof ScrollArea>
+} satisfies Meta<typeof ScrollArea>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const tags = Array.from({ length: 50 }, (_, i) => `Tag ${i + 1}`)
+const tags = Array.from({ length: 50 }, (_, i) => `Tag ${i + 1}`);
 
 export const Vertical: Story = {
   render: () => (
@@ -28,7 +28,7 @@ export const Vertical: Story = {
       </div>
     </ScrollArea>
   ),
-}
+};
 
 export const Horizontal: Story = {
   render: () => (
@@ -46,7 +46,7 @@ export const Horizontal: Story = {
       <ScrollBar orientation="horizontal" />
     </ScrollArea>
   ),
-}
+};
 
 export const WithContent: Story = {
   render: () => (
@@ -54,10 +54,11 @@ export const WithContent: Story = {
       <h4 className="mb-4 text-sm font-medium leading-none">Long content</h4>
       {Array.from({ length: 20 }, (_, i) => (
         <p key={i} className="text-sm text-muted-foreground mb-3">
-          Paragraph {i + 1}: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua.
+          Paragraph {i + 1}: Lorem ipsum dolor sit amet, consectetur adipiscing
+          elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
+          aliqua.
         </p>
       ))}
     </ScrollArea>
   ),
-}
+};

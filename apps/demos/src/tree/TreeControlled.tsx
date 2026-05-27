@@ -1,6 +1,6 @@
-import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react'
-import { FileTextIcon, FolderIcon } from '@acronis-platform/shadcn-uikit'
-import { CodeIcon } from '../icons/missing-icons'
+import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react';
+import { FileTextIcon, FolderIcon } from '@acronis-platform/shadcn-uikit';
+import { CodeIcon } from '../icons/missing-icons';
 const projectData: TreeNode[] = [
   {
     id: 'src',
@@ -60,7 +60,7 @@ const projectData: TreeNode[] = [
     label: 'package.json',
     icon: <FileTextIcon className="h-4 w-4 text-green-600" />,
   },
-]
+];
 
 export function TreeControlled() {
   return (
@@ -73,5 +73,5 @@ export function TreeControlled() {
       onNodeSelect={(id) => console.log('Node selected:', id)}
       onNodeCheck={(id, checked) => console.log('Node checked:', id, checked)}
     />
-  )
+  );
 }

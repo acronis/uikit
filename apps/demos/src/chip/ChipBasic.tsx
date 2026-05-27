@@ -1,4 +1,4 @@
-import { Chip } from '@acronis-platform/shadcn-uikit/react'
+import { Chip } from '@acronis-platform/shadcn-uikit/react';
 
 export function ChipBasic() {
   return (
@@ -10,5 +10,5 @@ export function ChipBasic() {
       <Chip>Warning</Chip>
       <Chip>Error</Chip>
     </div>
-  )
+  );
 }

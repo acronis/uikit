@@ -1,6 +1,6 @@
-import * as React from 'react'
+import * as React from 'react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 const AppShell = React.forwardRef<
   HTMLDivElement,
@@ -11,20 +11,16 @@ const AppShell = React.forwardRef<
     className={cn('flex min-h-screen w-full bg-background', className)}
     {...props}
   />
-))
-AppShell.displayName = 'AppShell'
+));
+AppShell.displayName = 'AppShell';
 
 const AppShellSidebar = React.forwardRef<
   HTMLElement,
   React.HTMLAttributes<HTMLElement>
 >(({ className, ...props }, ref) => (
-  <aside
-    ref={ref}
-    className={cn('flex-shrink-0', className)}
-    {...props}
-  />
-))
-AppShellSidebar.displayName = 'AppShellSidebar'
+  <aside ref={ref} className={cn('flex-shrink-0', className)} {...props} />
+));
+AppShellSidebar.displayName = 'AppShellSidebar';
 
 const AppShellBody = React.forwardRef<
   HTMLDivElement,
@@ -35,8 +31,8 @@ const AppShellBody = React.forwardRef<
     className={cn('flex flex-1 flex-col overflow-hidden', className)}
     {...props}
   />
-))
-AppShellBody.displayName = 'AppShellBody'
+));
+AppShellBody.displayName = 'AppShellBody';
 
 const AppShellHeader = React.forwardRef<
   HTMLElement,
@@ -50,8 +46,8 @@ const AppShellHeader = React.forwardRef<
     )}
     {...props}
   />
-))
-AppShellHeader.displayName = 'AppShellHeader'
+));
+AppShellHeader.displayName = 'AppShellHeader';
 
 const AppShellMain = React.forwardRef<
   HTMLElement,
@@ -62,8 +58,8 @@ const AppShellMain = React.forwardRef<
     className={cn('flex-1 overflow-auto', className)}
     {...props}
   />
-))
-AppShellMain.displayName = 'AppShellMain'
+));
+AppShellMain.displayName = 'AppShellMain';
 
 const AppShellFooter = React.forwardRef<
   HTMLElement,
@@ -74,8 +70,8 @@ const AppShellFooter = React.forwardRef<
     className={cn('border-t bg-background px-6 py-4', className)}
     {...props}
   />
-))
-AppShellFooter.displayName = 'AppShellFooter'
+));
+AppShellFooter.displayName = 'AppShellFooter';
 
 export {
   AppShell,
@@ -84,4 +80,4 @@ export {
   AppShellHeader,
   AppShellMain,
   AppShellFooter,
-}
+};

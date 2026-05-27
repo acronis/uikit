@@ -4,37 +4,39 @@ import {
   WarningIcon,
   // CriticalIcon,
   DangerIcon,
-} from '@/components/icons/auto-generated'
-import { useTheme } from 'next-themes'
-import { Toaster as Sonner } from 'sonner'
+} from '@/components/icons/auto-generated';
+import { useTheme } from 'next-themes';
+import { Toaster as Sonner } from 'sonner';
 
-export type ToasterProps = React.ComponentProps<typeof Sonner>
+export type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = 'system' } = useTheme()
+  const { theme = 'system' } = useTheme();
 
   return (
     <Sonner
       theme={theme as ToasterProps['theme']}
       richColors
       className="toaster group"
-      style={{
-        '--normal-bg': 'hsl(var(--av-card))',
-        '--normal-border': 'hsl(var(--av-border))',
-        '--normal-text': 'hsl(var(--av-foreground))',
-        '--success-bg': 'hsl(var(--av-status-success-bg))',
-        '--success-border': 'hsl(var(--av-status-success))',
-        '--success-text': 'hsl(var(--av-foreground))',
-        '--info-bg': 'hsl(var(--av-status-info-bg))',
-        '--info-border': 'hsl(var(--av-status-info))',
-        '--info-text': 'hsl(var(--av-foreground))',
-        '--warning-bg': 'hsl(var(--av-status-warning-bg))',
-        '--warning-border': 'hsl(var(--av-status-warning))',
-        '--warning-text': 'hsl(var(--av-foreground))',
-        '--error-bg': 'hsl(var(--av-status-danger-bg))',
-        '--error-border': 'hsl(var(--av-destructive))',
-        '--error-text': 'hsl(var(--av-foreground))',
-      } as React.CSSProperties}
+      style={
+        {
+          '--normal-bg': 'hsl(var(--av-card))',
+          '--normal-border': 'hsl(var(--av-border))',
+          '--normal-text': 'hsl(var(--av-foreground))',
+          '--success-bg': 'hsl(var(--av-status-success-bg))',
+          '--success-border': 'hsl(var(--av-status-success))',
+          '--success-text': 'hsl(var(--av-foreground))',
+          '--info-bg': 'hsl(var(--av-status-info-bg))',
+          '--info-border': 'hsl(var(--av-status-info))',
+          '--info-text': 'hsl(var(--av-foreground))',
+          '--warning-bg': 'hsl(var(--av-status-warning-bg))',
+          '--warning-border': 'hsl(var(--av-status-warning))',
+          '--warning-text': 'hsl(var(--av-foreground))',
+          '--error-bg': 'hsl(var(--av-status-danger-bg))',
+          '--error-border': 'hsl(var(--av-destructive))',
+          '--error-text': 'hsl(var(--av-foreground))',
+        } as React.CSSProperties
+      }
       icons={{
         success: <SuccessIcon className="h-4 w-4 text-success-accent" />,
         info: <InfoIcon className="h-4 w-4 text-info-accent" />,
@@ -55,8 +57,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       {...props}
     />
-  )
-}
+  );
+};
 
-export { Toaster }
-export { toast } from 'sonner'
+export { Toaster };
+export { toast } from 'sonner';

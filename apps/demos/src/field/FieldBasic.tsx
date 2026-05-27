@@ -1,10 +1,10 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Field,
   FieldLabel,
   FieldDescription,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
 
 export function FieldBasic() {
   return (
@@ -15,5 +15,5 @@ export function FieldBasic() {
         <FieldDescription>This is your public display name.</FieldDescription>
       </Field>
     </div>
-  )
+  );
 }

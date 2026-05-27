@@ -1,6 +1,11 @@
-import * as React from 'react'
-import { EllipsisHIcon, ShowIcon, EditIcon, TrashOIcon } from '@acronis-platform/shadcn-uikit'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import {
+  EllipsisHIcon,
+  ShowIcon,
+  EditIcon,
+  TrashOIcon,
+} from '@acronis-platform/shadcn-uikit';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,14 +13,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
-import type { DataRow } from '../../types'
+} from '@acronis-platform/shadcn-uikit/react';
+import type { DataRow } from '../../types';
 
 interface RowActionsProps {
-  row: DataRow
-  onEdit: () => void
-  onDelete: () => void
-  onView: () => void
+  row: DataRow;
+  onEdit: () => void;
+  onDelete: () => void;
+  onView: () => void;
 }
 
 export function RowActions({ onEdit, onDelete, onView }: RowActionsProps) {
@@ -43,5 +48,5 @@ export function RowActions({ onEdit, onDelete, onView }: RowActionsProps) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

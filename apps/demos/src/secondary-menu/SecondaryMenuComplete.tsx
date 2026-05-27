@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import {
   SecondaryMenu,
   SecondaryMenuContent,
@@ -6,20 +6,23 @@ import {
   SecondaryMenuItem,
   SecondaryMenuHeader,
   SecondaryMenuFooter,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 import {
   DownloadIcon,
   FileTextIcon,
   ImageIcon,
   UploadIcon,
-} from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit';
 export function SecondaryMenuComplete() {
-  const [activeItem, setActiveItem] = useState('recent1')
+  const [activeItem, setActiveItem] = useState('recent1');
 
   return (
-    <div className="border rounded-lg overflow-hidden" style={{ height: '500px' }}>
+    <div
+      className="border rounded-lg overflow-hidden"
+      style={{ height: '500px' }}
+    >
       <SecondaryMenu>
         <SecondaryMenuHeader>
           <h3 className="text-sm font-semibold text-[#243143]">File Manager</h3>
@@ -77,5 +80,5 @@ export function SecondaryMenuComplete() {
         </SecondaryMenuFooter>
       </SecondaryMenu>
     </div>
-  )
+  );
 }

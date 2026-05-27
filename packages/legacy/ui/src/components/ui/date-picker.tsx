@@ -1,12 +1,16 @@
-import * as React from 'react'
-import { format } from 'date-fns'
-import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import { CalendarIcon } from '@/components/icons/auto-generated'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import * as React from 'react';
+import { format } from 'date-fns';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { CalendarIcon } from '@/components/icons/auto-generated';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 export function DatePicker() {
-  const [date, setDate] = React.useState<Date>()
+  const [date, setDate] = React.useState<Date>();
 
   return (
     <Popover>
@@ -26,5 +30,5 @@ export function DatePicker() {
         <Calendar mode="single" selected={date} onSelect={setDate} />
       </PopoverContent>
     </Popover>
-  )
+  );
 }

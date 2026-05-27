@@ -1,10 +1,13 @@
-import { Textarea } from '@acronis-platform/shadcn-uikit/react'
+import { Textarea } from '@acronis-platform/shadcn-uikit/react';
 
 export function TextareaAutoResize() {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <label htmlFor="auto-resize" className="text-sm font-medium text-[#243143]">
+        <label
+          htmlFor="auto-resize"
+          className="text-sm font-medium text-[#243143]"
+        >
           Auto-growing Textarea
         </label>
         <Textarea
@@ -18,5 +21,5 @@ export function TextareaAutoResize() {
         </p>
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { Filter } from '@acronis-platform/shadcn-uikit/react'
+import { Filter } from '@acronis-platform/shadcn-uikit/react';
 
 export function FilterWithCounter() {
   return (
@@ -10,5 +10,5 @@ export function FilterWithCounter() {
       <Filter count={12}>Filter</Filter>
       <Filter count={99}>Filter</Filter>
     </div>
-  )
+  );
 }

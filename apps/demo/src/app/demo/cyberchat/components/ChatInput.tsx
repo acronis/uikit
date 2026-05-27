@@ -1,10 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { SendIcon, FileTextIcon, GlobeIcon, CloseIcon } from '@acronis-platform/shadcn-uikit'
-import { BrainIcon } from '@/components/icons/missing-icons'
-import { toast } from 'sonner'
-import { useCyberChatStore } from '../store/useCyberChatStore'
-import { ModelSelector } from './ModelSelector'
+import { useEffect, useRef, useState } from 'react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import {
+  SendIcon,
+  FileTextIcon,
+  GlobeIcon,
+  CloseIcon,
+} from '@acronis-platform/shadcn-uikit';
+import { BrainIcon } from '@/components/icons/missing-icons';
+import { toast } from 'sonner';
+import { useCyberChatStore } from '../store/useCyberChatStore';
+import { ModelSelector } from './ModelSelector';
 
 export function ChatInput() {
   const {
@@ -18,77 +23,77 @@ export function ChatInput() {
     attachedFiles,
     addAttachedFile,
     removeAttachedFile,
-  } = useCyberChatStore()
+  } = useCyberChatStore();
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [isDragging, setIsDragging] = useState(false)
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   // Auto-resize textarea
   useEffect(() => {
-    const textarea = textareaRef.current
+    const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto'
-      const newHeight = Math.min(textarea.scrollHeight, 200)
-      textarea.style.height = `${newHeight}px`
+      textarea.style.height = 'auto';
+      const newHeight = Math.min(textarea.scrollHeight, 200);
+      textarea.style.height = `${newHeight}px`;
     }
-  }, [inputValue])
+  }, [inputValue]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
+      e.preventDefault();
+      handleSend();
     }
-  }
+  };
 
   const handleSend = () => {
     if (inputValue.trim()) {
-      sendMessage()
+      sendMessage();
       if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto'
+        textareaRef.current.style.height = 'auto';
       }
     }
-  }
+  };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
+    const files = Array.from(e.target.files || []);
     files.forEach((file) => {
       if (file.size > 10 * 1024 * 1024) {
-        toast.error(`File ${file.name} is too large (max 10MB)`)
+        toast.error(`File ${file.name} is too large (max 10MB)`);
       } else {
-        addAttachedFile(file)
-        toast.success(`Added ${file.name}`)
+        addAttachedFile(file);
+        toast.success(`Added ${file.name}`);
       }
-    })
+    });
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''
+      fileInputRef.current.value = '';
     }
-  }
+  };
 
   const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(true)
-  }
+    e.preventDefault();
+    setIsDragging(true);
+  };
 
   const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-  }
+    e.preventDefault();
+    setIsDragging(false);
+  };
 
   const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
+    e.preventDefault();
+    setIsDragging(false);
 
-    const files = Array.from(e.dataTransfer.files)
+    const files = Array.from(e.dataTransfer.files);
     files.forEach((file) => {
       if (file.size > 10 * 1024 * 1024) {
-        toast.error(`File ${file.name} is too large (max 10MB)`)
+        toast.error(`File ${file.name} is too large (max 10MB)`);
       } else {
-        addAttachedFile(file)
-        toast.success(`Added ${file.name}`)
+        addAttachedFile(file);
+        toast.success(`Added ${file.name}`);
       }
-    })
-  }
+    });
+  };
 
   return (
     <div className="p-6 border-t border-border/50 bg-background">
@@ -194,5 +199,5 @@ export function ChatInput() {
         )}
       </div>
     </div>
-  )
+  );
 }

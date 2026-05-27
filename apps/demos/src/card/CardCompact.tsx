@@ -1,4 +1,4 @@
-import { Card } from '@acronis-platform/shadcn-uikit/react'
+import { Card } from '@acronis-platform/shadcn-uikit/react';
 
 export function CardCompact() {
   return (
@@ -20,5 +20,5 @@ export function CardCompact() {
         <div className="text-2xl font-bold">+12%</div>
       </Card>
     </div>
-  )
+  );
 }

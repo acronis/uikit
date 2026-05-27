@@ -1,5 +1,5 @@
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { LockIcon, MailIcon, SearchIcon } from '@acronis-platform/shadcn-uikit'
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { LockIcon, MailIcon, SearchIcon } from '@acronis-platform/shadcn-uikit';
 export function InputWithIcons() {
   return (
     <div className="space-y-4">
@@ -16,5 +16,5 @@ export function InputWithIcons() {
         <Input className="pl-10" type="search" placeholder="Search..." />
       </div>
     </div>
-  )
+  );
 }

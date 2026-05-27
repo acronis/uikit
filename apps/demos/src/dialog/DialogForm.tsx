@@ -7,15 +7,13 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button, Input } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button, Input } from '@acronis-platform/shadcn-uikit/react';
 
 export function DialogForm() {
   return (
     <Dialog>
-      <DialogTrigger render={<Button />}>
-        Create Account
-      </DialogTrigger>
+      <DialogTrigger render={<Button />}>Create Account</DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Create Account</DialogTitle>
@@ -39,7 +37,11 @@ export function DialogForm() {
               <label htmlFor="password" className="text-sm font-medium">
                 Password
               </label>
-              <Input id="password" type="password" placeholder="Enter your password" />
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+              />
             </div>
           </form>
         </DialogBody>
@@ -51,5 +53,5 @@ export function DialogForm() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Tree } from '../tree'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Tree } from '../tree';
 
 const meta = {
   title: 'UI/Tree',
   component: Tree,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof Tree>
+} satisfies Meta<typeof Tree>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 const treeData = [
   {
@@ -32,10 +32,10 @@ const treeData = [
       },
     ],
   },
-]
+];
 
 export const Default: Story = {
   args: {
     data: treeData,
   },
-}
+};

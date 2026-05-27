@@ -1,14 +1,14 @@
-import * as React from 'react'
-import { Spinner } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { Spinner } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function SpinnerButton() {
-  const [loading, setLoading] = React.useState(false)
+  const [loading, setLoading] = React.useState(false);
 
   const simulateLoading = () => {
-    setLoading(true)
-    setTimeout(() => setLoading(false), 3000)
-  }
+    setLoading(true);
+    setTimeout(() => setLoading(false), 3000);
+  };
 
   return (
     <div className="flex gap-3">
@@ -33,5 +33,5 @@ export function SpinnerButton() {
         )}
       </Button>
     </div>
-  )
+  );
 }

@@ -1,16 +1,19 @@
-import * as React from 'react'
-import { FilterIcon } from '@/components/icons'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
+import * as React from 'react';
+import { FilterIcon } from '@/components/icons';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 export interface FilterProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  count?: number
-  active?: boolean
-  variant?: 'default' | 'outline' | 'ghost'
+  count?: number;
+  active?: boolean;
+  variant?: 'default' | 'outline' | 'ghost';
 }
 
 const Filter = React.forwardRef<HTMLButtonElement, FilterProps>(
-  ({ className, count, active = false, variant = 'ghost', children, ...props }, ref) => {
+  (
+    { className, count, active = false, variant = 'ghost', children, ...props },
+    ref
+  ) => {
     return (
       <Button
         ref={ref}
@@ -27,12 +30,16 @@ const Filter = React.forwardRef<HTMLButtonElement, FilterProps>(
             {count}
           </span>
         )}
-        {!count && <FilterIcon className="h-4 w-4 text-[hsl(var(--filter-icon))]" />}
-        <span className="text-sm font-semibold leading-6">{children || 'Filter'}</span>
+        {!count && (
+          <FilterIcon className="h-4 w-4 text-[hsl(var(--filter-icon))]" />
+        )}
+        <span className="text-sm font-semibold leading-6">
+          {children || 'Filter'}
+        </span>
       </Button>
-    )
+    );
   }
-)
-Filter.displayName = 'Filter'
+);
+Filter.displayName = 'Filter';
 
-export { Filter }
+export { Filter };

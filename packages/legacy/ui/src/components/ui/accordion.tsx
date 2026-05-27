@@ -1,20 +1,20 @@
-'use client'
+'use client';
 
-import * as React from 'react'
-import { Accordion } from '@base-ui/react'
-import { ChevronDownIcon } from '@/components/icons'
+import * as React from 'react';
+import { Accordion } from '@base-ui/react';
+import { ChevronDownIcon } from '@/components/icons';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
-const AccordionRoot = Accordion.Root
+const AccordionRoot = Accordion.Root;
 
 const AccordionItem = React.forwardRef<
   React.ElementRef<typeof Accordion.Item>,
   React.ComponentPropsWithoutRef<typeof Accordion.Item>
 >(({ className, ...props }, ref) => (
   <Accordion.Item ref={ref} className={cn('border-b', className)} {...props} />
-))
-AccordionItem.displayName = 'AccordionItem'
+));
+AccordionItem.displayName = 'AccordionItem';
 
 const AccordionTrigger = React.forwardRef<
   // Base UI Trigger forwards ref to HTMLElement; button is the concrete element
@@ -36,8 +36,8 @@ const AccordionTrigger = React.forwardRef<
       <ChevronDownIcon className="h-4 w-4 shrink-0 transition-transform duration-200" />
     </Accordion.Trigger>
   </Accordion.Header>
-))
-AccordionTrigger.displayName = 'AccordionTrigger'
+));
+AccordionTrigger.displayName = 'AccordionTrigger';
 
 const AccordionContent = React.forwardRef<
   React.ElementRef<typeof Accordion.Panel>,
@@ -51,7 +51,12 @@ const AccordionContent = React.forwardRef<
   >
     <div className={cn('pb-4 pt-0', className)}>{children}</div>
   </Accordion.Panel>
-))
-AccordionContent.displayName = 'AccordionContent'
+));
+AccordionContent.displayName = 'AccordionContent';
 
-export { AccordionRoot as Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+export {
+  AccordionRoot as Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+};

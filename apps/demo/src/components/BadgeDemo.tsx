@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   BadgeStatusVariants,
   BadgeDefaultVariants,
@@ -6,24 +6,24 @@ import {
   BadgeWithIcons,
   BadgeStatusIndicators,
   BadgeNotificationCounts,
-} from '@acronis-platform/shadcn-uikit-demos/badge'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/badge';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import badgeStatusVariantsCode from '../../../demos/src/badge/BadgeStatusVariants.tsx?raw'
-import badgeDefaultVariantsCode from '../../../demos/src/badge/BadgeDefaultVariants.tsx?raw'
-import badgeSmallCode from '../../../demos/src/badge/BadgeSmall.tsx?raw'
-import badgeWithIconsCode from '../../../demos/src/badge/BadgeWithIcons.tsx?raw'
-import badgeStatusIndicatorsCode from '../../../demos/src/badge/BadgeStatusIndicators.tsx?raw'
-import badgeNotificationCountsCode from '../../../demos/src/badge/BadgeNotificationCounts.tsx?raw'
+import badgeStatusVariantsCode from '../../../demos/src/badge/BadgeStatusVariants.tsx?raw';
+import badgeDefaultVariantsCode from '../../../demos/src/badge/BadgeDefaultVariants.tsx?raw';
+import badgeSmallCode from '../../../demos/src/badge/BadgeSmall.tsx?raw';
+import badgeWithIconsCode from '../../../demos/src/badge/BadgeWithIcons.tsx?raw';
+import badgeStatusIndicatorsCode from '../../../demos/src/badge/BadgeStatusIndicators.tsx?raw';
+import badgeNotificationCountsCode from '../../../demos/src/badge/BadgeNotificationCounts.tsx?raw';
 
 export function BadgeDemo() {
   return (
     <section className="demo-section">
       <h2>Badge Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Displays a badge or a component that looks like a badge for status indicators, labels, and
-        tags.
+        Displays a badge or a component that looks like a badge for status
+        indicators, labels, and tags.
       </p>
 
       <div className="space-y-8">
@@ -76,5 +76,5 @@ export function BadgeDemo() {
         </DemoWithCode>
       </div>
     </section>
-  )
+  );
 }

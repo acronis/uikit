@@ -1,4 +1,4 @@
-import { Spinner } from '@acronis-platform/shadcn-uikit/react'
+import { Spinner } from '@acronis-platform/shadcn-uikit/react';
 
 export function SpinnerWithText() {
   return (
@@ -13,8 +13,10 @@ export function SpinnerWithText() {
       </div>
       <div className="flex items-center gap-3">
         <Spinner size="lg" />
-        <span className="text-base text-muted-foreground">Loading content...</span>
+        <span className="text-base text-muted-foreground">
+          Loading content...
+        </span>
       </div>
     </div>
-  )
+  );
 }

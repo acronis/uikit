@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { Calendar } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { Calendar } from '@acronis-platform/shadcn-uikit/react';
 
 export function CalendarDropdown() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date())
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   return (
     <div className="flex justify-center rounded-lg border p-4">
@@ -15,5 +15,5 @@ export function CalendarDropdown() {
         toYear={2100}
       />
     </div>
-  )
+  );
 }

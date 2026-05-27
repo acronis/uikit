@@ -1,16 +1,16 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { VisuallyHidden } from '../visually-hidden'
-import { Button } from '../button'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { VisuallyHidden } from '../visually-hidden';
+import { Button } from '../button';
 
 const meta = {
   title: 'UI/VisuallyHidden',
   component: VisuallyHidden,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof VisuallyHidden>
+} satisfies Meta<typeof VisuallyHidden>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -19,7 +19,17 @@ export const Default: Story = {
         The button below has a visually hidden label for screen readers:
       </p>
       <Button variant="outline" size="icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <line x1="3" y1="12" x2="21" y2="12" />
           <line x1="3" y1="6" x2="21" y2="6" />
           <line x1="3" y1="18" x2="21" y2="18" />
@@ -28,7 +38,7 @@ export const Default: Story = {
       </Button>
     </div>
   ),
-}
+};
 
 export const InHeading: Story = {
   render: () => (
@@ -42,4 +52,4 @@ export const InHeading: Story = {
       </p>
     </div>
   ),
-}
+};

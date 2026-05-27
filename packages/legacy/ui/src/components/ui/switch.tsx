@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { Switch as SwitchPrimitive } from '@base-ui/react'
+import * as React from 'react';
+import { Switch as SwitchPrimitive } from '@base-ui/react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitive.Root>,
@@ -21,7 +21,7 @@ const Switch = React.forwardRef<
       )}
     />
   </SwitchPrimitive.Root>
-))
-Switch.displayName = 'Switch'
+));
+Switch.displayName = 'Switch';
 
-export { Switch }
+export { Switch };

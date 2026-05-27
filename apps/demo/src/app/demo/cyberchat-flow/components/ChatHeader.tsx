@@ -1,9 +1,9 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { SettingsIcon } from '@acronis-platform/shadcn-uikit'
-import { Switch } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { SettingsIcon } from '@acronis-platform/shadcn-uikit';
+import { Switch } from '@acronis-platform/shadcn-uikit/react';
 
 interface ChatHeaderProps {
-  hasMessages: boolean
+  hasMessages: boolean;
 }
 
 export function ChatHeader({ hasMessages }: ChatHeaderProps) {
@@ -26,7 +26,9 @@ export function ChatHeader({ hasMessages }: ChatHeaderProps) {
         <div className="flex items-center gap-4">
           {hasMessages && (
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Temporary chat</span>
+              <span className="text-sm text-muted-foreground">
+                Temporary chat
+              </span>
               <Switch />
             </div>
           )}
@@ -36,5 +38,5 @@ export function ChatHeader({ hasMessages }: ChatHeaderProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

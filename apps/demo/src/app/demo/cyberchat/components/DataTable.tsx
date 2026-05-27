@@ -1,28 +1,28 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { toast } from 'sonner'
-import type { TableData } from '../types'
-import { copyToClipboard } from '../utils/helpers'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { toast } from 'sonner';
+import type { TableData } from '../types';
+import { copyToClipboard } from '../utils/helpers';
 
 interface DataTableProps {
-  data: TableData
+  data: TableData;
 }
 
 export function DataTable({ data }: DataTableProps) {
   const handleCopyTable = async () => {
     try {
       // Convert table to plain text format
-      const headerRow = data.headers.join('\t')
+      const headerRow = data.headers.join('\t');
       const dataRows = data.rows.map((row) =>
         data.headers.map((header) => row[header]).join('\t')
-      )
-      const tableText = [headerRow, ...dataRows].join('\n')
+      );
+      const tableText = [headerRow, ...dataRows].join('\n');
 
-      await copyToClipboard(tableText)
-      toast.success('Table copied to clipboard')
+      await copyToClipboard(tableText);
+      toast.success('Table copied to clipboard');
     } catch {
-      toast.error('Failed to copy table')
+      toast.error('Failed to copy table');
     }
-  }
+  };
 
   return (
     <div className="space-y-3">
@@ -55,8 +55,8 @@ export function DataTable({ data }: DataTableProps) {
                       j === 0
                         ? ''
                         : j === data.headers.length - 1
-                        ? 'text-right text-muted-foreground'
-                        : 'text-muted-foreground'
+                          ? 'text-right text-muted-foreground'
+                          : 'text-muted-foreground'
                     }`}
                   >
                     {row[header]}
@@ -75,5 +75,5 @@ export function DataTable({ data }: DataTableProps) {
         Copy table
       </Button>
     </div>
-  )
+  );
 }

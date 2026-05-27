@@ -1,6 +1,6 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
-import { CalendarIcon } from '@acronis-platform/shadcn-uikit'
+import { CalendarIcon } from '@acronis-platform/shadcn-uikit';
 export function DatePickerDisabled() {
   return (
     <Button
@@ -11,5 +11,5 @@ export function DatePickerDisabled() {
       <CalendarIcon className="mr-2 h-4 w-4" />
       <span>Pick a date</span>
     </Button>
-  )
+  );
 }

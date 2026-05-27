@@ -1,22 +1,22 @@
-import * as React from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ShowIcon, HideIcon } from '@acronis-platform/shadcn-uikit'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { Label } from '@acronis-platform/shadcn-uikit/react'
-import { Checkbox } from '@acronis-platform/shadcn-uikit/react'
-import { loginSchema } from '../../lib/validators'
-import type { LoginFormData } from '../../lib/validators'
-import { toast } from 'sonner'
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ShowIcon, HideIcon } from '@acronis-platform/shadcn-uikit';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { Label } from '@acronis-platform/shadcn-uikit/react';
+import { Checkbox } from '@acronis-platform/shadcn-uikit/react';
+import { loginSchema } from '../../lib/validators';
+import type { LoginFormData } from '../../lib/validators';
+import { toast } from 'sonner';
 
 interface LoginFormProps {
-  onSubmit: (data: LoginFormData) => Promise<void>
-  isLoading?: boolean
+  onSubmit: (data: LoginFormData) => Promise<void>;
+  isLoading?: boolean;
 }
 
 export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
-  const [showPassword, setShowPassword] = React.useState(false)
+  const [showPassword, setShowPassword] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -28,15 +28,15 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
       password: '',
       rememberMe: false,
     },
-  })
+  });
 
   const onFormSubmit = async (data: LoginFormData) => {
     try {
-      await onSubmit(data)
+      await onSubmit(data);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Login failed')
+      toast.error(error instanceof Error ? error.message : 'Login failed');
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
@@ -84,7 +84,11 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
       </div>
 
       <div className="flex items-center space-x-2">
-        <Checkbox id="rememberMe" {...register('rememberMe')} disabled={isLoading} />
+        <Checkbox
+          id="rememberMe"
+          {...register('rememberMe')}
+          disabled={isLoading}
+        />
         <Label
           htmlFor="rememberMe"
           className="text-sm font-normal cursor-pointer"
@@ -97,5 +101,5 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
         {isLoading ? 'Signing in...' : 'Sign in'}
       </Button>
     </form>
-  )
+  );
 }

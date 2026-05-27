@@ -1,7 +1,8 @@
-import type { StorybookConfig } from '@storybook/react-vite'
-import { resolve } from 'path'
+import type { StorybookConfig } from '@storybook/react-vite';
+import { resolve } from 'path';
 
-const disableVitestAddon = process.env.STORYBOOK_DISABLE_ADDON_VITEST === 'true'
+const disableVitestAddon =
+  process.env.STORYBOOK_DISABLE_ADDON_VITEST === 'true';
 
 const config: StorybookConfig = {
   stories: [
@@ -37,6 +38,6 @@ const config: StorybookConfig = {
     };
     return config;
   },
-}
+};
 
-export default config
+export default config;

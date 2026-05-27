@@ -84,14 +84,14 @@ Because `Field` primitives have no dependency on React Hook Form, they compose n
 
 The library ships two parallel sets of form-field primitives:
 
-| | `Field` / `FieldLabel` / `FieldError` | `FormItem` / `FormLabel` / `FormMessage` |
-|---|---|---|
-| **Coupling** | None — pure layout | React Hook Form (`useFormContext`) |
-| **Use with** | TanStack Form, native HTML, any lib | React Hook Form only |
-| **Error source** | `errors` prop (array) | Reads from RHF `useFormContext` automatically |
-| **Label ↔ control** | Manual `htmlFor` / `id` | Auto-wired via `FormItem` context |
-| **Orientation variants** | `vertical` · `horizontal` · `responsive` | Vertical only |
-| **Grouping** | `FieldGroup`, `FieldSet`, `FieldLegend` | `<div className="space-y-4">` |
+|                          | `Field` / `FieldLabel` / `FieldError`    | `FormItem` / `FormLabel` / `FormMessage`      |
+| ------------------------ | ---------------------------------------- | --------------------------------------------- |
+| **Coupling**             | None — pure layout                       | React Hook Form (`useFormContext`)            |
+| **Use with**             | TanStack Form, native HTML, any lib      | React Hook Form only                          |
+| **Error source**         | `errors` prop (array)                    | Reads from RHF `useFormContext` automatically |
+| **Label ↔ control**      | Manual `htmlFor` / `id`                  | Auto-wired via `FormItem` context             |
+| **Orientation variants** | `vertical` · `horizontal` · `responsive` | Vertical only                                 |
+| **Grouping**             | `FieldGroup`, `FieldSet`, `FieldLegend`  | `<div className="space-y-4">`                 |
 
 **Rule of thumb**: use `Field` when you are not using React Hook Form. Use `FormItem` and friends when you are.
 
@@ -99,19 +99,22 @@ The library ships two parallel sets of form-field primitives:
 
 ### Field
 
-<AutoTypeTable path="../../packages/legacy/ui/src/components/ui/field.tsx" name="Field" />
+<AutoTypeTable
+  path="../../packages/legacy/ui/src/components/ui/field.tsx"
+  name="Field"
+/>
 
 ### FieldError
 
 Accepts the standard `div` props plus:
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `errors` | `Array<{ message?: string } \| undefined>` | Error objects to display. Renders nothing when empty or undefined. |
-| `children` | `ReactNode` | Custom error content. Takes precedence over `errors`. |
+| Prop       | Type                                       | Description                                                        |
+| ---------- | ------------------------------------------ | ------------------------------------------------------------------ |
+| `errors`   | `Array<{ message?: string } \| undefined>` | Error objects to display. Renders nothing when empty or undefined. |
+| `children` | `ReactNode`                                | Custom error content. Takes precedence over `errors`.              |
 
 ### FieldLegend
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
+| Prop      | Type                  | Default    | Description                                                                 |
+| --------- | --------------------- | ---------- | --------------------------------------------------------------------------- |
 | `variant` | `"legend" \| "label"` | `"legend"` | `"legend"` uses `text-base`; `"label"` uses `text-sm` for tighter sections. |

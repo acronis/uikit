@@ -1,4 +1,4 @@
-import libraryConfig from '../../packages/legacy/ui/tailwind.config.js'
+import libraryConfig from '../../packages/legacy/ui/tailwind.config.js';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -10,4 +10,4 @@ export default {
   ],
   // Extend the library's config
   presets: [libraryConfig],
-}
+};

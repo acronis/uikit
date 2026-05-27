@@ -1,4 +1,4 @@
-import { Badge } from '@acronis-platform/shadcn-uikit/react'
+import { Badge } from '@acronis-platform/shadcn-uikit/react';
 
 export function BadgeStatusVariants() {
   return (
@@ -12,5 +12,5 @@ export function BadgeStatusVariants() {
       <Badge variant="ai">AI</Badge>
       <Badge variant="ai-solid">AI</Badge>
     </div>
-  )
+  );
 }

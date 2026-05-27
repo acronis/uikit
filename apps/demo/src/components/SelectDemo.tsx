@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   BasicSelect,
   ControlledSelect,
@@ -8,27 +8,28 @@ import {
   DisabledSelect,
   FormattedValueSelect,
   ScrollableSelect,
-} from '@acronis-platform/shadcn-uikit-demos/select'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/select';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import basicSelectCode from '../../../demos/src/select/BasicSelect.tsx?raw'
-import controlledSelectCode from '../../../demos/src/select/ControlledSelect.tsx?raw'
-import groupedSelectCode from '../../../demos/src/select/GroupedSelect.tsx?raw'
-import multipleSelectCode from '../../../demos/src/select/MultipleSelect.tsx?raw'
-import objectValuesSelectCode from '../../../demos/src/select/ObjectValuesSelect.tsx?raw'
-import disabledSelectCode from '../../../demos/src/select/DisabledSelect.tsx?raw'
-import formattedValueSelectCode from '../../../demos/src/select/FormattedValueSelect.tsx?raw'
-import scrollableSelectCode from '../../../demos/src/select/ScrollableSelect.tsx?raw'
+import basicSelectCode from '../../../demos/src/select/BasicSelect.tsx?raw';
+import controlledSelectCode from '../../../demos/src/select/ControlledSelect.tsx?raw';
+import groupedSelectCode from '../../../demos/src/select/GroupedSelect.tsx?raw';
+import multipleSelectCode from '../../../demos/src/select/MultipleSelect.tsx?raw';
+import objectValuesSelectCode from '../../../demos/src/select/ObjectValuesSelect.tsx?raw';
+import disabledSelectCode from '../../../demos/src/select/DisabledSelect.tsx?raw';
+import formattedValueSelectCode from '../../../demos/src/select/FormattedValueSelect.tsx?raw';
+import scrollableSelectCode from '../../../demos/src/select/ScrollableSelect.tsx?raw';
 
 export function SelectDemo() {
   return (
     <section className="demo-section">
       <h2>Select Component (Base UI)</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Select component built with MUI Base UI.
-        Provides accessible, unstyled primitives with full Tailwind CSS styling support.
-        Features include controlled/uncontrolled state, multiple selection, object values, grouping, and custom formatting.
+        Select component built with MUI Base UI. Provides accessible, unstyled
+        primitives with full Tailwind CSS styling support. Features include
+        controlled/uncontrolled state, multiple selection, object values,
+        grouping, and custom formatting.
       </p>
 
       <div className="space-y-8">
@@ -101,7 +102,10 @@ export function SelectDemo() {
         <h4 className="font-semibold mb-2">Key Features</h4>
         <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
           <li>Built on MUI Base UI primitives for maximum accessibility</li>
-          <li>Full keyboard navigation support (Arrow keys, Enter, Escape, Home, End)</li>
+          <li>
+            Full keyboard navigation support (Arrow keys, Enter, Escape, Home,
+            End)
+          </li>
           <li>Typeahead functionality for quick item selection</li>
           <li>Supports single and multiple selection modes</li>
           <li>Object values with custom comparison and formatting</li>
@@ -111,5 +115,5 @@ export function SelectDemo() {
         </ul>
       </div>
     </section>
-  )
+  );
 }

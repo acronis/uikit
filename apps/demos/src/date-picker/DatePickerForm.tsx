@@ -1,13 +1,17 @@
-import * as React from 'react'
-import { format } from 'date-fns'
-import { cn } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Calendar } from '@acronis-platform/shadcn-uikit/react'
-import { Popover, PopoverContent, PopoverTrigger } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { format } from 'date-fns';
+import { cn } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Calendar } from '@acronis-platform/shadcn-uikit/react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
-import { CalendarIcon } from '@acronis-platform/shadcn-uikit'
+import { CalendarIcon } from '@acronis-platform/shadcn-uikit';
 export function DatePickerForm() {
-  const [appointmentDate, setAppointmentDate] = React.useState<Date>()
+  const [appointmentDate, setAppointmentDate] = React.useState<Date>();
 
   return (
     <div className="max-w-md space-y-4 rounded-lg border p-6">
@@ -73,5 +77,5 @@ export function DatePickerForm() {
         </Popover>
       </div>
     </div>
-  )
+  );
 }

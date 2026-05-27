@@ -1,5 +1,5 @@
 /* Tailwind v4 utilities — needed for Fumadocs on-root: / md: variant classes */
-@import "tailwindcss/utilities";
+@import 'tailwindcss/utilities';
 
 /* Scan fumadocs-ui dist so on-root: and responsive variants get generated */
 @source "../../node_modules/fumadocs-ui/dist/**/*.js";
@@ -33,7 +33,11 @@
 .demo-preview__canvas {
   background: var(--av-background-secondary, #f8fafc);
   /* subtle dot grid */
-  background-image: radial-gradient(circle, var(--av-border-secondary, #e2e8f0) 1px, transparent 1px);
+  background-image: radial-gradient(
+    circle,
+    var(--av-border-secondary, #e2e8f0) 1px,
+    transparent 1px
+  );
   background-size: 20px 20px;
 }
 
@@ -91,7 +95,9 @@
 
 /* ─── Landing page ──────────────────────────────────────────────────────────── */
 .cta-primary {
-  transition: box-shadow 0.2s ease, opacity 0.2s ease;
+  transition:
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }
 .cta-primary:hover {
   box-shadow: 0 4px 24px hsl(213 94% 51% / 0.4);
@@ -100,22 +106,38 @@
 
 /* Staggered hero reveal */
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0);    }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .hero-animate {
   opacity: 0;
   animation: fade-up 0.6s ease forwards;
 }
-.hero-animate-1 { animation-delay: 0.05s; }
-.hero-animate-2 { animation-delay: 0.15s; }
-.hero-animate-3 { animation-delay: 0.25s; }
-.hero-animate-4 { animation-delay: 0.35s; }
+.hero-animate-1 {
+  animation-delay: 0.05s;
+}
+.hero-animate-2 {
+  animation-delay: 0.15s;
+}
+.hero-animate-3 {
+  animation-delay: 0.25s;
+}
+.hero-animate-4 {
+  animation-delay: 0.35s;
+}
 
 /* Feature card top accent */
 .feature-card {
   border-top: 2px solid transparent;
-  transition: border-top-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-top-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .feature-card:hover {
   border-top-color: var(--color-fd-primary);

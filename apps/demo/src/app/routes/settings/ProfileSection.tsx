@@ -1,23 +1,37 @@
-import * as React from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { Label } from '@acronis-platform/shadcn-uikit/react'
-import { Avatar, AvatarFallback, AvatarImage } from '@acronis-platform/shadcn-uikit/react'
-import { profileSchema } from '../../lib/validators'
-import type { ProfileFormData } from '../../lib/validators'
-import type { User } from '../../types'
-import { toast } from 'sonner'
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { Label } from '@acronis-platform/shadcn-uikit/react';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@acronis-platform/shadcn-uikit/react';
+import { profileSchema } from '../../lib/validators';
+import type { ProfileFormData } from '../../lib/validators';
+import type { User } from '../../types';
+import { toast } from 'sonner';
 
 interface ProfileSectionProps {
-  user: User
-  onUpdate: (data: ProfileFormData) => Promise<void>
-  isLoading?: boolean
+  user: User;
+  onUpdate: (data: ProfileFormData) => Promise<void>;
+  isLoading?: boolean;
 }
 
-export function ProfileSection({ user, onUpdate, isLoading = false }: ProfileSectionProps) {
+export function ProfileSection({
+  user,
+  onUpdate,
+  isLoading = false,
+}: ProfileSectionProps) {
   const {
     register,
     handleSubmit,
@@ -29,16 +43,16 @@ export function ProfileSection({ user, onUpdate, isLoading = false }: ProfileSec
       email: user.email,
       avatar: user.avatar || '',
     },
-  })
+  });
 
   const onFormSubmit = async (data: ProfileFormData) => {
     try {
-      await onUpdate(data)
-      toast.success('Profile updated successfully')
+      await onUpdate(data);
+      toast.success('Profile updated successfully');
     } catch {
-      toast.error('Failed to update profile')
+      toast.error('Failed to update profile');
     }
-  }
+  };
 
   return (
     <Card>
@@ -75,7 +89,9 @@ export function ProfileSection({ user, onUpdate, isLoading = false }: ProfileSec
                 disabled={isSubmitting}
               />
               {errors.name && (
-                <p className="text-sm text-destructive">{errors.name.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.name.message}
+                </p>
               )}
             </div>
 
@@ -89,7 +105,9 @@ export function ProfileSection({ user, onUpdate, isLoading = false }: ProfileSec
                 disabled={isSubmitting}
               />
               {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
@@ -103,7 +121,9 @@ export function ProfileSection({ user, onUpdate, isLoading = false }: ProfileSec
                 disabled={isSubmitting}
               />
               {errors.avatar && (
-                <p className="text-sm text-destructive">{errors.avatar.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.avatar.message}
+                </p>
               )}
             </div>
           </div>
@@ -114,5 +134,5 @@ export function ProfileSection({ user, onUpdate, isLoading = false }: ProfileSec
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

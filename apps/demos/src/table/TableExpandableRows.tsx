@@ -1,5 +1,5 @@
-import { Fragment, useMemo, useState } from 'react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Fragment, useMemo, useState } from 'react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   Table,
   TableBody,
@@ -7,14 +7,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 const records = [
   {
     id: '2016-05-01',
     date: '2016-05-01',
     name: 'Tom',
-    details: 'Tom has a longer description that can be shown only when this row is expanded.',
+    details:
+      'Tom has a longer description that can be shown only when this row is expanded.',
   },
   {
     id: '2016-05-02',
@@ -40,28 +41,33 @@ const records = [
     name: 'Gunnar',
     details: 'Gunnar details with expanded content.',
   },
-]
+];
 
 export function TableExpandableRows() {
-  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
-  const allExpanded = useMemo(() => expandedRows.size === records.length, [expandedRows])
+  const allExpanded = useMemo(
+    () => expandedRows.size === records.length,
+    [expandedRows]
+  );
 
   const toggleRow = (id: string) => {
     setExpandedRows((prev) => {
-      const next = new Set(prev)
+      const next = new Set(prev);
       if (next.has(id)) {
-        next.delete(id)
+        next.delete(id);
       } else {
-        next.add(id)
+        next.add(id);
       }
-      return next
-    })
-  }
+      return next;
+    });
+  };
 
   const toggleAllRows = () => {
-    setExpandedRows(allExpanded ? new Set() : new Set(records.map((record) => record.id)))
-  }
+    setExpandedRows(
+      allExpanded ? new Set() : new Set(records.map((record) => record.id))
+    );
+  };
 
   return (
     <div className="rounded-md border">
@@ -74,7 +80,7 @@ export function TableExpandableRows() {
         </TableHeader>
         <TableBody>
           {records.map((record) => {
-            const expanded = expandedRows.has(record.id)
+            const expanded = expandedRows.has(record.id);
 
             return (
               <Fragment key={record.id}>
@@ -85,7 +91,11 @@ export function TableExpandableRows() {
                       size="sm"
                       className="mr-2 h-7 w-7 p-0"
                       onClick={() => toggleRow(record.id)}
-                      aria-label={expanded ? `Collapse ${record.date}` : `Expand ${record.date}`}
+                      aria-label={
+                        expanded
+                          ? `Collapse ${record.date}`
+                          : `Expand ${record.date}`
+                      }
                     >
                       {expanded ? '−' : '+'}
                     </Button>
@@ -95,13 +105,16 @@ export function TableExpandableRows() {
                 </TableRow>
                 {expanded && (
                   <TableRow className="hover:bg-transparent">
-                    <TableCell colSpan={2} className="h-auto py-3 text-sm text-muted-foreground">
+                    <TableCell
+                      colSpan={2}
+                      className="h-auto py-3 text-sm text-muted-foreground"
+                    >
                       {record.details}
                     </TableCell>
                   </TableRow>
                 )}
               </Fragment>
-            )
+            );
           })}
           <TableRow>
             <TableCell colSpan={2} className="text-center">
@@ -113,5 +126,5 @@ export function TableExpandableRows() {
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }

@@ -1,5 +1,10 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@acronis-platform/shadcn-uikit/react'
-import { Button, Label } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button, Label } from '@acronis-platform/shadcn-uikit/react';
 
 export function TabsDashboard() {
   return (
@@ -55,5 +60,5 @@ export function TabsDashboard() {
         </div>
       </TabsContent>
     </Tabs>
-  )
+  );
 }

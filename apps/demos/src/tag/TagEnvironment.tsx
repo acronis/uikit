@@ -1,4 +1,4 @@
-import { Tag } from '@acronis-platform/shadcn-uikit/react'
+import { Tag } from '@acronis-platform/shadcn-uikit/react';
 
 export function TagEnvironment() {
   return (
@@ -8,5 +8,5 @@ export function TagEnvironment() {
       <Tag variant="info">Development</Tag>
       <Tag variant="neutral">Testing</Tag>
     </div>
-  )
+  );
 }

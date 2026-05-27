@@ -1,4 +1,4 @@
-import { Input } from '@acronis-platform/shadcn-uikit/react'
+import { Input } from '@acronis-platform/shadcn-uikit/react';
 
 export function InputSizes() {
   return (
@@ -7,5 +7,5 @@ export function InputSizes() {
       <Input placeholder="Default input (48px)" />
       <Input className="h-14 text-base" placeholder="Large input (56px)" />
     </div>
-  )
+  );
 }

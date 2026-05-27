@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import * as React from 'react'
-import { useForm } from 'react-hook-form'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
 import {
   Form,
   FormControl,
@@ -9,27 +9,30 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../form'
-import { Input } from '../input'
-import { Button } from '../button'
+} from '../form';
+import { Input } from '../input';
+import { Button } from '../button';
 
 const meta = {
   title: 'UI/Form',
   component: Form,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof Form>
+} satisfies Meta<typeof Form>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {} as React.ComponentProps<typeof Form>,
   render: () => {
-    const form = useForm()
+    const form = useForm();
     return (
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(() => {})} className="w-[400px] space-y-6">
+        <form
+          onSubmit={form.handleSubmit(() => {})}
+          className="w-[400px] space-y-6"
+        >
           <FormField
             control={form.control}
             name="username"
@@ -39,7 +42,9 @@ export const Default: Story = {
                 <FormControl>
                   <Input placeholder="Enter username" {...field} />
                 </FormControl>
-                <FormDescription>This is your public display name.</FormDescription>
+                <FormDescription>
+                  This is your public display name.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -47,6 +52,6 @@ export const Default: Story = {
           <Button type="submit">Submit</Button>
         </form>
       </Form>
-    )
+    );
   },
-}
+};

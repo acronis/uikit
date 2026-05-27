@@ -1,4 +1,4 @@
-import { Input } from '@acronis-platform/shadcn-uikit/react'
+import { Input } from '@acronis-platform/shadcn-uikit/react';
 
 export function InputTypesDemo() {
   return (
@@ -23,5 +23,5 @@ export function InputTypesDemo() {
         </div>
       </div>
     </section>
-  )
+  );
 }

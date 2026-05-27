@@ -8,15 +8,15 @@ import {
   WidgetFooter,
   WidgetValue,
   WidgetLabel,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { ShieldIcon, WarningCircleIcon } from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { ShieldIcon, WarningCircleIcon } from '@acronis-platform/shadcn-uikit';
 import {
   ActivityIcon,
   BarChart3Icon,
   MoreVerticalIcon,
   TrendingUpIcon,
-} from '../icons/missing-icons'
+} from '../icons/missing-icons';
 export function WidgetDashboardGrid() {
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -106,5 +106,5 @@ export function WidgetDashboardGrid() {
         </WidgetContent>
       </Widget>
     </div>
-  )
+  );
 }

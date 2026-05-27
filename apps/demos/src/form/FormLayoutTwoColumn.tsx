@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import {
   Form,
   FormControl,
@@ -9,16 +9,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 const formSchema = z.object({
   firstName: z.string().min(1, 'First name is required.'),
@@ -27,7 +27,7 @@ const formSchema = z.object({
   phone: z.string().optional(),
   country: z.string().min(1, 'Please select a country.'),
   city: z.string().optional(),
-})
+});
 
 export function FormLayoutTwoColumn() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -40,10 +40,10 @@ export function FormLayoutTwoColumn() {
       country: '',
       city: '',
     },
-  })
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    alert(JSON.stringify(values, null, 2))
+    alert(JSON.stringify(values, null, 2));
   }
 
   return (
@@ -89,7 +89,11 @@ export function FormLayoutTwoColumn() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="jane@example.com" {...field} />
+                    <Input
+                      type="email"
+                      placeholder="jane@example.com"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -100,9 +104,18 @@ export function FormLayoutTwoColumn() {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone <span className="text-muted-foreground font-normal">(optional)</span></FormLabel>
+                  <FormLabel>
+                    Phone{' '}
+                    <span className="text-muted-foreground font-normal">
+                      (optional)
+                    </span>
+                  </FormLabel>
                   <FormControl>
-                    <Input type="tel" placeholder="+1 555 000 0000" {...field} />
+                    <Input
+                      type="tel"
+                      placeholder="+1 555 000 0000"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -118,7 +131,10 @@ export function FormLayoutTwoColumn() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Country</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select country" />
@@ -140,7 +156,12 @@ export function FormLayoutTwoColumn() {
               name="city"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>City <span className="text-muted-foreground font-normal">(optional)</span></FormLabel>
+                  <FormLabel>
+                    City{' '}
+                    <span className="text-muted-foreground font-normal">
+                      (optional)
+                    </span>
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="San Francisco" {...field} />
                   </FormControl>
@@ -154,5 +175,5 @@ export function FormLayoutTwoColumn() {
         </form>
       </Form>
     </div>
-  )
+  );
 }

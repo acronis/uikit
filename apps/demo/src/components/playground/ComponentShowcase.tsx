@@ -1,19 +1,32 @@
 import {
   AlertContent,
   AlertIcon,
-  Button, CriticalIcon, DangerIcon, InfoIcon,
+  Button,
+  CriticalIcon,
+  DangerIcon,
+  InfoIcon,
   InfrastructureIcon,
   SuccessIcon,
-  WarningIcon
-} from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { Label } from '@acronis-platform/shadcn-uikit/react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@acronis-platform/shadcn-uikit/react'
-import { Badge } from '@acronis-platform/shadcn-uikit/react'
-import { Alert, AlertDescription, AlertTitle } from '@acronis-platform/shadcn-uikit/react'
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
-import { Switch } from '@acronis-platform/shadcn-uikit/react'
-import { Checkbox } from '@acronis-platform/shadcn-uikit/react'
+  WarningIcon,
+} from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { Label } from '@acronis-platform/shadcn-uikit/react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@acronis-platform/shadcn-uikit/react';
+import { Badge } from '@acronis-platform/shadcn-uikit/react';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from '@acronis-platform/shadcn-uikit/react';
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
+import { Switch } from '@acronis-platform/shadcn-uikit/react';
+import { Checkbox } from '@acronis-platform/shadcn-uikit/react';
 
 export const ComponentShowcase: React.FC = () => {
   return (
@@ -235,4 +248,4 @@ export const ComponentShowcase: React.FC = () => {
       </section>
     </div>
   );
-}
+};

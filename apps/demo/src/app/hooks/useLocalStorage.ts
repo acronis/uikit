@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 
 export function useLocalStorage<T>(
   key: string,
@@ -6,26 +6,27 @@ export function useLocalStorage<T>(
 ): [T, (value: T | ((val: T) => T)) => void] {
   const [storedValue, setStoredValue] = React.useState<T>(() => {
     try {
-      const item = window.localStorage.getItem(key)
-      return item ? JSON.parse(item) : initialValue
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      console.error(`Error loading localStorage key "${key}":`, error)
-      return initialValue
+      console.error(`Error loading localStorage key "${key}":`, error);
+      return initialValue;
     }
-  })
+  });
 
   const setValue = React.useCallback(
     (value: T | ((val: T) => T)) => {
       try {
-        const valueToStore = value instanceof Function ? value(storedValue) : value
-        setStoredValue(valueToStore)
-        window.localStorage.setItem(key, JSON.stringify(valueToStore))
+        const valueToStore =
+          value instanceof Function ? value(storedValue) : value;
+        setStoredValue(valueToStore);
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
       } catch (error) {
-        console.error(`Error setting localStorage key "${key}":`, error)
+        console.error(`Error setting localStorage key "${key}":`, error);
       }
     },
     [key, storedValue]
-  )
+  );
 
-  return [storedValue, setValue]
+  return [storedValue, setValue];
 }

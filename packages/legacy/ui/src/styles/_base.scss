@@ -15,14 +15,24 @@
   /* AI Badge gradient border — uses --av-status-ai-* tokens from the theme */
   .badge-ai-gradient {
     background:
-      linear-gradient(hsl(var(--av-status-ai-bg)), hsl(var(--av-status-ai-bg))) padding-box,
-      linear-gradient(135deg, hsl(var(--av-status-ai)), hsl(var(--av-status-ai-gradient-stop, 300deg 65% 60%))) border-box;
+      linear-gradient(hsl(var(--av-status-ai-bg)), hsl(var(--av-status-ai-bg)))
+        padding-box,
+      linear-gradient(
+          135deg,
+          hsl(var(--av-status-ai)),
+          hsl(var(--av-status-ai-gradient-stop, 300deg 65% 60%))
+        )
+        border-box;
     border-color: transparent;
   }
 
   /* AI Badge solid gradient background */
   .badge-ai-solid {
-    background: linear-gradient(135deg, hsl(var(--av-status-ai)), hsl(var(--av-status-ai-gradient-stop, 300deg 65% 60%)));
+    background: linear-gradient(
+      135deg,
+      hsl(var(--av-status-ai)),
+      hsl(var(--av-status-ai-gradient-stop, 300deg 65% 60%))
+    );
     border-color: transparent;
   }
 }

@@ -1,61 +1,76 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { usePlaygroundStore } from '@/store/playground/playgroundStore.ts'
-import { applyTokenSet, applyTypographySettings, TypographySettings } from '@/lib/playground/cssVariables.ts'
-import { ThemeMode } from '@/types/playground/index.ts'
-import { ThemeSwitcher } from '@/components/playground/ThemeSwitcher.tsx'
-import { TokenSelector } from '@/components/playground/TokenSelector.tsx'
-import { TokenEditor } from '@/components/playground/TokenEditor.tsx'
-import { TypographyEditor } from '@/components/playground/TypographyEditor.tsx'
-import { ComponentShowcase } from '@/components/playground/ComponentShowcase.tsx'
-import { Button, Tabs, TabsContent, TabsList, TabsTrigger, ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@acronis-platform/shadcn-uikit/react'
-import { ChatComponentsShowcase } from '@/components/playground/ChatComponentsShowcase.tsx'
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { usePlaygroundStore } from '@/store/playground/playgroundStore.ts';
+import {
+  applyTokenSet,
+  applyTypographySettings,
+  TypographySettings,
+} from '@/lib/playground/cssVariables.ts';
+import { ThemeMode } from '@/types/playground/index.ts';
+import { ThemeSwitcher } from '@/components/playground/ThemeSwitcher.tsx';
+import { TokenSelector } from '@/components/playground/TokenSelector.tsx';
+import { TokenEditor } from '@/components/playground/TokenEditor.tsx';
+import { TypographyEditor } from '@/components/playground/TypographyEditor.tsx';
+import { ComponentShowcase } from '@/components/playground/ComponentShowcase.tsx';
+import {
+  Button,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from '@acronis-platform/shadcn-uikit/react';
+import { ChatComponentsShowcase } from '@/components/playground/ChatComponentsShowcase.tsx';
 import { ChartsShowcase } from '@/components/playground/ChartsShowcase.tsx';
 import { AppLayout } from '@/app/layout/AppLayout.tsx';
 import { LocaleProvider } from '@/app/context/LocaleContext';
 import { AuthProvider } from '@/app/context/AuthContext';
 
-import { ArrowLeftIcon } from '@acronis-platform/shadcn-uikit'
+import { ArrowLeftIcon } from '@acronis-platform/shadcn-uikit';
 const PlaygroundPage: React.FC = () => {
-  const { theme, activeTokenSetId, tokenSets, customTokenSet } = usePlaygroundStore()
-  const [activeTab, setActiveTab] = useState('components')
+  const { theme, activeTokenSetId, tokenSets, customTokenSet } =
+    usePlaygroundStore();
+  const [activeTab, setActiveTab] = useState('components');
 
   // Initialize typography settings on mount
   useEffect(() => {
     const DEFAULT_TYPOGRAPHY: TypographySettings = {
       fontFamily: 'system-ui',
-      fontFamilyStack: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      fontFamilyStack:
+        'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       fontSize: '16px',
       lineHeight: '1.5',
       letterSpacing: '0',
-    }
+    };
 
-    const stored = localStorage.getItem('playground-typography')
-    let settings = DEFAULT_TYPOGRAPHY
+    const stored = localStorage.getItem('playground-typography');
+    let settings = DEFAULT_TYPOGRAPHY;
 
     if (stored) {
       try {
-        settings = JSON.parse(stored)
+        settings = JSON.parse(stored);
       } catch {
-        settings = DEFAULT_TYPOGRAPHY
+        settings = DEFAULT_TYPOGRAPHY;
       }
     }
 
-    applyTypographySettings(settings)
-  }, [])
+    applyTypographySettings(settings);
+  }, []);
 
   useEffect(() => {
-    const activeTokenSet = customTokenSet || tokenSets[activeTokenSetId]
+    const activeTokenSet = customTokenSet || tokenSets[activeTokenSetId];
     if (activeTokenSet) {
       const effectiveTheme =
         theme.mode === ThemeMode.SYSTEM
           ? window.matchMedia('(prefers-color-scheme: dark)').matches
             ? ThemeMode.DARK
             : ThemeMode.LIGHT
-          : theme.mode
-      applyTokenSet(activeTokenSet, effectiveTheme)
+          : theme.mode;
+      applyTokenSet(activeTokenSet, effectiveTheme);
     }
-  }, [theme, activeTokenSetId, tokenSets, customTokenSet])
+  }, [theme, activeTokenSetId, tokenSets, customTokenSet]);
 
   return (
     <div className="playground-page h-screen bg-background text-foreground flex flex-col">
@@ -154,12 +169,8 @@ const PlaygroundPage: React.FC = () => {
                     <TabsList className="grid w-full grid-cols-5">
                       <TabsTrigger value="components">Components</TabsTrigger>
                       <TabsTrigger value="chat">Chat</TabsTrigger>
-                      <TabsTrigger value="showcase3">
-                        Demo
-                      </TabsTrigger>
-                      <TabsTrigger value="showcase4">
-                        Charts
-                      </TabsTrigger>
+                      <TabsTrigger value="showcase3">Demo</TabsTrigger>
+                      <TabsTrigger value="showcase4">Charts</TabsTrigger>
                       <TabsTrigger value="showcase5" disabled>
                         Showcase 5
                       </TabsTrigger>
@@ -177,9 +188,8 @@ const PlaygroundPage: React.FC = () => {
                     </TabsContent>
                     <TabsContent value="showcase3" className="mt-0">
                       <LocaleProvider>
-
                         <AuthProvider>
-                        <AppLayout />
+                          <AppLayout />
                         </AuthProvider>
                       </LocaleProvider>
                     </TabsContent>
@@ -200,6 +210,6 @@ const PlaygroundPage: React.FC = () => {
       </main>
     </div>
   );
-}
+};
 
-export { PlaygroundPage }
+export { PlaygroundPage };

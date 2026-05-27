@@ -1,11 +1,13 @@
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
 
 export function SeparatorHorizontal() {
   return (
     <div className="space-y-4">
       <div>
         <h4 className="text-sm font-medium">Section 1</h4>
-        <p className="text-sm text-muted-foreground">This is the first section of content.</p>
+        <p className="text-sm text-muted-foreground">
+          This is the first section of content.
+        </p>
       </div>
       <Separator />
       <div>
@@ -15,5 +17,5 @@ export function SeparatorHorizontal() {
         </p>
       </div>
     </div>
-  )
+  );
 }

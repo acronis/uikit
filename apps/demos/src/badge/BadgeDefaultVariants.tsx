@@ -1,4 +1,4 @@
-import { Badge } from '@acronis-platform/shadcn-uikit/react'
+import { Badge } from '@acronis-platform/shadcn-uikit/react';
 
 export function BadgeDefaultVariants() {
   return (
@@ -8,5 +8,5 @@ export function BadgeDefaultVariants() {
       <Badge variant="destructive">Destructive</Badge>
       <Badge variant="outline">Outline</Badge>
     </div>
-  )
+  );
 }

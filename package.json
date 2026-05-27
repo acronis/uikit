@@ -64,10 +64,7 @@
     "packages/**/*.{js,jsx,ts,tsx,vue}": [
       "eslint --fix"
     ],
-    "apps/**/*.{json,md,yml,yaml}": [
-      "prettier --write"
-    ],
-    "packages/**/*.{json,md,yml,yaml}": [
+    "**/*.{json,md,yml,yaml}": [
       "prettier --write"
     ]
   },

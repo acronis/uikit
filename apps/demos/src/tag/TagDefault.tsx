@@ -1,4 +1,4 @@
-import { Tag } from '@acronis-platform/shadcn-uikit/react'
+import { Tag } from '@acronis-platform/shadcn-uikit/react';
 
 export function TagDefault() {
   return (
@@ -10,5 +10,5 @@ export function TagDefault() {
       <Tag variant="danger">Danger</Tag>
       <Tag variant="neutral">Neutral</Tag>
     </div>
-  )
+  );
 }

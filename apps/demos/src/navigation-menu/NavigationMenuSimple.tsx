@@ -12,5 +12,5 @@ export function NavigationMenuSimple() {
         ))}
       </nav>
     </div>
-  )
+  );
 }

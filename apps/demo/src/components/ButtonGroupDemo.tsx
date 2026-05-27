@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   ButtonGroupBasic,
   ButtonGroupDaySelector,
@@ -12,30 +12,30 @@ import {
   ButtonGroupZoomControls,
   ButtonGroupSizes,
   ButtonGroupComplexToolbar,
-} from '@acronis-platform/shadcn-uikit-demos/button-group'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/button-group';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import buttonGroupBasicCode from '../../../demos/src/button-group/ButtonGroupBasic.tsx?raw'
-import buttonGroupDaySelectorCode from '../../../demos/src/button-group/ButtonGroupDaySelector.tsx?raw'
-import buttonGroupDaySelectorSmallCode from '../../../demos/src/button-group/ButtonGroupDaySelectorSmall.tsx?raw'
-import buttonGroupTextAlignmentCode from '../../../demos/src/button-group/ButtonGroupTextAlignment.tsx?raw'
-import buttonGroupTextFormattingCode from '../../../demos/src/button-group/ButtonGroupTextFormatting.tsx?raw'
-import buttonGroupWithSeparatorsCode from '../../../demos/src/button-group/ButtonGroupWithSeparators.tsx?raw'
-import buttonGroupWithTextLabelsCode from '../../../demos/src/button-group/ButtonGroupWithTextLabels.tsx?raw'
-import buttonGroupVerticalCode from '../../../demos/src/button-group/ButtonGroupVertical.tsx?raw'
-import buttonGroupMediaControlsCode from '../../../demos/src/button-group/ButtonGroupMediaControls.tsx?raw'
-import buttonGroupZoomControlsCode from '../../../demos/src/button-group/ButtonGroupZoomControls.tsx?raw'
-import buttonGroupSizesCode from '../../../demos/src/button-group/ButtonGroupSizes.tsx?raw'
-import buttonGroupComplexToolbarCode from '../../../demos/src/button-group/ButtonGroupComplexToolbar.tsx?raw'
+import buttonGroupBasicCode from '../../../demos/src/button-group/ButtonGroupBasic.tsx?raw';
+import buttonGroupDaySelectorCode from '../../../demos/src/button-group/ButtonGroupDaySelector.tsx?raw';
+import buttonGroupDaySelectorSmallCode from '../../../demos/src/button-group/ButtonGroupDaySelectorSmall.tsx?raw';
+import buttonGroupTextAlignmentCode from '../../../demos/src/button-group/ButtonGroupTextAlignment.tsx?raw';
+import buttonGroupTextFormattingCode from '../../../demos/src/button-group/ButtonGroupTextFormatting.tsx?raw';
+import buttonGroupWithSeparatorsCode from '../../../demos/src/button-group/ButtonGroupWithSeparators.tsx?raw';
+import buttonGroupWithTextLabelsCode from '../../../demos/src/button-group/ButtonGroupWithTextLabels.tsx?raw';
+import buttonGroupVerticalCode from '../../../demos/src/button-group/ButtonGroupVertical.tsx?raw';
+import buttonGroupMediaControlsCode from '../../../demos/src/button-group/ButtonGroupMediaControls.tsx?raw';
+import buttonGroupZoomControlsCode from '../../../demos/src/button-group/ButtonGroupZoomControls.tsx?raw';
+import buttonGroupSizesCode from '../../../demos/src/button-group/ButtonGroupSizes.tsx?raw';
+import buttonGroupComplexToolbarCode from '../../../demos/src/button-group/ButtonGroupComplexToolbar.tsx?raw';
 
 export function ButtonGroupDemo() {
   return (
     <section className="demo-section">
       <h2>Button Group Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Group related buttons together with consistent styling and spacing. Supports horizontal and
-        vertical orientations.
+        Group related buttons together with consistent styling and spacing.
+        Supports horizontal and vertical orientations.
       </p>
 
       <div className="space-y-8">
@@ -136,5 +136,5 @@ export function ButtonGroupDemo() {
         </DemoWithCode>
       </div>
     </section>
-  )
+  );
 }

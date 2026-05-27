@@ -5,23 +5,27 @@ export function SecondaryMenuSpecs() {
         <strong className="font-semibold">Width:</strong> 240px (fixed)
       </div>
       <div>
-        <strong className="font-semibold">Padding:</strong> 24px horizontal, 12px vertical
+        <strong className="font-semibold">Padding:</strong> 24px horizontal,
+        12px vertical
       </div>
       <div>
-        <strong className="font-semibold">Title Padding:</strong> 24px horizontal, 16px top, 8px
-        bottom
+        <strong className="font-semibold">Title Padding:</strong> 24px
+        horizontal, 16px top, 8px bottom
       </div>
       <div>
-        <strong className="font-semibold">Gap:</strong> 16px between icon and text
+        <strong className="font-semibold">Gap:</strong> 16px between icon and
+        text
       </div>
       <div>
         <strong className="font-semibold">Icon Size:</strong> 16×16px
       </div>
       <div>
-        <strong className="font-semibold">Active Background:</strong> rgba(38, 104, 197, 0.05)
+        <strong className="font-semibold">Active Background:</strong> rgba(38,
+        104, 197, 0.05)
       </div>
       <div>
-        <strong className="font-semibold">Divider:</strong> rgba(38, 104, 197, 0.1)
+        <strong className="font-semibold">Divider:</strong> rgba(38, 104, 197,
+        0.1)
       </div>
       <div>
         <strong className="font-semibold">Typography:</strong>
@@ -39,5 +43,5 @@ export function SecondaryMenuSpecs() {
         </ul>
       </div>
     </div>
-  )
+  );
 }

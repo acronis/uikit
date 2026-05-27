@@ -12,14 +12,18 @@ interface DemoPreviewProps {
   center?: boolean;
 }
 
-export async function DemoPreview({ children, sourcePath, center }: DemoPreviewProps) {
+export async function DemoPreview({
+  children,
+  sourcePath,
+  center,
+}: DemoPreviewProps) {
   let highlighted: ReactNode | undefined;
 
   if (sourcePath) {
     try {
       const source = readFileSync(
         resolve(process.cwd(), '..', '..', sourcePath),
-        'utf-8',
+        'utf-8'
       );
       highlighted = await highlight(source, {
         lang: 'tsx',

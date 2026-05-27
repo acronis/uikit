@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   TextareaBasic,
   TextareaWithLabels,
@@ -12,22 +12,22 @@ import {
   TextareaResizeOptions,
   TextareaForm,
   TextareaUseCases,
-} from '@acronis-platform/shadcn-uikit-demos/textarea'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/textarea';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import textareaBasicCode from '../../../demos/src/textarea/TextareaBasic.tsx?raw'
-import textareaWithLabelsCode from '../../../demos/src/textarea/TextareaWithLabels.tsx?raw'
-import textareaSizesCode from '../../../demos/src/textarea/TextareaSizes.tsx?raw'
-import textareaWithHelperCode from '../../../demos/src/textarea/TextareaWithHelper.tsx?raw'
-import textareaDisabledCode from '../../../demos/src/textarea/TextareaDisabled.tsx?raw'
-import textareaRequiredCode from '../../../demos/src/textarea/TextareaRequired.tsx?raw'
-import textareaErrorCode from '../../../demos/src/textarea/TextareaError.tsx?raw'
-import textareaCharCounterCode from '../../../demos/src/textarea/TextareaCharCounter.tsx?raw'
-import textareaAutoResizeCode from '../../../demos/src/textarea/TextareaAutoResize.tsx?raw'
-import textareaResizeOptionsCode from '../../../demos/src/textarea/TextareaResizeOptions.tsx?raw'
-import textareaFormCode from '../../../demos/src/textarea/TextareaForm.tsx?raw'
-import textareaUseCasesCode from '../../../demos/src/textarea/TextareaUseCases.tsx?raw'
+import textareaBasicCode from '../../../demos/src/textarea/TextareaBasic.tsx?raw';
+import textareaWithLabelsCode from '../../../demos/src/textarea/TextareaWithLabels.tsx?raw';
+import textareaSizesCode from '../../../demos/src/textarea/TextareaSizes.tsx?raw';
+import textareaWithHelperCode from '../../../demos/src/textarea/TextareaWithHelper.tsx?raw';
+import textareaDisabledCode from '../../../demos/src/textarea/TextareaDisabled.tsx?raw';
+import textareaRequiredCode from '../../../demos/src/textarea/TextareaRequired.tsx?raw';
+import textareaErrorCode from '../../../demos/src/textarea/TextareaError.tsx?raw';
+import textareaCharCounterCode from '../../../demos/src/textarea/TextareaCharCounter.tsx?raw';
+import textareaAutoResizeCode from '../../../demos/src/textarea/TextareaAutoResize.tsx?raw';
+import textareaResizeOptionsCode from '../../../demos/src/textarea/TextareaResizeOptions.tsx?raw';
+import textareaFormCode from '../../../demos/src/textarea/TextareaForm.tsx?raw';
+import textareaUseCasesCode from '../../../demos/src/textarea/TextareaUseCases.tsx?raw';
 
 export function TextareaDemo() {
   return (

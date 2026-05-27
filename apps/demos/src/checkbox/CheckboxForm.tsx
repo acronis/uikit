@@ -1,4 +1,4 @@
-import { Checkbox, Label } from '@acronis-platform/shadcn-uikit/react'
+import { Checkbox, Label } from '@acronis-platform/shadcn-uikit/react';
 
 export function CheckboxForm() {
   return (
@@ -48,5 +48,5 @@ export function CheckboxForm() {
         </div>
       </div>
     </form>
-  )
+  );
 }

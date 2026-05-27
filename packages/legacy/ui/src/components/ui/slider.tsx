@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import * as React from 'react'
-import { Slider as SliderPrimitive } from '@base-ui/react'
+import * as React from 'react';
+import { Slider as SliderPrimitive } from '@base-ui/react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 const Slider = React.forwardRef<
   HTMLDivElement,
@@ -12,17 +12,24 @@ const Slider = React.forwardRef<
   // Normalize values to arrays for consistency. Base UI accepts number | readonly number[]
   // but arrays provide more predictable behavior for thumb rendering and state management.
   const normalizedValue =
-    value != null ? (Array.isArray(value) ? value : [value]) : undefined
+    value != null ? (Array.isArray(value) ? value : [value]) : undefined;
   const normalizedDefaultValue =
-    defaultValue != null ? (Array.isArray(defaultValue) ? defaultValue : [defaultValue]) : [0]
-  const thumbCount = (normalizedValue ?? normalizedDefaultValue).length
+    defaultValue != null
+      ? Array.isArray(defaultValue)
+        ? defaultValue
+        : [defaultValue]
+      : [0];
+  const thumbCount = (normalizedValue ?? normalizedDefaultValue).length;
 
   return (
     <SliderPrimitive.Root
       ref={ref}
       value={normalizedValue}
       defaultValue={normalizedDefaultValue}
-      className={cn('relative flex w-full touch-none select-none items-center', className)}
+      className={cn(
+        'relative flex w-full touch-none select-none items-center',
+        className
+      )}
       {...props}
     >
       <SliderPrimitive.Control className="relative flex w-full items-center">
@@ -42,8 +49,8 @@ const Slider = React.forwardRef<
         ))}
       </SliderPrimitive.Control>
     </SliderPrimitive.Root>
-  )
-})
-Slider.displayName = 'Slider'
+  );
+});
+Slider.displayName = 'Slider';
 
-export { Slider }
+export { Slider };

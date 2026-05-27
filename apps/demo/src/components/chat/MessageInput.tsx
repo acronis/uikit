@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
-import { cn } from '@acronis-platform/shadcn-uikit/react'
+import { cn } from '@acronis-platform/shadcn-uikit/react';
 import { MessageInputProps } from '@/lib/chat/types';
 import { Button } from '@acronis-platform/shadcn-uikit/react';
 import { Textarea } from '@acronis-platform/shadcn-uikit/react';
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger
+  PopoverTrigger,
 } from '@acronis-platform/shadcn-uikit/react';
 import { SendIcon, ShowIcon, HideIcon } from '@acronis-platform/shadcn-uikit';
 import { SmileIcon } from '@/components/icons/missing-icons';
@@ -20,9 +20,9 @@ export function MessageInput({
   onSend,
   disabled = false,
   maxLength = 500,
-  placeholder = "Type your message...",
+  placeholder = 'Type your message...',
   showPreview = false,
-  onPreviewToggle
+  onPreviewToggle,
 }: MessageInputProps) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -132,11 +132,13 @@ export function MessageInput({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className={cn(
-            'text-xs',
-            isNearLimit && !isAtLimit && 'text-yellow-600',
-            isAtLimit && 'text-red-600'
-          )}>
+          <span
+            className={cn(
+              'text-xs',
+              isNearLimit && !isAtLimit && 'text-yellow-600',
+              isAtLimit && 'text-red-600'
+            )}
+          >
             {characterCount}/{maxLength}
           </span>
 

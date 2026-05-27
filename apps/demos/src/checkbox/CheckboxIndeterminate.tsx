@@ -1,10 +1,10 @@
-import * as React from 'react'
-import { Checkbox, Label } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { Checkbox, Label } from '@acronis-platform/shadcn-uikit/react';
 
 export function CheckboxIndeterminate() {
-  const [indeterminate, setIndeterminate] = React.useState<boolean | 'indeterminate'>(
-    'indeterminate'
-  )
+  const [indeterminate, setIndeterminate] = React.useState<
+    boolean | 'indeterminate'
+  >('indeterminate');
 
   return (
     <div className="flex items-center space-x-2">
@@ -13,7 +13,10 @@ export function CheckboxIndeterminate() {
         checked={indeterminate}
         onCheckedChange={setIndeterminate}
       />
-      <Label htmlFor="indeterminate" className="text-sm font-normal cursor-pointer">
+      <Label
+        htmlFor="indeterminate"
+        className="text-sm font-normal cursor-pointer"
+      >
         {indeterminate === 'indeterminate'
           ? 'Indeterminate'
           : indeterminate
@@ -21,5 +24,5 @@ export function CheckboxIndeterminate() {
             : 'Unchecked'}
       </Label>
     </div>
-  )
+  );
 }

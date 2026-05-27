@@ -1,24 +1,24 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Switch } from '../switch'
-import { Label } from '../label'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Switch } from '../switch';
+import { Label } from '../label';
 
 const meta = {
   title: 'UI/Switch',
   component: Switch,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof Switch>
+} satisfies Meta<typeof Switch>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {},
-}
+};
 
 export const Checked: Story = {
   args: { checked: true },
-}
+};
 
 export const WithLabel: Story = {
   render: () => (
@@ -27,4 +27,4 @@ export const WithLabel: Story = {
       <Label htmlFor="airplane-mode">Airplane Mode</Label>
     </div>
   ),
-}
+};

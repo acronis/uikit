@@ -11,5 +11,5 @@ export enum ThemeMode {
  * Theme configuration
  */
 export interface Theme {
-  mode: ThemeMode
+  mode: ThemeMode;
 }

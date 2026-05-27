@@ -1,4 +1,4 @@
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
 
 export function SeparatorWithText() {
   return (
@@ -11,5 +11,5 @@ export function SeparatorWithText() {
       </div>
       <p className="text-sm">Content below separator</p>
     </div>
-  )
+  );
 }

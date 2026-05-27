@@ -1,4 +1,4 @@
-export { cn } from './cn'
+export { cn } from './cn';
 export {
   applyTheme,
   getCurrentTheme,
@@ -11,4 +11,4 @@ export {
   initializeThemeSystem,
   type ThemeName,
   type ColorMode,
-} from './theme-switcher'
+} from './theme-switcher';

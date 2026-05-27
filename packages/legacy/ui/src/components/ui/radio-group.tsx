@@ -1,17 +1,23 @@
-import * as React from 'react'
-import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group'
-import { Radio } from '@base-ui/react/radio'
-import { CircleIcon } from '@/components/icons'
+import * as React from 'react';
+import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
+import { Radio } from '@base-ui/react/radio';
+import { CircleIcon } from '@/components/icons';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 const RadioGroup = React.forwardRef<
   React.ComponentRef<typeof RadioGroupPrimitive>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive>
 >(({ className, ...props }, ref) => {
-  return <RadioGroupPrimitive className={cn('grid gap-2', className)} {...props} ref={ref} />
-})
-RadioGroup.displayName = 'RadioGroup'
+  return (
+    <RadioGroupPrimitive
+      className={cn('grid gap-2', className)}
+      {...props}
+      ref={ref}
+    />
+  );
+});
+RadioGroup.displayName = 'RadioGroup';
 
 const RadioGroupItem = React.forwardRef<
   React.ComponentRef<typeof Radio.Root>,
@@ -30,8 +36,8 @@ const RadioGroupItem = React.forwardRef<
         <CircleIcon className="h-2.5 w-2.5 fill-current text-current" />
       </Radio.Indicator>
     </Radio.Root>
-  )
-})
-RadioGroupItem.displayName = 'RadioGroupItem'
+  );
+});
+RadioGroupItem.displayName = 'RadioGroupItem';
 
-export { RadioGroup, RadioGroupItem }
+export { RadioGroup, RadioGroupItem };

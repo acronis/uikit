@@ -1,6 +1,19 @@
-import React, { createContext, useContext, useReducer, useEffect, useMemo, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useMemo,
+  ReactNode,
+} from 'react';
 import { chatReducer, createInitialState } from './chat-reducer';
-import { ChatState, ChatService, ChatMessage, BotMode, BotConfig } from './types';
+import {
+  ChatState,
+  ChatService,
+  ChatMessage,
+  BotMode,
+  BotConfig,
+} from './types';
 import { ChatStorage } from './storage';
 import { ElizaBot } from './bots/eliza';
 import { Hal9000Bot } from './bots/hal9000';
@@ -12,22 +25,22 @@ const BOT_CONFIGS: Record<BotMode, BotConfig> = {
     name: 'ELIZA',
     description: 'Classic psychotherapist chatbot',
     avatar: '🧑‍⚕️',
-    responseDelay: { min: 800, max: 1500 }
+    responseDelay: { min: 800, max: 1500 },
   },
   hal9000: {
     id: 'hal9000',
     name: 'HAL 9000',
     description: '2001: A Space Odyssey AI',
     avatar: '🔴',
-    responseDelay: { min: 1000, max: 2000 }
+    responseDelay: { min: 1000, max: 2000 },
   },
   conversation: {
     id: 'conversation',
     name: 'ELIZA ↔ HAL',
     description: 'Watch ELIZA and HAL 9000 talk to each other',
     avatar: '💬',
-    responseDelay: { min: 1000, max: 1500 }
-  }
+    responseDelay: { min: 1000, max: 1500 },
+  },
 };
 
 // Bot instances
@@ -42,7 +55,9 @@ interface ChatProviderProps {
 
 export function ChatProvider({ children }: ChatProviderProps) {
   const [state, dispatch] = useReducer(chatReducer, createInitialState());
-  const [botInstance, setBotInstance] = React.useState<ElizaBot | Hal9000Bot>(() => hal9000Bot);
+  const [botInstance, setBotInstance] = React.useState<ElizaBot | Hal9000Bot>(
+    () => hal9000Bot
+  );
 
   // Use refs to always have access to current values
   const stateRef = React.useRef(state);
@@ -63,7 +78,9 @@ export function ChatProvider({ children }: ChatProviderProps) {
       const savedState = ChatStorage.load();
       if (savedState) {
         dispatch({ type: 'LOAD_SESSION', payload: savedState });
-        setBotInstance(savedState.botMode === 'hal9000' ? hal9000Bot : elizaBot);
+        setBotInstance(
+          savedState.botMode === 'hal9000' ? hal9000Bot : elizaBot
+        );
       }
     }
   }, []);
@@ -82,7 +99,9 @@ export function ChatProvider({ children }: ChatProviderProps) {
       newBotInstance = hal9000Bot;
     } else if (state.botMode === 'conversation') {
       // In conversation mode, alternate between bots
-      const lastBotMessage = state.messages.filter(m => m.sender === 'bot').pop();
+      const lastBotMessage = state.messages
+        .filter((m) => m.sender === 'bot')
+        .pop();
       const lastBot = lastBotMessage?.metadata?.botMode;
       newBotInstance = lastBot === 'hal9000' ? elizaBot : hal9000Bot;
     } else {
@@ -101,26 +120,32 @@ export function ChatProvider({ children }: ChatProviderProps) {
     let timeoutId: NodeJS.Timeout;
 
     // Determine which bot is responding
-    const currentBotMode = stateRef.current.botMode === 'conversation'
-      ? (botInstanceRef.current === elizaBot ? 'eliza' : 'hal9000')
-      : stateRef.current.botMode;
+    const currentBotMode =
+      stateRef.current.botMode === 'conversation'
+        ? botInstanceRef.current === elizaBot
+          ? 'eliza'
+          : 'hal9000'
+        : stateRef.current.botMode;
 
-    const responsePromise = botInstanceRef.current.generateResponse(trimmed, stateRef.current.messages)
-      .then(response => {
+    const responsePromise = botInstanceRef.current
+      .generateResponse(trimmed, stateRef.current.messages)
+      .then((response) => {
         clearTimeout(timeoutId);
         return { response, botMode: currentBotMode };
       })
-      .catch(err => {
+      .catch((err) => {
         console.error('Bot generateResponse error:', err);
         clearTimeout(timeoutId);
         throw err;
       });
 
-    const timeoutPromise = new Promise<{ response: string; botMode: BotMode }>((_, reject) => {
-      timeoutId = setTimeout(() => {
-        reject(new Error('Response timeout'));
-      }, 10000);
-    });
+    const timeoutPromise = new Promise<{ response: string; botMode: BotMode }>(
+      (_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error('Response timeout'));
+        }, 10000);
+      }
+    );
 
     Promise.race([responsePromise, timeoutPromise])
       .then(({ response: responseContent, botMode: respondingBot }) => {
@@ -131,8 +156,8 @@ export function ChatProvider({ children }: ChatProviderProps) {
           timestamp: new Date(),
           type: 'text',
           metadata: {
-            botMode: respondingBot
-          }
+            botMode: respondingBot,
+          },
         };
         dispatch({ type: 'RECEIVE_MESSAGE', payload: botMessage });
 
@@ -160,7 +185,10 @@ export function ChatProvider({ children }: ChatProviderProps) {
     }
 
     if (trimmed.length > 500) {
-      dispatch({ type: 'SET_ERROR', payload: 'Message too long (max 500 characters)' });
+      dispatch({
+        type: 'SET_ERROR',
+        payload: 'Message too long (max 500 characters)',
+      });
       throw new Error('Message too long');
     }
 
@@ -173,14 +201,17 @@ export function ChatProvider({ children }: ChatProviderProps) {
       content: trimmed,
       sender: 'user',
       timestamp: new Date(),
-      type: 'text'
+      type: 'text',
     };
 
     // Send user message immediately
     dispatch({ type: 'SEND_MESSAGE', payload: trimmed });
 
     // Generate bot response asynchronously without blocking
-    console.log('Sending message to bot:', botInstanceRef.current?.constructor.name);
+    console.log(
+      'Sending message to bot:',
+      botInstanceRef.current?.constructor.name
+    );
 
     if (!botInstanceRef.current) {
       console.error('Bot instance is null!');
@@ -192,28 +223,34 @@ export function ChatProvider({ children }: ChatProviderProps) {
     let timeoutId: NodeJS.Timeout;
 
     // Determine which bot is responding
-    const currentBotMode = stateRef.current.botMode === 'conversation'
-      ? (botInstanceRef.current === elizaBot ? 'eliza' : 'hal9000')
-      : stateRef.current.botMode;
+    const currentBotMode =
+      stateRef.current.botMode === 'conversation'
+        ? botInstanceRef.current === elizaBot
+          ? 'eliza'
+          : 'hal9000'
+        : stateRef.current.botMode;
 
-    const responsePromise = botInstanceRef.current.generateResponse(trimmed, stateRef.current.messages)
-      .then(response => {
+    const responsePromise = botInstanceRef.current
+      .generateResponse(trimmed, stateRef.current.messages)
+      .then((response) => {
         console.log('Bot response received:', response);
         clearTimeout(timeoutId); // Cancel timeout when response arrives
         return { response, botMode: currentBotMode };
       })
-      .catch(err => {
+      .catch((err) => {
         console.error('Bot generateResponse error:', err);
         clearTimeout(timeoutId); // Cancel timeout on error too
         throw err;
       });
 
-    const timeoutPromise = new Promise<{ response: string; botMode: BotMode }>((_, reject) => {
-      timeoutId = setTimeout(() => {
-        console.log('Bot response timeout!');
-        reject(new Error('Response timeout'));
-      }, 10000);
-    });
+    const timeoutPromise = new Promise<{ response: string; botMode: BotMode }>(
+      (_, reject) => {
+        timeoutId = setTimeout(() => {
+          console.log('Bot response timeout!');
+          reject(new Error('Response timeout'));
+        }, 10000);
+      }
+    );
 
     Promise.race([responsePromise, timeoutPromise])
       .then(({ response: responseContent, botMode: respondingBot }) => {
@@ -225,8 +262,8 @@ export function ChatProvider({ children }: ChatProviderProps) {
           timestamp: new Date(),
           type: 'text',
           metadata: {
-            botMode: respondingBot
-          }
+            botMode: respondingBot,
+          },
         };
         dispatch({ type: 'RECEIVE_MESSAGE', payload: botMessage });
 
@@ -241,9 +278,10 @@ export function ChatProvider({ children }: ChatProviderProps) {
       .catch((error) => {
         console.error('Bot response error:', error);
         clearTimeout(timeoutId); // Ensure timeout is cleared
-        const errorMessage = error.message === 'Response timeout'
-          ? 'Bot response timed out. Please try again.'
-          : 'Failed to generate response';
+        const errorMessage =
+          error.message === 'Response timeout'
+            ? 'Bot response timed out. Please try again.'
+            : 'Failed to generate response';
         dispatch({ type: 'SET_ERROR', payload: errorMessage });
         dispatch({ type: 'SET_TYPING', payload: false });
       });
@@ -255,7 +293,10 @@ export function ChatProvider({ children }: ChatProviderProps) {
     dispatch({ type: 'ANSWER_QUESTION', payload: option });
 
     try {
-      const responseContent = await botInstanceRef.current.generateResponse(option, stateRef.current.messages);
+      const responseContent = await botInstanceRef.current.generateResponse(
+        option,
+        stateRef.current.messages
+      );
 
       const botMessage: ChatMessage = {
         id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -264,8 +305,8 @@ export function ChatProvider({ children }: ChatProviderProps) {
         timestamp: new Date(),
         type: 'text',
         metadata: {
-          botMode: stateRef.current.botMode
-        }
+          botMode: stateRef.current.botMode,
+        },
       };
 
       dispatch({ type: 'RECEIVE_MESSAGE', payload: botMessage });
@@ -324,32 +365,45 @@ export function ChatProvider({ children }: ChatProviderProps) {
 
   // Notify all listeners when state changes
   React.useEffect(() => {
-    listenersRef.current.forEach(listener => listener(state));
+    listenersRef.current.forEach((listener) => listener(state));
   }, [state]);
 
   const getState = (): ChatState => {
     return stateRef.current;
   };
 
-  const service: ChatService = useMemo(() => ({
-    sendMessage,
-    getMessages,
-    clearMessages,
-    setBotMode,
-    getBotMode,
-    getAvailableBots,
-    saveSession,
-    loadSession,
-    clearSession,
-    subscribe,
-    getState,
-    answerQuestion
-  }), [sendMessage, getMessages, clearMessages, setBotMode, getBotMode, getAvailableBots, saveSession, loadSession, clearSession, subscribe, getState]);
+  const service: ChatService = useMemo(
+    () => ({
+      sendMessage,
+      getMessages,
+      clearMessages,
+      setBotMode,
+      getBotMode,
+      getAvailableBots,
+      saveSession,
+      loadSession,
+      clearSession,
+      subscribe,
+      getState,
+      answerQuestion,
+    }),
+    [
+      sendMessage,
+      getMessages,
+      clearMessages,
+      setBotMode,
+      getBotMode,
+      getAvailableBots,
+      saveSession,
+      loadSession,
+      clearSession,
+      subscribe,
+      getState,
+    ]
+  );
 
   return (
-    <ChatContext.Provider value={service}>
-      {children}
-    </ChatContext.Provider>
+    <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
   );
 }
 

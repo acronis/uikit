@@ -1,5 +1,5 @@
-import { Tag } from '@acronis-platform/shadcn-uikit/react'
-import { CheckCircleIcon, ClockIcon } from '@acronis-platform/shadcn-uikit'
+import { Tag } from '@acronis-platform/shadcn-uikit/react';
+import { CheckCircleIcon, ClockIcon } from '@acronis-platform/shadcn-uikit';
 export function TagMixedSizes() {
   return (
     <div className="space-y-4">
@@ -55,5 +55,5 @@ export function TagMixedSizes() {
         </div>
       </div>
     </div>
-  )
+  );
 }

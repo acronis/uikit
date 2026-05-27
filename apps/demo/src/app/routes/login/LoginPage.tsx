@@ -1,23 +1,29 @@
-import * as React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@acronis-platform/shadcn-uikit/react'
-import { LoginForm } from './LoginForm'
-import { useAuth } from '../../hooks/useAuth'
-import type { LoginFormData } from '../../lib/validators'
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@acronis-platform/shadcn-uikit/react';
+import { LoginForm } from './LoginForm';
+import { useAuth } from '../../hooks/useAuth';
+import type { LoginFormData } from '../../lib/validators';
 
 export function LoginPage() {
-  const { login, isLoading, isAuthenticated } = useAuth()
-  const navigate = useNavigate()
+  const { login, isLoading, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     if (isAuthenticated) {
-      navigate('/demo/dashboard')
+      navigate('/demo/dashboard');
     }
-  }, [isAuthenticated, navigate])
+  }, [isAuthenticated, navigate]);
 
   const handleLogin = async (data: LoginFormData) => {
-    await login(data.email, data.password)
-  }
+    await login(data.email, data.password);
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
@@ -37,5 +43,5 @@ export function LoginPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

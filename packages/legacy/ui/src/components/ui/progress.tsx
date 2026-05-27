@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import * as React from 'react'
-import { Progress as ProgressPrimitive } from '@base-ui/react'
+import * as React from 'react';
+import { Progress as ProgressPrimitive } from '@base-ui/react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 const Progress = React.forwardRef<
   HTMLDivElement,
@@ -12,7 +12,10 @@ const Progress = React.forwardRef<
   <ProgressPrimitive.Root
     ref={ref}
     value={value ?? null}
-    className={cn('relative h-4 w-full overflow-hidden rounded-full', className)}
+    className={cn(
+      'relative h-4 w-full overflow-hidden rounded-full',
+      className
+    )}
     {...props}
   >
     <ProgressPrimitive.Track className="relative h-full w-full overflow-hidden bg-input">
@@ -22,7 +25,7 @@ const Progress = React.forwardRef<
       />
     </ProgressPrimitive.Track>
   </ProgressPrimitive.Root>
-))
-Progress.displayName = 'Progress'
+));
+Progress.displayName = 'Progress';
 
-export { Progress }
+export { Progress };

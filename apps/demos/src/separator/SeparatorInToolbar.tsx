@@ -1,4 +1,4 @@
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
 
 export function SeparatorInToolbar() {
   return (
@@ -14,5 +14,5 @@ export function SeparatorInToolbar() {
       <button className="rounded p-2 hover:bg-accent">Link</button>
       <button className="rounded p-2 hover:bg-accent">Image</button>
     </div>
-  )
+  );
 }

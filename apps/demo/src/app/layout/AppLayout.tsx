@@ -1,24 +1,24 @@
-import * as React from 'react'
-import { Outlet } from 'react-router-dom'
-import { Header } from './Header'
-import { Sidebar } from './Sidebar'
+import * as React from 'react';
+import { Outlet } from 'react-router-dom';
+import { Header } from './Header';
+import { Sidebar } from './Sidebar';
 
 export function AppLayout() {
-  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false)
-  const [isMobile, setIsMobile] = React.useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
+      setIsMobile(window.innerWidth < 768);
       if (window.innerWidth < 768) {
-        setSidebarCollapsed(true)
+        setSidebarCollapsed(true);
       }
-    }
+    };
 
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -39,5 +39,5 @@ export function AppLayout() {
         </main>
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { Input } from '@acronis-platform/shadcn-uikit/react'
+import { Input } from '@acronis-platform/shadcn-uikit/react';
 
 export function InputBasic() {
   return (
@@ -6,5 +6,5 @@ export function InputBasic() {
       <Input placeholder="Enter text..." />
       <Input placeholder="With default value" defaultValue="Default value" />
     </div>
-  )
+  );
 }

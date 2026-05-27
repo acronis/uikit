@@ -1,17 +1,17 @@
-import { useMemo } from 'react'
+import { useMemo } from 'react';
 import {
   Avatar,
   AvatarFallback,
   Button,
   Input,
   ScrollArea,
-} from '@acronis-platform/shadcn-uikit/react'
-import { SearchIcon, PlusIcon } from '@acronis-platform/shadcn-uikit'
-import { useCyberChatStore } from '../store/useCyberChatStore'
-import { CollapsibleTree } from './CollapsibleTree'
-import { ChatListItem } from './ChatListItem'
-import { SettingsDialog } from './SettingsDialog'
-import { filterBySearchQuery } from '../utils/helpers'
+} from '@acronis-platform/shadcn-uikit/react';
+import { SearchIcon, PlusIcon } from '@acronis-platform/shadcn-uikit';
+import { useCyberChatStore } from '../store/useCyberChatStore';
+import { CollapsibleTree } from './CollapsibleTree';
+import { ChatListItem } from './ChatListItem';
+import { SettingsDialog } from './SettingsDialog';
+import { filterBySearchQuery } from '../utils/helpers';
 
 export function CyberChatSidebar() {
   const {
@@ -26,22 +26,22 @@ export function CyberChatSidebar() {
     toggleProjectExpanded,
     toggleSkillExpanded,
     setActiveChat,
-  } = useCyberChatStore()
+  } = useCyberChatStore();
 
   const filteredProjects = useMemo(
     () => filterBySearchQuery(projects, searchQuery, ['name']),
     [projects, searchQuery]
-  )
+  );
 
   const filteredSkills = useMemo(
     () => filterBySearchQuery(skills, searchQuery, ['name']),
     [skills, searchQuery]
-  )
+  );
 
   const filteredChats = useMemo(
     () => filterBySearchQuery(chats, searchQuery, ['title', 'preview']),
     [chats, searchQuery]
-  )
+  );
 
   return (
     <div className="w-64 border-r border-border/50 bg-card/30 flex flex-col h-full">
@@ -76,7 +76,7 @@ export function CyberChatSidebar() {
             className="h-6 w-6"
             onClick={() => {
               // TODO: Open add project dialog
-              console.log('Add project')
+              console.log('Add project');
             }}
           >
             <PlusIcon className="h-3 w-3" />
@@ -104,7 +104,7 @@ export function CyberChatSidebar() {
             className="h-6 w-6"
             onClick={() => {
               // TODO: Open add skill dialog
-              console.log('Add skill')
+              console.log('Add skill');
             }}
           >
             <PlusIcon className="h-3 w-3" />
@@ -125,14 +125,16 @@ export function CyberChatSidebar() {
       {/* Recent Chats */}
       <div className="flex-1 overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-4 py-3 border-b border-border/50">
-          <h3 className="text-sm font-semibold text-foreground">Recent chats</h3>
+          <h3 className="text-sm font-semibold text-foreground">
+            Recent chats
+          </h3>
           <Button
             variant="default"
             size="icon"
             className="h-6 w-6"
             onClick={() => {
               // TODO: Open new chat dialog
-              console.log('New chat')
+              console.log('New chat');
             }}
           >
             <PlusIcon className="h-3 w-3" />
@@ -165,5 +167,5 @@ export function CyberChatSidebar() {
         </div>
       </div>
     </div>
-  )
+  );
 }

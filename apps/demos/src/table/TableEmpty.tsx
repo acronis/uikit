@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function TableEmpty() {
   return (
@@ -28,5 +28,5 @@ export function TableEmpty() {
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }

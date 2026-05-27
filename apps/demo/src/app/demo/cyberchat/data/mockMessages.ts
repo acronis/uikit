@@ -1,4 +1,4 @@
-import type { Message, TableData } from '../types'
+import type { Message, TableData } from '../types';
 
 const feedbackTableData: TableData = {
   headers: ['Category', 'Count', 'Type', 'Estimated time'],
@@ -28,7 +28,7 @@ const feedbackTableData: TableData = {
       'Estimated time': '10 min',
     },
   ],
-}
+};
 
 export const mockMessages: Message[] = [
   {
@@ -115,4 +115,4 @@ Both issues are straightforward and can be handled by a junior technical support
       { text: 'Confidence: High', variant: 'outline' },
     ],
   },
-]
+];

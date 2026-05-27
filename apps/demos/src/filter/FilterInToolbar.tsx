@@ -1,5 +1,5 @@
-import { Filter } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Filter } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function FilterInToolbar() {
   return (
@@ -13,7 +13,9 @@ export function FilterInToolbar() {
           Export
         </Button>
       </div>
-      <div className="text-sm text-muted-foreground">Showing 24 of 156 items</div>
+      <div className="text-sm text-muted-foreground">
+        Showing 24 of 156 items
+      </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { Progress } from '@acronis-platform/shadcn-uikit/react'
+import { Progress } from '@acronis-platform/shadcn-uikit/react';
 
 export function ProgressValues() {
   return (
@@ -35,5 +35,5 @@ export function ProgressValues() {
         <Progress value={100} className="w-full" />
       </div>
     </div>
-  )
+  );
 }

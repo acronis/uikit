@@ -1,17 +1,21 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { ChevronUpdownIcon } from '@/components/icons'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../collapsible'
-import { Button } from '../button'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ChevronUpdownIcon } from '@/components/icons';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '../collapsible';
+import { Button } from '../button';
 
 const meta = {
   title: 'UI/Collapsible',
   component: Collapsible,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof Collapsible>
+} satisfies Meta<typeof Collapsible>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -27,16 +31,22 @@ export const Default: Story = {
           }
         />
       </div>
-      <div className="rounded-md border px-4 py-3 text-sm">@radix-ui/primitives</div>
+      <div className="rounded-md border px-4 py-3 text-sm">
+        @radix-ui/primitives
+      </div>
       <CollapsibleContent>
         <div className="space-y-2">
-          <div className="rounded-md border px-4 py-3 text-sm">@radix-ui/colors</div>
-          <div className="rounded-md border px-4 py-3 text-sm">@stitches/react</div>
+          <div className="rounded-md border px-4 py-3 text-sm">
+            @radix-ui/colors
+          </div>
+          <div className="rounded-md border px-4 py-3 text-sm">
+            @stitches/react
+          </div>
         </div>
       </CollapsibleContent>
     </Collapsible>
   ),
-}
+};
 
 export const Open: Story = {
   render: () => (
@@ -52,13 +62,19 @@ export const Open: Story = {
           }
         />
       </div>
-      <div className="rounded-md border px-4 py-3 text-sm">@radix-ui/primitives</div>
+      <div className="rounded-md border px-4 py-3 text-sm">
+        @radix-ui/primitives
+      </div>
       <CollapsibleContent>
         <div className="space-y-2">
-          <div className="rounded-md border px-4 py-3 text-sm">@radix-ui/colors</div>
-          <div className="rounded-md border px-4 py-3 text-sm">@stitches/react</div>
+          <div className="rounded-md border px-4 py-3 text-sm">
+            @radix-ui/colors
+          </div>
+          <div className="rounded-md border px-4 py-3 text-sm">
+            @stitches/react
+          </div>
         </div>
       </CollapsibleContent>
     </Collapsible>
   ),
-}
+};

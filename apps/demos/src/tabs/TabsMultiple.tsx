@@ -1,4 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@acronis-platform/shadcn-uikit/react'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function TabsMultiple() {
   return (
@@ -42,5 +47,5 @@ export function TabsMultiple() {
         </div>
       </TabsContent>
     </Tabs>
-  )
+  );
 }

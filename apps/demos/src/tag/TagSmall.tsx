@@ -1,4 +1,4 @@
-import { Tag } from '@acronis-platform/shadcn-uikit/react'
+import { Tag } from '@acronis-platform/shadcn-uikit/react';
 
 export function TagSmall() {
   return (
@@ -22,5 +22,5 @@ export function TagSmall() {
         Neutral
       </Tag>
     </div>
-  )
+  );
 }

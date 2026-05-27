@@ -1,9 +1,9 @@
-import * as React from 'react'
+import * as React from 'react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 interface AspectRatioProps extends React.ComponentPropsWithoutRef<'div'> {
-  ratio?: number
+  ratio?: number;
 }
 
 const AspectRatio = React.forwardRef<HTMLDivElement, AspectRatioProps>(
@@ -16,7 +16,7 @@ const AspectRatio = React.forwardRef<HTMLDivElement, AspectRatioProps>(
       <div style={{ position: 'absolute', inset: 0 }} {...props} />
     </div>
   )
-)
-AspectRatio.displayName = 'AspectRatio'
+);
+AspectRatio.displayName = 'AspectRatio';
 
-export { AspectRatio }
+export { AspectRatio };

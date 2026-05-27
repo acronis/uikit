@@ -1,4 +1,4 @@
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
 
 export function SeparatorInSidebar() {
   return (
@@ -16,5 +16,5 @@ export function SeparatorInSidebar() {
         <div className="px-2 py-1.5 text-sm hover:bg-accent">Logout</div>
       </div>
     </div>
-  )
+  );
 }

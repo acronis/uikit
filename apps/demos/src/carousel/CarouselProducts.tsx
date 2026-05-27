@@ -4,9 +4,9 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Card, CardContent } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Card, CardContent } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function CarouselProducts() {
   return (
@@ -24,7 +24,9 @@ export function CarouselProducts() {
                 <CardContent className="flex flex-col items-center justify-center p-8">
                   <div className="text-6xl mb-4">{product.emoji}</div>
                   <h4 className="text-xl font-semibold mb-2">{product.name}</h4>
-                  <p className="text-2xl font-bold text-primary mb-4">{product.price}</p>
+                  <p className="text-2xl font-bold text-primary mb-4">
+                    {product.price}
+                  </p>
                   <Button className="w-full">Add to Cart</Button>
                 </CardContent>
               </Card>
@@ -35,5 +37,5 @@ export function CarouselProducts() {
       <CarouselPrevious />
       <CarouselNext />
     </Carousel>
-  )
+  );
 }

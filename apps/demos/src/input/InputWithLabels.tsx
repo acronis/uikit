@@ -1,4 +1,4 @@
-import { Input } from '@acronis-platform/shadcn-uikit/react'
+import { Input } from '@acronis-platform/shadcn-uikit/react';
 
 export function InputWithLabels() {
   return (
@@ -10,11 +10,18 @@ export function InputWithLabels() {
         <Input id="email" type="email" placeholder="Enter your email" />
       </div>
       <div className="space-y-2">
-        <label htmlFor="password" className="text-sm font-medium text-[#243143]">
+        <label
+          htmlFor="password"
+          className="text-sm font-medium text-[#243143]"
+        >
           Password
         </label>
-        <Input id="password" type="password" placeholder="Enter your password" />
+        <Input
+          id="password"
+          type="password"
+          placeholder="Enter your password"
+        />
       </div>
     </div>
-  )
+  );
 }

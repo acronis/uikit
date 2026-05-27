@@ -7,15 +7,13 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button, Input, Textarea } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button, Input, Textarea } from '@acronis-platform/shadcn-uikit/react';
 
 export function DialogWithTextarea() {
   return (
     <Dialog>
-      <DialogTrigger render={<Button />}>
-        Leave Feedback
-      </DialogTrigger>
+      <DialogTrigger render={<Button />}>Leave Feedback</DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Provide Feedback</DialogTitle>
@@ -49,5 +47,5 @@ export function DialogWithTextarea() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { toast } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { toast } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function SonnerWarning() {
   return (
@@ -8,12 +8,13 @@ export function SonnerWarning() {
       <Button
         onClick={() =>
           toast.warning('Storage warning', {
-            description: 'Your storage is almost full. Please free up some space.',
+            description:
+              'Your storage is almost full. Please free up some space.',
           })
         }
       >
         Warning with Description
       </Button>
     </div>
-  )
+  );
 }

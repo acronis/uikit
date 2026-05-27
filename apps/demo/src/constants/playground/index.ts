@@ -1,2 +1,2 @@
-export * from './defaultState'
-export * from './predefinedTokens'
+export * from './defaultState';
+export * from './predefinedTokens';

@@ -5,11 +5,11 @@
 
 export interface ThemeColorMapping {
   /** CSS variable name */
-  cssVar: string
+  cssVar: string;
   /** Tailwind color key */
-  tailwindKey: string
+  tailwindKey: string;
   /** ColorPalette property name */
-  paletteKey: string
+  paletteKey: string;
 }
 
 /**
@@ -136,11 +136,11 @@ export const THEME_COLOR_MAPPINGS: ThemeColorMapping[] = [
  * Helper to get CSS var → Palette key mapping for runtime use
  */
 export function getCssVarToPaletteMap(): Record<string, string> {
-  const map: Record<string, string> = {}
+  const map: Record<string, string> = {};
   THEME_COLOR_MAPPINGS.forEach(({ cssVar, paletteKey }) => {
-    map[cssVar] = paletteKey
-  })
-  return map
+    map[cssVar] = paletteKey;
+  });
+  return map;
 }
 
 /**
@@ -148,27 +148,27 @@ export function getCssVarToPaletteMap(): Record<string, string> {
  * This can be imported in tailwind.config.js
  */
 export function generateTailwindColors() {
-  const colors: Record<string, any> = {}
+  const colors: Record<string, any> = {};
 
   THEME_COLOR_MAPPINGS.forEach(({ cssVar, tailwindKey }) => {
-    const keys = tailwindKey.split('.')
+    const keys = tailwindKey.split('.');
 
     if (keys.length === 1) {
       // Simple key like 'background'
-      colors[keys[0]] = `hsl(var(${cssVar}))`
+      colors[keys[0]] = `hsl(var(${cssVar}))`;
     } else {
       // Nested key like 'primary.foreground'
-      const [parent, child] = keys
+      const [parent, child] = keys;
       if (!colors[parent]) {
-        colors[parent] = {}
+        colors[parent] = {};
       }
       if (child === 'foreground') {
-        colors[parent].foreground = `hsl(var(${cssVar}))`
+        colors[parent].foreground = `hsl(var(${cssVar}))`;
       } else {
-        colors[parent][child] = `hsl(var(${cssVar}))`
+        colors[parent][child] = `hsl(var(${cssVar}))`;
       }
     }
-  })
+  });
 
-  return colors
+  return colors;
 }

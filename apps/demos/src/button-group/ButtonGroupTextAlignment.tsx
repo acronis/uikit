@@ -1,8 +1,12 @@
-import * as React from 'react'
-import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react'
-import { AlignCenterIcon, AlignLeftIcon, AlignRightIcon } from '../icons/missing-icons'
+import * as React from 'react';
+import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react';
+import {
+  AlignCenterIcon,
+  AlignLeftIcon,
+  AlignRightIcon,
+} from '../icons/missing-icons';
 export function ButtonGroupTextAlignment() {
-  const [alignment, setAlignment] = React.useState<string>('left')
+  const [alignment, setAlignment] = React.useState<string>('left');
 
   return (
     <ButtonGroup>
@@ -28,5 +32,5 @@ export function ButtonGroupTextAlignment() {
         <AlignRightIcon className="h-4 w-4" />
       </Button>
     </ButtonGroup>
-  )
+  );
 }

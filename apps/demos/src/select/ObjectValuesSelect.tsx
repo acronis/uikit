@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Select,
   SelectContent,
@@ -6,12 +6,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@acronis-platform/shadcn-uikit';
-import { Label } from '@acronis-platform/shadcn-uikit/react'
+import { Label } from '@acronis-platform/shadcn-uikit/react';
 
 interface User {
-  id: number
-  name: string
-  email: string
+  id: number;
+  name: string;
+  email: string;
 }
 
 const users: User[] = [
@@ -19,10 +19,10 @@ const users: User[] = [
   { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
   { id: 3, name: 'Bob Johnson', email: 'bob@example.com' },
   { id: 4, name: 'Alice Williams', email: 'alice@example.com' },
-]
+];
 
 export function ObjectValuesSelect() {
-  const [selectedUser, setSelectedUser] = React.useState<User | null>(null)
+  const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
 
   return (
     <div className="space-y-4">
@@ -43,7 +43,9 @@ export function ObjectValuesSelect() {
               <SelectItem key={user.id} value={user}>
                 <div className="flex flex-col items-start">
                   <span className="font-medium">{user.name}</span>
-                  <span className="text-xs text-muted-foreground">{user.email}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {user.email}
+                  </span>
                 </div>
               </SelectItem>
             ))}
@@ -52,9 +54,11 @@ export function ObjectValuesSelect() {
       </div>
       {selectedUser && (
         <div className="text-sm text-muted-foreground">
-          <p>Selected: {selectedUser.name} ({selectedUser.email})</p>
+          <p>
+            Selected: {selectedUser.name} ({selectedUser.email})
+          </p>
         </div>
       )}
     </div>
-  )
+  );
 }

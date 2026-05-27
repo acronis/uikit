@@ -1,4 +1,4 @@
-import { Tag } from '@acronis-platform/shadcn-uikit/react'
+import { Tag } from '@acronis-platform/shadcn-uikit/react';
 import {
   CheckCircleIcon,
   CircleIcon,
@@ -6,7 +6,7 @@ import {
   InfoIcon,
   TimesCircleIcon,
   WarningCircleIcon,
-} from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit';
 export function TagWithIcons() {
   return (
     <div className="flex flex-wrap gap-3">
@@ -19,7 +19,10 @@ export function TagWithIcons() {
       <Tag variant="warning" icon={<WarningCircleIcon className="h-4 w-4" />}>
         Warning
       </Tag>
-      <Tag variant="critical" icon={<ExclamationCircleIcon className="h-4 w-4" />}>
+      <Tag
+        variant="critical"
+        icon={<ExclamationCircleIcon className="h-4 w-4" />}
+      >
         Critical
       </Tag>
       <Tag variant="danger" icon={<TimesCircleIcon className="h-4 w-4" />}>
@@ -29,5 +32,5 @@ export function TagWithIcons() {
         Neutral
       </Tag>
     </div>
-  )
+  );
 }

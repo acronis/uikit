@@ -1,4 +1,4 @@
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
 
 export function SeparatorMultiple() {
   return (
@@ -26,8 +26,10 @@ export function SeparatorMultiple() {
       <Separator />
       <div>
         <h4 className="mb-2 text-sm font-semibold">Contact</h4>
-        <p className="text-sm text-muted-foreground">Get in touch with our support team.</p>
+        <p className="text-sm text-muted-foreground">
+          Get in touch with our support team.
+        </p>
       </div>
     </div>
-  )
+  );
 }

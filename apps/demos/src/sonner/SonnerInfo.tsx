@@ -1,5 +1,5 @@
-import { toast } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { toast } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function SonnerInfo() {
   return (
@@ -15,5 +15,5 @@ export function SonnerInfo() {
         Info with Description
       </Button>
     </div>
-  )
+  );
 }

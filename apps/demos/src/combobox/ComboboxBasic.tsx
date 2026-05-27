@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { cn } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { cn } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   Command,
   CommandEmpty,
@@ -8,10 +8,14 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Popover, PopoverContent, PopoverTrigger } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
-import { CheckIcon, ChevronUpdownIcon } from '@acronis-platform/shadcn-uikit'
+import { CheckIcon, ChevronUpdownIcon } from '@acronis-platform/shadcn-uikit';
 const frameworks = [
   { value: 'next.js', label: 'Next.js' },
   { value: 'sveltekit', label: 'SvelteKit' },
@@ -21,11 +25,11 @@ const frameworks = [
   { value: 'react', label: 'React' },
   { value: 'vue', label: 'Vue' },
   { value: 'angular', label: 'Angular' },
-]
+];
 
 export function ComboboxBasic() {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState('')
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState('');
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -55,8 +59,8 @@ export function ComboboxBasic() {
                   key={framework.value}
                   value={framework.value}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? '' : currentValue)
-                    setOpen(false)
+                    setValue(currentValue === value ? '' : currentValue);
+                    setOpen(false);
                   }}
                 >
                   <CheckIcon
@@ -73,5 +77,5 @@ export function ComboboxBasic() {
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }

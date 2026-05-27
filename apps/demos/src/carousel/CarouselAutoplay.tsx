@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Carousel,
   CarouselContent,
@@ -6,27 +6,27 @@ import {
   CarouselNext,
   CarouselPrevious,
   type CarouselApi,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Card, CardContent } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Card, CardContent } from '@acronis-platform/shadcn-uikit/react';
 
 export function CarouselAutoplay() {
-  const [api, setApi] = React.useState<CarouselApi>()
+  const [api, setApi] = React.useState<CarouselApi>();
 
   React.useEffect(() => {
     if (!api) {
-      return
+      return;
     }
 
     const interval = setInterval(() => {
       if (api.canScrollNext()) {
-        api.scrollNext()
+        api.scrollNext();
       } else {
-        api.scrollTo(0)
+        api.scrollTo(0);
       }
-    }, 3000)
+    }, 3000);
 
-    return () => clearInterval(interval)
-  }, [api])
+    return () => clearInterval(interval);
+  }, [api]);
 
   return (
     <Carousel setApi={setApi} className="w-full max-w-xs mx-auto">
@@ -46,5 +46,5 @@ export function CarouselAutoplay() {
       <CarouselPrevious />
       <CarouselNext />
     </Carousel>
-  )
+  );
 }

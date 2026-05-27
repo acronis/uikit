@@ -1,14 +1,16 @@
-import * as React from 'react'
-import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react'
-import { BoldIcon, ItalicIcon, UnderlineIcon } from '../icons/missing-icons'
+import * as React from 'react';
+import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react';
+import { BoldIcon, ItalicIcon, UnderlineIcon } from '../icons/missing-icons';
 export function ButtonGroupTextFormatting() {
-  const [textFormat, setTextFormat] = React.useState<string[]>([])
+  const [textFormat, setTextFormat] = React.useState<string[]>([]);
 
   const toggleFormat = (format: string) => {
     setTextFormat((prev) =>
-      prev.includes(format) ? prev.filter((f) => f !== format) : [...prev, format]
-    )
-  }
+      prev.includes(format)
+        ? prev.filter((f) => f !== format)
+        : [...prev, format]
+    );
+  };
 
   return (
     <ButtonGroup>
@@ -34,5 +36,5 @@ export function ButtonGroupTextFormatting() {
         <UnderlineIcon className="h-4 w-4" />
       </Button>
     </ButtonGroup>
-  )
+  );
 }

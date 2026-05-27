@@ -1,4 +1,4 @@
-import type { SuggestionChip } from '../types'
+import type { SuggestionChip } from '../types';
 
 export const suggestionChips: SuggestionChip[] = [
   { id: '1', text: 'Show me what you can' },
@@ -9,4 +9,4 @@ export const suggestionChips: SuggestionChip[] = [
   { id: '6', text: 'Analyzing my email data' },
   { id: '7', text: 'Help plan my next vacation' },
   { id: '8', text: 'Tell me about your skill' },
-]
+];

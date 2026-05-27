@@ -1,4 +1,4 @@
-import { Badge } from '@acronis-platform/shadcn-uikit/react'
+import { Badge } from '@acronis-platform/shadcn-uikit/react';
 
 export function BadgeNotificationCounts() {
   return (
@@ -31,5 +31,5 @@ export function BadgeNotificationCounts() {
         </Badge>
       </div>
     </div>
-  )
+  );
 }

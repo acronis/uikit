@@ -1,18 +1,23 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { AuthLayout, AuthLayoutCard, AuthLayoutLogo, AuthLayoutFooter } from '../auth-layout'
-import { Button } from '../button'
-import { Input } from '../input'
-import { Label } from '../label'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import {
+  AuthLayout,
+  AuthLayoutCard,
+  AuthLayoutLogo,
+  AuthLayoutFooter,
+} from '../auth-layout';
+import { Button } from '../button';
+import { Input } from '../input';
+import { Label } from '../label';
 
 const meta = {
   title: 'UI/AuthLayout',
   component: AuthLayout,
   parameters: { layout: 'fullscreen' },
   tags: ['autodocs'],
-} satisfies Meta<typeof AuthLayout>
+} satisfies Meta<typeof AuthLayout>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -63,7 +68,9 @@ export const SignUp: Story = {
             A
           </div>
         </AuthLayoutLogo>
-        <h2 className="mb-2 text-center text-xl font-semibold">Create an account</h2>
+        <h2 className="mb-2 text-center text-xl font-semibold">
+          Create an account
+        </h2>
         <p className="mb-6 text-center text-sm text-muted-foreground">
           Get started with a free account
         </p>
@@ -84,11 +91,14 @@ export const SignUp: Story = {
         </div>
         <AuthLayoutFooter>
           Already have an account?{' '}
-          <a href="#" className="text-primary underline-offset-4 hover:underline">
+          <a
+            href="#"
+            className="text-primary underline-offset-4 hover:underline"
+          >
             Sign in
           </a>
         </AuthLayoutFooter>
       </AuthLayoutCard>
     </AuthLayout>
   ),
-}
+};

@@ -1,1 +1,1 @@
-export { AlertVariants } from './AlertVariants'
+export { AlertVariants } from './AlertVariants';

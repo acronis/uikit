@@ -1,20 +1,26 @@
-import { TokenSet, ColorToken, TypographyConfig } from '@/types/playground'
+import { TokenSet, ColorToken, TypographyConfig } from '@/types/playground';
 
 /**
  * Default typography configuration
  */
 const DEFAULT_TYPOGRAPHY: TypographyConfig = {
   fontFamily: 'system-ui',
-  fontFamilyStack: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  fontFamilyStack:
+    'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   fontSize: '16px',
   lineHeight: '1.5',
   letterSpacing: '0',
-}
+};
 
 /**
  * Helper to create a color token from HSL values
  */
-const createToken = (h: number, s: number, l: number, opacity?: number): ColorToken => ({
+const createToken = (
+  h: number,
+  s: number,
+  l: number,
+  opacity?: number
+): ColorToken => ({
   h,
   s,
   l,
@@ -32,55 +38,55 @@ const createToken = (h: number, s: number, l: number, opacity?: number): ColorTo
  * @returns Hex color string with optional alpha channel
  */
 function hslToHex(h: number, s: number, l: number, opacity?: number): string {
-  const sDecimal = s / 100
-  const lDecimal = l / 100
-  const c = (1 - Math.abs(2 * lDecimal - 1)) * sDecimal
-  const x = c * (1 - Math.abs(((h / 60) % 2) - 1))
-  const m = lDecimal - c / 2
+  const sDecimal = s / 100;
+  const lDecimal = l / 100;
+  const c = (1 - Math.abs(2 * lDecimal - 1)) * sDecimal;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = lDecimal - c / 2;
   let r = 0,
     g = 0,
-    b = 0
+    b = 0;
 
   if (h >= 0 && h < 60) {
-    r = c
-    g = x
-    b = 0
+    r = c;
+    g = x;
+    b = 0;
   } else if (h >= 60 && h < 120) {
-    r = x
-    g = c
-    b = 0
+    r = x;
+    g = c;
+    b = 0;
   } else if (h >= 120 && h < 180) {
-    r = 0
-    g = c
-    b = x
+    r = 0;
+    g = c;
+    b = x;
   } else if (h >= 180 && h < 240) {
-    r = 0
-    g = x
-    b = c
+    r = 0;
+    g = x;
+    b = c;
   } else if (h >= 240 && h < 300) {
-    r = x
-    g = 0
-    b = c
+    r = x;
+    g = 0;
+    b = c;
   } else if (h >= 300 && h < 360) {
-    r = c
-    g = 0
-    b = x
+    r = c;
+    g = 0;
+    b = x;
   }
 
   const toHex = (n: number) => {
-    const hex = Math.round((n + m) * 255).toString(16)
-    return hex.length === 1 ? '0' + hex : hex
-  }
+    const hex = Math.round((n + m) * 255).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  };
 
-  const hexColor = `#${toHex(r)}${toHex(g)}${toHex(b)}`
+  const hexColor = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 
   // Add alpha channel if opacity is provided
   if (opacity !== undefined) {
-    const alpha = Math.round((opacity / 100) * 255).toString(16)
-    return `${hexColor}${alpha.length === 1 ? '0' + alpha : alpha}`
+    const alpha = Math.round((opacity / 100) * 255).toString(16);
+    return `${hexColor}${alpha.length === 1 ? '0' + alpha : alpha}`;
   }
 
-  return hexColor
+  return hexColor;
 }
 
 /**
@@ -141,7 +147,7 @@ export const DEFAULT_TOKEN_SET: TokenSet = {
     full: '9999px',
   },
   typography: DEFAULT_TYPOGRAPHY,
-}
+};
 
 /**
  * Acronis Electric token set
@@ -267,7 +273,7 @@ export const OCEAN_TOKEN_SET: TokenSet = {
     full: '9999px',
   },
   typography: DEFAULT_TYPOGRAPHY,
-}
+};
 
 /**
  * Forest theme (Green)
@@ -327,7 +333,7 @@ export const FOREST_TOKEN_SET: TokenSet = {
     full: '9999px',
   },
   typography: DEFAULT_TYPOGRAPHY,
-}
+};
 
 /**
  * Sunset theme (Orange/Red)
@@ -387,7 +393,7 @@ export const SUNSET_TOKEN_SET: TokenSet = {
     full: '9999px',
   },
   typography: DEFAULT_TYPOGRAPHY,
-}
+};
 
 /**
  * Lavender theme (Purple)
@@ -447,7 +453,7 @@ export const LAVENDER_TOKEN_SET: TokenSet = {
     full: '9999px',
   },
   typography: DEFAULT_TYPOGRAPHY,
-}
+};
 
 /**
  * Monochrome theme (Grayscale)
@@ -507,7 +513,7 @@ export const MONOCHROME_TOKEN_SET: TokenSet = {
     full: '9999px',
   },
   typography: DEFAULT_TYPOGRAPHY,
-}
+};
 
 /**
  * Acronis theme (Cyan/Blue brand colors)
@@ -567,7 +573,7 @@ export const ACRONIS_TOKEN_SET: TokenSet = {
     full: '9999px',
   },
   typography: DEFAULT_TYPOGRAPHY,
-}
+};
 
 /**
  * Acronis White Label theme (neutral slate)
@@ -627,7 +633,7 @@ export const WHITE_LABEL_TOKEN_SET: TokenSet = {
     full: '9999px',
   },
   typography: DEFAULT_TYPOGRAPHY,
-}
+};
 
 /**
  * All predefined token sets

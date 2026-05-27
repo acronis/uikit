@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { userEvent, within } from 'storybook/test'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within } from 'storybook/test';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,19 +10,19 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-} from '../dropdown-menu'
-import { Button } from '../button'
-import { withDarkMode } from './utils'
+} from '../dropdown-menu';
+import { Button } from '../button';
+import { withDarkMode } from './utils';
 
 const meta = {
   title: 'UI/DropdownMenu',
   component: DropdownMenu,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-} satisfies Meta<typeof DropdownMenu>
+} satisfies Meta<typeof DropdownMenu>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Open: Story = {
   render: () => (
@@ -40,11 +40,11 @@ export const Open: Story = {
     </DropdownMenu>
   ),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    await userEvent.click(canvas.getByRole('button', { name: 'Open Menu' }))
-    await userEvent.keyboard('{ArrowDown}')
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Open Menu' }));
+    await userEvent.keyboard('{ArrowDown}');
   },
-}
+};
 
 export const Default: Story = {
   render: () => (
@@ -61,7 +61,7 @@ export const Default: Story = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
-}
+};
 
 export const WithCheckboxes: Story = {
   render: () => (
@@ -78,7 +78,7 @@ export const WithCheckboxes: Story = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
-}
+};
 
 export const WithRadioGroup: Story = {
   render: () => (
@@ -97,7 +97,7 @@ export const WithRadioGroup: Story = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
-}
+};
 
 const dropdownRender = () => (
   <DropdownMenu>
@@ -112,45 +112,49 @@ const dropdownRender = () => (
       <DropdownMenuItem>Logout</DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
-)
+);
 
-const openMenuPlay = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-  const canvas = within(canvasElement)
-  await userEvent.click(canvas.getByRole('button', { name: 'Open Menu' }))
-  await userEvent.keyboard('{ArrowDown}')
-}
+const openMenuPlay = async ({
+  canvasElement,
+}: {
+  canvasElement: HTMLElement;
+}) => {
+  const canvas = within(canvasElement);
+  await userEvent.click(canvas.getByRole('button', { name: 'Open Menu' }));
+  await userEvent.keyboard('{ArrowDown}');
+};
 
 export const DarkDefault: Story = {
   name: 'Dark / Default',
   decorators: [withDarkMode()],
   render: dropdownRender,
   play: openMenuPlay,
-}
+};
 
 export const DarkAcronisDefault: Story = {
   name: 'Dark / Acronis Default',
   decorators: [withDarkMode('theme-acronis-default')],
   render: dropdownRender,
   play: openMenuPlay,
-}
+};
 
 export const DarkAcronisOcean: Story = {
   name: 'Dark / Acronis Ocean',
   decorators: [withDarkMode('theme-acronis-ocean')],
   render: dropdownRender,
   play: openMenuPlay,
-}
+};
 
 export const DarkCyberChat: Story = {
   name: 'Dark / Cyber Chat',
   decorators: [withDarkMode('theme-cyber-chat')],
   render: dropdownRender,
   play: openMenuPlay,
-}
+};
 
 export const DarkAcronisElectric: Story = {
   name: 'Dark / Acronis Electric',
   decorators: [withDarkMode('theme-acronis-electric')],
   render: dropdownRender,
   play: openMenuPlay,
-}
+};

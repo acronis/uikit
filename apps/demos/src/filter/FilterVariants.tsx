@@ -1,4 +1,4 @@
-import { Filter } from '@acronis-platform/shadcn-uikit/react'
+import { Filter } from '@acronis-platform/shadcn-uikit/react';
 
 export function FilterVariants() {
   return (
@@ -13,5 +13,5 @@ export function FilterVariants() {
         Default
       </Filter>
     </div>
-  )
+  );
 }

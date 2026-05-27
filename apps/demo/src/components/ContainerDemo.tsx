@@ -1,16 +1,17 @@
-import * as React from 'react'
-import { ContainerResponsive } from '@acronis-platform/shadcn-uikit-demos/container'
-import { DemoWithCode } from './DemoWithCode'
+import * as React from 'react';
+import { ContainerResponsive } from '@acronis-platform/shadcn-uikit-demos/container';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import containerResponsiveCode from '../../../demos/src/container/ContainerResponsive.tsx?raw'
+import containerResponsiveCode from '../../../demos/src/container/ContainerResponsive.tsx?raw';
 
 export function ContainerDemo() {
   return (
     <section className="demo-section">
       <h2>Container Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Responsive container with adaptive max-width and padding across different breakpoints.
+        Responsive container with adaptive max-width and padding across
+        different breakpoints.
       </p>
 
       <div className="space-y-8">

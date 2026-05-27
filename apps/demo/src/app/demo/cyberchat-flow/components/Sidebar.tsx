@@ -1,7 +1,7 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { SearchIcon, PlusIcon } from '@acronis-platform/shadcn-uikit'
-import { ScrollArea } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { SearchIcon, PlusIcon } from '@acronis-platform/shadcn-uikit';
+import { ScrollArea } from '@acronis-platform/shadcn-uikit/react';
 
 const mockChats = [
   { id: '1', title: 'Show me what you can', active: true },
@@ -9,7 +9,7 @@ const mockChats = [
   { id: '3', title: 'Sales follow-up', active: false },
   { id: '4', title: 'Marketing campaign strategy', active: false },
   { id: '5', title: 'Feature demo', active: false },
-]
+];
 
 export function Sidebar() {
   return (
@@ -18,10 +18,7 @@ export function Sidebar() {
       <div className="p-4 border-b border-border">
         <div className="relative">
           <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search..."
-            className="pl-9"
-          />
+          <Input placeholder="Search..." className="pl-9" />
         </div>
       </div>
 
@@ -40,9 +37,7 @@ export function Sidebar() {
                 <button
                   key={chat.id}
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                    chat.active
-                      ? 'bg-muted font-medium'
-                      : 'hover:bg-muted/50'
+                    chat.active ? 'bg-muted font-medium' : 'hover:bg-muted/50'
                   }`}
                 >
                   {chat.title}
@@ -53,5 +48,5 @@ export function Sidebar() {
         </ScrollArea>
       </div>
     </div>
-  )
+  );
 }

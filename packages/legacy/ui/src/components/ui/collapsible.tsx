@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import * as React from 'react'
-import { Collapsible as CollapsiblePrimitive } from '@base-ui/react'
+import * as React from 'react';
+import { Collapsible as CollapsiblePrimitive } from '@base-ui/react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
-const Collapsible = CollapsiblePrimitive.Root
-const CollapsibleTrigger = CollapsiblePrimitive.Trigger
+const Collapsible = CollapsiblePrimitive.Root;
+const CollapsibleTrigger = CollapsiblePrimitive.Trigger;
 // Base UI renamed Content → Panel; re-export under the original name for API compatibility
 const CollapsibleContent = React.forwardRef<
   React.ElementRef<typeof CollapsiblePrimitive.Panel>,
@@ -23,7 +23,7 @@ const CollapsibleContent = React.forwardRef<
     style={style}
     {...props}
   />
-))
-CollapsibleContent.displayName = 'CollapsibleContent'
+));
+CollapsibleContent.displayName = 'CollapsibleContent';
 
-export { Collapsible, CollapsibleTrigger, CollapsibleContent }
+export { Collapsible, CollapsibleTrigger, CollapsibleContent };

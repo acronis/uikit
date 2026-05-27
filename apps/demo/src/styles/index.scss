@@ -11,10 +11,10 @@
 @use '../../../../packages/legacy/ui/src/styles/base';
 
 /* Tailwind v4 imports */
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/preflight.css" layer(base);
-@import "tailwindcss/utilities.css" layer(utilities);
-@import "tw-animate-css/dist/tw-animate.css";
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities);
+@import 'tw-animate-css/dist/tw-animate.css';
 
 @config "../../tailwind.config.js";
 @source "../../../../packages/legacy/ui/src/components";

@@ -4,8 +4,8 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Card, CardContent } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Card, CardContent } from '@acronis-platform/shadcn-uikit/react';
 
 export function CarouselTestimonials() {
   return (
@@ -32,7 +32,9 @@ export function CarouselTestimonials() {
             <div className="p-1">
               <Card>
                 <CardContent className="flex flex-col items-center justify-center p-8 text-center min-h-[200px]">
-                  <p className="text-lg italic mb-4">&quot;{testimonial.quote}&quot;</p>
+                  <p className="text-lg italic mb-4">
+                    &quot;{testimonial.quote}&quot;
+                  </p>
                   <div>
                     <p className="font-semibold">{testimonial.author}</p>
                     <p className="text-sm text-gray-600">{testimonial.role}</p>
@@ -46,5 +48,5 @@ export function CarouselTestimonials() {
       <CarouselPrevious />
       <CarouselNext />
     </Carousel>
-  )
+  );
 }

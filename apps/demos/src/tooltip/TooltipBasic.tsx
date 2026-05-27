@@ -1,11 +1,11 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
   TooltipArrow,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 export function TooltipBasic() {
   return (
@@ -20,5 +20,5 @@ export function TooltipBasic() {
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  )
+  );
 }

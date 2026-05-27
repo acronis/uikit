@@ -1,4 +1,4 @@
-import { Input } from '@acronis-platform/shadcn-uikit/react'
+import { Input } from '@acronis-platform/shadcn-uikit/react';
 
 export function InputTypes() {
   return (
@@ -10,5 +10,5 @@ export function InputTypes() {
       <Input type="tel" placeholder="Phone input" />
       <Input type="url" placeholder="URL input" />
     </div>
-  )
+  );
 }

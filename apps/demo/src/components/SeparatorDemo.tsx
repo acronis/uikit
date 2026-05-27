@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   SeparatorHorizontal,
   SeparatorVertical,
@@ -11,21 +11,21 @@ import {
   SeparatorInToolbar,
   SeparatorMultiple,
   SeparatorInGrid,
-} from '@acronis-platform/shadcn-uikit-demos/separator'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/separator';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import separatorHorizontalCode from '../../../demos/src/separator/SeparatorHorizontal.tsx?raw'
-import separatorVerticalCode from '../../../demos/src/separator/SeparatorVertical.tsx?raw'
-import separatorWithTextCode from '../../../demos/src/separator/SeparatorWithText.tsx?raw'
-import separatorInNavigationCode from '../../../demos/src/separator/SeparatorInNavigation.tsx?raw'
-import separatorInListsCode from '../../../demos/src/separator/SeparatorInLists.tsx?raw'
-import separatorInCardsCode from '../../../demos/src/separator/SeparatorInCards.tsx?raw'
-import separatorInFormsCode from '../../../demos/src/separator/SeparatorInForms.tsx?raw'
-import separatorInSidebarCode from '../../../demos/src/separator/SeparatorInSidebar.tsx?raw'
-import separatorInToolbarCode from '../../../demos/src/separator/SeparatorInToolbar.tsx?raw'
-import separatorMultipleCode from '../../../demos/src/separator/SeparatorMultiple.tsx?raw'
-import separatorInGridCode from '../../../demos/src/separator/SeparatorInGrid.tsx?raw'
+import separatorHorizontalCode from '../../../demos/src/separator/SeparatorHorizontal.tsx?raw';
+import separatorVerticalCode from '../../../demos/src/separator/SeparatorVertical.tsx?raw';
+import separatorWithTextCode from '../../../demos/src/separator/SeparatorWithText.tsx?raw';
+import separatorInNavigationCode from '../../../demos/src/separator/SeparatorInNavigation.tsx?raw';
+import separatorInListsCode from '../../../demos/src/separator/SeparatorInLists.tsx?raw';
+import separatorInCardsCode from '../../../demos/src/separator/SeparatorInCards.tsx?raw';
+import separatorInFormsCode from '../../../demos/src/separator/SeparatorInForms.tsx?raw';
+import separatorInSidebarCode from '../../../demos/src/separator/SeparatorInSidebar.tsx?raw';
+import separatorInToolbarCode from '../../../demos/src/separator/SeparatorInToolbar.tsx?raw';
+import separatorMultipleCode from '../../../demos/src/separator/SeparatorMultiple.tsx?raw';
+import separatorInGridCode from '../../../demos/src/separator/SeparatorInGrid.tsx?raw';
 
 export function SeparatorDemo() {
   return (
@@ -125,6 +125,5 @@ export function SeparatorDemo() {
         </DemoWithCode>
       </div>
     </section>
-  )
+  );
 }
-

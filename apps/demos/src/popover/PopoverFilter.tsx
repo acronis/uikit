@@ -1,6 +1,10 @@
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Popover, PopoverContent, PopoverTrigger } from '@acronis-platform/shadcn-uikit/react'
-import { FilterIcon } from '@acronis-platform/shadcn-uikit'
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
+import { FilterIcon } from '@acronis-platform/shadcn-uikit';
 export function PopoverFilter() {
   return (
     <div className="flex justify-center rounded-lg border p-8">
@@ -42,5 +46,5 @@ export function PopoverFilter() {
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }

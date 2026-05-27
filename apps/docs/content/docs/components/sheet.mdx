@@ -44,22 +44,22 @@ The Sheet is a dialog variant that slides in from any screen edge. It is built o
 
 {/* SheetContentProps is not exported, so we document it manually */}
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `side` | `"top"` \| `"bottom"` \| `"left"` \| `"right"` | `"right"` | The edge the sheet slides in from. |
-| `portal` | `boolean` | `true` | Whether to render in a portal. |
-| `className` | `string` | — | Additional CSS class names. |
+| Prop        | Type                                           | Default   | Description                        |
+| ----------- | ---------------------------------------------- | --------- | ---------------------------------- |
+| `side`      | `"top"` \| `"bottom"` \| `"left"` \| `"right"` | `"right"` | The edge the sheet slides in from. |
+| `portal`    | `boolean`                                      | `true`    | Whether to render in a portal.     |
+| `className` | `string`                                       | —         | Additional CSS class names.        |
 
 ### Compound components
 
-| Component | Description |
-|-----------|-------------|
-| `Sheet` | Root component (Base UI `Dialog.Root`). Controls open/close state. |
-| `SheetTrigger` | Button that opens the sheet (`Dialog.Trigger`). |
-| `SheetContent` | The sliding panel. Accepts `side` and `portal` props. |
-| `SheetHeader` | Container for title and description at the top. |
-| `SheetTitle` | Heading within the sheet (`Dialog.Title`). |
-| `SheetDescription` | Description text (`Dialog.Description`). |
-| `SheetFooter` | Container for actions at the bottom. |
-| `SheetClose` | Button that closes the sheet (`Dialog.Close`). |
-| `SheetOverlay` | Backdrop overlay behind the sheet. |
+| Component          | Description                                                        |
+| ------------------ | ------------------------------------------------------------------ |
+| `Sheet`            | Root component (Base UI `Dialog.Root`). Controls open/close state. |
+| `SheetTrigger`     | Button that opens the sheet (`Dialog.Trigger`).                    |
+| `SheetContent`     | The sliding panel. Accepts `side` and `portal` props.              |
+| `SheetHeader`      | Container for title and description at the top.                    |
+| `SheetTitle`       | Heading within the sheet (`Dialog.Title`).                         |
+| `SheetDescription` | Description text (`Dialog.Description`).                           |
+| `SheetFooter`      | Container for actions at the bottom.                               |
+| `SheetClose`       | Button that closes the sheet (`Dialog.Close`).                     |
+| `SheetOverlay`     | Backdrop overlay behind the sheet.                                 |

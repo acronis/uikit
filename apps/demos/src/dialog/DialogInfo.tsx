@@ -7,9 +7,9 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { InfoIcon } from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { InfoIcon } from '@acronis-platform/shadcn-uikit';
 export function DialogInfo() {
   return (
     <Dialog>
@@ -28,8 +28,8 @@ export function DialogInfo() {
               <div className="space-y-2">
                 <p className="text-sm font-medium">Important Information</p>
                 <p className="text-sm text-gray-600">
-                  This dialog provides important information about the system. Please read
-                  carefully before proceeding.
+                  This dialog provides important information about the system.
+                  Please read carefully before proceeding.
                 </p>
               </div>
             </div>
@@ -41,11 +41,9 @@ export function DialogInfo() {
           </div>
         </DialogBody>
         <DialogFooter>
-          <DialogTrigger render={<Button />}>
-            Got it
-          </DialogTrigger>
+          <DialogTrigger render={<Button />}>Got it</DialogTrigger>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

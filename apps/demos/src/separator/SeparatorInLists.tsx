@@ -1,4 +1,4 @@
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
 
 export function SeparatorInLists() {
   return (
@@ -18,5 +18,5 @@ export function SeparatorInLists() {
         <p className="text-sm text-muted-foreground">Description for item 3</p>
       </div>
     </div>
-  )
+  );
 }

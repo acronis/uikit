@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { cn } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { cn } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   Command,
   CommandEmpty,
@@ -8,10 +8,14 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Popover, PopoverContent, PopoverTrigger } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@acronis-platform/shadcn-uikit/react';
 
-import { CheckIcon, ChevronUpdownIcon } from '@acronis-platform/shadcn-uikit'
+import { CheckIcon, ChevronUpdownIcon } from '@acronis-platform/shadcn-uikit';
 const languages = [
   { value: 'javascript', label: 'JavaScript' },
   { value: 'typescript', label: 'TypeScript' },
@@ -21,7 +25,7 @@ const languages = [
   { value: 'go', label: 'Go' },
   { value: 'rust', label: 'Rust' },
   { value: 'php', label: 'PHP' },
-]
+];
 
 const countries = [
   { value: 'us', label: 'United States' },
@@ -32,14 +36,14 @@ const countries = [
   { value: 'fr', label: 'France' },
   { value: 'jp', label: 'Japan' },
   { value: 'cn', label: 'China' },
-]
+];
 
 export function ComboboxWidths() {
-  const [languageOpen, setLanguageOpen] = React.useState(false)
-  const [languageValue, setLanguageValue] = React.useState('')
+  const [languageOpen, setLanguageOpen] = React.useState(false);
+  const [languageValue, setLanguageValue] = React.useState('');
 
-  const [countryOpen, setCountryOpen] = React.useState(false)
-  const [countryValue, setCountryValue] = React.useState('')
+  const [countryOpen, setCountryOpen] = React.useState(false);
+  const [countryValue, setCountryValue] = React.useState('');
 
   return (
     <div className="flex flex-wrap gap-4">
@@ -70,14 +74,18 @@ export function ComboboxWidths() {
                     key={lang.value}
                     value={lang.value}
                     onSelect={(currentValue) => {
-                      setLanguageValue(currentValue === languageValue ? '' : currentValue)
-                      setLanguageOpen(false)
+                      setLanguageValue(
+                        currentValue === languageValue ? '' : currentValue
+                      );
+                      setLanguageOpen(false);
                     }}
                   >
                     <CheckIcon
                       className={cn(
                         'mr-2 h-4 w-4',
-                        languageValue === lang.value ? 'opacity-100' : 'opacity-0'
+                        languageValue === lang.value
+                          ? 'opacity-100'
+                          : 'opacity-0'
                       )}
                     />
                     {lang.label}
@@ -116,14 +124,18 @@ export function ComboboxWidths() {
                     key={country.value}
                     value={country.value}
                     onSelect={(currentValue) => {
-                      setCountryValue(currentValue === countryValue ? '' : currentValue)
-                      setCountryOpen(false)
+                      setCountryValue(
+                        currentValue === countryValue ? '' : currentValue
+                      );
+                      setCountryOpen(false);
                     }}
                   >
                     <CheckIcon
                       className={cn(
                         'mr-2 h-4 w-4',
-                        countryValue === country.value ? 'opacity-100' : 'opacity-0'
+                        countryValue === country.value
+                          ? 'opacity-100'
+                          : 'opacity-0'
                       )}
                     />
                     {country.label}
@@ -135,5 +147,5 @@ export function ComboboxWidths() {
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }

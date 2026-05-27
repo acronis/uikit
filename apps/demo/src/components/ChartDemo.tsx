@@ -1,9 +1,9 @@
-import * as React from 'react'
-import { ChartAll } from '@acronis-platform/shadcn-uikit-demos/chart'
-import { DemoWithCode } from './DemoWithCode'
+import * as React from 'react';
+import { ChartAll } from '@acronis-platform/shadcn-uikit-demos/chart';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import chartAllCode from '../../../demos/src/chart/ChartAll.tsx?raw'
+import chartAllCode from '../../../demos/src/chart/ChartAll.tsx?raw';
 
 export function ChartDemo() {
   return (

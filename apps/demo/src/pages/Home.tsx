@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 export function Home() {
   return (
@@ -45,12 +45,16 @@ export function Home() {
 
         <div className="rounded-lg border p-6">
           <h3 className="mb-2 text-lg font-semibold">
-            <Link to="/demo">Demo</Link>,{' '}
-            <Link to="/demo/cyberchat">Chat</Link>,{' '}
-            <Link to="/demo/cyberchat-themed">Chat (<i>Host Theming</i>)</Link>
+            <Link to="/demo">Demo</Link>, <Link to="/demo/cyberchat">Chat</Link>
+            ,{' '}
+            <Link to="/demo/cyberchat-themed">
+              Chat (<i>Host Theming</i>)
+            </Link>
           </h3>
           <p className="text-sm text-muted-foreground">
-            Full-featured demo application. &ldquo;Host Theming&rdquo; shows <code>applyTheme</code> with <code>extraRoots</code> targeting an inner container &mdash; simulating shadow DOM embedding.
+            Full-featured demo application. &ldquo;Host Theming&rdquo; shows{' '}
+            <code>applyTheme</code> with <code>extraRoots</code> targeting an
+            inner container &mdash; simulating shadow DOM embedding.
           </p>
         </div>
 
@@ -68,7 +72,8 @@ export function Home() {
             <Link to="/widgets">Dashboard Widgets</Link>
           </h3>
           <p className="text-sm text-muted-foreground">
-            Chart widgets, alerts, progress, data tables, text metrics, and placeholders
+            Chart widgets, alerts, progress, data tables, text metrics, and
+            placeholders
           </p>
         </div>
 
@@ -77,7 +82,8 @@ export function Home() {
             <Link to="/generic-components">Generic Components</Link>
           </h3>
           <p className="text-sm text-muted-foreground">
-            PageHeader, PageContent, Section, Stack, Grid — layout building blocks
+            PageHeader, PageContent, Section, Stack, Grid — layout building
+            blocks
           </p>
         </div>
 
@@ -86,7 +92,8 @@ export function Home() {
             <Link to="/layouts">Layout Components</Link>
           </h3>
           <p className="text-sm text-muted-foreground">
-            AppShell, AuthLayout, DashboardLayout, SplitLayout — page-level structural shells
+            AppShell, AuthLayout, DashboardLayout, SplitLayout — page-level
+            structural shells
           </p>
         </div>
 
@@ -95,7 +102,8 @@ export function Home() {
             <Link to="/patterns">Pattern Demos</Link>
           </h3>
           <p className="text-sm text-muted-foreground">
-            Dashboard, Settings, Data Management, Login/Signup, Error Pages — semi-functional page compositions
+            Dashboard, Settings, Data Management, Login/Signup, Error Pages —
+            semi-functional page compositions
           </p>
         </div>
 
@@ -146,7 +154,9 @@ export function Home() {
 
         <div className="rounded-lg border p-6 border-primary">
           <h3 className="mb-2 text-lg font-semibold">
-            <Link to="/scatterchart-playground">🔵 ScatterChart Playground</Link>
+            <Link to="/scatterchart-playground">
+              🔵 ScatterChart Playground
+            </Link>
           </h3>
           <p className="text-sm text-muted-foreground">
             Explore ScatterChart: correlation, point shapes, reference lines
@@ -155,7 +165,9 @@ export function Home() {
 
         <div className="rounded-lg border p-6 border-primary">
           <h3 className="mb-2 text-lg font-semibold">
-            <Link to="/composedchart-playground">🔀 ComposedChart Playground</Link>
+            <Link to="/composedchart-playground">
+              🔀 ComposedChart Playground
+            </Link>
           </h3>
           <p className="text-sm text-muted-foreground">
             Mix Line, Bar, Area in one chart
@@ -173,7 +185,9 @@ export function Home() {
 
         <div className="rounded-lg border p-6 border-primary">
           <h3 className="mb-2 text-lg font-semibold">
-            <Link to="/treemapchart-playground">🗂️ TreemapChart Playground</Link>
+            <Link to="/treemapchart-playground">
+              🗂️ TreemapChart Playground
+            </Link>
           </h3>
           <p className="text-sm text-muted-foreground">
             Hierarchical data as nested rectangles

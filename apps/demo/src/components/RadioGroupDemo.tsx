@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   RadioGroupBasic,
   RadioGroupControlled,
@@ -10,28 +10,28 @@ import {
   RadioGroupCards,
   RadioGroupSizes,
   RadioGroupPriority,
-} from '@acronis-platform/shadcn-uikit-demos/radio-group'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/radio-group';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import radioGroupBasicCode from '../../../demos/src/radio-group/RadioGroupBasic.tsx?raw'
-import radioGroupControlledCode from '../../../demos/src/radio-group/RadioGroupControlled.tsx?raw'
-import radioGroupWithDescriptionsCode from '../../../demos/src/radio-group/RadioGroupWithDescriptions.tsx?raw'
-import radioGroupDisabledCode from '../../../demos/src/radio-group/RadioGroupDisabled.tsx?raw'
-import radioGroupHorizontalCode from '../../../demos/src/radio-group/RadioGroupHorizontal.tsx?raw'
-import radioGroupFormCode from '../../../demos/src/radio-group/RadioGroupForm.tsx?raw'
-import radioGroupPaymentCode from '../../../demos/src/radio-group/RadioGroupPayment.tsx?raw'
-import radioGroupCardsCode from '../../../demos/src/radio-group/RadioGroupCards.tsx?raw'
-import radioGroupSizesCode from '../../../demos/src/radio-group/RadioGroupSizes.tsx?raw'
-import radioGroupPriorityCode from '../../../demos/src/radio-group/RadioGroupPriority.tsx?raw'
+import radioGroupBasicCode from '../../../demos/src/radio-group/RadioGroupBasic.tsx?raw';
+import radioGroupControlledCode from '../../../demos/src/radio-group/RadioGroupControlled.tsx?raw';
+import radioGroupWithDescriptionsCode from '../../../demos/src/radio-group/RadioGroupWithDescriptions.tsx?raw';
+import radioGroupDisabledCode from '../../../demos/src/radio-group/RadioGroupDisabled.tsx?raw';
+import radioGroupHorizontalCode from '../../../demos/src/radio-group/RadioGroupHorizontal.tsx?raw';
+import radioGroupFormCode from '../../../demos/src/radio-group/RadioGroupForm.tsx?raw';
+import radioGroupPaymentCode from '../../../demos/src/radio-group/RadioGroupPayment.tsx?raw';
+import radioGroupCardsCode from '../../../demos/src/radio-group/RadioGroupCards.tsx?raw';
+import radioGroupSizesCode from '../../../demos/src/radio-group/RadioGroupSizes.tsx?raw';
+import radioGroupPriorityCode from '../../../demos/src/radio-group/RadioGroupPriority.tsx?raw';
 
 export function RadioGroupDemo() {
   return (
     <section className="demo-section">
       <h2>Radio Group Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Used when a group of options is mutually exclusive and only one option can be selected from
-        that group.
+        Used when a group of options is mutually exclusive and only one option
+        can be selected from that group.
       </p>
 
       <div className="space-y-8">
@@ -116,5 +116,5 @@ export function RadioGroupDemo() {
         </DemoWithCode>
       </div>
     </section>
-  )
+  );
 }

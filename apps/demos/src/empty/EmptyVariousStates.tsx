@@ -5,10 +5,14 @@ import {
   EmptyTitle,
   EmptyDescription,
   EmptyActions,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { CalendarIcon, MailIcon, ShoppingCartIcon } from '@acronis-platform/shadcn-uikit'
-import { DatabaseIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import {
+  CalendarIcon,
+  MailIcon,
+  ShoppingCartIcon,
+} from '@acronis-platform/shadcn-uikit';
+import { DatabaseIcon } from '../icons/missing-icons';
 export function EmptyVariousStates() {
   return (
     <div className="grid gap-4 md:grid-cols-2">
@@ -19,7 +23,9 @@ export function EmptyVariousStates() {
           </EmptyIcon>
           <EmptyHeader>
             <EmptyTitle>No data available</EmptyTitle>
-            <EmptyDescription>There is no data to display at this time.</EmptyDescription>
+            <EmptyDescription>
+              There is no data to display at this time.
+            </EmptyDescription>
           </EmptyHeader>
         </Empty>
       </div>
@@ -31,7 +37,9 @@ export function EmptyVariousStates() {
           </EmptyIcon>
           <EmptyHeader>
             <EmptyTitle>Cart is empty</EmptyTitle>
-            <EmptyDescription>Add items to your cart to get started.</EmptyDescription>
+            <EmptyDescription>
+              Add items to your cart to get started.
+            </EmptyDescription>
           </EmptyHeader>
           <EmptyActions>
             <Button variant="outline">Browse Products</Button>
@@ -46,7 +54,9 @@ export function EmptyVariousStates() {
           </EmptyIcon>
           <EmptyHeader>
             <EmptyTitle>No events scheduled</EmptyTitle>
-            <EmptyDescription>Create your first event to get started.</EmptyDescription>
+            <EmptyDescription>
+              Create your first event to get started.
+            </EmptyDescription>
           </EmptyHeader>
           <EmptyActions>
             <Button>Create Event</Button>
@@ -66,5 +76,5 @@ export function EmptyVariousStates() {
         </Empty>
       </div>
     </div>
-  )
+  );
 }

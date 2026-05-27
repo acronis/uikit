@@ -1,32 +1,33 @@
-import { useState } from 'react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+import { useState } from 'react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 import {
   ArrowRightIcon,
   ChevronDownIcon,
   CloseIcon,
   RotateIcon,
   SearchIcon,
-} from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit';
 export function InputSearchDemo() {
-  const [search, setSearch] = useState('')
-  const [searchWithFolder, setSearchWithFolder] = useState('')
-  const [searchFilled, setSearchFilled] = useState('Request')
-  const [searchLoading, setSearchLoading] = useState(false)
-  const [folderPath, setFolderPath] = useState('')
-  const [folderPathFilled, setFolderPathFilled] = useState('C:\\Windows\\Test')
+  const [search, setSearch] = useState('');
+  const [searchWithFolder, setSearchWithFolder] = useState('');
+  const [searchFilled, setSearchFilled] = useState('Request');
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [folderPath, setFolderPath] = useState('');
+  const [folderPathFilled, setFolderPathFilled] = useState('C:\\Windows\\Test');
 
   const handleSearch = () => {
-    setSearchLoading(true)
-    setTimeout(() => setSearchLoading(false), 2000)
-  }
+    setSearchLoading(true);
+    setTimeout(() => setSearchLoading(false), 2000);
+  };
 
   return (
     <section className="demo-section">
       <h2>Search Input Component</h2>
       <p className="demo-description">
-        Search input component with various states including loading, filled, folder search, and path
-        input. Based on Acronis Design System specifications from Figma.
+        Search input component with various states including loading, filled,
+        folder search, and path input. Based on Acronis Design System
+        specifications from Figma.
       </p>
 
       <div className="demo-grid">
@@ -121,7 +122,9 @@ export function InputSearchDemo() {
                 className="h-8 pr-[140px] text-sm border-[rgba(38,104,197,0.3)]"
               />
               <div className="absolute right-0 top-0 h-full flex items-center gap-4 pr-3">
-                <span className="text-sm font-semibold text-[#243143]">In folder</span>
+                <span className="text-sm font-semibold text-[#243143]">
+                  In folder
+                </span>
                 <div className="h-full w-px bg-[rgba(38,104,197,0.3)]" />
                 <SearchIcon className="h-4 w-4 text-[#2668C5]" />
               </div>
@@ -144,7 +147,9 @@ export function InputSearchDemo() {
                 className="h-8 pr-[140px] text-sm border-[#2668C5] focus-visible:ring-[#2668C5]"
               />
               <div className="absolute right-0 top-0 h-full flex items-center gap-4 pr-3">
-                <span className="text-sm font-semibold text-[#243143]">In folder</span>
+                <span className="text-sm font-semibold text-[#243143]">
+                  In folder
+                </span>
                 <div className="h-full w-px bg-[#2668C5]" />
                 <RotateIcon className="h-4 w-4 text-[#408BEA] animate-spin" />
               </div>
@@ -167,7 +172,9 @@ export function InputSearchDemo() {
                 className="h-8 pr-[140px] text-sm border-[rgba(38,104,197,0.3)]"
               />
               <div className="absolute right-0 top-0 h-full flex items-center gap-4 pr-3">
-                <span className="text-sm font-semibold text-[#243143]">In folder</span>
+                <span className="text-sm font-semibold text-[#243143]">
+                  In folder
+                </span>
                 <div className="h-full w-px bg-[rgba(38,104,197,0.3)]" />
                 <button
                   type="button"
@@ -281,7 +288,8 @@ export function InputSearchDemo() {
               <strong className="font-semibold">Height:</strong> 32px (fixed)
             </div>
             <div>
-              <strong className="font-semibold">Padding:</strong> 16px horizontal
+              <strong className="font-semibold">Padding:</strong> 16px
+              horizontal
             </div>
             <div>
               <strong className="font-semibold">Border Radius:</strong> 4px
@@ -290,19 +298,23 @@ export function InputSearchDemo() {
               <strong className="font-semibold">Icon Size:</strong> 16×16px
             </div>
             <div>
-              <strong className="font-semibold">Gap:</strong> 16px between elements
+              <strong className="font-semibold">Gap:</strong> 16px between
+              elements
             </div>
             <div>
-              <strong className="font-semibold">Border Default:</strong> rgba(38, 104, 197, 0.3)
+              <strong className="font-semibold">Border Default:</strong>{' '}
+              rgba(38, 104, 197, 0.3)
             </div>
             <div>
               <strong className="font-semibold">Border Focus:</strong> #2668C5
             </div>
             <div>
-              <strong className="font-semibold">Icon Color:</strong> #2668C5 (Technical/fixed-link)
+              <strong className="font-semibold">Icon Color:</strong> #2668C5
+              (Technical/fixed-link)
             </div>
             <div>
-              <strong className="font-semibold">Loading Color:</strong> #408BEA (Nav/brand-secondary)
+              <strong className="font-semibold">Loading Color:</strong> #408BEA
+              (Nav/brand-secondary)
             </div>
             <div>
               <strong className="font-semibold">Typography:</strong>
@@ -316,5 +328,5 @@ export function InputSearchDemo() {
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -7,15 +7,13 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { CheckCircleIcon } from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { CheckCircleIcon } from '@acronis-platform/shadcn-uikit';
 export function DialogSuccess() {
   return (
     <Dialog>
-      <DialogTrigger render={<Button />}>
-        Complete Task
-      </DialogTrigger>
+      <DialogTrigger render={<Button />}>Complete Task</DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Success</DialogTitle>
@@ -35,11 +33,9 @@ export function DialogSuccess() {
           </div>
         </DialogBody>
         <DialogFooter>
-          <DialogTrigger render={<Button />}>
-            Close
-          </DialogTrigger>
+          <DialogTrigger render={<Button />}>Close</DialogTrigger>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

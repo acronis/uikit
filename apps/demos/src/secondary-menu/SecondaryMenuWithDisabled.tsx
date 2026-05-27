@@ -1,17 +1,24 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import {
   SecondaryMenu,
   SecondaryMenuContent,
   SecondaryMenuGroup,
   SecondaryMenuItem,
-} from '@acronis-platform/shadcn-uikit/react'
-import { FileTextIcon, ImageIcon, VideosIcon } from '@acronis-platform/shadcn-uikit'
-import { MusicIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit/react';
+import {
+  FileTextIcon,
+  ImageIcon,
+  VideosIcon,
+} from '@acronis-platform/shadcn-uikit';
+import { MusicIcon } from '../icons/missing-icons';
 export function SecondaryMenuWithDisabled() {
-  const [activeItem, setActiveItem] = useState('opt1')
+  const [activeItem, setActiveItem] = useState('opt1');
 
   return (
-    <div className="border rounded-lg overflow-hidden" style={{ height: '400px' }}>
+    <div
+      className="border rounded-lg overflow-hidden"
+      style={{ height: '400px' }}
+    >
       <SecondaryMenu>
         <SecondaryMenuContent>
           <SecondaryMenuGroup title="Options">
@@ -22,7 +29,10 @@ export function SecondaryMenuWithDisabled() {
             >
               Available Option
             </SecondaryMenuItem>
-            <SecondaryMenuItem disabled icon={<ImageIcon className="h-4 w-4" />}>
+            <SecondaryMenuItem
+              disabled
+              icon={<ImageIcon className="h-4 w-4" />}
+            >
               Disabled Option
             </SecondaryMenuItem>
             <SecondaryMenuItem
@@ -32,12 +42,15 @@ export function SecondaryMenuWithDisabled() {
             >
               Another Available
             </SecondaryMenuItem>
-            <SecondaryMenuItem disabled icon={<MusicIcon className="h-4 w-4" />}>
+            <SecondaryMenuItem
+              disabled
+              icon={<MusicIcon className="h-4 w-4" />}
+            >
               Coming Soon
             </SecondaryMenuItem>
           </SecondaryMenuGroup>
         </SecondaryMenuContent>
       </SecondaryMenu>
     </div>
-  )
+  );
 }

@@ -1,33 +1,36 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   type CarouselApi,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Card, CardContent } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { ChevronLeftIcon, ChevronRightIcon } from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Card, CardContent } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from '@acronis-platform/shadcn-uikit';
 export function CarouselFigmaStyle() {
-  const [api, setApi] = React.useState<CarouselApi>()
-  const [current, setCurrent] = React.useState(0)
-  const [count, setCount] = React.useState(0)
+  const [api, setApi] = React.useState<CarouselApi>();
+  const [current, setCurrent] = React.useState(0);
+  const [count, setCount] = React.useState(0);
 
   React.useEffect(() => {
     if (!api) {
-      return
+      return;
     }
 
-    setCount(api.scrollSnapList().length)
-    setCurrent(api.selectedScrollSnap())
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap());
 
     api.on('select', () => {
-      setCurrent(api.selectedScrollSnap())
-    })
-  }, [api])
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
 
-  const isFirst = current === 0
-  const isLast = current === count - 1
+  const isFirst = current === 0;
+  const isLast = current === count - 1;
 
   return (
     <div className="w-full max-w-sm mx-auto space-y-4">
@@ -94,11 +97,14 @@ export function CarouselFigmaStyle() {
           <Button className="w-full bg-[hsl(var(--carousel-button-bg))] text-[hsl(var(--carousel-button-text))] hover:opacity-90">
             Protect devices
           </Button>
-          <Button variant="ghost" className="w-full text-[hsl(var(--carousel-nav-text))]">
+          <Button
+            variant="ghost"
+            className="w-full text-[hsl(var(--carousel-nav-text))]"
+          >
             Go back
           </Button>
         </div>
       )}
     </div>
-  )
+  );
 }

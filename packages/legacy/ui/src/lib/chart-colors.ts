@@ -16,7 +16,7 @@ export const CHART_COLORS = [
   'var(--av-chart-yellow)',
   'var(--av-chart-brown)',
   'var(--av-chart-grey)',
-] as const
+] as const;
 
 export const CHART_COLORS_SEMANTIC = {
   primary: 'var(--av-chart-blue)',
@@ -26,21 +26,21 @@ export const CHART_COLORS_SEMANTIC = {
   info: 'var(--av-chart-info)',
   critical: 'var(--av-chart-critical)',
   neutral: 'var(--av-chart-grey)',
-} as const
+} as const;
 
 /**
  * Get a color from the palette by index
  * Automatically cycles through colors if index exceeds palette length
  */
 export function getChartColor(index: number): string {
-  return CHART_COLORS[index % CHART_COLORS.length]
+  return CHART_COLORS[index % CHART_COLORS.length];
 }
 
 /**
  * Get multiple colors from the palette
  */
 export function getChartColors(count: number): string[] {
-  return Array.from({ length: count }, (_, i) => getChartColor(i))
+  return Array.from({ length: count }, (_, i) => getChartColor(i));
 }
 
 /**
@@ -55,5 +55,5 @@ export function addColorsToData<T extends Record<string, any>>(
   return data.map((item, index) => ({
     ...item,
     [colorKey]: getChartColor(startIndex + index),
-  }))
+  }));
 }

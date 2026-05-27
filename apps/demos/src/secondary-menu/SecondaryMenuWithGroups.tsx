@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import {
   SecondaryMenu,
   SecondaryMenuContent,
   SecondaryMenuGroup,
   SecondaryMenuItem,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 import {
   DownloadIcon,
   EditIcon,
@@ -13,13 +13,16 @@ import {
   TrashOIcon,
   UploadIcon,
   VideosIcon,
-} from '@acronis-platform/shadcn-uikit'
-import { MusicIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit';
+import { MusicIcon } from '../icons/missing-icons';
 export function SecondaryMenuWithGroups() {
-  const [activeItem, setActiveItem] = useState('documents')
+  const [activeItem, setActiveItem] = useState('documents');
 
   return (
-    <div className="border rounded-lg overflow-hidden" style={{ height: '500px' }}>
+    <div
+      className="border rounded-lg overflow-hidden"
+      style={{ height: '500px' }}
+    >
       <SecondaryMenu>
         <SecondaryMenuContent>
           <SecondaryMenuGroup title="Content">
@@ -86,5 +89,5 @@ export function SecondaryMenuWithGroups() {
         </SecondaryMenuContent>
       </SecondaryMenu>
     </div>
-  )
+  );
 }

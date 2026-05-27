@@ -1,4 +1,4 @@
-import { Textarea } from '@acronis-platform/shadcn-uikit/react'
+import { Textarea } from '@acronis-platform/shadcn-uikit/react';
 
 export function TextareaWithHelper() {
   return (
@@ -22,5 +22,5 @@ export function TextareaWithHelper() {
         </p>
       </div>
     </div>
-  )
+  );
 }

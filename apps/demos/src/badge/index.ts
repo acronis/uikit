@@ -1,6 +1,6 @@
-export { BadgeStatusVariants } from './BadgeStatusVariants'
-export { BadgeDefaultVariants } from './BadgeDefaultVariants'
-export { BadgeSmall } from './BadgeSmall'
-export { BadgeWithIcons } from './BadgeWithIcons'
-export { BadgeStatusIndicators } from './BadgeStatusIndicators'
-export { BadgeNotificationCounts } from './BadgeNotificationCounts'
+export { BadgeStatusVariants } from './BadgeStatusVariants';
+export { BadgeDefaultVariants } from './BadgeDefaultVariants';
+export { BadgeSmall } from './BadgeSmall';
+export { BadgeWithIcons } from './BadgeWithIcons';
+export { BadgeStatusIndicators } from './BadgeStatusIndicators';
+export { BadgeNotificationCounts } from './BadgeNotificationCounts';

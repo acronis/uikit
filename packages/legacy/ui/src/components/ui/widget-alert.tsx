@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { cva, type VariantProps } from 'class-variance-authority'
+import * as React from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 /**
  * WidgetAlert — Dashboard alert notification widget.
@@ -34,9 +34,12 @@ const widgetAlertVariants = cva(
     variants: {
       variant: {
         info: 'bg-[var(--av-fixed-info-accent)] border-[var(--av-fixed-info)]',
-        success: 'bg-[var(--av-fixed-success-accent)] border-[var(--av-fixed-success)]',
-        warning: 'bg-[var(--av-fixed-warning-accent)] border-[var(--av-fixed-warning)]',
-        danger: 'bg-[var(--av-fixed-danger-accent)] border-[var(--av-fixed-danger)]',
+        success:
+          'bg-[var(--av-fixed-success-accent)] border-[var(--av-fixed-success)]',
+        warning:
+          'bg-[var(--av-fixed-warning-accent)] border-[var(--av-fixed-warning)]',
+        danger:
+          'bg-[var(--av-fixed-danger-accent)] border-[var(--av-fixed-danger)]',
       },
       interactive: {
         true: 'cursor-pointer hover:bg-[var(--av-el-secondary-hover)] active:bg-[var(--av-el-secondary-active)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--av-fixed-focus)]',
@@ -48,10 +51,11 @@ const widgetAlertVariants = cva(
       interactive: false,
     },
   }
-)
+);
 
 export interface WidgetAlertProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof widgetAlertVariants> {}
 
 const WidgetAlert = React.forwardRef<HTMLDivElement, WidgetAlertProps>(
@@ -64,8 +68,8 @@ const WidgetAlert = React.forwardRef<HTMLDivElement, WidgetAlertProps>(
       {...props}
     />
   )
-)
-WidgetAlert.displayName = 'WidgetAlert'
+);
+WidgetAlert.displayName = 'WidgetAlert';
 
 const WidgetAlertIcon = React.forwardRef<
   HTMLDivElement,
@@ -79,8 +83,8 @@ const WidgetAlertIcon = React.forwardRef<
     )}
     {...props}
   />
-))
-WidgetAlertIcon.displayName = 'WidgetAlertIcon'
+));
+WidgetAlertIcon.displayName = 'WidgetAlertIcon';
 
 const WidgetAlertContent = React.forwardRef<
   HTMLDivElement,
@@ -94,8 +98,8 @@ const WidgetAlertContent = React.forwardRef<
     )}
     {...props}
   />
-))
-WidgetAlertContent.displayName = 'WidgetAlertContent'
+));
+WidgetAlertContent.displayName = 'WidgetAlertContent';
 
 const WidgetAlertTitle = React.forwardRef<
   HTMLDivElement,
@@ -106,8 +110,8 @@ const WidgetAlertTitle = React.forwardRef<
     className={cn('text-sm font-semibold leading-6 truncate', className)}
     {...props}
   />
-))
-WidgetAlertTitle.displayName = 'WidgetAlertTitle'
+));
+WidgetAlertTitle.displayName = 'WidgetAlertTitle';
 
 const WidgetAlertDate = React.forwardRef<
   HTMLDivElement,
@@ -115,11 +119,14 @@ const WidgetAlertDate = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('text-sm leading-6 text-[var(--av-fixed-primary)]', className)}
+    className={cn(
+      'text-sm leading-6 text-[var(--av-fixed-primary)]',
+      className
+    )}
     {...props}
   />
-))
-WidgetAlertDate.displayName = 'WidgetAlertDate'
+));
+WidgetAlertDate.displayName = 'WidgetAlertDate';
 
 const WidgetAlertDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -127,11 +134,14 @@ const WidgetAlertDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn('text-sm leading-6 text-[var(--av-fixed-primary)]', className)}
+    className={cn(
+      'text-sm leading-6 text-[var(--av-fixed-primary)]',
+      className
+    )}
     {...props}
   />
-))
-WidgetAlertDescription.displayName = 'WidgetAlertDescription'
+));
+WidgetAlertDescription.displayName = 'WidgetAlertDescription';
 
 const WidgetAlertActions = React.forwardRef<
   HTMLDivElement,
@@ -145,8 +155,8 @@ const WidgetAlertActions = React.forwardRef<
     )}
     {...props}
   />
-))
-WidgetAlertActions.displayName = 'WidgetAlertActions'
+));
+WidgetAlertActions.displayName = 'WidgetAlertActions';
 
 export {
   WidgetAlert,
@@ -157,4 +167,4 @@ export {
   WidgetAlertDescription,
   WidgetAlertActions,
   widgetAlertVariants,
-}
+};

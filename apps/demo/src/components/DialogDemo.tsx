@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   DialogBasic,
   DialogSizes,
@@ -9,27 +9,27 @@ import {
   DialogInfo,
   DialogWithTextarea,
   DialogScrollable,
-} from '@acronis-platform/shadcn-uikit-demos/dialog'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/dialog';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import dialogBasicCode from '../../../demos/src/dialog/DialogBasic.tsx?raw'
-import dialogSizesCode from '../../../demos/src/dialog/DialogSizes.tsx?raw'
-import dialogFormCode from '../../../demos/src/dialog/DialogForm.tsx?raw'
-import dialogConfirmationCode from '../../../demos/src/dialog/DialogConfirmation.tsx?raw'
-import dialogLoadingCode from '../../../demos/src/dialog/DialogLoading.tsx?raw'
-import dialogSuccessCode from '../../../demos/src/dialog/DialogSuccess.tsx?raw'
-import dialogInfoCode from '../../../demos/src/dialog/DialogInfo.tsx?raw'
-import dialogWithTextareaCode from '../../../demos/src/dialog/DialogWithTextarea.tsx?raw'
-import dialogScrollableCode from '../../../demos/src/dialog/DialogScrollable.tsx?raw'
+import dialogBasicCode from '../../../demos/src/dialog/DialogBasic.tsx?raw';
+import dialogSizesCode from '../../../demos/src/dialog/DialogSizes.tsx?raw';
+import dialogFormCode from '../../../demos/src/dialog/DialogForm.tsx?raw';
+import dialogConfirmationCode from '../../../demos/src/dialog/DialogConfirmation.tsx?raw';
+import dialogLoadingCode from '../../../demos/src/dialog/DialogLoading.tsx?raw';
+import dialogSuccessCode from '../../../demos/src/dialog/DialogSuccess.tsx?raw';
+import dialogInfoCode from '../../../demos/src/dialog/DialogInfo.tsx?raw';
+import dialogWithTextareaCode from '../../../demos/src/dialog/DialogWithTextarea.tsx?raw';
+import dialogScrollableCode from '../../../demos/src/dialog/DialogScrollable.tsx?raw';
 
 export function DialogDemo() {
   return (
     <section className="demo-section">
       <h2>Dialog Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Used to focus the user&apos;s attention exclusively on one task or piece of information via
-        a dialog that sits on top of the page content.
+        Used to focus the user&apos;s attention exclusively on one task or piece
+        of information via a dialog that sits on top of the page content.
       </p>
 
       <div className="space-y-8">

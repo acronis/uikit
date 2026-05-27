@@ -1,25 +1,25 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import '../themes/acronis-electric.scss'
-import '../themes/acronis-ocean.scss'
-import '../themes/acronis-white-label.scss'
-import '../themes/cyber-chat.scss'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import '../themes/acronis-electric.scss';
+import '../themes/acronis-ocean.scss';
+import '../themes/acronis-white-label.scss';
+import '../themes/cyber-chat.scss';
 
 const meta = {
   title: 'Themes/Layout Schemes',
   parameters: { layout: 'fullscreen', snapshot: { fullPage: true } },
   tags: ['autodocs'],
-} satisfies Meta
+} satisfies Meta;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 /* ------------------------------------------------------------------ */
 /*  Theme registry                                                     */
 /* ------------------------------------------------------------------ */
 
 interface ThemeDef {
-  className: string
-  label: string
+  className: string;
+  label: string;
 }
 
 const CORE_THEMES: ThemeDef[] = [
@@ -27,7 +27,7 @@ const CORE_THEMES: ThemeDef[] = [
   { className: 'theme-acronis-electric', label: 'Acronis Electric' },
   { className: 'theme-acronis-ocean', label: 'Acronis Ocean' },
   { className: 'theme-cyber-chat', label: 'Cyber Chat' },
-]
+];
 
 const WHITE_LABEL_THEMES: ThemeDef[] = [
   { className: 'theme-purple', label: 'Purple' },
@@ -39,9 +39,15 @@ const WHITE_LABEL_THEMES: ThemeDef[] = [
   { className: 'theme-red-fire-brick', label: 'Red Fire Brick' },
   { className: 'theme-yellow-1c', label: 'Yellow 1C' },
   { className: 'theme-deep-sky-itkontoret', label: 'Deep Sky (ITkontoret)' },
-  { className: 'theme-blue-yellow-uss-signal', label: 'Blue Yellow (USS Signal)' },
+  {
+    className: 'theme-blue-yellow-uss-signal',
+    label: 'Blue Yellow (USS Signal)',
+  },
   { className: 'theme-red-home-pl', label: 'Red (home.pl)' },
-  { className: 'theme-orange-tsukaeru-helpox', label: 'Orange (Tsukaeru/Helpox)' },
+  {
+    className: 'theme-orange-tsukaeru-helpox',
+    label: 'Orange (Tsukaeru/Helpox)',
+  },
   { className: 'theme-green-also-choise-df', label: 'Green (Also/Choise/DF)' },
   { className: 'theme-light-blue-hp', label: 'Light Blue (HP)' },
   { className: 'theme-purple-fusion-media', label: 'Purple (Fusion Media)' },
@@ -50,14 +56,22 @@ const WHITE_LABEL_THEMES: ThemeDef[] = [
   { className: 'theme-deep-purple', label: 'Deep Purple' },
   { className: 'theme-pinky', label: 'Pinky' },
   { className: 'theme-virtuozzo', label: 'Virtuozzo' },
-]
+];
 
 /* ------------------------------------------------------------------ */
 /*  Schematic layout                                                   */
 /* ------------------------------------------------------------------ */
 
-function LayoutSchematic({ themeClass, dark, label }: { themeClass: string; dark: boolean; label: string }) {
-  const cls = dark ? `${themeClass} dark` : themeClass
+function LayoutSchematic({
+  themeClass,
+  dark,
+  label,
+}: {
+  themeClass: string;
+  dark: boolean;
+  label: string;
+}) {
+  const cls = dark ? `${themeClass} dark` : themeClass;
 
   return (
     <div
@@ -145,7 +159,14 @@ function LayoutSchematic({ themeClass, dark, label }: { themeClass: string; dark
         {/* Main + Aside */}
         <div style={{ flex: 1, display: 'flex', padding: 6, gap: 6 }}>
           {/* Main content */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 5,
+            }}
+          >
             {/* Title text */}
             <div
               style={{
@@ -162,7 +183,8 @@ function LayoutSchematic({ themeClass, dark, label }: { themeClass: string; dark
                 flex: 1,
                 borderRadius: 4,
                 border: '1px solid hsl(var(--av-border))',
-                background: 'hsl(var(--av-card, var(--av-elevated, var(--av-background))))',
+                background:
+                  'hsl(var(--av-card, var(--av-elevated, var(--av-background))))',
                 display: 'flex',
                 flexDirection: 'column',
                 padding: 5,
@@ -170,14 +192,53 @@ function LayoutSchematic({ themeClass, dark, label }: { themeClass: string; dark
               }}
             >
               {/* Text lines */}
-              <div style={{ height: 6, width: '90%', borderRadius: 2, background: 'hsl(var(--av-foreground))', opacity: 0.6 }} />
-              <div style={{ height: 6, width: '60%', borderRadius: 2, background: 'hsl(var(--av-muted-foreground))', opacity: 0.5 }} />
-              <div style={{ height: 6, width: '75%', borderRadius: 2, background: 'hsl(var(--av-muted-foreground))', opacity: 0.4 }} />
+              <div
+                style={{
+                  height: 6,
+                  width: '90%',
+                  borderRadius: 2,
+                  background: 'hsl(var(--av-foreground))',
+                  opacity: 0.6,
+                }}
+              />
+              <div
+                style={{
+                  height: 6,
+                  width: '60%',
+                  borderRadius: 2,
+                  background: 'hsl(var(--av-muted-foreground))',
+                  opacity: 0.5,
+                }}
+              />
+              <div
+                style={{
+                  height: 6,
+                  width: '75%',
+                  borderRadius: 2,
+                  background: 'hsl(var(--av-muted-foreground))',
+                  opacity: 0.4,
+                }}
+              />
               <div style={{ flex: 1 }} />
               {/* Action row */}
               <div style={{ display: 'flex', gap: 4 }}>
-                <div style={{ height: 10, width: 36, borderRadius: 3, background: 'hsl(var(--av-primary))' }} />
-                <div style={{ height: 10, width: 36, borderRadius: 3, border: '1px solid hsl(var(--av-border))', background: 'transparent' }} />
+                <div
+                  style={{
+                    height: 10,
+                    width: 36,
+                    borderRadius: 3,
+                    background: 'hsl(var(--av-primary))',
+                  }}
+                />
+                <div
+                  style={{
+                    height: 10,
+                    width: 36,
+                    borderRadius: 3,
+                    border: '1px solid hsl(var(--av-border))',
+                    background: 'transparent',
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -203,8 +264,24 @@ function LayoutSchematic({ themeClass, dark, label }: { themeClass: string; dark
                 gap: 3,
               }}
             >
-              <div style={{ height: 5, width: '80%', borderRadius: 2, background: 'hsl(var(--av-foreground))', opacity: 0.5 }} />
-              <div style={{ height: 5, width: '60%', borderRadius: 2, background: 'hsl(var(--av-muted-foreground))', opacity: 0.4 }} />
+              <div
+                style={{
+                  height: 5,
+                  width: '80%',
+                  borderRadius: 2,
+                  background: 'hsl(var(--av-foreground))',
+                  opacity: 0.5,
+                }}
+              />
+              <div
+                style={{
+                  height: 5,
+                  width: '60%',
+                  borderRadius: 2,
+                  background: 'hsl(var(--av-muted-foreground))',
+                  opacity: 0.4,
+                }}
+              />
             </div>
             {/* Aside card 2 */}
             <div
@@ -218,8 +295,24 @@ function LayoutSchematic({ themeClass, dark, label }: { themeClass: string; dark
                 gap: 3,
               }}
             >
-              <div style={{ height: 5, width: '70%', borderRadius: 2, background: 'hsl(var(--av-foreground))', opacity: 0.5 }} />
-              <div style={{ height: 5, width: '50%', borderRadius: 2, background: 'hsl(var(--av-muted-foreground))', opacity: 0.4 }} />
+              <div
+                style={{
+                  height: 5,
+                  width: '70%',
+                  borderRadius: 2,
+                  background: 'hsl(var(--av-foreground))',
+                  opacity: 0.5,
+                }}
+              />
+              <div
+                style={{
+                  height: 5,
+                  width: '50%',
+                  borderRadius: 2,
+                  background: 'hsl(var(--av-muted-foreground))',
+                  opacity: 0.4,
+                }}
+              />
             </div>
           </div>
         </div>
@@ -248,7 +341,7 @@ function LayoutSchematic({ themeClass, dark, label }: { themeClass: string; dark
         </span>
       </div>
     </div>
-  )
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -258,10 +351,18 @@ function LayoutSchematic({ themeClass, dark, label }: { themeClass: string; dark
 function ThemePair({ theme }: { theme: ThemeDef }) {
   return (
     <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-      <LayoutSchematic themeClass={theme.className} dark={false} label={theme.label} />
-      <LayoutSchematic themeClass={theme.className} dark={true} label={theme.label} />
+      <LayoutSchematic
+        themeClass={theme.className}
+        dark={false}
+        label={theme.label}
+      />
+      <LayoutSchematic
+        themeClass={theme.className}
+        dark={true}
+        label={theme.label}
+      />
     </div>
-  )
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -271,7 +372,14 @@ function ThemePair({ theme }: { theme: ThemeDef }) {
 function ThemeGrid({ themes, title }: { themes: ThemeDef[]; title: string }) {
   return (
     <div style={{ padding: 24, fontFamily: 'system-ui, sans-serif' }}>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20, color: '#1a1a1a' }}>
+      <h2
+        style={{
+          fontSize: 20,
+          fontWeight: 700,
+          marginBottom: 20,
+          color: '#1a1a1a',
+        }}
+      >
         {title}
       </h2>
       <div
@@ -286,15 +394,23 @@ function ThemeGrid({ themes, title }: { themes: ThemeDef[]; title: string }) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 /* ------------------------------------------------------------------ */
 /*  Text colors panel                                                  */
 /* ------------------------------------------------------------------ */
 
-function TextColorsSample({ themeClass, dark, label }: { themeClass: string; dark: boolean; label: string }) {
-  const cls = dark ? `${themeClass} dark` : themeClass
+function TextColorsSample({
+  themeClass,
+  dark,
+  label,
+}: {
+  themeClass: string;
+  dark: boolean;
+  label: string;
+}) {
+  const cls = dark ? `${themeClass} dark` : themeClass;
   const tokens = [
     { token: '--av-foreground', name: 'foreground' },
     { token: '--av-text-primary', name: 'text-primary' },
@@ -304,7 +420,7 @@ function TextColorsSample({ themeClass, dark, label }: { themeClass: string; dar
     { token: '--av-brand-foreground', name: 'brand-fg' },
     { token: '--av-primary-foreground', name: 'primary-fg' },
     { token: '--av-destructive-foreground', name: 'destructive-fg' },
-  ]
+  ];
 
   return (
     <div
@@ -326,13 +442,24 @@ function TextColorsSample({ themeClass, dark, label }: { themeClass: string; dar
           background: 'hsl(var(--av-muted))',
         }}
       >
-        <span style={{ fontSize: 10, fontWeight: 600, color: 'hsl(var(--av-foreground))' }}>
+        <span
+          style={{
+            fontSize: 10,
+            fontWeight: 600,
+            color: 'hsl(var(--av-foreground))',
+          }}
+        >
           {label} — {dark ? 'Dark' : 'Light'}
         </span>
       </div>
-      <div style={{ padding: 8, display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <div
+        style={{ padding: 8, display: 'flex', flexDirection: 'column', gap: 3 }}
+      >
         {tokens.map(({ token, name }) => (
-          <div key={token} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div
+            key={token}
+            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+          >
             <div
               style={{
                 width: 12,
@@ -356,25 +483,46 @@ function TextColorsSample({ themeClass, dark, label }: { themeClass: string; dar
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-function TextColorsGrid({ themes, title }: { themes: ThemeDef[]; title: string }) {
+function TextColorsGrid({
+  themes,
+  title,
+}: {
+  themes: ThemeDef[];
+  title: string;
+}) {
   return (
     <div style={{ padding: 24, fontFamily: 'system-ui, sans-serif' }}>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20, color: '#1a1a1a' }}>
+      <h2
+        style={{
+          fontSize: 20,
+          fontWeight: 700,
+          marginBottom: 20,
+          color: '#1a1a1a',
+        }}
+      >
         {title} — Text Colors
       </h2>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
         {themes.map((theme) => (
           <div key={theme.className} style={{ display: 'flex', gap: 12 }}>
-            <TextColorsSample themeClass={theme.className} dark={false} label={theme.label} />
-            <TextColorsSample themeClass={theme.className} dark={true} label={theme.label} />
+            <TextColorsSample
+              themeClass={theme.className}
+              dark={false}
+              label={theme.label}
+            />
+            <TextColorsSample
+              themeClass={theme.className}
+              dark={true}
+              label={theme.label}
+            />
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -383,19 +531,23 @@ function TextColorsGrid({ themes, title }: { themes: ThemeDef[]; title: string }
 
 export const CoreThemes: Story = {
   render: () => <ThemeGrid themes={CORE_THEMES} title="Core Themes" />,
-}
+};
 
 export const CoreThemesTextColors: Story = {
   render: () => <TextColorsGrid themes={CORE_THEMES} title="Core Themes" />,
-}
+};
 
 export const WhiteLabelThemes: Story = {
-  render: () => <ThemeGrid themes={WHITE_LABEL_THEMES} title="White-Label Themes" />,
-}
+  render: () => (
+    <ThemeGrid themes={WHITE_LABEL_THEMES} title="White-Label Themes" />
+  ),
+};
 
 export const WhiteLabelTextColors: Story = {
-  render: () => <TextColorsGrid themes={WHITE_LABEL_THEMES} title="White-Label Themes" />,
-}
+  render: () => (
+    <TextColorsGrid themes={WHITE_LABEL_THEMES} title="White-Label Themes" />
+  ),
+};
 
 export const AllThemes: Story = {
   render: () => (
@@ -405,4 +557,4 @@ export const AllThemes: Story = {
       <ThemeGrid themes={WHITE_LABEL_THEMES} title="White-Label Themes" />
     </div>
   ),
-}
+};

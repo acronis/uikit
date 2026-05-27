@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Themes/Status Colors',
   parameters: { layout: 'fullscreen' },
   tags: ['autodocs'],
-} satisfies Meta
+} satisfies Meta;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 const STATUS_GROUPS = [
   { name: 'Success', prefix: 'success' },
@@ -17,14 +17,14 @@ const STATUS_GROUPS = [
   { name: 'Critical', prefix: 'critical' },
   { name: 'Neutral', prefix: 'neutral' },
   { name: 'AI', prefix: 'ai' },
-] as const
+] as const;
 
 function StatusRow({ name, prefix }: { name: string; prefix: string }) {
   const tokens = [
     { token: `--av-status-${prefix}`, label: 'base' },
     { token: `--av-status-${prefix}-bg`, label: 'background' },
     { token: `--av-status-${prefix}-text`, label: 'text' },
-  ]
+  ];
 
   return (
     <div style={{ marginBottom: 24 }}>
@@ -40,7 +40,10 @@ function StatusRow({ name, prefix }: { name: string; prefix: string }) {
       </h3>
       <div style={{ display: 'flex', gap: 16 }}>
         {tokens.map(({ token, label }) => (
-          <div key={token} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <div
+            key={token}
+            style={{ display: 'flex', flexDirection: 'column', gap: 4 }}
+          >
             <div
               style={{
                 width: 140,
@@ -100,7 +103,7 @@ function StatusRow({ name, prefix }: { name: string; prefix: string }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function AllStatuses() {
@@ -120,9 +123,9 @@ function AllStatuses() {
         <StatusRow key={prefix} name={name} prefix={prefix} />
       ))}
     </div>
-  )
+  );
 }
 
 export const Default: Story = {
   render: () => <AllStatuses />,
-}
+};

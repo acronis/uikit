@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import {
   Form,
   FormControl,
@@ -10,17 +10,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Checkbox } from '@acronis-platform/shadcn-uikit/react'
-import { RadioGroup, RadioGroupItem } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Checkbox } from '@acronis-platform/shadcn-uikit/react';
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from '@acronis-platform/shadcn-uikit/react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
 
 const formSchema = z.object({
   notifications: z.boolean().default(false),
@@ -32,7 +35,7 @@ const formSchema = z.object({
   theme: z.enum(['light', 'dark', 'system'], {
     message: 'Please select a theme.',
   }),
-})
+});
 
 export function FormSettings() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -43,11 +46,11 @@ export function FormSettings() {
       security: true,
       theme: 'system',
     },
-  })
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    alert(JSON.stringify(values, null, 2))
+    console.log(values);
+    alert(JSON.stringify(values, null, 2));
   }
 
   return (
@@ -63,11 +66,18 @@ export function FormSettings() {
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                     <FormControl>
-                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel className="font-normal">Receive email notifications</FormLabel>
-                      <FormDescription>Get notified about important updates</FormDescription>
+                      <FormLabel className="font-normal">
+                        Receive email notifications
+                      </FormLabel>
+                      <FormDescription>
+                        Get notified about important updates
+                      </FormDescription>
                     </div>
                   </FormItem>
                 )}
@@ -79,10 +89,15 @@ export function FormSettings() {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                   <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="font-normal">Marketing emails</FormLabel>
+                    <FormLabel className="font-normal">
+                      Marketing emails
+                    </FormLabel>
                     <FormDescription>
                       Receive emails about new products and features
                     </FormDescription>
@@ -96,11 +111,18 @@ export function FormSettings() {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                   <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="font-normal">Security alerts</FormLabel>
-                    <FormDescription>Get notified about security updates</FormDescription>
+                    <FormLabel className="font-normal">
+                      Security alerts
+                    </FormLabel>
+                    <FormDescription>
+                      Get notified about security updates
+                    </FormDescription>
                   </div>
                 </FormItem>
               )}
@@ -113,7 +135,10 @@ export function FormSettings() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Language</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a language" />
@@ -174,5 +199,5 @@ export function FormSettings() {
         </form>
       </Form>
     </div>
-  )
+  );
 }

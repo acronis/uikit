@@ -4,8 +4,8 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Card, CardContent } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Card, CardContent } from '@acronis-platform/shadcn-uikit/react';
 
 export function CarouselVertical() {
   return (
@@ -32,5 +32,5 @@ export function CarouselVertical() {
       <CarouselPrevious />
       <CarouselNext />
     </Carousel>
-  )
+  );
 }

@@ -1,20 +1,29 @@
-import * as React from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { Label } from '@acronis-platform/shadcn-uikit/react'
-import { passwordChangeSchema } from '../../lib/validators'
-import type { PasswordChangeFormData } from '../../lib/validators'
-import { toast } from 'sonner'
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { Label } from '@acronis-platform/shadcn-uikit/react';
+import { passwordChangeSchema } from '../../lib/validators';
+import type { PasswordChangeFormData } from '../../lib/validators';
+import { toast } from 'sonner';
 
 interface AccountSectionProps {
-  onPasswordChange: (data: PasswordChangeFormData) => Promise<void>
-  isLoading?: boolean
+  onPasswordChange: (data: PasswordChangeFormData) => Promise<void>;
+  isLoading?: boolean;
 }
 
-export function AccountSection({ onPasswordChange, isLoading = false }: AccountSectionProps) {
+export function AccountSection({
+  onPasswordChange,
+  isLoading = false,
+}: AccountSectionProps) {
   const {
     register,
     handleSubmit,
@@ -27,17 +36,17 @@ export function AccountSection({ onPasswordChange, isLoading = false }: AccountS
       newPassword: '',
       confirmPassword: '',
     },
-  })
+  });
 
   const onFormSubmit = async (data: PasswordChangeFormData) => {
     try {
-      await onPasswordChange(data)
-      toast.success('Password changed successfully')
-      reset()
+      await onPasswordChange(data);
+      toast.success('Password changed successfully');
+      reset();
     } catch {
-      toast.error('Failed to change password')
+      toast.error('Failed to change password');
     }
-  }
+  };
 
   return (
     <Card>
@@ -59,7 +68,9 @@ export function AccountSection({ onPasswordChange, isLoading = false }: AccountS
               disabled={isSubmitting || isLoading}
             />
             {errors.currentPassword && (
-              <p className="text-sm text-destructive">{errors.currentPassword.message}</p>
+              <p className="text-sm text-destructive">
+                {errors.currentPassword.message}
+              </p>
             )}
           </div>
 
@@ -73,7 +84,9 @@ export function AccountSection({ onPasswordChange, isLoading = false }: AccountS
               disabled={isSubmitting || isLoading}
             />
             {errors.newPassword && (
-              <p className="text-sm text-destructive">{errors.newPassword.message}</p>
+              <p className="text-sm text-destructive">
+                {errors.newPassword.message}
+              </p>
             )}
             <p className="text-xs text-muted-foreground">
               Password must be at least 6 characters long
@@ -90,15 +103,19 @@ export function AccountSection({ onPasswordChange, isLoading = false }: AccountS
               disabled={isSubmitting || isLoading}
             />
             {errors.confirmPassword && (
-              <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
+              <p className="text-sm text-destructive">
+                {errors.confirmPassword.message}
+              </p>
             )}
           </div>
 
           <Button type="submit" disabled={isSubmitting || isLoading}>
-            {isSubmitting || isLoading ? 'Changing Password...' : 'Change Password'}
+            {isSubmitting || isLoading
+              ? 'Changing Password...'
+              : 'Change Password'}
           </Button>
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { Tag } from '@acronis-platform/shadcn-uikit/react'
+import { Tag } from '@acronis-platform/shadcn-uikit/react';
 
 export function TagCategory() {
   return (
@@ -9,5 +9,5 @@ export function TagCategory() {
       <Tag variant="critical">DevOps</Tag>
       <Tag variant="neutral">Design</Tag>
     </div>
-  )
+  );
 }

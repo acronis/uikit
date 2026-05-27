@@ -3,7 +3,16 @@ title: Select
 description: A dropdown control for selecting a value from a list of options.
 ---
 
-import { BasicSelect, ControlledSelect, GroupedSelect, MultipleSelect, ObjectValuesSelect, DisabledSelect, FormattedValueSelect, ScrollableSelect } from '@/components/demos/select';
+import {
+  BasicSelect,
+  ControlledSelect,
+  GroupedSelect,
+  MultipleSelect,
+  ObjectValuesSelect,
+  DisabledSelect,
+  FormattedValueSelect,
+  ScrollableSelect,
+} from '@/components/demos/select';
 import { DemoPreview } from '@/components/DemoPreview';
 
 ## Usage
@@ -86,6 +95,9 @@ Select with a long list of options that scrolls.
 
 ### SelectContent
 
-<AutoTypeTable path="../../packages/legacy/ui/src/components/ui/select.docs.ts" name="SelectContentProps" />
+<AutoTypeTable
+  path="../../packages/legacy/ui/src/components/ui/select.docs.ts"
+  name="SelectContentProps"
+/>
 
 `Select` wraps Base UI `Select.Root` and accepts `value`, `defaultValue`, and `onValueChange`. `SelectTrigger`, `SelectItem`, `SelectLabel`, and `SelectSeparator` extend their respective Base UI primitive props.

@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import {
   Form,
   FormControl,
@@ -10,12 +10,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { Textarea } from '@acronis-platform/shadcn-uikit/react'
-import { Switch } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { Textarea } from '@acronis-platform/shadcn-uikit/react';
+import { Switch } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
 
 const formSchema = z.object({
   displayName: z.string().min(2, 'Display name must be at least 2 characters.'),
@@ -24,8 +24,11 @@ const formSchema = z.object({
   emailNotifications: z.boolean().default(true),
   marketingEmails: z.boolean().default(false),
   currentPassword: z.string().optional(),
-  newPassword: z.string().min(8, 'Password must be at least 8 characters.').optional(),
-})
+  newPassword: z
+    .string()
+    .min(8, 'Password must be at least 8 characters.')
+    .optional(),
+});
 
 export function FormLayoutSections() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -39,17 +42,16 @@ export function FormLayoutSections() {
       currentPassword: '',
       newPassword: '',
     },
-  })
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    alert(JSON.stringify(values, null, 2))
+    alert(JSON.stringify(values, null, 2));
   }
 
   return (
     <div className="w-full max-w-lg">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-
           {/* Section: Profile */}
           <div className="space-y-4">
             <div>
@@ -78,7 +80,11 @@ export function FormLayoutSections() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="you@example.com" {...field} />
+                    <Input
+                      type="email"
+                      placeholder="you@example.com"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -120,7 +126,9 @@ export function FormLayoutSections() {
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-sm font-medium">Email notifications</FormLabel>
+                    <FormLabel className="text-sm font-medium">
+                      Email notifications
+                    </FormLabel>
                     <FormDescription>
                       Receive notifications about account activity.
                     </FormDescription>
@@ -140,7 +148,9 @@ export function FormLayoutSections() {
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-sm font-medium">Marketing emails</FormLabel>
+                    <FormLabel className="text-sm font-medium">
+                      Marketing emails
+                    </FormLabel>
                     <FormDescription>
                       Get updates on new features and promotions.
                     </FormDescription>
@@ -188,7 +198,9 @@ export function FormLayoutSections() {
                   <FormControl>
                     <Input type="password" placeholder="••••••••" {...field} />
                   </FormControl>
-                  <FormDescription>Must be at least 8 characters.</FormDescription>
+                  <FormDescription>
+                    Must be at least 8 characters.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -199,5 +211,5 @@ export function FormLayoutSections() {
         </form>
       </Form>
     </div>
-  )
+  );
 }

@@ -1,8 +1,8 @@
-export { SecondaryMenuBasic } from './SecondaryMenuBasic'
-export { SecondaryMenuWithIcons } from './SecondaryMenuWithIcons'
-export { SecondaryMenuWithGroups } from './SecondaryMenuWithGroups'
-export { SecondaryMenuWithTags } from './SecondaryMenuWithTags'
-export { SecondaryMenuWithRightIcons } from './SecondaryMenuWithRightIcons'
-export { SecondaryMenuWithDisabled } from './SecondaryMenuWithDisabled'
-export { SecondaryMenuComplete } from './SecondaryMenuComplete'
-export { SecondaryMenuSpecs } from './SecondaryMenuSpecs'
+export { SecondaryMenuBasic } from './SecondaryMenuBasic';
+export { SecondaryMenuWithIcons } from './SecondaryMenuWithIcons';
+export { SecondaryMenuWithGroups } from './SecondaryMenuWithGroups';
+export { SecondaryMenuWithTags } from './SecondaryMenuWithTags';
+export { SecondaryMenuWithRightIcons } from './SecondaryMenuWithRightIcons';
+export { SecondaryMenuWithDisabled } from './SecondaryMenuWithDisabled';
+export { SecondaryMenuComplete } from './SecondaryMenuComplete';
+export { SecondaryMenuSpecs } from './SecondaryMenuSpecs';

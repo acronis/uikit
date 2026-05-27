@@ -1,4 +1,4 @@
-import { Separator } from '@acronis-platform/shadcn-uikit/react'
+import { Separator } from '@acronis-platform/shadcn-uikit/react';
 
 export function SeparatorInGrid() {
   return (
@@ -19,5 +19,5 @@ export function SeparatorInGrid() {
         <p className="text-sm text-muted-foreground">Content for column 3</p>
       </div>
     </div>
-  )
+  );
 }

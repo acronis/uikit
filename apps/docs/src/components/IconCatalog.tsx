@@ -48,17 +48,14 @@ export function IconCatalog() {
     );
   }, [search]);
 
-  const handleCopy = useCallback(
-    (entry: IconEntry) => {
-      const snippet = `import { ${entry.name} } from '@acronis-platform/shadcn-uikit'`;
-      navigator.clipboard.writeText(snippet).then(() => {
-        setCopiedSlug(entry.slug);
-        if (timerRef.current) clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => setCopiedSlug(null), 1500);
-      });
-    },
-    []
-  );
+  const handleCopy = useCallback((entry: IconEntry) => {
+    const snippet = `import { ${entry.name} } from '@acronis-platform/shadcn-uikit'`;
+    navigator.clipboard.writeText(snippet).then(() => {
+      setCopiedSlug(entry.slug);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setCopiedSlug(null), 1500);
+    });
+  }, []);
 
   return (
     <div className="flex flex-col gap-4">

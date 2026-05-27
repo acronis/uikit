@@ -9,12 +9,12 @@ has its own `CONTRIBUTING.md` describing what's expected when changing
 that workspace specifically (tests required? changeset? doc updates?).
 Start there once you've read this.
 
-| Workspace | What it is | Workspace-specific guide |
-|---|---|---|
-| `packages/legacy/ui` | Published UI library | [packages/legacy/ui/CONTRIBUTING.md](packages/legacy/ui/CONTRIBUTING.md) |
-| `apps/demo` | Vite SPA for manual verification | [apps/demo/CONTRIBUTING.md](apps/demo/CONTRIBUTING.md) |
-| `apps/demos` | Shared source-only demo components | [apps/demos/CONTRIBUTING.md](apps/demos/CONTRIBUTING.md) |
-| `apps/docs` | Next.js + Fumadocs documentation site | [apps/docs/CONTRIBUTING.md](apps/docs/CONTRIBUTING.md) |
+| Workspace            | What it is                            | Workspace-specific guide                                                 |
+| -------------------- | ------------------------------------- | ------------------------------------------------------------------------ |
+| `packages/legacy/ui` | Published UI library                  | [packages/legacy/ui/CONTRIBUTING.md](packages/legacy/ui/CONTRIBUTING.md) |
+| `apps/demo`          | Vite SPA for manual verification      | [apps/demo/CONTRIBUTING.md](apps/demo/CONTRIBUTING.md)                   |
+| `apps/demos`         | Shared source-only demo components    | [apps/demos/CONTRIBUTING.md](apps/demos/CONTRIBUTING.md)                 |
+| `apps/docs`          | Next.js + Fumadocs documentation site | [apps/docs/CONTRIBUTING.md](apps/docs/CONTRIBUTING.md)                   |
 
 For repo structure, tooling, and conventions, see [AGENTS.md](AGENTS.md)
 and the [`./context/`](context/) directory.
@@ -53,7 +53,7 @@ Regardless of which workspace you touch, the outer flow is the same:
 8. Commit with [Conventional Commits](https://www.conventionalcommits.org/)
    prefixes (`feat`, `fix`, `docs`, `chore`, `refactor`, `test`,
    `ci`, `build`, `perf`, `style`, `revert`). Husky runs lint-staged
-   + typecheck on every commit; **don't use `--no-verify`** to skip it.
+   - typecheck on every commit; **don't use `--no-verify`** to skip it.
 9. Open a PR. Keep it focused — PRs over ~250 lines are slower to
    review and easier to break.
 
@@ -100,7 +100,7 @@ See [`./context/releasing.md`](context/releasing.md) for the full release flow.
   there…", split it.
 - The PR title becomes the squash-merge commit message — it must also
   follow Conventional Commits (commitlint runs on PR titles too).
-- The description should explain *why*, not restate the diff.
+- The description should explain _why_, not restate the diff.
 - Link the issue if there is one.
 
 ## License

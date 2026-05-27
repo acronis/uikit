@@ -1,5 +1,5 @@
-import { Input } from '@acronis-platform/shadcn-uikit/react'
-import { HideIcon } from '@acronis-platform/shadcn-uikit'
+import { Input } from '@acronis-platform/shadcn-uikit/react';
+import { HideIcon } from '@acronis-platform/shadcn-uikit';
 export function PasswordInputError() {
   return (
     <div className="space-y-4">
@@ -20,7 +20,10 @@ export function PasswordInputError() {
             <HideIcon className="h-4 w-4" />
           </button>
         </div>
-        <p id="pwd-error-1" className="text-xs font-medium text-[#EA3939] px-0 py-1">
+        <p
+          id="pwd-error-1"
+          className="text-xs font-medium text-[#EA3939] px-0 py-1"
+        >
           Error message
         </p>
       </div>
@@ -45,10 +48,13 @@ export function PasswordInputError() {
             <HideIcon className="h-4 w-4" />
           </button>
         </div>
-        <p id="pwd-error-2" className="text-xs font-medium text-[#EA3939] px-0 py-1">
+        <p
+          id="pwd-error-2"
+          className="text-xs font-medium text-[#EA3939] px-0 py-1"
+        >
           Error message
         </p>
       </div>
     </div>
-  )
+  );
 }

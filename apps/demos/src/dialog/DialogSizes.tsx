@@ -7,8 +7,8 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function DialogSizes() {
   return (
@@ -23,7 +23,9 @@ export function DialogSizes() {
             <DialogCloseButton />
           </DialogHeader>
           <DialogBody>
-            <p className="text-sm text-gray-600">This is a small dialog (464px width).</p>
+            <p className="text-sm text-gray-600">
+              This is a small dialog (464px width).
+            </p>
           </DialogBody>
           <DialogFooter>
             <Button>Done</Button>
@@ -41,7 +43,9 @@ export function DialogSizes() {
             <DialogCloseButton />
           </DialogHeader>
           <DialogBody>
-            <p className="text-sm text-gray-600">This is a medium dialog (672px width).</p>
+            <p className="text-sm text-gray-600">
+              This is a medium dialog (672px width).
+            </p>
           </DialogBody>
           <DialogFooter>
             <Button>Done</Button>
@@ -59,7 +63,9 @@ export function DialogSizes() {
             <DialogCloseButton />
           </DialogHeader>
           <DialogBody>
-            <p className="text-sm text-gray-600">This is a large dialog (832px width).</p>
+            <p className="text-sm text-gray-600">
+              This is a large dialog (832px width).
+            </p>
           </DialogBody>
           <DialogFooter>
             <Button>Done</Button>
@@ -67,5 +73,5 @@ export function DialogSizes() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

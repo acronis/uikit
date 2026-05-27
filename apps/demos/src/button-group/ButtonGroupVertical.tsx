@@ -1,4 +1,4 @@
-import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react'
+import { Button, ButtonGroup } from '@acronis-platform/shadcn-uikit/react';
 
 export function ButtonGroupVertical() {
   return (
@@ -7,5 +7,5 @@ export function ButtonGroupVertical() {
       <Button variant="outline">Middle</Button>
       <Button variant="outline">Bottom</Button>
     </ButtonGroup>
-  )
+  );
 }

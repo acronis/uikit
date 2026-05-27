@@ -7,15 +7,13 @@ import {
   DialogBody,
   DialogCloseButton,
   DialogTrigger,
-} from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { RotateIcon } from '@acronis-platform/shadcn-uikit'
+} from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { RotateIcon } from '@acronis-platform/shadcn-uikit';
 export function DialogLoading() {
   return (
     <Dialog>
-      <DialogTrigger render={<Button />}>
-        Process Data
-      </DialogTrigger>
+      <DialogTrigger render={<Button />}>Process Data</DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Processing</DialogTitle>
@@ -34,5 +32,5 @@ export function DialogLoading() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

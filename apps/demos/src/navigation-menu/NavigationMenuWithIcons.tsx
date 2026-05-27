@@ -17,5 +17,5 @@ export function NavigationMenuWithIcons() {
         </button>
       </nav>
     </div>
-  )
+  );
 }

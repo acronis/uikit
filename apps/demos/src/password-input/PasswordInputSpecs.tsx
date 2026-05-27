@@ -14,13 +14,15 @@ export function PasswordInputSpecs() {
         <strong className="font-semibold">Icon Size:</strong> 16×16px
       </div>
       <div>
-        <strong className="font-semibold">Border Default:</strong> rgba(38, 104, 197, 0.3)
+        <strong className="font-semibold">Border Default:</strong> rgba(38, 104,
+        197, 0.3)
       </div>
       <div>
         <strong className="font-semibold">Border Error:</strong> #EA3939
       </div>
       <div>
-        <strong className="font-semibold">Icon Color:</strong> #2668C5 (default), #EA3939 (error)
+        <strong className="font-semibold">Icon Color:</strong> #2668C5
+        (default), #EA3939 (error)
       </div>
       <div>
         <strong className="font-semibold">Typography:</strong>
@@ -30,5 +32,5 @@ export function PasswordInputSpecs() {
         </ul>
       </div>
     </div>
-  )
+  );
 }

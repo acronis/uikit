@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   ProgressBasic,
   ProgressValues,
@@ -10,28 +10,28 @@ import {
   ProgressWidths,
   ProgressInCards,
   ProgressInteractive,
-} from '@acronis-platform/shadcn-uikit-demos/progress'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/progress';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import progressBasicCode from '../../../demos/src/progress/ProgressBasic.tsx?raw'
-import progressValuesCode from '../../../demos/src/progress/ProgressValues.tsx?raw'
-import progressWithLabelsCode from '../../../demos/src/progress/ProgressWithLabels.tsx?raw'
-import progressWithTimeCode from '../../../demos/src/progress/ProgressWithTime.tsx?raw'
-import progressSizesCode from '../../../demos/src/progress/ProgressSizes.tsx?raw'
-import progressAnimatedCode from '../../../demos/src/progress/ProgressAnimated.tsx?raw'
-import progressMultipleCode from '../../../demos/src/progress/ProgressMultiple.tsx?raw'
-import progressWidthsCode from '../../../demos/src/progress/ProgressWidths.tsx?raw'
-import progressInCardsCode from '../../../demos/src/progress/ProgressInCards.tsx?raw'
-import progressInteractiveCode from '../../../demos/src/progress/ProgressInteractive.tsx?raw'
+import progressBasicCode from '../../../demos/src/progress/ProgressBasic.tsx?raw';
+import progressValuesCode from '../../../demos/src/progress/ProgressValues.tsx?raw';
+import progressWithLabelsCode from '../../../demos/src/progress/ProgressWithLabels.tsx?raw';
+import progressWithTimeCode from '../../../demos/src/progress/ProgressWithTime.tsx?raw';
+import progressSizesCode from '../../../demos/src/progress/ProgressSizes.tsx?raw';
+import progressAnimatedCode from '../../../demos/src/progress/ProgressAnimated.tsx?raw';
+import progressMultipleCode from '../../../demos/src/progress/ProgressMultiple.tsx?raw';
+import progressWidthsCode from '../../../demos/src/progress/ProgressWidths.tsx?raw';
+import progressInCardsCode from '../../../demos/src/progress/ProgressInCards.tsx?raw';
+import progressInteractiveCode from '../../../demos/src/progress/ProgressInteractive.tsx?raw';
 
 export function ProgressDemo() {
   return (
     <section className="demo-section">
       <h2>Progress Component</h2>
       <p className="demo-description mb-8 text-muted-foreground">
-        Used to visually represent the progress of a particular process. It shows how much of the
-        task has been completed and how much is remaining.
+        Used to visually represent the progress of a particular process. It
+        shows how much of the task has been completed and how much is remaining.
       </p>
 
       <div className="space-y-8">

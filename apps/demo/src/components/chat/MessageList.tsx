@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { cn } from '@acronis-platform/shadcn-uikit/react'
+import { cn } from '@acronis-platform/shadcn-uikit/react';
 import { MessageListProps } from '../../lib/chat/types';
 import { useChat } from '../../lib/chat/chat-service';
 import { TypingIndicator } from './TypingIndicator';
@@ -15,7 +15,7 @@ export function MessageList({
   messages,
   isTyping,
   className,
-  onAnswerQuestion
+  onAnswerQuestion,
 }: MessageListPropsExtended) {
   const { getBotMode } = useChat();
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
@@ -48,7 +48,9 @@ export function MessageList({
           >
             {message.sender === 'bot' && message.metadata?.botMode && (
               <div className="text-xs font-semibold mb-1 opacity-70">
-                {message.metadata.botMode === 'eliza' ? '🧑‍⚕️ ELIZA' : '🔴 HAL 9000'}
+                {message.metadata.botMode === 'eliza'
+                  ? '🧑‍⚕️ ELIZA'
+                  : '🔴 HAL 9000'}
               </div>
             )}
             <div className="prose prose-sm max-w-none dark:prose-invert">

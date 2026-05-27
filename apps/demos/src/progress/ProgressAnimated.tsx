@@ -1,21 +1,21 @@
-import * as React from 'react'
-import { Progress, Button } from '@acronis-platform/shadcn-uikit/react'
+import * as React from 'react';
+import { Progress, Button } from '@acronis-platform/shadcn-uikit/react';
 
 export function ProgressAnimated() {
-  const [progress, setProgress] = React.useState(50)
+  const [progress, setProgress] = React.useState(50);
 
   const handleStart = () => {
-    setProgress(0)
+    setProgress(0);
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
-          clearInterval(interval)
-          return 100
+          clearInterval(interval);
+          return 100;
         }
-        return prev + 10
-      })
-    }, 500)
-  }
+        return prev + 10;
+      });
+    }, 500);
+  };
 
   return (
     <div className="space-y-4">
@@ -30,5 +30,5 @@ export function ProgressAnimated() {
         Start Progress
       </Button>
     </div>
-  )
+  );
 }

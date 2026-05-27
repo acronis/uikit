@@ -1,11 +1,11 @@
-import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react'
+import { Tree, TreeNode } from '@acronis-platform/shadcn-uikit/react';
 import {
   FileIcon,
   FileTextIcon,
   FolderIcon,
   ImageIcon,
-} from '@acronis-platform/shadcn-uikit'
-import { MusicIcon } from '../icons/missing-icons'
+} from '@acronis-platform/shadcn-uikit';
+import { MusicIcon } from '../icons/missing-icons';
 const fileSystemData: TreeNode[] = [
   {
     id: '1',
@@ -103,8 +103,15 @@ const fileSystemData: TreeNode[] = [
       },
     ],
   },
-]
+];
 
 export function TreeWithIconsAndCheckboxes() {
-  return <Tree data={fileSystemData} showIcon showCheckbox defaultExpanded={['1', '1-1']} />
+  return (
+    <Tree
+      data={fileSystemData}
+      showIcon
+      showCheckbox
+      defaultExpanded={['1', '1-1']}
+    />
+  );
 }

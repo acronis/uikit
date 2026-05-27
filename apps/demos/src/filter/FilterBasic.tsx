@@ -1,4 +1,4 @@
-import { Filter } from '@acronis-platform/shadcn-uikit/react'
+import { Filter } from '@acronis-platform/shadcn-uikit/react';
 
 export function FilterBasic() {
   return (
@@ -7,5 +7,5 @@ export function FilterBasic() {
       <Filter>Custom Label</Filter>
       <Filter>Apply Filters</Filter>
     </div>
-  )
+  );
 }

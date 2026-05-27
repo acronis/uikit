@@ -1,9 +1,9 @@
 // @ts-expect-error -- Storybook types use package.json "exports" which require moduleResolution "bundler"
-import type { Preview } from '@storybook/react'
-import '../src/styles/index.scss'
-import '../src/styles/themes/acronis-ocean.scss'
-import '../src/styles/themes/cyber-chat.scss'
-import '../src/styles/themes/acronis-white-label.scss'
+import type { Preview } from '@storybook/react';
+import '../src/styles/index.scss';
+import '../src/styles/themes/acronis-ocean.scss';
+import '../src/styles/themes/cyber-chat.scss';
+import '../src/styles/themes/acronis-white-label.scss';
 
 const preview: Preview = {
   globalTypes: {
@@ -93,4 +93,4 @@ const preview: Preview = {
   },
 };
 
-export default preview
+export default preview;

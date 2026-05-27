@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   CardBasic,
   CardWithFooter,
@@ -12,22 +12,22 @@ import {
   CardInteractive,
   CardVariants,
   CardList,
-} from '@acronis-platform/shadcn-uikit-demos/card'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/card';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import cardBasicCode from '../../../demos/src/card/CardBasic.tsx?raw'
-import cardWithFooterCode from '../../../demos/src/card/CardWithFooter.tsx?raw'
-import cardWithFormCode from '../../../demos/src/card/CardWithForm.tsx?raw'
-import cardMultipleCode from '../../../demos/src/card/CardMultiple.tsx?raw'
-import cardWithShadowCode from '../../../demos/src/card/CardWithShadow.tsx?raw'
-import cardSettingsCode from '../../../demos/src/card/CardSettings.tsx?raw'
-import cardProductCode from '../../../demos/src/card/CardProduct.tsx?raw'
-import cardWithImageCode from '../../../demos/src/card/CardWithImage.tsx?raw'
-import cardCompactCode from '../../../demos/src/card/CardCompact.tsx?raw'
-import cardInteractiveCode from '../../../demos/src/card/CardInteractive.tsx?raw'
-import cardVariantsCode from '../../../demos/src/card/CardVariants.tsx?raw'
-import cardListCode from '../../../demos/src/card/CardList.tsx?raw'
+import cardBasicCode from '../../../demos/src/card/CardBasic.tsx?raw';
+import cardWithFooterCode from '../../../demos/src/card/CardWithFooter.tsx?raw';
+import cardWithFormCode from '../../../demos/src/card/CardWithForm.tsx?raw';
+import cardMultipleCode from '../../../demos/src/card/CardMultiple.tsx?raw';
+import cardWithShadowCode from '../../../demos/src/card/CardWithShadow.tsx?raw';
+import cardSettingsCode from '../../../demos/src/card/CardSettings.tsx?raw';
+import cardProductCode from '../../../demos/src/card/CardProduct.tsx?raw';
+import cardWithImageCode from '../../../demos/src/card/CardWithImage.tsx?raw';
+import cardCompactCode from '../../../demos/src/card/CardCompact.tsx?raw';
+import cardInteractiveCode from '../../../demos/src/card/CardInteractive.tsx?raw';
+import cardVariantsCode from '../../../demos/src/card/CardVariants.tsx?raw';
+import cardListCode from '../../../demos/src/card/CardList.tsx?raw';
 
 export function CardDemo() {
   return (

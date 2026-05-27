@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react'
-import { ScrollArea } from '@acronis-platform/shadcn-uikit/react'
-import { Button } from '@acronis-platform/shadcn-uikit/react'
-import { CopyIcon, RotateIcon } from '@acronis-platform/shadcn-uikit'
-import { ThumbsUpIcon, ThumbsDownIcon } from '@/components/icons/missing-icons'
-import { useChatFlowStore } from '../store/useChatFlowStore'
-import type { Message } from '../types'
+import { useEffect, useRef } from 'react';
+import { ScrollArea } from '@acronis-platform/shadcn-uikit/react';
+import { Button } from '@acronis-platform/shadcn-uikit/react';
+import { CopyIcon, RotateIcon } from '@acronis-platform/shadcn-uikit';
+import { ThumbsUpIcon, ThumbsDownIcon } from '@/components/icons/missing-icons';
+import { useChatFlowStore } from '../store/useChatFlowStore';
+import type { Message } from '../types';
 
 function UserMessage({ message }: { message: Message }) {
   return (
@@ -13,7 +13,7 @@ function UserMessage({ message }: { message: Message }) {
         <p className="text-sm">{message.content}</p>
       </div>
     </div>
-  )
+  );
 }
 
 function AIMessage({ message }: { message: Message }) {
@@ -46,7 +46,7 @@ function AIMessage({ message }: { message: Message }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function LoadingMessage() {
@@ -63,18 +63,18 @@ function LoadingMessage() {
         <div className="w-2 h-2 rounded-full bg-muted-foreground/50 animate-bounce"></div>
       </div>
     </div>
-  )
+  );
 }
 
 export function ChatMessages() {
-  const messages = useChatFlowStore((state) => state.messages)
-  const isTyping = useChatFlowStore((state) => state.isTyping)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const messages = useChatFlowStore((state) => state.messages);
+  const isTyping = useChatFlowStore((state) => state.isTyping);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, isTyping])
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isTyping]);
 
   return (
     <div className="flex-1 overflow-hidden">
@@ -92,5 +92,5 @@ export function ChatMessages() {
         </div>
       </ScrollArea>
     </div>
-  )
+  );
 }

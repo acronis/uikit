@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   FormBasic,
   FormLogin,
@@ -6,16 +6,16 @@ import {
   FormRegistration,
   FormContact,
   FormSettings,
-} from '@acronis-platform/shadcn-uikit-demos/form'
-import { DemoWithCode } from './DemoWithCode'
+} from '@acronis-platform/shadcn-uikit-demos/form';
+import { DemoWithCode } from './DemoWithCode';
 
 // Import actual source code files as raw strings
-import formBasicCode from '../../../demos/src/form/FormBasic.tsx?raw'
-import formLoginCode from '../../../demos/src/form/FormLogin.tsx?raw'
-import formProfileCode from '../../../demos/src/form/FormProfile.tsx?raw'
-import formRegistrationCode from '../../../demos/src/form/FormRegistration.tsx?raw'
-import formContactCode from '../../../demos/src/form/FormContact.tsx?raw'
-import formSettingsCode from '../../../demos/src/form/FormSettings.tsx?raw'
+import formBasicCode from '../../../demos/src/form/FormBasic.tsx?raw';
+import formLoginCode from '../../../demos/src/form/FormLogin.tsx?raw';
+import formProfileCode from '../../../demos/src/form/FormProfile.tsx?raw';
+import formRegistrationCode from '../../../demos/src/form/FormRegistration.tsx?raw';
+import formContactCode from '../../../demos/src/form/FormContact.tsx?raw';
+import formSettingsCode from '../../../demos/src/form/FormSettings.tsx?raw';
 
 export function FormDemo() {
   return (
