@@ -32,7 +32,10 @@
       "types": "./tailwind.preset.d.ts",
       "require": "./tailwind.preset.js"
     },
-    "./components/*": "./dist/components/*"
+    "./components/*": {
+      "types": "./dist/components/*.d.ts",
+      "import": "./dist/components/*.js"
+    }
   },
   "files": [
     "dist",
