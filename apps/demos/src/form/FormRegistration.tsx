@@ -40,7 +40,8 @@ const formSchema = z
 
 export function FormRegistration() {
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+    // TO-DO.md #3: apps/demos zod 3 schemas vs zod 4 types in @hookform/resolvers — cast bypasses the false-positive
+    resolver: zodResolver(formSchema as never),
     defaultValues: {
       firstName: '',
       lastName: '',

@@ -4,7 +4,7 @@ import { Calendar } from '@acronis-platform/shadcn-uikit/react';
 type DateRange = { from: Date | undefined; to?: Date | undefined };
 
 export function CalendarRange() {
-  const [rangeDate, setRangeDate] = React.useState<DateRange | undefined>({
+  const [rangeDate, setRangeDate] = React.useState<DateRange>({
     from: undefined,
     to: undefined,
   });

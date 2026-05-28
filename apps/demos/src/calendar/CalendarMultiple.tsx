@@ -10,7 +10,7 @@ export function CalendarMultiple() {
         <Calendar
           mode="multiple"
           selected={multipleDate}
-          onSelect={setMultipleDate}
+          onSelect={(dates) => setMultipleDate(dates ?? [])}
         />
       </div>
       {multipleDate.length > 0 && (

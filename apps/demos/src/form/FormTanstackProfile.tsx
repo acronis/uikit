@@ -83,8 +83,8 @@ export function FormTanstackProfile() {
                 <Input
                   id={field.name}
                   placeholder="johndoe"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  value={field.state.value as never}
+                  onChange={(e) => field.handleChange(e.target.value as never)}
                   onBlur={field.handleBlur}
                   aria-invalid={
                     field.state.meta.isTouched &&
@@ -121,8 +121,8 @@ export function FormTanstackProfile() {
                   id={field.name}
                   type="email"
                   placeholder="jane@example.com"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  value={field.state.value as never}
+                  onChange={(e) => field.handleChange(e.target.value as never)}
                   onBlur={field.handleBlur}
                   aria-invalid={
                     field.state.meta.isTouched &&
@@ -156,7 +156,9 @@ export function FormTanstackProfile() {
                 <FieldLabel htmlFor={field.name}>Role</FieldLabel>
                 <Select
                   value={field.state.value}
-                  onValueChange={(val) => field.handleChange(val ?? '')}
+                  onValueChange={(val) =>
+                    field.handleChange((val ?? '') as never)
+                  }
                 >
                   <SelectTrigger id={field.name} onBlur={field.handleBlur}>
                     <SelectValue placeholder="Select a role" />
@@ -189,8 +191,8 @@ export function FormTanstackProfile() {
                   id={field.name}
                   placeholder="Tell us a little about yourself"
                   className="resize-none"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  value={field.state.value as never}
+                  onChange={(e) => field.handleChange(e.target.value as never)}
                   onBlur={field.handleBlur}
                 />
                 <FieldDescription>Up to 160 characters.</FieldDescription>
