@@ -1,5 +1,5 @@
-import { Theme } from 'src/types/playground/theme.ts';
-import { TokenSet } from 'src/types/playground/tokens.ts';
+import { Theme } from './theme.ts';
+import { TokenSet } from './tokens.ts';
 
 /**
  * UI state for playground interface

@@ -51,13 +51,8 @@ jobs:
       - name: Lint
         run: pnpm -r lint
 
-      # Typecheck is scoped to the published library for now — apps still
-      # have pre-existing source-level type errors (TanStack Form types in
-      # apps/demos, base-ui RadioGroup onValueChange, a missing sonner
-      # declaration in apps/docs) that aren't fixed by the catalog. Widen
-      # this to \`pnpm -r typecheck\` once those are sorted.
-      - name: Typecheck UI library
-        run: pnpm --filter @acronis-platform/shadcn-uikit typecheck
+      - name: Typecheck
+        run: pnpm -r typecheck
 
       # Build runs last so the topological build order (ui → demo / docs)
       # is exercised against the same lockfile we just installed from.
