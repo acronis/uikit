@@ -72,10 +72,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build UI Component Library
-        run: pnpm --filter ./packages/ui run build
+        run: pnpm --filter ./packages/legacy/ui run build
 
       # Build step is in prepublish script in package.json
       - name: Publish package on NPM
-        run: pnpm publish packages/ui --access public --no-git-checks
+        run: pnpm publish packages/legacy/ui --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}

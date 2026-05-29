@@ -1,0 +1,39 @@
+{
+  "name": "@acronis-platform/shadcn-uikit-docs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "clean": "rm -rf .next .source",
+    "dev": "next dev",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "start": "next start",
+    "test": "echo \"no tests in this workspace\" && exit 0",
+    "test:watch": "echo \"no tests in this workspace\" && exit 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@acronis-platform/shadcn-uikit": "workspace:*",
+    "@acronis-platform/shadcn-uikit-demos": "workspace:*",
+    "@base-ui/react": "1.4.1",
+    "@radix-ui/react-dialog": "1.1.15",
+    "fumadocs-core": "15.7.13",
+    "fumadocs-ui": "15.7.13",
+    "fumadocs-mdx": "11.10.1",
+    "fumadocs-typescript": "3.1.0",
+    "next": "15.5.18",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "next-themes": "catalog:",
+    "sonner": "catalog:"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  }
+}

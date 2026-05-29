@@ -6,7 +6,7 @@ A monorepo containing 40+ custom UI components built on [shadcn/ui](https://ui.s
 
 ## 📦 Packages
 
-### [@acronis-platform/shadcn-uikit](./packages/ui) (v0.34.0)
+### [@acronis-platform/shadcn-uikit](./packages/legacy/ui) (v0.34.0)
 
 The core UI component library. Ships pre-built CSS — consumers do **not** need Tailwind CSS installed.
 
@@ -16,7 +16,7 @@ The core UI component library. Ships pre-built CSS — consumers do **not** need
 - `react-dom` ^18.2.0 || ^19.0.0
 - `tw-animate-css` ^1.4.0
 
-### [@acronis-platform/shadcn-uikit-demo](./packages/demo)
+### [@acronis-platform/shadcn-uikit-demo](./apps/demo)
 
 Interactive demo application showcasing all components with multiple themes.
 
@@ -51,7 +51,7 @@ pnpm run build
 
 ```bash
 # Start the demo application
-cd packages/demo
+cd apps/demo
 pnpm run dev
 ```
 
@@ -332,65 +332,73 @@ applyTheme('acronis-ocean');
 Create custom themes by copying the template file and customizing colors:
 
 ```bash
-# See packages/ui/src/styles/themes/_template.scss for the template
+# See packages/legacy/ui/src/styles/themes/_template.scss for the template
 ```
 
-See [Theme Documentation](./packages/docs/THEMES.md) for details.
+See [Theme Documentation](./apps/docs/THEMES.md) for details.
 
 ## 🏗️ Project Structure
 
 ```
 shadcn-uikit/
+├── apps/
+│   ├── demo/                  # Vite demo app (@acronis-platform/shadcn-uikit-demo)
+│   ├── demos/                 # Shared demo components (@acronis-platform/shadcn-uikit-demos)
+│   └── docs/                  # Fumadocs documentation site (@acronis-platform/shadcn-uikit-docs)
 ├── packages/
-│   ├── ui/                    # Core UI components library (@acronis-platform/shadcn-uikit)
-│   │   ├── src/
-│   │   │   ├── components/    # React components
-│   │   │   ├── hooks/         # Custom React hooks
-│   │   │   ├── lib/           # Utility functions
-│   │   │   ├── styles/        # SCSS source — themes, tokens, base
-│   │   │   │   ├── themes/    # Theme SCSS files + template
-│   │   │   │   └── tokens/    # Design tokens (CSS variables)
-│   │   │   ├── types/         # Shared TypeScript types
-│   │   │   ├── utils/         # Additional utilities
-│   │   │   ├── index.ts       # Main entry (all exports)
-│   │   │   └── react.ts       # React-only entry
-│   │   └── package.json
-│   ├── demo/                  # Demo application
-│   │   ├── src/
-│   │   │   ├── components/    # Demo-specific components
-│   │   │   ├── demos/         # Per-component demo pages
-│   │   │   └── layouts/       # App layouts
-│   │   └── package.json
-│   └── docs/                  # Package-level documentation
-├── docs/                      # Project-level documentation
-│   ├── explorations/          # Research & exploration documents
-│   ├── features/              # Feature specifications
-│   └── team/                  # Team processes & guides
-├── git-hooks/                 # Git hook scripts
-├── package.json               # Root workspace config
-├── pnpm-workspace.yaml        # pnpm workspace definition
+│   └── legacy/
+│       └── ui/                # Published library (@acronis-platform/shadcn-uikit)
+│           ├── src/           # React components, hooks, lib, styles, types, utils
+│           ├── docker-compose.storybook.yml      # Storybook visual-regression compose
+│           ├── Dockerfile.storybook              # ... and its image
+│           └── package.json
+├── .changeset/                # Pending changesets (each PR adds one)
+├── .github/workflows/         # ci.yml, release.yml, demo-deploy.yml, visual-regression.yml
+├── .husky/                    # Git hooks (managed by Husky)
+├── package.json               # Workspace root: scripts + shared devDeps
+├── pnpm-workspace.yaml        # pnpm workspaces + dependency catalog
 └── README.md
 ```
 
-## 🛠️ Development
+## 🛠️ Scripts
 
-### Build All Packages
+All commands run from the repo root unless noted otherwise. Every workspace
+exposes the same vocabulary, so `pnpm -r <name>` is reliable.
+
+| Script | What it does |
+|---|---|
+| `pnpm -r dev` / `pnpm --filter <name> dev` | Run the dev server / watcher for one or all workspaces |
+| `pnpm -r build` | Build every package in topological order (ui → demo/docs) |
+| `pnpm -r test` | Run the test suite once across all workspaces |
+| `pnpm -r test:watch` | Run tests in watch mode |
+| `pnpm -r lint` / `pnpm -r lint:fix` | ESLint across all workspaces |
+| `pnpm -r typecheck` | `tsc --noEmit` across all workspaces |
+| `pnpm format` / `pnpm format:check` | Prettier write / check from the repo root |
+| `pnpm -r clean` | Delete `dist/`, `.next/`, `storybook-static/`, etc. |
+| `pnpm changeset` | Add a changeset for a PR that changes the published UI library |
+
+To run a single workspace, prefix with `pnpm --filter <package-name>`:
 
 ```bash
-pnpm run build
+pnpm --filter @acronis-platform/shadcn-uikit-docs dev
+pnpm --filter @acronis-platform/shadcn-uikit storybook
 ```
 
-### Type Checking
+## 🚢 Releasing
+
+Releases are driven by [changesets](https://github.com/changesets/changesets).
+Every PR that changes `@acronis-platform/shadcn-uikit` should include a
+`.changeset/*.md` file describing the bump:
 
 ```bash
-pnpm run type-check
+pnpm changeset
 ```
 
-### Linting
-
-```bash
-pnpm run lint
-```
+On merge to `main`, the **Release** workflow opens (or updates) a single
+"Version Packages" PR aggregating all pending changesets. Merging that PR
+publishes to **npm** and **GitHub Packages** and creates the corresponding
+**GitHub Release**, which in turn triggers the **Demo & Storybook Pages
+deploy**. See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the full flow.
 
 ## 🚀 Quick Reference
 
@@ -422,12 +430,12 @@ export function App() {
 
 ## 📚 Documentation
 
-- [Tree-Shaking & Performance](./packages/docs/TREE_SHAKING.md) — bundle optimization guide
-- [Theme System Guide](./packages/docs/THEMES.md) — complete theme usage guide
-- [Theme Build Configuration](./packages/docs/THEME_BUILD.md) — build setup details
-- [Theme Architecture](./packages/demo/docs/THEME_ARCHITECTURE.md) — token system architecture
-- [UI Package Documentation](./packages/ui/README.md)
-- [Demo Package Documentation](./packages/demo/README.md)
+- [Tree-Shaking & Performance](./apps/docs/TREE_SHAKING.md) — bundle optimization guide
+- [Theme System Guide](./apps/docs/THEMES.md) — complete theme usage guide
+- [Theme Build Configuration](./apps/docs/THEME_BUILD.md) — build setup details
+- [Theme Architecture](./apps/demo/docs/THEME_ARCHITECTURE.md) — token system architecture
+- [UI Package Documentation](./packages/legacy/ui/README.md)
+- [Demo Package Documentation](./apps/demo/README.md)
 
 ## 📝 License
 

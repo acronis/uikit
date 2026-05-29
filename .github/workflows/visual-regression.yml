@@ -19,13 +19,14 @@ jobs:
           cache: 'pnpm'
 
       - name: Get pnpm store directory
+        id: pnpm-cache
         shell: bash
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
       - name: Cache pnpm store
         uses: actions/cache@v4
         with:
-          path: ${{ env.STORE_PATH }}
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: ${{ runner.os }}-pnpm-
 
@@ -38,9 +39,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            packages/ui/node_modules/.vite
-            packages/ui/node_modules/.cache/storybook
-          key: storybook-${{ runner.os }}-${{ hashFiles('packages/ui/src/**', 'packages/ui/.storybook/**', 'packages/ui/package.json') }}
+            packages/legacy/ui/node_modules/.vite
+            packages/legacy/ui/node_modules/.cache/storybook
+          key: storybook-${{ runner.os }}-${{ hashFiles('packages/legacy/ui/src/**', 'packages/legacy/ui/.storybook/**', 'packages/legacy/ui/package.json') }}
           restore-keys: storybook-${{ runner.os }}-
 
       - name: Build Storybook
@@ -56,4 +57,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: visual-regression-diffs
-          path: packages/ui/test/__snapshots__/__diff_output__/
+          path: packages/legacy/ui/test/__snapshots__/__diff_output__/

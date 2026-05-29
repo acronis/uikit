@@ -56,6 +56,6 @@ jobs:
 #      - run: echo registry=https://npm.pkg.github.com/acronis-platform >> .npmrc
 
       - name: Publish package on Github Packages
-        run: pnpm publish packages/ui --access public --no-git-checks
+        run: pnpm publish packages/legacy/ui --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

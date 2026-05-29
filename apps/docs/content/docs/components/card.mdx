@@ -1,0 +1,128 @@
+---
+title: Card
+description: A container that groups related content and actions.
+---
+
+import {
+  CardBasic,
+  CardWithFooter,
+  CardWithForm,
+  CardMultiple,
+  CardWithShadow,
+  CardSettings,
+  CardProduct,
+  CardWithImage,
+  CardCompact,
+  CardInteractive,
+  CardVariants,
+  CardList,
+} from '@/components/demos/card';
+import { DemoPreview } from '@/components/DemoPreview';
+
+## Usage
+
+```tsx
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@acronis-platform/shadcn-uikit';
+```
+
+## Basic
+
+A simple card with a header and content.
+
+<DemoPreview sourcePath="apps/demos/src/card/CardBasic.tsx">
+  <CardBasic />
+</DemoPreview>
+
+## Variants
+
+Different visual card variants.
+
+<DemoPreview sourcePath="apps/demos/src/card/CardVariants.tsx">
+  <CardVariants />
+</DemoPreview>
+
+## With footer
+
+A card with an action footer.
+
+<DemoPreview sourcePath="apps/demos/src/card/CardWithFooter.tsx">
+  <CardWithFooter />
+</DemoPreview>
+
+## With form
+
+A card containing a form layout.
+
+<DemoPreview sourcePath="apps/demos/src/card/CardWithForm.tsx">
+  <CardWithForm />
+</DemoPreview>
+
+## Multiple cards
+
+A grid of cards for displaying collections.
+
+<DemoPreview sourcePath="apps/demos/src/card/CardMultiple.tsx">
+  <CardMultiple />
+</DemoPreview>
+
+## With shadow
+
+Cards with elevated shadow styling.
+
+<DemoPreview sourcePath="apps/demos/src/card/CardWithShadow.tsx">
+  <CardWithShadow />
+</DemoPreview>
+
+## Settings
+
+A settings panel built with cards.
+
+<DemoPreview sourcePath="apps/demos/src/card/CardSettings.tsx">
+  <CardSettings />
+</DemoPreview>
+
+## Product card
+
+A product display card with image and details.
+
+<DemoPreview sourcePath="apps/demos/src/card/CardProduct.tsx">
+  <CardProduct />
+</DemoPreview>
+
+## With image
+
+A card featuring a header image.
+
+<DemoPreview sourcePath="apps/demos/src/card/CardWithImage.tsx">
+  <CardWithImage />
+</DemoPreview>
+
+## Compact
+
+A condensed card layout for dense interfaces.
+
+<DemoPreview sourcePath="apps/demos/src/card/CardCompact.tsx">
+  <CardCompact />
+</DemoPreview>
+
+## Interactive
+
+Cards with hover and click interactions.
+
+<DemoPreview sourcePath="apps/demos/src/card/CardInteractive.tsx">
+  <CardInteractive />
+</DemoPreview>
+
+## List layout
+
+Cards arranged in a list format.
+
+<DemoPreview sourcePath="apps/demos/src/card/CardList.tsx">
+  <CardList />
+</DemoPreview>
+
+## API Reference
+
+{/* No exported Props interface — Card sub-components accept standard HTML element props */}
+
+All Card sub-components (`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`) extend standard `React.HTMLAttributes<HTMLDivElement>` with consistent styling.

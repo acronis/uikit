@@ -1,46 +1,63 @@
-name: UI - Release
+name: UI - Release && Publish to NPM
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'packages/ui/**'
-
-  workflow_dispatch:
+  release:
+    types: [ published ]  # Triggers when you publish a release through GitHub UI
+  workflow_dispatch:      # Enables manual trigger via GitHub web
 
 permissions:
-  contents: write
+  contents: read
+  id-token: write  # Required for OIDC trusted publishing
 
 jobs:
-  changelog:
-    if: github.repository == 'acronis/shadcn-uikit'
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Conventional Changelog
-        id: changelog
-        uses: TriPSs/conventional-changelog-action@v5.3.0
-        with:
-          preset: "conventionalcommits"
-          github-token: ${{ secrets.ACV_TOKEN }}
-          version-file: './packages/ui/package.json'
-          output-file: './packages/ui/CHANGELOG.md'
-          git-path: './packages/ui'
-          git-user-name: 'Team-RND-Tools-Github'
-          git-user-email: 'team-rnd-tools-github@acronis.com'
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
 
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        if: ${{steps.changelog.outputs.skipped == 'false'}}
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACV_TOKEN }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          tag_name: ${{ steps.changelog.outputs.tag }}
-          name: ${{ steps.changelog.outputs.tag }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
-          draft: false
-          prerelease: false
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run tests
+        run: pnpm test
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build UI Component Library
+        run: pnpm --filter ./packages/ui run build
+
+      - name: Publish package on NPM
+        working-directory: packages/ui
+        run: pnpm publish --access public --no-git-checks --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}

@@ -2,9 +2,9 @@ name: Test - CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
   workflow_dispatch:
 
@@ -42,22 +42,26 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-
             ${{ runner.os }}-
 
-      - if: ${{ steps.cache-pnpm.outputs.cache-hit != 'true' }}
-        name: List the state of node modules
-        continue-on-error: true
-        run: pnpm list
-
+      # --frozen-lockfile: refuse the install if pnpm-lock.yaml is out of
+      # sync with package.json. This is what guarantees CI sees the exact
+      # tree a contributor saw locally.
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Build Acronis shacn UI Component Library
-        run: pnpm --filter ./packages/ui run build
-
-#      - name: Build icons
-#        run: pnpm --filter ./packages/icons run build
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
         run: pnpm run lint
+
+      # Typecheck is scoped to the published library for now — apps still
+      # have pre-existing source-level type errors. Widen this to
+      # `pnpm -r typecheck` after the script vocabulary unification and
+      # apps/demos typecheck-fix sibling PRs land.
+      - name: Typecheck UI library
+        run: pnpm --filter @acronis-platform/shadcn-uikit run type-check
+
+      # Build runs before Test so the topological build order (ui → demo / docs)
+      # is exercised against the same lockfile we just installed from.
+      - name: Build
+        run: pnpm -r build
 
       - name: Test
         run: pnpm run test

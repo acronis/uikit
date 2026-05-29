@@ -1,5 +1,4 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-export PATH="/opt/homebrew/opt/node@22/bin:$PATH"
+if ! command -v node >/dev/null 2>&1 && [ -d "/opt/homebrew/opt/node@22/bin" ]; then
+  export PATH="/opt/homebrew/opt/node@22/bin:$PATH"
+fi
 pnpm run lint-staged

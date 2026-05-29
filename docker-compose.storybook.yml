@@ -9,7 +9,7 @@ services:
       - "6006:6006"
     # Serve the pre-built static output from the host — no build step in Docker
     volumes:
-      - ./packages/ui/storybook-static:/app/packages/ui/storybook-static:ro
+      - ./packages/legacy/ui/storybook-static:/app/packages/legacy/ui/storybook-static:ro
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:6006 || exit 1"]
       interval: 10s
@@ -27,4 +27,4 @@ services:
       storybook:
         condition: service_healthy
     volumes:
-      - ./packages/ui/test/__snapshots__:/app/packages/ui/test/__snapshots__
+      - ./packages/legacy/ui/test/__snapshots__:/app/packages/legacy/ui/test/__snapshots__

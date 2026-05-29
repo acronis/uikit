@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true
+  }
+}

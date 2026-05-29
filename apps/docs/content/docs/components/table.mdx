@@ -1,0 +1,114 @@
+---
+title: Table
+description: A structured data display with headers, rows, and optional sorting, selection, and actions.
+---
+
+import { TableBasic, TableWithFooter, TableWithSelection, TableWithActions, TableWithBadges, TableCompact, TableStriped, TableEmpty, TableScrollable, TableSortable, TableExpandableRows } from '@/components/demos/table';
+import { DemoPreview } from '@/components/DemoPreview';
+
+## Usage
+
+```tsx
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@acronis-platform/shadcn-uikit';
+```
+
+## Basic
+
+A simple table with headers and rows.
+
+<DemoPreview sourcePath="apps/demos/src/table/TableBasic.tsx">
+  <TableBasic />
+</DemoPreview>
+
+## With Footer
+
+Table including a footer row for totals or summaries.
+
+<DemoPreview sourcePath="apps/demos/src/table/TableWithFooter.tsx">
+  <TableWithFooter />
+</DemoPreview>
+
+## With Selection
+
+Table with row selection checkboxes.
+
+<DemoPreview sourcePath="apps/demos/src/table/TableWithSelection.tsx">
+  <TableWithSelection />
+</DemoPreview>
+
+## With Actions
+
+Table with action buttons in each row.
+
+<DemoPreview sourcePath="apps/demos/src/table/TableWithActions.tsx">
+  <TableWithActions />
+</DemoPreview>
+
+## With Badges
+
+Table cells containing badge components.
+
+<DemoPreview sourcePath="apps/demos/src/table/TableWithBadges.tsx">
+  <TableWithBadges />
+</DemoPreview>
+
+## Compact
+
+Table with reduced padding for denser layouts.
+
+<DemoPreview sourcePath="apps/demos/src/table/TableCompact.tsx">
+  <TableCompact />
+</DemoPreview>
+
+## Striped
+
+Table with alternating row backgrounds.
+
+<DemoPreview sourcePath="apps/demos/src/table/TableStriped.tsx">
+  <TableStriped />
+</DemoPreview>
+
+## Empty
+
+Table displaying an empty state message.
+
+<DemoPreview sourcePath="apps/demos/src/table/TableEmpty.tsx">
+  <TableEmpty />
+</DemoPreview>
+
+## Scrollable
+
+Table with horizontal scrolling for wide content.
+
+<DemoPreview sourcePath="apps/demos/src/table/TableScrollable.tsx">
+  <TableScrollable />
+</DemoPreview>
+
+## Sortable
+
+Table with sortable column headers.
+
+<DemoPreview sourcePath="apps/demos/src/table/TableSortable.tsx">
+  <TableSortable />
+</DemoPreview>
+
+## Expandable rows
+
+Table rows can be expanded to reveal additional details without increasing table width.
+
+<DemoPreview sourcePath="apps/demos/src/table/TableExpandableRows.tsx">
+  <TableExpandableRows />
+</DemoPreview>
+
+## API Reference
+
+{/* No exported Props interface — Table sub-components accept standard HTML table element props */}
+
+The Table is a compound component built from standard HTML table elements. Each sub-component (`Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, `TableFooter`, `TableCaption`) extends its native HTML element props with consistent styling.

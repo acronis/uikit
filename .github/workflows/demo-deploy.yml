@@ -1,16 +1,16 @@
-# Sample workflow for building and deploying a VitePress site to GitHub Pages
+# Builds the demo + Storybook + docs into a single GitHub Pages artefact
+# and deploys it.
 #
+# Trigger: GitHub Release published. \`release.yml\` is configured with
+# \`createGithubReleases: true\`, so a successful Changesets publish
+# emits the release event we listen to here — meaning the Pages site
+# only updates when a real version of the UI library ships, not on
+# every push to main.
 name: Demo & Storybook - Deploy to Pages
 
 on:
-  # TODO: Add more specific event, such as release ui
-  push:
-    branches: [main]
-    paths:
-      - 'packages/demo/**'
-      - 'packages/ui/**'
-      - 'packages/docs/**'
-      - 'packages/demos/**'
+  release:
+    types: [published]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -50,27 +50,32 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build UI Component Library
-        run: pnpm --filter ./packages/ui run build
+        run: pnpm --filter ./packages/legacy/ui run build
 
       - name: Build demo
-        run: VITE_BASE_PATH=/shadcn-uikit/ pnpm --filter ./packages/demo run build
+        run: VITE_BASE_PATH=/shadcn-uikit/ pnpm --filter ./apps/demo run build
 
       - name: Build storybook
-        run: pnpm --filter ./packages/ui run storybook:build -o ../demo/dist/storybook
+        run: STORYBOOK_DISABLE_ADDON_VITEST=true pnpm --filter ./packages/legacy/ui run storybook:build
+
+      - name: Copy storybook to demo dist
+        run: |
+          rm -rf apps/demo/dist/storybook
+          cp -r packages/legacy/ui/storybook-static apps/demo/dist/storybook
 
       - name: Build docs
-        run: DOCS_STATIC_EXPORT=true DOCS_BASE_PATH=/shadcn-uikit/docs pnpm --filter ./packages/docs run build
+        run: DOCS_STATIC_EXPORT=true DOCS_BASE_PATH=/shadcn-uikit/docs pnpm --filter ./apps/docs run build
 
       - name: Copy docs to demo dist
-        run: cp -r packages/docs/out packages/demo/dist/docs
+        run: cp -r apps/docs/out apps/demo/dist/docs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: packages/demo/dist
+          path: apps/demo/dist
 
   # Deployment job
   deploy:

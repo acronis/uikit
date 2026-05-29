@@ -1,0 +1,42 @@
+{
+  "name": "@acronis-platform/shadcn-uikit-demos",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./*": "./src/*/index.ts",
+    "./icons/missing-icons": "./src/icons/missing-icons.tsx"
+  },
+  "scripts": {
+    "build": "echo \"no build (consumed via source by demo/docs)\" && exit 0",
+    "clean": "echo \"nothing to clean\" && exit 0",
+    "dev": "echo \"no dev server in this workspace\" && exit 0",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "test": "echo \"no tests in this workspace\" && exit 0",
+    "test:watch": "echo \"no tests in this workspace\" && exit 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@acronis-platform/shadcn-uikit": "workspace:*",
+    "@hookform/resolvers": "catalog:",
+    "@tanstack/react-form": "0.42.1",
+    "@tanstack/zod-form-adapter": "0.42.1",
+    "@tanstack/react-table": "catalog:",
+    "recharts": "catalog:",
+    "date-fns": "catalog:",
+    "react-hook-form": "catalog:",
+    "react-router-dom": "7.15.1",
+    "sonner": "catalog:",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
+  }
+}

@@ -1,22 +1,21 @@
 {
   "name": "shadcn-uikit-monorepo",
-  "version": "0.4.0",
+  "private": true,
   "description": "The Acronis UI Shadcn UI components library with color schemes and demos",
   "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
-    "husky": "pnpm run lint-staged && pnpm run lint:ts",
-    "lint-staged": "lint-staged",
-    "lint": "pnpm run -r lint",
-    "lint:fix": "pnpm run -r lint:fix",
-    "lint:ts": "pnpm run -r lint:ts",
-    "prepare": "husky",
     "build": "pnpm -r build",
-    "test": "pnpm -r test -- --watch=false",
-    "release": "pnpm run release --workspaces",
-    "type-check": "npm run type-check --workspaces --if-present"
+    "clean": "pnpm -r clean",
+    "format": "prettier --write . --ignore-unknown",
+    "format:check": "prettier --check . --ignore-unknown",
+    "husky": "pnpm run lint-staged && pnpm run typecheck",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "lint-staged": "lint-staged",
+    "prepare": "husky",
+    "test": "pnpm -r test",
+    "test:watch": "pnpm -r test:watch",
+    "typecheck": "pnpm -r typecheck"
   },
   "keywords": [
     "ui",
@@ -35,39 +34,37 @@
     "url": "https://github.com/acronis/shadcn-uikit/issues"
   },
   "devDependencies": {
-    "@commitlint/cli": "20.5.0",
-    "@commitlint/config-conventional": "20.5.0",
-    "@eslint/js": "^10.0.1",
-    "@types/node": "^25.5.2",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "globals": "^17.4.0",
-    "husky": "9.1.7",
-    "lint-staged": "16.4.0",
-    "prettier": "3.8.1",
-    "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.0",
-    "eslint": "^10.2.0",
+    "@commitlint/cli": "20.3.1",
+    "@commitlint/config-conventional": "20.3.1",
+    "@eslint/js": "^9.15.0",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "eslint": "catalog:",
     "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-storybook": "10.3.4",
-    "eslint-plugin-unused-imports": "^4.4.1"
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-storybook": "10.1.10",
+    "eslint-plugin-unused-imports": "^4.3.0",
+    "globals": "^15.12.0",
+    "husky": "9.1.7",
+    "lint-staged": "16.2.7",
+    "prettier": "3.7.4",
+    "typescript": "catalog:",
+    "typescript-eslint": "^8.15.0"
   },
   "lint-staged": {
+    "apps/**/*.{js,jsx,ts,tsx,vue}": [
+      "eslint --fix"
+    ],
     "packages/**/*.{js,jsx,ts,tsx,vue}": [
       "eslint --fix"
+    ],
+    "apps/**/*.{json,md,yml,yaml}": [
+      "prettier --write"
     ],
     "packages/**/*.{json,md,yml,yaml}": [
       "prettier --write"
     ]
   },
-  "packageManager": "pnpm@10.27.0",
-  "pnpm": {
-    "overrides": {
-      "react": "^19.0.0",
-      "react-dom": "^19.0.0",
-      "@types/react": "^19.0.0",
-      "@types/react-dom": "^19.0.0"
-    }
-  }
+  "packageManager": "pnpm@10.27.0"
 }

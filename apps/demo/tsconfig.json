@@ -1,0 +1,30 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@acronis-platform/shadcn-uikit": [
+        "../../packages/legacy/ui/dist/index.d.ts"
+      ],
+      "@acronis-platform/shadcn-uikit/react": [
+        "../../packages/legacy/ui/dist/react.d.ts"
+      ],
+      "@acronis-platform/shadcn-uikit/styles": [
+        "../../packages/legacy/ui/src/styles/globals.css"
+      ],
+      "@uikit-utils/*": ["../../packages/legacy/ui/dist/utils/*"]
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
