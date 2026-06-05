@@ -9,6 +9,7 @@ import { describe, expect, it } from 'vitest';
 
 import { collectDecls, serializeCss } from '../formats/css-light-dark';
 import { normalizeTree } from '../preprocessors/acronis-dtcg';
+import { buildThemeExtend, routeColor } from '../../tailwind';
 
 // ── normalizeTree (stage 1) ──────────────────────────────────────────────────
 
@@ -176,6 +177,28 @@ describe('serializeCss', () => {
     expect(css).toContain(":host-context([data-theme='dark'])");
   });
 
+  it('targets both :root and :host so tokens resolve in shadow roots', () => {
+    const base = serializeCss({
+      brand: 'acronis',
+      tier: 'semantic',
+      isOverride: false,
+      vars: new Map([['ui-x', 'red']]),
+      classes: new Map(),
+    });
+    expect(base).toContain(':root, :host {');
+    expect(base).toContain(":host([data-theme='light'])");
+    expect(base).toContain(":host([data-theme='dark'])");
+
+    const override = serializeCss({
+      brand: 'brand-b',
+      tier: 'semantic',
+      isOverride: true,
+      vars: new Map([['ui-x', 'blue']]),
+      classes: new Map(),
+    });
+    expect(override).toContain(':root, :host {');
+  });
+
   it('omits the shell from override files', () => {
     const css = serializeCss({
       brand: 'brand-b',
@@ -186,5 +209,117 @@ describe('serializeCss', () => {
     });
     expect(css).not.toContain('color-scheme');
     expect(css).toContain('--ui-x: blue;');
+  });
+});
+
+// ── routeColor + buildThemeExtend (tailwind preset) ──────────────────────────
+
+describe('routeColor', () => {
+  it('routes semantic background to backgroundColor, dropping `colors`/role', () => {
+    expect(routeColor(['colors', 'background', 'surface', 'primary'])).toEqual({
+      namespace: 'backgroundColor',
+      key: 'surface-primary',
+    });
+  });
+
+  it('routes semantic text to textColor', () => {
+    expect(routeColor(['colors', 'text', 'on-surface', 'primary'])).toEqual({
+      namespace: 'textColor',
+      key: 'on-surface-primary',
+    });
+  });
+
+  it('routes glyph (icons) to fill — keeps it distinct from text', () => {
+    expect(routeColor(['colors', 'glyph', 'on-surface', 'primary'])).toEqual({
+      namespace: 'fill',
+      key: 'on-surface-primary',
+    });
+  });
+
+  it('routes focus to ringColor', () => {
+    expect(routeColor(['colors', 'focus', 'brand'])).toEqual({
+      namespace: 'ringColor',
+      key: 'brand',
+    });
+  });
+
+  it('drops the role word from a component path (button.primary.background.idle)', () => {
+    expect(routeColor(['button', 'primary', 'background', 'idle'])).toEqual({
+      namespace: 'backgroundColor',
+      key: 'button-primary-idle',
+    });
+  });
+
+  it('keeps a descriptive role word in the key (switch.circle.on → backgroundColor)', () => {
+    expect(routeColor(['switch', 'circle', 'on'])).toEqual({
+      namespace: 'backgroundColor',
+      key: 'switch-circle-on',
+    });
+  });
+
+  it('throws for a color it cannot route', () => {
+    expect(() => routeColor(['mystery', 'thing'])).toThrow(/Cannot route/);
+  });
+});
+
+describe('buildThemeExtend', () => {
+  const tok = (over: Partial<TransformedToken>): TransformedToken =>
+    ({ name: 'x', path: ['x'], ...over }) as TransformedToken;
+
+  it('splits colors into role namespaces and bakes light-dark()', () => {
+    const theme = buildThemeExtend(
+      [
+        tok({
+          name: 'ui-background-surface-primary',
+          path: ['colors', 'background', 'surface', 'primary'],
+          $type: 'color',
+          $value: 'rgb(255 255 255)',
+        }),
+      ],
+      new Map([['colors.background.surface.primary', 'rgb(0 0 0)']])
+    );
+    expect(theme.backgroundColor['surface-primary']).toBe(
+      'light-dark(rgb(255 255 255), rgb(0 0 0))'
+    );
+  });
+
+  it('puts gradients in backgroundImage (not a color namespace)', () => {
+    const theme = buildThemeExtend(
+      [
+        tok({
+          name: 'ui-background-ai-idle',
+          path: ['colors', 'background', 'ai', 'idle'],
+          $type: 'gradient',
+          $value: 'linear-gradient(180deg, rgb(0 0 0) 20%, rgb(255 0 255) 100%)',
+        }),
+      ],
+      new Map()
+    );
+    expect(theme.backgroundImage['ai-idle']).toContain('linear-gradient(');
+    expect(theme.backgroundColor['ai-idle']).toBeUndefined();
+  });
+
+  it('drops the ui- prefix from dimension keys and splits radius vs spacing', () => {
+    const theme = buildThemeExtend(
+      [
+        tok({ name: 'ui-button-global-gap', path: ['button', '_global', 'gap'], $type: 'dimension', $value: '8px' }),
+        tok({ name: 'ui-button-global-radius', path: ['button', '_global', 'radius'], $type: 'dimension', $value: '4px' }),
+      ],
+      new Map()
+    );
+    expect(theme.spacing['button-global-gap']).toBe('8px');
+    expect(theme.borderRadius['button-global-radius']).toBe('4px');
+  });
+
+  it('throws on a key collision instead of silently overwriting', () => {
+    expect(() =>
+      buildThemeExtend(
+        [
+          tok({ path: ['colors', 'background', 'surface', 'primary'], $type: 'color', $value: 'rgb(1 1 1)' }),
+          tok({ path: ['colors', 'background', 'surface', 'primary'], $type: 'color', $value: 'rgb(2 2 2)' }),
+        ],
+        new Map()
+      )
+    ).toThrow(/collision/);
   });
 });

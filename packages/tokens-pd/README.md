@@ -16,14 +16,15 @@ and rebuild.
 
 Output is grouped into three top-level directories — `css/`, `tailwind/`, `dtcg/`:
 
-| Path                          | Tier      | Contents                                                             |
-| ----------------------------- | --------- | -------------------------------------------------------------------- |
-| `css/acronis.css`             | semantic  | Default brand — every semantic token (`--ui-*`) + `.ui-typography-*` |
-| `css/brand-b.css`             | semantic  | Non-default brand — only the tokens that differ from `acronis`       |
-| `css/<component>/acronis.css` | component | Default brand — that component's tokens (`button/`, `tooltip/`, …)   |
-| `css/<component>/brand-b.css` | component | Non-default brand — only the component tokens that differ            |
-| `tailwind/<brand>.js`         | —         | Tailwind preset with **baked** token values, consumed via `@config`  |
-| `dtcg/*.json`                 | —         | The 100%-DTCG intermediate (per-mode), for generic DTCG tooling      |
+| Path                                         | Tier      | Contents                                                                      |
+| -------------------------------------------- | --------- | ----------------------------------------------------------------------------- |
+| `css/acronis.css`                            | semantic  | Default brand — every semantic token (`--ui-*`) + `.ui-typography-*`          |
+| `css/brand-b.css`                            | semantic  | Non-default brand — only the tokens that differ from `acronis`                |
+| `css/<component>/acronis.css`                | component | Default brand — that component's tokens (`button/`, `tooltip/`, …)            |
+| `css/<component>/brand-b.css`                | component | Non-default brand — only the component tokens that differ                     |
+| `tailwind/<brand>/tokens.js`                 | semantic  | Tailwind preset of the shared semantic vocabulary (**baked** values)          |
+| `tailwind/<brand>/components/<component>.js` | component | One preset per component — opt-in, so its utilities aren't suggested globally |
+| `dtcg/*.json`                                | —         | The 100%-DTCG intermediate (per-mode), for generic DTCG tooling               |
 
 Names use the `--ui-*` convention (the `colors` tier segment is dropped, every
 token is prefixed with `ui`): `colors.background.surface.primary` →
@@ -48,11 +49,18 @@ Light/dark is built in via `light-dark()` + `color-scheme`; switch with the
 declare the `color-scheme` shell; override files restate only the changed
 properties on top.
 
-The Tailwind preset bakes resolved values (no dependency on the CSS variables):
+The Tailwind presets bake resolved values (no dependency on the CSS variables).
+They split into a shared semantic `tokens` preset plus one preset per component,
+so a component's utilities are only suggested where that component preset is
+loaded — not globally:
 
 ```css
 @import 'tailwindcss';
-@config '../tailwind.config.js'; /* presets: [require('@acronis-platform/tokens-pd/tailwind/acronis.js')] */
+/* presets: [
+     require('@acronis-platform/tokens-pd/tailwind/acronis/tokens.js'),       // shared vocabulary
+     require('@acronis-platform/tokens-pd/tailwind/acronis/components/button.js'), // opt-in per component
+   ] */
+@config '../tailwind.config.js';
 ```
 
 ## Build

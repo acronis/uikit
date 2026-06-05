@@ -10,8 +10,8 @@
   },
   "files": [
     "css/**/*.css",
-    "tailwind/*.js",
-    "tailwind/*.d.ts",
+    "tailwind/**/*.js",
+    "tailwind/**/*.d.ts",
     "dtcg/**/*.json",
     "README.md",
     "LICENSE"

@@ -30,8 +30,11 @@ this tool's gitignored `dist/assets/`:
 2. `pd-css` → `tokens-pd/css/` — semantic tier at the css root (`acronis.css`
    full, `brand-b.css` override-only) + one dir per component
    (`css/<component>/<brand>.css`). Names use the `--ui-*` convention.
-3. `pd-tailwind` → `tokens-pd/tailwind/<brand>.js` — per-brand Tailwind presets
-   with **baked** token values, consumed via `@config`.
+3. `pd-tailwind` → `tokens-pd/tailwind/<brand>/tokens.js` (semantic) +
+   `tokens-pd/tailwind/<brand>/components/<component>.js` (one per component) —
+   per-brand Tailwind presets with **baked** token values, consumed via `@config`.
+   Colors use role-namespaced keys (`bg-surface-primary`, `fill-on-surface-primary`,
+   `ring-brand`); splitting the components out keeps their utilities opt-in.
 4. `pd-assets` / `web-assets` → optimized SVG + React from
    `@acronis-platform/design-assets`, emitted as **one dir per deliverable** under
    `dist/assets/<filter>-<group>-<format>/`: `pd-concept-pack-{svg,react}`,
@@ -93,7 +96,8 @@ src/
   platforms.ts          Shared axes: Filter/Output/PlatformKey, FILTERS, OUTPUTS,
                         filtersFor, ALL_FILTERS, FILTER_ENUM; the tokens-pd output
                         paths (TOKENS_PD, dtcgDir, cssDir, semanticFile, componentFile,
-                        tailwindDir, tailwindPreset), DIST/ASSETS_DIST, rel.
+                        tailwindDir, tailwindTokensPreset, tailwindComponentPreset),
+                        DIST/ASSETS_DIST, rel.
   tokens.ts             The two SD stages (buildDtcg, buildCss) + TOKEN_SOURCES, VIEWS,
                         BRANDS, the makeSd factory; exports resolveTokens/resolveColorMap.
   tailwind.ts           buildTailwind — per-brand Tailwind preset (baked values).

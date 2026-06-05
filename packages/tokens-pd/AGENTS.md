@@ -33,8 +33,11 @@ Three top-level dirs — `css/`, `tailwind/`, `dtcg/`:
 - `css/brand-b.css` — semantic tier, non-default brand: **override-only**.
 - `css/<component>/<brand>.css` — component tier, one dir per component
   (`button/`, `breadcrumb/`, …); default brand full, others override-only.
-- `tailwind/<brand>.js` (+ `.d.ts`) — Tailwind preset with **baked** resolved
-  values, consumed via `@config`.
+- `tailwind/<brand>/tokens.js` (+ `.d.ts`) — Tailwind preset of the shared
+  semantic vocabulary, **baked** values, consumed via `@config`.
+- `tailwind/<brand>/components/<component>.js` (+ `.d.ts`) — one preset per
+  component, opt-in (load only the ones a build needs so their utilities aren't
+  globally suggested).
 - `dtcg/*.json` — the six per-mode, 100%-DTCG intermediate files.
 
 ## Conventions / scope
@@ -50,8 +53,13 @@ Three top-level dirs — `css/`, `tailwind/`, `dtcg/`:
   importing the base + (optionally) that brand's override file — last import wins.
 - **Override rule.** A non-default brand file contains a token only when its value
   **differs** from `acronis` or is **new** in that brand.
-- **Tailwind preset** values are baked literals (no `--ui-*` dependency), so a
-  preset is self-contained but brand selection is build-time (`@config`).
+- **Tailwind presets** carry baked literals (no `--ui-*` dependency), so a preset
+  is self-contained but brand selection is build-time (`@config`). Keys follow
+  Tailwind's role-namespaced model — colors land in `backgroundColor`/`textColor`/
+  `borderColor`/`fill`/`ringColor` with the role word and `ui-` prefix dropped
+  (`bg-surface-primary`, `fill-on-surface-primary`, `ring-brand`); gradients in
+  `backgroundImage` (`bg-ai-idle`). The semantic vocabulary and each component
+  ship as **separate** presets so component utilities stay opt-in.
 
 See `../../context/releasing.md` for the Changesets / publish flow. The tool's
 own conventions live in [`../../tools/style-dictionary/AGENTS.md`](../../tools/style-dictionary/AGENTS.md).

@@ -64,12 +64,19 @@ export const componentDir = (component: string): string => path.join(cssDir(), c
 export const componentFile = (component: string, brand: string): string =>
   path.join(componentDir(component), `${brand}.css`);
 
-/** Tailwind presets live under `tokens-pd/tailwind/`. */
+/** Tailwind presets live under `tokens-pd/tailwind/`, partitioned per brand. */
 export const tailwindDir = (): string => path.join(TOKENS_PD, 'tailwind');
 
-/** Per-brand Tailwind preset: `tokens-pd/tailwind/<brand>.js`. */
-export const tailwindPreset = (brand: string): string =>
-  path.join(tailwindDir(), `${brand}.js`);
+/** Per-brand Tailwind preset dir: `tokens-pd/tailwind/<brand>/`. */
+export const tailwindBrandDir = (brand: string): string => path.join(tailwindDir(), brand);
+
+/** Shared semantic-vocabulary preset: `tokens-pd/tailwind/<brand>/tokens.js`. */
+export const tailwindTokensPreset = (brand: string): string =>
+  path.join(tailwindBrandDir(brand), 'tokens.js');
+
+/** Per-component preset: `tokens-pd/tailwind/<brand>/components/<component>.js`. */
+export const tailwindComponentPreset = (brand: string, component: string): string =>
+  path.join(tailwindBrandDir(brand), 'components', `${component}.js`);
 
 /** Asset deliverables live under `dist/assets/<filter>-<group>-<format>/`. */
 export const ASSETS_DIST = path.join(DIST, 'assets');

@@ -1,5 +1,7 @@
 // CSS rendering for the token build. Two kinds of declaration share a file:
-//   - colors + dimensions + gradients → custom properties in `:root`. Colors are
+//   - colors + dimensions + gradients → custom properties in `:root, :host` (so
+//     the tokens resolve in the light DOM and inside web-component shadow roots).
+//     Colors are
 //     theme-aware: the light value is zipped with the matching dark value
 //     (supplied via `darkTokens`, keyed by token path) into `light-dark()`.
 //   - typography composites → utility classes (`.ui-typography-* { … }`). The
@@ -75,7 +77,7 @@ export interface SerializeOptions {
   brand: string;
   /** `semantic` or a component name — recorded in the file header. */
   tier: string;
-  /** Override-only files are bare `:root {}`; base files carry the theme shell. */
+  /** Override-only files are bare `:root, :host {}`; base files carry the theme shell. */
   isOverride: boolean;
   vars: Map<string, string>;
   classes: Map<string, string>;
