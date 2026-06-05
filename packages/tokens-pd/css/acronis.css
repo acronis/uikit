@@ -157,6 +157,14 @@
   color-scheme: dark;
 }
 
+:host-context([data-theme='light']) {
+  color-scheme: light;
+}
+
+:host-context([data-theme='dark']) {
+  color-scheme: dark;
+}
+
 .ui-typography-body-accent {
   font-family: Inter;
   font-size: 14px;

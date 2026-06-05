@@ -110,7 +110,9 @@ export function serializeCss({
     ? `:root {\n${varLines}\n}`
     : `:root {\n  color-scheme: light dark;\n\n${varLines}\n}\n\n` +
       `[data-theme='light'] {\n  color-scheme: light;\n}\n\n` +
-      `[data-theme='dark'] {\n  color-scheme: dark;\n}`;
+      `[data-theme='dark'] {\n  color-scheme: dark;\n}\n\n` +
+      `:host-context([data-theme='light']) {\n  color-scheme: light;\n}\n\n` +
+      `:host-context([data-theme='dark']) {\n  color-scheme: dark;\n}`;
 
   return `${header}\n${[root, classBlocks].filter(Boolean).join('\n\n')}\n`;
 }
