@@ -173,8 +173,8 @@ describe('serializeCss', () => {
     });
     expect(css).toContain('color-scheme: light dark;');
     expect(css).toContain("[data-theme='dark']");
-    expect(css).toContain(":host-context([data-theme='light'])");
-    expect(css).toContain(":host-context([data-theme='dark'])");
+    expect(css).toContain(":host([data-theme='light'])");
+    expect(css).toContain(":host([data-theme='dark'])");
   });
 
   it('targets both :root and :host so tokens resolve in shadow roots', () => {

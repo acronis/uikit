@@ -109,12 +109,12 @@ export function serializeCss({
   // Base files declare the light/dark shell; override files only restate the
   // changed custom properties (they layer on top of the imported base).
   const root = isOverride
-    ? `:root {\n${varLines}\n}`
-    : `:root {\n  color-scheme: light dark;\n\n${varLines}\n}\n\n` +
+    ? `:root, :host {\n${varLines}\n}`
+    : `:root, :host {\n  color-scheme: light dark;\n\n${varLines}\n}\n\n` +
       `[data-theme='light'] {\n  color-scheme: light;\n}\n\n` +
       `[data-theme='dark'] {\n  color-scheme: dark;\n}\n\n` +
-      `:host-context([data-theme='light']) {\n  color-scheme: light;\n}\n\n` +
-      `:host-context([data-theme='dark']) {\n  color-scheme: dark;\n}`;
+      `:host([data-theme='light']) {\n  color-scheme: light;\n}\n\n` +
+      `:host([data-theme='dark']) {\n  color-scheme: dark;\n}`;
 
   return `${header}\n${[root, classBlocks].filter(Boolean).join('\n\n')}\n`;
 }
