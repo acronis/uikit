@@ -57,6 +57,17 @@ const RENDER: Record<string, RenderHint> = {
   },
   input: { ariaLabel: 'Email' },
   search: { ariaLabel: 'Search' },
+  tooltip: {
+    extraImports: [
+      "import { TooltipTrigger, TooltipContent } from '../tooltip';",
+    ],
+    sample: [
+      '',
+      '      <TooltipTrigger>Hover me</TooltipTrigger>',
+      '      <TooltipContent>Helpful hint</TooltipContent>',
+      '    ',
+    ].join('\n'),
+  },
   select: {
     extraImports: [
       "import { SelectTrigger, SelectValue, SelectContent, SelectItem } from '../select';",

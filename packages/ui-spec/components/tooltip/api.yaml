@@ -1,0 +1,74 @@
+spec_version: '1.0'
+component: Tooltip
+
+# A composable tooltip: a trigger plus a content popup (see anatomy.yaml). Open
+# state is controllable or uncontrolled; delays are configured on a shared
+# provider.
+contract:
+  properties:
+    - name: open
+      type: boolean
+      required: false
+      description: Controlled open state of the popup. Pair with the change event.
+    - name: default-open
+      type: boolean
+      required: false
+      default: false
+      description: Whether the popup is initially open when uncontrolled.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables the tooltip — the popup never opens.
+    - name: side
+      type: "'top' | 'right' | 'bottom' | 'left'"
+      required: false
+      default: top
+      description: Which side of the trigger the popup is placed on (on the content).
+    - name: delay
+      type: number
+      required: false
+      description: >-
+        Open delay in ms. Set on a `TooltipProvider` to share across tooltips.
+
+  events:
+    - name: open-change
+      payload: boolean
+      description: >-
+        Fired when the popup opens or closes (React: `onOpenChange`). Payload is
+        the new open state.
+
+  content:
+    - name: default
+      description: >-
+        The composed tooltip: a trigger (wrap any element via the trigger's
+        `render` prop) and a content popup holding the hint text.
+
+  methods: []
+
+adapters:
+  react:
+    component: Tooltip
+    status: implemented
+    import: >-
+      import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from
+      '@acronis-platform/ui-react'
+    example: |
+      <Tooltip>
+        <TooltipTrigger render={<Button>Save</Button>} />
+        <TooltipContent>Save your changes</TooltipContent>
+      </Tooltip>
+  vue:
+    component: AvTooltip
+    status: planned
+    import: "import { AvTooltip } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvTooltip text="Save your changes">
+        <AvButton>Save</AvButton>
+      </AvTooltip>
+  web-components:
+    element: ui-tooltip
+    status: planned
+    import: "import '@acronis-platform/ui-wc/tooltip'"
+    example: |
+      <ui-tooltip text="Save your changes"><button>Save</button></ui-tooltip>

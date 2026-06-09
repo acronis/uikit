@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: Tooltip
+name: tooltip
+status: ready
+category: overlay
+description: >-
+  A contextual hint that appears on hover or focus of its trigger and disappears
+  when the interaction ends. Used for supplementary information — not for
+  critical content or actions.
+since: 0.12.0
+dependencies:
+  components: []
+figma:
+  node: '1010-36'
+  codeConnect: packages/ui-react/src/components/ui/tooltip/tooltip.figma.tsx

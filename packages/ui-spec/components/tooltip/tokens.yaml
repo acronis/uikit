@@ -1,0 +1,26 @@
+spec_version: '1.0'
+component: Tooltip
+
+# References only — values live in @acronis-platform/tokens-pd.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-tooltip-background,
+      affects: popup,
+      description: Bubble background (dark ~90% opaque),
+    }
+  - { name: --ui-tooltip-label, affects: label, description: Hint text color }
+  - { name: --ui-tooltip-global-padding-x, affects: popup }
+  - { name: --ui-tooltip-global-padding-y, affects: popup }
+  - { name: --ui-tooltip-global-radius, affects: popup }
+  - {
+      name: --ui-tooltip-global-width-min,
+      affects: popup,
+      description: Minimum width (48px),
+    }
+  - {
+      name: --ui-tooltip-global-width-max,
+      affects: popup,
+      description: Maximum width (256px),
+    }
