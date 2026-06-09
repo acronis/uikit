@@ -1,0 +1,54 @@
+spec_version: '1.0'
+component: Tag
+
+# `variant` and `size` are the cva axes (their enums match the cva keys in the
+# ui-react source). The label is content; the icon is an optional leading slot.
+contract:
+  properties:
+    - name: variant
+      type: "'info' | 'success' | 'warning' | 'critical' | 'danger' | 'neutral'"
+      required: false
+      default: neutral
+      description: >-
+        Status style. Each maps to the shared semantic status tokens
+        (background / border / text). (The Figma "AI" variant is pending an
+        upstream `--ui-background-status-ai` token and is not yet shipped.)
+    - name: size
+      type: "'default' | 'sm'"
+      required: false
+      default: default
+      description: Height and padding — 24px (`default`) or 20px (`sm`).
+    - name: icon
+      type: ReactNode
+      required: false
+      description: Optional leading icon, rendered at 16px before the label.
+
+  events: []
+
+  content:
+    - name: default
+      description: The tag label (children). Truncates at the 256px max width.
+
+  methods: []
+
+adapters:
+  react:
+    component: Tag
+    status: implemented
+    import: "import { Tag } from '@acronis-platform/ui-react'"
+    example: |
+      <Tag variant="success">Active</Tag>
+      <Tag variant="info" size="sm">Beta</Tag>
+      <Tag variant="warning" icon={<TriangleWarningIcon />}>Degraded</Tag>
+  vue:
+    component: AvTag
+    status: planned
+    import: "import { AvTag } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvTag variant="success">Active</AvTag>
+  web-components:
+    element: ui-tag
+    status: planned
+    import: "import '@acronis-platform/ui-wc/tag'"
+    example: |
+      <ui-tag variant="success">Active</ui-tag>
