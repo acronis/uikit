@@ -1,7 +1,27 @@
 import { Fragment } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 
-import { Button, ButtonIcon, Switch } from '@acronis-platform/ui-react';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  Button,
+  ButtonIcon,
+  Checkbox,
+  Input,
+  Radio,
+  RadioGroup,
+  Search,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Switch,
+} from '@acronis-platform/ui-react';
 import { PlusIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 type Variant =
@@ -118,6 +138,21 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
+// Fixed-width wrapper for the full-width form controls (Input/Search/Select).
+function Field({ width = 200, children }: { width?: number; children: ReactNode }) {
+  return <div style={{ width }}>{children}</div>;
+}
+
+const radioRow: CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+  fontSize: 14,
+  color: 'var(--ui-text-on-surface-primary)',
+};
+
+const FRUITS = { apple: 'Apple', banana: 'Banana', cherry: 'Cherry' };
+
 export function ComponentsSection() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
@@ -192,6 +227,124 @@ export function ComponentsSection() {
           <Switch aria-label="Disabled off" disabled />
           <Switch aria-label="Disabled on" disabled defaultChecked />
         </Row>
+      </div>
+
+      <div>
+        <h3 style={{ marginBottom: 12 }}>Checkbox</h3>
+        <Row label="States">
+          <Checkbox aria-label="Unchecked" />
+          <Checkbox aria-label="Checked" defaultChecked />
+          <Checkbox aria-label="Indeterminate" indeterminate />
+          <Checkbox aria-label="Disabled" disabled />
+          <Checkbox aria-label="Disabled checked" disabled defaultChecked />
+        </Row>
+      </div>
+
+      <div>
+        <h3 style={{ marginBottom: 12 }}>Radio</h3>
+        <RadioGroup defaultValue="standard" aria-label="Plan">
+          <label style={radioRow}>
+            <Radio value="standard" /> Standard
+          </label>
+          <label style={radioRow}>
+            <Radio value="pro" /> Pro
+          </label>
+          <label style={radioRow}>
+            <Radio value="enterprise" disabled /> Enterprise (disabled)
+          </label>
+        </RadioGroup>
+      </div>
+
+      <div>
+        <h3 style={{ marginBottom: 12 }}>Input</h3>
+        <Row label="States">
+          <Field>
+            <Input aria-label="Idle" placeholder="Placeholder" />
+          </Field>
+          <Field>
+            <Input aria-label="Filled" defaultValue="Value" />
+          </Field>
+          <Field>
+            <Input aria-label="Invalid" aria-invalid defaultValue="Bad value" />
+          </Field>
+          <Field>
+            <Input aria-label="Disabled" placeholder="Disabled" disabled />
+          </Field>
+        </Row>
+      </div>
+
+      <div>
+        <h3 style={{ marginBottom: 12 }}>Search</h3>
+        <Row label="States">
+          <Field width={240}>
+            <Search aria-label="Search" placeholder="Search" />
+          </Field>
+          <Field width={240}>
+            <Search aria-label="Filled" defaultValue="Query" />
+          </Field>
+          <Field width={240}>
+            <Search aria-label="Disabled" placeholder="Search" disabled />
+          </Field>
+        </Row>
+      </div>
+
+      <div>
+        <h3 style={{ marginBottom: 12 }}>Select</h3>
+        <Row label="States">
+          <Field width={224}>
+            <Select items={FRUITS}>
+              <SelectTrigger aria-label="Fruit">
+                <SelectValue placeholder="Select an option" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="apple">Apple</SelectItem>
+                <SelectItem value="banana">Banana</SelectItem>
+                <SelectItem value="cherry">Cherry</SelectItem>
+              </SelectContent>
+            </Select>
+          </Field>
+          <Field width={224}>
+            <Select items={FRUITS} defaultValue="banana">
+              <SelectTrigger aria-label="With value">
+                <SelectValue placeholder="Select an option" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="apple">Apple</SelectItem>
+                <SelectItem value="banana">Banana</SelectItem>
+                <SelectItem value="cherry">Cherry</SelectItem>
+              </SelectContent>
+            </Select>
+          </Field>
+          <Field width={224}>
+            <Select disabled>
+              <SelectTrigger aria-label="Disabled">
+                <SelectValue placeholder="Disabled" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="apple">Apple</SelectItem>
+              </SelectContent>
+            </Select>
+          </Field>
+        </Row>
+      </div>
+
+      <div>
+        <h3 style={{ marginBottom: 12 }}>Breadcrumb</h3>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="#">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="#">Devices</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Workstation</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
     </div>
   );
