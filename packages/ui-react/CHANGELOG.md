@@ -1,5 +1,32 @@
 # @acronis-platform/ui-react
 
+## 0.12.0
+
+### Minor Changes
+
+- [#251](https://github.com/acronis/uikit/pull/251) [`e5ce3de`](https://github.com/acronis/uikit/commit/e5ce3de0d53d9c3bad17c1dba03a6a23777a115b) Thanks [@leonid](https://github.com/leonid)! - Add `Tag`: a compact status/category label with six variants (`info`,
+  `success`, `warning`, `critical`, `danger`, `neutral`) across two sizes
+  (`default`, `sm`) and an optional leading icon. Colors reference the shared
+  semantic status tokens; the label truncates at the 256px max width.
+
+  (The Figma "AI" variant is not included yet — its background tint has no design
+  token, pending an upstream `--ui-background-status-ai` sync.)
+
+### Patch Changes
+
+- [#250](https://github.com/acronis/uikit/pull/250) [`d3541f9`](https://github.com/acronis/uikit/commit/d3541f9c40c5d12f1c464ad68bf42709b89948e5) Thanks [@leonid](https://github.com/leonid)! - Fix the AI background gradient to run **left-to-right** (90deg) instead of
+  top-to-bottom, matching the Figma design. The `background.ai` gradient transform
+  in design-tokens carried a stale vertical matrix (`[[0,1,0],[-1,0,1]]` → 180deg);
+  it is now identity (`[[1,0,0],[0,1,0]]` → 90deg), and `tokens-pd` is regenerated.
+
+  The AI `Button` variant now always leads with the `Sparkles` icon before its
+  label, matching the Figma "Ai" button, and sets `bg-origin-border` so the
+  gradient covers the full button box (previously a 1px sliver of the gradient's
+  opposite end showed on the left and right border edges).
+
+- Updated dependencies [[`d3541f9`](https://github.com/acronis/uikit/commit/d3541f9c40c5d12f1c464ad68bf42709b89948e5)]:
+  - @acronis-platform/tokens-pd@0.7.3
+
 ## 0.11.1
 
 ### Patch Changes
