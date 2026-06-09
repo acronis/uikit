@@ -16,6 +16,15 @@
 **When** it renders
 **Then** it uses the `default` (Primary) style.
 
+### AI variant always leads with the Sparkles icon
+
+**Given** a Button with `variant="ai"`
+**When** it renders
+**Then** it always renders the `Sparkles` icon before the label (the icon is
+intrinsic to the variant — the consumer does not pass it)
+**And** its background is the `--ui-background-ai-*` gradient, which runs
+**left-to-right** (start color → end color), covering the full button box.
+
 ## Interaction states
 
 ### Tracks each state from its own token

@@ -21,9 +21,11 @@ parts:
     description: >-
       Leading or trailing icon. Any SVG child is sized to 16px via the
       `[&_svg]:size-4` rule and inherits the label color through currentColor.
+      The `ai` variant always renders a leading `Sparkles` icon before the label
+      (intrinsic to the variant, not passed by the consumer).
     element: svg
     optional: true
-    visible_when: an SVG child is present
+    visible_when: an SVG child is present, or always for the `ai` variant
   - id: label
     description: Text content passed as children.
     optional: true

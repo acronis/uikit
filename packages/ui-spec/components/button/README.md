@@ -25,3 +25,18 @@ import { Button } from '@acronis-platform/ui-react';
 
 Vue and Web Component implementations are planned and will target the same
 contract — see `api.yaml` `adapters`.
+
+## AI variant
+
+`variant="ai"` is special:
+
+- It **always leads with the `Sparkles` icon** before the label — the icon is
+  intrinsic to the variant, so you don't pass it:
+
+  ```tsx
+  <Button variant="ai">Ask AI</Button>
+  ```
+
+- Its background is the `--ui-background-ai-*` gradient, which runs
+  **left-to-right** and covers the full button (including the transparent 1px
+  border box).
