@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
+import { SparklesIcon } from '@acronis-platform/icons-react/stroke-mono';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
@@ -58,13 +59,27 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, render, ...props }, ref) => {
+  ({ className, variant, size, render, children, ...props }, ref) => {
+    // The AI variant always leads with the Sparkles icon before its label
+    // (the Figma "Ai" button is a Sparkles instance + label).
+    const content =
+      variant === 'ai' ? (
+        <>
+          <SparklesIcon />
+          {children}
+        </>
+      ) : (
+        children
+      );
     return useRender({
       render,
       ref,
       defaultTagName: 'button',
       props: mergeProps<'button'>(
-        { className: cn(buttonVariants({ variant, size, className })) },
+        {
+          className: cn(buttonVariants({ variant, size, className })),
+          children: content,
+        },
         props
       ),
     });

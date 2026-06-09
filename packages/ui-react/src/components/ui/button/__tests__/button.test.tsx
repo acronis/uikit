@@ -11,6 +11,19 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
   });
 
+  it('leads the ai variant with the Sparkles icon before the label', () => {
+    render(<Button variant="ai">Ask AI</Button>);
+    const button = screen.getByRole('button', { name: /Ask AI/ });
+    expect(button).toHaveTextContent('Ask AI');
+    // The icon is the first child (rendered before the label).
+    expect(button.firstElementChild?.tagName.toLowerCase()).toBe('svg');
+  });
+
+  it('does not inject an icon for non-ai variants', () => {
+    render(<Button>Save</Button>);
+    expect(screen.getByRole('button', { name: 'Save' }).querySelector('svg')).toBeNull();
+  });
+
   it('applies the default variant and size classes', () => {
     render(<Button>Save</Button>);
     const button = screen.getByRole('button', { name: 'Save' });

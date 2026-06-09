@@ -702,8 +702,8 @@
           "platforms": ["PD"],
           "$extensions": {
             "com.figma.gradientTransform": [
-              [0, 1, 0],
-              [-1, 0, 1]
+              [1, 0, 0],
+              [0, 1, 0]
             ],
             "com.figma.styleId": "6a29f79edcb949dfddc3c57804e23ca90e2e3158"
           }
@@ -730,8 +730,8 @@
           "platforms": ["PD"],
           "$extensions": {
             "com.figma.gradientTransform": [
-              [0, 1, 0],
-              [-1, 0, 1]
+              [1, 0, 0],
+              [0, 1, 0]
             ],
             "com.figma.styleId": "d75824f59afe59907a78feb5c44bcf9d89e32d8d"
           }
@@ -758,8 +758,8 @@
           "platforms": ["PD"],
           "$extensions": {
             "com.figma.gradientTransform": [
-              [0, 1, 0],
-              [-1, 0, 1]
+              [1, 0, 0],
+              [0, 1, 0]
             ],
             "com.figma.styleId": "d3600bd86ce03979f095d043a02a4325e201c3c5"
           }
@@ -786,8 +786,8 @@
           "platforms": ["PD"],
           "$extensions": {
             "com.figma.gradientTransform": [
-              [0, 1, 0],
-              [-1, 0, 1]
+              [1, 0, 0],
+              [0, 1, 0]
             ],
             "com.figma.styleId": "ff3aef1c0377478a63ccaa33539cec575af8b8c5"
           }
