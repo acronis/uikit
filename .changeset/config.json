@@ -10,6 +10,7 @@
   "ignore": [
     "@acronis-platform/shadcn-uikit-demo",
     "@acronis-platform/shadcn-uikit-demos",
-    "@acronis-platform/shadcn-uikit-docs"
+    "@acronis-platform/shadcn-uikit-docs",
+    "@acronis-platform/kitchen-sink"
   ]
 }
