@@ -54,3 +54,6 @@ storybook-static
 # AI
 .ai
 .claude
+
+# Temporary pull data from Figma
+packages/design-tokens/.tmp/figma-tokens
