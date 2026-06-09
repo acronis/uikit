@@ -201,8 +201,24 @@ const STATE_RE = new RegExp(`^(.+)-(${STATE_ORDER.join('|')})$`);
     groups.get(prefix)[state] = k;
   }
   for (const [prefix, stateMap] of groups) {
-    if (prefix in node) throw new Error(`state regroup conflict: '${prefix}' already exists alongside its state variants`);
-    const group = {};
+    let group;
+    if (prefix in node) {
+      if (isLeafNode(node[prefix])) {
+        // A plain leaf coexists with state-variant siblings — preserve it as
+        // _base so consumers can reach button.secondary.background._base and
+        // button.secondary.background.idle without conflict.
+        group = { _base: node[prefix] };
+      } else if (typeof node[prefix] === 'object' && !Array.isArray(node[prefix])) {
+        // An existing non-leaf group (e.g. background.idle set via a nested
+        // Figma path) — merge the flat state variants into it rather than
+        // creating a duplicate.
+        group = node[prefix];
+      } else {
+        throw new Error(`state regroup conflict: '${prefix}' already exists alongside its state variants`);
+      }
+    } else {
+      group = {};
+    }
     for (const state of STATE_ORDER) {
       if (stateMap[state]) {
         group[state] = node[stateMap[state]];
