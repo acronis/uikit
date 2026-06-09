@@ -1,0 +1,34 @@
+spec_version: '1.0'
+component: Tag
+
+# References only. The Figma `component/tag/*` colors are 1:1 aliases of the
+# shared semantic status tokens, so the component references those directly
+# (no dedicated `--ui-tag-*` color tier). Geometry (height, padding, radius,
+# gap) uses Tailwind utilities matching the design's values.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # Info
+  - { name: --ui-background-status-info, affects: root }
+  - { name: --ui-border-on-status-info, affects: root }
+  - { name: --ui-text-on-status-info, affects: label }
+  # Success
+  - { name: --ui-background-status-success, affects: root }
+  - { name: --ui-border-on-status-success, affects: root }
+  - { name: --ui-text-on-status-success, affects: label }
+  # Warning
+  - { name: --ui-background-status-warning, affects: root }
+  - { name: --ui-border-on-status-warning, affects: root }
+  - { name: --ui-text-on-status-warning, affects: label }
+  # Critical
+  - { name: --ui-background-status-critical, affects: root }
+  - { name: --ui-border-on-status-critical, affects: root }
+  - { name: --ui-text-on-status-critical, affects: label }
+  # Danger
+  - { name: --ui-background-status-danger, affects: root }
+  - { name: --ui-border-on-status-danger, affects: root }
+  - { name: --ui-text-on-status-danger, affects: label }
+  # Neutral
+  - { name: --ui-background-status-neutral, affects: root }
+  - { name: --ui-border-on-status-neutral, affects: root }
+  - { name: --ui-text-on-status-neutral, affects: label }

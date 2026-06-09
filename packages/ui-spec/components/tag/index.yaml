@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: Tag
+name: tag
+status: ready
+category: data-display
+description: >-
+  A compact label that represents, categorizes, or highlights a piece of
+  information — a status, attribute, or keyword. Six status variants across two
+  sizes, with an optional leading icon.
+since: 0.12.0
+dependencies:
+  components: []
+figma:
+  node: '907-257669'
+  codeConnect: packages/ui-react/src/components/ui/tag/tag.figma.tsx

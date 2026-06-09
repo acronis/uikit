@@ -8,3 +8,4 @@ export * from './components/ui/search';
 export * from './components/ui/select';
 export * from './components/ui/button-icon';
 export * from './components/ui/switch';
+export * from './components/ui/tag';

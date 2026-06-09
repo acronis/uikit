@@ -57,6 +57,7 @@ const RENDER: Record<string, RenderHint> = {
   },
   input: { ariaLabel: 'Email' },
   search: { ariaLabel: 'Search' },
+  tag: { sample: 'Label' },
   select: {
     extraImports: [
       "import { SelectTrigger, SelectValue, SelectContent, SelectItem } from '../select';",
@@ -168,15 +169,18 @@ export const Matrix: Story = {
       ])}
     </div>
   ),
-};
-
-export const Disabled: Story = {
+};`);
+    // Only emit the all-variants Disabled grid when the component actually has a
+    // `disabled` prop (e.g. Button does; Tag doesn't).
+    if (hasProp(api, 'disabled')) {
+      parts.push(`export const Disabled: Story = {
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
       {VARIANTS.map((v) => ${inst(' key={v} variant={v} disabled')})}
     </div>
   ),
 };`);
+    }
   } else if (hasProp(api, 'checked')) {
     parts.push(`export const States: Story = {
   render: () => (
