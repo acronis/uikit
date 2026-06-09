@@ -1,5 +1,15 @@
 # @acronis-platform/ui-react
 
+## 0.13.0
+
+### Minor Changes
+
+- [#253](https://github.com/acronis/uikit/pull/253) [`1a9281b`](https://github.com/acronis/uikit/commit/1a9281b69e4fe763fb742fcf9a802b87a76e1169) Thanks [@leonid](https://github.com/leonid)! - Add `Tooltip`: a contextual hint shown on hover/focus, built on the Base UI
+  Tooltip primitive and themed with the `--ui-tooltip-*` tokens (dark bubble,
+  light label, no arrow). Exports `Tooltip`, `TooltipTrigger`, `TooltipContent`,
+  and `TooltipProvider` (shared open/close delays); `TooltipContent` takes
+  `side` / `align` / `sideOffset` for placement.
+
 ## 0.12.0
 
 ### Minor Changes
