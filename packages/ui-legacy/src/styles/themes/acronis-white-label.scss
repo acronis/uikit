@@ -13,6 +13,16 @@
      PRIMITIVE TOKENS - WHITE LABEL (auto-generated)
      ============================================ */
 
+  font-family: var(
+    --av-font-sans,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif
+  );
+
   /* Brand Colors */
   --color-brand-primary: 210 16% 32%; /* #44515E - --av-brand-primary */
   --color-brand-secondary: 215 68% 46%; /* #2668C5 - --av-fixed-link */

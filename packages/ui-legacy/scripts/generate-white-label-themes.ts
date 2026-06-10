@@ -350,6 +350,10 @@ function generateBaseMixin(tokens: TokenMap): string {
   lines.push('     PRIMITIVE TOKENS - WHITE LABEL (auto-generated)');
   lines.push('     ============================================ */');
   lines.push('');
+  lines.push(
+    "  font-family: var(--av-font-sans, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);"
+  );
+  lines.push('');
 
   const primitiveGroups: Array<{
     label: string;
