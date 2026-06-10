@@ -1,0 +1,94 @@
+# Fetches the next-gen icon SVGs from the shadcn-uikit Figma file into
+# packages/icons-svg-next and opens a pull request with any changes.
+#
+# Pull-based: this workflow asks Figma for the current icon set, runs the
+# `@acronis-platform/figma-icons-fetcher` tool (via the icons-svg-next
+# `pull-icons` script) using the `new-frames` selection strategy, and — because
+# `main` is branch-protected — proposes the result as a PR instead of pushing
+# directly.
+#
+# The same sync can be run locally; see packages/icons-svg-next/README.md. This
+# workflow just automates the "run + open PR" loop for people without a Figma
+# token set up.
+#
+# Required secrets:
+#   FIGMA_ACCESS_TOKEN  Figma personal access token (figd_…) with read access
+#                       to the icons file. Shared with the Code Connect workflow.
+#   ACV_TOKEN           GitHub PAT used to push the branch and open the PR so
+#                       that branch-protection / CI runs on the resulting PR.
+#
+# All non-secret fetch config (file key, page names, strategy, output dirs) is
+# set in the "Fetch icons" step's env below — keep it in sync with
+# packages/icons-svg-next/.env.local.example.
+name: Fetch Figma Icons (next)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  fetch:
+    # Don't run on forks — only the canonical repo holds the Figma token.
+    if: github.repository == 'acronis/uikit'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch icons from Figma
+        env:
+          FIGMA_FETCHER_FIGMA_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+          FIGMA_FETCHER_FILE_KEY: lrU3ydIyvPYQNE6ixdsKtJ
+          FIGMA_FETCHER_PAGE_NAMES: '[TEMP] Old icons categorisation'
+          FIGMA_FETCHER_SELECTION_STRATEGY: 'new-frames'
+          FIGMA_FETCHER_CLASS_NAME: ''
+          FIGMA_FETCHER_SYSTEM_COLOR: '#1763CF'
+          FIGMA_FETCHER_SKIP_MISSING_IMAGES: 'true'
+          FIGMA_FETCHER_OUTPUT_DIR: './src/svg'
+          FIGMA_FETCHER_OUTPUT_DIRS: ''
+          FIGMA_FETCHER_GENERATE_MANIFESTS: 'true'
+          FIGMA_FETCHER_MANIFEST_DIR: './src/figma'
+          FIGMA_FETCHER_CATEGORIZE_BY_COLOR: 'false'
+        run: pnpm --filter @acronis-platform/icons-svg-next pull-icons
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.ACV_TOKEN }}
+          branch: chore/figma-icons-next-sync
+          base: main
+          add-paths: |
+            packages/icons-svg-next/src/**
+          commit-message: 'chore(icons-svg-next): sync icons from Figma'
+          title: 'chore(icons-svg-next): sync icons from Figma'
+          body: |
+            Automated next-gen icon sync from the shadcn-uikit Figma file.
+
+            Pulled by the **Fetch Figma Icons (next)** workflow via
+            `@acronis-platform/figma-icons-fetcher` (`new-frames` strategy).
+
+            - `src/svg/` is a clean mirror of the current Figma set.
+            - `src/figma/` manifests are regenerated to match.
+
+            The source is a live WIP surface — review the diff for duplicate
+            names (suffixed `-duplicate`) and stray markup before merging.
+          labels: |
+            icons
+            automated
+          delete-branch: true

@@ -1,0 +1,100 @@
+spec_version: '1.0'
+component: Select
+
+# Framework-agnostic contract for a *composable* select assembled from parts
+# (see anatomy.yaml). Property names are neutral; see `adapters` for per-framework
+# syntax. Selection and open state are each controllable or uncontrolled.
+contract:
+  properties:
+    - name: value
+      type: string | string[]
+      required: false
+      description: Controlled selected value(s). Pair with the change event.
+    - name: default-value
+      type: string | string[]
+      required: false
+      description: Initial selection when uncontrolled.
+    - name: open
+      type: boolean
+      required: false
+      description: Controlled open state of the options popup.
+    - name: default-open
+      type: boolean
+      required: false
+      default: false
+      description: Whether the popup is initially open when uncontrolled.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables the control; applies the disabled tokens and blocks opening.
+    - name: multiple
+      type: boolean
+      required: false
+      default: false
+      description: Whether more than one option can be selected.
+    - name: required
+      type: boolean
+      required: false
+      default: false
+      description: Marks the control as required in a form.
+    - name: name
+      type: string
+      required: false
+      description: Form field name submitted with the form (via a hidden input).
+    - name: placeholder
+      type: string
+      required: false
+      description: Hint shown by the value part when nothing is selected.
+
+  events:
+    - name: value-change
+      payload: string | string[]
+      description: >-
+        Fired when the selection changes (React: `onValueChange`). Payload is the
+        new value.
+    - name: open-change
+      payload: boolean
+      description: >-
+        Fired when the popup opens or closes (React: `onOpenChange`). Payload is
+        the new open state.
+
+  content:
+    - name: default
+      description: >-
+        The composed select. Author it from the parts: a trigger wrapping the
+        value, then content wrapping the items (optionally grouped). Provide an
+        `items` map on the root so the value part can render a selected option's
+        label while the popup is closed.
+
+  methods: []
+
+adapters:
+  react:
+    component: Select
+    status: implemented
+    import: >-
+      import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
+      SelectGroup, SelectGroupLabel } from '@acronis-platform/ui-react'
+    example: |
+      <Select items={{ apple: 'Apple', banana: 'Banana' }} value={fruit} onValueChange={setFruit}>
+        <SelectTrigger aria-label="Fruit">
+          <SelectValue placeholder="Select an option" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="apple">Apple</SelectItem>
+          <SelectItem value="banana">Banana</SelectItem>
+        </SelectContent>
+      </Select>
+  vue:
+    component: AvSelect
+    status: planned
+    import: "import { AvSelect } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvSelect v-model="fruit" :items="items" placeholder="Select an option" />
+  web-components:
+    element: ui-select
+    status: planned
+    import: "import '@acronis-platform/ui-wc/select'"
+    example: |
+      <ui-select placeholder="Select an option"></ui-select>

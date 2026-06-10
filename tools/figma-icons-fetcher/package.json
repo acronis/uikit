@@ -1,6 +1,6 @@
 {
   "name": "@acronis-platform/figma-icons-fetcher",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Private build tool: fetch SVG icons from a Figma file, optimize them with SVGO, and write them (with JSON manifests + mono/multicolor categorization) into a target package.",
   "type": "module",

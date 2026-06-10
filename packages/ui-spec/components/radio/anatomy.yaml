@@ -1,0 +1,91 @@
+spec_version: '1.0'
+component: RadioGroup
+
+schematic: |
+  root: <div role="radiogroup">
+   ( ) Option A          item   = the 16px circle (span role="radio")
+   (o) Option B   <- selected   indicator = the 8px inner dot (when selected)
+   ( ) Option C
+
+root:
+  element: div
+  role: radiogroup
+  description: >-
+    Container that owns the selected value and groups the radio items for
+    keyboard navigation (Base UI RadioGroup).
+
+parts:
+  - id: item
+    description: >-
+      A single option — a 16px round control (span role="radio") with idle /
+      hover / active / disabled border + background from the `--ui-form-*`
+      tokens (Base UI Radio.Root). Each item carries a `value`.
+    element: span
+  - id: indicator
+    description: >-
+      The 8px inner dot shown when the item is selected (Base UI
+      Radio.Indicator). `--ui-form-circle-active`, or `--ui-form-circle-disabled`
+      when disabled.
+    element: span
+    optional: true
+    visible_when: the item is the selected one
+
+# The group owns one piece of state — the selected `value`. An item is "checked"
+# when its value equals the group's value; selecting an item is a transition on
+# that state.
+internal_state:
+  - id: value
+    type: string
+    initial: undefined
+    controllable_via: [value]
+    controlled_default: default-value
+    emits: value-change
+    changed_by: click or arrow keys select an item (when uncontrolled)
+    description: The selected option's value; the matching item shows the dot.
+
+transitions:
+  - id: select
+    state: value
+    on: click / Arrow keys
+    to: the activated item's value
+    guard: item not disabled
+    effect: emits value-change(next)
+    when_controlled: >-
+      internal value does NOT change; the group emits value-change and the
+      consumer updates the `value` prop.
+    interactive: false
+
+states:
+  - {
+      id: checked,
+      trigger: 'item value === group value (data-[checked])',
+      kind: internal,
+      affects: [item, indicator],
+    }
+  - {
+      id: unchecked,
+      trigger: 'item value !== group value',
+      kind: internal,
+      affects: [item],
+    }
+  - {
+      id: hover,
+      trigger: pointer hover over an item,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [item],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on an item,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [item],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true (group or item, data-[disabled])',
+      kind: prop,
+      prop: disabled,
+      affects: [item, indicator],
+    }

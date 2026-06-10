@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: RadioGroup
+name: radio
+status: ready
+category: forms
+description: >-
+  A group of mutually exclusive options where exactly one can be selected.
+  Selecting an option deselects the previously selected one. Composed from a
+  RadioGroup container and Radio items.
+since: 0.7.0
+figma:
+  node: '848-13'
+  codeConnect: packages/ui-react/src/components/ui/radio/radio.figma.tsx

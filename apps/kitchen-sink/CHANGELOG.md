@@ -1,5 +1,48 @@
 # @acronis-platform/kitchen-sink
 
+## 0.1.13
+
+### Patch Changes
+
+- Updated dependencies [[`4520292`](https://github.com/acronis/uikit/commit/4520292e06b6e4f6ca022c30ac96ed843f7e1ed1)]:
+  - @acronis-platform/ui-react@0.11.1
+
+## 0.1.12
+
+### Patch Changes
+
+- Updated dependencies [[`0e5760d`](https://github.com/acronis/uikit/commit/0e5760d80ac4728826e20e7a0d64571a44a3c86b)]:
+  - @acronis-platform/ui-react@0.11.0
+
+## 0.1.11
+
+### Patch Changes
+
+- Updated dependencies [[`fa22177`](https://github.com/acronis/uikit/commit/fa2217700b5dae6105c9c63c7d2e973d752d09a9), [`a85d629`](https://github.com/acronis/uikit/commit/a85d6291933854a99af8825b985c325bfb80725c)]:
+  - @acronis-platform/ui-react@0.10.0
+  - @acronis-platform/icons-react@0.3.0
+
+## 0.1.10
+
+### Patch Changes
+
+- Updated dependencies [[`dbdc2fc`](https://github.com/acronis/uikit/commit/dbdc2fcb566b8aaf1f5ddb91d9d977051b65e9e7)]:
+  - @acronis-platform/ui-react@0.9.0
+
+## 0.1.9
+
+### Patch Changes
+
+- Updated dependencies [[`f0f4ab6`](https://github.com/acronis/uikit/commit/f0f4ab676513d1e4ec4d1014ce15a8ae0cf0b8c6)]:
+  - @acronis-platform/ui-react@0.8.0
+
+## 0.1.8
+
+### Patch Changes
+
+- Updated dependencies [[`4fb8b2f`](https://github.com/acronis/uikit/commit/4fb8b2f3c0df84f49def85fa7cba7ee3d062ef66)]:
+  - @acronis-platform/ui-react@0.7.0
+
 ## 0.1.7
 
 ### Patch Changes

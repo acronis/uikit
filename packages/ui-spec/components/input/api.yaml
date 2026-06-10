@@ -1,0 +1,84 @@
+spec_version: '1.0'
+component: Input
+
+# Framework-agnostic contract. Native input attributes (type, placeholder,
+# value, name, required, readonly, autocomplete, …) pass through in every
+# framework. See `adapters` for per-framework syntax.
+contract:
+  properties:
+    - name: type
+      type: string
+      required: false
+      default: "'text'"
+      description: Native input type (text, email, password, number, search, …).
+    - name: placeholder
+      type: string
+      required: false
+      description: Example/hint text shown when empty. Not a label substitute.
+    - name: value
+      type: string
+      required: false
+      description: Controlled value. Pair with the change event.
+    - name: default-value
+      type: string
+      required: false
+      description: Initial value when uncontrolled.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables interaction; applies the disabled form tokens.
+    - name: required
+      type: boolean
+      required: false
+      default: false
+      description: Marks the field as required in a form.
+    - name: name
+      type: string
+      required: false
+      description: Form field name submitted with the form.
+    - name: aria-invalid
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Marks the field as invalid — red border and, on focus, a
+        `--ui-focus-error` ring. Set it (with an associated error message via
+        `aria-describedby`) when validation fails.
+
+  events:
+    - name: change
+      payload: string
+      description: >-
+        Fired as the value changes (React: native `onChange`). The new value is
+        on `event.target.value`.
+
+  methods: []
+
+adapters:
+  react:
+    component: Input
+    status: implemented
+    import: "import { Input } from '@acronis-platform/ui-react'"
+    example: |
+      <Input
+        type="email"
+        placeholder="name@acronis.com"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      {/* Error state */}
+      <Input aria-invalid aria-describedby="email-error" />
+  vue:
+    component: AvInput
+    status: planned
+    import: "import { AvInput } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvInput v-model="email" type="email" placeholder="name@acronis.com" />
+  web-components:
+    element: ui-input
+    status: planned
+    import: "import '@acronis-platform/ui-wc/input'"
+    example: |
+      <ui-input type="email" placeholder="name@acronis.com"></ui-input>

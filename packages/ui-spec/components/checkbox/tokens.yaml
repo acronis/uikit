@@ -1,0 +1,52 @@
+spec_version: '1.0'
+component: Checkbox
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# Checkbox uses the shared `--ui-form-*` tier (common to form controls) plus a
+# couple of semantic tokens for the glyph and focus ring.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-form-background-idle,
+      affects: root,
+      description: Box fill when unchecked,
+    }
+  - {
+      name: --ui-form-background-active,
+      affects: root,
+      description: Box fill when checked / indeterminate,
+    }
+  - { name: --ui-form-background-disabled, affects: root }
+  - {
+      name: --ui-form-border-idle,
+      affects: root,
+      description: Border when unchecked,
+    }
+  - {
+      name: --ui-form-border-hover,
+      affects: root,
+      description: Border on hover,
+    }
+  - {
+      name: --ui-form-border-active,
+      affects: root,
+      description: Border when checked / indeterminate,
+    }
+  - { name: --ui-form-border-disabled, affects: root }
+  - {
+      name: --ui-form-icon-disabled,
+      affects: indicator,
+      description: Glyph color when disabled,
+    }
+  - {
+      name: --ui-glyph-on-brand-primary,
+      affects: indicator,
+      description: Glyph color on the active (brand) fill,
+    }
+  - {
+      name: --ui-focus-primary,
+      affects: root,
+      description: Focus-visible ring color,
+    }

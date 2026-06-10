@@ -1,0 +1,18 @@
+spec_version: '1.0'
+component: Select
+name: select
+status: ready
+category: forms
+description: >-
+  A form control that displays the current selection and reveals a list of
+  predefined options when activated. Composed from parts (trigger, value,
+  content, item); supports single or multiple selection. Built on the Base UI
+  Select primitive and themed with the shared `--ui-form-*` token tier.
+since: 0.10.0
+dependencies:
+  components:
+    - ChevronDownIcon
+    - CheckIcon
+figma:
+  node: '1846-1815'
+  codeConnect: packages/ui-react/src/components/ui/select/select.figma.tsx

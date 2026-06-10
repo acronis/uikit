@@ -1,0 +1,16 @@
+spec_version: '1.0'
+component: Search
+name: search
+status: ready
+category: forms
+description: >-
+  A search field — a text input with a leading magnifier and a clear (×) button
+  that appears once there's a value. Used to find or filter content.
+since: 0.9.0
+dependencies:
+  components:
+    - SearchIcon
+    - TimesIcon
+figma:
+  node: '1852-2314'
+  codeConnect: packages/ui-react/src/components/ui/search/search.figma.tsx

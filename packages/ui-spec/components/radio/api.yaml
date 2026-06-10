@@ -1,0 +1,78 @@
+spec_version: '1.0'
+component: RadioGroup
+
+# Framework-agnostic contract for the group. The selected value lives on the
+# group; each Radio item takes a `value` (and optional `disabled`). Native form
+# attributes pass through. See `adapters` for per-framework syntax.
+contract:
+  properties:
+    - name: value
+      type: string
+      required: false
+      description: Controlled selected value. Pair with the change event.
+    - name: default-value
+      type: string
+      required: false
+      description: Initially selected value when uncontrolled.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables every item in the group.
+    - name: name
+      type: string
+      required: false
+      description: Form field name submitted with the selected value.
+    - name: required
+      type: boolean
+      required: false
+      default: false
+      description: Requires a selection before the form can submit.
+
+  events:
+    - name: value-change
+      payload: string
+      description: >-
+        Fired when the selection changes (React: `onValueChange`). Payload is the
+        newly selected item's value.
+
+  content:
+    - name: default
+      description: >-
+        Radio items. Each takes a `value` (and optional `disabled`); compose each
+        with its label (e.g. wrap both in a `<label>`).
+
+  methods: []
+
+adapters:
+  react:
+    component: RadioGroup
+    status: implemented
+    import: "import { RadioGroup, Radio } from '@acronis-platform/ui-react'"
+    example: |
+      <RadioGroup value={plan} onValueChange={setPlan} aria-label="Plan">
+        <label>
+          <Radio value="free" /> Free
+        </label>
+        <label>
+          <Radio value="standard" /> Standard
+        </label>
+      </RadioGroup>
+  vue:
+    component: AvRadioGroup
+    status: planned
+    import: "import { AvRadioGroup, AvRadio } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvRadioGroup v-model="plan" aria-label="Plan">
+        <AvRadio value="free">Free</AvRadio>
+        <AvRadio value="standard">Standard</AvRadio>
+      </AvRadioGroup>
+  web-components:
+    element: ui-radio-group
+    status: planned
+    import: "import '@acronis-platform/ui-wc/radio-group'"
+    example: |
+      <ui-radio-group aria-label="Plan">
+        <ui-radio value="free">Free</ui-radio>
+        <ui-radio value="standard">Standard</ui-radio>
+      </ui-radio-group>

@@ -1,0 +1,81 @@
+spec_version: '1.0'
+component: Select
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The trigger uses the shared `--ui-form-*` tier (like Input/Search); the popup
+# and items use the shared semantic surface vocabulary.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # Trigger box (the Figma "Select" states)
+  - {
+      name: --ui-form-background-idle,
+      affects: root,
+      description: Trigger fill,
+    }
+  - { name: --ui-form-background-disabled, affects: root }
+  - {
+      name: --ui-form-border-idle,
+      affects: root,
+      description: Border when idle,
+    }
+  - {
+      name: --ui-form-border-hover,
+      affects: root,
+      description: Border on hover,
+    }
+  - {
+      name: --ui-form-border-active,
+      affects: root,
+      description: Border when open / focused,
+    }
+  - { name: --ui-form-border-disabled, affects: root }
+  - {
+      name: --ui-form-text-value,
+      affects: value,
+      description: Selected value text,
+    }
+  - {
+      name: --ui-form-text-placeholder,
+      affects: value,
+      description: Placeholder text,
+    }
+  - { name: --ui-form-text-disabled, affects: value }
+  - {
+      name: --ui-form-icon-idle,
+      affects: icon,
+      description: Chevron / selected-item check color,
+    }
+  - { name: --ui-form-icon-disabled, affects: icon }
+  - {
+      name: --ui-focus-primary,
+      affects: root,
+      description: Focus / open ring color,
+    }
+  # Popup + items (shared semantic surface tokens)
+  - {
+      name: --ui-background-surface-primary,
+      affects: popup,
+      description: Popup background,
+    }
+  - {
+      name: --ui-border-on-surface-border,
+      affects: popup,
+      description: Popup border,
+    }
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: item,
+      description: Item text,
+    }
+  - {
+      name: --ui-background-surface-hover,
+      affects: item,
+      description: Highlighted item background,
+    }
+  - {
+      name: --ui-text-on-surface-secondary,
+      affects: group-label,
+      description: Group label text,
+    }

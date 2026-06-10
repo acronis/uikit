@@ -1,0 +1,67 @@
+spec_version: '1.0'
+component: Search
+
+# Framework-agnostic contract. Native input attributes (placeholder, value,
+# name, autocomplete, …) pass through. See `adapters` for per-framework syntax.
+contract:
+  properties:
+    - name: placeholder
+      type: string
+      required: false
+      description: Hint text shown when empty (e.g. "Search table").
+    - name: value
+      type: string
+      required: false
+      description: Controlled value. Pair with the change event.
+    - name: default-value
+      type: string
+      required: false
+      description: Initial value when uncontrolled.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables the field; hides the clear button and applies the disabled tokens.
+    - name: name
+      type: string
+      required: false
+      description: Form field name submitted with the form.
+
+  events:
+    - name: change
+      payload: string
+      description: >-
+        Fired as the value changes (React: native `onChange`). The value is on
+        `event.target.value`.
+    - name: clear
+      payload: void
+      description: >-
+        Fired after the clear (×) button empties the field (React: `onClear`). A
+        change event with an empty value fires alongside it.
+
+  methods: []
+
+adapters:
+  react:
+    component: Search
+    status: implemented
+    import: "import { Search } from '@acronis-platform/ui-react'"
+    example: |
+      <Search
+        placeholder="Search table"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onClear={() => setQuery('')}
+      />
+  vue:
+    component: AvSearch
+    status: planned
+    import: "import { AvSearch } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvSearch v-model="query" placeholder="Search table" />
+  web-components:
+    element: ui-search
+    status: planned
+    import: "import '@acronis-platform/ui-wc/search'"
+    example: |
+      <ui-search placeholder="Search table"></ui-search>

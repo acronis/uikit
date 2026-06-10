@@ -1,0 +1,96 @@
+spec_version: '1.0'
+component: Checkbox
+
+schematic: |
+  unchecked        checked          indeterminate
+  +-------+        +-------+        +-------+
+  |       |        |   v   |        |   -   |   root: the box (span role="checkbox")
+  +-------+        +-------+        +-------+
+                       ^                ^
+                   indicator        indicator (check glyph / minus glyph)
+
+root:
+  element: span
+  role: checkbox
+  description: >-
+    The box. A focusable element with role="checkbox" whose aria-checked
+    reflects the state (true / false / mixed) — Base UI Checkbox.Root. Geometry
+    and border/background come from the `--ui-form-*` tokens.
+
+parts:
+  - id: indicator
+    description: >-
+      The glyph shown when the box is checked or indeterminate (Base UI
+      Checkbox.Indicator). Renders the check icon when checked and the minus
+      icon when indeterminate; tinted with `--ui-glyph-on-brand-primary`.
+    element: span
+    optional: true
+    visible_when: checked or indeterminate
+
+# Checkbox owns one piece of internal state, `checked`, plus the click/key logic
+# that toggles it. `indeterminate` is a separate, prop-driven visual state (it is
+# not entered by clicking — the consumer sets it), so it is a `prop` state.
+internal_state:
+  - id: checked
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [checked]
+    controlled_default: default-checked
+    emits: checked-change
+    changed_by: click / Space toggles it (when uncontrolled)
+    description: On/off state; reflected to aria-checked and the check glyph.
+
+transitions:
+  - id: toggle
+    state: checked
+    on: click / Space
+    to: toggle (!checked)
+    guard: not disabled
+    effect: emits checked-change(next)
+    when_controlled: >-
+      internal value does NOT change; the component emits checked-change and the
+      consumer must update the `checked` prop to reflect the new value.
+    interactive: true
+
+states:
+  - {
+      id: checked,
+      trigger: 'internal checked === true (data-[checked])',
+      kind: internal,
+      affects: [root, indicator],
+    }
+  - {
+      id: unchecked,
+      trigger: 'internal checked === false',
+      kind: internal,
+      affects: [root],
+    }
+  - {
+      id: indeterminate,
+      trigger: 'indeterminate === true (data-[indeterminate])',
+      kind: prop,
+      prop: indeterminate,
+      affects: [root, indicator],
+    }
+  - {
+      id: hover,
+      trigger: pointer hover,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [root],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [root],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true (data-[disabled])',
+      kind: prop,
+      prop: disabled,
+      affects: [root, indicator],
+    }

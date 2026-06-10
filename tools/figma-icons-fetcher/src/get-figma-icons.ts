@@ -1,15 +1,10 @@
 import chalk from 'chalk';
 
 import { figmaClientRequest } from './figma-client';
-import { findDuplicates, formatName } from './helpers';
+import { findDuplicates } from './helpers';
+import { getSelectionStrategy } from './strategies';
+import type { FigmaNode, FigmaPage } from './strategies/types';
 import type { FetcherConfig, FigmaIcon } from './types';
-
-interface FigmaNode {
-  id: string;
-  name: string;
-  type: string;
-  children?: FigmaNode[];
-}
 
 interface FileStructureResponse {
   err?: string;
@@ -25,6 +20,9 @@ interface NodesResponse {
  * Fetches icon metadata from Figma using a two-step approach:
  * 1. Gets file structure to find page IDs
  * 2. Fetches specific pages with icon frames
+ *
+ * Which nodes within those pages become icons is decided by the configured
+ * selection strategy (see ./strategies).
  */
 export async function getFigmaIcons(config: FetcherConfig): Promise<FigmaIcon[]> {
   if (!config.token) {
@@ -35,6 +33,7 @@ export async function getFigmaIcons(config: FetcherConfig): Promise<FigmaIcon[]>
     throw new Error('File key not found. Please add FIGMA_FETCHER_FILE_KEY to .env.local');
   }
 
+  const selectIcons = getSelectionStrategy(config.selectionStrategy);
   const figmaClient = figmaClientRequest(config.token);
 
   // Step 1: Get file structure to find page IDs
@@ -77,48 +76,20 @@ export async function getFigmaIcons(config: FetcherConfig): Promise<FigmaIcon[]>
   console.log(chalk.cyan(`Fetched pages in ${(pagesEndTime - pagesStartTime) / 1000}s\n`));
 
   // Extract pages with their names
-  const pages = Object.entries(pagesResponse.data.nodes).map(([pageId, node]) => ({
+  const pages: FigmaPage[] = Object.entries(pagesResponse.data.nodes).map(([pageId, node]) => ({
     id: pageId,
     name: targetPages.find((p) => p.id === pageId)?.name ?? 'unknown',
     document: node.document,
   }));
 
-  // Find frames with icons and track their page
-  const framesWithIcons = pages.flatMap((page) =>
-    (page.document.children ?? [])
-      .filter((c) => c.type === 'FRAME' && config.frameNames.includes(c.name))
-      .map((frame) => ({ ...frame, pageName: page.name })),
-  );
+  // Delegate node selection to the configured strategy
+  const icons = pages.flatMap((page) => selectIcons(page, config));
 
-  if (!framesWithIcons.length) {
-    throw new Error(`Cannot find frames: ${config.frameNames.join(', ')} in specified pages`);
+  if (!icons.length) {
+    throw new Error(
+      `No icons found using the "${config.selectionStrategy}" strategy in pages: ${config.pageNames.join(', ')}`,
+    );
   }
-
-  // Extract all components from frames with page tracking
-  const components: Array<FigmaNode & { pageName: string }> = [];
-
-  function findComponents(element: FigmaNode, pageName: string): void {
-    if (element.children) {
-      element.children.forEach((child) => {
-        if (child.type === 'COMPONENT') {
-          components.push({ ...child, pageName });
-        } else {
-          findComponents(child, pageName);
-        }
-      });
-    }
-  }
-
-  framesWithIcons.forEach((frame) => findComponents(frame, frame.pageName));
-
-  // Filter and format icons
-  const icons = components
-    .filter((component) => !component.name.startsWith('_'))
-    .map((component) => ({
-      id: component.id,
-      name: formatName(component.name),
-      pageName: component.pageName,
-    }));
 
   return findDuplicates<FigmaIcon>('name', icons);
 }

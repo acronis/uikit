@@ -11,16 +11,11 @@ const meta = {
       control: 'select',
       options: ['default', 'secondary', 'ghost', 'destructive', 'ai', 'inverted'],
     },
-    size: {
-      control: 'select',
-      options: ['default', 'sm', 'lg'],
-    },
     disabled: { control: 'boolean' },
   },
   args: {
     children: 'Button',
     variant: 'default',
-    size: 'default',
   },
 } satisfies Meta<typeof Button>;
 
@@ -38,16 +33,6 @@ export const Variants: Story = {
       <Button variant="destructive">Destructive</Button>
       <Button variant="ai">Ai</Button>
       <Button variant="inverted">Inverted</Button>
-    </div>
-  ),
-};
-
-export const Sizes: Story = {
-  render: () => (
-    <div className="flex items-center gap-3">
-      <Button size="sm">Small</Button>
-      <Button size="default">Default</Button>
-      <Button size="lg">Large</Button>
     </div>
   ),
 };

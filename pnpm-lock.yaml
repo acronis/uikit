@@ -536,6 +536,15 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
+  packages/icons-svg-next:
+    devDependencies:
+      '@acronis-platform/figma-icons-fetcher':
+        specifier: workspace:*
+        version: link:../../tools/figma-icons-fetcher
+      tsx:
+        specifier: ^4.20.0
+        version: 4.22.3
+
   packages/tokens-pd:
     dependencies:
       '@acronis-platform/design-tokens':

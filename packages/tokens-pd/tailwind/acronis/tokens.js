@@ -155,10 +155,10 @@ export default {
         "secondary": "light-dark(rgb(190 215 244), rgb(11 66 142))"
       },
       "backgroundImage": {
-        "ai-idle": "linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
-        "ai-hover": "linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
-        "ai-active": "linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
-        "ai-disabled": "linear-gradient(180deg, rgb(219 223 229) 20%, rgb(212 219 230) 100%)"
+        "ai-idle": "linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
+        "ai-hover": "linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
+        "ai-active": "linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
+        "ai-disabled": "linear-gradient(90deg, rgb(219 223 229) 20%, rgb(212 219 230) 100%)"
       },
       "fontFamily": {
         "typography-headings-display": "Inter, system-ui, sans-serif",

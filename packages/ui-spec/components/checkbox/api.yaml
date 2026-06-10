@@ -1,0 +1,77 @@
+spec_version: '1.0'
+component: Checkbox
+
+# Framework-agnostic contract. Native input attributes (name, value, required,
+# form) pass through. See `adapters` for per-framework syntax.
+contract:
+  properties:
+    - name: checked
+      type: boolean
+      required: false
+      description: Controlled checked state. Pair with the change event.
+    - name: default-checked
+      type: boolean
+      required: false
+      default: false
+      description: Initial checked state when uncontrolled.
+    - name: indeterminate
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Renders the mixed/indeterminate state (minus glyph, aria-checked="mixed").
+        Independent of `checked` — set by the consumer, not toggled by clicking.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables interaction; applies the disabled form tokens.
+    - name: required
+      type: boolean
+      required: false
+      default: false
+      description: Marks the control as required in a form.
+    - name: name
+      type: string
+      required: false
+      description: Form field name submitted with the form.
+    - name: value
+      type: string
+      required: false
+      description: Form field value when checked.
+
+  events:
+    - name: checked-change
+      payload: boolean
+      description: >-
+        Fired when the checked state changes (React: `onCheckedChange`). Payload
+        is the new checked value.
+
+  methods: []
+
+adapters:
+  react:
+    component: Checkbox
+    status: implemented
+    import: "import { Checkbox } from '@acronis-platform/ui-react'"
+    example: |
+      <Checkbox
+        aria-label="Accept terms"
+        checked={accepted}
+        onCheckedChange={setAccepted}
+      />
+
+      {/* Indeterminate (e.g. a partially-selected parent) */}
+      <Checkbox aria-label="Select all" indeterminate />
+  vue:
+    component: AvCheckbox
+    status: planned
+    import: "import { AvCheckbox } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvCheckbox v-model="accepted" label="Accept terms" />
+  web-components:
+    element: ui-checkbox
+    status: planned
+    import: "import '@acronis-platform/ui-wc/checkbox'"
+    example: |
+      <ui-checkbox aria-label="Accept terms"></ui-checkbox>

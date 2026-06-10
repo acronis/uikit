@@ -734,6 +734,214 @@
             "com.figma.variableId": "VariableID:910:263450"
           }
         }
+      },
+      "inverted": {
+        "active": {
+          "values": {
+            "acronis": "{palette.transparent.inverted.6}",
+            "brand-b": "{palette.transparent.inverted.6}"
+          },
+          "platforms": ["PD"],
+          "$extensions": {
+            "com.figma.scopes": ["FRAME_FILL"],
+            "com.figma.variableId": "VariableID:305:124"
+          }
+        },
+        "hover": {
+          "values": {
+            "acronis": "{palette.transparent.inverted.7}",
+            "brand-b": "{palette.transparent.inverted.7}"
+          },
+          "platforms": ["PD"],
+          "$extensions": {
+            "com.figma.scopes": ["FRAME_FILL"],
+            "com.figma.variableId": "VariableID:305:123"
+          }
+        },
+        "primary": {
+          "values": {
+            "acronis": "{palette.transparent.inverted.8}",
+            "brand-b": "{palette.transparent.inverted.8}"
+          },
+          "platforms": ["PD"],
+          "$extensions": {
+            "com.figma.scopes": ["FRAME_FILL"],
+            "com.figma.variableId": "VariableID:305:122"
+          }
+        }
+      },
+      "inverted-surface": {
+        "idle": {
+          "values": {
+            "acronis": {
+              "colorSpace": "hsl",
+              "components": [211.67, 45, 31.37]
+            },
+            "brand-b": {
+              "colorSpace": "hsl",
+              "components": [211.67, 45, 31.37]
+            }
+          },
+          "platforms": ["PD"],
+          "$extensions": { "com.figma.scopes": ["FRAME_FILL"] }
+        },
+        "hover": {
+          "values": {
+            "acronis": {
+              "colorSpace": "hsl",
+              "components": [211.76, 20.48, 48.82]
+            },
+            "brand-b": {
+              "colorSpace": "hsl",
+              "components": [211.76, 20.48, 48.82]
+            }
+          },
+          "platforms": ["PD"],
+          "$extensions": { "com.figma.scopes": ["FRAME_FILL"] }
+        },
+        "active": {
+          "values": {
+            "acronis": {
+              "colorSpace": "hsl",
+              "components": [211.34, 48.2, 27.25]
+            },
+            "brand-b": {
+              "colorSpace": "hsl",
+              "components": [211.34, 48.2, 27.25]
+            }
+          },
+          "platforms": ["PD"],
+          "$extensions": { "com.figma.scopes": ["FRAME_FILL"] }
+        },
+        "disabled": {
+          "values": {
+            "acronis": {
+              "colorSpace": "hsl",
+              "components": [215.84, 100, 15.1]
+            },
+            "brand-b": {
+              "colorSpace": "hsl",
+              "components": [215.84, 100, 15.1]
+            }
+          },
+          "platforms": ["PD"],
+          "$extensions": { "com.figma.scopes": ["FRAME_FILL"] }
+        }
+      },
+      "ai": {
+        "$type": "gradient",
+        "idle": {
+          "values": {
+            "acronis": [
+              {
+                "color": {
+                  "colorSpace": "hsl",
+                  "components": [233.93, 73.04, 54.9]
+                },
+                "position": 0.2
+              },
+              {
+                "color": {
+                  "colorSpace": "hsl",
+                  "components": [303.19, 97.17, 58.23]
+                },
+                "position": 1
+              }
+            ]
+          },
+          "platforms": ["PD"],
+          "$extensions": {
+            "com.figma.gradientTransform": [
+              [1, 0, 0],
+              [0, 1, 0]
+            ],
+            "com.figma.styleId": "6a29f79edcb949dfddc3c57804e23ca90e2e3158"
+          }
+        },
+        "hover": {
+          "values": {
+            "acronis": [
+              {
+                "color": {
+                  "colorSpace": "hsl",
+                  "components": [233.93, 73.04, 54.9]
+                },
+                "position": 0.2
+              },
+              {
+                "color": {
+                  "colorSpace": "hsl",
+                  "components": [303.19, 97.17, 58.23]
+                },
+                "position": 1
+              }
+            ]
+          },
+          "platforms": ["PD"],
+          "$extensions": {
+            "com.figma.gradientTransform": [
+              [1, 0, 0],
+              [0, 1, 0]
+            ],
+            "com.figma.styleId": "d75824f59afe59907a78feb5c44bcf9d89e32d8d"
+          }
+        },
+        "active": {
+          "values": {
+            "acronis": [
+              {
+                "color": {
+                  "colorSpace": "hsl",
+                  "components": [233.93, 73.04, 54.9]
+                },
+                "position": 0.2
+              },
+              {
+                "color": {
+                  "colorSpace": "hsl",
+                  "components": [303.19, 97.17, 58.23]
+                },
+                "position": 1
+              }
+            ]
+          },
+          "platforms": ["PD"],
+          "$extensions": {
+            "com.figma.gradientTransform": [
+              [1, 0, 0],
+              [0, 1, 0]
+            ],
+            "com.figma.styleId": "d3600bd86ce03979f095d043a02a4325e201c3c5"
+          }
+        },
+        "disabled": {
+          "values": {
+            "acronis": [
+              {
+                "color": {
+                  "colorSpace": "hsl",
+                  "components": [215.97, 16.12, 87.84]
+                },
+                "position": 0.2
+              },
+              {
+                "color": {
+                  "colorSpace": "hsl",
+                  "components": [215.47, 25.29, 86.65]
+                },
+                "position": 1
+              }
+            ]
+          },
+          "platforms": ["PD"],
+          "$extensions": {
+            "com.figma.gradientTransform": [
+              [1, 0, 0],
+              [0, 1, 0]
+            ],
+            "com.figma.styleId": "ff3aef1c0377478a63ccaa33539cec575af8b8c5"
+          }
+        }
       }
     },
     "border": {

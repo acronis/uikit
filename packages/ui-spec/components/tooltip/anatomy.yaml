@@ -1,0 +1,84 @@
+spec_version: '1.0'
+component: Tooltip
+
+schematic: |
+  trigger (hover / focus)
+  +-------------+
+  |  Hover me   |   root: the trigger (Tooltip.Trigger)
+  +-------------+
+        │ opens
+        ▼
+  +-----------------------+
+  | popup: <div role=tooltip>   (portaled, positioned)
+  |   label               |
+  +-----------------------+
+   popup -> dark bubble (--ui-tooltip-background)
+   label -> hint text (--ui-tooltip-label)
+
+root:
+  element: button
+  description: >-
+    The trigger that anchors the tooltip (`Tooltip.Trigger`, a button by default;
+    polymorphic via `render` to wrap any element). `Tooltip.Root` owns the
+    open/close state and renders no element of its own.
+
+parts:
+  - id: popup
+    description: >-
+      The floating bubble (`role="tooltip"`), portaled and positioned relative to
+      the trigger. Dark, ~90%-opaque background (`--ui-tooltip-background`), 4px
+      radius, 12/8px padding, 48–256px wide. No arrow.
+    element: div
+  - id: label
+    description: >-
+      The hint text inside the popup — 12px medium, `--ui-tooltip-label`.
+
+layout:
+  type: flex
+  direction: column
+  align: center
+
+# Tooltip owns one piece of internal state, `open`, driven by pointer/focus
+# interaction on the trigger (or the controlled `open` prop).
+internal_state:
+  - id: open
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [open]
+    controlled_default: default-open
+    emits: open-change
+    changed_by: hover / focus the trigger to open; leave / blur / Escape to close
+    description: Whether the tooltip popup is shown.
+
+transitions:
+  - id: openOnHover
+    state: open
+    from: false
+    on: pointer enter / focus on the trigger (after the delay)
+    to: true
+    guard: not disabled
+    effect: emits open-change(true)
+    interactive: false
+  - id: closeOnLeave
+    state: open
+    from: true
+    on: pointer leave / blur / Escape
+    to: false
+    effect: emits open-change(false)
+    interactive: false
+
+states:
+  - {
+      id: open,
+      trigger: 'internal open === true',
+      kind: internal,
+      affects: [popup, label],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true',
+      kind: prop,
+      prop: disabled,
+      affects: [root],
+    }

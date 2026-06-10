@@ -1,0 +1,53 @@
+spec_version: '1.0'
+component: Input
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# Input uses the shared `--ui-form-*` tier plus two semantic focus-ring tokens.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-form-background-idle,
+      affects: root,
+      description: Field fill (idle / hover / focus / error),
+    }
+  - { name: --ui-form-background-disabled, affects: root }
+  - {
+      name: --ui-form-border-idle,
+      affects: root,
+      description: Border when idle / filled,
+    }
+  - {
+      name: --ui-form-border-hover,
+      affects: root,
+      description: Border on hover,
+    }
+  - {
+      name: --ui-form-border-active,
+      affects: root,
+      description: Border when focused,
+    }
+  - {
+      name: --ui-form-border-error,
+      affects: root,
+      description: Border when invalid,
+    }
+  - { name: --ui-form-border-disabled, affects: root }
+  - {
+      name: --ui-form-text-value,
+      affects: root,
+      description: Entered value text color,
+    }
+  - {
+      name: --ui-form-text-placeholder,
+      affects: root,
+      description: Placeholder text color,
+    }
+  - { name: --ui-form-text-disabled, affects: root }
+  - { name: --ui-focus-primary, affects: root, description: Focus ring color }
+  - {
+      name: --ui-focus-error,
+      affects: root,
+      description: Focus ring color when invalid,
+    }

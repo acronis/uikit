@@ -31,26 +31,36 @@ const config: TestRunnerConfig = {
       image = await page.screenshot({ animations: 'disabled', fullPage: true });
     } else {
       // Floating UI (dialogs, menus, listboxes) renders in a portal outside
-      // #storybook-root — snapshot the overlay itself when present.
+      // #storybook-root. When such an overlay is open, capture the union of the
+      // story root (the trigger) and the overlay so the control AND its popup
+      // are both in frame — framing the overlay alone clips the trigger above it.
       const overlay = page
         .locator(
           '[role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"]'
         )
         .first();
       const hasOverlay = (await overlay.count()) > 0;
-      const target = hasOverlay ? overlay : page.locator('#storybook-root');
-      const box = await target.boundingBox();
+      const targets = hasOverlay
+        ? [page.locator('#storybook-root'), overlay]
+        : [page.locator('#storybook-root')];
+      const boxes = (await Promise.all(targets.map((t) => t.boundingBox()))).filter(
+        (b): b is NonNullable<typeof b> => b !== null
+      );
       const padding = 24;
       const viewport = page.viewportSize();
-      const clip = box && viewport
+      const clip = boxes.length && viewport
         ? (() => {
-            const x = Math.max(0, box.x - padding);
-            const y = Math.max(0, box.y - padding);
+            const minX = Math.min(...boxes.map((b) => b.x));
+            const minY = Math.min(...boxes.map((b) => b.y));
+            const maxX = Math.max(...boxes.map((b) => b.x + b.width));
+            const maxY = Math.max(...boxes.map((b) => b.y + b.height));
+            const x = Math.max(0, minX - padding);
+            const y = Math.max(0, minY - padding);
             return {
               x,
               y,
-              width: Math.min(box.width + padding * 2, viewport.width - x),
-              height: Math.min(box.height + padding * 2, viewport.height - y),
+              width: Math.min(maxX - minX + padding * 2, viewport.width - x),
+              height: Math.min(maxY - minY + padding * 2, viewport.height - y),
             };
           })()
         : undefined;

@@ -1,0 +1,17 @@
+spec_version: '1.0'
+component: Checkbox
+name: checkbox
+status: ready
+category: forms
+description: >-
+  A control that lets users select or deselect an option. Supports checked,
+  unchecked, and indeterminate states; used individually for a binary choice or
+  in groups where any number of options may be selected.
+since: 0.7.0
+dependencies:
+  components:
+    - CheckIcon
+    - MinusIcon
+figma:
+  node: '728-3781'
+  codeConnect: packages/ui-react/src/components/ui/checkbox/checkbox.figma.tsx

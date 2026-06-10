@@ -1,6 +1,10 @@
+import type { SelectionStrategyName } from './strategies/types';
+
 export interface FetcherConfig {
   token?: string;
   fileKey?: string;
+  selectionStrategy: SelectionStrategyName;
+  skipMissingImages: boolean;
   pageNames: string[];
   frameNames: string[];
   className?: string;

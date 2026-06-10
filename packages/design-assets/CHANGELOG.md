@@ -1,5 +1,14 @@
 # @acronis-platform/design-assets
 
+## 0.4.0
+
+### Minor Changes
+
+- [#242](https://github.com/acronis/uikit/pull/242) [`a85d629`](https://github.com/acronis/uikit/commit/a85d6291933854a99af8825b985c325bfb80725c) Thanks [@leonid](https://github.com/leonid)! - Add the `search` (magnifier) icon to the `icons-solid-mono` pack. The asset
+  already existed upstream in `icons-svg` but wasn't promoted into `design-assets`,
+  so no React component was generated. It now generates `SearchIcon`, exported from
+  `@acronis-platform/icons-react/solid-mono`.
+
 ## 0.3.0
 
 ### Minor Changes

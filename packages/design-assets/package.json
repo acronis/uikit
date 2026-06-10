@@ -1,6 +1,6 @@
 {
   "name": "@acronis-platform/design-assets",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Acronis visual assets — icons and illustrations as JSON manifests + bundled binaries.",
   "license": "MIT AND ISC",
   "type": "module",

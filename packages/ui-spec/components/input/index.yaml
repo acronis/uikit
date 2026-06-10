@@ -1,0 +1,12 @@
+spec_version: '1.0'
+component: Input
+name: input
+status: ready
+category: forms
+description: >-
+  A single-line text field for entering and editing one value (name, email, …).
+  States: idle, hover, focus, filled, error (via aria-invalid), and disabled.
+since: 0.7.0
+figma:
+  node: '1256-1240'
+  codeConnect: packages/ui-react/src/components/ui/input/input.figma.tsx

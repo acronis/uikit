@@ -31,6 +31,17 @@
         "legacyNames": []
       }
     },
+    "search": {
+      "values": {
+        "24": { "$file": "./packs/icons-solid-mono/search-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["Search"],
+        "tags": ["search", "find", "magnifier"],
+        "legacyNames": []
+      }
+    },
     "sparkles": {
       "values": {
         "24": { "$file": "./packs/icons-solid-mono/sparkles-24.svg" }

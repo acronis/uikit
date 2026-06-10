@@ -47,6 +47,14 @@ describe('Switch', () => {
     expect(onCheckedChange).not.toHaveBeenCalled();
   });
 
+  it('wires the track to the --ui-switch-* token tier', () => {
+    render(<Switch aria-label="Notifications" />);
+    expect(screen.getByRole('switch')).toHaveClass(
+      'data-[unchecked]:bg-[var(--ui-switch-background-inactive)]',
+      'data-[checked]:bg-[var(--ui-switch-background-active)]'
+    );
+  });
+
   it('forwards the ref to the underlying switch element', () => {
     const ref = createRef<ComponentRef<typeof Switch>>();
     render(<Switch ref={ref} aria-label="Notifications" />);

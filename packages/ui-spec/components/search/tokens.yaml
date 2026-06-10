@@ -1,0 +1,49 @@
+spec_version: '1.0'
+component: Search
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# Search uses the shared `--ui-form-*` tier plus the semantic focus-ring token.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - { name: --ui-form-background-idle, affects: root, description: Box fill }
+  - { name: --ui-form-background-disabled, affects: root }
+  - {
+      name: --ui-form-border-idle,
+      affects: root,
+      description: Border when idle,
+    }
+  - {
+      name: --ui-form-border-hover,
+      affects: root,
+      description: Border on hover,
+    }
+  - {
+      name: --ui-form-border-active,
+      affects: root,
+      description: Border when focused (focus-within),
+    }
+  - { name: --ui-form-border-disabled, affects: root }
+  - {
+      name: --ui-form-text-value,
+      affects: input,
+      description: Entered value text color,
+    }
+  - {
+      name: --ui-form-text-placeholder,
+      affects: input,
+      description: Placeholder text color,
+    }
+  - { name: --ui-form-text-disabled, affects: input }
+  - {
+      name: --ui-form-icon-idle,
+      affects: icon,
+      description: Magnifier / clear icon color,
+    }
+  - {
+      name: --ui-form-icon-disabled,
+      affects: icon,
+      description: Icon color when disabled,
+    }
+  - { name: --ui-focus-primary, affects: root, description: Focus ring color }

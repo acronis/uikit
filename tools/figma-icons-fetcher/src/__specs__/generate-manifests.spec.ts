@@ -99,6 +99,17 @@ describe('generateManifests', () => {
     expect(files).toContain('icons.json');
   });
 
+  it('collapses path separators in group names into a flat filename', async () => {
+    const config = { generateManifests: true, manifestDir: testDir };
+    const icons = [{ name: 'microsoft365', pageName: 'Brands / logos' }];
+
+    await generateManifests(config, icons);
+
+    const files = await fs.readdir(testDir);
+    expect(files).toContain('brands-logos.json');
+    expect(JSON.parse(await fs.readFile(path.join(testDir, 'brands-logos.json'), 'utf8'))).toEqual(['microsoft365']);
+  });
+
   it('should add newline at end of JSON files', async () => {
     const config = { generateManifests: true, manifestDir: testDir };
     const icons = [{ name: 'icon1', pageName: 'Actions' }];

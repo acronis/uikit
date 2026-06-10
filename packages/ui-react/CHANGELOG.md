@@ -1,5 +1,133 @@
 # @acronis-platform/ui-react
 
+## 0.14.0
+
+### Minor Changes
+
+- [#255](https://github.com/acronis/uikit/pull/255) [`c11f987`](https://github.com/acronis/uikit/commit/c11f9878b8920259223a4622dd0efc96d6a83d2a) Thanks [@leonid](https://github.com/leonid)! - **Button: removed the `size` prop.** The Figma button has a single size, so
+  `Button` no longer accepts `size` (`sm` / `default` / `lg`) — it always renders
+  the 32px-tall size (`h-8 px-3`). This is a breaking change for any consumer
+  passing `size`; drop the prop. `ButtonIcon` is unaffected.
+
+## 0.13.0
+
+### Minor Changes
+
+- [#253](https://github.com/acronis/uikit/pull/253) [`1a9281b`](https://github.com/acronis/uikit/commit/1a9281b69e4fe763fb742fcf9a802b87a76e1169) Thanks [@leonid](https://github.com/leonid)! - Add `Tooltip`: a contextual hint shown on hover/focus, built on the Base UI
+  Tooltip primitive and themed with the `--ui-tooltip-*` tokens (dark bubble,
+  light label, no arrow). Exports `Tooltip`, `TooltipTrigger`, `TooltipContent`,
+  and `TooltipProvider` (shared open/close delays); `TooltipContent` takes
+  `side` / `align` / `sideOffset` for placement.
+
+## 0.12.0
+
+### Minor Changes
+
+- [#251](https://github.com/acronis/uikit/pull/251) [`e5ce3de`](https://github.com/acronis/uikit/commit/e5ce3de0d53d9c3bad17c1dba03a6a23777a115b) Thanks [@leonid](https://github.com/leonid)! - Add `Tag`: a compact status/category label with six variants (`info`,
+  `success`, `warning`, `critical`, `danger`, `neutral`) across two sizes
+  (`default`, `sm`) and an optional leading icon. Colors reference the shared
+  semantic status tokens; the label truncates at the 256px max width.
+
+  (The Figma "AI" variant is not included yet — its background tint has no design
+  token, pending an upstream `--ui-background-status-ai` sync.)
+
+### Patch Changes
+
+- [#250](https://github.com/acronis/uikit/pull/250) [`d3541f9`](https://github.com/acronis/uikit/commit/d3541f9c40c5d12f1c464ad68bf42709b89948e5) Thanks [@leonid](https://github.com/leonid)! - Fix the AI background gradient to run **left-to-right** (90deg) instead of
+  top-to-bottom, matching the Figma design. The `background.ai` gradient transform
+  in design-tokens carried a stale vertical matrix (`[[0,1,0],[-1,0,1]]` → 180deg);
+  it is now identity (`[[1,0,0],[0,1,0]]` → 90deg), and `tokens-pd` is regenerated.
+
+  The AI `Button` variant now always leads with the `Sparkles` icon before its
+  label, matching the Figma "Ai" button, and sets `bg-origin-border` so the
+  gradient covers the full button box (previously a 1px sliver of the gradient's
+  opposite end showed on the left and right border edges).
+
+- Updated dependencies [[`d3541f9`](https://github.com/acronis/uikit/commit/d3541f9c40c5d12f1c464ad68bf42709b89948e5)]:
+  - @acronis-platform/tokens-pd@0.7.3
+
+## 0.11.1
+
+### Patch Changes
+
+- [#246](https://github.com/acronis/uikit/pull/246) [`4520292`](https://github.com/acronis/uikit/commit/4520292e06b6e4f6ca022c30ac96ed843f7e1ed1) Thanks [@leonid](https://github.com/leonid)! - Re-theme `Switch` to the design's `--ui-switch-*` token tier. It now matches the
+  Figma component: a 32×16 track with a 12px circle, green `--ui-switch-background-active`
+  (on) / `--ui-switch-background-inactive` (off) / dedicated disabled tokens
+  (replacing the placeholder shadcn `bg-primary`/`bg-input` colors and
+  `opacity-50` disabled), with a 3px `--ui-focus-primary` focus ring. No API
+  change. Also completes the Figma Code Connect mapping.
+
+## 0.11.0
+
+### Minor Changes
+
+- [#245](https://github.com/acronis/uikit/pull/245) [`0e5760d`](https://github.com/acronis/uikit/commit/0e5760d80ac4728826e20e7a0d64571a44a3c86b) Thanks [@leonid](https://github.com/leonid)! - Add `Select`: a composable select control built on the Base UI Select primitive
+  and themed with the shared `--ui-form-*` token tier. Exports `Select`,
+  `SelectTrigger`, `SelectValue`, `SelectContent`, `SelectItem`, `SelectGroup`, and
+  `SelectGroupLabel`, with single/multiple selection, keyboard support, and a
+  trigger matching the Figma "Select" states (idle / hover / open+focus /
+  disabled).
+
+## 0.10.0
+
+### Minor Changes
+
+- [#242](https://github.com/acronis/uikit/pull/242) [`fa22177`](https://github.com/acronis/uikit/commit/fa2217700b5dae6105c9c63c7d2e973d752d09a9) Thanks [@leonid](https://github.com/leonid)! - Add `Search`: a search field — a leading magnifier (`SearchIcon`), a borderless
+  text input, and a clear (×) button that appears once there's a value. Themed by
+  the shared `--ui-form-*` token tier; the box owns the visual state via
+  `focus-within` (active border + 3px `--ui-focus-primary` ring), with hover and
+  disabled wired to their own tokens. The clear button empties the field (firing
+  `onChange` with an empty value plus `onClear`) and refocuses the input. Includes
+  tests, Storybook stories, visual-regression baselines, and a Figma Code Connect
+  mapping.
+
+### Patch Changes
+
+- Updated dependencies [[`a85d629`](https://github.com/acronis/uikit/commit/a85d6291933854a99af8825b985c325bfb80725c)]:
+  - @acronis-platform/design-assets@0.4.0
+  - @acronis-platform/icons-react@0.3.0
+
+## 0.9.0
+
+### Minor Changes
+
+- [#240](https://github.com/acronis/uikit/pull/240) [`dbdc2fc`](https://github.com/acronis/uikit/commit/dbdc2fcb566b8aaf1f5ddb91d9d977051b65e9e7) Thanks [@leonid](https://github.com/leonid)! - Add `RadioGroup` and `Radio`: a mutually-exclusive option group wrapping Base
+  UI's RadioGroup / Radio primitives. The group owns the selected value; each
+  `Radio` takes a `value`. Themed by the shared `--ui-form-*` token tier from
+  `@acronis-platform/tokens-pd` — the 16px circle uses idle / hover / active /
+  disabled border + background, the 8px dot uses `--ui-form-circle-active` (and
+  `--ui-form-circle-disabled` when disabled), and the focus ring uses
+  `--ui-focus-primary`; the checked fill is scoped with `not-data-[disabled]` so
+  disabled wins. Includes tests, Storybook stories, visual-regression baselines,
+  and a Figma Code Connect mapping. Labels are composed by the consumer (a Field
+  component is future work).
+
+## 0.8.0
+
+### Minor Changes
+
+- [#237](https://github.com/acronis/uikit/pull/237) [`f0f4ab6`](https://github.com/acronis/uikit/commit/f0f4ab676513d1e4ec4d1014ce15a8ae0cf0b8c6) Thanks [@leonid](https://github.com/leonid)! - Add `Input`: a single-line text input themed by the shared `--ui-form-*` token
+  tier from `@acronis-platform/tokens-pd`. Each state is wired to its own token —
+  idle / hover / focus (active border + a 3px `--ui-focus-primary` ring) /
+  disabled — and the error state is driven by `aria-invalid` (red border, and a
+  `--ui-focus-error` ring on focus) scoped so it wins over the hover/focus border.
+  Includes tests, Storybook stories, visual-regression baselines, and a Figma
+  Code Connect mapping. Label / description / error message are composed by the
+  consumer (a Field component is future work).
+
+## 0.7.0
+
+### Minor Changes
+
+- [#235](https://github.com/acronis/uikit/pull/235) [`4fb8b2f`](https://github.com/acronis/uikit/commit/4fb8b2f3c0df84f49def85fa7cba7ee3d062ef66) Thanks [@leonid](https://github.com/leonid)! - Add `Checkbox`: a Base UI checkbox wrapper supporting checked, unchecked, and
+  indeterminate states (check / minus glyphs). Colors and geometry are wired to
+  the shared `--ui-form-*` token tier from `@acronis-platform/tokens-pd`, with the
+  glyph tinted by `--ui-glyph-on-brand-primary` and the focus ring by
+  `--ui-focus-primary`; the disabled state always wins over the checked /
+  indeterminate fill. Includes tests, Storybook stories, visual-regression
+  baselines, and a Figma Code Connect mapping. The `form` token tier is now
+  imported in `src/styles/index.css`.
+
 ## 0.6.1
 
 ### Patch Changes

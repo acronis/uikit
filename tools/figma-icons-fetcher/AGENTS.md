@@ -35,8 +35,12 @@ and [`README.md`](./README.md) for the full table.
 `fetch-icons.ts` orchestrates the run:
 
 1. `get-figma-icons.ts` — two Figma API calls (file structure → page nodes),
-   walks frames for `COMPONENT` nodes, formats names (`helpers.formatName`),
-   de-duplicates.
+   then delegates node selection to a **strategy** in `strategies/` (chosen by
+   `FIGMA_FETCHER_SELECTION_STRATEGY`), formats names (`helpers.formatName`),
+   de-duplicates. Strategies are pure (no network/fs):
+   - `frames-by-name` (default) — `COMPONENT` nodes under name-matched frames.
+   - `new-frames` — icon leaves inside green `New`-badged frames, grouped by the
+     page's top-level category frames. See `README.md` → "Selection strategies".
 2. `get-figma-images.ts` — resolves SVG render URLs (batched 200/req).
 3. `download-chunks.ts` → `download-image.ts` — downloads + SVGO-optimizes each
    icon (viewBox kept, IDs prefixed, system color → `currentColor`), writes to

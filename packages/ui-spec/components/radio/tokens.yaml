@@ -1,0 +1,51 @@
+spec_version: '1.0'
+component: RadioGroup
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# Radio uses the shared `--ui-form-*` tier plus the semantic focus-ring token.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-form-background-idle,
+      affects: item,
+      description: Circle fill when unselected,
+    }
+  - {
+      name: --ui-form-background-active,
+      affects: item,
+      description: Circle fill when selected,
+    }
+  - { name: --ui-form-background-disabled, affects: item }
+  - {
+      name: --ui-form-border-idle,
+      affects: item,
+      description: Border when unselected,
+    }
+  - {
+      name: --ui-form-border-hover,
+      affects: item,
+      description: Border on hover,
+    }
+  - {
+      name: --ui-form-border-active,
+      affects: item,
+      description: Border when selected,
+    }
+  - { name: --ui-form-border-disabled, affects: item }
+  - {
+      name: --ui-form-circle-active,
+      affects: indicator,
+      description: Inner dot color when selected,
+    }
+  - {
+      name: --ui-form-circle-disabled,
+      affects: indicator,
+      description: Inner dot color when disabled,
+    }
+  - {
+      name: --ui-focus-primary,
+      affects: item,
+      description: Focus-visible ring color,
+    }

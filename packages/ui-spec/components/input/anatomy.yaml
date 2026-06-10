@@ -1,0 +1,46 @@
+spec_version: '1.0'
+component: Input
+
+schematic: |
+  +-------------------------------+
+  | Placeholder / Value           |   root: <input> (role="textbox")
+  +-------------------------------+
+   border idle / hover / active(focus) / error / disabled
+   text -> --ui-form-text-value ; placeholder -> --ui-form-text-placeholder
+
+root:
+  element: input
+  role: textbox
+  description: >-
+    Native single-line text input. Geometry (32px tall, 12px x-padding, 4px
+    radius, 1px border) and all colors come from the `--ui-form-*` tokens; the
+    focus ring uses `--ui-focus-primary` (and `--ui-focus-error` when invalid).
+
+# A bare input has no named sub-parts — the placeholder/value live on the native
+# element itself. Label / description / error message are composed externally
+# (a Field component is future work), so they are not parts of this control.
+parts: []
+
+# The input is a near-pure function of its props plus native interaction
+# pseudo-states. Value is the native input's own state and is not modelled here.
+states:
+  - id: hover
+    trigger: pointer hover (enabled, not invalid)
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [root]
+  - id: focus-visible
+    trigger: keyboard or text-entry focus
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [root]
+  - id: error
+    trigger: 'aria-invalid === true'
+    kind: prop
+    prop: aria-invalid
+    affects: [root]
+  - id: disabled
+    trigger: 'disabled === true'
+    kind: prop
+    prop: disabled
+    affects: [root]

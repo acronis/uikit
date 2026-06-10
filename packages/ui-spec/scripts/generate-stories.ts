@@ -44,6 +44,47 @@ const RENDER: Record<string, RenderHint> = {
     ariaLabel: 'Action',
   },
   switch: { ariaLabel: 'Toggle' },
+  checkbox: { ariaLabel: 'Accept' },
+  radio: {
+    ariaLabel: 'Plan',
+    extraImports: ["import { Radio } from '../radio';"],
+    sample: [
+      '',
+      '      <Radio value="a" aria-label="Option A" />',
+      '      <Radio value="b" aria-label="Option B" />',
+      '    ',
+    ].join('\n'),
+  },
+  input: { ariaLabel: 'Email' },
+  search: { ariaLabel: 'Search' },
+  tooltip: {
+    extraImports: [
+      "import { TooltipTrigger, TooltipContent } from '../tooltip';",
+    ],
+    sample: [
+      '',
+      '      <TooltipTrigger>Hover me</TooltipTrigger>',
+      '      <TooltipContent>Helpful hint</TooltipContent>',
+      '    ',
+    ].join('\n'),
+  },
+  tag: { sample: 'Label' },
+  select: {
+    extraImports: [
+      "import { SelectTrigger, SelectValue, SelectContent, SelectItem } from '../select';",
+    ],
+    sample: [
+      '',
+      '      <SelectTrigger aria-label="Fruit">',
+      '        <SelectValue placeholder="Select an option" />',
+      '      </SelectTrigger>',
+      '      <SelectContent>',
+      '        <SelectItem value="apple">Apple</SelectItem>',
+      '        <SelectItem value="banana">Banana</SelectItem>',
+      '      </SelectContent>',
+      '    ',
+    ].join('\n'),
+  },
   breadcrumb: {
     ariaLabel: 'breadcrumb',
     extraImports: [
@@ -139,15 +180,38 @@ export const Matrix: Story = {
       ])}
     </div>
   ),
-};
-
-export const Disabled: Story = {
+};`);
+    // Only emit the all-variants Disabled grid when the component actually has a
+    // `disabled` prop (e.g. Button does; Tag doesn't).
+    if (hasProp(api, 'disabled')) {
+      parts.push(`export const Disabled: Story = {
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
       {VARIANTS.map((v) => ${inst(' key={v} variant={v} disabled')})}
     </div>
   ),
 };`);
+    }
+  } else if (variants.length) {
+    // Variants but no size axis (e.g. Button has a single size): list each variant.
+    parts.push(`const VARIANTS = ${arr(variants)};
+
+export const Variants: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
+      {VARIANTS.map((v) => ${inst(' key={v} variant={v}')})}
+    </div>
+  ),
+};`);
+    if (hasProp(api, 'disabled')) {
+      parts.push(`export const Disabled: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
+      {VARIANTS.map((v) => ${inst(' key={v} variant={v} disabled')})}
+    </div>
+  ),
+};`);
+    }
   } else if (hasProp(api, 'checked')) {
     parts.push(`export const States: Story = {
   render: () => (

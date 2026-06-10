@@ -2,12 +2,6 @@ spec_version: '1.0'
 component: Switch
 
 # References only — values live in @acronis-platform/tokens-pd.
-#
-# KNOWN GAP: these are the design-intended `--ui-switch-*` tokens. The current
-# React implementation is not yet wired to them — it uses the shared semantic
-# bridge (bg-primary / bg-input / bg-background / ring) and `opacity-50` for
-# disabled. Wiring Switch to these tokens (as Button now is) is tracked
-# follow-up work; this spec is the target contract.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
@@ -47,7 +41,7 @@ tokens:
       description: Thumb diameter,
     }
   - {
-      name: --ui-focus-brand,
+      name: --ui-focus-primary,
       affects: root,
       description: Focus-visible ring color,
     }

@@ -59,8 +59,9 @@ delivery model differs from the retired `design-theme`:
   styles via `.ui-typography-*` utilities / components, not bare tags — so the
   section showed only the reset baseline. The file is kept (not wired into
   `SECTIONS` in `App.tsx`) so it can be re-enabled if a base element layer ships.
-- `components.tsx` — `ui-react` `Button` (variants/sizes/states/with-icons) and
-  `Switch`.
+- `components.tsx` — the implemented `ui-react` components: `Button`
+  (variants/sizes/states/with-icons), `ButtonIcon`, `Switch`, `Checkbox`,
+  `Radio`, `Input`, `Search`, `Select`, and `Breadcrumb`.
 - `icons.tsx` — galleries for all four `icons-react` packs.
 
 ## Run

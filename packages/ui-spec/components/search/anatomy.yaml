@@ -1,0 +1,57 @@
+spec_version: '1.0'
+component: Search
+
+schematic: |
+  +-------------------------------------------+
+  | (icon)  input text / placeholder   (clear)|   root: <div> (the box)
+  +-------------------------------------------+
+   icon  = leading magnifier (--ui-form-icon-idle)
+   input = borderless <input type="search"> (role="searchbox")
+   clear = trailing × button, shown once there's a value
+
+root:
+  element: div
+  description: >-
+    The bordered box. Holds the icon, input, and clear button; owns the visual
+    state (border idle/hover/active, focus ring) via `:focus-within`. Colors and
+    geometry come from the `--ui-form-*` tokens.
+
+parts:
+  - id: icon
+    description: >-
+      Leading magnifier (SearchIcon). `--ui-form-icon-idle`, or
+      `--ui-form-icon-disabled` when the field is disabled.
+    element: svg
+  - id: input
+    description: Borderless native `<input type="search">` (role="searchbox").
+    element: input
+  - id: clear
+    description: >-
+      Trailing clear (×) button (TimesIcon) that empties the field and refocuses
+      the input. Only present when there is a value and the field is enabled.
+    element: button
+    optional: true
+    visible_when: the field has a value and is not disabled
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [icon, input, clear]
+
+states:
+  - id: hover
+    trigger: pointer hover (enabled)
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [root]
+  - id: focus-visible
+    trigger: input focus (box shows the :focus-within ring)
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [root]
+  - id: disabled
+    trigger: 'disabled === true'
+    kind: prop
+    prop: disabled
+    affects: [root, input, icon, clear]

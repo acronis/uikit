@@ -34,7 +34,9 @@ export async function generateManifests(config: ManifestConfig, icons: ManifestI
   // Generate per-page manifests
   const pageManifests: Array<{ page: string; count: number; path: string }> = [];
   for (const [pageName, pageIcons] of Object.entries(iconsByPage)) {
-    const manifestFileName = `${pageName}.json`;
+    // Group keys may contain "/" (e.g. a "Brands / logos" category) — keep the
+    // manifest flat by collapsing path separators into hyphens.
+    const manifestFileName = `${pageName.replace(/[/\\]/g, '-')}.json`;
     const manifestPath = path.join(config.manifestDir, manifestFileName);
 
     // Sort icon names alphabetically

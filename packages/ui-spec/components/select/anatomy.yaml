@@ -1,0 +1,144 @@
+spec_version: '1.0'
+component: Select
+
+schematic: |
+  closed                                   open
+  +--------------------------------+       +--------------------------------+
+  | value / placeholder    (icon)  |       | value / placeholder    (icon)  |  root: trigger (role=combobox)
+  +--------------------------------+       +--------------------------------+
+                                           | popup: <div role=listbox>      |
+                                           |  +---------------------------+ |
+                                           |  | group-label               | |
+                                           |  | item            (indicator)| |
+                                           |  | item            (indicator)| |
+                                           |  +---------------------------+ |
+                                           +--------------------------------+
+   value     -> selected label or placeholder (--ui-form-text-value / -placeholder)
+   icon      -> chevron (--ui-form-icon-idle), rotates 180° when open
+   popup     -> floating listbox (bg-background / border-border)
+   item      -> an option; highlighted row uses bg-accent
+   indicator -> check shown on the selected item (--ui-form-icon-idle)
+   group / group-label -> optional labelled section of items
+
+root:
+  element: button
+  role: combobox
+  description: >-
+    The trigger — a `role="combobox"` button (Base UI `Select.Trigger`) showing
+    the current value (or placeholder) and a chevron; pressing it opens the
+    popup. `Select.Root` owns the open/selection state and renders no element of
+    its own; the trigger is the focusable control. Geometry and colors come from
+    the `--ui-form-*` tokens.
+
+parts:
+  - id: value
+    description: >-
+      The selected option's label, or the placeholder when nothing is selected
+      (Base UI `Select.Value`). `--ui-form-text-value` / `--ui-form-text-placeholder`.
+    element: span
+  - id: icon
+    description: >-
+      Trailing chevron (ChevronDownIcon, `--ui-form-icon-idle`) that rotates 180°
+      while the popup is open. `--ui-form-icon-disabled` when disabled.
+    element: span
+  - id: popup
+    description: >-
+      The floating listbox panel (`role="listbox"`) holding the options. Portaled
+      and positioned below the trigger; `bg-background`, `border-border`, shadow.
+    element: div
+  - id: item
+    description: >-
+      A single option (`role="option"`). The highlighted row uses `bg-accent`;
+      a disabled item is non-interactive (`--ui-form-text-disabled`).
+    element: div
+  - id: indicator
+    description: A check mark (CheckIcon) shown on the selected item.
+    element: span
+  - id: group
+    description: An optional labelled section grouping related items.
+    element: div
+    optional: true
+  - id: group-label
+    description: The heading for a group (`--ui-text-on-surface-secondary`).
+    element: div
+    optional: true
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [value, icon]
+
+# Select owns two pieces of internal state: whether the popup is `open`, and the
+# current `value` (selection). The visual `open` state below is driven by the
+# former; selection is reflected by the `value` part and the item `indicator`.
+internal_state:
+  - id: open
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [open]
+    controlled_default: default-open
+    emits: open-change
+    changed_by: trigger press, item select, Escape, or outside press
+    description: Whether the options popup is shown; reflected to `data-popup-open` on the trigger.
+  - id: value
+    type: string | string[]
+    controllable_via: [value]
+    controlled_default: default-value
+    emits: value-change
+    changed_by: selecting an item (toggling, when multiple)
+    description: The selected value(s); drives the trigger label and the item indicators.
+
+transitions:
+  - id: openPopup
+    state: open
+    from: false
+    on: trigger press / Space / Enter / ArrowDown
+    to: true
+    guard: not disabled
+    effect: emits open-change(true)
+    interactive: true
+  - id: selectItem
+    state: value
+    on: click / Enter on an item
+    to: the item's value
+    guard: item not disabled
+    effect: emits value-change(next); closes the popup unless multiple
+    interactive: false
+  - id: closePopup
+    state: open
+    from: true
+    on: Escape / outside press / single select
+    to: false
+    effect: emits open-change(false)
+    interactive: false
+
+states:
+  - {
+      id: hover,
+      trigger: pointer hover over the trigger (enabled),
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [root],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on the trigger,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [root],
+    }
+  - {
+      id: open,
+      trigger: 'internal open === true (data-[popup-open])',
+      kind: internal,
+      affects: [root, icon, popup],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true',
+      kind: prop,
+      prop: disabled,
+      affects: [root, value, icon],
+    }

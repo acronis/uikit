@@ -8,4 +8,5 @@ description: >-
   effect immediately (no separate submit).
 since: 0.4.0
 figma:
+  node: '1838-1908'
   codeConnect: packages/ui-react/src/components/ui/switch/switch.figma.tsx

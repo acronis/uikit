@@ -44,16 +44,21 @@ export async function fetchIcons(userConfig: Partial<FetcherConfig> = {}): Promi
     const icons = await getFigmaIcons(config);
 
     // Get download URLs for icons
-    const iconsWithUrls = await getFigmaImages(config, icons);
+    const allIconsWithUrls = await getFigmaImages(config, icons);
 
-    // Validate all icons have URLs
-    const invalidIcons = iconsWithUrls.filter((icon) => !icon.image);
+    // Icons Figma could not render to SVG come back without an image URL. By
+    // default that's a hard error; sources with work-in-progress placeholders
+    // can opt into skipping them via FIGMA_FETCHER_SKIP_MISSING_IMAGES.
+    const invalidIcons = allIconsWithUrls.filter((icon) => !icon.image);
     if (invalidIcons.length) {
-      throw new Error(
-        `${invalidIcons.length} icons missing image URLs:\n${
-          invalidIcons.map((icon) => `  - ${icon.name} (ID: ${icon.id})`).join('\n')}`,
-      );
+      const list = invalidIcons.map((icon) => `  - ${icon.name} (ID: ${icon.id})`).join('\n');
+      if (!config.skipMissingImages) {
+        throw new Error(`${invalidIcons.length} icons missing image URLs:\n${list}`);
+      }
+      console.warn(chalk.yellow(`\n⚠ Skipping ${invalidIcons.length} icons Figma could not render:\n${list}`));
     }
+
+    const iconsWithUrls = allIconsWithUrls.filter((icon) => icon.image);
 
     console.log(`\n📦 Found ${iconsWithUrls.length} icons to download\n`);
 

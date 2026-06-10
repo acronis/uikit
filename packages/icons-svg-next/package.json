@@ -1,0 +1,33 @@
+{
+  "name": "@acronis-platform/icons-svg-next",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Next-gen raw SVG icon sources for Acronis — redesigned icons fetched from the shadcn-uikit Figma file, plus per-category JSON manifests.",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    "./svg/*": "./src/svg/*.svg",
+    "./figma/*": "./src/figma/*.json"
+  },
+  "scripts": {
+    "build": "echo \"no build (raw SVG source package)\" && exit 0",
+    "dev": "echo \"no dev server (raw SVG source package)\" && exit 0",
+    "clean": "echo \"nothing to clean (raw SVG source package)\" && exit 0",
+    "pull-icons": "tsx ../../tools/figma-icons-fetcher/src/index.ts",
+    "lint": "echo \"no lint (raw SVG source package)\" && exit 0",
+    "lint:fix": "echo \"no lint (raw SVG source package)\" && exit 0",
+    "test": "echo \"no tests (raw SVG source package)\" && exit 0",
+    "test:watch": "echo \"no watch mode (raw SVG source package)\" && exit 0",
+    "typecheck": "echo \"no typecheck (raw SVG source package)\" && exit 0"
+  },
+  "keywords": [
+    "acronis",
+    "icons",
+    "svg",
+    "design-system"
+  ],
+  "devDependencies": {
+    "@acronis-platform/figma-icons-fetcher": "workspace:*",
+    "tsx": "^4.20.0"
+  }
+}

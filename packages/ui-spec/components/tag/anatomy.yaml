@@ -1,0 +1,87 @@
+spec_version: '1.0'
+component: Tag
+
+schematic: |
+  +-----------------------+
+  |  [icon]  label        |   root: <span> (pill)
+  +-----------------------+
+     ^         ^
+     icon      label (children / text)
+  variant -> colors    size -> height & padding
+
+root:
+  element: span
+  description: >-
+    The pill — a non-interactive inline `<span>` (background, 1px border,
+    fully-rounded). `variant` drives the colors; `size` the height/padding.
+
+parts:
+  - id: icon
+    description: >-
+      Optional leading icon, rendered at 16px before the label and inheriting the
+      variant's text color via currentColor. The Figma "Small" size omits it.
+    element: svg
+    optional: true
+    visible_when: an `icon` is provided (Default size)
+  - id: label
+    description: >-
+      Text content (children). Truncates with an ellipsis at the 256px max width.
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [icon, label]
+
+# Tag is a pure function of its props — no internal state. Every state is a
+# variant/size prop value (it is non-interactive, so no pseudo-states).
+states:
+  - {
+      id: info,
+      trigger: "variant === 'info'",
+      kind: prop,
+      prop: variant,
+      affects: [root],
+    }
+  - {
+      id: success,
+      trigger: "variant === 'success'",
+      kind: prop,
+      prop: variant,
+      affects: [root],
+    }
+  - {
+      id: warning,
+      trigger: "variant === 'warning'",
+      kind: prop,
+      prop: variant,
+      affects: [root],
+    }
+  - {
+      id: critical,
+      trigger: "variant === 'critical'",
+      kind: prop,
+      prop: variant,
+      affects: [root],
+    }
+  - {
+      id: danger,
+      trigger: "variant === 'danger'",
+      kind: prop,
+      prop: variant,
+      affects: [root],
+    }
+  - {
+      id: neutral,
+      trigger: "variant === 'neutral'",
+      kind: prop,
+      prop: variant,
+      affects: [root],
+    }
+  - {
+      id: small,
+      trigger: "size === 'sm'",
+      kind: prop,
+      prop: size,
+      affects: [root],
+    }

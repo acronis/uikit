@@ -13,6 +13,8 @@ export function getConfig(): FetcherConfig {
   return {
     token: envConfig.FIGMA_FETCHER_FIGMA_TOKEN,
     fileKey: envConfig.FIGMA_FETCHER_FILE_KEY,
+    selectionStrategy: envConfig.FIGMA_FETCHER_SELECTION_STRATEGY === 'new-frames' ? 'new-frames' : 'frames-by-name',
+    skipMissingImages: envConfig.FIGMA_FETCHER_SKIP_MISSING_IMAGES === 'true',
     frameNames: envConfig.FIGMA_FETCHER_FRAME_NAMES?.split(',').map((name) => name.trim()) ?? [],
     pageNames: envConfig.FIGMA_FETCHER_PAGE_NAMES?.split(',').map((name) => name.trim()) ?? [],
     className: envConfig.FIGMA_FETCHER_CLASS_NAME,
