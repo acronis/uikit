@@ -78,8 +78,9 @@ contract must be stable before the component ladder accelerates.
       export with no code change. Track light/dark per brand.
 - [ ] **White-label fonts per brand** (#101) — brand-scoped font tokens + fallback stack.
 - [ ] **New assets wired to themes** — icon/illustration assets paired per brand.
-- [ ] **Token contract & versioning** — define what a breaking token change is; how
+- [x] **Token contract & versioning** (#176) — define what a breaking token change is; how
       `design-tokens` semver maps to `tokens-pd` and consumers.
+      See `packages/design-tokens/context/token-contract.md`.
 - [ ] **Style Dictionary hardening** — test coverage for normalization, light-dark,
       gradients, brand scoping (partly done).
 - [ ] **Design context → design-grammar package** (#88) — relocate design context.
