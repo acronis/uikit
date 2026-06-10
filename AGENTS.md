@@ -141,6 +141,9 @@ that workspace**, never here.
 - `context/roadmap.md` — product roadmap (epics, phases, v1 scope/timeline);
   tracked on GitHub Project #3 as issues #102–108. Companion task breakdowns:
   `context/backlog-p2-primitives.md`, `context/backlog-p3-p4.md`.
+- `context/e1-theme-delivery.md` — E1 (#102) theme-delivery implementation
+  proposal: how the open theme sub-issues (#172/#173/#175/#101/#177) get built on
+  the shipped `tokens-pd` pipeline, and what's reused from the legacy stack.
 - `context/project-board.md` — how we run Project #3: epic/task model, status
   lifecycle + gates, fields, views, and automation.
 - `packages/ui-spec/context/component-specs-proposal.md` — **Proposed**
