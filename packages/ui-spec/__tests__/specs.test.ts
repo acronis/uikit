@@ -122,7 +122,7 @@ function enumMembers(api: ApiSpec, propName: string): string[] {
 }
 
 describe('cva ↔ contract conformance', () => {
-  it('Button: api.yaml variant/size enums match the cva keys in ui-react', () => {
+  it('Button: api.yaml variant enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/button/button.tsx'),
       'utf8'
@@ -130,8 +130,8 @@ describe('cva ↔ contract conformance', () => {
     const groups = extractCvaGroups(source);
     const api = loadSpec('button').api;
 
-    expect(Object.keys(groups).sort()).toEqual(['size', 'variant']);
+    // The Figma button has a single size, so `variant` is the only cva axis.
+    expect(Object.keys(groups)).toEqual(['variant']);
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
-    expect(groups.size.sort()).toEqual(enumMembers(api, 'size'));
   });
 });

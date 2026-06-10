@@ -21,8 +21,15 @@ import {
   SelectTrigger,
   SelectValue,
   Switch,
+  Tag,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from '@acronis-platform/ui-react';
-import { PlusIcon } from '@acronis-platform/icons-react/stroke-mono';
+import {
+  CircleCheckIcon,
+  PlusIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
 
 type Variant =
   | 'default'
@@ -201,22 +208,15 @@ export function ComponentsSection() {
       </div>
 
       <div>
-        <h3 style={{ marginBottom: 12 }}>Button — sizes &amp; usage</h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          <Row label="Sizes">
-            <Button size="sm">Small</Button>
-            <Button size="default">Default</Button>
-            <Button size="lg">Large</Button>
-          </Row>
-          <Row label="With icon">
-            <Button>
-              <PlusIcon /> Add item
-            </Button>
-            <Button variant="secondary">
-              <PlusIcon /> Add item
-            </Button>
-          </Row>
-        </div>
+        <h3 style={{ marginBottom: 12 }}>Button — with icon</h3>
+        <Row label="With icon">
+          <Button>
+            <PlusIcon /> Add item
+          </Button>
+          <Button variant="secondary">
+            <PlusIcon /> Add item
+          </Button>
+        </Row>
       </div>
 
       <div>
@@ -345,6 +345,40 @@ export function ComponentsSection() {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+      </div>
+
+      <div>
+        <h3 style={{ marginBottom: 12 }}>Tag</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <Row label="Variants">
+            <Tag variant="info">Info</Tag>
+            <Tag variant="success">Success</Tag>
+            <Tag variant="warning">Warning</Tag>
+            <Tag variant="critical">Critical</Tag>
+            <Tag variant="danger">Danger</Tag>
+            <Tag variant="neutral">Neutral</Tag>
+          </Row>
+          <Row label="Sizes & icon">
+            <Tag variant="success" icon={<CircleCheckIcon />}>
+              Active
+            </Tag>
+            <Tag variant="neutral" size="sm">
+              Small
+            </Tag>
+          </Row>
+        </div>
+      </div>
+
+      <div>
+        <h3 style={{ marginBottom: 12 }}>Tooltip</h3>
+        <Row label="Open">
+          <Tooltip defaultOpen>
+            <TooltipTrigger
+              render={<Button variant="secondary">Hover me</Button>}
+            />
+            <TooltipContent side="bottom">Helpful hint</TooltipContent>
+          </Tooltip>
+        </Row>
       </div>
     </div>
   );

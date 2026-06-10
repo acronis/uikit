@@ -13,11 +13,6 @@ contract:
       description: >-
         Visual style. `default` is the Figma "Primary" style. Each variant maps
         to its dedicated `--ui-button-<style>-*` tokens.
-    - name: size
-      type: "'default' | 'sm' | 'lg'"
-      required: false
-      default: "'default'"
-      description: Controls height and horizontal padding. `default` is 32px tall.
     - name: disabled
       type: boolean
       required: false

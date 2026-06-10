@@ -18,8 +18,10 @@ import { cn } from '@/lib/utils';
 // paints its gradient via `background-image` and sets `bg-origin-border` so it
 // covers the (transparent) 1px border box — otherwise the gradient anchors to
 // the padding box and repeats a 1px color sliver into the left/right border.
+// The Figma button has a single size — 32px tall, 12px x-padding, 8px gap —
+// baked into the base classes (`h-8 px-3 gap-2`).
 const buttonVariants = cva(
-  'inline-flex min-w-16 items-center justify-center gap-2 whitespace-nowrap rounded border text-sm font-semibold leading-6 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)] focus-visible:ring-offset-2 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex h-8 min-w-16 items-center justify-center gap-2 whitespace-nowrap rounded border px-3 text-sm font-semibold leading-6 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)] focus-visible:ring-offset-2 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
@@ -35,16 +37,9 @@ const buttonVariants = cva(
         inverted:
           'bg-[var(--ui-button-inverted-background-idle)] text-[var(--ui-button-inverted-label-idle)] border-[var(--ui-button-inverted-border-idle)] hover:bg-[var(--ui-button-inverted-background-hover)] hover:text-[var(--ui-button-inverted-label-hover)] hover:border-[var(--ui-button-inverted-border-hover)] active:bg-[var(--ui-button-inverted-background-active)] active:text-[var(--ui-button-inverted-label-active)] active:border-[var(--ui-button-inverted-border-active)] disabled:bg-[var(--ui-button-inverted-background-disabled)] disabled:text-[var(--ui-button-inverted-label-disabled)] disabled:border-[var(--ui-button-inverted-border-disabled)]',
       },
-      size: {
-        // Default matches the Figma button: 32px tall, 12px x-padding, 8px gap.
-        default: 'h-8 px-3',
-        sm: 'h-7 px-2 py-0.5 text-xs',
-        lg: 'h-10 px-4 py-2',
-      },
     },
     defaultVariants: {
       variant: 'default',
-      size: 'default',
     },
   }
 );
@@ -62,7 +57,7 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, render, children, ...props }, ref) => {
+  ({ className, variant, render, children, ...props }, ref) => {
     // The AI variant always leads with the Sparkles icon before its label
     // (the Figma "Ai" button is a Sparkles instance + label).
     const content =
@@ -80,7 +75,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       defaultTagName: 'button',
       props: mergeProps<'button'>(
         {
-          className: cn(buttonVariants({ variant, size, className })),
+          className: cn(buttonVariants({ variant, className })),
           children: content,
         },
         props

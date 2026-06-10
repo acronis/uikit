@@ -42,11 +42,12 @@ overrides that differ per state are honored.
 **Then** it applies the variant's `*-disabled` tokens (not a blanket opacity)
 **And** it does not emit `click`.
 
-## Sizes
+## Size
 
-**Given** `size` of `default`, `sm`, or `lg`
+**Given** any Button
 **When** it renders
-**Then** the height/padding change accordingly; `default` is 32px tall.
+**Then** it has a single size — 32px tall with 12px horizontal padding (the
+Figma button has no size variants).
 
 ## Content
 

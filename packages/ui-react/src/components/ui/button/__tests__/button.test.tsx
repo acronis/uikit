@@ -24,7 +24,7 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: 'Save' }).querySelector('svg')).toBeNull();
   });
 
-  it('applies the default variant and size classes', () => {
+  it('applies the default variant and the single (32px) size classes', () => {
     render(<Button>Save</Button>);
     const button = screen.getByRole('button', { name: 'Save' });
     expect(button).toHaveClass(
@@ -34,16 +34,12 @@ describe('Button', () => {
     );
   });
 
-  it('applies variant and size modifiers', () => {
-    render(
-      <Button variant="destructive" size="lg">
-        Delete
-      </Button>
-    );
+  it('applies the requested variant', () => {
+    render(<Button variant="destructive">Delete</Button>);
     const button = screen.getByRole('button', { name: 'Delete' });
     expect(button).toHaveClass(
       'bg-[var(--ui-button-destructive-background-idle)]',
-      'h-10'
+      'h-8'
     );
   });
 

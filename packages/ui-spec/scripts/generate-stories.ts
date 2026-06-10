@@ -192,6 +192,26 @@ export const Matrix: Story = {
   ),
 };`);
     }
+  } else if (variants.length) {
+    // Variants but no size axis (e.g. Button has a single size): list each variant.
+    parts.push(`const VARIANTS = ${arr(variants)};
+
+export const Variants: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
+      {VARIANTS.map((v) => ${inst(' key={v} variant={v}')})}
+    </div>
+  ),
+};`);
+    if (hasProp(api, 'disabled')) {
+      parts.push(`export const Disabled: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
+      {VARIANTS.map((v) => ${inst(' key={v} variant={v} disabled')})}
+    </div>
+  ),
+};`);
+    }
   } else if (hasProp(api, 'checked')) {
     parts.push(`export const States: Story = {
   render: () => (

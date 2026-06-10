@@ -7,7 +7,7 @@ schematic: |
   +---------------------------------+
      ^         ^
      icon      label (children / text)
-  variant -> colors    size -> height & padding
+  variant -> colors    (single 32px-tall size)
 
 root:
   element: button
@@ -81,22 +81,6 @@ states:
       kind: prop,
       prop: variant,
       affects: [root],
-    }
-  - {
-      id: small,
-      trigger: "size === 'sm'",
-      kind: prop,
-      prop: size,
-      affects: [root],
-      exclusive_with: [large],
-    }
-  - {
-      id: large,
-      trigger: "size === 'lg'",
-      kind: prop,
-      prop: size,
-      affects: [root],
-      exclusive_with: [small],
     }
   - {
       id: hover,
