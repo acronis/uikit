@@ -75,18 +75,62 @@ interface DtcgView {
   mode: string;
 }
 
+/**
+ * Tiers whose tokens carry the Brand axis — their `values` dicts are keyed by
+ * brand. (The primitives tier is keyed by theme: light/dark, not by brand.)
+ */
+const BRAND_TIERS: TokenSourceName[] = ['semantic', 'components'];
+
+/** Collect the key set of every `values` dict in a token tree. */
+function collectValueKeys(node: unknown, into: Set<string>): void {
+  if (!node || typeof node !== 'object') return;
+  const obj = node as Record<string, unknown>;
+  const values = obj['values'];
+  if (values && typeof values === 'object' && !Array.isArray(values)) {
+    for (const key of Object.keys(values)) into.add(key);
+    return; // token leaf — do not descend into the resolved values
+  }
+  for (const [k, v] of Object.entries(obj)) {
+    if (k.startsWith('$')) continue;
+    collectValueKeys(v, into);
+  }
+}
+
+/**
+ * Discover the brand set from the token data — the union of `values` keys across
+ * the brand-bearing tiers (semantic + components). `DEFAULT_BRAND` is emitted in
+ * full and listed first; the rest are alphabetical. This is the data-driven
+ * brand matrix: adding a brand mode in `@acronis-platform/design-tokens` adds a
+ * brand here (and a generated `<brand>.css`) with **no code change**. See
+ * `packages/design-tokens/context/brand-matrix.md`.
+ */
+export function discoverBrands(): string[] {
+  const keys = new Set<string>();
+  for (const tier of BRAND_TIERS) collectValueKeys(readTokenSource(tier), keys);
+  if (!keys.has(DEFAULT_BRAND)) {
+    throw new Error(
+      `Default brand "${DEFAULT_BRAND}" has no token values in ${BRAND_TIERS.join(' / ')}`
+    );
+  }
+  return [DEFAULT_BRAND, ...[...keys].filter((b) => b !== DEFAULT_BRAND).sort()];
+}
+
+/** The discovered brand set (data-driven). */
+export const BRAND_NAMES: readonly string[] = discoverBrands();
+
 const VIEWS: DtcgView[] = [
   { out: 'primitives-light', source: 'primitives', mode: 'light' },
   { out: 'primitives-dark', source: 'primitives', mode: 'dark' },
-  { out: 'semantic-acronis', source: 'semantic', mode: 'acronis' },
-  { out: 'semantic-brand-b', source: 'semantic', mode: 'brand-b' },
-  { out: 'components-acronis', source: 'components', mode: 'acronis' },
-  { out: 'components-brand-b', source: 'components', mode: 'brand-b' },
+  ...BRAND_NAMES.flatMap((brand): DtcgView[] => [
+    { out: `semantic-${brand}`, source: 'semantic', mode: brand },
+    { out: `components-${brand}`, source: 'components', mode: brand },
+  ]),
 ];
 
 /**
  * Stage-2 brands. Each brand resolves its semantic + component view against both
- * theme views of the primitives, zipping colors into `light-dark()`.
+ * theme views of the primitives, zipping colors into `light-dark()`. Derived
+ * from the discovered brand set, so the list is data-driven.
  */
 export interface Brand {
   name: string;
@@ -94,10 +138,11 @@ export interface Brand {
   components: string;
 }
 
-export const BRANDS: Brand[] = [
-  { name: 'acronis', semantic: 'semantic-acronis', components: 'components-acronis' },
-  { name: 'brand-b', semantic: 'semantic-brand-b', components: 'components-brand-b' },
-];
+export const BRANDS: Brand[] = BRAND_NAMES.map((name) => ({
+  name,
+  semantic: `semantic-${name}`,
+  components: `components-${name}`,
+}));
 
 export type Theme = 'light' | 'dark';
 
