@@ -9,12 +9,10 @@ figma.connect(
   'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=1173-2789',
   {
     props: {
-      // Figma's `Variant` property labels its text-only style "Link"; the code
-      // variant (and its `--ui-button-ghost-*` tokens) is named `ghost`.
       variant: figma.enum('Variant', {
         Primary: 'default',
         Secondary: 'secondary',
-        Link: 'ghost',
+        Ghost: 'ghost',
         Destructive: 'destructive',
         Ai: 'ai',
         Inverted: 'inverted',
@@ -24,18 +22,9 @@ figma.connect(
       disabled: figma.enum('State', {
         Disabled: true,
       }),
-      // The Figma button has two same-named "Icon" properties — a boolean
-      // visibility toggle and an instance-swap slot — so they're referenced by
-      // their full `Name#id` to disambiguate. When the toggle is on, the
-      // swapped icon instance is rendered as the button's leading child.
-      icon: figma.boolean('Icon#1173:2', {
-        true: figma.instance('Icon#1173:0'),
-        false: undefined,
-      }),
     },
-    example: ({ variant, disabled, icon }) => (
+    example: ({ variant, disabled }) => (
       <Button variant={variant} disabled={disabled}>
-        {icon}
         Label
       </Button>
     ),
