@@ -82,7 +82,7 @@ interface DtcgView {
 const BRAND_TIERS: TokenSourceName[] = ['semantic', 'components'];
 
 /** Collect the key set of every `values` dict in a token tree. */
-function collectValueKeys(node: unknown, into: Set<string>): void {
+export function collectValueKeys(node: unknown, into: Set<string>): void {
   if (!node || typeof node !== 'object') return;
   const obj = node as Record<string, unknown>;
   const values = obj['values'];
@@ -238,7 +238,7 @@ const sliceFile = (slice: string, brand: string): string =>
 const emptyDecls = (): Decls => ({ vars: new Map(), classes: new Map(), skipped: [] });
 
 /** Override-only maps: entries that differ from (or are absent in) the base. */
-function diffDecls(base: Decls, brand: Decls): Pick<Decls, 'vars' | 'classes'> {
+export function diffDecls(base: Decls, brand: Decls): Pick<Decls, 'vars' | 'classes'> {
   const vars = new Map<string, string>();
   for (const [name, value] of brand.vars) {
     if (base.vars.get(name) !== value) vars.set(name, value);
