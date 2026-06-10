@@ -104,6 +104,87 @@ Lock the pipeline guarantees so brand/data growth can't silently regress:
 - **Brand scoping** — non-default brands emit override-only (diff vs `acronis`), default emits full.
 - **Drift guard** — a rebuild is byte-stable for unchanged input (the property PR #258 verified manually).
 
+## Runtime integration: apps, microfrontends, shadow DOM
+
+How the generated CSS actually lands in a running product. The delivery
+primitive is **inherited CSS custom properties**, and the generated CSS is
+already written for it — `tokens-pd` emits:
+
+```css
+:root,
+:host {
+  /* base + brand values */
+  color-scheme: light dark;
+  --ui-background-brand-primary: light-dark(rgb(0 32 77), rgb(238 242 247));
+  /* … */
+}
+[data-theme='dark'],
+:host([data-theme='dark']) {
+  color-scheme: dark; /* … */
+}
+```
+
+Two properties of that output drive everything below: **`--ui-*` and
+`color-scheme` are inherited** (they cross the shadow boundary down the flattened
+tree), and every block is **dual-scoped to `:root` _and_ `:host`** so the same
+stylesheet works whether it's loaded in the document or adopted into a shadow
+root. Theming is delivered by **inheritance**, not by selector reach — a
+`var(--ui-*)` anywhere resolves against the nearest ancestor (in either tree)
+that defined it.
+
+### Plain app (light DOM)
+
+Import `acronis.css` (+ an optional `<brand>.css`) once at the document; set
+`[data-theme]` on `<html>` (e.g. via `next-themes`). The Tailwind `dark:` variant
+is already wired to `[data-theme='dark']` in `ui-react/src/styles/index.css`.
+Toggling the attribute flips `color-scheme`, which flips every token's
+`light-dark()` — one switch, whole tree.
+
+### Shadow DOM (web components, isolated widgets)
+
+- **Custom properties + `color-scheme` inherit into** shadow roots from the host
+  document. If the page loads the token base, components inside shadow DOM are
+  themed **for free** — do **not** redeclare tokens per shadow root.
+- If a shadow root is fully style-isolated, adopt the **same** token CSS into it
+  via `adoptedStyleSheets`; the `:host` half of each selector scopes it to that
+  root. **Inside a shadow tree use `:host`, never `:root`** — a `:root` rule
+  never matches inside shadow DOM. (The generated CSS already ships both, so no
+  change is needed.)
+- Component/Tailwind CSS _does_ have to be present inside each shadow root
+  (outer styles don't leak in), but it only references `var(--ui-*)`, which
+  inherits.
+
+### Microfrontends
+
+- **Shared brand, many MFEs:** define the token base **once** in the shell
+  document `:root`. MFEs ship only their component CSS referencing `var(--ui-*)`
+  — they must **not** each emit a `:root` token block (duplication + last-wins
+  conflicts). Token **names are the contract** ([token-contract](../packages/design-tokens/context/token-contract.md)),
+  so version skew between MFEs is tolerated as long as names hold.
+- **Theme switch across MFEs:** toggle `[data-theme]` on `<html>`; it inherits
+  into every MFE and their shadow roots. Shadow-isolated MFEs that adopt token
+  CSS into their own roots should mirror the attribute onto each host (observe
+  the document and copy it).
+- **Different brand per MFE on one page — the one real gap.** Brand overrides are
+  emitted globally (`:root, :host`), so two brands on the same page both target
+  `:root` and collide (last wins for the whole document). Today's clean answer:
+  give each such MFE its **own shadow root** and adopt that brand's `<brand>.css`
+  into it, where `:host` scopes it correctly. The pipeline enhancement that would
+  remove the shadow-root requirement: a **container-scoped brand build** that
+  emits overrides under a selector like `:where([data-brand='x'])` / a brand
+  class, so brands can coexist in one light-DOM tree. (Tracked as a follow-up to
+  #172/#173, not E1-blocking.)
+
+### Pitfalls checklist
+
+- Never ship the `:root` token block from more than one bundle on a page.
+- Inside shadow DOM, scope with `:host`, not `:root`.
+- Multi-brand in a single light-DOM document needs the container-scoped build
+  above; otherwise isolate per shadow root.
+- Per-MFE Tailwind **preflight/reset** can fight across apps — scope or dedupe it
+  (orthogonal to tokens, but bites the same integrations).
+- Avoid FOUC: load the token base before first paint (it's small and inlinable).
+
 ## Explicitly NOT doing
 
 - Porting the legacy SCSS, `--av-*` names, or `.theme-{brand}` class toggle (decision #1).
@@ -123,3 +204,7 @@ Lock the pipeline guarantees so brand/data growth can't silently regress:
   `acronis-ocean`, `cyber-chat`, `acronis-white-label`) with the legacy 22-brand
   set — which brands actually ship for v1? (Also flagged in the brand matrix.)
 - #175 needs an asset-selection contract before implementation.
+- **Container-scoped brand build** (follow-up to #172/#173): emit brand overrides
+  under `:where([data-brand='x'])` / a brand class in addition to `:root, :host`,
+  so multiple brands can coexist in one light-DOM document without per-MFE shadow
+  roots (see [Runtime integration → Microfrontends](#microfrontends)).
