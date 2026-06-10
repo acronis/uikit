@@ -55,6 +55,62 @@ describe('Tooltip', () => {
     expect(await screen.findByText('Helpful hint')).toBeInTheDocument();
   });
 
+  it('supports delay from TooltipProvider', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <TooltipProvider delay={50}>
+        <Example />
+      </TooltipProvider>
+    );
+
+    await user.hover(screen.getByRole('button', { name: 'Hover me' }));
+    expect(screen.queryByText('Helpful hint')).not.toBeInTheDocument();
+
+    expect(await screen.findByText('Helpful hint')).toBeInTheDocument();
+  });
+
+  it('supports controlled open state', () => {
+    const { rerender } = render(<Example open={false} />);
+    expect(screen.queryByText('Helpful hint')).not.toBeInTheDocument();
+
+    rerender(<Example open />);
+    expect(screen.getByText('Helpful hint')).toBeInTheDocument();
+  });
+
+  it('opens on keyboard focus', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <TooltipProvider delay={0}>
+        <Example />
+      </TooltipProvider>
+    );
+
+    await user.tab();
+    const trigger = screen.getByRole('button', { name: 'Hover me' });
+    expect(trigger).toHaveFocus();
+
+    expect(await screen.findByText('Helpful hint')).toBeInTheDocument();
+  });
+
+  it('renders into a custom portal container', () => {
+    const portalContainer = document.createElement('div');
+    document.body.appendChild(portalContainer);
+
+    render(
+      <Tooltip defaultOpen>
+        <TooltipTrigger>Hover me</TooltipTrigger>
+        <TooltipContent portalContainer={portalContainer}>
+          Helpful hint
+        </TooltipContent>
+      </Tooltip>
+    );
+
+    expect(portalContainer).toContainElement(screen.getByText('Helpful hint'));
+    portalContainer.remove();
+  });
+
   it('forwards the ref to the popup element', () => {
     const ref = createRef<HTMLDivElement>();
     render(

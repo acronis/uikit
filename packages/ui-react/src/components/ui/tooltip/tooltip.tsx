@@ -21,21 +21,44 @@ const TooltipContent = React.forwardRef<
     sideOffset?: number;
     side?: TooltipPrimitive.Positioner.Props['side'];
     align?: TooltipPrimitive.Positioner.Props['align'];
+    portalContainer?: TooltipPrimitive.Portal.Props['container'];
+    keepMounted?: TooltipPrimitive.Portal.Props['keepMounted'];
   }
->(({ className, sideOffset = 6, side = 'top', align = 'center', ...props }, ref) => (
-  <TooltipPrimitive.Portal>
-    <TooltipPrimitive.Positioner sideOffset={sideOffset} side={side} align={align} className="z-50">
-      <TooltipPrimitive.Popup
-        ref={ref}
-        className={cn(
-          'max-w-[var(--ui-tooltip-global-width-max)] min-w-[var(--ui-tooltip-global-width-min)] rounded-[var(--ui-tooltip-global-radius)] bg-[var(--ui-tooltip-background)] px-[var(--ui-tooltip-global-padding-x)] py-[var(--ui-tooltip-global-padding-y)] text-xs font-medium leading-4 text-[var(--ui-tooltip-label)]',
-          className
-        )}
-        {...props}
-      />
-    </TooltipPrimitive.Positioner>
-  </TooltipPrimitive.Portal>
-));
+>(
+  (
+    {
+      className,
+      sideOffset = 6,
+      side = 'top',
+      align = 'center',
+      portalContainer,
+      keepMounted,
+      ...props
+    },
+    ref
+  ) => (
+    <TooltipPrimitive.Portal
+      container={portalContainer}
+      keepMounted={keepMounted}
+    >
+      <TooltipPrimitive.Positioner
+        sideOffset={sideOffset}
+        side={side}
+        align={align}
+        className="z-50"
+      >
+        <TooltipPrimitive.Popup
+          ref={ref}
+          className={cn(
+            'max-w-[var(--ui-tooltip-global-width-max)] min-w-[var(--ui-tooltip-global-width-min)] rounded-[var(--ui-tooltip-global-radius)] bg-[var(--ui-tooltip-background)] px-[var(--ui-tooltip-global-padding-x)] py-[var(--ui-tooltip-global-padding-y)] text-xs font-medium leading-4 text-[var(--ui-tooltip-label)]',
+            className
+          )}
+          {...props}
+        />
+      </TooltipPrimitive.Positioner>
+    </TooltipPrimitive.Portal>
+  )
+);
 TooltipContent.displayName = 'TooltipContent';
 
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
