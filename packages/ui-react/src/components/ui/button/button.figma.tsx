@@ -22,9 +22,14 @@ figma.connect(
       disabled: figma.enum('State', {
         Disabled: true,
       }),
+      // The leading icon — the Figma button's `Icon` instance-swap, rendered as
+      // the button's first child. (The companion `Icon` boolean toggle isn't
+      // mapped; the snippet just shows the icon slot.)
+      icon: figma.instance('Icon#1173:0'),
     },
-    example: ({ variant, disabled }) => (
+    example: ({ variant, disabled, icon }) => (
       <Button variant={variant} disabled={disabled}>
+        {icon}
         Label
       </Button>
     ),
