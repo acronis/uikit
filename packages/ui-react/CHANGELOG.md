@@ -1,5 +1,14 @@
 # @acronis-platform/ui-react
 
+## 0.14.0
+
+### Minor Changes
+
+- [#255](https://github.com/acronis/uikit/pull/255) [`c11f987`](https://github.com/acronis/uikit/commit/c11f9878b8920259223a4622dd0efc96d6a83d2a) Thanks [@leonid](https://github.com/leonid)! - **Button: removed the `size` prop.** The Figma button has a single size, so
+  `Button` no longer accepts `size` (`sm` / `default` / `lg`) — it always renders
+  the 32px-tall size (`h-8 px-3`). This is a breaking change for any consumer
+  passing `size`; drop the prop. `ButtonIcon` is unaffected.
+
 ## 0.13.0
 
 ### Minor Changes
