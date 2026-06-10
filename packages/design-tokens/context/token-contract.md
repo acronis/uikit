@@ -51,8 +51,8 @@ Its `exports` expose `tiers/{primitives,semantic,components}.json` and
 `schemas/*`. Its primary consumer is the build tool, but because it's published,
 a direct JSON consumer is possible. What's contractual here:
 
-- token **paths** (`background.brand.primary`), `$type`, and the **`values` mode
-  keys** (themes `light`/`dark`; brands `acronis`/`brand-b`/…);
+- semantic/component token **paths** (`background.brand.primary`), `$type`, and the **`values` mode
+  keys** (themes `light`/`dark`; brands `acronis`/`brand-b`/…); primitive palette paths (`palette.*`) are internal (see below).
 - the **alias structure** (`components → semantics → primitives`) only insofar as
   it changes a resolved value or a token's existence.
 
@@ -89,9 +89,9 @@ name is identical, because it silently breaks every consumer's intent.
 ## Bump mapping
 
 We are **pre-1.0** on both packages (`design-tokens` 0.x, `tokens-pd` 0.x) and
+We are **pre-1.0** on both packages (`design-tokens` 0.x, `tokens-pd` 0.x) and
 the token contract is **not yet frozen** — freezing it is a ui-react 1.0
-criterion (see `context/roadmap.md`). `releasing.md` says to avoid `major` until
-a major release is planned. So while at 0.x we use the **0ver** mapping:
+criterion (see [`../../../context/roadmap.md`](../../../context/roadmap.md)). `releasing.md` says to avoid `major` until
 
 | Change category | Changeset bump (pre-1.0)                                          | Changeset bump (1.0+) |
 | --------------- | ----------------------------------------------------------------- | --------------------- |
@@ -109,7 +109,7 @@ column) and freeze the contract.
 A single token change produces **a changeset per affected published package**, of
 the **same category**:
 
-1. **Author** the change in `design-tokens` `tiers/*.json` → `pnpm validate`.
+1. **Author** the change in `design-tokens` `tiers/*.json` → `pnpm --filter @acronis-platform/design-tokens validate`.
    Add a `design-tokens` changeset (category per the table).
 2. **Rebuild** `tokens-pd` (`pnpm --filter @acronis-platform/tokens-pd build`);
    commit the regenerated output. If any byte changed, add a `tokens-pd`
