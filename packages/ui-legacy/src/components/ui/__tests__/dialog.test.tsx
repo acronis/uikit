@@ -3,22 +3,39 @@ import { render, screen } from '@testing-library/react';
 import { Dialog, DialogContent, DialogTitle } from '../dialog';
 
 describe('Dialog', () => {
-  it('keeps exit animation styles applied while closing', () => {
-    render(
+  it('preserves the exit end-state while closing', () => {
+    const { rerender } = render(
       <Dialog open>
-        <DialogContent>
+        <DialogContent portal={false}>
           <DialogTitle>Dialog title</DialogTitle>
         </DialogContent>
       </Dialog>
     );
 
-    const dialog = screen.getByRole('dialog');
-    const overlay = Array.from(document.querySelectorAll('div')).find((node) =>
-      node.className.includes('bg-black/80')
+    const overlaySelector = '.bg-black\\/80';
+
+    expect(screen.getByRole('dialog')).toHaveClass(
+      'data-[closed]:fill-mode-forwards'
     );
 
-    expect(dialog).toHaveClass('data-[closed]:fill-mode-forwards');
-    expect(overlay).toBeTruthy();
-    expect(overlay).toHaveClass('data-[closed]:fill-mode-forwards');
+    const overlayOpen = document.querySelector<HTMLDivElement>(overlaySelector);
+    expect(overlayOpen).not.toBeNull();
+    expect(overlayOpen!).toHaveClass('data-[closed]:fill-mode-forwards');
+
+    // Trigger the close transition so Base UI applies `data-closed`.
+    rerender(
+      <Dialog open={false}>
+        <DialogContent portal={false}>
+          <DialogTitle>Dialog title</DialogTitle>
+        </DialogContent>
+      </Dialog>
+    );
+
+    expect(screen.getByRole('dialog')).toHaveAttribute('data-closed');
+
+    const overlayClosed =
+      document.querySelector<HTMLDivElement>(overlaySelector);
+    expect(overlayClosed).not.toBeNull();
+    expect(overlayClosed!).toHaveAttribute('data-closed');
   });
 });
