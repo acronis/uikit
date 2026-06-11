@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      :root { color-scheme: light dark; }
+      body {
+        font: 12px/1.45 Inter, -apple-system, system-ui, sans-serif;
+        margin: 0; padding: 12px; color: var(--figma-color-text);
+        background: var(--figma-color-bg);
+      }
+      h1 { font-size: 12px; font-weight: 600; margin: 0 0 8px; }
+      .summary { color: var(--figma-color-text-secondary); margin-bottom: 10px; white-space: pre-line; min-height: 48px; }
+      button {
+        width: 100%; padding: 8px 12px; border: 0; border-radius: 6px; cursor: pointer;
+        font-weight: 600; font-size: 12px;
+        background: var(--figma-color-bg-brand); color: var(--figma-color-text-onbrand);
+      }
+      button:disabled { opacity: 0.5; cursor: default; }
+      .status { margin-top: 10px; white-space: pre-line; }
+      .ok { color: var(--figma-color-text-success, #1a8a3a); }
+      .err { color: var(--figma-color-text-danger, #d33); }
+      code { font-family: ui-monospace, Menlo, monospace; font-size: 11px; }
+    </style>
+  </head>
+  <body>
+    <h1>Acronis Token Exporter</h1>
+    <div class="summary" id="summary">Reading variables…</div>
+    <button id="send" disabled>Send snapshot to repo</button>
+    <div class="status" id="status"></div>
+
+    <script>
+      var PORT = 3333;
+      var ENDPOINT = 'http://localhost:' + PORT + '/';
+      var payload = null;
+
+      var summaryEl = document.getElementById('summary');
+      var statusEl = document.getElementById('status');
+      var sendBtn = document.getElementById('send');
+
+      function setStatus(text, cls) {
+        statusEl.textContent = text;
+        statusEl.className = 'status' + (cls ? ' ' + cls : '');
+      }
+
+      onmessage = function (event) {
+        var msg = event.data.pluginMessage;
+        if (!msg) return;
+        if (msg.type === 'PAYLOAD_READY') {
+          payload = msg.payload;
+          var s = msg.summary;
+          summaryEl.textContent =
+            (s.fileName ? s.fileName + '\n' : '') +
+            s.variables + ' variables · ' + s.collections + ' collections\n' +
+            s.orphans + ' resolved orphan refs · ' + s.textStyles + ' text styles';
+          sendBtn.disabled = false;
+        } else if (msg.type === 'ERROR') {
+          summaryEl.textContent = '';
+          setStatus('Plugin error: ' + msg.error, 'err');
+        }
+      };
+
+      sendBtn.onclick = async function () {
+        if (!payload) return;
+        sendBtn.disabled = true;
+        setStatus('Sending to ' + ENDPOINT + ' …');
+        try {
+          var res = await fetch(ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          var data = await res.json();
+          if (!res.ok || !data.ok) throw new Error(data.error || ('HTTP ' + res.status));
+          setStatus('Wrote snapshot ✓\n' + (data.files || []).join('\n'), 'ok');
+        } catch (e) {
+          setStatus(
+            'Could not reach the receiver.\nStart it first:\n' +
+              'pnpm --filter @acronis-platform/figma-token-exporter receive\n\n' +
+              ((e && e.message) || String(e)),
+            'err'
+          );
+          sendBtn.disabled = false;
+        }
+      };
+    </script>
+  </body>
+</html>

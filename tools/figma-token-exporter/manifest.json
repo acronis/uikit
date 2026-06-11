@@ -1,0 +1,13 @@
+{
+  "name": "Acronis Token Exporter",
+  "api": "1.0.0",
+  "main": "plugin/code.js",
+  "ui": "plugin/ui.html",
+  "editorType": ["figma", "dev"],
+  "capabilities": ["inspect"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["http://localhost:3333"],
+    "reasoning": "Posts the exported token snapshot to a local receiver (pnpm --filter @acronis-platform/figma-token-exporter receive) that writes it into packages/design-tokens/.tmp/figma-tokens/."
+  }
+}

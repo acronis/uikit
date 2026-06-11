@@ -1,0 +1,35 @@
+{
+  "name": "@acronis-platform/figma-token-exporter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Private build tool: a self-hosted Figma plugin + local receiver that exports design-token variables/styles into packages/design-tokens/.tmp/figma-tokens/ (the snapshot the sync emitters consume). Replaces the third-party figma-console Desktop Bridge for token pulls.",
+  "type": "module",
+  "exports": {
+    "./convert": "./src/convert.ts",
+    "./write-snapshot": "./src/write-snapshot.ts"
+  },
+  "scripts": {
+    "build": "echo \"no build (plugin is plain JS; node side runs via tsx)\" && exit 0",
+    "dev": "echo \"no dev server (run receive)\" && exit 0",
+    "clean": "echo \"nothing to clean\" && exit 0",
+    "receive": "tsx src/receiver.ts",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "figma",
+    "design-tokens",
+    "dtcg",
+    "plugin",
+    "acronis"
+  ],
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "tsx": "^4.20.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
