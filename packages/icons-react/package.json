@@ -1,6 +1,6 @@
 {
   "name": "@acronis-platform/icons-react",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Acronis React icon components, generated from @acronis-platform/icons-svg-next.",
   "type": "module",
   "main": "./dist/index.js",
