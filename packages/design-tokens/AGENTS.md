@@ -23,6 +23,20 @@ pnpm --filter @acronis-platform/design-tokens validate    # ajv-compiles the sch
 
 `--strict=false` is required for the tokens schema — a known ajv quirk from the `properties`/`patternProperties` overlap on `$extensions`. It is already baked into the `validate` script; keep it.
 
+## Emit (re-emit tiers from a Figma snapshot)
+
+```bash
+pnpm --filter @acronis-platform/design-tokens emit
+```
+
+One-command re-emit: runs the orphan-coverage gate, the three generators in
+dependency order (`figma-to-primitives` → `figma-to-semantic` →
+`figma-to-components`), then `validate` — fail-fast (`&&`-chained). Requires a
+populated `.tmp/figma-tokens/` snapshot (see Bootstrap below). It does **not**
+rebuild `tokens-pd`, review the diff, or fix consumers — that's the
+[`/sync-tokens`](../../.claude/skills/sync-tokens/SKILL.md) flow. Use `emit` for
+the mechanical re-emit; use the skill for a full sync.
+
 `build` / `dev` / `clean` / `lint` / `typecheck` are intentional no-ops
 — there is nothing to compile in a JSON data package. `test` runs the
 ajv validation so `pnpm -r test` covers this workspace in CI.
