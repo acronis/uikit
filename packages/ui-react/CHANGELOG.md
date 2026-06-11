@@ -1,5 +1,11 @@
 # @acronis-platform/ui-react
 
+## 0.15.0
+
+### Minor Changes
+
+- [#262](https://github.com/acronis/uikit/pull/262) [`78fe4ff`](https://github.com/acronis/uikit/commit/78fe4ff0699510e787ac32a299864d7c80c09e1c) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Add ui-react Tooltip controlled/delay coverage and a portal container escape hatch on `TooltipContent` via the new `portalContainer` prop.
+
 ## 0.14.0
 
 ### Minor Changes
