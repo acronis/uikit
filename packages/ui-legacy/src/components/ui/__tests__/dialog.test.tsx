@@ -1,14 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { Dialog, DialogContent, DialogTitle } from '../dialog';
+import { Dialog, DialogContent, DialogPortal, DialogTitle } from '../dialog';
 
 describe('Dialog', () => {
   it('preserves the exit end-state while closing', () => {
     const { rerender } = render(
       <Dialog open>
-        <DialogContent portal={false}>
-          <DialogTitle>Dialog title</DialogTitle>
-        </DialogContent>
+        <DialogPortal keepMounted>
+          <DialogContent portal={false}>
+            <DialogTitle>Dialog title</DialogTitle>
+          </DialogContent>
+        </DialogPortal>
       </Dialog>
     );
 
@@ -25,13 +27,17 @@ describe('Dialog', () => {
     // Trigger the close transition so Base UI applies `data-closed`.
     rerender(
       <Dialog open={false}>
-        <DialogContent portal={false}>
-          <DialogTitle>Dialog title</DialogTitle>
-        </DialogContent>
+        <DialogPortal keepMounted>
+          <DialogContent portal={false}>
+            <DialogTitle>Dialog title</DialogTitle>
+          </DialogContent>
+        </DialogPortal>
       </Dialog>
     );
 
-    expect(screen.getByRole('dialog')).toHaveAttribute('data-closed');
+    expect(screen.getByRole('dialog', { hidden: true })).toHaveAttribute(
+      'data-closed'
+    );
 
     const overlayClosed =
       document.querySelector<HTMLDivElement>(overlaySelector);
