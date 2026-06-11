@@ -50,7 +50,7 @@ const TooltipContent = React.forwardRef<
         <TooltipPrimitive.Popup
           ref={ref}
           className={cn(
-            'max-w-[var(--ui-tooltip-global-width-max)] min-w-[var(--ui-tooltip-global-width-min)] rounded-[var(--ui-tooltip-global-radius)] bg-[var(--ui-tooltip-background)] px-[var(--ui-tooltip-global-padding-x)] py-[var(--ui-tooltip-global-padding-y)] text-xs font-medium leading-4 text-[var(--ui-tooltip-label)]',
+            'max-w-[var(--ui-tooltip-container-width-max)] min-w-[var(--ui-tooltip-container-width-min)] rounded-[var(--ui-tooltip-container-radius)] bg-[var(--ui-tooltip-container-color)] px-[var(--ui-tooltip-container-padding-x)] py-[var(--ui-tooltip-container-padding-y)] text-xs font-medium leading-4 text-[var(--ui-tooltip-label-color)]',
             className
           )}
           {...props}

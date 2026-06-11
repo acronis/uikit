@@ -40,8 +40,8 @@ describe('Tooltip', () => {
   it('applies the --ui-tooltip-* tokens to the popup', () => {
     render(<Example defaultOpen />);
     expect(screen.getByText('Helpful hint')).toHaveClass(
-      'bg-[var(--ui-tooltip-background)]',
-      'text-[var(--ui-tooltip-label)]'
+      'bg-[var(--ui-tooltip-container-color)]',
+      'text-[var(--ui-tooltip-label-color)]'
     );
   });
 
