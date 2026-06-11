@@ -1,49 +1,35 @@
 import { createRequire } from 'node:module';
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { toComponentName } from '../src/lib/naming.ts';
-import { PACKS, type PackConfig } from './packs.ts';
+import {
+  ICON_SIZES,
+  PACKS,
+  STROKE_WIDTH_PX,
+  type PackConfig,
+} from './packs.ts';
 
 const require = createRequire(import.meta.url);
 const here = dirname(fileURLToPath(import.meta.url));
 const srcPacks = resolve(here, '..', 'src', 'packs');
 
-// design-assets ships JSON manifests + SVG sources; resolve its root from the
-// package.json export and read packs/rules off the filesystem.
-const assetsRoot = dirname(
-  require.resolve('@acronis-platform/design-assets/package.json')
+// icons-svg-next ships flat SVG masters (src/svg) + per-pack/category name-list
+// manifests (src/figma). Resolve its root from the package.json export.
+const nextRoot = dirname(
+  require.resolve('@acronis-platform/icons-svg-next/package.json')
 );
-
-interface Rule {
-  kind: 'scale' | 'stroke';
-  target: { value: number; unit: string };
-}
-interface Manifest {
-  name: string;
-  values: Record<string, { default?: boolean; $rules?: string[] }>;
-  assets: Record<string, { values: Record<string, { $file?: string }> }>;
-}
+const svgDir = resolve(nextRoot, 'src', 'svg');
+const figmaDir = resolve(nextRoot, 'src', 'figma');
 
 function round(n: number): number {
   return Math.round(n * 1000) / 1000;
 }
 
-async function loadRules(): Promise<Map<string, Rule>> {
-  const names = [
-    'scale-16',
-    'scale-32',
-    'scale-96',
-    'stroke-1-6',
-    'stroke-2-5',
-  ];
-  const rules = new Map<string, Rule>();
-  for (const name of names) {
-    const file = resolve(assetsRoot, 'rules', `${name}.json`);
-    rules.set(name, JSON.parse(await readFile(file, 'utf8')) as Rule);
-  }
-  return rules;
+/** Manifest files feeding a pack: `<name>.json` or `<name>-<category>.json`. */
+function manifestMatcher(pack: PackConfig): RegExp {
+  return new RegExp(`^${pack.name}(-.*)?\\.json$`);
 }
 
 /** kebab-attr="…" → camelAttr="…" for JSX (leaving aria- and data- attrs alone). */
@@ -123,40 +109,43 @@ function wrapperSource(
   );
 }
 
-async function generatePack(
-  pack: PackConfig,
-  rules: Map<string, Rule>
-): Promise<number> {
-  const manifest = JSON.parse(
-    await readFile(
-      resolve(assetsRoot, 'packs', `${pack.assetPack}.json`),
-      'utf8'
-    )
-  ) as Manifest;
+/** Merge + de-dupe the icon names for a pack from its manifest file(s). */
+async function packIconNames(pack: PackConfig): Promise<string[]> {
+  const matcher = manifestMatcher(pack);
+  const files = (await readdir(figmaDir))
+    .filter((f) => f !== 'icons.json' && matcher.test(f))
+    .sort();
+  const names = new Set<string>();
+  for (const file of files) {
+    const list = JSON.parse(
+      await readFile(resolve(figmaDir, file), 'utf8')
+    ) as string[];
+    list.forEach((name) => names.add(name));
+  }
+  return [...names].sort();
+}
 
-  const defaultSize = Object.entries(manifest.values).find(
-    ([, v]) => v.default
-  )?.[0];
-  if (!defaultSize)
-    throw new Error(`${pack.assetPack}: no default size in manifest`);
+async function generatePack(pack: PackConfig): Promise<number> {
+  const names = await packIconNames(pack);
 
   const outDir = resolve(srcPacks, pack.name);
   await rm(outDir, { recursive: true, force: true });
   await mkdir(resolve(outDir, 'icons'), { recursive: true });
 
-  const assetNames = Object.keys(manifest.assets).sort();
-  let viewBox = '0 0 24 24';
-  let masterStroke = 2;
-
+  let viewBoxSize = 24;
   const components: { name: string; component: string; file: string }[] = [];
-  for (const assetName of assetNames) {
-    const file = manifest.assets[assetName].values[defaultSize]?.$file;
-    if (!file) continue;
-    const svg = await readFile(resolve(assetsRoot, file), 'utf8');
-    viewBox = svg.match(/viewBox="([^"]*)"/)?.[1] ?? viewBox;
-    masterStroke = Number(
-      svg.match(/stroke-width="([\d.]+)"/)?.[1] ?? masterStroke
-    );
+  for (const assetName of names) {
+    let svg: string;
+    try {
+      svg = await readFile(resolve(svgDir, `${assetName}.svg`), 'utf8');
+    } catch {
+      console.warn(
+        `⚠ icons-react: ${pack.name} — no SVG for "${assetName}", skipping`
+      );
+      continue;
+    }
+    const viewBox = svg.match(/viewBox="([^"]*)"/)?.[1] ?? '0 0 24 24';
+    viewBoxSize = Number(viewBox.split(/\s+/)[2]) || viewBoxSize;
 
     const component = toComponentName(assetName);
     const inner = toInnerJsx(svg, pack, assetName);
@@ -173,18 +162,10 @@ async function generatePack(
   }
 
   // Stroke-width map (stroke packs only): rendered px → viewBox user units.
-  const viewBoxSize = Number(viewBox.split(/\s+/)[2]) || 24;
   const strokeMap: Record<number, number> = {};
   if (pack.paint === 'stroke') {
-    for (const [sizeKey, value] of Object.entries(manifest.values)) {
-      const renderSize = Number(sizeKey);
-      const strokeRuleName = value.$rules?.find(
-        (r) => rules.get(r)?.kind === 'stroke'
-      );
-      const strokePx = strokeRuleName
-        ? rules.get(strokeRuleName)!.target.value
-        : masterStroke;
-      strokeMap[renderSize] = round((strokePx * viewBoxSize) / renderSize);
+    for (const size of ICON_SIZES) {
+      strokeMap[size] = round((STROKE_WIDTH_PX[size] * viewBoxSize) / size);
     }
   }
 
@@ -199,7 +180,7 @@ async function generatePack(
     components.map((c) => `  '${c.name}': ${c.component},`).join('\n') +
     `\n} as const;`;
   const index =
-    `// Generated by scripts/generate-icons.ts from @acronis-platform/design-assets. Do not edit.\n` +
+    `// Generated by scripts/generate-icons.ts from @acronis-platform/icons-svg-next. Do not edit.\n` +
     `export type { IconProps } from './icon';\n\n` +
     `${imports}\n\n${exportList}\n\n${registry}\n\n` +
     `export type IconName = keyof typeof icons;\n`;
@@ -209,10 +190,9 @@ async function generatePack(
 }
 
 async function main(): Promise<void> {
-  const rules = await loadRules();
   await mkdir(srcPacks, { recursive: true });
   for (const pack of PACKS) {
-    const count = await generatePack(pack, rules);
+    const count = await generatePack(pack);
     console.log(`✓ icons-react: ${pack.name} — ${count} icons`);
   }
 }

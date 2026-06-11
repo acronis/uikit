@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { BanIcon, icons, type IconName } from '../packs/stroke-mono';
+import { BoltIcon, icons, type IconName } from '../packs/stroke-mono';
 
 /**
- * The `stroke-mono` pack, generated from `@acronis-platform/design-assets`.
- * Icons use `currentColor` (inherit text color) and apply the design-assets
- * scale + stroke rules via the `size` prop.
+ * The `stroke-mono` pack, generated from `@acronis-platform/icons-svg-next`.
+ * Icons use `currentColor` (inherit text color) and apply the design size +
+ * stroke rules via the `size` prop.
  */
 const meta = {
   title: 'Icons/Stroke Mono',
-  component: BanIcon,
+  component: BoltIcon,
   parameters: { layout: 'centered' },
-} satisfies Meta<typeof BanIcon>;
+} satisfies Meta<typeof BoltIcon>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -21,9 +21,9 @@ export const Default: Story = {};
 export const Sizes: Story = {
   render: () => (
     <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-      <BanIcon size={16} />
-      <BanIcon size={24} />
-      <BanIcon size={32} />
+      <BoltIcon size={16} />
+      <BoltIcon size={24} />
+      <BoltIcon size={32} />
     </div>
   ),
 };
@@ -32,13 +32,13 @@ export const InheritsColor: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 24, fontSize: 32 }}>
       <span style={{ color: '#1763cf' }}>
-        <BanIcon size={32} />
+        <BoltIcon size={32} />
       </span>
       <span style={{ color: '#d4380d' }}>
-        <BanIcon size={32} />
+        <BoltIcon size={32} />
       </span>
       <span style={{ color: 'currentColor' }}>
-        <BanIcon size={32} />
+        <BoltIcon size={32} />
       </span>
     </div>
   ),

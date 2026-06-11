@@ -1,7 +1,7 @@
 {
   "name": "@acronis-platform/icons-react",
   "version": "0.3.0",
-  "description": "Acronis React icon components, generated from @acronis-platform/design-assets.",
+  "description": "Acronis React icon components, generated from @acronis-platform/icons-svg-next.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -60,7 +60,7 @@
     }
   },
   "devDependencies": {
-    "@acronis-platform/design-assets": "workspace:*",
+    "@acronis-platform/icons-svg-next": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:",
     "@storybook/addon-a11y": "10.4.1",

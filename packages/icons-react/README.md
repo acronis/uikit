@@ -1,8 +1,8 @@
 # @acronis-platform/icons-react
 
 React icon components, generated from
-[`@acronis-platform/design-assets`](../design-assets). Tree-shakeable, themed
-via `currentColor`, with the design-system scale/stroke rules baked in.
+[`@acronis-platform/icons-svg-next`](../icons-svg-next). Tree-shakeable, themed
+via `currentColor`, with the design-system size/stroke rules baked in.
 
 ## Install
 
@@ -14,7 +14,7 @@ pnpm add @acronis-platform/icons-react react react-dom
 
 ```tsx
 import {
-  BanIcon,
+  BoltIcon,
   ChevronDownIcon,
 } from '@acronis-platform/icons-react/stroke-mono';
 
@@ -22,15 +22,15 @@ export function Example() {
   return (
     <p style={{ color: 'crimson' }}>
       {/* inherits text color via currentColor */}
-      <BanIcon size={16} title="Blocked" />
+      <BoltIcon size={16} title="Power" />
       <ChevronDownIcon /> {/* defaults to 24px, decorative */}
     </p>
   );
 }
 ```
 
-`size` applies the design-assets scale + stroke rules — e.g. `size={16}` renders
-at 16px with a 1.6px stroke, `size={32}` at 32px with 2.5px, matching the design.
+`size` applies the design size + stroke rules — e.g. `size={16}` renders at 16px
+with a 1.6px stroke, `size={32}` at 32px with 2.5px, matching the design.
 
 ### Dynamic lookup
 
@@ -48,7 +48,7 @@ const Icon = icons['chevron-down'];
 ## Develop
 
 ```sh
-pnpm --filter @acronis-platform/icons-react generate    # regenerate from design-assets
+pnpm --filter @acronis-platform/icons-react generate    # regenerate from icons-svg-next
 pnpm --filter @acronis-platform/icons-react storybook    # browse the gallery
 pnpm --filter @acronis-platform/icons-react test         # Vitest + RTL
 pnpm --filter @acronis-platform/icons-react build        # generate + lib bundle

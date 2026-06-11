@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { SearchIcon } from '@acronis-platform/icons-react/solid-mono';
-import { TimesIcon } from '@acronis-platform/icons-react/stroke-mono';
+import {
+  MagnifierIcon,
+  TimesIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
 
@@ -78,7 +80,7 @@ const Search = React.forwardRef<HTMLInputElement, SearchProps>(
           className
         )}
       >
-        <SearchIcon
+        <MagnifierIcon
           size={16}
           className="shrink-0 text-[var(--ui-form-icon-idle)] group-data-[disabled]:text-[var(--ui-form-icon-disabled)]"
         />

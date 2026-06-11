@@ -16,17 +16,17 @@ export interface IconProps extends Omit<
 export interface SvgIconProps extends IconProps {
   /**
    * Map of rendered size (px) → stroke width in viewBox user units, derived
-   * from the design-assets scale + stroke rules at generation time. Applied to
-   * the `<svg>` (stroke packs only); falls back to the canonical (24) value.
+   * from the design size/stroke rules at generation time. Applied to the
+   * `<svg>` (stroke packs only); falls back to the canonical (24) value.
    */
   strokeWidthBySize?: Record<number, number>;
   children: React.ReactNode;
 }
 
 /**
- * Shared renderer for generated icon components. The design-assets master is a
- * 24px vector; the scale + stroke rules are baked into `strokeWidthBySize` (by
- * the generator) so one source renders at any size with the designed stroke
+ * Shared renderer for generated icon components. The source master is a 24px
+ * vector; the size + stroke rules are baked into `strokeWidthBySize` (by the
+ * generator) so one source renders at any size with the designed stroke
  * weight. Paint defaults (`currentColor`, `fill: none`, line caps) are supplied
  * by each pack's generated wrapper and can be overridden per call.
  */

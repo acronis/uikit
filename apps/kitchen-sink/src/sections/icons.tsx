@@ -6,6 +6,10 @@ import { icons as strokeMulti } from '@acronis-platform/icons-react/stroke-multi
 
 type IconMap = Record<string, ComponentType<{ size?: number }>>;
 
+// The supported icon sizes (px) — each icon renders at all three so the
+// size/stroke rules baked into icons-react (1.6 / 2 / 2.5px stroke) are visible.
+const SIZES = [16, 24, 32] as const;
+
 const PACKS: { name: string; icons: IconMap }[] = [
   { name: 'stroke-mono', icons: strokeMono },
   { name: 'solid-mono', icons: solidMono },
@@ -18,7 +22,7 @@ function Gallery({ icons }: { icons: IconMap }) {
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
         gap: 12,
       }}
     >
@@ -30,13 +34,25 @@ function Gallery({ icons }: { icons: IconMap }) {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 6,
+            gap: 8,
             padding: 8,
             borderRadius: 6,
             border: '1px solid var(--ui-border-on-surface-border)',
           }}
         >
-          <Icon size={24} />
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              gap: 8,
+              minHeight: 32,
+            }}
+          >
+            {SIZES.map((size) => (
+              <Icon key={size} size={size} />
+            ))}
+          </div>
           <span
             style={{
               fontSize: 9,
@@ -59,6 +75,17 @@ function Gallery({ icons }: { icons: IconMap }) {
 export function IconsSection() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+      <p
+        style={{
+          fontSize: 12,
+          color: 'var(--ui-text-on-surface-secondary)',
+          margin: 0,
+        }}
+      >
+        Each icon is shown at all three sizes — sm 16px, md 24px, lg 32px —
+        applying the per-size stroke weights (1.6 / 2 / 2.5px) baked into
+        icons-react.
+      </p>
       {PACKS.map((pack) => (
         <div key={pack.name}>
           <h3

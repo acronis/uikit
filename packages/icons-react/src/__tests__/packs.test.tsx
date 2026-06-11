@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { AcronisAIcon } from '../packs/solid-mono';
+import { AcronisIcon } from '../packs/solid-mono';
 import { CircleCheckSolidIcon } from '../packs/stroke-multi';
-import { SparklesIcon } from '../packs/solid-multi';
+import { SparklesDuplicateIcon } from '../packs/solid-multi';
 
 function svgOf(container: HTMLElement): SVGSVGElement {
   const svg = container.querySelector('svg');
@@ -13,7 +13,7 @@ function svgOf(container: HTMLElement): SVGSVGElement {
 
 describe('solid-mono pack', () => {
   it('paints with currentColor fill (no authored color, no stroke width)', () => {
-    const svg = svgOf(render(<AcronisAIcon />).container);
+    const svg = svgOf(render(<AcronisIcon />).container);
     expect(svg).toHaveAttribute('fill', 'currentColor');
     expect(svg).not.toHaveAttribute('stroke-width');
     // authored fill on the path was stripped so the svg's fill cascades.
@@ -28,18 +28,18 @@ describe('multicolor packs keep authored colors', () => {
     expect(svg).not.toHaveAttribute('stroke'); // not forced to currentColor
     expect(svg).toHaveAttribute('stroke-width', '2.4'); // rule-driven at 16px
     const paths = svg.querySelectorAll('path');
-    expect(paths[0]).toHaveAttribute('fill', '#29A33D');
-    expect(paths[0]).toHaveAttribute('stroke', '#248F36');
-    expect(paths[1]).toHaveAttribute('stroke', 'white');
+    expect(paths[0]).toHaveAttribute('fill', '#29a33d');
+    expect(paths[0]).toHaveAttribute('stroke', '#248f36');
+    expect(paths[1]).toHaveAttribute('stroke', '#fff');
   });
 
   it('solid-multi preserves gradients with namespaced ids', () => {
-    const svg = svgOf(render(<SparklesIcon />).container);
-    expect(svg.querySelector('linearGradient')?.id).toBe(
-      'sparkles-paint0_linear_1208_893'
-    );
+    const svg = svgOf(render(<SparklesDuplicateIcon />).container);
+    const gradientId = svg.querySelector('linearGradient')?.id;
+    // ids are namespaced per-icon so gradients can't collide across icons.
+    expect(gradientId).toMatch(/^sparkles-duplicate-/);
     expect(svg.querySelector('path')?.getAttribute('fill')).toBe(
-      'url(#sparkles-paint0_linear_1208_893)'
+      `url(#${gradientId})`
     );
   });
 });
