@@ -1056,7 +1056,7 @@
         },
         "critical": {
           "values": {
-            "acronis": "{palette.orange.7}",
+            "acronis": "{palette.orange.11}",
             "brand-b": "{palette.orange.7}"
           },
           "platforms": ["PD"],
@@ -1067,7 +1067,7 @@
         },
         "danger": {
           "values": {
-            "acronis": "{palette.red.7}",
+            "acronis": "{palette.red.11}",
             "brand-b": "{palette.red.7}"
           },
           "platforms": ["PD"],
@@ -1089,7 +1089,7 @@
         },
         "info": {
           "values": {
-            "acronis": "{palette.blue.7}",
+            "acronis": "{palette.blue.11}",
             "brand-b": "{palette.blue.7}"
           },
           "platforms": ["PD"],
@@ -1100,35 +1100,13 @@
         },
         "neutral": {
           "values": {
-            "acronis": "{palette.grayscale.7}",
+            "acronis": "{palette.grayscale.11}",
             "brand-b": "{palette.grayscale.7}"
           },
           "platforms": ["PD"],
           "$extensions": {
             "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
             "com.figma.variableId": "VariableID:911:263464"
-          }
-        },
-        "off": {
-          "values": {
-            "acronis": "{palette.base}",
-            "brand-b": "{palette.base}"
-          },
-          "platforms": ["PD"],
-          "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
-            "com.figma.variableId": "VariableID:1205:724"
-          }
-        },
-        "on": {
-          "values": {
-            "acronis": "{palette.base}",
-            "brand-b": "{palette.base}"
-          },
-          "platforms": ["PD"],
-          "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
-            "com.figma.variableId": "VariableID:1205:723"
           }
         },
         "primary": {
@@ -1144,7 +1122,7 @@
         },
         "success": {
           "values": {
-            "acronis": "{palette.green.7}",
+            "acronis": "{palette.green.11}",
             "brand-b": "{palette.green.7}"
           },
           "platforms": ["PD"],
@@ -1155,7 +1133,7 @@
         },
         "warning": {
           "values": {
-            "acronis": "{palette.yellow.7}",
+            "acronis": "{palette.yellow.11}",
             "brand-b": "{palette.yellow.7}"
           },
           "platforms": ["PD"],
