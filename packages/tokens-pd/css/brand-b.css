@@ -10,6 +10,12 @@
   --ui-background-brand-secondary-active: light-dark(rgb(26 102 94), rgb(121 210 203));
   --ui-background-brand-secondary-disabled: light-dark(rgb(209 240 237), rgb(4 73 67));
   --ui-background-brand-secondary-hover: light-dark(rgb(31 122 115), rgb(70 185 175));
+  --ui-background-inverted-active: light-dark(rgb(255 255 255 / 0.4), rgb(0 0 0 / 0.4));
+  --ui-background-inverted-disabled: light-dark(rgb(255 255 255 / 0.4), rgb(0 0 0 / 0.4));
+  --ui-background-inverted-hover: light-dark(rgb(255 255 255 / 0.302), rgb(0 0 0 / 0.302));
+  --ui-background-inverted-primary: light-dark(rgb(255 255 255 / 0.2), rgb(0 0 0 / 0.2));
+  --ui-background-status-strong-danger-hover: light-dark(rgb(217 38 38), rgb(237 94 94));
+  --ui-background-status-strong-danger-pressed: light-dark(rgb(195 34 34), rgb(244 154 154));
   --ui-background-surface-active: light-dark(rgb(209 240 237), rgb(4 73 67));
   --ui-background-surface-hover: light-dark(rgb(226 245 244), rgb(3 58 54));
   --ui-background-surface-secondary: light-dark(rgb(247 253 252), rgb(0 36 33));
@@ -20,6 +26,7 @@
   --ui-focus-secondary: light-dark(rgb(178 230 225), rgb(10 92 85));
   --ui-glyph-on-surface-disabled: light-dark(rgb(209 240 237), rgb(4 73 67));
   --ui-glyph-on-surface-primary: light-dark(rgb(51 153 145), rgb(51 153 145));
+  --ui-text-on-brand-disabled: light-dark(rgb(255 255 255 / 0.898), rgb(0 0 0 / 0.898));
   --ui-text-on-brand-link: light-dark(rgb(51 153 145), rgb(51 153 145));
   --ui-text-on-brand-link-hover: light-dark(rgb(121 210 203), rgb(26 102 94));
   --ui-text-on-brand-link-pressed: light-dark(rgb(226 245 244), rgb(3 58 54));
@@ -27,7 +34,7 @@
   --ui-text-on-overlay-link-hover: light-dark(rgb(121 210 203), rgb(26 102 94));
   --ui-text-on-overlay-link-pressed: light-dark(rgb(209 240 237), rgb(4 73 67));
   --ui-text-on-surface-link: light-dark(rgb(51 153 145), rgb(51 153 145));
-  --ui-text-on-surface-link-disabled: light-dark(rgb(121 210 203), rgb(26 102 94));
+  --ui-text-on-surface-link-disabled: light-dark(rgb(209 240 237), rgb(4 73 67));
   --ui-text-on-surface-link-hover: light-dark(rgb(31 122 115), rgb(70 185 175));
   --ui-text-on-surface-link-pressed: light-dark(rgb(4 73 67), rgb(209 240 237));
 }

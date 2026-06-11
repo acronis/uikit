@@ -5,28 +5,27 @@
 export default {
   theme: {
     extend: {
-      "backgroundColor": {
-        "switch-active": "light-dark(rgb(70 185 89), rgb(36 143 54))",
-        "switch-disabled": "light-dark(rgb(247 253 252), rgb(0 36 33))",
-        "switch-inactive": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "switch-circle-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "switch-circle-off": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "switch-circle-on": "light-dark(rgb(255 255 255), rgb(0 0 0))"
+      "textColor": {
+        "switch-container-active": "light-dark(rgb(70 185 89), rgb(36 143 54))",
+        "switch-container-disabled": "light-dark(rgb(247 253 252), rgb(0 36 33))",
+        "switch-label": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "switch-toggle-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))"
       },
       "borderColor": {
-        "switch-disabled": "light-dark(rgb(209 240 237), rgb(4 73 67))"
+        "switch-container-disabled": "light-dark(rgb(209 240 237), rgb(4 73 67))"
       },
       "spacing": {
-        "switch-units-border": "1px",
-        "switch-units-circle": "12px",
-        "switch-units-gap": "8px",
-        "switch-units-height": "16px",
-        "switch-units-padding-x": "2px",
-        "switch-units-padding-y": "2px",
-        "switch-units-width": "32px"
+        "switch-container-border": "1px",
+        "switch-container-height": "16px",
+        "switch-container-padding-x": "2px",
+        "switch-container-padding-y": "2px",
+        "switch-container-width": "32px",
+        "switch-toggle-size": "12px",
+        "switch-units-gap": "8px"
       },
       "borderRadius": {
-        "switch-units-radius": "999px"
+        "switch-container-radius": "999px",
+        "switch-toggle-radius": "999px"
       }
     },
   },

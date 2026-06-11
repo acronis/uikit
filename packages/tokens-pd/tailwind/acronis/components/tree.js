@@ -6,30 +6,33 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "tree-item-hover": "light-dark(rgb(226 235 245), rgb(3 43 99))",
-        "tree-item-active": "light-dark(rgb(214 228 245), rgb(6 54 121))"
+        "tree-global-active": "light-dark(rgb(214 228 245), rgb(6 54 121))",
+        "tree-global-focus": "light-dark(rgb(190 215 244), rgb(11 66 142))",
+        "tree-global-hover": "light-dark(rgb(238 242 247), rgb(0 32 77))",
+        "tree-global-idle": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))"
       },
       "textColor": {
-        "tree-item": "light-dark(rgb(24 25 27), rgb(244 245 245))",
-        "tree-title": "light-dark(rgb(255 255 255), rgb(255 255 255))"
-      },
-      "borderColor": {
-        "tree-global": "light-dark(rgb(214 228 245), rgb(6 54 121))"
+        "tree-global-active": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "tree-global-focus": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "tree-global-hover": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "tree-global-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "fill": {
-        "tree-item": "light-dark(rgb(23 99 207), rgb(48 125 232))"
+        "tree-global-active": "light-dark(rgb(23 99 207), rgb(48 125 232))",
+        "tree-global-focus": "light-dark(rgb(23 99 207), rgb(48 125 232))",
+        "tree-global-hover": "light-dark(rgb(23 99 207), rgb(48 125 232))",
+        "tree-global-idle": "light-dark(rgb(23 99 207), rgb(48 125 232))"
       },
       "spacing": {
-        "tree-global-padding-x": "16px",
-        "tree-global-padding-y": "8px",
-        "tree-global-width-min": "224px",
-        "tree-item-gap": "8px",
-        "tree-item-padding-y": "8px",
-        "tree-nesting-padding-l1": "8px",
-        "tree-nesting-padding-l2": "32px",
-        "tree-nesting-padding-l3": "56px",
-        "tree-nesting-padding-l4": "80px",
-        "tree-nesting-padding-l5": "104px"
+        "tree-global-units-gap-x": "8px",
+        "tree-global-units-gap-y": "4px",
+        "tree-global-units-height-min": "40px",
+        "tree-global-units-padding-icon": "4px",
+        "tree-global-units-padding-x-primary": "8px",
+        "tree-global-units-padding-x-secondary": "8px",
+        "tree-global-units-padding-y": "8px",
+        "tree-global-units-padding-y-tag": "2px",
+        "tree-global-units-width-min": "128px"
       }
     },
   },

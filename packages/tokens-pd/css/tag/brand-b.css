@@ -2,5 +2,5 @@
 /* Source: @acronis-platform/design-tokens • brand: brand-b • tier: tag • overrides only */
 
 :root, :host {
-
+  --ui-tag-ai-background: light-dark(rgb(245 238 248), rgb(108 19 108));
 }

@@ -25,15 +25,11 @@ export default {
         "button-inverted-idle": "light-dark(rgb(44 78 116), rgb(44 78 116))",
         "button-inverted-hover": "light-dark(rgb(99 123 150), rgb(99 123 150))",
         "button-inverted-active": "light-dark(rgb(36 68 103), rgb(36 68 103))",
-        "button-inverted-disabled": "light-dark(rgb(0 31 77), rgb(0 31 77))",
+        "button-inverted-disabled": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
         "button-ai-idle": "light-dark(rgb(255 0 255 / 0), rgb(255 0 255 / 0))",
         "button-ai-hover": "light-dark(rgb(255 0 255 / 0), rgb(255 0 255 / 0))",
         "button-ai-active": "light-dark(rgb(255 0 255 / 0), rgb(255 0 255 / 0))",
-        "button-ai-disabled": "light-dark(rgb(219 223 229), rgb(219 223 229))",
-        "button-icon-idle": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
-        "button-icon-hover": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
-        "button-icon-active": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
-        "button-icon-disabled": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))"
+        "button-ai-disabled": "light-dark(rgb(219 223 229), rgb(219 223 229))"
       },
       "textColor": {
         "button-primary-idle": "light-dark(rgb(4 73 67), rgb(209 240 237))",
@@ -43,11 +39,11 @@ export default {
         "button-secondary-idle": "light-dark(rgb(51 153 145), rgb(51 153 145))",
         "button-secondary-hover": "light-dark(rgb(31 122 115), rgb(70 185 175))",
         "button-secondary-active": "light-dark(rgb(4 73 67), rgb(209 240 237))",
-        "button-secondary-disabled": "light-dark(rgb(121 210 203), rgb(26 102 94))",
+        "button-secondary-disabled": "light-dark(rgb(209 240 237), rgb(4 73 67))",
         "button-ghost-idle": "light-dark(rgb(51 153 145), rgb(51 153 145))",
         "button-ghost-hover": "light-dark(rgb(31 122 115), rgb(70 185 175))",
         "button-ghost-active": "light-dark(rgb(4 73 67), rgb(209 240 237))",
-        "button-ghost-disabled": "light-dark(rgb(121 210 203), rgb(26 102 94))",
+        "button-ghost-disabled": "light-dark(rgb(209 240 237), rgb(4 73 67))",
         "button-destructive-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "button-destructive-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "button-destructive-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
@@ -59,21 +55,13 @@ export default {
         "button-ai-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-ai-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-ai-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "button-ai-disabled": "light-dark(rgb(154 163 176), rgb(154 163 176))",
-        "button-icon-idle": "light-dark(rgb(51 153 145), rgb(51 153 145))",
-        "button-icon-hover": "light-dark(rgb(31 122 115), rgb(70 185 175))",
-        "button-icon-active": "light-dark(rgb(4 73 67), rgb(209 240 237))",
-        "button-icon-disabled": "light-dark(rgb(121 210 203), rgb(26 102 94))"
+        "button-ai-disabled": "light-dark(rgb(154 163 176), rgb(154 163 176))"
       },
       "borderColor": {
-        "button-primary-idle": "light-dark(rgb(51 153 145), rgb(51 153 145))",
-        "button-primary-hover": "light-dark(rgb(31 122 115), rgb(70 185 175))",
-        "button-primary-active": "light-dark(rgb(26 102 94), rgb(121 210 203))",
-        "button-primary-disabled": "light-dark(rgb(209 240 237), rgb(4 73 67))",
         "button-secondary-idle": "light-dark(rgb(209 240 237), rgb(4 73 67))",
         "button-secondary-hover": "light-dark(rgb(209 240 237), rgb(4 73 67))",
         "button-secondary-active": "light-dark(rgb(209 240 237), rgb(4 73 67))",
-        "button-secondary-disabled": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
+        "button-secondary-disabled": "light-dark(rgb(209 240 237), rgb(4 73 67))",
         "button-ghost-idle": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
         "button-ghost-hover": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
         "button-ghost-active": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
@@ -85,15 +73,11 @@ export default {
         "button-inverted-idle": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
         "button-inverted-hover": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
         "button-inverted-active": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
-        "button-inverted-disabled": "light-dark(rgb(62 77 98), rgb(62 77 98))",
+        "button-inverted-disabled": "light-dark(rgb(255 255 255 / 0.102), rgb(0 0 0 / 0.102))",
         "button-ai-idle": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
         "button-ai-hover": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
         "button-ai-active": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
-        "button-ai-disabled": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
-        "button-icon-idle": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
-        "button-icon-hover": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
-        "button-icon-active": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))",
-        "button-icon-disabled": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))"
+        "button-ai-disabled": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))"
       },
       "fill": {
         "button-primary-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))",
@@ -119,22 +103,18 @@ export default {
         "button-ai-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-ai-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-ai-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "button-ai-disabled": "light-dark(rgb(154 163 176), rgb(154 163 176))",
-        "button-icon-idle": "light-dark(rgb(51 153 145), rgb(51 153 145))",
-        "button-icon-hover": "light-dark(rgb(51 153 145), rgb(51 153 145))",
-        "button-icon-active": "light-dark(rgb(51 153 145), rgb(51 153 145))",
-        "button-icon-disabled": "light-dark(rgb(209 240 237), rgb(4 73 67))"
+        "button-ai-disabled": "light-dark(rgb(154 163 176), rgb(154 163 176))"
       },
       "spacing": {
-        "button-global-border": "1px",
-        "button-global-gap": "8px",
-        "button-global-height": "32px",
-        "button-global-padding-x": "16px",
-        "button-global-padding-y": "8px",
-        "button-global-width-min": "64px"
+        "button-units-border": "1px",
+        "button-units-gap": "8px",
+        "button-units-height": "32px",
+        "button-units-padding-x": "16px",
+        "button-units-padding-y": "8px",
+        "button-units-width-min": "64px"
       },
       "borderRadius": {
-        "button-global-radius": "8px"
+        "button-units-radius": "8px"
       }
     },
   },

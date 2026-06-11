@@ -5,20 +5,18 @@
 export default {
   theme: {
     extend: {
-      "backgroundColor": {
-        "tooltip": "light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898))"
-      },
       "textColor": {
-        "tooltip": "light-dark(rgb(255 255 255), rgb(0 0 0))"
+        "tooltip-container": "light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898))",
+        "tooltip-label": "light-dark(rgb(255 255 255), rgb(0 0 0))"
       },
       "spacing": {
-        "tooltip-global-padding-x": "12px",
-        "tooltip-global-padding-y": "8px",
-        "tooltip-global-width-max": "256px",
-        "tooltip-global-width-min": "48px"
+        "tooltip-container-padding-x": "12px",
+        "tooltip-container-padding-y": "8px",
+        "tooltip-container-width-max": "256px",
+        "tooltip-container-width-min": "48px"
       },
       "borderRadius": {
-        "tooltip-global-radius": "4px"
+        "tooltip-container-radius": "4px"
       }
     },
   },

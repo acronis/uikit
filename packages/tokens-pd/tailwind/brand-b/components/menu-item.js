@@ -6,28 +6,31 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "menu-item-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "menu-item-hover": "light-dark(rgb(226 245 244), rgb(3 58 54))",
-        "menu-item-active": "light-dark(rgb(209 240 237), rgb(4 73 67))"
+        "menu-item-global-active": "light-dark(rgb(209 240 237), rgb(4 73 67))",
+        "menu-item-global-focus": "light-dark(rgb(226 245 244), rgb(3 58 54))",
+        "menu-item-global-hover": "light-dark(rgb(226 245 244), rgb(3 58 54))",
+        "menu-item-global-idle": "light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0))"
       },
       "textColor": {
-        "menu-item-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))",
-        "menu-item-active": "light-dark(rgb(24 25 27), rgb(244 245 245))"
-      },
-      "borderColor": {
-        "menu-item-divider": "light-dark(rgb(209 240 237), rgb(4 73 67))"
+        "menu-item-global-active": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "menu-item-global-focus": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "menu-item-global-hover": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "menu-item-global-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "fill": {
-        "menu-item": "light-dark(rgb(51 153 145), rgb(51 153 145))"
+        "menu-item-global-active": "light-dark(rgb(51 153 145), rgb(51 153 145))",
+        "menu-item-global-focus": "light-dark(rgb(51 153 145), rgb(51 153 145))",
+        "menu-item-global-hover": "light-dark(rgb(51 153 145), rgb(51 153 145))",
+        "menu-item-global-idle": "light-dark(rgb(51 153 145), rgb(51 153 145))"
       },
       "spacing": {
-        "menu-item-gap": "8px",
-        "menu-item-height-header": "64px",
-        "menu-item-padding-l2": "40px",
-        "menu-item-padding-x": "16px",
-        "menu-item-padding-y": "8px",
-        "menu-item-width": "256px",
-        "menu-item-width-collapsed": "48px"
+        "menu-item-global-units-gap-x": "8px",
+        "menu-item-global-units-gap-y": "4px",
+        "menu-item-global-units-height-min": "40px",
+        "menu-item-global-units-padding-icon": "4px",
+        "menu-item-global-units-padding-x": "8px",
+        "menu-item-global-units-padding-y": "8px",
+        "menu-item-global-units-width-min": "128px"
       }
     },
   },

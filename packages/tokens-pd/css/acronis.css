@@ -4,25 +4,22 @@
 :root, :host {
   color-scheme: light dark;
 
-  --ui-background-ai-active: linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
-  --ui-background-ai-disabled: linear-gradient(90deg, rgb(219 223 229) 20%, rgb(212 219 230) 100%);
-  --ui-background-ai-hover: linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
-  --ui-background-ai-idle: linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
+  --ui-background-ai-active: linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
+  --ui-background-ai-disabled: linear-gradient(180deg, rgb(219 223 229) 20%, rgb(212 219 230) 100%);
+  --ui-background-ai-hover: linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
+  --ui-background-ai-idle: linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
   --ui-background-brand-primary: light-dark(rgb(0 32 77), rgb(238 242 247));
-  --ui-background-brand-primary-active: light-dark(rgb(6 54 121), rgb(214 228 245));
+  --ui-background-brand-primary-active: light-dark(rgb(23 99 207), rgb(48 125 232));
   --ui-background-brand-primary-disabled: light-dark(rgb(117 174 240), rgb(13 77 165));
   --ui-background-brand-primary-hover: light-dark(rgb(3 43 99), rgb(226 235 245));
   --ui-background-brand-secondary: light-dark(rgb(23 99 207), rgb(48 125 232));
   --ui-background-brand-secondary-active: light-dark(rgb(13 77 165), rgb(117 174 240));
   --ui-background-brand-secondary-disabled: light-dark(rgb(214 228 245), rgb(6 54 121));
   --ui-background-brand-secondary-hover: light-dark(rgb(19 84 174), rgb(48 125 232));
-  --ui-background-inverted-active: light-dark(rgb(255 255 255 / 0.4), rgb(0 0 0 / 0.4));
-  --ui-background-inverted-hover: light-dark(rgb(255 255 255 / 0.302), rgb(0 0 0 / 0.302));
-  --ui-background-inverted-primary: light-dark(rgb(255 255 255 / 0.2), rgb(0 0 0 / 0.2));
-  --ui-background-inverted-surface-active: light-dark(rgb(36 68 103), rgb(36 68 103));
-  --ui-background-inverted-surface-disabled: light-dark(rgb(0 31 77), rgb(0 31 77));
-  --ui-background-inverted-surface-hover: light-dark(rgb(99 123 150), rgb(99 123 150));
-  --ui-background-inverted-surface-idle: light-dark(rgb(44 78 116), rgb(44 78 116));
+  --ui-background-inverted-active: light-dark(rgb(19 84 174), rgb(48 125 232));
+  --ui-background-inverted-disabled: light-dark(rgb(6 54 121), rgb(214 228 245));
+  --ui-background-inverted-hover: light-dark(rgb(13 77 165), rgb(117 174 240));
+  --ui-background-inverted-primary: light-dark(rgb(11 66 142), rgb(190 215 244));
   --ui-background-overlay-inverted: light-dark(rgb(255 255 255 / 0.898), rgb(0 0 0 / 0.898));
   --ui-background-overlay-primary: light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898));
   --ui-background-status-critical: light-dark(rgb(255 240 230), rgb(102 46 0));
@@ -34,29 +31,29 @@
   --ui-background-status-info: light-dark(rgb(238 242 247), rgb(0 32 77));
   --ui-background-status-info-hover: light-dark(rgb(226 235 245), rgb(3 43 99));
   --ui-background-status-info-pressed: light-dark(rgb(214 228 245), rgb(6 54 121));
-  --ui-background-status-inverted-critical: light-dark(rgb(255 128 0), rgb(255 128 0));
-  --ui-background-status-inverted-critical-hover: light-dark(rgb(240 112 0), rgb(133 83 33));
-  --ui-background-status-inverted-critical-pressed: light-dark(rgb(214 96 0), rgb(151 93 36));
-  --ui-background-status-inverted-danger: light-dark(rgb(226 54 54), rgb(226 54 54));
-  --ui-background-status-inverted-danger-hover: light-dark(rgb(217 38 38), rgb(237 94 94));
-  --ui-background-status-inverted-danger-pressed: light-dark(rgb(195 34 34), rgb(244 154 154));
-  --ui-background-status-inverted-info: light-dark(rgb(23 99 207), rgb(48 125 232));
-  --ui-background-status-inverted-info-hover: light-dark(rgb(19 84 174), rgb(48 125 232));
-  --ui-background-status-inverted-info-pressed: light-dark(rgb(13 77 165), rgb(117 174 240));
-  --ui-background-status-inverted-neutral: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-background-status-inverted-neutral-hover: light-dark(rgb(97 101 107), rgb(89 94 109));
-  --ui-background-status-inverted-neutral-pressed: light-dark(rgb(85 89 94), rgb(101 106 122));
-  --ui-background-status-inverted-success: light-dark(rgb(41 163 61), rgb(41 163 61));
-  --ui-background-status-inverted-success-hover: light-dark(rgb(36 143 54), rgb(6 110 36));
-  --ui-background-status-inverted-success-pressed: light-dark(rgb(31 122 46), rgb(8 124 42));
-  --ui-background-status-inverted-warning: light-dark(rgb(245 184 0), rgb(245 184 0));
-  --ui-background-status-inverted-warning-hover: light-dark(rgb(229 164 0), rgb(255 196 0));
-  --ui-background-status-inverted-warning-pressed: light-dark(rgb(204 146 0), rgb(255 210 61));
   --ui-background-status-neutral: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-background-status-neutral-hover: light-dark(rgb(236 237 238), rgb(37 38 40));
   --ui-background-status-neutral-pressed: light-dark(rgb(228 229 231), rgb(48 50 54));
   --ui-background-status-off: light-dark(rgb(214 228 245), rgb(6 54 121));
   --ui-background-status-on: light-dark(rgb(70 185 89), rgb(36 143 54));
+  --ui-background-status-strong-critical: light-dark(rgb(255 128 0), rgb(255 128 0));
+  --ui-background-status-strong-critical-hover: light-dark(rgb(240 112 0), rgb(133 83 33));
+  --ui-background-status-strong-critical-pressed: light-dark(rgb(214 96 0), rgb(151 93 36));
+  --ui-background-status-strong-danger: light-dark(rgb(226 54 54), rgb(226 54 54));
+  --ui-background-status-strong-danger-hover: light-dark(rgb(195 34 34), rgb(244 154 154));
+  --ui-background-status-strong-danger-pressed: light-dark(rgb(173 31 31), rgb(248 195 195));
+  --ui-background-status-strong-info: light-dark(rgb(23 99 207), rgb(48 125 232));
+  --ui-background-status-strong-info-hover: light-dark(rgb(19 84 174), rgb(48 125 232));
+  --ui-background-status-strong-info-pressed: light-dark(rgb(13 77 165), rgb(117 174 240));
+  --ui-background-status-strong-neutral: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-background-status-strong-neutral-hover: light-dark(rgb(97 101 107), rgb(89 94 109));
+  --ui-background-status-strong-neutral-pressed: light-dark(rgb(85 89 94), rgb(101 106 122));
+  --ui-background-status-strong-success: light-dark(rgb(41 163 61), rgb(41 163 61));
+  --ui-background-status-strong-success-hover: light-dark(rgb(36 143 54), rgb(6 110 36));
+  --ui-background-status-strong-success-pressed: light-dark(rgb(31 122 46), rgb(8 124 42));
+  --ui-background-status-strong-warning: light-dark(rgb(245 184 0), rgb(245 184 0));
+  --ui-background-status-strong-warning-hover: light-dark(rgb(229 164 0), rgb(255 196 0));
+  --ui-background-status-strong-warning-pressed: light-dark(rgb(204 146 0), rgb(255 210 61));
   --ui-background-status-success: light-dark(rgb(238 247 239), rgb(3 58 17));
   --ui-background-status-success-hover: light-dark(rgb(226 245 229), rgb(8 69 23));
   --ui-background-status-success-pressed: light-dark(rgb(209 240 214), rgb(15 87 33));
@@ -64,30 +61,30 @@
   --ui-background-status-warning-hover: light-dark(rgb(255 244 204), rgb(102 73 0));
   --ui-background-status-warning-pressed: light-dark(rgb(255 238 178), rgb(138 99 0));
   --ui-background-surface-active: light-dark(rgb(214 228 245), rgb(6 54 121));
-  --ui-background-surface-hover: light-dark(rgb(226 235 245), rgb(3 43 99));
+  --ui-background-surface-hover: light-dark(rgb(238 242 247), rgb(0 32 77));
   --ui-background-surface-primary: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-background-surface-secondary: light-dark(rgb(248 250 252), rgb(0 21 51));
   --ui-border-on-brand-border: light-dark(rgb(255 255 255 / 0.102), rgb(0 0 0 / 0.102));
   --ui-border-on-brand-border-active: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-border-on-brand-divider: light-dark(rgb(255 255 255 / 0.102), rgb(0 0 0 / 0.102));
   --ui-border-on-status-critical: light-dark(rgb(255 204 153), rgb(178 80 0));
-  --ui-border-on-status-critical-dark: light-dark(rgb(240 112 0), rgb(133 83 33));
+  --ui-border-on-status-critical-strong: light-dark(rgb(240 112 0), rgb(133 83 33));
   --ui-border-on-status-danger: light-dark(rgb(248 195 195), rgb(173 31 31));
-  --ui-border-on-status-danger-dark: light-dark(rgb(217 38 38), rgb(237 94 94));
+  --ui-border-on-status-danger-strong: light-dark(rgb(217 38 38), rgb(237 94 94));
   --ui-border-on-status-info: light-dark(rgb(190 215 244), rgb(11 66 142));
-  --ui-border-on-status-info-dark: light-dark(rgb(19 84 174), rgb(48 125 232));
+  --ui-border-on-status-info-strong: light-dark(rgb(19 84 174), rgb(48 125 232));
   --ui-border-on-status-neutral: light-dark(rgb(201 204 207), rgb(73 76 80));
-  --ui-border-on-status-neutral-dark: light-dark(rgb(97 101 107), rgb(89 94 109));
+  --ui-border-on-status-neutral-strong: light-dark(rgb(97 101 107), rgb(89 94 109));
   --ui-border-on-status-success: light-dark(rgb(178 229 187), rgb(26 102 38));
-  --ui-border-on-status-success-dark: light-dark(rgb(36 143 54), rgb(6 110 36));
+  --ui-border-on-status-success-strong: light-dark(rgb(36 143 54), rgb(6 110 36));
   --ui-border-on-status-warning: light-dark(rgb(255 227 128), rgb(178 128 0));
-  --ui-border-on-status-warning-dark: light-dark(rgb(229 164 0), rgb(255 196 0));
+  --ui-border-on-status-warning-strong: light-dark(rgb(229 164 0), rgb(255 196 0));
   --ui-border-on-surface-border: light-dark(rgb(214 228 245), rgb(6 54 121));
   --ui-border-on-surface-border-active: light-dark(rgb(23 99 207), rgb(48 125 232));
   --ui-border-on-surface-border-ai: light-dark(rgb(23 99 207), rgb(48 125 232));
   --ui-border-on-surface-border-error: light-dark(rgb(226 54 54), rgb(226 54 54));
   --ui-border-on-surface-divider: light-dark(rgb(214 228 245), rgb(6 54 121));
-  --ui-focus-brand: light-dark(rgb(48 125 232), rgb(19 84 174));
+  --ui-focus-brand: light-dark(rgb(190 215 244), rgb(11 66 142));
   --ui-focus-error: light-dark(rgb(248 195 195), rgb(173 31 31));
   --ui-focus-primary: light-dark(rgb(190 215 244), rgb(11 66 142));
   --ui-focus-secondary: light-dark(rgb(190 215 244), rgb(11 66 142));
@@ -98,6 +95,7 @@
   --ui-glyph-on-inverted-primary: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-glyph-on-inverted-secondary: light-dark(rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.6));
   --ui-glyph-on-overlay-primary: light-dark(rgb(255 255 255), rgb(0 0 0));
+  --ui-glyph-on-status-ai: light-dark(rgb(130 23 130), rgb(250 209 250));
   --ui-glyph-on-status-critical: light-dark(rgb(255 128 0), rgb(255 128 0));
   --ui-glyph-on-status-danger: light-dark(rgb(226 54 54), rgb(226 54 54));
   --ui-glyph-on-status-disabled: light-dark(rgb(214 228 245), rgb(6 54 121));
@@ -112,7 +110,7 @@
   --ui-glyph-on-surface-disabled: light-dark(rgb(214 228 245), rgb(6 54 121));
   --ui-glyph-on-surface-neutral: light-dark(rgb(201 204 207), rgb(73 76 80));
   --ui-glyph-on-surface-primary: light-dark(rgb(23 99 207), rgb(48 125 232));
-  --ui-text-on-brand-disabled: light-dark(rgb(255 255 255 / 0.898), rgb(0 0 0 / 0.898));
+  --ui-text-on-brand-disabled: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-text-on-brand-link: light-dark(rgb(23 99 207), rgb(48 125 232));
   --ui-text-on-brand-link-disabled: light-dark(rgb(255 255 255 / 0.898), rgb(0 0 0 / 0.898));
   --ui-text-on-brand-link-hover: light-dark(rgb(117 174 240), rgb(13 77 165));
@@ -142,7 +140,7 @@
   --ui-text-on-surface-destructive: light-dark(rgb(226 54 54), rgb(226 54 54));
   --ui-text-on-surface-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-text-on-surface-link: light-dark(rgb(23 99 207), rgb(48 125 232));
-  --ui-text-on-surface-link-disabled: light-dark(rgb(117 174 240), rgb(13 77 165));
+  --ui-text-on-surface-link-disabled: light-dark(rgb(214 228 245), rgb(6 54 121));
   --ui-text-on-surface-link-hover: light-dark(rgb(19 84 174), rgb(48 125 232));
   --ui-text-on-surface-link-pressed: light-dark(rgb(6 54 121), rgb(214 228 245));
   --ui-text-on-surface-primary: light-dark(rgb(24 25 27), rgb(244 245 245));
@@ -250,22 +248,6 @@
   font-size: 24px;
   font-weight: 400;
   line-height: 32px;
-  letter-spacing: 0px;
-}
-
-.ui-typography-link-default {
-  font-family: Inter, system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 24px;
-  letter-spacing: 0px;
-}
-
-.ui-typography-link-default-underline {
-  font-family: Inter, system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 24px;
   letter-spacing: 0px;
 }
 

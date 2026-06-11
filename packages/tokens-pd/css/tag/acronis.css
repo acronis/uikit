@@ -4,11 +4,34 @@
 :root, :host {
   color-scheme: light dark;
 
-  --ui-tag-global-height: 24px;
-  --ui-tag-global-height-sm: 20px;
-  --ui-tag-global-padding-x: 8px;
-  --ui-tag-global-padding-x-sm: 4px;
-  --ui-tag-global-width-max: 256px;
+  --ui-tag-ai-background: light-dark(rgb(249 245 251), rgb(82 20 82));
+  --ui-tag-ai-text: light-dark(rgb(130 23 130), rgb(250 209 250));
+  --ui-tag-critical-background: light-dark(rgb(255 240 230), rgb(102 46 0));
+  --ui-tag-critical-border: light-dark(rgb(255 204 153), rgb(178 80 0));
+  --ui-tag-critical-text: light-dark(rgb(153 69 0), rgb(190 113 38));
+  --ui-tag-danger-background: light-dark(rgb(253 237 237), rgb(108 19 19));
+  --ui-tag-danger-border: light-dark(rgb(248 195 195), rgb(173 31 31));
+  --ui-tag-danger-text: light-dark(rgb(152 27 27), rgb(251 218 218));
+  --ui-tag-info-background: light-dark(rgb(238 242 247), rgb(0 32 77));
+  --ui-tag-info-border: light-dark(rgb(190 215 244), rgb(11 66 142));
+  --ui-tag-info-text: light-dark(rgb(6 54 121), rgb(214 228 245));
+  --ui-tag-neutral-background: light-dark(rgb(255 255 255), rgb(0 0 0));
+  --ui-tag-neutral-border: light-dark(rgb(201 204 207), rgb(73 76 80));
+  --ui-tag-neutral-text: light-dark(rgb(61 63 67), rgb(125 132 148));
+  --ui-tag-success-background: light-dark(rgb(238 247 239), rgb(3 58 17));
+  --ui-tag-success-border: light-dark(rgb(178 229 187), rgb(26 102 38));
+  --ui-tag-success-text: light-dark(rgb(15 87 33), rgb(56 150 66));
+  --ui-tag-units-border: 1px;
+  --ui-tag-units-gap: 4px;
+  --ui-tag-units-height-lg: 24px;
+  --ui-tag-units-height-sm: 20px;
+  --ui-tag-units-padding-x: 8px;
+  --ui-tag-units-radius: 999px;
+  --ui-tag-units-width-max: 256px;
+  --ui-tag-units-width-min: 32px;
+  --ui-tag-warning-background: light-dark(rgb(255 249 229), rgb(77 55 0));
+  --ui-tag-warning-border: light-dark(rgb(255 227 128), rgb(178 128 0));
+  --ui-tag-warning-text: light-dark(rgb(138 99 0), rgb(255 238 178));
 }
 
 [data-theme='light'], :host([data-theme='light']) {

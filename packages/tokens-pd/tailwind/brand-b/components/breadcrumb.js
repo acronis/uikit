@@ -6,15 +6,17 @@ export default {
   theme: {
     extend: {
       "textColor": {
-        "breadcrumb-link": "light-dark(rgb(109 114 120), rgb(109 114 120))",
-        "breadcrumb-value": "light-dark(rgb(24 25 27), rgb(244 245 245))"
+        "breadcrumb-text-link-idle": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "breadcrumb-text-link-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "breadcrumb-text-link-active": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "breadcrumb-text-value": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "fill": {
-        "breadcrumb-chevron": "light-dark(rgb(201 204 207), rgb(73 76 80))"
+        "breadcrumb-icon-chevron": "light-dark(rgb(201 204 207), rgb(73 76 80))"
       },
       "spacing": {
-        "breadcrumb-gap": "4px",
-        "breadcrumb-padding-x": "16px"
+        "breadcrumb-units-gap": "4px",
+        "breadcrumb-units-padding-x": "16px"
       }
     },
   },

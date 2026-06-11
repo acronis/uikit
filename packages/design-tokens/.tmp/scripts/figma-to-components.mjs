@@ -27,10 +27,10 @@
 // in figma-to-semantic.mjs.
 //
 // Input  (figma/variables.tokens.json):
-//   brand.component.breadcrumb.chevron
+//   brand.componentLegacy.breadcrumb.chevron
 //     → { $type: "color", $value: "{color.glyph.on surface.neutral}",
 //          $extensions["figma-console-mcp"].lastSyncedValue.Acronis.reference }
-//   brand.component.button.inverted["background-active"]
+//   brand.componentLegacy.button.inverted["background-active"]
 //     → { $type: "color", $value: "#244467",
 //          $extensions["figma-console-mcp"].lastSyncedValue.Acronis.literal }
 //
@@ -56,8 +56,12 @@ import { formatDtcgJson } from './lib/format.mjs';
 import { makeAliasTranslator } from './lib/alias-map.mjs';
 
 const { path: srcPath, source } = loadDtcg(process.argv);
-const figmaComponents = source.brand?.component;
-if (!figmaComponents) throw new Error(`source ${srcPath} has no brand.component subtree.`);
+// Figma reorganized component variables: the published set now lives under
+// `brand.componentLegacy/*` (it was `brand.component/*`), while a new,
+// incomplete next-gen set sits under `brand.components/*`. tiers/components.json
+// tracks the legacy (current) set until the next-gen set is ready.
+const figmaComponents = source.brand?.componentLegacy;
+if (!figmaComponents) throw new Error(`source ${srcPath} has no brand.componentLegacy subtree.`);
 
 const OUT = fileURLToPath(new URL('../../tiers/components.json', import.meta.url));
 const PRIMITIVES = fileURLToPath(new URL('../../tiers/primitives.json', import.meta.url));
@@ -76,6 +80,8 @@ const normalizeMode = m => m.toLowerCase().replace(/\s+/g, '-');
 
 const aliasErrors = [];
 const rawValueWarnings = [];
+const skippedWarnings = [];
+const structureWarnings = [];
 
 function isLeaf(node) {
   return node && typeof node === 'object' && '$type' in node && '$value' in node;
@@ -117,6 +123,14 @@ let count = 0;
     const variableId = fcExt(node).variableId;
     const lastSynced = fcExt(node).lastSyncedValue ?? {};
     const leafPath = path.join('.');
+    // Skip leaves whose literal value type we don't model in this tier yet —
+    // today only the two `*/label/typography` string tokens (e.g. "body-default"),
+    // new in the componentLegacy set. References of any $type still pass through.
+    const hasLiteral = Object.values(lastSynced).some(m => m && 'literal' in m);
+    if (node.$type !== 'color' && node.$type !== 'dimension' && hasLiteral) {
+      skippedWarnings.push(`${leafPath}: $type=${node.$type} literal not modeled in components tier — skipped`);
+      return;
+    }
     const values = {};
     for (const [figmaModeKey, modeData] of Object.entries(lastSynced)) {
       values[normalizeMode(figmaModeKey)] = resolveModeValue(node.$type, modeData, leafPath);
@@ -146,6 +160,11 @@ if (aliasErrors.length) {
 if (rawValueWarnings.length) {
   console.warn('Component alias gaps (raw values inlined):');
   for (const w of rawValueWarnings) console.warn('  -', w);
+}
+
+if (skippedWarnings.length) {
+  console.warn('Skipped unmodeled component tokens:');
+  for (const w of skippedWarnings) console.warn('  -', w);
 }
 
 // Move direct-leaf children of these components into a `_global` sub-group.
@@ -188,7 +207,7 @@ for (const [comp, typeFilter] of Object.entries(GLOBAL_SCOPE)) {
 // applied after sortNode below.
 const STATE_ORDER = ['idle', 'hover', 'active', 'disabled'];
 const STATE_RE = new RegExp(`^(.+)-(${STATE_ORDER.join('|')})$`);
-(function regroupStates(node) {
+(function regroupStates(node, path) {
   if (!node || typeof node !== 'object' || isLeafNode(node)) return;
   const groups = new Map();
   for (const k of Object.keys(node)) {
@@ -201,9 +220,28 @@ const STATE_RE = new RegExp(`^(.+)-(${STATE_ORDER.join('|')})$`);
     groups.get(prefix)[state] = k;
   }
   for (const [prefix, stateMap] of groups) {
-    if (prefix in node) throw new Error(`state regroup conflict: '${prefix}' already exists alongside its state variants`);
+    const bare = isLeafNode(node[prefix]) ? node[prefix] : null;
+    if (!bare && prefix in node) {
+      // A nested `<prefix>/` group coexists with flat `<prefix>-<state>` leaves
+      // — duplicate representations of the same token (a Figma data issue, e.g.
+      // sidebar.secondary.background). Keep BOTH: leave the flat leaves
+      // un-regrouped beside the nested group, and report it for a Figma fix.
+      structureWarnings.push(`${[...path, prefix].join('.')}: flat '<state>' leaves coexist with a nested '${prefix}/' group — kept both as-is (de-duplicate in Figma)`);
+      continue;
+    }
+    // A bare `<prefix>` leaf beside `<prefix>-<state>` siblings is the idle
+    // state (Figma dropped the `-idle` suffix on resting states, e.g.
+    // breadcrumb.text.link + link-hover + link-active). Fold it in as `idle`.
+    if (bare && stateMap.idle) {
+      throw new Error(`state regroup conflict: '${prefix}' has both a bare leaf and '${prefix}-idle'`);
+    }
+    if (bare) delete node[prefix];
     const group = {};
     for (const state of STATE_ORDER) {
+      if (state === 'idle' && bare) {
+        group.idle = bare;
+        continue;
+      }
       if (stateMap[state]) {
         group[state] = node[stateMap[state]];
         delete node[stateMap[state]];
@@ -213,9 +251,14 @@ const STATE_RE = new RegExp(`^(.+)-(${STATE_ORDER.join('|')})$`);
   }
   for (const k of Object.keys(node)) {
     if (k.startsWith('$')) continue;
-    regroupStates(node[k]);
+    regroupStates(node[k], [...path, k]);
   }
-})(out);
+})(out, []);
+
+if (structureWarnings.length) {
+  console.warn('Component structure issues (kept both, fix in Figma):');
+  for (const w of structureWarnings) console.warn('  -', w);
+}
 
 const sorted = sortNode(out);
 
