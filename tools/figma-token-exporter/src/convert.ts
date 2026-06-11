@@ -15,6 +15,8 @@
 import type {
   ExportPayload,
   RawVariable,
+  RawCollection,
+  RawMode,
   FigmaVariableValue,
   FigmaVariableAlias,
   FigmaRgba,
@@ -43,7 +45,7 @@ export function convertPayloadToDocument(payload: ExportPayload): TokenDocument 
   for (const v of payload.variables) variableById.set(v.id, v);
 
   const sets = payload.collections.map((collection) => {
-    const wantedModes = collection.modes;
+    const wantedModes = modesDefaultFirst(collection);
     const collectionVars = payload.variables.filter(
       (v) => v.variableCollectionId === collection.id,
     );
@@ -68,15 +70,27 @@ export function convertPayloadToDocument(payload: ExportPayload): TokenDocument 
   };
 }
 
+// Put the collection's default mode first. `renderToken` uses the first mode
+// for the token's `$value` and stashes the rest under `$extensions.modes`, and
+// figma-to-primitives expects the default (e.g. Light) in `$value` and Dark
+// under `modes.Dark` — so order by `defaultModeId`, not Figma's array order.
+function modesDefaultFirst(collection: RawCollection): RawMode[] {
+  const def = collection.modes.find((m) => m.modeId === collection.defaultModeId);
+  if (!def) return collection.modes;
+  return [def, ...collection.modes.filter((m) => m.modeId !== collection.defaultModeId)];
+}
+
 function convertVariable(
   variable: RawVariable,
-  wantedModes: { modeId: string; name: string }[],
+  wantedModes: RawMode[],
   variableById: Map<string, RawVariable>,
 ): Token {
   const path = variable.name.split('/').filter(Boolean);
   const type = mapResolvedType(variable.resolvedType, variable.name);
 
-  const values: Record<string, TokenValue> = {};
+  // Null-prototype map: keys are Figma mode names (untrusted input), so a
+  // literal `__proto__`/`constructor` mode can't pollute Object.prototype.
+  const values: Record<string, TokenValue> = Object.create(null);
   for (const mode of wantedModes) {
     const rawValue = variable.valuesByMode[mode.modeId];
     if (rawValue === undefined) continue;
@@ -194,7 +208,10 @@ function byteToHex(byte: number): string {
 type DtcgNode = Record<string, unknown>;
 
 export function buildDtcgTree(doc: TokenDocument): DtcgNode {
-  const tree: DtcgNode = {};
+  // Null-prototype containers throughout the tree build: keys derive from Figma
+  // variable names / mode names (untrusted), so a `__proto__` segment becomes a
+  // plain own property instead of polluting Object.prototype.
+  const tree: DtcgNode = Object.create(null);
 
   const mcpDocMeta: Record<string, unknown> = {};
   if (doc.meta?.figmaFileKey) mcpDocMeta.figmaFileKey = doc.meta.figmaFileKey;
@@ -207,7 +224,7 @@ export function buildDtcgTree(doc: TokenDocument): DtcgNode {
     const setKey = slugify(set.name);
     let setGroup = tree[setKey] as DtcgNode | undefined;
     if (!setGroup) {
-      setGroup = {};
+      setGroup = Object.create(null) as DtcgNode;
       const mcpMeta: Record<string, unknown> = {};
       if (set.meta?.figmaCollectionId) mcpMeta.figmaCollectionId = set.meta.figmaCollectionId;
       if (set.name !== setKey) mcpMeta.originalName = set.name;
@@ -229,7 +246,11 @@ function slugify(s: string): string {
     .trim()
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    // Runs are already collapsed to a single '-' above, so a single anchored
+    // strip per side is sufficient — and avoids the backtracking-prone
+    // `/^-+|-+$/` alternation (ReDoS).
+    .replace(/^-/, '')
+    .replace(/-$/, '');
 }
 
 function writeTokenIntoTree(root: DtcgNode, token: Token, setModes: string[]): void {
@@ -238,7 +259,7 @@ function writeTokenIntoTree(root: DtcgNode, token: Token, setModes: string[]): v
     const segment = token.path[i];
     let next = cursor[segment] as DtcgNode | undefined;
     if (!next || isToken(next)) {
-      next = {};
+      next = Object.create(null) as DtcgNode;
       cursor[segment] = next;
     }
     cursor = next;
@@ -247,8 +268,12 @@ function writeTokenIntoTree(root: DtcgNode, token: Token, setModes: string[]): v
   cursor[leafKey] = renderToken(token, setModes);
 }
 
+function isRecordLike(node: unknown): node is Record<string, unknown> {
+  return Object(node) === node && !Array.isArray(node);
+}
+
 function isToken(node: unknown): boolean {
-  return typeof node === 'object' && node !== null && '$value' in (node as object);
+  return isRecordLike(node) && '$value' in node;
 }
 
 function renderToken(token: Token, setModes: string[]): DtcgNode {
@@ -261,7 +286,7 @@ function renderToken(token: Token, setModes: string[]): DtcgNode {
   } else if (modeKeys.length > 1) {
     const primaryMode = setModes[0] in token.values ? setModes[0] : modeKeys[0];
     result.$value = encodeValue(token.values[primaryMode]);
-    const otherModes: Record<string, unknown> = {};
+    const otherModes: Record<string, unknown> = Object.create(null);
     for (const m of modeKeys) {
       if (m === primaryMode) continue;
       otherModes[m] = encodeValue(token.values[m]);
@@ -287,14 +312,14 @@ function encodeValue(value: TokenValue | undefined): string | number | boolean {
 }
 
 function mergeExtension(node: DtcgNode, key: string, payload: unknown): void {
-  if (!node.$extensions) node.$extensions = {};
+  if (!node.$extensions) node.$extensions = Object.create(null);
   (node.$extensions as Record<string, unknown>)[key] = payload;
 }
 
 function sortKeys(node: unknown): unknown {
   if (node === null || typeof node !== 'object' || Array.isArray(node)) return node;
   const obj = node as Record<string, unknown>;
-  const sorted: Record<string, unknown> = {};
+  const sorted: Record<string, unknown> = Object.create(null);
   const keys = Object.keys(obj).sort((a, b) => {
     const aDollar = a.startsWith('$');
     const bDollar = b.startsWith('$');

@@ -92,9 +92,10 @@ The translation logic for palette names lives in `../.tmp/scripts/lib/palette-ma
 > doc describes — replacing the third-party figma-console Desktop Bridge for the
 > bulk pull. Its `src/convert.ts` is a faithful port of figma-console's
 > variable→DTCG serialization, so the output is a drop-in for the emitters
-> below. To use it: run `pnpm --filter @acronis-platform/figma-token-exporter
-receive`, then run the **Acronis Token Exporter** plugin in Figma Desktop and
-> click _Send snapshot to repo_. It also folds resolved orphan IDs into
+> below. To use it: run the receiver
+> (`pnpm --filter @acronis-platform/figma-token-exporter receive`), then run the
+> **Acronis Token Exporter** plugin in Figma Desktop and click
+> _Send snapshot to repo_. It also folds resolved orphan IDs into
 > `variables-meta.json`, so the post-process gate (step 4) passes on the first
 > run. See [`tools/figma-token-exporter/README.md`](../../../tools/figma-token-exporter/README.md).
 > The figma-console MCP steps below remain valid as a fallback.

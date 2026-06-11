@@ -72,14 +72,35 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // Read the body — client faults (too large / unreadable) are 413 / 400.
+  let raw: string;
   try {
-    const raw = await readBody(req);
-    const payload = JSON.parse(raw) as ExportPayload;
-    if (payload?.exporter !== 'acronis-figma-token-exporter') {
-      sendJson(res, 400, { ok: false, error: 'Unrecognized payload (missing exporter marker).' });
-      return;
-    }
+    raw = await readBody(req);
+  } catch (err) {
+    const tooLarge = err instanceof Error && err.message === 'Payload too large';
+    sendJson(res, tooLarge ? 413 : 400, {
+      ok: false,
+      error: tooLarge ? 'Payload too large.' : 'Could not read request body.',
+    });
+    return;
+  }
 
+  // Parse + validate — malformed input is the client's fault (400).
+  let payload: ExportPayload;
+  try {
+    payload = JSON.parse(raw) as ExportPayload;
+  } catch {
+    sendJson(res, 400, { ok: false, error: 'Invalid JSON payload.' });
+    return;
+  }
+  if (payload?.exporter !== 'acronis-figma-token-exporter') {
+    sendJson(res, 400, { ok: false, error: 'Unrecognized payload (missing exporter marker).' });
+    return;
+  }
+
+  // Write — a failure here is a server fault (500). Log details locally; return
+  // a generic message so internal/stack details aren't exposed to the client.
+  try {
     const { files } = writeSnapshot(payload);
 
     console.log(
@@ -92,9 +113,8 @@ const server = createServer(async (req, res) => {
 
     sendJson(res, 200, { ok: true, files });
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error('✗ Failed to write snapshot:', message);
-    sendJson(res, 500, { ok: false, error: message });
+    console.error('✗ Failed to write snapshot:', error instanceof Error ? (error.stack ?? error.message) : String(error));
+    sendJson(res, 500, { ok: false, error: 'Internal error writing the snapshot — see the receiver logs.' });
   }
 });
 
