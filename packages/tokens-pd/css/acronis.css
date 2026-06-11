@@ -11,6 +11,7 @@
   --ui-background-brand-primary: light-dark(rgb(0 32 77), rgb(238 242 247));
   --ui-background-brand-primary-active: light-dark(rgb(23 99 207), rgb(48 125 232));
   --ui-background-brand-primary-disabled: light-dark(rgb(117 174 240), rgb(13 77 165));
+  --ui-background-brand-primary-focus: light-dark(rgb(11 66 142), rgb(190 215 244));
   --ui-background-brand-primary-hover: light-dark(rgb(3 43 99), rgb(226 235 245));
   --ui-background-brand-secondary: light-dark(rgb(23 99 207), rgb(48 125 232));
   --ui-background-brand-secondary-active: light-dark(rgb(13 77 165), rgb(117 174 240));
@@ -22,6 +23,9 @@
   --ui-background-inverted-primary: light-dark(rgb(11 66 142), rgb(190 215 244));
   --ui-background-overlay-inverted: light-dark(rgb(255 255 255 / 0.898), rgb(0 0 0 / 0.898));
   --ui-background-overlay-primary: light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898));
+  --ui-background-status-ai: light-dark(rgb(249 245 251), rgb(82 20 82));
+  --ui-background-status-ai-hover: light-dark(rgb(245 238 248), rgb(108 19 108));
+  --ui-background-status-ai-pressed: light-dark(rgb(236 222 242), rgb(130 23 130));
   --ui-background-status-critical: light-dark(rgb(255 240 230), rgb(102 46 0));
   --ui-background-status-critical-hover: light-dark(rgb(255 231 214), rgb(128 57 0));
   --ui-background-status-critical-pressed: light-dark(rgb(255 222 194), rgb(153 69 0));
@@ -248,6 +252,22 @@
   font-size: 24px;
   font-weight: 400;
   line-height: 32px;
+  letter-spacing: 0px;
+}
+
+.ui-typography-link-default {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0px;
+}
+
+.ui-typography-link-default-underline {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
   letter-spacing: 0px;
 }
 

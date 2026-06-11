@@ -5,6 +5,7 @@
   --ui-background-brand-primary: light-dark(rgb(0 46 42), rgb(236 249 248));
   --ui-background-brand-primary-active: light-dark(rgb(4 73 67), rgb(209 240 237));
   --ui-background-brand-primary-disabled: light-dark(rgb(121 210 203), rgb(26 102 94));
+  --ui-background-brand-primary-focus: light-dark(rgb(121 210 203), rgb(26 102 94));
   --ui-background-brand-primary-hover: light-dark(rgb(3 58 54), rgb(226 245 244));
   --ui-background-brand-secondary: light-dark(rgb(51 153 145), rgb(51 153 145));
   --ui-background-brand-secondary-active: light-dark(rgb(26 102 94), rgb(121 210 203));

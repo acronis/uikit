@@ -83,6 +83,17 @@
             "com.figma.variableId": "VariableID:383:39"
           }
         },
+        "primary-focus": {
+          "values": {
+            "acronis": "{palette.blue.10}",
+            "brand-b": "{palette.teal.5}"
+          },
+          "platforms": ["PD"],
+          "$extensions": {
+            "com.figma.scopes": ["FRAME_FILL"],
+            "com.figma.variableId": "VariableID:2277:1436"
+          }
+        },
         "primary-hover": {
           "values": {
             "acronis": "{palette.blue.12}",
@@ -164,6 +175,39 @@
         }
       },
       "status": {
+        "ai": {
+          "values": {
+            "acronis": "{palette.violet.1}",
+            "brand-b": "{palette.violet.1}"
+          },
+          "platforms": ["PD"],
+          "$extensions": {
+            "com.figma.scopes": ["FRAME_FILL"],
+            "com.figma.variableId": "VariableID:2277:406"
+          }
+        },
+        "ai-hover": {
+          "values": {
+            "acronis": "{palette.violet.2}",
+            "brand-b": "{palette.violet.2}"
+          },
+          "platforms": ["PD"],
+          "$extensions": {
+            "com.figma.scopes": ["FRAME_FILL"],
+            "com.figma.variableId": "VariableID:2277:407"
+          }
+        },
+        "ai-pressed": {
+          "values": {
+            "acronis": "{palette.violet.3}",
+            "brand-b": "{palette.violet.3}"
+          },
+          "platforms": ["PD"],
+          "$extensions": {
+            "com.figma.scopes": ["FRAME_FILL"],
+            "com.figma.variableId": "VariableID:2277:408"
+          }
+        },
         "critical": {
           "values": {
             "acronis": "{palette.orange.1}",
@@ -1713,6 +1757,33 @@
       }
     },
     "link": {
+      "default": {
+        "$value": {
+          "fontFamily": "{font.font-family.default}",
+          "fontSize": "{font.font-size.14}",
+          "fontWeight": "{font.font-weight.regular}",
+          "letterSpacing": "{font.letter-spacing.0}",
+          "lineHeight": "{font.line-height.24}"
+        },
+        "platforms": ["PD"],
+        "$extensions": {
+          "com.figma.styleId": "S:cbd898a42c818aaa98ea4309a0d5f73f7c9876f7,"
+        }
+      },
+      "default-underline": {
+        "$value": {
+          "fontFamily": "{font.font-family.default}",
+          "fontSize": "{font.font-size.14}",
+          "fontWeight": "{font.font-weight.regular}",
+          "letterSpacing": "{font.letter-spacing.0}",
+          "lineHeight": "{font.line-height.24}"
+        },
+        "platforms": ["PD"],
+        "$extensions": {
+          "com.acronis.textDecoration": "UNDERLINE",
+          "com.figma.styleId": "S:792ca5ea9f5e3b65b124435a337e6eacacfa842b,"
+        }
+      },
       "strong": {
         "$value": {
           "fontFamily": "{font.font-family.default}",

@@ -75,6 +75,16 @@
             "com.figma.variableId": "VariableID:383:39"
           }
         },
+        "primary-focus": {
+          "$type": "color",
+          "$value": "{palette.blue.10}",
+          "$extensions": {
+            "com.figma.scopes": [
+              "FRAME_FILL"
+            ],
+            "com.figma.variableId": "VariableID:2277:1436"
+          }
+        },
         "primary-hover": {
           "$type": "color",
           "$value": "{palette.blue.12}",
@@ -149,6 +159,36 @@
         }
       },
       "status": {
+        "ai": {
+          "$type": "color",
+          "$value": "{palette.violet.1}",
+          "$extensions": {
+            "com.figma.scopes": [
+              "FRAME_FILL"
+            ],
+            "com.figma.variableId": "VariableID:2277:406"
+          }
+        },
+        "ai-hover": {
+          "$type": "color",
+          "$value": "{palette.violet.2}",
+          "$extensions": {
+            "com.figma.scopes": [
+              "FRAME_FILL"
+            ],
+            "com.figma.variableId": "VariableID:2277:407"
+          }
+        },
+        "ai-pressed": {
+          "$type": "color",
+          "$value": "{palette.violet.3}",
+          "$extensions": {
+            "com.figma.scopes": [
+              "FRAME_FILL"
+            ],
+            "com.figma.variableId": "VariableID:2277:408"
+          }
+        },
         "critical": {
           "$type": "color",
           "$value": "{palette.orange.1}",
@@ -1747,6 +1787,33 @@
       }
     },
     "link": {
+      "default": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{font.font-family.default}",
+          "fontSize": "{font.font-size.14}",
+          "fontWeight": "{font.font-weight.regular}",
+          "letterSpacing": "{font.letter-spacing.0}",
+          "lineHeight": "{font.line-height.24}"
+        },
+        "$extensions": {
+          "com.figma.styleId": "S:cbd898a42c818aaa98ea4309a0d5f73f7c9876f7,"
+        }
+      },
+      "default-underline": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{font.font-family.default}",
+          "fontSize": "{font.font-size.14}",
+          "fontWeight": "{font.font-weight.regular}",
+          "letterSpacing": "{font.letter-spacing.0}",
+          "lineHeight": "{font.line-height.24}"
+        },
+        "$extensions": {
+          "com.acronis.textDecoration": "UNDERLINE",
+          "com.figma.styleId": "S:792ca5ea9f5e3b65b124435a337e6eacacfa842b,"
+        }
+      },
       "strong": {
         "$type": "typography",
         "$value": {

@@ -13,6 +13,7 @@ export default {
         "brand-primary": "light-dark(rgb(0 46 42), rgb(236 249 248))",
         "brand-primary-active": "light-dark(rgb(4 73 67), rgb(209 240 237))",
         "brand-primary-disabled": "light-dark(rgb(121 210 203), rgb(26 102 94))",
+        "brand-primary-focus": "light-dark(rgb(121 210 203), rgb(26 102 94))",
         "brand-primary-hover": "light-dark(rgb(3 58 54), rgb(226 245 244))",
         "brand-secondary": "light-dark(rgb(51 153 145), rgb(51 153 145))",
         "brand-secondary-active": "light-dark(rgb(26 102 94), rgb(121 210 203))",
@@ -20,6 +21,9 @@ export default {
         "brand-secondary-hover": "light-dark(rgb(31 122 115), rgb(70 185 175))",
         "overlay-inverted": "light-dark(rgb(255 255 255 / 0.898), rgb(0 0 0 / 0.898))",
         "overlay-primary": "light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898))",
+        "status-ai": "light-dark(rgb(249 245 251), rgb(82 20 82))",
+        "status-ai-hover": "light-dark(rgb(245 238 248), rgb(108 19 108))",
+        "status-ai-pressed": "light-dark(rgb(236 222 242), rgb(130 23 130))",
         "status-critical": "light-dark(rgb(255 240 230), rgb(102 46 0))",
         "status-critical-hover": "light-dark(rgb(255 231 214), rgb(128 57 0))",
         "status-critical-pressed": "light-dark(rgb(255 222 194), rgb(153 69 0))",
@@ -161,6 +165,8 @@ export default {
         "typography-body-heading": "Inter, system-ui, sans-serif",
         "typography-body-accent": "Inter, system-ui, sans-serif",
         "typography-body-form-label": "Inter, system-ui, sans-serif",
+        "typography-link-default": "Inter, system-ui, sans-serif",
+        "typography-link-default-underline": "Inter, system-ui, sans-serif",
         "typography-link-strong": "Inter, system-ui, sans-serif",
         "typography-link-strong-underline": "Inter, system-ui, sans-serif",
         "typography-caption-default": "Inter, system-ui, sans-serif",
@@ -231,6 +237,22 @@ export default {
           "14px",
           {
             "lineHeight": "16px",
+            "letterSpacing": "0px",
+            "fontWeight": "400"
+          }
+        ],
+        "typography-link-default": [
+          "14px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "0px",
+            "fontWeight": "400"
+          }
+        ],
+        "typography-link-default-underline": [
+          "14px",
+          {
+            "lineHeight": "24px",
             "letterSpacing": "0px",
             "fontWeight": "400"
           }
