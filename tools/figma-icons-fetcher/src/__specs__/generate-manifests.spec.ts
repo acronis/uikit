@@ -38,6 +38,26 @@ describe('generateManifests', () => {
     expect(exists).toBe(true);
   });
 
+  it('wipes stale manifests when cleanManifests is true', async () => {
+    await fs.writeFile(path.join(testDir, 'stale.json'), '["old"]\n', 'utf8');
+    const config = { generateManifests: true, manifestDir: testDir, cleanManifests: true };
+
+    await generateManifests(config, [{ name: 'icon1', pageName: 'Actions' }]);
+
+    const files = await fs.readdir(testDir);
+    expect(files.sort()).toEqual(['actions.json', 'icons.json']);
+  });
+
+  it('keeps pre-existing files when cleanManifests is off', async () => {
+    await fs.writeFile(path.join(testDir, 'hand-maintained.json'), '["keep"]\n', 'utf8');
+    const config = { generateManifests: true, manifestDir: testDir };
+
+    await generateManifests(config, [{ name: 'icon1', pageName: 'Actions' }]);
+
+    const files = await fs.readdir(testDir);
+    expect(files).toContain('hand-maintained.json');
+  });
+
   it('should generate per-page manifests', async () => {
     const config = { generateManifests: true, manifestDir: testDir };
     const icons = [

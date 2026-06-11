@@ -15,6 +15,7 @@ function makeConfig(overrides: Partial<FetcherConfig> = {}): FetcherConfig {
     outputDirs: [],
     generateManifests: false,
     manifestDir: './manifests',
+    cleanManifests: false,
     categorizeByColor: false,
     monoColorDir: 'monocolor-icons',
     multiColorDir: 'multicolor-icons',

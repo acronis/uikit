@@ -3,9 +3,9 @@
 #
 # Pull-based: this workflow asks Figma for the current icon set, runs the
 # `@acronis-platform/figma-icons-fetcher` tool (via the icons-svg-next
-# `pull-icons` script) using the `new-frames` selection strategy, and — because
-# `main` is branch-protected — proposes the result as a PR instead of pushing
-# directly.
+# `pull-icons` script) using the `icon-packs` selection strategy against the
+# `icon-packs-source` section node, and — because `main` is branch-protected —
+# proposes the result as a PR instead of pushing directly.
 #
 # The same sync can be run locally; see packages/icons-svg-next/README.md. This
 # workflow just automates the "run + open PR" loop for people without a Figma
@@ -55,8 +55,8 @@ jobs:
         env:
           FIGMA_FETCHER_FIGMA_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
           FIGMA_FETCHER_FILE_KEY: lrU3ydIyvPYQNE6ixdsKtJ
-          FIGMA_FETCHER_PAGE_NAMES: '[TEMP] Old icons categorisation'
-          FIGMA_FETCHER_SELECTION_STRATEGY: 'new-frames'
+          FIGMA_FETCHER_NODE_ID: '2246:3201'
+          FIGMA_FETCHER_SELECTION_STRATEGY: 'icon-packs'
           FIGMA_FETCHER_CLASS_NAME: ''
           FIGMA_FETCHER_SYSTEM_COLOR: '#1763CF'
           FIGMA_FETCHER_SKIP_MISSING_IMAGES: 'true'
@@ -64,6 +64,7 @@ jobs:
           FIGMA_FETCHER_OUTPUT_DIRS: ''
           FIGMA_FETCHER_GENERATE_MANIFESTS: 'true'
           FIGMA_FETCHER_MANIFEST_DIR: './src/figma'
+          FIGMA_FETCHER_CLEAN_MANIFESTS: 'true'
           FIGMA_FETCHER_CATEGORIZE_BY_COLOR: 'false'
         run: pnpm --filter @acronis-platform/icons-svg-next pull-icons
 
@@ -81,10 +82,13 @@ jobs:
             Automated next-gen icon sync from the shadcn-uikit Figma file.
 
             Pulled by the **Fetch Figma Icons (next)** workflow via
-            `@acronis-platform/figma-icons-fetcher` (`new-frames` strategy).
+            `@acronis-platform/figma-icons-fetcher` (`icon-packs` strategy)
+            from the `icon-packs-source` section node.
 
             - `src/svg/` is a clean mirror of the current Figma set.
-            - `src/figma/` manifests are regenerated to match.
+            - `src/figma/` has per-pack manifests — packs with `Category` frames
+              split per category (e.g. `stroke-mono-arrows.json`) — plus combined
+              `icons.json`, regenerated to match.
 
             The source is a live WIP surface — review the diff for duplicate
             names (suffixed `-duplicate`) and stray markup before merging.

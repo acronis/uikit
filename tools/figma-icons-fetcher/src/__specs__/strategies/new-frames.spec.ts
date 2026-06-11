@@ -14,6 +14,7 @@ const config: FetcherConfig = {
   outputDirs: [],
   generateManifests: false,
   manifestDir: './manifests',
+  cleanManifests: false,
   categorizeByColor: false,
   monoColorDir: 'monocolor-icons',
   multiColorDir: 'multicolor-icons',

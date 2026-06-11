@@ -9,7 +9,7 @@ there is **no monocolor/multicolor split**.
 
 It is the sibling of `packages/icons-svg` (the legacy icon source) and shares
 the same `@acronis-platform/figma-icons-fetcher` engine — but uses the fetcher's
-`new-frames` selection strategy instead of `frames-by-name`.
+`icon-packs` selection strategy (against a node id) instead of `frames-by-name`.
 
 Repo-wide rules (TypeScript, kebab-case filenames, Conventional Commits) live in
 the repo root's [`../../context/`](../../context/) and apply on top. This file
@@ -17,31 +17,41 @@ documents only what is specific to this workspace.
 
 ## Layout
 
-| Path         | Contents                                                       |
-| ------------ | -------------------------------------------------------------- |
-| `src/svg/`   | Full current icon set — a clean mirror, replaced on every sync |
-| `src/figma/` | Per-category + combined `icons.json` manifests (name arrays)   |
+| Path         | Contents                                                         |
+| ------------ | ---------------------------------------------------------------- |
+| `src/svg/`   | Full current icon set — a flat, clean mirror, replaced each sync |
+| `src/figma/` | Per-pack (or per-category) manifests + combined `icons.json`     |
 
 ## Source structure (important)
 
-Icons are pulled from the `[TEMP] Old icons categorisation` canvas via the
-fetcher's **`new-frames`** strategy:
+Icons are pulled from the **`icon-packs-source`** section (Figma node
+`2246:3201`) via the fetcher's **`icon-packs`** strategy. The section is fetched
+directly by node id, so no page name is configured.
 
-- Each **top-level frame** (`Arrows`, `Objects`, `Shapes`, `Symbols`,
-  `Documents`, `asset types`, `Brands / logos`) is a **category** and becomes a
-  manifest group.
-- Inside each category, the redesigned icons live in green frames badged with a
-  vertical **`New`** text label. Only the icon leaves inside those frames are
-  pulled; the old size-suffixed icons (`name--16/24/32`) sitting next to them
-  are ignored.
+- The section has **four top-level frames** — `stroke-mono`, `stroke-multi`,
+  `solid-mono`, `solid-multi`. Each is a **pack**; a combined `src/figma/icons.json`
+  lists every icon across all packs.
+- Icons are the `COMPONENT` nodes named `_iconsource/<Name>` (the `_iconsource/`
+  prefix is stripped to form the icon name).
+- **Manifest grouping follows the pack layout.** A pack that organizes icons
+  into `Category` frames splits into one manifest per category, named
+  `<pack>-<category>` from the category's `CategoryTitle` (today `stroke-mono`
+  → `stroke-mono-arrows.json`, `stroke-mono-shapes.json`, `stroke-mono-symbols.json`,
+  `stroke-mono-documents.json`, `stroke-mono-objects.json`, `stroke-mono-assets.json`).
+  A pack that lists icons directly gets a single `<pack>.json` (`stroke-multi.json`,
+  `solid-mono.json`, `solid-multi.json`).
+- All SVGs land **flat** in `src/svg/` (no per-pack subfolders). Icon names can
+  repeat across packs (a stroke vs solid variant); colliding names are surfaced
+  by the fetcher and suffixed `-duplicate` (see below).
 
-The source canvas is a live design surface, so a sync may surface
-work-in-progress noise the designer still needs to clean up:
+The source is a live design surface, so a sync may surface work-in-progress
+noise the designer still needs to clean up:
 
-- **Duplicate names** (e.g. several `Monitor` variants) — the fetcher warns and
-  suffixes them `-duplicate`. Fix the names in Figma, then re-sync.
-- **Stray markup** — a few unfinished frames carry annotation artifacts (e.g. a
-  red overlay) that end up in the exported SVG. Fix at source.
+- **Duplicate names** — the same name in two packs, or genuine WIP dupes. The
+  fetcher warns and suffixes them `-duplicate`. Fix the names in Figma if
+  unintended, then re-sync.
+- **Stray markup / placeholders** — a few unfinished components carry annotation
+  artifacts or fail to render (skipped via `SKIP_MISSING_IMAGES`). Fix at source.
 
 The `currentColor` system color for this set is `#1763CF` (the redesign stroke).
 

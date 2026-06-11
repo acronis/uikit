@@ -3,11 +3,13 @@ import path from 'node:path';
 
 import chalk from 'chalk';
 
+import { cleanDirectory } from './clean-directory';
 import { groupIconsByPage } from './helpers';
 
 interface ManifestConfig {
   generateManifests: boolean;
   manifestDir: string;
+  cleanManifests?: boolean;
 }
 
 interface ManifestIcon {
@@ -27,6 +29,13 @@ export async function generateManifests(config: ManifestConfig, icons: ManifestI
 
   // Ensure manifest directory exists
   await fs.mkdir(config.manifestDir, { recursive: true });
+
+  // Wipe stale manifests so renamed/removed groups don't linger (opt-in: packages
+  // that keep hand-maintained manifests in this dir leave it off).
+  if (config.cleanManifests) {
+    await cleanDirectory(config.manifestDir);
+    console.log(chalk.gray(`  Cleaned ${config.manifestDir} before regenerating`));
+  }
 
   // Group icons by page
   const iconsByPage = groupIconsByPage(icons);

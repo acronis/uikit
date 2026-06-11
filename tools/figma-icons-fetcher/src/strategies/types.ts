@@ -9,6 +9,8 @@ export interface FigmaNode {
   id: string;
   name: string;
   type: string;
+  // Text content (TEXT nodes only) — used to read category titles.
+  characters?: string;
   children?: FigmaNode[];
 }
 
@@ -29,4 +31,4 @@ export interface FigmaPage {
  */
 export type SelectionStrategy = (page: FigmaPage, config: FetcherConfig) => FigmaIcon[];
 
-export type SelectionStrategyName = 'frames-by-name' | 'new-frames';
+export type SelectionStrategyName = 'frames-by-name' | 'new-frames' | 'icon-packs';

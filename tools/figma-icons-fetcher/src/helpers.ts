@@ -5,7 +5,26 @@ import process from 'node:process';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
 
+import type { SelectionStrategyName } from './strategies/types';
 import type { FetcherConfig } from './types';
+
+const SELECTION_STRATEGIES = new Set<SelectionStrategyName>(['frames-by-name', 'new-frames', 'icon-packs']);
+
+function parseSelectionStrategy(value: string | undefined): SelectionStrategyName {
+  return value && SELECTION_STRATEGIES.has(value as SelectionStrategyName)
+    ? (value as SelectionStrategyName)
+    : 'frames-by-name';
+}
+
+// Figma node ids use a colon ("2246:3201"); URLs encode them with a hyphen
+// ("node-id=2246-3201"). Accept either form so a value pasted from a URL works.
+function parseNodeId(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+  return /^\d+-\d+$/.test(trimmed) ? trimmed.replace('-', ':') : trimmed;
+}
 
 export function getConfig(): FetcherConfig {
   const envConfig = { ...getEnvConfig('.env'), ...getEnvConfig('.env.local'), ...process.env };
@@ -13,7 +32,8 @@ export function getConfig(): FetcherConfig {
   return {
     token: envConfig.FIGMA_FETCHER_FIGMA_TOKEN,
     fileKey: envConfig.FIGMA_FETCHER_FILE_KEY,
-    selectionStrategy: envConfig.FIGMA_FETCHER_SELECTION_STRATEGY === 'new-frames' ? 'new-frames' : 'frames-by-name',
+    nodeId: parseNodeId(envConfig.FIGMA_FETCHER_NODE_ID),
+    selectionStrategy: parseSelectionStrategy(envConfig.FIGMA_FETCHER_SELECTION_STRATEGY),
     skipMissingImages: envConfig.FIGMA_FETCHER_SKIP_MISSING_IMAGES === 'true',
     frameNames: envConfig.FIGMA_FETCHER_FRAME_NAMES?.split(',').map((name) => name.trim()) ?? [],
     pageNames: envConfig.FIGMA_FETCHER_PAGE_NAMES?.split(',').map((name) => name.trim()) ?? [],
@@ -23,6 +43,7 @@ export function getConfig(): FetcherConfig {
     outputDirs: envConfig.FIGMA_FETCHER_OUTPUT_DIRS?.split(',').map((dir) => dir.trim()).filter(Boolean) ?? [],
     generateManifests: envConfig.FIGMA_FETCHER_GENERATE_MANIFESTS === 'true',
     manifestDir: envConfig.FIGMA_FETCHER_MANIFEST_DIR ?? './manifests',
+    cleanManifests: envConfig.FIGMA_FETCHER_CLEAN_MANIFESTS === 'true',
     categorizeByColor: envConfig.FIGMA_FETCHER_CATEGORIZE_BY_COLOR === 'true',
     monoColorDir: envConfig.FIGMA_FETCHER_MONOCOLOR_DIR ?? 'monocolor-icons',
     multiColorDir: envConfig.FIGMA_FETCHER_MULTICOLOR_DIR ?? 'multicolor-icons',

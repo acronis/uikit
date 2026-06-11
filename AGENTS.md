@@ -39,7 +39,7 @@ distinct role:
 | `packages/ui-react/`          | `@acronis-platform/ui-react`             | **yes**    | Base UI library, Vite, Storybook 10, Vitest + RTL, Tailwind v4                                                   | [AGENTS.md](packages/ui-react/AGENTS.md)          |
 | `packages/icons-react/`       | `@acronis-platform/icons-react`          | **yes**    | React icons generated from `design-assets`, Vite, Storybook, Vitest                                              | [AGENTS.md](packages/icons-react/AGENTS.md)       |
 | `packages/icons-svg/`         | `@acronis-platform/icons-svg`            | no         | Raw SVG icon sources (mono/multicolor) fetched from Figma + manifests                                            | [AGENTS.md](packages/icons-svg/AGENTS.md)         |
-| `packages/icons-svg-next/`    | `@acronis-platform/icons-svg-next`       | no         | Raw SVG sources for the **next-gen** icon set (Figma `new-frames` strategy)                                      | [AGENTS.md](packages/icons-svg-next/AGENTS.md)    |
+| `packages/icons-svg-next/`    | `@acronis-platform/icons-svg-next`       | no         | Raw SVG sources for the **next-gen** icon set (Figma `icon-packs` strategy)                                      | [AGENTS.md](packages/icons-svg-next/AGENTS.md)    |
 | `packages/icons-sprite/`      | `@acronis-platform/icons-sprite`         | **yes**    | Generated (committed) SVG sprites built from `icons-svg` (tsx + SVGO)                                            | [AGENTS.md](packages/icons-sprite/AGENTS.md)      |
 | `apps/demo/`                  | `@acronis-platform/shadcn-uikit-demo`    | no         | Vite SPA, React Router v7, Zustand                                                                               | [AGENTS.md](apps/demo/AGENTS.md)                  |
 | `apps/docs/`                  | `@acronis-platform/shadcn-uikit-docs`    | no         | Next.js 15 + Fumadocs                                                                                            | [AGENTS.md](apps/docs/AGENTS.md)                  |
@@ -67,7 +67,7 @@ distinct role:
   (which runs `tools/figma-icons-fetcher`) or the `Fetch Figma Icons` workflow.
 - `packages/icons-svg-next/` — sibling of `icons-svg` for the **next-gen** icon
   set: same private, source-only model, but pulled from the `shadcn-uikit` Figma
-  file with the fetcher's `new-frames` selection strategy. Synced via its
+  file with the fetcher's `icon-packs` selection strategy. Synced via its
   `pull-icons` script or the `Fetch Figma Icons (next)` workflow.
 - `packages/icons-sprite/` — published SVG sprites (combined / monocolor /
   multicolor) **generated and committed** from `icons-svg` (same model as
@@ -92,7 +92,7 @@ distinct role:
 - `tools/figma-icons-fetcher/` — fetches SVG icons from a Figma file,
   SVGO-optimizes them, and writes them (with JSON manifests + mono/multicolor
   categorization) into `packages/icons-svg` and `packages/icons-svg-next`. Node
-  selection is pluggable (`frames-by-name` / `new-frames`). Run via `tsx` (no
+  selection is pluggable (`frames-by-name` / `new-frames` / `icon-packs`). Run via `tsx` (no
   build step); drives the `Fetch Figma Icons` workflows and each package's
   `pull-icons` script.
 - `tools/figma-token-exporter/` — a **self-hosted Figma plugin + local
