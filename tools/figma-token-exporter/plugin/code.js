@@ -94,8 +94,13 @@ async function buildPayload() {
     try {
       var ov = await figma.variables.getVariableByIdAsync(id);
       if (ov) orphanVariables.push(serializeVariable(ov));
-    } catch {
-      // Unresolvable even by ID — leave it for the gate to report.
+    } catch (e) {
+      // getVariableByIdAsync can reject for truly unresolvable IDs — skip and
+      // let the orphan-coverage gate report it. Figma's sandbox lacks optional
+      // `catch {}` binding, so we bind `e` and intentionally ignore it.
+      if (e) {
+        /* ignored */
+      }
     }
   }
 
