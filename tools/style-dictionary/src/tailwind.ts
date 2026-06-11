@@ -106,16 +106,16 @@ const normalizeSegment = (segment: string): string =>
     .replace(/([A-Z])/g, m => `-${m.toLowerCase()}`)
     .replace(/^-/, '');
 
-/**
- * Map a token's path to its Tailwind namespace + key (no `ui-`, no `color` wrapper),
- * driven by the authored `com.acronis.tailwindRoles` map (tier-scoped — semantic
- * tokens route against the semantic roles only, component tokens against the merged
- * map). The deepest path segment present in the map wins (so a `border-color` under a
- * `container` routes to the border namespace, not the container's). The matched role
- * word is dropped only for the semantic tier (pure roles); component parts are kept.
- * Throws if no segment is mapped, so an unrouted color/gradient token fails the build
- * loudly.
- */
+// Semantic color tokens (path starts with `colors`) MUST route — a failure
+// there is a real bug and stays fatal. Component-tier color tokens come
+// straight from per-component Figma authoring and occasionally use shapes the
+// router can't map (flat `<role>-<state>` twins like sidebar.secondary
+// .background-active, or new role words like switch.toggle.color-on). Those are
+// kept in the tiers + CSS but skipped from the Tailwind preset with a warning,
+// so component authoring drift can't break the whole build.
+const isSemanticColor = (path: string[]): boolean => path[0] === 'colors';
+
+/** Map a color token's path to its Tailwind namespace + key (no `ui-`, no role word). */
 export function routeColor(path: string[]): { namespace: ColorNamespace; key: string } {
   const isSemantic = SEMANTIC_ROOTS.has(path[0]);
   const roleMap = isSemantic ? SEMANTIC_ROLE_MAP : COMPONENT_ROLE_MAP;
@@ -178,8 +178,22 @@ export function buildThemeExtend(
     if (token.$type === 'color') {
       if (value === null) continue;
       const dark = darkColors.get(token.path.join('.')) ?? value;
-      const { namespace, key } = routeColor(token.path);
-      put(theme[namespace], key, `light-dark(${value}, ${dark})`, token.path);
+      let routed;
+      try {
+        routed = routeColor(token.path);
+      } catch (err) {
+        // Component-tier tokens that don't encode a routable role are kept in
+        // CSS + tiers but omitted from the Tailwind preset (warned). Semantic
+        // color tokens must always route — a throw there is a genuine bug.
+        if (!isSemanticColor(token.path)) {
+          console.warn(
+            `tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): ${token.path.join('.')}`,
+          );
+          continue;
+        }
+        throw err;
+      }
+      put(theme[routed.namespace], routed.key, `light-dark(${value}, ${dark})`, token.path);
     } else if (token.$type === 'gradient') {
       if (value === null) continue;
       // Gradients route via the same authored map to `backgroundImage` (→ `bg-*`
