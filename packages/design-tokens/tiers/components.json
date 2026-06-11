@@ -252,16 +252,8 @@
         "idle": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -296,16 +288,8 @@
         "disabled": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -470,16 +454,8 @@
         "idle": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -490,16 +466,8 @@
         "hover": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -510,16 +478,8 @@
         "active": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -530,16 +490,8 @@
         "disabled": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -552,16 +504,8 @@
         "idle": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -572,16 +516,8 @@
         "hover": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -593,11 +529,7 @@
           "$type": "color",
           "values": {
             "acronis": "{colors.border.on-surface.border-active}",
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -608,16 +540,8 @@
         "disabled": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -782,16 +706,8 @@
         "idle": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -802,16 +718,8 @@
         "hover": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -822,16 +730,8 @@
         "active": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -842,16 +742,8 @@
         "disabled": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -967,10 +859,7 @@
           "$type": "color",
           "values": {
             "acronis": "{palette.blue.10}",
-            "brand-b": {
-              "colorSpace": "hsl",
-              "components": [211.67, 45, 31.37]
-            }
+            "brand-b": { "colorSpace": "hsl", "components": [211.67, 45, 31.37] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -982,10 +871,7 @@
           "$type": "color",
           "values": {
             "acronis": "{palette.blue.9}",
-            "brand-b": {
-              "colorSpace": "hsl",
-              "components": [211.76, 20.48, 48.82]
-            }
+            "brand-b": { "colorSpace": "hsl", "components": [211.76, 20.48, 48.82] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -997,10 +883,7 @@
           "$type": "color",
           "values": {
             "acronis": "{colors.background.brand.primary-active}",
-            "brand-b": {
-              "colorSpace": "hsl",
-              "components": [211.34, 48.2, 27.25]
-            }
+            "brand-b": { "colorSpace": "hsl", "components": [211.34, 48.2, 27.25] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1011,16 +894,8 @@
         "disabled": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1033,16 +908,8 @@
         "idle": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1053,16 +920,8 @@
         "hover": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1073,16 +932,8 @@
         "active": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1143,10 +994,7 @@
         "disabled": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "colorSpace": "hsl",
-              "components": [215, 22.5, 31.37]
-            },
+            "acronis": { "colorSpace": "hsl", "components": [215, 22.5, 31.37] },
             "brand-b": { "colorSpace": "hsl", "components": [215, 22.5, 31.37] }
           },
           "platforms": ["PD"],
@@ -1212,16 +1060,8 @@
         "idle": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [300, 100, 50]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [300, 100, 50]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [300, 100, 50] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [300, 100, 50] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1232,16 +1072,8 @@
         "hover": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [300, 100, 50]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [300, 100, 50]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [300, 100, 50] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [300, 100, 50] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1252,16 +1084,8 @@
         "active": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [300, 100, 50]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [300, 100, 50]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [300, 100, 50] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [300, 100, 50] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1272,14 +1096,8 @@
         "disabled": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "colorSpace": "hsl",
-              "components": [216, 16.13, 87.84]
-            },
-            "brand-b": {
-              "colorSpace": "hsl",
-              "components": [216, 16.13, 87.84]
-            }
+            "acronis": { "colorSpace": "hsl", "components": [216, 16.13, 87.84] },
+            "brand-b": { "colorSpace": "hsl", "components": [216, 16.13, 87.84] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1292,16 +1110,8 @@
         "idle": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1312,16 +1122,8 @@
         "hover": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1332,16 +1134,8 @@
         "active": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1352,16 +1146,8 @@
         "disabled": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1410,14 +1196,8 @@
         "disabled": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "colorSpace": "hsl",
-              "components": [215.45, 12.22, 64.71]
-            },
-            "brand-b": {
-              "colorSpace": "hsl",
-              "components": [215.45, 12.22, 64.71]
-            }
+            "acronis": { "colorSpace": "hsl", "components": [215.45, 12.22, 64.71] },
+            "brand-b": { "colorSpace": "hsl", "components": [215.45, 12.22, 64.71] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -1466,14 +1246,8 @@
         "disabled": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "colorSpace": "hsl",
-              "components": [215.45, 12.22, 64.71]
-            },
-            "brand-b": {
-              "colorSpace": "hsl",
-              "components": [215.45, 12.22, 64.71]
-            }
+            "acronis": { "colorSpace": "hsl", "components": [215.45, 12.22, 64.71] },
+            "brand-b": { "colorSpace": "hsl", "components": [215.45, 12.22, 64.71] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -2190,16 +1964,8 @@
         "idle": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -2550,16 +2316,8 @@
         "idle": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -2660,16 +2418,8 @@
         "idle": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {
@@ -3498,16 +3248,8 @@
         "idle": {
           "$type": "color",
           "values": {
-            "acronis": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            },
-            "brand-b": {
-              "alpha": 0,
-              "colorSpace": "hsl",
-              "components": [0, 0, 100]
-            }
+            "acronis": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] },
+            "brand-b": { "alpha": 0, "colorSpace": "hsl", "components": [0, 0, 100] }
           },
           "platforms": ["PD"],
           "$extensions": {

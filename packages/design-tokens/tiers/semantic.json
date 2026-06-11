@@ -435,113 +435,41 @@
         "$type": "gradient",
         "idle": {
           "values": {
-            "acronis": [
-              {
-                "color": {
-                  "colorSpace": "hsl",
-                  "components": [233.93, 73.04, 54.9]
-                },
-                "position": 0.2
-              },
-              {
-                "color": {
-                  "colorSpace": "hsl",
-                  "components": [303.19, 97.17, 58.23]
-                },
-                "position": 1
-              }
-            ]
+            "acronis": [{ "color": { "colorSpace": "hsl", "components": [233.93, 73.04, 54.9] }, "position": 0.2 }, { "color": { "colorSpace": "hsl", "components": [303.19, 97.17, 58.23] }, "position": 1 }]
           },
           "platforms": ["PD"],
           "$extensions": {
-            "com.figma.gradientTransform": [
-              [0, 1, 0],
-              [-1, 0, 1]
-            ],
+            "com.figma.gradientTransform": [[0, 1, 0], [-1, 0, 1]],
             "com.figma.styleId": "6a29f79edcb949dfddc3c57804e23ca90e2e3158"
           }
         },
         "hover": {
           "values": {
-            "acronis": [
-              {
-                "color": {
-                  "colorSpace": "hsl",
-                  "components": [233.93, 73.04, 54.9]
-                },
-                "position": 0.2
-              },
-              {
-                "color": {
-                  "colorSpace": "hsl",
-                  "components": [303.19, 97.17, 58.23]
-                },
-                "position": 1
-              }
-            ]
+            "acronis": [{ "color": { "colorSpace": "hsl", "components": [233.93, 73.04, 54.9] }, "position": 0.2 }, { "color": { "colorSpace": "hsl", "components": [303.19, 97.17, 58.23] }, "position": 1 }]
           },
           "platforms": ["PD"],
           "$extensions": {
-            "com.figma.gradientTransform": [
-              [0, 1, 0],
-              [-1, 0, 1]
-            ],
+            "com.figma.gradientTransform": [[0, 1, 0], [-1, 0, 1]],
             "com.figma.styleId": "d75824f59afe59907a78feb5c44bcf9d89e32d8d"
           }
         },
         "active": {
           "values": {
-            "acronis": [
-              {
-                "color": {
-                  "colorSpace": "hsl",
-                  "components": [233.93, 73.04, 54.9]
-                },
-                "position": 0.2
-              },
-              {
-                "color": {
-                  "colorSpace": "hsl",
-                  "components": [303.19, 97.17, 58.23]
-                },
-                "position": 1
-              }
-            ]
+            "acronis": [{ "color": { "colorSpace": "hsl", "components": [233.93, 73.04, 54.9] }, "position": 0.2 }, { "color": { "colorSpace": "hsl", "components": [303.19, 97.17, 58.23] }, "position": 1 }]
           },
           "platforms": ["PD"],
           "$extensions": {
-            "com.figma.gradientTransform": [
-              [0, 1, 0],
-              [-1, 0, 1]
-            ],
+            "com.figma.gradientTransform": [[0, 1, 0], [-1, 0, 1]],
             "com.figma.styleId": "d3600bd86ce03979f095d043a02a4325e201c3c5"
           }
         },
         "disabled": {
           "values": {
-            "acronis": [
-              {
-                "color": {
-                  "colorSpace": "hsl",
-                  "components": [215.97, 16.12, 87.84]
-                },
-                "position": 0.2
-              },
-              {
-                "color": {
-                  "colorSpace": "hsl",
-                  "components": [215.47, 25.29, 86.65]
-                },
-                "position": 1
-              }
-            ]
+            "acronis": [{ "color": { "colorSpace": "hsl", "components": [215.97, 16.12, 87.84] }, "position": 0.2 }, { "color": { "colorSpace": "hsl", "components": [215.47, 25.29, 86.65] }, "position": 1 }]
           },
           "platforms": ["PD"],
           "$extensions": {
-            "com.figma.gradientTransform": [
-              [0, 1, 0],
-              [-1, 0, 1]
-            ],
+            "com.figma.gradientTransform": [[0, 1, 0], [-1, 0, 1]],
             "com.figma.styleId": "ff3aef1c0377478a63ccaa33539cec575af8b8c5"
           }
         }

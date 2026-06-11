@@ -7,3 +7,7 @@ pnpm-lock.yaml
 packages/tokens-pd/css
 packages/tokens-pd/tailwind
 packages/tokens-pd/dtcg
+
+# Source-of-truth token tiers — canonically formatted by the design-tokens
+# emitters (.tmp/scripts); prettier's layout differs and would cause drift.
+packages/design-tokens/tiers
