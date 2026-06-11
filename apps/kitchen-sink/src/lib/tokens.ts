@@ -21,8 +21,8 @@ import buttonAcronis from '@acronis-platform/tokens-pd/css/button/acronis.css?ra
 import chipAcronis from '@acronis-platform/tokens-pd/css/chip/acronis.css?raw';
 import formAcronis from '@acronis-platform/tokens-pd/css/form/acronis.css?raw';
 import iconAcronis from '@acronis-platform/tokens-pd/css/icon/acronis.css?raw';
-import itemAcronis from '@acronis-platform/tokens-pd/css/item/acronis.css?raw';
 import menuItemAcronis from '@acronis-platform/tokens-pd/css/menu-item/acronis.css?raw';
+import sidebarAcronis from '@acronis-platform/tokens-pd/css/sidebar/acronis.css?raw';
 import switchAcronis from '@acronis-platform/tokens-pd/css/switch/acronis.css?raw';
 import tagAcronis from '@acronis-platform/tokens-pd/css/tag/acronis.css?raw';
 import tooltipAcronis from '@acronis-platform/tokens-pd/css/tooltip/acronis.css?raw';
@@ -35,8 +35,8 @@ import buttonBrandB from '@acronis-platform/tokens-pd/css/button/brand-b.css?raw
 import chipBrandB from '@acronis-platform/tokens-pd/css/chip/brand-b.css?raw';
 import formBrandB from '@acronis-platform/tokens-pd/css/form/brand-b.css?raw';
 import iconBrandB from '@acronis-platform/tokens-pd/css/icon/brand-b.css?raw';
-import itemBrandB from '@acronis-platform/tokens-pd/css/item/brand-b.css?raw';
 import menuItemBrandB from '@acronis-platform/tokens-pd/css/menu-item/brand-b.css?raw';
+import sidebarBrandB from '@acronis-platform/tokens-pd/css/sidebar/brand-b.css?raw';
 import switchBrandB from '@acronis-platform/tokens-pd/css/switch/brand-b.css?raw';
 import tagBrandB from '@acronis-platform/tokens-pd/css/tag/brand-b.css?raw';
 import tooltipBrandB from '@acronis-platform/tokens-pd/css/tooltip/brand-b.css?raw';
@@ -73,8 +73,8 @@ const COMPONENT_SOURCES: { tier: string; css: string }[] = [
   { tier: 'chip', css: chipAcronis },
   { tier: 'form', css: formAcronis },
   { tier: 'icon', css: iconAcronis },
-  { tier: 'item', css: itemAcronis },
   { tier: 'menu-item', css: menuItemAcronis },
+  { tier: 'sidebar', css: sidebarAcronis },
   { tier: 'switch', css: switchAcronis },
   { tier: 'tag', css: tagAcronis },
   { tier: 'tooltip', css: tooltipAcronis },
@@ -88,8 +88,8 @@ const BRAND_B_CSS = [
   chipBrandB,
   formBrandB,
   iconBrandB,
-  itemBrandB,
   menuItemBrandB,
+  sidebarBrandB,
   switchBrandB,
   tagBrandB,
   tooltipBrandB,
@@ -308,18 +308,18 @@ export const statusMatrix: TokenMatrix = buildMatrix(STATUS_INTENTS, [
       pickStatus(`--ui-background-status-${i}${c === 'idle' ? '' : `-${c}`}`),
   },
   {
-    label: 'Background · inverted',
+    label: 'Background · strong',
     kind: 'fill',
     columns: ['idle', 'hover', 'pressed'],
     name: (i, c) =>
       pickStatus(
-        `--ui-background-status-inverted-${i}${c === 'idle' ? '' : `-${c}`}`
+        `--ui-background-status-strong-${i}${c === 'idle' ? '' : `-${c}`}`
       ),
   },
   {
     label: 'Border',
     kind: 'border',
-    columns: ['base', 'dark'],
+    columns: ['base', 'strong'],
     name: (i, c) =>
       pickStatus(`--ui-border-on-status-${i}${c === 'base' ? '' : `-${c}`}`),
   },
