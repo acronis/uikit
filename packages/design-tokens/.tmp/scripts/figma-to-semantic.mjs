@@ -184,7 +184,16 @@ const toDtcgStop = s => {
   if (s.a !== undefined && s.a < 1) stop.color.alpha = round(s.a, 4);
   return stop;
 };
-const AI_GRADIENT_TRANSFORM = [[0, 1, 0], [-1, 0, 1]]; // Figma returns ~6.12e-17 in place of 0 due to float math; we round to clean ints.
+// Identity transform → CSS `linear-gradient(90deg, …)`, i.e. a horizontal
+// (left→right) AI gradient — the intended design.
+// NOTE: the live Figma `Ai/ai-*` paint styles currently report a 90°-rotated
+// transform (`[[6.12e-17,1,0],[-1,6.12e-17,1]]` ≈ `[[0,1,0],[-1,0,1]]`), which is
+// mathematically VERTICAL (top→bottom) and does not match the intended
+// horizontal visual. These gradients are hardcoded here (not pulled live), so we
+// pin the intended horizontal orientation. Re-orient the Figma `Ai/*` styles to
+// horizontal to make Figma and tokens agree; only then is it safe to drive this
+// from the pulled `styles-color.json` transform.
+const AI_GRADIENT_TRANSFORM = [[1, 0, 0], [0, 1, 0]];
 const AI_GRADIENTS = [
   { key: 'idle',     styleId: '6a29f79edcb949dfddc3c57804e23ca90e2e3158', stops: [{ r: 0.2196, g: 0.2863, b: 0.8784, a: 1, position: 0.2 }, { r: 0.9882, g: 0.1765, b: 0.9451, a: 1, position: 1 }] },
   { key: 'hover',    styleId: 'd75824f59afe59907a78feb5c44bcf9d89e32d8d', stops: [{ r: 0.2196, g: 0.2863, b: 0.8784, a: 1, position: 0.2 }, { r: 0.9882, g: 0.1765, b: 0.9451, a: 1, position: 1 }] },
