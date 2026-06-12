@@ -9,6 +9,19 @@ export default {
         "tooltip-container": "light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898))",
         "tooltip-label": "light-dark(rgb(255 255 255), rgb(0 0 0))"
       },
+      "fontFamily": {
+        "tooltip-label-text-style": "Inter, system-ui, sans-serif"
+      },
+      "fontSize": {
+        "tooltip-label-text-style": [
+          "12px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "0px",
+            "fontWeight": "600"
+          }
+        ]
+      },
       "spacing": {
         "tooltip-container-padding-x": "12px",
         "tooltip-container-padding-y": "8px",
@@ -16,7 +29,7 @@ export default {
         "tooltip-container-width-min": "48px"
       },
       "borderRadius": {
-        "tooltip-container-radius": "4px"
+        "tooltip-container-border-radius": "4px"
       }
     },
   },

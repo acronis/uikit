@@ -1,50 +1,57 @@
 #!/usr/bin/env node
 // Convert the Figma DTCG export into tiers/components.json — per-component
-// tokens that alias semantic colors (and primitive units), inheriting the
-// Brand mode dimension from semantics (today: acronis; more brands later).
+// tokens that alias semantic colors/typography and primitive units, inheriting
+// the Brand mode dimension from semantics (today: acronis; more brands later).
 //
 // Usage: node .tmp/scripts/figma-to-components.mjs [export-file]
-//   export-file defaults to ./figma/variables.tokens.json
-//   (the path produced by figma-console MCP's figma_export_tokens).
+//   export-file defaults to .tmp/figma-tokens/variables.tokens.json
+//   (the path produced by the Figma token export).
 //
 // Output has no outer "components" wrapper — components are root groups
-// (breadcrumb, button, chip, ...). $type lives on each leaf because most
-// components mix `color` and `dimension`. Every leaf carries
-// `$extensions.com.figma.variableId` (no styleId paths in components).
+// (breadcrumb, button, button-icon, …). $type lives on each leaf because most
+// components mix `color`, `dimension`, `gradient`, and `typography`. Every leaf
+// carries `$extensions.com.figma.variableId` (no styleId paths in components).
 //
-// Depends on tiers/primitives.json AND tiers/semantic.json being current —
-// the alias-map validator checks every translated alias target against those
-// trees and fails the build on unknown targets.
+// Source: the next-gen `brand.components` tier (PascalCase: Button, ButtonIcon,
+// MenuItem, SidebarPrimary, …) plus a second pass over the retired
+// `brand.componentLegacy` tier (icon, tree) so those `--ui-icon-*`/`--ui-tree-*`
+// tokens keep flowing while the legacy components have no next-gen counterpart.
+//
+// Structure (next-gen): the Figma tree is already nested
+// (`<Component>/<variant|_global>/<role>/<property>[/<state>]`), so the emitter
+// is a faithful structural pass-through — no flat-key reconstruction. The two
+// bounded normalizations (per context/next-gen-components-migration.md §1,
+// Option A):
+//   1. Case + separator only: PascalCase → kebab (`ButtonIcon` → `button-icon`),
+//      camelCase → kebab (`borderRadius` → `border-radius`, `widthMin` →
+//      `width-min`). `_global` keeps its leading underscore (sorts to front;
+//      stripped later by the Tailwind router). See lib/segment-case.mjs.
+//   2. Drop the literal `color` property segment (color-valued tokens only):
+//      `Button/ai/container/color/idle` → `button.ai.container.idle`. Compound
+//      names like `borderColor` keep their word (→ `border-color`).
+//
+// Value handling per leaf:
+//   - reference whose target resolves to the AI gradient group
+//     (`colors.background.ai.*`) → emit as $type:gradient (Figma types these
+//     `string`; they alias `{semantics.gradients.ai.*}`, rewritten by alias-map).
+//   - `textStyle` string literal → normalized into a `{typography.*}` alias
+//     ($type:typography); the literal formats are inconsistent in Figma
+//     (`typography.body.strong` / `body.default` / `caption/strong`) and are
+//     reconciled by alias-map's translateTextStyle.
+//   - color / dimension reference → translated + validated alias.
+//   - color / dimension literal → inlined (HSL / px) and warned, as a design-
+//     system gap (same posture as figma-to-semantic.mjs).
+//   - any other string literal (`borderStyle`, `textDecoration`) → skipped and
+//     warned: `string` is not a valid emitted $type (schema enum) and there is
+//     no DTCG type for these yet.
+//
+// Depends on tiers/primitives.json AND tiers/semantic.json being current — the
+// alias-map validator checks every translated alias target (colors, typography,
+// units, palette) against those trees and fails the build on unknown targets.
 //
 // Mode handling is data-driven: brand mode names come from `lastSyncedValue`
-// keys per leaf and are lowercased for our output. Adding a new brand mode in
-// Figma flows through unchanged — no edits here.
-//
-// Raw values: 66 leaves in Figma today hold raw literals instead of aliases
-// (button: 61 raw hex; tree: 4; tag: 1). Per the alias-chain rule these are
-// gaps in the design system. We inline them (HSL for colors, {value, unit:'px'}
-// for dimensions) and warn — same posture as the typography primitive gaps
-// in figma-to-semantic.mjs.
-//
-// Input  (figma/variables.tokens.json):
-//   brand.componentLegacy.breadcrumb.chevron
-//     → { $type: "color", $value: "{color.glyph.on surface.neutral}",
-//          $extensions["figma-console-mcp"].lastSyncedValue.Acronis.reference }
-//   brand.componentLegacy.button.inverted["background-active"]
-//     → { $type: "color", $value: "#244467",
-//          $extensions["figma-console-mcp"].lastSyncedValue.Acronis.literal }
-//
-// Output (tiers/components.json):
-//   breadcrumb.chevron
-//     → { $type: "color",
-//         values: { acronis: "{colors.glyph.on-surface.neutral}" },
-//         platforms: ["PD"],
-//         $extensions: { com.figma.scopes: [...], com.figma.variableId: "VariableID:..." } }
-//   button.inverted["background-active"]
-//     → { $type: "color",
-//         values: { acronis: { colorSpace: "hsl", components: [...] } },
-//         platforms: ["PD"],
-//         $extensions: { com.figma.scopes: [...], com.figma.variableId: "VariableID:..." } }
+// keys per leaf and are lowercased for our output. The next-gen tier is
+// acronis-only today; adding a brand mode in Figma flows through unchanged.
 
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -54,14 +61,14 @@ import { hexToHslValue, round } from './lib/color.mjs';
 import { setPath, sortNode, reorderByList } from './lib/tree.mjs';
 import { formatDtcgJson } from './lib/format.mjs';
 import { makeAliasTranslator } from './lib/alias-map.mjs';
+import { kebabSegment } from './lib/segment-case.mjs';
 
 const { path: srcPath, source } = loadDtcg(process.argv);
-// Figma reorganized component variables: the published set now lives under
-// `brand.componentLegacy/*` (it was `brand.component/*`), while a new,
-// incomplete next-gen set sits under `brand.components/*`. tiers/components.json
-// tracks the legacy (current) set until the next-gen set is ready.
-const figmaComponents = source.brand?.componentLegacy;
-if (!figmaComponents) throw new Error(`source ${srcPath} has no brand.componentLegacy subtree.`);
+const figmaComponents = source.brand?.components;
+if (!figmaComponents) throw new Error(`source ${srcPath} has no brand.components subtree.`);
+// The retired flat tier still carries icon/tree (no next-gen equivalent); a
+// second pass keeps their tokens alive. Absence is not an error.
+const figmaLegacy = source.brand?.componentLegacy ?? {};
 
 const OUT = fileURLToPath(new URL('../../tiers/components.json', import.meta.url));
 const PRIMITIVES = fileURLToPath(new URL('../../tiers/primitives.json', import.meta.url));
@@ -73,18 +80,77 @@ const metaFor = makeMetaFor(loadMeta());
 const aliasMap = makeAliasTranslator({ primitives, semantic });
 
 const fcExt = leaf => leaf?.$extensions?.['figma-console-mcp'] ?? {};
-const normalizeKey = k => k.replace(/\s+/g, '-');
 // Mode keys come from Figma as title-case ("Acronis", "Brand B"). Lower-case
 // and hyphenate so they're kebab-stable in our output.
 const normalizeMode = m => m.toLowerCase().replace(/\s+/g, '-');
 
+// Targets under this alias prefix are the AI gradients (emitted by
+// figma-to-semantic.mjs as colors.background.ai.* with $type:gradient).
+const isGradientTarget = codeAlias => codeAlias.startsWith('{colors.background.ai.');
+
 const aliasErrors = [];
 const rawValueWarnings = [];
 const skippedWarnings = [];
-const structureWarnings = [];
 
 function isLeaf(node) {
   return node && typeof node === 'object' && '$type' in node && '$value' in node;
+}
+
+// Will this leaf be emitted (vs. skipped)? Mirrors the skip rules in `walk`:
+// only `string` leaves carrying a literal that is NOT a `textStyle` are dropped
+// (borderStyle/textDecoration). Everything else emits.
+function leafEmits(node, lastSeg) {
+  if (node.$type !== 'string') return true;
+  if (lastSeg === 'textStyle') return true;
+  const ls = fcExt(node).lastSyncedValue ?? {};
+  // A string leaf with a reference (gradient alias) emits; a string literal does not.
+  return !Object.values(ls).some(m => m && 'literal' in m);
+}
+
+// Does this subtree contain at least one token that will be emitted? Used to
+// decide whether a stateless `color` leaf collides with real siblings.
+function subtreeEmits(node, lastSeg) {
+  if (!node || typeof node !== 'object') return false;
+  if (isLeaf(node)) return leafEmits(node, lastSeg);
+  for (const [k, v] of Object.entries(node)) {
+    if (k.startsWith('$')) continue;
+    if (subtreeEmits(v, k)) return true;
+  }
+  return false;
+}
+
+// A stateless `color` leaf collides with its siblings (so its `color` segment
+// must be kept, not dropped) iff the parent has a non-`color` child that emits.
+function colorLeafCollides(parentNode) {
+  for (const [k, v] of Object.entries(parentNode)) {
+    if (k.startsWith('$') || k === 'color') continue;
+    if (subtreeEmits(v, k)) return true;
+  }
+  return false;
+}
+
+// Emitted path: kebab each segment, then drop the literal `color` property word.
+// `borderColor` etc. survive (they kebab to a different segment before this runs).
+//
+// `color` is dropped in two positions:
+//   - intermediate `color` (a group of states, `.../color/idle`): its state
+//     children hoist up to the role node, which stays a pure group — always safe.
+//   - trailing `color` (a stateless color leaf, `.../container/color`): dropping
+//     collapses the value onto the role node. Safe ONLY when that role node has
+//     no other token children. When it does (e.g. Tooltip/container also has
+//     paddingX, Tag/x/container also has borderColor), dropping would shadow the
+//     siblings and they'd be lost in the build — so the trailing `color` is KEPT
+//     (`tooltip.container.color`) to preserve a leaf-vs-group separation.
+//
+// `keepTrailingColor` carries that per-leaf collision decision from the walk.
+function emittedPath(figmaPath, keepTrailingColor) {
+  const kebabbed = figmaPath.map(kebabSegment);
+  const lastIdx = kebabbed.length - 1;
+  return kebabbed.filter((seg, i) => {
+    if (seg !== 'color') return true;
+    if (i === lastIdx && keepTrailingColor) return true;
+    return false;
+  });
 }
 
 function inlineRawColor(literal, leafPath) {
@@ -97,16 +163,21 @@ function inlineRawDimension(literal, leafPath) {
   return { value: round(Number(literal), 4), unit: 'px' };
 }
 
+// Resolve one mode value for a non-typography leaf. Returns `{ type, value }`:
+// the (possibly promoted) $type and the emitted value. References to the AI
+// gradient group promote the leaf to $type:gradient (Figma mis-types these
+// `string`).
 function resolveModeValue($type, modeData, leafPath) {
   if ('reference' in modeData) {
     const figmaAlias = modeData.reference;
     const codeAlias = aliasMap.translate(figmaAlias);
     if (!aliasMap.has(codeAlias)) aliasErrors.push(`${leafPath}: unknown alias target ${codeAlias} (from Figma ${figmaAlias})`);
-    return codeAlias;
+    const type = isGradientTarget(codeAlias) ? 'gradient' : $type;
+    return { type, value: codeAlias };
   }
   if ('literal' in modeData) {
-    if ($type === 'color') return inlineRawColor(modeData.literal, leafPath);
-    if ($type === 'dimension') return inlineRawDimension(modeData.literal, leafPath);
+    if ($type === 'color') return { type: 'color', value: inlineRawColor(modeData.literal, leafPath) };
+    if ($type === 'dimension') return { type: 'dimension', value: inlineRawDimension(modeData.literal, leafPath) };
     throw new Error(`${leafPath}: cannot inline literal for $type=${$type}`);
   }
   throw new Error(`${leafPath}: lastSyncedValue mode has neither reference nor literal`);
@@ -117,39 +188,78 @@ const out = {
 };
 
 let count = 0;
-(function walk(node, path) {
+function walk(node, path, parentNode) {
   if (!node || typeof node !== 'object') return;
   if (isLeaf(node)) {
     const variableId = fcExt(node).variableId;
     const lastSynced = fcExt(node).lastSyncedValue ?? {};
     const leafPath = path.join('.');
-    // Skip leaves whose literal value type we don't model in this tier yet —
-    // today only the two `*/label/typography` string tokens (e.g. "body-default"),
-    // new in the componentLegacy set. References of any $type still pass through.
-    const hasLiteral = Object.values(lastSynced).some(m => m && 'literal' in m);
-    if (node.$type !== 'color' && node.$type !== 'dimension' && hasLiteral) {
-      skippedWarnings.push(`${leafPath}: $type=${node.$type} literal not modeled in components tier — skipped`);
+    const lastSeg = path[path.length - 1];
+    // A trailing `color` segment is kept (not dropped) only when dropping would
+    // collapse this stateless color leaf onto a role node that also carries
+    // emittable siblings — see emittedPath().
+    const keepTrailingColor = lastSeg === 'color' && parentNode != null && colorLeafCollides(parentNode);
+
+    // `textStyle` string leaves point at a semantic typography style. Normalize
+    // the inconsistent Figma literal into a {typography.*} alias.
+    if (node.$type === 'string' && lastSeg === 'textStyle') {
+      const values = {};
+      let ok = true;
+      for (const [figmaModeKey, modeData] of Object.entries(lastSynced)) {
+        if (!('literal' in modeData)) {
+          skippedWarnings.push(`${leafPath}: textStyle mode ${figmaModeKey} is not a literal — skipped`);
+          ok = false;
+          break;
+        }
+        const alias = aliasMap.translateTextStyle(modeData.literal);
+        if (!aliasMap.has(alias)) aliasErrors.push(`${leafPath}: unknown typography target ${alias} (from "${modeData.literal}")`);
+        values[normalizeMode(figmaModeKey)] = alias;
+      }
+      if (!ok) return;
+      emitLeaf(path, 'typography', values, variableId, false);
       return;
     }
-    const values = {};
-    for (const [figmaModeKey, modeData] of Object.entries(lastSynced)) {
-      values[normalizeMode(figmaModeKey)] = resolveModeValue(node.$type, modeData, leafPath);
+
+    // String leaves carrying a *literal* (borderStyle "solid", textDecoration
+    // "underline") have no valid emitted $type (`string` is not in the schema
+    // enum) and no DTCG type yet — skip and warn. String leaves carrying a
+    // *reference* are mis-typed gradient aliases (`{semantics.gradients.ai.*}`)
+    // and fall through to the reference path below, which promotes them to
+    // $type:gradient.
+    if (node.$type === 'string' && Object.values(lastSynced).some(m => m && 'literal' in m)) {
+      skippedWarnings.push(`${leafPath}: $type=string (${lastSeg}) literal not modeled in components tier — skipped`);
+      return;
     }
-    const meta = metaFor(variableId);
-    const ext = {
-      'com.figma.scopes': meta.scopes,
-      'com.figma.variableId': variableId,
-    };
-    if (meta.hidden) ext['com.figma.hiddenFromPublishing'] = true;
-    setPath(out, path.map(normalizeKey), { $type: node.$type, values, platforms: ['PD'], $extensions: ext });
-    count++;
+
+    const values = {};
+    let emittedType = node.$type;
+    for (const [figmaModeKey, modeData] of Object.entries(lastSynced)) {
+      const { type, value } = resolveModeValue(node.$type, modeData, leafPath);
+      emittedType = type;
+      values[normalizeMode(figmaModeKey)] = value;
+    }
+    emitLeaf(path, emittedType, values, variableId, keepTrailingColor);
     return;
   }
   for (const [k, v] of Object.entries(node)) {
     if (k.startsWith('$')) continue;
-    walk(v, [...path, k]);
+    walk(v, [...path, k], node);
   }
-})(figmaComponents, []);
+}
+
+function emitLeaf(figmaPath, $type, values, variableId, keepTrailingColor) {
+  const meta = metaFor(variableId);
+  const ext = {
+    'com.figma.scopes': meta.scopes,
+    'com.figma.variableId': variableId,
+  };
+  if (meta.hidden) ext['com.figma.hiddenFromPublishing'] = true;
+  setPath(out, emittedPath(figmaPath, keepTrailingColor), { $type, values, platforms: ['PD'], $extensions: ext });
+  count++;
+}
+
+walk(figmaComponents, [], null);
+walk(figmaLegacy, [], null);
 
 if (aliasErrors.length) {
   console.error('Alias errors:');
@@ -167,126 +277,15 @@ if (skippedWarnings.length) {
   for (const w of skippedWarnings) console.warn('  -', w);
 }
 
-// Move direct-leaf children of these components into a `_global` sub-group.
-// The value is an optional $type filter — `null` moves all direct leaves; a
-// string moves only that $type. Tooltip restricts to `dimension` because the
-// designer keeps `background` and `label` at tooltip root; every other listed
-// component moves all of its direct leaves (dimensions describe geometry, and
-// where a direct color leaf exists — tree.border-color — it belongs with the
-// component-wide tokens). `_global` sorts to the front via the leading
-// underscore.
-const GLOBAL_SCOPE = {
-  button:  null,
-  chip:    null,
-  form:    null,
-  menubar: null,
-  sidebar: null,
-  tag:     null,
-  tooltip: 'dimension',
-  tree:    null,
-};
-const isLeafNode = v => v && typeof v === 'object' && '$type' in v && '$extensions' in v;
-for (const [comp, typeFilter] of Object.entries(GLOBAL_SCOPE)) {
-  if (!out[comp]) continue;
-  const globals = {};
-  for (const [k, v] of Object.entries(out[comp])) {
-    if (k.startsWith('$')) continue;
-    if (!isLeafNode(v)) continue;
-    if (typeFilter && v.$type !== typeFilter) continue;
-    globals[k] = v;
-    delete out[comp][k];
-  }
-  if (Object.keys(globals).length > 0) out[comp]._global = globals;
-}
-
-// Regroup `<prefix>-<state>` sibling leaves into nested `<prefix>.<state>`
-// sub-groups across every component. In Figma the four interaction states are
-// flattened into kebab keys (background-idle / background-hover / …); in code
-// we split them so consumers can reach `button.primary.background.hover`
-// directly. State order is fixed (idle → hover → active → disabled) and
-// applied after sortNode below.
-const STATE_ORDER = ['idle', 'hover', 'active', 'disabled'];
-const STATE_RE = new RegExp(`^(.+)-(${STATE_ORDER.join('|')})$`);
-(function regroupStates(node, path) {
-  if (!node || typeof node !== 'object' || isLeafNode(node)) return;
-  const groups = new Map();
-  for (const k of Object.keys(node)) {
-    if (k.startsWith('$')) continue;
-    if (!isLeafNode(node[k])) continue;
-    const m = k.match(STATE_RE);
-    if (!m) continue;
-    const [, prefix, state] = m;
-    if (!groups.has(prefix)) groups.set(prefix, {});
-    groups.get(prefix)[state] = k;
-  }
-  for (const [prefix, stateMap] of groups) {
-    const bare = isLeafNode(node[prefix]) ? node[prefix] : null;
-    if (!bare && prefix in node) {
-      // A nested `<prefix>/` group coexists with flat `<prefix>-<state>` leaves
-      // — duplicate representations of the same token (a Figma data issue, e.g.
-      // sidebar.secondary.background). Keep BOTH: leave the flat leaves
-      // un-regrouped beside the nested group, and report it for a Figma fix.
-      structureWarnings.push(`${[...path, prefix].join('.')}: flat '<state>' leaves coexist with a nested '${prefix}/' group — kept both as-is (de-duplicate in Figma)`);
-      continue;
-    }
-    // A bare `<prefix>` leaf beside `<prefix>-<state>` siblings is the idle
-    // state (Figma dropped the `-idle` suffix on resting states, e.g.
-    // breadcrumb.text.link + link-hover + link-active). Fold it in as `idle`.
-    if (bare && stateMap.idle) {
-      throw new Error(`state regroup conflict: '${prefix}' has both a bare leaf and '${prefix}-idle'`);
-    }
-    if (bare) delete node[prefix];
-    const group = {};
-    for (const state of STATE_ORDER) {
-      if (state === 'idle' && bare) {
-        group.idle = bare;
-        continue;
-      }
-      if (stateMap[state]) {
-        group[state] = node[stateMap[state]];
-        delete node[stateMap[state]];
-      }
-    }
-    node[prefix] = group;
-  }
-  for (const k of Object.keys(node)) {
-    if (k.startsWith('$')) continue;
-    regroupStates(node[k], [...path, k]);
-  }
-})(out, []);
-
-if (structureWarnings.length) {
-  console.warn('Component structure issues (kept both, fix in Figma):');
-  for (const w of structureWarnings) console.warn('  -', w);
-}
-
 const sorted = sortNode(out);
 
-// sortNode alphabetised the regrouped state keys (active, disabled, hover,
-// idle). Walk every state-only group and reorder to STATE_ORDER in place.
-(function reorderStates(node) {
-  if (!node || typeof node !== 'object' || Array.isArray(node)) return;
-  const keys = Object.keys(node);
-  if (keys.length > 0 && keys.every(k => STATE_ORDER.includes(k))) {
-    for (const s of STATE_ORDER) {
-      if (s in node) { const v = node[s]; delete node[s]; node[s] = v; }
-    }
-  }
-  for (const k of Object.keys(node)) {
-    if (k.startsWith('$')) continue;
-    reorderStates(node[k]);
-  }
-})(sorted);
-
-// Per-component sub-group ordering follows the design-system structure spec
-// rather than alphabetical. `_global` already sorts to the front via sortNode
-// (leading underscore precedes letters in ASCII) — listing it here is just
-// for clarity. Root-level components stay alphabetical (sortNode default).
-if (sorted.button)  sorted.button  = reorderByList(sorted.button,  ['_global', 'primary', 'secondary', 'ghost', 'destructive', 'inverted', 'ai']);
-if (sorted.form)    sorted.form    = reorderByList(sorted.form,    ['_global', 'input', 'text', 'switch']);
-if (sorted.sidebar) sorted.sidebar = reorderByList(sorted.sidebar, ['_global', 'side-bar', 'menu-item']);
-if (sorted.menubar) sorted.menubar = reorderByList(sorted.menubar, ['_global', 'side-bar', 'menu-item']);
-if (sorted.tree)    sorted.tree    = reorderByList(sorted.tree,    ['_global', 'item', 'title', 'nesting']);
+// Per-component variant ordering follows the design-system structure rather than
+// alphabetical. `_global` already sorts to the front via sortNode (leading
+// underscore precedes letters in ASCII); listing it is just for clarity.
+// Root-level components stay alphabetical (sortNode default).
+if (sorted.button) sorted.button = reorderByList(sorted.button, ['_global', 'primary', 'secondary', 'ghost', 'destructive', 'inverted', 'ai']);
+if (sorted['button-icon']) sorted['button-icon'] = reorderByList(sorted['button-icon'], ['_global', 'primary', 'secondary', 'ghost', 'destructive', 'inverted', 'ai']);
+if (sorted.tag) sorted.tag = reorderByList(sorted.tag, ['_global', 'neutral', 'info', 'success', 'warning', 'danger', 'critical', 'ai']);
 
 fs.writeFileSync(OUT, formatDtcgJson(sorted) + '\n');
-console.log(`Wrote ${OUT}: ${count} leaves (${rawValueWarnings.length} raw-value gaps inlined)`);
+console.log(`Wrote ${OUT}: ${count} leaves (${rawValueWarnings.length} raw-value gaps inlined, ${skippedWarnings.length} skipped)`);

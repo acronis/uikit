@@ -196,10 +196,24 @@ export function buildThemeExtend(
       put(theme[routed.namespace], routed.key, `light-dark(${value}, ${dark})`, token.path);
     } else if (token.$type === 'gradient') {
       if (value === null) continue;
-      // Gradients route via the same authored map to `backgroundImage` (→ `bg-*`
-      // setting background-image), not a solid `*-color` paint.
-      const { namespace, key } = routeColor(token.path);
-      put(theme[namespace], key, value, token.path);
+      // Gradients can't be a `*-color` (those set a solid paint); Tailwind's
+      // gradient namespace is `backgroundImage` (→ `bg-*` setting background-image).
+      // Like color tokens, component-tier gradients can use a path shape the
+      // router can't map (e.g. `button.ai.container.idle` — `container` is not a
+      // role word); keep them in CSS + tiers but skip the preset with a warning.
+      let gradientRouted;
+      try {
+        gradientRouted = routeColor(token.path);
+      } catch (err) {
+        if (!isSemanticColor(token.path)) {
+          console.warn(
+            `tailwind: skipped unroutable component gradient token (kept in CSS/tiers; fix naming in Figma): ${token.path.join('.')}`,
+          );
+          continue;
+        }
+        throw err;
+      }
+      put(theme.backgroundImage, gradientRouted.key, value, token.path);
     } else if (token.$type === 'typography') {
       if (value !== null) addTypography(theme, stripUi(token.name), value);
     } else if (token.$type === 'dimension') {

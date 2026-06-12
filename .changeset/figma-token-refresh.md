@@ -1,17 +1,20 @@
 ---
 '@acronis-platform/design-tokens': minor
 '@acronis-platform/tokens-pd': minor
-'@acronis-platform/ui-react': patch
 ---
 
-Refresh design tokens from Figma.
+Refresh design tokens from Figma and migrate the component tier to the next-gen Figma component architecture.
 
-Breaking (pre-1.0): rename semantic `status-inverted.*` → `status-strong.*`, `inverted-surface.*` → `inverted.*`, and `border.on-status.*-dark` → `*-strong`; remove the `item` component; component tokens now source from the renamed `componentLegacy` Figma group.
+**Primitives / semantic (breaking, pre-1.0):** rename semantic `status-inverted.*` → `status-strong.*`, `inverted-surface.*` → `inverted.*`, and `border.on-status.*-dark` → `*-strong`. Add the `ink` palette, `units.size-20`, a `transparent.clear` stop, semantic `glyph.on-status.ai`, the `status-strong` background family, `background.status.ai{,-hover,-pressed}`, `background.brand.primary-focus`, and `typography.link.default` / `link.default-underline`. The `brand-b` mode is removed (its values were dropped upstream in Figma); `tokens-pd` no longer emits `brand-b.css` / `brand-b` presets.
 
-Additive: new `ink` palette and `units.size-20`; semantic `glyph.on-status.ai`, the `status-strong` background family, the `background.status.ai{,-hover,-pressed}` and `background.brand.primary-focus` colors, and the `typography.link.default` / `link.default-underline` styles; new `sidebar` component.
+**Component tier (breaking, pre-1.0):** the component tokens now source the next-gen `brand.components` Figma tier instead of the retired `componentLegacy` group. Components emitted: `breadcrumb`, `button`, `button-icon`, `checkbox`, `input`, `menu-item`, `sidebar-primary`, `sidebar-secondary`, `switch`, `tag`, `tooltip` (plus `icon` / `tree`, retained from legacy — no next-gen equivalent yet). This replaces the previous `chip` / `form` / `sidebar` / `item` components.
 
-The `colors.background.ai.*` gradients keep their intended **horizontal** (`90deg`) orientation. (The Figma `Ai/*` paint styles currently report a 90°-rotated/vertical transform that doesn't match the intended visual; since these gradients are hardcoded in the emitter, the horizontal orientation is pinned there. The Figma styles should be re-oriented to horizontal to make Figma and tokens agree.)
+Naming follows the next-gen contract ("Option A — faithful"): PascalCase component → kebab (`ButtonIcon` → `button-icon`), camelCase leaf → kebab (`borderRadius` → `border-radius`, `paddingX` → `padding-x`), `_global` → `global`, and the redundant `color` property word is dropped for color tokens only (`Button/ai/container/color/idle` → `--ui-button-ai-container-idle`; compound names like `borderColor` keep their suffix → `border-color`). The token shape is deeply nested: `<component>-<variant|global>-<role>-<property>[-<state>]`.
 
-Regenerated all `tokens-pd` artifacts (CSS, DTCG, Tailwind presets) to match. The Tailwind preset builder now skips unroutable component-tier color tokens with a warning instead of failing the whole build (semantic tokens still must route), so per-component Figma authoring drift can't block generation. A handful of tokens are kept in the tiers/CSS but absent from the Tailwind preset pending Figma cleanup: the duplicated `sidebar.secondary.background-*` (flat vs nested), `switch.{container.color-inactive,toggle.color-on,toggle.color-off}`, and the unmodeled `*/label/typography` string tokens.
+The `colors.background.ai.*` gradients keep their intended **horizontal** (`90deg`) orientation; component AI references (`button.ai.*`, `tag.ai.*`) resolve to them via an alias rewrite (`{semantics.gradients.ai.*}` → `colors.background.ai.*`). `textStyle` literals resolve to `typography.*`.
 
-`ui-react`: re-theme the `Switch` and `Tooltip` components to the renamed switch / tooltip tokens (`--ui-switch-background-*`/`-circle-*` → `container-color-*`/`toggle-color-*`; `--ui-tooltip-background`/`-global-*`/`-label` → `container-color`/`container-*`/`label-color`) so they keep rendering after the rename. The `Tag` AI variant now resolves its background (`--ui-background-status-ai`, newly added). Visual-regression baselines updated accordingly.
+**Known gaps (warned, not fatal):** 8 `$type:string` component tokens are skipped because the token schema has no `string` type — `Button.*.container.borderStyle` (`"solid"`), `Switch._global.box.borderStyle`, and `Button.ghost.label.textDecoration.*` (`"underline"`/`"none"`); consumers hard-code these for now. Fully-transparent `#FF00FF00` stops inline as `rgb(255 0 255 / 0)` (hue irrelevant at alpha 0).
+
+Regenerated all `tokens-pd` artifacts (CSS, DTCG, Tailwind presets). The Tailwind preset builder skips unroutable component-tier color/gradient tokens with a warning instead of failing the build (semantic tokens still must route), so deeply-nested component roles (`box`, `tick`, `container`) stay in the CSS/tiers — consumers bind `var(--ui-*)` directly — but are omitted from the Tailwind preset.
+
+**ui-react consumers require follow-up re-theming** (separate change): the `Switch` and `Tooltip` token names changed again under the next-gen contract. `Tooltip` needs `--ui-tooltip-container-radius` → `--ui-tooltip-container-border-radius`; `Switch` must move to the new `--ui-switch-{global,on,off}-box-*` + `--ui-switch-global-tick-*` model.

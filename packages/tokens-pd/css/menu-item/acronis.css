@@ -4,25 +4,55 @@
 :root, :host {
   color-scheme: light dark;
 
-  --ui-menu-item-global-background-active: light-dark(rgb(214 228 245), rgb(6 54 121));
-  --ui-menu-item-global-background-focus: light-dark(rgb(190 215 244), rgb(11 66 142));
-  --ui-menu-item-global-background-hover: light-dark(rgb(238 242 247), rgb(0 32 77));
-  --ui-menu-item-global-background-idle: light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0));
+  --ui-menu-item-global-container-active: light-dark(rgb(214 228 245), rgb(6 54 121));
+  --ui-menu-item-global-container-content-gap: 0px;
+  --ui-menu-item-global-container-focus: light-dark(rgb(190 215 244), rgb(11 66 142));
+  --ui-menu-item-global-container-gap: 8px;
+  --ui-menu-item-global-container-height-description-min: 56px;
+  --ui-menu-item-global-container-height-min: 40px;
+  --ui-menu-item-global-container-hover: light-dark(rgb(238 242 247), rgb(0 32 77));
+  --ui-menu-item-global-container-idle: light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0));
+  --ui-menu-item-global-container-left-padding-y: 4px;
+  --ui-menu-item-global-container-padding-x: 16px;
+  --ui-menu-item-global-container-padding-y: 8px;
+  --ui-menu-item-global-container-width-min: 128px;
   --ui-menu-item-global-icon-active: light-dark(rgb(23 99 207), rgb(48 125 232));
   --ui-menu-item-global-icon-focus: light-dark(rgb(23 99 207), rgb(48 125 232));
   --ui-menu-item-global-icon-hover: light-dark(rgb(23 99 207), rgb(48 125 232));
   --ui-menu-item-global-icon-idle: light-dark(rgb(23 99 207), rgb(48 125 232));
-  --ui-menu-item-global-text-active: light-dark(rgb(24 25 27), rgb(244 245 245));
-  --ui-menu-item-global-text-focus: light-dark(rgb(24 25 27), rgb(244 245 245));
-  --ui-menu-item-global-text-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
-  --ui-menu-item-global-text-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
-  --ui-menu-item-global-units-gap-x: 8px;
-  --ui-menu-item-global-units-gap-y: 4px;
-  --ui-menu-item-global-units-height-min: 40px;
-  --ui-menu-item-global-units-padding-icon: 4px;
-  --ui-menu-item-global-units-padding-x: 16px;
-  --ui-menu-item-global-units-padding-y: 8px;
-  --ui-menu-item-global-units-width-min: 128px;
+  --ui-menu-item-global-icon-size: 16px;
+  --ui-menu-item-link-active: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-link-description-false-label-active: light-dark(rgb(23 99 207), rgb(48 125 232));
+  --ui-menu-item-link-description-false-label-focus: light-dark(rgb(23 99 207), rgb(48 125 232));
+  --ui-menu-item-link-description-false-label-hover: light-dark(rgb(23 99 207), rgb(48 125 232));
+  --ui-menu-item-link-description-false-label-idle: light-dark(rgb(23 99 207), rgb(48 125 232));
+  --ui-menu-item-link-description-true-description-active: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-link-description-true-description-focus: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-link-description-true-description-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-link-description-true-description-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-link-description-true-label-active: light-dark(rgb(23 99 207), rgb(48 125 232));
+  --ui-menu-item-link-description-true-label-focus: light-dark(rgb(23 99 207), rgb(48 125 232));
+  --ui-menu-item-link-description-true-label-hover: light-dark(rgb(23 99 207), rgb(48 125 232));
+  --ui-menu-item-link-description-true-label-idle: light-dark(rgb(23 99 207), rgb(48 125 232));
+  --ui-menu-item-link-focus: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-link-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-link-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-active: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-description-false-label-active: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-description-false-label-focus: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-description-false-label-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-description-false-label-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-description-true-description-active: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-description-true-description-focus: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-description-true-description-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-description-true-description-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-description-true-label-active: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-description-true-label-focus: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-description-true-label-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-description-true-label-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-focus: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-menu-item-static-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
 }
 
 [data-theme='light'], :host([data-theme='light']) {
@@ -31,4 +61,52 @@
 
 [data-theme='dark'], :host([data-theme='dark']) {
   color-scheme: dark;
+}
+
+.ui-menu-item-link-description-false-label-text-style {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0px;
+}
+
+.ui-menu-item-link-description-true-description-text-style {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0px;
+}
+
+.ui-menu-item-link-description-true-label-text-style {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0px;
+}
+
+.ui-menu-item-static-description-false-label-text-style {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0px;
+}
+
+.ui-menu-item-static-description-true-description-text-style {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0px;
+}
+
+.ui-menu-item-static-description-true-label-text-style {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0px;
 }

@@ -45,6 +45,15 @@ const PREFIX_RULES = [
     emit: () => ['colors'],
   },
   {
+    // {semantics.gradients.ai.X} → {colors.background.ai.X}
+    // Figma models the AI gradients in a `gradients` group, but our semantic
+    // tier emits them under `colors.background.ai` ($type:gradient — see
+    // figma-to-semantic.mjs). Rewrite the reference to the path we actually
+    // emit so the component alias validator resolves it.
+    match: parts => (parts[0] === 'semantic' || parts[0] === 'semantics') && parts[1] === 'gradients' && parts[2] === 'ai' ? 3 : 0,
+    emit: () => ['colors', 'background', 'ai'],
+  },
+  {
     // {gap.gap-N} → {units.gap.N}
     match: parts => parts[0] === 'gap' && /^gap-/.test(parts[1] ?? '') ? 2 : 0,
     emit: parts => ['units', 'gap', parts[1].replace(/^gap-/, '')],
@@ -94,6 +103,19 @@ export function translateAliasPath(figmaAlias) {
   return `{${translatePalette(rawParts).join('.')}}`;
 }
 
+// Normalize a Figma `textStyle` string literal into a typography alias.
+// The Figma data is inconsistent across three observed formats:
+//   "typography.body.strong"  (dotted, prefixed)
+//   "body.default"            (dotted, no prefix)
+//   "caption/strong"          (slash-separated)
+// All denote a leaf in our semantic typography tier (`typography.<group>.<leaf>`).
+// We strip a leading `typography.`, convert `/` → `.`, and re-prefix, yielding a
+// `{typography.<group>.<leaf>}` alias. Existence is validated by `has()`.
+export function translateTextStyle(literal) {
+  const dotted = literal.replace(/\//g, '.').replace(/^typography\./, '');
+  return `{typography.${dotted}}`;
+}
+
 // Walk a path inside a tree. Returns true iff every segment exists.
 function pathExists(tree, parts) {
   let cur = tree;
@@ -110,16 +132,18 @@ function pathExists(tree, parts) {
 export function makeAliasTranslator({ primitives, semantic }) {
   return {
     translate: translateAliasPath,
+    translateTextStyle,
     has(codeAlias) {
       const m = codeAlias.match(/^\{([^}]+)\}$/);
       if (!m) throw new Error(`expected DTCG alias, got ${codeAlias}`);
       const parts = m[1].split('.');
       const root = parts[0];
       const rest = parts.slice(1);
-      if (root === 'colors')    return pathExists(semantic.colors,    rest);
-      if (root === 'units')     return pathExists(primitives.units,   rest);
-      if (root === 'palette')   return pathExists(primitives.palette, rest);
-      if (root === 'font')      return pathExists(primitives.font, rest);
+      if (root === 'colors')     return pathExists(semantic.colors,     rest);
+      if (root === 'typography') return pathExists(semantic.typography, rest);
+      if (root === 'units')      return pathExists(primitives.units,    rest);
+      if (root === 'palette')    return pathExists(primitives.palette,  rest);
+      if (root === 'font')       return pathExists(primitives.font,     rest);
       return false;
     },
   };
