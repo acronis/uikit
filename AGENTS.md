@@ -155,6 +155,10 @@ that workspace**, never here.
   the shipped `tokens-pd` pipeline, and what's reused from the legacy stack.
 - `context/project-board.md` — how we run Project #3: epic/task model, status
   lifecycle + gates, fields, views, and automation.
+- `context/next-gen-components-migration.md` — migrating the component token tier
+  to Figma's next-gen `brand.components` (Option A naming, emitter rework,
+  tokens-pd impact, ui-react per-component re-theme). §9 tracks execution status,
+  the remaining ui-react backlog, and the Radio/Search/Select token gap.
 - `packages/ui-spec/context/component-specs-proposal.md` — **Proposed**
   (not yet adopted):
   framework-agnostic component specs + a machine-readable design grammar, to
