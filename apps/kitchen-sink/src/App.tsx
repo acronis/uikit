@@ -1,14 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 
-import {
-  applyBrand,
-  applyTheme,
-  brandOverrideCount,
-  BRANDS,
-  DEFAULT_BRAND,
-  type Brand,
-  type ColorMode,
-} from '@/lib/tokens';
+import { applyTheme, type ColorMode } from '@/lib/tokens';
 import { ColorsSection } from '@/sections/colors';
 import { ComponentsSection } from '@/sections/components';
 import { IconsSection } from '@/sections/icons';
@@ -68,21 +60,11 @@ const MAIN_CONTENT_PADDING_BOTTOM = 96;
 
 export default function App() {
   const [mode, setMode] = useState<ColorMode>('light');
-  const [brand, setBrand] = useState<Brand>(DEFAULT_BRAND);
 
   // Light/dark drives the tokens' `light-dark()` via `color-scheme`.
   useEffect(() => {
     applyTheme(mode);
   }, [mode]);
-
-  // A brand applies its `:root` override stylesheet (brand-b) or removes it.
-  useEffect(() => {
-    applyBrand(brand);
-  }, [brand]);
-
-  // How many tokens the selected brand overrides vs the default — 0 means the
-  // brand renders identically to the default.
-  const overrides = brandOverrideCount(brand);
 
   return (
     <div
@@ -121,38 +103,6 @@ export default function App() {
             </a>
           ))}
         </nav>
-        <label
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            fontSize: 13,
-          }}
-        >
-          Brand
-          <select
-            value={brand}
-            onChange={(e) => setBrand(e.target.value as Brand)}
-            style={{
-              padding: '6px 8px',
-              borderRadius: 6,
-              border: '1px solid var(--ui-border-on-surface-border)',
-              background: 'var(--ui-background-surface-secondary)',
-              color: 'inherit',
-            }}
-          >
-            {BRANDS.map((b) => (
-              <option key={b} value={b}>
-                {b}
-              </option>
-            ))}
-          </select>
-          <span style={{ color: 'var(--ui-text-on-surface-secondary)' }}>
-            {brand === DEFAULT_BRAND
-              ? '(default)'
-              : `(${overrides} override${overrides === 1 ? '' : 's'})`}
-          </span>
-        </label>
         <button
           type="button"
           onClick={() => setMode((m) => (m === 'light' ? 'dark' : 'light'))}

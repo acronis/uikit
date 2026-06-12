@@ -50,8 +50,8 @@ describe('Switch', () => {
   it('wires the track to the --ui-switch-* token tier', () => {
     render(<Switch aria-label="Notifications" />);
     expect(screen.getByRole('switch')).toHaveClass(
-      'data-[unchecked]:bg-[var(--ui-switch-container-color-inactive)]',
-      'data-[checked]:bg-[var(--ui-switch-container-color-active)]'
+      'data-[unchecked]:bg-[var(--ui-switch-off-box-idle)]',
+      'data-[checked]:bg-[var(--ui-switch-on-box-idle)]'
     );
   });
 

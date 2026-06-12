@@ -1,6 +1,7 @@
 ---
 '@acronis-platform/design-tokens': minor
 '@acronis-platform/tokens-pd': minor
+'@acronis-platform/ui-react': patch
 ---
 
 Refresh design tokens from Figma and migrate the component tier to the next-gen Figma component architecture.
@@ -17,4 +18,4 @@ The `colors.background.ai.*` gradients keep their intended **horizontal** (`90de
 
 Regenerated all `tokens-pd` artifacts (CSS, DTCG, Tailwind presets). The Tailwind preset builder skips unroutable component-tier color/gradient tokens with a warning instead of failing the build (semantic tokens still must route), so deeply-nested component roles (`box`, `tick`, `container`) stay in the CSS/tiers — consumers bind `var(--ui-*)` directly — but are omitted from the Tailwind preset.
 
-**ui-react consumers require follow-up re-theming** (separate change): the `Switch` and `Tooltip` token names changed again under the next-gen contract. `Tooltip` needs `--ui-tooltip-container-radius` → `--ui-tooltip-container-border-radius`; `Switch` must move to the new `--ui-switch-{global,on,off}-box-*` + `--ui-switch-global-tick-*` model.
+`ui-react`: re-theme the `Switch` and `Tooltip` components to the next-gen token names. `Tooltip` moves to `--ui-tooltip-container-border-radius`. `Switch` moves to the new `box`/`tick` model — track fill wired per checked-state (`--ui-switch-off-box-idle` / `--ui-switch-on-box-idle`, green), disabled to `--ui-switch-{on,off}-box-disabled` + `--ui-switch-global-tick-disabled` with a 1px inset `--ui-switch-global-box-border-color-disabled` border; the thumb is the single `--ui-switch-global-tick-*` color regardless of on/off (hover/active stops equal idle, so no hover color change). `ui-react/styles` swaps its dead `css/form` import for `css/input` + `css/checkbox` and adds `css/button-icon`. **Visual-regression baselines for `Switch` need regenerating in Docker/CI** (the disabled-state values changed) — not done here.

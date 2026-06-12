@@ -7,46 +7,30 @@
  * files (`css/<component>/acronis.css`), so we load those here — both to render
  * the components correctly and to enumerate their `--ui-<component>-*` names.
  *
- * Brand switching: `brand-b` ships *override-only* CSS scoped to `:root`, so a
- * brand is applied by injecting its override stylesheet (not a class toggle).
- * Light/dark is driven by the tokens' `light-dark()` + `color-scheme`, so we
- * flip `color-scheme` (and mirror `[data-theme]` for ui-react's `dark:` variant).
+ * acronis is the only brand: its semantic tokens are the base layer (no
+ * override stylesheet). Light/dark is driven by the tokens' `light-dark()` +
+ * `color-scheme`, so we flip `color-scheme` (and mirror `[data-theme]` for
+ * ui-react's `dark:` variant).
  */
 
-// --- acronis (default brand): semantic is applied by ui-react/styles; we read
-//     it here only to enumerate names. Per-component files we both apply + read.
+// --- acronis: semantic is applied by ui-react/styles; we read it here only to
+//     enumerate names. Per-component files we both apply + read.
 import semanticAcronis from '@acronis-platform/tokens-pd/css/acronis.css?raw';
 import breadcrumbAcronis from '@acronis-platform/tokens-pd/css/breadcrumb/acronis.css?raw';
 import buttonAcronis from '@acronis-platform/tokens-pd/css/button/acronis.css?raw';
-import chipAcronis from '@acronis-platform/tokens-pd/css/chip/acronis.css?raw';
-import formAcronis from '@acronis-platform/tokens-pd/css/form/acronis.css?raw';
+import buttonIconAcronis from '@acronis-platform/tokens-pd/css/button-icon/acronis.css?raw';
+import checkboxAcronis from '@acronis-platform/tokens-pd/css/checkbox/acronis.css?raw';
 import iconAcronis from '@acronis-platform/tokens-pd/css/icon/acronis.css?raw';
+import inputAcronis from '@acronis-platform/tokens-pd/css/input/acronis.css?raw';
 import menuItemAcronis from '@acronis-platform/tokens-pd/css/menu-item/acronis.css?raw';
-import sidebarAcronis from '@acronis-platform/tokens-pd/css/sidebar/acronis.css?raw';
+import sidebarPrimaryAcronis from '@acronis-platform/tokens-pd/css/sidebar-primary/acronis.css?raw';
+import sidebarSecondaryAcronis from '@acronis-platform/tokens-pd/css/sidebar-secondary/acronis.css?raw';
 import switchAcronis from '@acronis-platform/tokens-pd/css/switch/acronis.css?raw';
 import tagAcronis from '@acronis-platform/tokens-pd/css/tag/acronis.css?raw';
 import tooltipAcronis from '@acronis-platform/tokens-pd/css/tooltip/acronis.css?raw';
 import treeAcronis from '@acronis-platform/tokens-pd/css/tree/acronis.css?raw';
 
-// --- brand-b: override-only CSS, applied on demand.
-import semanticBrandB from '@acronis-platform/tokens-pd/css/brand-b.css?raw';
-import breadcrumbBrandB from '@acronis-platform/tokens-pd/css/breadcrumb/brand-b.css?raw';
-import buttonBrandB from '@acronis-platform/tokens-pd/css/button/brand-b.css?raw';
-import chipBrandB from '@acronis-platform/tokens-pd/css/chip/brand-b.css?raw';
-import formBrandB from '@acronis-platform/tokens-pd/css/form/brand-b.css?raw';
-import iconBrandB from '@acronis-platform/tokens-pd/css/icon/brand-b.css?raw';
-import menuItemBrandB from '@acronis-platform/tokens-pd/css/menu-item/brand-b.css?raw';
-import sidebarBrandB from '@acronis-platform/tokens-pd/css/sidebar/brand-b.css?raw';
-import switchBrandB from '@acronis-platform/tokens-pd/css/switch/brand-b.css?raw';
-import tagBrandB from '@acronis-platform/tokens-pd/css/tag/brand-b.css?raw';
-import tooltipBrandB from '@acronis-platform/tokens-pd/css/tooltip/brand-b.css?raw';
-import treeBrandB from '@acronis-platform/tokens-pd/css/tree/brand-b.css?raw';
-
-export type Brand = 'acronis' | 'brand-b';
 export type ColorMode = 'light' | 'dark';
-
-export const BRANDS: Brand[] = ['acronis', 'brand-b'];
-export const DEFAULT_BRAND: Brand = 'acronis';
 
 /** A row of tokens that share a role (paints `bg` / `text` / `border` / …). */
 export interface RoleGroup {
@@ -70,31 +54,18 @@ export interface ContextGroup {
 const COMPONENT_SOURCES: { tier: string; css: string }[] = [
   { tier: 'breadcrumb', css: breadcrumbAcronis },
   { tier: 'button', css: buttonAcronis },
-  { tier: 'chip', css: chipAcronis },
-  { tier: 'form', css: formAcronis },
+  { tier: 'button-icon', css: buttonIconAcronis },
+  { tier: 'checkbox', css: checkboxAcronis },
   { tier: 'icon', css: iconAcronis },
+  { tier: 'input', css: inputAcronis },
   { tier: 'menu-item', css: menuItemAcronis },
-  { tier: 'sidebar', css: sidebarAcronis },
+  { tier: 'sidebar-primary', css: sidebarPrimaryAcronis },
+  { tier: 'sidebar-secondary', css: sidebarSecondaryAcronis },
   { tier: 'switch', css: switchAcronis },
   { tier: 'tag', css: tagAcronis },
   { tier: 'tooltip', css: tooltipAcronis },
   { tier: 'tree', css: treeAcronis },
 ];
-
-const BRAND_B_CSS = [
-  semanticBrandB,
-  breadcrumbBrandB,
-  buttonBrandB,
-  chipBrandB,
-  formBrandB,
-  iconBrandB,
-  menuItemBrandB,
-  sidebarBrandB,
-  switchBrandB,
-  tagBrandB,
-  tooltipBrandB,
-  treeBrandB,
-].join('\n');
 
 /** Extract the unique `--ui-*` custom-property names declared in a CSS string. */
 function tokenNames(css: string): string[] {
@@ -492,13 +463,7 @@ export const typographyStyles: TypographyStyle[] = (() => {
   return out;
 })();
 
-/** How many tokens a non-default brand overrides. */
-export function brandOverrideCount(brand: Brand): number {
-  return brand === DEFAULT_BRAND ? 0 : tokenNames(BRAND_B_CSS).length;
-}
-
 const COMPONENT_TOKENS_STYLE_ID = 'ks-component-tokens';
-const BRAND_OVERRIDES_STYLE_ID = 'ks-brand-overrides';
 
 /** Apply the per-component token CSS once (ui-react/styles omits it). */
 function injectComponentTokens(): void {
@@ -510,21 +475,6 @@ function injectComponentTokens(): void {
   document.head.appendChild(el);
 }
 injectComponentTokens();
-
-/** Apply a brand by injecting (or removing) its `:root` override stylesheet. */
-export function applyBrand(brand: Brand): void {
-  if (typeof document === 'undefined') return;
-  const existing = document.getElementById(BRAND_OVERRIDES_STYLE_ID);
-  if (brand === DEFAULT_BRAND) {
-    existing?.remove();
-    return;
-  }
-  const el = existing ?? document.createElement('style');
-  el.id = BRAND_OVERRIDES_STYLE_ID;
-  el.textContent = BRAND_B_CSS;
-  // Append last so brand overrides win over the base `:root` declarations.
-  document.head.appendChild(el);
-}
 
 /** Flip light/dark: `color-scheme` drives `light-dark()`; `[data-theme]` drives ui-react's `dark:`. */
 export function applyTheme(mode: ColorMode): void {

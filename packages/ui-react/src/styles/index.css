@@ -3,12 +3,13 @@
 
 /* Component token tiers are opt-in (per @acronis-platform/tokens-pd): import the
    tier for every component this library ships, so its `--ui-<component>-*` tokens
-   are defined. The `button` tier also carries the `--ui-button-icon-*` tokens.
-   Add a line here whenever a new component with its own tier lands. */
+   are defined. Add a line here whenever a new component with its own tier lands. */
 @import '@acronis-platform/tokens-pd/css/button/acronis.css';
+@import '@acronis-platform/tokens-pd/css/button-icon/acronis.css';
 @import '@acronis-platform/tokens-pd/css/switch/acronis.css';
+@import '@acronis-platform/tokens-pd/css/checkbox/acronis.css';
+@import '@acronis-platform/tokens-pd/css/input/acronis.css';
 @import '@acronis-platform/tokens-pd/css/breadcrumb/acronis.css';
-@import '@acronis-platform/tokens-pd/css/form/acronis.css';
 @import '@acronis-platform/tokens-pd/css/tooltip/acronis.css';
 
 /* Theme switches via the `[data-theme]` attribute (set by the consumer /
