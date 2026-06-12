@@ -61,8 +61,9 @@ import { makeTypographyMap, styleToWeight, mapTextStyleName } from './lib/typogr
 const TEXT_STYLES_PATH = fileURLToPath(new URL('../../.tmp/figma-tokens/styles-text.json', import.meta.url));
 
 const { path: srcPath, source } = loadDtcg(process.argv);
-const figmaBrandColor = source.brand?.semantic?.colors;
-if (!figmaBrandColor) throw new Error(`source ${srcPath} has no brand.semantic.colors subtree.`);
+// Figma renamed the Brand group `semantic` → `semantics`; accept either.
+const figmaBrandColor = source.brand?.semantics?.colors ?? source.brand?.semantic?.colors;
+if (!figmaBrandColor) throw new Error(`source ${srcPath} has no brand.semantics.colors (or brand.semantic.colors) subtree.`);
 
 const OUT = fileURLToPath(new URL('../../tiers/semantic.json', import.meta.url));
 const PRIMITIVES = fileURLToPath(new URL('../../tiers/primitives.json', import.meta.url));
