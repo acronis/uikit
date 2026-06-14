@@ -14,8 +14,9 @@ dist
 # Misc
 .DS_Store
 *.pem
-.claude/settings.local.json
-.claude/settings.json
+# Claude Code — personal/scratch only; skills/agents/settings.json are tracked
+**/.claude/settings.local.json
+**/.claude/plans/
 .playwright-mcp
 
 # Debug
@@ -53,4 +54,3 @@ storybook-static
 
 # AI
 .ai
-.claude
