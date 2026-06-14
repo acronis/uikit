@@ -10,7 +10,6 @@ Acronis design tokens as data — DTCG-2025.10-conformant JSON. No runtime code.
 - [Properties](#properties)
 - [Token files](#token-files)
 - [Package structure](#package-structure)
-- [Setup](#setup)
 - [Contributing](#contributing)
 - [How to run](#how-to-run)
 - [Translation tools](#translation-tools)
@@ -182,58 +181,9 @@ design-tokens/
 └── package.json           Package metadata, files, and the validate script.
 ```
 
-The Figma→tiers sync lives in the repo-root `/figma-to-design-tokens` skill
-(`.claude/skills/figma-to-design-tokens/`), not in this package.
-
-## Setup
-
-The JSON files under `tiers/` are the **source of truth**. You only need this setup if you want to **update tokens from Figma** (change a value, add a token). If you just _consume_ the published JSON, skip it — `pnpm install` is all you need.
-
-Updates flow from Figma through an AI assistant (Claude) that talks to Figma via the **[Figma Console MCP](https://github.com/southleft/figma-console-mcp)**. Two one-time steps:
-
-### 1. Create a Figma access token
-
-A Figma _personal access token_ lets the MCP read the Figma file. Create one by following Figma's official guide — **[Manage personal access tokens](https://help.figma.com/hc/en-us/articles/8085703771159-Manage-personal-access-tokens)** (Figma → your avatar → **Settings → Security → Personal access tokens → Generate new token**). Give it read access. **Copy it immediately — Figma shows the value only once.**
-
-### 2. Set it globally as `FIGMA_ACCESS_TOKEN_ACRONIS`
-
-The MCP reads the token from an environment variable named `FIGMA_ACCESS_TOKEN_ACRONIS`. Set it once, globally, so every terminal and Claude session sees it. Replace `figd_your_token_here` with your token.
-
-**macOS (zsh, the default):**
-
-```bash
-echo 'export FIGMA_ACCESS_TOKEN_ACRONIS="figd_your_token_here"' >> ~/.zshrc
-source ~/.zshrc
-```
-
-**Linux (bash):**
-
-```bash
-echo 'export FIGMA_ACCESS_TOKEN_ACRONIS="figd_your_token_here"' >> ~/.bashrc
-source ~/.bashrc
-```
-
-**Windows (PowerShell):**
-
-```powershell
-setx FIGMA_ACCESS_TOKEN_ACRONIS "figd_your_token_here"
-```
-
-Open a new terminal afterwards so it takes effect. (Or set it via **Settings → System → Advanced system settings → Environment Variables**.)
-
-Check it worked: `echo $FIGMA_ACCESS_TOKEN_ACRONIS` (macOS/Linux) or `echo %FIGMA_ACCESS_TOKEN_ACRONIS%` (Windows).
-
-### 3. The Figma Console MCP
-
-The server is already wired up at the repo root in [`.mcp.json`](../../.mcp.json) — it runs via `npx figma-console-mcp@latest`, so you just need [Node](https://nodejs.org) installed plus the token above. Install notes and capabilities: **[figma-console-mcp](https://github.com/southleft/figma-console-mcp)**. Launch Claude from the repo root so it loads this `.mcp.json`.
-
-### Updating tokens from Figma
-
-Once set up: when a value or name changes in Figma, **ask Claude to sync** (with the Figma Console MCP available). Claude runs the `/figma-to-design-tokens` skill, which pulls the change from Figma, shows a diff, and re-emits the affected JSON — keeping the shape exact and saving tokens — then you run `pnpm validate` and commit. You can also hand-edit the JSON directly, since it's the source of truth. **Full step-by-step in [`CONTRIBUTING.md`](./CONTRIBUTING.md).**
-
 ## Contributing
 
-See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for day-to-day tasks: updating tokens from Figma, adding a mode, adding a new `$type` or `$extensions` key, and validating.
+The JSON under `tiers/` is the **source of truth** — edit it directly (it's hand-editable and schema-validated). See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for day-to-day tasks: authoring a token, adding a mode, adding a new `$type` or `$extensions` key, and validating.
 
 ## How to run
 
@@ -241,8 +191,6 @@ See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for day-to-day tasks: updating tokens
 | --------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `pnpm install`  | Installs devDependencies (the ajv toolchain).                                                                           |
 | `pnpm validate` | ajv-compiles the token schema (with `--strict=false`), then validates `tiers/*.json` against it. Run before committing. |
-
-The Figma sync is owned by the repo-root `/figma-to-design-tokens` skill (`.claude/skills/figma-to-design-tokens/`): its emitters re-emit the token JSON from a Figma snapshot — the LLM triggers them during a [sync](#setup) to keep the shape exact and save tokens. They are not npm scripts and not part of the published package; the flow is documented in the skill's [`SKILL.md`](../../.claude/skills/figma-to-design-tokens/SKILL.md).
 
 ## Translation tools
 

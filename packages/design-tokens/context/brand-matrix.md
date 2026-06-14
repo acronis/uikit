@@ -118,27 +118,25 @@ anything it doesn't override (acceptable, but confirm per brand).
 
 Fully **data-driven** — no code change in `tools/style-dictionary`:
 
-1. Add the brand as a **mode** in the Figma variable collection and define its
-   token values (at minimum the [override surface](#brand-override-surface)).
-2. Sync into `@acronis-platform/design-tokens` — the synced `tiers/*.json` gain a
-   `values.<brand>` key on the tokens the brand sets.
-3. Rebuild `tokens-pd`. `tools/style-dictionary` discovers the brand from the
+1. Add a `values.<brand>` key (with the brand's values, at minimum the
+   [override surface](#brand-override-surface)) to each token the brand sets in
+   `tiers/semantics.json` / `tiers/components.json`.
+2. Rebuild `tokens-pd`. `tools/style-dictionary` discovers the brand from the
    union of `values` keys (`discoverBrands()` in `tokens.ts`) and emits
    `css/<brand>.css` (+ per-component overrides) and the Tailwind preset.
 
-A brand mode in Figma is **exhaustive** (every variable has a value per mode), so
+A brand is **exhaustive** (it sets a value for every variable it overrides), so
 each brand resolves as a complete view; the build emits only its diff vs acronis.
 
 ## Current state vs target
 
 - **Shipped now:** `acronis` (full). The `brand-b` placeholder is removed from
-  Figma and `tiers/semantics.json`; it still lingers in `tiers/components.json`
-  (and the generated `tokens-pd` output) until the next components sync/rebuild.
-- **Target:** the legacy set above, sourced from Figma brand modes.
+  `tiers/semantics.json`; it still lingers in `tiers/components.json` (and the
+  generated `tokens-pd` output) until that's updated.
+- **Target:** the legacy set above.
 - **Gap (data, not code):** the 21 legacy accent brands' token values are **not
-  yet in Figma / design-tokens**. The pipeline is ready; populating them is a
-  Figma-authoring + sync task (do not hand-author token values here — see the
-  package `AGENTS.md`).
+  yet authored** in `tiers/*.json`. The pipeline is ready; populating them means
+  adding the `values.<brand>` keys.
 
 ## Open confirmations (#174)
 

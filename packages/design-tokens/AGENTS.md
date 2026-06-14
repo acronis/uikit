@@ -2,9 +2,8 @@
 
 `@acronis-platform/design-tokens` — a **published** data-only workspace:
 DTCG-2025.10-conformant design-token JSON. The files under
-`tiers/` are the source of truth; they're synced from Figma by the
-[`/figma-to-design-tokens` skill](../../.claude/skills/figma-to-design-tokens/SKILL.md).
-Consumes the vendored DTCG-2025-10 spec snapshot under `context/DTCG-2025-10/`.
+`tiers/` are the source of truth. Consumes the vendored DTCG-2025-10 spec
+snapshot under `context/DTCG-2025-10/`.
 
 Repo-wide rules (TypeScript, file naming, Conventional Commits,
 Changesets) live in the repo root's [`../../context/`](../../context/)
@@ -26,14 +25,6 @@ pnpm --filter @acronis-platform/design-tokens validate    # ajv-compiles the sch
 `build` / `dev` / `clean` / `lint` / `typecheck` are intentional no-ops
 — there is nothing to compile in a JSON data package. `test` runs the
 ajv validation so `pnpm -r test` covers this workspace in CI.
-
-## Bootstrap: the Figma snapshot may be absent
-
-The Figma→tiers sync is owned by the self-contained `/figma-to-design-tokens` skill (`.claude/skills/figma-to-design-tokens/`). Its local snapshot under `.claude/skills/figma-to-design-tokens/snapshot/` is **not** committed and won't be present in a fresh clone. If you need to sync and it isn't there:
-
-1. Run the `/figma-to-design-tokens` skill — it pulls a fresh snapshot via the **Figma Console MCP** server (`figma-console` in the repo-root [`.mcp.json`](../../.mcp.json); launch Claude from the repo root so it loads), then diffs and emits to `tiers/*.json`. Never hand-author the snapshot contents.
-2. The Figma↔code mapping and full pull procedure live in the skill's [`SKILL.md`](../../.claude/skills/figma-to-design-tokens/SKILL.md).
-3. If the MCP server is unavailable, stop and ask the user — do not fabricate snapshot data. The JSON under `tiers/` is the source of truth and may be edited, but don't hand-patch it to stand in for a Figma snapshot you couldn't fetch.
 
 ## Loading context
 

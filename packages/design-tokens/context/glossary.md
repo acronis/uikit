@@ -15,7 +15,7 @@ A business categorization Acronis applies to tokens. There are three:
 - **Semantics** — roles/intents that alias primitives (color roles, text styles).
 - **Components** — component-specific tokens that alias semantics.
 
-Tiers exist in code only. Figma does not use this concept — see the [`/figma-to-design-tokens` skill](../../../.claude/skills/figma-to-design-tokens/SKILL.md) for how tiers map to Figma's organization.
+Tiers exist in code only. Figma does not use this concept.
 
 ### Group
 
@@ -39,7 +39,7 @@ A Group may have one mode, many modes, or none. Not every Group is mode-aware.
 
 ### Collection
 
-**Figma-native concept.** A Figma Collection groups Variables and supports exactly one mode dimension; every token in the collection follows that dimension. The Figma file has four Collections — see the [`/figma-to-design-tokens` skill](../../../.claude/skills/figma-to-design-tokens/SKILL.md).
+**Figma-native concept.** A Figma Collection groups Variables and supports exactly one mode dimension; every token in the collection follows that dimension. The Figma file has four Collections (Theme, Brand, Units, Font).
 
 ## Tokens
 
