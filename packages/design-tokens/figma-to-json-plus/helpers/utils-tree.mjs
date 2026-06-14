@@ -27,34 +27,25 @@ export class TreeUtils {
     }
   }
 
-  // Deep-sort an object's keys: $-prefixed metadata first, then others
-  // alphabetically with all-numeric keys sorted numerically.
+  // Recursively sort every object's keys alphabetically (ASCII code-unit order),
+  // with the exception that all-numeric keys are ordered numerically so "8"
+  // precedes "12". Arrays keep their order. This is the single ordering rule for
+  // all tiers/*.json output — `$`-prefixed keys sort ahead of digits, which sort
+  // ahead of letters, so a leaf reads `$description, $extensions, $type, $value,
+  // platforms, values`.
   static sortNode(node) {
     if (!node || typeof node !== 'object' || Array.isArray(node)) return node;
-    const meta = Object.keys(node).filter(k => k.startsWith('$')).sort();
-    const rest = Object.keys(node).filter(k => !k.startsWith('$'));
-    const allNumeric = rest.every(k => /^\d+$/.test(k));
-    const sorted = allNumeric
-      ? rest.slice().sort((a, b) => Number(a) - Number(b))
-      : rest.slice().sort();
     const out = {};
-    for (const k of [...meta, ...sorted]) {
+    for (const k of Object.keys(node).sort(TreeUtils.#compareKeys)) {
       out[k] = TreeUtils.sortNode(node[k]);
     }
     return out;
   }
 
-  // Reorder the top-level keys of obj according to the order list.
-  // Keys not in the list are appended alphabetically at the end.
-  static reorderByList(obj, order) {
-    if (!obj || typeof obj !== 'object') return obj;
-    const out = {};
-    for (const k of order) {
-      if (k in obj) out[k] = obj[k];
-    }
-    for (const k of Object.keys(obj).sort()) {
-      if (!(k in out)) out[k] = obj[k];
-    }
-    return out;
+  static #compareKeys(a, b) {
+    const na = /^\d+$/.test(a);
+    const nb = /^\d+$/.test(b);
+    if (na && nb) return Number(a) - Number(b);
+    return a < b ? -1 : a > b ? 1 : 0;
   }
 }

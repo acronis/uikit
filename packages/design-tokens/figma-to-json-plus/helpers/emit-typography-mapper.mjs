@@ -3,8 +3,6 @@
 // primitive dimensions (fontFamily, fontSize, fontWeight, lineHeight,
 // letterSpacing).
 
-import { DtcgWalker } from './utils-dtcg-walker.mjs';
-
 // Maps font style strings to numeric weights.
 const WEIGHT_MAP = new Map([
   ['Thin', 100], ['Extra Light', 200], ['Light', 300],
@@ -47,41 +45,38 @@ export class TypographyMapper {
     const font = primitives.font;
     if (!font) return;
 
-    for (const { path, leaf } of DtcgWalker.walk(font)) {
-      const units = leaf.$extensions?.['com.acronis.units'];
-      const section = path[0]; // font-family, font-weight, font-size, …
+    // Dimension leaves (font-size/line-height/letter-spacing) carry a native
+    // DTCG `$value: { value, unit }` — the scalar is `value`. fontFamily/fontWeight
+    // carry a plain DTCG scalar `$value` (string / number).
+    // The font tree is shallow (section → leaf), so iterate directly.
+    for (const section of ['font-family', 'font-weight', 'font-size', 'line-height', 'letter-spacing']) {
+      const group = font[section];
+      if (!group || typeof group !== 'object') continue;
 
-      switch (section) {
-        case 'font-family':
-          if (typeof units === 'string') {
-            const alias = `{font.${path.join('.')}}`;
-            this.#map.fontFamily.set(units, alias);
-          }
-          break;
-        case 'font-weight':
-          if (units !== undefined) {
-            const alias = `{font.${path.join('.')}}`;
-            this.#map.fontWeight.set(Number(units), alias);
-          }
-          break;
-        case 'font-size':
-          if (units?.value !== undefined) {
-            const alias = `{font.${path.join('.')}}`;
-            this.#map.fontSize.set(units.value, alias);
-          }
-          break;
-        case 'line-height':
-          if (units?.value !== undefined) {
-            const alias = `{font.${path.join('.')}}`;
-            this.#map.lineHeight.set(units.value, alias);
-          }
-          break;
-        case 'letter-spacing':
-          if (units?.value !== undefined) {
-            const alias = `{font.${path.join('.')}}`;
-            this.#map.letterSpacing.set(units.value, alias);
-          }
-          break;
+      for (const [key, leaf] of Object.entries(group)) {
+        if (key.startsWith('$')) continue;
+        const raw = leaf?.$value;
+        const comp = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw.value : raw;
+        if (comp === undefined) continue;
+        const alias = `{font.${section}.${key}}`;
+
+        switch (section) {
+          case 'font-family':
+            if (typeof comp === 'string') this.#map.fontFamily.set(comp, alias);
+            break;
+          case 'font-weight':
+            this.#map.fontWeight.set(Number(comp), alias);
+            break;
+          case 'font-size':
+            this.#map.fontSize.set(comp, alias);
+            break;
+          case 'line-height':
+            this.#map.lineHeight.set(comp, alias);
+            break;
+          case 'letter-spacing':
+            this.#map.letterSpacing.set(comp, alias);
+            break;
+        }
       }
     }
   }

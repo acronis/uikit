@@ -4,6 +4,7 @@
 //   - Walk DTCG variable tree via DtcgWalker
 //   - Merge meta sidecar fields (scopes, hidden) inline per leaf
 //   - Drop MCP-transport figma-console-mcp extension key
+//   - Normalize Figma hex colors to canonical DTCG HSL (ColorNormalizer)
 //   - Pass styles through verbatim
 //   - Write output to snapshot/figma-snapshot.json
 
@@ -11,6 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DtcgWalker } from './utils-dtcg-walker.mjs';
+import { ColorNormalizer } from './normalize-colors.mjs';
 
 const SNAPSHOT_DIR = fileURLToPath(
   new URL('../snapshot/', import.meta.url),
@@ -26,7 +28,7 @@ export class SnapshotBuilder {
 
   // Build and return the normalized snapshot object (does not write to disk).
   build() {
-    const variables = this.#normalizeVariables();
+    const variables = ColorNormalizer.normalize(this.#normalizeVariables());
     const styles = { ...this.#loader.styles };
     return { variables, styles };
   }

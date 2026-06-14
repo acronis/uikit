@@ -1,50 +1,72 @@
 // figma-to-json-plus/helpers/utils-dtcg-formatter.mjs
-// Mixed-layout JSON formatter: multi-line for top-level groups and known
-// block keys ($extensions, values, $type, $value, platforms), inline for
-// short leaf objects (under 250 chars).
+// JSON formatter matching the tiers/*.json house style, which is Prettier's
+// (printWidth 80 — the pre-commit hook runs `prettier --write` on these files):
+//   - `$extensions` and `values` are always expanded (multi-line)
+//   - every other object/array is inlined when the whole line (indentation +
+//     `"key": ` prefix + inline form) fits within 80 columns, else expanded
+//     one member per line. So a `{ colorSpace, components }` color inlines when
+//     shallow but expands when deeply indented; alpha colors and gradient-stop
+//     arrays expand because their lines overflow.
+// Key order is whatever the (pre-sorted) tree carries; see TreeUtils.sortNode.
 
 export class DtcgFormatter {
-  static BLOCK_KEYS = new Set(['$extensions', 'values', '$type', '$value', 'platforms']);
-  static INLINE_LIMIT = 250;
+  // Prettier's default printWidth; the inline/expand boundary for the whole line.
+  static PRINT_WIDTH = 80;
 
-  // Returns a formatted JSON string for a DTCG token tree.
-  static format(value, indent = 0) {
-    if (value === null || typeof value !== 'object' || Array.isArray(value)) {
-      return JSON.stringify(value);
+  // Returns a formatted JSON string (trailing newline) for a token tree.
+  static serialize(root) {
+    return DtcgFormatter.#format(root, 0, null) + '\n';
+  }
+
+  // `key` is the property name this value sits under (null at the root / array
+  // elements) — used to compute the line prefix and to keep `$extensions` /
+  // `values` always expanded.
+  static #format(value, indent, key) {
+    if (value === null || typeof value !== 'object') return JSON.stringify(value);
+
+    const pad = '  '.repeat(indent);
+    const childPad = '  '.repeat(indent + 1);
+    const prefixLen = pad.length + (key !== null ? `${JSON.stringify(key)}: `.length : 0);
+
+    if (Array.isArray(value)) {
+      if (value.length === 0) return '[]';
+      const inline = DtcgFormatter.#inline(value);
+      if (prefixLen + inline.length <= DtcgFormatter.PRINT_WIDTH) return inline;
+      const lines = value.map(v => `${childPad}${DtcgFormatter.#format(v, indent + 1, null)}`);
+      return `[\n${lines.join(',\n')}\n${pad}]`;
     }
 
     const keys = Object.keys(value);
     if (keys.length === 0) return '{}';
 
-    // Try inline if it's a leaf-level or small object.
-    const inlined = DtcgFormatter._tryInline(value);
-    if (inlined !== null && indent > 0) return inlined;
+    // `$extensions` / `values` always expand; any other scalar object inlines
+    // when the whole line fits in PRINT_WIDTH.
+    if (indent > 0 && key !== '$extensions' && key !== 'values' && DtcgFormatter.#isScalarObject(value)) {
+      const inline = DtcgFormatter.#inline(value);
+      if (prefixLen + inline.length <= DtcgFormatter.PRINT_WIDTH) return inline;
+    }
 
-    const pad = '  '.repeat(indent);
-    const childPad = '  '.repeat(indent + 1);
-    const lines = keys.map(k => {
-      const v = value[k];
-      let formatted;
-      if (DtcgFormatter.BLOCK_KEYS.has(k) && v && typeof v === 'object' && !Array.isArray(v)) {
-        formatted = DtcgFormatter.format(v, indent + 1);
-      } else if (v && typeof v === 'object' && !Array.isArray(v)) {
-        formatted = DtcgFormatter.format(v, indent + 1);
-      } else {
-        formatted = JSON.stringify(v);
-      }
-      return `${childPad}${JSON.stringify(k)}: ${formatted}`;
-    });
+    const lines = keys.map(
+      k => `${childPad}${JSON.stringify(k)}: ${DtcgFormatter.#format(value[k], indent + 1, k)}`,
+    );
     return `{\n${lines.join(',\n')}\n${pad}}`;
   }
 
-  static _tryInline(value) {
-    const s = JSON.stringify(value);
-    if (s.length <= DtcgFormatter.INLINE_LIMIT) return s;
-    return null;
+  // True when no member is a nested plain object (arrays and primitives are fine).
+  static #isScalarObject(obj) {
+    return Object.values(obj).every(
+      v => v === null || typeof v !== 'object' || Array.isArray(v),
+    );
   }
 
-  // Top-level entry: format and append newline.
-  static serialize(root) {
-    return DtcgFormatter.format(root) + '\n';
+  // Inline JSON with spaces: { "k": v, ... } and [a, b, c]; [] and {} stay tight.
+  static #inline(value) {
+    if (value === null || typeof value !== 'object') return JSON.stringify(value);
+    if (Array.isArray(value)) {
+      return value.length === 0 ? '[]' : `[${value.map(DtcgFormatter.#inline).join(', ')}]`;
+    }
+    const keys = Object.keys(value);
+    if (keys.length === 0) return '{}';
+    return `{ ${keys.map(k => `${JSON.stringify(k)}: ${DtcgFormatter.#inline(value[k])}`).join(', ')} }`;
   }
 }

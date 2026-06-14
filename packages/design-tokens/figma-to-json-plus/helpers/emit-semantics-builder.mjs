@@ -11,8 +11,8 @@ import { DtcgFormatter } from './utils-dtcg-formatter.mjs';
 import { AliasTranslator } from './emit-alias-translator.mjs';
 import { TypographyMapper } from './emit-typography-mapper.mjs';
 
-const OUT_PATH        = fileURLToPath(new URL('../../../tiers/semantics.json', import.meta.url));
-const PRIMITIVES_PATH = fileURLToPath(new URL('../../../tiers/primitives.json', import.meta.url));
+const OUT_PATH        = fileURLToPath(new URL('../../tiers/semantics.json', import.meta.url));
+const PRIMITIVES_PATH = fileURLToPath(new URL('../../tiers/primitives.json', import.meta.url));
 
 const normalizeMode = m => m.toLowerCase().replace(/\s+/g, '-');
 const normalizeKey  = k => k.replace(/\s+/g, '-');
@@ -51,17 +51,11 @@ export class SemanticsEmitter {
       throw new Error(`${aliasErrors.length} alias error(s) — see above.`);
     }
 
-    const sorted = TreeUtils.sortNode(out);
-    sorted.colors = TreeUtils.reorderByList(sorted.colors, ['$type', 'background', 'border', 'glyph', 'text']);
-    if (sorted.colors.background) sorted.colors.background = TreeUtils.reorderByList(sorted.colors.background, ['surface', 'brand', 'overlay', 'status', 'status-strong', 'inverted']);
-    if (sorted.colors.border)     sorted.colors.border     = TreeUtils.reorderByList(sorted.colors.border, ['on-surface', 'on-brand', 'on-status']);
-    for (const role of ['glyph', 'text']) {
-      if (sorted.colors[role]) sorted.colors[role] = TreeUtils.reorderByList(sorted.colors[role], ['on-surface', 'on-brand', 'on-overlay', 'on-status', 'on-inverted']);
-    }
-    sorted.typography = TreeUtils.reorderByList(sorted.typography ?? {}, ['$type', 'headings', 'body', 'link', 'caption', 'note', 'fineprint']);
-    if (sorted.typography?.headings) sorted.typography.headings = TreeUtils.reorderByList(sorted.typography.headings, ['display', 'title', 'lead']);
-    if (sorted.typography?.body)     sorted.typography.body     = TreeUtils.reorderByList(sorted.typography.body, ['default', 'strong', 'strong-underline', 'heading', 'accent']);
-    const root = TreeUtils.reorderByList(sorted, ['$schema', '$extensions', 'colors', 'gradients', 'typography']);
+    // Attach the hand-authored $extensions before sorting so its key lands in
+    // alphabetical position, then restore its content verbatim afterwards
+    // (sortNode would otherwise reorder its hand-curated internals).
+    if (prevOut.$extensions) out.$extensions = prevOut.$extensions;
+    const root = TreeUtils.sortNode(out);
     if (prevOut.$extensions) root.$extensions = prevOut.$extensions;
 
     fs.writeFileSync(OUT_PATH, DtcgFormatter.serialize(root));
@@ -84,9 +78,20 @@ export class SemanticsEmitter {
       }
 
       const values = {};
+      let isGradient = false;
       for (const [figmaModeKey, modeRef] of Object.entries(lastSynced)) {
         if (typeof modeRef !== 'string' || !modeRef.startsWith('{')) {
           aliasErrors.push(`${path.join('.')} mode ${figmaModeKey}: expected reference, got ${JSON.stringify(modeRef)}`);
+          continue;
+        }
+        // A semantic that points at another semantic (e.g. a gradient border →
+        // gradients.ai.idle) exports as a `{semantics.…}` alias — strip the
+        // redundant prefix. Everything else is a palette reference.
+        const semMatch = modeRef.match(/^\{(?:brand\.)?semantics\.(.+)\}$/);
+        if (semMatch) {
+          const inner = semMatch[1].replace(/\s+/g, '-');
+          values[normalizeMode(figmaModeKey)] = `{${inner}}`;
+          if (inner.startsWith('gradients.')) isGradient = true;
           continue;
         }
         try {
@@ -103,7 +108,11 @@ export class SemanticsEmitter {
       const ourKey = path.map(normalizeKey);
       const ext = { 'com.figma.scopes': leaf.$extensions?.['com.figma.scopes'] ?? [], 'com.figma.variableId': variableId };
       if (leaf.$extensions?.['com.figma.hiddenFromPublishing']) ext['com.figma.hiddenFromPublishing'] = true;
-      TreeUtils.setPath(out.colors, ourKey, { values, platforms: ['PD'], $extensions: ext });
+      // A gradient-valued leaf overrides the group's `color` $type.
+      const leafOut = isGradient
+        ? { $type: 'gradient', values, platforms: ['PD'], $extensions: ext }
+        : { values, platforms: ['PD'], $extensions: ext };
+      TreeUtils.setPath(out.colors, ourKey, leafOut);
     }
   }
 

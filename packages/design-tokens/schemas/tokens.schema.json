@@ -48,64 +48,18 @@
       ]
     },
     "LeafRequiresPlatforms": {
-      "description": "A node is a leaf if it carries `values`, `$value`, or `$extensions.com.acronis.units`. Every leaf MUST declare `platforms`.",
+      "description": "A node is a leaf if it carries `values` (per-mode) or `$value` (native DTCG: composites, dimension `{ value, unit }`, and fontWeight/fontFamily scalars). Every leaf MUST declare `platforms`.",
       "if": {
-        "anyOf": [
-          { "required": ["values"] },
-          { "required": ["$value"] },
-          {
-            "required": ["$extensions"],
-            "properties": {
-              "$extensions": { "required": ["com.acronis.units"] }
-            }
-          }
-        ]
+        "anyOf": [{ "required": ["values"] }, { "required": ["$value"] }]
       },
       "then": {
         "required": ["platforms"],
-        "oneOf": [
-          { "required": ["values"] },
-          { "required": ["$value"] },
-          {
-            "required": ["$extensions"],
-            "properties": {
-              "$extensions": { "required": ["com.acronis.units"] }
-            }
-          }
-        ]
+        "oneOf": [{ "required": ["values"] }, { "required": ["$value"] }]
       }
     },
     "SingleValueCarrier": {
-      "description": "A token carries its value through exactly one carrier: `$value` (DTCG composites), per-mode `values`, or `$extensions.com.acronis.units` (single-value primitives). This enforces the mutual-exclusion half (no token may carry two); the at-least-one expectation for leaves is normative in ../context/spec.md and checked in review.",
-      "allOf": [
-        { "not": { "required": ["$value", "values"] } },
-        {
-          "not": {
-            "allOf": [
-              { "required": ["$value"] },
-              {
-                "required": ["$extensions"],
-                "properties": {
-                  "$extensions": { "required": ["com.acronis.units"] }
-                }
-              }
-            ]
-          }
-        },
-        {
-          "not": {
-            "allOf": [
-              { "required": ["values"] },
-              {
-                "required": ["$extensions"],
-                "properties": {
-                  "$extensions": { "required": ["com.acronis.units"] }
-                }
-              }
-            ]
-          }
-        }
-      ]
+      "description": "A token carries its value through exactly one carrier: `$value` (native DTCG: composites, dimension `{ value, unit }`, and fontWeight/fontFamily scalars) or per-mode `values` (multi-mode). This enforces the mutual-exclusion half (no token may carry both); the at-least-one expectation for leaves is normative in ../context/spec.md and checked in review.",
+      "allOf": [{ "not": { "required": ["$value", "values"] } }]
     },
     "TokenType": {
       "description": "Known DTCG types currently used in this package. Extend as new $types are introduced. `string` is a documented divergence — DTCG 2025.10 has no string type, but the Figma export carries raw string variables (e.g. per-state text-decoration); see ../context/spec.md.",
@@ -149,7 +103,6 @@
         "^com\\.(acronis|figma)\\.": {}
       },
       "properties": {
-        "com.acronis.units": { "$ref": "#/$defs/AcronisUnits" },
         "com.acronis.tailwindRoles": {
           "$ref": "#/$defs/AcronisTailwindRoles"
         },
@@ -168,22 +121,6 @@
       "not": {
         "required": ["com.figma.variableId", "com.figma.styleId"]
       }
-    },
-    "AcronisUnits": {
-      "description": "Single-value primitive carrier. Shape depends on the token's $type: dimension → {value, unit:'px'}; fontFamily → string; fontWeight → number.",
-      "oneOf": [
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["value", "unit"],
-          "properties": {
-            "value": { "type": "number" },
-            "unit": { "const": "px" }
-          }
-        },
-        { "type": "string", "minLength": 1 },
-        { "type": "number" }
-      ]
     },
     "AcronisTailwindRoles": {
       "description": "Maps a token path segment (role/part name) to the Tailwind theme namespace the style-dictionary build routes it into. Read at build time; not part of any token's value.",

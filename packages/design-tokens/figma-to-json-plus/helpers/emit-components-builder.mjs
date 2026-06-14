@@ -7,10 +7,14 @@ import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { TreeUtils } from './utils-tree.mjs';
 import { DtcgFormatter } from './utils-dtcg-formatter.mjs';
+import { AliasTranslator } from './emit-alias-translator.mjs';
 
-const OUT_PATH        = fileURLToPath(new URL('../../../tiers/components.json', import.meta.url));
-const PRIMITIVES_PATH = fileURLToPath(new URL('../../../tiers/primitives.json', import.meta.url));
-const SEMANTICS_PATH  = fileURLToPath(new URL('../../../tiers/semantics.json', import.meta.url));
+// Figma "units" collection sections → our `units.<section>` group.
+const UNIT_SECTIONS = new Set(['gap', 'size', 'radius', 'stroke']);
+
+const OUT_PATH        = fileURLToPath(new URL('../../tiers/components.json', import.meta.url));
+const PRIMITIVES_PATH = fileURLToPath(new URL('../../tiers/primitives.json', import.meta.url));
+const SEMANTICS_PATH  = fileURLToPath(new URL('../../tiers/semantics.json', import.meta.url));
 
 // Components to emit — PascalCase Figma names. Pass a subset via constructor.
 const DEFAULT_COMPONENTS = [
@@ -18,10 +22,6 @@ const DEFAULT_COMPONENTS = [
   'SidebarPrimary', 'SidebarSecondary', 'Switch', 'Tag',
 ];
 
-// Interaction state sort order.
-const STATE_ORDER = ['idle', 'hover', 'active', 'focus', 'disabled', 'error', 'selected', 'checked', 'indeterminate'];
-// Color-related leaf key order.
-const COLOR_ORDER = ['color', 'background', 'border', 'fill', 'stroke', 'shadow'];
 
 // No case transformation: Figma segment names are preserved exactly as-is.
 // Components and SubComponents are PascalCase in Figma; everything else is camelCase.
@@ -32,12 +32,14 @@ export class ComponentsEmitter {
   #primitives;
   #semantics;
   #allowlist;
+  #aliasTranslator;
 
   constructor(snapshot, { components = DEFAULT_COMPONENTS } = {}) {
     this.#snapshot = snapshot;
     this.#primitives = JSON.parse(fs.readFileSync(PRIMITIVES_PATH, 'utf8'));
     this.#semantics  = JSON.parse(fs.readFileSync(SEMANTICS_PATH, 'utf8'));
     this.#allowlist  = new Set(components);
+    this.#aliasTranslator = new AliasTranslator(this.#primitives);
   }
 
   emit() {
@@ -59,10 +61,12 @@ export class ComponentsEmitter {
       out[figmaName] = this.#emitComponent(figmaName, subtree);
     }
 
-    const sorted = TreeUtils.sortNode(out);
-    // Re-attach hand-authored $extensions verbatim (sortNode may have reordered internals).
-    if (prevOut.$extensions) sorted.$extensions = prevOut.$extensions;
-    const root = TreeUtils.reorderByList(sorted, ['$schema', '$extensions', ...DEFAULT_COMPONENTS]);
+    // Attach the hand-authored $extensions before sorting so its key lands in
+    // alphabetical position, then restore its content verbatim afterwards
+    // (sortNode would otherwise reorder its hand-curated internals).
+    if (prevOut.$extensions) out.$extensions = prevOut.$extensions;
+    const root = TreeUtils.sortNode(out);
+    if (prevOut.$extensions) root.$extensions = prevOut.$extensions;
 
     fs.writeFileSync(OUT_PATH, DtcgFormatter.serialize(root));
     return root;
@@ -90,8 +94,6 @@ export class ComponentsEmitter {
         // Group. Figma segment names are already camelCase — use as-is.
         out[k] = {};
         this.#walk(v, out[k], depth + 1);
-        // Reorder interaction states if this group looks like a variant container.
-        out[k] = TreeUtils.reorderByList(out[k], STATE_ORDER);
       }
     }
   }
@@ -100,15 +102,10 @@ export class ComponentsEmitter {
     const variableId = leaf.$extensions?.['figma-console-mcp']?.variableId
       ?? leaf.$extensions?.['com.figma.variableId'];
 
-    // Resolve $value: if it's an alias, translate it.
-    let value = leaf.$value;
-    if (typeof value === 'string' && value.startsWith('{')) {
-      value = this.#translateAlias(value, variableId);
-    }
+    const value = this.#translateValue(leaf.$value, variableId);
 
     const token = {};
     if (leaf.$type) token.$type = leaf.$type;
-    token.$value = value;
 
     // Build extensions.
     const ext = {};
@@ -134,58 +131,68 @@ export class ComponentsEmitter {
       const translatedValues = {};
       for (const [modeKey, modeRef] of Object.entries(allModes)) {
         const normalizedKey = modeKey.toLowerCase().replace(/\s+/g, '-');
-        if (typeof modeRef === 'string' && modeRef.startsWith('{')) {
-          try {
-            translatedValues[normalizedKey] = this.#translateAlias(modeRef, id);
-          } catch {
-            translatedValues[normalizedKey] = modeRef;
-          }
-        } else {
-          translatedValues[normalizedKey] = modeRef;
-        }
+        translatedValues[normalizedKey] = this.#translateValue(modeRef, id);
       }
       if (Object.keys(translatedValues).length > 0) token.values = translatedValues;
     }
 
+    // A leaf carries exactly one value carrier: per-mode `values` (the brand
+    // axis) when modes exist, else a single `$value`. Figma exports both a
+    // default `$value` and a `modes` map, so prefer `values` and drop the
+    // redundant `$value` to satisfy the schema's one-carrier rule.
+    if (!token.values) token.$value = value;
+
+    // A token whose value references a typography composite is itself typography
+    // (Figma stores it in a string Variable, so its source $type is "string").
+    // Correct it so the CSS builder emits a `.typography-*` utility class.
+    const sample = token.values ? Object.values(token.values)[0] : token.$value;
+    if (typeof sample === 'string' && sample.startsWith('{typography.')) token.$type = 'typography';
+
+    token.platforms = ['PD'];
     if (Object.keys(ext).length > 0) token.$extensions = ext;
     return token;
   }
 
-  #translateAlias(alias, variableId) {
-    // Try semantic colors first: "semantics.colors.background.surface.primary" → "{colors.background.surface.primary}"
-    const semanticMatch = alias.match(/^\{brand\.semantics\.(.+)\}$/);
-    if (semanticMatch) {
-      const innerPath = semanticMatch[1].replace(/\./g, '.').replace(/\s+/g, '-');
-      return `{${innerPath}}`;
+  // Translate a single component value to our alias/literal form:
+  //   "{semantics.colors.text.onSurface.primary}" → "{colors.text.onSurface.primary}"
+  //   "{components.Button._global.container.radius}" → "{Button._global.container.radius}"
+  //   "{gap.gap-4}" / "{stroke.width-1}"          → "{units.gap.4}" / "{units.stroke.1}"
+  //   "{Base}" / "{Blue.Blue-3}"                   → palette ref (via AliasTranslator)
+  //   "typography.link.default" / "body.accent"    → "{typography.link.default}" / "{typography.body.accent}"
+  //   "underline" / "none" / "solid"               → kept verbatim (enum literal)
+  #translateValue(value, variableId) {
+    // Transparent rule: a fully-transparent literal color (alpha 0) becomes the
+    // CSS keyword `transparent` — its RGB channels are meaningless.
+    if (value && typeof value === 'object' && value.alpha === 0) return 'transparent';
+    if (typeof value !== 'string') return value;
+    if (value.startsWith('{')) return this.#translateAlias(value, variableId);
+    // A bare dotted string is a typography reference; a bare word is an enum literal.
+    if (value.includes('.')) {
+      return value.startsWith('typography.') ? `{${value}}` : `{typography.${value}}`;
     }
-
-    // Palette alias: "{Base}", "{Blue.Blue-3}", "{__library:VariableID:…}"
-    if (alias.includes('__library:VariableID') || /^\{[A-Z]/.test(alias)) {
-      // Delegate to the shared alias translator logic inline.
-      // (Avoid importing AliasTranslator to keep this self-contained.)
-      const orphanMatch = alias.match(/^\{__library:(VariableID:[^}]+)\}$/);
-      if (orphanMatch) {
-        const varId = orphanMatch[1];
-        const path = this.#findPathByVarId(this.#primitives, varId);
-        if (path) return `{${path}}`;
-      }
-      const inner = alias.slice(1, -1);
-      const parts = inner.split('.');
-      // Simple: just use the raw alias as-is if we can't map it.
-      return alias;
-    }
-
-    return alias;
+    return value;
   }
 
-  #findPathByVarId(node, varId, base = []) {
-    if (!node || typeof node !== 'object') return null;
-    if (node.$extensions?.['com.figma.variableId'] === varId) return base.join('.');
-    for (const [k, v] of Object.entries(node)) {
-      if (k.startsWith('$')) continue;
-      const found = this.#findPathByVarId(v, varId, [...base, k]);
-      if (found) return found;
+  #translateAlias(alias, variableId) {
+    // Semantic / component self references: strip the redundant tier prefix.
+    const prefixed = alias.match(/^\{(?:brand\.)?(semantics|components)\.(.+)\}$/);
+    if (prefixed) return `{${prefixed[2].replace(/\s+/g, '-')}}`;
+
+    const inner = alias.slice(1, -1);
+    const section = inner.split('.')[0];
+
+    // Units: "{gap.gap-4}" → "{units.gap.4}" (strip the section-name key prefix).
+    if (UNIT_SECTIONS.has(section)) {
+      const rest = inner.slice(section.length + 1);
+      const key = rest.replace(/^[^-]+-/, '');
+      return `{units.${section}.${key}}`;
     }
-    return null;
+
+    // Orphan/library + palette references go through the shared translator.
+    try {
+      return this.#aliasTranslator.translate(alias);
+    } catch {
+      return alias;
+    }
   }
 }

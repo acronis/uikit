@@ -3,6 +3,7 @@
 // classifies every difference into a typed change record.
 
 import { DtcgWalker } from './utils-dtcg-walker.mjs';
+import { ColorUtils } from './utils-color.mjs';
 
 // Change type constants.
 export const ChangeType = Object.freeze({
@@ -100,14 +101,27 @@ export class DiffEngine {
       classified = true;
     }
 
-    // $value change (default/light mode).
+    // $value carrier. For dimension primitives the tier stores a native DTCG
+    // `{ value, unit }` while the snapshot has the raw scalar — compare the
+    // numeric `value` (rounded to 4 dp to absorb Figma float noise); `unit` is
+    // implied by $type and absent from the snapshot, so it isn't compared.
+    // Otherwise (DTCG composites / aliases, and plain fontWeight/fontFamily
+    // scalars) compare normalized values directly.
     if (snLeaf.$value !== undefined && tierLeaf.$value !== undefined) {
-      const snVal = JSON.stringify(DiffEngine.#normalizeValue(snLeaf.$value));
-      const tierVal = JSON.stringify(DiffEngine.#normalizeValue(tierLeaf.$value));
-      if (snVal !== tierVal) {
-        this.#changes.push({ ...base, type: ChangeType.VALUE_CHANGED, from: tierLeaf.$value, to: snLeaf.$value });
-        classified = true;
+      const tv = tierLeaf.$value;
+      if (tv && typeof tv === 'object' && !Array.isArray(tv) && 'value' in tv && 'unit' in tv) {
+        const round = c => (typeof c === 'number' ? ColorUtils.round(c, 4) : c);
+        if (round(tv.value) !== round(snLeaf.$value)) {
+          this.#changes.push({ ...base, type: ChangeType.VALUE_CHANGED, from: tv, to: snLeaf.$value });
+        }
+      } else {
+        const snVal = JSON.stringify(DiffEngine.#normalizeValue(snLeaf.$value));
+        const tierVal = JSON.stringify(DiffEngine.#normalizeValue(tv));
+        if (snVal !== tierVal) {
+          this.#changes.push({ ...base, type: ChangeType.VALUE_CHANGED, from: tv, to: snLeaf.$value });
+        }
       }
+      classified = true;
     }
 
     // Mode value changes (compare snapshot modes vs tier values).
@@ -180,14 +194,16 @@ export class DiffEngine {
           DiffEngine.#normalizeValue(v),
         ]),
       ]));
+      // $type is intentionally excluded: primitives/semantics tiers declare
+      // $type on the group, not the leaf, so the snapshot leaf carries it inline
+      // while the tier leaf does not — comparing them yields false positives.
+      // Real $type changes are caught by the explicit TYPE_CHANGED check above.
       const snSig = JSON.stringify({
         allValues: toAllValues(snLeaf.$value, snModes),
-        $type: snLeaf.$type,
         ext: sortedObj(snFigmaExt),
       });
       const tierSig = JSON.stringify({
         allValues: toAllValues(tierLeaf.$value, tierValues),
-        $type: tierLeaf.$type,
         ext: sortedObj(tierFigmaExt),
       });
       if (snSig !== tierSig) {
@@ -250,11 +266,26 @@ export class DiffEngine {
   //   {components.button.label.color.idle}        → {button.label.color.idle}
   // Non-alias values are returned as-is.
   static #normalizeValue(value) {
+    // Objects (e.g. DTCG color { colorSpace, components, alpha }) are compared by
+    // JSON.stringify elsewhere, so canonicalize key order — Figma-derived and
+    // emitted objects can carry the same fields in different orders. Arrays keep
+    // their order ([h, s, l] is positional).
+    if (value && typeof value === 'object') return DiffEngine.#sortKeysDeep(value);
     if (typeof value !== 'string' || !value.startsWith('{')) return value;
     let inner = value.slice(1, -1);
     inner = inner.replace(/^(semantics|components)\./, '');
     inner = inner.replace(/ /g, '-');
     return `{${inner}}`;
+  }
+
+  static #sortKeysDeep(value) {
+    if (Array.isArray(value)) return value.map(DiffEngine.#sortKeysDeep);
+    if (value && typeof value === 'object') {
+      return Object.fromEntries(
+        Object.keys(value).sort().map(k => [k, DiffEngine.#sortKeysDeep(value[k])]),
+      );
+    }
+    return value;
   }
 
   // Infer which tier a snapshot token belongs to from its Figma path.

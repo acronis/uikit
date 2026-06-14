@@ -12,7 +12,12 @@ import { DtcgFormatter } from './utils-dtcg-formatter.mjs';
 import { PaletteMapper } from './emit-palette-mapper.mjs';
 import { TypographyMapper } from './emit-typography-mapper.mjs';
 
-const OUT_PATH = fileURLToPath(new URL('../../../tiers/primitives.json', import.meta.url));
+const OUT_PATH = fileURLToPath(new URL('../../tiers/primitives.json', import.meta.url));
+
+// Transparent rule: a fully-transparent color (alpha 0) is emitted as the CSS
+// keyword `transparent` rather than an HSL object — the RGB channels of a
+// zero-alpha color are meaningless (Figma may store magenta, black, etc.).
+const colorValue = c => (c && typeof c === 'object' && c.alpha === 0 ? 'transparent' : c);
 
 // Orphan palette stops that Figma never exports as local Mode variables.
 // These are referenced by semantic tokens; keep them in sync manually.
@@ -43,7 +48,7 @@ export class PrimitivesEmitter {
         'line-height':    { $type: 'dimension' },
         'letter-spacing': {
           $type: 'dimension',
-          $description: 'Derived from Figma Text Styles; no source Variable.',
+          $description: 'Derived from Figma Text Styles; no source Variable. Refresh by re-pulling styles.json.',
         },
       },
       units: { $type: 'dimension' },
@@ -55,12 +60,7 @@ export class PrimitivesEmitter {
     this.#emitFont(out);
     this.#emitLetterSpacing(out);
 
-    const sorted = TreeUtils.sortNode(out);
-    const PALETTE_ORDER = ['$type', 'base', 'grayscale', 'blue', 'teal', 'green', 'yellow', 'orange', 'red', 'violet', 'ink', 'transparent'];
-    sorted.palette = TreeUtils.reorderByList(sorted.palette, PALETTE_ORDER);
-    sorted.units = TreeUtils.reorderByList(sorted.units, ['$type', 'gap', 'size', 'radius', 'stroke']);
-    sorted.font['font-weight'] = TreeUtils.reorderByList(sorted.font['font-weight'], ['$type', 'regular', 'medium', 'semibold', 'bold']);
-    const root = TreeUtils.reorderByList(sorted, ['$schema', 'palette', 'units', 'font']);
+    const root = TreeUtils.sortNode(out);
 
     fs.writeFileSync(OUT_PATH, DtcgFormatter.serialize(root));
     return root;
@@ -74,16 +74,14 @@ export class PrimitivesEmitter {
 
     for (const { path, leaf } of DtcgWalker.walk(themeNode)) {
       const ourPath = PaletteMapper.map(path);
-      const lightHex = leaf.$value;
-      const darkHex  = leaf.$extensions?.modes?.Dark ?? leaf.$value;
+      // Snapshot colors are already normalized to DTCG HSL by ColorNormalizer.
+      const light = colorValue(leaf.$value);
+      const dark  = colorValue(leaf.$extensions?.modes?.Dark ?? leaf.$value);
       const variableId = leaf.$extensions?.['com.figma.variableId'];
       const ext = this.#buildFigmaExt(leaf.$extensions, variableId);
 
       TreeUtils.setPath(out, ['palette', ...ourPath], {
-        values: {
-          light: ColorUtils.hexToHslValue(lightHex),
-          dark:  ColorUtils.hexToHslValue(darkHex),
-        },
+        values: { light, dark },
         platforms: ['PD'],
         $extensions: ext,
       });
@@ -117,13 +115,13 @@ export class PrimitivesEmitter {
       if (!section) continue;
       for (const { path, leaf } of DtcgWalker.walk(section)) {
         const localKey = path[path.length - 1].replace(new RegExp(`^${prefix}-`), '');
-        const value = typeof leaf.$value === 'number' ? leaf.$value : Number(leaf.$value);
+        const num = typeof leaf.$value === 'number' ? leaf.$value : Number(leaf.$value);
         const variableId = leaf.$extensions?.['com.figma.variableId'];
-        const ext = {
-          'com.acronis.units': { value: ColorUtils.round(value, 4), unit: 'px' },
-          ...this.#buildFigmaExt(leaf.$extensions, variableId),
-        };
-        TreeUtils.setPath(out, ['units', outKey, localKey], { platforms: ['PD'], $extensions: ext });
+        TreeUtils.setPath(out, ['units', outKey, localKey], {
+          $value: { value: ColorUtils.round(num, 4), unit: 'px' },
+          platforms: ['PD'],
+          $extensions: this.#buildFigmaExt(leaf.$extensions, variableId),
+        });
       }
     }
   }
@@ -146,16 +144,20 @@ export class PrimitivesEmitter {
         const localKey = prefix
           ? path[path.length - 1].replace(new RegExp(`^${prefix}-`), '')
           : path[path.length - 1];
-        const value = leaf.$value;
+        const raw = leaf.$value;
         const variableId = leaf.$extensions?.['com.figma.variableId'];
-        const unitsValue = type === 'dimension'
-          ? { value: ColorUtils.round(Number(value), 4), unit: 'px' }
-          : value;
-        const ext = {
-          'com.acronis.units': unitsValue,
-          ...this.#buildFigmaExt(leaf.$extensions, variableId),
-        };
-        TreeUtils.setPath(out, ['font', key, localKey], { platforms: ['PD'], $extensions: ext });
+        // `dimension` uses the native DTCG `{ value, unit }`. fontWeight /
+        // fontFamily are scalar DTCG types, so they carry a plain `$value`
+        // (number / string).
+        let dtcgValue;
+        if (type === 'dimension') dtcgValue = { value: ColorUtils.round(Number(raw), 4), unit: 'px' };
+        else if (type === 'fontWeight') dtcgValue = Number(raw);
+        else dtcgValue = raw; // fontFamily (string)
+        TreeUtils.setPath(out, ['font', key, localKey], {
+          $value: dtcgValue,
+          platforms: ['PD'],
+          $extensions: this.#buildFigmaExt(leaf.$extensions, variableId),
+        });
       }
     }
   }
@@ -172,8 +174,8 @@ export class PrimitivesEmitter {
     }
     for (const px of [...lsValues].sort((a, b) => a - b)) {
       TreeUtils.setPath(out, ['font', 'letter-spacing', TypographyMapper.lsSlug(px)], {
+        $value: { value: px, unit: 'px' },
         platforms: ['PD'],
-        $extensions: { 'com.acronis.units': { unit: 'px', value: px } },
       });
     }
   }

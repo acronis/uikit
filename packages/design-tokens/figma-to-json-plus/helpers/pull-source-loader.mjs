@@ -22,16 +22,13 @@ export class FigmaSourceLoader {
 
   get variablesPath() { return path.join(this.#dir, 'variables.tokens.json'); }
   get metaPath()      { return path.join(this.#dir, 'variables-meta.json'); }
+  get stylesPath()    { return path.join(this.#dir, 'styles.json'); }
 
   // Load all sources. Returns `this` for chaining.
   load() {
     this.#variables = this.#readJson(this.variablesPath, true);
     this.#meta = this.#readMeta();
-    this.#styles = {
-      text:   this.#readStyles('styles-text.json'),
-      color:  this.#readStyles('styles-color.json'),
-      effect: this.#readStyles('styles-effect.json'),
-    };
+    this.#styles = this.#readStyles();
     return this;
   }
 
@@ -65,11 +62,18 @@ export class FigmaSourceLoader {
     return raw;
   }
 
-  #readStyles(filename) {
-    const filePath = path.join(this.#dir, filename);
-    const data = this.#readJson(filePath, false);
-    if (!data) return [];
-    // figma_get_styles returns { styles: [...] }
-    return Array.isArray(data) ? data : (data.styles ?? []);
+  // Styles come from a single execute pull written verbatim to styles.json:
+  // an MCP envelope { _mcp, success, result: { text, color, effect, grid } }.
+  // Auto-unwrap the envelope (like #readMeta) and default each section to [].
+  #readStyles() {
+    const raw = this.#readJson(this.stylesPath, false);
+    if (!raw) return { text: [], color: [], effect: [], grid: [] };
+    const data = raw._mcp !== undefined && raw.result !== undefined ? raw.result : raw;
+    return {
+      text:   data.text   ?? [],
+      color:  data.color  ?? [],
+      effect: data.effect ?? [],
+      grid:   data.grid   ?? [],
+    };
   }
 }
