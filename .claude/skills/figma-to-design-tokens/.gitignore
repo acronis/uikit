@@ -1,4 +1,4 @@
-# figma-to-json-plus/.gitignore
+# .claude/skills/figma-to-design-tokens/.gitignore
 # Local snapshot output — gitignored like .tmp/figma-tokens/.
 # Scripts under helpers/ and entry points are committed.
 snapshot/

@@ -1,4 +1,4 @@
-// figma-to-json-plus/helpers/diff-reporter.mjs
+// .claude/skills/figma-to-design-tokens/helpers/diff-reporter.mjs
 // Formats DiffEngine results as a human-readable stdout report and a
 // structured JSON file at snapshot/figma-diff-report.json.
 

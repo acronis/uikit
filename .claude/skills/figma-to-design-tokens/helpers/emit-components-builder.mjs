@@ -1,4 +1,4 @@
-// figma-to-json-plus/helpers/emit-components-builder.mjs
+// .claude/skills/figma-to-design-tokens/helpers/emit-components-builder.mjs
 // Builds tiers/components.json from a normalized figma-snapshot.json.
 // Filters by a COMPONENTS allowlist, maps PascalCase component names to
 // camelCase keys, and preserves hand-authored $extensions.
@@ -12,9 +12,9 @@ import { AliasTranslator } from './emit-alias-translator.mjs';
 // Figma "units" collection sections → our `units.<section>` group.
 const UNIT_SECTIONS = new Set(['gap', 'size', 'radius', 'stroke']);
 
-const OUT_PATH        = fileURLToPath(new URL('../../tiers/components.json', import.meta.url));
-const PRIMITIVES_PATH = fileURLToPath(new URL('../../tiers/primitives.json', import.meta.url));
-const SEMANTICS_PATH  = fileURLToPath(new URL('../../tiers/semantics.json', import.meta.url));
+const OUT_PATH        = fileURLToPath(new URL('../../../../packages/design-tokens/tiers/components.json', import.meta.url));
+const PRIMITIVES_PATH = fileURLToPath(new URL('../../../../packages/design-tokens/tiers/primitives.json', import.meta.url));
+const SEMANTICS_PATH  = fileURLToPath(new URL('../../../../packages/design-tokens/tiers/semantics.json', import.meta.url));
 
 // Components to emit — PascalCase Figma names. Pass a subset via constructor.
 const DEFAULT_COMPONENTS = [

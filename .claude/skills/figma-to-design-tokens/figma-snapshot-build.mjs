@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// figma-to-json-plus/figma-snapshot-build.mjs
+// .claude/skills/figma-to-design-tokens/figma-snapshot-build.mjs
 // Entry point for Step 4: combine all Figma pull outputs into one normalized
-// figma-to-json-plus/snapshot/figma-snapshot.json.
+// .claude/skills/figma-to-design-tokens/snapshot/figma-snapshot.json.
 //
 // Prerequisites: .tmp/figma-tokens/ must be populated and the post-process
 // gate (figma-pull-postprocess.mjs) must have exited 0.
 //
-// Usage: node figma-to-json-plus/figma-snapshot-build.mjs
+// Usage: node .claude/skills/figma-to-design-tokens/figma-snapshot-build.mjs
 
 import { FigmaSourceLoader } from './helpers/pull-source-loader.mjs';
 import { SnapshotBuilder } from './helpers/pull-snapshot-builder.mjs';

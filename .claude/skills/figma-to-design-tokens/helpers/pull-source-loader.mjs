@@ -1,5 +1,5 @@
-// figma-to-json-plus/helpers/pull-source-loader.mjs
-// Loads and validates all raw files from figma-to-json-plus/snapshot/ into memory.
+// .claude/skills/figma-to-design-tokens/helpers/pull-source-loader.mjs
+// Loads and validates all raw files from .claude/skills/figma-to-design-tokens/snapshot/ into memory.
 // Throws with clear messages on missing or unparseable files.
 
 import fs from 'node:fs';

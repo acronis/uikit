@@ -1,4 +1,4 @@
-// figma-to-json-plus/helpers/utils-tree.mjs
+// .claude/skills/figma-to-design-tokens/helpers/utils-tree.mjs
 // Generic DTCG tree operations: path manipulation, leaf collection, sorting.
 
 export class TreeUtils {

@@ -1,10 +1,10 @@
-// figma-to-json-plus/helpers/diff-tiers-reader.mjs
+// .claude/skills/figma-to-design-tokens/helpers/diff-tiers-reader.mjs
 // Reads all three tier files and builds lookup indexes keyed by Figma IDs.
 
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-const TIERS_DIR = fileURLToPath(new URL('../../tiers/', import.meta.url));
+const TIERS_DIR = fileURLToPath(new URL('../../../../packages/design-tokens/tiers/', import.meta.url));
 
 const TIER_FILES = {
   primitives: `${TIERS_DIR}primitives.json`,

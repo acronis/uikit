@@ -1,14 +1,16 @@
 #!/usr/bin/env node
-// figma-to-json-plus/emit-primitives.mjs
-// Entry point for Step 6a: emit tiers/primitives.json from the current snapshot.
+// .claude/skills/figma-to-design-tokens/emit-semantics.mjs
+// Entry point for Step 6b: emit tiers/semantics.json from the current snapshot.
 //
-// Prerequisites: snapshot/figma-snapshot.json must exist (run figma-snapshot-build.mjs).
+// Prerequisites:
+//   - snapshot/figma-snapshot.json must exist
+//   - tiers/primitives.json must be current (run emit-primitives.mjs first if needed)
 //
-// Usage: node figma-to-json-plus/emit-primitives.mjs
+// Usage: node .claude/skills/figma-to-design-tokens/emit-semantics.mjs
 
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { PrimitivesEmitter } from './helpers/emit-primitives-builder.mjs';
+import { SemanticsEmitter } from './helpers/emit-semantics-builder.mjs';
 
 const SNAPSHOT_PATH = fileURLToPath(new URL('./snapshot/figma-snapshot.json', import.meta.url));
 
@@ -19,6 +21,6 @@ if (!fs.existsSync(SNAPSHOT_PATH)) {
 }
 
 const snapshot = JSON.parse(fs.readFileSync(SNAPSHOT_PATH, 'utf8'));
-const emitter = new PrimitivesEmitter(snapshot);
+const emitter = new SemanticsEmitter(snapshot);
 emitter.emit();
 console.log(`Wrote ${emitter.outputPath}`);

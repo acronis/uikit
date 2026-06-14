@@ -1,4 +1,4 @@
-// figma-to-json-plus/helpers/utils-dtcg-formatter.mjs
+// .claude/skills/figma-to-design-tokens/helpers/utils-dtcg-formatter.mjs
 // JSON formatter matching the tiers/*.json house style, which is Prettier's
 // (printWidth 80 — the pre-commit hook runs `prettier --write` on these files):
 //   - `$extensions` and `values` are always expanded (multi-line)

@@ -1,4 +1,4 @@
-// figma-to-json-plus/helpers/emit-primitives-builder.mjs
+// .claude/skills/figma-to-design-tokens/helpers/emit-primitives-builder.mjs
 // Builds tiers/primitives.json from a normalized figma-snapshot.json.
 // Handles palette (theme collection), units (gap/size/radius/stroke),
 // and font (font-family/weight/size/line-height/letter-spacing from styles).
@@ -12,7 +12,7 @@ import { DtcgFormatter } from './utils-dtcg-formatter.mjs';
 import { PaletteMapper } from './emit-palette-mapper.mjs';
 import { TypographyMapper } from './emit-typography-mapper.mjs';
 
-const OUT_PATH = fileURLToPath(new URL('../../tiers/primitives.json', import.meta.url));
+const OUT_PATH = fileURLToPath(new URL('../../../../packages/design-tokens/tiers/primitives.json', import.meta.url));
 
 // Transparent rule: a fully-transparent color (alpha 0) is emitted as the CSS
 // keyword `transparent` rather than an HSL object — the RGB channels of a

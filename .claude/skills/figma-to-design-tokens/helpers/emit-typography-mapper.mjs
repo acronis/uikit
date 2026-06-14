@@ -1,4 +1,4 @@
-// figma-to-json-plus/helpers/emit-typography-mapper.mjs
+// .claude/skills/figma-to-design-tokens/helpers/emit-typography-mapper.mjs
 // Builds value→alias lookups from tiers/primitives.json for all typography
 // primitive dimensions (fontFamily, fontSize, fontWeight, lineHeight,
 // letterSpacing).

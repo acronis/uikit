@@ -1,4 +1,4 @@
-// figma-to-json-plus/helpers/pull-snapshot-builder.mjs
+// .claude/skills/figma-to-design-tokens/helpers/pull-snapshot-builder.mjs
 // Merges all Figma pull outputs into one clean normalized figma-snapshot.json.
 // Responsibilities:
 //   - Walk DTCG variable tree via DtcgWalker
@@ -58,7 +58,7 @@ export class SnapshotBuilder {
       if (!metaEntry) {
         throw new Error(
           `No metadata for ${variableId} at path ${leafPath.join('.')}\n` +
-          `Run figma-pull-postprocess.mjs (Phase 1d) to identify missing IDs.`,
+          `Re-pull variables-meta.json so every VariableID has a meta entry.`,
         );
       }
 

@@ -1,4 +1,4 @@
-// figma-to-json-plus/helpers/utils-dtcg-walker.mjs
+// .claude/skills/figma-to-design-tokens/helpers/utils-dtcg-walker.mjs
 // Depth-first DTCG tree walker. Yields {path, leaf} for every node that
 // has a $value key (i.e. is a token, not a group).
 
