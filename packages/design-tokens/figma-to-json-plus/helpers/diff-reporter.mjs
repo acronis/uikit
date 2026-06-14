@@ -38,7 +38,11 @@ export class DiffReporter {
   // Print human-readable report to stdout.
   print(tierFilter = null) {
     const changes = tierFilter
-      ? this.#changes.filter(c => !c.tier || c.tier === tierFilter)
+      ? this.#changes.filter(c => {
+          if (c.tier) return c.tier === tierFilter;
+          if (c.inferredTier) return c.inferredTier === tierFilter;
+          return true; // no tier info — show in all views (e.g. STYLE_*)
+        })
       : this.#changes;
 
     if (changes.length === 0) {

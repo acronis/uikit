@@ -23,13 +23,13 @@
 // the probe result into `variables-meta.json` — should exit 0.
 //
 // Usage: node .tmp/scripts/figma-pull-postprocess.mjs
-//   No args. Operates on `.tmp/figma-tokens/` relative to repo root.
+//   No args. Operates on `figma-to-json-plus/snapshot/` relative to this package.
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const DIR = fileURLToPath(new URL('../../.tmp/figma-tokens/', import.meta.url));
+const DIR = fileURLToPath(new URL('../../figma-to-json-plus/snapshot/', import.meta.url));
 const EXPORT_PATH = path.join(DIR, 'variables.tokens.json');
 const ALT_EXPORT_PATH = path.join(DIR, 'tokens.tokens.json');
 const META_PATH = path.join(DIR, 'variables-meta.json');

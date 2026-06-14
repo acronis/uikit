@@ -1,5 +1,5 @@
 // figma-to-json-plus/helpers/pull-source-loader.mjs
-// Loads and validates all raw files from .tmp/figma-tokens/ into memory.
+// Loads and validates all raw files from figma-to-json-plus/snapshot/ into memory.
 // Throws with clear messages on missing or unparseable files.
 
 import fs from 'node:fs';
@@ -7,7 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const TOKENS_DIR = fileURLToPath(
-  new URL('../../.tmp/figma-tokens/', import.meta.url),
+  new URL('../snapshot/', import.meta.url),
 );
 
 export class FigmaSourceLoader {
