@@ -30,8 +30,23 @@ below is reflected in the corresponding `tokens-pd` artifacts.
 - `fontWeight` and `fontFamily` are scalar DTCG types and carry a plain
   `$value` — a `number` for weight, a `string`/array for family — not a
   dimension object.
-- The `schemas/tokens.schema.json` descriptions were updated to native DTCG
-  language to match.
+- The schema descriptions were updated to native DTCG language to match.
+
+### Schema file renamed `tokens.schema.json` → `tier.schema.json` (BREAKING)
+
+The validating schema moved from `schemas/tokens.schema.json` to
+`schemas/tier.schema.json`. It describes the structure of a whole **tier file**
+(`tiers/*.json`) — how tokens are grouped and nested within a tier, not just a
+single token — so the name now reflects what it validates.
+
+- The `$schema` value embedded in every tier file is now
+  `"../schemas/tier.schema.json"` (the schema enforces this exact string as a
+  `const`, so the file and its tier data move in lockstep).
+- The schema's own `$id` is updated to match.
+- Consumers that reference the schema by path (or key off the `$schema`
+  discriminator string) must update to `tier.schema.json`. The package's
+  `exports` map already exposes `./schemas/*`, so the import subpath simply
+  changes filename.
 
 ### Transparent rule (BREAKING for affected leaves)
 

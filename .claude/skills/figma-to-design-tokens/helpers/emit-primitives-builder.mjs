@@ -39,7 +39,7 @@ export class PrimitivesEmitter {
 
   emit() {
     const out = {
-      $schema: '../schemas/tokens.schema.json',
+      $schema: '../schemas/tier.schema.json',
       palette: { $type: 'color' },
       font: {
         'font-family':    { $type: 'fontFamily' },

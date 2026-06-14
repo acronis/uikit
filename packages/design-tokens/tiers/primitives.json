@@ -1,5 +1,5 @@
 {
-  "$schema": "../schemas/tokens.schema.json",
+  "$schema": "../schemas/tier.schema.json",
   "font": {
     "font-family": {
       "$type": "fontFamily",

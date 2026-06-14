@@ -47,7 +47,7 @@ export class ComponentsEmitter {
       ? JSON.parse(fs.readFileSync(OUT_PATH, 'utf8'))
       : {};
 
-    const out = { $schema: '../schemas/tokens.schema.json' };
+    const out = { $schema: '../schemas/tier.schema.json' };
     // Preserve hand-authored $extensions (e.g. com.acronis.tailwindRoles).
     if (prevOut.$extensions) out.$extensions = prevOut.$extensions;
 

@@ -23,7 +23,7 @@
       "clearIcon": "fill"
     }
   },
-  "$schema": "../schemas/tokens.schema.json",
+  "$schema": "../schemas/tier.schema.json",
   "Breadcrumb": {
     "Link": {
       "label": {

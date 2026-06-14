@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://acronis.local/schemas/tokens.schema.json",
+  "$id": "https://acronis.local/schemas/tier.schema.json",
   "title": "Acronis Design Tokens",
   "description": "DTCG-conformant token files with a small structural divergence: per-mode `values` and `platforms` live at the token level, not under `$extensions`. The public DTCG schema (declared as the file's $schema) covers the surrounding shape; this schema enforces the on-token keys plus the com.acronis.* / com.figma.* keys still inside $extensions. See ../context/spec.md.",
   "$ref": "#/$defs/RootNode",
@@ -9,7 +9,7 @@
       "type": "object",
       "required": ["$schema"],
       "properties": {
-        "$schema": { "const": "../schemas/tokens.schema.json" },
+        "$schema": { "const": "../schemas/tier.schema.json" },
         "$type": { "$ref": "#/$defs/TokenType" },
         "$description": { "type": "string" },
         "$value": true,

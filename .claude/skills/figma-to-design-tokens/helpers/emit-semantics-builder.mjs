@@ -36,7 +36,7 @@ export class SemanticsEmitter {
       : {};
 
     const out = {
-      $schema: '../schemas/tokens.schema.json',
+      $schema: '../schemas/tier.schema.json',
       colors: { $type: 'color' },
     };
     if (prevOut.$extensions) out.$extensions = prevOut.$extensions;

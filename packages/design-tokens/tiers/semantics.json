@@ -9,7 +9,7 @@
       "gradients": "backgroundImage"
     }
   },
-  "$schema": "../schemas/tokens.schema.json",
+  "$schema": "../schemas/tier.schema.json",
   "colors": {
     "$type": "color",
     "background": {
