@@ -42,7 +42,7 @@ This is what consumers bind to, so this is what versioning protects:
 - **Per-brand entry points** — `css/<brand>.css` and
   `css/<component>/<brand>.css` (the opt-in component tiers consumers `@import`).
 - **The brand-override mechanism** — `acronis` is the full base; other brands are
-  override-only. See [`brand-matrix.md`](./brand-matrix.md).
+  override-only.
 - **Tailwind presets** (`tailwind/**`) and the **DTCG output** (`dtcg/**`) shape.
 
 ### `design-tokens` — the upstream source contract
@@ -83,8 +83,7 @@ name is identical, because it silently breaks every consumer's intent.
 
 > Adding a **brand** is always additive — a new Figma brand mode →
 > `values.<brand>` → a new override-only `<brand>.css`, no existing token
-> touched. The pipeline discovers it with no code change
-> ([`brand-matrix.md`](./brand-matrix.md)).
+> touched. The pipeline discovers it with no code change.
 
 ## Bump mapping
 
@@ -140,6 +139,5 @@ touches.
 ## See also
 
 - [`../../../context/releasing.md`](../../../context/releasing.md) — the Changesets flow and the generic patch/minor/major definitions.
-- [`brand-matrix.md`](./brand-matrix.md) — the brand axis; why adding a brand is always additive.
 - [`glossary.md`](./glossary.md) — Tier / Mode / Theme / Brand vocabulary used here.
 - [`manifest.md`](./manifest.md) — token shape, the `values` dict, the alias chain.

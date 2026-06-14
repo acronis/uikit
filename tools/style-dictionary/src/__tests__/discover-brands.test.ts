@@ -1,8 +1,7 @@
-// Pins the data-driven brand matrix: `discoverBrands()` derives the brand set
+// Pins data-driven brand discovery: `discoverBrands()` derives the brand set
 // from the union of `values` keys in the brand-bearing token tiers (semantic +
 // components), with the default brand first and the rest alphabetical. Adding a
-// brand mode upstream must surface here with no code change — see
-// `packages/design-tokens/context/brand-matrix.md`.
+// brand mode upstream must surface here with no code change.
 
 import { describe, expect, it } from 'vitest';
 

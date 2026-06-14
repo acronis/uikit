@@ -75,11 +75,11 @@ Only two Groups carry a mode dimension; everything else is single-value. Which
 Group owns which axis is structural; the concrete mode keys present in each are
 defined by the JSON:
 
-| Group                | Mode dimension | Mode keys                                                | Planned                                                                                                                                 |
-| -------------------- | -------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `primitives.palette` | **Theme**      | `light` / `dark`                                         | `high-contrast`; color-vision variants (deuteranopia, protanopia, tritanopia); culturally-adjusted variants (e.g. red-as-success in CN) |
-| `semantics.colors`   | **Brand**      | data-driven (see [`brand-matrix.md`](./brand-matrix.md)) | Additional brand(s) for white-labeling                                                                                                  |
-| `components.*`       | **Brand**      | data-driven (same Brand axis)                            | Same as Brand above                                                                                                                     |
+| Group                | Mode dimension | Mode keys                     | Planned                                                                                                                                 |
+| -------------------- | -------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `primitives.palette` | **Theme**      | `light` / `dark`              | `high-contrast`; color-vision variants (deuteranopia, protanopia, tritanopia); culturally-adjusted variants (e.g. red-as-success in CN) |
+| `semantics.colors`   | **Brand**      | data-driven (Brand axis)      | Additional brand(s) for white-labeling                                                                                                  |
+| `components.*`       | **Brand**      | data-driven (same Brand axis) | Same as Brand above                                                                                                                     |
 
 **How modes propagate.** Modes do **not** repeat at every Tier. The mode axis is owned by the Tier that introduces it:
 

@@ -142,10 +142,9 @@ export function collectValueKeys(node: unknown, into: Set<string>): void {
 /**
  * Discover the brand set from the token data — the union of `values` keys across
  * the brand-bearing tiers (semantic + components). `DEFAULT_BRAND` is emitted in
- * full and listed first; the rest are alphabetical. This is the data-driven
- * brand matrix: adding a brand mode in `@acronis-platform/design-tokens` adds a
- * brand here (and a generated `<brand>.css`) with **no code change**. See
- * `packages/design-tokens/context/brand-matrix.md`.
+ * full and listed first; the rest are alphabetical. The brand set is
+ * data-driven: adding a brand mode in `@acronis-platform/design-tokens` adds a
+ * brand here (and a generated `<brand>.css`) with **no code change**.
  */
 export function discoverBrands(): string[] {
   const keys = new Set<string>();
