@@ -223,7 +223,7 @@ Check it worked: `echo $FIGMA_ACCESS_TOKEN_ACRONIS` (macOS/Linux) or `echo %FIGM
 
 ### 3. The Figma Console MCP
 
-The server is already wired up for this package in [`.mcp.json`](./.mcp.json) — it runs via `npx figma-console-mcp@latest`, so you just need [Node](https://nodejs.org) installed plus the token above. Install notes and capabilities: **[figma-console-mcp](https://github.com/southleft/figma-console-mcp)**. Launch Claude from the `design-tokens/` directory so it loads this `.mcp.json`.
+The server is already wired up at the repo root in [`.mcp.json`](../../.mcp.json) — it runs via `npx figma-console-mcp@latest`, so you just need [Node](https://nodejs.org) installed plus the token above. Install notes and capabilities: **[figma-console-mcp](https://github.com/southleft/figma-console-mcp)**. Launch Claude from the repo root so it loads this `.mcp.json`.
 
 ### Updating tokens from Figma
 

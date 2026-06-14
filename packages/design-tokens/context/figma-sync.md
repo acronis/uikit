@@ -29,7 +29,7 @@ Figma exports drop into `.tmp/figma-tokens/` — a DTCG-shaped export plus Figma
 
 Fresh clones (and anyone who's never synced) won't have `.tmp/figma-tokens/`; the helper scripts fail with "no such file" until it's populated. To populate:
 
-1. Confirm the `figma-console` MCP server is connected (declared in this package's [`.mcp.json`](../.mcp.json), loaded when Claude is launched from `design-tokens/`; needs `FIGMA_ACCESS_TOKEN_ACRONIS` in the environment).
+1. Confirm the `figma-console` MCP server is connected (declared in the repo-root [`.mcp.json`](../../../.mcp.json), loaded when Claude is launched from the repo root; needs `FIGMA_ACCESS_TOKEN_ACRONIS` in the environment).
 2. `mkdir -p .tmp/figma-tokens`.
 3. Run the [Pull workflow](#pull-workflow) below to export variables, styles, and metadata into that directory.
 4. Run the [helper scripts](#helper-scripts--lib).
@@ -111,9 +111,9 @@ The `string` $type is a documented divergence (DTCG has no string type); see [`s
 
 > **Preferred backend: the figma-console MCP server.** Pull directly through the
 > [`figma-console` MCP](https://github.com/southleft/figma-console-mcp) tools
-> (`figma_export_tokens` / `figma_execute`) — declared in this package's
-> [`.mcp.json`](../.mcp.json), loaded when Claude is launched from
-> `design-tokens/`. The user opens the Desktop Bridge plugin in Figma
+> (`figma_export_tokens` / `figma_execute`) — declared in the repo-root
+> [`.mcp.json`](../../../.mcp.json), loaded when Claude is launched from
+> the repo root. The user opens the Desktop Bridge plugin in Figma
 > (Plugins → Development → Figma Desktop Bridge → Run); the steps below then run
 > against it. This is the supported path for syncs.
 >
