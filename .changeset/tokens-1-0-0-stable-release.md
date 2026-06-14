@@ -100,6 +100,33 @@ The `/figma-to-design-tokens` skill (a self-contained pipeline: pull →
 snapshot-build → diff → emit, with a human-reviewable diff gate) replaces the
 legacy temporary pull scripts as the canonical token-sync path.
 
+### Context docs — removed `brand-matrix.md`
+
+`context/brand-matrix.md` is deleted. It carried information that was untrue,
+out of scope for this data-only package, or already owned by another context
+file:
+
+- **Wrong vocabulary.** It called the `light` / `dark` axis a "Color mode",
+  but `glossary.md` defines that axis as **Theme** — reusing an established
+  term with a different meaning.
+- **Out-of-scope implementation details.** It referenced the legacy `--av-*`
+  CSS prefix and the `oklch` color space; CSS variable names and the output
+  color space are the translation tool's concern, not the token data.
+- **Out-of-scope "Delivery model".** Emitted stylesheets, override-only files,
+  and `light-dark()` composition belong to
+  `@acronis-platform/style-dictionary` → `@acronis-platform/tokens-pd`, not to
+  the data package.
+- **Untrue / unmaintained roadmap content.** The "Brand override surface" table
+  (keyed by `--ui-*` output variables) and "The matrix" (a speculative list of
+  ~22 legacy brands with partner mappings and guessed dark-mode columns) were
+  unverified planning material, not properties of the token data.
+- **Misplaced how-to.** "Adding a brand" belongs in `CONTRIBUTING.md`.
+
+The accurate, in-scope idea — the Brand axis is data-driven and adding a brand
+is purely additive — is already covered by `glossary.md`, `manifest.md`, and
+`token-contract.md`; references within the design-owned packages are updated in
+the same change.
+
 ---
 
 ## `@acronis-platform/tokens-pd` (→ `1.0.0`)
