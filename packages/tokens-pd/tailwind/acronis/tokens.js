@@ -6,10 +6,6 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "surface-active": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "surface-hover": "light-dark(rgb(238 242 247), rgb(0 32 77))",
-        "surface-primary": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "surface-secondary": "light-dark(rgb(248 250 252), rgb(0 21 51))",
         "brand-primary": "light-dark(rgb(0 32 77), rgb(238 242 247))",
         "brand-primary-active": "light-dark(rgb(23 99 207), rgb(48 125 232))",
         "brand-primary-disabled": "light-dark(rgb(117 174 240), rgb(13 77 165))",
@@ -19,6 +15,10 @@ export default {
         "brand-secondary-active": "light-dark(rgb(13 77 165), rgb(117 174 240))",
         "brand-secondary-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
         "brand-secondary-hover": "light-dark(rgb(19 84 174), rgb(48 125 232))",
+        "inverted-active": "light-dark(rgb(19 84 174), rgb(48 125 232))",
+        "inverted-disabled": "light-dark(rgb(6 54 121), rgb(214 228 245))",
+        "inverted-hover": "light-dark(rgb(13 77 165), rgb(117 174 240))",
+        "inverted-primary": "light-dark(rgb(11 66 142), rgb(190 215 244))",
         "overlay-inverted": "light-dark(rgb(255 255 255 / 0.898), rgb(0 0 0 / 0.898))",
         "overlay-primary": "light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898))",
         "status-ai": "light-dark(rgb(249 245 251), rgb(82 20 82))",
@@ -62,21 +62,13 @@ export default {
         "status-strong-warning": "light-dark(rgb(245 184 0), rgb(245 184 0))",
         "status-strong-warning-hover": "light-dark(rgb(229 164 0), rgb(255 196 0))",
         "status-strong-warning-pressed": "light-dark(rgb(204 146 0), rgb(255 210 61))",
-        "inverted-active": "light-dark(rgb(19 84 174), rgb(48 125 232))",
-        "inverted-disabled": "light-dark(rgb(6 54 121), rgb(214 228 245))",
-        "inverted-hover": "light-dark(rgb(13 77 165), rgb(117 174 240))",
-        "inverted-primary": "light-dark(rgb(11 66 142), rgb(190 215 244))",
-        "transparent": "light-dark(rgb(255 0 255 / 0), rgb(255 0 255 / 0))"
+        "surface-active": "light-dark(rgb(214 228 245), rgb(6 54 121))",
+        "surface-hover": "light-dark(rgb(238 242 247), rgb(0 32 77))",
+        "surface-primary": "light-dark(rgb(255 255 255), rgb(0 0 0))",
+        "surface-secondary": "light-dark(rgb(248 250 252), rgb(0 21 51))",
+        "transparent": "light-dark(transparent, transparent)"
       },
       "textColor": {
-        "on-surface-destructive": "light-dark(rgb(226 54 54), rgb(226 54 54))",
-        "on-surface-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
-        "on-surface-link": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "on-surface-link-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "on-surface-link-hover": "light-dark(rgb(19 84 174), rgb(48 125 232))",
-        "on-surface-link-pressed": "light-dark(rgb(6 54 121), rgb(214 228 245))",
-        "on-surface-primary": "light-dark(rgb(24 25 27), rgb(244 245 245))",
-        "on-surface-secondary": "light-dark(rgb(109 114 120), rgb(109 114 120))",
         "on-brand-disabled": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "on-brand-link": "light-dark(rgb(23 99 207), rgb(48 125 232))",
         "on-brand-link-disabled": "light-dark(rgb(255 255 255 / 0.898), rgb(0 0 0 / 0.898))",
@@ -84,6 +76,8 @@ export default {
         "on-brand-link-pressed": "light-dark(rgb(214 228 245), rgb(6 54 121))",
         "on-brand-primary": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "on-brand-secondary": "light-dark(rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.6))",
+        "on-inverted-disabled": "light-dark(rgb(255 255 255 / 0.302), rgb(0 0 0 / 0.302))",
+        "on-inverted-primary": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "on-overlay-link": "light-dark(rgb(23 99 207), rgb(48 125 232))",
         "on-overlay-link-hover": "light-dark(rgb(117 174 240), rgb(13 77 165))",
         "on-overlay-link-pressed": "light-dark(rgb(214 228 245), rgb(6 54 121))",
@@ -102,18 +96,20 @@ export default {
         "on-status-secondary": "light-dark(rgb(61 63 67), rgb(125 132 148))",
         "on-status-success": "light-dark(rgb(15 87 33), rgb(56 150 66))",
         "on-status-warning": "light-dark(rgb(138 99 0), rgb(255 238 178))",
-        "on-inverted-disabled": "light-dark(rgb(255 255 255 / 0.302), rgb(0 0 0 / 0.302))",
-        "on-inverted-primary": "light-dark(rgb(255 255 255), rgb(0 0 0))"
+        "on-surface-destructive": "light-dark(rgb(226 54 54), rgb(226 54 54))",
+        "on-surface-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
+        "on-surface-link": "light-dark(rgb(23 99 207), rgb(48 125 232))",
+        "on-surface-link-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
+        "on-surface-link-hover": "light-dark(rgb(19 84 174), rgb(48 125 232))",
+        "on-surface-link-pressed": "light-dark(rgb(6 54 121), rgb(214 228 245))",
+        "on-surface-primary": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "on-surface-secondary": "light-dark(rgb(109 114 120), rgb(109 114 120))"
       },
       "borderColor": {
-        "border-on-surface": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "on-surface-border-active": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "on-surface-border-ai": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "on-surface-border-error": "light-dark(rgb(226 54 54), rgb(226 54 54))",
-        "on-surface-divider": "light-dark(rgb(214 228 245), rgb(6 54 121))",
         "border-on-brand": "light-dark(rgb(255 255 255 / 0.102), rgb(0 0 0 / 0.102))",
         "on-brand-border-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "on-brand-divider": "light-dark(rgb(255 255 255 / 0.102), rgb(0 0 0 / 0.102))",
+        "on-status-ai-strong": "linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
         "on-status-critical": "light-dark(rgb(255 204 153), rgb(178 80 0))",
         "on-status-critical-strong": "light-dark(rgb(240 112 0), rgb(133 83 33))",
         "on-status-danger": "light-dark(rgb(248 195 195), rgb(173 31 31))",
@@ -126,17 +122,20 @@ export default {
         "on-status-success-strong": "light-dark(rgb(36 143 54), rgb(6 110 36))",
         "on-status-warning": "light-dark(rgb(255 227 128), rgb(178 128 0))",
         "on-status-warning-strong": "light-dark(rgb(229 164 0), rgb(255 196 0))",
-        "transparent": "light-dark(rgb(255 0 255 / 0), rgb(255 0 255 / 0))"
+        "border-on-surface": "light-dark(rgb(214 228 245), rgb(6 54 121))",
+        "on-surface-border-active": "light-dark(rgb(23 99 207), rgb(48 125 232))",
+        "on-surface-border-ai": "light-dark(rgb(23 99 207), rgb(48 125 232))",
+        "on-surface-border-error": "light-dark(rgb(226 54 54), rgb(226 54 54))",
+        "on-surface-divider": "light-dark(rgb(214 228 245), rgb(6 54 121))",
+        "transparent": "light-dark(transparent, transparent)"
       },
       "fill": {
-        "on-surface-brand": "light-dark(rgb(0 32 77), rgb(238 242 247))",
-        "on-surface-destructive": "light-dark(rgb(226 54 54), rgb(226 54 54))",
-        "on-surface-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "on-surface-neutral": "light-dark(rgb(201 204 207), rgb(73 76 80))",
-        "on-surface-primary": "light-dark(rgb(23 99 207), rgb(48 125 232))",
         "on-brand-disabled": "light-dark(rgb(255 255 255 / 0.898), rgb(0 0 0 / 0.898))",
         "on-brand-primary": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "on-brand-secondary": "light-dark(rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.6))",
+        "on-inverted-disabled": "light-dark(rgb(255 255 255 / 0.302), rgb(0 0 0 / 0.302))",
+        "on-inverted-primary": "light-dark(rgb(255 255 255), rgb(0 0 0))",
+        "on-inverted-secondary": "light-dark(rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.6))",
         "on-overlay-primary": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "on-status-ai": "light-dark(rgb(130 23 130), rgb(250 209 250))",
         "on-status-critical": "light-dark(rgb(153 69 0), rgb(190 113 38))",
@@ -147,9 +146,11 @@ export default {
         "on-status-primary": "light-dark(rgb(6 54 121), rgb(214 228 245))",
         "on-status-success": "light-dark(rgb(15 87 33), rgb(56 150 66))",
         "on-status-warning": "light-dark(rgb(138 99 0), rgb(255 238 178))",
-        "on-inverted-disabled": "light-dark(rgb(255 255 255 / 0.302), rgb(0 0 0 / 0.302))",
-        "on-inverted-primary": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "on-inverted-secondary": "light-dark(rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.6))"
+        "on-surface-brand": "light-dark(rgb(0 32 77), rgb(238 242 247))",
+        "on-surface-destructive": "light-dark(rgb(226 54 54), rgb(226 54 54))",
+        "on-surface-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
+        "on-surface-neutral": "light-dark(rgb(201 204 207), rgb(73 76 80))",
+        "on-surface-primary": "light-dark(rgb(23 99 207), rgb(48 125 232))"
       },
       "ringColor": {
         "brand": "light-dark(rgb(190 215 244), rgb(11 66 142))",
@@ -164,38 +165,102 @@ export default {
         "ai-idle": "linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)"
       },
       "fontFamily": {
-        "typography-headings-display": "Inter, system-ui, sans-serif",
-        "typography-headings-title": "Inter, system-ui, sans-serif",
-        "typography-headings-lead": "Inter, system-ui, sans-serif",
-        "typography-body-default": "Inter, system-ui, sans-serif",
-        "typography-body-strong": "Inter, system-ui, sans-serif",
-        "typography-body-heading": "Inter, system-ui, sans-serif",
         "typography-body-accent": "Inter, system-ui, sans-serif",
+        "typography-body-default": "Inter, system-ui, sans-serif",
         "typography-body-form-label": "Inter, system-ui, sans-serif",
+        "typography-body-heading": "Inter, system-ui, sans-serif",
+        "typography-body-strong": "Inter, system-ui, sans-serif",
+        "typography-caption-accent": "Inter, system-ui, sans-serif",
+        "typography-caption-default": "Inter, system-ui, sans-serif",
+        "typography-caption-strong": "Inter, system-ui, sans-serif",
+        "typography-fineprint-heading": "Inter, system-ui, sans-serif",
+        "typography-headings-display": "Inter, system-ui, sans-serif",
+        "typography-headings-lead": "Inter, system-ui, sans-serif",
+        "typography-headings-title": "Inter, system-ui, sans-serif",
         "typography-link-default": "Inter, system-ui, sans-serif",
         "typography-link-default-underline": "Inter, system-ui, sans-serif",
         "typography-link-strong": "Inter, system-ui, sans-serif",
         "typography-link-strong-underline": "Inter, system-ui, sans-serif",
-        "typography-caption-default": "Inter, system-ui, sans-serif",
-        "typography-caption-strong": "Inter, system-ui, sans-serif",
-        "typography-caption-accent": "Inter, system-ui, sans-serif",
         "typography-note-default": "Inter, system-ui, sans-serif",
-        "typography-note-heading": "Inter, system-ui, sans-serif",
-        "typography-fineprint-heading": "Inter, system-ui, sans-serif"
+        "typography-note-heading": "Inter, system-ui, sans-serif"
       },
       "fontSize": {
-        "typography-headings-display": [
-          "32px",
+        "typography-body-accent": [
+          "14px",
           {
-            "lineHeight": "40px",
+            "lineHeight": "24px",
+            "letterSpacing": "0px",
+            "fontWeight": "500"
+          }
+        ],
+        "typography-body-default": [
+          "14px",
+          {
+            "lineHeight": "24px",
             "letterSpacing": "0px",
             "fontWeight": "400"
           }
         ],
-        "typography-headings-title": [
-          "24px",
+        "typography-body-form-label": [
+          "14px",
           {
-            "lineHeight": "32px",
+            "lineHeight": "16px",
+            "letterSpacing": "0px",
+            "fontWeight": "400"
+          }
+        ],
+        "typography-body-heading": [
+          "14px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "0.3px",
+            "fontWeight": "600"
+          }
+        ],
+        "typography-body-strong": [
+          "14px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "0px",
+            "fontWeight": "600"
+          }
+        ],
+        "typography-caption-accent": [
+          "12px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "0px",
+            "fontWeight": "500"
+          }
+        ],
+        "typography-caption-default": [
+          "12px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "0px",
+            "fontWeight": "400"
+          }
+        ],
+        "typography-caption-strong": [
+          "12px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "0px",
+            "fontWeight": "600"
+          }
+        ],
+        "typography-fineprint-heading": [
+          "10px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "1px",
+            "fontWeight": "700"
+          }
+        ],
+        "typography-headings-display": [
+          "32px",
+          {
+            "lineHeight": "40px",
             "letterSpacing": "0px",
             "fontWeight": "400"
           }
@@ -208,42 +273,10 @@ export default {
             "fontWeight": "400"
           }
         ],
-        "typography-body-default": [
-          "14px",
+        "typography-headings-title": [
+          "24px",
           {
-            "lineHeight": "24px",
-            "letterSpacing": "0px",
-            "fontWeight": "400"
-          }
-        ],
-        "typography-body-strong": [
-          "14px",
-          {
-            "lineHeight": "24px",
-            "letterSpacing": "0px",
-            "fontWeight": "600"
-          }
-        ],
-        "typography-body-heading": [
-          "14px",
-          {
-            "lineHeight": "24px",
-            "letterSpacing": "0.3px",
-            "fontWeight": "600"
-          }
-        ],
-        "typography-body-accent": [
-          "14px",
-          {
-            "lineHeight": "24px",
-            "letterSpacing": "0px",
-            "fontWeight": "500"
-          }
-        ],
-        "typography-body-form-label": [
-          "14px",
-          {
-            "lineHeight": "16px",
+            "lineHeight": "32px",
             "letterSpacing": "0px",
             "fontWeight": "400"
           }
@@ -280,30 +313,6 @@ export default {
             "fontWeight": "600"
           }
         ],
-        "typography-caption-default": [
-          "12px",
-          {
-            "lineHeight": "16px",
-            "letterSpacing": "0px",
-            "fontWeight": "400"
-          }
-        ],
-        "typography-caption-strong": [
-          "12px",
-          {
-            "lineHeight": "16px",
-            "letterSpacing": "0px",
-            "fontWeight": "600"
-          }
-        ],
-        "typography-caption-accent": [
-          "12px",
-          {
-            "lineHeight": "16px",
-            "letterSpacing": "0px",
-            "fontWeight": "500"
-          }
-        ],
         "typography-note-default": [
           "11px",
           {
@@ -314,14 +323,6 @@ export default {
         ],
         "typography-note-heading": [
           "11px",
-          {
-            "lineHeight": "16px",
-            "letterSpacing": "1px",
-            "fontWeight": "700"
-          }
-        ],
-        "typography-fineprint-heading": [
-          "10px",
           {
             "lineHeight": "16px",
             "letterSpacing": "1px",

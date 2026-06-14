@@ -4,10 +4,10 @@
 :root, :host {
   color-scheme: light dark;
 
-  --ui-switch-global-box-border-color-active: light-dark(rgb(255 0 255 / 0), rgb(255 0 255 / 0));
+  --ui-switch-global-box-border-color-active: light-dark(transparent, transparent);
   --ui-switch-global-box-border-color-disabled: light-dark(rgb(214 228 245), rgb(6 54 121));
-  --ui-switch-global-box-border-color-hover: light-dark(rgb(255 0 255 / 0), rgb(255 0 255 / 0));
-  --ui-switch-global-box-border-color-idle: light-dark(rgb(255 0 255 / 0), rgb(255 0 255 / 0));
+  --ui-switch-global-box-border-color-hover: light-dark(transparent, transparent);
+  --ui-switch-global-box-border-color-idle: light-dark(transparent, transparent);
   --ui-switch-global-box-border-radius: 999px;
   --ui-switch-global-box-border-style: solid;
   --ui-switch-global-box-border-width: 1px;

@@ -6,9 +6,9 @@ export default {
   theme: {
     extend: {
       "textColor": {
-        "breadcrumb-link-label-idle": "light-dark(rgb(109 114 120), rgb(109 114 120))",
-        "breadcrumb-link-label-hover": "light-dark(rgb(24 25 27), rgb(244 245 245))",
         "breadcrumb-link-label-active": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "breadcrumb-link-label-hover": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "breadcrumb-link-label-idle": "light-dark(rgb(109 114 120), rgb(109 114 120))",
         "breadcrumb-page-label": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "fill": {
@@ -37,8 +37,8 @@ export default {
         ]
       },
       "spacing": {
-        "breadcrumb-list-gap": "4px",
-        "breadcrumb-separator-icon-size": "16px"
+        "breadcrumb-separator-icon-size": "16px",
+        "breadcrumb-list-gap": "4px"
       }
     },
   },

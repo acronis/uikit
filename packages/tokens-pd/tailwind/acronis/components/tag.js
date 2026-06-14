@@ -24,7 +24,6 @@ export default {
         "tag-warning-label": "light-dark(rgb(138 99 0), rgb(255 238 178))"
       },
       "borderColor": {
-        "tag-ai-container-border-color": "linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
         "tag-critical-container-border-color": "light-dark(rgb(255 204 153), rgb(178 80 0))",
         "tag-danger-container-border-color": "light-dark(rgb(248 195 195), rgb(173 31 31))",
         "tag-info-container-border-color": "light-dark(rgb(190 215 244), rgb(11 66 142))",
