@@ -16,42 +16,26 @@ This guide covers the day-to-day authoring tasks: keeping the tokens and Figma i
 The JSON under `tiers/` is the **source of truth**; Figma is a peer surface. An LLM (Claude) keeps them in step through the [Figma Console MCP](https://github.com/southleft/figma-console-mcp). Changes flow in **either direction** — pick the one that matches where the change originated. Both end with `pnpm validate` → commit ([Validating](#validating)).
 | Pipeline | Use when | Tools |
 | --------------------------------------------------- | ------------------------------ | --------------------------------------- |
-| [Figma → JSON](#figma--json-designer-changed-figma) | a designer changed Figma | LLM + Figma Console + JS helper scripts |
+| [Figma → JSON](#figma--json-designer-changed-figma) | a designer changed Figma | the `/figma-to-design-tokens` skill |
 | [JSON → Figma](#json--figma-change-decided-in-code) | the change was decided in code | LLM + Figma Console |
 
 ### Figma → JSON (designer changed Figma)
 
-Pull a Figma change back into the canonical JSON. The **JS helper scripts** (`.tmp/scripts/figma-to-*.mjs`) re-emit the JSON so the shape stays exact and the LLM spends few tokens — that's why this direction has scripts and the other doesn't.
+Pull a Figma change back into the canonical JSON via the `/figma-to-design-tokens` skill — it re-emits the JSON so the shape stays exact and the LLM spends few tokens (that's why this direction is scripted and the other isn't).
 
 Where the change lives in Figma (so you know what was touched):
 
-| Change                                                         | Where in Figma                                                              |
-| -------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| New palette color, or change a palette value                   | **Theme** collection (modes: `light`, `dark`)                               |
-| New semantic color, or change which palette token it aliases   | **Brand** collection, group `Semantic/colors` (modes: `acronis`, `brand-b`) |
-| New per-component token, or change its alias                   | **Brand** collection, group `Component/<component-name>`                    |
-| New unit (`gap`, `size`, `radius`, `stroke`) or font primitive | **Units** or **Font** collection (single-value, no modes)                   |
-| New typography style                                           | **Text Styles** (not a Variable Collection — backs `semantic.typography`)   |
+| Change                                                         | Where in Figma                                                             |
+| -------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| New palette color, or change a palette value                   | **Theme** collection (modes: `light`, `dark`)                              |
+| New semantic color, or change which palette token it aliases   | **Brand** collection, group `Semantic/colors` (mode: `acronis`)            |
+| New per-component token, or change its alias                   | **Brand** collection, group `Component/<component-name>`                   |
+| New unit (`gap`, `size`, `radius`, `stroke`) or font primitive | **Units** or **Font** collection (single-value, no modes)                  |
+| New typography style                                           | **Text Styles** (not a Variable Collection — backs `semantics.typography`) |
 
-Figma naming is UI-optimized; the helper scripts translate it to our canonical kebab-case paths on import. With the Figma Console MCP available (see [Setup](./README.md#setup)), **ask Claude to sync** — it pulls the Figma snapshot into `.tmp/figma-tokens/` and runs the helper scripts to re-emit the affected JSON. The full procedure (export steps, post-process gate, generator order) lives in [`context/figma-sync.md`](./context/figma-sync.md); Claude follows it.
+Figma naming is UI-optimized; the skill's emitters translate it to our canonical paths on import. With the Figma Console MCP available (see [Setup](./README.md#setup)), **ask Claude to sync** — running the `/figma-to-design-tokens` skill pulls a fresh Figma snapshot, shows a full diff for review, then emits the affected JSON. The full step-by-step **and** the Figma↔code mapping live in the skill itself ([`SKILL.md`](../../.claude/skills/figma-to-design-tokens/SKILL.md)).
 
-To run it by hand — pull (short version; full procedure in [`context/figma-sync.md`](./context/figma-sync.md)):
-
-1. `figma_export_tokens` (figma-console MCP) → writes `.tmp/figma-tokens/tokens.tokens.json`.
-2. `figma_execute` running `figma.variables.getLocalVariablesAsync()` → save as `.tmp/figma-tokens/variables-meta.json`.
-3. Pull paint, effect, and text styles into the matching `.tmp/figma-tokens/styles-*.json` files.
-4. `node .tmp/scripts/figma-pull-postprocess.mjs` — renames the export to `variables.tokens.json` and diffs VariableID coverage against the meta sidecar. Exits 0 when complete; exits 1 with a paste-ready `figma_execute` snippet listing IDs that need probing.
-5. If step 4 reported missing IDs, probe them via `figma_execute`, merge into `.tmp/figma-tokens/variables-meta.json`, and re-run step 4 until clean.
-
-Then re-emit the JSON with the three helper scripts, in this order (the second and third depend on the first two for alias-target validation):
-
-```bash
-node .tmp/scripts/figma-to-primitives.mjs
-node .tmp/scripts/figma-to-semantic.mjs
-node .tmp/scripts/figma-to-components.mjs
-```
-
-They write `tiers/primitives.json`, `tiers/semantics.json`, and `tiers/components.json`, and are the canonical formatter for each — don't reformat the output. Finish with `pnpm validate` and review `git diff tiers/`: only the tokens you touched should have changed.
+The skill writes `tiers/primitives.json`, `tiers/semantics.json`, and `tiers/components.json`, and is the canonical formatter for each — don't reformat the output. It finishes with `pnpm validate`; review `git diff tiers/` so only the tokens you touched changed.
 
 ### JSON → Figma (change decided in code)
 
@@ -65,7 +49,7 @@ Use this direction when code is ahead of Figma; use Figma → JSON when Figma is
 
 ## Adding a new mode
 
-Modes are data-driven. The helper scripts read whichever mode names appear in Figma's `lastSyncedValue` per token, lower-case + kebab them, and emit them verbatim into each token's `values` dict.
+Modes are data-driven. The skill's emitters read whichever mode names appear in Figma's `lastSyncedValue` per token, lower-case + kebab them, and emit them verbatim into each token's `values` dict.
 
 1. Add the mode to the corresponding Figma Collection (Theme for palette, Brand for semantic / component).
 2. Run a [Figma → JSON](#figma--json-designer-changed-figma) sync.
@@ -81,7 +65,7 @@ These are schema changes — coordinated edits in three places, all in the same 
 
 1. **`schemas/tokens.schema.json`** — extend the `TokenType` enum (new `$type`) or the `Extensions` `properties` map (new `$extensions` key).
 2. **`context/spec.md`** (and [`context/spec.md`](./context/spec.md) for any cross-package implications) — document the new key's semantics and reserved-namespace rules.
-3. **Generator(s)** — update whichever of `.tmp/scripts/figma-to-*.mjs` emits the new shape so the next sync produces it.
+3. **Emitter(s)** — update whichever of the skill's emitters (`.claude/skills/figma-to-design-tokens/helpers/emit-*-builder.mjs`) emits the new shape so the next sync produces it.
 
 A new `com.acronis.*` key also needs a context-file owner (a `.md` file under `context/` that documents what the key means) — a `com.acronis.*` key without a documented owner is forbidden by review even if the schema accepts it. Detail in [`context/spec.md`](./context/spec.md).
 
@@ -103,12 +87,12 @@ It does NOT check semantic correctness — whether an alias points at a token th
 
 These docs live in this package under `context/`. They are the authoritative reference; this contributing guide is a quick-start.
 
-| Topic                                                                                                           | File                                                 |
-| --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| Vocabulary — Tier, Group, Mode, Theme, Brand, Collection, token                                                 | [`./context/glossary.md`](./context/glossary.md)     |
-| Token-file data model — the files, token shape, modes & themes, the alias chain, platform scope                 | [`./context/manifest.md`](./context/manifest.md)     |
-| DTCG conformance & divergence, `$schema`/discriminator, `$extensions` namespaces, naming / `$`-prefix / `$type` | [`./context/spec.md`](./context/spec.md)             |
-| Figma → JSON sync — mapping, the pull/post-process workflow, the generators & lib                               | [`./context/figma-sync.md`](./context/figma-sync.md) |
-| Naming rules (kebab-case, `$`-prefix reservations) — cross-package                                              | [`./context/spec.md`](./context/spec.md)             |
+| Topic                                                                                                           | File                                                                                    |
+| --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Vocabulary — Tier, Group, Mode, Theme, Brand, Collection, token                                                 | [`./context/glossary.md`](./context/glossary.md)                                        |
+| Token-file data model — the files, token shape, modes & themes, the alias chain, platform scope                 | [`./context/manifest.md`](./context/manifest.md)                                        |
+| DTCG conformance & divergence, `$schema`/discriminator, `$extensions` namespaces, naming / `$`-prefix / `$type` | [`./context/spec.md`](./context/spec.md)                                                |
+| Figma → JSON sync — the diff-gated pull/emit workflow and the Figma↔code mapping                                | [`/figma-to-design-tokens` skill](../../.claude/skills/figma-to-design-tokens/SKILL.md) |
+| Naming rules (kebab-case, `$`-prefix reservations) — cross-package                                              | [`./context/spec.md`](./context/spec.md)                                                |
 
 The same context files are indexed in `./CLAUDE.md` for AI agents.

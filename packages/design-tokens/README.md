@@ -179,9 +179,11 @@ design-tokens/
 ├── README.md              This file — consumer-facing surface.
 ├── CONTRIBUTING.md        How to author a token, add a mode, validate.
 ├── LICENSE                MIT.
-├── package.json           Package metadata, files, and the validate script.
-└── .tmp/scripts/          Figma-sync helper scripts the LLM triggers (repo-only, not shipped).
+└── package.json           Package metadata, files, and the validate script.
 ```
+
+The Figma→tiers sync lives in the repo-root `/figma-to-design-tokens` skill
+(`.claude/skills/figma-to-design-tokens/`), not in this package.
 
 ## Setup
 
@@ -227,7 +229,7 @@ The server is already wired up at the repo root in [`.mcp.json`](../../.mcp.json
 
 ### Updating tokens from Figma
 
-Once set up: when a value or name changes in Figma, **ask Claude to sync** (with the Figma Console MCP available). Claude reads the change from Figma and re-emits the affected JSON using the helper scripts — they keep the shape exact and save tokens — then you run `pnpm validate` and commit. You can also hand-edit the JSON directly, since it's the source of truth. **Full step-by-step in [`CONTRIBUTING.md`](./CONTRIBUTING.md).**
+Once set up: when a value or name changes in Figma, **ask Claude to sync** (with the Figma Console MCP available). Claude runs the `/figma-to-design-tokens` skill, which pulls the change from Figma, shows a diff, and re-emits the affected JSON — keeping the shape exact and saving tokens — then you run `pnpm validate` and commit. You can also hand-edit the JSON directly, since it's the source of truth. **Full step-by-step in [`CONTRIBUTING.md`](./CONTRIBUTING.md).**
 
 ## Contributing
 
@@ -240,7 +242,7 @@ See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for day-to-day tasks: updating tokens
 | `pnpm install`  | Installs devDependencies (the ajv toolchain).                                                                           |
 | `pnpm validate` | ajv-compiles the token schema (with `--strict=false`), then validates `tiers/*.json` against it. Run before committing. |
 
-The Figma-sync helper scripts under `.tmp/scripts/` (`figma-to-primitives.mjs`, `figma-to-semantic.mjs`, `figma-to-components.mjs`, …) re-emit the token JSON from a Figma snapshot — the LLM triggers them during a [sync](#setup) to keep the shape exact and save tokens. They're repo-only (run with `node .tmp/scripts/<file>.mjs`), documented in [`./context/figma-sync.md`](./context/figma-sync.md); not npm scripts, not part of the published package.
+The Figma sync is owned by the repo-root `/figma-to-design-tokens` skill (`.claude/skills/figma-to-design-tokens/`): its emitters re-emit the token JSON from a Figma snapshot — the LLM triggers them during a [sync](#setup) to keep the shape exact and save tokens. They are not npm scripts and not part of the published package; the flow is documented in the skill's [`SKILL.md`](../../.claude/skills/figma-to-design-tokens/SKILL.md).
 
 ## Translation tools
 

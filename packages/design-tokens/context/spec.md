@@ -109,7 +109,7 @@ A `com.acronis.*` key without a context file owning it is forbidden by review, n
 
 ## Naming
 
-Code names are simpler than Figma names and are canonical; the Figma → code mapping lives in [`figma-sync.md`](./figma-sync.md).
+Code names are simpler than Figma names and are canonical; the Figma → code mapping lives in the [`/figma-to-design-tokens` skill](../../../.claude/skills/figma-to-design-tokens/SKILL.md).
 
 ### Ids (token names, group names)
 
@@ -149,8 +149,8 @@ These come from DTCG. Use them as defined; do NOT invent new `$`-prefixed keys.
 
 DTCG-defined: `color`, `dimension`, `fontFamily`, `fontWeight`, `number`, `typography`, `shadow`, `border`, `transition`, `gradient`, `cubicBezier`, `strokeStyle`, `duration`. DTCG group-level `$type` inheritance applies: declared at a parent group, descendants inherit unless overridden.
 
-**One non-DTCG divergence: `string`.** DTCG 2025.10 has no string type, but Figma exports raw `string` variables that don't map onto any DTCG type — currently the four per-state `textDecoration` tokens (`button.ghost.label.text-decoration.{idle,hover,active,disabled}`, values `"none"` / `"underline"`). They're emitted as `$type: "string"`, which is added to the schema's `$type` enum. (Other Figma `string` variables _do_ decode to a DTCG type and are mapped: `borderStyle` → `strokeStyle`, `textStyle` → `typography` alias, and the mocked CSS gradients → `gradient`; see [`figma-sync.md`](./figma-sync.md). Only `textDecoration` has no DTCG home and stays `string`.)
+**One non-DTCG divergence: `string`.** DTCG 2025.10 has no string type, but Figma exports raw `string` variables that don't map onto any DTCG type — currently the four per-state `textDecoration` tokens (`button.ghost.label.text-decoration.{idle,hover,active,disabled}`, values `"none"` / `"underline"`). They're emitted as `$type: "string"`, which is added to the schema's `$type` enum. (Other Figma `string` variables _do_ decode to a DTCG type and are mapped: `borderStyle` → `strokeStyle`, `textStyle` → `typography` alias, and the mocked CSS gradients → `gradient`; see the [`/figma-to-design-tokens` skill](../../../.claude/skills/figma-to-design-tokens/SKILL.md). Only `textDecoration` has no DTCG home and stays `string`.)
 
-### Where the helper scripts enforce this
+### Where the emitters enforce this
 
-`.tmp/scripts/figma-to-primitives.mjs` and `.tmp/scripts/figma-to-semantic.mjs` are the canonical emitters AND formatters — they produce the exact shape above. During a Figma sync the LLM runs them to re-emit `tiers/primitives.json` and `tiers/semantics.json` in that canonical shape, so it doesn't have to hand-write the JSON (accuracy, plus fewer LLM tokens). The JSON is the source of truth and may be edited, but reflect a Figma change by running a sync. See [`figma-sync.md`](./figma-sync.md).
+The `/figma-to-design-tokens` skill's emitters (`emit-primitives.mjs`, `emit-semantics.mjs`, `emit-components.mjs`) are the canonical emitters AND formatters — they produce the exact shape above. During a Figma sync the LLM runs them to re-emit `tiers/*.json` in that canonical shape, so it doesn't have to hand-write the JSON (accuracy, plus fewer LLM tokens). The JSON is the source of truth and may be edited, but reflect a Figma change by running a sync. See the [`/figma-to-design-tokens` skill](../../../.claude/skills/figma-to-design-tokens/SKILL.md).

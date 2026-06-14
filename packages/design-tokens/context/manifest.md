@@ -1,18 +1,18 @@
 # Manifest — token files
 
-The shape of the `@acronis-platform/design-tokens` token files, how their token values vary by mode and platform, and how they resolve through the alias chain. For DTCG/format rules, `$extensions` namespacing, and naming see [`spec.md`](./spec.md); for how these files are updated/synced from Figma see [`figma-sync.md`](./figma-sync.md). Vocabulary (Tier, Group, Mode, Theme, Brand, Collection) lives in [`glossary.md`](./glossary.md). The authoritative schema is [`../schemas/tokens.schema.json`](../schemas/tokens.schema.json).
+The shape of the `@acronis-platform/design-tokens` token files, how their token values vary by mode and platform, and how they resolve through the alias chain. For DTCG/format rules, `$extensions` namespacing, and naming see [`spec.md`](./spec.md); for how these files are updated/synced from Figma see the [`/figma-to-design-tokens` skill](../../../.claude/skills/figma-to-design-tokens/SKILL.md). Vocabulary (Tier, Group, Mode, Theme, Brand, Collection) lives in [`glossary.md`](./glossary.md). The authoritative schema is [`../schemas/tokens.schema.json`](../schemas/tokens.schema.json).
 
 ## The files
 
 Token value files live under `tiers/`; the package root holds only package metadata (`package.json`, `README.md`, `schemas/`).
 
-These files are the source of truth. The `figma-to-*.mjs` helper scripts re-emit them during a Figma sync (see [`figma-sync.md`](./figma-sync.md)) so the canonical shape stays exact; reflect a Figma change by running a sync rather than hand-patching.
+These files are the source of truth. The [`/figma-to-design-tokens` skill](../../../.claude/skills/figma-to-design-tokens/SKILL.md) re-emits them during a Figma sync so the canonical shape stays exact; reflect a Figma change by running a sync rather than hand-patching.
 
-| File                    | Re-emitted by (on sync)                |
-| ----------------------- | -------------------------------------- |
-| `tiers/primitives.json` | `.tmp/scripts/figma-to-primitives.mjs` |
-| `tiers/semantics.json`  | `.tmp/scripts/figma-to-semantic.mjs`   |
-| `tiers/components.json` | `.tmp/scripts/figma-to-components.mjs` |
+| File                    | Re-emitted by (on sync)                                     |
+| ----------------------- | ----------------------------------------------------------- |
+| `tiers/primitives.json` | `.claude/skills/figma-to-design-tokens/emit-primitives.mjs` |
+| `tiers/semantics.json`  | `.claude/skills/figma-to-design-tokens/emit-semantics.mjs`  |
+| `tiers/components.json` | `.claude/skills/figma-to-design-tokens/emit-components.mjs` |
 
 ### `primitives.json`
 
@@ -20,7 +20,7 @@ Covers all of the Primitives Tier:
 
 - `palette` — color tokens, mode-aware on the **Theme** axis (`light` / `dark`). Values stored as `{ colorSpace: "hsl", components: [...], alpha? }` under `values.{light,dark}` on each token (see [Modes & themes](#modes--themes)).
 - `units` — `gap`, `size`, `radius`, `stroke`. Single-value (no modes), `$type: dimension`. Stored under `$value` as a native DTCG dimension `{ value, unit: "px" }`. (`gap` was previously `space`; renamed in Figma 2026-05-27 along with `space-N → gap-N` per-token identifiers.)
-- `font` — `font-family`, `font-weight`, `font-size`, `line-height`, `letter-spacing`. Single-value. The dimension members (`font-size`, `line-height`, `letter-spacing`) are stored under `$value` as a native DTCG dimension `{ value, unit: "px" }`. `font-weight` (`$type: fontWeight`) and `font-family` (`$type: fontFamily`) are scalar DTCG types, so they carry a plain `$value` (a number, or a string / array for a font stack). `letter-spacing` is derived from the styles snapshot (`figma-to-json-plus/snapshot/styles.json`) rather than a Figma Variable (Figma exposes letter-spacing only on Text Styles), so its tokens carry a group-level `$description` instead of `com.figma.variableId`.
+- `font` — `font-family`, `font-weight`, `font-size`, `line-height`, `letter-spacing`. Single-value. The dimension members (`font-size`, `line-height`, `letter-spacing`) are stored under `$value` as a native DTCG dimension `{ value, unit: "px" }`. `font-weight` (`$type: fontWeight`) and `font-family` (`$type: fontFamily`) are scalar DTCG types, so they carry a plain `$value` (a number, or a string / array for a font stack). `letter-spacing` is derived from the styles snapshot (`.claude/skills/figma-to-design-tokens/snapshot/styles.json`) rather than a Figma Variable (Figma exposes letter-spacing only on Text Styles), so its tokens carry a group-level `$description` instead of `com.figma.variableId`.
 
 ### `semantics.json`
 
@@ -28,7 +28,7 @@ Three roots, no outer `semantic` wrapper:
 
 - `colors.{background,text,glyph,border,focus}` — mode dimension is **Brand**. Today one brand mode appears in `values`: `acronis` (the `brand-b` pipeline-proof mode, added 2026-05-27, was removed in Figma 2026-06-12 — Acronis-only focus until real brands land). The set is data-driven from Figma's `lastSyncedValue` per token — new brands flow through without code changes. Every variable-backed token carries `$extensions.com.figma.variableId` and a `values.<brand>` alias like `"{palette.blue.7}"`. (The flat variable-backed AI status colors `background.status.ai*` on the violet ramp also live here; the AI _gradient_ treatment is the separate `gradients` root below.)
 - `gradients.ai.{idle,hover,active,disabled}` — DTCG `gradient` tokens (mode dimension **Brand**, single `acronis` key today). Figma variables can't hold gradient fills, so these are mocked in Figma as `string` variables carrying a CSS `linear-gradient(...)`; the emitter parses the stops into `{color, position}` arrays (hex → HSL, percent → `0..1`) and preserves the raw CSS string — which also carries the `90deg` angle DTCG `gradient` can't express — in `$extensions.com.figma.cssGradient`. Each token carries `com.figma.variableId`. `button.ai.container.color.*` in `components.json` aliases this root.
-- `typography.{headings,body,link,caption,note,fineprint}` — DTCG `typography` composite tokens derived from `.tmp/figma-tokens/styles-text.json`. No mode dimension, so the composite lives directly on `$value` (no `values` wrapper). Each token carries `com.figma.styleId`. Non-DTCG fields from Figma are preserved as `com.acronis.textCase` and `com.acronis.textDecoration` on the affected tokens. Every composite field aliases a primitive — the former `font-size 11` / `line-height 40` gaps were closed when those primitives landed in the Typography Variable Collection; `aliasOrInline` in the emitter still guards (and warns on) any future gap.
+- `typography.{headings,body,link,caption,note,fineprint}` — DTCG `typography` composite tokens derived from the styles snapshot (`.claude/skills/figma-to-design-tokens/snapshot/styles.json`). No mode dimension, so the composite lives directly on `$value` (no `values` wrapper). Each token carries `com.figma.styleId`. Non-DTCG fields from Figma are preserved as `com.acronis.textCase` and `com.acronis.textDecoration` on the affected tokens. Every composite field aliases a primitive — the former `font-size 11` / `line-height 40` gaps were closed when those primitives landed in the Typography Variable Collection; `aliasOrInline` in the emitter still guards (and warns on) any future gap.
 
 The `variableId` / `styleId` discriminator split is described in [`spec.md`](./spec.md).
 
@@ -40,7 +40,7 @@ One root per component, no outer wrapper. `$type` lives on each token because co
 
 Aliases follow the chain `components → semantics → primitives` (see [The alias chain](#the-alias-chain)). Component tokens alias `colors.*` / `gradients.*` / `typography.*` (preferred) or `units.*` / `palette.*` (acceptable when no suitable semantic exists). Every token is variable-backed, so `com.figma.variableId` is the only discriminator — no `styleId` paths in components.
 
-**Mocked values decoded** (Figma technical limitations): `#FF00FF00` / `#FFFFFF00` color literals → CSS `transparent` (`{colorSpace:"hsl", components:[0,0,0], alpha:0}`); `textStyle` string variables → `$type: "typography"` aliases (`{typography.body.strong}`, …); `borderStyle` string variables → `$type: "strokeStyle"` (`"solid"`); per-state `textDecoration` string variables → `$type: "string"` (`"none"`/`"underline"`, the documented enum divergence). See [`figma-sync.md`](./figma-sync.md) and [`spec.md`](./spec.md). The fresh pull inlined **zero** raw-value gaps — every token resolves to a semantic/primitive alias or a decoded mock. (Yellow-flag direct component→primitive aliases: `button.inverted.container.border-color.disabled` → `{palette.transparent.inverted.9}`, and `switch._global.tick.color.{idle,hover,active}` → `{palette.base}` — the white switch tick, verified against Figma; no "on-status white glyph" semantic exists to point at.)
+**Mocked values decoded** (Figma technical limitations): `#FF00FF00` / `#FFFFFF00` color literals → CSS `transparent` (`{colorSpace:"hsl", components:[0,0,0], alpha:0}`); `textStyle` string variables → `$type: "typography"` aliases (`{typography.body.strong}`, …); `borderStyle` string variables → `$type: "strokeStyle"` (`"solid"`); per-state `textDecoration` string variables → `$type: "string"` (`"none"`/`"underline"`, the documented enum divergence). See the [`/figma-to-design-tokens` skill](../../../.claude/skills/figma-to-design-tokens/SKILL.md) and [`spec.md`](./spec.md). The fresh pull inlined **zero** raw-value gaps — every token resolves to a semantic/primitive alias or a decoded mock. (Yellow-flag direct component→primitive aliases: `button.inverted.container.border-color.disabled` → `{palette.transparent.inverted.9}`, and `switch._global.tick.color.{idle,hover,active}` → `{palette.base}` — the white switch tick, verified against Figma; no "on-status white glyph" semantic exists to point at.)
 
 ### Not yet built
 
@@ -93,7 +93,7 @@ Only two Groups carry a mode dimension today; everything else is single-value:
 **Adding a new mode** (e.g. palette `high-contrast`) is data-driven, not code-driven:
 
 1. Add it as a Mode to the corresponding Figma Collection (Theme for palette, Brand for semantic/component).
-2. Re-pull the data — see [`figma-sync.md`](./figma-sync.md).
+2. Re-pull the data — see the [`/figma-to-design-tokens` skill](../../../.claude/skills/figma-to-design-tokens/SKILL.md).
 3. Confirm the generator picks up the new mode key inside every token's `values`.
 
 The generator and emission format must not assume a fixed set of modes.

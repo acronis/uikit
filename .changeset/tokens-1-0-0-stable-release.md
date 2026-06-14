@@ -81,9 +81,9 @@ preserved for consumers.
 
 ### Sync pipeline
 
-The `figma-to-json-plus/` pipeline (advanced exporter: pull → snapshot-build →
-diff → emit, with a human-reviewable diff gate) replaces the legacy temporary
-pull scripts as the canonical token-sync path.
+The `/figma-to-design-tokens` skill (a self-contained pipeline: pull →
+snapshot-build → diff → emit, with a human-reviewable diff gate) replaces the
+legacy temporary pull scripts as the canonical token-sync path.
 
 ---
 
