@@ -17,7 +17,7 @@ This is the only script that does real work. From the repo root:
 
 ```bash
 pnpm --filter @acronis-platform/design-tokens test       # alias for validate
-pnpm --filter @acronis-platform/design-tokens validate    # ajv-compiles the schema, validates the three token files
+pnpm --filter @acronis-platform/design-tokens validate    # ajv-compiles the schema, validates the tier files
 ```
 
 `--strict=false` is required for the tokens schema — a known ajv quirk from the `properties`/`patternProperties` overlap on `$extensions`. It is already baked into the `validate` script; keep it.
