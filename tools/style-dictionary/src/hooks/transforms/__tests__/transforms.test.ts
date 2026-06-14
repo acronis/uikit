@@ -36,10 +36,22 @@ describe('hslColorToRgb', () => {
     expect(hslColorToRgb(hsl(210, 100, 30))).toMatch(/^rgb\(\d+ \d+ \d+\)$/);
   });
 
-  it('appends the alpha channel only when it is below 1', () => {
+  it('appends the alpha channel only when it is below 1 (and above 0)', () => {
     expect(hslColorToRgb(hsl(0, 0, 0, 0.4))).toBe('rgb(0 0 0 / 0.4)');
     expect(hslColorToRgb(hsl(0, 0, 0, 1))).toBe('rgb(0 0 0)');
-    expect(hslColorToRgb(hsl(0, 0, 0, 0))).toBe('rgb(0 0 0 / 0)');
+  });
+
+  it('collapses any fully-transparent color (alpha 0) to the `transparent` keyword', () => {
+    // Figma stores zero-alpha colors with arbitrary channels (often a magenta
+    // placeholder); they must all render as `transparent`, never `rgb(… / 0)`.
+    expect(hslColorToRgb(hsl(300, 100, 50, 0))).toBe('transparent'); // magenta @ alpha 0
+    expect(hslColorToRgb(hsl(0, 0, 0, 0))).toBe('transparent'); // black @ alpha 0
+    expect(hslColorToRgb(hsl(0, 0, 100, 0))).toBe('transparent'); // white @ alpha 0
+  });
+
+  it('passes an already-resolved `transparent` value through the transform untouched', () => {
+    const transform = colorHslToRgb.transform as (token: TransformedToken) => string;
+    expect(transform({ $type: 'color', $value: 'transparent' } as TransformedToken)).toBe('transparent');
   });
 
   it('clamps channels into the 0–255 byte range', () => {

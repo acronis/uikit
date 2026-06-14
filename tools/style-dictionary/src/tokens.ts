@@ -203,6 +203,23 @@ const makeSd = (config: Config): StyleDictionary =>
     ...config,
   });
 
+// Recursively sort object keys alphabetically (ASCII code-unit order), with
+// all-numeric keys ordered numerically so "8" precedes "12". Arrays keep their
+// order. Mirrors the tiers' ordering rule so the emitted DTCG is alphabetical too.
+const sortKeysDeep = (value: unknown): unknown => {
+  if (Array.isArray(value)) return value.map(sortKeysDeep);
+  if (value === null || typeof value !== 'object') return value;
+  const entries = Object.keys(value as Record<string, unknown>).sort((a, b) => {
+    const na = /^\d+$/.test(a);
+    const nb = /^\d+$/.test(b);
+    if (na && nb) return Number(a) - Number(b);
+    return a < b ? -1 : a > b ? 1 : 0;
+  });
+  const out: Record<string, unknown> = {};
+  for (const k of entries) out[k] = sortKeysDeep((value as Record<string, unknown>)[k]);
+  return out;
+};
+
 // ── Stage 1: dtcg ──────────────────────────────────────────────────────────────
 
 export function buildDtcg(filter: Filter): void {
@@ -220,7 +237,7 @@ export function buildDtcg(filter: Filter): void {
   for (const view of VIEWS) {
     const tree = normalizeTree(sources[view.source], view.mode, FILTER_ENUM[filter]);
     const dest = path.join(outDir, `${view.out}.json`);
-    writeFileSync(dest, `${JSON.stringify(tree, null, 2)}\n`);
+    writeFileSync(dest, `${JSON.stringify(sortKeysDeep(tree), null, 2)}\n`);
     console.log(`✓ ${rel(dest)}`);
   }
 }

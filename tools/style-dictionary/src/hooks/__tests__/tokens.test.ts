@@ -13,8 +13,9 @@ import { buildThemeExtend, routeColor } from '../../tailwind';
 
 // ── normalizeTree (stage 1) ──────────────────────────────────────────────────
 
-// A fixture in the Acronis source shape: per-mode `values`, a `com.acronis.units`
-// dimension, a `$value` composite, and a token scoped to a different platform.
+// A fixture in the Acronis source shape: per-mode `values`, a native DTCG
+// dimension `$value` { value, unit }, plain fontWeight/fontFamily scalar
+// `$value`s, a `$value` composite, and a token scoped to a different platform.
 const SOURCE = {
   $type: 'color',
   colors: {
@@ -33,7 +34,23 @@ const SOURCE = {
     sm: {
       $type: 'dimension',
       platforms: ['PD'],
-      $extensions: { 'com.acronis.units': { unit: 'px', value: 8 } },
+      $value: { value: 8, unit: 'px' },
+    },
+  },
+  font: {
+    weight: {
+      bold: {
+        $type: 'fontWeight',
+        platforms: ['PD'],
+        $value: 700,
+      },
+    },
+    family: {
+      default: {
+        $type: 'fontFamily',
+        platforms: ['PD'],
+        $value: 'Inter',
+      },
     },
   },
   typography: {
@@ -75,10 +92,16 @@ describe('normalizeTree', () => {
     expect(Object.keys(background)).toEqual(['base']);
   });
 
-  it('reorders `com.acronis.units` into the DTCG `{ value, unit }` shape', () => {
+  it('passes a native dimension `$value` { value, unit } through untouched', () => {
     const sm = at(normalizeTree(SOURCE, 'light', 'PD'), 'spacing', 'sm');
     expect(sm.$type).toBe('dimension');
     expect(sm.$value).toEqual({ value: 8, unit: 'px' });
+  });
+
+  it('passes plain fontWeight (number) and fontFamily (string) scalars through untouched', () => {
+    const tree = normalizeTree(SOURCE, 'light', 'PD');
+    expect(at(tree, 'font', 'weight', 'bold').$value).toBe(700);
+    expect(at(tree, 'font', 'family', 'default').$value).toBe('Inter');
   });
 
   it('keeps a mode-invariant `$value` composite untouched', () => {
@@ -255,8 +278,11 @@ describe('routeColor', () => {
     });
   });
 
-  it('uses the role segment closest to the leaf (border-color beats container)', () => {
-    expect(routeColor(['button', 'secondary', 'container', 'border-color', 'idle'])).toEqual({
+  it('uses the role segment closest to the leaf (borderColor beats container)', () => {
+    // Figma segments are camelCase (`borderColor`); routeColor matches the role
+    // map by the verbatim segment, and `normalizeSegment` kebab-cases it for the
+    // emitted key. The deeper `borderColor` wins over the outer `container`.
+    expect(routeColor(['button', 'secondary', 'container', 'borderColor', 'idle'])).toEqual({
       namespace: 'borderColor',
       key: 'button-secondary-container-border-color-idle',
     });

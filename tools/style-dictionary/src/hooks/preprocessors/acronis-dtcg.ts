@@ -3,13 +3,14 @@
 // vendor divergences are resolved inside SD's pipeline (preprocessors run on the
 // token object before resolution/expansion). See context/pipeline.md.
 //
-// Acronis tokens diverge from DTCG in three ways this pass resolves:
+// Acronis tokens diverge from DTCG in two ways this pass resolves:
 //   - per-mode `values` dict          → a single `$value` for the requested mode
-//   - `$extensions.com.acronis.units` → a single `$value` (dimension/family/weight)
 //   - top-level `platforms` array     → filtered on, then dropped (non-DTCG)
 //
-// `$extensions` is retained for traceability; `{group.token}` alias strings are
-// kept as references (resolution happens later, in the CSS builder).
+// Every `$value` is already native DTCG (dimension `{ value, unit }`, composites,
+// scalars, aliases) and passes through untouched. `$extensions` is retained for
+// traceability; `{group.token}` alias strings are kept as references (resolution
+// happens later, in the CSS builder).
 
 import type { Preprocessor, PreprocessedTokens } from 'style-dictionary/types';
 
@@ -20,22 +21,7 @@ type Node = Record<string, unknown>;
 const isObject = (v: unknown): v is Node =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 
-const getUnits = (extensions: unknown): unknown =>
-  isObject(extensions) && 'com.acronis.units' in extensions
-    ? extensions['com.acronis.units']
-    : undefined;
-
-const isToken = (node: Node): boolean =>
-  'values' in node ||
-  '$value' in node ||
-  getUnits(node['$extensions']) !== undefined;
-
-// `com.acronis.units` carries `{ unit, value }` for dimensions (reordered to the
-// DTCG `{ value, unit }` shape), or a bare string/number for fontFamily/fontWeight.
-const normalizeUnits = (units: unknown): unknown =>
-  isObject(units) && 'value' in units && 'unit' in units
-    ? { value: units['value'], unit: units['unit'] }
-    : units;
+const isToken = (node: Node): boolean => 'values' in node || '$value' in node;
 
 function normalizeToken(
   node: Node,
@@ -51,10 +37,10 @@ function normalizeToken(
   if (isObject(node['values'])) {
     if (!(mode in node['values'])) return undefined; // token doesn't define this mode
     value = node['values'][mode];
-  } else if ('$value' in node) {
-    value = node['$value']; // mode-invariant composite (typography)
   } else {
-    value = normalizeUnits(getUnits(node['$extensions'])); // single-value primitive
+    // Mode-invariant `$value`: already native DTCG (dimension { value, unit },
+    // composite, scalar, or `{group.token}` alias) — passes through untouched.
+    value = node['$value'];
   }
 
   const token: Node = {};
