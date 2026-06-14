@@ -16,7 +16,7 @@ Everything else stays DTCG: token shape, `$type` and group-level `$type` inherit
 - A palette token (mode dimension: Theme): `values.light` and `values.dark`, each a DTCG color value (`{ colorSpace: "hsl", components: [...], alpha? }`).
 - A semantic-color token (mode dimension: Brand): `values.acronis`, a DTCG alias string like `"{palette.blue.7}"`.
 
-Single-value (non-mode-aware) primitives still use `$extensions.com.acronis.units` (shape `{ value, unit: "px" }` for dimensions, or the raw scalar for other `$type`s). DTCG composite typography tokens continue to use a native `$value`. Mode storage, aliasing, and platform scope are detailed in [`manifest.md`](./manifest.md).
+Non-mode-aware **dimension** primitives store their value in `$value` as a native DTCG dimension `{ value, unit }` (`unit` is `"px"` or `"rem"` per DTCG; `"px"` today). `fontWeight` and `fontFamily` primitives are scalar DTCG types, so they carry a plain `$value` (a number, or a string / array for a font stack). DTCG composite typography tokens also use a native `$value`. Every `$value` in this package is therefore native DTCG — the only divergences are the per-mode `values` dict and the `platforms` array. Mode storage, aliasing, and platform scope are detailed in [`manifest.md`](./manifest.md).
 
 Canonical token shape:
 
@@ -67,15 +67,15 @@ Vendor-specific metadata goes under `$extensions` with a reverse-DNS key. DTCG l
 
 ### `com.acronis.*` keys today
 
-| Key                          | Status                                                                                                  |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `com.acronis.units`          | Dimension carrier (`{unit, value}`) on units primitives.                                                |
-| `com.acronis.textCase`       | Typography hint preserved from Figma Text Styles (non-DTCG field).                                      |
-| `com.acronis.textDecoration` | Typography hint preserved from Figma Text Styles (non-DTCG field).                                      |
-| `com.acronis.tailwindRoles`  | Root-level build-time hint mapping a token path segment to a Tailwind theme namespace (see below).      |
-| `com.acronis.modes`          | NOT USED — modes live at the top-level `values` key on each token (see [`manifest.md`](./manifest.md)). |
-| `com.acronis.platform`       | NOT USED — platform scope lives at the top-level `platforms` key (see [`manifest.md`](./manifest.md)).  |
-| `com.acronis.metadata`       | NOT USED.                                                                                               |
+| Key                          | Status                                                                                                                                                                      |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `com.acronis.units`          | RETIRED — dimension primitives now carry a native DTCG `$value: { value, unit }`; fontWeight/fontFamily carry a plain `$value` scalar (see [`manifest.md`](./manifest.md)). |
+| `com.acronis.textCase`       | Typography hint preserved from Figma Text Styles (non-DTCG field).                                                                                                          |
+| `com.acronis.textDecoration` | Typography hint preserved from Figma Text Styles (non-DTCG field).                                                                                                          |
+| `com.acronis.tailwindRoles`  | Root-level build-time hint mapping a token path segment to a Tailwind theme namespace (see below).                                                                          |
+| `com.acronis.modes`          | NOT USED — modes live at the top-level `values` key on each token (see [`manifest.md`](./manifest.md)).                                                                     |
+| `com.acronis.platform`       | NOT USED — platform scope lives at the top-level `platforms` key (see [`manifest.md`](./manifest.md)).                                                                      |
+| `com.acronis.metadata`       | NOT USED.                                                                                                                                                                   |
 
 #### `com.acronis.tailwindRoles`
 

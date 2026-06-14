@@ -61,7 +61,7 @@ Forbidden:
 
 ### DTCG snapshot and cross-package symmetry
 
-Assets does NOT vendor the DTCG spec. The single canonical DTCG copy lives in `@acronis-platform/design-tokens`, which still consumes the DTCG shape; assets only borrows the `$`-prefix vocabulary and otherwise diverges. The assets package moved project fields out of `$extensions` first; `@acronis-platform/design-tokens` later followed for `modes` (→ top-level `values`) and `platform` (→ top-level `platforms`). The two packages now share access paths for those two concepts. The tokens-only `com.acronis.units` carrier and typography hints (`com.acronis.textCase`, `com.acronis.textDecoration`) have no assets equivalent and stay inside the tokens-side `$extensions`.
+Assets does NOT vendor the DTCG spec. The single canonical DTCG copy lives in `@acronis-platform/design-tokens`, which still consumes the DTCG shape; assets only borrows the `$`-prefix vocabulary and otherwise diverges. The assets package moved project fields out of `$extensions` first; `@acronis-platform/design-tokens` later followed for `modes` (→ top-level `values`) and `platform` (→ top-level `platforms`). The two packages now share access paths for those two concepts. The tokens-only typography hints (`com.acronis.textCase`, `com.acronis.textDecoration`) have no assets equivalent and stay inside the tokens-side `$extensions`.
 
 ---
 

@@ -69,9 +69,9 @@ is a resolution input, not output.
 Two token stages — see [`context/pipeline.md`](context/pipeline.md) for the full
 mapping and [`context/output.md`](context/output.md) for the CSS contract:
 
-1. **Normalize** the Acronis tokens (per-mode `values`, `com.acronis.units`,
-   `platforms`) into plain DTCG JSON, split by mode, filtered to the `PD`
-   platform, with aliases preserved.
+1. **Normalize** the Acronis tokens (per-mode `values`, `platforms`) into plain
+   DTCG JSON, split by mode, filtered to the `PD` platform, with aliases
+   preserved. Every `$value` is already native DTCG, so it passes through as-is.
 2. **Resolve & format** each brand against both themes, zipping colors into
    `light-dark()` and writing the CSS.
 

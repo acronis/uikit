@@ -19,8 +19,8 @@ These files are the source of truth. The `figma-to-*.mjs` helper scripts re-emit
 Covers all of the Primitives Tier:
 
 - `palette` — color tokens, mode-aware on the **Theme** axis (`light` / `dark`). Values stored as `{ colorSpace: "hsl", components: [...], alpha? }` under `values.{light,dark}` on each token (see [Modes & themes](#modes--themes)).
-- `units` — `gap`, `size`, `radius`, `stroke`. Single-value (no modes). Stored under `$extensions.com.acronis.units` as `{ value, unit: "px" }`. (`gap` was previously `space`; renamed in Figma 2026-05-27 along with `space-N → gap-N` per-token identifiers.)
-- `font` — `font-family`, `font-weight`, `font-size`, `line-height`, `letter-spacing`. Single-value, stored under `$extensions.com.acronis.units`. `letter-spacing` is derived from `.tmp/figma-tokens/styles-text.json` rather than a Figma Variable (Figma exposes letter-spacing only on Text Styles), so its tokens carry a group-level `$description` instead of `com.figma.variableId`.
+- `units` — `gap`, `size`, `radius`, `stroke`. Single-value (no modes), `$type: dimension`. Stored under `$value` as a native DTCG dimension `{ value, unit: "px" }`. (`gap` was previously `space`; renamed in Figma 2026-05-27 along with `space-N → gap-N` per-token identifiers.)
+- `font` — `font-family`, `font-weight`, `font-size`, `line-height`, `letter-spacing`. Single-value. The dimension members (`font-size`, `line-height`, `letter-spacing`) are stored under `$value` as a native DTCG dimension `{ value, unit: "px" }`. `font-weight` (`$type: fontWeight`) and `font-family` (`$type: fontFamily`) are scalar DTCG types, so they carry a plain `$value` (a number, or a string / array for a font stack). `letter-spacing` is derived from the styles snapshot (`figma-to-json-plus/snapshot/styles.json`) rather than a Figma Variable (Figma exposes letter-spacing only on Text Styles), so its tokens carry a group-level `$description` instead of `com.figma.variableId`.
 
 ### `semantics.json`
 
@@ -52,15 +52,15 @@ Aliases follow the chain `components → semantics → primitives` (see [The ali
 
 A token carries some of these keys (full rules in [`../schemas/tokens.schema.json`](../schemas/tokens.schema.json)):
 
-- **`$value`** — the literal token value, used only for single-mode tokens (e.g. typography composites). Mode-aware tokens omit `$value` and use `values` instead.
+- **`$value`** — the literal token value (native DTCG), used for single-mode tokens: typography composites, plain fontWeight/fontFamily scalars, and dimension primitives (the last as `{ value, unit }`). Mode-aware tokens omit `$value` and use `values` instead.
 - **`values`** — the per-mode value dictionary (see [Modes & themes](#modes--themes) for the storage shape). Either `$value` or `values` carries the payload, not both.
 - **`$type`** — DTCG type from the schema's closed enum (`color`, `dimension`, `fontFamily`, `fontWeight`, `gradient`, `typography`, `duration`, `cubicBezier`, `number`, `strokeStyle`, `string`, `border`, `transition`, `shadow`). `string` is a documented non-DTCG divergence (see [`spec.md`](./spec.md)). May be inherited from an ancestor group down to its tokens or set per-token (components set it per-token).
 - **`$description`** — optional human-readable note; also the documented home for "why a Tier was skipped" justifications.
 - **`platforms`** — required on every token; see [Platform scope](#platform-scope).
-- **`$extensions`** — `com.acronis.*` and `com.figma.*` keys only. `com.acronis.units` carries single-value primitives (`{value, unit:"px"}` for dimensions, string for fontFamily, number for fontWeight); `com.figma.variableId` / `com.figma.styleId` are mutually exclusive discriminators. Namespace rules in [`spec.md`](./spec.md).
+- **`$extensions`** — `com.acronis.*` and `com.figma.*` keys only (e.g. `com.acronis.textCase`, `com.acronis.textDecoration`); `com.figma.variableId` / `com.figma.styleId` are mutually exclusive discriminators. Namespace rules in [`spec.md`](./spec.md).
 - **`$deprecated`** — optional boolean or string.
 
-**What's required.** A node is a **token** (not a group) if it carries `values`, `$value`, or `$extensions.com.acronis.units`; every token MUST declare `platforms`. The root node additionally requires `$schema`. A primitive single-value token may carry only `$extensions.com.acronis.units` + `platforms` (no `$value`).
+**What's required.** A node is a **token** (not a group) if it carries `values` or `$value`; every token MUST declare `platforms`. The root node additionally requires `$schema`. A dimension primitive carries its value in `$value` as a native DTCG `{ value, unit }`; fontWeight/fontFamily primitives carry a plain `$value` scalar.
 
 ## Modes & themes
 

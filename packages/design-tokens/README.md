@@ -61,20 +61,20 @@ These definitions are kept in sync with [`context/glossary.md`](./context/glossa
 
 Every key that can appear in a token file. (`Level` names where it lives; `Required` is within that level.)
 
-| Key                   | Level         | Type / values                                                                                                                                                                     | Required                                         | Meaning                                                                                                                                                                                                  |
-| --------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `$schema`             | root          | string (`../schemas/tokens.schema.json`)                                                                                                                                          | yes (root)                                       | Schema discriminator; points at the repo's Acronis token schema (DTCG-conformant shape).                                                                                                                 |
-| `$value`              | token         | any DTCG value                                                                                                                                                                    | one of `$value` / `values` / `com.acronis.units` | Native DTCG single value — used by typography composites (object of font aliases). NOT used for mode-aware tokens.                                                                                       |
-| `values`              | token         | object (mode id → value)                                                                                                                                                          | one of `$value` / `values` / `com.acronis.units` | Per-mode value dict — the primary Acronis divergence. Keys are kebab-case lowercase mode names (`light`, `dark`, `acronis`, `brand-b`); values are concrete values or `{group.token}` aliases.           |
-| `$type`               | group / token | DTCG type enum (`color`, `dimension`, `fontFamily`, `fontWeight`, `gradient`, `typography`, `duration`, `cubicBezier`, `number`, `strokeStyle`, `border`, `transition`, `shadow`) | no                                               | Token type; may be declared on a Group and inherited.                                                                                                                                                    |
-| `$description`        | group / token | string                                                                                                                                                                            | no                                               | One-line human summary.                                                                                                                                                                                  |
-| `platforms`           | token         | array of `"WEB"` \| `"PD"`                                                                                                                                                        | yes (every token)                                | Consumer scope. The schema requires every token to declare it.                                                                                                                                           |
-| `$extensions`         | group / token | object, keys `^com\.(acronis\|figma)\.`                                                                                                                                           | no                                               | Vendor metadata, namespaced reverse-DNS.                                                                                                                                                                 |
-| ↳ `com.acronis.units` | `$extensions` | `{value,unit:"px"}` \| string \| number                                                                                                                                           | makes a token                                    | Single-value primitive carrier (units, font primitives) — holds the value instead of `$value`. A token carrying it MUST declare `platforms`. Also: `com.acronis.textCase`, `com.acronis.textDecoration`. |
-| ↳ `com.figma.*`       | `$extensions` | `variableId`, `styleId`, `scopes`, `hiddenFromPublishing`, `gradientTransform`                                                                                                    | no                                               | Figma round-trip metadata. `variableId` and `styleId` are mutually exclusive.                                                                                                                            |
-| `$deprecated`         | group / token | boolean \| string                                                                                                                                                                 | no                                               | Marks the token deprecated; a string carries a reason.                                                                                                                                                   |
+| Key               | Level         | Type / values                                                                                                                                                                     | Required                   | Meaning                                                                                                                                                                                               |
+| ----------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `$schema`         | root          | string (`../schemas/tokens.schema.json`)                                                                                                                                          | yes (root)                 | Schema discriminator; points at the repo's Acronis token schema (DTCG-conformant shape).                                                                                                              |
+| `$value`          | token         | any native DTCG value (dimension `{ value, unit }`, scalar, or composite)                                                                                                         | one of `$value` / `values` | Native DTCG single value — used by dimension primitives (`{ value, unit }`), plain fontWeight/fontFamily scalars, and typography composites (object of font aliases). NOT used for mode-aware tokens. |
+| `values`          | token         | object (mode id → value)                                                                                                                                                          | one of `$value` / `values` | Per-mode value dict — the primary Acronis divergence. Keys are kebab-case lowercase mode names (`light`, `dark`, `acronis`, `brand-b`); values are concrete values or `{group.token}` aliases.        |
+| `$type`           | group / token | DTCG type enum (`color`, `dimension`, `fontFamily`, `fontWeight`, `gradient`, `typography`, `duration`, `cubicBezier`, `number`, `strokeStyle`, `border`, `transition`, `shadow`) | no                         | Token type; may be declared on a Group and inherited.                                                                                                                                                 |
+| `$description`    | group / token | string                                                                                                                                                                            | no                         | One-line human summary.                                                                                                                                                                               |
+| `platforms`       | token         | array of `"WEB"` \| `"PD"`                                                                                                                                                        | yes (every token)          | Consumer scope. The schema requires every token to declare it.                                                                                                                                        |
+| `$extensions`     | group / token | object, keys `^com\.(acronis\|figma)\.`                                                                                                                                           | no                         | Vendor metadata, namespaced reverse-DNS.                                                                                                                                                              |
+| ↳ `com.acronis.*` | `$extensions` | `textCase`, `textDecoration`, `tailwindRoles`                                                                                                                                     | no                         | Acronis vendor hints preserved from Figma (e.g. typography `textCase` / `textDecoration`; root-level `tailwindRoles` build hint).                                                                     |
+| ↳ `com.figma.*`   | `$extensions` | `variableId`, `styleId`, `scopes`, `hiddenFromPublishing`, `gradientTransform`                                                                                                    | no                         | Figma round-trip metadata. `variableId` and `styleId` are mutually exclusive.                                                                                                                         |
+| `$deprecated`     | group / token | boolean \| string                                                                                                                                                                 | no                         | Marks the token deprecated; a string carries a reason.                                                                                                                                                |
 
-Note: a token **should use exactly one** of `$value` (typography composites), per-mode `values` (mode-aware tokens), or `$extensions.com.acronis.units` (single-value primitives). The schema enforces the mutual-exclusion half — no token may carry **more than one**, and `pnpm validate` rejects any that does. The complementary expectation that every leaf carries **at least one** is normative in [`./context/spec.md`](./context/spec.md) and checked in review (it can't be expressed structurally, since a leaf is defined by carrying one).
+Note: a token **should use exactly one** of `$value` (typography composites and single-value primitives) or per-mode `values` (mode-aware tokens). The schema enforces the mutual-exclusion half — no token may carry **both**, and `pnpm validate` rejects any that does. The complementary expectation that every leaf carries **at least one** is normative in [`./context/spec.md`](./context/spec.md) and checked in review (it can't be expressed structurally, since a leaf is defined by carrying one).
 
 ## Token files
 
@@ -118,18 +118,27 @@ A semantic or component token (Brand axis `acronis` / `brand-b`) aliases upstrea
 }
 ```
 
-A single-value primitive (units, font primitives — no mode dimension) keeps its value inside `com.acronis.units` rather than DTCG `$value`:
+A **dimension** primitive (units, font-size, line-height, letter-spacing — no mode dimension) carries its value in `$value` as a native DTCG dimension `{ value, unit }`:
 
 ```jsonc
 "gap": {
   "4": {
+    "$value": { "unit": "px", "value": 4 },
     "platforms": ["PD"],
     "$extensions": {
-      "com.acronis.units": { "value": 4, "unit": "px" },
       "com.figma.scopes": ["GAP", "FONT_VARIATIONS"],
       "com.figma.variableId": "VariableID:1330:10878"
     }
   }
+}
+```
+
+`fontWeight` and `fontFamily` primitives are scalar DTCG types, so they carry a plain `$value` (a number / string):
+
+```jsonc
+"font-weight": {
+  "$type": "fontWeight",
+  "regular": { "$value": 400, "platforms": ["PD"], "$extensions": { /* … */ } }
 }
 ```
 
@@ -237,7 +246,7 @@ The Figma-sync helper scripts under `.tmp/scripts/` (`figma-to-primitives.mjs`, 
 
 The package is consumed by a **translation tool** in the [DTCG sense](https://www.designtokens.org/tr/2025.10/format/#translation-tool): a build-time program that reads the source-of-truth tokens and writes platform-specific output.
 
-Because the token files **are** DTCG-conformant, generic DTCG tooling largely works out of the box. The two Acronis divergences need handling, though: the on-token `values` dict (mode-aware tokens) and the token `platforms` array sit outside the plain DTCG shape, and single-value primitives carry their value inside `$extensions.com.acronis.units` rather than `$value`. A consumer that wants to use Style Dictionary, Tokens Studio, or any DTCG library should register a custom parser that understands these details. Key off [`schemas/tokens.schema.json`](./schemas/tokens.schema.json) (or the `package.json` name) to identify our tokens.
+Because the token files **are** DTCG-conformant, generic DTCG tooling largely works out of the box. Only two Acronis divergences need handling: the on-token `values` dict (mode-aware tokens) and the token `platforms` array sit outside the plain DTCG shape. Every `$value` is native DTCG. A consumer that wants to use Style Dictionary, Tokens Studio, or any DTCG library should register a custom parser that understands these two details. Key off [`schemas/tokens.schema.json`](./schemas/tokens.schema.json) (or the `package.json` name) to identify our tokens.
 
 ### Worked example — Style Dictionary
 
@@ -259,16 +268,11 @@ StyleDictionary.registerParser({
       for (const [k, v] of Object.entries(node ?? {})) {
         if (k.startsWith('$')) continue;
         const next = [...path, k];
-        if (
-          v &&
-          typeof v === 'object' &&
-          (v.values || v.$value || v.$extensions?.['com.acronis.units'])
-        ) {
-          // Token: prefer top-level `values` (mode-aware), then DTCG `$value`
-          // (typography composites), then `com.acronis.units` (single-value
-          // primitives). Filter by `platforms` if your target needs it.
-          const value =
-            v.values ?? v.$value ?? v.$extensions['com.acronis.units'];
+        if (v && typeof v === 'object' && (v.values || v.$value)) {
+          // Token: prefer top-level `values` (mode-aware), else native DTCG
+          // `$value` (dimension `{ value, unit }`, fontWeight/fontFamily scalars,
+          // typography composites). Filter by `platforms` if your target needs it.
+          const value = v.values ?? v.$value;
           out[next.join('.')] = {
             value,
             type: v.$type,

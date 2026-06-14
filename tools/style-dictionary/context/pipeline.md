@@ -48,18 +48,15 @@ AGENTS.md), which is why this stage does not run through SD. The pass:
   includes the build's filter enum value (`"PD"` today; see AGENTS.md →
   Platforms). The `platforms` key itself is then **stripped** (it has no DTCG home).
 - **One `$value` per token, original form** — `values.<mode>` collapses to a
-  single `$value`; `$extensions.com.acronis.units` (`{ unit, value }` /
-  string / number) is promoted to a DTCG `$value` (`{ value, unit }` /
-  string / number); HSL color objects and typography composites are kept as-is.
-  No conversion, no flattening here.
-- **`$extensions` is retained** for traceability (so `com.acronis.units` ends up
-  duplicated alongside the promoted `$value` — intentional).
+  single `$value`. Every `$value` is already native DTCG (dimension
+  `{ value, unit }`, plain fontWeight number / fontFamily string, HSL color
+  objects, typography composites), so it is kept as-is. No flattening here.
+- **`$extensions` is retained** for traceability.
 - **`$type`** is carried down from groups onto each token so every emitted token
   is self-describing; `$description` / `$deprecated` are preserved.
 
-A node is a **token** (not a group) if it carries `values`, `$value`, or
-`$extensions.com.acronis.units`; groups whose every child was omitted for a mode
-are themselves omitted.
+A node is a **token** (not a group) if it carries `values` or `$value`; groups
+whose every child was omitted for a mode are themselves omitted.
 
 ## Stage 2 — `buildCss` (in `tokens.ts`) + the `acronis/css` hooks
 
