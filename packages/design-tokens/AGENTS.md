@@ -34,12 +34,12 @@ When a new file lands under `context/`, add a row here in the same change. An un
 
 ### Context — hand-authored
 
-| When the task involves…                                                                                                                                          | Load                                                     |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| Grounding vocabulary (Tier, Group, Mode, Theme, Brand, Collection, token)                                                                                        | [`context/glossary.md`](context/glossary.md)             |
-| Writing/reading a `.tokens.json` — the files, token shape (`$value`/`$type`/`values`/`platforms`/`$extensions`), modes & themes, the alias chain, platform scope | [`context/manifest.md`](context/manifest.md)             |
-| DTCG conformance & divergence, the `$schema`/Figma discriminator, `$extensions` namespaces (`com.acronis.*`/`com.figma.*`), naming / `$`-prefix / `$type` rules  | [`context/spec.md`](context/spec.md)                     |
-| Versioning a token change — the public contract surface, what counts as a breaking change, and how a `design-tokens` bump maps to `tokens-pd` + consumers        | [`context/token-contract.md`](context/token-contract.md) |
+| When the task involves…                                                                                                                                          | Load                                             |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Grounding vocabulary (Tier, Group, Mode, Theme, Brand, Collection, token)                                                                                        | [`context/glossary.md`](context/glossary.md)     |
+| Writing/reading a `.tokens.json` — the files, token shape (`$value`/`$type`/`values`/`platforms`/`$extensions`), modes & themes, the alias chain, platform scope | [`context/manifest.md`](context/manifest.md)     |
+| DTCG conformance & divergence, the `$schema`/Figma discriminator, `$extensions` namespaces (`com.acronis.*`/`com.figma.*`), naming / `$`-prefix / `$type` rules  | [`context/spec.md`](context/spec.md)             |
+| Sizing a token change — whether a change is a major / minor / patch bump, and how to record it                                                                   | [`context/versioning.md`](context/versioning.md) |
 
 ### DTCG 2025.10 spec — vendored snapshot
 
