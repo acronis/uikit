@@ -52,7 +52,7 @@ Its `exports` expose `tiers/{primitives,semantic,components}.json` and
 a direct JSON consumer is possible. What's contractual here:
 
 - semantic/component token **paths** (`background.brand.primary`), `$type`, and the **`values` mode
-  keys** (themes `light`/`dark`; brands `acronis`/`brand-b`/…); primitive palette paths (`palette.*`) are internal (see below).
+  keys** (themes `light`/`dark`; brands `acronis`/… — the brand set is data-driven); primitive palette paths (`palette.*`) are internal (see below).
 - the **alias structure** (`components → semantics → primitives`) only insofar as
   it changes a resolved value or a token's existence.
 
@@ -88,7 +88,6 @@ name is identical, because it silently breaks every consumer's intent.
 
 ## Bump mapping
 
-We are **pre-1.0** on both packages (`design-tokens` 0.x, `tokens-pd` 0.x) and
 We are **pre-1.0** on both packages (`design-tokens` 0.x, `tokens-pd` 0.x) and
 the token contract is **not yet frozen** — freezing it is a ui-react 1.0
 criterion (see [`../../../context/roadmap.md`](../../../context/roadmap.md)). `releasing.md` says to avoid `major` until

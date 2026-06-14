@@ -16,7 +16,7 @@ Everything else stays DTCG: token shape, `$type` and group-level `$type` inherit
 - A palette token (mode dimension: Theme): `values.light` and `values.dark`, each a DTCG color value (`{ colorSpace: "hsl", components: [...], alpha? }`).
 - A semantic-color token (mode dimension: Brand): `values.acronis`, a DTCG alias string like `"{palette.blue.7}"`.
 
-Non-mode-aware **dimension** primitives store their value in `$value` as a native DTCG dimension `{ value, unit }` (`unit` is `"px"` or `"rem"` per DTCG; `"px"` today). `fontWeight` and `fontFamily` primitives are scalar DTCG types, so they carry a plain `$value` (a number, or a string / array for a font stack). DTCG composite typography tokens also use a native `$value`. Every `$value` in this package is therefore native DTCG — the only divergences are the per-mode `values` dict and the `platforms` array. Mode storage, aliasing, and platform scope are detailed in [`manifest.md`](./manifest.md).
+Non-mode-aware **dimension** primitives store their value in `$value` as a native DTCG dimension `{ value, unit }` (`unit` is `"px"` or `"rem"` per DTCG). `fontWeight` and `fontFamily` primitives are scalar DTCG types, so they carry a plain `$value` (a number, or a string / array for a font stack). DTCG composite typography tokens also use a native `$value`. Every `$value` in this package is therefore native DTCG — the only divergences are the per-mode `values` dict and the `platforms` array. Mode storage, aliasing, and platform scope are detailed in [`manifest.md`](./manifest.md).
 
 Canonical token shape:
 
@@ -35,10 +35,10 @@ Canonical token shape:
 Every emitted token file MUST start with:
 
 ```json
-"$schema": "../schemas/tokens.schema.json"
+"$schema": "../schemas/tier.schema.json"
 ```
 
-The file's `$schema` points at the repo's [`../schemas/tokens.schema.json`](../schemas/tokens.schema.json) — the canonical description of the Acronis shape (DTCG-conformant with the divergences above). It doubles as the discriminator: a generic DTCG consumer that opens the file sees a non-DTCG `$schema` and should route it through an Acronis-aware parser rather than treat it as a plain DTCG file.
+The file's `$schema` points at the repo's [`../schemas/tier.schema.json`](../schemas/tier.schema.json) — the canonical description of the Acronis shape (DTCG-conformant with the divergences above). It doubles as the discriminator: a generic DTCG consumer that opens the file sees a non-DTCG `$schema` and should route it through an Acronis-aware parser rather than treat it as a plain DTCG file.
 
 **Discriminator.** Every token carries **exactly one** of:
 
@@ -65,7 +65,7 @@ Vendor-specific metadata goes under `$extensions` with a reverse-DNS key. DTCG l
 | `com.acronis.*` | This project     | Project-specific metadata not yet promoted to a top-level key.                                                               |
 | `com.figma.*`   | Figma round-trip | Identity carried back to Figma (`com.figma.variableId`, `com.figma.styleId`, `com.figma.scopes`, future `com.figma.nodeId`). |
 
-### `com.acronis.*` keys today
+### `com.acronis.*` keys
 
 | Key                          | Status                                                                                                                                                                      |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -89,13 +89,13 @@ This is a **build-time hint consumed by [`tools/style-dictionary`](../../../tool
 key to route colors/gradients into the right Tailwind namespace), **not part of
 any token's value** — it carries no design data and never appears on a token's
 `$value`. It is validated by the `AcronisTailwindRoles` `$def` in
-[`../schemas/tokens.schema.json`](../schemas/tokens.schema.json).
+[`../schemas/tier.schema.json`](../schemas/tier.schema.json).
 
 ### Adding a new key (3-step rule)
 
 A new `com.acronis.*` key requires THREE changes in the same commit:
 
-1. Update [`../schemas/tokens.schema.json`](../schemas/tokens.schema.json) to allow / require the new key.
+1. Update [`../schemas/tier.schema.json`](../schemas/tier.schema.json) to allow / require the new key.
 2. Add or update the context file that owns the key's semantics.
 3. Update the CLAUDE.md row pointing at that context file, if the wording needs to widen.
 
@@ -149,4 +149,4 @@ These come from DTCG. Use them as defined; do NOT invent new `$`-prefixed keys.
 
 DTCG-defined: `color`, `dimension`, `fontFamily`, `fontWeight`, `number`, `typography`, `shadow`, `border`, `transition`, `gradient`, `cubicBezier`, `strokeStyle`, `duration`. DTCG group-level `$type` inheritance applies: declared at a parent group, descendants inherit unless overridden.
 
-**One non-DTCG divergence: `string`.** DTCG 2025.10 has no string type, but Figma exports raw `string` variables that don't map onto any DTCG type — currently the four per-state `textDecoration` tokens (`button.ghost.label.text-decoration.{idle,hover,active,disabled}`, values `"none"` / `"underline"`). They're emitted as `$type: "string"`, which is added to the schema's `$type` enum. (Other Figma `string` variables _do_ decode to a DTCG type and are mapped: `borderStyle` → `strokeStyle`, `textStyle` → `typography` alias, and the mocked CSS gradients → `gradient`. Only `textDecoration` has no DTCG home and stays `string`.)
+**One non-DTCG divergence: `string`.** DTCG 2025.10 has no string type, but Figma exports raw `string` variables that don't map cleanly onto a DTCG type. The rule: a Figma `string` variable is re-typed only when it decodes unambiguously to a DTCG type (`textStyle` → a `typography` alias); otherwise it is emitted verbatim as `$type: "string"`, which is added to the schema's `$type` enum. Examples kept as `string`: per-state `textDecoration` (`"none"` / `"underline"`), `borderStyle` (`"solid"`), and the gradient-fill mocks that alias `{gradients.ai.*}` (the `gradient` `$type` itself lives only on those `gradients.ai.*` tokens in `semantics.json`).

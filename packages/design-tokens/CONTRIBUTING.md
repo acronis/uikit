@@ -8,7 +8,7 @@ This guide covers the day-to-day authoring tasks: editing a token, adding a new 
 ## Before you start
 
 - **Know the vocabulary** — Tier, Group, Mode, Theme, Brand, Collection, and the token. See [`context/glossary.md`](./context/glossary.md).
-- **Know the format and its rules** — the data model in [`context/manifest.md`](./context/manifest.md), and the DTCG conformance/divergence + naming + `$extensions` rules in [`context/spec.md`](./context/spec.md). The schema itself is [`schemas/tokens.schema.json`](./schemas/tokens.schema.json).
+- **Know the format and its rules** — the data model in [`context/manifest.md`](./context/manifest.md), and the DTCG conformance/divergence + naming + `$extensions` rules in [`context/spec.md`](./context/spec.md). The schema itself is [`schemas/tier.schema.json`](./schemas/tier.schema.json).
 
 ## Editing tokens
 
@@ -33,7 +33,7 @@ See [`context/manifest.md`](./context/manifest.md) for the list of current and p
 
 These are schema changes — coordinated edits in the same commit:
 
-1. **`schemas/tokens.schema.json`** — extend the `TokenType` enum (new `$type`) or the `Extensions` `properties` map (new `$extensions` key).
+1. **`schemas/tier.schema.json`** — extend the `TokenType` enum (new `$type`) or the `Extensions` `properties` map (new `$extensions` key).
 2. **`context/spec.md`** — document the new key's semantics and reserved-namespace rules.
 
 A new `com.acronis.*` key also needs a context-file owner (a `.md` file under `context/` that documents what the key means) — a `com.acronis.*` key without a documented owner is forbidden by review even if the schema accepts it. Detail in [`context/spec.md`](./context/spec.md).
@@ -48,7 +48,7 @@ pnpm validate
 
 Run `pnpm validate` from `packages/design-tokens/` (or `pnpm --filter @acronis-platform/design-tokens validate` from the repo root) before committing. It catches:
 
-- Token files that don't conform to `tokens.schema.json` (missing `platforms` on a token, unknown `$type`, unknown `$extensions` key prefix, malformed `com.figma.variableId`, etc.).
+- Token files that don't conform to `tier.schema.json` (missing `platforms` on a token, unknown `$type`, unknown `$extensions` key prefix, malformed `com.figma.variableId`, etc.).
 
 It does NOT check semantic correctness — whether an alias points at a token that exists, whether mode values agree, whether a color is the one you intended. Those checks live in code review.
 

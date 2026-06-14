@@ -5,9 +5,10 @@ Acronis design tokens as data — DTCG-2025.10-conformant JSON. No runtime code.
 ## Table of contents
 
 - [Introduction](#introduction)
+- [Prerequisites](#prerequisites)
 - [Relationship to DTCG](#relationship-to-dtcg)
 - [Glossary](#glossary)
-- [Properties](#properties)
+- [JSON schema and structure](#json-schema-and-structure)
 - [Token files](#token-files)
 - [Package structure](#package-structure)
 - [Contributing](#contributing)
@@ -17,63 +18,44 @@ Acronis design tokens as data — DTCG-2025.10-conformant JSON. No runtime code.
 
 ## Introduction
 
-`@acronis-platform/design-tokens` is **design data only**, technology-agnostic. It ships JSON token files — every color, dimension, typography, and per-component value across Acronis surfaces — and nothing else: no components, no build, no runtime API. The files are **[DTCG 2025.10](https://www.designtokens.org/tr/2025.10/)**-conformant.
+`@acronis-platform/design-tokens` is **design data only** — the colors, sizes, typography, and per-component values that define how Acronis products look, stored as plain JSON. There are no components, no build step, and nothing to run: just the values.
 
-Keeping the canonical form as data means no consumer's conventions are baked in. The same `palette.blue.7` ends up in a CSS file, a Tailwind config, and an iOS Asset Catalog without ever becoming one of their conventions — each team owns its own pipeline.
+The format takes **[DTCG 2025.10](https://www.designtokens.org/tr/2025.10/)** — the W3C-track design-token standard — as its starting point and **builds on top of it**, adding a couple of things the standard doesn't cover yet (see [Relationship to DTCG](#relationship-to-dtcg)).
 
-The package is meant to be consumed by a **translation tool**: a build-time program that reads the source-of-truth tokens and emits platform-specific output (CSS custom properties, a JS module, a Tailwind `@theme` block, an Asset Catalog, …). See [Translation tools](#translation-tools).
+Storing these values as data — rather than as CSS, a Tailwind config, or an iOS asset catalog — means no single technology is baked in. The same `palette.blue.7` can become any of those, and each team decides how. That conversion is done by a **translation tool** (see [Translation tools](#translation-tools)).
+
+## Prerequisites
+
+You don't need much — the package is just JSON. What you need depends on whether you want to **use** the tokens or **work on** them.
+
+**To use the tokens in a product:**
+
+- _Needed:_ a **translation tool** to turn the JSON into your platform's format (CSS, Tailwind, etc.). See [Translation tools](#translation-tools).
+- _Optional:_ [Style Dictionary](https://styledictionary.com/) or another DTCG-aware translator, if you don't already have one.
+
+**To work on the tokens (author or validate them):**
+
+- _Needed (tools):_ [Node](https://nodejs.org/) 22.x and [pnpm](https://pnpm.io/) 10.27.0 — used by the `validate` script. Install with `pnpm install`.
+- _Needed (mindset):_ read the **[Glossary](./context/glossary.md)** first. The docs use _Tier_, _Mode_, _Theme_, _Brand_, and _Alias_ with precise meanings; a few minutes there saves confusion later. Skimming [Relationship to DTCG](#relationship-to-dtcg) helps too.
+- _Optional:_ familiarity with [DTCG 2025.10](https://www.designtokens.org/tr/2025.10/) for deeper format questions — the spec is vendored under [`context/DTCG-2025-10/`](./context/DTCG-2025-10/).
 
 ## Relationship to DTCG
 
-The token files are conformant with **[DTCG 2025.10](https://www.designtokens.org/tr/2025.10/)**, the W3C-track Design Tokens Community Group format. We use the DTCG `$`-prefix vocabulary (`$schema`, `$type`, `$value`, `$extensions`, `{group.token}` alias syntax) and the DTCG type system (`color`, `dimension`, `gradient`, `typography`, …).
+The token files follow **[DTCG 2025.10](https://www.designtokens.org/tr/2025.10/)** and add two small things on top, both at the token: a per-mode **`values`** dict (so one file holds every theme and brand inline) and a per-token **`platforms`** scope (so each token says which consumers it's for).
 
-We diverge in two small, deliberate ways, both at the token:
-
-- **Per-mode `values`** — a top-level `values` dict carries one value per mode (Theme `light`/`dark`, Brand `acronis`/`brand-b`), instead of the spec's single `$value`.
-- **Token `platforms`** — a top-level `platforms` array scopes the token to `WEB` / `PD` consumers.
-
-Neither lives under `$extensions.com.acronis.*` as the spec's vendor-extension pattern would suggest. Each file's `$schema` points at [`schemas/tokens.schema.json`](./schemas/tokens.schema.json) — the canonical description of the Acronis shape (DTCG-conformant with these divergences), which also flags the file as ours rather than plain DTCG. Full rationale: [`./context/spec.md`](./context/spec.md).
+That's the short version. The full contract — how the files relate to the spec, what each divergence is and why, the `$schema` discriminator, and the `$extensions` namespaces — lives in **[`context/spec.md`](./context/spec.md)**. Read it there to learn more.
 
 ## Glossary
 
-### Tiers & groups
+The docs use a small set of terms precisely. They're all defined in **[`context/glossary.md`](./context/glossary.md)** — read it once before working with the tokens.
 
-- **Tier** — a business categorization of tokens: **primitives** (raw palette, units, font primitives), **semantics** (roles/intents that alias primitives), **components** (component-specific tokens that alias semantics). Tiers exist in code only; Figma does not use the concept.
-- **Group** — a parent of one or more tokens, living inside a Tier or another Group (`palette`, `palette.blue`, `units.gap`).
+## JSON schema and structure
 
-### Modes
+The actual data lives in [`tiers/*.json`](./tiers) — three files, one per Tier. Every token carries a value (a per-mode `values` dict or a DTCG `$value`), a `$type`, a `platforms` scope, and optional `$extensions` metadata.
 
-- **Mode** — a dimension inside a Group that lets a token carry a different value per active dimension value. A Group may have one mode, many, or none.
-- **Theme** — business name for the modes under `primitives.palette`: `light` / `dark`. "Theme switch" is the user-facing concept.
-- **Brand** — business name for the modes under `semantics.colors` and `components.*`: `acronis`, `brand-b` today, more planned. Drives white-labeling.
-- **Collection** — Figma-native concept: a Figma Collection groups Variables under exactly one mode dimension.
+Every file is validated against **[`schemas/tier.schema.json`](./schemas/tier.schema.json)** — the authority on which keys are allowed, where they may appear, and when they're required. Run `pnpm validate` to check the data against it.
 
-### Tokens
-
-- **Token** — the smallest entry: it carries a value via per-mode `values` (or a DTCG `$value` on typography composites) plus a `$type` and a `platforms` scope.
-- **Alias** — a DTCG `{group.token}` string pointing at another token; resolved by the consumer. Stored inside `values.<mode>` or inside a composite `$value`.
-- **Primitive / semantic / component** — the three Tiers a token belongs to, wired in an alias chain `components → semantics → primitives`.
-
-These definitions are kept in sync with [`context/glossary.md`](./context/glossary.md) — edit both.
-
-## Properties
-
-Every key that can appear in a token file. (`Level` names where it lives; `Required` is within that level.)
-
-| Key               | Level         | Type / values                                                                                                                                                                     | Required                   | Meaning                                                                                                                                                                                               |
-| ----------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `$schema`         | root          | string (`../schemas/tokens.schema.json`)                                                                                                                                          | yes (root)                 | Schema discriminator; points at the repo's Acronis token schema (DTCG-conformant shape).                                                                                                              |
-| `$value`          | token         | any native DTCG value (dimension `{ value, unit }`, scalar, or composite)                                                                                                         | one of `$value` / `values` | Native DTCG single value — used by dimension primitives (`{ value, unit }`), plain fontWeight/fontFamily scalars, and typography composites (object of font aliases). NOT used for mode-aware tokens. |
-| `values`          | token         | object (mode id → value)                                                                                                                                                          | one of `$value` / `values` | Per-mode value dict — the primary Acronis divergence. Keys are kebab-case lowercase mode names (`light`, `dark`, `acronis`, `brand-b`); values are concrete values or `{group.token}` aliases.        |
-| `$type`           | group / token | DTCG type enum (`color`, `dimension`, `fontFamily`, `fontWeight`, `gradient`, `typography`, `duration`, `cubicBezier`, `number`, `strokeStyle`, `border`, `transition`, `shadow`) | no                         | Token type; may be declared on a Group and inherited.                                                                                                                                                 |
-| `$description`    | group / token | string                                                                                                                                                                            | no                         | One-line human summary.                                                                                                                                                                               |
-| `platforms`       | token         | array of `"WEB"` \| `"PD"`                                                                                                                                                        | yes (every token)          | Consumer scope. The schema requires every token to declare it.                                                                                                                                        |
-| `$extensions`     | group / token | object, keys `^com\.(acronis\|figma)\.`                                                                                                                                           | no                         | Vendor metadata, namespaced reverse-DNS.                                                                                                                                                              |
-| ↳ `com.acronis.*` | `$extensions` | `textCase`, `textDecoration`, `tailwindRoles`                                                                                                                                     | no                         | Acronis vendor hints preserved from Figma (e.g. typography `textCase` / `textDecoration`; root-level `tailwindRoles` build hint).                                                                     |
-| ↳ `com.figma.*`   | `$extensions` | `variableId`, `styleId`, `scopes`, `hiddenFromPublishing`, `gradientTransform`                                                                                                    | no                         | Figma round-trip metadata. `variableId` and `styleId` are mutually exclusive.                                                                                                                         |
-| `$deprecated`     | group / token | boolean \| string                                                                                                                                                                 | no                         | Marks the token deprecated; a string carries a reason.                                                                                                                                                |
-
-Note: a token **should use exactly one** of `$value` (typography composites and single-value primitives) or per-mode `values` (mode-aware tokens). The schema enforces the mutual-exclusion half — no token may carry **both**, and `pnpm validate` rejects any that does. The complementary expectation that every leaf carries **at least one** is normative in [`./context/spec.md`](./context/spec.md) and checked in review (it can't be expressed structurally, since a leaf is defined by carrying one).
+For the full breakdown — every key, its rules, and the reasoning — see **[`context/spec.md`](./context/spec.md)**.
 
 ## Token files
 
@@ -100,15 +82,14 @@ A mode-aware color token (palette: Theme axis `light` / `dark`):
 }
 ```
 
-A semantic or component token (Brand axis `acronis` / `brand-b`) aliases upstream tokens with DTCG `{group.token}` strings:
+A semantic or component token (Brand axis — e.g. `acronis`, the default brand) aliases upstream tokens with DTCG `{group.token}` strings:
 
 ```jsonc
 "background": {
   "brand": {
     "primary": {
       "values": {
-        "acronis": "{palette.blue.7}",
-        "brand-b": "{palette.blue.7}"
+        "acronis": "{palette.blue.7}"
       },
       "platforms": ["PD"],
       "$extensions": { "com.figma.scopes": ["ALL_FILLS"], "com.figma.variableId": "VariableID:50:1428" }
@@ -162,7 +143,7 @@ A typography composite uses native DTCG `$value` and aliases font primitives:
 ### Modes & the alias chain
 
 - **Theme axis** (`light` / `dark`) lives on `primitives.palette`. Semantic and component tokens never restate it — they alias palette tokens and inherit the axis through the chain.
-- **Brand axis** (`acronis`, `brand-b`; more planned) lives on `semantic.colors` and `components.*`.
+- **Brand axis** (`acronis` is the default brand; more are data-driven) lives on `semantic.colors` and `components.*`.
 - **Alias chain** — `components → semantics → primitives`. Aliases are DTCG `{group.token}` strings stored inside `values.<mode>` (or a typography composite `$value`). When a theme switches, the primitive value changes and everything downstream picks it up.
 - **Adding a mode** is data-driven — the schema's mode pattern accepts any kebab-case lowercase name; no schema edit needed.
 
@@ -196,7 +177,7 @@ The JSON under `tiers/` is the **source of truth** — edit it directly (it's ha
 
 The package is consumed by a **translation tool** in the [DTCG sense](https://www.designtokens.org/tr/2025.10/format/#translation-tool): a build-time program that reads the source-of-truth tokens and writes platform-specific output.
 
-Because the token files **are** DTCG-conformant, generic DTCG tooling largely works out of the box. Only two Acronis divergences need handling: the on-token `values` dict (mode-aware tokens) and the token `platforms` array sit outside the plain DTCG shape. Every `$value` is native DTCG. A consumer that wants to use Style Dictionary, Tokens Studio, or any DTCG library should register a custom parser that understands these two details. Key off [`schemas/tokens.schema.json`](./schemas/tokens.schema.json) (or the `package.json` name) to identify our tokens.
+Because the token files **are** DTCG-conformant, generic DTCG tooling largely works out of the box. Only two Acronis divergences need handling: the on-token `values` dict (mode-aware tokens) and the token `platforms` array sit outside the plain DTCG shape. Every `$value` is native DTCG. A consumer that wants to use Style Dictionary, Tokens Studio, or any DTCG library should register a custom parser that understands these two details. Key off [`schemas/tier.schema.json`](./schemas/tier.schema.json) (or the `package.json` name) to identify our tokens.
 
 ### Worked example — Style Dictionary
 
