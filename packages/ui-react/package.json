@@ -1,6 +1,6 @@
 {
   "name": "@acronis-platform/ui-react",
-  "version": "0.15.2",
+  "version": "0.15.3",
   "description": "Acronis React component library — a Base UI implementation, themed by @acronis-platform/design-tokens.",
   "type": "module",
   "main": "./dist/index.js",
