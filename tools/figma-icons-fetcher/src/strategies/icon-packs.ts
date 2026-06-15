@@ -3,17 +3,18 @@ import type { FetcherConfig, FigmaIcon } from '../types';
 import type { FigmaNode, FigmaPage, SelectionStrategy } from './types';
 
 // Real icons in the "icon-packs-source" section are COMPONENT nodes named
-// "_iconsource/<Name>". Everything else under a pack (Category wrappers,
+// "_assetsource/<Name>" (the Figma source renamed this prefix from the earlier
+// "_iconsource/"). Everything else under a pack (Category wrappers,
 // CategoryTitle text, stray auto-added frames) is layout/noise and is ignored.
-const ICON_PREFIX = '_iconsource/';
+const ASSET_PREFIX = '_assetsource/';
 const TITLE_NAME = 'categorytitle';
 
 function isIcon(node: FigmaNode): boolean {
-  return node.type === 'COMPONENT' && node.name.startsWith(ICON_PREFIX);
+  return node.type === 'COMPONENT' && node.name.startsWith(ASSET_PREFIX);
 }
 
 function iconName(node: FigmaNode): string {
-  return formatName(node.name.slice(ICON_PREFIX.length));
+  return formatName(node.name.slice(ASSET_PREFIX.length));
 }
 
 // A category's display name lives in its "CategoryTitle" text node — the frame
@@ -39,7 +40,7 @@ function collectIcons(node: FigmaNode, pageName: string, icons: FigmaIcon[]): vo
  * Selection model for the next-gen `icon-packs-source` section. The fetched
  * node is the section itself; each of its top-level frames is one *pack*
  * (`stroke-mono`, `stroke-multi`, `solid-mono`, `solid-multi`). Icons are the
- * `COMPONENT` leaves named `_iconsource/<Name>` (the prefix is stripped).
+ * `COMPONENT` leaves named `_assetsource/<Name>` (the prefix is stripped).
  *
  * Manifest grouping reflects the pack's internal layout:
  * - icons nested in a `Category` frame are grouped as `<pack>/<category>` (the

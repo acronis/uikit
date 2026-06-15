@@ -100,7 +100,7 @@ live in `src/strategies/`.
 - **`icon-packs`** — for the `icon-packs-source` section (fetched via
   `FIGMA_FETCHER_NODE_ID`). Each top-level frame of the section is one **pack**
   (`stroke-mono`, `stroke-multi`, `solid-mono`, `solid-multi`). Icons are the
-  `COMPONENT` leaves named `_iconsource/<Name>` (the prefix is stripped).
+  `COMPONENT` leaves named `_assetsource/<Name>` (the prefix is stripped).
   Manifest grouping follows the pack's layout: icons nested in a `Category`
   frame are grouped `<pack>/<category>` (the category name is read from its
   `CategoryTitle` text), so e.g. `stroke-mono` splits into `stroke-mono-arrows`,

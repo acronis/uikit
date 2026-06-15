@@ -42,7 +42,7 @@ and [`README.md`](./README.md) for the full table.
    - `frames-by-name` (default) — `COMPONENT` nodes under name-matched frames.
    - `new-frames` — icon leaves inside green `New`-badged frames, grouped by the
      page's top-level category frames.
-   - `icon-packs` — `_iconsource/<Name>` components from the `icon-packs-source`
+   - `icon-packs` — `_assetsource/<Name>` components from the `icon-packs-source`
      section's pack frames (`stroke-mono`, `stroke-multi`, `solid-mono`,
      `solid-multi`), grouped by `<pack>/<category>` where a pack has `Category`
      frames (split by `CategoryTitle`) else by pack. See `README.md` →

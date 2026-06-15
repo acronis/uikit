@@ -31,7 +31,7 @@ directly by node id, so no page name is configured.
 - The section has **four top-level frames** — `stroke-mono`, `stroke-multi`,
   `solid-mono`, `solid-multi`. Each is a **pack**; a combined `src/figma/icons.json`
   lists every icon across all packs.
-- Icons are the `COMPONENT` nodes named `_iconsource/<Name>` (the `_iconsource/`
+- Icons are the `COMPONENT` nodes named `_assetsource/<Name>` (the `_assetsource/`
   prefix is stripped to form the icon name).
 - **Manifest grouping follows the pack layout.** A pack that organizes icons
   into `Category` frames splits into one manifest per category, named

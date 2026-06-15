@@ -44,13 +44,13 @@ describe('iconPacksStrategy', () => {
               id: 'cat1',
               name: 'Category',
               type: 'FRAME',
-              children: [title('Arrows'), icon('i1', '_iconsource/ArrowDown')],
+              children: [title('Arrows'), icon('i1', '_assetsource/ArrowDown')],
             },
             {
               id: 'cat2',
               name: 'Category',
               type: 'FRAME',
-              children: [title('Shapes'), icon('i2', '_iconsource/Circle')],
+              children: [title('Shapes'), icon('i2', '_assetsource/Circle')],
             },
           ],
         },
@@ -59,7 +59,7 @@ describe('iconPacksStrategy', () => {
           name: 'solid-mono',
           type: 'FRAME',
           // icons listed directly under the pack → grouped under the pack
-          children: [icon('i3', '_iconsource/Acronis')],
+          children: [icon('i3', '_assetsource/Acronis')],
         },
       ]),
       config,
@@ -80,7 +80,7 @@ describe('iconPacksStrategy', () => {
           name: 'stroke-mono',
           type: 'FRAME',
           children: [
-            { id: 'cat', name: 'Symbols', type: 'FRAME', children: [icon('i1', '_iconsource/Bell')] },
+            { id: 'cat', name: 'Symbols', type: 'FRAME', children: [icon('i1', '_assetsource/Bell')] },
           ],
         },
       ]),
@@ -90,7 +90,7 @@ describe('iconPacksStrategy', () => {
     expect(icons).toEqual([{ id: 'i1', name: 'bell', pageName: 'stroke-mono/symbols' }]);
   });
 
-  it('ignores components without the _iconsource/ prefix and non-component noise', () => {
+  it('ignores components without the _assetsource/ prefix and non-component noise', () => {
     const icons = iconPacksStrategy(
       sectionOf([
         {
@@ -98,10 +98,10 @@ describe('iconPacksStrategy', () => {
           name: 'solid-mono',
           type: 'FRAME',
           children: [
-            icon('keep', '_iconsource/Database'),
+            icon('keep', '_assetsource/Database'),
             // stray auto-added component the designer still has to clean up
             icon('junk', 'Auto-added frame'),
-            { id: 'txt', name: '_iconsource/NotAnIcon', type: 'TEXT' },
+            { id: 'txt', name: '_assetsource/NotAnIcon', type: 'TEXT' },
           ],
         },
       ]),
