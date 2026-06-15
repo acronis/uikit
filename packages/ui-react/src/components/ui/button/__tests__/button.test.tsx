@@ -28,9 +28,9 @@ describe('Button', () => {
     render(<Button>Save</Button>);
     const button = screen.getByRole('button', { name: 'Save' });
     expect(button).toHaveClass(
-      'bg-[var(--ui-button-primary-background-idle)]',
+      'bg-[var(--ui-button-primary-container-idle)]',
       'text-[var(--ui-button-primary-label-idle)]',
-      'h-8'
+      'h-[var(--ui-button-global-container-height)]'
     );
   });
 
@@ -38,8 +38,8 @@ describe('Button', () => {
     render(<Button variant="destructive">Delete</Button>);
     const button = screen.getByRole('button', { name: 'Delete' });
     expect(button).toHaveClass(
-      'bg-[var(--ui-button-destructive-background-idle)]',
-      'h-8'
+      'bg-[var(--ui-button-destructive-container-idle)]',
+      'h-[var(--ui-button-global-container-height)]'
     );
   });
 
@@ -47,7 +47,7 @@ describe('Button', () => {
     render(<Button className="custom-class">Save</Button>);
     expect(screen.getByRole('button', { name: 'Save' })).toHaveClass(
       'custom-class',
-      'bg-[var(--ui-button-primary-background-idle)]'
+      'bg-[var(--ui-button-primary-container-idle)]'
     );
   });
 

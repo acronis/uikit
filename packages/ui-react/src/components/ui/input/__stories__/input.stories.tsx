@@ -38,15 +38,15 @@ export const States: Story = {
 
 export const WithLabel: Story = {
   render: () => (
-    <div className="flex w-64 flex-col gap-[var(--ui-form-units-gap-md)]">
+    <div className="flex w-64 flex-col gap-[var(--ui-input-global-container-gap)]">
       <label
         htmlFor="email"
-        className="text-sm leading-4 text-[var(--ui-form-text-label)]"
+        className="text-sm leading-4 text-[var(--ui-input-global-label-idle)]"
       >
         Email
       </label>
       <Input id="email" type="email" placeholder="name@acronis.com" />
-      <p className="text-xs leading-4 text-[var(--ui-form-text-description)]">
+      <p className="text-xs leading-4 text-[var(--ui-input-normal-description-color)]">
         We&apos;ll never share your email.
       </p>
     </div>
@@ -56,10 +56,10 @@ export const WithLabel: Story = {
 export const Invalid: Story = {
   name: 'Invalid (with error message)',
   render: () => (
-    <div className="flex w-64 flex-col gap-[var(--ui-form-units-gap-md)]">
+    <div className="flex w-64 flex-col gap-[var(--ui-input-global-container-gap)]">
       <label
         htmlFor="pwd"
-        className="text-sm leading-4 text-[var(--ui-form-text-label)]"
+        className="text-sm leading-4 text-[var(--ui-input-global-label-idle)]"
       >
         Password
       </label>
@@ -72,7 +72,7 @@ export const Invalid: Story = {
       />
       <p
         id="pwd-error"
-        className="text-xs leading-4 text-[var(--ui-form-text-error)]"
+        className="text-xs leading-4 text-[var(--ui-input-error-error-color)]"
       >
         Password is too short.
       </p>

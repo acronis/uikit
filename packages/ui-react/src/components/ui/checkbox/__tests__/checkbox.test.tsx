@@ -13,11 +13,11 @@ describe('Checkbox', () => {
     expect(checkbox).toHaveAttribute('aria-checked', 'false');
   });
 
-  it('applies the idle form token classes', () => {
+  it('applies the unchecked idle box token classes', () => {
     render(<Checkbox aria-label="Accept" />);
     expect(screen.getByRole('checkbox', { name: 'Accept' })).toHaveClass(
-      'bg-[var(--ui-form-background-idle)]',
-      'border-[var(--ui-form-border-idle)]'
+      'bg-[var(--ui-checkbox-unchecked-box-idle)]',
+      'border-[var(--ui-checkbox-unchecked-box-border-color-idle)]'
     );
   });
 
@@ -63,7 +63,7 @@ describe('Checkbox', () => {
     render(<Checkbox aria-label="Accept" className="custom-class" />);
     expect(screen.getByRole('checkbox', { name: 'Accept' })).toHaveClass(
       'custom-class',
-      'bg-[var(--ui-form-background-idle)]'
+      'bg-[var(--ui-checkbox-unchecked-box-idle)]'
     );
   });
 

@@ -53,7 +53,7 @@ describe('Breadcrumb', () => {
     render(<Trail />);
     const link = screen.getByRole('link', { name: 'Home' });
     expect(link).toHaveAttribute('href', '/');
-    expect(link).toHaveClass('text-[var(--ui-breadcrumb-link)]');
+    expect(link).toHaveClass('text-[var(--ui-breadcrumb-link-label-idle)]');
   });
 
   it('marks the current page with aria-current and the value token color', () => {
@@ -61,7 +61,7 @@ describe('Breadcrumb', () => {
     const page = screen.getByText('Settings');
     expect(page).toHaveAttribute('aria-current', 'page');
     expect(page).toHaveAttribute('aria-disabled', 'true');
-    expect(page).toHaveClass('text-[var(--ui-breadcrumb-value)]');
+    expect(page).toHaveClass('text-[var(--ui-breadcrumb-page-label-color)]');
     // Exposed as a disabled link (role=link), so it is distinguished from the
     // navigable links: it carries no href and is the only aria-current item.
     expect(page).not.toHaveAttribute('href');
@@ -106,7 +106,7 @@ describe('Breadcrumb', () => {
       </BreadcrumbLink>
     );
     const button = screen.getByRole('button', { name: 'Home' });
-    expect(button).toHaveClass('text-[var(--ui-breadcrumb-link)]');
+    expect(button).toHaveClass('text-[var(--ui-breadcrumb-link-label-idle)]');
     await userEvent.click(button);
     expect(onClick).toHaveBeenCalledOnce();
     expect(screen.queryByRole('link')).not.toBeInTheDocument();

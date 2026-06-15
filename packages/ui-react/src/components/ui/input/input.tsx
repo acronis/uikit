@@ -2,14 +2,16 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-// A single-line text input. Colors and geometry come from the shared
-// `--ui-form-*` token tier from @acronis-platform/tokens-pd (the same tier the
-// checkbox uses). Each state is wired to its own token: idle / hover / focus
-// (border `--ui-form-border-active` + a 3px `--ui-focus-primary` ring) /
-// disabled. The error state is driven by `aria-invalid` — red border and, on
-// focus, a `--ui-focus-error` ring — and is scoped with `not-aria-[invalid]` so
-// it wins over the hover/focus border. Label, description, and error message
-// are composed by the consumer (a Field component is future work).
+// A single-line text input, themed by the dedicated next-gen `--ui-input-*` token
+// tier from @acronis-platform/tokens-pd. The box fill (`global-box-*`) and the
+// normal border (`normal-box-border-color-*`) are wired per state: idle / hover /
+// focus (border `*-active` + a 3px `--ui-focus-primary` ring) / disabled. Value
+// and placeholder text use `content-value-*` / `content-placeholder-*`. The error
+// state is driven by `aria-invalid` — `error-box-border-color-*` border and, on
+// focus, a `--ui-focus-error` ring — scoped with `not-aria-[invalid]` so it wins
+// over the hover/focus border. Box geometry (32px height, 4px radius, 12px
+// padding-x) comes from `--ui-input-global-box-*`. Label, description, and error
+// message are composed by the consumer (a Field component is future work).
 export type InputProps = React.ComponentPropsWithoutRef<'input'>;
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -18,7 +20,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       ref={ref}
       type={type}
       className={cn(
-        'h-8 w-full min-w-0 rounded border bg-[var(--ui-form-background-idle)] border-[var(--ui-form-border-idle)] px-3 text-sm leading-6 text-[var(--ui-form-text-value)] transition-colors placeholder:text-[var(--ui-form-text-placeholder)] focus-visible:outline-none focus-visible:ring-[3px] enabled:not-aria-[invalid=true]:hover:border-[var(--ui-form-border-hover)] not-aria-[invalid=true]:focus-visible:border-[var(--ui-form-border-active)] not-aria-[invalid=true]:focus-visible:ring-[var(--ui-focus-primary)] aria-[invalid=true]:border-[var(--ui-form-border-error)] aria-[invalid=true]:focus-visible:ring-[var(--ui-focus-error)] disabled:cursor-not-allowed disabled:border-[var(--ui-form-border-disabled)] disabled:bg-[var(--ui-form-background-disabled)] disabled:text-[var(--ui-form-text-disabled)]',
+        'h-[var(--ui-input-global-box-height)] w-full min-w-0 rounded-[var(--ui-input-global-box-border-radius)] border bg-[var(--ui-input-global-box-idle)] border-[var(--ui-input-normal-box-border-color-idle)] px-[var(--ui-input-global-box-padding-x)] text-sm leading-6 text-[var(--ui-input-content-value-idle)] transition-colors placeholder:text-[var(--ui-input-content-placeholder-idle)] focus-visible:outline-none focus-visible:ring-[3px] enabled:not-aria-[invalid=true]:hover:border-[var(--ui-input-normal-box-border-color-hover)] not-aria-[invalid=true]:focus-visible:border-[var(--ui-input-normal-box-border-color-active)] not-aria-[invalid=true]:focus-visible:ring-[var(--ui-focus-primary)] aria-[invalid=true]:border-[var(--ui-input-error-box-border-color-idle)] aria-[invalid=true]:focus-visible:ring-[var(--ui-focus-error)] disabled:cursor-not-allowed disabled:border-[var(--ui-input-normal-box-border-color-disabled)] disabled:bg-[var(--ui-input-global-box-disabled)] disabled:text-[var(--ui-input-content-value-disabled)] disabled:placeholder:text-[var(--ui-input-content-placeholder-disabled)]',
         className
       )}
       {...props}

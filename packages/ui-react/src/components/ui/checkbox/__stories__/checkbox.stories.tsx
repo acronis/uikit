@@ -42,7 +42,7 @@ export const Disabled: Story = {
 
 export const WithLabel: Story = {
   render: () => (
-    <label className="inline-flex items-center gap-[var(--ui-form-units-gap-lg)] text-sm text-[var(--ui-form-text-label)]">
+    <label className="inline-flex items-center gap-[var(--ui-checkbox-global-container-gap)] text-sm text-[var(--ui-checkbox-global-label-color)]">
       <Checkbox defaultChecked />
       Label
     </label>

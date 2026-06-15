@@ -6,11 +6,13 @@ import { ChevronRightIcon, EllipsisIcon } from '@acronis-platform/icons-react/st
 import { cn } from '@/lib/utils';
 
 // Composable breadcrumb primitives mirroring the Figma "Breadcrumb" component.
-// Colors are wired to the `--ui-breadcrumb-*` tokens from
-// @acronis-platform/tokens-pd: links use `--ui-breadcrumb-link`, the current
-// page uses `--ui-breadcrumb-value`, and the chevron separator uses
-// `--ui-breadcrumb-chevron`. The inter-item gap is `--ui-breadcrumb-gap` (4px).
-// Type is 14px / 24px line-height to match the design's `body/default`.
+// Colors are wired to the next-gen `--ui-breadcrumb-*` tokens from
+// @acronis-platform/tokens-pd: links use `--ui-breadcrumb-link-label-<state>`
+// (idle gray, darkening on hover/active), the current page uses
+// `--ui-breadcrumb-page-label-color`, and the chevron separator uses
+// `--ui-breadcrumb-separator-icon-color` sized by `--ui-breadcrumb-separator-icon-size`
+// (16px). The inter-item gap is `--ui-breadcrumb-list-gap` (4px). Type is
+// 14px / 24px line-height to match the design's `body/default`.
 
 export interface BreadcrumbProps extends React.ComponentPropsWithoutRef<'nav'> {
   /**
@@ -39,7 +41,7 @@ const BreadcrumbList = React.forwardRef<
   <ol
     ref={ref}
     className={cn(
-      'flex flex-wrap items-center gap-[var(--ui-breadcrumb-gap)] break-words text-sm font-normal leading-6',
+      'flex flex-wrap items-center gap-[var(--ui-breadcrumb-list-gap)] break-words text-sm font-normal leading-6',
       className
     )}
     {...props}
@@ -54,7 +56,7 @@ const BreadcrumbItem = React.forwardRef<
   <li
     ref={ref}
     className={cn(
-      'inline-flex items-center gap-[var(--ui-breadcrumb-gap)]',
+      'inline-flex items-center gap-[var(--ui-breadcrumb-list-gap)]',
       className
     )}
     {...props}
@@ -80,7 +82,7 @@ const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
       props: mergeProps<'a'>(
         {
           className: cn(
-            'rounded-sm text-[var(--ui-breadcrumb-link)] no-underline transition-colors hover:underline focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)] focus-visible:ring-offset-2 ring-offset-background',
+            'rounded-sm text-[var(--ui-breadcrumb-link-label-idle)] no-underline transition-colors hover:text-[var(--ui-breadcrumb-link-label-hover)] hover:underline active:text-[var(--ui-breadcrumb-link-label-active)] focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)] focus-visible:ring-offset-2 ring-offset-background',
             className
           ),
         },
@@ -100,7 +102,7 @@ const BreadcrumbPage = React.forwardRef<
     role="link"
     aria-disabled="true"
     aria-current="page"
-    className={cn('text-[var(--ui-breadcrumb-value)]', className)}
+    className={cn('text-[var(--ui-breadcrumb-page-label-color)]', className)}
     {...props}
   />
 ));
@@ -115,7 +117,7 @@ const BreadcrumbSeparator = ({
     role="presentation"
     aria-hidden="true"
     className={cn(
-      'inline-flex items-center text-[var(--ui-breadcrumb-chevron)] [&>svg]:size-4',
+      'inline-flex items-center text-[var(--ui-breadcrumb-separator-icon-color)] [&>svg]:size-[var(--ui-breadcrumb-separator-icon-size)]',
       className
     )}
     {...props}
@@ -133,7 +135,7 @@ const BreadcrumbEllipsis = ({
     role="presentation"
     aria-hidden="true"
     className={cn(
-      'inline-flex size-4 items-center justify-center text-[var(--ui-breadcrumb-link)]',
+      'inline-flex size-4 items-center justify-center text-[var(--ui-breadcrumb-link-label-idle)]',
       className
     )}
     {...props}

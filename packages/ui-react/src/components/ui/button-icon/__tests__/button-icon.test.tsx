@@ -28,9 +28,9 @@ describe('ButtonIcon', () => {
       </ButtonIcon>
     );
     expect(screen.getByRole('button', { name: 'Add' })).toHaveClass(
-      'size-8',
-      'bg-[var(--ui-button-icon-background-idle)]',
-      'text-[var(--ui-button-icon-icon-idle)]'
+      'size-[var(--ui-button-icon-global-container-height)]',
+      'bg-[var(--ui-button-icon-global-container-idle)]',
+      'text-[var(--ui-button-icon-global-icon-idle)]'
     );
   });
 
@@ -42,7 +42,7 @@ describe('ButtonIcon', () => {
     );
     expect(screen.getByRole('button', { name: 'Add' })).toHaveClass(
       'custom-class',
-      'size-8'
+      'size-[var(--ui-button-icon-global-container-height)]'
     );
   });
 
