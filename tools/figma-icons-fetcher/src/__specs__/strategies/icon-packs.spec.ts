@@ -90,6 +90,53 @@ describe('iconPacksStrategy', () => {
     expect(icons).toEqual([{ id: 'i1', name: 'bell', pageName: 'stroke-mono/symbols' }]);
   });
 
+  it('matches CategoryTitle text nodes case-insensitively after trimming', () => {
+    const icons = iconPacksStrategy(
+      sectionOf([
+        {
+          id: 'p1',
+          name: 'stroke-mono',
+          type: 'FRAME',
+          children: [
+            {
+              id: 'cat1',
+              name: 'Category',
+              type: 'FRAME',
+              children: [
+                { id: 'title', name: '  CATEGORYTITLE  ', type: 'TEXT', characters: 'Controls' },
+                icon('i1', '_assetsource/Toggle'),
+              ],
+            },
+          ],
+        },
+      ]),
+      config,
+    );
+
+    expect(icons).toEqual([{ id: 'i1', name: 'toggle', pageName: 'stroke-mono/controls' }]);
+  });
+
+  it('collects deeply nested icons without recursive traversal', () => {
+    let nested: FigmaNode = icon('deep', '_assetsource/Database');
+    for (let i = 0; i < 15_000; i += 1) {
+      nested = { id: `f-${i}`, name: `Frame ${i}`, type: 'FRAME', children: [nested] };
+    }
+
+    const icons = iconPacksStrategy(
+      sectionOf([
+        {
+          id: 'p1',
+          name: 'solid-mono',
+          type: 'FRAME',
+          children: [{ id: 'cat1', name: 'Category', type: 'FRAME', children: [title('Deep'), nested] }],
+        },
+      ]),
+      config,
+    );
+
+    expect(icons).toEqual([{ id: 'deep', name: 'database', pageName: 'solid-mono/deep' }]);
+  });
+
   it('ignores components without the _assetsource/ prefix and non-component noise', () => {
     const icons = iconPacksStrategy(
       sectionOf([
