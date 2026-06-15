@@ -21,7 +21,11 @@ figma.connect(
       }),
     },
     example: ({ checked, disabled }) => (
-      <Switch aria-label="Setting" defaultChecked={checked} disabled={disabled} />
+      <Switch
+        aria-label="Setting"
+        defaultChecked={checked}
+        disabled={disabled}
+      />
     ),
   }
 );

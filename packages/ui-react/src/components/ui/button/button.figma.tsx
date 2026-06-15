@@ -6,7 +6,7 @@ import { Button } from './button';
 
 figma.connect(
   Button,
-  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=1173-2789',
+  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2236-5696',
   {
     props: {
       variant: figma.enum('Variant', {
