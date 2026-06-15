@@ -10,6 +10,7 @@
 @import '@acronis-platform/tokens-pd/css/Checkbox/acronis.css';
 @import '@acronis-platform/tokens-pd/css/InputText/acronis.css';
 @import '@acronis-platform/tokens-pd/css/Breadcrumb/acronis.css';
+@import '@acronis-platform/tokens-pd/css/Tag/acronis.css';
 
 /* Theme switches via the `[data-theme]` attribute (set by the consumer /
    next-themes), which drives the tokens' `light-dark()` + `color-scheme` — mirror
