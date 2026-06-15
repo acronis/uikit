@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { AcronisIcon } from '../packs/solid-mono';
-import { CircleCheckSolidIcon } from '../packs/stroke-multi';
-import { SparklesDuplicateIcon } from '../packs/solid-multi';
+import { BrandAcronisIcon } from '../packs/solid-mono';
+import { CircleCheckColorIcon } from '../packs/stroke-multi';
+import { SparklesColorIcon } from '../packs/solid-multi';
 
 function svgOf(container: HTMLElement): SVGSVGElement {
   const svg = container.querySelector('svg');
@@ -13,7 +13,7 @@ function svgOf(container: HTMLElement): SVGSVGElement {
 
 describe('solid-mono pack', () => {
   it('paints with currentColor fill (no authored color, no stroke width)', () => {
-    const svg = svgOf(render(<AcronisIcon />).container);
+    const svg = svgOf(render(<BrandAcronisIcon />).container);
     expect(svg).toHaveAttribute('fill', 'currentColor');
     expect(svg).not.toHaveAttribute('stroke-width');
     // authored fill on the path was stripped so the svg's fill cascades.
@@ -23,7 +23,7 @@ describe('solid-mono pack', () => {
 
 describe('multicolor packs keep authored colors', () => {
   it('stroke-multi preserves per-path colors but takes stroke width from rules', () => {
-    const svg = svgOf(render(<CircleCheckSolidIcon size={16} />).container);
+    const svg = svgOf(render(<CircleCheckColorIcon size={16} />).container);
     expect(svg).toHaveAttribute('fill', 'none');
     expect(svg).not.toHaveAttribute('stroke'); // not forced to currentColor
     expect(svg).toHaveAttribute('stroke-width', '2.4'); // rule-driven at 16px
@@ -34,10 +34,10 @@ describe('multicolor packs keep authored colors', () => {
   });
 
   it('solid-multi preserves gradients with namespaced ids', () => {
-    const svg = svgOf(render(<SparklesDuplicateIcon />).container);
+    const svg = svgOf(render(<SparklesColorIcon />).container);
     const gradientId = svg.querySelector('linearGradient')?.id;
     // ids are namespaced per-icon so gradients can't collide across icons.
-    expect(gradientId).toMatch(/^sparkles-duplicate-/);
+    expect(gradientId).toMatch(/^sparkles-/);
     expect(svg.querySelector('path')?.getAttribute('fill')).toBe(
       `url(#${gradientId})`
     );
