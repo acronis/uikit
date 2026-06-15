@@ -21,19 +21,28 @@ function iconName(node: FigmaNode): string {
 // itself is just named "Category". Falls back to the frame's own name.
 function categoryLabel(frame: FigmaNode): string {
   const title = frame.children?.find(
-    (child) => child.type === 'TEXT' && child.name.trim().toLowerCase() === TITLE_NAME,
+    (child) =>
+      child.type === 'TEXT' &&
+      child.name.trim().localeCompare(TITLE_NAME, undefined, { sensitivity: 'accent' }) === 0,
   )?.characters;
   return formatName(title?.trim() || frame.name);
 }
 
 function collectIcons(node: FigmaNode, pageName: string, icons: FigmaIcon[]): void {
-  const visit = (candidate: FigmaNode): void => {
+  const stack: FigmaNode[] = [node];
+
+  while (stack.length > 0) {
+    const candidate = stack.pop() as FigmaNode;
+
     if (isIcon(candidate)) {
       icons.push({ id: candidate.id, name: iconName(candidate), pageName });
     }
-    candidate.children?.forEach(visit);
-  };
-  visit(node);
+
+    const children = candidate.children ?? [];
+    for (let i = children.length - 1; i >= 0; i -= 1) {
+      stack.push(children[i]);
+    }
+  }
 }
 
 /**
