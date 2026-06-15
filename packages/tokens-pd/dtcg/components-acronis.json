@@ -4199,5 +4199,91 @@
         }
       }
     }
+  },
+  "Tooltip": {
+    "container": {
+      "borderRadius": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "CORNER_RADIUS"
+          ],
+          "com.figma.variableId": "VariableID:2235:1610"
+        },
+        "$type": "dimension",
+        "$value": "{units.radius.4}"
+      },
+      "color": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "FRAME_FILL"
+          ],
+          "com.figma.variableId": "VariableID:2235:1607"
+        },
+        "$type": "color",
+        "$value": "{colors.background.overlay.primary}"
+      },
+      "paddingX": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "GAP"
+          ],
+          "com.figma.variableId": "VariableID:2235:1613"
+        },
+        "$type": "dimension",
+        "$value": "{units.gap.12}"
+      },
+      "paddingY": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "GAP"
+          ],
+          "com.figma.variableId": "VariableID:2235:1614"
+        },
+        "$type": "dimension",
+        "$value": "{units.gap.8}"
+      },
+      "widthMax": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "WIDTH_HEIGHT"
+          ],
+          "com.figma.variableId": "VariableID:2235:1612"
+        },
+        "$type": "dimension",
+        "$value": "{units.size.256}"
+      },
+      "widthMin": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "WIDTH_HEIGHT"
+          ],
+          "com.figma.variableId": "VariableID:2235:1611"
+        },
+        "$type": "dimension",
+        "$value": "{units.size.48}"
+      }
+    },
+    "label": {
+      "color": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "TEXT_FILL"
+          ],
+          "com.figma.variableId": "VariableID:2235:1608"
+        },
+        "$type": "color",
+        "$value": "{colors.text.onOverlay.primary}"
+      },
+      "textStyle": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ],
+          "com.figma.variableId": "VariableID:2235:1609"
+        },
+        "$type": "string",
+        "$value": "caption/strong"
+      }
+    }
   }
 }
