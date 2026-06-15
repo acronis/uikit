@@ -109,7 +109,6 @@ export default {
         "border-on-brand": "light-dark(rgb(255 255 255 / 0.102), rgb(0 0 0 / 0.102))",
         "on-brand-border-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "on-brand-divider": "light-dark(rgb(255 255 255 / 0.102), rgb(0 0 0 / 0.102))",
-        "on-status-ai-strong": "linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
         "on-status-critical": "light-dark(rgb(255 204 153), rgb(178 80 0))",
         "on-status-critical-strong": "light-dark(rgb(240 112 0), rgb(133 83 33))",
         "on-status-danger": "light-dark(rgb(248 195 195), rgb(173 31 31))",
@@ -159,6 +158,7 @@ export default {
         "secondary": "light-dark(rgb(190 215 244), rgb(11 66 142))"
       },
       "backgroundImage": {
+        "on-status-ai-strong": "linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
         "ai-active": "linear-gradient(180deg, rgb(43 54 155) 20%, rgb(118 21 113) 100%)",
         "ai-disabled": "linear-gradient(180deg, rgb(223 226 255) 20%, rgb(255 218 253) 100%)",
         "ai-hover": "linear-gradient(180deg, rgb(51 66 195) 20%, rgb(182 33 174) 100%)",
