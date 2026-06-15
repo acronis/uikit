@@ -23,8 +23,28 @@ import { BRANDS, resolveColorMap, resolveTokens, semanticRoots, tailwindRoleMap 
 // typography) → one base `tokens` preset; every other first path segment is a
 // component → its own preset. Mirrors the css build's semantics/component split,
 // reusing the same data-driven root set so the two partitions can't drift.
+
+function sanitizeLightDarkArg(input: string): string {
+  const trimmed = input.trim();
+  if (trimmed.length === 0) throw new Error('Invalid empty color value for light-dark()');
+  if (trimmed.toLowerCase().includes('light-dark(')) {
+    throw new Error('Nested light-dark() is not allowed');
+  }
+  if (/[;{}]/.test(trimmed)) {
+    throw new Error('Invalid characters in color value for light-dark()');
+  }
+  return trimmed;
+}
+
+function composeLightDark(light: string, dark: string): string {
+  const safeLight = sanitizeLightDarkArg(light);
+  const safeDark = sanitizeLightDarkArg(dark);
+  return `light-dark(${safeLight}, ${safeDark})`;
+}
+
 const SEMANTIC_ROOTS = semanticRoots();
 const sliceOf = (token: TransformedToken): string =>
+  // Shared semantic vocabulary (colors/gradients/typography) is emitted under the base `tokens` preset.
   SEMANTIC_ROOTS.has(token.path[0]) ? 'tokens' : token.path[0];
 
 // Tailwind theme namespaces we populate from tokens. Colors are split into
@@ -122,15 +142,16 @@ export function routeColor(path: string[]): { namespace: ColorNamespace; key: st
   for (let i = path.length - 1; i >= 0; i--) {
     const namespace = roleMap.get(path[i]);
     if (namespace) {
-      const key = path
-        .filter((seg, j) => {
-          if (seg === WRAPPER_SEGMENT) return false;
-          if (isSemantic && j === i) return false;
-          if (isSemantic && j === 0 && seg === TIER_PREFIX) return false;
-          return true;
-        })
-        .map(normalizeSegment)
-        .join('-');
+      let key = '';
+      for (let j = 0; j < path.length; j++) {
+        const seg = path[j];
+        if (seg === WRAPPER_SEGMENT) continue;
+        if (isSemantic && j === i) continue;
+        if (isSemantic && j === 0 && seg === TIER_PREFIX) continue;
+
+        const normalized = normalizeSegment(seg);
+        key = key ? `${key}-${normalized}` : normalized;
+      }
       return { namespace: namespace as ColorNamespace, key };
     }
   }
@@ -138,17 +159,22 @@ export function routeColor(path: string[]): { namespace: ColorNamespace; key: st
 }
 
 /** Assign into a namespace map, throwing if two tokens land on the same key. */
-function put(map: Record<string, string>, key: string, value: string, path: string[]): void {
-  if (key in map) throw new Error(`Tailwind key collision on '${key}' (at ${path.join('.')})`);
+function put(map: Record<string, string>, key: string, value: string, contextPath: string[]): void {
+  if (key in map) throw new Error(`Tailwind key collision on '${key}' (at ${contextPath.join('.')})`);
   map[key] = value;
 }
 
 /** Parse a `prop: value;`-per-line declaration block into a property map. */
 function parseDeclarations(block: string): Record<string, string> {
   const out: Record<string, string> = {};
-  for (const line of block.split('\n')) {
-    const match = /^\s*([\w-]+)\s*:\s*(.+?);?\s*$/.exec(line);
-    if (match) out[match[1]] = match[2];
+  for (const rawLine of block.split('\n')) {
+    const line = rawLine.trim();
+    if (!line) continue;
+    // This parser intentionally supports exactly one declaration per line.
+    // Multiline values are out of scope for typography token composites.
+    if (/[\r\n]/.test(line)) continue;
+    const match = /^([\w-]+)\s*:\s*([^;]+?)\s*;?$/.exec(line);
+    if (match) out[match[1]] = match[2].trim();
   }
   return out;
 }
@@ -193,7 +219,19 @@ export function buildThemeExtend(
         }
         throw err;
       }
-      put(theme[routed.namespace], routed.key, `light-dark(${value}, ${dark})`, token.path);
+      let lightDarkValue: string;
+      try {
+        lightDarkValue = composeLightDark(value, dark);
+      } catch (err) {
+        if (!isSemanticColor(token.path)) {
+          console.warn(
+            `tailwind: skipped invalid component color token value for light-dark() (kept in CSS/tiers): ${token.path.join('.')}`,
+          );
+          continue;
+        }
+        throw err;
+      }
+      put(theme[routed.namespace], routed.key, lightDarkValue, token.path);
     } else if (token.$type === 'gradient') {
       if (value === null) continue;
       // Gradients can't be a `*-color` (those set a solid paint); Tailwind's

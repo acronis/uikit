@@ -5,7 +5,7 @@
 // light/dark zip stay pinned independently of a full `build`.
 
 import type { TransformedToken } from 'style-dictionary/types';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { collectDecls, serializeCss } from '../formats/css-light-dark';
 import { normalizeTree } from '../preprocessors/acronis-dtcg';
@@ -366,5 +366,44 @@ describe('buildThemeExtend', () => {
         new Map()
       )
     ).toThrow(/collision/);
+  });
+
+  it('skips component color tokens with invalid light-dark() args', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const theme = buildThemeExtend(
+        [
+          tok({
+            name: 'ui-button-primary-container-idle',
+            path: ['button', 'primary', 'container', 'color', 'idle'],
+            $type: 'color',
+            $value: 'light-dark(rgb(255 255 255), rgb(0 0 0))',
+          }),
+        ],
+        new Map()
+      );
+      expect(theme.backgroundColor['button-primary-container-idle']).toBeUndefined();
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining('skipped invalid component color token value for light-dark()')
+      );
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it('throws for invalid semantic color token values in light-dark()', () => {
+    expect(() =>
+      buildThemeExtend(
+        [
+          tok({
+            name: 'ui-background-surface-primary',
+            path: ['colors', 'background', 'surface', 'primary'],
+            $type: 'color',
+            $value: 'rgb(255 255 255); color: red',
+          }),
+        ],
+        new Map()
+      )
+    ).toThrow(/Invalid characters in color value for light-dark\(\)/);
   });
 });
