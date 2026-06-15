@@ -1,14 +1,14 @@
 [
-  "circle-check-solid",
-  "circle-info-solid",
-  "circle-times-solid",
-  "circle-warning-solid",
-  "circles-solid",
-  "diamond-warning-solid",
-  "dot-blue-solid",
-  "dot-green-solid",
-  "dot-orange-solid",
-  "dot-red-solid",
-  "dot-yellow-solid",
-  "triangle-warning-solid"
+  "circle-check-color",
+  "circle-info-color",
+  "circle-times-color",
+  "circle-warning-color",
+  "circles-color",
+  "diamond-warning-color",
+  "dot-blue-color",
+  "dot-green-color",
+  "dot-orange-color",
+  "dot-red-color",
+  "dot-yellow-color",
+  "triangle-warning-color"
 ]
