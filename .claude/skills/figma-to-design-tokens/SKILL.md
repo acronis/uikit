@@ -25,13 +25,14 @@ Run this before any other phase.
 **Step 1 — data source**
 
 Ask the user (AskUserQuestion) whether to fetch fresh data from Figma or use
-the last snapshot already on disk. Default to **fetch** when no instruction
+a snapshot already on disk. Default to **fetch** when no instruction
 was given or the user's prompt does not say otherwise.
 
 Options:
 
 - **Fetch from Figma** _(default)_ — pull a new snapshot via the figma-console MCP
 - **Use last snapshot** — work from `.claude/skills/figma-to-design-tokens/snapshot/` files already present
+- **Use `.tmp/figma-tokens`** — build from `packages/design-tokens/.tmp/figma-tokens/`, the snapshot written by the repo's figma-token-exporter. **No figma-console involved** — skip the plugin check below, skip Phase 1 entirely, and run Phase 2 with `--tmp` (see below).
 
 **Step 2a — plugin check (fetch path only)**
 
@@ -165,8 +166,15 @@ the loader auto-unwraps it.
 ## Phase 2 — Combine
 
 ```bash
-node .claude/skills/figma-to-design-tokens/figma-snapshot-build.mjs
+node .claude/skills/figma-to-design-tokens/figma-snapshot-build.mjs          # default: reads snapshot/ (figma-console pull)
+node .claude/skills/figma-to-design-tokens/figma-snapshot-build.mjs --tmp    # reads packages/design-tokens/.tmp/figma-tokens/ (figma-token-exporter)
 ```
+
+`--tmp` is the figma-console-free path: it builds the snapshot from the
+figma-token-exporter output instead of the figma-console pull. The exporter
+writes split `styles-{text,color,effect}.json` rather than a single
+`styles.json`; the loader handles both layouts. The remaining phases (emit,
+validate, diff) are identical either way.
 
 Output: `.claude/skills/figma-to-design-tokens/snapshot/figma-snapshot.json`
 

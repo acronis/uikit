@@ -62,18 +62,25 @@ export class FigmaSourceLoader {
     return raw;
   }
 
-  // Styles come from a single execute pull written verbatim to styles.json:
-  // an MCP envelope { _mcp, success, result: { text, color, effect, grid } }.
-  // Auto-unwrap the envelope (like #readMeta) and default each section to [].
+  // Styles come in one of two layouts:
+  //   - figma-console pull: a single styles.json, an MCP envelope
+  //     { _mcp, success, result: { text, color, effect, grid } } (auto-unwrapped).
+  //   - figma-token-exporter (.tmp/figma-tokens): split styles-{text,color,
+  //     effect}.json, each a bare { styles: [...] }.
+  // Each section defaults to [].
   #readStyles() {
     const raw = this.#readJson(this.stylesPath, false);
-    if (!raw) return { text: [], color: [], effect: [], grid: [] };
-    const data = raw._mcp !== undefined && raw.result !== undefined ? raw.result : raw;
-    return {
-      text:   data.text   ?? [],
-      color:  data.color  ?? [],
-      effect: data.effect ?? [],
-      grid:   data.grid   ?? [],
-    };
+    if (raw) {
+      const data = raw._mcp !== undefined && raw.result !== undefined ? raw.result : raw;
+      return {
+        text:   data.text   ?? [],
+        color:  data.color  ?? [],
+        effect: data.effect ?? [],
+        grid:   data.grid   ?? [],
+      };
+    }
+    const split = name =>
+      this.#readJson(path.join(this.#dir, `styles-${name}.json`), false)?.styles ?? [];
+    return { text: split('text'), color: split('color'), effect: split('effect'), grid: [] };
   }
 }

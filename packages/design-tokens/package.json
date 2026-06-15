@@ -26,7 +26,7 @@
     "build": "echo \"no build (JSON data package)\" && exit 0",
     "clean": "echo \"nothing to clean (JSON data package)\" && exit 0",
     "dev": "echo \"no dev server (JSON data package)\" && exit 0",
-    "emit": "node .tmp/scripts/figma-pull-postprocess.mjs && node .tmp/scripts/figma-to-primitives.mjs && node .tmp/scripts/figma-to-semantic.mjs && node .tmp/scripts/figma-to-components.mjs && pnpm run validate",
+    "emit": "node ../../.claude/skills/figma-to-design-tokens/figma-snapshot-build.mjs --tmp && node ../../.claude/skills/figma-to-design-tokens/emit-primitives.mjs && node ../../.claude/skills/figma-to-design-tokens/emit-semantics.mjs && node ../../.claude/skills/figma-to-design-tokens/emit-components.mjs && pnpm run validate",
     "lint": "echo \"no lint (JSON data package; validated via test)\" && exit 0",
     "lint:fix": "echo \"no lint (JSON data package; validated via test)\" && exit 0",
     "test": "pnpm run validate",

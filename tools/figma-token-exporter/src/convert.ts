@@ -5,11 +5,11 @@
 // formatters/dtcg.js + alias-resolver.js), restricted to the single-file,
 // all-modes export shape that this repo's design-tokens emitters consume.
 //
-// Faithfulness is the whole point: the committed `.tmp/scripts/figma-to-*`
-// emitters were written against figma-console's output, so reproducing the
-// exact transform (slugified collection key, slash→path variable names,
-// `lastSyncedValue` keyed by mode name with {reference}|{literal}, primary
-// mode in `$value` and others under `$extensions.modes`) yields a drop-in
+// Faithfulness is the whole point: the `/figma-to-design-tokens` skill's
+// snapshot loader + tier emitters were written against figma-console's output,
+// so reproducing the exact transform (slugified collection key, slash→path
+// variable names, `lastSyncedValue` keyed by mode name with {reference}|{literal},
+// primary mode in `$value` and others under `$extensions.modes`) yields a drop-in
 // snapshot. Do not "improve" the shape here — change the emitters instead.
 
 import type {

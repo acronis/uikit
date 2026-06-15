@@ -22,9 +22,9 @@ documents only what is specific to this workspace.
 `src/convert.ts` is a **faithful, trimmed port** of figma-console-mcp's
 serialization (MIT — `southleft/figma-console-mcp`: `figma-converter.js` +
 `formatters/dtcg.js` + `alias-resolver.js`), restricted to the single-file,
-all-modes export. The committed emitters under
-`packages/design-tokens/.tmp/scripts/` were written against figma-console's
-output, so reproducing its exact transform yields a **drop-in** snapshot:
+all-modes export. The `/figma-to-design-tokens` skill's snapshot loader + tier
+emitters were written against figma-console's output, so reproducing its exact
+transform yields a **drop-in** snapshot:
 
 - top-level key = `slugify(collection.name)` (`Theme` → `theme`, `Brand` → `brand`);
 - token path = `variable.name.split("/")`, case-preserved;
@@ -34,7 +34,7 @@ output, so reproducing its exact transform yields a **drop-in** snapshot:
 - an alias to a non-local target encodes as `{__library:VariableID:X:Y}`.
 
 **Do not "improve" the shape here** — if the contract needs to change, change the
-emitters in `packages/design-tokens/.tmp/scripts/` (and `figma-sync.md`) instead.
+`/figma-to-design-tokens` skill's loader/emitters (and `figma-sync.md`) instead.
 `src/__specs__/convert.spec.ts` pins this contract.
 
 ## How it runs
@@ -66,20 +66,25 @@ operator walkthrough.
 
 Into `packages/design-tokens/.tmp/figma-tokens/` (gitignored — never committed):
 
-| File                    | Consumed by                                      |
-| ----------------------- | ------------------------------------------------ |
-| `variables.tokens.json` | all three `figma-to-*` emitters                  |
-| `variables-meta.json`   | all three (scopes/hidden sidecar)                |
-| `styles-text.json`      | `figma-to-semantic` (letter-spacing, typography) |
-| `styles-color.json`     | parity only — not consumed today                 |
-| `styles-effect.json`    | parity only — not consumed today                 |
+These feed the `/figma-to-design-tokens` skill's snapshot build
+(`figma-snapshot-build.mjs --tmp`), which normalizes them into one
+`figma-snapshot.json` that the three tier emitters consume:
 
-The orphan-coverage gate (`figma-pull-postprocess.mjs`) passes on the first run
-because the plugin folds resolved orphan IDs into `variables-meta.json`.
+| File                    | Consumed by                                   |
+| ----------------------- | --------------------------------------------- |
+| `variables.tokens.json` | snapshot build → all three tier emitters      |
+| `variables-meta.json`   | snapshot build (scopes/hidden sidecar)        |
+| `styles-text.json`      | `emit-semantics` (letter-spacing, typography) |
+| `styles-color.json`     | parity only — not consumed today              |
+| `styles-effect.json`    | parity only — not consumed today              |
+
+The snapshot build's meta-completeness check passes on the first run because the
+plugin folds resolved orphan IDs into `variables-meta.json`.
 
 ## Testing
 
 `pnpm --filter @acronis-platform/figma-token-exporter test` runs the Vitest unit
 specs (pure converter + snapshot writer; no Figma, no network). The end-to-end
-correctness check is the sync itself: after a real export, the three emitters run
-and `git diff tiers/` shows only intended changes.
+correctness check is the sync itself: after a real export, `pnpm --filter
+@acronis-platform/design-tokens emit` runs and `git diff tiers/` shows only
+intended changes.

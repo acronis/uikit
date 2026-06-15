@@ -28,13 +28,16 @@ pnpm --filter @acronis-platform/design-tokens validate    # ajv-compiles the sch
 pnpm --filter @acronis-platform/design-tokens emit
 ```
 
-One-command re-emit: runs the orphan-coverage gate, the three generators in
-dependency order (`figma-to-primitives` → `figma-to-semantic` →
-`figma-to-components`), then `validate` — fail-fast (`&&`-chained). Requires a
-populated `.tmp/figma-tokens/` snapshot (see Bootstrap below). It does **not**
-rebuild `tokens-pd`, review the diff, or fix consumers — that's the
-[`/sync-tokens`](../../.claude/skills/sync-tokens/SKILL.md) flow. Use `emit` for
-the mechanical re-emit; use the skill for a full sync.
+One-command re-emit: builds the normalized snapshot from the
+figma-token-exporter output in `.tmp/figma-tokens/`
+(`figma-snapshot-build.mjs --tmp`), runs the three tier emitters in dependency
+order (`emit-primitives` → `emit-semantics` → `emit-components`), then
+`validate` — fail-fast (`&&`-chained). All scripts live in the
+[`/figma-to-design-tokens`](../../.claude/skills/figma-to-design-tokens/SKILL.md)
+skill; this is the **figma-console-free** path (it reads `.tmp/figma-tokens/`,
+which the exporter writes — no MCP pull). Requires a populated
+`.tmp/figma-tokens/` snapshot. It does **not** rebuild `tokens-pd`, review the
+diff, or fix consumers — run the skill for a diff-gated full sync.
 
 `build` / `dev` / `clean` / `lint` / `typecheck` are intentional no-ops
 — there is nothing to compile in a JSON data package. `test` runs the

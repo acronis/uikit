@@ -1,5 +1,5 @@
 # Local Figma token snapshots — reproducible pull inputs written by the
 # sync flow (tools/figma-token-exporter → its receiver). Never committed; a
-# contributor re-fetches them from Figma. The helper scripts under
-# .tmp/scripts/ ARE committed and stay tracked (they're not matched here).
+# contributor re-fetches them from Figma. The tier emitters now live in the
+# /figma-to-design-tokens skill, so nothing else under .tmp/ is tracked.
 .tmp/figma-tokens/
