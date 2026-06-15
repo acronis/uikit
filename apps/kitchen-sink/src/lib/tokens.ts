@@ -16,19 +16,16 @@
 // --- acronis: semantic is applied by ui-react/styles; we read it here only to
 //     enumerate names. Per-component files we both apply + read.
 import semanticAcronis from '@acronis-platform/tokens-pd/css/acronis.css?raw';
-import breadcrumbAcronis from '@acronis-platform/tokens-pd/css/breadcrumb/acronis.css?raw';
-import buttonAcronis from '@acronis-platform/tokens-pd/css/button/acronis.css?raw';
-import buttonIconAcronis from '@acronis-platform/tokens-pd/css/button-icon/acronis.css?raw';
-import checkboxAcronis from '@acronis-platform/tokens-pd/css/checkbox/acronis.css?raw';
-import iconAcronis from '@acronis-platform/tokens-pd/css/icon/acronis.css?raw';
-import inputAcronis from '@acronis-platform/tokens-pd/css/input/acronis.css?raw';
-import menuItemAcronis from '@acronis-platform/tokens-pd/css/menu-item/acronis.css?raw';
-import sidebarPrimaryAcronis from '@acronis-platform/tokens-pd/css/sidebar-primary/acronis.css?raw';
-import sidebarSecondaryAcronis from '@acronis-platform/tokens-pd/css/sidebar-secondary/acronis.css?raw';
-import switchAcronis from '@acronis-platform/tokens-pd/css/switch/acronis.css?raw';
-import tagAcronis from '@acronis-platform/tokens-pd/css/tag/acronis.css?raw';
-import tooltipAcronis from '@acronis-platform/tokens-pd/css/tooltip/acronis.css?raw';
-import treeAcronis from '@acronis-platform/tokens-pd/css/tree/acronis.css?raw';
+import breadcrumbAcronis from '@acronis-platform/tokens-pd/css/Breadcrumb/acronis.css?raw';
+import buttonAcronis from '@acronis-platform/tokens-pd/css/Button/acronis.css?raw';
+import buttonIconAcronis from '@acronis-platform/tokens-pd/css/ButtonIcon/acronis.css?raw';
+import checkboxAcronis from '@acronis-platform/tokens-pd/css/Checkbox/acronis.css?raw';
+import inputTextAcronis from '@acronis-platform/tokens-pd/css/InputText/acronis.css?raw';
+import sidebarPrimaryAcronis from '@acronis-platform/tokens-pd/css/SidebarPrimary/acronis.css?raw';
+import sidebarSecondaryAcronis from '@acronis-platform/tokens-pd/css/SidebarSecondary/acronis.css?raw';
+import switchAcronis from '@acronis-platform/tokens-pd/css/Switch/acronis.css?raw';
+import tagAcronis from '@acronis-platform/tokens-pd/css/Tag/acronis.css?raw';
+import tooltipAcronis from '@acronis-platform/tokens-pd/css/Tooltip/acronis.css?raw';
 
 export type ColorMode = 'light' | 'dark';
 
@@ -56,15 +53,12 @@ const COMPONENT_SOURCES: { tier: string; css: string }[] = [
   { tier: 'button', css: buttonAcronis },
   { tier: 'button-icon', css: buttonIconAcronis },
   { tier: 'checkbox', css: checkboxAcronis },
-  { tier: 'icon', css: iconAcronis },
-  { tier: 'input', css: inputAcronis },
-  { tier: 'menu-item', css: menuItemAcronis },
+  { tier: 'input-text', css: inputTextAcronis },
   { tier: 'sidebar-primary', css: sidebarPrimaryAcronis },
   { tier: 'sidebar-secondary', css: sidebarSecondaryAcronis },
   { tier: 'switch', css: switchAcronis },
   { tier: 'tag', css: tagAcronis },
   { tier: 'tooltip', css: tooltipAcronis },
-  { tier: 'tree', css: treeAcronis },
 ];
 
 /** Extract the unique `--ui-*` custom-property names declared in a CSS string. */

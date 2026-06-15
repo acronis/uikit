@@ -35,6 +35,10 @@ export default defineConfig({
         'react/jsx-runtime',
         '@base-ui/react',
         /^@base-ui\/react\//,
+        // Sibling published packages — consumers install them separately, so
+        // don't inline them into ui-react's bundle.
+        '@acronis-platform/icons-react',
+        /^@acronis-platform\/icons-react\//,
       ],
       output: {
         // Preserve module structure so consumers tree-shake unused components.
