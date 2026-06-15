@@ -1,6 +1,6 @@
 {
   "name": "@acronis-platform/design-tokens",
-  "version": "0.6.1",
+  "version": "1.0.0",
   "description": "Acronis design tokens",
   "license": "MIT",
   "type": "module",
