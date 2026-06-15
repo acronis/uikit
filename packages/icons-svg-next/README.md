@@ -35,7 +35,7 @@ import strokeArrows from '@acronis-platform/icons-svg-next/figma/stroke-mono-arr
 Icons are pulled by `@acronis-platform/figma-icons-fetcher` using its
 `icon-packs` selection strategy against the `icon-packs-source` section (node
 `2246:3201`, fetched directly by id). Each of the section's four top-level
-frames is a pack, and icons are the `_iconsource/<Name>` components inside it;
+frames is a pack, and icons are the `_assetsource/<Name>` components inside it;
 packs organized into `Category` frames split into per-category manifests. Only
 `src/svg/` and `src/figma/` are written (color categorization is off).
 
