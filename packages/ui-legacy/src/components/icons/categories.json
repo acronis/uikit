@@ -866,7 +866,6 @@
     "circle-16",
     "circle-o-32",
     "circle-outline-16",
-    "cis-16",
     "cisco-tray-32",
     "citrix-tray-32",
     "claim-16",
@@ -890,10 +889,10 @@
     "collapse-menu-16",
     "communigate-32",
     "compare-32",
-    "configure-machine-32"
+    "configure-machine-32",
+    "connected-32"
   ],
   "other-C-D": [
-    "connected-32",
     "connecting-16",
     "console-16",
     "console-log-16",
@@ -952,10 +951,10 @@
     "dislike-16",
     "dislike-o-16",
     "dislikes-16",
-    "document-export-o-32"
+    "document-export-o-32",
+    "document-templates-16"
   ],
   "other-D-F": [
-    "document-templates-16",
     "document-templates-24",
     "download-16",
     "download-24",
@@ -1014,10 +1013,10 @@
     "export-ab-32",
     "facebook-16",
     "facebook-24",
-    "failover-server-24"
+    "failover-server-24",
+    "failover-server-32"
   ],
   "other-F-I": [
-    "failover-server-32",
     "fallback-server-24",
     "files-o-16",
     "files-o-24",
@@ -1076,10 +1075,10 @@
     "image-template-o-24",
     "import-16",
     "import-ab-32",
-    "imported-pool-32"
+    "imported-pool-32",
+    "impossible-cloud-32"
   ],
   "other-I-L": [
-    "impossible-cloud-32",
     "infiniband-24",
     "infinity-32",
     "infrastructure-32",
@@ -1101,7 +1100,6 @@
     "invalid-link-24",
     "inventory-ab-32",
     "ionos-16",
-    "ionos-24",
     "ionos-32",
     "ipn-16",
     "ipn-24",
@@ -1138,11 +1136,11 @@
     "local-backup-o-24",
     "local-backup-o-32",
     "lock-16",
-    "lock-32"
+    "lock-32",
+    "lock-status-16",
+    "locked-16"
   ],
   "other-L-N": [
-    "lock-status-16",
-    "locked-16",
     "locked-32",
     "locked-mix-32",
     "lun-24",
@@ -1173,7 +1171,6 @@
     "migration-ab-32",
     "milestone-16",
     "minimize-24",
-    "minio-32",
     "modal-o-32",
     "money-magnet-32",
     "money-tree-32",
@@ -1200,12 +1197,12 @@
     "notarized-mix-32",
     "notary-24",
     "notary-circle-d-32",
-    "notary-o-16"
-  ],
-  "other-N-P": [
+    "notary-o-16",
     "notary-o-32",
     "notifications-d-o-16",
-    "notifications-o-24",
+    "notifications-o-24"
+  ],
+  "other-N-P": [
     "notifications-with-state-d-o-16",
     "nutanix-16",
     "nutanix-vm-32",
@@ -1262,18 +1259,17 @@
     "placeholder-16",
     "placeholder-24",
     "placeholder-32",
-    "placement-24"
-  ],
-  "other-P-R": [
+    "placement-24",
     "plans-ab-32",
     "plugin-ab-24",
-    "plugin-ab-32",
+    "plugin-ab-32"
+  ],
+  "other-P-R": [
     "plus-16",
     "plus-24",
     "plus-rounded-16",
     "plus-small-16",
     "policy-24",
-    "postgresql-32",
     "posts-32",
     "power-ab-32",
     "power-o-24",
@@ -1324,13 +1320,13 @@
     "refresh-scan-ab-32",
     "reinstall-16",
     "remove-circle-outline-16",
-    "remove-from-group-ab-32"
-  ],
-  "other-R-S": [
+    "remove-from-group-ab-32",
     "remove-from-list-32",
     "replica-32",
     "replica-running-32",
-    "replication-ab-32",
+    "replication-ab-32"
+  ],
+  "other-R-S": [
     "reply-16",
     "reports-custom-24",
     "reports-custom-32",
@@ -1360,7 +1356,6 @@
     "router-24",
     "router-ab-32",
     "routing-24",
-    "s3-24",
     "s3-32",
     "sale-items-24",
     "sale-tray-16",
@@ -1386,14 +1381,14 @@
     "sftp-ab-32",
     "share-16",
     "share-32",
-    "shared-folder-24"
-  ],
-  "other-S-T": [
+    "shared-folder-24",
     "shelve-16",
     "shield-32",
     "shield-mix-32",
     "shopping-cart-16",
-    "shopping-cart-24",
+    "shopping-cart-24"
+  ],
+  "other-S-T": [
     "shopping-cart-o-32",
     "shut-down-16",
     "shut-down-24",
@@ -1448,14 +1443,14 @@
     "synology-32",
     "table-32",
     "table-rows-32",
-    "table-view-16"
-  ],
-  "other-T-V": [
+    "table-view-16",
     "talk-minutes-package-16",
     "talk-minutes-package-24",
     "target-24",
     "target-group-24",
-    "tasks-32",
+    "tasks-32"
+  ],
+  "other-T-V": [
     "test-replica-ab-32",
     "text-file-o-16",
     "text-sign-16",
@@ -1510,14 +1505,14 @@
     "users-16",
     "users-24",
     "users-32",
-    "v-center-32"
-  ],
-  "other-V-Z": [
+    "v-center-32",
     "v-host-16",
     "v-host-24",
     "v-logo-32",
     "validation-plan-ab-32",
-    "vcd-virtual-machines-16",
+    "vcd-virtual-machines-16"
+  ],
+  "other-V-Z": [
     "vcd-virtual-machines-24",
     "veil-engine-16",
     "veil-engine-32",
@@ -1551,7 +1546,6 @@
     "vz-container-running-32",
     "vz-virtual-32",
     "vz-virtual-running-32",
-    "wasabi-32",
     "whatsapp-16",
     "windows-pc-24",
     "windows-pc-32",
