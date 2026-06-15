@@ -386,7 +386,6 @@ const BUTTON_VARIANTS = [
   'ghost',
   'destructive',
   'inverted',
-  'icon',
   'ai',
 ];
 const BUTTON_STATES = ['idle', 'hover', 'active', 'disabled'];
@@ -399,8 +398,8 @@ export const buttonMatrix: TokenMatrix = buildMatrix(
   BUTTON_VARIANTS,
   (
     [
-      ['Background', 'fill', 'background'],
-      ['Border', 'border', 'border'],
+      ['Container', 'fill', 'container'],
+      ['Border', 'border', 'container-border-color'],
       ['Icon', 'glyph', 'icon'],
       ['Label', 'text', 'label'],
     ] as const

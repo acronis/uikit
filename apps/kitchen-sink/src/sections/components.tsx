@@ -53,27 +53,45 @@ const STYLES: { variant: Variant; token: string; label: string }[] = [
 type State = 'idle' | 'hover' | 'active' | 'disabled' | 'focus';
 const STATES: State[] = ['idle', 'hover', 'active', 'disabled', 'focus'];
 
+const FOCUS_RING =
+  '0 0 0 2px var(--ui-background-surface-primary), 0 0 0 4px var(--ui-focus-brand)';
+
 // Hover/active/focus only trigger on real interaction, so the spec matrix
 // forces each cell to a static state by overriding the component's colors with
-// the matching `--ui-button-*` state tokens. Focus reuses the idle colors and
-// adds the design's focus ring. Idle/disabled render the real component (idle
-// untouched, disabled via the `disabled` prop) so its own styling is exercised.
+// the matching next-gen `--ui-button-*` state tokens. Focus reuses the idle
+// colors and adds the design's focus ring. Idle/disabled render the real
+// component (idle untouched, disabled via the `disabled` prop) so its own
+// styling is exercised. The container fill is `--ui-button-<variant>-container-*`
+// (a gradient for `ai`); the border only exists for the `secondary`/`inverted`
+// variants (`-container-border-color-*`) — for the others the var is undefined,
+// so the declaration is ignored and the component's transparent border shows.
 function forcedStyle(
   token: string,
   state: 'hover' | 'active' | 'focus',
-  colorKey: 'label' | 'icon',
   gradient: boolean
 ): CSSProperties {
   const cs = state === 'focus' ? 'idle' : state;
   const style: CSSProperties = gradient
-    ? { backgroundImage: `var(--ui-background-ai-${cs})` }
-    : { backgroundColor: `var(--ui-button-${token}-background-${cs})` };
-  style.color = `var(--ui-button-${token}-${colorKey}-${cs})`;
-  style.borderColor = `var(--ui-button-${token}-border-${cs})`;
-  if (state === 'focus') {
-    style.boxShadow =
-      '0 0 0 2px var(--ui-background-surface-primary), 0 0 0 4px var(--ui-focus-brand)';
-  }
+    ? { backgroundImage: `var(--ui-button-${token}-container-${cs})` }
+    : { backgroundColor: `var(--ui-button-${token}-container-${cs}, transparent)` };
+  style.color = `var(--ui-button-${token}-label-${cs})`;
+  // Only `secondary`/`inverted` define a border token; for the others the var is
+  // undefined and falls back to `transparent` (an undefined var in an inline
+  // longhand would otherwise compute to `currentColor` and paint a stray border).
+  style.borderColor = `var(--ui-button-${token}-container-border-color-${cs}, transparent)`;
+  if (state === 'focus') style.boxShadow = FOCUS_RING;
+  return style;
+}
+
+// ButtonIcon has a single (borderless) style under `--ui-button-icon-global-*`:
+// a transparent container fill and a per-state glyph color.
+function forcedIconStyle(state: 'hover' | 'active' | 'focus'): CSSProperties {
+  const cs = state === 'focus' ? 'idle' : state;
+  const style: CSSProperties = {
+    backgroundColor: `var(--ui-button-icon-global-container-${cs})`,
+    color: `var(--ui-button-icon-global-icon-${cs})`,
+  };
+  if (state === 'focus') style.boxShadow = FOCUS_RING;
   return style;
 }
 
@@ -106,7 +124,7 @@ function ButtonCell({ variant, token, state }: { variant: Variant; token: string
       </Button>
     );
   return (
-    <Button variant={variant} style={forcedStyle(token, state, 'label', variant === 'ai')}>
+    <Button variant={variant} style={forcedStyle(token, state, variant === 'ai')}>
       Label
     </Button>
   );
@@ -126,7 +144,7 @@ function ButtonIconCell({ state }: { state: State }) {
       </ButtonIcon>
     );
   return (
-    <ButtonIcon aria-label="Add" style={forcedStyle('icon', state, 'icon', false)}>
+    <ButtonIcon aria-label="Add" style={forcedIconStyle(state)}>
       <PlusIcon />
     </ButtonIcon>
   );
