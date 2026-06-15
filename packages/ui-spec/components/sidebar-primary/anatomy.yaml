@@ -1,0 +1,112 @@
+spec_version: '1.0'
+component: SidebarPrimary
+
+schematic: |
+  root: <nav aria-label="Primary" data-state="expanded|collapsed">
+  +-------------------------------------------+
+  | header: <div>  (consumer logo)            |
+  +-------------------------------------------+
+  | content: <div>  (scrollable)              |
+  |  +-------------------------------------+  |
+  |  | section: <div>                      |  |
+  |  |  +-------------------------------+  |  |
+  |  |  | menu: <ul>                    |  |  |
+  |  |  |  +-------------------------+  |  |  |
+  |  |  |  | menu-item: <li><a>      |  |  |  |
+  |  |  |  |  [icon] label  [extras] |  |  |  |
+  |  |  |  +-------------------------+  |  |  |
+  |  |  +-------------------------------+  |  |
+  |  +-------------------------------------+  |
+  +-------------------------------------------+
+  | footer: <div>  (top border)               |
+  |  menu / menu-item                         |
+  |  collapse-trigger: <li><button>           |
+  +-------------------------------------------+
+     menu-item selected   -> --ui-sidebar-primary-menu-item-selected-*
+     menu-item unselected -> --ui-sidebar-primary-menu-item-unselected-*
+     extras               -> --ui-sidebar-primary-menu-item-extras-*
+
+root:
+  element: nav
+  role: navigation
+  description: >-
+    Navigation landmark (`<nav aria-label="Primary">`) owning the expanded /
+    collapsed width state via `data-state`. Polymorphic via the `render` prop.
+
+parts:
+  - id: header
+    description: >-
+      Logo slot (`<div>`). Padding and logo height switch on expanded /
+      collapsed. The product logo is a consumer-provided child, not a built part.
+    element: div
+  - id: content
+    description: >-
+      Scrollable region (`<div>`, `overflow-y-auto`) stacking the sections.
+    element: div
+  - id: footer
+    description: >-
+      Footer menu region (`<div>`) with a top divider, pinned to the bottom.
+    element: div
+  - id: section
+    description: >-
+      A group of menu items (`<div>`). Non-first sections carry a top divider.
+    element: div
+  - id: menu
+    description: The list (`<ul>`) that owns the inter-item gap.
+    element: ul
+  - id: menu-item
+    description: >-
+      One nav row (`<li><a>`, polymorphic via `render`): optional leading icon +
+      label + optional extras. `selected` marks the current route and sets
+      `aria-current="page"`. In collapsed mode the label stays as `sr-only`.
+    element: a
+  - id: extras
+    description: >-
+      Trailing affordance (`<span>`) inside a menu item: a keyboard shortcut, an
+      external-link icon, a tag, or a tag + external-link.
+    element: span
+    optional: true
+  - id: collapse-trigger
+    description: >-
+      The footer "Collapse menu" affordance (`<li><button>`): a row-styled button
+      that toggles the rail width via the layout context, driving the
+      controlled/uncontrolled `expanded` state and emitting `expanded-change`.
+      Carries `aria-expanded`.
+    element: button
+    optional: true
+
+layout:
+  type: flex
+  direction: column
+  align: stretch
+  order: [header, content, footer]
+
+# `selected` and `expanded` are real props; the interaction states are pure CSS
+# pseudo-classes on the menu item. Figma `idle` is the default (not listed);
+# `firstSection` is structural (derived from DOM position), not a state.
+states:
+  - id: selected
+    trigger: the menu item represents the current route
+    kind: prop
+    prop: selected
+    affects: [menu-item]
+  - id: expanded
+    trigger: the rail is in full-width (expanded) mode
+    kind: prop
+    prop: expanded
+    affects: [root, header, menu-item, extras, collapse-trigger]
+  - id: hover
+    trigger: pointer hover over a menu item
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [menu-item]
+  - id: active
+    trigger: pointer or keyboard activation of a menu item
+    kind: pseudo
+    pseudo: ':active'
+    affects: [menu-item]
+  - id: focus-visible
+    trigger: keyboard focus on a menu item
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [menu-item]

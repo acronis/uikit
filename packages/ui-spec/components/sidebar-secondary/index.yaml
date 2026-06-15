@@ -1,0 +1,22 @@
+spec_version: '1.0'
+component: SidebarSecondary
+name: sidebar-secondary
+status: ready
+category: navigation
+description: >-
+  The contextual second-level navigation panel that sits beside the primary
+  rail. A set of composable parts (header, content, sections with optional
+  labels, menu, fixed and expandable menu items, level-2 sub-items, extras)
+  that reflows between an expanded (256px) panel and a collapsed (48px) rail.
+  In collapsed mode the section list is replaced by a vertical breadcrumb
+  (parent → separator → current page). Expandable rows disclose a level-2 child
+  list via Base UI Collapsible.
+since: 0.7.0
+dependencies:
+  components:
+    - SquareArrowUpRightIcon
+    - ChevronRightIcon
+    - ChevronDownIcon
+figma:
+  node: '2468:59502'
+  codeConnect: packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.figma.tsx

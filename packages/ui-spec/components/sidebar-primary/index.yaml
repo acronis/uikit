@@ -1,0 +1,18 @@
+spec_version: '1.0'
+component: SidebarPrimary
+name: sidebar-primary
+status: ready
+category: navigation
+description: >-
+  The app-level navigation rail. A set of composable parts (header, content,
+  footer, sections, menu, menu items, extras) that reflows between an expanded
+  (256px) and a collapsed (48px icon rail) state. Menu items carry a `selected`
+  variant for the current route; trailing extras add a shortcut, external-link,
+  or tag affordance. The product logo is consumer-slotted into the header.
+since: 0.7.0
+dependencies:
+  components:
+    - SquareArrowUpRightIcon
+figma:
+  node: '2092:4359'
+  codeConnect: packages/ui-react/src/components/ui/sidebar-primary/sidebar-primary.figma.tsx

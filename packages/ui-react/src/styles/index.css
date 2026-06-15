@@ -12,6 +12,8 @@
 @import '@acronis-platform/tokens-pd/css/Breadcrumb/acronis.css';
 @import '@acronis-platform/tokens-pd/css/Tag/acronis.css';
 @import '@acronis-platform/tokens-pd/css/Tooltip/acronis.css';
+@import '@acronis-platform/tokens-pd/css/SidebarPrimary/acronis.css';
+@import '@acronis-platform/tokens-pd/css/SidebarSecondary/acronis.css';
 
 /* Theme switches via the `[data-theme]` attribute (set by the consumer /
    next-themes), which drives the tokens' `light-dark()` + `color-scheme` — mirror

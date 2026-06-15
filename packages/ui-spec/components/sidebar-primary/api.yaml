@@ -1,0 +1,138 @@
+spec_version: '1.0'
+component: SidebarPrimary
+
+# Framework-agnostic contract for a *composable* navigation rail: the rail is
+# assembled from parts (see anatomy.yaml). Property names are neutral; see
+# `adapters` for per-framework syntax. Native element attributes (href, target,
+# rel, …) pass through on the relevant part.
+contract:
+  properties:
+    - name: render
+      type: 'RenderProp'
+      required: false
+      default: undefined
+      description: >-
+        Base UI composition prop on the root and on the menu-item part —
+        replaces the rendered element with another component (e.g. a router
+        `Link` in a menu item, or an `<aside>` wrapper on the root) while merging
+        props and classes. React-only; other frameworks use their own
+        polymorphism.
+    - name: expanded
+      type: boolean
+      required: false
+      default: undefined
+      description: >-
+        Controlled rail width state (on the root). `true` = full width (256px),
+        `false` = collapsed icon rail (48px). Drives `data-state`.
+    - name: defaultExpanded
+      type: boolean
+      required: false
+      default: true
+      description: Uncontrolled initial expanded state (on the root).
+    - name: selected
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Marks a menu-item as the current route — applies the `selected` variant
+        and sets `aria-current="page"`.
+    - name: icon
+      type: ReactNode
+      required: false
+      default: undefined
+      description: Leading 16px icon for a menu-item.
+    - name: href
+      type: string
+      required: false
+      default: undefined
+      description: Target URL of a menu-item link (passthrough on the `<a>`).
+    - name: extras-variant
+      type: "'tag' | 'externalLink' | 'shortcut' | 'tag-externalLink'"
+      required: true
+      description: >-
+        Which trailing affordance the extras part renders. React: the `variant`
+        prop on `SidebarPrimaryMenuItemExtras`. (Distinct from the menu-item's
+        selected/unselected cva variant, which is driven by the `selected` prop —
+        named here without the bare `variant` key reserved for a root cva axis.)
+    - name: shortcut
+      type: string
+      required: false
+      default: undefined
+      description: Keyboard-shortcut text for the extras `shortcut` variant.
+    - name: tag
+      type: ReactNode
+      required: false
+      default: undefined
+      description: Tag content for the extras `tag` / `tag-externalLink` variants.
+
+  events:
+    - name: expanded-change
+      payload: boolean
+      description: >-
+        Fires when the expanded state changes (e.g. via a consumer "collapse"
+        control). React: `onExpandedChange`.
+
+  content:
+    - name: default
+      description: >-
+        The composed rail. Author it from the parts: a header (with the consumer
+        logo), a scrollable content region of sections each wrapping a menu of
+        items, and a footer menu.
+
+  methods: []
+
+adapters:
+  react:
+    component: SidebarPrimary
+    status: implemented
+    import: >-
+      import { SidebarPrimary, SidebarPrimaryHeader, SidebarPrimaryContent,
+      SidebarPrimaryFooter, SidebarPrimarySection, SidebarPrimaryMenu,
+      SidebarPrimaryMenuItem, SidebarPrimaryMenuItemExtras } from
+      '@acronis-platform/ui-react'
+    example: |
+      <SidebarPrimary expanded={expanded} onExpandedChange={setExpanded}>
+        <SidebarPrimaryHeader>
+          <ProductLogo />
+        </SidebarPrimaryHeader>
+        <SidebarPrimaryContent>
+          <SidebarPrimarySection>
+            <SidebarPrimaryMenu>
+              <SidebarPrimaryMenuItem render={<Link to="/assets" />} icon={<BoxIcon />} selected>
+                Assets
+              </SidebarPrimaryMenuItem>
+              <SidebarPrimaryMenuItem href="/clients" icon={<UsersIcon />}>
+                Clients
+                <SidebarPrimaryMenuItemExtras variant="shortcut" shortcut="⌘K" />
+              </SidebarPrimaryMenuItem>
+            </SidebarPrimaryMenu>
+          </SidebarPrimarySection>
+        </SidebarPrimaryContent>
+        <SidebarPrimaryFooter>
+          <SidebarPrimaryMenu>
+            <SidebarPrimaryMenuItem href="/help" icon={<CircleHelpIcon />}>
+              Help
+            </SidebarPrimaryMenuItem>
+          </SidebarPrimaryMenu>
+        </SidebarPrimaryFooter>
+      </SidebarPrimary>
+
+  vue:
+    component: AvSidebarPrimary
+    status: planned
+    import: "import { AvSidebarPrimary, AvSidebarPrimaryMenuItem } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvSidebarPrimary :expanded="expanded">
+        <AvSidebarPrimaryMenuItem to="/assets" selected>Assets</AvSidebarPrimaryMenuItem>
+        <AvSidebarPrimaryMenuItem to="/clients">Clients</AvSidebarPrimaryMenuItem>
+      </AvSidebarPrimary>
+
+  web-components:
+    element: ui-sidebar-primary
+    status: planned
+    import: "import '@acronis-platform/ui-wc/sidebar-primary'"
+    example: |
+      <ui-sidebar-primary expanded>
+        <ui-sidebar-primary-menu-item href="/assets" selected>Assets</ui-sidebar-primary-menu-item>
+        <ui-sidebar-primary-menu-item href="/clients">Clients</ui-sidebar-primary-menu-item>
+      </ui-sidebar-primary>

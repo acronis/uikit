@@ -1,0 +1,170 @@
+spec_version: '1.0'
+component: SidebarSecondary
+
+# Framework-agnostic contract for a *composable* contextual navigation panel:
+# assembled from parts (see anatomy.yaml). Property names are neutral; see
+# `adapters` for per-framework syntax. Native element attributes pass through on
+# the relevant part.
+contract:
+  properties:
+    - name: render
+      type: 'RenderProp'
+      required: false
+      default: undefined
+      description: >-
+        Base UI composition prop on the root and on the menu-item / sub-item
+        parts — replaces the rendered element with another component (e.g. a
+        router `Link`, or an `<aside>` wrapper on the root) while merging props
+        and classes. React-only.
+    - name: expanded
+      type: boolean
+      required: false
+      default: undefined
+      description: >-
+        Controlled panel width state (on the root). `true` = full width (256px),
+        `false` = collapsed rail (48px). Drives `data-state`.
+    - name: defaultExpanded
+      type: boolean
+      required: false
+      default: true
+      description: Uncontrolled initial expanded state (on the root).
+    - name: label
+      type: ReactNode
+      required: false
+      default: undefined
+      description: Heading text for the header part (or pass as children).
+    - name: selected
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Marks a menu-item / sub-trigger / sub-item as the current route — applies
+        the `selected` container variant and sets `aria-current="page"`.
+    - name: icon
+      type: ReactNode
+      required: false
+      default: undefined
+      description: Optional leading 16px icon for a Level-1 menu-item / sub-trigger.
+    - name: href
+      type: string
+      required: false
+      default: undefined
+      description: Target URL of a menu-item / sub-item link.
+    - name: open
+      type: boolean
+      required: false
+      default: undefined
+      description: >-
+        Controlled disclosure state of an expandable row (menu-sub). Driven by
+        Base UI Collapsible; sets `aria-expanded` / `aria-controls`.
+    - name: defaultOpen
+      type: boolean
+      required: false
+      default: false
+      description: Uncontrolled initial disclosure state of an expandable row.
+    - name: parentLabel
+      type: ReactNode
+      required: true
+      description: Parent section label on the collapsed-breadcrumb part.
+    - name: currentLabel
+      type: ReactNode
+      required: true
+      description: Current page label on the collapsed-breadcrumb part.
+    - name: separator
+      type: ReactNode
+      required: false
+      default: 'ChevronRightIcon'
+      description: >-
+        Separator between the breadcrumb labels (collapsed-breadcrumb part).
+        Defaults to a 16px ChevronRight icon.
+    - name: extras-variant
+      type: "'tag' | 'externalLink' | 'shortcut' | 'tag-externalLink'"
+      required: true
+      description: >-
+        Which trailing affordance the extras part renders. React: the `variant`
+        prop on `SidebarSecondaryMenuItemExtras`. (Named here without the bare
+        `variant` key reserved for a root cva axis.)
+    - name: shortcut
+      type: string
+      required: false
+      default: undefined
+      description: Keyboard-shortcut text for the extras `shortcut` variant.
+    - name: tag
+      type: ReactNode
+      required: false
+      default: undefined
+      description: Tag content for the extras `tag` / `tag-externalLink` variants.
+
+  events:
+    - name: expanded-change
+      payload: boolean
+      description: >-
+        Fires when the panel expanded state changes. React: `onExpandedChange`.
+    - name: open-change
+      payload: boolean
+      description: >-
+        Fires when an expandable row's disclosure opens/closes (Base UI
+        Collapsible). React: `onOpenChange` on the menu-sub part.
+
+  content:
+    - name: default
+      description: >-
+        The composed panel. Author it from the parts: a header, a scrollable
+        content region of sections (each with an optional label and a menu of
+        fixed and expandable rows), a collapsed-breadcrumb for rail mode, and a
+        footer.
+
+  methods: []
+
+adapters:
+  react:
+    component: SidebarSecondary
+    status: implemented
+    import: >-
+      import { SidebarSecondary, SidebarSecondaryHeader, SidebarSecondaryContent,
+      SidebarSecondaryCollapsedBreadcrumb, SidebarSecondaryFooter,
+      SidebarSecondarySection, SidebarSecondarySectionLabel, SidebarSecondaryMenu,
+      SidebarSecondaryMenuItem, SidebarSecondaryMenuSub,
+      SidebarSecondaryMenuSubTrigger, SidebarSecondaryMenuSubContent,
+      SidebarSecondaryMenuSubItem, SidebarSecondaryMenuItemExtras } from
+      '@acronis-platform/ui-react'
+    example: |
+      <SidebarSecondary expanded={expanded} onExpandedChange={setExpanded}>
+        <SidebarSecondaryHeader label="Protection" />
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection>
+            <SidebarSecondarySectionLabel>Overview</SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem render={<Link to="/dashboard" />} selected>
+                Dashboard
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuSub defaultOpen>
+                <SidebarSecondaryMenuSubTrigger icon={<BoxIcon />}>Policies</SidebarSecondaryMenuSubTrigger>
+                <SidebarSecondaryMenuSubContent>
+                  <SidebarSecondaryMenuSubItem href="/policies/backup" selected>Backup</SidebarSecondaryMenuSubItem>
+                  <SidebarSecondaryMenuSubItem href="/policies/av">Antivirus</SidebarSecondaryMenuSubItem>
+                </SidebarSecondaryMenuSubContent>
+              </SidebarSecondaryMenuSub>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+        <SidebarSecondaryCollapsedBreadcrumb parentLabel="Protection" currentLabel="Dashboard" />
+      </SidebarSecondary>
+
+  vue:
+    component: AvSidebarSecondary
+    status: planned
+    import: "import { AvSidebarSecondary, AvSidebarSecondaryMenuItem } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvSidebarSecondary :expanded="expanded">
+        <AvSidebarSecondaryMenuItem to="/dashboard" selected>Dashboard</AvSidebarSecondaryMenuItem>
+      </AvSidebarSecondary>
+
+  web-components:
+    element: ui-sidebar-secondary
+    status: planned
+    import: "import '@acronis-platform/ui-wc/sidebar-secondary'"
+    example: |
+      <ui-sidebar-secondary expanded>
+        <ui-sidebar-secondary-menu-item href="/dashboard" selected>Dashboard</ui-sidebar-secondary-menu-item>
+      </ui-sidebar-secondary>

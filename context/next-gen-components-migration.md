@@ -319,18 +319,18 @@ string` token falls through and is silently dropped from the preset. For CSS
 
 ## 4. Component-set delta
 
-| Next-gen Figma component              | Maps to `ui-react` dir           | Status                                                                  |
-| ------------------------------------- | -------------------------------- | ----------------------------------------------------------------------- |
-| `Button`                              | `button/`                        | re-theme (rename)                                                       |
-| `ButtonIcon`                          | `button-icon/`                   | re-theme; component exists                                              |
-| `Breadcrumb`                          | `breadcrumb/`                    | re-theme                                                                |
-| `Checkbox`                            | `checkbox/`                      | re-theme; **new dedicated tier** (was under legacy `form`)              |
-| `Input`                               | `input/`, possibly `search/`     | re-theme; new dedicated tier                                            |
-| `MenuItem`                            | `select/`? (no `menu-item/` dir) | **gap** — no 1:1 `ui-react` dir; route to where menu items render       |
-| `SidebarPrimary` / `SidebarSecondary` | none                             | **new** — no `ui-react` sidebar yet; tokens land ahead of the component |
-| `Switch`                              | `switch/`                        | re-theme; states `inactive`→`off`, `toggle`→`tick`                      |
-| `Tag`                                 | `tag/`                           | re-theme; mostly uses **semantic** tokens today, see note               |
-| `Tooltip`                             | `tooltip/`                       | re-theme; no `_global` group (roles at root)                            |
+| Next-gen Figma component              | Maps to `ui-react` dir                   | Status                                                            |
+| ------------------------------------- | ---------------------------------------- | ----------------------------------------------------------------- |
+| `Button`                              | `button/`                                | re-theme (rename)                                                 |
+| `ButtonIcon`                          | `button-icon/`                           | re-theme; component exists                                        |
+| `Breadcrumb`                          | `breadcrumb/`                            | re-theme                                                          |
+| `Checkbox`                            | `checkbox/`                              | re-theme; **new dedicated tier** (was under legacy `form`)        |
+| `Input`                               | `input/`, possibly `search/`             | re-theme; new dedicated tier                                      |
+| `MenuItem`                            | `select/`? (no `menu-item/` dir)         | **gap** — no 1:1 `ui-react` dir; route to where menu items render |
+| `SidebarPrimary` / `SidebarSecondary` | `sidebar-primary/`, `sidebar-secondary/` | **done** — both shipped on this branch (new tier, new components) |
+| `Switch`                              | `switch/`                                | re-theme; states `inactive`→`off`, `toggle`→`tick`                |
+| `Tag`                                 | `tag/`                                   | re-theme; mostly uses **semantic** tokens today, see note         |
+| `Tooltip`                             | `tooltip/`                               | re-theme; no `_global` group (roles at root)                      |
 
 **Dropped from `componentLegacy` (next-gen has no equivalent):** `chip`, `form`,
 `menubar`, `item`, and the legacy flat `sidebar`/`menu-item` shapes. Per the
@@ -547,6 +547,16 @@ and the precise remaining work, superseding the §7 phasing where they differ
 - **Phase 5 (partial) — kitchen-sink** (`2800583`). Dropped brand-b + the brand
   switcher; component CSS sources updated to the next-gen set. `ui-react/styles`
   swapped its dead `css/form` import for `css/input` + `css/checkbox` + `css/button-icon`.
+- **SidebarPrimary + SidebarSecondary — new components.** Both shipped through the
+  full pipeline (Design → Plan → Dev → QA → Review → Audit). Two independent part
+  families per ADR-0001 (no shared `tone`-keyed menu item; `Extras` duplicated).
+  Each binds its own `--ui-sidebar-{primary,secondary}-*` tier directly (44 / 49
+  tokens, all resolving). 7-file specs in `packages/ui-spec/components/sidebar-*`.
+  Gates: ui-react 114 tests, ui-spec 79 tests, typecheck/lint/build/figma:connect
+  clean, Docker VR 104/104. Audit summary: `.ai/team/sidebar/audit/summary.md`.
+  Follow-ups carried (non-blocking): collapsed-breadcrumb 48px overflow polish;
+  generalize the ui-spec cva-conformance test beyond Button (sidebar's
+  `extras-variant` / `selected|unselected` axis is currently unchecked).
 
 ### Remaining ui-react re-theme (the follow-up — NOT done)
 

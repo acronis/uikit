@@ -1,0 +1,16 @@
+export {
+  SidebarPrimary,
+  SidebarPrimaryHeader,
+  SidebarPrimaryContent,
+  SidebarPrimaryFooter,
+  SidebarPrimarySection,
+  SidebarPrimaryMenu,
+  SidebarPrimaryMenuItem,
+  SidebarPrimaryMenuItemExtras,
+  SidebarPrimaryCollapseTrigger,
+  sidebarPrimaryMenuItemVariants,
+  type SidebarPrimaryProps,
+  type SidebarPrimaryMenuItemProps,
+  type SidebarPrimaryMenuItemExtrasProps,
+  type SidebarPrimaryCollapseTriggerProps,
+} from './sidebar-primary';

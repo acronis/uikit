@@ -1,0 +1,271 @@
+spec_version: '1.0'
+component: SidebarSecondary
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── root ──
+  - {
+      name: --ui-sidebar-secondary-global-container-color,
+      affects: root,
+      description: Panel background,
+    }
+  - {
+      name: --ui-sidebar-secondary-global-container-border-color,
+      affects: root,
+      description: Right border color,
+    }
+  - {
+      name: --ui-sidebar-secondary-global-container-border-width,
+      affects: root,
+      description: Right border width,
+    }
+  - {
+      name: --ui-sidebar-secondary-collapsed-container-width,
+      affects: root,
+      description: Collapsed rail width (48),
+    }
+  - {
+      name: --ui-sidebar-secondary-expanded-container-width,
+      affects: root,
+      description: Expanded panel width (256),
+    }
+  # ── header ──
+  - {
+      name: --ui-sidebar-secondary-collapsed-container-header-padding-x,
+      affects: header,
+      description: Collapsed header padding-x,
+    }
+  - {
+      name: --ui-sidebar-secondary-collapsed-container-header-padding-y,
+      affects: header,
+      description: Collapsed header padding-y,
+    }
+  - {
+      name: --ui-sidebar-secondary-expanded-container-header-padding-x,
+      affects: header,
+      description: Expanded header padding-x,
+    }
+  - {
+      name: --ui-sidebar-secondary-expanded-container-header-padding-y,
+      affects: header,
+      description: Expanded header padding-y,
+    }
+  - {
+      name: --ui-sidebar-secondary-global-header-label-color,
+      affects: header,
+      description: Header heading color (24/32),
+    }
+  # ── collapsed breadcrumb ──
+  - {
+      name: --ui-sidebar-secondary-collapsed-container-content-gap,
+      affects: collapsed-breadcrumb,
+      description: Breadcrumb stack gap (4),
+    }
+  - {
+      name: --ui-sidebar-secondary-collapsed-container-content-padding-y,
+      affects: collapsed-breadcrumb,
+      description: Breadcrumb vertical padding,
+    }
+  - {
+      name: --ui-sidebar-secondary-collapsed-breadcrumb-label-color,
+      affects: collapsed-breadcrumb,
+      description: Parent label color (14/24/600),
+    }
+  - {
+      name: --ui-sidebar-secondary-collapsed-icon-separator-color,
+      affects: collapsed-breadcrumb,
+      description: Separator icon color,
+    }
+  - {
+      name: --ui-sidebar-secondary-collapsed-icon-separator-size,
+      affects: collapsed-breadcrumb,
+      description: Separator icon size (16),
+    }
+  - {
+      name: --ui-sidebar-secondary-collapsed-label-current-page-color,
+      affects: collapsed-breadcrumb,
+      description: Current page color (14/24/600),
+    }
+  # ── content / section ──
+  - {
+      name: --ui-sidebar-secondary-global-section-list-gap,
+      affects: content,
+      description: Gap between sections,
+    }
+  - {
+      name: --ui-sidebar-secondary-section-container-border-color,
+      affects: section,
+      description: Inter-section divider color,
+    }
+  - {
+      name: --ui-sidebar-secondary-section-container-border-width,
+      affects: section,
+      description: Inter-section divider width,
+    }
+  - {
+      name: --ui-sidebar-secondary-section-container-padding-y,
+      affects: section,
+      description: Section vertical padding,
+    }
+  # ── section label ──
+  - {
+      name: --ui-sidebar-secondary-section-container-section-header-padding-b,
+      affects: section-label,
+      description: Section header padding-bottom,
+    }
+  - {
+      name: --ui-sidebar-secondary-section-container-section-header-padding-x,
+      affects: section-label,
+      description: Section header padding-x,
+    }
+  - {
+      name: --ui-sidebar-secondary-section-label-section-color,
+      affects: section-label,
+      description: Section label color (14/24/600),
+    }
+  # ── menu ──
+  - {
+      name: --ui-sidebar-secondary-section-menu-item-list-gap,
+      affects: menu,
+      description: Gap between menu items,
+    }
+  # ── footer ──
+  - {
+      name: --ui-sidebar-secondary-global-container-footer-border-color,
+      affects: footer,
+      description: Footer top divider color,
+    }
+  - {
+      name: --ui-sidebar-secondary-global-container-footer-border-width,
+      affects: footer,
+      description: Footer top divider width,
+    }
+  # ── menu-item box / geometry ──
+  - {
+      name: --ui-sidebar-secondary-menu-item-global-container-gap,
+      affects: menu-item,
+      description: Icon/label gap,
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-global-container-height,
+      affects: menu-item,
+      description: Row height (40),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-global-container-padding-x,
+      affects: menu-item,
+      description: Row padding-x,
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-global-container-padding-y,
+      affects: menu-item,
+      description: Row padding-y,
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-global-icon-size,
+      affects: menu-item,
+      description: Icon size (16),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-global-icon-margin-t,
+      affects: menu-item,
+      description: Icon optical top margin (4),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-global-level2-container-padding-l,
+      affects: menu-sub-item,
+      description: Level-2 left indent (40),
+    }
+  # ── menu-item GLOBAL icon/label colors (shared across selected/unselected) ──
+  - {
+      name: --ui-sidebar-secondary-menu-item-global-icon-color-idle,
+      affects: menu-item,
+      description: Icon (idle),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-global-icon-color-hover,
+      affects: menu-item,
+      description: Icon (hover),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-global-icon-color-active,
+      affects: menu-item,
+      description: Icon (active),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-global-label-color-idle,
+      affects: menu-item,
+      description: Label (idle),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-global-label-color-hover,
+      affects: menu-item,
+      description: Label (hover),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-global-label-color-active,
+      affects: menu-item,
+      description: Label (active),
+    }
+  # ── menu-item CONTAINER colors (vary by variant) ──
+  - {
+      name: --ui-sidebar-secondary-menu-item-selected-container-color-idle,
+      affects: menu-item,
+      description: Selected container (idle),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-selected-container-color-hover,
+      affects: menu-item,
+      description: Selected container (hover),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-selected-container-color-active,
+      affects: menu-item,
+      description: Selected container (active),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-unselected-container-color-idle,
+      affects: menu-item,
+      description: 'Unselected container (idle)',
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-unselected-container-color-hover,
+      affects: menu-item,
+      description: Unselected container (hover),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-unselected-container-color-active,
+      affects: menu-item,
+      description: Unselected container (active),
+    }
+  # ── extras ──
+  - {
+      name: --ui-sidebar-secondary-menu-item-extras-global-container-gap,
+      affects: extras,
+      description: Gap inside the extras cluster (8),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-extras-global-external-icon-color,
+      affects: extras,
+      description: External-link icon color,
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-extras-global-external-icon-size,
+      affects: extras,
+      description: External-link icon size (16),
+    }
+  - {
+      name: --ui-sidebar-secondary-menu-item-extras-global-shortcut-color,
+      affects: extras,
+      description: Shortcut text color,
+    }
+  # ── focus ──
+  - {
+      name: --ui-focus-brand,
+      affects: menu-item,
+      description: Focus-visible ring color (shared; no sidebar focus token),
+    }

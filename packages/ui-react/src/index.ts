@@ -6,6 +6,8 @@ export * from './components/ui/radio';
 export * from './components/ui/input';
 export * from './components/ui/search';
 export * from './components/ui/select';
+export * from './components/ui/sidebar-primary';
+export * from './components/ui/sidebar-secondary';
 export * from './components/ui/button-icon';
 export * from './components/ui/switch';
 export * from './components/ui/tooltip';
