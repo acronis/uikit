@@ -106,7 +106,7 @@ const DialogCloseButton = React.forwardRef<
   <BaseDialog.Close
     ref={ref}
     className={cn(
-      'rounded p-1 text-[#2668C5] opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
+      'rounded p-1 text-primary opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
       className
     )}
     {...props}
