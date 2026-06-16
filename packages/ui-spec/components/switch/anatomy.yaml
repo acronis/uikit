@@ -2,23 +2,43 @@ spec_version: '1.0'
 component: Switch
 
 schematic: |
+  container (label) ───────────────────────────┐
+   +---------------+                             │
+   | (thumb)  root |   label: "Enable Wi-Fi"     │
+   +---------------+                             │
+   thumb slides left <-> right with the checked state
+
+  Track states:
   unchecked                 checked
   +---------------+         +---------------+
-  | (thumb)       |         |       (thumb) |   root: track
+  | (thumb)       |         |       (thumb) |
   +---------------+         +---------------+
-  thumb slides left <-> right with the checked state
 
 root:
   element: button
   role: switch
   description: >-
     The track. A button with role="switch" and aria-checked reflecting state
-    (Base UI Switch.Root).
+    (Base UI Switch.Root). Fill comes from `--ui-switch-{off,on}-box-color-*`.
 
 parts:
   - id: thumb
     description: The sliding knob that moves between the off and on positions.
     element: span
+  - id: container
+    description: >-
+      The wrapping `<label>` that lays out the toggle beside its label and
+      forwards clicks to the toggle. Only rendered when a label is provided;
+      otherwise the track is the root.
+    element: label
+    optional: true
+  - id: label
+    description: >-
+      The label text, naming the control via aria-labelledby. Tinted with
+      `--ui-switch-global-label-color`.
+    element: span
+    optional: true
+    visible_when: label provided
 
 # Switch owns one piece of internal state, `checked`, plus the logic that maps
 # interaction -> state -> visuals. The checked/unchecked visual states below are

@@ -1,8 +1,8 @@
 // Figma Code Connect — status: COMPLETE
 // Mapped to the "Switch" component set in the shadcn-uikit Figma file.
-// `State=ON` maps to checked; `Interaction=Disabled` maps to disabled.
-// Default/Hover/Focus are visual states with no prop (Base UI + the
-// `--ui-switch-*` / `--ui-focus-primary` tokens drive them).
+// `variant=on` maps to checked; `state=disabled` maps to disabled (idle/hover/
+// active/focus are visual). `label` is composed by Switch itself, gated by the
+// hasLabel boolean.
 import figma from '@figma/code-connect';
 
 import { Switch } from './switch';
@@ -12,20 +12,20 @@ figma.connect(
   'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=1838-1908',
   {
     props: {
-      checked: figma.enum('State', {
-        ON: true,
-        OFF: false,
+      checked: figma.enum('variant', {
+        on: true,
+        off: false,
       }),
-      disabled: figma.enum('Interaction', {
-        Disabled: true,
+      disabled: figma.enum('state', {
+        disabled: true,
+      }),
+      label: figma.boolean('hasLabel', {
+        true: figma.string('label'),
+        false: undefined,
       }),
     },
-    example: ({ checked, disabled }) => (
-      <Switch
-        aria-label="Setting"
-        defaultChecked={checked}
-        disabled={disabled}
-      />
+    example: ({ checked, disabled, label }) => (
+      <Switch defaultChecked={checked} disabled={disabled} label={label} />
     ),
   }
 );

@@ -30,6 +30,12 @@ contract:
       type: string
       required: false
       description: Form field value when checked.
+    - name: label
+      type: ReactNode
+      required: false
+      description: >-
+        Optional label rendered beside the toggle. When provided, the whole row
+        becomes a clickable `<label>` and the toggle is named via aria-labelledby.
 
   events:
     - name: checked-change

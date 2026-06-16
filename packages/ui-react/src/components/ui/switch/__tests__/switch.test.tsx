@@ -50,8 +50,8 @@ describe('Switch', () => {
   it('wires the track to the --ui-switch-* token tier', () => {
     render(<Switch aria-label="Notifications" />);
     expect(screen.getByRole('switch')).toHaveClass(
-      'data-[unchecked]:bg-[var(--ui-switch-off-box-idle)]',
-      'data-[checked]:bg-[var(--ui-switch-on-box-idle)]'
+      'data-[unchecked]:bg-[var(--ui-switch-off-box-color-idle)]',
+      'data-[checked]:bg-[var(--ui-switch-on-box-color-idle)]'
     );
   });
 
@@ -59,5 +59,14 @@ describe('Switch', () => {
     const ref = createRef<ComponentRef<typeof Switch>>();
     render(<Switch ref={ref} aria-label="Notifications" />);
     expect(ref.current).toBe(screen.getByRole('switch'));
+  });
+
+  it('names the control from the label prop and toggles on label click', async () => {
+    const onCheckedChange = vi.fn();
+    render(<Switch label="Wi-Fi" onCheckedChange={onCheckedChange} />);
+    const toggle = screen.getByRole('switch', { name: 'Wi-Fi' });
+    expect(toggle).toBeInTheDocument();
+    await userEvent.click(screen.getByText('Wi-Fi'));
+    expect(onCheckedChange).toHaveBeenCalledWith(true, expect.anything());
   });
 });

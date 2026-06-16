@@ -9,6 +9,7 @@ const meta = {
   argTypes: {
     disabled: { control: 'boolean' },
     defaultChecked: { control: 'boolean' },
+    label: { control: 'text' },
   },
   args: {
     'aria-label': 'Toggle setting',
@@ -35,6 +36,20 @@ export const States: Story = {
       <Switch aria-label="On" defaultChecked />
       <Switch aria-label="Disabled off" disabled />
       <Switch aria-label="Disabled on" disabled defaultChecked />
+    </div>
+  ),
+};
+
+export const WithLabel: Story = {
+  args: { label: 'Enable notifications', defaultChecked: true },
+};
+
+export const LabelledStates: Story = {
+  render: () => (
+    <div className="flex flex-col gap-3">
+      <Switch label="Off" />
+      <Switch label="On" defaultChecked />
+      <Switch label="Disabled" disabled defaultChecked />
     </div>
   ),
 };

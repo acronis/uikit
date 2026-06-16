@@ -1,45 +1,52 @@
 spec_version: '1.0'
 component: Switch
 
-# References only — values live in @acronis-platform/tokens-pd.
+# References only — values live in @acronis-platform/tokens-pd. Track fill is
+# wired per checked-state (off / on); the design's hover/active stops equal idle,
+# so only idle + disabled are referenced. Box/thumb geometry comes from layout
+# utilities, not tokens.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
+  # ── track fill (off / on) ──
   - {
-      name: --ui-switch-background-active,
-      affects: root,
-      description: Track fill when on,
-    }
-  - {
-      name: --ui-switch-background-inactive,
+      name: --ui-switch-off-box-color-idle,
       affects: root,
       description: Track fill when off,
     }
-  - { name: --ui-switch-background-disabled, affects: root }
-  - { name: --ui-switch-border-disabled, affects: root }
+  - { name: --ui-switch-off-box-color-disabled, affects: root }
   - {
-      name: --ui-switch-circle-on,
+      name: --ui-switch-on-box-color-idle,
+      affects: root,
+      description: Track fill when on,
+    }
+  - { name: --ui-switch-on-box-color-disabled, affects: root }
+  - {
+      name: --ui-switch-global-box-border-color-disabled,
+      affects: root,
+      description: Inset track border when disabled,
+    }
+
+  # ── thumb (tick) ──
+  - {
+      name: --ui-switch-global-tick-color-idle,
       affects: thumb,
-      description: Thumb fill when on,
+      description: Thumb fill,
+    }
+  - { name: --ui-switch-global-tick-color-disabled, affects: thumb }
+
+  # ── label field ──
+  - {
+      name: --ui-switch-global-container-gap,
+      affects: container,
+      description: Gap between the toggle and its label,
     }
   - {
-      name: --ui-switch-circle-off,
-      affects: thumb,
-      description: Thumb fill when off,
+      name: --ui-switch-global-label-color,
+      affects: label,
+      description: Label text color,
     }
-  - { name: --ui-switch-circle-disabled, affects: thumb }
-  - { name: --ui-switch-units-width, affects: root }
-  - { name: --ui-switch-units-height, affects: root }
-  - { name: --ui-switch-units-radius, affects: root }
-  - { name: --ui-switch-units-border, affects: root }
-  - { name: --ui-switch-units-padding-x, affects: root }
-  - { name: --ui-switch-units-padding-y, affects: root }
-  - { name: --ui-switch-units-gap, affects: root }
-  - {
-      name: --ui-switch-units-circle,
-      affects: thumb,
-      description: Thumb diameter,
-    }
+
   - {
       name: --ui-focus-primary,
       affects: root,

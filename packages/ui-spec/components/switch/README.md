@@ -18,9 +18,30 @@ import { Switch } from '@acronis-platform/ui-react';
 
 const [enabled, setEnabled] = useState(false);
 
+{
+  /* Bare toggle — name it with aria-label */
+}
 <Switch aria-label="Wireless" checked={enabled} onCheckedChange={setEnabled} />;
+
+{
+  /* With a label — the whole row toggles */
+}
+<Switch
+  label="Enable notifications"
+  checked={enabled}
+  onCheckedChange={setEnabled}
+/>;
 ```
 
-> **Note:** the implementation is not yet wired to the `--ui-switch-*` tokens
-> (see `tokens.yaml`/`behavior.md`). Vue and Web Component implementations are
-> planned against the same contract.
+Pass `label` to compose the full field (the row becomes clickable and the toggle
+is named via aria-labelledby); omit it for a bare toggle named with `aria-label`.
+Vue and Web Component implementations are planned against the same contract.
+
+## Parts
+
+| Part        | Element  | Notes                                                   |
+| ----------- | -------- | ------------------------------------------------------- |
+| `root`      | `button` | The track (role `switch`); fill per off/on state        |
+| `thumb`     | `span`   | The sliding knob                                        |
+| `container` | `label`  | Wraps toggle + label, forwards clicks (only with label) |
+| `label`     | `span`   | Label text, names the control                           |
