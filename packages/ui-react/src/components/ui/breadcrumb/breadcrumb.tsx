@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 // Composable breadcrumb primitives mirroring the Figma "Breadcrumb" component.
 // Colors are wired to the next-gen `--ui-breadcrumb-*` tokens from
-// @acronis-platform/tokens-pd: links use `--ui-breadcrumb-link-label-<state>`
+// @acronis-platform/tokens-pd: links use `--ui-breadcrumb-link-label-color-<state>`
 // (idle gray, darkening on hover/active), the current page uses
 // `--ui-breadcrumb-page-label-color`, and the chevron separator uses
 // `--ui-breadcrumb-separator-icon-color` sized by `--ui-breadcrumb-separator-icon-size`
@@ -82,7 +82,7 @@ const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
       props: mergeProps<'a'>(
         {
           className: cn(
-            'rounded-sm text-[var(--ui-breadcrumb-link-label-idle)] no-underline transition-colors hover:text-[var(--ui-breadcrumb-link-label-hover)] hover:underline active:text-[var(--ui-breadcrumb-link-label-active)] focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)] focus-visible:ring-offset-2 ring-offset-background',
+            'rounded-sm text-[var(--ui-breadcrumb-link-label-color-idle)] no-underline transition-colors hover:text-[var(--ui-breadcrumb-link-label-color-hover)] hover:underline active:text-[var(--ui-breadcrumb-link-label-color-active)] focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)] focus-visible:ring-offset-2 ring-offset-background',
             className
           ),
         },
@@ -135,7 +135,7 @@ const BreadcrumbEllipsis = ({
     role="presentation"
     aria-hidden="true"
     className={cn(
-      'inline-flex size-4 items-center justify-center text-[var(--ui-breadcrumb-link-label-idle)]',
+      'inline-flex size-4 items-center justify-center text-[var(--ui-breadcrumb-link-label-color-idle)]',
       className
     )}
     {...props}

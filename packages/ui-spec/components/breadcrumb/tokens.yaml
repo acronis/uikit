@@ -8,22 +8,37 @@ source: '@acronis-platform/tokens-pd'
 
 tokens:
   - {
-      name: --ui-breadcrumb-link,
+      name: --ui-breadcrumb-link-label-color-idle,
       affects: link,
-      description: Link text color (idle / hover / active / focus),
+      description: Link text color — idle,
     }
   - {
-      name: --ui-breadcrumb-value,
+      name: --ui-breadcrumb-link-label-color-hover,
+      affects: link,
+      description: Link text color — hover,
+    }
+  - {
+      name: --ui-breadcrumb-link-label-color-active,
+      affects: link,
+      description: Link text color — active / pressed,
+    }
+  - {
+      name: --ui-breadcrumb-page-label-color,
       affects: page,
       description: Current-page text color,
     }
   - {
-      name: --ui-breadcrumb-chevron,
+      name: --ui-breadcrumb-separator-icon-color,
       affects: separator,
-      description: Chevron / separator color,
+      description: Chevron / separator icon color,
     }
   - {
-      name: --ui-breadcrumb-gap,
+      name: --ui-breadcrumb-separator-icon-size,
+      affects: separator,
+      description: Chevron / separator icon size (16px),
+    }
+  - {
+      name: --ui-breadcrumb-list-gap,
       affects: list,
       description: Gap between items and separators (4px),
     }

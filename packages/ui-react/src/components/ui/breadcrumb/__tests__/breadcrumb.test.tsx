@@ -53,7 +53,7 @@ describe('Breadcrumb', () => {
     render(<Trail />);
     const link = screen.getByRole('link', { name: 'Home' });
     expect(link).toHaveAttribute('href', '/');
-    expect(link).toHaveClass('text-[var(--ui-breadcrumb-link-label-idle)]');
+    expect(link).toHaveClass('text-[var(--ui-breadcrumb-link-label-color-idle)]');
   });
 
   it('marks the current page with aria-current and the value token color', () => {
@@ -106,7 +106,7 @@ describe('Breadcrumb', () => {
       </BreadcrumbLink>
     );
     const button = screen.getByRole('button', { name: 'Home' });
-    expect(button).toHaveClass('text-[var(--ui-breadcrumb-link-label-idle)]');
+    expect(button).toHaveClass('text-[var(--ui-breadcrumb-link-label-color-idle)]');
     await userEvent.click(button);
     expect(onClick).toHaveBeenCalledOnce();
     expect(screen.queryByRole('link')).not.toBeInTheDocument();

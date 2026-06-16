@@ -15,7 +15,7 @@ import {
 
 figma.connect(
   BreadcrumbItem,
-  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2238-43890',
+  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=1017-2852',
   {
     props: {
       current: figma.enum('state', {

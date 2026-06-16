@@ -10,9 +10,9 @@ schematic: |
   |   |  [link]   |  |    >      |  | [ellipsis]|  |  [page]      |  |
   |   +-----------+  +-----------+  +-----------+  +--------------+  |
   +-----------------------------------------------------------------+
-     link    -> --ui-breadcrumb-link  (interactive, hover/focus underline)
-     page    -> --ui-breadcrumb-value (current page, aria-current="page")
-     separator -> --ui-breadcrumb-chevron (decorative chevron, aria-hidden)
+     link    -> --ui-breadcrumb-link-label-color-* (interactive, hover/focus underline)
+     page    -> --ui-breadcrumb-page-label-color (current page, aria-current="page")
+     separator -> --ui-breadcrumb-separator-icon-color (decorative chevron, aria-hidden)
      ellipsis  -> collapsed-items affordance (aria-hidden + sr-only label)
 
 root:
@@ -26,7 +26,7 @@ parts:
   - id: list
     description: >-
       Ordered list (`<ol>`) that lays the trail out in a horizontal, wrapping
-      flex row. Owns the inter-item gap (`--ui-breadcrumb-gap`) and the 14px /
+      flex row. Owns the inter-item gap (`--ui-breadcrumb-list-gap`) and the 14px /
       24px type.
     element: ol
   - id: item
@@ -35,12 +35,12 @@ parts:
   - id: link
     description: >-
       Interactive link (`<a>` by default, polymorphic via `render`). Uses
-      `--ui-breadcrumb-link`; underlines on hover and focus-visible.
+      `--ui-breadcrumb-link-label-color-*`; underlines on hover and focus-visible.
     element: a
   - id: page
     description: >-
       The current page (`<span role="link" aria-current="page" aria-disabled>`).
-      Non-interactive; uses `--ui-breadcrumb-value`. Always the last item.
+      Non-interactive; uses `--ui-breadcrumb-page-label-color`. Always the last item.
     element: span
   - id: separator
     description: >-
