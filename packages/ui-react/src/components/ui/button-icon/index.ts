@@ -1,1 +1,5 @@
-export { ButtonIcon, type ButtonIconProps } from './button-icon';
+export {
+  ButtonIcon,
+  buttonIconVariants,
+  type ButtonIconProps,
+} from './button-icon';

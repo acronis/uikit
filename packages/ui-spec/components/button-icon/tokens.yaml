@@ -1,23 +1,46 @@
 spec_version: '1.0'
 component: ButtonIcon
 
-# References only — values live in @acronis-platform/tokens-pd. Geometry (32×32,
-# 4px radius, 1px border) comes from layout utilities, not tokens.
+# References only — values live in @acronis-platform/tokens-pd. Container fill
+# and icon color are shared across both variants (`--ui-button-icon-global-*`);
+# the secondary variant adds a 1px container border (`-secondary-*`).
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - { name: --ui-button-icon-background-idle, affects: root }
-  - { name: --ui-button-icon-background-hover, affects: root }
-  - { name: --ui-button-icon-background-active, affects: root }
-  - { name: --ui-button-icon-background-disabled, affects: root }
-  - { name: --ui-button-icon-icon-idle, affects: icon }
-  - { name: --ui-button-icon-icon-hover, affects: icon }
-  - { name: --ui-button-icon-icon-active, affects: icon }
-  - { name: --ui-button-icon-icon-disabled, affects: icon }
-  - { name: --ui-button-icon-border-idle, affects: root }
-  - { name: --ui-button-icon-border-hover, affects: root }
-  - { name: --ui-button-icon-border-active, affects: root }
-  - { name: --ui-button-icon-border-disabled, affects: root }
+  # ── Geometry (root) ──
+  - { name: --ui-button-icon-global-container-height, affects: root }
+  - { name: --ui-button-icon-global-container-border-radius, affects: root }
+  - { name: --ui-button-icon-global-icon-size, affects: icon }
+
+  # ── Container fill (shared by ghost + secondary) ──
+  - { name: --ui-button-icon-global-container-color-idle, affects: root }
+  - { name: --ui-button-icon-global-container-color-hover, affects: root }
+  - { name: --ui-button-icon-global-container-color-active, affects: root }
+  - { name: --ui-button-icon-global-container-color-disabled, affects: root }
+
+  # ── Icon color (shared by ghost + secondary) ──
+  - { name: --ui-button-icon-global-icon-color-idle, affects: icon }
+  - { name: --ui-button-icon-global-icon-color-hover, affects: icon }
+  - { name: --ui-button-icon-global-icon-color-active, affects: icon }
+  - { name: --ui-button-icon-global-icon-color-disabled, affects: icon }
+
+  # ── secondary container border ──
+  - {
+      name: --ui-button-icon-secondary-container-border-color-idle,
+      affects: root,
+    }
+  - {
+      name: --ui-button-icon-secondary-container-border-color-hover,
+      affects: root,
+    }
+  - {
+      name: --ui-button-icon-secondary-container-border-color-active,
+      affects: root,
+    }
+  - {
+      name: --ui-button-icon-secondary-container-border-color-disabled,
+      affects: root,
+    }
   - {
       name: --ui-focus-brand,
       affects: root,

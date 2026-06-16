@@ -252,7 +252,7 @@ export const Matrix: Story = {
         <span key={\`\${v}-label\`} style={{ fontSize: 12, opacity: 0.6 }}>
           {v}
         </span>,
-        ...SIZES.map((s) => ${inst(' key={`${v}-${s}`} variant={v} size={s}')}),
+        ...SIZES.map((s) => ${inst(label + ' key={`${v}-${s}`} variant={v} size={s}')}),
       ])}
     </div>
   ),
@@ -263,7 +263,7 @@ export const Matrix: Story = {
       parts.push(`export const Disabled: Story = {
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-      {VARIANTS.map((v) => ${inst(' key={v} variant={v} disabled')})}
+      {VARIANTS.map((v) => ${inst(label + ' key={v} variant={v} disabled')})}
     </div>
   ),
 };`);
@@ -275,7 +275,7 @@ export const Matrix: Story = {
 export const Variants: Story = {
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
-      {VARIANTS.map((v) => ${inst(' key={v} variant={v}')})}
+      {VARIANTS.map((v) => ${inst(label + ' key={v} variant={v}')})}
     </div>
   ),
 };`);
@@ -283,7 +283,7 @@ export const Variants: Story = {
       parts.push(`export const Disabled: Story = {
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
-      {VARIANTS.map((v) => ${inst(' key={v} variant={v} disabled')})}
+      {VARIANTS.map((v) => ${inst(label + ' key={v} variant={v} disabled')})}
     </div>
   ),
 };`);
