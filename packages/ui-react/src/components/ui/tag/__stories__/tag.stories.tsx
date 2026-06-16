@@ -11,7 +11,15 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['info', 'success', 'warning', 'critical', 'danger', 'neutral'],
+      options: [
+        'info',
+        'success',
+        'warning',
+        'critical',
+        'danger',
+        'neutral',
+        'ai',
+      ],
     },
     size: { control: 'inline-radio', options: ['default', 'sm'] },
   },
@@ -27,6 +35,7 @@ const VARIANTS = [
   'critical',
   'danger',
   'neutral',
+  'ai',
 ] as const;
 
 export const Default: Story = {};

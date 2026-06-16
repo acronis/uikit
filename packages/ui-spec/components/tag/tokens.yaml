@@ -1,34 +1,103 @@
 spec_version: '1.0'
 component: Tag
 
-# References only. The Figma `component/tag/*` colors are 1:1 aliases of the
-# shared semantic status tokens, so the component references those directly
-# (no dedicated `--ui-tag-*` color tier). Geometry (height, padding, radius,
-# gap) uses Tailwind utilities matching the design's values.
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+# Tag binds the dedicated `--ui-tag-*` component tier: per variant a container
+# fill, container border color, label color, and icon color; geometry under
+# `--ui-tag-global-*`. The `ai` border color is a gradient.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  # Info
-  - { name: --ui-background-status-info, affects: root }
-  - { name: --ui-border-on-status-info, affects: root }
-  - { name: --ui-text-on-status-info, affects: label }
-  # Success
-  - { name: --ui-background-status-success, affects: root }
-  - { name: --ui-border-on-status-success, affects: root }
-  - { name: --ui-text-on-status-success, affects: label }
-  # Warning
-  - { name: --ui-background-status-warning, affects: root }
-  - { name: --ui-border-on-status-warning, affects: root }
-  - { name: --ui-text-on-status-warning, affects: label }
-  # Critical
-  - { name: --ui-background-status-critical, affects: root }
-  - { name: --ui-border-on-status-critical, affects: root }
-  - { name: --ui-text-on-status-critical, affects: label }
-  # Danger
-  - { name: --ui-background-status-danger, affects: root }
-  - { name: --ui-border-on-status-danger, affects: root }
-  - { name: --ui-text-on-status-danger, affects: label }
-  # Neutral
-  - { name: --ui-background-status-neutral, affects: root }
-  - { name: --ui-border-on-status-neutral, affects: root }
-  - { name: --ui-text-on-status-neutral, affects: label }
+  # ── Shared geometry (root) ──
+  - name: --ui-tag-global-container-border-radius
+    affects: root
+  - name: --ui-tag-global-container-border-width
+    affects: root
+  - name: --ui-tag-global-container-gap
+    affects: root
+  - name: --ui-tag-global-container-padding-x
+    affects: root
+  - name: --ui-tag-global-container-padding-y
+    affects: root
+  - name: --ui-tag-global-container-width-max
+    affects: root
+  - name: --ui-tag-global-container-width-min
+    affects: root
+  - name: --ui-tag-global-md-container-height
+    affects: root
+  - name: --ui-tag-global-sm-container-height
+    affects: root
+  - name: --ui-tag-global-md-icon-size
+    affects: icon
+
+  # ── info ──
+  - name: --ui-tag-info-container-color
+    affects: root
+  - name: --ui-tag-info-container-border-color
+    affects: root
+  - name: --ui-tag-info-label-color
+    affects: label
+  - name: --ui-tag-info-icon-color
+    affects: icon
+
+  # ── success ──
+  - name: --ui-tag-success-container-color
+    affects: root
+  - name: --ui-tag-success-container-border-color
+    affects: root
+  - name: --ui-tag-success-label-color
+    affects: label
+  - name: --ui-tag-success-icon-color
+    affects: icon
+
+  # ── warning ──
+  - name: --ui-tag-warning-container-color
+    affects: root
+  - name: --ui-tag-warning-container-border-color
+    affects: root
+  - name: --ui-tag-warning-label-color
+    affects: label
+  - name: --ui-tag-warning-icon-color
+    affects: icon
+
+  # ── critical ──
+  - name: --ui-tag-critical-container-color
+    affects: root
+  - name: --ui-tag-critical-container-border-color
+    affects: root
+  - name: --ui-tag-critical-label-color
+    affects: label
+  - name: --ui-tag-critical-icon-color
+    affects: icon
+
+  # ── danger ──
+  - name: --ui-tag-danger-container-color
+    affects: root
+  - name: --ui-tag-danger-container-border-color
+    affects: root
+  - name: --ui-tag-danger-label-color
+    affects: label
+  - name: --ui-tag-danger-icon-color
+    affects: icon
+
+  # ── neutral ──
+  - name: --ui-tag-neutral-container-color
+    affects: root
+  - name: --ui-tag-neutral-container-border-color
+    affects: root
+  - name: --ui-tag-neutral-label-color
+    affects: label
+  - name: --ui-tag-neutral-icon-color
+    affects: icon
+
+  # ── ai (gradient border over a tinted fill) ──
+  - name: --ui-tag-ai-container-color
+    affects: root
+  - name: --ui-tag-ai-container-border-color
+    affects: root
+  - name: --ui-tag-ai-label-color
+    affects: label
+  - name: --ui-tag-ai-icon-color
+    affects: icon

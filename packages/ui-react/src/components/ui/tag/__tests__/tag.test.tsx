@@ -13,10 +13,10 @@ describe('Tag', () => {
   it('defaults to the neutral variant and default size tokens', () => {
     const { container } = render(<Tag>Active</Tag>);
     expect(container.firstElementChild).toHaveClass(
-      'bg-[var(--ui-background-status-neutral)]',
-      'border-[var(--ui-border-on-status-neutral)]',
-      'text-[var(--ui-text-on-status-neutral)]',
-      'h-6'
+      'bg-[var(--ui-tag-neutral-container-color)]',
+      'border-[var(--ui-tag-neutral-container-border-color)]',
+      'text-[var(--ui-tag-neutral-label-color)]',
+      'h-[var(--ui-tag-global-md-container-height)]'
     );
   });
 
@@ -27,10 +27,18 @@ describe('Tag', () => {
       </Tag>
     );
     expect(container.firstElementChild).toHaveClass(
-      'bg-[var(--ui-background-status-success)]',
-      'text-[var(--ui-text-on-status-success)]',
-      'h-5',
-      'px-1'
+      'bg-[var(--ui-tag-success-container-color)]',
+      'text-[var(--ui-tag-success-label-color)]',
+      'h-[var(--ui-tag-global-sm-container-height)]',
+      'px-[var(--ui-tag-global-container-padding-x)]'
+    );
+  });
+
+  it('paints the ai variant with the gradient-border background trick', () => {
+    const { container } = render(<Tag variant="ai">Ask AI</Tag>);
+    expect(container.firstElementChild).toHaveClass(
+      'text-[var(--ui-tag-ai-label-color)]',
+      '[background:linear-gradient(var(--ui-tag-ai-container-color),var(--ui-tag-ai-container-color))_padding-box,var(--ui-tag-ai-container-border-color)_border-box]'
     );
   });
 

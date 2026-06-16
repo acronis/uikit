@@ -16,11 +16,10 @@ A compact label for a status, attribute, or keyword.
 
 ## Variants
 
-`info` · `success` · `warning` · `critical` · `danger` · `neutral` — each maps to
-the shared semantic status colors. Two sizes: `default` (24px) and `sm` (20px).
-
-> The Figma "AI" variant is not shipped yet — its background tint has no design
-> token (pending an upstream `--ui-background-status-ai` sync).
+`info` · `success` · `warning` · `critical` · `danger` · `neutral` · `ai` — each
+maps to the dedicated `--ui-tag-<variant>-*` tier (container fill / border /
+label / icon). `ai` paints a gradient border over a tinted fill. Two sizes:
+`default` (24px) and `sm` (20px).
 
 ## Examples
 

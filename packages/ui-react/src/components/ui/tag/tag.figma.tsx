@@ -1,7 +1,5 @@
 // Figma Code Connect — status: COMPLETE
-// Mapped to the "Tag" component set in the shadcn-uikit Figma file. The Figma
-// "AI" variant is intentionally unmapped — it's not shipped yet (pending an
-// upstream `--ui-background-status-ai` token).
+// Mapped to the "Tag" component set in the shadcn-uikit Figma file.
 import figma from '@figma/code-connect';
 
 import { Tag } from './tag';
@@ -18,6 +16,7 @@ figma.connect(
         Critical: 'critical',
         Danger: 'danger',
         Neutral: 'neutral',
+        Ai: 'ai',
       }),
       size: figma.enum('Size', {
         Default: 'default',

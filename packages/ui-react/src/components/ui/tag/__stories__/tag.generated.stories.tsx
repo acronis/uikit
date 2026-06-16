@@ -13,7 +13,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const VARIANTS = ['info', 'success', 'warning', 'critical', 'danger', 'neutral'] as const;
+const VARIANTS = ['info', 'success', 'warning', 'critical', 'danger', 'neutral', 'ai'] as const;
 const SIZES = ['default', 'sm'] as const;
 
 export const Matrix: Story = {

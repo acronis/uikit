@@ -3,36 +3,39 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
-// A compact label for a status, category, or keyword. `variant` maps to the
-// shared semantic status vocabulary — the Figma `component/tag/*` colors are
-// 1:1 aliases of `--ui-background-status-*` / `--ui-border-on-status-*` /
-// `--ui-text-on-status-*`, so they're referenced directly. `size` sets the
-// height/padding (24px / 20px); an optional leading icon (16px) sits before the
-// label, which truncates at the 256px max width.
-//
-// NOTE: the Figma "AI" variant is not shipped yet — its background tint
-// (`#f9f5fb`) has no design token; it's pending an upstream
-// `--ui-background-status-ai` sync.
+// A compact label for a status, category, or keyword. `variant` wires the
+// container fill, border, label, and icon to the dedicated `--ui-tag-*`
+// component tier from @acronis-platform/tokens-pd (one token per part, per
+// variant). Geometry — radius, border width, gap, padding, max/min width, icon
+// size — comes from `--ui-tag-global-*`; `size` only changes the height (24px
+// `default` / 20px `sm`), padding is uniform. The `ai` variant paints a gradient
+// border (`--ui-tag-ai-container-border-color`) over its solid tinted fill via
+// the padding-box / border-box background-clip trick (the border stays
+// transparent so the border-box gradient shows through). The fill is wrapped in
+// a `linear-gradient(color, color)` so it's a background *image* layer — a plain
+// background-color is only valid in the final layer of the `background`
+// shorthand, and as a non-final layer would invalidate the whole declaration.
 const tagVariants = cva(
-  'inline-flex max-w-64 items-center gap-1 overflow-hidden rounded-full border align-middle text-xs font-semibold leading-4 [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex min-w-[var(--ui-tag-global-container-width-min)] max-w-[var(--ui-tag-global-container-width-max)] items-center gap-[var(--ui-tag-global-container-gap)] overflow-hidden rounded-[var(--ui-tag-global-container-border-radius)] border-[length:var(--ui-tag-global-container-border-width)] border-solid border-transparent px-[var(--ui-tag-global-container-padding-x)] align-middle text-xs font-semibold leading-4 [&_svg]:size-[var(--ui-tag-global-md-icon-size)] [&_svg]:shrink-0',
   {
     variants: {
       variant: {
-        info: 'bg-[var(--ui-background-status-info)] border-[var(--ui-border-on-status-info)] text-[var(--ui-text-on-status-info)]',
+        info: 'bg-[var(--ui-tag-info-container-color)] border-[var(--ui-tag-info-container-border-color)] text-[var(--ui-tag-info-label-color)] [&_svg]:text-[var(--ui-tag-info-icon-color)]',
         success:
-          'bg-[var(--ui-background-status-success)] border-[var(--ui-border-on-status-success)] text-[var(--ui-text-on-status-success)]',
+          'bg-[var(--ui-tag-success-container-color)] border-[var(--ui-tag-success-container-border-color)] text-[var(--ui-tag-success-label-color)] [&_svg]:text-[var(--ui-tag-success-icon-color)]',
         warning:
-          'bg-[var(--ui-background-status-warning)] border-[var(--ui-border-on-status-warning)] text-[var(--ui-text-on-status-warning)]',
+          'bg-[var(--ui-tag-warning-container-color)] border-[var(--ui-tag-warning-container-border-color)] text-[var(--ui-tag-warning-label-color)] [&_svg]:text-[var(--ui-tag-warning-icon-color)]',
         critical:
-          'bg-[var(--ui-background-status-critical)] border-[var(--ui-border-on-status-critical)] text-[var(--ui-text-on-status-critical)]',
+          'bg-[var(--ui-tag-critical-container-color)] border-[var(--ui-tag-critical-container-border-color)] text-[var(--ui-tag-critical-label-color)] [&_svg]:text-[var(--ui-tag-critical-icon-color)]',
         danger:
-          'bg-[var(--ui-background-status-danger)] border-[var(--ui-border-on-status-danger)] text-[var(--ui-text-on-status-danger)]',
+          'bg-[var(--ui-tag-danger-container-color)] border-[var(--ui-tag-danger-container-border-color)] text-[var(--ui-tag-danger-label-color)] [&_svg]:text-[var(--ui-tag-danger-icon-color)]',
         neutral:
-          'bg-[var(--ui-background-status-neutral)] border-[var(--ui-border-on-status-neutral)] text-[var(--ui-text-on-status-neutral)]',
+          'bg-[var(--ui-tag-neutral-container-color)] border-[var(--ui-tag-neutral-container-border-color)] text-[var(--ui-tag-neutral-label-color)] [&_svg]:text-[var(--ui-tag-neutral-icon-color)]',
+        ai: 'text-[var(--ui-tag-ai-label-color)] [&_svg]:text-[var(--ui-tag-ai-icon-color)] [background:linear-gradient(var(--ui-tag-ai-container-color),var(--ui-tag-ai-container-color))_padding-box,var(--ui-tag-ai-container-border-color)_border-box]',
       },
       size: {
-        default: 'h-6 px-2',
-        sm: 'h-5 px-1',
+        default: 'h-[var(--ui-tag-global-md-container-height)]',
+        sm: 'h-[var(--ui-tag-global-sm-container-height)]',
       },
     },
     defaultVariants: {

@@ -3,11 +3,11 @@
 ## Variant
 
 **Given** a Tag with `variant` set to one of `info`, `success`, `warning`,
-`critical`, `danger`, or `neutral`
+`critical`, `danger`, `neutral`, or `ai`
 **When** it renders
-**Then** its background, border, and text resolve from that status's
-`--ui-background-status-*` / `--ui-border-on-status-*` / `--ui-text-on-status-*`
-tokens
+**Then** its fill, border, label, and icon resolve from that variant's
+`--ui-tag-<variant>-container-color` / `-container-border-color` /
+`-label-color` / `-icon-color` tokens (the `ai` border color is a gradient)
 **And** with no `variant` it defaults to `neutral`.
 
 ## Size
