@@ -1,5 +1,16 @@
 # @acronis-platform/ui-react
 
+## 0.16.4
+
+### Patch Changes
+
+- [#294](https://github.com/acronis/uikit/pull/294) [`2acfc52`](https://github.com/acronis/uikit/commit/2acfc52d686114c9a97a560b8ce4db4b393f64d5) Thanks [@leonid](https://github.com/leonid)! - Fix `Button` colors: wire every variant's container fill, label, and icon to the
+  renamed `--ui-button-*-color-*` tokens (the next-gen token sync added a `-color-`
+  segment — e.g. `--ui-button-primary-container-idle` → `…-container-color-idle`).
+  The component still referenced the old names, which no longer exist in
+  `@acronis-platform/tokens-pd`, so every variant rendered with no fill/text color.
+  Border, geometry, and padding tokens were already correct and are unchanged.
+
 ## 0.16.3
 
 ### Patch Changes
