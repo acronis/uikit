@@ -88,10 +88,11 @@ const FOCUS_RING =
 // the matching next-gen `--ui-button-*` state tokens. Focus reuses the idle
 // colors and adds the design's focus ring. Idle/disabled render the real
 // component (idle untouched, disabled via the `disabled` prop) so its own
-// styling is exercised. The container fill is `--ui-button-<variant>-container-*`
-// (a gradient for `ai`); the border only exists for the `secondary`/`inverted`
-// variants (`-container-border-color-*`) — for the others the var is undefined,
-// so the declaration is ignored and the component's transparent border shows.
+// styling is exercised. The container fill is
+// `--ui-button-<variant>-container-color-*` (a gradient for `ai`); the border
+// only exists for the `secondary`/`inverted` variants (`-container-border-color-*`)
+// — for the others the var is undefined, so the declaration is ignored and the
+// component's transparent border shows.
 function forcedStyle(
   token: string,
   state: 'hover' | 'active' | 'focus',
@@ -99,9 +100,9 @@ function forcedStyle(
 ): CSSProperties {
   const cs = state === 'focus' ? 'idle' : state;
   const style: CSSProperties = gradient
-    ? { backgroundImage: `var(--ui-button-${token}-container-${cs})` }
-    : { backgroundColor: `var(--ui-button-${token}-container-${cs}, transparent)` };
-  style.color = `var(--ui-button-${token}-label-${cs})`;
+    ? { backgroundImage: `var(--ui-button-${token}-container-color-${cs})` }
+    : { backgroundColor: `var(--ui-button-${token}-container-color-${cs}, transparent)` };
+  style.color = `var(--ui-button-${token}-label-color-${cs})`;
   // Only `secondary`/`inverted` define a border token; for the others the var is
   // undefined and falls back to `transparent` (an undefined var in an inline
   // longhand would otherwise compute to `currentColor` and paint a stray border).
@@ -115,8 +116,8 @@ function forcedStyle(
 function forcedIconStyle(state: 'hover' | 'active' | 'focus'): CSSProperties {
   const cs = state === 'focus' ? 'idle' : state;
   const style: CSSProperties = {
-    backgroundColor: `var(--ui-button-icon-global-container-${cs})`,
-    color: `var(--ui-button-icon-global-icon-${cs})`,
+    backgroundColor: `var(--ui-button-icon-global-container-color-${cs})`,
+    color: `var(--ui-button-icon-global-icon-color-${cs})`,
   };
   if (state === 'focus') style.boxShadow = FOCUS_RING;
   return style;
