@@ -68,7 +68,7 @@
   --ui-border-on-brand-border: light-dark(rgb(255 255 255 / 0.102), rgb(0 0 0 / 0.102));
   --ui-border-on-brand-border-active: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-border-on-brand-divider: light-dark(rgb(255 255 255 / 0.102), rgb(0 0 0 / 0.102));
-  --ui-border-on-status-ai-strong: linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
+  --ui-border-on-status-ai-strong: linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
   --ui-border-on-status-critical: light-dark(rgb(255 204 153), rgb(178 80 0));
   --ui-border-on-status-critical-strong: light-dark(rgb(240 112 0), rgb(133 83 33));
   --ui-border-on-status-danger: light-dark(rgb(248 195 195), rgb(173 31 31));
@@ -111,10 +111,10 @@
   --ui-glyph-on-surface-disabled: light-dark(rgb(214 228 245), rgb(6 54 121));
   --ui-glyph-on-surface-neutral: light-dark(rgb(201 204 207), rgb(73 76 80));
   --ui-glyph-on-surface-primary: light-dark(rgb(23 99 207), rgb(48 125 232));
-  --ui-gradients-ai-active: linear-gradient(180deg, rgb(43 54 155) 20%, rgb(118 21 113) 100%);
-  --ui-gradients-ai-disabled: linear-gradient(180deg, rgb(223 226 255) 20%, rgb(255 218 253) 100%);
-  --ui-gradients-ai-hover: linear-gradient(180deg, rgb(51 66 195) 20%, rgb(182 33 174) 100%);
-  --ui-gradients-ai-idle: linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
+  --ui-gradients-ai-active: linear-gradient(90deg, rgb(43 54 155) 20%, rgb(118 21 113) 100%);
+  --ui-gradients-ai-disabled: linear-gradient(90deg, rgb(223 226 255) 20%, rgb(255 218 253) 100%);
+  --ui-gradients-ai-hover: linear-gradient(90deg, rgb(51 66 195) 20%, rgb(182 33 174) 100%);
+  --ui-gradients-ai-idle: linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
   --ui-text-on-brand-disabled: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-text-on-brand-link: light-dark(rgb(23 99 207), rgb(48 125 232));
   --ui-text-on-brand-link-disabled: light-dark(rgb(255 255 255 / 0.898), rgb(0 0 0 / 0.898));

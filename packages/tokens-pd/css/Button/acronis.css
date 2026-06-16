@@ -4,10 +4,10 @@
 :root, :host {
   color-scheme: light dark;
 
-  --ui-button-ai-container-color-active: linear-gradient(180deg, rgb(43 54 155) 20%, rgb(118 21 113) 100%);
-  --ui-button-ai-container-color-disabled: linear-gradient(180deg, rgb(223 226 255) 20%, rgb(255 218 253) 100%);
-  --ui-button-ai-container-color-hover: linear-gradient(180deg, rgb(51 66 195) 20%, rgb(182 33 174) 100%);
-  --ui-button-ai-container-color-idle: linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
+  --ui-button-ai-container-color-active: linear-gradient(90deg, rgb(43 54 155) 20%, rgb(118 21 113) 100%);
+  --ui-button-ai-container-color-disabled: linear-gradient(90deg, rgb(223 226 255) 20%, rgb(255 218 253) 100%);
+  --ui-button-ai-container-color-hover: linear-gradient(90deg, rgb(51 66 195) 20%, rgb(182 33 174) 100%);
+  --ui-button-ai-container-color-idle: linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
   --ui-button-ai-container-padding-x: 12px;
   --ui-button-ai-container-width-min: 64px;
   --ui-button-ai-icon-color-active: light-dark(rgb(255 255 255), rgb(0 0 0));

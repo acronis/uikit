@@ -4,7 +4,7 @@
 :root, :host {
   color-scheme: light dark;
 
-  --ui-tag-ai-container-border-color: linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
+  --ui-tag-ai-container-border-color: linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
   --ui-tag-ai-container-color: light-dark(rgb(249 245 251), rgb(82 20 82));
   --ui-tag-ai-icon-color: light-dark(rgb(130 23 130), rgb(250 209 250));
   --ui-tag-ai-label-color: light-dark(rgb(130 23 130), rgb(250 209 250));

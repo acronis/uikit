@@ -103,8 +103,15 @@ describe('gradientCss', () => {
     expect(out).toContain('linear-gradient(90deg,');
   });
 
-  it('defaults to 180deg (to bottom) when no transform matrix is present', () => {
-    expect(run([stop(hsl(0, 0, 0), 0)])).toContain('linear-gradient(180deg,');
+  it('parses the angle from com.figma.cssGradient when no transform matrix is present', () => {
+    const out = run([stop(hsl(0, 0, 0), 0), stop(hsl(0, 0, 100), 1)], {
+      'com.figma.cssGradient': 'linear-gradient(90deg, #000000 0%, #FFFFFF 100%);',
+    });
+    expect(out).toContain('linear-gradient(90deg,');
+  });
+
+  it('defaults to 90deg (to right) when neither a matrix nor cssGradient is present', () => {
+    expect(run([stop(hsl(0, 0, 0), 0)])).toContain('linear-gradient(90deg,');
   });
 
   it('rounds fractional stop positions', () => {
