@@ -38,11 +38,11 @@ Read the workspace contracts first — they override anything here on conflict:
 | Arg             | Meaning                                                                |
 | --------------- | ---------------------------------------------------------------------- |
 | `ComponentName` | PascalCase React name (`Breadcrumb`, `Tooltip`). Files are kebab-case. |
-| `figma-url`     | A **node-specific** Figma URL (`…?node-id=1019-1502`).                 |
+| `figma-url`     | A **node-specific** Figma URL (`…?node-id=1017-2852`).                 |
 | `--update`      | Component already exists — refresh it against the current design.      |
 
-Parse the URL: `figma.com/design/:fileKey/…?node-id=1019-1502` →
-`fileKey=lrU3ydIyvPYQNE6ixdsKtJ`, `nodeId=1019:1502` (convert `-` to `:`).
+Parse the URL: `figma.com/design/:fileKey/…?node-id=1017-2852` →
+`fileKey=lrU3ydIyvPYQNE6ixdsKtJ`, `nodeId=1017:2852` (convert `-` to `:`).
 
 ---
 
@@ -53,14 +53,17 @@ Call these (no skill prerequisite for reads):
 1. `get_design_context({ nodeId, fileKey })` — reference markup + screenshot.
    Identify states, the part structure, and which layers are icons/instances.
 2. `get_variable_defs({ nodeId, fileKey })` — the design variables **the node
-   uses** (e.g. `component/breadcrumb/link`, `…/gap`, font size / line height),
-   as resolved `name → value` pairs. This is the right tool for the per-component
-   question (it returns only what this node references — not whole collections;
-   for a full token-collection sync use `/sync-tokens`). **Caveat:** the Dev Mode
-   MCP is **selection-bound** — if it errors with "nothing selected", the node
-   must be selected in the Figma desktop app; ask the user to select it (or open
-   the node URL in desktop), then retry. Reconcile each returned Figma variable
-   name to its `--ui-*` token in Phase 2 — never copy the resolved hex/number.
+   uses** (e.g. `component/Breadcrumb/link-label/color`, `…/list/gap`, font size /
+   line height), as resolved `name → value` pairs. This is the right tool for the
+   per-component question (it returns only what this node references — not whole
+   collections; for a full token-collection sync use `/sync-tokens`). **Caveat:**
+   the Figma MCP is **selection-bound** in this setup — both the figma-console
+   Desktop Bridge and the official `mcp__figma__*` Dev Mode server reject reads
+   with "You currently have nothing selected" even when you pass a valid
+   `nodeId`/`fileKey`. The node must be **selected in the Figma desktop app**: ask
+   the user to open the node URL in desktop and click the layer, then retry.
+   Reconcile each returned Figma variable name to its `--ui-*` token in Phase 2 —
+   never copy the resolved hex/number.
 3. `get_context_for_code_connect({ nodeId, fileKey })` — **exact** Figma
    property names + variant options. Use this to write Code Connect; never
    guess property names.
@@ -74,7 +77,7 @@ Write down, from the design:
   exist as a `--ui-<x>-<y>` token (see Phase 2).
 
 > A node may be a single item even if the frame shows a full assembly (the
-> breadcrumb node `1019:1502` is one item with a `state` variant, not the whole
+> breadcrumb node `1017:2852` is one item with a `state` variant, not the whole
 > trail). Confirm via `get_context_for_code_connect`.
 
 ---
@@ -88,8 +91,8 @@ Write down, from the design:
 grep -rn "<component>" packages/tokens-pd/css --include="*.css" -i
 ```
 
-- If the tokens exist (e.g. `--ui-breadcrumb-link`), reference them directly:
-  `text-[var(--ui-breadcrumb-link)]`, `hover:…`, etc.
+- If the tokens exist (e.g. `--ui-breadcrumb-link-label-color-idle`), reference
+  them directly: `text-[var(--ui-breadcrumb-link-label-color-idle)]`, `hover:…`, etc.
 - If a **shared** color is missing, bridge a Tailwind name in
   `packages/ui-react/src/styles/index.css` (`@theme inline`).
 - If **component-specific** tokens are missing entirely, they belong upstream
@@ -99,6 +102,19 @@ grep -rn "<component>" packages/tokens-pd/css --include="*.css" -i
 Wire **each interaction state to its own token** (`hover:` → `*-hover`,
 `disabled:` → `*-disabled`) even when the idle value happens to match — brand
 overrides only honor the referenced token.
+
+> **On `--update`, re-verify every token ref against the _current_ tokens-pd.**
+> A missing CSS var is a **silent** failure — `var(--does-not-exist)` makes the
+> property invalid and the element falls back to inherited color; nothing fails
+> the build, typecheck, or lint. A token-sync (e.g. the `/sync-tokens` flow) can
+> rename tokens out from under a shipped component, leaving it referencing dead
+> names. So when updating, grep each ref and confirm it still resolves:
+> `for t in $(grep -oE 'ui-[a-z-]+' src/components/ui/<name>/<name>.tsx | sort -u); do grep -qF -- "--$t" packages/tokens-pd/css/<Tier>/acronis.css && echo "OK $t" || echo "MISS $t"; done`
+> Don't forget the **spec** (`ui-spec/components/<name>/tokens.yaml` +
+> `anatomy.yaml`) and the **tests** — both pin token names and drift the same way.
+> (Worked example: the 2025-06 next-gen sync renamed `--ui-breadcrumb-link` →
+> `--ui-breadcrumb-link-label-color-idle`; the component kept the old name and
+> rendered links uncolored until re-themed.)
 
 > **tokens-pd component tiers are opt-in.** `src/styles/index.css` imports the
 > semantic tier (`css/acronis.css`) plus one `@import '…/css/<component>/acronis.css'`
@@ -224,13 +240,14 @@ pnpm --filter @acronis-platform/ui-spec test
 pnpm -r typecheck                                   # what the pre-commit hook runs
 ```
 
-Add a changeset for the **published** package only (`ui-react` — `minor` for a
-new component). `ui-spec` is private (0.0.0); no changeset:
+Add a changeset for the **published** package only (`ui-react`). Bump by intent:
+`minor` for a **new** component, `patch` for an **update/fix** of an existing one
+(re-theme, token rename, bug fix). `ui-spec` is private (0.0.0); no changeset:
 
 ```
 .changeset/<name>-component.md
 ---
-'@acronis-platform/ui-react': minor
+'@acronis-platform/ui-react': minor   # or: patch (update/fix)
 ---
 Add `<Name>`: …
 ```
@@ -251,6 +268,12 @@ pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker         # 
 Never commit baselines rendered on macOS/Windows — they won't match CI's Linux
 renderer. CI: `.github/workflows/visual-regression.yml`.
 
+On `--update`, the `:docker:update` run may legitimately rewrite **zero** PNGs —
+that happens when you're fixing code to match an already-correct baseline (e.g. a
+silent token rename the baselines never captured). Confirm with `git status
+test/__snapshots__/`; if nothing changed, run the **check** variant once to prove
+the committed baselines still pass, and commit no PNGs.
+
 ---
 
 ## Output checklist (done = all green)
@@ -269,14 +292,17 @@ renderer. CI: `.github/workflows/visual-regression.yml`.
 
 ---
 
-## Worked example: Breadcrumb (node 1019-1502)
+## Worked example: Breadcrumb (node 1017-2852)
 
 - Base UI has **no** breadcrumb primitive → semantic `<nav><ol><li>` + composable
   shadcn-style parts; `BreadcrumbLink`/`Breadcrumb` use `useRender` for the
   `render` prop.
-- Tokens already existed: `--ui-breadcrumb-link` (links),
-  `--ui-breadcrumb-value` (current page), `--ui-breadcrumb-chevron` (separator),
-  `--ui-breadcrumb-gap`.
+- Tokens (current, next-gen names): `--ui-breadcrumb-link-label-color-{idle,hover,active}`
+  (links), `--ui-breadcrumb-page-label-color` (current page),
+  `--ui-breadcrumb-separator-icon-color` + `--ui-breadcrumb-separator-icon-size`
+  (separator), `--ui-breadcrumb-list-gap` (inter-item gap). These superseded the
+  original `--ui-breadcrumb-{link,value,chevron,gap}` names in the 2025-06 next-gen
+  token sync — see the `--update` note in Phase 2.
 - States: idle/hover/pressed/focus are pseudo-states on the link; `active` =
   the current page = `BreadcrumbPage` (`role="link" aria-current="page"
 aria-disabled`), a **part**, not a state.
@@ -284,7 +310,3 @@ aria-disabled`), a **part**, not a state.
   `BreadcrumbPage` vs `BreadcrumbLink` + separator.
 - ui-spec `breadcrumb/` documents the composable parts; "current page" lives in
   `anatomy.parts`, only the link pseudo-states live in `anatomy.states`.
-
-```
-
-```
