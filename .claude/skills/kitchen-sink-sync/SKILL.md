@@ -36,8 +36,8 @@ Three silent drifts make the kitchen sink lie:
    matrix renders blank cells. The component itself may already be fixed; these
    hand-written token strings drift independently and must be re-checked.
 
-This skill is the audit + fix loop for both. **Pure additive/QA work on a private
-app** — no published-package or token changes.
+This skill is the audit + fix loop for all three. **Pure additive/QA work on a
+private app** — no published-package or token changes.
 
 ## Invocation
 
