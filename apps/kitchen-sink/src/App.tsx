@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 
-import { applyTheme, type ColorMode } from '@/lib/tokens';
+import { applyBrand, applyTheme, type Brand, type ColorMode } from '@/lib/tokens';
 import { ColorsSection } from '@/sections/colors';
 import { ComponentsSection } from '@/sections/components';
 import { IconsSection } from '@/sections/icons';
@@ -60,11 +60,17 @@ const MAIN_CONTENT_PADDING_BOTTOM = 96;
 
 export default function App() {
   const [mode, setMode] = useState<ColorMode>('light');
+  const [brand, setBrand] = useState<Brand>('acronis');
 
   // Light/dark drives the tokens' `light-dark()` via `color-scheme`.
   useEffect(() => {
     applyTheme(mode);
   }, [mode]);
+
+  // Brand layers deep-sky's `:root` overrides on top of the acronis base.
+  useEffect(() => {
+    applyBrand(brand);
+  }, [brand]);
 
   return (
     <div
@@ -103,6 +109,22 @@ export default function App() {
             </a>
           ))}
         </nav>
+        <select
+          value={brand}
+          onChange={(e) => setBrand(e.target.value as Brand)}
+          aria-label="Brand"
+          style={{
+            padding: '6px 10px',
+            borderRadius: 6,
+            cursor: 'pointer',
+            border: '1px solid var(--ui-border-on-surface-border)',
+            background: 'var(--ui-background-surface-secondary)',
+            color: 'inherit',
+          }}
+        >
+          <option value="acronis">Acronis</option>
+          <option value="deep-sky">Deep Sky</option>
+        </select>
         <button
           type="button"
           onClick={() => setMode((m) => (m === 'light' ? 'dark' : 'light'))}
