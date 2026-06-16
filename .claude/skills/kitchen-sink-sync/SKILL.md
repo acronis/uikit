@@ -1,6 +1,6 @@
 ---
 name: kitchen-sink-sync
-description: Audit and update the kitchen-sink app (apps/kitchen-sink) so it represents every ui-react component and its real variants/sizes/states. Use when components are added or re-themed, when token tiers are renamed, or when asked to "update the kitchen sink", "show all components", or check the kitchen sink for drift. Cross-checks ui-react exports + cva keys + ui-spec against what the page renders, and verifies every --ui-* token ref still resolves.
+description: Audit and update the kitchen-sink app (apps/kitchen-sink) so it represents every ui-react component (with its real variants/sizes/states/props) and every brand tokens-pd ships. Use when components are added or re-themed, when token tiers or brands are added/renamed, or when asked to "update the kitchen sink", "show all components", or check the kitchen sink for drift. Cross-checks ui-react exports + cva keys + ui-spec + tokens-pd brands against what the page renders, and verifies every --ui-* token ref still resolves.
 argument-hint: '[ComponentName | all]'
 ---
 
@@ -17,12 +17,16 @@ rules live in [context/conventions.md](../../../context/conventions.md) and
 
 ## Why this skill exists (the failure mode it prevents)
 
-Two silent drifts make the kitchen sink lie:
+Three silent drifts make the kitchen sink lie:
 
 1. **Missing components.** A new ui-react export (e.g. `SidebarPrimary`) is never
    added to `src/sections/components.tsx`, so the page silently under-represents
-   the library.
-2. **Dead token references.** `components.tsx` hardcodes token names in inline
+   the library. (Also missed: new variants and content-slot props on components
+   that _are_ shown — see Phase 2.)
+2. **Missing brands.** tokens-pd ships a new override brand (e.g. `deep-sky`) but
+   the header brand `<select>` / `applyBrand` never gain it, so the page can only
+   preview the default brand — see Phase 4.
+3. **Dead token references.** `components.tsx` hardcodes token names in inline
    styles — notably the `forcedStyle` / `forcedIconStyle` helpers that force a
    button cell into a hover/active/focus state by referencing
    `--ui-button-<variant>-container-color-<state>` etc. When a token sync renames
@@ -125,7 +129,37 @@ If a referenced tier isn't injected in `tokens.ts`, add its
 it into the injected list (so both rendering and the colors-section enumeration
 see it).
 
-## Phase 4 — Implement
+## Phase 4 — Brand & scheme switchers (keep the header in sync with tokens-pd)
+
+The header must expose **every brand tokens-pd ships**, not just the ones wired
+when it was last touched (a new brand is as easy to miss as a new component).
+Brands are the root CSS files: `acronis` is the base; every other root file is an
+**override-only** brand layered on top.
+
+```bash
+# Brands tokens-pd actually ships (each non-acronis root file is an override brand):
+ls packages/tokens-pd/css/*.css | sed 's#.*/##; s/\.css$//'      # e.g. acronis, deep-sky
+# Brands the kitchen sink exposes — the Brand union + applyBrand + the <select>:
+grep -nE "type Brand|DEEP_SKY|applyBrand|'[a-z-]+'" apps/kitchen-sink/src/lib/tokens.ts
+grep -n "<option value=" apps/kitchen-sink/src/App.tsx
+```
+
+Any shipped brand missing from the `Brand` union / `applyBrand` override blob /
+the `App.tsx` `<select>` is a gap. To wire a new override brand `<b>`:
+
+- `find packages/tokens-pd/css -name '<b>.css'` — an override file exists only
+  where the brand diverges, so the set may be smaller than the acronis set.
+- In `tokens.ts`: `import … '@acronis-platform/tokens-pd/css/<Tier>/<b>.css?raw'`
+  for the semantic root + each component tier that has a `<b>.css`; concatenate
+  them into the brand's override blob; extend the `Brand` union; make `applyBrand`
+  swap that blob into the override `<style>` (kept **last** in `<head>`).
+- In `App.tsx`: add an `<option value="<b>">…</option>`.
+
+Override brands carry no `color-scheme` shell, so they inherit light/dark from the
+acronis base via the existing scheme toggle — **no per-brand scheme wiring**. The
+scheme toggle is one mechanism (`applyTheme`) and needs no per-brand audit.
+
+## Phase 5 — Implement
 
 Edit `apps/kitchen-sink/src/sections/components.tsx`:
 
@@ -139,7 +173,7 @@ Edit `apps/kitchen-sink/src/sections/components.tsx`:
 - Update the `components.tsx` bullet in `apps/kitchen-sink/AGENTS.md` to list
   what's now shown.
 
-## Phase 5 — Verify (build from dist + look at it)
+## Phase 6 — Verify (build from dist + look at it)
 
 The app imports the libraries by package name from their **built `dist`**, so
 build deps first:
@@ -161,7 +195,10 @@ pnpm --filter @acronis-platform/kitchen-sink exec vite preview --port 4180 &
 Open `http://localhost:4180/#components`, scroll to the changed sections, and
 screenshot (Chrome DevTools MCP, or manually). Confirm **light and dark** (the
 header toggle) — tokens are `light-dark()`, so a blank/oddly-colored cell in one
-scheme is the dead-token signature. Stop the preview when done.
+scheme is the dead-token signature — and switch to at least one **non-default
+brand** (the brand `<select>`): the components should re-theme (override-only, so
+some variants legitimately stay put), and switching back to `acronis` clears it.
+Stop the preview when done.
 
 ## Output checklist (done = all green)
 
@@ -170,9 +207,12 @@ scheme is the dead-token signature. Stop the preview when done.
       optional content-slot props (`label` / `description` / `icon` / `render`).
 - [ ] Every hardcoded `--ui-*` ref resolves against the current tier; each used
       tier is imported in `tokens.ts`.
+- [ ] Every brand tokens-pd ships is selectable (the `Brand` union, `applyBrand`'s
+      override blob, and the `App.tsx` `<select>` all agree with `css/*.css`).
 - [ ] `AGENTS.md` component list updated.
 - [ ] typecheck · lint · build pass (deps built first).
-- [ ] Visually verified in the browser, light **and** dark.
+- [ ] Visually verified in the browser — light **and** dark, default brand **and**
+      at least one override brand.
 
 ## Notes
 
