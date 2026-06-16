@@ -1,5 +1,15 @@
 # @acronis-platform/ui-react
 
+## 0.16.1
+
+### Patch Changes
+
+- [#289](https://github.com/acronis/uikit/pull/289) [`2488240`](https://github.com/acronis/uikit/commit/2488240bd78243d59626e45a958a34d86ef70757) Thanks [@leonid](https://github.com/leonid)! - Fix `Breadcrumb` link colors: wire link/ellipsis text to the renamed
+  `--ui-breadcrumb-link-label-color-{idle,hover,active}` tokens (previously
+  referenced the stale `--ui-breadcrumb-link-label-{idle,hover,active}` names,
+  which no longer exist in `@acronis-platform/tokens-pd`, so links rendered with
+  no color).
+
 ## 0.16.0
 
 ### Minor Changes
