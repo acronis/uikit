@@ -21,14 +21,7 @@ const colorValue = c => (c && typeof c === 'object' && c.alpha === 0 ? 'transpar
 
 // Orphan palette stops that Figma never exports as local Mode variables.
 // These are referenced by semantic tokens; keep them in sync manually.
-const ORPHAN_PALETTE = [
-  { ourPath: ['transparent', 'inverted', '6'], variableId: 'VariableID:139:23',
-    light: { colorSpace: 'hsl', components: [0, 0, 100], alpha: 0.4 },
-    dark:  { colorSpace: 'hsl', components: [0, 0,   0], alpha: 0.4 } },
-  { ourPath: ['transparent', 'inverted', '8'], variableId: 'VariableID:139:25',
-    light: { colorSpace: 'hsl', components: [0, 0, 100], alpha: 0.2 },
-    dark:  { colorSpace: 'hsl', components: [0, 0,   0], alpha: 0.2 } },
-];
+const ORPHAN_PALETTE = [];
 
 export class PrimitivesEmitter {
   #snapshot;

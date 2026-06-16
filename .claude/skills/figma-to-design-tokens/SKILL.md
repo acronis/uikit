@@ -247,6 +247,18 @@ Fields intentionally NOT diffed:
 - `com.acronis.*` — hand-authored metadata (`tailwindRoles`, `textCase`, `textDecoration`), not in snapshot
 - Tokens with no `variableId` (orphan palette stops, letter-spacing) — `FIGMA_UNTRACKED`
 
+### Known cosmetic diff patterns
+
+Two patterns surface on every semantics (and components) sync and produce **zero net change** in emitted JSON — recognize them and do not flag them as concerns.
+
+**Palette alias name format** (`MODE_VALUE_CHANGED` in semantics/components)
+
+Figma exports palette aliases using its native segment path (e.g. `{Blue.Blue-7-Primary}`, `{Grayscale.Gray-1}`, `{Transparent.Inverted-1}`). Tier files store the mapped form (`{palette.blue.7}`, `{palette.grayscale.1}`, `{palette.transparent.inverted.1}`). Every sync will show many `MODE_VALUE_CHANGED` entries of this kind. **Do not rename `palette.*.*` token paths based on these diffs.** `emit-palette-mapper.mjs` translates Figma's native format back on every emit — they always resolve to zero output change. Only a genuine value swap (different stop number, different color family) is a real change.
+
+**Gradient format** (`MODE_VALUE_CHANGED` + `EXTENSION_REMOVED` + sometimes `TYPE_CHANGED` on gradient tokens)
+
+Figma's pattern for gradients is a `STRING`-type variable holding a CSS `linear-gradient(...)` literal. The diff will show the raw CSS string as "to" and the HSL stop array as "from", plus `EXTENSION_REMOVED` for `com.figma.cssGradient`. A `TYPE_CHANGED` of `gradient → string` on any gradient-group token is also cosmetic. **The canonical JSON format is always `$type: "gradient"` with HSL stop arrays — never change to `string` or `text`.** The emitter parses the CSS literal and writes stops; `com.figma.cssGradient` is re-derived on emit.
+
 ---
 
 ## Phase 4 — Human gate
@@ -446,13 +458,13 @@ helpers — don't bypass them — when a new palette/unit naming pattern appears
 Some values can't be native Figma variables, so designers mock them; the emitters
 decode each into the right DTCG `$type`:
 
-| Figma form                                                   | Decodes to                                                            | Where                  |
-| ------------------------------------------------------------ | --------------------------------------------------------------------- | ---------------------- |
-| Color literal at `alpha: 0` (e.g. magenta `#FF00FF00`)       | CSS `transparent`                                                     | primitives, components |
-| `string` holding `linear-gradient(<angle>, <hex> <pct>%, …)` | `$type: "gradient"` stop array; raw string in `com.figma.cssGradient` | `Semantic/gradients`   |
-| `string` holding `typography.<path>`                         | `$type: "typography"` alias (`{typography.body.strong}`)              | components             |
-| `string` on a `borderStyle` key                              | `$type: "strokeStyle"` (value `"solid"`)                              | components             |
-| `string` on a per-state `textDecoration` key                 | `$type: "string"` (value `"none"` / `"underline"`)                    | components             |
+| Figma form                                                                                | Decodes to                                                                                                                                     | Where                  |
+| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| Color literal at `alpha: 0` (e.g. magenta `#FF00FF00`)                                    | CSS `transparent`                                                                                                                              | primitives, components |
+| `string` (STRING-type Figma variable) holding `linear-gradient(<angle>, <hex> <pct>%, …)` | `$type: "gradient"` stop array; CSS literal re-derived in `com.figma.cssGradient`. **Always `$type: "gradient"` in JSON — never string/text.** | `Semantic/gradients`   |
+| `string` holding `typography.<path>`                                                      | `$type: "typography"` alias (`{typography.body.strong}`)                                                                                       | components             |
+| `string` on a `borderStyle` key                                                           | `$type: "strokeStyle"` (value `"solid"`)                                                                                                       | components             |
+| `string` on a per-state `textDecoration` key                                              | `$type: "string"` (value `"none"` / `"underline"`)                                                                                             | components             |
 
 ### Orphan variable IDs
 
