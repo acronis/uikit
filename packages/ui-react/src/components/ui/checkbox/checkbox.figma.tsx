@@ -10,7 +10,7 @@ import { Checkbox } from './checkbox';
 
 figma.connect(
   Checkbox,
-  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=728-3781',
+  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2238-43890',
   {
     props: {
       checked: figma.enum('State', {
