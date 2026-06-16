@@ -1,5 +1,21 @@
 # @acronis-platform/ui-react
 
+## 0.17.0
+
+### Minor Changes
+
+- [#301](https://github.com/acronis/uikit/pull/301) [`9a20554`](https://github.com/acronis/uikit/commit/9a205544dea2f16a3091828d2955d0175d6e2917) Thanks [@leonid](https://github.com/leonid)! - Re-theme `Checkbox` against the next-gen tokens and grow it into the full Figma
+  field.
+  - Fixed dead token refs: the box fill and glyph referenced `--ui-checkbox-*-box-{state}`
+    / `--ui-checkbox-*-icon-{state}`, which were renamed to `*-box-color-{state}` /
+    `*-icon-color-{state}` — so fills and glyphs silently fell back to inherited
+    colors. Every state (unchecked / checked / indeterminate × idle / hover / active
+    / disabled) is now wired to its current `--ui-checkbox-*` token.
+  - Added optional `label` and `description` props. When provided, the box, label,
+    and description compose a clickable `<label>` row (wired via aria-labelledby /
+    aria-describedby) using the `--ui-checkbox-global-{label,description,container}-*`
+    tokens. With neither, the bare box renders as before — name it with `aria-label`.
+
 ## 0.16.4
 
 ### Patch Changes
