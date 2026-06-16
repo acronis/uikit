@@ -772,7 +772,7 @@
       "onStatus": {
         "ai-strong": {
           "$extensions": {
-            "com.figma.scopes": ["ALL_SCOPES"],
+            "com.figma.scopes": [],
             "com.figma.variableId": "VariableID:2277:437"
           },
           "$type": "gradient",
@@ -1708,7 +1708,7 @@
       "active": {
         "$extensions": {
           "com.figma.cssGradient": "linear-gradient(90deg, #2B369B 20%, #761571 100%);",
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": [],
           "com.figma.variableId": "VariableID:2277:28"
         },
         "platforms": ["PD"],
@@ -1750,7 +1750,7 @@
       "disabled": {
         "$extensions": {
           "com.figma.cssGradient": "linear-gradient(90deg, #DFE2FF 20%, #FFDAFD 100%);",
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": [],
           "com.figma.variableId": "VariableID:2277:29"
         },
         "platforms": ["PD"],
@@ -1792,7 +1792,7 @@
       "hover": {
         "$extensions": {
           "com.figma.cssGradient": "linear-gradient(90deg, #3342C3 20%, #B621AE 100%);",
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": [],
           "com.figma.variableId": "VariableID:2277:27"
         },
         "platforms": ["PD"],
@@ -1834,7 +1834,7 @@
       "idle": {
         "$extensions": {
           "com.figma.cssGradient": "linear-gradient(90deg, #3849E0 20%, #FC2DF1 100%);",
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": [],
           "com.figma.variableId": "VariableID:2277:21"
         },
         "platforms": ["PD"],
