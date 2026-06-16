@@ -10,6 +10,8 @@ const meta = {
     checked: { control: 'boolean' },
     indeterminate: { control: 'boolean' },
     disabled: { control: 'boolean' },
+    label: { control: 'text' },
+    description: { control: 'text' },
   },
 } satisfies Meta<typeof Checkbox>;
 
@@ -41,10 +43,29 @@ export const Disabled: Story = {
 };
 
 export const WithLabel: Story = {
+  args: { label: 'Accept terms', defaultChecked: true },
+};
+
+export const WithDescription: Story = {
+  args: {
+    label: 'Email notifications',
+    description: 'Get notified when someone mentions you.',
+    defaultChecked: true,
+  },
+};
+
+export const LabelledVariants: Story = {
   render: () => (
-    <label className="inline-flex items-center gap-[var(--ui-checkbox-global-container-gap)] text-sm text-[var(--ui-checkbox-global-label-color)]">
-      <Checkbox defaultChecked />
-      Label
-    </label>
+    <div className="flex flex-col gap-3">
+      <Checkbox label="Unchecked option" />
+      <Checkbox label="Checked option" defaultChecked />
+      <Checkbox label="Indeterminate option" indeterminate />
+      <Checkbox
+        label="Disabled option"
+        description="This one can't be changed."
+        disabled
+        defaultChecked
+      />
+    </div>
   ),
 };

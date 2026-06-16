@@ -16,7 +16,7 @@ describe('Checkbox', () => {
   it('applies the unchecked idle box token classes', () => {
     render(<Checkbox aria-label="Accept" />);
     expect(screen.getByRole('checkbox', { name: 'Accept' })).toHaveClass(
-      'bg-[var(--ui-checkbox-unchecked-box-idle)]',
+      'bg-[var(--ui-checkbox-unchecked-box-color-idle)]',
       'border-[var(--ui-checkbox-unchecked-box-border-color-idle)]'
     );
   });
@@ -63,7 +63,26 @@ describe('Checkbox', () => {
     render(<Checkbox aria-label="Accept" className="custom-class" />);
     expect(screen.getByRole('checkbox', { name: 'Accept' })).toHaveClass(
       'custom-class',
-      'bg-[var(--ui-checkbox-unchecked-box-idle)]'
+      'bg-[var(--ui-checkbox-unchecked-box-color-idle)]'
+    );
+  });
+
+  it('names the control from the label prop and toggles on label click', async () => {
+    const onCheckedChange = vi.fn();
+    render(<Checkbox label="Accept terms" onCheckedChange={onCheckedChange} />);
+    const checkbox = screen.getByRole('checkbox', { name: 'Accept terms' });
+    expect(checkbox).toBeInTheDocument();
+    await userEvent.click(screen.getByText('Accept terms'));
+    expect(onCheckedChange).toHaveBeenCalledWith(true, expect.anything());
+  });
+
+  it('associates the description via aria-describedby', () => {
+    render(<Checkbox label="Notify" description="Send me emails" />);
+    const checkbox = screen.getByRole('checkbox', { name: 'Notify' });
+    const describedby = checkbox.getAttribute('aria-describedby');
+    expect(describedby).toBeTruthy();
+    expect(document.getElementById(describedby as string)).toHaveTextContent(
+      'Send me emails'
     );
   });
 

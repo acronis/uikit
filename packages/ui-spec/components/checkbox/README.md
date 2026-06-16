@@ -27,15 +27,19 @@ import { Checkbox } from '@acronis-platform/ui-react';
 function Terms() {
   const [accepted, setAccepted] = useState(false);
   return (
-    <label className="inline-flex items-center gap-2">
-      <Checkbox checked={accepted} onCheckedChange={setAccepted} />I accept the
-      terms
-    </label>
+    <Checkbox
+      label="I accept the terms"
+      description="You agree to the privacy policy."
+      checked={accepted}
+      onCheckedChange={setAccepted}
+    />
   );
 }
 ```
 
-Indeterminate (e.g. a "select all" parent):
+Pass `label` (and optional `description`) to compose the full field — the whole
+row becomes clickable and the box is wired to the text for accessibility. Omit
+them for a bare box, and name it with `aria-label`:
 
 ```tsx
 <Checkbox aria-label="Select all" indeterminate />
@@ -55,8 +59,8 @@ Indeterminate (e.g. a "select all" parent):
 | File               | Contents                                                          |
 | ------------------ | ----------------------------------------------------------------- |
 | `index.yaml`       | Identity, status, category, dependencies, Figma link              |
-| `anatomy.yaml`     | Root, indicator part, internal state, transitions, states         |
+| `anatomy.yaml`     | Root, container/content/label/description/indicator parts, states |
 | `api.yaml`         | Framework-agnostic contract + framework adapters                  |
-| `tokens.yaml`      | `--ui-form-*` token references                                    |
+| `tokens.yaml`      | `--ui-checkbox-*` token references                                |
 | `behavior.md`      | Given/When/Then behavior scenarios                                |
 | `accessibility.md` | ARIA roles, keyboard map, screen-reader and contrast requirements |

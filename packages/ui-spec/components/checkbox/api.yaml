@@ -39,6 +39,18 @@ contract:
       type: string
       required: false
       description: Form field value when checked.
+    - name: label
+      type: ReactNode
+      required: false
+      description: >-
+        Optional label rendered beside the box. When provided, the whole row
+        becomes a clickable `<label>` and the box is named via aria-labelledby.
+    - name: description
+      type: ReactNode
+      required: false
+      description: >-
+        Optional secondary description rendered under the label, associated with
+        the box via aria-describedby.
 
   events:
     - name: checked-change
@@ -55,8 +67,17 @@ adapters:
     status: implemented
     import: "import { Checkbox } from '@acronis-platform/ui-react'"
     example: |
+      {/* Box only — name it with aria-label */}
       <Checkbox
         aria-label="Accept terms"
+        checked={accepted}
+        onCheckedChange={setAccepted}
+      />
+
+      {/* With label + description (the whole row toggles) */}
+      <Checkbox
+        label="Email notifications"
+        description="Get notified when someone mentions you."
         checked={accepted}
         onCheckedChange={setAccepted}
       />

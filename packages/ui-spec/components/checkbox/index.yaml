@@ -13,5 +13,5 @@ dependencies:
     - CheckIcon
     - MinusIcon
 figma:
-  node: '728-3781'
+  node: '2238-43890'
   codeConnect: packages/ui-react/src/components/ui/checkbox/checkbox.figma.tsx

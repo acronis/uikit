@@ -2,27 +2,60 @@ spec_version: '1.0'
 component: Checkbox
 
 schematic: |
+  container (label) ─────────────────────────────┐
+   +-------+   content                            │
+   | root  |   label: "Accept terms"              │
+   +-------+   description: "secondary text"       │
+       ^ box (span role="checkbox"); indicator = check / minus glyph
+
+  Box states:
   unchecked        checked          indeterminate
   +-------+        +-------+        +-------+
-  |       |        |   v   |        |   -   |   root: the box (span role="checkbox")
+  |       |        |   v   |        |   -   |
   +-------+        +-------+        +-------+
-                       ^                ^
-                   indicator        indicator (check glyph / minus glyph)
 
 root:
   element: span
   role: checkbox
   description: >-
     The box. A focusable element with role="checkbox" whose aria-checked
-    reflects the state (true / false / mixed) — Base UI Checkbox.Root. Geometry
-    and border/background come from the `--ui-form-*` tokens.
+    reflects the state (true / false / mixed) — Base UI Checkbox.Root. Fill,
+    border, and glyph come from the dedicated `--ui-checkbox-*` tier (per box
+    state-group and interaction state).
 
 parts:
+  - id: container
+    description: >-
+      The wrapping `<label>` that lays out the box beside the label/description
+      and forwards clicks to the box. Only rendered when a label or description
+      is provided; otherwise the box is the root.
+    element: label
+    optional: true
+  - id: content
+    description: >-
+      The column holding the label and description beside the box (gap +
+      max-width from `--ui-checkbox-global-container-content-*`).
+    element: span
+    optional: true
+  - id: label
+    description: >-
+      The label text, naming the control via aria-labelledby. Tinted with
+      `--ui-checkbox-global-label-color`.
+    element: span
+    optional: true
+    visible_when: label provided
+  - id: description
+    description: >-
+      Optional secondary text under the label, associated via aria-describedby.
+      Tinted with `--ui-checkbox-global-description-color`.
+    element: span
+    optional: true
+    visible_when: description provided
   - id: indicator
     description: >-
       The glyph shown when the box is checked or indeterminate (Base UI
       Checkbox.Indicator). Renders the check icon when checked and the minus
-      icon when indeterminate; tinted with `--ui-glyph-on-brand-primary`.
+      icon when indeterminate; inherits the box's `--ui-checkbox-*-icon-color-*`.
     element: span
     optional: true
     visible_when: checked or indeterminate
