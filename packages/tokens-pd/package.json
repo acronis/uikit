@@ -1,6 +1,6 @@
 {
   "name": "@acronis-platform/tokens-pd",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Acronis platform (PD) design tokens: per-brand CSS custom properties, per-component CSS, Tailwind presets, and a DTCG intermediate — generated from @acronis-platform/design-tokens via @acronis-platform/style-dictionary.",
   "license": "MIT",
   "type": "module",
