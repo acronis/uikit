@@ -65,13 +65,28 @@ interface**, mirrored by the ui-spec contract — never guess:
 sed -n '/cva(/,/^);/p' packages/ui-react/src/components/ui/<name>/<name>.tsx
 # the framework-agnostic contract (variant/size enums, boolean state props):
 cat packages/ui-spec/components/<name>/api.yaml          # if a spec exists
+# OPTIONAL CONTENT-SLOT PROPS — easy to miss; grep the prop interface directly:
+grep -nE '\b(label|description|icon|render|placeholder)\??:' \
+  packages/ui-react/src/components/ui/<name>/<name>.tsx
 ```
 
-Decide what to render: every `variant` × every `size`, plus the meaningful
-**states** — `idle / hover / active / disabled / focus` for interactive controls
-(buttons), and prop-driven states for the rest (`checked`, `indeterminate`,
-`disabled`, `aria-invalid`, `selected`, `open`, …). Mirror the existing matrix
-style (`STYLES` × `STATES` grid for buttons; `Row` lists for the others).
+Three distinct axes to render — **all three**, not just cva:
+
+1. **cva `variant` / `size`** — every key (e.g. ButtonIcon's `ghost` _and_
+   `secondary`; Tag's 7 variants incl. `ai`). A re-theme often **adds** a variant.
+2. **States** — `idle / hover / active / disabled / focus` for interactive
+   controls (forced via the matrix helpers); prop-driven states for the rest
+   (`checked`, `indeterminate`, `disabled`, `aria-invalid`, `selected`, `open`).
+3. **Optional content-slot props** — `label`, `description`, `icon`, `render`.
+   These are **first-class things to show**, not just cva variants: a component
+   that gained a `label` / `description` (the field-style Checkbox/Switch) looks
+   complete in the box-only matrix yet under-represents its real API. Add a
+   dedicated row for each (a "With label", "With label & description" row, …).
+   This is where coverage gaps most often hide — check it on every run.
+
+Mirror the existing matrix style: `STYLES` × `STATES` grid for the buttons, `Row`
+lists for the rest (use `alignItems: 'flex-start'` for taller field rows that
+carry a description).
 
 ## Phase 3 — Token-resolution check (do this every run — it's the silent bug)
 
@@ -151,7 +166,8 @@ scheme is the dead-token signature. Stop the preview when done.
 ## Output checklist (done = all green)
 
 - [ ] Every `ui-react` export renders in `components.tsx` (Phase 1 diff empty).
-- [ ] Each component shows its real cva variants × sizes + meaningful states.
+- [ ] Each component shows its real cva variants × sizes, meaningful states, and
+      optional content-slot props (`label` / `description` / `icon` / `render`).
 - [ ] Every hardcoded `--ui-*` ref resolves against the current tier; each used
       tier is imported in `tokens.ts`.
 - [ ] `AGENTS.md` component list updated.
@@ -162,6 +178,10 @@ scheme is the dead-token signature. Stop the preview when done.
 
 - This app is **private** — no changeset, no VR baselines (it isn't in the
   Storybook VR suite).
+- **Commit headers must be ≤ 100 chars** (commitlint rejects longer). With the
+  `feat(kitchen-sink): …` prefix that leaves ~80 chars — list the components
+  added, not every variant (e.g. `feat(kitchen-sink): add ButtonIcon secondary,
+Switch/Checkbox labels, Tag ai`).
 - Don't fix component/token bugs _here_: if a token is genuinely missing upstream
   (not just renamed), or a component renders wrong, that's a ui-react / tokens-pd
   fix (use `/figma-component`), not a kitchen-sink patch.
