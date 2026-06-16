@@ -28,8 +28,8 @@ describe('Button', () => {
     render(<Button>Save</Button>);
     const button = screen.getByRole('button', { name: 'Save' });
     expect(button).toHaveClass(
-      'bg-[var(--ui-button-primary-container-idle)]',
-      'text-[var(--ui-button-primary-label-idle)]',
+      'bg-[var(--ui-button-primary-container-color-idle)]',
+      'text-[var(--ui-button-primary-label-color-idle)]',
       'h-[var(--ui-button-global-container-height)]'
     );
   });
@@ -38,7 +38,7 @@ describe('Button', () => {
     render(<Button variant="destructive">Delete</Button>);
     const button = screen.getByRole('button', { name: 'Delete' });
     expect(button).toHaveClass(
-      'bg-[var(--ui-button-destructive-container-idle)]',
+      'bg-[var(--ui-button-destructive-container-color-idle)]',
       'h-[var(--ui-button-global-container-height)]'
     );
   });
@@ -47,7 +47,7 @@ describe('Button', () => {
     render(<Button className="custom-class">Save</Button>);
     expect(screen.getByRole('button', { name: 'Save' })).toHaveClass(
       'custom-class',
-      'bg-[var(--ui-button-primary-container-idle)]'
+      'bg-[var(--ui-button-primary-container-color-idle)]'
     );
   });
 
@@ -83,7 +83,7 @@ describe('Button', () => {
     );
     const link = screen.getByRole('link', { name: 'Home' });
     expect(link).toHaveAttribute('href', '/home');
-    expect(link).toHaveClass('text-[var(--ui-button-ghost-label-idle)]');
+    expect(link).toHaveClass('text-[var(--ui-button-ghost-label-color-idle)]');
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 });
