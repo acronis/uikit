@@ -61,7 +61,8 @@ delivery model differs from the retired `design-theme`:
   `SECTIONS` in `App.tsx`) so it can be re-enabled if a base element layer ships.
 - `components.tsx` — the implemented `ui-react` components: `Button`
   (variants/sizes/states/with-icons), `ButtonIcon`, `Switch`, `Checkbox`,
-  `Radio`, `Input`, `Search`, `Select`, and `Breadcrumb`.
+  `Radio`, `Input`, `Search`, `Select`, `Breadcrumb`, `Tag`, `Tooltip`, and
+  `SidebarPrimary` / `SidebarSecondary`.
 - `icons.tsx` — galleries for all four `icons-react` packs.
 
 ## Run
