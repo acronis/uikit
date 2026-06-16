@@ -428,7 +428,7 @@ which Collection a new token belongs in.
 | Components | \* (per component) | Brand                                | `Brand/components/<Component>` |
 
 - The **Brand** collection carries `semantics.colors`, `semantics.gradients`, and every `components.*` group; they share its mode axis (`acronis` only today).
-- **Components** are emitted only for the `COMPONENTS` allowlist in `helpers/emit-components-builder.mjs` (today: `Breadcrumb`, `Button`, `ButtonIcon`, `Checkbox`, `InputText`, `SidebarPrimary`, `SidebarSecondary`, `Switch`, `Tag`). Extend the allowlist to pull more.
+- **Components** are emitted only for the `COMPONENTS` allowlist in `helpers/emit-components-builder.mjs` (today: `Breadcrumb`, `Button`, `ButtonDropdown`, `ButtonIcon`, `ButtonDropdown`, `Checkbox`, `InputSearch`, `InputText`, `InputTextarea`, `Radio`, `SidebarPrimary`, `SidebarSecondary`, `Switch`, `Tag`, `Tooltip`). Extend the allowlist to pull more.
 
 ### Name handling
 
