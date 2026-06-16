@@ -80,8 +80,13 @@ export class SemanticsEmitter {
       const values = {};
       let isGradient = false;
       for (const [figmaModeKey, modeRef] of Object.entries(lastSynced)) {
+        // Literal color object — brand uses hardcoded colors not mapped to primitives.
+        if (modeRef !== null && typeof modeRef === 'object' && modeRef.colorSpace === 'hsl') {
+          values[normalizeMode(figmaModeKey)] = { colorSpace: 'hsl', components: modeRef.components };
+          continue;
+        }
         if (typeof modeRef !== 'string' || !modeRef.startsWith('{')) {
-          aliasErrors.push(`${path.join('.')} mode ${figmaModeKey}: expected reference, got ${JSON.stringify(modeRef)}`);
+          aliasErrors.push(`${path.join('.')} mode ${figmaModeKey}: expected reference or hsl object, got ${JSON.stringify(modeRef)}`);
           continue;
         }
         // A semantic that points at another semantic (e.g. a gradient border →

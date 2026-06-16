@@ -11,7 +11,6 @@
   --ui-tooltip-container-width-max: 256px;
   --ui-tooltip-container-width-min: 48px;
   --ui-tooltip-label-color: light-dark(rgb(255 255 255), rgb(0 0 0));
-  --ui-tooltip-label-text-style: caption/strong;
 }
 
 [data-theme='light'], :host([data-theme='light']) {
@@ -20,4 +19,12 @@
 
 [data-theme='dark'], :host([data-theme='dark']) {
   color-scheme: dark;
+}
+
+.ui-tooltip-label-text-style {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0px;
 }

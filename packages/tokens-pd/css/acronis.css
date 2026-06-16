@@ -83,7 +83,6 @@
   --ui-border-on-status-warning-strong: light-dark(rgb(229 164 0), rgb(255 196 0));
   --ui-border-on-surface-border: light-dark(rgb(214 228 245), rgb(6 54 121));
   --ui-border-on-surface-border-active: light-dark(rgb(23 99 207), rgb(48 125 232));
-  --ui-border-on-surface-border-ai: light-dark(rgb(23 99 207), rgb(48 125 232));
   --ui-border-on-surface-border-error: light-dark(rgb(226 54 54), rgb(226 54 54));
   --ui-border-on-surface-divider: light-dark(rgb(214 228 245), rgb(6 54 121));
   --ui-border-transparent: light-dark(transparent, transparent);

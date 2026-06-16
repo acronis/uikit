@@ -1,11 +1,15 @@
 import { createRef } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { Search } from '../search';
 
 describe('Search', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('renders a searchbox with the leading magnifier', () => {
     const { container } = render(<Search aria-label="Search" />);
     expect(
@@ -13,6 +17,11 @@ describe('Search', () => {
     ).toBeInTheDocument();
     // Leading search icon is rendered (decorative svg).
     expect(container.querySelector('svg')).toBeInTheDocument();
+  });
+
+  it('uses "Search" as the default accessible label', () => {
+    render(<Search />);
+    expect(screen.getByRole('searchbox', { name: 'Search' })).toBeInTheDocument();
   });
 
   it('shows the placeholder', () => {

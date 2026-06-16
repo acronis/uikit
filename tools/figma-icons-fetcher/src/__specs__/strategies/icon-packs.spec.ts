@@ -103,8 +103,8 @@ describe('iconPacksStrategy', () => {
               name: 'Category',
               type: 'FRAME',
               children: [
-                { id: 'title', name: '  CATEGORYTITLE  ', type: 'TEXT', characters: 'Controls' },
-                icon('i1', '_assetsource/Toggle'),
+                { id: 't1', name: '  cAtEgOrYtItLe  ', type: 'TEXT', characters: ' Brand Icons ' },
+                icon('i1', '_assetsource/Cloud'),
               ],
             },
           ],
@@ -113,10 +113,48 @@ describe('iconPacksStrategy', () => {
       config,
     );
 
-    expect(icons).toEqual([{ id: 'i1', name: 'toggle', pageName: 'stroke-mono/controls' }]);
+    expect(icons).toEqual([{ id: 'i1', name: 'cloud', pageName: 'stroke-mono/brand-icons' }]);
   });
 
-  it('collects deeply nested icons without recursive traversal', () => {
+  it('collects deeply nested icons within a category frame', () => {
+    const icons = iconPacksStrategy(
+      sectionOf([
+        {
+          id: 'p1',
+          name: 'solid-mono',
+          type: 'FRAME',
+          children: [
+            {
+              id: 'cat1',
+              name: 'Category',
+              type: 'FRAME',
+              children: [
+                title('Nested'),
+                {
+                  id: 'lvl1',
+                  name: 'Wrapper 1',
+                  type: 'FRAME',
+                  children: [
+                    {
+                      id: 'lvl2',
+                      name: 'Wrapper 2',
+                      type: 'FRAME',
+                      children: [icon('i1', '_assetsource/Lock')],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ]),
+      config,
+    );
+
+    expect(icons).toEqual([{ id: 'i1', name: 'lock', pageName: 'solid-mono/nested' }]);
+  });
+
+  it('collects very deep icon trees without recursion overflow', () => {
     let nested: FigmaNode = icon('deep', '_assetsource/Database');
     for (let i = 0; i < 15_000; i += 1) {
       nested = { id: `f-${i}`, name: `Frame ${i}`, type: 'FRAME', children: [nested] };

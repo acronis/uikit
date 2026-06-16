@@ -59,13 +59,21 @@ const Search = React.forwardRef<HTMLInputElement, SearchProps>(
     const handleClear = () => {
       const input = innerRef.current;
       if (!input) return;
-      // Use the native value setter + dispatch a real input event so React's
-      // onChange fires for both controlled and uncontrolled usage.
-      const setter = Object.getOwnPropertyDescriptor(
-        window.HTMLInputElement.prototype,
-        'value'
-      )?.set;
-      setter?.call(input, '');
+      // Use the native value setter when available + dispatch a real input event
+      // so React's onChange fires for both controlled and uncontrolled usage.
+      let setter: ((this: HTMLInputElement, value: string) => void) | undefined;
+      try {
+        setter = Object.getOwnPropertyDescriptor(
+          globalThis.HTMLInputElement?.prototype,
+          'value'
+        )?.set;
+      } catch {
+        setter = undefined;
+      }
+
+      if (setter) setter.call(input, '');
+      else input.value = '';
+
       input.dispatchEvent(new Event('input', { bubbles: true }));
       setHasValue(false);
       input.focus();
@@ -91,6 +99,7 @@ const Search = React.forwardRef<HTMLInputElement, SearchProps>(
           value={value}
           defaultValue={defaultValue}
           onChange={handleChange}
+          aria-label="Search"
           className="h-full min-w-0 flex-1 border-0 bg-transparent p-0 text-inherit outline-none placeholder:text-[var(--ui-form-text-placeholder)] disabled:cursor-not-allowed [&::-webkit-search-cancel-button]:appearance-none"
           {...props}
         />

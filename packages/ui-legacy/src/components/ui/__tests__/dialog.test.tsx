@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { Dialog, DialogContent, DialogPortal, DialogTitle } from '../dialog';
+import {
+  Dialog,
+  DialogCloseButton,
+  DialogContent,
+  DialogHeader,
+  DialogPortal,
+  DialogTitle,
+} from '../dialog';
 
 describe('Dialog', () => {
   it('preserves the exit end-state while closing', () => {
@@ -43,5 +50,25 @@ describe('Dialog', () => {
       document.querySelector<HTMLDivElement>(overlaySelector);
     expect(overlayClosed).not.toBeNull();
     expect(overlayClosed!).toHaveAttribute('data-closed');
+  });
+
+  it('uses the primary text token for the close button color', () => {
+    render(
+      <Dialog open>
+        <DialogPortal keepMounted>
+          <DialogContent portal={false}>
+            <DialogHeader>
+              <DialogTitle>Dialog title</DialogTitle>
+              <DialogCloseButton />
+            </DialogHeader>
+          </DialogContent>
+        </DialogPortal>
+      </Dialog>
+    );
+
+    const closeButton = screen.getByRole('button', { name: 'Close' });
+
+    expect(closeButton).toHaveClass('text-primary');
+    expect(closeButton).not.toHaveClass('text-[#2668C5]');
   });
 });
