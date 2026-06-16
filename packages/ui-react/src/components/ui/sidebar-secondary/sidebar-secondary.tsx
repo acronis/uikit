@@ -400,7 +400,7 @@ export type SidebarSecondaryMenuSubProps = React.ComponentPropsWithoutRef<
 >;
 
 const SidebarSecondaryMenuSub = React.forwardRef<
-  HTMLDivElement,
+  HTMLElement,
   SidebarSecondaryMenuSubProps
 >(({ className, render, ...props }, ref) => (
   // Disclosure row: Base UI Collapsible gives per-row open state +
@@ -431,6 +431,7 @@ const SidebarSecondaryMenuSubTrigger = React.forwardRef<
   return (
     <Collapsible.Trigger
       ref={ref}
+      aria-current={selected ? 'page' : undefined}
       className={cn(
         sidebarSecondaryMenuItemVariants({
           variant: selected ? 'selected' : 'unselected',
@@ -526,7 +527,7 @@ export interface SidebarSecondaryMenuItemExtrasProps
   extends React.ComponentPropsWithoutRef<'span'> {
   /** Which trailing affordance to render. */
   variant: 'tag' | 'externalLink' | 'shortcut' | 'tag-externalLink';
-  /** Shortcut text for the `shortcut` / `tag-externalLink` variants. */
+  /** Shortcut text for the `shortcut` variant. */
   shortcut?: string;
   /** Tag content for the `tag` / `tag-externalLink` variants. */
   tag?: React.ReactNode;

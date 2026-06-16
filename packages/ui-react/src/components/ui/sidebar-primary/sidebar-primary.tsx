@@ -321,7 +321,7 @@ export interface SidebarPrimaryMenuItemExtrasProps
   extends React.ComponentPropsWithoutRef<'span'> {
   /** Which trailing affordance to render. */
   variant: 'tag' | 'externalLink' | 'shortcut' | 'tag-externalLink';
-  /** Shortcut text (e.g. "⌘H") for the `shortcut` / `tag-externalLink` variants. */
+  /** Shortcut text (e.g. "⌘H") for the `shortcut` variant. */
   shortcut?: string;
   /** Tag content for the `tag` / `tag-externalLink` variants. */
   tag?: React.ReactNode;
