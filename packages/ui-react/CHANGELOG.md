@@ -1,5 +1,17 @@
 # @acronis-platform/ui-react
 
+## 0.19.0
+
+### Minor Changes
+
+- [#305](https://github.com/acronis/uikit/pull/305) [`431b331`](https://github.com/acronis/uikit/commit/431b3317636131fd85a24b5fb7501986529767ce) Thanks [@leonid](https://github.com/leonid)! - `Tag`: migrate to the dedicated `--ui-tag-*` component tier and add an `ai`
+  variant. Each variant now wires its container fill, border, label, and icon to
+  `--ui-tag-<variant>-*` (previously the shared `--ui-background-status-*` /
+  `--ui-border-on-status-*` / `--ui-text-on-status-*` semantic tokens), and
+  geometry (radius, border width, gap, padding, max/min width, heights, icon size)
+  comes from `--ui-tag-global-*`. The new `ai` variant paints a gradient border
+  over a tinted fill. `size` now only changes the height; padding is uniform.
+
 ## 0.18.0
 
 ### Minor Changes
