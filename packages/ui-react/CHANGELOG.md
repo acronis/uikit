@@ -1,5 +1,21 @@
 # @acronis-platform/ui-react
 
+## 0.18.0
+
+### Minor Changes
+
+- [#303](https://github.com/acronis/uikit/pull/303) [`53fe8ef`](https://github.com/acronis/uikit/commit/53fe8ef946f4486bad3bea68551d13a81d96dcbf) Thanks [@leonid](https://github.com/leonid)! - Re-theme `Switch` against the next-gen tokens and add an optional `label`.
+  - Fixed dead token refs: the track and thumb fills referenced
+    `--ui-switch-{off,on}-box-{state}` / `--ui-switch-global-tick-{state}`, which
+    were renamed to `*-box-color-{state}` / `*-tick-color-{state}` — so the track
+    and thumb silently fell back to inherited colors. Now wired to the current
+    `--ui-switch-*` tokens.
+  - Added an optional `label` prop. When provided, the toggle and its label
+    compose a clickable `<label>` row (wired via aria-labelledby) using
+    `--ui-switch-global-{container-gap,label-color}`. With no label, the bare
+    toggle renders as before — name it with `aria-label`.
+  - Corrected Code Connect to the real Figma props (variant/state/label).
+
 ## 0.17.0
 
 ### Minor Changes
