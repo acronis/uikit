@@ -400,7 +400,7 @@ export type SidebarSecondaryMenuSubProps = React.ComponentPropsWithoutRef<
 >;
 
 const SidebarSecondaryMenuSub = React.forwardRef<
-  HTMLElement,
+  HTMLDivElement,
   SidebarSecondaryMenuSubProps
 >(({ className, render, ...props }, ref) => (
   // Disclosure row: Base UI Collapsible gives per-row open state +
