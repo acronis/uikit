@@ -36,6 +36,7 @@ interface RenderHint {
 
 const RENDER: Record<string, RenderHint> = {
   button: { sample: 'Label' },
+  'button-dropdown': { sample: 'Label' },
   'button-icon': {
     sample: '<PlusIcon />',
     extraImports: [
