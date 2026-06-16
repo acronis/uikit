@@ -1,7 +1,9 @@
 # ButtonIcon
 
-An icon-only button: 32×32 with a single 16px glyph, one visual style, and
-idle/hover/active/disabled states.
+An icon-only button: 32×32 with a single 16px glyph and
+idle/hover/active/disabled states. Two variants share the same fill and icon
+colors — `ghost` (borderless, the default) and `secondary` (a 1px container
+border).
 
 ## When to use
 
@@ -21,6 +23,11 @@ import { ButtonIcon } from '@acronis-platform/ui-react';
 import { PlusIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 <ButtonIcon aria-label="Add">
+  <PlusIcon />
+</ButtonIcon>;
+
+// Bordered treatment
+<ButtonIcon variant="secondary" aria-label="Add">
   <PlusIcon />
 </ButtonIcon>;
 ```

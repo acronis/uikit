@@ -3,6 +3,15 @@ component: ButtonIcon
 
 contract:
   properties:
+    - name: variant
+      type: "'ghost' | 'secondary'"
+      required: false
+      default: "'ghost'"
+      description: >-
+        Visual style. Both share the `--ui-button-icon-global-*` fill and icon
+        colors; `secondary` additionally paints a 1px container border from the
+        `--ui-button-icon-secondary-container-border-color-*` tokens, `ghost` is
+        borderless.
     - name: disabled
       type: boolean
       required: false

@@ -1,5 +1,30 @@
 # @acronis-platform/ui-react
 
+## 0.16.4
+
+### Patch Changes
+
+- [#294](https://github.com/acronis/uikit/pull/294) [`2acfc52`](https://github.com/acronis/uikit/commit/2acfc52d686114c9a97a560b8ce4db4b393f64d5) Thanks [@leonid](https://github.com/leonid)! - Fix `Button` colors: wire every variant's container fill, label, and icon to the
+  renamed `--ui-button-*-color-*` tokens (the next-gen token sync added a `-color-`
+  segment — e.g. `--ui-button-primary-container-idle` → `…-container-color-idle`).
+  The component still referenced the old names, which no longer exist in
+  `@acronis-platform/tokens-pd`, so every variant rendered with no fill/text color.
+  Border, geometry, and padding tokens were already correct and are unchanged.
+
+## 0.16.3
+
+### Patch Changes
+
+- [#296](https://github.com/acronis/uikit/pull/296) [`77b1c3c`](https://github.com/acronis/uikit/commit/77b1c3c7110d58dbb5850f84b17bc4f508f32e38) Thanks [@leonid](https://github.com/leonid)! - Re-theme `ButtonIcon` against the next-gen Figma tokens. The component referenced
+  renamed color tokens (`--ui-button-icon-global-container-idle` →
+  `…-container-color-idle`, same for the icon color) that no longer existed, so
+  fills and glyph colors silently fell back to inherited values. Each state is now
+  wired to its current `--ui-button-icon-global-*` token.
+
+  Adds a `variant` prop: `ghost` (borderless, the default — unchanged from the
+  previous look) and `secondary` (a 1px container border from the
+  `--ui-button-icon-secondary-container-border-color-*` tokens).
+
 ## 0.16.2
 
 ### Patch Changes

@@ -135,12 +135,25 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
   });
 
-  it('ButtonDropdown: api.yaml variant enum matches the cva keys in ui-react', () => {
+  it('ButtonIcon: api.yaml variant enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(
         HERE,
-        '../../ui-react/src/components/ui/button-dropdown/button-dropdown.tsx'
+        '../../ui-react/src/components/ui/button-icon/button-icon.tsx'
       ),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('button-icon').api;
+
+    // `variant` (ghost / secondary) is the only cva axis.
+    expect(Object.keys(groups)).toEqual(['variant']);
+    expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
+  });
+
+  it('ButtonDropdown: api.yaml variant enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(HERE, '../../ui-react/src/components/ui/button-dropdown/button-dropdown.tsx'),
       'utf8'
     );
     const groups = extractCvaGroups(source);

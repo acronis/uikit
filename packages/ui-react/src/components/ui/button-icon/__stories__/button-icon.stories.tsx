@@ -13,6 +13,10 @@ const meta = {
   component: ButtonIcon,
   tags: ['autodocs'],
   argTypes: {
+    variant: {
+      control: 'inline-radio',
+      options: ['ghost', 'secondary'],
+    },
     disabled: { control: 'boolean' },
   },
   args: {
@@ -26,19 +30,46 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
+export const Secondary: Story = {
+  args: { variant: 'secondary' },
+};
+
 export const Disabled: Story = {
   args: { disabled: true },
 };
 
-export const States: Story = {
+export const Variants: Story = {
   render: () => (
     <div className="flex items-center gap-3">
       <ButtonIcon aria-label="Add">
         <PlusIcon />
       </ButtonIcon>
-      <ButtonIcon aria-label="Add" disabled>
+      <ButtonIcon aria-label="Add" variant="secondary">
         <PlusIcon />
       </ButtonIcon>
+    </div>
+  ),
+};
+
+export const States: Story = {
+  render: () => (
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center gap-3">
+        <ButtonIcon aria-label="Add">
+          <PlusIcon />
+        </ButtonIcon>
+        <ButtonIcon aria-label="Add" disabled>
+          <PlusIcon />
+        </ButtonIcon>
+      </div>
+      <div className="flex items-center gap-3">
+        <ButtonIcon aria-label="Add" variant="secondary">
+          <PlusIcon />
+        </ButtonIcon>
+        <ButtonIcon aria-label="Add" variant="secondary" disabled>
+          <PlusIcon />
+        </ButtonIcon>
+      </div>
     </div>
   ),
 };

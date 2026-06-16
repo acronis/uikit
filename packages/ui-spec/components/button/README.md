@@ -36,6 +36,6 @@ contract — see `api.yaml` `adapters`.
   <Button variant="ai">Ask AI</Button>
   ```
 
-- Its background is the `--ui-background-ai-*` gradient, which runs
-  **left-to-right** and covers the full button (including the transparent 1px
+- Its background is the `--ui-button-ai-container-color-*` gradient, which runs
+  **top-to-bottom** and covers the full button (including the transparent 1px
   border box).
