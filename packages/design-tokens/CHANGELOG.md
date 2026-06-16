@@ -1,5 +1,59 @@
 # @acronis-platform/design-tokens
 
+## 1.2.0
+
+### Minor Changes
+
+- [#285](https://github.com/acronis/uikit/pull/285) [`4e13963`](https://github.com/acronis/uikit/commit/4e139630719ebb51eedc99494b351aa657a75c78) Thanks [@heygabecom](https://github.com/heygabecom)! - ## design-tokens
+
+  ### Added
+
+  | Scope                           | What was added                                        |
+  | ------------------------------- | ----------------------------------------------------- |
+  | `semantics.colors.*`            | `"deep-sky"` mode values for all color tokens         |
+  | `semantics.gradients.*`         | `"deep-sky"` mode values for all 4 AI gradient tokens |
+  | `components.Breadcrumb.*`       | `"deep-sky"` mode values                              |
+  | `components.Button.*`           | `"deep-sky"` mode values                              |
+  | `components.ButtonIcon.*`       | `"deep-sky"` mode values                              |
+  | `components.Checkbox.*`         | `"deep-sky"` mode values                              |
+  | `components.InputText.*`        | `"deep-sky"` mode values                              |
+  | `components.SidebarPrimary.*`   | `"deep-sky"` mode values                              |
+  | `components.SidebarSecondary.*` | `"deep-sky"` mode values                              |
+  | `components.Switch.*`           | `"deep-sky"` mode values                              |
+  | `components.Tag.*`              | `"deep-sky"` mode values                              |
+  | `components.Tooltip.*`          | `"deep-sky"` mode values                              |
+
+  ## tokens-pd
+
+  ### Added
+  - `css/deep-sky.css` — full semantic + component CSS custom properties for the deep-sky brand
+  - `css/<Component>/deep-sky.css` — per-component CSS for all allowlisted components
+  - `dtcg/semantics-deep-sky.json` — resolved DTCG semantics for deep-sky
+  - `dtcg/components-deep-sky.json` — resolved DTCG components for deep-sky
+  - `tailwind/deep-sky/tokens.js` — Tailwind preset for deep-sky semantic tokens
+  - `tailwind/deep-sky/components/<Component>.js` — per-component Tailwind presets for deep-sky
+
+  Brand-specific tokens (e.g. `background.brand.*`, `text.onSurface.*`) carry hardcoded HSL values for deep-sky; all other tokens alias into the shared semantics layer identical to the `acronis` brand.
+
+- [#285](https://github.com/acronis/uikit/pull/285) [`4e13963`](https://github.com/acronis/uikit/commit/4e139630719ebb51eedc99494b351aa657a75c78) Thanks [@heygabecom](https://github.com/heygabecom)! - ## design-tokens
+
+  ### Deleted
+
+  | Token                                         | Was                                                                      |
+  | --------------------------------------------- | ------------------------------------------------------------------------ |
+  | `semantics.colors.border.onSurface.border-ai` | Alias to a palette blue color representing the AI brand border treatment |
+
+  ## Migration
+
+  Replace usages of `--ui-border-onSurface-border-ai` with one of the dedicated AI gradient tokens, which now represent the canonical AI border/surface treatment:
+
+  | Replacement token                 | CSS variable                 | Use when                |
+  | --------------------------------- | ---------------------------- | ----------------------- |
+  | `semantics.gradients.ai.idle`     | `--ui-gradients-ai-idle`     | Default / resting state |
+  | `semantics.gradients.ai.hover`    | `--ui-gradients-ai-hover`    | Hover state             |
+  | `semantics.gradients.ai.active`   | `--ui-gradients-ai-active`   | Active / pressed state  |
+  | `semantics.gradients.ai.disabled` | `--ui-gradients-ai-disabled` | Disabled state          |
+
 ## 1.1.0
 
 ### Minor Changes
