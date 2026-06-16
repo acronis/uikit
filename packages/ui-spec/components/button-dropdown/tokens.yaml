@@ -1,0 +1,76 @@
+spec_version: '1.0'
+component: ButtonDropdown
+
+# References only — values live in @acronis-platform/tokens-pd. `primary` uses a
+# single label/icon color across states; only `secondary` diverges them per
+# state and adds a container border. The open state reuses each variant's
+# `*-active` tokens.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Geometry (root / icon) ──
+  - { name: --ui-button-dropdown-global-container-height, affects: root }
+  - { name: --ui-button-dropdown-global-container-width-min, affects: root }
+  - { name: --ui-button-dropdown-global-container-padding-x, affects: root }
+  - { name: --ui-button-dropdown-global-container-gap, affects: root }
+  - { name: --ui-button-dropdown-global-container-border-radius, affects: root }
+  - { name: --ui-button-dropdown-global-icon-size, affects: icon }
+
+  # ── primary (solid) ──
+  - { name: --ui-button-dropdown-primary-container-color-idle, affects: root }
+  - { name: --ui-button-dropdown-primary-container-color-hover, affects: root }
+  - { name: --ui-button-dropdown-primary-container-color-active, affects: root }
+  - {
+      name: --ui-button-dropdown-primary-container-color-disabled,
+      affects: root,
+    }
+  - { name: --ui-button-dropdown-primary-label-color, affects: label }
+  - { name: --ui-button-dropdown-primary-icon-color, affects: icon }
+
+  # ── secondary (bordered) ──
+  - { name: --ui-button-dropdown-secondary-container-color-idle, affects: root }
+  - {
+      name: --ui-button-dropdown-secondary-container-color-hover,
+      affects: root,
+    }
+  - {
+      name: --ui-button-dropdown-secondary-container-color-active,
+      affects: root,
+    }
+  - {
+      name: --ui-button-dropdown-secondary-container-color-disabled,
+      affects: root,
+    }
+  - {
+      name: --ui-button-dropdown-secondary-container-border-color-idle,
+      affects: root,
+    }
+  - {
+      name: --ui-button-dropdown-secondary-container-border-color-hover,
+      affects: root,
+    }
+  - {
+      name: --ui-button-dropdown-secondary-container-border-color-active,
+      affects: root,
+    }
+  - {
+      name: --ui-button-dropdown-secondary-container-border-color-disabled,
+      affects: root,
+    }
+  - { name: --ui-button-dropdown-secondary-label-color-idle, affects: label }
+  - { name: --ui-button-dropdown-secondary-label-color-hover, affects: label }
+  - { name: --ui-button-dropdown-secondary-label-color-active, affects: label }
+  - {
+      name: --ui-button-dropdown-secondary-label-color-disabled,
+      affects: label,
+    }
+  - { name: --ui-button-dropdown-secondary-icon-color-idle, affects: icon }
+  - { name: --ui-button-dropdown-secondary-icon-color-hover, affects: icon }
+  - { name: --ui-button-dropdown-secondary-icon-color-active, affects: icon }
+  - { name: --ui-button-dropdown-secondary-icon-color-disabled, affects: icon }
+
+  - {
+      name: --ui-focus-brand,
+      affects: root,
+      description: Focus-visible ring color,
+    }

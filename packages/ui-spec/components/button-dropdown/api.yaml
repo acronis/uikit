@@ -1,0 +1,71 @@
+spec_version: '1.0'
+component: ButtonDropdown
+
+contract:
+  properties:
+    - name: variant
+      type: "'primary' | 'secondary'"
+      required: false
+      default: "'primary'"
+      description: >-
+        Visual style. `primary` is a solid filled button; `secondary` is
+        bordered with a transparent fill. Each maps to its dedicated
+        `--ui-button-dropdown-<variant>-*` tokens.
+    - name: open
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Whether the associated menu is open. Flips the trailing chevron
+        (down → up), applies the open (`*-active`) treatment, and reflects
+        `aria-expanded`. Keep it in sync with the menu the button controls.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Disables interaction. Applies the explicit disabled tokens (not opacity)
+        and suppresses click.
+    - name: type
+      type: "'button' | 'submit' | 'reset'"
+      required: false
+      default: "'button'"
+      description: Native HTML button type.
+
+  events:
+    - name: click
+      payload: MouseEvent
+      description: >-
+        Fired on activation (pointer or keyboard). Typically toggles the
+        associated menu. Not fired while disabled.
+
+  content:
+    - name: default
+      description: >-
+        The label content, rendered before the chevron. Plain text or inline
+        nodes.
+
+adapters:
+  react:
+    component: ButtonDropdown
+    status: implemented
+    import: "import { ButtonDropdown } from '@acronis-platform/ui-react'"
+    example: |
+      <ButtonDropdown variant="primary" open={open} onClick={toggle}>
+        Actions
+      </ButtonDropdown>
+
+      {/* Polymorphic: render as a menu trigger via the `render` prop */}
+      <ButtonDropdown render={<Menu.Trigger />}>Actions</ButtonDropdown>
+  vue:
+    element: AvButtonDropdown
+    status: planned
+    import: "import { AvButtonDropdown } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvButtonDropdown :open="open" @click="toggle">Actions</AvButtonDropdown>
+  web-components:
+    element: ui-button-dropdown
+    status: planned
+    import: "import '@acronis-platform/ui-wc/button-dropdown'"
+    example: |
+      <ui-button-dropdown open>Actions</ui-button-dropdown>
