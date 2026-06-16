@@ -1189,6 +1189,367 @@
       }
     }
   },
+  "ButtonDropdown": {
+    "_global": {
+      "container": {
+        "borderRadius": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "CORNER_RADIUS"
+            ],
+            "com.figma.variableId": "VariableID:2542:191"
+          },
+          "$type": "dimension",
+          "$value": "{units.radius.4}"
+        },
+        "gap": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "GAP"
+            ],
+            "com.figma.variableId": "VariableID:2542:190"
+          },
+          "$type": "dimension",
+          "$value": "{units.gap.8}"
+        },
+        "height": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "WIDTH_HEIGHT"
+            ],
+            "com.figma.variableId": "VariableID:2542:188"
+          },
+          "$type": "dimension",
+          "$value": "{units.size.32}"
+        },
+        "paddingX": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "GAP"
+            ],
+            "com.figma.variableId": "VariableID:2542:194"
+          },
+          "$type": "dimension",
+          "$value": "{units.gap.12}"
+        },
+        "paddingY": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "GAP"
+            ],
+            "com.figma.variableId": "VariableID:2542:189"
+          },
+          "$type": "dimension",
+          "$value": "{units.gap.8}"
+        },
+        "widthMin": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "WIDTH_HEIGHT"
+            ],
+            "com.figma.variableId": "VariableID:2542:195"
+          },
+          "$type": "dimension",
+          "$value": "{units.size.64}"
+        }
+      },
+      "icon": {
+        "size": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "WIDTH_HEIGHT"
+            ],
+            "com.figma.variableId": "VariableID:2542:192"
+          },
+          "$type": "dimension",
+          "$value": "{units.size.16}"
+        }
+      },
+      "label": {
+        "textStyle": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.variableId": "VariableID:2542:193"
+          },
+          "$type": "typography",
+          "$value": "{typography.body.strong}"
+        }
+      }
+    },
+    "primary": {
+      "container": {
+        "color": {
+          "active": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "FRAME_FILL"
+              ],
+              "com.figma.variableId": "VariableID:2542:198"
+            },
+            "$type": "color",
+            "$value": "{colors.background.brand.secondary-active}"
+          },
+          "disabled": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "FRAME_FILL"
+              ],
+              "com.figma.variableId": "VariableID:2542:199"
+            },
+            "$type": "color",
+            "$value": "{colors.background.brand.secondary-disabled}"
+          },
+          "hover": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "FRAME_FILL"
+              ],
+              "com.figma.variableId": "VariableID:2542:197"
+            },
+            "$type": "color",
+            "$value": "{colors.background.brand.secondary-hover}"
+          },
+          "idle": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "FRAME_FILL"
+              ],
+              "com.figma.variableId": "VariableID:2542:196"
+            },
+            "$type": "color",
+            "$value": "{colors.background.brand.secondary}"
+          }
+        }
+      },
+      "icon": {
+        "color": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL",
+              "STROKE_COLOR"
+            ],
+            "com.figma.variableId": "VariableID:2542:200"
+          },
+          "$type": "color",
+          "$value": "{colors.glyph.onBrand.primary}"
+        }
+      },
+      "label": {
+        "color": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "TEXT_FILL"
+            ],
+            "com.figma.variableId": "VariableID:2542:204"
+          },
+          "$type": "color",
+          "$value": "{colors.text.onBrand.primary}"
+        }
+      }
+    },
+    "secondary": {
+      "container": {
+        "borderColor": {
+          "active": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "STROKE_COLOR"
+              ],
+              "com.figma.variableId": "VariableID:2542:218"
+            },
+            "$type": "color",
+            "$value": "transparent"
+          },
+          "disabled": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "STROKE_COLOR"
+              ],
+              "com.figma.variableId": "VariableID:2542:219"
+            },
+            "$type": "color",
+            "$value": "{colors.border.onSurface.border}"
+          },
+          "hover": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "STROKE_COLOR"
+              ],
+              "com.figma.variableId": "VariableID:2542:217"
+            },
+            "$type": "color",
+            "$value": "transparent"
+          },
+          "idle": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "STROKE_COLOR"
+              ],
+              "com.figma.variableId": "VariableID:2542:216"
+            },
+            "$type": "color",
+            "$value": "{colors.border.onSurface.border}"
+          }
+        },
+        "borderStyle": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "ALL_SCOPES"
+            ],
+            "com.figma.variableId": "VariableID:2542:210"
+          },
+          "$type": "string",
+          "$value": "solid"
+        },
+        "borderWidth": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "STROKE_FLOAT"
+            ],
+            "com.figma.variableId": "VariableID:2542:211"
+          },
+          "$type": "dimension",
+          "$value": "{units.stroke.1}"
+        },
+        "color": {
+          "active": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "FRAME_FILL"
+              ],
+              "com.figma.variableId": "VariableID:2542:214"
+            },
+            "$type": "color",
+            "$value": "{colors.background.surface.active}"
+          },
+          "disabled": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "FRAME_FILL"
+              ],
+              "com.figma.variableId": "VariableID:2542:215"
+            },
+            "$type": "color",
+            "$value": "transparent"
+          },
+          "hover": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "FRAME_FILL"
+              ],
+              "com.figma.variableId": "VariableID:2542:213"
+            },
+            "$type": "color",
+            "$value": "{colors.background.surface.hover}"
+          },
+          "idle": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "FRAME_FILL"
+              ],
+              "com.figma.variableId": "VariableID:2542:212"
+            },
+            "$type": "color",
+            "$value": "transparent"
+          }
+        }
+      },
+      "icon": {
+        "color": {
+          "active": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "SHAPE_FILL",
+                "STROKE_COLOR"
+              ],
+              "com.figma.variableId": "VariableID:2542:222"
+            },
+            "$type": "color",
+            "$value": "{colors.glyph.onSurface.primary}"
+          },
+          "disabled": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "SHAPE_FILL",
+                "STROKE_COLOR"
+              ],
+              "com.figma.variableId": "VariableID:2542:223"
+            },
+            "$type": "color",
+            "$value": "{colors.glyph.onSurface.disabled}"
+          },
+          "hover": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "SHAPE_FILL",
+                "STROKE_COLOR"
+              ],
+              "com.figma.variableId": "VariableID:2542:221"
+            },
+            "$type": "color",
+            "$value": "{colors.glyph.onSurface.primary}"
+          },
+          "idle": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "SHAPE_FILL",
+                "STROKE_COLOR"
+              ],
+              "com.figma.variableId": "VariableID:2542:220"
+            },
+            "$type": "color",
+            "$value": "{colors.glyph.onSurface.primary}"
+          }
+        }
+      },
+      "label": {
+        "color": {
+          "active": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "TEXT_FILL"
+              ],
+              "com.figma.variableId": "VariableID:2542:226"
+            },
+            "$type": "color",
+            "$value": "{colors.text.onSurface.link}"
+          },
+          "disabled": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "TEXT_FILL"
+              ],
+              "com.figma.variableId": "VariableID:2542:227"
+            },
+            "$type": "color",
+            "$value": "{colors.text.onSurface.link-disabled}"
+          },
+          "hover": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "TEXT_FILL"
+              ],
+              "com.figma.variableId": "VariableID:2542:225"
+            },
+            "$type": "color",
+            "$value": "{colors.text.onSurface.link}"
+          },
+          "idle": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "TEXT_FILL"
+              ],
+              "com.figma.variableId": "VariableID:2542:224"
+            },
+            "$type": "color",
+            "$value": "{colors.text.onSurface.link}"
+          }
+        }
+      }
+    }
+  },
   "ButtonIcon": {
     "_global": {
       "container": {

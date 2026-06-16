@@ -2353,6 +2353,14 @@
         "$value": { "unit": "px", "value": 72 },
         "platforms": ["PD"]
       },
+      "96": {
+        "$extensions": {
+          "com.figma.scopes": ["WIDTH_HEIGHT", "FONT_VARIATIONS"],
+          "com.figma.variableId": "VariableID:2816:717"
+        },
+        "$value": { "unit": "px", "value": 96 },
+        "platforms": ["PD"]
+      },
       "128": {
         "$extensions": {
           "com.figma.scopes": ["WIDTH_HEIGHT", "FONT_VARIATIONS"],
