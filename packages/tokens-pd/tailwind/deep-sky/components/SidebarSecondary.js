@@ -5,36 +5,28 @@
 export default {
   theme: {
     extend: {
-      "backgroundColor": {
+      "textColor": {
+        "sidebar-secondary-menu-item-global-icon": "light-dark(rgb(68 81 93), rgb(68 81 93))",
+        "sidebar-secondary-menu-item-global-label": "light-dark(rgb(68 81 93), rgb(68 81 93))",
         "sidebar-secondary-menu-item-selected-container-active": "light-dark(rgb(216 222 228), rgb(216 222 228))",
         "sidebar-secondary-menu-item-selected-container-hover": "light-dark(rgb(216 222 228), rgb(216 222 228))",
         "sidebar-secondary-menu-item-selected-container-idle": "light-dark(rgb(216 222 228), rgb(216 222 228))",
         "sidebar-secondary-menu-item-unselected-container-active": "light-dark(rgb(236 238 239), rgb(236 238 239))",
         "sidebar-secondary-menu-item-unselected-container-hover": "light-dark(rgb(236 238 239), rgb(236 238 239))",
         "sidebar-secondary-menu-item-unselected-container-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "sidebar-secondary-global-container": "light-dark(rgb(255 255 255), rgb(0 0 0))"
-      },
-      "textColor": {
-        "sidebar-secondary-menu-item-global-label-active": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "sidebar-secondary-menu-item-global-label-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "sidebar-secondary-menu-item-global-label-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))",
+        "sidebar-secondary-menu-item-extras-global-external-icon": "light-dark(rgb(68 81 93), rgb(68 81 93))",
         "sidebar-secondary-menu-item-extras-global-shortcut": "light-dark(rgb(54 65 74), rgb(54 65 74))",
+        "sidebar-secondary-section-icon-arrow": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "sidebar-secondary-section-label-section": "light-dark(rgb(68 81 93), rgb(68 81 93))",
+        "sidebar-secondary-global-container": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "sidebar-secondary-global-header-label": "light-dark(rgb(68 81 93), rgb(68 81 93))",
         "sidebar-secondary-collapsed-breadcrumb-label": "light-dark(rgb(54 65 74), rgb(54 65 74))",
+        "sidebar-secondary-collapsed-icon-separator": "light-dark(rgb(199 203 207), rgb(199 203 207))",
         "sidebar-secondary-collapsed-label-current-page": "light-dark(rgb(68 81 93), rgb(68 81 93))"
       },
       "borderColor": {
-        "sidebar-secondary-section-container-border-color": "light-dark(rgb(199 203 207), rgb(199 203 207))",
         "sidebar-secondary-global-container-border-color": "light-dark(rgb(199 203 207), rgb(199 203 207))",
         "sidebar-secondary-global-container-footer-border-color": "light-dark(rgb(199 203 207), rgb(199 203 207))"
-      },
-      "fill": {
-        "sidebar-secondary-menu-item-global-icon-active": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "sidebar-secondary-menu-item-global-icon-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "sidebar-secondary-menu-item-global-icon-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "sidebar-secondary-menu-item-extras-global-external-icon": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "sidebar-secondary-collapsed-icon-separator": "light-dark(rgb(199 203 207), rgb(199 203 207))"
       },
       "fontFamily": {
         "sidebar-secondary-menu-item-global-label-text-style": "Inter, system-ui, sans-serif",
@@ -96,21 +88,23 @@ export default {
       },
       "spacing": {
         "sidebar-secondary-menu-item-global-container-gap": "8px",
-        "sidebar-secondary-menu-item-global-container-height": "40px",
+        "sidebar-secondary-menu-item-global-container-height-min": "40px",
         "sidebar-secondary-menu-item-global-container-padding-x": "16px",
         "sidebar-secondary-menu-item-global-container-padding-y": "8px",
         "sidebar-secondary-menu-item-global-icon-margin-t": "4px",
         "sidebar-secondary-menu-item-global-icon-size": "16px",
-        "sidebar-secondary-menu-item-global-level2-container-padding-l": "40px",
         "sidebar-secondary-menu-item-extras-global-container-gap": "8px",
         "sidebar-secondary-menu-item-extras-global-external-icon-size": "16px",
         "sidebar-secondary-section-menu-item-list-gap": "0px",
-        "sidebar-secondary-section-container-border-width": "1px",
         "sidebar-secondary-section-container-padding-y": "8px",
-        "sidebar-secondary-section-container-section-header-padding-b": "8px",
-        "sidebar-secondary-section-container-section-header-padding-x": "16px",
+        "sidebar-secondary-section-container-header-gap": "8px",
+        "sidebar-secondary-section-container-header-min-width": "undefinedundefined",
+        "sidebar-secondary-section-container-header-padding-x": "16px",
+        "sidebar-secondary-section-container-header-padding-y": "8px",
         "sidebar-secondary-global-container-border-width": "1px",
         "sidebar-secondary-global-container-footer-border-width": "1px",
+        "sidebar-secondary-global-container-header-padding-x": "16px",
+        "sidebar-secondary-global-container-header-padding-y": "16px",
         "sidebar-secondary-global-section-list-gap": "0px",
         "sidebar-secondary-collapsed-container-width": "48px",
         "sidebar-secondary-collapsed-container-content-gap": "4px",

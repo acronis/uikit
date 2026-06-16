@@ -5,10 +5,8 @@
 export default {
   theme: {
     extend: {
-      "backgroundColor": {
-        "tooltip-container": "light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898))"
-      },
       "textColor": {
+        "tooltip-container": "light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898))",
         "tooltip-label": "light-dark(rgb(255 255 255), rgb(0 0 0))"
       },
       "fontFamily": {

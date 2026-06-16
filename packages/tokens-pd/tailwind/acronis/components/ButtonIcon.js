@@ -5,23 +5,21 @@
 export default {
   theme: {
     extend: {
-      "backgroundColor": {
+      "textColor": {
         "button-icon-global-container-active": "light-dark(rgb(214 228 245), rgb(6 54 121))",
         "button-icon-global-container-disabled": "light-dark(transparent, transparent)",
         "button-icon-global-container-hover": "light-dark(rgb(238 242 247), rgb(0 32 77))",
-        "button-icon-global-container-idle": "light-dark(transparent, transparent)"
+        "button-icon-global-container-idle": "light-dark(transparent, transparent)",
+        "button-icon-global-icon-active": "light-dark(rgb(23 99 207), rgb(48 125 232))",
+        "button-icon-global-icon-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
+        "button-icon-global-icon-hover": "light-dark(rgb(23 99 207), rgb(48 125 232))",
+        "button-icon-global-icon-idle": "light-dark(rgb(23 99 207), rgb(48 125 232))"
       },
       "borderColor": {
         "button-icon-secondary-container-border-color-active": "light-dark(transparent, transparent)",
         "button-icon-secondary-container-border-color-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
         "button-icon-secondary-container-border-color-hover": "light-dark(transparent, transparent)",
         "button-icon-secondary-container-border-color-idle": "light-dark(rgb(214 228 245), rgb(6 54 121))"
-      },
-      "fill": {
-        "button-icon-global-icon-active": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "button-icon-global-icon-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "button-icon-global-icon-hover": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "button-icon-global-icon-idle": "light-dark(rgb(23 99 207), rgb(48 125 232))"
       },
       "spacing": {
         "button-icon-global-container-height": "32px",

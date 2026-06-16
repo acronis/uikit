@@ -9,9 +9,7 @@ export default {
         "breadcrumb-link-label-active": "light-dark(rgb(68 81 93), rgb(68 81 93))",
         "breadcrumb-link-label-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
         "breadcrumb-link-label-idle": "light-dark(rgb(54 65 74), rgb(54 65 74))",
-        "breadcrumb-page-label": "light-dark(rgb(68 81 93), rgb(68 81 93))"
-      },
-      "fill": {
+        "breadcrumb-page-label": "light-dark(rgb(68 81 93), rgb(68 81 93))",
         "breadcrumb-separator-icon": "light-dark(rgb(199 203 207), rgb(199 203 207))"
       },
       "fontFamily": {

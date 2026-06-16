@@ -39,7 +39,7 @@
   --ui-sidebar-primary-menu-item-selected-label-color-idle: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-sidebar-primary-menu-item-unselected-container-color-active: light-dark(rgb(3 43 99), rgb(226 235 245));
   --ui-sidebar-primary-menu-item-unselected-container-color-hover: light-dark(rgb(3 43 99), rgb(226 235 245));
-  --ui-sidebar-primary-menu-item-unselected-container-color-idle: light-dark(transparent, transparent);
+  --ui-sidebar-primary-menu-item-unselected-container-color-idle: light-dark(rgb(0 32 77), rgb(238 242 247));
   --ui-sidebar-primary-menu-item-unselected-icon-color-active: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-sidebar-primary-menu-item-unselected-icon-color-hover: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-sidebar-primary-menu-item-unselected-icon-color-idle: light-dark(rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.6));
