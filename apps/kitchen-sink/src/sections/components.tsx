@@ -111,14 +111,24 @@ function forcedStyle(
   return style;
 }
 
-// ButtonIcon has a single (borderless) style under `--ui-button-icon-global-*`:
-// a transparent container fill and a per-state glyph color.
-function forcedIconStyle(state: 'hover' | 'active' | 'focus'): CSSProperties {
+// ButtonIcon shares one container/glyph color set under
+// `--ui-button-icon-global-*`; the `secondary` variant adds a 1px border
+// (`--ui-button-icon-secondary-container-border-color-*`). `ghost` (default) has
+// no border, so its border var is undefined and falls back to transparent.
+type IconVariant = 'ghost' | 'secondary';
+
+function forcedIconStyle(
+  state: 'hover' | 'active' | 'focus',
+  variant: IconVariant
+): CSSProperties {
   const cs = state === 'focus' ? 'idle' : state;
   const style: CSSProperties = {
     backgroundColor: `var(--ui-button-icon-global-container-color-${cs})`,
     color: `var(--ui-button-icon-global-icon-color-${cs})`,
   };
+  if (variant === 'secondary') {
+    style.borderColor = `var(--ui-button-icon-secondary-container-border-color-${cs}, transparent)`;
+  }
   if (state === 'focus') style.boxShadow = FOCUS_RING;
   return style;
 }
@@ -158,21 +168,26 @@ function ButtonCell({ variant, token, state }: { variant: Variant; token: string
   );
 }
 
-function ButtonIconCell({ state }: { state: State }) {
+const ICON_VARIANTS: { variant: IconVariant; label: string }[] = [
+  { variant: 'ghost', label: 'Ghost' },
+  { variant: 'secondary', label: 'Secondary' },
+];
+
+function ButtonIconCell({ variant, state }: { variant: IconVariant; state: State }) {
   if (state === 'idle')
     return (
-      <ButtonIcon aria-label="Add">
+      <ButtonIcon variant={variant} aria-label="Add">
         <PlusIcon />
       </ButtonIcon>
     );
   if (state === 'disabled')
     return (
-      <ButtonIcon aria-label="Add" disabled>
+      <ButtonIcon variant={variant} aria-label="Add" disabled>
         <PlusIcon />
       </ButtonIcon>
     );
   return (
-    <ButtonIcon aria-label="Add" style={forcedIconStyle(state)}>
+    <ButtonIcon variant={variant} aria-label="Add" style={forcedIconStyle(state, variant)}>
       <PlusIcon />
     </ButtonIcon>
   );
@@ -234,7 +249,7 @@ export function ComponentsSection() {
       </div>
 
       <div>
-        <h3 style={{ marginBottom: 12 }}>ButtonIcon — states</h3>
+        <h3 style={{ marginBottom: 12 }}>ButtonIcon — styles × states</h3>
         <div
           style={{
             display: 'grid',
@@ -244,11 +259,15 @@ export function ComponentsSection() {
           }}
         >
           <ColumnHeaders />
-          <span style={{ fontSize: 13, color: 'var(--ui-text-on-surface-primary)' }}>
-            Default
-          </span>
-          {STATES.map((state) => (
-            <ButtonIconCell key={state} state={state} />
+          {ICON_VARIANTS.map((v) => (
+            <Fragment key={v.variant}>
+              <span style={{ fontSize: 13, color: 'var(--ui-text-on-surface-primary)' }}>
+                {v.label}
+              </span>
+              {STATES.map((state) => (
+                <ButtonIconCell key={state} variant={v.variant} state={state} />
+              ))}
+            </Fragment>
           ))}
         </div>
       </div>
@@ -273,6 +292,11 @@ export function ComponentsSection() {
           <Switch aria-label="Disabled off" disabled />
           <Switch aria-label="Disabled on" disabled defaultChecked />
         </Row>
+        <Row label="With label">
+          <Switch label="Notifications" />
+          <Switch label="Auto-update" defaultChecked />
+          <Switch label="Disabled" disabled defaultChecked />
+        </Row>
       </div>
 
       <div>
@@ -284,6 +308,19 @@ export function ComponentsSection() {
           <Checkbox aria-label="Disabled" disabled />
           <Checkbox aria-label="Disabled checked" disabled defaultChecked />
         </Row>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 12 }}>
+          <span style={{ fontSize: 12, color: 'var(--ui-text-on-surface-secondary)' }}>
+            With label &amp; description
+          </span>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: 24 }}>
+            <Checkbox label="Email notifications" />
+            <Checkbox label="Auto-renew" defaultChecked />
+            <Checkbox
+              label="Share usage data"
+              description="Anonymous analytics to help improve the product."
+            />
+          </div>
+        </div>
       </div>
 
       <div>
@@ -403,6 +440,7 @@ export function ComponentsSection() {
             <Tag variant="critical">Critical</Tag>
             <Tag variant="danger">Danger</Tag>
             <Tag variant="neutral">Neutral</Tag>
+            <Tag variant="ai">AI</Tag>
           </Row>
           <Row label="Sizes & icon">
             <Tag variant="success" icon={<CircleCheckIcon />}>
