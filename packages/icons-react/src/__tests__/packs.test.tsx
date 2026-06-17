@@ -2,8 +2,8 @@ import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { BrandAcronisIcon } from '../packs/solid-mono';
-import { CircleCheckColorIcon } from '../packs/stroke-multi';
-import { SparklesColorIcon } from '../packs/solid-multi';
+import { CircleCheckMultiIcon } from '../packs/stroke-multi';
+import { SparklesMultiIcon } from '../packs/solid-multi';
 
 function svgOf(container: HTMLElement): SVGSVGElement {
   const svg = container.querySelector('svg');
@@ -23,7 +23,7 @@ describe('solid-mono pack', () => {
 
 describe('multicolor packs keep authored colors', () => {
   it('stroke-multi preserves per-path colors but takes stroke width from rules', () => {
-    const svg = svgOf(render(<CircleCheckColorIcon size={16} />).container);
+    const svg = svgOf(render(<CircleCheckMultiIcon size={16} />).container);
     expect(svg).toHaveAttribute('fill', 'none');
     expect(svg).not.toHaveAttribute('stroke'); // not forced to currentColor
     expect(svg).toHaveAttribute('stroke-width', '2.4'); // rule-driven at 16px
@@ -34,7 +34,7 @@ describe('multicolor packs keep authored colors', () => {
   });
 
   it('solid-multi preserves gradients with namespaced ids', () => {
-    const svg = svgOf(render(<SparklesColorIcon />).container);
+    const svg = svgOf(render(<SparklesMultiIcon />).container);
     const gradientId = svg.querySelector('linearGradient')?.id;
     // ids are namespaced per-icon so gradients can't collide across icons.
     expect(gradientId).toMatch(/^sparkles-/);
