@@ -1,5 +1,21 @@
 # @acronis-platform/ui-react
 
+## 0.20.0
+
+### Minor Changes
+
+- [#300](https://github.com/acronis/uikit/pull/300) [`7782af7`](https://github.com/acronis/uikit/commit/7782af7c4ea61728edc65b6c2d6d3b19e720ec63) Thanks [@leonid](https://github.com/leonid)! - Add `ButtonDropdown`: a button that opens a dropdown menu — a label followed by a
+  chevron that flips up while `open`. Two variants (`primary` solid / `secondary`
+  bordered) across idle, hover, open, and disabled states, wired to the
+  `--ui-button-dropdown-*` tokens. The `open` prop drives the chevron direction,
+  the open (`*-active`) treatment, and `aria-expanded`; compose it with a menu
+  trigger via the `render` prop.
+
+### Patch Changes
+
+- Updated dependencies [[`7782af7`](https://github.com/acronis/uikit/commit/7782af7c4ea61728edc65b6c2d6d3b19e720ec63)]:
+  - @acronis-platform/tokens-pd@1.3.0
+
 ## 0.19.0
 
 ### Minor Changes

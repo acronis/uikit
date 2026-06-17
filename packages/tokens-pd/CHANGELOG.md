@@ -1,5 +1,30 @@
 # @acronis-platform/tokens-pd
 
+## 1.3.0
+
+### Minor Changes
+
+- [#300](https://github.com/acronis/uikit/pull/300) [`7782af7`](https://github.com/acronis/uikit/commit/7782af7c4ea61728edc65b6c2d6d3b19e720ec63) Thanks [@leonid](https://github.com/leonid)! - Sync the `ButtonDropdown` component token tier from Figma.
+
+  ## design-tokens
+
+  ### Added
+  - `ButtonDropdown` component tier: global geometry (height, min-width, padding,
+    gap, radius, icon size) plus `primary` and `secondary` container / label / icon
+    colors and the `secondary` container border, across idle / hover / active /
+    disabled.
+  - A `96px` size primitive.
+
+  ## tokens-pd
+
+  Generated the `--ui-button-dropdown-*` CSS custom properties (acronis + deep-sky
+  brands) from the new tier.
+
+### Patch Changes
+
+- Updated dependencies [[`7782af7`](https://github.com/acronis/uikit/commit/7782af7c4ea61728edc65b6c2d6d3b19e720ec63)]:
+  - @acronis-platform/design-tokens@1.3.0
+
 ## 1.2.1
 
 ### Patch Changes
