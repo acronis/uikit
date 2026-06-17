@@ -40,8 +40,9 @@ delivery model differs from the retired `design-theme`:
   by `ui-react/styles`, so `tokens.ts` imports the `css/<component>/acronis.css`
   files and injects them once (needed both to render components and to enumerate
   their names).
-- **Brand switching** injects `brand-b`'s _override-only_ `:root` stylesheet
-  (`applyBrand`) — it is not a class toggle.
+- **Brand switching** injects `deep-sky`'s _override-only_ `:root` stylesheets
+  (semantic + per-component) on top of the acronis base via `applyBrand` — it is
+  not a class toggle. The header's brand `<select>` (`App.tsx`) drives it.
 - **Light/dark** flips `color-scheme` (drives the tokens' `light-dark()`) and
   mirrors `[data-theme]` for ui-react's `dark:` variant (`applyTheme`) — it is
   not a `.dark` class.
@@ -61,7 +62,8 @@ delivery model differs from the retired `design-theme`:
   `SECTIONS` in `App.tsx`) so it can be re-enabled if a base element layer ships.
 - `components.tsx` — the implemented `ui-react` components: `Button`
   (variants/sizes/states/with-icons), `ButtonIcon`, `Switch`, `Checkbox`,
-  `Radio`, `Input`, `Search`, `Select`, and `Breadcrumb`.
+  `Radio`, `Input`, `Search`, `Select`, `Breadcrumb`, `Tag`, `Tooltip`, and
+  `SidebarPrimary` / `SidebarSecondary`.
 - `icons.tsx` — galleries for all four `icons-react` packs.
 
 ## Run

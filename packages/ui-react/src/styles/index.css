@@ -5,6 +5,7 @@
    tier for every component this library ships, so its `--ui-<component>-*` tokens
    are defined. Add a line here whenever a new component with its own tier lands. */
 @import '@acronis-platform/tokens-pd/css/Button/acronis.css';
+@import '@acronis-platform/tokens-pd/css/ButtonDropdown/acronis.css';
 @import '@acronis-platform/tokens-pd/css/ButtonIcon/acronis.css';
 @import '@acronis-platform/tokens-pd/css/Switch/acronis.css';
 @import '@acronis-platform/tokens-pd/css/Checkbox/acronis.css';

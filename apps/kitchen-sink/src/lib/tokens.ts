@@ -7,10 +7,12 @@
  * files (`css/<component>/acronis.css`), so we load those here — both to render
  * the components correctly and to enumerate their `--ui-<component>-*` names.
  *
- * acronis is the only brand: its semantic tokens are the base layer (no
- * override stylesheet). Light/dark is driven by the tokens' `light-dark()` +
- * `color-scheme`, so we flip `color-scheme` (and mirror `[data-theme]` for
- * ui-react's `dark:` variant).
+ * Two brands ship: `acronis` (the base layer — its semantic tokens are loaded by
+ * ui-react/styles, per-component ones injected here) and `deep-sky` (an
+ * override-only layer). Brand switching (`applyBrand`) injects/clears deep-sky's
+ * `:root` overrides on top of the base — it is not a class toggle. Light/dark is
+ * driven by the tokens' `light-dark()` + `color-scheme`, so we flip
+ * `color-scheme` (and mirror `[data-theme]` for ui-react's `dark:` variant).
  */
 
 // --- acronis: semantic is applied by ui-react/styles; we read it here only to
@@ -27,7 +29,22 @@ import switchAcronis from '@acronis-platform/tokens-pd/css/Switch/acronis.css?ra
 import tagAcronis from '@acronis-platform/tokens-pd/css/Tag/acronis.css?raw';
 import tooltipAcronis from '@acronis-platform/tokens-pd/css/Tooltip/acronis.css?raw';
 
+// --- deep-sky: override-only `:root` stylesheets, layered on the acronis base
+//     by `applyBrand`. One per tier (semantic + each component).
+import semanticDeepSky from '@acronis-platform/tokens-pd/css/deep-sky.css?raw';
+import breadcrumbDeepSky from '@acronis-platform/tokens-pd/css/Breadcrumb/deep-sky.css?raw';
+import buttonDeepSky from '@acronis-platform/tokens-pd/css/Button/deep-sky.css?raw';
+import buttonIconDeepSky from '@acronis-platform/tokens-pd/css/ButtonIcon/deep-sky.css?raw';
+import checkboxDeepSky from '@acronis-platform/tokens-pd/css/Checkbox/deep-sky.css?raw';
+import inputTextDeepSky from '@acronis-platform/tokens-pd/css/InputText/deep-sky.css?raw';
+import sidebarPrimaryDeepSky from '@acronis-platform/tokens-pd/css/SidebarPrimary/deep-sky.css?raw';
+import sidebarSecondaryDeepSky from '@acronis-platform/tokens-pd/css/SidebarSecondary/deep-sky.css?raw';
+import switchDeepSky from '@acronis-platform/tokens-pd/css/Switch/deep-sky.css?raw';
+import tagDeepSky from '@acronis-platform/tokens-pd/css/Tag/deep-sky.css?raw';
+import tooltipDeepSky from '@acronis-platform/tokens-pd/css/Tooltip/deep-sky.css?raw';
+
 export type ColorMode = 'light' | 'dark';
+export type Brand = 'acronis' | 'deep-sky';
 
 /** A row of tokens that share a role (paints `bg` / `text` / `border` / …). */
 export interface RoleGroup {
@@ -475,6 +492,43 @@ export function applyTheme(mode: ColorMode): void {
   const html = document.documentElement;
   html.dataset.theme = mode;
   html.style.colorScheme = mode;
+}
+
+const BRAND_OVERRIDE_STYLE_ID = 'ks-brand-override';
+
+/** deep-sky override CSS (semantic + every per-component tier), concatenated. */
+const DEEP_SKY_OVERRIDES = [
+  semanticDeepSky,
+  breadcrumbDeepSky,
+  buttonDeepSky,
+  buttonIconDeepSky,
+  checkboxDeepSky,
+  inputTextDeepSky,
+  sidebarPrimaryDeepSky,
+  sidebarSecondaryDeepSky,
+  switchDeepSky,
+  tagDeepSky,
+  tooltipDeepSky,
+].join('\n');
+
+/**
+ * Switch brand by layering deep-sky's override-only `:root` tokens on top of the
+ * acronis base (not a class toggle). The override `<style>` is kept **last** in
+ * `<head>` so it wins the cascade over ui-react/styles + the component-token
+ * style; selecting `acronis` clears it back to the base.
+ */
+export function applyBrand(brand: Brand): void {
+  if (typeof document === 'undefined') return;
+  let el = document.getElementById(
+    BRAND_OVERRIDE_STYLE_ID
+  ) as HTMLStyleElement | null;
+  if (!el) {
+    el = document.createElement('style');
+    el.id = BRAND_OVERRIDE_STYLE_ID;
+  }
+  // Re-append so it stays after the base + component-token stylesheets.
+  document.head.appendChild(el);
+  el.textContent = brand === 'deep-sky' ? DEEP_SKY_OVERRIDES : '';
 }
 
 /**

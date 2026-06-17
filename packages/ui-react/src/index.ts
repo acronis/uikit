@@ -1,6 +1,7 @@
 export { cn } from './lib/utils';
 export * from './components/ui/breadcrumb';
 export * from './components/ui/button';
+export * from './components/ui/button-dropdown';
 export * from './components/ui/checkbox';
 export * from './components/ui/radio';
 export * from './components/ui/input';
