@@ -218,6 +218,12 @@ Stop the preview when done.
 
 - This app is **private** — no changeset, no VR baselines (it isn't in the
   Storybook VR suite).
+- **The audit one-liners must stay POSIX** — this repo runs on macOS (BSD `sed`),
+  which has no `\U` / `\L` case transforms. Don't normalize PascalCase↔kebab with
+  `sed -E 's/.../\U&/'` to auto-diff the export/render lists: BSD `sed` emits a
+  literal `U`/`L`, silently turning every entry into a false "missing". Compare
+  the two `sort -u` lists **by eye**, or match each export's PascalCase tag with a
+  plain `grep "<Pascal"` loop (no case folding).
 - **Commit headers must be ≤ 100 chars** (commitlint rejects longer). With the
   `feat(kitchen-sink): …` prefix that leaves ~80 chars — list the components
   added, not every variant (e.g. `feat(kitchen-sink): add ButtonIcon secondary,
