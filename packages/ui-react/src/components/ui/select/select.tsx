@@ -4,6 +4,14 @@ import { CheckIcon, ChevronDownIcon } from '@acronis-platform/icons-react/stroke
 
 import { cn } from '@/lib/utils';
 
+// STRANDED THEME: this component still binds to the legacy `--ui-form-*` token
+// tier, which is NOT shipped by @acronis-platform/tokens-pd. The Figma sync
+// (#308) added next-gen tiers for Radio (`--ui-radio-*`), Search
+// (`--ui-input-search-*`) and Input (`--ui-input-text-*`) but NOT for Select, so
+// there is nothing to rewire to yet — Select renders with unresolved colors until
+// a `--ui-select-*` tier ships. Re-theme it once those tokens land (tracked
+// alongside the token-drift guard, issue #297).
+//
 // A select: a Base UI `Select` themed with the shared `--ui-form-*` token tier
 // (the same tier Input/Search use). The trigger is the Figma "Select" box —
 // 32px tall, bordered, rounded — and wires each state to its own token:

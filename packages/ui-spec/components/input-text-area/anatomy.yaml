@@ -1,0 +1,50 @@
+spec_version: '1.0'
+component: InputTextArea
+
+schematic: |
+  +-------------------------------+
+  | Placeholder / Value           |   root: <textarea> (role="textbox")
+  |                               |
+  |                            ◢  |   vertical resize handle
+  +-------------------------------+
+   border idle / hover / focus / disabled (no error border token)
+   text -> --ui-input-text-area-value-color-* ;
+   placeholder -> --ui-input-text-area-placeholder-color-*
+
+root:
+  element: textarea
+  role: textbox
+  description: >-
+    Native multiline text area. Geometry (96px min-height, 12px x-padding, 8px
+    y-padding, 4px radius, 1px border) and all colors come from the
+    `--ui-input-text-area-*` tokens; the field grows with vertical resize. The
+    focus ring uses `--ui-focus-primary` (and `--ui-focus-error` when invalid).
+
+# A bare text area has no named sub-parts — the placeholder/value live on the
+# native element itself. Label / description / required marker are composed
+# externally (a Field component is future work), so they are not parts here.
+parts: []
+
+# The text area is a near-pure function of its props plus native interaction
+# pseudo-states. Value is the native element's own state and is not modelled here.
+states:
+  - id: hover
+    trigger: pointer hover (enabled)
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [root]
+  - id: focus-visible
+    trigger: keyboard or text-entry focus
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [root]
+  - id: error
+    trigger: 'aria-invalid === true'
+    kind: prop
+    prop: aria-invalid
+    affects: [root]
+  - id: disabled
+    trigger: 'disabled === true'
+    kind: prop
+    prop: disabled
+    affects: [root]

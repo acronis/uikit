@@ -24,11 +24,11 @@ describe('Radio', () => {
     expect(screen.getAllByRole('radio')).toHaveLength(3);
   });
 
-  it('applies the idle form token classes to an item', () => {
+  it('applies the idle radio token classes to an item', () => {
     render(<Group />);
     expect(screen.getByRole('radio', { name: 'A' })).toHaveClass(
-      'bg-[var(--ui-form-background-idle)]',
-      'border-[var(--ui-form-border-idle)]'
+      'bg-[var(--ui-radio-unchecked-box-color-idle)]',
+      'border-[var(--ui-radio-unchecked-box-border-color-idle)]'
     );
   });
 
@@ -83,7 +83,7 @@ describe('Radio', () => {
     );
     expect(screen.getByRole('radio', { name: 'A' })).toHaveClass(
       'custom-class',
-      'bg-[var(--ui-form-background-idle)]'
+      'bg-[var(--ui-radio-unchecked-box-color-idle)]'
     );
   });
 

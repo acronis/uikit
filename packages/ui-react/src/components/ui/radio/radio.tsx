@@ -6,13 +6,17 @@ import { cn } from '@/lib/utils';
 
 // Radio group + item, wrapping Base UI's RadioGroup / Radio primitives. Radios
 // are mutually exclusive, so the group owns the selected value; each Radio takes
-// a `value`. Colors and geometry come from the shared `--ui-form-*` token tier
-// from @acronis-platform/tokens-pd (the same tier checkbox/input use): the 16px
-// circle uses idle / hover / active / disabled border + background, the 8px dot
-// uses `--ui-form-circle-active` (and `--ui-form-circle-disabled` when disabled),
-// and the focus ring uses `--ui-focus-primary`. Each state is wired to its own
-// token, and the checked fill is scoped with `not-data-[disabled]` so the
-// disabled tokens win.
+// a `value`. Colors and geometry come from the dedicated next-gen `--ui-radio-*`
+// token tier from @acronis-platform/tokens-pd (which mirrors `--ui-checkbox-*`):
+// the circle has two logical states — `unchecked` (the base) and `checked` —
+// each with its own per-interaction (idle / hover / active / disabled) fill
+// (`*-box-color-*`) and border (`*-box-border-color-*`) tokens. `unchecked` is
+// the base layer (lowest specificity); `data-[checked]` overrides it, and
+// `data-[disabled]:data-[checked]` overrides that in turn. The inner dot fill
+// uses `--ui-radio-checked-icon-color-*`. Box geometry (16px size) comes from
+// `--ui-radio-global-box-size`; the focus ring uses `--ui-focus-primary`. Each
+// state is wired to its own token, and the checked overrides are scoped with
+// `not-data-[disabled]` so the disabled tokens win.
 
 export type RadioGroupProps = React.ComponentPropsWithoutRef<
   typeof RadioGroupPrimitive
@@ -41,12 +45,24 @@ const Radio = React.forwardRef<
   <RadioPrimitive.Root
     ref={ref}
     className={cn(
-      'inline-flex size-4 shrink-0 cursor-pointer items-center justify-center rounded-full border bg-[var(--ui-form-background-idle)] border-[var(--ui-form-border-idle)] outline-none transition-colors not-data-[disabled]:hover:border-[var(--ui-form-border-hover)] focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)] data-[checked]:not-data-[disabled]:border-[var(--ui-form-border-active)] data-[checked]:not-data-[disabled]:bg-[var(--ui-form-background-active)] data-[disabled]:cursor-not-allowed data-[disabled]:border-[var(--ui-form-border-disabled)] data-[disabled]:bg-[var(--ui-form-background-disabled)]',
+      // geometry + focus ring
+      'inline-flex size-[var(--ui-radio-global-box-size)] shrink-0 cursor-pointer items-center justify-center rounded-full border outline-none transition-colors focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
+      // unchecked (base): idle / hover / active
+      'bg-[var(--ui-radio-unchecked-box-color-idle)] border-[var(--ui-radio-unchecked-box-border-color-idle)]',
+      'not-data-[disabled]:hover:bg-[var(--ui-radio-unchecked-box-color-hover)] not-data-[disabled]:hover:border-[var(--ui-radio-unchecked-box-border-color-hover)]',
+      'not-data-[disabled]:active:bg-[var(--ui-radio-unchecked-box-color-active)] not-data-[disabled]:active:border-[var(--ui-radio-unchecked-box-border-color-active)]',
+      // checked: idle / hover / active
+      'data-[checked]:not-data-[disabled]:bg-[var(--ui-radio-checked-box-color-idle)] data-[checked]:not-data-[disabled]:border-[var(--ui-radio-checked-box-border-color-idle)]',
+      'data-[checked]:not-data-[disabled]:hover:bg-[var(--ui-radio-checked-box-color-hover)] data-[checked]:not-data-[disabled]:hover:border-[var(--ui-radio-checked-box-border-color-hover)]',
+      'data-[checked]:not-data-[disabled]:active:bg-[var(--ui-radio-checked-box-color-active)] data-[checked]:not-data-[disabled]:active:border-[var(--ui-radio-checked-box-border-color-active)]',
+      // disabled (unchecked base + checked override)
+      'data-[disabled]:cursor-not-allowed data-[disabled]:bg-[var(--ui-radio-unchecked-box-color-disabled)] data-[disabled]:border-[var(--ui-radio-unchecked-box-border-color-disabled)]',
+      'data-[disabled]:data-[checked]:bg-[var(--ui-radio-checked-box-color-disabled)] data-[disabled]:data-[checked]:border-[var(--ui-radio-checked-box-border-color-disabled)]',
       className
     )}
     {...props}
   >
-    <RadioPrimitive.Indicator className="size-2 rounded-full bg-[var(--ui-form-circle-active)] data-[disabled]:bg-[var(--ui-form-circle-disabled)]" />
+    <RadioPrimitive.Indicator className="size-2 rounded-full bg-[var(--ui-radio-checked-icon-color-idle)] data-[disabled]:bg-[var(--ui-radio-checked-icon-color-disabled)]" />
   </RadioPrimitive.Root>
 ));
 Radio.displayName = 'Radio';

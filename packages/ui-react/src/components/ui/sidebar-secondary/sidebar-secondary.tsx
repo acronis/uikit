@@ -25,9 +25,11 @@ import { cn } from '@/lib/utils';
 //
 // Menu-item color wiring DIVERGES from Primary (DESIGN §6.2): Secondary recolors
 // only the CONTAINER per selected/unselected; the icon and label use the shared
-// `--ui-sidebar-secondary-menu-item-global-{icon,label}-color-{idle,hover,active}`
-// tokens across both variants. So the cva base carries the global icon/label
-// state colors and the two variants only swap the container fill.
+// `--ui-sidebar-secondary-menu-item-global-{icon,label}-color-color` tokens
+// across both variants and every interaction state (the next-gen token sync
+// collapsed the former per-state idle/hover/active icon+label colors into a
+// single value each). So the cva base carries the global icon/label colors and
+// the two variants only swap the container fill.
 //
 // The Level-1 expandable disclosure (SidebarSecondaryMenuSub) is the canonical
 // Base UI Collapsible use — it gives `aria-expanded`/`aria-controls` for free and
@@ -272,13 +274,13 @@ const SidebarSecondarySection = React.forwardRef<
   HTMLDivElement,
   React.ComponentPropsWithoutRef<'div'>
 >(({ className, ...props }, ref) => (
-  // `firstSection` in Figma only toggles the top divider — derive it from DOM
-  // position (`:not(:first-child)`).
+  // Sections are separated by vertical padding + the section label; the next-gen
+  // token sync removed the inter-section divider (no
+  // `--ui-sidebar-secondary-section-container-border-*` token survives).
   <div
     ref={ref}
     className={cn(
       'flex flex-col py-[var(--ui-sidebar-secondary-section-container-padding-y)]',
-      '[&:not(:first-child)]:border-t [&:not(:first-child)]:border-[var(--ui-sidebar-secondary-section-container-border-color)] [&:not(:first-child)]:[border-top-width:var(--ui-sidebar-secondary-section-container-border-width)]',
       className
     )}
     {...props}
@@ -294,7 +296,7 @@ const SidebarSecondarySectionLabel = React.forwardRef<
     ref={ref}
     className={cn(
       'ui-sidebar-secondary-section-label-section-text-style text-[var(--ui-sidebar-secondary-section-label-section-color)]',
-      'pb-[var(--ui-sidebar-secondary-section-container-section-header-padding-b)] px-[var(--ui-sidebar-secondary-section-container-section-header-padding-x)]',
+      'pb-[var(--ui-sidebar-secondary-section-container-header-padding-y)] px-[var(--ui-sidebar-secondary-section-container-header-padding-x)]',
       className
     )}
     {...props}
@@ -323,7 +325,7 @@ SidebarSecondaryMenu.displayName = 'SidebarSecondaryMenu';
 // value is unchanged (runtime var() references honor brand overrides only on the
 // referenced token).
 const sidebarSecondaryRowClasses =
-  'group/row flex w-full items-center gap-[var(--ui-sidebar-secondary-menu-item-global-container-gap)] h-[var(--ui-sidebar-secondary-menu-item-global-container-height)] px-[var(--ui-sidebar-secondary-menu-item-global-container-padding-x)] py-[var(--ui-sidebar-secondary-menu-item-global-container-padding-y)] no-underline ui-sidebar-secondary-menu-item-global-label-text-style transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)] focus-visible:ring-inset text-[var(--ui-sidebar-secondary-menu-item-global-label-color-idle)] hover:text-[var(--ui-sidebar-secondary-menu-item-global-label-color-hover)] active:text-[var(--ui-sidebar-secondary-menu-item-global-label-color-active)] [&_svg]:shrink-0 [&_svg]:size-[var(--ui-sidebar-secondary-menu-item-global-icon-size)] [&_svg]:text-[var(--ui-sidebar-secondary-menu-item-global-icon-color-idle)] hover:[&_svg]:text-[var(--ui-sidebar-secondary-menu-item-global-icon-color-hover)] active:[&_svg]:text-[var(--ui-sidebar-secondary-menu-item-global-icon-color-active)]';
+  'group/row flex w-full items-center gap-[var(--ui-sidebar-secondary-menu-item-global-container-gap)] min-h-[var(--ui-sidebar-secondary-menu-item-global-container-height-min)] px-[var(--ui-sidebar-secondary-menu-item-global-container-padding-x)] py-[var(--ui-sidebar-secondary-menu-item-global-container-padding-y)] no-underline ui-sidebar-secondary-menu-item-global-label-text-style transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)] focus-visible:ring-inset text-[var(--ui-sidebar-secondary-menu-item-global-label-color-color)] [&_svg]:shrink-0 [&_svg]:size-[var(--ui-sidebar-secondary-menu-item-global-icon-size)] [&_svg]:text-[var(--ui-sidebar-secondary-menu-item-global-icon-color-color)]';
 
 const sidebarSecondaryMenuItemVariants = cva(sidebarSecondaryRowClasses, {
   variants: {
@@ -504,8 +506,11 @@ const SidebarSecondaryMenuSubItem = React.forwardRef<
           sidebarSecondaryMenuItemVariants({
             variant: selected ? 'selected' : 'unselected',
           }),
-          // Level-2 left indent (no icon column).
-          'pl-[var(--ui-sidebar-secondary-menu-item-global-level2-container-padding-l)]',
+          // Level-2 left indent (no icon column). The dedicated level-2 padding
+          // token was removed in the next-gen sync; reconstruct the indent from
+          // surviving tokens so the label aligns under level-1 labels (row
+          // padding + icon column + gap).
+          'pl-[calc(var(--ui-sidebar-secondary-menu-item-global-container-padding-x)+var(--ui-sidebar-secondary-menu-item-global-icon-size)+var(--ui-sidebar-secondary-menu-item-global-container-gap))]',
           className
         ),
         'aria-current': selected ? 'page' : undefined,

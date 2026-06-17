@@ -64,11 +64,11 @@ describe('Search', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('applies the idle form token classes to the box', () => {
+  it('applies the idle input-search token classes to the box', () => {
     const { container } = render(<Search aria-label="Search" />);
     expect(container.firstElementChild).toHaveClass(
-      'bg-[var(--ui-form-background-idle)]',
-      'border-[var(--ui-form-border-idle)]'
+      'bg-[var(--ui-input-search-box-color-idle)]',
+      'border-[var(--ui-input-search-border-color-idle)]'
     );
   });
 

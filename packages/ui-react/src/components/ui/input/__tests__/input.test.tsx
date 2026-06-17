@@ -16,9 +16,9 @@ describe('Input', () => {
   it('applies the idle input token classes', () => {
     render(<Input aria-label="Name" />);
     expect(screen.getByRole('textbox', { name: 'Name' })).toHaveClass(
-      'bg-[var(--ui-input-global-box-idle)]',
-      'border-[var(--ui-input-normal-box-border-color-idle)]',
-      'text-[var(--ui-input-content-value-idle)]'
+      'bg-[var(--ui-input-text-global-box-color-idle)]',
+      'border-[var(--ui-input-text-normal-box-border-color-idle)]',
+      'text-[var(--ui-input-text-global-value-color-idle)]'
     );
   });
 
@@ -48,7 +48,7 @@ describe('Input', () => {
     const input = screen.getByRole('textbox', { name: 'Name' });
     expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(input).toHaveClass(
-      'aria-[invalid=true]:border-[var(--ui-input-error-box-border-color-idle)]'
+      'aria-[invalid=true]:border-[var(--ui-input-text-error-msg-box-border-color-idle)]'
     );
   });
 
@@ -65,7 +65,7 @@ describe('Input', () => {
     render(<Input aria-label="Name" className="custom-class" />);
     expect(screen.getByRole('textbox', { name: 'Name' })).toHaveClass(
       'custom-class',
-      'bg-[var(--ui-input-global-box-idle)]'
+      'bg-[var(--ui-input-text-global-box-color-idle)]'
     );
   });
 

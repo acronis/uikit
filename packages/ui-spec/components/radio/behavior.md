@@ -50,7 +50,7 @@
 
 **Given** an enabled, unselected item
 **When** the pointer hovers it
-**Then** the border uses `--ui-form-border-hover`
+**Then** the border uses `--ui-radio-unchecked-box-border-color-hover`
 
 ### Focus
 
@@ -62,8 +62,8 @@
 
 **Given** a selected item
 **When** it renders
-**Then** the circle fills with `--ui-form-background-active`
-**And** the dot uses `--ui-form-circle-active`
+**Then** the circle fills with `--ui-radio-checked-box-color-idle`
+**And** the dot uses `--ui-radio-checked-icon-color-idle`
 
 ---
 

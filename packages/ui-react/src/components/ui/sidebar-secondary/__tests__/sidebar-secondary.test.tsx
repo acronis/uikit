@@ -117,10 +117,10 @@ describe('SidebarSecondary', () => {
     const dashboard = screen.getByRole('link', { name: 'Dashboard' });
     const devices = screen.getByRole('link', { name: 'Devices' });
     expect(dashboard).toHaveClass(
-      'text-[var(--ui-sidebar-secondary-menu-item-global-label-color-idle)]'
+      'text-[var(--ui-sidebar-secondary-menu-item-global-label-color-color)]'
     );
     expect(devices).toHaveClass(
-      'text-[var(--ui-sidebar-secondary-menu-item-global-label-color-idle)]'
+      'text-[var(--ui-sidebar-secondary-menu-item-global-label-color-color)]'
     );
   });
 
@@ -147,7 +147,7 @@ describe('SidebarSecondary', () => {
     render(<Panel />);
     const backup = screen.getByRole('link', { name: 'Backup' });
     expect(backup).toHaveClass(
-      'pl-[var(--ui-sidebar-secondary-menu-item-global-level2-container-padding-l)]'
+      'pl-[calc(var(--ui-sidebar-secondary-menu-item-global-container-padding-x)+var(--ui-sidebar-secondary-menu-item-global-icon-size)+var(--ui-sidebar-secondary-menu-item-global-container-gap))]'
     );
   });
 

@@ -97,28 +97,18 @@ tokens:
       description: Gap between sections,
     }
   - {
-      name: --ui-sidebar-secondary-section-container-border-color,
-      affects: section,
-      description: Inter-section divider color,
-    }
-  - {
-      name: --ui-sidebar-secondary-section-container-border-width,
-      affects: section,
-      description: Inter-section divider width,
-    }
-  - {
       name: --ui-sidebar-secondary-section-container-padding-y,
       affects: section,
       description: Section vertical padding,
     }
   # ── section label ──
   - {
-      name: --ui-sidebar-secondary-section-container-section-header-padding-b,
+      name: --ui-sidebar-secondary-section-container-header-padding-y,
       affects: section-label,
       description: Section header padding-bottom,
     }
   - {
-      name: --ui-sidebar-secondary-section-container-section-header-padding-x,
+      name: --ui-sidebar-secondary-section-container-header-padding-x,
       affects: section-label,
       description: Section header padding-x,
     }
@@ -151,9 +141,9 @@ tokens:
       description: Icon/label gap,
     }
   - {
-      name: --ui-sidebar-secondary-menu-item-global-container-height,
+      name: --ui-sidebar-secondary-menu-item-global-container-height-min,
       affects: menu-item,
-      description: Row height (40),
+      description: Row min-height (40),
     }
   - {
       name: --ui-sidebar-secondary-menu-item-global-container-padding-x,
@@ -175,41 +165,20 @@ tokens:
       affects: menu-item,
       description: Icon optical top margin (4),
     }
+  # ── menu-item GLOBAL icon/label colors (shared across selected/unselected and
+  #    all interaction states — the next-gen sync collapsed the former per-state
+  #    idle/hover/active values into one each). Level-2 indent is reconstructed in
+  #    code from container-padding-x + icon-size + container-gap (its dedicated
+  #    token was removed). ──
   - {
-      name: --ui-sidebar-secondary-menu-item-global-level2-container-padding-l,
-      affects: menu-sub-item,
-      description: Level-2 left indent (40),
-    }
-  # ── menu-item GLOBAL icon/label colors (shared across selected/unselected) ──
-  - {
-      name: --ui-sidebar-secondary-menu-item-global-icon-color-idle,
+      name: --ui-sidebar-secondary-menu-item-global-icon-color-color,
       affects: menu-item,
-      description: Icon (idle),
-    }
-  - {
-      name: --ui-sidebar-secondary-menu-item-global-icon-color-hover,
-      affects: menu-item,
-      description: Icon (hover),
+      description: Icon color,
     }
   - {
-      name: --ui-sidebar-secondary-menu-item-global-icon-color-active,
+      name: --ui-sidebar-secondary-menu-item-global-label-color-color,
       affects: menu-item,
-      description: Icon (active),
-    }
-  - {
-      name: --ui-sidebar-secondary-menu-item-global-label-color-idle,
-      affects: menu-item,
-      description: Label (idle),
-    }
-  - {
-      name: --ui-sidebar-secondary-menu-item-global-label-color-hover,
-      affects: menu-item,
-      description: Label (hover),
-    }
-  - {
-      name: --ui-sidebar-secondary-menu-item-global-label-color-active,
-      affects: menu-item,
-      description: Label (active),
+      description: Label color,
     }
   # ── menu-item CONTAINER colors (vary by variant) ──
   - {

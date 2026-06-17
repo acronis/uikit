@@ -3,47 +3,89 @@ component: Search
 
 # References only. Values live in @acronis-platform/tokens-pd (generated from
 # @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
-# Search uses the shared `--ui-form-*` tier plus the semantic focus-ring token.
+# Search uses its dedicated `--ui-input-search-*` tier: box geometry/layout, the
+# bordered box fill/border per interaction, the entered value + placeholder text,
+# and the leading magnifier / trailing clear icon colors, plus the semantic
+# focus-ring token. The tier has no focus/active border token, so the focused
+# border reuses `--ui-input-search-border-color-hover`.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - { name: --ui-form-background-idle, affects: root, description: Box fill }
-  - { name: --ui-form-background-disabled, affects: root }
+  # ── Geometry / layout ──
+  - { name: --ui-input-search-box-height, affects: root }
+  - { name: --ui-input-search-box-border-radius, affects: root }
+  - { name: --ui-input-search-box-border-width, affects: root }
+  - { name: --ui-input-search-box-padding-x, affects: root }
+  - { name: --ui-input-search-box-padding-y, affects: root }
+  - { name: --ui-input-search-box-gap, affects: root }
+  - { name: --ui-input-search-container-gap, affects: container }
+  - { name: --ui-input-search-container-label-gap, affects: container }
+  - { name: --ui-input-search-container-width-min, affects: container }
+
+  # ── Box fill ──
   - {
-      name: --ui-form-border-idle,
+      name: --ui-input-search-box-color-idle,
+      affects: root,
+      description: Box fill when idle,
+    }
+  - {
+      name: --ui-input-search-box-color-hover,
+      affects: root,
+      description: Box fill on hover,
+    }
+  - { name: --ui-input-search-box-color-disabled, affects: root }
+
+  # ── Box border ──
+  - {
+      name: --ui-input-search-border-color-idle,
       affects: root,
       description: Border when idle,
     }
   - {
-      name: --ui-form-border-hover,
+      name: --ui-input-search-border-color-hover,
       affects: root,
-      description: Border on hover,
+      description: Border on hover; also reused for the focus-within border,
     }
+  - { name: --ui-input-search-border-color-disabled, affects: root }
+
+  # ── Value + placeholder text ──
   - {
-      name: --ui-form-border-active,
-      affects: root,
-      description: Border when focused (focus-within),
-    }
-  - { name: --ui-form-border-disabled, affects: root }
-  - {
-      name: --ui-form-text-value,
+      name: --ui-input-search-value-color-idle,
       affects: input,
       description: Entered value text color,
     }
+  - { name: --ui-input-search-value-color-hover, affects: input }
+  - { name: --ui-input-search-value-color-disabled, affects: input }
   - {
-      name: --ui-form-text-placeholder,
+      name: --ui-input-search-placeholder-color-idle,
       affects: input,
       description: Placeholder text color,
     }
-  - { name: --ui-form-text-disabled, affects: input }
+  - { name: --ui-input-search-placeholder-color-hover, affects: input }
+  - { name: --ui-input-search-placeholder-color-disabled, affects: input }
+  - { name: --ui-input-search-color-idle, affects: input }
+  - { name: --ui-input-search-color-hover, affects: input }
+  - { name: --ui-input-search-color-disabled, affects: input }
+  - { name: --ui-input-search-required-color, affects: label }
+
+  # ── Magnifier icon ──
   - {
-      name: --ui-form-icon-idle,
+      name: --ui-input-search-icon-search-color-idle,
       affects: icon,
-      description: Magnifier / clear icon color,
+      description: Leading magnifier color when idle,
     }
+  - { name: --ui-input-search-icon-search-color-hover, affects: icon }
   - {
-      name: --ui-form-icon-disabled,
+      name: --ui-input-search-icon-search-color-disabled,
       affects: icon,
-      description: Icon color when disabled,
+      description: Magnifier color when disabled,
     }
+
+  # ── Clear (×) icon ──
+  - {
+      name: --ui-input-search-clear-icon-color,
+      affects: icon,
+      description: Trailing clear-button icon color,
+    }
+
   - { name: --ui-focus-primary, affects: root, description: Focus ring color }

@@ -21,7 +21,7 @@ function LabeledRadio({
   disabled?: boolean;
 }) {
   return (
-    <label className="inline-flex items-center gap-[var(--ui-form-units-gap-lg)] text-sm text-[var(--ui-form-text-label)]">
+    <label className="inline-flex items-center gap-[var(--ui-radio-global-container-gap)] text-sm text-[var(--ui-radio-global-label-color)]">
       <Radio value={value} disabled={disabled} />
       {children}
     </label>

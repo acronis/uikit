@@ -1,0 +1,9 @@
+spec_version: '1.0'
+component: InputTextArea
+name: input-text-area
+status: ready
+category: forms
+description: >-
+  A multiline text field for entering and editing longer free-text (notes,
+  comments, descriptions). Grows with vertical resize. States: idle, hover,
+  focus, filled, error (via aria-invalid), and disabled.

@@ -18,14 +18,15 @@ parts:
   - id: item
     description: >-
       A single option — a 16px round control (span role="radio") with idle /
-      hover / active / disabled border + background from the `--ui-form-*`
-      tokens (Base UI Radio.Root). Each item carries a `value`.
+      hover / active / disabled border + background from the
+      `--ui-radio-{unchecked,checked}-box[-border-color]-*` tokens (Base UI
+      Radio.Root). Each item carries a `value`.
     element: span
   - id: indicator
     description: >-
       The 8px inner dot shown when the item is selected (Base UI
-      Radio.Indicator). `--ui-form-circle-active`, or `--ui-form-circle-disabled`
-      when disabled.
+      Radio.Indicator). `--ui-radio-checked-icon-color-idle`, or
+      `--ui-radio-checked-icon-color-disabled` when disabled.
     element: span
     optional: true
     visible_when: the item is the selected one

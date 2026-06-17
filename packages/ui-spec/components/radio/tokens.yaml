@@ -3,47 +3,49 @@ component: RadioGroup
 
 # References only. Values live in @acronis-platform/tokens-pd (generated from
 # @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
-# Radio uses the shared `--ui-form-*` tier plus the semantic focus-ring token.
+# Radio uses its dedicated `--ui-radio-*` tier (which mirrors `--ui-checkbox-*`):
+# two box state-groups (unchecked / checked), each with per-interaction fill,
+# border, and dot colors, plus global geometry and the label/description text.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - {
-      name: --ui-form-background-idle,
-      affects: item,
-      description: Circle fill when unselected,
-    }
-  - {
-      name: --ui-form-background-active,
-      affects: item,
-      description: Circle fill when selected,
-    }
-  - { name: --ui-form-background-disabled, affects: item }
-  - {
-      name: --ui-form-border-idle,
-      affects: item,
-      description: Border when unselected,
-    }
-  - {
-      name: --ui-form-border-hover,
-      affects: item,
-      description: Border on hover,
-    }
-  - {
-      name: --ui-form-border-active,
-      affects: item,
-      description: Border when selected,
-    }
-  - { name: --ui-form-border-disabled, affects: item }
-  - {
-      name: --ui-form-circle-active,
-      affects: indicator,
-      description: Inner dot color when selected,
-    }
-  - {
-      name: --ui-form-circle-disabled,
-      affects: indicator,
-      description: Inner dot color when disabled,
-    }
+  # ── Global geometry / layout ──
+  - { name: --ui-radio-global-box-size, affects: item }
+  - { name: --ui-radio-global-box-border-radius, affects: item }
+  - { name: --ui-radio-global-box-border-width, affects: item }
+  - { name: --ui-radio-global-box-margin-t, affects: item }
+  - { name: --ui-radio-global-container-gap, affects: container }
+  - { name: --ui-radio-global-container-width-min, affects: container }
+  - { name: --ui-radio-global-container-width-max, affects: container }
+  - { name: --ui-radio-global-container-content-gap, affects: content }
+  - { name: --ui-radio-global-container-content-width-max, affects: content }
+  - { name: --ui-radio-global-label-color, affects: label }
+  - { name: --ui-radio-global-description-color, affects: description }
+
+  # ── unchecked box (fill + border) ──
+  - { name: --ui-radio-unchecked-box-color-idle, affects: item }
+  - { name: --ui-radio-unchecked-box-color-hover, affects: item }
+  - { name: --ui-radio-unchecked-box-color-active, affects: item }
+  - { name: --ui-radio-unchecked-box-color-disabled, affects: item }
+  - { name: --ui-radio-unchecked-box-border-color-idle, affects: item }
+  - { name: --ui-radio-unchecked-box-border-color-hover, affects: item }
+  - { name: --ui-radio-unchecked-box-border-color-active, affects: item }
+  - { name: --ui-radio-unchecked-box-border-color-disabled, affects: item }
+
+  # ── checked box (fill + border + dot) ──
+  - { name: --ui-radio-checked-box-color-idle, affects: item }
+  - { name: --ui-radio-checked-box-color-hover, affects: item }
+  - { name: --ui-radio-checked-box-color-active, affects: item }
+  - { name: --ui-radio-checked-box-color-disabled, affects: item }
+  - { name: --ui-radio-checked-box-border-color-idle, affects: item }
+  - { name: --ui-radio-checked-box-border-color-hover, affects: item }
+  - { name: --ui-radio-checked-box-border-color-active, affects: item }
+  - { name: --ui-radio-checked-box-border-color-disabled, affects: item }
+  - { name: --ui-radio-checked-icon-color-idle, affects: indicator }
+  - { name: --ui-radio-checked-icon-color-hover, affects: indicator }
+  - { name: --ui-radio-checked-icon-color-active, affects: indicator }
+  - { name: --ui-radio-checked-icon-color-disabled, affects: indicator }
+
   - {
       name: --ui-focus-primary,
       affects: item,

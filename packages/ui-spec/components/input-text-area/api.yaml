@@ -1,0 +1,85 @@
+spec_version: '1.0'
+component: InputTextArea
+
+# Framework-agnostic contract. Native textarea attributes (placeholder, value,
+# name, required, readonly, rows, maxlength, …) pass through in every framework.
+# See `adapters` for per-framework syntax.
+contract:
+  properties:
+    - name: placeholder
+      type: string
+      required: false
+      description: Example/hint text shown when empty. Not a label substitute.
+    - name: value
+      type: string
+      required: false
+      description: Controlled value. Pair with the change event.
+    - name: default-value
+      type: string
+      required: false
+      description: Initial value when uncontrolled.
+    - name: rows
+      type: number
+      required: false
+      description: >-
+        Initial visible number of text rows. The field can still grow taller via
+        vertical resize; its minimum height is the `box-height-min` token.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables interaction; applies the disabled form tokens.
+    - name: required
+      type: boolean
+      required: false
+      default: false
+      description: Marks the field as required in a form.
+    - name: name
+      type: string
+      required: false
+      description: Form field name submitted with the form.
+    - name: aria-invalid
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Marks the field as invalid. This tier has no error-specific border/fill
+        token, so the border stays at its idle/hover/focus color and only the
+        focus ring switches to `--ui-focus-error`. Set it (with an associated
+        error message via `aria-describedby`) when validation fails.
+
+  events:
+    - name: change
+      payload: string
+      description: >-
+        Fired as the value changes (React: native `onChange`). The new value is
+        on `event.target.value`.
+
+  methods: []
+
+adapters:
+  react:
+    component: InputTextArea
+    status: implemented
+    import: "import { InputTextArea } from '@acronis-platform/ui-react'"
+    example: |
+      <InputTextArea
+        placeholder="Tell us about yourself"
+        value={bio}
+        onChange={(e) => setBio(e.target.value)}
+      />
+
+      {/* Error state */}
+      <InputTextArea aria-invalid aria-describedby="bio-error" />
+  vue:
+    component: AvInputTextArea
+    status: planned
+    import: "import { AvInputTextArea } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvInputTextArea v-model="bio" placeholder="Tell us about yourself" />
+  web-components:
+    element: ui-input-text-area
+    status: planned
+    import: "import '@acronis-platform/ui-wc/input-text-area'"
+    example: |
+      <ui-input-text-area placeholder="Tell us about yourself"></ui-input-text-area>

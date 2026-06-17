@@ -25,13 +25,13 @@ container (owns the selected value) and `Radio` items.
 
 ## States
 
-| State      | How                          | Visual                                       |
-| ---------- | ---------------------------- | -------------------------------------------- |
-| Unselected | default                      | Idle border, white fill, no dot              |
-| Hover      | pointer hover                | `--ui-form-border-hover`                     |
-| Focus      | focus                        | 3px `--ui-focus-primary` ring                |
-| Selected   | group `value` === item value | Active fill + border + dot                   |
-| Disabled   | `disabled` (group or item)   | Faint fill/border, muted dot, not selectable |
+| State      | How                          | Visual                                        |
+| ---------- | ---------------------------- | --------------------------------------------- |
+| Unselected | default                      | Idle border, white fill, no dot               |
+| Hover      | pointer hover                | `--ui-radio-unchecked-box-border-color-hover` |
+| Focus      | focus                        | 3px `--ui-focus-primary` ring                 |
+| Selected   | group `value` === item value | Active fill + border + dot                    |
+| Disabled   | `disabled` (group or item)   | Faint fill/border, muted dot, not selectable  |
 
 ## Quick Example
 
@@ -68,6 +68,6 @@ function PlanPicker() {
 | `index.yaml`       | Identity, status, category, Figma link                      |
 | `anatomy.yaml`     | Root, item + indicator parts, internal value state, states  |
 | `api.yaml`         | Framework-agnostic contract + framework adapters            |
-| `tokens.yaml`      | `--ui-form-*` + focus-ring token references                 |
+| `tokens.yaml`      | `--ui-radio-*` + focus-ring token references                |
 | `behavior.md`      | Given/When/Then behavior scenarios                          |
 | `accessibility.md` | ARIA, keyboard map, screen-reader and contrast requirements |
