@@ -13,7 +13,10 @@
   },
   "assetsGroups": {
     "solid-mono": {
-      "$description": "G1: group inherits pack values as-is; no $type or $values patch needed.",
+      "$values": {
+        "24": { "$rules": ["current-color"] },
+        "16": { "$rules": ["current-color", "scale-16"] }
+      },
       "assets": {
         "Acronis": {
           "values": {
@@ -1095,7 +1098,6 @@
       }
     },
     "solid-multi": {
-      "$description": "G2: $values patch -- overrides 16 with a different rule chain, adds 32.",
       "assets": {
         "AcronisAiMulti": {
           "values": {
@@ -1120,11 +1122,9 @@
       }
     },
     "stroke-mono": {
-      "$description": "G3: null in $values removes the 16 variant from this group's effective set.",
       "$values": {
-        "16": {
-          "$rules": ["stroke-1-6"]
-        }
+        "24": { "$rules": ["current-color"] },
+        "16": { "$rules": ["current-color", "stroke-1-6"] }
       },
       "assets": {
         "AppWindow": {
@@ -8838,7 +8838,6 @@
       }
     },
     "stroke-multi": {
-      "$description": "G4: $type override to raster; combines with $values to drop 16.",
       "$values": {
         "16": {
           "$rules": ["scale-16", "stroke-1-6"]
