@@ -46,6 +46,30 @@ Parse the URL: `figma.com/design/:fileKey/…?node-id=1017-2852` →
 
 ---
 
+## Phase 0 — Readiness gate (prerequisite)
+
+Before reading the design, run the [`/component-readiness`](../component-readiness/SKILL.md)
+gate. It is **read-only** and catches the silent failures this recipe is most
+exposed to — dead `var(--ui-*)` refs and un-imported token tiers (see Phase 2).
+
+```bash
+bash .claude/skills/component-readiness/scripts/audit.sh <ComponentName>   # or `all`
+```
+
+- **`--update` an existing component:** run the gate on **that component first**.
+  A `DRIFT` verdict means the update must include the token rewire (dead names →
+  current `tokens-pd` tier, missing `@import` in `styles/index.css`), not just the
+  design refresh. Don't layer new work on a silently-broken baseline.
+- **New component:** run it on `all` (or skip — there's nothing to audit yet) to
+  confirm you're not about to build alongside pre-existing drift you'd be blamed
+  for. `INCOMPLETE`/`READY` are fine to proceed on; resolve any `DRIFT` rows or
+  flag them to the user.
+
+This gate fills the issue-#297 gap: `ui-spec test` validates token-name _shape_
+but never that the names _exist_ in `tokens-pd`, so drift otherwise passes CI.
+
+---
+
 ## Phase 1 — Read the design (Figma MCP)
 
 Call these (no skill prerequisite for reads):
