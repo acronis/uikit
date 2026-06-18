@@ -108,7 +108,7 @@ export default {
         "sidebar-secondary-global-container-border-width": "1px",
         "sidebar-secondary-global-container-footer-border-width": "1px",
         "sidebar-secondary-global-container-header-padding-x": "16px",
-        "sidebar-secondary-global-container-header-padding-y": "16px",
+        "sidebar-secondary-global-container-header-padding-y": "12px",
         "sidebar-secondary-global-section-list-gap": "0px",
         "sidebar-secondary-collapsed-container-width": "48px",
         "sidebar-secondary-collapsed-container-content-gap": "4px",

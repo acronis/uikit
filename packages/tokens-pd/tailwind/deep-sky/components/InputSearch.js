@@ -39,7 +39,7 @@ export default {
         "input-search-label-text-style": [
           "14px",
           {
-            "lineHeight": "24px",
+            "lineHeight": "16px",
             "letterSpacing": "0px",
             "fontWeight": "400"
           }

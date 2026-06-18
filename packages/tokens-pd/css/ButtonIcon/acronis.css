@@ -15,7 +15,7 @@
   --ui-button-icon-global-icon-color-disabled: light-dark(rgb(214 228 245), rgb(6 54 121));
   --ui-button-icon-global-icon-color-hover: light-dark(rgb(23 99 207), rgb(48 125 232));
   --ui-button-icon-global-icon-color-idle: light-dark(rgb(23 99 207), rgb(48 125 232));
-  --ui-button-icon-global-icon-size: 16px;
+  --ui-button-icon-global-icon-size: 24px;
   --ui-button-icon-secondary-container-border-color-active: light-dark(transparent, transparent);
   --ui-button-icon-secondary-container-border-color-disabled: light-dark(rgb(214 228 245), rgb(6 54 121));
   --ui-button-icon-secondary-container-border-color-hover: light-dark(transparent, transparent);

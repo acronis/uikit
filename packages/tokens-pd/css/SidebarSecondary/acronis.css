@@ -22,7 +22,7 @@
   --ui-sidebar-secondary-global-container-footer-border-color: light-dark(rgb(214 228 245), rgb(6 54 121));
   --ui-sidebar-secondary-global-container-footer-border-width: 1px;
   --ui-sidebar-secondary-global-container-header-padding-x: 16px;
-  --ui-sidebar-secondary-global-container-header-padding-y: 16px;
+  --ui-sidebar-secondary-global-container-header-padding-y: 12px;
   --ui-sidebar-secondary-global-header-label-color: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-sidebar-secondary-global-section-list-gap: 0px;
   --ui-sidebar-secondary-menu-item-extras-global-container-gap: 8px;
