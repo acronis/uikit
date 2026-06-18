@@ -12,8 +12,8 @@ schematic: |
   | popup: <div role=tooltip>   (portaled, positioned)
   |   label               |
   +-----------------------+
-   popup -> dark bubble (--ui-tooltip-background)
-   label -> hint text (--ui-tooltip-label)
+   popup -> dark bubble (--ui-tooltip-container-color)
+   label -> hint text (--ui-tooltip-label-color)
 
 root:
   element: button
@@ -26,12 +26,12 @@ parts:
   - id: popup
     description: >-
       The floating bubble (`role="tooltip"`), portaled and positioned relative to
-      the trigger. Dark, ~90%-opaque background (`--ui-tooltip-background`), 4px
+      the trigger. Dark, ~90%-opaque background (`--ui-tooltip-container-color`), 4px
       radius, 12/8px padding, 48–256px wide. No arrow.
     element: div
   - id: label
     description: >-
-      The hint text inside the popup — 12px medium, `--ui-tooltip-label`.
+      The hint text inside the popup — 12px medium, `--ui-tooltip-label-color`.
 
 layout:
   type: flex

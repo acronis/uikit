@@ -8,7 +8,7 @@
 **When** it renders
 **Then** the input exposes `role="searchbox"` (native `type="search"`)
 **And** a leading magnifier icon is shown
-**And** the placeholder (if set) uses `--ui-form-text-placeholder`
+**And** the placeholder (if set) uses `--ui-input-search-placeholder-color-idle`
 
 ---
 
@@ -46,7 +46,7 @@
 
 **Given** an enabled Search
 **When** the pointer hovers the box
-**Then** the border uses `--ui-form-border-hover`
+**Then** the border uses `--ui-input-search-border-color-hover`
 
 ### Focus
 

@@ -7,7 +7,7 @@
 **Given** an Input with no value
 **When** it renders
 **Then** it exposes `role="textbox"` with `type="text"` by default
-**And** the placeholder (if set) is shown in `--ui-form-text-placeholder`
+**And** the placeholder (if set) is shown in `--ui-input-text-global-placeholder-color-idle`
 
 ### Honors a custom type
 
@@ -41,20 +41,20 @@
 
 **Given** an enabled, valid Input
 **When** the pointer hovers it
-**Then** the border uses `--ui-form-border-hover`
+**Then** the border uses `--ui-input-text-normal-box-border-color-hover`
 
 ### Focus
 
 **Given** an Input
 **When** it receives focus
-**Then** the border uses `--ui-form-border-active`
+**Then** the border uses `--ui-input-text-normal-box-border-color-hover`
 **And** a 3px `--ui-focus-primary` ring is shown
 
 ### Error (aria-invalid)
 
 **Given** an Input with `aria-invalid`
 **When** it renders
-**Then** the border uses `--ui-form-border-error`
+**Then** the border uses `--ui-input-text-error-msg-box-border-color-idle`
 **And** on focus the ring uses `--ui-focus-error` (not the primary ring)
 **And** the error styling overrides the hover/focus border
 

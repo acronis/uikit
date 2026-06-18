@@ -27,5 +27,5 @@ Provided by the Base UI Tooltip primitive; verify these hold after styling.
 
 ## Contrast
 
-- `--ui-tooltip-label` on `--ui-tooltip-background` meets contrast; the bubble's
+- `--ui-tooltip-label-color` on `--ui-tooltip-container-color` meets contrast; the bubble's
   ~90% opacity keeps text legible over varied backgrounds.

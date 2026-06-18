@@ -55,7 +55,7 @@
 
 **Given** an enabled Checkbox
 **When** the pointer hovers it
-**Then** the border uses `--ui-form-border-hover`
+**Then** the border uses `--ui-checkbox-unchecked-box-border-color-hover`
 
 ### Focus
 
@@ -67,8 +67,8 @@
 
 **Given** a checked or indeterminate Checkbox
 **When** it renders
-**Then** the box fills with `--ui-form-background-active` and the border with
-`--ui-form-border-active`
+**Then** the box fills with `--ui-checkbox-checked-box-color-idle` and the border with
+`--ui-checkbox-checked-box-border-color-idle`
 
 ---
 

@@ -5,7 +5,7 @@ schematic: |
   +-------------------------------------------+
   | (icon)  input text / placeholder   (clear)|   root: <div> (the box)
   +-------------------------------------------+
-   icon  = leading magnifier (--ui-form-icon-idle)
+   icon  = leading magnifier (--ui-input-search-icon-search-color-idle)
    input = borderless <input type="search"> (role="searchbox")
    clear = trailing × button, shown once there's a value
 
@@ -19,8 +19,8 @@ root:
 parts:
   - id: icon
     description: >-
-      Leading magnifier (SearchIcon). `--ui-form-icon-idle`, or
-      `--ui-form-icon-disabled` when the field is disabled.
+      Leading magnifier (SearchIcon). `--ui-input-search-icon-search-color-idle`, or
+      `--ui-input-search-icon-search-color-disabled` when the field is disabled.
     element: svg
   - id: input
     description: Borderless native `<input type="search">` (role="searchbox").

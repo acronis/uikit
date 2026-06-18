@@ -6,14 +6,14 @@ schematic: |
   | Placeholder / Value           |   root: <input> (role="textbox")
   +-------------------------------+
    border idle / hover / active(focus) / error / disabled
-   text -> --ui-form-text-value ; placeholder -> --ui-form-text-placeholder
+   text -> --ui-input-text-global-value-color-idle ; placeholder -> --ui-input-text-global-placeholder-color-idle
 
 root:
   element: input
   role: textbox
   description: >-
     Native single-line text input. Geometry (32px tall, 12px x-padding, 4px
-    radius, 1px border) and all colors come from the `--ui-form-*` tokens; the
+    radius, 1px border) and all colors come from the `--ui-input-text-*` tokens; the
     focus ring uses `--ui-focus-primary` (and `--ui-focus-error` when invalid).
 
 # A bare input has no named sub-parts — the placeholder/value live on the native

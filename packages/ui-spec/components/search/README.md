@@ -28,7 +28,7 @@ filtering a table, or global search).
 | State    | How           | Visual                                         |
 | -------- | ------------- | ---------------------------------------------- |
 | Idle     | default       | Idle border, magnifier + placeholder           |
-| Hover    | pointer hover | `--ui-form-border-hover`                       |
+| Hover    | pointer hover | `--ui-input-search-border-color-hover`         |
 | Focus    | input focus   | Active border + 3px `--ui-focus-primary` ring  |
 | Filled   | has a value   | Value text + clear (×) button                  |
 | Disabled | `disabled`    | Faint tokens; no clear button; not interactive |
@@ -61,6 +61,6 @@ function TableFilter() {
 | `index.yaml`       | Identity, status, category, dependencies, Figma link        |
 | `anatomy.yaml`     | Root, icon / input / clear parts, states                    |
 | `api.yaml`         | Framework-agnostic contract + framework adapters            |
-| `tokens.yaml`      | `--ui-form-*` + focus-ring token references                 |
+| `tokens.yaml`      | `--ui-input-search-*` + focus-ring token references         |
 | `behavior.md`      | Given/When/Then behavior scenarios                          |
 | `accessibility.md` | ARIA, keyboard map, screen-reader and contrast requirements |

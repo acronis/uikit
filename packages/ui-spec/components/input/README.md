@@ -20,7 +20,7 @@ and, when validation fails, an associated error message.
 | State    | How            | Visual                                          |
 | -------- | -------------- | ----------------------------------------------- |
 | Idle     | default        | Idle border, white fill                         |
-| Hover    | pointer hover  | `--ui-form-border-hover`                        |
+| Hover    | pointer hover  | `--ui-input-text-normal-box-border-color-hover` |
 | Focus    | focus          | Active border + 3px `--ui-focus-primary` ring   |
 | Error    | `aria-invalid` | Error border + `--ui-focus-error` ring on focus |
 | Disabled | `disabled`     | Faint fill/border, muted text, not interactive  |
@@ -67,6 +67,6 @@ Error state:
 | `index.yaml`       | Identity, status, category, Figma link                      |
 | `anatomy.yaml`     | Root element/role, pseudo + prop states                     |
 | `api.yaml`         | Framework-agnostic contract + framework adapters            |
-| `tokens.yaml`      | `--ui-form-*` + focus-ring token references                 |
+| `tokens.yaml`      | `--ui-input-text-*` + focus-ring token references           |
 | `behavior.md`      | Given/When/Then behavior scenarios                          |
 | `accessibility.md` | ARIA, keyboard map, screen-reader and contrast requirements |

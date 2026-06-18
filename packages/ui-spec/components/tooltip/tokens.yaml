@@ -6,21 +6,25 @@ source: '@acronis-platform/tokens-pd'
 
 tokens:
   - {
-      name: --ui-tooltip-background,
+      name: --ui-tooltip-container-color,
       affects: popup,
       description: Bubble background (dark ~90% opaque),
     }
-  - { name: --ui-tooltip-label, affects: label, description: Hint text color }
-  - { name: --ui-tooltip-global-padding-x, affects: popup }
-  - { name: --ui-tooltip-global-padding-y, affects: popup }
-  - { name: --ui-tooltip-global-radius, affects: popup }
   - {
-      name: --ui-tooltip-global-width-min,
+      name: --ui-tooltip-label-color,
+      affects: label,
+      description: Hint text color,
+    }
+  - { name: --ui-tooltip-container-padding-x, affects: popup }
+  - { name: --ui-tooltip-container-padding-y, affects: popup }
+  - { name: --ui-tooltip-container-border-radius, affects: popup }
+  - {
+      name: --ui-tooltip-container-width-min,
       affects: popup,
       description: Minimum width (48px),
     }
   - {
-      name: --ui-tooltip-global-width-max,
+      name: --ui-tooltip-container-width-max,
       affects: popup,
       description: Maximum width (256px),
     }
