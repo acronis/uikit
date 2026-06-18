@@ -120,12 +120,20 @@
         "platforms": ["PD"]
       },
       "1": {
+        "$extensions": {
+          "com.figma.scopes": ["LETTER_SPACING", "FONT_VARIATIONS"],
+          "com.figma.variableId": "VariableID:1727:2410"
+        },
         "$value": { "unit": "px", "value": 1 },
         "platforms": ["PD"]
       },
       "$description": "Derived from Figma Text Styles; no source Variable. Refresh by re-pulling styles.json.",
       "$type": "dimension",
       "0-3": {
+        "$extensions": {
+          "com.figma.scopes": ["LETTER_SPACING", "FONT_VARIATIONS"],
+          "com.figma.variableId": "VariableID:1727:2408"
+        },
         "$value": { "unit": "px", "value": 0.3 },
         "platforms": ["PD"]
       }

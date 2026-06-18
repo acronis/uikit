@@ -173,6 +173,13 @@
         }
       },
       "1": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "LETTER_SPACING",
+            "FONT_VARIATIONS"
+          ],
+          "com.figma.variableId": "VariableID:1727:2410"
+        },
         "$type": "dimension",
         "$value": {
           "unit": "px",
@@ -182,6 +189,13 @@
       "$description": "Derived from Figma Text Styles; no source Variable. Refresh by re-pulling styles.json.",
       "$type": "dimension",
       "0-3": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "LETTER_SPACING",
+            "FONT_VARIATIONS"
+          ],
+          "com.figma.variableId": "VariableID:1727:2408"
+        },
         "$type": "dimension",
         "$value": {
           "unit": "px",

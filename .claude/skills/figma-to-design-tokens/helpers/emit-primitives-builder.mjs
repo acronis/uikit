@@ -156,6 +156,20 @@ export class PrimitivesEmitter {
   }
 
   #emitLetterSpacing(out) {
+    // Build a value→Font-collection-variable lookup so we can wire in
+    // variableId + scopes when the Font collection has an explicit variable
+    // for a given letter-spacing value.
+    const fontLsVars = this.#snapshot.variables?.font?.['letter-spacing'] ?? {};
+    const valueToFontVar = {};
+    for (const leaf of Object.values(fontLsVars)) {
+      if (leaf.$type !== 'dimension') continue;
+      const val = ColorUtils.round(Number(leaf.$value), 4);
+      valueToFontVar[val] = {
+        variableId: leaf.$extensions?.['com.figma.variableId'],
+        scopes: leaf.$extensions?.['com.figma.scopes'],
+      };
+    }
+
     const textStyles = this.#snapshot.styles?.text ?? [];
     const lsValues = new Set();
     for (const s of textStyles) {
@@ -166,9 +180,14 @@ export class PrimitivesEmitter {
       lsValues.add(ColorUtils.round(ls.value, 4));
     }
     for (const px of [...lsValues].sort((a, b) => a - b)) {
+      const fontVar = valueToFontVar[px];
+      const ext = {};
+      if (fontVar?.variableId) ext['com.figma.variableId'] = fontVar.variableId;
+      if (fontVar?.scopes) ext['com.figma.scopes'] = fontVar.scopes;
       TreeUtils.setPath(out, ['font', 'letter-spacing', TypographyMapper.lsSlug(px)], {
         $value: { value: px, unit: 'px' },
         platforms: ['PD'],
+        ...(Object.keys(ext).length ? { $extensions: ext } : {}),
       });
     }
   }
