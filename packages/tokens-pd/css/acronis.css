@@ -256,6 +256,14 @@
   letter-spacing: 0px;
 }
 
+.ui-typography-headings-title-accent {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  letter-spacing: 0px;
+}
+
 .ui-typography-link-default {
   font-family: Inter, system-ui, sans-serif;
   font-size: 14px;

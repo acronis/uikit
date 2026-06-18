@@ -976,8 +976,7 @@
       "brand": {
         "$extensions": {
           "com.figma.scopes": [
-            "STROKE_COLOR",
-            "EFFECT_COLOR"
+            "STROKE_COLOR"
           ],
           "com.figma.variableId": "VariableID:1838:1394"
         },
@@ -987,8 +986,7 @@
       "error": {
         "$extensions": {
           "com.figma.scopes": [
-            "STROKE_COLOR",
-            "EFFECT_COLOR"
+            "STROKE_COLOR"
           ],
           "com.figma.variableId": "VariableID:1828:1379"
         },
@@ -998,8 +996,7 @@
       "primary": {
         "$extensions": {
           "com.figma.scopes": [
-            "STROKE_COLOR",
-            "EFFECT_COLOR"
+            "STROKE_COLOR"
           ],
           "com.figma.variableId": "VariableID:1828:1378"
         },
@@ -1009,8 +1006,7 @@
       "secondary": {
         "$extensions": {
           "com.figma.scopes": [
-            "STROKE_COLOR",
-            "EFFECT_COLOR"
+            "STROKE_COLOR"
           ],
           "com.figma.variableId": "VariableID:1838:1393"
         },
@@ -1214,7 +1210,8 @@
         "brand": {
           "$extensions": {
             "com.figma.scopes": [
-              "ALL_SCOPES"
+              "SHAPE_FILL",
+              "STROKE_COLOR"
             ],
             "com.figma.variableId": "VariableID:2463:54749"
           },
@@ -1995,6 +1992,19 @@
           "fontFamily": "{font.font-family.default}",
           "fontSize": "{font.font-size.24}",
           "fontWeight": "{font.font-weight.regular}",
+          "letterSpacing": "{font.letter-spacing.0}",
+          "lineHeight": "{font.line-height.32}"
+        }
+      },
+      "title-accent": {
+        "$extensions": {
+          "com.figma.styleId": "S:0a5eaafe0eae33bf024e0bcbff020b46d4730192,"
+        },
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{font.font-family.default}",
+          "fontSize": "{font.font-size.24}",
+          "fontWeight": "{font.font-weight.semibold}",
           "letterSpacing": "{font.letter-spacing.0}",
           "lineHeight": "{font.line-height.32}"
         }

@@ -176,6 +176,7 @@ export default {
         "typography-headings-display": "Inter, system-ui, sans-serif",
         "typography-headings-lead": "Inter, system-ui, sans-serif",
         "typography-headings-title": "Inter, system-ui, sans-serif",
+        "typography-headings-title-accent": "Inter, system-ui, sans-serif",
         "typography-link-default": "Inter, system-ui, sans-serif",
         "typography-link-default-underline": "Inter, system-ui, sans-serif",
         "typography-link-strong": "Inter, system-ui, sans-serif",
@@ -278,6 +279,14 @@ export default {
             "lineHeight": "32px",
             "letterSpacing": "0px",
             "fontWeight": "400"
+          }
+        ],
+        "typography-headings-title-accent": [
+          "24px",
+          {
+            "lineHeight": "32px",
+            "letterSpacing": "0px",
+            "fontWeight": "600"
           }
         ],
         "typography-link-default": [
