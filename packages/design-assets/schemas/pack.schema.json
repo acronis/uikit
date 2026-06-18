@@ -5,7 +5,8 @@
   "description": "Pack manifest for visual assets. DTCG-divergent: borrows $-prefixed vocabulary, project fields live at top-level keys. See ../context/spec.md.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "name", "version", "$type", "values", "assets"],
+  "required": ["$schema", "name", "version", "$type", "values"],
+  "anyOf": [{ "required": ["assets"] }, { "required": ["assetsGroups"] }],
   "properties": {
     "$schema": {
       "type": "string",
@@ -33,7 +34,14 @@
       "type": "object",
       "propertyNames": { "pattern": "^[A-Za-z0-9][A-Za-z0-9-]*$" },
       "additionalProperties": { "$ref": "#/$defs/Asset" },
-      "description": "Flat map of asset id -> Asset. Categorization lives in metadata, not in structure. Asset ids MAY start with a digit (illustrations pack uses 4-digit catalog ids)."
+      "description": "Flat map of asset id -> Asset. Categorization lives in metadata, not in structure. Asset ids MAY start with a digit (illustrations pack uses 4-digit catalog ids). Omit when the pack uses only assetsGroups."
+    },
+    "assetsGroups": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^[a-z][a-z0-9-]*$" },
+      "additionalProperties": { "$ref": "#/$defs/AssetsGroup" },
+      "description": "Optional map of group-id -> AssetsGroup. Organises assets into named subsets that inherit the pack-level $type and values but may override either via group-level $type / $values. Packs that omit this field and use only the flat assets map are fully backward-compatible."
     }
   },
   "$defs": {
@@ -189,6 +197,43 @@
           "description": "Ordered list of rule ids (declared under ./rules/) to apply, left to right, to the resolved source (the `$from` sibling, or the effective canonical when `$from` is omitted)."
         }
       }
+    },
+    "AssetsGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assets"],
+      "properties": {
+        "$type": {
+          "$ref": "#/$defs/AssetType",
+          "description": "Optional type override for all assets in this group. Overrides the pack-level $type for this group only."
+        },
+        "$values": {
+          "$ref": "#/$defs/ValuesGroupPatch",
+          "description": "RFC 7396 merge-patch applied to the pack-level values. Absent keys inherit unchanged; a non-null entry overrides or adds that variant; a null entry (the null branch of VariantValue) removes the variant from this group's effective values set."
+        },
+        "$description": {
+          "type": "string",
+          "description": "One-line human summary of the group."
+        },
+        "assets": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "pattern": "^[A-Za-z0-9][A-Za-z0-9-]*$" },
+          "additionalProperties": { "$ref": "#/$defs/Asset" },
+          "description": "Flat map of asset id -> Asset within this group. Same shape as the pack-level assets map."
+        }
+      },
+      "description": "A named group of assets that inherits the pack-level $type and values. Override either with $type / $values at the group level."
+    },
+    "ValuesGroupPatch": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z0-9][a-z0-9-]*$",
+        "description": "Variant id to patch."
+      },
+      "additionalProperties": { "$ref": "#/$defs/VariantValue" },
+      "description": "RFC 7396 merge-patch for the pack-level values map. Absent keys inherit from the pack unchanged. A null entry removes the variant from this group's effective values set; a non-null VariantValue entry overrides or adds that variant. Must have at least one entry."
     },
     "Extensions": {
       "type": "object",
