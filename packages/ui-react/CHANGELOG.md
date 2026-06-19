@@ -1,5 +1,12 @@
 # @acronis-platform/ui-react
 
+## 0.21.1
+
+### Patch Changes
+
+- Updated dependencies [[`0d66857`](https://github.com/acronis/uikit/commit/0d66857127ac07df5ae5cbe95fbad6c7bc81e76d)]:
+  - @acronis-platform/tokens-pd@1.5.0
+
 ## 0.21.0
 
 ### Minor Changes
