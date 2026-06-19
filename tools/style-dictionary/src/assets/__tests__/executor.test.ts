@@ -12,8 +12,8 @@ const stroke16 = rules.get('stroke-1-6')!;
 const scale96 = rules.get('scale-96')!;
 
 const src = (rel: string): string => readSvg(resolveBinary(rel).absPath);
-const BAN = './packs/icons-stroke-mono/ban-24.svg';
-const DOT = './packs/icons-stroke-multi/dot-blue-solid-24.svg';
+const BAN = './packs/icons-stroke-mono/CircleBan.svg';
+const DOT = './packs/icons-stroke-multi/DotBlue.svg';
 const ILLU = './packs/illustrations/0001-full-image-backup-48.svg';
 
 describe('executor', () => {

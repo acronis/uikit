@@ -9,7 +9,7 @@ import { readSvg, resolveBinary } from '../read';
 
 const src = (rel: string): string => readSvg(resolveBinary(rel).absPath);
 const ILLU = './packs/illustrations/0001-full-image-backup-48.svg';
-const DOT = './packs/icons-stroke-multi/dot-blue-solid-24.svg';
+const DOT = './packs/icons-stroke-multi/DotBlue.svg';
 
 describe('svgo config', () => {
   it('keeps the viewBox (removeViewBox stays off in v4)', () => {
