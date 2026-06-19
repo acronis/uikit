@@ -45,13 +45,13 @@ Do not load files that aren't listed; do not skip files that are. When a new
 file lands under `./context/`, add a row here in the same change — an unlisted
 file is invisible to the agent.
 
-| When the task involves…                                                                                                                                                          | Load                                           |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| The normative contract — DTCG divergence, `$`-prefix discipline, the R1–R16 cases, invariants, the resolution algorithm                                                          | [`context/spec.md`](./context/spec.md)         |
-| Grounding vocabulary (Schema, Rule, Pack, Asset, Variant, Canonical/Default, Value: source/computed, …)                                                                          | [`context/glossary.md`](./context/glossary.md) |
-| Writing/reading a manifest — pack root + asset shape, the `values` map (`$file` / `$rules` (+`$from`) / `"default"` canonical / `null`), per-key merge, metadata, platform scope | [`context/manifest.md`](./context/manifest.md) |
-| The pack catalog, on-disk binary layout, and id/filename/`$type` naming                                                                                                          | [`context/packs.md`](./context/packs.md)       |
-| Adding or changing a rule under `./rules/` — declaration format (execution out of scope)                                                                                         | [`context/rules.md`](./context/rules.md)       |
+| When the task involves…                                                                                                                                                                                                                    | Load                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| The normative contract — DTCG divergence, `$`-prefix discipline, the R1–R16 cases, invariants, the resolution algorithm                                                                                                                    | [`context/spec.md`](./context/spec.md)                     |
+| Grounding vocabulary (Schema, Rule, Pack, Asset, Variant, Canonical/Default, Value: source/computed, AssetsGroup, `$values` patch, …)                                                                                                      | [`context/glossary.md`](./context/glossary.md)             |
+| Writing/reading a manifest — pack root, asset groups (`assetsGroups` / `$values` patch), asset shape, `values` map (`$file` / `$rules` / `$from` / `null`), merge semantics, metadata, platform scope, pack catalog, binary layout, naming | [`context/manifest-pack.md`](./context/manifest-pack.md)   |
+| Adding or changing a rule under `./rules/` — declaration format, `kind` semantics (`scale`/`stroke`/`color`), target shape by kind                                                                                                         | [`context/manifest-rules.md`](./context/manifest-rules.md) |
+| Sizing a pack change — whether a change is major / minor / patch, and how to record it                                                                                                                                                     | [`context/versioning.md`](./context/versioning.md)         |
 
 ## Third-party content & licensing
 

@@ -20,7 +20,7 @@ This project's manifests are **NOT** DTCG-conformant. They borrow DTCG-style `$`
 
 Every Pack manifest under `../packs/` ends in plain `.json` (not `.tokens.json`). The filename alone is NOT a DTCG-skip signal — discrimination is by `$schema`.
 
-Every manifest MUST start with `"$schema": "../schemas/pack.schema.json"`. That URI is the canonical discriminator: unique to this project, distinct from `https://www.designtokens.org/schemas/...`, and a DTCG token consumer can refuse-by-schema without inspecting any other key. A DTCG token consumer that opens a pack manifest MUST look at `$schema` and refuse to interpret the file as DTCG when it points at this project's schema. The project does NOT publish a DTCG-conformant schema and MUST NOT use the W3C URI. (Every rule file likewise MUST start with `"$schema": "../schemas/rule.schema.json"` — see [`rules.md`](./rules.md).)
+Every manifest MUST start with `"$schema": "../schemas/pack.schema.json"`. That URI is the canonical discriminator: unique to this project, distinct from `https://www.designtokens.org/schemas/...`, and a DTCG token consumer can refuse-by-schema without inspecting any other key. A DTCG token consumer that opens a pack manifest MUST look at `$schema` and refuse to interpret the file as DTCG when it points at this project's schema. The project does NOT publish a DTCG-conformant schema and MUST NOT use the W3C URI. (Every rule file likewise MUST start with `"$schema": "../schemas/rule.schema.json"` — see [`rules.md`](./manifest-rules.md).)
 
 ### How the shape diverges
 
@@ -37,7 +37,7 @@ Every manifest MUST start with `"$schema": "../schemas/pack.schema.json"`. That 
 
 ### Same-asset references — `$from`, not an alias
 
-This project coins NO alias syntax. DTCG aliases (`{group.token}`) are absolute paths into a token tree; assets have nothing to point at across files, so there is no `{…}` form at all. A computed variant names its source sibling with `$from: "<id>"` — a literal variant id (e.g., `"24"`, `"48"`, `"dark"`) looked up on the **same asset**. Omit `$from` to compute from the effective canonical; this is the common case, and it lets a Pack-level shared computation late-bind to each consuming Asset's own canonical. `$from` can only ever name a sibling of the same asset — there is no cross-asset, no cross-pack reference. See [`manifest.md`](./manifest.md).
+This project coins NO alias syntax. DTCG aliases (`{group.token}`) are absolute paths into a token tree; assets have nothing to point at across files, so there is no `{…}` form at all. A computed variant names its source sibling with `$from: "<id>"` — a literal variant id (e.g., `"24"`, `"48"`, `"dark"`) looked up on the **same asset**. Omit `$from` to compute from the effective canonical; this is the common case, and it lets a Pack-level shared computation late-bind to each consuming Asset's own canonical. `$from` can only ever name a sibling of the same asset — there is no cross-asset, no cross-pack reference. See [`manifest.md`](./manifest-pack.md).
 
 ### The canonical — an inline `"default": true` flag
 
@@ -220,7 +220,7 @@ The design MUST NOT widen the spec to include any of the following. Each is defe
 - **Cross-Pack references.** Packs are independent units. No `{icons-solid-mono.add.24}`.
 - **Per-Variant metadata.** `category`, `tags`, `legacyNames`, `platforms` are per-Asset only. A single Asset cannot have one `category` for its `16` Variant and another for its `32`.
 - **Per-platform Variants.** An Asset cannot ship a different binary for `WEB` vs `PD` at the same Variant. Authoring two Assets is the workaround.
-- **Rule execution — the resolution≠execution boundary.** This spec covers **resolution**: parsing a manifest, merging pack and asset values, picking the canonical, and resolving each Variant to either a source binary or a derivation plan (`source + ordered rule ids`). It does **not** cover **rule execution** — the transform a Rule performs on a binary (how `scale-96` resizes an SVG, how `stroke-2-5` rewrites stroke widths). Rules are declared under [`rules.md`](./rules.md) and describe intent (`{kind: "scale", target: {value: 16, unit: "px"}}`); the executor that reads a Rule and transforms a binary is a separate component. A renderer produces, for each computed Variant, a **derivation plan** — the resolved source binary plus the ordered list of rule ids — and hands that to the executor.
+- **Rule execution — the resolution≠execution boundary.** This spec covers **resolution**: parsing a manifest, merging pack and asset values, picking the canonical, and resolving each Variant to either a source binary or a derivation plan (`source + ordered rule ids`). It does **not** cover **rule execution** — the transform a Rule performs on a binary (how `scale-96` resizes an SVG, how `stroke-2-5` rewrites stroke widths). Rules are declared under [`rules.md`](./manifest-rules.md) and describe intent (`{kind: "scale", target: {value: 16, unit: "px"}}`); the executor that reads a Rule and transforms a binary is a separate component. A renderer produces, for each computed Variant, a **derivation plan** — the resolved source binary plus the ordered list of rule ids — and hands that to the executor.
 
 ---
 
