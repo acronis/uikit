@@ -6,8 +6,10 @@ description: >
   that every --ui-* reference resolves in tokens-pd, that each referenced token
   tier is imported in styles/index.css, that the ui-spec 7-file set is present and
   conformance passes, that tests exist, and that the Figma link is intact
-  (index.yaml node + a COMPLETE Code Connect) — plus a live design-parity diff
-  (variants/states/tokens vs. the Figma node) via the Figma MCP. Reports a
+  (index.yaml node + a COMPLETE Code Connect). A deep mode adds Figma design
+  parity: structural (variants/states), value-level (each design variable's value
+  == the referenced --ui-* token's resolved value), and an advisory screenshot
+  pixel-diff — via the Figma MCP + bundled scripts. Reports a
   READY / DRIFT / INCOMPLETE matrix; never edits files. Invoke with
   /component-readiness [ComponentName | all].
 argument-hint: '[ComponentName | all]'
@@ -128,6 +130,42 @@ Diff the design against the implementation and report mismatches (do not fix her
   unwired, no hardcoded value substituted.
 - **Code Connect** — `figma.enum(...)` property names equal the design's exact
   property names (run `figma:connect` to validate).
+
+### Value-level parity — `scripts/parity-values.mjs`
+
+Confirms each design variable's **value** equals the resolved value of the
+`--ui-*` token the component references (not just that a token is wired). Save the
+MCP output and run the (dependency-free) comparator:
+
+```bash
+# 1. agent: dump the node's design variables to JSON (node must be selected in Figma desktop)
+#    get_variable_defs({ nodeId, fileKey })  →  save as figma-vars.json
+# 2. compare against tokens-pd resolved values:
+node .claude/skills/component-readiness/scripts/parity-values.mjs <Component> figma-vars.json [--theme light|dark] [--brand acronis]
+```
+
+It maps each Figma variable name → `--ui-*` token (Option-A kebab), then reports
+`MATCH` / `VALUE-DIFF` (name-paired, **exit 1**) and `MISSING` (a design value no
+referenced token carries — advisory, may be out of the component's scope). Colors
+are compared alpha-aware (`#191B23E5` ≡ `rgb(25 27 35 / 0.898)`); dimensions by
+number (`12` ≡ `12px`).
+
+### Visual parity — `scripts/parity-image.mjs` (advisory)
+
+Pixel-diffs a Figma node screenshot against a Storybook render and writes a
+highlighted diff PNG:
+
+```bash
+# 1. agent: capture the node image via the Figma MCP (get_screenshot / get_design_context) → figma.png
+# 2. storybook render: a committed VR baseline works, or a fresh Playwright capture
+node .claude/skills/component-readiness/scripts/parity-image.mjs figma.png \
+  packages/ui-react/test/__snapshots__/ui-<name>--default.png --out parity-diff.png
+```
+
+Reuses `pixelmatch` + `pngjs` from the pnpm store (no new deps); resizes the
+Storybook image to the Figma dims before diffing. **Advisory only** — the two
+aren't pixel-aligned (framing/scale differ), so the % is a delta signal; read the
+diff PNG. Crop the Storybook capture to just the component for the cleanest result.
 
 > **Selection-bound caveat (same as `/figma-component` Phase 1):** the Figma MCP
 > in this setup rejects reads with "nothing selected" even given a valid
