@@ -10,7 +10,7 @@ contract:
       description: >-
         Visual style. `primary` is a solid filled button; `secondary` is
         bordered with a transparent fill. Each maps to its dedicated
-        `--ui-button-dropdown-<variant>-*` tokens.
+        `--ui-button-menu-<variant>-*` tokens.
     - name: open
       type: boolean
       required: false

@@ -8,7 +8,7 @@
 **When** it renders
 **Then** it shows the label followed by a chevron icon (16px)
 **And** background, label, icon, and — for `secondary` — border resolve from
-`--ui-button-dropdown-*` for the current variant and state.
+`--ui-button-menu-*` for the current variant and state.
 
 ## Open / closed
 

@@ -9,65 +9,50 @@ source: '@acronis-platform/tokens-pd'
 
 tokens:
   # ── Geometry (root / icon) ──
-  - { name: --ui-button-dropdown-global-container-height, affects: root }
-  - { name: --ui-button-dropdown-global-container-width-min, affects: root }
-  - { name: --ui-button-dropdown-global-container-padding-x, affects: root }
-  - { name: --ui-button-dropdown-global-container-gap, affects: root }
-  - { name: --ui-button-dropdown-global-container-border-radius, affects: root }
-  - { name: --ui-button-dropdown-global-icon-size, affects: icon }
+  - { name: --ui-button-menu-global-container-height, affects: root }
+  - { name: --ui-button-menu-global-container-width-min, affects: root }
+  - { name: --ui-button-menu-global-container-padding-x, affects: root }
+  - { name: --ui-button-menu-global-container-gap, affects: root }
+  - { name: --ui-button-menu-global-container-border-radius, affects: root }
+  - { name: --ui-button-menu-global-icon-size, affects: icon }
 
   # ── primary (solid) ──
-  - { name: --ui-button-dropdown-primary-container-color-idle, affects: root }
-  - { name: --ui-button-dropdown-primary-container-color-hover, affects: root }
-  - { name: --ui-button-dropdown-primary-container-color-active, affects: root }
-  - {
-      name: --ui-button-dropdown-primary-container-color-disabled,
-      affects: root,
-    }
-  - { name: --ui-button-dropdown-primary-label-color, affects: label }
-  - { name: --ui-button-dropdown-primary-icon-color, affects: icon }
+  - { name: --ui-button-menu-primary-container-color-idle, affects: root }
+  - { name: --ui-button-menu-primary-container-color-hover, affects: root }
+  - { name: --ui-button-menu-primary-container-color-active, affects: root }
+  - { name: --ui-button-menu-primary-container-color-disabled, affects: root }
+  - { name: --ui-button-menu-primary-label-color, affects: label }
+  - { name: --ui-button-menu-primary-icon-color, affects: icon }
 
   # ── secondary (bordered) ──
-  - { name: --ui-button-dropdown-secondary-container-color-idle, affects: root }
+  - { name: --ui-button-menu-secondary-container-color-idle, affects: root }
+  - { name: --ui-button-menu-secondary-container-color-hover, affects: root }
+  - { name: --ui-button-menu-secondary-container-color-active, affects: root }
+  - { name: --ui-button-menu-secondary-container-color-disabled, affects: root }
   - {
-      name: --ui-button-dropdown-secondary-container-color-hover,
+      name: --ui-button-menu-secondary-container-border-color-idle,
       affects: root,
     }
   - {
-      name: --ui-button-dropdown-secondary-container-color-active,
+      name: --ui-button-menu-secondary-container-border-color-hover,
       affects: root,
     }
   - {
-      name: --ui-button-dropdown-secondary-container-color-disabled,
+      name: --ui-button-menu-secondary-container-border-color-active,
       affects: root,
     }
   - {
-      name: --ui-button-dropdown-secondary-container-border-color-idle,
+      name: --ui-button-menu-secondary-container-border-color-disabled,
       affects: root,
     }
-  - {
-      name: --ui-button-dropdown-secondary-container-border-color-hover,
-      affects: root,
-    }
-  - {
-      name: --ui-button-dropdown-secondary-container-border-color-active,
-      affects: root,
-    }
-  - {
-      name: --ui-button-dropdown-secondary-container-border-color-disabled,
-      affects: root,
-    }
-  - { name: --ui-button-dropdown-secondary-label-color-idle, affects: label }
-  - { name: --ui-button-dropdown-secondary-label-color-hover, affects: label }
-  - { name: --ui-button-dropdown-secondary-label-color-active, affects: label }
-  - {
-      name: --ui-button-dropdown-secondary-label-color-disabled,
-      affects: label,
-    }
-  - { name: --ui-button-dropdown-secondary-icon-color-idle, affects: icon }
-  - { name: --ui-button-dropdown-secondary-icon-color-hover, affects: icon }
-  - { name: --ui-button-dropdown-secondary-icon-color-active, affects: icon }
-  - { name: --ui-button-dropdown-secondary-icon-color-disabled, affects: icon }
+  - { name: --ui-button-menu-secondary-label-color-idle, affects: label }
+  - { name: --ui-button-menu-secondary-label-color-hover, affects: label }
+  - { name: --ui-button-menu-secondary-label-color-active, affects: label }
+  - { name: --ui-button-menu-secondary-label-color-disabled, affects: label }
+  - { name: --ui-button-menu-secondary-icon-color-idle, affects: icon }
+  - { name: --ui-button-menu-secondary-icon-color-hover, affects: icon }
+  - { name: --ui-button-menu-secondary-icon-color-active, affects: icon }
+  - { name: --ui-button-menu-secondary-icon-color-disabled, affects: icon }
 
   - {
       name: --ui-focus-brand,

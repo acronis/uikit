@@ -16,17 +16,17 @@ describe('ButtonDropdown', () => {
   it('defaults to the primary variant token classes', () => {
     render(<ButtonDropdown>Actions</ButtonDropdown>);
     expect(screen.getByRole('button', { name: 'Actions' })).toHaveClass(
-      'h-[var(--ui-button-dropdown-global-container-height)]',
-      'bg-[var(--ui-button-dropdown-primary-container-color-idle)]',
-      'text-[var(--ui-button-dropdown-primary-label-color)]'
+      'h-[var(--ui-button-menu-global-container-height)]',
+      'bg-[var(--ui-button-menu-primary-container-color-idle)]',
+      'text-[var(--ui-button-menu-primary-label-color)]'
     );
   });
 
   it('applies the secondary variant token classes', () => {
     render(<ButtonDropdown variant="secondary">Actions</ButtonDropdown>);
     expect(screen.getByRole('button', { name: 'Actions' })).toHaveClass(
-      'bg-[var(--ui-button-dropdown-secondary-container-color-idle)]',
-      'border-[var(--ui-button-dropdown-secondary-container-border-color-idle)]'
+      'bg-[var(--ui-button-menu-secondary-container-color-idle)]',
+      'border-[var(--ui-button-menu-secondary-container-border-color-idle)]'
     );
   });
 
@@ -48,7 +48,7 @@ describe('ButtonDropdown', () => {
     render(<ButtonDropdown className="custom-class">Actions</ButtonDropdown>);
     expect(screen.getByRole('button', { name: 'Actions' })).toHaveClass(
       'custom-class',
-      'h-[var(--ui-button-dropdown-global-container-height)]'
+      'h-[var(--ui-button-menu-global-container-height)]'
     );
   });
 
