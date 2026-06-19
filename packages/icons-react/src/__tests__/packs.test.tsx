@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { BrandAcronisIcon } from '../packs/solid-mono';
-import { CircleCheckStrokeMultiIcon } from '../packs/stroke-multi';
-import { SparklesSolidMultiIcon } from '../packs/solid-multi';
+import { AcronisIcon } from '../packs/solid-mono';
+import { CircleCheckGreenIcon } from '../packs/stroke-multi';
+import { AcronisAiMultiIcon } from '../packs/solid-multi';
 
 function svgOf(container: HTMLElement): SVGSVGElement {
   const svg = container.querySelector('svg');
@@ -13,7 +13,7 @@ function svgOf(container: HTMLElement): SVGSVGElement {
 
 describe('solid-mono pack', () => {
   it('paints with currentColor fill (no authored color, no stroke width)', () => {
-    const svg = svgOf(render(<BrandAcronisIcon />).container);
+    const svg = svgOf(render(<AcronisIcon />).container);
     expect(svg).toHaveAttribute('fill', 'currentColor');
     expect(svg).not.toHaveAttribute('stroke-width');
     // authored fill on the path was stripped so the svg's fill cascades.
@@ -24,7 +24,7 @@ describe('solid-mono pack', () => {
 describe('multicolor packs keep authored colors', () => {
   it('stroke-multi preserves per-path colors but takes stroke width from rules', () => {
     const svg = svgOf(
-      render(<CircleCheckStrokeMultiIcon size={16} />).container
+      render(<CircleCheckGreenIcon size={16} />).container
     );
     expect(svg).toHaveAttribute('fill', 'none');
     expect(svg).not.toHaveAttribute('stroke'); // not forced to currentColor
@@ -36,10 +36,10 @@ describe('multicolor packs keep authored colors', () => {
   });
 
   it('solid-multi preserves gradients with namespaced ids', () => {
-    const svg = svgOf(render(<SparklesSolidMultiIcon />).container);
+    const svg = svgOf(render(<AcronisAiMultiIcon />).container);
     const gradientId = svg.querySelector('linearGradient')?.id;
     // ids are namespaced per-icon so gradients can't collide across icons.
-    expect(gradientId).toMatch(/^sparkles-/);
+    expect(gradientId).toMatch(/^acronis-ai-multi-/);
     expect(svg.querySelector('path')?.getAttribute('fill')).toBe(
       `url(#${gradientId})`
     );
