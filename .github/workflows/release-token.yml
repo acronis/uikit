@@ -6,12 +6,20 @@
 # How it differs from release.yml:
 #   - Triggered manually (workflow_dispatch) instead of on every push.
 #   - Authenticates with a static Automation token (NPM_PUBLISH_TOKEN_2).
-#   - Runs `changeset publish` directly — no version-PR step.
-#     Changesets skips any package whose current version is already on npm,
-#     so it is safe to run even when only some packages need publishing.
+#   - Publishes an explicit, fixed list of packages — safe to re-run because
+#     each package is skipped when its current version is already on npm.
+#   - Does NOT publish @acronis-platform/shadcn-uikit (ui-legacy) — that
+#     package is handled exclusively by release.yml (OIDC path).
+#
+# Packages published by this workflow:
+#   @acronis-platform/design-assets
+#   @acronis-platform/design-tokens
+#   @acronis-platform/icons-react
+#   @acronis-platform/icons-sprite
+#   @acronis-platform/tokens-pd
+#   @acronis-platform/ui-react
 #
 # Required secrets:
-#   ACV_TOKEN             GitHub PAT — needed to create GitHub Releases.
 #   NPM_PUBLISH_TOKEN_2   npm Automation token (NOT a classic Publish token —
 #                         classic tokens require 2FA and will hit EOTP).
 #
@@ -54,11 +62,11 @@ jobs:
       - name: Validate design packages
         run: pnpm --filter "./packages/design-*" test
 
-      - name: Build UI library (ui-legacy)
-        run: pnpm --filter @acronis-platform/shadcn-uikit build
-
       - name: Build tokens-pd
         run: pnpm --filter @acronis-platform/tokens-pd build
+
+      - name: Build icons-sprite
+        run: pnpm --filter @acronis-platform/icons-sprite build
 
       - name: Build icons-react
         run: pnpm --filter @acronis-platform/icons-react build
@@ -66,10 +74,25 @@ jobs:
       - name: Build ui-react
         run: pnpm --filter @acronis-platform/ui-react build
 
-      - name: Publish to npm
-        run: pnpm run release
+      - name: Publish packages to npm
+        run: |
+          publish() {
+            local pkg="$1"; local dir="$2"
+            local ver; ver=$(node -p "require('./$dir/package.json').version")
+            if npm view "$pkg@$ver" version --json 2>/dev/null | grep -q '"'; then
+              echo "⏭  $pkg@$ver already on npm, skipping"
+            else
+              echo "🚀 Publishing $pkg@$ver"
+              pnpm --filter "$pkg" publish --access public --no-git-checks
+            fi
+          }
+          publish @acronis-platform/design-assets  packages/design-assets
+          publish @acronis-platform/design-tokens  packages/design-tokens
+          publish @acronis-platform/icons-react    packages/icons-react
+          publish @acronis-platform/icons-sprite   packages/icons-sprite
+          publish @acronis-platform/tokens-pd      packages/tokens-pd
+          publish @acronis-platform/ui-react       packages/ui-react
         env:
-          GITHUB_TOKEN: ${{ secrets.ACV_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN_2 }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN_2 }}
           NPM_CONFIG_PROVENANCE: true
