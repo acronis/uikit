@@ -79,7 +79,11 @@ jobs:
           publish() {
             local pkg="$1"; local dir="$2"
             local ver; ver=$(node -p "require('./$dir/package.json').version")
-            if npm view "$pkg@$ver" version --json 2>/dev/null | grep -q '"'; then
+            # `npm view <pkg>@<ver> version` prints the version when published and
+            # nothing when absent (the E404 goes to stderr). Do NOT use --json: for
+            # a never-published package npm prints an error OBJECT to stdout, whose
+            # quotes defeat a naive existence test and skip every package.
+            if [ -n "$(npm view "$pkg@$ver" version 2>/dev/null)" ]; then
               echo "⏭  $pkg@$ver already on npm, skipping"
             else
               echo "🚀 Publishing $pkg@$ver"
