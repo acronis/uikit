@@ -1,5 +1,5 @@
-# Builds the demo + Storybook + docs + kitchen-sink into a single GitHub Pages
-# artefact and deploys it.
+# Builds the demo + Storybook (ui-legacy and ui-react) + docs + kitchen-sink
+# into a single GitHub Pages artefact and deploys it.
 #
 # All sub-sites must ship in ONE artefact: GitHub Pages serves a single artefact
 # per deployment, so each deploy replaces the whole site. A separate per-app
@@ -70,6 +70,23 @@ jobs:
         run: |
           rm -rf apps/demo/dist/storybook
           cp -r packages/ui-legacy/storybook-static apps/demo/dist/storybook
+
+      # ui-react Storybook, served alongside the legacy one at /uikit/storybook-react.
+      # ui-react consumes its generated deps (icons-react, which pulls in
+      # tokens-pd/design-assets/style-dictionary) from dist, so build those first;
+      # ui-react's own source is bundled by Storybook via the .storybook alias.
+      # Storybook's static build uses relative asset paths, so it works under the
+      # subpath with no base flag (same as the legacy build above).
+      - name: Build ui-react storybook dependencies
+        run: pnpm --filter @acronis-platform/icons-react... run build
+
+      - name: Build ui-react storybook
+        run: pnpm --filter ./packages/ui-react run storybook:build
+
+      - name: Copy ui-react storybook to demo dist
+        run: |
+          rm -rf apps/demo/dist/storybook-react
+          cp -r packages/ui-react/storybook-static apps/demo/dist/storybook-react
 
       - name: Build docs
         run: DOCS_STATIC_EXPORT=true DOCS_BASE_PATH=/uikit/docs pnpm --filter ./apps/docs run build
