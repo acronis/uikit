@@ -155,11 +155,11 @@ jobs:
             packs=$(printf '%s\n' $PACKS_FILES \
               | sed -nE 's#packages/design-assets/packs/([a-z0-9-]+)(\.json|/.*)#\1#p' \
               | sort -u \
-              | while read -r pack; do
-                  if [ -f "packages/design-assets/packs/${pack}.json" ]; then
-                    echo "$pack"
-                  fi
-                done \
+              | { while read -r pack; do
+                    if [ -f "packages/design-assets/packs/${pack}.json" ]; then
+                      echo "$pack"
+                    fi
+                  done; true; } \
               | paste -sd, -)
             if [ -z "$packs" ]; then
               echo "No existing changed packs to rebuild (only removals/renames)."
