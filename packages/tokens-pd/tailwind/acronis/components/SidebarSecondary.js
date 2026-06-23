@@ -6,13 +6,13 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "sidebar-secondary-menu-item-selected-container-active": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "sidebar-secondary-menu-item-selected-container-hover": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "sidebar-secondary-menu-item-selected-container-idle": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "sidebar-secondary-menu-item-unselected-container-active": "light-dark(rgb(238 242 247), rgb(0 32 77))",
-        "sidebar-secondary-menu-item-unselected-container-hover": "light-dark(rgb(238 242 247), rgb(0 32 77))",
-        "sidebar-secondary-menu-item-unselected-container-idle": "light-dark(rgb(248 250 252), rgb(0 21 51))",
-        "sidebar-secondary-global-container": "light-dark(rgb(248 250 252), rgb(0 21 51))"
+        "sidebar-secondary-menu-item-selected-container-active": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "sidebar-secondary-menu-item-selected-container-hover": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "sidebar-secondary-menu-item-selected-container-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "sidebar-secondary-menu-item-unselected-container-active": "light-dark(rgb(238 242 247), rgb(46 47 50))",
+        "sidebar-secondary-menu-item-unselected-container-hover": "light-dark(rgb(238 242 247), rgb(46 47 50))",
+        "sidebar-secondary-menu-item-unselected-container-idle": "light-dark(rgb(248 250 252), rgb(24 25 27))",
+        "sidebar-secondary-global-container": "light-dark(rgb(248 250 252), rgb(24 25 27))"
       },
       "textColor": {
         "sidebar-secondary-menu-item-global-label": "light-dark(rgb(24 25 27), rgb(244 245 245))",
@@ -23,13 +23,13 @@ export default {
         "sidebar-secondary-collapsed-label-current-page": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
-        "sidebar-secondary-global-container-border-color": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "sidebar-secondary-global-container-footer-border-color": "light-dark(rgb(214 228 245), rgb(6 54 121))"
+        "sidebar-secondary-global-container-border-color": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "sidebar-secondary-global-container-footer-border-color": "light-dark(rgb(214 228 245), rgb(48 50 54))"
       },
       "fill": {
-        "sidebar-secondary-menu-item-global-icon": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "sidebar-secondary-menu-item-extras-global-external-icon": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "sidebar-secondary-section-icon-arrow": "light-dark(rgb(23 99 207), rgb(48 125 232))",
+        "sidebar-secondary-menu-item-global-icon": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "sidebar-secondary-menu-item-extras-global-external-icon": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "sidebar-secondary-section-icon-arrow": "light-dark(rgb(23 99 207), rgb(117 174 240))",
         "sidebar-secondary-collapsed-icon-separator": "light-dark(rgb(201 204 207), rgb(73 76 80))"
       },
       "fontFamily": {

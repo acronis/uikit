@@ -6,10 +6,10 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "tooltip-container": "light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898))"
+        "tooltip-container": "light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.6))"
       },
       "textColor": {
-        "tooltip-label": "light-dark(rgb(255 255 255), rgb(0 0 0))"
+        "tooltip-label": "light-dark(rgb(255 255 255), rgb(255 255 255))"
       },
       "fontFamily": {
         "tooltip-label-text-style": "Inter, system-ui, sans-serif"

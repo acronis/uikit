@@ -6,9 +6,9 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "input-search-box-disabled": "light-dark(rgb(248 250 252), rgb(0 21 51))",
-        "input-search-box-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "input-search-box-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))"
+        "input-search-box-disabled": "light-dark(rgb(248 250 252), rgb(24 25 27))",
+        "input-search-box-hover": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "input-search-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
       "textColor": {
         "input-search-placeholder-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
@@ -20,15 +20,15 @@ export default {
         "input-search-value-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
-        "input-search-border-color-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "input-search-border-color-hover": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "input-search-border-color-idle": "light-dark(rgb(214 228 245), rgb(6 54 121))"
+        "input-search-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "input-search-border-color-hover": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "input-search-border-color-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
       },
       "fill": {
-        "input-search-clear-icon": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "input-search-icon-search-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "input-search-icon-search-hover": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "input-search-icon-search-idle": "light-dark(rgb(23 99 207), rgb(48 125 232))"
+        "input-search-clear-icon": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "input-search-icon-search-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "input-search-icon-search-hover": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "input-search-icon-search-idle": "light-dark(rgb(23 99 207), rgb(117 174 240))"
       },
       "fontFamily": {
         "input-search-label-text-style": "Inter, system-ui, sans-serif",

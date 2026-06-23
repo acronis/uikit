@@ -11,8 +11,8 @@ export default {
         "sidebar-secondary-menu-item-selected-container-idle": "light-dark(rgb(216 222 228), rgb(216 222 228))",
         "sidebar-secondary-menu-item-unselected-container-active": "light-dark(rgb(236 238 239), rgb(236 238 239))",
         "sidebar-secondary-menu-item-unselected-container-hover": "light-dark(rgb(236 238 239), rgb(236 238 239))",
-        "sidebar-secondary-menu-item-unselected-container-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "sidebar-secondary-global-container": "light-dark(rgb(255 255 255), rgb(0 0 0))"
+        "sidebar-secondary-menu-item-unselected-container-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "sidebar-secondary-global-container": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
       "textColor": {
         "sidebar-secondary-menu-item-global-label": "light-dark(rgb(68 81 93), rgb(68 81 93))",

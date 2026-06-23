@@ -6,9 +6,9 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "input-text-global-box-disabled": "light-dark(rgb(248 250 252), rgb(0 21 51))",
-        "input-text-global-box-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "input-text-global-box-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))"
+        "input-text-global-box-disabled": "light-dark(rgb(248 250 252), rgb(24 25 27))",
+        "input-text-global-box-hover": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "input-text-global-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
       "textColor": {
         "input-text-global-label-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
@@ -29,12 +29,12 @@ export default {
       "borderColor": {
         "input-text-error-msg-box-border-color-hover": "light-dark(rgb(226 54 54), rgb(226 54 54))",
         "input-text-error-msg-box-border-color-idle": "light-dark(rgb(226 54 54), rgb(226 54 54))",
-        "input-text-normal-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "input-text-normal-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "input-text-normal-box-border-color-idle": "light-dark(rgb(214 228 245), rgb(6 54 121))"
+        "input-text-normal-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "input-text-normal-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "input-text-normal-box-border-color-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
       },
       "fill": {
-        "input-text-global-clear-icon": "light-dark(rgb(23 99 207), rgb(48 125 232))"
+        "input-text-global-clear-icon": "light-dark(rgb(23 99 207), rgb(117 174 240))"
       },
       "fontFamily": {
         "input-text-global-label-text-style": "Inter, system-ui, sans-serif",

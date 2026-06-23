@@ -1310,7 +1310,7 @@
             "com.figma.variableId": "VariableID:2236:5675"
           },
           "$type": "dimension",
-          "$value": "{units.gap.8}"
+          "$value": "{units.gap.4}"
         }
       },
       "icon": {
@@ -2100,7 +2100,7 @@
           "$type": "dimension",
           "$value": "{units.stroke.1}"
         },
-        "marginT": {
+        "marginX": {
           "$extensions": {
             "com.figma.scopes": [
               "GAP",
@@ -4250,6 +4250,30 @@
       },
       "icon": {
         "color": {
+          "hover": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "SHAPE_FILL"
+              ],
+              "com.figma.variableId": "VariableID:3299:9036"
+            },
+            "$type": "color",
+            "$value": "{colors.text.onSurface.secondary}"
+          },
+          "idle": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "SHAPE_FILL"
+              ],
+              "com.figma.variableId": "VariableID:3299:9035"
+            },
+            "$type": "color",
+            "$value": "{colors.text.onSurface.secondary}"
+          }
+        }
+      },
+      "iconExpand": {
+        "color": {
           "disabled": {
             "$extensions": {
               "com.figma.scopes": [
@@ -4361,6 +4385,40 @@
         }
       },
       "icon": {
+        "color": {
+          "disabled": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "SHAPE_FILL"
+              ],
+              "com.figma.variableId": "VariableID:3299:8951"
+            },
+            "$type": "color",
+            "$value": "{colors.text.onSurface.disabled}"
+          },
+          "hover": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "SHAPE_FILL"
+              ],
+              "com.figma.variableId": "VariableID:3299:8950"
+            },
+            "$type": "color",
+            "$value": "{colors.text.onSurface.secondary}"
+          },
+          "idle": {
+            "$extensions": {
+              "com.figma.scopes": [
+                "SHAPE_FILL"
+              ],
+              "com.figma.variableId": "VariableID:3299:8949"
+            },
+            "$type": "color",
+            "$value": "{colors.text.onSurface.secondary}"
+          }
+        }
+      },
+      "iconExpand": {
         "color": {
           "disabled": {
             "$extensions": {

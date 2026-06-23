@@ -654,7 +654,7 @@
             "com.figma.variableId": "VariableID:52:1377"
           },
           "$type": "color",
-          "$value": "{palette.transparent.inverted.9}"
+          "$value": "{palette.blue.12}"
         },
         "border-active": {
           "$extensions": {
@@ -664,7 +664,7 @@
             "com.figma.variableId": "VariableID:139:5"
           },
           "$type": "color",
-          "$value": "{palette.transparent.inverted.0}"
+          "$value": "{palette.grayscale.0}"
         },
         "divider": {
           "$extensions": {
@@ -913,7 +913,7 @@
             "com.figma.variableId": "VariableID:179:195"
           },
           "$type": "color",
-          "$value": "{palette.transparent.inverted.1}"
+          "$value": "{palette.transparent.inverted.9}"
         },
         "primary": {
           "$extensions": {

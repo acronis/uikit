@@ -25,7 +25,7 @@ export default {
       },
       "spacing": {
         "button-icon-global-container-height": "32px",
-        "button-icon-global-container-padding-x": "8px",
+        "button-icon-global-container-padding-x": "4px",
         "button-icon-global-icon-size": "24px",
         "button-icon-secondary-container-border-width": "1px"
       },

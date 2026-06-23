@@ -6,10 +6,10 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "switch-global-tick-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
+        "switch-global-tick-active": "light-dark(rgb(255 255 255), rgb(31 32 34))",
         "switch-global-tick-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "switch-global-tick-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "switch-global-tick-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))",
+        "switch-global-tick-hover": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "switch-global-tick-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))",
         "switch-off-box-active": "light-dark(rgb(199 203 207), rgb(199 203 207))",
         "switch-off-box-disabled": "light-dark(rgb(246 246 247), rgb(246 246 247))",
         "switch-off-box-hover": "light-dark(rgb(199 203 207), rgb(199 203 207))",

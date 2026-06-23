@@ -6,36 +6,36 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "sidebar-primary-menu-item-selected-container-active": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "sidebar-primary-menu-item-selected-container-hover": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "sidebar-primary-menu-item-selected-container-idle": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "sidebar-primary-menu-item-unselected-container-active": "light-dark(rgb(3 43 99), rgb(226 235 245))",
-        "sidebar-primary-menu-item-unselected-container-hover": "light-dark(rgb(3 43 99), rgb(226 235 245))",
-        "sidebar-primary-menu-item-unselected-container-idle": "light-dark(rgb(0 32 77), rgb(238 242 247))",
-        "sidebar-primary-global-container": "light-dark(rgb(0 32 77), rgb(238 242 247))"
+        "sidebar-primary-menu-item-selected-container-active": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "sidebar-primary-menu-item-selected-container-hover": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "sidebar-primary-menu-item-selected-container-idle": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "sidebar-primary-menu-item-unselected-container-active": "light-dark(rgb(3 43 99), rgb(61 63 67))",
+        "sidebar-primary-menu-item-unselected-container-hover": "light-dark(rgb(3 43 99), rgb(61 63 67))",
+        "sidebar-primary-menu-item-unselected-container-idle": "light-dark(rgb(0 32 77), rgb(31 32 34))",
+        "sidebar-primary-global-container": "light-dark(rgb(0 32 77), rgb(31 32 34))"
       },
       "textColor": {
-        "sidebar-primary-menu-item-selected-label-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "sidebar-primary-menu-item-selected-label-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "sidebar-primary-menu-item-selected-label-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "sidebar-primary-menu-item-unselected-label-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "sidebar-primary-menu-item-unselected-label-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "sidebar-primary-menu-item-unselected-label-idle": "light-dark(rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.6))",
-        "sidebar-primary-menu-item-extras-global-shortcut": "light-dark(rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.6))"
+        "sidebar-primary-menu-item-selected-label-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "sidebar-primary-menu-item-selected-label-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "sidebar-primary-menu-item-selected-label-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "sidebar-primary-menu-item-unselected-label-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "sidebar-primary-menu-item-unselected-label-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "sidebar-primary-menu-item-unselected-label-idle": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.502))",
+        "sidebar-primary-menu-item-extras-global-shortcut": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.502))"
       },
       "borderColor": {
-        "sidebar-primary-section-container-border-color": "light-dark(rgb(255 255 255 / 0.102), rgb(0 0 0 / 0.102))",
-        "sidebar-primary-global-container-footer-border-color": "light-dark(rgb(255 255 255 / 0.102), rgb(0 0 0 / 0.102))"
+        "sidebar-primary-section-container-border-color": "light-dark(rgb(3 43 99), rgb(61 63 67))",
+        "sidebar-primary-global-container-footer-border-color": "light-dark(rgb(3 43 99), rgb(61 63 67))"
       },
       "fill": {
-        "sidebar-primary-menu-item-selected-icon-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "sidebar-primary-menu-item-selected-icon-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "sidebar-primary-menu-item-selected-icon-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "sidebar-primary-menu-item-unselected-icon-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "sidebar-primary-menu-item-unselected-icon-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "sidebar-primary-menu-item-unselected-icon-idle": "light-dark(rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.6))",
-        "sidebar-primary-menu-item-extras-global-external-icon": "light-dark(rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.6))",
-        "sidebar-primary-global-logo": "light-dark(rgb(255 255 255), rgb(0 0 0))"
+        "sidebar-primary-menu-item-selected-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "sidebar-primary-menu-item-selected-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "sidebar-primary-menu-item-selected-icon-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "sidebar-primary-menu-item-unselected-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "sidebar-primary-menu-item-unselected-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "sidebar-primary-menu-item-unselected-icon-idle": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.502))",
+        "sidebar-primary-menu-item-extras-global-external-icon": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.502))",
+        "sidebar-primary-global-logo": "light-dark(rgb(255 255 255), rgb(255 255 255))"
       },
       "fontFamily": {
         "sidebar-primary-menu-item-global-label-text-style": "Inter, system-ui, sans-serif",

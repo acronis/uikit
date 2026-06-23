@@ -28,11 +28,11 @@
   --ui-tag-global-md-icon-size: 16px;
   --ui-tag-global-sm-container-height: 20px;
   --ui-tag-info-container-border-color: light-dark(rgb(190 215 244), rgb(11 66 142));
-  --ui-tag-info-container-color: light-dark(rgb(238 242 247), rgb(0 32 77));
-  --ui-tag-info-icon-color: light-dark(rgb(6 54 121), rgb(214 228 245));
-  --ui-tag-info-label-color: light-dark(rgb(6 54 121), rgb(214 228 245));
+  --ui-tag-info-container-color: light-dark(rgb(238 242 247), rgb(46 47 50));
+  --ui-tag-info-icon-color: light-dark(rgb(6 54 121), rgb(190 215 244));
+  --ui-tag-info-label-color: light-dark(rgb(6 54 121), rgb(190 215 244));
   --ui-tag-neutral-container-border-color: light-dark(rgb(201 204 207), rgb(73 76 80));
-  --ui-tag-neutral-container-color: light-dark(rgb(255 255 255), rgb(0 0 0));
+  --ui-tag-neutral-container-color: light-dark(rgb(255 255 255), rgb(31 32 34));
   --ui-tag-neutral-icon-color: light-dark(rgb(61 63 67), rgb(125 132 148));
   --ui-tag-neutral-label-color: light-dark(rgb(61 63 67), rgb(125 132 148));
   --ui-tag-success-container-border-color: light-dark(rgb(178 229 187), rgb(26 102 38));

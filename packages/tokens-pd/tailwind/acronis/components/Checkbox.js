@@ -6,46 +6,46 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "checkbox-checked-box-active": "light-dark(rgb(13 77 165), rgb(117 174 240))",
-        "checkbox-checked-box-disabled": "light-dark(rgb(248 250 252), rgb(0 21 51))",
-        "checkbox-checked-box-hover": "light-dark(rgb(19 84 174), rgb(48 125 232))",
-        "checkbox-checked-box-idle": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "checkbox-indeterminate-box-active": "light-dark(rgb(13 77 165), rgb(117 174 240))",
-        "checkbox-indeterminate-box-disabled": "light-dark(rgb(248 250 252), rgb(0 21 51))",
-        "checkbox-indeterminate-box-hover": "light-dark(rgb(19 84 174), rgb(48 125 232))",
-        "checkbox-indeterminate-box-idle": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "checkbox-unchecked-box-active": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "checkbox-unchecked-box-disabled": "light-dark(rgb(248 250 252), rgb(0 21 51))",
-        "checkbox-unchecked-box-hover": "light-dark(rgb(238 242 247), rgb(0 32 77))",
-        "checkbox-unchecked-box-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))"
+        "checkbox-checked-box-active": "light-dark(rgb(13 77 165), rgb(101 106 122))",
+        "checkbox-checked-box-disabled": "light-dark(rgb(248 250 252), rgb(24 25 27))",
+        "checkbox-checked-box-hover": "light-dark(rgb(19 84 174), rgb(23 99 207))",
+        "checkbox-checked-box-idle": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "checkbox-indeterminate-box-active": "light-dark(rgb(13 77 165), rgb(101 106 122))",
+        "checkbox-indeterminate-box-disabled": "light-dark(rgb(248 250 252), rgb(24 25 27))",
+        "checkbox-indeterminate-box-hover": "light-dark(rgb(19 84 174), rgb(23 99 207))",
+        "checkbox-indeterminate-box-idle": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "checkbox-unchecked-box-active": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "checkbox-unchecked-box-disabled": "light-dark(rgb(248 250 252), rgb(24 25 27))",
+        "checkbox-unchecked-box-hover": "light-dark(rgb(238 242 247), rgb(46 47 50))",
+        "checkbox-unchecked-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
       "textColor": {
         "checkbox-global-description": "light-dark(rgb(109 114 120), rgb(109 114 120))",
         "checkbox-global-label": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
-        "checkbox-checked-box-border-color-active": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "checkbox-checked-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "checkbox-checked-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "checkbox-checked-box-border-color-idle": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "checkbox-indeterminate-box-border-color-active": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "checkbox-indeterminate-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "checkbox-indeterminate-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "checkbox-indeterminate-box-border-color-idle": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "checkbox-unchecked-box-border-color-active": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "checkbox-unchecked-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "checkbox-unchecked-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "checkbox-unchecked-box-border-color-idle": "light-dark(rgb(214 228 245), rgb(6 54 121))"
+        "checkbox-checked-box-border-color-active": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "checkbox-checked-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "checkbox-checked-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "checkbox-checked-box-border-color-idle": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "checkbox-indeterminate-box-border-color-active": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "checkbox-indeterminate-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "checkbox-indeterminate-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "checkbox-indeterminate-box-border-color-idle": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "checkbox-unchecked-box-border-color-active": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "checkbox-unchecked-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "checkbox-unchecked-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "checkbox-unchecked-box-border-color-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
       },
       "fill": {
-        "checkbox-checked-icon-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "checkbox-checked-icon-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "checkbox-checked-icon-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "checkbox-checked-icon-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "checkbox-indeterminate-icon-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "checkbox-indeterminate-icon-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "checkbox-indeterminate-icon-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "checkbox-indeterminate-icon-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))"
+        "checkbox-checked-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "checkbox-checked-icon-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "checkbox-checked-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "checkbox-checked-icon-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "checkbox-indeterminate-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "checkbox-indeterminate-icon-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "checkbox-indeterminate-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "checkbox-indeterminate-icon-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))"
       },
       "fontFamily": {
         "checkbox-global-description-text-style": "Inter, system-ui, sans-serif",
@@ -71,7 +71,7 @@ export default {
       },
       "spacing": {
         "checkbox-global-box-border-width": "1px",
-        "checkbox-global-box-margin-t": "4px",
+        "checkbox-global-box-margin-x": "4px",
         "checkbox-global-box-size": "16px",
         "checkbox-global-container-gap": "8px",
         "checkbox-global-container-width-max": "632px",

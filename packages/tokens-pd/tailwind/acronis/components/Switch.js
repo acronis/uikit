@@ -6,16 +6,16 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "switch-global-tick-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "switch-global-tick-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "switch-global-tick-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "switch-global-tick-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "switch-off-box-active": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "switch-off-box-disabled": "light-dark(rgb(248 250 252), rgb(0 21 51))",
-        "switch-off-box-hover": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "switch-off-box-idle": "light-dark(rgb(214 228 245), rgb(6 54 121))",
+        "switch-global-tick-active": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "switch-global-tick-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "switch-global-tick-hover": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "switch-global-tick-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "switch-off-box-active": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "switch-off-box-disabled": "light-dark(rgb(248 250 252), rgb(24 25 27))",
+        "switch-off-box-hover": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "switch-off-box-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))",
         "switch-on-box-active": "light-dark(rgb(70 185 89), rgb(36 143 54))",
-        "switch-on-box-disabled": "light-dark(rgb(248 250 252), rgb(0 21 51))",
+        "switch-on-box-disabled": "light-dark(rgb(248 250 252), rgb(24 25 27))",
         "switch-on-box-hover": "light-dark(rgb(70 185 89), rgb(36 143 54))",
         "switch-on-box-idle": "light-dark(rgb(70 185 89), rgb(36 143 54))"
       },
@@ -24,7 +24,7 @@ export default {
       },
       "borderColor": {
         "switch-global-box-border-color-active": "light-dark(transparent, transparent)",
-        "switch-global-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
+        "switch-global-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
         "switch-global-box-border-color-hover": "light-dark(transparent, transparent)",
         "switch-global-box-border-color-idle": "light-dark(transparent, transparent)"
       },

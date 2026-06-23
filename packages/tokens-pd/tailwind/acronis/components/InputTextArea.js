@@ -6,9 +6,9 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "input-text-area-box-disabled": "light-dark(rgb(248 250 252), rgb(0 21 51))",
-        "input-text-area-box-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "input-text-area-box-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))"
+        "input-text-area-box-disabled": "light-dark(rgb(248 250 252), rgb(24 25 27))",
+        "input-text-area-box-hover": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "input-text-area-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
       "textColor": {
         "input-text-area-description-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
@@ -26,12 +26,12 @@ export default {
         "input-text-area-value-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
-        "input-text-area-border-color-disabled": "light-dark(rgb(214 228 245), rgb(6 54 121))",
-        "input-text-area-border-color-hover": "light-dark(rgb(23 99 207), rgb(48 125 232))",
-        "input-text-area-border-color-idle": "light-dark(rgb(214 228 245), rgb(6 54 121))"
+        "input-text-area-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "input-text-area-border-color-hover": "light-dark(rgb(23 99 207), rgb(117 174 240))",
+        "input-text-area-border-color-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
       },
       "ringColor": {
-        "input-text-area-border-color-focus": "light-dark(rgb(23 99 207), rgb(48 125 232))"
+        "input-text-area-border-color-focus": "light-dark(rgb(23 99 207), rgb(117 174 240))"
       },
       "fontFamily": {
         "input-text-area-description-text-style": "Inter, system-ui, sans-serif",

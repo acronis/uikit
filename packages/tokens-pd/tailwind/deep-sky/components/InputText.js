@@ -7,8 +7,8 @@ export default {
     extend: {
       "backgroundColor": {
         "input-text-global-box-disabled": "light-dark(rgb(246 246 247), rgb(246 246 247))",
-        "input-text-global-box-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
-        "input-text-global-box-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))"
+        "input-text-global-box-hover": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "input-text-global-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
       "textColor": {
         "input-text-global-label-disabled": "light-dark(rgb(41 49 55), rgb(41 49 55))",

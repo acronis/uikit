@@ -6,7 +6,7 @@
   --ui-sidebar-secondary-collapsed-icon-separator-color: light-dark(rgb(199 203 207), rgb(199 203 207));
   --ui-sidebar-secondary-collapsed-label-current-page-color: light-dark(rgb(68 81 93), rgb(68 81 93));
   --ui-sidebar-secondary-global-container-border-color: light-dark(rgb(199 203 207), rgb(199 203 207));
-  --ui-sidebar-secondary-global-container-color: light-dark(rgb(255 255 255), rgb(0 0 0));
+  --ui-sidebar-secondary-global-container-color: light-dark(rgb(255 255 255), rgb(31 32 34));
   --ui-sidebar-secondary-global-container-footer-border-color: light-dark(rgb(199 203 207), rgb(199 203 207));
   --ui-sidebar-secondary-global-header-label-color: light-dark(rgb(68 81 93), rgb(68 81 93));
   --ui-sidebar-secondary-menu-item-extras-global-external-icon-color: light-dark(rgb(68 81 93), rgb(68 81 93));
@@ -18,7 +18,7 @@
   --ui-sidebar-secondary-menu-item-selected-container-color-idle: light-dark(rgb(216 222 228), rgb(216 222 228));
   --ui-sidebar-secondary-menu-item-unselected-container-color-active: light-dark(rgb(236 238 239), rgb(236 238 239));
   --ui-sidebar-secondary-menu-item-unselected-container-color-hover: light-dark(rgb(236 238 239), rgb(236 238 239));
-  --ui-sidebar-secondary-menu-item-unselected-container-color-idle: light-dark(rgb(255 255 255), rgb(0 0 0));
+  --ui-sidebar-secondary-menu-item-unselected-container-color-idle: light-dark(rgb(255 255 255), rgb(31 32 34));
   --ui-sidebar-secondary-section-container-header-padding-y: 8px;
   --ui-sidebar-secondary-section-container-padding-y: 8px;
   --ui-sidebar-secondary-section-icon-arrow-color: light-dark(rgb(255 255 255), rgb(255 255 255));
