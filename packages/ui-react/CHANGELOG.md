@@ -1,5 +1,19 @@
 # @acronis-platform/ui-react
 
+## 0.22.0
+
+### Minor Changes
+
+- [#334](https://github.com/acronis/uikit/pull/334) [`fc1cb92`](https://github.com/acronis/uikit/commit/fc1cb92d406186b3a422c2a2ef3118f9631c7c73) Thanks [@leonid](https://github.com/leonid)! - Add `Avatar`: a circular user/entity badge showing an image or initials, in five
+  color schemes (`teal` / `violet` / `red` / `yellow` / `orange`), themed by the
+  `--ui-avatar-*` token tier. Ships `Avatar`, `AvatarImage`, `AvatarFallback`
+  (Base UI Avatar under the hood), and `AvatarGroup` for an overlapping row.
+
+### Patch Changes
+
+- Updated dependencies [[`fc1cb92`](https://github.com/acronis/uikit/commit/fc1cb92d406186b3a422c2a2ef3118f9631c7c73)]:
+  - @acronis-platform/tokens-pd@1.7.0
+
 ## 0.21.2
 
 ### Patch Changes
