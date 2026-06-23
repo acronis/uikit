@@ -37,34 +37,66 @@ Tailwind pipeline here**.
 delivery model differs from the retired `design-theme`:
 
 - **Per-component tokens** (`--ui-button-*`, `--ui-switch-*`, …) are NOT bundled
-  by `ui-react/styles`, so `tokens.ts` imports the `css/<component>/acronis.css`
-  files and injects them once (needed both to render components and to enumerate
-  their names).
+  by `ui-react/styles`, so `tokens.ts` imports **every** `css/<Tier>/acronis.css`
+  tier tokens-pd ships and injects them once (needed both to render components and
+  to enumerate their names). It also exports `tierTokenNames` (tier → its token
+  names) and `hasToken`, consumed by the forced-state machinery (below).
 - **Brand switching** injects `deep-sky`'s _override-only_ `:root` stylesheets
   (semantic + per-component) on top of the acronis base via `applyBrand` — it is
-  not a class toggle. The header's brand `<select>` (`App.tsx`) drives it.
+  not a class toggle. The header's brand `<select>` (`routes/layout.tsx`) drives it.
 - **Light/dark** flips `color-scheme` (drives the tokens' `light-dark()`) and
   mirrors `[data-theme]` for ui-react's `dark:` variant (`applyTheme`) — it is
   not a `.dark` class.
 
-## Sections (`src/sections/`)
+> Note (faithful to tokens, not a bug): in **deep-sky + dark**, some surface
+> tokens (e.g. `--ui-background-surface-secondary`) lack a distinct dark value
+> (`light-dark(x, x)`), so specimen canvases render light on the dark page. This
+> is a real deep-sky dark-coverage gap surfaced by the tool, not a kitchen-sink
+> issue. Acronis (both schemes) and deep-sky light are fully consistent.
 
-- `colors.tsx` — enumerates `--ui-*` custom properties (semantic + per-component,
-  e.g. `--ui-button-*`) parsed from the tokens-pd CSS in `src/lib/tokens.ts`;
-  values resolve live per brand/scheme.
-- `typography.tsx` — the `.ui-typography-*` utility classes (headings/body/link/
-  caption/note/fineprint), each shown as live sample text + its name and metrics.
-- `elements.tsx` — raw HTML elements (headings, lists, table, native form
-  controls) as the reset renders them. **Currently hidden**: the library only
-  applies Tailwind Preflight (which normalizes/strips bare-tag styling) — the DS
-  styles via `.ui-typography-*` utilities / components, not bare tags — so the
-  section showed only the reset baseline. The file is kept (not wired into
-  `SECTIONS` in `App.tsx`) so it can be re-enabled if a base element layer ships.
-- `components.tsx` — the implemented `ui-react` components: `Button`
-  (variants/sizes/states/with-icons), `ButtonIcon`, `Switch`, `Checkbox`,
-  `Radio`, `Input`, `Search`, `Select`, `Breadcrumb`, `Tag`, `Tooltip`, and
-  `SidebarPrimary` / `SidebarSecondary`.
-- `icons.tsx` — galleries for all four `icons-react` packs.
+## Routing & layout
+
+The app is a routed SPA (react-router `HashRouter`, so deep links work under
+static preview/deploy with no rewrites). `src/App.tsx` is the router root;
+`routes/layout.tsx` is the persistent shell: a header (title + brand/theme
+toolbar) and a left sidebar nav, with `<Outlet/>` for the page.
+
+- **Brand + light/dark are URL search params** (`?brand=&theme=`), so any view —
+  including a single component in a given brand/scheme — is shareable. The
+  `KsLink`/`KsNavLink` wrappers (`lib/nav.tsx`) carry the active query across
+  internal navigation, since react-router otherwise drops it.
+
+Routes: `/` (overview) · `/tokens` (Semantic / Component tabs) · `/typography` ·
+`/icons` · `/components` (index grid) · `/components/:slug` (one per component).
+
+## Component specimens (`src/components/`)
+
+`registry.tsx` is the single source of truth for the component routes (drives the
+sidebar, the `/components` index, and `:slug` routing). Each component has its own
+`<name>.tsx` exporting a **specimen** — a Figma-style sheet of its states.
+
+- `lib/specimen.tsx` holds the shared primitives: `StateGrid` (variants × states),
+  `Stage`, `SpecimenPage`, `Subsection`, `SampleRow`, `Field`, and the key
+  `forcedVars`/`Forced`. **Forced states**: real `:hover`/`:active`/`:focus` only
+  fire on interaction, so a static cell is pinned by remapping the component's
+  `--ui-<tier>-…-idle` custom properties to their `-<state>` siblings on a wrapper
+  (the remap cascades into nested DOM — a Switch thumb, a Checkbox box). `disabled`
+  uses the component's own prop; `focus` adds the design's focus ring (tier-aware:
+  `--ui-focus-primary` for form controls, `--ui-focus-brand` for buttons).
+- Coverage matches `ui-react`'s exports (incl. `ButtonDropdown` + `InputTextArea`).
+  `Select` is shown with natural states only — it still consumes the legacy
+  `--ui-form-*` tokens (not a dedicated `--ui-input-select-*` tier), so the remap
+  and brand overrides don't apply to it yet.
+
+## Foundations sections (`src/sections/`)
+
+- `colors.tsx` — exports `SemanticColors` / `ComponentColors` / `TokensIntro`
+  (used by `routes/tokens.tsx`); enumerates `--ui-*` custom properties parsed in
+  `src/lib/tokens.ts`, values resolving live per brand/scheme.
+- `typography.tsx` — the `.ui-typography-*` utility classes, each a live sample +
+  its metrics. `icons.tsx` — galleries for all four `icons-react` packs.
+- `elements.tsx` — kept but **not routed** (raw HTML elements as the reset renders
+  them); re-enable if a base element layer ships.
 
 ## Run
 

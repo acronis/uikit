@@ -16,13 +16,21 @@
  */
 
 // --- acronis: semantic is applied by ui-react/styles; we read it here only to
-//     enumerate names. Per-component files we both apply + read.
+//     enumerate names. Per-component files we both apply + read. Every tier
+//     tokens-pd ships is imported so the page renders + enumerates them all
+//     (including tiers no component consumes yet, e.g. input-date-picker).
 import semanticAcronis from '@acronis-platform/tokens-pd/css/acronis.css?raw';
 import breadcrumbAcronis from '@acronis-platform/tokens-pd/css/Breadcrumb/acronis.css?raw';
 import buttonAcronis from '@acronis-platform/tokens-pd/css/Button/acronis.css?raw';
 import buttonIconAcronis from '@acronis-platform/tokens-pd/css/ButtonIcon/acronis.css?raw';
+import buttonMenuAcronis from '@acronis-platform/tokens-pd/css/ButtonMenu/acronis.css?raw';
 import checkboxAcronis from '@acronis-platform/tokens-pd/css/Checkbox/acronis.css?raw';
+import inputDatePickerAcronis from '@acronis-platform/tokens-pd/css/InputDatePicker/acronis.css?raw';
+import inputSearchAcronis from '@acronis-platform/tokens-pd/css/InputSearch/acronis.css?raw';
+import inputSelectAcronis from '@acronis-platform/tokens-pd/css/InputSelect/acronis.css?raw';
 import inputTextAcronis from '@acronis-platform/tokens-pd/css/InputText/acronis.css?raw';
+import inputTextAreaAcronis from '@acronis-platform/tokens-pd/css/InputTextArea/acronis.css?raw';
+import radioAcronis from '@acronis-platform/tokens-pd/css/Radio/acronis.css?raw';
 import sidebarPrimaryAcronis from '@acronis-platform/tokens-pd/css/SidebarPrimary/acronis.css?raw';
 import sidebarSecondaryAcronis from '@acronis-platform/tokens-pd/css/SidebarSecondary/acronis.css?raw';
 import switchAcronis from '@acronis-platform/tokens-pd/css/Switch/acronis.css?raw';
@@ -35,8 +43,14 @@ import semanticDeepSky from '@acronis-platform/tokens-pd/css/deep-sky.css?raw';
 import breadcrumbDeepSky from '@acronis-platform/tokens-pd/css/Breadcrumb/deep-sky.css?raw';
 import buttonDeepSky from '@acronis-platform/tokens-pd/css/Button/deep-sky.css?raw';
 import buttonIconDeepSky from '@acronis-platform/tokens-pd/css/ButtonIcon/deep-sky.css?raw';
+import buttonMenuDeepSky from '@acronis-platform/tokens-pd/css/ButtonMenu/deep-sky.css?raw';
 import checkboxDeepSky from '@acronis-platform/tokens-pd/css/Checkbox/deep-sky.css?raw';
+import inputDatePickerDeepSky from '@acronis-platform/tokens-pd/css/InputDatePicker/deep-sky.css?raw';
+import inputSearchDeepSky from '@acronis-platform/tokens-pd/css/InputSearch/deep-sky.css?raw';
+import inputSelectDeepSky from '@acronis-platform/tokens-pd/css/InputSelect/deep-sky.css?raw';
 import inputTextDeepSky from '@acronis-platform/tokens-pd/css/InputText/deep-sky.css?raw';
+import inputTextAreaDeepSky from '@acronis-platform/tokens-pd/css/InputTextArea/deep-sky.css?raw';
+import radioDeepSky from '@acronis-platform/tokens-pd/css/Radio/deep-sky.css?raw';
 import sidebarPrimaryDeepSky from '@acronis-platform/tokens-pd/css/SidebarPrimary/deep-sky.css?raw';
 import sidebarSecondaryDeepSky from '@acronis-platform/tokens-pd/css/SidebarSecondary/deep-sky.css?raw';
 import switchDeepSky from '@acronis-platform/tokens-pd/css/Switch/deep-sky.css?raw';
@@ -64,13 +78,20 @@ export interface ContextGroup {
   roles: RoleGroup[];
 }
 
-/** Per-component token CSS (not bundled by ui-react/styles). */
+/** Per-component token CSS (not bundled by ui-react/styles). The `tier` is the
+ *  `--ui-<tier>-…` prefix. Order is the display order on the tokens page. */
 const COMPONENT_SOURCES: { tier: string; css: string }[] = [
   { tier: 'breadcrumb', css: breadcrumbAcronis },
   { tier: 'button', css: buttonAcronis },
   { tier: 'button-icon', css: buttonIconAcronis },
+  { tier: 'button-menu', css: buttonMenuAcronis },
   { tier: 'checkbox', css: checkboxAcronis },
+  { tier: 'input-date-picker', css: inputDatePickerAcronis },
+  { tier: 'input-search', css: inputSearchAcronis },
+  { tier: 'input-select', css: inputSelectAcronis },
   { tier: 'input-text', css: inputTextAcronis },
+  { tier: 'input-text-area', css: inputTextAreaAcronis },
+  { tier: 'radio', css: radioAcronis },
   { tier: 'sidebar-primary', css: sidebarPrimaryAcronis },
   { tier: 'sidebar-secondary', css: sidebarSecondaryAcronis },
   { tier: 'switch', css: switchAcronis },
@@ -83,6 +104,25 @@ function tokenNames(css: string): string[] {
   const set = new Set<string>();
   for (const m of css.matchAll(/(--ui-[a-z0-9-]+)\s*:/g)) set.add(m[1]);
   return [...set].sort();
+}
+
+/**
+ * Per-tier token names, keyed by the `--ui-<tier>-…` prefix. Drives the
+ * forced-state machinery in `lib/specimen`: to pin a component into a static
+ * `hover`/`active` state, each `*-idle` token is remapped to its `*-<state>`
+ * sibling (which only exists when the tier defines that state).
+ */
+export const tierTokenNames: Record<string, string[]> = Object.fromEntries(
+  COMPONENT_SOURCES.map((s) => [s.tier, tokenNames(s.css)])
+);
+
+const ALL_COMPONENT_TOKEN_NAMES = new Set(
+  Object.values(tierTokenNames).flat()
+);
+
+/** Whether a `--ui-*` custom property is declared by any component tier. */
+export function hasToken(name: string): boolean {
+  return ALL_COMPONENT_TOKEN_NAMES.has(name);
 }
 
 /**
@@ -502,8 +542,14 @@ const DEEP_SKY_OVERRIDES = [
   breadcrumbDeepSky,
   buttonDeepSky,
   buttonIconDeepSky,
+  buttonMenuDeepSky,
   checkboxDeepSky,
+  inputDatePickerDeepSky,
+  inputSearchDeepSky,
+  inputSelectDeepSky,
   inputTextDeepSky,
+  inputTextAreaDeepSky,
+  radioDeepSky,
   sidebarPrimaryDeepSky,
   sidebarSecondaryDeepSky,
   switchDeepSky,

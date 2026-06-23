@@ -360,32 +360,38 @@ function ComponentSection({ group }: { group: ComponentTokenGroup }) {
   );
 }
 
-export function ColorsSection() {
+/** The intro blurb shared by the tokens page. */
+export function TokensIntro() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
-      <p style={{ fontSize: 13, color: 'var(--ui-text-on-surface-secondary)' }}>
-        Generated <code>--ui-*</code> tokens from{' '}
-        <code>@acronis-platform/tokens-pd</code>. Values reflect the active brand
-        and light/dark scheme. Tokens are grouped by{' '}
-        <strong>context</strong> (the surface/intent a color lives on, or the
-        component), then by <strong>role</strong> (background, text, border,
-        glyph) within. Regular families — status by intent, button by variant —
-        are shown as a matrix.
-      </p>
+    <p style={{ fontSize: 13, color: 'var(--ui-text-on-surface-secondary)', margin: 0 }}>
+      Generated <code>--ui-*</code> tokens from{' '}
+      <code>@acronis-platform/tokens-pd</code>. Values reflect the active brand
+      and light/dark scheme. Tokens are grouped by <strong>context</strong> (the
+      surface/intent a color lives on, or the component), then by{' '}
+      <strong>role</strong> (background, text, border, glyph) within. Regular
+      families — status by intent, button by variant — are shown as a matrix.
+    </p>
+  );
+}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-        <h3 style={{ fontSize: 14, fontWeight: 600 }}>Semantic colors</h3>
-        {semanticContextGroups.map((group) => (
-          <ContextSection key={group.context} group={group} />
-        ))}
-      </div>
+/** Semantic colors, grouped by context → role. */
+export function SemanticColors() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      {semanticContextGroups.map((group) => (
+        <ContextSection key={group.context} group={group} />
+      ))}
+    </div>
+  );
+}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-        <h3 style={{ fontSize: 14, fontWeight: 600 }}>Component tokens</h3>
-        {componentGroups.map((group) => (
-          <ComponentSection key={group.component} group={group} />
-        ))}
-      </div>
+/** Per-component token tiers (`--ui-button-*`, `--ui-switch-*`, …). */
+export function ComponentColors() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      {componentGroups.map((group) => (
+        <ComponentSection key={group.component} group={group} />
+      ))}
     </div>
   );
 }

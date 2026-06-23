@@ -22,7 +22,8 @@
     "@acronis-platform/ui-react": "workspace:*",
     "@fontsource/inter": "5.2.8",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "react-router-dom": "7.16.0"
   },
   "devDependencies": {
     "@types/react": "catalog:",
