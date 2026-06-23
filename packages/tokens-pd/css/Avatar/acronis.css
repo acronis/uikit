@@ -4,8 +4,8 @@
 :root, :host {
   color-scheme: light dark;
 
-  --ui-avatar-color-orange: light-dark(rgb(255 222 194), rgb(153 69 0));
-  --ui-avatar-color-red: light-dark(rgb(251 218 218), rgb(152 27 27));
+  --ui-avatar-color-orange: light-dark(rgb(255 222 194), rgb(128 58 0));
+  --ui-avatar-color-red: light-dark(rgb(251 218 218), rgb(130 23 23));
   --ui-avatar-color-teal: light-dark(rgb(209 240 237), rgb(4 73 67));
   --ui-avatar-color-violet: light-dark(rgb(236 222 242), rgb(130 23 130));
   --ui-avatar-color-yellow: light-dark(rgb(255 238 178), rgb(138 99 0));

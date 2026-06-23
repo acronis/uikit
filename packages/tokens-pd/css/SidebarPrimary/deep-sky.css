@@ -3,7 +3,6 @@
 
 :root, :host {
   --ui-sidebar-primary-global-container-color: light-dark(rgb(14 105 139), rgb(14 105 139));
-  --ui-sidebar-primary-global-container-footer-border-color: light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.898));
   --ui-sidebar-primary-menu-item-selected-container-color-active: light-dark(rgb(30 172 242), rgb(30 172 242));
   --ui-sidebar-primary-menu-item-selected-container-color-hover: light-dark(rgb(30 172 242), rgb(30 172 242));
   --ui-sidebar-primary-menu-item-selected-container-color-idle: light-dark(rgb(30 172 242), rgb(30 172 242));
@@ -11,5 +10,4 @@
   --ui-sidebar-primary-menu-item-unselected-container-color-active: light-dark(rgb(10 93 123), rgb(10 93 123));
   --ui-sidebar-primary-menu-item-unselected-container-color-hover: light-dark(rgb(10 93 123), rgb(10 93 123));
   --ui-sidebar-primary-menu-item-unselected-container-color-idle: light-dark(rgb(14 105 139), rgb(14 105 139));
-  --ui-sidebar-primary-section-container-border-color: light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.898));
 }

@@ -24,8 +24,8 @@ export default {
         "sidebar-primary-menu-item-extras-global-shortcut": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.502))"
       },
       "borderColor": {
-        "sidebar-primary-section-container-border-color": "light-dark(rgb(3 43 99), rgb(61 63 67))",
-        "sidebar-primary-global-container-footer-border-color": "light-dark(rgb(3 43 99), rgb(61 63 67))"
+        "sidebar-primary-section-container-border-color": "light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.898))",
+        "sidebar-primary-global-container-footer-border-color": "light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.898))"
       },
       "fill": {
         "sidebar-primary-menu-item-selected-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",

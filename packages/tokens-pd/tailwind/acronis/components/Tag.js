@@ -7,12 +7,12 @@ export default {
     extend: {
       "backgroundColor": {
         "tag-ai-container": "light-dark(rgb(249 245 251), rgb(82 20 82))",
-        "tag-critical-container": "light-dark(rgb(255 240 230), rgb(102 46 0))",
-        "tag-danger-container": "light-dark(rgb(253 237 237), rgb(108 19 19))",
+        "tag-critical-container": "light-dark(rgb(255 240 230), rgb(77 35 0))",
+        "tag-danger-container": "light-dark(rgb(253 237 237), rgb(87 15 15))",
         "tag-info-container": "light-dark(rgb(238 242 247), rgb(46 47 50))",
         "tag-neutral-container": "light-dark(rgb(255 255 255), rgb(31 32 34))",
         "tag-success-container": "light-dark(rgb(238 247 239), rgb(3 58 17))",
-        "tag-warning-container": "light-dark(rgb(255 249 229), rgb(77 55 0))"
+        "tag-warning-container": "light-dark(rgb(255 249 229), rgb(31 32 34))"
       },
       "textColor": {
         "tag-ai-label": "light-dark(rgb(130 23 130), rgb(250 209 250))",
@@ -24,8 +24,8 @@ export default {
         "tag-warning-label": "light-dark(rgb(138 99 0), rgb(255 238 178))"
       },
       "borderColor": {
-        "tag-critical-container-border-color": "light-dark(rgb(255 204 153), rgb(178 80 0))",
-        "tag-danger-container-border-color": "light-dark(rgb(248 195 195), rgb(173 31 31))",
+        "tag-critical-container-border-color": "light-dark(rgb(255 204 153), rgb(153 69 0))",
+        "tag-danger-container-border-color": "light-dark(rgb(248 195 195), rgb(151 27 27))",
         "tag-info-container-border-color": "light-dark(rgb(190 215 244), rgb(11 66 142))",
         "tag-neutral-container-border-color": "light-dark(rgb(201 204 207), rgb(73 76 80))",
         "tag-success-container-border-color": "light-dark(rgb(178 229 187), rgb(26 102 38))",

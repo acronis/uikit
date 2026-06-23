@@ -7,7 +7,7 @@ export default {
     extend: {
       "backgroundColor": {
         "button-destructive-container-active": "light-dark(rgb(173 31 31), rgb(248 195 195))",
-        "button-destructive-container-disabled": "light-dark(rgb(253 237 237), rgb(108 19 19))",
+        "button-destructive-container-disabled": "light-dark(rgb(253 237 237), rgb(87 15 15))",
         "button-destructive-container-hover": "light-dark(rgb(195 34 34), rgb(244 154 154))",
         "button-destructive-container-idle": "light-dark(rgb(226 54 54), rgb(226 54 54))",
         "button-inverted-container-active": "light-dark(rgb(19 84 174), rgb(23 99 207))",

@@ -19,7 +19,7 @@
   --ui-button-ai-label-color-hover: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-button-ai-label-color-idle: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-button-destructive-container-color-active: light-dark(rgb(173 31 31), rgb(248 195 195));
-  --ui-button-destructive-container-color-disabled: light-dark(rgb(253 237 237), rgb(108 19 19));
+  --ui-button-destructive-container-color-disabled: light-dark(rgb(253 237 237), rgb(87 15 15));
   --ui-button-destructive-container-color-hover: light-dark(rgb(195 34 34), rgb(244 154 154));
   --ui-button-destructive-container-color-idle: light-dark(rgb(226 54 54), rgb(226 54 54));
   --ui-button-destructive-container-padding-x: 12px;

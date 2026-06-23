@@ -742,7 +742,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "acronis": "{palette.blue.12}",
+            "acronis": "{palette.transparent.inverted.9}",
             "deep-sky": "{palette.transparent.inverted.9}"
           }
         },

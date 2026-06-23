@@ -15,7 +15,6 @@
   --ui-background-surface-active: light-dark(rgb(216 222 228), rgb(216 222 228));
   --ui-background-surface-hover: light-dark(rgb(236 238 239), rgb(236 238 239));
   --ui-background-surface-secondary: light-dark(rgb(246 246 247), rgb(246 246 247));
-  --ui-border-on-brand-border: light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.898));
   --ui-border-on-brand-border-active: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-border-on-surface-border: light-dark(rgb(199 203 207), rgb(199 203 207));
   --ui-border-on-surface-border-active: light-dark(rgb(68 81 93), rgb(68 81 93));

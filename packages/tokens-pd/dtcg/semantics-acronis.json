@@ -654,7 +654,7 @@
             "com.figma.variableId": "VariableID:52:1377"
           },
           "$type": "color",
-          "$value": "{palette.blue.12}"
+          "$value": "{palette.transparent.inverted.9}"
         },
         "border-active": {
           "$extensions": {
