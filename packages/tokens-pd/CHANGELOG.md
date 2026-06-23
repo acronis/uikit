@@ -1,5 +1,25 @@
 # @acronis-platform/tokens-pd
 
+## 1.7.0
+
+### Minor Changes
+
+- [#334](https://github.com/acronis/uikit/pull/334) [`fc1cb92`](https://github.com/acronis/uikit/commit/fc1cb92d406186b3a422c2a2ef3118f9631c7c73) Thanks [@leonid](https://github.com/leonid)! - Sync tokens from Figma and regenerate `tokens-pd` (`css/<Tier>/*`, Tailwind
+  presets, DTCG):
+  - **Components**: add the `CardFilter`, `Icon`, `MenuItem`, `SearchGlobal`, and
+    `Table` token tiers. Fixes the `CardFilter` value text-style reference
+    (`{typography.title.accent}` → `{typography.headings.title-accent}`); the
+    components emitter now resolves this hyphen-as-dot typography mismatch so
+    re-syncs stay correct.
+  - **Primitives**: the internal (hidden) `palette.electricblue.ink-*` stops were
+    renamed to `palette.electricblue.blue-*` with refreshed values.
+  - **Semantics**: one alias re-pointed to `{palette.transparent.inverted.9}`.
+
+### Patch Changes
+
+- Updated dependencies [[`fc1cb92`](https://github.com/acronis/uikit/commit/fc1cb92d406186b3a422c2a2ef3118f9631c7c73)]:
+  - @acronis-platform/design-tokens@1.7.0
+
 ## 1.6.0
 
 ### Minor Changes
