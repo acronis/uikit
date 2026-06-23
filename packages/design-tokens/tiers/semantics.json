@@ -742,7 +742,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "acronis": "{palette.transparent.inverted.9}",
+            "acronis": "{palette.blue.12}",
             "deep-sky": "{palette.transparent.inverted.9}"
           }
         },
@@ -753,7 +753,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "acronis": "{palette.transparent.inverted.0}",
+            "acronis": "{palette.grayscale.0}",
             "deep-sky": "{palette.transparent.inverted.0}"
           }
         },
@@ -1037,7 +1037,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "acronis": "{palette.transparent.inverted.1}",
+            "acronis": "{palette.transparent.inverted.9}",
             "deep-sky": "{palette.transparent.inverted.1}"
           }
         },

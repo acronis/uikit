@@ -1551,8 +1551,8 @@
           "$type": "dimension",
           "platforms": ["PD"],
           "values": {
-            "acronis": "{units.gap.8}",
-            "deep-sky": "{units.gap.8}"
+            "acronis": "{units.gap.4}",
+            "deep-sky": "{units.gap.4}"
           }
         }
       },
@@ -2477,7 +2477,7 @@
             "deep-sky": "{units.stroke.1}"
           }
         },
-        "marginT": {
+        "marginX": {
           "$extensions": {
             "com.figma.scopes": ["GAP", "FONT_VARIATIONS"],
             "com.figma.variableId": "VariableID:2504:22904"
@@ -4679,7 +4679,7 @@
           "$type": "dimension",
           "platforms": ["PD"],
           "values": {
-            "acronis": "{units.gap.12}",
+            "acronis": "{units.gap.8}",
             "deep-sky": "{units.gap.12}"
           }
         },
@@ -4988,6 +4988,34 @@
       },
       "icon": {
         "color": {
+          "hover": {
+            "$extensions": {
+              "com.figma.scopes": ["SHAPE_FILL"],
+              "com.figma.variableId": "VariableID:3299:9036"
+            },
+            "$type": "color",
+            "platforms": ["PD"],
+            "values": {
+              "acronis": "{colors.glyph.onSurface.destructive}",
+              "deep-sky": "{colors.text.onSurface.secondary}"
+            }
+          },
+          "idle": {
+            "$extensions": {
+              "com.figma.scopes": ["SHAPE_FILL"],
+              "com.figma.variableId": "VariableID:3299:9035"
+            },
+            "$type": "color",
+            "platforms": ["PD"],
+            "values": {
+              "acronis": "{colors.glyph.onSurface.destructive}",
+              "deep-sky": "{colors.text.onSurface.secondary}"
+            }
+          }
+        }
+      },
+      "iconExpand": {
+        "color": {
           "disabled": {
             "$extensions": {
               "com.figma.scopes": ["SHAPE_FILL"],
@@ -5121,6 +5149,46 @@
         }
       },
       "icon": {
+        "color": {
+          "disabled": {
+            "$extensions": {
+              "com.figma.scopes": ["SHAPE_FILL"],
+              "com.figma.variableId": "VariableID:3299:8951"
+            },
+            "$type": "color",
+            "platforms": ["PD"],
+            "values": {
+              "acronis": "{colors.glyph.onSurface.disabled}",
+              "deep-sky": "{colors.text.onSurface.disabled}"
+            }
+          },
+          "hover": {
+            "$extensions": {
+              "com.figma.scopes": ["SHAPE_FILL"],
+              "com.figma.variableId": "VariableID:3299:8950"
+            },
+            "$type": "color",
+            "platforms": ["PD"],
+            "values": {
+              "acronis": "{colors.glyph.onSurface.primary}",
+              "deep-sky": "{colors.text.onSurface.secondary}"
+            }
+          },
+          "idle": {
+            "$extensions": {
+              "com.figma.scopes": ["SHAPE_FILL"],
+              "com.figma.variableId": "VariableID:3299:8949"
+            },
+            "$type": "color",
+            "platforms": ["PD"],
+            "values": {
+              "acronis": "{colors.glyph.onSurface.primary}",
+              "deep-sky": "{colors.text.onSurface.secondary}"
+            }
+          }
+        }
+      },
+      "iconExpand": {
         "color": {
           "disabled": {
             "$extensions": {
