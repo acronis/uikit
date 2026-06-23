@@ -15,6 +15,45 @@ import { ButtonIcon } from '../../button-icon';
 const meta = {
   title: 'UI/Button/With Icons',
   component: Button,
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['default', 'secondary', 'ghost', 'destructive', 'ai', 'inverted'],
+      description: 'Visual style — mirrors the Figma Button `Variant` property.',
+      table: {
+        type: {
+          summary:
+            "'default' | 'secondary' | 'ghost' | 'destructive' | 'ai' | 'inverted'",
+        },
+        defaultValue: { summary: 'default' },
+        category: 'Appearance',
+      },
+    },
+    children: {
+      control: 'text',
+      description: 'Button content — here an icon alongside the label.',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disables the button and applies the disabled token set.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    onClick: {
+      control: false,
+      description: 'Click handler.',
+      table: {
+        type: { summary: '(event: MouseEvent) => void' },
+        category: 'Events',
+      },
+    },
+    render: {
+      control: false,
+      description:
+        'Base UI render prop — replace the underlying `<button>` (e.g. render as an `<a>`).',
+      table: { type: { summary: 'RenderProp' }, category: 'Composition' },
+    },
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;

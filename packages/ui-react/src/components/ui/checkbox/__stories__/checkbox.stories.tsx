@@ -7,11 +7,70 @@ const meta = {
   component: Checkbox,
   tags: ['autodocs'],
   argTypes: {
-    checked: { control: 'boolean' },
-    indeterminate: { control: 'boolean' },
-    disabled: { control: 'boolean' },
-    label: { control: 'text' },
-    description: { control: 'text' },
+    defaultChecked: {
+      control: 'boolean',
+      description: 'Uncontrolled initial checked state.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    checked: {
+      control: 'boolean',
+      description: 'Controlled checked state.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    indeterminate: {
+      control: 'boolean',
+      description:
+        'Renders the box in the indeterminate (mixed) state, showing a minus glyph.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disables the box and applies the disabled token set.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    required: {
+      control: 'boolean',
+      description: 'Marks the control as required for form submission.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    readOnly: {
+      control: 'boolean',
+      description: 'Prevents the user from changing the checked state.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    name: {
+      control: 'text',
+      description: 'Form field name submitted with the value.',
+      table: { type: { summary: 'string' }, category: 'Behavior' },
+    },
+    value: {
+      control: 'text',
+      description: 'Value submitted with the form when checked.',
+      table: { type: { summary: 'string' }, category: 'Behavior' },
+    },
+    label: {
+      control: 'text',
+      description: 'Optional label rendered beside the box; names the control.',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
+    description: {
+      control: 'text',
+      description: 'Optional secondary description rendered under the label.',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
+    onCheckedChange: {
+      control: false,
+      description: 'Fires with the new checked state when toggled.',
+      table: {
+        type: { summary: '(checked: boolean, event: Event) => void' },
+        category: 'Events',
+      },
+    },
+    render: {
+      control: false,
+      description: 'Base UI render prop for overriding the rendered element.',
+      table: { type: { summary: 'ReactElement | function' }, category: 'Composition' },
+    },
   },
 } satisfies Meta<typeof Checkbox>;
 

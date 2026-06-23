@@ -10,8 +10,32 @@ const meta = {
     variant: {
       control: 'select',
       options: ['default', 'secondary', 'ghost', 'destructive', 'ai', 'inverted'],
+      description: 'Visual style — mirrors the Figma Button `Variant` property.',
+      table: {
+        type: {
+          summary:
+            "'default' | 'secondary' | 'ghost' | 'destructive' | 'ai' | 'inverted'",
+        },
+        defaultValue: { summary: 'default' },
+        category: 'Appearance',
+      },
     },
-    disabled: { control: 'boolean' },
+    children: {
+      control: 'text',
+      description: 'Button label content.',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disables the button and applies the disabled token set.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    render: {
+      control: false,
+      description:
+        'Base UI render prop — replace the underlying `<button>` (e.g. render as an `<a>`).',
+      table: { type: { summary: 'RenderProp' }, category: 'Composition' },
+    },
   },
   args: {
     children: 'Button',

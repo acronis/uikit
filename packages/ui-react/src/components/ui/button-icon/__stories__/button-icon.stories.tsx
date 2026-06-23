@@ -14,10 +14,45 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     variant: {
-      control: 'inline-radio',
+      control: 'select',
       options: ['ghost', 'secondary'],
+      description: 'Visual style — mirrors the Figma ButtonIcon `variant` property.',
+      table: {
+        type: { summary: "'ghost' | 'secondary'" },
+        defaultValue: { summary: 'ghost' },
+        category: 'Appearance',
+      },
     },
-    disabled: { control: 'boolean' },
+    disabled: {
+      control: 'boolean',
+      description: 'Disables the button and applies the disabled token set.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    'aria-label': {
+      control: 'text',
+      description:
+        'Accessible name for the icon-only button. Provide this (or `aria-labelledby`) so the control has a label.',
+      table: { type: { summary: 'string' }, category: 'Content' },
+    },
+    children: {
+      control: false,
+      description: 'The icon element rendered inside the button.',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
+    onClick: {
+      control: false,
+      description: 'Click handler.',
+      table: {
+        type: { summary: '(event: MouseEvent) => void' },
+        category: 'Events',
+      },
+    },
+    render: {
+      control: false,
+      description:
+        'Base UI render prop — replace the underlying `<button>` (e.g. render as an `<a>`).',
+      table: { type: { summary: 'RenderProp' }, category: 'Composition' },
+    },
   },
   args: {
     'aria-label': 'Add',

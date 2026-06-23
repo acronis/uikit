@@ -8,8 +8,47 @@ const meta = {
   tags: ['autodocs'],
   args: { placeholder: 'Placeholder', 'aria-label': 'Example' },
   argTypes: {
-    disabled: { control: 'boolean' },
-    rows: { control: 'number' },
+    placeholder: {
+      control: 'text',
+      description: 'Placeholder shown when the textarea is empty.',
+      table: { type: { summary: 'string' }, category: 'Content' },
+    },
+    defaultValue: {
+      control: 'text',
+      description: 'Uncontrolled initial value.',
+      table: { type: { summary: 'string' }, category: 'Content' },
+    },
+    rows: {
+      control: 'number',
+      description:
+        'Number of visible text rows (the box still grows with vertical resize past this height).',
+      table: { type: { summary: 'number' }, category: 'Appearance' },
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disables the textarea and applies the disabled token set.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    'aria-invalid': {
+      control: 'boolean',
+      description: 'Marks the field invalid; on focus the ring swaps to the error color.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    readOnly: {
+      control: 'boolean',
+      description: 'Makes the value non-editable.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    required: {
+      control: 'boolean',
+      description: 'Marks the field as required for form submission.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    onChange: {
+      control: false,
+      description: 'Native change handler.',
+      table: { type: { summary: '(event) => void' }, category: 'Events' },
+    },
   },
   decorators: [
     (Story) => (

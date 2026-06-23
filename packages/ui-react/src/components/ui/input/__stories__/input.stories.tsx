@@ -8,8 +8,37 @@ const meta = {
   tags: ['autodocs'],
   args: { placeholder: 'Placeholder', 'aria-label': 'Example' },
   argTypes: {
-    disabled: { control: 'boolean' },
-    type: { control: 'text' },
+    placeholder: {
+      control: 'text',
+      description: 'Placeholder shown when the field is empty.',
+      table: { type: { summary: 'string' }, category: 'Content' },
+    },
+    defaultValue: {
+      control: 'text',
+      description: 'Uncontrolled initial value.',
+      table: { type: { summary: 'string' }, category: 'Content' },
+    },
+    type: {
+      control: 'select',
+      options: ['text', 'email', 'password', 'number', 'search', 'tel', 'url'],
+      description: 'Native input type.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: 'text' }, category: 'Behavior' },
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disables the input and applies the disabled token set.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    'aria-invalid': {
+      control: 'boolean',
+      description: 'Renders the error border and, on focus, the error ring.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    readOnly: {
+      control: 'boolean',
+      description: 'Makes the value non-editable.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
   },
   decorators: [
     (Story) => (

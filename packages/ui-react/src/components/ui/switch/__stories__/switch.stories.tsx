@@ -7,9 +7,31 @@ const meta = {
   component: Switch,
   tags: ['autodocs'],
   argTypes: {
-    disabled: { control: 'boolean' },
-    defaultChecked: { control: 'boolean' },
-    label: { control: 'text' },
+    label: {
+      control: 'text',
+      description: 'Optional text label rendered beside the toggle; names the control.',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
+    defaultChecked: {
+      control: 'boolean',
+      description: 'Uncontrolled initial checked state.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    checked: {
+      control: 'boolean',
+      description: 'Controlled checked state.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disables the toggle and applies the disabled token set.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    onCheckedChange: {
+      control: false,
+      description: 'Fires with the new checked state when toggled.',
+      table: { type: { summary: '(checked: boolean) => void' }, category: 'Events' },
+    },
   },
   args: {
     'aria-label': 'Toggle setting',

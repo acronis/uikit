@@ -20,8 +20,43 @@ const meta = {
         'neutral',
         'ai',
       ],
+      description:
+        'Status/category style. Wires container fill, border, label, and icon to the matching `--ui-tag-<variant>-*` token set. The `ai` variant paints a gradient border.',
+      table: {
+        type: {
+          summary:
+            "'info' | 'success' | 'warning' | 'critical' | 'danger' | 'neutral' | 'ai'",
+        },
+        defaultValue: { summary: 'neutral' },
+        category: 'Appearance',
+      },
     },
-    size: { control: 'inline-radio', options: ['default', 'sm'] },
+    size: {
+      control: 'inline-radio',
+      options: ['default', 'sm'],
+      description:
+        'Tag height: `default` (24px) or `sm` (20px). Padding is uniform across sizes.',
+      table: {
+        type: { summary: "'default' | 'sm'" },
+        defaultValue: { summary: 'default' },
+        category: 'Appearance',
+      },
+    },
+    icon: {
+      control: false,
+      description: 'Optional leading icon, rendered at 16px before the label.',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
+    children: {
+      control: 'text',
+      description: 'Tag label. Truncates with an ellipsis when it exceeds the max width.',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
+    className: {
+      control: false,
+      description: 'Additional classes merged onto the tag root.',
+      table: { type: { summary: 'string' }, category: 'Appearance' },
+    },
   },
 } satisfies Meta<typeof Tag>;
 

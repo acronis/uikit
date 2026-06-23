@@ -15,6 +15,25 @@ const meta = {
   title: 'UI/Breadcrumb',
   component: Breadcrumb,
   tags: ['autodocs'],
+  argTypes: {
+    children: {
+      control: false,
+      description:
+        'Breadcrumb structure — typically a single `BreadcrumbList` containing `BreadcrumbItem`, `BreadcrumbLink`, `BreadcrumbPage`, and `BreadcrumbSeparator` parts.',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
+    render: {
+      control: false,
+      description:
+        'Replace the rendered `<nav>` with another element or component via Base UI composition. Accepts a React element or a render function.',
+      table: { type: { summary: 'useRender.RenderProp' }, category: 'Composition' },
+    },
+    className: {
+      control: false,
+      description: 'Additional classes merged onto the breadcrumb `<nav>`.',
+      table: { type: { summary: 'string' }, category: 'Appearance' },
+    },
+  },
 } satisfies Meta<typeof Breadcrumb>;
 
 export default meta;

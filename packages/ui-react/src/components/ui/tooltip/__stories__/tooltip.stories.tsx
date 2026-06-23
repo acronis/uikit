@@ -13,6 +13,42 @@ const meta = {
   title: 'UI/Tooltip',
   component: Tooltip,
   tags: ['autodocs'],
+  argTypes: {
+    defaultOpen: {
+      control: 'boolean',
+      description: 'Uncontrolled initial open state of the tooltip popup.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    open: {
+      control: 'boolean',
+      description: 'Controlled open state of the tooltip popup.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disables the tooltip, preventing it from opening.',
+      table: { type: { summary: 'boolean' }, category: 'Behavior' },
+    },
+    trackCursorAxis: {
+      control: 'select',
+      options: ['none', 'x', 'y', 'both'],
+      description: 'Which axis the popup follows the cursor along.',
+      table: { type: { summary: "'none' | 'x' | 'y' | 'both'" }, category: 'Behavior' },
+    },
+    onOpenChange: {
+      control: false,
+      description: 'Fires with the new open state when the tooltip opens or closes.',
+      table: {
+        type: { summary: '(open: boolean, event?: Event) => void' },
+        category: 'Events',
+      },
+    },
+    children: {
+      control: false,
+      description: 'The TooltipTrigger and TooltipContent that compose the tooltip.',
+      table: { type: { summary: 'ReactNode' }, category: 'Composition' },
+    },
+  },
   decorators: [
     (Story) => (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 64 }}>

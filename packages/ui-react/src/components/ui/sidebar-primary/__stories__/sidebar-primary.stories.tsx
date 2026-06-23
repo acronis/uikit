@@ -30,6 +30,54 @@ const meta = {
   component: SidebarPrimary,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },
+  argTypes: {
+    expanded: {
+      control: 'boolean',
+      description:
+        'Controlled rail-width state. When set, the consumer owns it and the trigger only emits `onExpandedChange`. `data-state="expanded|collapsed"` drives every token switch.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    defaultExpanded: {
+      control: 'boolean',
+      description:
+        'Uncontrolled initial expanded state. Ignored when `expanded` is provided.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'true' },
+        category: 'State',
+      },
+    },
+    onExpandedChange: {
+      control: false,
+      description:
+        'Fires with the next expanded value whenever the rail toggles (e.g. via the collapse trigger), in both controlled and uncontrolled modes.',
+      table: {
+        type: { summary: '(expanded: boolean) => void' },
+        category: 'Events',
+      },
+    },
+    render: {
+      control: false,
+      description:
+        'Replace the rendered `<nav>` with another element or component (Base UI composition). Accepts a React element or a render function.',
+      table: { type: { summary: 'useRender.RenderProp' }, category: 'Composition' },
+    },
+    'aria-label': {
+      control: 'text',
+      description: 'Accessible name for the navigation landmark.',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: "'Primary'" },
+        category: 'Behavior',
+      },
+    },
+    children: {
+      control: false,
+      description:
+        'Composed sidebar parts (Header, Content, Section, Menu, Footer, …).',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
+  },
 } satisfies Meta<typeof SidebarPrimary>;
 
 export default meta;

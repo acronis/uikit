@@ -14,6 +14,82 @@ const meta = {
   title: 'UI/Select',
   component: Select,
   tags: ['autodocs'],
+  argTypes: {
+    defaultValue: {
+      control: 'text',
+      description: 'Uncontrolled initial value (matches a SelectItem `value`).',
+      table: { type: { summary: 'Value | null' }, category: 'Content' },
+    },
+    value: {
+      control: false,
+      description: 'Controlled value. Pair with `onValueChange`.',
+      table: { type: { summary: 'Value | null' }, category: 'Content' },
+    },
+    items: {
+      control: false,
+      description:
+        'Item data structure; when set, `SelectValue` renders the selected item label instead of the raw value.',
+      table: {
+        type: { summary: 'Record<string, ReactNode> | { label; value }[]' },
+        category: 'Content',
+      },
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Disables the select and applies the disabled token set.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' }, category: 'State' },
+    },
+    readOnly: {
+      control: 'boolean',
+      description: 'Prevents choosing a different option from the popup.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' }, category: 'State' },
+    },
+    required: {
+      control: 'boolean',
+      description: 'Requires a value before form submission.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' }, category: 'State' },
+    },
+    multiple: {
+      control: 'boolean',
+      description: 'Allows selecting multiple items.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' }, category: 'Behavior' },
+    },
+    defaultOpen: {
+      control: 'boolean',
+      description: 'Whether the popup is initially open (uncontrolled).',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' }, category: 'Behavior' },
+    },
+    open: {
+      control: false,
+      description: 'Controlled open state. Pair with `onOpenChange`.',
+      table: { type: { summary: 'boolean' }, category: 'Behavior' },
+    },
+    modal: {
+      control: 'boolean',
+      description: 'Whether the select enters a modal state (locks scroll, blocks outside pointer) when open.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' }, category: 'Behavior' },
+    },
+    name: {
+      control: 'text',
+      description: 'Identifies the field when a form is submitted.',
+      table: { type: { summary: 'string' }, category: 'Behavior' },
+    },
+    onValueChange: {
+      control: false,
+      description: 'Called when the selected value changes.',
+      table: { type: { summary: '(value, eventDetails) => void' }, category: 'Events' },
+    },
+    onOpenChange: {
+      control: false,
+      description: 'Called when the popup is opened or closed.',
+      table: { type: { summary: '(open, eventDetails) => void' }, category: 'Events' },
+    },
+    children: {
+      control: false,
+      description: 'SelectTrigger + SelectContent composition.',
+      table: { type: { summary: 'ReactNode' }, category: 'Composition' },
+    },
+  },
   decorators: [
     (Story) => (
       <div className="w-64">

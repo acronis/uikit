@@ -11,6 +11,24 @@ const meta = {
     color: {
       control: 'select',
       options: ['teal', 'violet', 'red', 'yellow', 'orange'],
+      description:
+        'Color scheme that tints the fallback background and the initials. Maps to the `--ui-avatar-color-<scheme>` / `--ui-avatar-label-color-<scheme>` token pair.',
+      table: {
+        type: { summary: "'teal' | 'violet' | 'red' | 'yellow' | 'orange'" },
+        defaultValue: { summary: 'teal' },
+        category: 'Appearance',
+      },
+    },
+    children: {
+      control: false,
+      description:
+        'Avatar content — compose `AvatarImage` and/or `AvatarFallback` here.',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
+    className: {
+      control: false,
+      description: 'Additional classes merged onto the avatar root.',
+      table: { type: { summary: 'string' }, category: 'Appearance' },
     },
   },
 } satisfies Meta<typeof Avatar>;
