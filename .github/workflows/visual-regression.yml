@@ -92,14 +92,15 @@ jobs:
           key: storybook-${{ matrix.name }}-${{ runner.os }}-${{ hashFiles(format('{0}/src/**', matrix.dir), format('{0}/.storybook/**', matrix.dir), format('{0}/package.json', matrix.dir)) }}
           restore-keys: storybook-${{ matrix.name }}-${{ runner.os }}-
 
-      # ui-react depends on generated workspace packages — notably
-      # @acronis-platform/icons-react, whose sources are generated + gitignored
-      # and which ships from dist/. Its dependency graph must be built before
-      # Storybook can resolve those imports. ui-legacy is a leaf and needs no
-      # pre-build. Mirrors ci.yml's `pnpm --filter "@acronis-platform/ui-react..."`.
+      # ui-react depends on generated @acronis-platform/icons-react output
+      # (generated sources + dist/ are gitignored). Build that package (and its
+      # own prerequisites) before Storybook so imports resolve. Avoid broad
+      # ui-react recursive builds here: they also pull in tokens-pd/style-dictionary,
+      # which is unrelated to visual snapshots and can fail on in-flight
+      # design-assets schema migrations.
       - name: Build workspace dependencies
         if: matrix.name == 'ui-react' && steps.changes.outputs[matrix.name] == 'true'
-        run: pnpm --filter "${{ matrix.filter }}..." run build
+        run: pnpm --filter @acronis-platform/icons-react... run build
 
       - name: Build Storybook
         if: steps.changes.outputs[matrix.name] == 'true'
