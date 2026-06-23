@@ -14,7 +14,7 @@ export default {
         "avatar-label-yellow": "light-dark(rgb(138 99 0), rgb(255 238 178))"
       },
       "borderColor": {
-        "avatar-global-avatar-border": "light-dark(rgb(255 255 255), rgb(31 32 34))"
+        "avatar-global-avatar-border": "light-dark(rgb(255 255 255), rgb(0 0 0))"
       },
       "fontFamily": {
         "avatar-global-label-text-style": "Inter, system-ui, sans-serif",

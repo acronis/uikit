@@ -6,9 +6,9 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "card-filter-global-container-active": "light-dark(rgb(255 255 255), rgb(31 32 34))",
-        "card-filter-global-container-hover": "light-dark(rgb(255 255 255), rgb(31 32 34))",
-        "card-filter-global-container-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
+        "card-filter-global-container-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
+        "card-filter-global-container-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
+        "card-filter-global-container-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))"
       },
       "textColor": {
         "card-filter-global-label": "light-dark(rgb(54 65 74), rgb(54 65 74))",

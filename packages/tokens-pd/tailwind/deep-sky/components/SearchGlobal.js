@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "search-global-box": "light-dark(rgb(255 255 255), rgb(31 32 34))"
+        "search-global-box": "light-dark(rgb(255 255 255), rgb(0 0 0))"
       },
       "textColor": {
         "search-global-shortcut": "light-dark(rgb(54 65 74), rgb(54 65 74))"

@@ -257,7 +257,7 @@
             "com.figma.variableId": "VariableID:147:8"
           },
           "$type": "color",
-          "$value": "{palette.blue.1}"
+          "$value": "{palette.electricblue.blue-1}"
         },
         "info-hover": {
           "$extensions": {
@@ -267,7 +267,7 @@
             "com.figma.variableId": "VariableID:149:9"
           },
           "$type": "color",
-          "$value": "{palette.blue.2}"
+          "$value": "{palette.electricblue.blue-2}"
         },
         "info-pressed": {
           "$extensions": {
@@ -277,7 +277,7 @@
             "com.figma.variableId": "VariableID:149:10"
           },
           "$type": "color",
-          "$value": "{palette.blue.3}"
+          "$value": "{palette.electricblue.blue-3}"
         },
         "neutral": {
           "$extensions": {
@@ -466,7 +466,7 @@
             "com.figma.variableId": "VariableID:910:263442"
           },
           "$type": "color",
-          "$value": "{palette.blue.7}"
+          "$value": "{palette.electricblue.blue-7-primary}"
         },
         "info-hover": {
           "$extensions": {
@@ -477,7 +477,7 @@
             "com.figma.variableId": "VariableID:910:263443"
           },
           "$type": "color",
-          "$value": "{palette.blue.8}"
+          "$value": "{palette.electricblue.blue-8}"
         },
         "info-pressed": {
           "$extensions": {
@@ -488,7 +488,7 @@
             "com.figma.variableId": "VariableID:910:263444"
           },
           "$type": "color",
-          "$value": "{palette.blue.9}"
+          "$value": "{palette.electricblue.blue-9}"
         },
         "neutral": {
           "$extensions": {
@@ -734,7 +734,7 @@
             "com.figma.variableId": "VariableID:147:38"
           },
           "$type": "color",
-          "$value": "{palette.blue.4}"
+          "$value": "{palette.electricblue.blue-4}"
         },
         "info-strong": {
           "$extensions": {
@@ -744,7 +744,7 @@
             "com.figma.variableId": "VariableID:797:2008"
           },
           "$type": "color",
-          "$value": "{palette.blue.8}"
+          "$value": "{palette.electricblue.blue-8}"
         },
         "neutral": {
           "$extensions": {
@@ -1040,7 +1040,7 @@
             "com.figma.variableId": "VariableID:796:1735"
           },
           "$type": "color",
-          "$value": "{palette.blue.11}"
+          "$value": "{palette.electricblue.blue-11}"
         },
         "neutral": {
           "$extensions": {
@@ -1062,7 +1062,7 @@
             "com.figma.variableId": "VariableID:149:7"
           },
           "$type": "color",
-          "$value": "{palette.blue.11}"
+          "$value": "{palette.electricblue.blue-11}"
         },
         "success": {
           "$extensions": {
@@ -1331,7 +1331,7 @@
             "com.figma.variableId": "VariableID:201:17"
           },
           "$type": "color",
-          "$value": "{palette.blue.11}"
+          "$value": "{palette.electricblue.blue-11}"
         },
         "link": {
           "$extensions": {
@@ -1341,7 +1341,7 @@
             "com.figma.variableId": "VariableID:149:4"
           },
           "$type": "color",
-          "$value": "{palette.blue.11}"
+          "$value": "{palette.electricblue.blue-11}"
         },
         "link-disabled": {
           "$extensions": {
@@ -1351,7 +1351,7 @@
             "com.figma.variableId": "VariableID:149:8"
           },
           "$type": "color",
-          "$value": "{palette.blue.5}"
+          "$value": "{palette.electricblue.blue-5}"
         },
         "link-hover": {
           "$extensions": {
@@ -1361,7 +1361,7 @@
             "com.figma.variableId": "VariableID:149:5"
           },
           "$type": "color",
-          "$value": "{palette.blue.13}"
+          "$value": "{palette.electricblue.blue-13-brand}"
         },
         "link-pressed": {
           "$extensions": {
@@ -1371,7 +1371,7 @@
             "com.figma.variableId": "VariableID:149:6"
           },
           "$type": "color",
-          "$value": "{palette.blue.14}"
+          "$value": "{palette.electricblue.blue-14}"
         },
         "neutral": {
           "$extensions": {

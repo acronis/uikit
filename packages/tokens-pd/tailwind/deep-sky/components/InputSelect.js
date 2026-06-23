@@ -6,16 +6,16 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "input-select-dropdown-container": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "input-select-dropdown-container": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "input-select-dropdown-item-selected-container-disabled": "light-dark(rgb(246 246 247), rgb(246 246 247))",
         "input-select-dropdown-item-selected-container-hover": "light-dark(rgb(216 222 228), rgb(216 222 228))",
         "input-select-dropdown-item-selected-container-idle": "light-dark(rgb(216 222 228), rgb(216 222 228))",
         "input-select-dropdown-item-unselected-container-disabled": "light-dark(rgb(246 246 247), rgb(246 246 247))",
         "input-select-dropdown-item-unselected-container-hover": "light-dark(rgb(236 238 239), rgb(236 238 239))",
-        "input-select-dropdown-item-unselected-container-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "input-select-dropdown-item-unselected-container-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "input-select-global-box-disabled": "light-dark(rgb(246 246 247), rgb(246 246 247))",
-        "input-select-global-box-hover": "light-dark(rgb(255 255 255), rgb(31 32 34))",
-        "input-select-global-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
+        "input-select-global-box-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
+        "input-select-global-box-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))"
       },
       "textColor": {
         "input-select-dropdown-dropdown-search-label-placeholder": "light-dark(rgb(54 65 74), rgb(54 65 74))",
@@ -49,9 +49,6 @@ export default {
         "input-select-normal-box-border-color-idle": "light-dark(rgb(199 203 207), rgb(199 203 207))"
       },
       "fill": {
-        "input-select-dropdown-item-global-icon-checked": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "input-select-dropdown-item-global-icon-collapse": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "input-select-dropdown-item-global-icon-tenant": "light-dark(rgb(68 81 93), rgb(68 81 93))",
         "input-select-error-icon-hover": "light-dark(rgb(54 65 74), rgb(54 65 74))",
         "input-select-error-icon-idle": "light-dark(rgb(54 65 74), rgb(54 65 74))",
         "input-select-normal-icon-disabled": "light-dark(rgb(41 49 55), rgb(41 49 55))",

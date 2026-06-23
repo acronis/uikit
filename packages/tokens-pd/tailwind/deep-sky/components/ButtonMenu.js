@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "button-menu-dropdown-container": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "button-menu-dropdown-container": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "button-menu-dropdown-item-container-active": "light-dark(rgb(246 246 247), rgb(246 246 247))",
         "button-menu-dropdown-item-container-hover": "light-dark(rgb(216 222 228), rgb(216 222 228))",
         "button-menu-dropdown-item-container-idle": "light-dark(rgb(216 222 228), rgb(216 222 228))",
@@ -22,7 +22,7 @@ export default {
       "textColor": {
         "button-menu-dropdown-extras-shortcut-label": "light-dark(rgb(54 65 74), rgb(54 65 74))",
         "button-menu-dropdown-item-label": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "button-menu-primary-label": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "button-menu-primary-label": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "button-menu-secondary-label-active": "light-dark(rgb(68 81 93), rgb(68 81 93))",
         "button-menu-secondary-label-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
         "button-menu-secondary-label-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
@@ -39,7 +39,7 @@ export default {
       "fill": {
         "button-menu-dropdown-extras-cascade-icon": "light-dark(rgb(68 81 93), rgb(68 81 93))",
         "button-menu-dropdown-item-icon": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "button-menu-primary-icon": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "button-menu-primary-icon": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "button-menu-secondary-icon-active": "light-dark(rgb(68 81 93), rgb(68 81 93))",
         "button-menu-secondary-icon-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
         "button-menu-secondary-icon-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",

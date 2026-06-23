@@ -10,7 +10,7 @@
   --ui-search-global-box-border-radius: 24px;
   --ui-search-global-box-border-style: solid;
   --ui-search-global-box-border-width: 2px;
-  --ui-search-global-box-color: light-dark(rgb(255 255 255), rgb(31 32 34));
+  --ui-search-global-box-color: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-search-global-box-gap: 8px;
   --ui-search-global-box-height: 48px;
   --ui-search-global-box-padding-x: 16px;

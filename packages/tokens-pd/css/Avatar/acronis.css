@@ -4,14 +4,14 @@
 :root, :host {
   color-scheme: light dark;
 
-  --ui-avatar-color-orange: light-dark(rgb(255 222 194), rgb(128 58 0));
-  --ui-avatar-color-red: light-dark(rgb(251 218 218), rgb(130 23 23));
+  --ui-avatar-color-orange: light-dark(rgb(255 222 194), rgb(153 69 0));
+  --ui-avatar-color-red: light-dark(rgb(251 218 218), rgb(152 27 27));
   --ui-avatar-color-teal: light-dark(rgb(209 240 237), rgb(4 73 67));
-  --ui-avatar-color-violet: light-dark(rgb(236 222 242), rgb(108 19 108));
+  --ui-avatar-color-violet: light-dark(rgb(236 222 242), rgb(130 23 130));
   --ui-avatar-color-yellow: light-dark(rgb(255 238 178), rgb(138 99 0));
   --ui-avatar-global-avatar-border-border-style: solid;
   --ui-avatar-global-avatar-border-border-width: 2px;
-  --ui-avatar-global-avatar-border-color: light-dark(rgb(255 255 255), rgb(31 32 34));
+  --ui-avatar-global-avatar-border-color: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-avatar-global-avatar-border-radius: 999px;
   --ui-avatar-global-avatar-group-gap: -6px;
   --ui-avatar-global-avatar-size: 32px;

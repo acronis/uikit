@@ -6,27 +6,27 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "tag-ai-container": "light-dark(rgb(249 245 251), rgb(62 15 62))",
-        "tag-critical-container": "light-dark(rgb(255 240 230), rgb(77 35 0))",
-        "tag-danger-container": "light-dark(rgb(253 237 237), rgb(87 15 15))",
-        "tag-info-container": "light-dark(rgb(238 242 247), rgb(46 47 50))",
-        "tag-neutral-container": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "tag-ai-container": "light-dark(rgb(249 245 251), rgb(82 20 82))",
+        "tag-critical-container": "light-dark(rgb(255 240 230), rgb(102 46 0))",
+        "tag-danger-container": "light-dark(rgb(253 237 237), rgb(108 19 19))",
+        "tag-info-container": "light-dark(rgb(238 242 247), rgb(31 48 71))",
+        "tag-neutral-container": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "tag-success-container": "light-dark(rgb(238 247 239), rgb(3 58 17))",
-        "tag-warning-container": "light-dark(rgb(255 249 229), rgb(102 73 0))"
+        "tag-warning-container": "light-dark(rgb(255 249 229), rgb(77 55 0))"
       },
       "textColor": {
         "tag-ai-label": "light-dark(rgb(130 23 130), rgb(250 209 250))",
         "tag-critical-label": "light-dark(rgb(153 69 0), rgb(190 113 38))",
         "tag-danger-label": "light-dark(rgb(152 27 27), rgb(251 218 218))",
-        "tag-info-label": "light-dark(rgb(6 54 121), rgb(190 215 244))",
+        "tag-info-label": "light-dark(rgb(6 54 121), rgb(214 228 245))",
         "tag-neutral-label": "light-dark(rgb(61 63 67), rgb(125 132 148))",
         "tag-success-label": "light-dark(rgb(15 87 33), rgb(56 150 66))",
         "tag-warning-label": "light-dark(rgb(138 99 0), rgb(255 238 178))"
       },
       "borderColor": {
-        "tag-critical-container-border-color": "light-dark(rgb(255 204 153), rgb(153 69 0))",
-        "tag-danger-container-border-color": "light-dark(rgb(248 195 195), rgb(151 27 27))",
-        "tag-info-container-border-color": "light-dark(rgb(190 215 244), rgb(11 66 142))",
+        "tag-critical-container-border-color": "light-dark(rgb(255 204 153), rgb(178 80 0))",
+        "tag-danger-container-border-color": "light-dark(rgb(248 195 195), rgb(173 31 31))",
+        "tag-info-container-border-color": "light-dark(rgb(190 215 244), rgb(53 83 125))",
         "tag-neutral-container-border-color": "light-dark(rgb(201 204 207), rgb(73 76 80))",
         "tag-success-container-border-color": "light-dark(rgb(178 229 187), rgb(26 102 38))",
         "tag-warning-container-border-color": "light-dark(rgb(255 227 128), rgb(178 128 0))"
@@ -35,7 +35,7 @@ export default {
         "tag-ai-icon": "light-dark(rgb(130 23 130), rgb(250 209 250))",
         "tag-critical-icon": "light-dark(rgb(153 69 0), rgb(190 113 38))",
         "tag-danger-icon": "light-dark(rgb(152 27 27), rgb(251 218 218))",
-        "tag-info-icon": "light-dark(rgb(6 54 121), rgb(190 215 244))",
+        "tag-info-icon": "light-dark(rgb(6 54 121), rgb(214 228 245))",
         "tag-neutral-icon": "light-dark(rgb(61 63 67), rgb(125 132 148))",
         "tag-success-icon": "light-dark(rgb(15 87 33), rgb(56 150 66))",
         "tag-warning-icon": "light-dark(rgb(138 99 0), rgb(255 238 178))"
