@@ -18,7 +18,7 @@ const SEMANTICS_PATH  = fileURLToPath(new URL('../../../../packages/design-token
 
 // Components to emit — PascalCase Figma names. Pass a subset via constructor.
 const DEFAULT_COMPONENTS = [
-  'Breadcrumb', 'Button', 'ButtonIcon', 'ButtonMenu', 'Checkbox',
+  'Avatar', 'Breadcrumb', 'Button', 'ButtonIcon', 'ButtonMenu', 'Checkbox',
   'InputDatePicker', 'InputSearch', 'InputSelect', 'InputText', 'InputTextArea', 'Radio',
   'SidebarPrimary', 'SidebarSecondary', 'Switch', 'Tag', 'Tooltip',
 ];
