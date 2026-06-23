@@ -39,7 +39,7 @@ Options:
 If fetching, call `figma_get_status` immediately — before asking about scope,
 before any other work. Two outcomes:
 
-- **Running**: report the connected file name and proceed to Phase 0.
+- **Running**: report the connected file name, then run `ls -l .claude/skills/figma-to-design-tokens/snapshot/` and show the timestamps of any existing snapshot files, then proceed to Phase 0.
 - **Not running / unreachable**: stop. Tell the user: "The Figma Desktop
   Bridge plugin is not running. Open Figma → Plugins → Development →
   Figma Desktop Bridge → Run, then try again." Do not continue until confirmed.
@@ -68,15 +68,18 @@ If tier is ambiguous, ask before proceeding. Do not assume.
 
 _Skip this phase entirely if Pre-flight chose "use last snapshot" — proceed directly to Phase 2 (Combine)._
 
-Run all three MCP tools in order. Do not skip any.
+Run all three MCP tools. **1a must complete first** (it writes the file to disk
+itself). **1b and 1c are independent — fire them in parallel** as a single
+tool-call turn to cut wall-clock time in half.
 
 **Courier convention.** Your only job for the pull is to route each tool's output
 to its fixed snapshot filename — **byte-for-byte, no reshaping, field-picking, or
 unwrapping**. Do NOT hand-author or re-type snapshot files. When an `execute`
 result is large and the harness spills it to a temp file, `cp` that temp file to
 the destination verbatim (the `{_mcp, success, result}` envelope is fine — the
-scripts auto-unwrap it). The pipeline scripts own the file shapes; don't inspect
-them unless a script fails.
+scripts auto-unwrap it). The pipeline scripts own the file shapes; **never Read
+snapshot JSON files** — they are 100 KB+ and blow the context window. Only open
+them if a script exits non-zero and you need to diagnose the exact error line.
 
 **1a. `figma_export_tokens`**
 
@@ -95,7 +98,9 @@ mv .claude/skills/figma-to-design-tokens/snapshot/tokens.tokens.json \
 
 **1b. `figma_execute` → `styles.json`**
 Pull **all** style types via the plugin API and save the raw result (envelope and
-all) to `.claude/skills/figma-to-design-tokens/snapshot/styles.json`:
+all) to `.claude/skills/figma-to-design-tokens/snapshot/styles.json`.
+**Write via Bash (`cat > file << 'EOF'`), not the Write tool** — the Write tool
+requires a prior Read and will error if the file already exists from a previous run:
 
 ```javascript
 const text = await figma.getLocalTextStylesAsync();
@@ -222,6 +227,7 @@ node .claude/skills/figma-to-design-tokens/figma-diff.mjs [--tier <tier>]
 Output: structured diff printed to stdout + `snapshot/figma-diff-report.json`
 
 **Present the full diff report to the operator. Do not summarize or omit lines.**
+Use the stdout printed by the script — do **not** Read `snapshot/figma-diff-report.json`.
 
 Change categories in the report:
 
@@ -295,6 +301,9 @@ Wait for plan approval before proceeding.
 ---
 
 ## Phase 6 — Emit
+
+**Skip any tier whose diff showed zero changes** — don't run its emitter or
+validate it. Only emit tiers that have actual diff entries.
 
 Run the appropriate emitter(s) based on the approved tier:
 
@@ -414,6 +423,10 @@ chore(tokens): sync all tiers from Figma
 
 ## Hard rules
 
+- **Never Read snapshot JSON files** — `variables.tokens.json`, `variables-meta.json`,
+  `styles.json`, `figma-snapshot.json`, `figma-diff-report.json` are all 100 KB+.
+  Route them to disk and let the pipeline scripts process them. Only open a file if
+  a script exits non-zero and you need to pinpoint the error line.
 - **Never hand-edit `tiers/*.json`** — always use the emitters.
 - **Never use `--no-verify`** — fix the hook failure.
 - **Never proceed past Phase 4** without explicit operator approval.
