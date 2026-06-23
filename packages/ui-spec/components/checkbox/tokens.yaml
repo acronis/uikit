@@ -13,7 +13,7 @@ tokens:
   - { name: --ui-checkbox-global-box-size, affects: root }
   - { name: --ui-checkbox-global-box-border-radius, affects: root }
   - { name: --ui-checkbox-global-box-border-width, affects: root }
-  - { name: --ui-checkbox-global-box-margin-t, affects: root }
+  - { name: --ui-checkbox-global-box-margin-x, affects: root }
   - { name: --ui-checkbox-global-container-gap, affects: container }
   - { name: --ui-checkbox-global-container-width-min, affects: container }
   - { name: --ui-checkbox-global-container-width-max, affects: container }
