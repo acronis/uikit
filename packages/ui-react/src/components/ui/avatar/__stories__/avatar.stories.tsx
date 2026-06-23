@@ -40,13 +40,16 @@ export const Colors: Story = {
   ),
 };
 
+// A self-contained data-URI image keeps the visual-regression snapshot
+// deterministic — a remote URL renders differently when the network is blocked
+// (e.g. in CI), which shifts the layout and breaks the baseline.
+const SAMPLE_IMAGE =
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect width='32' height='32' fill='%234f46e5'/><circle cx='16' cy='13' r='6' fill='white'/><circle cx='16' cy='30' r='10' fill='white'/></svg>";
+
 export const WithImage: Story = {
   render: () => (
     <Avatar>
-      <AvatarImage
-        src="https://i.pravatar.cc/64?img=12"
-        alt="Sam Nguyen"
-      />
+      <AvatarImage src={SAMPLE_IMAGE} alt="Sam Nguyen" />
       <AvatarFallback>SN</AvatarFallback>
     </Avatar>
   ),
