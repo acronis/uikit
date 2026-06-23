@@ -16,11 +16,14 @@ const OUT_PATH        = fileURLToPath(new URL('../../../../packages/design-token
 const PRIMITIVES_PATH = fileURLToPath(new URL('../../../../packages/design-tokens/tiers/primitives.json', import.meta.url));
 const SEMANTICS_PATH  = fileURLToPath(new URL('../../../../packages/design-tokens/tiers/semantics.json', import.meta.url));
 
-// Components to emit — PascalCase Figma names. Pass a subset via constructor.
-const DEFAULT_COMPONENTS = [
-  'Avatar', 'Breadcrumb', 'Button', 'ButtonIcon', 'ButtonMenu', 'Checkbox',
-  'InputDatePicker', 'InputSearch', 'InputSelect', 'InputText', 'InputTextArea', 'Radio',
-  'SidebarPrimary', 'SidebarSecondary', 'Switch', 'Tag', 'Tooltip',
+// Full component list from the snapshot — kept as a reference for callers
+// that want to pass an explicit subset. The default is null (= emit everything).
+export const DEFAULT_COMPONENTS = [
+  'Avatar', 'Breadcrumb', 'Button', 'ButtonIcon', 'ButtonMenu',
+  'CardFilter', 'Checkbox', 'Icon',
+  'InputDatePicker', 'InputSearch', 'InputSelect', 'InputText', 'InputTextArea',
+  'MenuItem', 'Radio', 'SearchGlobal',
+  'SidebarPrimary', 'SidebarSecondary', 'Switch', 'Table', 'Tag', 'Tooltip',
 ];
 
 
