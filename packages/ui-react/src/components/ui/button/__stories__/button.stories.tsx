@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import type { Locale } from '../../../../../.storybook/globals';
+import { t } from '../../../../../.storybook/i18n';
 import { Button } from '../button';
 
 const meta = {
@@ -92,5 +94,15 @@ export const AsLink: Story = {
     <Button render={<a href="https://www.acronis.com" />} variant="ghost">
       Rendered as an anchor
     </Button>
+  ),
+};
+
+// Reads the active `locale` toolbar global and renders demo-localized text from
+// the shared catalog (.storybook/i18n.ts). Switching the Locale toolbar — incl.
+// ar/he, which also flip the canvas to RTL — re-renders the label in-place.
+export const Localized: Story = {
+  name: 'Localized (locale toolbar)',
+  render: (args, { globals }) => (
+    <Button {...args}>{t((globals.locale as Locale) ?? 'en', 'submit')}</Button>
   ),
 };
