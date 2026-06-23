@@ -1,6 +1,11 @@
 {
   "name": "@acronis-platform/icons-react",
   "version": "0.4.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acronis/uikit.git",
+    "directory": "packages/icons-react"
+  },
   "description": "Acronis React icon components, generated from @acronis-platform/icons-svg-next.",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,6 +1,11 @@
 {
   "name": "@acronis-platform/design-tokens",
   "version": "1.6.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acronis/uikit.git",
+    "directory": "packages/design-tokens"
+  },
   "description": "Acronis design tokens",
   "license": "MIT",
   "type": "module",

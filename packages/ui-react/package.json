@@ -1,6 +1,11 @@
 {
   "name": "@acronis-platform/ui-react",
   "version": "0.21.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acronis/uikit.git",
+    "directory": "packages/ui-react"
+  },
   "description": "Acronis React component library — a Base UI implementation, themed by @acronis-platform/design-tokens.",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,6 +1,11 @@
 {
   "name": "@acronis-platform/design-assets",
   "version": "0.4.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acronis/uikit.git",
+    "directory": "packages/design-assets"
+  },
   "description": "Acronis visual assets — icons and illustrations as JSON manifests + bundled binaries.",
   "license": "MIT AND ISC",
   "type": "module",

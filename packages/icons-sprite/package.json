@@ -1,6 +1,11 @@
 {
   "name": "@acronis-platform/icons-sprite",
   "version": "0.2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acronis/uikit.git",
+    "directory": "packages/icons-sprite"
+  },
   "description": "Optimized SVG sprites (combined / monocolor / multicolor) generated from @acronis-platform/icons-svg.",
   "license": "MIT",
   "type": "module",
