@@ -22,7 +22,7 @@ export const DEFAULT_COMPONENTS = [
   'Avatar', 'Breadcrumb', 'Button', 'ButtonIcon', 'ButtonMenu',
   'CardFilter', 'Checkbox', 'Icon',
   'InputDatePicker', 'InputSearch', 'InputSelect', 'InputText', 'InputTextArea',
-  'MenuItem', 'Radio', 'SearchGlobal',
+  'MenuItem', 'Radio', 'Resizable', 'SearchGlobal',
   'SidebarPrimary', 'SidebarSecondary', 'Switch', 'Table', 'Tag', 'Tooltip',
 ];
 
