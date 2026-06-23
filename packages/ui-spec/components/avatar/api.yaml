@@ -1,0 +1,54 @@
+spec_version: '1.0'
+component: Avatar
+
+# `color` is the only cva axis (its enum matches the cva keys in the ui-react
+# source). Image and fallback are composed as child parts (AvatarImage /
+# AvatarFallback); AvatarGroup is a sibling layout component.
+contract:
+  properties:
+    - name: color
+      type: "'teal' | 'violet' | 'red' | 'yellow' | 'orange'"
+      required: false
+      default: teal
+      description: >-
+        Color scheme for the fallback. Maps to `--ui-avatar-color-<scheme>`
+        (background) and `--ui-avatar-label-color-<scheme>` (initials). Ignored
+        once an image is shown.
+
+  events: []
+
+  content:
+    - name: default
+      description: >-
+        The avatar's children — an `AvatarImage` and/or an `AvatarFallback`
+        (the initials). With no image the fallback always shows.
+
+  methods: []
+
+adapters:
+  react:
+    component: Avatar
+    status: implemented
+    import: "import { Avatar, AvatarImage, AvatarFallback, AvatarGroup } from '@acronis-platform/ui-react'"
+    example: |
+      <Avatar color="teal">
+        <AvatarImage src="/me.png" alt="Sam N." />
+        <AvatarFallback>SN</AvatarFallback>
+      </Avatar>
+
+      <AvatarGroup>
+        <Avatar color="teal"><AvatarFallback>SN</AvatarFallback></Avatar>
+        <Avatar color="violet"><AvatarFallback>GA</AvatarFallback></Avatar>
+      </AvatarGroup>
+  vue:
+    component: AvAvatar
+    status: planned
+    import: "import { AvAvatar } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvAvatar color="teal">SN</AvAvatar>
+  web-components:
+    element: ui-avatar
+    status: planned
+    import: "import '@acronis-platform/ui-wc/avatar'"
+    example: |
+      <ui-avatar color="teal">SN</ui-avatar>

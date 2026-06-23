@@ -163,4 +163,17 @@ describe('cva ↔ contract conformance', () => {
     expect(Object.keys(groups)).toEqual(['variant']);
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
   });
+
+  it('Avatar: api.yaml color enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(HERE, '../../ui-react/src/components/ui/avatar/avatar.tsx'),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('avatar').api;
+
+    // `color` (the five Figma color schemes) is the only cva axis.
+    expect(Object.keys(groups)).toEqual(['color']);
+    expect(groups.color.sort()).toEqual(enumMembers(api, 'color'));
+  });
 });

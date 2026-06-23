@@ -35,6 +35,10 @@ interface RenderHint {
 }
 
 const RENDER: Record<string, RenderHint> = {
+  avatar: {
+    extraImports: ["import { AvatarFallback } from '../avatar';"],
+    sample: '\n      <AvatarFallback>SN</AvatarFallback>\n    ',
+  },
   button: { sample: 'Label' },
   'button-dropdown': { sample: 'Label' },
   'button-icon': {

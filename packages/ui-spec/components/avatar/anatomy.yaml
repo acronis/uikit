@@ -1,0 +1,87 @@
+spec_version: '1.0'
+component: Avatar
+
+schematic: |
+  +----------+
+  |  image   |   root: <span> (32px circle, 2px border)
+  |  /  SN   |        image (cover) on top of fallback
+  +----------+
+       ^
+       fallback (initials) shows until the image loads / if it fails
+  color -> background + initials color
+
+  AvatarGroup (overlapping row):
+  ( SN )( GA )( SI )   each pulled left by the negative group gap;
+                       2px borders form the layered separation
+
+root:
+  element: span
+  description: >-
+    The circular badge — a Base UI Avatar root (`<span>`), 32px, fully rounded,
+    with a 2px border whose color separates avatars when they overlap. `color`
+    drives the fallback background and initials color.
+
+parts:
+  - id: image
+    description: >-
+      The profile image, covering the circle. Hidden by Base UI until it loads,
+      so the fallback shows in the meantime; if it errors, the fallback stays.
+    element: img
+    optional: true
+    visible_when: a `src` is provided and the image has loaded
+  - id: fallback
+    description: >-
+      Shown when there is no image (or it failed to load) — typically the
+      entity's initials, in the variant's label color.
+    optional: true
+  - id: group
+    description: >-
+      AvatarGroup — an optional wrapper that lays out several avatars in an
+      overlapping row (each after the first offset by the negative group gap).
+    element: div
+    optional: true
+
+# Image and fallback occupy the same circular box (image painted over the
+# fallback); AvatarGroup is a horizontal flex row with a negative inter-item offset.
+layout:
+  type: stack
+  order: [image, fallback]
+
+# Avatar is a pure function of its props — no internal interaction state. The
+# only visual axis is the `color` scheme (non-interactive, so no pseudo-states).
+states:
+  - {
+      id: teal,
+      trigger: "color === 'teal'",
+      kind: prop,
+      prop: color,
+      affects: [root, fallback],
+    }
+  - {
+      id: violet,
+      trigger: "color === 'violet'",
+      kind: prop,
+      prop: color,
+      affects: [root, fallback],
+    }
+  - {
+      id: red,
+      trigger: "color === 'red'",
+      kind: prop,
+      prop: color,
+      affects: [root, fallback],
+    }
+  - {
+      id: yellow,
+      trigger: "color === 'yellow'",
+      kind: prop,
+      prop: color,
+      affects: [root, fallback],
+    }
+  - {
+      id: orange,
+      trigger: "color === 'orange'",
+      kind: prop,
+      prop: color,
+      affects: [root, fallback],
+    }

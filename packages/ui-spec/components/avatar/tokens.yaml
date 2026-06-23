@@ -1,0 +1,59 @@
+spec_version: '1.0'
+component: Avatar
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+# Avatar binds the dedicated `--ui-avatar-*` tier: shared geometry + a 2px
+# border under `--ui-avatar-global-*`, a per-scheme background
+# (`--ui-avatar-color-<scheme>`) and initials color (`--ui-avatar-label-color-<scheme>`).
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Shared geometry / border (root) ──
+  - name: --ui-avatar-global-avatar-size
+    affects: root
+  - name: --ui-avatar-global-avatar-border-radius
+    affects: root
+  - name: --ui-avatar-global-avatar-border-border-width
+    affects: root
+  - name: --ui-avatar-global-avatar-border-border-style
+    affects: root
+  - name: --ui-avatar-global-avatar-border-color
+    affects: root
+  - name: --ui-avatar-global-avatar-group-gap
+    affects: group
+  - name: --ui-avatar-global-container-gap
+    affects: group
+  - name: --ui-avatar-global-text-color
+    affects: group
+
+  # ── teal ──
+  - name: --ui-avatar-color-teal
+    affects: root
+  - name: --ui-avatar-label-color-teal
+    affects: fallback
+
+  # ── violet ──
+  - name: --ui-avatar-color-violet
+    affects: root
+  - name: --ui-avatar-label-color-violet
+    affects: fallback
+
+  # ── red ──
+  - name: --ui-avatar-color-red
+    affects: root
+  - name: --ui-avatar-label-color-red
+    affects: fallback
+
+  # ── yellow ──
+  - name: --ui-avatar-color-yellow
+    affects: root
+  - name: --ui-avatar-label-color-yellow
+    affects: fallback
+
+  # ── orange ──
+  - name: --ui-avatar-color-orange
+    affects: root
+  - name: --ui-avatar-label-color-orange
+    affects: fallback

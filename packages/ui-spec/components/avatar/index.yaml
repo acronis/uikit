@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: Avatar
+name: avatar
+status: ready
+category: data-display
+description: >-
+  A user or entity avatar — a circular badge showing a profile image or, when
+  none is available, the entity's initials on a tinted background. Five color
+  schemes; stack several with AvatarGroup for an overlapping row.
+since: 0.22.0
+dependencies:
+  components: []
+figma:
+  node: '3332-4943'
+  codeConnect: packages/ui-react/src/components/ui/avatar/avatar.figma.tsx
