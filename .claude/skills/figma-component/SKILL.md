@@ -251,6 +251,48 @@ in `packages/ui-spec/scripts/generate-stories.ts` (see the `breadcrumb` entry:
 something real. Hand-write `<name>.stories.tsx` for the rich, demo-quality
 stories (Default + each meaningful variation), mirroring `button.stories.tsx`.
 
+**Wide `argTypes` (required).** The hand-written `meta.argTypes` must expose a
+control for **every meaningful prop**, not just `variant`/`disabled`. Mirror the
+exemplar in `button.stories.tsx` / `input.stories.tsx` / `switch.stories.tsx`:
+
+- Enumerate the real props from the component source — `cva` `variant`/`size`
+  keys, booleans, string/content props, callbacks, and the `render` prop. For a
+  Base-UI-wrapping component, read the primitive's `.d.ts` for the forwarded
+  props (e.g. `Tooltip.Root` has `defaultOpen`/`trackCursorAxis` but **not**
+  `delay` — that's on the Provider). Only add props the component's type actually
+  accepts, or `satisfies Meta<typeof X>` fails typecheck.
+- Control by kind: union/`variant`/`size` → `control: 'select'` with `options`
+  equal to the exact `cva` keys; boolean → `control: 'boolean'`; string/ReactNode
+  text → `control: 'text'`; number → `control: 'number'`; callbacks, `render`,
+  and element-only props → `control: false`.
+- Every entry carries a `description` and a `table: { type: { summary }, category }`
+  (and `defaultValue` for variants). Categories: `Appearance`, `Content`,
+  `State`, `Behavior`, `Events`, `Composition`.
+- **VR safety:** enrich `meta.argTypes` freely, but don't change what an existing
+  story _renders_ (its baseline) — keep `meta.args` reproducing the current
+  default unless you intend a baseline regen.
+
+**Preview toolbars** (`.storybook/preview.ts` + `.storybook/globals.ts`) already
+provide brand (acronis / deep-sky), light/dark, direction (auto/ltr/rtl), and
+locale globals — stories get them for free, no per-story wiring. For **localized
+demo content**, read the locale global in `render` and pull sample text from
+`.storybook/i18n.ts` (the demo-only catalog — ui-react ships no strings). See the
+`Localized` story in `button.stories.tsx`:
+
+```tsx
+import type { Locale } from '../../../../../.storybook/globals';
+import { t } from '../../../../../.storybook/i18n';
+
+export const Localized: Story = {
+  render: (args, { globals }) => (
+    <Button {...args}>{t((globals.locale as Locale) ?? 'en', 'submit')}</Button>
+  ),
+};
+```
+
+Add a localized story only when a locale-/RTL-sensitive demo is worth a VR
+baseline; add any new message keys to `.storybook/i18n.ts` (all six locales).
+
 ---
 
 ## Phase 5 — Verify & changeset
