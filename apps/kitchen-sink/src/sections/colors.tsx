@@ -187,10 +187,13 @@ function MatrixCell({
   if (kind === 'border') {
     return <div title={name} style={{ ...box, border: `2px solid var(${name})` }} />;
   }
+  // Glyph/label colors can be light (e.g. a primary button's white label) or
+  // dark, so a single-tone backdrop hides one or the other. A diagonal two-tone
+  // keeps the centered swatch legible either way (it straddles both halves).
   const fg = {
     ...box,
     color: `var(${name})`,
-    background: 'var(--ui-background-surface-secondary)',
+    background: 'linear-gradient(135deg, #e5e7eb 0 50%, #4b5563 50% 100%)',
   } as const;
   return kind === 'text' ? (
     <div title={name} style={{ ...fg, fontSize: 12, fontWeight: 700 }}>

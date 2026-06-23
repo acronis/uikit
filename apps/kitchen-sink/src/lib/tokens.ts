@@ -449,10 +449,10 @@ export const buttonMatrix: TokenMatrix = buildMatrix(
   BUTTON_VARIANTS,
   (
     [
-      ['Container', 'fill', 'container'],
+      ['Container', 'fill', 'container-color'],
       ['Border', 'border', 'container-border-color'],
-      ['Icon', 'glyph', 'icon'],
-      ['Label', 'text', 'label'],
+      ['Icon', 'glyph', 'icon-color'],
+      ['Label', 'text', 'label-color'],
     ] as const
   ).map(([label, kind, role]) => ({
     label,
