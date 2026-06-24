@@ -1,16 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import {
-  BoxIcon,
+  BoltIcon,
+  BriefcaseIcon,
   BuildingIcon,
+  ChartGrowthIcon,
+  ChevronsLeftIcon,
   CircleHelpIcon,
+  HeadsetIcon,
   InboxIcon,
   LayoutGridIcon,
-  PanelLeftIcon,
-  ServerIcon,
-  ShoppingCartIcon,
+  MonitorIcon,
+  ShieldCheckIcon,
   StarIcon,
-  UsersIcon,
 } from '@acronis-platform/icons-react/stroke-mono';
 
 import {
@@ -94,8 +96,72 @@ function LogoMark() {
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
-  // Sidebars fill their container height; give stories a fixed viewport.
-  return <div style={{ height: 520, display: 'flex' }}>{children}</div>;
+  // Sidebars fill their container height; give stories a fixed viewport tall
+  // enough to show the full Figma nav (both sections + footer) without clipping.
+  return <div style={{ height: 620, display: 'flex' }}>{children}</div>;
+}
+
+// The Acronis Cyber Platform nav from the Figma example: a primary section of
+// product areas plus a secondary section (inbox / favorites).
+function PrimaryNav() {
+  return (
+    <SidebarPrimaryContent>
+      <SidebarPrimarySection>
+        <SidebarPrimaryMenu>
+          <SidebarPrimaryMenuItem href="#" icon={<MonitorIcon />} selected>
+            Assets
+          </SidebarPrimaryMenuItem>
+          <SidebarPrimaryMenuItem href="#" icon={<ShieldCheckIcon />}>
+            Protection management
+          </SidebarPrimaryMenuItem>
+          <SidebarPrimaryMenuItem href="#" icon={<BriefcaseIcon />}>
+            Clients
+          </SidebarPrimaryMenuItem>
+          <SidebarPrimaryMenuItem href="#" icon={<HeadsetIcon />}>
+            Service desk
+          </SidebarPrimaryMenuItem>
+          <SidebarPrimaryMenuItem href="#" icon={<BoltIcon />}>
+            Automation
+          </SidebarPrimaryMenuItem>
+          <SidebarPrimaryMenuItem href="#" icon={<LayoutGridIcon />}>
+            Marketplace
+          </SidebarPrimaryMenuItem>
+          <SidebarPrimaryMenuItem href="#" icon={<ChartGrowthIcon />}>
+            Partner portal
+          </SidebarPrimaryMenuItem>
+          <SidebarPrimaryMenuItem href="#" icon={<BuildingIcon />}>
+            My company
+          </SidebarPrimaryMenuItem>
+        </SidebarPrimaryMenu>
+      </SidebarPrimarySection>
+      <SidebarPrimarySection>
+        <SidebarPrimaryMenu>
+          <SidebarPrimaryMenuItem href="#" icon={<InboxIcon />}>
+            My inbox
+          </SidebarPrimaryMenuItem>
+          <SidebarPrimaryMenuItem href="#" icon={<StarIcon />}>
+            Favorites
+          </SidebarPrimaryMenuItem>
+        </SidebarPrimaryMenu>
+      </SidebarPrimarySection>
+    </SidebarPrimaryContent>
+  );
+}
+
+function FooterNav() {
+  return (
+    <SidebarPrimaryFooter>
+      <SidebarPrimaryMenu>
+        <SidebarPrimaryMenuItem href="#" icon={<CircleHelpIcon />}>
+          Help
+        </SidebarPrimaryMenuItem>
+        {/* Uncontrolled rail: the trigger toggles `expanded` via context. */}
+        <SidebarPrimaryCollapseTrigger icon={<ChevronsLeftIcon />}>
+          Collapse menu
+        </SidebarPrimaryCollapseTrigger>
+      </SidebarPrimaryMenu>
+    </SidebarPrimaryFooter>
+  );
 }
 
 export const Default: Story = {
@@ -105,51 +171,8 @@ export const Default: Story = {
         <SidebarPrimaryHeader>
           <LogoMark />
         </SidebarPrimaryHeader>
-        <SidebarPrimaryContent>
-          <SidebarPrimarySection>
-            <SidebarPrimaryMenu>
-              <SidebarPrimaryMenuItem href="#" icon={<BoxIcon />} selected>
-                Assets
-              </SidebarPrimaryMenuItem>
-              <SidebarPrimaryMenuItem href="#" icon={<ServerIcon />}>
-                Protection management
-              </SidebarPrimaryMenuItem>
-              <SidebarPrimaryMenuItem href="#" icon={<UsersIcon />}>
-                Clients
-              </SidebarPrimaryMenuItem>
-              <SidebarPrimaryMenuItem href="#" icon={<LayoutGridIcon />}>
-                Automation
-              </SidebarPrimaryMenuItem>
-              <SidebarPrimaryMenuItem href="#" icon={<ShoppingCartIcon />}>
-                Marketplace
-              </SidebarPrimaryMenuItem>
-              <SidebarPrimaryMenuItem href="#" icon={<BuildingIcon />}>
-                My company
-              </SidebarPrimaryMenuItem>
-            </SidebarPrimaryMenu>
-          </SidebarPrimarySection>
-          <SidebarPrimarySection>
-            <SidebarPrimaryMenu>
-              <SidebarPrimaryMenuItem href="#" icon={<InboxIcon />}>
-                My inbox
-              </SidebarPrimaryMenuItem>
-              <SidebarPrimaryMenuItem href="#" icon={<StarIcon />}>
-                Favorites
-              </SidebarPrimaryMenuItem>
-            </SidebarPrimaryMenu>
-          </SidebarPrimarySection>
-        </SidebarPrimaryContent>
-        <SidebarPrimaryFooter>
-          <SidebarPrimaryMenu>
-            <SidebarPrimaryMenuItem href="#" icon={<CircleHelpIcon />}>
-              Help
-            </SidebarPrimaryMenuItem>
-            {/* Uncontrolled rail: the trigger toggles `expanded` via context. */}
-            <SidebarPrimaryCollapseTrigger icon={<PanelLeftIcon />}>
-              Collapse menu
-            </SidebarPrimaryCollapseTrigger>
-          </SidebarPrimaryMenu>
-        </SidebarPrimaryFooter>
+        <PrimaryNav />
+        <FooterNav />
       </SidebarPrimary>
     </Shell>
   ),
@@ -163,28 +186,8 @@ export const Collapsed: Story = {
         <SidebarPrimaryHeader>
           <LogoMark />
         </SidebarPrimaryHeader>
-        <SidebarPrimaryContent>
-          <SidebarPrimarySection>
-            <SidebarPrimaryMenu>
-              <SidebarPrimaryMenuItem href="#" icon={<BoxIcon />} selected>
-                Assets
-              </SidebarPrimaryMenuItem>
-              <SidebarPrimaryMenuItem href="#" icon={<ServerIcon />}>
-                Protection management
-              </SidebarPrimaryMenuItem>
-              <SidebarPrimaryMenuItem href="#" icon={<UsersIcon />}>
-                Clients
-              </SidebarPrimaryMenuItem>
-            </SidebarPrimaryMenu>
-          </SidebarPrimarySection>
-        </SidebarPrimaryContent>
-        <SidebarPrimaryFooter>
-          <SidebarPrimaryMenu>
-            <SidebarPrimaryMenuItem href="#" icon={<CircleHelpIcon />}>
-              Help
-            </SidebarPrimaryMenuItem>
-          </SidebarPrimaryMenu>
-        </SidebarPrimaryFooter>
+        <PrimaryNav />
+        <FooterNav />
       </SidebarPrimary>
     </Shell>
   ),
@@ -198,13 +201,13 @@ export const Selected: Story = {
         <SidebarPrimaryContent>
           <SidebarPrimarySection>
             <SidebarPrimaryMenu>
-              <SidebarPrimaryMenuItem href="#" icon={<BoxIcon />} selected>
+              <SidebarPrimaryMenuItem href="#" icon={<MonitorIcon />} selected>
                 Selected item
               </SidebarPrimaryMenuItem>
-              <SidebarPrimaryMenuItem href="#" icon={<ServerIcon />}>
+              <SidebarPrimaryMenuItem href="#" icon={<ShieldCheckIcon />}>
                 Unselected item
               </SidebarPrimaryMenuItem>
-              <SidebarPrimaryMenuItem href="#" icon={<UsersIcon />}>
+              <SidebarPrimaryMenuItem href="#" icon={<BriefcaseIcon />}>
                 Another item
               </SidebarPrimaryMenuItem>
             </SidebarPrimaryMenu>
@@ -226,7 +229,7 @@ export const WithExtras: Story = {
                 Shortcut
                 <SidebarPrimaryMenuItemExtras variant="shortcut" shortcut="⌘K" />
               </SidebarPrimaryMenuItem>
-              <SidebarPrimaryMenuItem href="#" icon={<ShoppingCartIcon />}>
+              <SidebarPrimaryMenuItem href="#" icon={<LayoutGridIcon />}>
                 External link
                 <SidebarPrimaryMenuItemExtras variant="externalLink" />
               </SidebarPrimaryMenuItem>
@@ -244,20 +247,17 @@ export const Controlled: Story = {
     const [expanded, setExpanded] = useState(true);
     return (
       <Shell>
-        <SidebarPrimary
-          expanded={expanded}
-          onExpandedChange={setExpanded}
-        >
+        <SidebarPrimary expanded={expanded} onExpandedChange={setExpanded}>
           <SidebarPrimaryHeader>
             <LogoMark />
           </SidebarPrimaryHeader>
           <SidebarPrimaryContent>
             <SidebarPrimarySection>
               <SidebarPrimaryMenu>
-                <SidebarPrimaryMenuItem href="#" icon={<BoxIcon />} selected>
+                <SidebarPrimaryMenuItem href="#" icon={<MonitorIcon />} selected>
                   Assets
                 </SidebarPrimaryMenuItem>
-                <SidebarPrimaryMenuItem href="#" icon={<ServerIcon />}>
+                <SidebarPrimaryMenuItem href="#" icon={<ShieldCheckIcon />}>
                   Protection management
                 </SidebarPrimaryMenuItem>
               </SidebarPrimaryMenu>
@@ -267,7 +267,7 @@ export const Controlled: Story = {
             <SidebarPrimaryMenu>
               {/* Controlled: the trigger calls toggleExpanded → onExpandedChange,
                   and this consumer owns the `expanded` state. */}
-              <SidebarPrimaryCollapseTrigger icon={<PanelLeftIcon />}>
+              <SidebarPrimaryCollapseTrigger icon={<ChevronsLeftIcon />}>
                 Collapse menu
               </SidebarPrimaryCollapseTrigger>
             </SidebarPrimaryMenu>
