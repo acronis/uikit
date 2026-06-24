@@ -7,8 +7,9 @@
   icon-only buttons prefer the dedicated `ButtonIcon` component.
 - **Keyboard:** Enter and Space activate (native). Tab focuses; a `disabled`
   button is removed from the tab order (native).
-- **Focus visible:** keyboard focus shows a 2px ring in `--ui-focus-brand` with
-  a 2px offset, via `:focus-visible` (no ring on pointer activation).
+- **Focus visible:** keyboard focus shows a 3px ring in `--ui-focus-primary`
+  flush to the button edge (no offset), via `:focus-visible` (no ring on pointer
+  activation).
 - **Contrast:** label/background pairs come from the design tokens, which are
   authored to meet WCAG contrast. State is never conveyed by color alone — the
   disabled state also removes interactivity.

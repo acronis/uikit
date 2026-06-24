@@ -22,7 +22,7 @@ tokens:
     affects: root
   - name: --ui-button-global-icon-size
     affects: icon
-  - name: --ui-focus-brand
+  - name: --ui-focus-primary
     affects: root
 
   # ── default (Primary) ──
