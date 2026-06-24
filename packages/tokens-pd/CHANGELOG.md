@@ -1,5 +1,16 @@
 # @acronis-platform/tokens-pd
 
+## 1.8.1
+
+### Patch Changes
+
+- [#342](https://github.com/acronis/uikit/pull/342) [`0492758`](https://github.com/acronis/uikit/commit/04927588678c058275a3911579a476b73eba12bf) Thanks [@leonid](https://github.com/leonid)! - Regenerate tokens-pd so its committed CSS / Tailwind presets / DTCG match the
+  current `design-tokens` source. The earlier Figma token sync (ElectricBlue,
+  Avatar, ink removal) left the generated output drifted — this re-runs the
+  Style Dictionary build to drop the removed dark-mode brand and `Icon` / `Table`
+  / `InputDatePicker` component tiers and pick up the updated dark primitive
+  values.
+
 ## 1.8.0
 
 ### Minor Changes
