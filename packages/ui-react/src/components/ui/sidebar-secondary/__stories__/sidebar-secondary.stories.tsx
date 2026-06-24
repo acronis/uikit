@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import {
   BoxIcon,
+  ChevronLeftIcon,
   LayoutGridIcon,
-  PanelLeftIcon,
   PlusIcon,
   ServerIcon,
   ShoppingCartIcon,
@@ -150,7 +150,7 @@ export const Default: Story = {
           <SidebarSecondaryMenu>
             <SidebarSecondaryMenuItem href="#">Settings</SidebarSecondaryMenuItem>
             {/* Uncontrolled panel: the trigger toggles `expanded` via context. */}
-            <SidebarSecondaryCollapseTrigger icon={<PanelLeftIcon />}>
+            <SidebarSecondaryCollapseTrigger icon={<ChevronLeftIcon />}>
               Collapse menu
             </SidebarSecondaryCollapseTrigger>
           </SidebarSecondaryMenu>
@@ -294,7 +294,7 @@ export const Controlled: Story = {
                 </SidebarSecondaryMenuItem>
                 {/* Controlled: the trigger calls toggleExpanded → onExpandedChange,
                     and this consumer owns the `expanded` state. */}
-                <SidebarSecondaryCollapseTrigger icon={<PanelLeftIcon />}>
+                <SidebarSecondaryCollapseTrigger icon={<ChevronLeftIcon />}>
                   Collapse menu
                 </SidebarSecondaryCollapseTrigger>
               </SidebarSecondaryMenu>
@@ -375,7 +375,7 @@ export const ExpandableSections: Story = {
         </SidebarSecondaryContent>
         <SidebarSecondaryFooter>
           <SidebarSecondaryMenu>
-            <SidebarSecondaryCollapseTrigger icon={<PanelLeftIcon />}>
+            <SidebarSecondaryCollapseTrigger icon={<ChevronLeftIcon />}>
               Collapse menu
             </SidebarSecondaryCollapseTrigger>
           </SidebarSecondaryMenu>
@@ -438,7 +438,7 @@ export const SectionActionsAndRollup: Story = {
         </SidebarSecondaryContent>
         <SidebarSecondaryFooter>
           <SidebarSecondaryMenu>
-            <SidebarSecondaryCollapseTrigger icon={<PanelLeftIcon />}>
+            <SidebarSecondaryCollapseTrigger icon={<ChevronLeftIcon />}>
               Collapse menu
             </SidebarSecondaryCollapseTrigger>
           </SidebarSecondaryMenu>
