@@ -151,13 +151,13 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
   });
 
-  it('ButtonDropdown: api.yaml variant enum matches the cva keys in ui-react', () => {
+  it('ButtonMenu: api.yaml variant enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
-      resolve(HERE, '../../ui-react/src/components/ui/button-dropdown/button-dropdown.tsx'),
+      resolve(HERE, '../../ui-react/src/components/ui/button-menu/button-menu.tsx'),
       'utf8'
     );
     const groups = extractCvaGroups(source);
-    const api = loadSpec('button-dropdown').api;
+    const api = loadSpec('button-menu').api;
 
     // `variant` (primary / secondary) is the only cva axis.
     expect(Object.keys(groups)).toEqual(['variant']);

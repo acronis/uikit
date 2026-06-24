@@ -4,12 +4,12 @@
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { userEvent } from 'storybook/test';
-import { ButtonDropdown } from '../button-dropdown';
+import { ButtonMenu } from '../button-menu';
 
 const meta = {
-  title: 'UI/ButtonDropdown/All States (generated)',
-  component: ButtonDropdown,
-} satisfies Meta<typeof ButtonDropdown>;
+  title: 'UI/ButtonMenu/All States (generated)',
+  component: ButtonMenu,
+} satisfies Meta<typeof ButtonMenu>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -27,9 +27,9 @@ export const Variants: Story = {
       }}
     >
       {VARIANTS.map((v) => (
-        <ButtonDropdown key={v} variant={v}>
+        <ButtonMenu key={v} variant={v}>
           Label
-        </ButtonDropdown>
+        </ButtonMenu>
       ))}
     </div>
   ),
@@ -46,9 +46,9 @@ export const Disabled: Story = {
       }}
     >
       {VARIANTS.map((v) => (
-        <ButtonDropdown key={v} variant={v} disabled>
+        <ButtonMenu key={v} variant={v} disabled>
           Label
-        </ButtonDropdown>
+        </ButtonMenu>
       ))}
     </div>
   ),
@@ -56,16 +56,16 @@ export const Disabled: Story = {
 
 export const Hover: Story = {
   parameters: { pseudo: { hover: true } },
-  render: () => <ButtonDropdown>Label</ButtonDropdown>,
+  render: () => <ButtonMenu>Label</ButtonMenu>,
 };
 
 export const Active: Story = {
   parameters: { pseudo: { active: true } },
-  render: () => <ButtonDropdown>Label</ButtonDropdown>,
+  render: () => <ButtonMenu>Label</ButtonMenu>,
 };
 
 export const FocusVisible: Story = {
-  render: () => <ButtonDropdown>Label</ButtonDropdown>,
+  render: () => <ButtonMenu>Label</ButtonMenu>,
   // Real keyboard focus — paints :focus-visible without a pseudo-states addon.
   play: async () => {
     await userEvent.tab();

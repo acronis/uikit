@@ -9,7 +9,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
-// Mirrors the Figma "ButtonDropdown" component: a Button-like trigger (label +
+// Mirrors the Figma "ButtonMenu" component: a Button-like trigger (label +
 // trailing chevron) that opens a menu. `variant` maps to the Figma `variant`
 // property (Primary / Secondary); the Figma `active` state is the **open** state
 // — the chevron flips down→up and the container takes its `*-active` colors. Each
@@ -22,10 +22,11 @@ import { cn } from '@/lib/utils';
 // padding-x, 4px radius, 64px min-width, 16px icon — comes from the
 // `--ui-button-menu-global-*` tokens. The open treatment is driven by the
 // `data-open` attribute (set from the `open` prop) and CSS `:active` for press
-// feedback; disabled uses the explicit disabled tokens (not opacity) and the
-// focus ring uses `--ui-focus-*`.
-const buttonDropdownVariants = cva(
-  'inline-flex h-[var(--ui-button-menu-global-container-height)] min-w-[var(--ui-button-menu-global-container-width-min)] items-center justify-center gap-[var(--ui-button-menu-global-container-gap)] whitespace-nowrap rounded-[var(--ui-button-menu-global-container-border-radius)] border border-transparent px-[var(--ui-button-menu-global-container-padding-x)] text-sm font-semibold leading-6 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)] focus-visible:ring-offset-2 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-[var(--ui-button-menu-global-icon-size)] [&_svg]:shrink-0',
+// feedback; disabled uses the explicit disabled tokens (not opacity). Focus: the
+// Figma focus state is a 3px `--ui-focus-primary` ring flush to the button edge
+// (no offset) — `ring-[3px]`, no `ring-offset`.
+const buttonMenuVariants = cva(
+  'inline-flex h-[var(--ui-button-menu-global-container-height)] min-w-[var(--ui-button-menu-global-container-width-min)] items-center justify-center gap-[var(--ui-button-menu-global-container-gap)] whitespace-nowrap rounded-[var(--ui-button-menu-global-container-border-radius)] border border-transparent px-[var(--ui-button-menu-global-container-padding-x)] text-sm font-semibold leading-6 transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)] disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-[var(--ui-button-menu-global-icon-size)] [&_svg]:shrink-0',
   {
     variants: {
       variant: {
@@ -41,10 +42,10 @@ const buttonDropdownVariants = cva(
   }
 );
 
-export interface ButtonDropdownProps
+export interface ButtonMenuProps
   extends
     Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'>,
-    VariantProps<typeof buttonDropdownVariants> {
+    VariantProps<typeof buttonMenuVariants> {
   /**
    * Whether the associated menu is open. Flips the trailing chevron
    * (down → up), applies the open (`*-active`) treatment, and reflects
@@ -66,7 +67,7 @@ export interface ButtonDropdownProps
  * points up while `open`. Pair it with the menu/popover it controls and keep
  * the `open` prop in sync.
  */
-const ButtonDropdown = React.forwardRef<HTMLButtonElement, ButtonDropdownProps>(
+const ButtonMenu = React.forwardRef<HTMLButtonElement, ButtonMenuProps>(
   ({ className, variant, open, render, children, ...props }, ref) => {
     const Chevron = open ? ChevronUpIcon : ChevronDownIcon;
     return useRender({
@@ -75,7 +76,7 @@ const ButtonDropdown = React.forwardRef<HTMLButtonElement, ButtonDropdownProps>(
       defaultTagName: 'button',
       props: mergeProps<'button'>(
         {
-          className: cn(buttonDropdownVariants({ variant, className })),
+          className: cn(buttonMenuVariants({ variant, className })),
           'aria-expanded': open,
           // `data-open` drives the open (`*-active`) token switch via attribute
           // selectors; present only while open, and typed loosely because
@@ -94,6 +95,6 @@ const ButtonDropdown = React.forwardRef<HTMLButtonElement, ButtonDropdownProps>(
     });
   }
 );
-ButtonDropdown.displayName = 'ButtonDropdown';
+ButtonMenu.displayName = 'ButtonMenu';
 
-export { ButtonDropdown, buttonDropdownVariants };
+export { ButtonMenu, buttonMenuVariants };

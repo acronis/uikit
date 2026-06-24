@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { ButtonDropdown } from '../button-dropdown';
+import { ButtonMenu } from '../button-menu';
 
 const meta = {
-  title: 'UI/ButtonDropdown',
-  component: ButtonDropdown,
+  title: 'UI/ButtonMenu',
+  component: ButtonMenu,
   tags: ['autodocs'],
   argTypes: {
     variant: {
       control: 'select',
       options: ['primary', 'secondary'],
-      description: 'Visual style — mirrors the Figma ButtonDropdown `variant` property.',
+      description: 'Visual style — mirrors the Figma ButtonMenu `variant` property.',
       table: {
         type: { summary: "'primary' | 'secondary'" },
         defaultValue: { summary: 'primary' },
@@ -51,7 +51,7 @@ const meta = {
   args: {
     children: 'Label',
   },
-} satisfies Meta<typeof ButtonDropdown>;
+} satisfies Meta<typeof ButtonMenu>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -73,8 +73,8 @@ export const Disabled: Story = {
 export const Variants: Story = {
   render: () => (
     <div className="flex items-center gap-3">
-      <ButtonDropdown variant="primary">Label</ButtonDropdown>
-      <ButtonDropdown variant="secondary">Label</ButtonDropdown>
+      <ButtonMenu variant="primary">Label</ButtonMenu>
+      <ButtonMenu variant="secondary">Label</ButtonMenu>
     </div>
   ),
 };
@@ -83,22 +83,22 @@ export const States: Story = {
   render: () => (
     <div className="flex flex-col gap-3">
       <div className="flex items-center gap-3">
-        <ButtonDropdown variant="primary">Label</ButtonDropdown>
-        <ButtonDropdown variant="primary" open>
+        <ButtonMenu variant="primary">Label</ButtonMenu>
+        <ButtonMenu variant="primary" open>
           Label
-        </ButtonDropdown>
-        <ButtonDropdown variant="primary" disabled>
+        </ButtonMenu>
+        <ButtonMenu variant="primary" disabled>
           Label
-        </ButtonDropdown>
+        </ButtonMenu>
       </div>
       <div className="flex items-center gap-3">
-        <ButtonDropdown variant="secondary">Label</ButtonDropdown>
-        <ButtonDropdown variant="secondary" open>
+        <ButtonMenu variant="secondary">Label</ButtonMenu>
+        <ButtonMenu variant="secondary" open>
           Label
-        </ButtonDropdown>
-        <ButtonDropdown variant="secondary" disabled>
+        </ButtonMenu>
+        <ButtonMenu variant="secondary" disabled>
           Label
-        </ButtonDropdown>
+        </ButtonMenu>
       </div>
     </div>
   ),

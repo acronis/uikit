@@ -1,5 +1,5 @@
 spec_version: '1.0'
-component: ButtonDropdown
+component: ButtonMenu
 
 contract:
   properties:
@@ -47,25 +47,25 @@ contract:
 
 adapters:
   react:
-    component: ButtonDropdown
+    component: ButtonMenu
     status: implemented
-    import: "import { ButtonDropdown } from '@acronis-platform/ui-react'"
+    import: "import { ButtonMenu } from '@acronis-platform/ui-react'"
     example: |
-      <ButtonDropdown variant="primary" open={open} onClick={toggle}>
+      <ButtonMenu variant="primary" open={open} onClick={toggle}>
         Actions
-      </ButtonDropdown>
+      </ButtonMenu>
 
       {/* Polymorphic: render as a menu trigger via the `render` prop */}
-      <ButtonDropdown render={<Menu.Trigger />}>Actions</ButtonDropdown>
+      <ButtonMenu render={<Menu.Trigger />}>Actions</ButtonMenu>
   vue:
-    element: AvButtonDropdown
+    element: AvButtonMenu
     status: planned
-    import: "import { AvButtonDropdown } from '@acronis-platform/ui-vue'"
+    import: "import { AvButtonMenu } from '@acronis-platform/ui-vue'"
     example: |
-      <AvButtonDropdown :open="open" @click="toggle">Actions</AvButtonDropdown>
+      <AvButtonMenu :open="open" @click="toggle">Actions</AvButtonMenu>
   web-components:
-    element: ui-button-dropdown
+    element: ui-button-menu
     status: planned
-    import: "import '@acronis-platform/ui-wc/button-dropdown'"
+    import: "import '@acronis-platform/ui-wc/button-menu'"
     example: |
-      <ui-button-dropdown open>Actions</ui-button-dropdown>
+      <ui-button-menu open>Actions</ui-button-menu>

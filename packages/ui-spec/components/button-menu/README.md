@@ -1,4 +1,4 @@
-# ButtonDropdown
+# ButtonMenu
 
 A button that opens a dropdown menu: a label followed by a chevron that points up
 while the menu is open. Two visual styles — `primary` (solid) and `secondary`
@@ -19,16 +19,16 @@ while the menu is open. Two visual styles — `primary` (solid) and `secondary`
 ## Example (React — implemented)
 
 ```tsx
-import { ButtonDropdown } from '@acronis-platform/ui-react';
+import { ButtonMenu } from '@acronis-platform/ui-react';
 
 const [open, setOpen] = useState(false);
 
-<ButtonDropdown open={open} onClick={() => setOpen((v) => !v)}>
+<ButtonMenu open={open} onClick={() => setOpen((v) => !v)}>
   Actions
-</ButtonDropdown>;
+</ButtonMenu>;
 
 // Bordered treatment
-<ButtonDropdown variant="secondary">Actions</ButtonDropdown>;
+<ButtonMenu variant="secondary">Actions</ButtonMenu>;
 ```
 
 Keep `open` in sync with the menu the button controls so the chevron and

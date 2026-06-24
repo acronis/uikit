@@ -1,4 +1,4 @@
-# ButtonDropdown — Accessibility
+# ButtonMenu — Accessibility
 
 ## Role & name
 
@@ -14,7 +14,7 @@
   button controls.
 - When wired to a real menu, the trigger should also reference the menu it
   controls (e.g. `aria-haspopup="menu"` and `aria-controls` pointing at the
-  popup). The menu component owns those; ButtonDropdown only owns the trigger.
+  popup). The menu component owns those; ButtonMenu only owns the trigger.
 
 ## Keyboard
 
@@ -24,8 +24,8 @@
 
 ## Focus
 
-- `:focus-visible` paints a 2px ring in `--ui-focus-brand` with a 2px offset; the
-  ring is suppressed for pointer focus.
+- `:focus-visible` paints a 3px ring in `--ui-focus-primary` flush to the button
+  edge (no offset); the ring is suppressed for pointer focus.
 
 ## Contrast
 

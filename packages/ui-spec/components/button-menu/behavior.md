@@ -1,10 +1,10 @@
-# ButtonDropdown — Behavior
+# ButtonMenu — Behavior
 
 ## Rendering
 
 ### Renders a label and a trailing chevron
 
-**Given** a ButtonDropdown with label content
+**Given** a ButtonMenu with label content
 **When** it renders
 **Then** it shows the label followed by a chevron icon (16px)
 **And** background, label, icon, and — for `secondary` — border resolve from
@@ -35,7 +35,7 @@ overrides honored per state). `primary` keeps a single label/icon color.
 
 ### Disabled suppresses click
 
-**Given** a ButtonDropdown with `disabled`
+**Given** a ButtonMenu with `disabled`
 **When** the user activates it
 **Then** no `click` is emitted and the disabled tokens apply (not opacity).
 

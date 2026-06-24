@@ -1,11 +1,11 @@
 // Figma Code Connect — status: COMPLETE
-// Mapped to the "ButtonDropdown" component set in the shadcn-uikit Figma file.
+// Mapped to the "ButtonMenu" component set in the shadcn-uikit Figma file.
 import figma from '@figma/code-connect';
 
-import { ButtonDropdown } from './button-dropdown';
+import { ButtonMenu } from './button-menu';
 
 figma.connect(
-  ButtonDropdown,
+  ButtonMenu,
   'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2542-6423',
   {
     props: {
@@ -25,9 +25,9 @@ figma.connect(
       }),
     },
     example: ({ label, variant, open, disabled }) => (
-      <ButtonDropdown variant={variant} open={open} disabled={disabled}>
+      <ButtonMenu variant={variant} open={open} disabled={disabled}>
         {label}
-      </ButtonDropdown>
+      </ButtonMenu>
     ),
   }
 );

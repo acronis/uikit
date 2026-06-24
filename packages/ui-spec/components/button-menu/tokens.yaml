@@ -1,5 +1,5 @@
 spec_version: '1.0'
-component: ButtonDropdown
+component: ButtonMenu
 
 # References only — values live in @acronis-platform/tokens-pd. `primary` uses a
 # single label/icon color across states; only `secondary` diverges them per
@@ -55,7 +55,7 @@ tokens:
   - { name: --ui-button-menu-secondary-icon-color-disabled, affects: icon }
 
   - {
-      name: --ui-focus-brand,
+      name: --ui-focus-primary,
       affects: root,
       description: Focus-visible ring color,
     }

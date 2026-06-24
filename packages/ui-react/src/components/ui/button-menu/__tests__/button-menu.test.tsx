@@ -3,18 +3,18 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ButtonDropdown } from '../button-dropdown';
+import { ButtonMenu } from '../button-menu';
 
-describe('ButtonDropdown', () => {
+describe('ButtonMenu', () => {
   it('renders a button with its label and a chevron', () => {
-    render(<ButtonDropdown>Actions</ButtonDropdown>);
+    render(<ButtonMenu>Actions</ButtonMenu>);
     const button = screen.getByRole('button', { name: 'Actions' });
     expect(button).toBeInTheDocument();
     expect(button.querySelector('svg')).toBeInTheDocument();
   });
 
   it('defaults to the primary variant token classes', () => {
-    render(<ButtonDropdown>Actions</ButtonDropdown>);
+    render(<ButtonMenu>Actions</ButtonMenu>);
     expect(screen.getByRole('button', { name: 'Actions' })).toHaveClass(
       'h-[var(--ui-button-menu-global-container-height)]',
       'bg-[var(--ui-button-menu-primary-container-color-idle)]',
@@ -23,7 +23,7 @@ describe('ButtonDropdown', () => {
   });
 
   it('applies the secondary variant token classes', () => {
-    render(<ButtonDropdown variant="secondary">Actions</ButtonDropdown>);
+    render(<ButtonMenu variant="secondary">Actions</ButtonMenu>);
     expect(screen.getByRole('button', { name: 'Actions' })).toHaveClass(
       'bg-[var(--ui-button-menu-secondary-container-color-idle)]',
       'border-[var(--ui-button-menu-secondary-container-border-color-idle)]'
@@ -31,21 +31,21 @@ describe('ButtonDropdown', () => {
   });
 
   it('is closed by default: no data-open, aria-expanded false omitted', () => {
-    render(<ButtonDropdown>Actions</ButtonDropdown>);
+    render(<ButtonMenu>Actions</ButtonMenu>);
     const button = screen.getByRole('button', { name: 'Actions' });
     expect(button).not.toHaveAttribute('data-open');
     expect(button).not.toHaveAttribute('aria-expanded');
   });
 
   it('reflects the open state via data-open and aria-expanded', () => {
-    render(<ButtonDropdown open>Actions</ButtonDropdown>);
+    render(<ButtonMenu open>Actions</ButtonMenu>);
     const button = screen.getByRole('button', { name: 'Actions' });
     expect(button).toHaveAttribute('data-open');
     expect(button).toHaveAttribute('aria-expanded', 'true');
   });
 
   it('merges a custom className with the base classes', () => {
-    render(<ButtonDropdown className="custom-class">Actions</ButtonDropdown>);
+    render(<ButtonMenu className="custom-class">Actions</ButtonMenu>);
     expect(screen.getByRole('button', { name: 'Actions' })).toHaveClass(
       'custom-class',
       'h-[var(--ui-button-menu-global-container-height)]'
@@ -54,7 +54,7 @@ describe('ButtonDropdown', () => {
 
   it('fires onClick when pressed', async () => {
     const onClick = vi.fn();
-    render(<ButtonDropdown onClick={onClick}>Actions</ButtonDropdown>);
+    render(<ButtonMenu onClick={onClick}>Actions</ButtonMenu>);
     await userEvent.click(screen.getByRole('button', { name: 'Actions' }));
     expect(onClick).toHaveBeenCalledOnce();
   });
@@ -62,9 +62,9 @@ describe('ButtonDropdown', () => {
   it('does not fire onClick when disabled', async () => {
     const onClick = vi.fn();
     render(
-      <ButtonDropdown disabled onClick={onClick}>
+      <ButtonMenu disabled onClick={onClick}>
         Actions
-      </ButtonDropdown>
+      </ButtonMenu>
     );
     await userEvent.click(screen.getByRole('button', { name: 'Actions' }));
     expect(onClick).not.toHaveBeenCalled();
@@ -72,13 +72,13 @@ describe('ButtonDropdown', () => {
 
   it('forwards the ref to the underlying button element', () => {
     const ref = createRef<HTMLButtonElement>();
-    render(<ButtonDropdown ref={ref}>Actions</ButtonDropdown>);
+    render(<ButtonMenu ref={ref}>Actions</ButtonMenu>);
     expect(ref.current).toBeInstanceOf(HTMLButtonElement);
   });
 
   it('composes with another element via the render prop', () => {
     render(
-      <ButtonDropdown render={<a href="/menu" />}>Actions</ButtonDropdown>
+      <ButtonMenu render={<a href="/menu" />}>Actions</ButtonMenu>
     );
     const link = screen.getByRole('link', { name: 'Actions' });
     expect(link).toHaveAttribute('href', '/menu');

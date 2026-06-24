@@ -1,4 +1,4 @@
-import { ButtonDropdown } from '@acronis-platform/ui-react';
+import { ButtonMenu } from '@acronis-platform/ui-react';
 
 import {
   Forced,
@@ -28,24 +28,24 @@ function cell(variant: string, state: string) {
   const v = variant as 'primary' | 'secondary';
   if (state === 'open') {
     return (
-      <ButtonDropdown variant={v} open>
+      <ButtonMenu variant={v} open>
         Actions
-      </ButtonDropdown>
+      </ButtonMenu>
     );
   }
   return (
     <Forced tier="button-menu" state={state as ForceState}>
-      <ButtonDropdown variant={v} disabled={state === 'disabled'}>
+      <ButtonMenu variant={v} disabled={state === 'disabled'}>
         Actions
-      </ButtonDropdown>
+      </ButtonMenu>
     </Forced>
   );
 }
 
-export function ButtonDropdownSpecimen() {
+export function ButtonMenuSpecimen() {
   return (
     <SpecimenPage
-      title="ButtonDropdown"
+      title="ButtonMenu"
       description="A Button-like trigger (label + trailing chevron) that opens a menu. Primary and secondary variants; the chevron flips up and the container takes its active treatment while open."
     >
       <Subsection title="Variants × states">

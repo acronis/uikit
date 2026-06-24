@@ -1,6 +1,6 @@
 spec_version: '1.0'
-component: ButtonDropdown
-name: button-dropdown
+component: ButtonMenu
+name: button-menu
 status: ready
 category: actions
 description: >-
@@ -10,4 +10,4 @@ description: >-
 since: 0.17.0
 figma:
   node: '2542-6423'
-  codeConnect: packages/ui-react/src/components/ui/button-dropdown/button-dropdown.figma.tsx
+  codeConnect: packages/ui-react/src/components/ui/button-menu/button-menu.figma.tsx

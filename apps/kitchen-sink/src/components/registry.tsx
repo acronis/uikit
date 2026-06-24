@@ -2,7 +2,7 @@ import type { ComponentType } from 'react';
 
 import { BreadcrumbSpecimen } from './breadcrumb';
 import { ButtonSpecimen } from './button';
-import { ButtonDropdownSpecimen } from './button-dropdown';
+import { ButtonMenuSpecimen } from './button-menu';
 import { ButtonIconSpecimen } from './button-icon';
 import { CheckboxSpecimen } from './checkbox';
 import { InputSpecimen } from './input';
@@ -32,7 +32,7 @@ export interface ComponentEntry {
 export const COMPONENTS: ComponentEntry[] = [
   { slug: 'button', name: 'Button', Specimen: ButtonSpecimen },
   { slug: 'button-icon', name: 'ButtonIcon', Specimen: ButtonIconSpecimen },
-  { slug: 'button-dropdown', name: 'ButtonDropdown', Specimen: ButtonDropdownSpecimen },
+  { slug: 'button-menu', name: 'ButtonMenu', Specimen: ButtonMenuSpecimen },
   { slug: 'switch', name: 'Switch', Specimen: SwitchSpecimen },
   { slug: 'checkbox', name: 'Checkbox', Specimen: CheckboxSpecimen },
   { slug: 'radio', name: 'Radio', Specimen: RadioSpecimen },

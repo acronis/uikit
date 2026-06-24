@@ -43,7 +43,7 @@ const RENDER: Record<string, RenderHint> = {
     sample: '\n      <AvatarFallback>SN</AvatarFallback>\n    ',
   },
   button: { sample: 'Label' },
-  'button-dropdown': { sample: 'Label' },
+  'button-menu': { sample: 'Label' },
   'button-icon': {
     sample: '<PlusIcon />',
     extraImports: [
