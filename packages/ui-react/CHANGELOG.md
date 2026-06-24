@@ -1,5 +1,16 @@
 # @acronis-platform/ui-react
 
+## 0.23.0
+
+### Minor Changes
+
+- [#344](https://github.com/acronis/uikit/pull/344) [`01a4ae9`](https://github.com/acronis/uikit/commit/01a4ae9da2b0623a844509e0700a7afdb62ea8d1) Thanks [@leonid](https://github.com/leonid)! - Add `Resizable`: a panel-group component (`ResizablePanelGroup` / `ResizablePanel`
+  / `ResizableHandle`) wrapping `react-resizable-panels`, themed with the
+  `--ui-resizable-*` token tier. The handle is a draggable divider with an optional
+  grab-bar grip (`withHandle`); supports horizontal and vertical orientation,
+  min/max sizes, collapsible and nested panels. Keyboard-resizable, with the handle
+  exposed as an ARIA `separator`.
+
 ## 0.22.3
 
 ### Patch Changes
