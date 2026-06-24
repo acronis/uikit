@@ -55,13 +55,38 @@ contract:
       required: false
       default: undefined
       description: >-
-        Controlled disclosure state of an expandable row (menu-sub). Driven by
-        Base UI Collapsible; sets `aria-expanded` / `aria-controls`.
+        Controlled disclosure state of an expandable row (menu-sub) or an
+        expandable section. Driven by Base UI Collapsible; sets `aria-expanded` /
+        `aria-controls`.
     - name: defaultOpen
       type: boolean
       required: false
       default: false
-      description: Uncontrolled initial disclosure state of an expandable row.
+      description: >-
+        Uncontrolled initial disclosure state of an expandable row or expandable
+        section. (Expandable sections default to open.)
+    - name: expandable
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Makes a section a collapsible disclosure (section part): the section-label
+        becomes a chevron toggle and the menu becomes its collapsible panel. Mirrors
+        the Figma Section `expandable` variant.
+    - name: actions
+      type: ReactNode
+      required: false
+      default: undefined
+      description: >-
+        Trailing header actions on the section-label (e.g. a ghost ButtonIcon),
+        rendered outside the toggle so they stay independently operable.
+    - name: unreadRollup
+      type: ReactNode
+      required: false
+      default: undefined
+      description: >-
+        A rollup badge (e.g. a Tag with an unread count) shown in an expandable
+        section's header only while it is collapsed.
     - name: parentLabel
       type: ReactNode
       required: true

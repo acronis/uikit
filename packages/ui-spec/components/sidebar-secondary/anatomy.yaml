@@ -61,10 +61,17 @@ parts:
     description: Footer menu region (`<div>`) with a top divider.
     element: div
   - id: section
-    description: A group of menu items (`<div>`); non-first sections carry a top divider.
+    description: >-
+      A group of menu items (`<div>`). With `expandable`, it becomes a Base UI
+      Collapsible: the section-label toggles the menu's visibility (Figma Section
+      `expandable` variant).
     element: div
   - id: section-label
-    description: Optional section caption (`<div>`) rendered above the menu.
+    description: >-
+      Optional section caption (`<div>`) rendered above the menu. In an expandable
+      section it is the collapsible trigger — a leading chevron + label, with an
+      optional trailing `actions` slot and an `unreadRollup` badge shown while
+      collapsed.
     element: div
     optional: true
   - id: menu

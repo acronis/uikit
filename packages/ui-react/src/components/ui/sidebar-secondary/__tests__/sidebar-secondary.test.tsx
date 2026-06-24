@@ -291,3 +291,121 @@ describe('SidebarSecondary', () => {
     expect(within(searchRow).getByText('⌘F')).toBeInTheDocument();
   });
 });
+
+describe('SidebarSecondary — expandable section', () => {
+  function ExpandableSection(
+    props: React.ComponentProps<typeof SidebarSecondarySection>
+  ) {
+    return (
+      <SidebarSecondary>
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection expandable {...props}>
+            <SidebarSecondarySectionLabel
+              actions={<button type="button">Add</button>}
+              unreadRollup={<span>3</span>}
+            >
+              Configuration
+            </SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="/policies">
+                Policies
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuSub>
+                <SidebarSecondaryMenuSubTrigger>Add-ons</SidebarSecondaryMenuSubTrigger>
+                <SidebarSecondaryMenuSubContent>
+                  <SidebarSecondaryMenuSubItem href="/addons/a">
+                    Backup
+                  </SidebarSecondaryMenuSubItem>
+                </SidebarSecondaryMenuSubContent>
+              </SidebarSecondaryMenuSub>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+      </SidebarSecondary>
+    );
+  }
+
+  it('renders the section label as a collapsible trigger, open by default', () => {
+    render(<ExpandableSection />);
+    const trigger = screen.getByRole('button', { name: /Configuration/ });
+    expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('link', { name: 'Policies' })).toBeInTheDocument();
+  });
+
+  it('collapses and expands the whole section, hiding/showing its items', async () => {
+    render(<ExpandableSection />);
+    const trigger = screen.getByRole('button', { name: /Configuration/ });
+
+    await userEvent.click(trigger);
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('link', { name: 'Policies' })).not.toBeInTheDocument();
+
+    await userEvent.click(trigger);
+    expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('link', { name: 'Policies' })).toBeInTheDocument();
+  });
+
+  it('honors a controlled open state via onOpenChange', async () => {
+    const onOpenChange = vi.fn();
+    render(<ExpandableSection open={false} onOpenChange={onOpenChange} />);
+    const trigger = screen.getByRole('button', { name: /Configuration/ });
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('link', { name: 'Policies' })).not.toBeInTheDocument();
+
+    await userEvent.click(trigger);
+    // Base UI calls onOpenChange with (nextOpen, eventDetails); assert the value.
+    expect(onOpenChange).toHaveBeenCalled();
+    expect(onOpenChange.mock.calls[0][0]).toBe(true);
+    // Still closed — the consumer owns `open`.
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('keeps header actions operable outside the toggle (no nested buttons)', async () => {
+    const onAdd = vi.fn();
+    render(
+      <SidebarSecondary>
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection expandable>
+            <SidebarSecondarySectionLabel
+              actions={
+                <button type="button" onClick={onAdd}>
+                  Add
+                </button>
+              }
+            >
+              Configuration
+            </SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="/policies">Policies</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+      </SidebarSecondary>
+    );
+    const toggle = screen.getByRole('button', { name: /Configuration/ });
+    const add = screen.getByRole('button', { name: 'Add' });
+    // The action is a sibling of the toggle, not nested inside it.
+    expect(toggle).not.toContainElement(add);
+    await userEvent.click(add);
+    expect(onAdd).toHaveBeenCalledTimes(1);
+    // Clicking the action did not toggle the section.
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('static sections still render a plain (non-button) label', () => {
+    render(
+      <SidebarSecondary>
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection>
+            <SidebarSecondarySectionLabel>Overview</SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="/d">Dashboard</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+      </SidebarSecondary>
+    );
+    expect(screen.queryByRole('button', { name: /Overview/ })).not.toBeInTheDocument();
+    expect(screen.getByText('Overview')).toBeInTheDocument();
+  });
+});

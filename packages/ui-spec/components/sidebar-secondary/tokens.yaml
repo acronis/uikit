@@ -117,6 +117,16 @@ tokens:
       affects: section-label,
       description: Section label color (14/24/600),
     }
+  - {
+      name: --ui-sidebar-secondary-section-container-header-gap,
+      affects: section-label,
+      description: Gap between the expand chevron / label / header actions,
+    }
+  - {
+      name: --ui-sidebar-secondary-section-icon-arrow-color,
+      affects: section-label,
+      description: Expandable-section header chevron color,
+    }
   # ── menu ──
   - {
       name: --ui-sidebar-secondary-section-menu-item-list-gap,

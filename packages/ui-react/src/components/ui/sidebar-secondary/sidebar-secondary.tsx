@@ -270,53 +270,189 @@ const SidebarSecondaryFooter = React.forwardRef<
 ));
 SidebarSecondaryFooter.displayName = 'SidebarSecondaryFooter';
 
+// A section can be a static group (label + items) or an EXPANDABLE disclosure
+// (Figma Section `expandable=yes-*`): the label becomes a chevron toggle that
+// shows/hides the whole item list. Whether a section is expandable is shared to
+// its label + menu via this context (default: static), so the same `SectionLabel`
+// / `Menu` parts adapt without a separate component set.
+interface SidebarSecondarySectionContextValue {
+  expandable: boolean;
+}
+
+const SidebarSecondarySectionContext =
+  React.createContext<SidebarSecondarySectionContextValue>({ expandable: false });
+
+const SECTION_STATIC: SidebarSecondarySectionContextValue = { expandable: false };
+const SECTION_EXPANDABLE: SidebarSecondarySectionContextValue = { expandable: true };
+
+export interface SidebarSecondarySectionProps
+  extends React.ComponentPropsWithoutRef<'div'> {
+  /**
+   * Make the section a collapsible disclosure: the `SidebarSecondarySectionLabel`
+   * becomes a chevron toggle and the `SidebarSecondaryMenu` becomes its panel.
+   */
+  expandable?: boolean;
+  /** Controlled open state (expandable sections only). */
+  open?: boolean;
+  /** Uncontrolled initial open state (expandable sections only). Defaults to open. */
+  defaultOpen?: boolean;
+  /** Fires with the next open value when an expandable section toggles. */
+  onOpenChange?: (open: boolean) => void;
+}
+
 const SidebarSecondarySection = React.forwardRef<
   HTMLDivElement,
-  React.ComponentPropsWithoutRef<'div'>
->(({ className, ...props }, ref) => (
-  // Sections are separated by vertical padding + the section label; the next-gen
-  // token sync removed the inter-section divider (no
-  // `--ui-sidebar-secondary-section-container-border-*` token survives).
-  <div
-    ref={ref}
-    className={cn(
+  SidebarSecondarySectionProps
+>(
+  (
+    { className, expandable = false, open, defaultOpen = true, onOpenChange, children, ...props },
+    ref
+  ) => {
+    // Sections are separated by vertical padding + the section label; the next-gen
+    // token sync removed the inter-section divider (no
+    // `--ui-sidebar-secondary-section-container-border-*` token survives).
+    const sectionClass = cn(
       'flex flex-col py-[var(--ui-sidebar-secondary-section-container-padding-y)]',
       className
-    )}
-    {...props}
-  />
-));
+    );
+
+    if (!expandable) {
+      return (
+        <SidebarSecondarySectionContext.Provider value={SECTION_STATIC}>
+          <div ref={ref} className={sectionClass} {...props}>
+            {children}
+          </div>
+        </SidebarSecondarySectionContext.Provider>
+      );
+    }
+
+    // Expandable: Base UI Collapsible owns the open state (controlled or
+    // uncontrolled) + the aria-expanded/aria-controls wiring on the trigger.
+    return (
+      <SidebarSecondarySectionContext.Provider value={SECTION_EXPANDABLE}>
+        <Collapsible.Root
+          ref={ref}
+          open={open}
+          defaultOpen={defaultOpen}
+          onOpenChange={onOpenChange}
+          render={<div className={sectionClass} />}
+          {...props}
+        >
+          {children}
+        </Collapsible.Root>
+      </SidebarSecondarySectionContext.Provider>
+    );
+  }
+);
 SidebarSecondarySection.displayName = 'SidebarSecondarySection';
+
+export interface SidebarSecondarySectionLabelProps
+  extends React.ComponentPropsWithoutRef<'div'> {
+  /** Trailing header actions (e.g. a ghost `ButtonIcon`). Rendered outside the toggle. */
+  actions?: React.ReactNode;
+  /**
+   * A rollup badge (e.g. a `Tag` with an unread count) shown in the header only
+   * when an expandable section is collapsed. Ignored for static sections.
+   */
+  unreadRollup?: React.ReactNode;
+}
+
+const sectionLabelTextClass =
+  'ui-sidebar-secondary-section-label-section-text-style text-[var(--ui-sidebar-secondary-section-label-section-color)]';
+const sectionHeaderPadClass =
+  'pb-[var(--ui-sidebar-secondary-section-container-header-padding-y)] px-[var(--ui-sidebar-secondary-section-container-header-padding-x)]';
 
 const SidebarSecondarySectionLabel = React.forwardRef<
   HTMLDivElement,
-  React.ComponentPropsWithoutRef<'div'>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      'ui-sidebar-secondary-section-label-section-text-style text-[var(--ui-sidebar-secondary-section-label-section-color)]',
-      'pb-[var(--ui-sidebar-secondary-section-container-header-padding-y)] px-[var(--ui-sidebar-secondary-section-container-header-padding-x)]',
-      className
-    )}
-    {...props}
-  />
-));
+  SidebarSecondarySectionLabelProps
+>(({ className, actions, unreadRollup, children, ...props }, ref) => {
+  const { expandable } = React.useContext(SidebarSecondarySectionContext);
+
+  if (!expandable) {
+    // Static header: preserve the original markup when there are no actions so
+    // existing layouts/baselines are unchanged.
+    const base = cn(sectionLabelTextClass, sectionHeaderPadClass, className);
+    if (actions == null) {
+      return (
+        <div ref={ref} className={base} {...props}>
+          {children}
+        </div>
+      );
+    }
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          base,
+          'flex items-center gap-[var(--ui-sidebar-secondary-section-container-header-gap)]'
+        )}
+        {...props}
+      >
+        <span className="min-w-0 flex-1 truncate">{children}</span>
+        <span className="flex shrink-0 items-center">{actions}</span>
+      </div>
+    );
+  }
+
+  // Expandable header: a chevron toggle (the Collapsible trigger) plus optional
+  // trailing actions kept OUTSIDE the trigger button (no nested buttons). The
+  // unread-rollup badge sits inside the trigger and shows only while collapsed.
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        'flex items-center gap-[var(--ui-sidebar-secondary-section-container-header-gap)]',
+        sectionHeaderPadClass,
+        className
+      )}
+      {...props}
+    >
+      <Collapsible.Trigger
+        className={cn(
+          'group/section flex min-w-0 flex-1 items-center gap-[var(--ui-sidebar-secondary-section-container-header-gap)] text-left',
+          sectionLabelTextClass,
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)] focus-visible:ring-inset'
+        )}
+      >
+        <ChevronDownIcon
+          size={16}
+          aria-hidden="true"
+          className="shrink-0 -rotate-90 transition-transform group-data-[panel-open]/section:rotate-0 text-[var(--ui-sidebar-secondary-section-icon-arrow-color)]"
+        />
+        <span className="min-w-0 flex-1 truncate">{children}</span>
+        {unreadRollup != null && (
+          <span className="flex shrink-0 items-center group-data-[panel-open]/section:hidden">
+            {unreadRollup}
+          </span>
+        )}
+      </Collapsible.Trigger>
+      {actions != null && (
+        <span className="flex shrink-0 items-center">{actions}</span>
+      )}
+    </div>
+  );
+});
 SidebarSecondarySectionLabel.displayName = 'SidebarSecondarySectionLabel';
 
 const SidebarSecondaryMenu = React.forwardRef<
   HTMLUListElement,
   React.ComponentPropsWithoutRef<'ul'>
->(({ className, ...props }, ref) => (
-  <ul
-    ref={ref}
-    className={cn(
-      'flex flex-col gap-[var(--ui-sidebar-secondary-section-menu-item-list-gap)]',
-      className
-    )}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  const { expandable } = React.useContext(SidebarSecondarySectionContext);
+  const list = (
+    <ul
+      ref={ref}
+      className={cn(
+        'flex flex-col gap-[var(--ui-sidebar-secondary-section-menu-item-list-gap)]',
+        className
+      )}
+      {...props}
+    />
+  );
+  // Inside an expandable section the item list IS the collapsible panel, so it
+  // mounts/unmounts with the section's open state.
+  return expandable ? <Collapsible.Panel>{list}</Collapsible.Panel> : list;
+});
 SidebarSecondaryMenu.displayName = 'SidebarSecondaryMenu';
 
 // Shared row geometry + the GLOBAL icon/label state colors (shared across

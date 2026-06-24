@@ -4,9 +4,13 @@ import {
   BoxIcon,
   LayoutGridIcon,
   PanelLeftIcon,
+  PlusIcon,
   ServerIcon,
   ShoppingCartIcon,
 } from '@acronis-platform/icons-react/stroke-mono';
+
+import { ButtonIcon } from '../../button-icon';
+import { Tag } from '../../tag';
 
 import {
   SidebarSecondary,
@@ -84,8 +88,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-function Shell({ children }: { children: React.ReactNode }) {
-  return <div style={{ height: 520, display: 'flex' }}>{children}</div>;
+function Shell({
+  children,
+  height = 520,
+}: {
+  children: React.ReactNode;
+  height?: number;
+}) {
+  return <div style={{ height, display: 'flex' }}>{children}</div>;
 }
 
 export const Default: Story = {
@@ -298,4 +308,142 @@ export const Controlled: Story = {
       </Shell>
     );
   },
+};
+
+// Collapsible sections (Figma "Section" expandable variant). Mirrors the
+// "Protection" reference: one open section of items, several collapsed sections,
+// a submenu nested inside a section, and a header-less section ("Chat").
+export const ExpandableSections: Story = {
+  name: 'Expandable sections',
+  render: () => (
+    <Shell height={680}>
+      <SidebarSecondary>
+        <SidebarSecondaryHeader label="Protection" />
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection expandable>
+            <SidebarSecondarySectionLabel>Policies</SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#" selected>
+                Protection
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Remote management</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Monitoring</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Software deployment</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Cloud application backup</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Archiving</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">SIEM forwarding</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+          <SidebarSecondarySection expandable defaultOpen={false}>
+            <SidebarSecondarySectionLabel>Jobs</SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#">Active</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">History</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+          <SidebarSecondarySection expandable defaultOpen={false}>
+            <SidebarSecondarySectionLabel>Disaster recovery</SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              {/* A submenu (item-level disclosure) nested inside an expandable section. */}
+              <SidebarSecondaryMenuSub>
+                <SidebarSecondaryMenuSubTrigger>Runbooks</SidebarSecondaryMenuSubTrigger>
+                <SidebarSecondaryMenuSubContent>
+                  <SidebarSecondaryMenuSubItem href="#">Primary site</SidebarSecondaryMenuSubItem>
+                  <SidebarSecondaryMenuSubItem href="#">Secondary site</SidebarSecondaryMenuSubItem>
+                </SidebarSecondaryMenuSubContent>
+              </SidebarSecondaryMenuSub>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+          <SidebarSecondarySection expandable defaultOpen={false}>
+            <SidebarSecondarySectionLabel>Email security</SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#">Quarantine</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+          <SidebarSecondarySection expandable defaultOpen={false}>
+            <SidebarSecondarySectionLabel>Infrastructure</SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#">Storage</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+          {/* Header-less section: a plain top-level item. */}
+          <SidebarSecondarySection>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#">Chat</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+        <SidebarSecondaryFooter>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryCollapseTrigger icon={<PanelLeftIcon />}>
+              Collapse menu
+            </SidebarSecondaryCollapseTrigger>
+          </SidebarSecondaryMenu>
+        </SidebarSecondaryFooter>
+      </SidebarSecondary>
+    </Shell>
+  ),
+};
+
+// Section header extras (Figma "Intelligence" reference): a `+` action button on
+// an open section, and an unread-rollup Tag on a collapsed section.
+export const SectionActionsAndRollup: Story = {
+  name: 'Section actions + unread rollup',
+  render: () => (
+    <Shell height={560}>
+      <SidebarSecondary>
+        <SidebarSecondaryHeader label="Intelligence" />
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection expandable>
+            <SidebarSecondarySectionLabel
+              actions={
+                <ButtonIcon variant="ghost" aria-label="Add dashboard">
+                  <PlusIcon />
+                </ButtonIcon>
+              }
+            >
+              Dashboards
+            </SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#" selected>
+                Overview
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Microsoft 365 licensing</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Security</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">RMM</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Backup</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Usage</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+          <SidebarSecondarySection expandable defaultOpen={false}>
+            <SidebarSecondarySectionLabel
+              unreadRollup={
+                <Tag variant="neutral" size="sm">
+                  22
+                </Tag>
+              }
+            >
+              Operations
+            </SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#">Alerts</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Activities</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+          <SidebarSecondarySection>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#">Reports</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+        <SidebarSecondaryFooter>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryCollapseTrigger icon={<PanelLeftIcon />}>
+              Collapse menu
+            </SidebarSecondaryCollapseTrigger>
+          </SidebarSecondaryMenu>
+        </SidebarSecondaryFooter>
+      </SidebarSecondary>
+    </Shell>
+  ),
 };

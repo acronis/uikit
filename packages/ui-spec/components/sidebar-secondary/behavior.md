@@ -101,3 +101,31 @@
 **Given** any extras inside a menu item
 **When** the panel is collapsed
 **Then** the extras cluster is hidden
+
+## Expandable section
+
+### Toggle a section
+
+**Given** a `SidebarSecondarySection` with `expandable`
+**When** the user activates its section-label header
+**Then** the section's menu collapses/expands and the header chevron rotates
+(`aria-expanded` flips); an uncontrolled section starts open
+
+### Header actions stay operable
+
+**Given** an expandable section-label with an `actions` slot (e.g. a ButtonIcon)
+**When** the user activates the action
+**Then** the action fires and the section does **not** toggle (the action is a
+sibling of the toggle, never nested in it)
+
+### Unread rollup while collapsed
+
+**Given** an expandable section-label with an `unreadRollup` badge
+**When** the section is collapsed
+**Then** the rollup badge shows in the header; it hides again when expanded
+
+### Submenus nest inside sections
+
+**Given** a `SidebarSecondaryMenuSub` inside an expandable section's menu
+**When** the section is open
+**Then** the submenu disclosure toggles independently of the section's open state

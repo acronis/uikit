@@ -20,6 +20,7 @@ import {
   SidebarSecondaryMenuSubItem,
   SidebarSecondaryMenuSubTrigger,
   SidebarSecondarySection,
+  SidebarSecondarySectionLabel,
 } from './sidebar-secondary';
 
 figma.connect(
@@ -64,6 +65,33 @@ figma.connect(
           </SidebarSecondaryMenu>
         </SidebarSecondaryFooter>
       </SidebarSecondary>
+    ),
+  }
+);
+
+// The "Section" sub-component. Its `expandable` variant (no / yes-expanded /
+// yes-callapsed) maps to the React `expandable` boolean; `labelHeader` is the
+// section caption. The yes-* options are both `expandable` — the open vs
+// collapsed split is the runtime open state.
+figma.connect(
+  SidebarSecondarySection,
+  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2891-16563',
+  {
+    props: {
+      expandable: figma.enum('expandable', {
+        no: false,
+        'yes-expanded': true,
+        'yes-callapsed': true,
+      }),
+      label: figma.string('labelHeader'),
+    },
+    example: ({ expandable, label }) => (
+      <SidebarSecondarySection expandable={expandable}>
+        <SidebarSecondarySectionLabel>{label}</SidebarSecondarySectionLabel>
+        <SidebarSecondaryMenu>
+          <SidebarSecondaryMenuItem href="#">Menu item</SidebarSecondaryMenuItem>
+        </SidebarSecondaryMenu>
+      </SidebarSecondarySection>
     ),
   }
 );

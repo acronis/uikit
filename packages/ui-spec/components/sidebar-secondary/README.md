@@ -20,23 +20,23 @@ breadcrumb rail.
 
 ## Parts
 
-| Part                                  | Element                              | Role                                              |
-| ------------------------------------- | ------------------------------------ | ------------------------------------------------- |
-| `SidebarSecondary`                    | `<nav>`                              | Navigation landmark; owns the expanded state      |
-| `SidebarSecondaryHeader`              | `<div><h2>`                          | Section title row                                 |
-| `SidebarSecondaryContent`             | `<div>`                              | Scrollable section list (expanded only)           |
-| `SidebarSecondaryCollapsedBreadcrumb` | `<div>`                              | Rail-mode location indicator (collapsed only)     |
-| `SidebarSecondaryFooter`              | `<div>`                              | Footer menu with a top divider                    |
-| `SidebarSecondarySection`             | `<div>`                              | A group of rows (divider between groups)          |
-| `SidebarSecondarySectionLabel`        | `<div>`                              | Optional section caption                          |
-| `SidebarSecondaryMenu`                | `<ul>`                               | List that owns the inter-item gap                 |
-| `SidebarSecondaryMenuItem`            | `<li><a>` (polymorphic via `render`) | Level-1 leaf row                                  |
-| `SidebarSecondaryMenuSub`             | `Collapsible.Root` `<li>`            | Expandable Level-1 row                            |
-| `SidebarSecondaryMenuSubTrigger`      | `Collapsible.Trigger` `<button>`     | Disclosure parent row (rotating chevron)          |
-| `SidebarSecondaryMenuSubContent`      | `Collapsible.Panel` `<div><ul>`      | Level-2 child list                                |
-| `SidebarSecondaryMenuSubItem`         | `<li><a>`                            | Level-2 indented leaf                             |
-| `SidebarSecondaryMenuItemExtras`      | `<span>`                             | Trailing shortcut / external-link / tag           |
-| `SidebarSecondaryCollapseTrigger`     | `<li><button>`                       | Footer "Collapse menu" button; toggles `expanded` |
+| Part                                  | Element                              | Role                                                                                   |
+| ------------------------------------- | ------------------------------------ | -------------------------------------------------------------------------------------- |
+| `SidebarSecondary`                    | `<nav>`                              | Navigation landmark; owns the expanded state                                           |
+| `SidebarSecondaryHeader`              | `<div><h2>`                          | Section title row                                                                      |
+| `SidebarSecondaryContent`             | `<div>`                              | Scrollable section list (expanded only)                                                |
+| `SidebarSecondaryCollapsedBreadcrumb` | `<div>`                              | Rail-mode location indicator (collapsed only)                                          |
+| `SidebarSecondaryFooter`              | `<div>`                              | Footer menu with a top divider                                                         |
+| `SidebarSecondarySection`             | `<div>` / `Collapsible.Root`         | A group of rows; `expandable` makes it collapsible                                     |
+| `SidebarSecondarySectionLabel`        | `<div>` / `Collapsible.Trigger`      | Section caption; the chevron toggle when expandable (`actions` / `unreadRollup` slots) |
+| `SidebarSecondaryMenu`                | `<ul>`                               | List that owns the inter-item gap                                                      |
+| `SidebarSecondaryMenuItem`            | `<li><a>` (polymorphic via `render`) | Level-1 leaf row                                                                       |
+| `SidebarSecondaryMenuSub`             | `Collapsible.Root` `<li>`            | Expandable Level-1 row                                                                 |
+| `SidebarSecondaryMenuSubTrigger`      | `Collapsible.Trigger` `<button>`     | Disclosure parent row (rotating chevron)                                               |
+| `SidebarSecondaryMenuSubContent`      | `Collapsible.Panel` `<div><ul>`      | Level-2 child list                                                                     |
+| `SidebarSecondaryMenuSubItem`         | `<li><a>`                            | Level-2 indented leaf                                                                  |
+| `SidebarSecondaryMenuItemExtras`      | `<span>`                             | Trailing shortcut / external-link / tag                                                |
+| `SidebarSecondaryCollapseTrigger`     | `<li><button>`                       | Footer "Collapse menu" button; toggles `expanded`                                      |
 
 ## Quick Examples
 
