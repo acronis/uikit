@@ -1,0 +1,60 @@
+spec_version: '1.0'
+component: CardFilter
+
+contract:
+  properties:
+    - name: variant
+      type: "'static' | 'static-empty' | 'clickable'"
+      required: false
+      default: "'static'"
+      description: >-
+        Visual style and interactivity. `static` is presentational with a default
+        value color; `static-empty` is a presentational placeholder (no icon, a
+        muted em-dash); `clickable` renders an interactive `<button>` with a
+        link-colored value and hover / active / focus states. Per the design,
+        only `clickable` has states beyond idle.
+
+  events:
+    - name: click
+      payload: MouseEvent
+      description: >-
+        Fired on activation (pointer or keyboard) of the `clickable` variant.
+        Typically applies the filter the card represents.
+
+  content:
+    - name: label
+      description: The caption shown above the value. Plain text or inline nodes.
+    - name: value
+      description: >-
+        The prominent value. Ignored for `static-empty` (which shows an em-dash
+        placeholder).
+    - name: icon
+      description: >-
+        Optional leading glyph (16px) rendered before the value. Hidden for
+        `static-empty`.
+
+adapters:
+  react:
+    component: CardFilter
+    status: implemented
+    import: "import { CardFilter } from '@acronis-platform/ui-react'"
+    example: |
+      <CardFilter variant="static" label="Total assets" value="125" icon={<CircleInfoIcon />} />
+
+      {/* Clickable filter */}
+      <CardFilter variant="clickable" label="Active filters" value="3" onClick={apply} />
+
+      {/* Polymorphic: render as a link */}
+      <CardFilter variant="clickable" label="Alerts" value="12" render={<a href="/alerts" />} />
+  vue:
+    element: AvCardFilter
+    status: planned
+    import: "import { AvCardFilter } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvCardFilter variant="clickable" label="Active filters" value="3" @click="apply" />
+  web-components:
+    element: ui-card-filter
+    status: planned
+    import: "import '@acronis-platform/ui-wc/card-filter'"
+    example: |
+      <ui-card-filter variant="clickable" label="Active filters" value="3"></ui-card-filter>

@@ -32,6 +32,9 @@ interface RenderHint {
   sample?: string;
   extraImports?: string[];
   ariaLabel?: string;
+  /** Fixed prop string applied to every generated instance, for components
+   *  driven by props rather than children (e.g. CardFilter's `label`/`value`). */
+  props?: string;
   /** Root component/import to render when it differs from `index.component`
    *  (e.g. Resizable's root export is `ResizablePanelGroup`). */
   root?: string;
@@ -44,6 +47,12 @@ const RENDER: Record<string, RenderHint> = {
   },
   button: { sample: 'Label' },
   'button-menu': { sample: 'Label' },
+  'card-filter': {
+    extraImports: [
+      "import { CircleInfoIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    props: 'label="Active filters" value="125" icon={<CircleInfoIcon />}',
+  },
   'button-icon': {
     sample: '<PlusIcon />',
     extraImports: [
@@ -239,7 +248,9 @@ function buildStories(
 ): { body: string; needsPlay: boolean } {
   const variants = enumMembers(api, 'variant');
   const sizes = enumMembers(api, 'size');
-  const label = hint.ariaLabel ? ` aria-label="${hint.ariaLabel}"` : '';
+  const label =
+    (hint.ariaLabel ? ` aria-label="${hint.ariaLabel}"` : '') +
+    (hint.props ? ` ${hint.props}` : '');
   const children = hint.sample ?? '';
   const inst = (props: string) =>
     children ? `<${comp}${props}>${children}</${comp}>` : `<${comp}${props} />`;

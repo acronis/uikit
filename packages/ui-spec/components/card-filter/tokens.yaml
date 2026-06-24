@@ -1,0 +1,44 @@
+spec_version: '1.0'
+component: CardFilter
+
+# References only — values live in @acronis-platform/tokens-pd. Geometry and the
+# container fill / border come from the `--ui-card-filter-global-*` tokens; the
+# value color is the one token that varies by variant
+# (`-clickable-value-color`, `-static-value-color-*`).
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Geometry (root) ──
+  - { name: --ui-card-filter-global-container-height, affects: root }
+  - { name: --ui-card-filter-global-container-border-radius, affects: root }
+  - { name: --ui-card-filter-global-container-border-width, affects: root }
+  - { name: --ui-card-filter-global-container-border-style, affects: root }
+  - { name: --ui-card-filter-global-container-padding-x, affects: root }
+  - { name: --ui-card-filter-global-container-padding-y, affects: root }
+  - { name: --ui-card-filter-global-content-gap, affects: root }
+
+  # ── Container fill (per state; hover/active are clickable-only) ──
+  - { name: --ui-card-filter-global-container-color-idle, affects: root }
+  - { name: --ui-card-filter-global-container-color-hover, affects: root }
+  - { name: --ui-card-filter-global-container-color-active, affects: root }
+
+  # ── Border color (per state; hover/active/focused are clickable-only) ──
+  - { name: --ui-card-filter-global-border-color-idle, affects: root }
+  - { name: --ui-card-filter-global-border-color-hover, affects: root }
+  - { name: --ui-card-filter-global-border-color-active, affects: root }
+  - { name: --ui-card-filter-global-border-color-focused, affects: root }
+
+  # ── Label ──
+  - { name: --ui-card-filter-global-label-color, affects: label }
+
+  # ── Value (varies by variant) ──
+  - { name: --ui-card-filter-clickable-value-color, affects: value }
+  - { name: --ui-card-filter-static-value-color-idle, affects: value }
+  - { name: --ui-card-filter-static-value-color-disabled, affects: value }
+
+  # ── Focus ring ──
+  - {
+      name: --ui-focus-primary,
+      affects: root,
+      description: Focus-visible ring color,
+    }

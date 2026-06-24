@@ -1,0 +1,14 @@
+spec_version: '1.0'
+component: CardFilter
+name: card-filter
+status: ready
+category: data-display
+description: >-
+  A compact stat/filter card: a caption label above a prominent value, with an
+  optional leading icon. Three variants — `static` (presentational), `static-empty`
+  (presentational placeholder with an em-dash), and `clickable` (an interactive
+  filter that renders a button with hover / active / focus states).
+since: 0.26.0
+figma:
+  node: '3293-2431'
+  codeConnect: packages/ui-react/src/components/ui/card-filter/card-filter.figma.tsx

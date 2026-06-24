@@ -1,0 +1,64 @@
+spec_version: '1.0'
+component: CardFilter
+
+schematic: |
+  +----------------------------+
+  |  label                     |   root: <button> (clickable) | <div> w=224
+  |  icon   value              |
+  +----------------------------+
+  label: caption above the value
+  icon:  optional 16px leading glyph (hidden for static-empty)
+  value: prominent figure; link-colored when clickable, em-dash when static-empty
+
+root:
+  element: button
+  role: button
+  description: >-
+    The card surface (background, border, radius). For `variant="clickable"` it is
+    a native `<button>` and carries the hover / active / focus-visible treatments;
+    for `static` / `static-empty` it is a presentational `<div>` with no interaction
+    states. The `render` prop can swap the element (e.g. a link).
+
+parts:
+  - id: label
+    description: The caption shown above the value (12px).
+    element: span
+  - id: icon
+    description: >-
+      Optional leading glyph (16px) rendered before the value. Hidden for the
+      `static-empty` variant.
+    element: svg
+  - id: value
+    description: >-
+      The prominent value (24px). Link-colored for `clickable`, default text for
+      `static`, and a muted em-dash placeholder for `static-empty`.
+    element: span
+
+layout:
+  type: stack
+  direction: vertical
+  align: start
+  order: [label, icon, value]
+
+states:
+  - {
+      id: hover,
+      trigger: pointer hover (clickable only),
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [root],
+    }
+  - {
+      id: pressed,
+      trigger: pointer or keyboard activation (clickable only),
+      kind: pseudo,
+      pseudo: ':active',
+      affects: [root],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus (clickable only),
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [root],
+    }
