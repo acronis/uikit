@@ -32,6 +32,9 @@ interface RenderHint {
   sample?: string;
   extraImports?: string[];
   ariaLabel?: string;
+  /** Root component/import to render when it differs from `index.component`
+   *  (e.g. Resizable's root export is `ResizablePanelGroup`). */
+  root?: string;
 }
 
 const RENDER: Record<string, RenderHint> = {
@@ -163,6 +166,18 @@ const RENDER: Record<string, RenderHint> = {
       '          <SidebarSecondaryMenuItem href="#">Settings</SidebarSecondaryMenuItem>',
       '        </SidebarSecondaryMenu>',
       '      </SidebarSecondaryFooter>',
+      '    ',
+    ].join('\n'),
+  },
+  resizable: {
+    root: 'ResizablePanelGroup',
+    ariaLabel: 'Resizable example',
+    extraImports: ["import { ResizablePanel, ResizableHandle } from '../resizable';"],
+    sample: [
+      '',
+      '      <ResizablePanel defaultSize={50}>One</ResizablePanel>',
+      '      <ResizableHandle withHandle />',
+      '      <ResizablePanel defaultSize={50}>Two</ResizablePanel>',
       '    ',
     ].join('\n'),
   },
@@ -366,8 +381,8 @@ function generate(name: string): boolean {
     return false;
   }
   const { index, api, anatomy } = loadSpec(name);
-  const comp = index.component;
   const hint = RENDER[name] ?? {};
+  const comp = hint.root ?? index.component;
   const { body, needsPlay } = buildStories(comp, api, anatomy, hint);
 
   const imports = [
@@ -381,7 +396,7 @@ function generate(name: string): boolean {
 ${imports}
 
 const meta = {
-  title: 'UI/${comp}/All States (generated)',
+  title: 'UI/${index.component}/All States (generated)',
   component: ${comp},
 } satisfies Meta<typeof ${comp}>;
 

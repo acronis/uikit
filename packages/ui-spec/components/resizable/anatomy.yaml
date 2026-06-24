@@ -1,0 +1,80 @@
+spec_version: '1.0'
+component: Resizable
+
+schematic: |
+  root: group <div role="group"> (orientation horizontal)
+  +-------------------------+---+-------------------------+
+  |                         | h |                         |
+  |        panel            | a |        panel            |
+  |       (region)          | n |       (region)          |
+  |                         | d |                         |
+  |                         | l |                         |
+  |                         | e |                         |
+  |                         |[bar]                        |
+  |                         | | |                         |
+  +-------------------------+---+-------------------------+
+     group  -> the PanelGroup container; lays panels out along one axis
+     panel  -> a resizable region; sized by defaultSize / min / max
+     handle -> draggable separator (role="separator"); 1px divider line,
+               --ui-resizable-border-color-hover (rest) / -active (drag)
+     bar    -> grab-bar grip pill (--ui-resizable-bar-*), shown when withHandle
+
+root:
+  element: div
+  role: group
+  description: >-
+    The panel group container (`react-resizable-panels` Group). Lays its panels
+    out in a row (`orientation="horizontal"`) or column (`vertical`) and tracks
+    their relative sizes.
+
+parts:
+  - id: group
+    description: >-
+      The PanelGroup container element. Establishes the resize axis via
+      `orientation` and the flex layout of its panels.
+    element: div
+  - id: panel
+    description: >-
+      A single resizable region. Its size is constrained by `defaultSize`,
+      `minSize`, and `maxSize`; may be `collapsible`.
+    element: div
+  - id: handle
+    description: >-
+      The draggable separator between two panels (`role="separator"`). Renders a
+      centered 1px divider line — `--ui-resizable-border-color-hover` at rest,
+      `--ui-resizable-border-color-active` while dragging — and shows the
+      `--ui-resizable-cursor`. Carries `aria-orientation` reflecting the axis.
+    element: div
+  - id: bar
+    description: >-
+      The grab-bar grip pill centered on the handle (`--ui-resizable-bar-*`:
+      7×32, 4px radius). Rendered only when `withHandle` is set; rotates 90° in a
+      vertical group.
+    element: div
+    optional: true
+    visible_when: the handle's `withHandle` prop is set
+
+layout:
+  type: flex
+  direction: row
+  align: stretch
+  order: [panel, handle]
+
+# The only visual states are CSS pseudo-classes on the handle plus the `disabled`
+# prop. Panel sizes are continuous data, not enumerable states.
+states:
+  - id: hover
+    trigger: pointer hover over the handle
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [handle]
+  - id: active
+    trigger: dragging the handle (pointer held)
+    kind: pseudo
+    pseudo: ':active'
+    affects: [handle]
+  - id: focus-visible
+    trigger: keyboard focus on the handle
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [handle]

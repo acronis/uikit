@@ -762,6 +762,9 @@ importers:
       clsx:
         specifier: 2.1.1
         version: 2.1.1
+      react-resizable-panels:
+        specifier: 4.11.2
+        version: 4.11.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       tailwind-merge:
         specifier: 3.6.0
         version: 3.6.0

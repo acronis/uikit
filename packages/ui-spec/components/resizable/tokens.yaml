@@ -1,0 +1,59 @@
+spec_version: '1.0'
+component: Resizable
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-resizable-bar-width,
+      affects: bar,
+      description: Grab-bar grip and handle width (7px),
+    }
+  - {
+      name: --ui-resizable-bar-height,
+      affects: bar,
+      description: Grab-bar grip height (32px),
+    }
+  - {
+      name: --ui-resizable-bar-color,
+      affects: bar,
+      description: Grab-bar grip fill,
+    }
+  - {
+      name: --ui-resizable-bar-border-radius,
+      affects: bar,
+      description: Grab-bar grip corner radius (4px),
+    }
+  - {
+      name: --ui-resizable-border-width,
+      affects: handle,
+      description: Divider line thickness (1px),
+    }
+  - {
+      name: --ui-resizable-border-style,
+      affects: handle,
+      description: Divider line style (solid),
+    }
+  - {
+      name: --ui-resizable-border-color-hover,
+      affects: handle,
+      description: Divider line color — idle / hover,
+    }
+  - {
+      name: --ui-resizable-border-color-active,
+      affects: handle,
+      description: Divider line color — active / dragging,
+    }
+  - {
+      name: --ui-resizable-cursor,
+      affects: handle,
+      description: Resting cursor over the handle (ew-resize),
+    }
+  - {
+      name: --ui-focus-primary,
+      affects: handle,
+      description: Focus-visible ring color,
+    }

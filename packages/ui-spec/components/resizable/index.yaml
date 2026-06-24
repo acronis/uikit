@@ -1,0 +1,14 @@
+spec_version: '1.0'
+component: Resizable
+name: resizable
+status: ready
+category: layout
+description: >-
+  A group of panels separated by draggable handles that let the user resize
+  adjacent regions along one axis. Composable parts (panel group, panel,
+  handle); the handle is a thin divider with an optional grab-bar grip and
+  resizes its neighbouring panels on drag or arrow keys.
+since: 0.23.0
+figma:
+  node: '3476-5078'
+  codeConnect: packages/ui-react/src/components/ui/resizable/resizable.figma.tsx

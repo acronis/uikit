@@ -1,0 +1,115 @@
+spec_version: '1.0'
+component: Resizable
+
+# Framework-agnostic contract for a *composable* resizable: a panel group is
+# assembled from parts (see anatomy.yaml). Property names are neutral and grouped
+# by the part they apply to; native element attributes pass through. The React
+# adapter wraps `react-resizable-panels`.
+contract:
+  properties:
+    # — panel group —
+    - name: orientation
+      type: "'horizontal' | 'vertical'"
+      required: false
+      default: horizontal
+      description: >-
+        Resize axis of the group (panel-group part). `horizontal` arranges panels
+        in a row with vertical handles; `vertical` stacks them with horizontal
+        handles.
+    # — panel —
+    - name: defaultSize
+      type: number
+      required: false
+      default: undefined
+      description: >-
+        Initial size of a panel as a percentage of the group (panel part). Panels
+        without one share the remaining space.
+    - name: minSize
+      type: number
+      required: false
+      default: undefined
+      description: Minimum size of a panel, in percent of the group (panel part).
+    - name: maxSize
+      type: number
+      required: false
+      default: undefined
+      description: Maximum size of a panel, in percent of the group (panel part).
+    - name: collapsible
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Whether the panel can collapse below its `minSize` to a collapsed size
+        (panel part).
+    # — handle —
+    - name: withHandle
+      type: boolean
+      required: false
+      default: false
+      description: Render the grab-bar grip pill on the handle (handle part).
+    - name: disableResize
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Disable resizing through the handle or panel (`disabled` on the React
+        `ResizableHandle` / `ResizablePanel`). Named `disableResize` here so it is
+        not confused with a root-level disabled state — resizing is a per-part
+        capability, the group is never globally "disabled".
+
+  events:
+    - name: resize
+      description: >-
+        Fired as a panel's size changes during a drag (panel part). The React
+        adapter exposes this as the panel's `onResize` callback.
+
+  content:
+    - name: default
+      description: >-
+        The composed group. Author it from the parts: a panel group wrapping
+        panels, with a handle between each adjacent pair.
+
+  methods:
+    - name: resize
+      description: >-
+        Imperatively set a panel's size (panel part). The React adapter exposes
+        the panel's imperative handle (`collapse` / `expand` / `resize`) via its
+        `panelRef`.
+
+adapters:
+  react:
+    component: ResizablePanelGroup
+    status: implemented
+    import: >-
+      import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from
+      '@acronis-platform/ui-react'
+    example: |
+      <ResizablePanelGroup orientation="horizontal">
+        <ResizablePanel defaultSize={50}>One</ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize={50}>Two</ResizablePanel>
+      </ResizablePanelGroup>
+
+  vue:
+    component: AvResizablePanelGroup
+    status: planned
+    import: >-
+      import { AvResizablePanelGroup, AvResizablePanel, AvResizableHandle } from
+      '@acronis-platform/ui-vue'
+    example: |
+      <AvResizablePanelGroup orientation="horizontal">
+        <AvResizablePanel :default-size="50">One</AvResizablePanel>
+        <AvResizableHandle with-handle />
+        <AvResizablePanel :default-size="50">Two</AvResizablePanel>
+      </AvResizablePanelGroup>
+
+  web-components:
+    element: ui-resizable-group
+    status: planned
+    import: "import '@acronis-platform/ui-wc/resizable'"
+    example: |
+      <ui-resizable-group orientation="horizontal">
+        <ui-resizable-panel default-size="50">One</ui-resizable-panel>
+        <ui-resizable-handle with-handle></ui-resizable-handle>
+        <ui-resizable-panel default-size="50">Two</ui-resizable-panel>
+      </ui-resizable-group>
