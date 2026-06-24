@@ -1,0 +1,71 @@
+spec_version: '1.0'
+component: SearchGlobal
+
+# A single-element search field. Beyond the listed props it accepts the native
+# input attributes (value, defaultValue, onChange, name, autoFocus, …), which pass
+# through to the inner <input>.
+contract:
+  properties:
+    - name: placeholder
+      type: string
+      required: false
+      default: Search anything
+      description: Placeholder text shown in the input.
+    - name: shortcut
+      type: ReactNode
+      required: false
+      default: ⌘K
+      description: >-
+        Keyboard-shortcut hint rendered at the trailing edge. Decorative only;
+        pass null to hide it. Wiring the actual shortcut is left to the consumer.
+    - name: value
+      type: string
+      required: false
+      default: undefined
+      description: Controlled value of the input.
+    - name: defaultValue
+      type: string
+      required: false
+      default: undefined
+      description: Initial value for uncontrolled usage.
+    - name: aria-label
+      type: string
+      required: false
+      default: Search
+      description: Accessible name for the input (it has no visible label).
+
+  events:
+    - name: change
+      description: Fired as the input value changes (native input `onChange`).
+
+  content: []
+
+  methods:
+    - name: focus
+      description: Focus the input via the forwarded ref.
+
+adapters:
+  react:
+    component: SearchGlobal
+    status: implemented
+    import: "import { SearchGlobal } from '@acronis-platform/ui-react'"
+    example: |
+      <SearchGlobal
+        placeholder="Search anything"
+        shortcut="⌘K"
+        onChange={(e) => setQuery(e.target.value)}
+      />
+
+  vue:
+    component: AvSearchGlobal
+    status: planned
+    import: "import { AvSearchGlobal } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvSearchGlobal placeholder="Search anything" shortcut="⌘K" v-model="query" />
+
+  web-components:
+    element: ui-search-global
+    status: planned
+    import: "import '@acronis-platform/ui-wc/search-global'"
+    example: |
+      <ui-search-global placeholder="Search anything" shortcut="⌘K"></ui-search-global>

@@ -8,6 +8,7 @@ export * from './components/ui/radio';
 export * from './components/ui/input';
 export * from './components/ui/input-text-area';
 export * from './components/ui/search';
+export * from './components/ui/search-global';
 export * from './components/ui/select';
 export * from './components/ui/resizable';
 export * from './components/ui/sidebar-primary';

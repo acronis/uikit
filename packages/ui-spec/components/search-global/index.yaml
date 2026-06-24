@@ -1,0 +1,16 @@
+spec_version: '1.0'
+component: SearchGlobal
+name: search-global
+status: ready
+category: forms
+description: >-
+  A prominent global "search anything" field — a pill-shaped box with a gradient
+  brand border, a leading magnifier, a borderless input, and a trailing
+  keyboard-shortcut hint (⌘K). Used as the top-level search entry point of an app.
+since: 0.23.0
+dependencies:
+  components:
+    - MagnifierIcon
+figma:
+  node: '2999-116'
+  codeConnect: packages/ui-react/src/components/ui/search-global/search-global.figma.tsx

@@ -1,0 +1,106 @@
+spec_version: '1.0'
+component: SearchGlobal
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+# Note: the border-color tokens are brand *gradients*, applied via a
+# padding-box/border-box background rather than `border-color`.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-search-global-box-color,
+      affects: box,
+      description: Box fill (padding-box),
+    }
+  - {
+      name: --ui-search-global-box-height,
+      affects: box,
+      description: Box height (48px),
+    }
+  - {
+      name: --ui-search-global-box-width,
+      affects: box,
+      description: Box width (512px),
+    }
+  - {
+      name: --ui-search-global-box-width-min,
+      affects: box,
+      description: Minimum box width (256px),
+    }
+  - {
+      name: --ui-search-global-box-width-max,
+      affects: box,
+      description: Maximum box width (512px),
+    }
+  - {
+      name: --ui-search-global-box-padding-x,
+      affects: box,
+      description: Horizontal padding (16px),
+    }
+  - {
+      name: --ui-search-global-box-gap,
+      affects: box,
+      description: Gap between icon / input / shortcut (8px),
+    }
+  - {
+      name: --ui-search-global-box-border-radius,
+      affects: box,
+      description: Corner radius (24px pill),
+    }
+  - {
+      name: --ui-search-global-box-border-width,
+      affects: box,
+      description: Border thickness (2px),
+    }
+  - {
+      name: --ui-search-global-box-border-style,
+      affects: box,
+      description: Border style (solid),
+    }
+  - {
+      name: --ui-search-global-border-color-idle,
+      affects: box,
+      description: Gradient border — idle,
+    }
+  - {
+      name: --ui-search-global-border-color-hover,
+      affects: box,
+      description: Gradient border — hover,
+    }
+  - {
+      name: --ui-search-global-border-color-active,
+      affects: box,
+      description: Gradient border — active,
+    }
+  - {
+      name: --ui-search-global-icon-color,
+      affects: icon,
+      description: Magnifier color,
+    }
+  - {
+      name: --ui-search-global-icon-size,
+      affects: icon,
+      description: Magnifier size (16px),
+    }
+  - {
+      name: --ui-search-global-placeholoder-color,
+      affects: input,
+      description: Placeholder text color (Figma spelling),
+    }
+  - {
+      name: --ui-search-global-shortcut-color,
+      affects: shortcut,
+      description: Shortcut hint color,
+    }
+  - {
+      name: --ui-focus-primary,
+      affects: box,
+      description: Focus-within ring color,
+    }
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: input,
+      description: Typed value color (bridged text-foreground),
+    }

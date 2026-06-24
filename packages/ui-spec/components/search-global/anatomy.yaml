@@ -1,0 +1,69 @@
+spec_version: '1.0'
+component: SearchGlobal
+
+schematic: |
+  root: box <div> (48px pill, gradient brand border)
+  +-------------------------------------------------------------+
+  | [icon]  input (placeholder)                       [shortcut]|
+  +-------------------------------------------------------------+
+     box      -> the pill container; gradient border via --ui-search-global-border-color-*
+                 (idle/hover/active) + box fill / radius / size
+     icon     -> leading magnifier, --ui-search-global-icon-color (AI purple)
+     input    -> borderless native search input; placeholder uses
+                 --ui-search-global-placeholoder-color
+     shortcut -> trailing keyboard-shortcut hint (⌘K), --ui-search-global-shortcut-color
+
+root:
+  element: div
+  description: >-
+    The pill box wrapping the field. Not itself focusable — the inner input is the
+    accessible control. Owns the visual state: a gradient border that swaps
+    idle → hover → active, with a 3px `--ui-focus-primary` ring on `focus-within`.
+
+parts:
+  - id: box
+    description: >-
+      Pill container (48px tall, 24px radius). Paints the gradient border with the
+      padding-box / border-box technique (box fill in padding-box, the
+      `--ui-search-global-border-color-*` gradient in border-box).
+    element: div
+  - id: icon
+    description: Leading magnifier (16px), `--ui-search-global-icon-color`.
+    element: svg
+  - id: input
+    description: >-
+      Borderless native `<input type="search">` that fills the row. Placeholder
+      uses `--ui-search-global-placeholoder-color`; typed text uses the foreground.
+    element: input
+  - id: shortcut
+    description: >-
+      Trailing keyboard-shortcut hint (⌘K by default), `--ui-search-global-shortcut-color`.
+      Decorative (`aria-hidden`); hidden when the `shortcut` prop is null.
+    element: span
+    optional: true
+    visible_when: the `shortcut` prop is not null
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [icon, input, shortcut]
+
+# Interaction-only states on the box; idle is the default. There is no disabled
+# state in the design.
+states:
+  - id: hover
+    trigger: pointer hover over the box
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [box]
+  - id: active
+    trigger: the box is pressed
+    kind: pseudo
+    pseudo: ':active'
+    affects: [box]
+  - id: focus-visible
+    trigger: the input has focus (box shows the :focus-within ring)
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [box]
