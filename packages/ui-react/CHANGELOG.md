@@ -1,5 +1,17 @@
 # @acronis-platform/ui-react
 
+## 0.28.0
+
+### Minor Changes
+
+- [#361](https://github.com/acronis/uikit/pull/361) [`c62ec0a`](https://github.com/acronis/uikit/commit/c62ec0a8c8b5516e00f413a96ec10883b5706c7e) Thanks [@leonid](https://github.com/leonid)! - Add `InputText`: a full single-line text field built around the bare `Input`
+  primitive — an optional `label` (with an optional `required` marker), the input
+  box, an optional clear (✕) button (`clearable` + `onClear`), and an optional
+  `description` or `error` message. Passing `error` switches the field to its error
+  treatment (red box border via `aria-invalid` + red message). Label/description/error
+  are wired with `htmlFor`/`aria-describedby`/`aria-required` for accessibility, and
+  all colors come from the `--ui-input-text-*` token tier.
+
 ## 0.27.0
 
 ### Minor Changes
