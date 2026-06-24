@@ -1,5 +1,17 @@
 # @acronis-platform/ui-react
 
+## 0.27.0
+
+### Minor Changes
+
+- [#359](https://github.com/acronis/uikit/pull/359) [`dff869e`](https://github.com/acronis/uikit/commit/dff869e61e6a03a2d68687be08f44be9d74aa1e0) Thanks [@leonid](https://github.com/leonid)! - Add `CardFilter`: a compact stat/filter card — a caption `label` above a prominent
+  `value`, with an optional leading `icon`. Three variants: `static` (presentational),
+  `static-empty` (placeholder with an em-dash, no icon), and `clickable` (renders an
+  interactive `<button>` with hover / active / focus states and a link-colored value).
+  Themed entirely by the `--ui-card-filter-*` tokens; focus is a 3px `--ui-focus-primary`
+  ring flush to the edge. Supports Base UI `render`-prop composition (e.g. render a
+  clickable filter as a link).
+
 ## 0.26.0
 
 ### Minor Changes
