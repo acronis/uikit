@@ -1,5 +1,19 @@
 # @acronis-platform/ui-react
 
+## 0.26.0
+
+### Minor Changes
+
+- [#357](https://github.com/acronis/uikit/pull/357) [`a79abf1`](https://github.com/acronis/uikit/commit/a79abf17387b6e43fb2fd67fab5601c9a590411a) Thanks [@leonid](https://github.com/leonid)! - **Breaking:** rename `ButtonDropdown` → `ButtonMenu` to match the Figma component
+  set (named "ButtonMenu") and its `--ui-button-menu-*` token tier. The exports
+  `ButtonDropdown`, `ButtonDropdownProps`, and `buttonDropdownVariants` are now
+  `ButtonMenu`, `ButtonMenuProps`, and `buttonMenuVariants`; update imports
+  accordingly. The API (props, variants, behavior) is otherwise unchanged.
+
+  Also fixes the focus ring to match the current Figma design — was a 2px
+  `--ui-focus-brand` ring with a 2px offset; now a 3px `--ui-focus-primary` ring
+  flush to the button edge (no offset), matching `Button` and `ButtonIcon`.
+
 ## 0.25.2
 
 ### Patch Changes
