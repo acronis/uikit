@@ -6,8 +6,8 @@
   `aria-hidden`. Without a label the button is unusable to screen readers.
 - **Keyboard:** Enter and Space activate (native). `disabled` removes it from
   the tab order.
-- **Focus visible:** 2px `--ui-focus-brand` ring with 2px offset via
-  `:focus-visible`.
+- **Focus visible:** 3px `--ui-focus-primary` ring flush to the edge (no offset)
+  via `:focus-visible`.
 - **Touch target:** 32×32 is below the 44×44 guideline; place with adequate
   spacing, or extend the hit area with transparent padding where touch is a
   primary input.

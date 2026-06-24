@@ -38,7 +38,7 @@ contract:
 
   content:
     - name: default
-      description: A single icon (SVG), sized to 16px and tinted via currentColor.
+      description: A single icon (SVG), sized to 24px and tinted via currentColor.
 
 adapters:
   react:

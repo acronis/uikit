@@ -41,7 +41,8 @@ describe('ButtonIcon', () => {
       </ButtonIcon>
     );
     const button = screen.getByRole('button', { name: 'Add' });
-    expect(button).toHaveClass('border-transparent');
+    // Ghost draws no border at all (only `secondary` adds one).
+    expect(button).not.toHaveClass('border');
     expect(button).not.toHaveClass(
       'border-[var(--ui-button-icon-secondary-container-border-color-idle)]'
     );

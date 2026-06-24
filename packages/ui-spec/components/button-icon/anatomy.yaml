@@ -5,7 +5,7 @@ schematic: |
   +----------+
   |   icon   |   root: <button> 32x32
   +----------+
-  icon: single glyph, 16px, centered
+  icon: single glyph, 24px, centered
 
 root:
   element: button
@@ -14,7 +14,7 @@ root:
 
 parts:
   - id: icon
-    description: The single glyph (the button's content), sized to 16px.
+    description: The single glyph (the button's content), sized to 24px.
     element: svg
 
 # Pure function of its props — no internal state.

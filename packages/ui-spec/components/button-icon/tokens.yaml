@@ -42,7 +42,7 @@ tokens:
       affects: root,
     }
   - {
-      name: --ui-focus-brand,
+      name: --ui-focus-primary,
       affects: root,
       description: Focus-visible ring color,
     }

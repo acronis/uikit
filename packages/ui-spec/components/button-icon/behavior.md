@@ -6,7 +6,7 @@
 
 **Given** a ButtonIcon with a single icon child
 **When** it renders
-**Then** it is a 32×32 square with the icon centered at 16px
+**Then** it is a 32×32 square with the icon centered at 24px
 **And** background, glyph, and border resolve from `--ui-button-icon-*` for the
 current state.
 
