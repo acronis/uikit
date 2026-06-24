@@ -73,6 +73,7 @@ const RENDER: Record<string, RenderHint> = {
     ].join('\n'),
   },
   input: { ariaLabel: 'Email' },
+  'input-text': { props: 'label="Email" placeholder="you@example.com"' },
   search: { ariaLabel: 'Search' },
   tooltip: {
     extraImports: [

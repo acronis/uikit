@@ -1,0 +1,90 @@
+spec_version: '1.0'
+component: InputText
+
+contract:
+  properties:
+    - name: label
+      type: ReactNode
+      required: false
+      description: Field label rendered above the input, associated via `htmlFor`/`id`.
+    - name: required
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Appends a required marker (`*`) after the label and sets `aria-required`
+        on the input.
+    - name: description
+      type: ReactNode
+      required: false
+      description: Helper text below the input. Hidden while `error` is set.
+    - name: error
+      type: ReactNode
+      required: false
+      description: >-
+        Error message below the input. Its presence switches the field to the
+        error treatment (red box border via `aria-invalid`, red message replacing
+        the description).
+    - name: clearable
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Show a clear (✕) button while the (controlled) field has a value.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables the field (native `<input disabled>`).
+    - name: value
+      type: string
+      required: false
+      description: Controlled value. Required for the clear button to appear.
+
+  events:
+    - name: change
+      payload: ChangeEvent<HTMLInputElement>
+      description: Native input change — forwarded to the underlying `<input>`.
+    - name: clear
+      payload: void
+      description: Fired when the clear (✕) button is activated.
+
+  content:
+    - name: label
+      description: The label content.
+    - name: description
+      description: The helper text.
+    - name: error
+      description: The error message.
+
+adapters:
+  react:
+    component: InputText
+    status: implemented
+    import: "import { InputText } from '@acronis-platform/ui-react'"
+    example: |
+      <InputText label="Email" placeholder="you@example.com" description="We never share it" />
+
+      {/* Error */}
+      <InputText label="Email" value={value} error="Enter a valid email" onChange={onChange} />
+
+      {/* Clearable (controlled) */}
+      <InputText
+        label="Search"
+        value={value}
+        clearable
+        onChange={onChange}
+        onClear={() => setValue('')}
+      />
+  vue:
+    element: AvInputText
+    status: planned
+    import: "import { AvInputText } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvInputText label="Email" placeholder="you@example.com" v-model="email" />
+  web-components:
+    element: ui-input-text
+    status: planned
+    import: "import '@acronis-platform/ui-wc/input-text'"
+    example: |
+      <ui-input-text label="Email" placeholder="you@example.com"></ui-input-text>

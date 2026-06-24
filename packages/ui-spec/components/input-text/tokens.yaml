@@ -1,0 +1,68 @@
+spec_version: '1.0'
+component: InputText
+
+# References only — values live in @acronis-platform/tokens-pd. The box geometry,
+# fill, and border come from `--ui-input-text-global-box-*` / `-normal-box-*` /
+# `-error-msg-box-*` (shared with the `Input` primitive); the field furniture
+# (label, required, description, error, clear) uses the remaining `--ui-input-text-*`
+# tokens.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Field container ──
+  - { name: --ui-input-text-global-container-gap, affects: root }
+  - { name: --ui-input-text-global-container-width-min, affects: root }
+  - { name: --ui-input-text-global-container-label-gap, affects: label }
+
+  # ── Label + required marker ──
+  - { name: --ui-input-text-global-label-color-idle, affects: label }
+  - { name: --ui-input-text-global-label-color-hover, affects: label }
+  - { name: --ui-input-text-global-label-color-disabled, affects: label }
+  - { name: --ui-input-text-global-required-color, affects: required }
+
+  # ── Box geometry (input) ──
+  - { name: --ui-input-text-global-box-height, affects: input }
+  - { name: --ui-input-text-global-box-border-radius, affects: input }
+  - { name: --ui-input-text-global-box-border-width, affects: input }
+  - { name: --ui-input-text-global-box-padding-x, affects: input }
+
+  # ── Box fill + value/placeholder text ──
+  - { name: --ui-input-text-global-box-color-idle, affects: input }
+  - { name: --ui-input-text-global-box-color-hover, affects: input }
+  - { name: --ui-input-text-global-box-color-disabled, affects: input }
+  - { name: --ui-input-text-global-value-color-idle, affects: input }
+  - { name: --ui-input-text-global-value-color-disabled, affects: input }
+  - { name: --ui-input-text-global-placeholder-color-idle, affects: input }
+  - { name: --ui-input-text-global-placeholder-color-disabled, affects: input }
+
+  # ── Box border (normal + error) ──
+  - { name: --ui-input-text-normal-box-border-color-idle, affects: input }
+  - { name: --ui-input-text-normal-box-border-color-hover, affects: input }
+  - { name: --ui-input-text-normal-box-border-color-disabled, affects: input }
+  - { name: --ui-input-text-error-msg-box-border-color-idle, affects: input }
+
+  # ── Clear button ──
+  - { name: --ui-input-text-global-clear-icon-color, affects: clear }
+
+  # ── Description + error message ──
+  - {
+      name: --ui-input-text-normal-description-color-idle,
+      affects: description,
+    }
+  - {
+      name: --ui-input-text-normal-description-color-disabled,
+      affects: description,
+    }
+  - { name: --ui-input-text-error-msg-error-color, affects: error }
+
+  # ── Focus rings ──
+  - {
+      name: --ui-focus-primary,
+      affects: input,
+      description: Input + clear focus ring,
+    }
+  - {
+      name: --ui-focus-error,
+      affects: input,
+      description: Error-state focus ring,
+    }

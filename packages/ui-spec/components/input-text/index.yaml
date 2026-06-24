@@ -1,0 +1,16 @@
+spec_version: '1.0'
+component: InputText
+name: input-text
+status: ready
+category: forms
+description: >-
+  A full single-line text field: an optional label (with an optional required
+  marker), the text input box, an optional clear button, and an optional
+  description or error message. Builds on the bare `Input` primitive and the
+  `--ui-input-text-*` token tier.
+since: 0.26.0
+dependencies:
+  components: [Input]
+figma:
+  node: '2624-248'
+  codeConnect: packages/ui-react/src/components/ui/input-text/input-text.figma.tsx

@@ -1,0 +1,79 @@
+spec_version: '1.0'
+component: InputText
+
+schematic: |
+  +-------------------------------+
+  |  label  required              |   root: <div> (field, vertical stack)
+  +-------------------------------+
+  |  [ input               clear ]|   input: the box; clear: optional ✕ button
+  +-------------------------------+
+  |  description | error          |   description (normal) OR error (error state)
+  +-------------------------------+
+
+root:
+  element: div
+  role: group
+  description: >-
+    The field container — a vertical stack of the label, the input box, and the
+    description / error message. Width is fluid with a minimum from
+    `--ui-input-text-global-container-width-min`.
+
+parts:
+  - id: label
+    description: The field label, rendered above the input (`<label htmlFor>`).
+    element: label
+  - id: required
+    description: The required marker (`*`) after the label; shown when `required`.
+    element: span
+  - id: input
+    description: >-
+      The text input box (the bare `Input` primitive) — border, fill, value /
+      placeholder, and per-state treatment.
+    element: input
+  - id: clear
+    description: >-
+      Optional clear (✕) button inside the box, shown while `clearable` and the
+      field has a value; activates `onClear`.
+    element: button
+  - id: description
+    description: Helper text below the input (normal state).
+    element: p
+  - id: error
+    description: Error message below the input; replaces the description when `error` is set.
+    element: p
+
+layout:
+  type: stack
+  direction: vertical
+  align: start
+  order: [label, input, description, error]
+
+states:
+  - {
+      id: hover,
+      trigger: pointer hover over the input,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [input],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on the input,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [input],
+    }
+  - {
+      id: error,
+      trigger: 'error is set',
+      kind: prop,
+      prop: error,
+      affects: [input, error],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true',
+      kind: prop,
+      prop: disabled,
+      affects: [label, input, description],
+    }
