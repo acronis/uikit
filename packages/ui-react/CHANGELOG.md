@@ -1,5 +1,18 @@
 # @acronis-platform/ui-react
 
+## 0.25.0
+
+### Minor Changes
+
+- [#350](https://github.com/acronis/uikit/pull/350) [`d9d19a7`](https://github.com/acronis/uikit/commit/d9d19a7ed8bda545a801d5dbe494df6185529eee) Thanks [@leonid](https://github.com/leonid)! - `SidebarSecondary`: add **expandable sections**. `SidebarSecondarySection` gains
+  an `expandable` prop (plus `open` / `defaultOpen` / `onOpenChange`) that turns the
+  section into a Base UI Collapsible — the `SidebarSecondarySectionLabel` becomes a
+  chevron toggle and the `SidebarSecondaryMenu` its collapsible panel. The label
+  also accepts an `actions` slot (e.g. a ghost `ButtonIcon`, kept outside the toggle)
+  and an `unreadRollup` badge shown only while the section is collapsed. Item-level
+  submenus (`SidebarSecondaryMenuSub`) nest inside expandable sections. Static
+  sections are unchanged.
+
 ## 0.24.0
 
 ### Minor Changes
