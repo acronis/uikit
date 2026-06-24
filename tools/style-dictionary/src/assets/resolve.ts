@@ -163,8 +163,8 @@ export function resolveAsset(
   };
 }
 
-/** Resolve every asset in a pack. Throws on the first invariant violation. */
+/** Resolve every asset in a flat pack. Throws on the first invariant violation. */
 export function resolvePack(pack: PackManifest, rules: Map<string, Rule>): ResolvedAsset[] {
   assertPackSchema(pack);
-  return Object.entries(pack.assets).map(([id, asset]) => resolveAsset(pack, id, asset, rules));
+  return Object.entries(pack.assets ?? {}).map(([id, asset]) => resolveAsset(pack, id, asset, rules));
 }

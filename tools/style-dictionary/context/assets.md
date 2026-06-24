@@ -23,8 +23,18 @@ executor, on top of a faithful resolver:
   hops concatenated leaf-first), cycle detection, `$file` existence, rule-id
   existence, and `$type`/extension consistency for **every** asset (incl. inherited
   `$type`). It throws `"<pack>.<asset> [<variant>]: <reason>"` and is exercised by
-  the R1–R16 tests (`__tests__/resolve.test.ts`) against the live `concept-pack`.
+  the R1–R16 tests (`__tests__/resolve.test.ts`) against an in-memory pack wired to
+  real `icons` binaries (resolution only checks a `$file`'s existence + extension).
 - **`executor.ts`** — applies a variant's derivation plan to its source SVG.
+
+A pack groups its assets one of two ways. A **flat** pack (`illustrations`) puts
+assets directly under `assets`. A **grouped** pack (`icons`) puts them under
+`assetsGroups` — one entry per rendering style (`stroke-mono`, `solid-multi`, …),
+each inheriting the pack-level `$type`/`values` and optionally overriding `values`
+via a `$values` merge-patch. `pipeline.ts` expands each group into a synthesized
+flat manifest (pack `values` + the group's `$values` patch, canonical flag
+preserved) and runs the same per-asset resolver over it; the group id becomes the
+React `variant` and the SVG subdir.
 
 The **build pipeline** (`pipeline.ts`) resolves per-asset and skips + warns on a
 broken asset rather than aborting, so one upstream defect (see Gotchas) doesn't
@@ -51,10 +61,14 @@ Rules apply left-to-right over the SVG AST (svgson):
 ## Color
 
 `color.ts` rewrites hardcoded `fill`/`stroke`/`stop-color` to `currentColor` for
-**mono** packs only (`concept-pack`, `icons-solid-mono`, `icons-stroke-mono`),
-skipping `none`/`transparent`/`url(#…)`. **Multi** packs and **illustrations** keep
-their exact colors and gradients (`preserve`). The pass runs on the AST **before**
-SVGO so it is one parse and trivially testable; SVGO stays a pure optimizer.
+**mono** styles only, skipping `none`/`transparent`/`url(#…)`. A style is mono when
+its effective `values` reference a `color`-kind rule (`current-color`) — the
+`solid-mono` / `stroke-mono` icon groups today. **Multi** styles and
+**illustrations** carry no such rule and keep their exact colors and gradients
+(`preserve`). The pass runs on the AST **before** SVGO so it is one parse and
+trivially testable; SVGO stays a pure optimizer. The `color` rule itself is a
+no-op in the executor's geometry loop — it only flips the mode the color pass and
+SVGO config run in.
 
 ## SVGO
 
@@ -65,18 +79,20 @@ overrides: `cleanupIds:false` (illustrations reference `url(#paint0_linear_…)`
 never collapsed. **viewBox is kept by default** — SVGO v4 dropped `removeViewBox`
 from `preset-default`, so it is no longer overridden.
 
-## The five deliverables
+## The three deliverables
 
 Each is its own self-contained directory under `dist/assets/`, named
 `<filter>-<group>-<format>` — the format is the dir, not a subfolder:
 
-| deliverable dir          | packs                                               | contents                                       |
-| ------------------------ | --------------------------------------------------- | ---------------------------------------------- |
-| `pd-concept-pack-svg/`   | `concept-pack`                                      | `<asset>-<size>.svg` + `manifest.json`         |
-| `pd-concept-pack-react/` | `concept-pack`                                      | `<asset>.tsx` + `index.ts` + `manifest.json`   |
-| `pd-icons-svg/`          | `icons-{solid,stroke}-{mono,multi}` (4, **merged**) | `<style>/<asset>-<size>.svg` + `manifest.json` |
-| `pd-icons-react/`        | same four packs                                     | `<asset>.tsx` + `index.ts` + `manifest.json`   |
-| `web-illustrations-svg/` | `illustrations`                                     | `<asset>-<size>.svg` + `manifest.json`         |
+| deliverable dir          | pack            | contents                                       |
+| ------------------------ | --------------- | ---------------------------------------------- |
+| `pd-icons-svg/`          | `icons`         | `<style>/<asset>-<size>.svg` + `manifest.json` |
+| `pd-icons-react/`        | `icons`         | `<asset>.tsx` + `index.ts` + `manifest.json`   |
+| `web-illustrations-svg/` | `illustrations` | `<asset>-<size>.svg` + `manifest.json`         |
+
+The `icons` pack's four `assetsGroups` (`solid-mono`, `solid-multi`, `stroke-mono`,
+`stroke-multi`) merge into the one `icons` deliverable; an asset present in several
+groups becomes one component with a `variant` per group.
 
 The group `manifest.json` is written into **every** deliverable dir for that group
 (identical), so each platform dir stands alone. Icons namespace their SVGs by style
@@ -92,9 +108,9 @@ no React component. Tokens live under the sibling `dist/tokens/` root.
 - **`size`** (both groups) — the manifest size keys; default = the effective
   canonical (`24`), per spec R11.
 - **`variant`** (icons only) — the **style** (`stroke-mono`, `solid-multi`, …),
-  restricted to the packs that asset appears in. concept-pack has no style axis, so
-  its components expose only `size` (the user-facing "variant" for that group is
-  the size). Default variant follows a fixed style precedence.
+  restricted to the `assetsGroups` that asset appears in. A flat pack
+  (illustrations) has no style axis, so its components expose only `size`. Default
+  variant follows a fixed style precedence.
 
 **Dedup.** With lossless resize, an asset's sizes share identical inner geometry,
 differing only in root width/height and a uniform stroke-width (lifted to the root
@@ -117,10 +133,12 @@ jobs in `.github/workflows/ci.yml`.
 
 ## Gotchas
 
-- **`concept-pack.image-raster` is a known upstream defect** — the manifest
-  references `image-raster-24.png` but the package ships `image-raster-24.svg`. The
-  resolver catches it (missing-file invariant); the build skips it with a warning,
-  and `resolve.test.ts` asserts the fail-closed behavior. Fix belongs in
+- **A missing upstream binary is skipped, not fatal** — a `$file` the manifest
+  references but the package doesn't ship trips the resolver's missing-file
+  invariant; the build skips that asset with a warning while `resolve.test.ts`
+  asserts the strict fail-closed behavior. A genuine missing binary is fixed in
   `@acronis-platform/design-assets` (and needs a changeset).
-- **mono vs multi is pack-name driven** (the `MONO_PACKS` set in `pipeline.ts`),
-  not detected from content. A new mono/multi pack must be added there.
+- **mono vs multi is data-driven** — a style is mono iff its effective `values`
+  reference a `color`-kind rule (`usesColorRule` in `pipeline.ts`), not a hardcoded
+  pack list. Authoring a mono group means adding `current-color` to its `$values`
+  in the pack manifest; no tool change is needed.

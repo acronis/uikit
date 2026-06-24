@@ -173,13 +173,6 @@
         }
       },
       "1": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "LETTER_SPACING",
-            "FONT_VARIATIONS"
-          ],
-          "com.figma.variableId": "VariableID:1727:2410"
-        },
         "$type": "dimension",
         "$value": {
           "unit": "px",
@@ -189,13 +182,6 @@
       "$description": "Derived from Figma Text Styles; no source Variable. Refresh by re-pulling styles.json.",
       "$type": "dimension",
       "0-3": {
-        "$extensions": {
-          "com.figma.scopes": [
-            "LETTER_SPACING",
-            "FONT_VARIATIONS"
-          ],
-          "com.figma.variableId": "VariableID:1727:2408"
-        },
         "$type": "dimension",
         "$value": {
           "unit": "px",
@@ -303,9 +289,9 @@
       "$value": {
         "colorSpace": "hsl",
         "components": [
-          220,
-          4.62,
-          12.75
+          0,
+          0,
+          0
         ]
       }
     },
@@ -320,8 +306,8 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            220,
-            5.88,
+            215.29,
+            100,
             10
           ]
         }
@@ -336,9 +322,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            225,
-            4.17,
-            18.82
+            215.06,
+            100,
+            15.1
           ]
         }
       },
@@ -352,8 +338,8 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            220,
-            5.88,
+            215,
+            94.12,
             20
           ]
         }
@@ -368,9 +354,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            220,
-            5.88,
-            20
+            214.96,
+            90.55,
+            24.9
           ]
         }
       },
@@ -400,9 +386,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            213.33,
-            5.03,
-            35.1
+            214.74,
+            85.39,
+            34.9
           ]
         }
       },
@@ -416,9 +402,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            216,
-            4.9,
-            40
+            214.84,
+            80.31,
+            37.84
           ]
         }
       },
@@ -432,9 +418,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            212.2,
-            80.39,
-            70
+            214.89,
+            80,
+            54.9
           ]
         }
       },
@@ -448,9 +434,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            215.22,
+            214.89,
             80,
-            45.1
+            54.9
           ]
         }
       },
@@ -464,9 +450,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            225.71,
-            9.42,
-            43.73
+            212.2,
+            80.39,
+            70
           ]
         }
       },
@@ -480,9 +466,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            222.86,
-            8.5,
-            48.43
+            212.22,
+            71.05,
+            85.1
           ]
         }
       },
@@ -496,9 +482,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            212.22,
-            71.05,
-            85.1
+            212.9,
+            60.78,
+            90
           ]
         }
       },
@@ -512,9 +498,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            220,
-            4.69,
-            25.1
+            211.58,
+            48.72,
+            92.35
           ]
         }
       },
@@ -528,9 +514,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            220,
-            4.62,
-            12.75
+            213.33,
+            36,
+            95.1
           ]
         }
       },
@@ -544,251 +530,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            180,
-            4.76,
-            95.88
-          ]
-        }
-      }
-    },
-    "electricblue": {
-      "blue-0": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1940"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
             210,
             40,
             98.04
-          ]
-        }
-      },
-      "blue-1": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1941"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            213.33,
-            36,
-            95.1
-          ]
-        }
-      },
-      "blue-10": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1950"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            214.81,
-            85.62,
-            30
-          ]
-        }
-      },
-      "blue-11": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1951"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            214.96,
-            90.55,
-            24.9
-          ]
-        }
-      },
-      "blue-12": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1952"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            215,
-            94.12,
-            20
-          ]
-        }
-      },
-      "blue-13-brand": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1953"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            215.06,
-            100,
-            15.1
-          ]
-        }
-      },
-      "blue-14": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1954"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            180,
-            4.76,
-            95.88
-          ]
-        }
-      },
-      "blue-2": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1942"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            211.58,
-            48.72,
-            92.35
-          ]
-        }
-      },
-      "blue-3": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1943"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            212.9,
-            60.78,
-            90
-          ]
-        }
-      },
-      "blue-4": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1944"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            212.22,
-            71.05,
-            85.1
-          ]
-        }
-      },
-      "blue-5": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1945"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            212.2,
-            80.39,
-            70
-          ]
-        }
-      },
-      "blue-6": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1946"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            214.89,
-            80,
-            54.9
-          ]
-        }
-      },
-      "blue-7-primary": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1947"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            215.22,
-            80,
-            45.1
-          ]
-        }
-      },
-      "blue-8": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1948"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            214.84,
-            80.31,
-            37.84
-          ]
-        }
-      },
-      "blue-9": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1949"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            214.74,
-            85.39,
-            34.9
           ]
         }
       }
@@ -1530,9 +1274,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            27.06,
+            26.49,
             100,
-            10
+            15.1
           ]
         }
       },
@@ -1546,9 +1290,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            27.27,
+            27.06,
             100,
-            15.1
+            20
           ]
         }
       },
@@ -1562,9 +1306,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            26.47,
+            26.72,
             100,
-            20
+            25.1
           ]
         }
       },
@@ -1578,9 +1322,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            27.19,
+            27.06,
             100,
-            25.1
+            30
           ]
         }
       },
@@ -1594,9 +1338,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            27.06,
+            26.97,
             100,
-            30
+            34.9
           ]
         }
       },
@@ -1773,8 +1517,8 @@
           "colorSpace": "hsl",
           "components": [
             0,
-            61.04,
-            15.1
+            60.78,
+            20
           ]
         }
       },
@@ -1789,8 +1533,8 @@
           "colorSpace": "hsl",
           "components": [
             0,
-            70.59,
-            20
+            70.08,
+            24.9
           ]
         }
       },
@@ -1805,8 +1549,8 @@
           "colorSpace": "hsl",
           "components": [
             0,
-            70.08,
-            24.9
+            69.93,
+            30
           ]
         }
       },
@@ -1821,8 +1565,8 @@
           "colorSpace": "hsl",
           "components": [
             0,
-            69.93,
-            30
+            69.83,
+            35.1
           ]
         }
       },
@@ -1837,8 +1581,8 @@
           "colorSpace": "hsl",
           "components": [
             0,
-            69.66,
-            34.9
+            69.61,
+            40
           ]
         }
       },
@@ -2280,7 +2024,7 @@
           },
           "$type": "color",
           "$value": {
-            "alpha": 0.6,
+            "alpha": 0.898,
             "colorSpace": "hsl",
             "components": [
               228,
@@ -2297,7 +2041,7 @@
           },
           "$type": "color",
           "$value": {
-            "alpha": 0.698,
+            "alpha": 0.8,
             "colorSpace": "hsl",
             "components": [
               228,
@@ -2314,7 +2058,7 @@
           },
           "$type": "color",
           "$value": {
-            "alpha": 0.8,
+            "alpha": 0.698,
             "colorSpace": "hsl",
             "components": [
               228,
@@ -2331,7 +2075,7 @@
           },
           "$type": "color",
           "$value": {
-            "alpha": 0.898,
+            "alpha": 0.6,
             "colorSpace": "hsl",
             "components": [
               228,
@@ -2354,7 +2098,7 @@
             "components": [
               0,
               0,
-              100
+              0
             ]
           }
         },
@@ -2366,12 +2110,12 @@
           },
           "$type": "color",
           "$value": {
-            "alpha": 0.102,
+            "alpha": 0.898,
             "colorSpace": "hsl",
             "components": [
               0,
               0,
-              100
+              0
             ]
           }
         },
@@ -2383,12 +2127,12 @@
           },
           "$type": "color",
           "$value": {
-            "alpha": 0.502,
+            "alpha": 0.6,
             "colorSpace": "hsl",
             "components": [
               0,
               0,
-              100
+              0
             ]
           }
         },
@@ -2400,12 +2144,12 @@
           },
           "$type": "color",
           "$value": {
-            "alpha": 0.6,
+            "alpha": 0.302,
             "colorSpace": "hsl",
             "components": [
               0,
               0,
-              100
+              0
             ]
           }
         },
@@ -2422,7 +2166,7 @@
             "components": [
               0,
               0,
-              100
+              0
             ]
           }
         }
@@ -2440,8 +2184,8 @@
           "colorSpace": "hsl",
           "components": [
             300,
-            50.82,
-            11.96
+            49.43,
+            17.06
           ]
         }
       },
@@ -2456,8 +2200,8 @@
           "colorSpace": "hsl",
           "components": [
             300,
-            61.04,
-            15.1
+            60.78,
+            20
           ]
         }
       },
@@ -2472,8 +2216,8 @@
           "colorSpace": "hsl",
           "components": [
             300,
-            70.59,
-            20
+            70.08,
+            24.9
           ]
         }
       },
@@ -2488,8 +2232,8 @@
           "colorSpace": "hsl",
           "components": [
             300,
-            70.08,
-            24.9
+            69.93,
+            30
           ]
         }
       },
@@ -2504,8 +2248,8 @@
           "colorSpace": "hsl",
           "components": [
             300,
-            69.93,
-            30
+            69.83,
+            35.1
           ]
         }
       },
@@ -2697,9 +2441,9 @@
         "$value": {
           "colorSpace": "hsl",
           "components": [
-            42.94,
+            42.86,
             100,
-            20
+            15.1
           ]
         }
       },

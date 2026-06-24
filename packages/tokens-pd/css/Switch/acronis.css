@@ -5,7 +5,7 @@
   color-scheme: light dark;
 
   --ui-switch-global-box-border-color-active: light-dark(transparent, transparent);
-  --ui-switch-global-box-border-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-switch-global-box-border-color-disabled: light-dark(rgb(214 228 245), rgb(6 54 121));
   --ui-switch-global-box-border-color-hover: light-dark(transparent, transparent);
   --ui-switch-global-box-border-color-idle: light-dark(transparent, transparent);
   --ui-switch-global-box-border-radius: 999px;
@@ -18,17 +18,17 @@
   --ui-switch-global-container-gap: 8px;
   --ui-switch-global-label-color: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-switch-global-tick-border-radius: 999px;
-  --ui-switch-global-tick-color-active: light-dark(rgb(255 255 255), rgb(31 32 34));
-  --ui-switch-global-tick-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-switch-global-tick-color-hover: light-dark(rgb(255 255 255), rgb(31 32 34));
-  --ui-switch-global-tick-color-idle: light-dark(rgb(255 255 255), rgb(31 32 34));
+  --ui-switch-global-tick-color-active: light-dark(rgb(255 255 255), rgb(0 0 0));
+  --ui-switch-global-tick-color-disabled: light-dark(rgb(214 228 245), rgb(6 54 121));
+  --ui-switch-global-tick-color-hover: light-dark(rgb(255 255 255), rgb(0 0 0));
+  --ui-switch-global-tick-color-idle: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-switch-global-tick-size: 12px;
-  --ui-switch-off-box-color-active: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-switch-off-box-color-disabled: light-dark(rgb(248 250 252), rgb(24 25 27));
-  --ui-switch-off-box-color-hover: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-switch-off-box-color-idle: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-switch-off-box-color-active: light-dark(rgb(214 228 245), rgb(6 54 121));
+  --ui-switch-off-box-color-disabled: light-dark(rgb(248 250 252), rgb(0 21 51));
+  --ui-switch-off-box-color-hover: light-dark(rgb(214 228 245), rgb(6 54 121));
+  --ui-switch-off-box-color-idle: light-dark(rgb(214 228 245), rgb(6 54 121));
   --ui-switch-on-box-color-active: light-dark(rgb(70 185 89), rgb(36 143 54));
-  --ui-switch-on-box-color-disabled: light-dark(rgb(248 250 252), rgb(24 25 27));
+  --ui-switch-on-box-color-disabled: light-dark(rgb(248 250 252), rgb(0 21 51));
   --ui-switch-on-box-color-hover: light-dark(rgb(70 185 89), rgb(36 143 54));
   --ui-switch-on-box-color-idle: light-dark(rgb(70 185 89), rgb(36 143 54));
 }

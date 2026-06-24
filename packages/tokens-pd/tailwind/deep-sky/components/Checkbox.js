@@ -17,7 +17,7 @@ export default {
         "checkbox-unchecked-box-active": "light-dark(rgb(216 222 228), rgb(216 222 228))",
         "checkbox-unchecked-box-disabled": "light-dark(rgb(246 246 247), rgb(246 246 247))",
         "checkbox-unchecked-box-hover": "light-dark(rgb(236 238 239), rgb(236 238 239))",
-        "checkbox-unchecked-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
+        "checkbox-unchecked-box-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))"
       },
       "textColor": {
         "checkbox-global-description": "light-dark(rgb(54 65 74), rgb(54 65 74))",
@@ -38,14 +38,14 @@ export default {
         "checkbox-unchecked-box-border-color-idle": "light-dark(rgb(199 203 207), rgb(199 203 207))"
       },
       "fill": {
-        "checkbox-checked-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "checkbox-checked-icon-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "checkbox-checked-icon-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "checkbox-checked-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "checkbox-checked-icon-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "checkbox-indeterminate-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "checkbox-checked-icon-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
+        "checkbox-checked-icon-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))",
+        "checkbox-indeterminate-icon-active": "light-dark(rgb(255 255 255), rgb(0 0 0))",
         "checkbox-indeterminate-icon-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "checkbox-indeterminate-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "checkbox-indeterminate-icon-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))"
+        "checkbox-indeterminate-icon-hover": "light-dark(rgb(255 255 255), rgb(0 0 0))",
+        "checkbox-indeterminate-icon-idle": "light-dark(rgb(255 255 255), rgb(0 0 0))"
       },
       "fontFamily": {
         "checkbox-global-description-text-style": "Inter, system-ui, sans-serif",

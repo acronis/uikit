@@ -3,9 +3,10 @@
 // ("a separate component … the executor"); this is that component.
 //
 // Pipeline per variant: parse → apply rules left-to-right (scale sets width/height
-// losslessly and reports the rendered size; stroke sizes strokes in rendered px) →
-// currentColor (mono only) → SVGO optimize. Leaf variants run with an empty rule
-// list so every emitted SVG is normalized identically.
+// losslessly and reports the rendered size; stroke sizes strokes in rendered px;
+// color rules are realized by the `color` mode pass, not geometry) → currentColor
+// (mono only) → SVGO optimize. Leaf variants run with an empty rule list so every
+// emitted SVG is normalized identically.
 
 import { optimize } from 'svgo';
 
@@ -30,6 +31,11 @@ export function executeSvg(sourceSvg: string, rules: Rule[], color: ColorMode): 
   let renderedLonger = intrinsicLonger(root, vb);
 
   for (const rule of rules) {
+    if (rule.kind === 'color') {
+      // currentColor is applied by the `color` mode pass below (set per group),
+      // so a color rule needs no geometry work here.
+      continue;
+    }
     if (rule.target.unit !== 'px') {
       throw new Error(`unsupported rule unit "${rule.target.unit}" in rule "${rule.name}"`);
     }
@@ -38,7 +44,7 @@ export function executeSvg(sourceSvg: string, rules: Rule[], color: ColorMode): 
     } else if (rule.kind === 'stroke') {
       applyStroke(root, rule.target.value, vb, renderedLonger);
     } else {
-      throw new Error(`unsupported rule kind "${rule.kind}" in rule "${rule.name}"`);
+      throw new Error(`unsupported rule kind "${(rule as Rule).kind}" in rule "${(rule as Rule).name}"`);
     }
   }
 

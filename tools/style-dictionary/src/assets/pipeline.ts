@@ -3,13 +3,14 @@
 // executes every variant to an optimized SVG (or copies a raster), generates the
 // React components for the group, and writes the dist layout + a manifest.
 //
-//   dist/assets/pd-concept-pack-svg/    <asset>-<size>.svg + manifest.json
-//   dist/assets/pd-concept-pack-react/  <asset>.tsx + index.ts + manifest.json
-//   dist/assets/pd-icons-{svg,react}/   4 icon packs merged (svg namespaced by style)
+//   dist/assets/pd-icons-{svg,react}/   one icons pack, its assetsGroups merged
 //   dist/assets/web-illustrations-svg/  SVG-only
 //
-// The four icon packs merge into one `icons` group: per asset id one component
-// whose `variant` is the style (stroke-mono, …) and `size` the manifest sizes.
+// The icons pack ships its rendering styles as `assetsGroups` (stroke-mono,
+// solid-multi, …); each group becomes one `variant` member and namespaces its
+// SVGs by style within the deliverable. A flat pack (illustrations) is a single
+// implicit style. currentColor is driven by whether a style references a `color`
+// rule, not a hardcoded pack list.
 
 import path from 'node:path';
 
@@ -17,38 +18,36 @@ import { writeManifest, writeRaster, writeReact, writeSvg } from './emit';
 import { executeSvg } from './executor';
 import { copyRaster } from './raster';
 import { generateComponent, type StyleInput } from './react/codegen';
-import { styleLabel } from './react/naming';
 import { loadAllRules, loadPack, readSvg } from './read';
 import { assertPackSchema, resolveAsset } from './resolve';
 import type { ColorMode } from './svgo-config';
-import type { Platform, ResolvedAsset } from './types';
+import type {
+  Asset,
+  ComputedValue,
+  PackManifest,
+  Platform,
+  ResolvedAsset,
+  Rule,
+  Values,
+  VariantValue,
+} from './types';
 
 export type AssetFilter = 'pd' | 'web';
 
 interface GroupDef {
+  /** Deliverable name (`dist/assets/<filter>-<name>-<format>/`). */
   name: string;
   filter: AssetFilter;
-  packs: string[];
+  /** Source pack file stem under `packs/`. */
+  pack: string;
   react: boolean;
   hasVariantAxis: boolean;
   namespaceSvgByStyle: boolean;
 }
 
-/** Single-color packs whose hardcoded colors are rewritten to `currentColor`. */
-const MONO_PACKS = new Set(['concept-pack', 'icons-solid-mono', 'icons-stroke-mono']);
-const colorModeFor = (pack: string): ColorMode => (MONO_PACKS.has(pack) ? 'mono' : 'preserve');
-
 const GROUPS: GroupDef[] = [
-  { name: 'concept-pack', filter: 'pd', packs: ['concept-pack'], react: true, hasVariantAxis: false, namespaceSvgByStyle: false },
-  {
-    name: 'icons',
-    filter: 'pd',
-    packs: ['icons-solid-mono', 'icons-solid-multi', 'icons-stroke-mono', 'icons-stroke-multi'],
-    react: true,
-    hasVariantAxis: true,
-    namespaceSvgByStyle: true,
-  },
-  { name: 'illustrations', filter: 'web', packs: ['illustrations'], react: false, hasVariantAxis: false, namespaceSvgByStyle: false },
+  { name: 'icons', filter: 'pd', pack: 'icons', react: true, hasVariantAxis: true, namespaceSvgByStyle: true },
+  { name: 'illustrations', filter: 'web', pack: 'illustrations', react: false, hasVariantAxis: false, namespaceSvgByStyle: false },
 ];
 
 /** Filters that have at least one deliverable group. */
@@ -56,6 +55,74 @@ export const ASSET_FILTERS: AssetFilter[] = [...new Set(GROUPS.map((g) => g.filt
 
 const FILTER_ENUM: Record<AssetFilter, Platform> = { pd: 'PD', web: 'WEB' };
 const RASTER_EXTS = new Set(['png', 'webp']);
+
+const isFlagged = (v: VariantValue): boolean =>
+  v != null && typeof v === 'object' && (v as { default?: unknown }).default === true;
+
+/**
+ * Effective `values` for a group: the pack `values` with the group's `$values`
+ * RFC 7396 merge-patch applied. A `null` entry removes the variant; a non-null
+ * entry overrides or adds it. The pack-level canonical marker is preserved when
+ * the patch only changes a variant's derivation — the canonical is determined
+ * from these `values` (spec §canonical), so dropping the flag would orphan it.
+ */
+function effectiveGroupValues(packValues: Values, patch: Values | undefined): Values {
+  if (!patch) return { ...packValues };
+  const out: Values = { ...packValues };
+  for (const [key, val] of Object.entries(patch)) {
+    if (val === null) {
+      delete out[key];
+      continue;
+    }
+    out[key] = isFlagged(packValues[key]) && !isFlagged(val) ? { ...val, default: true } : val;
+  }
+  return out;
+}
+
+/** Whether any computed entry in `values` applies a `color`-kind rule. */
+function usesColorRule(values: Values, rules: Map<string, Rule>): boolean {
+  for (const val of Object.values(values)) {
+    if (val == null || typeof val !== 'object' || !('$rules' in val)) continue;
+    if ((val as ComputedValue).$rules.some((id) => rules.get(id)?.kind === 'color')) return true;
+  }
+  return false;
+}
+
+/** One resolvable rendering style: a synthesized flat manifest + its color mode + React label. */
+interface StyleUnit {
+  /** React `variant` member + SVG subdir name (group id, or the pack name for a flat pack). */
+  label: string;
+  manifest: PackManifest;
+  color: ColorMode;
+}
+
+/** Expand a pack into its rendering styles: one per `assetsGroups` entry, or a single flat style. */
+function expandStyles(pack: PackManifest, rules: Map<string, Rule>): StyleUnit[] {
+  if (pack.assetsGroups) {
+    return Object.entries(pack.assetsGroups).map(([groupId, group]) => {
+      const values = effectiveGroupValues(pack.values, group.$values);
+      return {
+        label: groupId,
+        manifest: {
+          $schema: pack.$schema,
+          name: groupId,
+          version: pack.version,
+          $type: group.$type ?? pack.$type,
+          values,
+          assets: group.assets,
+        },
+        color: usesColorRule(values, rules) ? 'mono' : 'preserve',
+      };
+    });
+  }
+  return [
+    {
+      label: pack.name,
+      manifest: pack,
+      color: usesColorRule(pack.values, rules) ? 'mono' : 'preserve',
+    },
+  ];
+}
 
 export interface BuildAssetsOptions {
   filter: AssetFilter;
@@ -76,8 +143,11 @@ export function buildAssetsForFilter(opts: BuildAssetsOptions): void {
 
   for (const group of GROUPS) {
     if (group.filter !== filter) continue;
-    const groupPacks = packs ? group.packs.filter((p) => packs.includes(p)) : group.packs;
-    if (groupPacks.length === 0) continue;
+    if (packs && !packs.includes(group.pack)) continue;
+
+    const pack = loadPack(group.pack);
+    assertPackSchema(pack);
+    const styles = expandStyles(pack, rules);
 
     // One deliverable dir per format: `dist/assets/<filter>-<group>-<format>/`.
     const deliverable = `${filter}-${group.name}`;
@@ -87,14 +157,13 @@ export function buildAssetsForFilter(opts: BuildAssetsOptions): void {
     const manifestAssets: unknown[] = [];
     let svgCount = 0;
 
-    for (const pack of groupPacks) {
-      const manifest = loadPack(pack);
-      assertPackSchema(manifest);
+    for (const style of styles) {
+      const { manifest, label, color } = style;
       // Resolve per-asset so one broken asset (e.g. a missing upstream binary) is
       // reported and skipped rather than aborting the whole build. The resolver
       // itself stays strict/fail-closed (resolvePack) for the R1–R16 tests.
       const resolved: ResolvedAsset[] = [];
-      for (const [id, asset] of Object.entries(manifest.assets)) {
+      for (const [id, asset] of Object.entries(manifest.assets ?? {}) as [string, Asset][]) {
         if (!asset.platforms.includes(platform)) continue;
         try {
           resolved.push(resolveAsset(manifest, id, asset, rules));
@@ -102,8 +171,6 @@ export function buildAssetsForFilter(opts: BuildAssetsOptions): void {
           console.warn(`  ⚠ skipped ${error instanceof Error ? error.message : String(error)}`);
         }
       }
-      const color = colorModeFor(pack);
-      const label = styleLabel(pack);
       // icons namespace their SVGs by style within the deliverable; others are flat.
       const svgDir = group.namespaceSvgByStyle ? path.join(svgDeliverable, label) : svgDeliverable;
 
@@ -127,14 +194,14 @@ export function buildAssetsForFilter(opts: BuildAssetsOptions): void {
         }
 
         if (group.react && reactVariants.length > 0) {
-          const styles = reactByAsset.get(asset.id) ?? [];
-          styles.push({ style: pack, canonical: asset.canonical, variants: reactVariants });
-          reactByAsset.set(asset.id, styles);
+          const styleInputs = reactByAsset.get(asset.id) ?? [];
+          styleInputs.push({ style: label, canonical: asset.canonical, variants: reactVariants });
+          reactByAsset.set(asset.id, styleInputs);
         }
 
         manifestAssets.push({
           id: asset.id,
-          pack,
+          pack: group.pack,
           style: label,
           platforms: asset.platforms,
           canonical: asset.canonical,
@@ -146,14 +213,14 @@ export function buildAssetsForFilter(opts: BuildAssetsOptions): void {
 
     // The same manifest is written into every deliverable dir for the group — a
     // deliberate duplication so each platform dir is self-describing.
-    const manifest = { group: group.name, filter, packs: groupPacks, assets: manifestAssets };
+    const manifest = { group: group.name, filter, pack: group.pack, styles: styles.map((s) => s.label), assets: manifestAssets };
     writeManifest(svgDeliverable, manifest);
 
     let componentCount = 0;
     if (group.react && reactByAsset.size > 0) {
       const components = [...reactByAsset.entries()]
         .sort(([a], [b]) => a.localeCompare(b))
-        .map(([id, styles]) => generateComponent({ id, hasVariantAxis: group.hasVariantAxis, styles }));
+        .map(([id, styleInputs]) => generateComponent({ id, hasVariantAxis: group.hasVariantAxis, styles: styleInputs }));
       writeReact(reactDeliverable, components);
       writeManifest(reactDeliverable, manifest);
       componentCount = components.length;

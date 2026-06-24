@@ -37,17 +37,17 @@ this tool's gitignored `dist/assets/`:
    `ring-brand`); splitting the components out keeps their utilities opt-in.
 4. `pd-assets` / `web-assets` → optimized SVG + React from
    `@acronis-platform/design-assets`, emitted as **one dir per deliverable** under
-   `dist/assets/<filter>-<group>-<format>/`: `pd-concept-pack-{svg,react}`,
-   `pd-icons-{svg,react}` (the four icon packs merged), and `web-illustrations-svg`
-   (SVG-only). The group manifest is duplicated into each deliverable dir so it is
-   self-contained. See [`context/assets.md`](context/assets.md).
+   `dist/assets/<filter>-<group>-<format>/`: `pd-icons-{svg,react}` (the `icons`
+   pack's four `assetsGroups` merged) and `web-illustrations-svg` (SVG-only). The
+   group manifest is duplicated into each deliverable dir so it is self-contained.
+   See [`context/assets.md`](context/assets.md).
 
 Usage:
 
 ```bash
 tsx src/index.ts                                # all filters, all outputs
 tsx src/index.ts pd-css                         # one platform (runs its pd-dtcg dependency first)
-tsx src/index.ts pd-assets web-assets --pack=icons-stroke-mono   # one asset pack only
+tsx src/index.ts pd-assets web-assets --pack=icons   # one asset pack only
 tsx src/index.ts --filter=web                   # restrict to one filter (web-assets only)
 ```
 
@@ -73,7 +73,7 @@ source coverage — `filtersFor(output)` in `index.ts` encodes this:
 - `dtcg`/`css`/`tailwind` come from the token package. Every token is `["PD"]`
   today, so `FILTERS` is `['pd']`; `web` is schema-defined and coming.
 - `assets` come from `@acronis-platform/design-assets`, which **already** spans
-  both platforms — icons/concept-pack are `PD`, illustrations `WEB` — selected
+  both platforms — icons are `PD`, illustrations `WEB` — selected
   per-asset by each asset's own `platforms`. So the asset build runs for
   `ASSET_FILTERS` (`['pd','web']`), independent of the token `FILTERS`. The valid
   platform keys are therefore `pd-{dtcg,css,tailwind,assets}` + `web-assets`.
@@ -204,14 +204,16 @@ tool needs `@acronis-platform/design-assets` as a workspace dependency.
   properties (theme-invariant, not zipped into `light-dark()`) in the root semantic
   CSS, and route into the base Tailwind preset's `backgroundImage` — the routing is
   driven by the source `com.acronis.tailwindRoles` extension, not hardcoded.
-- **Assets: lossless resize + currentColor for mono only.** `scale` sets
+- **Assets: lossless resize + data-driven currentColor.** `scale` sets
   width/height and preserves the viewBox; `stroke` sizes to target px via
-  `S·viewBoxLonger/renderedLonger`; `currentColor` is applied to mono packs only
-  (multi + illustrations keep exact colors). SVGO keeps the viewBox and ids. The
-  asset **build** skips a broken asset with a warning (so one upstream defect
-  doesn't sink it) while the **resolver** stays strict for tests — full reasoning,
-  the React dedup, and the known `concept-pack.image-raster` upstream defect are in
-  [`context/assets.md`](context/assets.md).
+  `S·viewBoxLonger/renderedLonger`; `currentColor` is applied to **mono** styles
+  only — a style is mono when its effective `values` reference a `color`-kind rule
+  (`current-color`), not a hardcoded pack list (multi + illustrations keep exact
+  colors). The `icons` pack ships its styles as `assetsGroups`; the pipeline
+  expands each group into a flat manifest and resolves it. SVGO keeps the viewBox
+  and ids. The asset **build** skips a broken asset with a warning (so one upstream
+  defect doesn't sink it) while the **resolver** stays strict for tests — full
+  reasoning and the React dedup are in [`context/assets.md`](context/assets.md).
 
 ## Loading context
 

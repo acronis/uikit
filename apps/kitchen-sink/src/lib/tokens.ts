@@ -25,7 +25,6 @@ import buttonAcronis from '@acronis-platform/tokens-pd/css/Button/acronis.css?ra
 import buttonIconAcronis from '@acronis-platform/tokens-pd/css/ButtonIcon/acronis.css?raw';
 import buttonMenuAcronis from '@acronis-platform/tokens-pd/css/ButtonMenu/acronis.css?raw';
 import checkboxAcronis from '@acronis-platform/tokens-pd/css/Checkbox/acronis.css?raw';
-import inputDatePickerAcronis from '@acronis-platform/tokens-pd/css/InputDatePicker/acronis.css?raw';
 import inputSearchAcronis from '@acronis-platform/tokens-pd/css/InputSearch/acronis.css?raw';
 import inputSelectAcronis from '@acronis-platform/tokens-pd/css/InputSelect/acronis.css?raw';
 import inputTextAcronis from '@acronis-platform/tokens-pd/css/InputText/acronis.css?raw';
@@ -45,7 +44,6 @@ import buttonDeepSky from '@acronis-platform/tokens-pd/css/Button/deep-sky.css?r
 import buttonIconDeepSky from '@acronis-platform/tokens-pd/css/ButtonIcon/deep-sky.css?raw';
 import buttonMenuDeepSky from '@acronis-platform/tokens-pd/css/ButtonMenu/deep-sky.css?raw';
 import checkboxDeepSky from '@acronis-platform/tokens-pd/css/Checkbox/deep-sky.css?raw';
-import inputDatePickerDeepSky from '@acronis-platform/tokens-pd/css/InputDatePicker/deep-sky.css?raw';
 import inputSearchDeepSky from '@acronis-platform/tokens-pd/css/InputSearch/deep-sky.css?raw';
 import inputSelectDeepSky from '@acronis-platform/tokens-pd/css/InputSelect/deep-sky.css?raw';
 import inputTextDeepSky from '@acronis-platform/tokens-pd/css/InputText/deep-sky.css?raw';
@@ -86,7 +84,6 @@ const COMPONENT_SOURCES: { tier: string; css: string }[] = [
   { tier: 'button-icon', css: buttonIconAcronis },
   { tier: 'button-menu', css: buttonMenuAcronis },
   { tier: 'checkbox', css: checkboxAcronis },
-  { tier: 'input-date-picker', css: inputDatePickerAcronis },
   { tier: 'input-search', css: inputSearchAcronis },
   { tier: 'input-select', css: inputSelectAcronis },
   { tier: 'input-text', css: inputTextAcronis },
@@ -544,7 +541,6 @@ const DEEP_SKY_OVERRIDES = [
   buttonIconDeepSky,
   buttonMenuDeepSky,
   checkboxDeepSky,
-  inputDatePickerDeepSky,
   inputSearchDeepSky,
   inputSelectDeepSky,
   inputTextDeepSky,

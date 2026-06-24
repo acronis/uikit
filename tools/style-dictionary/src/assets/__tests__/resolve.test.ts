@@ -1,5 +1,6 @@
-// Resolver coverage: every R-case (R1–R16) against the live `concept-pack`
-// fixture (built for exactly this), plus synthetic fail-closed negatives.
+// Resolver coverage: every R-case (R1–R16) against an in-memory pack wired to
+// real `icons` binaries (the resolver only checks a $file's existence + extension,
+// never its content), plus synthetic fail-closed negatives.
 
 import { describe, expect, it } from 'vitest';
 
@@ -8,9 +9,60 @@ import { resolveAsset } from '../resolve';
 import type { Asset, PackManifest, ResolvedAsset, Values } from '../types';
 
 const rules = loadAllRules();
-const concept = loadPack('concept-pack');
 
-const resolveOne = (id: string): ResolvedAsset => resolveAsset(concept, id, concept.assets[id], rules);
+const META = { category: [], tags: [], legacyNames: [] };
+// Real, distinct binaries shipped by the `icons` pack — used purely as resolvable
+// $file targets; their pixel content is irrelevant to resolution.
+const F24 = './packs/icons/Acronis.svg';
+const F48 = './packs/icons/AppWindow.svg';
+const ALT16 = './packs/icons/AcronisCloud.svg';
+const ALT24 = './packs/icons/Apple.svg';
+const ALT32 = './packs/icons/AppWindow.svg';
+
+const asset = (values: Values, extra: Partial<Asset> = {}): Asset =>
+  ({ values, platforms: ['PD'], metadata: META, ...extra }) as Asset;
+
+// An in-memory stand-in for the retired `concept-pack` fixture: the same R1–R16
+// shapes, with each $file pointing at a real `icons` binary.
+const concept: PackManifest = {
+  $schema: '',
+  name: 'concept-pack',
+  version: '1.0.0',
+  $type: 'vector',
+  values: {
+    '24': { default: true },
+    '16': { $rules: ['scale-16'] },
+    '32': { $rules: ['scale-32'] },
+  },
+  assets: {
+    'icon-basic': asset({ '24': { $file: F24 } }),
+    'icon-extended': asset({ '24': { $file: F24 }, '96': { $rules: ['scale-96'] } }),
+    'icon-rule-override': asset({ '24': { $file: F24 }, '16': { $rules: ['stroke-2-5', 'scale-16'] } }),
+    'icon-opted-out': asset({ '24': { $file: F24 }, '32': null }),
+    'icon-file-override': asset({ '24': { $file: ALT24 }, '16': { $file: ALT16 } }),
+    'icon-multi-source': asset({ '24': { $file: ALT24 }, '16': { $file: ALT16 }, '32': { $file: ALT32 } }),
+    'image-raster': asset({ '24': { $file: './packs/icons/image-raster-24.png' }, '16': null, '32': null }, { $type: 'raster' }),
+    'icon-cross-source': asset(
+      { '24': { $file: F24 }, '48': { $file: F48 }, '96': { $from: '48', $rules: ['scale-96'] } },
+      { platforms: ['WEB', 'PD'] }
+    ),
+    'icon-themed': asset({ '24': { $file: F24 }, dark: { $file: ALT24 }, '16': null, '32': null }, { platforms: ['WEB'] }),
+    'icon-special-default': asset({ '32': { $file: ALT32, default: true }, '24': null, '16': null }),
+    'icon-with-extensions': asset(
+      { '24': { $file: F24 } },
+      {
+        $extensions: {
+          'com.figma.nodeId': '1:42',
+          'com.figma.variableId': 'VariableID:0:1',
+          'com.acronis.review': 'approved',
+          'io.example.someTool': 'anything',
+        },
+      }
+    ),
+  },
+};
+
+const resolveOne = (id: string): ResolvedAsset => resolveAsset(concept, id, concept.assets![id], rules);
 const variantIds = (a: ResolvedAsset): string[] => a.variants.map((v) => v.id).sort();
 const variant = (a: ResolvedAsset, id: string) => a.variants.find((v) => v.id === id);
 const base = (p: string): string => p.split('/').pop() ?? '';
@@ -22,7 +74,7 @@ describe('resolver — concept-pack R-cases', () => {
     expect(variantIds(a)).toEqual(['16', '24', '32']);
     expect(variant(a, '24')!.rules).toHaveLength(0);
     expect(variant(a, '16')!.rules.map((r) => r.name)).toEqual(['scale-16']);
-    expect(base(variant(a, '16')!.leafFile)).toBe('icon-24.svg');
+    expect(base(variant(a, '16')!.leafFile)).toBe('Acronis.svg');
   });
 
   it('R3: extends with a new 96 variant computed from the canonical', () => {
@@ -43,7 +95,7 @@ describe('resolver — concept-pack R-cases', () => {
   it('R6: replaces a computed variant with its own binary (leaf, no rules)', () => {
     const a = resolveOne('icon-file-override');
     expect(variant(a, '16')!.rules).toHaveLength(0);
-    expect(base(variant(a, '16')!.leafFile)).toBe('icon-alt-16.svg');
+    expect(base(variant(a, '16')!.leafFile)).toBe('AcronisCloud.svg');
   });
 
   it('R7: ships independent binaries at every variant', () => {
@@ -52,15 +104,14 @@ describe('resolver — concept-pack R-cases', () => {
   });
 
   it('R8: raster asset fails closed on the missing upstream binary', () => {
-    // concept-pack ships image-raster-24.svg but the manifest references
-    // image-raster-24.png — a genuine upstream defect. The resolver catches it.
+    // The manifest references image-raster-24.png but no such binary exists.
     expect(() => resolveOne('image-raster')).toThrow(/image-raster-24\.png/);
   });
 
   it('R9: computes from a non-canonical sibling via $from', () => {
     const a = resolveOne('icon-cross-source');
     expect(variant(a, '96')!.rules.map((r) => r.name)).toEqual(['scale-96']);
-    expect(base(variant(a, '96')!.leafFile)).toBe('icon-48.svg'); // from 48, not canonical 24
+    expect(base(variant(a, '96')!.leafFile)).toBe('AppWindow.svg'); // from 48, not canonical 24
   });
 
   it('R10: supports a non-numeric variant key', () => {
@@ -89,9 +140,9 @@ describe('resolver — concept-pack R-cases', () => {
 
   it('R15: allows digit-first asset ids (illustrations)', () => {
     const ill = loadPack('illustrations');
-    const first = Object.keys(ill.assets)[0];
+    const first = Object.keys(ill.assets!)[0];
     expect(first).toMatch(/^[0-9]/);
-    expect(() => resolveAsset(ill, first, ill.assets[first], rules)).not.toThrow();
+    expect(() => resolveAsset(ill, first, ill.assets![first], rules)).not.toThrow();
   });
 
   it('R16: resolves assets carrying $extensions (ignored by resolution)', () => {
@@ -101,8 +152,7 @@ describe('resolver — concept-pack R-cases', () => {
 
 // ── Fail-closed negatives (synthetic manifests) ──────────────────────────────
 
-const META = { category: [], tags: [], legacyNames: [] };
-const REAL = './packs/concept-pack/icon-24.svg';
+const REAL = F24;
 
 const synthetic = (assetValues: Values, $type: 'vector' | 'raster' = 'vector'): PackManifest => ({
   $schema: '',
@@ -113,13 +163,13 @@ const synthetic = (assetValues: Values, $type: 'vector' | 'raster' = 'vector'): 
   assets: { x: { values: assetValues, platforms: ['PD'], metadata: META } as Asset },
 });
 
-const run = (pack: PackManifest): ResolvedAsset => resolveAsset(pack, 'x', pack.assets.x, rules);
+const run = (pack: PackManifest): ResolvedAsset => resolveAsset(pack, 'x', pack.assets!.x, rules);
 
 describe('resolver — fail closed', () => {
   it('rejects two canonical markers in one asset', () => {
     const pack = synthetic({
       '24': { $file: REAL, default: true },
-      '32': { $file: './packs/concept-pack/icon-special-32.svg', default: true },
+      '32': { $file: ALT32, default: true },
     });
     expect(() => run(pack)).toThrow(/multiple canonical/);
   });
@@ -133,7 +183,7 @@ describe('resolver — fail closed', () => {
   });
 
   it('rejects a $file missing on disk', () => {
-    expect(() => run(synthetic({ '24': { $file: './packs/concept-pack/does-not-exist.svg' } }))).toThrow(/does not exist/);
+    expect(() => run(synthetic({ '24': { $file: './packs/icons/does-not-exist.svg' } }))).toThrow(/does not exist/);
   });
 
   it('rejects a derivation cycle', () => {
