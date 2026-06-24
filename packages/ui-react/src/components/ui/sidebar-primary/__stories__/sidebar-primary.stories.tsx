@@ -15,6 +15,7 @@ import {
   StarIcon,
 } from '@acronis-platform/icons-react/stroke-mono';
 
+import { Tag } from '../../tag';
 import {
   SidebarPrimary,
   SidebarPrimaryCollapseTrigger,
@@ -232,6 +233,28 @@ export const WithExtras: Story = {
               <SidebarPrimaryMenuItem href="#" icon={<LayoutGridIcon />}>
                 External link
                 <SidebarPrimaryMenuItemExtras variant="externalLink" />
+              </SidebarPrimaryMenuItem>
+              <SidebarPrimaryMenuItem href="#" icon={<BoltIcon />}>
+                Tag
+                <SidebarPrimaryMenuItemExtras
+                  variant="tag"
+                  tag={
+                    <Tag variant="info" size="sm">
+                      New
+                    </Tag>
+                  }
+                />
+              </SidebarPrimaryMenuItem>
+              <SidebarPrimaryMenuItem href="#" icon={<BriefcaseIcon />}>
+                Tag + external link
+                <SidebarPrimaryMenuItemExtras
+                  variant="tag-externalLink"
+                  tag={
+                    <Tag variant="info" size="sm">
+                      Beta
+                    </Tag>
+                  }
+                />
               </SidebarPrimaryMenuItem>
             </SidebarPrimaryMenu>
           </SidebarPrimarySection>

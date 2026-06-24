@@ -13,6 +13,7 @@ import {
   SidebarPrimaryHeader,
   SidebarPrimaryMenu,
   SidebarPrimaryMenuItem,
+  SidebarPrimaryMenuItemExtras,
   SidebarPrimarySection,
 } from './sidebar-primary';
 
@@ -45,6 +46,29 @@ figma.connect(
           </SidebarPrimaryMenu>
         </SidebarPrimaryFooter>
       </SidebarPrimary>
+    ),
+  }
+);
+
+// The "MenuItemExtras" sub-component (the trailing affordance on a menu item).
+// Its `variant` maps 1:1 to the React `variant`; `labelTag` / `labelShortcut` are
+// the tag / shortcut text.
+figma.connect(
+  SidebarPrimaryMenuItemExtras,
+  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2463-49164',
+  {
+    props: {
+      variant: figma.enum('variant', {
+        tag: 'tag',
+        externalLink: 'externalLink',
+        shortcut: 'shortcut',
+        'tag-externalLink': 'tag-externalLink',
+      }),
+      tag: figma.string('labelTag'),
+      shortcut: figma.string('labelShortcut'),
+    },
+    example: ({ variant, tag, shortcut }) => (
+      <SidebarPrimaryMenuItemExtras variant={variant} tag={tag} shortcut={shortcut} />
     ),
   }
 );
