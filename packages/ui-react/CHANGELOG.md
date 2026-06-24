@@ -1,5 +1,16 @@
 # @acronis-platform/ui-react
 
+## 0.24.0
+
+### Minor Changes
+
+- [#346](https://github.com/acronis/uikit/pull/346) [`769a142`](https://github.com/acronis/uikit/commit/769a142e1ebe20e60207eac43d3407f0068a18c3) Thanks [@leonid](https://github.com/leonid)! - Add `SearchGlobal`: a prominent global "search anything" field — a 48px pill with
+  a gradient brand border (`--ui-search-global-*` token tier), a leading magnifier,
+  a borderless search input, and a decorative trailing keyboard-shortcut hint (`⌘K`,
+  hideable via `shortcut={null}`). Border swaps idle/hover/active gradients and shows
+  a `--ui-focus-primary` ring on focus; forwards a ref to the input for shortcut
+  wiring.
+
 ## 0.23.0
 
 ### Minor Changes
