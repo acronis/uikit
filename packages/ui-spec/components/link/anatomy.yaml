@@ -1,0 +1,65 @@
+spec_version: '1.0'
+component: Link
+
+schematic: |
+  +---------------------------+
+  |  label  (icon)            |   root: <a> (role=link), inline
+  +---------------------------+
+   label -> the link text (semibold; underlines on hover)
+   icon  -> optional trailing external-link icon (when `external`)
+
+root:
+  element: a
+  role: link
+  description: >-
+    The inline anchor. Semibold 14/24 text in `--ui-link-color-idle`; hover adds the
+    `--ui-link-text-decoration-hover` underline + `-color-hover`; `:active` uses
+    `-color-active`. Polymorphic via `render` (e.g. a router link). When `disabled`,
+    it is inert: `--ui-link-color-disabled`, removed from the tab order, no href.
+
+parts:
+  - id: label
+    description: The link text (the children).
+    element: text
+  - id: icon
+    description: >-
+      Optional trailing external-link icon (SquareArrowUpRightIcon), shown when
+      `external`. `--ui-link-external-icon-color-*`.
+    element: svg
+    optional: true
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [label, icon]
+
+states:
+  - {
+      id: hover,
+      trigger: pointer hover,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [label, icon],
+    }
+  - {
+      id: active,
+      trigger: pressed (pointer down),
+      kind: pseudo,
+      pseudo: ':active',
+      affects: [label, icon],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [root],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true',
+      kind: prop,
+      prop: disabled,
+      affects: [label, icon],
+    }

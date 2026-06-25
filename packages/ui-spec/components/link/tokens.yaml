@@ -1,0 +1,32 @@
+spec_version: '1.0'
+component: Link
+
+# References only — values live in @acronis-platform/tokens-pd. The `--ui-link-*`
+# tier wires text color, text decoration, and the external-icon color per state; the
+# focus ring uses the shared `--ui-focus-primary` token.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Layout ──
+  - { name: --ui-link-container-gap, affects: root }
+
+  # ── Text color ──
+  - { name: --ui-link-color-idle, affects: label }
+  - { name: --ui-link-color-hover, affects: label }
+  - { name: --ui-link-color-active, affects: label }
+  - { name: --ui-link-color-disabled, affects: label }
+
+  # ── Text decoration (underline on hover) ──
+  - { name: --ui-link-text-decoration-idle, affects: label }
+  - { name: --ui-link-text-decoration-hover, affects: label }
+  - { name: --ui-link-text-decoration-active, affects: label }
+  - { name: --ui-link-text-decoration-disabled, affects: label }
+
+  # ── External icon color ──
+  - { name: --ui-link-external-icon-color-idle, affects: icon }
+  - { name: --ui-link-external-icon-color-hover, affects: icon }
+  - { name: --ui-link-external-icon-color-active, affects: icon }
+  - { name: --ui-link-external-icon-color-disabled, affects: icon }
+
+  # ── Focus ring ──
+  - { name: --ui-focus-primary, affects: root, description: Focus ring }

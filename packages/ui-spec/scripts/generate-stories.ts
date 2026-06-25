@@ -95,6 +95,7 @@ const RENDER: Record<string, RenderHint> = {
   },
   'input-text': { props: 'label="Email" placeholder="you@example.com"' },
   'input-text-area': { props: 'label="Bio" placeholder="Tell us about yourself"' },
+  link: { sample: 'Link', props: 'href="#"' },
   search: { ariaLabel: 'Search' },
   tooltip: {
     extraImports: [

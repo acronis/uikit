@@ -1,0 +1,62 @@
+spec_version: '1.0'
+component: Link
+
+# Framework-agnostic contract. Native anchor attributes (href, target, rel, …) pass
+# through. See `adapters` for per-framework syntax.
+contract:
+  properties:
+    - name: href
+      type: string
+      required: false
+      description: Navigation target. Omitted when `disabled`.
+    - name: external
+      type: boolean
+      required: false
+      default: false
+      description: Append a trailing external-link icon (for links that leave the app).
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Render the link inert — disabled color, removed from the tab order
+        (`tabindex=-1`), `aria-disabled`, and no navigation (href dropped).
+
+  events:
+    - name: click
+      payload: MouseEvent
+      description: Native activation (click / Enter), forwarded to the anchor.
+
+  content:
+    - name: default
+      description: The link label.
+
+  methods: []
+
+adapters:
+  react:
+    component: Link
+    status: implemented
+    import: "import { Link } from '@acronis-platform/ui-react'"
+    example: |
+      <Link href="/docs">Documentation</Link>
+
+      {/* External */}
+      <Link href="https://acronis.com" external target="_blank" rel="noreferrer">
+        Acronis
+      </Link>
+
+      {/* Polymorphic — render a router link */}
+      <Link render={<RouterLink to="/settings" />}>Settings</Link>
+  vue:
+    component: AvLink
+    status: planned
+    import: "import { AvLink } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvLink href="/docs">Documentation</AvLink>
+  web-components:
+    element: ui-link
+    status: planned
+    import: "import '@acronis-platform/ui-wc/link'"
+    example: |
+      <ui-link href="/docs">Documentation</ui-link>

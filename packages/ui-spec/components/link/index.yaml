@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: Link
+name: link
+status: ready
+category: navigation
+description: >-
+  An inline text link (semibold) that underlines on hover, with an optional
+  trailing external-link icon. Navigates to an href or composes a router link.
+  Themed by the `--ui-link-*` token tier.
+since: 0.31.0
+dependencies:
+  components: [SquareArrowUpRightIcon]
+figma:
+  node: '3741-981'
+  codeConnect: packages/ui-react/src/components/ui/link/link.figma.tsx
