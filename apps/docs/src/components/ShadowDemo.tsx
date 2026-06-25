@@ -1,7 +1,22 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { createPortal } from 'react-dom';
+
+// Lets a demo portal its Base UI overlays (Select dropdown, Tooltip popup) INTO
+// the shadow root instead of document.body, so the popup inherits the shadow's
+// ui-react styles. Pass it to a component's `portalContainer` prop.
+const ShadowMountContext = createContext<HTMLElement | null>(null);
+export function useShadowMount(): HTMLElement | null {
+  return useContext(ShadowMountContext);
+}
 
 // ui-react ships its styles authored for `:root,:host`, so the same stylesheet
 // works inside a shadow root. We fetch it once, build a single Constructable
@@ -105,7 +120,13 @@ export function ShadowDemo({ children, center }: ShadowDemoProps) {
 
   return (
     <div ref={hostRef} className="min-h-[96px]">
-      {mount && createPortal(children, mount)}
+      {mount &&
+        createPortal(
+          <ShadowMountContext.Provider value={mount}>
+            {children}
+          </ShadowMountContext.Provider>,
+          mount
+        )}
     </div>
   );
 }

@@ -131,13 +131,27 @@ const InputSelectContent = React.forwardRef<
     sideOffset?: number;
     align?: SelectPrimitive.Positioner.Props['align'];
     side?: SelectPrimitive.Positioner.Props['side'];
+    /**
+     * Container the dropdown portals into. Defaults to the document body;
+     * pass an element to scope the portal (e.g. a shadow root, so the popup
+     * inherits styles defined there).
+     */
+    portalContainer?: SelectPrimitive.Portal.Props['container'];
   }
 >(
   (
-    { className, children, sideOffset = 4, align = 'start', side = 'bottom', ...props },
+    {
+      className,
+      children,
+      sideOffset = 4,
+      align = 'start',
+      side = 'bottom',
+      portalContainer,
+      ...props
+    },
     ref
   ) => (
-    <SelectPrimitive.Portal>
+    <SelectPrimitive.Portal container={portalContainer}>
       <SelectPrimitive.Positioner
         sideOffset={sideOffset}
         align={align}
