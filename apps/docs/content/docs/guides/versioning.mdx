@@ -1,304 +1,102 @@
 ---
 title: Versioning
-description: Versioning strategy using standard-version and Conventional Commits.
+description: Versioning strategy using Changesets and Conventional Commits.
 ---
 
 # Versioning Guide
 
-This project uses [standard-version](https://github.com/conventional-changelog/standard-version) for automated versioning and changelog generation based on [Conventional Commits](https://www.conventionalcommits.org/).
+This monorepo versions its published packages with
+[Changesets](https://github.com/changesets/changesets). Each published
+workspace (`@acronis-platform/ui-react`, `shadcn-uikit`, `icons-react`,
+`icons-sprite`, `tokens-pd`, `design-tokens`, `design-assets`) is versioned
+independently following [Semantic Versioning](https://semver.org/).
+
+Commit messages additionally follow
+[Conventional Commits](https://www.conventionalcommits.org/) (enforced by
+commitlint), but **commits do not drive version bumps** — Changesets does. The
+two are separate concerns: Conventional Commits keep history readable; the
+Changeset you attach to a PR declares the bump.
 
 ## How It Works
 
-1. **Commit with conventional format** - Your commits determine the version bump
-2. **Run release command** - `standard-version` analyzes commits and bumps version
-3. **Automatic changelog** - `CHANGELOG.md` is generated/updated automatically
-4. **Git tag created** - A git tag is created for the new version
-5. **Push and publish** - Push changes and tags, then publish to npm
+1. **Add a Changeset to your PR** — declares which packages changed and the
+   bump type (`patch` / `minor` / `major`).
+2. **Merge to `main`** — the Release workflow opens a "Version Packages" PR
+   aggregating all pending changesets.
+3. **Merge that PR** — versions in `package.json`, the `CHANGELOG.md` files,
+   and git tags are updated, and the bumped packages publish to npm.
 
-## Commit Message Format
+See the [Publishing guide](/docs/guides/publishing) for the full release flow.
 
-Follow the Conventional Commits specification:
+## Creating a Changeset
+
+From the repo root:
+
+```bash
+pnpm changeset
+```
+
+The interactive prompt asks:
+
+- which package(s) the change affects,
+- the bump type for each, and
+- a one-line summary (this becomes the changelog entry).
+
+It writes a markdown file under `.changeset/`. **Commit that file with your code
+change.**
+
+## Bump Type Rules
+
+| Bump      | When                                                        | Example                       |
+| --------- | ----------------------------------------------------------- | ----------------------------- |
+| **patch** | Bug fixes, internal refactors, consumer-invisible dep bumps | `0.34.0` → `0.34.1`           |
+| **minor** | Additive, backwards-compatible (new export/prop/option)     | `0.34.0` → `0.35.0`           |
+| **major** | Breaking change (removed export, rename, changed default)   | `0.34.0` → `1.0.0`            |
+
+Prefer **minor** for new components and props; reserve **major** for planned
+breaking releases.
+
+## Conventional Commits
+
+All commit messages must follow Conventional Commits — commitlint enforces this
+on every commit and on PR titles. Common types in this repo:
+
+- **feat** — new user-facing functionality
+- **fix** — bug fix
+- **chore** — repo plumbing, tooling, dependencies
+- **docs** — documentation only (including `AGENTS.md`, `context/`, `apps/docs/`)
+- **refactor** — neither a fix nor a feature
+- **test** — adding or correcting tests
+- **ci** — CI workflow changes
+
+Scope is encouraged — use the workspace or component:
 
 ```text
-<type>(<scope>): <subject>
-
-<body>
-
-<footer>
+feat(button): add loading state
+fix(card-filter): correct chip wrapping
+chore(deps): bump vitest
 ```
 
-### Types
-
-- **feat**: A new feature (triggers MINOR version bump)
-- **fix**: A bug fix (triggers PATCH version bump)
-- **perf**: Performance improvement (triggers PATCH version bump)
-- **docs**: Documentation changes (no version bump by default)
-- **style**: Code style changes (no version bump by default)
-- **refactor**: Code refactoring (no version bump by default)
-- **test**: Adding or updating tests (no version bump by default)
-- **chore**: Maintenance tasks (no version bump by default)
-- **ci**: CI/CD changes (no version bump by default)
-
-### Breaking Changes
-
-Add `BREAKING CHANGE:` in the footer or use `!` after type to trigger MAJOR version bump:
-
-```bash
-# Option 1: Using footer
-feat: add new API
-
-BREAKING CHANGE: removed old API endpoint
-
-# Option 2: Using !
-feat!: complete API redesign
-```
-
-## Release Commands
-
-### Automatic Version (Recommended)
-
-Analyzes commits since last release and determines version bump automatically:
-
-```bash
-pnpm release
-```
-
-This will:
-
-- Analyze commits since last tag
-- Determine version bump (major/minor/patch)
-- Update version in `package.json` files
-- Generate/update `CHANGELOG.md`
-- Create a git commit with the changes
-- Create a git tag
-
-### Manual Version Override
-
-Force a specific version bump:
-
-```bash
-# Force patch bump (0.1.0 -> 0.1.1)
-pnpm release:patch
-
-# Force minor bump (0.1.0 -> 0.2.0)
-pnpm release:minor
-
-# Force major bump (0.1.0 -> 1.0.0)
-pnpm release:major
-```
-
-### First Release
-
-For the initial release (creates tag without bumping version):
-
-```bash
-pnpm release:first
-```
-
-### Dry Run
-
-See what would happen without making changes:
-
-```bash
-pnpm release:dry
-```
-
-## Complete Release Workflow
-
-### 1. Development Phase
-
-Make changes and commit with conventional format:
-
-```bash
-git add .
-git commit -m "feat: add new button component"
-git commit -m "fix: resolve tooltip positioning issue"
-git commit -m "docs: update installation guide"
-```
-
-### 2. Create Release
-
-Run standard-version to create the release:
-
-```bash
-# Dry run first to preview
-pnpm release:dry
-
-# Create the release
-pnpm release
-```
-
-This creates:
-
-- Updated `package.json` versions
-- Updated `CHANGELOG.md`
-- Git commit: `chore(release): 0.2.0`
-- Git tag: `v0.2.0`
-
-### 3. Push Changes
-
-Push the commit and tags:
-
-```bash
-git push --follow-tags origin main
-```
-
-### 4. Publish to npm
-
-```bash
-cd packages/ui-legacy
-npm publish
-```
-
-Or use a CI/CD pipeline to automate publishing.
-
-## Version Bump Rules
-
-| Commit Type                                       | Example                    | Version Bump                |
-| ------------------------------------------------- | -------------------------- | --------------------------- |
-| `feat:`                                           | `feat: add new component`  | MINOR (0.1.0 -> 0.2.0)      |
-| `fix:`                                            | `fix: resolve bug`         | PATCH (0.1.0 -> 0.1.1)      |
-| `perf:`                                           | `perf: optimize rendering` | PATCH (0.1.0 -> 0.1.1)      |
-| `feat!:` or `BREAKING CHANGE:`                    | `feat!: redesign API`      | MAJOR (0.1.0 -> 1.0.0)      |
-| `docs:`, `style:`, `refactor:`, `test:`, `chore:` | Any                        | No bump (unless configured) |
-
-## Configuration
-
-The configuration is in `.versionrc.json`:
-
-- **types**: Defines which commit types appear in changelog
-- **bumpFiles**: Files to update with new version
-- **packageFiles**: Package files to read version from
-
-## Examples
-
-### Example 1: Feature Release
-
-```bash
-# Make changes
-git commit -m "feat: add dark mode support"
-git commit -m "feat: add keyboard shortcuts"
-git commit -m "fix: resolve focus trap issue"
-
-# Create release (0.1.0 -> 0.2.0 due to features)
-pnpm release
-
-# Push
-git push --follow-tags origin main
-
-# Publish
-cd packages/shadcn-uikit && npm publish
-```
-
-### Example 2: Patch Release
-
-```bash
-# Bug fixes only
-git commit -m "fix: correct button padding"
-git commit -m "fix: resolve tooltip z-index"
-
-# Create release (0.2.0 -> 0.2.1 due to fixes only)
-pnpm release
-
-# Push and publish
-git push --follow-tags origin main
-cd packages/shadcn-uikit && npm publish
-```
-
-### Example 3: Breaking Change
-
-```bash
-# Breaking change
-git commit -m "feat!: redesign component API"
-
-# Create release (0.2.1 -> 1.0.0 due to breaking change)
-pnpm release
-
-# Push and publish
-git push --follow-tags origin main
-cd packages/shadcn-uikit && npm publish
-```
-
-## CI/CD Integration
-
-### GitHub Actions Example
-
-```yaml
-name: Release
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build
-        run: pnpm build
-
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Create Release
-        run: pnpm release
-
-      - name: Push changes
-        run: git push --follow-tags origin main
-
-      - name: Publish to npm
-        working-directory: packages/ui-legacy
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-```
-
-## Troubleshooting
-
-### No commits since last release
-
-If you see "No commits since last release", it means there are no conventional commits to process. Make sure your commits follow the conventional format.
-
-### Version not bumping
-
-Check that your commits use the correct types (`feat:`, `fix:`, etc.). Use `pnpm release:dry` to preview what would happen.
-
-### Changelog not updating
-
-Ensure commits follow conventional format and are not marked as hidden in `.versionrc.json`.
-
-## Best Practices
-
-1. **Always use conventional commits** - This is required for automation
-2. **Run dry-run first** - Preview changes with `pnpm release:dry`
-3. **Review changelog** - Check generated `CHANGELOG.md` before pushing
-4. **Use commitlint** - Already configured to enforce commit format
-5. **Squash carefully** - When squashing commits, ensure the final message is conventional
-6. **Document breaking changes** - Always explain breaking changes in commit body
+## What NOT to Do
+
+- **Don't bump versions manually.** Changesets owns `package.json` versions.
+- **Don't edit or delete `.changeset/*.md` files by hand.** The Version
+  Packages PR consumes them automatically.
+- **Don't run `npm publish` locally.** CI publishes on the Version Packages PR
+  merge.
+
+## Root Scripts
+
+These back the Release workflow; you rarely run `version`/`release` locally:
+
+| Script           | Runs                | Purpose                            |
+| ---------------- | ------------------- | ---------------------------------- |
+| `pnpm changeset` | `changeset`         | Add a changeset for your PR        |
+| `pnpm version`   | `changeset version` | Rewrite versions + changelogs (CI) |
+| `pnpm release`   | `changeset publish` | Publish to npm (CI)                |
 
 ## Resources
 
+- [Changesets](https://github.com/changesets/changesets)
 - [Conventional Commits](https://www.conventionalcommits.org/)
-- [standard-version](https://github.com/conventional-changelog/standard-version)
 - [Semantic Versioning](https://semver.org/)

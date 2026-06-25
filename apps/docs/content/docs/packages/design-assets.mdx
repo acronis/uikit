@@ -1,0 +1,38 @@
+---
+title: design-assets
+description: JSON manifests and bundled binaries for the Acronis icon and illustration sets.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+`@acronis-platform/design-assets` is a **data-only** package: it ships JSON
+manifests for icons and illustrations, plus the bundled icon and illustration
+binaries the manifests point at. No components, no build, no runtime API.
+
+## Grouped manifest schema
+
+Manifests are organized into packs. A pack groups related assets under
+`assetsGroups`, with a `$values` patch mechanism so a group can share and
+selectively override per-asset values. Rules (under `rules/`) drive computed
+behavior by `kind` — `scale`, `stroke`, and `color`. The package borrows DTCG
+`$`-prefix vocabulary but is **not** DTCG-conformant: project fields live at
+top-level keys (`values`, `platforms`, `metadata`), not inside `$extensions`.
+
+## Upstream of icons-react
+
+This package is the upstream design data for the icon tooling: the icon
+generators read its manifests and binaries to produce the React components in
+`@acronis-platform/icons-react` and the sprites in
+`@acronis-platform/icons-sprite`.
+
+## Validation
+
+The one script that does real work is `validate` (aliased by `test`): it ajv-
+validates the pack and rule manifests, checks that referenced `$file` binaries
+exist, and audits per-pack export coverage. `build` / `dev` / `clean` / `lint` /
+`typecheck` are intentional no-ops.
+
+<Callout type="info">
+  Some icons are derived from [Lucide](https://lucide.dev) (ISC). The package is
+  MIT overall, but the Lucide ISC attribution is retained in its `LICENSE`.
+</Callout>

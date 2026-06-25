@@ -1,0 +1,59 @@
+---
+title: Button
+description: Triggers an action or event.
+---
+
+import {
+  ButtonVariants,
+  ButtonSizes,
+  ButtonDisabled,
+  ButtonTranslucent,
+} from '@/components/demos/button';
+import { DemoPreview } from '@/components/DemoPreview';
+
+## Usage
+
+```tsx
+import { Button } from '@acronis-platform/shadcn-uikit';
+```
+
+## Variants
+
+The button supports multiple visual variants for different action contexts.
+
+<DemoPreview sourcePath="apps/demos/src/button/ButtonVariants.tsx">
+  <ButtonVariants />
+</DemoPreview>
+
+## Sizes
+
+Buttons come in different sizes to fit various layout needs.
+
+<DemoPreview sourcePath="apps/demos/src/button/ButtonSizes.tsx">
+  <ButtonSizes />
+</DemoPreview>
+
+## Disabled state
+
+Disabled buttons indicate that an action is not currently available.
+
+<DemoPreview sourcePath="apps/demos/src/button/ButtonDisabled.tsx">
+  <ButtonDisabled />
+</DemoPreview>
+
+## Translucent
+
+Translucent buttons for use on colored backgrounds.
+
+<DemoPreview sourcePath="apps/demos/src/button/ButtonTranslucent.tsx">
+  <ButtonTranslucent />
+</DemoPreview>
+
+## API Reference
+
+### Button
+
+<AutoTypeTable
+  path="../../packages/ui-legacy/src/components/ui/button.tsx"
+  name="ButtonProps"
+/>

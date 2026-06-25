@@ -1,0 +1,128 @@
+---
+title: Input
+description: A text field for user input.
+---
+
+import {
+  InputBasic,
+  InputTypes,
+  InputWithLabels,
+  InputWithIcons,
+  InputDisabled,
+  InputRequired,
+  InputWithHelper,
+  InputError,
+  InputSizes,
+  InputForm,
+  InputSearch,
+  InputVariousTypes,
+} from '@/components/demos/input';
+import { DemoPreview } from '@/components/DemoPreview';
+
+## Usage
+
+```tsx
+import { Input } from '@acronis-platform/shadcn-uikit';
+```
+
+## Basic
+
+A simple text input field.
+
+<DemoPreview sourcePath="apps/demos/src/input/InputBasic.tsx">
+  <InputBasic />
+</DemoPreview>
+
+## Types
+
+Input fields for different data types (email, password, number, etc.).
+
+<DemoPreview sourcePath="apps/demos/src/input/InputTypes.tsx">
+  <InputTypes />
+</DemoPreview>
+
+## With labels
+
+Input fields paired with labels.
+
+<DemoPreview sourcePath="apps/demos/src/input/InputWithLabels.tsx">
+  <InputWithLabels />
+</DemoPreview>
+
+## With icons
+
+Input fields with leading or trailing icons.
+
+<DemoPreview sourcePath="apps/demos/src/input/InputWithIcons.tsx">
+  <InputWithIcons />
+</DemoPreview>
+
+## Disabled state
+
+Disabled input fields that cannot be edited.
+
+<DemoPreview sourcePath="apps/demos/src/input/InputDisabled.tsx">
+  <InputDisabled />
+</DemoPreview>
+
+## Required
+
+Input fields marked as required.
+
+<DemoPreview sourcePath="apps/demos/src/input/InputRequired.tsx">
+  <InputRequired />
+</DemoPreview>
+
+## With helper text
+
+Input fields with descriptive helper text below.
+
+<DemoPreview sourcePath="apps/demos/src/input/InputWithHelper.tsx">
+  <InputWithHelper />
+</DemoPreview>
+
+## Error state
+
+Input fields displaying validation errors.
+
+<DemoPreview sourcePath="apps/demos/src/input/InputError.tsx">
+  <InputError />
+</DemoPreview>
+
+## Sizes
+
+Input fields in different sizes.
+
+<DemoPreview sourcePath="apps/demos/src/input/InputSizes.tsx">
+  <InputSizes />
+</DemoPreview>
+
+## In a form
+
+Input integrated with form validation.
+
+<DemoPreview sourcePath="apps/demos/src/input/InputForm.tsx">
+  <InputForm />
+</DemoPreview>
+
+## Search
+
+A search-specific input with search icon.
+
+<DemoPreview sourcePath="apps/demos/src/input/InputSearch.tsx">
+  <InputSearch />
+</DemoPreview>
+
+## Various types
+
+A showcase of all available input type variants.
+
+<DemoPreview sourcePath="apps/demos/src/input/InputVariousTypes.tsx">
+  <InputVariousTypes />
+</DemoPreview>
+
+## API Reference
+
+{/* No exported Props interface — component accepts standard HTML input element props */}
+
+The `Input` component extends all standard HTML `<input>` element props (`React.ComponentProps<'input'>`) with consistent styling. Pass `type`, `placeholder`, `disabled`, `value`, `onChange`, and all other native input attributes directly.

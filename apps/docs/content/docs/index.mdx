@@ -1,46 +1,71 @@
 ---
 title: Acronis UIKit
-description: 40+ accessible, themeable React components built on shadcn/ui principles.
+description: Accessible, token-driven React components built on Base UI.
 ---
 
 import { Cards, Card } from 'fumadocs-ui/components/card';
 
-A production-ready React component library featuring 40+ UI components, 1500+ icons, multiple built-in themes, and full TypeScript support.
+`@acronis-platform/ui-react` is the next-generation Acronis React component
+library: a [Base UI](https://base-ui.com/) implementation themed entirely by
+generated design tokens. Components are accessible by default, fully typed, and
+styled with Tailwind CSS v4 over the `--ui-*` custom properties from
+`@acronis-platform/tokens-pd`.
 
 ## Features
 
-- **40+ components** — buttons, forms, tables, dialogs, navigation, and more
-- **1500+ icons** — comprehensive icon set included
-- **Multiple themes** — light, dark, and brand-specific themes out of the box
+- **Base UI primitives** — keyboard navigation, focus management, and ARIA come
+  from `@base-ui/react`, a direct dependency
+- **Token-driven theming** — colors, typography, and component metrics resolve to
+  `--ui-*` tokens generated from the design system; light/dark via `light-dark()`
+- **Multiple brands** — `acronis` by default, with brand overrides layered by
+  import order
 - **TypeScript-first** — every component is fully typed
-- **Accessible** — built on shadcn/ui and Radix UI primitives
-- **Zero configuration** — import the styles, use the components
+- **Tree-shakeable** — import only the components you use
+- **Acronis icon set** — companion `@acronis-platform/icons-react` package with
+  per-size stroke scaling
 
 ## Quick start
 
 ```bash
-npm install @acronis-platform/shadcn-uikit tw-animate-css
+pnpm add @acronis-platform/ui-react react react-dom
 ```
 
 ```tsx
-import '@acronis-platform/shadcn-uikit/styles';
-import { Button } from '@acronis-platform/shadcn-uikit';
+import '@acronis-platform/ui-react/styles';
+import { Button } from '@acronis-platform/ui-react';
+
+export function App() {
+  return <Button variant="default">Get started</Button>;
+}
 ```
 
 <Cards>
   <Card
     title="Getting Started"
     href="/docs/getting-started"
-    description="Installation and basic setup"
+    description="Installation and setup"
   />
   <Card
     title="Components"
     href="/docs/components"
-    description="Browse all 40+ components"
+    description="Browse the ui-react components"
   />
   <Card
     title="Theming"
     href="/docs/theming"
-    description="Customize colors and themes"
+    description="Brands, dark mode, and tokens"
+  />
+  <Card
+    title="Packages"
+    href="/docs/packages"
+    description="Tokens, icons, and the design-data pipeline"
+  />
+</Cards>
+
+<Cards>
+  <Card
+    title="Migrating from shadcn-uikit?"
+    href="/docs/guides/migration"
+    description="The legacy library is deprecated — see the migration guide."
   />
 </Cards>

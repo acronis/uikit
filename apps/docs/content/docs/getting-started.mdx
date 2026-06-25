@@ -1,45 +1,96 @@
 ---
 title: Getting Started
-description: Install and use Acronis UIKit in your React application.
+description: Install and use @acronis-platform/ui-react in your React application.
 ---
 
 ## Installation
 
-Install the package and its required CSS animation dependency:
+Install the library alongside React:
 
 ```bash
-npm install @acronis-platform/shadcn-uikit tw-animate-css
+pnpm add @acronis-platform/ui-react react react-dom
 # or
-pnpm add @acronis-platform/shadcn-uikit tw-animate-css
+npm install @acronis-platform/ui-react react react-dom
 ```
 
-## Setup
+`react` and `react-dom` are peer dependencies (React 18 or 19).
 
-Import the UIKit styles in your root layout or entry point:
+## Import the styles
+
+Import the stylesheet once, at your application's entry point. It bundles the
+Tailwind layer, the base `--ui-*` tokens from `@acronis-platform/tokens-pd`, and
+every component's token tier:
 
 ```tsx
-import '@acronis-platform/shadcn-uikit/styles';
+import '@acronis-platform/ui-react/styles';
+```
+
+## Fonts
+
+The tokens reference the **Inter** family but the library does not bundle fonts —
+you control loading. The self-hosted [`@fontsource/inter`](https://fontsource.org/fonts/inter)
+package is the simplest option:
+
+```bash
+pnpm add @fontsource/inter
+```
+
+```tsx
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
 ```
 
 ## Basic usage
 
 ```tsx
-import { Button } from '@acronis-platform/shadcn-uikit';
+import '@acronis-platform/ui-react/styles';
+import { Button, Switch, InputText } from '@acronis-platform/ui-react';
 
 export default function App() {
-  return <Button variant="default">Click me</Button>;
+  return (
+    <div>
+      <Button variant="default">Save</Button>
+      <Switch defaultChecked />
+      <InputText placeholder="Your name" />
+    </div>
+  );
 }
 ```
 
-## TypeScript
+## Dark mode
 
-All components are fully typed. Import component prop types directly:
+Dark mode is built into the tokens via `light-dark()` + `color-scheme`. Toggle the
+active scheme with the `data-theme` attribute on a root element:
+
+```html
+<html data-theme="dark"></html>
+```
+
+## Brands
+
+`acronis` is the default brand. Layer another brand by importing its override
+stylesheet after the base styles (last import wins):
 
 ```tsx
-import type { ButtonProps } from '@acronis-platform/shadcn-uikit';
+import '@acronis-platform/ui-react/styles';
+import '@acronis-platform/tokens-pd/css/deep-sky.css';
+```
+
+See [Theming](/docs/theming) for the full model.
+
+## TypeScript
+
+Every component is fully typed. Import prop types directly:
+
+```tsx
+import type { ButtonProps } from '@acronis-platform/ui-react';
 ```
 
 ## Next steps
 
 - Browse the [Components](/docs/components) reference
 - Learn about [Theming](/docs/theming)
+- Explore the [Packages](/docs/packages) that power the library
+- Migrating from legacy `shadcn-uikit`? See the [migration guide](/docs/guides/migration)

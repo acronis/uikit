@@ -1,0 +1,107 @@
+---
+title: icons-react
+description: Tree-shakeable React icon components, generated from the Acronis icon sources.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+`@acronis-platform/icons-react` ships React icon components, **generated** from
+the Acronis icon SVG sources. Each icon is a small component that renders one
+24px master at any size, with stroke width auto-scaled to match the design.
+
+## Packs and subpath exports
+
+Icons are grouped into four packs, each available as its own subpath export so
+you only pull what you use:
+
+| Subpath        | Icons (approx.) | Style              |
+| -------------- | --------------- | ------------------ |
+| `/stroke-mono` | ~390            | Outline, monocolor |
+| `/solid-mono`  | ~70             | Filled, monocolor  |
+| `/stroke-multi`| ~15             | Outline, multicolor|
+| `/solid-multi` | ~1              | Filled, multicolor |
+
+<Callout type="info">
+  The upstream icon set is an active work in progress, so counts grow over time
+  with no code change. Treat the numbers above as approximate; the live
+  [icon catalog](/docs/icons) is the authoritative list.
+</Callout>
+
+## Named imports
+
+Each icon is a **named export**, so imports are tree-shakeable — bundlers drop
+everything you don't reference:
+
+```tsx
+import { BanIcon, ChevronDownIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+export function Example() {
+  return (
+    <>
+      <BanIcon />
+      <ChevronDownIcon size={32} />
+    </>
+  );
+}
+```
+
+Naming is `PascalCase(asset) + "Icon"` (e.g. `chevron-down` → `ChevronDownIcon`).
+Asset names that start with a digit take the `Icon` prefix instead so the
+identifier stays valid (`365-sync` → `Icon365Sync`).
+
+## The `size` prop
+
+`size` defaults to `24`. The icon renders the single 24px master at the
+requested pixel size, and for stroke packs the stroke width auto-scales per size
+(1.6px @16, 2px @24, 2.5px @32) so outlines stay visually consistent:
+
+```tsx
+<ChevronDownIcon size={16} />
+<ChevronDownIcon size={24} /> {/* default */}
+<ChevronDownIcon size={32} />
+```
+
+## `currentColor` theming
+
+Monocolor packs (`stroke-mono`, `solid-mono`) render their fills and strokes as
+`currentColor`, so they inherit the surrounding text color — set `color` (or a
+Tailwind text utility) on a parent and the icon follows:
+
+```tsx
+<span className="text-on-surface-primary">
+  <BanIcon />
+</span>
+```
+
+Multicolor packs (`stroke-multi`, `solid-multi`) keep their authored colors and
+gradients verbatim.
+
+## Dynamic lookup
+
+Each pack also exports an `icons` registry and an `IconName` type for cases
+where the icon name is only known at runtime:
+
+```tsx
+import { icons, type IconName } from '@acronis-platform/icons-react/stroke-mono';
+
+function DynamicIcon({ name }: { name: IconName }) {
+  const Icon = icons[name];
+  return <Icon />;
+}
+```
+
+<Callout type="warn">
+  Importing `icons` pulls the **whole pack** into your bundle. Prefer named
+  imports unless you genuinely need runtime lookup.
+</Callout>
+
+## Root export
+
+The root `.` export ships the `SvgIcon` base component and the `IconProps` type
+for advanced or custom-icon use:
+
+```tsx
+import { SvgIcon, type IconProps } from '@acronis-platform/icons-react';
+```
+
+Browse every available icon in the live [icon catalog](/docs/icons).

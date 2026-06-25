@@ -71,6 +71,27 @@
   }
 }
 
+/*
+ * Same @layer-ordering hazard as #nd-subnav above. Fumadocs sizes the docs
+ * grid with `--fd-sidebar-width` / `--fd-toc-width`: a `0px` default plus a
+ * responsive `:has(...)` override that bumps them to 268px at md / xl. The
+ * uikit pre-built CSS emits @layer rules that reorder layers, so the 268px
+ * overrides lose to the 0px defaults — collapsing the sidebar and the
+ * "On this page" TOC to zero-width columns (links overflow off-screen).
+ * Re-assert the overrides unlayered (unlayered always beats @layer) at the
+ * same breakpoints + marker selectors Fumadocs uses.
+ */
+@media (width >= 48rem) {
+  #nd-docs-layout:has(.md\:layout\:\[--fd-sidebar-width\:268px\]) {
+    --fd-sidebar-width: 268px;
+  }
+}
+@media (width >= 80rem) {
+  #nd-docs-layout:has(.xl\:layout\:\[--fd-toc-width\:268px\]) {
+    --fd-toc-width: 268px;
+  }
+}
+
 /* ─── Landing page — responsive features grid ─────────────────────────────── */
 .feature-row {
   display: flex;

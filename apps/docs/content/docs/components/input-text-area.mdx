@@ -1,0 +1,51 @@
+---
+title: InputTextArea
+description: A multi-line text field with label, description, and error support.
+---
+
+## Usage
+
+```tsx
+import { InputTextArea } from '@acronis-platform/ui-react';
+```
+
+`InputTextArea` wraps a native `<textarea>` and adds the field furniture — an
+optional label (with a `required` marker), helper description, and error
+message. Without a label it renders just the box. Themed by the
+`--ui-input-text-area-*` tokens.
+
+## Examples
+
+A labeled multi-line field:
+
+```tsx
+<InputTextArea label="Description" placeholder="Add details…" />
+```
+
+Required and error states:
+
+```tsx
+<InputTextArea label="Comment" required />
+
+<InputTextArea
+  label="Comment"
+  error="This field is required."
+/>
+```
+
+With helper text and a row count:
+
+```tsx
+<InputTextArea
+  label="Notes"
+  description="Markdown is supported."
+  rows={6}
+/>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-text-area/input-text-area.tsx"
+  name="InputTextAreaProps"
+/>

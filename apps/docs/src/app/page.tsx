@@ -6,9 +6,9 @@ const syne = Syne({ subsets: ['latin'], weight: ['700', '800'] });
 
 const features = [
   {
-    title: '40+ Components',
+    title: 'Base UI Components',
     description:
-      'Buttons, forms, tables, dialogs, navigation, and more — ready for production use in enterprise products.',
+      'Buttons, inputs, selects, navigation, and more — built on Base UI primitives for production use in enterprise products.',
     icon: (
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden>
         <rect
@@ -51,9 +51,9 @@ const features = [
     ),
   },
   {
-    title: '1500+ Icons',
+    title: 'Acronis Icon Set',
     description:
-      'A comprehensive icon set covering every need in enterprise and product interfaces.',
+      'A tree-shakeable icon set from @acronis-platform/icons-react, covering enterprise and product interfaces.',
     icon: (
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden>
         <circle
@@ -83,9 +83,9 @@ const features = [
     ),
   },
   {
-    title: 'Multiple Themes',
+    title: 'Token-Driven Theming',
     description:
-      'Light, dark, and brand-specific themes built on CSS custom properties — trivial to extend.',
+      'Light, dark, and brand themes from generated --ui-* design tokens — switch with a data attribute, no rebuild.',
     icon: (
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden>
         <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" />
@@ -118,7 +118,7 @@ const features = [
   {
     title: 'Accessible',
     description:
-      'Built on Radix UI primitives with WAI-ARIA compliance and full keyboard navigation out of the box.',
+      'Built on Base UI primitives with WAI-ARIA compliance and full keyboard navigation out of the box.',
     icon: (
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden>
         <circle
@@ -157,9 +157,9 @@ const features = [
 ];
 
 const stats = [
-  { value: '40+', label: 'Components' },
-  { value: '1500+', label: 'Icons' },
-  { value: '4', label: 'Themes' },
+  { value: '24', label: 'Components' },
+  { value: '470+', label: 'Icons' },
+  { value: '2', label: 'Brands' },
   { value: '100%', label: 'TypeScript' },
 ];
 
@@ -175,8 +175,8 @@ export default function HomePage() {
       links={[
         { type: 'main', text: 'Documentation', url: '/docs' },
         { type: 'main', text: 'Components', url: '/docs/components' },
-        { type: 'main', text: 'Storybook', url: '/storybook' },
-        { type: 'main', text: 'Demo', url: '/demo' },
+        { type: 'main', text: 'Storybook', url: '/storybook-react' },
+        // { type: 'main', text: 'Demo', url: '/demo' },
       ]}
     >
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
@@ -233,7 +233,7 @@ export default function HomePage() {
               color: muted,
             }}
           >
-            shadcn/ui · Radix UI · Base UI · Tailwind CSS
+            Base UI · Tailwind CSS · Design Tokens
           </span>
         </div>
 
@@ -560,7 +560,7 @@ export default function HomePage() {
             >
               <code>
                 <span style={{ color: muted, userSelect: 'none' }}>$ </span>
-                {'npm install @acronis-platform/shadcn-uikit tw-animate-css'}
+                {'npm install @acronis-platform/ui-react react react-dom'}
               </code>
             </pre>
           </div>
@@ -594,11 +594,11 @@ export default function HomePage() {
             >
               <code>
                 <span style={{ color: muted }}>{'import '}</span>
-                <span>{"'@acronis-platform/shadcn-uikit/styles';\n"}</span>
+                <span>{"'@acronis-platform/ui-react/styles';\n"}</span>
                 <span style={{ color: muted }}>{'import '}</span>
                 <span>{'{ Button } '}</span>
                 <span style={{ color: muted }}>{'from '}</span>
-                <span>{"'@acronis-platform/shadcn-uikit';\n\n"}</span>
+                <span>{"'@acronis-platform/ui-react';\n\n"}</span>
                 <span style={{ color: muted }}>
                   {'export default function '}
                 </span>

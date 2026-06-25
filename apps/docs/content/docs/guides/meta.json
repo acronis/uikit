@@ -3,7 +3,6 @@
   "pages": [
     "architecture",
     "design-to-code",
-    "forms",
     "migration",
     "tree-shaking",
     "publishing",

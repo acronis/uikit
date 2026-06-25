@@ -1,59 +1,83 @@
 'use client';
 
 import { useState, useCallback, useMemo, useRef } from 'react';
-import { AutoIcons } from '@acronis-platform/shadcn-uikit';
+import { icons as strokeMono } from '@acronis-platform/icons-react/stroke-mono';
+import { icons as solidMono } from '@acronis-platform/icons-react/solid-mono';
+import { icons as strokeMulti } from '@acronis-platform/icons-react/stroke-multi';
+import { icons as solidMulti } from '@acronis-platform/icons-react/solid-multi';
+
+type IconComponent = React.ComponentType<{ size?: number; className?: string }>;
+
+/** The four published icon packs, in catalog display order. */
+const PACKS = [
+  { id: 'stroke-mono', label: 'Stroke · mono', icons: strokeMono },
+  { id: 'solid-mono', label: 'Solid · mono', icons: solidMono },
+  { id: 'stroke-multi', label: 'Stroke · multi', icons: strokeMulti },
+  { id: 'solid-multi', label: 'Solid · multi', icons: solidMulti },
+] as const;
+
+type PackId = (typeof PACKS)[number]['id'];
 
 /**
- * Convert a kebab-case icon slug (e.g. "chevron-down") to its PascalCase
- * export name (e.g. "ChevronDownIcon"). This mirrors the naming convention
- * used by the auto-generated icon module.
+ * Convert a kebab-case icon slug to its PascalCase export name. Mirrors the
+ * generator's rule: `chevron-down` → `ChevronDownIcon`, while numeric-leading
+ * slugs are prefixed instead (`365-sync` → `Icon365Sync`) since an identifier
+ * can't start with a digit.
  */
-function toPascalCaseName(slug: string): string {
+function toExportName(slug: string): string {
   const pascal = slug
     .split('-')
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join('');
-  return `${pascal}Icon`;
+  return /^[0-9]/.test(slug) ? `Icon${pascal}` : `${pascal}Icon`;
 }
 
 type IconEntry = {
   slug: string;
   name: string;
-  Component: React.ComponentType<{ className?: string }>;
+  pack: PackId;
+  packLabel: string;
+  Component: IconComponent;
 };
 
-const allIcons: IconEntry[] = Object.entries(
-  AutoIcons as Record<string, React.ComponentType<{ className?: string }>>
-)
-  .map(([slug, Component]) => ({
-    slug,
-    name: toPascalCaseName(slug),
-    Component,
-  }))
-  .sort((a, b) => a.slug.localeCompare(b.slug));
+const allIcons: IconEntry[] = PACKS.flatMap((pack) =>
+  Object.entries(pack.icons as Record<string, IconComponent>).map(
+    ([slug, Component]) => ({
+      slug,
+      name: toExportName(slug),
+      pack: pack.id,
+      packLabel: pack.label,
+      Component,
+    })
+  )
+).sort((a, b) => a.slug.localeCompare(b.slug));
 
 const TOTAL = allIcons.length;
 
 export function IconCatalog() {
   const [search, setSearch] = useState('');
-  const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
+  const [activePack, setActivePack] = useState<PackId | 'all'>('all');
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   const filtered = useMemo(() => {
-    if (!search) return allIcons;
     const lower = search.toLowerCase();
-    return allIcons.filter(
-      (icon) =>
+    return allIcons.filter((icon) => {
+      if (activePack !== 'all' && icon.pack !== activePack) return false;
+      if (!lower) return true;
+      return (
         icon.slug.includes(lower) || icon.name.toLowerCase().includes(lower)
-    );
-  }, [search]);
+      );
+    });
+  }, [search, activePack]);
 
   const handleCopy = useCallback((entry: IconEntry) => {
-    const snippet = `import { ${entry.name} } from '@acronis-platform/shadcn-uikit'`;
+    const snippet = `import { ${entry.name} } from '@acronis-platform/icons-react/${entry.pack}'`;
+    const key = `${entry.pack}/${entry.slug}`;
     navigator.clipboard.writeText(snippet).then(() => {
-      setCopiedSlug(entry.slug);
+      setCopiedKey(key);
       if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => setCopiedSlug(null), 1500);
+      timerRef.current = setTimeout(() => setCopiedKey(null), 1500);
     });
   }, []);
 
@@ -72,27 +96,46 @@ export function IconCatalog() {
         </p>
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-2">
-        {filtered.map((entry) => (
-          <button
-            key={entry.slug}
-            type="button"
-            onClick={() => handleCopy(entry)}
-            title={`Copy import for ${entry.name}`}
-            className="group relative flex flex-col items-center gap-1.5 rounded-lg border border-fd-border p-3 text-fd-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
-          >
-            <entry.Component className="size-6 shrink-0" />
-            <span className="w-full truncate text-center text-[10px] leading-tight text-fd-muted-foreground group-hover:text-fd-accent-foreground">
-              {entry.name}
-            </span>
-
-            {copiedSlug === entry.slug && (
-              <span className="absolute inset-0 flex items-center justify-center rounded-lg bg-fd-background/90 text-xs font-medium text-fd-primary">
-                Copied!
-              </span>
-            )}
-          </button>
+      <div className="flex flex-wrap gap-1.5">
+        <PackTab
+          label="All"
+          active={activePack === 'all'}
+          onClick={() => setActivePack('all')}
+        />
+        {PACKS.map((pack) => (
+          <PackTab
+            key={pack.id}
+            label={pack.label}
+            active={activePack === pack.id}
+            onClick={() => setActivePack(pack.id)}
+          />
         ))}
+      </div>
+
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-2">
+        {filtered.map((entry) => {
+          const key = `${entry.pack}/${entry.slug}`;
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => handleCopy(entry)}
+              title={`Copy import for ${entry.name} (${entry.packLabel})`}
+              className="group relative flex flex-col items-center gap-1.5 rounded-lg border border-fd-border p-3 text-fd-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
+            >
+              <entry.Component size={24} className="shrink-0" />
+              <span className="w-full truncate text-center text-[10px] leading-tight text-fd-muted-foreground group-hover:text-fd-accent-foreground">
+                {entry.name}
+              </span>
+
+              {copiedKey === key && (
+                <span className="absolute inset-0 flex items-center justify-center rounded-lg bg-fd-background/90 text-xs font-medium text-fd-primary">
+                  Copied!
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {filtered.length === 0 && (
@@ -101,5 +144,30 @@ export function IconCatalog() {
         </p>
       )}
     </div>
+  );
+}
+
+function PackTab({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={
+        'rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ' +
+        (active
+          ? 'border-fd-primary bg-fd-primary/10 text-fd-primary'
+          : 'border-fd-border text-fd-muted-foreground hover:bg-fd-accent hover:text-fd-accent-foreground')
+      }
+    >
+      {label}
+    </button>
   );
 }

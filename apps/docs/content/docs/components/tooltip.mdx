@@ -1,17 +1,7 @@
 ---
 title: Tooltip
-description: A small overlay that appears on hover to provide additional context.
+description: A contextual hint shown on hover or focus.
 ---
-
-import {
-  TooltipBasic,
-  TooltipWithIcon,
-  TooltipPositions,
-  TooltipLongText,
-  TooltipCustomDelay,
-  TooltipMultiple,
-} from '@/components/demos/tooltip';
-import { DemoPreview } from '@/components/DemoPreview';
 
 ## Usage
 
@@ -21,64 +11,51 @@ import {
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
-} from '@acronis-platform/shadcn-uikit';
+} from '@acronis-platform/ui-react';
 ```
 
-## Basic
+`Tooltip`, `TooltipTrigger`, and `TooltipContent` wrap Base UI's `Tooltip`
+primitive — hover/focus open behavior, positioning, portalling, and ARIA come
+from Base UI. `TooltipTrigger` is polymorphic via the `render` prop, so it can
+wrap any element (such as a `Button`). Wrap your app (or a subtree) in
+`TooltipProvider` to share open/close timing across tooltips.
 
-A simple tooltip on hover.
+## Examples
 
-<DemoPreview sourcePath="apps/demos/src/tooltip/TooltipBasic.tsx">
-  <TooltipBasic />
-</DemoPreview>
+A basic tooltip on a button:
 
-## With Icon
+```tsx
+<Tooltip>
+  <TooltipTrigger render={<Button variant="secondary">Hover me</Button>} />
+  <TooltipContent>Helpful hint</TooltipContent>
+</Tooltip>
+```
 
-Tooltip triggered by an icon button.
+Position the content with `side` (and optionally `align`):
 
-<DemoPreview sourcePath="apps/demos/src/tooltip/TooltipWithIcon.tsx">
-  <TooltipWithIcon />
-</DemoPreview>
+```tsx
+<Tooltip>
+  <TooltipTrigger render={<Button variant="secondary">Top</Button>} />
+  <TooltipContent side="top">On top</TooltipContent>
+</Tooltip>
+```
 
-## Positions
+Share timing across many tooltips with a provider:
 
-Tooltips placed on different sides of the trigger.
-
-<DemoPreview sourcePath="apps/demos/src/tooltip/TooltipPositions.tsx">
-  <TooltipPositions />
-</DemoPreview>
-
-## Long Text
-
-Tooltip with longer descriptive text.
-
-<DemoPreview sourcePath="apps/demos/src/tooltip/TooltipLongText.tsx">
-  <TooltipLongText />
-</DemoPreview>
-
-## Custom Delay
-
-Tooltip with a custom open/close delay.
-
-<DemoPreview sourcePath="apps/demos/src/tooltip/TooltipCustomDelay.tsx">
-  <TooltipCustomDelay />
-</DemoPreview>
-
-## Multiple
-
-Several tooltips on different elements.
-
-<DemoPreview sourcePath="apps/demos/src/tooltip/TooltipMultiple.tsx">
-  <TooltipMultiple />
-</DemoPreview>
+```tsx
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger render={<ButtonIcon aria-label="Edit"><PencilIcon /></ButtonIcon>} />
+    <TooltipContent>Edit</TooltipContent>
+  </Tooltip>
+  {/* …more tooltips… */}
+</TooltipProvider>
+```
 
 ## API Reference
 
-### TooltipContent
-
-<AutoTypeTable
-  path="../../packages/ui-legacy/src/components/ui/tooltip.tsx"
-  name="TooltipContentProps"
-/>
-
-`TooltipProvider`, `Tooltip`, and `TooltipTrigger` are direct re-exports of Base UI primitives.
+These parts re-export Base UI's `Tooltip` primitives and do not define their own
+named prop interfaces. `TooltipContent` additionally accepts `side`, `align`,
+`portalContainer`, and `keepMounted` to control positioning and portalling.
+Refer to the [Base UI Tooltip docs](https://base-ui.com/react/components/tooltip)
+for the full prop surface of each part.

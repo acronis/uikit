@@ -1,15 +1,7 @@
 ---
 title: Breadcrumb
-description: Displays a navigation trail showing the current page location within a hierarchy.
+description: Shows the path to the current page within a navigation hierarchy.
 ---
-
-import {
-  BreadcrumbBasic,
-  BreadcrumbWithIcons,
-  BreadcrumbWithEllipsis,
-  BreadcrumbIconsEllipsis,
-} from '@/components/demos/breadcrumb';
-import { DemoPreview } from '@/components/DemoPreview';
 
 ## Usage
 
@@ -19,57 +11,86 @@ import {
   BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbSeparator,
   BreadcrumbPage,
-} from '@acronis-platform/shadcn-uikit';
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+} from '@acronis-platform/ui-react';
 ```
 
-## Basic
+`Breadcrumb` is a compound component. The structure is a single
+`BreadcrumbList` containing `BreadcrumbItem` parts, each holding a
+`BreadcrumbLink` (a navigable ancestor) or a `BreadcrumbPage` (the current page),
+separated by `BreadcrumbSeparator`. Use `BreadcrumbEllipsis` to collapse a long
+trail. `Breadcrumb` and `BreadcrumbLink` are polymorphic via Base UI's
+`useRender` (the `render` prop) — pass a router link for client-side
+navigation.
 
-A simple breadcrumb trail with text links.
+## Examples
 
-<DemoPreview sourcePath="apps/demos/src/breadcrumb/BreadcrumbBasic.tsx">
-  <BreadcrumbBasic />
-</DemoPreview>
+A typical trail:
 
-## With icons
+```tsx
+<Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+      <BreadcrumbLink href="#">Home</BreadcrumbLink>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbLink href="#">Products</BreadcrumbLink>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbPage>Settings</BreadcrumbPage>
+    </BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
+```
 
-Breadcrumb items can include icons for better visual recognition.
+Collapse intermediate levels with `BreadcrumbEllipsis`:
 
-<DemoPreview sourcePath="apps/demos/src/breadcrumb/BreadcrumbWithIcons.tsx">
-  <BreadcrumbWithIcons />
-</DemoPreview>
+```tsx
+<Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+      <BreadcrumbLink href="#">Home</BreadcrumbLink>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbEllipsis />
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbPage>Current</BreadcrumbPage>
+    </BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
+```
 
-## With ellipsis
+Render a link as a router link with `render`:
 
-Long breadcrumb trails can be collapsed with an ellipsis.
+```tsx
+import { Link as RouterLink } from 'react-router';
 
-<DemoPreview sourcePath="apps/demos/src/breadcrumb/BreadcrumbEllipsis.tsx">
-  <BreadcrumbWithEllipsis />
-</DemoPreview>
-
-## With icons and ellipsis
-
-Combining icons and ellipsis for complex navigation hierarchies.
-
-<DemoPreview sourcePath="apps/demos/src/breadcrumb/BreadcrumbIconsEllipsis.tsx">
-  <BreadcrumbIconsEllipsis />
-</DemoPreview>
+<BreadcrumbLink render={<RouterLink to="/products" />}>Products</BreadcrumbLink>
+```
 
 ## API Reference
 
 ### Breadcrumb
 
 <AutoTypeTable
-  path="../../packages/ui-legacy/src/components/ui/breadcrumb.docs.ts"
+  path="../../packages/ui-react/src/components/ui/breadcrumb/breadcrumb.tsx"
   name="BreadcrumbProps"
 />
 
 ### BreadcrumbLink
 
 <AutoTypeTable
-  path="../../packages/ui-legacy/src/components/ui/breadcrumb.docs.ts"
+  path="../../packages/ui-react/src/components/ui/breadcrumb/breadcrumb.tsx"
   name="BreadcrumbLinkProps"
 />
 
-All other Breadcrumb sub-components (`BreadcrumbList`, `BreadcrumbItem`, `BreadcrumbPage`, `BreadcrumbSeparator`, `BreadcrumbEllipsis`) extend their native HTML element props.
+The remaining parts (`BreadcrumbList`, `BreadcrumbItem`, `BreadcrumbPage`,
+`BreadcrumbSeparator`, `BreadcrumbEllipsis`) accept the standard attributes of
+the element they render.

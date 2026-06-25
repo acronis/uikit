@@ -1,0 +1,74 @@
+---
+title: Avatar
+description: Represents a user or entity with an image or initials.
+---
+
+## Usage
+
+```tsx
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+  AvatarGroup,
+} from '@acronis-platform/ui-react';
+```
+
+`Avatar` wraps Base UI's `Avatar` primitive — `AvatarImage` is hidden until the
+image loads, revealing `AvatarFallback` (typically initials). Stack several in
+`AvatarGroup` for an overlapping cluster. The fallback color is set by the
+`color` prop and themed by the `--ui-avatar-*` tokens.
+
+## Examples
+
+An avatar with an image and an initials fallback:
+
+```tsx
+<Avatar>
+  <AvatarImage src="/users/jane.png" alt="Jane Doe" />
+  <AvatarFallback>JD</AvatarFallback>
+</Avatar>
+```
+
+Initials only, with a color (default is `teal`):
+
+```tsx
+<Avatar color="violet">
+  <AvatarFallback>AB</AvatarFallback>
+</Avatar>
+<Avatar color="orange">
+  <AvatarFallback>CD</AvatarFallback>
+</Avatar>
+```
+
+An overlapping group:
+
+```tsx
+<AvatarGroup>
+  <Avatar color="teal">
+    <AvatarFallback>JD</AvatarFallback>
+  </Avatar>
+  <Avatar color="violet">
+    <AvatarFallback>AB</AvatarFallback>
+  </Avatar>
+  <Avatar color="red">
+    <AvatarFallback>+3</AvatarFallback>
+  </Avatar>
+</AvatarGroup>
+```
+
+## API Reference
+
+### Avatar
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/avatar/avatar.tsx"
+  name="AvatarProps"
+/>
+
+### AvatarGroup
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/avatar/avatar.tsx"
+  name="AvatarGroupProps"
+/>

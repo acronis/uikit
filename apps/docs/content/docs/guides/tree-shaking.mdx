@@ -1,121 +1,93 @@
 ---
 title: Tree-Shaking & Performance
-description: How tree-shaking works in the UIKit and best practices for optimal bundle size.
+description: How tree-shaking works in @acronis-platform/ui-react and best practices for optimal bundle size.
 ---
 
 # Tree-Shaking & Performance
 
 ## Overview
 
-The shadcn-uikit is **fully tree-shakeable**, meaning your production bundle will only include the components you actually use.
+`@acronis-platform/ui-react` is built to be **tree-shakeable**, so your
+production bundle includes only the components you actually import.
 
 ## Tree-Shaking Enabled
 
-The library uses `preserveModules: true` in the build configuration, which preserves the original module structure. This allows modern bundlers (Vite, Webpack 5+, Rollup) to perform optimal tree-shaking.
+The library is built with `preserveModules: true` in its Vite library config
+(`packages/ui-react/vite.lib.config.ts`), which preserves the original module
+structure. This lets modern bundlers (Vite, Webpack 5+, Rollup) drop the
+components you don't use.
 
 ### What This Means
 
 ```typescript
 // You import only what you need
-import { Button } from '@acronis-platform/shadcn-uikit';
+import { Button } from '@acronis-platform/ui-react';
 
 // Your production bundle includes:
-// Button component (~2KB)
-// Button dependencies (cn utility, etc.)
-// NOT included: Card, Input, Table, or any other unused components
+// the Button component + its dependencies (cn utility, cva, the Base UI
+// primitives it wraps)
+// NOT included: Switch, InputText, Tag, or any other unused component
 ```
 
 ## Build Output Structure
 
-The library is built with preserved module structure:
+The library is built with preserved module structure — each component compiles
+to its own file under `dist/`:
 
 ```text
 dist/
-├── index.js                    (65KB - re-exports all components)
+├── index.js                          (re-exports all components)
+├── react.js                          (the ./react subpath entry)
 ├── components/
 │   └── ui/
-│       ├── button.js          (1.9KB - individual component)
-│       ├── card.js            (1.4KB - individual component)
-│       ├── input.js           (~2KB)
-│       ├── table.js           (~3KB)
-│       └── ... (40+ components, each separate)
+│       ├── button/button.js          (individual component)
+│       ├── switch/switch.js          (individual component)
+│       ├── input-text/input-text.js
+│       ├── tag/tag.js
+│       └── ...                        (24 component modules, each separate)
 ├── lib/
-│   └── utils.js               (utility functions)
-└── utils/
-    └── theme-switcher.js      (theme utilities)
-```
-
-## Performance Metrics
-
-### Bundle Size Impact
-
-| Import Pattern            | Bundle Size (minified) | Gzipped | Notes             |
-| ------------------------- | ---------------------- | ------- | ----------------- |
-| Single component (Button) | ~2-3KB                 | ~1KB    | Minimal overhead  |
-| 5 components              | ~10-15KB               | ~4-5KB  | Still very small  |
-| 10 components             | ~20-30KB               | ~8-10KB | Typical app usage |
-| All components            | ~65KB                  | ~16KB   | Full library      |
-
-### Real-World Example
-
-```typescript
-// Typical app imports
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  Input,
-  Label,
-  Alert,
-  Badge,
-} from '@acronis-platform/shadcn-uikit';
-
-// Production bundle: ~15KB minified (~5KB gzipped)
-// vs. Full library: 65KB minified (~16KB gzipped)
-// Savings: ~50KB (75% reduction)
+│   └── utils.js                      (cn class-merge helper)
+└── ui-react.css                      (compiled styles, imported separately)
 ```
 
 ## How Tree-Shaking Works
 
 ### 1. ES Module Format
 
-The library is built as ES modules (`format: 'es'`), which is required for tree-shaking:
+The library is built as ES modules (`formats: ['es']`), which is required for
+tree-shaking:
 
 ```javascript
 // Tree-shakeable (ES modules)
 export { Button } from './components/ui/button';
-export { Card } from './components/ui/card';
+export { Switch } from './components/ui/switch';
 
 // Not tree-shakeable (CommonJS)
-module.exports = { Button, Card };
+module.exports = { Button, Switch };
 ```
+
+`ui-react` ships **ESM only** — there is no CommonJS entry.
 
 ### 2. Preserved Module Structure
 
-Each component is a separate file, allowing bundlers to analyze dependencies:
+Each component is a separate file, so bundlers can analyze dependencies
+precisely:
 
 ```typescript
 // When you import Button
-import { Button } from '@acronis-platform/shadcn-uikit';
+import { Button } from '@acronis-platform/ui-react';
 
 // Bundler traces dependencies:
-// index.js -> react.js -> components/ui/button.js -> lib/utils.js
+// index.js -> components/ui/button/button.js -> lib/utils.js
 // Only these files are included in your bundle
 ```
 
-### 3. Side-Effect Free
+### 3. Peer Dependencies Stay External
 
-Components are marked as side-effect free in `package.json`:
-
-```json
-{
-  "sideEffects": false
-}
-```
-
-This tells bundlers it's safe to remove unused exports.
+`react`, `react-dom`, `@base-ui/react`, and `@acronis-platform/icons-react` are
+marked external in the build, so they are **not** inlined into the bundle.
+Consumers install them once, and bundlers de-duplicate them across your app and
+the library.
 
 ## Bundler Compatibility
 
@@ -130,8 +102,8 @@ export default {
     rollupOptions: {
       output: {
         manualChunks: {
-          // Optional: separate vendor chunks
-          'ui-components': ['@acronis-platform/shadcn-uikit'],
+          // Optional: separate vendor chunk
+          'ui-components': ['@acronis-platform/ui-react'],
         },
       },
     },
@@ -160,7 +132,7 @@ Next.js automatically tree-shakes in production:
 
 ```typescript
 // No configuration needed
-import { Button } from '@acronis-platform/shadcn-uikit';
+import { Button } from '@acronis-platform/ui-react';
 ```
 
 ### Rollup
@@ -178,51 +150,50 @@ export default {
 
 ## Optimization Tips
 
-### 1. Import from Main Entry
+### 1. Import from the Main Entry
 
-Always import from the main package entry:
+Always import from the package entry:
 
 ```typescript
-// Recommended - tree-shakeable
-import { Button, Card } from '@acronis-platform/shadcn-uikit';
+// Recommended — tree-shakeable
+import { Button, Switch } from '@acronis-platform/ui-react';
 
-// Avoid - bypasses tree-shaking optimizations
-import Button from '@acronis-platform/shadcn-uikit/dist/components/ui/button';
+// Avoid — reaches into build internals, which may change
+import { Button } from '@acronis-platform/ui-react/dist/components/ui/button/button';
 ```
 
 ### 2. Use Named Imports
 
-Use named imports, not default imports:
+Use named imports, not namespace imports:
 
 ```typescript
-// Good - tree-shakeable
-import { Button, Card } from '@acronis-platform/shadcn-uikit';
+// Good — tree-shakeable
+import { Button, Switch } from '@acronis-platform/ui-react';
 
-// Avoid - may include entire module
-import * as UI from '@acronis-platform/shadcn-uikit';
+// Avoid — may pull in the entire module
+import * as UI from '@acronis-platform/ui-react';
 ```
 
-### 3. Import Styles Separately
+### 3. Import Styles Once
 
-CSS is not tree-shakeable, so import only what you need:
+CSS is not tree-shakeable. `ui-react` ships a single compiled stylesheet;
+import it once at your app entry:
 
 ```typescript
-// Main styles (15KB)
-import '@acronis-platform/shadcn-uikit/styles';
-
-// Optional: Add alternative theme only if needed
-import '@acronis-platform/shadcn-uikit/styles/themes/acronis-ocean';
+import '@acronis-platform/ui-react/styles';
 ```
 
-### 4. Lazy Load Heavy Components
+### 4. Lazy Load Heavy Composites
 
-For large components (Chart, DataTable), consider lazy loading:
+For larger composite components you don't need on first paint (e.g. the
+sidebars or `Resizable`), consider lazy loading:
 
 ```typescript
-// Lazy load heavy components
-const Chart = lazy(() =>
-  import('@acronis-platform/shadcn-uikit').then((mod) => ({
-    default: mod.Chart,
+import { lazy } from 'react';
+
+const SidebarSecondary = lazy(() =>
+  import('@acronis-platform/ui-react').then((mod) => ({
+    default: mod.SidebarSecondary,
   }))
 );
 ```
@@ -268,9 +239,9 @@ module.exports = {
 
 After analysis, you should see:
 
-- Only imported components in your bundle
-- Shared dependencies (React, Radix UI) as separate chunks
-- Unused components completely excluded
+- Only the components you import in your bundle
+- Peer dependencies (React, `@base-ui/react`) shared, not duplicated
+- Unused components excluded
 
 ## Performance Best Practices
 
@@ -289,91 +260,68 @@ const Settings = lazy(() => import('./pages/Settings'));
 Load components on demand:
 
 ```typescript
-// Load component when needed
-const loadChart = async () => {
-  const { Chart } = await import('@acronis-platform/shadcn-uikit');
-  return Chart;
+// Load a component when needed
+const loadResizable = async () => {
+  const { Resizable } = await import('@acronis-platform/ui-react');
+  return Resizable;
 };
 ```
 
 ### 3. Preload Critical Components
 
-Preload components needed for first render:
+Import the components needed for first render up front:
 
 ```typescript
-// Preload critical components
-import { Button, Card, Input } from '@acronis-platform/shadcn-uikit';
-```
-
-### 4. Monitor Bundle Size
-
-Set bundle size budgets:
-
-```json
-{
-  "bundlesize": [
-    {
-      "path": "./dist/**/*.js",
-      "maxSize": "100kb"
-    }
-  ]
-}
+// Statically imported, available immediately
+import { Button, InputText, Switch } from '@acronis-platform/ui-react';
 ```
 
 ## Common Issues
 
 ### Issue: Bundle includes all components
 
-**Cause:** Using `import *` or importing from wrong path
+**Cause:** Using `import *` or importing from the wrong path.
 
 **Solution:**
 
 ```typescript
 // Wrong
-import * as UI from '@acronis-platform/shadcn-uikit';
+import * as UI from '@acronis-platform/ui-react';
 
 // Correct
-import { Button, Card } from '@acronis-platform/shadcn-uikit';
+import { Button, Switch } from '@acronis-platform/ui-react';
 ```
 
 ### Issue: Tree-shaking not working
 
-**Cause:** Development mode or misconfigured bundler
+**Cause:** Development mode or a misconfigured bundler.
 
 **Solution:**
 
 - Ensure production mode: `NODE_ENV=production`
-- Check bundler configuration
-- Verify `sideEffects: false` in package.json
+- Check your bundler configuration
+- Confirm you import from the package entry, not `dist/` internals
 
 ### Issue: Large bundle size
 
-**Cause:** Importing heavy dependencies
+**Cause:** Importing heavy dependencies.
 
 **Solution:**
 
-- Use bundle analyzer to identify large modules
-- Lazy load heavy components
+- Use a bundle analyzer to identify large modules
+- Lazy load heavy composites
 - Consider code splitting
-
-## Comparison with Other Libraries
-
-| Library              | Tree-Shakeable | Bundle Size (5 components) | Notes                      |
-| -------------------- | -------------- | -------------------------- | -------------------------- |
-| **shadcn-uikit**     | Yes            | ~10-15KB                   | Optimal                    |
-| Material-UI          | Partial        | ~80-100KB                  | Heavier                    |
-| Ant Design           | Partial        | ~100-150KB                 | Requires babel plugin      |
-| Chakra UI            | Yes            | ~40-60KB                   | Good                       |
-| shadcn/ui (original) | Yes            | ~10-15KB                   | Similar (copy-paste model) |
 
 ## Summary
 
-The shadcn-uikit is **production-ready and performant** for real applications:
+`@acronis-platform/ui-react` is built for production:
 
-- **Fully tree-shakeable** — Only bundle what you use
-- **Small footprint** — Individual components are 1-3KB
-- **Modern bundlers** — Works with Vite, Webpack 5+, Next.js
-- **No configuration** — Tree-shaking works out of the box
-- **Optimal for production** — Minimal bundle size impact
+- **Tree-shakeable** — preserved module structure lets bundlers drop unused
+  components
+- **ESM-only** — modern, statically analyzable output
+- **External peers** — React and `@base-ui/react` are not bundled in
+- **Modern bundlers** — works with Vite, Webpack 5+, Next.js, and Rollup
 
-For most applications using 10-20 components, expect **~20-40KB minified (~8-12KB gzipped)** — which is excellent for a full-featured UI library.
+For most apps, importing a handful of components results in a small footprint
+relative to the full library. Verify the exact savings for your app with a
+bundle analyzer.

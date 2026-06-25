@@ -1,0 +1,56 @@
+---
+title: Switch
+description: A toggle control that switches between on and off states.
+---
+
+import {
+  SwitchBasic,
+  SwitchWithLabel,
+  SwitchControlled,
+  SwitchForm,
+} from '@/components/demos/switch';
+import { DemoPreview } from '@/components/DemoPreview';
+
+## Usage
+
+```tsx
+import { Switch } from '@acronis-platform/shadcn-uikit';
+```
+
+## Basic
+
+A simple on/off switch.
+
+<DemoPreview sourcePath="apps/demos/src/switch/SwitchBasic.tsx">
+  <SwitchBasic />
+</DemoPreview>
+
+## With Label
+
+Switch paired with a descriptive label.
+
+<DemoPreview sourcePath="apps/demos/src/switch/SwitchWithLabel.tsx">
+  <SwitchWithLabel />
+</DemoPreview>
+
+## Controlled
+
+Switch with externally managed state.
+
+<DemoPreview sourcePath="apps/demos/src/switch/SwitchControlled.tsx">
+  <SwitchControlled />
+</DemoPreview>
+
+## Form
+
+Switch integrated within a form.
+
+<DemoPreview sourcePath="apps/demos/src/switch/SwitchForm.tsx">
+  <SwitchForm />
+</DemoPreview>
+
+## API Reference
+
+{/* No exported Props interface — Switch extends Base UI Switch.Root props */}
+
+The `Switch` wraps the Base UI Switch primitive and extends `React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>`. It accepts `checked`, `defaultChecked`, `onCheckedChange`, and `disabled` props.

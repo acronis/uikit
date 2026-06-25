@@ -1,0 +1,47 @@
+---
+title: ButtonIcon
+description: An icon-only button for compact, glyph-driven actions.
+---
+
+## Usage
+
+```tsx
+import { ButtonIcon } from '@acronis-platform/ui-react';
+```
+
+`ButtonIcon` is a square (32px) icon-only `<button>`. The icon is passed as
+`children`. It is polymorphic via Base UI's `useRender` (the `render` prop).
+Always provide an `aria-label` (or `aria-labelledby`) so the control has an
+accessible name.
+
+## Examples
+
+Two visual variants — `ghost` (default, no border) and `secondary` (1px
+border):
+
+```tsx
+import { PencilIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<ButtonIcon aria-label="Edit">
+  <PencilIcon />
+</ButtonIcon>
+
+<ButtonIcon variant="secondary" aria-label="Edit">
+  <PencilIcon />
+</ButtonIcon>
+```
+
+Disabled state:
+
+```tsx
+<ButtonIcon aria-label="Edit" disabled>
+  <PencilIcon />
+</ButtonIcon>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/button-icon/button-icon.tsx"
+  name="ButtonIconProps"
+/>

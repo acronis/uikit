@@ -1,0 +1,77 @@
+---
+title: Radio
+description: Mutually exclusive selection within a group.
+---
+
+## Usage
+
+```tsx
+import { RadioGroup, Radio } from '@acronis-platform/ui-react';
+```
+
+`RadioGroup` and `Radio` wrap Base UI's `RadioGroup` / `Radio` primitives —
+keyboard arrow navigation, focus management, and ARIA come from Base UI. The
+group owns the selected value; each `Radio` takes a `value`. Styled by the
+`--ui-radio-*` tokens.
+
+## Examples
+
+A basic uncontrolled group:
+
+```tsx
+<RadioGroup defaultValue="weekly">
+  <label>
+    <Radio value="daily" /> Daily
+  </label>
+  <label>
+    <Radio value="weekly" /> Weekly
+  </label>
+  <label>
+    <Radio value="monthly" /> Monthly
+  </label>
+</RadioGroup>
+```
+
+Controlled:
+
+```tsx
+const [value, setValue] = React.useState('weekly');
+
+<RadioGroup value={value} onValueChange={setValue}>
+  <label>
+    <Radio value="daily" /> Daily
+  </label>
+  <label>
+    <Radio value="weekly" /> Weekly
+  </label>
+</RadioGroup>
+```
+
+A disabled option:
+
+```tsx
+<RadioGroup defaultValue="daily">
+  <label>
+    <Radio value="daily" /> Daily
+  </label>
+  <label>
+    <Radio value="weekly" disabled /> Weekly (unavailable)
+  </label>
+</RadioGroup>
+```
+
+## API Reference
+
+### RadioGroup
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/radio/radio.tsx"
+  name="RadioGroupProps"
+/>
+
+### Radio
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/radio/radio.tsx"
+  name="RadioProps"
+/>

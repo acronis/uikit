@@ -16,12 +16,18 @@ To:
 ## ui-react component ladder tracking
 
 Docs coverage follows the `ui-react` ladder from `context/roadmap.md` (E2/E6).
-Use this checklist to keep docs work aligned with component rollout:
+Use this checklist to keep docs work aligned with component rollout. `ui-react`
+currently ships **24 component modules** (plus the `cn` class-merge helper),
+exported from `packages/ui-react/src/index.ts`:
 
-- [x] **Tier 0 — done:** `Button`, `Switch` (docs pages exist and are kept current)
-- [ ] **Tier 1 — form & overlay primitives:** `Input`, `Label`, `Field`, `Textarea`, `Checkbox`, `Radio Group`, `Select`, `Separator`, `Popover`, `Tooltip`, `Dialog`
-- [ ] **Tier 2 — composites on primitives:** `Combobox`, `Dropdown Menu`, `Number Field`, `Slider`, `Tabs`, `Accordion`, `Toggle Group`, `Collapsible`, `Avatar`, `Badge`, `Chip/Tag`, `Alert`, `Progress`, `Skeleton`, `Spinner`
-- [ ] **Tier 3 — design-system/layout/app-specific components:** layout, app shell/navigation, form composition, and widget families from the roadmap
+- [x] **Buttons & actions:** `Button`, `ButtonIcon`, `ButtonMenu`, `Link`
+- [x] **Form inputs:** `Input`, `InputText`, `InputTextArea`, `InputSearch`, `InputSelect`, `InputDatePicker`, `Select` (alias of `InputSelect`), `Checkbox`, `Radio` (+ `RadioGroup`), `Switch`
+- [x] **Search:** `Search`, `SearchGlobal`
+- [x] **Display & feedback:** `Avatar`, `Tag`, `Tooltip`, `Breadcrumb`
+- [x] **Layout & navigation:** `Resizable`, `SidebarPrimary`, `SidebarSecondary`, `CardFilter`
+- [ ] **Not yet shipped:** overlay primitives (`Dialog`, `Popover`, `Sheet`),
+      data display (`Card`, `Table`, `DataTable`, `Chart`), and the remaining
+      composites/layout families tracked in `context/roadmap.md`.
 
 When a component is shipped in `ui-react`, update this ladder section and the
 corresponding page in `/docs/components/*` in the same PR.
@@ -60,13 +66,15 @@ The mapping below is based on current package exports.
 
 ### Directly available in both packages
 
+These keep the same name — only the import source changes.
+
 | Legacy (`shadcn-uikit/react`) | ui-react     |
 | ----------------------------- | ------------ |
 | `Avatar`                      | `Avatar`     |
 | `Breadcrumb`                  | `Breadcrumb` |
 | `Button`                      | `Button`     |
 | `Checkbox`                    | `Checkbox`   |
-| `Input`                       | `Input`      |
+| `Link`                        | `Link`       |
 | `Resizable`                   | `Resizable`  |
 | `Select`                      | `Select`     |
 | `Switch`                      | `Switch`     |
@@ -75,17 +83,27 @@ The mapping below is based on current package exports.
 
 ### Renamed / split equivalents
 
+`ui-react` standardizes form fields under an `Input*` namespace and splits the
+legacy sidebar into two components. Map these by name:
+
 | Legacy           | ui-react equivalent                   |
 | ---------------- | ------------------------------------- |
+| `Input`          | `InputText`                           |
+| `Textarea`       | `InputTextArea`                       |
+| `DatePicker`     | `InputDatePicker`                     |
 | `RadioGroup`     | `RadioGroup` (from `radio`)           |
 | `RadioGroupItem` | `Radio`                               |
 | `ButtonGroup`    | `ButtonMenu`                          |
 | `Sidebar`        | `SidebarPrimary` / `SidebarSecondary` |
-| `Textarea`       | `InputTextArea`                       |
+
+> The bare `Input` export still exists in `ui-react`, but new code should
+> prefer the explicit `InputText` field. `ui-react` also adds form fields with
+> no direct legacy equivalent: `InputSearch`, `InputSelect`, `Search`,
+> `SearchGlobal`, `ButtonIcon`, and `CardFilter`.
 
 ### Not yet available in ui-react (keep legacy for now)
 
-`Accordion`, `Alert`, `AlertDialog`, `AppShell`, `AspectRatio`, `AuthLayout`, `Badge`, `Calendar`, `Card`, `Carousel`, `Chart`, `Chip`, `Collapsible`, `Combobox`, `Command`, `DashboardLayout`, `DataTable`, `DatePicker`, `Dialog`, `Drawer`, `DropdownMenu`, `Field`, `Filter`, `Form`, `Grid`, `Label`, `NavigationMenu`, `NumberField`, `PageContent`, `PageHeader`, `Pagination`, `Popover`, `Progress`, `ScrollArea`, `SecondaryMenu`, `Section`, `Separator`, `Sheet`, `Skeleton`, `Slider`, `Sonner`, `Spinner`, `SplitLayout`, `Stack`, `Table`, `Tabs`, `ToggleGroup`, `Tree`, `VisuallyHidden`, `Widget`, `WidgetAlert`, `WidgetPlaceholder`, `WidgetProgressChunks`, `WidgetProgressTiers`, `WidgetProtectionStatus`, `WidgetProtectionSummary`, `WidgetTableData`, `WidgetText`.
+`Accordion`, `Alert`, `AlertDialog`, `AppShell`, `AspectRatio`, `AuthLayout`, `Badge`, `Calendar`, `Card`, `Carousel`, `Chart`, `Chip`, `Collapsible`, `Combobox`, `Command`, `DashboardLayout`, `DataTable`, `Dialog`, `Drawer`, `DropdownMenu`, `Field`, `Filter`, `Form`, `Grid`, `Label`, `NavigationMenu`, `NumberField`, `PageContent`, `PageHeader`, `Pagination`, `Popover`, `Progress`, `ScrollArea`, `SecondaryMenu`, `Section`, `Separator`, `Sheet`, `Skeleton`, `Slider`, `Sonner`, `Spinner`, `SplitLayout`, `Stack`, `Table`, `Tabs`, `ToggleGroup`, `Tree`, `VisuallyHidden`, `Widget`, `WidgetAlert`, `WidgetPlaceholder`, `WidgetProgressChunks`, `WidgetProgressTiers`, `WidgetProtectionStatus`, `WidgetProtectionSummary`, `WidgetTableData`, `WidgetText`.
 
 ## 4) Codemods (where viable)
 

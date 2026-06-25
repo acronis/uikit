@@ -1,0 +1,48 @@
+---
+title: ButtonMenu
+description: A button that opens a dropdown menu, with a trailing chevron.
+---
+
+## Usage
+
+```tsx
+import { ButtonMenu } from '@acronis-platform/ui-react';
+```
+
+`ButtonMenu` is a Button-like trigger — a label followed by a chevron that
+points up while the menu is open. It is polymorphic via Base UI's `useRender`
+(the `render` prop). Keep the `open` prop in sync with the menu or popover it
+controls; `open` flips the chevron, applies the open (active) treatment, and
+reflects `aria-expanded`.
+
+## Examples
+
+Two variants — `primary` (default) and `secondary`:
+
+```tsx
+<ButtonMenu>Actions</ButtonMenu>
+<ButtonMenu variant="secondary">Filters</ButtonMenu>
+```
+
+Wire `open` to the controlled menu state:
+
+```tsx
+const [open, setOpen] = React.useState(false);
+
+<ButtonMenu open={open} onClick={() => setOpen((v) => !v)}>
+  Sort by
+</ButtonMenu>
+```
+
+Disabled state:
+
+```tsx
+<ButtonMenu disabled>Actions</ButtonMenu>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/button-menu/button-menu.tsx"
+  name="ButtonMenuProps"
+/>

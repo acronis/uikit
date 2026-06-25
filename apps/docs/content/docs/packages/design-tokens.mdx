@@ -1,0 +1,39 @@
+---
+title: design-tokens
+description: The DTCG JSON source of truth for the Acronis design system.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+`@acronis-platform/design-tokens` is a **data-only** package: it ships
+DTCG-2025.10-conformant design-token JSON and nothing else. There is no build
+step and no runtime API.
+
+## Source of truth
+
+The token JSON here is the upstream source. Figma is the design-time origin, and
+`@acronis-platform/tokens-pd` is the generated downstream — to change a value you
+edit a tier file here and rebuild `tokens-pd`, never the other way around.
+
+## Tier files
+
+The package exports three tier files, layered primitives → semantics →
+components:
+
+| Export                      | Holds                                                   |
+| --------------------------- | ------------------------------------------------------- |
+| `./tiers/primitives.json`   | Raw values (palette, base scales)                       |
+| `./tiers/semantics.json`    | Role-based aliases (surface, on-surface, brand, …)      |
+| `./tiers/components.json`   | Per-component token values                              |
+
+## Validation
+
+The one script that does real work is `validate` (aliased by `test`), which
+ajv-compiles the tier schema and validates the three tier files against it. The
+`build` / `dev` / `clean` / `lint` / `typecheck` scripts are intentional no-ops.
+
+<Callout type="info">
+  This is a published package, so most consumers depend on the generated
+  `tokens-pd` CSS rather than reading this JSON directly. Consume `design-tokens`
+  only when you need the raw DTCG data.
+</Callout>

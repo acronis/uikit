@@ -1,0 +1,110 @@
+---
+title: SidebarPrimary
+description: The primary navigation rail, with a collapsible width.
+---
+
+## Usage
+
+```tsx
+import {
+  SidebarPrimary,
+  SidebarPrimaryHeader,
+  SidebarPrimaryContent,
+  SidebarPrimaryFooter,
+  SidebarPrimarySection,
+  SidebarPrimaryMenu,
+  SidebarPrimaryMenuItem,
+  SidebarPrimaryMenuItemExtras,
+  SidebarPrimaryCollapseTrigger,
+} from '@acronis-platform/ui-react';
+```
+
+`SidebarPrimary` is the top-level navigation rail. It renders a `<nav>` and owns
+a controlled/uncontrolled `expanded` (rail width) state. Compose a
+`SidebarPrimaryHeader`, a `SidebarPrimaryContent` (one or more
+`SidebarPrimarySection`s of `SidebarPrimaryMenu` → `SidebarPrimaryMenuItem`), and
+a `SidebarPrimaryFooter`. `SidebarPrimary` and `SidebarPrimaryMenuItem` are
+polymorphic via Base UI's `useRender` (the `render` prop) — pass a router link
+for menu items. Themed by the `--ui-sidebar-primary-*` tokens.
+
+## Examples
+
+A full rail:
+
+```tsx
+<SidebarPrimary>
+  <SidebarPrimaryHeader>{/* logo / product switcher */}</SidebarPrimaryHeader>
+  <SidebarPrimaryContent>
+    <SidebarPrimarySection>
+      <SidebarPrimaryMenu>
+        <SidebarPrimaryMenuItem href="#" icon={<MonitorIcon />} selected>
+          Assets
+        </SidebarPrimaryMenuItem>
+        <SidebarPrimaryMenuItem href="#" icon={<ShieldCheckIcon />}>
+          Protection management
+        </SidebarPrimaryMenuItem>
+      </SidebarPrimaryMenu>
+    </SidebarPrimarySection>
+  </SidebarPrimaryContent>
+  <SidebarPrimaryFooter>
+    <SidebarPrimaryMenu>
+      <SidebarPrimaryCollapseTrigger icon={<ChevronsLeftIcon />}>
+        Collapse
+      </SidebarPrimaryCollapseTrigger>
+    </SidebarPrimaryMenu>
+  </SidebarPrimaryFooter>
+</SidebarPrimary>
+```
+
+A trailing affordance on a menu item with `SidebarPrimaryMenuItemExtras`:
+
+```tsx
+<SidebarPrimaryMenuItem href="#" icon={<InboxIcon />}>
+  My inbox
+  <SidebarPrimaryMenuItemExtras variant="tag" tag={<Tag variant="info">3</Tag>} />
+</SidebarPrimaryMenuItem>
+```
+
+Controlled collapse:
+
+```tsx
+const [expanded, setExpanded] = React.useState(true);
+
+<SidebarPrimary expanded={expanded} onExpandedChange={setExpanded}>
+  {/* … */}
+</SidebarPrimary>
+```
+
+## API Reference
+
+### SidebarPrimary
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-primary/sidebar-primary.tsx"
+  name="SidebarPrimaryProps"
+/>
+
+### SidebarPrimaryMenuItem
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-primary/sidebar-primary.tsx"
+  name="SidebarPrimaryMenuItemProps"
+/>
+
+### SidebarPrimaryMenuItemExtras
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-primary/sidebar-primary.tsx"
+  name="SidebarPrimaryMenuItemExtrasProps"
+/>
+
+### SidebarPrimaryCollapseTrigger
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-primary/sidebar-primary.tsx"
+  name="SidebarPrimaryCollapseTriggerProps"
+/>
+
+The structural parts (`SidebarPrimaryHeader`, `SidebarPrimaryContent`,
+`SidebarPrimaryFooter`, `SidebarPrimarySection`, `SidebarPrimaryMenu`) accept the
+standard attributes of the element they render.

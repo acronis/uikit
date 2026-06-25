@@ -1,0 +1,113 @@
+---
+title: InputSelect
+description: A select field with label, options, sections, search, and status states.
+---
+
+## Usage
+
+```tsx
+import {
+  InputSelect,
+  InputSelectField,
+  InputSelectLabel,
+  InputSelectTrigger,
+  InputSelectValue,
+  InputSelectContent,
+  InputSelectSearch,
+  InputSelectGroup,
+  InputSelectSection,
+  InputSelectSectionLabel,
+  InputSelectItem,
+  InputSelectDescription,
+  InputSelectError,
+  InputSelectStatus,
+} from '@acronis-platform/ui-react';
+```
+
+`InputSelect` is a compound select built on Base UI's `Select` primitive —
+keyboard navigation, typeahead, focus management, and ARIA come from Base UI.
+`InputSelect` owns the value; `InputSelectField` wraps the label/trigger/
+description/error furniture, and `InputSelectContent` holds the
+`InputSelectItem` options (optionally grouped into `InputSelectSection`s, with an
+`InputSelectSearch` filter). Themed by the `--ui-input-select-*` tokens.
+
+## Examples
+
+A labeled select with a description:
+
+```tsx
+<InputSelect items={fruitItems}>
+  <InputSelectField>
+    <InputSelectLabel>Fruit</InputSelectLabel>
+    <InputSelectTrigger>
+      <InputSelectValue placeholder="Select an option" />
+    </InputSelectTrigger>
+    <InputSelectDescription>Pick your favourite</InputSelectDescription>
+  </InputSelectField>
+  <InputSelectContent>
+    <InputSelectItem value="apple">Apple</InputSelectItem>
+    <InputSelectItem value="banana">Banana</InputSelectItem>
+    <InputSelectItem value="grapes">Grapes</InputSelectItem>
+  </InputSelectContent>
+</InputSelect>
+```
+
+Required, with an error message:
+
+```tsx
+<InputSelect items={fruitItems}>
+  <InputSelectField>
+    <InputSelectLabel required>Fruit</InputSelectLabel>
+    <InputSelectTrigger>
+      <InputSelectValue placeholder="Select an option" />
+    </InputSelectTrigger>
+    <InputSelectError>Please choose a fruit</InputSelectError>
+  </InputSelectField>
+  <InputSelectContent>{/* …items… */}</InputSelectContent>
+</InputSelect>
+```
+
+A searchable, sectioned list:
+
+```tsx
+<InputSelectContent>
+  <InputSelectSearch aria-label="Filter" placeholder="Search" />
+  <InputSelectSection>
+    <InputSelectSectionLabel>Fruits</InputSelectSectionLabel>
+    <InputSelectItem value="apple">Apple</InputSelectItem>
+    <InputSelectItem value="banana">Banana</InputSelectItem>
+  </InputSelectSection>
+</InputSelectContent>
+```
+
+A loading / empty / error status inside the content:
+
+```tsx
+<InputSelectContent>
+  <InputSelectStatus
+    variant="error"
+    action={<Button variant="ghost">Try again</Button>}
+  >
+    Couldn't load options
+  </InputSelectStatus>
+</InputSelectContent>
+```
+
+## API Reference
+
+### InputSelectStatus
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-select/input-select.tsx"
+  name="InputSelectStatusProps"
+/>
+
+The other parts (`InputSelect`, `InputSelectField`, `InputSelectLabel`,
+`InputSelectTrigger`, `InputSelectValue`, `InputSelectContent`,
+`InputSelectSearch`, `InputSelectGroup`, `InputSelectSection`,
+`InputSelectSectionLabel`, `InputSelectItem`, `InputSelectDescription`,
+`InputSelectError`) extend the corresponding Base UI `Select` primitive props.
+`InputSelect` accepts `items`, `defaultValue` / `value`, and Base UI `Select`
+root props; `InputSelectContent` adds `side` / `align` for positioning. See the
+[Base UI Select docs](https://base-ui.com/react/components/select) for the full
+prop surface.

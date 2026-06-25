@@ -1,19 +1,7 @@
 ---
 title: Select
-description: A dropdown control for selecting a value from a list of options.
+description: Choose one option from a list (alias of the InputSelect family).
 ---
-
-import {
-  BasicSelect,
-  ControlledSelect,
-  GroupedSelect,
-  MultipleSelect,
-  ObjectValuesSelect,
-  DisabledSelect,
-  FormattedValueSelect,
-  ScrollableSelect,
-} from '@/components/demos/select';
-import { DemoPreview } from '@/components/DemoPreview';
 
 ## Usage
 
@@ -24,80 +12,61 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from '@acronis-platform/shadcn-uikit';
+  SelectGroup,
+  SelectGroupLabel,
+} from '@acronis-platform/ui-react';
 ```
 
-## Basic
+`Select` is an alias of the [`InputSelect`](/docs/components/input-select)
+family, themed by the `--ui-input-select-*` tokens and built on Base UI's
+`Select` primitive. The `Select*` names map onto the corresponding
+`InputSelect*` parts (`SelectGroup` → `InputSelectSection`, `SelectGroupLabel` →
+`InputSelectSection­Label`). **Prefer importing `InputSelect*` directly in new
+code** — `Select` exists for compatibility.
 
-A simple select with string options.
+## Examples
 
-<DemoPreview sourcePath="apps/demos/src/select/BasicSelect.tsx">
-  <BasicSelect />
-</DemoPreview>
+A basic select:
 
-## Controlled
+```tsx
+<Select items={fruitItems}>
+  <SelectTrigger aria-label="Fruit">
+    <SelectValue placeholder="Select an option" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value="apple">Apple</SelectItem>
+    <SelectItem value="banana">Banana</SelectItem>
+    <SelectItem value="grapes">Grapes</SelectItem>
+  </SelectContent>
+</Select>
+```
 
-Select with externally managed state.
+A disabled trigger:
 
-<DemoPreview sourcePath="apps/demos/src/select/ControlledSelect.tsx">
-  <ControlledSelect />
-</DemoPreview>
+```tsx
+<Select items={fruitItems} disabled>
+  <SelectTrigger aria-label="Fruit">
+    <SelectValue placeholder="Select an option" />
+  </SelectTrigger>
+  <SelectContent>{/* …items… */}</SelectContent>
+</Select>
+```
 
-## Grouped
+Grouped options:
 
-Options organized into labeled groups.
-
-<DemoPreview sourcePath="apps/demos/src/select/GroupedSelect.tsx">
-  <GroupedSelect />
-</DemoPreview>
-
-## Multiple
-
-Select supporting multiple selected values.
-
-<DemoPreview sourcePath="apps/demos/src/select/MultipleSelect.tsx">
-  <MultipleSelect />
-</DemoPreview>
-
-## Object Values
-
-Select using objects as option values.
-
-<DemoPreview sourcePath="apps/demos/src/select/ObjectValuesSelect.tsx">
-  <ObjectValuesSelect />
-</DemoPreview>
-
-## Disabled
-
-Select in a disabled state.
-
-<DemoPreview sourcePath="apps/demos/src/select/DisabledSelect.tsx">
-  <DisabledSelect />
-</DemoPreview>
-
-## Formatted Value
-
-Select with custom value rendering.
-
-<DemoPreview sourcePath="apps/demos/src/select/FormattedValueSelect.tsx">
-  <FormattedValueSelect />
-</DemoPreview>
-
-## Scrollable
-
-Select with a long list of options that scrolls.
-
-<DemoPreview sourcePath="apps/demos/src/select/ScrollableSelect.tsx">
-  <ScrollableSelect />
-</DemoPreview>
+```tsx
+<SelectContent>
+  <SelectGroup>
+    <SelectGroupLabel>Fruits</SelectGroupLabel>
+    <SelectItem value="apple">Apple</SelectItem>
+    <SelectItem value="banana">Banana</SelectItem>
+  </SelectGroup>
+</SelectContent>
+```
 
 ## API Reference
 
-### SelectContent
-
-<AutoTypeTable
-  path="../../packages/ui-legacy/src/components/ui/select.docs.ts"
-  name="SelectContentProps"
-/>
-
-`Select` wraps Base UI `Select.Root` and accepts `value`, `defaultValue`, and `onValueChange`. `SelectTrigger`, `SelectItem`, `SelectLabel`, and `SelectSeparator` extend their respective Base UI primitive props.
+The `Select*` parts are re-exports of the `InputSelect*` parts and share their
+props. See [InputSelect](/docs/components/input-select) for the full reference
+and the [Base UI Select docs](https://base-ui.com/react/components/select) for
+each primitive's prop surface.

@@ -3,57 +3,59 @@ title: Button
 description: Triggers an action or event.
 ---
 
-import {
-  ButtonVariants,
-  ButtonSizes,
-  ButtonDisabled,
-  ButtonTranslucent,
-} from '@/components/demos/button';
-import { DemoPreview } from '@/components/DemoPreview';
-
 ## Usage
 
 ```tsx
-import { Button } from '@acronis-platform/shadcn-uikit';
+import { Button } from '@acronis-platform/ui-react';
 ```
 
-## Variants
+`Button` renders a native `<button>` styled by the `--ui-button-*` design
+tokens. It is polymorphic via Base UI's `useRender` — pass the `render` prop to
+render it as another element (e.g. a router link) while keeping the button
+styling and merged props.
 
-The button supports multiple visual variants for different action contexts.
+## Examples
 
-<DemoPreview sourcePath="apps/demos/src/button/ButtonVariants.tsx">
-  <ButtonVariants />
-</DemoPreview>
+Variants map to the Figma "Button" set. The default is `default` (primary):
 
-## Sizes
+```tsx
+<Button variant="default">Save</Button>
+<Button variant="secondary">Cancel</Button>
+<Button variant="ghost">Learn more</Button>
+<Button variant="destructive">Delete</Button>
+<Button variant="ai">Ask AI</Button>
+<Button variant="inverted">On a dark surface</Button>
+```
 
-Buttons come in different sizes to fit various layout needs.
+The `ai` variant automatically leads with a Sparkles icon. Other variants accept
+an icon as part of their children:
 
-<DemoPreview sourcePath="apps/demos/src/button/ButtonSizes.tsx">
-  <ButtonSizes />
-</DemoPreview>
+```tsx
+import { PlusIcon } from '@acronis-platform/icons-react/stroke-mono';
 
-## Disabled state
+<Button variant="default">
+  <PlusIcon />
+  Add item
+</Button>
+```
 
-Disabled buttons indicate that an action is not currently available.
+Disabled state uses dedicated disabled tokens (not opacity):
 
-<DemoPreview sourcePath="apps/demos/src/button/ButtonDisabled.tsx">
-  <ButtonDisabled />
-</DemoPreview>
+```tsx
+<Button variant="default" disabled>
+  Save
+</Button>
+```
 
-## Translucent
+Render as another element with `render` (Base UI composition):
 
-Translucent buttons for use on colored backgrounds.
-
-<DemoPreview sourcePath="apps/demos/src/button/ButtonTranslucent.tsx">
-  <ButtonTranslucent />
-</DemoPreview>
+```tsx
+<Button render={<a href="/dashboard" />}>Go to dashboard</Button>
+```
 
 ## API Reference
 
-### Button
-
 <AutoTypeTable
-  path="../../packages/ui-legacy/src/components/ui/button.tsx"
+  path="../../packages/ui-react/src/components/ui/button/button.tsx"
   name="ButtonProps"
 />

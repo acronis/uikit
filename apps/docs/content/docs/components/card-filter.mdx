@@ -1,0 +1,51 @@
+---
+title: CardFilter
+description: A compact stat or filter card with a label, optional icon, and value.
+---
+
+## Usage
+
+```tsx
+import { CardFilter } from '@acronis-platform/ui-react';
+```
+
+`CardFilter` is a compact card showing a caption label above a prominent value
+(with an optional leading icon). The `clickable` variant renders a `<button>`
+with hover/active/focus treatments and is polymorphic via Base UI's `useRender`
+(the `render` prop); `static` / `static-empty` are presentational. Themed by the
+`--ui-card-filter-*` tokens.
+
+## Examples
+
+A static stat card:
+
+```tsx
+<CardFilter label="Active devices" value="1,284" />
+```
+
+A clickable filter (renders a button) with an icon:
+
+```tsx
+import { ShieldIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<CardFilter
+  variant="clickable"
+  label="Protected"
+  value="982"
+  icon={<ShieldIcon />}
+  onClick={() => applyFilter('protected')}
+/>
+```
+
+An empty placeholder (renders an em-dash, no icon):
+
+```tsx
+<CardFilter variant="static-empty" label="Pending" />
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/card-filter/card-filter.tsx"
+  name="CardFilterProps"
+/>

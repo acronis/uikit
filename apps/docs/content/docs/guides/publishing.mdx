@@ -1,184 +1,134 @@
 ---
 title: Publishing
-description: How to prepare and publish the @acronis-platform/shadcn-uikit library to npm.
+description: How the monorepo's published packages are released to npm using Changesets.
 ---
 
 # Publishing Guide
 
-This guide explains how to build and publish `@acronis-platform/shadcn-uikit` from the monorepo.
+Releases in this monorepo are automated with
+[Changesets](https://github.com/changesets/changesets). You do **not** run
+`npm publish` by hand or bump versions manually — CI does both.
+
+## Published packages
+
+The flow applies to every published workspace:
+
+- `@acronis-platform/ui-react` — the next-generation React component library
+  (primary)
+- `@acronis-platform/shadcn-uikit` — the legacy library (`ui-legacy`)
+- `@acronis-platform/icons-react`
+- `@acronis-platform/icons-sprite`
+- `@acronis-platform/tokens-pd`
+- `@acronis-platform/design-tokens`
+- `@acronis-platform/design-assets`
+
+The `apps/` and `tools/` workspaces are private and never published (they are
+in `.changeset/config.json`'s `ignore` list).
 
 ## Prerequisites
 
-- **pnpm** — install globally: `npm install -g pnpm`
-- **npm account** with publish permissions to the `@acronis-platform` scope
-- **npm access token** for CI/CD publishing
+- **pnpm `10.27.0`** — `corepack enable` or `npm install -g pnpm@10.27.0`
+- **Node 22.x**
 
-## Quick Start
+Publish credentials are handled by CI (OIDC Trusted Publishing); contributors
+do not need an npm token.
+
+## The release flow
+
+### 1. Add a Changeset with your change
+
+Any PR that changes the **published surface** of a published workspace (its
+`src/`, `package.json`, or build config) must include a Changeset:
 
 ```bash
-# Install dependencies
-pnpm install
-
-# Build the library
-pnpm --filter ./packages/ui-legacy run build
-
-# Verify the build
-ls packages/ui-legacy/dist/
+pnpm changeset
 ```
 
-## Package Structure
+The interactive prompt asks which packages changed, the bump type
+(`patch` / `minor` / `major`), and a one-line summary. It writes a markdown
+file under `.changeset/`. **Commit that file alongside your code change.**
 
-The published package includes:
+Bump-type guidance:
 
-```text
-@acronis-platform/shadcn-uikit/
-├── dist/
-│   ├── index.js              # Main ES module entry
-│   ├── index.d.ts            # TypeScript declarations
-│   ├── components/ui/        # Individual component modules
-│   ├── icons/                # Icon components
-│   ├── lib/                  # Utilities
-│   └── styles/
-│       ├── index.css         # Main stylesheet
-│       └── themes/           # Per-theme CSS files
-├── package.json
-├── README.md
-└── LICENSE
-```
+- **patch** — bug fixes, internal refactors, dependency updates that don't
+  affect consumers.
+- **minor** — additive, backwards-compatible: new exports, new options, new
+  props.
+- **major** — breaking changes (removed exports, renamed identifiers, changed
+  defaults).
 
-## Usage After Publishing
+Pure repo-tooling changes (root config, CI, `context/`, `AGENTS.md`, READMEs)
+do not need a Changeset.
+
+### 2. Merge to `main` — the Version Packages PR
+
+On merge to `main`, the **Release** workflow opens (or updates) a single
+**"Version Packages"** PR that aggregates all pending changesets. For each
+affected workspace it:
+
+- bumps the `package.json` version,
+- updates the workspace's `CHANGELOG.md`,
+- deletes the consumed `.changeset/*.md` files.
+
+Do not edit versions or delete changeset files by hand — Changesets owns them.
+
+### 3. Merge the Version Packages PR — publish
+
+Merging the Version Packages PR triggers the publish step, which runs
+`changeset publish` to push the bumped packages to **npm** (with provenance)
+and create a **GitHub Release**.
+
+## Authentication: OIDC and token bootstrap
+
+Two workflows can publish; both attach build provenance.
+
+- **`release.yml` — OIDC Trusted Publishing (default).** Runs on the Version
+  Packages PR merge with **no npm token**: GitHub's OIDC token is exchanged for
+  a short-lived npm credential. This is the normal path for packages that
+  already exist on npm. Provenance validates each package's `repository.url`
+  against `https://github.com/acronis/uikit`, so the `repository` field must be
+  present.
+- **`release-token.yml` — token auth (manual bootstrap / fallback).**
+  Dispatched manually (`workflow_dispatch`) with a static automation token and a
+  per-package skip-if-already-published guard. Use it for a package's
+  **first-ever publish** (OIDC cannot bootstrap a package that doesn't exist on
+  npm yet) or if OIDC config is missing. It deliberately does not publish
+  `shadcn-uikit`, which stays on the OIDC path.
+
+### Putting a new package on the OIDC path (one-time)
+
+1. Publish its first version via `release-token.yml`.
+2. On npmjs.com → the package → **Settings → Trusted Publisher → GitHub
+   Actions**, set organization `acronis`, repository `uikit`, workflow filename
+   `release.yml`, environment blank.
+3. Later versions then publish automatically through `release.yml`.
+
+The binding is exact: renaming `release.yml` or the repo requires updating the
+npm config, or OIDC publishes will fail.
+
+## Root release scripts
+
+These back the Release workflow — you rarely run them locally:
+
+| Script           | Runs               | Purpose                                  |
+| ---------------- | ------------------ | ---------------------------------------- |
+| `pnpm changeset` | `changeset`        | Add a changeset for your PR              |
+| `pnpm version`   | `changeset version`| Rewrite versions + changelogs (CI)       |
+| `pnpm release`   | `changeset publish`| Publish bumped packages to npm (CI)      |
+
+## Usage after publishing
 
 ```tsx
-import '@acronis-platform/shadcn-uikit/styles';
-import { Button, Input, Dialog } from '@acronis-platform/shadcn-uikit';
+import '@acronis-platform/ui-react/styles';
+import { Button, InputText, Switch } from '@acronis-platform/ui-react';
 
 function App() {
   return <Button>Click me</Button>;
 }
 ```
 
-## Version Management
+## See also
 
-Follow [Semantic Versioning](https://semver.org/):
-
-- **MAJOR** — breaking changes
-- **MINOR** — new features, backwards compatible
-- **PATCH** — bug fixes, backwards compatible
-
-See the [Versioning guide](/docs/guides/versioning) for how to create releases using `standard-version`.
-
-## Manual Publishing
-
-```bash
-# 1. Create a release (bumps version, updates CHANGELOG, creates git tag)
-pnpm release
-
-# 2. Build the library
-pnpm --filter ./packages/ui-legacy run build
-
-# 3. Dry run to verify what will be published
-cd packages/ui-legacy && npm publish --dry-run
-
-# 4. Publish
-cd packages/ui-legacy && npm publish --access public
-
-# 5. Push the release commit and tag
-git push --follow-tags origin main
-```
-
-## Automated Publishing (CI/CD)
-
-```yaml
-name: Publish Package
-
-on:
-  push:
-    tags:
-      - 'v*'
-
-jobs:
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          registry-url: 'https://registry.npmjs.org'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build library
-        run: pnpm --filter ./packages/ui-legacy run build
-
-      - name: Publish to npm
-        run: cd packages/ui-legacy && npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-```
-
-## Pre-publish Checklist
-
-- [ ] All tests pass (`pnpm --filter ./packages/ui-legacy test`)
-- [ ] Build completes without errors
-- [ ] TypeScript declarations generated correctly
-- [ ] Version number bumped
-- [ ] `CHANGELOG.md` updated
-- [ ] All new exports added to `packages/ui-legacy/src/index.ts`
-
-## Build Verification
-
-```bash
-cd packages/ui-legacy
-
-# Check dist contents
-ls -la dist/
-
-# Check bundle sizes
-npm pack --dry-run
-
-# Verify main export works
-node -e "console.log(Object.keys(require('./dist/index.js')))"
-```
-
-## Beta / Pre-release
-
-```bash
-# Create a beta version
-npm version prerelease --preid=beta
-# → 0.34.0-beta.0
-
-# Publish with beta tag
-cd packages/ui-legacy && npm publish --tag beta
-
-# Install beta in consuming projects
-npm install @acronis-platform/shadcn-uikit@beta
-```
-
-## Troubleshooting
-
-### Build errors
-
-```bash
-cd packages/ui-legacy
-rm -rf dist
-pnpm run build
-```
-
-### Package not found after publishing
-
-Wait a few minutes for the npm registry to propagate, then:
-
-```bash
-npm cache clean --force
-npm install @acronis-platform/shadcn-uikit
-```
-
-### Wrong files published
-
-Check the `files` field in `packages/ui-legacy/package.json` — only listed paths are included in the tarball.
+- [Versioning guide](/docs/guides/versioning) — bump types and Conventional
+  Commits
+- [Changelog](/docs/guides/changelog) — where release notes live

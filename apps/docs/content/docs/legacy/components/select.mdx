@@ -1,0 +1,103 @@
+---
+title: Select
+description: A dropdown control for selecting a value from a list of options.
+---
+
+import {
+  BasicSelect,
+  ControlledSelect,
+  GroupedSelect,
+  MultipleSelect,
+  ObjectValuesSelect,
+  DisabledSelect,
+  FormattedValueSelect,
+  ScrollableSelect,
+} from '@/components/demos/select';
+import { DemoPreview } from '@/components/DemoPreview';
+
+## Usage
+
+```tsx
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@acronis-platform/shadcn-uikit';
+```
+
+## Basic
+
+A simple select with string options.
+
+<DemoPreview sourcePath="apps/demos/src/select/BasicSelect.tsx">
+  <BasicSelect />
+</DemoPreview>
+
+## Controlled
+
+Select with externally managed state.
+
+<DemoPreview sourcePath="apps/demos/src/select/ControlledSelect.tsx">
+  <ControlledSelect />
+</DemoPreview>
+
+## Grouped
+
+Options organized into labeled groups.
+
+<DemoPreview sourcePath="apps/demos/src/select/GroupedSelect.tsx">
+  <GroupedSelect />
+</DemoPreview>
+
+## Multiple
+
+Select supporting multiple selected values.
+
+<DemoPreview sourcePath="apps/demos/src/select/MultipleSelect.tsx">
+  <MultipleSelect />
+</DemoPreview>
+
+## Object Values
+
+Select using objects as option values.
+
+<DemoPreview sourcePath="apps/demos/src/select/ObjectValuesSelect.tsx">
+  <ObjectValuesSelect />
+</DemoPreview>
+
+## Disabled
+
+Select in a disabled state.
+
+<DemoPreview sourcePath="apps/demos/src/select/DisabledSelect.tsx">
+  <DisabledSelect />
+</DemoPreview>
+
+## Formatted Value
+
+Select with custom value rendering.
+
+<DemoPreview sourcePath="apps/demos/src/select/FormattedValueSelect.tsx">
+  <FormattedValueSelect />
+</DemoPreview>
+
+## Scrollable
+
+Select with a long list of options that scrolls.
+
+<DemoPreview sourcePath="apps/demos/src/select/ScrollableSelect.tsx">
+  <ScrollableSelect />
+</DemoPreview>
+
+## API Reference
+
+### SelectContent
+
+<AutoTypeTable
+  path="../../packages/ui-legacy/src/components/ui/select.docs.ts"
+  name="SelectContentProps"
+/>
+
+`Select` wraps Base UI `Select.Root` and accepts `value`, `defaultValue`, and `onValueChange`. `SelectTrigger`, `SelectItem`, `SelectLabel`, and `SelectSeparator` extend their respective Base UI primitive props.

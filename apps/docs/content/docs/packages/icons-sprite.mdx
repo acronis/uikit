@@ -1,0 +1,65 @@
+---
+title: icons-sprite
+description: Committed SVG sprites for referencing Acronis icons via use without a React dependency.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+`@acronis-platform/icons-sprite` ships optimized SVG sprites generated from the
+Acronis icon sources. Like `tokens-pd`, the build output is **committed**, so
+consumers get the sprites with no build step and no runtime dependency on the
+private icon-source packages.
+
+## The three sprites
+
+The package publishes three sprite files under `sprites/`:
+
+| Export                  | Contents                       |
+| ----------------------- | ------------------------------ |
+| `./iconsprite.svg`      | Combined — every symbol        |
+| `./iconsprite-mono.svg` | Monocolor symbols only         |
+| `./iconsprite-multi.svg`| Multicolor symbols only        |
+
+Each icon is a `<symbol>` whose `id` is prefixed by color kind: `m-` for
+monocolor (e.g. `m-arrow-down`) and `c-` for multicolor (e.g. `c-cloud`).
+
+## Referencing a symbol
+
+Reference a symbol from the sprite with an SVG `<use>` element:
+
+```html
+<svg width="24" height="24">
+  <use href="/icons/iconsprite-mono.svg#m-arrow-down" />
+</svg>
+```
+
+Serve the sprite file from your app (copy it into your public assets, or resolve
+its path through your bundler) and point `href` at `<sprite-url>#<symbol-id>`.
+
+## `currentColor` theming
+
+Monocolor symbols have their fills rewritten to `currentColor`, so they inherit
+the surrounding text color exactly like the monocolor React icons:
+
+```html
+<span style="color: var(--ui-text-on-surface-primary)">
+  <svg width="24" height="24"><use href="/icons/iconsprite-mono.svg#m-arrow-down" /></svg>
+</span>
+```
+
+Multicolor symbols keep their authored colors and gradients.
+
+## When to choose the sprite
+
+Reach for the sprite (over `@acronis-platform/icons-react`) when:
+
+- you are **not in a React app** — plain HTML, server-rendered templates, or
+  another framework;
+- you want a **single cached asset** rather than per-icon JS modules; or
+- you need icons referenced from static markup or CSS without a build step.
+
+<Callout type="info">
+  In a React app that already bundles components, prefer
+  [`@acronis-platform/icons-react`](/docs/packages/icons-react) — its named
+  imports are tree-shakeable and carry the `size` / stroke-scaling logic.
+</Callout>

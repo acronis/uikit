@@ -1,0 +1,52 @@
+---
+title: InputSearch
+description: A Search box wrapped with field furniture (label, required marker).
+---
+
+## Usage
+
+```tsx
+import { InputSearch } from '@acronis-platform/ui-react';
+```
+
+`InputSearch` wraps [`Search`](/docs/components/search) and adds an optional
+label above the box (with a `required` marker). Every other prop — `placeholder`,
+`value`, `onClear`, `disabled`, … — passes straight through to `Search`. A
+visible label names the field automatically.
+
+## Examples
+
+A labeled search field:
+
+```tsx
+<InputSearch label="Find a report" placeholder="Search…" />
+```
+
+Required:
+
+```tsx
+<InputSearch label="Search" required placeholder="Type to search" />
+```
+
+Controlled, with a clear handler (forwarded to `Search`):
+
+```tsx
+const [query, setQuery] = React.useState('');
+
+<InputSearch
+  label="Search"
+  value={query}
+  onChange={(e) => setQuery(e.target.value)}
+  onClear={() => setQuery('')}
+/>
+```
+
+## API Reference
+
+`InputSearchProps` extends [`SearchProps`](/docs/components/search), so it also
+accepts every prop documented there.
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-search/input-search.tsx"
+  name="InputSearchProps"
+/>

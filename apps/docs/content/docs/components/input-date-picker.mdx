@@ -1,0 +1,61 @@
+---
+title: InputDatePicker
+description: A date-field trigger for a single date or a date range.
+---
+
+## Usage
+
+```tsx
+import { InputDatePicker } from '@acronis-platform/ui-react';
+```
+
+`InputDatePicker` is the field trigger for a date picker — a labeled box with a
+trailing calendar icon that displays the formatted selection and opens a
+consumer-owned calendar popup. It supports a single date or a start–end range
+via `pickerType`. Themed by the `--ui-input-text-*` tokens.
+
+This component renders the *field*; wiring it to an actual calendar popup and
+formatting the dates is the consumer's responsibility (pass formatted strings as
+`value` / `startDate` / `endDate`, and toggle `open`).
+
+## Examples
+
+A single-date field:
+
+```tsx
+<InputDatePicker
+  label="Start date"
+  pickerType="date"
+  placeholder="Select a date"
+  value="Jun 25, 2026"
+/>
+```
+
+A date-range field:
+
+```tsx
+<InputDatePicker
+  label="Reporting period"
+  pickerType="dateRange"
+  startDate="Jun 1, 2026"
+  endDate="Jun 30, 2026"
+  separator="–"
+/>
+```
+
+Required, error, and open states:
+
+```tsx
+<InputDatePicker label="Date" required placeholder="Select a date" />
+
+<InputDatePicker label="Date" error="Pick a date." />
+
+<InputDatePicker label="Date" open value="Jun 25, 2026" />
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-date-picker/input-date-picker.tsx"
+  name="InputDatePickerProps"
+/>

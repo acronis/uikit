@@ -1,0 +1,45 @@
+---
+title: Resizable
+description: Draggable panels that allow users to resize adjacent sections.
+---
+
+## Usage
+
+```tsx
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from '@acronis-platform/shadcn-uikit';
+```
+
+```tsx
+<ResizablePanelGroup direction="horizontal">
+  <ResizablePanel defaultSize={50}>Left panel</ResizablePanel>
+  <ResizableHandle withHandle />
+  <ResizablePanel defaultSize={50}>Right panel</ResizablePanel>
+</ResizablePanelGroup>
+```
+
+## Overview
+
+Built on top of `react-resizable-panels`, the Resizable components provide draggable dividers between content areas. The `ResizableHandle` supports an optional drag handle icon via the `withHandle` prop.
+
+## API Reference
+
+### ResizablePanelGroup
+
+Wraps `react-resizable-panels` `Group`. Accepts `direction` (`"horizontal"` | `"vertical"`) and all props from the underlying `PanelGroup` component.
+
+### ResizablePanel
+
+Re-exports the `Panel` component from `react-resizable-panels`. Accepts `defaultSize`, `minSize`, `maxSize`, `collapsible`, and all standard panel props.
+
+### ResizableHandle
+
+Wraps the `Separator` from `react-resizable-panels`.
+
+| Prop         | Type      | Default | Description                                  |
+| ------------ | --------- | ------- | -------------------------------------------- |
+| `withHandle` | `boolean` | `false` | Show a visible grip icon on the drag handle. |
+| `className`  | `string`  | —       | Additional CSS class names.                  |

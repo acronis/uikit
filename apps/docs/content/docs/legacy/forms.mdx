@@ -1,6 +1,6 @@
 ---
-title: Forms Guide
-description: How to build forms with Acronis UIKit — layout patterns, components, validation, and state management with React Hook Form and TanStack Form.
+title: Forms (legacy)
+description: How to build forms with the legacy shadcn-uikit — layout patterns, components, validation, and state management with React Hook Form and TanStack Form.
 ---
 
 import {
@@ -13,6 +13,15 @@ import {
 } from '@/components/demos/form';
 import { FieldTanstackForm } from '@/components/demos/field';
 import { DemoPreview } from '@/components/DemoPreview';
+import { Callout } from 'fumadocs-ui/components/callout';
+
+<Callout type="warn" title="Legacy guide">
+  This guide documents the `@acronis-platform/shadcn-uikit` `Form` / `Field`
+  layers. The next-gen [`@acronis-platform/ui-react`](/docs/components) library
+  composes forms directly from its input primitives (`InputText`, `InputSelect`,
+  `Checkbox`, `Radio`, `Switch`) without a dedicated `Form` / `Field`
+  abstraction.
+</Callout>
 
 ## Overview
 

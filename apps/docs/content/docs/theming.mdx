@@ -6,7 +6,9 @@ description: Customize the look and feel of Acronis UIKit using CSS custom prope
 ## How themes work
 
 Acronis UIKit uses generated `--ui-*` CSS custom properties from
-`@acronis-platform/tokens-pd`.
+[`@acronis-platform/tokens-pd`](/docs/packages/tokens-pd). You never hand-author
+theme values — they are generated from the design system and resolved at paint
+time, so brand and light/dark switches need no rebuild.
 
 Load the default `acronis` base, then (optionally) layer another brand override
 on top:

@@ -1,0 +1,41 @@
+---
+title: Legacy (shadcn-uikit)
+description: Deprecation notice and EOL timeline for @acronis-platform/shadcn-uikit, the legacy component library.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+<Callout type="warn" title="Deprecated — in maintenance/freeze">
+  `@acronis-platform/shadcn-uikit` (`ui-legacy`) is frozen. New component work
+  has moved to [`@acronis-platform/ui-react`](/docs). Use this section only for
+  components that do not yet have a `ui-react` equivalent.
+</Callout>
+
+`@acronis-platform/shadcn-uikit` is the original shadcn/ui-based component
+library. It is no longer the recommended choice for new applications — the
+next-generation [`@acronis-platform/ui-react`](/docs/components) library
+replaces it.
+
+## Status
+
+- **No new features** will be added.
+- Only **critical fixes and security fixes** are accepted.
+- New component development happens in `@acronis-platform/ui-react`.
+
+## Timeline
+
+| Phase                                    | What it means                                                              |
+| ---------------------------------------- | -------------------------------------------------------------------------- |
+| **Now (Jun 2026)**                       | Maintenance/freeze starts; migrating new work to `ui-react` is recommended. |
+| **Through end of Q3 2026 (Sep 30, 2026)** | `ui-legacy` remains available while consumers migrate.                     |
+| **Q4 2026 (EOL window)**                 | Security-only support; final EOL date announced in this window.            |
+
+## Migrating off legacy
+
+Follow the [Legacy → ui-react migration guide](/docs/guides/migration) for the
+package swap, import rewrites, the component mapping table, and codemod recipes.
+
+## Component reference
+
+The legacy component pages remain available under this section for as long as
+`ui-legacy` is supported. Browse them from the sidebar.

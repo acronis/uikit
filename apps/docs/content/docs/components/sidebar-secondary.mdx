@@ -1,0 +1,169 @@
+---
+title: SidebarSecondary
+description: The secondary navigation panel, with collapsible sections and sub-menus.
+---
+
+## Usage
+
+```tsx
+import {
+  SidebarSecondary,
+  SidebarSecondaryHeader,
+  SidebarSecondaryContent,
+  SidebarSecondaryCollapsedBreadcrumb,
+  SidebarSecondaryFooter,
+  SidebarSecondarySection,
+  SidebarSecondarySectionLabel,
+  SidebarSecondaryMenu,
+  SidebarSecondaryMenuItem,
+  SidebarSecondaryMenuSub,
+  SidebarSecondaryMenuSubTrigger,
+  SidebarSecondaryMenuSubContent,
+  SidebarSecondaryMenuSubItem,
+  SidebarSecondaryMenuItemExtras,
+  SidebarSecondaryCollapseTrigger,
+} from '@acronis-platform/ui-react';
+```
+
+`SidebarSecondary` is the second-level navigation panel that sits beside
+[`SidebarPrimary`](/docs/components/sidebar-primary). It supports two collapse
+levels — expandable `SidebarSecondarySection`s and per-item submenus
+(`SidebarSecondaryMenuSub`, built on Base UI's `Collapsible`). The panel itself
+owns a controlled/uncontrolled `expanded` width state. `SidebarSecondary` and the
+menu-item parts are polymorphic via the `render` prop. Themed by the
+`--ui-sidebar-secondary-*` tokens.
+
+## Examples
+
+A panel with a section and a sub-menu:
+
+```tsx
+<SidebarSecondary>
+  <SidebarSecondaryHeader label="Protection" />
+  <SidebarSecondaryContent>
+    <SidebarSecondarySection>
+      <SidebarSecondarySectionLabel>Overview</SidebarSecondarySectionLabel>
+      <SidebarSecondaryMenu>
+        <SidebarSecondaryMenuItem href="#" icon={<LayoutGridIcon />} selected>
+          Dashboard
+        </SidebarSecondaryMenuItem>
+        <SidebarSecondaryMenuItem href="#" icon={<ServerIcon />}>
+          Workloads
+        </SidebarSecondaryMenuItem>
+      </SidebarSecondaryMenu>
+    </SidebarSecondarySection>
+
+    <SidebarSecondarySection>
+      <SidebarSecondarySectionLabel>Resources</SidebarSecondarySectionLabel>
+      <SidebarSecondaryMenu>
+        <SidebarSecondaryMenuSub defaultOpen>
+          <SidebarSecondaryMenuSubTrigger icon={<BoxIcon />}>
+            Backups
+          </SidebarSecondaryMenuSubTrigger>
+          <SidebarSecondaryMenuSubContent>
+            <SidebarSecondaryMenuSubItem href="#" selected>
+              All backups
+            </SidebarSecondaryMenuSubItem>
+            <SidebarSecondaryMenuSubItem href="#">Archived</SidebarSecondaryMenuSubItem>
+          </SidebarSecondaryMenuSubContent>
+        </SidebarSecondaryMenuSub>
+      </SidebarSecondaryMenu>
+    </SidebarSecondarySection>
+  </SidebarSecondaryContent>
+
+  <SidebarSecondaryFooter>
+    <SidebarSecondaryMenu>
+      <SidebarSecondaryCollapseTrigger icon={<ChevronLeftIcon />}>
+        Collapse
+      </SidebarSecondaryCollapseTrigger>
+    </SidebarSecondaryMenu>
+  </SidebarSecondaryFooter>
+</SidebarSecondary>
+```
+
+An expandable section (the second collapse level):
+
+```tsx
+<SidebarSecondarySection expandable defaultOpen>
+  <SidebarSecondarySectionLabel>Settings</SidebarSecondarySectionLabel>
+  <SidebarSecondaryMenu>
+    <SidebarSecondaryMenuItem href="#">General</SidebarSecondaryMenuItem>
+  </SidebarSecondaryMenu>
+</SidebarSecondarySection>
+```
+
+Collapsed panel with a breadcrumb:
+
+```tsx
+<SidebarSecondary expanded={false}>
+  <SidebarSecondaryHeader label="Protection" />
+  <SidebarSecondaryCollapsedBreadcrumb label="Protection" current="Dashboard" />
+  {/* … */}
+</SidebarSecondary>
+```
+
+## API Reference
+
+### SidebarSecondary
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
+  name="SidebarSecondaryProps"
+/>
+
+### SidebarSecondaryHeader
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
+  name="SidebarSecondaryHeaderProps"
+/>
+
+### SidebarSecondaryCollapsedBreadcrumb
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
+  name="SidebarSecondaryCollapsedBreadcrumbProps"
+/>
+
+### SidebarSecondaryMenuItem
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
+  name="SidebarSecondaryMenuItemProps"
+/>
+
+### SidebarSecondaryMenuSubTrigger
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
+  name="SidebarSecondaryMenuSubTriggerProps"
+/>
+
+### SidebarSecondaryMenuSubItem
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
+  name="SidebarSecondaryMenuSubItemProps"
+/>
+
+### SidebarSecondaryMenuItemExtras
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
+  name="SidebarSecondaryMenuItemExtrasProps"
+/>
+
+### SidebarSecondaryCollapseTrigger
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
+  name="SidebarSecondaryCollapseTriggerProps"
+/>
+
+`SidebarSecondarySection` adds `expandable` plus `open` / `defaultOpen` /
+`onOpenChange` for the expandable-section collapse level;
+`SidebarSecondaryMenuSub` and `SidebarSecondaryMenuSubContent` extend Base UI's
+`Collapsible` props. The remaining structural parts
+(`SidebarSecondaryContent`, `SidebarSecondarySectionLabel`,
+`SidebarSecondaryMenu`, `SidebarSecondaryFooter`) accept the standard attributes
+of the element they render.

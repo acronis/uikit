@@ -1,189 +1,164 @@
 ---
 title: Architecture
-description: Architecture overview of the Acronis UIKit — design philosophy, component structure, theming, and best practices.
+description: How @acronis-platform/ui-react is built — Base UI primitives, CVA variants, Tailwind v4, and the design-token pipeline.
 ---
 
-# Architecture Guide
+# Architecture
 
 ## Overview
 
-Acronis UIKit is a **React-only** component library built on top of [shadcn/ui](https://ui.shadcn.com/) principles, using [Radix UI](https://www.radix-ui.com/) and [Base UI](https://base-ui.com/) primitives with Tailwind CSS. It provides a consistent design system styled with Acronis brand colors and design tokens.
+`@acronis-platform/ui-react` is a **React-only** component library built on
+[Base UI](https://base-ui.com/) primitives, styled with Tailwind CSS v4 over
+design tokens generated from the Acronis design system. It is the
+next-generation successor to the legacy `@acronis-platform/shadcn-uikit`.
 
-## Design Philosophy
+## Design philosophy
 
-### Base Layer: shadcn/ui principles
+### Base UI first
 
-- Uses Radix UI and Base UI primitives for accessibility and unstyled behaviour
-- Tailwind CSS for styling with CVA (class-variance-authority) for variants
-- Components are shipped as compiled ES modules — not a copy-paste library
+- Interactive/stateful primitives come from `@base-ui/react`, a **direct
+  dependency** (the legacy library mixed in Radix; ui-react does not).
+- For element composition and polymorphism, components use Base UI's
+  **`useRender`** hook with **`mergeProps`** and expose a `render` prop — not
+  Radix `Slot` / `asChild`.
+- Accessibility (keyboard navigation, focus management, ARIA) is inherited from
+  the Base UI primitives and checked in Storybook via `@storybook/addon-a11y`.
 
-### Acronis Theme Layer
+### Token-driven theming
 
-- CSS custom properties using the `--av-*` token namespace
-- Four built-in themes: `acronis-default`, `acronis-ocean`, `cyber-chat`, `acronis-white-label`
-- Additional variant options: `success`, `warning`, `info`, `translucent`
-- Consistent spacing, typography, and border radius via Tailwind config
+- Color, typography, and component metrics resolve to `--ui-*` CSS custom
+  properties from [`@acronis-platform/tokens-pd`](/docs/packages/tokens-pd).
+- Values are **never** hand-authored in components. Light/dark is handled by the
+  tokens' `light-dark()` + `color-scheme`, driven by the `[data-theme]`
+  attribute — no rebuild to switch themes or brands.
 
-## Monorepo Structure
+### Variants via CVA
+
+- Visual variants are declared with
+  [`class-variance-authority`](https://cva.style/) and exposed through
+  `VariantProps`. Classes are merged with `cn()` (`clsx` + `tailwind-merge`).
+
+## The token pipeline
+
+Theming flows in one direction, from the design source to the rendered
+component:
 
 ```text
-packages/
-├── ui/          # @acronis-platform/shadcn-uikit — the published library
-├── demo/        # Vite demo app (component showcase)
-├── demos/       # @acronis-platform/shadcn-uikit-demos — shared demo components
-└── docs/        # @acronis-platform/shadcn-uikit-docs — this docs site (Next.js 15)
+@acronis-platform/design-tokens   (DTCG JSON — source of truth)
+        │  built by tools/style-dictionary
+        ▼
+@acronis-platform/tokens-pd        (generated CSS + Tailwind presets, --ui-* vars)
+        │  @import + @theme bridge
+        ▼
+@acronis-platform/ui-react         (component utilities reference the tokens)
 ```
 
-## UI Package Structure
+Change a color in `design-tokens` and rebuild `tokens-pd`; every consumer
+follows automatically. See [Packages](/docs/packages) for each tier.
+
+## Styling: two ways to reference a token
+
+`src/styles/index.css` imports the base token tier and each component's tier,
+then **bridges** shared semantic tokens onto Tailwind color names in an
+`@theme inline` block. Components pick one of two patterns by how shared the
+token is:
+
+- **Shared semantic vocabulary → bridged name.** Colors reused across many
+  components use the short Tailwind name: `bg-primary`, `text-foreground`,
+  `border-border`.
+- **Component-local tokens → direct reference** with an arbitrary-value utility:
+  `bg-[var(--ui-button-primary-container-color-idle)]`,
+  `hover:text-[var(--ui-button-secondary-label-color-hover)]`.
+
+Stateful colors wire **each state to its own token** (`hover:` → `*-hover`,
+`disabled:` → `*-disabled`) so brand overrides are honored per state.
+
+## Monorepo structure
+
+| Path                      | Package                          | Role                                  |
+| ------------------------- | -------------------------------- | ------------------------------------- |
+| `packages/ui-react/`      | `@acronis-platform/ui-react`     | The component library (this docs site) |
+| `packages/ui-legacy/`     | `@acronis-platform/shadcn-uikit` | Legacy library (deprecated)           |
+| `packages/tokens-pd/`     | `@acronis-platform/tokens-pd`    | Generated CSS + Tailwind presets      |
+| `packages/design-tokens/` | `@acronis-platform/design-tokens` | DTCG token source                     |
+| `packages/icons-react/`   | `@acronis-platform/icons-react`  | Generated React icon components       |
+| `apps/docs/`              | —                                | This documentation site (Next.js + Fumadocs) |
+
+## Component file layout
+
+Each component lives in its own directory:
 
 ```text
-packages/ui-legacy/src/
-├── components/
-│   └── ui/                     # All components live here
-│       ├── button.tsx
-│       ├── button.docs.ts      # Optional: companion type file for AutoTypeTable
-│       ├── __stories__/        # Storybook stories
-│       │   └── button.stories.tsx
-│       └── ...                 # 70+ component files
-├── icons/                      # 1500+ auto-generated icon components
-│   ├── base/                   # BaseIcon primitive
-│   └── index.ts
-├── lib/
-│   └── utils.ts                # cn() utility (clsx + tailwind-merge)
-├── styles/
-│   ├── index.css               # Main entry — imports everything
-│   ├── themes/                 # Per-theme SCSS
-│   │   ├── acronis-default.scss
-│   │   ├── acronis-ocean.scss
-│   │   ├── cyber-chat.scss
-│   │   └── acronis-white-label.scss
-│   └── tokens/                 # Semantic token definitions
-└── index.ts                    # Public exports
+packages/ui-react/src/components/ui/<component>/
+├── <component>.tsx              # the component (CVA variants, forwardRef)
+├── <component>.figma.tsx        # optional — Figma Code Connect mapping
+├── index.ts                     # barrel export
+├── __tests__/<component>.test.tsx   # Vitest + React Testing Library
+└── __stories__/<component>.stories.tsx  # Storybook (also visual-regression cases)
 ```
 
-## Component Structure
+## Component anatomy
 
-Each component follows this pattern:
+A representative component wires CVA variants to tokens and exposes a `render`
+prop for composition:
 
 ```tsx
-// packages/ui-legacy/src/components/ui/button.tsx
+import * as React from 'react';
+import { mergeProps } from '@base-ui/react/merge-props';
+import { useRender } from '@base-ui/react/use-render';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
-const buttonVariants = cva('base-classes', {
+const buttonVariants = cva('inline-flex items-center justify-center …', {
   variants: {
     variant: {
-      default: '...',
-      secondary: '...',
-      destructive: '...',
-      outline: '...',
-      ghost: '...',
-      link: '...',
-    },
-    size: {
-      default: '...',
-      sm: '...',
-      lg: '...',
+      default: 'bg-[var(--ui-button-primary-container-color-idle)] …',
+      secondary: '…',
+      ghost: '…',
     },
   },
-  defaultVariants: {
-    variant: 'default',
-    size: 'default',
-  },
+  defaultVariants: { variant: 'default' },
 });
 
 export interface ButtonProps
-  extends
-    React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
+  render?: useRender.RenderProp;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
-    );
-  }
+  ({ className, variant, render, ...props }, ref) =>
+    useRender({
+      render,
+      ref,
+      defaultTagName: 'button',
+      props: mergeProps<'button'>(
+        { className: cn(buttonVariants({ variant, className })) },
+        props
+      ),
+    })
 );
+Button.displayName = 'Button';
+
+export { Button, buttonVariants };
 ```
 
-## Theming System
+## Build & distribution
 
-Themes are SCSS files that define CSS custom properties on the `:root`. They use an `--av-*` token namespace:
+- Built with **Vite 6** in library mode; the published output is ES modules with
+  preserved module structure for [tree-shaking](/docs/guides/tree-shaking).
+- `.figma.tsx`, `.test.tsx`, and `.stories.tsx` files are excluded from the
+  bundle.
+- Stories double as **visual-regression** cases, screenshotted in Docker and
+  compared against committed baselines in CI (light and dark).
 
-```scss
-// packages/ui-legacy/src/styles/themes/acronis-default.scss
-:root {
-  --av-background: 0 0% 100%;
-  --av-foreground: 222 84% 5%;
-  --av-primary: 213 94% 51%; /* Acronis Blue */
-  --av-success: 142 76% 36%;
-  --av-warning: 38 92% 50%;
-  --av-info: 199 89% 48%;
-  /* ... */
-}
-.dark {
-  --av-background: 222 84% 5%;
-  /* ... */
-}
-```
+## Best practices
 
-The Tailwind config maps these tokens to utility classes:
-
-```js
-colors: {
-  background: 'hsl(var(--av-background))',
-  primary: 'hsl(var(--av-primary))',
-  // ...
-}
-```
-
-## Build Output
-
-```text
-packages/ui-legacy/dist/
-├── index.js          # Main ES module entry (re-exports everything)
-├── index.d.ts        # TypeScript declarations
-├── components/ui/    # Individual component modules (tree-shakeable)
-├── icons/            # Icon components
-├── lib/              # Utilities
-└── styles/           # Compiled CSS
-    ├── index.css     # Main stylesheet (import this)
-    └── themes/       # Individual theme CSS files
-```
-
-## Import Paths
-
-```ts
-// Components — named imports from main entry
-import { Button, Card, Input } from '@acronis-platform/shadcn-uikit';
-
-// Styles — required, import once in your app root
-import '@acronis-platform/shadcn-uikit/styles';
-
-// Optional: alternative theme
-import '@acronis-platform/shadcn-uikit/styles/themes/acronis-ocean';
-```
-
-## Adding a New Component
-
-1. Create `packages/ui-legacy/src/components/ui/[component].tsx`
-2. Follow the CVA + forwardRef pattern shown above
-3. Export from `packages/ui-legacy/src/index.ts`
-4. Add Storybook stories in `__stories__/[component].stories.tsx`
-5. Add a demo in `apps/demos/src/[component]/`
-6. Create an MDX doc in `apps/docs/content/docs/components/[component].mdx`
-
-## Best Practices
-
-- **Use Radix UI / Base UI primitives** for interactive components — they provide accessibility for free
-- **Variants via CVA** — all visual variants should be defined with `class-variance-authority`
-- **Forwarded refs** — always use `React.forwardRef` so consumers can attach refs
-- **TypeScript strict** — all components must be fully typed; use `VariantProps` for variant types
-- **Test all variants** — Storybook stories serve as both documentation and visual tests
+- **Lean on Base UI primitives** for interactive components — accessibility for
+  free.
+- **Variants via CVA**, typed with `VariantProps`; export both the component and
+  its `*Variants`.
+- **Never hard-code a color** — every value resolves to a `--ui-*` token.
+- **`forwardRef`** for ref-accepting components; **`render` prop** for
+  polymorphism (not `asChild`).
+- **TypeScript strict** — define explicit prop interfaces at the module boundary.

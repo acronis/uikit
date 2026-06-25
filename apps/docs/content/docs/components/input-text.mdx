@@ -1,0 +1,56 @@
+---
+title: InputText
+description: A text input field with label, description, error, and clear support.
+---
+
+## Usage
+
+```tsx
+import { InputText } from '@acronis-platform/ui-react';
+```
+
+`InputText` wraps a native `<input>` and adds the full field furniture — an
+optional label (with a `required` marker), helper description, error message,
+and an optional clear button. Without a label it renders just the box. Themed by
+the `--ui-input-text-*` tokens.
+
+## Examples
+
+A labeled field with helper text:
+
+```tsx
+<InputText label="Full name" description="As it appears on your ID." />
+```
+
+Required and error states:
+
+```tsx
+<InputText label="Email" required placeholder="you@example.com" />
+
+<InputText
+  label="Email"
+  error="Enter a valid email address."
+  placeholder="you@example.com"
+/>
+```
+
+A clearable, controlled field:
+
+```tsx
+const [value, setValue] = React.useState('');
+
+<InputText
+  label="Search term"
+  clearable
+  value={value}
+  onChange={(e) => setValue(e.target.value)}
+  onClear={() => setValue('')}
+/>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-text/input-text.tsx"
+  name="InputTextProps"
+/>

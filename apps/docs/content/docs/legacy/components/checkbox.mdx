@@ -1,0 +1,124 @@
+---
+title: Checkbox
+description: A control that allows the user to toggle between checked and unchecked states.
+---
+
+import {
+  CheckboxBasic,
+  CheckboxWithLabel,
+  CheckboxWithDescription,
+  CheckboxControlled,
+  CheckboxIndeterminate,
+  CheckboxDisabled,
+  CheckboxParentChild,
+  CheckboxForm,
+  CheckboxMultipleSelection,
+  CheckboxList,
+  CheckboxStates,
+} from '@/components/demos/checkbox';
+import { DemoPreview } from '@/components/DemoPreview';
+
+## Usage
+
+```tsx
+import { Checkbox } from '@acronis-platform/shadcn-uikit';
+```
+
+## Basic
+
+A standalone checkbox.
+
+<DemoPreview sourcePath="apps/demos/src/checkbox/CheckboxBasic.tsx">
+  <CheckboxBasic />
+</DemoPreview>
+
+## States
+
+All visual states of the checkbox.
+
+<DemoPreview sourcePath="apps/demos/src/checkbox/CheckboxStates.tsx">
+  <CheckboxStates />
+</DemoPreview>
+
+## With label
+
+A checkbox paired with a clickable label.
+
+<DemoPreview sourcePath="apps/demos/src/checkbox/CheckboxWithLabel.tsx">
+  <CheckboxWithLabel />
+</DemoPreview>
+
+## With description
+
+A checkbox with a label and additional description text.
+
+<DemoPreview sourcePath="apps/demos/src/checkbox/CheckboxWithDescription.tsx">
+  <CheckboxWithDescription />
+</DemoPreview>
+
+## Controlled
+
+A controlled checkbox with external state management.
+
+<DemoPreview sourcePath="apps/demos/src/checkbox/CheckboxControlled.tsx">
+  <CheckboxControlled />
+</DemoPreview>
+
+## Indeterminate
+
+The indeterminate state for parent checkboxes with partial selection.
+
+<DemoPreview sourcePath="apps/demos/src/checkbox/CheckboxIndeterminate.tsx">
+  <CheckboxIndeterminate />
+</DemoPreview>
+
+## Disabled state
+
+Disabled checkboxes that cannot be interacted with.
+
+<DemoPreview sourcePath="apps/demos/src/checkbox/CheckboxDisabled.tsx">
+  <CheckboxDisabled />
+</DemoPreview>
+
+## Parent-child
+
+A hierarchical checkbox with parent controlling children.
+
+<DemoPreview sourcePath="apps/demos/src/checkbox/CheckboxParentChild.tsx">
+  <CheckboxParentChild />
+</DemoPreview>
+
+## In a form
+
+Checkbox integrated with form validation.
+
+<DemoPreview sourcePath="apps/demos/src/checkbox/CheckboxForm.tsx">
+  <CheckboxForm />
+</DemoPreview>
+
+## Multiple selection
+
+A group of checkboxes for selecting multiple options.
+
+<DemoPreview sourcePath="apps/demos/src/checkbox/CheckboxMultipleSelection.tsx">
+  <CheckboxMultipleSelection />
+</DemoPreview>
+
+## List
+
+A checkbox list pattern for item selection.
+
+<DemoPreview sourcePath="apps/demos/src/checkbox/CheckboxList.tsx">
+  <CheckboxList />
+</DemoPreview>
+
+## API Reference
+
+### Checkbox
+
+<AutoTypeTable
+  path="../../packages/ui-legacy/src/components/ui/checkbox.tsx"
+  name="CheckboxProps"
+/>
+
+The `Checkbox` component extends the Base UI Checkbox primitive props. The `checked` prop accepts `boolean` or `"indeterminate"` for backwards-compatibility with the Radix UI API.

@@ -1,0 +1,54 @@
+---
+title: Link
+description: An inline text link with an optional external-link icon.
+---
+
+## Usage
+
+```tsx
+import { Link } from '@acronis-platform/ui-react';
+```
+
+`Link` is an inline, semibold text link themed by the `--ui-link-*` tokens
+(underline appears on hover). It is polymorphic via Base UI's `useRender` — pass
+the `render` prop to render a router `Link` instead of the default `<a>`.
+
+## Examples
+
+A basic link:
+
+```tsx
+<Link href="/docs">Documentation</Link>
+```
+
+Append a trailing external-link icon for links that leave the app:
+
+```tsx
+<Link href="https://acronis.com" external>
+  Acronis website
+</Link>
+```
+
+`disabled` makes the link inert — disabled color, removed from the tab order, no
+navigation:
+
+```tsx
+<Link href="/docs" disabled>
+  Documentation
+</Link>
+```
+
+Render as a router link with `render` (Base UI composition):
+
+```tsx
+import { Link as RouterLink } from 'react-router';
+
+<Link render={<RouterLink to="/dashboard" />}>Dashboard</Link>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/link/link.tsx"
+  name="LinkProps"
+/>

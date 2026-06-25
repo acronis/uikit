@@ -1,0 +1,61 @@
+---
+title: Packages
+description: The published design-data, token, and icon packages that ui-react is built on.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+`@acronis-platform/ui-react` does not stand alone. It sits on top of a small
+ecosystem of published packages that carry the design data, generate the
+themeable CSS, and ship the icons. This section documents those building
+blocks so you can consume them directly or understand how a token or icon
+flows from design into a component.
+
+## The pipeline
+
+Two **source** packages hold hand-curated design data exported from Figma:
+
+- `@acronis-platform/design-tokens` — DTCG JSON: colors, typography, spacing,
+  radii, and the per-component token values.
+- `@acronis-platform/design-assets` — JSON manifests plus the bundled icon
+  and illustration binaries they point at.
+
+Build tooling under `tools/` transforms that data:
+
+- `tools/style-dictionary` translates `design-tokens` into CSS custom
+  properties, Tailwind presets, and a DTCG intermediate.
+- The icon generator turns the `design-assets` / icon SVG sources into React
+  components and SVG sprites.
+
+The result is three **generated, published** packages:
+
+- `@acronis-platform/tokens-pd` — per-brand CSS (`--ui-*` custom properties),
+  per-component CSS, and Tailwind presets.
+- `@acronis-platform/icons-react` — tree-shakeable React icon components.
+- `@acronis-platform/icons-sprite` — committed SVG sprites.
+
+Finally, `@acronis-platform/ui-react` consumes `tokens-pd` for theming and
+`icons-react` for composed icons.
+
+```
+design-tokens ─┐                        ┌─► tokens-pd ──┐
+               ├─► (tools/style-dict.) ─┤               ├─► ui-react
+design-assets ─┘   (icon generator)     └─► icons-react ─┘
+                                        └─► icons-sprite
+```
+
+## Published packages
+
+| Package                            | Ships                                                        | Published |
+| ---------------------------------- | ----------------------------------------------------------- | --------- |
+| `@acronis-platform/tokens-pd`      | Per-brand + per-component CSS, Tailwind presets, DTCG JSON   | yes       |
+| `@acronis-platform/icons-react`    | React icon components, per-pack subpath exports             | yes       |
+| `@acronis-platform/icons-sprite`   | Combined / mono / multi SVG sprites                         | yes       |
+| `@acronis-platform/design-tokens`  | DTCG-2025.10 token JSON (the source of truth)               | yes       |
+| `@acronis-platform/design-assets`  | Icon / illustration JSON manifests + bundled binaries       | yes       |
+
+<Callout type="info">
+  The source SVG packages (`icons-svg`, `icons-svg-next`), the tooling under
+  `tools/`, and the apps (`demo`, `docs`, `kitchen-sink`) are **private** and
+  not published. Only the five packages above are on npm.
+</Callout>

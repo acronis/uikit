@@ -1,19 +1,53 @@
 ---
 title: Components
-description: Browse all 40+ accessible, themeable UI components.
+description: The ui-react component set — Base UI primitives, themed by design tokens.
 ---
 
-Acronis UIKit provides 40+ production-ready React components. Each component page includes live demos, source code, and API reference.
+import { Cards, Card } from 'fumadocs-ui/components/card';
 
-## Installation
+The `@acronis-platform/ui-react` library ships a set of accessible React
+components built on [Base UI](https://base-ui.com/) primitives and themed
+entirely by generated design tokens. Every component is fully typed and
+tree-shakeable.
 
-```bash
-npm install @acronis-platform/shadcn-uikit tw-animate-css
-```
+## Importing
+
+All public components are imported from the package root, and the stylesheet is
+imported once at your app entry point:
 
 ```tsx
-import '@acronis-platform/shadcn-uikit/styles';
-import { Button } from '@acronis-platform/shadcn-uikit';
+import '@acronis-platform/ui-react/styles';
+import { Button, Input, Avatar } from '@acronis-platform/ui-react';
 ```
 
-Browse the components using the sidebar.
+The `styles` import pulls in the `--ui-*` custom properties from
+`@acronis-platform/tokens-pd` and the Tailwind bridge that maps them onto the
+components. Without it, components render unstyled.
+
+## How the components work
+
+- **Base UI under the hood** — keyboard navigation, focus management, and ARIA
+  come from `@base-ui/react`. Components that render a single element expose a
+  `render` prop (Base UI's `useRender`) for polymorphism instead of `asChild`.
+- **Token-driven theming** — colors and metrics resolve to `--ui-*` tokens
+  generated from the design system; light/dark via `light-dark()`, brands via
+  the `[data-theme]` attribute. Nothing is hard-coded.
+- **Tree-shakeable** — import only what you use; unused components are dropped
+  by the bundler.
+
+## Browse
+
+<Cards>
+  <Card title="Button" href="/docs/components/button" description="Triggers an action or event." />
+  <Card title="Input" href="/docs/components/input" description="Single-line text entry with adornments." />
+  <Card title="Checkbox" href="/docs/components/checkbox" description="Binary on/off selection." />
+  <Card title="Radio" href="/docs/components/radio" description="Mutually exclusive selection within a group." />
+  <Card title="Switch" href="/docs/components/switch" description="Toggle between two states." />
+  <Card title="Select" href="/docs/components/select" description="Choose one option from a list." />
+  <Card title="Avatar" href="/docs/components/avatar" description="Represents a user or entity." />
+  <Card title="Tag" href="/docs/components/tag" description="Compact label for status or metadata." />
+  <Card title="Breadcrumb" href="/docs/components/breadcrumb" description="Shows the path to the current page." />
+  <Card title="Tooltip" href="/docs/components/tooltip" description="Contextual hint on hover or focus." />
+  <Card title="Sidebar" href="/docs/components/sidebar-primary" description="Primary and secondary navigation rails." />
+  <Card title="Resizable" href="/docs/components/resizable" description="Draggable split panels." />
+</Cards>

@@ -1,0 +1,116 @@
+---
+title: tokens-pd
+description: Generated, themeable CSS custom properties and Tailwind presets for the Acronis platform design tokens.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+`@acronis-platform/tokens-pd` is the consumable home for the Acronis platform
+(PD) token artifacts. Everything in it is **generated** from
+`@acronis-platform/design-tokens` by the `tools/style-dictionary` pipeline and
+**committed to git**, so consumers (and npm) get the output with no build step.
+
+It ships three kinds of artifact under `css/`, `tailwind/`, and `dtcg/`.
+
+## Semantic tier
+
+`css/acronis.css` is the default brand at full strength: every `--ui-*` custom
+property plus the `.ui-typography-*` utility classes. This is the file you load
+first.
+
+```css
+@import '@acronis-platform/tokens-pd/css/acronis.css';
+```
+
+`@acronis-platform/ui-react` already pulls this in for you when you import its
+styles entry, so most apps never import it directly.
+
+## Per-component tiers
+
+Each component has its own CSS under `css/<Component>/acronis.css` (e.g.
+`css/Button/acronis.css`, `css/Breadcrumb/acronis.css`). These hold the
+component-scoped `--ui-*` tokens (such as `--ui-button-global-radius`) and are
+**opt-in** — load only the components a build needs.
+
+```css
+@import '@acronis-platform/tokens-pd/css/Button/acronis.css';
+```
+
+## Brand overrides
+
+Non-default brands ship as **override-only** files. `css/deep-sky.css` contains
+a token only when its value differs from `acronis` or is new in that brand.
+Brand selection is import-order based — **last import wins** — not a class
+toggle:
+
+```css
+@import '@acronis-platform/tokens-pd/css/acronis.css';
+@import '@acronis-platform/tokens-pd/css/deep-sky.css'; /* layers on top */
+```
+
+The base (`acronis`) files carry the `color-scheme` shell; override files are
+bare `:root {}` blocks layered over it.
+
+## Dark mode
+
+Colors are zipped into `light-dark()` and the active scheme switches via the
+`[data-theme]` attribute plus `color-scheme`. There is no separate dark
+stylesheet — one set of variables covers both:
+
+```html
+<html data-theme="dark"></html>
+```
+
+## Tailwind presets
+
+`tailwind/<brand>/tokens.js` is a Tailwind preset of the shared semantic
+vocabulary, with **baked literal values** (no `--ui-*` dependency), consumed via
+`@config`. Each component also ships its own preset under
+`tailwind/<brand>/components/<Component>.js`, kept separate so component
+utilities stay opt-in.
+
+```css
+/* in your app's CSS entry */
+@config "../tailwind.config.ts";
+```
+
+```ts
+// tailwind.config.ts
+import tokens from '@acronis-platform/tokens-pd/tailwind/acronis/tokens.js';
+import buttonTokens from '@acronis-platform/tokens-pd/tailwind/acronis/components/Button.js';
+
+export default {
+  presets: [tokens, buttonTokens],
+};
+```
+
+Color roles land in Tailwind's role-namespaced keys with the role word and the
+`ui-` prefix dropped — `bg-surface-primary`, `text-on-surface-primary`,
+`border-on-surface-border`, `ring-brand`. Because the values are baked, a preset
+is self-contained, but brand selection happens at build time.
+
+## The `--ui-*` naming convention
+
+Every CSS custom property is prefixed `ui` and the token path is flattened with
+hyphens. The `colors` tier root is dropped:
+
+| Token path                            | CSS variable                      |
+| ------------------------------------- | --------------------------------- |
+| `colors.background.surface.primary`   | `--ui-background-surface-primary` |
+| `colors.text.on-surface.primary`      | `--ui-text-on-surface-primary`    |
+| `button._global.radius`               | `--ui-button-global-radius`       |
+
+## DTCG intermediate
+
+`dtcg/*.json` holds the per-mode, 100%-DTCG intermediate the CSS and presets are
+generated from (e.g. `primitives-light.json`, `semantics-acronis.json`,
+`components-acronis.json`). It is rarely consumed directly but is published for
+tools that prefer DTCG over CSS.
+
+<Callout type="warn">
+  All files in this package are generated and carry a DO-NOT-EDIT header. To
+  change a value, edit `@acronis-platform/design-tokens` and rebuild — never
+  hand-edit the output.
+</Callout>
+
+For how to apply these tokens in an app, see [Theming](/docs/theming).

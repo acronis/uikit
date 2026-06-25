@@ -1,8 +1,27 @@
 ---
 title: Icons
-description: Browse and search 1,500+ icons from the Acronis design system.
+description: Browse and use the Acronis icon set from @acronis-platform/icons-react.
 ---
 
 import { IconCatalog } from '@/components/IconCatalog';
+
+[`@acronis-platform/icons-react`](/docs/packages/icons-react) ships the Acronis
+icon set as tree-shakeable React components, generated from the design system.
+Icons are split into four packs, imported from per-pack subpaths:
+
+```tsx
+import { ChevronDownIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<ChevronDownIcon size={24} title="Expand" />;
+```
+
+- **`size`** sets the rendered pixel size (default `24`); stroke width scales
+  automatically per size for the stroke packs.
+- Monocolor icons paint with `currentColor`, so they inherit the surrounding
+  text color and respond to `className` / CSS.
+- Provide a **`title`** to expose the icon to assistive tech (`role="img"`);
+  without one it is decorative (`aria-hidden`).
+
+Click any icon below to copy its import statement.
 
 <IconCatalog />

@@ -1,6 +1,6 @@
 ---
 title: Resizable
-description: Draggable panels that allow users to resize adjacent sections.
+description: Draggable split panels with a resize handle.
 ---
 
 ## Usage
@@ -10,36 +10,60 @@ import {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle,
-} from '@acronis-platform/shadcn-uikit';
+} from '@acronis-platform/ui-react';
 ```
 
+`Resizable` wraps [`react-resizable-panels`](https://github.com/bvaughn/react-resizable-panels).
+`ResizablePanelGroup` lays out `ResizablePanel` children along an `orientation`
+(`horizontal` or `vertical`), separated by a `ResizableHandle` the user drags.
+The handle is themed by the `--ui-resizable-*` tokens; pass `withHandle` to show
+a grab-bar pill.
+
+## Examples
+
+A horizontal split (sidebar + content):
+
 ```tsx
-<ResizablePanelGroup direction="horizontal">
-  <ResizablePanel defaultSize={50}>Left panel</ResizablePanel>
+<ResizablePanelGroup orientation="horizontal">
+  <ResizablePanel defaultSize={40} minSize={20}>
+    Sidebar
+  </ResizablePanel>
   <ResizableHandle withHandle />
-  <ResizablePanel defaultSize={50}>Right panel</ResizablePanel>
+  <ResizablePanel defaultSize={60}>Content</ResizablePanel>
 </ResizablePanelGroup>
 ```
 
-## Overview
+A vertical split (editor + preview):
 
-Built on top of `react-resizable-panels`, the Resizable components provide draggable dividers between content areas. The `ResizableHandle` supports an optional drag handle icon via the `withHandle` prop.
+```tsx
+<ResizablePanelGroup orientation="vertical">
+  <ResizablePanel defaultSize={60}>Editor</ResizablePanel>
+  <ResizableHandle withHandle />
+  <ResizablePanel defaultSize={40}>Preview</ResizablePanel>
+</ResizablePanelGroup>
+```
+
+A plain handle without the grab-bar pill:
+
+```tsx
+<ResizablePanelGroup orientation="horizontal">
+  <ResizablePanel defaultSize={50}>One</ResizablePanel>
+  <ResizableHandle />
+  <ResizablePanel defaultSize={50}>Two</ResizablePanel>
+</ResizablePanelGroup>
+```
 
 ## API Reference
 
-### ResizablePanelGroup
-
-Wraps `react-resizable-panels` `Group`. Accepts `direction` (`"horizontal"` | `"vertical"`) and all props from the underlying `PanelGroup` component.
-
-### ResizablePanel
-
-Re-exports the `Panel` component from `react-resizable-panels`. Accepts `defaultSize`, `minSize`, `maxSize`, `collapsible`, and all standard panel props.
-
 ### ResizableHandle
 
-Wraps the `Separator` from `react-resizable-panels`.
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/resizable/resizable.tsx"
+  name="ResizableHandleProps"
+/>
 
-| Prop         | Type      | Default | Description                                  |
-| ------------ | --------- | ------- | -------------------------------------------- |
-| `withHandle` | `boolean` | `false` | Show a visible grip icon on the drag handle. |
-| `className`  | `string`  | —       | Additional CSS class names.                  |
+`ResizablePanelGroup` and `ResizablePanel` pass through the `Group` and `Panel`
+props of `react-resizable-panels` (e.g. `orientation`, `defaultSize`, `minSize`,
+`maxSize`, `onResize`). See the
+[react-resizable-panels API](https://github.com/bvaughn/react-resizable-panels)
+for the full list.
