@@ -88,6 +88,13 @@ jobs:
           rm -rf apps/demo/dist/storybook-react
           cp -r packages/ui-react/storybook-static apps/demo/dist/storybook-react
 
+      # The docs import @acronis-platform/ui-react (and icons-react) from their
+      # built dist — the ui-react Storybook build above only bundles src, it does
+      # not emit the library dist — so build the ui-react library (+ its deps)
+      # before the docs build, or the static export fails to resolve the package.
+      - name: Build docs dependencies
+        run: pnpm --filter "@acronis-platform/ui-react..." run build
+
       - name: Build docs
         run: DOCS_STATIC_EXPORT=true DOCS_BASE_PATH=/uikit/docs pnpm --filter ./apps/docs run build
 

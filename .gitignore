@@ -51,6 +51,7 @@ storybook-static
 
 # Fumadocs
 .source
+/apps/docs/out/
 
 # AI
 .ai
