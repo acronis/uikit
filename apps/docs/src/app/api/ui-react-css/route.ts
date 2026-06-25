@@ -30,7 +30,7 @@ export function GET() {
   return new Response(loadCss(), {
     headers: {
       'content-type': 'text/css; charset=utf-8',
-      'cache-control': 'public, max-age=31536000, immutable',
-    },
+      'cache-control': 'public, max-age=3600, stale-while-revalidate=86400',
+    }
   });
 }
