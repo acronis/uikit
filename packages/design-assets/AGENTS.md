@@ -21,7 +21,7 @@ This is the only script that does real work. From the repo root:
 
 ```bash
 pnpm --filter @acronis-platform/design-assets test       # alias for validate
-pnpm --filter @acronis-platform/design-assets validate    # ajv-compiles both schemas, validates packs/*.json and rules/*.json
+pnpm --filter @acronis-platform/design-assets validate    # ajv + manifest/export audit (packs, rules, $file existence, per-pack export coverage)
 ```
 
 `build` / `dev` / `clean` / `lint` / `typecheck` are intentional no-ops

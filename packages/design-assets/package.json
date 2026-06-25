@@ -39,7 +39,7 @@
     "typecheck": "echo \"no typecheck (JSON data package)\" && exit 0",
     "sync": "tsx ../../tools/figma-design-assets-sync/src/index.ts",
     "validate:manifest": "tsx ../../tools/figma-design-assets-sync/src/validate-manifest.ts",
-    "validate": "ajv compile -s schemas/pack.schema.json --spec=draft2020 && ajv compile -s schemas/rule.schema.json --spec=draft2020 && ajv validate -s schemas/pack.schema.json -d \"packs/*.json\" --spec=draft2020 && ajv validate -s schemas/rule.schema.json -d \"rules/*.json\" --spec=draft2020"
+    "validate": "ajv compile -s schemas/pack.schema.json --spec=draft2020 && ajv compile -s schemas/rule.schema.json --spec=draft2020 && ajv validate -s schemas/pack.schema.json -d \"packs/*.json\" --spec=draft2020 && ajv validate -s schemas/rule.schema.json -d \"rules/*.json\" --spec=draft2020 && node ./scripts/validate-manifests-and-exports.mjs"
   },
   "keywords": [
     "design-assets",

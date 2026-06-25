@@ -213,8 +213,8 @@ pnpm validate          # from packages/design-assets/
 
 `pnpm validate` compiles both schemas and checks every pack manifest and rule file. Run before
 committing. It catches missing required keys, wrong shapes, invalid asset ids, invalid `$file`
-paths. It does **not** check that `$file` paths resolve to real binaries on disk — verify that
-by eye or by running your translator end-to-end.
+paths, missing binaries referenced by `$file`, and per-pack subpath export coverage in
+`package.json`.
 
 ### Third-party sources
 
