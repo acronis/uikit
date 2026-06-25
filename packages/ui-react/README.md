@@ -29,7 +29,24 @@ export function Example() {
 }
 ```
 
-Toggle dark mode by adding the `dark` class to an ancestor element.
+`@acronis-platform/ui-react/styles` loads the `acronis` token base. To switch
+theme at runtime:
+
+```css
+/* base brand */
+@import '@acronis-platform/ui-react/styles';
+
+/* optional: layer another brand override on top */
+@import '@acronis-platform/tokens-pd/css/deep-sky.css';
+```
+
+```html
+<!-- light/dark mode -->
+<html data-theme="dark"></html>
+```
+
+Light/dark is driven by `light-dark()` + `color-scheme`; `dark:` utilities are
+wired to `[data-theme='dark']`.
 
 ## Fonts
 

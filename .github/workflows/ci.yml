@@ -11,6 +11,26 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    env:
+      WORKSPACES: >-
+        @acronis-platform/shadcn-uikit-demo
+        @acronis-platform/shadcn-uikit-demos
+        @acronis-platform/shadcn-uikit-docs
+        @acronis-platform/kitchen-sink
+        @acronis-platform/design-assets
+        @acronis-platform/design-tokens
+        @acronis-platform/icons-react
+        @acronis-platform/icons-sprite
+        @acronis-platform/icons-svg
+        @acronis-platform/icons-svg-next
+        @acronis-platform/tokens-pd
+        @acronis-platform/shadcn-uikit
+        @acronis-platform/ui-react
+        @acronis-platform/ui-spec
+        @acronis-platform/figma-design-assets-sync
+        @acronis-platform/figma-icons-fetcher
+        @acronis-platform/figma-token-exporter
+        @acronis-platform/style-dictionary
 
     steps:
       - name: Checkout
@@ -57,15 +77,23 @@ jobs:
       - name: Build library dependencies
         run: pnpm --filter "@acronis-platform/ui-react..." run build
 
-      - name: Lint
-        run: pnpm -r lint
+      - name: Lint (per workspace)
+        run: |
+          set -euo pipefail
+          for workspace in $WORKSPACES; do
+            pnpm --filter "$workspace" lint
+          done
 
       # Generate the fumadocs .source files needed by apps/docs typecheck.
       - name: Generate fumadocs source
         run: pnpm --filter @acronis-platform/shadcn-uikit-docs exec fumadocs-mdx
 
-      - name: Typecheck
-        run: pnpm -r typecheck
+      - name: Typecheck (per workspace)
+        run: |
+          set -euo pipefail
+          for workspace in $WORKSPACES; do
+            pnpm --filter "$workspace" typecheck
+          done
 
       # Build runs last so the topological build order (ui → demo / docs)
       # is exercised against the same lockfile we just installed from.
@@ -77,8 +105,12 @@ jobs:
       - name: Verify generated tokens-pd is committed
         run: git diff --exit-code -- packages/tokens-pd
 
-      - name: Test
-        run: pnpm -r test
+      - name: Test (per workspace)
+        run: |
+          set -euo pipefail
+          for workspace in $WORKSPACES; do
+            pnpm --filter "$workspace" test
+          done
 
   # ── design-assets → SVG/React build ────────────────────────────────────────
   # Incrementally rebuilds the asset artifacts when their inputs change, per the

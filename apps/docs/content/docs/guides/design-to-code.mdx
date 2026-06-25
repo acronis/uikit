@@ -1,0 +1,83 @@
+---
+title: Design-to-code contributor workflow
+description: How contributors use Figma design context and Code Connect when implementing or updating ui-react components.
+---
+
+# Design-to-code contributor workflow
+
+This guide documents the contributor flow for E4 ("Figma ↔ Code"), focused on:
+
+- reading design context from Figma
+- implementing/updating `packages/ui-react` components
+- keeping Figma Code Connect and specs in sync
+
+## Prerequisites
+
+- Node 22 + pnpm 10
+- Repo dependencies installed from the root:
+
+```bash
+pnpm install --frozen-lockfile
+```
+
+- Figma access and a node URL for the target component/variant
+- `FIGMA_ACCESS_TOKEN` exported for Code Connect validation/publish flows
+
+## Workflow
+
+### 1) Start from readiness (existing component) or from a Figma URL (new component)
+
+- Existing component update: run `/component-readiness <ComponentName>` first.
+- New component: start directly with `/figma-component <ComponentName> <figma-url>`.
+
+`/component-readiness` is read-only and helps detect token drift, missing tests/spec files, and incomplete Code Connect links before implementation.
+
+### 2) Read design context from Figma
+
+Use the selected node and its exact properties (variant/state/size/etc.) as the source of truth.
+
+Rules:
+
+- map design variables to `--ui-*` tokens (do not copy raw hex/number values)
+- keep Figma property names exact for `figma.enum(...)` / `figma.boolean(...)`
+- treat interaction states (`hover`, `active`, `focus-visible`) as behavior, not always as public API
+
+### 3) Implement the component update
+
+For `ui-react` work, keep the standard shape:
+
+- component source in `packages/ui-react/src/components/ui/<component>/`
+- tests in `__tests__/`
+- stories in `__stories__/`
+- Code Connect file `<component>.figma.tsx` (or update existing one)
+
+If the change affects the framework-agnostic component contract, update `packages/ui-spec/components/<name>/` accordingly.
+
+### 4) Validate locally
+
+Typical checks:
+
+```bash
+pnpm --filter @acronis-platform/ui-react lint
+pnpm --filter @acronis-platform/ui-react typecheck
+pnpm --filter @acronis-platform/ui-react test
+pnpm --filter @acronis-platform/ui-react figma:connect
+pnpm --filter @acronis-platform/ui-spec test
+```
+
+Run broader repo checks when needed (`pnpm lint`, `pnpm build`, `pnpm test`) before merge.
+
+### 5) Finalize the contribution
+
+- Ensure Figma linkage is complete in both places:
+  - component `*.figma.tsx` mapping
+  - `packages/ui-spec/components/<name>/index.yaml` Figma link metadata
+- Add/update docs when API or behavior changed
+- Add a changeset only when a published package changes (not needed for docs-only changes)
+
+## Recommended command shortcuts
+
+```text
+/component-readiness Button
+/figma-component Button https://www.figma.com/design/.../node-id
+```
