@@ -1,5 +1,15 @@
 # @acronis-platform/ui-react
 
+## 0.35.0
+
+### Minor Changes
+
+- [#396](https://github.com/acronis/uikit/pull/396) [`051f91c`](https://github.com/acronis/uikit/commit/051f91ce89129acc1e572925a152637477f82b1e) Thanks [@leonid](https://github.com/leonid)! - Add an optional `portalContainer` prop to `InputSelectContent` (mirroring
+  `TooltipContent`). It forwards to the underlying Base UI `Select.Portal`'s
+  `container`, so the dropdown can be portaled into a scoped root (e.g. a shadow
+  root) and inherit styles defined there instead of always mounting on
+  `document.body`.
+
 ## 0.34.0
 
 ### Minor Changes
