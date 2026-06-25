@@ -447,3 +447,93 @@ export const SectionActionsAndRollup: Story = {
     </Shell>
   ),
 };
+
+// The "Assets" reference: grouped, expandable sections of (icon-less) items, with
+// count Tags on leaf rows ("832" / "56") and a status Tag ("NEW") — all via the
+// `tag` extra. Mirrors the Figma Assets example.
+export const Assets: Story = {
+  render: () => (
+    <Shell height={640}>
+      <SidebarSecondary>
+        <SidebarSecondaryHeader label="Assets" />
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection expandable>
+            <SidebarSecondarySectionLabel>Devices</SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#" selected>
+                All devices
+                <SidebarSecondaryMenuItemExtras
+                  variant="tag"
+                  tag={
+                    <Tag variant="neutral" size="sm">
+                      832
+                    </Tag>
+                  }
+                />
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Managed devices</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">
+                Discovered devices
+                <SidebarSecondaryMenuItemExtras
+                  variant="tag"
+                  tag={
+                    <Tag variant="neutral" size="sm">
+                      56
+                    </Tag>
+                  }
+                />
+              </SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+          <SidebarSecondarySection expandable>
+            <SidebarSecondarySectionLabel>Virtualization</SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#">VMware</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Virtuozzo</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Cyber Frame</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Scale Computing</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+          <SidebarSecondarySection expandable>
+            <SidebarSecondarySectionLabel>Public cloud</SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#">Microsoft Azure</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+          <SidebarSecondarySection expandable>
+            <SidebarSecondarySectionLabel>SaaS</SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#">Microsoft 365</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Microsoft Entra ID</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">
+                Mail servers
+                <SidebarSecondaryMenuItemExtras
+                  variant="tag"
+                  tag={
+                    <Tag variant="success" size="sm">
+                      NEW
+                    </Tag>
+                  }
+                />
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Google Workspace</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+          <SidebarSecondarySection expandable>
+            <SidebarSecondarySectionLabel>Network</SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#">Network Attached Storage</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+        <SidebarSecondaryFooter>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryCollapseTrigger icon={<ChevronLeftIcon />}>
+              Collapse menu
+            </SidebarSecondaryCollapseTrigger>
+          </SidebarSecondaryMenu>
+        </SidebarSecondaryFooter>
+      </SidebarSecondary>
+    </Shell>
+  ),
+};

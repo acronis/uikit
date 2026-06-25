@@ -14,6 +14,7 @@ import {
   ShieldCheckIcon,
   StarIcon,
 } from '@acronis-platform/icons-react/stroke-mono';
+import { AcronisIcon } from '@acronis-platform/icons-react/solid-mono';
 
 import { Tag } from '../../tag';
 import {
@@ -86,13 +87,20 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// A stand-in for the consumer-slotted product logo (R7) — the Header just sizes
-// whatever img/svg lands inside it.
+// The Acronis Cyber Platform brand lockup from the Figma primary example: the
+// Acronis A-mark (`AcronisIcon`, sized by the Header's logo-height token) + the
+// wordmark, which the rail hides when collapsed. Both inherit
+// `--ui-sidebar-primary-global-logo-color`, so the lockup adapts per brand/theme
+// exactly like the design.
 function LogoMark() {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-label="Acronis">
-      <path d="M12 2 2 22h20L12 2Zm0 6 5 10H7l5-10Z" />
-    </svg>
+    <span className="flex items-center gap-2">
+      <AcronisIcon aria-hidden="true" />
+      <span className="leading-[1.15] group-data-[state=collapsed]/sidebar:hidden">
+        <span className="block text-base font-semibold">Acronis</span>
+        <span className="block text-sm">Cyber Platform</span>
+      </span>
+    </span>
   );
 }
 

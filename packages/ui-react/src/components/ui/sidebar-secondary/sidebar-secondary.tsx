@@ -495,6 +495,21 @@ const SidebarSecondaryMenuItem = React.forwardRef<
 >(({ className, selected = false, icon, render, children, ...props }, ref) => {
   const { expanded } = useSidebarSecondaryContext();
 
+  // Trailing extras (tag / shortcut / external link) are passed as children but
+  // must sit at the right edge of the row, after the title — so split them out:
+  // the title takes the remaining width and truncates with an ellipsis, while the
+  // extras stay `shrink-0` on the right (the row's `gap` is their left margin).
+  const items = React.Children.toArray(children);
+  const extras = items.filter(
+    (child): child is React.ReactElement =>
+      React.isValidElement(child) &&
+      (child.type as { displayName?: string }).displayName ===
+        'SidebarSecondaryMenuItemExtras'
+  );
+  const label = items.filter(
+    (child) => !extras.includes(child as React.ReactElement)
+  );
+
   const inner = useRender({
     render,
     ref,
@@ -518,10 +533,16 @@ const SidebarSecondaryMenuItem = React.forwardRef<
             {/* Keep the label in the DOM as `sr-only` in collapsed/rail mode so
                 an icon-only row keeps an accessible name (a11y §7). */}
             <span
-              className={cn('flex-1 truncate text-left', !expanded && 'sr-only')}
+              className={cn(
+                'min-w-0 flex-1 truncate text-left',
+                !expanded && 'sr-only'
+              )}
             >
-              {children}
+              {label}
             </span>
+            {extras.length > 0 && (
+              <span className="flex shrink-0 items-center">{extras}</span>
+            )}
           </>
         ),
       },
