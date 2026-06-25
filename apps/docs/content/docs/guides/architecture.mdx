@@ -27,7 +27,7 @@ next-generation successor to the legacy `@acronis-platform/shadcn-uikit`.
 ### Token-driven theming
 
 - Color, typography, and component metrics resolve to `--ui-*` CSS custom
-  properties from [`@acronis-platform/tokens-pd`](/docs/packages/tokens-pd).
+  properties from [`@acronis-platform/tokens-pd`](/packages/tokens-pd).
 - Values are **never** hand-authored in components. Light/dark is handled by the
   tokens' `light-dark()` + `color-scheme`, driven by the `[data-theme]`
   attribute — no rebuild to switch themes or brands.
@@ -54,7 +54,7 @@ component:
 ```
 
 Change a color in `design-tokens` and rebuild `tokens-pd`; every consumer
-follows automatically. See [Packages](/docs/packages) for each tier.
+follows automatically. See [Packages](/packages) for each tier.
 
 ## Styling: two ways to reference a token
 
@@ -146,7 +146,7 @@ export { Button, buttonVariants };
 ## Build & distribution
 
 - Built with **Vite 6** in library mode; the published output is ES modules with
-  preserved module structure for [tree-shaking](/docs/guides/tree-shaking).
+  preserved module structure for [tree-shaking](/guides/tree-shaking).
 - `.figma.tsx`, `.test.tsx`, and `.stories.tsx` files are excluded from the
   bundle.
 - Stories double as **visual-regression** cases, screenshotted in Docker and

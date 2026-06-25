@@ -104,8 +104,17 @@ with usage examples instead.
 ### `AutoTypeTable` global registration
 
 `AutoTypeTable` is registered as a global MDX component in
-`src/app/docs/[[...slug]]/page.tsx`. MDX files do **not** need to
+`src/app/[...slug]/page.tsx`. MDX files do **not** need to
 import it.
+
+### Routing
+
+Docs content is served at the app **root** (`/<slug>`), not under `/docs` —
+Fumadocs `source` uses `baseUrl: '/'` and the catch-all lives at
+`src/app/[...slug]/`. The marketing landing is `src/app/page.tsx` at `/`. This
+keeps URLs single-segment under the deploy basePath (`/uikit/docs/<page>`, not
+`/uikit/docs/docs/<page>`). Internal links therefore point at `/<page>` (e.g.
+`/components/button`), never `/docs/<page>`.
 
 ## Search
 

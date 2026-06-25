@@ -21,7 +21,7 @@ export default function ErrorPage({
           Try again
         </button>
         <Link
-          href="/docs"
+          href="/"
           className="text-primary underline underline-offset-4 hover:text-primary/80"
         >
           Back to documentation

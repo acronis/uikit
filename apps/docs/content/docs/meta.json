@@ -1,7 +1,6 @@
 {
   "title": "UIKit Docs",
   "pages": [
-    "index",
     "getting-started",
     "theming",
     "components",

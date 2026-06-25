@@ -17,7 +17,7 @@ import { Callout } from 'fumadocs-ui/components/callout';
 
 <Callout type="warn" title="Legacy guide">
   This guide documents the `@acronis-platform/shadcn-uikit` `Form` / `Field`
-  layers. The next-gen [`@acronis-platform/ui-react`](/docs/components) library
+  layers. The next-gen [`@acronis-platform/ui-react`](/components) library
   composes forms directly from its input primitives (`InputText`, `InputSelect`,
   `Checkbox`, `Radio`, `Switch`) without a dedicated `Form` / `Field`
   abstraction.
@@ -152,7 +152,7 @@ Every form control in UIKit has a consistent anatomy. The table below shows how 
 
 `FormMessage` renders the first validation error for the field. It reads from form context and shows nothing when the field is valid.
 
-When using **TanStack Form or any non-RHF library**, use `Field` / `FieldLabel` / `FieldError` instead — see the [Field component docs](/docs/components/field) and the [TanStack Form section](#tanstack-form--zod) below.
+When using **TanStack Form or any non-RHF library**, use `Field` / `FieldLabel` / `FieldError` instead — see the [Field component docs](/components/field) and the [TanStack Form section](#tanstack-form--zod) below.
 
 ---
 
@@ -267,7 +267,7 @@ Install the packages:
 pnpm add @tanstack/react-form @tanstack/zod-form-adapter
 ```
 
-TanStack Form has no React Hook Form context, so use the **[Field](/docs/components/field)** layer (`Field`, `FieldLabel`, `FieldDescription`, `FieldError`) instead of the `FormItem`/`FormLabel` RHF primitives.
+TanStack Form has no React Hook Form context, so use the **[Field](/components/field)** layer (`Field`, `FieldLabel`, `FieldDescription`, `FieldError`) instead of the `FormItem`/`FormLabel` RHF primitives.
 
 <DemoPreview sourcePath="apps/demos/src/field/FieldTanstackForm.tsx">
   <FieldTanstackForm />

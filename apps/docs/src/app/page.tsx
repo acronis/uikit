@@ -176,8 +176,8 @@ export default function HomePage() {
       nav={{ title: 'Acronis UIKit', transparentMode: 'top' }}
       githubUrl="https://github.com/acronis/uikit"
       links={[
-        { type: 'main', text: 'Documentation', url: '/docs' },
-        { type: 'main', text: 'Components', url: '/docs/components' },
+        { type: 'main', text: 'Documentation', url: '/getting-started' },
+        { type: 'main', text: 'Components', url: '/components' },
         { type: 'main', text: 'Storybook', url: '/storybook-react' },
         // { type: 'main', text: 'Demo', url: '/demo' },
       ]}
@@ -251,7 +251,7 @@ export default function HomePage() {
         {/* CTAs */}
         <div className="hero-animate hero-animate-4 flex flex-wrap items-center justify-center gap-3">
           <Link
-            href="/docs/getting-started"
+            href="/getting-started"
             className="cta-primary inline-flex items-center gap-2 rounded-lg font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             style={{
               background: primary,
@@ -279,7 +279,7 @@ export default function HomePage() {
             </svg>
           </Link>
           <Link
-            href="/docs/components"
+            href="/components"
             className="inline-flex items-center gap-2 rounded-lg border font-semibold transition-colors hover:bg-fd-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:ring-offset-2"
             style={{
               height: '2.75rem',
@@ -585,7 +585,7 @@ export default function HomePage() {
 
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Link
-              href="/docs/getting-started"
+              href="/getting-started"
               className="cta-primary inline-flex items-center gap-2 rounded-lg font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
               style={{
                 background: primary,

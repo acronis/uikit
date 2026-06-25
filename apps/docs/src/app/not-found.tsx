@@ -6,7 +6,7 @@ export default function NotFound() {
       <h1 className="text-4xl font-bold">404</h1>
       <p className="text-muted-foreground">This page could not be found.</p>
       <Link
-        href="/docs"
+        href="/"
         className="text-primary underline underline-offset-4 hover:text-primary/80"
       >
         Back to documentation
