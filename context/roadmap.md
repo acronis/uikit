@@ -1,6 +1,6 @@
 # Acronis UI Kit — Roadmap
 
-> Status: **ratified & on the board** · Owner: Leonid Romanov · Last updated: 2026-06-05
+> Status: **ratified & on the board** · Owner: Leonid Romanov · Last updated: 2026-06-25
 > Tracks GitHub Project [acronis/projects/3](https://github.com/orgs/acronis/projects/3)
 > ("User Interface Kit Development"). The 7 epics below are issues **#102–108**;
 > ~98 task issues are linked as sub-issues with Status / Phase (P1–P5) / Size set.
@@ -38,6 +38,13 @@ defined deprecation path.
    **phased out by Q3 2026**; after that it is security-only. **v1 scope** = all
    basic Base UI components + our design-system components + selected complex
    components (Table & friends).
+5. **A11y bar + browser support matrix (issue #193).** `ui-react` v1 targets
+   **WCAG 2.1 AA** for shipped components and docs surfaces (keyboard operation,
+   visible focus, semantic name/role/value, and contrast: 4.5:1 text, 3:1
+   non-text indicators). Supported browsers for v1 and per-component DoD
+   verification: **Chrome 123+ · Edge 123+ · Firefox 120+ · Safari 17.5+**
+   (desktop), matching the `light-dark()` + `color-scheme` token delivery
+   baseline used by `tokens-pd`.
 
 ---
 
@@ -165,6 +172,8 @@ Depends on Tier 1–2 primitives (Tooltip, Dropdown, Checkbox, Scroll Area).
 - [ ] Visual regression (Storybook-based) light + dark
 - [ ] Changesets discipline + release pipeline reliability
 - [ ] Define **ui-react 1.0 criteria** (which components, a11y bar, stable token contract)
+- [x] Ratify a11y bar + browser support matrix (#193) — WCAG 2.1 AA; Chrome/Edge
+      123+, Firefox 120+, Safari 17.5+.
 
 ---
 
@@ -212,8 +221,7 @@ migration guide (E6). On v1, `ui-legacy` goes security-only.
 To ratify early (they shape APIs/scope); tracked on the board under their epic:
 
 1. **RSC/Next support** → #192 (E2, P2) — settle before primitive detail.
-2. **A11y level + browser matrix** → #193 (E7, P2).
-3. **Codemods vs manual migration** → #194 (E6, P3).
+2. **Codemods vs manual migration** → #194 (E6, P3).
 
 ---
 
