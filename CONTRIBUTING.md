@@ -130,9 +130,19 @@ The files located at `types` folder. You can find more information about TypeScr
 ### Bump Version & Update Changelog
 
 We use [changesets](https://github.com/changesets/changesets) to manage versions
-and changelogs. **Every PR that changes the published UI library
-(`@acronis-platform/shadcn-uikit`) must include a changeset**, otherwise the
-release PR won't know what to bump.
+and changelogs. **Every PR that changes a published workspace's released
+surface must include a changeset**, otherwise the release PR won't know what to
+bump.
+
+Published workspaces are:
+
+- `@acronis-platform/shadcn-uikit` (`packages/ui-legacy`)
+- `@acronis-platform/ui-react`
+- `@acronis-platform/icons-react`
+- `@acronis-platform/icons-sprite`
+- `@acronis-platform/tokens-pd`
+- `@acronis-platform/design-tokens`
+- `@acronis-platform/design-assets`
 
 From the repo root:
 
@@ -149,8 +159,8 @@ You don't need a changeset for changes scoped to the apps (`apps/demo`,
 
 On merge to `main`, the `Release` workflow opens (or updates) a single
 "Version Packages" PR aggregating all pending changesets. Merging that PR
-publishes the bumped package to both npm and GitHub Packages and creates the
-corresponding GitHub Release.
+publishes bumped packages to npm and GitHub Packages and creates the
+corresponding GitHub Releases.
 
 Commit messages still follow [Conventional Commits](https://www.conventionalcommits.org/)
 so the existing commitlint hook keeps working, but the **release version is

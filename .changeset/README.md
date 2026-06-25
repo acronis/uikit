@@ -19,8 +19,17 @@ On merge to `main`, the Release workflow opens (or updates) a
 "Version Packages" PR that bumps versions and rewrites `CHANGELOG.md`.
 Merging that PR triggers the actual publish to npm and GitHub Packages.
 
-Only `@acronis-platform/shadcn-uikit` is published today. The apps in
-`apps/*` are listed as ignored in `config.json`, so changesets won't try to
-publish them or insist on bumps for changes scoped to them.
+Published workspaces are:
+
+- `@acronis-platform/shadcn-uikit` (`packages/ui-legacy`)
+- `@acronis-platform/ui-react`
+- `@acronis-platform/icons-react`
+- `@acronis-platform/icons-sprite`
+- `@acronis-platform/tokens-pd`
+- `@acronis-platform/design-tokens`
+- `@acronis-platform/design-assets`
+
+The apps in `apps/*` are listed as ignored in `config.json`, so changesets
+won't try to publish them or insist on bumps for app-only changes.
 
 For details, see [the changesets docs](https://github.com/changesets/changesets/blob/main/docs/intro-to-using-changesets.md).

@@ -35,6 +35,68 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect published-workspace changes
+        if: "github.event_name == 'pull_request' && github.event.pull_request.title != 'chore(release): version packages'"
+        id: changeset_filter
+        uses: dorny/paths-filter@v3
+        with:
+          list-files: shell
+          filters: |
+            published:
+              - 'packages/ui-legacy/**'
+              - 'packages/ui-react/**'
+              - 'packages/icons-react/**'
+              - 'packages/icons-sprite/**'
+              - 'packages/tokens-pd/**'
+              - 'packages/design-tokens/**'
+              - 'packages/design-assets/**'
+            changeset:
+              - '.changeset/*.md'
+
+      - name: Enforce changeset for published-surface PRs
+        if: "github.event_name == 'pull_request' && github.event.pull_request.title != 'chore(release): version packages'"
+        env:
+          PUBLISHED_FILES: ${{ steps.changeset_filter.outputs.published_files }}
+          HAS_CHANGESET: ${{ steps.changeset_filter.outputs.changeset }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${PUBLISHED_FILES:-}" ]; then
+            echo "No published-workspace changes detected."
+            exit 0
+          fi
+
+          requires_changeset=false
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            case "$file" in
+              # docs / metadata
+              */README.md|*/CHANGELOG.md|*/CONTRIBUTING.md|*/AGENTS.md|*/context/*)
+                ;;
+              # test-only/story-only changes
+              */__tests__/*|*.test.*|*.spec.*|*.stories.*)
+                ;;
+              *)
+                requires_changeset=true
+                echo "Published-surface change detected: $file"
+                ;;
+            esac
+          done <<< "$PUBLISHED_FILES"
+
+          if [ "$requires_changeset" = true ] && [ "${HAS_CHANGESET}" != "true" ]; then
+            echo "A changeset is required for published-surface changes."
+            echo "Run 'pnpm changeset' and commit the generated .changeset/*.md file."
+            exit 1
+          fi
+
+          if [ "$requires_changeset" = true ]; then
+            echo "Changeset check passed."
+          else
+            echo "Only non-release-impacting published-workspace files changed."
+          fi
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v6
