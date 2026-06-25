@@ -76,20 +76,28 @@ export function ShadowDemo({ children, center }: ShadowDemoProps) {
 
   useEffect(() => {
     const host = hostRef.current;
-    if (!host || host.shadowRoot) return;
-    const root = host.attachShadow({ mode: 'open' });
+    if (!host) return;
 
-    const style = document.createElement('style');
-    style.textContent = WRAPPER_CSS;
-    root.appendChild(style);
-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'sd-wrapper';
-    root.appendChild(wrapper);
+    // A shadow root can only be attached once per element, so on a re-run
+    // (React Strict Mode double-invokes effects in dev) reuse the existing one
+    // rather than bailing — bailing here would leave `mount` unset after the
+    // first run's cleanup cancelled it, so the preview renders empty on
+    // client-side navigation.
+    let root = host.shadowRoot;
+    if (!root) {
+      root = host.attachShadow({ mode: 'open' });
+      const style = document.createElement('style');
+      style.textContent = WRAPPER_CSS;
+      root.appendChild(style);
+      const wrapper = document.createElement('div');
+      wrapper.className = 'sd-wrapper';
+      root.appendChild(wrapper);
+    }
+    const wrapper = root.querySelector<HTMLElement>('.sd-wrapper');
 
     let cancelled = false;
     getSheet().then((sheet) => {
-      if (cancelled || !sheet) return;
+      if (cancelled || !sheet || !wrapper) return;
       root.adoptedStyleSheets = [sheet];
       setMount(wrapper);
     });
