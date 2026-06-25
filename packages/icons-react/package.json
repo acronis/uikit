@@ -39,6 +39,7 @@
     "README.md",
     "LICENSE"
   ],
+  "sideEffects": false,
   "scripts": {
     "generate": "tsx scripts/generate-icons.ts",
     "build": "pnpm run generate && vite build -c vite.lib.config.ts",
