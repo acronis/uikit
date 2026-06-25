@@ -1,0 +1,18 @@
+spec_version: '1.0'
+component: InputSelect
+name: input-select
+status: ready
+category: forms
+description: >-
+  The next-gen select field: an optional label (with a required marker), a
+  trigger box showing the value / placeholder and a chevron, an optional
+  description or error message, and a floating dropdown with an in-dropdown
+  search, sections (groups), single or multiple selectable items, and
+  loading / empty / error status. Composes Base UI `Select` and the
+  `--ui-input-select-*` token tier.
+since: 0.29.0
+dependencies:
+  components: [Checkbox]
+figma:
+  node: '2639-293'
+  codeConnect: packages/ui-react/src/components/ui/input-select/input-select.figma.tsx

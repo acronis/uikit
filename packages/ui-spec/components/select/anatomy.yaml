@@ -13,11 +13,11 @@ schematic: |
                                            |  | item            (indicator)| |
                                            |  +---------------------------+ |
                                            +--------------------------------+
-   value     -> selected label or placeholder (--ui-form-text-value / -placeholder)
-   icon      -> chevron (--ui-form-icon-idle), rotates 180° when open
-   popup     -> floating listbox (bg-background / border-border)
-   item      -> an option; highlighted row uses bg-accent
-   indicator -> check shown on the selected item (--ui-form-icon-idle)
+   value     -> selected label or placeholder (--ui-input-select-global-value-color-idle / -placeholder-color-idle)
+   icon      -> chevron (--ui-input-select-normal-icon-expand-color-idle), rotates 180° when open
+   popup     -> floating listbox (--ui-input-select-dropdown-container-color / -border-color)
+   item      -> an option; highlighted row uses --ui-input-select-dropdown-item-unselected-container-color-hover
+   indicator -> check shown on the selected item (--ui-input-select-normal-icon-expand-color-hover)
    group / group-label -> optional labelled section of items
 
 root:
@@ -28,28 +28,32 @@ root:
     the current value (or placeholder) and a chevron; pressing it opens the
     popup. `Select.Root` owns the open/selection state and renders no element of
     its own; the trigger is the focusable control. Geometry and colors come from
-    the `--ui-form-*` tokens.
+    the `--ui-input-select-*` tokens.
 
 parts:
   - id: value
     description: >-
       The selected option's label, or the placeholder when nothing is selected
-      (Base UI `Select.Value`). `--ui-form-text-value` / `--ui-form-text-placeholder`.
+      (Base UI `Select.Value`). `--ui-input-select-global-value-color-idle` /
+      `--ui-input-select-global-placeholder-color-idle`.
     element: span
   - id: icon
     description: >-
-      Trailing chevron (ChevronDownIcon, `--ui-form-icon-idle`) that rotates 180°
-      while the popup is open. `--ui-form-icon-disabled` when disabled.
+      Trailing chevron (ChevronDownIcon, `--ui-input-select-normal-icon-expand-color-idle`)
+      that rotates 180° while the popup is open.
+      `--ui-input-select-normal-icon-expand-color-disabled` when disabled.
     element: span
   - id: popup
     description: >-
       The floating listbox panel (`role="listbox"`) holding the options. Portaled
-      and positioned below the trigger; `bg-background`, `border-border`, shadow.
+      and positioned below the trigger; `--ui-input-select-dropdown-container-color`,
+      `--ui-input-select-dropdown-container-border-color`, shadow.
     element: div
   - id: item
     description: >-
-      A single option (`role="option"`). The highlighted row uses `bg-accent`;
-      a disabled item is non-interactive (`--ui-form-text-disabled`).
+      A single option (`role="option"`). The highlighted row uses
+      `--ui-input-select-dropdown-item-unselected-container-color-hover`; a disabled
+      item is non-interactive.
     element: div
   - id: indicator
     description: A check mark (CheckIcon) shown on the selected item.
@@ -59,7 +63,7 @@ parts:
     element: div
     optional: true
   - id: group-label
-    description: The heading for a group (`--ui-text-on-surface-secondary`).
+    description: The heading for a group (`--ui-input-select-dropdown-section-label-group-color`).
     element: div
     optional: true
 

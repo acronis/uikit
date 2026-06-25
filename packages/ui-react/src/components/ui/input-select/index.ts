@@ -1,0 +1,17 @@
+export {
+  InputSelect,
+  InputSelectField,
+  InputSelectLabel,
+  InputSelectTrigger,
+  InputSelectValue,
+  InputSelectContent,
+  InputSelectSearch,
+  InputSelectGroup,
+  InputSelectSection,
+  InputSelectSectionLabel,
+  InputSelectItem,
+  InputSelectDescription,
+  InputSelectError,
+  InputSelectStatus,
+  type InputSelectStatusProps,
+} from './input-select';

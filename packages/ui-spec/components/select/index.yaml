@@ -6,8 +6,8 @@ category: forms
 description: >-
   A form control that displays the current selection and reveals a list of
   predefined options when activated. Composed from parts (trigger, value,
-  content, item); supports single or multiple selection. Built on the Base UI
-  Select primitive and themed with the shared `--ui-form-*` token tier.
+  content, item); supports single or multiple selection. An alias of the next-gen
+  `InputSelect` family, themed with the `--ui-input-select-*` token tier.
 since: 0.10.0
 dependencies:
   components:

@@ -1,0 +1,123 @@
+spec_version: '1.0'
+component: InputSelect
+
+# Framework-agnostic contract for a *composable* select field assembled from parts
+# (see anatomy.yaml). Property names are neutral; see `adapters` for per-framework
+# syntax. Selection and open state are each controllable or uncontrolled. The label,
+# required marker, description, and error are field furniture composed around the
+# trigger; the dropdown (search / sections / items / status) is composed inside the
+# content.
+contract:
+  properties:
+    - name: value
+      type: string | string[]
+      required: false
+      description: Controlled selected value(s). Pair with the change event.
+    - name: default-value
+      type: string | string[]
+      required: false
+      description: Initial selection when uncontrolled.
+    - name: open
+      type: boolean
+      required: false
+      description: Controlled open state of the options popup.
+    - name: default-open
+      type: boolean
+      required: false
+      default: false
+      description: Whether the popup is initially open when uncontrolled.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables the control; applies the disabled tokens and blocks opening.
+    - name: multiple
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Whether more than one option can be selected. Items show a leading
+        checkbox and the popup stays open on select.
+    - name: required
+      type: boolean
+      required: false
+      default: false
+      description: Marks the control required; the label shows a `*` marker.
+    - name: name
+      type: string
+      required: false
+      description: Form field name submitted with the form (via a hidden input).
+    - name: placeholder
+      type: string
+      required: false
+      description: Hint shown by the value part when nothing is selected.
+
+  events:
+    - name: value-change
+      payload: string | string[]
+      description: >-
+        Fired when the selection changes (React: `onValueChange`).
+    - name: open-change
+      payload: boolean
+      description: >-
+        Fired when the popup opens or closes (React: `onOpenChange`).
+
+  content:
+    - name: default
+      description: >-
+        The composed field: a field wrapper holding the label, the trigger (with
+        the value), and the description / error; then the content holding the
+        optional search, sections, items, or a status row. Provide an `items` map
+        on the root so the value part can render a selected option's label while
+        the popup is closed.
+
+  methods: []
+
+adapters:
+  react:
+    component: InputSelect
+    status: implemented
+    import: >-
+      import { InputSelect, InputSelectField, InputSelectLabel, InputSelectTrigger,
+      InputSelectValue, InputSelectContent, InputSelectSearch, InputSelectSection,
+      InputSelectSectionLabel, InputSelectItem, InputSelectDescription,
+      InputSelectError, InputSelectStatus } from '@acronis-platform/ui-react'
+    example: |
+      <InputSelect items={{ apple: 'Apple', banana: 'Banana' }} value={fruit} onValueChange={setFruit}>
+        <InputSelectField>
+          <InputSelectLabel required>Fruit</InputSelectLabel>
+          <InputSelectTrigger aria-invalid={Boolean(error)}>
+            <InputSelectValue placeholder="Select an option" />
+          </InputSelectTrigger>
+          {error ? (
+            <InputSelectError>{error}</InputSelectError>
+          ) : (
+            <InputSelectDescription>Pick your favourite</InputSelectDescription>
+          )}
+        </InputSelectField>
+        <InputSelectContent>
+          <InputSelectSearch placeholder="Search" value={q} onChange={(e) => setQ(e.target.value)} />
+          <InputSelectSection>
+            <InputSelectSectionLabel>Fruits</InputSelectSectionLabel>
+            <InputSelectItem value="apple">Apple</InputSelectItem>
+            <InputSelectItem value="banana">Banana</InputSelectItem>
+          </InputSelectSection>
+        </InputSelectContent>
+      </InputSelect>
+
+      {/* Status (instead of items) */}
+      <InputSelectContent>
+        <InputSelectStatus variant="empty">No data found</InputSelectStatus>
+      </InputSelectContent>
+  vue:
+    component: AvInputSelect
+    status: planned
+    import: "import { AvInputSelect } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvInputSelect v-model="fruit" :items="items" label="Fruit" placeholder="Select an option" />
+  web-components:
+    element: ui-input-select
+    status: planned
+    import: "import '@acronis-platform/ui-wc/input-select'"
+    example: |
+      <ui-input-select label="Fruit" placeholder="Select an option"></ui-input-select>
