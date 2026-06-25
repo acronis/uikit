@@ -13,7 +13,7 @@ tokens:
   - { name: --ui-radio-global-box-size, affects: item }
   - { name: --ui-radio-global-box-border-radius, affects: item }
   - { name: --ui-radio-global-box-border-width, affects: item }
-  - { name: --ui-radio-global-box-margin-t, affects: item }
+  - { name: --ui-radio-global-box-margin-x, affects: item }
   - { name: --ui-radio-global-container-gap, affects: container }
   - { name: --ui-radio-global-container-width-min, affects: container }
   - { name: --ui-radio-global-container-width-max, affects: container }

@@ -32,6 +32,8 @@ services:
       dockerfile: packages/ui-react/Dockerfile.storybook
     image: ui-react-storybook
     command: pnpm exec test-storybook --url http://storybook:6006 --maxWorkers=4
+    environment:
+      - STORYBOOK_COLOR_MODE=${STORYBOOK_COLOR_MODE:-light}
     depends_on:
       storybook:
         condition: service_healthy
