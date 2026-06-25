@@ -5,26 +5,33 @@ description: Customize the look and feel of Acronis UIKit using CSS custom prope
 
 ## How themes work
 
-Acronis UIKit uses CSS custom properties (variables) for all design tokens. Importing the styles gives you the default light theme:
+Acronis UIKit uses generated `--ui-*` CSS custom properties from
+`@acronis-platform/tokens-pd`.
+
+Load the default `acronis` base, then (optionally) layer another brand override
+on top:
 
 ```tsx
-import '@acronis-platform/shadcn-uikit/styles';
+import '@acronis-platform/ui-react/styles'; // includes tokens-pd/css/acronis.css
+import '@acronis-platform/tokens-pd/css/deep-sky.css'; // optional brand override
 ```
 
 ## Dark mode
 
-Add the `dark` class to your `<html>` element to activate dark mode:
+Dark mode is built into the tokens via `light-dark()` + `color-scheme`. Toggle
+the active scheme with `data-theme`:
 
 ```html
-<html class="dark"></html>
+<html data-theme="dark"></html>
 ```
 
 ## Theme switching
 
-Switch themes using the `data-theme` attribute:
+Brand switching is import-order based (last import wins), not a class toggle:
 
-```html
-<html data-theme="acronis-dark"></html>
+```css
+@import '@acronis-platform/tokens-pd/css/acronis.css';
+@import '@acronis-platform/tokens-pd/css/deep-sky.css';
 ```
 
 ## Design tokens
@@ -33,12 +40,12 @@ Key CSS variables you can override:
 
 | Variable                    | Purpose                |
 | --------------------------- | ---------------------- |
-| `--av-background-primary`   | Main page background   |
-| `--av-background-secondary` | Secondary surfaces     |
-| `--av-text-primary`         | Primary text color     |
-| `--av-text-secondary`       | Secondary / muted text |
-| `--av-border-secondary`     | Dividers and borders   |
-| `--av-accent-primary`       | Brand accent color     |
+| `--ui-background-surface-primary`   | Main page background   |
+| `--ui-background-surface-secondary` | Secondary surfaces     |
+| `--ui-text-on-surface-primary`      | Primary text color     |
+| `--ui-text-on-surface-secondary`    | Secondary / muted text |
+| `--ui-border-on-surface-border`     | Dividers and borders   |
+| `--ui-background-brand-primary`     | Brand accent color     |
 
 ## Custom theme
 
@@ -46,6 +53,6 @@ Override any variable in your CSS:
 
 ```css
 :root {
-  --av-accent-primary: hsl(270 60% 55%);
+  --ui-background-brand-primary: #7c3aed;
 }
 ```

@@ -20,13 +20,16 @@ import avatarDeepSky from '@acronis-platform/tokens-pd/css/Avatar/deep-sky.css?r
 import buttonDeepSky from '@acronis-platform/tokens-pd/css/Button/deep-sky.css?raw';
 import buttonMenuDeepSky from '@acronis-platform/tokens-pd/css/ButtonMenu/deep-sky.css?raw';
 import buttonIconDeepSky from '@acronis-platform/tokens-pd/css/ButtonIcon/deep-sky.css?raw';
+import cardFilterDeepSky from '@acronis-platform/tokens-pd/css/CardFilter/deep-sky.css?raw';
 import switchDeepSky from '@acronis-platform/tokens-pd/css/Switch/deep-sky.css?raw';
 import checkboxDeepSky from '@acronis-platform/tokens-pd/css/Checkbox/deep-sky.css?raw';
 import inputTextDeepSky from '@acronis-platform/tokens-pd/css/InputText/deep-sky.css?raw';
 import inputTextAreaDeepSky from '@acronis-platform/tokens-pd/css/InputTextArea/deep-sky.css?raw';
 import inputSearchDeepSky from '@acronis-platform/tokens-pd/css/InputSearch/deep-sky.css?raw';
+import searchGlobalDeepSky from '@acronis-platform/tokens-pd/css/SearchGlobal/deep-sky.css?raw';
 import radioDeepSky from '@acronis-platform/tokens-pd/css/Radio/deep-sky.css?raw';
 import breadcrumbDeepSky from '@acronis-platform/tokens-pd/css/Breadcrumb/deep-sky.css?raw';
+import resizableDeepSky from '@acronis-platform/tokens-pd/css/Resizable/deep-sky.css?raw';
 import tagDeepSky from '@acronis-platform/tokens-pd/css/Tag/deep-sky.css?raw';
 import tooltipDeepSky from '@acronis-platform/tokens-pd/css/Tooltip/deep-sky.css?raw';
 import sidebarPrimaryDeepSky from '@acronis-platform/tokens-pd/css/SidebarPrimary/deep-sky.css?raw';
@@ -43,13 +46,16 @@ const DEEP_SKY_OVERRIDES = [
   buttonDeepSky,
   buttonMenuDeepSky,
   buttonIconDeepSky,
+  cardFilterDeepSky,
   switchDeepSky,
   checkboxDeepSky,
   inputTextDeepSky,
   inputTextAreaDeepSky,
   inputSearchDeepSky,
+  searchGlobalDeepSky,
   radioDeepSky,
   breadcrumbDeepSky,
+  resizableDeepSky,
   tagDeepSky,
   tooltipDeepSky,
   sidebarPrimaryDeepSky,
