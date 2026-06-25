@@ -204,6 +204,33 @@ describe('SidebarSecondary', () => {
     expect(nav).toHaveAttribute('data-state', 'expanded');
   });
 
+  it('collapse trigger renders an optional shortcut hint, sr-only when collapsed', () => {
+    const { rerender } = render(
+      <SidebarSecondary defaultExpanded>
+        <SidebarSecondaryFooter>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryCollapseTrigger shortcut="⌘J">
+              Menu Item
+            </SidebarSecondaryCollapseTrigger>
+          </SidebarSecondaryMenu>
+        </SidebarSecondaryFooter>
+      </SidebarSecondary>
+    );
+    expect(screen.getByText('⌘J')).not.toHaveClass('sr-only');
+    rerender(
+      <SidebarSecondary expanded={false}>
+        <SidebarSecondaryFooter>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryCollapseTrigger shortcut="⌘J">
+              Menu Item
+            </SidebarSecondaryCollapseTrigger>
+          </SidebarSecondaryMenu>
+        </SidebarSecondaryFooter>
+      </SidebarSecondary>
+    );
+    expect(screen.getByText('⌘J')).toHaveClass('sr-only');
+  });
+
   it('controlled: the collapse trigger calls onExpandedChange with the next value and the prop drives state', async () => {
     const onExpandedChange = vi.fn();
     const { rerender } = render(

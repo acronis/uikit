@@ -3,7 +3,6 @@ import { useState } from 'react';
 import {
   BoxIcon,
   ChevronLeftIcon,
-  ChevronRightIcon,
   LayoutGridIcon,
   PlusIcon,
   ServerIcon,
@@ -163,9 +162,9 @@ export const Default: Story = {
 
 // The generic component reference from Figma node 2468-59502: placeholder
 // "Header" / "Section Header" / three identical "Menu Item" rows (no leading
-// icons) and a footer menu item with a leading chevron + a `⌘J` shortcut. The
-// CollapsedBreadcrumb carries the same labels the design shows for the collapsed
-// rail (hidden here while expanded).
+// icons) and a footer collapse affordance with a leading chevron + a `⌘J`
+// shortcut. Uncontrolled, so clicking the footer toggles the rail to the
+// CollapsedBreadcrumb (carrying the design's collapsed-rail labels).
 export const Reference: Story = {
   name: 'Reference (Figma anatomy)',
   render: () => (
@@ -190,10 +189,12 @@ export const Reference: Story = {
         />
         <SidebarSecondaryFooter>
           <SidebarSecondaryMenu>
-            <SidebarSecondaryMenuItem href="#" icon={<ChevronLeftIcon />}>
+            <SidebarSecondaryCollapseTrigger
+              icon={<ChevronLeftIcon />}
+              shortcut="⌘J"
+            >
               Menu Item
-              <SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘J" />
-            </SidebarSecondaryMenuItem>
+            </SidebarSecondaryCollapseTrigger>
           </SidebarSecondaryMenu>
         </SidebarSecondaryFooter>
       </SidebarSecondary>
@@ -222,7 +223,9 @@ export const Collapsed: Story = {
         />
         <SidebarSecondaryFooter>
           <SidebarSecondaryMenu>
-            <SidebarSecondaryCollapseTrigger icon={<ChevronRightIcon />}>
+            {/* Chevron-left auto-flips to a right-pointing "expand" chevron in
+                the collapsed rail. */}
+            <SidebarSecondaryCollapseTrigger icon={<ChevronLeftIcon />}>
               Expand menu
             </SidebarSecondaryCollapseTrigger>
           </SidebarSecondaryMenu>

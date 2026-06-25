@@ -235,7 +235,10 @@ const SidebarSecondaryCollapsedBreadcrumb = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'flex flex-col items-center shrink-0',
+      // `flex-1` so the rail fills the space between the (hidden) header and the
+      // footer, keeping the collapse trigger pinned to the bottom; the breadcrumb
+      // content stays at the top of that space.
+      'flex flex-1 flex-col items-center',
       'gap-[var(--ui-sidebar-secondary-collapsed-container-content-gap)] py-[var(--ui-sidebar-secondary-collapsed-container-content-padding-y)]',
       'flex group-data-[state=expanded]/sidebar:hidden',
       className
@@ -742,6 +745,11 @@ export interface SidebarSecondaryCollapseTriggerProps
   extends Omit<React.ComponentPropsWithoutRef<'button'>, 'children'> {
   /** Leading 16px icon (e.g. a panel-left glyph). */
   icon?: React.ReactNode;
+  /**
+   * Optional trailing keyboard-shortcut hint (e.g. `⌘J`), right-aligned and
+   * hidden alongside the label in collapsed mode.
+   */
+  shortcut?: React.ReactNode;
   children?: React.ReactNode;
 }
 
@@ -751,7 +759,7 @@ export interface SidebarSecondaryCollapseTriggerProps
 const SidebarSecondaryCollapseTrigger = React.forwardRef<
   HTMLButtonElement,
   SidebarSecondaryCollapseTriggerProps
->(({ className, icon, children, onClick, ...props }, ref) => {
+>(({ className, icon, shortcut, children, onClick, ...props }, ref) => {
   const { expanded, toggleExpanded } = useSidebarSecondaryContext();
 
   return (
@@ -772,13 +780,31 @@ const SidebarSecondaryCollapseTrigger = React.forwardRef<
         {...props}
       >
         {icon != null && (
-          <span className="flex shrink-0 items-center self-start mt-[var(--ui-sidebar-secondary-menu-item-global-icon-margin-t)]">
+          // Flip the chevron when collapsed so a chevron-left ("collapse")
+          // becomes a chevron-right ("expand") — the icon always points toward
+          // the action it triggers.
+          <span
+            className={cn(
+              'flex shrink-0 items-center self-start mt-[var(--ui-sidebar-secondary-menu-item-global-icon-margin-t)] transition-transform',
+              !expanded && 'rotate-180'
+            )}
+          >
             {icon}
           </span>
         )}
         <span className={cn('flex-1 truncate', !expanded && 'sr-only')}>
           {children}
         </span>
+        {shortcut != null && (
+          <span
+            className={cn(
+              'shrink-0 ui-sidebar-secondary-menu-item-extras-global-shortcut-text-style text-[var(--ui-sidebar-secondary-menu-item-extras-global-shortcut-color)]',
+              !expanded && 'sr-only'
+            )}
+          >
+            {shortcut}
+          </span>
+        )}
       </button>
     </li>
   );
