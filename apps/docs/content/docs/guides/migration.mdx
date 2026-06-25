@@ -1,386 +1,170 @@
 ---
-title: Token Migration
-description: Guide for migrating components from the legacy token system to the new semantic token architecture.
+title: Legacy → ui-react migration
+description: Migrate from @acronis-platform/shadcn-uikit to @acronis-platform/ui-react with component mapping and codemod recipes.
 ---
 
-# Token System Migration Guide
+# Legacy → ui-react migration guide
 
-## Overview
+This guide helps you migrate from:
 
-The UI kit has been updated with a new 3-layer token architecture that reduces complexity and improves maintainability.
+- `@acronis-platform/shadcn-uikit` (legacy)
 
-**Key Changes:**
+To:
 
-- Reduced from 150+ component-specific tokens to ~30 semantic tokens
-- New token structure: Figma → Primitives → Semantics → Tailwind → Components
-- Improved dark mode support
-- Easier customization and theming
+- `@acronis-platform/ui-react` (next generation)
 
----
-
-## What Changed?
-
-### Old System
-
-```scss
-// _globals.scss (549 lines)
-:root {
-  --av-input-bg: 0 0% 100%;
-  --av-input-border: 213 65% 46%;
-  --av-checkbox-bg: 0 0% 100%;
-  --av-checkbox-border: 213 65% 46%;
-  --av-table-header-bg: 0 0% 100%;
-  --search-input-bg: 0 0% 100%;
-  // ... 150+ more tokens
-}
-```
-
-### New System
-
-```scss
-// tokens/semantic.scss
-:root {
-  --semantic-bg-elevated: var(--color-surface-primary);
-  --semantic-border-default: var(--color-brand-primary);
-  --semantic-text-primary: var(--color-text-primary);
-  // ... ~30 semantic tokens
-}
-```
-
----
-
-## Backward Compatibility
-
-**Good News:** The old `_globals.scss` file is still imported, so existing components will continue to work.
-
-**Migration Path:**
-
-1. New token system is active (already done)
-2. Gradually migrate components to use Tailwind classes
-3. Remove old tokens from `_globals.scss` as components are migrated
-4. Eventually delete `_variables.scss` (duplicate of `_globals.scss`)
-
----
-
-## How to Migrate Components
-
-### Step 1: Identify Current Token Usage
-
-**Before:**
-
-```tsx
-// Using old component-specific tokens
-<input
-  className="bg-white border-[hsl(var(--av-input-border))]"
-  style={{ borderColor: 'hsl(var(--av-input-border-focus))' }}
-/>
-```
-
-### Step 2: Map to Semantic Tokens
-
-Use this mapping table:
-
-| Old Token Pattern  | New Tailwind Class | Semantic Token                   |
-| ------------------ | ------------------ | -------------------------------- |
-| `--av-background`  | `bg-background`    | `--semantic-bg-base`             |
-| `--av-foreground`  | `text-foreground`  | `--semantic-text-primary`        |
-| `--av-card`        | `bg-card`          | `--semantic-bg-elevated`         |
-| `--av-primary`     | `bg-primary`       | `--semantic-interactive-default` |
-| `--av-secondary`   | `bg-secondary`     | `--semantic-bg-muted`            |
-| `--av-muted`       | `bg-muted`         | `--semantic-bg-muted`            |
-| `--av-border`      | `border-border`    | `--semantic-border-default`      |
-| `--av-input`       | `border-input`     | `--semantic-border-default`      |
-| `--av-ring`        | `ring-ring`        | `--semantic-interactive-focus`   |
-| `--av-destructive` | `bg-destructive`   | `--semantic-status-danger`       |
-| `--av-success`     | `bg-success`       | `--semantic-status-success`      |
-| `--av-warning`     | `bg-warning`       | `--semantic-status-warning`      |
-| `--av-info`        | `bg-info`          | `--semantic-status-info`         |
-
-**Component-Specific Tokens → Semantic Mapping:**
-
-| Old Component Token    | New Semantic Token          |
-| ---------------------- | --------------------------- |
-| `--av-input-bg`        | `--semantic-bg-elevated`    |
-| `--av-input-border`    | `--semantic-border-default` |
-| `--av-checkbox-bg`     | `--semantic-bg-elevated`    |
-| `--av-checkbox-border` | `--semantic-border-default` |
-| `--av-table-header-bg` | `--semantic-bg-elevated`    |
-| `--search-input-bg`    | `--semantic-bg-elevated`    |
-| `--dialog-bg`          | `--semantic-bg-muted`       |
-| `--popover-bg`         | `--semantic-bg-elevated`    |
-| `--tooltip-bg`         | `--semantic-bg-overlay`     |
-
-### Step 3: Update Component Code
-
-**After:**
-
-```tsx
-// Using new Tailwind classes with semantic tokens
-<input className="bg-background border border-input focus:border-primary" />
-```
-
----
-
-## Common Migration Patterns
-
-### Pattern 1: Simple Background Migration
-
-**Before:**
-
-```tsx
-className = 'bg-[hsl(var(--av-card))]';
-```
-
-**After:**
-
-```tsx
-className = 'bg-card';
-```
-
-### Pattern 2: Opacity with CSS Variables
-
-**Before:**
-
-```tsx
-className = 'border-[hsl(var(--checkbox-border)/0.3)]';
-```
-
-**After:**
-
-```tsx
-className = 'border-input/30';
-```
-
-Tailwind supports opacity modifiers. Convert decimal to percentage:
-
-- `0.1` → `/10`
-- `0.3` → `/30`
-- `0.5` → `/50`
-
-### Pattern 3: Hardcoded RGBA to Semantic
-
-**Before:**
-
-```tsx
-className = 'border-[rgba(38,104,197,0.3)]';
-```
-
-**After:**
-
-```tsx
-className = 'border-input';
-```
-
-Common conversions:
-
-- `rgba(38,104,197,0.3)` → `border-input`
-- `rgba(38,104,197,0.1)` → `border-border`
-- `rgba(36,49,67,0.7)` → `text-muted-foreground`
-
-### Pattern 4: Hover States
-
-**Before:**
-
-```tsx
-className = 'hover:bg-[hsl(var(--av-dropdown-item-hover))]';
-```
-
-**After:**
-
-```tsx
-className = 'hover:bg-accent';
-```
-
-### Pattern 5: Focus States
-
-**Before:**
-
-```tsx
-className = 'focus-visible:border-[hsl(var(--av-input-border-focus))]';
-```
-
-**After:**
-
-```tsx
-className = 'focus-visible:border-primary';
-```
-
-### Pattern 6: Data State Attributes
-
-**Before:**
-
-```tsx
-className = 'data-[state=checked]:bg-[hsl(var(--checkbox-checked-bg))]';
-```
-
-**After:**
-
-```tsx
-className = 'data-[state=checked]:bg-primary';
-```
-
----
-
-## Complex Examples
-
-### Checkbox (Multiple States)
-
-**Before:**
-
-```tsx
-className="bg-[hsl(var(--checkbox-bg))]
-  border-[hsl(var(--checkbox-border)/0.3)]
-  hover:border-[hsl(var(--checkbox-border-hover)/0.5)]
-  disabled:bg-[hsl(var(--checkbox-disabled-bg)/0.1)]
-  data-[state=checked]:bg-[hsl(var(--checkbox-checked-bg))]"
-```
-
-**After:**
-
-```tsx
-className="bg-background
-  border-input/30
-  hover:border-input/50
-  disabled:bg-muted/10
-  data-[state=checked]:bg-primary"
-```
-
-### Table Row (Hover and Selected)
-
-**Before:**
-
-```tsx
-className="border-[hsl(var(--table-border)/0.1)]
-  hover:bg-[hsl(var(--table-row-hover)/0.05)]
-  data-[state=selected]:bg-[hsl(var(--table-row-selected)/0.1)]"
-```
-
-**After:**
-
-```tsx
-className="border-border/10
-  hover:bg-accent/5
-  data-[state=selected]:bg-accent/10"
-```
-
----
-
-## Opacity Modifiers
-
-Tailwind now supports opacity modifiers with the new token system:
-
-```tsx
-// 50% opacity
-<div className="bg-primary/50">
-
-// 20% opacity
-<div className="bg-primary/20">
-
-// Hover with opacity
-<button className="bg-primary hover:bg-primary/90">
-```
-
----
-
-## Dark Mode
-
-Dark mode now works automatically through semantic tokens:
-
-```tsx
-// Automatically adapts to dark mode
-<div className="bg-background text-foreground border-border">Content</div>
-```
-
-No need for dark mode variants in most cases. The semantic tokens handle it.
-
----
-
-## Custom Themes
-
-### Option 1: Override Semantic Tokens
-
-```scss
-// In your app's CSS
-.theme-ocean {
-  --semantic-interactive-default: 200 90% 45%;
-  --semantic-bg-brand: 190 85% 50%;
-}
-```
-
-### Option 2: Override Primitive Tokens
-
-```scss
-// In your app's CSS
-.theme-forest {
-  --color-brand-primary: 140 70% 40%;
-  --color-brand-secondary: 120 65% 45%;
-}
-```
-
----
-
-## Testing Your Migration
-
-1. **Visual Check**: Compare before/after in both light and dark modes
-2. **Token Usage**: Search for old token patterns in your code
-3. **Console Warnings**: Check for missing CSS variables
-4. **Storybook**: Verify all component variants still work
-
-### Search for Old Patterns
+## 1) Switch package + styles
 
 ```bash
-# Find old token usage
-grep -r "var(--av-" src/components/
-grep -r "var(--search-" src/components/
-grep -r "var(--dialog-" src/components/
+pnpm remove @acronis-platform/shadcn-uikit
+pnpm add @acronis-platform/ui-react
 ```
 
----
+```tsx
+// before
+import '@acronis-platform/shadcn-uikit/styles';
 
-## Testing Checklist
+// after
+import '@acronis-platform/ui-react/styles';
+```
 
-After migration:
+## 2) Update imports
 
-- Visual appearance matches (light mode)
-- Dark mode works
-- All states work (hover, focus, disabled, active)
-- No console warnings
-- Tests pass
+Legacy code usually imports components from `@acronis-platform/shadcn-uikit/react`.
+Move migrated components to `@acronis-platform/ui-react`.
 
----
+```tsx
+// before
+import { Button, Input, Switch } from '@acronis-platform/shadcn-uikit/react';
 
-## Gradual Migration Strategy
+// after
+import { Button, Input, Switch } from '@acronis-platform/ui-react';
+```
 
-You don't need to migrate everything at once. Here's a recommended order:
+## 3) Component mapping
 
-1. **Phase 1**: New components use new system (already done via Tailwind config)
-2. **Phase 2**: Migrate high-traffic components (buttons, inputs, cards)
-3. **Phase 3**: Migrate complex components (tables, forms, dialogs)
-4. **Phase 4**: Migrate specialized components (charts, trees, etc.)
-5. **Phase 5**: Clean up old tokens from `_globals.scss`
+The mapping below is based on current package exports.
 
----
+### Directly available in both packages
 
-## Breaking Changes
+| Legacy (`shadcn-uikit/react`) | ui-react     |
+| ----------------------------- | ------------ |
+| `Avatar`                      | `Avatar`     |
+| `Breadcrumb`                  | `Breadcrumb` |
+| `Button`                      | `Button`     |
+| `Checkbox`                    | `Checkbox`   |
+| `Input`                       | `Input`      |
+| `Resizable`                   | `Resizable`  |
+| `Select`                      | `Select`     |
+| `Switch`                      | `Switch`     |
+| `Tag`                         | `Tag`        |
+| `Tooltip`                     | `Tooltip`    |
 
-### None (Yet)
+### Renamed / split equivalents
 
-The old token system is still in place for backward compatibility. However, we recommend migrating to avoid future breaking changes when the old system is removed.
+| Legacy           | ui-react equivalent                   |
+| ---------------- | ------------------------------------- |
+| `RadioGroup`     | `RadioGroup` (from `radio`)           |
+| `RadioGroupItem` | `Radio`                               |
+| `ButtonGroup`    | `ButtonMenu`                          |
+| `Sidebar`        | `SidebarPrimary` / `SidebarSecondary` |
+| `Textarea`       | `InputTextArea`                       |
 
-### Future Breaking Changes (Planned)
+### Not yet available in ui-react (keep legacy for now)
 
-When all components are migrated, we will:
+`Accordion`, `Alert`, `AlertDialog`, `AppShell`, `AspectRatio`, `AuthLayout`, `Badge`, `Calendar`, `Card`, `Carousel`, `Chart`, `Chip`, `Collapsible`, `Combobox`, `Command`, `DashboardLayout`, `DataTable`, `DatePicker`, `Dialog`, `Drawer`, `DropdownMenu`, `Field`, `Filter`, `Form`, `Grid`, `Label`, `NavigationMenu`, `NumberField`, `PageContent`, `PageHeader`, `Pagination`, `Popover`, `Progress`, `ScrollArea`, `SecondaryMenu`, `Section`, `Separator`, `Sheet`, `Skeleton`, `Slider`, `Sonner`, `Spinner`, `SplitLayout`, `Stack`, `Table`, `Tabs`, `ToggleGroup`, `Tree`, `VisuallyHidden`, `Widget`, `WidgetAlert`, `WidgetPlaceholder`, `WidgetProgressChunks`, `WidgetProgressTiers`, `WidgetProtectionStatus`, `WidgetProtectionSummary`, `WidgetTableData`, `WidgetText`.
 
-1. Remove old tokens from `_globals.scss`
-2. Delete `_variables.scss` (duplicate)
-3. Remove `--av-*` prefix tokens
+## 4) Codemods (where viable)
 
-**Timeline**: TBD (after component migration is complete)
+### Codemod A — import source rewrite
 
----
+Create `./codemods/shadcn-to-ui-react-imports.cjs`:
 
-## Need Help?
+```js
+module.exports = function transformer(file, api) {
+  const j = api.jscodeshift;
+  const root = j(file.source);
 
-- **Documentation**: See `src/styles/tokens/README.md`
-- **Examples**: Check updated components in `src/components/ui/`
-- **Token Reference**: See `src/styles/tokens/semantic.scss` for all available tokens
+  const fromLegacy = new Set([
+    '@acronis-platform/shadcn-uikit/react',
+    '@acronis-platform/shadcn-uikit',
+  ]);
+
+  root.find(j.ImportDeclaration).forEach((path) => {
+    if (!fromLegacy.has(path.node.source.value)) return;
+    path.node.source = j.stringLiteral('@acronis-platform/ui-react');
+  });
+
+  return root.toSource({ quote: 'single' });
+};
+```
+
+Run it:
+
+```bash
+npx jscodeshift -t ./codemods/shadcn-to-ui-react-imports.cjs "src/**/*.{ts,tsx}" --parser=tsx
+```
+
+### Codemod B — radio rename
+
+Legacy `RadioGroupItem` maps to `Radio` in ui-react.
+
+Create `./codemods/radio-group-item-to-radio.cjs`:
+
+```js
+module.exports = function transformer(file, api) {
+  const j = api.jscodeshift;
+  const root = j(file.source);
+
+  root
+    .find(j.ImportDeclaration, {
+      source: { value: '@acronis-platform/ui-react' },
+    })
+    .forEach((path) => {
+      path.node.specifiers?.forEach((specifier) => {
+        if (
+          specifier.type === 'ImportSpecifier' &&
+          specifier.imported.name === 'RadioGroupItem'
+        ) {
+          specifier.imported.name = 'Radio';
+          if (!specifier.local) specifier.local = j.identifier('Radio');
+        }
+      });
+    });
+
+  return root.toSource({ quote: 'single' });
+};
+```
+
+Run it:
+
+```bash
+npx jscodeshift -t ./codemods/radio-group-item-to-radio.cjs "src/**/*.{ts,tsx}" --parser=tsx
+```
+
+⚠️ Keep mixed files on legacy imports if they still use legacy-only components or utilities/icons.
+
+## 5) Manual follow-up checklist
+
+- Keep legacy package only for components not yet in ui-react.
+- Split mixed imports when needed:
+
+```tsx
+import { Button, Input } from '@acronis-platform/ui-react';
+import { Dialog, Popover } from '@acronis-platform/shadcn-uikit/react';
+```
+
+- Re-test interactive components after migration (`Select`, `RadioGroup`, sidebars).
+- Verify style import points to `@acronis-platform/ui-react/styles`.
+
+## 6) Verify migration progress
+
+```bash
+# remaining legacy imports
+grep -R "@acronis-platform/shadcn-uikit" src
+
+# ui-react usage
+grep -R "@acronis-platform/ui-react" src
+```
+
+A practical rollout is per feature/module: migrate files that use mapped components first, then keep the rest on legacy until their ui-react equivalents are available.
