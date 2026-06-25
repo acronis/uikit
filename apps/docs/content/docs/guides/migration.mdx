@@ -13,6 +13,19 @@ To:
 
 - `@acronis-platform/ui-react` (next generation)
 
+## ui-react component ladder tracking
+
+Docs coverage follows the `ui-react` ladder from `context/roadmap.md` (E2/E6).
+Use this checklist to keep docs work aligned with component rollout:
+
+- [x] **Tier 0 — done:** `Button`, `Switch` (docs pages exist and are kept current)
+- [ ] **Tier 1 — form & overlay primitives:** `Input`, `Label`, `Field`, `Textarea`, `Checkbox`, `Radio Group`, `Select`, `Separator`, `Popover`, `Tooltip`, `Dialog`
+- [ ] **Tier 2 — composites on primitives:** `Combobox`, `Dropdown Menu`, `Number Field`, `Slider`, `Tabs`, `Accordion`, `Toggle Group`, `Collapsible`, `Avatar`, `Badge`, `Chip/Tag`, `Alert`, `Progress`, `Skeleton`, `Spinner`
+- [ ] **Tier 3 — design-system/layout/app-specific components:** layout, app shell/navigation, form composition, and widget families from the roadmap
+
+When a component is shipped in `ui-react`, update this ladder section and the
+corresponding page in `/docs/components/*` in the same PR.
+
 ## 1) Switch package + styles
 
 ```bash
