@@ -3,6 +3,7 @@ import { useState } from 'react';
 import {
   BoxIcon,
   ChevronLeftIcon,
+  ChevronRightIcon,
   LayoutGridIcon,
   PlusIcon,
   ServerIcon,
@@ -181,9 +182,9 @@ export const Collapsed: Story = {
         />
         <SidebarSecondaryFooter>
           <SidebarSecondaryMenu>
-            <SidebarSecondaryMenuItem href="#" icon={<ServerIcon />}>
-              Settings
-            </SidebarSecondaryMenuItem>
+            <SidebarSecondaryCollapseTrigger icon={<ChevronRightIcon />}>
+              Expand menu
+            </SidebarSecondaryCollapseTrigger>
           </SidebarSecondaryMenu>
         </SidebarSecondaryFooter>
       </SidebarSecondary>

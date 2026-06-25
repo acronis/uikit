@@ -174,10 +174,13 @@ const SidebarSecondaryHeader = React.forwardRef<
   HTMLDivElement,
   SidebarSecondaryHeaderProps
 >(({ className, label, children, ...props }, ref) => (
+  // Hidden in collapsed mode — the CollapsedBreadcrumb's parent label carries the
+  // section context in the rail, so a truncated single-letter heading is omitted.
   <div
     ref={ref}
     className={cn(
       'flex items-center shrink-0',
+      'hidden group-data-[state=expanded]/sidebar:flex',
       'px-[var(--ui-sidebar-secondary-collapsed-container-header-padding-x)] py-[var(--ui-sidebar-secondary-collapsed-container-header-padding-y)]',
       'group-data-[state=expanded]/sidebar:px-[var(--ui-sidebar-secondary-expanded-container-header-padding-x)] group-data-[state=expanded]/sidebar:py-[var(--ui-sidebar-secondary-expanded-container-header-padding-y)]',
       className
@@ -224,8 +227,11 @@ const SidebarSecondaryCollapsedBreadcrumb = React.forwardRef<
   SidebarSecondaryCollapsedBreadcrumbProps
 >(({ className, parentLabel, currentLabel, separator, ...props }, ref) => (
   // Shown only in collapsed mode — toggled by the same data-[state] selector so
-  // it stays in the DOM (SSR-present) with no JS branch. Laid out vertically:
-  // parent → separator → current page.
+  // it stays in the DOM (SSR-present) with no JS branch. Stacked top→bottom:
+  // parent → separator → current page. In the ~48px rail the labels are rotated
+  // to read vertically (`writing-mode: vertical-rl`, glyphs tilted 90° clockwise,
+  // reading top-to-bottom) so long labels run down the rail instead of clipping;
+  // the separator chevron is turned to point down to match that flow.
   <div
     ref={ref}
     className={cn(
@@ -236,16 +242,16 @@ const SidebarSecondaryCollapsedBreadcrumb = React.forwardRef<
     )}
     {...props}
   >
-    <span className="ui-sidebar-secondary-collapsed-breadcrumb-label-text-style text-[var(--ui-sidebar-secondary-collapsed-breadcrumb-label-color)]">
+    <span className="ui-sidebar-secondary-collapsed-breadcrumb-label-text-style whitespace-nowrap [writing-mode:vertical-rl] text-[var(--ui-sidebar-secondary-collapsed-breadcrumb-label-color)]">
       {parentLabel}
     </span>
     <span
       aria-hidden="true"
       className="inline-flex items-center text-[var(--ui-sidebar-secondary-collapsed-icon-separator-color)] [&>svg]:size-[var(--ui-sidebar-secondary-collapsed-icon-separator-size)]"
     >
-      {separator ?? <ChevronRightIcon size={16} />}
+      {separator ?? <ChevronRightIcon size={16} className="rotate-90" />}
     </span>
-    <span className="ui-sidebar-secondary-collapsed-label-current-page-text-style text-[var(--ui-sidebar-secondary-collapsed-label-current-page-color)]">
+    <span className="ui-sidebar-secondary-collapsed-label-current-page-text-style whitespace-nowrap [writing-mode:vertical-rl] text-[var(--ui-sidebar-secondary-collapsed-label-current-page-color)]">
       {currentLabel}
     </span>
   </div>
