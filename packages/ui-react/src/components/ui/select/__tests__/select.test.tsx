@@ -33,11 +33,11 @@ describe('Select', () => {
     expect(trigger).toHaveTextContent('Select an option');
   });
 
-  it('applies the idle form token classes to the trigger', () => {
+  it('applies the idle input-select token classes to the trigger', () => {
     render(<Basic />);
     expect(screen.getByRole('combobox', { name: 'Fruit' })).toHaveClass(
-      'bg-[var(--ui-form-background-idle)]',
-      'border-[var(--ui-form-border-idle)]'
+      'bg-[var(--ui-input-select-global-box-color-idle)]',
+      'border-[var(--ui-input-select-normal-box-border-color-idle)]'
     );
   });
 

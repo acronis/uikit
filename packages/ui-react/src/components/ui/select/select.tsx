@@ -4,23 +4,11 @@ import { CheckIcon, ChevronDownIcon } from '@acronis-platform/icons-react/stroke
 
 import { cn } from '@/lib/utils';
 
-// STRANDED THEME: this component still binds to the legacy `--ui-form-*` token
-// tier, which is NOT shipped by @acronis-platform/tokens-pd. The Figma sync
-// (#308) added next-gen tiers for Radio (`--ui-radio-*`), Search
-// (`--ui-input-search-*`) and Input (`--ui-input-text-*`) but NOT for Select, so
-// there is nothing to rewire to yet — Select renders with unresolved colors until
-// a `--ui-select-*` tier ships. Re-theme it once those tokens land (tracked
-// alongside the token-drift guard, issue #297).
-//
-// A select: a Base UI `Select` themed with the shared `--ui-form-*` token tier
-// (the same tier Input/Search use). The trigger is the Figma "Select" box —
-// 32px tall, bordered, rounded — and wires each state to its own token:
-// idle / hover (`--ui-form-border-hover`) / open+focus (`--ui-form-border-active`
-// + a 3px `--ui-focus-primary` ring) / disabled. The chevron uses
-// `--ui-form-icon-idle` and rotates when the popup is open. The popup and items
-// aren't in the Figma spec, so they use the shared semantic surface vocabulary
-// (`bg-background`, `bg-accent`, `border-border`). Label, description, and error
-// message are composed by the consumer (a Field component is future work).
+// A select: a Base UI `Select` themed with the `--ui-input-select-*` token tier.
+// The trigger is 32px tall, bordered, rounded, with dedicated idle/hover/focus
+// and disabled tokens. The chevron rotates when the popup is open. The popup and
+// items use the shared semantic surface vocabulary (`bg-background`, `bg-accent`,
+// `border-border`).
 
 const Select = SelectPrimitive.Root;
 
@@ -33,9 +21,9 @@ const SelectValue = React.forwardRef<
   <SelectPrimitive.Value
     ref={ref}
     className={cn(
-      'min-w-0 flex-1 truncate text-left text-[var(--ui-form-text-value)] data-[placeholder]:text-[var(--ui-form-text-placeholder)]',
+      'min-w-0 flex-1 truncate text-left text-[var(--ui-input-select-global-value-color-idle)] data-[placeholder]:text-[var(--ui-input-select-global-placeholder-color-idle)]',
       // Disabled wins over the value/placeholder color regardless of variant order.
-      'group-data-[disabled]:!text-[var(--ui-form-text-disabled)]',
+      'group-data-[disabled]:!text-[var(--ui-input-select-global-value-color-disabled)]',
       className
     )}
     {...props}
@@ -50,17 +38,17 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      'group flex h-8 w-full min-w-0 items-center gap-2 rounded border bg-[var(--ui-form-background-idle)] border-[var(--ui-form-border-idle)] px-3 text-sm leading-6 text-[var(--ui-form-text-value)] outline-none transition-colors',
-      'not-data-[disabled]:hover:border-[var(--ui-form-border-hover)]',
-      'focus-visible:border-[var(--ui-form-border-active)] focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
-      'data-[popup-open]:border-[var(--ui-form-border-active)] data-[popup-open]:ring-[3px] data-[popup-open]:ring-[var(--ui-focus-primary)]',
-      'data-[disabled]:cursor-not-allowed data-[disabled]:border-[var(--ui-form-border-disabled)] data-[disabled]:bg-[var(--ui-form-background-disabled)] data-[disabled]:text-[var(--ui-form-text-disabled)]',
+      'group flex h-8 w-full min-w-0 items-center gap-2 rounded border bg-[var(--ui-input-select-global-box-color-idle)] border-[var(--ui-input-select-normal-box-border-color-idle)] px-3 text-sm leading-6 text-[var(--ui-input-select-global-value-color-idle)] outline-none transition-colors',
+      'not-data-[disabled]:hover:border-[var(--ui-input-select-normal-box-border-color-hover)]',
+      'focus-visible:border-[var(--ui-input-select-normal-box-border-color-hover)] focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
+      'data-[popup-open]:border-[var(--ui-input-select-normal-box-border-color-hover)] data-[popup-open]:ring-[3px] data-[popup-open]:ring-[var(--ui-focus-primary)]',
+      'data-[disabled]:cursor-not-allowed data-[disabled]:border-[var(--ui-input-select-normal-box-border-color-disabled)] data-[disabled]:bg-[var(--ui-input-select-global-box-color-disabled)] data-[disabled]:text-[var(--ui-input-select-global-value-color-disabled)]',
       className
     )}
     {...props}
   >
     {children}
-    <SelectPrimitive.Icon className="flex shrink-0 items-center text-[var(--ui-form-icon-idle)] group-data-[disabled]:text-[var(--ui-form-icon-disabled)]">
+    <SelectPrimitive.Icon className="flex shrink-0 items-center text-[var(--ui-input-select-normal-icon-expand-color-idle)] group-data-[disabled]:text-[var(--ui-input-select-normal-icon-expand-color-disabled)]">
       <ChevronDownIcon
         size={16}
         className="transition-transform group-data-[popup-open]:rotate-180"
@@ -110,7 +98,7 @@ const SelectItem = React.forwardRef<
     className={cn(
       'relative flex cursor-default items-center gap-2 py-1.5 pr-8 pl-3 leading-6 outline-none select-none',
       'data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground',
-      'data-[disabled]:pointer-events-none data-[disabled]:text-[var(--ui-form-text-disabled)]',
+      'data-[disabled]:pointer-events-none data-[disabled]:text-[var(--ui-input-select-global-value-color-disabled)]',
       className
     )}
     {...props}
@@ -118,7 +106,7 @@ const SelectItem = React.forwardRef<
     <SelectPrimitive.ItemText className="min-w-0 flex-1 truncate">
       {children}
     </SelectPrimitive.ItemText>
-    <SelectPrimitive.ItemIndicator className="absolute right-2 flex items-center text-[var(--ui-form-icon-idle)]">
+    <SelectPrimitive.ItemIndicator className="absolute right-2 flex items-center text-[var(--ui-input-select-dropdown-item-global-icon-checked)]">
       <CheckIcon size={16} />
     </SelectPrimitive.ItemIndicator>
   </SelectPrimitive.Item>

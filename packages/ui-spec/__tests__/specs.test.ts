@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Ajv2020 from 'ajv/dist/2020';
@@ -23,6 +23,8 @@ const validators = Object.fromEntries(
 
 const componentNames = listComponentNames();
 const HERE = dirname(fileURLToPath(import.meta.url));
+const TOKENS_PD_CSS_DIR = resolve(HERE, '../../tokens-pd/css');
+const UI_REACT_COMPONENTS_DIR = resolve(HERE, '../../ui-react/src/components/ui');
 
 describe('every component spec validates against its schema', () => {
   for (const name of componentNames) {
@@ -120,6 +122,81 @@ function enumMembers(api: ApiSpec, propName: string): string[] {
   if (!prop) return [];
   return [...prop.type.matchAll(/'([^']+)'/g)].map((m) => m[1]).sort();
 }
+
+function listFiles(
+  absDir: string,
+  include: (absPath: string) => boolean,
+  skipDirNames = new Set<string>()
+): string[] {
+  const entries = readdirSync(absDir, { withFileTypes: true });
+  const files: string[] = [];
+  for (const entry of entries) {
+    const absPath = resolve(absDir, entry.name);
+    if (entry.isDirectory()) {
+      if (skipDirNames.has(entry.name)) continue;
+      files.push(...listFiles(absPath, include, skipDirNames));
+      continue;
+    }
+    if (include(absPath)) files.push(absPath);
+  }
+  return files;
+}
+
+function tokenSetFromCssDefinitions(absCssDir: string): Set<string> {
+  const files = listFiles(absCssDir, (absPath) => absPath.endsWith('.css'));
+  const tokens = new Set<string>();
+  for (const absPath of files) {
+    const css = readFileSync(absPath, 'utf8');
+    for (const match of css.matchAll(/(--ui-[a-z0-9-]+)\s*:/g)) {
+      tokens.add(match[1]);
+    }
+  }
+  return tokens;
+}
+
+function tokenSetFromVarRefs(absDir: string): Set<string> {
+  const files = listFiles(
+    absDir,
+    (absPath) => absPath.endsWith('.ts') || absPath.endsWith('.tsx'),
+    new Set(['__tests__', '__stories__'])
+  );
+  const tokens = new Set<string>();
+  for (const absPath of files) {
+    const source = readFileSync(absPath, 'utf8');
+    for (const match of source.matchAll(/var\(\s*(--ui-[a-z0-9-]+)\s*\)/g)) {
+      tokens.add(match[1]);
+    }
+  }
+  return tokens;
+}
+
+describe('token references resolve in tokens-pd', () => {
+  const definedTokens = tokenSetFromCssDefinitions(TOKENS_PD_CSS_DIR);
+
+  for (const name of componentNames) {
+    it(`${name}: tokens.yaml names and ui-react var(--ui-*) refs are defined`, () => {
+      const specTokenNames = loadSpec(name).tokens.tokens.map((token) => token.name);
+      const missingSpecNames = specTokenNames.filter((token) => !definedTokens.has(token));
+      expect(
+        missingSpecNames,
+        `${name}: tokens.yaml contains undefined tokens:\n${missingSpecNames.join('\n')}`
+      ).toEqual([]);
+
+      const sourceDir = resolve(UI_REACT_COMPONENTS_DIR, name);
+      expect(existsSync(sourceDir), `${name}: missing ui-react component dir`).toBe(true);
+      if (!existsSync(sourceDir)) return;
+
+      const sourceTokenNames = [...tokenSetFromVarRefs(sourceDir)];
+      const missingSourceNames = sourceTokenNames.filter(
+        (token) => !definedTokens.has(token)
+      );
+      expect(
+        missingSourceNames,
+        `${name}: ui-react source has undefined var(--ui-*) tokens:\n${missingSourceNames.join('\n')}`
+      ).toEqual([]);
+    });
+  }
+});
 
 describe('cva ↔ contract conformance', () => {
   it('Button: api.yaml variant enum matches the cva keys in ui-react', () => {
