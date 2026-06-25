@@ -1,0 +1,177 @@
+spec_version: '1.0'
+component: InputSelect
+
+# References only — values live in @acronis-platform/tokens-pd. The field furniture
+# (container/label/required/description/error) + trigger box use the `global` /
+# `normal` / `error` groups; the popup (search/sections/items/status) uses the
+# `dropdown` group. All share the `--ui-input-select-*` tier. The multiple-select
+# item's checkbox indicator reuses the `--ui-checkbox-*` tier.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Field container + label ──
+  - { name: --ui-input-select-global-container-width-min, affects: root }
+  - { name: --ui-input-select-global-container-gap, affects: root }
+  - { name: --ui-input-select-global-container-label-gap, affects: label }
+  - { name: --ui-input-select-global-label-color-idle, affects: label }
+  - { name: --ui-input-select-global-label-color-disabled, affects: label }
+  - { name: --ui-input-select-global-required-color, affects: required }
+
+  # ── Trigger box geometry + fill ──
+  - { name: --ui-input-select-global-box-height, affects: trigger }
+  - { name: --ui-input-select-global-box-border-radius, affects: trigger }
+  - { name: --ui-input-select-global-box-gap, affects: trigger }
+  - { name: --ui-input-select-global-box-padding-x, affects: trigger }
+  - { name: --ui-input-select-global-box-color-idle, affects: trigger }
+  - { name: --ui-input-select-global-box-color-hover, affects: trigger }
+  - { name: --ui-input-select-global-box-color-disabled, affects: trigger }
+
+  # ── Trigger border (normal + error) ──
+  - { name: --ui-input-select-normal-box-border-color-idle, affects: trigger }
+  - { name: --ui-input-select-normal-box-border-color-hover, affects: trigger }
+  - {
+      name: --ui-input-select-normal-box-border-color-disabled,
+      affects: trigger,
+    }
+  - { name: --ui-input-select-error-box-border-color-idle, affects: trigger }
+  - { name: --ui-input-select-error-box-border-color-hover, affects: trigger }
+
+  # ── Value / placeholder ──
+  - { name: --ui-input-select-global-value-color-idle, affects: value }
+  - { name: --ui-input-select-global-value-color-disabled, affects: value }
+  - { name: --ui-input-select-global-placeholder-color-idle, affects: value }
+  - {
+      name: --ui-input-select-global-placeholder-color-disabled,
+      affects: value,
+    }
+
+  # ── Chevron ──
+  - { name: --ui-input-select-normal-icon-expand-color-idle, affects: icon }
+  - { name: --ui-input-select-normal-icon-expand-color-disabled, affects: icon }
+
+  # ── Description / error message ──
+  - {
+      name: --ui-input-select-normal-description-color-idle,
+      affects: description,
+    }
+  - { name: --ui-input-select-error-error-msg-color, affects: error }
+
+  # ── Dropdown popup ──
+  - { name: --ui-input-select-dropdown-container-color, affects: popup }
+  - { name: --ui-input-select-dropdown-container-border-color, affects: popup }
+  - { name: --ui-input-select-dropdown-container-border-radius, affects: popup }
+  - { name: --ui-input-select-dropdown-container-padding-y, affects: popup }
+
+  # ── In-dropdown search ──
+  - { name: --ui-input-select-dropdown-dropdown-search-gap, affects: search }
+  - {
+      name: --ui-input-select-dropdown-dropdown-search-padding-x,
+      affects: search,
+    }
+  - {
+      name: --ui-input-select-dropdown-dropdown-search-padding-y,
+      affects: search,
+    }
+  - {
+      name: --ui-input-select-dropdown-dropdown-search-label-color-placeholder,
+      affects: search,
+    }
+  - {
+      name: --ui-input-select-dropdown-dropdown-search-label-color-value,
+      affects: search,
+    }
+
+  # ── Section (group) ──
+  - {
+      name: --ui-input-select-dropdown-section-container-border-color,
+      affects: section,
+    }
+  - {
+      name: --ui-input-select-dropdown-section-container-padding-y,
+      affects: section,
+    }
+  - {
+      name: --ui-input-select-dropdown-section-container-header-padding-x,
+      affects: section-label,
+    }
+  - {
+      name: --ui-input-select-dropdown-section-container-header-padding-y,
+      affects: section-label,
+    }
+  - {
+      name: --ui-input-select-dropdown-section-label-group-color,
+      affects: section-label,
+    }
+
+  # ── Item ──
+  - {
+      name: --ui-input-select-dropdown-item-global-container-gap,
+      affects: item,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-global-container-padding-x,
+      affects: item,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-global-container-padding-y,
+      affects: item,
+    }
+  - { name: --ui-input-select-dropdown-item-global-label-color, affects: item }
+  - {
+      name: --ui-input-select-dropdown-item-unselected-container-color-idle,
+      affects: item,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-unselected-container-color-hover,
+      affects: item,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-unselected-container-color-disabled,
+      affects: item,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-selected-container-color-idle,
+      affects: item,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-selected-container-color-hover,
+      affects: item,
+    }
+
+  # ── Item selection indicator (single check / multiple checkbox) ──
+  - {
+      name: --ui-input-select-normal-icon-expand-color-hover,
+      affects: indicator,
+      description: Single-select trailing check,
+    }
+  - { name: --ui-checkbox-global-box-size, affects: indicator }
+  - { name: --ui-checkbox-global-box-border-radius, affects: indicator }
+  - { name: --ui-checkbox-global-box-border-width, affects: indicator }
+  - { name: --ui-checkbox-unchecked-box-border-color-idle, affects: indicator }
+  - { name: --ui-checkbox-unchecked-box-color-idle, affects: indicator }
+  - { name: --ui-checkbox-checked-box-border-color-idle, affects: indicator }
+  - { name: --ui-checkbox-checked-box-color-idle, affects: indicator }
+  - { name: --ui-checkbox-checked-icon-color-idle, affects: indicator }
+
+  # ── Status row ──
+  - { name: --ui-input-select-dropdown-container-status-gap, affects: status }
+  - {
+      name: --ui-input-select-dropdown-container-status-padding-x,
+      affects: status,
+    }
+  - {
+      name: --ui-input-select-dropdown-container-status-padding-y,
+      affects: status,
+    }
+
+  # ── Focus ring ──
+  - {
+      name: --ui-focus-primary,
+      affects: trigger,
+      description: Focus / open ring,
+    }
+  - {
+      name: --ui-focus-error,
+      affects: trigger,
+      description: Focus / open ring in the error state,
+    }

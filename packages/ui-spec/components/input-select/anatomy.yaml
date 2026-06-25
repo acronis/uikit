@@ -1,0 +1,179 @@
+spec_version: '1.0'
+component: InputSelect
+
+schematic: |
+  +-----------------------------------------+
+  |  label  required                        |   root: <div> field (vertical stack)
+  +-----------------------------------------+
+  | [ value / placeholder          icon   ] |   trigger (role=combobox): value + icon (chevron)
+  +-----------------------------------------+
+  |  description  |  error                  |   description (normal) OR error (invalid)
+  +-----------------------------------------+
+            (open) popup: <div role=listbox>
+            +-----------------------------+
+            | [search]                    |   search: in-dropdown filter row
+            | section-label               |   section + section-label (group)
+            |   item            indicator |   item (option) + indicator (check / checkbox)
+            |   item            indicator |
+            | status (loading/empty/error)|   status: shown instead of items
+            +-----------------------------+
+
+root:
+  element: div
+  role: group
+  description: >-
+    The field container — a vertical stack of the label, the trigger box, and
+    the description / error message. Width is fluid with a minimum from
+    `--ui-input-select-global-container-width-min`. `Select.Root` owns the
+    open/selection state and renders no element of its own.
+
+parts:
+  - id: label
+    description: The field label, auto-associated with the trigger (Base UI `Select.Label`).
+    element: label
+  - id: required
+    description: The required marker (`*`) after the label; shown when `required`.
+    element: span
+  - id: trigger
+    description: >-
+      The focusable box (`role="combobox"`, Base UI `Select.Trigger`) showing the
+      value/placeholder + chevron; opens the popup. `--ui-input-select-global-box-*`
+      + `-normal-box-border-*`; switches to `-error-box-border-*` when `aria-invalid`.
+    element: button
+  - id: value
+    description: >-
+      Selected option label, or placeholder when empty (Base UI `Select.Value`).
+      `--ui-input-select-global-value-color-*` / `-placeholder-color-*`.
+    element: span
+  - id: icon
+    description: >-
+      Trailing chevron (ChevronDownIcon) that rotates 180° while open.
+      `--ui-input-select-normal-icon-expand-color-{idle,disabled}`.
+    element: span
+  - id: description
+    description: Helper text below the trigger (normal). `-normal-description-color-*`.
+    element: p
+    optional: true
+  - id: error
+    description: Error message below the trigger; shown instead of the description. `-error-error-msg-color`.
+    element: p
+    optional: true
+  - id: popup
+    description: >-
+      The floating listbox panel (`role="listbox"`), portaled below the trigger.
+      `--ui-input-select-dropdown-container-*`.
+    element: div
+  - id: search
+    description: >-
+      Optional in-dropdown search row (magnifier + input) the consumer wires to
+      filter items. `--ui-input-select-dropdown-dropdown-search-*`.
+    element: div
+    optional: true
+  - id: section
+    description: An optional labelled section (group) of items, divided by a top border.
+    element: div
+    optional: true
+  - id: section-label
+    description: The heading for a section. `--ui-input-select-dropdown-section-label-group-color`.
+    element: div
+    optional: true
+  - id: item
+    description: >-
+      A single option (`role="option"`). Single-select rows tint when selected;
+      highlighted rows use the hover container color; disabled rows are inert.
+    element: div
+  - id: indicator
+    description: >-
+      Selection indicator on the item — a trailing check (single) or a leading
+      checkbox (multiple).
+    element: span
+  - id: status
+    description: >-
+      Loading / empty / error row shown instead of items.
+      `--ui-input-select-dropdown-container-status-*`.
+    element: div
+    optional: true
+
+layout:
+  type: stack
+  direction: vertical
+  align: start
+  order: [label, trigger, description, error]
+
+internal_state:
+  - id: open
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [open]
+    controlled_default: default-open
+    emits: open-change
+    changed_by: trigger press, item select (single), Escape, or outside press
+    description: Whether the options popup is shown; reflected to `data-popup-open` on the trigger.
+  - id: value
+    type: string | string[]
+    controllable_via: [value]
+    controlled_default: default-value
+    emits: value-change
+    changed_by: selecting an item (toggling, when multiple)
+    description: The selected value(s); drives the trigger label and the item indicators.
+
+transitions:
+  - id: openPopup
+    state: open
+    from: false
+    on: trigger press / Space / Enter / ArrowDown
+    to: true
+    guard: not disabled
+    effect: emits open-change(true)
+    interactive: true
+  - id: selectItem
+    state: value
+    on: click / Enter on an item
+    to: the item's value
+    guard: item not disabled
+    effect: emits value-change(next); closes the popup unless multiple
+    interactive: false
+  - id: closePopup
+    state: open
+    from: true
+    on: Escape / outside press / single select
+    to: false
+    effect: emits open-change(false)
+    interactive: false
+
+states:
+  - {
+      id: hover,
+      trigger: pointer hover over the trigger (enabled),
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [trigger],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on the trigger,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [trigger],
+    }
+  - {
+      id: open,
+      trigger: 'internal open === true (data-[popup-open])',
+      kind: internal,
+      affects: [trigger, icon, popup],
+    }
+  - {
+      id: invalid,
+      trigger: 'aria-invalid set on the trigger',
+      kind: pseudo,
+      pseudo: '[aria-invalid]',
+      affects: [trigger, error],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true',
+      kind: prop,
+      prop: disabled,
+      affects: [label, trigger, value, icon, description],
+    }

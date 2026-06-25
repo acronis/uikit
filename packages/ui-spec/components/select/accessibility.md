@@ -36,6 +36,6 @@ Provided by the Base UI Select primitive; verify these hold after styling.
 ## Contrast
 
 - Trigger value text, placeholder, border, and the chevron all resolve to
-  `--ui-form-*` tokens that meet contrast in both light and dark themes.
+  `--ui-input-select-*` tokens that meet contrast in both light and dark themes.
 - The disabled state uses the dedicated disabled tokens (not opacity), keeping
   text legible.

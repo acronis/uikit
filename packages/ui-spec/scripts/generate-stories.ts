@@ -74,6 +74,25 @@ const RENDER: Record<string, RenderHint> = {
   },
   input: { ariaLabel: 'Email' },
   'input-search': { props: 'label="Find" placeholder="Search table"' },
+  'input-select': {
+    extraImports: [
+      "import { InputSelectField, InputSelectLabel, InputSelectTrigger, InputSelectValue, InputSelectContent, InputSelectItem } from '../input-select';",
+    ],
+    sample: [
+      '',
+      '      <InputSelectField>',
+      '        <InputSelectLabel>Fruit</InputSelectLabel>',
+      '        <InputSelectTrigger>',
+      '          <InputSelectValue placeholder="Select an option" />',
+      '        </InputSelectTrigger>',
+      '      </InputSelectField>',
+      '      <InputSelectContent>',
+      '        <InputSelectItem value="apple">Apple</InputSelectItem>',
+      '        <InputSelectItem value="banana">Banana</InputSelectItem>',
+      '      </InputSelectContent>',
+      '    ',
+    ].join('\n'),
+  },
   'input-text': { props: 'label="Email" placeholder="you@example.com"' },
   search: { ariaLabel: 'Search' },
   tooltip: {

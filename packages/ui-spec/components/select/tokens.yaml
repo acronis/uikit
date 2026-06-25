@@ -1,10 +1,10 @@
 spec_version: '1.0'
 component: Select
 
-# References only. Values live in @acronis-platform/tokens-pd (generated from
-# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
-# The trigger uses the dedicated `--ui-input-select-*` tier; the popup and items
-# use the shared semantic surface vocabulary.
+# References only. Values live in @acronis-platform/tokens-pd. `Select` is an alias of
+# the next-gen `InputSelect` family, so it consumes the `--ui-input-select-*` tier (it
+# previously bound the deleted `--ui-form-*` tier — issue #333). See the InputSelect
+# spec for the full part/token breakdown.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
@@ -23,12 +23,7 @@ tokens:
   - {
       name: --ui-input-select-normal-box-border-color-hover,
       affects: root,
-      description: Border on hover,
-    }
-  - {
-      name: --ui-input-select-normal-box-border-color-hover,
-      affects: root,
-      description: Border when open / focused,
+      description: Border on hover / open,
     }
   - { name: --ui-input-select-normal-box-border-color-disabled, affects: root }
   - {
@@ -49,37 +44,33 @@ tokens:
     }
   - { name: --ui-input-select-normal-icon-expand-color-disabled, affects: icon }
   - {
-      name: --ui-input-select-dropdown-item-global-icon-checked,
-      affects: indicator,
-    }
-  - {
       name: --ui-focus-primary,
       affects: root,
       description: Focus / open ring color,
     }
-  # Popup + items (shared semantic surface tokens)
+  # Popup + items
   - {
-      name: --ui-background-surface-primary,
+      name: --ui-input-select-dropdown-container-color,
       affects: popup,
       description: Popup background,
     }
   - {
-      name: --ui-border-on-surface-border,
+      name: --ui-input-select-dropdown-container-border-color,
       affects: popup,
       description: Popup border,
     }
   - {
-      name: --ui-text-on-surface-primary,
+      name: --ui-input-select-dropdown-item-global-label-color,
       affects: item,
       description: Item text,
     }
   - {
-      name: --ui-background-surface-hover,
+      name: --ui-input-select-dropdown-item-unselected-container-color-hover,
       affects: item,
       description: Highlighted item background,
     }
   - {
-      name: --ui-text-on-surface-secondary,
+      name: --ui-input-select-dropdown-section-label-group-color,
       affects: group-label,
       description: Group label text,
     }
