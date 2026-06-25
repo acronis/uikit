@@ -1,162 +1,73 @@
 spec_version: '1.0'
 component: InputTextArea
 
-# References only. Values live in @acronis-platform/tokens-pd (generated from
-# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
-# InputTextArea uses the dedicated `--ui-input-text-area-*` tier plus two
-# semantic focus-ring tokens. NOTE: this tier has NO error-specific border/fill
-# token — the error state (aria-invalid) reuses the `--ui-focus-error` ring only.
+# References only. Values live in @acronis-platform/tokens-pd. The field furniture
+# (container / label / required / description / error) and the textarea box all use
+# the dedicated `--ui-input-text-area-*` tier; the focus ring uses the shared
+# `--ui-focus-*` tokens.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - {
-      name: --ui-input-text-area-border-color-idle,
-      affects: root,
-      description: Border when idle / filled,
-    }
-  - {
-      name: --ui-input-text-area-border-color-hover,
-      affects: root,
-      description: Border on hover,
-    }
-  - {
-      name: --ui-input-text-area-border-color-focus,
-      affects: root,
-      description: Border when focused,
-    }
-  - {
-      name: --ui-input-text-area-border-color-disabled,
-      affects: root,
-      description: Border when disabled,
-    }
-  - {
-      name: --ui-input-text-area-box-border-radius,
-      affects: root,
-      description: Corner radius,
-    }
-  - {
-      name: --ui-input-text-area-box-border-width,
-      affects: root,
-      description: Border width,
-    }
-  - {
-      name: --ui-input-text-area-box-color-idle,
-      affects: root,
-      description: Field fill when idle / focus,
-    }
-  - {
-      name: --ui-input-text-area-box-color-hover,
-      affects: root,
-      description: Field fill on hover,
-    }
-  - {
-      name: --ui-input-text-area-box-color-disabled,
-      affects: root,
-      description: Field fill when disabled,
-    }
-  - {
-      name: --ui-input-text-area-box-gap,
-      affects: root,
-      description: Internal gap between box content elements,
-    }
+  # ── Field container ──
+  - { name: --ui-input-text-area-container-width-min, affects: root }
+  - { name: --ui-input-text-area-container-gap, affects: root }
+  - { name: --ui-input-text-area-container-label-gap, affects: label }
+
+  # ── Label + required marker ──
+  - { name: --ui-input-text-area-label-color-idle, affects: label }
+  - { name: --ui-input-text-area-label-color-disabled, affects: label }
+  - { name: --ui-input-text-area-required-color, affects: required }
+
+  # ── Box geometry ──
   - {
       name: --ui-input-text-area-box-height-min,
-      affects: root,
-      description: Minimum field height (grows with vertical resize),
+      affects: textarea,
+      description: Minimum height (grows with vertical resize),
+    }
+  - { name: --ui-input-text-area-box-border-radius, affects: textarea }
+  - { name: --ui-input-text-area-box-border-width, affects: textarea }
+  - { name: --ui-input-text-area-box-padding-x, affects: textarea }
+  - { name: --ui-input-text-area-box-padding-y, affects: textarea }
+
+  # ── Box fill ──
+  - { name: --ui-input-text-area-box-color-idle, affects: textarea }
+  - { name: --ui-input-text-area-box-color-hover, affects: textarea }
+  - { name: --ui-input-text-area-box-color-disabled, affects: textarea }
+
+  # ── Box border (normal + error) ──
+  - { name: --ui-input-text-area-border-color-idle, affects: textarea }
+  - { name: --ui-input-text-area-border-color-hover, affects: textarea }
+  - { name: --ui-input-text-area-border-color-focus, affects: textarea }
+  - { name: --ui-input-text-area-border-color-disabled, affects: textarea }
+  - {
+      name: --ui-input-text-area-error-msg-box-border-color-idle,
+      affects: textarea,
     }
   - {
-      name: --ui-input-text-area-box-padding-x,
-      affects: root,
-      description: Horizontal padding,
+      name: --ui-input-text-area-error-msg-box-border-color-hover,
+      affects: textarea,
     }
-  - {
-      name: --ui-input-text-area-box-padding-y,
-      affects: root,
-      description: Vertical padding,
-    }
-  - {
-      name: --ui-input-text-area-container-gap,
-      affects: container,
-      description: Gap between the field and its description (composed externally),
-    }
-  - {
-      name: --ui-input-text-area-container-label-gap,
-      affects: container,
-      description: Gap between the label and the field (composed externally),
-    }
-  - {
-      name: --ui-input-text-area-container-width-min,
-      affects: container,
-      description: Minimum container width (composed externally),
-    }
-  - {
-      name: --ui-input-text-area-value-color-idle,
-      affects: root,
-      description: Entered value text color (idle / focus),
-    }
-  - {
-      name: --ui-input-text-area-value-color-hover,
-      affects: root,
-      description: Entered value text color on hover,
-    }
-  - {
-      name: --ui-input-text-area-value-color-disabled,
-      affects: root,
-      description: Entered value text color when disabled,
-    }
-  - {
-      name: --ui-input-text-area-placeholder-color-idle,
-      affects: root,
-      description: Placeholder text color (idle / focus),
-    }
-  - {
-      name: --ui-input-text-area-placeholder-color-hover,
-      affects: root,
-      description: Placeholder text color on hover,
-    }
-  - {
-      name: --ui-input-text-area-placeholder-color-disabled,
-      affects: root,
-      description: Placeholder text color when disabled,
-    }
-  - {
-      name: --ui-input-text-area-label-color-idle,
-      affects: container,
-      description: Label text color (composed externally) idle,
-    }
-  - {
-      name: --ui-input-text-area-label-color-hover,
-      affects: container,
-      description: Label text color (composed externally) on hover,
-    }
-  - {
-      name: --ui-input-text-area-label-color-disabled,
-      affects: container,
-      description: Label text color (composed externally) when disabled,
-    }
-  - {
-      name: --ui-input-text-area-description-color-idle,
-      affects: container,
-      description: Description text color (composed externally) idle,
-    }
-  - {
-      name: --ui-input-text-area-description-color-hover,
-      affects: container,
-      description: Description text color (composed externally) on hover,
-    }
+
+  # ── Value + placeholder text ──
+  - { name: --ui-input-text-area-value-color-idle, affects: textarea }
+  - { name: --ui-input-text-area-value-color-hover, affects: textarea }
+  - { name: --ui-input-text-area-value-color-disabled, affects: textarea }
+  - { name: --ui-input-text-area-placeholder-color-idle, affects: textarea }
+  - { name: --ui-input-text-area-placeholder-color-hover, affects: textarea }
+  - { name: --ui-input-text-area-placeholder-color-disabled, affects: textarea }
+
+  # ── Description + error message ──
+  - { name: --ui-input-text-area-description-color-idle, affects: description }
   - {
       name: --ui-input-text-area-description-color-disabled,
-      affects: container,
-      description: Description text color (composed externally) when disabled,
+      affects: description,
     }
-  - {
-      name: --ui-input-text-area-required-color,
-      affects: container,
-      description: Required marker / error message color (composed externally),
-    }
-  - { name: --ui-focus-primary, affects: root, description: Focus ring color }
+  - { name: --ui-input-text-area-error-msg-error-color, affects: error }
+
+  # ── Focus rings ──
+  - { name: --ui-focus-primary, affects: textarea, description: Focus ring }
   - {
       name: --ui-focus-error,
-      affects: root,
-      description: Focus ring color when invalid,
+      affects: textarea,
+      description: Error-state focus ring,
     }

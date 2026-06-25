@@ -6,8 +6,28 @@ const meta = {
   title: 'UI/InputTextArea',
   component: InputTextArea,
   tags: ['autodocs'],
-  args: { placeholder: 'Placeholder', 'aria-label': 'Example' },
   argTypes: {
+    label: {
+      control: 'text',
+      description: 'Field label rendered above the textarea.',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
+    required: {
+      control: 'boolean',
+      description: 'Appends a required `*` after the label and sets `aria-required`.',
+      table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    description: {
+      control: 'text',
+      description: 'Helper text below the textarea (hidden while `error` is set).',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
+    error: {
+      control: 'text',
+      description:
+        'Error message below the textarea; its presence switches the field to the error treatment.',
+      table: { type: { summary: 'ReactNode' }, category: 'State' },
+    },
     placeholder: {
       control: 'text',
       description: 'Placeholder shown when the textarea is empty.',
@@ -31,17 +51,7 @@ const meta = {
     },
     'aria-invalid': {
       control: 'boolean',
-      description: 'Marks the field invalid; on focus the ring swaps to the error color.',
-      table: { type: { summary: 'boolean' }, category: 'State' },
-    },
-    readOnly: {
-      control: 'boolean',
-      description: 'Makes the value non-editable.',
-      table: { type: { summary: 'boolean' }, category: 'State' },
-    },
-    required: {
-      control: 'boolean',
-      description: 'Marks the field as required for form submission.',
+      description: 'Marks the textarea invalid directly (alternative to `error`).',
       table: { type: { summary: 'boolean' }, category: 'State' },
     },
     onChange: {
@@ -49,6 +59,11 @@ const meta = {
       description: 'Native change handler.',
       table: { type: { summary: '(event) => void' }, category: 'Events' },
     },
+  },
+  args: {
+    label: 'Label',
+    placeholder: 'Placeholder',
+    description: 'Description message',
   },
   decorators: [
     (Story) => (
@@ -64,57 +79,23 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const States: Story = {
-  render: () => (
-    <div className="flex w-64 flex-col gap-3">
-      <InputTextArea aria-label="Idle" placeholder="Placeholder" />
-      <InputTextArea aria-label="Filled" defaultValue="Value" />
-      <InputTextArea aria-label="Invalid" defaultValue="Value" aria-invalid />
-      <InputTextArea aria-label="Disabled" defaultValue="Value" disabled />
-    </div>
-  ),
+export const Required: Story = {
+  args: { required: true },
 };
 
-export const WithLabel: Story = {
-  render: () => (
-    <div className="flex w-64 flex-col gap-[var(--ui-input-text-area-container-gap)]">
-      <label
-        htmlFor="bio"
-        className="text-sm leading-4 text-[var(--ui-input-text-area-label-color-idle)]"
-      >
-        Bio
-      </label>
-      <InputTextArea id="bio" placeholder="Tell us about yourself" />
-      <p className="text-xs leading-4 text-[var(--ui-input-text-area-description-color-idle)]">
-        A short description shown on your profile.
-      </p>
-    </div>
-  ),
+export const WithValue: Story = {
+  args: { defaultValue: 'Value', description: undefined },
 };
 
-export const Invalid: Story = {
-  name: 'Invalid (with error message)',
-  render: () => (
-    <div className="flex w-64 flex-col gap-[var(--ui-input-text-area-container-gap)]">
-      <label
-        htmlFor="comment"
-        className="text-sm leading-4 text-[var(--ui-input-text-area-label-color-idle)]"
-      >
-        Comment
-        <span className="text-[var(--ui-input-text-area-required-color)]"> *</span>
-      </label>
-      <InputTextArea
-        id="comment"
-        defaultValue="Too short"
-        aria-invalid
-        aria-describedby="comment-error"
-      />
-      <p
-        id="comment-error"
-        className="text-xs leading-4 text-[var(--ui-input-text-area-required-color)]"
-      >
-        Comment must be at least 20 characters.
-      </p>
-    </div>
-  ),
+export const Error: Story = {
+  args: { error: 'Error message', description: undefined },
+};
+
+export const Disabled: Story = {
+  args: { disabled: true, defaultValue: 'Value' },
+};
+
+// Bare usage — no label/description; the box renders on its own.
+export const Bare: Story = {
+  args: { label: undefined, description: undefined, 'aria-label': 'Notes' },
 };

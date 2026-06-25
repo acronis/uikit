@@ -51,16 +51,54 @@ describe('InputTextArea', () => {
     expect(textarea).toHaveValue('');
   });
 
-  it('reflects the error state via aria-invalid', () => {
+  it('renders a labelled textarea associated via htmlFor/id', () => {
+    render(<InputTextArea label="Bio" placeholder="About you" />);
+    const textarea = screen.getByLabelText('Bio');
+    expect(textarea.tagName).toBe('TEXTAREA');
+    expect(textarea).toHaveAttribute('placeholder', 'About you');
+  });
+
+  it('appends a required marker and sets aria-required', () => {
+    render(<InputTextArea label="Bio" required />);
+    expect(screen.getByText('*')).toBeInTheDocument();
+    // The `*` is aria-hidden, so the accessible name is still "Bio".
+    expect(screen.getByRole('textbox', { name: 'Bio' })).toHaveAttribute(
+      'aria-required',
+      'true'
+    );
+  });
+
+  it('renders a description associated via aria-describedby', () => {
+    render(<InputTextArea label="Bio" description="Shown on your profile" />);
+    const textarea = screen.getByLabelText('Bio');
+    const descId = textarea.getAttribute('aria-describedby');
+    expect(descId).toBeTruthy();
+    expect(screen.getByText('Shown on your profile')).toHaveAttribute(
+      'id',
+      descId as string
+    );
+  });
+
+  it('switches to the error treatment when error is set', () => {
+    render(<InputTextArea label="Bio" description="hint" error="Required field" />);
+    const textarea = screen.getByLabelText('Bio');
+    expect(textarea).toHaveAttribute('aria-invalid', 'true');
+    // Error message replaces the description.
+    expect(screen.getByText('Required field')).toBeInTheDocument();
+    expect(screen.queryByText('hint')).not.toBeInTheDocument();
+  });
+
+  it('reflects the error state via aria-invalid (red border + error ring)', () => {
     render(<InputTextArea aria-label="Notes" aria-invalid />);
     const textarea = screen.getByRole('textbox', { name: 'Notes' });
     expect(textarea).toHaveAttribute('aria-invalid', 'true');
     expect(textarea).toHaveClass(
+      'aria-[invalid=true]:border-[var(--ui-input-text-area-error-msg-box-border-color-idle)]',
       'aria-[invalid=true]:focus-visible:ring-[var(--ui-focus-error)]'
     );
   });
 
-  it('merges a custom className with the token classes', () => {
+  it('merges a custom className onto the textarea', () => {
     render(<InputTextArea aria-label="Notes" className="custom-class" />);
     expect(screen.getByRole('textbox', { name: 'Notes' })).toHaveClass(
       'custom-class',

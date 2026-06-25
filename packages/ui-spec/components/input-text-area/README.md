@@ -18,17 +18,13 @@ error message.
 
 ## States
 
-| State    | How            | Visual                                               |
-| -------- | -------------- | ---------------------------------------------------- |
-| Idle     | default        | Idle border, idle fill                               |
-| Hover    | pointer hover  | `border-color-hover` + `box-color-hover`             |
-| Focus    | focus          | `border-color-focus` + 3px `--ui-focus-primary` ring |
-| Error    | `aria-invalid` | Border unchanged + `--ui-focus-error` ring on focus  |
-| Disabled | `disabled`     | Faint fill/border, muted text, not interactive       |
-
-> The `--ui-input-text-area-*` tier has **no** error-specific border or fill
-> token (unlike the single-line Input tier). The error state therefore keeps the
-> idle/hover/focus border and only swaps the focus ring to `--ui-focus-error`.
+| State    | How                      | Visual                                                              |
+| -------- | ------------------------ | ------------------------------------------------------------------- |
+| Idle     | default                  | Idle border, idle fill                                              |
+| Hover    | pointer hover            | `border-color-hover` + `box-color-hover`                            |
+| Focus    | focus                    | `border-color-focus` + 3px `--ui-focus-primary` ring                |
+| Error    | `error` / `aria-invalid` | Red `error-msg-box-border-color-*` border + `--ui-focus-error` ring |
+| Disabled | `disabled`               | Faint fill/border, muted text, not interactive                      |
 
 ## Quick Examples
 
@@ -40,29 +36,28 @@ import { InputTextArea } from '@acronis-platform/ui-react';
 function BioField() {
   const [bio, setBio] = useState('');
   return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor="bio">Bio</label>
-      <InputTextArea
-        id="bio"
-        placeholder="Tell us about yourself"
-        value={bio}
-        onChange={(e) => setBio(e.target.value)}
-      />
-    </div>
+    <InputTextArea
+      label="Bio"
+      description="Shown on your profile"
+      placeholder="Tell us about yourself"
+      value={bio}
+      onChange={(e) => setBio(e.target.value)}
+    />
   );
 }
 ```
 
-Error state:
+Error state — `error` switches the field to the error treatment (red border +
+red message replacing the description):
 
 ```tsx
-<InputTextArea id="comment" aria-invalid aria-describedby="comment-error" />
-<p id="comment-error">Comment must be at least 20 characters.</p>
+<InputTextArea
+  label="Comment"
+  value={value}
+  error="Comment must be at least 20 characters."
+  onChange={onChange}
+/>
 ```
-
-> Label, description, and required marker are composed by the consumer today; a
-> `Field` component that wires them together (label, `aria-describedby`,
-> required marker) is planned.
 
 ## Spec Files
 

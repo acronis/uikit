@@ -16,21 +16,28 @@ type Story = StoryObj<typeof meta>;
 
 export const States: Story = {
   render: () => (
-    <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-      <InputTextArea aria-label="Notes" />
-      <InputTextArea aria-label="Notes" aria-invalid />
-      <InputTextArea aria-label="Notes" disabled />
+    <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+      <InputTextArea label="Bio" placeholder="Tell us about yourself" />
+      <InputTextArea
+        label="Bio"
+        placeholder="Tell us about yourself"
+        disabled
+      />
     </div>
   ),
 };
 
 export const Hover: Story = {
   parameters: { pseudo: { hover: true } },
-  render: () => <InputTextArea aria-label="Notes" />,
+  render: () => (
+    <InputTextArea label="Bio" placeholder="Tell us about yourself" />
+  ),
 };
 
 export const FocusVisible: Story = {
-  render: () => <InputTextArea aria-label="Notes" />,
+  render: () => (
+    <InputTextArea label="Bio" placeholder="Tell us about yourself" />
+  ),
   // Real keyboard focus — paints :focus-visible without a pseudo-states addon.
   play: async () => {
     await userEvent.tab();

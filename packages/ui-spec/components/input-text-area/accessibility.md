@@ -9,9 +9,10 @@
 | `aria-describedby`  | id of the error/description | Associates the message text with the field   |
 | `aria-disabled`     | implied by `disabled`       | Disabled fields are skipped in the tab order |
 
-**Always provide an accessible name** — a visible `<label for>` (preferred) or
-`aria-label` / `aria-labelledby`. The placeholder is **not** a label; it
-disappears on input and fails contrast as a label.
+**Always provide an accessible name** — the built-in `label` prop (preferred,
+auto-associated via `htmlFor`/`id`) or `aria-label` / `aria-labelledby` for the
+bare usage. The placeholder is **not** a label; it disappears on input and fails
+contrast as a label.
 
 ## Keyboard Navigation
 

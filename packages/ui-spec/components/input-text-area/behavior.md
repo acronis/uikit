@@ -53,13 +53,23 @@
 **Then** the border uses `--ui-input-text-area-border-color-focus`
 **And** a 3px `--ui-focus-primary` ring is shown
 
-### Error (aria-invalid)
+### Error (error prop / aria-invalid)
 
-**Given** an InputTextArea with `aria-invalid`
+**Given** an InputTextArea with `error` set (or `aria-invalid`)
 **When** it renders
-**Then** the border stays at its idle/hover/focus color — this tier has no
-error-specific border token
+**Then** the box border uses `--ui-input-text-area-error-msg-box-border-color-idle`
+(`-hover` on hover / focus)
 **And** on focus the ring uses `--ui-focus-error` (not the primary ring)
+**And** the `error` message replaces the description below the field, in
+`--ui-input-text-area-error-msg-error-color`
+
+### Label, required, description
+
+**Given** a `label` (with optional `required`) and a `description`
+**When** the field renders
+**Then** the label appears above the box (associated via `htmlFor`/`id`), a `*`
+marker follows it when `required`, and the description shows below — associated
+via `aria-describedby`.
 
 ---
 

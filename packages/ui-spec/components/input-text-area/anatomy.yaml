@@ -3,48 +3,75 @@ component: InputTextArea
 
 schematic: |
   +-------------------------------+
-  | Placeholder / Value           |   root: <textarea> (role="textbox")
-  |                               |
-  |                            ◢  |   vertical resize handle
+  |  label  required              |   root: <div> (field, vertical stack)
   +-------------------------------+
-   border idle / hover / focus / disabled (no error border token)
-   text -> --ui-input-text-area-value-color-* ;
-   placeholder -> --ui-input-text-area-placeholder-color-*
+  | [ textarea                 ]  |   textarea: the box (role="textbox")
+  | [                       ◢  ]  |   vertical resize handle
+  +-------------------------------+
+  |  description | error          |   description (normal) OR error (error state)
+  +-------------------------------+
 
 root:
-  element: textarea
-  role: textbox
+  element: div
+  role: group
   description: >-
-    Native multiline text area. Geometry (96px min-height, 12px x-padding, 8px
-    y-padding, 4px radius, 1px border) and all colors come from the
-    `--ui-input-text-area-*` tokens; the field grows with vertical resize. The
-    focus ring uses `--ui-focus-primary` (and `--ui-focus-error` when invalid).
+    The field container — a vertical stack of the label, the textarea box, and the
+    description / error message. Width is fluid with a minimum from
+    `--ui-input-text-area-container-width-min`.
 
-# A bare text area has no named sub-parts — the placeholder/value live on the
-# native element itself. Label / description / required marker are composed
-# externally (a Field component is future work), so they are not parts here.
-parts: []
-
-# The text area is a near-pure function of its props plus native interaction
-# pseudo-states. Value is the native element's own state and is not modelled here.
-states:
-  - id: hover
-    trigger: pointer hover (enabled)
-    kind: pseudo
-    pseudo: ':hover'
-    affects: [root]
-  - id: focus-visible
-    trigger: keyboard or text-entry focus
-    kind: pseudo
-    pseudo: ':focus-visible'
-    affects: [root]
+parts:
+  - id: label
+    description: The field label, rendered above the textarea (`<label htmlFor>`).
+    element: label
+  - id: required
+    description: The required marker (`*`) after the label; shown when `required`.
+    element: span
+  - id: textarea
+    description: >-
+      The native multiline `<textarea>` box (`role="textbox"`) — border, fill,
+      value / placeholder, per-state treatment; grows with vertical resize. 96px
+      min-height, 4px radius, 12px x-padding, 8px y-padding from
+      `--ui-input-text-area-box-*`.
+    element: textarea
+  - id: description
+    description: Helper text below the textarea (normal state).
+    element: p
   - id: error
-    trigger: 'aria-invalid === true'
-    kind: prop
-    prop: aria-invalid
-    affects: [root]
-  - id: disabled
-    trigger: 'disabled === true'
-    kind: prop
-    prop: disabled
-    affects: [root]
+    description: Error message below the textarea; replaces the description when `error` is set.
+    element: p
+
+layout:
+  type: stack
+  direction: vertical
+  align: start
+  order: [label, textarea, description, error]
+
+states:
+  - {
+      id: hover,
+      trigger: pointer hover over the textarea (enabled),
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [textarea],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard or text-entry focus on the textarea,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [textarea],
+    }
+  - {
+      id: error,
+      trigger: 'error is set (or aria-invalid)',
+      kind: prop,
+      prop: error,
+      affects: [textarea, error],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true',
+      kind: prop,
+      prop: disabled,
+      affects: [label, textarea, description],
+    }
