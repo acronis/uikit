@@ -45,6 +45,10 @@ defined deprecation path.
    verification: **Chrome 123+ · Edge 123+ · Firefox 120+ · Safari 17.5+**
    (desktop), matching the `light-dark()` + `color-scheme` token delivery
    baseline used by `tokens-pd`.
+6. **Legacy → `ui-react` migration path (issue #194).** For E6/v1, migration is
+   **manual-first via the guide (#184)**. In-repo automation scope is limited to
+   optional, targeted codemod recipes (for low-risk import/symbol rewrites), not
+   a fully automated end-to-end legacy→ui-react codemod.
 
 ---
 
@@ -160,7 +164,7 @@ Depends on Tier 1–2 primitives (Tooltip, Dropdown, Checkbox, Scroll Area).
 
 ### E6 — Docs & adoption · #107
 
-- [ ] **Migration guide: legacy → ui-react** (component mapping + codemods where viable)
+- [ ] **Migration guide: legacy → ui-react** (component mapping + manual flow; optional codemod recipes where viable)
 - [ ] Deprecation notice + timeline published on `ui-legacy`
 - [ ] Docs site (apps/docs) coverage tracks ui-react component ladder
 - [ ] kitchen-sink kept as living token/component/icon reference
@@ -221,7 +225,6 @@ migration guide (E6). On v1, `ui-legacy` goes security-only.
 To ratify early (they shape APIs/scope); tracked on the board under their epic:
 
 1. **RSC/Next support** → #192 (E2, P2) — settle before primitive detail.
-2. **Codemods vs manual migration** → #194 (E6, P3).
 
 ---
 
