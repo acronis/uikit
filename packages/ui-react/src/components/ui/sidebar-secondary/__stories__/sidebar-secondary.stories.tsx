@@ -161,6 +161,46 @@ export const Default: Story = {
   ),
 };
 
+// The generic component reference from Figma node 2468-59502: placeholder
+// "Header" / "Section Header" / three identical "Menu Item" rows (no leading
+// icons) and a footer menu item with a leading chevron + a `⌘J` shortcut. The
+// CollapsedBreadcrumb carries the same labels the design shows for the collapsed
+// rail (hidden here while expanded).
+export const Reference: Story = {
+  name: 'Reference (Figma anatomy)',
+  render: () => (
+    <Shell>
+      <SidebarSecondary>
+        <SidebarSecondaryHeader label="Header" />
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection>
+            <SidebarSecondarySectionLabel>
+              Section Header
+            </SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#">Menu Item</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Menu Item</SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#">Menu Item</SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+        <SidebarSecondaryCollapsedBreadcrumb
+          parentLabel="Header"
+          currentLabel="Current Page Name"
+        />
+        <SidebarSecondaryFooter>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryMenuItem href="#" icon={<ChevronLeftIcon />}>
+              Menu Item
+              <SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘J" />
+            </SidebarSecondaryMenuItem>
+          </SidebarSecondaryMenu>
+        </SidebarSecondaryFooter>
+      </SidebarSecondary>
+    </Shell>
+  ),
+};
+
 export const Collapsed: Story = {
   name: 'Collapsed (breadcrumb rail)',
   render: () => (
