@@ -175,7 +175,7 @@ Depends on Tier 1–2 primitives (Tooltip, Dropdown, Checkbox, Scroll Area).
 - [ ] Accessibility testing baseline (keyboard, ARIA, contrast) per component
 - [ ] Visual regression (Storybook-based) light + dark
 - [ ] Changesets discipline + release pipeline reliability
-- [ ] Define **ui-react 1.0 criteria** (which components, a11y bar, stable token contract)
+- [x] Define and ratify **ui-react 1.0 criteria** (#191) — component set, a11y bar, stable token contract.
 - [x] Ratify a11y bar + browser support matrix (#193) — WCAG 2.1 AA; Chrome/Edge
       123+, Firefox 120+, Safari 17.5+.
 
@@ -188,6 +188,16 @@ design-system components** (layout/shell, brand-specific elements — E2 Tier 3)
 **+ selected complex components** led by **Table** (E3). Backed by the stable
 token/theme contract (E1), a11y baseline and visual regression (E7), and a
 migration guide (E6). On v1, `ui-legacy` goes security-only.
+
+Ratified v1.0 criteria (#191):
+
+- **Component set:** E2 Tier 1 + Tier 2 shipped; Tier 3 must-haves (★) shipped;
+  E3 Table cluster delivered to its scoped DoD.
+- **Accessibility bar:** WCAG 2.1 AA and browser matrix from #193 applied to
+  shipped components/docs and per-component DoD verification.
+- **Stable token contract:** E1 token contract/versioning (#176) is in force for
+  `design-tokens` → `tokens-pd` → `ui-react`, with no unresolved breaking-contract
+  gaps for the v1 component surface.
 
 ## Sequencing (calendar — today is 2026-06-05)
 
@@ -230,18 +240,19 @@ To ratify early (they shape APIs/scope); tracked on the board under their epic:
 
 ## Issue → epic map
 
-| Issue     | Title                                   | Epic            |
-| --------- | --------------------------------------- | --------------- |
-| #101      | White-label brand fonts                 | E1              |
-| #88       | Move design context to design-grammar   | E1              |
-| #100      | sonner toast() imperative API split     | E2 (Tier 2)     |
-| #87       | Figma connect template                  | E4              |
-| #86       | Complete Table implementation           | E3              |
-| #49 / #45 | Scroll-friendly table layout primitives | E3              |
-| #48       | Column header inline-toggle sort        | E3              |
-| #47       | Tooltip portal escape hatch             | E3 / E2 Tooltip |
-| #46       | Resizable columns                       | E3              |
-| #44       | Sticky / frozen columns                 | E3              |
-| #192      | RSC/Next support                        | E2              |
-| #193      | A11y level + browser matrix             | E7              |
-| #194      | Codemods vs manual migration            | E6              |
+| Issue     | Title                                    | Epic            |
+| --------- | ---------------------------------------- | --------------- |
+| #101      | White-label brand fonts                  | E1              |
+| #88       | Move design context to design-grammar    | E1              |
+| #100      | sonner toast() imperative API split      | E2 (Tier 2)     |
+| #87       | Figma connect template                   | E4              |
+| #86       | Complete Table implementation            | E3              |
+| #49 / #45 | Scroll-friendly table layout primitives  | E3              |
+| #48       | Column header inline-toggle sort         | E3              |
+| #47       | Tooltip portal escape hatch              | E3 / E2 Tooltip |
+| #46       | Resizable columns                        | E3              |
+| #44       | Sticky / frozen columns                  | E3              |
+| #192      | RSC/Next support                         | E2              |
+| #193      | A11y level + browser matrix              | E7              |
+| #191      | Define and ratify ui-react v1.0 criteria | E7              |
+| #194      | Codemods vs manual migration             | E6              |
