@@ -20,38 +20,52 @@
 //     tokens-pd ships is imported so the page renders + enumerates them all
 //     (including tiers no component consumes yet, e.g. input-date-picker).
 import semanticAcronis from '@acronis-platform/tokens-pd/css/acronis.css?raw';
+import avatarAcronis from '@acronis-platform/tokens-pd/css/Avatar/acronis.css?raw';
 import breadcrumbAcronis from '@acronis-platform/tokens-pd/css/Breadcrumb/acronis.css?raw';
 import buttonAcronis from '@acronis-platform/tokens-pd/css/Button/acronis.css?raw';
 import buttonIconAcronis from '@acronis-platform/tokens-pd/css/ButtonIcon/acronis.css?raw';
 import buttonMenuAcronis from '@acronis-platform/tokens-pd/css/ButtonMenu/acronis.css?raw';
+import cardFilterAcronis from '@acronis-platform/tokens-pd/css/CardFilter/acronis.css?raw';
 import checkboxAcronis from '@acronis-platform/tokens-pd/css/Checkbox/acronis.css?raw';
+import inputDatePickerAcronis from '@acronis-platform/tokens-pd/css/InputDatePicker/acronis.css?raw';
 import inputSearchAcronis from '@acronis-platform/tokens-pd/css/InputSearch/acronis.css?raw';
 import inputSelectAcronis from '@acronis-platform/tokens-pd/css/InputSelect/acronis.css?raw';
 import inputTextAcronis from '@acronis-platform/tokens-pd/css/InputText/acronis.css?raw';
 import inputTextAreaAcronis from '@acronis-platform/tokens-pd/css/InputTextArea/acronis.css?raw';
+import linkAcronis from '@acronis-platform/tokens-pd/css/Link/acronis.css?raw';
 import radioAcronis from '@acronis-platform/tokens-pd/css/Radio/acronis.css?raw';
+import resizableAcronis from '@acronis-platform/tokens-pd/css/Resizable/acronis.css?raw';
+import searchGlobalAcronis from '@acronis-platform/tokens-pd/css/SearchGlobal/acronis.css?raw';
 import sidebarPrimaryAcronis from '@acronis-platform/tokens-pd/css/SidebarPrimary/acronis.css?raw';
 import sidebarSecondaryAcronis from '@acronis-platform/tokens-pd/css/SidebarSecondary/acronis.css?raw';
 import switchAcronis from '@acronis-platform/tokens-pd/css/Switch/acronis.css?raw';
+import tableAcronis from '@acronis-platform/tokens-pd/css/Table/acronis.css?raw';
 import tagAcronis from '@acronis-platform/tokens-pd/css/Tag/acronis.css?raw';
 import tooltipAcronis from '@acronis-platform/tokens-pd/css/Tooltip/acronis.css?raw';
 
 // --- deep-sky: override-only `:root` stylesheets, layered on the acronis base
 //     by `applyBrand`. One per tier (semantic + each component).
 import semanticDeepSky from '@acronis-platform/tokens-pd/css/deep-sky.css?raw';
+import avatarDeepSky from '@acronis-platform/tokens-pd/css/Avatar/deep-sky.css?raw';
 import breadcrumbDeepSky from '@acronis-platform/tokens-pd/css/Breadcrumb/deep-sky.css?raw';
 import buttonDeepSky from '@acronis-platform/tokens-pd/css/Button/deep-sky.css?raw';
 import buttonIconDeepSky from '@acronis-platform/tokens-pd/css/ButtonIcon/deep-sky.css?raw';
 import buttonMenuDeepSky from '@acronis-platform/tokens-pd/css/ButtonMenu/deep-sky.css?raw';
+import cardFilterDeepSky from '@acronis-platform/tokens-pd/css/CardFilter/deep-sky.css?raw';
 import checkboxDeepSky from '@acronis-platform/tokens-pd/css/Checkbox/deep-sky.css?raw';
+import inputDatePickerDeepSky from '@acronis-platform/tokens-pd/css/InputDatePicker/deep-sky.css?raw';
 import inputSearchDeepSky from '@acronis-platform/tokens-pd/css/InputSearch/deep-sky.css?raw';
 import inputSelectDeepSky from '@acronis-platform/tokens-pd/css/InputSelect/deep-sky.css?raw';
 import inputTextDeepSky from '@acronis-platform/tokens-pd/css/InputText/deep-sky.css?raw';
 import inputTextAreaDeepSky from '@acronis-platform/tokens-pd/css/InputTextArea/deep-sky.css?raw';
+import linkDeepSky from '@acronis-platform/tokens-pd/css/Link/deep-sky.css?raw';
 import radioDeepSky from '@acronis-platform/tokens-pd/css/Radio/deep-sky.css?raw';
+import resizableDeepSky from '@acronis-platform/tokens-pd/css/Resizable/deep-sky.css?raw';
+import searchGlobalDeepSky from '@acronis-platform/tokens-pd/css/SearchGlobal/deep-sky.css?raw';
 import sidebarPrimaryDeepSky from '@acronis-platform/tokens-pd/css/SidebarPrimary/deep-sky.css?raw';
 import sidebarSecondaryDeepSky from '@acronis-platform/tokens-pd/css/SidebarSecondary/deep-sky.css?raw';
 import switchDeepSky from '@acronis-platform/tokens-pd/css/Switch/deep-sky.css?raw';
+import tableDeepSky from '@acronis-platform/tokens-pd/css/Table/deep-sky.css?raw';
 import tagDeepSky from '@acronis-platform/tokens-pd/css/Tag/deep-sky.css?raw';
 import tooltipDeepSky from '@acronis-platform/tokens-pd/css/Tooltip/deep-sky.css?raw';
 
@@ -79,19 +93,26 @@ export interface ContextGroup {
 /** Per-component token CSS (not bundled by ui-react/styles). The `tier` is the
  *  `--ui-<tier>-…` prefix. Order is the display order on the tokens page. */
 const COMPONENT_SOURCES: { tier: string; css: string }[] = [
+  { tier: 'avatar', css: avatarAcronis },
   { tier: 'breadcrumb', css: breadcrumbAcronis },
   { tier: 'button', css: buttonAcronis },
   { tier: 'button-icon', css: buttonIconAcronis },
   { tier: 'button-menu', css: buttonMenuAcronis },
+  { tier: 'card-filter', css: cardFilterAcronis },
   { tier: 'checkbox', css: checkboxAcronis },
+  { tier: 'input-date-picker', css: inputDatePickerAcronis },
   { tier: 'input-search', css: inputSearchAcronis },
   { tier: 'input-select', css: inputSelectAcronis },
   { tier: 'input-text', css: inputTextAcronis },
   { tier: 'input-text-area', css: inputTextAreaAcronis },
+  { tier: 'link', css: linkAcronis },
   { tier: 'radio', css: radioAcronis },
+  { tier: 'resizable', css: resizableAcronis },
+  { tier: 'search-global', css: searchGlobalAcronis },
   { tier: 'sidebar-primary', css: sidebarPrimaryAcronis },
   { tier: 'sidebar-secondary', css: sidebarSecondaryAcronis },
   { tier: 'switch', css: switchAcronis },
+  { tier: 'table', css: tableAcronis },
   { tier: 'tag', css: tagAcronis },
   { tier: 'tooltip', css: tooltipAcronis },
 ];
@@ -536,19 +557,26 @@ const BRAND_OVERRIDE_STYLE_ID = 'ks-brand-override';
 /** deep-sky override CSS (semantic + every per-component tier), concatenated. */
 const DEEP_SKY_OVERRIDES = [
   semanticDeepSky,
+  avatarDeepSky,
   breadcrumbDeepSky,
   buttonDeepSky,
   buttonIconDeepSky,
   buttonMenuDeepSky,
+  cardFilterDeepSky,
   checkboxDeepSky,
+  inputDatePickerDeepSky,
   inputSearchDeepSky,
   inputSelectDeepSky,
   inputTextDeepSky,
   inputTextAreaDeepSky,
+  linkDeepSky,
   radioDeepSky,
+  resizableDeepSky,
+  searchGlobalDeepSky,
   sidebarPrimaryDeepSky,
   sidebarSecondaryDeepSky,
   switchDeepSky,
+  tableDeepSky,
   tagDeepSky,
   tooltipDeepSky,
 ].join('\n');

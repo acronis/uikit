@@ -83,10 +83,10 @@ sidebar, the `/components` index, and `:slug` routing). Each component has its o
   (the remap cascades into nested DOM — a Switch thumb, a Checkbox box). `disabled`
   uses the component's own prop; `focus` adds the design's focus ring (tier-aware:
   `--ui-focus-primary` for form controls, `--ui-focus-brand` for buttons).
-- Coverage matches `ui-react`'s exports (incl. `ButtonMenu` + `InputTextArea`).
-  `Select` is shown with natural states only — it still consumes the legacy
-  `--ui-form-*` tokens (not a dedicated `--ui-input-select-*` tier), so the remap
-  and brand overrides don't apply to it yet.
+- Coverage matches `ui-react` exports: Avatar, Breadcrumb, Button, ButtonIcon,
+  ButtonMenu, CardFilter, Checkbox, Input, InputDatePicker, InputSearch,
+  InputSelect, InputText, InputTextArea, Link, Radio, Resizable, Search,
+  SearchGlobal, Select, SidebarPrimary, SidebarSecondary, Switch, Tag, Tooltip.
 
 ## Foundations sections (`src/sections/`)
 
