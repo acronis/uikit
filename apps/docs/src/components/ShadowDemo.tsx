@@ -27,7 +27,10 @@ let sheetPromise: Promise<CSSStyleSheet | null> | null = null;
 
 function getSheet(): Promise<CSSStyleSheet | null> {
   if (!sheetPromise) {
-    sheetPromise = fetch('/api/ui-react-css')
+    // basePath isn't applied to manual fetch(), so prefix it explicitly — the
+    // route lives at <basePath>/api/ui-react-css when deployed under a subpath.
+    const basePath = process.env.NEXT_PUBLIC_DOCS_BASE_PATH ?? '';
+    sheetPromise = fetch(`${basePath}/api/ui-react-css`)
       .then((r) => r.text())
       .then((cssText) => {
         const sheet = new CSSStyleSheet();
