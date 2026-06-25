@@ -320,6 +320,9 @@ importers:
       '@acronis-platform/shadcn-uikit-demos':
         specifier: workspace:*
         version: link:../demos
+      '@acronis-platform/ui-react':
+        specifier: workspace:*
+        version: link:../../packages/ui-react
       '@base-ui/react':
         specifier: 1.5.0
         version: 1.5.0(@date-fns/tz@1.5.0)(@types/react@19.2.15)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)

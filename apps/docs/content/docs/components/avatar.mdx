@@ -3,6 +3,9 @@ title: Avatar
 description: Represents a user or entity with an image or initials.
 ---
 
+import { DemoReact } from "@/components/DemoReact";
+import { AvatarDemo } from "@/components/demos-react/avatar";
+
 ## Usage
 
 ```tsx
@@ -20,6 +23,11 @@ image loads, revealing `AvatarFallback` (typically initials). Stack several in
 `color` prop and themed by the `--ui-avatar-*` tokens.
 
 ## Examples
+
+
+<DemoReact>
+  <AvatarDemo />
+</DemoReact>
 
 An avatar with an image and an initials fallback:
 
