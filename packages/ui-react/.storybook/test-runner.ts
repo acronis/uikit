@@ -2,6 +2,10 @@ import type { TestRunnerConfig } from '@storybook/test-runner';
 import { getStoryContext } from '@storybook/test-runner';
 import * as process from 'node:process';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
+import {
+  getSnapshotIdentifier,
+  resolveVisualColorMode,
+} from './visual-regression';
 
 const config: TestRunnerConfig = {
   setup() {
@@ -10,6 +14,7 @@ const config: TestRunnerConfig = {
   async postVisit(page, context) {
     // Wait for fonts and images to load before snapshotting.
     await page.waitForLoadState('networkidle');
+    const colorMode = resolveVisualColorMode(process.env.STORYBOOK_COLOR_MODE);
 
     const storyContext = await getStoryContext(page, context);
     const snapshotFullPage =
@@ -23,6 +28,13 @@ const config: TestRunnerConfig = {
         typeof animationDelay === 'number' ? animationDelay : 400
       );
     }
+
+    await page.evaluate((mode: 'light' | 'dark') => {
+      const html = document.documentElement;
+      html.dataset.theme = mode;
+      html.style.colorScheme = mode;
+    }, colorMode);
+    await page.waitForTimeout(50);
 
     let image: Buffer;
     if (snapshotFullPage) {
@@ -68,7 +80,7 @@ const config: TestRunnerConfig = {
     }
     expect(image).toMatchImageSnapshot({
       customSnapshotsDir: `${process.cwd()}/test/__snapshots__`,
-      customSnapshotIdentifier: context.id,
+      customSnapshotIdentifier: getSnapshotIdentifier(context.id, colorMode),
       failureThreshold: 0.005,
       failureThresholdType: 'percent',
     });

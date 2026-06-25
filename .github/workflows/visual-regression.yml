@@ -16,7 +16,12 @@ jobs:
           - name: ui-react
             filter: '@acronis-platform/ui-react'
             dir: packages/ui-react
-    name: visual-regression (${{ matrix.name }})
+            color_mode: light
+          - name: ui-react
+            filter: '@acronis-platform/ui-react'
+            dir: packages/ui-react
+            color_mode: dark
+    name: visual-regression (${{ matrix.name }}${{ matrix.color_mode && format(', {0}', matrix.color_mode) || '' }})
     steps:
       - uses: actions/checkout@v6
 
@@ -110,11 +115,13 @@ jobs:
       # --build rebuilds the image when Dockerfile or .storybook config changes.
       - name: Run visual regression tests
         if: steps.changes.outputs[matrix.name] == 'true'
+        env:
+          STORYBOOK_COLOR_MODE: ${{ matrix.color_mode || 'light' }}
         run: docker compose -f ${{ matrix.dir }}/docker-compose.storybook.yml up --build --abort-on-container-exit --exit-code-from test-runner
 
       - name: Upload diff artifacts on failure
         if: failure() && steps.changes.outputs[matrix.name] == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: visual-regression-diffs-${{ matrix.name }}
+          name: visual-regression-diffs-${{ matrix.name }}${{ matrix.color_mode && format('-{0}', matrix.color_mode) || '' }}
           path: ${{ matrix.dir }}/test/__snapshots__/__diff_output__/
