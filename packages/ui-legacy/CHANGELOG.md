@@ -1,3 +1,9 @@
+## 0.36.4
+
+### Patch Changes
+
+- Docs: publish `ui-legacy` deprecation notice and timeline (maintenance/freeze in Jun 2026, coexistence through Q3 2026, Q4 2026 EOL window).
+
 ## [0.36.1](https://github.com/acronis/uikit/compare/v0.36.0...v0.36.1) (2026-05-18)
 
 ## 0.36.3

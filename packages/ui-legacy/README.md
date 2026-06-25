@@ -2,6 +2,20 @@
 
 Custom shadcn UI components library with multiple color schemes.
 
+## Deprecation notice (E6)
+
+`@acronis-platform/shadcn-uikit` (`ui-legacy`) is in **maintenance/freeze**.
+
+- No new features will be added.
+- Only critical fixes and security fixes are accepted.
+- New component development is moving to `@acronis-platform/ui-react`.
+
+### Timeline
+
+- **Now (Jun 2026):** maintenance/freeze starts and migration to `ui-react` is recommended for all new work.
+- **Through end of Q3 2026 (Sep 30, 2026):** `ui-legacy` remains available while consumers migrate.
+- **Q4 2026 (EOL window):** package remains in security-only support, with final EOL date announced in this window.
+
 ## Installation
 
 ```bash

@@ -165,7 +165,7 @@ Depends on Tier 1–2 primitives (Tooltip, Dropdown, Checkbox, Scroll Area).
 ### E6 — Docs & adoption · #107
 
 - [ ] **Migration guide: legacy → ui-react** (component mapping + manual flow; optional codemod recipes where viable)
-- [ ] Deprecation notice + timeline published on `ui-legacy`
+- [x] Deprecation notice + timeline published on `ui-legacy` (issue #185)
 - [ ] Docs site (apps/docs) coverage tracks ui-react component ladder
 - [ ] kitchen-sink kept as living token/component/icon reference
 
