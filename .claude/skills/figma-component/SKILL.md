@@ -323,16 +323,28 @@ Stories must be checked in light **and** dark mode in Storybook
 
 **Visual regression.** Stories are also VR cases (`@storybook/test-runner` +
 `jest-image-snapshot`, config in `.storybook/test-runner.ts`; baselines in
-`test/__snapshots__/`). After adding/updating stories, regenerate the **Linux**
-baselines in Docker and review the PNGs before committing them:
+`test/__snapshots__/`). CI runs a **light _and_ dark** matrix
+(`.github/workflows/visual-regression.yml`), so every story has **two** baselines:
+`<id>.png` (light) and `<id>--dark.png` (dark). The Docker update command defaults
+to `STORYBOOK_COLOR_MODE=light` — you MUST regenerate **both** modes or the dark CI
+job fails on the light-only baselines. After adding/updating stories, regenerate the
+**Linux** baselines for both modes and review the PNGs before committing:
 
 ```bash
-pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker:update  # regenerate
-pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker         # check (what CI runs)
+# Light (default)
+pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker:update
+# Dark — same command, STORYBOOK_COLOR_MODE=dark (writes the `--dark.png` baselines)
+STORYBOOK_COLOR_MODE=dark pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker:update
+# Check both (what CI runs)
+pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker
+STORYBOOK_COLOR_MODE=dark pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker
 ```
 
+When you **remove or rename** a story, delete BOTH its baselines (`<id>.png` and
+`<id>--dark.png`) — the runner only writes/updates existing stories, leaving orphans.
+
 Never commit baselines rendered on macOS/Windows — they won't match CI's Linux
-renderer. CI: `.github/workflows/visual-regression.yml`.
+renderer.
 
 On `--update`, the `:docker:update` run may legitimately rewrite **zero** PNGs —
 that happens when you're fixing code to match an already-correct baseline (e.g. a
@@ -349,8 +361,9 @@ the committed baselines still pass, and commit no PNGs.
 - [ ] `__tests__/<name>.test.tsx` — render, variants/states, a11y roles, ref,
       `render`-prop composition.
 - [ ] `__stories__/<name>.stories.tsx` (hand) + `<name>.generated.stories.tsx`.
-- [ ] VR baselines regenerated in Docker (`storybook:test:visual:docker:update`)
-      and reviewed; `test/__snapshots__/*.png` committed.
+- [ ] VR baselines regenerated in Docker for **both** light and dark
+      (`storybook:test:visual:docker:update` + the `STORYBOOK_COLOR_MODE=dark` variant)
+      and reviewed; both `<id>.png` and `<id>--dark.png` committed (orphans deleted).
 - [ ] `<name>.figma.tsx` — `COMPLETE`, validated by `figma:connect`.
 - [ ] `packages/ui-spec/components/<name>/` — 7 files, `ui-spec test` green.
 - [ ] Changeset for `@acronis-platform/ui-react`.
