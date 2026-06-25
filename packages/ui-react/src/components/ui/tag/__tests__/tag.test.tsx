@@ -5,6 +5,14 @@ import { describe, expect, it } from 'vitest';
 import { Tag } from '../tag';
 
 describe('Tag', () => {
+  it('stays presentational by default (no role, no tab stop)', () => {
+    const { container } = render(<Tag>Active</Tag>);
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.tagName).toBe('SPAN');
+    expect(root).not.toHaveAttribute('role');
+    expect(root).not.toHaveAttribute('tabindex');
+  });
+
   it('renders its label', () => {
     render(<Tag>Active</Tag>);
     expect(screen.getByText('Active')).toBeInTheDocument();

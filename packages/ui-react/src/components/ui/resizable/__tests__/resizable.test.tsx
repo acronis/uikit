@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../resizable';
@@ -46,5 +47,24 @@ describe('Resizable', () => {
 
     rerender(<Group orientation="vertical" />);
     expect(screen.getByRole('separator')).toHaveAttribute('aria-orientation', 'horizontal');
+  });
+
+  it('keeps the separator keyboard-focusable', async () => {
+    render(<Group />);
+    const handle = screen.getByRole('separator');
+    await userEvent.tab();
+    expect(handle).toHaveFocus();
+    expect(handle).toHaveAttribute('tabindex', '0');
+  });
+
+  it('uses tokenized divider/grip/focus colors', () => {
+    render(<Group withHandle />);
+    const handle = screen.getByRole('separator');
+    expect(handle).toHaveClass(
+      'after:bg-[var(--ui-resizable-border-color-hover)]',
+      'active:after:bg-[var(--ui-resizable-border-color-active)]',
+      'focus-visible:ring-[var(--ui-focus-primary)]'
+    );
+    expect(handle.firstElementChild).toHaveClass('bg-[var(--ui-resizable-bar-color)]');
   });
 });

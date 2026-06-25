@@ -74,4 +74,30 @@ describe('InputText', () => {
     await userEvent.type(screen.getByLabelText('Email'), 'a');
     expect(onChange).toHaveBeenCalled();
   });
+
+  it('uses tokenized label/required/message/clear colors', () => {
+    render(
+      <InputText
+        label="Email"
+        required
+        description="We never share it"
+        clearable
+        value="a"
+        onChange={() => {}}
+      />
+    );
+
+    expect(screen.getByText('Email').closest('label')).toHaveClass(
+      'text-[var(--ui-input-text-global-label-color-idle)]'
+    );
+    expect(screen.getByText('*')).toHaveClass(
+      'text-[var(--ui-input-text-global-required-color)]'
+    );
+    expect(screen.getByText('We never share it')).toHaveClass(
+      'text-[var(--ui-input-text-normal-description-color-idle)]'
+    );
+    expect(screen.getByRole('button', { name: 'Clear' })).toHaveClass(
+      'text-[var(--ui-input-text-global-clear-icon-color)]'
+    );
+  });
 });

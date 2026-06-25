@@ -76,4 +76,12 @@ describe('InputSearch', () => {
     await userEvent.type(screen.getByLabelText('Find'), 'a');
     expect(onChange).toHaveBeenCalled();
   });
+
+  it('uses tokenized label and required-marker colors', () => {
+    render(<InputSearch label="Find" required />);
+    expect(screen.getByText('Find').closest('label')).toHaveClass(
+      'text-[var(--ui-input-search-color-idle)]'
+    );
+    expect(screen.getByText('*')).toHaveClass('text-[var(--ui-input-search-required-color)]');
+  });
 });

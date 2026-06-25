@@ -5,6 +5,18 @@ import { describe, expect, it } from 'vitest';
 import { Avatar, AvatarFallback, AvatarGroup, AvatarImage } from '../avatar';
 
 describe('Avatar', () => {
+  it('stays presentational by default (no role, no tab stop)', () => {
+    const { container } = render(
+      <Avatar>
+        <AvatarFallback>SN</AvatarFallback>
+      </Avatar>
+    );
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.tagName).toBe('SPAN');
+    expect(root).not.toHaveAttribute('role');
+    expect(root).not.toHaveAttribute('tabindex');
+  });
+
   it('renders fallback initials', () => {
     render(
       <Avatar>

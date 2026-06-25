@@ -42,4 +42,20 @@ describe('SearchGlobal', () => {
     render(<SearchGlobal aria-label="Global search" />);
     expect(screen.getByRole('searchbox', { name: 'Global search' })).toBeInTheDocument();
   });
+
+  it('uses tokenized border/icon/placeholder/shortcut colors', () => {
+    const { container } = render(<SearchGlobal />);
+    const root = container.firstElementChild as HTMLElement;
+    const input = screen.getByRole('searchbox', { name: 'Search' });
+
+    expect(root).toHaveClass(
+      '[--sg-border:var(--ui-search-global-border-color-idle)]',
+      'hover:[--sg-border:var(--ui-search-global-border-color-hover)]',
+      'active:[--sg-border:var(--ui-search-global-border-color-active)]',
+      'focus-within:ring-[var(--ui-focus-primary)]'
+    );
+    expect(root.querySelector('svg')).toHaveClass('text-[var(--ui-search-global-icon-color)]');
+    expect(input).toHaveClass('placeholder:text-[var(--ui-search-global-placeholoder-color)]');
+    expect(screen.getByText('⌘K')).toHaveClass('text-[var(--ui-search-global-shortcut-color)]');
+  });
 });
