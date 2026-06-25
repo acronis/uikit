@@ -18,7 +18,10 @@
   --color-fd-ring: hsl(213, 94%, 51%);
 }
 
-.dark {
+/* `html.dark` (0,1,1) outranks Fumadocs' own `.dark` (0,1,0), which is loaded
+   after globals.css and otherwise resets --color-fd-primary to near-white in
+   dark — dropping the Acronis blue accent everywhere in dark mode. */
+html.dark {
   --color-fd-primary: hsl(213, 94%, 65%);
   --color-fd-primary-foreground: hsl(0, 0%, 9%);
   --color-fd-ring: hsl(213, 94%, 65%);
@@ -121,7 +124,7 @@
     opacity 0.2s ease;
 }
 .cta-primary:hover {
-  box-shadow: 0 4px 24px hsl(213 94% 51% / 0.4);
+  box-shadow: 0 2px 10px hsl(213 94% 51% / 0.22);
   opacity: 0.95;
 }
 

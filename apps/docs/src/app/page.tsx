@@ -1,8 +1,11 @@
 import Link from 'next/link';
-import { Syne } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 
-const syne = Syne({ subsets: ['latin'], weight: ['700', '800'] });
+// Inter is the family the UIKit itself ships with — using it for the marketing
+// headings keeps the landing page on-brand and reads as a professional product
+// site rather than a futuristic showcase.
+const display = Inter({ subsets: ['latin'], weight: ['600', '700', '800'] });
 
 const features = [
   {
@@ -184,35 +187,13 @@ export default function HomePage() {
         className="relative flex flex-col items-center overflow-hidden px-4 text-center"
         style={{ paddingTop: '7rem', paddingBottom: '8rem' }}
       >
-        {/* Ambient glow */}
+        {/* Soft brand tint — subtle, no sci-fi grid */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 -z-10"
           style={{
-            background: [
-              'radial-gradient(ellipse 65% 45% at 50% -5%, hsl(213 94% 51% / 0.14), transparent 65%)',
-              'radial-gradient(ellipse 40% 30% at 50% 0%, hsl(213 94% 75% / 0.07), transparent 55%)',
-            ].join(', '),
-          }}
-        />
-
-        {/* Perspective grid floor */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute bottom-0 left-1/2 -z-10 -translate-x-1/2"
-          style={{
-            width: '220%',
-            height: '45%',
-            backgroundImage: [
-              'linear-gradient(hsl(213 94% 51% / 0.08) 1px, transparent 1px)',
-              'linear-gradient(90deg, hsl(213 94% 51% / 0.08) 1px, transparent 1px)',
-            ].join(', '),
-            backgroundSize: '64px 64px',
-            transform: 'perspective(480px) rotateX(68deg)',
-            transformOrigin: 'center bottom',
-            maskImage: 'linear-gradient(to bottom, transparent 0%, black 55%)',
-            WebkitMaskImage:
-              'linear-gradient(to bottom, transparent 0%, black 55%)',
+            background:
+              'radial-gradient(ellipse 75% 50% at 50% -12%, hsl(213 94% 51% / 0.06), transparent 72%)',
           }}
         />
 
@@ -239,27 +220,17 @@ export default function HomePage() {
 
         {/* Headline */}
         <h1
-          className={`${syne.className} hero-animate hero-animate-2`}
+          className={`${display.className} hero-animate hero-animate-2`}
           style={{
-            fontSize: 'clamp(3.5rem, 10vw, 6rem)',
-            fontWeight: 800,
-            lineHeight: 1.05,
-            letterSpacing: '-0.02em',
-            marginBottom: '1.75rem',
-            maxWidth: '48rem',
+            fontSize: 'clamp(2.75rem, 7vw, 4.5rem)',
+            fontWeight: 700,
+            lineHeight: 1.1,
+            letterSpacing: '-0.03em',
+            marginBottom: '1.5rem',
+            maxWidth: '44rem',
           }}
         >
-          Acronis{' '}
-          <span
-            style={{
-              background: `linear-gradient(140deg, ${primary} 30%, hsl(213 94% 72%) 100%)`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            UIKit.
-          </span>
+          Acronis <span style={{ color: primary }}>UIKit</span>
         </h1>
 
         {/* Subheadline */}
@@ -281,7 +252,7 @@ export default function HomePage() {
         <div className="hero-animate hero-animate-4 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/docs/getting-started"
-            className="cta-primary inline-flex items-center gap-2 rounded-full font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            className="cta-primary inline-flex items-center gap-2 rounded-lg font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             style={{
               background: primary,
               color: 'var(--color-fd-primary-foreground)',
@@ -309,7 +280,7 @@ export default function HomePage() {
           </Link>
           <Link
             href="/docs/components"
-            className="inline-flex items-center gap-2 rounded-full border font-semibold transition-colors hover:bg-fd-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-2 rounded-lg border font-semibold transition-colors hover:bg-fd-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-ring focus-visible:ring-offset-2"
             style={{
               height: '2.75rem',
               padding: '0 1.75rem',
@@ -346,7 +317,7 @@ export default function HomePage() {
               }}
             >
               <span
-                className={syne.className}
+                className={display.className}
                 style={{
                   fontSize: '3.5rem',
                   fontWeight: 800,
@@ -393,7 +364,7 @@ export default function HomePage() {
               Capabilities
             </p>
             <h2
-              className={syne.className}
+              className={display.className}
               style={{
                 fontSize: 'clamp(2rem, 5vw, 2.75rem)',
                 fontWeight: 800,
@@ -507,7 +478,7 @@ export default function HomePage() {
             Installation
           </p>
           <h2
-            className={syne.className}
+            className={display.className}
             style={{
               fontSize: 'clamp(2rem, 5vw, 2.75rem)',
               fontWeight: 800,
@@ -615,7 +586,7 @@ export default function HomePage() {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Link
               href="/docs/getting-started"
-              className="cta-primary inline-flex items-center gap-2 rounded-full font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              className="cta-primary inline-flex items-center gap-2 rounded-lg font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
               style={{
                 background: primary,
                 color: 'var(--color-fd-primary-foreground)',
