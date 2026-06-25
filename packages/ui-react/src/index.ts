@@ -7,6 +7,7 @@ export * from './components/ui/card-filter';
 export * from './components/ui/checkbox';
 export * from './components/ui/radio';
 export * from './components/ui/input';
+export * from './components/ui/input-date-picker';
 export * from './components/ui/input-search';
 export * from './components/ui/input-select';
 export * from './components/ui/input-text';

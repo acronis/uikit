@@ -1,0 +1,99 @@
+spec_version: '1.0'
+component: InputDatePicker
+
+schematic: |
+  +-------------------------------+
+  |  label  required              |   root: <div> (field, vertical stack)
+  +-------------------------------+
+  | [ value / placeholder   icon ]|   trigger (role=button): value/range + calendar icon
+  |   start  separator  end       |   value parts when pickerType=dateRange
+  +-------------------------------+
+  |  description | error          |   description (normal) OR error (error state)
+  +-------------------------------+
+
+root:
+  element: div
+  role: group
+  description: >-
+    The field container — a vertical stack of the label, the trigger box, and the
+    description / error message. Width is fluid with a minimum from
+    `--ui-input-date-picker-global-container-width-min`.
+
+parts:
+  - id: label
+    description: The field label, rendered above the box (`<label htmlFor>`).
+    element: label
+  - id: required
+    description: The required marker (`*`) after the label; shown when `required`.
+    element: span
+  - id: trigger
+    description: >-
+      The focusable box (`role="button"`, `aria-haspopup="dialog"`) showing the
+      value/range + calendar icon; activating it opens the (consumer-owned)
+      calendar. `--ui-input-date-picker-global-box-*` + `-normal-box-border-*`;
+      switches to `-error-box-border-*` when `aria-invalid`.
+    element: button
+  - id: value
+    description: >-
+      The selected date, or the placeholder when empty.
+      `--ui-input-date-picker-global-value-color-*` / `-placeholder-color-*`.
+    element: span
+  - id: separator
+    description: >-
+      The `–` between range dates (`pickerType="dateRange"`).
+      `--ui-input-date-picker-global-separator-color-*`.
+    element: span
+  - id: icon
+    description: >-
+      Trailing calendar icon. `--ui-input-date-picker-normal-icon-color-*`, or
+      `-error-icon-color-*` in the error state.
+    element: span
+  - id: description
+    description: Helper text below the box (normal state).
+    element: p
+  - id: error
+    description: Error message below the box; replaces the description when `error` is set.
+    element: p
+
+layout:
+  type: stack
+  direction: vertical
+  align: start
+  order: [label, trigger, description, error]
+
+states:
+  - {
+      id: hover,
+      trigger: pointer hover over the trigger (enabled),
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [trigger, icon],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on the trigger,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [trigger],
+    }
+  - {
+      id: open,
+      trigger: 'open === true (consumer-owned calendar shown)',
+      kind: prop,
+      prop: open,
+      affects: [trigger],
+    }
+  - {
+      id: error,
+      trigger: 'error is set (or aria-invalid)',
+      kind: prop,
+      prop: error,
+      affects: [trigger, icon, error],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true',
+      kind: prop,
+      prop: disabled,
+      affects: [label, trigger, value, icon, description],
+    }
