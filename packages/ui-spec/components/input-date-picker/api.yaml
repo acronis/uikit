@@ -1,0 +1,118 @@
+spec_version: '1.0'
+component: InputDatePicker
+
+# Framework-agnostic contract. The trigger displays formatted date strings (the
+# consumer formats dates and owns the calendar popup); the field furniture (label /
+# required / description / error) wraps it. See `adapters` for per-framework syntax.
+contract:
+  properties:
+    - name: label
+      type: ReactNode
+      required: false
+      description: Field label rendered above the box, associated via `htmlFor`/`id`.
+    - name: required
+      type: boolean
+      required: false
+      default: false
+      description: Appends a required marker (`*`) and sets `aria-required` on the trigger.
+    - name: description
+      type: ReactNode
+      required: false
+      description: Helper text below the box. Hidden while `error` is set.
+    - name: error
+      type: ReactNode
+      required: false
+      description: >-
+        Error message below the box. Its presence switches the field to the error
+        treatment (red box border via `aria-invalid`, red message replacing the
+        description).
+    - name: picker-type
+      type: "'date' | 'dateRange'"
+      required: false
+      default: date
+      description: Whether the field holds a single date or a start–end range.
+    - name: placeholder
+      type: ReactNode
+      required: false
+      description: Hint shown when no value is selected.
+    - name: value
+      type: ReactNode
+      required: false
+      description: Formatted selected date (`picker-type="date"`).
+    - name: start-date
+      type: ReactNode
+      required: false
+      description: Formatted range start (`picker-type="dateRange"`).
+    - name: end-date
+      type: ReactNode
+      required: false
+      description: Formatted range end (`picker-type="dateRange"`).
+    - name: separator
+      type: ReactNode
+      required: false
+      default: '–'
+      description: Separator rendered between the range dates.
+    - name: open
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Whether the consumer-owned calendar is open — paints the active border and
+        sets `aria-expanded`.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables the trigger; applies the disabled tokens.
+
+  events:
+    - name: click
+      payload: MouseEvent
+      description: >-
+        Fired when the trigger is activated (React: native `onClick`). Open your
+        calendar here.
+
+  content:
+    - name: label
+      description: The label content.
+    - name: description
+      description: The helper text.
+    - name: error
+      description: The error message.
+
+  methods: []
+
+adapters:
+  react:
+    component: InputDatePicker
+    status: implemented
+    import: "import { InputDatePicker } from '@acronis-platform/ui-react'"
+    example: |
+      <InputDatePicker
+        label="Due date"
+        placeholder="Pick a date"
+        value={selected && format(selected, 'MMM d, yyyy')}
+        open={open}
+        onClick={() => setOpen(true)}
+        description="When the task is due"
+      />
+
+      {/* Range */}
+      <InputDatePicker
+        label="Period"
+        pickerType="dateRange"
+        startDate={start && format(start, 'MMM d')}
+        endDate={end && format(end, 'MMM d')}
+      />
+  vue:
+    component: AvInputDatePicker
+    status: planned
+    import: "import { AvInputDatePicker } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvInputDatePicker label="Due date" v-model="date" placeholder="Pick a date" />
+  web-components:
+    element: ui-input-date-picker
+    status: planned
+    import: "import '@acronis-platform/ui-wc/input-date-picker'"
+    example: |
+      <ui-input-date-picker label="Due date" placeholder="Pick a date"></ui-input-date-picker>

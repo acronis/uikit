@@ -73,6 +73,7 @@ const RENDER: Record<string, RenderHint> = {
     ].join('\n'),
   },
   input: { ariaLabel: 'Email' },
+  'input-date-picker': { props: 'label="Due" placeholder="Pick a date"' },
   'input-search': { props: 'label="Find" placeholder="Search table"' },
   'input-select': {
     extraImports: [

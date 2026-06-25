@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: InputDatePicker
+name: input-date-picker
+status: ready
+category: forms
+description: >-
+  The date-field trigger: a button box that displays a formatted date (or a
+  start–end range when `pickerType="dateRange"`) and a trailing calendar icon,
+  with an optional label (and required marker) and an optional description or
+  error message. Opens a consumer-owned calendar. Themed by the
+  `--ui-input-date-picker-*` token tier.
+since: 0.30.0
+figma:
+  node: '3034-966'
+  codeConnect: packages/ui-react/src/components/ui/input-date-picker/input-date-picker.figma.tsx

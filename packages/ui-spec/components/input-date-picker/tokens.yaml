@@ -1,0 +1,104 @@
+spec_version: '1.0'
+component: InputDatePicker
+
+# References only — values live in @acronis-platform/tokens-pd. The field furniture
+# (container / label / required / description / error) and the trigger box all use
+# the `--ui-input-date-picker-*` tier; the focus ring uses the shared `--ui-focus-*`
+# tokens. NOTE: the tier covers the trigger field only — the calendar popup is not
+# designed/tokenized yet.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Field container + label ──
+  - { name: --ui-input-date-picker-global-container-width-min, affects: root }
+  - { name: --ui-input-date-picker-global-container-gap, affects: root }
+  - { name: --ui-input-date-picker-global-container-label-gap, affects: label }
+  - { name: --ui-input-date-picker-global-label-color-idle, affects: label }
+  - { name: --ui-input-date-picker-global-label-color-disabled, affects: label }
+  - { name: --ui-input-date-picker-global-required-color, affects: required }
+
+  # ── Trigger box geometry + fill ──
+  - { name: --ui-input-date-picker-global-box-height, affects: trigger }
+  - { name: --ui-input-date-picker-global-box-border-radius, affects: trigger }
+  - { name: --ui-input-date-picker-global-box-border-width, affects: trigger }
+  - { name: --ui-input-date-picker-global-box-gap, affects: trigger }
+  - { name: --ui-input-date-picker-global-box-gap-range, affects: value }
+  - { name: --ui-input-date-picker-global-box-padding-x, affects: trigger }
+  - { name: --ui-input-date-picker-global-box-padding-y, affects: trigger }
+  - { name: --ui-input-date-picker-global-box-color-idle, affects: trigger }
+  - { name: --ui-input-date-picker-global-box-color-hover, affects: trigger }
+  - { name: --ui-input-date-picker-global-box-color-disabled, affects: trigger }
+
+  # ── Trigger border (normal + error) ──
+  - {
+      name: --ui-input-date-picker-normal-box-border-color-idle,
+      affects: trigger,
+    }
+  - {
+      name: --ui-input-date-picker-normal-box-border-color-hover,
+      affects: trigger,
+    }
+  - {
+      name: --ui-input-date-picker-normal-box-border-color-active,
+      affects: trigger,
+    }
+  - {
+      name: --ui-input-date-picker-normal-box-border-color-disabled,
+      affects: trigger,
+    }
+  - {
+      name: --ui-input-date-picker-error-box-border-color-idle,
+      affects: trigger,
+    }
+  - {
+      name: --ui-input-date-picker-error-box-border-color-hover,
+      affects: trigger,
+    }
+  - {
+      name: --ui-input-date-picker-error-box-border-color-active,
+      affects: trigger,
+    }
+
+  # ── Value / placeholder / separator ──
+  - { name: --ui-input-date-picker-global-value-color-idle, affects: value }
+  - { name: --ui-input-date-picker-global-value-color-disabled, affects: value }
+  - {
+      name: --ui-input-date-picker-global-placeholder-color-idle,
+      affects: value,
+    }
+  - {
+      name: --ui-input-date-picker-global-placeholder-color-disabled,
+      affects: value,
+    }
+  - {
+      name: --ui-input-date-picker-global-separator-color-idle,
+      affects: separator,
+    }
+  - {
+      name: --ui-input-date-picker-global-separator-color-disabled,
+      affects: separator,
+    }
+
+  # ── Calendar icon ──
+  - { name: --ui-input-date-picker-normal-icon-color-idle, affects: icon }
+  - { name: --ui-input-date-picker-normal-icon-color-disabled, affects: icon }
+  - { name: --ui-input-date-picker-error-icon-color-idle, affects: icon }
+
+  # ── Description / error message ──
+  - {
+      name: --ui-input-date-picker-normal-description-color-idle,
+      affects: description,
+    }
+  - {
+      name: --ui-input-date-picker-normal-description-color-disabled,
+      affects: description,
+    }
+  - { name: --ui-input-date-picker-error-error-msg-color, affects: error }
+
+  # ── Focus rings ──
+  - { name: --ui-focus-primary, affects: trigger, description: Focus ring }
+  - {
+      name: --ui-focus-error,
+      affects: trigger,
+      description: Error-state focus ring,
+    }

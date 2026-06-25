@@ -27,6 +27,7 @@ import inputTextDeepSky from '@acronis-platform/tokens-pd/css/InputText/deep-sky
 import inputTextAreaDeepSky from '@acronis-platform/tokens-pd/css/InputTextArea/deep-sky.css?raw';
 import inputSearchDeepSky from '@acronis-platform/tokens-pd/css/InputSearch/deep-sky.css?raw';
 import inputSelectDeepSky from '@acronis-platform/tokens-pd/css/InputSelect/deep-sky.css?raw';
+import inputDatePickerDeepSky from '@acronis-platform/tokens-pd/css/InputDatePicker/deep-sky.css?raw';
 import searchGlobalDeepSky from '@acronis-platform/tokens-pd/css/SearchGlobal/deep-sky.css?raw';
 import radioDeepSky from '@acronis-platform/tokens-pd/css/Radio/deep-sky.css?raw';
 import breadcrumbDeepSky from '@acronis-platform/tokens-pd/css/Breadcrumb/deep-sky.css?raw';
@@ -54,6 +55,7 @@ const DEEP_SKY_OVERRIDES = [
   inputTextAreaDeepSky,
   inputSearchDeepSky,
   inputSelectDeepSky,
+  inputDatePickerDeepSky,
   searchGlobalDeepSky,
   radioDeepSky,
   breadcrumbDeepSky,
