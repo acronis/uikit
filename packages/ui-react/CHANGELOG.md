@@ -1,5 +1,15 @@
 # @acronis-platform/ui-react
 
+## 0.35.1
+
+### Patch Changes
+
+- [#398](https://github.com/acronis/uikit/pull/398) [`d9dfac1`](https://github.com/acronis/uikit/commit/d9dfac1b0e4a2ef4fe229aaa17648c5604ec637f) Thanks [@leonid](https://github.com/leonid)! - Declare `"sideEffects": ["**/*.css"]` in package.json. This lets bundlers
+  tree-shake unused component modules (the JS is side-effect-free) while still
+  preserving the stylesheet entry (`@acronis-platform/ui-react/styles`), which
+  must not be dropped. Consumers importing a subset of components now get a
+  smaller bundle with no configuration.
+
 ## 0.35.0
 
 ### Minor Changes
