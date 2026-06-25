@@ -44,7 +44,11 @@
     "storybook:test:visual": "test-storybook",
     "storybook:test:visual:update": "test-storybook --updateSnapshot",
     "storybook:test:visual:docker": "pnpm storybook:build && docker compose -f ./docker-compose.storybook.yml up --build --abort-on-container-exit --exit-code-from test-runner",
+    "storybook:test:visual:docker:dark": "STORYBOOK_COLOR_MODE=dark pnpm storybook:test:visual:docker",
+    "storybook:test:visual:docker:all": "pnpm storybook:test:visual:docker && pnpm storybook:test:visual:docker:dark",
     "storybook:test:visual:docker:update": "pnpm storybook:build && docker compose -f ./docker-compose.storybook.yml -f ./docker-compose.storybook.update.yml up --build --abort-on-container-exit --exit-code-from test-runner",
+    "storybook:test:visual:docker:update:dark": "STORYBOOK_COLOR_MODE=dark pnpm storybook:test:visual:docker:update",
+    "storybook:test:visual:docker:update:all": "pnpm storybook:test:visual:docker:update && pnpm storybook:test:visual:docker:update:dark",
     "figma:connect": "figma connect parse",
     "figma:connect:publish": "figma connect publish",
     "figma:connect:unpublish": "figma connect unpublish"
