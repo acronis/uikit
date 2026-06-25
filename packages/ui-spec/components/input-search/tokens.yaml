@@ -1,0 +1,59 @@
+spec_version: '1.0'
+component: InputSearch
+
+# References only — values live in @acronis-platform/tokens-pd. The field
+# furniture (container, label, required) is owned by InputSearch; the box
+# geometry, fill, border, icon, value/placeholder, and clear come from the
+# composed `Search` box. All share the `--ui-input-search-*` tier.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Field container ──
+  - { name: --ui-input-search-container-width-min, affects: root }
+  - { name: --ui-input-search-container-gap, affects: root }
+  - { name: --ui-input-search-container-label-gap, affects: label }
+
+  # ── Label + required marker ──
+  - { name: --ui-input-search-color-idle, affects: label }
+  - { name: --ui-input-search-color-hover, affects: label }
+  - { name: --ui-input-search-color-disabled, affects: label }
+  - { name: --ui-input-search-required-color, affects: required }
+
+  # ── Box geometry ──
+  - { name: --ui-input-search-box-height, affects: input }
+  - { name: --ui-input-search-box-border-radius, affects: input }
+  - { name: --ui-input-search-box-border-width, affects: input }
+  - { name: --ui-input-search-box-gap, affects: input }
+  - { name: --ui-input-search-box-padding-x, affects: input }
+  - { name: --ui-input-search-box-padding-y, affects: input }
+
+  # ── Box fill + border ──
+  - { name: --ui-input-search-box-color-idle, affects: input }
+  - { name: --ui-input-search-box-color-hover, affects: input }
+  - { name: --ui-input-search-box-color-disabled, affects: input }
+  - { name: --ui-input-search-border-color-idle, affects: input }
+  - { name: --ui-input-search-border-color-hover, affects: input }
+  - { name: --ui-input-search-border-color-disabled, affects: input }
+
+  # ── Value + placeholder text ──
+  - { name: --ui-input-search-value-color-idle, affects: input }
+  - { name: --ui-input-search-value-color-hover, affects: input }
+  - { name: --ui-input-search-value-color-disabled, affects: input }
+  - { name: --ui-input-search-placeholder-color-idle, affects: input }
+  - { name: --ui-input-search-placeholder-color-hover, affects: input }
+  - { name: --ui-input-search-placeholder-color-disabled, affects: input }
+
+  # ── Leading magnifier ──
+  - { name: --ui-input-search-icon-search-color-idle, affects: icon }
+  - { name: --ui-input-search-icon-search-color-hover, affects: icon }
+  - { name: --ui-input-search-icon-search-color-disabled, affects: icon }
+
+  # ── Clear button ──
+  - { name: --ui-input-search-clear-icon-color, affects: clear }
+
+  # ── Focus ring ──
+  - {
+      name: --ui-focus-primary,
+      affects: input,
+      description: Input + clear focus ring,
+    }

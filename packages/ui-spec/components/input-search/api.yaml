@@ -1,0 +1,86 @@
+spec_version: '1.0'
+component: InputSearch
+
+# Framework-agnostic contract. InputSearch composes the bare `Search` box and
+# adds the label furniture; native input attributes (placeholder, value, name,
+# …) pass through to the input. See `adapters` for per-framework syntax.
+contract:
+  properties:
+    - name: label
+      type: ReactNode
+      required: false
+      description: Field label rendered above the box, associated via `htmlFor`/`id`.
+    - name: required
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Appends a required marker (`*`) after the label and sets `aria-required`
+        on the input.
+    - name: placeholder
+      type: string
+      required: false
+      description: Hint text shown when empty (e.g. "Search table").
+    - name: value
+      type: string
+      required: false
+      description: Controlled value. Pair with the change event.
+    - name: default-value
+      type: string
+      required: false
+      description: Initial value when uncontrolled.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Disables the field; hides the clear button and applies the disabled
+        tokens.
+
+  events:
+    - name: change
+      payload: ChangeEvent<HTMLInputElement>
+      description: >-
+        Native input change — forwarded to the underlying `<input>`. Also fires
+        when the value is cleared.
+    - name: clear
+      payload: void
+      description: >-
+        Fired after the clear (×) button empties the field (React: `onClear`).
+
+  content:
+    - name: label
+      description: The label content.
+
+  methods: []
+
+adapters:
+  react:
+    component: InputSearch
+    status: implemented
+    import: "import { InputSearch } from '@acronis-platform/ui-react'"
+    example: |
+      <InputSearch label="Find" placeholder="Search table" />
+
+      {/* Required */}
+      <InputSearch label="Find" required />
+
+      {/* Controlled with clear */}
+      <InputSearch
+        label="Find"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onClear={() => setQuery('')}
+      />
+  vue:
+    component: AvInputSearch
+    status: planned
+    import: "import { AvInputSearch } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvInputSearch label="Find" placeholder="Search table" v-model="query" />
+  web-components:
+    element: ui-input-search
+    status: planned
+    import: "import '@acronis-platform/ui-wc/input-search'"
+    example: |
+      <ui-input-search label="Find" placeholder="Search table"></ui-input-search>

@@ -1,0 +1,69 @@
+spec_version: '1.0'
+component: InputSearch
+
+schematic: |
+  +-------------------------------+
+  |  label  required              |   root: <div> (field, vertical stack)
+  +-------------------------------+
+  | [ icon  input          clear ]|   the Search box: icon, input, optional clear
+  +-------------------------------+
+
+root:
+  element: div
+  role: group
+  description: >-
+    The field container — a vertical stack of the label and the search box.
+    Width is fluid with a minimum from `--ui-input-search-container-width-min`;
+    the label/box gap is `--ui-input-search-container-gap`.
+
+parts:
+  - id: label
+    description: The field label, rendered above the box (`<label htmlFor>`).
+    element: label
+  - id: required
+    description: The required marker (`*`) after the label; shown when `required`.
+    element: span
+  - id: icon
+    description: >-
+      Leading magnifier (`MagnifierIcon`) inside the box, from the composed
+      `Search`. `--ui-input-search-icon-search-color-{idle,disabled}`.
+    element: svg
+  - id: input
+    description: >-
+      The borderless search input inside the box (the composed `Search`,
+      `role="searchbox"`) — value / placeholder and per-state treatment.
+    element: input
+  - id: clear
+    description: >-
+      Optional clear (×) button inside the box, shown by `Search` while the
+      field has a value and is enabled; activates `onClear`.
+    element: button
+
+layout:
+  type: stack
+  direction: vertical
+  align: start
+  order: [label, input]
+
+states:
+  - {
+      id: hover,
+      trigger: pointer hover over the box,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [input],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on the input (the box shows the :focus-within ring),
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [input],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true',
+      kind: prop,
+      prop: disabled,
+      affects: [label, input, icon, clear],
+    }

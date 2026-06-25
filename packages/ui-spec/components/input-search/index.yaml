@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: InputSearch
+name: input-search
+status: ready
+category: forms
+description: >-
+  A full search field: an optional label (with an optional required marker)
+  above the search box. Builds on the bare `Search` box (leading magnifier,
+  input, and clear button) and the `--ui-input-search-*` token tier.
+since: 0.29.0
+dependencies:
+  components: [Search]
+figma:
+  node: '2617-339'
+  codeConnect: packages/ui-react/src/components/ui/input-search/input-search.figma.tsx
