@@ -54,6 +54,21 @@ const RENDER: Record<string, RenderHint> = {
     ],
     props: 'label="Active filters" value="125" icon={<CircleInfoIcon />}',
   },
+  card: {
+    extraImports: [
+      "import { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../card';",
+    ],
+    sample: [
+      '',
+      '      <CardHeader>',
+      '        <CardTitle>Backup status</CardTitle>',
+      '        <CardDescription>Last run 5 minutes ago.</CardDescription>',
+      '      </CardHeader>',
+      '      <CardContent>All workloads protected.</CardContent>',
+      '      <CardFooter>Footer</CardFooter>',
+      '    ',
+    ].join('\n'),
+  },
   'button-icon': {
     sample: '<PlusIcon />',
     extraImports: [

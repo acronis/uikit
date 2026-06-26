@@ -1,0 +1,11 @@
+spec_version: '1.0'
+component: Card
+name: card
+status: draft
+category: layout
+description: >-
+  A surface that groups related content and actions. A set of composable parts
+  (header, title, description, content, footer) on a bordered, rounded container
+  with a subtle shadow. Initial version ported from the legacy shadcn-uikit
+  `Card`; design reconciliation against Figma is pending.
+since: 0.8.0

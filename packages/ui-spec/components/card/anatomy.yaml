@@ -1,0 +1,68 @@
+spec_version: '1.0'
+component: Card
+
+schematic: |
+  root: <div> (rounded border + surface + shadow)
+  +-----------------------------------------------+
+  |  header                                       |
+  |   +-----------------------------------------+ |
+  |   | title                                   | |
+  |   | description                             | |
+  |   +-----------------------------------------+ |
+  |  content                                      |
+  |   +-----------------------------------------+ |
+  |   | arbitrary children                      | |
+  |   +-----------------------------------------+ |
+  |  footer                                       |
+  |   +-----------------------------------------+ |
+  |   | actions                                 | |
+  |   +-----------------------------------------+ |
+  +-----------------------------------------------+
+     root   -> bg-background / text-foreground / border-border (semantic tokens)
+     header -> top padding + vertical stack for title + description
+     footer -> bottom padding + horizontal action row
+
+root:
+  element: div
+  description: >-
+    The card surface: a rounded, 1px-bordered container with a subtle shadow.
+    Polymorphic via the `render` prop (e.g. render as `<article>`/`<section>`).
+    Background, text, and border resolve to the shared semantic tokens (no
+    `--ui-card-*` tier exists yet).
+
+parts:
+  - id: header
+    description: >-
+      Top region (`<div>`) that vertically stacks the title and description with
+      a small gap. Owns the top/side padding.
+    element: div
+    optional: true
+  - id: title
+    description: >-
+      The card's prominent heading text. A `<div>` by default; render as a real
+      heading (`<h2>`/`<h3>`) via the `render` prop for correct document outline.
+    element: div
+    optional: true
+  - id: description
+    description: >-
+      Secondary supporting copy below the title, in the muted-foreground color.
+    element: div
+    optional: true
+  - id: content
+    description: Primary body region (`<div>`) holding arbitrary children.
+    element: div
+    optional: true
+  - id: footer
+    description: >-
+      Bottom region (`<div>`) laying actions out in a horizontal row. Owns the
+      bottom/side padding.
+    element: div
+    optional: true
+
+layout:
+  type: flex
+  direction: column
+  order: [header, content, footer]
+
+# Card is a pure presentational container — a function of its composition. It has
+# no variant props and no interaction states of its own.

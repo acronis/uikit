@@ -1,0 +1,72 @@
+spec_version: '1.0'
+component: Card
+
+# Framework-agnostic contract for a *composable* card: the surface is assembled
+# from parts (see anatomy.yaml). Card has no variant/size props — every part is a
+# styled container that passes native attributes through. Property names are
+# neutral; see `adapters` for per-framework syntax.
+contract:
+  properties:
+    - name: render
+      type: 'RenderProp'
+      required: false
+      default: undefined
+      description: >-
+        Base UI composition prop available on the root and every part — replaces
+        the rendered element with another component (e.g. render the root as
+        `<article>` or the title as `<h2>`) while merging props and classes.
+        React-only; other frameworks use their own polymorphism.
+
+  events: []
+
+  content:
+    - name: default
+      description: >-
+        The composed card. Author it from the parts: an optional header (holding
+        a title and description), a content region, and an optional footer for
+        actions. All parts are optional and may be used in any combination.
+
+  methods: []
+
+adapters:
+  react:
+    component: Card
+    status: implemented
+    import: >-
+      import { Card, CardHeader, CardTitle, CardDescription, CardContent,
+      CardFooter } from '@acronis-platform/ui-react'
+    example: |
+      <Card>
+        <CardHeader>
+          <CardTitle>Backup status</CardTitle>
+          <CardDescription>Last run 5 minutes ago</CardDescription>
+        </CardHeader>
+        <CardContent>All workloads protected.</CardContent>
+        <CardFooter>
+          <Button>View report</Button>
+        </CardFooter>
+      </Card>
+
+  vue:
+    component: AvCard
+    status: planned
+    import: "import { AvCard, AvCardHeader, AvCardContent } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvCard>
+        <AvCardHeader>
+          <AvCardTitle>Backup status</AvCardTitle>
+        </AvCardHeader>
+        <AvCardContent>All workloads protected.</AvCardContent>
+      </AvCard>
+
+  web-components:
+    element: ui-card
+    status: planned
+    import: "import '@acronis-platform/ui-wc/card'"
+    example: |
+      <ui-card>
+        <ui-card-header>
+          <ui-card-title>Backup status</ui-card-title>
+        </ui-card-header>
+        <ui-card-content>All workloads protected.</ui-card-content>
+      </ui-card>

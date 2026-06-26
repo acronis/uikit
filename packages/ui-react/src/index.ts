@@ -3,6 +3,7 @@ export * from './components/ui/avatar';
 export * from './components/ui/breadcrumb';
 export * from './components/ui/button';
 export * from './components/ui/button-menu';
+export * from './components/ui/card';
 export * from './components/ui/card-filter';
 export * from './components/ui/checkbox';
 export * from './components/ui/chip';
