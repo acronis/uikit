@@ -30,10 +30,10 @@ export function FilterPopoverDemo() {
         className="w-80 p-0"
       >
         <form onSubmit={(e) => e.preventDefault()}>
-          <div className="border-b border-border px-4 py-4">
+          <div className="border-b border-border px-5 py-4">
             <p className="text-sm font-semibold leading-none">Filters</p>
           </div>
-          <div className="grid gap-4 p-4">
+          <div className="grid gap-4 px-5 py-4">
             <InputSelect items={statuses}>
               <InputSelectField>
                 <InputSelectLabel>Status</InputSelectLabel>
@@ -61,7 +61,7 @@ export function FilterPopoverDemo() {
               </InputSelectContent>
             </InputSelect>
           </div>
-          <div className="flex justify-end gap-2 border-t border-border px-4 py-4">
+          <div className="flex justify-end gap-2 border-t border-border px-5 py-4">
             <Button type="reset" variant="ghost">
               Reset
             </Button>
