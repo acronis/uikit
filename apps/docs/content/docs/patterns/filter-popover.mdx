@@ -1,0 +1,88 @@
+---
+title: Filter popover
+description: A trigger that opens a popover of filter fields with Apply / Reset.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { FilterPopoverDemo } from "@/components/demos-react/patterns/filter-popover";
+
+The approved way to offer multi-criteria filtering of a list or table without
+leaving the page. It composes existing components — a **`Button`** opens a
+**`Popover`** holding a small form of **`InputSelect`** fields, with a primary
+**Apply** and a ghost **Reset** in a right-aligned footer. It supersedes the
+legacy `el-multi-search`.
+
+<DemoReact>
+  <FilterPopoverDemo />
+</DemoReact>
+
+## When to use
+
+- Filtering a table or list by a few discrete criteria (status, region, type).
+- Keeping the filter controls tucked away until the user wants them.
+
+## When not to use
+
+- A single, always-visible filter — render the field inline, no popover.
+- Free-text search — use a search field (`InputSearch` / `SearchGlobal`).
+- A blocking, full-screen task — use a `Dialog`.
+
+## Composition
+
+```tsx
+import {
+  Button,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  InputSelect,
+  InputSelectField,
+  InputSelectLabel,
+  InputSelectTrigger,
+  InputSelectValue,
+  InputSelectContent,
+  InputSelectItem,
+} from '@acronis-platform/ui-react';
+
+<Popover>
+  <PopoverTrigger render={<Button variant="secondary">Filters</Button>} />
+  <PopoverContent className="w-80">
+    <form
+      className="grid gap-4"
+      onSubmit={(e) => {
+        e.preventDefault();
+        applyFilters(/* read field values */);
+      }}
+      onReset={() => clearFilters()}
+    >
+      <InputSelect items={statuses}>
+        <InputSelectField>
+          <InputSelectLabel>Status</InputSelectLabel>
+          <InputSelectTrigger>
+            <InputSelectValue placeholder="Any status" />
+          </InputSelectTrigger>
+        </InputSelectField>
+        <InputSelectContent>
+          <InputSelectItem value="active">Active</InputSelectItem>
+          <InputSelectItem value="error">Error</InputSelectItem>
+        </InputSelectContent>
+      </InputSelect>
+
+      <div className="flex justify-end gap-2">
+        <Button type="reset" variant="ghost">
+          Reset
+        </Button>
+        <Button type="submit">Apply</Button>
+      </div>
+    </form>
+  </PopoverContent>
+</Popover>;
+```
+
+## Guidelines
+
+- Keep the footer to **Apply** (primary) and **Reset** (ghost) only — no
+  destructive or navigation actions.
+- Pick one model: either auto-apply on change, **or** an explicit Apply button —
+  not both.
+- For free-text criteria, reach for a search field instead of a select.

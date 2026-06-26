@@ -56,6 +56,16 @@ When you add or change a component spec, run `test`. When you change a
 component's variants in `ui-react`, update its `api.yaml` or the conformance
 test fails.
 
+## Usage patterns
+
+`patterns/<name>/pattern.yaml` defines **approved multi-component compositions**
+(recipes) — bigger than one component (e.g. `filter-popover`). They are the
+agent-facing source of truth for "how to combine components" and are rendered
+for humans in the docs site's **Patterns** section. Validated by
+`__tests__/patterns.test.ts` against `schema/pattern.schema.json`, which also
+checks every referenced `components[]` entry exists in `@acronis-platform/ui-react`.
+See [`patterns/README.md`](./patterns/README.md).
+
 ## Scripts
 
 `build`/`dev`/`clean` are no-ops (ships source YAML/MD). `lint`/`typecheck` run

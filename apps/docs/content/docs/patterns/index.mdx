@@ -1,0 +1,23 @@
+---
+title: Patterns
+description: Approved compositions of components — recipes for recurring UI problems.
+---
+
+**Patterns** are sanctioned ways to combine components to solve a recurring
+problem (a filter popover, a confirm dialog, a wizard, …). They sit one level
+above component docs: a component page tells you _what a component is_; a pattern
+tells you _how to compose components_ for a task — and when not to.
+
+Use a pattern as the starting point instead of assembling one from scratch, so
+the same problem is solved the same way across the product (and so AI assistants
+reuse an approved recipe rather than reinventing one).
+
+Each pattern has a machine-readable definition in
+`@acronis-platform/ui-spec` (`patterns/<name>/pattern.yaml`) — the source of
+truth — and is rendered + explained here.
+
+## Available patterns
+
+- [Filter popover](/docs/patterns/filter-popover) — a trigger that opens a
+  popover of filter fields with Apply / Reset. Replaces the legacy
+  `el-multi-search`.

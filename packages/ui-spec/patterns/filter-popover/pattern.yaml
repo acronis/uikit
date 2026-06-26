@@ -1,0 +1,69 @@
+spec_version: '1.0'
+pattern: FilterPopover
+name: filter-popover
+status: draft
+category: data-display
+since: 0.12.0
+intent: A trigger button that opens a popover containing filter fields with Apply / Reset actions.
+replaces: el-multi-search
+description: >-
+  The sanctioned way to offer multi-criteria filtering of a list or table
+  without leaving the page: a Button opens a Popover holding a small form of
+  select fields, with a primary Apply and a ghost Reset in a right-aligned
+  footer. Composes existing components — no bespoke widget. Supersedes the legacy
+  `el-multi-search`.
+
+when_to_use:
+  - Filtering a table or list by a few discrete criteria (status, region, type).
+  - Keeping filter controls tucked away until the user wants them.
+when_not_to_use:
+  - A single always-visible filter — render the field inline instead of a popover.
+  - Free-text search — use a search field (InputSearch / SearchGlobal), not selects.
+  - A blocking, full-screen task — use a Dialog.
+
+anti_patterns:
+  - Building a one-off dropdown panel by hand instead of composing Popover.
+  - Putting destructive or navigation actions in the footer (only Apply / Reset).
+  - Auto-applying on every change AND showing an Apply button — pick one model.
+
+components:
+  - Popover
+  - InputSelect
+  - Button
+
+demo: apps/docs/src/components/demos-react/patterns/filter-popover.tsx
+docs: apps/docs/content/docs/patterns/filter-popover.mdx
+
+# Approved starting point. `side`/`align` and the exact fields vary; the shape
+# (Popover > form of InputSelect fields > right-aligned Reset/Apply) does not.
+example: |
+  <Popover>
+    <PopoverTrigger render={<Button variant="secondary">Filters</Button>} />
+    <PopoverContent className="w-80">
+      <form
+        className="grid gap-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          applyFilters(/* read field values */);
+        }}
+        onReset={() => clearFilters()}
+      >
+        <InputSelect items={statuses}>
+          <InputSelectField>
+            <InputSelectLabel>Status</InputSelectLabel>
+            <InputSelectTrigger>
+              <InputSelectValue placeholder="Any status" />
+            </InputSelectTrigger>
+          </InputSelectField>
+          <InputSelectContent>
+            <InputSelectItem value="active">Active</InputSelectItem>
+            <InputSelectItem value="error">Error</InputSelectItem>
+          </InputSelectContent>
+        </InputSelect>
+        <div className="flex justify-end gap-2">
+          <Button type="reset" variant="ghost">Reset</Button>
+          <Button type="submit">Apply</Button>
+        </div>
+      </form>
+    </PopoverContent>
+  </Popover>

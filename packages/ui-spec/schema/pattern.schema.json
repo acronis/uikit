@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://acronis.com/ui-spec/pattern.schema.json",
+  "title": "Usage pattern — pattern.yaml",
+  "description": "An approved multi-component composition (a recipe), for human demonstration and AI reuse. Bigger than one component's spec.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "spec_version",
+    "pattern",
+    "name",
+    "status",
+    "intent",
+    "components"
+  ],
+  "properties": {
+    "spec_version": { "type": "string" },
+    "pattern": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]*$" },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "status": { "enum": ["draft", "ready", "stable", "deprecated"] },
+    "category": { "type": "string" },
+    "since": { "type": "string" },
+    "intent": {
+      "type": "string",
+      "description": "One-line description of what this pattern accomplishes."
+    },
+    "description": { "type": "string" },
+    "replaces": {
+      "type": "string",
+      "description": "Legacy element/component this pattern supersedes (e.g. 'el-multi-search')."
+    },
+    "when_to_use": { "type": "array", "items": { "type": "string" } },
+    "when_not_to_use": { "type": "array", "items": { "type": "string" } },
+    "anti_patterns": { "type": "array", "items": { "type": "string" } },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]*$" },
+      "description": "ui-react components this pattern composes (PascalCase). Each must exist."
+    },
+    "demo": {
+      "type": "string",
+      "description": "Path to the live demo that renders this pattern."
+    },
+    "docs": {
+      "type": "string",
+      "description": "Path to the docs page for this pattern."
+    },
+    "example": {
+      "type": "string",
+      "description": "The approved React composition (copy-paste starting point)."
+    }
+  }
+}
