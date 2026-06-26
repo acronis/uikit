@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within } from 'storybook/test';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -162,4 +163,23 @@ export const ExpandableRows: Story = {
       )}
     />
   ),
+};
+
+export const Striped: Story = {
+  render: () => <DataTable columns={columns} data={payments} striped />,
+};
+
+export const Bordered: Story = {
+  render: () => <DataTable columns={columns} data={payments} bordered striped />,
+};
+
+export const Skeleton: Story = {
+  render: () => <DataTable columns={columns} data={[]} skeleton skeletonRows={5} />,
+};
+
+export const CurrentRow: Story = {
+  render: () => <DataTable columns={columns} data={payments} highlightCurrentRow />,
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByText('silas22@example.com'));
+  },
 };

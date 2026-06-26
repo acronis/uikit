@@ -62,3 +62,23 @@ states:
     kind: prop
     prop: getRowCanExpand
     affects: [row, expanded-row]
+  - id: striped
+    trigger: striped is set
+    kind: prop
+    prop: striped
+    affects: [row]
+  - id: bordered
+    trigger: bordered is set
+    kind: prop
+    prop: bordered
+    affects: [table]
+  - id: current
+    trigger: highlightCurrentRow is set and a row is clicked
+    kind: prop
+    prop: highlightCurrentRow
+    affects: [row]
+  - id: skeleton
+    trigger: skeleton is set
+    kind: prop
+    prop: skeleton
+    affects: [row, cell]

@@ -1,0 +1,66 @@
+spec_version: '1.0'
+pattern: DataTableBulkActions
+name: data-table-bulk-actions
+status: draft
+category: data-display
+since: 0.42.0
+intent: Select rows in a data table and act on the selection via a contextual bulk-action bar.
+description: >-
+  The sanctioned way to offer row selection with bulk actions (delete, export,
+  …): a checkbox selection column drives a contextual bar that replaces the
+  toolbar while rows are selected, showing the count and the available actions.
+  Because the bulk bar and the row checkboxes must read the SAME selection state,
+  this composes the Table primitives + DataTablePagination over a single
+  `useReactTable` instance — not the self-contained `DataTable` (which owns its
+  own internal state and can't share selection with external chrome).
+
+when_to_use:
+  - A table where users pick several rows and apply one action to all of them.
+  - Destructive or batch operations (delete, export, assign) on multiple rows.
+when_not_to_use:
+  - A read-only or single-select table — use `DataTable` directly.
+  - One action per row — put a row action (menu / button) in a cell instead.
+
+anti_patterns:
+  - Using the self-contained `DataTable` and a separate `useReactTable` for the bar — their selection states diverge.
+  - Leaving the bulk bar always visible — show it only while rows are selected.
+  - Hiding the selection count — always show "N selected" so the scope is clear.
+
+components:
+  - Table
+  - Checkbox
+  - Button
+  - DataTable
+
+demo: apps/docs/src/components/demos-react/patterns/data-table-bulk-actions.tsx
+docs: apps/docs/content/docs/patterns/data-table-bulk-actions.mdx
+
+# Approved starting point. One `useReactTable` instance feeds the checkbox column,
+# the bulk bar (via getSelectedRowModel), and DataTablePagination. The bar swaps
+# in only while a row is selected; Clear calls table.resetRowSelection().
+example: |
+  const table = useReactTable({
+    data,
+    columns, // includes a checkbox 'select' column
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    state: { rowSelection },
+  });
+  const selected = table.getSelectedRowModel().rows;
+
+  {selected.length > 0 ? (
+    <div className="flex items-center justify-between rounded-md border border-border bg-muted px-4 py-2">
+      <span className="text-sm font-medium">{selected.length} selected</span>
+      <div className="flex gap-2">
+        <Button variant="ghost" onClick={() => table.resetRowSelection()}>Clear</Button>
+        <Button variant="secondary">Export</Button>
+        <Button variant="destructive">Delete</Button>
+      </div>
+    </div>
+  ) : (
+    <DataTableToolbar table={table} searchKey="email" />
+  )}
+  <Table>{/* render table.getHeaderGroups() / getRowModel() */}</Table>
+  <DataTablePagination table={table} />

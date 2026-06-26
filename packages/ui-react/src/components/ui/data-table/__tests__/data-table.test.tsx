@@ -73,6 +73,51 @@ describe('DataTable', () => {
   });
 });
 
+describe('DataTable presentational features', () => {
+  it('stripes alternating rows', () => {
+    render(<DataTable columns={columns} data={data.slice(0, 4)} striped />);
+    const secondRow = screen.getByText('user2@example.com').closest('tr')!;
+    const firstRow = screen.getByText('user1@example.com').closest('tr')!;
+    expect(secondRow.className).toContain(
+      'bg-[var(--ui-background-surface-secondary)]'
+    );
+    expect(firstRow.className).not.toContain(
+      'bg-[var(--ui-background-surface-secondary)]'
+    );
+  });
+
+  it('adds vertical borders when bordered', () => {
+    const { container } = render(
+      <DataTable columns={columns} data={data.slice(0, 2)} bordered />
+    );
+    const wrapper = container.querySelector('div.rounded-md') as HTMLElement;
+    expect(wrapper.className).toContain('[&_td:not(:last-child)]:border-r');
+  });
+
+  it('renders skeleton placeholder rows instead of data', () => {
+    const { container } = render(
+      <DataTable columns={columns} data={data} skeleton skeletonRows={3} />
+    );
+    expect(screen.queryByText('user1@example.com')).not.toBeInTheDocument();
+    // 3 rows × 2 columns of pulse bars
+    expect(container.querySelectorAll('.animate-pulse')).toHaveLength(6);
+  });
+
+  it('highlights the clicked row when highlightCurrentRow', async () => {
+    render(
+      <DataTable columns={columns} data={data.slice(0, 3)} highlightCurrentRow />
+    );
+    const row = screen.getByText('user2@example.com').closest('tr')!;
+    // Exact class token — the primitive carries `active:bg-[…row-color-active]`
+    // for its pressed pseudo-state, so a substring check would collide.
+    const current = 'bg-[var(--ui-table-global-row-color-active)]';
+    const classes = (el: HTMLElement) => el.className.split(/\s+/);
+    expect(classes(row)).not.toContain(current);
+    await userEvent.click(row);
+    expect(classes(row)).toContain(current);
+  });
+});
+
 function Harness() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({

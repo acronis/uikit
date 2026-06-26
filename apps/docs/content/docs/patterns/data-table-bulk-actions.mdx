@@ -1,0 +1,57 @@
+---
+title: Data table bulk actions
+description: Select rows in a data table and act on the selection via a contextual bulk-action bar.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { DataTableBulkActionsDemo } from "@/components/demos-react/patterns/data-table-bulk-actions";
+
+The approved way to offer row selection with bulk actions. A checkbox selection
+column drives a contextual bar that replaces the toolbar while rows are selected,
+showing the count and the available actions (**Export**, **Delete**, **Clear**).
+
+Because the bulk bar and the row checkboxes must read the **same** selection
+state, this composes the **`Table`** primitives + **`DataTablePagination`** over a
+single `useReactTable` instance — *not* the self-contained **`DataTable`**, which
+owns its own internal state and can't share selection with external chrome.
+
+<DemoReact>
+  <DataTableBulkActionsDemo />
+</DemoReact>
+
+## When to use
+
+- A table where users pick several rows and apply one action to all of them.
+- Destructive or batch operations (delete, export, assign) across rows.
+
+## When not to use
+
+- A read-only or single-select table — use `DataTable` directly.
+- One action per row — put a row action (menu / button) in a cell instead.
+
+## Anti-patterns
+
+- Using the self-contained `DataTable` **and** a separate `useReactTable` for the
+  bar — their selection states diverge. Build one table instance and feed both.
+- Leaving the bulk bar always visible — show it only while rows are selected.
+- Hiding the selection count — always show "N selected" so the scope is clear.
+
+## How it works
+
+```tsx
+const [rowSelection, setRowSelection] = useState({});
+const table = useReactTable({
+  data,
+  columns, // includes a checkbox 'select' column
+  getCoreRowModel: getCoreRowModel(),
+  getPaginationRowModel: getPaginationRowModel(),
+  enableRowSelection: true,
+  onRowSelectionChange: setRowSelection,
+  state: { rowSelection },
+});
+const selected = table.getSelectedRowModel().rows;
+```
+
+Render the bulk bar only while `selected.length > 0`, wire **Clear** to
+`table.resetRowSelection()`, render the grid from `table.getHeaderGroups()` /
+`getRowModel()`, and pass the same `table` to `DataTablePagination`.

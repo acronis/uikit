@@ -22,6 +22,31 @@ contract:
       type: '(row: Row<TData>) => ReactNode'
       required: false
       description: Renders the detail content for an expanded row.
+    - name: striped
+      type: boolean
+      required: false
+      default: 'false'
+      description: Alternating row backgrounds (borrowed from the Vue AvTable).
+    - name: bordered
+      type: boolean
+      required: false
+      default: 'false'
+      description: Vertical borders between columns (rows already have horizontal borders).
+    - name: highlightCurrentRow
+      type: boolean
+      required: false
+      default: 'false'
+      description: Highlight the row the user last clicked (the "current" row).
+    - name: skeleton
+      type: boolean
+      required: false
+      default: 'false'
+      description: Render placeholder skeleton rows instead of data (loading state).
+    - name: skeletonRows
+      type: number
+      required: false
+      default: '5'
+      description: Number of skeleton rows when skeleton is set.
   events: []
   methods: []
 

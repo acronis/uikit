@@ -56,6 +56,17 @@ const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel(),
 <DataTablePagination table={table} />
 ```
 
+### Presentational flags
+
+Borrowed from the Vue `AvTable`, these are pure visual props on `DataTable`:
+
+```tsx
+<DataTable columns={columns} data={rows} striped />
+<DataTable columns={columns} data={rows} bordered />        {/* vertical column borders */}
+<DataTable columns={columns} data={rows} highlightCurrentRow /> {/* click to highlight */}
+<DataTable columns={columns} data={[]} skeleton skeletonRows={5} /> {/* loading */}
+```
+
 ## API Reference
 
 <AutoTypeTable

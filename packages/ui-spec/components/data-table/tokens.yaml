@@ -19,3 +19,9 @@ tokens:
   - name: --ui-text-on-surface-secondary
     affects: pagination
     description: Muted pagination / toolbar meta text (text-muted-foreground).
+  - name: --ui-background-surface-secondary
+    affects: row
+    description: Striped row background + skeleton placeholder bars.
+  - name: --ui-table-global-row-color-active
+    affects: row
+    description: Current (last-clicked) row highlight — the active-row color.

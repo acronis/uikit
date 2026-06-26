@@ -15,4 +15,14 @@ export interface DataTableProps {
   getRowCanExpand?: (row: unknown) => boolean;
   /** Renders the detail content for an expanded row. */
   renderExpandedRow?: (row: unknown) => ReactNode;
+  /** Alternating row backgrounds. */
+  striped?: boolean;
+  /** Vertical borders between columns (rows already have horizontal borders). */
+  bordered?: boolean;
+  /** Highlight the row the user last clicked (the "current" row). */
+  highlightCurrentRow?: boolean;
+  /** Render placeholder skeleton rows instead of data (loading state). */
+  skeleton?: boolean;
+  /** Number of skeleton rows to render when `skeleton` is set (default 5). */
+  skeletonRows?: number;
 }
