@@ -1,0 +1,18 @@
+spec_version: '1.0'
+component: Table
+name: table
+status: draft
+category: data-display
+description: >-
+  Displays rows and columns of data. A set of composable parts (header, body,
+  footer, row, column header, cell, caption) with sortable column headers and a
+  selected row state. Ported from the legacy shadcn-uikit `Table` and informed by
+  the pre-release Table design; themed by the `--ui-table-*` token tier. A
+  TanStack-backed data grid (`DataTable`) over these primitives is a planned
+  follow-up.
+since: 0.10.0
+dependencies:
+  components:
+    - ArrowsDownUpIcon
+    - ArrowUpIcon
+    - ArrowDownIcon

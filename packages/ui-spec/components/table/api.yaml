@@ -1,0 +1,93 @@
+spec_version: '1.0'
+component: Table
+
+# Framework-agnostic contract for a *composable* table: the grid is assembled
+# from parts (see anatomy.yaml). Properties below are flat but apply to specific
+# parts (noted in each description); the parts otherwise pass through the native
+# attributes of the element they render.
+contract:
+  properties:
+    - name: selected
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        On a row — marks it selected (active row token + `data-state="selected"`).
+    - name: sortable
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        On a column header — renders a focusable sort affordance and exposes
+        `aria-sort`.
+    - name: sort-direction
+      type: "'asc' | 'desc' | false"
+      required: false
+      default: false
+      description: >-
+        On a sortable column header — the current sort direction (`false` =
+        sortable but unsorted). Drives the sort icon and `aria-sort`.
+
+  events:
+    - name: sort
+      payload: void
+      description: >-
+        Fired when a sortable header is activated by click / Enter / Space
+        (React: `onSort`). The consumer owns the sorting logic and updates
+        `sort-direction`.
+
+  content:
+    - name: default
+      description: >-
+        The composed table. Author it from the parts: a header (rows of column
+        headers), a body (rows of cells), an optional footer, and an optional
+        caption. Cell content (text, tags, links, checkboxes, …) is arbitrary.
+
+  methods: []
+
+adapters:
+  react:
+    component: Table
+    status: implemented
+    import: >-
+      import { Table, TableHeader, TableBody, TableFooter, TableRow, TableHead,
+      TableCell, TableCaption } from '@acronis-platform/ui-react'
+    example: |
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead sortable sortDirection={dir} onSort={toggleSort}>
+              Name
+            </TableHead>
+            <TableHead>Status</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow selected={isSelected}>
+            <TableCell>web-server-01</TableCell>
+            <TableCell><Tag>Protected</Tag></TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+
+  vue:
+    component: AvTable
+    status: planned
+    import: "import { AvTable, AvTableRow, AvTableCell } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvTable>
+        <AvTableRow :selected="isSelected">
+          <AvTableCell>web-server-01</AvTableCell>
+        </AvTableRow>
+      </AvTable>
+
+  web-components:
+    element: ui-table
+    status: planned
+    import: "import '@acronis-platform/ui-wc/table'"
+    example: |
+      <ui-table>
+        <ui-table-row selected>
+          <ui-table-cell>web-server-01</ui-table-cell>
+        </ui-table-row>
+      </ui-table>

@@ -1,0 +1,86 @@
+spec_version: '1.0'
+component: Table
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# Table has its own `--ui-table-*` component tier (opt-in via an @import in
+# ui-react's styles/index.css); the sort-button focus ring reuses the shared
+# semantic `--ui-focus-primary`.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-table-data-value-color-idle,
+      affects: root,
+      description: Default cell text color,
+    }
+  - {
+      name: --ui-table-global-cell-border-color,
+      affects: row,
+      description: Row / cell divider color,
+    }
+  - {
+      name: --ui-table-global-cell-padding-x,
+      affects: cell,
+      description: Cell horizontal padding,
+    }
+  - {
+      name: --ui-table-global-cell-padding-y,
+      affects: cell,
+      description: Cell vertical padding,
+    }
+  - {
+      name: --ui-table-global-row-color-idle,
+      affects: row,
+      description: Row background — idle,
+    }
+  - {
+      name: --ui-table-global-row-color-hover,
+      affects: row,
+      description: Row background — hover,
+    }
+  - {
+      name: --ui-table-global-row-color-active,
+      affects: row,
+      description: Row background — selected/active,
+    }
+  - {
+      name: --ui-table-header-cell-padding-x,
+      affects: head,
+      description: Header cell horizontal padding,
+    }
+  - {
+      name: --ui-table-header-cell-color-hover,
+      affects: head,
+      description: Sortable header background — hover,
+    }
+  - {
+      name: --ui-table-header-label-color,
+      affects: head,
+      description: Header label text color,
+    }
+  - {
+      name: --ui-table-header-gap,
+      affects: head,
+      description: Gap between header label and sort icon,
+    }
+  - {
+      name: --ui-table-header-sort-icon-size,
+      affects: head,
+      description: Sort icon size (16px),
+    }
+  - {
+      name: --ui-table-header-sort-icon-color-active,
+      affects: head,
+      description: Sort icon color when sorted,
+    }
+  - {
+      name: --ui-table-header-sort-icon-color-inactive,
+      affects: head,
+      description: Sort icon color when unsorted,
+    }
+  - {
+      name: --ui-focus-primary,
+      affects: head,
+      description: Focus-visible ring on the sort button,
+    }
