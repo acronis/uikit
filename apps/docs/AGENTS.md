@@ -32,10 +32,10 @@ library is documented under a deprecated **Legacy** section
 - `content/docs/` — MDX pages + `meta.json` files controlling sidebar order.
   Top-level order: `index`, `getting-started`, `theming`, `components`, `icons`,
   `packages`, `guides`, `legacy`.
-- `content/docs/components/` — one MDX file per **ui-react** component (24).
-  These are **API-reference pages**: usage + code-snippet examples +
-  `<AutoTypeTable>`. They have **no live `<DemoPreview>`** — see "ui-react has no
-  live demos" below.
+- `content/docs/components/` — one MDX file per **ui-react** component. Each
+  pairs usage + code-snippet examples + `<AutoTypeTable>` with a **live
+  `<DemoReact>`** preview (shadow-root isolated) — see "ui-react live demos"
+  below. (They do **not** use the legacy `<DemoPreview>`.)
 - `content/docs/packages/` — the ecosystem section (`tokens-pd`, `icons-react`,
   `icons-sprite`, `design-tokens`, `design-assets`).
 - `content/docs/legacy/` — the deprecated legacy library: a deprecation
@@ -48,19 +48,39 @@ library is documented under a deprecated **Legacy** section
   `@acronis-platform/shadcn-uikit-demos` and add `'use client'`. Demo
   components use hooks and browser APIs, so they need that directive;
   the shared demos package doesn't add it, so the wrappers do. **These pull
-  from the legacy library** (`shadcn-uikit-demos` → `shadcn-uikit/react`).
+  from the legacy library** (`shadcn-uikit-demos` → `shadcn-uikit/react`) and
+  back the **legacy** pages only.
+- `src/components/demos-react/` — `'use client'` demos for the **ui-react**
+  pages, importing straight from `@acronis-platform/ui-react`. One
+  `<Name>Demo` per component, rendered through `<DemoReact>` (see below).
+- `src/components/DemoReact.tsx` + `src/components/ShadowDemo.tsx` — the
+  ui-react live-preview wrapper: `ShadowDemo` mounts the demo in a **shadow
+  root** that adopts ui-react's stylesheet (fetched from `/api/ui-react-css`),
+  isolating it from the legacy + Fumadocs CSS on the global document.
 - `src/components/IconCatalog.tsx` — searchable catalog rendering the
   `@acronis-platform/icons-react` packs (`/docs/icons`).
 
-## ui-react has no live demos
+## ui-react live demos (shadow-root isolated)
 
-The shared `@acronis-platform/shadcn-uikit-demos` package imports the **legacy**
-package specifier. The alias trick that lets ui-react's Storybook swap the
-library at build time **does not work in the Next/RSC docs build** — bundler-
-aliasing a `"use client"` component drops it from Next's client manifest, so it
-renders as `undefined` (see `packages/ui-react/AGENTS.md`). Therefore ui-react
-component pages use **static code blocks**, not `<DemoPreview>`. Add live demos
-only if/when a ui-react-backed demos path exists.
+ui-react component pages render **live `<DemoReact>` previews**, not just static
+code blocks. This took a workaround: the shared
+`@acronis-platform/shadcn-uikit-demos` package imports the **legacy** specifier,
+and the alias trick that lets ui-react's Storybook swap the library at build time
+**does not work in the Next/RSC docs build** — bundler-aliasing a `"use client"`
+component drops it from Next's client manifest, so it renders as `undefined`
+(see `packages/ui-react/AGENTS.md`). So ui-react demos **don't** go through the
+shared demos package at all. Instead:
+
+- write a `'use client'` demo in `src/components/demos-react/<name>.tsx` that
+  imports directly from `@acronis-platform/ui-react`, and
+- render it via `<DemoReact>`, which mounts it inside a **shadow root**
+  (`ShadowDemo`) that adopts ui-react's stylesheet from `/api/ui-react-css`.
+
+The shadow boundary keeps ui-react's Tailwind preflight from colliding with the
+legacy + Fumadocs CSS loaded globally on the docs document. For components with
+portaled overlays (Select/Tooltip popups), the demo reads `useShadowMount()` and
+passes it as the primitive's `portalContainer` so the popup inherits the shadow's
+styles. See `card-filter.tsx` / `input-select.tsx` for the pattern.
 
 ## Critical path conventions
 
