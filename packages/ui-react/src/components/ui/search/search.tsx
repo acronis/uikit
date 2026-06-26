@@ -6,7 +6,9 @@ import {
 
 import { cn } from '@/lib/utils';
 
-// A search field: a bordered box (the dedicated `--ui-input-search-*` token
+// Internal primitive: the bare search box behind the public `InputSearch` field
+// (which is also exported as `Search`). Not exported from the package; consumed
+// by `input-search`. A bordered box (the dedicated `--ui-input-search-*` token
 // tier) holding a leading magnifier, a borderless native input, and a trailing
 // clear button shown once there's a value. The box owns the visual state via
 // `focus-within` (the input-search tier has no focus/active border token, so the
@@ -15,12 +17,12 @@ import { cn } from '@/lib/utils';
 // `--ui-input-search-icon-search-color-{idle,disabled}` (via the `group`) and the
 // clear button uses `--ui-input-search-clear-icon-color`.
 
-export interface SearchProps extends React.ComponentPropsWithoutRef<'input'> {
+export interface SearchBoxProps extends React.ComponentPropsWithoutRef<'input'> {
   /** Called when the clear (×) button is pressed, after the value is cleared. */
   onClear?: () => void;
 }
 
-const Search = React.forwardRef<HTMLInputElement, SearchProps>(
+const SearchBox = React.forwardRef<HTMLInputElement, SearchBoxProps>(
   (
     {
       className,
@@ -119,6 +121,6 @@ const Search = React.forwardRef<HTMLInputElement, SearchProps>(
     );
   }
 );
-Search.displayName = 'Search';
+SearchBox.displayName = 'SearchBox';
 
-export { Search };
+export { SearchBox };

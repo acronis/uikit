@@ -2,10 +2,10 @@ import * as React from 'react';
 import { TimesIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
-import { Input } from '../input';
+import { InputBox } from '../input';
 
 // Mirrors the Figma "InputText" component: a full single-line text field built
-// around the bare `Input` primitive (themed by the `--ui-input-text-*` tier). It
+// around the bare `InputBox` primitive (themed by the `--ui-input-text-*` tier). It
 // adds the field furniture: an optional `label` (with an optional `required` `*`),
 // an optional clear (✕) button, and an optional `description` or `error` message
 // below. Passing `error` switches the field to its error treatment — the box gets
@@ -85,7 +85,7 @@ const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
         )}
 
         <div className="relative">
-          <Input
+          <InputBox
             ref={ref}
             id={inputId}
             disabled={disabled}
