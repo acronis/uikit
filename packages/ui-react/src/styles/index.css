@@ -1,4 +1,8 @@
 @import 'tailwindcss';
+/* Enter/exit animation utilities (animate-in / fade / zoom / slide), keyed to
+   Base UI's data-[open] / data-[closed] state attributes — same library legacy
+   uses. Registers them as Tailwind v4 utilities so variants can prefix them. */
+@import 'tw-animate-css';
 @import '@acronis-platform/tokens-pd/css/acronis.css';
 
 /* Component token tiers are opt-in (per @acronis-platform/tokens-pd): import the

@@ -16,9 +16,10 @@ import { cn } from '@/lib/utils';
 //   • title    -> text-foreground / description -> text-muted-foreground
 //   • close    -> text-muted-foreground → hover text-foreground (replaces the
 //     legacy opacity hack), focus ring var(--ui-focus-primary)
-// The legacy enter/exit animations (`animate-in`/`fade`/`zoom`/`slide`) are
-// dropped — ui-react ships no animation utilities. Reconcile against the real
-// design with `/figma-component Dialog <url> --update` once a mockup lands.
+// Enter/exit animations use `tw-animate-css` (imported in styles/index.css),
+// keyed to Base UI's data-[open] / data-[closed] state attributes — overlay
+// fades, popup fades + zooms. Reconcile against the real design with
+// `/figma-component Dialog <url> --update` once a mockup lands.
 
 const Dialog = DialogPrimitive.Root;
 
@@ -35,7 +36,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Backdrop
     ref={ref}
     className={cn(
-      'fixed inset-0 z-50 bg-[var(--ui-background-overlay-primary)]',
+      'fixed inset-0 z-50 bg-[var(--ui-background-overlay-primary)] duration-200 data-[open]:animate-in data-[open]:fade-in-0 data-[closed]:animate-out data-[closed]:fade-out-0',
       className
     )}
     {...props}
@@ -74,7 +75,7 @@ const DialogContent = React.forwardRef<
         <DialogPrimitive.Popup
           ref={ref}
           className={cn(
-            'fixed left-1/2 top-1/2 z-50 flex w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg bg-muted text-foreground shadow-lg',
+            'fixed left-1/2 top-1/2 z-50 flex w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg bg-muted text-foreground shadow-lg duration-200 data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95',
             className
           )}
           {...props}

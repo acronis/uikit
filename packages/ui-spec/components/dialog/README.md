@@ -5,10 +5,10 @@ decision. Composable from parts; built on the Base UI Dialog primitive.
 
 > **Status: draft (design-pending v1).** Ported from the legacy
 > `@acronis-platform/shadcn-uikit` `Dialog`. There is no `--ui-dialog-*` token
-> tier yet, so colors resolve to the shared semantic tokens, and the legacy
-> enter/exit animations are dropped (ui-react ships no animation utilities).
-> Reconcile against Figma with `/figma-component Dialog <url> --update` once a
-> mockup lands.
+> tier yet, so colors resolve to the shared semantic tokens. Enter/exit
+> animations use `tw-animate-css` (overlay fade, popup fade + zoom), keyed to
+> Base UI's open/closed state. Reconcile against Figma with
+> `/figma-component Dialog <url> --update` once a mockup lands.
 
 ## When to use
 
