@@ -1,0 +1,37 @@
+---
+title: Progress
+description: A bar showing the completion of a known-length task, or an indeterminate sliding bar.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { ProgressDemo } from "@/components/demos-react/progress";
+
+## Usage
+
+```tsx
+import { Progress } from '@acronis-platform/ui-react';
+```
+
+`Progress` wraps the Base UI Progress primitive and shows the completion of a
+task. Pass a `value` (0–`max`) for a determinate bar, or `value={null}` for an
+indeterminate sliding bar. The bar carries `role="progressbar"` with the right
+ARIA value range. This is a design-pending v1; the track uses `bg-input` and the
+indicator the brand blue (`bg-secondary`) pending a Figma pass.
+
+## Examples
+
+<DemoReact>
+  <ProgressDemo />
+</DemoReact>
+
+```tsx
+<Progress value={40} />
+<Progress value={null} /> {/* indeterminate */}
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/progress/progress.docs.ts"
+  name="ProgressProps"
+/>

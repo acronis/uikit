@@ -16,8 +16,10 @@ export * from './components/ui/input-search';
 export * from './components/ui/input-select';
 export * from './components/ui/input-text';
 export * from './components/ui/input-text-area';
+export * from './components/ui/label';
 export * from './components/ui/link';
 export * from './components/ui/popover';
+export * from './components/ui/progress';
 export * from './components/ui/search-global';
 // `Input` / `Search` / `Textarea` are aliases of the full-field components
 // `InputText` / `InputSearch` / `InputTextArea`. The bare input/search boxes are
@@ -47,3 +49,10 @@ export * from './components/ui/table';
 export * from './components/ui/tabs';
 export * from './components/ui/tooltip';
 export * from './components/ui/tag';
+// `Badge` is an alias of `Tag`. The legacy generic shadcn Badge is replaced by
+// the design-system-native Tag (its own `--ui-tag-*` token tier, icon slot, and
+// sizes); Tag's variants are exactly Badge's status set. No separate component.
+export {
+  Tag as Badge,
+  type TagProps as BadgeProps,
+} from './components/ui/tag';

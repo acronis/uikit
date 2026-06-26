@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: Progress
+name: progress
+status: draft
+category: feedback
+description: >-
+  A horizontal bar showing the completion of a known-length task, or an
+  indeterminate sliding bar when the length is unknown. Ported from the legacy
+  shadcn-uikit `Progress`; wraps the Base UI Progress primitive.
+since: 0.40.0

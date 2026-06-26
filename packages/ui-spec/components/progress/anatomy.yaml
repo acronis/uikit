@@ -1,0 +1,37 @@
+spec_version: '1.0'
+component: Progress
+
+schematic: |
+  root: <div role="progressbar"> rounded, overflow-hidden
+    track:     full-width rail (bg-input)
+      indicator: brand-blue fill; width = value%, or a sliding bar when indeterminate
+
+root:
+  element: div
+  role: progressbar
+  description: >-
+    Base UI Progress.Root. Carries `aria-valuenow`/`aria-valuemin`/`aria-valuemax`
+    (omits valuenow when indeterminate). Groups the track and indicator and
+    exposes completion status to assistive tech.
+
+parts:
+  - id: track
+    element: div
+    description: The full-width rail the indicator fills (bg-input).
+  - id: indicator
+    element: div
+    description: >-
+      The brand-blue fill. Its width follows `value` as a percentage; when
+      indeterminate it is a fixed-width bar sliding across the track.
+
+states:
+  - id: determinate
+    trigger: value is a number (0–max)
+    kind: prop
+    prop: value
+    affects: [indicator]
+  - id: indeterminate
+    trigger: value is null
+    kind: prop
+    prop: value
+    affects: [indicator]

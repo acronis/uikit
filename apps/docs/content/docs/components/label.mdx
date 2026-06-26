@@ -1,0 +1,39 @@
+---
+title: Label
+description: A caption for a form control — small, medium-weight text tied to an input.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { LabelDemo } from "@/components/demos-react/label";
+
+## Usage
+
+```tsx
+import { Label } from '@acronis-platform/ui-react';
+```
+
+`Label` renders a native `<label>` with small, medium-weight type. Associate it
+with a control via `htmlFor` (the control's `id`) so clicking the label focuses
+the control and assistive tech reads it as the control's accessible name. When a
+preceding `peer`-marked control is disabled, the label dims. This is a
+design-pending v1; a `--ui-label-*` tier is pending a Figma pass.
+
+## Examples
+
+<DemoReact>
+  <LabelDemo />
+</DemoReact>
+
+```tsx
+<div className="flex flex-col gap-2">
+  <Label htmlFor="email">Email address</Label>
+  <Input id="email" placeholder="name@acronis.com" />
+</div>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/label/label.docs.ts"
+  name="LabelProps"
+/>

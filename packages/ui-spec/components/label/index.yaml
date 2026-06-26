@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: Label
+name: label
+status: draft
+category: forms
+description: >-
+  A caption for a form control. Ported from the legacy shadcn-uikit `Label`; a
+  plain `<label>` with small medium-weight type that dims when an associated
+  control is disabled.
+since: 0.40.0

@@ -1,0 +1,45 @@
+spec_version: '1.0'
+component: Progress
+
+contract:
+  properties:
+    - name: value
+      type: number | null
+      required: false
+      default: 'null'
+      description: >-
+        Completion between `min` and `max`. `null` renders an indeterminate
+        sliding bar.
+    - name: max
+      type: number
+      required: false
+      default: '100'
+      description: The value that represents full completion.
+    - name: min
+      type: number
+      required: false
+      default: '0'
+      description: The value that represents no completion.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Progress
+    status: implemented
+    import: "import { Progress } from '@acronis-platform/ui-react'"
+    example: |
+      <Progress value={40} />
+      <Progress value={null} />
+  vue:
+    component: AvProgress
+    status: planned
+    import: "import { AvProgress } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvProgress :value="40" />
+  web-components:
+    element: ui-progress
+    status: planned
+    import: "import '@acronis-platform/ui-wc/progress'"
+    example: |
+      <ui-progress value="40"></ui-progress>

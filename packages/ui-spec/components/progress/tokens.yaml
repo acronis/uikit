@@ -1,0 +1,16 @@
+spec_version: '1.0'
+component: Progress
+
+# References only. Values live in @acronis-platform/tokens-pd. No
+# `--ui-progress-*` tier yet: the track uses the shared border token (bridged as
+# bg-input) and the indicator uses the brand action blue (bridged as
+# bg-secondary) — the same remap Spinner uses.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-border-on-surface-border
+    affects: track
+    description: Track rail fill (bg-input).
+  - name: --ui-background-brand-secondary
+    affects: indicator
+    description: Indicator fill, the brand action blue (bg-secondary).

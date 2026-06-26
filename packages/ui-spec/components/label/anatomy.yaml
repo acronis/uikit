@@ -1,0 +1,22 @@
+spec_version: '1.0'
+component: Label
+
+schematic: |
+  root: <label for="…"> small medium-weight caption text
+     peer-disabled -> dimmed (opacity 70, not-allowed cursor)
+
+root:
+  element: label
+  description: >-
+    A native `<label>` rendering small (14px) medium-weight text. Associates
+    with a control via `htmlFor`/`for`. When a `peer`-marked sibling control is
+    disabled, the label dims via `peer-disabled:` utilities.
+
+parts: []
+
+states:
+  - id: peer-disabled
+    trigger: an associated peer control is :disabled
+    kind: pseudo
+    pseudo: ':disabled (on a preceding .peer sibling)'
+    affects: [root]

@@ -1,0 +1,37 @@
+spec_version: '1.0'
+component: Label
+
+contract:
+  properties:
+    - name: htmlFor
+      type: string
+      required: false
+      description: >-
+        The `id` of the control this label captions. Clicking the label focuses
+        that control.
+  events: []
+  content:
+    - name: children
+      description: The label text.
+  methods: []
+
+adapters:
+  react:
+    component: Label
+    status: implemented
+    import: "import { Label } from '@acronis-platform/ui-react'"
+    example: |
+      <Label htmlFor="email">Email address</Label>
+      <Input id="email" />
+  vue:
+    component: AvLabel
+    status: planned
+    import: "import { AvLabel } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvLabel for="email">Email address</AvLabel>
+  web-components:
+    element: ui-label
+    status: planned
+    import: "import '@acronis-platform/ui-wc/label'"
+    example: |
+      <ui-label for="email">Email address</ui-label>

@@ -1,0 +1,12 @@
+spec_version: '1.0'
+component: Label
+
+# References only. Values live in @acronis-platform/tokens-pd. Label has no
+# `--ui-label-*` tier and sets no color of its own — it inherits the surface
+# foreground from context (bridged as text-foreground).
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-text-on-surface-primary
+    affects: root
+    description: Inherited label text color (text-foreground from context).

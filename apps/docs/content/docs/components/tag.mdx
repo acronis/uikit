@@ -15,6 +15,11 @@ import { Tag } from '@acronis-platform/ui-react';
 `Tag` renders a `<span>` styled by the `--ui-tag-*` tokens. An optional leading
 `icon` is rendered at 16px before the label.
 
+> **`Badge` is an alias of `Tag`.** The legacy generic shadcn `Badge` is replaced
+> by the design-system-native `Tag`, which carries its own token tier, icon slot,
+> and sizes. `import { Badge } from '@acronis-platform/ui-react'` re-exports `Tag`
+> — same props, same variants. Prefer `Tag` in new code.
+
 ## Examples
 
 
