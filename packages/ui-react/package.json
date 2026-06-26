@@ -83,6 +83,7 @@
     "@acronis-platform/shadcn-uikit-demos": "workspace:*",
     "@figma/code-connect": "1.4.8",
     "@playwright/test": "1.60.0",
+    "@tanstack/react-virtual": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "@storybook/addon-a11y": "10.4.1",

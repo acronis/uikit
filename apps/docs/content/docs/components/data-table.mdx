@@ -67,6 +67,22 @@ Borrowed from the Vue `AvTable`, these are pure visual props on `DataTable`:
 <DataTable columns={columns} data={[]} skeleton skeletonRows={5} /> {/* loading */}
 ```
 
+### Advanced recipes
+
+The heavier behaviors stay out of `DataTable` (to keep it lean) and are shown as
+**copy-paste recipes** that compose the `Table` primitives + TanStack directly —
+see the `UI/DataTable/Recipes` stories in Storybook.
+
+- **Tree mode** — pass `getSubRows: (row) => row.children` + `getExpandedRowModel()`
+  and indent the name cell by `row.depth`.
+- **Row groups** — `state.grouping` + `getGroupedRowModel()` + `getExpandedRowModel()`;
+  render a header row for `row.getIsGrouped()`.
+- **Virtual scrolling** — `useVirtualizer` from `@tanstack/react-virtual` over a
+  fixed-height scroll container, with spacer rows above/below the visible window
+  (keeps the column layout intact). Add `@tanstack/react-virtual` yourself.
+- **Column reorder** — `state.columnOrder` + `onColumnOrderChange`, with native
+  HTML5 `draggable` headers (no extra DnD dependency).
+
 ## API Reference
 
 <AutoTypeTable

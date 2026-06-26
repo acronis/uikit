@@ -37,6 +37,7 @@ catalog:
   react-hook-form: 7.76.1
   '@hookform/resolvers': 5.4.0
   '@tanstack/react-table': 8.21.3
+  '@tanstack/react-virtual': 3.13.12
   recharts: 3.8.1
   date-fns: 4.3.0
   sonner: 2.0.7
