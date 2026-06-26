@@ -445,7 +445,6 @@ none fits.
 **Verify the docs build** (no test suite here — it's build-verified):
 
 ```bash
-pnpm --filter @acronis-platform/ui-react build         # FIRST — see note below
 pnpm --filter @acronis-platform/uikit-docs typecheck   # demo .tsx compiles
 pnpm --filter @acronis-platform/uikit-docs build       # MDX + AutoTypeTable resolve, page renders
 ```
@@ -453,18 +452,17 @@ pnpm --filter @acronis-platform/uikit-docs build       # MDX + AutoTypeTable res
 A broken `AutoTypeTable` `path`/`name` or a missing demo import fails the build,
 not typecheck — so run the build.
 
-> **Build `ui-react` first, or every live demo renders _unstyled_.** `<DemoReact>`
-> mounts the demo in a shadow root that adopts ui-react's **compiled**
-> `dist/ui-react.css` (served by the `/api/ui-react-css` route) — and that file is
-> **gitignored**, so it only exists after `@acronis-platform/ui-react` is built;
-> `apps/docs` `dev`/`build` don't build it for you (no turbo pipeline). On a fresh
-> checkout, or after editing the component, run `pnpm --filter
-@acronis-platform/ui-react build` before `uikit-docs dev`/`build` or the shadow
-> root adopts no stylesheet and the preview shows raw, unstyled markup. (CI is
-> fine: `pnpm -r build` builds ui-react topologically first.) A corollary: a demo
-> can only use utility classes ui-react's compiled CSS actually contains — classes
-> used solely in the demo (and never by a shipped ui-react component or story) get
-> tree-shaken out and silently no-op in the preview.
+> **Live demos need ui-react's _compiled_ CSS — already handled, but know why.**
+> `<DemoReact>` mounts the demo in a shadow root that adopts ui-react's compiled
+> `dist/ui-react.css` (served by `/api/ui-react-css`), a **gitignored** artifact.
+> `apps/docs` has `predev`/`prebuild` hooks that run `pnpm --filter @acronis-platform/ui-react build`
+> first, so `uikit-docs dev`/`build` regenerate it automatically (≈1.5s) — replicate
+> that if you ever run Next directly, or the previews render unstyled. **Corollary
+> for the demo file:** the shadow root adopts _only_ that compiled sheet, which is
+> Tailwind-built from ui-react's own source — so a demo may only use utility classes
+> ui-react itself ships. A class used solely in the demo (never by a shipped
+> component or its story) is tree-shaken out and silently no-ops in the preview;
+> prefer inline `style={{…}}` for one-off demo layout.
 
 ---
 

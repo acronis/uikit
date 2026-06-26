@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prebuild": "pnpm --filter @acronis-platform/ui-react build",
     "build": "next build",
     "clean": "rm -rf .next .source",
+    "predev": "pnpm --filter @acronis-platform/ui-react build",
     "dev": "next dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

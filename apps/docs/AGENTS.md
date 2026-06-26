@@ -82,17 +82,19 @@ portaled overlays (Select/Tooltip popups), the demo reads `useShadowMount()` and
 passes it as the primitive's `portalContainer` so the popup inherits the shadow's
 styles. See `card-filter.tsx` / `input-select.tsx` for the pattern.
 
-> **Build `ui-react` before `dev`/`build` or the demos render unstyled.** The
+> **The demos need ui-react's compiled CSS — `predev`/`prebuild` build it.** The
 > `/api/ui-react-css` route serves ui-react's **compiled** `dist/ui-react.css`
-> (`node_modules/@acronis-platform/ui-react/dist/ui-react.css`), which is a
-> **gitignored** build artifact. This workspace's `dev`/`build` do **not** build
-> it first (no turbo pipeline). On a fresh checkout the route has nothing to
-> serve, the shadow root adopts no stylesheet, and every preview shows raw
-> unstyled markup. Run `pnpm --filter @acronis-platform/ui-react build` first (CI
-> is fine — `pnpm -r build` builds it topologically). Because the served sheet is
-> Tailwind-compiled from ui-react's own source, a demo may only use utility
-> classes that ui-react itself ships — a class used solely in a demo is tree-
-> shaken out and no-ops in the preview.
+> (`node_modules/@acronis-platform/ui-react/dist/ui-react.css`), a **gitignored**
+> build artifact. If it's missing, the shadow root adopts no stylesheet and every
+> preview shows raw unstyled markup. To prevent that, this workspace's `dev` and
+> `build` scripts have `predev`/`prebuild` hooks that run
+> `pnpm --filter @acronis-platform/ui-react build` first (pnpm runs `pre*` hooks by
+> default), so a fresh `pnpm --filter @acronis-platform/uikit-docs dev` just works.
+> The cost is a ~1.5s ui-react rebuild on every dev/build start. (CI is also fine
+> independently — `pnpm -r build` builds ui-react topologically.) Because the
+> served sheet is Tailwind-compiled from ui-react's own source, a demo may only
+> use utility classes that ui-react itself ships — a class used solely in a demo is
+> tree-shaken out and no-ops in the preview.
 
 ## Critical path conventions
 
