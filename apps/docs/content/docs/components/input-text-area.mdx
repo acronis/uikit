@@ -17,6 +17,12 @@ optional label (with a `required` marker), helper description, and error
 message. Without a label it renders just the box. Themed by the
 `--ui-input-text-area-*` tokens.
 
+> **`Textarea` is an alias of `InputTextArea`.** The legacy bare `Textarea` box
+> is replaced by this design-system-native field; `import { Textarea } from
+> '@acronis-platform/ui-react'` re-exports `InputTextArea` — same props. Without
+> a `label` it's a drop-in for the bare textarea. Prefer `InputTextArea` in new
+> code.
+
 ## Examples
 
 
