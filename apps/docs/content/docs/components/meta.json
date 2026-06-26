@@ -32,6 +32,7 @@
     "resizable",
     "---Overlays---",
     "dialog",
+    "popover",
     "tooltip"
   ]
 }

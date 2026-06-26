@@ -1,0 +1,80 @@
+---
+title: Popover
+description: A floating panel anchored to a trigger, for secondary content or quick actions.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { PopoverDemo } from "@/components/demos-react/popover";
+
+## Usage
+
+```tsx
+import { Popover, PopoverTrigger, PopoverContent } from '@acronis-platform/ui-react';
+```
+
+`Popover` is a compound component built on Base UI's Popover primitive
+(positioning, focus management, outside-press / Esc dismissal). `Popover` owns
+the open state; `PopoverTrigger` toggles and anchors it; `PopoverContent` is the
+portaled, positioned popup (`side` / `align` / `sideOffset`). This is a
+design-pending v1 themed from the shared semantic surface tokens
+(`bg-background` / `text-foreground` / `border-border`); a `--ui-popover-*` tier
+is pending a Figma pass.
+
+## Examples
+
+
+<DemoReact>
+  <PopoverDemo />
+</DemoReact>
+
+A popover with a heading and description:
+
+```tsx
+<Popover>
+  <PopoverTrigger render={<Button variant="secondary">Open</Button>} />
+  <PopoverContent>
+    <div className="grid gap-2">
+      <h4 className="font-medium leading-none">Dimensions</h4>
+      <p className="text-sm text-muted-foreground">
+        Set the dimensions for the layer.
+      </p>
+    </div>
+  </PopoverContent>
+</Popover>
+```
+
+Position it with `side` / `align`:
+
+```tsx
+<PopoverContent side="right" align="start">
+  {/* … */}
+</PopoverContent>
+```
+
+Controlled — drive `open` and react to `onOpenChange`:
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<Popover open={open} onOpenChange={setOpen}>
+  {/* …trigger + content… */}
+</Popover>;
+```
+
+When the popover renders inside an isolated container (e.g. a shadow root), pass
+a `portalContainer` so the popup inherits that scope's styles.
+
+## API Reference
+
+### PopoverContent
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/popover/popover.docs.ts"
+  name="PopoverContentProps"
+/>
+
+`Popover` (root) accepts the Base UI Popover root props — `open` /
+`defaultOpen`, `onOpenChange`. `PopoverTrigger` and `PopoverPortal` wrap the
+matching Base UI parts. See the
+[Base UI Popover docs](https://base-ui.com/react/components/popover) for the full
+prop surface.
