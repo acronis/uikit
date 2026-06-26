@@ -34,33 +34,38 @@ components:
 demo: apps/docs/src/components/demos-react/patterns/filter-popover.tsx
 docs: apps/docs/content/docs/patterns/filter-popover.mdx
 
-# Approved starting point. `side`/`align` and the exact fields vary; the shape
-# (Popover > form of InputSelect fields > right-aligned Reset/Apply) does not.
+# Approved starting point. Anchor the panel to the trigger's start edge
+# (align="start"); the shape — a titled panel of InputSelect fields over a
+# divided, right-aligned Reset/Apply footer — does not vary.
 example: |
   <Popover>
     <PopoverTrigger render={<Button variant="secondary">Filters</Button>} />
-    <PopoverContent className="w-80">
+    <PopoverContent align="start" sideOffset={8} className="w-80 p-0">
       <form
-        className="grid gap-4"
         onSubmit={(e) => {
           e.preventDefault();
           applyFilters(/* read field values */);
         }}
         onReset={() => clearFilters()}
       >
-        <InputSelect items={statuses}>
-          <InputSelectField>
-            <InputSelectLabel>Status</InputSelectLabel>
-            <InputSelectTrigger>
-              <InputSelectValue placeholder="Any status" />
-            </InputSelectTrigger>
-          </InputSelectField>
-          <InputSelectContent>
-            <InputSelectItem value="active">Active</InputSelectItem>
-            <InputSelectItem value="error">Error</InputSelectItem>
-          </InputSelectContent>
-        </InputSelect>
-        <div className="flex justify-end gap-2">
+        <div className="border-b border-border px-4 py-4">
+          <p className="text-sm font-semibold leading-none">Filters</p>
+        </div>
+        <div className="grid gap-4 p-4">
+          <InputSelect items={statuses}>
+            <InputSelectField>
+              <InputSelectLabel>Status</InputSelectLabel>
+              <InputSelectTrigger>
+                <InputSelectValue placeholder="Any status" />
+              </InputSelectTrigger>
+            </InputSelectField>
+            <InputSelectContent>
+              <InputSelectItem value="active">Active</InputSelectItem>
+              <InputSelectItem value="error">Error</InputSelectItem>
+            </InputSelectContent>
+          </InputSelect>
+        </div>
+        <div className="flex justify-end gap-2 border-t border-border px-4 py-4">
           <Button type="reset" variant="ghost">Reset</Button>
           <Button type="submit">Apply</Button>
         </div>

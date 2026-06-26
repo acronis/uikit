@@ -46,29 +46,33 @@ import {
 
 <Popover>
   <PopoverTrigger render={<Button variant="secondary">Filters</Button>} />
-  <PopoverContent className="w-80">
+  {/* align="start" anchors the panel to the trigger's left edge */}
+  <PopoverContent align="start" sideOffset={8} className="w-80 p-0">
     <form
-      className="grid gap-4"
       onSubmit={(e) => {
         e.preventDefault();
         applyFilters(/* read field values */);
       }}
       onReset={() => clearFilters()}
     >
-      <InputSelect items={statuses}>
-        <InputSelectField>
-          <InputSelectLabel>Status</InputSelectLabel>
-          <InputSelectTrigger>
-            <InputSelectValue placeholder="Any status" />
-          </InputSelectTrigger>
-        </InputSelectField>
-        <InputSelectContent>
-          <InputSelectItem value="active">Active</InputSelectItem>
-          <InputSelectItem value="error">Error</InputSelectItem>
-        </InputSelectContent>
-      </InputSelect>
-
-      <div className="flex justify-end gap-2">
+      <div className="border-b border-border px-4 py-4">
+        <p className="text-sm font-semibold leading-none">Filters</p>
+      </div>
+      <div className="grid gap-4 p-4">
+        <InputSelect items={statuses}>
+          <InputSelectField>
+            <InputSelectLabel>Status</InputSelectLabel>
+            <InputSelectTrigger>
+              <InputSelectValue placeholder="Any status" />
+            </InputSelectTrigger>
+          </InputSelectField>
+          <InputSelectContent>
+            <InputSelectItem value="active">Active</InputSelectItem>
+            <InputSelectItem value="error">Error</InputSelectItem>
+          </InputSelectContent>
+        </InputSelect>
+      </div>
+      <div className="flex justify-end gap-2 border-t border-border px-4 py-4">
         <Button type="reset" variant="ghost">
           Reset
         </Button>
