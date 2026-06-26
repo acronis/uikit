@@ -1,0 +1,64 @@
+---
+title: DataTable
+description: A data grid on TanStack react-table — sorting, filtering, selection, pagination, and row expansion.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { DataTableDemo } from "@/components/demos-react/data-table";
+
+## Usage
+
+```tsx
+import {
+  DataTable,
+  DataTableColumnHeader,
+  DataTableToolbar,
+  DataTablePagination,
+  DataTableViewOptions,
+} from '@acronis-platform/ui-react';
+import type { ColumnDef } from '@tanstack/react-table';
+```
+
+`DataTable` is a data grid built on [TanStack react-table](https://tanstack.com/table)
+v8, composed over the `Table` primitives. It manages sorting, filtering, column
+visibility, row selection, pagination, and optional row expansion. The companion
+parts — `DataTableColumnHeader`, `DataTableToolbar`, `DataTablePagination`,
+`DataTableViewOptions` — operate on a TanStack `table` instance you build with
+`useReactTable`. This is a design-pending v1; it reuses the `Table` component's
+`--ui-table-*` tokens (the wrapper border matches the cell borders).
+
+## Examples
+
+<DemoReact>
+  <DataTableDemo />
+</DemoReact>
+
+```tsx
+const columns: ColumnDef<Payment>[] = [
+  {
+    accessorKey: 'email',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
+  },
+  { accessorKey: 'amount', header: 'Amount' },
+];
+
+<DataTable columns={columns} data={payments} />
+```
+
+For a toolbar + pagination, build the table instance yourself and pass it to the
+companion parts:
+
+```tsx
+const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel(), /* … */ });
+
+<DataTableToolbar table={table} searchKey="email" />
+<DataTable columns={columns} data={data} />
+<DataTablePagination table={table} />
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/data-table/data-table.docs.ts"
+  name="DataTableProps"
+/>

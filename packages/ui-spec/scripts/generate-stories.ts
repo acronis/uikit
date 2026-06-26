@@ -369,6 +369,11 @@ const RENDER: Record<string, RenderHint> = {
     // hand-written stories (Default / Variants / WithAction).
     skip: true,
   },
+  'data-table': {
+    // Generic with required `columns`/`data` (TanStack column defs) — there's no
+    // meaningful zero-arg render. VR is covered by the hand-written stories.
+    skip: true,
+  },
   resizable: {
     root: 'ResizablePanelGroup',
     ariaLabel: 'Resizable example',

@@ -1,0 +1,46 @@
+spec_version: '1.0'
+component: DataTable
+
+# DataTable takes columns/data (it owns table state). The companion parts
+# (DataTableToolbar / DataTablePagination / DataTableColumnHeader /
+# DataTableViewOptions) take a TanStack `table` instance — see README.
+contract:
+  properties:
+    - name: columns
+      type: 'ColumnDef<TData, TValue>[]'
+      required: true
+      description: TanStack column definitions (header / cell renderers, accessors).
+    - name: data
+      type: 'TData[]'
+      required: true
+      description: The row data.
+    - name: getRowCanExpand
+      type: '(row: Row<TData>) => boolean'
+      required: false
+      description: Enables row expansion for rows that return true. Pair with renderExpandedRow.
+    - name: renderExpandedRow
+      type: '(row: Row<TData>) => ReactNode'
+      required: false
+      description: Renders the detail content for an expanded row.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: DataTable
+    status: implemented
+    import: "import { DataTable } from '@acronis-platform/ui-react'"
+    example: |
+      <DataTable columns={columns} data={rows} />
+  vue:
+    component: AvDataTable
+    status: planned
+    import: "import { AvDataTable } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvDataTable :columns="columns" :data="rows" />
+  web-components:
+    element: ui-data-table
+    status: planned
+    import: "import '@acronis-platform/ui-wc/data-table'"
+    example: |
+      <ui-data-table></ui-data-table>

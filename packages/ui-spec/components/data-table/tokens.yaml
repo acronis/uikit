@@ -1,0 +1,21 @@
+spec_version: '1.0'
+component: DataTable
+
+# References only. Values live in @acronis-platform/tokens-pd. DataTable adds no
+# color of its own — it composes already-themed components (Table, Button,
+# DropdownMenu, InputSelect, …). Its own chrome reuses the Table component's
+# `--ui-table-*` tier so the wrapper border matches the cell borders and the
+# empty-state matches muted table text. The pagination/toolbar meta text (outside
+# the grid) uses the shared `text-muted-foreground`.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-table-global-cell-border-color
+    affects: table
+    description: Wrapper border — matches the Table cell borders.
+  - name: --ui-table-data-value-color-disabled
+    affects: empty-state
+    description: Muted "No results." text — matches disabled table values.
+  - name: --ui-text-on-surface-secondary
+    affects: pagination
+    description: Muted pagination / toolbar meta text (text-muted-foreground).

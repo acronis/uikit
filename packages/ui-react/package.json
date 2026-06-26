@@ -73,6 +73,7 @@
     "@acronis-platform/icons-react": "workspace:*",
     "@acronis-platform/tokens-pd": "workspace:*",
     "@base-ui/react": "catalog:",
+    "@tanstack/react-table": "catalog:",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "react-resizable-panels": "4.11.2",
