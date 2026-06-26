@@ -1,5 +1,34 @@
 # @acronis-platform/ui-react
 
+## 0.41.0
+
+### Minor Changes
+
+- [#423](https://github.com/acronis/uikit/pull/423) [`fa6d61e`](https://github.com/acronis/uikit/commit/fa6d61ea4b184ba91ab7f3fe228f4c6a7e910ab7) Thanks [@leonid](https://github.com/leonid)! - feat(label,progress,badge): add Label and Progress components, alias Badge to Tag
+  - **Label** — a caption for a form control (native `<label>`, small
+    medium-weight type, `peer-disabled:` dimming). Design-pending v1 ported from
+    the legacy library; inherits `text-foreground` (no `--ui-label-*` tier yet).
+  - **Progress** — a determinate/indeterminate progress bar wrapping the Base UI
+    Progress primitive. Design-pending v1; track uses `bg-input`, the indicator the
+    brand blue (`bg-secondary`), with a sliding `indeterminate-progress` animation
+    when `value` is `null`.
+  - **Badge** — re-exported as an alias of `Tag`. The generic legacy shadcn Badge
+    is replaced by the design-system-native `Tag` (its own `--ui-tag-*` token tier,
+    icon slot, and sizes); `import { Badge }` returns `Tag`.
+
+- [#425](https://github.com/acronis/uikit/pull/425) [`93eb023`](https://github.com/acronis/uikit/commit/93eb02326571a95738179f953b890e531248c435) Thanks [@leonid](https://github.com/leonid)! - feat(widget-placeholder): add WidgetPlaceholder component
+
+  A composable empty-state for a dashboard widget — a bordered card with a header
+  (icon + title), a centered illustration / message / action, and an optional
+  footer. The root takes an `interactive` prop that makes the whole card focusable
+  and clickable (hover/active surface tints + a focus ring). Design-pending v1
+  ported from the legacy library; themed on semantic tokens (no
+  `--ui-widget-placeholder-*` tier yet — the icon/action use the brand action blue,
+  the illustration a muted placeholder tone). Parts: `WidgetPlaceholder`,
+  `WidgetPlaceholderHeader`, `WidgetPlaceholderIcon`, `WidgetPlaceholderTitle`,
+  `WidgetPlaceholderContent`, `WidgetPlaceholderImage`, `WidgetPlaceholderText`,
+  `WidgetPlaceholderAction`, `WidgetPlaceholderFooter`.
+
 ## 0.40.0
 
 ### Minor Changes
