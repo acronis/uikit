@@ -30,7 +30,15 @@ export function GET() {
   return new Response(loadCss(), {
     headers: {
       'content-type': 'text/css; charset=utf-8',
-      'cache-control': 'public, max-age=3600, stale-while-revalidate=86400',
-    }
+      // Revalidate on every load. This serves ui-react's *compiled* stylesheet,
+      // which changes whenever the library does. A long max-age made the
+      // shadow-root demos (ShadowDemo) keep adopting a stale sheet — a newly
+      // added utility (e.g. Dialog's `bg-muted`) would be missing, so the demo
+      // rendered unstyled until the cache expired (in dev, and for up to an hour
+      // for returning users after a deploy). `no-cache` keeps it cached but
+      // forces revalidation (304 via ETag when unchanged) so a rebuilt library
+      // shows immediately.
+      'cache-control': 'no-cache',
+    },
   });
 }
