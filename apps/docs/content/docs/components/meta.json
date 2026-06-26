@@ -33,6 +33,7 @@
     "resizable",
     "---Overlays---",
     "dialog",
+    "dropdown-menu",
     "popover",
     "tooltip"
   ]

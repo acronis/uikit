@@ -1,0 +1,104 @@
+---
+title: DropdownMenu
+description: A menu of actions anchored to a trigger, opened on demand.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { DropdownMenuDemo } from "@/components/demos-react/dropdown-menu";
+
+## Usage
+
+```tsx
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+} from '@acronis-platform/ui-react';
+```
+
+`DropdownMenu` is a compound component built on Base UI's Menu primitive
+(positioning, roving focus, typeahead, outside-press / Esc dismissal, ARIA).
+`DropdownMenu` owns the open state; `DropdownMenuTrigger` opens it; and
+`DropdownMenuContent` is the portaled popup holding `DropdownMenuItem`s — with
+optional labels, separators, checkbox/radio items, shortcuts, and nested
+submenus. This is a design-pending v1 themed from the shared semantic tokens; a
+`--ui-menu-*` tier is pending a Figma pass.
+
+## Examples
+
+
+<DemoReact>
+  <DropdownMenuDemo />
+</DemoReact>
+
+A basic actions menu:
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger render={<Button variant="secondary">Open menu</Button>} />
+  <DropdownMenuContent className="w-56">
+    <DropdownMenuLabel>My account</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem>
+      Profile <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+    </DropdownMenuItem>
+    <DropdownMenuItem>Settings</DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem>Log out</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+Checkbox and radio items (consumer owns the values):
+
+```tsx
+<DropdownMenuContent>
+  <DropdownMenuCheckboxItem checked={grid} onCheckedChange={setGrid}>
+    Show grid
+  </DropdownMenuCheckboxItem>
+  <DropdownMenuSeparator />
+  <DropdownMenuRadioGroup value={density} onValueChange={setDensity}>
+    <DropdownMenuRadioItem value="comfortable">Comfortable</DropdownMenuRadioItem>
+    <DropdownMenuRadioItem value="compact">Compact</DropdownMenuRadioItem>
+  </DropdownMenuRadioGroup>
+</DropdownMenuContent>
+```
+
+A nested submenu:
+
+```tsx
+<DropdownMenuSub>
+  <DropdownMenuSubTrigger>More tools</DropdownMenuSubTrigger>
+  <DropdownMenuSubContent>
+    <DropdownMenuItem>Import</DropdownMenuItem>
+    <DropdownMenuItem>Export</DropdownMenuItem>
+  </DropdownMenuSubContent>
+</DropdownMenuSub>
+```
+
+## API Reference
+
+### DropdownMenuContent
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/dropdown-menu/dropdown-menu.docs.ts"
+  name="DropdownMenuContentProps"
+/>
+
+`DropdownMenu` (root) accepts the Base UI Menu root props — `open` /
+`defaultOpen`, `onOpenChange`. `DropdownMenuItem` / `DropdownMenuLabel` /
+`DropdownMenuSubTrigger` take an `inset` flag; `DropdownMenuCheckboxItem` takes
+`checked` / `onCheckedChange`; `DropdownMenuRadioGroup` takes `value` /
+`onValueChange`. See the
+[Base UI Menu docs](https://base-ui.com/react/components/menu) for the full prop
+surface of each part.
