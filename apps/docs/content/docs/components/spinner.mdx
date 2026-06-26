@@ -1,0 +1,38 @@
+---
+title: Spinner
+description: An indeterminate loading indicator — a spinning ring in four sizes.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { SpinnerDemo } from "@/components/demos-react/spinner";
+
+## Usage
+
+```tsx
+import { Spinner } from '@acronis-platform/ui-react';
+```
+
+`Spinner` is a CSS spinning ring with a `role="status"` live region and an
+sr-only "Loading…" label. It comes in four `size`s and defaults to the brand
+blue; override the color with any `text-*` class. This is a design-pending v1; a
+`--ui-spinner-*` tier is pending a Figma pass.
+
+## Examples
+
+
+<DemoReact>
+  <SpinnerDemo />
+</DemoReact>
+
+```tsx
+<Spinner />
+<Spinner size="lg" />
+<Spinner size="sm" className="text-muted-foreground" />
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/spinner/spinner.tsx"
+  name="SpinnerProps"
+/>

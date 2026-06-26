@@ -1,0 +1,41 @@
+---
+title: Separator
+description: A thin rule that divides content, horizontally or vertically.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { SeparatorDemo } from "@/components/demos-react/separator";
+
+## Usage
+
+```tsx
+import { Separator } from '@acronis-platform/ui-react';
+```
+
+`Separator` is a 1px rule built on Base UI's Separator primitive (it sets the
+`separator` role and `aria-orientation`). It's `horizontal` by default; pass
+`orientation="vertical"` for a vertical divider (inside a height-bearing flex
+row). It uses the shared `bg-border` divider token.
+
+## Examples
+
+
+<DemoReact>
+  <SeparatorDemo />
+</DemoReact>
+
+```tsx
+<Separator className="my-4" />
+
+<div className="flex h-5 items-center gap-4">
+  <span>Backup</span>
+  <Separator orientation="vertical" />
+  <span>Recovery</span>
+</div>
+```
+
+## API Reference
+
+`Separator` accepts the standard `<div>` attributes plus **`orientation`**
+(`'horizontal'` | `'vertical'`, default `'horizontal'`), which sets
+`aria-orientation` and swaps the 1px dimension.
