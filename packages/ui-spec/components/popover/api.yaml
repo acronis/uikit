@@ -1,0 +1,83 @@
+spec_version: '1.0'
+component: Popover
+
+# Framework-agnostic contract for a *composable* popover: a trigger plus a
+# floating content panel (see anatomy.yaml). The root owns the open state; the
+# content part takes positioning props. Property names are neutral.
+contract:
+  properties:
+    - name: open
+      type: boolean
+      required: false
+      description: Controlled open state. Pair with the change event.
+    - name: default-open
+      type: boolean
+      required: false
+      default: false
+      description: Initial open state when uncontrolled.
+    - name: side
+      type: "'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end'"
+      required: false
+      default: "'bottom'"
+      description: On the content — which side of the trigger to render on.
+    - name: align
+      type: "'start' | 'center' | 'end'"
+      required: false
+      default: "'center'"
+      description: On the content — alignment along the chosen side.
+    - name: side-offset
+      type: number
+      required: false
+      default: 4
+      description: On the content — distance in px from the trigger.
+
+  events:
+    - name: open-change
+      payload: boolean
+      description: >-
+        Fired when the popover opens or closes (React: `onOpenChange`). Payload
+        is the new open value.
+
+  content:
+    - name: default
+      description: >-
+        A `trigger` plus the popover `content` (the root popup), which holds
+        arbitrary content — text, fields, actions.
+
+  methods: []
+
+adapters:
+  react:
+    component: Popover
+    status: implemented
+    import: >-
+      import { Popover, PopoverTrigger, PopoverContent } from
+      '@acronis-platform/ui-react'
+    example: |
+      <Popover>
+        <PopoverTrigger render={<Button variant="secondary">Open</Button>} />
+        <PopoverContent side="bottom" align="center">
+          <h4>Dimensions</h4>
+          <p>Set the dimensions for the layer.</p>
+        </PopoverContent>
+      </Popover>
+
+  vue:
+    component: AvPopover
+    status: planned
+    import: "import { AvPopover, AvPopoverTrigger, AvPopoverContent } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvPopover>
+        <AvPopoverTrigger>Open</AvPopoverTrigger>
+        <AvPopoverContent>Dimensions</AvPopoverContent>
+      </AvPopover>
+
+  web-components:
+    element: ui-popover
+    status: planned
+    import: "import '@acronis-platform/ui-wc/popover'"
+    example: |
+      <ui-popover>
+        <ui-popover-trigger>Open</ui-popover-trigger>
+        <ui-popover-content>Dimensions</ui-popover-content>
+      </ui-popover>

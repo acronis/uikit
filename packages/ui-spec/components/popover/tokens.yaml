@@ -1,0 +1,27 @@
+spec_version: '1.0'
+component: Popover
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# Design-pending v1: no `--ui-popover-*` component tier yet, so the popup
+# consumes the shared *semantic* surface tokens (via the bridged Tailwind names
+# bg-background / text-foreground / border-border). Replace with a
+# `--ui-popover-*` tier if/when a Figma pass introduces one.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-background-surface-primary,
+      affects: root,
+      description: Popup surface (bridged as bg-background),
+    }
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: root,
+      description: Popup text color (bridged as text-foreground),
+    }
+  - {
+      name: --ui-border-on-surface-border,
+      affects: root,
+      description: Popup border (bridged as border-border),
+    }

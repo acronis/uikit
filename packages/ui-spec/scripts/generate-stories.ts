@@ -78,6 +78,23 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  popover: {
+    props: 'defaultOpen',
+    extraImports: [
+      "import { PopoverTrigger, PopoverContent } from '../popover';",
+    ],
+    sample: [
+      '',
+      '      <PopoverTrigger>Open</PopoverTrigger>',
+      '      <PopoverContent>',
+      '        <div className="grid gap-2">',
+      '          <h4 className="font-medium leading-none">Dimensions</h4>',
+      '          <p className="text-sm text-muted-foreground">Set the dimensions for the layer.</p>',
+      '        </div>',
+      '      </PopoverContent>',
+      '    ',
+    ].join('\n'),
+  },
   tabs: {
     props: 'defaultValue="account"',
     extraImports: [

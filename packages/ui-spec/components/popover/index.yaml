@@ -1,0 +1,11 @@
+spec_version: '1.0'
+component: Popover
+name: popover
+status: draft
+category: overlays
+description: >-
+  A floating panel anchored to a trigger, shown on demand for secondary content
+  or quick actions. Built on the Base UI Popover primitive (positioning, focus
+  management, outside-press / Esc dismissal). Ported from the legacy shadcn-uikit
+  `Popover`; themed by the shared semantic tokens (no `--ui-popover-*` tier yet).
+since: 0.12.0

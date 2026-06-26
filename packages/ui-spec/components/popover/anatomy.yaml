@@ -1,0 +1,83 @@
+spec_version: '1.0'
+component: Popover
+
+schematic: |
+  trigger: <button> (anchors and toggles the popover)
+
+  ─ when open ─────────────────────────────
+       ▲ (anchored to the trigger, side/align)
+  +-------------------------------------+
+  | root: <div role="dialog"> (popup)   |
+  |   arbitrary content                 |
+  +-------------------------------------+
+     root -> bg-background / text-foreground / border-border + shadow-md
+     enter/exit: fade + zoom + slide-from-side (data-[open]/[closed]/[side])
+
+root:
+  element: div
+  role: dialog
+  description: >-
+    The floating popup panel (Base UI `Popover.Popup`), positioned relative to
+    the trigger and portaled. A bordered, rounded surface with a shadow; receives
+    focus when opened and is dismissed by outside-press or Esc.
+
+parts:
+  - id: trigger
+    description: >-
+      The control that toggles the popover (Base UI `Popover.Trigger`).
+      Polymorphic via `render` — usually a Button. Anchors the popup.
+    element: button
+
+layout:
+  type: flex
+  direction: column
+  order: [trigger, root]
+
+# Popover owns one piece of internal state — whether it is open. The popup's
+# presence/visibility is therefore `internal` (driven by this state), reached via
+# the controlled prop or interaction (see transitions).
+internal_state:
+  - id: open
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [open]
+    controlled_default: default-open
+    emits: open-change
+    changed_by: >-
+      trigger click toggles it; outside-press or Esc closes it (when uncontrolled)
+    description: Whether the popup is shown; reflected to the trigger + popup.
+
+transitions:
+  - id: open
+    state: open
+    from: false
+    on: trigger click
+    to: true
+    effect: emits open-change(true)
+    when_controlled: >-
+      internal value does NOT change; the component emits open-change and the
+      consumer must update the `open` prop.
+  - id: close
+    state: open
+    from: true
+    on: trigger click / outside press / Esc
+    to: false
+    effect: emits open-change(false)
+    when_controlled: >-
+      internal value does NOT change; the component emits open-change and the
+      consumer must update the `open` prop.
+
+states:
+  - {
+      id: open,
+      trigger: 'internal open === true (data-[open])',
+      kind: internal,
+      affects: [root],
+    }
+  - {
+      id: closed,
+      trigger: 'internal open === false (data-[closed])',
+      kind: internal,
+      affects: [root],
+    }

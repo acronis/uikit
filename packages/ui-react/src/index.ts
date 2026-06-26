@@ -15,6 +15,7 @@ export * from './components/ui/input-select';
 export * from './components/ui/input-text';
 export * from './components/ui/input-text-area';
 export * from './components/ui/link';
+export * from './components/ui/popover';
 export * from './components/ui/search-global';
 // `Input` / `Search` / `Textarea` are aliases of the full-field components
 // `InputText` / `InputSearch` / `InputTextArea`. The bare input/search boxes are
