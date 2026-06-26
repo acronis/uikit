@@ -1,0 +1,21 @@
+---
+title: Typography
+description: The typography scale shipped by @acronis-platform/tokens-pd as .ui-typography-* utility classes.
+---
+
+import { TypographyCatalog } from '@/components/TypographyCatalog';
+
+[`@acronis-platform/tokens-pd`](/docs/packages/tokens-pd) emits the typography
+scale as `.ui-typography-*` utility classes (in `css/acronis.css`), rather than
+as `--ui-*` custom properties. Apply a class to set a complete text style —
+font family, size, weight, line height, and letter spacing — in one place:
+
+```tsx
+<p className="ui-typography-body-default">Body copy.</p>
+<h1 className="ui-typography-headings-display">Page title</h1>
+```
+
+Each row below renders a live sample with the parsed declarations applied
+inline, alongside the class name and its metrics. Styles are grouped by family.
+
+<TypographyCatalog />

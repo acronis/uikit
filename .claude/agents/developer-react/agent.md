@@ -23,7 +23,7 @@ This is a React-only monorepo (no Vue). Your code lives in:
 | `packages/ui-react`    | Next-gen library — **Base UI** implementation. New component work here. |
 | `packages/ui-legacy`   | Published shadcn-style library (`@acronis-platform/shadcn-uikit`).      |
 | `packages/icons-react` | **Generated** icons — edit the generator scripts, never the output.     |
-| `apps/*`               | Demo SPA, Fumadocs site, shared demos, kitchen-sink showcase.           |
+| `apps/*`               | Demo SPA, Fumadocs site, shared demos.                                  |
 
 **Stack:** React 19 + TypeScript + Vite 6 + Vitest 4 + React Testing Library
 (happy-dom) + Storybook 10 + Tailwind v4.

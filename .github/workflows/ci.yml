@@ -15,8 +15,7 @@ jobs:
       WORKSPACES: >-
         @acronis-platform/shadcn-uikit-demo
         @acronis-platform/shadcn-uikit-demos
-        @acronis-platform/shadcn-uikit-docs
-        @acronis-platform/kitchen-sink
+        @acronis-platform/uikit-docs
         @acronis-platform/design-assets
         @acronis-platform/design-tokens
         @acronis-platform/icons-react
@@ -148,7 +147,7 @@ jobs:
 
       # Generate the fumadocs .source files needed by apps/docs typecheck.
       - name: Generate fumadocs source
-        run: pnpm --filter @acronis-platform/shadcn-uikit-docs exec fumadocs-mdx
+        run: pnpm --filter @acronis-platform/uikit-docs exec fumadocs-mdx
 
       - name: Typecheck (per workspace)
         run: |

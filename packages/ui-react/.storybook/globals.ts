@@ -1,8 +1,7 @@
 /**
  * Storybook global state for the ui-react preview: brand, light/dark, text
- * direction, and locale. The apply* helpers mirror the canonical switching
- * model used by `apps/kitchen-sink/src/lib/tokens.ts`, since both consume the
- * same `@acronis-platform/tokens-pd` delivery model:
+ * direction, and locale. The apply* helpers implement the canonical switching
+ * model for the `@acronis-platform/tokens-pd` delivery model:
  *
  * - Light/dark is NOT a `.dark` class. The tokens use `light-dark()` resolved by
  *   `color-scheme`; ui-react's `dark:` variant keys off `[data-theme]`. So we set

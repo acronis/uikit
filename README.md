@@ -360,7 +360,7 @@ shadcn-uikit/
 ├── apps/
 │   ├── demo/                  # Vite demo app (@acronis-platform/shadcn-uikit-demo)
 │   ├── demos/                 # Shared demo components (@acronis-platform/shadcn-uikit-demos)
-│   └── docs/                  # Fumadocs documentation site (@acronis-platform/shadcn-uikit-docs)
+│   └── docs/                  # Fumadocs documentation site (@acronis-platform/uikit-docs)
 ├── packages/
 │   └── legacy/
 │       └── ui/                # Published library (@acronis-platform/shadcn-uikit)
@@ -409,7 +409,7 @@ exposes the same vocabulary, so `pnpm -r <name>` is reliable.
 To run a single workspace, prefix with `pnpm --filter <package-name>`:
 
 ```bash
-pnpm --filter @acronis-platform/shadcn-uikit-docs dev
+pnpm --filter @acronis-platform/uikit-docs dev
 pnpm --filter @acronis-platform/shadcn-uikit storybook
 ```
 

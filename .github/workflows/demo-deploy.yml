@@ -1,10 +1,9 @@
-# Builds the demo + Storybook (ui-legacy and ui-react) + docs + kitchen-sink
+# Builds the demo + Storybook (ui-legacy and ui-react) + docs
 # into a single GitHub Pages artefact and deploys it.
 #
 # All sub-sites must ship in ONE artefact: GitHub Pages serves a single artefact
 # per deployment, so each deploy replaces the whole site. A separate per-app
-# deploy workflow would clobber the others (this is why the old standalone
-# kitchen-sink-deploy.yml broke the demo/docs site).
+# deploy workflow would clobber the others.
 #
 # Trigger: GitHub Release published. \`release.yml\` is configured with
 # \`createGithubReleases: true\`, so a successful Changesets publish
@@ -100,19 +99,6 @@ jobs:
 
       - name: Copy docs to demo dist
         run: cp -r apps/docs/out apps/demo/dist/docs
-
-      # kitchen-sink imports ui-react/icons-react by package name from their
-      # built dist, so build its dependency graph first, then the app with the
-      # base path matching where it is served (/uikit/kitchen-sink/).
-      - name: Build kitchen-sink
-        run: |
-          pnpm --filter "@acronis-platform/kitchen-sink^..." run build
-          pnpm --filter ./apps/kitchen-sink exec vite build --base=/uikit/kitchen-sink/
-
-      - name: Copy kitchen-sink to demo dist
-        run: |
-          rm -rf apps/demo/dist/kitchen-sink
-          cp -r apps/kitchen-sink/dist apps/demo/dist/kitchen-sink
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

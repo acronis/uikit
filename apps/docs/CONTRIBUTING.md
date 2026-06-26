@@ -1,4 +1,4 @@
-# Contributing to `@acronis-platform/shadcn-uikit-docs`
+# Contributing to `@acronis-platform/uikit-docs`
 
 This is the Next.js + Fumadocs documentation site. **Private**, not
 published, **no changeset needed**.
@@ -62,10 +62,10 @@ easy to get wrong.
 ## Verification
 
 ```bash
-pnpm --filter @acronis-platform/shadcn-uikit-docs dev      # local dev
-pnpm --filter @acronis-platform/shadcn-uikit-docs build    # production build
-pnpm --filter @acronis-platform/shadcn-uikit-docs typecheck
-pnpm --filter @acronis-platform/shadcn-uikit-docs lint
+pnpm --filter @acronis-platform/uikit-docs dev      # local dev
+pnpm --filter @acronis-platform/uikit-docs build    # production build
+pnpm --filter @acronis-platform/uikit-docs typecheck
+pnpm --filter @acronis-platform/uikit-docs lint
 ```
 
 Visually verify every page you changed at `pnpm dev`.

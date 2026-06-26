@@ -1,6 +1,6 @@
 # AGENTS.md — `apps/docs`
 
-`@acronis-platform/shadcn-uikit-docs` — the documentation site.
+`@acronis-platform/uikit-docs` — the documentation site.
 **Private**, not published.
 
 Cross-cutting topics live in `../../context/*.md`. This file documents
@@ -17,7 +17,7 @@ only what is specific to this workspace.
 ## Running
 
 ```bash
-pnpm --filter @acronis-platform/shadcn-uikit-docs dev
+pnpm --filter @acronis-platform/uikit-docs dev
 ```
 
 ## What this site documents

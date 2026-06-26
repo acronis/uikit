@@ -1,0 +1,18 @@
+---
+title: Token reference
+description: Every --ui-* design token shipped by @acronis-platform/tokens-pd, grouped by tier.
+---
+
+import { TokenReference } from '@/components/TokenReference';
+
+[`@acronis-platform/tokens-pd`](/docs/packages/tokens-pd) ships design tokens as
+CSS custom properties (`--ui-*`). The **Semantic** tier (`css/acronis.css`) is
+bundled by `@acronis-platform/ui-react/styles`; each **component** tier
+(`css/<Component>/acronis.css`) is opt-in.
+
+Values are shown for the `acronis` brand exactly as authored — many resolve via
+[`light-dark()`](/docs/theming), so the active color scheme picks the light or
+dark value at runtime. For more on how brands and color schemes are delivered,
+see [Theming](/docs/theming).
+
+<TokenReference />

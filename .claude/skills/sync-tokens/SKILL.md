@@ -5,7 +5,7 @@ description: >
   variable/style snapshot with the repo's figma-token-exporter plugin
   (figma-console MCP as fallback), run the orphan-coverage gate, re-emit the
   canonical tiers/*.json, validate, rebuild tokens-pd, fix any broken downstream
-  consumers (kitchen-sink, ui-react components + visual baselines), and verify no
+  consumers (ui-react components + visual baselines), and verify no
   unexpected drift — then commit. Use when a token/brand/mode changed in Figma,
   when the repo snapshot looks stale, or when asked to refresh tokens. Invoke
   with /sync-tokens [optional: what changed].
@@ -177,9 +177,6 @@ refs=$(grep -rhoE "var\(\s*--ui-[a-z0-9-]+" packages/ui-react/src --include='*.t
 comm -23 <(echo "$refs") <(echo "$defined")   # referenced but undefined = broken
 ```
 
-- **`apps/kitchen-sink/src/lib/tokens.ts`** statically imports every
-  `css/<component>/{acronis,brand-b}.css` and enumerates them — add/remove the
-  component there or the Vite build fails on the missing import.
 - **`packages/ui-react/src/components/ui/<c>/<c>.tsx`** reference `--ui-<c>-*`
   directly; re-theme to the new names and update the component's test assertions.
   (Same pattern used for Switch and Tooltip in this PR.)
@@ -234,7 +231,7 @@ produce them.
 - [ ] `design-tokens validate` passes.
 - [ ] **Value-level** diff reviewed — only intended tokens changed.
 - [ ] `tokens-pd` rebuilt; generated diff is the expected one; no drift.
-- [ ] If tokens were renamed/removed: broken ui-react refs + kitchen-sink fixed forward; VR baselines handled (Apple-Silicon caveat).
+- [ ] If tokens were renamed/removed: broken ui-react refs fixed forward; VR baselines handled (Apple-Silicon caveat).
 - [ ] Changeset(s) added per token-contract; `tiers/` + `tokens-pd` (+ `ui-react`) committed together; `.tmp/` not committed.
 
 ## When NOT to use this skill

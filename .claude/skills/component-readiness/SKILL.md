@@ -37,9 +37,8 @@ Read the workspace contracts first — they override anything here on conflict:
   [context/conventions.md](../../../packages/ui-react/context/conventions.md)
 - [packages/ui-spec/AGENTS.md](../../../packages/ui-spec/AGENTS.md)
 
-Related: [`/kitchen-sink-sync`](../kitchen-sink-sync/SKILL.md) verifies token
-resolution for the kitchen-sink showcase; this skill is the per-component
-pre-build gate. The token-resolution discipline mirrors `/figma-component` Phase 2.
+This skill is the per-component pre-build gate. The token-resolution discipline
+mirrors `/figma-component` Phase 2.
 
 ---
 

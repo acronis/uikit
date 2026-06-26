@@ -31,7 +31,7 @@ pnpm --filter <pkg> lint         # ESLint
 pnpm --filter <pkg> typecheck    # tsc --noEmit
 pnpm --filter <pkg> build        # library/app build
 pnpm -r typecheck                # all workspaces (pre-commit parity)
-pnpm --filter @acronis-platform/shadcn-uikit-docs build   # Fumadocs site build
+pnpm --filter @acronis-platform/uikit-docs build   # Fumadocs site build
 ```
 
 Report each as **PASS** / **FAIL** (new error = FAIL, pre-existing = WARNING).

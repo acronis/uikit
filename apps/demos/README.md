@@ -14,7 +14,7 @@ This workspace deliberately has no `dev` script. The TSX files under
   a demo with HMR; edits in `apps/demos/src/` reload instantly.
 - `apps/docs` — through Fumadocs' `<DemoPreview sourcePath="apps/demos/src/...">`
   RSC, which renders the demo inside the docs site. Run
-  `pnpm --filter @acronis-platform/shadcn-uikit-docs dev`.
+  `pnpm --filter @acronis-platform/uikit-docs dev`.
 
 If you genuinely need a standalone preview environment for this
 workspace (e.g. a Storybook-style harness for components that aren't

@@ -18,6 +18,10 @@ const PACKS = [
 
 type PackId = (typeof PACKS)[number]['id'];
 
+/** The rendered pixel sizes offered by the size toggle. */
+const SIZES = [16, 24, 32] as const;
+type IconSize = (typeof SIZES)[number];
+
 /**
  * Convert a kebab-case icon slug to its PascalCase export name. Mirrors the
  * generator's rule: `chevron-down` → `ChevronDownIcon`, while numeric-leading
@@ -57,6 +61,7 @@ const TOTAL = allIcons.length;
 export function IconCatalog() {
   const [search, setSearch] = useState('');
   const [activePack, setActivePack] = useState<PackId | 'all'>('all');
+  const [size, setSize] = useState<IconSize>(24);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
@@ -96,20 +101,34 @@ export function IconCatalog() {
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-1.5">
-        <PackTab
-          label="All"
-          active={activePack === 'all'}
-          onClick={() => setActivePack('all')}
-        />
-        {PACKS.map((pack) => (
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-1.5">
           <PackTab
-            key={pack.id}
-            label={pack.label}
-            active={activePack === pack.id}
-            onClick={() => setActivePack(pack.id)}
+            label="All"
+            active={activePack === 'all'}
+            onClick={() => setActivePack('all')}
           />
-        ))}
+          {PACKS.map((pack) => (
+            <PackTab
+              key={pack.id}
+              label={pack.label}
+              active={activePack === pack.id}
+              onClick={() => setActivePack(pack.id)}
+            />
+          ))}
+        </div>
+
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs text-fd-muted-foreground">Size</span>
+          {SIZES.map((s) => (
+            <PackTab
+              key={s}
+              label={`${s}`}
+              active={size === s}
+              onClick={() => setSize(s)}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-2">
@@ -123,7 +142,9 @@ export function IconCatalog() {
               title={`Copy import for ${entry.name} (${entry.packLabel})`}
               className="group relative flex flex-col items-center gap-1.5 rounded-lg border border-fd-border p-3 text-fd-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
             >
-              <entry.Component size={24} className="shrink-0" />
+              <span className="flex h-8 items-center justify-center">
+                <entry.Component size={size} className="shrink-0" />
+              </span>
               <span className="w-full truncate text-center text-[10px] leading-tight text-fd-muted-foreground group-hover:text-fd-accent-foreground">
                 {entry.name}
               </span>

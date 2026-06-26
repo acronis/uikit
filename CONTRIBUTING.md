@@ -38,7 +38,7 @@ pnpm -r typecheck
 pnpm -r lint
 
 # Or run it for a single workspace
-pnpm --filter @acronis-platform/shadcn-uikit-docs dev
+pnpm --filter @acronis-platform/uikit-docs dev
 pnpm --filter @acronis-platform/shadcn-uikit storybook
 ```
 
@@ -57,7 +57,7 @@ and you can find the details for each point in the remaining part of this docume
 
 1. Fork [This repo](https://github.com/acronis/uikit)
 2. Enter the local project root directory and use `pnpm i` to install dependencies.
-3. Use `pnpm --filter @acronis-platform/shadcn-uikit-docs dev` to start the documentation app.
+3. Use `pnpm --filter @acronis-platform/uikit-docs dev` to start the documentation app.
 4. Please pull the latest code before submitting to avoid file conflicts.
 5. Commit your changes with a clear commit message, please abide by it at the same time. [Commit Standard](https://acronis.github.io/ui-component-library/guide/commitlint.html)。
 6. Ensure the code follows [Style Guide for Front-end development](Link to styleguide).

@@ -62,7 +62,7 @@ defined deprecation path.
 | Token artifacts  | `tokens-pd` (built by `tools/style-dictionary`) | 0.6.0   | Per-brand CSS + Tailwind presets       |
 | Icons            | `icons-react`                                   | 0.2.0   | Generated from assets                  |
 | Assets           | `design-assets`                                 | 0.3.0   | Manifests + binaries                   |
-| Apps             | demo · docs · demos · kitchen-sink              | 0.1–0.4 | Scaffolded showcases                   |
+| Apps             | demo · docs · demos                             | 0.1–0.4 | Scaffolded showcases                   |
 
 **The gap that defines the plan:** ui-react is ~2/82 components in. The roadmap is
 fundamentally "grow ui-react to a usable, then complete, surface — on a solid
@@ -167,7 +167,7 @@ Depends on Tier 1–2 primitives (Tooltip, Dropdown, Checkbox, Scroll Area).
 - [ ] **Migration guide: legacy → ui-react** (component mapping + manual flow; optional codemod recipes where viable)
 - [x] Deprecation notice + timeline published on `ui-legacy` (issue #185)
 - [ ] Docs site (apps/docs) coverage tracks ui-react component ladder
-- [ ] kitchen-sink kept as living token/component/icon reference
+      (including the token reference, typography, and icon catalog pages)
 
 ### E7 — Quality & release engineering · #108
 
