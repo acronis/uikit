@@ -29,6 +29,7 @@
     "sidebar-secondary",
     "resizable",
     "---Overlays---",
+    "dialog",
     "tooltip"
   ]
 }

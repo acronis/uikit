@@ -1,0 +1,106 @@
+---
+title: Dialog
+description: A modal overlay that interrupts the user to show focused content or request a decision.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { DialogDemo } from "@/components/demos-react/dialog";
+
+## Usage
+
+```tsx
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogCloseButton,
+  DialogBody,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@acronis-platform/ui-react';
+```
+
+`Dialog` is a compound component built on Base UI's Dialog primitive (focus trap,
+scroll lock, `Esc`/outside-press dismissal, and ARIA come from Base UI). `Dialog`
+owns the open state; `DialogTrigger` opens it; `DialogContent` is the portaled,
+centered popup wrapping a `DialogHeader` (with `DialogTitle` + `DialogCloseButton`),
+a `DialogBody` (with `DialogDescription`), and a `DialogFooter` of actions. The
+trigger, close, title, and description parts are polymorphic via Base UI's
+`render` prop. This is a design-pending v1: with no `--ui-dialog-*` token tier
+yet, the surface, overlay, text, and border resolve to the shared semantic tokens.
+
+## Examples
+
+
+<DemoReact>
+  <DialogDemo />
+</DemoReact>
+
+A confirmation dialog:
+
+```tsx
+<Dialog>
+  <DialogTrigger render={<Button variant="secondary">Open dialog</Button>} />
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Are you absolutely sure?</DialogTitle>
+      <DialogCloseButton />
+    </DialogHeader>
+    <DialogBody>
+      <DialogDescription>This action cannot be undone.</DialogDescription>
+    </DialogBody>
+    <DialogFooter>
+      <DialogClose render={<Button variant="ghost">Cancel</Button>} />
+      <Button variant="destructive">Delete account</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+Controlled — drive `open` yourself and react to `onOpenChange`:
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<Dialog open={open} onOpenChange={setOpen}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Session expired</DialogTitle>
+    </DialogHeader>
+    <DialogBody>
+      <DialogDescription>Please sign in again to continue.</DialogDescription>
+    </DialogBody>
+    <DialogFooter>
+      <Button onClick={() => setOpen(false)}>OK</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>;
+```
+
+When the dialog renders inside an isolated container (e.g. a shadow root), pass a
+`portalContainer` so the popup inherits that scope's styles:
+
+```tsx
+<DialogContent portalContainer={mountNode}>{/* … */}</DialogContent>
+```
+
+## API Reference
+
+### DialogContent
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/dialog/dialog.docs.ts"
+  name="DialogContentProps"
+/>
+
+`Dialog` (root) accepts the Base UI Dialog root props — `open` / `defaultOpen`,
+`onOpenChange`, and `modal`. The remaining parts (`DialogTrigger`, `DialogClose`,
+`DialogTitle`, `DialogDescription`, `DialogOverlay`, `DialogPortal`) wrap the
+matching Base UI Dialog parts and accept their props (including `render` for
+composition); `DialogHeader`, `DialogBody`, and `DialogFooter` accept the standard
+attributes of the `<div>` they render. See the
+[Base UI Dialog docs](https://base-ui.com/react/components/dialog) for the full
+prop surface.
