@@ -1,0 +1,11 @@
+spec_version: '1.0'
+component: Toast
+name: toast
+status: draft
+category: feedback
+description: >-
+  A transient notification shown in a corner stack — title, optional description,
+  status icon, optional action, and a close button. Triggered imperatively via
+  the `toast(...)` API and rendered by a single `<Toaster>` region. Ported from
+  the legacy shadcn-uikit `sonner` wrapper; rebuilt on the Base UI toast manager.
+since: 0.41.0

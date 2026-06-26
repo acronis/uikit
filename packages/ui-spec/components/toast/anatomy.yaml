@@ -1,0 +1,46 @@
+spec_version: '1.0'
+component: Toast
+
+schematic: |
+  root: <div role="region" aria-label="Notifications"> fixed bottom-right stack
+    toast: <div> card (border, surface, shadow), one per notification
+      icon:        leading status glyph (success/info/warning/error) or spinner
+      title:       bold first line
+      description: muted secondary line
+      action:      optional inline button (e.g. Undo)
+      close:       trailing dismiss (✕) button
+
+root:
+  element: div
+  role: region
+  description: >-
+    The toast viewport — a live region (`aria-label="Notifications"`,
+    `aria-live="polite"`) that portals to the bottom-right of the page and
+    renders the queued toasts as a vertical stack. Rendered once via `<Toaster>`.
+
+parts:
+  - id: toast
+    element: div
+    description: A single notification card (border + surface + shadow).
+  - id: icon
+    element: span
+    description: >-
+      Leading status glyph — check (success), info, warning triangle, or error
+      (✕) tinted by `--ui-text-on-status-*`; a Spinner for the loading type.
+  - id: title
+    element: div
+    description: The bold first line.
+  - id: description
+    element: div
+    description: Optional muted secondary line.
+  - id: action
+    element: button
+    description: Optional inline action button (e.g. Undo).
+  - id: close
+    element: button
+    description: Trailing dismiss (✕) button.
+
+# A toast's `type` (default / success / info / warning / error / loading) and its
+# enter/auto-dismiss/exit lifecycle are runtime facets of the imperative API, not
+# props on a rendered component — see behavior.md.
+states: []

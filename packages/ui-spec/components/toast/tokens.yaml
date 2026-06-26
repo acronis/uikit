@@ -1,0 +1,40 @@
+spec_version: '1.0'
+component: Toast
+
+# References only. Values live in @acronis-platform/tokens-pd. No `--ui-toast-*`
+# tier yet; this design-pending v1 uses a neutral card surface
+# (bg-background + border-border + shadow) with the status conveyed by a colored
+# leading icon. Per-status surface tinting is design-pending.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-background-surface-primary
+    affects: toast
+    description: Toast card background (bg-background).
+  - name: --ui-border-on-surface-border
+    affects: toast
+    description: Toast card border (border-border).
+  - name: --ui-text-on-surface-primary
+    affects: title
+    description: Title color (text-foreground).
+  - name: --ui-text-on-surface-secondary
+    affects: description
+    description: Description + close-icon color (text-muted-foreground).
+  - name: --ui-text-on-status-success
+    affects: icon
+    description: Success icon color.
+  - name: --ui-text-on-status-info
+    affects: icon
+    description: Info icon color.
+  - name: --ui-text-on-status-warning
+    affects: icon
+    description: Warning icon color.
+  - name: --ui-text-on-status-danger
+    affects: icon
+    description: Error icon color.
+  - name: --ui-background-brand-secondary
+    affects: action
+    description: Action button label, the brand action blue (text-secondary).
+  - name: --ui-focus-primary
+    affects: close
+    description: Close-button keyboard focus ring.

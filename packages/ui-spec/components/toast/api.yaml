@@ -1,0 +1,75 @@
+spec_version: '1.0'
+component: Toast
+
+# Toast is imperative: a `<Toaster>` region (these properties) plus a `toast(...)`
+# API (these methods). There is no per-toast React component to take props.
+contract:
+  properties:
+    - name: timeout
+      type: number
+      required: false
+      default: '5000'
+      description: >-
+        Default auto-dismiss delay (ms) for toasts that don't set their own. `0`
+        keeps a toast until dismissed.
+    - name: limit
+      type: number
+      required: false
+      default: '3'
+      description: Maximum toasts shown at once; the oldest is dropped past it.
+  events: []
+  methods:
+    - name: toast
+      signature: 'toast(title, options?) => string'
+      description: >-
+        Show a neutral toast and return its id. `options`: description, timeout,
+        action ({ label, onClick }), id (re-adding the same id updates in place).
+    - name: toast.success
+      signature: 'toast.success(title, options?) => string'
+      description: Show a success toast (check icon).
+    - name: toast.info
+      signature: 'toast.info(title, options?) => string'
+      description: Show an info toast.
+    - name: toast.warning
+      signature: 'toast.warning(title, options?) => string'
+      description: Show a warning toast.
+    - name: toast.error
+      signature: 'toast.error(title, options?) => string'
+      description: Show an error toast.
+    - name: toast.loading
+      signature: 'toast.loading(title, options?) => string'
+      description: Show a persistent loading toast (spinner; no auto-dismiss).
+    - name: toast.dismiss
+      signature: 'toast.dismiss(id?) => void'
+      description: Dismiss the toast with the id, or all toasts when omitted.
+    - name: toast.promise
+      signature: 'toast.promise(promise, { loading, success, error }) => Promise'
+      description: Tie a toast to a promise, swapping its content as it settles.
+
+adapters:
+  react:
+    component: Toaster
+    status: implemented
+    import: "import { Toaster, toast } from '@acronis-platform/ui-react'"
+    example: |
+      // once, near the app root:
+      <Toaster />
+
+      // anywhere:
+      toast.success('Profile saved', { description: 'Your changes were saved.' });
+      toast('Event created', {
+        description: 'Monday at 6:00 PM',
+        action: { label: 'Undo', onClick: undo },
+      });
+  vue:
+    component: AvToaster
+    status: planned
+    import: "import { AvToaster, toast } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvToaster />
+  web-components:
+    element: ui-toaster
+    status: planned
+    import: "import '@acronis-platform/ui-wc/toast'"
+    example: |
+      <ui-toaster></ui-toaster>

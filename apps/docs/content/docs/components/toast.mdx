@@ -1,0 +1,64 @@
+---
+title: Toast
+description: A transient notification shown in a corner stack, triggered with the imperative toast() API.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { ToastDemo } from "@/components/demos-react/toast";
+
+## Usage
+
+```tsx
+import { Toaster, toast } from '@acronis-platform/ui-react';
+```
+
+Render a single `<Toaster />` near the app root, then call the imperative
+`toast(...)` API from anywhere — including outside React, since the manager is
+module-level. Rebuilt on the Base UI toast primitive (no Sonner dependency). This
+is a design-pending v1 on semantic tokens: a neutral card surface with the status
+conveyed by a colored leading icon; a `--ui-toast-*` tier and per-status tinting
+are pending a Figma pass.
+
+```tsx
+// once, near the app root
+<Toaster />
+
+// anywhere
+toast.success('Profile saved', { description: 'Your changes were saved.' });
+```
+
+## Examples
+
+<DemoReact>
+  <ToastDemo />
+</DemoReact>
+
+```tsx
+toast('Event created', { description: 'Monday, January 3rd at 6:00 PM' });
+toast.success('Profile saved');
+toast.error('Delete failed', { description: 'Please try again.' });
+toast.info('Event created', {
+  description: 'Monday at 6:00 PM',
+  action: { label: 'Undo', onClick: undo },
+});
+```
+
+## The `toast` API
+
+| Method                                  | Description                                            |
+| --------------------------------------- | ------------------------------------------------------ |
+| `toast(title, options?)`                | A neutral toast. Returns the toast id.                 |
+| `toast.success / info / warning / error`| Status variants (sets the icon).                       |
+| `toast.loading(title, options?)`        | A persistent spinner toast (no auto-dismiss).          |
+| `toast.dismiss(id?)`                    | Dismiss one toast, or all when `id` is omitted.        |
+| `toast.promise(promise, { loading, success, error })` | Tie a toast to a promise's lifecycle.    |
+
+`options`: `description`, `timeout` (ms; `0` = persist), `action` (`{ label,
+onClick }`), and `id` (re-adding the same id updates the toast in place).
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/toast/toast.docs.ts"
+  name="ToasterProps"
+/>

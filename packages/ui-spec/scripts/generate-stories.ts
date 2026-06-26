@@ -358,6 +358,11 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  toast: {
+    // The toast region's React export is `Toaster` (the imperative `toast()` API
+    // pushes content; the generated story just renders the empty region).
+    root: 'Toaster',
+  },
   resizable: {
     root: 'ResizablePanelGroup',
     ariaLabel: 'Resizable example',
