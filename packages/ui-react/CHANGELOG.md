@@ -1,5 +1,20 @@
 # @acronis-platform/ui-react
 
+## 0.36.0
+
+### Minor Changes
+
+- [#404](https://github.com/acronis/uikit/pull/404) [`9c7bffb`](https://github.com/acronis/uikit/commit/9c7bffb1ef8edba94e5de8e69bda281218fcbe5f) Thanks [@leonid](https://github.com/leonid)! - Add `Chip`: a compact interactive label with two variants — `removable` (a
+  trailing × remove button that emits `onRemove`) and `selectable` (a toggle that
+  shows the active style when `selected`, exposed as `role="button"` +
+  `aria-pressed`). Supports an optional leading icon and is themed by the
+  `--ui-chips-*` token tier.
+
+### Patch Changes
+
+- Updated dependencies [[`c686666`](https://github.com/acronis/uikit/commit/c686666ff880d8adc647c7c5b47c3b01bce2c88d)]:
+  - @acronis-platform/tokens-pd@1.9.0
+
 ## 0.35.1
 
 ### Patch Changes
