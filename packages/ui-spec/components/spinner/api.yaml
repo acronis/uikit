@@ -1,0 +1,33 @@
+spec_version: '1.0'
+component: Spinner
+
+contract:
+  properties:
+    - name: size
+      type: "'sm' | 'md' | 'lg' | 'xl'"
+      required: false
+      default: "'md'"
+      description: Diameter — sm 16 · md 24 · lg 32 · xl 48 (px).
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Spinner
+    status: implemented
+    import: "import { Spinner } from '@acronis-platform/ui-react'"
+    example: |
+      <Spinner />
+      <Spinner size="lg" className="text-muted-foreground" />
+  vue:
+    component: AvSpinner
+    status: planned
+    import: "import { AvSpinner } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvSpinner size="lg" />
+  web-components:
+    element: ui-spinner
+    status: planned
+    import: "import '@acronis-platform/ui-wc/spinner'"
+    example: |
+      <ui-spinner size="lg"></ui-spinner>

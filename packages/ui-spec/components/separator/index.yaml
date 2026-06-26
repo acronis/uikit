@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: Separator
+name: separator
+status: draft
+category: layout
+description: >-
+  A thin rule that visually and semantically divides content. Built on the Base
+  UI Separator primitive (sets the `separator` role + aria-orientation). Ported
+  from the legacy shadcn-uikit `Separator`; uses the shared divider token.
+since: 0.15.0

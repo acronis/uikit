@@ -1,0 +1,35 @@
+spec_version: '1.0'
+component: Separator
+
+contract:
+  properties:
+    - name: orientation
+      type: "'horizontal' | 'vertical'"
+      required: false
+      default: "'horizontal'"
+      description: >-
+        Direction of the rule; sets aria-orientation and swaps the 1px
+        dimension.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Separator
+    status: implemented
+    import: "import { Separator } from '@acronis-platform/ui-react'"
+    example: |
+      <Separator className="my-4" />
+      <Separator orientation="vertical" />
+  vue:
+    component: AvSeparator
+    status: planned
+    import: "import { AvSeparator } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvSeparator orientation="vertical" />
+  web-components:
+    element: ui-separator
+    status: planned
+    import: "import '@acronis-platform/ui-wc/separator'"
+    example: |
+      <ui-separator orientation="vertical"></ui-separator>

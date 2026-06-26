@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: Spinner
+name: spinner
+status: draft
+category: feedback
+description: >-
+  An indeterminate loading indicator — a spinning ring in four sizes. Ported from
+  the legacy shadcn-uikit `Spinner`; a CSS spinner (no primitive), colored by the
+  shared brand token via currentColor.
+since: 0.15.0

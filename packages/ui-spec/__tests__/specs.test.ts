@@ -257,6 +257,18 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant').sort());
   });
 
+  it('Spinner: api.yaml size enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(HERE, '../../ui-react/src/components/ui/spinner/spinner.tsx'),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('spinner').api;
+
+    expect(Object.keys(groups)).toEqual(['size']);
+    expect(groups.size.sort()).toEqual(enumMembers(api, 'size').sort());
+  });
+
   it('Dialog: api.yaml size enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/dialog/dialog.tsx'),

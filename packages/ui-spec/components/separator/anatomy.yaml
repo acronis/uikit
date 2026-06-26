@@ -1,0 +1,18 @@
+spec_version: '1.0'
+component: Separator
+
+schematic: |
+  horizontal: ─────────────────────────  (h-px w-full)
+  vertical:   │  (h-full w-px)
+     line -> bg-border (--ui-border-on-surface-border)
+
+root:
+  element: div
+  role: separator
+  description: >-
+    A 1px rule (Base UI `Separator`). Horizontal by default (full width, 1px
+    tall); vertical swaps the dimensions. Colored with the shared divider token.
+
+parts: []
+
+# Separator is a single presentational element — no sub-parts, no interaction state.

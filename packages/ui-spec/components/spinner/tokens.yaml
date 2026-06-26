@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: Spinner
+
+# References only. Values live in @acronis-platform/tokens-pd. No `--ui-spinner-*`
+# tier yet; the ring color defaults to the brand action blue (bridged as
+# text-secondary, applied through border-current) and is overridable via a text
+# color class.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-background-brand-secondary,
+      affects: root,
+      description: Default ring color (text-secondary via border-current),
+    }

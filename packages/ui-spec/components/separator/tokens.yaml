@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: Separator
+
+# References only. Values live in @acronis-platform/tokens-pd. No `--ui-separator-*`
+# tier yet; the rule uses the shared divider token (bridged as bg-border).
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-border-on-surface-border,
+      affects: root,
+      description: Divider line color (bridged as bg-border),
+    }

@@ -1,0 +1,47 @@
+spec_version: '1.0'
+component: Spinner
+
+schematic: |
+  root: <div role="status"> (a spinning ring; an sr-only "Loading…" label)
+  sizes: sm 16 · md 24 · lg 32 · xl 48 (px)
+     ring -> border-current; color defaults to text-secondary (brand blue)
+
+root:
+  element: div
+  role: status
+  description: >-
+    A spinning ring drawn with a 2px border (one edge transparent), rotated by
+    `animate-spin`. Carries `aria-label="Loading"` and an sr-only label. Ring
+    color comes from the current text color (defaults to the brand blue).
+
+parts: []
+
+states:
+  - {
+      id: sm,
+      trigger: "size === 'sm'",
+      kind: prop,
+      prop: size,
+      affects: [root],
+    }
+  - {
+      id: md,
+      trigger: "size === 'md' (default)",
+      kind: prop,
+      prop: size,
+      affects: [root],
+    }
+  - {
+      id: lg,
+      trigger: "size === 'lg'",
+      kind: prop,
+      prop: size,
+      affects: [root],
+    }
+  - {
+      id: xl,
+      trigger: "size === 'xl'",
+      kind: prop,
+      prop: size,
+      affects: [root],
+    }
