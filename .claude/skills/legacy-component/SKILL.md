@@ -4,8 +4,9 @@ description: >
   Recreate a first version of a ui-react component from its `packages/ui-legacy`
   counterpart when a "ready for dev" Figma mockup does not yet exist. Drives the
   same recipe as /figma-component — implement in packages/ui-react (component,
-  tests, stories) and write its framework-agnostic spec in packages/ui-spec — but
-  reads the legacy source instead of a Figma node, and maps legacy `--av-*` /
+  tests, stories), write its framework-agnostic spec in packages/ui-spec, and add
+  a docs page in apps/docs — but reads the legacy source instead of a Figma node,
+  and maps legacy `--av-*` /
   Radix patterns onto ui-react `--ui-*` tokens + Base UI. Prefers a component's
   own `--ui-<name>-*` token tier when one already exists, otherwise falls back to
   semantic/primitive tokens. The Figma Code Connect link is deferred (no node
@@ -18,8 +19,8 @@ A repeatable recipe for landing a **first version** of a component into
 `packages/ui-react` by porting its mature `packages/ui-legacy` counterpart, for
 when finished Figma mockups don't exist yet. It produces the **same shape of
 output** the Button and Breadcrumb components have — component, tests, stories,
-VR baselines, and a ui-spec — with two deliberate differences from
-[`/figma-component`](../figma-component/SKILL.md):
+VR baselines, a ui-spec, and an `apps/docs` page — with two deliberate
+differences from [`/figma-component`](../figma-component/SKILL.md):
 
 1. **Source is legacy code, not a Figma node.** Variants, parts, props, and a11y
    come from reading `packages/ui-legacy/src/components/ui/<legacy-name>/`.
@@ -359,7 +360,101 @@ for all six locales). **VR safety:** don't change what an existing story renders
 
 ---
 
-## Phase 5 — Verify & changeset
+## Phase 5 — Document in apps/docs (components section)
+
+Add a documentation page so the new component shows up in the docs site's
+**Components** section in the same style as every other ui-react page. Three
+pieces: a **live demo**, an **MDX page**, and a **nav entry**.
+
+> **The docs `AGENTS.md` is stale on this point.** It says "ui-react has no live
+> demos" — that's no longer true. Essentially every ui-react component page now
+> renders a live demo via `<DemoReact>`, which mounts the component inside a
+> **shadow root** (`src/components/ShadowDemo.tsx`) that adopts ui-react's
+> stylesheet from `/api/ui-react-css` — sidestepping the RSC alias problem the
+> note describes. Follow the live-demo pattern below; don't fall back to static-
+> only pages.
+
+**1. Live demo** — `apps/docs/src/components/demos-react/<name>.tsx`:
+
+- `'use client'` at the top (the demo uses ui-react's client components).
+- Import the component(s) from `@acronis-platform/ui-react` (and icons from
+  `@acronis-platform/icons-react/<pack>`), and `export function <Name>Demo()`
+  rendering a representative composition — mirror the hand-written story.
+- **Network-free**, same rule as the VR stories ([[vr-stories-no-network]]): no
+  remote images; data-URI/local only.
+- If the component has **portaled overlays** (menu/select/tooltip popups), read
+  `useShadowMount()` and pass it as the primitive's `portalContainer` so the
+  popup inherits the shadow root's styles (see `demos-react/input-select.tsx`).
+
+**2. MDX page** — `apps/docs/content/docs/components/<name>.mdx`. Mirror an
+existing page (`breadcrumb.mdx` for a compound component, `card-filter.mdx` for a
+single one):
+
+````mdx
+---
+title: <Name> # PascalCase
+description: <one line> # reuse the spec index.yaml description
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { <Name>Demo } from "@/components/demos-react/<name>";
+
+## Usage
+
+\`\`\`tsx
+import { <Name> } from '@acronis-platform/ui-react';
+\`\`\`
+
+<prose: what it is, the parts, polymorphism via the `render` prop, which tokens
+theme it — note it's a design-pending v1 if useful>
+
+## Examples
+
+<DemoReact>
+  <<Name>Demo />
+</DemoReact>
+
+<one fenced ```tsx``` block per meaningful example, mirroring the hand stories>
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/<name>/<name>.tsx"
+  name="<Name>Props"
+/>
+````
+
+- `<AutoTypeTable>` is a **global** MDX component — do **not** import it. Its
+  `path` is **relative to `apps/docs/`** (`../../packages/ui-react/...`), unlike
+  `DemoPreview` paths. `name` is an **exported** prop interface.
+- **Compound component:** emit one `<AutoTypeTable>` per distinct exported props
+  interface, then a sentence covering the parts that just take native element
+  attributes (see `breadcrumb.mdx`). When several parts **share one** interface
+  (e.g. Card's `CardPartProps`), one table + a sentence ("all parts accept …")
+  is enough.
+- If `AutoTypeTable` can't resolve a type (re-exported Base UI props, complex
+  generics, a part with no own interface), add a `.docs.ts` companion next to the
+  component source and point `path` at that instead.
+
+**3. Nav entry** — add `"<name>"` to the `pages` array in
+`apps/docs/content/docs/components/meta.json`, under the right `---Section---`
+divider (`Buttons & Actions`, `Inputs & Forms`, `Data Display`,
+`Navigation & Layout`, `Overlays`). Pick by category; add a new divider only if
+none fits.
+
+**Verify the docs build** (no test suite here — it's build-verified):
+
+```bash
+pnpm --filter @acronis-platform/uikit-docs typecheck   # demo .tsx compiles
+pnpm --filter @acronis-platform/uikit-docs build       # MDX + AutoTypeTable resolve, page renders
+```
+
+A broken `AutoTypeTable` `path`/`name` or a missing demo import fails the build,
+not typecheck — so run the build.
+
+---
+
+## Phase 6 — Verify & changeset
 
 Identical to `/figma-component` Phase 5.
 
@@ -414,10 +509,13 @@ the `/figma-component` Phase 5 notes for the single-mode variants and the
 - [ ] `<name>.figma.tsx` — `NEEDS_FIGMA_URL` skeleton with real prop mappings, placeholder URL.
 - [ ] `packages/ui-spec/components/<name>/` — 7 files, **`status: draft`**, no
       `figma:` block, `ui-spec test` green.
+- [ ] `apps/docs`: `src/components/demos-react/<name>.tsx` (live demo) +
+      `content/docs/components/<name>.mdx` (Usage / Examples / API Reference) +
+      `meta.json` nav entry; `uikit-docs build` passes.
 - [ ] Changeset for `@acronis-platform/ui-react`.
 - [ ] test / typecheck / lint / build all pass; `pnpm -r typecheck` clean.
 - [ ] User told this is a design-pending v1 — reconcile with `/figma-component
-    <Name> <url> --update` once mockups exist.
+  <Name> <url> --update` once mockups exist.
 
 ---
 
@@ -452,4 +550,5 @@ Suppose `<Name>` has no Figma node and no `--ui-<name>-*` tier yet:
    `useRender` + `mergeProps`.
 4. **Implement** the component, tests, stories; write the `NEEDS_FIGMA_URL`
    `.figma.tsx`; write the 7-file spec with `status: draft` and no `figma:` block;
+   add the `apps/docs` page (demo + MDX + nav) and confirm `uikit-docs build`;
    regenerate light+dark VR baselines; add a `minor` changeset.
