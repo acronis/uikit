@@ -1,5 +1,17 @@
 # @acronis-platform/ui-react
 
+## 0.38.0
+
+### Minor Changes
+
+- [#411](https://github.com/acronis/uikit/pull/411) [`c1adde9`](https://github.com/acronis/uikit/commit/c1adde90beff0f887fd83b2abcf1566a67b4a42c) Thanks [@leonid](https://github.com/leonid)! - Add `Card` (initial version ported from ui-legacy; design reconciliation pending). A composable surface — `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` — built on Base UI `useRender` with a `render` prop on every part. Colors resolve to the shared semantic tokens (`bg-background` / `text-foreground` / `border-border` / `text-muted-foreground`); a `--ui-card-*` tier will be wired in once a Figma reference exists.
+
+- [#412](https://github.com/acronis/uikit/pull/412) [`e2b3335`](https://github.com/acronis/uikit/commit/e2b3335a4e33ba3892f08b63e0d4bad02d682871) Thanks [@leonid](https://github.com/leonid)! - Add `Dialog` (initial version ported from ui-legacy; design reconciliation pending). A modal overlay built on the Base UI Dialog primitive, composed from `Dialog`, `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogCloseButton`, `DialogBody`, `DialogDescription`, `DialogFooter`, plus the lower-level `DialogOverlay` / `DialogPortal` / `DialogClose` parts. Focus trap, scroll lock, and `Esc`/outside-press dismissal come from Base UI; `DialogContent` accepts a `size` prop (six widths — `xs`/`sm`/`md`/`lg`/`xl`/`2xl`, 464–1136px, default `sm`) and `portalContainer` for isolated-style mounts. Colors resolve to the shared semantic tokens (overlay/surface/text/border); enter/exit animations use `tw-animate-css` (overlay fade, popup fade + zoom); a `--ui-dialog-*` token tier is deferred to a Figma pass.
+
+- [#413](https://github.com/acronis/uikit/pull/413) [`4e713d4`](https://github.com/acronis/uikit/commit/4e713d46c36aa8de8506e2b18f1357cb288f8fd6) Thanks [@leonid](https://github.com/leonid)! - Add `Table` (initial version ported from ui-legacy, informed by the pre-release Table design). Composable from native table parts — `Table`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead`, `TableCell`, `TableCaption` — with **sortable column headers** (`sortable` + `sortDirection` + `onSort`, with a sort icon and `aria-sort`) and a **selectable** `TableRow` (`selected`). Themed by the existing `--ui-table-*` token tier (now imported in ui-react's styles). Sorting/selection logic stays with the consumer; a TanStack-backed `DataTable` over these primitives is a planned follow-up.
+
+- [#412](https://github.com/acronis/uikit/pull/412) [`e2b3335`](https://github.com/acronis/uikit/commit/e2b3335a4e33ba3892f08b63e0d4bad02d682871) Thanks [@leonid](https://github.com/leonid)! - Add `tw-animate-css` to ui-react's stylesheet, enabling enter/exit animation utilities (`animate-in` / `animate-out` / `fade-*` / `zoom-*` / `slide-*`) — the same library the legacy package uses. Components wrapping Base UI primitives can now animate against the `data-[open]` / `data-[closed]` state attributes (e.g. `Dialog`'s overlay fade and popup fade + zoom). VR-safe: the visual-regression runner screenshots with animations disabled, so baselines capture the settled end state.
+
 ## 0.37.0
 
 ### Minor Changes
