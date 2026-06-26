@@ -1,0 +1,71 @@
+---
+title: Empty
+description: A centered empty-state placeholder shown when there is no data or content.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { EmptyDemo } from "@/components/demos-react/empty";
+
+## Usage
+
+```tsx
+import {
+  Empty,
+  EmptyIcon,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyActions,
+  EmptyLinks,
+} from '@acronis-platform/ui-react';
+```
+
+`Empty` is a compound component for empty states. `Empty` is a centered column;
+`EmptyIcon` holds an optional 72px glyph; `EmptyHeader` groups an `EmptyTitle`
+(foreground) and an `EmptyDescription` (muted); `EmptyActions` and `EmptyLinks`
+hold a primary action and supporting links. All parts are optional. This is a
+design-pending v1 themed from the shared semantic text tokens; a `--ui-empty-*`
+tier is pending a Figma pass.
+
+## Examples
+
+
+<DemoReact>
+  <EmptyDemo />
+</DemoReact>
+
+A title and description only:
+
+```tsx
+<Empty>
+  <EmptyHeader>
+    <EmptyTitle>No data</EmptyTitle>
+    <EmptyDescription>There is no data to display.</EmptyDescription>
+  </EmptyHeader>
+</Empty>
+```
+
+With an icon and a primary action:
+
+```tsx
+<Empty>
+  <EmptyIcon>
+    <InboxIcon />
+  </EmptyIcon>
+  <EmptyHeader>
+    <EmptyTitle>No backups found</EmptyTitle>
+    <EmptyDescription>Create your first backup plan.</EmptyDescription>
+  </EmptyHeader>
+  <EmptyActions>
+    <Button>Create backup plan</Button>
+  </EmptyActions>
+</Empty>
+```
+
+## API Reference
+
+`Empty` has no props of its own — each part is a styled element that accepts the
+standard attributes of what it renders: `Empty`, `EmptyIcon`, `EmptyHeader`,
+`EmptyActions`, and `EmptyLinks` are `<div>`s; `EmptyTitle` is an `<h3>`; and
+`EmptyDescription` is a `<p>`. Compose them and pass `className` / native
+attributes as needed.
