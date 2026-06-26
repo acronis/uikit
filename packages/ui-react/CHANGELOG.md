@@ -1,5 +1,17 @@
 # @acronis-platform/ui-react
 
+## 0.39.0
+
+### Minor Changes
+
+- [#420](https://github.com/acronis/uikit/pull/420) [`17498f6`](https://github.com/acronis/uikit/commit/17498f6545fe38f6a33c46823cd6bac21ce62bf6) Thanks [@leonid](https://github.com/leonid)! - Add `DropdownMenu` (initial version ported from ui-legacy). A menu of actions on the Base UI Menu primitive, composed from `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuRadioGroup`/`DropdownMenuRadioItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`, `DropdownMenuShortcut`, and nested `DropdownMenuSub`/`DropdownMenuSubTrigger`/`DropdownMenuSubContent`. Keyboard nav, typeahead, focus management, and dismissal come from Base UI; `DropdownMenuContent` accepts `side`/`align`/`sideOffset` and `portalContainer`. Themed from the shared semantic tokens (surface/highlight/separator/shortcut); enter/exit animations use `tw-animate-css`. Design-pending until a `--ui-menu-*` tier exists.
+
+- [#419](https://github.com/acronis/uikit/pull/419) [`ae5867e`](https://github.com/acronis/uikit/commit/ae5867ee726a9d196582d497abfd948e97ad1336) Thanks [@leonid](https://github.com/leonid)! - Add `Empty` (initial version ported from ui-legacy). A centered empty-state placeholder composed from parts — `Empty`, `EmptyIcon`, `EmptyHeader`, `EmptyTitle`, `EmptyDescription`, `EmptyActions`, `EmptyLinks`. Themed from the shared semantic text tokens (emphasized `text-foreground` title over a muted `text-muted-foreground` description/icon); a `--ui-empty-*` tier is deferred to a Figma pass.
+
+- [#416](https://github.com/acronis/uikit/pull/416) [`6407723`](https://github.com/acronis/uikit/commit/6407723e3ab704f1544beb729a92acbc45658edf) Thanks [@leonid](https://github.com/leonid)! - Add `Popover` (initial version ported from ui-legacy). A floating panel anchored to a trigger — `Popover`, `PopoverTrigger`, `PopoverContent` (+ `PopoverPortal`) — built on the Base UI Popover primitive (positioning, focus management, outside-press / Esc dismissal). `PopoverContent` accepts `side` / `align` / `sideOffset`, `portal`, and `portalContainer` (for isolated-style mounts). Themed from the shared semantic surface tokens (`bg-background` / `text-foreground` / `border-border`); enter/exit animations use `tw-animate-css`. Design-pending until a `--ui-popover-*` tier exists.
+
+- [#415](https://github.com/acronis/uikit/pull/415) [`f95bde5`](https://github.com/acronis/uikit/commit/f95bde5385b60ef7ff4c510bcabc7d4d8b60a4a9) Thanks [@leonid](https://github.com/leonid)! - Add `Tabs` (initial version ported from ui-legacy). A bordered segmented-control tab group — `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` — built on the Base UI Tabs primitive (roving focus, arrow-key navigation, ARIA). Themed from the shared brand tokens: idle triggers are outlined in the `secondary` brand blue (the same blue Button uses), and the active trigger fills with that blue and a pure-white `text-primary-foreground` label. Sorting/selection of content is the consumer's; design-pending until a `--ui-tabs-*` tier exists.
+
 ## 0.38.0
 
 ### Minor Changes
