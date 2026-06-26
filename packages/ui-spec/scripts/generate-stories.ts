@@ -54,6 +54,30 @@ const RENDER: Record<string, RenderHint> = {
     ],
     props: 'label="Active filters" value="125" icon={<CircleInfoIcon />}',
   },
+  dialog: {
+    props: 'defaultOpen',
+    extraImports: [
+      "import { DialogContent, DialogHeader, DialogTitle, DialogCloseButton, DialogBody, DialogDescription, DialogFooter } from '../dialog';",
+      "import { Button } from '../../button';",
+    ],
+    sample: [
+      '',
+      '      <DialogContent>',
+      '        <DialogHeader>',
+      '          <DialogTitle>Are you absolutely sure?</DialogTitle>',
+      '          <DialogCloseButton />',
+      '        </DialogHeader>',
+      '        <DialogBody>',
+      '          <DialogDescription>This action cannot be undone.</DialogDescription>',
+      '        </DialogBody>',
+      '        <DialogFooter>',
+      '          <Button variant="ghost">Cancel</Button>',
+      '          <Button variant="destructive">Delete</Button>',
+      '        </DialogFooter>',
+      '      </DialogContent>',
+      '    ',
+    ].join('\n'),
+  },
   card: {
     extraImports: [
       "import { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../card';",

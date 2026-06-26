@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: Dialog
+name: dialog
+status: draft
+category: overlays
+description: >-
+  A modal overlay that interrupts the user to show focused content or request a
+  decision. A set of composable parts (trigger, overlay, content, header, title,
+  close, body, description, footer) built on the Base UI Dialog primitive. Initial
+  version ported from the legacy shadcn-uikit `Dialog`; design reconciliation
+  against Figma is pending.
+since: 0.9.0
+dependencies:
+  components:
+    - TimesIcon
