@@ -1,5 +1,34 @@
 # @acronis-platform/ui-react
 
+## 0.42.0
+
+### Minor Changes
+
+- [#428](https://github.com/acronis/uikit/pull/428) [`eaaba11`](https://github.com/acronis/uikit/commit/eaaba116195e110fc7f30bd78ec63e2424cac7fa) Thanks [@leonid](https://github.com/leonid)! - feat(data-table): add DataTable (TanStack data grid)
+
+  A data grid built on TanStack react-table v8, composed over the Table primitives —
+  sorting, filtering, column visibility, row selection, pagination, and optional row
+  expansion. Ported from the legacy library. Exports `DataTable` plus the companion
+  parts `DataTableColumnHeader`, `DataTableToolbar`, `DataTablePagination`, and
+  `DataTableViewOptions` (which operate on a TanStack `table` instance). Adds
+  `@tanstack/react-table` as a dependency. Design-pending v1: it reuses the Table
+  component's `--ui-table-*` tokens (the wrapper border matches the cell borders)
+  and composes the already-themed Button / ButtonIcon / Checkbox / DropdownMenu /
+  InputSelect / InputText components.
+
+- [#427](https://github.com/acronis/uikit/pull/427) [`a84fe67`](https://github.com/acronis/uikit/commit/a84fe670c104d0ee14f0f2fe6703368df3f765c5) Thanks [@leonid](https://github.com/leonid)! - feat(toast): add Toast (Toaster + imperative toast API)
+
+  Transient corner-stack notifications. Render one `<Toaster />` near the app root
+  and trigger toasts imperatively from anywhere with `toast(title, options)` —
+  including `toast.success` / `info` / `warning` / `error` / `loading`,
+  `toast.dismiss`, and `toast.promise`. Rebuilt on the Base UI toast manager (no
+  Sonner dependency), replacing the legacy `sonner` wrapper. Each toast shows a
+  status-colored icon, title, optional description, optional action button, and a
+  close button; auto-dismisses after `timeout` (default 5000ms), with `loading`
+  toasts persisting until updated or dismissed. Design-pending v1 on semantic
+  tokens (no `--ui-toast-*` tier yet). `Toaster` accepts `timeout`, `limit`, and
+  `portalContainer`.
+
 ## 0.41.0
 
 ### Minor Changes
