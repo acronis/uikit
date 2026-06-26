@@ -80,6 +80,22 @@ const [open, setOpen] = useState(false);
 </Dialog>;
 ```
 
+Pick a width with `DialogContent`'s `size` — `xs` (464px), `sm` (512px,
+default), `md` (672px), `lg` (832px), `xl` (992px), or `2xl` (1136px):
+
+```tsx
+<Dialog>
+  <DialogTrigger render={<Button variant="secondary">Open</Button>} />
+  <DialogContent size="lg">
+    <DialogHeader>
+      <DialogTitle>Configure discovery agent</DialogTitle>
+      <DialogCloseButton />
+    </DialogHeader>
+    <DialogBody>{/* … */}</DialogBody>
+  </DialogContent>
+</Dialog>
+```
+
 When the dialog renders inside an isolated container (e.g. a shadow root), pass a
 `portalContainer` so the popup inherits that scope's styles:
 

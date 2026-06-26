@@ -257,6 +257,19 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant').sort());
   });
 
+  it('Dialog: api.yaml size enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(HERE, '../../ui-react/src/components/ui/dialog/dialog.tsx'),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('dialog').api;
+
+    // `size` (the six width steps) is the only cva axis.
+    expect(Object.keys(groups)).toEqual(['size']);
+    expect(groups.size.sort()).toEqual(enumMembers(api, 'size').sort());
+  });
+
   it('Avatar: api.yaml color enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/avatar/avatar.tsx'),

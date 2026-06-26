@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import { TimesIcon } from '@acronis-platform/icons-react/stroke-mono';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
@@ -18,8 +19,30 @@ import { cn } from '@/lib/utils';
 //     legacy opacity hack), focus ring var(--ui-focus-primary)
 // Enter/exit animations use `tw-animate-css` (imported in styles/index.css),
 // keyed to Base UI's data-[open] / data-[closed] state attributes — overlay
-// fades, popup fades + zooms. Reconcile against the real design with
+// fades, popup fades + zooms. The `size` scale (max-width) mirrors the reference
+// design's six widths; until a `--ui-dialog-*` tier defines them, they are plain
+// max-width utilities. Reconcile against the real design with
 // `/figma-component Dialog <url> --update` once a mockup lands.
+
+// Popup width scale. `sm` (512px) is the default and matches the pre-size width.
+const dialogContentVariants = cva(
+  'fixed left-1/2 top-1/2 z-50 flex w-full -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg bg-muted text-foreground shadow-lg duration-200 data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95',
+  {
+    variants: {
+      size: {
+        xs: 'max-w-[464px]',
+        sm: 'max-w-lg',
+        md: 'max-w-2xl',
+        lg: 'max-w-[832px]',
+        xl: 'max-w-[992px]',
+        '2xl': 'max-w-[1136px]',
+      },
+    },
+    defaultVariants: {
+      size: 'sm',
+    },
+  }
+);
 
 const Dialog = DialogPrimitive.Root;
 
@@ -45,7 +68,13 @@ const DialogOverlay = React.forwardRef<
 DialogOverlay.displayName = 'DialogOverlay';
 
 export interface DialogContentProps
-  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Popup> {
+  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Popup>,
+    VariantProps<typeof dialogContentVariants> {
+  /**
+   * Popup max-width. `sm` 512 · `xs` 464 · `md` 672 · `lg` 832 · `xl` 992 ·
+   * `2xl` 1136 (px). Defaults to `sm`.
+   */
+  size?: VariantProps<typeof dialogContentVariants>['size'];
   /**
    * Render the content inside a portal (default `true`). Base UI requires the
    * Popup to sit in a Portal for correct stacking; set `false` for inline usage
@@ -66,7 +95,15 @@ const DialogContent = React.forwardRef<
   DialogContentProps
 >(
   (
-    { className, children, portal = true, portalContainer, keepMounted, ...props },
+    {
+      className,
+      children,
+      size,
+      portal = true,
+      portalContainer,
+      keepMounted,
+      ...props
+    },
     ref
   ) => {
     const popup = (
@@ -74,10 +111,7 @@ const DialogContent = React.forwardRef<
         <DialogOverlay />
         <DialogPrimitive.Popup
           ref={ref}
-          className={cn(
-            'fixed left-1/2 top-1/2 z-50 flex w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg bg-muted text-foreground shadow-lg duration-200 data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95',
-            className
-          )}
+          className={cn(dialogContentVariants({ size }), className)}
           {...props}
         >
           {children}
@@ -192,4 +226,5 @@ export {
   DialogTitle,
   DialogBody,
   DialogDescription,
+  dialogContentVariants,
 };

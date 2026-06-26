@@ -45,6 +45,8 @@ const meta = {
       description: 'Fires when the dialog opens or closes.',
       table: { type: { summary: '(open, eventDetails) => void' }, category: 'Events' },
     },
+    // `size` is a `DialogContent` prop (not a Dialog root prop), so it isn't an
+    // arg here — see the `Large` story and the API reference for the scale.
     children: {
       control: false,
       description:
@@ -96,6 +98,32 @@ export const Confirmation: Story = {
         <DialogFooter>
           <Button variant="ghost">Cancel</Button>
           <Button>Run backup</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  ),
+};
+
+// `DialogContent` takes a `size` prop (max-width): xs 464 · sm 512 (default) ·
+// md 672 · lg 832 · xl 992 · 2xl 1136 (px).
+export const Large: Story = {
+  render: () => (
+    <Dialog defaultOpen>
+      <DialogContent size="lg">
+        <DialogHeader>
+          <DialogTitle>Configure discovery agent</DialogTitle>
+          <DialogCloseButton />
+        </DialogHeader>
+        <DialogBody>
+          <DialogDescription>
+            The discovery agent will obtain the neighbor IP addresses by using
+            NetBIOS discovery, Web Service Discovery (WSD), and Address
+            Resolution Protocol (ARP) table.
+          </DialogDescription>
+        </DialogBody>
+        <DialogFooter>
+          <DialogClose render={<Button variant="ghost">Cancel</Button>} />
+          <Button>Configure</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

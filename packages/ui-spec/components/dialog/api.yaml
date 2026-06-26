@@ -23,6 +23,13 @@ contract:
       description: >-
         Modal behavior — traps focus and locks background scroll while open.
         `'trap-focus'` keeps the focus trap but allows background interaction.
+    - name: size
+      type: "'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'"
+      required: false
+      default: "'sm'"
+      description: >-
+        Popup max-width (on the content part). xs 464 · sm 512 · md 672 · lg 832
+        · xl 992 · 2xl 1136 (px). Mirrors the reference design's six widths.
     - name: portal
       type: boolean
       required: false

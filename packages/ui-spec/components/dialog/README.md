@@ -38,6 +38,13 @@ decision. Composable from parts; built on the Base UI Dialog primitive.
 | `DialogClose`                    | `button`           | Closes the dialog; wrap a Button via `render`.    |
 | `DialogOverlay` / `DialogPortal` | —                  | Lower-level parts (`DialogContent` renders them). |
 
+## Sizes
+
+`DialogContent` takes a `size` prop controlling the popup max-width: `xs` 464 ·
+`sm` 512 (default) · `md` 672 · `lg` 832 · `xl` 992 · `2xl` 1136 (px). These
+mirror the reference design's six width steps; until a `--ui-dialog-*` tier
+defines them they are plain max-width utilities.
+
 ## Example
 
 ```tsx

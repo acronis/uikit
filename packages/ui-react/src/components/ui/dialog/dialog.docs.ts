@@ -8,6 +8,11 @@ import type * as React from 'react';
 /** Props for `DialogContent` — the portaled, centered dialog popup. */
 export interface DialogContentProps {
   /**
+   * Popup max-width. One of `xs` (464px) · `sm` (512px, default) · `md` (672px)
+   * · `lg` (832px) · `xl` (992px) · `2xl` (1136px).
+   */
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  /**
    * Render the content inside a portal (default `true`). Disable only when you
    * supply your own `DialogPortal` ancestor (e.g. inline usage).
    */

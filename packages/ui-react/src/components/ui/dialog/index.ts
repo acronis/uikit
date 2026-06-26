@@ -11,5 +11,6 @@ export {
   DialogTitle,
   DialogBody,
   DialogDescription,
+  dialogContentVariants,
   type DialogContentProps,
 } from './dialog';

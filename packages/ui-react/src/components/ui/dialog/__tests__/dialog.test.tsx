@@ -56,6 +56,22 @@ describe('Dialog', () => {
     expect(screen.getByRole('dialog')).toHaveClass('bg-muted', 'text-foreground');
   });
 
+  it('defaults to the sm size (max-w-lg / 512px)', () => {
+    render(<OpenDialog />);
+    expect(screen.getByRole('dialog')).toHaveClass('max-w-lg');
+  });
+
+  it('applies a larger max-width via the size prop', () => {
+    render(
+      <Dialog open>
+        <DialogContent size="lg">
+          <DialogTitle>Title</DialogTitle>
+        </DialogContent>
+      </Dialog>
+    );
+    expect(screen.getByRole('dialog')).toHaveClass('max-w-[832px]');
+  });
+
   it('forwards the ref to the popup element', () => {
     const ref = createRef<HTMLDivElement>();
     render(
