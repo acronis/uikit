@@ -26,6 +26,7 @@
     "---Navigation & Layout---",
     "breadcrumb",
     "card",
+    "tabs",
     "sidebar-primary",
     "sidebar-secondary",
     "resizable",

@@ -1,0 +1,79 @@
+---
+title: Tabs
+description: Switches between related panels of content within the same context.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { TabsDemo } from "@/components/demos-react/tabs";
+
+## Usage
+
+```tsx
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@acronis-platform/ui-react';
+```
+
+`Tabs` is a compound component built on Base UI's Tabs primitive (roving focus,
+arrow-key navigation, and ARIA come from Base UI). `Tabs` owns the selected
+value; `TabsList` holds the `TabsTrigger`s (a bordered segmented control), and
+each `TabsContent` shows when its `value` matches the selected tab. This is a
+design-pending v1 themed from the shared brand tokens — the active segment is
+filled (`bg-primary`); a `--ui-tabs-*` tier and the final active treatment are
+pending a Figma pass.
+
+## Examples
+
+
+<DemoReact>
+  <TabsDemo />
+</DemoReact>
+
+A basic two-tab group:
+
+```tsx
+<Tabs defaultValue="account" className="w-[400px]">
+  <TabsList className="grid w-full grid-cols-2">
+    <TabsTrigger value="account">Account</TabsTrigger>
+    <TabsTrigger value="password">Password</TabsTrigger>
+  </TabsList>
+  <TabsContent value="account">Make changes to your account here.</TabsContent>
+  <TabsContent value="password">Change your password here.</TabsContent>
+</Tabs>
+```
+
+Controlled — drive `value` and react to `onValueChange`:
+
+```tsx
+const [tab, setTab] = useState('account');
+
+<Tabs value={tab} onValueChange={setTab}>
+  {/* …list + content… */}
+</Tabs>;
+```
+
+Vertical orientation switches arrow-key navigation to Up/Down:
+
+```tsx
+<Tabs defaultValue="account" orientation="vertical">
+  {/* … */}
+</Tabs>
+```
+
+## API Reference
+
+### Tabs
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/tabs/tabs.docs.ts"
+  name="TabsProps"
+/>
+
+### TabsTrigger / TabsContent
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/tabs/tabs.docs.ts"
+  name="TabsPartProps"
+/>
+
+`TabsList` accepts the standard attributes of the `<div>` it renders. See the
+[Base UI Tabs docs](https://base-ui.com/react/components/tabs) for the full prop
+surface of each part.
