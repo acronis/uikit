@@ -1,0 +1,11 @@
+spec_version: '1.0'
+component: Tabs
+name: tabs
+status: draft
+category: navigation
+description: >-
+  Switches between related panels of content within the same context. A
+  bordered segmented-control tab group (list, trigger, content) built on the
+  Base UI Tabs primitive. Ported from the legacy shadcn-uikit `Tabs`; themed by
+  the shared semantic tokens (no `--ui-tabs-*` tier yet).
+since: 0.11.0

@@ -1,0 +1,80 @@
+spec_version: '1.0'
+component: Tabs
+
+# Framework-agnostic contract for a *composable* tab group: assembled from a
+# list of triggers and matching content panels (see anatomy.yaml). The root owns
+# the selected value; triggers/panels are identified by a `tab-value`.
+contract:
+  properties:
+    - name: value
+      type: string
+      required: false
+      description: Controlled selected-tab value. Pair with the change event.
+    - name: default-value
+      type: string
+      required: false
+      description: Initially selected tab value when uncontrolled.
+    - name: orientation
+      type: "'horizontal' | 'vertical'"
+      required: false
+      default: "'horizontal'"
+      description: Layout and arrow-key navigation orientation.
+    - name: tab-value
+      type: string
+      required: true
+      description: >-
+        On a trigger and its content — the identifier that links them and is
+        emitted on selection. A trigger also accepts a `disabled` flag
+        (pass-through to the underlying tab) to prevent selecting it.
+
+  events:
+    - name: value-change
+      payload: string
+      description: >-
+        Fired when the selected tab changes (React: `onValueChange`). Payload is
+        the newly selected tab value.
+
+  content:
+    - name: default
+      description: >-
+        A `list` of `trigger`s followed by one `content` panel per tab. Each
+        trigger and its panel share a `tab-value`.
+
+  methods: []
+
+adapters:
+  react:
+    component: Tabs
+    status: implemented
+    import: >-
+      import { Tabs, TabsList, TabsTrigger, TabsContent } from
+      '@acronis-platform/ui-react'
+    example: |
+      <Tabs defaultValue="account">
+        <TabsList>
+          <TabsTrigger value="account">Account</TabsTrigger>
+          <TabsTrigger value="password">Password</TabsTrigger>
+        </TabsList>
+        <TabsContent value="account">Account settings</TabsContent>
+        <TabsContent value="password">Password settings</TabsContent>
+      </Tabs>
+
+  vue:
+    component: AvTabs
+    status: planned
+    import: "import { AvTabs, AvTabsTrigger, AvTabsContent } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvTabs default-value="account">
+        <AvTabsTrigger value="account">Account</AvTabsTrigger>
+        <AvTabsContent value="account">Account settings</AvTabsContent>
+      </AvTabs>
+
+  web-components:
+    element: ui-tabs
+    status: planned
+    import: "import '@acronis-platform/ui-wc/tabs'"
+    example: |
+      <ui-tabs default-value="account">
+        <ui-tab value="account">Account</ui-tab>
+        <ui-tab-panel value="account">Account settings</ui-tab-panel>
+      </ui-tabs>

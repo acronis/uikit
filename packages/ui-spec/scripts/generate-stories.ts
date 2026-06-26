@@ -78,6 +78,22 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  tabs: {
+    props: 'defaultValue="account"',
+    extraImports: [
+      "import { TabsList, TabsTrigger, TabsContent } from '../tabs';",
+    ],
+    sample: [
+      '',
+      '      <TabsList className="grid w-[400px] grid-cols-2">',
+      '        <TabsTrigger value="account">Account</TabsTrigger>',
+      '        <TabsTrigger value="password">Password</TabsTrigger>',
+      '      </TabsList>',
+      '      <TabsContent value="account">Account settings</TabsContent>',
+      '      <TabsContent value="password">Password settings</TabsContent>',
+      '    ',
+    ].join('\n'),
+  },
   table: {
     extraImports: [
       "import { TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption } from '../table';",

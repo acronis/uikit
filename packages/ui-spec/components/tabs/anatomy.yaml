@@ -1,0 +1,86 @@
+spec_version: '1.0'
+component: Tabs
+
+schematic: |
+  root: <div> (Base UI Tabs.Root)
+  +-----------------------------------------------------------+
+  | list: role="tablist"                                      |
+  |   +-------------------+ +-------------------+             |
+  |   | trigger (active)  | | trigger           |  ◂ segments |
+  |   +-------------------+ +-------------------+             |
+  +-----------------------------------------------------------+
+  | content: role="tabpanel" (the active tab's panel)         |
+  +-----------------------------------------------------------+
+     trigger idle   -> border-secondary + text-secondary (brand blue)
+     trigger active -> bg-secondary + text-primary-foreground (pure white)
+     trigger focus  -> --ui-focus-primary ring
+
+root:
+  element: div
+  description: >-
+    The tabs container (Base UI `Tabs.Root`). Owns the selected-tab state and
+    `orientation`. No ARIA role itself; the parts carry the roles.
+
+parts:
+  - id: list
+    description: >-
+      The tab strip (`role="tablist"`). A bordered, rounded segmented control
+      laying triggers out in a row (or column when vertical).
+    element: div
+  - id: trigger
+    description: >-
+      A tab button (`role="tab"`). Idle = brand outline (`border-secondary` /
+      `text-secondary`, the Button blue); active (`data-[active]`) = filled
+      `bg-secondary` with a pure-white `text-primary-foreground` label.
+      Identified by its `value`.
+    element: button
+  - id: content
+    description: >-
+      A tab panel (`role="tabpanel"`), shown when its `value` matches the
+      selected tab. Associated with its trigger via `aria-controls`.
+    element: div
+
+layout:
+  type: flex
+  direction: column
+  order: [list, content]
+
+# Tabs owns one piece of internal state — the selected tab `value`. The active
+# trigger/panel visuals are therefore `internal` (driven by this state), reached
+# via the controlled prop or interaction (see transitions).
+internal_state:
+  - id: active-tab
+    type: string
+    initial: undefined
+    controllable_via: [value]
+    controlled_default: default-value
+    emits: value-change
+    changed_by: >-
+      click / Enter / Space on a trigger activates it; arrow keys move focus
+      (manual activation)
+    description: The selected tab value; reflected to aria-selected + data-active.
+
+transitions:
+  - id: select
+    state: active-tab
+    on: click / Enter / Space on a trigger
+    to: that trigger's value
+    effect: emits value-change(value)
+    when_controlled: >-
+      internal value does NOT change; the component emits value-change and the
+      consumer must update the `value` prop.
+
+states:
+  - {
+      id: active,
+      trigger: "the trigger's value is selected (data-active)",
+      kind: internal,
+      affects: [trigger, content],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on a trigger,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [trigger],
+    }

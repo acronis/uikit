@@ -1,0 +1,29 @@
+spec_version: '1.0'
+component: Tabs
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# Design-pending v1: no `--ui-tabs-*` component tier yet, so the segmented
+# triggers consume the shared *semantic* brand tokens (via bridged Tailwind names
+# border-secondary / text-secondary / bg-secondary / text-secondary-foreground),
+# plus a direct focus-ring ref. NB the brand action blue is `brand-secondary`
+# (the same blue Button uses); `brand-primary` is the dark navy and is not used.
+# Replace with a `--ui-tabs-*` tier if/when a Figma pass introduces one.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-background-brand-secondary,
+      affects: trigger,
+      description: Trigger border/text (idle) and fill (active) — bridged as secondary (the Button blue),
+    }
+  - {
+      name: --ui-glyph-on-brand-primary,
+      affects: trigger,
+      description: 'Active trigger label — pure white (text-primary-foreground; like the default Button)',
+    }
+  - {
+      name: --ui-focus-primary,
+      affects: trigger,
+      description: Focus-visible ring on a trigger and the panel,
+    }
