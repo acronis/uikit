@@ -1,5 +1,24 @@
 # @acronis-platform/ui-react
 
+## 0.37.0
+
+### Minor Changes
+
+- [#407](https://github.com/acronis/uikit/pull/407) [`2239301`](https://github.com/acronis/uikit/commit/2239301d72ed2aa3f08ab95b4c851207f8a3d48d) Thanks [@leonid](https://github.com/leonid)! - **Breaking:** `Input` and `Search` are now aliases of the full field components
+  `InputText` and `InputSearch`. Previously they were the bare input/search boxes.
+
+  The bare boxes are now internal primitives (`InputBox` / `SearchBox`) consumed by
+  the field components and are no longer exported. Consumers that used `Input` /
+  `Search` as a plain control now get the labelled field (a wrapping element, with
+  optional label/clear/error furniture). To keep a bare control, compose the field
+  without a `label`, or migrate to `InputText` / `InputSearch` directly (same
+  components). `InputProps` / `SearchProps` now alias `InputTextProps` /
+  `InputSearchProps`.
+
+- [#408](https://github.com/acronis/uikit/pull/408) [`cda0168`](https://github.com/acronis/uikit/commit/cda016837931ae927b114b7474b035935bb83c16) Thanks [@leonid](https://github.com/leonid)! - Add a `Textarea` alias (and `TextareaProps`) for `InputTextArea`, mirroring the
+  `Input` / `Search` aliases of `InputText` / `InputSearch`. `InputTextArea`
+  remains the canonical export; `Textarea` is an additional name for discovery.
+
 ## 0.36.0
 
 ### Minor Changes
