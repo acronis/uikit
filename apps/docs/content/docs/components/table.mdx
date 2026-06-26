@@ -1,0 +1,111 @@
+---
+title: Table
+description: Displays rows and columns of data, with sortable headers and selectable rows.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { TableDemo } from "@/components/demos-react/table";
+
+## Usage
+
+```tsx
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableCaption,
+} from '@acronis-platform/ui-react';
+```
+
+`Table` is a compound component over native table elements. `TableHeader` holds
+column-header rows of `TableHead`; `TableBody` holds data rows of `TableCell`;
+`TableFooter` and `TableCaption` are optional. `TableHead` can be `sortable`
+(renders a sort affordance + `aria-sort`), and `TableRow` takes a `selected`
+flag. Themed by the `--ui-table-*` token tier. Cell content — checkboxes, tags,
+links, numbers — is your own composition. This is a design-pending v1; a
+TanStack-backed `DataTable` (sorting/selection/pagination logic) is planned on
+top of these primitives.
+
+## Examples
+
+
+<DemoReact>
+  <TableDemo />
+</DemoReact>
+
+A basic table with a footer:
+
+```tsx
+<Table>
+  <TableCaption>A list of your recent invoices.</TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Invoice</TableHead>
+      <TableHead className="text-right">Amount</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell className="font-medium">INV001</TableCell>
+      <TableCell className="text-right">$250.00</TableCell>
+    </TableRow>
+  </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TableCell>Total</TableCell>
+      <TableCell className="text-right">$250.00</TableCell>
+    </TableRow>
+  </TableFooter>
+</Table>
+```
+
+Sortable headers — the consumer owns the sorting logic and updates
+`sortDirection`:
+
+```tsx
+const [dir, setDir] = useState<'asc' | 'desc' | false>(false);
+
+<TableHead
+  sortable
+  sortDirection={dir}
+  onSort={() => setDir(dir === 'asc' ? 'desc' : 'asc')}
+>
+  Name
+</TableHead>;
+```
+
+Selectable rows — mark the row `selected` and render a `Checkbox` in a leading
+cell:
+
+```tsx
+<TableRow selected={checked}>
+  <TableCell>
+    <Checkbox checked={checked} onCheckedChange={setChecked} aria-label="Select row" />
+  </TableCell>
+  <TableCell>web-server-01</TableCell>
+</TableRow>
+```
+
+## API Reference
+
+### TableHead
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/table/table.tsx"
+  name="TableHeadProps"
+/>
+
+### TableRow
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/table/table.tsx"
+  name="TableRowProps"
+/>
+
+`Table`, `TableHeader`, `TableBody`, `TableFooter`, `TableCell`, and
+`TableCaption` accept the standard attributes of the element they render
+(`<table>`, `<thead>`, `<tbody>`, `<tfoot>`, `<td>`, `<caption>`).
