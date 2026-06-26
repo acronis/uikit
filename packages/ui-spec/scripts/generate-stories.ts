@@ -47,6 +47,7 @@ const RENDER: Record<string, RenderHint> = {
   },
   button: { sample: 'Label' },
   'button-menu': { sample: 'Label' },
+  chip: { sample: 'Label' },
   'card-filter': {
     extraImports: [
       "import { CircleInfoIcon } from '@acronis-platform/icons-react/stroke-mono';",

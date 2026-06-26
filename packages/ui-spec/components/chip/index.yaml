@@ -1,0 +1,16 @@
+spec_version: '1.0'
+component: Chip
+name: chip
+status: ready
+category: data-display
+description: >-
+  A compact, interactive label for a selection or a removable token. The
+  `removable` variant carries a trailing × button; the `selectable` variant is a
+  toggle that shows an active style when selected. Both accept an optional
+  leading icon.
+since: 0.36.0
+dependencies:
+  components: []
+figma:
+  node: '912-272218'
+  codeConnect: packages/ui-react/src/components/ui/chip/chip.figma.tsx

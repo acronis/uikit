@@ -5,6 +5,7 @@ export * from './components/ui/button';
 export * from './components/ui/button-menu';
 export * from './components/ui/card-filter';
 export * from './components/ui/checkbox';
+export * from './components/ui/chip';
 export * from './components/ui/radio';
 export * from './components/ui/input';
 export * from './components/ui/input-date-picker';
