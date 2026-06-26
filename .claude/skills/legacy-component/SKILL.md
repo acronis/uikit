@@ -445,12 +445,26 @@ none fits.
 **Verify the docs build** (no test suite here — it's build-verified):
 
 ```bash
+pnpm --filter @acronis-platform/ui-react build         # FIRST — see note below
 pnpm --filter @acronis-platform/uikit-docs typecheck   # demo .tsx compiles
 pnpm --filter @acronis-platform/uikit-docs build       # MDX + AutoTypeTable resolve, page renders
 ```
 
 A broken `AutoTypeTable` `path`/`name` or a missing demo import fails the build,
 not typecheck — so run the build.
+
+> **Build `ui-react` first, or every live demo renders _unstyled_.** `<DemoReact>`
+> mounts the demo in a shadow root that adopts ui-react's **compiled**
+> `dist/ui-react.css` (served by the `/api/ui-react-css` route) — and that file is
+> **gitignored**, so it only exists after `@acronis-platform/ui-react` is built;
+> `apps/docs` `dev`/`build` don't build it for you (no turbo pipeline). On a fresh
+> checkout, or after editing the component, run `pnpm --filter
+@acronis-platform/ui-react build` before `uikit-docs dev`/`build` or the shadow
+> root adopts no stylesheet and the preview shows raw, unstyled markup. (CI is
+> fine: `pnpm -r build` builds ui-react topologically first.) A corollary: a demo
+> can only use utility classes ui-react's compiled CSS actually contains — classes
+> used solely in the demo (and never by a shipped ui-react component or story) get
+> tree-shaken out and silently no-op in the preview.
 
 ---
 
@@ -515,7 +529,7 @@ the `/figma-component` Phase 5 notes for the single-mode variants and the
 - [ ] Changeset for `@acronis-platform/ui-react`.
 - [ ] test / typecheck / lint / build all pass; `pnpm -r typecheck` clean.
 - [ ] User told this is a design-pending v1 — reconcile with `/figma-component
-  <Name> <url> --update` once mockups exist.
+<Name> <url> --update` once mockups exist.
 
 ---
 

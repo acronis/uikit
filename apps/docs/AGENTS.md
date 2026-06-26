@@ -82,6 +82,18 @@ portaled overlays (Select/Tooltip popups), the demo reads `useShadowMount()` and
 passes it as the primitive's `portalContainer` so the popup inherits the shadow's
 styles. See `card-filter.tsx` / `input-select.tsx` for the pattern.
 
+> **Build `ui-react` before `dev`/`build` or the demos render unstyled.** The
+> `/api/ui-react-css` route serves ui-react's **compiled** `dist/ui-react.css`
+> (`node_modules/@acronis-platform/ui-react/dist/ui-react.css`), which is a
+> **gitignored** build artifact. This workspace's `dev`/`build` do **not** build
+> it first (no turbo pipeline). On a fresh checkout the route has nothing to
+> serve, the shadow root adopts no stylesheet, and every preview shows raw
+> unstyled markup. Run `pnpm --filter @acronis-platform/ui-react build` first (CI
+> is fine — `pnpm -r build` builds it topologically). Because the served sheet is
+> Tailwind-compiled from ui-react's own source, a demo may only use utility
+> classes that ui-react itself ships — a class used solely in a demo is tree-
+> shaken out and no-ops in the preview.
+
 ## Critical path conventions
 
 These are easy to get wrong because the conventions differ by component:
