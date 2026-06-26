@@ -1,5 +1,15 @@
 # @acronis-platform/ui-react
 
+## 0.40.0
+
+### Minor Changes
+
+- [#421](https://github.com/acronis/uikit/pull/421) [`b9df0c2`](https://github.com/acronis/uikit/commit/b9df0c288100503b6f67fb41b55e76270574c7f7) Thanks [@leonid](https://github.com/leonid)! - Add `Separator` and `Spinner` (initial versions ported from ui-legacy).
+  - `Separator` — a 1px divider (`horizontal` / `vertical`) on the Base UI Separator primitive, using the shared `bg-border` token (replacing the legacy `bg-primary/10` hack).
+  - `Spinner` — a CSS loading ring (`role="status"`) in four sizes (`sm`/`md`/`lg`/`xl`), defaulting to the brand blue via `currentColor` and overridable with a `text-*` class.
+
+  Both are design-pending until dedicated token tiers exist.
+
 ## 0.39.0
 
 ### Minor Changes
