@@ -1,0 +1,84 @@
+---
+title: Card
+description: A surface that groups related content and actions.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { CardDemo } from '@/components/demos-react/card';
+
+## Usage
+
+```tsx
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@acronis-platform/ui-react';
+```
+
+`Card` is a compound component: a bordered, rounded surface assembled from parts.
+`CardHeader` stacks a `CardTitle` and `CardDescription`; `CardContent` holds the
+body; `CardFooter` lays out actions in a row. All parts are optional and
+polymorphic via Base UI's `useRender` (the `render` prop) — render `CardTitle` as
+a real heading, or the root as an `<article>`. This is a design-pending v1: with
+no `--ui-card-*` token tier yet, the surface, text, and border resolve to the
+shared semantic tokens (`--ui-background-surface-primary`,
+`--ui-text-on-surface-primary`, `--ui-border-on-surface-border`).
+
+## Examples
+
+<DemoReact>
+  <CardDemo />
+</DemoReact>
+
+A card with a header, body, and footer actions:
+
+```tsx
+<Card className="w-[350px]">
+  <CardHeader>
+    <CardTitle>Backup status</CardTitle>
+    <CardDescription>Last successful run 5 minutes ago.</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <p>All 24 workloads are protected and up to date.</p>
+  </CardContent>
+  <CardFooter className="gap-2">
+    <Button>View report</Button>
+    <Button variant="secondary">Run now</Button>
+  </CardFooter>
+</Card>
+```
+
+Just a header and content:
+
+```tsx
+<Card className="w-[350px]">
+  <CardHeader>
+    <CardTitle>Storage usage</CardTitle>
+    <CardDescription>3.2 TB of 5 TB used.</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <p>64% of your quota is currently consumed.</p>
+  </CardContent>
+</Card>
+```
+
+Render the title as a real heading for a correct document outline:
+
+```tsx
+<CardTitle render={<h2 />}>Section title</CardTitle>
+```
+
+## API Reference
+
+Every part (`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`,
+`CardFooter`) shares the same props — the standard `<div>` attributes plus a
+`render` prop for Base UI composition.
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/card/card.tsx"
+  name="CardPartProps"
+/>
