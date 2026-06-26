@@ -14,9 +14,10 @@ export * from './components/ui/input-text';
 export * from './components/ui/input-text-area';
 export * from './components/ui/link';
 export * from './components/ui/search-global';
-// `Input` / `Search` are aliases of the full-field components `InputText` /
-// `InputSearch`. The bare input/search boxes are internal primitives (`InputBox`
-// / `SearchBox`), consumed by those fields and not exported.
+// `Input` / `Search` / `Textarea` are aliases of the full-field components
+// `InputText` / `InputSearch` / `InputTextArea`. The bare input/search boxes are
+// internal primitives (`InputBox` / `SearchBox`), consumed by those fields and
+// not exported.
 export {
   InputText as Input,
   type InputTextProps as InputProps,
@@ -25,6 +26,10 @@ export {
   InputSearch as Search,
   type InputSearchProps as SearchProps,
 } from './components/ui/input-search';
+export {
+  InputTextArea as Textarea,
+  type InputTextAreaProps as TextareaProps,
+} from './components/ui/input-text-area';
 export * from './components/ui/select';
 export * from './components/ui/resizable';
 export * from './components/ui/sidebar-primary';
