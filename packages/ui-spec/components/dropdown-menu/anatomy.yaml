@@ -1,0 +1,126 @@
+spec_version: '1.0'
+component: DropdownMenu
+
+schematic: |
+  trigger: <button> (opens the menu)
+
+  ─ when open ─────────────────────────────
+  root: <div role="menu"> (popup)
+  +---------------------------------------+
+  | label: "My account"                   |
+  | separator: ───────────────────────    |
+  | item: Profile            shortcut ⇧⌘P |
+  | item: Settings               shortcut |
+  | checkbox-item: ✓ Show grid            |
+  | radio-item: ● Comfortable             |
+  | submenu-trigger: More            ›     |
+  |     └ submenu-content: <div role=menu>|
+  +---------------------------------------+
+     popup -> bg-background / text-foreground / border-border + shadow-md
+     item highlight (pointer or keyboard) -> bg-accent (data-[highlighted])
+
+root:
+  element: div
+  role: menu
+  description: >-
+    The portaled, positioned menu popup (Base UI `Menu.Popup`). A bordered,
+    rounded surface; receives focus and roving keyboard navigation when open.
+
+parts:
+  - id: trigger
+    description: The control that opens the menu (Base UI `Menu.Trigger`).
+    element: button
+  - id: item
+    description: >-
+      An action row (`role="menuitem"`). Highlighted via `data-[highlighted]`
+      (pointer or keyboard); `inset` aligns it with items that have an indicator.
+    element: div
+  - id: checkbox-item
+    description: >-
+      A toggleable row (`role="menuitemcheckbox"`) with a leading check
+      indicator. Controlled by `checked` / change event.
+    element: div
+    optional: true
+  - id: radio-item
+    description: >-
+      A single-choice row (`role="menuitemradio"`) with a leading dot indicator,
+      inside a radio group keyed by `value`.
+    element: div
+    optional: true
+  - id: label
+    description: A non-interactive section heading.
+    element: div
+    optional: true
+  - id: separator
+    description: A divider (`role="separator"`) between groups of items.
+    element: div
+    optional: true
+  - id: shortcut
+    description: Right-aligned keyboard-shortcut hint inside an item, muted.
+    element: span
+    optional: true
+  - id: submenu-trigger
+    description: >-
+      An item that opens a nested submenu (trailing chevron); highlighted on
+      `data-[highlighted]` and filled on `data-[popup-open]`.
+    element: div
+    optional: true
+  - id: submenu-content
+    description: The nested submenu popup, same surface as the root.
+    element: div
+    optional: true
+
+layout:
+  type: flex
+  direction: column
+  order: [label, separator, item]
+
+# DropdownMenu owns one piece of internal state — whether it is open. The popup's
+# presence is `internal` (driven by this state), reached via the controlled prop
+# or interaction (see transitions).
+internal_state:
+  - id: open
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [open]
+    controlled_default: default-open
+    emits: open-change
+    changed_by: >-
+      trigger click / Enter / Space / Arrow opens; selecting an item, Esc, or
+      outside-press closes (when uncontrolled)
+    description: Whether the menu popup is shown.
+
+transitions:
+  - id: open
+    state: open
+    from: false
+    on: trigger activation
+    to: true
+    effect: emits open-change(true)
+    when_controlled: >-
+      internal value does NOT change; the component emits open-change and the
+      consumer must update the `open` prop.
+  - id: close
+    state: open
+    from: true
+    on: item select / Esc / outside press
+    to: false
+    effect: emits open-change(false)
+    when_controlled: >-
+      internal value does NOT change; the component emits open-change and the
+      consumer must update the `open` prop.
+
+states:
+  - {
+      id: open,
+      trigger: 'internal open === true (data-[open])',
+      kind: internal,
+      affects: [root],
+    }
+  - {
+      id: closed,
+      trigger: 'internal open === false (data-[closed])',
+      kind: internal,
+      affects: [root],
+    }

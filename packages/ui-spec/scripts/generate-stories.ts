@@ -140,6 +140,24 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  'dropdown-menu': {
+    props: 'defaultOpen',
+    extraImports: [
+      "import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from '../dropdown-menu';",
+    ],
+    sample: [
+      '',
+      '      <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>',
+      '      <DropdownMenuContent className="w-56">',
+      '        <DropdownMenuLabel>My account</DropdownMenuLabel>',
+      '        <DropdownMenuSeparator />',
+      '        <DropdownMenuItem>Profile</DropdownMenuItem>',
+      '        <DropdownMenuItem>Settings</DropdownMenuItem>',
+      '        <DropdownMenuItem>Log out</DropdownMenuItem>',
+      '      </DropdownMenuContent>',
+      '    ',
+    ].join('\n'),
+  },
   empty: {
     extraImports: [
       "import { EmptyIcon, EmptyHeader, EmptyTitle, EmptyDescription } from '../empty';",

@@ -1,0 +1,106 @@
+spec_version: '1.0'
+component: DropdownMenu
+
+# Framework-agnostic contract for a *composable* menu: a trigger plus a popup of
+# items (see anatomy.yaml). The root owns the open state; positioning props live
+# on the content; item-level props (checkbox `checked`, radio `value`) live on
+# the respective parts.
+contract:
+  properties:
+    - name: open
+      type: boolean
+      required: false
+      description: Controlled open state. Pair with the change event.
+    - name: default-open
+      type: boolean
+      required: false
+      default: false
+      description: Initial open state when uncontrolled.
+    - name: side
+      type: "'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end'"
+      required: false
+      default: "'bottom'"
+      description: On the content — which side of the trigger to render on.
+    - name: align
+      type: "'start' | 'center' | 'end'"
+      required: false
+      description: On the content — alignment along the chosen side.
+    - name: side-offset
+      type: number
+      required: false
+      default: 4
+      description: On the content — distance in px from the trigger.
+    - name: inset
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        On an item / label / submenu-trigger — left-pad to align with rows that
+        have a leading indicator.
+    - name: value
+      type: string
+      required: false
+      description: >-
+        On a radio group / radio item — the selected value / this item's value.
+        Checkbox items use a boolean `checked` instead.
+
+  events:
+    - name: open-change
+      payload: boolean
+      description: Fired when the menu opens or closes (React `onOpenChange`).
+    - name: checked-change
+      payload: boolean
+      description: Fired by a checkbox item when toggled (React `onCheckedChange`).
+    - name: value-change
+      payload: string
+      description: Fired by a radio group when the selection changes (React `onValueChange`).
+
+  content:
+    - name: default
+      description: >-
+        A `trigger` plus the `content` popup of `item`s — optionally `label`s,
+        `separator`s, `checkbox-item`s, a radio group of `radio-item`s, and
+        nested submenus (`submenu-trigger` + `submenu-content`).
+
+  methods: []
+
+adapters:
+  react:
+    component: DropdownMenu
+    status: implemented
+    import: >-
+      import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
+      DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioGroup,
+      DropdownMenuRadioItem, DropdownMenuLabel, DropdownMenuSeparator,
+      DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubTrigger,
+      DropdownMenuSubContent } from '@acronis-platform/ui-react'
+    example: |
+      <DropdownMenu>
+        <DropdownMenuTrigger render={<Button variant="secondary">Open</Button>} />
+        <DropdownMenuContent>
+          <DropdownMenuLabel>My account</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            Profile <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>Settings</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+  vue:
+    component: AvDropdownMenu
+    status: planned
+    import: "import { AvDropdownMenu, AvDropdownMenuItem } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvDropdownMenu>
+        <AvDropdownMenuItem>Profile</AvDropdownMenuItem>
+      </AvDropdownMenu>
+
+  web-components:
+    element: ui-dropdown-menu
+    status: planned
+    import: "import '@acronis-platform/ui-wc/dropdown-menu'"
+    example: |
+      <ui-dropdown-menu>
+        <ui-dropdown-menu-item>Profile</ui-dropdown-menu-item>
+      </ui-dropdown-menu>

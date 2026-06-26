@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: DropdownMenu
+name: dropdown-menu
+status: draft
+category: overlays
+description: >-
+  A menu of actions anchored to a trigger, opened on demand. A rich set of
+  composable parts (trigger, content, item, checkbox item, radio item, label,
+  separator, shortcut, submenu) built on the Base UI Menu primitive. Ported from
+  the legacy shadcn-uikit `DropdownMenu`; themed by the shared semantic tokens.
+since: 0.14.0
+dependencies:
+  components:
+    - CheckIcon
+    - ChevronRightIcon

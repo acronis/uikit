@@ -1,0 +1,37 @@
+spec_version: '1.0'
+component: DropdownMenu
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# Design-pending v1: no `--ui-menu-*` tier yet, so the menu consumes the shared
+# *semantic* tokens (via bridged Tailwind names bg-background / text-foreground /
+# border-border / bg-accent / text-muted-foreground). Replace with a `--ui-menu-*`
+# tier if/when a Figma pass introduces one.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-background-surface-primary,
+      affects: root,
+      description: Popup surface (bridged as bg-background),
+    }
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: root,
+      description: Popup text color (bridged as text-foreground),
+    }
+  - {
+      name: --ui-border-on-surface-border,
+      affects: root,
+      description: Popup border and separator (bridged as border-border / bg-border),
+    }
+  - {
+      name: --ui-background-surface-hover,
+      affects: item,
+      description: Highlighted item background (bridged as bg-accent),
+    }
+  - {
+      name: --ui-text-on-surface-secondary,
+      affects: shortcut,
+      description: Shortcut hint color (bridged as text-muted-foreground),
+    }
