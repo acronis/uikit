@@ -190,6 +190,25 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  'widget-placeholder': {
+    extraImports: [
+      "import { WidgetPlaceholderHeader, WidgetPlaceholderIcon, WidgetPlaceholderTitle, WidgetPlaceholderContent, WidgetPlaceholderImage, WidgetPlaceholderText, WidgetPlaceholderAction } from '../widget-placeholder';",
+      "import { ChartBarVerticalIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    sample: [
+      '',
+      '      <WidgetPlaceholderHeader>',
+      '        <WidgetPlaceholderIcon><ChartBarVerticalIcon /></WidgetPlaceholderIcon>',
+      '        <WidgetPlaceholderTitle>Backup statistics</WidgetPlaceholderTitle>',
+      '      </WidgetPlaceholderHeader>',
+      '      <WidgetPlaceholderContent>',
+      '        <WidgetPlaceholderImage><ChartBarVerticalIcon /></WidgetPlaceholderImage>',
+      '        <WidgetPlaceholderText>No data available yet</WidgetPlaceholderText>',
+      '        <WidgetPlaceholderAction>Set up backup plan</WidgetPlaceholderAction>',
+      '      </WidgetPlaceholderContent>',
+      '    ',
+    ].join('\n'),
+  },
   'button-icon': {
     sample: '<PlusIcon />',
     extraImports: [

@@ -1,0 +1,11 @@
+spec_version: '1.0'
+component: WidgetPlaceholder
+name: widget-placeholder
+status: draft
+category: data-display
+description: >-
+  An empty-state placeholder for a dashboard widget — a bordered card with a
+  header (icon + title), a centered illustration / message / action, and an
+  optional footer. Ported from the legacy shadcn-uikit `WidgetPlaceholder`;
+  composable parts, optionally interactive.
+since: 0.41.0

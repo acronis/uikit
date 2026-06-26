@@ -1,0 +1,72 @@
+---
+title: WidgetPlaceholder
+description: An empty-state placeholder for a dashboard widget — header, illustration, message, and action.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { WidgetPlaceholderDemo } from "@/components/demos-react/widget-placeholder";
+
+## Usage
+
+```tsx
+import {
+  WidgetPlaceholder,
+  WidgetPlaceholderHeader,
+  WidgetPlaceholderIcon,
+  WidgetPlaceholderTitle,
+  WidgetPlaceholderContent,
+  WidgetPlaceholderImage,
+  WidgetPlaceholderText,
+  WidgetPlaceholderAction,
+  WidgetPlaceholderFooter,
+} from '@acronis-platform/ui-react';
+```
+
+`WidgetPlaceholder` is a composable empty-state for a dashboard widget: a bordered
+card with a header (icon + title), a centered illustration / message / action, and
+an optional footer. Set `interactive` to make the whole card focusable and
+clickable. This is a design-pending v1 on semantic tokens; a
+`--ui-widget-placeholder-*` tier is pending a Figma pass.
+
+## Examples
+
+<DemoReact>
+  <WidgetPlaceholderDemo />
+</DemoReact>
+
+```tsx
+<WidgetPlaceholder className="h-[220px] w-[320px]">
+  <WidgetPlaceholderHeader>
+    <WidgetPlaceholderIcon><ChartBarVerticalIcon /></WidgetPlaceholderIcon>
+    <WidgetPlaceholderTitle>Backup statistics</WidgetPlaceholderTitle>
+  </WidgetPlaceholderHeader>
+  <WidgetPlaceholderContent>
+    <WidgetPlaceholderImage><ChartBarVerticalIcon /></WidgetPlaceholderImage>
+    <WidgetPlaceholderText>No data available yet</WidgetPlaceholderText>
+    <WidgetPlaceholderAction>Set up backup plan</WidgetPlaceholderAction>
+  </WidgetPlaceholderContent>
+</WidgetPlaceholder>
+```
+
+A clickable widget tile with a footer:
+
+```tsx
+<WidgetPlaceholder interactive className="w-[320px]" onClick={configure}>
+  <WidgetPlaceholderHeader>
+    <WidgetPlaceholderIcon><ShieldCheckIcon /></WidgetPlaceholderIcon>
+    <WidgetPlaceholderTitle>Protection status</WidgetPlaceholderTitle>
+  </WidgetPlaceholderHeader>
+  <WidgetPlaceholderContent>
+    <WidgetPlaceholderImage><ShieldCheckIcon /></WidgetPlaceholderImage>
+    <WidgetPlaceholderText>No devices protected</WidgetPlaceholderText>
+  </WidgetPlaceholderContent>
+  <WidgetPlaceholderFooter>Last checked: never</WidgetPlaceholderFooter>
+</WidgetPlaceholder>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/widget-placeholder/widget-placeholder.docs.ts"
+  name="WidgetPlaceholderProps"
+/>

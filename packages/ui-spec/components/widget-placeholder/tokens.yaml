@@ -1,0 +1,34 @@
+spec_version: '1.0'
+component: WidgetPlaceholder
+
+# References only. Values live in @acronis-platform/tokens-pd. No
+# `--ui-widget-placeholder-*` tier yet; this design-pending v1 maps the legacy
+# `--av-*` colors onto the shared semantic vocabulary (border/surface/text +
+# the brand action color for the icon/action).
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-border-on-surface-border
+    affects: root
+    description: Card border (border-border).
+  - name: --ui-background-surface-primary
+    affects: root
+    description: Card background (bg-background).
+  - name: --ui-text-on-surface-primary
+    affects: root
+    description: Default text color (text-foreground).
+  - name: --ui-background-brand-secondary
+    affects: icon, action
+    description: Header icon + action color, the brand action blue (text-secondary).
+  - name: --ui-text-on-surface-secondary
+    affects: image, footer
+    description: Muted illustration + footer metadata color (text-muted-foreground).
+  - name: --ui-background-surface-hover
+    affects: root
+    description: Interactive hover surface (bg-accent).
+  - name: --ui-background-surface-active
+    affects: root
+    description: Interactive pressed surface.
+  - name: --ui-focus-primary
+    affects: root
+    description: Interactive keyboard focus ring.

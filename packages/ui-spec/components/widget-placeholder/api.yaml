@@ -1,0 +1,50 @@
+spec_version: '1.0'
+component: WidgetPlaceholder
+
+contract:
+  properties:
+    - name: interactive
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Make the whole widget focusable (`tabindex=0`) and clickable — adds
+        hover/active surface tints and a focus ring. Wire the behavior with
+        `onClick`.
+  events: []
+  content:
+    - name: children
+      description: >-
+        The composed parts — WidgetPlaceholderHeader / Title / Icon, Content /
+        Image / Text / Action, and an optional Footer.
+  methods: []
+
+adapters:
+  react:
+    component: WidgetPlaceholder
+    status: implemented
+    import: "import { WidgetPlaceholder } from '@acronis-platform/ui-react'"
+    example: |
+      <WidgetPlaceholder>
+        <WidgetPlaceholderHeader>
+          <WidgetPlaceholderIcon><ChartBarVerticalIcon /></WidgetPlaceholderIcon>
+          <WidgetPlaceholderTitle>Backup statistics</WidgetPlaceholderTitle>
+        </WidgetPlaceholderHeader>
+        <WidgetPlaceholderContent>
+          <WidgetPlaceholderImage><ChartBarVerticalIcon /></WidgetPlaceholderImage>
+          <WidgetPlaceholderText>No data available yet</WidgetPlaceholderText>
+          <WidgetPlaceholderAction>Set up backup plan</WidgetPlaceholderAction>
+        </WidgetPlaceholderContent>
+      </WidgetPlaceholder>
+  vue:
+    component: AvWidgetPlaceholder
+    status: planned
+    import: "import { AvWidgetPlaceholder } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvWidgetPlaceholder />
+  web-components:
+    element: ui-widget-placeholder
+    status: planned
+    import: "import '@acronis-platform/ui-wc/widget-placeholder'"
+    example: |
+      <ui-widget-placeholder></ui-widget-placeholder>

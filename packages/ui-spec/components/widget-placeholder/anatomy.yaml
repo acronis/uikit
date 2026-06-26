@@ -1,0 +1,56 @@
+spec_version: '1.0'
+component: WidgetPlaceholder
+
+schematic: |
+  root: <div> rounded card, border-border, bg-background (interactive -> focusable)
+    header:  icon + title row
+      icon:  leading 16px glyph (text-secondary)
+      title: widget name (truncating, semibold)
+    content: centered column
+      image: large 72px decorative illustration (muted)
+      text:  short "no data" message
+      action: inline call-to-action (text-secondary, underline on hover)
+    footer: optional metadata line (muted, 12px)
+
+root:
+  element: div
+  description: >-
+    The widget card. A bordered, rounded container with a column layout. When
+    `interactive`, it becomes focusable (`tabindex=0`) and shows hover/active
+    surface tints plus a focus ring; wire the behavior with `onClick`.
+
+parts:
+  - id: header
+    element: div
+    description: Top row — the leading icon and the widget title.
+  - id: title
+    element: div
+    description: The widget name; truncates when it overflows.
+  - id: icon
+    element: div
+    description: Leading 16px glyph in the header (brand action color).
+  - id: content
+    element: div
+    description: Centered column holding the illustration, message, and action.
+  - id: image
+    element: div
+    description: Large 72px decorative illustration (muted placeholder tone).
+  - id: text
+    element: div
+    description: Short supporting message (e.g. "No data available yet").
+  - id: action
+    element: div
+    description: Inline call-to-action (brand action color, underline on hover).
+  - id: footer
+    element: div
+    description: Optional metadata line below the content (muted, 12px).
+
+# The hover / active / focus-visible affordances are all gated behind the
+# `interactive` prop (so they're facets of that prop-state, not independent
+# pseudo-states) — captured in behavior.md and the hand-written Interactive story.
+states:
+  - id: interactive
+    trigger: the interactive prop is set
+    kind: prop
+    prop: interactive
+    affects: [root]
