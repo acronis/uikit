@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import { Search, type SearchProps } from '../search';
+import { SearchBox, type SearchBoxProps } from '../search';
 
 // Mirrors the Figma "InputSearch" component: a full search field built around the
-// bare `Search` box (themed by the `--ui-input-search-*` tier). It adds the field
+// bare `SearchBox` (themed by the `--ui-input-search-*` tier). It adds the field
 // furniture — an optional `label` above the box (with an optional `required` `*`).
 // Every other prop (placeholder, value, onClear, disabled, …) passes straight
 // through to `Search`. Label colors come from `--ui-input-search-color-{idle,disabled}`
@@ -12,7 +12,7 @@ import { Search, type SearchProps } from '../search';
 // are honored. When a visible label is present it names the field via `htmlFor`/`id`,
 // and `Search`'s built-in `aria-label="Search"` is cleared so it doesn't shadow the
 // visible label.
-export interface InputSearchProps extends SearchProps {
+export interface InputSearchProps extends SearchBoxProps {
   /** Field label, rendered above the search box. */
   label?: React.ReactNode;
   /** Marks the field required — appends a `*` after the label. */
@@ -68,7 +68,7 @@ const InputSearch = React.forwardRef<HTMLInputElement, InputSearchProps>(
             )}
           </label>
         )}
-        <Search
+        <SearchBox
           ref={ref}
           id={inputId}
           disabled={disabled}

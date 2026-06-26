@@ -1,0 +1,67 @@
+spec_version: '1.0'
+component: Chip
+
+# `variant` is the cva axis (its enum matches the cva keys in the ui-react
+# source). `selected` drives the selectable toggle's active style; `onRemove`
+# fires from the removable variant's × button.
+contract:
+  properties:
+    - name: variant
+      type: "'removable' | 'selectable'"
+      required: false
+      default: removable
+      description: >-
+        `removable` renders a trailing × button; `selectable` is a toggle
+        (`role="button"` + `aria-pressed`) that applies the active style when
+        `selected`. Both share the `--ui-chips-*` container/border/label tokens.
+    - name: selected
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        `selectable` only — applies the selected (active) styling and sets
+        `aria-pressed`.
+    - name: icon
+      type: ReactNode
+      required: false
+      description: Optional leading icon, rendered at 16px before the label.
+    - name: removeLabel
+      type: string
+      required: false
+      default: Remove
+      description: Accessible label for the remove (×) button.
+
+  events:
+    - name: remove
+      description: >-
+        `removable` only — emitted when the trailing × button is activated
+        (React: `onRemove`).
+      payload: none
+
+  content:
+    - name: default
+      description: The chip label (children). Truncates when it overflows.
+
+  methods: []
+
+adapters:
+  react:
+    component: Chip
+    status: implemented
+    import: "import { Chip } from '@acronis-platform/ui-react'"
+    example: |
+      <Chip onRemove={() => remove(id)}>Filter</Chip>
+      <Chip variant="selectable" selected={on} onClick={toggle}>Option</Chip>
+      <Chip variant="selectable" icon={<CircleInfoIcon />}>With icon</Chip>
+  vue:
+    component: AvChip
+    status: planned
+    import: "import { AvChip } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvChip @remove="remove(id)">Filter</AvChip>
+  web-components:
+    element: ui-chip
+    status: planned
+    import: "import '@acronis-platform/ui-wc/chip'"
+    example: |
+      <ui-chip>Filter</ui-chip>

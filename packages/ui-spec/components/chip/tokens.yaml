@@ -1,0 +1,54 @@
+spec_version: '1.0'
+component: Chip
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# Chip binds the dedicated `--ui-chips-*` tier: container geometry, the
+# idle/hover/active container fill + border colors, the label color, and the
+# icon color/size. The focus ring reuses the shared `--ui-focus-primary`.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Geometry (root) ──
+  - name: --ui-chips-container-height
+    affects: root
+  - name: --ui-chips-container-gap
+    affects: root
+  - name: --ui-chips-container-padding-x
+    affects: root
+  - name: --ui-chips-container-width-min
+    affects: root
+  - name: --ui-chips-border-radius
+    affects: root
+  - name: --ui-chips-border-width
+    affects: root
+
+  # ── Container fill (idle / hover / active) ──
+  - name: --ui-chips-container-color-idle
+    affects: root
+  - name: --ui-chips-container-color-hover
+    affects: root
+  - name: --ui-chips-container-color-active
+    affects: root
+
+  # ── Border color (idle / hover / active) ──
+  - name: --ui-chips-border-color-idle
+    affects: root
+  - name: --ui-chips-border-color-hover
+    affects: root
+  - name: --ui-chips-border-color-active
+    affects: root
+
+  # ── Label ──
+  - name: --ui-chips-label-color
+    affects: label
+
+  # ── Icon (leading icon + remove glyph) ──
+  - name: --ui-chips-icon-color
+    affects: icon
+  - name: --ui-chips-icon-size
+    affects: icon
+
+  # ── Focus ring (shared) ──
+  - name: --ui-focus-primary
+    affects: root

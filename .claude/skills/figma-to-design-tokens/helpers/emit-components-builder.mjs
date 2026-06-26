@@ -19,7 +19,7 @@ const SEMANTICS_PATH  = fileURLToPath(new URL('../../../../packages/design-token
 // Full component list from the snapshot — kept as a reference for callers
 // that want to pass an explicit subset. The default is null (= emit everything).
 export const DEFAULT_COMPONENTS = [
-  'Avatar', 'Breadcrumb', 'Button', 'ButtonIcon', 'ButtonMenu',
+  'Avatar', 'Breadcrumb', 'Button', 'ButtonIcon', 'ButtonMenu', 'Chips',
   'CardFilter', 'Checkbox', 'Icon', 'Link', 'Menu',
   'InputDatePicker', 'InputSearch', 'InputSelect', 'InputText', 'InputTextArea',
   'MenuItem', 'Radio', 'Resizable', 'SearchGlobal',

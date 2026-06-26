@@ -2,7 +2,9 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-// A single-line text input, themed by the dedicated next-gen `--ui-input-text-*`
+// Internal primitive: the bare single-line input box behind the public
+// `InputText` field (which is also exported as `Input`). Not exported from the
+// package; consumed by `input-text`. Themed by the dedicated next-gen `--ui-input-text-*`
 // token tier from @acronis-platform/tokens-pd. The box fill (`global-box-color-*`)
 // and the normal border (`normal-box-border-color-*`) are wired per state: idle /
 // hover / focus / disabled. The `normal-box-border-color-*` tier has no `-active`,
@@ -14,9 +16,9 @@ import { cn } from '@/lib/utils';
 // geometry (32px height, 4px radius, 12px padding-x) comes from
 // `--ui-input-text-global-box-*`. Label, description, and error message are
 // composed by the consumer (a Field component is future work).
-export type InputProps = React.ComponentPropsWithoutRef<'input'>;
+export type InputBoxProps = React.ComponentPropsWithoutRef<'input'>;
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
+const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
   ({ className, type = 'text', ...props }, ref) => (
     <input
       ref={ref}
@@ -29,6 +31,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     />
   )
 );
-Input.displayName = 'Input';
+InputBox.displayName = 'InputBox';
 
-export { Input };
+export { InputBox };

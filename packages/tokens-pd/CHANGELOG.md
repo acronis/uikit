@@ -1,5 +1,18 @@
 # @acronis-platform/tokens-pd
 
+## 1.9.0
+
+### Minor Changes
+
+- [#405](https://github.com/acronis/uikit/pull/405) [`c686666`](https://github.com/acronis/uikit/commit/c686666ff880d8adc647c7c5b47c3b01bce2c88d) Thanks [@leonid](https://github.com/leonid)! - Add the `Chips` component token tier: the design-tokens source plus the
+  generated tokens-pd output (per-brand `--ui-chips-*` CSS, Tailwind presets, and
+  DTCG). Consumed by the new `Chip` component in `@acronis-platform/ui-react`.
+
+### Patch Changes
+
+- Updated dependencies [[`c686666`](https://github.com/acronis/uikit/commit/c686666ff880d8adc647c7c5b47c3b01bce2c88d)]:
+  - @acronis-platform/design-tokens@1.9.0
+
 ## 1.8.1
 
 ### Patch Changes

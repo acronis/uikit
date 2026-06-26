@@ -1,0 +1,87 @@
+spec_version: '1.0'
+component: Chip
+
+schematic: |
+  removable:                       selectable (selected):
+  +----------------------------+   +-------------------------+
+  | [icon]  label        [×]   |   | [icon]  label           |
+  +----------------------------+   +-------------------------+
+     ^       ^          ^             ^       ^
+     icon    label      remove        icon    label
+  hover / :active / focus-within     hover / selected / focus-visible
+
+root:
+  element: div
+  description: >-
+    The pill — a flex row with a 1px border and 12px radius. `variant` decides
+    its contents and behavior: `removable` renders a `remove` button and is a
+    plain container; `selectable` becomes a toggle (`role="button"`,
+    `aria-pressed`) that applies the active style when `selected`.
+
+parts:
+  - id: icon
+    description: >-
+      Optional leading icon, rendered at 16px before the label and tinted with
+      `--ui-chips-icon-color`.
+    element: svg
+    optional: true
+    visible_when: an `icon` is provided
+  - id: label
+    description: Text content (children). Truncates with an ellipsis when it overflows.
+  - id: remove
+    description: >-
+      Trailing × button that emits the `remove` event. Present only for the
+      `removable` variant; carries an accessible label (`removeLabel`).
+    element: button
+    optional: true
+    visible_when: variant === 'removable'
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [icon, label, remove]
+
+states:
+  - {
+      id: removable,
+      trigger: "variant === 'removable'",
+      kind: prop,
+      prop: variant,
+      affects: [root, remove],
+    }
+  - {
+      id: selectable,
+      trigger: "variant === 'selectable'",
+      kind: prop,
+      prop: variant,
+      affects: [root],
+    }
+  - {
+      id: selected,
+      trigger: 'selected (selectable)',
+      kind: prop,
+      prop: selected,
+      affects: [root],
+    }
+  - {
+      id: hover,
+      trigger: pointer over the chip,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [root],
+    }
+  - {
+      id: pressed,
+      trigger: pressed (removable),
+      kind: pseudo,
+      pseudo: ':active',
+      affects: [root],
+    }
+  - {
+      id: focused,
+      trigger: keyboard focus,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [root],
+    }

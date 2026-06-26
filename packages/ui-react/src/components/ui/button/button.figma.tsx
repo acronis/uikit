@@ -9,23 +9,23 @@ figma.connect(
   'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2236-5696',
   {
     props: {
-      variant: figma.enum('Variant', {
-        Primary: 'default',
-        Secondary: 'secondary',
-        Ghost: 'ghost',
-        Destructive: 'destructive',
-        Ai: 'ai',
-        Inverted: 'inverted',
+      variant: figma.enum('variant', {
+        primary: 'default',
+        secondary: 'secondary',
+        ghost: 'ghost',
+        destructive: 'destructive',
+        ai: 'ai',
+        inverted: 'inverted',
       }),
       // The Figma button encodes interaction state as a variant; only the
       // Disabled state maps to a code prop (Idle/Hover/Active/Focus are visual).
-      disabled: figma.enum('State', {
-        Disabled: true,
+      disabled: figma.enum('state', {
+        disabled: true,
       }),
-      // The leading icon — the Figma button's `Icon` instance-swap, rendered as
-      // the button's first child. (The companion `Icon` boolean toggle isn't
+      // The leading icon — the Figma button's `icon` instance-swap, rendered as
+      // the button's first child. (The companion `hasIcon` boolean toggle isn't
       // mapped; the snippet just shows the icon slot.)
-      icon: figma.instance('Icon#1173:0'),
+      icon: figma.instance('icon'),
     },
     example: ({ variant, disabled, icon }) => (
       <Button variant={variant} disabled={disabled}>
