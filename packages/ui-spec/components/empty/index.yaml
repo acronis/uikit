@@ -1,0 +1,11 @@
+spec_version: '1.0'
+component: Empty
+name: empty
+status: draft
+category: data-display
+description: >-
+  A centered empty-state placeholder shown when there is no data or content. A
+  set of composable parts (icon, header, title, description, actions, links).
+  Ported from the legacy shadcn-uikit `Empty`; themed by the shared semantic text
+  tokens.
+since: 0.13.0

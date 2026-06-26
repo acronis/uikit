@@ -1,0 +1,57 @@
+spec_version: '1.0'
+component: Empty
+
+schematic: |
+  root: <div> (centered column, max-w 448px, muted)
+  +-----------------------------------------------+
+  |                  icon (72px)                  |
+  |   header:                                     |
+  |        title  (foreground, lg)                |
+  |        description  (muted, sm)               |
+  |   actions:  [ primary action ]                |
+  |   links:     supporting link(s)               |
+  +-----------------------------------------------+
+     title       -> text-foreground
+     description / icon -> text-muted-foreground
+
+root:
+  element: div
+  description: >-
+    The empty-state container: a centered, max-448px column. Muted by default
+    (`text-muted-foreground`); the title overrides to `text-foreground`.
+
+parts:
+  - id: icon
+    description: >-
+      Optional 72px illustration/glyph slot above the header. The SVG fills the
+      slot and inherits the muted color.
+    element: div
+    optional: true
+  - id: header
+    description: Groups the title and description in a centered column.
+    element: div
+    optional: true
+  - id: title
+    description: The empty-state heading (`<h3>`), in the foreground color.
+    element: h3
+    optional: true
+  - id: description
+    description: Supporting text under the title, muted.
+    element: p
+    optional: true
+  - id: actions
+    description: Primary action(s) (e.g. a Button) below the header.
+    element: div
+    optional: true
+  - id: links
+    description: Secondary supporting link(s).
+    element: div
+    optional: true
+
+layout:
+  type: flex
+  direction: column
+  align: center
+  order: [icon, header, actions, links]
+
+# Empty is a pure presentational placeholder — no variants, no interaction state.

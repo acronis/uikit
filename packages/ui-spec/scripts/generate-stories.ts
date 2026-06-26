@@ -140,6 +140,23 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  empty: {
+    extraImports: [
+      "import { EmptyIcon, EmptyHeader, EmptyTitle, EmptyDescription } from '../empty';",
+      "import { InboxIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    sample: [
+      '',
+      '      <EmptyIcon>',
+      '        <InboxIcon />',
+      '      </EmptyIcon>',
+      '      <EmptyHeader>',
+      '        <EmptyTitle>No messages</EmptyTitle>',
+      '        <EmptyDescription>You have no messages yet.</EmptyDescription>',
+      '      </EmptyHeader>',
+      '    ',
+    ].join('\n'),
+  },
   card: {
     extraImports: [
       "import { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../card';",

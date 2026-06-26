@@ -1,0 +1,55 @@
+spec_version: '1.0'
+component: Empty
+
+# Framework-agnostic contract for a *composable* empty state: assembled from
+# parts (see anatomy.yaml). Empty has no props of its own — every part is a
+# styled container that passes native attributes through.
+contract:
+  properties: []
+  events: []
+  content:
+    - name: default
+      description: >-
+        The composed empty state. Author it from the parts: an optional icon, a
+        header (title + description), and optional actions / links. All parts are
+        optional and may be combined as needed.
+  methods: []
+
+adapters:
+  react:
+    component: Empty
+    status: implemented
+    import: >-
+      import { Empty, EmptyIcon, EmptyHeader, EmptyTitle, EmptyDescription,
+      EmptyActions, EmptyLinks } from '@acronis-platform/ui-react'
+    example: |
+      <Empty>
+        <EmptyIcon>
+          <InboxIcon />
+        </EmptyIcon>
+        <EmptyHeader>
+          <EmptyTitle>No backups found</EmptyTitle>
+          <EmptyDescription>Create your first backup plan.</EmptyDescription>
+        </EmptyHeader>
+        <EmptyActions>
+          <Button>Create backup plan</Button>
+        </EmptyActions>
+      </Empty>
+
+  vue:
+    component: AvEmpty
+    status: planned
+    import: "import { AvEmpty, AvEmptyTitle } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvEmpty>
+        <AvEmptyTitle>No data</AvEmptyTitle>
+      </AvEmpty>
+
+  web-components:
+    element: ui-empty
+    status: planned
+    import: "import '@acronis-platform/ui-wc/empty'"
+    example: |
+      <ui-empty>
+        <ui-empty-title>No data</ui-empty-title>
+      </ui-empty>

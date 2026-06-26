@@ -1,0 +1,22 @@
+spec_version: '1.0'
+component: Empty
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# Design-pending v1: no `--ui-empty-*` component tier yet, so the parts consume
+# the shared *semantic* text tokens (via the bridged Tailwind names
+# text-foreground / text-muted-foreground). Replace with a `--ui-empty-*` tier
+# if/when a Figma pass introduces one.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: title,
+      description: Title color (bridged as text-foreground),
+    }
+  - {
+      name: --ui-text-on-surface-secondary,
+      affects: description,
+      description: Muted block / description / icon color (bridged as text-muted-foreground),
+    }
