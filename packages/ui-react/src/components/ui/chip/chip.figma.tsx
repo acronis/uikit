@@ -12,12 +12,12 @@ figma.connect(
       // `type` is the only design variant that maps to a prop; `state`
       // (idle/hover/active/focused) is interaction state, handled in CSS.
       variant: figma.enum('type', {
-        removable: 'removable',
+        dismissable: 'removable',
         selectable: 'selectable',
       }),
-      label: figma.string('Label#917:73'),
-      icon: figma.boolean('hasIcon#912:37', {
-        true: figma.instance('Icon#912:45'),
+      label: figma.string('Label'),
+      icon: figma.boolean('hasIcon', {
+        true: figma.instance('Icon'),
         false: undefined,
       }),
     },

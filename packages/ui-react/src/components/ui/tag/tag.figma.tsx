@@ -9,18 +9,18 @@ figma.connect(
   'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=907-257669',
   {
     props: {
-      variant: figma.enum('Variant', {
-        Info: 'info',
-        Success: 'success',
-        Warning: 'warning',
-        Critical: 'critical',
-        Danger: 'danger',
-        Neutral: 'neutral',
-        Ai: 'ai',
+      variant: figma.enum('variant', {
+        info: 'info',
+        success: 'success',
+        warning: 'warning',
+        critical: 'critical',
+        danger: 'danger',
+        neutral: 'neutral',
+        ai: 'ai',
       }),
-      size: figma.enum('Size', {
-        Default: 'default',
-        Small: 'sm',
+      size: figma.enum('size', {
+        md: 'default',
+        sm: 'sm',
       }),
       icon: figma.instance('Icon#907:0'),
     },
