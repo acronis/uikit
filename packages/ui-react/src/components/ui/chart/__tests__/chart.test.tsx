@@ -23,6 +23,8 @@ describe('Chart', () => {
     const wrapper = container.querySelector('[data-slot="chart"]');
     expect(wrapper).toBeInTheDocument();
     expect(wrapper).toHaveAttribute('data-chart', 'chart-usage');
+    // The `id` prop is forwarded to the wrapper (for aria-labelledby / anchors).
+    expect(wrapper).toHaveAttribute('id', 'usage');
   });
 
   it('injects per-series --color-* custom properties from the config', () => {

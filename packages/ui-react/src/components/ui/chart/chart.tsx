@@ -97,6 +97,7 @@ function ChartContainer({
   return (
     <ChartContext.Provider value={{ config }}>
       <div
+        id={id}
         data-slot="chart"
         data-chart={chartId}
         className={cn(
@@ -123,12 +124,14 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null;
   }
 
+  // Rendered as a text child (not dangerouslySetInnerHTML): React sets it via
+  // textContent, which the browser does not HTML-parse, so a `</style>` in a
+  // config color can't break out of the tag.
   return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
+    <style>
+      {Object.entries(THEMES)
+        .map(
+          ([theme, prefix]) => `
             ${prefix} [data-chart=${id}] {
             ${colorConfig
               .map(([key, itemConfig]) => {
@@ -140,10 +143,9 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
               .join('\n')}
             }
             `
-          )
-          .join('\n'),
-      }}
-    />
+        )
+        .join('\n')}
+    </style>
   );
 };
 
@@ -235,7 +237,7 @@ function ChartTooltipContent({
               )}
             >
               {formatter && item?.value !== undefined && item.name ? (
-                formatter(item.value, item.name, item, index, item.payload)
+                formatter(item.value, item.name, item, index, payload)
               ) : (
                 <>
                   {itemConfig?.icon ? (
@@ -274,7 +276,7 @@ function ChartTooltipContent({
                         {itemConfig?.label || item.name}
                       </span>
                     </div>
-                    {item.value && (
+                    {item.value != null && (
                       <span className="font-mono font-medium tabular-nums text-foreground">
                         {item.value.toLocaleString()}
                       </span>
