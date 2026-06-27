@@ -1,5 +1,29 @@
 # @acronis-platform/ui-react
 
+## 0.45.0
+
+### Minor Changes
+
+- [#444](https://github.com/acronis/uikit/pull/444) [`a5f4dbf`](https://github.com/acronis/uikit/commit/a5f4dbf4e41c8b2ed3d43feab250943cdd892ce8) Thanks [@leonid](https://github.com/leonid)! - feat(description-list): add DescriptionList — key/value data list
+
+  A composable, semantic `<dl>` for key/value data: rows of label → value, where
+  the value can be plain text, a status (leading icon + value + a muted
+  description), or action links. Parts: `DescriptionList`, `DescriptionListItem`,
+  `DescriptionListLabel`, `DescriptionListValue`, `DescriptionListValueDescription`,
+  `DescriptionListActions`. Built from the Cyber-Compliance "Service status" design
+  (Figma node 3001-20448, COMPLETE Code Connect); composes the shared semantic
+  tokens — no new tier. `SheetDetails` and the `sheet-detail-panel` pattern now
+  render their property list through it instead of an ad-hoc grid.
+
+- [#442](https://github.com/acronis/uikit/pull/442) [`53c5207`](https://github.com/acronis/uikit/commit/53c52078797643c0f21e78c497b5e0352999b6f9) Thanks [@leonid](https://github.com/leonid)! - feat(sheet): add the SheetDetails preset (sheet-detail-panel pattern)
+
+  `SheetDetails` is the "easy path that is the pattern" for the sheet-detail-panel
+  recipe: a right-anchored Sheet whose header (title + close), body, and optional
+  footer are driven by props. The body switches by `contentState` —
+  `loading` → Spinner, `empty`/`error` → Empty, else a key/value `properties` list
+  or custom children. Composes the existing `Sheet*` parts; reach for those
+  directly only for layouts the preset doesn't cover.
+
 ## 0.44.0
 
 ### Minor Changes
