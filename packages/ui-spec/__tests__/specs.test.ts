@@ -310,6 +310,30 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.side.sort()).toEqual(enumMembers(api, 'side').sort());
   });
 
+  it('Stack: api.yaml string enums match the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(HERE, '../../ui-react/src/components/ui/stack/stack.tsx'),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('stack').api;
+    // wrap is a boolean axis (no string-literal enum), so it's excluded here.
+    for (const axis of ['direction', 'gap', 'align', 'justify']) {
+      expect(groups[axis].sort(), axis).toEqual(enumMembers(api, axis));
+    }
+  });
+
+  it('Grid: api.yaml gap enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(HERE, '../../ui-react/src/components/ui/grid/grid.tsx'),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('grid').api;
+    // cols is a numeric axis (no string-literal enum), so only gap is compared.
+    expect(groups.gap.sort()).toEqual(enumMembers(api, 'gap'));
+  });
+
   it('Alert: api.yaml variant enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/alert/alert.tsx'),

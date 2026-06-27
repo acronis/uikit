@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: Section
+name: section
+status: draft
+category: layout
+description: >-
+  A titled content block — a <section> with an optional header (title +
+  description) and a content area. Ported 1:1 from the legacy shadcn-uikit
+  `section`.
+since: 0.51.0

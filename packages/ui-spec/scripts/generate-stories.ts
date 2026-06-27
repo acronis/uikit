@@ -456,6 +456,21 @@ const RENDER: Record<string, RenderHint> = {
     // hand-written story (Default).
     skip: true,
   },
+  stack: {
+    // A layout primitive — needs child boxes to render meaningfully. VR is covered
+    // by the hand-written stories (Vertical / Horizontal).
+    skip: true,
+  },
+  grid: {
+    // A layout primitive — needs child cells to render meaningfully. VR is covered
+    // by the hand-written story (Default).
+    skip: true,
+  },
+  section: {
+    // A composition needing header/title/content children. VR is covered by the
+    // hand-written story (Default).
+    skip: true,
+  },
   accordion: {
     // A composition needing item/trigger/panel children. VR is covered by the
     // hand-written stories (Default / Multiple).

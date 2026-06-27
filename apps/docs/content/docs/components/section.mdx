@@ -1,0 +1,46 @@
+---
+title: Section
+description: A titled content block with header, description, and content.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { SectionDemo } from "@/components/demos-react/section";
+
+## Usage
+
+```tsx
+import {
+  Section,
+  SectionHeader,
+  SectionTitle,
+  SectionDescription,
+  SectionContent,
+} from '@acronis-platform/ui-react';
+```
+
+`Section` is a titled content block — a `<section>` with an optional header
+(`SectionTitle` + `SectionDescription`) and a `SectionContent` body. The title is
+an `<h2>`; the description is muted.
+
+> Design-pending v1, ported 1:1 from the legacy `shadcn-uikit` section.
+
+## Examples
+
+<DemoReact>
+  <SectionDemo />
+</DemoReact>
+
+```tsx
+<Section>
+  <SectionHeader>
+    <SectionTitle>Backup plans</SectionTitle>
+    <SectionDescription>Manage how your workloads are backed up.</SectionDescription>
+  </SectionHeader>
+  <SectionContent>{children}</SectionContent>
+</Section>
+```
+
+## API Reference
+
+`Section`, `SectionHeader`, `SectionTitle`, `SectionDescription`, and
+`SectionContent` accept their native element attributes plus `className`.

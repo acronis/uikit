@@ -1,0 +1,35 @@
+spec_version: '1.0'
+component: Section
+
+# Section and its parts take only native element attributes; no component-specific
+# props.
+contract:
+  properties: []
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Section
+    status: implemented
+    import: "import { Section, SectionHeader, SectionTitle, SectionDescription, SectionContent } from '@acronis-platform/ui-react'"
+    example: |
+      <Section>
+        <SectionHeader>
+          <SectionTitle>Backups</SectionTitle>
+          <SectionDescription>Manage your backup plans.</SectionDescription>
+        </SectionHeader>
+        <SectionContent>{children}</SectionContent>
+      </Section>
+  vue:
+    component: AvSection
+    status: planned
+    import: "import { AvSection } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvSection />
+  web-components:
+    element: ui-section
+    status: planned
+    import: "import '@acronis-platform/ui-wc/section'"
+    example: |
+      <ui-section></ui-section>

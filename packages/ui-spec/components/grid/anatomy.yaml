@@ -1,0 +1,16 @@
+spec_version: '1.0'
+component: Grid
+
+schematic: |
+  grid: <div> CSS grid (cols + gap; columns step down at smaller breakpoints)
+
+root:
+  element: div
+  description: A CSS-grid container arranging children into responsive columns.
+
+parts:
+  - id: grid
+    element: div
+    description: The grid container.
+
+states: []

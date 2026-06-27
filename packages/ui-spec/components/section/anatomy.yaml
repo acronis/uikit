@@ -1,0 +1,29 @@
+spec_version: '1.0'
+component: Section
+
+schematic: |
+  section: <section> vertical block
+    section-header: title + description group
+      section-title:       <h2> heading
+      section-description: <p> muted supporting text
+    section-content: the body
+
+root:
+  element: section
+  description: A vertical content block with an optional header and a body.
+
+parts:
+  - id: section-header
+    element: div
+    description: Groups the title + description.
+  - id: section-title
+    element: h2
+    description: The section heading.
+  - id: section-description
+    element: p
+    description: Muted supporting text under the title.
+  - id: section-content
+    element: div
+    description: The section body.
+
+states: []

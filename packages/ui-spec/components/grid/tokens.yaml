@@ -1,0 +1,7 @@
+spec_version: '1.0'
+component: Grid
+
+# Grid has no tokens — it's a layout-only primitive (grid utilities, no color).
+source: '@acronis-platform/tokens-pd'
+
+tokens: []

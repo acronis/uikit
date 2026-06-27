@@ -1,0 +1,52 @@
+spec_version: '1.0'
+component: Stack
+
+contract:
+  properties:
+    - name: direction
+      type: "'vertical' | 'horizontal'"
+      required: false
+      default: "'vertical'"
+      description: Main-axis direction (flex-col / flex-row).
+    - name: gap
+      type: "'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'"
+      required: false
+      default: "'md'"
+      description: Space between children.
+    - name: align
+      type: "'start' | 'center' | 'end' | 'stretch'"
+      required: false
+      default: "'stretch'"
+      description: Cross-axis alignment (align-items).
+    - name: justify
+      type: "'start' | 'center' | 'end' | 'between'"
+      required: false
+      default: "'start'"
+      description: Main-axis distribution (justify-content).
+    - name: wrap
+      type: boolean
+      required: false
+      default: 'false'
+      description: Whether children wrap onto multiple lines.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Stack
+    status: implemented
+    import: "import { Stack } from '@acronis-platform/ui-react'"
+    example: |
+      <Stack direction="horizontal" gap="sm">{children}</Stack>
+  vue:
+    component: AvStack
+    status: planned
+    import: "import { AvStack } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvStack direction="horizontal" />
+  web-components:
+    element: ui-stack
+    status: planned
+    import: "import '@acronis-platform/ui-wc/stack'"
+    example: |
+      <ui-stack></ui-stack>

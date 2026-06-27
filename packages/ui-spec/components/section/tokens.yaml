@@ -1,0 +1,11 @@
+spec_version: '1.0'
+component: Section
+
+# References only. Values live in @acronis-platform/tokens-pd. Only the description
+# carries color (muted secondary text); the title inherits the foreground.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-text-on-surface-secondary
+    affects: section-description
+    description: Muted description text (text-muted-foreground).

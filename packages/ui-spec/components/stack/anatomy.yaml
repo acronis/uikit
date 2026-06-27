@@ -1,0 +1,16 @@
+spec_version: '1.0'
+component: Stack
+
+schematic: |
+  stack: <div> flex container (direction / gap / align / justify / wrap)
+
+root:
+  element: div
+  description: A flex container arranging its children per the layout props.
+
+parts:
+  - id: stack
+    element: div
+    description: The flex container.
+
+states: []

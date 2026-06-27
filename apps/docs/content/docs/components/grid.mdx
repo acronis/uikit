@@ -1,0 +1,40 @@
+---
+title: Grid
+description: A responsive CSS-grid layout primitive.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { GridDemo } from "@/components/demos-react/grid";
+
+## Usage
+
+```tsx
+import { Grid } from '@acronis-platform/ui-react';
+```
+
+`Grid` lays children into a `cols` column count that steps down at smaller
+breakpoints, with a configurable `gap`.
+
+> Design-pending v1, ported 1:1 from the legacy `shadcn-uikit` grid.
+
+## Examples
+
+<DemoReact>
+  <GridDemo />
+</DemoReact>
+
+```tsx
+<Grid cols={3} gap="md">
+  {items.map((i) => <Card key={i.id} {...i} />)}
+</Grid>
+```
+
+For one-dimensional rows/columns use [`Stack`](/components/stack); for tabular data
+use [`Table`](/components/table).
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/grid/grid.tsx"
+  name="GridProps"
+/>

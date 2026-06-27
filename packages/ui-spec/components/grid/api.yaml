@@ -1,0 +1,37 @@
+spec_version: '1.0'
+component: Grid
+
+contract:
+  properties:
+    - name: cols
+      type: '1 | 2 | 3 | 4 | 6 | 12'
+      required: false
+      default: '3'
+      description: Target column count at the largest breakpoint (steps down responsively).
+    - name: gap
+      type: "'none' | 'sm' | 'md' | 'lg' | 'xl'"
+      required: false
+      default: "'md'"
+      description: Space between grid cells.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Grid
+    status: implemented
+    import: "import { Grid } from '@acronis-platform/ui-react'"
+    example: |
+      <Grid cols={4} gap="lg">{cells}</Grid>
+  vue:
+    component: AvGrid
+    status: planned
+    import: "import { AvGrid } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvGrid :cols="4" />
+  web-components:
+    element: ui-grid
+    status: planned
+    import: "import '@acronis-platform/ui-wc/grid'"
+    example: |
+      <ui-grid></ui-grid>

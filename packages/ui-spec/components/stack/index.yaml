@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: Stack
+name: stack
+status: draft
+category: layout
+description: >-
+  A flexbox layout primitive — lay children out in a row or column with
+  configurable gap, alignment, justification, and wrapping. Ported 1:1 from the
+  legacy shadcn-uikit `stack`.
+since: 0.51.0
