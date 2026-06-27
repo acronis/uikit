@@ -1,5 +1,25 @@
 # @acronis-platform/ui-react
 
+## 0.47.0
+
+### Minor Changes
+
+- [#452](https://github.com/acronis/uikit/pull/452) [`ed63db5`](https://github.com/acronis/uikit/commit/ed63db55e7c447ecf3a10d368953f60edf47731a) Thanks [@leonid](https://github.com/leonid)! - feat(chart): add Chart (initial version ported from ui-legacy)
+
+  A theming layer over recharts: `ChartContainer` supplies per-series colors and
+  themes recharts' internals with the semantic token vocabulary, plus
+  `ChartTooltipContent` / `ChartLegendContent` chrome (and `ChartTooltip` /
+  `ChartLegend` re-exports). recharts is externalized from the bundle and resolved
+  as a dependency. Design reconciliation pending.
+
+- [#451](https://github.com/acronis/uikit/pull/451) [`080d486`](https://github.com/acronis/uikit/commit/080d486590dcc4a0fcc8d35318245cf0469bf4aa) Thanks [@leonid](https://github.com/leonid)! - feat(data-table): single-click column sorting
+
+  `DataTableColumnHeader` now sorts in a single click. The dropdown menu
+  (Asc / Desc / Hide) is replaced by a toggle button whose trailing arrow shows the
+  sort state — an up or down arrow in the brand blue when sorted, a muted up/down
+  arrow when unsorted — matching the `Table` primitive's sortable header. Column
+  hiding remains available via the toolbar's `DataTableViewOptions` menu.
+
 ## 0.46.0
 
 ### Minor Changes
