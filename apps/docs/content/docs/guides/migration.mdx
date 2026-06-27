@@ -188,7 +188,60 @@ import { Dialog, Popover } from '@acronis-platform/shadcn-uikit/react';
 - Re-test interactive components after migration (`Select`, `RadioGroup`, sidebars).
 - Verify style import points to `@acronis-platform/ui-react/styles`.
 
-## 6) Verify migration progress
+## 6) Migrating icons
+
+Icons migrate independently of components. Legacy
+`@acronis-platform/shadcn-uikit` re-exports icons under Acronis names
+(`EditIcon`, `CustomerIcon`, `SearchIcon`); `@acronis-platform/icons-react` uses
+descriptive names on a **different art grid** (`PencilIcon`, `BriefcaseIcon`,
+`MagnifierIcon`), so names must be resolved **authoritatively — not guessed**.
+
+### The authoritative name map
+
+`icons-react` ships the bridge as data — the
+`@acronis-platform/icons-react/legacy-map` export (`legacy-icon-map.json`),
+generated from the design-assets `legacyNames` bridge. It maps every legacy icon
+name to its icons-react name per pack variant, classifying each as:
+
+- **mapped** — safe 1:1 (with the name per variant, e.g. `stroke-mono`).
+- **colored** — exists **only** in a multicolor pack (baked-in status/brand
+  color). No monochrome equivalent: keep it on a `*-multi` pack, or map to a
+  mono base (`CircleTimesIcon`, `TriangleWarningIcon`, …) **with a color
+  className**. Never silently flatten status color.
+- **unresolved** — logos/illustrations genuinely absent from the icon packs.
+
+Because the map ships with the package, no monorepo checkout is needed — any app
+resolves names from its installed `icons-react`.
+
+### The `migrate-icons` skill
+
+The repo ships a reusable, dependency-free skill at
+`.claude/skills/migrate-icons/`. Copy that folder into your app's
+`.claude/skills/` (or run its scripts directly) to drive the migration off the
+shipped map:
+
+```bash
+# 1) Resolve — inventory your shadcn-uikit icon imports + build the map
+TARGET=stroke-mono node .claude/skills/migrate-icons/scripts/resolve-map.mjs
+#    writes .icon-migration/iconmap.json and prints the colored / unresolved triage
+
+# 2) Triage — decide the colored / unresolved icons; add chosen entries to the map by hand
+
+# 3) Apply — rewrite imports + JSX, dedupe collisions, hold the rest on legacy
+MAP=.icon-migration/iconmap.json \
+FROM=@acronis-platform/shadcn-uikit \
+TO=@acronis-platform/icons-react/stroke-mono \
+  node .claude/skills/migrate-icons/scripts/apply-icons.mjs
+
+# 4) Verify — types + tests, then confirm only intended holds remain
+npx tsc -b --noEmit && grep -R "@acronis-platform/shadcn-uikit" src
+```
+
+`IconProps` supports `size`/`className`/`style`, so `size={16}` and color
+overrides keep type-checking. Held and unresolved icons stay on the legacy
+package until you decide on them — icon migration never blocks on them.
+
+## 7) Verify migration progress
 
 ```bash
 # remaining legacy imports
