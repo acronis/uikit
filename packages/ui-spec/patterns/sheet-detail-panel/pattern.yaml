@@ -1,0 +1,80 @@
+spec_version: '1.0'
+pattern: SheetDetailPanel
+name: sheet-detail-panel
+status: draft
+category: overlays
+since: 0.42.0
+intent: Show the details of a selected item in a side Sheet — title, key/value properties, content states, and footer actions.
+replaces: AvDetails
+description: >-
+  The sanctioned way to present "details of the selected thing" beside its list:
+  a `Sheet` anchored to the right edge with a header (title + close), a body that
+  renders either a key/value property list or a content state (loading → Spinner,
+  empty/error → Empty), and a footer of actions. This is the React composition of
+  the Vue kit's feature-rich `Details` component — its content-state, properties,
+  and action-bar behavior become a composed recipe rather than props baked into
+  the Sheet primitive.
+
+when_to_use:
+  - Inspecting/acting on a selected row or entity next to its table or list.
+  - A detail view that must load, can be empty, and offers a few actions.
+when_not_to_use:
+  - A centered confirmation or short form — use `Dialog`.
+  - Persistent, non-modal page chrome — use `SidebarSecondary`, not a modal Sheet.
+  - A simple message with no data/actions — a plain `Sheet` is enough.
+
+anti_patterns:
+  - Hand-rolling a fixed side panel instead of composing `Sheet` (loses focus trap, scroll lock, ARIA, animations).
+  - Rendering a spinner/empty state inline in the body INSTEAD of switching the whole body by a `contentState` — mixed states confuse.
+  - Putting more than ~2–3 primary actions in the footer; overflow belongs in a menu.
+  - Omitting `SheetTitle` — the panel then has no accessible name.
+
+components:
+  - Sheet
+  - Button
+  - Spinner
+  - Empty
+
+demo: apps/docs/src/components/demos-react/patterns/sheet-detail-panel.tsx
+docs: apps/docs/content/docs/patterns/sheet-detail-panel.mdx
+
+# Approved starting point. Switch the whole body by `contentState`; keep the
+# header (title + close) and footer (actions) stable across states.
+example: |
+  function DetailPanel({ open, onOpenChange, contentState, item }) {
+    return (
+      <Sheet open={open} onOpenChange={onOpenChange}>
+        <SheetContent side="right">
+          <SheetHeader>
+            <SheetTitle>{item?.name ?? 'Details'}</SheetTitle>
+            <SheetCloseButton />
+          </SheetHeader>
+          <SheetBody>
+            {contentState === 'loading' ? (
+              <div className="flex h-full items-center justify-center"><Spinner /></div>
+            ) : contentState === 'empty' ? (
+              <Empty>
+                <EmptyHeader>
+                  <EmptyTitle>Nothing to show</EmptyTitle>
+                  <EmptyDescription>This item has no details yet.</EmptyDescription>
+                </EmptyHeader>
+              </Empty>
+            ) : (
+              <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
+                {item.properties.map((p) => (
+                  <Fragment key={p.label}>
+                    <dt className="text-muted-foreground">{p.label}</dt>
+                    <dd className="font-medium">{p.value}</dd>
+                  </Fragment>
+                ))}
+              </dl>
+            )}
+          </SheetBody>
+          <SheetFooter>
+            <SheetClose render={<Button variant="ghost">Close</Button>} />
+            <Button>Edit</Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    );
+  }

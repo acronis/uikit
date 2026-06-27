@@ -1,4 +1,9 @@
 {
   "title": "Patterns",
-  "pages": ["index", "filter-popover", "data-table-bulk-actions"]
+  "pages": [
+    "index",
+    "filter-popover",
+    "data-table-bulk-actions",
+    "sheet-detail-panel"
+  ]
 }
