@@ -20,6 +20,7 @@
     "release": "changeset publish",
     "test": "pnpm -r test",
     "test:watch": "pnpm -r test:watch",
+    "tokens:sync": "pnpm --filter @acronis-platform/design-tokens emit && pnpm --filter @acronis-platform/tokens-pd build",
     "typecheck": "pnpm -r typecheck",
     "version": "changeset version"
   },

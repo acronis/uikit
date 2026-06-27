@@ -12,6 +12,21 @@ There are two ways to make a change, and they answer different needs:
 > change isn't real until those files are updated, checked (`pnpm validate`),
 > and committed.
 
+## Canonical Figma sync path (one-way)
+
+For token updates that originate in Figma, use the one-way runbook:
+[`./context/figma-sync.md`](./context/figma-sync.md).
+
+After exporting a fresh snapshot with the local Figma exporter plugin, run one
+command from the repo root:
+
+```bash
+pnpm tokens:sync
+```
+
+This is the canonical post-export pipeline (`design-tokens emit` →
+`tokens-pd build`).
+
 ## At a glance
 
 |                     | ✋ **By hand**                                    | 🤖 **Via Agent**                                                            |

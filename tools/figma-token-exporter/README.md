@@ -33,10 +33,15 @@ Figma — this one is ours, with no external MCP server.
 3. Click **“Send snapshot to repo.”** The receiver logs the files it wrote.
    You can re-export as many times as you like; Ctrl-C to stop the receiver.
 
-4. Continue the sync from `packages/design-tokens/` (see
-   [`context/figma-sync.md`](../../packages/design-tokens/context/figma-sync.md)
-   or run `/sync-tokens`): orphan-coverage gate → re-emit `tiers/*.json` →
-   validate → review the diff → rebuild `tokens-pd`.
+4. Run the repo-side sync from the monorepo root:
+
+   ```bash
+   pnpm tokens:sync
+   ```
+
+   See
+   [`packages/design-tokens/context/figma-sync.md`](../../packages/design-tokens/context/figma-sync.md)
+   for the canonical one-way runbook and diff review expectations.
 
 ### Changing the port
 
