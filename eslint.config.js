@@ -8,6 +8,8 @@ import pluginReactHooks from 'eslint-plugin-react-hooks';
 import unusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 
+import acronisPatterns from './tools/eslint-rules/index.js';
+
 export default tseslint.config(
   // Base ESLint recommended rules
   js.configs.recommended, // TypeScript ESLint recommended rules
@@ -95,5 +97,15 @@ export default tseslint.config(
       'react/prop-types': 'off',
     },
   },
-  storybook.configs['flat/recommended']
+  storybook.configs['flat/recommended'],
+  // Usage-pattern enforcement (local plugin). Scoped to application code, where
+  // ad-hoc compositions tend to creep in; the library + its demos compose the
+  // real components. Each rule encodes a `ui-spec/patterns/*` anti-pattern.
+  {
+    files: ['apps/**/*.{jsx,tsx}'],
+    plugins: { 'acronis-patterns': acronisPatterns },
+    rules: {
+      'acronis-patterns/no-adhoc-sheet': 'error',
+    },
+  }
 );

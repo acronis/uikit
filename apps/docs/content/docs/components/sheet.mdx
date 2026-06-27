@@ -58,6 +58,34 @@ design-pending v1 themed on the shared semantic tokens like the Dialog family.
 <SheetContent side="left"> … </SheetContent>
 ```
 
+## Preset: `SheetDetails`
+
+For the common "details of the selected item" panel, use the **`SheetDetails`**
+preset — the easy path that *is* the
+[sheet-detail-panel pattern](/patterns/sheet-detail-panel). It bakes the header
+(title + close), a body that switches by `contentState`
+(`loading` → Spinner, `empty`/`error` → Empty, else a property list or custom
+children), and an optional footer of actions:
+
+```tsx
+import { SheetDetails, Button } from '@acronis-platform/ui-react';
+
+<SheetDetails
+  open={open}
+  onOpenChange={setOpen}
+  title="Workload details"
+  contentState={loading ? 'loading' : 'content'}
+  properties={[
+    { label: 'Status', value: 'Protected' },
+    { label: 'Owner', value: 'ken99@example.com' },
+  ]}
+  actions={<Button>Edit</Button>}
+/>
+```
+
+Reach for the composable `Sheet*` parts (above) only when you need a layout the
+preset doesn't cover.
+
 ## API Reference
 
 The root `Sheet` (and `Details`) forwards the Base UI Dialog root props

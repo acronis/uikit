@@ -15,6 +15,15 @@ export {
   type SheetContentProps,
 } from './sheet';
 
+// The `SheetDetails` preset — the easy path that *is* the sheet-detail-panel
+// usage pattern (header + content-state body + actions).
+export {
+  SheetDetails,
+  type SheetDetailsProps,
+  type SheetDetailsProperty,
+  type SheetDetailsContentState,
+} from './sheet-details';
+
 // `Details*` is an alias family for `Sheet*`. The Vue UI kit called this side
 // panel `Details`; the aliases give that migration a 1:1 drop-in. New code
 // should prefer `Sheet`.
