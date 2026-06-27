@@ -39,7 +39,11 @@ export function DataTableColumnHeader<TData, TValue>({
           render={
             <Button
               variant="ghost"
-              className="-ml-3 h-8 gap-2 data-[popup-open]:bg-accent"
+              // ui-react's ghost button has 0 horizontal padding, so add a small
+              // padding for a comfortable click/hover target and negate it on the
+              // left (-ml-2 px-2) so the label still sits flush at the cell's
+              // padding edge — aligned with the body cells below.
+              className="-ml-2 h-8 gap-2 px-2 data-[popup-open]:bg-accent"
             />
           }
         >
