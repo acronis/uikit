@@ -1,5 +1,31 @@
 # @acronis-platform/ui-react
 
+## 0.51.0
+
+### Minor Changes
+
+- [#461](https://github.com/acronis/uikit/pull/461) [`f58b48f`](https://github.com/acronis/uikit/commit/f58b48ff6475da25f0501996ba92fcd68cb86859) Thanks [@leonid](https://github.com/leonid)! - feat(accordion,collapsible): add Accordion and Collapsible (ported from ui-legacy)
+  - **Collapsible** — a disclosure primitive (trigger toggles a height-animating
+    panel) on Base UI's Collapsible; the primitive behind Accordion and the sidebars.
+  - **Accordion** — a vertical set of disclosure sections (header trigger + panel),
+    single or `multiple` open, on Base UI's Accordion.
+
+  Design reconciliation pending.
+
+- [#463](https://github.com/acronis/uikit/pull/463) [`c60861f`](https://github.com/acronis/uikit/commit/c60861f5a33d3e145a642a0095cccce5159787e2) Thanks [@leonid](https://github.com/leonid)! - feat(number-field): add NumberField (ported from ui-legacy)
+
+  A numeric input with decrement / increment steppers, min/max/step, and keyboard
+  stepping, built on Base UI's NumberField. The field box reuses the --ui-input-text-\*
+  token tier so it matches InputBox / InputText; steppers default to minus/plus icons.
+  Design reconciliation pending.
+
+- [#462](https://github.com/acronis/uikit/pull/462) [`8ae5750`](https://github.com/acronis/uikit/commit/8ae5750ab5058857b3f3e0c688e25439aff12d91) Thanks [@leonid](https://github.com/leonid)! - feat(slider): add Slider (ported from ui-legacy)
+
+  A slider for choosing a number — or a range (array value, two thumbs) — within a
+  min/max by dragging, built on Base UI's Slider. The filled indicator and thumb
+  border use the brand action blue (--ui-background-brand-secondary). Design
+  reconciliation pending.
+
 ## 0.50.0
 
 ### Minor Changes
