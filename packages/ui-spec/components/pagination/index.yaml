@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: Pagination
+name: pagination
+status: draft
+category: navigation
+description: >-
+  Navigation for paged content — previous / next controls, numbered page links
+  with a current-page marker, and an ellipsis for skipped ranges. Markup-only (no
+  Base UI primitive). Ported from the legacy shadcn-uikit `pagination`.
+since: 0.51.0

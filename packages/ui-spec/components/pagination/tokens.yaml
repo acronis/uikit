@@ -1,0 +1,25 @@
+spec_version: '1.0'
+component: Pagination
+
+# References only. Values live in @acronis-platform/tokens-pd. No --ui-pagination-*
+# tier — semantic tokens: foreground page numbers, the active surface for the
+# current page, the hover surface on hover, the muted secondary for the ellipsis,
+# and the primary focus ring.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-text-on-surface-primary
+    affects: pagination-link
+    description: Page-link text.
+  - name: --ui-background-surface-active
+    affects: pagination-link
+    description: Current (active) page background.
+  - name: --ui-background-surface-hover
+    affects: pagination-link
+    description: Hover background for inactive links.
+  - name: --ui-focus-primary
+    affects: pagination-link
+    description: Focus ring.
+  - name: --ui-text-on-surface-secondary
+    affects: pagination-ellipsis
+    description: Muted ellipsis color.

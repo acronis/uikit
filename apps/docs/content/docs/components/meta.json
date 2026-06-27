@@ -43,6 +43,7 @@
     "---Navigation & Layout---",
     "accordion",
     "breadcrumb",
+    "pagination",
     "card",
     "collapsible",
     "tabs",

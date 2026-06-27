@@ -1,0 +1,47 @@
+spec_version: '1.0'
+component: Pagination
+
+schematic: |
+  pagination: <nav role=navigation aria-label="pagination">
+    pagination-content: <ul> row of items
+      pagination-item: <li>
+        pagination-previous: ‹ go to previous page
+        pagination-link:     a page number (aria-current on the active page)
+        pagination-ellipsis: … skipped range
+        pagination-next:     › go to next page
+
+root:
+  element: nav
+  role: navigation
+  description: >-
+    The pagination landmark (aria-label="pagination") wrapping the row of page
+    controls.
+
+parts:
+  - id: pagination-content
+    element: ul
+    description: The horizontal list of items.
+  - id: pagination-item
+    element: li
+    description: A list item wrapping a link / ellipsis.
+  - id: pagination-link
+    element: a
+    description: >-
+      A page link; `isActive` marks the current page (aria-current="page" + the
+      selected surface).
+  - id: pagination-previous
+    element: a
+    description: Go to the previous page (chevron, labelled).
+  - id: pagination-next
+    element: a
+    description: Go to the next page (chevron, labelled).
+  - id: pagination-ellipsis
+    element: span
+    description: Indicates a skipped range of pages ("More pages").
+
+states:
+  - id: active
+    trigger: isActive marks the current page
+    kind: prop
+    prop: isActive
+    affects: [pagination-link]

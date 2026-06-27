@@ -1,0 +1,42 @@
+spec_version: '1.0'
+component: Pagination
+
+# Pagination is markup-only; navigation is the caller's responsibility (wire href /
+# onClick). The only component-specific prop is isActive on PaginationLink.
+contract:
+  properties:
+    - name: isActive
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        On PaginationLink — marks the current page (sets aria-current="page" and
+        the selected treatment).
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Pagination
+    status: implemented
+    import: "import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from '@acronis-platform/ui-react'"
+    example: |
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
+          <PaginationItem><PaginationLink href="#" isActive>1</PaginationLink></PaginationItem>
+          <PaginationItem><PaginationNext href="#" /></PaginationItem>
+        </PaginationContent>
+      </Pagination>
+  vue:
+    component: AvPagination
+    status: planned
+    import: "import { AvPagination } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvPagination :total="100" :page="1" />
+  web-components:
+    element: ui-pagination
+    status: planned
+    import: "import '@acronis-platform/ui-wc/pagination'"
+    example: |
+      <ui-pagination></ui-pagination>

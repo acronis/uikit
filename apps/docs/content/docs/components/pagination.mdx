@@ -1,0 +1,60 @@
+---
+title: Pagination
+description: Navigation for paged content — previous / next, page links, and an ellipsis.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { PaginationDemo } from "@/components/demos-react/pagination";
+
+## Usage
+
+```tsx
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from '@acronis-platform/ui-react';
+```
+
+`Pagination` is a `<nav>` landmark with previous / next controls, numbered page
+links (`isActive` marks the current page), and an ellipsis for skipped ranges.
+It's presentational — wire the navigation (`href` or `onClick`) and decide the
+active page yourself.
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` pagination.
+
+## Examples
+
+<DemoReact>
+  <PaginationDemo />
+</DemoReact>
+
+```tsx
+<Pagination>
+  <PaginationContent>
+    <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
+    <PaginationItem><PaginationLink href="#">1</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink href="#" isActive>2</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationEllipsis /></PaginationItem>
+    <PaginationItem><PaginationNext href="#" /></PaginationItem>
+  </PaginationContent>
+</Pagination>
+```
+
+Inside a [`DataTable`](/components/data-table) use its built-in
+`DataTablePagination` instead.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/pagination/pagination.tsx"
+  name="PaginationLinkProps"
+/>
+
+`Pagination`, `PaginationContent`, `PaginationItem`, and `PaginationEllipsis`
+accept their native element attributes; `PaginationPrevious` / `PaginationNext`
+take the same props as `PaginationLink`.
