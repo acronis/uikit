@@ -1,0 +1,18 @@
+spec_version: '1.0'
+component: Accordion
+
+# References only. Values live in @acronis-platform/tokens-pd. Accordion is mostly
+# markup; it uses the shared divider border, the muted secondary text for the
+# chevron + panel body, and the focus ring on the trigger.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-border-on-surface-border
+    affects: accordion-item
+    description: The bottom divider between items (border-border).
+  - name: --ui-text-on-surface-secondary
+    affects: accordion-content
+    description: Muted chevron + panel body text.
+  - name: --ui-focus-primary
+    affects: accordion-trigger
+    description: Focus ring of the header trigger.

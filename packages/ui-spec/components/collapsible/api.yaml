@@ -1,0 +1,47 @@
+spec_version: '1.0'
+component: Collapsible
+
+contract:
+  properties:
+    - name: open
+      type: boolean
+      required: false
+      description: Whether the panel is open (controlled).
+    - name: defaultOpen
+      type: boolean
+      required: false
+      default: 'false'
+      description: Whether the panel is initially open (uncontrolled).
+    - name: disabled
+      type: boolean
+      required: false
+      default: 'false'
+      description: Disables the trigger.
+  events:
+    - name: onOpenChange
+      payload: '(open: boolean, eventDetails) => void'
+      description: Fired when the open state changes.
+  methods: []
+
+adapters:
+  react:
+    component: Collapsible
+    status: implemented
+    import: "import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@acronis-platform/ui-react'"
+    example: |
+      <Collapsible>
+        <CollapsibleTrigger>Toggle</CollapsibleTrigger>
+        <CollapsibleContent>Content</CollapsibleContent>
+      </Collapsible>
+  vue:
+    component: AvCollapsible
+    status: planned
+    import: "import { AvCollapsible } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvCollapsible />
+  web-components:
+    element: ui-collapsible
+    status: planned
+    import: "import '@acronis-platform/ui-wc/collapsible'"
+    example: |
+      <ui-collapsible></ui-collapsible>

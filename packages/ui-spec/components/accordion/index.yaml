@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: Accordion
+name: accordion
+status: draft
+category: layout
+description: >-
+  A vertical set of disclosure sections — each with a header trigger and a
+  height-animating panel; single or multiple open at once. Built on Base UI's
+  Accordion. Ported from the legacy shadcn-uikit `accordion`.
+since: 0.49.0
+dependencies:
+  components:
+    - Collapsible

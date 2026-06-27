@@ -1,0 +1,45 @@
+---
+title: Collapsible
+description: A trigger that toggles a height-animating panel.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { CollapsibleDemo } from "@/components/demos-react/collapsible";
+
+## Usage
+
+```tsx
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from '@acronis-platform/ui-react';
+```
+
+`Collapsible` is a disclosure primitive — a trigger toggles a height-animating
+panel — built on
+[Base UI's Collapsible](https://base-ui.com/react/components/collapsible). It's the
+primitive behind [`Accordion`](/components/accordion) and the sidebars; use it
+directly for a single show/hide section. The trigger is polymorphic via the
+`render` prop (e.g. render it as a `Button`).
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` collapsible.
+
+## Examples
+
+<DemoReact>
+  <CollapsibleDemo />
+</DemoReact>
+
+```tsx
+<Collapsible>
+  <CollapsibleTrigger>Show advanced settings</CollapsibleTrigger>
+  <CollapsibleContent>…</CollapsibleContent>
+</Collapsible>
+```
+
+## API Reference
+
+`Collapsible` re-exports Base UI's Collapsible.Root props — `open` /
+`defaultOpen` / `disabled` / `onOpenChange`. `CollapsibleTrigger` and
+`CollapsibleContent` accept their Base UI part props plus `className`.

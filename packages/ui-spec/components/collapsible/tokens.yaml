@@ -1,0 +1,9 @@
+spec_version: '1.0'
+component: Collapsible
+
+# Collapsible has no tokens of its own — it's a behavioral disclosure primitive
+# with no color. Content styling comes from the caller / the component built on it
+# (e.g. Accordion). Values live in @acronis-platform/tokens-pd.
+source: '@acronis-platform/tokens-pd'
+
+tokens: []

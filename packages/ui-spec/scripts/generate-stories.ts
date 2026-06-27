@@ -431,6 +431,16 @@ const RENDER: Record<string, RenderHint> = {
     // meaningfully. VR is covered by the hand-written stories (Default / Open).
     skip: true,
   },
+  collapsible: {
+    // A disclosure needing a trigger + panel children. VR is covered by the
+    // hand-written story (Default).
+    skip: true,
+  },
+  accordion: {
+    // A composition needing item/trigger/panel children. VR is covered by the
+    // hand-written stories (Default / Multiple).
+    skip: true,
+  },
   'progress-circle': {
     // Driven by `value`; render a representative filled ring (per size grid).
     props: 'value={75} showValue',

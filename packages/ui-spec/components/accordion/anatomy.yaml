@@ -1,0 +1,47 @@
+spec_version: '1.0'
+component: Accordion
+
+schematic: |
+  accordion: Accordion.Root (which items are open)
+    accordion-item: one section (divided by a bottom border)
+      accordion-trigger: header button (title + chevron); chevron rotates when open
+      accordion-content: the height-animating panel
+
+root:
+  element: div
+  description: >-
+    Accordion (Base UI Accordion.Root) — tracks which items are open (single by
+    default; multiple when `multiple` is set).
+
+parts:
+  - id: accordion-item
+    element: div
+    description: One section, separated from the next by a bottom border.
+  - id: accordion-trigger
+    element: button
+    description: >-
+      The header button (in an Accordion.Header for heading semantics) — its label
+      plus a chevron that rotates when the section is open.
+  - id: accordion-content
+    element: div
+    description: The height-animating panel revealed when the section is open.
+
+states:
+  - id: multiple
+    trigger: multiple is set
+    kind: prop
+    prop: multiple
+    affects: [accordion-item]
+  - id: open
+    trigger: a section is open
+    kind: internal
+
+internal_state:
+  - id: open
+    type: array
+    values: ['the open item value(s)']
+    initial: 'none'
+    controllable_via: [value]
+    controlled_default: defaultValue
+    changed_by: clicking a trigger
+    description: Which item(s) are open.

@@ -1,0 +1,60 @@
+---
+title: Accordion
+description: A vertical set of expandable disclosure sections.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { AccordionDemo } from "@/components/demos-react/accordion";
+
+## Usage
+
+```tsx
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from '@acronis-platform/ui-react';
+```
+
+`Accordion` is a vertical set of disclosure sections — each a header trigger over a
+height-animating panel — built on
+[Base UI's Accordion](https://base-ui.com/react/components/accordion). One section
+is open at a time by default; pass `multiple` to allow several. Each
+`AccordionItem` needs a `value`; control the open set with `value` / `defaultValue`.
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` accordion.
+
+## Examples
+
+<DemoReact>
+  <AccordionDemo />
+</DemoReact>
+
+```tsx
+<Accordion defaultValue={['plan']}>
+  <AccordionItem value="plan">
+    <AccordionTrigger>What is included?</AccordionTrigger>
+    <AccordionContent>Backup, recovery, and anti-malware.</AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+Allow several sections open at once:
+
+```tsx
+<Accordion multiple defaultValue={['plan', 'support']}>
+  {/* … */}
+</Accordion>
+```
+
+For a single optional section use [`Collapsible`](/components/collapsible); for
+switching between views use [`Tabs`](/components/tabs).
+
+## API Reference
+
+`Accordion` re-exports Base UI's Accordion.Root props — `value` / `defaultValue`
+(arrays of open item values) / `multiple` / `disabled` / `onValueChange`.
+`AccordionItem` (needs a `value`),
+`AccordionTrigger`, and `AccordionContent` accept their Base UI part props plus
+`className`.

@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: Collapsible
+name: collapsible
+status: draft
+category: layout
+description: >-
+  A disclosure primitive — a trigger toggles a height-animating panel. Built on
+  Base UI's Collapsible; it's the primitive behind Accordion and the sidebars.
+  Ported from the legacy shadcn-uikit `collapsible`.
+since: 0.49.0

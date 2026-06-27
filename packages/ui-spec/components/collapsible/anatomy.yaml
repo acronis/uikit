@@ -1,0 +1,36 @@
+spec_version: '1.0'
+component: Collapsible
+
+schematic: |
+  collapsible: Collapsible.Root (open state)
+    collapsible-trigger: toggles the panel
+    collapsible-content: the height-animating panel
+
+root:
+  element: div
+  description: >-
+    Collapsible (Base UI Collapsible.Root) — holds the open state and coordinates
+    the trigger and panel.
+
+parts:
+  - id: collapsible-trigger
+    element: button
+    description: Toggles the panel open/closed; carries aria-expanded.
+  - id: collapsible-content
+    element: div
+    description: The panel; animates its height open/closed and hides when closed.
+
+states:
+  - id: open
+    trigger: the panel is open
+    kind: internal
+
+internal_state:
+  - id: open
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [open]
+    controlled_default: defaultOpen
+    changed_by: clicking the trigger (when uncontrolled)
+    description: Whether the panel is open.

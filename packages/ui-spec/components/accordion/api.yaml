@@ -1,0 +1,53 @@
+spec_version: '1.0'
+component: Accordion
+
+contract:
+  properties:
+    - name: value
+      type: 'Value[]'
+      required: false
+      description: The open item value(s) (controlled).
+    - name: defaultValue
+      type: 'Value[]'
+      required: false
+      description: The initially open item value(s) (uncontrolled).
+    - name: multiple
+      type: boolean
+      required: false
+      default: 'false'
+      description: Whether multiple items can be open at the same time.
+    - name: disabled
+      type: boolean
+      required: false
+      default: 'false'
+      description: Disables all items.
+  events:
+    - name: onValueChange
+      payload: '(value: Value[], eventDetails) => void'
+      description: Fired when the set of open items changes.
+  methods: []
+
+adapters:
+  react:
+    component: Accordion
+    status: implemented
+    import: "import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@acronis-platform/ui-react'"
+    example: |
+      <Accordion>
+        <AccordionItem value="a">
+          <AccordionTrigger>Section</AccordionTrigger>
+          <AccordionContent>Content</AccordionContent>
+        </AccordionItem>
+      </Accordion>
+  vue:
+    component: AvAccordion
+    status: planned
+    import: "import { AvAccordion } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvAccordion />
+  web-components:
+    element: ui-accordion
+    status: planned
+    import: "import '@acronis-platform/ui-wc/accordion'"
+    example: |
+      <ui-accordion></ui-accordion>
