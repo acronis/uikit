@@ -34,14 +34,14 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         value={normalizedValue}
         defaultValue={normalizedDefaultValue}
         className={cn(
-          'relative flex w-full touch-none select-none items-center',
+          'group relative flex w-full touch-none select-none items-center',
           className
         )}
         {...props}
       >
         <SliderPrimitive.Control className="relative flex w-full items-center py-2">
           <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-[var(--ui-border-on-surface-border)]">
-            <SliderPrimitive.Indicator className="rounded-full bg-[var(--ui-background-brand-secondary)]" />
+            <SliderPrimitive.Indicator className="rounded-full bg-[var(--ui-background-brand-secondary)] group-data-[disabled]:bg-[var(--ui-background-status-strong-neutral)]" />
           </SliderPrimitive.Track>
           {Array.from({ length: thumbCount }, (_, i) => (
             <SliderPrimitive.Thumb
@@ -50,7 +50,7 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
                 'block size-4 rounded-full border border-[var(--ui-background-brand-secondary)] bg-background shadow-sm transition-colors',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)]',
                 'data-dragging:ring-2 data-dragging:ring-[var(--ui-focus-primary)]',
-                'data-disabled:pointer-events-none data-disabled:opacity-50'
+                'data-disabled:pointer-events-none data-disabled:border-[var(--ui-background-status-strong-neutral)] data-disabled:opacity-50'
               )}
             />
           ))}

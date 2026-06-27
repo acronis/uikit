@@ -14,6 +14,11 @@ tokens:
   - name: --ui-background-brand-secondary
     affects: indicator
     description: The filled portion and the thumb border (the action blue).
+  - name: --ui-background-status-strong-neutral
+    affects: indicator
+    description: >-
+      Muted (but still visible) fill + thumb border when disabled — a medium gray
+      that stays distinct from the track.
   - name: --ui-background-surface-primary
     affects: thumb
     description: The thumb fill (bg-background).
