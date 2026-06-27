@@ -1,0 +1,114 @@
+---
+title: Field
+description: A form-field wrapper that ties a control to its label, description, and error.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { FieldDemo } from "@/components/demos-react/field";
+
+## Usage
+
+```tsx
+import {
+  Field,
+  FieldLabel,
+  FieldControl,
+  FieldDescription,
+  FieldError,
+} from '@acronis-platform/ui-react';
+```
+
+`Field` ties a control to its label, description, and error. Built on
+[Base UI's Field](https://base-ui.com/react/components/field), it wires the
+`for` / `id` / `aria-describedby` / `aria-invalid` associations and validity state
+automatically — no manual plumbing. The structural parts (`FieldSet`,
+`FieldLegend`, `FieldGroup`, `FieldContent`, `FieldSeparator`) compose and group
+fields.
+
+Pair Field with the **bare** controls: render a native input through
+`FieldControl` (`render={<InputBox />}`). The self-contained `InputText` /
+`InputSearch` / `InputSelect` already include their own label/description/error —
+use those directly instead. `Checkbox` / `Switch` self-label too (their own
+`label` prop); use `Field`/`FieldSet` only to **group** them.
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` field and rebuilt on
+> Base UI Field.
+
+## Examples
+
+<DemoReact>
+  <FieldDemo />
+</DemoReact>
+
+A text field with a description, auto-wired to the control:
+
+```tsx
+<Field>
+  <FieldLabel>Email</FieldLabel>
+  <FieldControl render={<InputBox type="email" />} />
+  <FieldDescription>We'll never share your email.</FieldDescription>
+</Field>
+```
+
+An invalid field with an error message:
+
+```tsx
+<Field invalid>
+  <FieldLabel>Email</FieldLabel>
+  <FieldControl render={<InputBox type="email" defaultValue="notanemail" />} />
+  <FieldError match>Please enter a valid email address.</FieldError>
+</Field>
+```
+
+Group related, self-labeling controls under a legend:
+
+```tsx
+<FieldSet>
+  <FieldLegend>Notifications</FieldLegend>
+  <FieldGroup>
+    <Checkbox label="Product updates" />
+    <Checkbox label="Security alerts" />
+  </FieldGroup>
+</FieldSet>
+```
+
+Lay the label out beside the control:
+
+```tsx
+<Field orientation="horizontal">
+  <FieldLabel>Workspace</FieldLabel>
+  <FieldControl render={<InputBox />} />
+</Field>
+```
+
+## API Reference
+
+`Field` (the root) carries the layout + validation props:
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/field/field.docs.ts"
+  name="FieldProps"
+/>
+
+`FieldError` shows a validation message:
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/field/field.docs.ts"
+  name="FieldErrorProps"
+/>
+
+`FieldLegend` heads a `FieldSet`:
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/field/field.docs.ts"
+  name="FieldLegendProps"
+/>
+
+`FieldLabel`, `FieldControl`, `FieldDescription`, `FieldContent`, `FieldTitle`,
+`FieldGroup`, and `FieldSeparator` accept the props of their underlying element
+(or Base UI Field part) plus `className`.
+
+> `FieldLabel`, `FieldControl`, `FieldDescription`, and `FieldError` are Base UI
+> Field parts — render them **inside a `Field`** (they throw without the Field
+> context). For a group-level heading, use `FieldLegend` inside a `FieldSet`, not a
+> bare `FieldDescription`.

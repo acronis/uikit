@@ -403,6 +403,12 @@ const RENDER: Record<string, RenderHint> = {
     // the hand-written stories (Bars / Lines / Areas / Pies / StackedBars).
     skip: true,
   },
+  field: {
+    // A multi-part composition: Field needs a label + control + description as
+    // children to render meaningfully. VR is covered by the hand-written stories
+    // (Default / WithError / Disabled / Horizontal / CheckboxGroup / Grouped).
+    skip: true,
+  },
   'progress-circle': {
     // Driven by `value`; render a representative filled ring (per size grid).
     props: 'value={75} showValue',

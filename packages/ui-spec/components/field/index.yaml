@@ -1,0 +1,16 @@
+spec_version: '1.0'
+component: Field
+name: field
+status: draft
+category: forms
+description: >-
+  A form-field wrapper that ties a control to its label, description, and error,
+  built on Base UI's Field primitive so those associations (and the validity
+  state) are wired automatically. Ships structural parts (fieldset, legend,
+  group, content, separator) for composing and grouping fields. Ported from the
+  legacy shadcn-uikit `field`.
+since: 0.47.0
+dependencies:
+  components:
+    - Label
+    - Separator

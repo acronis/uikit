@@ -1,0 +1,76 @@
+spec_version: '1.0'
+component: Field
+
+# Field is a multi-part composition. The root (Field) carries the layout +
+# validation props below; FieldControl forwards Base UI Field.Control (its `render`
+# wires a bare control); FieldError takes `match`; FieldLegend takes `variant`.
+contract:
+  properties:
+    - name: orientation
+      type: "'vertical' | 'horizontal' | 'responsive'"
+      required: false
+      default: "'vertical'"
+      description: >-
+        Label/control layout — stacked, inline, or stacked-then-inline at the @md
+        container width.
+    - name: invalid
+      type: boolean
+      required: false
+      description: >-
+        Marks the field invalid (sets data-invalid + the control's aria-invalid).
+        Useful when validation is controlled externally.
+    - name: disabled
+      type: boolean
+      required: false
+      default: 'false'
+      description: Disables the field and its control.
+    - name: name
+      type: string
+      required: false
+      description: Identifies the field when a form is submitted.
+    - name: validate
+      type: '(value, formValues) => string | string[] | null | Promise<…>'
+      required: false
+      description: Custom validation; returns error message(s) or null.
+    - name: validationMode
+      type: "'onSubmit' | 'onBlur' | 'onChange'"
+      required: false
+      default: "'onSubmit'"
+      description: When the field validates.
+    - name: match
+      type: 'boolean | keyof ValidityState'
+      required: false
+      description: >-
+        On FieldError — which ValidityState shows the message; `true` always shows
+        it (for externally controlled validation).
+    - name: variant
+      type: "'legend' | 'label'"
+      required: false
+      default: "'legend'"
+      description: On FieldLegend — large legend text or small label text.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Field
+    status: implemented
+    import: "import { Field, FieldLabel, FieldControl, FieldDescription, FieldError } from '@acronis-platform/ui-react'"
+    example: |
+      <Field>
+        <FieldLabel>Email</FieldLabel>
+        <FieldControl render={<InputBox />} />
+        <FieldDescription>We'll never share it.</FieldDescription>
+      </Field>
+  vue:
+    component: AvField
+    status: planned
+    import: "import { AvField } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvField label="Email" />
+  web-components:
+    element: ui-field
+    status: planned
+    import: "import '@acronis-platform/ui-wc/field'"
+    example: |
+      <ui-field></ui-field>

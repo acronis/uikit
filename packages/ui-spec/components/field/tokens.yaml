@@ -1,0 +1,26 @@
+spec_version: '1.0'
+component: Field
+
+# References only. Values live in @acronis-platform/tokens-pd. Field has no token
+# tier of its own — it's layout chrome on the shared semantic vocabulary. The
+# controls it wraps (InputBox, Checkbox, …) carry their own tokens. Error/invalid
+# text uses the readable danger text token (NOT bridged `text-destructive`, which
+# resolves to the pale danger *surface*).
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-text-on-status-danger
+    affects: field-error
+    description: Error message + invalid-field text — readable red on the page surface.
+  - name: --ui-text-on-surface-secondary
+    affects: field-description
+    description: Muted helper/description and separator-label text (text-muted-foreground).
+  - name: --ui-background-surface-primary
+    affects: field-separator
+    description: Background of the centered separator label (bg-background).
+  - name: --ui-border-on-surface-border
+    affects: field-separator
+    description: The separator rule (via the Separator component).
+  - name: --ui-background-brand-secondary
+    affects: field-description
+    description: Hover color for links inside a description.

@@ -1,0 +1,88 @@
+spec_version: '1.0'
+component: Field
+
+schematic: |
+  field-set: <fieldset> grouping related fields
+    field-legend:  group heading (legend | label variant)
+    field-group:   vertical stack of fields / nested groups
+      field:        one field (role=group; vertical | horizontal | responsive)
+        field-label:        caption — auto-tied to the control
+        field-control:      the wired control (render a bare input/checkbox/…)
+        field-content:      wrapper to stack label + description beside a control
+        field-title:        non-label heading inside a field
+        field-description:  helper text — auto-tied via aria-describedby
+        field-error:        validation message — shown on invalid
+      field-separator:  divider between fields (optional centered label)
+
+root:
+  element: div
+  role: group
+  description: >-
+    Field (Base UI Field.Root) — groups one control with its label, description,
+    and error, wiring the id / for / aria-describedby associations and exposing
+    Base UI's validity state. `orientation` lays the label out above (vertical),
+    beside (horizontal), or responsive to the @md container width.
+
+parts:
+  - id: field
+    element: div
+    description: The field wrapper (Field.Root). Provides the field context + orientation.
+  - id: field-label
+    element: label
+    description: >-
+      FieldLabel (Field.Label) — the caption, auto-associated with the control
+      (no manual htmlFor).
+  - id: field-control
+    element: input
+    description: >-
+      FieldControl (Field.Control) — the wired control. Use its `render` prop to
+      drive a bare ui-react control, e.g. `<FieldControl render={<InputBox />} />`.
+  - id: field-description
+    element: p
+    description: >-
+      FieldDescription (Field.Description) — helper text, linked to the control via
+      aria-describedby.
+  - id: field-error
+    element: div
+    description: >-
+      FieldError (Field.Error) — the validation message; shown according to the
+      field's validity (or forced with `match`).
+  - id: field-content
+    element: div
+    description: >-
+      FieldContent — a flex column to stack a label + description beside a control
+      (e.g. a horizontal toggle row).
+  - id: field-title
+    element: div
+    description: >-
+      FieldTitle — a non-label heading for a field that has no single associated
+      control.
+  - id: field-set
+    element: fieldset
+    description: FieldSet — a native fieldset grouping related fields.
+  - id: field-legend
+    element: legend
+    description: FieldLegend — the fieldset heading; `legend` (large) or `label` (small) variant.
+  - id: field-group
+    element: div
+    description: FieldGroup — a vertical stack of fields (or nested groups), a container query context.
+  - id: field-separator
+    element: div
+    description: FieldSeparator — a divider between fields, with an optional centered label.
+
+states:
+  - id: invalid
+    trigger: the field fails validation (or invalid is set)
+    kind: prop
+    prop: invalid
+    affects: [field, field-error, field-control]
+  - id: disabled
+    trigger: disabled is set
+    kind: prop
+    prop: disabled
+    affects: [field, field-label, field-control]
+  - id: orientation
+    trigger: orientation is horizontal or responsive
+    kind: prop
+    prop: orientation
+    affects: [field]
