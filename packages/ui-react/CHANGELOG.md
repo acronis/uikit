@@ -1,5 +1,28 @@
 # @acronis-platform/ui-react
 
+## 0.49.0
+
+### Minor Changes
+
+- [#457](https://github.com/acronis/uikit/pull/457) [`f89b7aa`](https://github.com/acronis/uikit/commit/f89b7aa88881c02cdb96d8932ed888ad1bf3a5ff) Thanks [@leonid](https://github.com/leonid)! - feat(alert,skeleton): add Alert and Skeleton (ported from ui-legacy)
+  - **Alert** — a status banner (`role="alert"`) with seven severity variants
+    (info / success / warning / critical / destructive / ai / neutral) and
+    composable `AlertIcon` / `AlertContent` / `AlertTitle` / `AlertDescription`
+    parts. Each variant maps to the `--ui-*` status tokens.
+  - **Skeleton** — a pulsing placeholder box for loading states; shape/size via
+    className.
+
+  Design reconciliation pending.
+
+- [#456](https://github.com/acronis/uikit/pull/456) [`f80f3ca`](https://github.com/acronis/uikit/commit/f80f3ca5566b1aec5db7b4a296cb4f4f4ef269e8) Thanks [@leonid](https://github.com/leonid)! - feat(form): add Form (initial version ported from ui-legacy)
+
+  A native `<form>` with consolidated validation, rebuilt on Base UI's Form: it
+  collects values by each `Field`'s name, validates on submit (or per
+  `validationMode`), surfaces server `errors` keyed by field name, and calls
+  `onFormSubmit(values)` when every field is valid. The legacy form wrapped
+  react-hook-form; this version drops that dependency and composes the ui-react
+  `Field` directly. Design reconciliation pending.
+
 ## 0.48.0
 
 ### Minor Changes
