@@ -1,5 +1,35 @@
 # @acronis-platform/ui-react
 
+## 0.43.0
+
+### Minor Changes
+
+- [#430](https://github.com/acronis/uikit/pull/430) [`2f4ed53`](https://github.com/acronis/uikit/commit/2f4ed53381a440623a36a93e24ec7d7866f4ec94) Thanks [@leonid](https://github.com/leonid)! - feat(data-table): add striped / bordered / current-row / skeleton flags
+
+  Borrow presentational features from the Vue `AvTable` onto `DataTable`:
+  - `striped` — alternating row backgrounds.
+  - `bordered` — vertical borders between columns (rows already have horizontal).
+  - `highlightCurrentRow` — highlight the row the user last clicked.
+  - `skeleton` (+ `skeletonRows`) — placeholder loading rows.
+
+  All reuse the existing `--ui-table-*` tier (current row = the active-row color,
+  stripes/skeleton = the secondary surface) — no new tokens. Behavioral features
+  (sorting, filtering, selection, expansion, pagination) already come from TanStack;
+  selection-driven bulk actions are documented as a new **data-table-bulk-actions**
+  usage pattern rather than a monolithic feature-flag prop.
+
+### Patch Changes
+
+- [#432](https://github.com/acronis/uikit/pull/432) [`83820c5`](https://github.com/acronis/uikit/commit/83820c5fb73e1647d5dbccf15b12939bdaba7686) Thanks [@leonid](https://github.com/leonid)! - fix(data-table,table): align header padding + center checkbox/cell contents
+  - `DataTableColumnHeader`: the sort button used the legacy `-ml-3`, which (with
+    ui-react's 0-padding ghost button) pulled the header label 12px left of the
+    body cells. Now `-ml-2 px-2`, so the label sits flush at the same horizontal
+    padding as the cells below it.
+  - `Table`: cells gave checkboxes the default `baseline` vertical alignment, so
+    they sat high relative to the centered text/tags. Header and body cells now
+    apply `align-middle` to any `[role=checkbox]`, vertically centering checkboxes
+    with the rest of the row content.
+
 ## 0.42.0
 
 ### Minor Changes
