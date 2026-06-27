@@ -1,0 +1,48 @@
+---
+title: ProgressCircle
+description: A circular (radial) progress indicator whose arc fills with the value and colors by level.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { ProgressCircleDemo } from "@/components/demos-react/progress-circle";
+
+## Usage
+
+```tsx
+import { ProgressCircle } from '@acronis-platform/ui-react';
+```
+
+`ProgressCircle` is a compact circular progress ring — an SVG arc that fills with
+`value` and whose color tracks the level (danger → critical → warning → success),
+with an optional numeric or icon center. It wraps the Base UI Progress primitive
+for `role="progressbar"` semantics. The sibling of the linear `Progress`; use it
+for at-a-glance scores in table cells, cards, and widgets. Design-pending v1 on
+the shared status tokens (no dedicated tier).
+
+## Examples
+
+<DemoReact>
+  <ProgressCircleDemo />
+</DemoReact>
+
+```tsx
+<ProgressCircle value={75} size="md" showValue />
+<ProgressCircle value={25} size="sm" />            {/* arc auto-colors to danger */}
+<ProgressCircle value={100} size="lg" showIcon />  {/* success check in center */}
+```
+
+In a table cell, compose the ring with an external label:
+
+```tsx
+<div className="flex items-center gap-2">
+  <ProgressCircle value={81} size="sm" />
+  <span className="text-sm">81%</span>
+</div>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/progress-circle/progress-circle.docs.ts"
+  name="ProgressCircleProps"
+/>

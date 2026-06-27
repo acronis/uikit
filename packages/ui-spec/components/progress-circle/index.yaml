@@ -1,0 +1,12 @@
+spec_version: '1.0'
+component: ProgressCircle
+name: progress-circle
+status: draft
+category: feedback
+description: >-
+  A circular (radial) progress indicator — an SVG ring whose arc fills with the
+  value and whose color tracks the level (danger / critical / warning / success),
+  with an optional numeric or icon center. Built from the Cyber-Compliance
+  "Compliance %" design; the sibling of the linear Progress. Design reconciliation
+  against the Figma component master is pending.
+since: 0.43.0

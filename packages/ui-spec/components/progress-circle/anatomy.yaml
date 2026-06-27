@@ -1,0 +1,61 @@
+spec_version: '1.0'
+component: ProgressCircle
+
+schematic: |
+  root: <div role="progressbar"> (Base UI Progress.Root), size = tiny|sm|md|lg
+    svg ring:
+      track: full circle (border color)
+      arc:   value-filled circle, color by status (danger→critical→warning→success)
+    center: optional — percentage, status icon, or custom content
+
+root:
+  element: div
+  role: progressbar
+  description: >-
+    Base UI Progress.Root — carries `aria-valuenow`/`min`/`max`. Sized by `size`;
+    holds the SVG ring and the optional center.
+
+parts:
+  - id: track
+    element: circle
+    description: The full background ring (border color).
+  - id: arc
+    element: circle
+    description: >-
+      The value-filled arc (stroke-dasharray); color tracks the status level via
+      `--ui-text-on-status-*`.
+  - id: center
+    element: span
+    description: >-
+      Optional center content — the rounded percentage (`showValue`), a status
+      icon (`showIcon`), or custom children.
+
+states:
+  - {
+      id: tiny,
+      trigger: "size === 'tiny'",
+      kind: prop,
+      prop: size,
+      affects: [root],
+    }
+  - {
+      id: sm,
+      trigger: "size === 'sm' (default)",
+      kind: prop,
+      prop: size,
+      affects: [root],
+    }
+  - {
+      id: md,
+      trigger: "size === 'md'",
+      kind: prop,
+      prop: size,
+      affects: [root],
+    }
+  - {
+      id: lg,
+      trigger: "size === 'lg'",
+      kind: prop,
+      prop: size,
+      affects: [root],
+    }

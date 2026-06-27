@@ -397,6 +397,10 @@ const RENDER: Record<string, RenderHint> = {
     // meaningful zero-arg render. VR is covered by the hand-written stories.
     skip: true,
   },
+  'progress-circle': {
+    // Driven by `value`; render a representative filled ring (per size grid).
+    props: 'value={75} showValue',
+  },
   'description-list': {
     extraImports: [
       "import { DescriptionListItem, DescriptionListLabel, DescriptionListValue, DescriptionListValueDescription } from '../description-list';",

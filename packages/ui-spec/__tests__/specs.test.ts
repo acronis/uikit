@@ -269,6 +269,21 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.size.sort()).toEqual(enumMembers(api, 'size').sort());
   });
 
+  it('ProgressCircle: api.yaml size enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/progress-circle/progress-circle.tsx'
+      ),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('progress-circle').api;
+
+    expect(Object.keys(groups)).toEqual(['size']);
+    expect(groups.size.sort()).toEqual(enumMembers(api, 'size').sort());
+  });
+
   it('Dialog: api.yaml size enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/dialog/dialog.tsx'),
