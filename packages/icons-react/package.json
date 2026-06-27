@@ -32,16 +32,19 @@
     "./solid-multi": {
       "import": "./dist/solid-multi/index.js",
       "types": "./dist/solid-multi/index.d.ts"
-    }
+    },
+    "./legacy-map": "./legacy-icon-map.json"
   },
   "files": [
     "dist",
+    "legacy-icon-map.json",
     "README.md",
     "LICENSE"
   ],
   "sideEffects": false,
   "scripts": {
-    "generate": "tsx scripts/generate-icons.ts",
+    "generate": "tsx scripts/generate-icons.ts && tsx scripts/generate-legacy-map.ts",
+    "generate:legacy-map": "tsx scripts/generate-legacy-map.ts",
     "build": "pnpm run generate && vite build -c vite.lib.config.ts",
     "dev": "pnpm run generate && vite build -c vite.lib.config.ts --watch",
     "clean": "rm -rf dist storybook-static node_modules/.vite src/packs *.tsbuildinfo",
