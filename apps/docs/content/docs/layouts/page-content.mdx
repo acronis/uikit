@@ -1,0 +1,40 @@
+---
+title: Page Content
+description: The padded gutter region for a page's body.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { PageContentDemo } from "@/components/demos-react/page-content";
+
+## Usage
+
+```tsx
+import { PageContent } from '@acronis-platform/ui-react';
+```
+
+`PageContent` is the padded gutter for a page's body. It renders a `<div>` (not
+`<main>`) so it nests inside [`AppShellMain`](/layouts/app-shell) without
+duplicating the `main` landmark; if you use it without the App Shell, wrap it in
+your own `<main>`.
+
+## Examples
+
+<DemoReact>
+  <PageContentDemo />
+</DemoReact>
+
+```tsx
+<AppShellMain>
+  <PageContent>
+    <PageHeader>…</PageHeader>
+    {children}
+  </PageContent>
+</AppShellMain>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/page-content/page-content.tsx"
+  name="PageContentProps"
+/>

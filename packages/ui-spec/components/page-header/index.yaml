@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: PageHeader
+name: page-header
+status: ready
+category: layout
+description: >-
+  The page header region — an optional breadcrumb, a title row (title left,
+  actions right), and an optional description. Sits at the top of a page's content.
+  Mapped to the shadcn-uikit Figma (node 2850-701).
+since: 0.52.0
+figma:
+  node: 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2850-701'
+  codeConnect: packages/ui-react/src/components/ui/page-header/page-header.figma.tsx

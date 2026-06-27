@@ -1,0 +1,7 @@
+spec_version: '1.0'
+component: PageContent
+
+# PageContent has no tokens — a layout-only padding region (no color).
+source: '@acronis-platform/tokens-pd'
+
+tokens: []

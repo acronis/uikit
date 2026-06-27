@@ -1,4 +1,12 @@
 {
   "title": "Layouts",
-  "pages": ["index", "app-shell", "stack", "grid", "section"]
+  "pages": [
+    "index",
+    "app-shell",
+    "page-header",
+    "page-content",
+    "stack",
+    "grid",
+    "section"
+  ]
 }

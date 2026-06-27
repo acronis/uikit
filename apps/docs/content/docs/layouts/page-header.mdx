@@ -1,0 +1,56 @@
+---
+title: Page Header
+description: A page's header region — breadcrumb, title + actions, and description.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { PageHeaderDemo } from "@/components/demos-react/page-header";
+
+## Usage
+
+```tsx
+import {
+  PageHeader,
+  PageHeaderBreadcrumb,
+  PageHeaderRow,
+  PageHeaderTitle,
+  PageHeaderDescription,
+  PageHeaderActions,
+} from '@acronis-platform/ui-react';
+```
+
+`PageHeader` is the header region at the top of a page's content (inside the App
+Shell's main, not the app-wide [`AppShellHeader`](/layouts/app-shell)). It stacks
+an optional breadcrumb, a title row (`PageHeaderRow` — title left, actions right),
+and an optional description. Mapped to the
+[Page Header Figma](https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2850-701).
+
+## Examples
+
+<DemoReact>
+  <PageHeaderDemo />
+</DemoReact>
+
+```tsx
+<PageHeader>
+  <PageHeaderBreadcrumb>Home / Reports</PageHeaderBreadcrumb>
+  <PageHeaderRow>
+    <PageHeaderTitle>Reports</PageHeaderTitle>
+    <PageHeaderActions><Button>New report</Button></PageHeaderActions>
+  </PageHeaderRow>
+  <PageHeaderDescription>All scheduled reports.</PageHeaderDescription>
+</PageHeader>
+```
+
+## Parts
+
+| Export                  | Element  | Purpose                          |
+| ----------------------- | -------- | -------------------------------- |
+| `PageHeader`            | `div`    | The banner region.               |
+| `PageHeaderBreadcrumb`  | `nav`    | Optional breadcrumb (muted).     |
+| `PageHeaderRow`         | `div`    | Title + actions row.             |
+| `PageHeaderTitle`       | `h1`     | The page title.                  |
+| `PageHeaderDescription` | `p`      | Optional muted text.             |
+| `PageHeaderActions`     | `div`    | Trailing action buttons.         |
+
+All parts accept their native element attributes plus `className`.

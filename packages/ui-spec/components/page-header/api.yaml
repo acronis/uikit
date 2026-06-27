@@ -1,0 +1,33 @@
+spec_version: '1.0'
+component: PageHeader
+
+# Markup-only; parts take native element attributes. No component-specific props.
+contract:
+  properties: []
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: PageHeader
+    status: implemented
+    import: "import { PageHeader, PageHeaderBreadcrumb, PageHeaderRow, PageHeaderTitle, PageHeaderDescription, PageHeaderActions } from '@acronis-platform/ui-react'"
+    example: |
+      <PageHeader>
+        <PageHeaderRow>
+          <PageHeaderTitle>Reports</PageHeaderTitle>
+          <PageHeaderActions><Button>New</Button></PageHeaderActions>
+        </PageHeaderRow>
+      </PageHeader>
+  vue:
+    component: AvPageHeader
+    status: planned
+    import: "import { AvPageHeader } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvPageHeader title="Reports" />
+  web-components:
+    element: ui-page-header
+    status: planned
+    import: "import '@acronis-platform/ui-wc/page-header'"
+    example: |
+      <ui-page-header></ui-page-header>

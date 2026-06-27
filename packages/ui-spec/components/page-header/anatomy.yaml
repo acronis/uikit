@@ -1,0 +1,34 @@
+spec_version: '1.0'
+component: PageHeader
+
+schematic: |
+  page-header: <div role="banner"> vertical block
+    page-header-breadcrumb:  optional breadcrumb nav (muted)
+    page-header-row:         title row
+      page-header-title:       <h1> page title
+      page-header-actions:     buttons (right)
+    page-header-description: optional muted supporting text
+
+root:
+  element: div
+  role: banner
+  description: The page header region; stacks breadcrumb, the title/actions row, and a description.
+
+parts:
+  - id: page-header-breadcrumb
+    element: nav
+    description: Optional breadcrumb (muted), labelled "Breadcrumb".
+  - id: page-header-row
+    element: div
+    description: The title + actions row (title left, actions right).
+  - id: page-header-title
+    element: h1
+    description: The page title.
+  - id: page-header-actions
+    element: div
+    description: Trailing action buttons.
+  - id: page-header-description
+    element: p
+    description: Optional muted supporting text under the title.
+
+states: []

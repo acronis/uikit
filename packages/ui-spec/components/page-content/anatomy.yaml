@@ -1,0 +1,18 @@
+spec_version: '1.0'
+component: PageContent
+
+schematic: |
+  page-content: <div> padded body region (flex-1 + page padding)
+
+root:
+  element: div
+  description: >-
+    The padded content region for a page body. Renders a <div> (not <main>) so it
+    nests inside AppShellMain without a duplicate landmark.
+
+parts:
+  - id: page-content
+    element: div
+    description: The padded, flex-1 content region.
+
+states: []
