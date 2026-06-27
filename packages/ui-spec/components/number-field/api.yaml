@@ -1,0 +1,62 @@
+spec_version: '1.0'
+component: NumberField
+
+contract:
+  properties:
+    - name: value
+      type: 'number | null'
+      required: false
+      description: The value (controlled).
+    - name: defaultValue
+      type: 'number | null'
+      required: false
+      description: The initial value (uncontrolled).
+    - name: min
+      type: number
+      required: false
+      description: Minimum value (clamped).
+    - name: max
+      type: number
+      required: false
+      description: Maximum value (clamped).
+    - name: step
+      type: number
+      required: false
+      default: '1'
+      description: Increment for the steppers / arrow keys.
+    - name: disabled
+      type: boolean
+      required: false
+      default: 'false'
+      description: Disables the field and steppers.
+  events:
+    - name: onValueChange
+      payload: '(value: number | null, eventDetails) => void'
+      description: Fired when the value changes.
+  methods: []
+
+adapters:
+  react:
+    component: NumberField
+    status: implemented
+    import: "import { NumberField, NumberFieldGroup, NumberFieldDecrement, NumberFieldInput, NumberFieldIncrement } from '@acronis-platform/ui-react'"
+    example: |
+      <NumberField defaultValue={1} min={0} max={99}>
+        <NumberFieldGroup>
+          <NumberFieldDecrement />
+          <NumberFieldInput />
+          <NumberFieldIncrement />
+        </NumberFieldGroup>
+      </NumberField>
+  vue:
+    component: AvNumberField
+    status: planned
+    import: "import { AvNumberField } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvNumberField :default-value="1" />
+  web-components:
+    element: ui-number-field
+    status: planned
+    import: "import '@acronis-platform/ui-wc/number-field'"
+    example: |
+      <ui-number-field></ui-number-field>

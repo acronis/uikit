@@ -1,0 +1,47 @@
+spec_version: '1.0'
+component: NumberField
+
+schematic: |
+  number-field: NumberField.Root (value/min/max/step)
+    number-field-group: the bordered box
+      number-field-decrement: − stepper button
+      number-field-input:     the numeric input
+      number-field-increment: + stepper button
+
+root:
+  element: div
+  description: >-
+    NumberField (Base UI NumberField.Root) — holds the numeric value, min/max/step,
+    and formatting; coordinates the input and steppers.
+
+parts:
+  - id: number-field-group
+    element: div
+    description: The bordered box wrapping the steppers + input (input-text box styling).
+  - id: number-field-input
+    element: input
+    description: The numeric input (centered value).
+  - id: number-field-decrement
+    element: button
+    description: Decrement (−) stepper.
+  - id: number-field-increment
+    element: button
+    description: Increment (+) stepper.
+
+states:
+  - id: disabled
+    trigger: disabled is set
+    kind: prop
+    prop: disabled
+    affects:
+      [
+        number-field-group,
+        number-field-input,
+        number-field-decrement,
+        number-field-increment,
+      ]
+  - id: focused
+    trigger: the input is focused
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [number-field-group]

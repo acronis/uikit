@@ -1,0 +1,30 @@
+spec_version: '1.0'
+component: NumberField
+
+# References only. Values live in @acronis-platform/tokens-pd. No --ui-number-field-*
+# tier — the box reuses the InputText tier (so it matches InputBox / InputText), and
+# the steppers use the shared muted/hover surface + text tokens.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-input-text-global-box-color-idle
+    affects: number-field-group
+    description: Box surface.
+  - name: --ui-input-text-normal-box-border-color-idle
+    affects: number-field-group
+    description: Box border.
+  - name: --ui-focus-primary
+    affects: number-field-group
+    description: Focus-within ring.
+  - name: --ui-input-text-global-value-color-idle
+    affects: number-field-input
+    description: Numeric value text.
+  - name: --ui-text-on-surface-secondary
+    affects: number-field-increment
+    description: Idle stepper icon color.
+  - name: --ui-background-surface-hover
+    affects: number-field-increment
+    description: Stepper hover background.
+  - name: --ui-text-on-surface-disabled
+    affects: number-field-increment
+    description: Disabled stepper icon color.

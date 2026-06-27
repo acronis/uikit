@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: NumberField
+name: number-field
+status: draft
+category: forms
+description: >-
+  A numeric input with decrement / increment steppers, min/max/step, and scrub
+  support. Built on Base UI's NumberField; the field box reuses the InputText
+  token tier. Ported from the legacy shadcn-uikit `number-field`.
+since: 0.51.0

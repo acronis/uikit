@@ -18,6 +18,7 @@
     "radio",
     "switch",
     "slider",
+    "number-field",
     "select",
     "search-global",
     "label",
