@@ -1,6 +1,12 @@
 import * as React from 'react';
 
 import {
+  DescriptionList,
+  DescriptionListItem,
+  DescriptionListLabel,
+  DescriptionListValue,
+} from '../description-list';
+import {
   Empty,
   EmptyDescription,
   EmptyHeader,
@@ -111,15 +117,25 @@ function SheetDetailsBody({
   }
   if (children) return <>{children}</>;
   if (properties?.length) {
+    // Render through DescriptionList. `-mx-6` cancels the SheetBody padding so
+    // the row dividers go full-bleed while the content stays aligned at the
+    // panel's 24px inset; the label column is tightened for the narrow panel.
     return (
-      <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
+      <DescriptionList
+        className="-mx-6"
+        style={{ '--description-list-label': '9rem' } as React.CSSProperties}
+      >
         {properties.map((p, i) => (
-          <React.Fragment key={i}>
-            <dt className="text-muted-foreground">{p.label}</dt>
-            <dd className="font-medium">{p.value}</dd>
-          </React.Fragment>
+          <DescriptionListItem key={i}>
+            <DescriptionListLabel className="text-muted-foreground">
+              {p.label}
+            </DescriptionListLabel>
+            <DescriptionListValue className="font-medium">
+              {p.value}
+            </DescriptionListValue>
+          </DescriptionListItem>
         ))}
-      </dl>
+      </DescriptionList>
     );
   }
   return null;

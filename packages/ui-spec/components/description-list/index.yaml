@@ -1,0 +1,14 @@
+spec_version: '1.0'
+component: DescriptionList
+name: description-list
+status: ready
+category: data-display
+description: >-
+  A key/value data list — rows of label → value, where the value can be plain
+  text, a status (leading icon + value + a muted description), or action links.
+  Composable, semantic `<dl>`. Built from the Cyber-Compliance "Service status"
+  design.
+since: 0.43.0
+figma:
+  node: '3001-20448'
+  codeConnect: packages/ui-react/src/components/ui/description-list/description-list.figma.tsx

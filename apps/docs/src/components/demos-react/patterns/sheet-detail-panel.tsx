@@ -1,8 +1,12 @@
 'use client';
 
-import { Fragment, useState } from 'react';
+import { type CSSProperties, useState } from 'react';
 import {
   Button,
+  DescriptionList,
+  DescriptionListItem,
+  DescriptionListLabel,
+  DescriptionListValue,
   Empty,
   EmptyDescription,
   EmptyHeader,
@@ -73,14 +77,23 @@ export function SheetDetailPanelDemo() {
                 </EmptyHeader>
               </Empty>
             ) : (
-              <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
+              <DescriptionList
+                className="-mx-6"
+                style={
+                  { '--description-list-label': '9rem' } as CSSProperties
+                }
+              >
                 {properties.map((p) => (
-                  <Fragment key={p.label}>
-                    <dt className="text-muted-foreground">{p.label}</dt>
-                    <dd className="font-medium">{p.value}</dd>
-                  </Fragment>
+                  <DescriptionListItem key={p.label}>
+                    <DescriptionListLabel className="text-muted-foreground">
+                      {p.label}
+                    </DescriptionListLabel>
+                    <DescriptionListValue className="font-medium">
+                      {p.value}
+                    </DescriptionListValue>
+                  </DescriptionListItem>
                 ))}
-              </dl>
+              </DescriptionList>
             )}
           </SheetBody>
           <SheetFooter>

@@ -1,0 +1,19 @@
+spec_version: '1.0'
+component: DescriptionList
+
+# References only. Values live in @acronis-platform/tokens-pd. No
+# `--ui-description-list-*` tier — it composes the shared semantic tokens. Status
+# icon colors (--ui-text-on-status-*) and action links come from the icons/Link
+# the caller composes into the value.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-text-on-surface-primary
+    affects: label
+    description: Label + value text (text-foreground).
+  - name: --ui-text-on-surface-secondary
+    affects: value-description
+    description: Muted value-description (text-muted-foreground).
+  - name: --ui-border-on-surface-border
+    affects: item
+    description: Full-bleed row divider (border-border).

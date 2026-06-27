@@ -1,0 +1,46 @@
+spec_version: '1.0'
+component: DescriptionList
+
+schematic: |
+  root: <dl>
+    item: <div> grid [ label | value ], full-bleed top divider, padded content
+      label: <dt> the key (left column)
+      value: <dd> the value (right column) — flex: optional status icon +
+        content (text / value-description / actions)
+        value-description: muted secondary line
+        actions: row of action links
+
+root:
+  element: dl
+  description: >-
+    The description list (`<dl>`). Holds `item` groups; adds no padding of its
+    own — the items carry the row padding so dividers stay full-bleed.
+
+parts:
+  - id: item
+    element: div
+    description: >-
+      A row grouping a `<dt>`/`<dd>` pair (HTML5 allows a wrapping div in a
+      `<dl>`). Two-column grid (label | value) with a full-bleed top divider and
+      inset content.
+  - id: label
+    element: dt
+    description: The key, in the left column.
+  - id: value
+    element: dd
+    description: >-
+      The value, in the right column — a flex row of an optional leading status
+      icon plus the value content.
+  - id: value-description
+    element: p
+    description: A muted secondary line under the value (e.g. a status detail).
+  - id: actions
+    element: div
+    description: A wrapped row of action links within a value (e.g. Fix / View).
+
+layout:
+  type: grid
+  direction: row
+  order: [label, value]
+
+states: []

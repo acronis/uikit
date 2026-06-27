@@ -397,6 +397,24 @@ const RENDER: Record<string, RenderHint> = {
     // meaningful zero-arg render. VR is covered by the hand-written stories.
     skip: true,
   },
+  'description-list': {
+    extraImports: [
+      "import { DescriptionListItem, DescriptionListLabel, DescriptionListValue, DescriptionListValueDescription } from '../description-list';",
+    ],
+    sample: [
+      '',
+      '      <DescriptionListItem>',
+      '        <DescriptionListLabel>Backup</DescriptionListLabel>',
+      '        <DescriptionListValue>',
+      '          <div>',
+      '            Success',
+      '            <DescriptionListValueDescription>150GB backed up</DescriptionListValueDescription>',
+      '          </div>',
+      '        </DescriptionListValue>',
+      '      </DescriptionListItem>',
+      '    ',
+    ].join('\n'),
+  },
   resizable: {
     root: 'ResizablePanelGroup',
     ariaLabel: 'Resizable example',

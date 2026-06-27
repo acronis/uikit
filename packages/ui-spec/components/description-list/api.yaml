@@ -1,0 +1,53 @@
+spec_version: '1.0'
+component: DescriptionList
+
+# A composable, presentational list — parts take native element attributes
+# (className, etc.); there are no behavioral props. The value is a slot composed
+# from a status icon, text, a value-description, and action links (the `Link`
+# component).
+contract:
+  properties: []
+  events: []
+  content:
+    - name: default
+      description: >-
+        DescriptionListItem rows, each a DescriptionListLabel (<dt>) and a
+        DescriptionListValue (<dd>). The value composes an optional status icon,
+        text, a DescriptionListValueDescription, and a DescriptionListActions row.
+  methods: []
+
+adapters:
+  react:
+    component: DescriptionList
+    status: implemented
+    import: >-
+      import { DescriptionList, DescriptionListItem, DescriptionListLabel,
+      DescriptionListValue, DescriptionListValueDescription, DescriptionListActions }
+      from '@acronis-platform/ui-react'
+    example: |
+      <DescriptionList>
+        <DescriptionListItem>
+          <DescriptionListLabel>Backup</DescriptionListLabel>
+          <DescriptionListValue>
+            <CircleCheckIcon className="text-[var(--ui-text-on-status-success)]" />
+            <div>
+              Success
+              <DescriptionListValueDescription>
+                150GB of data backed up successfully
+              </DescriptionListValueDescription>
+            </div>
+          </DescriptionListValue>
+        </DescriptionListItem>
+      </DescriptionList>
+  vue:
+    component: AvDescriptionList
+    status: planned
+    import: "import { AvDescriptionList } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvDescriptionList :items="items" />
+  web-components:
+    element: ui-description-list
+    status: planned
+    import: "import '@acronis-platform/ui-wc/description-list'"
+    example: |
+      <ui-description-list></ui-description-list>

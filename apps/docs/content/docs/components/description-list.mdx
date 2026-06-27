@@ -1,0 +1,77 @@
+---
+title: DescriptionList
+description: A key/value data list — rows of label → value with optional status icons, descriptions, and action links.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { DescriptionListDemo } from "@/components/demos-react/description-list";
+
+## Usage
+
+```tsx
+import {
+  DescriptionList, DescriptionListItem, DescriptionListLabel,
+  DescriptionListValue, DescriptionListValueDescription, DescriptionListActions,
+} from '@acronis-platform/ui-react';
+```
+
+`DescriptionList` displays **key/value data** — a semantic `<dl>` of rows, each a
+`label` and a `value`. The value is a slot: plain text, a status (leading icon +
+value + a muted description), or action **`Link`**s. Rows have a full-bleed top
+divider while the content stays inset. Composes the shared semantic tokens — no
+dedicated tier. The status icon color is caller-applied via
+`--ui-text-on-status-*`.
+
+## Examples
+
+<DemoReact>
+  <DescriptionListDemo />
+</DemoReact>
+
+```tsx
+<DescriptionList>
+  <DescriptionListItem>
+    <DescriptionListLabel>Backup</DescriptionListLabel>
+    <DescriptionListValue>
+      <CircleCheckIcon className="text-[var(--ui-text-on-status-success)]" />
+      <div>
+        Success
+        <DescriptionListValueDescription>
+          150GB of data backed up successfully
+        </DescriptionListValueDescription>
+      </div>
+    </DescriptionListValue>
+  </DescriptionListItem>
+
+  <DescriptionListItem>
+    <DescriptionListLabel>EDR</DescriptionListLabel>
+    <DescriptionListValue>
+      <CogIcon className="text-[var(--ui-text-on-status-warning)]" />
+      <div>
+        <DescriptionListValueDescription>Issue description</DescriptionListValueDescription>
+        <DescriptionListActions className="mt-1">
+          <Link href="#fix">Action to fix</Link>
+          <Link href="#alert">View alert</Link>
+        </DescriptionListActions>
+      </div>
+    </DescriptionListValue>
+  </DescriptionListItem>
+</DescriptionList>
+```
+
+The label column width is set with the `--description-list-label` custom property
+(default `14rem`); inside a padded container, add `-mx-6` to the list so dividers
+stay full-bleed.
+
+## Parts
+
+| Part                              | Element | Purpose                                    |
+| --------------------------------- | ------- | ------------------------------------------ |
+| `DescriptionList`                 | dl      | The list container.                        |
+| `DescriptionListItem`             | div     | A row (label + value); full-bleed divider. |
+| `DescriptionListLabel`            | dt      | The key (left column).                     |
+| `DescriptionListValue`            | dd      | The value (right column); icon + content.  |
+| `DescriptionListValueDescription` | p       | Muted secondary line under the value.      |
+| `DescriptionListActions`          | div     | A row of action links within a value.      |
+
+All parts accept native element attributes (`className`, …).
