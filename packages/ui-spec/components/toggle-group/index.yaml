@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: ToggleGroup
+name: toggle-group
+status: draft
+category: forms
+description: >-
+  A set of pressable toggle buttons (single or multiple selection) — plus a
+  standalone Toggle. Built on Base UI's Toggle / ToggleGroup. Ported from the
+  legacy shadcn-uikit `toggle-group`.
+since: 0.51.0

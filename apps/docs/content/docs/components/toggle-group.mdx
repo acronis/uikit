@@ -1,0 +1,50 @@
+---
+title: ToggleGroup
+description: A set of pressable toggle buttons, plus a standalone Toggle.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { ToggleGroupDemo } from "@/components/demos-react/toggle-group";
+
+## Usage
+
+```tsx
+import { Toggle, ToggleGroup, ToggleGroupItem } from '@acronis-platform/ui-react';
+```
+
+`ToggleGroup` is a set of pressable toggle buttons — single or multiple selection
+— built on [Base UI's Toggle / ToggleGroup](https://base-ui.com/react/components/toggle-group).
+Each `ToggleGroupItem` needs a `value`; control the pressed set with `value` /
+`defaultValue`. `Toggle` is the same button used standalone for an independent
+on/off control. Give icon-only toggles an `aria-label`.
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` toggle-group.
+
+## Examples
+
+<DemoReact>
+  <ToggleGroupDemo />
+</DemoReact>
+
+```tsx
+<ToggleGroup defaultValue={['grid']} aria-label="View mode">
+  <ToggleGroupItem value="grid" aria-label="Grid view"><LayoutGridIcon size={16} /></ToggleGroupItem>
+  <ToggleGroupItem value="list" aria-label="List view"><ListIcon size={16} /></ToggleGroupItem>
+</ToggleGroup>
+```
+
+A standalone toggle:
+
+```tsx
+<Toggle aria-label="Favorite"><StarIcon size={16} /> Favorite</Toggle>
+```
+
+For choosing a form value use [`RadioGroup`](/components/radio) or
+[`InputSelect`](/components/input-select); for a single labelled on/off setting use
+[`Switch`](/components/switch).
+
+## API Reference
+
+`ToggleGroup` re-exports Base UI's ToggleGroup props (`value` / `defaultValue` /
+`disabled` / `onValueChange`). `ToggleGroupItem` and `Toggle` are Base UI Toggles
+(`value`, `pressed` / `defaultPressed`, `disabled`) plus `className`.

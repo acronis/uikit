@@ -1,0 +1,60 @@
+spec_version: '1.0'
+component: ToggleGroup
+
+# ToggleGroup tracks pressed value(s); each ToggleGroupItem (and the standalone
+# Toggle) is a Base UI Toggle. Props below cover the group + the standalone toggle.
+contract:
+  properties:
+    - name: value
+      type: 'string[]'
+      required: false
+      description: The pressed item value(s) (controlled, on ToggleGroup).
+    - name: defaultValue
+      type: 'string[]'
+      required: false
+      description: The initially pressed value(s) (uncontrolled, on ToggleGroup).
+    - name: pressed
+      type: boolean
+      required: false
+      description: Whether a standalone Toggle is pressed (controlled).
+    - name: defaultPressed
+      type: boolean
+      required: false
+      default: 'false'
+      description: Whether a standalone Toggle is initially pressed (uncontrolled).
+    - name: disabled
+      type: boolean
+      required: false
+      default: 'false'
+      description: Disables the group / toggle.
+  events:
+    - name: onValueChange
+      payload: '(value: string[], eventDetails) => void'
+      description: Fired when the pressed set changes (ToggleGroup).
+    - name: onPressedChange
+      payload: '(pressed: boolean, eventDetails) => void'
+      description: Fired when a standalone Toggle's pressed state changes.
+  methods: []
+
+adapters:
+  react:
+    component: ToggleGroup
+    status: implemented
+    import: "import { Toggle, ToggleGroup, ToggleGroupItem } from '@acronis-platform/ui-react'"
+    example: |
+      <ToggleGroup defaultValue={['grid']}>
+        <ToggleGroupItem value="grid" aria-label="Grid">▦</ToggleGroupItem>
+        <ToggleGroupItem value="list" aria-label="List">≣</ToggleGroupItem>
+      </ToggleGroup>
+  vue:
+    component: AvToggleGroup
+    status: planned
+    import: "import { AvToggleGroup } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvToggleGroup />
+  web-components:
+    element: ui-toggle-group
+    status: planned
+    import: "import '@acronis-platform/ui-wc/toggle-group'"
+    example: |
+      <ui-toggle-group></ui-toggle-group>

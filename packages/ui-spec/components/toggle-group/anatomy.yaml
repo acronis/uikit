@@ -1,0 +1,35 @@
+spec_version: '1.0'
+component: ToggleGroup
+
+schematic: |
+  toggle-group: ToggleGroup (which item(s) are pressed)
+    toggle-group-item: a pressable button (pressed → tinted)
+  toggle: a standalone pressable button (same styling, no group)
+
+root:
+  element: div
+  description: >-
+    ToggleGroup — a horizontal (or vertical) set of toggle buttons; tracks which
+    item value(s) are pressed.
+
+parts:
+  - id: toggle-group-item
+    element: button
+    description: A pressable button; tints (active surface) when pressed.
+  - id: toggle
+    element: button
+    description: >-
+      A standalone toggle button (same styling as an item) for an independent
+      on/off control, used outside a group.
+
+states:
+  - id: pressed
+    trigger: the toggle is pressed
+    kind: pseudo
+    pseudo: '[data-pressed]'
+    affects: [toggle-group-item, toggle]
+  - id: disabled
+    trigger: disabled is set
+    kind: prop
+    prop: disabled
+    affects: [toggle-group-item, toggle]

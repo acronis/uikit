@@ -19,6 +19,7 @@
     "switch",
     "slider",
     "number-field",
+    "toggle-group",
     "select",
     "search-global",
     "label",

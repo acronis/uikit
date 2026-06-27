@@ -1,0 +1,21 @@
+spec_version: '1.0'
+component: ToggleGroup
+
+# References only. Values live in @acronis-platform/tokens-pd. No --ui-toggle-* tier
+# — semantic tokens: transparent idle, the hover surface on hover, the active
+# surface when pressed, foreground text, and the primary focus ring.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-text-on-surface-primary
+    affects: toggle-group-item
+    description: Label/icon text.
+  - name: --ui-background-surface-hover
+    affects: toggle-group-item
+    description: Hover background.
+  - name: --ui-background-surface-active
+    affects: toggle-group-item
+    description: Pressed (selected) background.
+  - name: --ui-focus-primary
+    affects: toggle-group-item
+    description: Focus ring.
