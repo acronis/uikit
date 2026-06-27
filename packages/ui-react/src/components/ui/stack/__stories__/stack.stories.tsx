@@ -25,9 +25,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// args drive the Controls panel; render spreads them so changing a control
+// re-renders the Stack.
 export const Vertical: Story = {
-  render: () => (
-    <Stack className="w-[240px]">
+  args: { direction: 'vertical', gap: 'md' },
+  render: (args) => (
+    <Stack {...args} className="w-[240px]">
       <Box>One</Box>
       <Box>Two</Box>
       <Box>Three</Box>
@@ -36,8 +39,9 @@ export const Vertical: Story = {
 };
 
 export const Horizontal: Story = {
-  render: () => (
-    <Stack direction="horizontal" gap="sm">
+  args: { direction: 'horizontal', gap: 'sm' },
+  render: (args) => (
+    <Stack {...args}>
       <Box>One</Box>
       <Box>Two</Box>
       <Box>Three</Box>

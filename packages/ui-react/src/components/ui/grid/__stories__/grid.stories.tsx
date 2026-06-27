@@ -22,9 +22,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// args drive the Controls panel; render spreads them so changing a control
+// re-renders the Grid.
 export const Default: Story = {
-  render: () => (
-    <Grid cols={3} className="w-[520px]">
+  args: { cols: 3, gap: 'md' },
+  render: (args) => (
+    <Grid {...args} className="w-[520px]">
       {Array.from({ length: 6 }, (_, i) => (
         <Box key={i}>Cell {i + 1}</Box>
       ))}
