@@ -21,9 +21,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
+  args: { defaultValue: 3, min: 0, max: 99 },
+  render: (args) => (
     <div className="w-[180px]">
-      <NumberField defaultValue={3} min={0} max={99}>
+      <NumberField {...args}>
         <NumberFieldGroup>
           <NumberFieldDecrement aria-label="Decrease" />
           <NumberFieldInput aria-label="Quantity" />

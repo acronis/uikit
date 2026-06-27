@@ -53,8 +53,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
-    <Alert className="w-[400px]">
+  args: { variant: 'info' },
+  render: (args) => (
+    <Alert {...args} className="w-[400px]">
       <AlertIcon>
         <CircleInfoIcon size={16} />
       </AlertIcon>

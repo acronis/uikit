@@ -21,9 +21,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
+  args: { defaultValue: 40 },
+  render: (args) => (
     <div className="w-[300px]">
-      <Slider defaultValue={40} aria-label="Volume" />
+      <Slider aria-label="Volume" {...args} />
     </div>
   ),
 };

@@ -21,8 +21,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
-    <ToggleGroup defaultValue={['grid']} aria-label="View mode">
+  args: { defaultValue: ['grid'] },
+  render: (args) => (
+    <ToggleGroup {...args} aria-label="View mode">
       <ToggleGroupItem value="grid" aria-label="Grid view">
         <LayoutGridIcon size={16} />
       </ToggleGroupItem>

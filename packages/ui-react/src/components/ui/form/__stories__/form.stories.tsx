@@ -48,8 +48,9 @@ type Story = StoryObj<typeof meta>;
 // Form coordinates the Fields natively — it collects values by each Field's `name`,
 // validates on submit, and calls onFormSubmit only when every field is valid.
 export const Default: Story = {
-  render: () => (
-    <Form onFormSubmit={() => {}} className="w-[360px]">
+  args: { validationMode: 'onSubmit' },
+  render: (args) => (
+    <Form {...args} onFormSubmit={() => {}} className="w-[360px]">
       <Field name="email">
         <FieldLabel>Email</FieldLabel>
         <FieldControl render={<InputBox type="email" placeholder="you@example.com" required />} />
