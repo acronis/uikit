@@ -1,0 +1,65 @@
+spec_version: '1.0'
+component: Combobox
+
+schematic: |
+  combobox: Combobox.Root (holds items + value; filters by input)
+    combobox-input:   field box — typeable input + clear (✕) + chevron trigger
+    combobox-content: portaled dropdown surface
+      combobox-list:    the (filtered) list
+        combobox-item:    one option (+ trailing check when selected)
+      combobox-empty:   "no results" message when the filter matches nothing
+      combobox-group:   optional group of items
+        combobox-group-label: group heading
+
+root:
+  element: div
+  description: >-
+    Combobox (Base UI Combobox.Root) — holds the items and selected value and
+    filters the items by the input text. Generic over the value type and single
+    vs. multiple selection.
+
+parts:
+  - id: combobox-input
+    element: input
+    description: >-
+      The field box — a typeable Combobox.Input with an optional clear button and a
+      chevron trigger that toggles the dropdown.
+  - id: combobox-content
+    element: div
+    description: The portaled dropdown surface (positioner + popup).
+  - id: combobox-list
+    element: div
+    description: >-
+      The list container. Its children may be a function `(item) => …` that the
+      list maps over the filtered items.
+  - id: combobox-item
+    element: div
+    description: One option; tints when highlighted/selected and shows a trailing check.
+  - id: combobox-empty
+    element: div
+    description: A message shown when the filter matches no items.
+  - id: combobox-group
+    element: div
+    description: An optional group of items.
+  - id: combobox-group-label
+    element: div
+    description: The heading for a group.
+
+states:
+  - id: open
+    trigger: the dropdown is open
+    kind: internal
+  - id: disabled
+    trigger: disabled is set
+    kind: prop
+    prop: disabled
+
+internal_state:
+  - id: open
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [open]
+    controlled_default: defaultOpen
+    changed_by: focusing/typing in the input, the chevron trigger, Esc, or selecting an item
+    description: Whether the dropdown is open.

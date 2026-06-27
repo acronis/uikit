@@ -426,6 +426,11 @@ const RENDER: Record<string, RenderHint> = {
     // VR is covered by the hand-written stories (Default / Card).
     skip: true,
   },
+  combobox: {
+    // A multi-part composition needing items + input + list children to render
+    // meaningfully. VR is covered by the hand-written stories (Default / Open).
+    skip: true,
+  },
   'progress-circle': {
     // Driven by `value`; render a representative filled ring (per size grid).
     props: 'value={75} showValue',

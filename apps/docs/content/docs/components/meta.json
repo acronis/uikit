@@ -12,6 +12,7 @@
     "input-text-area",
     "input-search",
     "input-select",
+    "combobox",
     "input-date-picker",
     "checkbox",
     "radio",

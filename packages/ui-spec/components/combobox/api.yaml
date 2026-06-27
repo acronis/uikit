@@ -1,0 +1,78 @@
+spec_version: '1.0'
+component: Combobox
+
+# Combobox is a multi-part composition. The root carries the data + value props
+# below (generic over the value type); the parts (input/content/list/item/…) take
+# their Base UI part props plus className.
+contract:
+  properties:
+    - name: items
+      type: 'readonly Value[]'
+      required: false
+      description: >-
+        The options. When items are `{ value, label }` objects, the label/value
+        are extracted automatically for display, filtering, and form submission.
+    - name: value
+      type: 'Value | Value[] | null'
+      required: false
+      description: The selected value (controlled). Use defaultValue for uncontrolled.
+    - name: defaultValue
+      type: 'Value | Value[] | null'
+      required: false
+      description: The initial selected value (uncontrolled).
+    - name: multiple
+      type: boolean
+      required: false
+      default: 'false'
+      description: Whether multiple items can be selected.
+    - name: open
+      type: boolean
+      required: false
+      description: Whether the dropdown is open (controlled).
+    - name: defaultOpen
+      type: boolean
+      required: false
+      default: 'false'
+      description: Whether the dropdown is initially open (uncontrolled).
+    - name: disabled
+      type: boolean
+      required: false
+      default: 'false'
+      description: Disables the combobox.
+    - name: name
+      type: string
+      required: false
+      description: Identifies the field when a form is submitted.
+  events:
+    - name: onValueChange
+      payload: '(value: Value | Value[] | null, eventDetails) => void'
+      description: Fired when the selected value changes.
+  methods: []
+
+adapters:
+  react:
+    component: Combobox
+    status: implemented
+    import: "import { Combobox, ComboboxInput, ComboboxContent, ComboboxList, ComboboxItem, ComboboxEmpty } from '@acronis-platform/ui-react'"
+    example: |
+      <Combobox items={frameworks}>
+        <ComboboxInput placeholder="Search…" />
+        <ComboboxContent>
+          <ComboboxEmpty>No results.</ComboboxEmpty>
+          <ComboboxList>
+            {(item) => <ComboboxItem key={item.value} value={item}>{item.label}</ComboboxItem>}
+          </ComboboxList>
+        </ComboboxContent>
+      </Combobox>
+  vue:
+    component: AvCombobox
+    status: planned
+    import: "import { AvCombobox } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvCombobox :items="frameworks" />
+  web-components:
+    element: ui-combobox
+    status: planned
+    import: "import '@acronis-platform/ui-wc/combobox'"
+    example: |
+      <ui-combobox></ui-combobox>

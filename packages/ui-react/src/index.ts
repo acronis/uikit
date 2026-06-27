@@ -9,6 +9,7 @@ export * from './components/ui/card-filter';
 export * from './components/ui/chart';
 export * from './components/ui/checkbox';
 export * from './components/ui/chip';
+export * from './components/ui/combobox';
 export * from './components/ui/data-table';
 export * from './components/ui/description-list';
 export * from './components/ui/dialog';

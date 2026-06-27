@@ -1,0 +1,78 @@
+---
+title: Combobox
+description: A searchable select — a typeable input that filters a list in a dropdown.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { ComboboxDemo } from "@/components/demos-react/combobox";
+
+## Usage
+
+```tsx
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxList,
+  ComboboxItem,
+} from '@acronis-platform/ui-react';
+```
+
+`Combobox` is a searchable select built on
+[Base UI's Combobox](https://base-ui.com/react/components/combobox): a typeable
+input that filters a list of items in a dropdown. It's themed with the
+`--ui-input-select-*` tokens, so it matches [`InputSelect`](/components/input-select)
+— use `Combobox` when the list is long enough to need filtering, `InputSelect`
+when it isn't.
+
+Pass `items` to the root; when they're `{ value, label }` objects the
+label/value are extracted automatically for display, filtering, and form
+submission. The `ComboboxList` children may be a function `(item) => …` that maps
+over the **filtered** items.
+
+> Design-pending v1. The legacy `shadcn-uikit` combobox was only a hardcoded
+> Popover + cmdk demo; this is a real, reusable component built on Base UI.
+
+## Examples
+
+<DemoReact>
+  <ComboboxDemo />
+</DemoReact>
+
+```tsx
+const frameworks = [
+  { value: 'next', label: 'Next.js' },
+  { value: 'astro', label: 'Astro' },
+];
+
+<Combobox items={frameworks}>
+  <ComboboxInput placeholder="Search framework…" clearable />
+  <ComboboxContent>
+    <ComboboxEmpty>No framework found.</ComboboxEmpty>
+    <ComboboxList>
+      {(item) => (
+        <ComboboxItem key={item.value} value={item}>
+          {item.label}
+        </ComboboxItem>
+      )}
+    </ComboboxList>
+  </ComboboxContent>
+</Combobox>
+```
+
+Pair it with a [`Field`](/components/field) for a label, description, and error,
+or set `aria-label` on `ComboboxInput`.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/combobox/combobox.tsx"
+  name="ComboboxInputProps"
+/>
+
+The root (`Combobox`) takes Base UI Combobox props — `items`, `value` /
+`defaultValue`, `onValueChange`, `multiple`, `open` / `defaultOpen`, `disabled`,
+`name`. `ComboboxContent`, `ComboboxList`, `ComboboxItem`, `ComboboxEmpty`,
+`ComboboxGroup`, and `ComboboxGroupLabel` accept their Base UI part props plus
+`className`.

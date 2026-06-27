@@ -1,0 +1,11 @@
+spec_version: '1.0'
+component: Combobox
+name: combobox
+status: draft
+category: forms
+description: >-
+  A searchable select built on Base UI's Combobox primitive — a typeable input
+  that filters a list of items in a dropdown. Reuses the InputSelect token tier so
+  it matches the non-searchable select. The legacy shadcn-uikit `combobox` was
+  only a hardcoded Popover + cmdk demo; this is a real, reusable component.
+since: 0.49.0

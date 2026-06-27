@@ -1,0 +1,46 @@
+spec_version: '1.0'
+component: Combobox
+
+# References only. Values live in @acronis-platform/tokens-pd. Combobox has no tier
+# of its own — it reuses the `--ui-input-select-*` tokens so it matches InputSelect
+# (the non-searchable select). Listed here is a representative subset; the field
+# box, dropdown container, and items all draw from that tier.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-input-select-global-box-color-idle
+    affects: combobox-input
+    description: Field box surface.
+  - name: --ui-input-select-normal-box-border-color-idle
+    affects: combobox-input
+    description: Field box border.
+  - name: --ui-input-select-global-value-color-idle
+    affects: combobox-input
+    description: Typed value text.
+  - name: --ui-input-select-global-placeholder-color-idle
+    affects: combobox-input
+    description: Placeholder text.
+  - name: --ui-focus-primary
+    affects: combobox-input
+    description: Focus ring of the field box.
+  - name: --ui-input-select-dropdown-container-color
+    affects: combobox-content
+    description: Dropdown surface.
+  - name: --ui-input-select-dropdown-container-border-color
+    affects: combobox-content
+    description: Dropdown border.
+  - name: --ui-input-select-dropdown-item-global-label-color
+    affects: combobox-item
+    description: Item label text.
+  - name: --ui-input-select-dropdown-item-unselected-container-color-hover
+    affects: combobox-item
+    description: Highlighted item background.
+  - name: --ui-input-select-dropdown-item-selected-container-color-idle
+    affects: combobox-item
+    description: Selected item background.
+  - name: --ui-input-select-normal-description-color-idle
+    affects: combobox-empty
+    description: Muted "no results" text.
+  - name: --ui-input-select-dropdown-section-label-group-color
+    affects: combobox-group-label
+    description: Group heading text.
