@@ -1,0 +1,59 @@
+spec_version: '1.0'
+component: Slider
+
+contract:
+  properties:
+    - name: value
+      type: 'number | number[]'
+      required: false
+      description: The value(s) (controlled). An array renders a range (one thumb each).
+    - name: defaultValue
+      type: 'number | number[]'
+      required: false
+      default: '0'
+      description: The initial value(s) (uncontrolled).
+    - name: min
+      type: number
+      required: false
+      default: '0'
+      description: Minimum value.
+    - name: max
+      type: number
+      required: false
+      default: '100'
+      description: Maximum value.
+    - name: step
+      type: number
+      required: false
+      default: '1'
+      description: Step increment.
+    - name: disabled
+      type: boolean
+      required: false
+      default: 'false'
+      description: Disables the slider.
+  events:
+    - name: onValueChange
+      payload: '(value: number | number[], eventDetails) => void'
+      description: Fired as the value changes while dragging.
+  methods: []
+
+adapters:
+  react:
+    component: Slider
+    status: implemented
+    import: "import { Slider } from '@acronis-platform/ui-react'"
+    example: |
+      <Slider defaultValue={40} aria-label="Volume" />
+  vue:
+    component: AvSlider
+    status: planned
+    import: "import { AvSlider } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvSlider :default-value="40" />
+  web-components:
+    element: ui-slider
+    status: planned
+    import: "import '@acronis-platform/ui-wc/slider'"
+    example: |
+      <ui-slider></ui-slider>

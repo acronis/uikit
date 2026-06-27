@@ -1,0 +1,42 @@
+spec_version: '1.0'
+component: Slider
+
+schematic: |
+  slider: Slider.Root (value/min/max/step)
+    control: the interaction area
+      track:     the rail
+        indicator: the filled portion (start → value)
+      thumb:     draggable handle (one per value; two for a range)
+
+root:
+  element: div
+  role: slider
+  description: >-
+    Slider (Base UI Slider.Root) — holds the value(s), min/max/step, and
+    orientation. Renders one thumb per value (a single number or a range array).
+
+parts:
+  - id: control
+    element: div
+    description: The interaction area spanning the track + thumb(s).
+  - id: track
+    element: div
+    description: The full-length rail.
+  - id: indicator
+    element: div
+    description: The filled portion from the start to the current value.
+  - id: thumb
+    element: div
+    description: The draggable handle; one per value (two for a range).
+
+states:
+  - id: dragging
+    trigger: a thumb is being dragged
+    kind: pseudo
+    pseudo: '[data-dragging]'
+    affects: [thumb]
+  - id: disabled
+    trigger: disabled is set
+    kind: prop
+    prop: disabled
+    affects: [thumb]

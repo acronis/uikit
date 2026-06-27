@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: Slider
+name: slider
+status: draft
+category: forms
+description: >-
+  A slider for choosing a number (or a range, with two thumbs) within a min/max by
+  dragging. Built on Base UI's Slider. Ported from the legacy shadcn-uikit
+  `slider`.
+since: 0.50.0

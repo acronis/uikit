@@ -52,6 +52,7 @@ export * from './components/ui/select';
 export * from './components/ui/separator';
 export * from './components/ui/sheet';
 export * from './components/ui/skeleton';
+export * from './components/ui/slider';
 export * from './components/ui/spinner';
 export * from './components/ui/resizable';
 export * from './components/ui/sidebar-primary';

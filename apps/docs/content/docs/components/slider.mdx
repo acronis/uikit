@@ -1,0 +1,41 @@
+---
+title: Slider
+description: Choose a number (or a range) within a min/max by dragging.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { SliderDemo } from "@/components/demos-react/slider";
+
+## Usage
+
+```tsx
+import { Slider } from '@acronis-platform/ui-react';
+```
+
+`Slider` lets the user pick a number — or a range, by passing an array value (two
+thumbs) — within a `min`/`max`, snapped to `step`. Built on
+[Base UI's Slider](https://base-ui.com/react/components/slider). Give it an
+accessible name via `aria-label` or a [`Field`](/components/field).
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` slider.
+
+## Examples
+
+<DemoReact>
+  <SliderDemo />
+</DemoReact>
+
+```tsx
+<Slider defaultValue={40} aria-label="Volume" />
+<Slider defaultValue={[20, 80]} aria-label="Price range" />
+```
+
+For precise numeric entry use a number field / `InputText`; for a few discrete
+choices use `RadioGroup` or a toggle group.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/slider/slider.tsx"
+  name="SliderProps"
+/>
