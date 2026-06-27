@@ -1,0 +1,28 @@
+spec_version: '1.0'
+component: AuthLayout
+
+schematic: |
+  auth-layout: <div> full-page centered, page surface
+    auth-layout-card: centered surface card (max-w-sm)
+      auth-layout-logo:   brand / title slot (top, centered)
+      …children…         the form (title + fields + submit)
+      auth-layout-footer: muted links (bottom, centered)
+
+root:
+  element: div
+  description: >-
+    The full-page centered container for an auth screen; centers the card on the
+    page surface.
+
+parts:
+  - id: auth-layout-card
+    element: div
+    description: The centered surface card (border + shadow, max-w-sm) holding the form.
+  - id: auth-layout-logo
+    element: div
+    description: Top brand / title slot, centered.
+  - id: auth-layout-footer
+    element: div
+    description: Bottom muted links / helper text, centered.
+
+states: []

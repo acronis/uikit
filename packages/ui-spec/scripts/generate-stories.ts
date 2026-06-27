@@ -486,6 +486,11 @@ const RENDER: Record<string, RenderHint> = {
     // covered by the hand-written story (Default).
     skip: true,
   },
+  'auth-layout': {
+    // A centered-card layout needing a card + form children. VR is covered by the
+    // hand-written story (SignIn).
+    skip: true,
+  },
   accordion: {
     // A composition needing item/trigger/panel children. VR is covered by the
     // hand-written stories (Default / Multiple).

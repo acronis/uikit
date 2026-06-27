@@ -1,0 +1,60 @@
+---
+title: Auth Layout
+description: A centered-card layout for sign-in, sign-up, and verification flows.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { AuthLayoutDemo } from "@/components/demos-react/auth-layout";
+
+## Usage
+
+```tsx
+import {
+  AuthLayout,
+  AuthLayoutCard,
+  AuthLayoutLogo,
+  AuthLayoutFooter,
+} from '@acronis-platform/ui-react';
+```
+
+`AuthLayout` is the centered-card chrome for unauthenticated screens — sign-in,
+sign-up, forgot-password, 2FA. It centers a surface `AuthLayoutCard` on the page,
+with a brand/title slot (`AuthLayoutLogo`), the form as children, and a footer of
+links (`AuthLayoutFooter`). Mapped to the
+[Main-menu-improvements Figma](https://www.figma.com/design/OkbBd4RX3Y5qI9Q0WwFD7u/Main-menu-improvements?node-id=4906-362342).
+
+> The form inside carries the semantics — use a [`Field`](/components/field) /
+> [`Form`](/components/form) with a labelled heading.
+
+## Examples
+
+<DemoReact>
+  <AuthLayoutDemo />
+</DemoReact>
+
+```tsx
+<AuthLayout>
+  <AuthLayoutCard>
+    <AuthLayoutLogo><span className="text-base font-semibold">Sign in</span></AuthLayoutLogo>
+    <Field>
+      <FieldLabel>Email</FieldLabel>
+      <FieldControl render={<InputBox type="email" />} />
+    </Field>
+    <Button className="w-full">Sign in</Button>
+    <AuthLayoutFooter><a href="#">Forgot password?</a></AuthLayoutFooter>
+  </AuthLayoutCard>
+</AuthLayout>
+```
+
+For an authenticated app screen use [App Shell](/layouts/app-shell).
+
+## Parts
+
+| Export             | Purpose                                |
+| ------------------ | -------------------------------------- |
+| `AuthLayout`       | Full-page centered container.          |
+| `AuthLayoutCard`   | The centered surface card (max-w-sm).  |
+| `AuthLayoutLogo`   | Top brand / title slot.                |
+| `AuthLayoutFooter` | Bottom muted links / helper text.      |
+
+All parts accept their native element attributes plus `className`.

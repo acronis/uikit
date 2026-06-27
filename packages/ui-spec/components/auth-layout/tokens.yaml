@@ -1,0 +1,17 @@
+spec_version: '1.0'
+component: AuthLayout
+
+# References only. Values live in @acronis-platform/tokens-pd. The page + card use
+# the primary surface, the card a border; the footer is muted.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-background-surface-primary
+    affects: auth-layout-card
+    description: Page + card surface (bg-background; legacy bg-card has no ui-react bridge).
+  - name: --ui-border-on-surface-border
+    affects: auth-layout-card
+    description: Card border (border-border).
+  - name: --ui-text-on-surface-secondary
+    affects: auth-layout-footer
+    description: Muted footer link/text (text-muted-foreground).

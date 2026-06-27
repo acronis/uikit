@@ -3,6 +3,7 @@
   "pages": [
     "index",
     "app-shell",
+    "auth-layout",
     "page-header",
     "page-content",
     "stack",

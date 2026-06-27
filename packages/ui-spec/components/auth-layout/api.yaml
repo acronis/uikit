@@ -1,0 +1,34 @@
+spec_version: '1.0'
+component: AuthLayout
+
+# Markup-only; parts take native element attributes. No component-specific props.
+contract:
+  properties: []
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: AuthLayout
+    status: implemented
+    import: "import { AuthLayout, AuthLayoutCard, AuthLayoutLogo, AuthLayoutFooter } from '@acronis-platform/ui-react'"
+    example: |
+      <AuthLayout>
+        <AuthLayoutCard>
+          <AuthLayoutLogo>Sign in</AuthLayoutLogo>
+          {/* form */}
+          <AuthLayoutFooter><a href="#">Forgot password?</a></AuthLayoutFooter>
+        </AuthLayoutCard>
+      </AuthLayout>
+  vue:
+    component: AvAuthLayout
+    status: planned
+    import: "import { AvAuthLayout } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvAuthLayout />
+  web-components:
+    element: ui-auth-layout
+    status: planned
+    import: "import '@acronis-platform/ui-wc/auth-layout'"
+    example: |
+      <ui-auth-layout></ui-auth-layout>

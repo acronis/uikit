@@ -1,0 +1,14 @@
+spec_version: '1.0'
+component: AuthLayout
+name: auth-layout
+status: ready
+category: layout
+description: >-
+  A centered-card layout for authentication flows (sign-in / sign-up /
+  forgot-password / 2FA) — a full-page centered surface card with a brand/logo
+  slot, the form content, and a footer of links. Mapped to the Main-menu-improvements
+  Figma (node 4906-362342).
+since: 0.52.0
+figma:
+  node: 'https://www.figma.com/design/OkbBd4RX3Y5qI9Q0WwFD7u/Main-menu-improvements?node-id=4906-362342'
+  codeConnect: packages/ui-react/src/components/ui/auth-layout/auth-layout.figma.tsx
