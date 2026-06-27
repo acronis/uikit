@@ -25,3 +25,18 @@ tokens:
   - name: --ui-table-global-row-color-active
     affects: row
     description: Current (last-clicked) row highlight — the active-row color.
+  - name: --ui-table-header-cell-color-hover
+    affects: column-header
+    description: Hover background of the single-click sort toggle.
+  - name: --ui-table-header-sort-icon-size
+    affects: column-header
+    description: Size of the sort-direction arrow in the column header.
+  - name: --ui-table-header-sort-icon-color-active
+    affects: column-header
+    description: Active (sorted) arrow color — the brand blue, ascending or descending.
+  - name: --ui-table-header-sort-icon-color-inactive
+    affects: column-header
+    description: Muted up/down arrow shown when the column is unsorted.
+  - name: --ui-focus-primary
+    affects: column-header
+    description: Focus ring of the keyboard-focused sort toggle.

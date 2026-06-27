@@ -4,74 +4,56 @@ import {
   ArrowDownIcon,
   ArrowsDownUpIcon,
   ArrowUpIcon,
-  EyeCrossedIcon,
 } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
-import { Button } from '../button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../dropdown-menu';
 
 interface DataTableColumnHeaderProps<TData, TValue>
-  extends React.HTMLAttributes<HTMLDivElement> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   column: Column<TData, TValue>;
   title: string;
 }
 
+// Single-click sortable column header — matches the Table primitive's sortable
+// `TableHead`: one click toggles the sort (ascending → descending → unsorted) via
+// TanStack's `column.toggleSorting()`. The trailing icon shows the state with the
+// same `--ui-table-header-sort-icon-*` tokens — an up arrow (ascending) or down
+// arrow (descending) in the active blue, or the muted up/down arrows when
+// unsorted. (Column hiding lives in the toolbar's `DataTableViewOptions`, not a
+// per-header menu, so sorting is a single click.)
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
   className,
+  ...props
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
 
+  const sorted = column.getIsSorted();
+
   return (
-    <div className={cn('flex items-center gap-2', className)}>
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <Button
-              variant="ghost"
-              // ui-react's ghost button has 0 horizontal padding, so add a small
-              // padding for a comfortable click/hover target and negate it on the
-              // left (-ml-2 px-2) so the label still sits flush at the cell's
-              // padding edge — aligned with the body cells below.
-              className="-ml-2 h-8 gap-2 px-2 data-[popup-open]:bg-accent"
-            />
-          }
-        >
-          <span>{title}</span>
-          {column.getIsSorted() === 'desc' ? (
-            <ArrowDownIcon />
-          ) : column.getIsSorted() === 'asc' ? (
-            <ArrowUpIcon />
-          ) : (
-            <ArrowsDownUpIcon />
-          )}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-          <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-            <ArrowUpIcon className="text-muted-foreground" />
-            Asc
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-            <ArrowDownIcon className="text-muted-foreground" />
-            Desc
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-            <EyeCrossedIcon className="text-muted-foreground" />
-            Hide
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <button
+      type="button"
+      onClick={() => column.toggleSorting()}
+      aria-label={`Sort by ${title}`}
+      className={cn(
+        // -ml-2 px-2 keeps the label flush at the cell padding while giving the
+        // toggle a comfortable click/hover target.
+        '-ml-2 inline-flex h-8 select-none items-center gap-2 rounded px-2 text-sm font-semibold transition-colors hover:bg-[var(--ui-table-header-cell-color-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)] [&_svg]:size-[var(--ui-table-header-sort-icon-size)] [&_svg]:shrink-0',
+        className
+      )}
+      {...props}
+    >
+      <span>{title}</span>
+      {sorted === 'asc' ? (
+        <ArrowUpIcon className="text-[var(--ui-table-header-sort-icon-color-active)]" />
+      ) : sorted === 'desc' ? (
+        <ArrowDownIcon className="text-[var(--ui-table-header-sort-icon-color-active)]" />
+      ) : (
+        <ArrowsDownUpIcon className="text-[var(--ui-table-header-sort-icon-color-inactive)]" />
+      )}
+    </button>
   );
 }

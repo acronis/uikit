@@ -20,13 +20,13 @@ and optional row expansion.
 
 ## Parts
 
-| Export                  | Purpose                                                                        |
-| ----------------------- | ------------------------------------------------------------------------------ |
-| `DataTable`             | The grid. Owns table state; takes `columns` / `data`.                          |
-| `DataTableColumnHeader` | A sortable column header (Asc / Desc / Hide menu). Use in a column's `header`. |
-| `DataTableToolbar`      | Search box + Reset + view options. Takes a `table` instance.                   |
-| `DataTablePagination`   | Selection count, rows-per-page, page controls. Takes a `table`.                |
-| `DataTableViewOptions`  | Column-visibility menu. Takes a `table`.                                       |
+| Export                  | Purpose                                                                             |
+| ----------------------- | ----------------------------------------------------------------------------------- |
+| `DataTable`             | The grid. Owns table state; takes `columns` / `data`.                               |
+| `DataTableColumnHeader` | A sortable column header — single-click toggle (↑/↓/↕). Use in a column's `header`. |
+| `DataTableToolbar`      | Search box + Reset + view options. Takes a `table` instance.                        |
+| `DataTablePagination`   | Selection count, rows-per-page, page controls. Takes a `table`.                     |
+| `DataTableViewOptions`  | Column-visibility menu. Takes a `table`.                                            |
 
 `DataTable` manages its own table state. The companion parts operate on a
 TanStack `table` instance you build with `useReactTable` — render them around a

@@ -17,16 +17,19 @@ Scenario: Empty
 ```
 
 ```gherkin
-Scenario: Sort a column
+Scenario: Sort a column in a single click
   Given a column whose header is a DataTableColumnHeader
-  When the user opens its menu and chooses Asc or Desc
-  Then the rows reorder and the header shows the sort direction
+  And the column is unsorted (a muted up/down arrow)
+  When the user clicks the header once
+  Then the rows reorder ascending and the header shows an up arrow in the active blue
+  When the user clicks the header again
+  Then the rows reorder descending and the header shows a down arrow in the active blue
 ```
 
 ```gherkin
 Scenario: Hide a column
-  Given a sortable column header (or the view-options menu)
-  When the user chooses Hide / unchecks the column
+  Given the toolbar's view-options menu
+  When the user unchecks the column
   Then that column is removed from the grid
 ```
 

@@ -13,6 +13,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   DataTable,
+  DataTableColumnHeader,
   DataTablePagination,
   DataTableToolbar,
 } from '../index';
@@ -41,6 +42,26 @@ describe('DataTable', () => {
   it('shows an empty state with no data', () => {
     render(<DataTable columns={columns} data={[]} />);
     expect(screen.getByText('No results.')).toBeInTheDocument();
+  });
+
+  it('sorts a DataTableColumnHeader column in a single click', async () => {
+    const sortable: ColumnDef<Row>[] = [
+      {
+        accessorKey: 'amount',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Amount" />
+        ),
+        cell: ({ row }) => <span>{row.original.amount}</span>,
+      },
+    ];
+    render(<DataTable columns={sortable} data={data.slice(0, 3)} />);
+    const cellsBefore = screen.getAllByRole('cell').map((c) => c.textContent);
+    expect(cellsBefore).toEqual(['100', '200', '300']);
+
+    // One click sorts ascending (already ascending → flips to descending here).
+    await userEvent.click(screen.getByRole('button', { name: 'Sort by Amount' }));
+    const cellsAfter = screen.getAllByRole('cell').map((c) => c.textContent);
+    expect(cellsAfter).not.toEqual(cellsBefore);
   });
 
   it('renders expanded content for an expanded row', async () => {

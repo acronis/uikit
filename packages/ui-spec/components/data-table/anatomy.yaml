@@ -4,7 +4,7 @@ component: DataTable
 schematic: |
   toolbar:   [ search input ] [ Reset ✕ ]            [ ⚙ View ▾ ]   (view-options)
   table: <div> rounded border wrapper
-    column-header: per-column header — title + sort menu (Asc/Desc/Hide)
+    column-header: per-column header — title + single-click sort toggle (↑/↓/↕)
     row:           data row (selectable; selected → tinted)
     expanded-row:  optional detail row under an expanded row
     empty-state:   "No results." row when there is no data
@@ -23,10 +23,12 @@ parts:
     element: table
     description: The table grid (Table / TableHeader / TableBody / rows / cells).
   - id: column-header
-    element: div
+    element: button
     description: >-
-      Sortable column header (DataTableColumnHeader) — a ghost button opening a
-      menu with Asc / Desc / Hide.
+      Sortable column header (DataTableColumnHeader) — a single-click toggle: the
+      title plus a trailing arrow (up = ascending, down = descending, both in the
+      active blue; a muted up/down arrow when unsorted). One click cycles the sort
+      direction. Column hiding lives in the toolbar's view-options menu, not here.
   - id: row
     element: tr
     description: A data row; selectable, tinted when selected.

@@ -27,6 +27,11 @@ parts — `DataTableColumnHeader`, `DataTableToolbar`, `DataTablePagination`,
 `useReactTable`. This is a design-pending v1; it reuses the `Table` component's
 `--ui-table-*` tokens (the wrapper border matches the cell borders).
 
+A `DataTableColumnHeader` sorts in a **single click**: the trailing arrow toggles
+ascending → descending and shows the direction with an up/down arrow in the brand
+blue, or a muted up/down arrow when the column is unsorted. Column hiding lives in
+the toolbar's `DataTableViewOptions` menu, keeping sorting to one click.
+
 ## Examples
 
 <DemoReact>
