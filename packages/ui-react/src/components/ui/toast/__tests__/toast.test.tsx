@@ -4,6 +4,18 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { Toaster, toast } from '../toast';
+import {
+  Toaster as ToasterFromComponentIndex,
+  toast as toastFromComponentIndex,
+} from '../index';
+import {
+  Toaster as ToasterFromRootIndex,
+  toast as toastFromRootIndex,
+} from '@/index';
+import {
+  Toaster as ToasterFromReactEntry,
+  toast as toastFromReactEntry,
+} from '@/react';
 
 // The manager is module-level, so clear any leftover toasts between tests and
 // wait for them to leave the DOM — otherwise a lingering toast pushes the next
@@ -21,6 +33,15 @@ afterEach(async () => {
 });
 
 describe('Toast', () => {
+  it('keeps toast and Toaster wired through component and package exports', () => {
+    expect(ToasterFromComponentIndex).toBe(Toaster);
+    expect(toastFromComponentIndex).toBe(toast);
+    expect(ToasterFromRootIndex).toBe(Toaster);
+    expect(toastFromRootIndex).toBe(toast);
+    expect(ToasterFromReactEntry).toBe(Toaster);
+    expect(toastFromReactEntry).toBe(toast);
+  });
+
   it('renders no toast until one is added', () => {
     render(<Toaster />);
     expect(screen.queryByText('Nothing here')).not.toBeInTheDocument();
