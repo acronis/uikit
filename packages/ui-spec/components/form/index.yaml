@@ -1,0 +1,16 @@
+spec_version: '1.0'
+component: Form
+name: form
+status: draft
+category: forms
+description: >-
+  A native form element with consolidated validation, built on Base UI's Form. It
+  collects values by each Field's name, runs the Fields' validation on submit (or
+  per validationMode), surfaces server errors keyed by field name, and calls
+  onFormSubmit with the values when every field is valid. Ported from the legacy
+  shadcn-uikit `form` (which wrapped react-hook-form); this version drops that
+  dependency and composes the ui-react Field directly.
+since: 0.48.0
+dependencies:
+  components:
+    - Field

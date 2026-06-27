@@ -409,6 +409,12 @@ const RENDER: Record<string, RenderHint> = {
     // (Default / WithError / Disabled / Horizontal / CheckboxGroup / Grouped).
     skip: true,
   },
+  form: {
+    // A <form> that needs Field children + a submit control to render anything
+    // meaningful. VR is covered by the hand-written stories (Default /
+    // WithServerErrors).
+    skip: true,
+  },
   'progress-circle': {
     // Driven by `value`; render a representative filled ring (per size grid).
     props: 'value={75} showValue',

@@ -1,0 +1,71 @@
+---
+title: Form
+description: A native form with consolidated validation, built on Base UI Form.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { FormDemo } from "@/components/demos-react/form";
+
+## Usage
+
+```tsx
+import { Form, Field, FieldLabel, FieldControl, FieldError } from '@acronis-platform/ui-react';
+```
+
+`Form` is a native `<form>` with consolidated validation, built on
+[Base UI's Form](https://base-ui.com/react/components/form). It coordinates the
+[`Field`](/components/field)s it contains — collecting their values by `name`,
+validating on submit (or per `validationMode`), surfacing server `errors` keyed by
+field name, and calling `onFormSubmit(values)` once every field is valid.
+
+> Design-pending v1. The legacy `shadcn-uikit` form wrapped
+> [react-hook-form](https://react-hook-form.com); this version **drops that
+> dependency** and validates through Base UI's Field. If you need react-hook-form
+> or TanStack Form, use them around plain `Field`s — `Form` is the lightweight,
+> dependency-free default.
+
+## Examples
+
+<DemoReact>
+  <FormDemo />
+</DemoReact>
+
+A sign-in form — values are collected by each field's `name`:
+
+```tsx
+<Form onFormSubmit={(values) => signIn(values)}>
+  <Field name="email">
+    <FieldLabel>Email</FieldLabel>
+    <FieldControl render={<InputBox type="email" required />} />
+    <FieldError />
+  </Field>
+  <Field name="password">
+    <FieldLabel>Password</FieldLabel>
+    <FieldControl render={<InputBox type="password" required />} />
+    <FieldError />
+  </Field>
+  <Button type="submit">Sign in</Button>
+</Form>
+```
+
+Show server-side errors after a failed submit — key them by field `name`:
+
+```tsx
+<Form errors={{ email: 'That email is already registered.' }}>
+  <Field name="email">
+    <FieldLabel>Email</FieldLabel>
+    <FieldControl render={<InputBox type="email" />} />
+    <FieldError />
+  </Field>
+</Form>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/form/form.tsx"
+  name="FormProps"
+/>
+
+`onFormSubmit(values, details)` fires on a valid submit with the collected field
+values keyed by name. `Form` also forwards the native `<form>` attributes.

@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: Form
+
+# Form has no tokens of its own — it's a native <form> that only adds a vertical
+# stack with gap. All color/typography comes from the Fields and controls it
+# composes (see the Field and InputBox specs). Values live in
+# @acronis-platform/tokens-pd.
+source: '@acronis-platform/tokens-pd'
+
+tokens: []

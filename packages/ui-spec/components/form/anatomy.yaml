@@ -1,0 +1,36 @@
+spec_version: '1.0'
+component: Form
+
+schematic: |
+  form: <form> — collects values by field name, validates on submit
+    (Field …)        one or more ui-react Fields (name → value)
+    (submit control)  a Button type="submit"
+
+root:
+  element: form
+  description: >-
+    Form (Base UI Form.Root) — a native <form> that coordinates the ui-react
+    Fields it contains: it gathers their values by `name`, runs their validation
+    per `validationMode`, merges externally supplied `errors`, and calls
+    `onFormSubmit(values)` only when every field is valid (calling preventDefault
+    on the native submit).
+
+parts:
+  - id: form
+    element: form
+    description: >-
+      The form element. Contains the Fields and a submit control; owns the
+      validation/submit coordination. Has no visual chrome of its own beyond a
+      vertical stack with gap.
+
+states:
+  - id: validation-mode
+    trigger: validationMode is onBlur or onChange instead of onSubmit
+    kind: prop
+    prop: validationMode
+    affects: [form]
+  - id: server-errors
+    trigger: errors are supplied (e.g. after a failed submit)
+    kind: prop
+    prop: errors
+    affects: [form]

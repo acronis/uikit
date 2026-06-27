@@ -1,0 +1,57 @@
+spec_version: '1.0'
+component: Form
+
+# Form is a single component (a native <form>) — the fields are composed from the
+# Field family. Props mirror Base UI's Form.
+contract:
+  properties:
+    - name: validationMode
+      type: "'onSubmit' | 'onBlur' | 'onChange'"
+      required: false
+      default: "'onSubmit'"
+      description: >-
+        When the fields validate. A Field's own validationMode takes precedence.
+    - name: errors
+      type: 'Record<string, string | string[]>'
+      required: false
+      description: >-
+        Externally supplied errors (e.g. from a server) keyed by each Field's
+        name. Shown on the matching field's FieldError.
+    - name: actionsRef
+      type: 'RefObject<{ validate: (fieldName?: string) => void }>'
+      required: false
+      description: Imperative handle to validate all fields (or one) on demand.
+  events:
+    - name: onFormSubmit
+      payload: '(values: Record<string, unknown>, details) => void'
+      description: >-
+        Fired on submit once every field is valid; receives the collected field
+        values keyed by name. preventDefault is called on the native event.
+  methods: []
+
+adapters:
+  react:
+    component: Form
+    status: implemented
+    import: "import { Form } from '@acronis-platform/ui-react'"
+    example: |
+      <Form onFormSubmit={(values) => save(values)} errors={serverErrors}>
+        <Field name="email">
+          <FieldLabel>Email</FieldLabel>
+          <FieldControl render={<InputBox type="email" required />} />
+          <FieldError />
+        </Field>
+        <Button type="submit">Save</Button>
+      </Form>
+  vue:
+    component: AvForm
+    status: planned
+    import: "import { AvForm } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvForm @submit="save" />
+  web-components:
+    element: ui-form
+    status: planned
+    import: "import '@acronis-platform/ui-wc/form'"
+    example: |
+      <ui-form></ui-form>
