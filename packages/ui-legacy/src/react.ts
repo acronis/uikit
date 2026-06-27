@@ -73,6 +73,7 @@ export * from './components/ui/widget-table-data';
 export * from './components/ui/widget-text';
 export {
   Empty,
+  EmptyIcon,
   EmptyIcon as EmptyIconComponent,
   EmptyHeader,
   EmptyTitle,
@@ -80,6 +81,7 @@ export {
   EmptyActions,
   EmptyLinks,
 } from './components/ui/empty';
+export { EmptyIcon as EmptySvgIcon } from './components/icons/auto-generated';
 
 // Hooks
 // export * from './hooks/use-toast'

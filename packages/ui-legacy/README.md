@@ -44,6 +44,24 @@ function App() {
 }
 ```
 
+### Empty exports from main entry
+
+When importing from the main entry (`@acronis-platform/shadcn-uikit`):
+
+- `EmptyIcon` is the Empty layout slot wrapper (`data-slot="empty-icon"`).
+- `EmptySvgIcon` is the standalone generated SVG icon glyph.
+- `EmptyIconComponent` remains available as a compatibility alias for the slot wrapper.
+
+```tsx
+import {
+  Empty,
+  EmptyIcon,
+  EmptyDescription,
+  EmptyActions,
+  EmptySvgIcon,
+} from '@acronis-platform/shadcn-uikit';
+```
+
 ## Components
 
 ### React Components
