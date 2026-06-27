@@ -1,0 +1,12 @@
+spec_version: '1.0'
+component: Skeleton
+
+# References only. Values live in @acronis-platform/tokens-pd.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-background-surface-active
+    affects: skeleton
+    description: >-
+      The placeholder fill — a visible gray (the muted surface is near-white and
+      disappears on a white background).

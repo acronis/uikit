@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: Alert
+name: alert
+status: draft
+category: feedback
+description: >-
+  A status banner with severity variants (info / success / warning / critical /
+  destructive / ai / neutral) and composable icon, content, title, and
+  description parts. Ported from the legacy shadcn-uikit `alert`.
+since: 0.48.0

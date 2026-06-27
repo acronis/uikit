@@ -1,0 +1,9 @@
+spec_version: '1.0'
+component: Skeleton
+name: skeleton
+status: draft
+category: feedback
+description: >-
+  A pulsing placeholder box for loading states. Shape and size come from the
+  caller's className. Ported from the legacy shadcn-uikit `skeleton`.
+since: 0.48.0

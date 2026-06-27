@@ -1,0 +1,89 @@
+---
+title: Alert
+description: A status banner with severity variants and composable parts.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { AlertDemo } from "@/components/demos-react/alert";
+
+## Usage
+
+```tsx
+import {
+  Alert,
+  AlertIcon,
+  AlertContent,
+  AlertTitle,
+  AlertDescription,
+} from '@acronis-platform/ui-react';
+```
+
+`Alert` is an inline status banner (`role="alert"`). The `variant` sets the
+severity — `info` (default), `success`, `warning`, `critical`, `destructive`,
+`ai`, or `neutral` — driving the surface, text, and accent-border colors from the
+`--ui-*` status tokens. Compose it with `AlertIcon` + `AlertContent`
+(`AlertTitle` / `AlertDescription`).
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` alert.
+
+## Examples
+
+<DemoReact>
+  <AlertDemo />
+</DemoReact>
+
+```tsx
+import { CircleWarningIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<Alert variant="destructive">
+  <AlertIcon><CircleWarningIcon size={16} /></AlertIcon>
+  <AlertContent>
+    <AlertTitle>Error</AlertTitle>
+    <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
+  </AlertContent>
+</Alert>
+```
+
+Add an action with `AlertActions`. As a direct child of `Alert` (after
+`AlertContent`) it sits at the **right edge** — `AlertContent` is `flex-1`, so add
+`self-center` to center it vertically:
+
+```tsx
+<Alert variant="info">
+  <AlertIcon><CircleInfoIcon size={16} /></AlertIcon>
+  <AlertContent>
+    <AlertTitle>Protect non-compliant devices</AlertTitle>
+    <AlertDescription>Ensure a protection plan is applied…</AlertDescription>
+  </AlertContent>
+  <AlertActions className="self-center">
+    <Button>View devices</Button>
+  </AlertActions>
+</Alert>
+```
+
+Place `AlertActions` **inside** `AlertContent` (after the description) and it flows
+**under** the text:
+
+```tsx
+<AlertContent>
+  <AlertTitle>Protect non-compliant devices</AlertTitle>
+  <AlertDescription>Ensure a protection plan is applied…</AlertDescription>
+  <AlertActions className="mt-2">
+    <Button>View devices</Button>
+    <Button variant="ghost">Dismiss</Button>
+  </AlertActions>
+</AlertContent>
+```
+
+For transient, auto-dismissing notifications use [`Toast`](/components/toast); for
+a blocking confirmation use [`Dialog`](/components/dialog).
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/alert/alert.tsx"
+  name="AlertProps"
+/>
+
+`AlertIcon`, `AlertContent`, `AlertTitle`, `AlertDescription`, and `AlertActions`
+accept the props of their underlying element plus `className`.

@@ -1,0 +1,48 @@
+---
+title: Skeleton
+description: A pulsing placeholder box for loading states.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { SkeletonDemo } from "@/components/demos-react/skeleton";
+
+## Usage
+
+```tsx
+import { Skeleton } from '@acronis-platform/ui-react';
+```
+
+`Skeleton` is a pulsing placeholder that reserves layout space while content
+loads, reducing layout shift. Its shape and size come from the `className` you
+pass; the fill uses a subtle gray surface token.
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` skeleton.
+
+## Examples
+
+<DemoReact>
+  <SkeletonDemo />
+</DemoReact>
+
+```tsx
+<div className="flex items-center gap-4">
+  <Skeleton className="size-12 rounded-full" />
+  <div className="flex flex-col gap-2">
+    <Skeleton className="h-4 w-[250px]" />
+    <Skeleton className="h-4 w-[200px]" />
+  </div>
+</div>
+```
+
+For indeterminate work with no known shape use [`Spinner`](/components/spinner);
+for determinate progress use [`Progress`](/components/progress).
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/skeleton/skeleton.tsx"
+  name="SkeletonProps"
+/>
+
+`Skeleton` accepts all native `<div>` attributes; set width / height / radius via
+`className`.

@@ -1,0 +1,38 @@
+spec_version: '1.0'
+component: Alert
+
+contract:
+  properties:
+    - name: variant
+      type: "'info' | 'success' | 'warning' | 'critical' | 'destructive' | 'ai' | 'neutral'"
+      required: false
+      default: "'info'"
+      description: Severity — sets the surface, text, and accent-border colors.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Alert
+    status: implemented
+    import: "import { Alert, AlertIcon, AlertContent, AlertTitle, AlertDescription } from '@acronis-platform/ui-react'"
+    example: |
+      <Alert variant="success">
+        <AlertIcon><CircleCheckIcon size={16} /></AlertIcon>
+        <AlertContent>
+          <AlertTitle>Saved</AlertTitle>
+          <AlertDescription>Your changes were saved.</AlertDescription>
+        </AlertContent>
+      </Alert>
+  vue:
+    component: AvAlert
+    status: planned
+    import: "import { AvAlert } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvAlert variant="success" />
+  web-components:
+    element: ui-alert
+    status: planned
+    import: "import '@acronis-platform/ui-wc/alert'"
+    example: |
+      <ui-alert></ui-alert>

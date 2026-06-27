@@ -415,6 +415,17 @@ const RENDER: Record<string, RenderHint> = {
     // WithServerErrors).
     skip: true,
   },
+  alert: {
+    // A composition needing AlertIcon/AlertContent/AlertTitle/AlertDescription
+    // children to render meaningfully. VR is covered by the hand-written stories
+    // (Default / Destructive / AllVariants).
+    skip: true,
+  },
+  skeleton: {
+    // A bare sized box — meaningful only with a caller-supplied size className.
+    // VR is covered by the hand-written stories (Default / Card).
+    skip: true,
+  },
   'progress-circle': {
     // Driven by `value`; render a representative filled ring (per size grid).
     props: 'value={75} showValue',

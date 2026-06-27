@@ -1,0 +1,50 @@
+spec_version: '1.0'
+component: Alert
+
+schematic: |
+  alert: <div role="alert"> — rounded, full status border, pale status surface
+    alert-icon:     leading status-tinted icon
+    alert-content:  text column
+      alert-title:        short heading
+      alert-description:  supporting text
+      alert-actions:      (optional) action buttons under the description
+    alert-actions:  (optional) action buttons at the right edge
+
+root:
+  element: div
+  role: alert
+  description: >-
+    The banner container — rounded, with a full border in the saturated status
+    color and a pale status surface; the text is the normal foreground and only
+    the icon is tinted with the status color. role="alert" so assistive tech
+    announces it.
+
+parts:
+  - id: alert
+    element: div
+    description: The banner root (role=alert); the variant drives its colors.
+  - id: alert-icon
+    element: div
+    description: Leading slot for a status icon.
+  - id: alert-content
+    element: div
+    description: The text column beside the icon (title + description).
+  - id: alert-title
+    element: h5
+    description: A short heading for the alert.
+  - id: alert-description
+    element: div
+    description: Supporting text under the title.
+  - id: alert-actions
+    element: div
+    description: >-
+      Optional action buttons. Placed as a direct child of the alert (after the
+      content) they sit at the right edge; placed inside the content they flow
+      under the description.
+
+states:
+  - id: variant
+    trigger: variant selects the severity
+    kind: prop
+    prop: variant
+    affects: [alert]

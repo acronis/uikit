@@ -1,0 +1,56 @@
+spec_version: '1.0'
+component: Alert
+
+# References only. Values live in @acronis-platform/tokens-pd. Reconciled with the
+# Figma design: a full border in the saturated status color, a pale status
+# surface, foreground text, and only the icon tinted with the status color. Each
+# variant maps to its pair below; the ai variant has no `strong` surface token so
+# its border/icon use the solid ai text token.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-text-on-surface-primary
+    affects: alert
+    description: Title/description text (text-foreground) — all variants.
+  - name: --ui-background-status-info
+    affects: alert
+    description: Surface for the info variant.
+  - name: --ui-background-status-strong-info
+    affects: alert-icon
+    description: Border + icon color for the info variant.
+  - name: --ui-background-status-success
+    affects: alert
+    description: Surface for the success variant.
+  - name: --ui-background-status-strong-success
+    affects: alert-icon
+    description: Border + icon color for the success variant.
+  - name: --ui-background-status-warning
+    affects: alert
+    description: Surface for the warning variant.
+  - name: --ui-background-status-strong-warning
+    affects: alert-icon
+    description: Border + icon color for the warning variant.
+  - name: --ui-background-status-critical
+    affects: alert
+    description: Surface for the critical variant.
+  - name: --ui-background-status-strong-critical
+    affects: alert-icon
+    description: Border + icon color for the critical variant.
+  - name: --ui-background-status-danger
+    affects: alert
+    description: Surface for the destructive variant.
+  - name: --ui-background-status-strong-danger
+    affects: alert-icon
+    description: Border + icon color for the destructive variant.
+  - name: --ui-background-status-ai
+    affects: alert
+    description: Surface for the ai variant.
+  - name: --ui-text-on-status-ai
+    affects: alert-icon
+    description: Border + icon color for the ai variant (its -strong token is a gradient).
+  - name: --ui-background-status-neutral
+    affects: alert
+    description: Surface for the neutral variant.
+  - name: --ui-background-status-strong-neutral
+    affects: alert-icon
+    description: Border + icon color for the neutral variant.

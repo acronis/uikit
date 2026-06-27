@@ -1,0 +1,29 @@
+spec_version: '1.0'
+component: Skeleton
+
+# Skeleton takes no props of its own beyond the native div attributes; size and
+# shape are set via className.
+contract:
+  properties: []
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Skeleton
+    status: implemented
+    import: "import { Skeleton } from '@acronis-platform/ui-react'"
+    example: |
+      <Skeleton className="h-4 w-[250px]" />
+  vue:
+    component: AvSkeleton
+    status: planned
+    import: "import { AvSkeleton } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvSkeleton class="h-4 w-[250px]" />
+  web-components:
+    element: ui-skeleton
+    status: planned
+    import: "import '@acronis-platform/ui-wc/skeleton'"
+    example: |
+      <ui-skeleton></ui-skeleton>

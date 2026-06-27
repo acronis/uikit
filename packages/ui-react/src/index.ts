@@ -1,4 +1,5 @@
 export { cn } from './lib/utils';
+export * from './components/ui/alert';
 export * from './components/ui/avatar';
 export * from './components/ui/breadcrumb';
 export * from './components/ui/button';
@@ -47,6 +48,7 @@ export {
 export * from './components/ui/select';
 export * from './components/ui/separator';
 export * from './components/ui/sheet';
+export * from './components/ui/skeleton';
 export * from './components/ui/spinner';
 export * from './components/ui/resizable';
 export * from './components/ui/sidebar-primary';

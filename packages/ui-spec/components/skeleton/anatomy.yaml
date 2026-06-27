@@ -1,0 +1,18 @@
+spec_version: '1.0'
+component: Skeleton
+
+schematic: |
+  skeleton: <div> pulsing placeholder (size/shape from className)
+
+root:
+  element: div
+  description: >-
+    A subtle gray, pulsing block standing in for content while it loads. Caller
+    sets width/height/radius via className.
+
+parts:
+  - id: skeleton
+    element: div
+    description: The placeholder box — animate-pulse on a subtle gray surface.
+
+states: []
