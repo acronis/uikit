@@ -1,0 +1,76 @@
+spec_version: '1.0'
+component: Chart
+
+# Chart is a multi-part composition. ChartContainer takes the `config` and the
+# recharts plot as children; the tooltip/legend chrome take recharts' content
+# props plus the display options below. ChartTooltip / ChartLegend are direct
+# re-exports of recharts' Tooltip / Legend.
+contract:
+  properties:
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Per-series map of label / icon / color (or per-theme light+dark colors).
+        ChartContainer turns each entry into a `--color-<key>` custom property.
+    - name: active
+      type: boolean
+      required: false
+      description: >-
+        Whether the tooltip is showing (set by recharts on hover/focus). Drives
+        ChartTooltipContent rendering.
+    - name: indicator
+      type: "'dot' | 'line' | 'dashed'"
+      required: false
+      default: "'dot'"
+      description: Shape of the per-series color indicator in the tooltip.
+    - name: hideLabel
+      type: boolean
+      required: false
+      default: 'false'
+      description: Hide the tooltip's heading label.
+    - name: hideIndicator
+      type: boolean
+      required: false
+      default: 'false'
+      description: Hide the per-series color indicator in the tooltip.
+    - name: hideIcon
+      type: boolean
+      required: false
+      default: 'false'
+      description: Hide the per-series icon in the legend (use the color swatch).
+    - name: nameKey
+      type: string
+      required: false
+      description: Config key to resolve each series' label from the payload.
+    - name: labelKey
+      type: string
+      required: false
+      description: Config key to resolve the tooltip's heading label.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: ChartContainer
+    status: implemented
+    import: "import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from '@acronis-platform/ui-react'"
+    example: |
+      <ChartContainer config={config} className="h-[300px] w-[500px]">
+        <BarChart data={data}>
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <Bar dataKey="desktop" fill="var(--color-desktop)" />
+        </BarChart>
+      </ChartContainer>
+  vue:
+    component: AvChart
+    status: planned
+    import: "import { AvChart } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvChart :config="config" />
+  web-components:
+    element: ui-chart
+    status: planned
+    import: "import '@acronis-platform/ui-wc/chart'"
+    example: |
+      <ui-chart></ui-chart>

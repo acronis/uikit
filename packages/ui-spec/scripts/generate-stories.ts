@@ -397,6 +397,12 @@ const RENDER: Record<string, RenderHint> = {
     // meaningful zero-arg render. VR is covered by the hand-written stories.
     skip: true,
   },
+  chart: {
+    // A recharts composition: ChartContainer needs a sized box and a plot built
+    // from recharts primitives — no meaningful zero-arg render. VR is covered by
+    // the hand-written stories (Bars / Lines / Areas / Pies / StackedBars).
+    skip: true,
+  },
   'progress-circle': {
     // Driven by `value`; render a representative filled ring (per size grid).
     props: 'value={75} showValue',

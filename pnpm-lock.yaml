@@ -359,6 +359,9 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.2.6(react@19.2.6)
+      recharts:
+        specifier: 'catalog:'
+        version: 3.8.1(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(redux@5.0.1)
       sonner:
         specifier: 'catalog:'
         version: 2.0.7(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -737,6 +740,9 @@ importers:
       react-resizable-panels:
         specifier: 4.11.2
         version: 4.11.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      recharts:
+        specifier: 'catalog:'
+        version: 3.8.1(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-is@19.2.6)(react@19.2.6)(redux@5.0.1)
       tailwind-merge:
         specifier: 3.6.0
         version: 3.6.0

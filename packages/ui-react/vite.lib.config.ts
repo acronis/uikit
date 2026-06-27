@@ -39,6 +39,10 @@ export default defineConfig({
         // don't inline them into ui-react's bundle.
         '@acronis-platform/icons-react',
         /^@acronis-platform\/icons-react\//,
+        // recharts is a heavy, opt-in charting dep — keep it out of the bundle
+        // and let consumers resolve it (declared in dependencies).
+        'recharts',
+        /^recharts\//,
       ],
       output: {
         // Preserve module structure so consumers tree-shake unused components.

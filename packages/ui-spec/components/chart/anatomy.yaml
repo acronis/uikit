@@ -1,0 +1,54 @@
+spec_version: '1.0'
+component: Chart
+
+schematic: |
+  container: <div data-slot="chart">  (provides series colors via chart-style)
+    chart-style:    injected <style> mapping config → --color-<key> vars
+    <recharts plot> bars / lines / area / pie — composed by the caller
+    tooltip-content: hover card — label + per-series indicator + value
+    legend-content:  per-series swatch + label row
+
+root:
+  element: div
+  description: >-
+    The chart wrapper (ChartContainer). Provides the chart config via context,
+    injects the per-series color custom properties, themes recharts' internal
+    classes (grid, axis, cursor) with semantic tokens, and renders a recharts
+    ResponsiveContainer around the caller-composed plot.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      ChartContainer — the themed wrapper. Takes a `config` and the recharts plot
+      as children; sizes via the caller's className (aspect-video by default).
+  - id: chart-style
+    element: style
+    description: >-
+      ChartStyle — an injected stylesheet that turns the config's per-series
+      colors into `--color-<key>` custom properties (scoped to this chart, with a
+      dark-mode block under [data-theme='dark']). Renders nothing when the config
+      has no colors.
+  - id: tooltip-content
+    element: div
+    description: >-
+      ChartTooltipContent — the hover tooltip body: an optional label, then one
+      row per series with a color indicator (dot / line / dashed), name, and value.
+      Passed to recharts' Tooltip via its `content` prop (ChartTooltip).
+  - id: legend-content
+    element: div
+    description: >-
+      ChartLegendContent — the legend body: one swatch + label per series. Passed
+      to recharts' Legend via its `content` prop (ChartLegend).
+
+states:
+  - id: tooltip-active
+    trigger: a data point is hovered/focused (recharts sets active)
+    kind: prop
+    prop: active
+    affects: [tooltip-content]
+  - id: indicator-style
+    trigger: indicator is set to line or dashed instead of the default dot
+    kind: prop
+    prop: indicator
+    affects: [tooltip-content]

@@ -1,0 +1,33 @@
+spec_version: '1.0'
+component: Chart
+
+# References only. Values live in @acronis-platform/tokens-pd. Chart has no token
+# tier of its own — series colors are supplied by the caller via `config` (a
+# dedicated data-viz palette is pending an upstream design pass). The chrome
+# (container, tooltip, legend) and the recharts grid/axis overrides use the
+# shared semantic vocabulary, referenced here by the bridged Tailwind names that
+# resolve to these `--ui-*` tokens.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-background-surface-primary
+    affects: tooltip-content
+    description: Tooltip surface (bg-background).
+  - name: --ui-text-on-surface-primary
+    affects: tooltip-content
+    description: Tooltip value text (text-foreground).
+  - name: --ui-text-on-surface-secondary
+    affects: tooltip-content
+    description: >-
+      Muted tooltip/legend label text and axis tick labels
+      (text-muted-foreground / fill-muted-foreground).
+  - name: --ui-border-on-surface-border
+    affects: tooltip-content
+    description: >-
+      Tooltip border and recharts grid / cursor / reference lines
+      (border-border / stroke-border).
+  - name: --ui-background-surface-secondary
+    affects: container
+    description: >-
+      Recharts muted fills — radial-bar background and tooltip cursor rectangle
+      (fill-muted).

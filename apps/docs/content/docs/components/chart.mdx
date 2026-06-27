@@ -1,0 +1,98 @@
+---
+title: Chart
+description: A theming layer over recharts — container, tooltip, and legend chrome.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { ChartDemo } from "@/components/demos-react/chart";
+
+## Usage
+
+```tsx
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+  type ChartConfig,
+} from '@acronis-platform/ui-react';
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
+```
+
+`Chart` is a thin theming layer over [recharts](https://recharts.org).
+`ChartContainer` supplies the series colors and themes recharts' internals (grid,
+axis, cursor) with the semantic token vocabulary; `ChartTooltipContent` and
+`ChartLegendContent` give the tooltip and legend the Acronis look. You compose the
+chart type itself — `BarChart`, `LineChart`, `AreaChart`, `PieChart`, … — from
+recharts primitives.
+
+Series colors are supplied by the caller through `config`: each entry maps a data
+key to a `label` and a `color` (or a per-theme `{ light, dark }` pair).
+`ChartContainer` turns those into `--color-<key>` custom properties you reference
+from the recharts `fill` / `stroke` props.
+
+> **Design-pending v1**, ported from the legacy `shadcn-uikit` chart. There is no
+> chart token tier yet, so the example colors reference the shared brand/status
+> tokens — a dedicated data-viz palette is pending an upstream design pass.
+> `recharts` resolves as a dependency of `@acronis-platform/ui-react`; import the
+> chart primitives directly from `recharts`.
+
+## Examples
+
+<DemoReact>
+  <ChartDemo />
+</DemoReact>
+
+A bar chart with a themed tooltip and legend:
+
+```tsx
+const config = {
+  desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
+  mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
+} satisfies ChartConfig;
+
+<ChartContainer config={config} className="h-[300px] w-[500px]">
+  <BarChart data={data}>
+    <CartesianGrid vertical={false} />
+    <XAxis dataKey="month" tickLine={false} axisLine={false} />
+    <ChartTooltip content={<ChartTooltipContent />} />
+    <ChartLegend content={<ChartLegendContent />} />
+    <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+    <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+  </BarChart>
+</ChartContainer>;
+```
+
+Per-theme colors switch with the active theme:
+
+```tsx
+const config = {
+  desktop: {
+    label: 'Desktop',
+    theme: { light: 'rgb(23 99 207)', dark: 'rgb(71 152 245)' },
+  },
+} satisfies ChartConfig;
+```
+
+The tooltip indicator can be a `dot` (default), `line`, or `dashed`:
+
+```tsx
+<ChartTooltip content={<ChartTooltipContent indicator="line" />} />
+```
+
+## API Reference
+
+`ChartContainer` takes the chart `config` and the recharts plot as children:
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/chart/chart.tsx"
+  name="ChartContainerProps"
+/>
+
+`ChartTooltipContent` and `ChartLegendContent` are passed to recharts' `Tooltip` /
+`Legend` via their `content` prop. They accept the display options
+`hideLabel`, `hideIndicator`, `indicator` (`'dot' | 'line' | 'dashed'`),
+`hideIcon`, `nameKey`, and `labelKey` on top of recharts' content props.
+`ChartTooltip` and `ChartLegend` are direct re-exports of recharts' `Tooltip` and
+`Legend`.

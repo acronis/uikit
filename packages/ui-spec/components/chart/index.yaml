@@ -1,0 +1,12 @@
+spec_version: '1.0'
+component: Chart
+name: chart
+status: draft
+category: data-display
+description: >-
+  A theming layer over recharts — a `ChartContainer` that supplies series colors
+  and recharts class overrides, plus tooltip and legend chrome
+  (`ChartTooltipContent`, `ChartLegendContent`). The chart type (bar / line /
+  area / pie / …) is composed from recharts primitives by the caller. Ported from
+  the legacy shadcn-uikit `chart`.
+since: 0.47.0
