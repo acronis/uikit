@@ -1,5 +1,19 @@
 # @acronis-platform/ui-react
 
+## 0.48.0
+
+### Minor Changes
+
+- [#454](https://github.com/acronis/uikit/pull/454) [`6870a94`](https://github.com/acronis/uikit/commit/6870a9427a20c728bf0e5f32a7e6b2e53a5deb0f) Thanks [@leonid](https://github.com/leonid)! - feat(field): add Field (initial version ported from ui-legacy)
+
+  A form-field wrapper rebuilt on Base UI's Field primitive: `Field` / `FieldLabel`
+  / `FieldControl` / `FieldDescription` / `FieldError` auto-wire the
+  label↔control↔description↔error associations and validity state, plus structural
+  parts (`FieldSet`, `FieldLegend`, `FieldGroup`, `FieldContent`, `FieldTitle`,
+  `FieldSeparator`) for composing and grouping fields. Also exports the bare
+  `InputBox` primitive (the control you render through `FieldControl`). Design
+  reconciliation pending.
+
 ## 0.47.0
 
 ### Minor Changes
