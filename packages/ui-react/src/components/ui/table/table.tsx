@@ -133,7 +133,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
               : undefined
       }
       className={cn(
-        'h-10 px-[var(--ui-table-header-cell-padding-x)] text-left align-middle text-sm font-semibold text-[var(--ui-table-header-label-color)] [&:has([role=checkbox])]:pr-0 [&_[role=checkbox]]:align-middle',
+        'h-10 px-[var(--ui-table-header-cell-padding-x)] text-left align-middle text-sm font-semibold text-[var(--ui-table-header-label-color)] [&:has([role=checkbox])]:pr-0',
         sortable &&
           'cursor-pointer transition-colors hover:bg-[var(--ui-table-header-cell-color-hover)]',
         className
@@ -164,7 +164,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      'h-10 px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm [&:has([role=checkbox])]:pr-0 [&_[role=checkbox]]:align-middle',
+      'h-10 px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm [&:has([role=checkbox])]:pr-0',
       className
     )}
     {...props}
