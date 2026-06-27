@@ -21,7 +21,7 @@ const meta = {
     },
     status: {
       control: 'inline-radio',
-      options: [undefined, 'danger', 'critical', 'warning', 'success'],
+      options: [undefined, 'brand', 'danger', 'critical', 'warning', 'success'],
       description: 'Arc color level; omit to derive from value.',
       table: { category: 'Appearance' },
     },
@@ -53,6 +53,17 @@ export const StatusLevels: Story = {
       <ProgressCircle value={50} size="md" showValue />
       <ProgressCircle value={75} size="md" showValue />
       <ProgressCircle value={100} size="md" showValue />
+    </div>
+  ),
+};
+
+// `status="brand"` is the single-color mode for generic progress (no value→color).
+export const Brand: Story = {
+  render: () => (
+    <div className="flex items-center gap-6">
+      <ProgressCircle value={25} size="md" status="brand" showValue />
+      <ProgressCircle value={60} size="md" status="brand" showValue />
+      <ProgressCircle value={90} size="md" status="brand" showValue />
     </div>
   ),
 };

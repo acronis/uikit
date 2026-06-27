@@ -17,7 +17,7 @@ export interface ProgressCircleProps {
    * Arc color level. Omit to derive from `value`/`max` by thresholds
    * (≈ <40% danger, <60% critical, <80% warning, else success).
    */
-  status?: 'danger' | 'critical' | 'warning' | 'success';
+  status?: 'brand' | 'danger' | 'critical' | 'warning' | 'success';
   /** Show the rounded percentage in the center. */
   showValue?: boolean;
   /** Show a status icon in the center (priority over `showValue`). */

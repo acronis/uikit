@@ -31,6 +31,15 @@ the shared status tokens (no dedicated tier).
 <ProgressCircle value={100} size="lg" showIcon />  {/* success check in center */}
 ```
 
+By default the arc color is **derived from the value** (danger → critical → warning →
+success), like the Vue `AvProgressRadial`. Set `status` to force a level, or use
+`status="brand"` for a single neutral color (generic progress, not a score):
+
+```tsx
+<ProgressCircle value={60} status="brand" showValue />  {/* brand blue, not orange */}
+<ProgressCircle value={90} status="danger" showValue /> {/* forced danger */}
+```
+
 In a table cell, compose the ring with an external label:
 
 ```tsx

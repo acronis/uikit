@@ -43,6 +43,21 @@ describe('ProgressCircle', () => {
     ).toBeTruthy();
   });
 
+  it('uses a single brand color in the brand mode (no value→color)', () => {
+    const { container } = render(<ProgressCircle value={60} status="brand" />);
+    expect(
+      container.querySelector(
+        '.stroke-\\[var\\(--ui-background-brand-secondary\\)\\]'
+      )
+    ).toBeTruthy();
+    // not the value-derived critical color
+    expect(
+      container.querySelector(
+        '.stroke-\\[var\\(--ui-text-on-status-critical\\)\\]'
+      )
+    ).toBeFalsy();
+  });
+
   it('renders custom center content over the value', () => {
     render(
       <ProgressCircle value={40} showValue>

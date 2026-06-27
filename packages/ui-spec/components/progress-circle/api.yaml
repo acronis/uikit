@@ -19,10 +19,10 @@ contract:
       default: "'sm'"
       description: Ring diameter + stroke width.
     - name: status
-      type: "'danger' | 'critical' | 'warning' | 'success'"
+      type: "'brand' | 'danger' | 'critical' | 'warning' | 'success'"
       required: false
       description: >-
-        Arc color level. Omit to derive from value/max by thresholds (≈ <40%
+        Arc color level. `brand` is a single neutral color; the rest are score levels. Omit to derive the level from value/max by thresholds (≈ <40%
         danger, <60% critical, <80% warning, else success — confirm with design).
     - name: showValue
       type: boolean

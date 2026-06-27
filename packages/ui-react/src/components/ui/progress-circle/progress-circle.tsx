@@ -21,7 +21,11 @@ import { cn } from '@/lib/utils';
 // shared status colors (`--ui-text-on-status-*`), the track the border token, and
 // the center label the surface foreground.
 
+// `brand` is the neutral single-color mode (matches the linear Progress accent);
+// the others are score levels. With no `status`, the level is derived from the
+// value (like the Vue ProgressRadial).
 export type ProgressCircleStatus =
+  | 'brand'
   | 'danger'
   | 'critical'
   | 'warning'
@@ -39,13 +43,15 @@ const SIZES = {
 export type ProgressCircleSize = keyof typeof SIZES;
 
 const ARC_COLOR: Record<ProgressCircleStatus, string> = {
+  brand: 'stroke-[var(--ui-background-brand-secondary)]',
   danger: 'stroke-[var(--ui-text-on-status-danger)]',
   critical: 'stroke-[var(--ui-text-on-status-critical)]',
   warning: 'stroke-[var(--ui-text-on-status-warning)]',
   success: 'stroke-[var(--ui-text-on-status-success)]',
 };
 
-const ICON_BY_STATUS: Record<ProgressCircleStatus, React.ReactNode> = {
+// `brand` has no score icon — only the level statuses do.
+const ICON_BY_STATUS: Partial<Record<ProgressCircleStatus, React.ReactNode>> = {
   danger: <CircleTimesIcon className="text-[var(--ui-text-on-status-danger)]" />,
   critical: (
     <TriangleWarningIcon className="text-[var(--ui-text-on-status-critical)]" />
@@ -118,7 +124,9 @@ const ProgressCircle = React.forwardRef<HTMLDivElement, ProgressCircleProps>(
     const radius = (d - stroke) / 2;
     const circumference = 2 * Math.PI * radius;
     const center = d / 2;
-    const showCenter = children != null || showIcon || showValue;
+    const icon = showIcon ? ICON_BY_STATUS[level] : undefined;
+    const centerContent =
+      children ?? icon ?? (showValue ? `${Math.round(fraction * 100)}%` : null);
 
     return (
       <ProgressPrimitive.Root
@@ -156,17 +164,14 @@ const ProgressCircle = React.forwardRef<HTMLDivElement, ProgressCircleProps>(
             strokeDashoffset={circumference * (1 - fraction)}
           />
         </svg>
-        {showCenter && (
+        {centerContent != null && (
           <span
             className={cn(
               'absolute inset-0 flex items-center justify-center text-foreground [&_svg]:size-[60%]',
               font
             )}
           >
-            {children ??
-              (showIcon
-                ? ICON_BY_STATUS[level]
-                : `${Math.round(fraction * 100)}%`)}
+            {centerContent}
           </span>
         )}
       </ProgressPrimitive.Root>

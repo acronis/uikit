@@ -13,6 +13,11 @@ tokens:
       description: Background ring color.,
     }
   - {
+      name: --ui-background-brand-secondary,
+      affects: arc,
+      description: Arc color in the brand (neutral) mode.,
+    }
+  - {
       name: --ui-text-on-status-danger,
       affects: arc,
       description: Arc color at the danger level.,
