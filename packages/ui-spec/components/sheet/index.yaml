@@ -1,0 +1,17 @@
+spec_version: '1.0'
+component: Sheet
+name: sheet
+status: draft
+category: overlays
+description: >-
+  A modal side panel anchored to a screen edge — for showing or acting on
+  detailed information without leaving the page. Composable parts (trigger,
+  overlay, content, header, title, close, body, description, footer) on the Base
+  UI Dialog primitive, with a slide transition. Was `Details` in the Vue kit
+  (re-exported under `Details*` aliases). Initial version ported from the legacy
+  shadcn-uikit `Sheet`; design reconciliation against Figma (Cyber-Compliance
+  node 3442-31542) is pending.
+since: 0.42.0
+dependencies:
+  components:
+    - TimesIcon

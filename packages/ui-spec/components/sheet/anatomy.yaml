@@ -1,0 +1,137 @@
+spec_version: '1.0'
+component: Sheet
+
+schematic: |
+  trigger: <button> (opens the sheet)
+
+  ─ when open (side="right") ──────────────────────────────────
+  overlay: full-screen scrim          +========================+
+                                      | root: <div role=dialog>|
+                                      | +--------------------+ |
+                                      | | header: title  (×) | |
+                                      | +--------------------+ |
+                                      | | body:              | |
+                                      | |   description      | |
+                                      | |   …content…        | |
+                                      | +--------------------+ |
+                                      | | footer:  [actions] | |
+                                      | +--------------------+ |
+                                      +========================+
+     root    -> bg-muted (surface-secondary) panel + shadow, edge border
+     header / footer -> bg-background (surface-primary) bars, border-border
+     overlay -> var(--ui-background-overlay-primary)
+     close   -> times icon, text-muted-foreground → hover text-foreground
+     side    -> top | right (default) | bottom | left (slides in from that edge)
+
+root:
+  element: div
+  role: dialog
+  description: >-
+    The modal panel (Base UI `Dialog.Popup`), anchored to a screen edge by `side`
+    and portaled. Carries `role="dialog"`/`aria-modal`, is labelled by the title
+    and described by the description, traps focus, and locks scroll while open.
+
+parts:
+  - id: trigger
+    description: >-
+      The control that opens the sheet (Base UI `Dialog.Trigger`). Polymorphic
+      via `render` — usually a Button. Optional; a controlled sheet needs none.
+    element: button
+    optional: true
+  - id: overlay
+    description: >-
+      Full-screen scrim (Base UI `Dialog.Backdrop`) behind the panel, tinted with
+      `--ui-background-overlay-primary`.
+    element: div
+  - id: header
+    description: >-
+      Top bar holding the title and close button. White surface
+      (`bg-background`) with a bottom divider.
+    element: div
+    optional: true
+  - id: title
+    description: >-
+      The sheet's accessible name (Base UI `Dialog.Title`), wired to
+      `aria-labelledby`. Uses `text-foreground`.
+    element: h2
+  - id: close
+    description: >-
+      Icon button (Base UI `Dialog.Close` + a times icon) that dismisses the
+      sheet. Labelled "Close" for screen readers.
+    element: button
+    optional: true
+  - id: body
+    description: Scrollable content region between the header and footer.
+    element: div
+    optional: true
+  - id: description
+    description: >-
+      Supporting text (Base UI `Dialog.Description`), wired to
+      `aria-describedby`. Uses `text-muted-foreground`.
+    element: p
+    optional: true
+  - id: footer
+    description: >-
+      Bottom action bar (right-aligned). White surface (`bg-background`) with a
+      top divider.
+    element: div
+    optional: true
+
+layout:
+  type: flex
+  direction: column
+  order: [header, body, footer]
+
+internal_state:
+  - id: open
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [open]
+    controlled_default: default-open
+    emits: open-change
+    changed_by: >-
+      trigger click opens; close button / Esc / outside-press / a Close part
+      closes (when uncontrolled)
+    description: Whether the sheet is shown; reflected to the panel + overlay.
+
+transitions:
+  - id: open
+    state: open
+    from: false
+    on: trigger click
+    to: true
+    effect: emits open-change(true)
+    when_controlled: >-
+      internal value does NOT change; the component emits open-change and the
+      consumer must update the `open` prop.
+  - id: close
+    state: open
+    from: true
+    on: close button / Esc / outside press
+    to: false
+    effect: emits open-change(false)
+    when_controlled: >-
+      internal value does NOT change; the component emits open-change and the
+      consumer must update the `open` prop.
+
+states:
+  - {
+      id: open,
+      trigger: 'internal open === true (data-[open])',
+      kind: internal,
+      affects: [root, overlay],
+    }
+  - {
+      id: closed,
+      trigger: 'internal open === false (data-[closed])',
+      kind: internal,
+      affects: [root, overlay],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on the close button,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [close],
+    }

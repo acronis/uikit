@@ -1,0 +1,48 @@
+spec_version: '1.0'
+component: Sheet
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# Design-pending v1: no `--ui-sheet-*` component tier exists yet, so the panel
+# consumes the shared *semantic* tokens (mirroring the Dialog family) via bridged
+# Tailwind names (bg-muted / bg-background / text-foreground /
+# text-muted-foreground / border-border) plus direct var() refs for the overlay
+# and focus ring. Replace with a `--ui-sheet-*` tier if a Figma pass introduces one.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-background-overlay-primary,
+      affects: overlay,
+      description: Scrim color behind the panel (direct var ref),
+    }
+  - {
+      name: --ui-background-surface-secondary,
+      affects: root,
+      description: Panel surface (bridged as `bg-muted`),
+    }
+  - {
+      name: --ui-background-surface-primary,
+      affects: header,
+      description: Header / footer bar surface (bridged as `bg-background`),
+    }
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: title,
+      description: Title / default text color (bridged as `text-foreground`),
+    }
+  - {
+      name: --ui-text-on-surface-secondary,
+      affects: description,
+      description: 'Description + idle close-icon color (bridged as text-muted-foreground)',
+    }
+  - {
+      name: --ui-border-on-surface-border,
+      affects: header,
+      description: Header bottom / footer top divider + edge border (bridged as `border-border`),
+    }
+  - {
+      name: --ui-focus-primary,
+      affects: close,
+      description: Focus-visible ring on the close button,
+    }

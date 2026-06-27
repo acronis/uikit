@@ -59,6 +59,29 @@ const RENDER: Record<string, RenderHint> = {
     ],
     props: 'label="Active filters" value="125" icon={<CircleInfoIcon />}',
   },
+  sheet: {
+    props: 'defaultOpen',
+    extraImports: [
+      "import { SheetContent, SheetHeader, SheetTitle, SheetCloseButton, SheetBody, SheetDescription, SheetFooter } from '../sheet';",
+      "import { Button } from '../../button';",
+    ],
+    sample: [
+      '',
+      '      <SheetContent>',
+      '        <SheetHeader>',
+      '          <SheetTitle>Workload details</SheetTitle>',
+      '          <SheetCloseButton />',
+      '        </SheetHeader>',
+      '        <SheetBody>',
+      '          <SheetDescription>Inspect the selected workload.</SheetDescription>',
+      '        </SheetBody>',
+      '        <SheetFooter>',
+      '          <Button>Edit</Button>',
+      '        </SheetFooter>',
+      '      </SheetContent>',
+      '    ',
+    ].join('\n'),
+  },
   dialog: {
     props: 'defaultOpen',
     extraImports: [

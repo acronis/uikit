@@ -1,0 +1,111 @@
+spec_version: '1.0'
+component: Sheet
+
+# Framework-agnostic contract for a *composable* modal side panel: the overlay is
+# assembled from parts (see anatomy.yaml). The root owns the open state; `side`
+# (on the content part) picks the edge. Property names are neutral; see
+# `adapters` for per-framework syntax.
+contract:
+  properties:
+    - name: open
+      type: boolean
+      required: false
+      description: Controlled open state. Pair with the change event.
+    - name: default-open
+      type: boolean
+      required: false
+      default: false
+      description: Initial open state when uncontrolled.
+    - name: modal
+      type: "boolean | 'trap-focus'"
+      required: false
+      default: true
+      description: >-
+        Modal behavior — traps focus and locks background scroll while open.
+        `'trap-focus'` keeps the focus trap but allows background interaction.
+    - name: side
+      type: "'top' | 'right' | 'bottom' | 'left'"
+      required: false
+      default: "'right'"
+      description: >-
+        Screen edge the panel anchors to and slides in from (on the content
+        part). Left/right are full-height; top/bottom are full-width.
+    - name: portal
+      type: boolean
+      required: false
+      default: true
+      description: >-
+        Render the content inside a portal (the content part). Required by the
+        underlying primitive for correct stacking; disable only when supplying
+        your own portal ancestor.
+    - name: render
+      type: 'RenderProp'
+      required: false
+      default: undefined
+      description: >-
+        Composition prop available on the trigger, close, title, description, and
+        other primitive parts — replaces the rendered element with another
+        component (e.g. render the trigger as a Button) while merging props.
+        React-only; other frameworks use their own polymorphism.
+
+  events:
+    - name: open-change
+      payload: boolean
+      description: >-
+        Fired when the sheet opens or closes (React: `onOpenChange`). Payload is
+        the new open value.
+
+  content:
+    - name: default
+      description: >-
+        The composed sheet. Author it from the parts: an optional trigger, plus
+        the content (panel) wrapping an optional header (title + close), a body
+        (with a description), and an optional footer for actions.
+
+  methods: []
+
+adapters:
+  react:
+    component: Sheet
+    status: implemented
+    import: >-
+      import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle,
+      SheetCloseButton, SheetBody, SheetDescription, SheetFooter } from
+      '@acronis-platform/ui-react'
+    example: |
+      <Sheet>
+        <SheetTrigger render={<Button variant="secondary">Open details</Button>} />
+        <SheetContent side="right">
+          <SheetHeader>
+            <SheetTitle>Workload details</SheetTitle>
+            <SheetCloseButton />
+          </SheetHeader>
+          <SheetBody>
+            <SheetDescription>Inspect the selected workload.</SheetDescription>
+          </SheetBody>
+          <SheetFooter>
+            <SheetClose render={<Button variant="ghost">Close</Button>} />
+            <Button>Edit</Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+      // `Details*` aliases (e.g. <Details>/<DetailsContent>) are equivalent — the
+      // Vue kit called this component Details.
+
+  vue:
+    component: AvDetails
+    status: planned
+    import: "import { AvDetails } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvDetails v-model:open="open" title="Workload details" />
+
+  web-components:
+    element: ui-sheet
+    status: planned
+    import: "import '@acronis-platform/ui-wc/sheet'"
+    example: |
+      <ui-sheet open side="right">
+        <ui-sheet-content>
+          <ui-sheet-title>Workload details</ui-sheet-title>
+        </ui-sheet-content>
+      </ui-sheet>
