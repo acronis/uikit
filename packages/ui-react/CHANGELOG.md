@@ -1,5 +1,18 @@
 # @acronis-platform/ui-react
 
+## 0.50.0
+
+### Minor Changes
+
+- [#459](https://github.com/acronis/uikit/pull/459) [`12578c5`](https://github.com/acronis/uikit/commit/12578c50b271e8c47961a5493388acfd9149f0e3) Thanks [@leonid](https://github.com/leonid)! - feat(combobox): add Combobox (searchable select on Base UI)
+
+  A real, reusable searchable select built on Base UI's Combobox primitive — a
+  typeable input that filters a list of items in a dropdown — replacing the legacy
+  hardcoded Popover + cmdk demo. Parts: Combobox / ComboboxInput / ComboboxContent /
+  ComboboxList / ComboboxItem / ComboboxEmpty / ComboboxGroup / ComboboxGroupLabel.
+  Themed with the existing --ui-input-select-\* tokens so it matches InputSelect.
+  Design reconciliation pending.
+
 ## 0.49.0
 
 ### Minor Changes
