@@ -1,0 +1,35 @@
+spec_version: '1.0'
+pattern: AppShellLayout
+name: app-shell
+status: draft
+category: layout
+since: 0.52.0
+intent: Assemble a full authenticated app screen by dropping the primary nav, optional secondary menu, global search, and page content into the App Shell's slots.
+description: >-
+  The sanctioned way to build a top-level screen: an `AppShell` whose sidebar slot
+  holds `SidebarPrimary` (and, when a section has sub-navigation, `SidebarSecondary`
+  beside it), whose header slot holds `SearchGlobal` plus account/actions, and whose
+  main slot holds the routed page content. App Shell is a slot-based layout — it
+  owns only the structure (full-height row, sticky header, independently scrolling
+  main); the rich behavior comes from the components placed in the slots.
+
+when_to_use:
+  - The root frame of an authenticated application screen.
+  - Screens that need persistent primary nav + a global header across routes.
+when_not_to_use:
+  - Marketing or auth screens — use the (future) Auth Layout.
+  - A region within a page — use Section / Stack / Grid.
+
+anti_patterns:
+  - Hand-rolling a fixed sidebar/header with raw divs instead of the AppShell slots (loses the landmark semantics and sticky/scroll behavior).
+  - Putting page content in AppShellHeader, or more than one AppShellMain (breaks the single `main` landmark).
+  - Styling the scaffold with custom colors instead of letting SidebarPrimary / SearchGlobal own their tokens.
+
+components:
+  - AppShell
+  - SidebarPrimary
+  - SidebarSecondary
+  - SearchGlobal
+
+demo: apps/docs/src/components/demos-react/app-shell.tsx
+docs: apps/docs/content/docs/patterns/app-shell.mdx

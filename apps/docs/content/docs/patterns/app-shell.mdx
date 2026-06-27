@@ -1,0 +1,56 @@
+---
+title: App Shell
+description: Assemble a full app screen by slotting nav, search, and content into the App Shell.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { AppShellDemo } from "@/components/demos-react/app-shell";
+
+The **App Shell** layout (see the [App Shell component](/layouts/app-shell)) is a
+slot-based scaffold. This pattern is the sanctioned way to fill those slots for a
+top-level authenticated screen: `SidebarPrimary` (and optionally
+`SidebarSecondary`) in the sidebar, `SearchGlobal` + account/actions in the header,
+and the routed page in main.
+
+<DemoReact>
+  <AppShellDemo />
+</DemoReact>
+
+## Assembly
+
+```tsx
+import {
+  AppShell, AppShellSidebar, AppShellBody, AppShellHeader, AppShellMain,
+  SidebarPrimary, SearchGlobal,
+} from '@acronis-platform/ui-react';
+
+<AppShell>
+  <AppShellSidebar>
+    <SidebarPrimary … />
+    {/* optional: <SidebarSecondary … /> for a section's sub-nav */}
+  </AppShellSidebar>
+  <AppShellBody>
+    <AppShellHeader>
+      <SearchGlobal … />
+      {/* account menu / actions pushed to the right with ml-auto */}
+    </AppShellHeader>
+    <AppShellMain>{children}</AppShellMain>
+  </AppShellBody>
+</AppShell>;
+```
+
+## When to use
+
+- The root frame of an authenticated application screen.
+- Screens needing persistent primary nav + a global header across routes.
+
+## When not to use
+
+- Marketing or auth screens — use the (future) Auth Layout.
+- A region within a page — use [`Section`](/layouts/section) / [`Stack`](/layouts/stack) / [`Grid`](/layouts/grid).
+
+## Anti-patterns
+
+- Hand-rolling a fixed sidebar/header with raw `div`s instead of the slots — you lose the landmark semantics and the sticky-header / scrolling-main behavior.
+- Putting page content in `AppShellHeader`, or rendering more than one `AppShellMain` (breaks the single `main` landmark).
+- Overriding the slotted components' colors from the scaffold — let `SidebarPrimary` / `SearchGlobal` own their tokens.

@@ -1,0 +1,35 @@
+spec_version: '1.0'
+component: AppShell
+
+# A layout scaffold; the parts take only native element attributes (className for
+# slot sizing). No component-specific props.
+contract:
+  properties: []
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: AppShell
+    status: implemented
+    import: "import { AppShell, AppShellSidebar, AppShellBody, AppShellHeader, AppShellMain, AppShellFooter } from '@acronis-platform/ui-react'"
+    example: |
+      <AppShell>
+        <AppShellSidebar><SidebarPrimary … /></AppShellSidebar>
+        <AppShellBody>
+          <AppShellHeader><SearchGlobal … /></AppShellHeader>
+          <AppShellMain>{children}</AppShellMain>
+        </AppShellBody>
+      </AppShell>
+  vue:
+    component: AvAppShell
+    status: planned
+    import: "import { AvAppShell } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvAppShell />
+  web-components:
+    element: ui-app-shell
+    status: planned
+    import: "import '@acronis-platform/ui-wc/app-shell'"
+    example: |
+      <ui-app-shell></ui-app-shell>

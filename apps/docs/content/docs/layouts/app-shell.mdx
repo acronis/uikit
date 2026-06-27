@@ -1,0 +1,67 @@
+---
+title: App Shell
+description: The full-page application scaffold — sidebar, header, and main slots.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { AppShellDemo } from "@/components/demos-react/app-shell";
+
+## Usage
+
+```tsx
+import {
+  AppShell,
+  AppShellSidebar,
+  AppShellBody,
+  AppShellHeader,
+  AppShellMain,
+  AppShellFooter,
+} from '@acronis-platform/ui-react';
+```
+
+`AppShell` is the full-page application scaffold — a **slot-based layout**: a
+sidebar column beside a body column of a sticky header over the scrolling main
+content. Drop [`SidebarPrimary`](/components/sidebar-primary) (and optionally
+[`SidebarSecondary`](/components/sidebar-secondary)) into the sidebar slot,
+[`SearchGlobal`](/components/search-global) into the header, and your page into
+main. The scaffold only paints surfaces + a header/footer divider; the slotted
+components bring their own styling.
+
+Mapped to the [App Shell Figma](https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2782-1495).
+
+## Examples
+
+<DemoReact>
+  <AppShellDemo />
+</DemoReact>
+
+```tsx
+<AppShell>
+  <AppShellSidebar>
+    <SidebarPrimary … />
+  </AppShellSidebar>
+  <AppShellBody>
+    <AppShellHeader>
+      <SearchGlobal … />
+    </AppShellHeader>
+    <AppShellMain>{children}</AppShellMain>
+  </AppShellBody>
+</AppShell>
+```
+
+For the full slot assembly with the real nav + search components, see the
+[App Shell pattern](/patterns/app-shell).
+
+## Parts
+
+| Export            | Element    | Purpose                                          |
+| ----------------- | ---------- | ------------------------------------------------ |
+| `AppShell`        | `div`      | The full-height row.                             |
+| `AppShellSidebar` | `aside`    | Left nav column (SidebarPrimary [+ Secondary]).  |
+| `AppShellBody`    | `div`      | The body column filling the rest.                |
+| `AppShellHeader`  | `header`   | Sticky top bar (global search + actions).        |
+| `AppShellMain`    | `main`     | Scrolling page content.                          |
+| `AppShellFooter`  | `footer`   | Optional bottom bar.                             |
+
+All parts accept their native element attributes plus `className` (use it to size
+the sidebar, pad main, etc.).

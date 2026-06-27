@@ -1,0 +1,14 @@
+spec_version: '1.0'
+component: AppShell
+name: app-shell
+status: ready
+category: layout
+description: >-
+  The full-page application scaffold — a sidebar column (primary nav, optionally a
+  secondary menu) beside a body column of a sticky header (with global search) over
+  the scrolling main content. A slot-based layout: drop SidebarPrimary /
+  SidebarSecondary / SearchGlobal and your page content into its slots.
+since: 0.52.0
+figma:
+  node: 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2782-1495'
+  codeConnect: packages/ui-react/src/components/ui/app-shell/app-shell.figma.tsx

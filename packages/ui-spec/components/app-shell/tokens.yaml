@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: AppShell
+
+# References only. Values live in @acronis-platform/tokens-pd. The scaffold itself
+# is just surfaces + a header/footer divider; the sidebar/search bring their own
+# tokens.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-background-surface-primary
+    affects: app-shell
+    description: Page + header/footer surface (bg-background).
+  - name: --ui-border-on-surface-border
+    affects: app-shell-header
+    description: Header bottom border + footer top border (border-border).

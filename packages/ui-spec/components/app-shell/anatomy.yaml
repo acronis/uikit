@@ -1,0 +1,36 @@
+spec_version: '1.0'
+component: AppShell
+
+schematic: |
+  app-shell: <div> full-height flex row
+    app-shell-sidebar: <aside> left column (SidebarPrimary [+ SidebarSecondary])
+    app-shell-body: <div> flex column (fills the rest)
+      app-shell-header: <header> sticky top bar (global search + actions)
+      app-shell-main:   <main> scrolling page content
+      app-shell-footer: <footer> optional bottom bar
+
+root:
+  element: div
+  description: >-
+    The page scaffold — a full-height flex row of the sidebar column and the body
+    column. Surfaces use the shared --ui-* tokens; the rich nav/search come from
+    the components dropped into the slots.
+
+parts:
+  - id: app-shell-sidebar
+    element: aside
+    description: Left column slot for SidebarPrimary (and optionally SidebarSecondary).
+  - id: app-shell-body
+    element: div
+    description: The flex-column filling the remaining width (header + main + footer).
+  - id: app-shell-header
+    element: header
+    description: Sticky top bar slot — typically the global search plus actions.
+  - id: app-shell-main
+    element: main
+    description: The scrolling main content area.
+  - id: app-shell-footer
+    element: footer
+    description: Optional bottom bar.
+
+states: []

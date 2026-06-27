@@ -471,6 +471,11 @@ const RENDER: Record<string, RenderHint> = {
     // hand-written story (Default).
     skip: true,
   },
+  'app-shell': {
+    // A full-page layout scaffold needing slotted children. VR is covered by the
+    // hand-written story (Default).
+    skip: true,
+  },
   accordion: {
     // A composition needing item/trigger/panel children. VR is covered by the
     // hand-written stories (Default / Multiple).
