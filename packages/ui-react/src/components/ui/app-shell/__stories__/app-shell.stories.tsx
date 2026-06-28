@@ -209,15 +209,18 @@ function SecondaryNav({ expanded }: { expanded?: boolean }) {
 function Header() {
   return (
     <AppShellHeader>
-      {/* Three zones: flexible spacers on the sides keep the search centered. */}
-      <div className="flex-1" />
-      <SearchGlobal
-        aria-label="Search"
-        placeholder="Search…"
-        className="w-full max-w-md"
-      />
-      <div className="flex flex-1 justify-end">
-        <span className="text-sm text-[var(--ui-text-on-surface-secondary)]">
+      {/* A 3-column grid (1fr · auto · 1fr) truly centers the search regardless
+          of the account label's width — equal side columns keep the middle
+          centered (a flex spacer approach gets pulled off-center by the search's
+          own width). */}
+      <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-4">
+        <span aria-hidden="true" />
+        <SearchGlobal
+          aria-label="Search"
+          placeholder="Search…"
+          className="w-[28rem] justify-self-center"
+        />
+        <span className="justify-self-end text-sm text-[var(--ui-text-on-surface-secondary)]">
           admin@acronis.com
         </span>
       </div>
