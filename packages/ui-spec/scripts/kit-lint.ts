@@ -11,6 +11,11 @@
  *
  * Detectors are added over the rollout; a grammar rule whose `detector` is not
  * implemented here yet is simply not enforced (no false confidence).
+ *
+ * Implemented: T1/T2 (must), T3/T4/Z1/Y1/Y2/Y3 (should), I3 (may). Deferred:
+ * A1 focus-ring + C5 z-index (must — need a ratified canonical / layer scale +
+ * overrides before they can block CI on real variation), Z5 touch-target (not
+ * reliably static), A3 border-border (pending a bare-`border` audit).
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -148,15 +153,97 @@ const DETECTORS: Detector[] = [
     });
     return out;
   },
+
+  // T4 — interaction state wired to the wrong token. A `hover:`/`active:`/
+  // `focus:`/`disabled:` color utility must reference a token whose trailing
+  // suffix matches that state. Flag a base token (`-idle`/`-default`/`-base`/
+  // `-normal`) or a *different* state's token under a state variant. Tokens with
+  // no state suffix (e.g. a semantic `-primary`) are left alone.
+  ({ file, lines }) => {
+    const out: Finding[] = [];
+    const re = new RegExp(
+      `\\b(hover|active|focus|disabled):(?:${COLOR_PREFIXES})-\\[var\\((--ui-[a-z0-9-]+)\\)\\]`,
+      'g'
+    );
+    const STATES = ['hover', 'active', 'focus', 'disabled'];
+    const BASE = ['idle', 'default', 'base', 'normal'];
+    lines.forEach((raw, i) => {
+      for (const m of raw.matchAll(re)) {
+        const state = m[1];
+        const token = m[2];
+        const suffix = [...BASE, ...STATES].find((s) => token.endsWith(`-${s}`));
+        if (!suffix) continue; // no state semantics in the token name → fine
+        if (BASE.includes(suffix) || suffix !== state)
+          out.push(finding('tokens/state-token-wiring', file, i + 1, `"${state}:" wired to "${token}" — reference the matching *-${state} token`));
+      }
+    });
+    return out;
+  },
+
+  // Y1 — off-scale arbitrary font size (text-[<number><unit>], not a token).
+  ({ file, lines }) => {
+    const out: Finding[] = [];
+    const re = /\btext-\[(\d+(?:\.\d+)?)(px|rem|em)\]/g;
+    lines.forEach((raw, i) => {
+      for (const m of raw.matchAll(re))
+        out.push(finding('typography/type-scale', file, i + 1, `off-scale font size "${m[0]}" — use a type-scale token/utility`));
+    });
+    return out;
+  },
+
+  // Y2 — line-height off the ramp (arbitrary leading-[<number>], not a token).
+  ({ file, lines }) => {
+    const out: Finding[] = [];
+    const re = /\bleading-\[(\d+(?:\.\d+)?)\]/g;
+    lines.forEach((raw, i) => {
+      for (const m of raw.matchAll(re))
+        out.push(finding('typography/line-height', file, i + 1, `off-ramp line-height "${m[0]}" — use a line-height token/utility`));
+    });
+    return out;
+  },
+
+  // Y3 — font-weight outside the allowed set (arbitrary numeric font-[NNN]).
+  ({ file, lines }) => {
+    const out: Finding[] = [];
+    const re = /\bfont-\[(\d{2,3})\]/g;
+    lines.forEach((raw, i) => {
+      for (const m of raw.matchAll(re))
+        out.push(finding('typography/font-weight', file, i + 1, `arbitrary font-weight "${m[0]}" — use a named weight (font-normal/medium/semibold)`));
+    });
+    return out;
+  },
+
+  // I3 — hover/transition timing drift (arbitrary duration-[<n>ms], not a scale step).
+  ({ file, lines }) => {
+    const out: Finding[] = [];
+    const re = /\bduration-\[(\d+)m?s\]/g;
+    lines.forEach((raw, i) => {
+      for (const m of raw.matchAll(re))
+        out.push(finding('interaction/timing-parity', file, i + 1, `arbitrary transition duration "${m[0]}" — use a duration scale step (duration-150/200/300)`));
+    });
+    return out;
+  },
 ];
+
+/** Run every detector over one source string. Exposed for focused tests. */
+export function lintSource(
+  file: string,
+  src: string,
+  bridged: Set<string> = new Set()
+): Finding[] {
+  const lines = stripComments(src).split('\n');
+  const out: Finding[] = [];
+  for (const detect of DETECTORS) out.push(...detect({ file, lines, bridged }));
+  return out;
+}
 
 export function runKitLint(): Finding[] {
   const bridged = bridgedColorNames();
   const findings: Finding[] = [];
   for (const file of componentFiles(UI_DIR)) {
-    const rel = relative(REPO, file);
-    const lines = stripComments(readFileSync(file, 'utf8')).split('\n');
-    for (const detect of DETECTORS) findings.push(...detect({ file: rel, lines, bridged }));
+    findings.push(
+      ...lintSource(relative(REPO, file), readFileSync(file, 'utf8'), bridged)
+    );
   }
   return findings;
 }

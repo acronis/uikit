@@ -82,11 +82,18 @@ screen specs and the rendered audit follow. See [`grammar/README.md`](./grammar/
 
 **Phase 1 — `kit-lint`** (`scripts/kit-lint.ts`, `pnpm --filter @acronis-platform/ui-spec kit-lint`):
 static detectors over shipped ui-react component source for the `kit-lint` checklist
-rows (T1 no-hardcoded-color, T2 unbridged-name as `must`; T3 opacity-hack, Z1
-off-grid-spacing as `should`). It reads severities from the grammar registry and is
-**enforced via `__tests__/kit-lint.test.ts`** (which is part of `test`), so a
-`must` finding fails CI. Add a detector by appending to the `DETECTORS` array and
-its grammar rule's `detector` id.
+rows. `must`: T1 no-hardcoded-color, T2 unbridged-name. `should`: T3 opacity-hack,
+T4 state-token-wiring, Z1 off-grid-spacing, Y1 type-scale, Y2 line-height, Y3
+font-weight. `may`: I3 timing-parity. It reads severities from the grammar registry
+and is **enforced via `__tests__/kit-lint.test.ts`** (part of `test`), so a `must`
+finding fails CI; that test also exercises each detector over synthetic source via
+the exported `lintSource()`. Add a detector by appending to the `DETECTORS` array
+and pointing its grammar rule's `detector` id at it. Three static rows stay
+deferred: A1 focus-ring and C5 z-index (`must`) — a static "parity"/"layer-scale"
+detector would block CI on real, possibly-intentional variation, so they need a
+ratified canonical (and the overrides/ledger) first; Z5 touch-target (`must`) is
+not reliably detectable from source. A3 border-border is held pending a focused
+audit of the ~80 bare-`border` usages.
 
 ## Screens (application layer)
 
