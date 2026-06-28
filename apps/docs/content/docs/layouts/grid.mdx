@@ -32,6 +32,14 @@ breakpoints, with a configurable `gap`.
 For one-dimensional rows/columns use [`Stack`](/layouts/stack); for tabular data
 use [`Table`](/components/table).
 
+With `container`, columns respond to the grid's **own width** (container queries)
+instead of the viewport — ideal for widget grids inside [App Shell](/layouts/app-shell),
+whose width changes as the sidebar expands:
+
+```tsx
+<Grid container cols={3}>{cells}</Grid>
+```
+
 ## API Reference
 
 <AutoTypeTable

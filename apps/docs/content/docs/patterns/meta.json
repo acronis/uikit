@@ -2,6 +2,7 @@
   "title": "Patterns",
   "pages": [
     "index",
+    "dashboard",
     "app-shell",
     "filter-popover",
     "data-table-bulk-actions",

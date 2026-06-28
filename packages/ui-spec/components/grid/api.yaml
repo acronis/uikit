@@ -13,6 +13,14 @@ contract:
       required: false
       default: "'md'"
       description: Space between grid cells.
+    - name: container
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Size columns by the grid's own width (container queries) instead of the
+        viewport — wraps the grid in a `@container/grid`. Use for grids inside a
+        variable-width area (e.g. App Shell main).
   events: []
   methods: []
 

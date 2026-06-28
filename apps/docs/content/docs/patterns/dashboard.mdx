@@ -1,0 +1,44 @@
+---
+title: Dashboard
+description: A dashboard screen — App Shell + a container-query Grid of widgets.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { DashboardDemo } from "@/components/demos-react/dashboard";
+
+A **dashboard** is not a dedicated component — it's [App Shell](/layouts/app-shell)
+with a [`Grid`](/layouts/grid) of widgets in its main content. Use the Grid's
+`container` mode so the widget columns respond to the **main content's width**
+(which shrinks as the sidebar expands), not the viewport.
+
+<DemoReact>
+  <DashboardDemo />
+</DemoReact>
+
+## Assembly
+
+```tsx
+<AppShell>
+  <AppShellSidebar><SidebarPrimary … /></AppShellSidebar>
+  <AppShellBody>
+    <AppShellHeader><SearchGlobal … /></AppShellHeader>
+    <AppShellMain className="p-6">
+      <PageHeader>
+        <PageHeaderRow><PageHeaderTitle>Overview</PageHeaderTitle></PageHeaderRow>
+      </PageHeader>
+      <Grid container cols={3}>
+        {widgets.map((w) => <WidgetPlaceholder key={w.id} {...w} />)}
+      </Grid>
+    </AppShellMain>
+  </AppShellBody>
+</AppShell>
+```
+
+## When to use
+
+- Overview / dashboard screens made of a grid of widget cards.
+
+## Anti-patterns
+
+- Reaching for a bespoke "dashboard layout" component — it's just App Shell + a container `Grid`.
+- A viewport-breakpoint `Grid` inside App Shell main — the columns won't account for the sidebar width; use `<Grid container>`.

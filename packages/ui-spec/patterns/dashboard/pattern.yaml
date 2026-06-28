@@ -1,0 +1,32 @@
+spec_version: '1.0'
+pattern: Dashboard
+name: dashboard
+status: draft
+category: layout
+since: 0.52.0
+intent: Build a dashboard screen by laying widgets into a container-query Grid inside the App Shell's main content.
+description: >-
+  The sanctioned way to build a dashboard: an `AppShell` (primary nav + header)
+  whose main holds a `PageHeader` and a `Grid` of widgets. The Grid uses
+  `container` so the widget columns respond to the main content's width — which
+  shrinks as the sidebar expands — rather than the viewport. There is no dedicated
+  "DashboardLayout" component: a dashboard is App Shell + a container Grid of
+  widgets (e.g. WidgetPlaceholder / Card), which is this composition.
+
+when_to_use:
+  - Overview / dashboard screens made of a grid of widget cards.
+when_not_to_use:
+  - A general two-dimensional layout outside a variable-width area — a plain `Grid` (viewport breakpoints) is enough.
+  - Non-grid page content — use `Section` / `Stack`.
+
+anti_patterns:
+  - Reaching for a bespoke "dashboard layout" component — it's just App Shell + a container Grid (this pattern).
+  - Using a viewport-breakpoint Grid inside App Shell main — the columns won't account for the sidebar width; use `<Grid container>`.
+
+components:
+  - AppShell
+  - Grid
+  - WidgetPlaceholder
+
+demo: apps/docs/src/components/demos-react/dashboard.tsx
+docs: apps/docs/content/docs/patterns/dashboard.mdx

@@ -34,3 +34,26 @@ export const Default: Story = {
     </Grid>
   ),
 };
+
+// With `container`, the columns respond to the grid's own width. The same
+// `cols={3}` grid shows fewer columns in a narrow column than a wide one.
+export const Container: Story = {
+  render: () => (
+    <div className="flex gap-6">
+      <div className="w-[280px]">
+        <Grid container cols={3}>
+          {Array.from({ length: 3 }, (_, i) => (
+            <Box key={i}>Cell {i + 1}</Box>
+          ))}
+        </Grid>
+      </div>
+      <div className="w-[640px]">
+        <Grid container cols={3}>
+          {Array.from({ length: 3 }, (_, i) => (
+            <Box key={i}>Cell {i + 1}</Box>
+          ))}
+        </Grid>
+      </div>
+    </div>
+  ),
+};
