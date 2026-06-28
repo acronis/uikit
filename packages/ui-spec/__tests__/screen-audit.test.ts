@@ -29,8 +29,10 @@ function node(partial: Partial<SnapshotNode>): SnapshotNode {
     text: partial.text ?? '',
     accessibleName: partial.accessibleName ?? null,
     interactive: partial.interactive ?? false,
+    disabled: partial.disabled ?? false,
     isIcon: partial.isIcon ?? false,
     rect: partial.rect ?? { x: 0, y: 0, width: 100, height: 32 },
+    opacity: partial.opacity ?? 1,
     color: partial.color ?? 'rgb(20, 20, 20)',
     backgroundColor: partial.backgroundColor ?? 'rgb(255, 255, 255)',
     fontSize: partial.fontSize ?? 14,
@@ -67,6 +69,8 @@ const everyRule: ScreenDescriptorLite = {
       rules: [
         'spacing/control-height-parity',
         'spacing/icon-size-parity',
+        'spacing/radius-parity',
+        'accessibility/tab-order',
         'composition/edge-baseline-alignment',
         'composition/vertical-rhythm',
         'composition/no-clipping',
@@ -131,6 +135,63 @@ describe('Z6 icon-size-parity', () => {
       node({ region: 'banner', isIcon: true, tag: 'svg', rect: { x: 24, y: 8, width: 20, height: 20 } }),
     ]);
     expect(ids(snap, everyRule)).toContain('spacing/icon-size-parity');
+  });
+});
+
+describe('Z3 radius-parity', () => {
+  it('flags sibling controls with mismatched radii in a row', () => {
+    const snap = snapshot([
+      node({ region: 'banner', interactive: true, tag: 'button', text: 'A', rect: { x: 0, y: 10, width: 80, height: 32 }, borderRadius: 6 }),
+      node({ region: 'banner', interactive: true, tag: 'button', text: 'B', rect: { x: 90, y: 10, width: 80, height: 32 }, borderRadius: 16 }),
+    ]);
+    expect(ids(snap, everyRule)).toContain('spacing/radius-parity');
+  });
+
+  it('passes equal radii', () => {
+    const snap = snapshot([
+      node({ region: 'banner', interactive: true, tag: 'button', text: 'A', rect: { x: 0, y: 10, width: 80, height: 32 }, borderRadius: 6 }),
+      node({ region: 'banner', interactive: true, tag: 'button', text: 'B', rect: { x: 90, y: 10, width: 80, height: 32 }, borderRadius: 6 }),
+    ]);
+    expect(ids(snap, everyRule)).not.toContain('spacing/radius-parity');
+  });
+});
+
+describe('A2 disabled-treatment (screen scope)', () => {
+  const noRules: ScreenDescriptorLite = { name: 'test', regions: [{ regionId: 'x', ariaRole: 'main' }] };
+
+  it('flags a mix of opacity-dimmed and token-dimmed disabled controls', () => {
+    const snap = snapshot([
+      node({ disabled: true, tag: 'button', accessibleName: 'A', opacity: 0.5 }),
+      node({ disabled: true, tag: 'button', accessibleName: 'B', opacity: 1 }),
+    ]);
+    expect(ids(snap, noRules)).toContain('anatomy/disabled-parity');
+  });
+
+  it('passes when all disabled controls share one treatment', () => {
+    const snap = snapshot([
+      node({ disabled: true, tag: 'button', accessibleName: 'A', opacity: 0.5 }),
+      node({ disabled: true, tag: 'button', accessibleName: 'B', opacity: 0.5 }),
+    ]);
+    expect(ids(snap, noRules)).not.toContain('anatomy/disabled-parity');
+  });
+});
+
+describe('I4 tab-order', () => {
+  it('flags a focusable element visually above one earlier in the tab order', () => {
+    // DOM order: A then B; but B sits entirely above A.
+    const snap = snapshot([
+      node({ region: 'banner', interactive: true, tag: 'a', text: 'A', rect: { x: 0, y: 100, width: 80, height: 32 } }),
+      node({ region: 'banner', interactive: true, tag: 'a', text: 'B', rect: { x: 0, y: 0, width: 80, height: 32 } }),
+    ]);
+    expect(ids(snap, everyRule)).toContain('accessibility/tab-order');
+  });
+
+  it('accepts DOM order matching top-to-bottom visual order', () => {
+    const snap = snapshot([
+      node({ region: 'banner', interactive: true, tag: 'a', text: 'A', rect: { x: 0, y: 0, width: 80, height: 32 } }),
+      node({ region: 'banner', interactive: true, tag: 'a', text: 'B', rect: { x: 0, y: 100, width: 80, height: 32 } }),
+    ]);
+    expect(ids(snap, everyRule)).not.toContain('accessibility/tab-order');
   });
 });
 

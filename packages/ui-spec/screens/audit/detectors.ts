@@ -136,6 +136,84 @@ export const DETECTORS: ScreenDetector[] = [
     },
   },
 
+  // Z3 — sibling controls in a row share a border-radius.
+  {
+    ruleId: 'spacing/radius-parity',
+    scope: 'region',
+    run(nodes) {
+      const out: Omit<ScreenFinding, 'severity' | 'checklist'>[] = [];
+      const controls = nodes.filter(
+        (n) => (n.interactive || n.disabled) && n.rect.height > 0
+      );
+      for (const row of rows(controls)) {
+        if (row.length < 2) continue;
+        const radii = distinct(row.map((n) => n.borderRadius), 1);
+        if (radii.length > 1) {
+          out.push(
+            find(
+              'spacing/radius-parity',
+              row[0],
+              `sibling controls in one row use ${radii.length} different border-radii (${radii.join('/')}px) — share one radius`
+            )
+          );
+        }
+      }
+      return out;
+    },
+  },
+
+  // A2 — disabled controls across the screen use ONE treatment, not a mix
+  // (some dimmed via opacity, some via a token color).
+  {
+    ruleId: 'anatomy/disabled-parity',
+    scope: 'screen',
+    run(nodes) {
+      const disabled = nodes.filter((n) => n.disabled);
+      if (disabled.length < 2) return [];
+      const viaOpacity = disabled.filter((n) => n.opacity < 0.99);
+      if (viaOpacity.length === 0 || viaOpacity.length === disabled.length) {
+        return [];
+      }
+      return [
+        find(
+          'anatomy/disabled-parity',
+          viaOpacity[0],
+          `disabled controls use mixed treatments (${viaOpacity.length} dim via opacity, ${disabled.length - viaOpacity.length} via a token) — pick one disabled treatment`
+        ),
+      ];
+    },
+  },
+
+  // I4 — tab (DOM) order follows visual order: no focusable element sits visually
+  // above another it comes after in source.
+  {
+    ruleId: 'accessibility/tab-order',
+    scope: 'region',
+    run(nodes) {
+      const out: Omit<ScreenFinding, 'severity' | 'checklist'>[] = [];
+      // `nodes` preserve DOM (document) order from the probe's tree walk.
+      const focusable = nodes.filter((n) => n.interactive);
+      for (let i = 0; i < focusable.length; i += 1) {
+        const a = focusable[i];
+        for (let j = i + 1; j < focusable.length; j += 1) {
+          const b = focusable[j];
+          // b comes later in the tab order but sits entirely above a.
+          if (b.rect.y + b.rect.height <= a.rect.y) {
+            out.push(
+              find(
+                'accessibility/tab-order',
+                b,
+                `tab order does not match visual order — this control is above an earlier-focused one (y=${b.rect.y} vs y=${a.rect.y})`
+              )
+            );
+            break;
+          }
+        }
+      }
+      return out;
+    },
+  },
+
   // C2 — adjacent components' left edges align, or are equal — never near-misses.
   {
     ruleId: 'composition/edge-baseline-alignment',

@@ -39,11 +39,15 @@ export interface SnapshotNode {
   text: string;
   /** Computed accessible name (aria-label / labelledby / alt / title / text). */
   accessibleName: string | null;
-  /** A control the user operates (button, link, input, select, textarea, …). */
+  /** An enabled control the user operates (button, link, input, select, …). */
   interactive: boolean;
+  /** A control that is present but disabled (`disabled` / `aria-disabled`). */
+  disabled: boolean;
   /** An icon glyph (svg / `[data-slot="icon"]`). */
   isIcon: boolean;
   rect: NodeRect;
+  /** Computed opacity (0–1) — used to tell apart disabled treatments. */
+  opacity: number;
   /** Computed `color`, normalized `rgb(...)`/`rgba(...)`. */
   color: string;
   /** First non-transparent background found walking ancestors (the effective bg). */

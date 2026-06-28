@@ -50,20 +50,27 @@ skill is the glue that captures the snapshot and feeds it to the CLI.
 
 ## Detectors implemented today
 
-| Rule id                               | Checklist | Severity |
-| ------------------------------------- | --------- | -------- |
-| `spacing/control-height-parity`       | Z2        | must     |
-| `accessibility/accessible-name`       | I1        | must     |
-| `accessibility/contrast`              | I5        | must     |
-| `composition/edge-baseline-alignment` | C2        | should   |
-| `composition/no-clipping`             | C8        | should   |
-| `spacing/icon-size-parity`            | Z6        | should   |
-| `composition/vertical-rhythm`         | C1        | should   |
+| Rule id                               | Checklist | Severity | Scope  |
+| ------------------------------------- | --------- | -------- | ------ |
+| `spacing/control-height-parity`       | Z2        | must     | region |
+| `accessibility/accessible-name`       | I1        | must     | screen |
+| `accessibility/contrast`              | I5        | must     | screen |
+| `composition/edge-baseline-alignment` | C2        | should   | region |
+| `composition/no-clipping`             | C8        | should   | region |
+| `spacing/icon-size-parity`            | Z6        | should   | region |
+| `spacing/radius-parity`               | Z3        | should   | region |
+| `composition/vertical-rhythm`         | C1        | should   | region |
+| `anatomy/disabled-parity`             | A2        | should   | screen |
+| `accessibility/tab-order`             | I4        | should   | region |
 
-A region-scoped detector runs only on regions whose `rules[]` opt into it; the
-two a11y detectors run screen-wide. A `screen/*` rule with no detector here is
-simply not enforced yet (no false confidence) — add one by appending to
-`DETECTORS` and pointing the rule's `detector` field at it.
+A region-scoped detector runs only on regions whose `rules[]` opt into it;
+screen-scoped detectors run over every node. A `screen/*` rule with no detector
+here is simply not enforced yet (no false confidence) — add one by appending to
+`DETECTORS` and pointing the rule's `detector` field at it. Four screen rules
+remain deferred because a single static snapshot can't judge them
+(`tokens/one-token-per-role`, `accessibility/overlay-dismiss`,
+`spacing/padding-tier`, `composition/shared-grid`) — see
+[`screens/audit/README.md`](../../../packages/ui-spec/screens/audit/README.md).
 
 ## Steps
 

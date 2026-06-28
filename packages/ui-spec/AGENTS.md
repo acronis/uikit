@@ -112,9 +112,14 @@ over that snapshot + descriptor, unit-tested in `__tests__/screen-audit.test.ts`
 without a browser. Findings map 1:1 to a `KitRule` (severity + checklist from the
 registry); `must` fails CI. Implemented: control-height-parity (Z2), accessible-name
 (I1), contrast (I5) — `must`; edge-baseline-alignment (C2), no-clipping (C8),
-icon-size-parity (Z6), vertical-rhythm (C1) — `should`. Region detectors run only
-on regions whose `rules[]` opt in; a11y detectors run screen-wide. Capture is
-driven by the [`/screen-audit`](../../.claude/skills/screen-audit/SKILL.md) skill.
+icon-size-parity (Z6), radius-parity (Z3), vertical-rhythm (C1), disabled-parity
+(A2), tab-order (I4) — `should`. Region detectors run only on regions whose
+`rules[]` opt in; screen detectors (accessible-name, contrast, disabled-parity)
+run screen-wide. Four `screen/*` rules stay deferred (one-token-per-role T5,
+overlay-dismiss I2, padding-tier Z4, shared-grid C3) — they need a role taxonomy,
+an interactive capture, or a column-grid model a single static snapshot lacks; see
+`screens/audit/README.md`. Capture is driven by the
+[`/screen-audit`](../../.claude/skills/screen-audit/SKILL.md) skill.
 The AI visual-review pass, reference diffs, and the ledger are Phase 4. See
 [`screens/audit/README.md`](./screens/audit/README.md).
 

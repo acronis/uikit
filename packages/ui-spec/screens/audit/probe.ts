@@ -160,13 +160,14 @@ export function collectScreenSnapshot(opts: ProbeOptions): ScreenSnapshot {
     const tag = el.tagName.toLowerCase();
     const isIcon =
       el.tagName === 'svg' || el.getAttribute('data-slot') === 'icon';
-    const disabled =
+    const isControl =
+      INTERACTIVE_TAG.has(el.tagName) ||
+      (role != null && INTERACTIVE_ROLE.has(role));
+    const isDisabled =
       el.hasAttribute('disabled') ||
       el.getAttribute('aria-disabled') === 'true';
-    const interactive =
-      !disabled &&
-      (INTERACTIVE_TAG.has(el.tagName) ||
-        (role != null && INTERACTIVE_ROLE.has(role)));
+    const interactive = isControl && !isDisabled;
+    const disabled = isControl && isDisabled;
 
     const borderX =
       num(style.borderLeftWidth) + num(style.borderRightWidth);
@@ -195,8 +196,12 @@ export function collectScreenSnapshot(opts: ProbeOptions): ScreenSnapshot {
       region: lm?.role ?? null,
       regionChild: lm ? el.parentElement === lm.el : false,
       text: (el.textContent ?? '').trim().slice(0, maxText),
-      accessibleName: interactive || el.tagName === 'IMG' ? accessibleName(el) : null,
+      accessibleName:
+        interactive || disabled || el.tagName === 'IMG'
+          ? accessibleName(el)
+          : null,
       interactive,
+      disabled,
       isIcon,
       rect: {
         x: Math.round(rect.x),
@@ -204,6 +209,7 @@ export function collectScreenSnapshot(opts: ProbeOptions): ScreenSnapshot {
         width: Math.round(rect.width),
         height: Math.round(rect.height),
       },
+      opacity: style.opacity === '' ? 1 : num(style.opacity),
       color: style.color,
       backgroundColor: effectiveBg(el),
       fontSize: Math.round(num(style.fontSize) * 100) / 100,

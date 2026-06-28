@@ -40,13 +40,25 @@ This is the same shape as `kit-lint`: a finding maps 1:1 to a `KitRule`, and
 | `composition/edge-baseline-alignment` | C2        | should   | region |
 | `composition/no-clipping`             | C8        | should   | region |
 | `spacing/icon-size-parity`            | Z6        | should   | region |
+| `spacing/radius-parity`               | Z3        | should   | region |
 | `composition/vertical-rhythm`         | C1        | should   | region |
+| `anatomy/disabled-parity`             | A2        | should   | screen |
+| `accessibility/tab-order`             | I4        | should   | region |
 
 **Region** detectors run only on descriptor regions whose `rules[]` opt into the
 detector's rule (nodes matched to the region by landmark role ↔ `ariaRole`).
 **Screen** detectors run over every node. A `screen/*` rule with no detector here
 is simply not enforced yet — add one by appending to `DETECTORS` and pointing the
 rule's `detector` field at it.
+
+### Deferred `screen/*` detectors (need a capability a single snapshot lacks)
+
+| Rule id                         | Checklist | Why it is not a snapshot detector                                                     |
+| ------------------------------- | --------- | ------------------------------------------------------------------------------------- |
+| `tokens/one-token-per-role`     | T5 (must) | needs a semantic-role taxonomy per node; better as a static role→token map + ref diff |
+| `accessibility/overlay-dismiss` | I2 (must) | needs an interactive before/after-Escape capture; the probe is one static snapshot    |
+| `spacing/padding-tier`          | Z4        | "same role/size → same padding"; without a role model it is pure noise                |
+| `composition/shared-grid`       | C3        | overlaps `edge-baseline-alignment` (C2); needs a column-grid model to add signal      |
 
 ## Running
 
