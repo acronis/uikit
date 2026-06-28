@@ -10,6 +10,8 @@
 // here, is simply not enforced — same "no false confidence" contract as kit-lint.
 // See context/kit-consistency-audit-proposal.md §7.
 import type { RuleSeverity } from '../../grammar';
+import { applyOverrides } from '../../grammar/overrides';
+import type { KitOverride } from '../../grammar/overrides';
 import { DETECTORS, resolveFinding } from './detectors';
 import type {
   ScreenDescriptorLite,
@@ -32,7 +34,8 @@ function flattenRegions(regions: ScreenRegionLite[]): ScreenRegionLite[] {
   return out;
 }
 
-export function runScreenAudit(
+/** All raw findings for a screen, before approved overrides are applied. */
+export function collectScreenFindings(
   snapshot: ScreenSnapshot,
   descriptor: ScreenDescriptorLite
 ): ScreenFinding[] {
@@ -67,6 +70,33 @@ export function runScreenAudit(
     seen.add(key);
     return true;
   });
+}
+
+/** Findings split into active vs. suppressed by an approved override. */
+export function auditScreen(
+  snapshot: ScreenSnapshot,
+  descriptor: ScreenDescriptorLite,
+  opts: { overrides?: KitOverride[]; today?: string } = {}
+): { active: ScreenFinding[]; suppressed: ScreenFinding[] } {
+  return applyOverrides(
+    collectScreenFindings(snapshot, descriptor),
+    (f) => ({
+      ruleId: f.ruleId,
+      screen: descriptor.name,
+      region: f.region ?? undefined,
+      ref: f.ref,
+    }),
+    opts
+  );
+}
+
+/** The active findings (approved overrides removed) — what gates CI. */
+export function runScreenAudit(
+  snapshot: ScreenSnapshot,
+  descriptor: ScreenDescriptorLite,
+  opts: { overrides?: KitOverride[]; today?: string } = {}
+): ScreenFinding[] {
+  return auditScreen(snapshot, descriptor, opts).active;
 }
 
 export function formatScreenReport(

@@ -15,12 +15,24 @@ Design and rationale: [`context/kit-consistency-audit-proposal.md`](../../../con
 grammar/
 ├── types.ts            # KitRule, RuleCategory, RuleSeverity
 ├── rules/              # one file per category + index (registry + lookups)
+├── overrides/          # approved, scoped, dated rule deviations (see README)
 ├── CHECKLIST.md        # human mirror of the registry (1:1 by row id)
 └── index.ts            # public surface
 ```
 
 The test (`../__tests__/grammar.test.ts`) enforces registry integrity and that
-the registry and `CHECKLIST.md` stay in sync.
+the registry and `CHECKLIST.md` stay in sync;
+`../__tests__/overrides.test.ts` validates the [overrides](./overrides/README.md)
+registry.
+
+## Overrides
+
+[`overrides/`](./overrides/README.md) is how an _intentional_ deviation stays
+legal: an approved, scoped, dated entry that the audits treat as a pass instead of
+a defect (the third resolution for a finding — fix / new rule / **override**).
+Both `kit-lint` and the screen audit run findings through `applyOverrides`, so an
+approved waiver removes a finding from what gates CI while keeping it auditable.
+The registry ships empty until a human ratifies one.
 
 ## Usage
 

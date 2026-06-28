@@ -80,6 +80,18 @@ and the checklist in sync. This is **Phase 0** of
 [`context/kit-consistency-audit-proposal.md`](../../context/kit-consistency-audit-proposal.md);
 screen specs and the rendered audit follow. See [`grammar/README.md`](./grammar/README.md).
 
+**Overrides** (`grammar/overrides/`, Phase 4): approved, scoped, dated waivers for
+_intentional_ deviations — the third resolution for a finding (fix / new rule /
+override). A `KitOverride` names the `rule` it waives, a `scope` (component / screen
+/ region / file / ref), a `reason`, `approvedBy`, `date`, and optional `expires`.
+Both `kit-lint` and the screen audit pass findings through `applyOverrides`, so an
+approved waiver is removed from what gates CI yet stays auditable (the CLIs print an
+`N suppressed by approved override(s)` line). The registry ships **empty**; only a
+human adds an entry. `validateOverrides()` (run by `__tests__/overrides.test.ts`)
+keeps entries well-formed. This unblocks the deferred `must` detectors — a rule can
+block CI broadly while genuine exceptions carry a scoped waiver. See
+[`grammar/overrides/README.md`](./grammar/overrides/README.md).
+
 **Phase 1 — `kit-lint`** (`scripts/kit-lint.ts`, `pnpm --filter @acronis-platform/ui-spec kit-lint`):
 static detectors over shipped ui-react component source for the `kit-lint` checklist
 rows. `must`: T1 no-hardcoded-color, T2 unbridged-name. `should`: T3 opacity-hack,

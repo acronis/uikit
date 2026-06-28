@@ -78,3 +78,24 @@ describe('I3 interaction/timing-parity', () => {
     );
   });
 });
+
+describe('overrides wiring', () => {
+  it('runKitLint suppresses a finding a scoped override covers', () => {
+    const ruleId = 'tokens/state-token-wiring';
+    const covered = (f: { ruleId: string; file: string }) =>
+      f.ruleId === ruleId && f.file.includes('scroll-area');
+    const active = runKitLint({
+      overrides: [
+        {
+          id: 'sa-state',
+          rule: ruleId,
+          scope: { component: 'scroll-area' },
+          reason: 'no -hover token exists for this border tier yet',
+          approvedBy: 'tester',
+          date: '2026-06-28',
+        },
+      ],
+    });
+    expect(active.some(covered)).toBe(false);
+  });
+});

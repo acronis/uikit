@@ -16,7 +16,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { load as parseYaml } from 'js-yaml';
 
-import { formatScreenReport, runScreenAudit } from '../screens/audit';
+import { auditScreen, formatScreenReport } from '../screens/audit';
 import type { ScreenDescriptorLite, ScreenSnapshot } from '../screens/audit/types';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -41,6 +41,10 @@ if (!slug || !snapshotPath) {
 
 const descriptor = loadDescriptor(slug);
 const snapshot = loadSnapshot(snapshotPath);
-const findings = runScreenAudit(snapshot, descriptor);
-process.stdout.write(formatScreenReport(findings, slug) + '\n');
-process.exit(findings.some((f) => f.severity === 'must') ? 1 : 0);
+const today = new Date().toISOString().slice(0, 10);
+const { active, suppressed } = auditScreen(snapshot, descriptor, { today });
+let report = formatScreenReport(active, slug);
+if (suppressed.length)
+  report += `\n${suppressed.length} suppressed by approved override(s).`;
+process.stdout.write(report + '\n');
+process.exit(active.some((f) => f.severity === 'must') ? 1 : 0);

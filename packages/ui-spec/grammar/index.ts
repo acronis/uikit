@@ -7,3 +7,11 @@ export {
   getRulesByCategory,
   getMandatoryRules,
 } from './rules';
+export type { KitOverride, OverrideScope, OverrideTarget } from './overrides';
+export {
+  overrides,
+  validateOverrides,
+  matchesOverride,
+  isOverridden,
+  applyOverrides,
+} from './overrides';

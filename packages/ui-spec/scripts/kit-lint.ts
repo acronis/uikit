@@ -23,6 +23,8 @@ import { fileURLToPath } from 'node:url';
 
 import { getRule } from '../grammar';
 import type { RuleSeverity } from '../grammar';
+import { applyOverrides } from '../grammar/overrides';
+import type { KitOverride, OverrideTarget } from '../grammar/overrides';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, '../../..');
@@ -237,7 +239,19 @@ export function lintSource(
   return out;
 }
 
-export function runKitLint(): Finding[] {
+/** Component dir name from a repo-relative source path (the override scope key). */
+function componentOf(file: string): string | undefined {
+  return file.match(/components\/ui\/([^/]+)\//)?.[1];
+}
+
+const kitTarget = (f: Finding): OverrideTarget => ({
+  ruleId: f.ruleId,
+  file: f.file,
+  component: componentOf(f.file),
+});
+
+/** All raw findings, before approved overrides are applied. */
+export function collectFindings(): Finding[] {
   const bridged = bridgedColorNames();
   const findings: Finding[] = [];
   for (const file of componentFiles(UI_DIR)) {
@@ -246,6 +260,20 @@ export function runKitLint(): Finding[] {
     );
   }
   return findings;
+}
+
+/** Findings split into active vs. suppressed by an approved override. */
+export function auditKitLint(
+  opts: { overrides?: KitOverride[]; today?: string } = {}
+): { active: Finding[]; suppressed: Finding[] } {
+  return applyOverrides(collectFindings(), kitTarget, opts);
+}
+
+/** The active findings (approved overrides removed) — what gates CI. */
+export function runKitLint(
+  opts: { overrides?: KitOverride[]; today?: string } = {}
+): Finding[] {
+  return auditKitLint(opts).active;
 }
 
 export function formatReport(findings: Finding[]): string {
@@ -267,7 +295,11 @@ export function formatReport(findings: Finding[]): string {
 // CLI: print the report; exit non-zero on any `must` finding.
 const isMain = process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url));
 if (isMain) {
-  const findings = runKitLint();
-  process.stdout.write(formatReport(findings) + '\n');
-  process.exit(findings.some((f) => f.severity === 'must') ? 1 : 0);
+  const today = new Date().toISOString().slice(0, 10);
+  const { active, suppressed } = auditKitLint({ today });
+  let report = formatReport(active);
+  if (suppressed.length)
+    report += `\n${suppressed.length} suppressed by approved override(s).`;
+  process.stdout.write(report + '\n');
+  process.exit(active.some((f) => f.severity === 'must') ? 1 : 0);
 }

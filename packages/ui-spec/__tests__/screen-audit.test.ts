@@ -298,6 +298,31 @@ describe('findings resolve against the registry', () => {
   });
 });
 
+// ── overrides suppress findings end-to-end ───────────────────────────────────
+describe('an approved override suppresses a screen finding', () => {
+  const snap = snapshot([
+    node({ region: 'banner', interactive: true, tag: 'button', text: 'A', rect: { x: 0, y: 10, width: 80, height: 28 } }),
+    node({ region: 'banner', interactive: true, tag: 'input', accessibleName: 'q', rect: { x: 90, y: 8, width: 200, height: 40 } }),
+  ]);
+
+  it('drops the finding the override covers, keeps the rest', () => {
+    expect(ids(snap, everyRule)).toContain('spacing/control-height-parity');
+    const active = runScreenAudit(snap, everyRule, {
+      overrides: [
+        {
+          id: 'compact-bar',
+          rule: 'spacing/control-height-parity',
+          scope: { screen: 'test', region: 'bar' },
+          reason: 'intentionally compact toolbar',
+          approvedBy: 'tester',
+          date: '2026-06-28',
+        },
+      ],
+    });
+    expect(active.map((f) => f.ruleId)).not.toContain('spacing/control-height-parity');
+  });
+});
+
 // ── end-to-end against the real protection-dashboard descriptor ──────────────
 describe('runs against the shipped protection-dashboard descriptor', () => {
   const descriptor = parseYaml(
