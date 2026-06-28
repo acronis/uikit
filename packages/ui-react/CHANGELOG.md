@@ -1,5 +1,27 @@
 # @acronis-platform/ui-react
 
+## 0.54.0
+
+### Minor Changes
+
+- [#480](https://github.com/acronis/uikit/pull/480) [`79b5e65`](https://github.com/acronis/uikit/commit/79b5e650d5646097f8a5a971d0f9173ecbdd948f) Thanks [@leonid](https://github.com/leonid)! - Add `ScrollArea` (and `ScrollBar`): a scrollable region with a custom overlay
+  scrollbar built on Base UI's Scroll Area. The bar floats over the content and
+  reserves no layout space, so full-bleed content is never cropped by a scrollbar
+  gutter on any OS/browser; it is hidden at rest and revealed on hover/scroll.
+  Supports `orientation` (`vertical` | `horizontal` | `both`). Initial version
+  ported from ui-legacy; design reconciliation pending.
+
+### Patch Changes
+
+- [#481](https://github.com/acronis/uikit/pull/481) [`e947aff`](https://github.com/acronis/uikit/commit/e947aff18abbcf28acbb32e377e51ddb19093a56) Thanks [@leonid](https://github.com/leonid)! - SidebarSecondary group headers (`SidebarSecondarySectionLabel`) are now at least
+  36px tall with the label vertically centered, matching the Figma spec
+  (node 4011-4472).
+
+- [#477](https://github.com/acronis/uikit/pull/477) [`3d6d6dc`](https://github.com/acronis/uikit/commit/3d6d6dcc7c5d2eda19a0823f2a23a7e9737d124d) Thanks [@leonid](https://github.com/leonid)! - SidebarPrimary and SidebarSecondary now scroll their section list inside a
+  `ScrollArea`, so the overlay scrollbar floats over the content and reserves no
+  gutter — the full-bleed selected row is no longer cropped (on any OS), and the
+  bar is revealed on hover/scroll instead of always shown.
+
 ## 0.53.0
 
 ### Minor Changes
