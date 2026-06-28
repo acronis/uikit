@@ -1,0 +1,43 @@
+spec_version: '1.0'
+component: ScrollArea
+
+contract:
+  properties:
+    - name: orientation
+      type: "'vertical' | 'horizontal' | 'both'"
+      required: false
+      default: "'vertical'"
+      description: >-
+        Which scrollbar(s) the all-in-one `ScrollArea` renders. `both` also
+        renders the corner. For finer control, compose the exported `ScrollBar`
+        part directly.
+  content:
+    - name: children
+      description: The content to be scrolled, wrapped in the viewport/content parts.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: ScrollArea
+    status: implemented
+    import: "import { ScrollArea, ScrollBar } from '@acronis-platform/ui-react'"
+    example: |
+      <ScrollArea className="h-72">
+        {longContent}
+      </ScrollArea>
+      <ScrollArea orientation="both" className="h-72 w-96">
+        {wideTallContent}
+      </ScrollArea>
+  vue:
+    component: AvScrollArea
+    status: planned
+    import: "import { AvScrollArea } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvScrollArea orientation="both" />
+  web-components:
+    element: ui-scroll-area
+    status: planned
+    import: "import '@acronis-platform/ui-wc/scroll-area'"
+    example: |
+      <ui-scroll-area orientation="both"></ui-scroll-area>

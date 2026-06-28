@@ -2,6 +2,7 @@
 '@acronis-platform/ui-react': patch
 ---
 
-SidebarPrimary and SidebarSecondary now reveal their scroll content's scrollbar
-on hover only (transparent thumb at rest) instead of showing a permanent
-scrollbar gutter.
+SidebarPrimary and SidebarSecondary now scroll their section list inside a
+`ScrollArea`, so the overlay scrollbar floats over the content and reserves no
+gutter — the full-bleed selected row is no longer cropped (on any OS), and the
+bar is revealed on hover/scroll instead of always shown.

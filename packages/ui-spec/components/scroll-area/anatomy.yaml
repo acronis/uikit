@@ -1,0 +1,89 @@
+spec_version: '1.0'
+component: ScrollArea
+
+schematic: |
+  root: <div> (relative, overflow hidden — groups the parts)
+  +-------------------------------------------+
+  | viewport (scrollable, clips content)      |
+  |  +-------------------------------------+  |
+  |  | content (the scrolled children)     | ││ <- scrollbar (overlay)
+  |  |                                     | ││    thumb (draggable)
+  |  |                                     | ││
+  |  +-------------------------------------+  |
+  |  ===================================== corner
+  +-------------------------------------------+
+     root      -> position: relative; overflow: hidden
+     viewport  -> the actual scroll container (focusable); clips to root radius
+     content   -> wrapper around children; drives scroll size
+     scrollbar -> absolutely positioned overlay track (no reserved gutter);
+                  opacity 0 at rest, 100 on hover/scroll
+     thumb     -> bg-[--ui-border-on-surface-border]; hover -> *-border-active
+     corner    -> fills the gap where the two scrollbars meet (orientation=both)
+
+root:
+  element: div
+  description: >-
+    Groups all parts. `position: relative; overflow: hidden`. The radius set
+    here is inherited by the viewport so scrolled content is clipped to the
+    rounded corners.
+
+parts:
+  - id: viewport
+    description: >-
+      The scrollable container that clips and scrolls the content. Focusable so
+      the region is keyboard-scrollable; shows a focus ring.
+    element: div
+  - id: content
+    description: >-
+      Wrapper around the children; its size drives whether (and how far) the
+      viewport scrolls.
+    element: div
+  - id: scrollbar
+    description: >-
+      An absolutely positioned overlay track that floats over the content and
+      reserves no layout space. Hidden at rest (opacity 0), revealed on hover or
+      while scrolling. One per axis; `orientation` selects vertical/horizontal.
+    element: div
+    optional: true
+  - id: thumb
+    description: >-
+      The draggable handle inside the scrollbar; sized to the visible/total
+      ratio by the primitive. Uses the shared border token, darkening on hover.
+    element: div
+    optional: true
+  - id: corner
+    description: >-
+      Fills the square where the vertical and horizontal scrollbars meet when
+      both axes scroll (`orientation="both"`).
+    element: div
+    optional: true
+
+layout:
+  type: overlay
+  order: [viewport, scrollbar, corner]
+
+states:
+  - id: hovering
+    trigger: the pointer is over the scroll area
+    kind: internal
+    affects: [scrollbar, thumb]
+  - id: scrolling
+    trigger: the viewport is being scrolled
+    kind: internal
+    affects: [scrollbar, thumb]
+
+internal_state:
+  - id: hovering
+    type: boolean
+    initial: false
+    changed_by: pointer entering/leaving the scroll area
+    description: >-
+      Tracked by the primitive and exposed as `data-hovering` on the scrollbar;
+      fades the bar in.
+  - id: scrolling
+    type: boolean
+    initial: false
+    changed_by: scrolling the viewport
+    description: >-
+      Tracked by the primitive and exposed as `data-scrolling` on the scrollbar;
+      fades the bar in.

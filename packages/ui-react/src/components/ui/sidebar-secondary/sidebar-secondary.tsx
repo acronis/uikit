@@ -11,6 +11,8 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
+import { ScrollArea } from '../scroll-area';
+
 // Composable SidebarSecondary primitives mirroring the Figma "SidebarSecondary"
 // component set (node 2468:59502, variant expanded|collapsed). Every color and
 // metric is wired to a next-gen `--ui-sidebar-secondary-*` token from
@@ -197,24 +199,24 @@ SidebarSecondaryHeader.displayName = 'SidebarSecondaryHeader';
 const SidebarSecondaryContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentPropsWithoutRef<'div'>
->(({ className, ...props }, ref) => (
-  // Expanded: the section list. Hidden in collapsed mode, where the
-  // CollapsedBreadcrumb sibling takes over.
-  <div
+>(({ className, children, ...props }, ref) => (
+  // Expanded: the section list, scrolling inside a ScrollArea whose overlay
+  // scrollbar floats over the content and reserves no gutter (full-bleed rows
+  // are never cropped). Hidden in collapsed mode, where the CollapsedBreadcrumb
+  // sibling takes over.
+  <ScrollArea
     ref={ref}
     className={cn(
-      'flex flex-1 flex-col gap-[var(--ui-sidebar-secondary-global-section-list-gap)]',
-      // Overlay scrollbar revealed on hover (transparent thumb at rest). We
-      // deliberately avoid `::-webkit-scrollbar` styling: it forces a classic,
-      // space-reserving scrollbar that would shrink the rows and crop the
-      // full-bleed selected highlight. Standard `scrollbar-*` props keep the
-      // native overlay behavior so the thumb floats over the full-width rows.
-      'overflow-y-auto [scrollbar-width:thin] [scrollbar-color:transparent_transparent] hover:[scrollbar-color:var(--ui-border-on-surface-border)_transparent]',
-      'hidden group-data-[state=expanded]/sidebar:flex',
+      'min-h-0 flex-1',
+      'hidden group-data-[state=expanded]/sidebar:block',
       className
     )}
     {...props}
-  />
+  >
+    <div className="flex flex-col gap-[var(--ui-sidebar-secondary-global-section-list-gap)]">
+      {children}
+    </div>
+  </ScrollArea>
 ));
 SidebarSecondaryContent.displayName = 'SidebarSecondaryContent';
 

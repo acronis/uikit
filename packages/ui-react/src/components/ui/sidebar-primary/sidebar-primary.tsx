@@ -6,6 +6,8 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
+import { ScrollArea } from '../scroll-area';
+
 // Composable SidebarPrimary primitives mirroring the Figma "SidebarPrimary"
 // component set (node 2092:4359, variant expanded|collapsed). Every color and
 // metric is wired to a next-gen `--ui-sidebar-primary-*` token from
@@ -173,21 +175,15 @@ SidebarPrimaryHeader.displayName = 'SidebarPrimaryHeader';
 const SidebarPrimaryContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentPropsWithoutRef<'div'>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      'flex flex-1 flex-col gap-[var(--ui-sidebar-primary-global-section-list-gap)]',
-      // Overlay scrollbar revealed on hover (transparent thumb at rest). We
-      // deliberately avoid `::-webkit-scrollbar` styling: it forces a classic,
-      // space-reserving scrollbar that would shrink the rows and crop the
-      // full-bleed selected highlight. Standard `scrollbar-*` props keep the
-      // native overlay behavior so the thumb floats over the full-width rows.
-      'overflow-y-auto [scrollbar-width:thin] [scrollbar-color:transparent_transparent] hover:[scrollbar-color:var(--ui-border-on-surface-border)_transparent]',
-      className
-    )}
-    {...props}
-  />
+>(({ className, children, ...props }, ref) => (
+  // The section list scrolls inside a ScrollArea: its overlay scrollbar floats
+  // over the content and reserves no gutter, so the full-bleed selected row is
+  // never cropped — on every OS, unlike a native `overflow` scrollbar.
+  <ScrollArea ref={ref} className={cn('min-h-0 flex-1', className)} {...props}>
+    <div className="flex flex-col gap-[var(--ui-sidebar-primary-global-section-list-gap)]">
+      {children}
+    </div>
+  </ScrollArea>
 ));
 SidebarPrimaryContent.displayName = 'SidebarPrimaryContent';
 

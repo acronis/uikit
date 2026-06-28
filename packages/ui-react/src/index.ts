@@ -38,6 +38,7 @@ export * from './components/ui/pagination';
 export * from './components/ui/popover';
 export * from './components/ui/progress';
 export * from './components/ui/progress-circle';
+export * from './components/ui/scroll-area';
 export * from './components/ui/search-global';
 // `Input` / `Search` / `Textarea` are aliases of the full-field components
 // `InputText` / `InputSearch` / `InputTextArea`. The bare input/search boxes are

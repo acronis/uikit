@@ -50,6 +50,7 @@
     "sidebar-primary",
     "sidebar-secondary",
     "resizable",
+    "scroll-area",
     "separator",
     "---Overlays---",
     "dialog",

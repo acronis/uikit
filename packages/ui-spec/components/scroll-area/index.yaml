@@ -1,0 +1,12 @@
+spec_version: '1.0'
+component: ScrollArea
+name: scroll-area
+status: draft
+category: layout
+description: >-
+  A scrollable region with a custom overlay scrollbar built on the Base UI
+  Scroll Area primitive. The bar floats over the content and reserves no layout
+  space, so full-bleed content is never cropped by a scrollbar gutter, on every
+  OS and browser. The bar is revealed on hover/scroll and hidden at rest. Ported
+  from the legacy shadcn-uikit `ScrollArea`.
+since: 0.53.0
