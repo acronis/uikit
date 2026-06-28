@@ -1,0 +1,46 @@
+---
+title: Dashboard Layout
+description: A dashboard region with responsive widget grids.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { DashboardLayoutDemo } from "@/components/demos-react/dashboard-layout";
+
+## Usage
+
+```tsx
+import { DashboardLayout, DashboardGrid } from '@acronis-platform/ui-react';
+```
+
+`DashboardLayout` is a vertically spaced region for dashboard pages, holding one or
+more `DashboardGrid` widget grids (`cols` 1–4, stepping down at smaller
+breakpoints).
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` dashboard-layout.
+
+## Examples
+
+<DemoReact>
+  <DashboardLayoutDemo />
+</DemoReact>
+
+```tsx
+<DashboardLayout>
+  <DashboardGrid cols={3}>
+    {widgets.map((w) => <WidgetPlaceholder key={w.id} {...w} />)}
+  </DashboardGrid>
+</DashboardLayout>
+```
+
+For a general two-dimensional layout use [`Grid`](/layouts/grid); for the page
+frame use [App Shell](/layouts/app-shell).
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/dashboard-layout/dashboard-layout.tsx"
+  name="DashboardGridProps"
+/>
+
+`DashboardLayout` accepts native `<div>` attributes; `DashboardGrid` adds the
+`cols` variant above.

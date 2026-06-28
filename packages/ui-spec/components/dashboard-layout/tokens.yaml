@@ -1,0 +1,8 @@
+spec_version: '1.0'
+component: DashboardLayout
+
+# DashboardLayout has no tokens — a layout-only region/grid (no color). The widgets
+# placed inside bring their own.
+source: '@acronis-platform/tokens-pd'
+
+tokens: []

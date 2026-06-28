@@ -1,0 +1,17 @@
+spec_version: '1.0'
+component: DashboardLayout
+
+schematic: |
+  dashboard-layout: <div> vertically spaced region
+    dashboard-grid: <div> responsive widget grid (1–4 cols)
+
+root:
+  element: div
+  description: The dashboard region — vertical spacing between widget grids / sections.
+
+parts:
+  - id: dashboard-grid
+    element: div
+    description: A responsive widget grid; columns step down at smaller breakpoints.
+
+states: []

@@ -1,0 +1,10 @@
+spec_version: '1.0'
+component: DashboardLayout
+name: dashboard-layout
+status: draft
+category: layout
+description: >-
+  A layout for dashboard pages — a vertically spaced region (DashboardLayout)
+  holding one or more responsive widget grids (DashboardGrid, 1–4 columns). Ported
+  from the legacy shadcn-uikit `dashboard-layout`.
+since: 0.52.0

@@ -1,0 +1,34 @@
+spec_version: '1.0'
+component: DashboardLayout
+
+contract:
+  properties:
+    - name: cols
+      type: '1 | 2 | 3 | 4'
+      required: false
+      default: '3'
+      description: On DashboardGrid — target column count (steps down responsively).
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: DashboardLayout
+    status: implemented
+    import: "import { DashboardLayout, DashboardGrid } from '@acronis-platform/ui-react'"
+    example: |
+      <DashboardLayout>
+        <DashboardGrid cols={3}>{widgets}</DashboardGrid>
+      </DashboardLayout>
+  vue:
+    component: AvDashboardLayout
+    status: planned
+    import: "import { AvDashboardLayout } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvDashboardLayout />
+  web-components:
+    element: ui-dashboard-layout
+    status: planned
+    import: "import '@acronis-platform/ui-wc/dashboard-layout'"
+    example: |
+      <ui-dashboard-layout></ui-dashboard-layout>
