@@ -26,6 +26,10 @@
     "since": { "type": "string" },
     "description": { "type": "string" },
     "route": { "type": "string" },
+    "story": {
+      "type": "string",
+      "description": "Storybook story id that renders this assembled screen; the screen audit (screens/audit) navigates here to capture a snapshot. e.g. `ui-appshell--with-secondary`."
+    },
     "permissions": { "type": "array", "items": { "type": "string" } },
     "pattern": {
       "type": "string",

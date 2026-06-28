@@ -15,6 +15,7 @@
     "lib/**/*.ts",
     "scripts/**/*.ts",
     "grammar/**/*.ts",
+    "screens/**/*.ts",
     "__tests__/**/*.ts"
   ]
 }

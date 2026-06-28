@@ -10,6 +10,9 @@ description: >-
   content area. Worked example for the screen-spec format; mirrors the App Shell
   "WithSecondary" story.
 route: /protection/dashboard
+# The assembled-screen render the screen audit captures (App Shell with-secondary
+# is the de-facto Protection dashboard). See screens/audit + the /screen-audit skill.
+story: ui-appshell--with-secondary
 permissions: [protection.view]
 pattern: app-shell
 figma:

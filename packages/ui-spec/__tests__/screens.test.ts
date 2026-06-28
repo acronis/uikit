@@ -39,7 +39,11 @@ interface Screen {
 function listScreens(): string[] {
   if (!existsSync(SCREENS_DIR)) return [];
   return readdirSync(SCREENS_DIR)
-    .filter((e) => statSync(join(SCREENS_DIR, e)).isDirectory())
+    .filter(
+      (e) =>
+        statSync(join(SCREENS_DIR, e)).isDirectory() &&
+        existsSync(join(SCREENS_DIR, e, 'screen.yaml'))
+    )
     .sort();
 }
 

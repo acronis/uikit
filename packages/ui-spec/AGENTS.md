@@ -98,8 +98,25 @@ a `stateMachine`, and a `figma` node. Validated by `__tests__/screens.test.ts`
 against `schema/screen.schema.json`: schema, component refs resolve in ui-react,
 grammar-rule refs resolve, the `pattern` slug exists, and the state machine has
 one initial + all-reachable states. First example: `screens/protection-dashboard`
-(the App Shell with-secondary screen). **Phase 2** of the kit-consistency proposal;
-a `ProductDescriptor` (flows/entry) and the audit follow. See [`screens/README.md`](./screens/README.md).
+(the App Shell with-secondary screen, captured via its `story` id). **Phase 2** of
+the kit-consistency proposal. See [`screens/README.md`](./screens/README.md).
+
+**Phase 3 — the rendered screen audit** (`screens/audit/`,
+`pnpm --filter @acronis-platform/ui-spec screen-audit <slug> <snapshot.json>`):
+measure a real assembled screen, then run cross-component **structural detectors**
+keyed to the grammar's `screen/*` rules. Like `kit-lint`, measurement is split
+from detection: `screens/audit/probe.ts`'s `collectScreenSnapshot` runs in the
+browser (via the VR `page.evaluate` or the MCP `evaluate_script`) and returns a
+serializable `ScreenSnapshot`; `screens/audit/detectors.ts` are **pure** functions
+over that snapshot + descriptor, unit-tested in `__tests__/screen-audit.test.ts`
+without a browser. Findings map 1:1 to a `KitRule` (severity + checklist from the
+registry); `must` fails CI. Implemented: control-height-parity (Z2), accessible-name
+(I1), contrast (I5) — `must`; edge-baseline-alignment (C2), no-clipping (C8),
+icon-size-parity (Z6), vertical-rhythm (C1) — `should`. Region detectors run only
+on regions whose `rules[]` opt in; a11y detectors run screen-wide. Capture is
+driven by the [`/screen-audit`](../../.claude/skills/screen-audit/SKILL.md) skill.
+The AI visual-review pass, reference diffs, and the ledger are Phase 4. See
+[`screens/audit/README.md`](./screens/audit/README.md).
 
 ## Scripts
 
