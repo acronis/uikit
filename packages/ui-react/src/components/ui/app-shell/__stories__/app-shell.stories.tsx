@@ -5,6 +5,7 @@ import {
   BriefcaseIcon,
   BuildingIcon,
   ChartGrowthIcon,
+  ChevronLeftIcon,
   ChevronsLeftIcon,
   CircleHelpIcon,
   HeadsetIcon,
@@ -42,10 +43,17 @@ import {
 } from '../../sidebar-primary';
 import {
   SidebarSecondary,
+  SidebarSecondaryCollapseTrigger,
+  SidebarSecondaryCollapsedBreadcrumb,
   SidebarSecondaryContent,
+  SidebarSecondaryFooter,
   SidebarSecondaryHeader,
   SidebarSecondaryMenu,
   SidebarSecondaryMenuItem,
+  SidebarSecondaryMenuSub,
+  SidebarSecondaryMenuSubContent,
+  SidebarSecondaryMenuSubItem,
+  SidebarSecondaryMenuSubTrigger,
   SidebarSecondarySection,
   SidebarSecondarySectionLabel,
 } from '../../sidebar-secondary';
@@ -155,12 +163,45 @@ function SecondaryNav({ expanded }: { expanded?: boolean }) {
             <SidebarSecondaryMenuItem href="#" icon={<ServerIcon />}>
               Devices
             </SidebarSecondaryMenuItem>
-            <SidebarSecondaryMenuItem href="#" icon={<BoxIcon />}>
-              Plans
-            </SidebarSecondaryMenuItem>
+          </SidebarSecondaryMenu>
+        </SidebarSecondarySection>
+        <SidebarSecondarySection>
+          <SidebarSecondarySectionLabel>
+            Configuration
+          </SidebarSecondarySectionLabel>
+          <SidebarSecondaryMenu>
+            {/* Third level: a collapsible sub-menu of nested items. */}
+            <SidebarSecondaryMenuSub defaultOpen>
+              <SidebarSecondaryMenuSubTrigger icon={<BoxIcon />}>
+                Policies
+              </SidebarSecondaryMenuSubTrigger>
+              <SidebarSecondaryMenuSubContent>
+                <SidebarSecondaryMenuSubItem href="#" selected>
+                  Backup
+                </SidebarSecondaryMenuSubItem>
+                <SidebarSecondaryMenuSubItem href="#">
+                  Antivirus
+                </SidebarSecondaryMenuSubItem>
+                <SidebarSecondaryMenuSubItem href="#">
+                  Vulnerability assessment
+                </SidebarSecondaryMenuSubItem>
+              </SidebarSecondaryMenuSubContent>
+            </SidebarSecondaryMenuSub>
           </SidebarSecondaryMenu>
         </SidebarSecondarySection>
       </SidebarSecondaryContent>
+      {/* Shown in place of the section list when the secondary is collapsed. */}
+      <SidebarSecondaryCollapsedBreadcrumb
+        parentLabel="Protection"
+        currentLabel="Dashboard"
+      />
+      <SidebarSecondaryFooter>
+        <SidebarSecondaryMenu>
+          <SidebarSecondaryCollapseTrigger icon={<ChevronLeftIcon />}>
+            Collapse menu
+          </SidebarSecondaryCollapseTrigger>
+        </SidebarSecondaryMenu>
+      </SidebarSecondaryFooter>
     </SidebarSecondary>
   );
 }
@@ -168,10 +209,18 @@ function SecondaryNav({ expanded }: { expanded?: boolean }) {
 function Header() {
   return (
     <AppShellHeader>
-      <SearchGlobal aria-label="Search" placeholder="Search…" className="max-w-md" />
-      <span className="ml-auto text-sm text-[var(--ui-text-on-surface-secondary)]">
-        admin@acronis.com
-      </span>
+      {/* Three zones: flexible spacers on the sides keep the search centered. */}
+      <div className="flex-1" />
+      <SearchGlobal
+        aria-label="Search"
+        placeholder="Search…"
+        className="w-full max-w-md"
+      />
+      <div className="flex flex-1 justify-end">
+        <span className="text-sm text-[var(--ui-text-on-surface-secondary)]">
+          admin@acronis.com
+        </span>
+      </div>
     </AppShellHeader>
   );
 }
@@ -190,12 +239,9 @@ function PageBody({ title = 'Assets' }: { title?: string }) {
 }
 
 function Frame({ children }: { children: React.ReactNode }) {
-  // Bound the full-page shell so the VR snapshot is a reasonable size.
-  return (
-    <div className="h-[560px] overflow-hidden">
-      <AppShell className="h-full min-h-0">{children}</AppShell>
-    </div>
-  );
+  // The shell fills the viewport with no surrounding gap; the sidebar stretches
+  // to the full height of the shell (its flex parent) and the main area scrolls.
+  return <AppShell className="h-screen">{children}</AppShell>;
 }
 
 // ---- states ----

@@ -177,7 +177,11 @@ const SidebarPrimaryContent = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'flex flex-1 flex-col overflow-y-auto gap-[var(--ui-sidebar-primary-global-section-list-gap)]',
+      'flex flex-1 flex-col gap-[var(--ui-sidebar-primary-global-section-list-gap)]',
+      // Scrollbar is revealed on hover only (transparent thumb at rest) so the
+      // nav never shows a permanent scrollbar gutter.
+      'overflow-y-auto [scrollbar-width:thin] [scrollbar-color:transparent_transparent] hover:[scrollbar-color:var(--ui-border-on-surface-border)_transparent]',
+      '[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-[var(--ui-border-on-surface-border)]',
       className
     )}
     {...props}
