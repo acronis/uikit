@@ -162,6 +162,11 @@ that workspace**, never here.
   (not yet adopted):
   framework-agnostic component specs + a machine-readable design grammar, to
   support future non-React implementations and agent tooling.
+- `context/kit-consistency-audit-proposal.md` — **Proposed** (not yet adopted):
+  cross-component consistency rules (grammar), a common-inconsistency checklist,
+  a complete-screen consistency audit (render real screens → structural + AI
+  detectors), reference-implementation diffing, and a self-improving feedback
+  loop + new AI skills. Extends the component-specs proposal above.
 
 ## Tooling preconditions
 
