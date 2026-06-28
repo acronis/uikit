@@ -78,7 +78,15 @@ the rollout phases), and a back-link to its `grammar/CHECKLIST.md` row.
 `__tests__/grammar.test.ts` enforces registry integrity and keeps the registry
 and the checklist in sync. This is **Phase 0** of
 [`context/kit-consistency-audit-proposal.md`](../../context/kit-consistency-audit-proposal.md);
-detectors, screen specs, and the audit follow. See [`grammar/README.md`](./grammar/README.md).
+screen specs and the rendered audit follow. See [`grammar/README.md`](./grammar/README.md).
+
+**Phase 1 — `kit-lint`** (`scripts/kit-lint.ts`, `pnpm --filter @acronis-platform/ui-spec kit-lint`):
+static detectors over shipped ui-react component source for the `kit-lint` checklist
+rows (T1 no-hardcoded-color, T2 unbridged-name as `must`; T3 opacity-hack, Z1
+off-grid-spacing as `should`). It reads severities from the grammar registry and is
+**enforced via `__tests__/kit-lint.test.ts`** (which is part of `test`), so a
+`must` finding fails CI. Add a detector by appending to the `DETECTORS` array and
+its grammar rule's `detector` id.
 
 ## Scripts
 

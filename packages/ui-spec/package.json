@@ -22,7 +22,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "validate": "vitest run",
-    "generate:stories": "tsx scripts/generate-stories.ts"
+    "generate:stories": "tsx scripts/generate-stories.ts",
+    "kit-lint": "tsx scripts/kit-lint.ts"
   },
   "keywords": [
     "ui-kit",
