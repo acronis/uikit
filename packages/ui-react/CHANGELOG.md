@@ -1,5 +1,17 @@
 # @acronis-platform/ui-react
 
+## 0.53.0
+
+### Minor Changes
+
+- [#474](https://github.com/acronis/uikit/pull/474) [`609740c`](https://github.com/acronis/uikit/commit/609740cfd31f4f43e4d636efb73be34431bae1ba) Thanks [@leonid](https://github.com/leonid)! - feat(grid): add container-query mode
+
+  Grid gains a `container` prop — columns respond to the grid's own width (container
+  queries via a `@container/grid` wrapper) instead of the viewport. Ideal for widget
+  grids inside variable-width areas like App Shell main. (DashboardLayout was dropped
+  as redundant with Stack + Grid; "dashboard" is now an App Shell + container-Grid
+  pattern.)
+
 ## 0.52.0
 
 ### Minor Changes
