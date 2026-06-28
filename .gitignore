@@ -5,6 +5,8 @@ node_modules
 
 # Testing
 coverage
+# Screen-audit snapshots (captured by the /screen-audit skill; never committed)
+**/test/screen-audit/
 
 # Production
 build
