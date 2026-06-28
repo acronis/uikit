@@ -1,0 +1,31 @@
+spec_version: '1.0'
+pattern: EmptyScreen
+name: empty-screen
+status: draft
+category: layout
+since: 0.52.0
+intent: Show a full-screen zero state inside the App Shell when a page has no content yet.
+description: >-
+  The sanctioned full-screen empty state: an `AppShell` (primary nav + header) whose
+  main centers an `Empty` (icon + title + description + optional action). Use it for
+  first-run / no-data screens so the chrome stays consistent while the content area
+  communicates the empty state. The sidebar configuration (expanded / collapsed /
+  with a secondary nav) is independent — see the App Shell stories.
+
+when_to_use:
+  - A page that has no data yet (first run, filtered-to-nothing, not-set-up).
+when_not_to_use:
+  - An empty region inside an otherwise full page — use `Empty` on its own.
+  - A loading state — use a `Spinner` / `Skeleton` in place of the content.
+
+anti_patterns:
+  - Replacing the whole shell with a bare centered message (loses the nav/header chrome and the user's place in the app).
+  - Using `Empty` without centering it in the main area — it should sit in the optical center of the content region.
+
+components:
+  - AppShell
+  - Empty
+  - SidebarPrimary
+
+demo: apps/docs/src/components/demos-react/empty-screen.tsx
+docs: apps/docs/content/docs/patterns/empty-screen.mdx

@@ -1,0 +1,42 @@
+---
+title: Empty Screen
+description: A full-screen zero state — App Shell with a centered Empty in the main area.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { EmptyScreenDemo } from "@/components/demos-react/empty-screen";
+
+A **full-screen empty state** keeps the [App Shell](/layouts/app-shell) chrome (nav
++ header) and centers an [`Empty`](/components/empty) in the main content area — for
+first-run / no-data screens. The sidebar configuration is independent (see the
+App Shell stories).
+
+<DemoReact>
+  <EmptyScreenDemo />
+</DemoReact>
+
+## Assembly
+
+```tsx
+<AppShell>
+  <AppShellSidebar><SidebarPrimary … /></AppShellSidebar>
+  <AppShellBody>
+    <AppShellHeader><SearchGlobal … /></AppShellHeader>
+    <AppShellMain className="grid place-items-center p-6">
+      <Empty>
+        <EmptyHeader>
+          <EmptyIcon><InboxIcon /></EmptyIcon>
+          <EmptyTitle>No workloads yet</EmptyTitle>
+          <EmptyDescription>Add a workload to start protecting your data.</EmptyDescription>
+        </EmptyHeader>
+        <EmptyActions><Button>Add workload</Button></EmptyActions>
+      </Empty>
+    </AppShellMain>
+  </AppShellBody>
+</AppShell>
+```
+
+## Anti-patterns
+
+- Replacing the whole shell with a bare centered message — keeps neither the nav/header nor the user's place in the app.
+- Using `Empty` without centering it in the main area.
