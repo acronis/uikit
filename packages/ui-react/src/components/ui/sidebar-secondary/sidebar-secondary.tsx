@@ -376,8 +376,11 @@ export interface SidebarSecondarySectionLabelProps
 
 const sectionLabelTextClass =
   'ui-sidebar-secondary-section-label-section-text-style text-[var(--ui-sidebar-secondary-section-label-section-color)]';
+// The group header is at least 36px tall (Figma node 4011-4472), with the label
+// vertically centered. No header-height token exists, so the 36px floor is set
+// directly; horizontal padding stays tokenized.
 const sectionHeaderPadClass =
-  'pb-[var(--ui-sidebar-secondary-section-container-header-padding-y)] px-[var(--ui-sidebar-secondary-section-container-header-padding-x)]';
+  'flex min-h-9 items-center px-[var(--ui-sidebar-secondary-section-container-header-padding-x)]';
 
 const SidebarSecondarySectionLabel = React.forwardRef<
   HTMLDivElement,
