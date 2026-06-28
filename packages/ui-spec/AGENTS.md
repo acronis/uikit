@@ -88,6 +88,19 @@ off-grid-spacing as `should`). It reads severities from the grammar registry and
 `must` finding fails CI. Add a detector by appending to the `DETECTORS` array and
 its grammar rule's `detector` id.
 
+## Screens (application layer)
+
+`screens/<slug>/screen.yaml` describes a real **product screen** assembled from
+real ui-react components — the layer above `components/`/`patterns/`/`grammar/`,
+and the input to the future rendered screen audit. Each descriptor has `regions[]`
+(layout + `components[]` with `$bind`/`$token` props + governing grammar `rules`),
+a `stateMachine`, and a `figma` node. Validated by `__tests__/screens.test.ts`
+against `schema/screen.schema.json`: schema, component refs resolve in ui-react,
+grammar-rule refs resolve, the `pattern` slug exists, and the state machine has
+one initial + all-reachable states. First example: `screens/protection-dashboard`
+(the App Shell with-secondary screen). **Phase 2** of the kit-consistency proposal;
+a `ProductDescriptor` (flows/entry) and the audit follow. See [`screens/README.md`](./screens/README.md).
+
 ## Scripts
 
 `build`/`dev`/`clean` are no-ops (ships source YAML/MD). `lint`/`typecheck` run

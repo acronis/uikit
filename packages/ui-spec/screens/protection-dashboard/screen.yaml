@@ -1,0 +1,101 @@
+spec_version: '1.0'
+name: protection-dashboard
+title: Protection Dashboard
+status: draft
+category: console
+description: >-
+  The Protection console dashboard: a full App Shell with a collapsed primary
+  rail, an expanded secondary section nav (Overview + Configuration with a
+  third-level Policies sub-menu), a centered global search header, and the main
+  content area. Worked example for the screen-spec format; mirrors the App Shell
+  "WithSecondary" story.
+route: /protection/dashboard
+permissions: [protection.view]
+pattern: app-shell
+figma:
+  file: lrU3ydIyvPYQNE6ixdsKtJ
+  node: 2782-1495
+
+regions:
+  - regionId: sidebar
+    label: Navigation rail
+    ariaRole: navigation
+    layout: { type: fixed-width, position: left, scroll: none }
+    # Sidebars scroll internally via ScrollArea — no reserved gutter may crop the
+    # full-bleed selected row, and the brand rail must use one token per role.
+    rules:
+      - composition/no-clipping
+      - tokens/one-token-per-role
+    components:
+      - instanceId: primary-nav
+        component: SidebarPrimary
+        props:
+          expanded: false
+          'aria-label': Primary
+      - instanceId: secondary-nav
+        component: SidebarSecondary
+        props:
+          expanded: true
+
+  - regionId: header
+    label: Top bar
+    ariaRole: banner
+    layout: { type: sticky, position: top, scroll: none }
+    # Search is centered; controls in the bar must share height and align.
+    rules:
+      - composition/edge-baseline-alignment
+      - spacing/control-height-parity
+    components:
+      - instanceId: global-search
+        component: SearchGlobal
+        props:
+          'aria-label': Search
+          placeholder: Search…
+        events:
+          input:
+            action: api-call
+            target: search
+            description: Debounced global search.
+
+  - regionId: main
+    label: Content area
+    ariaRole: main
+    layout: { type: flex-fill, scroll: independent }
+    # Sections on the page keep a consistent vertical rhythm.
+    rules:
+      - composition/vertical-rhythm
+    components:
+      - instanceId: page-header
+        component: PageHeader
+        props:
+          title: { $bind: section.title }
+        visibleWhen: loaded
+
+stateMachine:
+  states:
+    - name: idle
+      description: Before the dashboard requests data.
+      initial: true
+      category: idle
+    - name: loading
+      description: Fetching dashboard data; main area shows skeletons.
+      category: loading
+      rules: [anatomy/data-states-present]
+    - name: loaded
+      description: Dashboard populated.
+      category: loaded
+    - name: empty
+      description: No data for the current scope; shows an empty state.
+      category: empty
+      rules: [anatomy/empty-skeleton-parity]
+    - name: error
+      description: Fetch failed; shows an error with retry.
+      category: error
+  transitions:
+    - { from: idle, to: loading, trigger: mount }
+    - { from: loading, to: loaded, trigger: data-success, guard: 'count > 0' }
+    - { from: loading, to: empty, trigger: data-success, guard: 'count === 0' }
+    - { from: loading, to: error, trigger: data-error }
+    - { from: error, to: loading, trigger: retry }
+    - { from: empty, to: loading, trigger: scope-change }
+    - { from: loaded, to: loading, trigger: scope-change }

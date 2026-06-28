@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://acronis.com/ui-spec/screen.schema.json",
+  "title": "Screen descriptor — screen.yaml",
+  "description": "A machine-readable product screen: regions of real ui-react components, a state machine, and grammar/pattern references. The application layer above components, patterns, and grammar.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "spec_version",
+    "name",
+    "title",
+    "status",
+    "regions",
+    "stateMachine"
+  ],
+  "properties": {
+    "spec_version": { "type": "string" },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "kebab slug; must equal the folder name."
+    },
+    "title": { "type": "string" },
+    "status": { "enum": ["draft", "ready", "stable", "deprecated"] },
+    "category": { "type": "string" },
+    "since": { "type": "string" },
+    "description": { "type": "string" },
+    "route": { "type": "string" },
+    "permissions": { "type": "array", "items": { "type": "string" } },
+    "pattern": {
+      "type": "string",
+      "description": "Optional usage-pattern slug (patterns/<name>) this screen assembles."
+    },
+    "figma": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "file": { "type": "string" },
+        "node": { "type": "string" }
+      }
+    },
+    "regions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/region" }
+    },
+    "stateMachine": { "$ref": "#/$defs/stateMachine" }
+  },
+  "$defs": {
+    "region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["regionId", "label", "layout"],
+      "properties": {
+        "regionId": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "label": { "type": "string" },
+        "ariaRole": { "type": "string" },
+        "visibleWhen": {
+          "type": "string",
+          "description": "Name of the state in which this region is shown."
+        },
+        "pattern": { "type": "string" },
+        "rules": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z][a-z-]*/[a-z0-9-]+$" },
+          "description": "Grammar rule ids that govern this region. Each must exist in the registry."
+        },
+        "layout": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "enum": [
+                "fixed-width",
+                "flex-fill",
+                "overlay",
+                "sticky",
+                "dock-bottom"
+              ]
+            },
+            "position": { "enum": ["left", "right", "top", "bottom"] },
+            "width": { "type": "string" },
+            "scroll": { "enum": ["independent", "with-parent", "none"] }
+          }
+        },
+        "components": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/componentInstance" }
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/region" }
+        }
+      }
+    },
+    "componentInstance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["instanceId", "component"],
+      "properties": {
+        "instanceId": { "type": "string" },
+        "component": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Za-z0-9]*$",
+          "description": "Root ui-react component name (PascalCase). Must exist."
+        },
+        "props": {
+          "type": "object",
+          "description": "Prop values: literals, { $bind: '<path>' }, or { $token: '--ui-*' }.",
+          "additionalProperties": true
+        },
+        "slots": { "type": "object", "additionalProperties": true },
+        "visibleWhen": { "type": "string" },
+        "disabledWhen": { "type": "string" },
+        "events": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "stateMachine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["states", "transitions"],
+      "properties": {
+        "states": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "category"],
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "initial": { "type": "boolean" },
+              "category": {
+                "enum": [
+                  "idle",
+                  "loading",
+                  "loaded",
+                  "empty",
+                  "error",
+                  "custom"
+                ]
+              },
+              "rules": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z-]*/[a-z0-9-]+$"
+                }
+              }
+            }
+          }
+        },
+        "transitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from", "to", "trigger"],
+            "properties": {
+              "from": { "type": "string" },
+              "to": { "type": "string" },
+              "trigger": { "type": "string" },
+              "guard": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
