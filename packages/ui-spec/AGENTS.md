@@ -66,6 +66,20 @@ for humans in the docs site's **Patterns** section. Validated by
 checks every referenced `components[]` entry exists in `@acronis-platform/ui-react`.
 See [`patterns/README.md`](./patterns/README.md).
 
+## Grammar (cross-component rules)
+
+`grammar/` is the machine-readable registry of **cross-component invariants** —
+"the same thing is always the same across components" (no hard-coded color, one
+token per semantic role, one focus-ring treatment, controls in a row share
+height, …). It sits above `components/` (one component) and `patterns/` (specific
+recipes). Each rule (`grammar/rules/*.ts`, typed `KitRule`) has a `severity`
+(`must`/`should`/`may`), a `detector` (the check that enforces it — built across
+the rollout phases), and a back-link to its `grammar/CHECKLIST.md` row.
+`__tests__/grammar.test.ts` enforces registry integrity and keeps the registry
+and the checklist in sync. This is **Phase 0** of
+[`context/kit-consistency-audit-proposal.md`](../../context/kit-consistency-audit-proposal.md);
+detectors, screen specs, and the audit follow. See [`grammar/README.md`](./grammar/README.md).
+
 ## Scripts
 
 `build`/`dev`/`clean` are no-ops (ships source YAML/MD). `lint`/`typecheck` run

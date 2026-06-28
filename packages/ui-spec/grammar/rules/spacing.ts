@@ -1,0 +1,68 @@
+import type { KitRule } from '../types';
+
+export const spacingRules = [
+  {
+    id: 'spacing/on-grid',
+    title: 'Spacing is on the grid',
+    category: 'spacing',
+    severity: 'should',
+    rule: 'Padding, margin, and gap values must be a spacing token or a multiple of the 4px base grid.',
+    rationale:
+      'A shared spatial rhythm is what makes unrelated components feel like one kit; off-grid values read as accidental.',
+    checklist: 'Z1',
+    detector: 'kit-lint/spacing-grid',
+  },
+  {
+    id: 'spacing/control-height-parity',
+    title: 'Controls in a row share height',
+    category: 'spacing',
+    severity: 'must',
+    rule: 'Interactive controls placed together (Button, Input, Select, Combobox, …) must share the same height within a size tier.',
+    rationale:
+      'Mismatched control heights in one toolbar/row are the single most visible "the kit is inconsistent" defect.',
+    checklist: 'Z2',
+    detector: 'screen/control-height-parity',
+  },
+  {
+    id: 'spacing/radius-parity',
+    title: 'Sibling controls share radius',
+    category: 'spacing',
+    severity: 'should',
+    rule: 'Adjacent controls of the same role must use the same border-radius.',
+    rationale: 'Radius drift between neighbors looks unintentional.',
+    checklist: 'Z3',
+    detector: 'screen/radius-parity',
+  },
+  {
+    id: 'spacing/padding-tier',
+    title: 'Consistent padding tiers',
+    category: 'spacing',
+    severity: 'should',
+    rule: 'Components of the same role/size use the same padding tier.',
+    rationale: 'Inconsistent internal padding makes equivalent components feel different.',
+    checklist: 'Z4',
+    detector: 'screen/padding-tier',
+  },
+  {
+    id: 'spacing/touch-target',
+    title: 'Minimum touch target',
+    category: 'spacing',
+    severity: 'must',
+    rule: 'Interactive elements meet the kit minimum hit area.',
+    rationale: 'Sub-minimum targets are hard to hit and fail accessibility guidance.',
+    checklist: 'Z5',
+    detector: 'kit-lint/touch-target',
+    wcag: ['2.5.5'],
+    relatedRules: ['accessibility/contrast'],
+  },
+  {
+    id: 'spacing/icon-size-parity',
+    title: 'Icon sizes agree in a cluster',
+    category: 'spacing',
+    severity: 'should',
+    rule: 'Icons within a row/cluster share one size (e.g. all 16px), not a mix.',
+    rationale: 'A 16px icon beside a 20px icon in the same group reads as a mistake.',
+    checklist: 'Z6',
+    detector: 'screen/icon-size-parity',
+  },
+] satisfies KitRule[];
