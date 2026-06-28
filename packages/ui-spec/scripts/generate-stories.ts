@@ -218,6 +218,21 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  'scroll-area': {
+    props:
+      'className="h-48 w-64 rounded-md border border-border [&_[data-slot=scroll-area-scrollbar]]:opacity-100"',
+    sample: [
+      '',
+      '      <div className="flex flex-col gap-2 p-4">',
+      '        {Array.from({ length: 16 }, (_, i) => (',
+      '          <div key={i} className="rounded-md bg-[var(--ui-background-surface-secondary)] px-3 py-2 text-sm">',
+      '            Item {i + 1}',
+      '          </div>',
+      '        ))}',
+      '      </div>',
+      '    ',
+    ].join('\n'),
+  },
   'widget-placeholder': {
     extraImports: [
       "import { WidgetPlaceholderHeader, WidgetPlaceholderIcon, WidgetPlaceholderTitle, WidgetPlaceholderContent, WidgetPlaceholderImage, WidgetPlaceholderText, WidgetPlaceholderAction } from '../widget-placeholder';",

@@ -1,0 +1,68 @@
+---
+title: ScrollArea
+description: A scrollable region with a custom overlay scrollbar that floats over the content and reserves no layout space.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { ScrollAreaDemo } from "@/components/demos-react/scroll-area";
+
+## Usage
+
+```tsx
+import { ScrollArea } from '@acronis-platform/ui-react';
+```
+
+`ScrollArea` is a scrollable region built on the Base UI Scroll Area primitive.
+Unlike a native `overflow: auto` element, its scrollbar is a **custom overlay**:
+it floats over the content and reserves **no** layout space, so full-bleed
+content (e.g. edge-to-edge selected rows in a sidebar) is never cropped by a
+scrollbar gutter — on every OS and browser, not just where the platform provides
+overlay scrollbars. The bar is hidden at rest and revealed on hover/scroll.
+
+The all-in-one `ScrollArea` renders the viewport, content, and built-in
+scrollbar(s); `orientation` (`'vertical'` default · `'horizontal'` · `'both'`)
+selects which bars appear, and `'both'` also renders the corner. For custom
+scrollbar placement, compose the exported `ScrollBar` part directly. The thumb
+is themed by `--ui-border-on-surface-border` (and `--ui-border-on-surface-border-active`
+on hover); the focused viewport shows a `--ui-focus-brand` ring.
+
+> Design-pending v1: ported from the legacy shadcn-uikit `ScrollArea`.
+
+## Examples
+
+<DemoReact>
+  <ScrollAreaDemo />
+</DemoReact>
+
+```tsx
+<ScrollArea className="h-72 w-64 rounded-md border border-border">
+  {longList}
+</ScrollArea>
+```
+
+```tsx
+// Both axes (also renders the corner)
+<ScrollArea orientation="both" className="h-72 w-96">
+  {wideTallContent}
+</ScrollArea>
+```
+
+```tsx
+// Compose the parts directly
+import { ScrollArea, ScrollBar } from '@acronis-platform/ui-react';
+
+<ScrollArea orientation="horizontal">
+  {row}
+  <ScrollBar orientation="horizontal" />
+</ScrollArea>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/scroll-area/scroll-area.tsx"
+  name="ScrollAreaProps"
+/>
+
+`ScrollBar` accepts the Base UI `ScrollArea.Scrollbar` props (notably
+`orientation` and `keepMounted`).

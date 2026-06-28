@@ -1,0 +1,23 @@
+spec_version: '1.0'
+component: ScrollArea
+
+# References only. Values live in @acronis-platform/tokens-pd. No `--ui-scroll-area-*`
+# tier exists yet; the overlay scrollbar reuses shared semantic tokens.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-border-on-surface-border,
+      affects: thumb,
+      description: Scrollbar thumb color at rest (bridged as bg-border).,
+    }
+  - {
+      name: --ui-border-on-surface-border-active,
+      affects: thumb,
+      description: Scrollbar thumb color on hover.,
+    }
+  - {
+      name: --ui-focus-brand,
+      affects: viewport,
+      description: Focus ring color when the scrollable viewport is keyboard-focused.,
+    }
