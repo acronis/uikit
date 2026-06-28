@@ -1,5 +1,55 @@
 # @acronis-platform/ui-react
 
+## 0.52.0
+
+### Minor Changes
+
+- [#469](https://github.com/acronis/uikit/pull/469) [`d7358ca`](https://github.com/acronis/uikit/commit/d7358ca5312722510082d1297d4884d189833267) Thanks [@leonid](https://github.com/leonid)! - feat(app-shell): add AppShell layout scaffold (from Figma)
+
+  The full-page application scaffold — a slot-based layout (AppShell / AppShellSidebar
+  / AppShellBody / AppShellHeader / AppShellMain / AppShellFooter) for dropping
+  SidebarPrimary / SidebarSecondary / SearchGlobal and page content into. Mapped to
+  the App Shell Figma (node 2782-1495) with a COMPLETE Code Connect. Establishes a
+  dedicated "Layouts" docs section (App Shell + Stack/Grid/Section) and an App Shell
+  composition pattern.
+
+- [#471](https://github.com/acronis/uikit/pull/471) [`7c6eb81`](https://github.com/acronis/uikit/commit/7c6eb81d6dc8d5054cba19153b98d31aad83268d) Thanks [@leonid](https://github.com/leonid)! - feat(auth-layout): add AuthLayout (from Figma)
+
+  A centered-card layout for authentication flows (sign-in / sign-up /
+  forgot-password / 2FA) — AuthLayout / AuthLayoutCard / AuthLayoutLogo /
+  AuthLayoutFooter. Mapped to the Main-menu-improvements Figma (node 4906-362342)
+  with a COMPLETE Code Connect. Token fixes vs legacy: card uses bg-background
+  (legacy bg-card is unbridged) + border-border. Joins the Layouts docs section.
+
+- [#467](https://github.com/acronis/uikit/pull/467) [`69c54ae`](https://github.com/acronis/uikit/commit/69c54ae53a89a5e198cb9b1d6098c61048806a94) Thanks [@leonid](https://github.com/leonid)! - feat(stack,grid,section): add layout primitives (ported from ui-legacy)
+  - **Stack** — a flexbox primitive (direction / gap / align / justify / wrap).
+  - **Grid** — a responsive CSS-grid primitive (cols / gap, stepping down at smaller breakpoints).
+  - **Section** — a titled content block (Section / Header / Title / Description / Content).
+
+  Layout-only (no color except Section's muted description). Design reconciliation pending.
+
+- [#470](https://github.com/acronis/uikit/pull/470) [`86422a0`](https://github.com/acronis/uikit/commit/86422a06403be6dffdbaa114eac9a866917b42cf) Thanks [@leonid](https://github.com/leonid)! - feat(page-header,page-content): add Page Header and Page Content layout components
+  - **PageHeader** — the page header region (breadcrumb, title row with actions, description),
+    mapped to the shadcn-uikit Figma (node 2850-701) with a COMPLETE Code Connect.
+  - **PageContent** — the padded gutter for a page body; a <div> that nests inside
+    AppShellMain (no duplicate main landmark).
+
+  Both join the Layouts docs section (category: layout). Design reconciliation pending for PageContent.
+
+- [#466](https://github.com/acronis/uikit/pull/466) [`834a3a1`](https://github.com/acronis/uikit/commit/834a3a1279d9a96055bc103ad1510a4b335526f4) Thanks [@leonid](https://github.com/leonid)! - feat(pagination): add Pagination (ported from ui-legacy)
+
+  Navigation for paged content — previous/next controls, numbered page links with an
+  aria-current marker, and an ellipsis for skipped ranges. Markup-only; page links
+  styled with semantic tokens (foreground numbers, active surface for the current
+  page). Use DataTablePagination inside a DataTable. Design reconciliation pending.
+
+- [#465](https://github.com/acronis/uikit/pull/465) [`2933909`](https://github.com/acronis/uikit/commit/2933909fd1b46832e08cc3bf0bb1a907135d43ca) Thanks [@leonid](https://github.com/leonid)! - feat(toggle-group): add ToggleGroup and Toggle (ported from ui-legacy)
+
+  A set of pressable toggle buttons (single/multiple selection) plus a standalone
+  Toggle, on Base UI's Toggle / ToggleGroup. Semantic tokens: transparent idle, the
+  hover surface on hover, and the active surface + foreground when pressed. Design
+  reconciliation pending.
+
 ## 0.51.0
 
 ### Minor Changes
