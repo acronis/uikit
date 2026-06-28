@@ -33,24 +33,19 @@ distinct role:
 
 ## Workspaces
 
-| Path                          | Package                                  | Published? | Stack                                                                                                            | Workspace docs                                    |
-| ----------------------------- | ---------------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| `packages/ui-legacy/`         | `@acronis-platform/shadcn-uikit`         | **yes**    | Vite library, Storybook 10, Vitest + RTL                                                                         | [AGENTS.md](packages/ui-legacy/AGENTS.md)         |
-| `packages/ui-react/`          | `@acronis-platform/ui-react`             | **yes**    | Base UI library, Vite, Storybook 10, Vitest + RTL, Tailwind v4                                                   | [AGENTS.md](packages/ui-react/AGENTS.md)          |
-| `packages/icons-react/`       | `@acronis-platform/icons-react`          | **yes**    | React icons generated from `design-assets`, Vite, Storybook, Vitest                                              | [AGENTS.md](packages/icons-react/AGENTS.md)       |
-| `packages/icons-svg/`         | `@acronis-platform/icons-svg`            | no         | Raw SVG icon sources (mono/multicolor) fetched from Figma + manifests                                            | [AGENTS.md](packages/icons-svg/AGENTS.md)         |
-| `packages/icons-svg-next/`    | `@acronis-platform/icons-svg-next`       | no         | Raw SVG sources for the **next-gen** icon set (Figma `icon-packs` strategy)                                      | [AGENTS.md](packages/icons-svg-next/AGENTS.md)    |
-| `packages/icons-sprite/`      | `@acronis-platform/icons-sprite`         | **yes**    | Generated (committed) SVG sprites built from `icons-svg` (tsx + SVGO)                                            | [AGENTS.md](packages/icons-sprite/AGENTS.md)      |
-| `apps/demo/`                  | `@acronis-platform/shadcn-uikit-demo`    | no         | Vite SPA, React Router v7, Zustand                                                                               | [AGENTS.md](apps/demo/AGENTS.md)                  |
-| `apps/docs/`                  | `@acronis-platform/shadcn-uikit-docs`    | no         | Next.js 15 + Fumadocs                                                                                            | [AGENTS.md](apps/docs/AGENTS.md)                  |
-| `apps/demos/`                 | `@acronis-platform/shadcn-uikit-demos`   | no         | source-only (no build, no dev server)                                                                            | [AGENTS.md](apps/demos/AGENTS.md)                 |
-| `apps/kitchen-sink/`          | `@acronis-platform/kitchen-sink`         | no         | Vite SPA — one-page showcase of tokens, elements, components, icons                                              | [AGENTS.md](apps/kitchen-sink/AGENTS.md)          |
-| `packages/design-tokens/`     | `@acronis-platform/design-tokens`        | **yes**    | JSON data only (DTCG-2025.10 design tokens), ajv-validated                                                       | [AGENTS.md](packages/design-tokens/AGENTS.md)     |
-| `packages/design-assets/`     | `@acronis-platform/design-assets`        | **yes**    | JSON data only (icon/illustration manifests + binaries), ajv-validated                                           | [AGENTS.md](packages/design-assets/AGENTS.md)     |
-| `packages/tokens-pd/`         | `@acronis-platform/tokens-pd`            | **yes**    | Generated (committed) CSS + Tailwind presets + DTCG, built by the tool                                           | [AGENTS.md](packages/tokens-pd/AGENTS.md)         |
-| `tools/style-dictionary/`     | `@acronis-platform/style-dictionary`     | no         | Style Dictionary v5 build: design-tokens → tokens-pd CSS/presets                                                 | [AGENTS.md](tools/style-dictionary/AGENTS.md)     |
-| `tools/figma-icons-fetcher/`  | `@acronis-platform/figma-icons-fetcher`  | no         | Fetches + SVGO-optimizes icons from Figma into `icons-svg` (tsx, Vitest)                                         | [AGENTS.md](tools/figma-icons-fetcher/AGENTS.md)  |
-| `tools/figma-token-exporter/` | `@acronis-platform/figma-token-exporter` | no         | Self-hosted Figma plugin + local receiver: exports variables/styles → the `design-tokens` snapshot (tsx, Vitest) | [AGENTS.md](tools/figma-token-exporter/AGENTS.md) |
+| Path                      | Package                                | Published? | Stack                                                                  | Workspace docs                                |
+| ------------------------- | -------------------------------------- | ---------- | ---------------------------------------------------------------------- | --------------------------------------------- |
+| `packages/ui-legacy/`     | `@acronis-platform/shadcn-uikit`       | **yes**    | Vite library, Storybook 10, Vitest + RTL                               | [AGENTS.md](packages/ui-legacy/AGENTS.md)     |
+| `packages/ui-react/`      | `@acronis-platform/ui-react`           | **yes**    | Base UI library, Vite, Storybook 10, Vitest + RTL, Tailwind v4         | [AGENTS.md](packages/ui-react/AGENTS.md)      |
+| `packages/icons-react/`   | `@acronis-platform/icons-react`        | **yes**    | React icons generated from `design-assets`, Vite, Storybook, Vitest    | [AGENTS.md](packages/icons-react/AGENTS.md)   |
+| `apps/demo/`              | `@acronis-platform/shadcn-uikit-demo`  | no         | Vite SPA, React Router v7, Zustand                                     | [AGENTS.md](apps/demo/AGENTS.md)              |
+| `apps/docs/`              | `@acronis-platform/shadcn-uikit-docs`  | no         | Next.js 15 + Fumadocs                                                  | [AGENTS.md](apps/docs/AGENTS.md)              |
+| `apps/demos/`             | `@acronis-platform/shadcn-uikit-demos` | no         | source-only (no build, no dev server)                                  | [AGENTS.md](apps/demos/AGENTS.md)             |
+| `apps/kitchen-sink/`      | `@acronis-platform/kitchen-sink`       | no         | Vite SPA — one-page showcase of tokens, elements, components, icons    | [AGENTS.md](apps/kitchen-sink/AGENTS.md)      |
+| `packages/design-tokens/` | `@acronis-platform/design-tokens`      | **yes**    | JSON data only (DTCG-2025.10 design tokens), ajv-validated             | [AGENTS.md](packages/design-tokens/AGENTS.md) |
+| `packages/design-assets/` | `@acronis-platform/design-assets`      | **yes**    | JSON data only (icon/illustration manifests + binaries), ajv-validated | [AGENTS.md](packages/design-assets/AGENTS.md) |
+| `packages/tokens-pd/`     | `@acronis-platform/tokens-pd`          | **yes**    | Generated (committed) CSS + Tailwind presets + DTCG, built by the tool | [AGENTS.md](packages/tokens-pd/AGENTS.md)     |
+| `tools/style-dictionary/` | `@acronis-platform/style-dictionary`   | no         | Style Dictionary v5 build: design-tokens → tokens-pd CSS/presets       | [AGENTS.md](tools/style-dictionary/AGENTS.md) |
 
 `packages/` holds the published workspaces:
 
@@ -61,18 +56,6 @@ distinct role:
 - `packages/icons-react/` — published React icon components, **generated**
   from `@acronis-platform/design-assets` (24px masters + scale/stroke rules
   baked into a `size` prop). Per-pack subpath exports, tree-shakeable.
-- `packages/icons-svg/` — **private, source-only** raw SVG icon sources
-  (monocolor + multicolor) fetched from Figma, plus per-page JSON manifests.
-  No build; consumed in-repo from `src/`. Synced via its `pull-icons` script
-  (which runs `tools/figma-icons-fetcher`) or the `Fetch Figma Icons` workflow.
-- `packages/icons-svg-next/` — sibling of `icons-svg` for the **next-gen** icon
-  set: same private, source-only model, but pulled from the `shadcn-uikit` Figma
-  file with the fetcher's `icon-packs` selection strategy. Synced via its
-  `pull-icons` script or the `Fetch Figma Icons (next)` workflow.
-- `packages/icons-sprite/` — published SVG sprites (combined / monocolor /
-  multicolor) **generated and committed** from `icons-svg` (same model as
-  `tokens-pd`). Its `build` runs `scripts/generate-sprite.ts`; re-run it after
-  an icons-svg sync. Monocolor symbols are `currentColor`-themable.
 - `packages/design-tokens/` and `packages/design-assets/` — the published
   **design-data** packages. These ship JSON (and, for assets, bundled
   binaries) only: no build step, no runtime API. Their one real script
@@ -89,20 +72,6 @@ distinct role:
   that builds `@acronis-platform/design-tokens` into per-brand CSS custom
   properties. Its real script is `build`; output lands in a gitignored
   `dist/`.
-- `tools/figma-icons-fetcher/` — fetches SVG icons from a Figma file,
-  SVGO-optimizes them, and writes them (with JSON manifests + mono/multicolor
-  categorization) into `packages/icons-svg` and `packages/icons-svg-next`. Node
-  selection is pluggable (`frames-by-name` / `new-frames` / `icon-packs`). Run via `tsx` (no
-  build step); drives the `Fetch Figma Icons` workflows and each package's
-  `pull-icons` script.
-- `tools/figma-token-exporter/` — a **self-hosted Figma plugin + local
-  receiver** that exports design-token variables/styles into
-  `packages/design-tokens/.tmp/figma-tokens/` (the snapshot the sync emitters
-  consume). It replaces the third-party figma-console Desktop Bridge for the
-  bulk token pull; its `src/convert.ts` faithfully ports figma-console's
-  variable→DTCG serialization so the snapshot stays a drop-in. Run the receiver
-  via `tsx`; the plugin is imported into Figma Desktop from its `manifest.json`.
-  Used by the `/sync-tokens` flow.
 
 ## Scripts vocabulary
 
@@ -150,19 +119,8 @@ that workspace**, never here.
 - `context/roadmap.md` — product roadmap (epics, phases, v1 scope/timeline);
   tracked on GitHub Project #3 as issues #102–108. Companion task breakdowns:
   `context/backlog-p2-primitives.md`, `context/backlog-p3-p4.md`.
-- `context/e1-theme-delivery.md` — E1 (#102) theme-delivery implementation
-  proposal: how the open theme sub-issues (#172/#173/#175/#101/#177) get built on
-  the shipped `tokens-pd` pipeline, and what's reused from the legacy stack.
 - `context/project-board.md` — how we run Project #3: epic/task model, status
   lifecycle + gates, fields, views, and automation.
-- `context/next-gen-components-migration.md` — migrating the component token tier
-  to Figma's next-gen `brand.components` (Option A naming, emitter rework,
-  tokens-pd impact, ui-react per-component re-theme). §9 tracks execution status,
-  the remaining ui-react backlog, and the Radio/Search/Select token gap.
-- `packages/ui-spec/context/component-specs-proposal.md` — **Proposed**
-  (not yet adopted):
-  framework-agnostic component specs + a machine-readable design grammar, to
-  support future non-React implementations and agent tooling.
 
 ## Tooling preconditions
 

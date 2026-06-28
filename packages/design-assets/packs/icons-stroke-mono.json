@@ -1,0 +1,455 @@
+{
+  "$schema": "../schemas/pack.schema.json",
+  "name": "icons-stroke-mono",
+  "version": "1.0.0",
+  "$type": "vector",
+  "values": {
+    "24": { "default": true },
+    "16": { "$rules": ["scale-16", "stroke-1-6"] },
+    "32": { "$rules": ["scale-32", "stroke-2-5"] }
+  },
+  "assets": {
+    "arrow-square-up-right": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-square-up-right-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "ban": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/ban-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "bolt": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/bolt-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "briefcase": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/briefcase-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "building": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/building-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "chart-growth": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/chart-growth-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "chart-pie": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/chart-pie-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "chart-trend": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/chart-trend-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "check": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/check-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "chevron-down": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/chevron-down-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "chevron-left": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/chevron-left-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "chevron-right": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/chevron-right-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "chevron-up": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/chevron-up-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "chevrons-left": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/chevrons-left-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "chevrons-right": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/chevrons-right-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "circle-check": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/circle-check-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "circle-info": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/circle-info-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "circle-times": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/circle-times-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "circle-warning": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/circle-warning-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "cog": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/cog-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "database": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/database-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "database-fire": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/database-fire-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "database-snowflake": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/database-snowflake-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "ellipsis": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/ellipsis-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "folder": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/folder-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "folder-search": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/folder-search-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "graduation-cap": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/graduation-cap-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "grid": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/grid-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "headset": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/headset-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "megaphone": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/megaphone-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "minus": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/minus-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "monitor": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/monitor-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "plus": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/plus-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "shield-check": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/shield-check-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "sparkles": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/sparkles-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "square": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/square-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "star": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/star-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "text": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/text-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "times": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/times-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "triangle-warning": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-mono/triangle-warning-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    }
+  }
+}

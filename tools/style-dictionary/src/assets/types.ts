@@ -7,7 +7,7 @@
 
 export type AssetType = 'vector' | 'raster';
 export type Platform = 'WEB' | 'PD';
-export type RuleKind = 'scale' | 'stroke' | 'color';
+export type RuleKind = 'scale' | 'stroke';
 
 /** A `$file` source variant: a binary on disk, optionally the canonical. */
 export interface SourceValue {
@@ -47,38 +47,21 @@ export interface Asset {
   $extensions?: Record<string, unknown>;
 }
 
-/**
- * A named subset of assets within a pack. Inherits the pack-level `$type` and
- * `values`; either may be overridden via group-level `$type` / `$values`
- * (the latter an RFC 7396 merge-patch on the pack `values`).
- */
-export interface AssetsGroup {
-  $type?: AssetType;
-  $values?: Values;
-  $description?: string;
-  assets: Record<string, Asset>;
-}
-
 export interface PackManifest {
   $schema: string;
   name: string;
   version: string;
   $type: AssetType;
   values: Values;
-  /** Flat asset map. Present unless the pack uses only `assetsGroups`. */
-  assets?: Record<string, Asset>;
-  /** Grouped asset map (one entry per rendering style). Mutually inclusive with `assets`. */
-  assetsGroups?: Record<string, AssetsGroup>;
+  assets: Record<string, Asset>;
 }
 
-/**
- * One rule declaration. `scale`/`stroke` carry a numeric px target; `color`
- * carries a string target (e.g. `currentColor`). Discriminated on `kind` so the
- * executor narrows the target shape.
- */
-export type Rule =
-  | { $schema: string; name: string; kind: 'scale' | 'stroke'; target: { value: number; unit: 'px' } }
-  | { $schema: string; name: string; kind: 'color'; target: { value: string } };
+export interface Rule {
+  $schema: string;
+  name: string;
+  kind: RuleKind;
+  target: { value: number; unit: 'px' };
+}
 
 // ── Resolved shapes (resolver → executor / codegen) ──────────────────────────
 

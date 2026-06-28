@@ -5,11 +5,7 @@
   "description": "One rule declaration. Lives at ./rules/<name>.json. The executor is out of scope today; this file documents intent.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "name", "kind"],
-  "if": {
-    "properties": { "kind": { "enum": ["scale", "stroke"] } }
-  },
-  "then": { "required": ["target"] },
+  "required": ["$schema", "name", "kind", "target"],
   "properties": {
     "$schema": { "type": "string" },
     "name": {
@@ -18,32 +14,23 @@
       "description": "MUST equal the filename stem."
     },
     "kind": {
-      "enum": ["scale", "stroke", "color"],
-      "description": "What the rule does. `scale` resizes the base value's bounding box to the target. `stroke` sets every stroked path on the base to the target width. `color` replaces hardcoded colors in the SVG with a CSS value (e.g., currentColor)."
+      "enum": ["scale", "stroke"],
+      "description": "What the rule does. `scale` resizes the base value's bounding box to the target. `stroke` sets every stroked path on the base to the target width."
     },
     "target": {
-      "oneOf": [
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["value", "unit"],
-          "properties": {
-            "value": { "type": "number", "exclusiveMinimum": 0 },
-            "unit": { "enum": ["px"] }
-          },
-          "description": "Numeric target used by scale and stroke rules."
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {
+        "value": {
+          "type": "number",
+          "exclusiveMinimum": 0
         },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["value"],
-          "properties": {
-            "value": { "type": "string", "minLength": 1 }
-          },
-          "description": "String target used by color rules (e.g., currentColor)."
+        "unit": {
+          "enum": ["px"]
         }
-      ],
-      "description": "Rule target. Required for scale/stroke kinds; shape depends on kind."
+      },
+      "description": "Single composite target. Shared shape across all kinds today; meaning depends on `kind`. Unit enum is intentionally narrow — widening requires a coordinated schema change."
     }
   }
 }

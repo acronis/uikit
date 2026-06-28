@@ -1,0 +1,24 @@
+{
+  "$schema": "../schemas/pack.schema.json",
+  "name": "icons-solid-multi",
+  "version": "1.0.0",
+  "$type": "vector",
+  "values": {
+    "24": { "default": true },
+    "16": { "$rules": ["scale-16"] },
+    "32": { "$rules": ["scale-32"] }
+  },
+  "assets": {
+    "sparkles": {
+      "values": {
+        "24": { "$file": "./packs/icons-solid-multi/sparkles-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    }
+  }
+}

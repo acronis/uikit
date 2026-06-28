@@ -14,7 +14,10 @@
     "paths": {
       "@/*": ["./src/*"],
       "@acronis-platform/shadcn-uikit": ["./src/index.ts"],
-      "@acronis-platform/shadcn-uikit/react": ["./src/react.ts"]
+      "@acronis-platform/shadcn-uikit/react": ["./src/react.ts"],
+      "@acronis-platform/icons-react/stroke-mono": [
+        "../icons-react/src/packs/stroke-mono/index.ts"
+      ]
     }
   },
   "include": ["src", ".storybook", "vitest.shims.d.ts"],

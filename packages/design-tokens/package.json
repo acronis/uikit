@@ -1,12 +1,7 @@
 {
   "name": "@acronis-platform/design-tokens",
-  "version": "1.8.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/acronis/uikit.git",
-    "directory": "packages/design-tokens"
-  },
-  "description": "Acronis design tokens",
+  "version": "0.5.0",
+  "description": "Acronis design tokens. DTCG-2025.10-conformant JSON.",
   "license": "MIT",
   "type": "module",
   "publishConfig": {
@@ -23,7 +18,7 @@
   "exports": {
     "./package.json": "./package.json",
     "./tiers/primitives.json": "./tiers/primitives.json",
-    "./tiers/semantics.json": "./tiers/semantics.json",
+    "./tiers/semantic.json": "./tiers/semantic.json",
     "./tiers/components.json": "./tiers/components.json",
     "./schemas/*": "./schemas/*"
   },
@@ -31,13 +26,12 @@
     "build": "echo \"no build (JSON data package)\" && exit 0",
     "clean": "echo \"nothing to clean (JSON data package)\" && exit 0",
     "dev": "echo \"no dev server (JSON data package)\" && exit 0",
-    "emit": "node ../../.claude/skills/figma-to-design-tokens/figma-snapshot-build.mjs --tmp && node ../../.claude/skills/figma-to-design-tokens/emit-primitives.mjs && node ../../.claude/skills/figma-to-design-tokens/emit-semantics.mjs && node ../../.claude/skills/figma-to-design-tokens/emit-components.mjs && pnpm run validate",
     "lint": "echo \"no lint (JSON data package; validated via test)\" && exit 0",
     "lint:fix": "echo \"no lint (JSON data package; validated via test)\" && exit 0",
     "test": "pnpm run validate",
     "test:watch": "echo \"no watch mode (run test)\" && exit 0",
     "typecheck": "echo \"no typecheck (JSON data package)\" && exit 0",
-    "validate": "ajv compile -s schemas/tier.schema.json --spec=draft2020 --strict=false && ajv validate -s schemas/tier.schema.json -d \"tiers/primitives.json\" -d \"tiers/semantics.json\" -d \"tiers/components.json\" --spec=draft2020 --strict=false"
+    "validate": "ajv compile -s schemas/tokens.schema.json --spec=draft2020 --strict=false && ajv validate -s schemas/tokens.schema.json -d \"tiers/primitives.json\" -d \"tiers/semantic.json\" -d \"tiers/components.json\" --spec=draft2020 --strict=false"
   },
   "keywords": [
     "design-tokens",

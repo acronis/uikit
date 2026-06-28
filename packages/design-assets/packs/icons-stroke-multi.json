@@ -1,0 +1,155 @@
+{
+  "$schema": "../schemas/pack.schema.json",
+  "name": "icons-stroke-multi",
+  "version": "1.0.0",
+  "$type": "vector",
+  "values": {
+    "24": { "default": true },
+    "16": { "$rules": ["scale-16", "stroke-1-6"] },
+    "32": { "$rules": ["scale-32", "stroke-2-5"] }
+  },
+  "assets": {
+    "circle-check-solid": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/circle-check-solid-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "circle-info-solid": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-multi/circle-info-solid-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "circle-times-solid": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/circle-times-solid-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "circle-warning-solid": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/circle-warning-solid-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "circles-solid": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-multi/circles-solid-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "diamond-warning-solid": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/diamond-warning-solid-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "dot-blue-solid": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-multi/dot-blue-solid-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "dot-green-solid": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-multi/dot-green-solid-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "dot-orange-solid": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-multi/dot-orange-solid-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "dot-red-solid": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-multi/dot-red-solid-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "dot-yellow-solid": {
+      "values": {
+        "24": { "$file": "./packs/icons-stroke-multi/dot-yellow-solid-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "triangle-warning-solid": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/triangle-warning-solid-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    }
+  }
+}

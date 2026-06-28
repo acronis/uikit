@@ -1,31 +1,5 @@
 # @acronis-platform/icons-react
 
-## 0.4.0
-
-### Minor Changes
-
-- [#270](https://github.com/acronis/uikit/pull/270) [`9ce1b45`](https://github.com/acronis/uikit/commit/9ce1b4585571aa96c136d200489d0939749b2ece) Thanks [@leonid](https://github.com/leonid)! - Generate icon components from `@acronis-platform/icons-svg-next` instead of
-  `@acronis-platform/design-assets`. This swaps in the redesigned next-gen icon
-  set, so the packs grow substantially — `stroke-mono` (395), `solid-mono` (59),
-  `stroke-multi` (12), `solid-multi` (1) — and the size/stroke rule (sm/md/lg =
-  16/24/32 with 1.6/2/2.5px stroke) is now a generator constant rather than read
-  from design-assets manifests. The `size` prop, `currentColor` theming, per-icon
-  gradient-id namespacing, and per-pack subpath exports are unchanged.
-
-  Note: the icon set changed wholesale, so some previously exported names are gone
-  (e.g. `BanIcon`, `ArrowSquareUpRightIcon`, `AcronisAIcon`) and many new ones are
-  added. A few names still reflect work-in-progress Figma source (`*-duplicate`,
-  `agent-qnap--32`) until that source is cleaned up.
-
-## 0.3.0
-
-### Minor Changes
-
-- [#242](https://github.com/acronis/uikit/pull/242) [`a85d629`](https://github.com/acronis/uikit/commit/a85d6291933854a99af8825b985c325bfb80725c) Thanks [@leonid](https://github.com/leonid)! - Add the `search` (magnifier) icon to the `icons-solid-mono` pack. The asset
-  already existed upstream in `icons-svg` but wasn't promoted into `design-assets`,
-  so no React component was generated. It now generates `SearchIcon`, exported from
-  `@acronis-platform/icons-react/solid-mono`.
-
 ## 0.2.0
 
 ### Minor Changes

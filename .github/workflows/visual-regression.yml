@@ -6,70 +6,24 @@ on: [pull_request]
 jobs:
   visual-regression:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: ui-legacy
-            filter: '@acronis-platform/shadcn-uikit'
-            dir: packages/ui-legacy
-          - name: ui-react
-            filter: '@acronis-platform/ui-react'
-            dir: packages/ui-react
-    name: visual-regression (${{ matrix.name }})
     steps:
       - uses: actions/checkout@v6
 
-      # Snapshots only need refreshing when a library's own components / styles /
-      # Storybook config change, or when the shared design tokens (which can alter
-      # any rendered color) change. The job always runs and reports a status; the
-      # build + Docker steps below are skipped when nothing relevant changed, so
-      # docs-only / tooling-only PRs don't pay for a full Storybook + Playwright run.
-      - name: Detect relevant changes
-        uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          filters: |
-            ui-legacy:
-              - 'packages/ui-legacy/src/**'
-              - 'packages/ui-legacy/.storybook/**'
-              - 'packages/ui-legacy/package.json'
-              - 'packages/ui-legacy/Dockerfile.storybook'
-              - 'packages/ui-legacy/docker-compose.storybook*.yml'
-              - 'packages/tokens-pd/**'
-              - 'packages/design-tokens/**'
-              - '.github/workflows/visual-regression.yml'
-            ui-react:
-              - 'packages/ui-react/src/**'
-              - 'packages/ui-react/.storybook/**'
-              - 'packages/ui-react/package.json'
-              - 'packages/ui-react/Dockerfile.storybook'
-              - 'packages/ui-react/docker-compose.storybook*.yml'
-              - 'packages/tokens-pd/**'
-              - 'packages/design-tokens/**'
-              - 'packages/icons-react/**'
-              - 'packages/design-assets/**'
-              - '.github/workflows/visual-regression.yml'
-
       - name: Setup PNPM
-        if: steps.changes.outputs[matrix.name] == 'true'
         uses: pnpm/action-setup@v6
 
       - name: Setup Node.js
-        if: steps.changes.outputs[matrix.name] == 'true'
         uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: 'pnpm'
 
       - name: Get pnpm store directory
-        if: steps.changes.outputs[matrix.name] == 'true'
         id: pnpm-cache
         shell: bash
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
       - name: Cache pnpm store
-        if: steps.changes.outputs[matrix.name] == 'true'
         uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
@@ -77,44 +31,30 @@ jobs:
           restore-keys: ${{ runner.os }}-pnpm-
 
       - name: Install dependencies
-        if: steps.changes.outputs[matrix.name] == 'true'
         run: pnpm install --frozen-lockfile
 
       # Vite module cache + Storybook builder cache — key on source so only
       # changed files are recompiled when the cache is restored.
       - name: Cache Storybook build
-        if: steps.changes.outputs[matrix.name] == 'true'
         uses: actions/cache@v4
         with:
           path: |
-            ${{ matrix.dir }}/node_modules/.vite
-            ${{ matrix.dir }}/node_modules/.cache/storybook
-          key: storybook-${{ matrix.name }}-${{ runner.os }}-${{ hashFiles(format('{0}/src/**', matrix.dir), format('{0}/.storybook/**', matrix.dir), format('{0}/package.json', matrix.dir)) }}
-          restore-keys: storybook-${{ matrix.name }}-${{ runner.os }}-
-
-      # ui-react depends on generated @acronis-platform/icons-react output
-      # (generated sources + dist/ are gitignored). Build that package (and its
-      # own prerequisites) before Storybook so imports resolve. Avoid broad
-      # ui-react recursive builds here: they also pull in tokens-pd/style-dictionary,
-      # which is unrelated to visual snapshots and can fail on in-flight
-      # design-assets schema migrations.
-      - name: Build workspace dependencies
-        if: matrix.name == 'ui-react' && steps.changes.outputs[matrix.name] == 'true'
-        run: pnpm --filter @acronis-platform/icons-react... run build
+            packages/ui-legacy/node_modules/.vite
+            packages/ui-legacy/node_modules/.cache/storybook
+          key: storybook-${{ runner.os }}-${{ hashFiles('packages/ui-legacy/src/**', 'packages/ui-legacy/.storybook/**', 'packages/ui-legacy/package.json') }}
+          restore-keys: storybook-${{ runner.os }}-
 
       - name: Build Storybook
-        if: steps.changes.outputs[matrix.name] == 'true'
-        run: pnpm --filter ${{ matrix.filter }} storybook:build
+        run: pnpm --filter @acronis-platform/shadcn-uikit storybook:build
 
       # Docker only serves the pre-built static output and runs Playwright.
       # --build rebuilds the image when Dockerfile or .storybook config changes.
       - name: Run visual regression tests
-        if: steps.changes.outputs[matrix.name] == 'true'
-        run: docker compose -f ${{ matrix.dir }}/docker-compose.storybook.yml up --build --abort-on-container-exit --exit-code-from test-runner
+        run: docker compose -f packages/ui-legacy/docker-compose.storybook.yml up --build --abort-on-container-exit --exit-code-from test-runner
 
       - name: Upload diff artifacts on failure
-        if: failure() && steps.changes.outputs[matrix.name] == 'true'
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: visual-regression-diffs-${{ matrix.name }}
-          path: ${{ matrix.dir }}/test/__snapshots__/__diff_output__/
+          name: visual-regression-diffs
+          path: packages/ui-legacy/test/__snapshots__/__diff_output__/

@@ -1,0 +1,46 @@
+{
+  "$schema": "../schemas/pack.schema.json",
+  "name": "icons-solid-mono",
+  "version": "1.0.0",
+  "$type": "vector",
+  "values": {
+    "24": { "default": true },
+    "16": { "$rules": ["scale-16"] },
+    "32": { "$rules": ["scale-32"] }
+  },
+  "assets": {
+    "acronis-a": {
+      "values": {
+        "24": { "$file": "./packs/icons-solid-mono/acronis-a-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "microsoft-365": {
+      "values": {
+        "24": { "$file": "./packs/icons-solid-mono/microsoft-365-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "sparkles": {
+      "values": {
+        "24": { "$file": "./packs/icons-solid-mono/sparkles-24.svg" }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": [],
+        "tags": [],
+        "legacyNames": []
+      }
+    }
+  }
+}

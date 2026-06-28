@@ -1,11 +1,6 @@
 {
   "name": "@acronis-platform/ui-react",
-  "version": "0.25.2",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/acronis/uikit.git",
-    "directory": "packages/ui-react"
-  },
+  "version": "0.5.0",
   "description": "Acronis React component library — a Base UI implementation, themed by @acronis-platform/design-tokens.",
   "type": "module",
   "main": "./dist/index.js",
@@ -41,10 +36,6 @@
     "lint:fix": "eslint src/ --fix",
     "storybook": "storybook dev -p 6007",
     "storybook:build": "storybook build",
-    "storybook:test:visual": "test-storybook",
-    "storybook:test:visual:update": "test-storybook --updateSnapshot",
-    "storybook:test:visual:docker": "pnpm storybook:build && docker compose -f ./docker-compose.storybook.yml up --build --abort-on-container-exit --exit-code-from test-runner",
-    "storybook:test:visual:docker:update": "pnpm storybook:build && docker compose -f ./docker-compose.storybook.yml -f ./docker-compose.storybook.update.yml up --build --abort-on-container-exit --exit-code-from test-runner",
     "figma:connect": "figma connect parse",
     "figma:connect:publish": "figma connect publish",
     "figma:connect:unpublish": "figma connect unpublish"
@@ -68,13 +59,11 @@
     "@base-ui/react": "catalog:",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
-    "react-resizable-panels": "4.11.2",
     "tailwind-merge": "3.6.0"
   },
   "devDependencies": {
     "@acronis-platform/shadcn-uikit-demos": "workspace:*",
-    "@figma/code-connect": "1.4.8",
-    "@playwright/test": "1.60.0",
+    "@figma/code-connect": "1.4.7",
     "react": "catalog:",
     "react-dom": "catalog:",
     "@storybook/addon-a11y": "10.4.1",
@@ -82,7 +71,6 @@
     "@storybook/addon-links": "10.4.1",
     "@storybook/react": "10.4.1",
     "@storybook/react-vite": "10.4.1",
-    "@storybook/test-runner": "0.24.4",
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.2",
     "@testing-library/user-event": "14.6.1",
@@ -93,8 +81,6 @@
     "@tailwindcss/postcss": "catalog:",
     "eslint": "catalog:",
     "happy-dom": "20.9.0",
-    "http-server": "14.1.1",
-    "jest-image-snapshot": "6.5.2",
     "storybook": "10.4.1",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",

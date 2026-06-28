@@ -54,8 +54,8 @@ export const dtcgDir = (): string => path.join(TOKENS_PD, 'dtcg');
 /** All CSS lives under `tokens-pd/css/`. */
 export const cssDir = (): string => path.join(TOKENS_PD, 'css');
 
-/** Semantics-tier CSS lives at the css root: `tokens-pd/css/<brand>.css`. */
-export const semanticsFile = (brand: string): string => path.join(cssDir(), `${brand}.css`);
+/** Semantic-tier CSS lives at the css root: `tokens-pd/css/<brand>.css`. */
+export const semanticFile = (brand: string): string => path.join(cssDir(), `${brand}.css`);
 
 /** Each component tier gets its own dir: `tokens-pd/css/<component>/`. */
 export const componentDir = (component: string): string => path.join(cssDir(), component);

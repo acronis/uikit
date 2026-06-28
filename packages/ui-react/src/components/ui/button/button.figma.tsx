@@ -6,10 +6,10 @@ import { Button } from './button';
 
 figma.connect(
   Button,
-  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2236-5696',
+  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=1173-2789',
   {
     props: {
-      variant: figma.enum('Variant', {
+      variant: figma.enum('Style', {
         Primary: 'default',
         Secondary: 'secondary',
         Ghost: 'ghost',
@@ -18,19 +18,20 @@ figma.connect(
         Inverted: 'inverted',
       }),
       // The Figma button encodes interaction state as a variant; only the
-      // Disabled state maps to a code prop (Idle/Hover/Active/Focus are visual).
+      // Disabled state maps to a code prop (Idle/Hover/Active are visual).
       disabled: figma.enum('State', {
         Disabled: true,
       }),
-      // The leading icon — the Figma button's `Icon` instance-swap, rendered as
-      // the button's first child. (The companion `Icon` boolean toggle isn't
-      // mapped; the snippet just shows the icon slot.)
-      icon: figma.instance('Icon#1173:0'),
+      icon: figma.boolean('👀 Icon', {
+        true: figma.instance('⭐️ Icon'),
+        false: undefined,
+      }),
+      label: figma.string('✏️ Label'),
     },
-    example: ({ variant, disabled, icon }) => (
+    example: ({ variant, disabled, icon, label }) => (
       <Button variant={variant} disabled={disabled}>
         {icon}
-        Label
+        {label}
       </Button>
     ),
   }

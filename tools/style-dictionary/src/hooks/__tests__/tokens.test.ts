@@ -5,7 +5,7 @@
 // light/dark zip stay pinned independently of a full `build`.
 
 import type { TransformedToken } from 'style-dictionary/types';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { collectDecls, serializeCss } from '../formats/css-light-dark';
 import { normalizeTree } from '../preprocessors/acronis-dtcg';
@@ -13,9 +13,8 @@ import { buildThemeExtend, routeColor } from '../../tailwind';
 
 // ── normalizeTree (stage 1) ──────────────────────────────────────────────────
 
-// A fixture in the Acronis source shape: per-mode `values`, a native DTCG
-// dimension `$value` { value, unit }, plain fontWeight/fontFamily scalar
-// `$value`s, a `$value` composite, and a token scoped to a different platform.
+// A fixture in the Acronis source shape: per-mode `values`, a `com.acronis.units`
+// dimension, a `$value` composite, and a token scoped to a different platform.
 const SOURCE = {
   $type: 'color',
   colors: {
@@ -34,23 +33,7 @@ const SOURCE = {
     sm: {
       $type: 'dimension',
       platforms: ['PD'],
-      $value: { value: 8, unit: 'px' },
-    },
-  },
-  font: {
-    weight: {
-      bold: {
-        $type: 'fontWeight',
-        platforms: ['PD'],
-        $value: 700,
-      },
-    },
-    family: {
-      default: {
-        $type: 'fontFamily',
-        platforms: ['PD'],
-        $value: 'Inter',
-      },
+      $extensions: { 'com.acronis.units': { unit: 'px', value: 8 } },
     },
   },
   typography: {
@@ -92,16 +75,10 @@ describe('normalizeTree', () => {
     expect(Object.keys(background)).toEqual(['base']);
   });
 
-  it('passes a native dimension `$value` { value, unit } through untouched', () => {
+  it('reorders `com.acronis.units` into the DTCG `{ value, unit }` shape', () => {
     const sm = at(normalizeTree(SOURCE, 'light', 'PD'), 'spacing', 'sm');
     expect(sm.$type).toBe('dimension');
     expect(sm.$value).toEqual({ value: 8, unit: 'px' });
-  });
-
-  it('passes plain fontWeight (number) and fontFamily (string) scalars through untouched', () => {
-    const tree = normalizeTree(SOURCE, 'light', 'PD');
-    expect(at(tree, 'font', 'weight', 'bold').$value).toBe(700);
-    expect(at(tree, 'font', 'family', 'default').$value).toBe('Inter');
   });
 
   it('keeps a mode-invariant `$value` composite untouched', () => {
@@ -129,7 +106,7 @@ const token = (over: Partial<TransformedToken>): TransformedToken =>
 
 const render = (tokens: TransformedToken[], darkTokens = new Map<string, string>()): string => {
   const { vars, classes } = collectDecls(tokens, darkTokens);
-  return serializeCss({ brand: 'acronis', tier: 'semantics', isOverride: false, vars, classes });
+  return serializeCss({ brand: 'acronis', tier: 'semantic', isOverride: false, vars, classes });
 };
 
 describe('collectDecls', () => {
@@ -189,7 +166,7 @@ describe('serializeCss', () => {
   it('includes the light/dark shell in base files', () => {
     const css = serializeCss({
       brand: 'acronis',
-      tier: 'semantics',
+      tier: 'semantic',
       isOverride: false,
       vars: new Map([['ui-x', 'red']]),
       classes: new Map(),
@@ -201,7 +178,7 @@ describe('serializeCss', () => {
   it('targets both :root and :host so tokens resolve in shadow roots', () => {
     const base = serializeCss({
       brand: 'acronis',
-      tier: 'semantics',
+      tier: 'semantic',
       isOverride: false,
       vars: new Map([['ui-x', 'red']]),
       classes: new Map(),
@@ -212,7 +189,7 @@ describe('serializeCss', () => {
 
     const override = serializeCss({
       brand: 'brand-b',
-      tier: 'semantics',
+      tier: 'semantic',
       isOverride: true,
       vars: new Map([['ui-x', 'blue']]),
       classes: new Map(),
@@ -223,7 +200,7 @@ describe('serializeCss', () => {
   it('omits the shell from override files', () => {
     const css = serializeCss({
       brand: 'brand-b',
-      tier: 'semantics',
+      tier: 'semantic',
       isOverride: true,
       vars: new Map([['ui-x', 'blue']]),
       classes: new Map(),
@@ -264,41 +241,31 @@ describe('routeColor', () => {
     });
   });
 
-  it('routes the gradients root to backgroundImage', () => {
-    expect(routeColor(['gradients', 'ai', 'idle'])).toEqual({
-      namespace: 'backgroundImage',
-      key: 'ai-idle',
-    });
-  });
-
-  it('routes a component container.color to backgroundColor, keeping the part word', () => {
-    expect(routeColor(['button', 'primary', 'container', 'color', 'idle'])).toEqual({
+  it('drops the role word from a component path (button.primary.background.idle)', () => {
+    expect(routeColor(['button', 'primary', 'background', 'idle'])).toEqual({
       namespace: 'backgroundColor',
-      key: 'button-primary-container-idle',
+      key: 'button-primary-idle',
     });
   });
 
-  it('uses the role segment closest to the leaf (borderColor beats container)', () => {
-    // Figma segments are camelCase (`borderColor`); routeColor matches the role
-    // map by the verbatim segment, and `normalizeSegment` kebab-cases it for the
-    // emitted key. The deeper `borderColor` wins over the outer `container`.
-    expect(routeColor(['button', 'secondary', 'container', 'borderColor', 'idle'])).toEqual({
-      namespace: 'borderColor',
-      key: 'button-secondary-container-border-color-idle',
+  it('uses the role segment closest to the leaf when multiple role-like words exist', () => {
+    expect(routeColor(['button', 'icon', 'background', 'idle'])).toEqual({
+      namespace: 'backgroundColor',
+      key: 'button-icon-idle',
     });
   });
 
-  it('normalizes leading underscores and drops the `color` wrapper', () => {
-    expect(routeColor(['button', '_global', 'icon', 'color', 'idle'])).toEqual({
-      namespace: 'fill',
-      key: 'button-global-icon-idle',
+  it('normalizes leading underscores in key segments', () => {
+    expect(routeColor(['tree', '_global', 'background', 'selected'])).toEqual({
+      namespace: 'backgroundColor',
+      key: 'tree-global-selected',
     });
   });
 
-  it('routes a component label.color to textColor', () => {
-    expect(routeColor(['button', 'primary', 'label', 'color', 'idle'])).toEqual({
-      namespace: 'textColor',
-      key: 'button-primary-label-idle',
+  it('keeps a descriptive role word in the key (switch.circle.on → backgroundColor)', () => {
+    expect(routeColor(['switch', 'circle', 'on'])).toEqual({
+      namespace: 'backgroundColor',
+      key: 'switch-circle-on',
     });
   });
 
@@ -332,8 +299,8 @@ describe('buildThemeExtend', () => {
     const theme = buildThemeExtend(
       [
         tok({
-          name: 'ui-gradients-ai-idle',
-          path: ['gradients', 'ai', 'idle'],
+          name: 'ui-background-ai-idle',
+          path: ['colors', 'background', 'ai', 'idle'],
           $type: 'gradient',
           $value: 'linear-gradient(180deg, rgb(0 0 0) 20%, rgb(255 0 255) 100%)',
         }),
@@ -366,44 +333,5 @@ describe('buildThemeExtend', () => {
         new Map()
       )
     ).toThrow(/collision/);
-  });
-
-  it('skips component color tokens with invalid light-dark() args', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    try {
-      const theme = buildThemeExtend(
-        [
-          tok({
-            name: 'ui-button-primary-container-idle',
-            path: ['button', 'primary', 'container', 'color', 'idle'],
-            $type: 'color',
-            $value: 'light-dark(rgb(255 255 255), rgb(0 0 0))',
-          }),
-        ],
-        new Map()
-      );
-      expect(theme.backgroundColor['button-primary-container-idle']).toBeUndefined();
-      expect(warn).toHaveBeenCalledWith(
-        expect.stringContaining('skipped invalid component color token value for light-dark()')
-      );
-    } finally {
-      warn.mockRestore();
-    }
-  });
-
-  it('throws for invalid semantic color token values in light-dark()', () => {
-    expect(() =>
-      buildThemeExtend(
-        [
-          tok({
-            name: 'ui-background-surface-primary',
-            path: ['colors', 'background', 'surface', 'primary'],
-            $type: 'color',
-            $value: 'rgb(255 255 255); color: red',
-          }),
-        ],
-        new Map()
-      )
-    ).toThrow(/Invalid characters in color value for light-dark\(\)/);
   });
 });

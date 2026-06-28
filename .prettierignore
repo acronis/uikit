@@ -7,7 +7,3 @@ pnpm-lock.yaml
 packages/tokens-pd/css
 packages/tokens-pd/tailwind
 packages/tokens-pd/dtcg
-
-# Design-token source tiers are formatted by the figma-to-design-tokens skill
-# emitters (DtcgFormatter), which own their house style. Keep Prettier out of them.
-packages/design-tokens/tiers

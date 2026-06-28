@@ -1,11 +1,6 @@
 {
   "name": "@acronis-platform/design-assets",
-  "version": "0.4.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/acronis/uikit.git",
-    "directory": "packages/design-assets"
-  },
+  "version": "0.3.0",
   "description": "Acronis visual assets — icons and illustrations as JSON manifests + bundled binaries.",
   "license": "MIT AND ISC",
   "type": "module",
@@ -37,8 +32,6 @@
     "test": "pnpm run validate",
     "test:watch": "echo \"no watch mode (run test)\" && exit 0",
     "typecheck": "echo \"no typecheck (JSON data package)\" && exit 0",
-    "sync": "tsx ../../tools/figma-design-assets-sync/src/index.ts",
-    "validate:manifest": "tsx ../../tools/figma-design-assets-sync/src/validate-manifest.ts",
     "validate": "ajv compile -s schemas/pack.schema.json --spec=draft2020 && ajv compile -s schemas/rule.schema.json --spec=draft2020 && ajv validate -s schemas/pack.schema.json -d \"packs/*.json\" --spec=draft2020 && ajv validate -s schemas/rule.schema.json -d \"rules/*.json\" --spec=draft2020"
   },
   "keywords": [
@@ -48,12 +41,8 @@
     "acronis"
   ],
   "devDependencies": {
-    "@acronis-platform/figma-design-assets-sync": "workspace:*",
-    "@types/node": "catalog:",
     "ajv": "catalog:",
     "ajv-cli": "catalog:",
-    "ajv-formats": "catalog:",
-    "tsx": "^4.20.0",
-    "typescript": "catalog:"
+    "ajv-formats": "catalog:"
   }
 }
