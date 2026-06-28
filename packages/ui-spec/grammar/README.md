@@ -16,7 +16,9 @@ grammar/
 ├── types.ts            # KitRule, RuleCategory, RuleSeverity
 ├── rules/              # one file per category + index (registry + lookups)
 ├── overrides/          # approved, scoped, dated rule deviations (see README)
+├── ledger/             # discrepancy ledger registry (the self-improving loop)
 ├── CHECKLIST.md        # human mirror of the registry (1:1 by row id)
+├── LEDGER.md           # human mirror of the ledger (1:1 by entry id)
 └── index.ts            # public surface
 ```
 
@@ -33,6 +35,19 @@ a defect (the third resolution for a finding — fix / new rule / **override**).
 Both `kit-lint` and the screen audit run findings through `applyOverrides`, so an
 approved waiver removes a finding from what gates CI while keeping it auditable.
 The registry ships empty until a human ratifies one.
+
+## Ledger (the self-improving loop)
+
+[`ledger/`](./ledger/index.ts) + [`LEDGER.md`](./LEDGER.md) record every real
+consistency finding and **how it was resolved** — because a finding is done only
+when a permanent check exists so it can never recur (proposal §9). Each entry
+resolves into one of: an existing/new **detector** guards it, a ratified
+**new-rule**, or an **accepted** intentional deviation (an override). The
+[`/grammar-rule`](../../../.claude/skills/grammar-rule/SKILL.md) skill curates a
+new rule from a finding (a human ratifies `must`). Seeded with the App Shell review
+findings + the T4 mis-wiring; `validateLedger()` (run by
+`../__tests__/ledger.test.ts`) checks each entry and that its resolution target
+(detector / rule / override) actually exists.
 
 ## Usage
 

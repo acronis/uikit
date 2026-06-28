@@ -92,6 +92,19 @@ keeps entries well-formed. This unblocks the deferred `must` detectors — a rul
 block CI broadly while genuine exceptions carry a scoped waiver. See
 [`grammar/overrides/README.md`](./grammar/overrides/README.md).
 
+**Ledger** (`grammar/ledger/` + `grammar/LEDGER.md`, Phase 4): the self-improving
+loop. Every real consistency finding is logged with **how it was resolved** —
+because a finding is done only when a permanent check exists so it can never recur.
+A `LedgerEntry` resolves into a **detector** (existing/new guard), a ratified
+**new-rule**, or an **accepted** deviation (an override). `validateLedger()` (run
+by `__tests__/ledger.test.ts`) checks each entry and that its resolution target
+actually exists (a declared detector / a real rule / an existing override), and the
+LEDGER.md table mirrors the registry 1:1. It is seeded with the App Shell review
+findings plus the scroll-area T4 mis-wiring. The
+[`/grammar-rule`](../../.claude/skills/grammar-rule/SKILL.md) skill curates a new
+rule from a finding; only a human may ratify `must`. See
+[`grammar/LEDGER.md`](./grammar/LEDGER.md).
+
 **Phase 1 — `kit-lint`** (`scripts/kit-lint.ts`, `pnpm --filter @acronis-platform/ui-spec kit-lint`):
 static detectors over shipped ui-react component source for the `kit-lint` checklist
 rows. `must`: T1 no-hardcoded-color, T2 unbridged-name. `should`: T3 opacity-hack,

@@ -15,3 +15,16 @@ export {
   isOverridden,
   applyOverrides,
 } from './overrides';
+export type {
+  LedgerEntry,
+  LedgerStatus,
+  LedgerResolution,
+  LedgerSource,
+  ResolutionKind,
+} from './ledger';
+export {
+  ledger,
+  validateLedger,
+  getLedgerEntry,
+  ledgerByStatus,
+} from './ledger';
