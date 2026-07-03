@@ -504,7 +504,7 @@
         }
       }
     },
-    "deep-sky-itkontoret": {
+    "deep-sky": {
       "buttonprimary": {
         "active": {
           "$extensions": {

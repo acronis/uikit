@@ -22,7 +22,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.inverse.95}",
-            "deep-sky-itkontoret": "{palette.transparent.white.inverse.95}"
+            "deep-sky": "{palette.transparent.white.inverse.95}"
           }
         },
         "screen": {
@@ -33,7 +33,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.dark.fixed.90}",
-            "deep-sky-itkontoret": "{palette.transparent.dark.fixed.90}"
+            "deep-sky": "{palette.transparent.dark.fixed.90}"
           }
         }
       },
@@ -46,7 +46,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.13}",
-            "deep-sky-itkontoret": "{branding.deep-sky-itkontoret.sidebarprimary.idle}"
+            "deep-sky": "{branding.deep-sky.sidebarprimary.idle}"
           }
         },
         "primary-active": {
@@ -57,7 +57,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.7}",
-            "deep-sky-itkontoret": "{branding.deep-sky-itkontoret.sidebarprimary.active}"
+            "deep-sky": "{branding.deep-sky.sidebarprimary.active}"
           }
         },
         "primary-disabled": {
@@ -68,7 +68,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.5}",
-            "deep-sky-itkontoret": "{branding.deep-sky-itkontoret.sidebarprimary.disabled}"
+            "deep-sky": "{branding.deep-sky.sidebarprimary.disabled}"
           }
         },
         "primary-hover": {
@@ -79,7 +79,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.12}",
-            "deep-sky-itkontoret": "{branding.deep-sky-itkontoret.sidebarprimary.hover}"
+            "deep-sky": "{branding.deep-sky.sidebarprimary.hover}"
           }
         },
         "secondary": {
@@ -90,7 +90,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.7}",
-            "deep-sky-itkontoret": "{branding.deep-sky-itkontoret.buttonprimary.idle}"
+            "deep-sky": "{branding.deep-sky.buttonprimary.idle}"
           }
         },
         "secondary-active": {
@@ -101,7 +101,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.9}",
-            "deep-sky-itkontoret": "{branding.deep-sky-itkontoret.buttonprimary.active}"
+            "deep-sky": "{branding.deep-sky.buttonprimary.active}"
           }
         },
         "secondary-disabled": {
@@ -112,7 +112,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.3}",
-            "deep-sky-itkontoret": "{branding.deep-sky-itkontoret.buttonprimary.disabled}"
+            "deep-sky": "{branding.deep-sky.buttonprimary.disabled}"
           }
         },
         "secondary-hover": {
@@ -123,7 +123,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.8}",
-            "deep-sky-itkontoret": "{branding.deep-sky-itkontoret.buttonprimary.hover}"
+            "deep-sky": "{branding.deep-sky.buttonprimary.hover}"
           }
         }
       },
@@ -136,7 +136,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.dark.inverse.100}",
-            "deep-sky-itkontoret": "{palette.transparent.dark.inverse.100}"
+            "deep-sky": "{palette.transparent.dark.inverse.100}"
           }
         }
       },
@@ -149,7 +149,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.violet.1}",
-            "deep-sky-itkontoret": "{palette.violet.1}"
+            "deep-sky": "{palette.violet.1}"
           }
         },
         "ai-hover": {
@@ -160,7 +160,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.violet.2}",
-            "deep-sky-itkontoret": "{palette.violet.2}"
+            "deep-sky": "{palette.violet.2}"
           }
         },
         "ai-pressed": {
@@ -171,7 +171,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.violet.3}",
-            "deep-sky-itkontoret": "{palette.violet.3}"
+            "deep-sky": "{palette.violet.3}"
           }
         },
         "critical": {
@@ -182,7 +182,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.orange.1}",
-            "deep-sky-itkontoret": "{palette.orange.1}"
+            "deep-sky": "{palette.orange.1}"
           }
         },
         "critical-hover": {
@@ -193,7 +193,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.orange.2}",
-            "deep-sky-itkontoret": "{palette.orange.2}"
+            "deep-sky": "{palette.orange.2}"
           }
         },
         "critical-pressed": {
@@ -204,7 +204,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.orange.3}",
-            "deep-sky-itkontoret": "{palette.orange.3}"
+            "deep-sky": "{palette.orange.3}"
           }
         },
         "danger": {
@@ -215,7 +215,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.red.1}",
-            "deep-sky-itkontoret": "{palette.red.1}"
+            "deep-sky": "{palette.red.1}"
           }
         },
         "danger-hover": {
@@ -226,7 +226,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.red.2}",
-            "deep-sky-itkontoret": "{palette.red.2}"
+            "deep-sky": "{palette.red.2}"
           }
         },
         "danger-pressed": {
@@ -237,7 +237,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.red.3}",
-            "deep-sky-itkontoret": "{palette.red.3}"
+            "deep-sky": "{palette.red.3}"
           }
         },
         "info": {
@@ -248,7 +248,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.1}",
-            "deep-sky-itkontoret": "{palette.electricblue.1}"
+            "deep-sky": "{palette.electricblue.1}"
           }
         },
         "info-hover": {
@@ -259,7 +259,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.2}",
-            "deep-sky-itkontoret": "{palette.electricblue.2}"
+            "deep-sky": "{palette.electricblue.2}"
           }
         },
         "info-pressed": {
@@ -270,7 +270,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.3}",
-            "deep-sky-itkontoret": "{palette.electricblue.3}"
+            "deep-sky": "{palette.electricblue.3}"
           }
         },
         "neutral": {
@@ -281,7 +281,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.base}",
-            "deep-sky-itkontoret": "{palette.base}"
+            "deep-sky": "{palette.base}"
           }
         },
         "neutral-hover": {
@@ -292,7 +292,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.1}",
-            "deep-sky-itkontoret": "{palette.grayscale.1}"
+            "deep-sky": "{palette.grayscale.1}"
           }
         },
         "neutral-pressed": {
@@ -303,7 +303,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.2}",
-            "deep-sky-itkontoret": "{palette.grayscale.2}"
+            "deep-sky": "{palette.grayscale.2}"
           }
         },
         "off": {
@@ -314,7 +314,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.3}",
-            "deep-sky-itkontoret": "{palette.grayscale.3}"
+            "deep-sky": "{palette.grayscale.3}"
           }
         },
         "on": {
@@ -325,7 +325,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.green.6}",
-            "deep-sky-itkontoret": "{palette.green.6}"
+            "deep-sky": "{palette.green.6}"
           }
         },
         "success": {
@@ -336,7 +336,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.green.1}",
-            "deep-sky-itkontoret": "{palette.green.1}"
+            "deep-sky": "{palette.green.1}"
           }
         },
         "success-hover": {
@@ -347,7 +347,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.green.2}",
-            "deep-sky-itkontoret": "{palette.green.2}"
+            "deep-sky": "{palette.green.2}"
           }
         },
         "success-pressed": {
@@ -358,7 +358,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.green.3}",
-            "deep-sky-itkontoret": "{palette.green.3}"
+            "deep-sky": "{palette.green.3}"
           }
         },
         "warning": {
@@ -369,7 +369,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.yellow.1}",
-            "deep-sky-itkontoret": "{palette.yellow.1}"
+            "deep-sky": "{palette.yellow.1}"
           }
         },
         "warning-hover": {
@@ -380,7 +380,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.yellow.2}",
-            "deep-sky-itkontoret": "{palette.yellow.2}"
+            "deep-sky": "{palette.yellow.2}"
           }
         },
         "warning-pressed": {
@@ -391,7 +391,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.yellow.3}",
-            "deep-sky-itkontoret": "{palette.yellow.3}"
+            "deep-sky": "{palette.yellow.3}"
           }
         }
       },
@@ -404,7 +404,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.orange.7}",
-            "deep-sky-itkontoret": "{palette.orange.7}"
+            "deep-sky": "{palette.orange.7}"
           }
         },
         "critical-hover": {
@@ -415,7 +415,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.orange.8}",
-            "deep-sky-itkontoret": "{palette.orange.8}"
+            "deep-sky": "{palette.orange.8}"
           }
         },
         "critical-pressed": {
@@ -426,7 +426,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.orange.9}",
-            "deep-sky-itkontoret": "{palette.orange.9}"
+            "deep-sky": "{palette.orange.9}"
           }
         },
         "danger": {
@@ -437,7 +437,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.red.7}",
-            "deep-sky-itkontoret": "{palette.red.7}"
+            "deep-sky": "{palette.red.7}"
           }
         },
         "danger-hover": {
@@ -448,7 +448,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.red.9}",
-            "deep-sky-itkontoret": "{palette.red.9}"
+            "deep-sky": "{palette.red.9}"
           }
         },
         "danger-pressed": {
@@ -459,7 +459,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.red.10}",
-            "deep-sky-itkontoret": "{palette.red.10}"
+            "deep-sky": "{palette.red.10}"
           }
         },
         "info": {
@@ -470,7 +470,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.7}",
-            "deep-sky-itkontoret": "{palette.blue.7}"
+            "deep-sky": "{palette.blue.7}"
           }
         },
         "info-hover": {
@@ -481,7 +481,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.8}",
-            "deep-sky-itkontoret": "{palette.blue.8}"
+            "deep-sky": "{palette.blue.8}"
           }
         },
         "info-pressed": {
@@ -492,7 +492,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.9}",
-            "deep-sky-itkontoret": "{palette.blue.9}"
+            "deep-sky": "{palette.blue.9}"
           }
         },
         "neutral": {
@@ -503,7 +503,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.7}",
-            "deep-sky-itkontoret": "{palette.grayscale.7}"
+            "deep-sky": "{palette.grayscale.7}"
           }
         },
         "neutral-hover": {
@@ -514,7 +514,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.8}",
-            "deep-sky-itkontoret": "{palette.grayscale.8}"
+            "deep-sky": "{palette.grayscale.8}"
           }
         },
         "neutral-pressed": {
@@ -525,7 +525,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.9}",
-            "deep-sky-itkontoret": "{palette.grayscale.9}"
+            "deep-sky": "{palette.grayscale.9}"
           }
         },
         "success": {
@@ -536,7 +536,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.green.7}",
-            "deep-sky-itkontoret": "{palette.green.7}"
+            "deep-sky": "{palette.green.7}"
           }
         },
         "success-hover": {
@@ -547,7 +547,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.green.8}",
-            "deep-sky-itkontoret": "{palette.green.8}"
+            "deep-sky": "{palette.green.8}"
           }
         },
         "success-pressed": {
@@ -558,7 +558,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.green.9}",
-            "deep-sky-itkontoret": "{palette.green.9}"
+            "deep-sky": "{palette.green.9}"
           }
         },
         "warning": {
@@ -569,7 +569,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.yellow.7}",
-            "deep-sky-itkontoret": "{palette.yellow.7}"
+            "deep-sky": "{palette.yellow.7}"
           }
         },
         "warning-hover": {
@@ -580,7 +580,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.yellow.8}",
-            "deep-sky-itkontoret": "{palette.yellow.8}"
+            "deep-sky": "{palette.yellow.8}"
           }
         },
         "warning-pressed": {
@@ -591,7 +591,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.yellow.9}",
-            "deep-sky-itkontoret": "{palette.yellow.9}"
+            "deep-sky": "{palette.yellow.9}"
           }
         }
       },
@@ -604,7 +604,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.3}",
-            "deep-sky-itkontoret": "{palette.grayscale.3}"
+            "deep-sky": "{palette.grayscale.3}"
           }
         },
         "hover": {
@@ -615,7 +615,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.1}",
-            "deep-sky-itkontoret": "{palette.grayscale.1}"
+            "deep-sky": "{palette.grayscale.1}"
           }
         },
         "primary": {
@@ -626,7 +626,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.base}",
-            "deep-sky-itkontoret": "{palette.base}"
+            "deep-sky": "{palette.base}"
           }
         },
         "secondary": {
@@ -637,7 +637,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.0}",
-            "deep-sky-itkontoret": "{palette.grayscale.0}"
+            "deep-sky": "{palette.grayscale.0}"
           }
         }
       },
@@ -649,7 +649,7 @@
         "platforms": ["PD"],
         "values": {
           "acronis": "{palette.transparent.clear}",
-          "deep-sky-itkontoret": "{palette.transparent.clear}"
+          "deep-sky": "{palette.transparent.clear}"
         }
       }
     },
@@ -663,7 +663,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.10}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.10}"
+            "deep-sky": "{palette.transparent.white.fixed.10}"
           }
         },
         "border-active": {
@@ -674,7 +674,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.0}",
-            "deep-sky-itkontoret": "{palette.grayscale.0}"
+            "deep-sky": "{palette.grayscale.0}"
           }
         },
         "divider": {
@@ -685,7 +685,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.10}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.10}"
+            "deep-sky": "{palette.transparent.white.fixed.10}"
           }
         }
       },
@@ -699,7 +699,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{gradients.ai.idle}",
-            "deep-sky-itkontoret": "{gradients.ai.idle}"
+            "deep-sky": "{gradients.ai.idle}"
           }
         },
         "critical": {
@@ -710,7 +710,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.orange.4}",
-            "deep-sky-itkontoret": "{palette.orange.4}"
+            "deep-sky": "{palette.orange.4}"
           }
         },
         "criticalStrong": {
@@ -721,7 +721,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.orange.8}",
-            "deep-sky-itkontoret": "{palette.orange.8}"
+            "deep-sky": "{palette.orange.8}"
           }
         },
         "danger": {
@@ -732,7 +732,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.red.4}",
-            "deep-sky-itkontoret": "{palette.red.4}"
+            "deep-sky": "{palette.red.4}"
           }
         },
         "dangerStrong": {
@@ -743,7 +743,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.red.8}",
-            "deep-sky-itkontoret": "{palette.red.8}"
+            "deep-sky": "{palette.red.8}"
           }
         },
         "info": {
@@ -754,7 +754,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.4}",
-            "deep-sky-itkontoret": "{palette.electricblue.4}"
+            "deep-sky": "{palette.electricblue.4}"
           }
         },
         "infoStrong": {
@@ -765,7 +765,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.8}",
-            "deep-sky-itkontoret": "{palette.electricblue.8}"
+            "deep-sky": "{palette.electricblue.8}"
           }
         },
         "neutral": {
@@ -776,7 +776,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.4}",
-            "deep-sky-itkontoret": "{palette.grayscale.4}"
+            "deep-sky": "{palette.grayscale.4}"
           }
         },
         "neutralStrong": {
@@ -787,7 +787,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.8}",
-            "deep-sky-itkontoret": "{palette.grayscale.8}"
+            "deep-sky": "{palette.grayscale.8}"
           }
         },
         "success": {
@@ -798,7 +798,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.green.4}",
-            "deep-sky-itkontoret": "{palette.green.4}"
+            "deep-sky": "{palette.green.4}"
           }
         },
         "successStrong": {
@@ -809,7 +809,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.green.8}",
-            "deep-sky-itkontoret": "{palette.green.8}"
+            "deep-sky": "{palette.green.8}"
           }
         },
         "warning": {
@@ -820,7 +820,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.yellow.4}",
-            "deep-sky-itkontoret": "{palette.yellow.4}"
+            "deep-sky": "{palette.yellow.4}"
           }
         },
         "warningStrong": {
@@ -831,7 +831,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.yellow.8}",
-            "deep-sky-itkontoret": "{palette.yellow.8}"
+            "deep-sky": "{palette.yellow.8}"
           }
         }
       },
@@ -844,7 +844,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.3}",
-            "deep-sky-itkontoret": "{palette.grayscale.3}"
+            "deep-sky": "{palette.grayscale.3}"
           }
         },
         "border-active": {
@@ -855,7 +855,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.7}",
-            "deep-sky-itkontoret": "{palette.grayscale.7}"
+            "deep-sky": "{palette.grayscale.7}"
           }
         },
         "border-error": {
@@ -866,7 +866,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.red.7}",
-            "deep-sky-itkontoret": "{palette.red.7}"
+            "deep-sky": "{palette.red.7}"
           }
         },
         "divider": {
@@ -877,7 +877,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.3}",
-            "deep-sky-itkontoret": "{palette.grayscale.3}"
+            "deep-sky": "{palette.grayscale.3}"
           }
         }
       },
@@ -889,7 +889,7 @@
         "platforms": ["PD"],
         "values": {
           "acronis": "{palette.transparent.clear}",
-          "deep-sky-itkontoret": "{palette.transparent.clear}"
+          "deep-sky": "{palette.transparent.clear}"
         }
       }
     },
@@ -902,7 +902,7 @@
         "platforms": ["PD"],
         "values": {
           "acronis": "{palette.blue.4}",
-          "deep-sky-itkontoret": "{palette.blue.4}"
+          "deep-sky": "{palette.blue.4}"
         }
       },
       "error": {
@@ -913,7 +913,7 @@
         "platforms": ["PD"],
         "values": {
           "acronis": "{palette.red.4}",
-          "deep-sky-itkontoret": "{palette.red.4}"
+          "deep-sky": "{palette.red.4}"
         }
       },
       "primary": {
@@ -924,7 +924,7 @@
         "platforms": ["PD"],
         "values": {
           "acronis": "{palette.blue.4}",
-          "deep-sky-itkontoret": "{palette.blue.4}"
+          "deep-sky": "{palette.blue.4}"
         }
       },
       "secondary": {
@@ -935,7 +935,7 @@
         "platforms": ["PD"],
         "values": {
           "acronis": "{palette.blue.4}",
-          "deep-sky-itkontoret": "{palette.blue.4}"
+          "deep-sky": "{palette.blue.4}"
         }
       }
     },
@@ -949,7 +949,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.7}",
-            "deep-sky-itkontoret": "{palette.electricblue.7}"
+            "deep-sky": "{palette.electricblue.7}"
           }
         },
         "screenPrimary": {
@@ -960,7 +960,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -973,7 +973,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.10}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.10}"
+            "deep-sky": "{palette.transparent.white.fixed.10}"
           }
         },
         "primary": {
@@ -984,7 +984,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         },
         "secondary": {
@@ -995,7 +995,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.60}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.60}"
+            "deep-sky": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -1008,7 +1008,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -1021,7 +1021,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.violet.11}",
-            "deep-sky-itkontoret": "{palette.violet.11}"
+            "deep-sky": "{palette.violet.11}"
           }
         },
         "critical": {
@@ -1032,7 +1032,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.orange.11}",
-            "deep-sky-itkontoret": "{palette.orange.11}"
+            "deep-sky": "{palette.orange.11}"
           }
         },
         "danger": {
@@ -1043,7 +1043,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.red.11}",
-            "deep-sky-itkontoret": "{palette.red.11}"
+            "deep-sky": "{palette.red.11}"
           }
         },
         "disabled": {
@@ -1054,7 +1054,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.3}",
-            "deep-sky-itkontoret": "{palette.grayscale.3}"
+            "deep-sky": "{palette.grayscale.3}"
           }
         },
         "info": {
@@ -1065,7 +1065,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.11}",
-            "deep-sky-itkontoret": "{palette.electricblue.11}"
+            "deep-sky": "{palette.electricblue.11}"
           }
         },
         "neutral": {
@@ -1076,7 +1076,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.11}",
-            "deep-sky-itkontoret": "{palette.grayscale.11}"
+            "deep-sky": "{palette.grayscale.11}"
           }
         },
         "primary": {
@@ -1087,7 +1087,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.11}",
-            "deep-sky-itkontoret": "{palette.electricblue.11}"
+            "deep-sky": "{palette.electricblue.11}"
           }
         },
         "success": {
@@ -1098,7 +1098,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.green.11}",
-            "deep-sky-itkontoret": "{palette.green.11}"
+            "deep-sky": "{palette.green.11}"
           }
         },
         "warning": {
@@ -1109,7 +1109,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.yellow.11}",
-            "deep-sky-itkontoret": "{palette.yellow.11}"
+            "deep-sky": "{palette.yellow.11}"
           }
         }
       },
@@ -1122,7 +1122,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -1135,7 +1135,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.13}",
-            "deep-sky-itkontoret": "{palette.blue.13}"
+            "deep-sky": "{palette.blue.13}"
           }
         },
         "destructive": {
@@ -1146,7 +1146,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.red.7}",
-            "deep-sky-itkontoret": "{palette.red.7}"
+            "deep-sky": "{palette.red.7}"
           }
         },
         "disabled": {
@@ -1157,7 +1157,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.3}",
-            "deep-sky-itkontoret": "{palette.grayscale.3}"
+            "deep-sky": "{palette.grayscale.3}"
           }
         },
         "neutral": {
@@ -1168,7 +1168,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.4}",
-            "deep-sky-itkontoret": "{palette.grayscale.4}"
+            "deep-sky": "{palette.grayscale.4}"
           }
         },
         "primary": {
@@ -1179,7 +1179,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.7}",
-            "deep-sky-itkontoret": "{palette.grayscale.7}"
+            "deep-sky": "{palette.grayscale.7}"
           }
         }
       }
@@ -1194,7 +1194,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.4}",
-            "deep-sky-itkontoret": "{palette.electricblue.4}"
+            "deep-sky": "{palette.electricblue.4}"
           }
         },
         "elementLink-hover": {
@@ -1205,7 +1205,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.4}",
-            "deep-sky-itkontoret": "{palette.electricblue.4}"
+            "deep-sky": "{palette.electricblue.4}"
           }
         },
         "elementLink-idle": {
@@ -1216,7 +1216,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.7}",
-            "deep-sky-itkontoret": "{palette.electricblue.7}"
+            "deep-sky": "{palette.electricblue.7}"
           }
         },
         "elementPrimary": {
@@ -1227,7 +1227,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.dark.inverse.100}",
-            "deep-sky-itkontoret": "{palette.transparent.dark.inverse.100}"
+            "deep-sky": "{palette.transparent.dark.inverse.100}"
           }
         },
         "screenLink-active": {
@@ -1238,7 +1238,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.4}",
-            "deep-sky-itkontoret": "{palette.electricblue.4}"
+            "deep-sky": "{palette.electricblue.4}"
           }
         },
         "screenLink-hover": {
@@ -1249,7 +1249,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.4}",
-            "deep-sky-itkontoret": "{palette.electricblue.4}"
+            "deep-sky": "{palette.electricblue.4}"
           }
         },
         "screenLink-idle": {
@@ -1260,7 +1260,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.4}",
-            "deep-sky-itkontoret": "{palette.electricblue.4}"
+            "deep-sky": "{palette.electricblue.4}"
           }
         },
         "screenPrimary": {
@@ -1271,7 +1271,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         },
         "screenSecondary": {
@@ -1282,7 +1282,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.60}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.60}"
+            "deep-sky": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -1295,7 +1295,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.60}"
+            "deep-sky": "{palette.transparent.white.fixed.60}"
           }
         },
         "link-disabled": {
@@ -1306,7 +1306,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.30}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.30}"
+            "deep-sky": "{palette.transparent.white.fixed.30}"
           }
         },
         "link-hover": {
@@ -1317,7 +1317,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.5}",
-            "deep-sky-itkontoret": "{palette.blue.5}"
+            "deep-sky": "{palette.blue.5}"
           }
         },
         "link-idle": {
@@ -1328,7 +1328,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.7}",
-            "deep-sky-itkontoret": "{palette.blue.7}"
+            "deep-sky": "{palette.blue.7}"
           }
         },
         "link-pressed": {
@@ -1339,7 +1339,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.3}",
-            "deep-sky-itkontoret": "{palette.blue.3}"
+            "deep-sky": "{palette.blue.3}"
           }
         },
         "primary": {
@@ -1350,7 +1350,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         },
         "secondary": {
@@ -1361,7 +1361,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.60}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.60}"
+            "deep-sky": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -1374,7 +1374,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -1387,7 +1387,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.violet.11}",
-            "deep-sky-itkontoret": "{palette.violet.11}"
+            "deep-sky": "{palette.violet.11}"
           }
         },
         "critical": {
@@ -1398,7 +1398,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.orange.11}",
-            "deep-sky-itkontoret": "{palette.orange.11}"
+            "deep-sky": "{palette.orange.11}"
           }
         },
         "danger": {
@@ -1409,7 +1409,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.red.11}",
-            "deep-sky-itkontoret": "{palette.red.11}"
+            "deep-sky": "{palette.red.11}"
           }
         },
         "info": {
@@ -1420,7 +1420,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.11}",
-            "deep-sky-itkontoret": "{palette.electricblue.11}"
+            "deep-sky": "{palette.electricblue.11}"
           }
         },
         "link-disabled": {
@@ -1431,7 +1431,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.5}",
-            "deep-sky-itkontoret": "{palette.electricblue.5}"
+            "deep-sky": "{palette.electricblue.5}"
           }
         },
         "link-hover": {
@@ -1442,7 +1442,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.13}",
-            "deep-sky-itkontoret": "{palette.electricblue.13}"
+            "deep-sky": "{palette.electricblue.13}"
           }
         },
         "link-idle": {
@@ -1453,7 +1453,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.11}",
-            "deep-sky-itkontoret": "{palette.electricblue.11}"
+            "deep-sky": "{palette.electricblue.11}"
           }
         },
         "link-pressed": {
@@ -1464,7 +1464,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.14}",
-            "deep-sky-itkontoret": "{palette.electricblue.14}"
+            "deep-sky": "{palette.electricblue.14}"
           }
         },
         "neutral": {
@@ -1475,7 +1475,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.11}",
-            "deep-sky-itkontoret": "{palette.grayscale.11}"
+            "deep-sky": "{palette.grayscale.11}"
           }
         },
         "primary": {
@@ -1486,7 +1486,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.14}",
-            "deep-sky-itkontoret": "{palette.grayscale.14}"
+            "deep-sky": "{palette.grayscale.14}"
           }
         },
         "secondary": {
@@ -1497,7 +1497,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.11}",
-            "deep-sky-itkontoret": "{palette.grayscale.11}"
+            "deep-sky": "{palette.grayscale.11}"
           }
         },
         "success": {
@@ -1508,7 +1508,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.green.11}",
-            "deep-sky-itkontoret": "{palette.green.11}"
+            "deep-sky": "{palette.green.11}"
           }
         },
         "warning": {
@@ -1519,7 +1519,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.yellow.11}",
-            "deep-sky-itkontoret": "{palette.yellow.11}"
+            "deep-sky": "{palette.yellow.11}"
           }
         }
       },
@@ -1532,7 +1532,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         },
         "critical": {
@@ -1543,7 +1543,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         },
         "danger": {
@@ -1554,7 +1554,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         },
         "info": {
@@ -1565,7 +1565,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         },
         "link": {
@@ -1576,7 +1576,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.electricblue.11}",
-            "deep-sky-itkontoret": "{palette.electricblue.11}"
+            "deep-sky": "{palette.electricblue.11}"
           }
         },
         "neutral": {
@@ -1587,7 +1587,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         },
         "primary": {
@@ -1598,7 +1598,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.0}",
-            "deep-sky-itkontoret": "{palette.grayscale.0}"
+            "deep-sky": "{palette.grayscale.0}"
           }
         },
         "secondary": {
@@ -1609,7 +1609,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.2}",
-            "deep-sky-itkontoret": "{palette.grayscale.2}"
+            "deep-sky": "{palette.grayscale.2}"
           }
         },
         "success": {
@@ -1620,7 +1620,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         },
         "warning": {
@@ -1631,7 +1631,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.transparent.white.fixed.100}",
-            "deep-sky-itkontoret": "{palette.transparent.white.fixed.100}"
+            "deep-sky": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -1644,7 +1644,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.red.7}",
-            "deep-sky-itkontoret": "{palette.red.7}"
+            "deep-sky": "{palette.red.7}"
           }
         },
         "disabled": {
@@ -1655,7 +1655,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.5}",
-            "deep-sky-itkontoret": "{palette.grayscale.5}"
+            "deep-sky": "{palette.grayscale.5}"
           }
         },
         "link-disabled": {
@@ -1666,7 +1666,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.3}",
-            "deep-sky-itkontoret": "{palette.grayscale.3}"
+            "deep-sky": "{palette.grayscale.3}"
           }
         },
         "link-hover": {
@@ -1677,7 +1677,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.8}",
-            "deep-sky-itkontoret": "{palette.blue.8}"
+            "deep-sky": "{palette.blue.8}"
           }
         },
         "link-idle": {
@@ -1688,7 +1688,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.7}",
-            "deep-sky-itkontoret": "{palette.blue.7}"
+            "deep-sky": "{palette.blue.7}"
           }
         },
         "link-pressed": {
@@ -1699,7 +1699,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.blue.11}",
-            "deep-sky-itkontoret": "{palette.blue.11}"
+            "deep-sky": "{palette.blue.11}"
           }
         },
         "primary": {
@@ -1710,7 +1710,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.14}",
-            "deep-sky-itkontoret": "{palette.grayscale.14}"
+            "deep-sky": "{palette.grayscale.14}"
           }
         },
         "secondary": {
@@ -1721,7 +1721,7 @@
           "platforms": ["PD"],
           "values": {
             "acronis": "{palette.grayscale.7}",
-            "deep-sky-itkontoret": "{palette.grayscale.7}"
+            "deep-sky": "{palette.grayscale.7}"
           }
         }
       }
@@ -1754,7 +1754,7 @@
               "position": 1
             }
           ],
-          "deep-sky-itkontoret": [
+          "deep-sky": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -1796,7 +1796,7 @@
               "position": 1
             }
           ],
-          "deep-sky-itkontoret": [
+          "deep-sky": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -1838,7 +1838,7 @@
               "position": 1
             }
           ],
-          "deep-sky-itkontoret": [
+          "deep-sky": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -1880,7 +1880,7 @@
               "position": 1
             }
           ],
-          "deep-sky-itkontoret": [
+          "deep-sky": [
             {
               "color": {
                 "colorSpace": "hsl",
