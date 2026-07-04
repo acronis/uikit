@@ -1,6 +1,28 @@
 @import 'tailwindcss';
 @import '@acronis-platform/tokens-pd/css/acronis.css';
 
+/* Component token tiers are opt-in (per @acronis-platform/tokens-pd): import the
+   tier for every component this library ships, so its `--ui-<component>-*` tokens
+   are defined. Add a line here whenever a new component with its own tier lands. */
+@import '@acronis-platform/tokens-pd/css/Avatar/acronis.css';
+@import '@acronis-platform/tokens-pd/css/button/acronis.css';
+@import '@acronis-platform/tokens-pd/css/ButtonMenu/acronis.css';
+@import '@acronis-platform/tokens-pd/css/ButtonIcon/acronis.css';
+@import '@acronis-platform/tokens-pd/css/switch/acronis.css';
+@import '@acronis-platform/tokens-pd/css/Checkbox/acronis.css';
+@import '@acronis-platform/tokens-pd/css/form/acronis.css';
+@import '@acronis-platform/tokens-pd/css/InputText/acronis.css';
+@import '@acronis-platform/tokens-pd/css/InputTextArea/acronis.css';
+@import '@acronis-platform/tokens-pd/css/InputSearch/acronis.css';
+@import '@acronis-platform/tokens-pd/css/SearchGlobal/acronis.css';
+@import '@acronis-platform/tokens-pd/css/Radio/acronis.css';
+@import '@acronis-platform/tokens-pd/css/breadcrumb/acronis.css';
+@import '@acronis-platform/tokens-pd/css/Resizable/acronis.css';
+@import '@acronis-platform/tokens-pd/css/tag/acronis.css';
+@import '@acronis-platform/tokens-pd/css/tooltip/acronis.css';
+@import '@acronis-platform/tokens-pd/css/SidebarPrimary/acronis.css';
+@import '@acronis-platform/tokens-pd/css/SidebarSecondary/acronis.css';
+
 /* Theme switches via the `[data-theme]` attribute (set by the consumer /
    next-themes), which drives the tokens' `light-dark()` + `color-scheme` — mirror
    that for the `dark:` variant. */
