@@ -4,14 +4,42 @@
   "version": "1.0.0",
   "$type": "vector",
   "values": {
-    "24": { "default": true },
-    "16": { "$rules": ["scale-16"] },
-    "32": { "$rules": ["scale-32"] }
+    "16": {
+      "$rules": ["scale-16"]
+    },
+    "24": {
+      "default": true
+    },
+    "32": {
+      "$rules": ["scale-32"]
+    }
   },
   "assets": {
+    "acronis-ai-multi": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-solid-multi/acronis-ai-multi-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": ["ai", "magic", "artificial intelligence"],
+        "legacyNames": [
+          "ai-sparkles-tag--16",
+          "ai-sparkles-color--16",
+          "ai-sparkles-color--24",
+          "ai-sparkles-color--32",
+          "ai-sparkles-color--72",
+          "ai-sparkles-tag-color--16"
+        ]
+      }
+    },
     "sparkles": {
       "values": {
-        "24": { "$file": "./packs/icons-solid-multi/sparkles-24.svg" }
+        "24": {
+          "$file": "./packs/icons-solid-multi/sparkles-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {

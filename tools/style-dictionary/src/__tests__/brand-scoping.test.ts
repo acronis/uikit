@@ -8,6 +8,8 @@
 import { describe, expect, it } from 'vitest';
 
 import type { Decls } from '../hooks/formats/css-light-dark';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-expect-error
 import { collectValueKeys, diffDecls } from '../tokens';
 
 describe('collectValueKeys (data-driven brand discovery)', () => {

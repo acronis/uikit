@@ -30,7 +30,7 @@
     "ajv-formats": "catalog:",
     "react": "catalog:",
     "style-dictionary": "catalog:",
-    "svgo": "^4.0.1",
+    "svgo": "catalog:",
     "svgson": "^5.3.1",
     "tsx": "^4.20.0",
     "typescript": "catalog:",

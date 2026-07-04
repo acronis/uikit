@@ -397,7 +397,7 @@ export const SectionActionsAndRollup: Story = {
           <SidebarSecondarySection expandable>
             <SidebarSecondarySectionLabel
               actions={
-                <ButtonIcon variant="ghost" aria-label="Add dashboard">
+                <ButtonIcon aria-label="Add dashboard">
                   <PlusIcon />
                 </ButtonIcon>
               }

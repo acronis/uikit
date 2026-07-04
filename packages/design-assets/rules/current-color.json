@@ -1,6 +1,0 @@
-{
-  "$schema": "../schemas/rule.schema.json",
-  "name": "current-color",
-  "kind": "color",
-  "target": { "value": "currentColor" }
-}

@@ -77,19 +77,6 @@ jobs:
       - name: Copy docs to demo dist
         run: cp -r apps/docs/out apps/demo/dist/docs
 
-      # kitchen-sink imports ui-react/icons-react by package name from their
-      # built dist, so build its dependency graph first, then the app with the
-      # base path matching where it is served (/uikit/kitchen-sink/).
-      - name: Build kitchen-sink
-        run: |
-          pnpm --filter "@acronis-platform/kitchen-sink^..." run build
-          pnpm --filter ./apps/kitchen-sink exec vite build --base=/uikit/kitchen-sink/
-
-      - name: Copy kitchen-sink to demo dist
-        run: |
-          rm -rf apps/demo/dist/kitchen-sink
-          cp -r apps/kitchen-sink/dist apps/demo/dist/kitchen-sink
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

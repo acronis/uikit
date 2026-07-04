@@ -348,7 +348,7 @@ SidebarSecondarySection.displayName = 'SidebarSecondarySection';
 
 export interface SidebarSecondarySectionLabelProps
   extends React.ComponentPropsWithoutRef<'div'> {
-  /** Trailing header actions (e.g. a ghost `ButtonIcon`). Rendered outside the toggle. */
+  /** Trailing header actions (e.g. a `ButtonIcon`). Rendered outside the toggle. */
   actions?: React.ReactNode;
   /**
    * A rollup badge (e.g. a `Tag` with an unread count) shown in the header only

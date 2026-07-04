@@ -4,11 +4,393 @@
   "version": "1.0.0",
   "$type": "vector",
   "values": {
-    "24": { "default": true },
-    "16": { "$rules": ["scale-16", "stroke-1-6"] },
-    "32": { "$rules": ["scale-32", "stroke-2-5"] }
+    "16": {
+      "$rules": ["scale-16", "stroke-1-6"]
+    },
+    "24": {
+      "default": true
+    },
+    "32": {
+      "$rules": ["scale-32", "stroke-2-5"]
+    }
   },
   "assets": {
+    "app-window": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/app-window-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["application", "executable", "pane"],
+        "legacyNames": ["application--24", "virtual-app--32"]
+      }
+    },
+    "app-window-arrow": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/app-window-arrow-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["patch management", "install", "software"],
+        "legacyNames": [
+          "patch-management--16",
+          "patch-manage--24",
+          "software--32",
+          "install--32",
+          "install-blue--32",
+          "install-blue--16",
+          "install--16",
+          "patch-manage-o--24",
+          "patch-management-o--16",
+          "patch--16",
+          "patch--32",
+          "patch-o--16",
+          "software-management-o--32"
+        ]
+      }
+    },
+    "app-window-times": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/app-window-times-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["invalid link", "broken"],
+        "legacyNames": [
+          "invalid-link--16",
+          "invalid-link--24",
+          "broken-o--32",
+          "invalid-link-o--16",
+          "invalid-link-o--24"
+        ]
+      }
+    },
+    "archival-box": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/archival-box-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "archive",
+          "box",
+          "content",
+          "drawer",
+          "hub",
+          "index",
+          "records",
+          "storage",
+          "mail"
+        ],
+        "legacyNames": [
+          "archive-o--32",
+          "drawer--32",
+          "content-hub-o--32",
+          "archive-o--24",
+          "mail-archive--16",
+          "mail-archive--24",
+          "mail-archive-o--32",
+          "archive--16",
+          "archive--24",
+          "archive--32",
+          "archive-o--16",
+          "mail-archive-o--16",
+          "mail-archive-o--24",
+          "archive-section-clr--32"
+        ]
+      }
+    },
+    "arrow-down": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-down-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["sort down", "direction", "south"],
+        "legacyNames": [
+          "arrow-sort-down--16",
+          "arrow-down--16",
+          "state-download-d--16",
+          "download-mix--32"
+        ]
+      }
+    },
+    "arrow-down-left": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-down-left-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["minimize"],
+        "legacyNames": ["arrow-lower-left-o--24"]
+      }
+    },
+    "arrow-export": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-export-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["exit", "export", "egress", "sign out", "evacuate"],
+        "legacyNames": [
+          "exit--32",
+          "export-ab--32",
+          "exit--16",
+          "egress--24",
+          "evacuate--16",
+          "document-export-o--32",
+          "egress-o--24",
+          "exit-o--16",
+          "exit-o--32",
+          "export-ab-o--32"
+        ]
+      }
+    },
+    "arrow-import": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-import-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["import", "move to", "ingress"],
+        "legacyNames": [
+          "import--16",
+          "move-to-pool-ab--32",
+          "move-to-slot-ab--32",
+          "import-ab--32",
+          "ingress--24",
+          "import-ab-o--32",
+          "ingress-o--24",
+          "move-to-pool-ab-o--32",
+          "move-to-slot-ab-o--32"
+        ]
+      }
+    },
+    "arrow-in-down": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-in-down-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["download"],
+        "legacyNames": [
+          "download--16",
+          "download--24",
+          "save--16",
+          "download-ab--32",
+          "download-ab-o--32"
+        ]
+      }
+    },
+    "arrow-left": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-left-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["back"],
+        "legacyNames": [
+          "arrow-left--16",
+          "long-arrow-left--16",
+          "arrow-left--32",
+          "back-ab--32",
+          "long-arrow-left--24",
+          "long-arrow-left--32"
+        ]
+      }
+    },
+    "arrow-left-from-line": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-left-from-line-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["revoke", "detach", "backward"],
+        "legacyNames": [
+          "revoke-ab--32",
+          "detach--16",
+          "revoke--16",
+          "revoke--24"
+        ]
+      }
+    },
+    "arrow-left-to-line": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-left-to-line-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["first"],
+        "legacyNames": []
+      }
+    },
+    "arrow-out-up": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-out-up-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["upload"],
+        "legacyNames": ["upload--16", "upload--24"]
+      }
+    },
+    "arrow-reply": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-reply-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["reply"],
+        "legacyNames": ["reply--16"]
+      }
+    },
+    "arrow-right": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-right-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["next"],
+        "legacyNames": [
+          "long-arrow-right--16",
+          "arrow-right--16",
+          "long-arrow-right--24",
+          "long-arrow-right--32",
+          "direction-inactive-mix--32",
+          "direction-mix--32"
+        ]
+      }
+    },
+    "arrow-right-from-line": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-right-from-line-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["forward"],
+        "legacyNames": []
+      }
+    },
+    "arrow-right-to-line": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-right-to-line-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["attach"],
+        "legacyNames": ["attach--16"]
+      }
+    },
+    "arrow-rotation": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-rotation-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["restart", "upgrade", "fallback", "revert", "reboot"],
+        "legacyNames": [
+          "restart--16",
+          "upgrade--16",
+          "fallback-server--24",
+          "fallback-server-o--24",
+          "revert--32",
+          "soft-reboot--16"
+        ]
+      }
+    },
+    "arrow-rotation-dot": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-rotation-dot-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["recovery point"],
+        "legacyNames": ["recovery-point--24", "recovery-point--16"]
+      }
+    },
+    "arrow-rotation-time": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-rotation-time-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["history", "version control", "activities"],
+        "legacyNames": ["history--16", "history--24", "show-version-ab--32"]
+      }
+    },
+    "arrow-rotation-warning": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-rotation-warning-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["hard reboot"],
+        "legacyNames": ["hard-reboot--16"]
+      }
+    },
     "arrow-square-up-right": {
       "values": {
         "24": {
@@ -22,42 +404,798 @@
         "legacyNames": []
       }
     },
+    "arrow-trend-down": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-trend-down-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["trend down", "statistics"],
+        "legacyNames": []
+      }
+    },
+    "arrow-trend-up": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-trend-up-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["trend up", "statistics"],
+        "legacyNames": ["calendar-trend--32"]
+      }
+    },
+    "arrow-up": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-up-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["sort up"],
+        "legacyNames": [
+          "arrow-sort-up--16",
+          "arrow-up--16",
+          "state-upload-d--16"
+        ]
+      }
+    },
+    "arrow-up-right": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-up-right-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["maximize"],
+        "legacyNames": ["arrow-upper-right-o--24"]
+      }
+    },
+    "arrow-uturn": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrow-uturn-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["undo", "recover", "reverse", "restore"],
+        "legacyNames": [
+          "recover--16",
+          "reverse--16",
+          "recover--32",
+          "restore--16",
+          "recovery-ab--32",
+          "recovery-ab-o--32"
+        ]
+      }
+    },
+    "arrows-circle": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrows-circle-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["sync", "update", "refresh", "rotate"],
+        "legacyNames": [
+          "refresh-scan-ab--32",
+          "update--24",
+          "update--32",
+          "sync--32",
+          "sync--16",
+          "activities-arrow-ab--32",
+          "refresh--32",
+          "rotate--16",
+          "update-catalog-ab--32",
+          "update-o--24",
+          "update-o--32"
+        ]
+      }
+    },
+    "arrows-collapse": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrows-collapse-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["collapse"],
+        "legacyNames": [
+          "collapse--16",
+          "exit-full-size-o--16",
+          "collapse-all--16"
+        ]
+      }
+    },
+    "arrows-down-up": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrows-down-up-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["sort"],
+        "legacyNames": ["sort--16"]
+      }
+    },
+    "arrows-expand": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrows-expand-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["expand", "maximize", "full size", "fullscreen"],
+        "legacyNames": [
+          "allow-propagating-support-portal--16",
+          "expand--16",
+          "expand--24",
+          "expand-all--16",
+          "full-size--16"
+        ]
+      }
+    },
+    "arrows-left-right": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrows-left-right-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["move", "routing"],
+        "legacyNames": ["move--16", "move--24", "routing--24", "routing-o--24"]
+      }
+    },
+    "arrows-loop": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrows-loop-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["reinstall", "recurring"],
+        "legacyNames": ["reinstall--16", "recurring-ticket--16"]
+      }
+    },
+    "arrows-move": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/arrows-move-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["move", "coordinates"],
+        "legacyNames": ["placement--24"]
+      }
+    },
+    "asterisk": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/asterisk-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["math", "mandatory", "required"],
+        "legacyNames": ["star--16", "mandatory--16"]
+      }
+    },
+    "award": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/award-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["badge", "achievement", "prize"],
+        "legacyNames": [
+          "notarized-mix--32",
+          "notarized-signed-d--16",
+          "notary-mix--32",
+          "notarized--16"
+        ]
+      }
+    },
+    "badge-arrow-up": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/badge-arrow-up-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["upsell", "advanced", "marketing", "sales"],
+        "legacyNames": ["upsell--16", "adv--16", "upsell--32"]
+      }
+    },
+    "badge-check": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/badge-check-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "certificate",
+          "license",
+          "stamp",
+          "notary",
+          "notarized",
+          "verified",
+          "marketing",
+          "sales"
+        ],
+        "legacyNames": [
+          "notary--24",
+          "license-solid--16",
+          "license--16",
+          "license--32",
+          "notary-o--32",
+          "notary-o--16",
+          "certificate-check--32",
+          "stamp--16",
+          "license-o--16",
+          "license-o--32",
+          "notary-o--24",
+          "licence-clr--16",
+          "licence-tray--16",
+          "license-tray--32"
+        ]
+      }
+    },
+    "badge-key": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/badge-key-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["license", "key", "marketing", "sales"],
+        "legacyNames": ["license-keys--32"]
+      }
+    },
+    "badge-percent": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/badge-percent-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "promo",
+          "discount",
+          "sale",
+          "offer",
+          "marketing",
+          "price",
+          "sales"
+        ],
+        "legacyNames": [
+          "promo--24",
+          "discount--16",
+          "discount-solid--16",
+          "promo--32",
+          "offer-clr--16",
+          "offer-tray--16",
+          "sale-clr--16",
+          "sale-tray--16",
+          "sale-tray--32"
+        ]
+      }
+    },
     "ban": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/ban-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/ban-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "bars": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/bars-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["menu", "burger", "navigation", "options"],
+        "legacyNames": [
+          "menu-ab--32",
+          "menu--24",
+          "burger-menu--32",
+          "menu-o--24"
+        ]
+      }
+    },
+    "bars-filter": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/bars-filter-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["options", "filter"],
+        "legacyNames": []
+      }
+    },
+    "bars-vertical": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/bars-vertical-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["columns"],
+        "legacyNames": ["edit-columns--16"]
+      }
+    },
+    "bell": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/bell-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["alarm", "notifications", "reminder"],
+        "legacyNames": [
+          "bell--24",
+          "notifications-o--24",
+          "bell-o--32",
+          "bell-o--24",
+          "notifications-with-state-d-o--16",
+          "notifications-d-o--16"
+        ]
+      }
+    },
+    "bell-off": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/bell-off-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["alarm", "notifications", "reminder", "silent mode"],
+        "legacyNames": ["bell-off-o--24"]
+      }
+    },
+    "bin": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/bin-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["delete", "trash", "garbage"],
+        "legacyNames": [
+          "delete-o--16",
+          "delete--16",
+          "trash-o--32",
+          "trash-o--24",
+          "delete-ab--32",
+          "delete-catalog-ab--32",
+          "delete-ab-o--32",
+          "trash-o--16"
+        ]
+      }
+    },
+    "bluetooth": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/bluetooth-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["network", "connectivity", "bluetooth", "connection"],
+        "legacyNames": [
+          "connection-bluetooth-on--32",
+          "connection-bluetooth-off--32"
+        ]
       }
     },
     "bolt": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/bolt-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/bolt-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "book": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/book-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "reading",
+          "tome",
+          "knowledge",
+          "storybook",
+          "education",
+          "courses",
+          "documentation",
+          "ebook"
+        ],
+        "legacyNames": ["file-onenote--32", "devices-ebook-reader--24"]
+      }
+    },
+    "book-play": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/book-play-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["runbook", "playbook", "execute"],
+        "legacyNames": ["execute-runbook--24", "execute-runbook-o--24"]
+      }
+    },
+    "book-user": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/book-user-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "contacts",
+          "address",
+          "phone numbers",
+          "directory",
+          "listing"
+        ],
+        "legacyNames": ["address-book--32"]
+      }
+    },
+    "box": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/box-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "vm",
+          "virtual machine",
+          "vcd",
+          "installer",
+          "package",
+          "container"
+        ],
+        "legacyNames": [
+          "virtual-machines--16",
+          "virtual-machines--24",
+          "virtual-machines--32",
+          "installer--16",
+          "installer-ab--24",
+          "installer-ab--32",
+          "vcd-virtual-machines--16",
+          "vcd-virtual-machines--24",
+          "adv-backup-pack-virtual-machines--16",
+          "adv-backup-pack-virtual-machines--24",
+          "virtual-machines-included--16",
+          "virtual-machines-included--24",
+          "vz-container-running--32",
+          "vz-container--32",
+          "convert-to-vm-plan-ab--32",
+          "devices-virtual-machine--24",
+          "ovirt-vm-ab--24",
+          "hc3-vm-ab--24",
+          "vz-virtual-running--32",
+          "vz-virtual--32",
+          "vm-hyperv-running--32",
+          "vm-hyperv--32",
+          "veil-vm-running--32",
+          "veil-vm--32",
+          "run-vm-hyperv--32",
+          "run-proxmox-vm--32",
+          "proxmox-vm-running--32",
+          "proxmox-vm--32",
+          "nutanix-vm-running--32",
+          "nutanix-vm--32",
+          "hci-vm-running--32",
+          "hci-vm--32",
+          "vm-running--32",
+          "run-vm--32",
+          "vm-arm--32",
+          "virtual-machine-ab--32",
+          "ovirt-vm-running-ab--32",
+          "ovirt-vm-ab--32",
+          "hc3-vm-running-ab--32",
+          "hc3-vm-ab--32",
+          "adv-backup-pack-virtual-machines-o--16",
+          "adv-backup-pack-virtual-machines-o--24",
+          "hc3--16",
+          "installer-ab--16",
+          "ovirt--16",
+          "ovirt--32",
+          "ovirt-o--32",
+          "v-logo--32",
+          "vcloud-virtual-machines-o--16",
+          "vcloud-virtual-machines-o--24",
+          "virtual-machines-included-o--16",
+          "virtual-machines-included-o--24",
+          "virtual-machines-o--16",
+          "virtual-machines-o--24",
+          "virtual-machines-o--32",
+          "virtuozzo--24",
+          "virtuozzo--32",
+          "virtuozzo-ab--24",
+          "vz-containter--32",
+          "vz-containter-running--32",
+          "desktop-vm-disabled-ill--96",
+          "desktop-vm-enabled-ill--96"
+        ]
+      }
+    },
+    "box-dashed": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/box-dashed-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "vm",
+          "virtual machine",
+          "vcd",
+          "installer",
+          "package",
+          "container",
+          "flavor"
+        ],
+        "legacyNames": [
+          "flavor--24",
+          "vm-template--32",
+          "flavor-o--24",
+          "vms-templates--32"
+        ]
+      }
+    },
+    "box-shield": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/box-shield-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "vm",
+          "virtual machine",
+          "protection",
+          "agentless",
+          "security"
+        ],
+        "legacyNames": [
+          "adv-agentless-security-vm-pack--16",
+          "adv-agentless-security-vm-pack--24",
+          "adv-agentless-security-vm-pack-o--16",
+          "adv-agentless-security-vm-pack-o--24",
+          "veil-engine--16",
+          "veil-engine--32"
+        ]
+      }
+    },
+    "box-stack": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/box-stack-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["vm", "virtual machine", "replication", "clone"],
+        "legacyNames": ["vm-replication-plan-ab--32", "hc3-replica-ab--32"]
+      }
+    },
+    "boxes": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/boxes-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["virtual host", "vhost", "virtualization"],
+        "legacyNames": [
+          "v-host--16",
+          "v-host--24",
+          "esx-ab--32",
+          "hl-group--32",
+          "agent-hci--32",
+          "devices-esx-i-host--24",
+          "v-host-o--16",
+          "v-host-o--24",
+          "virtuozzo-platform-ab--24"
+        ]
       }
     },
     "briefcase": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/briefcase-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/briefcase-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "brush-cleaning": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/brush-cleaning-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "clean",
+          "erase",
+          "cleanup",
+          "cleaning",
+          "tool",
+          "sweep",
+          "maintenance",
+          "sanitation",
+          "sanitize"
+        ],
+        "legacyNames": [
+          "clean--16",
+          "clean--32",
+          "erase-ab--32",
+          "clean-up-o--24",
+          "clean-up-o--16",
+          "cleanup-plan-ab--32",
+          "erase-ab-o--32",
+          "clean-drive-ab--32",
+          "clean-drive-ab-o--32"
+        ]
+      }
+    },
+    "brush-painting": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/brush-painting-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["color", "theme", "theming", "design"],
+        "legacyNames": [
+          "paint-brush--24",
+          "paint-brush--32",
+          "paint-brush-o--24",
+          "paint-brush-o--32"
+        ]
+      }
+    },
+    "bucket": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/bucket-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [],
+        "legacyNames": ["bucket--24", "bucket--32", "bucket--16"]
+      }
+    },
+    "bug": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/bug-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "virus",
+          "malware",
+          "issue",
+          "error",
+          "defect",
+          "troubleshoot",
+          "problem",
+          "debug",
+          "insect",
+          "beetle"
+        ],
+        "legacyNames": [
+          "virus--16",
+          "virus--32",
+          "virus-mix--32",
+          "malware-o--24",
+          "malware-o--16"
+        ]
       }
     },
     "building": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/building-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/building-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -66,9 +1204,200 @@
         "legacyNames": []
       }
     },
+    "bulb": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/bulb-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["light", "idea", "bright", "lights", "on"],
+        "legacyNames": [
+          "enable-ab--32",
+          "light-enable--24",
+          "enable-ab-o--32",
+          "light-enable-o--24"
+        ]
+      }
+    },
+    "bulb-crossed": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/bulb-crossed-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["light", "idea", "bright", "lights", "off"],
+        "legacyNames": [
+          "disable-ab--32",
+          "light-disable--24",
+          "disable-ab-o--32",
+          "light-disable-o--24"
+        ]
+      }
+    },
+    "calculator": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/calculator-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["count", "math", "device", "estimate", "calculations"],
+        "legacyNames": ["calculator--16"]
+      }
+    },
+    "calendar": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/calendar-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["events", "holidays", "date", "month", "year", "birthday"],
+        "legacyNames": [
+          "calendar--16",
+          "events--32",
+          "calendars--32",
+          "calendar-holidays--16",
+          "calendar-o--16"
+        ]
+      }
+    },
+    "calendar-clock": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/calendar-clock-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "date",
+          "day",
+          "schedule",
+          "event",
+          "time registration",
+          "tracking"
+        ],
+        "legacyNames": [
+          "time-registration--24",
+          "schedule-ab--32",
+          "schedule-ab-o--32",
+          "schedule-o--32"
+        ]
+      }
+    },
+    "camera": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/camera-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "photo",
+          "photography",
+          "shot",
+          "capture",
+          "media",
+          "webcam"
+        ],
+        "legacyNames": ["devices-photo-camera--24"]
+      }
+    },
+    "car": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/car-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "vehicle",
+          "drive",
+          "trip",
+          "journey",
+          "device",
+          "electric car"
+        ],
+        "legacyNames": ["devices-car--24"]
+      }
+    },
+    "cctv": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/cctv-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "camera",
+          "cctv",
+          "surveillance",
+          "recording",
+          "video",
+          "security"
+        ],
+        "legacyNames": ["devices-camera--24"]
+      }
+    },
+    "chart-bar-horizontal": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/chart-bar-horizontal-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["statistics", "stats", "analytics", "diagram", "graph"],
+        "legacyNames": []
+      }
+    },
+    "chart-bar-vertical": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/chart-bar-vertical-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": [
+          "empty widget",
+          "placeholder",
+          "statistics",
+          "stats",
+          "analytics",
+          "diagram",
+          "graph"
+        ],
+        "legacyNames": ["empty-widget--32"]
+      }
+    },
     "chart-growth": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/chart-growth-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/chart-growth-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -79,7 +1408,9 @@
     },
     "chart-pie": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/chart-pie-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/chart-pie-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -90,7 +1421,9 @@
     },
     "chart-trend": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/chart-trend-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/chart-trend-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -101,18 +1434,35 @@
     },
     "check": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/check-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/check-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "check-double": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/check-double-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["received", "read"],
+        "legacyNames": ["check-double--16"]
       }
     },
     "chevron-down": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/chevron-down-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/chevron-down-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -121,9 +1471,37 @@
         "legacyNames": []
       }
     },
+    "chevron-first": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/chevron-first-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["next range"],
+        "legacyNames": ["next-range--16", "next-range-o--16"]
+      }
+    },
+    "chevron-last": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/chevron-last-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["arrows"],
+        "tags": ["last range"],
+        "legacyNames": ["last-range--16", "last-range-o--16"]
+      }
+    },
     "chevron-left": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/chevron-left-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/chevron-left-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -134,7 +1512,9 @@
     },
     "chevron-right": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/chevron-right-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/chevron-right-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -145,7 +1525,9 @@
     },
     "chevron-up": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/chevron-up-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/chevron-up-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -156,7 +1538,9 @@
     },
     "chevrons-left": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/chevrons-left-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/chevrons-left-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -167,117 +1551,1801 @@
     },
     "chevrons-right": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/chevrons-right-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/chevrons-right-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "circle-arrow-down": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-arrow-down-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["mount", "shelve", "rebuild"],
+        "legacyNames": [
+          "arrow-down-circled-o--32",
+          "arrow-circle-down-o--32",
+          "mount-media-ab--32",
+          "shelve--16",
+          "rebuild-catalog-ab--32",
+          "mount-media-ab-o--32",
+          "shelve-o--16"
+        ]
+      }
+    },
+    "circle-arrow-left": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-arrow-left-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["direction", "back"],
+        "legacyNames": []
+      }
+    },
+    "circle-arrow-right": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-arrow-right-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["direction", "move", "next"],
+        "legacyNames": [
+          "direction--16",
+          "arrow-right-circled-o--24",
+          "move-ab--32",
+          "direction-light--32",
+          "direction-dark--32",
+          "direction-blue--16",
+          "move-ab-o--32",
+          "direction--32"
+        ]
+      }
+    },
+    "circle-arrow-up": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-arrow-up-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["unshelve", "direction", "north"],
+        "legacyNames": ["unshelve-o--16"]
+      }
+    },
+    "circle-ban": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-ban-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": [
+          "ban",
+          "unknown",
+          "blocklist",
+          "blacklist",
+          "disabled",
+          "forbidden"
+        ],
+        "legacyNames": [
+          "blacklist-o--32",
+          "ban-o--32",
+          "ban-o--24",
+          "ban-o--16",
+          "ban--16",
+          "blocked-mix--32",
+          "forbidden-mix--32"
+        ]
       }
     },
     "circle-check": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/circle-check-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-check-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "circle-clock": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-clock-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["clock", "activities", "pending"],
+        "legacyNames": [
+          "clock--16",
+          "activities-ab--32",
+          "devices-clock--24",
+          "clock-o--24",
+          "activities-ab-o--32",
+          "clock-o--16"
+        ]
+      }
+    },
+    "circle-connect": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-connect-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["connect", "remote control", "rdp"],
+        "legacyNames": [
+          "connect--16",
+          "connect--24",
+          "connect--32",
+          "rdp-native--32",
+          "connect-o--16",
+          "connect-o--24",
+          "connect-o--32",
+          "rdp-native-o--32",
+          "rdp-web--32",
+          "rdp-web-o--32"
+        ]
+      }
+    },
+    "circle-dollar": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-dollar-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["subscription", "money"],
+        "legacyNames": ["subscriptions--24", "money-tree--32"]
+      }
+    },
+    "circle-ellipsis": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-ellipsis-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["actions", "progress", "connecting"],
+        "legacyNames": ["actions-o--16", "connecting--16"]
+      }
+    },
+    "circle-help": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-help-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["help", "unknown", "unrecognized"],
+        "legacyNames": [
+          "help--16",
+          "devices-unknown--24",
+          "help--24",
+          "help-ab--32",
+          "help-circle--16",
+          "unrecognized-pool--32",
+          "imported-pool--32",
+          "unknown-3th--24",
+          "help-ab-o--32",
+          "question-circle-o--24",
+          "question-circle-o--32",
+          "help-nav--24",
+          "help-nav-dark--24",
+          "unknown-disabled-ill--96",
+          "unknown-enabled-ill--96",
+          "unknown-mix--32"
+        ]
       }
     },
     "circle-info": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/circle-info-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-info-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "circle-ip": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-ip-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["floating ip"],
+        "legacyNames": [
+          "floating-ips--16",
+          "floating-ips--24",
+          "floating-ips-o--16",
+          "floating-ips-o--24"
+        ]
+      }
+    },
+    "circle-key": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-key-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["encrypted", "encryption"],
+        "legacyNames": [
+          "encrypted--16",
+          "encrypted-red--32",
+          "encrypted-red--16",
+          "encrypted--32"
+        ]
+      }
+    },
+    "circle-lightning": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-lightning-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["dr", "disaster recovery"],
+        "legacyNames": [
+          "dr--16",
+          "dr--24",
+          "dr-ab-o--32",
+          "disaster-recovery-ab-o--32",
+          "demo-dr--24",
+          "demo-dr--16",
+          "dr-base--16",
+          "dr-base--24",
+          "dr-base-o--16",
+          "dr-base-o--24"
+        ]
+      }
+    },
+    "circle-lock": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-lock-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["locked"],
+        "legacyNames": ["locked--32", "locked--16"]
+      }
+    },
+    "circle-minus": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-minus-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["remove", "minus", "disconnected"],
+        "legacyNames": [
+          "remove-circle-outline--16",
+          "minus-rounded--16",
+          "stopped-circle--16",
+          "minus-circle--32",
+          "disconnected--32",
+          "disconnected-o--32"
+        ]
+      }
+    },
+    "circle-pause": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-pause-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["media", "pause"],
+        "legacyNames": [
+          "paused-circle-d--32",
+          "paused-circle--16",
+          "pause--16",
+          "pause--32",
+          "pause-clr--16",
+          "pause-tray--16"
+        ]
+      }
+    },
+    "circle-pirate": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-pirate-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": [
+          "threat actor",
+          "criminal",
+          "malicious insider",
+          "digital privateer",
+          "hacker",
+          "mercenary",
+          "theft",
+          "hijacking"
+        ],
+        "legacyNames": ["pirate-tray--16", "pirate-clr--16"]
+      }
+    },
+    "circle-play": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-play-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["media", "play", "run", "start"],
+        "legacyNames": [
+          "play-round--16",
+          "run-now-ab--32",
+          "play--32",
+          "play--16",
+          "run-circle--16",
+          "play-round--24",
+          "play-round--32",
+          "start-server-o--24",
+          "run-now-ab-o--32",
+          "start-clr--16",
+          "start-tray--16",
+          "play-mix--32"
+        ]
+      }
+    },
+    "circle-plus": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-plus-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["add", "new", "create"],
+        "legacyNames": [
+          "plus-rounded--16",
+          "add--16",
+          "add--32",
+          "create-recovery-point--16",
+          "add-document--32",
+          "add-unit-ab--32",
+          "add-disk--32",
+          "add-admin-ab-o--32",
+          "add-to-group-ab-o--32",
+          "add-unit-ab-o--32",
+          "new-group-ab--32",
+          "new-group-ab-o--32"
+        ]
+      }
+    },
+    "circle-small": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-small-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["dot", "bullet", "ball", "other"],
+        "legacyNames": [
+          "dot-widget--16",
+          "dot--16",
+          "bullet--16",
+          "circle--16",
+          "circle-outline--16",
+          "ball-o--16",
+          "other-o--16",
+          "dot-custom--16"
+        ]
+      }
+    },
+    "circle-stop": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-stop-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["media", "stop"],
+        "legacyNames": [
+          "stop-plan-ab--32",
+          "stop--32",
+          "stop--16",
+          "stop-o--16",
+          "stop-server-o--24",
+          "stop-clr--16",
+          "stop-mix--32"
+        ]
       }
     },
     "circle-times": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/circle-times-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-times-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "circle-user": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-user-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["user", "account", "profile"],
+        "legacyNames": [
+          "user-circle-web--16",
+          "user-circle--16",
+          "profile--16",
+          "user-circle--24",
+          "profile--24",
+          "user-placeholder--32",
+          "user-circle--32",
+          "profile--32",
+          "account--32",
+          "account-ab-o--32",
+          "user-circle-o--16",
+          "user-circle-o--24",
+          "user-circle-o--32",
+          "account-clr--16",
+          "account-tray--16",
+          "profile-nav--24",
+          "profile-nav-dark--24",
+          "user-clr--32",
+          "user-tray--32"
+        ]
       }
     },
     "circle-warning": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/circle-warning-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circle-warning-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "circles": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circles-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["multiple"],
+        "legacyNames": []
+      }
+    },
+    "circles-blend": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/circles-blend-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["compare"],
+        "legacyNames": ["compare--32"]
+      }
+    },
+    "clipboard": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/clipboard-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [],
+        "legacyNames": [
+          "clipboard--24",
+          "clipboard--32",
+          "clipboard-o--24",
+          "clipboard-o--32"
+        ]
+      }
+    },
+    "clipboard-arrow": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/clipboard-arrow-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["import", "download"],
+        "legacyNames": [
+          "clipboard-arrow--24",
+          "reports-import--32",
+          "clipboard-import-o--32",
+          "clipboard-import--32",
+          "retention-policy--24"
+        ]
+      }
+    },
+    "clipboard-check": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/clipboard-check-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["policy", "copied", "pasted", "done", "complete"],
+        "legacyNames": ["policy--24", "policy-o--24"]
+      }
+    },
+    "clipboard-cog": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/clipboard-cog-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["default settings"],
+        "legacyNames": ["clipboard-custom-o--32", "settings-default--32"]
+      }
+    },
+    "clipboard-help": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/clipboard-help-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["help", "doubt", "question"],
+        "legacyNames": ["clipboard-doubt--24", "clipboard-question--24"]
+      }
+    },
+    "clipboard-text": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/clipboard-text-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "paste",
+          "inventory",
+          "list",
+          "tasks",
+          "text",
+          "custom report"
+        ],
+        "legacyNames": [
+          "inventory-ab--32",
+          "reports-custom--24",
+          "reports-custom--32",
+          "paste-o--16",
+          "inventory-ab-o--32",
+          "paste-outline--16"
+        ]
+      }
+    },
+    "cloud": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/cloud-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["weather"],
+        "legacyNames": [
+          "cloud-o--16",
+          "cloud--16",
+          "devices-cloud--24",
+          "cloud-mix--32",
+          "cloud--32",
+          "cloud--24",
+          "cloud-clr--16",
+          "cloud-fail-clr--16",
+          "cloud-fail-tray--16",
+          "cloud-hurry-clr--16",
+          "cloud-hurry-tray--16",
+          "cloud-tray--16",
+          "cloud-tray--32",
+          "cloud-tray-mix--32"
+        ]
+      }
+    },
+    "cloud-arrow-up": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/cloud-arrow-up-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["cloud storage", "upload", "add to cloud"],
+        "legacyNames": [
+          "cloud-storage--16",
+          "cloud-storage--24",
+          "add-document-cloud--32",
+          "cloud-storage-o--16",
+          "cloud-storage-o--24"
+        ]
+      }
+    },
+    "cloud-bolt": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/cloud-bolt-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["dr", "disaster recovery", "lightning", "thunder"],
+        "legacyNames": []
+      }
+    },
+    "cloud-box": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/cloud-box-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["cloud", "virtual machine", "vm"],
+        "legacyNames": [
+          "cyber-frame-vm--16",
+          "cyber-frame-vm-running--32",
+          "cyber-frame-vm--32",
+          "azure-vm-running--32",
+          "azure-vm--32",
+          "agent-cyberframe--32"
+        ]
+      }
+    },
+    "cloud-database": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/cloud-database-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["cyber frame storage", "database"],
+        "legacyNames": [
+          "partner-cyber-frame-storage--16",
+          "partner-cyber-frame-storage--24"
+        ]
+      }
+    },
+    "cloud-grid": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/cloud-grid-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["cloud apps", "applications", "backup"],
+        "legacyNames": [
+          "cloud-apps--24",
+          "cloud-app-backup-plan-ab--32",
+          "m365-google-backups--16",
+          "m365-google-backups--24",
+          "cloud-apps-o--24"
+        ]
+      }
+    },
+    "cloud-server": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/cloud-server-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["web hosting server"],
+        "legacyNames": [
+          "adv-backup-pack-web-hosting-server--16",
+          "web-hosting-server-included--16",
+          "cloud-server--16",
+          "cloud-server--24",
+          "web-hosting-server-included--24",
+          "adv-backup-pack-web-hosting-server--24",
+          "web-hosting-server-o--24",
+          "adv-backup-pack-web-hosting-server-o--16",
+          "adv-backup-pack-web-hosting-server-o--24",
+          "cloud-server-o--16",
+          "cloud-server-o--24",
+          "web-hosting-server-included-o--16",
+          "web-hosting-server-included-o--24",
+          "web-hosting-server-o--16"
+        ]
+      }
+    },
+    "cloud-shield": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/cloud-shield-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["dr infrastructure", "dr storage", "disaster recovery"],
+        "legacyNames": [
+          "partner-dr-infrastructure--16",
+          "dr-storage--16",
+          "dr-storage--24",
+          "partner-dr-infrastructure--24",
+          "dr-storage-o--16",
+          "dr-storage-o--24"
+        ]
+      }
+    },
+    "cloud-sun": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/cloud-sun-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["device", "weather station"],
+        "legacyNames": ["devices-weather-station--24"]
+      }
+    },
+    "cloud-user": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/cloud-user-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["partner storage"],
+        "legacyNames": [
+          "partner-storage--16",
+          "partner-storage--24",
+          "partner-storage-o--16",
+          "partner-storage-o--24",
+          "partner-vcd-o--16",
+          "partner-vcd-o--24"
+        ]
+      }
+    },
+    "clouds": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/clouds-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["cloud to cloud", "geo replication", "partner geo storage"],
+        "legacyNames": [
+          "cloud-to-cloud--16",
+          "cloud-to-cloud--24",
+          "partner-geo-storage--16",
+          "partner-geo-storage--24",
+          "geo-replication--24"
+        ]
       }
     },
     "cog": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/cog-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/cog-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "coins": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/coins-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["cost", "money", "finance", "cp", "compute points", "cash"],
+        "legacyNames": [
+          "cp-assigned--16",
+          "cp-used--16",
+          "cp-used--24",
+          "cp-assigned--24",
+          "project-costs--32",
+          "cd-assigned-o--24",
+          "cp-used-o--16",
+          "cp-used-o--24"
+        ]
+      }
+    },
+    "cpu": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/cpu-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "cpu",
+          "processor",
+          "compute",
+          "component",
+          "pc",
+          "micro computer",
+          "microcontroller",
+          "homelab"
+        ],
+        "legacyNames": [
+          "cpu--16",
+          "cpu--24",
+          "devices-microcomputer--24",
+          "partner-cyber-frame-compute--16",
+          "partner-cyber-frame-compute--24",
+          "devices-microcontroller-arduino--24",
+          "devices-microcontroller-raspberry--24",
+          "cpu-o--24"
+        ]
+      }
+    },
+    "credit-card": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/credit-card-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "device",
+          "pos",
+          "money",
+          "payment",
+          "finance",
+          "bank",
+          "purchase",
+          "cc"
+        ],
+        "legacyNames": ["devices-pos--24"]
+      }
+    },
+    "crosshair": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/crosshair-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["aim", "edr", "endpoint detection and response", "security"],
+        "legacyNames": [
+          "edr--16",
+          "adv-security-pack-edr--16",
+          "adv-security-pack-edr--24",
+          "edr--24"
+        ]
+      }
+    },
+    "crosshair-moving": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/crosshair-moving-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["xdr", "security", "aim"],
+        "legacyNames": [
+          "xdr--16",
+          "adv-security-pack-xdr--16",
+          "adv-security-pack-xdr--24",
+          "xdr--24"
+        ]
       }
     },
     "database": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/database-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/database-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "database-cluster": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/database-cluster-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["database", "cluster", "sql"],
+        "legacyNames": [
+          "db-cluster-active--32",
+          "db-cluster--32",
+          "db-cluster-active--16",
+          "db-cluster--16",
+          "sql-cluster--32"
+        ]
       }
     },
     "database-fire": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/database-fire-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/database-fire-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "database-group": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/database-group-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["database", "storage", "sql"],
+        "legacyNames": [
+          "target-group--24",
+          "mssql-db-group--32",
+          "target-group-o--24"
+        ]
       }
     },
     "database-snowflake": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/database-snowflake-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/database-snowflake-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "diamond-warning": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/diamond-warning-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["alert", "emergency"],
+        "legacyNames": []
+      }
+    },
+    "dollar-sign": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/dollar-sign-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["currency", "money", "payment"],
+        "legacyNames": ["money-magnet--32"]
+      }
+    },
+    "drive": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/drive-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "storage",
+          "external drive",
+          "disk",
+          "hdd",
+          "volume",
+          "iso",
+          "local backup",
+          "hard drive",
+          "ssd",
+          "media"
+        ],
+        "legacyNames": [
+          "hdd--16",
+          "clean-disk--32",
+          "external-drive--16",
+          "volume-snapshot--24",
+          "volume-iso--24",
+          "local-backup-o--24",
+          "hdd-status--24",
+          "hdd--24",
+          "hdd-o--32",
+          "hdd-mix--32",
+          "hdd--32",
+          "external-drive--32",
+          "disk-ab--32",
+          "local-backup-o--32",
+          "local-backup-o--16",
+          "tape-drive--32",
+          "ssd-status--24",
+          "ssd--24",
+          "hdd-o--24",
+          "hdd-s-o--24",
+          "volume-iso-o--24",
+          "volume-snapshot-o--24",
+          "disk-backup-clr--32",
+          "disk-media-clr--32",
+          "disk-nav--24",
+          "disk-nav-dark--24",
+          "external-drive-ill--72",
+          "hard-drive-clr--32",
+          "hdd-ill--72",
+          "swiss-drive-ill--72"
+        ]
       }
     },
     "ellipsis": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/ellipsis-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/ellipsis-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "ellipsis-moving": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/ellipsis-moving-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["dots", "typing", "progress"],
+        "legacyNames": ["typing--16"]
+      }
+    },
+    "envelope": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/envelope-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["mail", "email", "message", "letter"],
+        "legacyNames": [
+          "mail--16",
+          "mail--24",
+          "email--32",
+          "envelope-o--32",
+          "mail-o--16",
+          "mail-o--24",
+          "mail-nav--24",
+          "mail-nav-dark--24",
+          "mailbox-clr--32"
+        ]
+      }
+    },
+    "envelope-shield": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/envelope-shield-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["mail", "email", "security", "collaboration", "apps"],
+        "legacyNames": [
+          "email-security--16",
+          "email-security--24",
+          "perceptionpoint--24",
+          "perceptionpoint--16",
+          "collaboration-security--16",
+          "collaboration-security--24"
+        ]
+      }
+    },
+    "ethernet": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/ethernet-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": [
+          "network",
+          "connectivity",
+          "ethernet",
+          "lan",
+          "connection",
+          "switch"
+        ],
+        "legacyNames": [
+          "connection-ethernet-on--32",
+          "connection-ethernet-off--32",
+          "ethernet--24",
+          "devices-switch--24",
+          "ethernet-o--24"
+        ]
+      }
+    },
+    "eye": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/eye-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": [
+          "show",
+          "view",
+          "see",
+          "expose",
+          "reveal",
+          "visible",
+          "visibility",
+          "vision",
+          "preview",
+          "read"
+        ],
+        "legacyNames": [
+          "show--16",
+          "show--32",
+          "show-coordinate--16",
+          "show-coordinate-o--16",
+          "show-o--32"
+        ]
+      }
+    },
+    "eye-closed": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/eye-closed-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["hidden", "hide", "conceal", "mask", "visibility"],
+        "legacyNames": ["hide--16", "hide--32"]
+      }
+    },
+    "eye-crossed": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/eye-crossed-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["visibility", "hide", "conceal"],
+        "legacyNames": [
+          "hide-way--16",
+          "hide-coordinate--16",
+          "hide-coordinate-o--16",
+          "hide-o--32",
+          "hide-way-o--16"
+        ]
+      }
+    },
+    "file": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["document", "template", "files", "unknown type"],
+        "legacyNames": [
+          "file--16",
+          "file-empty--32",
+          "file--32",
+          "font-clr--32",
+          "unknown-clr--32",
+          "web-clr--32"
+        ]
+      }
+    },
+    "file-audio": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-audio-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["audio", "music", "volume", "sound"],
+        "legacyNames": ["file-audio--32", "file-audio--16", "music-clr--32"]
+      }
+    },
+    "file-badge": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-badge-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["notarized", "notarization", "certificate"],
+        "legacyNames": [
+          "file-notarized--16",
+          "file-notarized--32",
+          "file-notarization--16",
+          "file-notarization--32",
+          "certificate-ab--32",
+          "file-notarization-o--24",
+          "certificate--24",
+          "certificate--32",
+          "certificate-ab-o--32",
+          "file-notarization-o--16",
+          "file-notarization-o--32",
+          "notarized-backup-clr--32"
+        ]
+      }
+    },
+    "file-check": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-check-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "done",
+          "ready",
+          "tick",
+          "task",
+          "complete",
+          "todo",
+          "document",
+          "template"
+        ],
+        "legacyNames": [
+          "document-templates--16",
+          "document-templates--24",
+          "scroll-check--32",
+          "document-templates-o--16",
+          "document-templates-o--24"
+        ]
+      }
+    },
+    "file-code": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-code-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "script",
+          "document",
+          "html",
+          "xml",
+          "plist",
+          "sourcecode",
+          "api call"
+        ],
+        "legacyNames": [
+          "api-calls-files-o--24",
+          "programming-clr--32",
+          "api-calls-esign-o--24"
+        ]
+      }
+    },
+    "file-cog": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-cog-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["process", "executable", "settings", "gear"],
+        "legacyNames": ["file-process--32", "exe-clr--32", "sys-clr--32"]
+      }
+    },
+    "file-dollar": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-dollar-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["project", "budget", "report", "finance", "money", "payment"],
+        "legacyNames": [
+          "project-budget--32",
+          "sale-items--24",
+          "unplanned-expenses--32"
+        ]
+      }
+    },
+    "file-image": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-image-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["photo", "picture", "graphics"],
+        "legacyNames": [
+          "file-pdf--32",
+          "file-pdf--16",
+          "pdf-ab--32",
+          "graph-clr--32",
+          "image-clr--32",
+          "pdf-clr--32",
+          "vector-clr--32"
+        ]
+      }
+    },
+    "file-lock": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-lock-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["password", "security", "encrypted", "encryption"],
+        "legacyNames": ["encrypted-ab--32"]
+      }
+    },
+    "file-presentation": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-presentation-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "powerpoint",
+          "slide",
+          "keynote",
+          "presentation",
+          "statistics",
+          "analytics",
+          "diagram",
+          "graph"
+        ],
+        "legacyNames": [
+          "file-powerpoint--32",
+          "file-powerpoint--16",
+          "ppt-clr--32",
+          "presentation-clr--32"
+        ]
+      }
+    },
+    "file-search": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-search-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "view",
+          "open",
+          "search",
+          "document",
+          "lens",
+          "browse",
+          "find",
+          "lost"
+        ],
+        "legacyNames": [
+          "view-open-ab--32",
+          "file-open-o--32",
+          "view-open-ab-o--32"
+        ]
+      }
+    },
+    "file-signature": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-signature-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["esign", "notarization", "signed", "signature"],
+        "legacyNames": [
+          "esign-notarization--16",
+          "esign-notarization--32",
+          "eth-notarize-o--24",
+          "eth-esign-o--24",
+          "file-esigned--32",
+          "esign-notarizations-o--24",
+          "esign-notarizations-o--16",
+          "esign-notarization-o--32",
+          "eth-esign-o--16",
+          "eth-notarize-o--16",
+          "ztc-esign-o--16",
+          "ztc-esign-o--24",
+          "ztc-notarize-o--16",
+          "ztc-notarize-o--24"
+        ]
+      }
+    },
+    "file-sparkle": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-sparkle-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["ai summaries", "session", "generated"],
+        "legacyNames": [
+          "ai-summaries--16",
+          "ai-summaries--24",
+          "ai-summaries--32",
+          "ai-summaries-color--16",
+          "ai-summaries-color--24",
+          "ai-summaries-color--32"
+        ]
+      }
+    },
+    "file-spreadsheet": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-spreadsheet-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["excel", "spreadsheet", "sheet", "table"],
+        "legacyNames": [
+          "file-excel--32",
+          "file-excel--16",
+          "spreadsheet-clr--32",
+          "xls-clr--32"
+        ]
+      }
+    },
+    "file-terminal": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-terminal-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "script",
+          "console",
+          "cmd",
+          "command line",
+          "bash",
+          "powershell"
+        ],
+        "legacyNames": [
+          "script-ab--24",
+          "script--24",
+          "script-ab--32",
+          "script--32",
+          "script-ab-o--32",
+          "script-o--24",
+          "script-o--32"
+        ]
+      }
+    },
+    "file-text": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-text-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["details", "document", "word", "pages", "text", "txt", "data"],
+        "legacyNames": [
+          "details--24",
+          "details-ab--32",
+          "file-word--32",
+          "file-word--16",
+          "file-text--32",
+          "file-text--16",
+          "text-file-o--16",
+          "details-ab-o--32",
+          "details-o--24",
+          "doc-clr--32",
+          "text-clr--32"
+        ]
+      }
+    },
+    "file-times": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-times-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "broken backup",
+          "delete",
+          "remove",
+          "file",
+          "lost",
+          "document"
+        ],
+        "legacyNames": [
+          "broken-backup--16",
+          "broken-backup--24",
+          "broken-backup--32",
+          "ai-summaries-delete--16",
+          "ai-summaries-delete--24"
+        ]
+      }
+    },
+    "file-video": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-video-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["movie", "film", "play"],
+        "legacyNames": ["file-video--32", "file-video--16", "video-clr--32"]
+      }
+    },
+    "file-zip": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/file-zip-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["package", "archive"],
+        "legacyNames": ["file-zip--32", "file-zip--16", "archive-clr--32"]
+      }
+    },
+    "files": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/files-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["multiple", "documents"],
+        "legacyNames": ["files-o--24", "files-o--16"]
+      }
+    },
+    "firewall": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/firewall-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "firewall",
+          "protection",
+          "security",
+          "cybersecurity",
+          "safety"
+        ],
+        "legacyNames": [
+          "firewall-protection--16",
+          "firewall--24",
+          "firewall-protection-o--16"
+        ]
+      }
+    },
+    "flag": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/flag-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["finish", "milestone", "marker", "goal", "banner"],
+        "legacyNames": ["finish-flag--16", "milestone--16"]
+      }
+    },
+    "flash-drive": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/flash-drive-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "storage", "usb", "bootable media"],
+        "legacyNames": [
+          "devices-usb--24",
+          "bootable-media-ab--32",
+          "bootable-media-ab--24",
+          "bootable-media--24",
+          "bootable-media-o--24",
+          "image-template-o--24",
+          "external-devices-disabled-ill--96",
+          "external-devices-enabled-ill--96"
+        ]
+      }
+    },
+    "flask": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/flask-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["test replica", "lab", "experiment"],
+        "legacyNames": ["test-replica-ab--32", "test-replica-ab-o--32"]
       }
     },
     "folder": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/folder-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/folder-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -286,20 +3354,248 @@
         "legacyNames": []
       }
     },
+    "folder-arrow-down": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/folder-arrow-down-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["directory", "export", "sync", "download"],
+        "legacyNames": ["one-way-sync-folder--24"]
+      }
+    },
+    "folder-arrows-up-down": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/folder-arrows-up-down-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "directory",
+          "two way sync",
+          "download",
+          "synchronize",
+          "reconnect",
+          "transfer"
+        ],
+        "legacyNames": [
+          "two-way-syncfolder--24",
+          "sync-folder-mix--32",
+          "sync-folder--32",
+          "sync-clr--32"
+        ]
+      }
+    },
+    "folder-cloud": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/folder-cloud-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["shared folder", "directory", "public"],
+        "legacyNames": ["shared-folder--24"]
+      }
+    },
+    "folder-house": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/folder-house-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["directory", "home", "customers", "root"],
+        "legacyNames": [
+          "folder-customers--16",
+          "folder-customers--24",
+          "folder-customers--32",
+          "home-folder--24"
+        ]
+      }
+    },
+    "folder-infinity": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/folder-infinity-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["directory", "all", "dynamic", "special"],
+        "legacyNames": ["folder-all--16", "folder-all--24", "folder-all--32"]
+      }
+    },
+    "folder-opened": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/folder-opened-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["directory"],
+        "legacyNames": []
+      }
+    },
+    "folder-plus": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/folder-plus-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["directory", "add", "create", "new"],
+        "legacyNames": ["add-to-group-ab--32"]
+      }
+    },
     "folder-search": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/folder-search-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/folder-search-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
+        "legacyNames": []
+      }
+    },
+    "folder-shield": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/folder-shield-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["directory", "protect", "security"],
+        "legacyNames": ["protect-group-ab--32", "protect-group-ab-o--32"]
+      }
+    },
+    "folder-user": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/folder-user-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["directory", "shared", "public"],
+        "legacyNames": []
+      }
+    },
+    "funnel": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/funnel-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["filter"],
+        "legacyNames": ["funnel--16"]
+      }
+    },
+    "gamepad": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/gamepad-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "media", "gaming", "console"],
+        "legacyNames": ["devices-gaming-console--24"]
+      }
+    },
+    "gauge": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/gauge-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["dashboard", "overview", "metrics"],
+        "legacyNames": ["dashboard--24", "dashboard--32", "dashboard-o--32"]
+      }
+    },
+    "globe": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/globe-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": [
+          "connectivity",
+          "internet",
+          "web",
+          "root",
+          "earth",
+          "planet",
+          "world",
+          "language",
+          "translate"
+        ],
+        "legacyNames": [
+          "globe--16",
+          "internet--32",
+          "web-d-o--16",
+          "root-o--24",
+          "root-o--16",
+          "globe-disabled-ill--96",
+          "globe-enabled-ill--96"
+        ]
+      }
+    },
+    "gpu": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/gpu-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "gaming",
+          "component",
+          "gpu",
+          "graphics card",
+          "pci"
+        ],
         "legacyNames": []
       }
     },
     "graduation-cap": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/graduation-cap-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/graduation-cap-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -310,29 +3606,824 @@
     },
     "grid": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/grid-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/grid-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "handle-grip": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/handle-grip-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["grab", "dots", "handle", "move", "drag"],
+        "legacyNames": ["grip-dots--16"]
+      }
+    },
+    "handle-resize": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/handle-resize-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["expand", "resize", "unfold"],
+        "legacyNames": ["resize-handle--32", "col-expand--16"]
       }
     },
     "headset": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/headset-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/headset-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "headset-cog": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/headset-cog-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["acronis support", "call center", "device", "engineer"],
+        "legacyNames": ["acronis-support--24"]
+      }
+    },
+    "headset-lock": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/headset-lock-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["support portal access", "call center", "device"],
+        "legacyNames": [
+          "support-access--16",
+          "support-access--24",
+          "support-portal-access--16",
+          "support-portal-access--24"
+        ]
+      }
+    },
+    "headset-sparkle": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/headset-sparkle-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "support",
+          "call center",
+          "device",
+          "ai agent",
+          "bot",
+          "chatbot"
+        ],
+        "legacyNames": ["ai-agent--16", "ai-agent--24"]
+      }
+    },
+    "home-appliances": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/home-appliances-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "fridge",
+          "oven",
+          "washing machine",
+          "dryer",
+          "clothes",
+          "scale"
+        ],
+        "legacyNames": [
+          "devices-appliance--24",
+          "devices-smart-fridge--24",
+          "devices-smart-washer--24",
+          "devices-scale--24"
+        ]
+      }
+    },
+    "house": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/house-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["home", "building", "residence", "start"],
+        "legacyNames": []
+      }
+    },
+    "house-server": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/house-server-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["home", "building", "server room"],
+        "legacyNames": ["server-room--24", "server-room-o--24"]
+      }
+    },
+    "house-wifi": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/house-wifi-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "home",
+          "building",
+          "smart home",
+          "automation",
+          "mi",
+          "hub",
+          "device",
+          "wifi",
+          "connectivity"
+        ],
+        "legacyNames": [
+          "devices-garage-door--24",
+          "devices-home-automation-hub--24",
+          "devices-mi-home--24"
+        ]
+      }
+    },
+    "inbox": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/inbox-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["mailbox", "empty", "inbox", "email"],
+        "legacyNames": [
+          "empty--32",
+          "mailbox--16",
+          "mailboxes-ab--32",
+          "mailbox-ab--32",
+          "empty-o--24",
+          "mailboxes-o--16",
+          "mailboxes-o--24"
+        ]
+      }
+    },
+    "inbox-full": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/inbox-full-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["mailbox", "full", "inbox", "email"],
+        "legacyNames": []
+      }
+    },
+    "inbox-lock": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/inbox-lock-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["mailbox", "inbox", "email"],
+        "legacyNames": ["mailbox-encrypted-ab--32"]
+      }
+    },
+    "inbox-user": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/inbox-user-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["mailbox", "inbox", "email", "public", "shared", "m365"],
+        "legacyNames": [
+          "public-box-ab--16",
+          "public-box-ab--24",
+          "public-box-ab--32",
+          "m365-shared-mailboxes-included--16",
+          "m365-shared-mailboxes--16",
+          "m365-shared-mailboxes-included--24",
+          "m365-shared-mailboxes--24",
+          "m365-shared-mailboxes-included-o--16",
+          "m365-shared-mailboxes-included-o--24",
+          "m365-shared-mailboxes-o--16",
+          "m365-shared-mailboxes-o--24"
+        ]
+      }
+    },
+    "infiniband": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/infiniband-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["network", "connectivity", "infiniband", "connection"],
+        "legacyNames": ["infiniband--24", "infiniband-o--24"]
+      }
+    },
+    "infinity": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/infinity-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["math", "infinity", "unlimited", "loop", "forever"],
+        "legacyNames": ["infinity--32"]
+      }
+    },
+    "key": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/key-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "authentication",
+          "access",
+          "login",
+          "password",
+          "unlock",
+          "security",
+          "keychain"
+        ],
+        "legacyNames": [
+          "key--16",
+          "key--24",
+          "key--32",
+          "key-o--16",
+          "key-o--24",
+          "key-o--32",
+          "key-mix--32",
+          "encrypted-mix--32"
+        ]
+      }
+    },
+    "laptop": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/laptop-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "laptop", "computer"],
+        "legacyNames": [
+          "devices-linux-laptop--24",
+          "devices-windows-laptop--24",
+          "devices-macbook--24",
+          "laptop-windows-ab--24",
+          "laptop-apple-ab--24",
+          "laptop-ab--24",
+          "laptop-linux--24",
+          "devices-laptop-o--24",
+          "laptop-ab--32",
+          "laptop-windows-arm--32",
+          "laptop-windows-ab--32",
+          "laptop-linux--32",
+          "laptop-apple-arm--32",
+          "laptop-apple-ab--32",
+          "laptop-clr--32",
+          "laptop-default-disabled-ill--96",
+          "laptop-default-enabled-ill--96",
+          "laptop-ill--72",
+          "laptop-linux-disabled-ill--96",
+          "laptop-linux-enabled-ill--96",
+          "laptop-mac-book-disabled-ill--96",
+          "laptop-mac-book-enabled-ill--96",
+          "laptop-vm-disabled-ill--96",
+          "laptop-vm-enabled-ill--96",
+          "laptop-windows-disabled-ill--96",
+          "laptop-windows-enabled-ill--96",
+          "macbook-ill--72"
+        ]
+      }
+    },
+    "laptop-phone": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/laptop-phone-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "laptop",
+          "computer",
+          "mobile",
+          "phone",
+          "smartphone"
+        ],
+        "legacyNames": ["resources-o--32"]
+      }
+    },
+    "layout": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/layout-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["website"],
+        "legacyNames": [
+          "website--16",
+          "website-ab--16",
+          "website--24",
+          "website-ab--32",
+          "website--32",
+          "blog--16",
+          "blog--24",
+          "website-o--16",
+          "website-o--24",
+          "website-disabled-ill--96",
+          "website-enabled-ill--96"
+        ]
+      }
+    },
+    "layout-blocks": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/layout-blocks-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["ratios"],
+        "legacyNames": ["ratios--32", "layout-o--32"]
+      }
+    },
+    "layout-cards": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/layout-cards-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["cards"],
+        "legacyNames": [
+          "card-view--16",
+          "simplify-view--24",
+          "simplify-view-ab--32",
+          "simplify-view-ab-o--32",
+          "simplify-view-o--24"
+        ]
+      }
+    },
+    "layout-grid": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/layout-grid-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": [
+          "marketplace",
+          "products",
+          "apps",
+          "plans",
+          "services",
+          "vendor portal",
+          "squares"
+        ],
+        "legacyNames": [
+          "plans-ab--32",
+          "vp--16",
+          "services-o--16",
+          "apps--16",
+          "apps--24",
+          "services-o--24",
+          "products-o--24",
+          "vp--24",
+          "apps-o--24",
+          "vp--32",
+          "services--32",
+          "products-o--32",
+          "plans-ab-o--32",
+          "services-o--32",
+          "services-nav--24",
+          "services-nav-dark--24"
+        ]
+      }
+    },
+    "layout-table": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/layout-table-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["spreadsheet", "grid"],
+        "legacyNames": ["table--32", "table-rows--32", "table-view--16"]
+      }
+    },
+    "link": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/link-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["link", "chain", "url", "web"],
+        "legacyNames": []
+      }
+    },
+    "list": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/list-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["list", "rules", "posts", "list view"],
+        "legacyNames": [
+          "manage-rules--16",
+          "list--24",
+          "posts--32",
+          "list-view-ab--32",
+          "list-o--24"
+        ]
+      }
+    },
+    "list-check": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/list-check-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["checkbox list", "tasks"],
+        "legacyNames": ["checkbox-list--32", "tasks--32"]
+      }
+    },
+    "list-folder-tree": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/list-folder-tree-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["tree", "folders", "structure", "directory", "file browser"],
+        "legacyNames": []
+      }
+    },
+    "lock": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/lock-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["access", "security", "password", "encryption"],
+        "legacyNames": [
+          "lock--16",
+          "lock--32",
+          "lock-status--16",
+          "internet-access-o--24",
+          "internet-access-o--16",
+          "internet-access--16",
+          "lock-mix--32",
+          "locked-mix--32"
+        ]
+      }
+    },
+    "lock-opened": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/lock-opened-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["security", "unlock", "unlocked"],
+        "legacyNames": []
+      }
+    },
+    "lock-wifi": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/lock-wifi-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["device", "smart lock", "security"],
+        "legacyNames": ["devices-smart-lock--24"]
+      }
+    },
+    "magnifier": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/magnifier-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["search", "find", "scan", "lens", "magnifying glass"],
+        "legacyNames": [
+          "search--16",
+          "search--24",
+          "search-o--32",
+          "discovery-plan-ab--32",
+          "search-o--16",
+          "search-o--24",
+          "search-query--24"
+        ]
+      }
+    },
+    "magnifier-check": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/magnifier-check-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "find",
+          "scan",
+          "found",
+          "magnifier",
+          "check",
+          "tick",
+          "lens",
+          "correct"
+        ],
+        "legacyNames": ["verify--32"]
+      }
+    },
+    "magnifier-minus": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/magnifier-minus-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["zoom out"],
+        "legacyNames": ["zoom-out--16"]
+      }
+    },
+    "magnifier-plus": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/magnifier-plus-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["zoom in"],
+        "legacyNames": ["zoom-in--16"]
+      }
+    },
+    "magnifier-warning": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/magnifier-warning-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "mdr",
+          "security",
+          "threat hunting",
+          "detect",
+          "detection",
+          "alert",
+          "scan",
+          "warning",
+          "anomaly",
+          "find",
+          "lens"
+        ],
+        "legacyNames": [
+          "mdr-adv--16",
+          "mdr--16",
+          "mdr-std--16",
+          "adv-security-pack-mdr-std--16",
+          "adv-security-pack-mdr-adv--16",
+          "mdr-std--24",
+          "mdr-adv--24",
+          "mdr--24",
+          "adv-security-pack-mdr-std--24",
+          "adv-security-pack-mdr-adv--24",
+          "url-filtering-tray--32"
+        ]
+      }
+    },
+    "map-pin": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/map-pin-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["map", "location", "waypoint", "marker", "public ip"],
+        "legacyNames": [
+          "pin--16",
+          "pin-outline-small--32",
+          "pin-outline--32",
+          "pin--32",
+          "public-ips-o--24",
+          "public-ips-o--16"
+        ]
+      }
+    },
+    "media-eject": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/media-eject-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["media", "eject"],
+        "legacyNames": ["eject-ab--32", "eject-ab-o--32"]
+      }
+    },
+    "media-fast-forward": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/media-fast-forward-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["media", "migrate"],
+        "legacyNames": ["migrate--16", "migrate-o--16"]
+      }
+    },
+    "media-pause": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/media-pause-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["media", "pause", "suspend"],
+        "legacyNames": ["suspend-o--16", "state-pause-d--16", "pause-mix--32"]
+      }
+    },
+    "media-play": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/media-play-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["media", "play", "run", "start"],
+        "legacyNames": ["play-o--16", "play--24"]
+      }
+    },
+    "media-skip-back": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/media-skip-back-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["media", "go to start"],
+        "legacyNames": ["go-to-start--16", "go-to-start-o--16"]
+      }
+    },
+    "media-skip-forward": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/media-skip-forward-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["media", "go to end"],
+        "legacyNames": ["go-to-end--16", "go-to-end-o--16"]
+      }
+    },
+    "media-step-back": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/media-step-back-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["media", "reverse"],
+        "legacyNames": ["reverse-o--16"]
+      }
+    },
+    "media-step-forward": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/media-step-forward-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["media", "resume"],
+        "legacyNames": ["resume--16", "resume-o--16"]
       }
     },
     "megaphone": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/megaphone-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/megaphone-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -341,9 +4432,158 @@
         "legacyNames": []
       }
     },
+    "memory-card": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/memory-card-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "storage", "sd card", "memory"],
+        "legacyNames": ["devices-memory-card--24"]
+      }
+    },
+    "memory-stick": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/memory-stick-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "component", "pc", "ram"],
+        "legacyNames": ["ram--16", "ram-o--24", "ram-o--16"]
+      }
+    },
+    "message": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/message-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["chat", "message", "communication"],
+        "legacyNames": []
+      }
+    },
+    "message-dots": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/message-dots-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["chat", "message", "communication"],
+        "legacyNames": []
+      }
+    },
+    "message-sparkle": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/message-sparkle-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["chat", "ai"],
+        "legacyNames": [
+          "ai-chat-o--16",
+          "ai-chat--16",
+          "ai-chat-o--32",
+          "ai-chat--32",
+          "ai-chat-o--24",
+          "ai-chat--24",
+          "ai-chat--72",
+          "ai-chat-o--72"
+        ]
+      }
+    },
+    "message-text": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/message-text-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["chat", "message", "communication"],
+        "legacyNames": [
+          "chat--16",
+          "chat--24",
+          "chat--32",
+          "messages--32",
+          "chat-o--16",
+          "conversation-clr--32"
+        ]
+      }
+    },
+    "messages": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/messages-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["chat", "sms package", "omnivoice"],
+        "legacyNames": [
+          "sms-packages--16",
+          "sms-packages--24",
+          "omnivoice-sms-packages--16",
+          "omnivoice-sms-packages--24",
+          "omnivoice-sms-packages-o--16",
+          "omnivoice-sms-packages-o--24",
+          "sms-packages-o--16",
+          "sms-packages-o--24"
+        ]
+      }
+    },
+    "microphone": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/microphone-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "device",
+          "record",
+          "sound",
+          "listen",
+          "radio",
+          "podcast",
+          "connectivity",
+          "multimedia",
+          "communication",
+          "voice control",
+          "dictate",
+          "dictation"
+        ],
+        "legacyNames": [
+          "microphone--24",
+          "devices-mic--24",
+          "devices-voice-control--24",
+          "microphone-o--24"
+        ]
+      }
+    },
     "minus": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/minus-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/minus-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -354,18 +4594,843 @@
     },
     "monitor": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/monitor-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/monitor-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "monitor-check": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/monitor-check-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "workstation",
+          "workload",
+          "pc",
+          "desktop",
+          "resource",
+          "machine",
+          "active",
+          "check",
+          "status",
+          "running"
+        ],
+        "legacyNames": [
+          "finalize-ab--32",
+          "device-status--32",
+          "finalize-ab-o--32"
+        ]
+      }
+    },
+    "monitor-cloud": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/monitor-cloud-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "agent",
+          "configure",
+          "machine",
+          "workstation",
+          "workload",
+          "resource"
+        ],
+        "legacyNames": []
+      }
+    },
+    "monitor-cog": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/monitor-cog-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "agent",
+          "configure",
+          "machine",
+          "workstation",
+          "workload",
+          "resource"
+        ],
+        "legacyNames": [
+          "devices-withAgent--24",
+          "configure-machine--32",
+          "agent-va--32",
+          "devices-with-agent--24",
+          "system-state-clr--32"
+        ]
+      }
+    },
+    "monitor-lock": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/monitor-lock-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "workstation",
+          "workload",
+          "pc",
+          "desktop",
+          "resource",
+          "machine",
+          "screen",
+          "display",
+          "dlp",
+          "data loss prevention"
+        ],
+        "legacyNames": [
+          "dlp-workstation--16",
+          "dlp-workstation--24",
+          "dlp-workstation-o--24",
+          "dlp-workstation-o--16",
+          "dlp_workstation-o--16",
+          "dlp_workstation-o--24"
+        ]
+      }
+    },
+    "monitor-star": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/monitor-star-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "workstation",
+          "workload",
+          "pc",
+          "desktop",
+          "resource",
+          "machine",
+          "screen",
+          "display",
+          "premium"
+        ],
+        "legacyNames": [
+          "workstations-premium--16",
+          "workstations-premium--24",
+          "workstations-premium-o--16",
+          "workstations-premium-o--24"
+        ]
+      }
+    },
+    "monitor-times": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/monitor-times-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "workstation",
+          "workload",
+          "pc",
+          "desktop",
+          "resource",
+          "machine",
+          "screen",
+          "display",
+          "failure",
+          "status"
+        ],
+        "legacyNames": ["connect-failed--24", "connect-failed-o--24"]
+      }
+    },
+    "monitors": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/monitors-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["devices", "multiple", "replica", "migration", "replication"],
+        "legacyNames": [
+          "devices-withoutAgent--24",
+          "multiple-devices--32",
+          "replica-running--32",
+          "replica--32",
+          "migration-ab--32",
+          "hc3-replica-running-ab--32",
+          "replication-ab--32",
+          "devices-without-agent--24",
+          "migration-ab-o--32",
+          "replication-ab-o--32",
+          "devices-clr--32"
+        ]
+      }
+    },
+    "moon": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/moon-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["device", "sleep tech", "night", "quiet"],
+        "legacyNames": ["devices-sleep-tech--24"]
+      }
+    },
+    "nas": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/nas-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "storage", "nas", "network attached storage"],
+        "legacyNames": [
+          "nas--16",
+          "nas-included--16",
+          "adv-backup-pack-nas--16",
+          "nas-included--24",
+          "nas--24",
+          "adv-backup-pack-nas--24",
+          "nas-synology-ab--24",
+          "nas-ab--24",
+          "nas-ab--32",
+          "nas-synology-ab--32"
+        ]
+      }
+    },
+    "network-cloud": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/network-cloud-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["subroot"],
+        "legacyNames": [
+          "subroot--24",
+          "subroot--16",
+          "subroot-o--16",
+          "subroot-o--24"
+        ]
+      }
+    },
+    "network-database": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/network-database-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["lun", "logical unit number", "db", "storage"],
+        "legacyNames": ["lun--24", "lun-status--24", "lun-o--24", "lun-s-o--24"]
+      }
+    },
+    "network-folder": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/network-folder-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["network folder", "shared folder", "sftp", "nfs", "ftp"],
+        "legacyNames": [
+          "network-ds--24",
+          "sftp-ab--32",
+          "nfs-share-ab--32",
+          "network-folder--16",
+          "network-folder-mix--32",
+          "network-folder--32",
+          "ftp-ab--32",
+          "ftp--32",
+          "network-folder-ab--32",
+          "network-folder-o--16",
+          "network-folder-o--24",
+          "nfs--24",
+          "nfs-share--32",
+          "smb--24",
+          "network-folder-ill--72"
+        ]
+      }
+    },
+    "network-server": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/network-server-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "network", "node", "storage", "target"],
+        "legacyNames": [
+          "node--16",
+          "node-status--24",
+          "node--24",
+          "storage-node-ab--24",
+          "target--24",
+          "storage-node-ab--32",
+          "node-o--16",
+          "node-o--24",
+          "node-s-o--24",
+          "storage-node--32",
+          "target-o--24"
+        ]
+      }
+    },
+    "network-tape": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/network-tape-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["vtl", "tape device", "storage"],
+        "legacyNames": [
+          "vtl--24",
+          "network-tape-ab--24",
+          "network-tape-ab--32",
+          "network-tape--32",
+          "vtl-o--24"
+        ]
+      }
+    },
+    "node-bridge": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/node-bridge-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["network"],
+        "legacyNames": ["bridge--24", "bridge-o--24"]
+      }
+    },
+    "node-cluster": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/node-cluster-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": [],
+        "legacyNames": []
+      }
+    },
+    "node-compare": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/node-compare-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["compare", "failover server", "git"],
+        "legacyNames": [
+          "failover-server--24",
+          "failover-server--32",
+          "failover-server-o--24"
+        ]
+      }
+    },
+    "node-network": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/node-network-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["network"],
+        "legacyNames": ["network--32", "network-3th--24", "networks-o--32"]
+      }
+    },
+    "node-path": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/node-path-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["way", "path", "route"],
+        "legacyNames": ["show-way--16", "show-way-o--16"]
+      }
+    },
+    "node-pyramid": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/node-pyramid-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["active directory", "network"],
+        "legacyNames": ["active-directory--16", "active-directory--24"]
+      }
+    },
+    "node-share": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/node-share-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["share"],
+        "legacyNames": ["share--16", "share--32", "share-o--32"]
+      }
+    },
+    "node-sliders": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/node-sliders-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": [
+          "filter",
+          "tune",
+          "sliders",
+          "configuration",
+          "controls",
+          "settings"
+        ],
+        "legacyNames": ["filter--16", "tune--32", "tune--16"]
+      }
+    },
+    "node-tree": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/node-tree-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["accounts", "tree", "fork", "network", "organisation"],
+        "legacyNames": ["manage-accounts-ab--32"]
+      }
+    },
+    "node-tree-left": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/node-tree-left-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["network", "bond"],
+        "legacyNames": ["bond--24", "bond-o--24"]
+      }
+    },
+    "node-tree-right": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/node-tree-right-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["network", "vlan", "virtual"],
+        "legacyNames": [
+          "vlan--24",
+          "virtual-network--16",
+          "virtual-network--24",
+          "virtual-network-o--16",
+          "virtual-network-o--24",
+          "vlan-o--24"
+        ]
+      }
+    },
+    "node-triangle": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/node-triangle-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["infrastructure"],
+        "legacyNames": [
+          "infrastructure--32",
+          "cyber-infrastructure--24",
+          "cyber-infrastructure--16",
+          "acronis-storage-ab--32",
+          "cyber-infrastructure-o--16",
+          "cyber-infrastructure-o--24",
+          "infrastructure-o--32"
+        ]
+      }
+    },
+    "node-web": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/node-web-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["universal quota"],
+        "legacyNames": ["universal-quota--16", "universal-quota--24"]
+      }
+    },
+    "nodes-circle": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/nodes-circle-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["sync and share", "synchronization"],
+        "legacyNames": [
+          "sync-share--24",
+          "sync-share--16",
+          "sync-share-o--32",
+          "sync-share-o--24"
+        ]
+      }
+    },
+    "note": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/note-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["device", "speaker", "audio", "player", "amp", "multimedia"],
+        "legacyNames": ["devices-audio-player--24"]
+      }
+    },
+    "note-play": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/note-play-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["device", "av", "receiver", "audio", "video", "multimedia"],
+        "legacyNames": ["devices-av-receiver--24"]
+      }
+    },
+    "optical-disk": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/optical-disk-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "storage",
+          "optical disk",
+          "iso",
+          "image",
+          "cd",
+          "compact disk",
+          "disk player"
+        ],
+        "legacyNames": [
+          "optical-disk--32",
+          "image--24",
+          "devices-disc-player--24",
+          "cd--16",
+          "cd-o--16",
+          "image-o--24"
+        ]
+      }
+    },
+    "panel-left": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/panel-left-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["primary", "drawer", "sidebar", "position left"],
+        "legacyNames": [
+          "r-panel--16",
+          "panel-left--32",
+          "position-left--16",
+          "position-left--24"
+        ]
+      }
+    },
+    "panel-left-close": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/panel-left-close-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["hide", "close", "panel", "sidebar", "collapse menu"],
+        "legacyNames": ["hide-panel--24", "hide-panel-o--24"]
+      }
+    },
+    "panel-left-open": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/panel-left-open-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["show", "open", "panel", "sidebar", "expand menu"],
+        "legacyNames": ["show-panel--24", "show-panel-o--24"]
+      }
+    },
+    "panel-right": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/panel-right-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["aside", "secondary", "drawer", "position right"],
+        "legacyNames": [
+          "panel-right--32",
+          "position-right--16",
+          "position-right--24"
+        ]
+      }
+    },
+    "patch": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/patch-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["bandage", "band-aid", "health", "wound", "injury", "healing"],
+        "legacyNames": []
+      }
+    },
+    "paw": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/paw-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["device", "pet monitor", "dog", "cat"],
+        "legacyNames": ["devices-pet-monitor--24"]
+      }
+    },
+    "pc-tower": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/pc-tower-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "pc",
+          "personal computer",
+          "tower",
+          "desktop",
+          "case"
+        ],
+        "legacyNames": ["devices-pc--24", "pc-clr--32"]
+      }
+    },
+    "pc-tower-small": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/pc-tower-small-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "appliance", "mini pc", "computer", "desktop"],
+        "legacyNames": [
+          "appliance--24",
+          "devices-minipc--16",
+          "devices-minipc--24",
+          "devices-minipc-o--16",
+          "devices-minipc-o--24",
+          "appliance-o--24"
+        ]
+      }
+    },
+    "pencil": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/pencil-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "pen",
+          "edit",
+          "rename",
+          "sign",
+          "change",
+          "modify",
+          "draw",
+          "write"
+        ],
+        "legacyNames": [
+          "edit-o--16",
+          "edit--16",
+          "signature--32",
+          "pencil--32",
+          "pencil-o--16",
+          "edit-rename-ab-o--32",
+          "rename-o--16"
+        ]
+      }
+    },
+    "phone": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/phone-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "call",
+          "communication",
+          "connectivity",
+          "talk",
+          "minutes",
+          "omnivoice"
+        ],
+        "legacyNames": [
+          "omnivoice-minute-packages--16",
+          "talk-minutes-package--16",
+          "talk-minutes-package--24",
+          "omnivoice-minute-packages-o--24",
+          "omnivoice-minute-packages-o--16",
+          "talk-minutes-package-o--16",
+          "talk-minutes-package-o--24"
+        ]
+      }
+    },
+    "phone-waves": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/phone-waves-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["device", "ip phone", "communication", "connectivity", "ring"],
+        "legacyNames": ["phone--16", "devices-ip-phone--24"]
+      }
+    },
+    "pin": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/pin-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["save", "map", "default", "fix"],
+        "legacyNames": ["pin-default--16", "pin-circle--16"]
+      }
+    },
+    "pin-disabled": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/pin-disabled-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["unpin", "pin off", "map", "unfix", "unsave"],
+        "legacyNames": ["unpin--16"]
       }
     },
     "plus": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/plus-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/plus-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -374,42 +5439,1199 @@
         "legacyNames": []
       }
     },
+    "power": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/power-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["shut down", "power on/off"],
+        "legacyNames": [
+          "shut-down--16",
+          "shut-down--24",
+          "power-ab--32",
+          "power-off-o--16",
+          "power-o--24",
+          "power-ab-o--32"
+        ]
+      }
+    },
+    "present": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/present-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["gift", "promotion", "box", "account", "value"],
+        "legacyNames": [
+          "gift--24",
+          "gift-o--24",
+          "gift-clr--16",
+          "gift-tray--16"
+        ]
+      }
+    },
+    "presentation": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/presentation-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "powerpoint",
+          "screen",
+          "learning",
+          "results",
+          "office",
+          "meeting",
+          "planning",
+          "kpi",
+          "business"
+        ],
+        "legacyNames": [
+          "m365-rooms-equipment--16",
+          "m365-rooms-equipment-included--16",
+          "m365-rooms-equipment-included--24",
+          "m365-rooms-equipment--24",
+          "m365-rooms-equipment-included-o--16",
+          "m365-rooms-equipment-included-o--24",
+          "m365-rooms-equipment-o--16",
+          "m365-rooms-equipment-o--24"
+        ]
+      }
+    },
+    "printer": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/printer-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "print", "office", "fax"],
+        "legacyNames": [
+          "printer-3th--24",
+          "devices-printer-mfu--24",
+          "print--16",
+          "print-o--16",
+          "printer-disabled-ill--96",
+          "printer-enabled-ill--96"
+        ]
+      }
+    },
+    "progress": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/progress-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["loading", "progress", "circular"],
+        "legacyNames": [
+          "loading--16",
+          "loading--48",
+          "loading--32",
+          "loading--24"
+        ]
+      }
+    },
+    "progress-check": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/progress-check-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["cyberfit", "compliance"],
+        "legacyNames": ["cyberfit--16", "cyberfit-o--16"]
+      }
+    },
+    "projector": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/projector-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "media", "cinema", "movie", "home"],
+        "legacyNames": ["devices-projector--24"]
+      }
+    },
+    "pulse": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/pulse-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["analysis", "heartbeat"],
+        "legacyNames": [
+          "analysis--16",
+          "heartbeat--24",
+          "heartbeat--32",
+          "analysis-o--16",
+          "heartbeat-o--24",
+          "heartbeat-o--32"
+        ]
+      }
+    },
+    "puzzle": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/puzzle-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["plugin", "piece", "toy", "component", "module", "part"],
+        "legacyNames": ["plugin-ab--32", "plugin-ab--24", "devices-toy--24"]
+      }
+    },
+    "quotes": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/quotes-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["quotation", "testimonials", "quote marks"],
+        "legacyNames": ["quote-mark--32"]
+      }
+    },
+    "raid": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/raid-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "storage", "raid"],
+        "legacyNames": ["raid-status--24", "raid--24", "raid-s--24"]
+      }
+    },
+    "receipt": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/receipt-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "claim",
+          "quote",
+          "invoice",
+          "bill",
+          "voucher",
+          "check",
+          "finance",
+          "expense",
+          "payslip"
+        ],
+        "legacyNames": [
+          "claim--16",
+          "quote--24",
+          "claim--32",
+          "claim-o--16",
+          "claim-o--32"
+        ]
+      }
+    },
+    "rectangle-image": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/rectangle-image-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["image", "photo", "picture", "file"],
+        "legacyNames": [
+          "image--16",
+          "photos--32",
+          "file-image--32",
+          "file-image--16",
+          "image-o--16"
+        ]
+      }
+    },
+    "rectangle-pulse": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/rectangle-pulse-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["network", "monitoring", "overview"],
+        "legacyNames": [
+          "network-monitoring--16",
+          "adv-network-monitoring--16",
+          "network-monitoring--24",
+          "adv-network-monitoring--24",
+          "overview-ab--32",
+          "network-monitoring--32",
+          "devices-monitoring-box--24",
+          "devices-domotz-box--24",
+          "devices-fingbox--24",
+          "network-monitoring-advanced--16",
+          "network-monitoring-advanced--24",
+          "overview-ab-o--32",
+          "adv-management-pack--24",
+          "adv-management-pack--16",
+          "adv-management-pack-o--16",
+          "adv-management-pack-o--24"
+        ]
+      }
+    },
+    "rectangle-wifi": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/rectangle-wifi-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["smart display", "monitor", "photo display"],
+        "legacyNames": [
+          "devices-smart-display--24",
+          "devices-baby-monitor--24",
+          "devices-photo-display--24",
+          "devices-rfid-tag--24"
+        ]
+      }
+    },
+    "rectangles": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/rectangles-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": [
+          "copy",
+          "clone",
+          "duplicate",
+          "replicate",
+          "replication plan",
+          "geo replication",
+          "position floating"
+        ],
+        "legacyNames": [
+          "copy-o--16",
+          "copy--16",
+          "copy--24",
+          "clone-copy-ab--32",
+          "geo-replication--16",
+          "clone-o--32",
+          "backup-replication-plan-ab--32",
+          "duplicate--16",
+          "clone-copy-ab-o--32",
+          "copy-o--32",
+          "modal-o--32",
+          "position-floating--16",
+          "position-floating--24"
+        ]
+      }
+    },
+    "robot": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/robot-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["ai agent", "assistant", "bot"],
+        "legacyNames": ["devices-robot--24"]
+      }
+    },
+    "rocket": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/rocket-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["release", "launch", "version", "space"],
+        "legacyNames": ["rocket--24", "rocket--16", "rocket--32"]
+      }
+    },
+    "router": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/router-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "network", "connectivity", "wifi"],
+        "legacyNames": [
+          "devices-router--24",
+          "router--16",
+          "router--24",
+          "router-ab--32",
+          "router-ab-o--32",
+          "router-o--24"
+        ]
+      }
+    },
+    "san": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/san-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "storage", "san", "storage area network", "iscsi"],
+        "legacyNames": [
+          "devices-SAN--24",
+          "san-ab--24",
+          "san-ab--32",
+          "iscsi--24",
+          "devices-san--24",
+          "iscsi-o--24"
+        ]
+      }
+    },
+    "satellite-dish": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/satellite-dish-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device"],
+        "legacyNames": ["devices-satellite--24"]
+      }
+    },
+    "scanner": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/scanner-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "office", "scanner"],
+        "legacyNames": ["devices-scanner--24"]
+      }
+    },
+    "scissors": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/scissors-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["cut", "tool"],
+        "legacyNames": ["scissors-ab--32", "scissors-ab-o--32"]
+      }
+    },
+    "scroll": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/scroll-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "script",
+          "long document",
+          "paper",
+          "log",
+          "parchment",
+          "story",
+          "coding",
+          "scripture"
+        ],
+        "legacyNames": [
+          "psa-self-service--16",
+          "psa-self-service--24",
+          "console-log--16",
+          "console-log-o--16"
+        ]
+      }
+    },
+    "send": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/send-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "send",
+          "email",
+          "message",
+          "paper airplane",
+          "aeroplane",
+          "submit"
+        ],
+        "legacyNames": [
+          "send--16",
+          "send-email-ab--32",
+          "send-email-ab-o--32",
+          "send-o--16"
+        ]
+      }
+    },
+    "sensor": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/sensor-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "smart", "sensor", "wifi", "detector"],
+        "legacyNames": [
+          "devices-sensor--24",
+          "devices-smoke-detector--24",
+          "devices-motion-detector--24"
+        ]
+      }
+    },
+    "server": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/server-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device"],
+        "legacyNames": [
+          "server--16",
+          "adv-backup-pack-server--16",
+          "server-included--16",
+          "server-state--24",
+          "server--24",
+          "adv-backup-pack-server--24",
+          "server-included--24",
+          "server-o--32",
+          "server--32",
+          "server-arm--32",
+          "devices-domain-server--24",
+          "devices-communication-server--24",
+          "devices-web-server--24",
+          "storage-server--32",
+          "server-3th--24",
+          "adv-backup-pack-server-o--16",
+          "adv-backup-pack-server-o--24",
+          "server-included-o--16",
+          "server-included-o--24",
+          "server-o--16",
+          "server-o--24",
+          "server-state-o--24",
+          "server-clr--32",
+          "server-disabled-ill--96",
+          "server-enabled-ill--96",
+          "server-ill--72"
+        ]
+      }
+    },
+    "server-cluster": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/server-cluster-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device"],
+        "legacyNames": [
+          "cluster--24",
+          "cluster--32",
+          "cluster-o--24",
+          "cluster-scale--32"
+        ]
+      }
+    },
+    "server-cog": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/server-cog-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "settings", "master"],
+        "legacyNames": ["server-master--24", "master-server-o--24"]
+      }
+    },
+    "server-envelope": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/server-envelope-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "mail"],
+        "legacyNames": ["devices-mail-server--24"]
+      }
+    },
+    "server-lock": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/server-lock-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "dlp", "data loss prevention"],
+        "legacyNames": [
+          "dlp-server--16",
+          "dlp-server--24",
+          "dlp-server-o--16",
+          "dlp-server-o--24",
+          "dlp_server-o--16"
+        ]
+      }
+    },
+    "servers": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/servers-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "recovery"],
+        "legacyNames": [
+          "servers--16",
+          "recovery-server-state--24",
+          "recovery-server--24",
+          "recovery-server-o--24",
+          "recovery-server-state-o--24",
+          "servers-o--16"
+        ]
+      }
+    },
+    "shield-bolt": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/shield-bolt-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "advanced security",
+          "active protection",
+          "cybersecurity",
+          "safety",
+          "antivirus",
+          "detection"
+        ],
+        "legacyNames": [
+          "active-protection--16",
+          "active-protection--24",
+          "active-protection-ab--32",
+          "adv-security-pack--16",
+          "adv-security-pack--24",
+          "active-protection-ab-o--32",
+          "active-protection-o--16",
+          "active-protection-o--24",
+          "adv-security-pack-o--16",
+          "adv-security-pack-o--24",
+          "real-time-antivirus-protection-clr--32",
+          "real-time-antivirus-protection-tray--32"
+        ]
+      }
+    },
     "shield-check": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/shield-check-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/shield-check-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
+        "legacyNames": []
+      }
+    },
+    "shield-key": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/shield-key-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "vpn",
+          "virtual private network",
+          "acronis security zone",
+          "asz"
+        ],
+        "legacyNames": [
+          "vpn-con--16",
+          "vpn-con--24",
+          "asz-ab--32",
+          "asz-ab--24",
+          "vpn--24",
+          "devices-vpn--24",
+          "asz--32",
+          "vpn-con-o--16",
+          "vpn-con-o--24",
+          "vpn-o--24",
+          "asz-ill--72"
+        ]
+      }
+    },
+    "shield-lock": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/shield-lock-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["dlp", "data loss prevention"],
+        "legacyNames": [
+          "dlp--16",
+          "adv-dlp-pack--16",
+          "dlp--24",
+          "adv-dlp-pack--24",
+          "adv-dlp-pack-o--16",
+          "adv-dlp-pack-o--24"
+        ]
+      }
+    },
+    "shield-sparkle": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/shield-sparkle-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["ai protection", "generative ai", "genai"],
+        "legacyNames": []
+      }
+    },
+    "shield-times": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/shield-times-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["protection", "status"],
+        "legacyNames": [
+          "unprotected--16",
+          "unprotected--24",
+          "unprotected--32",
+          "protection-status-off--32",
+          "protection-status-unprotected--32",
+          "unprotected-o--16",
+          "unprotected-o--24"
+        ]
+      }
+    },
+    "shield-warning": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/shield-warning-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["protection", "status", "warning"],
+        "legacyNames": ["protection-status-warning--32"]
+      }
+    },
+    "shopping-bag": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/shopping-bag-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["ecommerce", "purchase", "store", "marketing"],
+        "legacyNames": []
+      }
+    },
+    "shopping-bags": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/shopping-bags-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["ecommerce", "purchase", "store", "marketing", "bundle"],
+        "legacyNames": ["bundle-tray--32"]
+      }
+    },
+    "shopping-cart": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/shopping-cart-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "trolley",
+          "cart",
+          "basket",
+          "ecommerce",
+          "store",
+          "purchase",
+          "products",
+          "items",
+          "marketing"
+        ],
+        "legacyNames": [
+          "shopping-cart--16",
+          "shopping-cart--24",
+          "shopping-cart-o--32",
+          "shopping-cart-o--16",
+          "shopping-cart-o--24"
+        ]
+      }
+    },
+    "sigma": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/sigma-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["math", "sum", "total storage"],
+        "legacyNames": [
+          "total-storage--24",
+          "total-storage--16",
+          "total-storage-o--16",
+          "total-storage-o--24"
+        ]
+      }
+    },
+    "signature": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/signature-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["esign"],
+        "legacyNames": ["esign-o--16"]
+      }
+    },
+    "signpost": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/signpost-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["milestone", "waypoint", "direction"],
+        "legacyNames": ["sign--32"]
+      }
+    },
+    "skull": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/skull-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "death",
+          "danger",
+          "critical severity",
+          "destruction",
+          "terminal health",
+          "bad"
+        ],
+        "legacyNames": ["skull--32"]
+      }
+    },
+    "smartphone": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/smartphone-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "phone", "communication"],
+        "legacyNames": [
+          "mobile-device--16",
+          "devices-iPhone--24",
+          "devices-android-smartphone--24",
+          "mobile-device--24",
+          "devices-phone-o--24",
+          "mobile-device--32",
+          "devices-i-phone--24",
+          "mobile-clr--16",
+          "mobile-clr--32",
+          "mobile-default-disabled-ill--96",
+          "mobile-default-enabled-ill--96",
+          "mobile-tray--16"
+        ]
+      }
+    },
+    "solar-panel": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/solar-panel-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device"],
+        "legacyNames": ["devices-solar-panel--24"]
+      }
+    },
+    "sparkle": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/sparkle-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["ai", "astroid", "math", "artificial intelligence"],
         "legacyNames": []
       }
     },
     "sparkles": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/sparkles-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/sparkles-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "speaker": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/speaker-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "media",
+          "radio",
+          "smart theater",
+          "wireless speaker",
+          "amp",
+          "sound",
+          "music",
+          "subwoofer",
+          "bass",
+          "dj"
+        ],
+        "legacyNames": [
+          "devices-radio--24",
+          "devices-smart-theater-system--24",
+          "devices-wireless-speaker--24",
+          "devices-speaker-amp--24"
+        ]
       }
     },
     "square": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/square-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/square-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "square-arrow-up-right": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/square-arrow-up-right-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["external link"],
+        "legacyNames": ["external-link--16", "external-link-o--16"]
+      }
+    },
+    "square-bolt": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/square-bolt-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": [
+          "electric device",
+          "smart plug",
+          "ups",
+          "power",
+          "electricity",
+          "energy",
+          "asset",
+          "bolt"
+        ],
+        "legacyNames": [
+          "devices-UPS--24",
+          "devices-electric--24",
+          "devices-smart-plug--24",
+          "devices-ups--24"
+        ]
+      }
+    },
+    "square-dashed": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/square-dashed-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["placeholder", "selection", "marquee", "slot"],
+        "legacyNames": [
+          "free-pool--32",
+          "placeholder--16",
+          "placeholder--24",
+          "placeholder--32",
+          "tape-slot-empty--32"
+        ]
+      }
+    },
+    "square-dashed-line": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/square-dashed-line-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": [
+          "snapshot",
+          "scan",
+          "barcode scanner",
+          "scan plan",
+          "auto discovery"
+        ],
+        "legacyNames": [
+          "quick-scan--32",
+          "devices-barcode-scanner--24",
+          "scan-plan-ab--32",
+          "autodiscovery--24",
+          "autodiscovery-o--24"
+        ]
+      }
+    },
+    "square-dashed-plus": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/square-dashed-plus-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["snapshot", "create"],
+        "legacyNames": ["create-snapshot--24", "create-snapshot--16"]
+      }
+    },
+    "square-pen": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/square-pen-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["edit", "new chat"],
+        "legacyNames": [
+          "new-chat--16",
+          "new-chat--24",
+          "pencil-square-o--32",
+          "edit-rename-ab--32"
+        ]
+      }
+    },
+    "square-play": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/square-play-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": [
+          "multimedia",
+          "video",
+          "movies",
+          "mediabox",
+          "streaming",
+          "tvos",
+          "recording",
+          "file"
+        ],
+        "legacyNames": [
+          "devices-mediabox--24",
+          "devices-iOS-tvOS--24",
+          "devices-streaming-device--24",
+          "videos--32",
+          "devices-i-os-tv-os--24"
+        ]
+      }
+    },
+    "squares-backup": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/squares-backup-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["shapes"],
+        "tags": ["backup", "backup plan"],
+        "legacyNames": [
+          "backups-mix--32",
+          "show-backups-ab--32",
+          "backups-ab-o--32",
+          "backup-ab--32",
+          "backups-ab--24",
+          "backups-ab--32",
+          "backup-dr--16",
+          "backup-dr--24",
+          "backup-dr--32",
+          "backup-plan-ab--32",
+          "backup-ab-o--32",
+          "backup-dr-o--16",
+          "backup-dr-o--24",
+          "backup-dr-o--32",
+          "backup-tray--32",
+          "show-backups-ab-o--32",
+          "backup-clr--32",
+          "service-backup-clr--32"
+        ]
+      }
+    },
+    "ssd-stick": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/ssd-stick-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "component", "pc", "nvme", "ssd", "storage"],
+        "legacyNames": [
+          "nvme--16",
+          "nvme--24",
+          "nvme-status--24",
+          "nvme-o--16",
+          "nvme-o--24",
+          "nvme-s-o--24",
+          "ssd-o--24",
+          "ssd-s-o--24"
+        ]
       }
     },
     "star": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/star-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/star-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -418,20 +6640,267 @@
         "legacyNames": []
       }
     },
+    "stopwatch": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/stopwatch-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["timer", "time", "duration", "period", "tracking"],
+        "legacyNames": ["stopwatch--16", "stopwatch--24"]
+      }
+    },
+    "tablet": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/tablet-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "mobile"],
+        "legacyNames": [
+          "devices-tablet--24",
+          "devices-iPad--24",
+          "devices-android-tablet--24",
+          "devices-i-pad--24",
+          "tablet-clr--32"
+        ]
+      }
+    },
+    "tablet-phone": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/tablet-phone-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["mobile devices", "phone", "tablet", "smartphone"],
+        "legacyNames": [
+          "mobile--16",
+          "adv-mobile-pack--16",
+          "mobile-devices-o--24",
+          "adv-mobile-pack--24",
+          "mobile--32",
+          "mobile-o--32",
+          "mobile-devices-o--16"
+        ]
+      }
+    },
+    "tag": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/tag-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["label", "badge", "mark"],
+        "legacyNames": ["label--24", "general-info--32", "label-o--24"]
+      }
+    },
+    "tags": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/tags-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": ["labels", "badges", "marks", "multiple"],
+        "legacyNames": ["price-tags--32"]
+      }
+    },
+    "tape": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/tape-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device"],
+        "legacyNames": [
+          "tape--16",
+          "tape-device--24",
+          "tape-worm--32",
+          "tape-slot--32",
+          "tape-device-ab--32",
+          "tape--32",
+          "tape-cleaning--32",
+          "tape-o--16"
+        ]
+      }
+    },
+    "tapes": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/tapes-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device"],
+        "legacyNames": [
+          "tape-set-ab--32",
+          "tape-pool-group--32",
+          "tape-pool--32",
+          "tape-library-group--32",
+          "tape-library--32",
+          "tape-set-ab-o--32"
+        ]
+      }
+    },
+    "target": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/target-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["hitmap", "bullseye", "deadline"],
+        "legacyNames": ["hitmap--16", "hitmap-o--16"]
+      }
+    },
+    "terminal": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/terminal-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": [
+          "console",
+          "terminal",
+          "command line",
+          "cmd",
+          "prompt",
+          "shell"
+        ],
+        "legacyNames": ["console--16", "devices-terminal--24", "console-o--16"]
+      }
+    },
     "text": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/text-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/text-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
+        "legacyNames": []
+      }
+    },
+    "thermometer": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/thermometer-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": [
+          "device",
+          "temperature",
+          "heating",
+          "cooling",
+          "thermostat",
+          "cold",
+          "warm"
+        ],
+        "legacyNames": ["devices-thermostat--24", "devices-heating-cooling--24"]
+      }
+    },
+    "thumbs-down": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/thumbs-down-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["dislike", "downvote", "hand", "bad"],
+        "legacyNames": ["dislikes--16", "dislike-o--16", "dislike--16"]
+      }
+    },
+    "thumbs-up": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/thumbs-up-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["like", "upvote", "hand", "good"],
+        "legacyNames": ["likes--16", "like-o--16", "like--16", "likes--32"]
+      }
+    },
+    "ticket": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/ticket-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "entry",
+          "pass",
+          "voucher",
+          "event",
+          "concert",
+          "show",
+          "task"
+        ],
+        "legacyNames": []
+      }
+    },
+    "tickets": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/tickets-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["documents"],
+        "tags": [
+          "entry",
+          "pass",
+          "voucher",
+          "event",
+          "concert",
+          "show",
+          "tasks"
+        ],
         "legacyNames": []
       }
     },
     "times": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/times-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/times-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -440,15 +6909,354 @@
         "legacyNames": []
       }
     },
+    "tower": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/tower-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "fortress",
+          "stronghold",
+          "building",
+          "safety",
+          "defense",
+          "vulnerability",
+          "security essentials"
+        ],
+        "legacyNames": [
+          "vulnerability--16",
+          "vulnerability-o--24",
+          "tower--32",
+          "tower-mix--32",
+          "security-essentials--24",
+          "security-essentials-o--24",
+          "vulnerability-o--16"
+        ]
+      }
+    },
+    "tower-cell": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/tower-cell-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "network", "connectivity"],
+        "legacyNames": ["devices-network-cell--24"]
+      }
+    },
+    "translate": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/translate-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["translation", "language"],
+        "legacyNames": ["translate-o--16"]
+      }
+    },
     "triangle-warning": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-mono/triangle-warning-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-mono/triangle-warning-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "truck": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/truck-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["physical data shipping", "delivery", "van", "transportation"],
+        "legacyNames": [
+          "to-cloud-ab--32",
+          "to-cloud--24",
+          "from-cloud--16",
+          "from-cloud--24",
+          "to-cloud--16",
+          "from-cloud-o--16",
+          "from-cloud-o--24",
+          "to-cloud-o--16",
+          "to-cloud-o--24"
+        ]
+      }
+    },
+    "tv": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/tv-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "media", "television", "tv"],
+        "legacyNames": ["devices-tv--24"]
+      }
+    },
+    "tv-remote": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/tv-remote-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "media", "tv", "remote control"],
+        "legacyNames": ["devices-remote-control--24"]
+      }
+    },
+    "user": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/user-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["profile", "account", "person", "contact"],
+        "legacyNames": [
+          "user-web--16",
+          "user--16",
+          "user--24",
+          "user-o--32",
+          "user--32",
+          "user-o--16",
+          "user-o--24"
+        ]
+      }
+    },
+    "user-cog": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/user-cog-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["admin", "user", "settings", "gear"],
+        "legacyNames": [
+          "add-admin--32",
+          "user-setting--24",
+          "user-admin--24",
+          "user-admin-o--24",
+          "user-setting-o--24"
+        ]
+      }
+    },
+    "user-star": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/user-star-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["referee", "person", "account", "favorite"],
+        "legacyNames": ["referee--16", "referee-o--16"]
+      }
+    },
+    "user-tie": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/user-tie-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["executive"],
+        "legacyNames": ["executive--16"]
+      }
+    },
+    "users": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/users-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["group", "crowd", "people"],
+        "legacyNames": [
+          "users--16",
+          "crowd--16",
+          "users--24",
+          "users--32",
+          "users-o--16",
+          "users-o--24",
+          "users-o--32",
+          "contacts--32"
+        ]
+      }
+    },
+    "vacuum-robot": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/vacuum-robot-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "smart", "cleaner", "robot", "vacuum", "rumba"],
+        "legacyNames": ["devices-smart-cleaner--24"]
+      }
+    },
+    "video-camera": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/video-camera-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "media", "recorder", "film", "movie", "camcoder"],
+        "legacyNames": ["devices-network-video-recorder--24"]
+      }
+    },
+    "watch": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/watch-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": [
+          "device",
+          "smart",
+          "fitness",
+          "tracker",
+          "wearable",
+          "clock",
+          "time"
+        ],
+        "legacyNames": [
+          "devices-smart-watch--24",
+          "devices-fitness-tracker--24",
+          "devices-wearable--24"
+        ]
+      }
+    },
+    "water-drop": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/water-drop-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["device", "water sensor"],
+        "legacyNames": ["devices-water-sensor--24"]
+      }
+    },
+    "water-sprinkler": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/water-sprinkler-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["assets"],
+        "tags": ["device", "smart"],
+        "legacyNames": ["devices-sprinkler--24"]
+      }
+    },
+    "wifi": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/wifi-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": [
+          "network",
+          "connectivity",
+          "wifi",
+          "connection",
+          "access point"
+        ],
+        "legacyNames": [
+          "connection-wifi-strong--32",
+          "connection-wifi-off--32",
+          "devices-access-point--24"
+        ]
+      }
+    },
+    "wifi-low": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/wifi-low-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["network", "connectivity", "wifi", "connection"],
+        "legacyNames": ["connection-wifi-weak--32"]
+      }
+    },
+    "wifi-medium": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/wifi-medium-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["symbols"],
+        "tags": ["network", "connectivity", "wifi", "connection"],
+        "legacyNames": ["connection-wifi-medium--32"]
+      }
+    },
+    "wrench": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-mono/wrench-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["objects"],
+        "tags": ["settings", "build", "configuration", "maintenance", "tool"],
+        "legacyNames": [
+          "maintenance-mode--16",
+          "maintenance-o--16",
+          "maintenance-mode--24",
+          "wrench-o--16",
+          "maintenance-mode-o--16"
+        ]
       }
     }
   }

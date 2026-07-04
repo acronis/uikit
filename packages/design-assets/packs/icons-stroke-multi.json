@@ -4,11 +4,39 @@
   "version": "1.0.0",
   "$type": "vector",
   "values": {
-    "24": { "default": true },
-    "16": { "$rules": ["scale-16", "stroke-1-6"] },
-    "32": { "$rules": ["scale-32", "stroke-2-5"] }
+    "16": {
+      "$rules": ["scale-16", "stroke-1-6"]
+    },
+    "24": {
+      "default": true
+    },
+    "32": {
+      "$rules": ["scale-32", "stroke-2-5"]
+    }
   },
   "assets": {
+    "circle-check-green": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/circle-check-green-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": ["alert", "status", "notification", "success", "ok"],
+        "legacyNames": [
+          "check-circle--24",
+          "check-circle--32",
+          "ok-clr--16",
+          "ok-tray--16",
+          "success--16",
+          "success--32",
+          "synced-d--16",
+          "success-mix--32"
+        ]
+      }
+    },
     "circle-check-solid": {
       "values": {
         "24": {
@@ -22,15 +50,104 @@
         "legacyNames": []
       }
     },
+    "circle-clock-blue": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/circle-clock-blue-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": [
+          "alert",
+          "status",
+          "notification",
+          "in progress",
+          "pending",
+          "time"
+        ],
+        "legacyNames": [
+          "in-progress-d--16",
+          "pending-mix--32",
+          "progress-clr--16",
+          "progress-mix--32",
+          "progress-red-mix--32",
+          "progress-tray--16",
+          "time-clr--16",
+          "time-hurry-clr--16",
+          "time-hurry-tray--16",
+          "time-no-more-clr--16",
+          "time-no-more-tray--16",
+          "time-tray--16",
+          "trial-tray--32",
+          "trial-tray-mix--32",
+          "pending--32",
+          "pending--16",
+          "progress--32",
+          "progress--16"
+        ]
+      }
+    },
+    "circle-info-blue": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/circle-info-blue-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": ["alert", "status", "notification", "info", "information"],
+        "legacyNames": ["info--16", "info--32", "info-mix--32"]
+      }
+    },
     "circle-info-solid": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-multi/circle-info-solid-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-multi/circle-info-solid-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "circle-minus-gray": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/circle-minus-gray-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": ["alert", "status", "notification", "unknown", "not available"],
+        "legacyNames": ["unknown--16", "unknown--32"]
+      }
+    },
+    "circle-times-red": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/circle-times-red-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": ["alert", "status", "notification", "danger", "error"],
+        "legacyNames": [
+          "danger--16",
+          "danger--32",
+          "danger-mix--32",
+          "error-clr--16",
+          "error-d--16",
+          "error-tray--16",
+          "forbidden--16",
+          "forbidden--32"
+        ]
       }
     },
     "circle-times-solid": {
@@ -46,6 +163,29 @@
         "legacyNames": []
       }
     },
+    "circle-warning-orange": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/circle-warning-orange-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": ["alert", "status", "notification", "critical"],
+        "legacyNames": [
+          "alert-clr--16",
+          "alert-tray--16",
+          "state-alert-d--16",
+          "critical--16",
+          "critical--32",
+          "critical-mix--32",
+          "warning-circle--16",
+          "warning-circle--32",
+          "warning-circle-mix--32"
+        ]
+      }
+    },
     "circle-warning-solid": {
       "values": {
         "24": {
@@ -59,15 +199,43 @@
         "legacyNames": []
       }
     },
+    "circles-multi": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/circles-multi-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": ["alert", "status", "notification", "multiple"],
+        "legacyNames": ["multiple-mix--32", "multiple--16"]
+      }
+    },
     "circles-solid": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-multi/circles-solid-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-multi/circles-solid-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "diamond-warning-red": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/diamond-warning-red-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": ["alert", "status", "notification", "emergency"],
+        "legacyNames": ["emergency--16", "emergency--32"]
       }
     },
     "diamond-warning-solid": {
@@ -83,42 +251,134 @@
         "legacyNames": []
       }
     },
+    "dot-blue": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/dot-blue-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": ["alert", "status", "notification", "info", "information"],
+        "legacyNames": [
+          "dot-chart-info--16",
+          "dot-info--16",
+          "dot-success--16",
+          "dot-chart-blue--16"
+        ]
+      }
+    },
     "dot-blue-solid": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-multi/dot-blue-solid-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-multi/dot-blue-solid-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "dot-gray": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/dot-gray-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": [
+          "alert",
+          "status",
+          "notification",
+          "neutral",
+          "idle",
+          "unknown"
+        ],
+        "legacyNames": ["dot-unknown--16", "dot-chart-grey--16"]
+      }
+    },
+    "dot-green": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/dot-green-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": ["alert", "status", "notification", "success", "ok"],
+        "legacyNames": ["dot-chart-success--16"]
       }
     },
     "dot-green-solid": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-multi/dot-green-solid-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-multi/dot-green-solid-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "dot-orange": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/dot-orange-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": ["alert", "status", "notification", "critical"],
+        "legacyNames": ["dot-chart-critical--16", "dot-critical--16"]
       }
     },
     "dot-orange-solid": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-multi/dot-orange-solid-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-multi/dot-orange-solid-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "dot-red": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/dot-red-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": [
+          "alert",
+          "status",
+          "notification",
+          "danger",
+          "error",
+          "emergency"
+        ],
+        "legacyNames": ["dot-chart-danger--16", "dot-danger--16"]
       }
     },
     "dot-red-solid": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-multi/dot-red-solid-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-multi/dot-red-solid-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -127,9 +387,24 @@
         "legacyNames": []
       }
     },
+    "dot-yellow": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/dot-yellow-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": ["alert", "status", "notification", "warning"],
+        "legacyNames": ["dot-chart-warning--16", "dot-warning--16"]
+      }
+    },
     "dot-yellow-solid": {
       "values": {
-        "24": { "$file": "./packs/icons-stroke-multi/dot-yellow-solid-24.svg" }
+        "24": {
+          "$file": "./packs/icons-stroke-multi/dot-yellow-solid-24.svg"
+        }
       },
       "platforms": ["PD"],
       "metadata": {
@@ -149,6 +424,26 @@
         "category": [],
         "tags": [],
         "legacyNames": []
+      }
+    },
+    "triangle-warning-yellow": {
+      "values": {
+        "24": {
+          "$file": "./packs/icons-stroke-multi/triangle-warning-yellow-24.svg"
+        }
+      },
+      "platforms": ["PD"],
+      "metadata": {
+        "category": ["multicolor"],
+        "tags": ["alert", "status", "notification", "warning"],
+        "legacyNames": [
+          "exclamation-triangle--16",
+          "exclamation-triangle--24",
+          "alert-triangle-clr--16",
+          "warning--16",
+          "warning--32",
+          "warning-mix--32"
+        ]
       }
     }
   }
