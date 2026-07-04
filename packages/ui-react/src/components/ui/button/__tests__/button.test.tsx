@@ -11,35 +11,26 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
   });
 
-  it('leads the ai variant with the Sparkles icon before the label', () => {
-    render(<Button variant="ai">Ask AI</Button>);
-    const button = screen.getByRole('button', { name: /Ask AI/ });
-    expect(button).toHaveTextContent('Ask AI');
-    // The icon is the first child (rendered before the label).
-    expect(button.firstElementChild?.tagName.toLowerCase()).toBe('svg');
-  });
-
-  it('does not inject an icon for non-ai variants', () => {
-    render(<Button>Save</Button>);
-    expect(screen.getByRole('button', { name: 'Save' }).querySelector('svg')).toBeNull();
-  });
-
-  it('applies the default variant and the single (32px) size classes', () => {
+  it('applies the default variant and size classes', () => {
     render(<Button>Save</Button>);
     const button = screen.getByRole('button', { name: 'Save' });
     expect(button).toHaveClass(
-      'bg-[var(--ui-button-primary-container-color-idle)]',
-      'text-[var(--ui-button-primary-label-color-idle)]',
-      'h-[var(--ui-button-global-container-height)]'
+      'bg-[var(--ui-button-primary-background-idle)]',
+      'text-[var(--ui-button-primary-label-idle)]',
+      'h-8'
     );
   });
 
-  it('applies the requested variant', () => {
-    render(<Button variant="destructive">Delete</Button>);
+  it('applies variant and size modifiers', () => {
+    render(
+      <Button variant="destructive" size="lg">
+        Delete
+      </Button>
+    );
     const button = screen.getByRole('button', { name: 'Delete' });
     expect(button).toHaveClass(
-      'bg-[var(--ui-button-destructive-container-color-idle)]',
-      'h-[var(--ui-button-global-container-height)]'
+      'bg-[var(--ui-button-destructive-background-idle)]',
+      'h-10'
     );
   });
 
@@ -47,7 +38,7 @@ describe('Button', () => {
     render(<Button className="custom-class">Save</Button>);
     expect(screen.getByRole('button', { name: 'Save' })).toHaveClass(
       'custom-class',
-      'bg-[var(--ui-button-primary-container-color-idle)]'
+      'bg-[var(--ui-button-primary-background-idle)]'
     );
   });
 
@@ -83,7 +74,7 @@ describe('Button', () => {
     );
     const link = screen.getByRole('link', { name: 'Home' });
     expect(link).toHaveAttribute('href', '/home');
-    expect(link).toHaveClass('text-[var(--ui-button-ghost-label-color-idle)]');
+    expect(link).toHaveClass('text-[var(--ui-button-ghost-label-idle)]');
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 });

@@ -13,46 +13,7 @@ const meta = {
   component: ButtonIcon,
   tags: ['autodocs'],
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['ghost', 'secondary'],
-      description: 'Visual style — mirrors the Figma ButtonIcon `variant` property.',
-      table: {
-        type: { summary: "'ghost' | 'secondary'" },
-        defaultValue: { summary: 'ghost' },
-        category: 'Appearance',
-      },
-    },
-    disabled: {
-      control: 'boolean',
-      description: 'Disables the button and applies the disabled token set.',
-      table: { type: { summary: 'boolean' }, category: 'State' },
-    },
-    'aria-label': {
-      control: 'text',
-      description:
-        'Accessible name for the icon-only button. Provide this (or `aria-labelledby`) so the control has a label.',
-      table: { type: { summary: 'string' }, category: 'Content' },
-    },
-    children: {
-      control: false,
-      description: 'The icon element rendered inside the button.',
-      table: { type: { summary: 'ReactNode' }, category: 'Content' },
-    },
-    onClick: {
-      control: false,
-      description: 'Click handler.',
-      table: {
-        type: { summary: '(event: MouseEvent) => void' },
-        category: 'Events',
-      },
-    },
-    render: {
-      control: false,
-      description:
-        'Base UI render prop — replace the underlying `<button>` (e.g. render as an `<a>`).',
-      table: { type: { summary: 'RenderProp' }, category: 'Composition' },
-    },
+    disabled: { control: 'boolean' },
   },
   args: {
     'aria-label': 'Add',
@@ -65,46 +26,19 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const Secondary: Story = {
-  args: { variant: 'secondary' },
-};
-
 export const Disabled: Story = {
   args: { disabled: true },
 };
 
-export const Variants: Story = {
+export const States: Story = {
   render: () => (
     <div className="flex items-center gap-3">
       <ButtonIcon aria-label="Add">
         <PlusIcon />
       </ButtonIcon>
-      <ButtonIcon aria-label="Add" variant="secondary">
+      <ButtonIcon aria-label="Add" disabled>
         <PlusIcon />
       </ButtonIcon>
-    </div>
-  ),
-};
-
-export const States: Story = {
-  render: () => (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-3">
-        <ButtonIcon aria-label="Add">
-          <PlusIcon />
-        </ButtonIcon>
-        <ButtonIcon aria-label="Add" disabled>
-          <PlusIcon />
-        </ButtonIcon>
-      </div>
-      <div className="flex items-center gap-3">
-        <ButtonIcon aria-label="Add" variant="secondary">
-          <PlusIcon />
-        </ButtonIcon>
-        <ButtonIcon aria-label="Add" variant="secondary" disabled>
-          <PlusIcon />
-        </ButtonIcon>
-      </div>
     </div>
   ),
 };

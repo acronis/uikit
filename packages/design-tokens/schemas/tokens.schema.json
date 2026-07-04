@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://acronis.local/schemas/tokens.schema.json",
+  "title": "Acronis Design Tokens",
+  "description": "DTCG-conformant token files with a small structural divergence: per-mode `values` and `platforms` live at the token level, not under `$extensions`. The public DTCG schema (declared as the file's $schema) covers the surrounding shape; this schema enforces the on-token keys plus the com.acronis.* / com.figma.* keys still inside $extensions. See ../context/spec.md.",
+  "$ref": "#/$defs/RootNode",
+  "$defs": {
+    "RootNode": {
+      "type": "object",
+      "required": ["$schema"],
+      "properties": {
+        "$schema": { "const": "../schemas/tokens.schema.json" },
+        "$type": { "$ref": "#/$defs/TokenType" },
+        "$description": { "type": "string" },
+        "$value": true,
+        "values": { "$ref": "#/$defs/Modes" },
+        "platforms": { "$ref": "#/$defs/Platforms" },
+        "$extensions": { "$ref": "#/$defs/Extensions" },
+        "$deprecated": { "type": ["boolean", "string"] }
+      },
+      "patternProperties": {
+        "^(?!values$|platforms$)[^$]": { "$ref": "#/$defs/Node" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        { "$ref": "#/$defs/LeafRequiresPlatforms" },
+        { "$ref": "#/$defs/SingleValueCarrier" }
+      ]
+    },
+    "Node": {
+      "type": "object",
+      "properties": {
+        "$type": { "$ref": "#/$defs/TokenType" },
+        "$description": { "type": "string" },
+        "$value": true,
+        "values": { "$ref": "#/$defs/Modes" },
+        "platforms": { "$ref": "#/$defs/Platforms" },
+        "$extensions": { "$ref": "#/$defs/Extensions" },
+        "$deprecated": { "type": ["boolean", "string"] }
+      },
+      "patternProperties": {
+        "^(?!values$|platforms$)[^$]": { "$ref": "#/$defs/Node" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        { "$ref": "#/$defs/LeafRequiresPlatforms" },
+        { "$ref": "#/$defs/SingleValueCarrier" }
+      ]
+    },
+    "LeafRequiresPlatforms": {
+      "description": "A node is a leaf if it carries `values`, `$value`, or `$extensions.com.acronis.units`. Every leaf MUST declare `platforms`.",
+      "if": {
+        "anyOf": [
+          { "required": ["values"] },
+          { "required": ["$value"] },
+          {
+            "required": ["$extensions"],
+            "properties": {
+              "$extensions": { "required": ["com.acronis.units"] }
+            }
+          }
+        ]
+      },
+      "then": {
+        "required": ["platforms"],
+        "oneOf": [
+          { "required": ["values"] },
+          { "required": ["$value"] },
+          {
+            "required": ["$extensions"],
+            "properties": {
+              "$extensions": { "required": ["com.acronis.units"] }
+            }
+          }
+        ]
+      }
+    },
+    "SingleValueCarrier": {
+      "description": "A token carries its value through exactly one carrier: `$value` (DTCG composites), per-mode `values`, or `$extensions.com.acronis.units` (single-value primitives). This enforces the mutual-exclusion half (no token may carry two); the at-least-one expectation for leaves is normative in ../context/spec.md and checked in review.",
+      "allOf": [
+        { "not": { "required": ["$value", "values"] } },
+        {
+          "not": {
+            "allOf": [
+              { "required": ["$value"] },
+              {
+                "required": ["$extensions"],
+                "properties": {
+                  "$extensions": { "required": ["com.acronis.units"] }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "not": {
+            "allOf": [
+              { "required": ["values"] },
+              {
+                "required": ["$extensions"],
+                "properties": {
+                  "$extensions": { "required": ["com.acronis.units"] }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "TokenType": {
+      "description": "Known DTCG types currently used in this package. Extend as new $types are introduced.",
+      "enum": [
+        "color",
+        "dimension",
+        "fontFamily",
+        "fontWeight",
+        "gradient",
+        "typography",
+        "duration",
+        "cubicBezier",
+        "number",
+        "strokeStyle",
+        "border",
+        "transition",
+        "shadow"
+      ]
+    },
+    "Modes": {
+      "description": "Per-mode value dictionary. One or many keys. Theme modes (light/dark) live on palette; brand modes (acronis, brand-b, …) live on semantic colors and components. Brand modes are kebab-case lowercase. See ../context/manifest.md.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[a-z][a-z0-9-]*$": {}
+      }
+    },
+    "Platforms": {
+      "description": "Platform scope: which consumers this token targets. See ../context/manifest.md.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["WEB", "PD"] }
+    },
+    "Extensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^com\\.(acronis|figma)\\.": {}
+      },
+      "properties": {
+        "com.acronis.units": { "$ref": "#/$defs/AcronisUnits" },
+        "com.acronis.textCase": { "$ref": "#/$defs/AcronisTextCase" },
+        "com.acronis.textDecoration": {
+          "$ref": "#/$defs/AcronisTextDecoration"
+        },
+        "com.figma.variableId": { "$ref": "#/$defs/FigmaVariableId" },
+        "com.figma.styleId": { "$ref": "#/$defs/FigmaStyleId" },
+        "com.figma.scopes": { "$ref": "#/$defs/FigmaScopes" },
+        "com.figma.hiddenFromPublishing": { "type": "boolean" },
+        "com.figma.gradientTransform": {
+          "$ref": "#/$defs/FigmaGradientTransform"
+        }
+      },
+      "not": {
+        "required": ["com.figma.variableId", "com.figma.styleId"]
+      }
+    },
+    "AcronisUnits": {
+      "description": "Single-value primitive carrier. Shape depends on the token's $type: dimension → {value, unit:'px'}; fontFamily → string; fontWeight → number.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "unit"],
+          "properties": {
+            "value": { "type": "number" },
+            "unit": { "const": "px" }
+          }
+        },
+        { "type": "string", "minLength": 1 },
+        { "type": "number" }
+      ]
+    },
+    "AcronisTextCase": {
+      "description": "Figma Text Style case override, when non-default.",
+      "enum": ["UPPER"]
+    },
+    "AcronisTextDecoration": {
+      "description": "Figma Text Style decoration, when present.",
+      "enum": ["UNDERLINE"]
+    },
+    "FigmaVariableId": {
+      "description": "Figma Variable identifier. Format: VariableID:<num>:<num>.",
+      "type": "string",
+      "pattern": "^VariableID:\\d+:\\d+$"
+    },
+    "FigmaStyleId": {
+      "description": "Figma Style identifier (paint or text style). Two observed formats: S-prefixed (S:<hex>,) for text/paint styles and bare hex for some gradient styles.",
+      "type": "string",
+      "pattern": "^(S:[0-9a-f]+,|[0-9a-f]+)$"
+    },
+    "FigmaScopes": {
+      "description": "Figma Variable scopes. Whitelist of accepted scope identifiers as emitted by Figma's Variables API.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "ALL_SCOPES",
+          "TEXT_CONTENT",
+          "CORNER_RADIUS",
+          "WIDTH_HEIGHT",
+          "GAP",
+          "ALL_FILLS",
+          "FRAME_FILL",
+          "SHAPE_FILL",
+          "TEXT_FILL",
+          "STROKE_COLOR",
+          "EFFECT_COLOR",
+          "STROKE_FLOAT",
+          "EFFECT_FLOAT",
+          "OPACITY",
+          "FONT_FAMILY",
+          "FONT_STYLE",
+          "FONT_WEIGHT",
+          "FONT_SIZE",
+          "LINE_HEIGHT",
+          "LETTER_SPACING",
+          "PARAGRAPH_SPACING",
+          "PARAGRAPH_INDENT",
+          "FONT_VARIATIONS"
+        ]
+      }
+    },
+    "FigmaGradientTransform": {
+      "description": "Figma gradient transform matrix carried for paint-style gradients where DTCG gradient has no direction field.",
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": { "type": "number" }
+      }
+    }
+  }
+}

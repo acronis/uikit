@@ -20,7 +20,7 @@ const DialogOverlay = React.forwardRef<
   <BaseDialog.Backdrop
     ref={ref}
     className={cn(
-      'fixed inset-0 z-50 bg-black/80 data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:fill-mode-forwards',
+      'fixed inset-0 z-50 bg-black/80 data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0',
       className
     )}
     {...props}
@@ -42,7 +42,7 @@ const DialogContent = React.forwardRef<
       <BaseDialog.Popup
         ref={ref}
         className={cn(
-          'fixed left-[50%] top-[50%] z-50 flex w-full max-w-lg translate-x-[-50%] translate-y-[-50%] flex-col overflow-hidden rounded bg-muted shadow-[0px_10px_20px_rgba(36,49,67,0.9)] duration-200 data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95 data-[closed]:slide-out-to-left-1/2 data-[closed]:slide-out-to-top-dialog-offset data-[open]:slide-in-from-left-1/2 data-[open]:slide-in-from-top-dialog-offset data-[closed]:fill-mode-forwards',
+          'fixed left-[50%] top-[50%] z-50 flex w-full max-w-lg translate-x-[-50%] translate-y-[-50%] flex-col overflow-hidden rounded bg-muted shadow-[0px_10px_20px_rgba(36,49,67,0.9)] duration-200 data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95 data-[closed]:slide-out-to-left-1/2 data-[closed]:slide-out-to-top-dialog-offset data-[open]:slide-in-from-left-1/2 data-[open]:slide-in-from-top-dialog-offset',
           className
         )}
         {...props}
@@ -106,7 +106,7 @@ const DialogCloseButton = React.forwardRef<
   <BaseDialog.Close
     ref={ref}
     className={cn(
-      'rounded p-1 text-primary opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
+      'rounded p-1 text-[#2668C5] opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
       className
     )}
     {...props}

@@ -12,25 +12,24 @@ The source tokens carry two independent mode axes (see
 [`design-tokens/context/manifest.md`](../../../packages/design-tokens/context/manifest.md)):
 
 - **Theme** (`light` / `dark`) lives on `primitives.palette`.
-- **Brand** (`acronis` / `brand-b`) lives on `semantics.colors` and `components.*`.
+- **Brand** (`acronis` / `brand-b`) lives on `semantic.colors` and `components.*`.
 
-So stage 1 splits **primitives by theme** but **semantics/components by brand**.
-The semantics tier carries `colors`, `gradients`, and `typography`:
+So stage 1 splits **primitives by theme** but **semantic/components by brand**:
 
 | Output (`tokens-pd/dtcg/`) | Source file       | Mode key picked from `values` |
 | -------------------------- | ----------------- | ----------------------------- |
 | `primitives-light.json`    | `primitives.json` | `light`                       |
 | `primitives-dark.json`     | `primitives.json` | `dark`                        |
-| `semantics-acronis.json`   | `semantics.json`  | `acronis`                     |
-| `semantics-brand-b.json`   | `semantics.json`  | `brand-b`                     |
+| `semantic-acronis.json`    | `semantic.json`   | `acronis`                     |
+| `semantic-brand-b.json`    | `semantic.json`   | `brand-b`                     |
 | `components-acronis.json`  | `components.json` | `acronis`                     |
 | `components-brand-b.json`  | `components.json` | `brand-b`                     |
 
-Because semantics/component files are **not** split by theme, their values **keep
+Because semantic/component files are **not** split by theme, their values **keep
 their `{group.token}` aliases** (e.g. `"{palette.base}"`). Theme is applied in
 stage 2 by pairing a brand's files with `primitives-light` vs `primitives-dark`
 and resolving the aliases against each. This is what yields a `light-dark()` pair
-per color without ever needing a `semantics-acronis-dark.json`. Aliases are
+per color without ever needing a `semantic-acronis-dark.json`. Aliases are
 **kept** in stage 1 and **flattened** only in stage 2.
 
 ## Stage 1 — `buildDtcg` (in `tokens.ts`)
@@ -48,20 +47,23 @@ AGENTS.md), which is why this stage does not run through SD. The pass:
   includes the build's filter enum value (`"PD"` today; see AGENTS.md →
   Platforms). The `platforms` key itself is then **stripped** (it has no DTCG home).
 - **One `$value` per token, original form** — `values.<mode>` collapses to a
-  single `$value`. Every `$value` is already native DTCG (dimension
-  `{ value, unit }`, plain fontWeight number / fontFamily string, HSL color
-  objects, typography composites), so it is kept as-is. No flattening here.
-- **`$extensions` is retained** for traceability.
+  single `$value`; `$extensions.com.acronis.units` (`{ unit, value }` /
+  string / number) is promoted to a DTCG `$value` (`{ value, unit }` /
+  string / number); HSL color objects and typography composites are kept as-is.
+  No conversion, no flattening here.
+- **`$extensions` is retained** for traceability (so `com.acronis.units` ends up
+  duplicated alongside the promoted `$value` — intentional).
 - **`$type`** is carried down from groups onto each token so every emitted token
   is self-describing; `$description` / `$deprecated` are preserved.
 
-A node is a **token** (not a group) if it carries `values` or `$value`; groups
-whose every child was omitted for a mode are themselves omitted.
+A node is a **token** (not a group) if it carries `values`, `$value`, or
+`$extensions.com.acronis.units`; groups whose every child was omitted for a mode
+are themselves omitted.
 
 ## Stage 2 — `buildCss` (in `tokens.ts`) + the `acronis/css` hooks
 
 `buildCss` (in `tokens.ts`), for each brand, resolves the brand's
-`semantics`/`components` views against **both** theme views of the primitives. It
+`semantic`/`components` views against **both** theme views of the primitives. It
 uses Style Dictionary only to resolve aliases + run the transforms
 (`getPlatformTokens` under the `<filter>-css` key); **emission is driven directly**
 from the resolved tokens (`collectDecls` + `serializeCss`), the same
@@ -85,8 +87,8 @@ output contract.
   `serializeCss` wraps it in a `.ui-typography-*` utility class.
 - The primitive roots (`palette`, `units`, `font`) are dropped via
   `isEmittableToken` (the `semantic-only` predicate); they are resolution inputs
-  only, so only the `semantics` + `component` tiers are emitted.
-- Emitted tokens partition by `token.path[0]` into the semantics root file vs a
+  only, so only the `semantic` + `component` tiers are emitted.
+- Emitted tokens partition by `token.path[0]` into the semantic root file vs a
   per-component file; non-default brands are diffed against `acronis` and written
   as override-only files. `pd-tailwind` (`tailwind.ts`) reuses the same resolve to
   emit baked per-brand Tailwind presets.

@@ -1,65 +1,31 @@
 # Contributing to `@acronis-platform/design-assets`
 
-There are two ways to make a change:
+This guide covers the day-to-day authoring tasks: adding an asset, adding a pack, adding a rule, validating your work, and attributing third-party sources. For deeper conceptual context (variants, derivation, naming, glossary) see the `context/` directory in this package — the references at the bottom of this file point you at the right doc per topic.
 
-- **✋ By hand** — open the pack files and edit directly.
-- **🔌 Via Figma sync** — run `tools/figma-design-assets-sync` to pull icons from Figma.
+## Before you start
 
-> [!IMPORTANT]
-> The pack files under `packs/` are the **single source of truth**. They're what gets
-> published and what every consumer reads. Whichever path you take, a change isn't real
-> until the files are updated, checked (`pnpm validate`), and committed.
+Before authoring anything, make sure you:
 
-> [!WARNING]
-> **Figma sync can overwrite hand-authored changes.** The sync tool
-> (`tools/figma-design-assets-sync`) regenerates pack manifests from Figma frames. It is
-> **not aware** of hand-authored additions: group `$values` patches, `current-color` rules,
-> asset-level overrides, null opt-outs, or any structural edit you made directly to the JSON.
-> Running it on a pack with recent manual changes may **silently discard them**.
->
-> Safe approach: run the sync first, then re-apply your manual changes on top — or skip the
-> sync for that pack and add only the missing assets by hand.
+- **Understand the vocabulary** — Asset, Pack, Variant, canonical/`default`, Rule, source vs. computed value. They are defined in [`context/glossary.md`](./context/glossary.md).
+- **Know the cases the schema supports** — the cases a manifest MUST cover (R1–R16), the `$`-prefix discipline, and which checks are schema- vs. runtime-enforced live in [`context/spec.md`](./context/spec.md). The schema itself is [`schemas/pack.schema.json`](./schemas/pack.schema.json).
 
-## At a glance
+## Adding an asset to an existing pack
 
-|                   | ✋ **By hand**                                                         | 🔌 **Via Figma sync**                                         |
-| ----------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------- |
-| **What it is**    | Edit the pack or rule JSON directly                                    | Run `tools/figma-design-assets-sync` to pull icons from Figma |
-| **Best for**      | One asset, structural changes, rule additions, group `$values` patches | Bulk icon syncs from a Figma frame                            |
-| **What you need** | A code editor + the repo running locally                               | Figma access token + `tsx` + repo running locally             |
-| **Safety net**    | `pnpm validate` — run it before committing                             | `pnpm validate` — run manually after the sync                 |
-| **Effort**        | Higher                                                                 | Lower for bulk syncs                                          |
+An asset is a single named entry inside a pack: one id, one or more per-variant values, mandatory `platforms` and `metadata` blocks.
 
----
+### 1. Drop the binary in place
 
-## ✋ By hand
+Binaries live flat under `packs/<pack>/`. The filename MUST match `<asset-id>-<size>.<ext>`:
 
-### Adding an asset to an existing pack
+- `asset-id`: lowercase kebab-case, starting with a letter or digit.
+- `size`: bare number, matching one of the pack's canonical sizes.
+- `ext`: `svg` for vector packs, `png` or `webp` for raster.
 
-An asset is a single named entry inside a pack: one id, one or more per-variant values,
-mandatory `platforms` and `metadata` blocks.
+Example: a new "bell" icon at 24px in `icons-stroke-mono` lands at `packs/icons-stroke-mono/bell-24.svg`.
 
-#### 1. Drop the binary in place
+### 2. Register it in the pack manifest
 
-Binaries live flat under `packs/<pack>/`. The filename pattern depends on the pack's convention:
-
-| Convention              | Pattern                                                              | Used by                                  |
-| ----------------------- | -------------------------------------------------------------------- | ---------------------------------------- |
-| **Default** (new packs) | `<AssetId>[-<dimension>].<ext>` — PascalCase id, optional dimension  | `icons` pack                             |
-| **Legacy**              | `<asset-id>[-<dimension>].<ext>` — kebab-case id, optional dimension | `illustrations` and pre-PascalCase packs |
-
-- **`<AssetId>` / `<asset-id>`**: matches the id in the manifest exactly (PascalCase or kebab-case).
-- **`<dimension>`** (optional): `-<variant-id>` appended between the id and extension — identifies
-  which Variant the file belongs to. Examples: `-24` (size), `-dark` (theme), `-de-DE` (locale).
-  Omit the dimension entirely when the Asset ships only one source binary (e.g. `AppWindow.svg`,
-  not `AppWindow-24.svg`).
-- **`<ext>`**: `svg` for vector packs, `png` or `webp` for raster.
-
-#### 2. Register it in the pack manifest
-
-Open `packs/<pack>.json` and add a new entry under the relevant `assets` map (at the pack root
-for flat packs, or under `assetsGroups.<group>.assets` for grouped packs like `icons`). The
-minimum shape when the pack's `values` already define every variant:
+Open `packs/<pack>.json` and add a new entry under `assets`. The minimum shape, when the pack's `values` already define every variant you need:
 
 ```json
 "bell": {
@@ -77,24 +43,22 @@ minimum shape when the pack's `values` already define every variant:
 
 What's happening here:
 
-- `values."24"` supplies the asset's binary for the pack's canonical variant (the one marked
-  `"default": true` at the pack level).
-- Pack-level `values` entries that omit `$from` **late-bind** to each asset's own canonical, so
-  derived sizes (e.g. `"16"`) are inherited automatically — one line in the manifest gets you
-  all sizes.
+- `values."24"` supplies the asset's binary for the pack's canonical variant — the one the pack marked `"default": true`.
+- The pack-level `values."16"` and `values."32"` apply automatically. Each is a computed entry (`{ "$rules": [...] }`) that omits `$from`, so it derives from _this asset's_ effective canonical — the 24px file you just added. A single line in the manifest gets you a 16, a 24, and a 32.
 - `platforms`: array of `"WEB"` / `"PD"`. Required, not defaultable.
-- `metadata`: three arrays, all required (use `[]` if empty).
+- `metadata`: three arrays, all required (use `[]` if empty). Category, tags, and legacyNames are the only fields supported today — no other keys.
 
-#### 3. Override a pack variant when its derivation doesn't fit
+### 3. Override a pack variant when its derivation doesn't fit
 
-Supply your own entry under that key to override. Replace with a different computation:
+If the derived 16px doesn't look right (optical balance breaks at small sizes, for example), supply your own entry under that key. Replace it with a different computation:
 
 ```json
 "bell": {
   "values": {
     "16": { "$rules": ["stroke-2-5", "scale-16"] },
-    "24": { "$file": "./packs/icons/bell-24.svg" }
-  }
+    "24": { "$file": "./packs/icons-stroke-mono/bell-24.svg" }
+  },
+  ...
 }
 ```
 
@@ -103,22 +67,24 @@ Supply your own entry under that key to override. Replace with a different compu
 ```json
 "bell": {
   "values": {
-    "16": { "$file": "./packs/icons/bell-16.svg" },
-    "24": { "$file": "./packs/icons/bell-24.svg" }w
-  }
+    "16": { "$file": "./packs/icons-stroke-mono/bell-16.svg" },
+    "24": { "$file": "./packs/icons-stroke-mono/bell-24.svg" }
+  },
+  ...
 }
 ```
 
-To opt out of a pack variant entirely, set the key to `null`.
+Per-variant replacement: your `values."16"` wins entirely over the pack's `values."16"`. There is no deep merge — the asset entry replaces the whole entry for that key. To opt out of a pack variant entirely, set the key to `null`.
 
-### Adding a new pack
+The 32px keeps coming from the pack, since you didn't override it.
 
-A pack is a catalog of same-style assets. The packs today are `icons` and `illustrations`.
+## Adding a new pack
 
-#### 1. Create the manifest
+A pack is a catalog of same-style assets. The five packs today are `icons-stroke-{mono,multi}`, `icons-solid-{mono,multi}`, and `illustrations`.
 
-Make a new file at `packs/<pack-id>.json`. The pack id (kebab-case) MUST equal the filename stem.
-Minimum shape:
+### 1. Create the manifest
+
+Make a new file at `packs/<pack-id>.json`. The pack id (kebab-case) MUST equal the filename stem. Minimum shape:
 
 ```json
 {
@@ -128,7 +94,8 @@ Minimum shape:
   "$type": "vector",
   "values": {
     "24": { "default": true },
-    "16": { "$rules": ["scale-16"] }
+    "16": { "$rules": ["scale-16", "stroke-1-6"] },
+    "32": { "$rules": ["scale-32", "stroke-2-5"] }
   },
   "assets": {}
 }
@@ -136,54 +103,32 @@ Minimum shape:
 
 Keys:
 
-- `$schema`: always `../schemas/pack.schema.json`. This is the discriminator consumers use.
+- `$schema`: always `../schemas/pack.schema.json`. This is the discriminator consumers use to identify our manifests.
 - `name`: pack id; MUST equal the filename stem.
 - `version`: semver. Bump it when the pack's contents change in a way consumers should notice.
-- `$type`: `"vector"` or `"raster"`. Inherited by every asset; can be overridden per asset.
-- `values`: pack-level variant map. Exactly one entry MUST carry `"default": true`. Declare
-  derived variants here as computed entries so individual assets only need to ship the canonical.
+- `$type`: `"vector"` or `"raster"`. Inherited by every asset; can be overridden per asset if a pack is mixed.
+- `values`: required. The pack-level variant map. Exactly one entry MUST carry `"default": true` — the canonical variant; the pack entry is just `{ "default": true }` (each asset supplies the binary). Declare the derived variants once here as computed entries (`{ "$rules": [...] }`) so individual assets only need to ship the canonical. Because these entries omit `$from`, each one derives from the consuming asset's effective canonical.
 
-#### 2. Create the binary directory
+### 2. Create the binary directory
 
-`packs/<pack-id>/` is a sibling of the manifest. Binaries go directly inside (flat, no per-asset
-subdirectories). Add a `.gitkeep` until the first binary lands.
+`packs/<pack-id>/` is a sibling of the manifest. Binaries go directly inside (flat — no per-asset subdirectories).
 
-### Adding a new group to an existing pack
+### 3. Pick canonical and derived sizes
 
-Use `assetsGroups` when you want to organize assets into named subsets that share most of the
-pack's variant behavior but need one or two variants to differ.
+Convention so far: icons author at 24px (the canonical, marked `"default": true`) and derive 16 and 32; illustrations author at 48px and derive 96. Pick whichever set makes sense for your pack and express it in the pack's `values` — one canonical entry plus a computed entry per derived variant.
 
-```json
-{
-  "assetsGroups": {
-    "my-group": {
-      "$values": {
-        "16": { "$rules": ["scale-16", "stroke-1-6"] }
-      },
-      "assets": { ... }
-    }
-  }
-}
-```
+## Adding a new rule
 
-- The group id (object key) follows the same kebab-case pattern as the pack id.
-- `$values` is an RFC 7396 merge-patch on the pack-level `values`. Absent keys inherit unchanged;
-  a non-null entry overrides or adds; `null` removes the variant from this group entirely.
-- `$type` can also be overridden per group.
+A rule is a declarative transform applied, in `$rules` order, to a computed variant's resolved source (its `$from` sibling, or the effective canonical when `$from` is omitted). Rules live in `rules/<name>.json` and document intent only — execution is owned by the consumer's translator (see [README.md](./README.md)).
 
-### Adding a new rule
-
-A rule is a declarative transform referenced from a computed variant's `$rules` array. Rules live
-in `rules/<name>.json`. The filename stem MUST equal the `name` field.
-
-Three kinds today:
+Two kinds today:
 
 - `scale` — resize the source's bounding box to the target dimension.
-  `target`: `{ "value": <number>, "unit": "px" }`
 - `stroke` — set every stroked path on the source to the target width.
-  `target`: `{ "value": <number>, "unit": "px" }`
-- `color` — replace hardcoded colors in the SVG with a CSS value.
-  `target`: `{ "value": "<css-value>" }` (no `unit` — value is a CSS string, e.g. `"currentColor"`)
+
+### Filename and shape
+
+The filename stem MUST equal the `name` field. Decimal values in filenames use dashes: `stroke-1-6` means width 1.6.
 
 ```json
 {
@@ -194,61 +139,43 @@ Three kinds today:
 }
 ```
 
-```json
-{
-  "$schema": "../schemas/rule.schema.json",
-  "name": "current-color",
-  "kind": "color",
-  "target": { "value": "currentColor" }
-}
-```
+The only unit today is `px`. The enum is intentionally narrow; widening it is a coordinated schema change, not an ad-hoc rule addition.
 
-Decimal values in filenames use dashes: `stroke-1-6` means width 1.6.
+## Validating
 
-### Validating
+`assets/package.json` has a `validate` script that compiles both schemas and checks every pack manifest and every rule file against them:
 
 ```bash
-pnpm validate          # from packages/design-assets/
+pnpm validate
 ```
 
-`pnpm validate` compiles both schemas and checks every pack manifest and rule file. Run before
-committing. It catches missing required keys, wrong shapes, invalid asset ids, invalid `$file`
-paths. It does **not** check that `$file` paths resolve to real binaries on disk — verify that
-by eye or by running your translator end-to-end.
+Run this from `packages/design-assets/` (or `pnpm --filter @acronis-platform/design-assets validate` from the repo root) before committing. It catches:
 
-### Third-party sources
+- Manifests that don't conform to `pack.schema.json` (missing required keys, wrong shapes, invalid asset ids, invalid `$file` paths).
+- Rules that don't conform to `rule.schema.json`.
 
-If you add assets derived from a third-party library:
+It does NOT check that the `$file` path resolves to a real binary on disk — do that by eye, or by running your translator end-to-end.
+
+## Third-party sources
+
+If you add an asset (or a batch of assets) derived from a third-party library, document the source in [`LICENSE`](./LICENSE):
 
 1. Open `LICENSE` and scroll to the "Third-party content" section.
-2. Append a new subsection: attribution paragraph (source + URL) + the source's full license
-   text, reproduced verbatim.
-3. If the source's license requires it, include the copyright notice.
+2. Append a new subsection: attribution paragraph (one or two sentences identifying the source and the URL) + the source's full license text, reproduced verbatim.
+3. If the source's license requires it (most permissive licenses do), make sure the copyright notice is included.
 
----
-
-## 🔌 Via Figma sync
-
-The Figma sync tool (`tools/figma-design-assets-sync`) pulls SVG icons from a Figma file and
-regenerates a pack manifest. See its own
-[`README.md`](../../tools/figma-design-assets-sync/README.md) for setup and usage.
-
-After running the sync, always:
-
-1. **Review the diff** — check that nothing was removed unexpectedly.
-2. **Run `pnpm validate`** — the sync does not run it automatically.
-3. **Re-apply any hand-authored changes** the sync may have overwritten (see warning above).
-
----
+Per-asset provenance is not tracked in the manifests today — the LICENSE entry is the canonical record that a given source was used in the package.
 
 ## Where the deeper context lives
 
-| Topic                                                                                                                                  | File                                                         |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Vocabulary — Schema, Rule, Pack, Asset, Variant, Canonical/Default, Value (source/computed), AssetsGroup                               | [`./context/glossary.md`](./context/glossary.md)             |
-| The normative contract — DTCG divergence, `$`-prefix discipline, R1–R16 cases, invariants, resolution algorithm                        | [`./context/spec.md`](./context/spec.md)                     |
-| Manifest shape — pack root + asset groups, the `values` map, derivation, metadata, platform scope, pack catalog, binary layout, naming | [`./context/manifest-pack.md`](./context/manifest-pack.md)   |
-| Rule declaration format                                                                                                                | [`./context/manifest-rules.md`](./context/manifest-rules.md) |
-| How to size a change — major / minor / patch and how to record it                                                                      | [`./context/versioning.md`](./context/versioning.md)         |
+These docs live in this package under `context/`. They are the authoritative reference; this contributing guide is a quick-start.
+
+| Topic                                                                                                           | File                                             |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Vocabulary — Schema, Rule, Pack, Asset, Variant, Canonical/Default, Value (source/computed)                     | [`./context/glossary.md`](./context/glossary.md) |
+| The normative contract — DTCG divergence, `$`-prefix discipline, R1–R16 cases, invariants, resolution algorithm | [`./context/spec.md`](./context/spec.md)         |
+| Manifest shape — pack root + asset, the `values` map, derivation, metadata, platform scope                      | [`./context/manifest.md`](./context/manifest.md) |
+| Pack catalog, on-disk binary layout, id/filename/`$type` naming                                                 | [`./context/packs.md`](./context/packs.md)       |
+| Rule declaration format                                                                                         | [`./context/rules.md`](./context/rules.md)       |
 
 The same context files are indexed in `./AGENTS.md` for AI agents.

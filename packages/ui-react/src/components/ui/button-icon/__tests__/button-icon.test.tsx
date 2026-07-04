@@ -28,34 +28,9 @@ describe('ButtonIcon', () => {
       </ButtonIcon>
     );
     expect(screen.getByRole('button', { name: 'Add' })).toHaveClass(
-      'size-[var(--ui-button-icon-global-container-height)]',
-      'bg-[var(--ui-button-icon-global-container-color-idle)]',
-      'text-[var(--ui-button-icon-global-icon-color-idle)]'
-    );
-  });
-
-  it('defaults to the borderless ghost variant', () => {
-    render(
-      <ButtonIcon aria-label="Add">
-        <Icon />
-      </ButtonIcon>
-    );
-    const button = screen.getByRole('button', { name: 'Add' });
-    // Ghost draws no border at all (only `secondary` adds one).
-    expect(button).not.toHaveClass('border');
-    expect(button).not.toHaveClass(
-      'border-[var(--ui-button-icon-secondary-container-border-color-idle)]'
-    );
-  });
-
-  it('paints the secondary border tokens for variant="secondary"', () => {
-    render(
-      <ButtonIcon aria-label="Add" variant="secondary">
-        <Icon />
-      </ButtonIcon>
-    );
-    expect(screen.getByRole('button', { name: 'Add' })).toHaveClass(
-      'border-[var(--ui-button-icon-secondary-container-border-color-idle)]'
+      'size-8',
+      'bg-[var(--ui-button-icon-background-idle)]',
+      'text-[var(--ui-button-icon-icon-idle)]'
     );
   });
 
@@ -67,7 +42,7 @@ describe('ButtonIcon', () => {
     );
     expect(screen.getByRole('button', { name: 'Add' })).toHaveClass(
       'custom-class',
-      'size-[var(--ui-button-icon-global-container-height)]'
+      'size-8'
     );
   });
 

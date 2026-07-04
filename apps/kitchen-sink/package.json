@@ -1,6 +1,6 @@
 {
   "name": "@acronis-platform/kitchen-sink",
-  "version": "0.1.13",
+  "version": "0.1.3",
   "private": true,
   "type": "module",
   "scripts": {
@@ -22,8 +22,7 @@
     "@acronis-platform/ui-react": "workspace:*",
     "@fontsource/inter": "5.2.8",
     "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-router-dom": "7.16.0"
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",

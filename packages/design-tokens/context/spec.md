@@ -16,7 +16,7 @@ Everything else stays DTCG: token shape, `$type` and group-level `$type` inherit
 - A palette token (mode dimension: Theme): `values.light` and `values.dark`, each a DTCG color value (`{ colorSpace: "hsl", components: [...], alpha? }`).
 - A semantic-color token (mode dimension: Brand): `values.acronis`, a DTCG alias string like `"{palette.blue.7}"`.
 
-Non-mode-aware **dimension** primitives store their value in `$value` as a native DTCG dimension `{ value, unit }` (`unit` is `"px"` or `"rem"` per DTCG). `fontWeight` and `fontFamily` primitives are scalar DTCG types, so they carry a plain `$value` (a number, or a string / array for a font stack). DTCG composite typography tokens also use a native `$value`. Every `$value` in this package is therefore native DTCG — the only divergences are the per-mode `values` dict and the `platforms` array. Mode storage, aliasing, and platform scope are detailed in [`manifest.md`](./manifest.md).
+Single-value (non-mode-aware) primitives still use `$extensions.com.acronis.units` (shape `{ value, unit: "px" }` for dimensions, or the raw scalar for other `$type`s). DTCG composite typography tokens continue to use a native `$value`. Mode storage, aliasing, and platform scope are detailed in [`manifest.md`](./manifest.md).
 
 Canonical token shape:
 
@@ -35,10 +35,10 @@ Canonical token shape:
 Every emitted token file MUST start with:
 
 ```json
-"$schema": "../schemas/tier.schema.json"
+"$schema": "../schemas/tokens.schema.json"
 ```
 
-The file's `$schema` points at the repo's [`../schemas/tier.schema.json`](../schemas/tier.schema.json) — the canonical description of the Acronis shape (DTCG-conformant with the divergences above). It doubles as the discriminator: a generic DTCG consumer that opens the file sees a non-DTCG `$schema` and should route it through an Acronis-aware parser rather than treat it as a plain DTCG file.
+The file's `$schema` points at the repo's [`../schemas/tokens.schema.json`](../schemas/tokens.schema.json) — the canonical description of the Acronis shape (DTCG-conformant with the divergences above). It doubles as the discriminator: a generic DTCG consumer that opens the file sees a non-DTCG `$schema` and should route it through an Acronis-aware parser rather than treat it as a plain DTCG file.
 
 **Discriminator.** Every token carries **exactly one** of:
 
@@ -52,7 +52,6 @@ Additional `com.figma.*` metadata when present:
 - `com.figma.scopes: [...]` — Variable scopes (e.g., `ALL_SCOPES`).
 - `com.figma.hiddenFromPublishing: true` — emitted only when truthy.
 - `com.figma.gradientTransform: [[…],[…]]` — Figma's gradient transform, for paint-style gradients where DTCG `gradient` has no direction field.
-- `com.figma.cssGradient: "linear-gradient(…)"` — the raw CSS gradient string for gradients that originate as **mocked `string` variables** (Figma variables can't hold gradient fills). The emitter parses its stops into the DTCG `gradient` `$value`; this key preserves the original string verbatim — including the `<angle>` (e.g. `90deg`), which DTCG `gradient` has no field for. Carried on the `gradients.ai.*` tokens in `semantics.json`.
 
 A handful of tokens may exist in Figma but be intentionally not linked back (no `variableId` / `styleId`). These are rare; add a `$description` explaining why when introducing one.
 
@@ -65,37 +64,22 @@ Vendor-specific metadata goes under `$extensions` with a reverse-DNS key. DTCG l
 | `com.acronis.*` | This project     | Project-specific metadata not yet promoted to a top-level key.                                                               |
 | `com.figma.*`   | Figma round-trip | Identity carried back to Figma (`com.figma.variableId`, `com.figma.styleId`, `com.figma.scopes`, future `com.figma.nodeId`). |
 
-### `com.acronis.*` keys
+### `com.acronis.*` keys today
 
-| Key                          | Status                                                                                                                                                                      |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `com.acronis.units`          | RETIRED — dimension primitives now carry a native DTCG `$value: { value, unit }`; fontWeight/fontFamily carry a plain `$value` scalar (see [`manifest.md`](./manifest.md)). |
-| `com.acronis.textCase`       | Typography hint preserved from Figma Text Styles (non-DTCG field).                                                                                                          |
-| `com.acronis.textDecoration` | Typography hint preserved from Figma Text Styles (non-DTCG field).                                                                                                          |
-| `com.acronis.tailwindRoles`  | Root-level build-time hint mapping a token path segment to a Tailwind theme namespace (see below).                                                                          |
-| `com.acronis.modes`          | NOT USED — modes live at the top-level `values` key on each token (see [`manifest.md`](./manifest.md)).                                                                     |
-| `com.acronis.platform`       | NOT USED — platform scope lives at the top-level `platforms` key (see [`manifest.md`](./manifest.md)).                                                                      |
-| `com.acronis.metadata`       | NOT USED.                                                                                                                                                                   |
-
-#### `com.acronis.tailwindRoles`
-
-A **root-level (group-level)** extension that maps a token path segment — a
-semantic role (e.g. `background`) or a component part (e.g. `container`) — to the
-Tailwind theme namespace it should route into: one of `backgroundColor`,
-`textColor`, `borderColor`, `fill`, `ringColor`, or `backgroundImage`. It is
-carried at the top of `semantics.json` and `components.json`.
-
-This is a **build-time hint consumed by [`tools/style-dictionary`](../../../tools/style-dictionary/AGENTS.md)** (its `tailwind.ts` reads the
-key to route colors/gradients into the right Tailwind namespace), **not part of
-any token's value** — it carries no design data and never appears on a token's
-`$value`. It is validated by the `AcronisTailwindRoles` `$def` in
-[`../schemas/tier.schema.json`](../schemas/tier.schema.json).
+| Key                          | Status                                                                                                  |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `com.acronis.units`          | Dimension carrier (`{unit, value}`) on units primitives.                                                |
+| `com.acronis.textCase`       | Typography hint preserved from Figma Text Styles (non-DTCG field).                                      |
+| `com.acronis.textDecoration` | Typography hint preserved from Figma Text Styles (non-DTCG field).                                      |
+| `com.acronis.modes`          | NOT USED — modes live at the top-level `values` key on each token (see [`manifest.md`](./manifest.md)). |
+| `com.acronis.platform`       | NOT USED — platform scope lives at the top-level `platforms` key (see [`manifest.md`](./manifest.md)).  |
+| `com.acronis.metadata`       | NOT USED.                                                                                               |
 
 ### Adding a new key (3-step rule)
 
 A new `com.acronis.*` key requires THREE changes in the same commit:
 
-1. Update [`../schemas/tier.schema.json`](../schemas/tier.schema.json) to allow / require the new key.
+1. Update [`../schemas/tokens.schema.json`](../schemas/tokens.schema.json) to allow / require the new key.
 2. Add or update the context file that owns the key's semantics.
 3. Update the CLAUDE.md row pointing at that context file, if the wording needs to widen.
 
@@ -109,7 +93,7 @@ A `com.acronis.*` key without a context file owning it is forbidden by review, n
 
 ## Naming
 
-Code names are simpler than Figma names and are canonical.
+Code names are simpler than Figma names and are canonical; the Figma → code mapping lives in [`figma-sync.md`](./figma-sync.md).
 
 ### Ids (token names, group names)
 
@@ -147,6 +131,8 @@ These come from DTCG. Use them as defined; do NOT invent new `$`-prefixed keys.
 
 ### `$type` values
 
-DTCG-defined: `color`, `dimension`, `fontFamily`, `fontWeight`, `number`, `typography`, `shadow`, `border`, `transition`, `gradient`, `cubicBezier`, `strokeStyle`, `duration`. DTCG group-level `$type` inheritance applies: declared at a parent group, descendants inherit unless overridden.
+DTCG-defined only: `color`, `dimension`, `fontFamily`, `fontWeight`, `number`, `typography`, `shadow`, `border`, `transition`, `gradient`, `cubicBezier`, `strokeStyle`, `duration`. DTCG group-level `$type` inheritance applies: declared at a parent group, descendants inherit unless overridden.
 
-**One non-DTCG divergence: `string`.** DTCG 2025.10 has no string type, but Figma exports raw `string` variables that don't map cleanly onto a DTCG type. The rule: a Figma `string` variable is re-typed only when it decodes unambiguously to a DTCG type (`textStyle` → a `typography` alias); otherwise it is emitted verbatim as `$type: "string"`, which is added to the schema's `$type` enum. Examples kept as `string`: per-state `textDecoration` (`"none"` / `"underline"`), `borderStyle` (`"solid"`), and the gradient-fill mocks that alias `{gradients.ai.*}` (the `gradient` `$type` itself lives only on those `gradients.ai.*` tokens in `semantics.json`).
+### Where the helper scripts enforce this
+
+`.tmp/scripts/figma-to-primitives.mjs` and `.tmp/scripts/figma-to-semantic.mjs` are the canonical emitters AND formatters — they produce the exact shape above. During a Figma sync the LLM runs them to re-emit `tiers/primitives.json` and `tiers/semantic.json` in that canonical shape, so it doesn't have to hand-write the JSON (accuracy, plus fewer LLM tokens). The JSON is the source of truth and may be edited, but reflect a Figma change by running a sync. See [`figma-sync.md`](./figma-sync.md).

@@ -166,118 +166,36 @@ export default {
         "secondary": "light-dark(rgb(190 215 244), rgb(11 66 142))"
       },
       "backgroundImage": {
-        "on-status-ai-strong": "linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
-        "ai-active": "linear-gradient(90deg, rgb(43 54 155) 20%, rgb(118 21 113) 100%)",
-        "ai-disabled": "linear-gradient(90deg, rgb(223 226 255) 20%, rgb(255 218 253) 100%)",
-        "ai-hover": "linear-gradient(90deg, rgb(51 66 195) 20%, rgb(182 33 174) 100%)",
-        "ai-idle": "linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)"
+        "ai-idle": "linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
+        "ai-hover": "linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
+        "ai-active": "linear-gradient(180deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%)",
+        "ai-disabled": "linear-gradient(180deg, rgb(219 223 229) 20%, rgb(212 219 230) 100%)"
       },
       "fontFamily": {
-        "typography-body-accent": "Inter, system-ui, sans-serif",
-        "typography-body-default": "Inter, system-ui, sans-serif",
-        "typography-body-form-label": "Inter, system-ui, sans-serif",
-        "typography-body-heading": "Inter, system-ui, sans-serif",
-        "typography-body-strong": "Inter, system-ui, sans-serif",
-        "typography-caption-accent": "Inter, system-ui, sans-serif",
-        "typography-caption-default": "Inter, system-ui, sans-serif",
-        "typography-caption-strong": "Inter, system-ui, sans-serif",
-        "typography-fineprint-heading": "Inter, system-ui, sans-serif",
         "typography-headings-display": "Inter, system-ui, sans-serif",
-        "typography-headings-lead": "Inter, system-ui, sans-serif",
         "typography-headings-title": "Inter, system-ui, sans-serif",
-        "typography-headings-title-accent": "Inter, system-ui, sans-serif",
+        "typography-headings-lead": "Inter, system-ui, sans-serif",
+        "typography-body-default": "Inter, system-ui, sans-serif",
+        "typography-body-strong": "Inter, system-ui, sans-serif",
+        "typography-body-heading": "Inter, system-ui, sans-serif",
+        "typography-body-accent": "Inter, system-ui, sans-serif",
+        "typography-body-form-label": "Inter, system-ui, sans-serif",
         "typography-link-default": "Inter, system-ui, sans-serif",
         "typography-link-default-underline": "Inter, system-ui, sans-serif",
         "typography-link-strong": "Inter, system-ui, sans-serif",
         "typography-link-strong-underline": "Inter, system-ui, sans-serif",
+        "typography-caption-default": "Inter, system-ui, sans-serif",
+        "typography-caption-strong": "Inter, system-ui, sans-serif",
+        "typography-caption-accent": "Inter, system-ui, sans-serif",
         "typography-note-default": "Inter, system-ui, sans-serif",
-        "typography-note-heading": "Inter, system-ui, sans-serif"
+        "typography-note-heading": "Inter, system-ui, sans-serif",
+        "typography-fineprint-heading": "Inter, system-ui, sans-serif"
       },
       "fontSize": {
-        "typography-body-accent": [
-          "14px",
-          {
-            "lineHeight": "24px",
-            "letterSpacing": "0px",
-            "fontWeight": "500"
-          }
-        ],
-        "typography-body-default": [
-          "14px",
-          {
-            "lineHeight": "24px",
-            "letterSpacing": "0px",
-            "fontWeight": "400"
-          }
-        ],
-        "typography-body-form-label": [
-          "14px",
-          {
-            "lineHeight": "16px",
-            "letterSpacing": "0px",
-            "fontWeight": "400"
-          }
-        ],
-        "typography-body-heading": [
-          "14px",
-          {
-            "lineHeight": "24px",
-            "letterSpacing": "0.3px",
-            "fontWeight": "600"
-          }
-        ],
-        "typography-body-strong": [
-          "14px",
-          {
-            "lineHeight": "24px",
-            "letterSpacing": "0px",
-            "fontWeight": "600"
-          }
-        ],
-        "typography-caption-accent": [
-          "12px",
-          {
-            "lineHeight": "16px",
-            "letterSpacing": "0px",
-            "fontWeight": "500"
-          }
-        ],
-        "typography-caption-default": [
-          "12px",
-          {
-            "lineHeight": "16px",
-            "letterSpacing": "0px",
-            "fontWeight": "400"
-          }
-        ],
-        "typography-caption-strong": [
-          "12px",
-          {
-            "lineHeight": "16px",
-            "letterSpacing": "0px",
-            "fontWeight": "600"
-          }
-        ],
-        "typography-fineprint-heading": [
-          "10px",
-          {
-            "lineHeight": "16px",
-            "letterSpacing": "1px",
-            "fontWeight": "700"
-          }
-        ],
         "typography-headings-display": [
           "32px",
           {
             "lineHeight": "40px",
-            "letterSpacing": "0px",
-            "fontWeight": "400"
-          }
-        ],
-        "typography-headings-lead": [
-          "18px",
-          {
-            "lineHeight": "24px",
             "letterSpacing": "0px",
             "fontWeight": "400"
           }
@@ -290,12 +208,52 @@ export default {
             "fontWeight": "400"
           }
         ],
-        "typography-headings-title-accent": [
-          "24px",
+        "typography-headings-lead": [
+          "18px",
           {
-            "lineHeight": "32px",
+            "lineHeight": "24px",
+            "letterSpacing": "0px",
+            "fontWeight": "400"
+          }
+        ],
+        "typography-body-default": [
+          "14px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "0px",
+            "fontWeight": "400"
+          }
+        ],
+        "typography-body-strong": [
+          "14px",
+          {
+            "lineHeight": "24px",
             "letterSpacing": "0px",
             "fontWeight": "600"
+          }
+        ],
+        "typography-body-heading": [
+          "14px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "0.3px",
+            "fontWeight": "600"
+          }
+        ],
+        "typography-body-accent": [
+          "14px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "0px",
+            "fontWeight": "500"
+          }
+        ],
+        "typography-body-form-label": [
+          "14px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "0px",
+            "fontWeight": "400"
           }
         ],
         "typography-link-default": [
@@ -330,6 +288,30 @@ export default {
             "fontWeight": "600"
           }
         ],
+        "typography-caption-default": [
+          "12px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "0px",
+            "fontWeight": "400"
+          }
+        ],
+        "typography-caption-strong": [
+          "12px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "0px",
+            "fontWeight": "600"
+          }
+        ],
+        "typography-caption-accent": [
+          "12px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "0px",
+            "fontWeight": "500"
+          }
+        ],
         "typography-note-default": [
           "11px",
           {
@@ -340,6 +322,14 @@ export default {
         ],
         "typography-note-heading": [
           "11px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "1px",
+            "fontWeight": "700"
+          }
+        ],
+        "typography-fineprint-heading": [
+          "10px",
           {
             "lineHeight": "16px",
             "letterSpacing": "1px",

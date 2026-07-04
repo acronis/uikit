@@ -33,11 +33,6 @@ export function hslColorToRgb(color: DtcgColor): string {
   const [h, s, l] = color.components;
   const alpha = color.alpha ?? 1;
 
-  // Transparent rule: a fully-transparent color renders as the `transparent`
-  // keyword — its RGB channels are meaningless (Figma may store magenta, black,
-  // etc. at alpha 0). Mirrors the figma-to-design-tokens emitter rule for the tiers.
-  if (alpha === 0) return 'transparent';
-
   const sat = s / 100;
   const light = l / 100;
   const k = (n: number): number => (n + h / 30) % 12;
@@ -54,8 +49,5 @@ export const colorHslToRgb: Transform = {
   type: transformTypes.value,
   transitive: false,
   filter: (token) => token.$type === 'color',
-  // Fully-transparent colors are stored as the CSS keyword `transparent`
-  // (see the figma-to-design-tokens transparent rule); pass it through verbatim.
-  transform: (token) =>
-    token.$value === 'transparent' ? 'transparent' : hslColorToRgb(token.$value as DtcgColor),
+  transform: (token) => hslColorToRgb(token.$value as DtcgColor),
 };

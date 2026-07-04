@@ -1,7 +1,7 @@
 {
   "codeConnect": {
     "parser": "react",
-    "include": ["src/components/**/*.tsx"],
+    "include": ["src/components/**/*.figma.tsx"],
     "exclude": [
       "src/components/**/__tests__/**",
       "src/components/**/__stories__/**"

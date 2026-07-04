@@ -12,11 +12,8 @@ not gitignored), grouped into `css/`, `tailwind/`, and `dtcg/` dirs. The CSS
   component (`button/`, `breadcrumb/`, …).
 - `css/<component>/brand-b.css` — component tier, non-default brand: override-only.
 
-Tokens partition into files by `token.path[0]`: the semantic-tier roots —
-`colors`, `gradients`, and `typography` — are the semantic tier (root file);
-every other root is its own component dir. The semantic roots are **data-driven**:
-the build derives them from the top-level keys of `semantics.json` via a shared
-`semanticRoots()` helper, not a hardcoded set.
+Tokens partition into files by `token.path[0]`: `colors` and `typography` are the
+semantic tier (root file); every other root is its own component dir.
 
 ## Theming — `light-dark()` + `color-scheme`
 
@@ -75,11 +72,9 @@ appear once with a single value.
 
 ## Gradients
 
-Gradient tokens live under the top-level `gradients.*` root of `semantics.json`
-(a semantic root, so they emit into the root semantic CSS as `--ui-gradients-*`
-custom properties and into the base Tailwind preset's `backgroundImage`). They are
-rendered by the `gradient/css` transform (`hooks/transforms/gradient-css.ts`): the
-`$value` is a DTCG array of `{ color, position }` stops and the matrix is under
+`colors.background.ai.*` gradient tokens are rendered by the `gradient/css`
+transform (`hooks/transforms/gradient-css.ts`): the `$value` is a DTCG array of
+`{ color, position }` stops and the matrix is under
 `$extensions.com.figma.gradientTransform`, mapped to a CSS angle via
 `atan2(a, -c)`. Each stop color uses the same hsl→rgb conversion as solid colors.
 
@@ -91,13 +86,3 @@ object (`{ theme: { extend: … } }`) consumed via `@config`. Values are
 `backgroundImage`, typography into `fontSize`/`fontFamily`, dimensions into
 `spacing`/`borderRadius`), keyed with the `ui-` prefix — so a preset is
 self-contained (no `--ui-*` dependency) and brand selection is build-time.
-
-The color/gradient → Tailwind-namespace routing (which theme namespace a token
-lands in — `backgroundColor`, `textColor`, `borderColor`, `fill`, `ringColor`,
-`backgroundImage`) is **data-driven**: it is authored in the source tokens as a
-root-level `com.acronis.tailwindRoles` extension (in `semantics.json` and
-`components.json`) and read at build time by `routeColor` (`tailwind.ts`), rather
-than hardcoded role→namespace maps in the tool. The key-shaping is unchanged:
-**pure semantic-tier role words are dropped** from the utility key
-(`bg-surface-primary`), while **component part words are kept**
-(`bg-button-primary-container-idle`); gradients route to `backgroundImage`.
