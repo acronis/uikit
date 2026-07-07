@@ -1,0 +1,10 @@
+
+> @acronis-platform/shadcn-uikit@0.36.3 generate:themes /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/ui-legacy
+> tsx scripts/generate-white-label-themes.ts
+
+❌ ui-syntax brands not found at: /Users/Mladen.Tsvetkov/projects/ui-syntax/packages/tokens/src/tokens/brands
+   Expected sibling repo layout: <parent>/shadcn-uikit + <parent>/ui-syntax
+   Update UI_SYNTAX_BRANDS_DIR in this script if your checkout is elsewhere.
+/Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/ui-legacy:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @acronis-platform/shadcn-uikit@0.36.3 generate:themes: `tsx scripts/generate-white-label-themes.ts`
+Exit status 1

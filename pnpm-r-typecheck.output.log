@@ -1,0 +1,46 @@
+Scope: 17 of 18 workspace projects
+packages/design-tokens typecheck$ echo "no typecheck (JSON data package)" && exit 0
+packages/ui-legacy typecheck$ tsc --noEmit
+packages/ui-spec typecheck$ tsc --noEmit
+tools/figma-design-assets-sync typecheck$ tsc --noEmit
+packages/design-tokens typecheck: no typecheck (JSON data package)
+packages/design-tokens typecheck: Done
+tools/figma-icons-fetcher typecheck$ tsc --noEmit
+tools/figma-design-assets-sync typecheck: Done
+tools/figma-token-exporter typecheck$ tsc --noEmit
+tools/figma-icons-fetcher typecheck: Done
+tools/figma-token-exporter typecheck: Done
+packages/ui-spec typecheck: Done
+packages/ui-legacy typecheck: Done
+apps/demos typecheck$ tsc --noEmit
+packages/design-assets typecheck$ echo "no typecheck (JSON data package)" && exit 0
+packages/icons-svg typecheck$ tsc --noEmit
+packages/icons-svg-next typecheck$ echo "no typecheck (raw SVG source package)" && exit 0
+packages/icons-svg-next typecheck: no typecheck (raw SVG source package)
+packages/design-assets typecheck: no typecheck (JSON data package)
+packages/icons-svg-next typecheck: Done
+packages/design-assets typecheck: Done
+packages/icons-svg typecheck: Done
+apps/demos typecheck: Done
+apps/demo typecheck$ tsc --noEmit
+packages/icons-sprite typecheck$ tsc --noEmit
+packages/icons-react typecheck$ pnpm run generate && tsc --noEmit
+tools/style-dictionary typecheck$ tsc --noEmit
+packages/icons-react typecheck: > @acronis-platform/icons-react@0.5.0 generate /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/icons-react
+packages/icons-react typecheck: > tsx scripts/generate-icons.ts && tsx scripts/generate-legacy-map.ts
+packages/icons-react typecheck: ✓ icons-react: stroke-mono — 392 icons
+packages/icons-react typecheck: ✓ icons-react: solid-mono — 69 icons
+packages/icons-react typecheck: ✓ icons-react: stroke-multi — 15 icons
+packages/icons-react typecheck: ✓ icons-react: solid-multi — 1 icons
+packages/icons-react typecheck: legacy-icon-map.json: 1079 mapped, 49 colored, 16 unresolved (of 1144)
+packages/icons-sprite typecheck: Done
+tools/style-dictionary typecheck: Done
+packages/icons-react typecheck: Done
+apps/demo typecheck: Done
+packages/tokens-pd typecheck$ echo "no typecheck (generated artifacts; no TypeScript sources)" && exit 0
+packages/tokens-pd typecheck: no typecheck (generated artifacts; no TypeScript sources)
+packages/tokens-pd typecheck: Done
+packages/ui-react typecheck$ tsc --noEmit
+packages/ui-react typecheck: Done
+apps/docs typecheck$ tsc --noEmit
+apps/docs typecheck: Done

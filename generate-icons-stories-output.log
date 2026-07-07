@@ -1,0 +1,5 @@
+
+> @acronis-platform/shadcn-uikit@0.36.3 generate:icon-stories /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/ui-legacy
+> tsx scripts/generate-icon-stories.ts
+
+Generated 100 icon story files → src/components/icons/__stories__

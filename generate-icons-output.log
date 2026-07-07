@@ -1,0 +1,11 @@
+
+> @acronis-platform/shadcn-uikit@0.36.3 generate:icons /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/ui-legacy
+> tsx scripts/generate-icons.ts
+
+Scanning SVG files…
+  1144 icons (335 with size variants)
+Generating auto-generated.tsx…
+  Written → src/components/icons/auto-generated.tsx
+Generating categories.json…
+  Written → src/components/icons/categories.json
+Done!

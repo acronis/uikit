@@ -1,0 +1,881 @@
+Scope: 17 of 18 workspace projects
+packages/design-tokens test$ pnpm run validate
+packages/ui-legacy test$ vitest run
+packages/ui-spec test$ vitest run
+tools/figma-design-assets-sync test$ echo "no tests" && exit 0
+tools/figma-design-assets-sync test: no tests
+tools/figma-design-assets-sync test: Done
+tools/figma-icons-fetcher test$ vitest run
+packages/design-tokens test: > @acronis-platform/design-tokens@1.9.0 validate /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/design-tokens
+packages/design-tokens test: > ajv compile -s schemas/tier.schema.json --spec=draft2020 --strict=false && ajv validate -s schemas/tier.schema.json -d "tiers/primitives.json" -d "tiers/semantics.json" -d "tiers/components.json" --spec=draft2020 --strict=false
+packages/ui-legacy test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.7 [39m[90m/Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/ui-legacy[39m
+packages/ui-spec test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.7 [39m[90m/Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/ui-spec[39m
+packages/ui-spec test:  [32m✓[39m __tests__/overrides.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+packages/ui-spec test:  [32m✓[39m __tests__/ledger.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+packages/ui-spec test:  [32m✓[39m __tests__/patterns.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+packages/ui-spec test:  [32m✓[39m __tests__/grammar.test.ts [2m([22m[2m160 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+packages/ui-spec test:  [32m✓[39m __tests__/screens.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+packages/ui-spec test:  [32m✓[39m __tests__/screen-audit.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+tools/figma-icons-fetcher test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.7 [39m[90m/Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-icons-fetcher[39m
+packages/ui-spec test:  [32m✓[39m __tests__/kit-lint.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 97[2mms[22m[39m
+tools/figma-icons-fetcher test:  [32m✓[39m src/__specs__/strategies/new-frames.spec.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/helpers.spec.ts[2m > [22m[2mfindDuplicates[2m > [22m[2mshould rename duplicate items
+tools/figma-icons-fetcher test: [22m[39mDuplicate icon name: icon1 -> icon1-duplicate. Please fix Figma file
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/helpers.spec.ts[2m > [22m[2mfindDuplicates[2m > [22m[2mshould handle multiple duplicates with unique names
+tools/figma-icons-fetcher test: [22m[39mDuplicate icon name: icon1 -> icon1-duplicate. Please fix Figma file
+tools/figma-icons-fetcher test: Duplicate icon name: icon1 -> icon1-duplicate-duplicate. Please fix Figma file
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/helpers.spec.ts[2m > [22m[2mfindDuplicates[2m > [22m[2mshould rename duplicates using the group name when provided
+tools/figma-icons-fetcher test: [22m[39mDuplicate icon name: icon1 -> icon1-page-b. Please fix Figma file
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/helpers.spec.ts[2m > [22m[2mfindDuplicates[2m > [22m[2mshould fall back to the duplicate suffix when the group-suffixed name still collides
+tools/figma-icons-fetcher test: [22m[39mDuplicate icon name: icon1 -> icon1-page-b. Please fix Figma file
+tools/figma-icons-fetcher test: Duplicate icon name: icon1 -> icon1-page-b-duplicate. Please fix Figma file
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould create manifest directory if it does not exist
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📝 Generating JSON manifests...
+tools/figma-icons-fetcher test:  [32m✓[39m src/__specs__/helpers.spec.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+tools/figma-icons-fetcher test:  [32m✓[39m src/__specs__/strategies/frames-by-name.spec.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould create manifest directory if it does not exist
+tools/figma-icons-fetcher test: [22m[39m  ✓ actions.json (1 icons)
+tools/figma-icons-fetcher test:  [32m✓[39m src/__specs__/strategies/icon-packs.spec.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould create manifest directory if it does not exist
+tools/figma-icons-fetcher test: [22m[39m  ✓ icons.json (1 icons - combined)
+tools/figma-icons-fetcher test: ✓ Generated 2 manifest files
+tools/figma-icons-fetcher test: Manifest directory: /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-icons-fetcher/test-manifests-temp/new-dir
+tools/figma-icons-fetcher test:  [32m✓[39m src/__specs__/clean-directory.spec.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mwipes stale manifests when cleanManifests is true
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📝 Generating JSON manifests...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould add only NEW monocolor icons
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📁 Categorizing new icons...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould add only NEW monocolor icons
+tools/figma-icons-fetcher test: [22m[39m  Icons before download: 1
+tools/figma-icons-fetcher test:   Icons after download: 2
+tools/figma-icons-fetcher test:   Existing monocolor: 1 icons
+tools/figma-icons-fetcher test:   Existing multicolor: 0 icons
+tools/figma-icons-fetcher test:   New icons downloaded: 1
+tools/figma-icons-fetcher test:   New monocolor icons to add: 1
+tools/figma-icons-fetcher test:   New multicolor icons to add: 0
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mwipes stale manifests when cleanManifests is true
+tools/figma-icons-fetcher test: [22m[39m  Cleaned /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-icons-fetcher/test-manifests-temp before regenerating
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mwipes stale manifests when cleanManifests is true
+tools/figma-icons-fetcher test: [22m[39m  ✓ actions.json (1 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mwipes stale manifests when cleanManifests is true
+tools/figma-icons-fetcher test: [22m[39m  ✓ icons.json (1 icons - combined)
+tools/figma-icons-fetcher test: ✓ Generated 2 manifest files
+tools/figma-icons-fetcher test: Manifest directory: /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-icons-fetcher/test-manifests-temp
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould add only NEW monocolor icons
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test:   ✓ Added 1 monocolor icons
+tools/figma-icons-fetcher test:   ✓ Added 0 multicolor icons
+tools/figma-icons-fetcher test:  [32m✓[39m src/__specs__/get-existing-icons.spec.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mkeeps pre-existing files when cleanManifests is off
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📝 Generating JSON manifests...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mkeeps pre-existing files when cleanManifests is off
+tools/figma-icons-fetcher test: [22m[39m  ✓ actions.json (1 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mkeeps pre-existing files when cleanManifests is off
+tools/figma-icons-fetcher test: [22m[39m  ✓ icons.json (1 icons - combined)
+tools/figma-icons-fetcher test: ✓ Generated 2 manifest files
+tools/figma-icons-fetcher test: Manifest directory: /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-icons-fetcher/test-manifests-temp
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould add only NEW multicolor icons
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📁 Categorizing new icons...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould add only NEW multicolor icons
+tools/figma-icons-fetcher test: [22m[39m  Icons before download: 0
+tools/figma-icons-fetcher test:   Icons after download: 1
+tools/figma-icons-fetcher test:   Existing monocolor: 0 icons
+tools/figma-icons-fetcher test:   Existing multicolor: 0 icons
+tools/figma-icons-fetcher test:   New icons downloaded: 1
+tools/figma-icons-fetcher test:   New monocolor icons to add: 0
+tools/figma-icons-fetcher test:   New multicolor icons to add: 1
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould generate per-page manifests
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📝 Generating JSON manifests...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould add only NEW multicolor icons
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test:   ✓ Added 0 monocolor icons
+tools/figma-icons-fetcher test:   ✓ Added 1 multicolor icons
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould generate per-page manifests
+tools/figma-icons-fetcher test: [22m[39m  ✓ actions.json (2 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould generate per-page manifests
+tools/figma-icons-fetcher test: [22m[39m  ✓ arrows.json (1 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould generate per-page manifests
+tools/figma-icons-fetcher test: [22m[39m  ✓ icons.json (3 icons - combined)
+tools/figma-icons-fetcher test: ✓ Generated 3 manifest files
+tools/figma-icons-fetcher test: Manifest directory: /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-icons-fetcher/test-manifests-temp
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould not add icons that existed before download
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📁 Categorizing new icons...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould generate combined icons.json manifest
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📝 Generating JSON manifests...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould not add icons that existed before download
+tools/figma-icons-fetcher test: [22m[39m  Icons before download: 2
+tools/figma-icons-fetcher test:   Icons after download: 2
+tools/figma-icons-fetcher test:   Existing monocolor: 0 icons
+tools/figma-icons-fetcher test:   Existing multicolor: 0 icons
+tools/figma-icons-fetcher test:   New icons downloaded: 0
+tools/figma-icons-fetcher test:   New monocolor icons to add: 0
+tools/figma-icons-fetcher test:   New multicolor icons to add: 0
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould not add icons that existed before download
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test:   ✓ Added 0 monocolor icons
+tools/figma-icons-fetcher test:   ✓ Added 0 multicolor icons
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould generate combined icons.json manifest
+tools/figma-icons-fetcher test: [22m[39m  ✓ actions.json (1 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould generate combined icons.json manifest
+tools/figma-icons-fetcher test: [22m[39m  ✓ arrows.json (1 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould generate combined icons.json manifest
+tools/figma-icons-fetcher test: [22m[39m  ✓ common.json (1 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould generate combined icons.json manifest
+tools/figma-icons-fetcher test: [22m[39m  ✓ icons.json (3 icons - combined)
+tools/figma-icons-fetcher test: ✓ Generated 4 manifest files
+tools/figma-icons-fetcher test: Manifest directory: /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-icons-fetcher/test-manifests-temp
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould sort icon names alphabetically
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📝 Generating JSON manifests...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould sort icon names alphabetically
+tools/figma-icons-fetcher test: [22m[39m  ✓ actions.json (3 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould handle mixed new monocolor and multicolor icons
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📁 Categorizing new icons...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould sort icon names alphabetically
+tools/figma-icons-fetcher test: [22m[39m  ✓ icons.json (3 icons - combined)
+tools/figma-icons-fetcher test: ✓ Generated 2 manifest files
+tools/figma-icons-fetcher test: Manifest directory: /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-icons-fetcher/test-manifests-temp
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould handle mixed new monocolor and multicolor icons
+tools/figma-icons-fetcher test: [22m[39m  Icons before download: 0
+tools/figma-icons-fetcher test:   Icons after download: 3
+tools/figma-icons-fetcher test:   Existing monocolor: 0 icons
+tools/figma-icons-fetcher test:   Existing multicolor: 0 icons
+tools/figma-icons-fetcher test:   New icons downloaded: 3
+tools/figma-icons-fetcher test:   New monocolor icons to add: 2
+tools/figma-icons-fetcher test:   New multicolor icons to add: 1
+packages/design-tokens test: schema schemas/tier.schema.json is valid
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould format page names correctly
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📝 Generating JSON manifests...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould format page names correctly
+tools/figma-icons-fetcher test: [22m[39m  ✓ monocolor---actions.json (1 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould handle mixed new monocolor and multicolor icons
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test:   ✓ Added 2 monocolor icons
+tools/figma-icons-fetcher test:   ✓ Added 1 multicolor icons
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould format page names correctly
+tools/figma-icons-fetcher test: [22m[39m  ✓ multicolor---status.json (1 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould format page names correctly
+tools/figma-icons-fetcher test: [22m[39m  ✓ icons.json (2 icons - combined)
+tools/figma-icons-fetcher test: ✓ Generated 3 manifest files
+tools/figma-icons-fetcher test: Manifest directory: /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-icons-fetcher/test-manifests-temp
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mcollapses path separators in group names into a flat filename
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📝 Generating JSON manifests...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mcollapses path separators in group names into a flat filename
+tools/figma-icons-fetcher test: [22m[39m  ✓ brands-logos.json (1 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mcollapses path separators in group names into a flat filename
+tools/figma-icons-fetcher test: [22m[39m  ✓ icons.json (1 icons - combined)
+tools/figma-icons-fetcher test: ✓ Generated 2 manifest files
+tools/figma-icons-fetcher test: Manifest directory: /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-icons-fetcher/test-manifests-temp
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould calculate total counts correctly
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📁 Categorizing new icons...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould calculate total counts correctly
+tools/figma-icons-fetcher test: [22m[39m  Icons before download: 0
+tools/figma-icons-fetcher test:   Icons after download: 1
+tools/figma-icons-fetcher test:   Existing monocolor: 2 icons
+tools/figma-icons-fetcher test:   Existing multicolor: 1 icons
+tools/figma-icons-fetcher test:   New icons downloaded: 1
+tools/figma-icons-fetcher test:   New monocolor icons to add: 1
+tools/figma-icons-fetcher test:   New multicolor icons to add: 0
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould calculate total counts correctly
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test:   ✓ Added 1 monocolor icons
+tools/figma-icons-fetcher test:   ✓ Added 0 multicolor icons
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould add newline at end of JSON files
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📝 Generating JSON manifests...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould add newline at end of JSON files
+tools/figma-icons-fetcher test: [22m[39m  ✓ actions.json (1 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould add newline at end of JSON files
+tools/figma-icons-fetcher test: [22m[39m  ✓ icons.json (1 icons - combined)
+tools/figma-icons-fetcher test: ✓ Generated 2 manifest files
+tools/figma-icons-fetcher test: Manifest directory: /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-icons-fetcher/test-manifests-temp
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould copy icon content correctly
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📁 Categorizing new icons...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould copy icon content correctly
+tools/figma-icons-fetcher test: [22m[39m  Icons before download: 0
+tools/figma-icons-fetcher test:   Icons after download: 1
+tools/figma-icons-fetcher test:   Existing monocolor: 0 icons
+tools/figma-icons-fetcher test:   Existing multicolor: 0 icons
+tools/figma-icons-fetcher test:   New icons downloaded: 1
+tools/figma-icons-fetcher test:   New monocolor icons to add: 1
+tools/figma-icons-fetcher test:   New multicolor icons to add: 0
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould copy icon content correctly
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test:   ✓ Added 1 monocolor icons
+tools/figma-icons-fetcher test:   ✓ Added 0 multicolor icons
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould handle empty icons array
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📝 Generating JSON manifests...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould handle empty icons array
+tools/figma-icons-fetcher test: [22m[39m  ✓ icons.json (0 icons - combined)
+tools/figma-icons-fetcher test: ✓ Generated 1 manifest files
+tools/figma-icons-fetcher test: Manifest directory: /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-icons-fetcher/test-manifests-temp
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould handle empty downloadedIcons array
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📁 Categorizing new icons...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould handle empty downloadedIcons array
+tools/figma-icons-fetcher test: [22m[39m  Icons before download: 0
+tools/figma-icons-fetcher test:   Icons after download: 0
+tools/figma-icons-fetcher test:   Existing monocolor: 0 icons
+tools/figma-icons-fetcher test:   Existing multicolor: 0 icons
+tools/figma-icons-fetcher test:   New icons downloaded: 0
+tools/figma-icons-fetcher test:   New monocolor icons to add: 0
+tools/figma-icons-fetcher test:   New multicolor icons to add: 0
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould handle icons with same name from different pages
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📝 Generating JSON manifests...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould handle empty downloadedIcons array
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test:   ✓ Added 0 monocolor icons
+tools/figma-icons-fetcher test:   ✓ Added 0 multicolor icons
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould handle icons with same name from different pages
+tools/figma-icons-fetcher test: [22m[39m  ✓ actions.json (1 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould handle icons with same name from different pages
+tools/figma-icons-fetcher test: [22m[39m  ✓ arrows.json (1 icons)
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/generate-manifests.spec.ts[2m > [22m[2mgenerateManifests[2m > [22m[2mshould handle icons with same name from different pages
+tools/figma-icons-fetcher test: [22m[39m  ✓ icons.json (2 icons - combined)
+tools/figma-icons-fetcher test: ✓ Generated 3 manifest files
+tools/figma-icons-fetcher test: Manifest directory: /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-icons-fetcher/test-manifests-temp
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould create directories if they do not exist
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test: 📁 Categorizing new icons...
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould create directories if they do not exist
+tools/figma-icons-fetcher test: [22m[39m  Icons before download: 0
+tools/figma-icons-fetcher test:   Icons after download: 1
+tools/figma-icons-fetcher test:   Existing monocolor: 0 icons
+tools/figma-icons-fetcher test:   Existing multicolor: 0 icons
+tools/figma-icons-fetcher test:   New icons downloaded: 1
+tools/figma-icons-fetcher test:   New monocolor icons to add: 1
+tools/figma-icons-fetcher test:   New multicolor icons to add: 0
+tools/figma-icons-fetcher test:  [32m✓[39m src/__specs__/generate-manifests.spec.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 73[2mms[22m[39m
+tools/figma-icons-fetcher test: [90mstdout[2m | src/__specs__/save-new-icons-to-categories.spec.ts[2m > [22m[2msaveNewIconsToCategories[2m > [22m[2mshould create directories if they do not exist
+tools/figma-icons-fetcher test: [22m[39m
+tools/figma-icons-fetcher test:   ✓ Added 1 monocolor icons
+tools/figma-icons-fetcher test:   ✓ Added 0 multicolor icons
+tools/figma-icons-fetcher test:  [32m✓[39m src/__specs__/save-new-icons-to-categories.spec.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 78[2mms[22m[39m
+tools/figma-icons-fetcher test:  [2m[90m↓[39m[22m src/__specs__/integration.spec.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
+tools/figma-icons-fetcher test: [2m Test Files [22m [1m[32m8 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (9)[39m
+tools/figma-icons-fetcher test: [2m      Tests [22m [1m[32m75 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (76)[39m
+tools/figma-icons-fetcher test: [2m   Start at [22m 09:06:33
+tools/figma-icons-fetcher test: [2m   Duration [22m 439ms[2m (transform 452ms, setup 0ms, import 797ms, tests 253ms, environment 0ms)[22m
+packages/design-tokens test: tiers/primitives.json valid
+packages/design-tokens test: tiers/semantics.json valid
+packages/design-tokens test: tiers/components.json valid
+packages/design-tokens test: Done
+tools/figma-token-exporter test$ vitest run
+tools/figma-icons-fetcher test: Done
+packages/ui-spec test:  [32m✓[39m __tests__/specs.test.ts [2m([22m[2m433 tests[22m[2m)[22m[33m 342[2mms[22m[39m
+packages/ui-spec test: [2m Test Files [22m [1m[32m8 passed[39m[22m[90m (8)[39m
+packages/ui-spec test: [2m      Tests [22m [1m[32m669 passed[39m[22m[90m (669)[39m
+packages/ui-spec test: [2m   Start at [22m 09:06:33
+packages/ui-spec test: [2m   Duration [22m 891ms[2m (transform 915ms, setup 0ms, import 1.48s, tests 477ms, environment 0ms)[22m
+packages/ui-spec test: Done
+packages/ui-legacy test:  [32m✓[39m [30m[43m 0 [49m[39m src/styles/__tests__/acronis-white-label-theme.spec.ts [2m([22m[2m1 test[22m[2m)[22m[32m 2[2mms[22m[39m
+packages/ui-legacy test:  [32m✓[39m [30m[43m 0 [49m[39m src/utils/__tests__/theme-switcher.spec.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+tools/figma-token-exporter test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.7 [39m[90m/Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/figma-token-exporter[39m
+tools/figma-token-exporter test:  [32m✓[39m src/__specs__/convert.spec.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+tools/figma-token-exporter test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+tools/figma-token-exporter test: [2m      Tests [22m [1m[32m8 passed[39m[22m[90m (8)[39m
+tools/figma-token-exporter test: [2m   Start at [22m 09:06:34
+tools/figma-token-exporter test: [2m   Duration [22m 108ms[2m (transform 25ms, setup 0ms, import 39ms, tests 4ms, environment 0ms)[22m
+tools/figma-token-exporter test: Done
+packages/ui-legacy test:  [32m✓[39m [30m[43m 0 [49m[39m src/components/ui/data-table/__tests__/data-table.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 42[2mms[22m[39m
+packages/ui-legacy test:  [32m✓[39m [30m[43m 0 [49m[39m src/components/react/components/button/__tests__/button.test.tsx [2m([22m[2m26 tests[22m[2m)[22m[32m 54[2mms[22m[39m
+packages/ui-legacy test:  [32m✓[39m [30m[43m 0 [49m[39m src/components/ui/__tests__/dialog.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+packages/ui-legacy test:  [32m✓[39m [30m[43m 0 [49m[39m src/components/ui/__tests__/empty-exports.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+packages/ui-legacy test: [2m Test Files [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+packages/ui-legacy test: [2m      Tests [22m [1m[32m48 passed[39m[22m[90m (48)[39m
+packages/ui-legacy test: [2m   Start at [22m 09:06:33
+packages/ui-legacy test: [2m   Duration [22m 5.61s[2m (transform 2.41s, setup 1.00s, import 7.40s, tests 153ms, environment 4.09s)[22m
+packages/ui-legacy test: Done
+apps/demos test$ echo "no tests in this workspace" && exit 0
+packages/design-assets test$ pnpm run validate
+packages/icons-svg test$ echo "no tests (raw SVG source package)" && exit 0
+packages/icons-svg-next test$ echo "no tests (raw SVG source package)" && exit 0
+apps/demos test: no tests in this workspace
+apps/demos test: Done
+packages/icons-svg-next test: no tests (raw SVG source package)
+packages/icons-svg test: no tests (raw SVG source package)
+packages/icons-svg-next test: Done
+packages/icons-svg test: Done
+packages/design-assets test: > @acronis-platform/design-assets@0.4.0 validate /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/design-assets
+packages/design-assets test: > ajv compile -s schemas/pack.schema.json --spec=draft2020 && ajv compile -s schemas/rule.schema.json --spec=draft2020 && ajv validate -s schemas/pack.schema.json -d "packs/*.json" --spec=draft2020 && ajv validate -s schemas/rule.schema.json -d "rules/*.json" --spec=draft2020 && node ./scripts/validate-manifests-and-exports.mjs
+packages/design-assets test: schema schemas/pack.schema.json is valid
+packages/design-assets test: schema schemas/rule.schema.json is valid
+packages/design-assets test: packs/icons.json valid
+packages/design-assets test: packs/illustrations.json valid
+packages/design-assets test: rules/current-color.json valid
+packages/design-assets test: rules/scale-16.json valid
+packages/design-assets test: rules/scale-32.json valid
+packages/design-assets test: rules/scale-96.json valid
+packages/design-assets test: rules/stroke-1-6.json valid
+packages/design-assets test: rules/stroke-2-5.json valid
+packages/design-assets test: Manifest/export audit passed for 2 pack(s).
+packages/design-assets test: Done
+packages/icons-react test$ pnpm run generate && vitest run
+packages/icons-sprite test$ pnpm run build
+apps/demo test$ echo "no tests in this workspace" && exit 0
+tools/style-dictionary test$ vitest run
+apps/demo test: no tests in this workspace
+apps/demo test: Done
+packages/icons-sprite test: > @acronis-platform/icons-sprite@0.2.0 build /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/icons-sprite
+packages/icons-sprite test: > tsx scripts/generate-sprite.ts
+packages/icons-react test: > @acronis-platform/icons-react@0.5.0 generate /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/icons-react
+packages/icons-react test: > tsx scripts/generate-icons.ts && tsx scripts/generate-legacy-map.ts
+tools/style-dictionary test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.7 [39m[90m/Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/style-dictionary[39m
+packages/icons-react test: ✓ icons-react: stroke-mono — 392 icons
+packages/icons-react test: ✓ icons-react: solid-mono — 69 icons
+packages/icons-react test: ✓ icons-react: stroke-multi — 15 icons
+packages/icons-react test: ✓ icons-react: solid-multi — 1 icons
+tools/style-dictionary test:  [32m✓[39m src/hooks/__tests__/font-family.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+packages/icons-sprite test: 🎨 Generating icon sprites...
+tools/style-dictionary test:  [32m✓[39m src/hooks/transforms/__tests__/transforms.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+packages/icons-sprite test: 📦 Found 1783 monocolor icons
+packages/icons-sprite test: 📦 Found 299 multicolor icons
+tools/style-dictionary test:  [32m✓[39m src/assets/__tests__/resolve.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+packages/icons-react test: legacy-icon-map.json: 1079 mapped, 49 colored, 16 unresolved (of 1144)
+tools/style-dictionary test:  [32m✓[39m src/assets/__tests__/svgo.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+tools/style-dictionary test:  [32m✓[39m src/assets/__tests__/executor.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+tools/style-dictionary test:  [32m✓[39m src/__tests__/brand-scoping.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+tools/style-dictionary test:  [32m✓[39m src/__tests__/discover-brands.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+tools/style-dictionary test:  [32m✓[39m src/hooks/__tests__/tokens.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+packages/icons-sprite test: ✅ Processed 2082 icons total
+packages/icons-sprite test: ⚡ Generating + optimizing sprites with SVGO...
+packages/icons-react test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.7 [39m[90m/Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/icons-react[39m
+tools/style-dictionary test:  [32m✓[39m src/assets/__tests__/codegen.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 547[2mms[22m[39m
+tools/style-dictionary test:      [33m[2m✓[22m[39m emits type-correct TSX (size-only component) [33m 328[2mms[22m[39m
+tools/style-dictionary test: [2m Test Files [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+tools/style-dictionary test: [2m      Tests [22m [1m[32m106 passed[39m[22m[90m (106)[39m
+tools/style-dictionary test: [2m   Start at [22m 09:06:40
+tools/style-dictionary test: [2m   Duration [22m 947ms[2m (transform 897ms, setup 0ms, import 2.75s, tests 622ms, environment 0ms)[22m
+tools/style-dictionary test: Done
+packages/icons-react test:  [32m✓[39m src/__tests__/naming.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+packages/icons-sprite test:    Combined: 1.50 MB (2082 icons, 22.7% reduction)
+packages/icons-sprite test:    Monocolor: 1.15 MB (1783 icons, 24.6% reduction)
+packages/icons-react test:  [32m✓[39m src/__tests__/packs.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+packages/icons-sprite test:    Multicolor: 352.65 KB (299 icons, 15.6% reduction)
+packages/icons-sprite test: 🎉 Sprite generation complete!
+packages/icons-sprite test: 📄 Generated files:
+packages/icons-sprite test:    • /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/icons-sprite/sprites/iconsprite.svg
+packages/icons-sprite test:    • /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/icons-sprite/sprites/iconsprite-mono.svg
+packages/icons-sprite test:    • /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/icons-sprite/sprites/iconsprite-multi.svg
+packages/icons-react test:  [32m✓[39m src/__tests__/bundle-checks.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 361[2mms[22m[39m
+packages/icons-react test:      [33m[2m✓[22m[39m keeps named icon imports small and avoids pulling full icon registry [33m 360[2mms[22m[39m
+packages/icons-sprite test: Done
+packages/icons-react test:  [32m✓[39m src/__tests__/stroke-mono.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+packages/icons-react test: [2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+packages/icons-react test: [2m      Tests [22m [1m[32m15 passed[39m[22m[90m (15)[39m
+packages/icons-react test: [2m   Start at [22m 09:06:40
+packages/icons-react test: [2m   Duration [22m 1.18s[2m (transform 952ms, setup 207ms, import 1.27s, tests 393ms, environment 925ms)[22m
+packages/icons-react test: Done
+packages/tokens-pd test$ pnpm run build
+packages/tokens-pd test: > @acronis-platform/tokens-pd@1.9.0 build /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/tokens-pd
+packages/tokens-pd test: > pnpm --filter @acronis-platform/style-dictionary build pd-css pd-tailwind
+packages/tokens-pd test: > @acronis-platform/style-dictionary@0.1.0 build /Users/Mladen.Tsvetkov/projects/ui-kit/uikit/tools/style-dictionary
+packages/tokens-pd test: > tsx src/index.ts pd-css pd-tailwind
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/dtcg/primitives-light.json
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/dtcg/primitives-dark.json
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/dtcg/semantics-acronis.json
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/dtcg/components-acronis.json
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/dtcg/semantics-deep-sky.json
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/dtcg/components-deep-sky.json
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Avatar/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Breadcrumb/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Button/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/ButtonIcon/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/ButtonMenu/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/CardFilter/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Checkbox/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Chips/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/InputDatePicker/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/InputSearch/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/InputSelect/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/InputText/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/InputTextArea/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Link/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Radio/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Resizable/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/SearchGlobal/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/SidebarPrimary/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/SidebarSecondary/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Switch/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Table/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Tag/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Tooltip/acronis.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Avatar/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Breadcrumb/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Button/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/ButtonIcon/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/ButtonMenu/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/CardFilter/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Checkbox/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Chips/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/InputDatePicker/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/InputSearch/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/InputSelect/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/InputText/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/InputTextArea/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Link/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Radio/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Resizable/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/SearchGlobal/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/SidebarPrimary/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/SidebarSecondary/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Switch/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Table/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Tag/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/css/Tooltip/deep-sky.css
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/tokens.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Avatar.color.orange
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Avatar.color.red
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Avatar.color.teal
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Avatar.color.violet
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Avatar.color.yellow
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/Avatar.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/Breadcrumb.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/Button.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/ButtonIcon.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/ButtonMenu.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/CardFilter.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/Checkbox.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/Chips.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputDatePicker._global.separator.color.disabled
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputDatePicker._global.separator.color.hover
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputDatePicker._global.separator.color.idle
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/InputDatePicker.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSearch.color.disabled
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSearch.color.hover
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSearch.color.idle
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/InputSearch.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.DropdownItem._global.iconChecked
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.DropdownItem._global.iconCollapse
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.DropdownItem._global.iconTenant
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.DropdownSection.labelGroup.color
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.normal.iconExpand.color.disabled
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.normal.iconExpand.color.hover
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.normal.iconExpand.color.idle
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/InputSelect.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/InputText.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/InputTextArea.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Link.color.active
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Link.color.disabled
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Link.color.hover
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Link.color.idle
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/Link.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/Radio.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Resizable.bar.color
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/Resizable.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): SearchGlobal.placeholoder.color
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/SearchGlobal.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/SidebarPrimary.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/SidebarSecondary.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/Switch.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table.Header.cell.color.active
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table.Header.cell.color.hover
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table.Header.cell.color.idle
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table.Header.sortIcon.color.active
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table.Header.sortIcon.color.inactive
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table._global.row.color.active
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table._global.row.color.hover
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table._global.row.color.idle
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/Table.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/Tag.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/acronis/components/Tooltip.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/tokens.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Avatar.color.orange
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Avatar.color.red
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Avatar.color.teal
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Avatar.color.violet
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Avatar.color.yellow
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/Avatar.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/Breadcrumb.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/Button.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/ButtonIcon.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/ButtonMenu.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/CardFilter.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/Checkbox.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/Chips.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputDatePicker._global.separator.color.disabled
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputDatePicker._global.separator.color.hover
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputDatePicker._global.separator.color.idle
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/InputDatePicker.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSearch.color.disabled
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSearch.color.hover
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSearch.color.idle
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/InputSearch.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.DropdownItem._global.iconChecked
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.DropdownItem._global.iconCollapse
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.DropdownItem._global.iconTenant
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.DropdownSection.labelGroup.color
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.normal.iconExpand.color.disabled
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.normal.iconExpand.color.hover
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): InputSelect.normal.iconExpand.color.idle
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/InputSelect.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/InputText.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/InputTextArea.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Link.color.active
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Link.color.disabled
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Link.color.hover
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Link.color.idle
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/Link.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/Radio.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Resizable.bar.color
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/Resizable.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): SearchGlobal.placeholoder.color
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/SearchGlobal.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/SidebarPrimary.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/SidebarSecondary.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/Switch.js
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table.Header.cell.color.active
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table.Header.cell.color.hover
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table.Header.cell.color.idle
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table.Header.sortIcon.color.active
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table.Header.sortIcon.color.inactive
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table._global.row.color.active
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table._global.row.color.hover
+packages/tokens-pd test: tailwind: skipped unroutable component color token (kept in CSS/tiers; fix naming in Figma): Table._global.row.color.idle
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/Table.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/Tag.js
+packages/tokens-pd test: ✓ ../../packages/tokens-pd/tailwind/deep-sky/components/Tooltip.js
+packages/tokens-pd test: Done
+packages/ui-react test$ vitest run
+packages/ui-react test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.7 [39m[90m/Users/Mladen.Tsvetkov/projects/ui-kit/uikit/packages/ui-react[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/radio/__tests__/radio.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 82[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/tooltip/__tests__/tooltip.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 137[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/table/__tests__/table.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-primary/__tests__/sidebar-primary.test.tsx[2m > [22m[2mSidebarPrimary[2m > [22m[2mrenders the composed rail without error
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-secondary/__tests__/sidebar-secondary.test.tsx[2m > [22m[2mSidebarSecondary[2m > [22m[2mrenders the composed panel without error
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-primary/__tests__/sidebar-primary.test.tsx[2m > [22m[2mSidebarPrimary[2m > [22m[2mexposes a distinguishing nav landmark label
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-secondary/__tests__/sidebar-secondary.test.tsx[2m > [22m[2mSidebarSecondary[2m > [22m[2mexposes a distinguishing nav landmark label
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-primary/__tests__/sidebar-primary.test.tsx[2m > [22m[2mSidebarPrimary[2m > [22m[2mrenders menus as lists of link items
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-secondary/__tests__/sidebar-secondary.test.tsx[2m > [22m[2mSidebarSecondary[2m > [22m[2mrenders the header label as a heading
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test:  [32m✓[39m src/components/ui/checkbox/__tests__/checkbox.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-primary/__tests__/sidebar-primary.test.tsx[2m > [22m[2mSidebarPrimary[2m > [22m[2mmarks the selected item with aria-current="page" and the unselected one without
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-secondary/__tests__/sidebar-secondary.test.tsx[2m > [22m[2mSidebarSecondary[2m > [22m[2mrenders menus as lists of link items
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-primary/__tests__/sidebar-primary.test.tsx[2m > [22m[2mSidebarPrimary[2m > [22m[2mapplies the selected vs unselected container token classes
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test:  [32m✓[39m src/components/ui/input-text/__tests__/input-text.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 66[2mms[22m[39m
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-primary/__tests__/sidebar-primary.test.tsx[2m > [22m[2mSidebarPrimary[2m > [22m[2mdefaults to the expanded state
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-secondary/__tests__/sidebar-secondary.test.tsx[2m > [22m[2mSidebarSecondary[2m > [22m[2mmarks the selected item with aria-current and the right container token
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-primary/__tests__/sidebar-primary.test.tsx[2m > [22m[2mSidebarPrimary[2m > [22m[2mreflects a controlled collapsed state and keeps labels accessible
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-secondary/__tests__/sidebar-secondary.test.tsx[2m > [22m[2mSidebarSecondary[2m > [22m[2muses the shared global icon/label tokens (not per-variant)
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-secondary/__tests__/sidebar-secondary.test.tsx[2m > [22m[2mSidebarSecondary[2m > [22m[2mdefaults to expanded and reflects a controlled collapsed state
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-secondary/__tests__/sidebar-secondary.test.tsx[2m > [22m[2mSidebarSecondary[2m > [22m[2mkeeps the collapsed breadcrumb labels in the DOM
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-secondary/__tests__/sidebar-secondary.test.tsx[2m > [22m[2mSidebarSecondary[2m > [22m[2mindents level-2 sub-items
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test:  [32m✓[39m src/components/ui/select/__tests__/select.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 112[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/search/__tests__/search.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-secondary/__tests__/sidebar-secondary.test.tsx[2m > [22m[2mSidebarSecondary[2m > [22m[2mopens the disclosure initially with defaultOpen
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test:  [32m✓[39m src/components/ui/sidebar-primary/__tests__/sidebar-primary.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[32m 119[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/sheet/__tests__/sheet.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 102[2mms[22m[39m
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-secondary/__tests__/sidebar-secondary.test.tsx[2m > [22m[2mSidebarSecondary — expandable section[2m > [22m[2mrenders the section label as a collapsible trigger, open by default
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test:  [32m✓[39m src/components/ui/input-select/__tests__/input-select.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[32m 194[2mms[22m[39m
+packages/ui-react test: [90mstderr[2m | src/components/ui/sidebar-secondary/__tests__/sidebar-secondary.test.tsx[2m > [22m[2mSidebarSecondary — expandable section[2m > [22m[2mstatic sections still render a plain (non-button) label
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test:  [32m✓[39m src/components/ui/sidebar-secondary/__tests__/sidebar-secondary.test.tsx [2m([22m[2m22 tests[22m[2m)[22m[32m 204[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/data-table/__tests__/data-table.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 153[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/avatar/__tests__/avatar.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/input-text-area/__tests__/input-text-area.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/button-icon/__tests__/button-icon.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/description-list/__tests__/description-list.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/breadcrumb/__tests__/breadcrumb.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/button/__tests__/button.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/input-date-picker/__tests__/input-date-picker.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 51[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/input-search/__tests__/input-search.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/button-menu/__tests__/button-menu.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/toast/__tests__/toast.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 96[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/dialog/__tests__/dialog.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 102[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/card-filter/__tests__/card-filter.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/widget-placeholder/__tests__/widget-placeholder.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/input/__tests__/input.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/field/__tests__/field.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/switch/__tests__/switch.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 87[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/chip/__tests__/chip.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+packages/ui-react test: [90mstderr[2m | src/components/ui/chart/__tests__/chart.test.tsx[2m > [22m[2mChart[2m > [22m[2mrenders the chart wrapper with a stable data-chart id
+packages/ui-react test: [22m[39mThe width(-1) and height(-1) of chart should be greater than 0,
+packages/ui-react test:        please check the style of container, or the props width(100%) and height(100%),
+packages/ui-react test:        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+packages/ui-react test:        height and width.
+packages/ui-react test: The width(0) and height(0) of chart should be greater than 0,
+packages/ui-react test:        please check the style of container, or the props width(100%) and height(100%),
+packages/ui-react test:        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+packages/ui-react test:        height and width.
+packages/ui-react test: [90mstderr[2m | src/components/ui/chart/__tests__/chart.test.tsx[2m > [22m[2mChart[2m > [22m[2minjects per-series --color-* custom properties from the config
+packages/ui-react test: [22m[39mThe width(-1) and height(-1) of chart should be greater than 0,
+packages/ui-react test:        please check the style of container, or the props width(100%) and height(100%),
+packages/ui-react test:        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+packages/ui-react test:        height and width.
+packages/ui-react test: The width(0) and height(0) of chart should be greater than 0,
+packages/ui-react test:        please check the style of container, or the props width(100%) and height(100%),
+packages/ui-react test:        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+packages/ui-react test:        height and width.
+packages/ui-react test:  [32m✓[39m src/components/ui/progress-circle/__tests__/progress-circle.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 57[2mms[22m[39m
+packages/ui-react test: [90mstderr[2m | src/components/ui/chart/__tests__/chart.test.tsx[2m > [22m[2mChart[2m > [22m[2mscopes a per-series theme color under [data-theme="dark"]
+packages/ui-react test: [22m[39mThe width(-1) and height(-1) of chart should be greater than 0,
+packages/ui-react test:        please check the style of container, or the props width(100%) and height(100%),
+packages/ui-react test:        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+packages/ui-react test:        height and width.
+packages/ui-react test: The width(0) and height(0) of chart should be greater than 0,
+packages/ui-react test:        please check the style of container, or the props width(100%) and height(100%),
+packages/ui-react test:        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+packages/ui-react test:        height and width.
+packages/ui-react test: [90mstderr[2m | src/components/ui/chart/__tests__/chart.test.tsx[2m > [22m[2mChart[2m > [22m[2mrenders no <style> when the config carries no colors
+packages/ui-react test: [22m[39mThe width(-1) and height(-1) of chart should be greater than 0,
+packages/ui-react test:        please check the style of container, or the props width(100%) and height(100%),
+packages/ui-react test:        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+packages/ui-react test:        height and width.
+packages/ui-react test: The width(0) and height(0) of chart should be greater than 0,
+packages/ui-react test:        please check the style of container, or the props width(100%) and height(100%),
+packages/ui-react test:        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+packages/ui-react test:        height and width.
+packages/ui-react test:  [32m✓[39m src/components/ui/chart/__tests__/chart.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/resizable/__tests__/resizable.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 71[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/dropdown-menu/__tests__/dropdown-menu.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 156[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/search-global/__tests__/search-global.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/tabs/__tests__/tabs.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/tag/__tests__/tag.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/card/__tests__/card.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/empty/__tests__/empty.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/toggle-group/__tests__/toggle-group.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 59[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/link/__tests__/link.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/popover/__tests__/popover.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 98[2mms[22m[39m
+packages/ui-react test: [90mstderr[2m | src/components/ui/scroll-area/__tests__/scroll-area.test.tsx[2m > [22m[2mScrollArea[2m > [22m[2mrenders its children inside the content
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/scroll-area/__tests__/scroll-area.test.tsx[2m > [22m[2mScrollArea[2m > [22m[2mexposes the structural parts via data-slot
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/scroll-area/__tests__/scroll-area.test.tsx[2m > [22m[2mScrollArea[2m > [22m[2mforwards a ref to the root element
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/scroll-area/__tests__/scroll-area.test.tsx[2m > [22m[2mScrollArea[2m > [22m[2mmerges a custom className onto the root
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/scroll-area/__tests__/scroll-area.test.tsx[2m > [22m[2mScrollArea[2m > [22m[2mrenders for orientation=vertical without crashing
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/scroll-area/__tests__/scroll-area.test.tsx[2m > [22m[2mScrollArea[2m > [22m[2mrenders for orientation=horizontal without crashing
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/scroll-area/__tests__/scroll-area.test.tsx[2m > [22m[2mScrollArea[2m > [22m[2mrenders for orientation=both without crashing
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test: [90mstderr[2m | src/components/ui/scroll-area/__tests__/scroll-area.test.tsx[2m > [22m[2mScrollArea[2m > [22m[2mrenders a standalone ScrollBar with the requested orientation
+packages/ui-react test: [22m[39mAn update to ScrollAreaRoot inside a test was not wrapped in act(...).
+packages/ui-react test: When testing, code that causes React state updates should be wrapped into act(...):
+packages/ui-react test: act(() => {
+packages/ui-react test:   /* fire events that update state */
+packages/ui-react test: });
+packages/ui-react test: /* assert on the output */
+packages/ui-react test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+packages/ui-react test:  [32m✓[39m src/components/ui/scroll-area/__tests__/scroll-area.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/accordion/__tests__/accordion.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 110[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/sheet/__tests__/sheet-details.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 78[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/form/__tests__/form.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 115[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/combobox/__tests__/combobox.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 251[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/alert/__tests__/alert.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 58[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/number-field/__tests__/number-field.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 102[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/pagination/__tests__/pagination.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/auth-layout/__tests__/auth-layout.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/app-shell/__tests__/app-shell.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/spinner/__tests__/spinner.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/label/__tests__/label.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/grid/__tests__/grid.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/slider/__tests__/slider.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 60[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/page-header/__tests__/page-header.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 24[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/separator/__tests__/separator.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/progress/__tests__/progress.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m .storybook/visual-regression.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 1[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/stack/__tests__/stack.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/skeleton/__tests__/skeleton.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/page-content/__tests__/page-content.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/section/__tests__/section.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 13[2mms[22m[39m
+packages/ui-react test:  [32m✓[39m src/components/ui/collapsible/__tests__/collapsible.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+packages/ui-react test: [2m Test Files [22m [1m[32m64 passed[39m[22m[90m (64)[39m
+packages/ui-react test: [2m      Tests [22m [1m[32m420 passed[39m[22m[90m (420)[39m
+packages/ui-react test: [2m   Start at [22m 09:06:43
+packages/ui-react test: [2m   Duration [22m 5.47s[2m (transform 5.20s, setup 5.03s, import 25.04s, tests 4.09s, environment 17.48s)[22m
+packages/ui-react test: Done
+apps/docs test$ echo "no tests in this workspace" && exit 0
+apps/docs test: no tests in this workspace
+apps/docs test: Done
