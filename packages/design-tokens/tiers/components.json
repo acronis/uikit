@@ -7267,6 +7267,7 @@
         "borderColor": {
           "hover": {
             "$extensions": {
+              "com.figma.hiddenFromPublishing": true,
               "com.figma.scopes": ["STROKE_COLOR"],
               "com.figma.variableId": "VariableID:3689:2477"
             },
@@ -7279,6 +7280,7 @@
           },
           "idle": {
             "$extensions": {
+              "com.figma.hiddenFromPublishing": true,
               "com.figma.scopes": ["STROKE_COLOR"],
               "com.figma.variableId": "VariableID:3689:2476"
             },
@@ -7294,6 +7296,7 @@
       "error": {
         "color": {
           "$extensions": {
+            "com.figma.hiddenFromPublishing": true,
             "com.figma.scopes": ["ALL_SCOPES"],
             "com.figma.variableId": "VariableID:3689:2478"
           },
@@ -7306,6 +7309,7 @@
         },
         "textStyle": {
           "$extensions": {
+            "com.figma.hiddenFromPublishing": true,
             "com.figma.scopes": ["ALL_SCOPES"],
             "com.figma.variableId": "VariableID:3689:2479"
           },
