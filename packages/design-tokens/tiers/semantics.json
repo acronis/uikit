@@ -329,8 +329,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-1}",
-            "default": "{palette.electricblue.electricblue-1}"
+            "deep_sky_itkontoret": "{palette.electricblue.1}",
+            "default": "{palette.electricblue.1}"
           }
         },
         "info-hover": {
@@ -340,8 +340,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-2}",
-            "default": "{palette.electricblue.electricblue-2}"
+            "deep_sky_itkontoret": "{palette.electricblue.2}",
+            "default": "{palette.electricblue.2}"
           }
         },
         "info-pressed": {
@@ -351,8 +351,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-3}",
-            "default": "{palette.electricblue.electricblue-3}"
+            "deep_sky_itkontoret": "{palette.electricblue.3}",
+            "default": "{palette.electricblue.3}"
           }
         },
         "neutral": {
@@ -858,19 +858,19 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-4}",
-            "default": "{palette.electricblue.electricblue-4}"
+            "deep_sky_itkontoret": "{palette.electricblue.4}",
+            "default": "{palette.electricblue.4}"
           }
         },
-        "info-strong": {
+        "infoStrong": {
           "$extensions": {
             "com.figma.scopes": ["STROKE_COLOR"],
             "com.figma.variableId": "VariableID:797:2008"
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-8}",
-            "default": "{palette.electricblue.electricblue-8}"
+            "deep_sky_itkontoret": "{palette.electricblue.8}",
+            "default": "{palette.electricblue.8}"
           }
         },
         "neutral": {
@@ -1192,8 +1192,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-11}",
-            "default": "{palette.electricblue.electricblue-11}"
+            "deep_sky_itkontoret": "{palette.electricblue.11}",
+            "default": "{palette.electricblue.11}"
           }
         },
         "neutral": {
@@ -1214,8 +1214,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-11}",
-            "default": "{palette.electricblue.electricblue-11}"
+            "deep_sky_itkontoret": "{palette.electricblue.11}",
+            "default": "{palette.electricblue.11}"
           }
         },
         "success": {
@@ -1309,6 +1309,74 @@
       }
     },
     "text": {
+      "onBackdrop": {
+        "elementLink-active": {
+          "$extensions": {
+            "com.figma.scopes": ["TEXT_FILL"],
+            "com.figma.variableId": "VariableID:3939:3396"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.4}",
+            "default": "{palette.electricblue.4}"
+          }
+        },
+        "elementLink-hover": {
+          "$extensions": {
+            "com.figma.scopes": ["TEXT_FILL"],
+            "com.figma.variableId": "VariableID:3939:3395"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.4}",
+            "default": "{palette.electricblue.4}"
+          }
+        },
+        "elementLink-idle": {
+          "$extensions": {
+            "com.figma.scopes": ["TEXT_FILL"],
+            "com.figma.variableId": "VariableID:3939:3394"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.7}",
+            "default": "{palette.electricblue.7}"
+          }
+        },
+        "screenLink-active": {
+          "$extensions": {
+            "com.figma.scopes": ["TEXT_FILL"],
+            "com.figma.variableId": "VariableID:3931:8760"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.4}",
+            "default": "{palette.electricblue.4}"
+          }
+        },
+        "screenLink-hover": {
+          "$extensions": {
+            "com.figma.scopes": ["TEXT_FILL"],
+            "com.figma.variableId": "VariableID:3931:8759"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.4}",
+            "default": "{palette.electricblue.4}"
+          }
+        },
+        "screenLink-idle": {
+          "$extensions": {
+            "com.figma.scopes": ["TEXT_FILL"],
+            "com.figma.variableId": "VariableID:3931:8758"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.4}",
+            "default": "{palette.electricblue.4}"
+          }
+        }
+      },
       "onBrand": {
         "disabled": {
           "$extensions": {
@@ -1521,8 +1589,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-11}",
-            "default": "{palette.electricblue.electricblue-11}"
+            "deep_sky_itkontoret": "{palette.electricblue.11}",
+            "default": "{palette.electricblue.11}"
           }
         },
         "link": {

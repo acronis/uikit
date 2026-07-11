@@ -410,7 +410,7 @@
       }
     },
     "electricblue": {
-      "electricblue-0": {
+      "0": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -422,7 +422,7 @@
           "light": { "colorSpace": "hsl", "components": [210, 40, 98.04] }
         }
       },
-      "electricblue-1": {
+      "1": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -434,67 +434,7 @@
           "light": { "colorSpace": "hsl", "components": [213.33, 36, 95.1] }
         }
       },
-      "electricblue-10": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1950"
-        },
-        "platforms": ["PD"],
-        "values": {
-          "dark": { "colorSpace": "hsl", "components": [211.58, 50, 85.1] },
-          "light": { "colorSpace": "hsl", "components": [214.81, 85.62, 30] }
-        }
-      },
-      "electricblue-11": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1951"
-        },
-        "platforms": ["PD"],
-        "values": {
-          "dark": { "colorSpace": "hsl", "components": [212.9, 60.78, 90] },
-          "light": { "colorSpace": "hsl", "components": [214.96, 90.55, 24.9] }
-        }
-      },
-      "electricblue-12": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1952"
-        },
-        "platforms": ["PD"],
-        "values": {
-          "dark": { "colorSpace": "hsl", "components": [211.58, 48.72, 92.35] },
-          "light": { "colorSpace": "hsl", "components": [215, 94.12, 20] }
-        }
-      },
-      "electricblue-13": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1953"
-        },
-        "platforms": ["PD"],
-        "values": {
-          "dark": { "colorSpace": "hsl", "components": [213.33, 36, 95.1] },
-          "light": { "colorSpace": "hsl", "components": [215.06, 100, 15.1] }
-        }
-      },
-      "electricblue-14": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1954"
-        },
-        "platforms": ["PD"],
-        "values": {
-          "dark": { "colorSpace": "hsl", "components": [210, 40, 98.04] },
-          "light": { "colorSpace": "hsl", "components": [215.29, 100, 10] }
-        }
-      },
-      "electricblue-2": {
+      "2": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -506,7 +446,7 @@
           "light": { "colorSpace": "hsl", "components": [211.58, 48.72, 92.35] }
         }
       },
-      "electricblue-3": {
+      "3": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -518,7 +458,7 @@
           "light": { "colorSpace": "hsl", "components": [212.9, 60.78, 90] }
         }
       },
-      "electricblue-4": {
+      "4": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -526,11 +466,11 @@
         },
         "platforms": ["PD"],
         "values": {
-          "dark": { "colorSpace": "hsl", "components": [214.77, 49.44, 34.9] },
+          "dark": { "colorSpace": "hsl", "components": [210.37, 49.69, 31.96] },
           "light": { "colorSpace": "hsl", "components": [212.22, 71.05, 85.1] }
         }
       },
-      "electricblue-5": {
+      "5": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -542,7 +482,7 @@
           "light": { "colorSpace": "hsl", "components": [212.2, 80.39, 70] }
         }
       },
-      "electricblue-6": {
+      "6": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -554,7 +494,7 @@
           "light": { "colorSpace": "hsl", "components": [214.89, 80, 54.9] }
         }
       },
-      "electricblue-7-primary": {
+      "7": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -562,11 +502,11 @@
         },
         "platforms": ["PD"],
         "values": {
-          "dark": { "colorSpace": "hsl", "components": [215.29, 50, 60] },
+          "dark": { "colorSpace": "hsl", "components": [212.36, 90.16, 64.12] },
           "light": { "colorSpace": "hsl", "components": [215.22, 80, 45.1] }
         }
       },
-      "electricblue-8": {
+      "8": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -578,7 +518,7 @@
           "light": { "colorSpace": "hsl", "components": [214.84, 80.31, 37.84] }
         }
       },
-      "electricblue-9": {
+      "9": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -588,6 +528,66 @@
         "values": {
           "dark": { "colorSpace": "hsl", "components": [211.95, 50.33, 70] },
           "light": { "colorSpace": "hsl", "components": [214.74, 85.39, 34.9] }
+        }
+      },
+      "10": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [],
+          "com.figma.variableId": "VariableID:3419:1950"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "dark": { "colorSpace": "hsl", "components": [211.58, 50, 85.1] },
+          "light": { "colorSpace": "hsl", "components": [214.81, 85.62, 30] }
+        }
+      },
+      "11": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [],
+          "com.figma.variableId": "VariableID:3419:1951"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "dark": { "colorSpace": "hsl", "components": [212.9, 60.78, 90] },
+          "light": { "colorSpace": "hsl", "components": [214.96, 90.55, 24.9] }
+        }
+      },
+      "12": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [],
+          "com.figma.variableId": "VariableID:3419:1952"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "dark": { "colorSpace": "hsl", "components": [211.58, 48.72, 92.35] },
+          "light": { "colorSpace": "hsl", "components": [215, 94.12, 20] }
+        }
+      },
+      "13": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [],
+          "com.figma.variableId": "VariableID:3419:1953"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "dark": { "colorSpace": "hsl", "components": [213.33, 36, 95.1] },
+          "light": { "colorSpace": "hsl", "components": [215.06, 100, 15.1] }
+        }
+      },
+      "14": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [],
+          "com.figma.variableId": "VariableID:3419:1954"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "dark": { "colorSpace": "hsl", "components": [210, 40, 98.04] },
+          "light": { "colorSpace": "hsl", "components": [215.29, 100, 10] }
         }
       }
     },
