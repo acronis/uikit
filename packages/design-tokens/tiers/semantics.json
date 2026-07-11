@@ -13,6 +13,43 @@
   "colors": {
     "$type": "color",
     "background": {
+      "backdrop": {
+        "element": {
+          "primary": {
+            "$extensions": {
+              "com.figma.scopes": ["FRAME_FILL"],
+              "com.figma.variableId": "VariableID:202:38"
+            },
+            "platforms": ["PD"],
+            "values": {
+              "deep_sky_itkontoret": "{palette.transparent.white.inverse-95}",
+              "default": "{palette.transparent.white.inverse-95}"
+            }
+          },
+          "secondary": {
+            "$extensions": {
+              "com.figma.scopes": ["FRAME_FILL"],
+              "com.figma.variableId": "VariableID:4370:2956"
+            },
+            "platforms": ["PD"],
+            "values": {
+              "deep_sky_itkontoret": "{palette.transparent.blue.inverse-95}",
+              "default": "{palette.transparent.blue.inverse-95}"
+            }
+          }
+        },
+        "screen": {
+          "$extensions": {
+            "com.figma.scopes": ["FRAME_FILL"],
+            "com.figma.variableId": "VariableID:50:1433"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.transparent.dark.fixed-90}",
+            "default": "{palette.transparent.dark.fixed-90}"
+          }
+        }
+      },
       "brand": {
         "primary": {
           "$extensions": {
@@ -21,11 +58,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.13}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [196.32, 81.7, 30]
-            }
+            },
+            "default": "{palette.blue.13}"
           }
         },
         "primary-active": {
@@ -35,11 +72,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.7}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [199.81, 89.08, 53.33]
-            }
+            },
+            "default": "{palette.blue.7}"
           }
         },
         "primary-disabled": {
@@ -49,8 +86,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.5}",
-            "deep_sky_itkontoret": { "colorSpace": "hsl", "components": [200, 100, 81.76] }
+            "deep_sky_itkontoret": {
+              "colorSpace": "hsl",
+              "components": [200, 100, 81.76]
+            },
+            "default": "{palette.blue.5}"
           }
         },
         "primary-focus": {
@@ -60,11 +100,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.10}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [199.81, 89.08, 53.33]
-            }
+            },
+            "default": "{palette.blue.10}"
           }
         },
         "primary-hover": {
@@ -74,11 +114,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.12}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [195.93, 84.96, 26.08]
-            }
+            },
+            "default": "{palette.blue.12}"
           }
         },
         "secondary": {
@@ -88,11 +128,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.7}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [208.8, 15.53, 31.57]
-            }
+            },
+            "default": "{palette.blue.7}"
           }
         },
         "secondary-active": {
@@ -102,11 +142,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.9}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [205.71, 14.58, 18.82]
-            }
+            },
+            "default": "{palette.blue.9}"
           }
         },
         "secondary-disabled": {
@@ -116,11 +156,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.3}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [210, 7.69, 79.61]
-            }
+            },
+            "default": "{palette.blue.3}"
           }
         },
         "secondary-hover": {
@@ -130,92 +170,24 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.8}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [207, 15.63, 25.1]
-            }
+            },
+            "default": "{palette.blue.8}"
           }
         }
       },
-      "inverted": {
-        "active": {
-          "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL"],
-            "com.figma.variableId": "VariableID:305:124"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.blue.8}",
-            "deep_sky_itkontoret": "{palette.blue.8}"
-          }
-        },
-        "disabled": {
-          "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL"],
-            "com.figma.variableId": "VariableID:2242:1416"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.blue.11}",
-            "deep_sky_itkontoret": "{palette.blue.11}"
-          }
-        },
-        "hover": {
-          "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL"],
-            "com.figma.variableId": "VariableID:305:123"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.blue.9}",
-            "deep_sky_itkontoret": "{palette.blue.9}"
-          }
-        },
+      "inverse": {
         "primary": {
-          "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL"],
-            "com.figma.variableId": "VariableID:305:122"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.blue.10}",
-            "deep_sky_itkontoret": "{palette.blue.10}"
-          }
-        }
-      },
-      "overlay": {
-        "inverted": {
-          "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL"],
-            "com.figma.variableId": "VariableID:202:38"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.transparent.inverted.1}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.1}"
-          }
-        },
-        "inverted-dark": {
           "$extensions": {
             "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:3665:6953"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.transparent.dark.inverted}",
-            "deep_sky_itkontoret": "{palette.transparent.dark.inverted}"
-          }
-        },
-        "primary": {
-          "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL"],
-            "com.figma.variableId": "VariableID:50:1433"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.transparent.dark.11}",
-            "deep_sky_itkontoret": "{palette.transparent.dark.11}"
+            "deep_sky_itkontoret": "{palette.transparent.dark.inverse-100}",
+            "default": "{palette.transparent.dark.inverse-100}"
           }
         }
       },
@@ -227,8 +199,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.violet.1}",
-            "deep_sky_itkontoret": "{palette.violet.1}"
+            "deep_sky_itkontoret": "{palette.violet.1}",
+            "default": "{palette.violet.1}"
           }
         },
         "ai-hover": {
@@ -238,8 +210,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.violet.2}",
-            "deep_sky_itkontoret": "{palette.violet.2}"
+            "deep_sky_itkontoret": "{palette.violet.2}",
+            "default": "{palette.violet.2}"
           }
         },
         "ai-pressed": {
@@ -249,8 +221,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.violet.3}",
-            "deep_sky_itkontoret": "{palette.violet.3}"
+            "deep_sky_itkontoret": "{palette.violet.3}",
+            "default": "{palette.violet.3}"
           }
         },
         "critical": {
@@ -260,8 +232,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.orange.1}",
-            "deep_sky_itkontoret": "{palette.orange.1}"
+            "deep_sky_itkontoret": "{palette.orange.1}",
+            "default": "{palette.orange.1}"
           }
         },
         "critical-hover": {
@@ -271,8 +243,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.orange.2}",
-            "deep_sky_itkontoret": "{palette.orange.2}"
+            "deep_sky_itkontoret": "{palette.orange.2}",
+            "default": "{palette.orange.2}"
           }
         },
         "critical-pressed": {
@@ -282,8 +254,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.orange.3}",
-            "deep_sky_itkontoret": "{palette.orange.3}"
+            "deep_sky_itkontoret": "{palette.orange.3}",
+            "default": "{palette.orange.3}"
           }
         },
         "danger": {
@@ -293,8 +265,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.red.1}",
-            "deep_sky_itkontoret": "{palette.red.1}"
+            "deep_sky_itkontoret": "{palette.red.1}",
+            "default": "{palette.red.1}"
           }
         },
         "danger-hover": {
@@ -304,8 +276,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.red.2}",
-            "deep_sky_itkontoret": "{palette.red.2}"
+            "deep_sky_itkontoret": "{palette.red.2}",
+            "default": "{palette.red.2}"
           }
         },
         "danger-pressed": {
@@ -315,8 +287,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.red.3}",
-            "deep_sky_itkontoret": "{palette.red.3}"
+            "deep_sky_itkontoret": "{palette.red.3}",
+            "default": "{palette.red.3}"
           }
         },
         "info": {
@@ -326,8 +298,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-1}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-1}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-1}",
+            "default": "{palette.electricblue.electricblue-1}"
           }
         },
         "info-hover": {
@@ -337,8 +309,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-2}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-2}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-2}",
+            "default": "{palette.electricblue.electricblue-2}"
           }
         },
         "info-pressed": {
@@ -348,8 +320,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-3}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-3}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-3}",
+            "default": "{palette.electricblue.electricblue-3}"
           }
         },
         "neutral": {
@@ -359,8 +331,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.base}",
-            "deep_sky_itkontoret": "{palette.base}"
+            "deep_sky_itkontoret": "{palette.base}",
+            "default": "{palette.base}"
           }
         },
         "neutral-hover": {
@@ -370,8 +342,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.1}",
-            "deep_sky_itkontoret": "{palette.grayscale.1}"
+            "deep_sky_itkontoret": "{palette.grayscale.1}",
+            "default": "{palette.grayscale.1}"
           }
         },
         "neutral-pressed": {
@@ -381,8 +353,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.2}",
-            "deep_sky_itkontoret": "{palette.grayscale.2}"
+            "deep_sky_itkontoret": "{palette.grayscale.2}",
+            "default": "{palette.grayscale.2}"
           }
         },
         "off": {
@@ -392,11 +364,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.3}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [210, 7.69, 79.61]
-            }
+            },
+            "default": "{palette.blue.3}"
           }
         },
         "on": {
@@ -406,8 +378,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.green.6}",
-            "deep_sky_itkontoret": "{palette.green.6}"
+            "deep_sky_itkontoret": "{palette.green.6}",
+            "default": "{palette.green.6}"
           }
         },
         "success": {
@@ -417,8 +389,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.green.1}",
-            "deep_sky_itkontoret": "{palette.green.1}"
+            "deep_sky_itkontoret": "{palette.green.1}",
+            "default": "{palette.green.1}"
           }
         },
         "success-hover": {
@@ -428,8 +400,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.green.2}",
-            "deep_sky_itkontoret": "{palette.green.2}"
+            "deep_sky_itkontoret": "{palette.green.2}",
+            "default": "{palette.green.2}"
           }
         },
         "success-pressed": {
@@ -439,8 +411,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.green.3}",
-            "deep_sky_itkontoret": "{palette.green.3}"
+            "deep_sky_itkontoret": "{palette.green.3}",
+            "default": "{palette.green.3}"
           }
         },
         "warning": {
@@ -450,8 +422,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.yellow.1}",
-            "deep_sky_itkontoret": "{palette.yellow.1}"
+            "deep_sky_itkontoret": "{palette.yellow.1}",
+            "default": "{palette.yellow.1}"
           }
         },
         "warning-hover": {
@@ -461,8 +433,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.yellow.2}",
-            "deep_sky_itkontoret": "{palette.yellow.2}"
+            "deep_sky_itkontoret": "{palette.yellow.2}",
+            "default": "{palette.yellow.2}"
           }
         },
         "warning-pressed": {
@@ -472,208 +444,208 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.yellow.3}",
-            "deep_sky_itkontoret": "{palette.yellow.3}"
+            "deep_sky_itkontoret": "{palette.yellow.3}",
+            "default": "{palette.yellow.3}"
           }
         }
       },
       "statusStrong": {
         "critical": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263451"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.orange.7}",
-            "deep_sky_itkontoret": "{palette.orange.7}"
+            "deep_sky_itkontoret": "{palette.orange.7}",
+            "default": "{palette.orange.7}"
           }
         },
         "critical-hover": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263452"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.orange.8}",
-            "deep_sky_itkontoret": "{palette.orange.8}"
+            "deep_sky_itkontoret": "{palette.orange.8}",
+            "default": "{palette.orange.8}"
           }
         },
         "critical-pressed": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263453"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.orange.9}",
-            "deep_sky_itkontoret": "{palette.orange.9}"
+            "deep_sky_itkontoret": "{palette.orange.9}",
+            "default": "{palette.orange.9}"
           }
         },
         "danger": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263454"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.red.7}",
-            "deep_sky_itkontoret": "{palette.red.7}"
+            "deep_sky_itkontoret": "{palette.red.7}",
+            "default": "{palette.red.7}"
           }
         },
         "danger-hover": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263455"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.red.9}",
-            "deep_sky_itkontoret": "{palette.red.9}"
+            "deep_sky_itkontoret": "{palette.red.9}",
+            "default": "{palette.red.9}"
           }
         },
         "danger-pressed": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263456"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.red.10}",
-            "deep_sky_itkontoret": "{palette.red.10}"
+            "deep_sky_itkontoret": "{palette.red.10}",
+            "default": "{palette.red.10}"
           }
         },
         "info": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263442"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-7-primary}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-7-primary}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-7-primary}",
+            "default": "{palette.electricblue.electricblue-7-primary}"
           }
         },
         "info-hover": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263443"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-8}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-8}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-8}",
+            "default": "{palette.electricblue.electricblue-8}"
           }
         },
         "info-pressed": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263444"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-9}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-9}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-9}",
+            "default": "{palette.electricblue.electricblue-9}"
           }
         },
         "neutral": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:911:263460"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.7}",
-            "deep_sky_itkontoret": "{palette.grayscale.7}"
+            "deep_sky_itkontoret": "{palette.grayscale.7}",
+            "default": "{palette.grayscale.7}"
           }
         },
         "neutral-hover": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:911:263461"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.8}",
-            "deep_sky_itkontoret": "{palette.grayscale.8}"
+            "deep_sky_itkontoret": "{palette.grayscale.8}",
+            "default": "{palette.grayscale.8}"
           }
         },
         "neutral-pressed": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:911:263462"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.9}",
-            "deep_sky_itkontoret": "{palette.grayscale.9}"
+            "deep_sky_itkontoret": "{palette.grayscale.9}",
+            "default": "{palette.grayscale.9}"
           }
         },
         "success": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263445"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.green.7}",
-            "deep_sky_itkontoret": "{palette.green.7}"
+            "deep_sky_itkontoret": "{palette.green.7}",
+            "default": "{palette.green.7}"
           }
         },
         "success-hover": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263446"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.green.8}",
-            "deep_sky_itkontoret": "{palette.green.8}"
+            "deep_sky_itkontoret": "{palette.green.8}",
+            "default": "{palette.green.8}"
           }
         },
         "success-pressed": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263447"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.green.9}",
-            "deep_sky_itkontoret": "{palette.green.9}"
+            "deep_sky_itkontoret": "{palette.green.9}",
+            "default": "{palette.green.9}"
           }
         },
         "warning": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263448"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.yellow.7}",
-            "deep_sky_itkontoret": "{palette.yellow.7}"
+            "deep_sky_itkontoret": "{palette.yellow.7}",
+            "default": "{palette.yellow.7}"
           }
         },
         "warning-hover": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263449"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.yellow.8}",
-            "deep_sky_itkontoret": "{palette.yellow.8}"
+            "deep_sky_itkontoret": "{palette.yellow.8}",
+            "default": "{palette.yellow.8}"
           }
         },
         "warning-pressed": {
           "$extensions": {
-            "com.figma.scopes": ["FRAME_FILL", "SHAPE_FILL"],
+            "com.figma.scopes": ["FRAME_FILL"],
             "com.figma.variableId": "VariableID:910:263450"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.yellow.9}",
-            "deep_sky_itkontoret": "{palette.yellow.9}"
+            "deep_sky_itkontoret": "{palette.yellow.9}",
+            "default": "{palette.yellow.9}"
           }
         }
       },
@@ -685,11 +657,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.3}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [210, 18.18, 87.06]
-            }
+            },
+            "default": "{palette.blue.3}"
           }
         },
         "hover": {
@@ -699,11 +671,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.1}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [200, 8.57, 93.14]
-            }
+            },
+            "default": "{palette.blue.1}"
           }
         },
         "primary": {
@@ -713,8 +685,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.base}",
-            "deep_sky_itkontoret": "{palette.base}"
+            "deep_sky_itkontoret": "{palette.base}",
+            "default": "{palette.base}"
           }
         },
         "secondary": {
@@ -724,11 +696,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.0}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [240, 5.88, 96.67]
-            }
+            },
+            "default": "{palette.blue.0}"
           }
         }
       },
@@ -739,8 +711,8 @@
         },
         "platforms": ["PD"],
         "values": {
-          "default": "{palette.transparent.clear}",
-          "deep_sky_itkontoret": "{palette.transparent.clear}"
+          "deep_sky_itkontoret": "{palette.transparent.clear}",
+          "default": "{palette.transparent.clear}"
         }
       }
     },
@@ -753,8 +725,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.transparent.inverted.9}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.9}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed-10}",
+            "default": "{palette.transparent.white.fixed-10}"
           }
         },
         "border-active": {
@@ -764,8 +736,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.0}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.0}"
+            "deep_sky_itkontoret": "{palette.transparent.inverted.0}",
+            "default": "{palette.grayscale.0}"
           }
         },
         "divider": {
@@ -775,8 +747,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.transparent.inverted.9}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.9}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed-10}",
+            "default": "{palette.transparent.white.fixed-10}"
           }
         }
       },
@@ -789,8 +761,8 @@
           "$type": "gradient",
           "platforms": ["PD"],
           "values": {
-            "default": "{gradients.ai.idle}",
-            "deep_sky_itkontoret": "{gradients.ai.idle}"
+            "deep_sky_itkontoret": "{gradients.ai.idle}",
+            "default": "{gradients.ai.idle}"
           }
         },
         "critical": {
@@ -800,8 +772,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.orange.4}",
-            "deep_sky_itkontoret": "{palette.orange.4}"
+            "deep_sky_itkontoret": "{palette.orange.4}",
+            "default": "{palette.orange.4}"
           }
         },
         "critical-strong": {
@@ -811,8 +783,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.orange.8}",
-            "deep_sky_itkontoret": "{palette.orange.8}"
+            "deep_sky_itkontoret": "{palette.orange.8}",
+            "default": "{palette.orange.8}"
           }
         },
         "danger": {
@@ -822,8 +794,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.red.4}",
-            "deep_sky_itkontoret": "{palette.red.4}"
+            "deep_sky_itkontoret": "{palette.red.4}",
+            "default": "{palette.red.4}"
           }
         },
         "danger-strong": {
@@ -833,8 +805,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.red.8}",
-            "deep_sky_itkontoret": "{palette.red.8}"
+            "deep_sky_itkontoret": "{palette.red.8}",
+            "default": "{palette.red.8}"
           }
         },
         "info": {
@@ -844,8 +816,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-4}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-4}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-4}",
+            "default": "{palette.electricblue.electricblue-4}"
           }
         },
         "info-strong": {
@@ -855,8 +827,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-8}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-8}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-8}",
+            "default": "{palette.electricblue.electricblue-8}"
           }
         },
         "neutral": {
@@ -866,8 +838,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.4}",
-            "deep_sky_itkontoret": "{palette.grayscale.4}"
+            "deep_sky_itkontoret": "{palette.grayscale.4}",
+            "default": "{palette.grayscale.4}"
           }
         },
         "neutral-strong": {
@@ -877,8 +849,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.8}",
-            "deep_sky_itkontoret": "{palette.grayscale.8}"
+            "deep_sky_itkontoret": "{palette.grayscale.8}",
+            "default": "{palette.grayscale.8}"
           }
         },
         "success": {
@@ -888,8 +860,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.green.4}",
-            "deep_sky_itkontoret": "{palette.green.4}"
+            "deep_sky_itkontoret": "{palette.green.4}",
+            "default": "{palette.green.4}"
           }
         },
         "success-strong": {
@@ -899,8 +871,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.green.8}",
-            "deep_sky_itkontoret": "{palette.green.8}"
+            "deep_sky_itkontoret": "{palette.green.8}",
+            "default": "{palette.green.8}"
           }
         },
         "warning": {
@@ -910,8 +882,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.yellow.4}",
-            "deep_sky_itkontoret": "{palette.yellow.4}"
+            "deep_sky_itkontoret": "{palette.yellow.4}",
+            "default": "{palette.yellow.4}"
           }
         },
         "warning-strong": {
@@ -921,8 +893,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.yellow.8}",
-            "deep_sky_itkontoret": "{palette.yellow.8}"
+            "deep_sky_itkontoret": "{palette.yellow.8}",
+            "default": "{palette.yellow.8}"
           }
         }
       },
@@ -934,11 +906,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.3}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [210, 7.69, 79.61]
-            }
+            },
+            "default": "{palette.blue.3}"
           }
         },
         "border-active": {
@@ -948,11 +920,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.7}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [208.8, 15.53, 31.57]
-            }
+            },
+            "default": "{palette.blue.7}"
           }
         },
         "border-error": {
@@ -962,8 +934,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.red.7}",
-            "deep_sky_itkontoret": "{palette.red.7}"
+            "deep_sky_itkontoret": "{palette.red.7}",
+            "default": "{palette.red.7}"
           }
         },
         "divider": {
@@ -973,11 +945,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.3}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [210, 7.69, 79.61]
-            }
+            },
+            "default": "{palette.blue.3}"
           }
         }
       },
@@ -988,8 +960,8 @@
         },
         "platforms": ["PD"],
         "values": {
-          "default": "{palette.transparent.clear}",
-          "deep_sky_itkontoret": "{palette.transparent.clear}"
+          "deep_sky_itkontoret": "{palette.transparent.clear}",
+          "default": "{palette.transparent.clear}"
         }
       }
     },
@@ -1001,8 +973,8 @@
         },
         "platforms": ["PD"],
         "values": {
-          "default": "{palette.blue.4}",
-          "deep_sky_itkontoret": "{palette.blue.4}"
+          "deep_sky_itkontoret": "{palette.blue.4}",
+          "default": "{palette.blue.4}"
         }
       },
       "error": {
@@ -1012,8 +984,8 @@
         },
         "platforms": ["PD"],
         "values": {
-          "default": "{palette.red.4}",
-          "deep_sky_itkontoret": "{palette.red.4}"
+          "deep_sky_itkontoret": "{palette.red.4}",
+          "default": "{palette.red.4}"
         }
       },
       "primary": {
@@ -1023,8 +995,8 @@
         },
         "platforms": ["PD"],
         "values": {
-          "default": "{palette.blue.4}",
-          "deep_sky_itkontoret": "{palette.blue.4}"
+          "deep_sky_itkontoret": "{palette.blue.4}",
+          "default": "{palette.blue.4}"
         }
       },
       "secondary": {
@@ -1034,262 +1006,251 @@
         },
         "platforms": ["PD"],
         "values": {
-          "default": "{palette.blue.4}",
-          "deep_sky_itkontoret": "{palette.blue.4}"
+          "deep_sky_itkontoret": "{palette.blue.4}",
+          "default": "{palette.blue.4}"
         }
       }
     },
     "glyph": {
-      "onBrand": {
-        "disabled": {
+      "onBackdrop": {
+        "elementPrimary": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
-            "com.figma.variableId": "VariableID:179:195"
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:3931:8751"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.transparent.inverted.9}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.1}"
+            "deep_sky_itkontoret": "{palette.grayscale.7}",
+            "default": "{palette.blue.7}"
           }
         },
-        "primary": {
+        "screenPrimary": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
-            "com.figma.variableId": "VariableID:52:2202"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.transparent.inverted.0}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.0}"
-          }
-        },
-        "secondary": {
-          "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
-            "com.figma.variableId": "VariableID:179:196"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.transparent.inverted.4}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.4}"
-          }
-        }
-      },
-      "onInverted": {
-        "disabled": {
-          "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
-            "com.figma.variableId": "VariableID:305:126"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.transparent.inverted.7}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.7}"
-          }
-        },
-        "primary": {
-          "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
-            "com.figma.variableId": "VariableID:305:125"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.transparent.inverted.0}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.0}"
-          }
-        },
-        "secondary": {
-          "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
-            "com.figma.variableId": "VariableID:915:272935"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.transparent.inverted.4}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.4}"
-          }
-        }
-      },
-      "onOverlay": {
-        "primary": {
-          "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:143:179"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.transparent.inverted.0}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.0}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
+            "default": "{palette.transparent.white.fixed-100}"
+          }
+        }
+      },
+      "onBrand": {
+        "disabled": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:179:195"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed-10}",
+            "default": "{palette.transparent.white.fixed-10}"
+          }
+        },
+        "primary": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:52:2202"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
+            "default": "{palette.transparent.white.fixed-100}"
+          }
+        },
+        "secondary": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:179:196"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
+            "default": "{palette.transparent.white.fixed-60}"
+          }
+        }
+      },
+      "onInverse": {
+        "primary": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:305:125"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
+            "default": "{palette.transparent.white.fixed-100}"
           }
         }
       },
       "onStatus": {
         "ai": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:1936:2682"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.violet.11}",
-            "deep_sky_itkontoret": "{palette.violet.11}"
+            "deep_sky_itkontoret": "{palette.violet.11}",
+            "default": "{palette.violet.11}"
           }
         },
         "critical": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:796:1732"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.orange.11}",
-            "deep_sky_itkontoret": "{palette.orange.11}"
+            "deep_sky_itkontoret": "{palette.orange.11}",
+            "default": "{palette.orange.11}"
           }
         },
         "danger": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:796:1731"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.red.11}",
-            "deep_sky_itkontoret": "{palette.red.11}"
+            "deep_sky_itkontoret": "{palette.red.11}",
+            "default": "{palette.red.11}"
           }
         },
         "disabled": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:151:43"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.3}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [210, 7.69, 79.61]
-            }
+            },
+            "default": "{palette.blue.3}"
           }
         },
         "info": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:796:1735"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-11}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-11}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-11}",
+            "default": "{palette.electricblue.electricblue-11}"
           }
         },
         "neutral": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:911:263464"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.11}",
-            "deep_sky_itkontoret": "{palette.grayscale.11}"
+            "deep_sky_itkontoret": "{palette.grayscale.11}",
+            "default": "{palette.grayscale.11}"
           }
         },
         "primary": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:149:7"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-11}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-11}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-11}",
+            "default": "{palette.electricblue.electricblue-11}"
           }
         },
         "success": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:796:1734"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.green.11}",
-            "deep_sky_itkontoret": "{palette.green.11}"
+            "deep_sky_itkontoret": "{palette.green.11}",
+            "default": "{palette.green.11}"
           }
         },
         "warning": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:796:1733"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.yellow.11}",
-            "deep_sky_itkontoret": "{palette.yellow.11}"
+            "deep_sky_itkontoret": "{palette.yellow.11}",
+            "default": "{palette.yellow.11}"
           }
         }
       },
       "onSurface": {
         "brand": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:2463:54749"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.13}",
-            "deep_sky_itkontoret": "{palette.blue.13}"
+            "deep_sky_itkontoret": "{palette.blue.13}",
+            "default": "{palette.blue.13}"
           }
         },
         "destructive": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:143:8"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.red.7}",
-            "deep_sky_itkontoret": "{palette.red.7}"
+            "deep_sky_itkontoret": "{palette.red.7}",
+            "default": "{palette.red.7}"
           }
         },
         "disabled": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:56:1581"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.3}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [210, 7.69, 79.61]
-            }
+            },
+            "default": "{palette.blue.3}"
           }
         },
         "neutral": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:1024:122"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.4}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [210, 7.69, 79.61]
-            }
+            },
+            "default": "{palette.grayscale.4}"
           }
         },
         "primary": {
           "$extensions": {
-            "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
+            "com.figma.scopes": ["SHAPE_FILL"],
             "com.figma.variableId": "VariableID:50:1436"
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.7}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [208.8, 15.53, 31.57]
-            }
+            },
+            "default": "{palette.blue.7}"
           }
         }
       }
@@ -1303,8 +1264,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.transparent.inverted.0}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.0}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed-30}",
+            "default": "{palette.transparent.white.fixed-30}"
           }
         },
         "link": {
@@ -1314,8 +1275,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.7}",
-            "deep_sky_itkontoret": "{palette.blue.7}"
+            "deep_sky_itkontoret": "{palette.blue.7}",
+            "default": "{palette.blue.7}"
           }
         },
         "link-disabled": {
@@ -1325,8 +1286,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.transparent.inverted.1}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.1}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed-30}",
+            "default": "{palette.transparent.white.fixed-30}"
           }
         },
         "link-hover": {
@@ -1336,8 +1297,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.5}",
-            "deep_sky_itkontoret": "{palette.blue.5}"
+            "deep_sky_itkontoret": "{palette.blue.5}",
+            "default": "{palette.blue.5}"
           }
         },
         "link-pressed": {
@@ -1347,8 +1308,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.3}",
-            "deep_sky_itkontoret": "{palette.blue.3}"
+            "deep_sky_itkontoret": "{palette.blue.3}",
+            "default": "{palette.blue.3}"
           }
         },
         "primary": {
@@ -1358,8 +1319,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.transparent.inverted.0}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.0}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
+            "default": "{palette.transparent.white.fixed-100}"
           }
         },
         "secondary": {
@@ -1369,100 +1330,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.transparent.inverted.4}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.4}"
-          }
-        }
-      },
-      "onInverted": {
-        "disabled": {
-          "$extensions": {
-            "com.figma.scopes": ["TEXT_FILL"],
-            "com.figma.variableId": "VariableID:305:132"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.transparent.inverted.7}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.7}"
-          }
-        },
-        "primary": {
-          "$extensions": {
-            "com.figma.scopes": ["TEXT_FILL"],
-            "com.figma.variableId": "VariableID:305:127"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.transparent.inverted.0}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.0}"
-          }
-        }
-      },
-      "onOverlay": {
-        "inverted-light": {
-          "$extensions": {
-            "com.figma.scopes": ["TEXT_FILL"],
-            "com.figma.variableId": "VariableID:3748:1159"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.transparent.light.inverted}",
-            "deep_sky_itkontoret": "{palette.transparent.light.inverted}"
-          }
-        },
-        "link": {
-          "$extensions": {
-            "com.figma.scopes": ["TEXT_FILL"],
-            "com.figma.variableId": "VariableID:139:188"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.blue.7}",
-            "deep_sky_itkontoret": "{palette.blue.7}"
-          }
-        },
-        "link-hover": {
-          "$extensions": {
-            "com.figma.scopes": ["TEXT_FILL"],
-            "com.figma.variableId": "VariableID:141:189"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.blue.5}",
-            "deep_sky_itkontoret": "{palette.blue.5}"
-          }
-        },
-        "link-pressed": {
-          "$extensions": {
-            "com.figma.scopes": ["TEXT_FILL"],
-            "com.figma.variableId": "VariableID:141:190"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.blue.3}",
-            "deep_sky_itkontoret": "{palette.blue.3}"
-          }
-        },
-        "primary": {
-          "$extensions": {
-            "com.figma.scopes": ["TEXT_FILL"],
-            "com.figma.variableId": "VariableID:52:1355"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.transparent.inverted.0}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.0}"
-          }
-        },
-        "secondary": {
-          "$extensions": {
-            "com.figma.scopes": ["TEXT_FILL"],
-            "com.figma.variableId": "VariableID:52:1356"
-          },
-          "platforms": ["PD"],
-          "values": {
-            "default": "{palette.transparent.inverted.4}",
-            "deep_sky_itkontoret": "{palette.transparent.inverted.4}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
+            "default": "{palette.transparent.white.fixed-60}"
           }
         }
       },
@@ -1474,8 +1343,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.violet.11}",
-            "deep_sky_itkontoret": "{palette.violet.11}"
+            "deep_sky_itkontoret": "{palette.violet.11}",
+            "default": "{palette.violet.11}"
           }
         },
         "critical": {
@@ -1485,8 +1354,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.orange.11}",
-            "deep_sky_itkontoret": "{palette.orange.11}"
+            "deep_sky_itkontoret": "{palette.orange.11}",
+            "default": "{palette.orange.11}"
           }
         },
         "danger": {
@@ -1496,8 +1365,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.red.11}",
-            "deep_sky_itkontoret": "{palette.red.11}"
+            "deep_sky_itkontoret": "{palette.red.11}",
+            "default": "{palette.red.11}"
           }
         },
         "info": {
@@ -1507,8 +1376,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-11}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-11}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-11}",
+            "default": "{palette.electricblue.electricblue-11}"
           }
         },
         "link": {
@@ -1518,8 +1387,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-11}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-11}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-11}",
+            "default": "{palette.electricblue.electricblue-11}"
           }
         },
         "link-disabled": {
@@ -1529,8 +1398,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-5}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-5}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-5}",
+            "default": "{palette.electricblue.electricblue-5}"
           }
         },
         "link-hover": {
@@ -1540,8 +1409,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-13}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-13}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-13}",
+            "default": "{palette.electricblue.electricblue-13}"
           }
         },
         "link-pressed": {
@@ -1551,8 +1420,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.electricblue.electricblue-14}",
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-14}"
+            "deep_sky_itkontoret": "{palette.electricblue.electricblue-14}",
+            "default": "{palette.electricblue.electricblue-14}"
           }
         },
         "neutral": {
@@ -1562,8 +1431,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.11}",
-            "deep_sky_itkontoret": "{palette.grayscale.11}"
+            "deep_sky_itkontoret": "{palette.grayscale.11}",
+            "default": "{palette.grayscale.11}"
           }
         },
         "primary": {
@@ -1573,8 +1442,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.14}",
-            "deep_sky_itkontoret": "{palette.grayscale.14}"
+            "deep_sky_itkontoret": "{palette.grayscale.14}",
+            "default": "{palette.grayscale.14}"
           }
         },
         "secondary": {
@@ -1584,8 +1453,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.11}",
-            "deep_sky_itkontoret": "{palette.grayscale.11}"
+            "deep_sky_itkontoret": "{palette.grayscale.11}",
+            "default": "{palette.grayscale.11}"
           }
         },
         "success": {
@@ -1595,8 +1464,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.green.11}",
-            "deep_sky_itkontoret": "{palette.green.11}"
+            "deep_sky_itkontoret": "{palette.green.11}",
+            "default": "{palette.green.11}"
           }
         },
         "warning": {
@@ -1606,8 +1475,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.yellow.11}",
-            "deep_sky_itkontoret": "{palette.yellow.11}"
+            "deep_sky_itkontoret": "{palette.yellow.11}",
+            "default": "{palette.yellow.11}"
           }
         }
       },
@@ -1619,8 +1488,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.red.7}",
-            "deep_sky_itkontoret": "{palette.red.7}"
+            "deep_sky_itkontoret": "{palette.red.7}",
+            "default": "{palette.red.7}"
           }
         },
         "disabled": {
@@ -1630,11 +1499,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.5}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [205.71, 14.58, 18.82]
-            }
+            },
+            "default": "{palette.grayscale.5}"
           }
         },
         "link": {
@@ -1644,11 +1513,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.7}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [208.8, 15.53, 31.57]
-            }
+            },
+            "default": "{palette.blue.7}"
           }
         },
         "link-disabled": {
@@ -1658,11 +1527,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.3}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [210, 7.69, 79.61]
-            }
+            },
+            "default": "{palette.blue.3}"
           }
         },
         "link-hover": {
@@ -1672,11 +1541,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.8}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [207, 15.63, 25.1]
-            }
+            },
+            "default": "{palette.blue.8}"
           }
         },
         "link-pressed": {
@@ -1686,11 +1555,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.blue.11}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [205.71, 14.58, 18.82]
-            }
+            },
+            "default": "{palette.blue.11}"
           }
         },
         "primary": {
@@ -1700,11 +1569,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.14}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [208.8, 15.53, 31.57]
-            }
+            },
+            "default": "{palette.grayscale.14}"
           }
         },
         "secondary": {
@@ -1714,11 +1583,11 @@
           },
           "platforms": ["PD"],
           "values": {
-            "default": "{palette.grayscale.7}",
             "deep_sky_itkontoret": {
               "colorSpace": "hsl",
               "components": [207, 15.63, 25.1]
-            }
+            },
+            "default": "{palette.grayscale.7}"
           }
         }
       }
@@ -1735,7 +1604,7 @@
         },
         "platforms": ["PD"],
         "values": {
-          "default": [
+          "deep_sky_itkontoret": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -1751,7 +1620,7 @@
               "position": 1
             }
           ],
-          "deep_sky_itkontoret": [
+          "default": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -1777,7 +1646,7 @@
         },
         "platforms": ["PD"],
         "values": {
-          "default": [
+          "deep_sky_itkontoret": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -1793,7 +1662,7 @@
               "position": 1
             }
           ],
-          "deep_sky_itkontoret": [
+          "default": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -1819,7 +1688,7 @@
         },
         "platforms": ["PD"],
         "values": {
-          "default": [
+          "deep_sky_itkontoret": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -1835,7 +1704,7 @@
               "position": 1
             }
           ],
-          "deep_sky_itkontoret": [
+          "default": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -1861,7 +1730,7 @@
         },
         "platforms": ["PD"],
         "values": {
-          "default": [
+          "deep_sky_itkontoret": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -1877,7 +1746,7 @@
               "position": 1
             }
           ],
-          "deep_sky_itkontoret": [
+          "default": [
             {
               "color": {
                 "colorSpace": "hsl",
