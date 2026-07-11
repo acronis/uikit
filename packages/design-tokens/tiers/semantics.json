@@ -395,10 +395,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [210, 7.69, 79.61]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.3}",
             "default": "{palette.blue.3}"
           }
         },
@@ -554,8 +551,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.7}",
-            "default": "{palette.electricblue.7}"
+            "deep_sky_itkontoret": "{palette.blue.7}",
+            "default": "{palette.blue.7}"
           }
         },
         "info-hover": {
@@ -565,8 +562,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.8}",
-            "default": "{palette.electricblue.8}"
+            "deep_sky_itkontoret": "{palette.blue.8}",
+            "default": "{palette.blue.8}"
           }
         },
         "info-pressed": {
@@ -576,8 +573,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.9}",
-            "default": "{palette.electricblue.9}"
+            "deep_sky_itkontoret": "{palette.blue.9}",
+            "default": "{palette.blue.9}"
           }
         },
         "neutral": {
@@ -688,11 +685,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [210, 18.18, 87.06]
-            },
-            "default": "{palette.blue.3}"
+            "deep_sky_itkontoret": "{palette.grayscale.2}",
+            "default": "{palette.blue.2}"
           }
         },
         "hover": {
@@ -702,10 +696,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [200, 8.57, 93.14]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.1}",
             "default": "{palette.blue.1}"
           }
         },
@@ -727,10 +718,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [240, 5.88, 96.67]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.0}",
             "default": "{palette.blue.0}"
           }
         }
@@ -767,7 +755,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.inverted.0}",
+            "deep_sky_itkontoret": "{palette.grayscale.0}",
             "default": "{palette.grayscale.0}"
           }
         },
@@ -948,10 +936,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [210, 7.69, 79.61]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.3}",
             "default": "{palette.blue.3}"
           }
         },
@@ -962,10 +947,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [208.8, 15.53, 31.57]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.7}",
             "default": "{palette.blue.7}"
           }
         },
@@ -987,10 +969,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [210, 7.69, 79.61]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.3}",
             "default": "{palette.blue.3}"
           }
         }
@@ -1178,10 +1157,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [210, 7.69, 79.61]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.3}",
             "default": "{palette.blue.3}"
           }
         },
@@ -1271,10 +1247,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [210, 7.69, 79.61]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.5}",
             "default": "{palette.blue.3}"
           }
         },
@@ -1285,10 +1258,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [210, 7.69, 79.61]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.4}",
             "default": "{palette.grayscale.4}"
           }
         },
@@ -1299,10 +1269,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [208.8, 15.53, 31.57]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.10}",
             "default": "{palette.blue.7}"
           }
         }
@@ -1740,10 +1707,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [210, 7.69, 79.61]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.3}",
             "default": "{palette.blue.3}"
           }
         },
@@ -1754,10 +1718,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [207, 15.63, 25.1]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.11}",
             "default": "{palette.blue.8}"
           }
         },
@@ -1768,10 +1729,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [205.71, 14.58, 18.82]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.12}",
             "default": "{palette.blue.11}"
           }
         },

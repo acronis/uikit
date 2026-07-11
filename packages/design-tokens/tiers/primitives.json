@@ -284,7 +284,7 @@
         },
         "platforms": ["PD"],
         "values": {
-          "dark": { "colorSpace": "hsl", "components": [214.81, 85.62, 30] },
+          "dark": { "colorSpace": "hsl", "components": [212.36, 90.16, 64.12] },
           "light": { "colorSpace": "hsl", "components": [212.22, 71.05, 85.1] }
         }
       },
@@ -320,7 +320,7 @@
         },
         "platforms": ["PD"],
         "values": {
-          "dark": { "colorSpace": "hsl", "components": [212.07, 89.69, 61.96] },
+          "dark": { "colorSpace": "hsl", "components": [212.36, 90.16, 64.12] },
           "light": { "colorSpace": "hsl", "components": [215.22, 80, 45.1] }
         }
       },
@@ -344,7 +344,7 @@
         },
         "platforms": ["PD"],
         "values": {
-          "dark": { "colorSpace": "hsl", "components": [225.71, 9.42, 43.73] },
+          "dark": { "colorSpace": "hsl", "components": [215.24, 79.89, 35.1] },
           "light": { "colorSpace": "hsl", "components": [214.74, 85.39, 34.9] }
         }
       },
@@ -356,7 +356,7 @@
         },
         "platforms": ["PD"],
         "values": {
-          "dark": { "colorSpace": "hsl", "components": [222.86, 8.5, 48.43] },
+          "dark": { "colorSpace": "hsl", "components": [38.82, 100, 50] },
           "light": { "colorSpace": "hsl", "components": [214.81, 85.62, 30] }
         }
       },
