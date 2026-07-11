@@ -5,6 +5,7 @@
       "$type": "fontFamily",
       "default": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["FONT_FAMILY"],
           "com.figma.variableId": "VariableID:1339:11318"
         },
@@ -13,6 +14,7 @@
       },
       "monospace": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["FONT_FAMILY"],
           "com.figma.variableId": "VariableID:1339:11319"
         },
@@ -23,6 +25,7 @@
     "font-size": {
       "10": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["FONT_SIZE"],
           "com.figma.variableId": "VariableID:1339:11310"
         },
@@ -31,6 +34,7 @@
       },
       "11": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["FONT_SIZE"],
           "com.figma.variableId": "VariableID:1727:2411"
         },
@@ -39,6 +43,7 @@
       },
       "12": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["FONT_SIZE"],
           "com.figma.variableId": "VariableID:1339:11308"
         },
@@ -47,6 +52,7 @@
       },
       "14": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["FONT_SIZE"],
           "com.figma.variableId": "VariableID:1339:11317"
         },
@@ -55,6 +61,7 @@
       },
       "18": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["FONT_SIZE"],
           "com.figma.variableId": "VariableID:1339:11315"
         },
@@ -63,6 +70,7 @@
       },
       "24": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["FONT_SIZE"],
           "com.figma.variableId": "VariableID:1339:11313"
         },
@@ -71,6 +79,7 @@
       },
       "32": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["FONT_SIZE"],
           "com.figma.variableId": "VariableID:1339:11311"
         },
@@ -83,6 +92,7 @@
       "$type": "fontWeight",
       "bold": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["FONT_WEIGHT", "FONT_VARIATIONS"],
           "com.figma.variableId": "VariableID:1339:11307"
         },
@@ -91,6 +101,7 @@
       },
       "medium": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["FONT_WEIGHT", "FONT_VARIATIONS"],
           "com.figma.variableId": "VariableID:1339:11312"
         },
@@ -99,6 +110,7 @@
       },
       "regular": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["FONT_WEIGHT", "FONT_VARIATIONS"],
           "com.figma.variableId": "VariableID:1339:11314"
         },
@@ -107,6 +119,7 @@
       },
       "semibold": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["FONT_WEIGHT", "FONT_VARIATIONS"],
           "com.figma.variableId": "VariableID:1339:11309"
         },
@@ -116,6 +129,10 @@
     },
     "letter-spacing": {
       "0": {
+        "$extensions": {
+          "com.figma.scopes": ["LETTER_SPACING", "FONT_VARIATIONS"],
+          "com.figma.variableId": "VariableID:4275:1498"
+        },
         "$value": { "unit": "px", "value": 0 },
         "platforms": ["PD"]
       },
@@ -141,6 +158,7 @@
     "line-height": {
       "16": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["LINE_HEIGHT", "FONT_VARIATIONS"],
           "com.figma.variableId": "VariableID:1339:11306"
         },
@@ -149,6 +167,7 @@
       },
       "20": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["LINE_HEIGHT", "FONT_VARIATIONS"],
           "com.figma.variableId": "VariableID:1339:11305"
         },
@@ -157,6 +176,7 @@
       },
       "24": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["LINE_HEIGHT", "FONT_VARIATIONS"],
           "com.figma.variableId": "VariableID:1339:11304"
         },
@@ -165,6 +185,7 @@
       },
       "32": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["LINE_HEIGHT", "FONT_VARIATIONS"],
           "com.figma.variableId": "VariableID:1339:11316"
         },
@@ -173,6 +194,7 @@
       },
       "40": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["LINE_HEIGHT", "FONT_VARIATIONS"],
           "com.figma.variableId": "VariableID:1727:2407"
         },
@@ -181,6 +203,7 @@
       },
       "48": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": ["LINE_HEIGHT", "FONT_VARIATIONS"],
           "com.figma.variableId": "VariableID:1339:11303"
         },
@@ -2268,12 +2291,12 @@
         "$value": { "unit": "px", "value": 24 },
         "platforms": ["PD"]
       },
-      "999": {
+      "full": {
         "$extensions": {
           "com.figma.scopes": ["CORNER_RADIUS", "FONT_VARIATIONS"],
           "com.figma.variableId": "VariableID:1330:10918"
         },
-        "$value": { "unit": "px", "value": 999 },
+        "$value": { "unit": "%", "value": 50 },
         "platforms": ["PD"]
       }
     },
