@@ -2,29 +2,29 @@
 /* Source: @acronis-platform/design-tokens • brand: deep_sky_itkontoret • tier: ButtonMenu • overrides only */
 
 :root, :host {
-  --ui-button-menu-dropdown-container-border-color: light-dark(rgb(215 217 219), rgb(61 63 67));
-  --ui-button-menu-dropdown-extras-cascade-icon-color: light-dark(rgb(73 76 80), rgb(201 204 207));
+  --ui-button-menu-dropdown-container-border-color: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-button-menu-dropdown-extras-cascade-icon-color: light-dark(rgb(68 81 93), rgb(68 81 93));
   --ui-button-menu-dropdown-extras-shortcut-label-color: light-dark(rgb(54 65 74), rgb(54 65 74));
-  --ui-button-menu-dropdown-item-container-color-active: light-dark(rgb(244 245 245), rgb(24 25 27));
-  --ui-button-menu-dropdown-item-container-color-hover: light-dark(rgb(228 229 231), rgb(48 50 54));
-  --ui-button-menu-dropdown-item-container-color-idle: light-dark(rgb(228 229 231), rgb(48 50 54));
-  --ui-button-menu-dropdown-item-icon-color: light-dark(rgb(73 76 80), rgb(201 204 207));
+  --ui-button-menu-dropdown-item-container-color-active: light-dark(rgb(246 246 247), rgb(246 246 247));
+  --ui-button-menu-dropdown-item-container-color-hover: light-dark(rgb(216 222 228), rgb(216 222 228));
+  --ui-button-menu-dropdown-item-container-color-idle: light-dark(rgb(216 222 228), rgb(216 222 228));
+  --ui-button-menu-dropdown-item-icon-color: light-dark(rgb(68 81 93), rgb(68 81 93));
   --ui-button-menu-dropdown-item-label-color: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-button-menu-dropdown-section-container-border-color: light-dark(rgb(215 217 219), rgb(61 63 67));
-  --ui-button-menu-primary-container-color-active: light-dark(rgb(41 49 55), rgb(41 49 55));
-  --ui-button-menu-primary-container-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
-  --ui-button-menu-primary-container-color-hover: light-dark(rgb(54 65 74), rgb(54 65 74));
-  --ui-button-menu-primary-container-color-idle: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-button-menu-secondary-container-border-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
-  --ui-button-menu-secondary-container-border-color-idle: light-dark(rgb(215 217 219), rgb(61 63 67));
-  --ui-button-menu-secondary-container-color-active: light-dark(rgb(228 229 231), rgb(48 50 54));
-  --ui-button-menu-secondary-container-color-hover: light-dark(rgb(236 237 238), rgb(37 38 40));
-  --ui-button-menu-secondary-icon-color-active: light-dark(rgb(73 76 80), rgb(201 204 207));
-  --ui-button-menu-secondary-icon-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
-  --ui-button-menu-secondary-icon-color-hover: light-dark(rgb(73 76 80), rgb(201 204 207));
-  --ui-button-menu-secondary-icon-color-idle: light-dark(rgb(73 76 80), rgb(201 204 207));
+  --ui-button-menu-dropdown-section-container-border-color: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-button-menu-primary-container-color-active: light-dark(rgb(48 50 54), rgb(18 77 161));
+  --ui-button-menu-primary-container-color-disabled: light-dark(rgb(215 217 219), rgb(48 50 54));
+  --ui-button-menu-primary-container-color-hover: light-dark(rgb(61 63 67), rgb(23 99 207));
+  --ui-button-menu-primary-container-color-idle: light-dark(rgb(73 76 80), rgb(81 157 246));
+  --ui-button-menu-secondary-container-border-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-button-menu-secondary-container-border-color-idle: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-button-menu-secondary-container-color-active: light-dark(rgb(216 222 228), rgb(216 222 228));
+  --ui-button-menu-secondary-container-color-hover: light-dark(rgb(236 238 239), rgb(236 238 239));
+  --ui-button-menu-secondary-icon-color-active: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-button-menu-secondary-icon-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-button-menu-secondary-icon-color-hover: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-button-menu-secondary-icon-color-idle: light-dark(rgb(68 81 93), rgb(68 81 93));
   --ui-button-menu-secondary-label-color-active: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-button-menu-secondary-label-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-button-menu-secondary-label-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
   --ui-button-menu-secondary-label-color-hover: light-dark(rgb(68 81 93), rgb(68 81 93));
   --ui-button-menu-secondary-label-color-idle: light-dark(rgb(68 81 93), rgb(68 81 93));
 }

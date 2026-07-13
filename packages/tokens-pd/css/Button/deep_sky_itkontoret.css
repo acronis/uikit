@@ -11,10 +11,10 @@
   --ui-button-ghost-label-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-button-ghost-label-color-hover: light-dark(rgb(61 63 67), rgb(215 217 219));
   --ui-button-ghost-label-color-idle: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-button-primary-container-color-active: light-dark(rgb(41 49 55), rgb(41 49 55));
-  --ui-button-primary-container-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
-  --ui-button-primary-container-color-hover: light-dark(rgb(54 65 74), rgb(54 65 74));
-  --ui-button-primary-container-color-idle: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-button-primary-container-color-active: light-dark(rgb(48 50 54), rgb(18 77 161));
+  --ui-button-primary-container-color-disabled: light-dark(rgb(215 217 219), rgb(48 50 54));
+  --ui-button-primary-container-color-hover: light-dark(rgb(61 63 67), rgb(23 99 207));
+  --ui-button-primary-container-color-idle: light-dark(rgb(73 76 80), rgb(81 157 246));
   --ui-button-primary-icon-color-disabled: light-dark(rgb(255 255 255 / 0.898), rgb(255 255 255 / 0.102));
   --ui-button-secondary-container-border-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-button-secondary-container-border-color-idle: light-dark(rgb(215 217 219), rgb(61 63 67));

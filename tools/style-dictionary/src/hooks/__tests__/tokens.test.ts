@@ -120,6 +120,34 @@ describe('normalizeTree', () => {
   it('returns an empty tree when no token matches the platform', () => {
     expect(normalizeTree(SOURCE, 'light', 'OTHER')).toEqual({});
   });
+
+  it('infers `$type: color` for an untyped token whose value is a DTCG color object', () => {
+    // The `branding` primitives are emitted without a group-level `$type: color`;
+    // resolution + the type-gated color transform need it, so it is inferred.
+    const source = {
+      branding: {
+        acme: {
+          primary: {
+            platforms: ['PD'],
+            values: {
+              light: { colorSpace: 'hsl', components: [195, 100, 28] },
+              dark: { colorSpace: 'hsl', components: [240, 8, 5] },
+            },
+          },
+        },
+      },
+    };
+    const leaf = at(normalizeTree(source, 'light', 'PD'), 'branding', 'acme', 'primary');
+    expect(leaf.$type).toBe('color');
+    expect(leaf.$value).toEqual({ colorSpace: 'hsl', components: [195, 100, 28] });
+  });
+
+  it('leaves an untyped non-color token untyped (inference is color-only)', () => {
+    const source = { misc: { flag: { platforms: ['PD'], values: { light: 'yes', dark: 'no' } } } };
+    const leaf = at(normalizeTree(source, 'light', 'PD'), 'misc', 'flag');
+    expect('$type' in leaf).toBe(false);
+    expect(leaf.$value).toBe('yes');
+  });
 });
 
 // ── collectDecls + serializeCss (stage 2) ────────────────────────────────────

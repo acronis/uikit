@@ -2,31 +2,31 @@
 /* Source: @acronis-platform/design-tokens • brand: deep_sky_itkontoret • tier: Checkbox • overrides only */
 
 :root, :host {
-  --ui-checkbox-checked-box-border-color-active: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-checkbox-checked-box-border-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
-  --ui-checkbox-checked-box-border-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-checkbox-checked-box-border-color-idle: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-checkbox-checked-box-color-active: light-dark(rgb(41 49 55), rgb(41 49 55));
-  --ui-checkbox-checked-box-color-disabled: light-dark(rgb(244 245 245), rgb(24 25 27));
-  --ui-checkbox-checked-box-color-hover: light-dark(rgb(54 65 74), rgb(54 65 74));
-  --ui-checkbox-checked-box-color-idle: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-checkbox-checked-icon-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
+  --ui-checkbox-checked-box-border-color-active: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-checkbox-checked-box-border-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-checkbox-checked-box-border-color-hover: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-checkbox-checked-box-border-color-idle: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-checkbox-checked-box-color-active: light-dark(rgb(48 50 54), rgb(18 77 161));
+  --ui-checkbox-checked-box-color-disabled: light-dark(rgb(246 246 247), rgb(246 246 247));
+  --ui-checkbox-checked-box-color-hover: light-dark(rgb(61 63 67), rgb(23 99 207));
+  --ui-checkbox-checked-box-color-idle: light-dark(rgb(73 76 80), rgb(81 157 246));
+  --ui-checkbox-checked-icon-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
   --ui-checkbox-global-description-color: light-dark(rgb(54 65 74), rgb(54 65 74));
   --ui-checkbox-global-label-color: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-checkbox-indeterminate-box-border-color-active: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-checkbox-indeterminate-box-border-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
-  --ui-checkbox-indeterminate-box-border-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-checkbox-indeterminate-box-border-color-idle: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-checkbox-indeterminate-box-color-active: light-dark(rgb(41 49 55), rgb(41 49 55));
-  --ui-checkbox-indeterminate-box-color-disabled: light-dark(rgb(244 245 245), rgb(24 25 27));
-  --ui-checkbox-indeterminate-box-color-hover: light-dark(rgb(54 65 74), rgb(54 65 74));
-  --ui-checkbox-indeterminate-box-color-idle: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-checkbox-indeterminate-icon-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
-  --ui-checkbox-unchecked-box-border-color-active: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-checkbox-unchecked-box-border-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
-  --ui-checkbox-unchecked-box-border-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-checkbox-unchecked-box-border-color-idle: light-dark(rgb(215 217 219), rgb(61 63 67));
-  --ui-checkbox-unchecked-box-color-active: light-dark(rgb(228 229 231), rgb(48 50 54));
-  --ui-checkbox-unchecked-box-color-disabled: light-dark(rgb(244 245 245), rgb(24 25 27));
-  --ui-checkbox-unchecked-box-color-hover: light-dark(rgb(236 237 238), rgb(37 38 40));
+  --ui-checkbox-indeterminate-box-border-color-active: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-checkbox-indeterminate-box-border-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-checkbox-indeterminate-box-border-color-hover: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-checkbox-indeterminate-box-border-color-idle: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-checkbox-indeterminate-box-color-active: light-dark(rgb(48 50 54), rgb(18 77 161));
+  --ui-checkbox-indeterminate-box-color-disabled: light-dark(rgb(246 246 247), rgb(246 246 247));
+  --ui-checkbox-indeterminate-box-color-hover: light-dark(rgb(61 63 67), rgb(23 99 207));
+  --ui-checkbox-indeterminate-box-color-idle: light-dark(rgb(73 76 80), rgb(81 157 246));
+  --ui-checkbox-indeterminate-icon-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-checkbox-unchecked-box-border-color-active: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-checkbox-unchecked-box-border-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-checkbox-unchecked-box-border-color-hover: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-checkbox-unchecked-box-border-color-idle: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-checkbox-unchecked-box-color-active: light-dark(rgb(216 222 228), rgb(216 222 228));
+  --ui-checkbox-unchecked-box-color-disabled: light-dark(rgb(246 246 247), rgb(246 246 247));
+  --ui-checkbox-unchecked-box-color-hover: light-dark(rgb(236 238 239), rgb(236 238 239));
 }

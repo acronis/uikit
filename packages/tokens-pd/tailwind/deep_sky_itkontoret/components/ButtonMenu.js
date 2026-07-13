@@ -7,16 +7,16 @@ export default {
     extend: {
       "backgroundColor": {
         "button-menu-dropdown-container": "light-dark(rgb(255 255 255), rgb(31 32 34))",
-        "button-menu-dropdown-item-container-active": "light-dark(rgb(244 245 245), rgb(24 25 27))",
-        "button-menu-dropdown-item-container-hover": "light-dark(rgb(228 229 231), rgb(48 50 54))",
-        "button-menu-dropdown-item-container-idle": "light-dark(rgb(228 229 231), rgb(48 50 54))",
-        "button-menu-primary-container-active": "light-dark(rgb(41 49 55), rgb(41 49 55))",
-        "button-menu-primary-container-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "button-menu-primary-container-hover": "light-dark(rgb(54 65 74), rgb(54 65 74))",
-        "button-menu-primary-container-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "button-menu-secondary-container-active": "light-dark(rgb(228 229 231), rgb(48 50 54))",
+        "button-menu-dropdown-item-container-active": "light-dark(rgb(246 246 247), rgb(246 246 247))",
+        "button-menu-dropdown-item-container-hover": "light-dark(rgb(216 222 228), rgb(216 222 228))",
+        "button-menu-dropdown-item-container-idle": "light-dark(rgb(216 222 228), rgb(216 222 228))",
+        "button-menu-primary-container-active": "light-dark(rgb(48 50 54), rgb(18 77 161))",
+        "button-menu-primary-container-disabled": "light-dark(rgb(215 217 219), rgb(48 50 54))",
+        "button-menu-primary-container-hover": "light-dark(rgb(61 63 67), rgb(23 99 207))",
+        "button-menu-primary-container-idle": "light-dark(rgb(73 76 80), rgb(81 157 246))",
+        "button-menu-secondary-container-active": "light-dark(rgb(216 222 228), rgb(216 222 228))",
         "button-menu-secondary-container-disabled": "light-dark(transparent, transparent)",
-        "button-menu-secondary-container-hover": "light-dark(rgb(236 237 238), rgb(37 38 40))",
+        "button-menu-secondary-container-hover": "light-dark(rgb(236 238 239), rgb(236 238 239))",
         "button-menu-secondary-container-idle": "light-dark(transparent, transparent)"
       },
       "textColor": {
@@ -24,26 +24,26 @@ export default {
         "button-menu-dropdown-item-label": "light-dark(rgb(68 81 93), rgb(68 81 93))",
         "button-menu-primary-label": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-menu-secondary-label-active": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "button-menu-secondary-label-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "button-menu-secondary-label-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
         "button-menu-secondary-label-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
         "button-menu-secondary-label-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))"
       },
       "borderColor": {
-        "button-menu-dropdown-container-border-color": "light-dark(rgb(215 217 219), rgb(61 63 67))",
-        "button-menu-dropdown-section-container-border-color": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "button-menu-dropdown-container-border-color": "light-dark(rgb(199 203 207), rgb(199 203 207))",
+        "button-menu-dropdown-section-container-border-color": "light-dark(rgb(199 203 207), rgb(199 203 207))",
         "button-menu-secondary-container-border-color-active": "light-dark(transparent, transparent)",
-        "button-menu-secondary-container-border-color-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "button-menu-secondary-container-border-color-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
         "button-menu-secondary-container-border-color-hover": "light-dark(transparent, transparent)",
-        "button-menu-secondary-container-border-color-idle": "light-dark(rgb(215 217 219), rgb(61 63 67))"
+        "button-menu-secondary-container-border-color-idle": "light-dark(rgb(199 203 207), rgb(199 203 207))"
       },
       "fill": {
-        "button-menu-dropdown-extras-cascade-icon": "light-dark(rgb(73 76 80), rgb(201 204 207))",
-        "button-menu-dropdown-item-icon": "light-dark(rgb(73 76 80), rgb(201 204 207))",
+        "button-menu-dropdown-extras-cascade-icon": "light-dark(rgb(68 81 93), rgb(68 81 93))",
+        "button-menu-dropdown-item-icon": "light-dark(rgb(68 81 93), rgb(68 81 93))",
         "button-menu-primary-icon": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "button-menu-secondary-icon-active": "light-dark(rgb(73 76 80), rgb(201 204 207))",
-        "button-menu-secondary-icon-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
-        "button-menu-secondary-icon-hover": "light-dark(rgb(73 76 80), rgb(201 204 207))",
-        "button-menu-secondary-icon-idle": "light-dark(rgb(73 76 80), rgb(201 204 207))"
+        "button-menu-secondary-icon-active": "light-dark(rgb(68 81 93), rgb(68 81 93))",
+        "button-menu-secondary-icon-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
+        "button-menu-secondary-icon-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
+        "button-menu-secondary-icon-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))"
       },
       "fontFamily": {
         "button-menu-dropdown-extras-shortcut-label-text-style": "Inter, system-ui, sans-serif",

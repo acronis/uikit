@@ -33,16 +33,6 @@
           "$type": "color",
           "$value": "{palette.blue.5}"
         },
-        "primary-focus": {
-          "$extensions": {
-            "com.figma.scopes": [
-              "FRAME_FILL"
-            ],
-            "com.figma.variableId": "VariableID:2277:1436"
-          },
-          "$type": "color",
-          "$value": "{palette.blue.10}"
-        },
         "primary-hover": {
           "$extensions": {
             "com.figma.scopes": [

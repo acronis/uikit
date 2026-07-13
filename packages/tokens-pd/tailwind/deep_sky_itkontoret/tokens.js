@@ -6,15 +6,14 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "brand-primary": "light-dark(rgb(14 105 139), rgb(14 105 139))",
-        "brand-primary-active": "light-dark(rgb(30 172 242), rgb(30 172 242))",
-        "brand-primary-disabled": "light-dark(rgb(162 224 255), rgb(162 224 255))",
-        "brand-primary-focus": "light-dark(rgb(30 172 242), rgb(30 172 242))",
-        "brand-primary-hover": "light-dark(rgb(10 93 123), rgb(10 93 123))",
-        "brand-secondary": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "brand-secondary-active": "light-dark(rgb(41 49 55), rgb(41 49 55))",
-        "brand-secondary-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "brand-secondary-hover": "light-dark(rgb(54 65 74), rgb(54 65 74))",
+        "brand-primary": "light-dark(rgb(0 105 142), rgb(12 12 14))",
+        "brand-primary-active": "light-dark(rgb(0 173 247), rgb(81 157 246))",
+        "brand-primary-disabled": "light-dark(rgb(194 237 255), rgb(85 89 94))",
+        "brand-primary-hover": "light-dark(rgb(0 128 173), rgb(61 63 67))",
+        "brand-secondary": "light-dark(rgb(73 76 80), rgb(81 157 246))",
+        "brand-secondary-active": "light-dark(rgb(48 50 54), rgb(18 77 161))",
+        "brand-secondary-disabled": "light-dark(rgb(215 217 219), rgb(48 50 54))",
+        "brand-secondary-hover": "light-dark(rgb(61 63 67), rgb(23 99 207))",
         "inverted-active": "light-dark(rgb(19 84 174), rgb(23 99 207))",
         "inverted-disabled": "light-dark(rgb(6 54 121), rgb(190 215 244))",
         "inverted-hover": "light-dark(rgb(13 77 165), rgb(18 77 161))",

@@ -23,6 +23,16 @@ const isObject = (v: unknown): v is Node =>
 
 const isToken = (node: Node): boolean => 'values' in node || '$value' in node;
 
+// A color token whose group never declared `$type` still resolves to a DTCG
+// color object ({ colorSpace, components }). Infer the type so the token stays
+// self-describing and the type-gated `color/hsl-to-rgb` transform applies —
+// without it the raw object survives into CSS and any alias to it silently
+// drops. Guards the `branding` primitives, which the sync emitter emits with no
+// group-level `$type: color` (unlike `palette`). Only fires when no type was
+// inherited from an ancestor group.
+const inferType = (value: unknown): string | undefined =>
+  isObject(value) && 'colorSpace' in value && 'components' in value ? 'color' : undefined;
+
 function normalizeToken(
   node: Node,
   type: string | undefined,
@@ -43,8 +53,9 @@ function normalizeToken(
     value = node['$value'];
   }
 
+  const resolvedType = type ?? inferType(value);
   const token: Node = {};
-  if (type) token['$type'] = type;
+  if (resolvedType) token['$type'] = resolvedType;
   token['$value'] = value;
   if (typeof node['$description'] === 'string')
     token['$description'] = node['$description'];
