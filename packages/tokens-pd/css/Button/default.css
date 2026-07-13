@@ -33,14 +33,14 @@
   --ui-button-destructive-label-color-hover: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-button-destructive-label-color-idle: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-button-ghost-container-padding-x: 0px;
-  --ui-button-ghost-icon-color-active: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-ghost-icon-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-ghost-icon-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-button-ghost-icon-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-button-ghost-icon-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-ghost-icon-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-button-ghost-icon-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-ghost-label-color-active: light-dark(rgb(6 54 121), rgb(190 215 244));
   --ui-button-ghost-label-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-button-ghost-label-color-hover: light-dark(rgb(19 84 174), rgb(23 99 207));
-  --ui-button-ghost-label-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-ghost-label-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-ghost-label-text-decoration-active: none;
   --ui-button-ghost-label-text-decoration-disabled: none;
   --ui-button-ghost-label-text-decoration-hover: underline;
@@ -58,8 +58,8 @@
   --ui-button-inverted-container-border-width: 1px;
   --ui-button-inverted-container-color-active: light-dark(rgb(19 84 174), rgb(23 99 207));
   --ui-button-inverted-container-color-disabled: light-dark(rgb(6 54 121), rgb(190 215 244));
-  --ui-button-inverted-container-color-hover: light-dark(rgb(13 77 165), rgb(101 106 122));
-  --ui-button-inverted-container-color-idle: light-dark(rgb(11 66 142), rgb(113 119 134));
+  --ui-button-inverted-container-color-hover: light-dark(rgb(13 77 165), rgb(18 77 161));
+  --ui-button-inverted-container-color-idle: light-dark(rgb(11 66 142), rgb(255 165 0));
   --ui-button-inverted-container-padding-x: 12px;
   --ui-button-inverted-container-width-min: 64px;
   --ui-button-inverted-icon-color-active: light-dark(rgb(255 255 255), rgb(255 255 255));
@@ -70,10 +70,10 @@
   --ui-button-inverted-label-color-disabled: light-dark(rgb(255 255 255 / 0.302), rgb(255 255 255 / 0.6));
   --ui-button-inverted-label-color-hover: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-button-inverted-label-color-idle: light-dark(rgb(255 255 255), rgb(255 255 255));
-  --ui-button-primary-container-color-active: light-dark(rgb(13 77 165), rgb(101 106 122));
+  --ui-button-primary-container-color-active: light-dark(rgb(13 77 165), rgb(18 77 161));
   --ui-button-primary-container-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-button-primary-container-color-hover: light-dark(rgb(19 84 174), rgb(23 99 207));
-  --ui-button-primary-container-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-primary-container-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-primary-container-padding-x: 12px;
   --ui-button-primary-container-width-min: 64px;
   --ui-button-primary-icon-color-active: light-dark(rgb(255 255 255), rgb(255 255 255));
@@ -90,20 +90,20 @@
   --ui-button-secondary-container-border-color-idle: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-button-secondary-container-border-style: solid;
   --ui-button-secondary-container-border-width: 1px;
-  --ui-button-secondary-container-color-active: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-button-secondary-container-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));
   --ui-button-secondary-container-color-disabled: light-dark(transparent, transparent);
   --ui-button-secondary-container-color-hover: light-dark(rgb(238 242 247), rgb(46 47 50));
   --ui-button-secondary-container-color-idle: light-dark(transparent, transparent);
   --ui-button-secondary-container-padding-x: 12px;
   --ui-button-secondary-container-width-min: 64px;
-  --ui-button-secondary-icon-color-active: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-secondary-icon-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-secondary-icon-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-button-secondary-icon-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-button-secondary-icon-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-button-secondary-label-color-active: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-secondary-icon-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-button-secondary-icon-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-button-secondary-label-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-secondary-label-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-button-secondary-label-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-button-secondary-label-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-secondary-label-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-button-secondary-label-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
 }
 
 [data-theme='light'], :host([data-theme='light']) {

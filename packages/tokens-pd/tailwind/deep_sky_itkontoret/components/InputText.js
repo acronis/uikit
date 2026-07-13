@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "input-text-global-box-disabled": "light-dark(rgb(246 246 247), rgb(246 246 247))",
+        "input-text-global-box-disabled": "light-dark(rgb(244 245 245), rgb(24 25 27))",
         "input-text-global-box-hover": "light-dark(rgb(255 255 255), rgb(31 32 34))",
         "input-text-global-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
@@ -29,12 +29,12 @@ export default {
       "borderColor": {
         "input-text-error-msg-box-border-color-hover": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "input-text-error-msg-box-border-color-idle": "light-dark(rgb(226 54 54), rgb(229 77 77))",
-        "input-text-normal-box-border-color-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "input-text-normal-box-border-color-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "input-text-normal-box-border-color-idle": "light-dark(rgb(199 203 207), rgb(199 203 207))"
+        "input-text-normal-box-border-color-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "input-text-normal-box-border-color-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "input-text-normal-box-border-color-idle": "light-dark(rgb(215 217 219), rgb(61 63 67))"
       },
       "fill": {
-        "input-text-global-clear-icon": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "input-text-global-clear-icon": "light-dark(rgb(73 76 80), rgb(201 204 207))"
       },
       "fontFamily": {
         "input-text-global-label-text-style": "Inter, system-ui, sans-serif",

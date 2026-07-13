@@ -3,21 +3,20 @@
 
 :root, :host {
   --ui-sidebar-secondary-collapsed-breadcrumb-label-color: light-dark(rgb(54 65 74), rgb(54 65 74));
-  --ui-sidebar-secondary-collapsed-icon-separator-color: light-dark(rgb(199 203 207), rgb(199 203 207));
   --ui-sidebar-secondary-collapsed-label-current-page-color: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-sidebar-secondary-global-container-border-color: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-sidebar-secondary-global-container-border-color: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-sidebar-secondary-global-container-color: light-dark(rgb(255 255 255), rgb(31 32 34));
-  --ui-sidebar-secondary-global-container-footer-border-color: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-sidebar-secondary-global-container-footer-border-color: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-sidebar-secondary-global-header-label-color: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-sidebar-secondary-menu-item-extras-global-external-icon-color: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-sidebar-secondary-menu-item-extras-global-external-icon-color: light-dark(rgb(73 76 80), rgb(201 204 207));
   --ui-sidebar-secondary-menu-item-extras-global-shortcut-color: light-dark(rgb(54 65 74), rgb(54 65 74));
-  --ui-sidebar-secondary-menu-item-global-icon-color-color: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-sidebar-secondary-menu-item-global-icon-color-color: light-dark(rgb(73 76 80), rgb(201 204 207));
   --ui-sidebar-secondary-menu-item-global-label-color-color: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-sidebar-secondary-menu-item-selected-container-color-active: light-dark(rgb(216 222 228), rgb(216 222 228));
-  --ui-sidebar-secondary-menu-item-selected-container-color-hover: light-dark(rgb(216 222 228), rgb(216 222 228));
-  --ui-sidebar-secondary-menu-item-selected-container-color-idle: light-dark(rgb(216 222 228), rgb(216 222 228));
-  --ui-sidebar-secondary-menu-item-unselected-container-color-active: light-dark(rgb(236 238 239), rgb(236 238 239));
-  --ui-sidebar-secondary-menu-item-unselected-container-color-hover: light-dark(rgb(236 238 239), rgb(236 238 239));
+  --ui-sidebar-secondary-menu-item-selected-container-color-active: light-dark(rgb(228 229 231), rgb(48 50 54));
+  --ui-sidebar-secondary-menu-item-selected-container-color-hover: light-dark(rgb(228 229 231), rgb(48 50 54));
+  --ui-sidebar-secondary-menu-item-selected-container-color-idle: light-dark(rgb(228 229 231), rgb(48 50 54));
+  --ui-sidebar-secondary-menu-item-unselected-container-color-active: light-dark(rgb(236 237 238), rgb(37 38 40));
+  --ui-sidebar-secondary-menu-item-unselected-container-color-hover: light-dark(rgb(236 237 238), rgb(37 38 40));
   --ui-sidebar-secondary-menu-item-unselected-container-color-idle: light-dark(rgb(255 255 255), rgb(31 32 34));
   --ui-sidebar-secondary-section-container-header-padding-y: 8px;
   --ui-sidebar-secondary-section-container-padding-y: 8px;

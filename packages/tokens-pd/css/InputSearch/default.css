@@ -5,7 +5,7 @@
   color-scheme: light dark;
 
   --ui-input-search-border-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-input-search-border-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-input-search-border-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-input-search-border-color-idle: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-input-search-box-border-radius: 4px;
   --ui-input-search-box-border-width: 1px;
@@ -16,7 +16,7 @@
   --ui-input-search-box-height: 32px;
   --ui-input-search-box-padding-x: 12px;
   --ui-input-search-box-padding-y: 4px;
-  --ui-input-search-clear-icon-color: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-input-search-clear-icon-color: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-input-search-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-input-search-color-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-input-search-color-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
@@ -24,8 +24,8 @@
   --ui-input-search-container-label-gap: 4px;
   --ui-input-search-container-width-min: 128px;
   --ui-input-search-icon-search-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-input-search-icon-search-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-input-search-icon-search-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-input-search-icon-search-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-input-search-icon-search-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-input-search-placeholder-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-input-search-placeholder-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
   --ui-input-search-placeholder-color-idle: light-dark(rgb(109 114 120), rgb(109 114 120));

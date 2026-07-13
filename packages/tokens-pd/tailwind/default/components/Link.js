@@ -9,7 +9,7 @@ export default {
         "link-external-icon-active": "light-dark(rgb(6 54 121), rgb(190 215 244))",
         "link-external-icon-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
         "link-external-icon-hover": "light-dark(rgb(19 84 174), rgb(23 99 207))",
-        "link-external-icon-idle": "light-dark(rgb(23 99 207), rgb(71 152 245))"
+        "link-external-icon-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))"
       },
       "fontFamily": {
         "link-text-style-active": "Inter, system-ui, sans-serif",

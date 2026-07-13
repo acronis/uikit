@@ -28,9 +28,9 @@
   --ui-sidebar-primary-menu-item-global-container-padding-y: 8px;
   --ui-sidebar-primary-menu-item-global-icon-margin-t: 4px;
   --ui-sidebar-primary-menu-item-global-icon-size: 16px;
-  --ui-sidebar-primary-menu-item-selected-container-color-active: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-sidebar-primary-menu-item-selected-container-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-sidebar-primary-menu-item-selected-container-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-sidebar-primary-menu-item-selected-container-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-sidebar-primary-menu-item-selected-container-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-sidebar-primary-menu-item-selected-container-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-sidebar-primary-menu-item-selected-icon-color-active: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-sidebar-primary-menu-item-selected-icon-color-hover: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-sidebar-primary-menu-item-selected-icon-color-idle: light-dark(rgb(255 255 255), rgb(255 255 255));

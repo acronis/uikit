@@ -2,22 +2,22 @@
 /* Source: @acronis-platform/design-tokens • brand: deep_sky_itkontoret • tier: Radio • overrides only */
 
 :root, :host {
-  --ui-radio-checked-box-border-color-active: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-radio-checked-box-border-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
-  --ui-radio-checked-box-border-color-hover: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-radio-checked-box-border-color-idle: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-radio-checked-box-border-color-active: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-radio-checked-box-border-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-radio-checked-box-border-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-radio-checked-box-border-color-idle: light-dark(rgb(109 114 120), rgb(109 114 120));
   --ui-radio-checked-box-color-active: light-dark(rgb(41 49 55), rgb(41 49 55));
-  --ui-radio-checked-box-color-disabled: light-dark(rgb(246 246 247), rgb(246 246 247));
+  --ui-radio-checked-box-color-disabled: light-dark(rgb(244 245 245), rgb(24 25 27));
   --ui-radio-checked-box-color-hover: light-dark(rgb(54 65 74), rgb(54 65 74));
   --ui-radio-checked-box-color-idle: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-radio-checked-icon-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-radio-checked-icon-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-radio-global-description-color: light-dark(rgb(54 65 74), rgb(54 65 74));
   --ui-radio-global-label-color: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-radio-unchecked-box-border-color-active: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-radio-unchecked-box-border-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
-  --ui-radio-unchecked-box-border-color-hover: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-radio-unchecked-box-border-color-idle: light-dark(rgb(199 203 207), rgb(199 203 207));
-  --ui-radio-unchecked-box-color-active: light-dark(rgb(216 222 228), rgb(216 222 228));
-  --ui-radio-unchecked-box-color-disabled: light-dark(rgb(246 246 247), rgb(246 246 247));
-  --ui-radio-unchecked-box-color-hover: light-dark(rgb(236 238 239), rgb(236 238 239));
+  --ui-radio-unchecked-box-border-color-active: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-radio-unchecked-box-border-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-radio-unchecked-box-border-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-radio-unchecked-box-border-color-idle: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-radio-unchecked-box-color-active: light-dark(rgb(228 229 231), rgb(48 50 54));
+  --ui-radio-unchecked-box-color-disabled: light-dark(rgb(244 245 245), rgb(24 25 27));
+  --ui-radio-unchecked-box-color-hover: light-dark(rgb(236 237 238), rgb(37 38 40));
 }

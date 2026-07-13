@@ -17,10 +17,10 @@ export default {
         "card-filter-static-value-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))"
       },
       "borderColor": {
-        "card-filter-global-border-color-active": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "card-filter-global-border-color-focused": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "card-filter-global-border-color-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "card-filter-global-border-color-idle": "light-dark(rgb(199 203 207), rgb(199 203 207))"
+        "card-filter-global-border-color-active": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "card-filter-global-border-color-focused": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "card-filter-global-border-color-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "card-filter-global-border-color-idle": "light-dark(rgb(215 217 219), rgb(61 63 67))"
       },
       "fontFamily": {
         "card-filter-global-label-text-style": "Inter, system-ui, sans-serif",

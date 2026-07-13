@@ -2,12 +2,12 @@
 /* Source: @acronis-platform/design-tokens • brand: deep_sky_itkontoret • tier: Switch • overrides only */
 
 :root, :host {
-  --ui-switch-global-box-border-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-switch-global-box-border-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-switch-global-label-color: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-switch-global-tick-color-disabled: light-dark(rgb(199 203 207), rgb(199 203 207));
-  --ui-switch-off-box-color-active: light-dark(rgb(199 203 207), rgb(199 203 207));
-  --ui-switch-off-box-color-disabled: light-dark(rgb(246 246 247), rgb(246 246 247));
-  --ui-switch-off-box-color-hover: light-dark(rgb(199 203 207), rgb(199 203 207));
-  --ui-switch-off-box-color-idle: light-dark(rgb(199 203 207), rgb(199 203 207));
-  --ui-switch-on-box-color-disabled: light-dark(rgb(246 246 247), rgb(246 246 247));
+  --ui-switch-global-tick-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-switch-off-box-color-active: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-switch-off-box-color-disabled: light-dark(rgb(244 245 245), rgb(24 25 27));
+  --ui-switch-off-box-color-hover: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-switch-off-box-color-idle: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-switch-on-box-color-disabled: light-dark(rgb(244 245 245), rgb(24 25 27));
 }

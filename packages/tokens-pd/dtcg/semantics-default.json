@@ -469,7 +469,7 @@
             "com.figma.variableId": "VariableID:910:263442"
           },
           "$type": "color",
-          "$value": "{palette.electricblue.7}"
+          "$value": "{palette.blue.7}"
         },
         "info-hover": {
           "$extensions": {
@@ -479,7 +479,7 @@
             "com.figma.variableId": "VariableID:910:263443"
           },
           "$type": "color",
-          "$value": "{palette.electricblue.8}"
+          "$value": "{palette.blue.8}"
         },
         "info-pressed": {
           "$extensions": {
@@ -489,7 +489,7 @@
             "com.figma.variableId": "VariableID:910:263444"
           },
           "$type": "color",
-          "$value": "{palette.electricblue.9}"
+          "$value": "{palette.blue.9}"
         },
         "neutral": {
           "$extensions": {
@@ -591,7 +591,7 @@
             "com.figma.variableId": "VariableID:141:276"
           },
           "$type": "color",
-          "$value": "{palette.blue.3}"
+          "$value": "{palette.blue.2}"
         },
         "hover": {
           "$extensions": {

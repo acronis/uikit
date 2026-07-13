@@ -2,12 +2,12 @@
 /* Source: @acronis-platform/design-tokens • brand: deep_sky_itkontoret • tier: Chips • overrides only */
 
 :root, :host {
-  --ui-chips-border-color-active: light-dark(rgb(199 203 207), rgb(199 203 207));
-  --ui-chips-border-color-hover: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-chips-border-color-idle: light-dark(rgb(199 203 207), rgb(199 203 207));
-  --ui-chips-container-color-active: light-dark(rgb(216 222 228), rgb(216 222 228));
-  --ui-chips-container-color-hover: light-dark(rgb(236 238 239), rgb(236 238 239));
-  --ui-chips-container-color-idle: light-dark(rgb(246 246 247), rgb(246 246 247));
-  --ui-chips-icon-color: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-chips-border-color-active: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-chips-border-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-chips-border-color-idle: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-chips-container-color-active: light-dark(rgb(228 229 231), rgb(48 50 54));
+  --ui-chips-container-color-hover: light-dark(rgb(236 237 238), rgb(37 38 40));
+  --ui-chips-container-color-idle: light-dark(rgb(244 245 245), rgb(24 25 27));
+  --ui-chips-icon-color: light-dark(rgb(73 76 80), rgb(201 204 207));
   --ui-chips-label-color: light-dark(rgb(68 81 93), rgb(68 81 93));
 }

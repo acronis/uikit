@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "input-text-area-box-disabled": "light-dark(rgb(246 246 247), rgb(246 246 247))",
+        "input-text-area-box-disabled": "light-dark(rgb(244 245 245), rgb(24 25 27))",
         "input-text-area-box-hover": "light-dark(rgb(255 255 255), rgb(31 32 34))",
         "input-text-area-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
@@ -27,14 +27,14 @@ export default {
         "input-text-area-value-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))"
       },
       "borderColor": {
-        "input-text-area-border-color-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "input-text-area-border-color-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "input-text-area-border-color-idle": "light-dark(rgb(199 203 207), rgb(199 203 207))",
+        "input-text-area-border-color-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "input-text-area-border-color-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "input-text-area-border-color-idle": "light-dark(rgb(215 217 219), rgb(61 63 67))",
         "input-text-area-error-msg-box-border-color-hover": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "input-text-area-error-msg-box-border-color-idle": "light-dark(rgb(226 54 54), rgb(229 77 77))"
       },
       "ringColor": {
-        "input-text-area-border-color-focus": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "input-text-area-border-color-focus": "light-dark(rgb(109 114 120), rgb(109 114 120))"
       },
       "fontFamily": {
         "input-text-area-description-text-style": "Inter, system-ui, sans-serif",

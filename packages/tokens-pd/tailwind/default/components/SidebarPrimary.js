@@ -6,9 +6,9 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "sidebar-primary-menu-item-selected-container-active": "light-dark(rgb(23 99 207), rgb(71 152 245))",
-        "sidebar-primary-menu-item-selected-container-hover": "light-dark(rgb(23 99 207), rgb(71 152 245))",
-        "sidebar-primary-menu-item-selected-container-idle": "light-dark(rgb(23 99 207), rgb(71 152 245))",
+        "sidebar-primary-menu-item-selected-container-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "sidebar-primary-menu-item-selected-container-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "sidebar-primary-menu-item-selected-container-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "sidebar-primary-menu-item-unselected-container-active": "light-dark(rgb(3 43 99), rgb(61 63 67))",
         "sidebar-primary-menu-item-unselected-container-hover": "light-dark(rgb(3 43 99), rgb(61 63 67))",
         "sidebar-primary-menu-item-unselected-container-idle": "light-dark(rgb(0 32 77), rgb(12 12 14))",

@@ -390,14 +390,7 @@
             "com.figma.variableId": "VariableID:1205:160"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              210,
-              7.69,
-              79.61
-            ]
-          }
+          "$value": "{palette.grayscale.3}"
         },
         "on": {
           "$extensions": {
@@ -539,7 +532,7 @@
             "com.figma.variableId": "VariableID:910:263442"
           },
           "$type": "color",
-          "$value": "{palette.electricblue.7}"
+          "$value": "{palette.blue.7}"
         },
         "info-hover": {
           "$extensions": {
@@ -549,7 +542,7 @@
             "com.figma.variableId": "VariableID:910:263443"
           },
           "$type": "color",
-          "$value": "{palette.electricblue.8}"
+          "$value": "{palette.blue.8}"
         },
         "info-pressed": {
           "$extensions": {
@@ -559,7 +552,7 @@
             "com.figma.variableId": "VariableID:910:263444"
           },
           "$type": "color",
-          "$value": "{palette.electricblue.9}"
+          "$value": "{palette.blue.9}"
         },
         "neutral": {
           "$extensions": {
@@ -661,14 +654,7 @@
             "com.figma.variableId": "VariableID:141:276"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              210,
-              18.18,
-              87.06
-            ]
-          }
+          "$value": "{palette.grayscale.2}"
         },
         "hover": {
           "$extensions": {
@@ -678,14 +664,7 @@
             "com.figma.variableId": "VariableID:141:275"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              200,
-              8.57,
-              93.14
-            ]
-          }
+          "$value": "{palette.grayscale.1}"
         },
         "primary": {
           "$extensions": {
@@ -705,14 +684,7 @@
             "com.figma.variableId": "VariableID:50:1427"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              240,
-              5.88,
-              96.67
-            ]
-          }
+          "$value": "{palette.grayscale.0}"
         }
       },
       "transparent": {
@@ -747,7 +719,7 @@
             "com.figma.variableId": "VariableID:139:5"
           },
           "$type": "color",
-          "$value": "{palette.transparent.inverted.0}"
+          "$value": "{palette.grayscale.0}"
         },
         "divider": {
           "$extensions": {
@@ -909,14 +881,7 @@
             "com.figma.variableId": "VariableID:50:1437"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              210,
-              7.69,
-              79.61
-            ]
-          }
+          "$value": "{palette.grayscale.3}"
         },
         "border-active": {
           "$extensions": {
@@ -926,14 +891,7 @@
             "com.figma.variableId": "VariableID:138:187"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              208.8,
-              15.53,
-              31.57
-            ]
-          }
+          "$value": "{palette.grayscale.7}"
         },
         "border-error": {
           "$extensions": {
@@ -953,14 +911,7 @@
             "com.figma.variableId": "VariableID:50:1438"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              210,
-              7.69,
-              79.61
-            ]
-          }
+          "$value": "{palette.grayscale.3}"
         }
       },
       "transparent": {
@@ -1136,14 +1087,7 @@
             "com.figma.variableId": "VariableID:151:43"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              210,
-              7.69,
-              79.61
-            ]
-          }
+          "$value": "{palette.grayscale.3}"
         },
         "info": {
           "$extensions": {
@@ -1225,14 +1169,7 @@
             "com.figma.variableId": "VariableID:56:1581"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              210,
-              7.69,
-              79.61
-            ]
-          }
+          "$value": "{palette.grayscale.5}"
         },
         "neutral": {
           "$extensions": {
@@ -1242,14 +1179,7 @@
             "com.figma.variableId": "VariableID:1024:122"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              210,
-              7.69,
-              79.61
-            ]
-          }
+          "$value": "{palette.grayscale.4}"
         },
         "primary": {
           "$extensions": {
@@ -1259,14 +1189,7 @@
             "com.figma.variableId": "VariableID:50:1436"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              208.8,
-              15.53,
-              31.57
-            ]
-          }
+          "$value": "{palette.grayscale.10}"
         }
       }
     },
@@ -1674,14 +1597,7 @@
             "com.figma.variableId": "VariableID:139:160"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              210,
-              7.69,
-              79.61
-            ]
-          }
+          "$value": "{palette.grayscale.3}"
         },
         "link-hover": {
           "$extensions": {
@@ -1691,14 +1607,7 @@
             "com.figma.variableId": "VariableID:139:156"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              207,
-              15.63,
-              25.1
-            ]
-          }
+          "$value": "{palette.grayscale.11}"
         },
         "link-pressed": {
           "$extensions": {
@@ -1708,14 +1617,7 @@
             "com.figma.variableId": "VariableID:139:159"
           },
           "$type": "color",
-          "$value": {
-            "colorSpace": "hsl",
-            "components": [
-              205.71,
-              14.58,
-              18.82
-            ]
-          }
+          "$value": "{palette.grayscale.12}"
         },
         "primary": {
           "$extensions": {

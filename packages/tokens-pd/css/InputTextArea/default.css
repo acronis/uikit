@@ -5,8 +5,8 @@
   color-scheme: light dark;
 
   --ui-input-text-area-border-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-input-text-area-border-color-focus: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-input-text-area-border-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-input-text-area-border-color-focus: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-input-text-area-border-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-input-text-area-border-color-idle: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-input-text-area-box-border-radius: 4px;
   --ui-input-text-area-box-border-width: 1px;
