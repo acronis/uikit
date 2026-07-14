@@ -35,6 +35,21 @@ intrinsic to the variant — the consumer does not pass it)
 `*-idle` / `*-hover` / `*-active` / `*-disabled` token — so brand/theme
 overrides that differ per state are honored.
 
+### Ghost underlines its label on hover
+
+**Given** a Button with `variant="ghost"` (the link-like variant)
+**When** the pointer hovers it
+**Then** the label is underlined (`--ui-button-ghost-label-text-decoration-hover`)
+**And** the underline is dropped again while the button is pressed (`:active`)
+and in every other state — idle, disabled, focus.
+Other variants never underline.
+
+### Shows a pointer cursor
+
+**Given** any enabled Button
+**When** the pointer is over it
+**Then** the cursor is `pointer` (disabled buttons have `pointer-events: none`).
+
 ### Disabled uses design tokens, not opacity
 
 **Given** a Button with `disabled`
