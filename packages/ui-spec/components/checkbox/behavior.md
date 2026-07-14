@@ -61,7 +61,7 @@
 
 **Given** a Checkbox
 **When** it receives keyboard focus
-**Then** a focus ring (`--ui-focus-primary`) is shown
+**Then** a 3px focus ring (`--ui-focus-primary`) is shown
 
 ### Checked / indeterminate fill
 
