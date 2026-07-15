@@ -77,7 +77,6 @@ export * from './components/ui/filter-search';
 export * from './components/ui/switch';
 export * from './components/ui/table';
 export * from './components/ui/tabs';
-export * from './components/ui/toast';
 export * from './components/ui/toggle-group';
 export * from './components/ui/tooltip';
 export * from './components/ui/tag';

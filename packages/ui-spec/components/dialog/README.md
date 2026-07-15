@@ -18,7 +18,6 @@ decision. Composable from parts; built on the Base UI Dialog primitive.
 
 ## When not to use
 
-- For transient, non-blocking feedback — use a toast.
 - For contextual hints anchored to an element — use a tooltip or popover.
 - For large, navigable content — prefer a full page or a side panel.
 

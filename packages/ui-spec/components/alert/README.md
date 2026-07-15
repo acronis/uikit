@@ -11,7 +11,6 @@ A status banner with severity variants and composable parts.
 
 ## When not to use
 
-- Transient, auto-dismissing notifications — use `Toast`.
 - A blocking confirmation — use `Dialog`.
 
 ## Parts

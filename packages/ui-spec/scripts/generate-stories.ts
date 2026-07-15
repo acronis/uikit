@@ -38,10 +38,9 @@ interface RenderHint {
   /** Root component/import to render when it differs from `index.component`
    *  (e.g. Resizable's root export is `ResizablePanelGroup`). */
   root?: string;
-  /** Skip story generation entirely — for imperative components whose static
-   *  render shows nothing (e.g. Toast: the region is empty until `toast()` is
-   *  called, so a generated "All States" story is a blank snapshot). Such
-   *  components rely on their hand-written stories for VR. */
+  /** Skip story generation entirely — for imperative or complex components whose
+   *  static render shows nothing meaningful (e.g. a region that is empty until
+   *  triggered). Such components rely on their hand-written stories for VR. */
   skip?: boolean;
 }
 
@@ -391,12 +390,6 @@ const RENDER: Record<string, RenderHint> = {
       '      </SidebarSecondaryFooter>',
       '    ',
     ].join('\n'),
-  },
-  toast: {
-    // Imperative: the region is empty until `toast()` is called, so a generated
-    // "All States" story would be a blank snapshot. VR is covered by the
-    // hand-written stories (Default / Variants / WithAction).
-    skip: true,
   },
   'data-table': {
     // Generic with required `columns`/`data` (TanStack column defs) — there's no
