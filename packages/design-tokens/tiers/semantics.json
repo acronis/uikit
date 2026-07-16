@@ -21,7 +21,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.sidebarprimary.idle}",
+            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.SidebarPrimary.idle}",
             "default": "{palette.blue.13}"
           }
         },
@@ -32,7 +32,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.sidebarprimary.active}",
+            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.SidebarPrimary.active}",
             "default": "{palette.blue.7}"
           }
         },
@@ -43,7 +43,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.sidebarprimary.disabled}",
+            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.SidebarPrimary.disabled}",
             "default": "{palette.blue.5}"
           }
         },
@@ -54,7 +54,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.sidebarprimary.hover}",
+            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.SidebarPrimary.hover}",
             "default": "{palette.blue.12}"
           }
         },
@@ -65,7 +65,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.buttonprimary.idle}",
+            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.ButtonPrimary.idle}",
             "default": "{palette.blue.7}"
           }
         },
@@ -76,7 +76,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.buttonprimary.active}",
+            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.ButtonPrimary.active}",
             "default": "{palette.blue.9}"
           }
         },
@@ -87,7 +87,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.buttonprimary.disabled}",
+            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.ButtonPrimary.disabled}",
             "default": "{palette.blue.3}"
           }
         },
@@ -98,7 +98,7 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.buttonprimary.hover}",
+            "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.ButtonPrimary.hover}",
             "default": "{palette.blue.8}"
           }
         }
