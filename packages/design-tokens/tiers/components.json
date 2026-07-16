@@ -821,7 +821,7 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.glyph.onInverted.primary}",
+              "deep_sky_itkontoret": "{colors.glyph.onInverse.primary}",
               "default": "{colors.glyph.onBrand.primary}"
             }
           },
@@ -834,7 +834,7 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.glyph.onInverted.disabled}",
+              "deep_sky_itkontoret": "{colors.glyph.onInverse.primary}",
               "default": "{colors.glyph.onBrand.disabled}"
             }
           },
@@ -847,7 +847,7 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.glyph.onInverted.primary}",
+              "deep_sky_itkontoret": "{colors.glyph.onInverse.primary}",
               "default": "{colors.glyph.onBrand.primary}"
             }
           },
@@ -860,7 +860,7 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.glyph.onInverted.primary}",
+              "deep_sky_itkontoret": "{colors.glyph.onInverse.primary}",
               "default": "{colors.glyph.onBrand.primary}"
             }
           }
@@ -877,7 +877,7 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onInverted.primary}",
+              "deep_sky_itkontoret": "{colors.text.onInverse.primary}",
               "default": "{colors.text.onBrand.primary}"
             }
           },
@@ -903,7 +903,7 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onInverted.primary}",
+              "deep_sky_itkontoret": "{colors.text.onInverse.primary}",
               "default": "{colors.text.onBrand.primary}"
             }
           },
@@ -916,7 +916,7 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onInverted.primary}",
+              "deep_sky_itkontoret": "{colors.text.onInverse.primary}",
               "default": "{colors.text.onBrand.primary}"
             }
           }
@@ -1248,8 +1248,8 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.background.inverted.active}",
-              "default": "{colors.background.inverted.active}"
+              "deep_sky_itkontoret": "{colors.background.inverse.primary}",
+              "default": "{colors.background.inverse.primary}"
             }
           },
           "disabled": {
@@ -1261,8 +1261,8 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.background.inverted.disabled}",
-              "default": "{colors.background.inverted.disabled}"
+              "deep_sky_itkontoret": "{colors.background.inverse.primary}",
+              "default": "{colors.background.inverse.primary}"
             }
           },
           "hover": {
@@ -1274,8 +1274,8 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.background.inverted.hover}",
-              "default": "{colors.background.inverted.hover}"
+              "deep_sky_itkontoret": "{colors.background.inverse.primary}",
+              "default": "{colors.background.inverse.primary}"
             }
           },
           "idle": {
@@ -1287,8 +1287,8 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.background.inverted.primary}",
-              "default": "{colors.background.inverted.primary}"
+              "deep_sky_itkontoret": "{colors.background.inverse.primary}",
+              "default": "{colors.background.inverse.primary}"
             }
           }
         },
@@ -1330,8 +1330,8 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.glyph.onInverted.primary}",
-              "default": "{colors.glyph.onInverted.primary}"
+              "deep_sky_itkontoret": "{colors.glyph.onInverse.primary}",
+              "default": "{colors.glyph.onInverse.primary}"
             }
           },
           "disabled": {
@@ -1343,8 +1343,8 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.glyph.onInverted.disabled}",
-              "default": "{colors.glyph.onInverted.disabled}"
+              "deep_sky_itkontoret": "{colors.glyph.onInverse.primary}",
+              "default": "{colors.glyph.onInverse.primary}"
             }
           },
           "hover": {
@@ -1356,8 +1356,8 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.glyph.onInverted.primary}",
-              "default": "{colors.glyph.onInverted.primary}"
+              "deep_sky_itkontoret": "{colors.glyph.onInverse.primary}",
+              "default": "{colors.glyph.onInverse.primary}"
             }
           },
           "idle": {
@@ -1369,8 +1369,8 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.glyph.onInverted.primary}",
-              "default": "{colors.glyph.onInverted.primary}"
+              "deep_sky_itkontoret": "{colors.glyph.onInverse.primary}",
+              "default": "{colors.glyph.onInverse.primary}"
             }
           }
         }
@@ -1399,8 +1399,8 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onInverted.disabled}",
-              "default": "{colors.text.onInverted.disabled}"
+              "deep_sky_itkontoret": "{colors.text.onInverse.secondary}",
+              "default": "{colors.text.onInverse.secondary}"
             }
           },
           "hover": {
@@ -1412,8 +1412,8 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onInverted.primary}",
-              "default": "{colors.text.onInverted.primary}"
+              "deep_sky_itkontoret": "{colors.text.onInverse.primary}",
+              "default": "{colors.text.onInverse.primary}"
             }
           },
           "idle": {
@@ -1425,8 +1425,8 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onInverted.primary}",
-              "default": "{colors.text.onInverted.primary}"
+              "deep_sky_itkontoret": "{colors.text.onInverse.primary}",
+              "default": "{colors.text.onInverse.primary}"
             }
           }
         }
