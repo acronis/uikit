@@ -80,8 +80,8 @@
           "$type": "dimension",
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{units.radius.999}",
-            "default": "{units.radius.999}"
+            "deep_sky_itkontoret": "{units.radius.full}",
+            "default": "{units.radius.full}"
           }
         },
         "group": {
@@ -7757,8 +7757,8 @@
           "$type": "dimension",
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{units.radius.999}",
-            "default": "{units.radius.999}"
+            "deep_sky_itkontoret": "{units.radius.full}",
+            "default": "{units.radius.full}"
           }
         },
         "borderWidth": {
@@ -10140,8 +10140,8 @@
           "$type": "dimension",
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{units.radius.999}",
-            "default": "{units.radius.999}"
+            "deep_sky_itkontoret": "{units.radius.full}",
+            "default": "{units.radius.full}"
           }
         },
         "borderStyle": {
@@ -10276,8 +10276,8 @@
           "$type": "dimension",
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{units.radius.999}",
-            "default": "{units.radius.999}"
+            "deep_sky_itkontoret": "{units.radius.full}",
+            "default": "{units.radius.full}"
           }
         },
         "color": {
@@ -10802,8 +10802,8 @@
           "$type": "dimension",
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{units.radius.999}",
-            "default": "{units.radius.999}"
+            "deep_sky_itkontoret": "{units.radius.full}",
+            "default": "{units.radius.full}"
           }
         },
         "borderWidth": {
