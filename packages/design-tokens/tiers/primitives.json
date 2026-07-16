@@ -2296,7 +2296,7 @@
           "com.figma.scopes": ["CORNER_RADIUS", "FONT_VARIATIONS"],
           "com.figma.variableId": "VariableID:1330:10918"
         },
-        "$value": { "unit": "%", "value": 50 },
+        "$value": { "unit": "px", "value": 999 },
         "platforms": ["PD"]
       }
     },
