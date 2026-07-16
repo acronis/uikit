@@ -1,5 +1,254 @@
 # @acronis-platform/ui-react
 
+## 0.56.0
+
+### Minor Changes
+
+- [#546](https://github.com/acronis/uikit/pull/546) [`20f6c46`](https://github.com/acronis/uikit/commit/20f6c468ad91c03dfdbc490213d3fc24361e191d) Thanks [@madjorr](https://github.com/madjorr)! - Add `Calendar` and `DateRangePicker` (initial versions ported from ui-legacy;
+  design reconciliation pending). `Calendar` wraps `react-day-picker` with the UI
+  Kit's semantic tokens (single / range / multiple selection, multi-month layouts);
+  `DateRangePicker` composes the `InputDatePicker` trigger with a dual-month range
+  calendar, editable start/end fields, and a Reset / Apply footer using a
+  draft/commit idiom. `Calendar` defaults to a Monday week start (`weekStartsOn={1}`),
+  overridable per instance.
+
+  **Migrating from `@acronis-platform/shadcn-uikit`'s `calendar`/`date-picker`**:
+  both are `'use client'` shadcn components built on the same underlying
+  `react-day-picker` and Base UI `Popover` foundation, so the selection/keyboard
+  model is unchanged — what moves is composition and theming.
+  - `import { Calendar } from '@acronis-platform/shadcn-uikit'` →
+    `import { Calendar } from '@acronis-platform/ui-react'`. Same `mode`/`selected`/
+    `onSelect`/`numberOfMonths`/`disabled` props (all passed through to
+    `DayPicker`). Legacy's `buttonVariant` prop is gone — ui-react's `Calendar`
+    themes its own nav/day buttons off `--ui-*` semantic tokens instead of
+    `buttonVariants`, so there's nothing to pass. Legacy defaulted to
+    `weekStartsOn={0}` (Sunday, `react-day-picker`'s own default); ui-react
+    defaults to `weekStartsOn={1}` (Monday) — pass `weekStartsOn={0}` explicitly
+    to keep the old default.
+  - Legacy's `date-picker.tsx` was a **local demo composition**
+    (`Popover` + `Button` trigger + `Calendar mode="single"`), not an exported
+    library component — there is no 1:1 import migration for it. For a single
+    date, compose `Calendar` + `Popover` + `InputDatePicker`
+    (`pickerType="date"`) yourself, mirroring `DateRangePicker`'s internals. For
+    a **range**, use the new `DateRangePicker` directly — it replaces that
+    hand-rolled composition end-to-end (trigger, dual-month calendar, editable
+    start/end fields, Reset/Apply), minus preset ranges (`Last 7 days`, etc.),
+    which are intentionally out of scope for this v1 and are expected to compose
+    alongside it (e.g. inside `FilterSearchFilters`) rather than be built into
+    the picker itself.
+  - Legacy's `bg-primary`/`bg-accent`/opacity-modifier styling (`data-[range-middle=true]:bg-accent`,
+    etc.) is now driven by `--ui-*` semantic tokens (no `--av-*`, no component
+    token tier yet) — if you were overriding legacy's `classNames`/`className`
+    directly, re-check against ui-react's token names rather than porting class
+    strings verbatim.
+
+- [#536](https://github.com/acronis/uikit/pull/536) [`33731fe`](https://github.com/acronis/uikit/commit/33731fe00eeb064e09e2aa3e8e40728ed66916e6) Thanks [@madjorr](https://github.com/madjorr)! - Extend `DataTable` with advanced grid features built on native TanStack APIs:
+  - **Column resizing** — opt in with `enableColumnResizing`; a drag handle renders at the trailing edge of each resizable header (`header.getResizeHandler()`). Optional `onColumnSizingChange` passthrough persists widths.
+  - **Sticky columns** — a `ColumnDef.meta.pin: 'left' | 'right'` flag drives TanStack's native column pinning (`column.pin()`), applying `position: sticky` with the computed offset and an opaque row-token background.
+  - **`DataTableExpandTrigger`** — a chevron toggle cell helper wired to `row.getCanExpand()` / `getIsExpanded()` / `toggleExpanded()`, so the expand affordance can live in a real column rather than only via a whole-row click.
+  - **Per-column filtering in `DataTableToolbar`** — the bare `InputText` filter is replaced by composition of `FilterSearchFilters` + `FilterSearchAppliedFilters`; pass filter-field children (keyed by column id via `useFilterSearchFilters`) and the toolbar wires them to the table's `columnFilters` state. The plain-text `searchKey` search remains a separate concern.
+
+  `DataTableViewOptions` is now a thin TanStack adapter over the primitive-only `TableViewOptions`.
+
+  **Migrating from Vue2 `table`**: column `sortable`/`sortBy`/`sortMethod` map to
+  `DataTable`'s TanStack `ColumnDef.enableSorting`/`sortingFn` (or `Table`'s new
+  `useSortState` hook for the primitives-only path). `resizable` →
+  `enableColumnResizing` (TanStack's native column-resizing; no more manual
+  `header-dragend` math). `fixed: true/'left'/'right'` → `ColumnDef.meta.pin`
+  (TanStack column pinning) instead of the old CSS/IE-polyfill approach. The
+  `type="expand"` column → `DataTableExpandTrigger` in a column `cell`.
+  Column-level filtering → filter-field children composed into
+  `DataTableToolbar` via `FilterSearchFilters`/`FilterSearchAppliedFilters`.
+  There is no Vue2 equivalent for the new URL-bookmarkable state (see the
+  companion `Table` primitives changeset) — this is `ui-react`-only
+  functionality with no migration mapping needed. `colReorderable` and
+  `rowGroups`/`<el-table-rows-group>` are **not covered by this release** —
+  they're scoped as separate follow-up tasks; when those ship, their own
+  changesets will carry the `colReorderable` → TanStack `columnOrder`-based
+  reordering and `rowGroups`/`getRowGroupData` → TanStack
+  `getGroupedRowModel`-based grouping migration notes.
+
+- [#536](https://github.com/acronis/uikit/pull/536) [`af50fcb`](https://github.com/acronis/uikit/commit/af50fcb4016d8d941504908dac79404288bced4a) Thanks [@madjorr](https://github.com/madjorr)! - Fix several `Table`/`DataTable` bugs and add a controlled column-visibility
+  API for composing `DataTable` with an external toolbar:
+  - **`DataTable`**: column pinning now un-pins when `ColumnDef.meta.pin` is
+    removed dynamically (previously only pinned, never un-pinned).
+  - **`DataTable`**: the column-resize handle is now keyboard-operable
+    (WCAG 2.1.1) — focusable, `aria-value{now,min,max}`, and Arrow
+    Left/Right (Shift = larger step) resize via a new exported
+    `getResizeKeyboardStep` helper. Ignores Ctrl/Alt/Meta so it doesn't hijack
+    browser/OS shortcuts, and clamps fully to `[minSize, maxSize]` regardless of
+    which bound the current size started outside of.
+  - **`DataTable`**: added a controlled `columnVisibility` /
+    `onColumnVisibilityChange` prop pair (mirrors the existing `columnSizing`
+    passthrough) so a `DataTable` composed with an external `DataTableToolbar`
+    can share one visibility state instead of two independently-owned,
+    out-of-sync `useReactTable` instances — fixes the toolbar's "View" menu
+    silently no-oping when paired with a self-contained `DataTable`.
+  - **`DataTable`/`Table`**: `DataTableColumnHeader` and `Table`'s sortable
+    header button now show a pointer cursor on the button itself (previously
+    missing, or set on an ancestor `<th>` that a native `<button>` doesn't
+    inherit cursor from).
+  - **`DataTable`**: the resize handle's cursor now references the same
+    `--ui-resizable-cursor` token the `Resizable` primitive uses, instead of a
+    hardcoded `cursor-col-resize`.
+  - **`DataTableExpandTrigger`**: now shows a pointer cursor, and its
+    expand/collapse chevron rotates (`ChevronDownIcon` + `transition-transform`)
+    instead of swapping between two icon components, matching
+    `SidebarSecondary`'s section-trigger pattern.
+  - **`use-table-url-state`**: multiple state setters called synchronously in
+    one handler (e.g. a filter change that also resets the page) now produce a
+    single browser-history entry instead of two.
+
+  No breaking changes — every fix above is backward compatible, and
+  `columnVisibility`/`onColumnVisibilityChange` are optional (uncontrolled
+  internal state when omitted, same as before).
+
+  **Migration (optional)**: if you compose `DataTable` with an external
+  toolbar and currently work around the visibility bug by manually filtering
+  the `columns` array you pass to `DataTable` (based on your own external
+  `columnVisibility` state), you can drop that workaround — pass
+  `columnVisibility`/`onColumnVisibilityChange` straight through instead:
+
+  ```diff
+  - <DataTable columns={visibleColumns} data={rows} />
+  + <DataTable
+  +   columns={allColumns}
+  +   data={rows}
+  +   columnVisibility={columnVisibility}
+  +   onColumnVisibilityChange={setColumnVisibility}
+  + />
+  ```
+
+  **Heads up**: `DataTableExpandTrigger`'s collapsed state now renders a
+  rotated `ChevronDownIcon` instead of a separate `ChevronRightIcon` — same
+  accessible name/behavior, but a different `<svg>` shape when collapsed. If
+  you maintain your own visual-regression snapshots covering this component,
+  expect a diff there.
+
+- [#536](https://github.com/acronis/uikit/pull/536) [`33731fe`](https://github.com/acronis/uikit/commit/33731fe00eeb064e09e2aa3e8e40728ed66916e6) Thanks [@madjorr](https://github.com/madjorr)! - Add a `ColumnDef.meta.wrap` flag to `DataTable`. When `true`, the column's
+  header and cells render with `whitespace-normal` and drop the fixed row height
+  so long content grows the row instead of being clipped — mirroring the `wrap`
+  prop the `Table` primitives already expose on `TableHead`/`TableCell`.
+
+- [#534](https://github.com/acronis/uikit/pull/534) [`abd485e`](https://github.com/acronis/uikit/commit/abd485ed5f9c3d06bd92721e1b5d1043fd0dceb1) Thanks [@madjorr](https://github.com/madjorr)! - Add `FilterSearchFilters` (filter popover: fields + Reset/Cancel/Apply) and `FilterSearchAppliedFilters` (removable applied-filter chips + a top-level Reset filters) to `FilterSearch`, replacing the standalone `MultiSearch` component (never released; retired in favor of living alongside the toolbar it always appeared next to). Design-pending — no Figma node yet for the two new parts.
+
+- [#537](https://github.com/acronis/uikit/pull/537) [`09a4110`](https://github.com/acronis/uikit/commit/09a4110c27e2e8aa1a3bca900e88637c656ccfaa) Thanks [@madjorr](https://github.com/madjorr)! - SidebarPrimary, SidebarSecondary: fix several UX bugs and unify the two components' collapse-trigger and tooltip behavior
+
+  **Breaking:**
+  - `SidebarPrimaryMenuItem.icon` is now required by default (rail mode is icon-only, so an icon-less row is a UX bug) — pass `noIcon` to explicitly opt out for the rare row that has none
+  - `SidebarSecondaryCollapseTrigger.expandIcon` removed — both `SidebarPrimaryCollapseTrigger` and `SidebarSecondaryCollapseTrigger` now take a single `icon` that rotates 180° between expanded/collapsed instead of swapping icon elements
+
+  **Fixes:**
+  - `SidebarPrimaryCollapseTrigger`'s row (and its extras) now shows a pointer cursor — the shared cva was missing `cursor-pointer` that `SidebarSecondary`'s already had
+  - `SidebarPrimaryHeader`'s logo/padding now animate alongside the rail's width transition instead of snapping instantly. The row's height is also now pinned to the larger of the two states' `padding×2 + logo-height` sums — `logo`/`collapsedLogo` are two separate elements swapped by a JS conditional (not one element whose size CSS-transitions), so the incoming logo mounts at its final size instantly while padding is still mid-transition; without the pinned height the row briefly overshot/undershot its resting height and the rest of the menu visibly jumped
+  - Truncated-label tooltips on `SidebarPrimaryMenuItem`, `SidebarSecondaryMenuItem`, `SidebarSecondarySectionLabel`, and both `CollapseTrigger`s now open to the side (right in LTR, left in RTL) instead of on top, and are anchored to the full row instead of the shrinking label span — so they align flush with the sidebar's edge instead of drifting inward when a row also has `extras`
+  - Collapsed/rail-mode icon-only rows now always show their label as a tooltip on hover — previously the tooltip trigger was the `sr-only` label itself, which can never receive a real hover
+  - `SidebarPrimaryMenuItem` (an anchor) now activates on Space in addition to Enter, matching native button behavior and `SidebarSecondaryMenuItem`
+  - `SidebarPrimaryMenuItem`'s required-`icon` union now rejects `icon={undefined}` without `noIcon` — previously it typechecked (since `React.ReactNode` already includes `undefined`) and silently rendered an icon-less row
+
+  **Added:**
+  - `TooltipContent` (`@/components/ui/tooltip`) gained an `anchor` prop — overrides what the popup positions against, independent of what triggers it open. Needed for the row-anchoring fix above; also usable directly by consumers with a similar narrow-trigger/wide-anchor layout.
+
+  **Migration:**
+  - Every `SidebarPrimaryMenuItem` without an `icon` now fails to typecheck. Add an `icon`, or `noIcon` for the rare row that intentionally has none:
+
+    ```diff
+    - <SidebarPrimaryMenuItem href="/settings">General settings</SidebarPrimaryMenuItem>
+    + <SidebarPrimaryMenuItem href="/settings" noIcon>General settings</SidebarPrimaryMenuItem>
+    ```
+
+  - Drop `expandIcon` from any `SidebarSecondaryCollapseTrigger` — the single `icon` now rotates automatically:
+
+    ```diff
+    - <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} expandIcon={<ChevronsRightIcon />} />
+    + <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} />
+    ```
+
+- [#536](https://github.com/acronis/uikit/pull/536) [`33731fe`](https://github.com/acronis/uikit/commit/33731fe00eeb064e09e2aa3e8e40728ed66916e6) Thanks [@madjorr](https://github.com/madjorr)! - Extend the `Table` primitives with TanStack-independent parts and hooks:
+  - **`TablePagination`** — a plain-props twin of `DataTablePagination`
+    (first/prev/next/last + rows-per-page select + page-count text) driven by
+    `pageIndex`/`pageCount`/`pageSize`/`onPageIndexChange`/`onPageSizeChange`, with
+    no `@tanstack/react-table` dependency.
+  - **`TableViewOptions`** — a router/grid-agnostic show/hide-columns dropdown
+    driven by a plain `{ id, label, hidden }[]` + `onToggle(id)`.
+  - **`useSortState`** — headless client-side sort state for the primitives
+    (default natural alphanumeric comparator, optional per-column custom
+    comparator) wired to `TableHead`'s `sortable`/`sortDirection`/`onSort`.
+  - **`useTableUrlState`** — router-agnostic hook that syncs controlled table
+    state (pagination/sorting/columnFilters) to and from the URL query string via
+    `history.pushState`/`popstate`, with namespaced `tbl_*` keys, so a view is
+    bookmarkable. Ships `parseTableUrlState`/`serializeTableUrlState` helpers.
+  - **`TableCell`/`TableHead` `wrap` prop** — swaps the fixed row height for
+    `whitespace-normal`, letting a cell wrap onto multiple lines and the row grow
+    to fit its content.
+
+  There is no Vue2 equivalent for the URL-bookmarkable state — this is
+  `ui-react`-only functionality.
+
+### Patch Changes
+
+- [#543](https://github.com/acronis/uikit/pull/543) [`fb43b1d`](https://github.com/acronis/uikit/commit/fb43b1d4549154fe479fa6e0903559dbfdf5f84f) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Fix `Avatar` rendering at 28px instead of the designed 32px (PLTFRM-92393). The
+  2px separator stroke was a CSS `border`, drawn inside the 32px border-box, so the
+  visible circle shrank to 28px. Figma draws the stroke with `strokeAlign: OUTSIDE`,
+  so it is now an outset `box-shadow` ring that leaves the colored circle at the full
+  32px without inflating the layout box — keeping the `AvatarGroup` overlap step
+  (32px − 6px gap) intact.
+
+- [#538](https://github.com/acronis/uikit/pull/538) [`e8f613d`](https://github.com/acronis/uikit/commit/e8f613d83b073502b9c9ad79a61916e7168c4126) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Fix `Breadcrumb` link states to match the Figma design: the pressed
+  (`:active`) state no longer keeps the hover underline, and keyboard focus now
+  shows a 3px focus-ring (`--ui-focus-primary`) flush to the label with no
+  underline (previously a 2px offset ring plus an underline).
+
+- [#540](https://github.com/acronis/uikit/pull/540) [`3fc266c`](https://github.com/acronis/uikit/commit/3fc266cfbec209981d6c40a708c5fb5b03a201a8) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Fix `Button` states to match Figma: the `ghost` variant now underlines its
+  label on hover (wired to the `--ui-button-ghost-label-text-decoration-*`
+  tokens, dropped again on `:active`), and every variant shows a `pointer`
+  cursor.
+
+- [#542](https://github.com/acronis/uikit/pull/542) [`267507f`](https://github.com/acronis/uikit/commit/267507fcf47f8778444202c3dc9729327b87a352) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Fix `Checkbox` focus ring width to 3px (`ring-[3px]`) to match the Figma
+  design — it was 2px.
+
+- [#539](https://github.com/acronis/uikit/pull/539) [`999efc8`](https://github.com/acronis/uikit/commit/999efc8c9b3221e579da3a284b304cc8c94c9691) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Set a global `text-underline-offset: 3px` so underlined text (links, hovered
+  breadcrumbs, …) matches the Figma underline offset instead of the tighter
+  browser default.
+
+- [#546](https://github.com/acronis/uikit/pull/546) [`20f6c46`](https://github.com/acronis/uikit/commit/20f6c468ad91c03dfdbc490213d3fc24361e191d) Thanks [@madjorr](https://github.com/madjorr)! - Fix `InputDatePicker` trigger cursor: show `cursor: pointer` on hover when
+  enabled (Tailwind v4's Preflight does not set a pointer cursor on `<button>`),
+  while keeping `cursor: not-allowed` when disabled.
+
+- [#532](https://github.com/acronis/uikit/pull/532) [`da18636`](https://github.com/acronis/uikit/commit/da186363bd8be271358575cbd3ef7bea76bfc007) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - SidebarSecondary, Resizable, ButtonIcon, Tooltip: UX polish fixes
+
+  **Cursor styles:**
+  - Add `cursor-pointer` to menu items, collapse triggers, and expandable section labels
+  - Add `cursor-pointer` to `ButtonIcon` base styles globally
+
+  **Keyboard accessibility:**
+  - Space key now activates focused anchor menu items (native `<a>` only responds to Enter)
+  - Resize edge: Space toggles expand/collapse, ArrowRight expands when collapsed
+
+  **Resize edge:**
+  - Widen hit area from 9px to 17px for easier targeting
+  - Add `trackCursorAxis="y"` to resize edge tooltip so it follows the pointer vertically
+  - Render own focus ring via `after` pseudo (CSS border + box-shadow) instead of sidebar container ring
+  - Sidebar container `:has()` styles now target `border-inline-end-color` only (no outer ring)
+
+  **Resizable:**
+  - `ResizableHandle` divider line now uses a CSS border (`border-inline-start`) instead of `width` + `background` so the browser pixel-snaps the 1px line on fractional positions
+  - Focus ring rendered as `box-shadow` on the `after` pseudo, auto-centered on the line
+
+  **Focus retention:**
+  - CollapseTrigger now keeps stable DOM structure (Tooltip wrapper always present, disabled when expanded) so focus is preserved across state changes
+
+  **Tooltip delay:**
+  - `TooltipProvider` now defaults `delay` to 300ms (down from Base UI's 600ms)
+
+  **Stories:**
+  - Operations section items show per-item counters (12, 10)
+  - External link items use `target="_blank" rel="noopener noreferrer"`
+  - Section action `ButtonIcon` wrapped in `Tooltip`
+
+- Updated dependencies [[`8580171`](https://github.com/acronis/uikit/commit/8580171c47a17be69f7dcb6ff028f2b271c443c7), [`62a9f38`](https://github.com/acronis/uikit/commit/62a9f389de16f911a0f4b042bd1d91c260405211), [`eb8b0f9`](https://github.com/acronis/uikit/commit/eb8b0f9eb2d222c6b2aa85d46a29c264282b6c5c)]:
+  - @acronis-platform/tokens-pd@2.0.0
+
 ## 0.55.0
 
 ### Minor Changes

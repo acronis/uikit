@@ -47,7 +47,54 @@ contract:
       required: false
       default: '5'
       description: Number of skeleton rows when skeleton is set.
-  events: []
+    - name: enableColumnResizing
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Opt in to interactive column resizing — renders a drag handle at the
+        trailing edge of each resizable header (TanStack's native
+        `columnResizing`, `columnResizeMode: 'onChange'`).
+    - name: meta.pin
+      type: "'left' | 'right'"
+      required: false
+      description: >-
+        Set on a `ColumnDef.meta` (not a DataTable prop) — pins the column to a
+        table edge. DataTable drives TanStack's native column-pinning and renders
+        the column as `position: sticky` cells with an opaque row background.
+    - name: meta.wrap
+      type: boolean
+      required: false
+      description: >-
+        Set on a `ColumnDef.meta` (not a DataTable prop) — allows a column's
+        header and cell content to wrap onto multiple lines instead of
+        truncating, mirroring the `Table` primitives' `wrap` prop.
+    - name: children
+      type: ReactNode
+      required: false
+      description: >-
+        On DataTableToolbar — filter fields rendered inside a
+        `FilterSearchFilters` popover (wire each to a column via
+        `useFilterSearchFilters()` keyed by column id). When provided, the
+        toolbar renders the filter popover plus a `FilterSearchAppliedFilters`
+        chip row below it.
+    - name: filtersLabel
+      type: ReactNode
+      required: false
+      default: "'Filters'"
+      description: On DataTableToolbar — label for the filters trigger button.
+    - name: getFilterChipLabel
+      type: '(key: string, value: unknown) => ReactNode'
+      required: false
+      description: >-
+        On DataTableToolbar — formats an applied-filter chip's label (defaults to
+        "<id>: <value>").
+  events:
+    - name: onColumnSizingChange
+      payload: 'ColumnSizingState (TanStack OnChangeFn)'
+      description: >-
+        Passthrough for the `columnSizing` state so a consumer can persist
+        column widths when `enableColumnResizing` is set.
   methods: []
 
 adapters:

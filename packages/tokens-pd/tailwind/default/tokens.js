@@ -111,6 +111,7 @@ export default {
         "border-on-brand": "light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.102))",
         "on-brand-border-active": "light-dark(rgb(244 245 245), rgb(24 25 27))",
         "on-brand-divider": "light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.102))",
+        "on-status-ai": "light-dark(rgb(228 204 237), rgb(130 23 130))",
         "on-status-critical": "light-dark(rgb(255 204 153), rgb(153 69 0))",
         "on-status-critical-strong": "light-dark(rgb(240 112 0), rgb(255 153 51))",
         "on-status-danger": "light-dark(rgb(248 195 195), rgb(151 27 27))",

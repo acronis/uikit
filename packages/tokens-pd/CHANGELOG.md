@@ -1,5 +1,39 @@
 # @acronis-platform/tokens-pd
 
+## 2.0.0
+
+### Major Changes
+
+- [#514](https://github.com/acronis/uikit/pull/514) [`eb8b0f9`](https://github.com/acronis/uikit/commit/eb8b0f9eb2d222c6b2aa85d46a29c264282b6c5c) Thanks [@heygabecom](https://github.com/heygabecom)! - Rename the brand mode keys across every generated artifact: `acronis` → `default`
+  and `deep-sky` → `deep_sky_itkontoret`. This renames the package's public entry
+  files — e.g. `css/acronis.css` → `css/default.css`, `css/deep-sky.css` →
+  `css/deep_sky_itkontoret.css`, and the parallel `css/<Component>/*` and
+  `tailwind/<brand>/*` paths.
+
+  **Breaking:** update any import of a brand-specific file. For example:
+
+  ```diff
+  -@import '@acronis-platform/tokens-pd/css/acronis.css';
+  -@import '@acronis-platform/tokens-pd/css/deep-sky.css';
+  +@import '@acronis-platform/tokens-pd/css/default.css';
+  +@import '@acronis-platform/tokens-pd/css/deep_sky_itkontoret.css';
+  ```
+
+### Minor Changes
+
+- [#519](https://github.com/acronis/uikit/pull/519) [`8580171`](https://github.com/acronis/uikit/commit/8580171c47a17be69f7dcb6ff028f2b271c443c7) Thanks [@heygabecom](https://github.com/heygabecom)! - Sync design tokens with Figma.
+
+  Adds AI-status semantic tokens: background.status.ai variants, border.onStatus.ai/aiStrong, glyph.onStatus.ai, text.onStatus.ai. Updates gradients.ai.\* values used by Button, Tag, and SearchGlobal.
+
+- [#520](https://github.com/acronis/uikit/pull/520) [`62a9f38`](https://github.com/acronis/uikit/commit/62a9f389de16f911a0f4b042bd1d91c260405211) Thanks [@heygabecom](https://github.com/heygabecom)! - Sync design tokens with Figma.
+
+  Adds and updates status semantic tokens for critical (orange), danger (red), success (green), warning (yellow), and neutral (grayscale) across background, statusStrong, border, glyph, and text layers. Renames seven hyphenated border.onStatus.*-strong tokens to camelCase *Strong.
+
+### Patch Changes
+
+- Updated dependencies [[`fcbbc68`](https://github.com/acronis/uikit/commit/fcbbc688cdd828c6330b27ea71ba867ddfe8ca3a), [`8580171`](https://github.com/acronis/uikit/commit/8580171c47a17be69f7dcb6ff028f2b271c443c7), [`975e756`](https://github.com/acronis/uikit/commit/975e756af302ca31216160298f988a1edd4e5be6), [`62a9f38`](https://github.com/acronis/uikit/commit/62a9f389de16f911a0f4b042bd1d91c260405211)]:
+  - @acronis-platform/design-tokens@2.0.0
+
 ## 1.9.0
 
 ### Minor Changes

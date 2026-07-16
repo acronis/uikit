@@ -294,7 +294,9 @@ const RENDER: Record<string, RenderHint> = {
     ].join('\n'),
   },
   'input-text': { props: 'label="Email" placeholder="you@example.com"' },
-  'input-text-area': { props: 'label="Bio" placeholder="Tell us about yourself"' },
+  'input-text-area': {
+    props: 'label="Bio" placeholder="Tell us about yourself"',
+  },
   link: { sample: 'Link', props: 'href="#"' },
   search: { ariaLabel: 'Search' },
   tooltip: {
@@ -326,41 +328,12 @@ const RENDER: Record<string, RenderHint> = {
     ].join('\n'),
   },
   'sidebar-primary': {
-    ariaLabel: 'Primary',
-    extraImports: [
-      "import { SidebarPrimaryHeader, SidebarPrimaryContent, SidebarPrimaryFooter, SidebarPrimarySection, SidebarPrimaryMenu, SidebarPrimaryMenuItem, SidebarPrimaryMenuItemExtras } from '../sidebar-primary';",
-      "import { BoxIcon, UsersIcon, CircleHelpIcon } from '@acronis-platform/icons-react/stroke-mono';",
-    ],
-    sample: [
-      '',
-      '      <SidebarPrimaryHeader>',
-      '        <svg width={24} height={24} />',
-      '      </SidebarPrimaryHeader>',
-      '      <SidebarPrimaryContent>',
-      '        <SidebarPrimarySection>',
-      '          <SidebarPrimaryMenu>',
-      '            <SidebarPrimaryMenuItem href="#" icon={<BoxIcon />} selected>',
-      '              Assets',
-      '            </SidebarPrimaryMenuItem>',
-      '            <SidebarPrimaryMenuItem',
-      '              href="#"',
-      '              icon={<UsersIcon />}',
-      '              extras={<SidebarPrimaryMenuItemExtras variant="shortcut" shortcut="⌘K" />}',
-      '            >',
-      '              Clients',
-      '            </SidebarPrimaryMenuItem>',
-      '          </SidebarPrimaryMenu>',
-      '        </SidebarPrimarySection>',
-      '      </SidebarPrimaryContent>',
-      '      <SidebarPrimaryFooter>',
-      '        <SidebarPrimaryMenu>',
-      '          <SidebarPrimaryMenuItem href="#" icon={<CircleHelpIcon />}>',
-      '            Help',
-      '          </SidebarPrimaryMenuItem>',
-      '        </SidebarPrimaryMenu>',
-      '      </SidebarPrimaryFooter>',
-      '    ',
-    ].join('\n'),
+    // A multi-part composition (Header/Content/Footer/Section/Menu/MenuItem)
+    // where the auto-generated zero-arg render doesn't reflect real usage —
+    // `icon` is required on every MenuItem, and the CollapseTrigger's rotating
+    // icon / collapsed-tooltip wiring needs real context to demonstrate. VR is
+    // covered by the hand-written `FullDemo` story.
+    skip: true,
   },
   'sidebar-secondary': {
     ariaLabel: 'Section navigation',
@@ -527,7 +500,9 @@ const RENDER: Record<string, RenderHint> = {
   resizable: {
     root: 'ResizablePanelGroup',
     ariaLabel: 'Resizable example',
-    extraImports: ["import { ResizablePanel, ResizableHandle } from '../resizable';"],
+    extraImports: [
+      "import { ResizablePanel, ResizableHandle } from '../resizable';",
+    ],
     sample: [
       '',
       '      <ResizablePanel defaultSize={50}>One</ResizablePanel>',

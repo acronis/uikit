@@ -106,6 +106,11 @@ export interface TableHeadProps
   sortDirection?: SortDirection;
   /** Invoked when the user activates a sortable header (click / Enter / Space). */
   onSort?: () => void;
+  /**
+   * Allow the header to wrap onto multiple lines (`whitespace-normal`) and drop
+   * the fixed row height so the cell grows to fit its content.
+   */
+  wrap?: boolean;
 }
 
 function SortIcon({ direction }: { direction: SortDirection }) {
@@ -120,7 +125,18 @@ function SortIcon({ direction }: { direction: SortDirection }) {
 }
 
 const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
-  ({ className, children, sortable, sortDirection = false, onSort, ...props }, ref) => (
+  (
+    {
+      className,
+      children,
+      sortable,
+      sortDirection = false,
+      onSort,
+      wrap,
+      ...props
+    },
+    ref
+  ) => (
     <th
       ref={ref}
       aria-sort={
@@ -133,9 +149,8 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
               : undefined
       }
       className={cn(
-        'h-10 px-[var(--ui-table-header-cell-padding-x)] text-start align-middle text-sm font-semibold text-[var(--ui-table-header-label-color)] [&:has([role=checkbox])]:pe-0',
-        sortable &&
-          'cursor-pointer transition-colors hover:bg-[var(--ui-table-header-cell-color-hover)]',
+        'px-[var(--ui-table-header-cell-padding-x)] text-start align-middle text-sm font-semibold text-[var(--ui-table-header-label-color)] [&:has([role=checkbox])]:pe-0',
+        wrap ? 'whitespace-normal' : 'h-10',
         className
       )}
       {...props}
@@ -144,7 +159,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
         <button
           type="button"
           onClick={onSort}
-          className="-mx-1 inline-flex items-center gap-[var(--ui-table-header-gap)] rounded-sm px-1 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)]"
+          className="-mx-1 inline-flex cursor-pointer items-center gap-[var(--ui-table-header-gap)] rounded-sm px-1 outline-none transition-colors hover:bg-[var(--ui-table-header-cell-color-hover)] focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)]"
         >
           {children}
           <SortIcon direction={sortDirection} />
@@ -157,19 +172,28 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
 );
 TableHead.displayName = 'TableHead';
 
-const TableCell = React.forwardRef<
-  HTMLTableCellElement,
-  React.TdHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
-  <td
-    ref={ref}
-    className={cn(
-      'h-10 px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm [&:has([role=checkbox])]:pe-0',
-      className
-    )}
-    {...props}
-  />
-));
+export interface TableCellProps
+  extends React.TdHTMLAttributes<HTMLTableCellElement> {
+  /**
+   * Allow the cell to wrap onto multiple lines (`whitespace-normal`) and drop
+   * the fixed row height so the row grows to fit its content.
+   */
+  wrap?: boolean;
+}
+
+const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
+  ({ className, wrap, ...props }, ref) => (
+    <td
+      ref={ref}
+      className={cn(
+        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm [&:has([role=checkbox])]:pe-0',
+        wrap ? 'whitespace-normal' : 'h-10',
+        className
+      )}
+      {...props}
+    />
+  )
+);
 TableCell.displayName = 'TableCell';
 
 const TableCaption = React.forwardRef<

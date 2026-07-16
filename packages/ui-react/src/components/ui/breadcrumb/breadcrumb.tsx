@@ -82,7 +82,7 @@ const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
       props: mergeProps<'a'>(
         {
           className: cn(
-            'rounded-sm text-[var(--ui-breadcrumb-link-label-color-idle)] no-underline transition-colors hover:text-[var(--ui-breadcrumb-link-label-color-hover)] hover:underline active:text-[var(--ui-breadcrumb-link-label-color-active)] focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)] focus-visible:ring-offset-2 ring-offset-background',
+            'rounded-sm text-[var(--ui-breadcrumb-link-label-color-idle)] no-underline transition-colors hover:text-[var(--ui-breadcrumb-link-label-color-hover)] hover:underline active:text-[var(--ui-breadcrumb-link-label-color-active)] active:no-underline focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
             className
           ),
         },

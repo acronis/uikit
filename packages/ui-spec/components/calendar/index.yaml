@@ -1,0 +1,16 @@
+spec_version: '1.0'
+component: Calendar
+name: calendar
+status: draft
+category: forms
+description: >-
+  A day-grid built on react-day-picker: single / range / multiple date selection
+  across one or more months side by side, with prev/next navigation at the outer
+  edges of the month row. Design-pending v1 ported from ui-legacy — themed off the
+  shared semantic tokens (no `--ui-calendar-*` tier yet).
+since: 0.56.0
+dependencies:
+  components:
+    - ChevronLeftIcon
+    - ChevronRightIcon
+    - ChevronDownIcon

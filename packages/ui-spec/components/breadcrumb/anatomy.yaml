@@ -10,7 +10,7 @@ schematic: |
   |   |  [link]   |  |    >      |  | [ellipsis]|  |  [page]      |  |
   |   +-----------+  +-----------+  +-----------+  +--------------+  |
   +-----------------------------------------------------------------+
-     link    -> --ui-breadcrumb-link-label-color-* (interactive, hover/focus underline)
+     link    -> --ui-breadcrumb-link-label-color-* (interactive, underline on hover only)
      page    -> --ui-breadcrumb-page-label-color (current page, aria-current="page")
      separator -> --ui-breadcrumb-separator-icon-color (decorative chevron, aria-hidden)
      ellipsis  -> collapsed-items affordance (aria-hidden + sr-only label)
@@ -35,7 +35,7 @@ parts:
   - id: link
     description: >-
       Interactive link (`<a>` by default, polymorphic via `render`). Uses
-      `--ui-breadcrumb-link-label-color-*`; underlines on hover and focus-visible.
+      `--ui-breadcrumb-link-label-color-*`; underlines on hover only.
     element: a
   - id: page
     description: >-

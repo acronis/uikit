@@ -10,6 +10,13 @@
 - Selection checkboxes need an `aria-label` ("Select row" / "Select all") since
   they have no visible label in the cell.
 - The view-options menu is keyboard-navigable (Base UI menu).
+- `DataTableExpandTrigger` is a real `<button>` carrying `aria-expanded` and an
+  "Expand row" / "Collapse row" label; it renders nothing for a row that can't
+  expand.
+- The column resize handle is a `role="separator"` with `aria-orientation`
+  vertical and an "Resize column" label (`enableColumnResizing`).
+- Per-column filter fields live in a keyboard-navigable `FilterSearchFilters`
+  popover; each applied-filter chip below the toolbar removes its own filter.
 
 ## Contrast
 

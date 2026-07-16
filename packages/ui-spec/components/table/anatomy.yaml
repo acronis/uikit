@@ -2,6 +2,7 @@ spec_version: '1.0'
 component: Table
 
 schematic: |
+  view-options:  [ ⚙ View ▾ ]   (show/hide columns dropdown, optional)
   root: <table> (in a horizontally scrollable container)
   +-----------------------------------------------------------------+
   | header: <thead>                                                 |
@@ -10,16 +11,17 @@ schematic: |
   +-----------------------------------------------------------------+
   | body: <tbody>                                                   |
   |   row: <tr> (idle / hover / selected)                           |
-  |     cell: <td> John Smith | cell: <td> Active                   |
+  |     cell: <td> John Smith | cell: <td> Active | cell ▸ wrap     |
   +-----------------------------------------------------------------+
   | footer: <tfoot>                                                 |
   |   row > cell: Total ............................. $750.00       |
   +-----------------------------------------------------------------+
   caption: <caption> (optional, below the table)
+  pagination:  "N of M selected"  [Rows per page ▾]  Page X of Y  ⏮ ◀ ▶ ⏭
      head    -> --ui-table-header-label-color, hover --ui-table-header-cell-color-hover
      sortable head -> sort icon (--ui-table-header-sort-icon-color-*) + aria-sort
      row     -> idle/hover/active (selected) via --ui-table-global-row-color-*
-     cell    -> --ui-table-global-cell-{padding-x,padding-y,border-color}
+     cell    -> --ui-table-global-cell-{padding-x,padding-y,border-color}; wrap grows height
 
 root:
   element: table
@@ -49,14 +51,31 @@ parts:
   - id: head
     description: >-
       A column header cell (`<th>`). When `sortable`, it renders a focusable sort
-      button with a sort icon and sets `aria-sort`.
+      button with a sort icon and sets `aria-sort`. `wrap` lets the label wrap onto
+      multiple lines and drops the fixed row height (otherwise `h-10`).
     element: th
   - id: cell
-    description: A data cell (`<td>`) — padding/border from the cell tokens.
+    description: >-
+      A data cell (`<td>`) — padding/border from the cell tokens. Truncates within
+      the fixed row height (`h-10`) by default; `wrap` switches it to
+      `whitespace-normal` and lets the row grow to fit multi-line content.
     element: td
   - id: caption
     description: Optional table caption (`<caption>`), muted, below the table.
     element: caption
+    optional: true
+  - id: pagination
+    description: >-
+      TablePagination — a TanStack-independent pagination bar driven by plain
+      props: an optional selection/row summary, a rows-per-page select, a page
+      indicator, and first / prev / next / last controls.
+    element: div
+    optional: true
+  - id: view-options
+    description: >-
+      TableViewOptions — a TanStack-independent show/hide-columns dropdown driven
+      by a plain `{ id, label, hidden }[]` + `onToggle` (a checkbox per column).
+    element: div
     optional: true
 
 layout:
@@ -77,6 +96,13 @@ states:
       kind: prop,
       prop: sort-direction,
       affects: [head],
+    }
+  - {
+      id: wrap,
+      trigger: 'wrap === true on a cell or head',
+      kind: prop,
+      prop: wrap,
+      affects: [cell, head],
     }
   - {
       id: header-hover,

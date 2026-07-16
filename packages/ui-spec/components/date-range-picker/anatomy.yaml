@@ -1,0 +1,98 @@
+spec_version: '1.0'
+component: DateRangePicker
+
+schematic: |
+  +-----------------------------------------------+
+  | trigger: [ start – end            calendar ]  |  InputDatePicker (pickerType=dateRange)
+  +-----------------------------------------------+
+             │ opens
+             ▼
+  popup (Popover content) ────────────────────────────────────
+  | calendar:  <   July 2026        August 2026        >       |
+  |            Su Mo Tu … Sa       Su Mo Tu … Sa               |
+  |            [range grid, dual-month, mode=range]            |
+  |-----------------------------------------------------------|
+  | field-start [ Jul 1, 2026 ]  –  field-end [ Jul 15, 2026 ]|
+  |-----------------------------------------------------------|
+  | reset "Reset to default"                    apply "Apply" |
+  ------------------------------------------------------------
+
+root:
+  element: div
+  role: group
+  description: >-
+    Wraps the trigger and its popover. The popover is portaled; positioning, focus
+    management, and outside-press / Escape dismissal come from the Popover
+    primitive (Base UI).
+
+parts:
+  - id: trigger
+    description: >-
+      The `InputDatePicker` field (`pickerType="dateRange"`) showing the applied
+      start–end range and a calendar icon; activating it opens the popup.
+    element: button
+  - id: popup
+    description: The Popover content panel holding the calendar, the fields, and the footer.
+    element: div
+  - id: calendar
+    description: A dual-month range `Calendar` (`mode="range"`, `numberOfMonths={2}`) bound to the draft range.
+    element: div
+  - id: field-start
+    description: An editable text input for the draft range start (`InputText`, `MMM d, yyyy`).
+    element: input
+  - id: field-end
+    description: An editable text input for the draft range end (`InputText`, `MMM d, yyyy`).
+    element: input
+  - id: reset
+    description: The "Reset to default" action reverting the draft to `defaultValue` (disabled when already equal).
+    element: button
+  - id: apply
+    description: The "Apply" action committing the draft via `onValueChange` and closing the popup (disabled when the draft equals the applied range).
+    element: button
+
+layout:
+  type: stack
+  direction: vertical
+  align: start
+  order: [trigger, popup, calendar, field-start, field-end, reset, apply]
+
+internal_state:
+  - id: open
+    type: boolean
+    initial: false
+    changed_by: trigger click opens; outside-press / Escape / Apply close
+    description: Whether the popover is open.
+  - id: draft
+    type: DateRange
+    initial: 'the applied range (snapshotted on open)'
+    controllable_via: [value, default-value]
+    changed_by: calendar selection or typing in the start/end fields
+    description: >-
+      The in-progress range being edited inside the popover. Committed to the
+      applied value only on Apply; reverted to the applied value on dismiss.
+
+states:
+  - id: hover
+    trigger: pointer hover over the trigger (enabled)
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [trigger]
+  - id: focus-visible
+    trigger: keyboard focus on the trigger
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [trigger]
+  - id: open
+    trigger: the popover is open
+    kind: internal
+    affects: [trigger, popup]
+  - id: error
+    trigger: 'error is set'
+    kind: prop
+    prop: error
+    affects: [trigger]
+  - id: disabled
+    trigger: 'disabled === true'
+    kind: prop
+    prop: disabled
+    affects: [trigger]

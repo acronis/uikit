@@ -1,0 +1,87 @@
+spec_version: '1.0'
+component: DateRangePicker
+
+# Framework-agnostic contract. The trigger, calendar, fields, and footer are
+# composed internally — the consumer only supplies the range value(s) and the
+# trigger's field furniture. See `adapters` for per-framework syntax.
+contract:
+  properties:
+    - name: value
+      type: '{ from?: Date; to?: Date }'
+      required: false
+      description: The applied range (controlled). Omit for uncontrolled use with `default-value`.
+    - name: default-value
+      type: '{ from?: Date; to?: Date }'
+      required: false
+      description: The initial applied range (uncontrolled) and the target of "Reset to default".
+    - name: label
+      type: ReactNode
+      required: false
+      description: Field label rendered above the trigger.
+    - name: description
+      type: ReactNode
+      required: false
+      description: Helper text below the trigger. Hidden while `error` is set.
+    - name: error
+      type: ReactNode
+      required: false
+      description: Error message below the trigger; switches it to the error treatment.
+    - name: placeholder
+      type: ReactNode
+      required: false
+      description: Hint shown in the trigger when no range is selected.
+    - name: required
+      type: boolean
+      required: false
+      default: false
+      description: Marks the trigger required (appends `*`).
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables the trigger and prevents opening the popover.
+
+  events:
+    - name: value-change
+      payload: '{ from?: Date; to?: Date }'
+      description: >-
+        Fired with the committed range when Apply is pressed (React:
+        `onValueChange`). Not fired on dismiss (the draft is reverted).
+
+  content: []
+
+  methods: []
+
+adapters:
+  react:
+    component: DateRangePicker
+    status: implemented
+    import: "import { DateRangePicker } from '@acronis-platform/ui-react'"
+    example: |
+      const [range, setRange] = React.useState<{ from?: Date; to?: Date }>({});
+
+      <DateRangePicker
+        label="Period"
+        placeholder="Select a date range"
+        value={range}
+        onValueChange={setRange}
+      />
+
+      {/* Uncontrolled with a default */}
+      <DateRangePicker
+        label="Period"
+        defaultValue={{ from: new Date(2026, 6, 1), to: new Date(2026, 6, 15) }}
+        onValueChange={(next) => console.log(next)}
+      />
+  vue:
+    component: AvDateRangePicker
+    status: planned
+    import: "import { AvDateRangePicker } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvDateRangePicker label="Period" v-model="range" />
+  web-components:
+    element: ui-date-range-picker
+    status: planned
+    import: "import '@acronis-platform/ui-wc/date-range-picker'"
+    example: |
+      <ui-date-range-picker label="Period"></ui-date-range-picker>

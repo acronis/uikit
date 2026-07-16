@@ -5,10 +5,11 @@ status: draft
 category: data-display
 description: >-
   A data grid built on TanStack react-table v8, composed over the Table
-  primitives — sorting, filtering, column visibility, row selection, pagination,
-  and optional row expansion. Ships with companion parts (column header,
-  toolbar, pagination, view options). Ported from the legacy shadcn-uikit
-  `data-table`.
+  primitives — sorting, filtering (text + per-column), column visibility, row
+  selection, pagination, optional row expansion (row-level or an in-cell expand
+  trigger), column resizing, and sticky (pinned) columns. Ships with companion
+  parts (column header, toolbar, pagination, view options, expand trigger).
+  Ported from the legacy shadcn-uikit `data-table`.
 since: 0.42.0
 dependencies:
   components:
@@ -17,5 +18,9 @@ dependencies:
     - ButtonIcon
     - Checkbox
     - DropdownMenu
-    - InputSelect
-    - InputText
+    - FilterSearch
+    - InputSearch
+    - Select
+    - ChevronDownIcon
+    - ChevronRightIcon
+    - TimesIcon

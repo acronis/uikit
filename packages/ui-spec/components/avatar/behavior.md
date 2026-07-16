@@ -31,5 +31,6 @@
 - **Given** an `AvatarGroup` wrapping several `Avatar`s
   **Then** each avatar after the first is offset left by
   `--ui-avatar-global-avatar-group-gap` (a negative value), so the avatars
-  overlap; each 2px border (`--ui-avatar-global-avatar-border-color`) separates
-  them, and later avatars paint above earlier ones.
+  overlap; each 2px ring (`--ui-avatar-global-avatar-border-color`, drawn outside
+  the 32px circle as a `box-shadow`) separates them, and later avatars paint above
+  earlier ones.

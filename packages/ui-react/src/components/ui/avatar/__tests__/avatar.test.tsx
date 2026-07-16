@@ -37,6 +37,23 @@ describe('Avatar', () => {
     expect(root.className).toContain('text-[var(--ui-avatar-label-color-teal)]');
   });
 
+  it('draws the 2px ring outside the 32px circle (box-shadow, not an inset border)', () => {
+    // PLTFRM-92393: Figma draws the stroke with strokeAlign OUTSIDE, so the
+    // colored circle is the full 32px. A CSS border would be inset (border-box),
+    // shrinking the visible circle to 28px — assert we ring instead.
+    const { container } = render(
+      <Avatar>
+        <AvatarFallback>SN</AvatarFallback>
+      </Avatar>
+    );
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.className).toContain('size-[var(--ui-avatar-global-avatar-size)]');
+    expect(root.className).toContain(
+      '[box-shadow:0_0_0_var(--ui-avatar-global-avatar-border-border-width)_var(--ui-avatar-global-avatar-border-color)]'
+    );
+    expect(root.className).not.toMatch(/\bborder-\[length:/);
+  });
+
   it('applies the requested color variant', () => {
     const { container } = render(
       <Avatar color="violet">

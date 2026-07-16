@@ -4,7 +4,9 @@ component: Table
 # Framework-agnostic contract for a *composable* table: the grid is assembled
 # from parts (see anatomy.yaml). Properties below are flat but apply to specific
 # parts (noted in each description); the parts otherwise pass through the native
-# attributes of the element they render.
+# attributes of the element they render. The two TanStack-independent companion
+# parts (pagination, view-options) and the two headless hooks are documented
+# here too — the hooks under `methods`.
 contract:
   properties:
     - name: selected
@@ -27,6 +29,62 @@ contract:
       description: >-
         On a sortable column header — the current sort direction (`false` =
         sortable but unsorted). Drives the sort icon and `aria-sort`.
+    - name: wrap
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        On a cell or column header — allow the content to wrap onto multiple
+        lines (`whitespace-normal`) and drop the fixed row height so the cell
+        grows to fit multi-line content instead of truncating.
+    - name: page-index
+      type: number
+      required: true
+      description: >-
+        On the pagination part — the zero-based index of the current page.
+    - name: page-count
+      type: number
+      required: true
+      description: On the pagination part — the total number of pages.
+    - name: page-size
+      type: number
+      required: true
+      description: On the pagination part — the number of rows shown per page.
+    - name: page-size-options
+      type: 'number[]'
+      required: false
+      default: '[10, 20, 30, 40, 50]'
+      description: >-
+        On the pagination part — the page-size options offered in the
+        rows-per-page select.
+    - name: total-rows
+      type: number
+      required: false
+      description: >-
+        On the pagination part — total rows across all pages (drives the
+        summary text).
+    - name: selected-rows
+      type: number
+      required: false
+      description: >-
+        On the pagination part — number of currently selected rows (drives the
+        selection summary text).
+    - name: columns
+      type: '{ id: string; label: string; hidden: boolean }[]'
+      required: true
+      description: >-
+        On the view-options part — the toggleable columns and their current
+        visibility.
+    - name: trigger-label
+      type: ReactNode
+      required: false
+      default: "'View'"
+      description: On the view-options part — the trigger button label.
+    - name: menu-label
+      type: ReactNode
+      required: false
+      default: "'Toggle columns'"
+      description: On the view-options part — the dropdown heading.
 
   events:
     - name: sort
@@ -35,6 +93,21 @@ contract:
         Fired when a sortable header is activated by click / Enter / Space
         (React: `onSort`). The consumer owns the sorting logic and updates
         `sort-direction`.
+    - name: page-index-change
+      payload: number
+      description: >-
+        On the pagination part — fired with the next zero-based page index
+        (React: `onPageIndexChange`).
+    - name: page-size-change
+      payload: number
+      description: >-
+        On the pagination part — fired with the next page size
+        (React: `onPageSizeChange`).
+    - name: toggle
+      payload: string
+      description: >-
+        On the view-options part — fired with the column id whose visibility
+        was toggled (React: `onToggle`).
 
   content:
     - name: default
@@ -43,7 +116,32 @@ contract:
         headers), a body (rows of cells), an optional footer, and an optional
         caption. Cell content (text, tags, links, checkboxes, …) is arbitrary.
 
-  methods: []
+  # Headless hooks exported alongside the primitives (no visual output). They
+  # own optional state and produce the props the parts consume.
+  methods:
+    - name: useSortState
+      signature: >-
+        useSortState<TData>({ data, initialSort?, comparators?, getValue? }):
+        { sortedData, sort, setSort, toggleSort, getSortDirection }
+      description: >-
+        Headless client-side single-column sort (no TanStack dependency).
+        Returns the sorted rows plus `getSortDirection(columnId)` /
+        `toggleSort(columnId)` (cycles none → asc → desc → none) shaped for a
+        `TableHead`'s `sort-direction` / `sort` props. Default comparator is
+        alphanumeric; pass `comparators` to override per column.
+    - name: useTableUrlState
+      signature: >-
+        useTableUrlState({ defaultPageSize?, paramKeys? }):
+        { state, setPagination, setSorting, setColumnFilters }
+      description: >-
+        Router-agnostic hook that syncs pagination / sorting / column-filter
+        state to and from the URL query string via `history.pushState` +
+        `popstate`. Query keys are namespaced (`tbl_page` / `tbl_size` /
+        `tbl_sort` / `tbl_filter`) so they never collide with other params.
+        Reads its initial state from the URL, so a bookmarked link restores the
+        view. The setters accept a value or an updater, shaped for TanStack's
+        `onPaginationChange` / `onSortingChange` / `onColumnFiltersChange`.
+        Ships with pure `parseTableUrlState` / `serializeTableUrlState` helpers.
 
 adapters:
   react:
@@ -51,7 +149,8 @@ adapters:
     status: implemented
     import: >-
       import { Table, TableHeader, TableBody, TableFooter, TableRow, TableHead,
-      TableCell, TableCaption } from '@acronis-platform/ui-react'
+      TableCell, TableCaption, TablePagination, TableViewOptions, useSortState,
+      useTableUrlState } from '@acronis-platform/ui-react'
     example: |
       <Table>
         <TableHeader>
@@ -65,10 +164,18 @@ adapters:
         <TableBody>
           <TableRow selected={isSelected}>
             <TableCell>web-server-01</TableCell>
+            <TableCell wrap>{longDescription}</TableCell>
             <TableCell><Tag>Protected</Tag></TableCell>
           </TableRow>
         </TableBody>
       </Table>
+      <TablePagination
+        pageIndex={pageIndex}
+        pageCount={pageCount}
+        pageSize={pageSize}
+        onPageIndexChange={setPageIndex}
+        onPageSizeChange={setPageSize}
+      />
 
   vue:
     component: AvTable

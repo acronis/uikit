@@ -24,6 +24,14 @@ const TooltipContent = React.forwardRef<
     sideOffset?: number;
     side?: TooltipPrimitive.Positioner.Props['side'];
     align?: TooltipPrimitive.Positioner.Props['align'];
+    /**
+     * Override what the popup is positioned against — defaults to the
+     * `TooltipTrigger` element. Useful when the hover/focus trigger is
+     * narrower than the element the tooltip should visually align to (e.g. a
+     * truncating label inside a full-width row, where the tooltip should
+     * anchor to the row's edge, not the label's).
+     */
+    anchor?: TooltipPrimitive.Positioner.Props['anchor'];
     portalContainer?: TooltipPrimitive.Portal.Props['container'];
     keepMounted?: TooltipPrimitive.Portal.Props['keepMounted'];
   }
@@ -34,6 +42,7 @@ const TooltipContent = React.forwardRef<
       sideOffset = 6,
       side = 'top',
       align = 'center',
+      anchor,
       portalContainer,
       keepMounted,
       ...props
@@ -52,6 +61,7 @@ const TooltipContent = React.forwardRef<
         sideOffset={sideOffset}
         side={side}
         align={align}
+        anchor={anchor}
         className="z-50"
       >
         <TooltipPrimitive.Popup

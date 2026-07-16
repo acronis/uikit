@@ -1,5 +1,30 @@
 # @acronis-platform/design-tokens
 
+## 2.0.0
+
+### Major Changes
+
+- [#514](https://github.com/acronis/uikit/pull/514) [`975e756`](https://github.com/acronis/uikit/commit/975e756af302ca31216160298f988a1edd4e5be6) Thanks [@heygabecom](https://github.com/heygabecom)! - Sync design tokens with Figma.
+
+  Renames the two brand mode keys across all token tiers: `acronis` → `default`, `deep-sky` → `deep_sky_itkontoret`. Any code that selects a theme by mode name must update its references accordingly.
+
+### Minor Changes
+
+- [#519](https://github.com/acronis/uikit/pull/519) [`8580171`](https://github.com/acronis/uikit/commit/8580171c47a17be69f7dcb6ff028f2b271c443c7) Thanks [@heygabecom](https://github.com/heygabecom)! - Sync design tokens with Figma.
+
+  Adds AI-status semantic tokens: background.status.ai variants, border.onStatus.ai/aiStrong, glyph.onStatus.ai, text.onStatus.ai. Updates gradients.ai.\* values used by Button, Tag, and SearchGlobal.
+
+- [#520](https://github.com/acronis/uikit/pull/520) [`62a9f38`](https://github.com/acronis/uikit/commit/62a9f389de16f911a0f4b042bd1d91c260405211) Thanks [@heygabecom](https://github.com/heygabecom)! - Sync design tokens with Figma.
+
+  Adds and updates status semantic tokens for critical (orange), danger (red), success (green), warning (yellow), and neutral (grayscale) across background, statusStrong, border, glyph, and text layers. Renames seven hyphenated border.onStatus.*-strong tokens to camelCase *Strong.
+
+### Patch Changes
+
+- [#513](https://github.com/acronis/uikit/pull/513) [`fcbbc68`](https://github.com/acronis/uikit/commit/fcbbc688cdd828c6330b27ea71ba867ddfe8ca3a) Thanks [@heygabecom](https://github.com/heygabecom)! - Reformat `tiers/semantics.json` and `tiers/components.json` to match the
+  canonical output of the sync pipeline (alphabetised keys, single-line
+  `com.figma.scopes` arrays). No token values, types, or references were changed.
+  Future sync diffs will show only real value changes.
+
 ## 1.9.0
 
 ### Minor Changes

@@ -65,7 +65,7 @@ function norm(v) {
 
 // --- map a Figma variable name → --ui-* token name (best effort, Option-A) ---
 function toToken(figmaName) {
-  const segs = String(figmaName).split('/').filter((s) => s && s.toLowerCase() !== 'component');
+  const segs = String(figmaName).split('/').filter((s) => s && !/^components?$/i.test(s));
   const kebabed = segs.map((s) =>
     s.replace(/^_/, '')                                  // _global → global
      .replace(/([a-z0-9])([A-Z])/g, '$1-$2')             // camel/Pascal → kebab

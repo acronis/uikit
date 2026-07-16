@@ -753,7 +753,18 @@
         }
       },
       "onStatus": {
-        "ai-strong": {
+        "ai": {
+          "$extensions": {
+            "com.figma.scopes": ["ALL_SCOPES"],
+            "com.figma.variableId": "VariableID:4313:50249"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.violet.4}",
+            "default": "{palette.violet.4}"
+          }
+        },
+        "aiStrong": {
           "$extensions": {
             "com.figma.scopes": [],
             "com.figma.variableId": "VariableID:2277:437"
@@ -776,7 +787,7 @@
             "default": "{palette.orange.4}"
           }
         },
-        "critical-strong": {
+        "criticalStrong": {
           "$extensions": {
             "com.figma.scopes": ["STROKE_COLOR"],
             "com.figma.variableId": "VariableID:797:2005"
@@ -798,7 +809,7 @@
             "default": "{palette.red.4}"
           }
         },
-        "danger-strong": {
+        "dangerStrong": {
           "$extensions": {
             "com.figma.scopes": ["STROKE_COLOR"],
             "com.figma.variableId": "VariableID:797:2004"
@@ -842,7 +853,7 @@
             "default": "{palette.grayscale.4}"
           }
         },
-        "neutral-strong": {
+        "neutralStrong": {
           "$extensions": {
             "com.figma.scopes": ["STROKE_COLOR"],
             "com.figma.variableId": "VariableID:912:268723"
@@ -864,7 +875,7 @@
             "default": "{palette.green.4}"
           }
         },
-        "success-strong": {
+        "successStrong": {
           "$extensions": {
             "com.figma.scopes": ["STROKE_COLOR"],
             "com.figma.variableId": "VariableID:797:2007"
@@ -886,7 +897,7 @@
             "default": "{palette.yellow.4}"
           }
         },
-        "warning-strong": {
+        "warningStrong": {
           "$extensions": {
             "com.figma.scopes": ["STROKE_COLOR"],
             "com.figma.variableId": "VariableID:797:2006"

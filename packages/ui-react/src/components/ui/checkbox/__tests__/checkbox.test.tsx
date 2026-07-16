@@ -21,6 +21,18 @@ describe('Checkbox', () => {
     );
   });
 
+  it('applies a 3px focus-visible ring (matching Figma, not the old 2px)', () => {
+    // VR can't guard this — the repo has no pseudo-states addon, so
+    // :focus-visible never paints in snapshots — so the class is the guard.
+    render(<Checkbox aria-label="Accept" />);
+    const checkbox = screen.getByRole('checkbox', { name: 'Accept' });
+    expect(checkbox).toHaveClass(
+      'focus-visible:ring-[3px]',
+      'focus-visible:ring-[var(--ui-focus-primary)]'
+    );
+    expect(checkbox.className).not.toMatch(/focus-visible:ring-2\b/);
+  });
+
   it('toggles checked state on click', async () => {
     const onCheckedChange = vi.fn();
     render(<Checkbox aria-label="Accept" onCheckedChange={onCheckedChange} />);

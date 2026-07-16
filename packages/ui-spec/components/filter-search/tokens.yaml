@@ -1,9 +1,26 @@
 spec_version: '1.0'
 component: FilterSearch
 
-# No dedicated token tier — FilterSearch is a pure layout wrapper. Its only
-# styling is a 16px gap between children. Child components (Search,
-# ButtonMenu, Select) each bring their own --ui-* token tiers.
+# FilterSearch itself has no dedicated token tier — it's a pure layout
+# wrapper (16px gap between children); child components (Search, ButtonMenu,
+# Select) each bring their own --ui-* token tiers. FilterSearchFilters and
+# FilterSearchAppliedFilters compose Button/Chip/Popover, each with its own
+# spec/tokens — the only tokens referenced directly here are the
+# button-secondary *-active tokens that highlight the filters-trigger while
+# its popover is open, plus the shared border token on the popover footer
+# divider (via the bridged `border-border` name).
 source: '@acronis-platform/tokens-pd'
 
-tokens: []
+tokens:
+  - name: --ui-button-secondary-container-color-active
+    affects: filters-trigger
+    description: Trigger container fill while the filter popover is open (data-popup-open).
+  - name: --ui-button-secondary-container-border-color-active
+    affects: filters-trigger
+    description: Trigger container border while the filter popover is open (data-popup-open).
+  - name: --ui-button-secondary-label-color-active
+    affects: filters-trigger
+    description: Trigger label/chevron color while the filter popover is open (data-popup-open).
+  - name: --ui-border-on-surface-border
+    affects: filters-footer
+    description: Divider line above the filter popover footer (bridged `border-border`).

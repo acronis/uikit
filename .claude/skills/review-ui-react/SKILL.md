@@ -164,6 +164,30 @@ contains and exit — don't run devil-advocate on nothing.
    each additional hit as confirmed-bug / needs-a-design-call / false-positive
    (e.g. symmetric/non-directional cases that only look like the same bug).
 
+   For any **new or changed pure function** (equality/comparison, parsing,
+   sorting, formatting, any helper over an `unknown`/union-typed value) — do
+   a separate coverage-vs-input-space pass, since "the logic reads
+   correctly" is not the same question as "the tests match what the input
+   space can contain":
+   - Enumerate the function's guards/branches, then for each one ask: is
+     there an input that satisfies this guard/enters this branch while the
+     function still returns the wrong answer? (Common shapes: two
+     independent checks that each pass individually but the combination they
+     jointly rule out is untested — e.g. an arity/length check plus a
+     per-slot equality check that together miss a presence-vs-value mixup; a
+     branch that explicitly handles one type/shape and silently falls
+     through to a generic default — `String()`, a template literal, JSON
+     stringify — for everything else.)
+   - Check the actual test/story file for that combination, not just each
+     condition in isolation — tests that cover condition A and condition B
+     separately do not cover the case where A and B combine to hide a bug.
+     A story or test that only exercises a function through a caller-supplied
+     override (a custom formatter/comparator prop) does not exercise that
+     function's own default/fallback path.
+   - An untested guard-combination or fallback branch is a finding on its
+     own — report it even before constructing the exact failing input, and
+     even if nothing currently visibly fails.
+
 7. **Impact review (tiers b/c/d)** — for tiers (b)/(c), assess effect on
    ui-react specifically rather than reviewing the file as if it were
    ui-react source. For tier (d), apply the `qa`/`devil-advocate` wide-view

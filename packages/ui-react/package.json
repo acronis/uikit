@@ -1,6 +1,6 @@
 {
   "name": "@acronis-platform/ui-react",
-  "version": "0.55.0",
+  "version": "0.56.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/acronis/uikit.git",
@@ -76,6 +76,8 @@
     "@tanstack/react-table": "catalog:",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "date-fns": "catalog:",
+    "react-day-picker": "10.0.1",
     "react-resizable-panels": "4.11.2",
     "recharts": "catalog:",
     "tailwind-merge": "3.6.0"

@@ -1,0 +1,18 @@
+spec_version: '1.0'
+component: DateRangePicker
+name: date-range-picker
+status: draft
+category: forms
+description: >-
+  A range date field: an `InputDatePicker` trigger opens a popover with a
+  dual-month range `Calendar`, editable start/end date fields, and a Reset / Apply
+  footer. Edits stay in a draft until Apply commits them (dismissing reverts).
+  Design-pending v1 ported from ui-legacy.
+since: 0.56.0
+dependencies:
+  components:
+    - InputDatePicker
+    - Calendar
+    - Popover
+    - Button
+    - InputText

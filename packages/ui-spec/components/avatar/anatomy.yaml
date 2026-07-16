@@ -3,7 +3,7 @@ component: Avatar
 
 schematic: |
   +----------+
-  |  image   |   root: <span> (32px circle, 2px border)
+  |  image   |   root: <span> (32px circle, 2px ring outside)
   |  /  SN   |        image (cover) on top of fallback
   +----------+
        ^
@@ -12,14 +12,15 @@ schematic: |
 
   AvatarGroup (overlapping row):
   ( SN )( GA )( SI )   each pulled left by the negative group gap;
-                       2px borders form the layered separation
+                       2px rings form the layered separation
 
 root:
   element: span
   description: >-
     The circular badge — a Base UI Avatar root (`<span>`), 32px, fully rounded,
-    with a 2px border whose color separates avatars when they overlap. `color`
-    drives the fallback background and initials color.
+    with a 2px ring (drawn outside the 32px circle, matching Figma's
+    `strokeAlign: OUTSIDE`) whose color separates avatars when they overlap.
+    `color` drives the fallback background and initials color.
 
 parts:
   - id: image

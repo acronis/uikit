@@ -2,8 +2,12 @@ spec_version: '1.0'
 component: FilterSearch
 
 # Framework-agnostic contract for a composable table toolbar. The toolbar
-# is assembled from parts — the consumer places Search, Select, ButtonMenu
-# etc. as direct children. FilterSearchActions pushes its content right.
+# is assembled from parts — the consumer places Search, Select,
+# FilterSearchFilters, etc. as direct children. FilterSearchActions pushes
+# its content right. FilterSearchFilters (the filter popover) and
+# FilterSearchAppliedFilters (the applied-filter chip row) are separate,
+# design-pending parts documented in the same contract — see their own
+# properties/methods below.
 contract:
   properties:
     - name: className
@@ -11,33 +15,111 @@ contract:
       required: false
       default: undefined
       description: Additional CSS classes for the root container.
+    - name: value
+      type: 'Record<string, unknown>'
+      required: true
+      description: >-
+        `FilterSearchFilters` only. The applied filter values, keyed by an
+        arbitrary consumer-chosen id.
+    - name: onValueChange
+      type: '(next: Record<string, unknown>) => void'
+      required: true
+      description: >-
+        `FilterSearchFilters` only. Called with the committed filters when
+        Apply is pressed. `FilterSearchAppliedFilters` also has an
+        `onValueChange` — called with the remaining filters when a chip is
+        removed or "Reset filters" clears all.
+    - name: onApply
+      type: '(filters: Record<string, unknown>) => void'
+      required: false
+      default: undefined
+      description: >-
+        `FilterSearchFilters` only. Called with the newly applied filters
+        when Apply is pressed (fires alongside `onValueChange`).
+        Synchronous — no loading/applying state in v1.
+    - name: label
+      type: ReactNode
+      required: false
+      default: "'Filters'"
+      description: '`FilterSearchFilters` only. Label for the filter trigger button.'
+    - name: filters
+      type: 'Record<string, unknown>'
+      required: true
+      description: >-
+        `FilterSearchAppliedFilters` only. The currently applied filter
+        values, keyed by an arbitrary consumer-chosen id. Renders nothing
+        when empty.
+    - name: getFilterChipLabel
+      type: '(key: string, value: unknown) => ReactNode'
+      required: false
+      default: 'defaults to "<key>: <value>"'
+      description: >-
+        `FilterSearchAppliedFilters` only. Format an applied-filter chip's
+        label. Defaults to `"<key>: <value>"` (array values joined with ", ").
 
   events: []
 
   content:
     - name: default
       description: >-
-        The composed toolbar. Place Search, Select, ButtonMenu, and
+        The composed toolbar. Place Search, Select, FilterSearchFilters, and
         FilterSearchActions as direct children. The order of children
         determines the visual order.
+    - name: FilterSearchFilters children
+      description: >-
+        Filter field children rendered inside `FilterSearchFilters`'s popover
+        form. Plain children — wire each field to the draft via
+        `useFilterSearchFilters`. Group fields with a `Separator` as a layout
+        convention if desired.
 
-  methods: []
+  methods:
+    - name: useFilterSearchFilters
+      signature: '(): { filters: Record<string, unknown>; setFilter: (key: string, value: unknown) => void }'
+      description: >-
+        Companion context hook for filter field children rendered inside
+        `FilterSearchFilters`'s popover. Returns the current draft `filters`
+        map and a per-key `setFilter` setter so a plain child can read/write
+        the draft without a render prop. Throws if used outside a
+        `<FilterSearchFilters>` popover.
 
 adapters:
   react:
     component: FilterSearch
     status: implemented
     import: >-
-      import { FilterSearch, FilterSearchActions } from
+      import { FilterSearch, FilterSearchActions, FilterSearchFilters,
+      FilterSearchAppliedFilters, useFilterSearchFilters } from
       '@acronis-platform/ui-react'
     example: |
-      <FilterSearch>
-        <Search placeholder="Search table" aria-label="Search" className="w-56" />
-        <ButtonMenu variant="secondary">Table filters</ButtonMenu>
-        <FilterSearchActions>
-          <Button>Export</Button>
-        </FilterSearchActions>
-      </FilterSearch>
+      function StatusField() {
+        const { filters, setFilter } = useFilterSearchFilters();
+        return (
+          <InputSelect
+            value={(filters.status as string) ?? null}
+            onValueChange={(v) => setFilter('status', v)}
+          >
+            {/* … */}
+          </InputSelect>
+        );
+      }
+
+      function Toolbar() {
+        const [filters, setFilters] = React.useState<Record<string, unknown>>({});
+        return (
+          <div className="flex flex-col gap-3">
+            <FilterSearch>
+              <Search placeholder="Search table" aria-label="Search" className="w-56" />
+              <FilterSearchFilters value={filters} onValueChange={setFilters} label="Table filters">
+                <StatusField />
+              </FilterSearchFilters>
+              <FilterSearchActions>
+                <Button>Export</Button>
+              </FilterSearchActions>
+            </FilterSearch>
+            <FilterSearchAppliedFilters filters={filters} onValueChange={setFilters} />
+          </div>
+        );
+      }
 
   vue:
     component: AvFilterSearch

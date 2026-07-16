@@ -7,9 +7,22 @@ import { cn } from '@/lib/utils';
 // Wraps Base UI's Avatar primitive (Root / Image / Fallback), themed by the
 // dedicated next-gen `--ui-avatar-*` token tier from @acronis-platform/tokens-pd.
 // A 32px circle (`--ui-avatar-global-avatar-size` / `-border-radius`) with a 2px
-// border (`-border-border-width` / `-border-color`) — the border is what visually
+// ring (`-border-border-width` / `-border-color`) — the ring is what visually
 // separates avatars when they overlap in an `AvatarGroup`. When no image is set
 // (or it fails to load) the `AvatarFallback` shows initials.
+//
+// The ring is a `box-shadow`, not a CSS `border`: Figma draws the 2px stroke
+// with `strokeAlign: OUTSIDE`, so the 32px is the *colored circle* and the ring
+// sits outside it. A CSS border would be drawn inside the border-box, shrinking
+// the visible circle to 28px (PLTFRM-92393). A box-shadow ring paints outside
+// without inflating the 32px layout box, so the `AvatarGroup` overlap step
+// (32px − 6px gap) still matches the design.
+//
+// It is written as a raw `[box-shadow:…]` arbitrary property, not Tailwind's
+// `shadow-[…]` utility: the utility routes the value through `--tw-shadow-color`
+// (`0 0 0 var(--tw-shadow-color, <spread>) <color>`), which resolves
+// inconsistently for a spread-only ring across engine versions. The raw property
+// emits the literal declaration so every renderer draws the same 2px outset ring.
 //
 // `color` selects one of the five Figma color schemes; it tints the fallback
 // background (`--ui-avatar-color-<scheme>`) and the initials
@@ -18,7 +31,7 @@ import { cn } from '@/lib/utils';
 const avatarVariants = cva(
   'relative inline-flex shrink-0 select-none items-center justify-center overflow-hidden ' +
     'size-[var(--ui-avatar-global-avatar-size)] rounded-[var(--ui-avatar-global-avatar-border-radius)] ' +
-    'border-[length:var(--ui-avatar-global-avatar-border-border-width)] border-solid border-[var(--ui-avatar-global-avatar-border-color)] ' +
+    '[box-shadow:0_0_0_var(--ui-avatar-global-avatar-border-border-width)_var(--ui-avatar-global-avatar-border-color)] ' +
     'text-xs font-semibold leading-4',
   {
     variants: {

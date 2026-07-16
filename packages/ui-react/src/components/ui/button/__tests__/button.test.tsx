@@ -69,6 +69,31 @@ describe('Button', () => {
     expect(onClick).not.toHaveBeenCalled();
   });
 
+  it('shows a pointer cursor on every variant', () => {
+    render(<Button>Save</Button>);
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveClass('cursor-pointer');
+  });
+
+  it('wires the ghost label text-decoration to its per-state tokens (underline on hover only)', () => {
+    render(<Button variant="ghost">Docs</Button>);
+    const button = screen.getByRole('button', { name: 'Docs' });
+    // Ghost is the link-like variant: it underlines on hover and drops the
+    // underline again on press, each state driven by its own token.
+    expect(button).toHaveClass(
+      '[text-decoration-line:var(--ui-button-ghost-label-text-decoration-idle)]',
+      'hover:[text-decoration-line:var(--ui-button-ghost-label-text-decoration-hover)]',
+      'active:[text-decoration-line:var(--ui-button-ghost-label-text-decoration-active)]',
+      'disabled:[text-decoration-line:var(--ui-button-ghost-label-text-decoration-disabled)]'
+    );
+  });
+
+  it('does not underline non-ghost variants', () => {
+    render(<Button variant="default">Save</Button>);
+    expect(screen.getByRole('button', { name: 'Save' }).className).not.toMatch(
+      /text-decoration-line|underline/
+    );
+  });
+
   it('forwards the ref to the underlying button element', () => {
     const ref = createRef<HTMLButtonElement>();
     render(<Button ref={ref}>Save</Button>);
