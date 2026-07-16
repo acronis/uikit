@@ -554,8 +554,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-7-primary}",
-            "default": "{palette.electricblue.electricblue-7-primary}"
+            "deep_sky_itkontoret": "{palette.electricblue.7}",
+            "default": "{palette.electricblue.7}"
           }
         },
         "info-hover": {
@@ -565,8 +565,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-8}",
-            "default": "{palette.electricblue.electricblue-8}"
+            "deep_sky_itkontoret": "{palette.electricblue.8}",
+            "default": "{palette.electricblue.8}"
           }
         },
         "info-pressed": {
@@ -576,8 +576,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-9}",
-            "default": "{palette.electricblue.electricblue-9}"
+            "deep_sky_itkontoret": "{palette.electricblue.9}",
+            "default": "{palette.electricblue.9}"
           }
         },
         "neutral": {
@@ -1600,8 +1600,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-11}",
-            "default": "{palette.electricblue.electricblue-11}"
+            "deep_sky_itkontoret": "{palette.electricblue.11}",
+            "default": "{palette.electricblue.11}"
           }
         },
         "link-disabled": {
@@ -1611,8 +1611,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-5}",
-            "default": "{palette.electricblue.electricblue-5}"
+            "deep_sky_itkontoret": "{palette.electricblue.5}",
+            "default": "{palette.electricblue.5}"
           }
         },
         "link-hover": {
@@ -1622,8 +1622,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-13}",
-            "default": "{palette.electricblue.electricblue-13}"
+            "deep_sky_itkontoret": "{palette.electricblue.13}",
+            "default": "{palette.electricblue.13}"
           }
         },
         "link-pressed": {
@@ -1633,8 +1633,8 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.electricblue.electricblue-14}",
-            "default": "{palette.electricblue.electricblue-14}"
+            "deep_sky_itkontoret": "{palette.electricblue.14}",
+            "default": "{palette.electricblue.14}"
           }
         },
         "neutral": {
