@@ -46,7 +46,7 @@
             "com.figma.variableId": "VariableID:3111:188"
           },
           "$type": "dimension",
-          "$value": "{units.radius.999}"
+          "$value": "{units.radius.full}"
         },
         "group": {
           "gap": {
@@ -6678,7 +6678,7 @@
             "com.figma.variableId": "VariableID:2597:1743"
           },
           "$type": "dimension",
-          "$value": "{units.radius.999}"
+          "$value": "{units.radius.full}"
         },
         "borderWidth": {
           "$extensions": {
@@ -8768,7 +8768,7 @@
             "com.figma.variableId": "VariableID:2511:141816"
           },
           "$type": "dimension",
-          "$value": "{units.radius.999}"
+          "$value": "{units.radius.full}"
         },
         "borderStyle": {
           "$extensions": {
@@ -8880,7 +8880,7 @@
             "com.figma.variableId": "VariableID:2511:141826"
           },
           "$type": "dimension",
-          "$value": "{units.radius.999}"
+          "$value": "{units.radius.full}"
         },
         "color": {
           "active": {
@@ -9334,7 +9334,7 @@
             "com.figma.variableId": "VariableID:2265:179"
           },
           "$type": "dimension",
-          "$value": "{units.radius.999}"
+          "$value": "{units.radius.full}"
         },
         "borderWidth": {
           "$extensions": {
