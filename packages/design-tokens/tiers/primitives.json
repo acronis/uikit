@@ -1,7 +1,7 @@
 {
   "$schema": "../schemas/tier.schema.json",
   "branding": {
-    "blue-yellow-uss-signal": {
+    "blue_yellow_uss_signal": {
       "ButtonPrimary": {
         "active": {
           "$extensions": {
@@ -226,7 +226,7 @@
         }
       }
     },
-    "dark-gray": {
+    "dark_gray": {
       "ButtonPrimary": {
         "active": {
           "$extensions": {
@@ -334,7 +334,7 @@
         }
       }
     },
-    "deep-purple": {
+    "deep_purple": {
       "ButtonPrimary": {
         "active": {
           "$extensions": {
@@ -556,7 +556,7 @@
         }
       }
     },
-    "green-also-choise-df": {
+    "green_also_choise_df": {
       "ButtonPrimary": {
         "active": {
           "$extensions": {
@@ -664,7 +664,7 @@
         }
       }
     },
-    "ingram-micro": {
+    "ingram_micro": {
       "ButtonPrimary": {
         "active": {
           "$extensions": {
@@ -781,7 +781,7 @@
         }
       }
     },
-    "light-blue-hp": {
+    "light_blue_hp": {
       "ButtonPrimary": {
         "active": {
           "$extensions": {
@@ -895,7 +895,7 @@
         }
       }
     },
-    "light-gray": {
+    "light_gray": {
       "ButtonPrimary": {
         "active": {
           "$extensions": {
@@ -1131,7 +1131,7 @@
         }
       }
     },
-    "orange-tsukaeru-helpox": {
+    "orange_tsukaeru_helpox": {
       "ButtonPrimary": {
         "active": {
           "$extensions": {
@@ -1473,7 +1473,7 @@
         }
       }
     },
-    "purple-fusion-media": {
+    "purple_fusion_media": {
       "ButtonPrimary": {
         "active": {
           "$extensions": {
@@ -1587,7 +1587,7 @@
         }
       }
     },
-    "red-fire-brick": {
+    "red_fire_brick": {
       "ButtonPrimary": {
         "active": {
           "$extensions": {
@@ -2050,7 +2050,7 @@
         }
       }
     },
-    "virtual-one": {
+    "virtual_one": {
       "ButtonPrimary": {
         "active": {
           "$extensions": {
@@ -2278,7 +2278,7 @@
         }
       }
     },
-    "yellow-1c": {
+    "yellow_1c": {
       "ButtonPrimary": {
         "active": {
           "$extensions": {
