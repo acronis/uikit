@@ -55,7 +55,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -172,7 +172,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -280,7 +280,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -388,7 +388,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -502,7 +502,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -610,7 +610,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -718,7 +718,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -835,7 +835,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -949,7 +949,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "background": {
           "active": {
             "$extensions": {
@@ -1185,7 +1185,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -1293,7 +1293,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -1407,7 +1407,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -1527,7 +1527,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -1641,7 +1641,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -1704,56 +1704,6 @@
         }
       }
     },
-    "red-home-pl": {
-      "100": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:4031:9608"
-        },
-        "platforms": ["PD"],
-        "values": {
-          "dark": { "colorSpace": "hsl", "components": [213.33, 5.03, 35.1] },
-          "light": { "colorSpace": "hsl", "components": [0, 100, 88.04] }
-        }
-      },
-      "200": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:4031:9609"
-        },
-        "platforms": ["PD"],
-        "values": {
-          "dark": { "colorSpace": "hsl", "components": [212.36, 90.16, 64.12] },
-          "light": { "colorSpace": "hsl", "components": [0, 100, 44.12] }
-        }
-      },
-      "300": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:4031:9610"
-        },
-        "platforms": ["PD"],
-        "values": {
-          "dark": { "colorSpace": "hsl", "components": [240, 7.69, 5.1] },
-          "light": { "colorSpace": "hsl", "components": [0, 0, 14.9] }
-        }
-      },
-      "400": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:4031:9611"
-        },
-        "platforms": ["PD"],
-        "values": {
-          "dark": { "colorSpace": "hsl", "components": [220, 4.69, 25.1] },
-          "light": { "colorSpace": "hsl", "components": [0, 0, 30.2] }
-        }
-      }
-    },
     "sand": {
       "ButtonPrimary": {
         "active": {
@@ -1808,7 +1758,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -1928,7 +1878,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "background": {
           "active": {
             "$extensions": {
@@ -2154,7 +2104,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -2268,7 +2218,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "active": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
@@ -2382,7 +2332,7 @@
           }
         }
       },
-      "sidebarprimary": {
+      "SidebarPrimary": {
         "background": {
           "active": {
             "$extensions": {
