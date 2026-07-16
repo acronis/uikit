@@ -43,7 +43,7 @@
   --ui-background-status-strong-danger: light-dark(rgb(226 54 54), rgb(229 77 77));
   --ui-background-status-strong-danger-hover: light-dark(rgb(195 34 34), rgb(244 154 154));
   --ui-background-status-strong-danger-pressed: light-dark(rgb(173 31 31), rgb(248 195 195));
-  --ui-background-status-strong-info: light-dark(rgb(23 99 207), rgb(102 144 204));
+  --ui-background-status-strong-info: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-background-status-strong-info-hover: light-dark(rgb(19 84 174), rgb(121 158 210));
   --ui-background-status-strong-info-pressed: light-dark(rgb(13 77 165), rgb(140 176 217));
   --ui-background-status-strong-neutral: light-dark(rgb(109 114 120), rgb(109 114 120));
@@ -75,7 +75,7 @@
   --ui-border-on-status-critical-strong: light-dark(rgb(240 112 0), rgb(255 153 51));
   --ui-border-on-status-danger: light-dark(rgb(248 195 195), rgb(151 27 27));
   --ui-border-on-status-danger-strong: light-dark(rgb(217 38 38), rgb(237 94 94));
-  --ui-border-on-status-info: light-dark(rgb(190 215 244), rgb(45 82 133));
+  --ui-border-on-status-info: light-dark(rgb(190 215 244), rgb(41 81 122));
   --ui-border-on-status-info-strong: light-dark(rgb(19 84 174), rgb(121 158 210));
   --ui-border-on-status-neutral: light-dark(rgb(201 204 207), rgb(73 76 80));
   --ui-border-on-status-neutral-strong: light-dark(rgb(97 101 107), rgb(135 139 146));
@@ -117,6 +117,12 @@
   --ui-gradients-ai-disabled: linear-gradient(90deg, rgb(223 226 255) 20%, rgb(255 218 253) 100%);
   --ui-gradients-ai-hover: linear-gradient(90deg, rgb(51 66 195) 20%, rgb(182 33 174) 100%);
   --ui-gradients-ai-idle: linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
+  --ui-text-on-backdrop-element-link-active: light-dark(rgb(190 215 244), rgb(41 81 122));
+  --ui-text-on-backdrop-element-link-hover: light-dark(rgb(190 215 244), rgb(41 81 122));
+  --ui-text-on-backdrop-element-link-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-text-on-backdrop-screen-link-active: light-dark(rgb(190 215 244), rgb(41 81 122));
+  --ui-text-on-backdrop-screen-link-hover: light-dark(rgb(190 215 244), rgb(41 81 122));
+  --ui-text-on-backdrop-screen-link-idle: light-dark(rgb(190 215 244), rgb(41 81 122));
   --ui-text-on-brand-disabled: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-text-on-brand-link: light-dark(rgb(23 99 207), rgb(71 152 245));
   --ui-text-on-brand-link-disabled: light-dark(rgb(255 255 255 / 0.898), rgb(255 255 255 / 0.102));

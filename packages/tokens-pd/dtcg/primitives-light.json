@@ -578,7 +578,7 @@
       }
     },
     "electricblue": {
-      "electricblue-0": {
+      "0": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -594,7 +594,7 @@
           ]
         }
       },
-      "electricblue-1": {
+      "1": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -610,87 +610,7 @@
           ]
         }
       },
-      "electricblue-10": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1950"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            214.81,
-            85.62,
-            30
-          ]
-        }
-      },
-      "electricblue-11": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1951"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            214.96,
-            90.55,
-            24.9
-          ]
-        }
-      },
-      "electricblue-12": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1952"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            215,
-            94.12,
-            20
-          ]
-        }
-      },
-      "electricblue-13": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1953"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            215.06,
-            100,
-            15.1
-          ]
-        }
-      },
-      "electricblue-14": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": [],
-          "com.figma.variableId": "VariableID:3419:1954"
-        },
-        "$type": "color",
-        "$value": {
-          "colorSpace": "hsl",
-          "components": [
-            215.29,
-            100,
-            10
-          ]
-        }
-      },
-      "electricblue-2": {
+      "2": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -706,7 +626,7 @@
           ]
         }
       },
-      "electricblue-3": {
+      "3": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -722,7 +642,7 @@
           ]
         }
       },
-      "electricblue-4": {
+      "4": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -738,7 +658,7 @@
           ]
         }
       },
-      "electricblue-5": {
+      "5": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -754,7 +674,7 @@
           ]
         }
       },
-      "electricblue-6": {
+      "6": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -770,7 +690,7 @@
           ]
         }
       },
-      "electricblue-7-primary": {
+      "7": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -786,7 +706,7 @@
           ]
         }
       },
-      "electricblue-8": {
+      "8": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -802,7 +722,7 @@
           ]
         }
       },
-      "electricblue-9": {
+      "9": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [],
@@ -815,6 +735,86 @@
             214.74,
             85.39,
             34.9
+          ]
+        }
+      },
+      "10": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [],
+          "com.figma.variableId": "VariableID:3419:1950"
+        },
+        "$type": "color",
+        "$value": {
+          "colorSpace": "hsl",
+          "components": [
+            214.81,
+            85.62,
+            30
+          ]
+        }
+      },
+      "11": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [],
+          "com.figma.variableId": "VariableID:3419:1951"
+        },
+        "$type": "color",
+        "$value": {
+          "colorSpace": "hsl",
+          "components": [
+            214.96,
+            90.55,
+            24.9
+          ]
+        }
+      },
+      "12": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [],
+          "com.figma.variableId": "VariableID:3419:1952"
+        },
+        "$type": "color",
+        "$value": {
+          "colorSpace": "hsl",
+          "components": [
+            215,
+            94.12,
+            20
+          ]
+        }
+      },
+      "13": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [],
+          "com.figma.variableId": "VariableID:3419:1953"
+        },
+        "$type": "color",
+        "$value": {
+          "colorSpace": "hsl",
+          "components": [
+            215.06,
+            100,
+            15.1
+          ]
+        }
+      },
+      "14": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [],
+          "com.figma.variableId": "VariableID:3419:1954"
+        },
+        "$type": "color",
+        "$value": {
+          "colorSpace": "hsl",
+          "components": [
+            215.29,
+            100,
+            10
           ]
         }
       }

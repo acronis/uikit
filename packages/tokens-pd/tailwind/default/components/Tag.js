@@ -26,7 +26,7 @@ export default {
       "borderColor": {
         "tag-critical-container-border-color": "light-dark(rgb(255 204 153), rgb(153 69 0))",
         "tag-danger-container-border-color": "light-dark(rgb(248 195 195), rgb(151 27 27))",
-        "tag-info-container-border-color": "light-dark(rgb(190 215 244), rgb(45 82 133))",
+        "tag-info-container-border-color": "light-dark(rgb(190 215 244), rgb(41 81 122))",
         "tag-neutral-container-border-color": "light-dark(rgb(201 204 207), rgb(73 76 80))",
         "tag-success-container-border-color": "light-dark(rgb(178 229 187), rgb(26 102 38))",
         "tag-warning-container-border-color": "light-dark(rgb(255 227 128), rgb(178 128 0))"
