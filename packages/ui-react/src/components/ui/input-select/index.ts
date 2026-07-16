@@ -10,8 +10,12 @@ export {
   InputSelectSection,
   InputSelectSectionLabel,
   InputSelectItem,
+  InputSelectExpander,
   InputSelectDescription,
   InputSelectError,
   InputSelectStatus,
+  useInputSelectFilter,
+  type InputSelectItemProps,
+  type InputSelectExpanderProps,
   type InputSelectStatusProps,
 } from './input-select';

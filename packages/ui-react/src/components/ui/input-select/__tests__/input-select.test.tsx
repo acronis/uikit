@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -8,6 +8,7 @@ import {
   InputSelectContent,
   InputSelectDescription,
   InputSelectError,
+  InputSelectExpander,
   InputSelectField,
   InputSelectItem,
   InputSelectLabel,
@@ -164,6 +165,30 @@ describe('InputSelect', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('indents nested items by the Figma nesting width (16 / 40 / 64 for levels 1–3)', async () => {
+    render(
+      <InputSelect>
+        <InputSelectTrigger aria-label="Tenant">
+          <InputSelectValue placeholder="Select" />
+        </InputSelectTrigger>
+        <InputSelectContent>
+          <InputSelectItem value="root">Root</InputSelectItem>
+          <InputSelectItem value="child" indent={3}>
+            Child
+          </InputSelectItem>
+        </InputSelectContent>
+      </InputSelect>
+    );
+    await userEvent.click(screen.getByRole('combobox', { name: 'Tenant' }));
+    const child = screen.getByRole('option', { name: 'Child' });
+    expect(child.querySelector('[aria-hidden="true"]')).toHaveStyle({
+      minWidth: '64px',
+    });
+    // An un-indented item reserves no nesting spacer.
+    const root = screen.getByRole('option', { name: 'Root' });
+    expect(root.querySelector('[aria-hidden="true"]')).toBeNull();
+  });
+
   it('forwards the ref to the trigger element', () => {
     const ref = createRef<HTMLButtonElement>();
     render(
@@ -177,5 +202,115 @@ describe('InputSelect', () => {
       </InputSelect>
     );
     expect(ref.current).toBeInstanceOf(HTMLButtonElement);
+  });
+});
+
+describe('InputSelectExpander', () => {
+  it('reflects the expanded state and toggles on click', async () => {
+    const onToggle = vi.fn();
+    const { rerender } = render(
+      <InputSelectExpander expanded={false} onToggle={onToggle}>
+        DataBridge Systems
+      </InputSelectExpander>
+    );
+    const button = screen.getByRole('button', { name: 'DataBridge Systems' });
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+    await userEvent.click(button);
+    expect(onToggle).toHaveBeenCalledTimes(1);
+    rerender(
+      <InputSelectExpander expanded onToggle={onToggle}>
+        DataBridge Systems
+      </InputSelectExpander>
+    );
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it.each([
+    [undefined, '16px'],
+    [1, '16px'],
+    [2, '40px'],
+    [3, '64px'],
+  ])(
+    'tucks the chevron into a %s-indent nesting spacer of %s',
+    (indent, expected) => {
+      render(
+        <InputSelectExpander expanded={false} onToggle={() => {}} indent={indent}>
+          Node
+        </InputSelectExpander>
+      );
+      const button = screen.getByRole('button', { name: 'Node' });
+      expect(button.firstElementChild).toHaveStyle({ minWidth: expected });
+    }
+  );
+});
+
+describe('InputSelect in-dropdown search', () => {
+  function SearchableSelect() {
+    return (
+      <InputSelect>
+        <InputSelectTrigger aria-label="Fruit">
+          <InputSelectValue placeholder="Select an option" />
+        </InputSelectTrigger>
+        <InputSelectContent>
+          <InputSelectSearch aria-label="Filter" placeholder="Search" />
+          <InputSelectItem value="apple">Apple</InputSelectItem>
+          <InputSelectItem value="banana">Banana</InputSelectItem>
+        </InputSelectContent>
+      </InputSelect>
+    );
+  }
+
+  it('shows the typed query and filters items to matches', async () => {
+    render(<SearchableSelect />);
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    const search = screen.getByRole('searchbox', { name: 'Filter' });
+    await userEvent.type(search, 'ban');
+    // The typed text is reflected in the field (Base UI no longer swallows keys).
+    expect(search).toHaveValue('ban');
+    // Non-matching rows hide themselves; matches stay.
+    expect(screen.getByRole('option', { name: 'Banana' })).toBeVisible();
+    // Apple hides (kept mounted, so still queryable by text) instead of unmounting.
+    expect(screen.getByText('Apple').closest('[role="option"]')).not.toBeVisible();
+  });
+
+  it('respects an explicit hidden prop instead of auto-filtering', async () => {
+    render(
+      <InputSelect>
+        <InputSelectTrigger aria-label="Fruit">
+          <InputSelectValue placeholder="Select an option" />
+        </InputSelectTrigger>
+        <InputSelectContent>
+          <InputSelectSearch aria-label="Filter" placeholder="Search" />
+          {/* Consumer-controlled visibility wins over the query auto-filter. */}
+          <InputSelectItem value="apple" hidden={false}>
+            Apple
+          </InputSelectItem>
+          <InputSelectItem value="banana">Banana</InputSelectItem>
+        </InputSelectContent>
+      </InputSelect>
+    );
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Filter' }), 'ban');
+    // Apple would auto-hide, but the explicit hidden={false} keeps it shown.
+    expect(screen.getByRole('option', { name: 'Apple' })).toBeVisible();
+  });
+
+  it('keeps typed characters but lets navigation keys reach the list', () => {
+    const ancestorKeyDown = vi.fn();
+    render(
+      <div onKeyDown={ancestorKeyDown}>
+        <InputSelectSearch aria-label="Filter" placeholder="Search" />
+      </div>
+    );
+    const search = screen.getByRole('searchbox', { name: 'Filter' });
+    // Printable keys are consumed here so Base UI's typeahead doesn't steal them
+    // from the input — they must NOT bubble to the popup's key handler.
+    fireEvent.keyDown(search, { key: 'a' });
+    expect(ancestorKeyDown).not.toHaveBeenCalled();
+    // Navigation/selection keys bubble so list nav + Enter-select work from the box.
+    fireEvent.keyDown(search, { key: 'ArrowDown' });
+    fireEvent.keyDown(search, { key: 'Enter' });
+    fireEvent.keyDown(search, { key: 'Escape' });
+    expect(ancestorKeyDown).toHaveBeenCalledTimes(3);
   });
 });

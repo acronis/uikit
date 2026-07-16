@@ -3,6 +3,7 @@ import { Select as SelectPrimitive } from '@base-ui/react/select';
 import {
   CheckIcon,
   ChevronDownIcon,
+  ChevronRightIcon,
   CircleWarningIcon,
   InboxIcon,
   MagnifierIcon,
@@ -24,12 +25,54 @@ import { usePortalContainer } from '@/lib/portal-container';
 
 const InputSelectModeContext = React.createContext(false);
 
+interface InputSelectFilterContextValue {
+  /** Current in-dropdown search query. */
+  query: string;
+  /** Update the search query. */
+  setQuery: (query: string) => void;
+}
+
+const InputSelectFilterContext =
+  React.createContext<InputSelectFilterContextValue | null>(null);
+
+/**
+ * Read the live in-dropdown search query (and its setter) from the nearest
+ * `InputSelect`. Flat item lists filter themselves; use this for hierarchical
+ * (tree) dropdowns that need to compute their own visibility.
+ */
+function useInputSelectFilter(): InputSelectFilterContextValue {
+  const context = React.useContext(InputSelectFilterContext);
+  if (!context) {
+    throw new Error('useInputSelectFilter must be used within <InputSelect>.');
+  }
+  return context;
+}
+
 function InputSelect<Value, Multiple extends boolean | undefined = false>(
   props: SelectPrimitive.Root.Props<Value, Multiple>
 ) {
+  const { onOpenChange } = props;
+  const [query, setQuery] = React.useState('');
+  const filter = React.useMemo(() => ({ query, setQuery }), [query]);
+
+  // Reset the query when the popup closes so it reopens unfiltered.
+  const handleOpenChange = React.useCallback<
+    NonNullable<SelectPrimitive.Root.Props<Value, Multiple>['onOpenChange']>
+  >(
+    (open, eventDetails) => {
+      onOpenChange?.(open, eventDetails);
+      if (!open) {
+        setQuery('');
+      }
+    },
+    [onOpenChange]
+  );
+
   return (
     <InputSelectModeContext.Provider value={Boolean(props.multiple)}>
-      <SelectPrimitive.Root {...props} />
+      <InputSelectFilterContext.Provider value={filter}>
+        <SelectPrimitive.Root {...props} onOpenChange={handleOpenChange} />
+      </InputSelectFilterContext.Provider>
     </InputSelectModeContext.Provider>
   );
 }
@@ -182,29 +225,50 @@ const InputSelectContent = React.forwardRef<
 InputSelectContent.displayName = 'InputSelectContent';
 
 /**
- * Presentational in-dropdown search row (magnifier + input). The consumer wires
- * `value`/`onChange` to filter the items it renders.
+ * In-dropdown search row (magnifier + input). By default it drives the
+ * `InputSelect` filter context — flat `InputSelectItem`s filter themselves, and
+ * tree dropdowns read the query via `useInputSelectFilter`. Pass `value`/`onChange`
+ * to control the query externally.
  */
 const InputSelectSearch = React.forwardRef<
   HTMLInputElement,
   React.ComponentPropsWithoutRef<'input'>
->(({ className, ...props }, ref) => (
-  <div className="flex items-center gap-[var(--ui-input-select-dropdown-dropdown-search-gap)] px-[var(--ui-input-select-dropdown-dropdown-search-padding-x)] py-[var(--ui-input-select-dropdown-dropdown-search-padding-y)]">
-    <MagnifierIcon
-      size={16}
-      className="shrink-0 text-[var(--ui-input-select-dropdown-dropdown-search-label-color-placeholder)]"
-    />
-    <input
-      ref={ref}
-      type="search"
-      className={cn(
-        'min-w-0 flex-1 border-0 bg-transparent p-0 text-sm leading-6 text-[var(--ui-input-select-dropdown-dropdown-search-label-color-value)] outline-none placeholder:text-[var(--ui-input-select-dropdown-dropdown-search-label-color-placeholder)] [&::-webkit-search-cancel-button]:appearance-none',
-        className
-      )}
-      {...props}
-    />
-  </div>
-));
+>(({ className, value, onChange, onKeyDown, ...props }, ref) => {
+  const filter = React.useContext(InputSelectFilterContext);
+  return (
+    <div className="flex items-center gap-[var(--ui-input-select-dropdown-dropdown-search-gap)] px-[var(--ui-input-select-dropdown-dropdown-search-padding-x)] py-[var(--ui-input-select-dropdown-dropdown-search-padding-y)]">
+      <MagnifierIcon
+        size={16}
+        className="shrink-0 text-[var(--ui-glyph-on-surface-primary)]"
+      />
+      <input
+        ref={ref}
+        type="search"
+        value={value ?? filter?.query ?? ''}
+        onChange={(event) => {
+          onChange?.(event);
+          filter?.setQuery(event.currentTarget.value);
+        }}
+        // Base UI Select's typeahead would consume printable keys before they
+        // reach this input, so stop those from bubbling — but let navigation and
+        // selection keys (Arrow*/Home/End/Enter/Escape, all multi-char `key`
+        // names) through so the user can move from the search box into the
+        // filtered list and pick a result with the keyboard.
+        onKeyDown={(event) => {
+          onKeyDown?.(event);
+          if (event.key.length === 1) {
+            event.stopPropagation();
+          }
+        }}
+        className={cn(
+          'min-w-0 flex-1 border-0 bg-transparent p-0 text-sm leading-6 text-[var(--ui-input-select-dropdown-dropdown-search-label-color-value)] outline-none placeholder:text-[var(--ui-input-select-dropdown-dropdown-search-label-color-placeholder)] [&::-webkit-search-cancel-button]:appearance-none',
+          className
+        )}
+        {...props}
+      />
+    </div>
+  );
+});
 InputSelectSearch.displayName = 'InputSelectSearch';
 
 /** A section (group) of items with an optional header. Divided by a top border. */
@@ -238,14 +302,49 @@ const InputSelectSectionLabel = React.forwardRef<
 ));
 InputSelectSectionLabel.displayName = 'InputSelectSectionLabel';
 
+/**
+ * Width (px) of the leading nesting spacer for a 1-based tree `indent` level, per
+ * the Figma "InputSelectDropdownTenants" spec: level 1 reserves 16 px (enough for a
+ * single chevron) and each deeper level adds 24 px — 16 / 40 / 64 for levels 1–3.
+ * The tenant icon therefore starts at the same x-position whether or not the row is
+ * expandable, because the chevron lives right-aligned inside this reserved space.
+ */
+const NESTING_BASE = 16;
+const NESTING_STEP = 24;
+function nestingWidth(indent: number): number {
+  return NESTING_BASE + (indent - 1) * NESTING_STEP;
+}
+
+export interface InputSelectItemProps
+  extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> {
+  /** Optional leading icon rendered before the label text. Colored by `--ui-input-select-dropdown-item-global-icon-tenant`. */
+  icon?: React.ReactNode;
+  /** 1-based nesting level (0 / omitted = no indent). Levels 1–3 reserve 16 / 40 / 64 px. */
+  indent?: number;
+  /**
+   * Text used to match the in-dropdown search query. Defaults to the string
+   * `children`. When a query is active and this text doesn't match, the row hides
+   * itself — unless `hidden` is passed explicitly (tree dropdowns compute their own
+   * visibility). Rows stay mounted while hidden to keep Base UI's selection index
+   * stable.
+   */
+  textValue?: string;
+}
+
 const InputSelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, ref) => {
+  InputSelectItemProps
+>(({ className, children, icon, indent, textValue, hidden, ...props }, ref) => {
   const multiple = React.useContext(InputSelectModeContext);
+  const filter = React.useContext(InputSelectFilterContext);
+  const query = filter?.query.trim().toLowerCase() ?? '';
+  const label = textValue ?? (typeof children === 'string' ? children : undefined);
+  const autoHidden =
+    query.length > 0 && label !== undefined && !label.toLowerCase().includes(query);
   return (
     <SelectPrimitive.Item
       ref={ref}
+      hidden={hidden ?? autoHidden}
       className={cn(
         'group/item relative flex cursor-default items-center gap-[var(--ui-input-select-dropdown-item-global-container-gap)] px-[var(--ui-input-select-dropdown-item-global-container-padding-x)] py-[var(--ui-input-select-dropdown-item-global-container-padding-y)] leading-6 text-[var(--ui-input-select-dropdown-item-global-label-color)] outline-none select-none',
         'bg-[var(--ui-input-select-dropdown-item-unselected-container-color-idle)] data-[highlighted]:bg-[var(--ui-input-select-dropdown-item-unselected-container-color-hover)]',
@@ -266,11 +365,23 @@ const InputSelectItem = React.forwardRef<
           <CheckIcon size={16} />
         </span>
       )}
+      {typeof indent === 'number' && indent > 0 && (
+        <span
+          aria-hidden="true"
+          className="size-4 shrink-0"
+          style={{ minWidth: nestingWidth(indent) }}
+        />
+      )}
+      {icon && (
+        <span className="flex shrink-0 items-center text-[var(--ui-input-select-dropdown-item-global-icon-tenant)]">
+          {icon}
+        </span>
+      )}
       <SelectPrimitive.ItemText className="min-w-0 flex-1 truncate">
         {children}
       </SelectPrimitive.ItemText>
       {!multiple && (
-        <SelectPrimitive.ItemIndicator className="flex shrink-0 items-center text-[var(--ui-input-select-normal-icon-expand-color-hover)]">
+        <SelectPrimitive.ItemIndicator className="flex shrink-0 items-center text-[var(--ui-input-select-dropdown-item-global-icon-checked)]">
           <CheckIcon size={16} />
         </SelectPrimitive.ItemIndicator>
       )}
@@ -278,6 +389,65 @@ const InputSelectItem = React.forwardRef<
   );
 });
 InputSelectItem.displayName = 'InputSelectItem';
+
+export interface InputSelectExpanderProps
+  extends React.ComponentPropsWithoutRef<'button'> {
+  /** Whether the group is currently expanded. */
+  expanded: boolean;
+  /** Called when the user clicks the row to toggle expand/collapse. */
+  onToggle: () => void;
+  /** Optional leading icon rendered after the chevron. */
+  icon?: React.ReactNode;
+  /** 1-based nesting level (0 / omitted = level 1). Levels 1–3 reserve 16 / 40 / 64 px; the chevron sits right-aligned inside. */
+  indent?: number;
+}
+
+/**
+ * A non-selectable row that acts as an expand/collapse toggle for a tree group.
+ * Visually identical to `InputSelectItem` but is **not** a `SelectPrimitive.Item`,
+ * so clicking it won't set the select value.
+ *
+ * When collapsing a group, keep its child `InputSelectItem`s mounted and toggle
+ * their `hidden` prop rather than unmounting them: Base UI's Select tracks the
+ * selection by list index, so removing the selected row from the DOM makes a
+ * sibling inherit its index and render a phantom check. `hidden` rows keep the
+ * indices stable and are skipped by keyboard navigation.
+ */
+const InputSelectExpander = React.forwardRef<
+  HTMLButtonElement,
+  InputSelectExpanderProps
+>(({ className, children, expanded, onToggle, icon, indent, ...props }, ref) => (
+  <button
+    ref={ref}
+    type="button"
+    onClick={onToggle}
+    aria-expanded={expanded}
+    className={cn(
+      'group/item relative flex w-full cursor-default items-center gap-[var(--ui-input-select-dropdown-item-global-container-gap)] px-[var(--ui-input-select-dropdown-item-global-container-padding-x)] py-[var(--ui-input-select-dropdown-item-global-container-padding-y)] text-start leading-6 text-[var(--ui-input-select-dropdown-item-global-label-color)] outline-none select-none',
+      'bg-[var(--ui-input-select-dropdown-item-unselected-container-color-idle)] hover:bg-[var(--ui-input-select-dropdown-item-unselected-container-color-hover)]',
+      className
+    )}
+    {...props}
+  >
+    <span
+      aria-hidden="true"
+      className="flex shrink-0 items-center justify-end text-[var(--ui-input-select-dropdown-item-global-icon-collapse)]"
+      style={{
+        minWidth:
+          typeof indent === 'number' && indent > 0 ? nestingWidth(indent) : NESTING_BASE,
+      }}
+    >
+      {expanded ? <ChevronDownIcon size={16} /> : <ChevronRightIcon size={16} />}
+    </span>
+    {icon && (
+      <span className="flex shrink-0 items-center text-[var(--ui-input-select-dropdown-item-global-icon-tenant)]">
+        {icon}
+      </span>
+    )}
+    <span className="min-w-0 flex-1 truncate">{children}</span>
+  </button>
+));
+InputSelectExpander.displayName = 'InputSelectExpander';
 
 const InputSelectDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -323,7 +493,7 @@ const InputSelectStatus = React.forwardRef<HTMLDivElement, InputSelectStatusProp
     <div
       ref={ref}
       className={cn(
-        'flex min-h-[128px] flex-col items-center justify-center gap-[var(--ui-input-select-dropdown-container-status-gap)] border-t border-[var(--ui-input-select-dropdown-section-container-border-color)] px-[var(--ui-input-select-dropdown-container-status-padding-x)] py-[var(--ui-input-select-dropdown-container-status-padding-y)] text-center text-sm leading-6 text-[var(--ui-input-select-dropdown-item-global-label-color)]',
+        'flex min-h-[var(--ui-input-select-dropdown-container-status-width-min)] flex-col items-center justify-center gap-[var(--ui-input-select-dropdown-container-status-gap)] border-t border-[var(--ui-input-select-dropdown-section-container-border-color)] px-[var(--ui-input-select-dropdown-container-status-padding-x)] py-[var(--ui-input-select-dropdown-container-status-padding-y)] text-center text-sm leading-6 text-[var(--ui-input-select-dropdown-item-global-label-color)]',
         className
       )}
       {...props}
@@ -331,11 +501,11 @@ const InputSelectStatus = React.forwardRef<HTMLDivElement, InputSelectStatusProp
       {variant === 'loading' && (
         <span
           aria-hidden="true"
-          className="size-6 animate-spin rounded-full border-2 border-current border-t-transparent opacity-70"
+          className="size-6 animate-spin rounded-full border-2 border-[var(--ui-glyph-on-surface-primary)] border-t-transparent"
         />
       )}
-      {variant === 'empty' && <InboxIcon size={24} className="opacity-70" />}
-      {variant === 'error' && <CircleWarningIcon size={24} className="opacity-70" />}
+      {variant === 'empty' && <InboxIcon size={24} className="text-[var(--ui-glyph-on-status-info)]" />}
+      {variant === 'error' && <CircleWarningIcon size={24} className="text-[var(--ui-glyph-on-status-warning)]" />}
       {children}
       {variant === 'error' && action}
     </div>
@@ -355,7 +525,9 @@ export {
   InputSelectSection,
   InputSelectSectionLabel,
   InputSelectItem,
+  InputSelectExpander,
   InputSelectDescription,
   InputSelectError,
   InputSelectStatus,
+  useInputSelectFilter,
 };

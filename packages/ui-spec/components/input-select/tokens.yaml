@@ -80,6 +80,11 @@ tokens:
       name: --ui-input-select-dropdown-dropdown-search-label-color-value,
       affects: search,
     }
+  - {
+      name: --ui-glyph-on-surface-primary,
+      affects: search,
+      description: Search magnifier icon color,
+    }
 
   # ── Section (group) ──
   - {
@@ -138,11 +143,21 @@ tokens:
       affects: item,
     }
 
-  # ── Item selection indicator (single check / multiple checkbox) ──
+  # ── Item icon + selection indicator ──
   - {
-      name: --ui-input-select-normal-icon-expand-color-hover,
+      name: --ui-input-select-dropdown-item-global-icon-tenant,
+      affects: item,
+      description: Leading tenant-type icon color,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-global-icon-checked,
       affects: indicator,
-      description: Single-select trailing check,
+      description: Single-select trailing check icon color,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-global-icon-collapse,
+      affects: item,
+      description: Expand/collapse chevron color,
     }
   - { name: --ui-checkbox-global-box-size, affects: indicator }
   - { name: --ui-checkbox-global-box-border-radius, affects: indicator }
@@ -154,6 +169,25 @@ tokens:
   - { name: --ui-checkbox-checked-icon-color-idle, affects: indicator }
 
   # ── Status row ──
+  - {
+      name: --ui-glyph-on-surface-primary,
+      affects: status,
+      description: Loading spinner color,
+    }
+  - {
+      name: --ui-glyph-on-status-info,
+      affects: status,
+      description: Empty (Inbox) icon color,
+    }
+  - {
+      name: --ui-glyph-on-status-warning,
+      affects: status,
+      description: Error (CircleWarning) icon color,
+    }
+  - {
+      name: --ui-input-select-dropdown-container-status-width-min,
+      affects: status,
+    }
   - { name: --ui-input-select-dropdown-container-status-gap, affects: status }
   - {
       name: --ui-input-select-dropdown-container-status-padding-x,
