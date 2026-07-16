@@ -1,0 +1,75 @@
+---
+title: DateRangePicker
+description: A date-field trigger that opens a dual-month range calendar with editable fields.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { DateRangePickerDemo } from "@/components/demos-react/date-range-picker";
+
+## Usage
+
+```tsx
+import { DateRangePicker } from '@acronis-platform/ui-react';
+```
+
+`DateRangePicker` composes an [`InputDatePicker`](/components/input-date-picker)
+trigger (`pickerType="dateRange"`) with a [`Popover`](/components/popover) holding
+a dual-month range [`Calendar`](/components/calendar), two editable start/end date
+fields, and a "Reset to default" / "Apply" footer. It follows a draft/commit/revert
+model: the applied range is snapshotted into a draft on open; editing the calendar
+or the text fields mutates only that draft; dismissing the popover reverts it, and
+only **Apply** commits the range via `onValueChange`. Use `value` for controlled
+usage or `defaultValue` for uncontrolled (which is also the target of "Reset to
+default").
+
+This is a **design-pending v1** ported from the legacy library — no dedicated token
+tier; the trigger brings `--ui-input-date-picker-*` and the calendar / popover /
+buttons bring their own semantic tokens. It will be reconciled against the Figma
+design once a mockup lands (presets are intentionally out of scope for v1).
+
+> The live preview below shows the closed trigger. `DateRangePicker` does not
+> expose a `portalContainer`, so its open popover portals outside this page's
+> shadow-root preview; view the open panel in Storybook.
+
+## Examples
+
+<DemoReact>
+  <DateRangePickerDemo />
+</DemoReact>
+
+Uncontrolled, defaulting to the first half of July:
+
+```tsx
+<DateRangePicker
+  label="Period"
+  placeholder="Select a date range"
+  defaultValue={{ from: new Date(2026, 6, 1), to: new Date(2026, 6, 15) }}
+  onValueChange={(range) => console.log(range)}
+/>
+```
+
+Controlled — the parent owns the applied range:
+
+```tsx
+const [range, setRange] = React.useState<DateRange>({
+  from: new Date(2026, 6, 10),
+  to: new Date(2026, 6, 20),
+});
+
+<DateRangePicker label="Period" value={range} onValueChange={setRange} />
+```
+
+Required, with an error message:
+
+```tsx
+<DateRangePicker label="Period" required placeholder="Select a date range" />
+
+<DateRangePicker label="Period" error="Please select a valid date range." />
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/date-range-picker/date-range-picker.tsx"
+  name="DateRangePickerProps"
+/>

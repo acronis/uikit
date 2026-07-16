@@ -1,0 +1,60 @@
+spec_version: '1.0'
+component: Calendar
+
+# References only — values live in @acronis-platform/tokens-pd. No `--ui-calendar-*`
+# tier exists yet (design-pending v1), so the grid is themed off the shared
+# semantic vocabulary. Surface/text/hover use bridged Tailwind names that resolve
+# to these `--ui-*` tokens; the tokens below are the ones referenced by role.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-background-surface-primary,
+      affects: root,
+      description: Calendar surface (bridged `bg-background`),
+    }
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: day,
+      description: Idle day / caption text (bridged `text-foreground`),
+    }
+  - {
+      name: --ui-background-surface-hover,
+      affects: day,
+      description: Day / nav hover surface and the range-middle band (bridged `bg-accent`),
+    }
+  - {
+      name: --ui-background-brand-primary,
+      affects: selected,
+      description: Selected day and range endpoints fill,
+    }
+  - {
+      name: --ui-background-brand-primary-hover,
+      affects: selected,
+      description: Hover fill for a selected day / range endpoint,
+    }
+  - {
+      name: --ui-glyph-on-brand-primary,
+      affects: selected,
+      description: Text on the selected / endpoint fill,
+    }
+  - {
+      name: --ui-text-on-surface-secondary,
+      affects: outside,
+      description: Outside-month days and weekday headers (bridged `text-muted-foreground`),
+    }
+  - {
+      name: --ui-text-on-surface-disabled,
+      affects: day,
+      description: Disabled days and disabled nav buttons,
+    }
+  - {
+      name: --ui-border-on-surface-border-active,
+      affects: caption,
+      description: Active border on the caption dropdowns (dropdown caption layouts),
+    }
+  - {
+      name: --ui-focus-primary,
+      affects: day,
+      description: Focus ring on days / nav buttons,
+    }

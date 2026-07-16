@@ -3,6 +3,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
+import { TooltipProvider } from '../../tooltip';
 import {
   SidebarSecondary,
   SidebarSecondaryCollapseTrigger,
@@ -589,6 +590,80 @@ describe('SidebarSecondary — Space key on anchor items', () => {
     link.focus();
     await userEvent.keyboard(' ');
     expect(onClick).toHaveBeenCalled();
+  });
+});
+
+describe('SidebarSecondary — collapse trigger icon rotation (unified with Primary)', () => {
+  it('rotates the same icon element between expanded and collapsed instead of swapping icons', async () => {
+    render(
+      <SidebarSecondary defaultExpanded>
+        <SidebarSecondaryFooter>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryCollapseTrigger icon={<svg data-testid="chevron" />}>
+              Collapse menu
+            </SidebarSecondaryCollapseTrigger>
+          </SidebarSecondaryMenu>
+        </SidebarSecondaryFooter>
+      </SidebarSecondary>
+    );
+    const icon = screen.getByTestId('chevron');
+    const wrapper = icon.parentElement!;
+    expect(wrapper).toHaveClass('rtl:rotate-180');
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Collapse menu' })
+    );
+    // Same icon node stays mounted — only the rotation class flips (no
+    // `expandIcon` swap, unifying with `SidebarPrimaryCollapseTrigger`).
+    expect(screen.getByTestId('chevron')).toBe(icon);
+    expect(wrapper).toHaveClass('ltr:rotate-180');
+  });
+});
+
+describe('SidebarSecondary — tooltip placement and collapsed-mode visibility', () => {
+  it('opens the truncation tooltip on the right', async () => {
+    vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(200);
+    vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(100);
+    render(
+      <TooltipProvider delay={0}>
+        <SidebarSecondary>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryMenuItem href="/a">
+              Protection management console
+            </SidebarSecondaryMenuItem>
+          </SidebarSecondaryMenu>
+        </SidebarSecondary>
+      </TooltipProvider>
+    );
+    await userEvent.hover(
+      screen.getByText('Protection management console')
+    );
+    const [, tooltip] = await screen.findAllByText(
+      'Protection management console'
+    );
+    expect(tooltip.closest('[data-side]')).toHaveAttribute(
+      'data-side',
+      'right'
+    );
+    vi.restoreAllMocks();
+  });
+
+  it('always shows the item label as a tooltip when collapsed, even though the sr-only label never overflows', async () => {
+    render(
+      <TooltipProvider delay={0}>
+        <SidebarSecondary expanded={false}>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryMenuItem
+              href="/a"
+              icon={<svg data-testid="icon" />}
+            >
+              Assets
+            </SidebarSecondaryMenuItem>
+          </SidebarSecondaryMenu>
+        </SidebarSecondary>
+      </TooltipProvider>
+    );
+    await userEvent.hover(screen.getByTestId('icon'));
+    expect(await screen.findAllByText('Assets')).toHaveLength(2);
   });
 });
 

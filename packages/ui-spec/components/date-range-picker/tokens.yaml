@@ -1,0 +1,36 @@
+spec_version: '1.0'
+component: DateRangePicker
+
+# References only — values live in @acronis-platform/tokens-pd. DateRangePicker
+# owns no tokens of its own (design-pending v1): the trigger brings the
+# `--ui-input-date-picker-*` tier, and the popup content is themed by the composed
+# Calendar / Popover / Button / InputText, each of which carries its own tokens.
+# The names below are the trigger's, referenced through the InputDatePicker part.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-input-date-picker-global-box-color-idle,
+      affects: trigger,
+      description: Trigger box fill,
+    }
+  - {
+      name: --ui-input-date-picker-normal-box-border-color-idle,
+      affects: trigger,
+      description: Trigger border (idle),
+    }
+  - {
+      name: --ui-input-date-picker-normal-box-border-color-active,
+      affects: trigger,
+      description: Trigger border while the popover is open,
+    }
+  - {
+      name: --ui-input-date-picker-error-box-border-color-idle,
+      affects: trigger,
+      description: Trigger border in the error state,
+    }
+  - {
+      name: --ui-focus-primary,
+      affects: trigger,
+      description: Trigger focus ring,
+    }

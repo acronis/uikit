@@ -4,18 +4,42 @@ component: FilterSearch
 schematic: |
   root: <div> (flex row, gap-16)
   +-----------------------------------------------------------+
-  |  [tenant]  |  [search]  |  [filters]  |      actions      |
-  |  Select    |  Search    |  ButtonMenu  | right-aligned slot|
+  |  [tenant]  |  [search]  |  [filters-trigger]  |  actions  |
+  |  Select    |  Search    |  FilterSearchFilters| right slot|
   +-----------------------------------------------------------+
     root    -> flex container, 16px gap, center-aligned
     actions -> flex-1, content pushed to trailing edge
+
+  filters-trigger (FilterSearchFilters, composed as a toolbar child):
+  highlighted (button-secondary-*-active) while its popover is open.
+
+  filters-popover (opened from filters-trigger, portalled):
+  +-----------------------------------------+
+  | filters-popover-content: <form>          |
+  |  +-----------------------------------+  |
+  |  | filters-fields                    |  |  <- consumer children, wired to
+  |  |  (InputSelect / InputSearch / …)  |  |     the draft via
+  |  |  scrolls if it exceeds max-height  |  |     useFilterSearchFilters
+  |  +-----------------------------------+  |
+  |  ---------------------------------------  |
+  |  filters-footer: [Reset filters] [Cancel] [Apply]
+  +-----------------------------------------+
+
+  applied-filters (FilterSearchAppliedFilters, a sibling row below FilterSearch,
+  not nested inside its root — renders nothing when there are no applied filters):
+  +-----------------------------------------------------------+
+  |  [chip] [chip] ...                    [Reset filters]     |
+  +-----------------------------------------------------------+
 
 root:
   element: div
   description: >-
     Flex container that arranges the toolbar children in a horizontal row
     with 16px gap (`gap-4` in Tailwind v4). No semantic role — the
-    component is a layout wrapper, not a landmark.
+    component is a layout wrapper, not a landmark. `FilterSearchFilters` is
+    composed as one of its children (in place of a plain filter trigger);
+    `FilterSearchAppliedFilters` is a separate component rendered as a
+    sibling row below (see its own `applied-filters` part), not nested here.
 
 parts:
   - id: actions
@@ -25,6 +49,65 @@ parts:
     element: div
     optional: true
     visible_when: the consumer adds trailing action buttons
+  - id: filters-trigger
+    description: >-
+      The filter button (`FilterSearchFilters`'s `PopoverTrigger` rendered as
+      a secondary `Button`) — a plain label (default "Filters") plus a
+      chevron that rotates while the popover is open, and a highlighted
+      (active-token) container while open. Composed as a `FilterSearch`
+      child, in place of a plain filter trigger. Design-pending — no Figma
+      node yet.
+    element: button
+    optional: true
+    visible_when: the consumer composes `FilterSearchFilters` in place of a plain trigger
+  - id: filters-popover
+    description: >-
+      The Base UI Popover shell owning open/close state, opened from
+      `filters-trigger`. Snapshots the applied filters into a draft on open;
+      reverts on outside-press / Escape.
+    element: div
+    optional: true
+  - id: filters-popover-content
+    description: >-
+      The popover panel — a `<form>` whose submit applies the draft. Holds
+      `filters-fields` and `filters-footer`. Portalled, `align="start"`.
+    element: form
+    optional: true
+  - id: filters-fields
+    description: >-
+      Slot region for the consumer-supplied filter field children, scrolling
+      internally (`max-h-80 overflow-y-auto`) once they exceed the popover's
+      max height. Each field reads/writes the draft via the
+      `useFilterSearchFilters` context hook. Fields may be grouped with a
+      `Separator` as a layout convention (not a prop).
+    element: div
+    optional: true
+  - id: filters-footer
+    description: >-
+      Divided footer with three buttons — "Reset filters" (ghost, left,
+      disabled when the draft is empty, clears the draft to empty), "Cancel"
+      (secondary, reverts the draft and closes), and "Apply" (primary,
+      disabled until the draft differs from the applied filters, commits the
+      draft).
+    element: div
+    optional: true
+  - id: applied-filters
+    description: >-
+      Root of `FilterSearchAppliedFilters` — a flex-wrap row of removable
+      `chip`s (one per applied filter) plus a "Reset filters" action that
+      clears all filters immediately (no popover involved). A sibling of
+      `FilterSearch`'s root, rendered below it, not a child. Renders nothing
+      when there are no applied filters. Design-pending — no Figma node yet.
+    element: div
+    optional: true
+    visible_when: '`filters` (its own prop) has one or more keys'
+  - id: chip
+    description: >-
+      One removable `Chip` (`variant="removable"`) per applied filter, inside
+      `applied-filters`. Removing a chip drops that key from the applied
+      filters.
+    element: span
+    optional: true
 
 layout:
   type: flex
@@ -32,6 +115,47 @@ layout:
   align: center
   order: [search, actions]
 
-# Pure layout — no component-owned interaction states. Child components
-# (Search, ButtonMenu, Select) manage their own states.
-states: []
+# FilterSearch's own root is a pure function of its children (no states of
+# its own). FilterSearchFilters owns open/draft internal state (see
+# internal_state); FilterSearchAppliedFilters is a pure function of its
+# `filters` prop.
+states:
+  - id: filters-open
+    trigger: the filters-trigger is clicked (and closes on Apply / Cancel / dismiss)
+    kind: internal
+    affects:
+      [
+        filters-trigger,
+        filters-popover,
+        filters-popover-content,
+        filters-fields,
+        filters-footer,
+      ]
+  - id: filters-applied
+    trigger: "`FilterSearchAppliedFilters`'s `filters` prop has one or more keys"
+    kind: prop
+    prop: filters
+    affects: [applied-filters, chip]
+
+internal_state:
+  - id: open
+    type: boolean
+    initial: false
+    changed_by: >-
+      trigger click opens; Apply, Cancel, outside-press, and Escape all close.
+    description: >-
+      Whether `FilterSearchFilters`'s popover is open. Owned by the
+      component (no external open/onOpenChange prop). Opening snapshots the
+      applied filters into the draft; every close path either commits
+      (Apply) or reverts (Cancel / dismiss) the draft.
+  - id: draft
+    type: 'Record<string, unknown>'
+    initial: 'snapshot of value taken on open'
+    changed_by: >-
+      field children via `setFilter`; "Reset filters" (footer) clears it to
+      empty; Cancel / dismiss revert it to `value`; Apply commits it.
+    description: >-
+      `FilterSearchFilters`'s working copy of the filters being edited inside
+      the popover, exposed to field children through the
+      `useFilterSearchFilters` context. Never leaks to `onValueChange` until
+      Apply.

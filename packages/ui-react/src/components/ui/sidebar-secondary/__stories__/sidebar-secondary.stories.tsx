@@ -3,7 +3,6 @@ import { useState } from 'react';
 import {
   BoltIcon,
   ChevronsLeftIcon,
-  ChevronsRightIcon,
   DatabaseIcon,
   LayoutGridIcon,
   PlusIcon,
@@ -175,7 +174,7 @@ export const Default: Story = {
         <SidebarSecondaryFooter>
           <SidebarSecondaryMenu>
             {/* Uncontrolled panel: the trigger toggles `expanded` via context. */}
-            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} expandIcon={<ChevronsRightIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
+            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
               Collapse
             </SidebarSecondaryCollapseTrigger>
           </SidebarSecondaryMenu>
@@ -205,7 +204,7 @@ export const Collapsed: Story = {
             <SidebarSecondaryMenuItem href="#" icon={<CogIcon />}>
               Settings
             </SidebarSecondaryMenuItem>
-            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} expandIcon={<ChevronsRightIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
+            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
               Collapse
             </SidebarSecondaryCollapseTrigger>
           </SidebarSecondaryMenu>
@@ -349,7 +348,7 @@ export const Controlled: Story = {
               and this consumer owns the `expanded` state. */}
           <SidebarSecondaryFooter>
             <SidebarSecondaryMenu>
-              <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} expandIcon={<ChevronsRightIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
+              <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
                 Collapse
               </SidebarSecondaryCollapseTrigger>
             </SidebarSecondaryMenu>
@@ -418,7 +417,7 @@ export const ExpandableSections: Story = {
         </SidebarSecondaryContent>
         <SidebarSecondaryFooter>
           <SidebarSecondaryMenu>
-            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} expandIcon={<ChevronsRightIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
+            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
               Collapse
             </SidebarSecondaryCollapseTrigger>
           </SidebarSecondaryMenu>
@@ -508,7 +507,7 @@ export const SectionActionsAndRollup: Story = {
         </SidebarSecondaryContent>
         <SidebarSecondaryFooter>
           <SidebarSecondaryMenu>
-            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} expandIcon={<ChevronsRightIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
+            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
               Collapse
             </SidebarSecondaryCollapseTrigger>
           </SidebarSecondaryMenu>
@@ -590,7 +589,6 @@ export const RealisticAssets: Story = {
           <SidebarSecondaryMenu>
             <SidebarSecondaryCollapseTrigger
               icon={<ChevronsLeftIcon />}
-              expandIcon={<ChevronsRightIcon />}
               extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}
             >
               Collapse
@@ -643,7 +641,7 @@ export const Localized: Story = {
         </SidebarSecondaryContent>
         <SidebarSecondaryFooter>
           <SidebarSecondaryMenu>
-            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} expandIcon={<ChevronsRightIcon />} expandTooltip="Expandir" extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
+            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} expandTooltip="Expandir" extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
               Contraer
             </SidebarSecondaryCollapseTrigger>
           </SidebarSecondaryMenu>
@@ -679,7 +677,7 @@ export const NotResizable: Story = {
         </SidebarSecondaryContent>
           <SidebarSecondaryFooter>
             <SidebarSecondaryMenu>
-              <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} expandIcon={<ChevronsRightIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
+              <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
                 Collapse
               </SidebarSecondaryCollapseTrigger>
             </SidebarSecondaryMenu>

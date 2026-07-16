@@ -1,53 +1,36 @@
 import type { Table } from '@tanstack/react-table';
-import { CogIcon } from '@acronis-platform/icons-react/stroke-mono';
 
-import { Button } from '../button';
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../dropdown-menu';
+import { TableViewOptions } from '../table';
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
 }
 
+// Thin TanStack adapter over the primitive-only `TableViewOptions`: maps
+// `table.getAllColumns()` onto the plain `{ id, label, hidden }[]` shape and
+// routes `onToggle` back through `column.toggleVisibility()`.
 export function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
+  const columns = table
+    .getAllColumns()
+    .filter(
+      (column) =>
+        typeof column.accessorFn !== 'undefined' && column.getCanHide()
+    )
+    .map((column) => ({
+      id: column.id,
+      label: column.id,
+      hidden: !column.getIsVisible(),
+    }));
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        render={
-          <Button variant="secondary" className="ms-auto hidden h-8 gap-2 lg:flex" />
-        }
-      >
-        <CogIcon />
-        View
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[150px]">
-        <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {table
-          .getAllColumns()
-          .filter(
-            (column) =>
-              typeof column.accessorFn !== 'undefined' && column.getCanHide()
-          )
-          .map((column) => (
-            <DropdownMenuCheckboxItem
-              key={column.id}
-              className="capitalize"
-              checked={column.getIsVisible()}
-              onCheckedChange={(value) => column.toggleVisibility(!!value)}
-            >
-              {column.id}
-            </DropdownMenuCheckboxItem>
-          ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <TableViewOptions
+      columns={columns}
+      onToggle={(id) => {
+        const column = table.getColumn(id);
+        column?.toggleVisibility(!column.getIsVisible());
+      }}
+    />
   );
 }

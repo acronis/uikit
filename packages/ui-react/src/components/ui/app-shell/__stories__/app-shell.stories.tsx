@@ -6,7 +6,6 @@ import {
   BuildingIcon,
   ChartGrowthIcon,
   ChevronsLeftIcon,
-  ChevronsRightIcon,
   CircleHelpIcon,
   HeadsetIcon,
   InboxIcon,
@@ -180,7 +179,7 @@ function SecondaryNav({ expanded }: { expanded?: boolean }) {
       </SidebarSecondaryContent>
       <SidebarSecondaryFooter>
         <SidebarSecondaryMenu>
-          <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} expandIcon={<ChevronsRightIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
+          <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
             Collapse
           </SidebarSecondaryCollapseTrigger>
         </SidebarSecondaryMenu>

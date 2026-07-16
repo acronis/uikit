@@ -98,6 +98,23 @@ describe('Breadcrumb', () => {
     expect(screen.getByText('More')).toHaveClass('sr-only');
   });
 
+  it('underlines only on hover — idle/pressed/focus stay un-underlined — and shows a 3px focus ring', () => {
+    render(<Trail />);
+    const link = screen.getByRole('link', { name: 'Home' });
+    // Pin the whole text-decoration state machine at the class level: underline
+    // is a hover-only affordance, the pressed state overrides it back off, and
+    // focus-visible shows a 3px ring (no offset gap) instead of an underline.
+    // VR can't guard this — the repo has no pseudo-states addon, so :hover/:active
+    // never paint in snapshots (they're driven by real input state, not the
+    // synthetic events a play() can dispatch) — so these classes are the guard.
+    expect(link).toHaveClass('no-underline', 'hover:underline', 'active:no-underline');
+    expect(link).toHaveClass(
+      'focus-visible:ring-[3px]',
+      'focus-visible:ring-[var(--ui-focus-primary)]'
+    );
+    expect(link.className).not.toMatch(/focus-visible:underline|ring-offset/);
+  });
+
   it('composes a link with another element via the render prop', async () => {
     const onClick = vi.fn();
     render(

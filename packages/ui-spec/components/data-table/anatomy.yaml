@@ -2,10 +2,14 @@ spec_version: '1.0'
 component: DataTable
 
 schematic: |
-  toolbar:   [ search input ] [ Reset ✕ ]            [ ⚙ View ▾ ]   (view-options)
+  toolbar:   [ search input ] [ filters ▾ ] [ Reset ✕ ]   [ ⚙ View ▾ ]   (view-options)
+  applied-filters: ( status: Success ✕ ) ( … )        (chip row, when filtering)
   table: <div> rounded border wrapper
     column-header: per-column header — title + single-click sort toggle (↑/↓/↕)
+    resize-handle: drag handle at a resizable header's trailing edge (opt-in)
+    pinned column: meta.pin left/right → position: sticky cell
     row:           data row (selectable; selected → tinted)
+    expand-trigger: chevron toggle inside a cell → toggles the row's expansion
     expanded-row:  optional detail row under an expanded row
     empty-state:   "No results." row when there is no data
   pagination: "N of M selected"   [Rows per page ▾]  Page X of Y   ⏮ ◀ ▶ ⏭
@@ -15,8 +19,9 @@ root:
   description: >-
     The bordered table wrapper. Renders a TanStack table over the Table
     primitives. Manages sorting / filtering / visibility / selection /
-    pagination / expansion state internally (DataTable), or accepts a caller-built
-    `table` instance for the companion parts.
+    pagination / expansion / column-sizing / pinning state internally
+    (DataTable), or accepts a caller-built `table` instance for the companion
+    parts.
 
 parts:
   - id: table
@@ -29,9 +34,28 @@ parts:
       title plus a trailing arrow (up = ascending, down = descending, both in the
       active blue; a muted up/down arrow when unsorted). One click cycles the sort
       direction. Column hiding lives in the toolbar's view-options menu, not here.
+  - id: resize-handle
+    element: div
+    description: >-
+      A drag handle rendered at the trailing edge of each resizable header when
+      `enableColumnResizing` is set (from TanStack's `header.getResizeHandler()`).
+      Appears on hover / while dragging; `role="separator"`, `aria-orientation`
+      vertical, labelled "Resize column".
+    optional: true
   - id: row
     element: tr
-    description: A data row; selectable, tinted when selected.
+    description: >-
+      A data row; selectable, tinted when selected. A column with `meta.pin`
+      renders as sticky cells with an opaque row background so scrolled cells
+      don't show through.
+  - id: expand-trigger
+    element: button
+    description: >-
+      DataTableExpandTrigger — a chevron toggle placed inside a column's `cell`
+      render function. Reads the row's `getCanExpand` / `getIsExpanded` and calls
+      `toggleExpanded()`; renders nothing when the row can't expand. Carries
+      `aria-expanded` and an "Expand row" / "Collapse row" label.
+    optional: true
   - id: expanded-row
     element: tr
     description: Optional detail row rendered under an expanded row.
@@ -41,12 +65,30 @@ parts:
   - id: toolbar
     element: div
     description: >-
-      DataTableToolbar — a column search box, a Reset button (when filtered), and
-      the view-options menu.
+      DataTableToolbar — a column search box, an optional per-column filters
+      popover (its `children`), a Reset button (when filtered and no filter
+      fields), and the view-options menu.
+  - id: filters
+    element: div
+    description: >-
+      The per-column filters popover (FilterSearchFilters) rendered when the
+      toolbar is given filter-field `children`. Each field is wired to a column
+      via `useFilterSearchFilters()` keyed by column id.
+    optional: true
+  - id: applied-filters
+    element: div
+    description: >-
+      A sibling chip row (FilterSearchAppliedFilters) below the toolbar, shown
+      when filtering; each chip removes its column's filter. Labels come from
+      `getFilterChipLabel`.
+    optional: true
   - id: view-options
     element: div
     description: >-
-      DataTableViewOptions — a menu of checkboxes toggling column visibility.
+      DataTableViewOptions — a menu of checkboxes toggling column visibility. A
+      thin TanStack adapter over the `TableViewOptions` primitive: it maps
+      `table.getAllColumns()` onto the plain `{ id, label, hidden }[]` shape and
+      routes `onToggle` back through `column.toggleVisibility()`.
   - id: pagination
     element: div
     description: >-
@@ -64,6 +106,11 @@ states:
     kind: prop
     prop: getRowCanExpand
     affects: [row, expanded-row]
+  - id: expandable-column
+    trigger: a column's cell renders a DataTableExpandTrigger (with getRowCanExpand set)
+    kind: prop
+    prop: getRowCanExpand
+    affects: [expand-trigger, expanded-row]
   - id: striped
     trigger: striped is set
     kind: prop
@@ -83,4 +130,19 @@ states:
     trigger: skeleton is set
     kind: prop
     prop: skeleton
-    affects: [row, cell]
+    affects: [row, table]
+  - id: resizable
+    trigger: enableColumnResizing is set
+    kind: prop
+    prop: enableColumnResizing
+    affects: [column-header, resize-handle]
+  - id: pinned
+    trigger: "a column's meta.pin is 'left' or 'right'"
+    kind: prop
+    prop: meta.pin
+    affects: [row, column-header]
+  - id: wrapping
+    trigger: a column's meta.wrap is set
+    kind: prop
+    prop: meta.wrap
+    affects: [row, column-header]

@@ -108,7 +108,7 @@ Phase 1):
 
 ```
 get_context_for_code_connect({ nodeId, fileKey })   # exact variant / prop names + options
-get_variable_defs({ nodeId, fileKey })              # the --ui-* / design vars the node uses
+get_variable_defs({ nodeId, fileKey })              # variable NAMES for cross-ref + values for parity-values.mjs only
 get_design_context({ nodeId, fileKey })             # states + part structure (+ screenshot)
 ```
 

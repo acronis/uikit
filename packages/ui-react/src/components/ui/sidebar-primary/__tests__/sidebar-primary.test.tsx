@@ -277,7 +277,7 @@ describe('SidebarPrimary', () => {
     render(
       <SidebarPrimary ref={navRef}>
         <SidebarPrimaryMenu>
-          <SidebarPrimaryMenuItem ref={itemRef} href="/x">
+          <SidebarPrimaryMenuItem ref={itemRef} href="/x" noIcon>
             X
           </SidebarPrimaryMenuItem>
         </SidebarPrimaryMenu>
@@ -293,6 +293,7 @@ describe('SidebarPrimary', () => {
       <SidebarPrimaryMenu>
         <SidebarPrimaryMenuItem
           render={<button type="button" data-test onClick={onClick} />}
+          noIcon
         >
           Toggle
         </SidebarPrimaryMenuItem>
@@ -314,12 +315,14 @@ describe('SidebarPrimary', () => {
         <SidebarPrimaryMenu>
           <SidebarPrimaryMenuItem
             href="/a"
+            noIcon
             extras={<SidebarPrimaryMenuItemExtras variant="externalLink" />}
           >
             Inbox
           </SidebarPrimaryMenuItem>
           <SidebarPrimaryMenuItem
             href="/b"
+            noIcon
             extras={
               <SidebarPrimaryMenuItemExtras variant="shortcut" shortcut="⌘H" />
             }
@@ -341,6 +344,7 @@ describe('SidebarPrimary', () => {
         <SidebarPrimaryMenu>
           <SidebarPrimaryMenuItem
             href="/a"
+            noIcon
             extras={<SidebarPrimaryMenuItemExtras variant="shortcut" shortcut="⌘H" />}
           >
             Home
@@ -362,7 +366,7 @@ describe('SidebarPrimary', () => {
     render(
       <SidebarPrimary expanded={false}>
         <SidebarPrimaryMenu>
-          <SidebarPrimaryMenuItem href="/a" extras={<span>99+</span>}>
+          <SidebarPrimaryMenuItem href="/a" noIcon extras={<span>99+</span>}>
             Inbox
           </SidebarPrimaryMenuItem>
         </SidebarPrimaryMenu>
@@ -404,7 +408,7 @@ describe('SidebarPrimary', () => {
     it('keeps min-w-0 alongside truncate on the label so it actually clips in a flex row', () => {
       render(
         <SidebarPrimaryMenu>
-          <SidebarPrimaryMenuItem href="/a">
+          <SidebarPrimaryMenuItem href="/a" noIcon>
             Protection management console
           </SidebarPrimaryMenuItem>
         </SidebarPrimaryMenu>
@@ -420,7 +424,9 @@ describe('SidebarPrimary', () => {
       render(
         <TooltipProvider delay={0}>
           <SidebarPrimaryMenu>
-            <SidebarPrimaryMenuItem href="/a">Assets</SidebarPrimaryMenuItem>
+            <SidebarPrimaryMenuItem href="/a" noIcon>
+              Assets
+            </SidebarPrimaryMenuItem>
           </SidebarPrimaryMenu>
         </TooltipProvider>
       );
@@ -433,7 +439,7 @@ describe('SidebarPrimary', () => {
       render(
         <TooltipProvider delay={0}>
           <SidebarPrimaryMenu>
-            <SidebarPrimaryMenuItem href="/a">
+            <SidebarPrimaryMenuItem href="/a" noIcon>
               Protection management console
             </SidebarPrimaryMenuItem>
           </SidebarPrimaryMenu>
@@ -474,25 +480,24 @@ describe('SidebarPrimary', () => {
       ).toHaveLength(1);
     });
 
-    it('never opens the tooltip in collapsed/rail mode even if the (sr-only) label would measure as clipped', async () => {
-      mockOverflow(true);
+    it('always opens the tooltip in collapsed/rail mode, regardless of overflow, since the label is sr-only', async () => {
+      mockOverflow(false);
       render(
         <TooltipProvider delay={0}>
           <SidebarPrimary expanded={false}>
             <SidebarPrimaryMenu>
-              <SidebarPrimaryMenuItem href="/a">
-                Protection management console
+              <SidebarPrimaryMenuItem href="/a" icon={<svg data-testid="icon" />}>
+                Assets
               </SidebarPrimaryMenuItem>
             </SidebarPrimaryMenu>
           </SidebarPrimary>
         </TooltipProvider>
       );
-      await userEvent.hover(
-        screen.getByText('Protection management console')
-      );
-      expect(
-        screen.getAllByText('Protection management console')
-      ).toHaveLength(1);
+      // The label is `sr-only` while collapsed, so it can never receive the
+      // hover that would open its own inner tooltip — hovering the (only
+      // visible) icon must still surface the full label as a tooltip.
+      await userEvent.hover(screen.getByTestId('icon'));
+      expect(await screen.findAllByText('Assets')).toHaveLength(2);
     });
 
     it('applies the same clipped-only tooltip behavior to the collapse trigger label', async () => {
@@ -513,6 +518,127 @@ describe('SidebarPrimary', () => {
         await screen.findAllByText('Collapse this very long navigation menu')
       ).toHaveLength(2);
     });
+  });
+});
+
+describe('SidebarPrimary — required icon (noIcon escape hatch)', () => {
+  it('renders the icon wrapper when icon is given', () => {
+    render(
+      <SidebarPrimaryMenu>
+        <SidebarPrimaryMenuItem href="/a" icon={<svg data-testid="icon" />}>
+          Assets
+        </SidebarPrimaryMenuItem>
+      </SidebarPrimaryMenu>
+    );
+    expect(screen.getByTestId('icon')).toBeInTheDocument();
+  });
+
+  it('renders no icon wrapper when noIcon is set', () => {
+    render(
+      <SidebarPrimaryMenu>
+        <SidebarPrimaryMenuItem href="/a" noIcon>
+          General settings
+        </SidebarPrimaryMenuItem>
+      </SidebarPrimaryMenu>
+    );
+    const link = screen.getByRole('link', { name: 'General settings' });
+    expect(link.querySelector('svg')).not.toBeInTheDocument();
+  });
+});
+
+describe('SidebarPrimary — collapse trigger cursor and icon rotation', () => {
+  it('gives the collapse trigger button a pointer cursor', () => {
+    render(
+      <SidebarPrimaryMenu>
+        <SidebarPrimaryCollapseTrigger icon={<svg data-testid="chevron" />}>
+          Collapse menu
+        </SidebarPrimaryCollapseTrigger>
+      </SidebarPrimaryMenu>
+    );
+    expect(screen.getByRole('button', { name: 'Collapse menu' })).toHaveClass(
+      'cursor-pointer'
+    );
+  });
+
+  it('rotates the same icon element between expanded and collapsed instead of swapping icons', async () => {
+    render(
+      <SidebarPrimary defaultExpanded>
+        <SidebarPrimaryFooter>
+          <SidebarPrimaryMenu>
+            <SidebarPrimaryCollapseTrigger icon={<svg data-testid="chevron" />}>
+              Collapse menu
+            </SidebarPrimaryCollapseTrigger>
+          </SidebarPrimaryMenu>
+        </SidebarPrimaryFooter>
+      </SidebarPrimary>
+    );
+    const icon = screen.getByTestId('chevron');
+    const wrapper = icon.parentElement!;
+    expect(wrapper).toHaveClass('rtl:rotate-180');
+    await userEvent.click(screen.getByRole('button', { name: 'Collapse menu' }));
+    // Same icon node stays mounted — only the rotation class flips.
+    expect(screen.getByTestId('chevron')).toBe(icon);
+    expect(wrapper).toHaveClass('ltr:rotate-180');
+  });
+});
+
+describe('SidebarPrimary — header transition sync (no jump between logo sizes)', () => {
+  it('transitions header padding and logo height alongside the rail width transition', () => {
+    render(
+      <SidebarPrimary>
+        <SidebarPrimaryHeader>
+          <svg data-testid="logo" />
+        </SidebarPrimaryHeader>
+      </SidebarPrimary>
+    );
+    const header = screen.getByTestId('logo').parentElement!;
+    expect(header).toHaveClass('transition-[padding]');
+    expect(header).toHaveClass(
+      '[&_:where(img,svg)]:transition-[height]'
+    );
+  });
+});
+
+describe('SidebarPrimary — tooltip placement', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('opens the truncation tooltip on the right', async () => {
+    mockOverflow(true);
+    render(
+      <TooltipProvider delay={0}>
+        <SidebarPrimaryMenu>
+          <SidebarPrimaryMenuItem href="/a" noIcon>
+            Protection management console
+          </SidebarPrimaryMenuItem>
+        </SidebarPrimaryMenu>
+      </TooltipProvider>
+    );
+    await userEvent.hover(
+      screen.getByText('Protection management console')
+    );
+    const [, tooltip] = await screen.findAllByText(
+      'Protection management console'
+    );
+    expect(tooltip.closest('[data-side]')).toHaveAttribute('data-side', 'right');
+  });
+});
+
+describe('SidebarPrimary — Space key activation', () => {
+  it('activates a focused menu item anchor on Space', async () => {
+    const onClick = vi.fn();
+    render(
+      <SidebarPrimaryMenu>
+        <SidebarPrimaryMenuItem href="/test" noIcon onClick={onClick}>
+          Test item
+        </SidebarPrimaryMenuItem>
+      </SidebarPrimaryMenu>
+    );
+    const link = screen.getByRole('link', { name: 'Test item' });
+    link.focus();
+    await userEvent.keyboard(' ');
+    expect(onClick).toHaveBeenCalled();
   });
 });
 

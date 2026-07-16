@@ -5,6 +5,7 @@ import { SquareArrowUpRightIcon } from '@acronis-platform/icons-react/stroke-mon
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
+import { useDocDir } from '@/lib/use-doc-dir';
 
 import { ScrollArea } from '../scroll-area';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
@@ -217,9 +218,23 @@ const SidebarPrimaryHeader = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        'flex items-center shrink-0 text-[var(--ui-sidebar-primary-global-logo-color)]',
+        'flex items-center shrink-0 text-[var(--ui-sidebar-primary-global-logo-color)] transition-[padding]',
         'px-[var(--ui-sidebar-primary-collapsed-container-header-padding-x)] py-[var(--ui-sidebar-primary-collapsed-container-header-padding-y)]',
-        '[&_:where(img,svg)]:h-[var(--ui-sidebar-primary-collapsed-logo-height)] [&_:where(img,svg)]:w-auto',
+        // `logo`/`collapsedLogo` are two separate elements swapped by a JS
+        // conditional (not one element whose size CSS-transitions) — the new
+        // one mounts at its final height instantly, while `padding-y` is
+        // still mid-transition. Since the two states' (padding*2 + logo
+        // height) sums only match at the transition's start/end, that instant
+        // pop makes the row briefly overshoot/undershoot its resting height
+        // and "jump". Pinning the row to the larger of the two sums makes the
+        // outer box's height constant across the whole transition regardless
+        // of that mismatch — padding/logo-height still animate cosmetically
+        // inside it.
+        'h-[max(calc(var(--ui-sidebar-primary-collapsed-container-header-padding-y)*2+var(--ui-sidebar-primary-collapsed-logo-height)),calc(var(--ui-sidebar-primary-expanded-container-header-padding-y)*2+var(--ui-sidebar-primary-expanded-logo-height)))]',
+        // Animate the logo's own height alongside the header's padding transition
+        // (both keyed off the same `data-state` flip) — without it the logo swaps
+        // size instantly while the rail width is still animating, reading as a jump.
+        '[&_:where(img,svg)]:h-[var(--ui-sidebar-primary-collapsed-logo-height)] [&_:where(img,svg)]:w-auto [&_:where(img,svg)]:transition-[height]',
         'group-data-[state=expanded]/sidebar:px-[var(--ui-sidebar-primary-expanded-container-header-padding-x)] group-data-[state=expanded]/sidebar:py-[var(--ui-sidebar-primary-expanded-container-header-padding-y)]',
         'group-data-[state=expanded]/sidebar:[&_:where(img,svg)]:h-[var(--ui-sidebar-primary-expanded-logo-height)]',
         className
@@ -316,7 +331,7 @@ SidebarPrimaryMenu.displayName = 'SidebarPrimaryMenu';
 // matching state token is referenced. (This is why Primary cannot share a cva
 // with Secondary, which recolors only the container — DESIGN §6.2.)
 const sidebarPrimaryMenuItemVariants = cva(
-  'group/menu-item flex w-full items-center gap-[var(--ui-sidebar-primary-menu-item-global-container-gap)] h-[var(--ui-sidebar-primary-menu-item-global-container-height)] px-[var(--ui-sidebar-primary-menu-item-global-container-padding-x)] py-[var(--ui-sidebar-primary-menu-item-global-container-padding-y)] no-underline ui-sidebar-primary-menu-item-global-label-text-style transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)] focus-visible:ring-inset [&_svg]:shrink-0 [&_svg]:size-[var(--ui-sidebar-primary-menu-item-global-icon-size)]',
+  'group/menu-item flex w-full items-center gap-[var(--ui-sidebar-primary-menu-item-global-container-gap)] h-[var(--ui-sidebar-primary-menu-item-global-container-height)] px-[var(--ui-sidebar-primary-menu-item-global-container-padding-x)] py-[var(--ui-sidebar-primary-menu-item-global-container-padding-y)] no-underline cursor-pointer ui-sidebar-primary-menu-item-global-label-text-style transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)] focus-visible:ring-inset [&_svg]:shrink-0 [&_svg]:size-[var(--ui-sidebar-primary-menu-item-global-icon-size)]',
   {
     variants: {
       variant: {
@@ -332,13 +347,11 @@ const sidebarPrimaryMenuItemVariants = cva(
   }
 );
 
-export interface SidebarPrimaryMenuItemProps
+interface SidebarPrimaryMenuItemBaseProps
   extends Omit<React.ComponentPropsWithoutRef<'a'>, 'children'>,
     Omit<VariantProps<typeof sidebarPrimaryMenuItemVariants>, 'variant'> {
   /** Marks the current route: sets the `selected` variant + `aria-current="page"`. */
   selected?: boolean;
-  /** Leading 16px icon (from `@acronis-platform/icons-react`). */
-  icon?: React.ReactNode;
   children?: React.ReactNode;
   /**
    * Trailing affordance — a `SidebarPrimaryMenuItemExtras` element. Rendered as
@@ -356,21 +369,45 @@ export interface SidebarPrimaryMenuItemProps
   render?: useRender.RenderProp;
 }
 
+// A nav rail row is icon-only when collapsed, so `icon` is required by default
+// (UX: every row must stay legible in rail mode). `noIcon` is the explicit,
+// rare escape hatch for a consumer that truly has no icon for a row.
+export type SidebarPrimaryMenuItemProps = SidebarPrimaryMenuItemBaseProps &
+  (
+    | {
+        /** Leading 16px icon (from `@acronis-platform/icons-react`). */
+        icon: Exclude<React.ReactNode, undefined>;
+        noIcon?: never;
+      }
+    | { icon?: undefined; /** Explicit opt-out for the rare row with no icon. */ noIcon: true }
+  );
+
 const SidebarPrimaryMenuItem = React.forwardRef<
   HTMLAnchorElement,
   SidebarPrimaryMenuItemProps
 >(
   (
-    { className, selected = false, icon, render, children, extras, ...props },
+    {
+      className,
+      selected = false,
+      icon,
+      noIcon,
+      render,
+      children,
+      extras,
+      ...props
+    },
     ref
   ) => {
     const { expanded } = useSidebarPrimaryContext();
+    const dir = useDocDir();
+    const rowRef = React.useRef<HTMLAnchorElement>(null);
     const labelRef = React.useRef<HTMLSpanElement>(null);
     const isOverflowing = useIsOverflowing(labelRef, { enabled: expanded });
 
     const inner = useRender({
       render,
-      ref,
+      ref: [ref, rowRef],
       defaultTagName: 'a',
       props: mergeProps<'a'>(
         {
@@ -381,6 +418,12 @@ const SidebarPrimaryMenuItem = React.forwardRef<
             className
           ),
           'aria-current': selected ? 'page' : undefined,
+          onKeyDown: (e: React.KeyboardEvent<HTMLAnchorElement>) => {
+            if (e.key === ' ') {
+              e.preventDefault();
+              e.currentTarget.click();
+            }
+          },
           children: (
             <>
               {icon != null && (
@@ -394,7 +437,9 @@ const SidebarPrimaryMenuItem = React.forwardRef<
                   collapsed but stay queryable for the same reason. The tooltip
                   trigger is the label span itself, not the row — it must not
                   open when hovering the icon or extras, and only ever opens
-                  when the label is actually clipped. */}
+                  when the label is actually clipped. It's anchored to the row
+                  (not the label span) so it lines up with the sidebar's right
+                  edge regardless of how much the label shrinks for extras. */}
               <Tooltip disabled={!isOverflowing}>
                 <TooltipTrigger
                   render={
@@ -409,7 +454,12 @@ const SidebarPrimaryMenuItem = React.forwardRef<
                 >
                   {children}
                 </TooltipTrigger>
-                <TooltipContent>{children}</TooltipContent>
+                <TooltipContent
+                  anchor={rowRef}
+                  side={dir === 'rtl' ? 'left' : 'right'}
+                >
+                  {children}
+                </TooltipContent>
               </Tooltip>
               {extras != null && (
                 <span className={cn(!expanded && 'hidden')}>{extras}</span>
@@ -421,7 +471,20 @@ const SidebarPrimaryMenuItem = React.forwardRef<
       ),
     });
 
-    return <li className="contents">{inner}</li>;
+    return (
+      <li className="contents">
+        {/* In collapsed/rail mode the label above is `sr-only` (zero-size), so
+            it never receives the hover that would open its tooltip — wrap the
+            whole row so the icon itself is hoverable and always shows the
+            item's label as a tooltip while collapsed. */}
+        <Tooltip disabled={expanded}>
+          <TooltipTrigger render={inner} />
+          <TooltipContent side={dir === 'rtl' ? 'left' : 'right'}>
+            {children}
+          </TooltipContent>
+        </Tooltip>
+      </li>
+    );
   }
 );
 SidebarPrimaryMenuItem.displayName = 'SidebarPrimaryMenuItem';
@@ -481,7 +544,7 @@ SidebarPrimaryMenuItemExtras.displayName = 'SidebarPrimaryMenuItemExtras';
 
 export interface SidebarPrimaryCollapseTriggerProps
   extends Omit<React.ComponentPropsWithoutRef<'button'>, 'children'> {
-  /** Leading 16px icon (e.g. a panel-left glyph). */
+  /** Leading 16px icon (e.g. a panel-left glyph). Rotates 180° between expanded/collapsed. */
   icon?: React.ReactNode;
   children?: React.ReactNode;
   /**
@@ -490,24 +553,38 @@ export interface SidebarPrimaryCollapseTriggerProps
    * as `SidebarPrimaryMenuItem`'s `extras` prop.
    */
   extras?: React.ReactNode;
+  /** Tooltip text shown when the rail is collapsed. Defaults to `'Expand'`. */
+  expandTooltip?: React.ReactNode;
 }
 
 // The footer "Collapse menu" affordance (Figma). A menu-item-styled `<button>`
 // that flips the rail width via the layout context — this is the live wiring
 // for the controllable `expanded` state (B1). In collapsed mode it keeps its
-// label as `sr-only` like every other row.
+// label as `sr-only` like every other row, and (same as
+// `SidebarSecondaryCollapseTrigger`) wraps the whole button in a tooltip
+// showing `expandTooltip` — the `sr-only` label can't receive the hover that
+// would open its own tooltip.
 const SidebarPrimaryCollapseTrigger = React.forwardRef<
   HTMLButtonElement,
   SidebarPrimaryCollapseTriggerProps
->(({ className, icon, children, extras, onClick, ...props }, ref) => {
-  const { expanded, toggleExpanded } = useSidebarPrimaryContext();
-  const labelRef = React.useRef<HTMLSpanElement>(null);
-  const isOverflowing = useIsOverflowing(labelRef, { enabled: expanded });
+>(
+  (
+    { className, icon, children, extras, expandTooltip = 'Expand', onClick, ...props },
+    ref
+  ) => {
+    const { expanded, toggleExpanded } = useSidebarPrimaryContext();
+    const dir = useDocDir();
+    const buttonRef = React.useRef<HTMLButtonElement>(null);
+    const labelRef = React.useRef<HTMLSpanElement>(null);
+    const isOverflowing = useIsOverflowing(labelRef, { enabled: expanded });
 
-  return (
-    <li className="contents">
+    const button = (
       <button
-        ref={ref}
+        ref={(node) => {
+          buttonRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
         type="button"
         aria-expanded={expanded}
         className={cn(
@@ -545,15 +622,31 @@ const SidebarPrimaryCollapseTrigger = React.forwardRef<
           >
             {children}
           </TooltipTrigger>
-          <TooltipContent>{children}</TooltipContent>
+          <TooltipContent
+            anchor={buttonRef}
+            side={dir === 'rtl' ? 'left' : 'right'}
+          >
+            {children}
+          </TooltipContent>
         </Tooltip>
         {extras != null && (
           <span className={cn(!expanded && 'hidden')}>{extras}</span>
         )}
       </button>
-    </li>
-  );
-});
+    );
+
+    return (
+      <li className="contents">
+        <Tooltip disabled={expanded}>
+          <TooltipTrigger render={button} />
+          <TooltipContent side={dir === 'rtl' ? 'left' : 'right'}>
+            {expandTooltip}
+          </TooltipContent>
+        </Tooltip>
+      </li>
+    );
+  }
+);
 SidebarPrimaryCollapseTrigger.displayName = 'SidebarPrimaryCollapseTrigger';
 
 export {

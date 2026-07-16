@@ -1,9 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { FolderIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import {
   Breadcrumb,
-  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
@@ -55,70 +53,6 @@ export const Default: Story = {
           <BreadcrumbLink href="#">Backup</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbPage>Settings</BreadcrumbPage>
-        </BreadcrumbItem>
-      </BreadcrumbList>
-    </Breadcrumb>
-  ),
-};
-
-export const WithIcon: Story = {
-  render: () => (
-    <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="#" className="inline-flex items-center gap-1">
-            <FolderIcon size={16} />
-            Projects
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbPage>Dashboard</BreadcrumbPage>
-        </BreadcrumbItem>
-      </BreadcrumbList>
-    </Breadcrumb>
-  ),
-};
-
-export const Collapsed: Story = {
-  name: 'Collapsed (ellipsis)',
-  render: () => (
-    <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="#">Home</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbEllipsis />
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink href="#">Backup</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbPage>Settings</BreadcrumbPage>
-        </BreadcrumbItem>
-      </BreadcrumbList>
-    </Breadcrumb>
-  ),
-};
-
-export const CustomSeparator: Story = {
-  render: () => (
-    <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="#">Home</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator>/</BreadcrumbSeparator>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="#">Products</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator>/</BreadcrumbSeparator>
         <BreadcrumbItem>
           <BreadcrumbPage>Settings</BreadcrumbPage>
         </BreadcrumbItem>

@@ -68,6 +68,21 @@ bash .claude/skills/component-readiness/scripts/audit.sh <ComponentName>   # or 
 This gate fills the issue-#297 gap: `ui-spec test` validates token-name _shape_
 but never that the names _exist_ in `tokens-pd`, so drift otherwise passes CI.
 
+### tokens-pd freshness
+
+Before reading the design, confirm `tokens-pd` is built from the current
+`design-tokens`. We can rebuild it ourselves; the upstream JSON in
+`design-tokens` is owned by the design team and must not be edited.
+
+```bash
+pnpm --filter @acronis-platform/tokens-pd build
+git diff --stat packages/tokens-pd/
+```
+
+If `git diff` shows changes, `tokens-pd` was stale — commit the rebuilt output
+so the component work targets the latest tokens. If no diff, tokens-pd is
+already current.
+
 ---
 
 ## Phase 1 — Read the design (Figma MCP)
@@ -76,18 +91,26 @@ Call these (no skill prerequisite for reads):
 
 1. `get_design_context({ nodeId, fileKey })` — reference markup + screenshot.
    Identify states, the part structure, and which layers are icons/instances.
-2. `get_variable_defs({ nodeId, fileKey })` — the design variables **the node
-   uses** (e.g. `component/Breadcrumb/link-label/color`, `…/list/gap`, font size /
-   line height), as resolved `name → value` pairs. This is the right tool for the
-   per-component question (it returns only what this node references — not whole
-   collections; for a full token-collection sync use `/sync-tokens`). **Caveat:**
-   the Figma MCP is **selection-bound** in this setup — both the figma-console
-   Desktop Bridge and the official `mcp__figma__*` Dev Mode server reject reads
-   with "You currently have nothing selected" even when you pass a valid
-   `nodeId`/`fileKey`. The node must be **selected in the Figma desktop app**: ask
-   the user to open the node URL in desktop and click the layer, then retry.
-   Reconcile each returned Figma variable name to its `--ui-*` token in Phase 2 —
-   never copy the resolved hex/number.
+2. `get_variable_defs({ nodeId, fileKey })` — returns the design variables
+   **the node uses**, as `name → value` pairs. **Discard every resolved value
+   immediately.** Extract only the variable **names** (the
+   `component/<X>/<Y>/<Z>` paths) — these are an inventory of what the
+   design references. Each name maps to a `--ui-*` token in Phase 2; the
+   token's value comes from `tokens-pd`, never from this response.
+
+   > **Why not use the values?** `get_variable_defs` returns resolved
+   > hex/number literals (e.g. `#063679`, `999`). These bypass the
+   > `design-tokens → tokens-pd` pipeline and make the component ignore
+   > upstream token changes. The pipeline — owned by the design team —
+   > is the single source of truth.
+
+   **Caveat:** the Figma MCP is **selection-bound** in this setup — both
+   the figma-console Desktop Bridge and the official `mcp__figma__*` Dev
+   Mode server reject reads with "You currently have nothing selected"
+   even when you pass a valid `nodeId`/`fileKey`. The node must be
+   **selected in the Figma desktop app**: ask the user to open the node
+   URL in desktop and click the layer, then retry.
+
 3. `get_context_for_code_connect({ nodeId, fileKey })` — **exact** Figma
    property names + variant options. Use this to write Code Connect; never
    guess property names.
@@ -97,8 +120,10 @@ Write down, from the design:
 - **Variants / states.** Which are real props (map to `variant`/`size`/
   `disabled`) vs. pure interaction states (`:hover`, `:active`,
   `:focus-visible`) vs. structural (e.g. "current page" = a different part).
-- **The design variables.** Each `component/<x>/<y>` variable should already
-  exist as a `--ui-<x>-<y>` token (see Phase 2).
+- **The design variable names** (from `get_variable_defs`). Each
+  `component/<x>/<y>` name must map to a `--ui-<x>-<y>` token that
+  **exists in `tokens-pd`** — if it doesn't, Phase 2 will hard-stop.
+  Never record or use the resolved values alongside these names.
 
 > A node may be a single item even if the frame shows a full assembly (the
 > breadcrumb node `1017:2852` is one item with a `state` variant, not the whole
@@ -120,8 +145,44 @@ grep -rn "<component>" packages/tokens-pd/css --include="*.css" -i
 - If a **shared** color is missing, bridge a Tailwind name in
   `packages/ui-react/src/styles/index.css` (`@theme inline`).
 - If **component-specific** tokens are missing entirely, they belong upstream
-  in `@acronis-platform/design-tokens` → rebuild `tokens-pd`. **Do not
-  hand-author hex values** in the component. Flag this to the user.
+  in `@acronis-platform/design-tokens` (owned by the design team — we never
+  edit `tiers/*.json`). **Do not hand-author hex values** in the component.
+  Escalate to the design team; once they ship the update in Figma, run
+  `/sync-tokens` (or `/figma-to-design-tokens`) to pull it into `tiers/*.json`,
+  then rebuild `tokens-pd`.
+
+### Hard gate — tokens-pd resolution (mandatory)
+
+For **every** variable name from Phase 1's `get_variable_defs` inventory,
+convert it to its `--ui-*` form and confirm it exists in tokens-pd:
+
+```bash
+for name in <list-of-figma-variable-names>; do
+  token="--ui-$(echo "$name" | sed -E 's|^components?/||; s|_global/|global-|g' \
+    | tr '/' '-' | sed -E 's/([a-z0-9])([A-Z])/\1-\2/g' | tr '[:upper:]' '[:lower:]')"
+  grep -rqF -- "$token" packages/tokens-pd/css/ && echo "OK  $token" || echo "MISS $token"
+done
+```
+
+**If any token is `MISS`:**
+
+- **Do NOT proceed to Phase 3.**
+- **Do NOT fall back to the Figma resolved value.**
+- Report the missing token(s) to the user. The token must be added by
+  the **design team** in Figma (we never edit `tiers/*.json`).
+  Once they ship the update, run `/sync-tokens` to pull it into
+  `tiers/*.json`, rebuild `tokens-pd`, and re-run the gate.
+- The skill resumes only after the missing tokens exist in `tokens-pd`.
+
+> ⛔ **No fallback rule.** If a design variable has no matching `--ui-*`
+> token in tokens-pd, escalate to the design team (they own
+> `design-tokens`) — **never** hardcode the Figma value in the component.
+> `tokens-pd` is the single source of truth; we can rebuild it but never
+> author the upstream JSON.
+>
+> Rebuilding `tokens-pd` alone won't pick up a new Figma variable — it only
+> reads what's already in `tiers/*.json`. Run `/sync-tokens` first to sync
+> Figma → `tiers/*.json`, then rebuild.
 
 Wire **each interaction state to its own token** (`hover:` → `*-hover`,
 `disabled:` → `*-disabled`) even when the idle value happens to match — brand

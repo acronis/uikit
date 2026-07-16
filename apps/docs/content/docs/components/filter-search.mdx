@@ -1,0 +1,158 @@
+---
+title: FilterSearch
+description: A composable data-table toolbar — search, a tenant switcher, a filter popover, and applied-filter chips.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { FilterSearchDemo } from "@/components/demos-react/filter-search";
+
+## Usage
+
+```tsx
+import {
+  FilterSearch,
+  FilterSearchActions,
+  FilterSearchFilters,
+  FilterSearchAppliedFilters,
+  useFilterSearchFilters,
+} from '@acronis-platform/ui-react';
+```
+
+`FilterSearch` is a composable toolbar for data tables: a horizontal row that
+arranges a search field, an optional tenant/scope switcher, an optional filter
+popover, and trailing action buttons. It's a pure layout wrapper — you place
+`Search`, `Select`, `FilterSearchFilters`, and `FilterSearchActions` as direct
+children.
+
+`FilterSearchFilters` is the real filter popover: a trigger button that opens
+a form (Reset filters / Cancel / Apply) over a **draft** copy of the applied
+filters. It snapshots `value` on open, lets field children mutate the draft,
+and only commits it back through `onValueChange` (plus the optional
+`onApply`) when **Apply** is pressed — disabled until the draft actually
+differs from the applied value. **Cancel**, Escape, and outside-press revert
+the draft. Fields that don't fit the popover's height scroll internally.
+
+`FilterSearchAppliedFilters` renders the currently applied filters as
+removable chips, plus a top-level **Reset filters** action that clears
+everything immediately (no popover involved). It's a separate component,
+rendered as a sibling row **below** `FilterSearch`, and renders nothing when
+there are no applied filters.
+
+Filter fields are supplied as plain `children` inside `FilterSearchFilters`.
+Each field wires itself to the draft with the `useFilterSearchFilters()`
+context hook, which returns the current draft `filters` map and a per-key
+`setFilter` setter:
+
+```tsx
+function StatusField() {
+  const { filters, setFilter } = useFilterSearchFilters();
+  return (
+    <InputSelect
+      value={(filters.status as string) ?? null}
+      onValueChange={(value) => setFilter('status', value)}
+    >
+      {/* … */}
+    </InputSelect>
+  );
+}
+```
+
+Group fields with a `Separator` as a layout convention if desired. Calling
+`useFilterSearchFilters()` outside a `<FilterSearchFilters>` popover throws.
+
+> **Design-pending.** `FilterSearch`/`FilterSearchActions` have a real Figma
+> node (see the API reference below). `FilterSearchFilters` and
+> `FilterSearchAppliedFilters` don't yet — they theme entirely from shared
+> semantic tokens plus their composed components' own tiers (`Button`,
+> `Chip`, `Popover`). They'll be reconciled against the real design once a
+> mockup lands.
+
+## Examples
+
+<DemoReact>
+  <FilterSearchDemo />
+</DemoReact>
+
+A full toolbar — tenant switcher, search, filter popover, and applied-filter
+chips:
+
+```tsx
+function DeviceFilterFields() {
+  return (
+    <>
+      <TypeField />
+      <PricingModeField />
+      <Separator />
+      <StatusField />
+    </>
+  );
+}
+
+function Toolbar() {
+  const [filters, setFilters] = useState<Record<string, unknown>>({});
+
+  return (
+    <div className="flex flex-col gap-3">
+      <FilterSearch>
+        <Select defaultValue="acme">
+          <SelectTrigger className="w-56">
+            <SelectValue placeholder="All customers" />
+          </SelectTrigger>
+          <SelectContent>{/* … */}</SelectContent>
+        </Select>
+        <InputSearch placeholder="Enter text to filter" aria-label="Search" className="w-56" />
+        <FilterSearchFilters value={filters} onValueChange={setFilters} label="Table filters">
+          <DeviceFilterFields />
+        </FilterSearchFilters>
+      </FilterSearch>
+      <FilterSearchAppliedFilters filters={filters} onValueChange={setFilters} />
+    </div>
+  );
+}
+```
+
+Search-only, no tenant switcher or filters:
+
+```tsx
+<FilterSearch>
+  <InputSearch placeholder="Search table" aria-label="Search" className="w-56" />
+</FilterSearch>
+```
+
+With trailing action buttons:
+
+```tsx
+<FilterSearch>
+  <InputSearch placeholder="Search table" aria-label="Search" className="w-56" />
+  <FilterSearchFilters value={filters} onValueChange={setFilters} />
+  <FilterSearchActions>
+    <Button>Export</Button>
+  </FilterSearchActions>
+</FilterSearch>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/filter-search/filter-search.tsx"
+  name="FilterSearchProps"
+/>
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/filter-search/filter-search.tsx"
+  name="FilterSearchActionsProps"
+/>
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/filter-search/filter-search.tsx"
+  name="FilterSearchFiltersProps"
+/>
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/filter-search/filter-search.tsx"
+  name="FilterSearchAppliedFiltersProps"
+/>
+
+The `useFilterSearchFilters()` hook returns the current draft `filters` map
+and a `setFilter(key, value)` setter for wiring filter-field children to the
+popover draft.

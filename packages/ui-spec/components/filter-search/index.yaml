@@ -8,6 +8,11 @@ description: >-
   filters button, optional tenant/scope switcher, and trailing action buttons
   in a single horizontal row. Pure layout — no dedicated token tier; child
   components (Search, ButtonMenu, Select) bring their own tokens.
+  `FilterSearchFilters` (the filter popover: trigger + form + Reset/Cancel/
+  Apply) and `FilterSearchAppliedFilters` (the removable-chip row + top-level
+  "Reset filters") are design-pending additions — no Figma node yet, unlike
+  the FilterSearch node itself (see `figma:` below, which covers only the
+  root toolbar layout).
 since: 0.55.0
 dependencies:
   components:
@@ -15,6 +20,8 @@ dependencies:
     - ButtonMenu
     - Select
     - Button
+    - Chip
+    - Popover
     - DataTableToolbar
 figma:
   node: '3897-7681'

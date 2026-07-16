@@ -46,12 +46,19 @@
 
 ## Links
 
-### Underlines on hover and focus
+### Underlines on hover
 
 **Given** a BreadcrumbLink
-**When** the pointer hovers it or it receives keyboard focus
+**When** the pointer hovers it
 **Then** the link text is underlined
-**And** focus shows a visible focus-ring (`--ui-focus-brand`)
+**And** the underline is removed again while the link is pressed (`:active`)
+
+### Shows a focus-ring on keyboard focus
+
+**Given** a BreadcrumbLink
+**When** it receives keyboard focus
+**Then** it shows a 3px focus-ring (`--ui-focus-primary`) flush to the label
+**And** the link text is not underlined
 
 ### Composes with a router link
 

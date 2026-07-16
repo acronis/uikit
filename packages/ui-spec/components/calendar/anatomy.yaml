@@ -1,0 +1,88 @@
+spec_version: '1.0'
+component: Calendar
+
+schematic: |
+  root: <div data-slot="calendar">
+  +-----------------------------------------------------------+
+  |  nav:  <          July 2026        August 2026         >  |  caption per month; nav at outer edges
+  |  +---------------------------+  +----------------------+  |
+  |  | weekday row: Su Mo … Sa   |  | weekday row …        |  |
+  |  | grid (month_grid):        |  | grid …               |  |
+  |  |   day  day  day  …        |  |   day  day  …        |  |
+  |  |   day [selected] day …    |  |   outside  outside … |  |
+  |  +---------------------------+  +----------------------+  |
+  +-----------------------------------------------------------+
+    day       -> selectable day button
+    selected  -> --ui-background-brand-primary + --ui-glyph-on-brand-primary
+    range-mid -> --ui-background-surface-hover
+    outside   -> --ui-text-on-surface-secondary (previous/next month days)
+
+root:
+  element: div
+  role: application
+  description: >-
+    The calendar container (`data-slot="calendar"`), wrapping one or more month
+    panels and the shared navigation row. Width hugs its content.
+
+parts:
+  - id: nav
+    description: >-
+      The navigation row above the months, holding the previous / next buttons at
+      the outer edges (not per-month). Buttons use `text-foreground`, hover
+      `--ui-background-surface-hover`, disabled `--ui-text-on-surface-disabled`.
+    element: button
+  - id: caption
+    description: The "Month Year" label centered above each month grid.
+    element: div
+  - id: weekday
+    description: A weekday column header (Su–Sa). Uses `--ui-text-on-surface-secondary`.
+    element: div
+  - id: grid
+    description: The month grid (`<table role="grid">`) laying out the weeks of days.
+    element: table
+  - id: day
+    description: >-
+      A selectable day button. Idle inherits `text-foreground`; hover uses
+      `--ui-background-surface-hover` / `--ui-text-on-surface-primary`.
+    element: button
+  - id: selected
+    description: >-
+      A selected day, or a range endpoint (`range-start` / `range-end`). Uses
+      `--ui-background-brand-primary` + `--ui-glyph-on-brand-primary`; range-middle
+      days use `--ui-background-surface-hover`.
+    element: button
+  - id: outside
+    description: >-
+      A day from the previous/next month shown to fill the grid
+      (`showOutsideDays`). Uses `--ui-text-on-surface-secondary`.
+    element: button
+    optional: true
+    visible_when: showOutsideDays is true
+
+layout:
+  type: flex
+  direction: row
+  align: start
+  order: [nav, caption, weekday, grid]
+
+states:
+  - id: hover
+    trigger: pointer hover over a day or a nav button (enabled)
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [day, nav]
+  - id: focus-visible
+    trigger: keyboard focus on a day or nav button
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [day, nav]
+  - id: selected
+    trigger: the day is part of the current `selected` value
+    kind: prop
+    prop: selected
+    affects: [selected]
+  - id: disabled
+    trigger: the day is matched by the `disabled` matcher
+    kind: prop
+    prop: disabled
+    affects: [day]

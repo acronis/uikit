@@ -1,0 +1,68 @@
+---
+title: Calendar
+description: A day-grid for selecting a single date, multiple dates, or a range.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { CalendarDemo } from "@/components/demos-react/calendar";
+
+## Usage
+
+```tsx
+import { Calendar } from '@acronis-platform/ui-react';
+```
+
+`Calendar` is a pure day-grid built on [`react-day-picker`](https://daypicker.dev)'s
+`DayPicker`. It supports `single`, `multiple`, and `range` selection (`mode`) and
+one or more months side by side (`numberOfMonths`), with prev/next chevrons at the
+outer edges of the month row. Keyboard navigation, focus management, and the
+selection model are handled by `react-day-picker`.
+
+This is a **design-pending v1** ported from the legacy library: no `--ui-calendar-*`
+token tier exists yet, so it themes off the shared semantic vocabulary
+(`bg-background` / `text-foreground` for the surface, the brand-primary tokens for
+selected days and range endpoints, `bg-accent` for the range middle). It will be
+reconciled against the Figma design once a mockup lands.
+
+## Examples
+
+<DemoReact>
+  <CalendarDemo />
+</DemoReact>
+
+A single-date calendar:
+
+```tsx
+const [selected, setSelected] = React.useState<Date>();
+
+<Calendar mode="single" selected={selected} onSelect={setSelected} />
+```
+
+A dual-month range calendar:
+
+```tsx
+import type { DateRange } from 'react-day-picker';
+
+const [range, setRange] = React.useState<DateRange>();
+
+<Calendar mode="range" numberOfMonths={2} selected={range} onSelect={setRange} />
+```
+
+Disable specific days or weekends with a matcher:
+
+```tsx
+<Calendar
+  mode="single"
+  disabled={[new Date(2026, 6, 4), { dayOfWeek: [0, 6] }]}
+/>
+```
+
+## API Reference
+
+`Calendar` forwards every [`react-day-picker` `DayPicker` prop](https://daypicker.dev/api/interfaces/PropsBase);
+the table below covers the props most commonly set.
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/calendar/calendar.docs.ts"
+  name="CalendarProps"
+/>

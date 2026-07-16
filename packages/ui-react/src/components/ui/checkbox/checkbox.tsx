@@ -32,7 +32,7 @@ const boxClasses = [
   // geometry + focus ring
   // `align-middle` keeps the box vertically centered when it sits inline next to
   // text (e.g. in a table cell) rather than defaulting to the text baseline.
-  'inline-flex size-[var(--ui-checkbox-global-box-size)] shrink-0 cursor-pointer items-center justify-center rounded-[var(--ui-checkbox-global-box-border-radius)] border align-middle transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)] [&_svg]:shrink-0',
+  'inline-flex size-[var(--ui-checkbox-global-box-size)] shrink-0 cursor-pointer items-center justify-center rounded-[var(--ui-checkbox-global-box-border-radius)] border align-middle transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)] [&_svg]:shrink-0',
   // unchecked (base): idle / hover / active
   'bg-[var(--ui-checkbox-unchecked-box-color-idle)] border-[var(--ui-checkbox-unchecked-box-border-color-idle)]',
   'not-data-[disabled]:hover:bg-[var(--ui-checkbox-unchecked-box-color-hover)] not-data-[disabled]:hover:border-[var(--ui-checkbox-unchecked-box-border-color-hover)]',

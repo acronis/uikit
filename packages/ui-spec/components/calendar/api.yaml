@@ -1,0 +1,86 @@
+spec_version: '1.0'
+component: Calendar
+
+# Framework-agnostic contract. Calendar is a thin wrapper over react-day-picker's
+# DayPicker: it re-themes the grid and forwards the rest of DayPicker's props
+# unchanged. Only the most-used props are enumerated here; every other DayPicker
+# prop passes through. See `adapters` for per-framework syntax.
+contract:
+  properties:
+    - name: mode
+      type: "'single' | 'multiple' | 'range'"
+      required: false
+      default: single
+      description: Selection mode — a single date, a set of dates, or a start–end range.
+    - name: selected
+      type: Date | Date[] | DateRange
+      required: false
+      description: >-
+        The current selection (controlled). Shape depends on `mode`: a `Date` for
+        single, `Date[]` for multiple, `{ from, to }` for range.
+    - name: number-of-months
+      type: number
+      required: false
+      default: 1
+      description: How many months to render side by side.
+    - name: show-outside-days
+      type: boolean
+      required: false
+      default: true
+      description: Show days from the previous/next month to fill the first/last week.
+    - name: caption-layout
+      type: "'label' | 'dropdown' | 'dropdown-months' | 'dropdown-years'"
+      required: false
+      default: label
+      description: How the month/year caption is rendered (plain label or dropdowns).
+    - name: disabled
+      type: Matcher | Matcher[]
+      required: false
+      description: >-
+        Day(s) that cannot be selected. Accepts a date, a range, a predicate, a
+        day-of-week matcher, or `true` to disable all days.
+    - name: default-month
+      type: Date
+      required: false
+      description: The month rendered first (uncontrolled navigation).
+
+  events:
+    - name: select
+      payload: selected
+      description: >-
+        Fired when the selection changes (React: `onSelect`). The payload matches
+        the `selected` shape for the current `mode`.
+
+  content: []
+
+  methods: []
+
+adapters:
+  react:
+    component: Calendar
+    status: implemented
+    import: "import { Calendar } from '@acronis-platform/ui-react'"
+    example: |
+      const [selected, setSelected] = React.useState<Date>();
+
+      <Calendar mode="single" selected={selected} onSelect={setSelected} />
+
+      {/* Two-month range */}
+      <Calendar
+        mode="range"
+        numberOfMonths={2}
+        selected={range}
+        onSelect={setRange}
+      />
+  vue:
+    component: AvCalendar
+    status: planned
+    import: "import { AvCalendar } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvCalendar mode="single" v-model="date" />
+  web-components:
+    element: ui-calendar
+    status: planned
+    import: "import '@acronis-platform/ui-wc/calendar'"
+    example: |
+      <ui-calendar mode="single"></ui-calendar>

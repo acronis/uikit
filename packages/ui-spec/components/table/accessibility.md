@@ -28,6 +28,15 @@ headers natively. Use the parts as their elements intend.
 - A selected `TableRow` sets `data-state="selected"` for styling — pair it with
   the checkbox's checked state so the visual and programmatic states agree.
 
+## Pagination & view options
+
+- `TablePagination`'s page controls are icon buttons with explicit labels ("Go
+  to first page" / "…previous page" / "…next page" / "…last page"); the
+  rows-per-page control is a labelled `Select` ("Rows per page"). Disabled
+  buttons at the range ends carry the native `disabled` state.
+- `TableViewOptions` is a Base UI dropdown menu (keyboard-navigable) of checkbox
+  items; the trigger has a visible "View" label.
+
 ## Contrast
 
 - Cell text uses `--ui-table-data-value-color-idle`, headers

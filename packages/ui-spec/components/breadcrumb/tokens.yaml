@@ -43,7 +43,7 @@ tokens:
       description: Gap between items and separators (4px),
     }
   - {
-      name: --ui-focus-brand,
+      name: --ui-focus-primary,
       affects: link,
-      description: Focus-visible ring color,
+      description: Focus-visible ring color (3px flush to label),
     }

@@ -134,6 +134,23 @@ describe('Tooltip', () => {
     expect(await screen.findByText('Helpful hint')).toBeInTheDocument();
   });
 
+  it('positions against a custom anchor instead of the trigger', () => {
+    function AnchorExample() {
+      const anchorRef = createRef<HTMLDivElement>();
+      return (
+        <>
+          <div ref={anchorRef} data-testid="anchor" />
+          <Tooltip defaultOpen>
+            <TooltipTrigger>Hover me</TooltipTrigger>
+            <TooltipContent anchor={anchorRef}>Helpful hint</TooltipContent>
+          </Tooltip>
+        </>
+      );
+    }
+    render(<AnchorExample />);
+    expect(screen.getByText('Helpful hint')).toBeInTheDocument();
+  });
+
   it('TooltipProvider delay can be overridden', async () => {
     const user = userEvent.setup();
     render(

@@ -69,6 +69,7 @@
   --ui-border-on-brand-border: light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.102));
   --ui-border-on-brand-border-active: light-dark(rgb(244 245 245), rgb(24 25 27));
   --ui-border-on-brand-divider: light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.102));
+  --ui-border-on-status-ai: light-dark(rgb(228 204 237), rgb(130 23 130));
   --ui-border-on-status-ai-strong: linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
   --ui-border-on-status-critical: light-dark(rgb(255 204 153), rgb(153 69 0));
   --ui-border-on-status-critical-strong: light-dark(rgb(240 112 0), rgb(255 153 51));

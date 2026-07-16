@@ -9,20 +9,12 @@ import {
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
+import { useDocDir } from '@/lib/use-doc-dir';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-
-/** Document direction — SSR-safe (defaults to 'ltr', syncs after mount). */
-function useDocDir(): 'ltr' | 'rtl' {
-  const [dir, setDir] = React.useState<'ltr' | 'rtl'>('ltr');
-  React.useEffect(() => {
-    setDir(document.documentElement.dir === 'rtl' ? 'rtl' : 'ltr');
-  }, []);
-  return dir;
-}
 
 /**
  * Tracks whether `ref`'s element is clipping its own content (`scrollWidth >
@@ -788,9 +780,19 @@ const SidebarSecondarySectionLabel = React.forwardRef<
   SidebarSecondarySectionLabelProps
 >(({ className, actions, unreadRollup, children, ...props }, ref) => {
   const { expandable } = React.useContext(SidebarSecondarySectionContext);
+  const dir = useDocDir();
+  const rowRef = React.useRef<HTMLDivElement>(null);
   const labelRef = React.useRef<HTMLSpanElement>(null);
   const isOverflowing = useIsOverflowing(labelRef, { enabled: true });
+  const setRowRef = (node: HTMLDivElement | null) => {
+    rowRef.current = node;
+    if (typeof ref === 'function') ref(node);
+    else if (ref) ref.current = node;
+  };
 
+  // Anchored to the row (not the label span) so it lines up with the
+  // sidebar's right edge regardless of how much the label shrinks for
+  // trailing actions/rollup.
   const labelTooltip = (
     <Tooltip disabled={!isOverflowing}>
       <TooltipTrigger
@@ -803,7 +805,9 @@ const SidebarSecondarySectionLabel = React.forwardRef<
       >
         {children}
       </TooltipTrigger>
-      <TooltipContent>{children}</TooltipContent>
+      <TooltipContent anchor={rowRef} side={dir === 'rtl' ? 'left' : 'right'}>
+        {children}
+      </TooltipContent>
     </Tooltip>
   );
 
@@ -814,7 +818,7 @@ const SidebarSecondarySectionLabel = React.forwardRef<
     if (actions == null) {
       return (
         <div
-          ref={ref}
+          ref={setRowRef}
           className={cn(
             base,
             'flex items-center'
@@ -827,7 +831,7 @@ const SidebarSecondarySectionLabel = React.forwardRef<
     }
     return (
       <div
-        ref={ref}
+        ref={setRowRef}
         className={cn(
           base,
           'flex items-center gap-[var(--ui-sidebar-secondary-section-container-header-gap)]'
@@ -845,7 +849,7 @@ const SidebarSecondarySectionLabel = React.forwardRef<
   // unread-rollup badge sits inside the trigger and shows only while collapsed.
   return (
     <div
-      ref={ref}
+      ref={setRowRef}
       className={cn(
         'flex items-center gap-[var(--ui-sidebar-secondary-section-container-header-gap)]',
         sectionHeaderPadClass,
@@ -948,6 +952,8 @@ const SidebarSecondaryMenuItem = React.forwardRef<
   ) => {
     const { expanded, setSelectedLabel } = useSidebarSecondaryContext();
     const { expandable } = React.useContext(SidebarSecondarySectionContext);
+    const dir = useDocDir();
+    const rowRef = React.useRef<HTMLAnchorElement>(null);
     const labelRef = React.useRef<HTMLSpanElement>(null);
     const isOverflowing = useIsOverflowing(labelRef, { enabled: expanded });
 
@@ -959,7 +965,7 @@ const SidebarSecondaryMenuItem = React.forwardRef<
 
     const inner = useRender({
       render,
-      ref,
+      ref: [ref, rowRef],
       defaultTagName: 'a',
       props: mergeProps<'a'>(
         {
@@ -991,7 +997,9 @@ const SidebarSecondaryMenuItem = React.forwardRef<
               {/* Keep the label in the DOM as `sr-only` in collapsed/rail mode so
                 an icon-only row keeps an accessible name (a11y §7). The tooltip
                 trigger is the label span itself — it only opens when the label
-                is actually clipped. */}
+                is actually clipped. It's anchored to the row (not the label
+                span) so it lines up with the sidebar's right edge regardless
+                of how much the label shrinks for extras. */}
               <Tooltip disabled={!isOverflowing}>
                 <TooltipTrigger
                   render={
@@ -1006,7 +1014,12 @@ const SidebarSecondaryMenuItem = React.forwardRef<
                 >
                   {children}
                 </TooltipTrigger>
-                <TooltipContent>{children}</TooltipContent>
+                <TooltipContent
+                  anchor={rowRef}
+                  side={dir === 'rtl' ? 'left' : 'right'}
+                >
+                  {children}
+                </TooltipContent>
               </Tooltip>
               {extras}
             </>
@@ -1016,7 +1029,20 @@ const SidebarSecondaryMenuItem = React.forwardRef<
       ),
     });
 
-    return <li className="contents">{inner}</li>;
+    return (
+      <li className="contents">
+        {/* In collapsed/rail mode the label above is `sr-only` (zero-size), so
+            it never receives the hover that would open its tooltip — wrap the
+            whole row so the icon itself is hoverable and always shows the
+            item's label as a tooltip while collapsed. */}
+        <Tooltip disabled={expanded}>
+          <TooltipTrigger render={inner} />
+          <TooltipContent side={dir === 'rtl' ? 'left' : 'right'}>
+            {children}
+          </TooltipContent>
+        </Tooltip>
+      </li>
+    );
   }
 );
 SidebarSecondaryMenuItem.displayName = 'SidebarSecondaryMenuItem';
@@ -1071,10 +1097,8 @@ export interface SidebarSecondaryCollapseTriggerProps extends Omit<
   React.ComponentPropsWithoutRef<'button'>,
   'children'
 > {
-  /** Icon shown when the sidebar is expanded (collapse affordance). */
+  /** Leading 16px icon (e.g. a panel-left glyph). Rotates 180° between expanded/collapsed — same as `SidebarPrimaryCollapseTrigger`. */
   icon?: React.ReactNode;
-  /** Icon shown when the sidebar is collapsed (expand affordance). Falls back to `icon` when omitted. */
-  expandIcon?: React.ReactNode;
   /** Tooltip text shown when the sidebar is collapsed. Defaults to `'Expand'`. */
   expandTooltip?: React.ReactNode;
   /** Trailing extras (e.g. a keyboard shortcut hint), same slot as `SidebarSecondaryMenuItem`. */
@@ -1094,7 +1118,6 @@ const SidebarSecondaryCollapseTrigger = React.forwardRef<
     {
       className,
       icon,
-      expandIcon,
       expandTooltip = 'Expand',
       extras,
       children,
@@ -1105,14 +1128,17 @@ const SidebarSecondaryCollapseTrigger = React.forwardRef<
   ) => {
     const { expanded, toggleExpanded } = useSidebarSecondaryContext();
     const dir = useDocDir();
+    const buttonRef = React.useRef<HTMLButtonElement>(null);
     const labelRef = React.useRef<HTMLSpanElement>(null);
     const isOverflowing = useIsOverflowing(labelRef, { enabled: expanded });
 
-    const activeIcon = expanded ? icon : (expandIcon ?? icon);
-
     const button = (
       <button
-        ref={ref}
+        ref={(node) => {
+          buttonRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
         type="button"
         aria-expanded={expanded}
         className={cn(
@@ -1126,9 +1152,14 @@ const SidebarSecondaryCollapseTrigger = React.forwardRef<
         }}
         {...props}
       >
-        {activeIcon != null && (
-          <span className="flex shrink-0 items-center self-start mt-[var(--ui-sidebar-secondary-menu-item-global-icon-margin-t)] rtl:-scale-x-100">
-            {activeIcon}
+        {icon != null && (
+          <span
+            className={cn(
+              'flex shrink-0 items-center self-start mt-[var(--ui-sidebar-secondary-menu-item-global-icon-margin-t)] transition-transform',
+              expanded ? 'rtl:rotate-180' : 'ltr:rotate-180'
+            )}
+          >
+            {icon}
           </span>
         )}
         <Tooltip disabled={!isOverflowing}>
@@ -1142,7 +1173,9 @@ const SidebarSecondaryCollapseTrigger = React.forwardRef<
           >
             {children}
           </TooltipTrigger>
-          <TooltipContent>{children}</TooltipContent>
+          <TooltipContent anchor={buttonRef} side={dir === 'rtl' ? 'left' : 'right'}>
+            {children}
+          </TooltipContent>
         </Tooltip>
         {extras}
       </button>

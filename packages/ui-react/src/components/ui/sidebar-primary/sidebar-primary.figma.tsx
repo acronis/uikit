@@ -9,6 +9,11 @@
 // MenuItemExtras (2463:49164) as standalone components with their own props —
 // mapped below so each shows its own Dev Mode snippet, not just the assembly.
 import figma from '@figma/code-connect';
+import {
+  BriefcaseIcon,
+  CircleHelpIcon,
+  MonitorIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
 
 import {
   SidebarPrimary,
@@ -37,16 +42,20 @@ figma.connect(
         <SidebarPrimaryContent>
           <SidebarPrimarySection>
             <SidebarPrimaryMenu>
-              <SidebarPrimaryMenuItem href="#" selected>
+              <SidebarPrimaryMenuItem href="#" icon={<MonitorIcon />} selected>
                 Assets
               </SidebarPrimaryMenuItem>
-              <SidebarPrimaryMenuItem href="#">Clients</SidebarPrimaryMenuItem>
+              <SidebarPrimaryMenuItem href="#" icon={<BriefcaseIcon />}>
+                Clients
+              </SidebarPrimaryMenuItem>
             </SidebarPrimaryMenu>
           </SidebarPrimarySection>
         </SidebarPrimaryContent>
         <SidebarPrimaryFooter>
           <SidebarPrimaryMenu>
-            <SidebarPrimaryMenuItem href="#">Help</SidebarPrimaryMenuItem>
+            <SidebarPrimaryMenuItem href="#" icon={<CircleHelpIcon />}>
+              Help
+            </SidebarPrimaryMenuItem>
           </SidebarPrimaryMenu>
         </SidebarPrimaryFooter>
       </SidebarPrimary>
@@ -66,7 +75,9 @@ figma.connect(
     example: () => (
       <SidebarPrimarySection>
         <SidebarPrimaryMenu>
-          <SidebarPrimaryMenuItem href="#">Label</SidebarPrimaryMenuItem>
+          <SidebarPrimaryMenuItem href="#" icon={<MonitorIcon />}>
+            Label
+          </SidebarPrimaryMenuItem>
         </SidebarPrimaryMenu>
       </SidebarPrimarySection>
     ),

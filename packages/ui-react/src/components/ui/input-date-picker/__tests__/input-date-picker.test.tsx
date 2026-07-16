@@ -94,4 +94,19 @@ describe('InputDatePicker', () => {
     render(<InputDatePicker label="Due" ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLButtonElement);
   });
+
+  // Tailwind v4's Preflight does NOT set `cursor: pointer` on `<button>`; the
+  // trigger opts in explicitly when enabled, and switches to `not-allowed` when
+  // disabled.
+  it('shows a pointer cursor when enabled and not-allowed when disabled', () => {
+    const { rerender } = render(<InputDatePicker label="Due" />);
+    expect(screen.getByRole('button', { name: 'Due' })).toHaveClass(
+      'cursor-pointer'
+    );
+
+    rerender(<InputDatePicker label="Due" disabled />);
+    expect(screen.getByRole('button', { name: 'Due' })).toHaveClass(
+      'disabled:cursor-not-allowed'
+    );
+  });
 });

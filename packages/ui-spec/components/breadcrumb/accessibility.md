@@ -76,8 +76,8 @@ focusable.
 | Separator icon vs background    | 3:1           | WCAG 1.4.11 (non-text) |
 | Focus indicator                 | 3:1           | WCAG 1.4.11            |
 
-Links are distinguished by more than color: they underline on hover and
-focus-visible (the focus-ring uses `--ui-focus-brand`).
+Links are distinguished by more than color: they underline on hover, and
+keyboard focus shows a 3px focus-ring (`--ui-focus-primary`).
 
 ---
 
