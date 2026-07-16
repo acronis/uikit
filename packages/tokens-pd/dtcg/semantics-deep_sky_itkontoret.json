@@ -11,7 +11,7 @@
             "com.figma.variableId": "VariableID:50:1428"
           },
           "$type": "color",
-          "$value": "{branding.deep_sky_itkontoret.sidebarprimary.idle}"
+          "$value": "{branding.deep_sky_itkontoret.SidebarPrimary.idle}"
         },
         "primary-active": {
           "$extensions": {
@@ -21,7 +21,7 @@
             "com.figma.variableId": "VariableID:143:3"
           },
           "$type": "color",
-          "$value": "{branding.deep_sky_itkontoret.sidebarprimary.active}"
+          "$value": "{branding.deep_sky_itkontoret.SidebarPrimary.active}"
         },
         "primary-disabled": {
           "$extensions": {
@@ -31,7 +31,7 @@
             "com.figma.variableId": "VariableID:383:39"
           },
           "$type": "color",
-          "$value": "{branding.deep_sky_itkontoret.sidebarprimary.disabled}"
+          "$value": "{branding.deep_sky_itkontoret.SidebarPrimary.disabled}"
         },
         "primary-hover": {
           "$extensions": {
@@ -41,7 +41,7 @@
             "com.figma.variableId": "VariableID:143:2"
           },
           "$type": "color",
-          "$value": "{branding.deep_sky_itkontoret.sidebarprimary.hover}"
+          "$value": "{branding.deep_sky_itkontoret.SidebarPrimary.hover}"
         },
         "secondary": {
           "$extensions": {
@@ -51,7 +51,7 @@
             "com.figma.variableId": "VariableID:50:1429"
           },
           "$type": "color",
-          "$value": "{branding.deep_sky_itkontoret.buttonprimary.idle}"
+          "$value": "{branding.deep_sky_itkontoret.ButtonPrimary.idle}"
         },
         "secondary-active": {
           "$extensions": {
@@ -61,7 +61,7 @@
             "com.figma.variableId": "VariableID:265:59"
           },
           "$type": "color",
-          "$value": "{branding.deep_sky_itkontoret.buttonprimary.active}"
+          "$value": "{branding.deep_sky_itkontoret.ButtonPrimary.active}"
         },
         "secondary-disabled": {
           "$extensions": {
@@ -71,7 +71,7 @@
             "com.figma.variableId": "VariableID:227:24"
           },
           "$type": "color",
-          "$value": "{branding.deep_sky_itkontoret.buttonprimary.disabled}"
+          "$value": "{branding.deep_sky_itkontoret.ButtonPrimary.disabled}"
         },
         "secondary-hover": {
           "$extensions": {
@@ -81,7 +81,7 @@
             "com.figma.variableId": "VariableID:265:58"
           },
           "$type": "color",
-          "$value": "{branding.deep_sky_itkontoret.buttonprimary.hover}"
+          "$value": "{branding.deep_sky_itkontoret.ButtonPrimary.hover}"
         }
       },
       "inverted": {

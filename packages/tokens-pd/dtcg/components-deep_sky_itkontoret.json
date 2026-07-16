@@ -1174,7 +1174,7 @@
               "com.figma.variableId": "VariableID:2236:5649"
             },
             "$type": "color",
-            "$value": "{colors.text.onOverlay.primary}"
+            "$value": "{colors.text.onInverted.primary}"
           },
           "disabled": {
             "$extensions": {
@@ -9873,7 +9873,7 @@
           "com.figma.variableId": "VariableID:2235:1607"
         },
         "$type": "color",
-        "$value": "{colors.background.overlay.inverted-dark}"
+        "$value": "{colors.background.inverted.primary}"
       },
       "paddingX": {
         "$extensions": {
@@ -9930,7 +9930,7 @@
           "com.figma.variableId": "VariableID:2235:1608"
         },
         "$type": "color",
-        "$value": "{colors.text.onOverlay.inverted-light}"
+        "$value": "{colors.text.onInverted.primary}"
       },
       "textStyle": {
         "$extensions": {

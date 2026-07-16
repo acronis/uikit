@@ -3,6 +3,6 @@
 
 :root, :host {
   --ui-resizable-bar-color: light-dark(rgb(73 76 80), rgb(81 157 246));
-  --ui-resizable-border-color-active: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-resizable-border-color-hover: light-dark(rgb(68 81 93), rgb(68 81 93));
+  --ui-resizable-border-color-active: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-resizable-border-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
 }

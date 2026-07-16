@@ -1386,8 +1386,8 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onOverlay.primary}",
-              "default": "{colors.text.onOverlay.primary}"
+              "deep_sky_itkontoret": "{colors.text.onInverted.primary}",
+              "default": "{colors.text.onInverted.primary}"
             }
           },
           "disabled": {
@@ -11408,8 +11408,8 @@
         "$type": "color",
         "platforms": ["PD"],
         "values": {
-          "deep_sky_itkontoret": "{colors.background.overlay.inverted-dark}",
-          "default": "{colors.background.overlay.inverted-dark}"
+          "deep_sky_itkontoret": "{colors.background.inverted.primary}",
+          "default": "{colors.background.inverted.primary}"
         }
       },
       "paddingX": {
@@ -11475,8 +11475,8 @@
         "$type": "color",
         "platforms": ["PD"],
         "values": {
-          "deep_sky_itkontoret": "{colors.text.onOverlay.inverted-light}",
-          "default": "{colors.text.onOverlay.inverted-light}"
+          "deep_sky_itkontoret": "{colors.text.onInverted.primary}",
+          "default": "{colors.text.onInverted.primary}"
         }
       },
       "textStyle": {

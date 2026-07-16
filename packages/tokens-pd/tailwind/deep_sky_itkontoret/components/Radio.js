@@ -7,12 +7,12 @@ export default {
     extend: {
       "backgroundColor": {
         "radio-checked-box-active": "light-dark(rgb(48 50 54), rgb(18 77 161))",
-        "radio-checked-box-disabled": "light-dark(rgb(246 246 247), rgb(246 246 247))",
+        "radio-checked-box-disabled": "light-dark(rgb(244 245 245), rgb(24 25 27))",
         "radio-checked-box-hover": "light-dark(rgb(61 63 67), rgb(23 99 207))",
         "radio-checked-box-idle": "light-dark(rgb(73 76 80), rgb(81 157 246))",
-        "radio-unchecked-box-active": "light-dark(rgb(216 222 228), rgb(216 222 228))",
-        "radio-unchecked-box-disabled": "light-dark(rgb(246 246 247), rgb(246 246 247))",
-        "radio-unchecked-box-hover": "light-dark(rgb(236 238 239), rgb(236 238 239))",
+        "radio-unchecked-box-active": "light-dark(rgb(228 229 231), rgb(48 50 54))",
+        "radio-unchecked-box-disabled": "light-dark(rgb(244 245 245), rgb(24 25 27))",
+        "radio-unchecked-box-hover": "light-dark(rgb(236 237 238), rgb(37 38 40))",
         "radio-unchecked-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
       "textColor": {
@@ -20,18 +20,18 @@ export default {
         "radio-global-label": "light-dark(rgb(68 81 93), rgb(68 81 93))"
       },
       "borderColor": {
-        "radio-checked-box-border-color-active": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "radio-checked-box-border-color-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "radio-checked-box-border-color-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "radio-checked-box-border-color-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "radio-unchecked-box-border-color-active": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "radio-unchecked-box-border-color-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "radio-unchecked-box-border-color-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "radio-unchecked-box-border-color-idle": "light-dark(rgb(199 203 207), rgb(199 203 207))"
+        "radio-checked-box-border-color-active": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "radio-checked-box-border-color-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "radio-checked-box-border-color-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "radio-checked-box-border-color-idle": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "radio-unchecked-box-border-color-active": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "radio-unchecked-box-border-color-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "radio-unchecked-box-border-color-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "radio-unchecked-box-border-color-idle": "light-dark(rgb(215 217 219), rgb(61 63 67))"
       },
       "fill": {
         "radio-checked-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "radio-checked-icon-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
+        "radio-checked-icon-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
         "radio-checked-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "radio-checked-icon-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))"
       },
