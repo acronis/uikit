@@ -6,22 +6,22 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "button-icon-global-container-active": "light-dark(rgb(216 222 228), rgb(216 222 228))",
+        "button-icon-global-container-active": "light-dark(rgb(228 229 231), rgb(48 50 54))",
         "button-icon-global-container-disabled": "light-dark(transparent, transparent)",
-        "button-icon-global-container-hover": "light-dark(rgb(236 238 239), rgb(236 238 239))",
+        "button-icon-global-container-hover": "light-dark(rgb(236 237 238), rgb(37 38 40))",
         "button-icon-global-container-idle": "light-dark(transparent, transparent)"
       },
       "borderColor": {
         "button-icon-secondary-container-border-color-active": "light-dark(transparent, transparent)",
-        "button-icon-secondary-container-border-color-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
+        "button-icon-secondary-container-border-color-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
         "button-icon-secondary-container-border-color-hover": "light-dark(transparent, transparent)",
-        "button-icon-secondary-container-border-color-idle": "light-dark(rgb(199 203 207), rgb(199 203 207))"
+        "button-icon-secondary-container-border-color-idle": "light-dark(rgb(215 217 219), rgb(61 63 67))"
       },
       "fill": {
-        "button-icon-global-icon-active": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "button-icon-global-icon-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "button-icon-global-icon-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "button-icon-global-icon-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "button-icon-global-icon-active": "light-dark(rgb(73 76 80), rgb(201 204 207))",
+        "button-icon-global-icon-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
+        "button-icon-global-icon-hover": "light-dark(rgb(73 76 80), rgb(201 204 207))",
+        "button-icon-global-icon-idle": "light-dark(rgb(73 76 80), rgb(201 204 207))"
       },
       "spacing": {
         "button-icon-global-container-height": "32px",

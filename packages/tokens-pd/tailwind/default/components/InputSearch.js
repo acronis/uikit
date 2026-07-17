@@ -21,14 +21,14 @@ export default {
       },
       "borderColor": {
         "input-search-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "input-search-border-color-hover": "light-dark(rgb(23 99 207), rgb(71 152 245))",
+        "input-search-border-color-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "input-search-border-color-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
       },
       "fill": {
-        "input-search-clear-icon": "light-dark(rgb(23 99 207), rgb(71 152 245))",
+        "input-search-clear-icon": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "input-search-icon-search-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "input-search-icon-search-hover": "light-dark(rgb(23 99 207), rgb(71 152 245))",
-        "input-search-icon-search-idle": "light-dark(rgb(23 99 207), rgb(71 152 245))"
+        "input-search-icon-search-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "input-search-icon-search-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))"
       },
       "fontFamily": {
         "input-search-label-text-style": "Inter, system-ui, sans-serif",

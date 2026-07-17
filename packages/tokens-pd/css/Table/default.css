@@ -13,16 +13,16 @@
   --ui-table-global-cell-min-height: 40px;
   --ui-table-global-cell-padding-x: 16px;
   --ui-table-global-cell-padding-y: 8px;
-  --ui-table-global-row-color-active: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-table-global-row-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));
   --ui-table-global-row-color-hover: light-dark(rgb(238 242 247), rgb(46 47 50));
   --ui-table-global-row-color-idle: light-dark(transparent, transparent);
-  --ui-table-header-cell-color-active: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-table-header-cell-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));
   --ui-table-header-cell-color-hover: light-dark(rgb(238 242 247), rgb(46 47 50));
   --ui-table-header-cell-color-idle: light-dark(transparent, transparent);
   --ui-table-header-cell-padding-x: 16px;
   --ui-table-header-gap: 8px;
   --ui-table-header-label-color: light-dark(rgb(24 25 27), rgb(244 245 245));
-  --ui-table-header-sort-icon-color-active: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-table-header-sort-icon-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-table-header-sort-icon-color-inactive: light-dark(rgb(201 204 207), rgb(73 76 80));
   --ui-table-header-sort-icon-size: 16px;
 }

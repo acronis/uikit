@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "input-search-box-disabled": "light-dark(rgb(246 246 247), rgb(246 246 247))",
+        "input-search-box-disabled": "light-dark(rgb(244 245 245), rgb(24 25 27))",
         "input-search-box-hover": "light-dark(rgb(255 255 255), rgb(31 32 34))",
         "input-search-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
@@ -20,15 +20,15 @@ export default {
         "input-search-value-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))"
       },
       "borderColor": {
-        "input-search-border-color-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "input-search-border-color-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "input-search-border-color-idle": "light-dark(rgb(199 203 207), rgb(199 203 207))"
+        "input-search-border-color-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "input-search-border-color-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "input-search-border-color-idle": "light-dark(rgb(215 217 219), rgb(61 63 67))"
       },
       "fill": {
-        "input-search-clear-icon": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "input-search-icon-search-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "input-search-icon-search-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "input-search-icon-search-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "input-search-clear-icon": "light-dark(rgb(73 76 80), rgb(201 204 207))",
+        "input-search-icon-search-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
+        "input-search-icon-search-hover": "light-dark(rgb(73 76 80), rgb(201 204 207))",
+        "input-search-icon-search-idle": "light-dark(rgb(73 76 80), rgb(201 204 207))"
       },
       "fontFamily": {
         "input-search-label-text-style": "Inter, system-ui, sans-serif",

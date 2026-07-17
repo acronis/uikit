@@ -6,9 +6,9 @@ export default {
   theme: {
     extend: {
       "fill": {
-        "link-external-icon-active": "light-dark(rgb(41 49 55), rgb(41 49 55))",
-        "link-external-icon-disabled": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "link-external-icon-hover": "light-dark(rgb(54 65 74), rgb(54 65 74))",
+        "link-external-icon-active": "light-dark(rgb(48 50 54), rgb(228 229 231))",
+        "link-external-icon-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "link-external-icon-hover": "light-dark(rgb(61 63 67), rgb(215 217 219))",
         "link-external-icon-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))"
       },
       "fontFamily": {

@@ -26,6 +26,13 @@ const ORPHAN_PALETTE = [];
 export class PrimitivesEmitter {
   #snapshot;
 
+  // Branding folder name (Figma) → our brand key. Kept verbatim except brands
+  // that are also a Brand-collection mode key, which must match the mode name so
+  // semantic aliases (`{branding.<mode>...}`) resolve — today only
+  // `deep-sky-itkontoret` (mode `deep_sky_itkontoret`). Add an entry when another
+  // branding folder becomes a Brand mode.
+  static #BRANDING_BRAND_MAP = new Map([['deep-sky-itkontoret', 'deep_sky_itkontoret']]);
+
   constructor(snapshot) {
     this.#snapshot = snapshot;
   }
@@ -34,6 +41,7 @@ export class PrimitivesEmitter {
     const out = {
       $schema: '../schemas/tier.schema.json',
       palette: { $type: 'color' },
+      branding: { $type: 'color' },
       font: {
         'font-family':    { $type: 'fontFamily' },
         'font-weight':    { $type: 'fontWeight' },
@@ -48,6 +56,7 @@ export class PrimitivesEmitter {
     };
 
     this.#emitPalette(out);
+    this.#emitBranding(out);
     this.#emitOrphanPalette(out);
     this.#emitUnits(out);
     this.#emitFont(out);
@@ -66,6 +75,9 @@ export class PrimitivesEmitter {
     if (!themeNode) throw new Error('Snapshot missing "theme" collection — expected palette source.');
 
     for (const { path, leaf } of DtcgWalker.walk(themeNode)) {
+      // Branding ramps live in the Theme collection but are their own tier —
+      // emitted by #emitBranding, not as palette entries.
+      if (path[0] === 'Branding') continue;
       const ourPath = PaletteMapper.map(path);
       // Snapshot colors are already normalized to DTCG HSL by ColorNormalizer.
       const light = colorValue(leaf.$value);
@@ -79,6 +91,38 @@ export class PrimitivesEmitter {
         $extensions: ext,
       });
     }
+  }
+
+  // Branding primitives (partner-brand color ramps) live in the Theme collection
+  // under `Branding/<brand>/<ramp>/...`, but belong to their own top-level
+  // `branding` tier that semantics/components alias — NOT under `palette`. The
+  // group-level `$type: color` is scaffolded in emit(); #emitPalette skips them.
+  #emitBranding(out) {
+    const brandingNode = this.#snapshot.variables?.theme?.Branding;
+    if (!brandingNode) return;
+
+    for (const { path, leaf } of DtcgWalker.walk(brandingNode)) {
+      const ourPath = this.#mapBrandingPath(path);
+      const light = colorValue(leaf.$value);
+      const dark  = colorValue(leaf.$extensions?.modes?.Dark ?? leaf.$value);
+      const variableId = leaf.$extensions?.['com.figma.variableId'];
+      const ext = this.#buildFigmaExt(leaf.$extensions, variableId);
+
+      TreeUtils.setPath(out, ['branding', ...ourPath], {
+        values: { light, dark },
+        platforms: ['PD'],
+        $extensions: ext,
+      });
+    }
+  }
+
+  // `Branding/<brand>/<ramp>/<rest…>` → `[<brand>, <ramp>, <rest…>]`. The brand
+  // segment is re-keyed via #BRANDING_BRAND_MAP (mode-name match); ramp and any
+  // sub-parts are lowercased (`sidebarPrimary` → `sidebarprimary`).
+  #mapBrandingPath(path) {
+    const [brand, ...rest] = path;
+    const mappedBrand = PrimitivesEmitter.#BRANDING_BRAND_MAP.get(brand) ?? brand;
+    return [mappedBrand, ...rest.map(p => p.toLowerCase())];
   }
 
   #emitOrphanPalette(out) {

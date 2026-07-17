@@ -11,7 +11,7 @@ export default {
         "table-header-label": "light-dark(rgb(68 81 93), rgb(68 81 93))"
       },
       "borderColor": {
-        "table-global-cell-border-color": "light-dark(rgb(199 203 207), rgb(199 203 207))"
+        "table-global-cell-border-color": "light-dark(rgb(215 217 219), rgb(61 63 67))"
       },
       "fontFamily": {
         "table-data-value-text-style": "Inter, system-ui, sans-serif",

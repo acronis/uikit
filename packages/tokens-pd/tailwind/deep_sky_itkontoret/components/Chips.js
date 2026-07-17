@@ -6,20 +6,20 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "chips-container-active": "light-dark(rgb(216 222 228), rgb(216 222 228))",
-        "chips-container-hover": "light-dark(rgb(236 238 239), rgb(236 238 239))",
-        "chips-container-idle": "light-dark(rgb(246 246 247), rgb(246 246 247))"
+        "chips-container-active": "light-dark(rgb(228 229 231), rgb(48 50 54))",
+        "chips-container-hover": "light-dark(rgb(236 237 238), rgb(37 38 40))",
+        "chips-container-idle": "light-dark(rgb(244 245 245), rgb(24 25 27))"
       },
       "textColor": {
         "chips-label": "light-dark(rgb(68 81 93), rgb(68 81 93))"
       },
       "borderColor": {
-        "chips-border-active": "light-dark(rgb(199 203 207), rgb(199 203 207))",
-        "chips-border-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "chips-border-idle": "light-dark(rgb(199 203 207), rgb(199 203 207))"
+        "chips-border-active": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "chips-border-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "chips-border-idle": "light-dark(rgb(215 217 219), rgb(61 63 67))"
       },
       "fill": {
-        "chips-icon": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "chips-icon": "light-dark(rgb(73 76 80), rgb(201 204 207))"
       },
       "fontFamily": {
         "chips-label-text-style": "Inter, system-ui, sans-serif"

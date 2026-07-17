@@ -36,16 +36,16 @@
   --ui-input-date-picker-global-value-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-input-date-picker-global-value-color-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-input-date-picker-global-value-color-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
-  --ui-input-date-picker-normal-box-border-color-active: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-input-date-picker-normal-box-border-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-input-date-picker-normal-box-border-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-input-date-picker-normal-box-border-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-input-date-picker-normal-box-border-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-input-date-picker-normal-box-border-color-idle: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-input-date-picker-normal-description-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-input-date-picker-normal-description-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
   --ui-input-date-picker-normal-description-color-idle: light-dark(rgb(109 114 120), rgb(109 114 120));
   --ui-input-date-picker-normal-icon-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-input-date-picker-normal-icon-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-input-date-picker-normal-icon-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-input-date-picker-normal-icon-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-input-date-picker-normal-icon-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
 }
 
 [data-theme='light'], :host([data-theme='light']) {

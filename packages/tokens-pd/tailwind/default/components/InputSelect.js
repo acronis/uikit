@@ -8,8 +8,8 @@ export default {
       "backgroundColor": {
         "input-select-dropdown-container": "light-dark(rgb(255 255 255), rgb(31 32 34))",
         "input-select-dropdown-item-selected-container-disabled": "light-dark(rgb(248 250 252), rgb(24 25 27))",
-        "input-select-dropdown-item-selected-container-hover": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "input-select-dropdown-item-selected-container-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "input-select-dropdown-item-selected-container-hover": "light-dark(rgb(226 235 245), rgb(48 50 54))",
+        "input-select-dropdown-item-selected-container-idle": "light-dark(rgb(226 235 245), rgb(48 50 54))",
         "input-select-dropdown-item-unselected-container-disabled": "light-dark(rgb(248 250 252), rgb(24 25 27))",
         "input-select-dropdown-item-unselected-container-hover": "light-dark(rgb(238 242 247), rgb(46 47 50))",
         "input-select-dropdown-item-unselected-container-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))",
@@ -40,20 +40,20 @@ export default {
         "input-select-normal-description-idle": "light-dark(rgb(109 114 120), rgb(109 114 120))"
       },
       "borderColor": {
-        "input-select-dropdown-container-border-color": "light-dark(rgb(23 99 207), rgb(71 152 245))",
+        "input-select-dropdown-container-border-color": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "input-select-dropdown-section-container-border-color": "light-dark(rgb(214 228 245), rgb(48 50 54))",
         "input-select-error-box-border-color-hover": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "input-select-error-box-border-color-idle": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "input-select-normal-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "input-select-normal-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(71 152 245))",
+        "input-select-normal-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "input-select-normal-box-border-color-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
       },
       "fill": {
         "input-select-error-icon-hover": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "input-select-error-icon-idle": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "input-select-normal-icon-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "input-select-normal-icon-hover": "light-dark(rgb(23 99 207), rgb(71 152 245))",
-        "input-select-normal-icon-idle": "light-dark(rgb(23 99 207), rgb(71 152 245))"
+        "input-select-normal-icon-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "input-select-normal-icon-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))"
       },
       "fontFamily": {
         "input-select-dropdown-dropdown-search-label-text-style": "Inter, system-ui, sans-serif",

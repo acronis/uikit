@@ -6,13 +6,13 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "sidebar-primary-menu-item-selected-container-active": "light-dark(rgb(30 172 242), rgb(30 172 242))",
-        "sidebar-primary-menu-item-selected-container-hover": "light-dark(rgb(30 172 242), rgb(30 172 242))",
-        "sidebar-primary-menu-item-selected-container-idle": "light-dark(rgb(30 172 242), rgb(30 172 242))",
-        "sidebar-primary-menu-item-unselected-container-active": "light-dark(rgb(10 93 123), rgb(10 93 123))",
-        "sidebar-primary-menu-item-unselected-container-hover": "light-dark(rgb(10 93 123), rgb(10 93 123))",
-        "sidebar-primary-menu-item-unselected-container-idle": "light-dark(rgb(14 105 139), rgb(14 105 139))",
-        "sidebar-primary-global-container": "light-dark(rgb(14 105 139), rgb(14 105 139))"
+        "sidebar-primary-menu-item-selected-container-active": "light-dark(rgb(0 173 247), rgb(81 157 246))",
+        "sidebar-primary-menu-item-selected-container-hover": "light-dark(rgb(0 173 247), rgb(81 157 246))",
+        "sidebar-primary-menu-item-selected-container-idle": "light-dark(rgb(0 173 247), rgb(81 157 246))",
+        "sidebar-primary-menu-item-unselected-container-active": "light-dark(rgb(0 128 173), rgb(61 63 67))",
+        "sidebar-primary-menu-item-unselected-container-hover": "light-dark(rgb(0 128 173), rgb(61 63 67))",
+        "sidebar-primary-menu-item-unselected-container-idle": "light-dark(rgb(0 105 142), rgb(12 12 14))",
+        "sidebar-primary-global-container": "light-dark(rgb(0 105 142), rgb(12 12 14))"
       },
       "textColor": {
         "sidebar-primary-menu-item-selected-label-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",

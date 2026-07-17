@@ -30,11 +30,11 @@ export default {
         "input-text-error-msg-box-border-color-hover": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "input-text-error-msg-box-border-color-idle": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "input-text-normal-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "input-text-normal-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(71 152 245))",
+        "input-text-normal-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "input-text-normal-box-border-color-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
       },
       "fill": {
-        "input-text-global-clear-icon": "light-dark(rgb(23 99 207), rgb(71 152 245))"
+        "input-text-global-clear-icon": "light-dark(rgb(23 99 207), rgb(81 157 246))"
       },
       "fontFamily": {
         "input-text-global-label-text-style": "Inter, system-ui, sans-serif",

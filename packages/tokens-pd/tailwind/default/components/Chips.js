@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "chips-container-active": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "chips-container-active": "light-dark(rgb(226 235 245), rgb(48 50 54))",
         "chips-container-hover": "light-dark(rgb(238 242 247), rgb(46 47 50))",
         "chips-container-idle": "light-dark(rgb(248 250 252), rgb(24 25 27))"
       },
@@ -15,11 +15,11 @@ export default {
       },
       "borderColor": {
         "chips-border-active": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "chips-border-hover": "light-dark(rgb(23 99 207), rgb(71 152 245))",
+        "chips-border-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "chips-border-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
       },
       "fill": {
-        "chips-icon": "light-dark(rgb(23 99 207), rgb(71 152 245))"
+        "chips-icon": "light-dark(rgb(23 99 207), rgb(81 157 246))"
       },
       "fontFamily": {
         "chips-label-text-style": "Inter, system-ui, sans-serif"

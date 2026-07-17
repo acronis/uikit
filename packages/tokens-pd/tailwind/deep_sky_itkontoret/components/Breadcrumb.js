@@ -12,7 +12,7 @@ export default {
         "breadcrumb-page-label": "light-dark(rgb(68 81 93), rgb(68 81 93))"
       },
       "fill": {
-        "breadcrumb-separator-icon": "light-dark(rgb(199 203 207), rgb(199 203 207))"
+        "breadcrumb-separator-icon": "light-dark(rgb(201 204 207), rgb(73 76 80))"
       },
       "fontFamily": {
         "breadcrumb-link-label-text-style": "Inter, system-ui, sans-serif",

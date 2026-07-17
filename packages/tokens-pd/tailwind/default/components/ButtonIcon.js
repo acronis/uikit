@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "button-icon-global-container-active": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "button-icon-global-container-active": "light-dark(rgb(226 235 245), rgb(48 50 54))",
         "button-icon-global-container-disabled": "light-dark(transparent, transparent)",
         "button-icon-global-container-hover": "light-dark(rgb(238 242 247), rgb(46 47 50))",
         "button-icon-global-container-idle": "light-dark(transparent, transparent)"
@@ -18,10 +18,10 @@ export default {
         "button-icon-secondary-container-border-color-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
       },
       "fill": {
-        "button-icon-global-icon-active": "light-dark(rgb(23 99 207), rgb(71 152 245))",
+        "button-icon-global-icon-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "button-icon-global-icon-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "button-icon-global-icon-hover": "light-dark(rgb(23 99 207), rgb(71 152 245))",
-        "button-icon-global-icon-idle": "light-dark(rgb(23 99 207), rgb(71 152 245))"
+        "button-icon-global-icon-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "button-icon-global-icon-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))"
       },
       "spacing": {
         "button-icon-global-container-height": "32px",

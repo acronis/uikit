@@ -6,13 +6,13 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "card-filter-global-container-active": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "card-filter-global-container-active": "light-dark(rgb(226 235 245), rgb(48 50 54))",
         "card-filter-global-container-hover": "light-dark(rgb(238 242 247), rgb(46 47 50))",
         "card-filter-global-container-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
       "textColor": {
         "card-filter-global-label": "light-dark(rgb(109 114 120), rgb(109 114 120))",
-        "card-filter-clickable-value": "light-dark(rgb(23 99 207), rgb(71 152 245))",
+        "card-filter-clickable-value": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "card-filter-static-value-disabled": "light-dark(rgb(109 114 120), rgb(109 114 120))",
         "card-filter-static-value-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },

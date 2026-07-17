@@ -5,19 +5,19 @@
   color-scheme: light dark;
 
   --ui-chips-border-color-active: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-chips-border-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-chips-border-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-chips-border-color-idle: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-chips-border-radius: 12px;
   --ui-chips-border-style: solid;
   --ui-chips-border-width: 1px;
-  --ui-chips-container-color-active: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-chips-container-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));
   --ui-chips-container-color-hover: light-dark(rgb(238 242 247), rgb(46 47 50));
   --ui-chips-container-color-idle: light-dark(rgb(248 250 252), rgb(24 25 27));
   --ui-chips-container-gap: 4px;
   --ui-chips-container-height: 24px;
   --ui-chips-container-padding-x: 8px;
   --ui-chips-container-width-min: 48px;
-  --ui-chips-icon-color: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-chips-icon-color: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-chips-icon-size: 16px;
   --ui-chips-label-color: light-dark(rgb(24 25 27), rgb(244 245 245));
 }

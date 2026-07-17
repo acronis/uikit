@@ -7,13 +7,13 @@
   --ui-link-color-active: light-dark(rgb(6 54 121), rgb(190 215 244));
   --ui-link-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-link-color-hover: light-dark(rgb(19 84 174), rgb(23 99 207));
-  --ui-link-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-link-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-link-container-gap: 4px;
   --ui-link-container-height: 32px;
   --ui-link-external-icon-color-active: light-dark(rgb(6 54 121), rgb(190 215 244));
   --ui-link-external-icon-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-link-external-icon-color-hover: light-dark(rgb(19 84 174), rgb(23 99 207));
-  --ui-link-external-icon-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-link-external-icon-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-link-text-decoration-active: none;
   --ui-link-text-decoration-disabled: none;
   --ui-link-text-decoration-hover: underline;

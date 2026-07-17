@@ -4,24 +4,24 @@
 :root, :host {
   color-scheme: light dark;
 
-  --ui-button-menu-dropdown-container-border-color: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-menu-dropdown-container-border-color: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-menu-dropdown-container-border-radius: 4px;
   --ui-button-menu-dropdown-container-border-width: 1px;
   --ui-button-menu-dropdown-container-color: light-dark(rgb(255 255 255), rgb(31 32 34));
   --ui-button-menu-dropdown-container-gap: 0px;
   --ui-button-menu-dropdown-container-padding-x: 0px;
   --ui-button-menu-dropdown-container-padding-y: 0px;
-  --ui-button-menu-dropdown-extras-cascade-icon-color: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-menu-dropdown-extras-cascade-icon-color: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-menu-dropdown-extras-shortcut-label-color: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-button-menu-dropdown-item-container-color-active: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-button-menu-dropdown-item-container-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));
   --ui-button-menu-dropdown-item-container-color-hover: light-dark(rgb(238 242 247), rgb(46 47 50));
   --ui-button-menu-dropdown-item-container-color-idle: light-dark(rgb(255 255 255), rgb(31 32 34));
   --ui-button-menu-dropdown-item-container-gap: 8px;
   --ui-button-menu-dropdown-item-container-height: 40px;
   --ui-button-menu-dropdown-item-container-padding-x: 12px;
   --ui-button-menu-dropdown-item-container-padding-y: 8px;
-  --ui-button-menu-dropdown-item-icon-color: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-button-menu-dropdown-item-label-color: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-menu-dropdown-item-icon-color: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-button-menu-dropdown-item-label-color: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-menu-dropdown-section-container-border-color: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-button-menu-dropdown-section-container-border-width: 1px;
   --ui-button-menu-dropdown-section-container-padding-x: 0px;
@@ -34,10 +34,10 @@
   --ui-button-menu-global-container-padding-y: 8px;
   --ui-button-menu-global-container-width-min: 64px;
   --ui-button-menu-global-icon-size: 16px;
-  --ui-button-menu-primary-container-color-active: light-dark(rgb(13 77 165), rgb(101 106 122));
+  --ui-button-menu-primary-container-color-active: light-dark(rgb(13 77 165), rgb(18 77 161));
   --ui-button-menu-primary-container-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-button-menu-primary-container-color-hover: light-dark(rgb(19 84 174), rgb(23 99 207));
-  --ui-button-menu-primary-container-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-menu-primary-container-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-menu-primary-icon-color: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-button-menu-primary-label-color: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-button-menu-secondary-container-border-color-active: light-dark(transparent, transparent);
@@ -46,18 +46,18 @@
   --ui-button-menu-secondary-container-border-color-idle: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-button-menu-secondary-container-border-style: solid;
   --ui-button-menu-secondary-container-border-width: 1px;
-  --ui-button-menu-secondary-container-color-active: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-button-menu-secondary-container-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));
   --ui-button-menu-secondary-container-color-disabled: light-dark(transparent, transparent);
   --ui-button-menu-secondary-container-color-hover: light-dark(rgb(238 242 247), rgb(46 47 50));
   --ui-button-menu-secondary-container-color-idle: light-dark(transparent, transparent);
-  --ui-button-menu-secondary-icon-color-active: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-menu-secondary-icon-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-menu-secondary-icon-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-button-menu-secondary-icon-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-button-menu-secondary-icon-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-button-menu-secondary-label-color-active: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-menu-secondary-icon-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-button-menu-secondary-icon-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-button-menu-secondary-label-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-menu-secondary-label-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-button-menu-secondary-label-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-button-menu-secondary-label-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-button-menu-secondary-label-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-button-menu-secondary-label-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
 }
 
 [data-theme='light'], :host([data-theme='light']) {

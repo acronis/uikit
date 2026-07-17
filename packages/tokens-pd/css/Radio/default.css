@@ -4,14 +4,14 @@
 :root, :host {
   color-scheme: light dark;
 
-  --ui-radio-checked-box-border-color-active: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-radio-checked-box-border-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-radio-checked-box-border-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-radio-checked-box-border-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-radio-checked-box-border-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
-  --ui-radio-checked-box-color-active: light-dark(rgb(13 77 165), rgb(101 106 122));
+  --ui-radio-checked-box-border-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-radio-checked-box-border-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-radio-checked-box-color-active: light-dark(rgb(13 77 165), rgb(18 77 161));
   --ui-radio-checked-box-color-disabled: light-dark(rgb(248 250 252), rgb(24 25 27));
   --ui-radio-checked-box-color-hover: light-dark(rgb(19 84 174), rgb(23 99 207));
-  --ui-radio-checked-box-color-idle: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-radio-checked-box-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-radio-checked-icon-color-active: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-radio-checked-icon-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-radio-checked-icon-color-hover: light-dark(rgb(255 255 255), rgb(255 255 255));
@@ -27,11 +27,11 @@
   --ui-radio-global-container-width-min: 16px;
   --ui-radio-global-description-color: light-dark(rgb(109 114 120), rgb(109 114 120));
   --ui-radio-global-label-color: light-dark(rgb(24 25 27), rgb(244 245 245));
-  --ui-radio-unchecked-box-border-color-active: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-radio-unchecked-box-border-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-radio-unchecked-box-border-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-radio-unchecked-box-border-color-hover: light-dark(rgb(23 99 207), rgb(71 152 245));
+  --ui-radio-unchecked-box-border-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-radio-unchecked-box-border-color-idle: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-radio-unchecked-box-color-active: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-radio-unchecked-box-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));
   --ui-radio-unchecked-box-color-disabled: light-dark(rgb(248 250 252), rgb(24 25 27));
   --ui-radio-unchecked-box-color-hover: light-dark(rgb(238 242 247), rgb(46 47 50));
   --ui-radio-unchecked-box-color-idle: light-dark(rgb(255 255 255), rgb(31 32 34));

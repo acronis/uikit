@@ -3,10 +3,10 @@
 
 :root, :host {
   --ui-card-filter-clickable-value-color: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-card-filter-global-border-color-active: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-card-filter-global-border-color-focused: light-dark(rgb(199 203 207), rgb(199 203 207));
-  --ui-card-filter-global-border-color-hover: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-card-filter-global-border-color-idle: light-dark(rgb(199 203 207), rgb(199 203 207));
+  --ui-card-filter-global-border-color-active: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-card-filter-global-border-color-focused: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-card-filter-global-border-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-card-filter-global-border-color-idle: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-card-filter-global-container-color-active: light-dark(rgb(255 255 255), rgb(31 32 34));
   --ui-card-filter-global-container-color-hover: light-dark(rgb(255 255 255), rgb(31 32 34));
   --ui-card-filter-global-label-color: light-dark(rgb(54 65 74), rgb(54 65 74));

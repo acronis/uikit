@@ -6,11 +6,11 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "radio-checked-box-active": "light-dark(rgb(13 77 165), rgb(101 106 122))",
+        "radio-checked-box-active": "light-dark(rgb(13 77 165), rgb(18 77 161))",
         "radio-checked-box-disabled": "light-dark(rgb(248 250 252), rgb(24 25 27))",
         "radio-checked-box-hover": "light-dark(rgb(19 84 174), rgb(23 99 207))",
-        "radio-checked-box-idle": "light-dark(rgb(23 99 207), rgb(71 152 245))",
-        "radio-unchecked-box-active": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "radio-checked-box-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "radio-unchecked-box-active": "light-dark(rgb(226 235 245), rgb(48 50 54))",
         "radio-unchecked-box-disabled": "light-dark(rgb(248 250 252), rgb(24 25 27))",
         "radio-unchecked-box-hover": "light-dark(rgb(238 242 247), rgb(46 47 50))",
         "radio-unchecked-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
@@ -20,13 +20,13 @@ export default {
         "radio-global-label": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
-        "radio-checked-box-border-color-active": "light-dark(rgb(23 99 207), rgb(71 152 245))",
+        "radio-checked-box-border-color-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "radio-checked-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "radio-checked-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(71 152 245))",
-        "radio-checked-box-border-color-idle": "light-dark(rgb(23 99 207), rgb(71 152 245))",
-        "radio-unchecked-box-border-color-active": "light-dark(rgb(23 99 207), rgb(71 152 245))",
+        "radio-checked-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "radio-checked-box-border-color-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "radio-unchecked-box-border-color-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "radio-unchecked-box-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "radio-unchecked-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(71 152 245))",
+        "radio-unchecked-box-border-color-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "radio-unchecked-box-border-color-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
       },
       "fill": {
