@@ -12,8 +12,10 @@ import { usePortalContainer } from '@/lib/portal-container';
 // trap, scroll lock, ARIA come from Base UI), but anchored to a screen edge with
 // a slide transition. In the Vue kit this was `Details`; it's re-exported under
 // `Details*` aliases for a 1:1 drop-in. No `--ui-sheet-*` token tier exists yet,
-// so this design-pending v1 mirrors the Dialog family's semantic theming:
-//   • overlay  -> var(--ui-background-overlay-primary)
+// so this design-pending v1 mirrors the Dialog family's semantic theming.
+// Sheets do NOT render a backdrop — they open on top of the page — so the
+// `SheetOverlay`/`DetailsOverlay` export is retained for drop-in compat but is
+// no longer part of the default `SheetContent` render.
 //   • panel    -> bg-muted        = --ui-background-surface-secondary
 //   • header / footer -> bg-background = --ui-background-surface-primary bars,
 //     divided by border-border
@@ -59,7 +61,7 @@ const SheetOverlay = React.forwardRef<
   <DialogPrimitive.Backdrop
     ref={ref}
     className={cn(
-      'fixed inset-0 z-50 bg-[var(--ui-background-overlay-primary)] duration-200 data-[open]:animate-in data-[open]:fade-in-0 data-[closed]:animate-out data-[closed]:fade-out-0',
+      'fixed inset-0 z-50 duration-200 data-[open]:animate-in data-[open]:fade-in-0 data-[closed]:animate-out data-[closed]:fade-out-0',
       className
     )}
     {...props}
@@ -107,16 +109,13 @@ const SheetContent = React.forwardRef<
     const resolvedContainer = portalContainer ?? ctxContainer;
 
     const popup = (
-      <>
-        <SheetOverlay />
-        <DialogPrimitive.Popup
-          ref={ref}
-          className={cn(sheetVariants({ side }), className)}
-          {...props}
-        >
-          {children}
-        </DialogPrimitive.Popup>
-      </>
+      <DialogPrimitive.Popup
+        ref={ref}
+        className={cn(sheetVariants({ side }), className)}
+        {...props}
+      >
+        {children}
+      </DialogPrimitive.Popup>
     );
 
     return portal ? (

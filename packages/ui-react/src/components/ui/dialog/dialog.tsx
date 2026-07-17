@@ -11,7 +11,7 @@ import { usePortalContainer } from '@/lib/portal-container';
 // the Base UI Dialog primitive (keyboard, focus trap, scroll lock, ARIA come
 // from Base UI). No `--ui-dialog-*` token tier exists yet, so this design-
 // pending v1 themes from the shared semantic tokens via bridged Tailwind names:
-//   • overlay  -> var(--ui-background-overlay-primary)   (legacy `bg-black/80`)
+//   • overlay  -> var(--ui-background-backdrop-screen)   (legacy `bg-black/80`)
 //   • popup    -> bg-muted        = --ui-background-surface-secondary
 //   • header / footer -> bg-background = --ui-background-surface-primary (white
 //     bars over the muted body), divided by border-border
@@ -60,7 +60,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Backdrop
     ref={ref}
     className={cn(
-      'fixed inset-0 z-50 bg-[var(--ui-background-overlay-primary)] duration-200 data-[open]:animate-in data-[open]:fade-in-0 data-[closed]:animate-out data-[closed]:fade-out-0',
+      'fixed inset-0 z-50 bg-[var(--ui-background-backdrop-screen)] duration-200 data-[open]:animate-in data-[open]:fade-in-0 data-[closed]:animate-out data-[closed]:fade-out-0',
       className
     )}
     {...props}

@@ -18,4 +18,4 @@ Title uses `--ui-text-on-surface-primary` and description/close use
 `--ui-text-on-surface-secondary` over the `--ui-background-surface-secondary`
 panel; the header/footer bars use `--ui-background-surface-primary` divided by
 `--ui-border-on-surface-border`. All meet text/non-text contrast in light and
-dark; the overlay uses `--ui-background-overlay-primary`.
+dark.

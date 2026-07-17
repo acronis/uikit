@@ -5,7 +5,7 @@
   color-scheme: light dark;
 
   --ui-tooltip-container-border-radius: 4px;
-  --ui-tooltip-container-color: light-dark(rgb(11 66 142), rgb(255 165 0));
+  --ui-tooltip-container-color: light-dark(rgb(25 27 35), rgb(255 255 255));
   --ui-tooltip-container-padding-x: 12px;
   --ui-tooltip-container-padding-y: 8px;
   --ui-tooltip-container-width-max: 256px;

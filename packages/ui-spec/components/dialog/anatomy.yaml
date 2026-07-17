@@ -20,7 +20,7 @@ schematic: |
   +===========================================================+
      root    -> bg-muted (surface-secondary) body + shadow, rounded
      header / footer -> bg-background (surface-primary) bars, border-border
-     overlay -> var(--ui-background-overlay-primary)
+     overlay -> var(--ui-background-backdrop-screen)
      close   -> times icon, text-muted-foreground → hover text-foreground
 
 root:
@@ -41,7 +41,7 @@ parts:
   - id: overlay
     description: >-
       Full-screen scrim (Base UI `Dialog.Backdrop`) behind the popup, tinted with
-      `--ui-background-overlay-primary`. Clicking it dismisses a non-modal dialog.
+      `--ui-background-backdrop-screen`. Clicking it dismisses a non-modal dialog.
     element: div
   - id: header
     description: >-

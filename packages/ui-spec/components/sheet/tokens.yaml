@@ -6,16 +6,11 @@ component: Sheet
 # Design-pending v1: no `--ui-sheet-*` component tier exists yet, so the panel
 # consumes the shared *semantic* tokens (mirroring the Dialog family) via bridged
 # Tailwind names (bg-muted / bg-background / text-foreground /
-# text-muted-foreground / border-border) plus direct var() refs for the overlay
-# and focus ring. Replace with a `--ui-sheet-*` tier if a Figma pass introduces one.
+# text-muted-foreground / border-border) plus a direct var() ref for the focus
+# ring. Replace with a `--ui-sheet-*` tier if a Figma pass introduces one.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - {
-      name: --ui-background-overlay-primary,
-      affects: overlay,
-      description: Scrim color behind the panel (direct var ref),
-    }
   - {
       name: --ui-background-surface-secondary,
       affects: root,

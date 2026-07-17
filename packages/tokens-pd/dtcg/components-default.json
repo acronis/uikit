@@ -994,7 +994,7 @@
               "com.figma.variableId": "VariableID:2238:6659"
             },
             "$type": "color",
-            "$value": "{palette.transparent.inverted.9}"
+            "$value": "{palette.transparent.white.fixed-10}"
           },
           "hover": {
             "$extensions": {
@@ -1050,7 +1050,7 @@
               "com.figma.variableId": "VariableID:2236:5634"
             },
             "$type": "color",
-            "$value": "{colors.background.inverted.active}"
+            "$value": "{colors.background.inverse.primary}"
           },
           "disabled": {
             "$extensions": {
@@ -1061,7 +1061,7 @@
               "com.figma.variableId": "VariableID:2236:5635"
             },
             "$type": "color",
-            "$value": "{colors.background.inverted.disabled}"
+            "$value": "{colors.background.inverse.primary}"
           },
           "hover": {
             "$extensions": {
@@ -1072,7 +1072,7 @@
               "com.figma.variableId": "VariableID:2236:5633"
             },
             "$type": "color",
-            "$value": "{colors.background.inverted.hover}"
+            "$value": "{colors.background.inverse.primary}"
           },
           "idle": {
             "$extensions": {
@@ -1083,7 +1083,7 @@
               "com.figma.variableId": "VariableID:2236:5632"
             },
             "$type": "color",
-            "$value": "{colors.background.inverted.primary}"
+            "$value": "{colors.background.inverse.primary}"
           }
         },
         "paddingX": {
@@ -1123,7 +1123,7 @@
               "com.figma.variableId": "VariableID:2236:5644"
             },
             "$type": "color",
-            "$value": "{colors.glyph.onInverted.primary}"
+            "$value": "{colors.glyph.onInverse.primary}"
           },
           "disabled": {
             "$extensions": {
@@ -1135,7 +1135,7 @@
               "com.figma.variableId": "VariableID:2236:5645"
             },
             "$type": "color",
-            "$value": "{colors.glyph.onInverted.disabled}"
+            "$value": "{colors.glyph.onInverse.primary}"
           },
           "hover": {
             "$extensions": {
@@ -1147,7 +1147,7 @@
               "com.figma.variableId": "VariableID:2236:5643"
             },
             "$type": "color",
-            "$value": "{colors.glyph.onInverted.primary}"
+            "$value": "{colors.glyph.onInverse.primary}"
           },
           "idle": {
             "$extensions": {
@@ -1159,7 +1159,7 @@
               "com.figma.variableId": "VariableID:2236:5642"
             },
             "$type": "color",
-            "$value": "{colors.glyph.onInverted.primary}"
+            "$value": "{colors.glyph.onInverse.primary}"
           }
         }
       },
@@ -1174,7 +1174,7 @@
               "com.figma.variableId": "VariableID:2236:5649"
             },
             "$type": "color",
-            "$value": "{colors.text.onInverted.primary}"
+            "$value": "{colors.text.onInverse.primary}"
           },
           "disabled": {
             "$extensions": {
@@ -1185,7 +1185,7 @@
               "com.figma.variableId": "VariableID:2236:5650"
             },
             "$type": "color",
-            "$value": "{colors.text.onInverted.disabled}"
+            "$value": "{colors.text.onInverse.secondary}"
           },
           "hover": {
             "$extensions": {
@@ -1196,7 +1196,7 @@
               "com.figma.variableId": "VariableID:2236:5648"
             },
             "$type": "color",
-            "$value": "{colors.text.onInverted.primary}"
+            "$value": "{colors.text.onInverse.primary}"
           },
           "idle": {
             "$extensions": {
@@ -1207,7 +1207,7 @@
               "com.figma.variableId": "VariableID:2236:5647"
             },
             "$type": "color",
-            "$value": "{colors.text.onInverted.primary}"
+            "$value": "{colors.text.onInverse.primary}"
           }
         }
       }
@@ -9866,7 +9866,7 @@
           "com.figma.variableId": "VariableID:2235:1607"
         },
         "$type": "color",
-        "$value": "{colors.background.inverted.primary}"
+        "$value": "{colors.background.inverse.primary}"
       },
       "paddingX": {
         "$extensions": {
@@ -9923,7 +9923,7 @@
           "com.figma.variableId": "VariableID:2235:1608"
         },
         "$type": "color",
-        "$value": "{colors.text.onInverted.primary}"
+        "$value": "{colors.text.onInverse.primary}"
       },
       "textStyle": {
         "$extensions": {

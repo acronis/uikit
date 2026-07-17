@@ -12,7 +12,7 @@ source: '@acronis-platform/tokens-pd'
 
 tokens:
   - {
-      name: --ui-background-overlay-primary,
+      name: --ui-background-backdrop-screen,
       affects: overlay,
       description: Scrim color behind the popup (direct var ref),
     }

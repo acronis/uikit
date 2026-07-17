@@ -19,9 +19,9 @@
   --ui-sidebar-primary-global-logo-color: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-sidebar-primary-global-section-list-gap: 0px;
   --ui-sidebar-primary-menu-item-extras-global-container-gap: 8px;
-  --ui-sidebar-primary-menu-item-extras-global-external-icon-color: light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.502));
+  --ui-sidebar-primary-menu-item-extras-global-external-icon-color: light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6));
   --ui-sidebar-primary-menu-item-extras-global-external-icon-size: 16px;
-  --ui-sidebar-primary-menu-item-extras-global-shortcut-color: light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.502));
+  --ui-sidebar-primary-menu-item-extras-global-shortcut-color: light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6));
   --ui-sidebar-primary-menu-item-global-container-gap: 8px;
   --ui-sidebar-primary-menu-item-global-container-height: 40px;
   --ui-sidebar-primary-menu-item-global-container-padding-x: 16px;
@@ -42,10 +42,10 @@
   --ui-sidebar-primary-menu-item-unselected-container-color-idle: light-dark(rgb(0 32 77), rgb(12 12 14));
   --ui-sidebar-primary-menu-item-unselected-icon-color-active: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-sidebar-primary-menu-item-unselected-icon-color-hover: light-dark(rgb(255 255 255), rgb(255 255 255));
-  --ui-sidebar-primary-menu-item-unselected-icon-color-idle: light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.502));
+  --ui-sidebar-primary-menu-item-unselected-icon-color-idle: light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6));
   --ui-sidebar-primary-menu-item-unselected-label-color-active: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-sidebar-primary-menu-item-unselected-label-color-hover: light-dark(rgb(255 255 255), rgb(255 255 255));
-  --ui-sidebar-primary-menu-item-unselected-label-color-idle: light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.502));
+  --ui-sidebar-primary-menu-item-unselected-label-color-idle: light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6));
   --ui-sidebar-primary-section-container-border-color: light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.102));
   --ui-sidebar-primary-section-container-border-width: 1px;
   --ui-sidebar-primary-section-container-padding-y: 8px;

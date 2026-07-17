@@ -19,7 +19,6 @@ schematic: |
                                       +========================+
      root    -> bg-muted (surface-secondary) panel + shadow, edge border
      header / footer -> bg-background (surface-primary) bars, border-border
-     overlay -> var(--ui-background-overlay-primary)
      close   -> times icon, text-muted-foreground → hover text-foreground
      side    -> top | right (default) | bottom | left (slides in from that edge)
 
@@ -38,11 +37,6 @@ parts:
       via `render` — usually a Button. Optional; a controlled sheet needs none.
     element: button
     optional: true
-  - id: overlay
-    description: >-
-      Full-screen scrim (Base UI `Dialog.Backdrop`) behind the panel, tinted with
-      `--ui-background-overlay-primary`.
-    element: div
   - id: header
     description: >-
       Top bar holding the title and close button. White surface

@@ -20,8 +20,8 @@ export default {
         "sidebar-primary-menu-item-selected-label-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "sidebar-primary-menu-item-unselected-label-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "sidebar-primary-menu-item-unselected-label-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "sidebar-primary-menu-item-unselected-label-idle": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.502))",
-        "sidebar-primary-menu-item-extras-global-shortcut": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.502))"
+        "sidebar-primary-menu-item-unselected-label-idle": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6))",
+        "sidebar-primary-menu-item-extras-global-shortcut": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6))"
       },
       "borderColor": {
         "sidebar-primary-section-container-border-color": "light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.102))",
@@ -33,8 +33,8 @@ export default {
         "sidebar-primary-menu-item-selected-icon-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "sidebar-primary-menu-item-unselected-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "sidebar-primary-menu-item-unselected-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "sidebar-primary-menu-item-unselected-icon-idle": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.502))",
-        "sidebar-primary-menu-item-extras-global-external-icon": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.502))",
+        "sidebar-primary-menu-item-unselected-icon-idle": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6))",
+        "sidebar-primary-menu-item-extras-global-external-icon": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6))",
         "sidebar-primary-global-logo": "light-dark(rgb(255 255 255), rgb(255 255 255))"
       },
       "fontFamily": {

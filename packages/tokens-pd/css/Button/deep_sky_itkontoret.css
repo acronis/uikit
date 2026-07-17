@@ -2,7 +2,7 @@
 /* Source: @acronis-platform/design-tokens • brand: deep_sky_itkontoret • tier: Button • overrides only */
 
 :root, :host {
-  --ui-button-destructive-icon-color-disabled: light-dark(rgb(255 255 255 / 0.302), rgb(255 255 255 / 0.6));
+  --ui-button-destructive-icon-color-disabled: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-button-ghost-icon-color-active: light-dark(rgb(73 76 80), rgb(201 204 207));
   --ui-button-ghost-icon-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-button-ghost-icon-color-hover: light-dark(rgb(73 76 80), rgb(201 204 207));
@@ -15,7 +15,6 @@
   --ui-button-primary-container-color-disabled: light-dark(rgb(215 217 219), rgb(48 50 54));
   --ui-button-primary-container-color-hover: light-dark(rgb(61 63 67), rgb(23 99 207));
   --ui-button-primary-container-color-idle: light-dark(rgb(73 76 80), rgb(81 157 246));
-  --ui-button-primary-icon-color-disabled: light-dark(rgb(255 255 255 / 0.898), rgb(255 255 255 / 0.102));
   --ui-button-secondary-container-border-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-button-secondary-container-border-color-idle: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-button-secondary-container-color-active: light-dark(rgb(228 229 231), rgb(48 50 54));

@@ -17,7 +17,7 @@
   --ui-border-on-surface-border: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-border-on-surface-border-active: light-dark(rgb(109 114 120), rgb(109 114 120));
   --ui-border-on-surface-divider: light-dark(rgb(215 217 219), rgb(61 63 67));
-  --ui-glyph-on-brand-disabled: light-dark(rgb(255 255 255 / 0.898), rgb(255 255 255 / 0.102));
+  --ui-glyph-on-backdrop-element-primary: light-dark(rgb(109 114 120), rgb(109 114 120));
   --ui-glyph-on-status-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-glyph-on-surface-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-glyph-on-surface-primary: light-dark(rgb(73 76 80), rgb(201 204 207));
