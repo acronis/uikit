@@ -1,6 +1,6 @@
 {
   "$schema": "../schemas/pack.schema.json",
-  "name": "concept-assetsgroups",
+  "name": "icons",
   "version": "1.0.0",
   "$type": "vector",
   "values": {
