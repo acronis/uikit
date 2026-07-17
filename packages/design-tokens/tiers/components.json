@@ -1181,8 +1181,8 @@
             "$type": "color",
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{palette.transparent.inverted.9}",
-              "default": "{palette.transparent.inverted.9}"
+              "deep_sky_itkontoret": "{palette.transparent.white.fixed-10}",
+              "default": "{palette.transparent.white.fixed-10}"
             }
           },
           "hover": {
