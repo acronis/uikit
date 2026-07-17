@@ -14,7 +14,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const VARIANTS = ['default', 'secondary', 'ghost', 'destructive', 'ai', 'inverted'] as const;
+const VARIANTS = ['default', 'secondary', 'ghost', 'destructive', 'ai'] as const;
 
 export const Variants: Story = {
   render: () => (

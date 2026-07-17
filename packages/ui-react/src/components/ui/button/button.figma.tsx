@@ -15,7 +15,6 @@ figma.connect(
         ghost: 'ghost',
         destructive: 'destructive',
         ai: 'ai',
-        inverted: 'inverted',
       }),
       // The Figma button encodes interaction state as a variant; only the
       // Disabled state maps to a code prop (Idle/Hover/Active/Focus are visual).

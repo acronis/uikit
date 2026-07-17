@@ -4,8 +4,8 @@ name: button
 status: ready
 category: actions
 description: >-
-  Triggers an action or event when activated. Six visual styles (default,
-  secondary, ghost, destructive, ai, inverted) across three sizes.
+  Triggers an action or event when activated. Five visual styles (default,
+  secondary, ghost, destructive, ai) in a single 32px-tall size.
 since: 0.4.0
 figma:
   node: '1173-2789'

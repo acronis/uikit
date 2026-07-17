@@ -339,7 +339,7 @@ const RENDER: Record<string, RenderHint> = {
     ariaLabel: 'Section navigation',
     extraImports: [
       "import { SidebarSecondaryHeader, SidebarSecondaryContent, SidebarSecondaryFooter, SidebarSecondarySection, SidebarSecondarySectionLabel, SidebarSecondaryMenu, SidebarSecondaryMenuItem, SidebarSecondaryMenuItemExtras } from '../sidebar-secondary';",
-      "import { GridIcon, SquareIcon } from '@acronis-platform/icons-react/stroke-mono';",
+      "import { LayoutGridIcon, SquareIcon } from '@acronis-platform/icons-react/stroke-mono';",
     ],
     sample: [
       '',
@@ -348,7 +348,7 @@ const RENDER: Record<string, RenderHint> = {
       '        <SidebarSecondarySection>',
       '          <SidebarSecondarySectionLabel>Overview</SidebarSecondarySectionLabel>',
       '          <SidebarSecondaryMenu>',
-      '            <SidebarSecondaryMenuItem href="#" icon={<GridIcon />} selected extras={<SidebarSecondaryMenuItemExtras variant="externalLink" />}>',
+      '            <SidebarSecondaryMenuItem href="#" icon={<LayoutGridIcon />} selected extras={<SidebarSecondaryMenuItemExtras variant="externalLink" />}>',
       '              Dashboard',
       '            </SidebarSecondaryMenuItem>',
       '            <SidebarSecondaryMenuItem href="#" icon={<SquareIcon />}>',

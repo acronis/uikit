@@ -17,6 +17,14 @@ const config: TestRunnerConfig = {
     const colorMode = resolveVisualColorMode(process.env.STORYBOOK_COLOR_MODE);
 
     const storyContext = await getStoryContext(page, context);
+
+    // Diagnostic/QA-only stories (e.g. Foundations/Breakpoints) opt out via
+    // parameters.snapshot.skip — they render deliberately at non-standard
+    // viewport widths and aren't part of the visual regression contract.
+    if (storyContext.parameters?.snapshot?.skip === true) {
+      return;
+    }
+
     const snapshotFullPage =
       storyContext.parameters?.snapshot?.fullPage === true;
 

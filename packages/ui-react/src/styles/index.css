@@ -53,6 +53,22 @@
 @theme {
   --animate-indeterminate-progress: indeterminate-progress 1.5s ease-in-out infinite;
 }
+
+/* Viewport breakpoints pinned to the design team's px ranges (sm/md unset,
+   fall through to Tailwind's 640px/768px defaults):
+     lg   1024px  range 1024-1280
+     xl   1280px  range 1281-1440
+     2xl  1440px  range 1441-1680
+     3xl  1680px  range 1681-1920
+     4xl  1920px  range 1920+
+*/
+@theme {
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 90rem;
+  --breakpoint-3xl: 105rem;
+  --breakpoint-4xl: 120rem;
+}
 @keyframes indeterminate-progress {
   0% {
     transform: translateX(-100%);

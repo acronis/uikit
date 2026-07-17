@@ -5,7 +5,7 @@
 ### Renders the requested visual style
 
 **Given** a Button with `variant` set to one of `default`, `secondary`, `ghost`,
-`destructive`, `ai`, or `inverted`
+`destructive`, or `ai`
 **When** it renders
 **Then** background, label, and border resolve from that variant's
 `--ui-button-<style>-*` tokens for the current interaction state.
@@ -16,12 +16,12 @@
 **When** it renders
 **Then** it uses the `default` (Primary) style.
 
-### AI variant always leads with the Sparkles icon
+### AI variant icon is optional
 
 **Given** a Button with `variant="ai"`
 **When** it renders
-**Then** it always renders the `Sparkles` icon before the label (the icon is
-intrinsic to the variant — the consumer does not pass it)
+**Then** it renders the consumer-provided children (icon is optional, hidden by
+default — the consumer passes an icon explicitly when needed)
 **And** its background is the `--ui-button-ai-container-color-*` gradient, which runs
 **top-to-bottom** (start color → end color), covering the full button box.
 

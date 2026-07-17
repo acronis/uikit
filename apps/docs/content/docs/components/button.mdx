@@ -31,11 +31,11 @@ Variants map to the Figma "Button" set. The default is `default` (primary):
 <Button variant="ghost">Learn more</Button>
 <Button variant="destructive">Delete</Button>
 <Button variant="ai">Ask AI</Button>
-<Button variant="inverted">On a dark surface</Button>
 ```
 
-The `ai` variant automatically leads with a Sparkles icon. Other variants accept
-an icon as part of their children:
+Every variant renders its children verbatim — no icon is injected automatically.
+Pass an icon explicitly as part of the children when you want one (the `ai`
+variant included):
 
 ```tsx
 import { PlusIcon } from '@acronis-platform/icons-react/stroke-mono';

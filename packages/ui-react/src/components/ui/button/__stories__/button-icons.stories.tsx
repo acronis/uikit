@@ -18,12 +18,12 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'secondary', 'ghost', 'destructive', 'ai', 'inverted'],
+      options: ['default', 'secondary', 'ghost', 'destructive', 'ai'],
       description: 'Visual style — mirrors the Figma Button `Variant` property.',
       table: {
         type: {
           summary:
-            "'default' | 'secondary' | 'ghost' | 'destructive' | 'ai' | 'inverted'",
+            "'default' | 'secondary' | 'ghost' | 'destructive' | 'ai'",
         },
         defaultValue: { summary: 'default' },
         category: 'Appearance',

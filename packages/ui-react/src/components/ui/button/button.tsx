@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
-import { SparklesIcon } from '@acronis-platform/icons-react/stroke-mono';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
 // Variants mirror the Figma "Button" component's `Variant` property (Primary,
-// Secondary, Link→ghost, Destructive, Ai, Inverted). Each interaction state
+// Secondary, Link→ghost, Destructive, Ai). Each interaction state
 // (idle / hover / active / disabled) wires the container fill, label, icon, and
 // — for the variants that have one — the border to its own dedicated
 // `--ui-button-*` token from @acronis-platform/tokens-pd. Every state is wired
@@ -28,8 +27,8 @@ import { cn } from '@/lib/utils';
 // token (underline on hover, none otherwise), so a hovered ghost underlines and a
 // pressed one does not — the `:active` token wins over `:hover` on press. Every
 // variant shows `cursor: pointer`.
-// Only `secondary` and `inverted` draw a 1px container border — they add `border`
-// in their own class so the design's 12px horizontal padding sits inside it. The
+// Only `secondary` draws a 1px container border — it adds `border`
+// in its own class so the design's 12px horizontal padding sits inside it. The
 // other variants have NO border (the Figma draws none), so their `px` is measured
 // from the box edge and matches the design exactly (no stray 1px from a
 // transparent border). The `ai` variant paints its gradient via `background-image`.
@@ -50,8 +49,6 @@ const buttonVariants = cva(
         destructive:
           'min-w-[var(--ui-button-destructive-container-width-min)] px-[var(--ui-button-destructive-container-padding-x)] bg-[var(--ui-button-destructive-container-color-idle)] text-[var(--ui-button-destructive-label-color-idle)] [&_svg]:text-[var(--ui-button-destructive-icon-color-idle)] hover:bg-[var(--ui-button-destructive-container-color-hover)] hover:text-[var(--ui-button-destructive-label-color-hover)] hover:[&_svg]:text-[var(--ui-button-destructive-icon-color-hover)] active:bg-[var(--ui-button-destructive-container-color-active)] active:text-[var(--ui-button-destructive-label-color-active)] active:[&_svg]:text-[var(--ui-button-destructive-icon-color-active)] disabled:bg-[var(--ui-button-destructive-container-color-disabled)] disabled:text-[var(--ui-button-destructive-label-color-disabled)] disabled:[&_svg]:text-[var(--ui-button-destructive-icon-color-disabled)]',
         ai: 'min-w-[var(--ui-button-ai-container-width-min)] px-[var(--ui-button-ai-container-padding-x)] bg-origin-border text-[var(--ui-button-ai-label-color-idle)] [&_svg]:text-[var(--ui-button-ai-icon-color-idle)] [background-image:var(--ui-button-ai-container-color-idle)] hover:text-[var(--ui-button-ai-label-color-hover)] hover:[&_svg]:text-[var(--ui-button-ai-icon-color-hover)] hover:[background-image:var(--ui-button-ai-container-color-hover)] active:text-[var(--ui-button-ai-label-color-active)] active:[&_svg]:text-[var(--ui-button-ai-icon-color-active)] active:[background-image:var(--ui-button-ai-container-color-active)] disabled:text-[var(--ui-button-ai-label-color-disabled)] disabled:[&_svg]:text-[var(--ui-button-ai-icon-color-disabled)] disabled:[background-image:var(--ui-button-ai-container-color-disabled)]',
-        inverted:
-          'border min-w-[var(--ui-button-inverted-container-width-min)] px-[var(--ui-button-inverted-container-padding-x)] bg-[var(--ui-button-inverted-container-color-idle)] text-[var(--ui-button-inverted-label-color-idle)] border-[var(--ui-button-inverted-container-border-color-idle)] [&_svg]:text-[var(--ui-button-inverted-icon-color-idle)] hover:bg-[var(--ui-button-inverted-container-color-hover)] hover:text-[var(--ui-button-inverted-label-color-hover)] hover:border-[var(--ui-button-inverted-container-border-color-hover)] hover:[&_svg]:text-[var(--ui-button-inverted-icon-color-hover)] active:bg-[var(--ui-button-inverted-container-color-active)] active:text-[var(--ui-button-inverted-label-color-active)] active:border-[var(--ui-button-inverted-container-border-color-active)] active:[&_svg]:text-[var(--ui-button-inverted-icon-color-active)] disabled:bg-[var(--ui-button-inverted-container-color-disabled)] disabled:text-[var(--ui-button-inverted-label-color-disabled)] disabled:border-[var(--ui-button-inverted-container-border-color-disabled)] disabled:[&_svg]:text-[var(--ui-button-inverted-icon-color-disabled)]',
       },
     },
     defaultVariants: {
@@ -74,17 +71,6 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, render, children, ...props }, ref) => {
-    // The AI variant always leads with the Sparkles icon before its label
-    // (the Figma "Ai" button is a Sparkles instance + label).
-    const content =
-      variant === 'ai' ? (
-        <>
-          <SparklesIcon />
-          {children}
-        </>
-      ) : (
-        children
-      );
     return useRender({
       render,
       ref,
@@ -92,7 +78,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       props: mergeProps<'button'>(
         {
           className: cn(buttonVariants({ variant, className })),
-          children: content,
+          children,
         },
         props
       ),

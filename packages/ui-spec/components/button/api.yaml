@@ -7,7 +7,7 @@ component: Button
 contract:
   properties:
     - name: variant
-      type: "'default' | 'secondary' | 'ghost' | 'destructive' | 'ai' | 'inverted'"
+      type: "'default' | 'secondary' | 'ghost' | 'destructive' | 'ai'"
       required: false
       default: "'default'"
       description: >-

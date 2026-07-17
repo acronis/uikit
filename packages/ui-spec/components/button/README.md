@@ -1,7 +1,7 @@
 # Button
 
-Triggers an action or event. Six styles — `default` (Primary), `secondary`,
-`ghost`, `destructive`, `ai`, `inverted` — in a single 32px-tall size.
+Triggers an action or event. Five styles — `default` (Primary), `secondary`,
+`ghost`, `destructive`, `ai` — in a single 32px-tall size.
 
 ## When to use
 
@@ -29,11 +29,12 @@ contract — see `api.yaml` `adapters`.
 
 `variant="ai"` is special:
 
-- It **always leads with the `Sparkles` icon** before the label — the icon is
-  intrinsic to the variant, so you don't pass it:
+- The icon is **optional** (hidden by default). Pass an icon explicitly when
+  needed:
 
   ```tsx
   <Button variant="ai">Ask AI</Button>
+  <Button variant="ai"><SparklesIcon /> Ask AI</Button>
   ```
 
 - Its background is the `--ui-button-ai-container-color-*` gradient, which runs

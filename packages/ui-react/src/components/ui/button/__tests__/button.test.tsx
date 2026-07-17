@@ -11,12 +11,28 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
   });
 
-  it('leads the ai variant with the Sparkles icon before the label', () => {
+  it('does not auto-inject an icon for the ai variant', () => {
     render(<Button variant="ai">Ask AI</Button>);
+    const button = screen.getByRole('button', { name: 'Ask AI' });
+    expect(button.querySelector('svg')).toBeNull();
+  });
+
+  it('renders an empty ai variant with no injected content', () => {
+    render(<Button variant="ai" aria-label="Ask AI" />);
+    const button = screen.getByRole('button', { name: 'Ask AI' });
+    expect(button).toBeEmptyDOMElement();
+    expect(button.querySelector('svg')).toBeNull();
+  });
+
+  it('renders a consumer-provided icon inside the ai variant', () => {
+    render(
+      <Button variant="ai">
+        <svg data-testid="ai-icon" />
+        Ask AI
+      </Button>
+    );
     const button = screen.getByRole('button', { name: /Ask AI/ });
-    expect(button).toHaveTextContent('Ask AI');
-    // The icon is the first child (rendered before the label).
-    expect(button.firstElementChild?.tagName.toLowerCase()).toBe('svg');
+    expect(button.querySelector('[data-testid="ai-icon"]')).toBeInTheDocument();
   });
 
   it('does not inject an icon for non-ai variants', () => {
