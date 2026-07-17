@@ -4,18 +4,22 @@
   "version": "1.0.0",
   "$type": "vector",
   "values": {
-    "24": {
-      "default": true
-    },
     "16": {
       "$rules": ["scale-16"]
+    },
+    "24": {
+      "default": true
     }
   },
   "assetsGroups": {
     "solid-mono": {
       "$values": {
-        "24": { "$rules": ["current-color"] },
-        "16": { "$rules": ["current-color", "scale-16"] }
+        "16": {
+          "$rules": ["current-color", "scale-16"]
+        },
+        "24": {
+          "$rules": ["current-color"]
+        }
       },
       "assets": {
         "Acronis": {
@@ -126,10 +130,10 @@
             "legacyNames": ["aws--24", "aws--32"]
           }
         },
-        "BoxLogo": {
+        "BoxCom": {
           "values": {
             "24": {
-              "$file": "./packs/icons/BoxLogo.svg"
+              "$file": "./packs/icons/BoxCom.svg"
             }
           },
           "platforms": ["PD"],
@@ -536,7 +540,7 @@
           "platforms": ["PD"],
           "metadata": {
             "category": ["Solid"],
-            "tags": ["logo", "ms", "microsoft 365", "office", "brand"],
+            "tags": ["logo", "ms", "microsoft 365", "office", "brand", "m365"],
             "legacyNames": [
               "ms-365--24",
               "ms-365-o--24",
@@ -641,6 +645,19 @@
               "exchange--24",
               "exchange-ab--32"
             ]
+          }
+        },
+        "MicrosoftIntune": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/MicrosoftIntune.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Solid"],
+            "tags": ["logo", "ms", "brand"],
+            "legacyNames": []
           }
         },
         "MicrosoftOneDrive": {
@@ -1954,7 +1971,7 @@
               "energy",
               "quick"
             ],
-            "legacyNames": ["add-action--16", "automation--24"]
+            "legacyNames": ["add-action--16", "automation--24", "lighting--16"]
           }
         },
         "Book": {
@@ -2362,10 +2379,10 @@
             ]
           }
         },
-        "BulbCrossed": {
+        "BulbOff": {
           "values": {
             "24": {
-              "$file": "./packs/icons/BulbCrossed.svg"
+              "$file": "./packs/icons/BulbOff.svg"
             }
           },
           "platforms": ["PD"],
@@ -2644,6 +2661,19 @@
             "category": ["Symbols"],
             "tags": ["received", "read"],
             "legacyNames": ["check-double--16"]
+          }
+        },
+        "CheckSmall": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/CheckSmall.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Symbols"],
+            "tags": ["checkbox"],
+            "legacyNames": []
           }
         },
         "ChevronDown": {
@@ -3083,19 +3113,6 @@
             ]
           }
         },
-        "CircleLock": {
-          "values": {
-            "24": {
-              "$file": "./packs/icons/CircleLock.svg"
-            }
-          },
-          "platforms": ["PD"],
-          "metadata": {
-            "category": ["Shapes"],
-            "tags": ["locked"],
-            "legacyNames": ["locked--32", "locked--16"]
-          }
-        },
         "CircleMinus": {
           "values": {
             "24": {
@@ -3326,19 +3343,6 @@
               "drive-error--16",
               "alerts-ab-o--32"
             ]
-          }
-        },
-        "Circles": {
-          "values": {
-            "24": {
-              "$file": "./packs/icons/Circles.svg"
-            }
-          },
-          "platforms": ["PD"],
-          "metadata": {
-            "category": ["Shapes"],
-            "tags": ["multiple"],
-            "legacyNames": []
           }
         },
         "CirclesBlend": {
@@ -4023,19 +4027,6 @@
             ]
           }
         },
-        "EllipsisMoving": {
-          "values": {
-            "24": {
-              "$file": "./packs/icons/EllipsisMoving.svg"
-            }
-          },
-          "platforms": ["PD"],
-          "metadata": {
-            "category": ["Symbols"],
-            "tags": ["dots", "typing", "progress"],
-            "legacyNames": ["typing--16"]
-          }
-        },
         "Envelope": {
           "values": {
             "24": {
@@ -4148,10 +4139,10 @@
             "legacyNames": ["hide--16", "hide--32"]
           }
         },
-        "EyeCrossed": {
+        "EyeOff": {
           "values": {
             "24": {
-              "$file": "./packs/icons/EyeCrossed.svg"
+              "$file": "./packs/icons/EyeOff.svg"
             }
           },
           "platforms": ["PD"],
@@ -4627,7 +4618,7 @@
           "platforms": ["PD"],
           "metadata": {
             "category": ["Objects"],
-            "tags": ["finish", "milestone", "marker", "goal", "banner"],
+            "tags": ["finish", "milestone", "marker", "goal", "banner", "end"],
             "legacyNames": ["finish-flag--16", "milestone--16"]
           }
         },
@@ -5177,19 +5168,6 @@
             ]
           }
         },
-        "InboxFull": {
-          "values": {
-            "24": {
-              "$file": "./packs/icons/InboxFull.svg"
-            }
-          },
-          "platforms": ["PD"],
-          "metadata": {
-            "category": ["Documents"],
-            "tags": ["mailbox", "full", "inbox", "email"],
-            "legacyNames": []
-          }
-        },
         "InboxLock": {
           "values": {
             "24": {
@@ -5526,7 +5504,7 @@
           "platforms": ["PD"],
           "metadata": {
             "category": ["Objects"],
-            "tags": ["access", "security", "password", "encryption"],
+            "tags": ["access", "security", "password", "encryption", "locked"],
             "legacyNames": [
               "lock--16",
               "lock--32",
@@ -5535,7 +5513,9 @@
               "internet-access-o--16",
               "internet-access--16",
               "lock-mix--32",
-              "locked-mix--32"
+              "locked-mix--32",
+              "locked--32",
+              "locked--16"
             ]
           }
         },
@@ -5654,7 +5634,8 @@
               "warning",
               "anomaly",
               "find",
-              "lens"
+              "lens",
+              "incident"
             ],
             "legacyNames": [
               "mdr-adv--16",
@@ -5990,6 +5971,19 @@
               "minimize--24",
               "minus-square--16"
             ]
+          }
+        },
+        "MinusSmall": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/MinusSmall.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Symbols"],
+            "tags": ["checkbox"],
+            "legacyNames": []
           }
         },
         "Monitor": {
@@ -6508,7 +6502,8 @@
               "sliders",
               "configuration",
               "controls",
-              "settings"
+              "settings",
+              "personalization"
             ],
             "legacyNames": ["filter--16", "tune--32", "tune--16"]
           }
@@ -6522,7 +6517,16 @@
           "platforms": ["PD"],
           "metadata": {
             "category": ["Symbols"],
-            "tags": ["accounts", "tree", "fork", "network", "organisation"],
+            "tags": [
+              "accounts",
+              "tree",
+              "fork",
+              "network",
+              "organization",
+              "unit",
+              "condition",
+              "branch"
+            ],
             "legacyNames": ["manage-accounts-ab--32"]
           }
         },
@@ -6904,10 +6908,10 @@
             "legacyNames": ["pin-default--16", "pin-circle--16"]
           }
         },
-        "PinDisabled": {
+        "PinOff": {
           "values": {
             "24": {
-              "$file": "./packs/icons/PinDisabled.svg"
+              "$file": "./packs/icons/PinOff.svg"
             }
           },
           "platforms": ["PD"],
@@ -6933,6 +6937,19 @@
               "add-create-ab--32",
               "plus--24"
             ]
+          }
+        },
+        "PlusSmall": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/PlusSmall.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Symbols"],
+            "tags": [],
+            "legacyNames": []
           }
         },
         "Power": {
@@ -7025,24 +7042,6 @@
             ]
           }
         },
-        "Progress": {
-          "values": {
-            "24": {
-              "$file": "./packs/icons/Progress.svg"
-            }
-          },
-          "platforms": ["PD"],
-          "metadata": {
-            "category": ["Symbols"],
-            "tags": ["loading", "progress", "circular"],
-            "legacyNames": [
-              "loading--16",
-              "loading--48",
-              "loading--32",
-              "loading--24"
-            ]
-          }
-        },
         "ProgressCheck": {
           "values": {
             "24": {
@@ -7053,7 +7052,12 @@
           "metadata": {
             "category": ["Symbols"],
             "tags": ["cyberfit", "compliance"],
-            "legacyNames": ["cyberfit--16", "cyberfit-o--16"]
+            "legacyNames": [
+              "cyberfit--16",
+              "cyberfit-o--16",
+              "cyberfit--32",
+              "cyberfit--24"
+            ]
           }
         },
         "Projector": {
@@ -8467,6 +8471,19 @@
             ]
           }
         },
+        "TimesSmall": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/TimesSmall.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Symbols"],
+            "tags": [],
+            "legacyNames": []
+          }
+        },
         "Tower": {
           "values": {
             "24": {
@@ -8935,6 +8952,45 @@
               "not available"
             ],
             "legacyNames": ["unknown--16", "unknown--32"]
+          }
+        },
+        "CirclePauseGray": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/CirclePauseGray.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Multicolor"],
+            "tags": ["alert", "status", "notification", "pause"],
+            "legacyNames": []
+          }
+        },
+        "CirclePlayGreen": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/CirclePlayGreen.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Multicolor"],
+            "tags": ["alert", "status", "notification", "play", "run"],
+            "legacyNames": []
+          }
+        },
+        "CircleStopRed": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/CircleStopRed.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Multicolor"],
+            "tags": ["alert", "status", "notification", "stopped", "suspended"],
+            "legacyNames": []
           }
         },
         "CircleTimesRed": {
