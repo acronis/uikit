@@ -273,6 +273,103 @@ describe('InputSelect in-dropdown search', () => {
     expect(screen.getByText('Apple').closest('[role="option"]')).not.toBeVisible();
   });
 
+  it('follows an externally controlled value and re-syncs when it changes outside onChange', async () => {
+    function ControlledSearchableSelect({
+      query,
+      onChange,
+    }: {
+      query: string;
+      onChange: React.ChangeEventHandler<HTMLInputElement>;
+    }) {
+      return (
+        <InputSelect>
+          <InputSelectTrigger aria-label="Fruit">
+            <InputSelectValue placeholder="Select an option" />
+          </InputSelectTrigger>
+          <InputSelectContent>
+            <InputSelectSearch aria-label="Filter" value={query} onChange={onChange} />
+            <InputSelectItem value="apple">Apple</InputSelectItem>
+            <InputSelectItem value="banana">Banana</InputSelectItem>
+          </InputSelectContent>
+        </InputSelect>
+      );
+    }
+
+    const onChange = vi.fn();
+    const { rerender } = render(
+      <ControlledSearchableSelect query="ban" onChange={onChange} />
+    );
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    const search = screen.getByRole('searchbox', { name: 'Filter' });
+    // The external value drives both the box and the internal filter items match against.
+    expect(search).toHaveValue('ban');
+    expect(screen.getByText('Apple').closest('[role="option"]')).not.toBeVisible();
+    // A prop-driven reset (e.g. a consumer "clear" button) fires no onChange, yet
+    // the filter must still clear so Apple reappears — the desync this guards against.
+    rerender(<ControlledSearchableSelect query="" onChange={onChange} />);
+    expect(search).toHaveValue('');
+    expect(screen.getByRole('option', { name: 'Apple' })).toBeVisible();
+  });
+
+  it('keeps a non-string-children item visible while filtering, unless textValue is given', async () => {
+    render(
+      <InputSelect>
+        <InputSelectTrigger aria-label="Fruit">
+          <InputSelectValue placeholder="Select an option" />
+        </InputSelectTrigger>
+        <InputSelectContent>
+          <InputSelectSearch aria-label="Filter" placeholder="Search" />
+          <InputSelectItem value="apple">Apple</InputSelectItem>
+          <InputSelectItem value="jsx">
+            <span>Custom</span>
+          </InputSelectItem>
+          <InputSelectItem value="labelled" textValue="Cherry">
+            <span>Cherry node</span>
+          </InputSelectItem>
+        </InputSelectContent>
+      </InputSelect>
+    );
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Filter' }), 'zzz');
+    // Apple has a string label that doesn't match → hides.
+    expect(screen.getByText('Apple').closest('[role="option"]')).not.toBeVisible();
+    // JSX children with no textValue → no text to match, so it degrades to visible.
+    expect(screen.getByText('Custom').closest('[role="option"]')).toBeVisible();
+    // JSX children WITH textValue match against that text → hides like a string label.
+    expect(
+      screen.getByText('Cherry node').closest('[role="option"]')
+    ).not.toBeVisible();
+  });
+
+  it('drops filtered-out items from the accessibility tree while keeping them mounted', async () => {
+    render(
+      <InputSelect>
+        <InputSelectTrigger aria-label="Fruit">
+          <InputSelectValue placeholder="Select an option" />
+        </InputSelectTrigger>
+        <InputSelectContent>
+          <InputSelectSearch aria-label="Filter" placeholder="Search" />
+          <InputSelectItem value="apple">Apple</InputSelectItem>
+          <InputSelectItem value="zzz">Zzz</InputSelectItem>
+          <InputSelectItem value="apricot">Apricot</InputSelectItem>
+        </InputSelectContent>
+      </InputSelect>
+    );
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    // "ap" keeps Apple + Apricot and hides the middle Zzz.
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Filter' }), 'ap');
+    // A `hidden` row leaves the accessibility tree (so it can't be a keyboard-nav
+    // or screen-reader target) but stays in the DOM — which is what keeps Base UI's
+    // selection-by-index stable. (That Base UI's composite navigation also visually
+    // skips the hidden row is a layout-driven, real-browser behaviour, exercised in
+    // Storybook rather than here — happy-dom has no layout to honour it.)
+    expect(screen.getAllByRole('option').map((o) => o.textContent)).toEqual([
+      'Apple',
+      'Apricot',
+    ]);
+    expect(screen.getByText('Zzz').closest('[role="option"]')).toBeInTheDocument();
+  });
+
   it('respects an explicit hidden prop instead of auto-filtering', async () => {
     render(
       <InputSelect>

@@ -21,9 +21,11 @@ import {
   InputSelectSection,
   InputSelectSectionLabel,
   InputSelectItem,
+  InputSelectExpander,
   InputSelectDescription,
   InputSelectError,
   InputSelectStatus,
+  useInputSelectFilter,
 } from '@acronis-platform/ui-react';
 ```
 
@@ -88,6 +90,34 @@ A searchable, sectioned list:
 </InputSelectContent>
 ```
 
+A tree / hierarchy, with icons and indentation. `InputSelectExpander` is a
+non-selectable row that expands or collapses a group; `InputSelectItem`'s
+`indent` reserves the leading nesting spacer (levels 1–3 → 16 / 40 / 64 px) and
+`icon` renders a leading glyph:
+
+```tsx
+<InputSelectContent>
+  <InputSelectExpander
+    expanded={open}
+    onToggle={() => setOpen((o) => !o)}
+    icon={<BriefcaseIcon size={16} />}
+  >
+    DataBridge Systems
+  </InputSelectExpander>
+  <InputSelectItem value="eu" indent={2} hidden={!open}>
+    EU region
+  </InputSelectItem>
+</InputSelectContent>
+```
+
+Keep collapsed children mounted and toggle `hidden` (rather than unmounting
+them) so Base UI's selection-by-index stays stable. When a search query is
+active, flat `InputSelectItem`s auto-hide against it; a tree that computes its
+own visibility reads the live query with `useInputSelectFilter()`. Pass
+`textValue` on an item whose `children` aren't plain text so it can still be
+matched, and `value`/`onChange` on `InputSelectSearch` to control the query
+externally.
+
 A loading / empty / error status inside the content:
 
 ```tsx
@@ -113,9 +143,15 @@ A loading / empty / error status inside the content:
 The other parts (`InputSelect`, `InputSelectField`, `InputSelectLabel`,
 `InputSelectTrigger`, `InputSelectValue`, `InputSelectContent`,
 `InputSelectSearch`, `InputSelectGroup`, `InputSelectSection`,
-`InputSelectSectionLabel`, `InputSelectItem`, `InputSelectDescription`,
-`InputSelectError`) extend the corresponding Base UI `Select` primitive props.
-`InputSelect` accepts `items`, `defaultValue` / `value`, and Base UI `Select`
-root props; `InputSelectContent` adds `side` / `align` for positioning. See the
+`InputSelectSectionLabel`, `InputSelectDescription`, `InputSelectError`) extend
+the corresponding Base UI `Select` primitive props. `InputSelect` accepts
+`items`, `defaultValue` / `value`, and Base UI `Select` root props;
+`InputSelectContent` adds `side` / `align` for positioning. See the
 [Base UI Select docs](https://base-ui.com/react/components/select) for the full
 prop surface.
+
+`InputSelectItem` extends the Base UI `Select.Item` props and adds `icon`,
+`indent`, and `textValue`. `InputSelectExpander` is a plain button (not a
+`Select.Item`) with `expanded`, `onToggle`, `icon`, and `indent`.
+`useInputSelectFilter()` returns the live `{ query, setQuery }` and must be
+called inside an `InputSelect`.

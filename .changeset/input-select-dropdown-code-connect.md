@@ -20,6 +20,10 @@ In-dropdown search now works:
 - Fixes a bug where Base UI's typeahead swallowed the typed keys, so the query
   never appeared. Only printable keys are now intercepted, so Arrow / Enter /
   Escape still navigate and dismiss the list from the search box.
+- Passing `value`/`onChange` controls the query externally: the internal filter
+  the items match against now stays synced to the controlled value, so a
+  prop-driven change (a "clear" button, a debounced value) that fires no
+  `onChange` no longer leaves items hidden against a stale query.
 
 Tree/hierarchy layout:
 

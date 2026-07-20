@@ -235,6 +235,23 @@ const InputSelectSearch = React.forwardRef<
   React.ComponentPropsWithoutRef<'input'>
 >(({ className, value, onChange, onKeyDown, ...props }, ref) => {
   const filter = React.useContext(InputSelectFilterContext);
+  const setQuery = filter?.setQuery;
+  const controlled = value !== undefined;
+
+  // When the query is controlled externally, the consumer's `value` is the
+  // source of truth for what's displayed, so keep the internal filter context
+  // (what flat items match against) synced to it. A prop-driven value change —
+  // a "clear" button resetting to '', a debounced/transformed value — doesn't
+  // fire `onChange`, so driving the filter off raw DOM events alone would leave
+  // `filter.query` stale and hide every item against a query the box no longer
+  // shows. `setQuery` is a stable state setter, so this runs only when `value`
+  // changes.
+  React.useEffect(() => {
+    if (controlled) {
+      setQuery?.(String(value ?? ''));
+    }
+  }, [controlled, value, setQuery]);
+
   return (
     <div className="flex items-center gap-[var(--ui-input-select-dropdown-dropdown-search-gap)] px-[var(--ui-input-select-dropdown-dropdown-search-padding-x)] py-[var(--ui-input-select-dropdown-dropdown-search-padding-y)]">
       <MagnifierIcon
@@ -247,7 +264,13 @@ const InputSelectSearch = React.forwardRef<
         value={value ?? filter?.query ?? ''}
         onChange={(event) => {
           onChange?.(event);
-          filter?.setQuery(event.currentTarget.value);
+          // Uncontrolled: the input's value *is* the filter query, so write it
+          // straight through. Controlled: the effect above syncs the filter to
+          // the consumer's `value` once it re-renders, avoiding a flash of raw
+          // typed text when the consumer debounces or transforms the value.
+          if (!controlled) {
+            filter?.setQuery(event.currentTarget.value);
+          }
         }}
         // Base UI Select's typeahead would consume printable keys before they
         // reach this input, so stop those from bubbling — but let navigation and
