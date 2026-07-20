@@ -1,5 +1,6 @@
 ---
 '@acronis-platform/design-tokens': minor
+'@acronis-platform/tokens-pd': minor
 ---
 
 Remove `Button.inverted` component tokens.
