@@ -1,7 +1,7 @@
 ---
-'@acronis-platform/design-tokens': minor
+'@acronis-platform/design-tokens': patch
 ---
 
-Sync design tokens with Figma.
+Update metadata for `Link.externalIcon.color` state tokens.
 
-Restructures Link component tokens into nested normal/inverse/\_global variant groups (24 tokens added, 18 deleted). The inverse variant references the new glyph.onBackdrop.screenPrimary semantic token.
+Adds `com.figma.hiddenFromPublishing: true` and corrects Figma scope and variableId on `active`, `disabled`, `hover`, and `idle` — no token values changed.
