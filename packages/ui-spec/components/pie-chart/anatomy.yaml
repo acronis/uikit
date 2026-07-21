@@ -1,0 +1,50 @@
+spec_version: '1.0'
+component: PieChart
+
+schematic: |
+  root: <div data-shape>                            (variant wrapper)
+    container: <ChartContainer>                     (themed, sized, responsive)
+      plot: recharts <PieChart>
+        slices:  <Pie dataKey nameKey> with one <Cell> per row (arc segments)
+        tooltip: <ChartTooltip> → tooltip-content   (hover card)
+        legend:  <ChartLegend>  → legend-content    (per-slice swatch + label)
+
+root:
+  element: div
+  description: >-
+    The variant wrapper. Carries the CVA `shape` class and mirrors the resolved
+    value onto `data-shape`, then renders the shared `ChartContainer` (sized to
+    fill the wrapper) around the recharts `PieChart`.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      The shared `ChartContainer` — supplies the per-slice `--color-<name>`
+      custom properties from `config` and themes recharts' internals.
+  - id: plot
+    element: svg
+    description: The recharts `PieChart` holding the arc and its chrome.
+  - id: slices
+    element: g
+    description: >-
+      The `Pie` — one `Cell` per data row, each an arc segment sized by `dataKey`
+      and filled from its `--color-<name>` var. `shape=donut` sets an
+      `innerRadius` (hollow centre); `shape=pie` fills to the centre.
+  - id: tooltip-content
+    element: div
+    description: >-
+      `ChartTooltipContent` — hover card with one row for the hovered slice
+      (color indicator + name + value). Rendered when `showTooltip`.
+  - id: legend-content
+    element: div
+    description: >-
+      `ChartLegendContent` — one swatch + label per slice (`nameKey`). Rendered
+      when `showLegend`.
+
+states:
+  - id: shape-variant
+    trigger: the shape prop selects a filled pie or a hollow-centre donut
+    kind: prop
+    prop: shape
+    affects: [slices]

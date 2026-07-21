@@ -1,0 +1,12 @@
+spec_version: '1.0'
+component: PieChart
+name: pie-chart
+status: draft
+category: data-display
+description: >-
+  A typed pie/donut-chart composition over the shared `Chart` primitives. Takes
+  `data` + `config` + a `dataKey` (slice value) and `nameKey` (slice label) and
+  renders a themed recharts `PieChart` inside a `ChartContainer`, with tooltip
+  and legend chrome. One variant axis: `shape` (filled pie / hollow-centre
+  donut). Ported from the apps/demo `PieChartPlayground`.
+since: 0.58.0

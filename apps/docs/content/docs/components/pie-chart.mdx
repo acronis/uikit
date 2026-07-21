@@ -1,0 +1,92 @@
+---
+title: PieChart
+description: A typed pie or donut chart for part-to-whole proportions.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { PieChartDemo } from '@/components/demos-react/pie-chart';
+
+## Usage
+
+```tsx
+import { PieChart } from '@acronis-platform/ui-react';
+import type { ChartConfig } from '@acronis-platform/ui-react';
+```
+
+`PieChart` is a typed composition over the shared [`Chart`](/components/chart)
+primitives. Give it `data`, a per-slice `config`, the value field (`dataKey`),
+and the label field (`nameKey`) — it renders a themed recharts pie chart (tooltip
+and legend included), so you don't hand-compose recharts children.
+
+Unlike the cartesian charts, a pie plots a **single** `dataKey` across rows and
+names each slice by `nameKey`. Slice colors are supplied by the caller through
+`config`, **keyed by each slice's `nameKey` value**: `PieChart` turns those into
+the `--color-<name>` custom properties its slices fill from.
+
+> **Design-pending v1**, ported from the demo `PieChartPlayground`. There is no
+> chart token tier yet, so the example colors reference the shared brand/status
+> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
+> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
+> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
+> across brands until the real palette lands.
+
+## Examples
+
+<DemoReact>
+  <PieChartDemo />
+</DemoReact>
+
+A donut chart with a themed tooltip and legend:
+
+```tsx
+const data = [
+  { browser: 'Chrome', value: 275 },
+  { browser: 'Safari', value: 200 },
+  { browser: 'Firefox', value: 187 },
+  { browser: 'Edge', value: 173 },
+];
+
+const config = {
+  Chrome: { label: 'Chrome', color: 'var(--ui-background-brand-secondary)' },
+  Safari: { label: 'Safari', color: 'var(--ui-background-status-strong-danger)' },
+  Firefox: { label: 'Firefox', color: 'var(--ui-background-status-strong-success)' },
+  Edge: { label: 'Edge', color: 'var(--ui-background-status-strong-warning)' },
+} satisfies ChartConfig;
+
+<PieChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="browser"
+  shape="donut"
+  className="h-[360px] w-[360px]"
+/>;
+```
+
+Use a filled pie with `shape="pie"` (the default):
+
+```tsx
+<PieChart config={config} data={data} dataKey="value" nameKey="browser" />
+```
+
+Separate the slices with `paddingAngle`, and tune the donut hole with
+`innerRadius`:
+
+```tsx
+<PieChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="browser"
+  shape="donut"
+  innerRadius={80}
+  paddingAngle={2}
+/>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/pie-chart/pie-chart.tsx"
+  name="PieChartProps"
+/>

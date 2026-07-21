@@ -395,6 +395,12 @@ const RENDER: Record<string, RenderHint> = {
     // (Vertical/Horizontal × Grouped/Stacked + TooltipOpen).
     skip: true,
   },
+  'pie-chart': {
+    // Data-driven: requires data / config / dataKey / nameKey + a sized box, so
+    // a zero-arg render is meaningless. VR is covered by the hand-written
+    // stories (Pie / Donut / NoChrome + TooltipOpen).
+    skip: true,
+  },
   'line-chart': {
     // Data-driven: requires data / config / dataKeys / xKey + a sized box, so a
     // zero-arg render is meaningless. VR is covered by the hand-written stories

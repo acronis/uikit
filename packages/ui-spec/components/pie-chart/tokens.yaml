@@ -1,0 +1,25 @@
+spec_version: '1.0'
+component: PieChart
+
+# References only. Values live in @acronis-platform/tokens-pd. PieChart has no
+# token tier of its own — slice colors are supplied by the caller via `config`
+# (a dedicated `--ui-chart-*` data-viz palette is pending an upstream design
+# pass). The chrome (tooltip, legend) is inherited from the shared Chart
+# primitives, which resolve the semantic tokens below.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-background-surface-primary
+    affects: tooltip-content
+    description: Tooltip surface (bg-background).
+  - name: --ui-text-on-surface-primary
+    affects: tooltip-content
+    description: Tooltip value text (text-foreground).
+  - name: --ui-text-on-surface-secondary
+    affects: legend-content
+    description: >-
+      Muted tooltip/legend label text
+      (text-muted-foreground / fill-muted-foreground).
+  - name: --ui-border-on-surface-border
+    affects: tooltip-content
+    description: Tooltip border (border-border).

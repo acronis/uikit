@@ -1,0 +1,89 @@
+spec_version: '1.0'
+component: PieChart
+
+# Framework-agnostic contract. `shape` is the CVA variant axis
+# (conformance-checked against the ui-react cva keys). `data` / `config` /
+# `dataKey` / `nameKey` are the data contract; the rest tune the arc geometry
+# and chrome. Unlike the cartesian charts, a pie plots a single `dataKey` across
+# rows and names each slice by `nameKey`.
+contract:
+  properties:
+    - name: shape
+      type: "'pie' | 'donut'"
+      required: false
+      default: "'pie'"
+      description: >-
+        Arc shape. `pie` fills to the centre; `donut` leaves a hollow centre
+        (`innerRadius`).
+    - name: data
+      type: ReadonlyArray<Record<string, string | number>>
+      required: true
+      description: Row-per-slice data — each row holds a `nameKey` label and a `dataKey` numeric value.
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Per-slice map of label / color, keyed by the slice's `nameKey` value
+        (from the shared Chart primitives). Turned into `--color-<name>` custom
+        properties. Colors are caller-supplied.
+    - name: dataKey
+      type: string
+      required: true
+      description: The numeric field that sizes each slice.
+    - name: nameKey
+      type: string
+      required: true
+      description: The label field that names each slice (drives legend, tooltip, and the `--color-<name>` lookup).
+    - name: innerRadius
+      type: number
+      required: false
+      default: '60'
+      description: Inner radius of the arc when `shape="donut"` (ignored for `shape="pie"`).
+    - name: outerRadius
+      type: number
+      required: false
+      description: Outer radius of the arc. Omit to use recharts' responsive default.
+    - name: paddingAngle
+      type: number
+      required: false
+      default: '0'
+      description: Gap between slices, in degrees.
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the hover tooltip.
+    - name: showLegend
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the legend.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: PieChart
+    status: implemented
+    import: "import { PieChart } from '@acronis-platform/ui-react'"
+    example: |
+      <PieChart
+        config={config}
+        data={data}
+        dataKey="value"
+        nameKey="browser"
+        shape="donut"
+        className="h-[360px] w-[360px]"
+      />
+  vue:
+    component: AvPieChart
+    status: planned
+    import: "import { AvPieChart } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvPieChart :config="config" :data="data" data-key="value" name-key="browser" />
+  web-components:
+    element: ui-pie-chart
+    status: planned
+    import: "import '@acronis-platform/ui-wc/pie-chart'"
+    example: |
+      <ui-pie-chart></ui-pie-chart>
