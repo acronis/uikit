@@ -882,8 +882,8 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onBrand.disabled}",
-              "default": "{colors.text.onBrand.disabled}"
+              "deep_sky_itkontoret": "{colors.text.onBrand.primary}",
+              "default": "{colors.text.onBrand.primary}"
             }
           },
           "hover": {
@@ -1048,7 +1048,7 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.glyph.onInverse.primary}",
+              "deep_sky_itkontoret": "{colors.glyph.onBrand.primary}",
               "default": "{colors.glyph.onBrand.primary}"
             }
           },
@@ -1066,8 +1066,8 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.glyph.onInverse.primary}",
-              "default": "{colors.glyph.onBrand.disabled}"
+              "deep_sky_itkontoret": "{colors.glyph.onBrand.primary}",
+              "default": "{colors.glyph.onBrand.primary}"
             }
           },
           "hover": {
@@ -1084,7 +1084,7 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.glyph.onInverse.primary}",
+              "deep_sky_itkontoret": "{colors.glyph.onBrand.primary}",
               "default": "{colors.glyph.onBrand.primary}"
             }
           },
@@ -1102,7 +1102,7 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.glyph.onInverse.primary}",
+              "deep_sky_itkontoret": "{colors.glyph.onBrand.primary}",
               "default": "{colors.glyph.onBrand.primary}"
             }
           }
@@ -1123,7 +1123,7 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onInverse.primary}",
+              "deep_sky_itkontoret": "{colors.text.onBrand.primary}",
               "default": "{colors.text.onBrand.primary}"
             }
           },
@@ -1140,8 +1140,8 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onBrand.disabled}",
-              "default": "{colors.text.onBrand.disabled}"
+              "deep_sky_itkontoret": "{colors.text.onBrand.primary}",
+              "default": "{colors.text.onBrand.primary}"
             }
           },
           "hover": {
@@ -1157,7 +1157,7 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onInverse.primary}",
+              "deep_sky_itkontoret": "{colors.text.onBrand.primary}",
               "default": "{colors.text.onBrand.primary}"
             }
           },
@@ -1174,7 +1174,7 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onInverse.primary}",
+              "deep_sky_itkontoret": "{colors.text.onBrand.primary}",
               "default": "{colors.text.onBrand.primary}"
             }
           }
@@ -1344,8 +1344,8 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onSurface.link}",
-              "default": "{colors.text.onSurface.link}"
+              "deep_sky_itkontoret": "{colors.text.onSurface.link-idle}",
+              "default": "{colors.text.onSurface.link-idle}"
             }
           }
         },
@@ -1626,8 +1626,8 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.glyph.onBrand.disabled}",
-              "default": "{colors.glyph.onBrand.disabled}"
+              "deep_sky_itkontoret": "{colors.glyph.onBrand.primary}",
+              "default": "{colors.glyph.onBrand.primary}"
             }
           },
           "hover": {
@@ -1700,8 +1700,8 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onBrand.disabled}",
-              "default": "{colors.text.onBrand.disabled}"
+              "deep_sky_itkontoret": "{colors.text.onBrand.primary}",
+              "default": "{colors.text.onBrand.primary}"
             }
           },
           "hover": {
@@ -1757,8 +1757,8 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "transparent",
-              "default": "transparent"
+              "deep_sky_itkontoret": "{colors.border.onSurface.border-active}",
+              "default": "{colors.border.onSurface.border-active}"
             }
           },
           "disabled": {
@@ -1774,8 +1774,8 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.border.onSurface.border}",
-              "default": "{colors.border.onSurface.border}"
+              "deep_sky_itkontoret": "{palette.grayscale.3}",
+              "default": "{palette.electricblue.3}"
             }
           },
           "hover": {
@@ -1791,8 +1791,8 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "transparent",
-              "default": "transparent"
+              "deep_sky_itkontoret": "{colors.border.onSurface.border-active}",
+              "default": "{colors.border.onSurface.border-active}"
             }
           },
           "idle": {
@@ -1808,8 +1808,8 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.border.onSurface.border}",
-              "default": "{colors.border.onSurface.border}"
+              "deep_sky_itkontoret": "{palette.grayscale.3}",
+              "default": "{palette.electricblue.3}"
             }
           }
         },
@@ -2044,8 +2044,8 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onSurface.link-pressed}",
-              "default": "{colors.text.onSurface.link}"
+              "deep_sky_itkontoret": "{colors.text.onSurface.link-idle}",
+              "default": "{colors.text.onSurface.link-idle}"
             }
           },
           "disabled": {
@@ -2078,8 +2078,8 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onSurface.link-hover}",
-              "default": "{colors.text.onSurface.link}"
+              "deep_sky_itkontoret": "{colors.text.onSurface.link-idle}",
+              "default": "{colors.text.onSurface.link-idle}"
             }
           },
           "idle": {
@@ -2095,8 +2095,8 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.text.onSurface.link}",
-              "default": "{colors.text.onSurface.link}"
+              "deep_sky_itkontoret": "{colors.text.onSurface.link-idle}",
+              "default": "{colors.text.onSurface.link-idle}"
             }
           }
         }
