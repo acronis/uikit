@@ -1,0 +1,12 @@
+spec_version: '1.0'
+component: BarChart
+name: bar-chart
+status: draft
+category: data-display
+description: >-
+  A typed bar-chart composition over the shared `Chart` primitives. Takes
+  `data` + `config` + a set of series `dataKeys` and renders a themed recharts
+  `BarChart` inside a `ChartContainer`, with tooltip and legend chrome. Two
+  variant axes: `orientation` (vertical / horizontal bars) and `layout`
+  (grouped / stacked). Ported from the apps/demo `BarChartPlayground`.
+since: 0.57.0

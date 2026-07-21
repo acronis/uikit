@@ -1,0 +1,77 @@
+spec_version: '1.0'
+component: BarChart
+
+schematic: |
+  root: <div data-orientation data-layout>          (variant wrapper)
+    container: <ChartContainer>                     (themed, sized, responsive)
+      plot: recharts <BarChart layout=…>
+        grid:    <CartesianGrid>                    (one axis of lines)
+        x-axis:  <XAxis>   category or number by orientation
+        y-axis:  <YAxis>   number or category by orientation
+        series:  one <Bar> per dataKey (grouped side-by-side or stacked)
+        tooltip: <ChartTooltip> → tooltip-content   (hover card)
+        legend:  <ChartLegend>  → legend-content    (per-series swatch + label)
+
+root:
+  element: div
+  description: >-
+    The variant wrapper. Carries the CVA `orientation` / `layout` classes and
+    mirrors the resolved values onto `data-orientation` / `data-layout`, then
+    renders the shared `ChartContainer` (sized to fill the wrapper) around the
+    recharts `BarChart`.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      The shared `ChartContainer` — supplies the per-series `--color-<key>`
+      custom properties from `config` and themes recharts' internals.
+  - id: plot
+    element: svg
+    description: >-
+      The recharts `BarChart`. Its `layout` is the opposite axis of our
+      `orientation` (vertical bars → recharts `horizontal`).
+  - id: grid
+    element: g
+    description: >-
+      `CartesianGrid` — horizontal lines for vertical bars, vertical lines for
+      horizontal bars.
+  - id: x-axis
+    element: g
+    description: >-
+      `XAxis` — the category axis for vertical bars (`xKey`), the numeric value
+      axis for horizontal bars.
+  - id: y-axis
+    element: g
+    description: >-
+      `YAxis` — the numeric value axis for vertical bars, the category axis
+      (`xKey`) for horizontal bars.
+  - id: series
+    element: g
+    description: >-
+      One `Bar` per entry in `dataKeys`, filled from its `--color-<key>` var.
+      Side-by-side when `layout=grouped`; sharing a `stackId` when `stacked`.
+  - id: tooltip-content
+    element: div
+    description: >-
+      `ChartTooltipContent` — hover card with the category label and one row per
+      series (color indicator + name + value). Rendered when `showTooltip`.
+  - id: legend-content
+    element: div
+    description: >-
+      `ChartLegendContent` — one swatch + label per series. Rendered when
+      `showLegend`.
+
+states:
+  - id: orientation-variant
+    trigger: the orientation prop selects vertical or horizontal bars
+    kind: prop
+    prop: orientation
+    affects: [plot, grid, x-axis, y-axis, series]
+  - id: layout-variant
+    trigger: the layout prop selects grouped or stacked bars
+    kind: prop
+    prop: layout
+    # `stacked` sums the series, so it also grows the value-axis domain and its
+    # grid ticks — not just the series arrangement.
+    affects: [series, x-axis, y-axis, grid]

@@ -346,6 +346,20 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
   });
 
+  it('BarChart: api.yaml orientation/layout enums match the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(HERE, '../../ui-react/src/components/ui/bar-chart/bar-chart.tsx'),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('bar-chart').api;
+
+    expect(Object.keys(groups).sort()).toEqual(['layout', 'orientation']);
+    for (const axis of ['orientation', 'layout']) {
+      expect(groups[axis].sort(), axis).toEqual(enumMembers(api, axis));
+    }
+  });
+
   it('Field: api.yaml orientation enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/field/field.tsx'),

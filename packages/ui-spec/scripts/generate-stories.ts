@@ -383,6 +383,12 @@ const RENDER: Record<string, RenderHint> = {
     // the hand-written stories (Bars / Lines / Areas / Pies / StackedBars).
     skip: true,
   },
+  'bar-chart': {
+    // Data-driven: requires data / config / dataKeys / xKey + a sized box, so a
+    // zero-arg render is meaningless. VR is covered by the hand-written stories
+    // (Vertical/Horizontal × Grouped/Stacked + TooltipOpen).
+    skip: true,
+  },
   field: {
     // A multi-part composition: Field needs a label + control + description as
     // children to render meaningfully. VR is covered by the hand-written stories

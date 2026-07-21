@@ -1,0 +1,94 @@
+---
+title: BarChart
+description: A typed bar chart — grouped or stacked, vertical or horizontal.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { BarChartDemo } from '@/components/demos-react/bar-chart';
+
+## Usage
+
+```tsx
+import { BarChart } from '@acronis-platform/ui-react';
+import type { ChartConfig } from '@acronis-platform/ui-react';
+```
+
+`BarChart` is a typed composition over the shared [`Chart`](/components/chart)
+primitives. Give it `data`, a per-series `config`, the series to plot
+(`dataKeys`), and the category key (`xKey`) — it renders a themed recharts bar
+chart (tooltip, legend, axes, grid included), so you don't hand-compose recharts
+children.
+
+Series colors are supplied by the caller through `config`: each entry maps a data
+key to a `label` and a `color`. `BarChart` turns those into the `--color-<key>`
+custom properties its bars fill from.
+
+> **Design-pending v1**, ported from the demo `BarChartPlayground`. There is no
+> chart token tier yet, so the example colors reference the shared brand/status
+> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
+> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
+> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
+> across brands until the real palette lands.
+
+## Examples
+
+<DemoReact>
+  <BarChartDemo />
+</DemoReact>
+
+A vertical, grouped bar chart with a themed tooltip and legend:
+
+```tsx
+const data = [
+  { month: 'Jan', desktop: 186, mobile: 80 },
+  { month: 'Feb', desktop: 305, mobile: 200 },
+  { month: 'Mar', desktop: 237, mobile: 120 },
+];
+
+const config = {
+  desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
+  mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
+} satisfies ChartConfig;
+
+<BarChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  className="h-[320px] w-[560px]"
+/>;
+```
+
+Stack the series by setting `layout="stacked"`:
+
+```tsx
+<BarChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" layout="stacked" />
+```
+
+Lay the bars on their side with `orientation="horizontal"` (the category moves to
+the y-axis):
+
+```tsx
+<BarChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" orientation="horizontal" />
+```
+
+Toggle the chrome and corner rounding with `showGrid` / `showTooltip` /
+`showLegend` / `barRadius`:
+
+```tsx
+<BarChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  showLegend={false}
+  barRadius={0}
+/>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/bar-chart/bar-chart.tsx"
+  name="BarChartProps"
+/>
