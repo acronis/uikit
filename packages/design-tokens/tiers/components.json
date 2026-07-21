@@ -12151,7 +12151,7 @@
                 "PD"
               ],
               "values": {
-                "deep_sky_itkontoret": "{colors.background.surface.hover}",
+                "deep_sky_itkontoret": "{colors.background.surface.active}",
                 "default": "{colors.background.surface.hover}"
               }
             },
@@ -12185,7 +12185,7 @@
                 "PD"
               ],
               "values": {
-                "deep_sky_itkontoret": "{colors.background.surface.primary}",
+                "deep_sky_itkontoret": "{colors.background.surface.secondary}",
                 "default": "{colors.background.surface.secondary}"
               }
             }
@@ -12321,7 +12321,7 @@
             "PD"
           ],
           "values": {
-            "deep_sky_itkontoret": "{units.gap.8}",
+            "deep_sky_itkontoret": "{units.gap.0}",
             "default": "{units.gap.0}"
           }
         }
@@ -12357,8 +12357,8 @@
             "PD"
           ],
           "values": {
-            "deep_sky_itkontoret": 36,
-            "default": 36
+            "deep_sky_itkontoret": "{units.size.40}",
+            "default": "{units.size.40}"
           }
         },
         "paddingX": {
@@ -12391,7 +12391,7 @@
             "PD"
           ],
           "values": {
-            "deep_sky_itkontoret": "{units.gap.8}",
+            "deep_sky_itkontoret": "{units.gap.2}",
             "default": "{units.gap.2}"
           }
         }
@@ -12411,14 +12411,7 @@
             "PD"
           ],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [
-                0,
-                0,
-                100
-              ]
-            },
+            "deep_sky_itkontoret": "{colors.glyph.onSurface.primary}",
             "default": "{colors.glyph.onSurface.primary}"
           }
         }
@@ -12508,7 +12501,7 @@
             "PD"
           ],
           "values": {
-            "deep_sky_itkontoret": "{colors.background.surface.primary}",
+            "deep_sky_itkontoret": "{colors.background.surface.secondary}",
             "default": "{colors.background.surface.secondary}"
           }
         }
@@ -12581,8 +12574,8 @@
             "PD"
           ],
           "values": {
-            "deep_sky_itkontoret": "{units.gap.12}",
-            "default": "{units.gap.12}"
+            "deep_sky_itkontoret": "{units.gap.16}",
+            "default": "{units.gap.16}"
           }
         }
       },
