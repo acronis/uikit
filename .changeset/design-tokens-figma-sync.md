@@ -1,6 +1,5 @@
 ---
 '@acronis-platform/design-tokens': minor
-'@acronis-platform/tokens-pd': minor
 ---
 
 Sync design tokens with Figma.
