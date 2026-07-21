@@ -5,20 +5,32 @@
 export default {
   theme: {
     extend: {
+      "textColor": {
+        "link-inverse-text-active": "light-dark(rgb(190 215 244), rgb(41 81 122))",
+        "link-inverse-text-hover": "light-dark(rgb(190 215 244), rgb(41 81 122))",
+        "link-inverse-text-idle": "light-dark(rgb(190 215 244), rgb(41 81 122))",
+        "link-normal-text-active": "light-dark(rgb(48 50 54), rgb(228 229 231))",
+        "link-normal-text-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "link-normal-text-hover": "light-dark(rgb(61 63 67), rgb(215 217 219))",
+        "link-normal-text-idle": "light-dark(rgb(73 76 80), rgb(201 204 207))"
+      },
       "fill": {
-        "link-external-icon-active": "light-dark(rgb(48 50 54), rgb(228 229 231))",
-        "link-external-icon-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
-        "link-external-icon-hover": "light-dark(rgb(61 63 67), rgb(215 217 219))",
-        "link-external-icon-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "link-inverse-external-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "link-inverse-external-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "link-inverse-external-icon-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "link-normal-external-icon-active": "light-dark(rgb(48 50 54), rgb(228 229 231))",
+        "link-normal-external-icon-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "link-normal-external-icon-hover": "light-dark(rgb(61 63 67), rgb(215 217 219))",
+        "link-normal-external-icon-idle": "light-dark(rgb(73 76 80), rgb(201 204 207))"
       },
       "fontFamily": {
-        "link-text-style-active": "Inter, system-ui, sans-serif",
-        "link-text-style-disabled": "Inter, system-ui, sans-serif",
-        "link-text-style-hover": "Inter, system-ui, sans-serif",
-        "link-text-style-idle": "Inter, system-ui, sans-serif"
+        "link-global-text-style-active": "Inter, system-ui, sans-serif",
+        "link-global-text-style-disabled": "Inter, system-ui, sans-serif",
+        "link-global-text-style-hover": "Inter, system-ui, sans-serif",
+        "link-global-text-style-idle": "Inter, system-ui, sans-serif"
       },
       "fontSize": {
-        "link-text-style-active": [
+        "link-global-text-style-active": [
           "14px",
           {
             "lineHeight": "24px",
@@ -26,7 +38,7 @@ export default {
             "fontWeight": "600"
           }
         ],
-        "link-text-style-disabled": [
+        "link-global-text-style-disabled": [
           "14px",
           {
             "lineHeight": "24px",
@@ -34,7 +46,7 @@ export default {
             "fontWeight": "600"
           }
         ],
-        "link-text-style-hover": [
+        "link-global-text-style-hover": [
           "14px",
           {
             "lineHeight": "24px",
@@ -42,7 +54,7 @@ export default {
             "fontWeight": "600"
           }
         ],
-        "link-text-style-idle": [
+        "link-global-text-style-idle": [
           "14px",
           {
             "lineHeight": "24px",
@@ -52,8 +64,8 @@ export default {
         ]
       },
       "spacing": {
-        "link-container-gap": "4px",
-        "link-container-height": "32px"
+        "link-global-container-gap": "4px",
+        "link-global-container-height": "32px"
       }
     },
   },

@@ -12,9 +12,9 @@ export default {
         "button-icon-global-container-idle": "light-dark(transparent, transparent)"
       },
       "borderColor": {
-        "button-icon-secondary-container-border-color-active": "light-dark(transparent, transparent)",
+        "button-icon-secondary-container-border-color-active": "light-dark(rgb(109 114 120), rgb(109 114 120))",
         "button-icon-secondary-container-border-color-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
-        "button-icon-secondary-container-border-color-hover": "light-dark(transparent, transparent)",
+        "button-icon-secondary-container-border-color-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
         "button-icon-secondary-container-border-color-idle": "light-dark(rgb(215 217 219), rgb(61 63 67))"
       },
       "fill": {
@@ -26,7 +26,9 @@ export default {
       "spacing": {
         "button-icon-global-container-height": "32px",
         "button-icon-global-container-padding-x": "4px",
-        "button-icon-global-icon-size": "24px",
+        "button-icon-global-container-padding-y": "4px",
+        "button-icon-global-container-width": "32px",
+        "button-icon-global-icon-size": "16px",
         "button-icon-secondary-container-border-width": "1px"
       },
       "borderRadius": {

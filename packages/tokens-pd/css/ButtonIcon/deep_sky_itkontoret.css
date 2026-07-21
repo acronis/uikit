@@ -8,6 +8,8 @@
   --ui-button-icon-global-icon-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-button-icon-global-icon-color-hover: light-dark(rgb(73 76 80), rgb(201 204 207));
   --ui-button-icon-global-icon-color-idle: light-dark(rgb(73 76 80), rgb(201 204 207));
+  --ui-button-icon-secondary-container-border-color-active: light-dark(rgb(109 114 120), rgb(109 114 120));
   --ui-button-icon-secondary-container-border-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-button-icon-secondary-container-border-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
   --ui-button-icon-secondary-container-border-color-idle: light-dark(rgb(215 217 219), rgb(61 63 67));
 }

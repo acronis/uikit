@@ -20,8 +20,8 @@ export default {
         "checkbox-unchecked-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
       "textColor": {
-        "checkbox-global-description": "light-dark(rgb(54 65 74), rgb(54 65 74))",
-        "checkbox-global-label": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "checkbox-global-description": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "checkbox-global-label": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
         "checkbox-checked-box-border-color-active": "light-dark(rgb(109 114 120), rgb(109 114 120))",

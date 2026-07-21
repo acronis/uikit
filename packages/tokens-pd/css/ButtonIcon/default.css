@@ -11,15 +11,17 @@
   --ui-button-icon-global-container-color-idle: light-dark(transparent, transparent);
   --ui-button-icon-global-container-height: 32px;
   --ui-button-icon-global-container-padding-x: 4px;
+  --ui-button-icon-global-container-padding-y: 4px;
+  --ui-button-icon-global-container-width: 32px;
   --ui-button-icon-global-icon-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-icon-global-icon-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-button-icon-global-icon-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-icon-global-icon-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
-  --ui-button-icon-global-icon-size: 24px;
-  --ui-button-icon-secondary-container-border-color-active: light-dark(transparent, transparent);
-  --ui-button-icon-secondary-container-border-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-button-icon-secondary-container-border-color-hover: light-dark(transparent, transparent);
-  --ui-button-icon-secondary-container-border-color-idle: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-button-icon-global-icon-size: 16px;
+  --ui-button-icon-secondary-container-border-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-button-icon-secondary-container-border-color-disabled: light-dark(rgb(214 228 245), rgb(38 70 115));
+  --ui-button-icon-secondary-container-border-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-button-icon-secondary-container-border-color-idle: light-dark(rgb(214 228 245), rgb(38 70 115));
   --ui-button-icon-secondary-container-border-style: solid;
   --ui-button-icon-secondary-container-border-width: 1px;
 }

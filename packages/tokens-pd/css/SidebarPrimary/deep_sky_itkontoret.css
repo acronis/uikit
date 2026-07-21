@@ -6,7 +6,6 @@
   --ui-sidebar-primary-menu-item-selected-container-color-active: light-dark(rgb(0 173 247), rgb(81 157 246));
   --ui-sidebar-primary-menu-item-selected-container-color-hover: light-dark(rgb(0 173 247), rgb(81 157 246));
   --ui-sidebar-primary-menu-item-selected-container-color-idle: light-dark(rgb(0 173 247), rgb(81 157 246));
-  --ui-sidebar-primary-menu-item-selected-icon-color-idle: light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6));
   --ui-sidebar-primary-menu-item-unselected-container-color-active: light-dark(rgb(0 128 173), rgb(61 63 67));
   --ui-sidebar-primary-menu-item-unselected-container-color-hover: light-dark(rgb(0 128 173), rgb(61 63 67));
   --ui-sidebar-primary-menu-item-unselected-container-color-idle: light-dark(rgb(0 105 142), rgb(12 12 14));

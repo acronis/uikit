@@ -7,9 +7,9 @@ export default {
     extend: {
       "backgroundColor": {
         "button-menu-dropdown-container": "light-dark(rgb(255 255 255), rgb(31 32 34))",
-        "button-menu-dropdown-item-container-active": "light-dark(rgb(244 245 245), rgb(24 25 27))",
-        "button-menu-dropdown-item-container-hover": "light-dark(rgb(228 229 231), rgb(48 50 54))",
-        "button-menu-dropdown-item-container-idle": "light-dark(rgb(228 229 231), rgb(48 50 54))",
+        "button-menu-dropdown-item-container-active": "light-dark(rgb(228 229 231), rgb(48 50 54))",
+        "button-menu-dropdown-item-container-hover": "light-dark(rgb(236 237 238), rgb(37 38 40))",
+        "button-menu-dropdown-item-container-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))",
         "button-menu-primary-container-active": "light-dark(rgb(48 50 54), rgb(18 77 161))",
         "button-menu-primary-container-disabled": "light-dark(rgb(215 217 219), rgb(48 50 54))",
         "button-menu-primary-container-hover": "light-dark(rgb(61 63 67), rgb(23 99 207))",
@@ -20,20 +20,20 @@ export default {
         "button-menu-secondary-container-idle": "light-dark(transparent, transparent)"
       },
       "textColor": {
-        "button-menu-dropdown-extras-shortcut-label": "light-dark(rgb(54 65 74), rgb(54 65 74))",
-        "button-menu-dropdown-item-label": "light-dark(rgb(68 81 93), rgb(68 81 93))",
+        "button-menu-dropdown-extras-shortcut-label": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "button-menu-dropdown-item-label": "light-dark(rgb(73 76 80), rgb(201 204 207))",
         "button-menu-primary-label": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "button-menu-secondary-label-active": "light-dark(rgb(68 81 93), rgb(68 81 93))",
+        "button-menu-secondary-label-active": "light-dark(rgb(73 76 80), rgb(201 204 207))",
         "button-menu-secondary-label-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
-        "button-menu-secondary-label-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "button-menu-secondary-label-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "button-menu-secondary-label-hover": "light-dark(rgb(73 76 80), rgb(201 204 207))",
+        "button-menu-secondary-label-idle": "light-dark(rgb(73 76 80), rgb(201 204 207))"
       },
       "borderColor": {
-        "button-menu-dropdown-container-border-color": "light-dark(rgb(215 217 219), rgb(61 63 67))",
+        "button-menu-dropdown-container-border-color": "light-dark(rgb(109 114 120), rgb(109 114 120))",
         "button-menu-dropdown-section-container-border-color": "light-dark(rgb(215 217 219), rgb(61 63 67))",
-        "button-menu-secondary-container-border-color-active": "light-dark(transparent, transparent)",
+        "button-menu-secondary-container-border-color-active": "light-dark(rgb(109 114 120), rgb(109 114 120))",
         "button-menu-secondary-container-border-color-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
-        "button-menu-secondary-container-border-color-hover": "light-dark(transparent, transparent)",
+        "button-menu-secondary-container-border-color-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
         "button-menu-secondary-container-border-color-idle": "light-dark(rgb(215 217 219), rgb(61 63 67))"
       },
       "fill": {
@@ -47,6 +47,7 @@ export default {
       },
       "fontFamily": {
         "button-menu-dropdown-extras-shortcut-label-text-style": "Inter, system-ui, sans-serif",
+        "button-menu-dropdown-item-label-text-style": "Inter, system-ui, sans-serif",
         "button-menu-global-label-text-style": "Inter, system-ui, sans-serif"
       },
       "fontSize": {
@@ -56,6 +57,14 @@ export default {
             "lineHeight": "24px",
             "letterSpacing": "0px",
             "fontWeight": "400"
+          }
+        ],
+        "button-menu-dropdown-item-label-text-style": [
+          "14px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "0px",
+            "fontWeight": "600"
           }
         ],
         "button-menu-global-label-text-style": [
@@ -72,13 +81,14 @@ export default {
         "button-menu-dropdown-container-gap": "0px",
         "button-menu-dropdown-container-padding-x": "0px",
         "button-menu-dropdown-container-padding-y": "0px",
+        "button-menu-dropdown-container-width-min": "128px",
         "button-menu-dropdown-item-container-gap": "8px",
         "button-menu-dropdown-item-container-height": "40px",
         "button-menu-dropdown-item-container-padding-x": "12px",
         "button-menu-dropdown-item-container-padding-y": "8px",
         "button-menu-dropdown-section-container-border-width": "1px",
         "button-menu-dropdown-section-container-padding-x": "0px",
-        "button-menu-dropdown-section-container-padding-y": "0px",
+        "button-menu-dropdown-section-container-padding-y": "8px",
         "button-menu-dropdown-section-list-gap": "0px",
         "button-menu-global-container-gap": "8px",
         "button-menu-global-container-height": "32px",

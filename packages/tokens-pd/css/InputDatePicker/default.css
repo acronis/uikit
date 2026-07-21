@@ -23,6 +23,7 @@
   --ui-input-date-picker-global-container-gap: 4px;
   --ui-input-date-picker-global-container-label-gap: 4px;
   --ui-input-date-picker-global-container-width-min: 128px;
+  --ui-input-date-picker-global-icon-box-size: 20px;
   --ui-input-date-picker-global-label-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-input-date-picker-global-label-color-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-input-date-picker-global-label-color-idle: light-dark(rgb(24 25 27), rgb(244 245 245));

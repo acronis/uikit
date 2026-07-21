@@ -4,22 +4,26 @@
 :root, :host {
   color-scheme: light dark;
 
+  --ui-table-data-cell-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));
+  --ui-table-data-cell-color-hover: light-dark(rgb(238 242 247), rgb(46 47 50));
+  --ui-table-data-cell-color-idle: light-dark(transparent, transparent);
   --ui-table-data-gap: 8px;
+  --ui-table-data-row-color-active: light-dark(rgb(238 242 247), rgb(46 47 50));
+  --ui-table-data-row-color-hover: light-dark(rgb(238 242 247), rgb(46 47 50));
+  --ui-table-data-row-color-idle: light-dark(transparent, transparent);
   --ui-table-data-value-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-table-data-value-color-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
-  --ui-table-global-cell-border-color: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-table-global-cell-border-style: solid;
-  --ui-table-global-cell-border-width: 1px;
+  --ui-table-global-cell-icon-margin-y: 4px;
   --ui-table-global-cell-min-height: 40px;
   --ui-table-global-cell-padding-x: 16px;
   --ui-table-global-cell-padding-y: 8px;
-  --ui-table-global-row-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));
-  --ui-table-global-row-color-hover: light-dark(rgb(238 242 247), rgb(46 47 50));
-  --ui-table-global-row-color-idle: light-dark(transparent, transparent);
+  --ui-table-global-cell-tag-margin-y: 2px;
+  --ui-table-global-row-border-color: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-table-global-row-border-style: solid;
+  --ui-table-global-row-border-width: 1px;
   --ui-table-header-cell-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));
   --ui-table-header-cell-color-hover: light-dark(rgb(238 242 247), rgb(46 47 50));
   --ui-table-header-cell-color-idle: light-dark(transparent, transparent);
-  --ui-table-header-cell-padding-x: 16px;
   --ui-table-header-gap: 8px;
   --ui-table-header-label-color: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-table-header-sort-icon-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));

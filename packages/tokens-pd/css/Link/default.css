@@ -4,20 +4,26 @@
 :root, :host {
   color-scheme: light dark;
 
-  --ui-link-color-active: light-dark(rgb(6 54 121), rgb(190 215 244));
-  --ui-link-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-link-color-hover: light-dark(rgb(19 84 174), rgb(23 99 207));
-  --ui-link-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
-  --ui-link-container-gap: 4px;
-  --ui-link-container-height: 32px;
-  --ui-link-external-icon-color-active: light-dark(rgb(6 54 121), rgb(190 215 244));
-  --ui-link-external-icon-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-link-external-icon-color-hover: light-dark(rgb(19 84 174), rgb(23 99 207));
-  --ui-link-external-icon-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
-  --ui-link-text-decoration-active: none;
-  --ui-link-text-decoration-disabled: none;
-  --ui-link-text-decoration-hover: underline;
-  --ui-link-text-decoration-idle: none;
+  --ui-link-global-container-gap: 4px;
+  --ui-link-global-container-height: 32px;
+  --ui-link-global-text-decoration-active: none;
+  --ui-link-global-text-decoration-disabled: none;
+  --ui-link-global-text-decoration-hover: underline;
+  --ui-link-global-text-decoration-idle: none;
+  --ui-link-inverse-external-icon-color-active: light-dark(rgb(255 255 255), rgb(255 255 255));
+  --ui-link-inverse-external-icon-color-hover: light-dark(rgb(255 255 255), rgb(255 255 255));
+  --ui-link-inverse-external-icon-color-idle: light-dark(rgb(255 255 255), rgb(255 255 255));
+  --ui-link-inverse-text-color-active: light-dark(rgb(190 215 244), rgb(41 81 122));
+  --ui-link-inverse-text-color-hover: light-dark(rgb(190 215 244), rgb(41 81 122));
+  --ui-link-inverse-text-color-idle: light-dark(rgb(190 215 244), rgb(41 81 122));
+  --ui-link-normal-external-icon-color-active: light-dark(rgb(6 54 121), rgb(190 215 244));
+  --ui-link-normal-external-icon-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-link-normal-external-icon-color-hover: light-dark(rgb(19 84 174), rgb(23 99 207));
+  --ui-link-normal-external-icon-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-link-normal-text-color-active: light-dark(rgb(6 54 121), rgb(190 215 244));
+  --ui-link-normal-text-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-link-normal-text-color-hover: light-dark(rgb(19 84 174), rgb(23 99 207));
+  --ui-link-normal-text-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
 }
 
 [data-theme='light'], :host([data-theme='light']) {
@@ -28,7 +34,7 @@
   color-scheme: dark;
 }
 
-.ui-link-text-style-active {
+.ui-link-global-text-style-active {
   font-family: Inter, system-ui, sans-serif;
   font-size: 14px;
   font-weight: 600;
@@ -36,7 +42,7 @@
   letter-spacing: 0px;
 }
 
-.ui-link-text-style-disabled {
+.ui-link-global-text-style-disabled {
   font-family: Inter, system-ui, sans-serif;
   font-size: 14px;
   font-weight: 600;
@@ -44,7 +50,7 @@
   letter-spacing: 0px;
 }
 
-.ui-link-text-style-hover {
+.ui-link-global-text-style-hover {
   font-family: Inter, system-ui, sans-serif;
   font-size: 14px;
   font-weight: 600;
@@ -52,7 +58,7 @@
   letter-spacing: 0px;
 }
 
-.ui-link-text-style-idle {
+.ui-link-global-text-style-idle {
   font-family: Inter, system-ui, sans-serif;
   font-size: 14px;
   font-weight: 600;

@@ -1982,6 +1982,140 @@
         }
       }
     },
+    "red_home_pl": {
+      "ButtonPrimary": {
+        "active": {
+          "$extensions": {
+            "com.figma.hiddenFromPublishing": true,
+            "com.figma.scopes": [],
+            "com.figma.variableId": "VariableID:5242:10313"
+          },
+          "$type": "color",
+          "$value": {
+            "colorSpace": "hsl",
+            "components": [
+              220,
+              5.88,
+              20
+            ]
+          }
+        },
+        "disabled": {
+          "$extensions": {
+            "com.figma.hiddenFromPublishing": true,
+            "com.figma.scopes": [],
+            "com.figma.variableId": "VariableID:5242:10314"
+          },
+          "$type": "color",
+          "$value": {
+            "colorSpace": "hsl",
+            "components": [
+              210,
+              5.26,
+              85.1
+            ]
+          }
+        },
+        "hover": {
+          "$extensions": {
+            "com.figma.hiddenFromPublishing": true,
+            "com.figma.scopes": [],
+            "com.figma.variableId": "VariableID:5242:10312"
+          },
+          "$type": "color",
+          "$value": {
+            "colorSpace": "hsl",
+            "components": [
+              220,
+              4.69,
+              25.1
+            ]
+          }
+        },
+        "idle": {
+          "$extensions": {
+            "com.figma.hiddenFromPublishing": true,
+            "com.figma.scopes": [],
+            "com.figma.variableId": "VariableID:5242:10311"
+          },
+          "$type": "color",
+          "$value": {
+            "colorSpace": "hsl",
+            "components": [
+              214.29,
+              4.58,
+              30
+            ]
+          }
+        }
+      },
+      "SidebarPrimary": {
+        "active": {
+          "$extensions": {
+            "com.figma.hiddenFromPublishing": true,
+            "com.figma.scopes": [],
+            "com.figma.variableId": "VariableID:4031:9608"
+          },
+          "$type": "color",
+          "$value": {
+            "colorSpace": "hsl",
+            "components": [
+              0,
+              100,
+              88.04
+            ]
+          }
+        },
+        "disabled": {
+          "$extensions": {
+            "com.figma.hiddenFromPublishing": true,
+            "com.figma.scopes": [],
+            "com.figma.variableId": "VariableID:5242:10306"
+          },
+          "$type": "color",
+          "$value": {
+            "colorSpace": "hsl",
+            "components": [
+              0,
+              100,
+              96.08
+            ]
+          }
+        },
+        "hover": {
+          "$extensions": {
+            "com.figma.hiddenFromPublishing": true,
+            "com.figma.scopes": [],
+            "com.figma.variableId": "VariableID:5242:10305"
+          },
+          "$type": "color",
+          "$value": {
+            "colorSpace": "hsl",
+            "components": [
+              0,
+              100,
+              53.92
+            ]
+          }
+        },
+        "idle": {
+          "$extensions": {
+            "com.figma.hiddenFromPublishing": true,
+            "com.figma.scopes": [],
+            "com.figma.variableId": "VariableID:4031:9609"
+          },
+          "$type": "color",
+          "$value": {
+            "colorSpace": "hsl",
+            "components": [
+              0,
+              100,
+              44.12
+            ]
+          }
+        }
+      }
+    },
     "sand": {
       "ButtonPrimary": {
         "active": {
@@ -6135,6 +6269,20 @@
           "value": 72
         }
       },
+      "76": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "WIDTH_HEIGHT",
+            "FONT_VARIATIONS"
+          ],
+          "com.figma.variableId": "VariableID:6327:19743"
+        },
+        "$type": "dimension",
+        "$value": {
+          "unit": "px",
+          "value": 76
+        }
+      },
       "96": {
         "$extensions": {
           "com.figma.scopes": [
@@ -6189,6 +6337,20 @@
         "$value": {
           "unit": "px",
           "value": 256
+        }
+      },
+      "320": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "WIDTH_HEIGHT",
+            "FONT_VARIATIONS"
+          ],
+          "com.figma.variableId": "VariableID:6364:18086"
+        },
+        "$type": "dimension",
+        "$value": {
+          "unit": "px",
+          "value": 320
         }
       },
       "512": {

@@ -11,8 +11,6 @@
   --ui-radio-checked-box-color-hover: light-dark(rgb(61 63 67), rgb(23 99 207));
   --ui-radio-checked-box-color-idle: light-dark(rgb(73 76 80), rgb(81 157 246));
   --ui-radio-checked-icon-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
-  --ui-radio-global-description-color: light-dark(rgb(54 65 74), rgb(54 65 74));
-  --ui-radio-global-label-color: light-dark(rgb(68 81 93), rgb(68 81 93));
   --ui-radio-unchecked-box-border-color-active: light-dark(rgb(109 114 120), rgb(109 114 120));
   --ui-radio-unchecked-box-border-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-radio-unchecked-box-border-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));

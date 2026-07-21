@@ -76,21 +76,21 @@ export default {
         "on-backdrop-screen-primary": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "on-backdrop-screen-secondary": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6))",
         "on-brand-disabled": "light-dark(rgb(255 255 255 / 0.302), rgb(255 255 255 / 0.302))",
-        "on-brand-link": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "on-brand-link-disabled": "light-dark(rgb(255 255 255 / 0.302), rgb(255 255 255 / 0.302))",
         "on-brand-link-hover": "light-dark(rgb(117 174 240), rgb(85 89 94))",
+        "on-brand-link-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "on-brand-link-pressed": "light-dark(rgb(214 228 245), rgb(48 50 54))",
         "on-brand-primary": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "on-brand-secondary": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6))",
-        "on-inverse-primary": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "on-inverse-primary": "light-dark(rgb(255 255 255), rgb(24 25 27))",
         "on-inverse-secondary": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6))",
         "on-status-ai": "light-dark(rgb(130 23 130), rgb(250 209 250))",
         "on-status-critical": "light-dark(rgb(153 69 0), rgb(255 222 194))",
         "on-status-danger": "light-dark(rgb(152 27 27), rgb(251 218 218))",
         "on-status-info": "light-dark(rgb(6 54 121), rgb(214 228 245))",
-        "on-status-link": "light-dark(rgb(6 54 121), rgb(214 228 245))",
         "on-status-link-disabled": "light-dark(rgb(117 174 240), rgb(48 89 145))",
         "on-status-link-hover": "light-dark(rgb(0 32 77), rgb(238 242 247))",
+        "on-status-link-idle": "light-dark(rgb(6 54 121), rgb(214 228 245))",
         "on-status-link-pressed": "light-dark(rgb(0 21 51), rgb(248 250 252))",
         "on-status-neutral": "light-dark(rgb(61 63 67), rgb(215 217 219))",
         "on-status-primary": "light-dark(rgb(24 25 27), rgb(244 245 245))",
@@ -109,9 +109,9 @@ export default {
         "on-status-strong-warning": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "on-surface-destructive": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "on-surface-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
-        "on-surface-link": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "on-surface-link-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
         "on-surface-link-hover": "light-dark(rgb(19 84 174), rgb(23 99 207))",
+        "on-surface-link-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "on-surface-link-pressed": "light-dark(rgb(6 54 121), rgb(190 215 244))",
         "on-surface-primary": "light-dark(rgb(24 25 27), rgb(244 245 245))",
         "on-surface-secondary": "light-dark(rgb(109 114 120), rgb(109 114 120))"
@@ -155,10 +155,12 @@ export default {
         "on-status-primary": "light-dark(rgb(6 54 121), rgb(214 228 245))",
         "on-status-success": "light-dark(rgb(15 87 33), rgb(209 240 214))",
         "on-status-warning": "light-dark(rgb(138 99 0), rgb(255 238 178))",
+        "on-status-strong-primary": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "on-surface-brand": "light-dark(rgb(0 32 77), rgb(12 12 14))",
         "on-surface-destructive": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "on-surface-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
         "on-surface-neutral": "light-dark(rgb(201 204 207), rgb(73 76 80))",
+        "on-surface-neutral-dark": "light-dark(rgb(73 76 80), rgb(201 204 207))",
         "on-surface-primary": "light-dark(rgb(23 99 207), rgb(81 157 246))"
       },
       "ringColor": {
@@ -185,6 +187,7 @@ export default {
         "typography-caption-strong": "Inter, system-ui, sans-serif",
         "typography-fineprint-heading": "Inter, system-ui, sans-serif",
         "typography-headings-display": "Inter, system-ui, sans-serif",
+        "typography-headings-display-numeric": "Inter, system-ui, sans-serif",
         "typography-headings-lead": "Inter, system-ui, sans-serif",
         "typography-headings-title": "Inter, system-ui, sans-serif",
         "typography-headings-title-accent": "Inter, system-ui, sans-serif",
@@ -269,6 +272,14 @@ export default {
           }
         ],
         "typography-headings-display": [
+          "32px",
+          {
+            "lineHeight": "40px",
+            "letterSpacing": "0px",
+            "fontWeight": "400"
+          }
+        ],
+        "typography-headings-display-numeric": [
           "32px",
           {
             "lineHeight": "40px",

@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       "textColor": {
-        "avatar-global-text": "light-dark(rgb(68 81 93), rgb(68 81 93))",
+        "avatar-global-text": "light-dark(rgb(24 25 27), rgb(244 245 245))",
         "avatar-label-orange": "light-dark(rgb(153 69 0), rgb(255 222 194))",
         "avatar-label-red": "light-dark(rgb(152 27 27), rgb(251 218 218))",
         "avatar-label-teal": "light-dark(rgb(4 73 67), rgb(209 240 237))",

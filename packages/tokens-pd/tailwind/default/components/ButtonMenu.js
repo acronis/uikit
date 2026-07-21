@@ -31,10 +31,10 @@ export default {
       "borderColor": {
         "button-menu-dropdown-container-border-color": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "button-menu-dropdown-section-container-border-color": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "button-menu-secondary-container-border-color-active": "light-dark(transparent, transparent)",
-        "button-menu-secondary-container-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "button-menu-secondary-container-border-color-hover": "light-dark(transparent, transparent)",
-        "button-menu-secondary-container-border-color-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
+        "button-menu-secondary-container-border-color-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "button-menu-secondary-container-border-color-disabled": "light-dark(rgb(214 228 245), rgb(38 70 115))",
+        "button-menu-secondary-container-border-color-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "button-menu-secondary-container-border-color-idle": "light-dark(rgb(214 228 245), rgb(38 70 115))"
       },
       "fill": {
         "button-menu-dropdown-extras-cascade-icon": "light-dark(rgb(23 99 207), rgb(81 157 246))",
@@ -81,13 +81,14 @@ export default {
         "button-menu-dropdown-container-gap": "0px",
         "button-menu-dropdown-container-padding-x": "0px",
         "button-menu-dropdown-container-padding-y": "0px",
+        "button-menu-dropdown-container-width-min": "128px",
         "button-menu-dropdown-item-container-gap": "8px",
         "button-menu-dropdown-item-container-height": "40px",
         "button-menu-dropdown-item-container-padding-x": "12px",
         "button-menu-dropdown-item-container-padding-y": "8px",
         "button-menu-dropdown-section-container-border-width": "1px",
         "button-menu-dropdown-section-container-padding-x": "0px",
-        "button-menu-dropdown-section-container-padding-y": "0px",
+        "button-menu-dropdown-section-container-padding-y": "8px",
         "button-menu-dropdown-section-list-gap": "0px",
         "button-menu-global-container-gap": "8px",
         "button-menu-global-container-height": "32px",

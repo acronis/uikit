@@ -38,7 +38,7 @@
   --ui-input-select-dropdown-section-container-border-width: 1px;
   --ui-input-select-dropdown-section-container-header-padding-x: 12px;
   --ui-input-select-dropdown-section-container-header-padding-y: 8px;
-  --ui-input-select-dropdown-section-container-padding-y: 0px;
+  --ui-input-select-dropdown-section-container-padding-y: 8px;
   --ui-input-select-dropdown-section-label-group-color: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-input-select-dropdown-section-list-gap: 0px;
   --ui-input-select-error-box-border-color-hover: light-dark(rgb(226 54 54), rgb(229 77 77));
@@ -61,6 +61,7 @@
   --ui-input-select-global-container-gap: 4px;
   --ui-input-select-global-container-label-gap: 4px;
   --ui-input-select-global-container-width-min: 128px;
+  --ui-input-select-global-icon-box-size: 20px;
   --ui-input-select-global-label-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-input-select-global-label-color-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-input-select-global-label-color-idle: light-dark(rgb(24 25 27), rgb(244 245 245));

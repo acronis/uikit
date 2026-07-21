@@ -10,7 +10,7 @@
   --ui-tooltip-container-padding-y: 8px;
   --ui-tooltip-container-width-max: 256px;
   --ui-tooltip-container-width-min: 48px;
-  --ui-tooltip-label-color: light-dark(rgb(255 255 255), rgb(255 255 255));
+  --ui-tooltip-label-color: light-dark(rgb(255 255 255), rgb(24 25 27));
 }
 
 [data-theme='light'], :host([data-theme='light']) {
@@ -24,7 +24,7 @@
 .ui-tooltip-label-text-style {
   font-family: Inter, system-ui, sans-serif;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 16px;
   letter-spacing: 0px;
 }

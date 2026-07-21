@@ -118,7 +118,8 @@ export default {
         "input-date-picker-global-box-padding-y": "4px",
         "input-date-picker-global-container-gap": "4px",
         "input-date-picker-global-container-width-min": "128px",
-        "input-date-picker-global-container-label-gap": "4px"
+        "input-date-picker-global-container-label-gap": "4px",
+        "input-date-picker-global-icon-box-size": "20px"
       },
       "borderRadius": {
         "input-date-picker-global-box-border-radius": "4px"

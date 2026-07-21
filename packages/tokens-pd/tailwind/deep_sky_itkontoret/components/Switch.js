@@ -20,7 +20,7 @@ export default {
         "switch-on-box-idle": "light-dark(rgb(70 185 89), rgb(70 185 89))"
       },
       "textColor": {
-        "switch-global-label": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "switch-global-label": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
         "switch-global-box-border-color-active": "light-dark(transparent, transparent)",

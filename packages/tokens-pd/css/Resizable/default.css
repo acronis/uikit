@@ -4,10 +4,6 @@
 :root, :host {
   color-scheme: light dark;
 
-  --ui-resizable-bar-border-radius: 4px;
-  --ui-resizable-bar-color: light-dark(rgb(23 99 207), rgb(81 157 246));
-  --ui-resizable-bar-height: 32px;
-  --ui-resizable-bar-width: 7px;
   --ui-resizable-border-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-resizable-border-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-resizable-border-style: solid;

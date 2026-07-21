@@ -21,11 +21,11 @@ export default {
       },
       "textColor": {
         "button-ai-label-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "button-ai-label-disabled": "light-dark(rgb(255 255 255 / 0.302), rgb(255 255 255 / 0.302))",
+        "button-ai-label-disabled": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-ai-label-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-ai-label-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-destructive-label-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "button-destructive-label-disabled": "light-dark(rgb(255 255 255 / 0.302), rgb(255 255 255 / 0.302))",
+        "button-destructive-label-disabled": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-destructive-label-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-destructive-label-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-ghost-label-active": "light-dark(rgb(6 54 121), rgb(190 215 244))",
@@ -33,7 +33,7 @@ export default {
         "button-ghost-label-hover": "light-dark(rgb(19 84 174), rgb(23 99 207))",
         "button-ghost-label-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "button-primary-label-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "button-primary-label-disabled": "light-dark(rgb(255 255 255 / 0.302), rgb(255 255 255 / 0.302))",
+        "button-primary-label-disabled": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-primary-label-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-primary-label-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-secondary-label-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",
@@ -42,10 +42,10 @@ export default {
         "button-secondary-label-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))"
       },
       "borderColor": {
-        "button-secondary-container-border-color-active": "light-dark(transparent, transparent)",
-        "button-secondary-container-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "button-secondary-container-border-color-hover": "light-dark(transparent, transparent)",
-        "button-secondary-container-border-color-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
+        "button-secondary-container-border-color-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "button-secondary-container-border-color-disabled": "light-dark(rgb(214 228 245), rgb(38 70 115))",
+        "button-secondary-container-border-color-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "button-secondary-container-border-color-idle": "light-dark(rgb(214 228 245), rgb(38 70 115))"
       },
       "fill": {
         "button-ai-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
@@ -53,7 +53,7 @@ export default {
         "button-ai-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-ai-icon-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-destructive-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "button-destructive-icon-disabled": "light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.102))",
+        "button-destructive-icon-disabled": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-destructive-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-destructive-icon-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-ghost-icon-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",
@@ -61,7 +61,7 @@ export default {
         "button-ghost-icon-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "button-ghost-icon-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "button-primary-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "button-primary-icon-disabled": "light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.102))",
+        "button-primary-icon-disabled": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-primary-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-primary-icon-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-secondary-icon-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",

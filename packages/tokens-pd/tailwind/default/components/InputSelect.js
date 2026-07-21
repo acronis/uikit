@@ -139,7 +139,7 @@ export default {
         "input-select-dropdown-item-global-container-padding-x": "12px",
         "input-select-dropdown-item-global-container-padding-y": "8px",
         "input-select-dropdown-section-container-border-width": "1px",
-        "input-select-dropdown-section-container-padding-y": "0px",
+        "input-select-dropdown-section-container-padding-y": "8px",
         "input-select-dropdown-section-container-header-padding-x": "12px",
         "input-select-dropdown-section-container-header-padding-y": "8px",
         "input-select-dropdown-section-list-gap": "0px",
@@ -150,7 +150,8 @@ export default {
         "input-select-global-box-padding-y": "4px",
         "input-select-global-container-gap": "4px",
         "input-select-global-container-width-min": "128px",
-        "input-select-global-container-label-gap": "4px"
+        "input-select-global-container-label-gap": "4px",
+        "input-select-global-icon-box-size": "20px"
       },
       "borderRadius": {
         "input-select-dropdown-container-border-radius": "4px",

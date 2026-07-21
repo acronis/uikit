@@ -17,9 +17,9 @@ export default {
         "card-filter-static-value-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
-        "card-filter-global-border-color-active": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "card-filter-global-border-color-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "card-filter-global-border-color-focused": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "card-filter-global-border-color-hover": "light-dark(rgb(214 228 245), rgb(48 50 54))",
+        "card-filter-global-border-color-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "card-filter-global-border-color-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
       },
       "fontFamily": {

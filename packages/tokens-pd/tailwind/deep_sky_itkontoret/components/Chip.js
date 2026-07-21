@@ -11,9 +11,9 @@ export default {
         "chip-global-box-idle": "light-dark(rgb(244 245 245), rgb(24 25 27))"
       },
       "textColor": {
-        "chip-operational-label": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "chip-removable-label": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "chip-selectable-label": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "chip-operational-label": "light-dark(rgb(73 76 80), rgb(201 204 207))",
+        "chip-removable-label": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "chip-selectable-label": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
         "chip-global-border-active": "light-dark(rgb(109 114 120), rgb(109 114 120))",
@@ -34,7 +34,7 @@ export default {
           {
             "lineHeight": "24px",
             "letterSpacing": "0px",
-            "fontWeight": "600"
+            "fontWeight": "400"
           }
         ],
         "chip-removable-label-text-style": [

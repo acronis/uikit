@@ -6,15 +6,15 @@ export default {
   theme: {
     extend: {
       "backgroundColor": {
-        "card-filter-global-container-active": "light-dark(rgb(255 255 255), rgb(31 32 34))",
-        "card-filter-global-container-hover": "light-dark(rgb(255 255 255), rgb(31 32 34))",
+        "card-filter-global-container-active": "light-dark(rgb(228 229 231), rgb(48 50 54))",
+        "card-filter-global-container-hover": "light-dark(rgb(236 237 238), rgb(37 38 40))",
         "card-filter-global-container-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
       "textColor": {
-        "card-filter-global-label": "light-dark(rgb(54 65 74), rgb(54 65 74))",
-        "card-filter-clickable-value": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "card-filter-static-value-disabled": "light-dark(rgb(54 65 74), rgb(54 65 74))",
-        "card-filter-static-value-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "card-filter-global-label": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "card-filter-clickable-value": "light-dark(rgb(73 76 80), rgb(201 204 207))",
+        "card-filter-static-value-disabled": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "card-filter-static-value-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
         "card-filter-global-border-color-active": "light-dark(rgb(109 114 120), rgb(109 114 120))",

@@ -12,10 +12,10 @@ export default {
         "button-icon-global-container-idle": "light-dark(transparent, transparent)"
       },
       "borderColor": {
-        "button-icon-secondary-container-border-color-active": "light-dark(transparent, transparent)",
-        "button-icon-secondary-container-border-color-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
-        "button-icon-secondary-container-border-color-hover": "light-dark(transparent, transparent)",
-        "button-icon-secondary-container-border-color-idle": "light-dark(rgb(214 228 245), rgb(48 50 54))"
+        "button-icon-secondary-container-border-color-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "button-icon-secondary-container-border-color-disabled": "light-dark(rgb(214 228 245), rgb(38 70 115))",
+        "button-icon-secondary-container-border-color-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "button-icon-secondary-container-border-color-idle": "light-dark(rgb(214 228 245), rgb(38 70 115))"
       },
       "fill": {
         "button-icon-global-icon-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",
@@ -26,7 +26,9 @@ export default {
       "spacing": {
         "button-icon-global-container-height": "32px",
         "button-icon-global-container-padding-x": "4px",
-        "button-icon-global-icon-size": "24px",
+        "button-icon-global-container-padding-y": "4px",
+        "button-icon-global-container-width": "32px",
+        "button-icon-global-icon-size": "16px",
         "button-icon-secondary-container-border-width": "1px"
       },
       "borderRadius": {

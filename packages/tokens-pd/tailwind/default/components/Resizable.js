@@ -10,12 +10,7 @@ export default {
         "resizable-border-hover": "light-dark(rgb(23 99 207), rgb(81 157 246))"
       },
       "spacing": {
-        "resizable-bar-height": "32px",
-        "resizable-bar-width": "7px",
         "resizable-border-width": "1px"
-      },
-      "borderRadius": {
-        "resizable-bar-border-radius": "4px"
       }
     },
   },

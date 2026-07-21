@@ -101,12 +101,14 @@
   --ui-glyph-on-status-info: light-dark(rgb(6 54 121), rgb(214 228 245));
   --ui-glyph-on-status-neutral: light-dark(rgb(61 63 67), rgb(215 217 219));
   --ui-glyph-on-status-primary: light-dark(rgb(6 54 121), rgb(214 228 245));
+  --ui-glyph-on-status-strong-primary: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-glyph-on-status-success: light-dark(rgb(15 87 33), rgb(209 240 214));
   --ui-glyph-on-status-warning: light-dark(rgb(138 99 0), rgb(255 238 178));
   --ui-glyph-on-surface-brand: light-dark(rgb(0 32 77), rgb(12 12 14));
   --ui-glyph-on-surface-destructive: light-dark(rgb(226 54 54), rgb(229 77 77));
   --ui-glyph-on-surface-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-glyph-on-surface-neutral: light-dark(rgb(201 204 207), rgb(73 76 80));
+  --ui-glyph-on-surface-neutral-dark: light-dark(rgb(73 76 80), rgb(201 204 207));
   --ui-glyph-on-surface-primary: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-gradients-ai-active: linear-gradient(90deg, rgb(43 54 155) 20%, rgb(118 21 113) 100%);
   --ui-gradients-ai-disabled: linear-gradient(90deg, rgb(223 226 255) 20%, rgb(255 218 253) 100%);
@@ -122,21 +124,21 @@
   --ui-text-on-backdrop-screen-primary: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-text-on-backdrop-screen-secondary: light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6));
   --ui-text-on-brand-disabled: light-dark(rgb(255 255 255 / 0.302), rgb(255 255 255 / 0.302));
-  --ui-text-on-brand-link: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-text-on-brand-link-disabled: light-dark(rgb(255 255 255 / 0.302), rgb(255 255 255 / 0.302));
   --ui-text-on-brand-link-hover: light-dark(rgb(117 174 240), rgb(85 89 94));
+  --ui-text-on-brand-link-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-text-on-brand-link-pressed: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-text-on-brand-primary: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-text-on-brand-secondary: light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6));
-  --ui-text-on-inverse-primary: light-dark(rgb(255 255 255), rgb(255 255 255));
+  --ui-text-on-inverse-primary: light-dark(rgb(255 255 255), rgb(24 25 27));
   --ui-text-on-inverse-secondary: light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6));
   --ui-text-on-status-ai: light-dark(rgb(130 23 130), rgb(250 209 250));
   --ui-text-on-status-critical: light-dark(rgb(153 69 0), rgb(255 222 194));
   --ui-text-on-status-danger: light-dark(rgb(152 27 27), rgb(251 218 218));
   --ui-text-on-status-info: light-dark(rgb(6 54 121), rgb(214 228 245));
-  --ui-text-on-status-link: light-dark(rgb(6 54 121), rgb(214 228 245));
   --ui-text-on-status-link-disabled: light-dark(rgb(117 174 240), rgb(48 89 145));
   --ui-text-on-status-link-hover: light-dark(rgb(0 32 77), rgb(238 242 247));
+  --ui-text-on-status-link-idle: light-dark(rgb(6 54 121), rgb(214 228 245));
   --ui-text-on-status-link-pressed: light-dark(rgb(0 21 51), rgb(248 250 252));
   --ui-text-on-status-neutral: light-dark(rgb(61 63 67), rgb(215 217 219));
   --ui-text-on-status-primary: light-dark(rgb(24 25 27), rgb(244 245 245));
@@ -155,9 +157,9 @@
   --ui-text-on-status-warning: light-dark(rgb(138 99 0), rgb(255 238 178));
   --ui-text-on-surface-destructive: light-dark(rgb(226 54 54), rgb(229 77 77));
   --ui-text-on-surface-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
-  --ui-text-on-surface-link: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-text-on-surface-link-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-text-on-surface-link-hover: light-dark(rgb(19 84 174), rgb(23 99 207));
+  --ui-text-on-surface-link-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-text-on-surface-link-pressed: light-dark(rgb(6 54 121), rgb(190 215 244));
   --ui-text-on-surface-primary: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-text-on-surface-secondary: light-dark(rgb(109 114 120), rgb(109 114 120));
@@ -244,6 +246,14 @@
 }
 
 .ui-typography-headings-display {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 40px;
+  letter-spacing: 0px;
+}
+
+.ui-typography-headings-display-numeric {
   font-family: Inter, system-ui, sans-serif;
   font-size: 32px;
   font-weight: 400;

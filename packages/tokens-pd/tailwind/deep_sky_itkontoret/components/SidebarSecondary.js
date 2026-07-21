@@ -9,18 +9,18 @@ export default {
         "sidebar-secondary-menu-item-selected-container-active": "light-dark(rgb(228 229 231), rgb(48 50 54))",
         "sidebar-secondary-menu-item-selected-container-hover": "light-dark(rgb(228 229 231), rgb(48 50 54))",
         "sidebar-secondary-menu-item-selected-container-idle": "light-dark(rgb(228 229 231), rgb(48 50 54))",
-        "sidebar-secondary-menu-item-unselected-container-active": "light-dark(rgb(236 237 238), rgb(37 38 40))",
+        "sidebar-secondary-menu-item-unselected-container-active": "light-dark(rgb(228 229 231), rgb(48 50 54))",
         "sidebar-secondary-menu-item-unselected-container-hover": "light-dark(rgb(236 237 238), rgb(37 38 40))",
-        "sidebar-secondary-menu-item-unselected-container-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))",
-        "sidebar-secondary-global-container": "light-dark(rgb(255 255 255), rgb(31 32 34))"
+        "sidebar-secondary-menu-item-unselected-container-idle": "light-dark(rgb(244 245 245), rgb(24 25 27))",
+        "sidebar-secondary-global-container": "light-dark(rgb(244 245 245), rgb(24 25 27))"
       },
       "textColor": {
-        "sidebar-secondary-menu-item-global-label": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "sidebar-secondary-menu-item-extras-global-shortcut": "light-dark(rgb(54 65 74), rgb(54 65 74))",
-        "sidebar-secondary-section-label-section": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "sidebar-secondary-global-header-label": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "sidebar-secondary-collapsed-breadcrumb-label": "light-dark(rgb(54 65 74), rgb(54 65 74))",
-        "sidebar-secondary-collapsed-label-current-page": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "sidebar-secondary-menu-item-global-label": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "sidebar-secondary-menu-item-extras-global-shortcut": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "sidebar-secondary-section-label-section": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "sidebar-secondary-global-header-label": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "sidebar-secondary-collapsed-breadcrumb-label": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "sidebar-secondary-collapsed-label-current-page": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
         "sidebar-secondary-global-container-border-color": "light-dark(rgb(215 217 219), rgb(61 63 67))",
@@ -29,7 +29,7 @@ export default {
       "fill": {
         "sidebar-secondary-menu-item-global-icon": "light-dark(rgb(73 76 80), rgb(201 204 207))",
         "sidebar-secondary-menu-item-extras-global-external-icon": "light-dark(rgb(73 76 80), rgb(201 204 207))",
-        "sidebar-secondary-section-icon-arrow": "light-dark(rgb(255 255 255), rgb(255 255 255))",
+        "sidebar-secondary-section-icon-arrow": "light-dark(rgb(73 76 80), rgb(201 204 207))",
         "sidebar-secondary-collapsed-icon-separator": "light-dark(rgb(201 204 207), rgb(73 76 80))"
       },
       "fontFamily": {
@@ -100,15 +100,15 @@ export default {
         "sidebar-secondary-menu-item-extras-global-container-gap": "8px",
         "sidebar-secondary-menu-item-extras-global-external-icon-size": "16px",
         "sidebar-secondary-section-menu-item-list-gap": "0px",
-        "sidebar-secondary-section-container-padding-y": "8px",
+        "sidebar-secondary-section-container-padding-y": "0px",
         "sidebar-secondary-section-container-header-gap": "8px",
-        "sidebar-secondary-section-container-header-min-width": "undefinedundefined",
+        "sidebar-secondary-section-container-header-min-width": "40px",
         "sidebar-secondary-section-container-header-padding-x": "16px",
-        "sidebar-secondary-section-container-header-padding-y": "8px",
+        "sidebar-secondary-section-container-header-padding-y": "2px",
         "sidebar-secondary-global-container-border-width": "1px",
         "sidebar-secondary-global-container-footer-border-width": "1px",
         "sidebar-secondary-global-container-header-padding-x": "16px",
-        "sidebar-secondary-global-container-header-padding-y": "12px",
+        "sidebar-secondary-global-container-header-padding-y": "16px",
         "sidebar-secondary-global-section-list-gap": "0px",
         "sidebar-secondary-collapsed-container-width": "48px",
         "sidebar-secondary-collapsed-container-content-gap": "4px",

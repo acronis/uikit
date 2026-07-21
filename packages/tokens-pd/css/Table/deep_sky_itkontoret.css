@@ -2,13 +2,12 @@
 /* Source: @acronis-platform/design-tokens • brand: deep_sky_itkontoret • tier: Table • overrides only */
 
 :root, :host {
-  --ui-table-data-value-color-disabled: light-dark(rgb(41 49 55), rgb(41 49 55));
-  --ui-table-data-value-color-idle: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-table-global-cell-border-color: light-dark(rgb(215 217 219), rgb(61 63 67));
-  --ui-table-global-row-color-active: light-dark(rgb(228 229 231), rgb(48 50 54));
-  --ui-table-global-row-color-hover: light-dark(rgb(236 237 238), rgb(37 38 40));
+  --ui-table-data-cell-color-active: light-dark(rgb(228 229 231), rgb(48 50 54));
+  --ui-table-data-cell-color-hover: light-dark(rgb(236 237 238), rgb(37 38 40));
+  --ui-table-data-row-color-active: light-dark(rgb(236 237 238), rgb(37 38 40));
+  --ui-table-data-row-color-hover: light-dark(rgb(236 237 238), rgb(37 38 40));
+  --ui-table-global-row-border-color: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-table-header-cell-color-active: light-dark(rgb(228 229 231), rgb(48 50 54));
   --ui-table-header-cell-color-hover: light-dark(rgb(236 237 238), rgb(37 38 40));
-  --ui-table-header-label-color: light-dark(rgb(68 81 93), rgb(68 81 93));
   --ui-table-header-sort-icon-color-active: light-dark(rgb(73 76 80), rgb(201 204 207));
 }

@@ -16,7 +16,6 @@
   --ui-input-search-box-height: 32px;
   --ui-input-search-box-padding-x: 12px;
   --ui-input-search-box-padding-y: 4px;
-  --ui-input-search-clear-icon-color: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-input-search-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-input-search-color-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-input-search-color-idle: light-dark(rgb(24 25 27), rgb(244 245 245));

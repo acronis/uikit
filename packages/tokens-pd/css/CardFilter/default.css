@@ -5,9 +5,9 @@
   color-scheme: light dark;
 
   --ui-card-filter-clickable-value-color: light-dark(rgb(23 99 207), rgb(81 157 246));
-  --ui-card-filter-global-border-color-active: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-card-filter-global-border-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-card-filter-global-border-color-focused: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-card-filter-global-border-color-hover: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-card-filter-global-border-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-card-filter-global-border-color-idle: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-card-filter-global-container-border-radius: 8px;
   --ui-card-filter-global-container-border-style: solid;

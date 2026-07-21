@@ -9,7 +9,7 @@ export default {
         "tooltip-container": "light-dark(rgb(25 27 35), rgb(255 255 255))"
       },
       "textColor": {
-        "tooltip-label": "light-dark(rgb(255 255 255), rgb(255 255 255))"
+        "tooltip-label": "light-dark(rgb(255 255 255), rgb(24 25 27))"
       },
       "fontFamily": {
         "tooltip-label-text-style": "Inter, system-ui, sans-serif"
@@ -20,7 +20,7 @@ export default {
           {
             "lineHeight": "16px",
             "letterSpacing": "0px",
-            "fontWeight": "600"
+            "fontWeight": "400"
           }
         ]
       },

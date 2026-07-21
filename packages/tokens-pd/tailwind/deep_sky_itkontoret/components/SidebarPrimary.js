@@ -30,7 +30,7 @@ export default {
       "fill": {
         "sidebar-primary-menu-item-selected-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "sidebar-primary-menu-item-selected-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
-        "sidebar-primary-menu-item-selected-icon-idle": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6))",
+        "sidebar-primary-menu-item-selected-icon-idle": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "sidebar-primary-menu-item-unselected-icon-active": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "sidebar-primary-menu-item-unselected-icon-hover": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "sidebar-primary-menu-item-unselected-icon-idle": "light-dark(rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.6))",

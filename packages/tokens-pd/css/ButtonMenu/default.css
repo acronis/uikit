@@ -11,6 +11,7 @@
   --ui-button-menu-dropdown-container-gap: 0px;
   --ui-button-menu-dropdown-container-padding-x: 0px;
   --ui-button-menu-dropdown-container-padding-y: 0px;
+  --ui-button-menu-dropdown-container-width-min: 128px;
   --ui-button-menu-dropdown-extras-cascade-icon-color: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-menu-dropdown-extras-shortcut-label-color: light-dark(rgb(109 114 120), rgb(109 114 120));
   --ui-button-menu-dropdown-item-container-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));
@@ -25,7 +26,7 @@
   --ui-button-menu-dropdown-section-container-border-color: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-button-menu-dropdown-section-container-border-width: 1px;
   --ui-button-menu-dropdown-section-container-padding-x: 0px;
-  --ui-button-menu-dropdown-section-container-padding-y: 0px;
+  --ui-button-menu-dropdown-section-container-padding-y: 8px;
   --ui-button-menu-dropdown-section-list-gap: 0px;
   --ui-button-menu-global-container-border-radius: 4px;
   --ui-button-menu-global-container-gap: 8px;
@@ -40,10 +41,10 @@
   --ui-button-menu-primary-container-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-menu-primary-icon-color: light-dark(rgb(255 255 255), rgb(255 255 255));
   --ui-button-menu-primary-label-color: light-dark(rgb(255 255 255), rgb(255 255 255));
-  --ui-button-menu-secondary-container-border-color-active: light-dark(transparent, transparent);
-  --ui-button-menu-secondary-container-border-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-button-menu-secondary-container-border-color-hover: light-dark(transparent, transparent);
-  --ui-button-menu-secondary-container-border-color-idle: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-button-menu-secondary-container-border-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-button-menu-secondary-container-border-color-disabled: light-dark(rgb(214 228 245), rgb(38 70 115));
+  --ui-button-menu-secondary-container-border-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
+  --ui-button-menu-secondary-container-border-color-idle: light-dark(rgb(214 228 245), rgb(38 70 115));
   --ui-button-menu-secondary-container-border-style: solid;
   --ui-button-menu-secondary-container-border-width: 1px;
   --ui-button-menu-secondary-container-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));

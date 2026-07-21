@@ -11,20 +11,20 @@ export default {
         "input-text-global-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
       "textColor": {
-        "input-text-global-label-disabled": "light-dark(rgb(41 49 55), rgb(41 49 55))",
-        "input-text-global-label-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "input-text-global-label-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "input-text-global-placeholder-disabled": "light-dark(rgb(54 65 74), rgb(54 65 74))",
-        "input-text-global-placeholder-hover": "light-dark(rgb(54 65 74), rgb(54 65 74))",
-        "input-text-global-placeholder-idle": "light-dark(rgb(54 65 74), rgb(54 65 74))",
+        "input-text-global-label-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
+        "input-text-global-label-hover": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "input-text-global-label-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "input-text-global-placeholder-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
+        "input-text-global-placeholder-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "input-text-global-placeholder-idle": "light-dark(rgb(109 114 120), rgb(109 114 120))",
         "input-text-global-required": "light-dark(rgb(226 54 54), rgb(229 77 77))",
-        "input-text-global-value-disabled": "light-dark(rgb(41 49 55), rgb(41 49 55))",
-        "input-text-global-value-hover": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "input-text-global-value-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))",
+        "input-text-global-value-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
+        "input-text-global-value-hover": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "input-text-global-value-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))",
         "input-text-error-msg-error": "light-dark(rgb(226 54 54), rgb(229 77 77))",
-        "input-text-normal-description-disabled": "light-dark(rgb(41 49 55), rgb(41 49 55))",
-        "input-text-normal-description-hover": "light-dark(rgb(54 65 74), rgb(54 65 74))",
-        "input-text-normal-description-idle": "light-dark(rgb(54 65 74), rgb(54 65 74))"
+        "input-text-normal-description-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
+        "input-text-normal-description-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "input-text-normal-description-idle": "light-dark(rgb(109 114 120), rgb(109 114 120))"
       },
       "borderColor": {
         "input-text-error-msg-box-border-color-hover": "light-dark(rgb(226 54 54), rgb(229 77 77))",
@@ -32,9 +32,6 @@ export default {
         "input-text-normal-box-border-color-disabled": "light-dark(rgb(215 217 219), rgb(61 63 67))",
         "input-text-normal-box-border-color-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
         "input-text-normal-box-border-color-idle": "light-dark(rgb(215 217 219), rgb(61 63 67))"
-      },
-      "fill": {
-        "input-text-global-clear-icon": "light-dark(rgb(73 76 80), rgb(201 204 207))"
       },
       "fontFamily": {
         "input-text-global-label-text-style": "Inter, system-ui, sans-serif",

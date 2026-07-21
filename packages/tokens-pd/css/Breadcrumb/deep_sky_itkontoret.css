@@ -2,8 +2,5 @@
 /* Source: @acronis-platform/design-tokens • brand: deep_sky_itkontoret • tier: Breadcrumb • overrides only */
 
 :root, :host {
-  --ui-breadcrumb-link-label-color-active: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-breadcrumb-link-label-color-hover: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-breadcrumb-link-label-color-idle: light-dark(rgb(54 65 74), rgb(54 65 74));
-  --ui-breadcrumb-page-label-color: light-dark(rgb(68 81 93), rgb(68 81 93));
+
 }

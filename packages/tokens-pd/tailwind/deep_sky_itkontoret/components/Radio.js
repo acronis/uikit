@@ -16,8 +16,8 @@ export default {
         "radio-unchecked-box-idle": "light-dark(rgb(255 255 255), rgb(31 32 34))"
       },
       "textColor": {
-        "radio-global-description": "light-dark(rgb(54 65 74), rgb(54 65 74))",
-        "radio-global-label": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "radio-global-description": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "radio-global-label": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
         "radio-checked-box-border-color-active": "light-dark(rgb(109 114 120), rgb(109 114 120))",

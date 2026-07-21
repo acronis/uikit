@@ -6,12 +6,12 @@ export default {
   theme: {
     extend: {
       "textColor": {
-        "table-data-value-disabled": "light-dark(rgb(41 49 55), rgb(41 49 55))",
-        "table-data-value-idle": "light-dark(rgb(68 81 93), rgb(68 81 93))",
-        "table-header-label": "light-dark(rgb(68 81 93), rgb(68 81 93))"
+        "table-data-value-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
+        "table-data-value-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "table-header-label": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
-        "table-global-cell-border-color": "light-dark(rgb(215 217 219), rgb(61 63 67))"
+        "table-global-row-border-color": "light-dark(rgb(215 217 219), rgb(61 63 67))"
       },
       "fontFamily": {
         "table-data-value-text-style": "Inter, system-ui, sans-serif",
@@ -37,13 +37,14 @@ export default {
       },
       "spacing": {
         "table-data-gap": "8px",
-        "table-header-cell-padding-x": "16px",
         "table-header-gap": "8px",
         "table-header-sort-icon-size": "16px",
-        "table-global-cell-border-width": "1px",
+        "table-global-cell-icon-margin-y": "4px",
         "table-global-cell-min-height": "40px",
         "table-global-cell-padding-x": "16px",
-        "table-global-cell-padding-y": "8px"
+        "table-global-cell-padding-y": "8px",
+        "table-global-cell-tag-margin-y": "2px",
+        "table-global-row-border-width": "1px"
       }
     },
   },

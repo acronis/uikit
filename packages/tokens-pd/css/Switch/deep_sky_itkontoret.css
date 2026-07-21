@@ -3,7 +3,6 @@
 
 :root, :host {
   --ui-switch-global-box-border-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
-  --ui-switch-global-label-color: light-dark(rgb(68 81 93), rgb(68 81 93));
   --ui-switch-global-tick-color-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-switch-off-box-color-active: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-switch-off-box-color-disabled: light-dark(rgb(244 245 245), rgb(24 25 27));

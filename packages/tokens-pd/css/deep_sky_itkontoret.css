@@ -21,11 +21,8 @@
   --ui-glyph-on-status-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-glyph-on-surface-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-glyph-on-surface-primary: light-dark(rgb(73 76 80), rgb(201 204 207));
-  --ui-text-on-surface-disabled: light-dark(rgb(41 49 55), rgb(41 49 55));
-  --ui-text-on-surface-link: light-dark(rgb(68 81 93), rgb(68 81 93));
   --ui-text-on-surface-link-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-text-on-surface-link-hover: light-dark(rgb(61 63 67), rgb(215 217 219));
+  --ui-text-on-surface-link-idle: light-dark(rgb(73 76 80), rgb(201 204 207));
   --ui-text-on-surface-link-pressed: light-dark(rgb(48 50 54), rgb(228 229 231));
-  --ui-text-on-surface-primary: light-dark(rgb(68 81 93), rgb(68 81 93));
-  --ui-text-on-surface-secondary: light-dark(rgb(54 65 74), rgb(54 65 74));
 }

@@ -11,7 +11,7 @@ export default {
         "table-header-label": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {
-        "table-global-cell-border-color": "light-dark(rgb(214 228 245), rgb(48 50 54))"
+        "table-global-row-border-color": "light-dark(rgb(214 228 245), rgb(48 50 54))"
       },
       "fontFamily": {
         "table-data-value-text-style": "Inter, system-ui, sans-serif",
@@ -37,13 +37,14 @@ export default {
       },
       "spacing": {
         "table-data-gap": "8px",
-        "table-header-cell-padding-x": "16px",
         "table-header-gap": "8px",
         "table-header-sort-icon-size": "16px",
-        "table-global-cell-border-width": "1px",
+        "table-global-cell-icon-margin-y": "4px",
         "table-global-cell-min-height": "40px",
         "table-global-cell-padding-x": "16px",
-        "table-global-cell-padding-y": "8px"
+        "table-global-cell-padding-y": "8px",
+        "table-global-cell-tag-margin-y": "2px",
+        "table-global-row-border-width": "1px"
       }
     },
   },
