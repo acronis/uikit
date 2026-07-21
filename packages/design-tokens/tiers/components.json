@@ -14792,8 +14792,8 @@
           "PD"
         ],
         "values": {
-          "deep_sky_itkontoret": "{typography.caption.strong}",
-          "default": "{typography.caption.strong}"
+          "deep_sky_itkontoret": "{typography.caption.default}",
+          "default": "{typography.caption.default}"
         }
       }
     }
