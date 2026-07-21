@@ -217,7 +217,7 @@ function ChartTooltipContent({
   return (
     <div
       className={cn(
-        'grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground shadow-xl',
+        'grid min-w-[8rem] items-start gap-1.5 rounded-[var(--ui-tooltip-container-border-radius)] border border-border bg-background px-[var(--ui-tooltip-container-padding-x)] py-[var(--ui-tooltip-container-padding-y)] text-xs text-foreground shadow-md',
         className
       )}
     >
@@ -277,7 +277,7 @@ function ChartTooltipContent({
                       </span>
                     </div>
                     {item.value != null && (
-                      <span className="font-mono font-medium tabular-nums text-foreground">
+                      <span className="font-medium tabular-nums text-foreground">
                         {item.value.toLocaleString()}
                       </span>
                     )}

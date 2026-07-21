@@ -30,6 +30,17 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
+  // The ChartContainer is transparent by design (it inherits the surface it sits
+  // on — usually a Card). Render the stories on a themed surface so the chart is
+  // legible in both light and dark; without it, dark mode flips the token-driven
+  // text/grid but leaves the backdrop unthemed.
+  decorators: [
+    (Story) => (
+      <div className="rounded-lg border border-border bg-background p-6 text-foreground">
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof ChartContainer>;
 
 export default meta;
@@ -160,6 +171,25 @@ export const StackedBars: Story = {
         <Bar dataKey="desktop" stackId="a" fill="var(--color-desktop)" isAnimationActive={false} />
         <Bar dataKey="mobile" stackId="a" fill="var(--color-mobile)" isAnimationActive={false} />
         <Bar dataKey="tablet" stackId="a" fill="var(--color-tablet)" radius={[4, 4, 0, 0]} isAnimationActive={false} />
+      </BarChart>
+    </ChartContainer>
+  ),
+};
+
+// Tooltip open by default (`defaultIndex`) so the tooltip surface — the tokens
+// this task aligned (radius / padding / shadow) — is captured in visual
+// regression; the tooltip is hover-only, so the other stories never snapshot it.
+export const TooltipOpen: Story = {
+  args: { config: seriesConfig, children: <span /> },
+  render: () => (
+    <ChartContainer config={seriesConfig} className="h-[300px] w-[500px]">
+      <BarChart data={seriesData}>
+        <CartesianGrid vertical={false} />
+        <XAxis dataKey="month" tickLine={false} axisLine={false} />
+        <ChartTooltip defaultIndex={2} content={<ChartTooltipContent />} />
+        <ChartLegend content={<ChartLegendContent />} />
+        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} isAnimationActive={false} />
+        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} isAnimationActive={false} />
       </BarChart>
     </ChartContainer>
   ),

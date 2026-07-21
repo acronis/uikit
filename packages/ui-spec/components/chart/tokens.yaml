@@ -5,8 +5,10 @@ component: Chart
 # tier of its own — series colors are supplied by the caller via `config` (a
 # dedicated data-viz palette is pending an upstream design pass). The chrome
 # (container, tooltip, legend) and the recharts grid/axis overrides use the
-# shared semantic vocabulary, referenced here by the bridged Tailwind names that
-# resolve to these `--ui-*` tokens.
+# shared semantic vocabulary via the bridged Tailwind names that resolve to these
+# `--ui-*` tokens. The tooltip surface additionally borrows the shape tokens from
+# the Tooltip component's own tier (`--ui-tooltip-container-*`) so a chart tooltip
+# and a plain tooltip read as the same object.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
@@ -31,3 +33,12 @@ tokens:
     description: >-
       Recharts muted fills — radial-bar background and tooltip cursor rectangle
       (fill-muted).
+  - name: --ui-tooltip-container-border-radius
+    affects: tooltip-content
+    description: Tooltip corner radius, borrowed from the Tooltip tier.
+  - name: --ui-tooltip-container-padding-x
+    affects: tooltip-content
+    description: Tooltip horizontal padding, borrowed from the Tooltip tier.
+  - name: --ui-tooltip-container-padding-y
+    affects: tooltip-content
+    description: Tooltip vertical padding, borrowed from the Tooltip tier.
