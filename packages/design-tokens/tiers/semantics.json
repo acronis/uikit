@@ -27,7 +27,8 @@
             ],
             "values": {
               "deep_sky_itkontoret": "{palette.transparent.white.inverse-95}",
-              "default": "{palette.transparent.white.inverse-95}"
+              "default": "{palette.transparent.white.inverse-95}",
+              "virtuozzo": "{palette.transparent.white.inverse-95}"
             }
           },
           "secondary": {
@@ -42,7 +43,8 @@
             ],
             "values": {
               "deep_sky_itkontoret": "{palette.transparent.blue.inverse-95}",
-              "default": "{palette.transparent.blue.inverse-95}"
+              "default": "{palette.transparent.blue.inverse-95}",
+              "virtuozzo": "{palette.transparent.blue.inverse-95}"
             }
           }
         },
@@ -58,7 +60,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.dark.fixed-90}",
-            "default": "{palette.transparent.dark.fixed-90}"
+            "default": "{palette.transparent.dark.fixed-90}",
+            "virtuozzo": "{palette.transparent.dark.fixed-90}"
           }
         }
       },
@@ -75,7 +78,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.SidebarPrimary.idle}",
-            "default": "{palette.blue.13}"
+            "default": "{palette.blue.13}",
+            "virtuozzo": "{branding.virtuozzo.SidebarPrimary.idle}"
           }
         },
         "primary-active": {
@@ -90,7 +94,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.SidebarPrimary.active}",
-            "default": "{palette.blue.7}"
+            "default": "{palette.blue.7}",
+            "virtuozzo": "{branding.virtuozzo.SidebarPrimary.active}"
           }
         },
         "primary-disabled": {
@@ -105,7 +110,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.SidebarPrimary.disabled}",
-            "default": "{palette.blue.5}"
+            "default": "{palette.blue.5}",
+            "virtuozzo": "{branding.virtuozzo.SidebarPrimary.disabled}"
           }
         },
         "primary-hover": {
@@ -120,7 +126,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.SidebarPrimary.hover}",
-            "default": "{palette.blue.12}"
+            "default": "{palette.blue.12}",
+            "virtuozzo": "{branding.virtuozzo.SidebarPrimary.hover}"
           }
         },
         "secondary": {
@@ -135,7 +142,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.ButtonPrimary.idle}",
-            "default": "{palette.blue.7}"
+            "default": "{palette.blue.7}",
+            "virtuozzo": "{branding.virtuozzo.ButtonPrimary.idle}"
           }
         },
         "secondary-active": {
@@ -150,7 +158,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.ButtonPrimary.active}",
-            "default": "{palette.blue.9}"
+            "default": "{palette.blue.9}",
+            "virtuozzo": "{branding.virtuozzo.ButtonPrimary.active}"
           }
         },
         "secondary-disabled": {
@@ -165,7 +174,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.ButtonPrimary.disabled}",
-            "default": "{palette.blue.3}"
+            "default": "{palette.blue.3}",
+            "virtuozzo": "{branding.virtuozzo.ButtonPrimary.disabled}"
           }
         },
         "secondary-hover": {
@@ -180,7 +190,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{branding.deep_sky_itkontoret.ButtonPrimary.hover}",
-            "default": "{palette.blue.8}"
+            "default": "{palette.blue.8}",
+            "virtuozzo": "{branding.virtuozzo.ButtonPrimary.hover}"
           }
         }
       },
@@ -197,7 +208,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.dark.inverse-100}",
-            "default": "{palette.transparent.dark.inverse-100}"
+            "default": "{palette.transparent.dark.inverse-100}",
+            "virtuozzo": "{palette.transparent.dark.inverse-100}"
           }
         }
       },
@@ -214,7 +226,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.violet.1}",
-            "default": "{palette.violet.1}"
+            "default": "{palette.violet.1}",
+            "virtuozzo": "{palette.violet.1}"
           }
         },
         "ai-hover": {
@@ -229,7 +242,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.violet.2}",
-            "default": "{palette.violet.2}"
+            "default": "{palette.violet.2}",
+            "virtuozzo": "{palette.violet.2}"
           }
         },
         "ai-pressed": {
@@ -244,7 +258,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.violet.3}",
-            "default": "{palette.violet.3}"
+            "default": "{palette.violet.3}",
+            "virtuozzo": "{palette.violet.3}"
           }
         },
         "critical": {
@@ -259,7 +274,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.orange.1}",
-            "default": "{palette.orange.1}"
+            "default": "{palette.orange.1}",
+            "virtuozzo": "{palette.orange.1}"
           }
         },
         "critical-hover": {
@@ -274,7 +290,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.orange.2}",
-            "default": "{palette.orange.2}"
+            "default": "{palette.orange.2}",
+            "virtuozzo": "{palette.orange.2}"
           }
         },
         "critical-pressed": {
@@ -289,7 +306,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.orange.3}",
-            "default": "{palette.orange.3}"
+            "default": "{palette.orange.3}",
+            "virtuozzo": "{palette.orange.3}"
           }
         },
         "danger": {
@@ -304,7 +322,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.red.1}",
-            "default": "{palette.red.1}"
+            "default": "{palette.red.1}",
+            "virtuozzo": "{palette.red.1}"
           }
         },
         "danger-hover": {
@@ -319,7 +338,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.red.2}",
-            "default": "{palette.red.2}"
+            "default": "{palette.red.2}",
+            "virtuozzo": "{palette.red.2}"
           }
         },
         "danger-pressed": {
@@ -334,7 +354,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.red.3}",
-            "default": "{palette.red.3}"
+            "default": "{palette.red.3}",
+            "virtuozzo": "{palette.red.3}"
           }
         },
         "info": {
@@ -349,7 +370,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.1}",
-            "default": "{palette.electricblue.1}"
+            "default": "{palette.electricblue.1}",
+            "virtuozzo": "{palette.electricblue.1}"
           }
         },
         "info-hover": {
@@ -364,7 +386,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.2}",
-            "default": "{palette.electricblue.2}"
+            "default": "{palette.electricblue.2}",
+            "virtuozzo": "{palette.electricblue.2}"
           }
         },
         "info-pressed": {
@@ -379,7 +402,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.3}",
-            "default": "{palette.electricblue.3}"
+            "default": "{palette.electricblue.3}",
+            "virtuozzo": "{palette.electricblue.3}"
           }
         },
         "neutral": {
@@ -394,7 +418,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.base}",
-            "default": "{palette.base}"
+            "default": "{palette.base}",
+            "virtuozzo": "{palette.base}"
           }
         },
         "neutral-hover": {
@@ -409,7 +434,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.1}",
-            "default": "{palette.grayscale.1}"
+            "default": "{palette.grayscale.1}",
+            "virtuozzo": "{palette.grayscale.1}"
           }
         },
         "neutral-pressed": {
@@ -424,7 +450,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.2}",
-            "default": "{palette.grayscale.2}"
+            "default": "{palette.grayscale.2}",
+            "virtuozzo": "{palette.grayscale.2}"
           }
         },
         "off": {
@@ -439,7 +466,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.3}",
-            "default": "{palette.blue.3}"
+            "default": "{palette.blue.3}",
+            "virtuozzo": "{palette.grayscale.3}"
           }
         },
         "on": {
@@ -454,7 +482,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.green.6}",
-            "default": "{palette.green.6}"
+            "default": "{palette.green.6}",
+            "virtuozzo": "{palette.green.6}"
           }
         },
         "success": {
@@ -469,7 +498,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.green.1}",
-            "default": "{palette.green.1}"
+            "default": "{palette.green.1}",
+            "virtuozzo": "{palette.green.1}"
           }
         },
         "success-hover": {
@@ -484,7 +514,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.green.2}",
-            "default": "{palette.green.2}"
+            "default": "{palette.green.2}",
+            "virtuozzo": "{palette.green.2}"
           }
         },
         "success-pressed": {
@@ -499,7 +530,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.green.3}",
-            "default": "{palette.green.3}"
+            "default": "{palette.green.3}",
+            "virtuozzo": "{palette.green.3}"
           }
         },
         "warning": {
@@ -514,7 +546,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.yellow.1}",
-            "default": "{palette.yellow.1}"
+            "default": "{palette.yellow.1}",
+            "virtuozzo": "{palette.yellow.1}"
           }
         },
         "warning-hover": {
@@ -529,7 +562,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.yellow.2}",
-            "default": "{palette.yellow.2}"
+            "default": "{palette.yellow.2}",
+            "virtuozzo": "{palette.yellow.2}"
           }
         },
         "warning-pressed": {
@@ -544,7 +578,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.yellow.3}",
-            "default": "{palette.yellow.3}"
+            "default": "{palette.yellow.3}",
+            "virtuozzo": "{palette.yellow.3}"
           }
         }
       },
@@ -561,7 +596,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.orange.7}",
-            "default": "{palette.orange.7}"
+            "default": "{palette.orange.7}",
+            "virtuozzo": "{palette.orange.7}"
           }
         },
         "critical-hover": {
@@ -576,7 +612,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.orange.8}",
-            "default": "{palette.orange.8}"
+            "default": "{palette.orange.8}",
+            "virtuozzo": "{palette.orange.8}"
           }
         },
         "critical-pressed": {
@@ -591,7 +628,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.orange.9}",
-            "default": "{palette.orange.9}"
+            "default": "{palette.orange.9}",
+            "virtuozzo": "{palette.orange.9}"
           }
         },
         "danger": {
@@ -606,7 +644,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.red.7}",
-            "default": "{palette.red.7}"
+            "default": "{palette.red.7}",
+            "virtuozzo": "{palette.red.7}"
           }
         },
         "danger-hover": {
@@ -621,7 +660,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.red.9}",
-            "default": "{palette.red.9}"
+            "default": "{palette.red.9}",
+            "virtuozzo": "{palette.red.9}"
           }
         },
         "danger-pressed": {
@@ -636,7 +676,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.red.10}",
-            "default": "{palette.red.10}"
+            "default": "{palette.red.10}",
+            "virtuozzo": "{palette.red.10}"
           }
         },
         "info": {
@@ -651,7 +692,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.blue.7}",
-            "default": "{palette.blue.7}"
+            "default": "{palette.blue.7}",
+            "virtuozzo": "{palette.blue.7}"
           }
         },
         "info-hover": {
@@ -666,7 +708,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.blue.8}",
-            "default": "{palette.blue.8}"
+            "default": "{palette.blue.8}",
+            "virtuozzo": "{palette.blue.8}"
           }
         },
         "info-pressed": {
@@ -681,7 +724,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.blue.9}",
-            "default": "{palette.blue.9}"
+            "default": "{palette.blue.9}",
+            "virtuozzo": "{palette.blue.9}"
           }
         },
         "neutral": {
@@ -696,7 +740,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.7}",
-            "default": "{palette.grayscale.7}"
+            "default": "{palette.grayscale.7}",
+            "virtuozzo": "{palette.grayscale.7}"
           }
         },
         "neutral-hover": {
@@ -711,7 +756,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.8}",
-            "default": "{palette.grayscale.8}"
+            "default": "{palette.grayscale.8}",
+            "virtuozzo": "{palette.grayscale.8}"
           }
         },
         "neutral-pressed": {
@@ -726,7 +772,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.9}",
-            "default": "{palette.grayscale.9}"
+            "default": "{palette.grayscale.9}",
+            "virtuozzo": "{palette.grayscale.9}"
           }
         },
         "success": {
@@ -741,7 +788,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.green.7}",
-            "default": "{palette.green.7}"
+            "default": "{palette.green.7}",
+            "virtuozzo": "{palette.green.7}"
           }
         },
         "success-hover": {
@@ -756,7 +804,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.green.8}",
-            "default": "{palette.green.8}"
+            "default": "{palette.green.8}",
+            "virtuozzo": "{palette.green.8}"
           }
         },
         "success-pressed": {
@@ -771,7 +820,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.green.9}",
-            "default": "{palette.green.9}"
+            "default": "{palette.green.9}",
+            "virtuozzo": "{palette.green.9}"
           }
         },
         "warning": {
@@ -786,7 +836,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.yellow.7}",
-            "default": "{palette.yellow.7}"
+            "default": "{palette.yellow.7}",
+            "virtuozzo": "{palette.yellow.7}"
           }
         },
         "warning-hover": {
@@ -801,7 +852,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.yellow.8}",
-            "default": "{palette.yellow.8}"
+            "default": "{palette.yellow.8}",
+            "virtuozzo": "{palette.yellow.8}"
           }
         },
         "warning-pressed": {
@@ -816,7 +868,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.yellow.9}",
-            "default": "{palette.yellow.9}"
+            "default": "{palette.yellow.9}",
+            "virtuozzo": "{palette.yellow.9}"
           }
         }
       },
@@ -833,7 +886,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.2}",
-            "default": "{palette.blue.2}"
+            "default": "{palette.blue.2}",
+            "virtuozzo": "{palette.grayscale.2}"
           }
         },
         "hover": {
@@ -848,7 +902,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.1}",
-            "default": "{palette.blue.1}"
+            "default": "{palette.blue.1}",
+            "virtuozzo": "{palette.grayscale.1}"
           }
         },
         "primary": {
@@ -863,7 +918,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.base}",
-            "default": "{palette.base}"
+            "default": "{palette.base}",
+            "virtuozzo": "{palette.base}"
           }
         },
         "secondary": {
@@ -878,7 +934,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.0}",
-            "default": "{palette.blue.0}"
+            "default": "{palette.blue.0}",
+            "virtuozzo": "{palette.grayscale.0}"
           }
         }
       },
@@ -895,7 +952,8 @@
         ],
         "values": {
           "deep_sky_itkontoret": "{palette.transparent.clear}",
-          "default": "{palette.transparent.clear}"
+          "default": "{palette.transparent.clear}",
+          "virtuozzo": "{palette.transparent.clear}"
         }
       }
     },
@@ -913,7 +971,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-10}",
-            "default": "{palette.transparent.white.fixed-10}"
+            "default": "{palette.transparent.white.fixed-10}",
+            "virtuozzo": "{palette.transparent.white.fixed-10}"
           }
         },
         "border-active": {
@@ -928,7 +987,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.0}",
-            "default": "{palette.grayscale.0}"
+            "default": "{palette.grayscale.0}",
+            "virtuozzo": "{palette.grayscale.0}"
           }
         },
         "divider": {
@@ -943,7 +1003,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-10}",
-            "default": "{palette.transparent.white.fixed-10}"
+            "default": "{palette.transparent.white.fixed-10}",
+            "virtuozzo": "{palette.transparent.white.fixed-10}"
           }
         }
       },
@@ -960,7 +1021,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.violet.4}",
-            "default": "{palette.violet.4}"
+            "default": "{palette.violet.4}",
+            "virtuozzo": "{palette.violet.4}"
           }
         },
         "aiStrong": {
@@ -974,7 +1036,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{gradients.ai.idle}",
-            "default": "{gradients.ai.idle}"
+            "default": "{gradients.ai.idle}",
+            "virtuozzo": "{gradients.ai.idle}"
           }
         },
         "critical": {
@@ -989,7 +1052,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.orange.4}",
-            "default": "{palette.orange.4}"
+            "default": "{palette.orange.4}",
+            "virtuozzo": "{palette.orange.4}"
           }
         },
         "criticalStrong": {
@@ -1004,7 +1068,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.orange.8}",
-            "default": "{palette.orange.8}"
+            "default": "{palette.orange.8}",
+            "virtuozzo": "{palette.orange.8}"
           }
         },
         "danger": {
@@ -1019,7 +1084,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.red.4}",
-            "default": "{palette.red.4}"
+            "default": "{palette.red.4}",
+            "virtuozzo": "{palette.red.4}"
           }
         },
         "dangerStrong": {
@@ -1034,7 +1100,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.red.8}",
-            "default": "{palette.red.8}"
+            "default": "{palette.red.8}",
+            "virtuozzo": "{palette.red.8}"
           }
         },
         "info": {
@@ -1049,7 +1116,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.4}",
-            "default": "{palette.electricblue.4}"
+            "default": "{palette.electricblue.4}",
+            "virtuozzo": "{palette.electricblue.4}"
           }
         },
         "infoStrong": {
@@ -1064,7 +1132,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.8}",
-            "default": "{palette.electricblue.8}"
+            "default": "{palette.electricblue.8}",
+            "virtuozzo": "{palette.electricblue.8}"
           }
         },
         "neutral": {
@@ -1079,7 +1148,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.4}",
-            "default": "{palette.grayscale.4}"
+            "default": "{palette.grayscale.4}",
+            "virtuozzo": "{palette.grayscale.4}"
           }
         },
         "neutralStrong": {
@@ -1094,7 +1164,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.8}",
-            "default": "{palette.grayscale.8}"
+            "default": "{palette.grayscale.8}",
+            "virtuozzo": "{palette.grayscale.8}"
           }
         },
         "success": {
@@ -1109,7 +1180,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.green.4}",
-            "default": "{palette.green.4}"
+            "default": "{palette.green.4}",
+            "virtuozzo": "{palette.green.4}"
           }
         },
         "successStrong": {
@@ -1124,7 +1196,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.green.8}",
-            "default": "{palette.green.8}"
+            "default": "{palette.green.8}",
+            "virtuozzo": "{palette.green.8}"
           }
         },
         "warning": {
@@ -1139,7 +1212,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.yellow.4}",
-            "default": "{palette.yellow.4}"
+            "default": "{palette.yellow.4}",
+            "virtuozzo": "{palette.yellow.4}"
           }
         },
         "warningStrong": {
@@ -1154,7 +1228,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.yellow.8}",
-            "default": "{palette.yellow.8}"
+            "default": "{palette.yellow.8}",
+            "virtuozzo": "{palette.yellow.8}"
           }
         }
       },
@@ -1171,7 +1246,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.3}",
-            "default": "{palette.blue.3}"
+            "default": "{palette.blue.3}",
+            "virtuozzo": "{palette.grayscale.3}"
           }
         },
         "border-active": {
@@ -1186,7 +1262,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.7}",
-            "default": "{palette.blue.7}"
+            "default": "{palette.blue.7}",
+            "virtuozzo": "{palette.grayscale.7}"
           }
         },
         "border-error": {
@@ -1201,7 +1278,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.red.7}",
-            "default": "{palette.red.7}"
+            "default": "{palette.red.7}",
+            "virtuozzo": "{palette.red.7}"
           }
         },
         "divider": {
@@ -1216,7 +1294,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.3}",
-            "default": "{palette.blue.3}"
+            "default": "{palette.blue.3}",
+            "virtuozzo": "{palette.grayscale.3}"
           }
         }
       },
@@ -1232,7 +1311,8 @@
         ],
         "values": {
           "deep_sky_itkontoret": "{palette.transparent.clear}",
-          "default": "{palette.transparent.clear}"
+          "default": "{palette.transparent.clear}",
+          "virtuozzo": "{palette.transparent.clear}"
         }
       }
     },
@@ -1249,7 +1329,8 @@
         ],
         "values": {
           "deep_sky_itkontoret": "{palette.blue.4}",
-          "default": "{palette.blue.4}"
+          "default": "{palette.blue.4}",
+          "virtuozzo": "{palette.blue.4}"
         }
       },
       "error": {
@@ -1264,7 +1345,8 @@
         ],
         "values": {
           "deep_sky_itkontoret": "{palette.red.4}",
-          "default": "{palette.red.4}"
+          "default": "{palette.red.4}",
+          "virtuozzo": "{palette.red.4}"
         }
       },
       "primary": {
@@ -1279,7 +1361,8 @@
         ],
         "values": {
           "deep_sky_itkontoret": "{palette.blue.4}",
-          "default": "{palette.blue.4}"
+          "default": "{palette.blue.4}",
+          "virtuozzo": "{palette.blue.4}"
         }
       },
       "secondary": {
@@ -1294,7 +1377,8 @@
         ],
         "values": {
           "deep_sky_itkontoret": "{palette.blue.4}",
-          "default": "{palette.blue.4}"
+          "default": "{palette.blue.4}",
+          "virtuozzo": "{palette.blue.4}"
         }
       }
     },
@@ -1312,7 +1396,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.7}",
-            "default": "{palette.blue.7}"
+            "default": "{palette.blue.7}",
+            "virtuozzo": "{palette.grayscale.7}"
           }
         },
         "screenPrimary": {
@@ -1327,7 +1412,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "default": "{palette.transparent.white.fixed-100}",
+            "virtuozzo": "{palette.transparent.white.fixed-100}"
           }
         }
       },
@@ -1344,7 +1430,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-10}",
-            "default": "{palette.transparent.white.fixed-10}"
+            "default": "{palette.transparent.white.fixed-10}",
+            "virtuozzo": "{palette.transparent.white.fixed-10}"
           }
         },
         "primary": {
@@ -1359,7 +1446,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "default": "{palette.transparent.white.fixed-100}",
+            "virtuozzo": "{palette.transparent.white.fixed-100}"
           }
         },
         "secondary": {
@@ -1374,7 +1462,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
-            "default": "{palette.transparent.white.fixed-60}"
+            "default": "{palette.transparent.white.fixed-60}",
+            "virtuozzo": "{palette.transparent.white.fixed-60}"
           }
         }
       },
@@ -1391,7 +1480,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "default": "{palette.transparent.white.fixed-100}",
+            "virtuozzo": "{palette.transparent.white.fixed-100}"
           }
         }
       },
@@ -1408,7 +1498,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.violet.11}",
-            "default": "{palette.violet.11}"
+            "default": "{palette.violet.11}",
+            "virtuozzo": "{palette.violet.11}"
           }
         },
         "critical": {
@@ -1423,7 +1514,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.orange.11}",
-            "default": "{palette.orange.11}"
+            "default": "{palette.orange.11}",
+            "virtuozzo": "{palette.orange.11}"
           }
         },
         "danger": {
@@ -1438,7 +1530,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.red.11}",
-            "default": "{palette.red.11}"
+            "default": "{palette.red.11}",
+            "virtuozzo": "{palette.red.11}"
           }
         },
         "disabled": {
@@ -1453,7 +1546,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.3}",
-            "default": "{palette.blue.3}"
+            "default": "{palette.blue.3}",
+            "virtuozzo": "{palette.grayscale.3}"
           }
         },
         "info": {
@@ -1468,7 +1562,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.11}",
-            "default": "{palette.electricblue.11}"
+            "default": "{palette.electricblue.11}",
+            "virtuozzo": "{palette.electricblue.11}"
           }
         },
         "neutral": {
@@ -1483,7 +1578,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.11}",
-            "default": "{palette.grayscale.11}"
+            "default": "{palette.grayscale.11}",
+            "virtuozzo": "{palette.grayscale.11}"
           }
         },
         "primary": {
@@ -1498,7 +1594,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.11}",
-            "default": "{palette.electricblue.11}"
+            "default": "{palette.electricblue.11}",
+            "virtuozzo": "{palette.electricblue.11}"
           }
         },
         "success": {
@@ -1513,7 +1610,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.green.11}",
-            "default": "{palette.green.11}"
+            "default": "{palette.green.11}",
+            "virtuozzo": "{palette.green.11}"
           }
         },
         "warning": {
@@ -1528,7 +1626,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.yellow.11}",
-            "default": "{palette.yellow.11}"
+            "default": "{palette.yellow.11}",
+            "virtuozzo": "{palette.yellow.11}"
           }
         }
       },
@@ -1545,7 +1644,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "default": "{palette.transparent.white.fixed-100}",
+            "virtuozzo": "{palette.transparent.white.fixed-100}"
           }
         }
       },
@@ -1562,7 +1662,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.blue.13}",
-            "default": "{palette.blue.13}"
+            "default": "{palette.blue.13}",
+            "virtuozzo": "{palette.blue.13}"
           }
         },
         "destructive": {
@@ -1577,7 +1678,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.red.7}",
-            "default": "{palette.red.7}"
+            "default": "{palette.red.7}",
+            "virtuozzo": "{palette.red.7}"
           }
         },
         "disabled": {
@@ -1592,7 +1694,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.5}",
-            "default": "{palette.blue.3}"
+            "default": "{palette.blue.3}",
+            "virtuozzo": "{palette.grayscale.5}"
           }
         },
         "neutral": {
@@ -1607,7 +1710,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.4}",
-            "default": "{palette.grayscale.4}"
+            "default": "{palette.grayscale.4}",
+            "virtuozzo": "{palette.grayscale.4}"
           }
         },
         "neutral-dark": {
@@ -1622,7 +1726,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.10}",
-            "default": "{palette.grayscale.10}"
+            "default": "{palette.grayscale.10}",
+            "virtuozzo": "{palette.grayscale.10}"
           }
         },
         "primary": {
@@ -1637,7 +1742,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.10}",
-            "default": "{palette.blue.7}"
+            "default": "{palette.blue.7}",
+            "virtuozzo": "{palette.grayscale.10}"
           }
         }
       }
@@ -1656,7 +1762,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.4}",
-            "default": "{palette.electricblue.4}"
+            "default": "{palette.electricblue.4}",
+            "virtuozzo": "{palette.electricblue.4}"
           }
         },
         "elementLink-hover": {
@@ -1671,7 +1778,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.4}",
-            "default": "{palette.electricblue.4}"
+            "default": "{palette.electricblue.4}",
+            "virtuozzo": "{palette.electricblue.4}"
           }
         },
         "elementLink-idle": {
@@ -1686,7 +1794,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.7}",
-            "default": "{palette.electricblue.7}"
+            "default": "{palette.electricblue.7}",
+            "virtuozzo": "{palette.electricblue.7}"
           }
         },
         "elementPrimary": {
@@ -1701,7 +1810,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.dark.inverse-100}",
-            "default": "{palette.transparent.dark.inverse-100}"
+            "default": "{palette.transparent.dark.inverse-100}",
+            "virtuozzo": "{palette.transparent.dark.inverse-100}"
           }
         },
         "screenLink-active": {
@@ -1716,7 +1826,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.4}",
-            "default": "{palette.electricblue.4}"
+            "default": "{palette.electricblue.4}",
+            "virtuozzo": "{palette.electricblue.4}"
           }
         },
         "screenLink-hover": {
@@ -1731,7 +1842,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.4}",
-            "default": "{palette.electricblue.4}"
+            "default": "{palette.electricblue.4}",
+            "virtuozzo": "{palette.electricblue.4}"
           }
         },
         "screenLink-idle": {
@@ -1746,7 +1858,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.4}",
-            "default": "{palette.electricblue.4}"
+            "default": "{palette.electricblue.4}",
+            "virtuozzo": "{palette.electricblue.4}"
           }
         },
         "screenPrimary": {
@@ -1761,7 +1874,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "default": "{palette.transparent.white.fixed-100}",
+            "virtuozzo": "{palette.transparent.white.fixed-100}"
           }
         },
         "screenSecondary": {
@@ -1776,7 +1890,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
-            "default": "{palette.transparent.white.fixed-60}"
+            "default": "{palette.transparent.white.fixed-60}",
+            "virtuozzo": "{palette.transparent.white.fixed-60}"
           }
         }
       },
@@ -1793,7 +1908,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-30}",
-            "default": "{palette.transparent.white.fixed-30}"
+            "default": "{palette.transparent.white.fixed-30}",
+            "virtuozzo": "{palette.transparent.white.fixed-30}"
           }
         },
         "link-disabled": {
@@ -1808,7 +1924,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-30}",
-            "default": "{palette.transparent.white.fixed-30}"
+            "default": "{palette.transparent.white.fixed-30}",
+            "virtuozzo": "{palette.transparent.white.fixed-30}"
           }
         },
         "link-hover": {
@@ -1823,7 +1940,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.blue.5}",
-            "default": "{palette.blue.5}"
+            "default": "{palette.blue.5}",
+            "virtuozzo": "{palette.blue.5}"
           }
         },
         "link-idle": {
@@ -1838,7 +1956,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.blue.7}",
-            "default": "{palette.blue.7}"
+            "default": "{palette.blue.7}",
+            "virtuozzo": "{palette.blue.7}"
           }
         },
         "link-pressed": {
@@ -1853,7 +1972,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.blue.3}",
-            "default": "{palette.blue.3}"
+            "default": "{palette.blue.3}",
+            "virtuozzo": "{palette.blue.3}"
           }
         },
         "primary": {
@@ -1868,7 +1988,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "default": "{palette.transparent.white.fixed-100}",
+            "virtuozzo": "{palette.transparent.white.fixed-100}"
           }
         },
         "secondary": {
@@ -1883,7 +2004,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
-            "default": "{palette.transparent.white.fixed-60}"
+            "default": "{palette.transparent.white.fixed-60}",
+            "virtuozzo": "{palette.transparent.white.fixed-60}"
           }
         }
       },
@@ -1900,7 +2022,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.inverse-100}",
-            "default": "{palette.transparent.white.inverse-100}"
+            "default": "{palette.transparent.white.inverse-100}",
+            "virtuozzo": "{palette.transparent.white.inverse-100}"
           }
         },
         "secondary": {
@@ -1915,7 +2038,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
-            "default": "{palette.transparent.white.fixed-60}"
+            "default": "{palette.transparent.white.fixed-60}",
+            "virtuozzo": "{palette.transparent.white.fixed-60}"
           }
         }
       },
@@ -1932,7 +2056,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.violet.11}",
-            "default": "{palette.violet.11}"
+            "default": "{palette.violet.11}",
+            "virtuozzo": "{palette.violet.11}"
           }
         },
         "critical": {
@@ -1947,7 +2072,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.orange.11}",
-            "default": "{palette.orange.11}"
+            "default": "{palette.orange.11}",
+            "virtuozzo": "{palette.orange.11}"
           }
         },
         "danger": {
@@ -1962,7 +2088,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.red.11}",
-            "default": "{palette.red.11}"
+            "default": "{palette.red.11}",
+            "virtuozzo": "{palette.red.11}"
           }
         },
         "info": {
@@ -1977,7 +2104,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.11}",
-            "default": "{palette.electricblue.11}"
+            "default": "{palette.electricblue.11}",
+            "virtuozzo": "{palette.electricblue.11}"
           }
         },
         "link-disabled": {
@@ -1992,7 +2120,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.5}",
-            "default": "{palette.electricblue.5}"
+            "default": "{palette.electricblue.5}",
+            "virtuozzo": "{palette.electricblue.5}"
           }
         },
         "link-hover": {
@@ -2007,7 +2136,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.13}",
-            "default": "{palette.electricblue.13}"
+            "default": "{palette.electricblue.13}",
+            "virtuozzo": "{palette.electricblue.13}"
           }
         },
         "link-idle": {
@@ -2022,7 +2152,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.11}",
-            "default": "{palette.electricblue.11}"
+            "default": "{palette.electricblue.11}",
+            "virtuozzo": "{palette.electricblue.11}"
           }
         },
         "link-pressed": {
@@ -2037,7 +2168,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.14}",
-            "default": "{palette.electricblue.14}"
+            "default": "{palette.electricblue.14}",
+            "virtuozzo": "{palette.electricblue.14}"
           }
         },
         "neutral": {
@@ -2052,7 +2184,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.11}",
-            "default": "{palette.grayscale.11}"
+            "default": "{palette.grayscale.11}",
+            "virtuozzo": "{palette.grayscale.11}"
           }
         },
         "primary": {
@@ -2067,7 +2200,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.14}",
-            "default": "{palette.grayscale.14}"
+            "default": "{palette.grayscale.14}",
+            "virtuozzo": "{palette.grayscale.14}"
           }
         },
         "secondary": {
@@ -2082,7 +2216,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.11}",
-            "default": "{palette.grayscale.11}"
+            "default": "{palette.grayscale.11}",
+            "virtuozzo": "{palette.grayscale.11}"
           }
         },
         "success": {
@@ -2097,7 +2232,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.green.11}",
-            "default": "{palette.green.11}"
+            "default": "{palette.green.11}",
+            "virtuozzo": "{palette.green.11}"
           }
         },
         "warning": {
@@ -2112,7 +2248,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.yellow.11}",
-            "default": "{palette.yellow.11}"
+            "default": "{palette.yellow.11}",
+            "virtuozzo": "{palette.yellow.11}"
           }
         }
       },
@@ -2129,7 +2266,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "default": "{palette.transparent.white.fixed-100}",
+            "virtuozzo": "{palette.transparent.white.fixed-100}"
           }
         },
         "critical": {
@@ -2144,7 +2282,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "default": "{palette.transparent.white.fixed-100}",
+            "virtuozzo": "{palette.transparent.white.fixed-100}"
           }
         },
         "danger": {
@@ -2159,7 +2298,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "default": "{palette.transparent.white.fixed-100}",
+            "virtuozzo": "{palette.transparent.white.fixed-100}"
           }
         },
         "info": {
@@ -2174,7 +2314,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "default": "{palette.transparent.white.fixed-100}",
+            "virtuozzo": "{palette.transparent.white.fixed-100}"
           }
         },
         "link": {
@@ -2189,7 +2330,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.electricblue.11}",
-            "default": "{palette.electricblue.11}"
+            "default": "{palette.electricblue.11}",
+            "virtuozzo": "{palette.electricblue.11}"
           }
         },
         "neutral": {
@@ -2204,7 +2346,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "default": "{palette.transparent.white.fixed-100}",
+            "virtuozzo": "{palette.transparent.white.fixed-100}"
           }
         },
         "primary": {
@@ -2219,7 +2362,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.0}",
-            "default": "{palette.grayscale.0}"
+            "default": "{palette.grayscale.0}",
+            "virtuozzo": "{palette.grayscale.0}"
           }
         },
         "secondary": {
@@ -2234,7 +2378,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.2}",
-            "default": "{palette.grayscale.2}"
+            "default": "{palette.grayscale.2}",
+            "virtuozzo": "{palette.grayscale.2}"
           }
         },
         "success": {
@@ -2249,7 +2394,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "default": "{palette.transparent.white.fixed-100}",
+            "virtuozzo": "{palette.transparent.white.fixed-100}"
           }
         },
         "warning": {
@@ -2264,7 +2410,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "default": "{palette.transparent.white.fixed-100}",
+            "virtuozzo": "{palette.transparent.white.fixed-100}"
           }
         }
       },
@@ -2281,7 +2428,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.red.7}",
-            "default": "{palette.red.7}"
+            "default": "{palette.red.7}",
+            "virtuozzo": "{palette.red.7}"
           }
         },
         "disabled": {
@@ -2296,7 +2444,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.5}",
-            "default": "{palette.grayscale.5}"
+            "default": "{palette.grayscale.5}",
+            "virtuozzo": "{palette.grayscale.5}"
           }
         },
         "link-disabled": {
@@ -2311,7 +2460,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.3}",
-            "default": "{palette.blue.3}"
+            "default": "{palette.blue.3}",
+            "virtuozzo": "{palette.grayscale.3}"
           }
         },
         "link-hover": {
@@ -2326,7 +2476,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.11}",
-            "default": "{palette.blue.8}"
+            "default": "{palette.blue.8}",
+            "virtuozzo": "{palette.grayscale.11}"
           }
         },
         "link-idle": {
@@ -2341,7 +2492,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.10}",
-            "default": "{palette.blue.7}"
+            "default": "{palette.blue.7}",
+            "virtuozzo": "{palette.grayscale.10}"
           }
         },
         "link-pressed": {
@@ -2356,7 +2508,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.12}",
-            "default": "{palette.blue.11}"
+            "default": "{palette.blue.11}",
+            "virtuozzo": "{palette.grayscale.12}"
           }
         },
         "primary": {
@@ -2371,7 +2524,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.14}",
-            "default": "{palette.grayscale.14}"
+            "default": "{palette.grayscale.14}",
+            "virtuozzo": "{palette.grayscale.14}"
           }
         },
         "secondary": {
@@ -2386,7 +2540,8 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{palette.grayscale.7}",
-            "default": "{palette.grayscale.7}"
+            "default": "{palette.grayscale.7}",
+            "virtuozzo": "{palette.grayscale.7}"
           }
         }
       }
@@ -2430,6 +2585,30 @@
             }
           ],
           "default": [
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [
+                  234.11,
+                  56.57,
+                  38.82
+                ]
+              },
+              "position": 0.2
+            },
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [
+                  303.09,
+                  69.78,
+                  27.25
+                ]
+              },
+              "position": 1
+            }
+          ],
+          "virtuozzo": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -2512,6 +2691,30 @@
               },
               "position": 1
             }
+          ],
+          "virtuozzo": [
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [
+                  234.38,
+                  100,
+                  93.73
+                ]
+              },
+              "position": 0.2
+            },
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [
+                  303.24,
+                  100,
+                  92.75
+                ]
+              },
+              "position": 1
+            }
           ]
         }
       },
@@ -2572,6 +2775,30 @@
               },
               "position": 1
             }
+          ],
+          "virtuozzo": [
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [
+                  233.75,
+                  58.54,
+                  48.24
+                ]
+              },
+              "position": 0.2
+            },
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [
+                  303.22,
+                  69.3,
+                  42.16
+                ]
+              },
+              "position": 1
+            }
           ]
         }
       },
@@ -2610,6 +2837,30 @@
             }
           ],
           "default": [
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [
+                  233.93,
+                  73.04,
+                  54.9
+                ]
+              },
+              "position": 0.2
+            },
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [
+                  303.19,
+                  97.18,
+                  58.24
+                ]
+              },
+              "position": 1
+            }
+          ],
+          "virtuozzo": [
             {
               "color": {
                 "colorSpace": "hsl",
