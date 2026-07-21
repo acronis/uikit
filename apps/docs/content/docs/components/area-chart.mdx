@@ -1,0 +1,97 @@
+---
+title: AreaChart
+description: A typed area chart — single or stacked, with solid or gradient fill.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { AreaChartDemo } from '@/components/demos-react/area-chart';
+
+## Usage
+
+```tsx
+import { AreaChart } from '@acronis-platform/ui-react';
+import type { ChartConfig } from '@acronis-platform/ui-react';
+```
+
+`AreaChart` is a typed composition over the shared [`Chart`](/components/chart)
+primitives. Give it `data`, a per-series `config`, the series to plot
+(`dataKeys`), and the category key (`xKey`) — it renders a themed recharts area
+chart (tooltip, legend, axes, grid included), so you don't hand-compose recharts
+children.
+
+Series colors are supplied by the caller through `config`: each entry maps a data
+key to a `label` and a `color`. `AreaChart` turns those into the `--color-<key>`
+custom properties its areas stroke and fill from. Single vs multi area simply
+follows from how many `dataKeys` you plot.
+
+> **Design-pending v1**, ported from the demo `AreaChartPlayground`. There is no
+> chart token tier yet, so the example colors reference the shared brand/status
+> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
+> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
+> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
+> across brands until the real palette lands.
+
+## Examples
+
+<DemoReact>
+  <AreaChartDemo />
+</DemoReact>
+
+A multi-series area chart with the default gradient fill, a themed tooltip and
+legend:
+
+```tsx
+const data = [
+  { month: 'Jan', desktop: 186, mobile: 80 },
+  { month: 'Feb', desktop: 305, mobile: 200 },
+  { month: 'Mar', desktop: 237, mobile: 120 },
+];
+
+const config = {
+  desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
+  mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
+} satisfies ChartConfig;
+
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  className="h-[320px] w-[560px]"
+/>;
+```
+
+Stack the series into one band with `layout="stacked"`:
+
+```tsx
+<AreaChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" layout="stacked" />
+```
+
+Use a flat translucent fill instead of the gradient with `fill="solid"` (tune it
+with `fillOpacity`):
+
+```tsx
+<AreaChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" fill="solid" fillOpacity={0.3} />
+```
+
+Change the interpolation with `curve` (`linear`, `monotone`, or `step`), and
+toggle the chrome / dots with `showGrid` / `showTooltip` / `showLegend` /
+`showDots`:
+
+```tsx
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  curve="step"
+  showLegend={false}
+/>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/area-chart/area-chart.tsx"
+  name="AreaChartProps"
+/>

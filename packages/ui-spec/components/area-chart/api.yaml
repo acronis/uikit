@@ -1,0 +1,114 @@
+spec_version: '1.0'
+component: AreaChart
+
+# Framework-agnostic contract. `layout` and `fill` are the CVA variant axes
+# (conformance-checked against the ui-react cva keys). `data` / `config` /
+# `dataKeys` / `xKey` are the data contract; the rest tune the curve, stroke,
+# fill, and chrome. Single vs multi area is not a variant — it is driven by how
+# many `dataKeys` are plotted.
+contract:
+  properties:
+    - name: layout
+      type: "'single' | 'stacked'"
+      required: false
+      default: "'single'"
+      description: >-
+        How multiple series are arranged. `single` = areas overlap independently;
+        `stacked` = areas share a `stackId` and sum into one band.
+    - name: fill
+      type: "'solid' | 'gradient'"
+      required: false
+      default: "'gradient'"
+      description: >-
+        How each area is filled. `solid` = a flat translucent fill (`fillOpacity`);
+        `gradient` = a vertical top-opaque → bottom-transparent gradient.
+    - name: data
+      type: ReadonlyArray<Record<string, string | number | null>>
+      required: true
+      description: >-
+        Row-per-point data — each row holds `xKey` plus one numeric field per
+        series. A `null` breaks the area at that point unless `connectNulls`.
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Per-series map of label / color (from the shared Chart primitives).
+        Turned into `--color-<key>` custom properties. Colors are caller-supplied.
+    - name: dataKeys
+      type: string[]
+      required: true
+      description: Series to plot — one area per key. Each must exist in `config` and every data row.
+    - name: xKey
+      type: string
+      required: true
+      description: The category dimension key shared across rows.
+    - name: curve
+      type: "'linear' | 'monotone' | 'step'"
+      required: false
+      default: "'monotone'"
+      description: Interpolation between points — straight, smoothed, or stepped.
+    - name: strokeWidth
+      type: number
+      required: false
+      default: '2'
+      description: Stroke width of each area's top border.
+    - name: fillOpacity
+      type: number
+      required: false
+      default: '0.4'
+      description: Flat-fill opacity — applies only when `fill="solid"`.
+    - name: showDots
+      type: boolean
+      required: false
+      default: 'false'
+      description: Render a dot at each data point.
+    - name: connectNulls
+      type: boolean
+      required: false
+      default: 'false'
+      description: Bridge `null` gaps in the data instead of breaking the area.
+    - name: showGrid
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the CartesianGrid.
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the hover tooltip.
+    - name: showLegend
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the legend.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: AreaChart
+    status: implemented
+    import: "import { AreaChart } from '@acronis-platform/ui-react'"
+    example: |
+      <AreaChart
+        config={config}
+        data={data}
+        dataKeys={['desktop', 'mobile']}
+        xKey="month"
+        layout="single"
+        fill="gradient"
+        className="h-[320px] w-[560px]"
+      />
+  vue:
+    component: AvAreaChart
+    status: planned
+    import: "import { AvAreaChart } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvAreaChart :config="config" :data="data" :data-keys="['desktop']" x-key="month" />
+  web-components:
+    element: ui-area-chart
+    status: planned
+    import: "import '@acronis-platform/ui-wc/area-chart'"
+    example: |
+      <ui-area-chart></ui-area-chart>

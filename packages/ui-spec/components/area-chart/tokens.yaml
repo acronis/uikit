@@ -1,0 +1,30 @@
+spec_version: '1.0'
+component: AreaChart
+
+# References only. Values live in @acronis-platform/tokens-pd. AreaChart has no
+# token tier of its own — series colors are supplied by the caller via `config`
+# (a dedicated `--ui-chart-*` data-viz palette is pending an upstream design
+# pass). The chrome (tooltip, legend, axes, grid) is inherited from the shared
+# Chart primitives, which resolve the semantic tokens below.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-background-surface-primary
+    affects: tooltip-content
+    description: Tooltip surface (bg-background).
+  - name: --ui-text-on-surface-primary
+    affects: tooltip-content
+    description: Tooltip value text (text-foreground).
+  - name: --ui-text-on-surface-secondary
+    affects: x-axis
+    description: >-
+      Muted tooltip/legend label text and axis tick labels
+      (text-muted-foreground / fill-muted-foreground).
+  - name: --ui-border-on-surface-border
+    affects: grid
+    description: >-
+      Tooltip border and the recharts grid / cursor lines
+      (border-border / stroke-border).
+  - name: --ui-background-surface-secondary
+    affects: series
+    description: Recharts muted fills — tooltip cursor line behind a hovered point (fill-muted).

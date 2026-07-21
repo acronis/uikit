@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: AreaChart
+name: area-chart
+status: draft
+category: data-display
+description: >-
+  A typed area-chart composition over the shared `Chart` primitives. Takes
+  `data` + `config` + a set of series `dataKeys` and renders a themed recharts
+  `AreaChart` inside a `ChartContainer`, with tooltip and legend chrome. Two
+  variant axes: `layout` (single / stacked areas) and `fill` (solid flat fill /
+  vertical gradient); single vs multi area is driven by the number of
+  `dataKeys`. Ported from the apps/demo `AreaChartPlayground`.
+since: 0.58.0

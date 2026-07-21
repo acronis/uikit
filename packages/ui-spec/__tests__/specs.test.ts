@@ -212,6 +212,20 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
   });
 
+  it('AreaChart: api.yaml layout/fill enums match the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(HERE, '../../ui-react/src/components/ui/area-chart/area-chart.tsx'),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('area-chart').api;
+
+    expect(Object.keys(groups).sort()).toEqual(['fill', 'layout']);
+    for (const axis of ['layout', 'fill']) {
+      expect(groups[axis].sort(), axis).toEqual(enumMembers(api, axis));
+    }
+  });
+
   it('LineChart: api.yaml curve/lineStyle enums match the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/line-chart/line-chart.tsx'),

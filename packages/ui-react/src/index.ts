@@ -9,6 +9,7 @@ export * from './components/ui/accordion';
 export * from './components/ui/alert';
 export * from './components/ui/app-shell';
 export * from './components/ui/app-shell-chat';
+export * from './components/ui/area-chart';
 export * from './components/ui/auth-layout';
 export * from './components/ui/avatar';
 export * from './components/ui/bar-chart';

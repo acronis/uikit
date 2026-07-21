@@ -1,0 +1,77 @@
+spec_version: '1.0'
+component: AreaChart
+
+schematic: |
+  root: <div data-layout data-fill>                 (variant wrapper)
+    container: <ChartContainer>                     (themed, sized, responsive)
+      plot: recharts <AreaChart>
+        defs:    <linearGradient> per series         (only when fill=gradient)
+        grid:    <CartesianGrid>                     (horizontal value lines)
+        x-axis:  <XAxis>   category (xKey)
+        y-axis:  <YAxis>   numeric value axis
+        series:  one <Area type=curve> per dataKey   (solid or gradient fill)
+        tooltip: <ChartTooltip> → tooltip-content    (hover card)
+        legend:  <ChartLegend>  → legend-content     (per-series swatch + label)
+
+root:
+  element: div
+  description: >-
+    The variant wrapper. Carries the CVA `layout` / `fill` classes and mirrors
+    the resolved values onto `data-layout` / `data-fill`, then renders the shared
+    `ChartContainer` (sized to fill the wrapper) around the recharts `AreaChart`.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      The shared `ChartContainer` — supplies the per-series `--color-<key>`
+      custom properties from `config` and themes recharts' internals.
+  - id: plot
+    element: svg
+    description: The recharts `AreaChart` holding the defs, axes, grid, and series.
+  - id: defs
+    element: defs
+    description: >-
+      One `<linearGradient>` per series (top-opaque → bottom-transparent),
+      referenced by the areas' `fill`. Rendered only when `fill=gradient`.
+  - id: grid
+    element: g
+    description: >-
+      `CartesianGrid` — horizontal value lines behind the plot (vertical lines
+      suppressed).
+  - id: x-axis
+    element: g
+    description: '`XAxis` — the category axis (`xKey`).'
+  - id: y-axis
+    element: g
+    description: '`YAxis` — the numeric value axis.'
+  - id: series
+    element: g
+    description: >-
+      One `Area` per entry in `dataKeys`, stroked from its `--color-<key>` var
+      and filled solid (with `fillOpacity`) or from its gradient def. Areas share
+      a `stackId` when `layout=stacked`; overlap independently when `single`.
+  - id: tooltip-content
+    element: div
+    description: >-
+      `ChartTooltipContent` — hover card with the category label and one row per
+      series (color indicator + name + value). Rendered when `showTooltip`.
+  - id: legend-content
+    element: div
+    description: >-
+      `ChartLegendContent` — one swatch + label per series. Rendered when
+      `showLegend`.
+
+states:
+  - id: layout-variant
+    trigger: the layout prop selects single (overlapping) or stacked areas
+    kind: prop
+    prop: layout
+    # `stacked` sums the series, so it also grows the value-axis domain and its
+    # grid ticks — not just the series arrangement.
+    affects: [series, y-axis, grid]
+  - id: fill-variant
+    trigger: the fill prop selects a flat solid fill or a vertical gradient
+    kind: prop
+    prop: fill
+    affects: [series, defs]
