@@ -3539,7 +3539,7 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{colors.border.onSurface.border-active}",
-            "default": "{colors.border.onSurface.border}"
+            "default": "{colors.border.onSurface.border-active}"
           }
         },
         "focused": {
@@ -3573,7 +3573,7 @@
           ],
           "values": {
             "deep_sky_itkontoret": "{colors.border.onSurface.border-active}",
-            "default": "{colors.border.onSurface.border}"
+            "default": "{colors.border.onSurface.border-active}"
           }
         },
         "idle": {
@@ -3660,7 +3660,7 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.background.surface.primary}",
+              "deep_sky_itkontoret": "{colors.background.surface.active}",
               "default": "{colors.background.surface.active}"
             }
           },
@@ -3677,7 +3677,7 @@
               "PD"
             ],
             "values": {
-              "deep_sky_itkontoret": "{colors.background.surface.primary}",
+              "deep_sky_itkontoret": "{colors.background.surface.hover}",
               "default": "{colors.background.surface.hover}"
             }
           },
@@ -3841,8 +3841,8 @@
             "PD"
           ],
           "values": {
-            "deep_sky_itkontoret": "{colors.text.onSurface.link}",
-            "default": "{colors.text.onSurface.link}"
+            "deep_sky_itkontoret": "{colors.text.onSurface.link-idle}",
+            "default": "{colors.text.onSurface.link-idle}"
           }
         }
       }
