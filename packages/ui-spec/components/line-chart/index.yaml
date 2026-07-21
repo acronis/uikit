@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: LineChart
+name: line-chart
+status: draft
+category: data-display
+description: >-
+  A typed line-chart composition over the shared `Chart` primitives. Takes
+  `data` + `config` + a set of series `dataKeys` and renders a themed recharts
+  `LineChart` inside a `ChartContainer`, with tooltip and legend chrome. Two
+  variant axes: `curve` (linear / monotone / step interpolation) and `lineStyle`
+  (solid / dashed stroke); single vs multi line is driven by the number of
+  `dataKeys`. Ported from the apps/demo `ChartPlayground`.
+since: 0.58.0

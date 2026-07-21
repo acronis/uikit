@@ -1,0 +1,102 @@
+spec_version: '1.0'
+component: LineChart
+
+# Framework-agnostic contract. `curve` and `lineStyle` are the CVA variant axes
+# (conformance-checked against the ui-react cva keys). `data` / `config` /
+# `dataKeys` / `xKey` are the data contract; the rest toggle chrome and stroke
+# detail. Single vs multi line is not a variant — it is driven by how many
+# `dataKeys` are plotted.
+contract:
+  properties:
+    - name: curve
+      type: "'linear' | 'monotone' | 'step'"
+      required: false
+      default: "'monotone'"
+      description: >-
+        How each line interpolates between points. `linear` = straight segments;
+        `monotone` = a smoothed curve; `step` = stepped (right-angle) segments.
+    - name: lineStyle
+      type: "'solid' | 'dashed'"
+      required: false
+      default: "'solid'"
+      description: Stroke style of every line — solid or dashed.
+    - name: data
+      type: ReadonlyArray<Record<string, string | number | null>>
+      required: true
+      description: >-
+        Row-per-point data — each row holds `xKey` plus one numeric field per
+        series. A `null` breaks the line at that point unless `connectNulls`.
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Per-series map of label / color (from the shared Chart primitives).
+        Turned into `--color-<key>` custom properties. Colors are caller-supplied.
+    - name: dataKeys
+      type: string[]
+      required: true
+      description: Series to plot — one line per key. Each must exist in `config` and every data row.
+    - name: xKey
+      type: string
+      required: true
+      description: The category dimension key shared across rows.
+    - name: strokeWidth
+      type: number
+      required: false
+      default: '2'
+      description: Stroke width of each line.
+    - name: showDots
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render a dot at each data point.
+    - name: connectNulls
+      type: boolean
+      required: false
+      default: 'false'
+      description: Bridge `null` gaps in the data instead of breaking the line.
+    - name: showGrid
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the CartesianGrid.
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the hover tooltip.
+    - name: showLegend
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the legend.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: LineChart
+    status: implemented
+    import: "import { LineChart } from '@acronis-platform/ui-react'"
+    example: |
+      <LineChart
+        config={config}
+        data={data}
+        dataKeys={['desktop', 'mobile']}
+        xKey="month"
+        curve="monotone"
+        lineStyle="solid"
+        className="h-[320px] w-[560px]"
+      />
+  vue:
+    component: AvLineChart
+    status: planned
+    import: "import { AvLineChart } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvLineChart :config="config" :data="data" :data-keys="['desktop']" x-key="month" />
+  web-components:
+    element: ui-line-chart
+    status: planned
+    import: "import '@acronis-platform/ui-wc/line-chart'"
+    example: |
+      <ui-line-chart></ui-line-chart>

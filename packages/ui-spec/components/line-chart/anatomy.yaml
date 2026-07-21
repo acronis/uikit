@@ -1,0 +1,70 @@
+spec_version: '1.0'
+component: LineChart
+
+schematic: |
+  root: <div data-curve data-line-style>            (variant wrapper)
+    container: <ChartContainer>                     (themed, sized, responsive)
+      plot: recharts <LineChart>
+        grid:    <CartesianGrid>                    (horizontal value lines)
+        x-axis:  <XAxis>   category (xKey)
+        y-axis:  <YAxis>   numeric value axis
+        series:  one <Line type=curve> per dataKey  (solid or dashed stroke)
+        tooltip: <ChartTooltip> → tooltip-content   (hover card)
+        legend:  <ChartLegend>  → legend-content    (per-series swatch + label)
+
+root:
+  element: div
+  description: >-
+    The variant wrapper. Carries the CVA `curve` / `lineStyle` classes and
+    mirrors the resolved values onto `data-curve` / `data-line-style`, then
+    renders the shared `ChartContainer` (sized to fill the wrapper) around the
+    recharts `LineChart`.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      The shared `ChartContainer` — supplies the per-series `--color-<key>`
+      custom properties from `config` and themes recharts' internals.
+  - id: plot
+    element: svg
+    description: The recharts `LineChart` holding the axes, grid, and series.
+  - id: grid
+    element: g
+    description: >-
+      `CartesianGrid` — horizontal value lines behind the plot (vertical lines
+      suppressed).
+  - id: x-axis
+    element: g
+    description: '`XAxis` — the category axis (`xKey`).'
+  - id: y-axis
+    element: g
+    description: '`YAxis` — the numeric value axis.'
+  - id: series
+    element: g
+    description: >-
+      One `Line` per entry in `dataKeys`, stroked from its `--color-<key>` var.
+      `curve` sets the interpolation (`type`); `lineStyle` sets solid vs dashed;
+      `showDots` toggles the per-point dot.
+  - id: tooltip-content
+    element: div
+    description: >-
+      `ChartTooltipContent` — hover card with the category label and one row per
+      series (color indicator + name + value). Rendered when `showTooltip`.
+  - id: legend-content
+    element: div
+    description: >-
+      `ChartLegendContent` — one swatch + label per series. Rendered when
+      `showLegend`.
+
+states:
+  - id: curve-variant
+    trigger: the curve prop selects linear, monotone, or step interpolation
+    kind: prop
+    prop: curve
+    affects: [series]
+  - id: line-style-variant
+    trigger: the lineStyle prop selects a solid or dashed stroke
+    kind: prop
+    prop: lineStyle
+    affects: [series]

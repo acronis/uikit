@@ -1,0 +1,100 @@
+---
+title: LineChart
+description: A typed line chart — single or multi-series, with curve and dashed variants.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { LineChartDemo } from '@/components/demos-react/line-chart';
+
+## Usage
+
+```tsx
+import { LineChart } from '@acronis-platform/ui-react';
+import type { ChartConfig } from '@acronis-platform/ui-react';
+```
+
+`LineChart` is a typed composition over the shared [`Chart`](/components/chart)
+primitives. Give it `data`, a per-series `config`, the series to plot
+(`dataKeys`), and the category key (`xKey`) — it renders a themed recharts line
+chart (tooltip, legend, axes, grid included), so you don't hand-compose recharts
+children.
+
+Series colors are supplied by the caller through `config`: each entry maps a data
+key to a `label` and a `color`. `LineChart` turns those into the `--color-<key>`
+custom properties its lines stroke from. Single vs multi line simply follows from
+how many `dataKeys` you plot.
+
+> **Design-pending v1**, ported from the demo `ChartPlayground`. There is no
+> chart token tier yet, so the example colors reference the shared brand/status
+> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
+> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
+> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
+> across brands until the real palette lands.
+
+## Examples
+
+<DemoReact>
+  <LineChartDemo />
+</DemoReact>
+
+A multi-series line chart with a themed tooltip and legend:
+
+```tsx
+const data = [
+  { month: 'Jan', desktop: 186, mobile: 80 },
+  { month: 'Feb', desktop: 305, mobile: 200 },
+  { month: 'Mar', desktop: 237, mobile: 120 },
+];
+
+const config = {
+  desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
+  mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
+} satisfies ChartConfig;
+
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  className="h-[320px] w-[560px]"
+/>;
+```
+
+Plot a single series by passing one `dataKey`:
+
+```tsx
+<LineChart config={config} data={data} dataKeys={['desktop']} xKey="month" />
+```
+
+Change the interpolation with `curve` (`linear`, `monotone`, or `step`):
+
+```tsx
+<LineChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" curve="step" />
+```
+
+Dash the strokes with `lineStyle="dashed"`:
+
+```tsx
+<LineChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" lineStyle="dashed" />
+```
+
+Toggle the chrome and per-point dots with `showGrid` / `showTooltip` /
+`showLegend` / `showDots`, and bridge `null` gaps with `connectNulls`:
+
+```tsx
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  showDots={false}
+  connectNulls
+/>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/line-chart/line-chart.tsx"
+  name="LineChartProps"
+/>

@@ -35,6 +35,7 @@
     "data-table",
     "chart",
     "bar-chart",
+    "line-chart",
     "description-list",
     "alert",
     "empty",
