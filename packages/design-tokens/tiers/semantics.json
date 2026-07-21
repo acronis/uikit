@@ -1899,8 +1899,8 @@
             "PD"
           ],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.inverse-100}",
+            "default": "{palette.transparent.white.inverse-100}"
           }
         },
         "secondary": {
@@ -2295,14 +2295,7 @@
             "PD"
           ],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [
-                205.71,
-                14.58,
-                18.82
-              ]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.5}",
             "default": "{palette.grayscale.5}"
           }
         },
@@ -2377,14 +2370,7 @@
             "PD"
           ],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [
-                208.8,
-                15.53,
-                31.57
-              ]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.14}",
             "default": "{palette.grayscale.14}"
           }
         },
@@ -2399,14 +2385,7 @@
             "PD"
           ],
           "values": {
-            "deep_sky_itkontoret": {
-              "colorSpace": "hsl",
-              "components": [
-                207,
-                15.63,
-                25.1
-              ]
-            },
+            "deep_sky_itkontoret": "{palette.grayscale.7}",
             "default": "{palette.grayscale.7}"
           }
         }
