@@ -58,6 +58,21 @@ describe('BarChart', () => {
     expect(root).toHaveAttribute('data-layout', 'stacked');
   });
 
+  // recharts only paints its SVG once the ResponsiveContainer has real
+  // dimensions, which happy-dom never gives it — so the grid/tooltip/legend
+  // toggles can't be asserted on the rendered chrome here. This exercises the
+  // toggle + barRadius prop paths (guarding against a plumbing/crash regression);
+  // the visual effect of the chrome toggles is covered by the `NoChrome` VR story.
+  it('renders with all chrome toggles off and a squared barRadius', () => {
+    const { container } = renderChart({
+      showGrid: false,
+      showTooltip: false,
+      showLegend: false,
+      barRadius: 0,
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
   it('renders without crashing on empty data', () => {
     const { container } = renderChart({ data: [] });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();

@@ -227,6 +227,15 @@ Conventions (mirror Button): `React.forwardRef` + `displayName`; props interface
   `src/index.ts`. **No new `@import`** in `src/styles/index.css` (you add no token
   tier; the shared primitives + semantic tiers are already loaded).
 
+**Start the file with `'use client';`.** A chart type instantiates raw recharts
+elements (`<XChart>`, `<Bar>`/`<Line>`, axes, grid) **outside** the shared
+`chart.tsx` boundary, and recharts is hook-driven (`ResponsiveContainer`,
+`Tooltip`), so the composition needs its own client boundary — `chart.tsx`'s
+directive doesn't cover the parts you construct. recharts ships no `'use client'`
+of its own, so a bare Server Component importing this chart would break without
+it. (The broader "which ui-react components should carry the directive" question
+is a separate, package-wide design call — charts are the clear-cut case.)
+
 **Code Connect — deferred.** Write `<name>.figma.tsx` with the `NEEDS_FIGMA_URL`
 status marker, real prop mappings, placeholder URL (identical to
 `/legacy-component` Phase 3).
@@ -258,6 +267,23 @@ whitespace churn + `git checkout --` the unrelated siblings).
 Hand-write `<name>.stories.tsx` mirroring the playground: **one story per
 variant** (orientation/layout/shape/…), plus the mandatory open-tooltip story
 (Phase 6). Wide `argTypes` for every meaningful prop.
+
+**Mandatory themed-surface decorator.** The `ChartContainer` is transparent by
+design — it inherits the surface it sits on (usually a `Card`). Without a
+backdrop, dark-mode VR flips the token-driven text/grid but leaves the chart on
+an unthemed (white) backdrop, so the dark baseline looks broken. Wrap **every**
+story via a meta-level `decorators` entry on a themed surface (mirror the shared
+`chart.stories.tsx`), so both the light and dark baselines are legible:
+
+```tsx
+decorators: [
+  (Story) => (
+    <div className="rounded-lg border border-border bg-background p-6 text-foreground">
+      <Story />
+    </div>
+  ),
+],
+```
 
 ---
 
@@ -328,17 +354,28 @@ pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker:all
 Never commit macOS/Windows-rendered baselines. Delete both baselines when you
 remove/rename a story.
 
+**Cover the chrome toggles with a VR story, not a unit test.** recharts only
+paints its SVG once `ResponsiveContainer` has real dimensions, which the unit env
+(happy-dom) never provides — so a Vitest test **cannot** assert that
+`showGrid`/`showTooltip`/`showLegend` actually removed anything (the grid/legend
+are never in the DOM there). Add a `NoChrome` story with those toggles off (and a
+squared `barRadius`/no dots) so a toggle silently becoming a no-op changes a real
+baseline; keep a unit test only to exercise the prop paths (renders without
+crashing).
+
 ---
 
 ## Output checklist (done = all green)
 
-- [ ] `src/components/ui/<name>/<name>.tsx` — recharts composition wrapping the
-      **imported** `ChartContainer`/tooltip/legend; `forwardRef`; CVA variants;
-      **no edit to `../chart/chart.tsx`**; **no new token / no `--av-*` / no hex**.
+- [ ] `src/components/ui/<name>/<name>.tsx` — **starts with `'use client';`**;
+      recharts composition wrapping the **imported** `ChartContainer`/tooltip/legend;
+      `forwardRef`; CVA variants; **no edit to `../chart/chart.tsx`**;
+      **no new token / no `--av-*` / no hex**.
 - [ ] `index.ts` + alphabetical export line in `src/index.ts`.
 - [ ] `__tests__/<name>.test.tsx` — renders series from data/config, variant
-      classes/props, empty-data, ref.
-- [ ] `__stories__/<name>.stories.tsx` (one story per variant + **`TooltipOpen`**) + `<name>.generated.stories.tsx`.
+      classes/props, chrome-toggles-off path, empty-data, ref.
+- [ ] `__stories__/<name>.stories.tsx` (one story per variant + **`TooltipOpen`** + a chrome-off **`NoChrome`**), wrapped by the **themed-surface `decorators`**
+      entry so dark VR is legible.
 - [ ] VR baselines (light + dark) for **every** story incl. `TooltipOpen`,
       regenerated in Docker and reviewed; orphans deleted.
 - [ ] `<name>.figma.tsx` — `NEEDS_FIGMA_URL` skeleton with real prop mappings.

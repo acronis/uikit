@@ -33,6 +33,17 @@ const meta = {
   component: BarChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
+  // The ChartContainer is transparent by design (it inherits the surface it sits
+  // on — usually a Card). Render the stories on a themed surface so the chart is
+  // legible in both light and dark; without it, dark mode flips the token-driven
+  // text/grid but leaves the backdrop unthemed.
+  decorators: [
+    (Story) => (
+      <div className="rounded-lg border border-border bg-background p-6 text-foreground">
+        <Story />
+      </div>
+    ),
+  ],
   args: {
     config,
     data,
@@ -74,6 +85,17 @@ export const VerticalStacked: Story = {
 
 export const HorizontalStacked: Story = {
   args: { orientation: 'horizontal', layout: 'stacked' },
+};
+
+// All chrome toggled off + squared corners — the baseline that would catch a
+// toggle silently becoming a no-op (the unit env can't paint recharts chrome).
+export const NoChrome: Story = {
+  args: {
+    showGrid: false,
+    showTooltip: false,
+    showLegend: false,
+    barRadius: 0,
+  },
 };
 
 // The tooltip is hover-only, so a normal story never snapshots it. This renders
