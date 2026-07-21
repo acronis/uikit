@@ -40,7 +40,7 @@ headers natively. Use the parts as their elements intend.
 ## Contrast
 
 - Cell text uses `--ui-table-data-value-color-idle`, headers
-  `--ui-table-header-label-color`, dividers `--ui-table-global-cell-border-color`;
-  row hover/active use `--ui-table-global-row-color-{hover,active}`. These meet
+  `--ui-table-header-label-color`, dividers `--ui-table-global-row-border-color`;
+  row hover/active use `--ui-table-data-row-color-{hover,active}`. These meet
   WCAG AA against the page surface in light and dark themes. Re-verify against
   the final palette once the design is confirmed ready for dev.

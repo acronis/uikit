@@ -545,7 +545,7 @@ function CustomSortingDemo() {
         primitives&apos; <code>useSortState</code> <code>comparators</code>{' '}
         override.
       </p>
-      <pre className="overflow-x-auto rounded-md border border-(--ui-table-global-cell-border-color) bg-muted p-3 text-xs">
+      <pre className="overflow-x-auto rounded-md border border-(--ui-table-global-row-border-color) bg-muted p-3 text-xs">
         <code>{SEVERITY_SORTING_FN_SOURCE}</code>
       </pre>
       <DataTable columns={incidentColumns} data={incidents} />

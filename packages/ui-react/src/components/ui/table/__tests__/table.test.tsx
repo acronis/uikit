@@ -123,7 +123,7 @@ describe('Table', () => {
     const row = screen.getByTestId('row');
     expect(row).toHaveAttribute('data-state', 'selected');
     expect(row).toHaveClass(
-      'data-[state=selected]:bg-[var(--ui-table-global-row-color-active)]'
+      'data-[state=selected]:bg-[var(--ui-table-data-row-color-active)]'
     );
   });
 

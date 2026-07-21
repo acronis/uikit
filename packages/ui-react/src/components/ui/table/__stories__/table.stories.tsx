@@ -250,7 +250,7 @@ function ScrollableBodyDemo() {
 
   return (
     <div className="w-[420px] space-y-4">
-      <div className="rounded-md border border-(--ui-table-global-cell-border-color) [&>div]:max-h-[220px] [&>div]:overflow-y-auto">
+      <div className="rounded-md border border-(--ui-table-global-row-border-color) [&>div]:max-h-[220px] [&>div]:overflow-y-auto">
         <Table>
           <TableHeader>
             <TableRow>

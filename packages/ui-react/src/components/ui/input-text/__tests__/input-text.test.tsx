@@ -97,7 +97,7 @@ describe('InputText', () => {
       'text-[var(--ui-input-text-normal-description-color-idle)]'
     );
     expect(screen.getByRole('button', { name: 'Clear' })).toHaveClass(
-      'text-[var(--ui-input-text-global-clear-icon-color)]'
+      'text-[var(--ui-button-icon-global-icon-color-idle)]'
     );
   });
 });

@@ -12,10 +12,10 @@ root:
   element: a
   role: link
   description: >-
-    The inline anchor. Semibold 14/24 text in `--ui-link-color-idle`; hover adds the
-    `--ui-link-text-decoration-hover` underline + `-color-hover`; `:active` uses
+    The inline anchor. Semibold 14/24 text in `--ui-link-normal-text-color-idle`; hover adds the
+    `--ui-link-global-text-decoration-hover` underline + `-color-hover`; `:active` uses
     `-color-active`. Polymorphic via `render` (e.g. a router link). When `disabled`,
-    it is inert: `--ui-link-color-disabled`, removed from the tab order, no href.
+    it is inert: `--ui-link-normal-text-color-disabled`, removed from the tab order, no href.
 
 parts:
   - id: label
@@ -24,7 +24,7 @@ parts:
   - id: icon
     description: >-
       Optional trailing external-link icon (SquareArrowUpRightIcon), shown when
-      `external`. `--ui-link-external-icon-color-*`.
+      `external`. `--ui-link-normal-external-icon-color-*`.
     element: svg
     optional: true
 

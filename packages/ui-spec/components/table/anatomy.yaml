@@ -20,7 +20,7 @@ schematic: |
   pagination:  "N of M selected"  [Rows per page ▾]  Page X of Y  ⏮ ◀ ▶ ⏭
      head    -> --ui-table-header-label-color, hover --ui-table-header-cell-color-hover
      sortable head -> sort icon (--ui-table-header-sort-icon-color-*) + aria-sort
-     row     -> idle/hover/active (selected) via --ui-table-global-row-color-*
+     row     -> idle/hover/active (selected) via --ui-table-data-row-color-*
      cell    -> --ui-table-global-cell-{padding-x,padding-y,border-color}; wrap grows height
 
 root:
@@ -45,7 +45,7 @@ parts:
     optional: true
   - id: row
     description: >-
-      A table row (`<tr>`). Idle/hover come from `--ui-table-global-row-color-*`;
+      A table row (`<tr>`). Idle/hover come from `--ui-table-data-row-color-*`;
       `selected` applies the active token + `data-state="selected"`.
     element: tr
   - id: head

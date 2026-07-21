@@ -8,25 +8,25 @@ source: '@acronis-platform/tokens-pd'
 
 tokens:
   # ── Layout ──
-  - { name: --ui-link-container-gap, affects: root }
+  - { name: --ui-link-global-container-gap, affects: root }
 
   # ── Text color ──
-  - { name: --ui-link-color-idle, affects: label }
-  - { name: --ui-link-color-hover, affects: label }
-  - { name: --ui-link-color-active, affects: label }
-  - { name: --ui-link-color-disabled, affects: label }
+  - { name: --ui-link-normal-text-color-idle, affects: label }
+  - { name: --ui-link-normal-text-color-hover, affects: label }
+  - { name: --ui-link-normal-text-color-active, affects: label }
+  - { name: --ui-link-normal-text-color-disabled, affects: label }
 
   # ── Text decoration (underline on hover) ──
-  - { name: --ui-link-text-decoration-idle, affects: label }
-  - { name: --ui-link-text-decoration-hover, affects: label }
-  - { name: --ui-link-text-decoration-active, affects: label }
-  - { name: --ui-link-text-decoration-disabled, affects: label }
+  - { name: --ui-link-global-text-decoration-idle, affects: label }
+  - { name: --ui-link-global-text-decoration-hover, affects: label }
+  - { name: --ui-link-global-text-decoration-active, affects: label }
+  - { name: --ui-link-global-text-decoration-disabled, affects: label }
 
   # ── External icon color ──
-  - { name: --ui-link-external-icon-color-idle, affects: icon }
-  - { name: --ui-link-external-icon-color-hover, affects: icon }
-  - { name: --ui-link-external-icon-color-active, affects: icon }
-  - { name: --ui-link-external-icon-color-disabled, affects: icon }
+  - { name: --ui-link-normal-external-icon-color-idle, affects: icon }
+  - { name: --ui-link-normal-external-icon-color-hover, affects: icon }
+  - { name: --ui-link-normal-external-icon-color-active, affects: icon }
+  - { name: --ui-link-normal-external-icon-color-disabled, affects: icon }
 
   # ── Focus ring ──
   - { name: --ui-focus-primary, affects: root, description: Focus ring }

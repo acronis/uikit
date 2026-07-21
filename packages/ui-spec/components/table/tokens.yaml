@@ -15,7 +15,7 @@ tokens:
       description: Default cell text color,
     }
   - {
-      name: --ui-table-global-cell-border-color,
+      name: --ui-table-global-row-border-color,
       affects: row,
       description: Row / cell divider color,
     }
@@ -30,22 +30,22 @@ tokens:
       description: Cell vertical padding,
     }
   - {
-      name: --ui-table-global-row-color-idle,
+      name: --ui-table-data-row-color-idle,
       affects: row,
       description: Row background — idle,
     }
   - {
-      name: --ui-table-global-row-color-hover,
+      name: --ui-table-data-row-color-hover,
       affects: row,
       description: Row background — hover,
     }
   - {
-      name: --ui-table-global-row-color-active,
+      name: --ui-table-data-row-color-active,
       affects: row,
       description: Row background — selected/active,
     }
   - {
-      name: --ui-table-header-cell-padding-x,
+      name: --ui-table-global-cell-padding-x,
       affects: head,
       description: Header cell horizontal padding,
     }

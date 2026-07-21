@@ -217,7 +217,7 @@ export const Statuses: Story = {
               variant === 'error' ? (
                 <button
                   type="button"
-                  className="text-[var(--ui-link-color-idle)] underline hover:text-[var(--ui-link-color-hover)]"
+                  className="text-[var(--ui-link-normal-text-color-idle)] underline hover:text-[var(--ui-link-normal-text-color-hover)]"
                 >
                   Try again
                 </button>
@@ -446,7 +446,7 @@ export const StatusesWithSearch: Story = {
               variant === 'error' ? (
                 <button
                   type="button"
-                  className="text-[var(--ui-link-color-idle)] underline hover:text-[var(--ui-link-color-hover)]"
+                  className="text-[var(--ui-link-normal-text-color-idle)] underline hover:text-[var(--ui-link-normal-text-color-hover)]"
                 >
                   Try again
                 </button>

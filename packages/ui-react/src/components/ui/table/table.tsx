@@ -12,9 +12,9 @@ import { cn } from '@/lib/utils';
 // "pre-release" Table design in the shadcn-uikit Figma (node 2948-2416). Unlike
 // Card/Dialog, a `--ui-table-*` token tier already exists, so these parts theme
 // directly from it (imported in styles/index.css):
-//   • cell   -> --ui-table-global-cell-{border-color,padding-x,padding-y,min-height}
-//   • row    -> --ui-table-global-row-color-{idle,hover,active}  (active = selected)
-//   • header -> --ui-table-header-{label-color,cell-color-hover,cell-padding-x,gap}
+//   • cell   -> --ui-table-global-cell-{padding-x,padding-y,min-height}
+//   • row    -> --ui-table-global-row-border-color, --ui-table-data-row-color-{idle,hover,active}  (active = selected)
+//   • header -> --ui-table-header-{label-color,cell-color-hover,gap}
 //   • sort   -> --ui-table-header-sort-icon-{color-active,color-inactive,size}
 //   • data   -> --ui-table-data-value-color-{idle,disabled}
 // The design's row checkboxes, tags, links and the column-settings button are
@@ -67,7 +67,7 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      'border-t border-[color:var(--ui-table-global-cell-border-color)] font-medium [&>tr]:last:border-b-0',
+      'border-t border-[color:var(--ui-table-global-row-border-color)] font-medium [&>tr]:last:border-b-0',
       className
     )}
     {...props}
@@ -87,7 +87,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
       ref={ref}
       data-state={selected ? 'selected' : undefined}
       className={cn(
-        'border-b border-[color:var(--ui-table-global-cell-border-color)] bg-[var(--ui-table-global-row-color-idle)] transition-colors hover:bg-[var(--ui-table-global-row-color-hover)] data-[state=selected]:bg-[var(--ui-table-global-row-color-active)]',
+        'border-b border-[color:var(--ui-table-global-row-border-color)] bg-[var(--ui-table-data-row-color-idle)] transition-colors hover:bg-[var(--ui-table-data-row-color-hover)] data-[state=selected]:bg-[var(--ui-table-data-row-color-active)]',
         className
       )}
       {...props}
@@ -149,7 +149,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
               : undefined
       }
       className={cn(
-        'px-[var(--ui-table-header-cell-padding-x)] text-start align-middle text-sm font-semibold text-[var(--ui-table-header-label-color)] [&:has([role=checkbox])]:pe-0',
+        'px-[var(--ui-table-global-cell-padding-x)] text-start align-middle text-sm font-semibold text-[var(--ui-table-header-label-color)] [&:has([role=checkbox])]:pe-0',
         wrap ? 'whitespace-normal' : 'h-10',
         className
       )}

@@ -64,7 +64,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const wrapperClass =
-  'rounded-md border border-[var(--ui-table-global-cell-border-color)]';
+  'rounded-md border border-[var(--ui-table-global-row-border-color)]';
 
 /* ----------------------------------------------------------------- Tree mode */
 

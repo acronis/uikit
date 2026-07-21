@@ -775,7 +775,7 @@ describe('DataTable presentational features', () => {
     const row = screen.getByText('user2@example.com').closest('tr')!;
     // Exact class token — the primitive carries `active:bg-[…row-color-active]`
     // for its pressed pseudo-state, so a substring check would collide.
-    const current = 'bg-[var(--ui-table-global-row-color-active)]';
+    const current = 'bg-[var(--ui-table-data-row-color-active)]';
     const classes = (el: HTMLElement) => el.className.split(/\s+/);
     expect(classes(row)).not.toContain(current);
     await userEvent.click(row);

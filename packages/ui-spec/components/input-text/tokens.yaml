@@ -4,8 +4,10 @@ component: InputText
 # References only — values live in @acronis-platform/tokens-pd. The box geometry,
 # fill, and border come from `--ui-input-text-global-box-*` / `-normal-box-*` /
 # `-error-msg-box-*` (shared with the `Input` primitive); the field furniture
-# (label, required, description, error, clear) uses the remaining `--ui-input-text-*`
-# tokens.
+# (label, required, description, error) uses the remaining `--ui-input-text-*`
+# tokens. The clear button is a ghost ButtonIcon, so its glyph uses the
+# `--ui-button-icon-global-icon-color-*` tier (the input-text tier dropped its own
+# clear-icon token in the Figma sync).
 source: '@acronis-platform/tokens-pd'
 
 tokens:
@@ -42,7 +44,7 @@ tokens:
   - { name: --ui-input-text-error-msg-box-border-color-idle, affects: input }
 
   # ── Clear button ──
-  - { name: --ui-input-text-global-clear-icon-color, affects: clear }
+  - { name: --ui-button-icon-global-icon-color-idle, affects: clear }
 
   # ── Description + error message ──
   - {

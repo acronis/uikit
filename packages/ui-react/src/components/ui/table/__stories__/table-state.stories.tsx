@@ -365,7 +365,7 @@ function CustomSorterDemo() {
         priority rank (Critical &gt; Error &gt; Warning &gt; Running), not
         alphabetically.
       </p>
-      <pre className="overflow-x-auto rounded-md border border-(--ui-table-global-cell-border-color) bg-muted p-3 text-xs">
+      <pre className="overflow-x-auto rounded-md border border-(--ui-table-global-row-border-color) bg-muted p-3 text-xs">
         <code>{SEVERITY_COMPARATOR_SOURCE}</code>
       </pre>
       <Table>

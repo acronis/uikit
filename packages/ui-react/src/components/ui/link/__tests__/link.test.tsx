@@ -16,7 +16,7 @@ describe('Link', () => {
   it('applies the idle link token color', () => {
     render(<Link href="/docs">Docs</Link>);
     expect(screen.getByRole('link', { name: 'Docs' })).toHaveClass(
-      'text-[var(--ui-link-color-idle)]'
+      'text-[var(--ui-link-normal-text-color-idle)]'
     );
   });
 
@@ -65,7 +65,7 @@ describe('Link', () => {
     );
     const el = screen.getByRole('button', { name: 'Action' });
     expect(el.tagName).toBe('BUTTON');
-    expect(el).toHaveClass('text-[var(--ui-link-color-idle)]');
+    expect(el).toHaveClass('text-[var(--ui-link-normal-text-color-idle)]');
   });
 
   it('forwards the ref to the underlying anchor', () => {

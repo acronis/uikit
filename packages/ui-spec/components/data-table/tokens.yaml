@@ -10,12 +10,12 @@ component: DataTable
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - name: --ui-table-global-cell-border-color
+  - name: --ui-table-global-row-border-color
     affects: table
     description: >-
       Wrapper border — matches the Table cell borders; also the column resize
       handle bar when enableColumnResizing is set.
-  - name: --ui-table-global-row-color-idle
+  - name: --ui-table-data-row-color-idle
     affects: row
     description: >-
       Default row background. Transparent by design (an idle row shows the
@@ -27,7 +27,7 @@ tokens:
     description: >-
       Opaque background applied to pinned (sticky) header/body cells in the
       idle state (bridged to bg-background), since
-      --ui-table-global-row-color-idle is transparent by design.
+      --ui-table-data-row-color-idle is transparent by design.
   - name: --ui-table-data-value-color-idle
     affects: expand-trigger
     description: Chevron color of the in-cell DataTableExpandTrigger.
@@ -40,7 +40,7 @@ tokens:
   - name: --ui-background-surface-secondary
     affects: row
     description: Striped row background + skeleton placeholder bars.
-  - name: --ui-table-global-row-color-active
+  - name: --ui-table-data-row-color-active
     affects: row
     description: Current (last-clicked) row highlight — the active-row color.
   - name: --ui-table-header-cell-color-hover

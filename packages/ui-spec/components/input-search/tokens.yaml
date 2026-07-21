@@ -3,8 +3,10 @@ component: InputSearch
 
 # References only — values live in @acronis-platform/tokens-pd. The field
 # furniture (container, label, required) is owned by InputSearch; the box
-# geometry, fill, border, icon, value/placeholder, and clear come from the
-# composed `Search` box. All share the `--ui-input-search-*` tier.
+# geometry, fill, border, icon, and value/placeholder come from the composed
+# `Search` box and share the `--ui-input-search-*` tier. The clear button is a
+# ghost ButtonIcon, so its glyph uses the `--ui-button-icon-global-icon-color-*`
+# tier (the input-search tier dropped its own clear-icon token in the Figma sync).
 source: '@acronis-platform/tokens-pd'
 
 tokens:
@@ -49,7 +51,7 @@ tokens:
   - { name: --ui-input-search-icon-search-color-disabled, affects: icon }
 
   # ── Clear button ──
-  - { name: --ui-input-search-clear-icon-color, affects: clear }
+  - { name: --ui-button-icon-global-icon-color-idle, affects: clear }
 
   # ── Focus ring ──
   - {

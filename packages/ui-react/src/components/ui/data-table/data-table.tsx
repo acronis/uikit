@@ -50,7 +50,7 @@ import {
 // take the `table` instance returned to column cells via TanStack context.
 // The grid cells/rows/headers are themed by the Table primitives' `--ui-table-*`
 // tier; DataTable's own chrome reuses that tier too — the wrapper border matches
-// the cell borders (`--ui-table-global-cell-border-color`), the empty-state uses
+// the cell borders (`--ui-table-global-row-border-color`), the empty-state uses
 // the muted table-value color, the current row the active-row color, and stripes
 // the secondary surface.
 //
@@ -97,8 +97,8 @@ export function getPinnedStyle<TData>(
     // hardcoded color), so the separator theme-adapts automatically.
     boxShadow:
       pinned === 'left'
-        ? '4px 0 4px -4px var(--ui-table-global-cell-border-color)'
-        : '-4px 0 4px -4px var(--ui-table-global-cell-border-color)',
+        ? '4px 0 4px -4px var(--ui-table-global-row-border-color)'
+        : '-4px 0 4px -4px var(--ui-table-global-row-border-color)',
   };
 }
 
@@ -448,11 +448,11 @@ export function DataTable<TData, TValue = unknown>({
   // Vertical borders are opt-in; a trailing border on the last cell would
   // double up with the wrapper, so suppress it.
   const borderedClass = bordered
-    ? '[&_th:not(:last-child)]:border-e [&_td:not(:last-child)]:border-e [&_th]:border-[var(--ui-table-global-cell-border-color)] [&_td]:border-[var(--ui-table-global-cell-border-color)]'
+    ? '[&_th:not(:last-child)]:border-e [&_td:not(:last-child)]:border-e [&_th]:border-[var(--ui-table-global-row-border-color)] [&_td]:border-[var(--ui-table-global-row-border-color)]'
     : undefined;
 
   // A pinned header/body cell must be opaque so the cells scrolling under it
-  // (same row) aren't visible. `--ui-table-global-row-color-idle` is
+  // (same row) aren't visible. `--ui-table-data-row-color-idle` is
   // *transparent by design* (an idle row shows the page/card surface through
   // it), so it can't be reused here — pinned idle cells need the actual
   // resolved surface color instead (`--ui-background-surface-primary`, bridged
@@ -463,7 +463,7 @@ export function DataTable<TData, TValue = unknown>({
   return (
     <div
       className={cn(
-        'rounded-md border border-[var(--ui-table-global-cell-border-color)]',
+        'rounded-md border border-[var(--ui-table-global-row-border-color)]',
         borderedClass
       )}
     >
@@ -516,7 +516,7 @@ export function DataTable<TData, TValue = unknown>({
                           handleResizeKeyDown(event, header)
                         }
                         className={cn(
-                          'absolute end-0 top-0 h-full w-1 cursor-(--ui-resizable-cursor) touch-none select-none bg-[var(--ui-table-global-cell-border-color)] opacity-0 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-2 focus-visible:outline-(--ui-focus-primary)',
+                          'absolute end-0 top-0 h-full w-1 cursor-(--ui-resizable-cursor) touch-none select-none bg-[var(--ui-table-global-row-border-color)] opacity-0 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-2 focus-visible:outline-(--ui-focus-primary)',
                           header.column.getIsResizing() && 'opacity-100'
                         )}
                       />
@@ -558,7 +558,7 @@ export function DataTable<TData, TValue = unknown>({
               // by design (see `headerPinnedBg` above).
               const rowBg =
                 isSelected || isCurrent
-                  ? 'bg-[var(--ui-table-global-row-color-active)]'
+                  ? 'bg-[var(--ui-table-data-row-color-active)]'
                   : striped && rowIndex % 2 === 1
                     ? 'bg-[var(--ui-background-surface-secondary)]'
                     : 'bg-background';
@@ -580,7 +580,7 @@ export function DataTable<TData, TValue = unknown>({
                         'bg-[var(--ui-background-surface-secondary)]',
                       isCurrent &&
                         !isSelected &&
-                        'bg-[var(--ui-table-global-row-color-active)]'
+                        'bg-[var(--ui-table-data-row-color-active)]'
                     )}
                   >
                     {row.getVisibleCells().map((cell) => {
