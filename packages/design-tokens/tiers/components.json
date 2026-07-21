@@ -11222,7 +11222,7 @@
                 "PD"
               ],
               "values": {
-                "deep_sky_itkontoret": "{colors.glyph.onBrand.secondary}",
+                "deep_sky_itkontoret": "{colors.glyph.onBrand.primary}",
                 "default": "{colors.glyph.onBrand.primary}"
               }
             }
