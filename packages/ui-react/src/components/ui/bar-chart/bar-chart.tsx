@@ -6,6 +6,7 @@ import {
   Bar,
   BarChart as RechartsBarChart,
   CartesianGrid,
+  ReferenceLine,
   XAxis,
   YAxis,
 } from 'recharts';
@@ -46,6 +47,47 @@ const barChartVariants = cva('', {
   },
 });
 
+export interface BarChartReferenceLine {
+  /** Fixed position on the value axis. Takes precedence over `average`. */
+  value?: number;
+  /**
+   * Draw the line at the mean of one series (a `dataKeys` entry) or, when
+   * `true`, of every plotted series' values.
+   */
+  average?: boolean | string;
+  /** Optional caption rendered alongside the line. */
+  label?: string;
+}
+
+/**
+ * Resolve a `referenceLine` config to a position on the value axis: a fixed
+ * `value` wins; otherwise the mean of the requested series (a single `dataKeys`
+ * entry, or all of them when `average` is `true`). Returns `undefined` when
+ * there is nothing to draw (no config, or no numeric values to average).
+ * Exported for unit tests; not part of the package's public API.
+ */
+export function barChartReferenceValue(
+  referenceLine: BarChartReferenceLine | undefined,
+  data: ReadonlyArray<Record<string, string | number>>,
+  dataKeys: string[]
+): number | undefined {
+  if (!referenceLine) return undefined;
+  if (typeof referenceLine.value === 'number') return referenceLine.value;
+  if (!referenceLine.average) return undefined;
+
+  const keys =
+    typeof referenceLine.average === 'string'
+      ? [referenceLine.average]
+      : dataKeys;
+  const nums = data.flatMap((row) =>
+    keys
+      .map((key) => row[key])
+      .filter((value): value is number => typeof value === 'number')
+  );
+  if (nums.length === 0) return undefined;
+  return nums.reduce((sum, n) => sum + n, 0) / nums.length;
+}
+
 export interface BarChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof barChartVariants> {
@@ -61,6 +103,12 @@ export interface BarChartProps
   dataKeys: string[];
   /** Category axis key (the shared dimension across rows, e.g. `"month"`). */
   xKey: string;
+  /**
+   * One or more dashed reference/average lines on the value axis (Y for vertical
+   * bars, X for horizontal). Each is driven by a fixed `value` or a computed
+   * series `average`. Pass a single object or an array to draw several at once.
+   */
+  referenceLine?: BarChartReferenceLine | BarChartReferenceLine[];
   /** Corner radius applied to the growing end of each bar. */
   barRadius?: number;
   showGrid?: boolean;
@@ -76,6 +124,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       data,
       dataKeys,
       xKey,
+      referenceLine,
       orientation = 'vertical',
       layout = 'grouped',
       barRadius = 4,
@@ -89,6 +138,12 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
     // Our `orientation` is bar-direction; recharts' `layout` is the opposite axis.
     const rechartsLayout = orientation === 'horizontal' ? 'vertical' : 'horizontal';
     const isStacked = layout === 'stacked';
+
+    const referenceLines = referenceLine
+      ? Array.isArray(referenceLine)
+        ? referenceLine
+        : [referenceLine]
+      : [];
 
     // Round only the growing end: top for vertical bars, right for horizontal.
     const endRadius: [number, number, number, number] =
@@ -148,6 +203,37 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   stackId={isStacked ? 'a' : undefined}
                   radius={barRadius > 0 && rounded ? endRadius : undefined}
                   isAnimationActive={false}
+                />
+              );
+            })}
+            {referenceLines.map((ref, index) => {
+              const value = barChartReferenceValue(ref, data, dataKeys);
+              if (value === undefined) return null;
+              return (
+                <ReferenceLine
+                  key={`${ref.label ?? 'ref'}-${index}`}
+                  // Draw on the value axis: Y for vertical bars, X for horizontal.
+                  {...(orientation === 'horizontal' ? { x: value } : { y: value })}
+                  stroke="var(--ui-text-on-surface-secondary)"
+                  strokeDasharray="4 4"
+                  // extendDomain so a target beyond the data max stays visible.
+                  ifOverflow="extendDomain"
+                  label={
+                    ref.label
+                      ? {
+                          value: ref.label,
+                          // Sit the caption at the top of the line: above the
+                          // right end of a horizontal line (vertical bars), or
+                          // above the top of a vertical line (horizontal bars).
+                          position:
+                            orientation === 'horizontal'
+                              ? 'top'
+                              : 'insideTopRight',
+                          fill: 'var(--ui-text-on-surface-secondary)',
+                          fontSize: 12,
+                        }
+                      : undefined
+                  }
                 />
               );
             })}

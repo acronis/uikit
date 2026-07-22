@@ -38,6 +38,15 @@ contract:
       type: string
       required: true
       description: The category dimension key shared across rows.
+    - name: referenceLine
+      type: 'Line | Line[]  where Line = { value?: number; average?: boolean | string; label?: string }'
+      required: false
+      description: >-
+        One or more dashed reference/average lines on the value axis (Y for
+        vertical bars, X for horizontal). Pass a single object or an array. Per
+        line, a fixed `value` wins; otherwise the mean of one series
+        (`average: '<key>'`) or of every plotted series (`average: true`). An
+        optional `label` captions each.
     - name: barRadius
       type: number
       required: false

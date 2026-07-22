@@ -62,6 +62,11 @@ const meta = {
     },
     layout: { control: 'inline-radio', options: ['grouped', 'stacked'] },
     barRadius: { control: { type: 'number', min: 0, max: 20 } },
+    referenceLine: {
+      control: 'object',
+      description:
+        'One line or an array. Each: `{ value }` (fixed) or `{ average: true | "<key>" }`, with an optional `{ label }`. The object editor needs **strict JSON** (double-quoted keys) — e.g. `[{ "value": 300, "label": "Target" }]` — then click the submit arrow.',
+    },
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
@@ -85,6 +90,33 @@ export const VerticalStacked: Story = {
 
 export const HorizontalStacked: Story = {
   args: { orientation: 'horizontal', layout: 'stacked' },
+};
+
+// A fixed target line on the value axis, captioned.
+export const ReferenceLine: Story = {
+  args: {
+    dataKeys: ['desktop'],
+    referenceLine: { value: 250, label: 'Target' },
+  },
+};
+
+// The reference line computed as the mean of every plotted series.
+export const AverageLine: Story = {
+  args: {
+    dataKeys: ['desktop'],
+    referenceLine: { average: true, label: 'Average' },
+  },
+};
+
+// Several lines at once — pass an array (here a fixed target + the average).
+export const MultipleReferenceLines: Story = {
+  args: {
+    dataKeys: ['desktop'],
+    referenceLine: [
+      { value: 300, label: 'Target' },
+      { average: true, label: 'Average' },
+    ],
+  },
 };
 
 // All chrome toggled off + squared corners — the baseline that would catch a

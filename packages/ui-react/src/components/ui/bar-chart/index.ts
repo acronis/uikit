@@ -1,1 +1,6 @@
-export { BarChart, barChartVariants, type BarChartProps } from './bar-chart';
+export {
+  BarChart,
+  barChartVariants,
+  type BarChartProps,
+  type BarChartReferenceLine,
+} from './bar-chart';

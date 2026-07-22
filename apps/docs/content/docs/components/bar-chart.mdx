@@ -86,6 +86,25 @@ Toggle the chrome and corner rounding with `showGrid` / `showTooltip` /
 />
 ```
 
+Overlay a dashed reference line on the value axis with `referenceLine` — either a
+fixed target `value`, or a computed `average` (the mean of one series by key, or
+of every plotted series when `true`). An optional `label` captions it. Pass an
+**array** to draw several at once:
+
+```tsx
+// Fixed target
+<BarChart config={config} data={data} dataKeys={['desktop']} xKey="month"
+  referenceLine={{ value: 250, label: 'Target' }} />
+
+// Mean of the plotted series
+<BarChart config={config} data={data} dataKeys={['desktop']} xKey="month"
+  referenceLine={{ average: true, label: 'Average' }} />
+
+// Several lines at once
+<BarChart config={config} data={data} dataKeys={['desktop']} xKey="month"
+  referenceLine={[{ value: 300, label: 'Target' }, { average: true, label: 'Average' }]} />
+```
+
 ## API Reference
 
 <AutoTypeTable

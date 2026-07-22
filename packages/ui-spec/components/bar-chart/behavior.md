@@ -57,6 +57,28 @@ Scenario: Legend
 ```
 
 ```gherkin
+Scenario: Fixed reference line
+  Given referenceLine is { value: 250, label: "Target" }
+  Then a dashed line draws across the value axis at 250
+  And it is captioned "Target"
+  And for horizontal orientation the line is vertical (on the x-axis), else horizontal (on the y-axis)
+```
+
+```gherkin
+Scenario: Averaged reference line
+  Given referenceLine is { average: true } (or a single series key)
+  Then the line draws at the mean of every plotted series' values (or that one series)
+  And when there are no numeric values to average, no line is drawn
+```
+
+```gherkin
+Scenario: Multiple reference lines
+  Given referenceLine is an array of line configs (e.g. a fixed target and an average)
+  Then one dashed line draws per config
+  And each config is resolved independently (a config with nothing to draw is skipped)
+```
+
+```gherkin
 Scenario: Empty data
   Given data is an empty array
   Then the chart renders its axes and grid with no bars and does not throw
