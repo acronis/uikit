@@ -164,7 +164,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                 fill={isGradient ? `url(#${gradientId}-${key})` : `var(--color-${key})`}
                 fillOpacity={isGradient ? 1 : fillOpacity}
                 dot={showDots ? { r: 3 } : false}
-                activeDot={{ r: 5 }}
+                activeDot={showDots ? { r: 5 } : false}
                 connectNulls={connectNulls}
                 isAnimationActive={false}
               />

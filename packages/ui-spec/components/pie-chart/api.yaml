@@ -33,7 +33,10 @@ contract:
     - name: nameKey
       type: string
       required: true
-      description: The label field that names each slice (drives legend, tooltip, and the `--color-<name>` lookup).
+      description: >-
+        The label field that names each slice (drives legend, tooltip, and the
+        `--color-<name>` lookup). Values should be unique per chart — rows
+        sharing a name share one config/color entry.
     - name: innerRadius
       type: number
       required: false

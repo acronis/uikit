@@ -48,7 +48,11 @@ export interface PieChartProps
   config: ChartConfig;
   /** Numeric field that sizes each slice. */
   dataKey: string;
-  /** Label field that names each slice (drives the legend, tooltip, and `--color-<name>` lookup). */
+  /**
+   * Label field that names each slice (drives the legend, tooltip, and
+   * `--color-<name>` lookup). Values should be unique per chart — rows sharing a
+   * name share one `config`/color entry.
+   */
   nameKey: string;
   /** Inner radius of the arc when `shape="donut"` (ignored for `shape="pie"`). */
   innerRadius?: number;
@@ -103,9 +107,12 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
               paddingAngle={paddingAngle}
               isAnimationActive={false}
             >
-              {data.map((entry) => (
+              {data.map((entry, index) => (
+                // Keyed by index, not the name: two rows may share a nameKey
+                // value, which would collide as a React key. Same-named rows
+                // intentionally share a color/config entry via `--color-<name>`.
                 <Cell
-                  key={String(entry[nameKey])}
+                  key={index}
                   fill={`var(--color-${entry[nameKey]})`}
                 />
               ))}
