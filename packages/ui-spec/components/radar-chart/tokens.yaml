@@ -1,0 +1,29 @@
+spec_version: '1.0'
+component: RadarChart
+
+# References only. Values live in @acronis-platform/tokens-pd. RadarChart has no
+# token tier of its own — series colors are supplied by the caller via `config`
+# (a dedicated `--ui-chart-*` data-viz palette is pending an upstream design
+# pass). The chrome (tooltip, legend, polar grid) is inherited from the shared
+# Chart primitives; the component adds a local override so the polar angle-axis
+# labels resolve the muted-foreground token (the shared container themes only
+# cartesian ticks).
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-text-on-surface-secondary
+    affects: angle-axis
+    description: >-
+      Polar angle-axis (spoke) labels and muted tooltip/legend label text
+      (fill-muted-foreground / text-muted-foreground).
+  - name: --ui-background-surface-primary
+    affects: tooltip-content
+    description: Tooltip surface (bg-background).
+  - name: --ui-text-on-surface-primary
+    affects: tooltip-content
+    description: Tooltip value text (text-foreground).
+  - name: --ui-border-on-surface-border
+    affects: grid
+    description: >-
+      Tooltip border and the recharts polar-grid web lines
+      (border-border / stroke-border).

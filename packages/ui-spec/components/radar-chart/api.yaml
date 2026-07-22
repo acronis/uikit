@@ -1,0 +1,94 @@
+spec_version: '1.0'
+component: RadarChart
+
+# Framework-agnostic contract. `gridType` is the CVA variant axis
+# (conformance-checked against the ui-react cva keys). `data` / `config` /
+# `dataKeys` / `angleKey` are the data contract; the rest tune the areas and
+# chrome. Series are columns of a shared row (like bar/line), plotted over one
+# polar angular axis.
+contract:
+  properties:
+    - name: gridType
+      type: "'polygon' | 'circle'"
+      required: false
+      default: "'polygon'"
+      description: >-
+        How the polar grid (web) is drawn. `polygon` = straight-edged rings
+        connecting the spokes; `circle` = smooth concentric rings.
+    - name: data
+      type: ReadonlyArray<Record<string, string | number>>
+      required: true
+      description: Row-per-axis data — each row holds `angleKey` plus one numeric field per series.
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Per-series map of label / color (from the shared Chart primitives).
+        Turned into `--color-<key>` custom properties. Colors are caller-supplied.
+    - name: dataKeys
+      type: string[]
+      required: true
+      description: Series to plot — one radar area per key. Each must exist in `config` and every data row.
+    - name: angleKey
+      type: string
+      required: true
+      description: The categorical axis key placed around the web (the spokes).
+    - name: fillOpacity
+      type: number
+      required: false
+      default: '0.3'
+      description: Fill opacity of each radar area.
+    - name: strokeWidth
+      type: number
+      required: false
+      default: '2'
+      description: Stroke width of each radar outline.
+    - name: showDots
+      type: boolean
+      required: false
+      default: 'false'
+      description: Render a dot at each axis point.
+    - name: showGrid
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the polar grid (the web).
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the hover tooltip.
+    - name: showLegend
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the legend.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: RadarChart
+    status: implemented
+    import: "import { RadarChart } from '@acronis-platform/ui-react'"
+    example: |
+      <RadarChart
+        config={config}
+        data={data}
+        dataKeys={['alice', 'bob']}
+        angleKey="subject"
+        gridType="polygon"
+        className="h-[380px] w-[420px]"
+      />
+  vue:
+    component: AvRadarChart
+    status: planned
+    import: "import { AvRadarChart } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvRadarChart :config="config" :data="data" :data-keys="['alice']" angle-key="subject" />
+  web-components:
+    element: ui-radar-chart
+    status: planned
+    import: "import '@acronis-platform/ui-wc/radar-chart'"
+    example: |
+      <ui-radar-chart></ui-radar-chart>

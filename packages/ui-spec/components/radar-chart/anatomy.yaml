@@ -1,0 +1,59 @@
+spec_version: '1.0'
+component: RadarChart
+
+schematic: |
+  root: <div data-grid-type>                        (variant wrapper)
+    container: <ChartContainer>                     (themed, sized, responsive)
+      plot: recharts <RadarChart>
+        grid:      <PolarGrid gridType=…>           (the web; polygon or circle)
+        angle-axis: <PolarAngleAxis dataKey=angleKey> (spoke labels)
+        series:    one <Radar> per dataKey           (stroked + filled area)
+        tooltip:   <ChartTooltip> → tooltip-content  (hover card)
+        legend:    <ChartLegend>  → legend-content   (per-series swatch + label)
+
+root:
+  element: div
+  description: >-
+    The variant wrapper. Carries the CVA `gridType` class and mirrors the
+    resolved value onto `data-grid-type`, then renders the shared
+    `ChartContainer` (sized to fill the wrapper) around the recharts `RadarChart`.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      The shared `ChartContainer` — supplies the per-series `--color-<key>`
+      custom properties from `config` and themes recharts' internals. Adds a
+      local override scoping the polar angle-axis tick labels to the
+      muted-foreground token (the shared container only themes cartesian ticks).
+  - id: plot
+    element: svg
+    description: The recharts `RadarChart` holding the web, angle axis, and series.
+  - id: grid
+    element: g
+    description: '`PolarGrid` — the web, `gridType=polygon` (straight rings) or `circle`.'
+  - id: angle-axis
+    element: g
+    description: '`PolarAngleAxis` — the categorical spokes labelled from `angleKey`.'
+  - id: series
+    element: g
+    description: >-
+      One `Radar` per entry in `dataKeys`, stroked and filled (at `fillOpacity`)
+      from its `--color-<key>` var; optional per-point dots.
+  - id: tooltip-content
+    element: div
+    description: >-
+      `ChartTooltipContent` — hover card with the axis label and one row per
+      series (color indicator + name + value). Rendered when `showTooltip`.
+  - id: legend-content
+    element: div
+    description: >-
+      `ChartLegendContent` — one swatch + label per series. Rendered when
+      `showLegend`.
+
+states:
+  - id: grid-type-variant
+    trigger: the gridType prop draws the web as polygon rings or circular rings
+    kind: prop
+    prop: gridType
+    affects: [grid]

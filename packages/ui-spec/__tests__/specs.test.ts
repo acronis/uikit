@@ -224,6 +224,18 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.shape.sort()).toEqual(enumMembers(api, 'shape'));
   });
 
+  it('RadarChart: api.yaml gridType enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(HERE, '../../ui-react/src/components/ui/radar-chart/radar-chart.tsx'),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('radar-chart').api;
+
+    expect(Object.keys(groups)).toEqual(['gridType']);
+    expect(groups.gridType.sort()).toEqual(enumMembers(api, 'gridType'));
+  });
+
   it('AreaChart: api.yaml layout/fill enums match the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/area-chart/area-chart.tsx'),

@@ -1,0 +1,79 @@
+---
+title: RadarChart
+description: A typed radar chart for comparing entities across shared quantitative axes.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { RadarChartDemo } from '@/components/demos-react/radar-chart';
+
+## Usage
+
+```tsx
+import { RadarChart } from '@acronis-platform/ui-react';
+import type { ChartConfig } from '@acronis-platform/ui-react';
+```
+
+`RadarChart` is a typed composition over the shared [`Chart`](/components/chart)
+primitives. Give it `data`, a per-series `config`, the series to plot
+(`dataKeys`), and the angular axis key (`angleKey`) — it renders a themed recharts
+radar (polar grid, spoke labels, tooltip, legend included), so you don't
+hand-compose recharts children.
+
+Series are columns of a shared row (like a bar or line chart), plotted over one
+polar angular axis. Series colors are supplied by the caller through `config`:
+each entry maps a data key to a `label` and a `color`, turned into the
+`--color-<key>` custom properties the areas stroke and fill from.
+
+> **Design-pending v1**, ported from the demo `RadarChartPlayground`. There is no
+> chart token tier yet, so the example colors reference the shared brand/status
+> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
+> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
+> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
+> across brands until the real palette lands.
+
+## Examples
+
+<DemoReact>
+  <RadarChartDemo />
+</DemoReact>
+
+Two series compared across shared axes, with a themed tooltip and legend:
+
+```tsx
+const data = [
+  { subject: 'Math', alice: 120, bob: 110 },
+  { subject: 'English', alice: 86, bob: 130 },
+  { subject: 'Physics', alice: 85, bob: 90 },
+  { subject: 'History', alice: 65, bob: 85 },
+];
+
+const config = {
+  alice: { label: 'Alice', color: 'var(--ui-background-brand-secondary)' },
+  bob: { label: 'Bob', color: 'var(--ui-background-status-strong-danger)' },
+} satisfies ChartConfig;
+
+<RadarChart
+  config={config}
+  data={data}
+  dataKeys={['alice', 'bob']}
+  angleKey="subject"
+  className="h-[380px] w-[420px]"
+/>;
+```
+
+Draw the web as smooth circles instead of straight polygon rings with
+`gridType="circle"`:
+
+```tsx
+<RadarChart config={config} data={data} dataKeys={['alice', 'bob']} angleKey="subject" gridType="circle" />
+```
+
+Tune the areas with `fillOpacity` / `strokeWidth` / `showDots`, and toggle the
+chrome with `showGrid` / `showTooltip` / `showLegend`.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/radar-chart/radar-chart.tsx"
+  name="RadarChartProps"
+/>

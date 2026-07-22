@@ -41,6 +41,7 @@
     "scatter-chart",
     "composed-chart",
     "funnel-chart",
+    "radar-chart",
     "description-list",
     "alert",
     "empty",

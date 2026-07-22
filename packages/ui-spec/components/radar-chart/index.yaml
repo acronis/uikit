@@ -1,0 +1,12 @@
+spec_version: '1.0'
+component: RadarChart
+name: radar-chart
+status: draft
+category: data-display
+description: >-
+  A typed radar-chart composition over the shared `Chart` primitives (the first
+  polar chart type). Plots a set of series `dataKeys` over one shared angular
+  axis (`angleKey`) inside a `ChartContainer`, with a polar grid, tooltip, and
+  legend. One variant axis: `gridType` (the web drawn as straight-edged `polygon`
+  rings or smooth `circle` rings). Ported from the apps/demo `RadarChartPlayground`.
+since: 0.58.0

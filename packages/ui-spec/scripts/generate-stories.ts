@@ -425,6 +425,12 @@ const RENDER: Record<string, RenderHint> = {
     // stories (Triangle / Rectangle / NoChrome + TooltipOpen).
     skip: true,
   },
+  'radar-chart': {
+    // Data-driven: requires data / config / dataKeys / angleKey + a sized box, so
+    // a zero-arg render is meaningless. VR is covered by the hand-written stories
+    // (Polygon / Circle / NoChrome + TooltipOpen).
+    skip: true,
+  },
   field: {
     // A multi-part composition: Field needs a label + control + description as
     // children to render meaningfully. VR is covered by the hand-written stories
