@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: RadialBarChart
+name: radial-bar-chart
+status: draft
+category: data-display
+description: >-
+  A typed radial-bar-chart composition over the shared `Chart` primitives (a
+  polar/radial type). Plots each data row as a concentric arc sized by `dataKey`,
+  colored per `nameKey`, inside a `ChartContainer` with an optional background
+  track, tooltip, and legend. No variant axes — the sweep (start/end angle) and
+  radii are plain props, so a caller can build a full ring or a gauge. Ported
+  from the apps/demo `RadialChartPlayground`.
+since: 0.58.0

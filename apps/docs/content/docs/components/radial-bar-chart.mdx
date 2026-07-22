@@ -1,0 +1,81 @@
+---
+title: RadialBarChart
+description: A typed radial bar chart — concentric arcs or a gauge.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { RadialBarChartDemo } from '@/components/demos-react/radial-bar-chart';
+
+## Usage
+
+```tsx
+import { RadialBarChart } from '@acronis-platform/ui-react';
+import type { ChartConfig } from '@acronis-platform/ui-react';
+```
+
+`RadialBarChart` is a typed composition over the shared [`Chart`](/components/chart)
+primitives. Give it `data`, a per-arc `config`, the value field (`dataKey`), and
+the label field (`nameKey`) — it renders a themed recharts radial bar chart
+(concentric arcs, an optional background track, tooltip, and legend), so you
+don't hand-compose recharts children.
+
+Each data row becomes a concentric arc (like a pie's slices unrolled into rings).
+Arc colors are supplied by the caller through `config`, **keyed by each `nameKey`
+value**: `RadialBarChart` turns those into the `--color-<name>` custom properties
+its arcs fill from.
+
+> **Design-pending v1**, ported from the demo `RadialChartPlayground`. There is no
+> chart token tier yet, so the example colors reference the shared brand/status
+> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
+> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
+> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
+> across brands until the real palette lands.
+
+## Examples
+
+<DemoReact>
+  <RadialBarChartDemo />
+</DemoReact>
+
+Concentric arcs sweeping a full circle, with a background track, tooltip and
+legend:
+
+```tsx
+const data = [
+  { browser: 'Chrome', value: 65 },
+  { browser: 'Safari', value: 50 },
+  { browser: 'Firefox', value: 35 },
+  { browser: 'Edge', value: 25 },
+];
+
+const config = {
+  Chrome: { label: 'Chrome', color: 'var(--ui-background-brand-secondary)' },
+  Safari: { label: 'Safari', color: 'var(--ui-background-status-strong-danger)' },
+  Firefox: { label: 'Firefox', color: 'var(--ui-background-status-strong-success)' },
+  Edge: { label: 'Edge', color: 'var(--ui-background-status-strong-warning)' },
+} satisfies ChartConfig;
+
+<RadialBarChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="browser"
+  className="h-[360px] w-[360px]"
+/>;
+```
+
+Make a half-circle gauge with `startAngle` / `endAngle`:
+
+```tsx
+<RadialBarChart config={config} data={data} dataKey="value" nameKey="browser" startAngle={180} endAngle={0} />
+```
+
+Tune the radii (`innerRadius` / `outerRadius`), `cornerRadius`, and toggle the
+`showBackground` track / `showTooltip` / `showLegend`.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/radial-bar-chart/radial-bar-chart.tsx"
+  name="RadialBarChartProps"
+/>

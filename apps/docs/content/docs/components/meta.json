@@ -42,6 +42,7 @@
     "composed-chart",
     "funnel-chart",
     "radar-chart",
+    "radial-bar-chart",
     "description-list",
     "alert",
     "empty",

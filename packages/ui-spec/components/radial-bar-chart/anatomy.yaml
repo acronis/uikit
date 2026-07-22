@@ -1,0 +1,57 @@
+spec_version: '1.0'
+component: RadialBarChart
+
+schematic: |
+  root: <div>                                       (wrapper)
+    container: <ChartContainer>                     (themed, sized, responsive)
+      plot: recharts <RadialBarChart data start/endAngle inner/outerRadius>
+        series:  <RadialBar dataKey> with one <Cell> per row (concentric arcs)
+        track:   RadialBar background sectors (muted, when showBackground)
+        tooltip: <ChartTooltip> → tooltip-content   (hover card)
+        legend:  <ChartLegend>  → legend-content    (per-arc swatch + label)
+
+root:
+  element: div
+  description: >-
+    The wrapper. Renders the shared `ChartContainer` (sized to fill it) around
+    the recharts `RadialBarChart`. RadialBarChart has no CVA variants, so the
+    root carries no variant data-attributes.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      The shared `ChartContainer` — supplies the per-arc `--color-<name>` custom
+      properties from `config` and themes recharts' internals (incl. the radial
+      background track → `fill-muted`).
+  - id: plot
+    element: svg
+    description: The recharts `RadialBarChart` holding the arcs and chrome.
+  - id: series
+    element: g
+    description: >-
+      The `RadialBar` — one `Cell` per data row, each a concentric arc sized by
+      `dataKey` and filled from its `--color-<name>` var, rounded by
+      `cornerRadius`.
+  - id: track
+    element: g
+    description: >-
+      The RadialBar background sectors behind each arc (muted). Rendered when
+      `showBackground`.
+  - id: tooltip-content
+    element: div
+    description: >-
+      `ChartTooltipContent` — hover card with one row for the hovered arc (color
+      indicator + name + value). Rendered when `showTooltip`.
+  - id: legend-content
+    element: div
+    description: >-
+      `ChartLegendContent` — one swatch + label per arc (`nameKey`). Rendered
+      when `showLegend`.
+
+states:
+  - id: background-track
+    trigger: the showBackground prop renders a muted track behind each arc
+    kind: prop
+    prop: showBackground
+    affects: [track]

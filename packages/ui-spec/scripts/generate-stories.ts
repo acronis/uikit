@@ -431,6 +431,12 @@ const RENDER: Record<string, RenderHint> = {
     // (Polygon / Circle / NoChrome + TooltipOpen).
     skip: true,
   },
+  'radial-bar-chart': {
+    // Data-driven: requires data / config / dataKey / nameKey + a sized box, so a
+    // zero-arg render is meaningless. VR is covered by the hand-written stories
+    // (FullCircle / Gauge / NoChrome + TooltipOpen).
+    skip: true,
+  },
   field: {
     // A multi-part composition: Field needs a label + control + description as
     // children to render meaningfully. VR is covered by the hand-written stories

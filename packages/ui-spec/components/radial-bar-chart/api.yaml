@@ -1,0 +1,99 @@
+spec_version: '1.0'
+component: RadialBarChart
+
+# Framework-agnostic contract. RadialBarChart has NO cva variant axes — its sweep
+# (start/end angle) and radii are plain geometry props, so there are no variant
+# enums to conformance-check. Rows become concentric arcs (like Pie/Funnel: one
+# `dataKey`, named by `nameKey`).
+contract:
+  properties:
+    - name: data
+      type: ReadonlyArray<Record<string, string | number>>
+      required: true
+      description: Row-per-arc data — each row holds a `nameKey` label and a `dataKey` numeric value.
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Per-arc map of label / color, keyed by the arc's `nameKey` value (from
+        the shared Chart primitives). Turned into `--color-<name>` custom
+        properties. Colors are caller-supplied.
+    - name: dataKey
+      type: string
+      required: true
+      description: The numeric field that sizes each arc.
+    - name: nameKey
+      type: string
+      required: true
+      description: >-
+        The label field that names each arc (drives legend, tooltip, and the
+        `--color-<name>` lookup). Values should be unique per chart — arcs sharing
+        a name share one config/color entry.
+    - name: innerRadius
+      type: number
+      required: false
+      default: '30'
+      description: Inner radius of the innermost arc.
+    - name: outerRadius
+      type: number
+      required: false
+      default: '110'
+      description: Outer radius of the outermost arc.
+    - name: startAngle
+      type: number
+      required: false
+      default: '90'
+      description: Angle (degrees) the arcs sweep from.
+    - name: endAngle
+      type: number
+      required: false
+      default: '-270'
+      description: Angle (degrees) the arcs sweep to (default is a full clockwise circle).
+    - name: cornerRadius
+      type: number
+      required: false
+      default: '4'
+      description: Corner radius on each arc's ends.
+    - name: showBackground
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render a muted background track behind each arc.
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the hover tooltip.
+    - name: showLegend
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the legend.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: RadialBarChart
+    status: implemented
+    import: "import { RadialBarChart } from '@acronis-platform/ui-react'"
+    example: |
+      <RadialBarChart
+        config={config}
+        data={data}
+        dataKey="value"
+        nameKey="browser"
+        className="h-[360px] w-[360px]"
+      />
+  vue:
+    component: AvRadialBarChart
+    status: planned
+    import: "import { AvRadialBarChart } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvRadialBarChart :config="config" :data="data" data-key="value" name-key="browser" />
+  web-components:
+    element: ui-radial-bar-chart
+    status: planned
+    import: "import '@acronis-platform/ui-wc/radial-bar-chart'"
+    example: |
+      <ui-radial-bar-chart></ui-radial-bar-chart>
