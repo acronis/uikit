@@ -102,4 +102,5 @@ export {
   Tag as Badge,
   type TagProps as BadgeProps,
 } from './components/ui/tag';
+export * from './components/ui/treemap';
 export * from './components/ui/widget-placeholder';

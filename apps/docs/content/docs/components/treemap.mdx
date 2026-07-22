@@ -1,0 +1,79 @@
+---
+title: Treemap
+description: A typed treemap — nested rectangles sized by value.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { TreemapDemo } from '@/components/demos-react/treemap';
+
+## Usage
+
+```tsx
+import { Treemap } from '@acronis-platform/ui-react';
+import type { ChartConfig } from '@acronis-platform/ui-react';
+```
+
+`Treemap` is a typed composition over the shared [`Chart`](/components/chart)
+primitives. Give it `data`, a per-leaf `config`, the size field (`dataKey`), and
+the label field (`nameKey`) — it renders a themed recharts treemap (cells sized
+by value, colored and labelled per name, with a tooltip), so you don't
+hand-compose recharts children. There are no axes, grid, or legend.
+
+Cell colors are supplied by the caller through `config`, **keyed by each `nameKey`
+value**: `Treemap` turns those into the `--color-<name>` custom properties its
+cells fill from.
+
+> **Design-pending v1**, ported from the demo `TreemapChartPlayground` — a flat
+> treemap (a list of leaves). There is no chart token tier yet, so the example
+> colors reference the shared brand/status tokens, and on-cell labels use the
+> `--ui-text-on-status-strong-neutral` token over them; a dedicated `--ui-chart-*`
+> data-viz palette (with matched per-cell label colors) is pending an upstream
+> design pass. `--ui-background-status-strong-*` is
+> chromatic in every brand; `--ui-background-brand-secondary` is brand-dependent,
+> so it is not color-stable across brands until the real palette lands.
+
+## Examples
+
+<DemoReact>
+  <TreemapDemo />
+</DemoReact>
+
+Leaves sized by value, colored and labelled per name, with a tooltip:
+
+```tsx
+const data = [
+  { name: 'React', size: 2400 },
+  { name: 'Vue', size: 1600 },
+  { name: 'Angular', size: 1200 },
+  { name: 'Svelte', size: 800 },
+];
+
+const config = {
+  React: { label: 'React', color: 'var(--ui-background-brand-secondary)' },
+  Vue: { label: 'Vue', color: 'var(--ui-background-status-strong-success)' },
+  Angular: { label: 'Angular', color: 'var(--ui-background-status-strong-danger)' },
+  Svelte: { label: 'Svelte', color: 'var(--ui-background-status-strong-warning)' },
+} satisfies ChartConfig;
+
+<Treemap
+  config={config}
+  data={data}
+  dataKey="size"
+  nameKey="name"
+  className="h-[320px] w-[520px]"
+/>;
+```
+
+Change the tiling with `aspectRatio`, and hide the on-cell labels or tooltip with
+`showLabels` / `showTooltip`:
+
+```tsx
+<Treemap config={config} data={data} dataKey="size" nameKey="name" aspectRatio={2.5} showLabels={false} />
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/treemap/treemap.tsx"
+  name="TreemapProps"
+/>

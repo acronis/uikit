@@ -1,0 +1,74 @@
+spec_version: '1.0'
+component: Treemap
+
+# Framework-agnostic contract. Treemap has NO cva variant axes — `aspectRatio` is
+# a plain geometry prop and nesting is out of v1 scope, so there are no variant
+# enums to conformance-check. v1 is a flat treemap (a list of leaves), themed via
+# a custom cell renderer.
+contract:
+  properties:
+    - name: data
+      type: ReadonlyArray<Record<string, string | number>>
+      required: true
+      description: Row-per-leaf data — each row holds a `nameKey` label and a `dataKey` numeric size.
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Per-leaf map of label / color, keyed by the leaf's `nameKey` value (from
+        the shared Chart primitives). Turned into `--color-<name>` custom
+        properties. Colors are caller-supplied.
+    - name: dataKey
+      type: string
+      required: true
+      description: The numeric field that sizes each leaf's rectangle.
+    - name: nameKey
+      type: string
+      required: true
+      description: >-
+        The label field that names each leaf (drives the on-cell label, tooltip,
+        and `--color-<name>` lookup). Values should be unique and CSS-safe (they
+        become part of a custom-property name).
+    - name: aspectRatio
+      type: number
+      required: false
+      default: '1.3333'
+      description: Width-to-height ratio the tiling targets (default 4 / 3).
+    - name: showLabels
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render each leaf's name inside its cell (when it fits).
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the hover tooltip.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Treemap
+    status: implemented
+    import: "import { Treemap } from '@acronis-platform/ui-react'"
+    example: |
+      <Treemap
+        config={config}
+        data={data}
+        dataKey="size"
+        nameKey="name"
+        className="h-[320px] w-[520px]"
+      />
+  vue:
+    component: AvTreemap
+    status: planned
+    import: "import { AvTreemap } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvTreemap :config="config" :data="data" data-key="size" name-key="name" />
+  web-components:
+    element: ui-treemap
+    status: planned
+    import: "import '@acronis-platform/ui-wc/treemap'"
+    example: |
+      <ui-treemap></ui-treemap>

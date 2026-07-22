@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: Treemap
+name: treemap
+status: draft
+category: data-display
+description: >-
+  A typed treemap composition over the shared `Chart` primitives. Tiles a flat
+  set of leaves into nested rectangles sized by `dataKey` and colored per
+  `nameKey`, inside a `ChartContainer`, with on-cell labels and a tooltip. No
+  axes, grid, or legend — and no variant axes; `aspectRatio` is a plain prop.
+  Themed through a custom cell renderer (recharts' default has no token hooks).
+  Ported from the apps/demo `TreemapChartPlayground`.
+since: 0.58.0

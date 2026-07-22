@@ -1,0 +1,45 @@
+spec_version: '1.0'
+component: Treemap
+
+schematic: |
+  root: <div>                                       (wrapper)
+    container: <ChartContainer>                     (themed, sized, responsive)
+      plot: recharts <Treemap data dataKey nameKey aspectRatio content>
+        cells:   one rect per leaf (sized by dataKey, filled per nameKey) + on-cell label
+        tooltip: <ChartTooltip> → tooltip-content   (hover card)
+
+root:
+  element: div
+  description: >-
+    The wrapper. Renders the shared `ChartContainer` (sized to fill it) around
+    the recharts `Treemap`. Treemap has no CVA variants, so the root carries no
+    variant data-attributes.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      The shared `ChartContainer` — supplies the per-leaf `--color-<name>` custom
+      properties from `config` and themes recharts' internals.
+  - id: plot
+    element: svg
+    description: The recharts `Treemap` holding the tiled cells and the tooltip.
+  - id: cells
+    element: g
+    description: >-
+      One rect per leaf, sized by `dataKey`, filled from its `--color-<name>` var
+      and separated by a surface-colored stroke, with a centered white on-cell
+      label (shown when the cell is large enough and `showLabels`). Rendered by a
+      custom `content` cell renderer.
+  - id: tooltip-content
+    element: div
+    description: >-
+      `ChartTooltipContent` — hover card with one row for the hovered leaf (color
+      indicator + name + value). Rendered when `showTooltip`.
+
+states:
+  - id: labels
+    trigger: the showLabels prop renders each leaf's name inside its cell
+    kind: prop
+    prop: showLabels
+    affects: [cells]

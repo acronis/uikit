@@ -437,6 +437,13 @@ const RENDER: Record<string, RenderHint> = {
     // (FullCircle / Gauge / NoChrome + TooltipOpen).
     skip: true,
   },
+  treemap: {
+    // Data-driven: requires data / config / dataKey / nameKey + a sized box, so a
+    // zero-arg render is meaningless. VR is covered by the hand-written stories
+    // (Default / WideAspect / NoChrome). No open-tooltip story: recharts' Treemap
+    // tooltip is hover-only and can't be opened statically via defaultIndex.
+    skip: true,
+  },
   field: {
     // A multi-part composition: Field needs a label + control + description as
     // children to render meaningfully. VR is covered by the hand-written stories

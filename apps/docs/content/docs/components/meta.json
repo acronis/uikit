@@ -43,6 +43,7 @@
     "funnel-chart",
     "radar-chart",
     "radial-bar-chart",
+    "treemap",
     "description-list",
     "alert",
     "empty",

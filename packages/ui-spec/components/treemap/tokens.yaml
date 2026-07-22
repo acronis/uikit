@@ -1,0 +1,29 @@
+spec_version: '1.0'
+component: Treemap
+
+# References only. Values live in @acronis-platform/tokens-pd. Treemap has no
+# token tier of its own — cell colors are supplied by the caller via `config`
+# (a dedicated `--ui-chart-*` data-viz palette is pending an upstream design
+# pass). The tooltip chrome is inherited from the shared Chart primitives.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-text-on-status-strong-neutral
+    affects: cells
+    description: >-
+      On-cell label text — the "text on a strong colored surface" token (constant
+      white in both themes), readable over the saturated series colors.
+  - name: --ui-background-surface-primary
+    affects: cells
+    description: >-
+      Cell separator stroke (stroke-background) and the tooltip surface
+      (bg-background).
+  - name: --ui-text-on-surface-primary
+    affects: tooltip-content
+    description: Tooltip value text (text-foreground).
+  - name: --ui-text-on-surface-secondary
+    affects: tooltip-content
+    description: Muted tooltip label text (text-muted-foreground).
+  - name: --ui-border-on-surface-border
+    affects: tooltip-content
+    description: Tooltip border (border-border).
