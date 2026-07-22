@@ -413,6 +413,12 @@ const RENDER: Record<string, RenderHint> = {
     // (Grouped / Bubble / TriangleMarkers / NoChrome + TooltipOpen).
     skip: true,
   },
+  'composed-chart': {
+    // Data-driven: requires data / config / series / xKey + a sized box, so a
+    // zero-arg render is meaningless. VR is covered by the hand-written stories
+    // (BarPlusLine / BarAreaLine / NoChrome + TooltipOpen).
+    skip: true,
+  },
   field: {
     // A multi-part composition: Field needs a label + control + description as
     // children to render meaningfully. VR is covered by the hand-written stories

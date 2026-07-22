@@ -1,0 +1,93 @@
+spec_version: '1.0'
+component: ComposedChart
+
+# Framework-agnostic contract. ComposedChart has NO cva variant axes — the mix is
+# data-driven via each `series[].type` (bar / line / area) over one shared
+# category axis — so there are no variant enums to conformance-check.
+contract:
+  properties:
+    - name: data
+      type: ReadonlyArray<Record<string, string | number>>
+      required: true
+      description: Row-per-category data — each row holds `xKey` plus one numeric field per series.
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Per-series map of label / color, keyed by `series[].key` (from the shared
+        Chart primitives). Turned into `--color-<key>` custom properties. Colors
+        are caller-supplied.
+    - name: series
+      type: ComposedSeries[]
+      required: true
+      description: >-
+        Series to plot, each `{ key, type }`. `type` is `bar` / `line` / `area`.
+        Rendered in array order — recharts paints children back-to-front, so
+        later entries sit on top; order them so a thin line comes after the
+        bars/areas it should overlay. Each key must exist in `config` and every
+        data row.
+    - name: xKey
+      type: string
+      required: true
+      description: The category dimension key shared across rows.
+    - name: curve
+      type: "'linear' | 'monotone' | 'step'"
+      required: false
+      default: "'monotone'"
+      description: Interpolation for the line and area series.
+    - name: barRadius
+      type: number
+      required: false
+      default: '4'
+      description: Corner radius on the growing end of bar series (0 for square corners).
+    - name: fillOpacity
+      type: number
+      required: false
+      default: '0.3'
+      description: Flat-fill opacity for area series.
+    - name: showGrid
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the CartesianGrid.
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the hover tooltip.
+    - name: showLegend
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the legend.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: ComposedChart
+    status: implemented
+    import: "import { ComposedChart } from '@acronis-platform/ui-react'"
+    example: |
+      <ComposedChart
+        config={config}
+        data={data}
+        series={[
+          { key: 'revenue', type: 'bar' },
+          { key: 'profit', type: 'line' },
+        ]}
+        xKey="month"
+        className="h-[320px] w-[560px]"
+      />
+  vue:
+    component: AvComposedChart
+    status: planned
+    import: "import { AvComposedChart } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvComposedChart :config="config" :data="data" :series="series" x-key="month" />
+  web-components:
+    element: ui-composed-chart
+    status: planned
+    import: "import '@acronis-platform/ui-wc/composed-chart'"
+    example: |
+      <ui-composed-chart></ui-composed-chart>

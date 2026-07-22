@@ -1,0 +1,64 @@
+spec_version: '1.0'
+component: ComposedChart
+
+schematic: |
+  root: <div>                                       (wrapper)
+    container: <ChartContainer>                     (themed, sized, responsive)
+      plot: recharts <ComposedChart>
+        grid:    <CartesianGrid>                    (horizontal value lines)
+        x-axis:  <XAxis>   category (xKey)
+        y-axis:  <YAxis>   numeric value axis
+        series:  one <Bar> / <Line> / <Area> per series[] entry (per its type)
+        tooltip: <ChartTooltip> → tooltip-content   (hover card)
+        legend:  <ChartLegend>  → legend-content    (per-series swatch + label)
+
+root:
+  element: div
+  description: >-
+    The wrapper. Renders the shared `ChartContainer` (sized to fill it) around
+    the recharts `ComposedChart`. ComposedChart has no CVA variants, so the root
+    carries no variant data-attributes.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      The shared `ChartContainer` — supplies the per-series `--color-<key>`
+      custom properties from `config` and themes recharts' internals.
+  - id: plot
+    element: svg
+    description: The recharts `ComposedChart` holding the axes, grid, and mixed series.
+  - id: grid
+    element: g
+    description: '`CartesianGrid` — horizontal value lines (vertical lines suppressed).'
+  - id: x-axis
+    element: g
+    description: '`XAxis` — the category axis (`xKey`).'
+  - id: y-axis
+    element: g
+    description: '`YAxis` — the numeric value axis (shared across all series).'
+  - id: series
+    element: g
+    description: >-
+      One recharts element per `series[]` entry, chosen by its `type`: `<Bar>`
+      (rounded by `barRadius`), `<Area>` (filled at `fillOpacity`, curved by
+      `curve`), or `<Line>` (curved by `curve`). Rendered in the caller's
+      `series` order — later entries paint on top. Each paints from its
+      `--color-<key>` var.
+  - id: tooltip-content
+    element: div
+    description: >-
+      `ChartTooltipContent` — hover card with the category label and one row per
+      series (color indicator + name + value). Rendered when `showTooltip`.
+  - id: legend-content
+    element: div
+    description: >-
+      `ChartLegendContent` — one swatch + label per series. Rendered when
+      `showLegend`.
+
+states:
+  - id: curve-variant
+    trigger: the curve prop sets the interpolation for line and area series
+    kind: prop
+    prop: curve
+    affects: [series]

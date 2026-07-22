@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: ComposedChart
+name: composed-chart
+status: draft
+category: data-display
+description: >-
+  A typed composed (mixed) chart over the shared `Chart` primitives. Plots a
+  `series` list over one shared category axis, where each entry picks its own
+  render `type` (bar / line / area), inside a `ChartContainer` with tooltip and
+  legend chrome. No variant axes — the mix is data-driven via `series[].type`.
+  Series render in the caller's `series` order (later entries paint on top).
+  Ported from the apps/demo `ComposedChartPlayground`.
+since: 0.58.0

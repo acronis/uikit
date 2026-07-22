@@ -39,6 +39,7 @@
     "line-chart",
     "pie-chart",
     "scatter-chart",
+    "composed-chart",
     "description-list",
     "alert",
     "empty",
