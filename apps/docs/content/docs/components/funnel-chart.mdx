@@ -1,0 +1,83 @@
+---
+title: FunnelChart
+description: A typed funnel chart for stage-by-stage progression and drop-off.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { FunnelChartDemo } from '@/components/demos-react/funnel-chart';
+
+## Usage
+
+```tsx
+import { FunnelChart } from '@acronis-platform/ui-react';
+import type { ChartConfig } from '@acronis-platform/ui-react';
+```
+
+`FunnelChart` is a typed composition over the shared [`Chart`](/components/chart)
+primitives. Give it `data` (one row per stage), a per-stage `config`, the value
+field (`dataKey`), and the label field (`nameKey`) — it renders a themed recharts
+funnel (on-chart stage labels and a tooltip included), so you don't hand-compose
+recharts children. There's no legend — the inline labels already name every stage.
+
+Stage colors are supplied by the caller through `config`, **keyed by each
+`nameKey` value**: `FunnelChart` turns those into the `--color-<name>` custom
+properties its segments fill from.
+
+> **Design-pending v1**, ported from the demo `FunnelChartPlayground`. There is no
+> chart token tier yet, so the example colors reference the shared brand/status
+> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
+> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
+> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
+> across brands until the real palette lands.
+
+## Examples
+
+<DemoReact>
+  <FunnelChartDemo />
+</DemoReact>
+
+A conversion funnel with on-chart stage labels and a themed tooltip:
+
+```tsx
+const data = [
+  { stage: 'Visits', value: 5000 },
+  { stage: 'Signups', value: 2600 },
+  { stage: 'Trials', value: 1400 },
+  { stage: 'Purchases', value: 620 },
+];
+
+const config = {
+  Visits: { label: 'Visits', color: 'var(--ui-background-brand-secondary)' },
+  Signups: { label: 'Signups', color: 'var(--ui-background-status-strong-success)' },
+  Trials: { label: 'Trials', color: 'var(--ui-background-status-strong-warning)' },
+  Purchases: { label: 'Purchases', color: 'var(--ui-background-status-strong-danger)' },
+} satisfies ChartConfig;
+
+<FunnelChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="stage"
+  className="h-[380px] w-[460px]"
+/>;
+```
+
+End the funnel flat instead of at a point with `lastShape="rectangle"`:
+
+```tsx
+<FunnelChart config={config} data={data} dataKey="value" nameKey="stage" lastShape="rectangle" />
+```
+
+Flip the direction with `reversed`, or hide the on-chart labels / tooltip with
+`showLabels` / `showTooltip`:
+
+```tsx
+<FunnelChart config={config} data={data} dataKey="value" nameKey="stage" reversed showLabels={false} />
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/funnel-chart/funnel-chart.tsx"
+  name="FunnelChartProps"
+/>

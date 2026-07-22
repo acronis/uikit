@@ -419,6 +419,12 @@ const RENDER: Record<string, RenderHint> = {
     // (BarPlusLine / BarAreaLine / NoChrome + TooltipOpen).
     skip: true,
   },
+  'funnel-chart': {
+    // Data-driven: requires data / config / dataKey / nameKey + a sized box, so
+    // a zero-arg render is meaningless. VR is covered by the hand-written
+    // stories (Triangle / Rectangle / NoChrome + TooltipOpen).
+    skip: true,
+  },
   field: {
     // A multi-part composition: Field needs a label + control + description as
     // children to render meaningfully. VR is covered by the hand-written stories

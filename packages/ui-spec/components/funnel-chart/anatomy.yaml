@@ -1,0 +1,57 @@
+spec_version: '1.0'
+component: FunnelChart
+
+schematic: |
+  root: <div data-last-shape>                       (variant wrapper)
+    container: <ChartContainer>                     (themed, sized, responsive)
+      plot: recharts <FunnelChart>
+        series:  <Funnel> with one <Cell> per stage row (stacked segments)
+        labels:  <LabelList> stage names beside the segments (when showLabels)
+        tooltip: <ChartTooltip> → tooltip-content   (hover card)
+
+root:
+  element: div
+  description: >-
+    The variant wrapper. Carries the CVA `lastShape` class and mirrors the
+    resolved value onto `data-last-shape`, then renders the shared
+    `ChartContainer` (sized to fill the wrapper) around the recharts
+    `FunnelChart`.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      The shared `ChartContainer` — supplies the per-stage `--color-<name>`
+      custom properties from `config` and themes recharts' internals.
+  - id: plot
+    element: svg
+    description: The recharts `FunnelChart` holding the funnel and its chrome.
+  - id: series
+    element: g
+    description: >-
+      The `Funnel` — one `Cell` per data row, each a segment sized by `dataKey`
+      and filled from its `--color-<name>` var. `lastShape=triangle` narrows the
+      final segment to a point; `rectangle` ends it flat. `reversed` flips the
+      direction.
+  - id: labels
+    element: g
+    description: >-
+      `LabelList` — each stage's `nameKey` label beside its segment. Rendered
+      when `showLabels`.
+  - id: tooltip-content
+    element: div
+    description: >-
+      `ChartTooltipContent` — hover card with one row for the hovered stage
+      (color indicator + name + value). Rendered when `showTooltip`.
+
+states:
+  - id: last-shape-variant
+    trigger: the lastShape prop ends the funnel as a triangle point or a flat rectangle
+    kind: prop
+    prop: lastShape
+    affects: [series]
+  - id: reversed
+    trigger: the reversed prop flips the funnel direction
+    kind: prop
+    prop: reversed
+    affects: [series]

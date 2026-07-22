@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: FunnelChart
+name: funnel-chart
+status: draft
+category: data-display
+description: >-
+  A typed funnel-chart composition over the shared `Chart` primitives. Plots a
+  single series of stages (rows) as stacked, narrowing segments inside a
+  `ChartContainer`, with a tooltip and on-chart stage labels (no legend — the
+  inline labels name every stage). One variant axis: `lastShape` (the funnel
+  narrows to a `triangle` point or ends `rectangle` flat). Ported from the
+  apps/demo `FunnelChartPlayground`.
+since: 0.58.0

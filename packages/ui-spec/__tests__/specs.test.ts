@@ -400,6 +400,21 @@ describe('cva ↔ contract conformance', () => {
     }
   });
 
+  it('FunnelChart: api.yaml lastShape enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/funnel-chart/funnel-chart.tsx'
+      ),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('funnel-chart').api;
+
+    expect(Object.keys(groups)).toEqual(['lastShape']);
+    expect(groups.lastShape.sort()).toEqual(enumMembers(api, 'lastShape'));
+  });
+
   it('Field: api.yaml orientation enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/field/field.tsx'),

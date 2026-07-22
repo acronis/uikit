@@ -1,0 +1,82 @@
+spec_version: '1.0'
+component: FunnelChart
+
+# Framework-agnostic contract. `lastShape` is the CVA variant axis
+# (conformance-checked against the ui-react cva keys). `data` / `config` /
+# `dataKey` / `nameKey` are the data contract; the rest toggle direction and
+# chrome. A funnel plots a single series of stages (rows).
+contract:
+  properties:
+    - name: lastShape
+      type: "'triangle' | 'rectangle'"
+      required: false
+      default: "'triangle'"
+      description: >-
+        How the funnel ends. `triangle` narrows the final segment to a point;
+        `rectangle` ends it flat (a stack of trapezoids).
+    - name: data
+      type: ReadonlyArray<Record<string, string | number>>
+      required: true
+      description: Row-per-stage data — each row holds a `nameKey` label and a `dataKey` numeric value.
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Per-stage map of label / color, keyed by the stage's `nameKey` value
+        (from the shared Chart primitives). Turned into `--color-<name>` custom
+        properties. Colors are caller-supplied.
+    - name: dataKey
+      type: string
+      required: true
+      description: The numeric field that sizes each stage.
+    - name: nameKey
+      type: string
+      required: true
+      description: >-
+        The label field that names each stage (drives the tooltip, on-chart
+        labels, and the `--color-<name>` lookup). Values should be unique per
+        chart — stages sharing a name share one config/color entry.
+    - name: reversed
+      type: boolean
+      required: false
+      default: 'false'
+      description: Flip the funnel so it widens toward the bottom instead of narrowing.
+    - name: showLabels
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render each stage's name beside its segment.
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the hover tooltip.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: FunnelChart
+    status: implemented
+    import: "import { FunnelChart } from '@acronis-platform/ui-react'"
+    example: |
+      <FunnelChart
+        config={config}
+        data={data}
+        dataKey="value"
+        nameKey="stage"
+        lastShape="triangle"
+        className="h-[380px] w-[460px]"
+      />
+  vue:
+    component: AvFunnelChart
+    status: planned
+    import: "import { AvFunnelChart } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvFunnelChart :config="config" :data="data" data-key="value" name-key="stage" />
+  web-components:
+    element: ui-funnel-chart
+    status: planned
+    import: "import '@acronis-platform/ui-wc/funnel-chart'"
+    example: |
+      <ui-funnel-chart></ui-funnel-chart>
