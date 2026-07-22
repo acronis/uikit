@@ -1,0 +1,90 @@
+spec_version: '1.0'
+component: ScatterChart
+
+# Framework-agnostic contract. ScatterChart has NO cva variant axes (its shape is
+# fixed; expressiveness is in the data mapping), so there are no variant enums to
+# conformance-check. Each series carries its own point array — points are not
+# columns of a shared row the way bar/line/area series are — so the contract
+# takes a `series` list rather than `dataKeys` over one `data` array.
+contract:
+  properties:
+    - name: series
+      type: ScatterSeries[]
+      required: true
+      description: >-
+        One `<Scatter>` per entry, each `{ key, data }` with its own point array.
+        `key` matches a `config` entry and drives its `--color-<key>` fill. A
+        single entry gives an ungrouped scatter.
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Per-series map of label / color, keyed by `series[].key` (from the shared
+        Chart primitives). Turned into `--color-<key>` custom properties. Colors
+        are caller-supplied.
+    - name: xKey
+      type: string
+      required: true
+      description: Numeric field for the horizontal axis.
+    - name: yKey
+      type: string
+      required: true
+      description: Numeric field for the vertical axis.
+    - name: zKey
+      type: string
+      required: false
+      description: Optional numeric field mapped to point size (a bubble chart), via recharts `ZAxis`.
+    - name: zRange
+      type: '[number, number]'
+      required: false
+      default: '[60, 400]'
+      description: Point-size range `[min, max]` the `zKey` maps into. Ignored when `zKey` is unset (points use recharts' default size).
+    - name: shape
+      type: "'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye'"
+      required: false
+      default: "'circle'"
+      description: Marker shape for every point.
+    - name: showGrid
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the CartesianGrid.
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the hover tooltip.
+    - name: showLegend
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the legend.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: ScatterChart
+    status: implemented
+    import: "import { ScatterChart } from '@acronis-platform/ui-react'"
+    example: |
+      <ScatterChart
+        config={config}
+        series={series}
+        xKey="hours"
+        yKey="score"
+        zKey="weight"
+        className="h-[360px] w-[520px]"
+      />
+  vue:
+    component: AvScatterChart
+    status: planned
+    import: "import { AvScatterChart } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvScatterChart :config="config" :series="series" x-key="hours" y-key="score" />
+  web-components:
+    element: ui-scatter-chart
+    status: planned
+    import: "import '@acronis-platform/ui-wc/scatter-chart'"
+    example: |
+      <ui-scatter-chart></ui-scatter-chart>

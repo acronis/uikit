@@ -407,6 +407,12 @@ const RENDER: Record<string, RenderHint> = {
     // (SingleLine / MultiLine / Linear / Stepped / Dashed + TooltipOpen).
     skip: true,
   },
+  'scatter-chart': {
+    // Data-driven: requires series / config / xKey / yKey + a sized box, so a
+    // zero-arg render is meaningless. VR is covered by the hand-written stories
+    // (Grouped / Bubble / TriangleMarkers / NoChrome + TooltipOpen).
+    skip: true,
+  },
   field: {
     // A multi-part composition: Field needs a label + control + description as
     // children to render meaningfully. VR is covered by the hand-written stories

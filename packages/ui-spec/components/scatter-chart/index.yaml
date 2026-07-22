@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: ScatterChart
+name: scatter-chart
+status: draft
+category: data-display
+description: >-
+  A typed scatter-chart composition over the shared `Chart` primitives. Plots
+  each `series[]` entry's points on numeric `xKey` / `yKey` axes inside a
+  `ChartContainer`, with tooltip and legend chrome. Optionally maps a `zKey` to
+  point size (a bubble chart). Scatter has no variant axes — its expressiveness
+  comes from the data mapping, not a visual mode. Ported from the apps/demo
+  `ScatterChartPlayground`.
+since: 0.58.0

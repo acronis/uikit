@@ -38,6 +38,7 @@
     "bar-chart",
     "line-chart",
     "pie-chart",
+    "scatter-chart",
     "description-list",
     "alert",
     "empty",

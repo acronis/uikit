@@ -1,0 +1,72 @@
+spec_version: '1.0'
+component: ScatterChart
+
+schematic: |
+  root: <div>                                       (wrapper)
+    container: <ChartContainer>                     (themed, sized, responsive)
+      plot: recharts <ScatterChart>
+        grid:    <CartesianGrid>
+        x-axis:  <XAxis type=number dataKey=xKey>
+        y-axis:  <YAxis type=number dataKey=yKey>
+        z-axis:  <ZAxis dataKey=zKey range>          (only when zKey → bubble size)
+        series:  one <Scatter> per series[] entry    (points; shape marker)
+        tooltip: <ChartTooltip> → tooltip-content    (hover card of point coords)
+        legend:  <ChartLegend>  → legend-content     (per-series swatch + label)
+
+root:
+  element: div
+  description: >-
+    The wrapper. Renders the shared `ChartContainer` (sized to fill it) around
+    the recharts `ScatterChart`. ScatterChart has no CVA variants, so the root
+    carries no variant data-attributes.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      The shared `ChartContainer` — supplies the per-series `--color-<key>`
+      custom properties from `config` and themes recharts' internals.
+  - id: plot
+    element: svg
+    description: The recharts `ScatterChart` holding the axes, grid, and series.
+  - id: grid
+    element: g
+    description: '`CartesianGrid` behind the plot.'
+  - id: x-axis
+    element: g
+    description: '`XAxis` — the numeric horizontal axis (`xKey`).'
+  - id: y-axis
+    element: g
+    description: '`YAxis` — the numeric vertical axis (`yKey`).'
+  - id: z-axis
+    element: g
+    description: >-
+      `ZAxis` — maps `zKey` to point size across `zRange` (a bubble chart).
+      Rendered only when `zKey` is set.
+  - id: series
+    element: g
+    description: >-
+      One `Scatter` per `series[]` entry — its points drawn with the `shape`
+      marker and filled from its `--color-<key>` var.
+  - id: tooltip-content
+    element: div
+    description: >-
+      `ChartTooltipContent` — hover card listing the hovered point's axis values.
+      Rendered when `showTooltip`.
+  - id: legend-content
+    element: div
+    description: >-
+      `ChartLegendContent` — one swatch + label per series. Rendered when
+      `showLegend`.
+
+states:
+  - id: bubble
+    trigger: a zKey is supplied, mapping a numeric field to point size
+    kind: prop
+    prop: zKey
+    affects: [z-axis, series]
+  - id: marker-shape
+    trigger: the shape prop selects the point marker glyph
+    kind: prop
+    prop: shape
+    affects: [series]
