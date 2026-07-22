@@ -444,6 +444,12 @@ const RENDER: Record<string, RenderHint> = {
     // tooltip is hover-only and can't be opened statically via defaultIndex.
     skip: true,
   },
+  'chart-state': {
+    // `state` is a required prop with no meaningful zero-arg render. VR is
+    // covered by the hand-written stories (Loading / Empty / Error /
+    // ErrorWithRetry / CustomMessage).
+    skip: true,
+  },
   field: {
     // A multi-part composition: Field needs a label + control + description as
     // children to render meaningfully. VR is covered by the hand-written stories

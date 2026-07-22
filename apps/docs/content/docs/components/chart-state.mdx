@@ -1,0 +1,70 @@
+---
+title: ChartState
+description: A shared loading / empty / error placeholder for the chart types.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { ChartStateDemo } from '@/components/demos-react/chart-state';
+
+## Usage
+
+```tsx
+import { ChartState } from '@acronis-platform/ui-react';
+```
+
+`ChartState` is the shared placeholder the [chart](/components/chart) types show
+in place of the chart itself — while data is loading, when there is nothing to
+plot, or when the fetch failed. It's a compact status block: a leading glyph
+(spinner / inbox / warning) over a centered label, sized to fill the same slot a
+chart would occupy.
+
+Drive it with the required `state` prop (`loading` | `empty` | `error`). Each
+state carries a default label; override it with `message`. The error state also
+takes an optional `action` (e.g. a retry button).
+
+> **Design-pending v1**, ported from the Figma InputSelect dropdown states and
+> kept visually in step with the shipped `InputSelectStatus`. There is no chart
+> token tier yet, so it themes from existing semantic tokens directly (the label
+> from `--ui-text-on-surface-primary`, the glyphs from `--ui-glyph-on-status-*`,
+> and the loading spinner from the shared `Spinner`).
+
+## Examples
+
+<DemoReact>
+  <ChartStateDemo />
+</DemoReact>
+
+Swap the chart for the matching state:
+
+```tsx
+function Sales({ status, data, config, refetch }) {
+  if (status === 'loading') return <ChartState state="loading" />;
+  if (status === 'error')
+    return (
+      <ChartState
+        state="error"
+        action={
+          <Button variant="ghost" onClick={refetch}>
+            Try again
+          </Button>
+        }
+      />
+    );
+  if (!data.length) return <ChartState state="empty" />;
+
+  return <LineChart config={config} data={data} dataKeys={['sales']} xKey="month" />;
+}
+```
+
+Override a state's default label with `message`:
+
+```tsx
+<ChartState state="empty" message="No results for the selected range" />
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/chart-state/chart-state.tsx"
+  name="ChartStateProps"
+/>

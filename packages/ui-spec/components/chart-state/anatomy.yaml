@@ -1,0 +1,54 @@
+spec_version: '1.0'
+component: ChartState
+
+schematic: |
+  root: <div role="status|alert"> (centered column, fills the chart slot)
+    glyph: loading -> Spinner (lg) · empty -> InboxIcon · error -> CircleWarningIcon
+    label: <p> the per-state message (overridable via `message`)
+    action: error only — optional trailing node (e.g. a "Try again" button)
+
+root:
+  element: div
+  role: status
+  description: >-
+    Centered column that fills its slot (`size-full`, `min-h-32`). Announces as
+    a live region — `role="status"` (`aria-live="polite"`) for loading/empty and
+    `role="alert"` (`aria-live="assertive"`) for error; `aria-busy` while loading.
+
+parts:
+  - id: glyph
+    element: svg | div
+    description: >-
+      The leading state glyph — the shared `Spinner` (lg) for loading, the
+      `InboxIcon` for empty, the `CircleWarningIcon` for error.
+  - id: label
+    element: p
+    description: The state message; defaults per state, overridable via `message`.
+  - id: action
+    element: slot
+    description: >-
+      Optional trailing action, rendered for the error state only (e.g. a "Try
+      again" button).
+
+states:
+  - {
+      id: loading,
+      trigger: "state === 'loading'",
+      kind: prop,
+      prop: state,
+      affects: [root, glyph, label],
+    }
+  - {
+      id: empty,
+      trigger: "state === 'empty'",
+      kind: prop,
+      prop: state,
+      affects: [root, glyph, label],
+    }
+  - {
+      id: error,
+      trigger: "state === 'error'",
+      kind: prop,
+      prop: state,
+      affects: [root, glyph, label, action],
+    }

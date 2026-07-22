@@ -1,0 +1,51 @@
+spec_version: '1.0'
+component: ChartState
+
+# No cva: `state` switches the glyph + default label rather than a set of root
+# classes, so it is a plain union prop (not a conformance-checked variant).
+contract:
+  properties:
+    - name: state
+      type: "'loading' | 'empty' | 'error'"
+      required: true
+      description: >-
+        Which placeholder to show. Drives the leading glyph and the default
+        label (loading → spinner + "Data is loading…"; empty → inbox + "No data
+        found"; error → warning + "Something went wrong").
+    - name: message
+      type: string
+      required: false
+      description: Overrides the default label for the current `state`.
+    - name: action
+      type: ReactNode
+      required: false
+      description: >-
+        Trailing action rendered for the `error` state only (e.g. a "Try again"
+        button).
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: ChartState
+    status: implemented
+    import: "import { ChartState } from '@acronis-platform/ui-react'"
+    example: |
+      <ChartState state="loading" />
+      <ChartState state="empty" message="No results for the selected range" />
+      <ChartState
+        state="error"
+        action={<Button variant="ghost" onClick={refetch}>Try again</Button>}
+      />
+  vue:
+    component: AvChartState
+    status: planned
+    import: "import { AvChartState } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvChartState state="loading" />
+  web-components:
+    element: ui-chart-state
+    status: planned
+    import: "import '@acronis-platform/ui-wc/chart-state'"
+    example: |
+      <ui-chart-state state="loading"></ui-chart-state>

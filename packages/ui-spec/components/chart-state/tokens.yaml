@@ -1,0 +1,24 @@
+spec_version: '1.0'
+component: ChartState
+
+# References only. Values live in @acronis-platform/tokens-pd. No `--ui-chart-*`
+# tier exists yet; ChartState themes from existing semantic tokens directly
+# (same icon tokens as the shipped InputSelectStatus sibling). The loading glyph
+# is the shared Spinner, which owns its own color token.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-text-on-surface-primary
+    affects: label
+    description: The state label text (bridged as `text-foreground`).
+  - name: --ui-glyph-on-status-info
+    affects: glyph
+    description: Empty-state inbox glyph color.
+  - name: --ui-glyph-on-status-warning
+    affects: glyph
+    description: Error-state warning glyph color.
+  - name: --ui-background-brand-secondary
+    affects: glyph
+    description: >-
+      Loading-state spinner ring color — inherited from the shared `Spinner`
+      (via `text-secondary`), listed here for completeness.

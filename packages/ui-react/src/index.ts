@@ -20,6 +20,7 @@ export * from './components/ui/calendar';
 export * from './components/ui/card';
 export * from './components/ui/card-filter';
 export * from './components/ui/chart';
+export * from './components/ui/chart-state';
 export * from './components/ui/checkbox';
 export * from './components/ui/chip';
 export * from './components/ui/collapsible';
