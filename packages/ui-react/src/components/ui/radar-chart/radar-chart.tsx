@@ -65,6 +65,13 @@ export interface RadarChartProps
   showGrid?: boolean;
   showTooltip?: boolean;
   showLegend?: boolean;
+  /**
+   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
+   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` /
+   * `indicator` — to customize formatting, per-series rows, or extra fields
+   * without composing recharts yourself. Ignored when `showTooltip` is false.
+   */
+  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
@@ -82,6 +89,7 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      tooltipContent,
       ...props
     },
     ref
@@ -103,7 +111,9 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
           className="size-full [&_.recharts-polar-angle-axis-tick_text]:fill-muted-foreground"
         >
           <RechartsRadarChart data={data as readonly unknown[]}>
-            {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
+            {showTooltip && (
+              <ChartTooltip content={tooltipContent ?? <ChartTooltipContent />} />
+            )}
             {showGrid && <PolarGrid gridType={gridType ?? 'polygon'} />}
             <PolarAngleAxis dataKey={angleKey} />
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}

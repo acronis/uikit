@@ -135,6 +135,30 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
 />
 ```
 
+## Custom tooltip
+
+Replace the tooltip with a configured `ChartTooltipContent` — imported from the
+same library, so you never compose recharts yourself. Its `formatter` renders
+each row and `labelFormatter` the header, giving you custom formatting, per-series
+content, and extra fields:
+
+```tsx
+import { LineChart, ChartTooltipContent } from '@acronis-platform/ui-react';
+
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  tooltipContent={
+    <ChartTooltipContent
+      labelFormatter={(label) => `${label} · fiscal Q3`}
+      formatter={(value, name) => `${name}: ${value.toLocaleString()}k`}
+    />
+  }
+/>;
+```
+
 ## API Reference
 
 <AutoTypeTable

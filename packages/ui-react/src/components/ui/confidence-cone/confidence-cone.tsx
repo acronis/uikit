@@ -80,6 +80,14 @@ export interface ConfidenceConeProps
   showGrid?: boolean;
   showTooltip?: boolean;
   showLegend?: boolean;
+  /**
+   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
+   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
+   * to customize the tooltip without composing recharts yourself. The default
+   * already filters the synthetic cone band; a custom tooltip should filter a
+   * `__cone` payload item too. Ignored when `showTooltip` is false.
+   */
+  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
@@ -101,6 +109,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      tooltipContent,
       ...props
     },
     ref
@@ -180,22 +189,25 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
                 strokeDasharray="4 4"
               />
             )}
-            {showTooltip && (
-              <ChartTooltip
-                content={(tp) => (
-                  <ChartTooltipContent
-                    active={tp.active}
-                    label={tp.label}
-                    // The synthetic band feeds the Area, not the tooltip.
-                    payload={
-                      tp.payload?.filter(
-                        (item) => item.dataKey !== BAND_KEY
-                      ) as ChartTooltipContentProps['payload']
-                    }
-                  />
-                )}
-              />
-            )}
+            {showTooltip &&
+              (tooltipContent ? (
+                <ChartTooltip content={tooltipContent} />
+              ) : (
+                <ChartTooltip
+                  content={(tp) => (
+                    <ChartTooltipContent
+                      active={tp.active}
+                      label={tp.label}
+                      // The synthetic band feeds the Area, not the tooltip.
+                      payload={
+                        tp.payload?.filter(
+                          (item) => item.dataKey !== BAND_KEY
+                        ) as ChartTooltipContentProps['payload']
+                      }
+                    />
+                  )}
+                />
+              ))}
             {showLegend && (
               <ChartLegend
                 content={(lp) => (

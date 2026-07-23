@@ -57,6 +57,13 @@ export interface FunnelChartProps
   /** Render each stage's name beside its segment. */
   showLabels?: boolean;
   showTooltip?: boolean;
+  /**
+   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
+   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
+   * to customize formatting, per-series rows, or extra fields without composing
+   * recharts yourself. Ignored when `showTooltip` is false.
+   */
+  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
@@ -71,6 +78,7 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
       reversed = false,
       showLabels = true,
       showTooltip = true,
+      tooltipContent,
       ...props
     },
     ref
@@ -97,7 +105,11 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
           <RechartsFunnelChart margin={{ top: 8, right: 96, bottom: 8, left: 24 }}>
             {showTooltip && (
               <ChartTooltip
-                content={<ChartTooltipContent nameKey={nameKey} hideLabel />}
+                content={
+                  tooltipContent ?? (
+                    <ChartTooltipContent nameKey={nameKey} hideLabel />
+                  )
+                }
               />
             )}
             <Funnel

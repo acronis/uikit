@@ -80,6 +80,13 @@ export interface AreaChartProps
   showGrid?: boolean;
   showTooltip?: boolean;
   showLegend?: boolean;
+  /**
+   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
+   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` /
+   * `indicator` — to customize formatting, per-series rows, or extra fields
+   * without composing recharts yourself. Ignored when `showTooltip` is false.
+   */
+  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
@@ -103,6 +110,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      tooltipContent,
       ...props
     },
     ref
@@ -187,7 +195,9 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />
-            {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
+            {showTooltip && (
+              <ChartTooltip content={tooltipContent ?? <ChartTooltipContent />} />
+            )}
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}
             {dataKeys.map((key) => (
               <Area

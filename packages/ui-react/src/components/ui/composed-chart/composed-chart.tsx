@@ -65,6 +65,13 @@ export interface ComposedChartProps
   showGrid?: boolean;
   showTooltip?: boolean;
   showLegend?: boolean;
+  /**
+   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
+   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` /
+   * `indicator` — to customize formatting, per-series rows, or extra fields
+   * without composing recharts yourself. Ignored when `showTooltip` is false.
+   */
+  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
@@ -84,6 +91,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      tooltipContent,
       ...props
     },
     ref
@@ -128,7 +136,9 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />
-            {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
+            {showTooltip && (
+              <ChartTooltip content={tooltipContent ?? <ChartTooltipContent />} />
+            )}
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}
             {/* Rendered in the caller's `series` order — recharts paints children
                 back-to-front, so later entries sit on top. Order them so thin
