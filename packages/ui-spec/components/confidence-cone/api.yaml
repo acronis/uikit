@@ -1,0 +1,104 @@
+spec_version: '1.0'
+component: ConfidenceCone
+
+# No cva: ConfidenceCone has no visual variant axes. The field-name props map
+# columns onto the actual line / forecast line / cone bounds.
+contract:
+  properties:
+    - name: data
+      type: ReadonlyArray<Record<string, string | number | null | undefined>>
+      required: true
+      description: >-
+        Row-per-point data. Rows are naturally sparse — a point carries either an
+        actual value or a forecast + its bounds — so missing fields are allowed.
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Per-series map of label / color for the actual + forecast lines (from the
+        shared Chart primitives). Turned into `--color-<key>` custom properties.
+        The cone band is tinted with the forecast series' color. Caller-supplied.
+    - name: xKey
+      type: string
+      required: true
+      description: The time / category dimension key shared across rows.
+    - name: actualKey
+      type: string
+      required: true
+      description: >-
+        Field for the known/actual values — drawn as a solid line with a filled
+        area.
+    - name: forecastKey
+      type: string
+      required: true
+      description: Field for the projected values — drawn as a dashed line.
+    - name: lowerKey
+      type: string
+      required: true
+      description: Field for the cone's lower bound.
+    - name: upperKey
+      type: string
+      required: true
+      description: Field for the cone's upper bound.
+    - name: strokeWidth
+      type: number
+      required: false
+      default: '2'
+      description: Stroke width of the actual + forecast lines.
+    - name: showForecastRegion
+      type: boolean
+      required: false
+      default: 'true'
+      description: >-
+        Set off the forecast period with a dashed divider at the hand-off point
+        (the first row with a forecast value) and a subtle shaded band over the
+        forecast region.
+    - name: showGrid
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the CartesianGrid.
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the hover tooltip (the band series is filtered out of it).
+    - name: showLegend
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the legend (the band series is filtered out of it).
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: ConfidenceCone
+    status: implemented
+    import: "import { ConfidenceCone } from '@acronis-platform/ui-react'"
+    example: |
+      <ConfidenceCone
+        config={{
+          actual: { label: 'Actual', color: 'var(--ui-background-brand-secondary)' },
+          forecast: { label: 'Forecast', color: 'var(--ui-background-brand-secondary)' },
+        }}
+        data={data}
+        xKey="month"
+        actualKey="actual"
+        forecastKey="forecast"
+        lowerKey="lower"
+        upperKey="upper"
+        className="h-[320px] w-[560px]"
+      />
+  vue:
+    component: AvConfidenceCone
+    status: planned
+    import: "import { AvConfidenceCone } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvConfidenceCone :data="data" x-key="month" />
+  web-components:
+    element: ui-confidence-cone
+    status: planned
+    import: "import '@acronis-platform/ui-wc/confidence-cone'"
+    example: |
+      <ui-confidence-cone></ui-confidence-cone>

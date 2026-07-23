@@ -26,6 +26,7 @@ export * from './components/ui/chip';
 export * from './components/ui/collapsible';
 export * from './components/ui/combobox';
 export * from './components/ui/composed-chart';
+export * from './components/ui/confidence-cone';
 export * from './components/ui/data-table';
 export * from './components/ui/date-range-picker';
 export * from './components/ui/description-list';

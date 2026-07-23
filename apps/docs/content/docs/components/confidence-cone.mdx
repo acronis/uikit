@@ -1,0 +1,70 @@
+---
+title: ConfidenceCone
+description: A forecast chart with a widening prediction band (the confidence cone).
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { ConfidenceConeDemo } from '@/components/demos-react/confidence-cone';
+
+## Usage
+
+```tsx
+import { ConfidenceCone } from '@acronis-platform/ui-react';
+import type { ChartConfig } from '@acronis-platform/ui-react';
+```
+
+`ConfidenceCone` plots a projection with **explicit uncertainty** as one metric
+in one color: a solid line + filled area over the known/actual period, a dashed
+line over the forecast, and a shaded band (the "cone") between a lower and upper
+bound that widens with the horizon. A dashed divider and a subtle shaded region
+set the forecast off from the actuals (toggle with `showForecastRegion`). Point
+the field-name props at your columns (`actualKey`, `forecastKey`, `lowerKey`,
+`upperKey`); the band is drawn behind the lines and kept out of the tooltip and
+legend, and actual vs forecast differ by line style, not hue.
+
+> **Design-pending v1**, built net-new (no demo playground). There is no chart
+> token tier yet, so the metric color references a shared brand token — a
+> dedicated `--ui-chart-*` data-viz palette is pending an upstream design pass.
+> The actual area and cone band reuse that color at low opacity.
+
+## Examples
+
+<DemoReact>
+  <ConfidenceConeDemo />
+</DemoReact>
+
+Give the hand-off point both an `actual` and a `forecast` (with `lower = upper`
+so the cone starts at a point) to make the two lines meet:
+
+```tsx
+const data = [
+  { month: 'Apr', actual: 130 },
+  { month: 'May', actual: 141 },
+  { month: 'Jun', actual: 150, forecast: 150, lower: 150, upper: 150 }, // hand-off
+  { month: 'Jul', forecast: 162, lower: 150, upper: 176 },
+  { month: 'Aug', forecast: 173, lower: 154, upper: 196 },
+];
+
+const config = {
+  actual: { label: 'Actual', color: 'var(--ui-background-brand-secondary)' },
+  forecast: { label: 'Forecast', color: 'var(--ui-background-brand-secondary)' },
+} satisfies ChartConfig;
+
+<ConfidenceCone
+  config={config}
+  data={data}
+  xKey="month"
+  actualKey="actual"
+  forecastKey="forecast"
+  lowerKey="lower"
+  upperKey="upper"
+  className="h-[320px] w-[560px]"
+/>;
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/confidence-cone/confidence-cone.tsx"
+  name="ConfidenceConeProps"
+/>

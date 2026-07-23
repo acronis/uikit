@@ -45,6 +45,7 @@
     "radial-bar-chart",
     "treemap",
     "histogram",
+    "confidence-cone",
     "chart-state",
     "description-list",
     "alert",

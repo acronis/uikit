@@ -1,0 +1,33 @@
+spec_version: '1.0'
+component: ConfidenceCone
+
+# References only. Values live in @acronis-platform/tokens-pd. ConfidenceCone has
+# no token tier of its own — the metric color is supplied by the caller via
+# `config` (a dedicated `--ui-chart-*` data-viz palette is pending an upstream
+# design pass). The whole metric uses one color: the actual area, the forecast
+# line, and the cone band all reuse the actual series' color (the cone/area fills
+# at low opacity). The chrome + forecast-region marker resolve the semantic
+# tokens below.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-background-surface-secondary
+    affects: region
+    description: Subtle shaded background over the forecast region (fill-muted).
+  - name: --ui-border-on-surface-border
+    affects: divider
+    description: The dashed vertical divider at the forecast hand-off (stroke-border).
+  - name: --ui-background-surface-primary
+    affects: tooltip-content
+    description: Tooltip surface (bg-background).
+  - name: --ui-text-on-surface-primary
+    affects: tooltip-content
+    description: Tooltip value text (text-foreground).
+  - name: --ui-text-on-surface-secondary
+    affects: x-axis
+    description: >-
+      Muted tooltip/legend label text and axis tick labels
+      (text-muted-foreground / fill-muted-foreground).
+  - name: --ui-border-on-surface-border
+    affects: grid
+    description: Tooltip border and the recharts grid lines (border-border / stroke-border).

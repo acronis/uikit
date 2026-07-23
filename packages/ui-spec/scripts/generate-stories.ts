@@ -431,6 +431,12 @@ const RENDER: Record<string, RenderHint> = {
     // FewBins / ManyBins / NoChrome + TooltipOpen).
     skip: true,
   },
+  'confidence-cone': {
+    // Data-driven: requires data / config / field keys + a sized box, so a
+    // zero-arg render is meaningless. VR is covered by the hand-written stories
+    // (Default / NoChrome + TooltipOpen).
+    skip: true,
+  },
   'radar-chart': {
     // Data-driven: requires data / config / dataKeys / angleKey + a sized box, so
     // a zero-arg render is meaningless. VR is covered by the hand-written stories

@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: ConfidenceCone
+name: confidence-cone
+status: draft
+category: data-display
+description: >-
+  A forecast confidence-cone over the shared `Chart` primitives: a solid line
+  for the known/actual period, a dashed line for the forecast, and a shaded band
+  (the "cone") between a lower and upper bound that typically widens with the
+  horizon, visualizing growing uncertainty. Distinct from the conversion
+  `FunnelChart`. Design-pending v1 (no `--ui-chart-*` palette, no `apps/demo`
+  playground — built net-new).
+since: 0.58.0

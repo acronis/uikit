@@ -1,0 +1,93 @@
+spec_version: '1.0'
+component: ConfidenceCone
+
+schematic: |
+  root: <div>                                       (plain wrapper, no variants)
+    container: <ChartContainer>                     (themed, sized, responsive)
+      plot: recharts <ComposedChart>                (one metric color throughout)
+        grid:     <CartesianGrid>                   (horizontal lines)
+        x-axis:   <XAxis dataKey=xKey>              (time / category)
+        y-axis:   <YAxis>                           (value)
+        region:   <ReferenceArea>                   (shaded forecast region, behind all)
+        divider:  <ReferenceLine>                   (dashed vertical at the hand-off)
+        cone:     <Area dataKey=__cone>             (band [lower, upper], tinted, behind lines)
+        actual:   <Area dataKey=actualKey>          (solid line + filled area)
+        forecast: <Line dataKey=forecastKey>        (dashed)
+        tooltip:  <ChartTooltip> → tooltip-content  (band filtered out)
+        legend:   <ChartLegend>  → legend-content   (band filtered out)
+
+root:
+  element: div
+  description: >-
+    Plain wrapper (no CVA variants). Renders the shared `ChartContainer` around a
+    recharts `ComposedChart` composing the cone band + the two lines.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      The shared `ChartContainer` — supplies the `--color-<key>` custom
+      properties from `config` and themes recharts' internals.
+  - id: region
+    element: g
+    description: >-
+      A `ReferenceArea` shading the forecast period (from the hand-off to the
+      last point), drawn behind everything. Rendered when `showForecastRegion`.
+  - id: divider
+    element: g
+    description: >-
+      A dashed vertical `ReferenceLine` at the hand-off point (the first row with
+      a forecast value), separating actuals from the forecast. Rendered when
+      `showForecastRegion`.
+  - id: cone
+    element: g
+    description: >-
+      An `Area` over a synthetic `[lower, upper]` range field, tinted with the
+      single metric color at low opacity and drawn behind the lines. Breaks where
+      a bound is missing (e.g. the actual-only period). Never marks points.
+  - id: actual
+    element: g
+    description: >-
+      An `Area` over `actualKey` — a solid line with a filled region in the metric
+      color (low opacity), the known/observed values. Never marks points.
+  - id: forecast
+    element: g
+    description: >-
+      A dashed `Line` over `forecastKey` — the projection, in the same metric
+      color (actual vs forecast differ by line style, not hue).
+  - id: grid
+    element: g
+    description: '`CartesianGrid` — horizontal value lines.'
+  - id: x-axis
+    element: g
+    description: '`XAxis` — the time/category dimension (`xKey`).'
+  - id: y-axis
+    element: g
+    description: '`YAxis` — the value axis.'
+  - id: tooltip-content
+    element: div
+    description: >-
+      `ChartTooltipContent` — hover card with the actual / forecast values; the
+      synthetic band series is filtered out. Rendered when `showTooltip`.
+  - id: legend-content
+    element: div
+    description: >-
+      `ChartLegendContent` — a swatch + label for actual and forecast; the band
+      is filtered out. Rendered when `showLegend`.
+
+states:
+  - id: forecast-region
+    trigger: rows with forecast + bound fields (vs actual-only rows)
+    kind: prop
+    prop: data
+    affects: [cone, actual, forecast]
+  - id: region-marker
+    trigger: showForecastRegion toggles the shaded region + hand-off divider
+    kind: prop
+    prop: showForecastRegion
+    affects: [region, divider]
+  - id: empty
+    trigger: data is an empty array
+    kind: prop
+    prop: data
+    affects: [cone, actual, forecast]
