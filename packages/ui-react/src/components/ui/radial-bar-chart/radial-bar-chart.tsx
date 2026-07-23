@@ -34,8 +34,9 @@ export interface RadialBarChartProps
   dataKey: string;
   /**
    * Label field that names each arc (drives the legend, tooltip, and
-   * `--color-<name>` lookup). Values should be unique per chart — arcs sharing a
-   * name share one `config`/color entry.
+   * `--color-<name>` lookup). Values should be unique per chart (arcs sharing a
+   * name share one `config`/color entry) and CSS-safe — they become part of a
+   * custom-property name.
    */
   nameKey: string;
   /** Inner radius of the innermost arc. */

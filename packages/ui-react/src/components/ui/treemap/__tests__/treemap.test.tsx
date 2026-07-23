@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { Treemap } from '../treemap';
+import { Treemap, TreemapCell } from '../treemap';
 import type { ChartConfig } from '../../chart';
 
 const data = [
@@ -66,5 +66,54 @@ describe('Treemap', () => {
   it('merges a caller className onto the root', () => {
     const { container } = renderChart({ className: 'h-[300px] w-[480px]' });
     expect(container.firstElementChild).toHaveClass('h-[300px]', 'w-[480px]');
+  });
+
+  // recharts never hands the `content` cell renderer real geometry under
+  // happy-dom, so the size-threshold branch (a named leaf whose rect is too
+  // small to label) is exercised here by rendering the cell directly with
+  // explicit geometry — the size path the chart-level tests above can't reach.
+  describe('TreemapCell', () => {
+    it('labels a named leaf whose rect clears the 64x28 threshold', () => {
+      const { container } = render(
+        <svg>
+          <TreemapCell name="React" width={90} height={60} />
+        </svg>
+      );
+      expect(container.querySelector('rect')?.style.fill).toBe(
+        'var(--color-React)'
+      );
+      expect(container.querySelector('text')).toHaveTextContent('React');
+    });
+
+    it('suppresses the label on a named leaf below the threshold but still paints the rect', () => {
+      const { container } = render(
+        <svg>
+          <TreemapCell name="React" width={40} height={20} />
+        </svg>
+      );
+      expect(container.querySelector('rect')?.style.fill).toBe(
+        'var(--color-React)'
+      );
+      expect(container.querySelector('text')).not.toBeInTheDocument();
+    });
+
+    it('suppresses the label when showLabels is off even on a large rect', () => {
+      const { container } = render(
+        <svg>
+          <TreemapCell name="React" width={90} height={60} showLabels={false} />
+        </svg>
+      );
+      expect(container.querySelector('text')).not.toBeInTheDocument();
+    });
+
+    it('renders nothing paintable for the name-less synthetic root node', () => {
+      const { container } = render(
+        <svg>
+          <TreemapCell width={500} height={320} />
+        </svg>
+      );
+      expect(container.querySelector('rect')).not.toBeInTheDocument();
+      expect(container.querySelector('text')).not.toBeInTheDocument();
+    });
   });
 });

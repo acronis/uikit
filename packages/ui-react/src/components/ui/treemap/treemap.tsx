@@ -32,7 +32,7 @@ interface TreemapCellProps {
 // with the surface color, and center a white label (readable over the saturated
 // series colors) when the cell is big enough. Passed to `Treemap.content`;
 // recharts clones it with each node's geometry + `name`.
-function TreemapCell({
+export function TreemapCell({
   x = 0,
   y = 0,
   width = 0,
