@@ -94,6 +94,17 @@ export const DonutWithCenterLabel: Story = {
   },
 };
 
+// Center label with the legend hidden — exercises the `showLegend: false` branch
+// of the center nudge (raw cy, no legend-row offset), which the legend-on
+// DonutWithCenterLabel baseline can't cover.
+export const DonutWithCenterLabelNoLegend: Story = {
+  args: {
+    shape: 'donut',
+    centerLabel: { value: '835', label: 'Visitors' },
+    showLegend: false,
+  },
+};
+
 // Chrome (tooltip + legend) toggled off — the baseline that would catch a toggle
 // silently becoming a no-op (the unit env can't paint recharts chrome).
 export const NoChrome: Story = {
