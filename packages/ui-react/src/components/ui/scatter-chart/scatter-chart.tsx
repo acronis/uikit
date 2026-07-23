@@ -76,6 +76,13 @@ export interface ScatterChartProps
   showGrid?: boolean;
   showTooltip?: boolean;
   showLegend?: boolean;
+  /**
+   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
+   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` /
+   * `indicator` — to customize formatting, per-series rows, or extra fields
+   * without composing recharts yourself. Ignored when `showTooltip` is false.
+   */
+  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
@@ -96,6 +103,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      tooltipContent,
       ...props
     },
     ref
@@ -153,7 +161,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
             {showTooltip && (
               <ChartTooltip
                 cursor={{ strokeDasharray: '3 3' }}
-                content={<ChartTooltipContent />}
+                content={tooltipContent ?? <ChartTooltipContent />}
               />
             )}
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}

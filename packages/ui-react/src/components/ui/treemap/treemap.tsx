@@ -99,6 +99,13 @@ export interface TreemapProps
   /** Render each leaf's name inside its cell (when it fits). */
   showLabels?: boolean;
   showTooltip?: boolean;
+  /**
+   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
+   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
+   * to customize formatting, per-cell rows, or extra fields without composing
+   * recharts yourself. Ignored when `showTooltip` is false.
+   */
+  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
@@ -112,6 +119,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
       aspectRatio = 4 / 3,
       showLabels = true,
       showTooltip = true,
+      tooltipContent,
       ...props
     },
     ref
@@ -137,7 +145,11 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
           >
             {showTooltip && (
               <ChartTooltip
-                content={<ChartTooltipContent nameKey={nameKey} hideLabel />}
+                content={
+                  tooltipContent ?? (
+                    <ChartTooltipContent nameKey={nameKey} hideLabel />
+                  )
+                }
               />
             )}
           </RechartsTreemap>

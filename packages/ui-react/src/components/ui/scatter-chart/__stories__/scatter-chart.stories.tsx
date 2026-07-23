@@ -159,3 +159,24 @@ export const TooltipOpen: Story = {
     </ChartContainer>
   ),
 };
+
+// Customize the tooltip through the component's `tooltipContent` prop — pass a
+// configured `ChartTooltipContent` from this library (no recharts needed).
+// `hideLabel` drops the header; `formatter` renders each axis row. Hover-only.
+export const CustomTooltip: Story = {
+  args: {
+    tooltipContent: (
+      <ChartTooltipContent
+        hideLabel
+        formatter={(value, name) => (
+          <div className="flex w-full justify-between gap-3">
+            <span className="capitalize text-muted-foreground">{name}</span>
+            <span className="font-mono font-medium tabular-nums">
+              {Number(value).toLocaleString()}
+            </span>
+          </div>
+        )}
+      />
+    ),
+  },
+};

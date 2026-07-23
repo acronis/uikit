@@ -68,6 +68,27 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
 />
 ```
 
+## Custom tooltip
+
+Replace the tooltip with a configured `ChartTooltipContent` — imported from the
+same library, so you never compose recharts yourself. Its `formatter` renders
+each row and `labelFormatter` the header:
+
+```tsx
+import { Histogram, ChartTooltipContent } from '@acronis-platform/ui-react';
+
+<Histogram
+  config={config}
+  values={values}
+  tooltipContent={
+    <ChartTooltipContent
+      labelFormatter={(label) => `Range ${label}`}
+      formatter={(value) => `${value.toLocaleString()} samples`}
+    />
+  }
+/>;
+```
+
 ## API Reference
 
 <AutoTypeTable

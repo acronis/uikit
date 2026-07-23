@@ -80,6 +80,32 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
 />
 ```
 
+## Custom tooltip
+
+Replace the tooltip with a configured `ChartTooltipContent` — imported from the
+same library, so you never compose recharts yourself. The synthetic cone band is
+already excluded from the payload:
+
+```tsx
+import { ConfidenceCone, ChartTooltipContent } from '@acronis-platform/ui-react';
+
+<ConfidenceCone
+  config={config}
+  data={data}
+  xKey="month"
+  actualKey="actual"
+  forecastKey="forecast"
+  lowerKey="lower"
+  upperKey="upper"
+  tooltipContent={
+    <ChartTooltipContent
+      labelFormatter={(label) => `${label} · projection`}
+      formatter={(value, name) => `${name}: ${value.toLocaleString()}`}
+    />
+  }
+/>;
+```
+
 ## API Reference
 
 <AutoTypeTable

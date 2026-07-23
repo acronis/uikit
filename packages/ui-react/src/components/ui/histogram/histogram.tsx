@@ -104,6 +104,13 @@ export interface HistogramProps
   barRadius?: number;
   showGrid?: boolean;
   showTooltip?: boolean;
+  /**
+   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
+   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
+   * to customize the tooltip without composing recharts yourself. Ignored when
+   * `showTooltip` is false.
+   */
+  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
@@ -121,6 +128,7 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
       barRadius = 0,
       showGrid = true,
       showTooltip = true,
+      tooltipContent,
       ...props
     },
     ref
@@ -173,7 +181,9 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />
-            {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
+            {showTooltip && (
+              <ChartTooltip content={tooltipContent ?? <ChartTooltipContent />} />
+            )}
             <Bar
               dataKey={dataKey}
               fill={`var(--color-${dataKey})`}

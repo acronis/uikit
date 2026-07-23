@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { ConfidenceCone } from '../confidence-cone';
-import type { ChartConfig } from '../../chart';
+import { ChartTooltipContent, type ChartConfig } from '../../chart';
 
 const data = [
   { month: 'Jan', actual: 100 },
@@ -70,6 +70,18 @@ describe('ConfidenceCone', () => {
       xAxisLabel: 'Month',
       yAxisLabel: 'Revenue',
       yUnit: 'k',
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  // The `tooltipContent` prop forwards a custom (library-owned) ChartTooltipContent
+  // to recharts' Tooltip; happy-dom doesn't paint the tooltip, so this only guards
+  // the prop path — consumers customize the tooltip without importing recharts.
+  it('accepts a custom tooltipContent', () => {
+    const { container } = renderChart({
+      tooltipContent: (
+        <ChartTooltipContent formatter={(value) => <span>{String(value)}</span>} />
+      ),
     });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });

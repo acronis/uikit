@@ -71,6 +71,29 @@ Draw the web as smooth circles instead of straight polygon rings with
 Tune the areas with `fillOpacity` / `strokeWidth` / `showDots`, and toggle the
 chrome with `showGrid` / `showTooltip` / `showLegend`.
 
+## Custom tooltip
+
+Replace the tooltip with a configured `ChartTooltipContent` — imported from the
+same library, so you never compose recharts yourself. Its `formatter` renders
+each row and `labelFormatter` the header, giving you custom formatting, per-series
+content, and extra fields:
+
+```tsx
+import { RadarChart, ChartTooltipContent } from '@acronis-platform/ui-react';
+
+<RadarChart
+  config={config}
+  data={data}
+  dataKeys={['alice', 'bob']}
+  angleKey="subject"
+  tooltipContent={
+    <ChartTooltipContent
+      formatter={(value, name) => `${name}: ${value.toLocaleString()}`}
+    />
+  }
+/>;
+```
+
 ## API Reference
 
 <AutoTypeTable

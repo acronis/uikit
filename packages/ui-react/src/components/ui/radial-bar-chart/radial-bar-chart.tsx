@@ -53,6 +53,13 @@ export interface RadialBarChartProps
   showBackground?: boolean;
   showTooltip?: boolean;
   showLegend?: boolean;
+  /**
+   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
+   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
+   * to customize formatting, per-arc rows, or extra fields without composing
+   * recharts yourself. Ignored when `showTooltip` is false.
+   */
+  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
@@ -71,6 +78,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
       showBackground = true,
       showTooltip = true,
       showLegend = true,
+      tooltipContent,
       ...props
     },
     ref
@@ -96,7 +104,11 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
           >
             {showTooltip && (
               <ChartTooltip
-                content={<ChartTooltipContent nameKey={nameKey} hideLabel />}
+                content={
+                  tooltipContent ?? (
+                    <ChartTooltipContent nameKey={nameKey} hideLabel />
+                  )
+                }
               />
             )}
             <RadialBar

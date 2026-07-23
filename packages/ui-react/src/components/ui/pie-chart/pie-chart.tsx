@@ -77,6 +77,13 @@ export interface PieChartProps
   paddingAngle?: number;
   showTooltip?: boolean;
   showLegend?: boolean;
+  /**
+   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
+   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
+   * to customize formatting, per-slice rows, or extra fields without composing
+   * recharts yourself. Ignored when `showTooltip` is false.
+   */
+  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 // Reserved height (px) of the shared single-row `ChartLegendContent` at the
@@ -101,6 +108,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       paddingAngle = 0,
       showTooltip = true,
       showLegend = true,
+      tooltipContent,
       ...props
     },
     ref
@@ -118,7 +126,11 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
           <RechartsPieChart>
             {showTooltip && (
               <ChartTooltip
-                content={<ChartTooltipContent nameKey={nameKey} hideLabel />}
+                content={
+                  tooltipContent ?? (
+                    <ChartTooltipContent nameKey={nameKey} hideLabel />
+                  )
+                }
               />
             )}
             <Pie

@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { PieChart } from '../pie-chart';
-import type { ChartConfig } from '../../chart';
+import { ChartTooltipContent, type ChartConfig } from '../../chart';
 
 const data = [
   { browser: 'Chrome', value: 275 },
@@ -102,4 +102,17 @@ describe('PieChart', () => {
     const { container } = renderChart({ className: 'h-[300px] w-[300px]' });
     expect(container.firstElementChild).toHaveClass('h-[300px]', 'w-[300px]');
   });
+
+  // The `tooltipContent` prop forwards a custom (library-owned) ChartTooltipContent
+  // to recharts' Tooltip; happy-dom doesn't paint the tooltip, so this only guards
+  // the prop path — consumers customize the tooltip without importing recharts.
+  it('accepts a custom tooltipContent', () => {
+    const { container } = renderChart({
+      tooltipContent: (
+        <ChartTooltipContent formatter={(value) => <span>{String(value)}</span>} />
+      ),
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
 });

@@ -51,6 +51,14 @@ contract:
       required: false
       default: 'true'
       description: Render the hover tooltip.
+    - name: tooltipContent
+      type: ReactElement
+      required: false
+      description: >-
+        Replace the default tooltip. Pass a configured ChartTooltipContent (from
+        this library) — e.g. with a formatter / labelFormatter — to customize the
+        tooltip content without composing recharts. Ignored when showTooltip is
+        false.
   events: []
   methods: []
 

@@ -118,6 +118,13 @@ export interface LineChartProps
   showGrid?: boolean;
   showTooltip?: boolean;
   showLegend?: boolean;
+  /**
+   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
+   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` /
+   * `indicator` — to customize formatting, per-series rows, or extra fields
+   * without composing recharts yourself. Ignored when `showTooltip` is false.
+   */
+  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
@@ -141,6 +148,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      tooltipContent,
       ...props
     },
     ref
@@ -222,7 +230,9 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               label={yAxisTitle}
             />
             {showTooltip &&
-              (bands.length > 0 ? (
+              (tooltipContent ? (
+                <ChartTooltip content={tooltipContent} />
+              ) : bands.length > 0 ? (
                 <ChartTooltip
                   content={(props) => (
                     <ChartTooltipContent

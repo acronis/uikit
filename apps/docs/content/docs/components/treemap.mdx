@@ -71,6 +71,31 @@ Change the tiling with `aspectRatio`, and hide the on-cell labels or tooltip wit
 <Treemap config={config} data={data} dataKey="size" nameKey="name" aspectRatio={2.5} showLabels={false} />
 ```
 
+## Custom tooltip
+
+Replace the tooltip with a configured `ChartTooltipContent` — imported from the
+same library, so you never compose recharts yourself. Its `formatter` renders
+each row and `labelFormatter` the header, giving you custom formatting, per-series
+content, and extra fields:
+
+```tsx
+import { Treemap, ChartTooltipContent } from '@acronis-platform/ui-react';
+
+<Treemap
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="name"
+  tooltipContent={
+    <ChartTooltipContent
+      nameKey="name"
+      hideLabel
+      formatter={(value, name) => `${name}: ${value.toLocaleString()}`}
+    />
+  }
+/>;
+```
+
 ## API Reference
 
 <AutoTypeTable

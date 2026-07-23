@@ -99,6 +99,31 @@ data, e.g. the total:
 />
 ```
 
+## Custom tooltip
+
+Replace the tooltip with a configured `ChartTooltipContent` — imported from the
+same library, so you never compose recharts yourself. Its `formatter` renders
+each row and `labelFormatter` the header, giving you custom formatting, per-series
+content, and extra fields:
+
+```tsx
+import { PieChart, ChartTooltipContent } from '@acronis-platform/ui-react';
+
+<PieChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="browser"
+  tooltipContent={
+    <ChartTooltipContent
+      nameKey="browser"
+      hideLabel
+      formatter={(value, name) => `${name}: ${value.toLocaleString()} users`}
+    />
+  }
+/>;
+```
+
 ## API Reference
 
 <AutoTypeTable

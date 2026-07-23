@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { Histogram, computeHistogramBins } from '../histogram';
-import type { ChartConfig } from '../../chart';
+import { ChartTooltipContent, type ChartConfig } from '../../chart';
 
 const config = {
   count: { label: 'Frequency', color: 'rgb(23 99 207)' },
@@ -55,6 +55,18 @@ describe('Histogram', () => {
       xAxisLabel: 'Value range',
       yAxisLabel: 'Frequency',
       yUnit: 'k',
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  // The `tooltipContent` prop forwards a custom (library-owned) ChartTooltipContent
+  // to recharts' Tooltip; happy-dom doesn't paint the tooltip, so this only guards
+  // the prop path — consumers customize the tooltip without importing recharts.
+  it('accepts a custom tooltipContent', () => {
+    const { container } = renderChart({
+      tooltipContent: (
+        <ChartTooltipContent formatter={(value) => <span>{String(value)}</span>} />
+      ),
     });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });

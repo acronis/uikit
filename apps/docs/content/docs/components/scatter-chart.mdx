@@ -91,6 +91,30 @@ the theme token:
 />
 ```
 
+## Custom tooltip
+
+Replace the tooltip with a configured `ChartTooltipContent` — imported from the
+same library, so you never compose recharts yourself. Its `formatter` renders
+each row and `labelFormatter` the header, giving you custom formatting, per-series
+content, and extra fields:
+
+```tsx
+import { ScatterChart, ChartTooltipContent } from '@acronis-platform/ui-react';
+
+<ScatterChart
+  config={config}
+  series={series}
+  xKey="hours"
+  yKey="score"
+  tooltipContent={
+    <ChartTooltipContent
+      hideLabel
+      formatter={(value, name) => `${name}: ${value.toLocaleString()}`}
+    />
+  }
+/>;
+```
+
 ## API Reference
 
 <AutoTypeTable

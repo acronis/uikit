@@ -98,6 +98,28 @@ export const AxisLabels: Story = {
   },
 };
 
+// Customize the tooltip through the component's `tooltipContent` prop — pass a
+// configured `ChartTooltipContent` from this library (no recharts needed). The
+// synthetic cone band is already excluded from the payload. The tooltip is
+// hover-only.
+export const CustomTooltip: Story = {
+  args: {
+    tooltipContent: (
+      <ChartTooltipContent
+        labelFormatter={(label) => `${label} · projection`}
+        formatter={(value, name) => (
+          <div className="flex w-full justify-between gap-3">
+            <span className="capitalize text-muted-foreground">{name}</span>
+            <span className="font-mono font-medium tabular-nums">
+              {Number(value).toLocaleString()}
+            </span>
+          </div>
+        )}
+      />
+    ),
+  },
+};
+
 // Chrome toggled off — the baseline that would catch a toggle silently becoming
 // a no-op (the unit env can't paint recharts chrome).
 export const NoChrome: Story = {

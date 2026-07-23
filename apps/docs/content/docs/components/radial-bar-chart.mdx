@@ -73,6 +73,31 @@ Make a half-circle gauge with `startAngle` / `endAngle`:
 Tune the radii (`innerRadius` / `outerRadius`), `cornerRadius`, and toggle the
 `showBackground` track / `showTooltip` / `showLegend`.
 
+## Custom tooltip
+
+Replace the tooltip with a configured `ChartTooltipContent` — imported from the
+same library, so you never compose recharts yourself. Its `formatter` renders
+each row and `labelFormatter` the header, giving you custom formatting, per-series
+content, and extra fields:
+
+```tsx
+import { RadialBarChart, ChartTooltipContent } from '@acronis-platform/ui-react';
+
+<RadialBarChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="browser"
+  tooltipContent={
+    <ChartTooltipContent
+      nameKey="browser"
+      hideLabel
+      formatter={(value, name) => `${name}: ${value.toLocaleString()} users`}
+    />
+  }
+/>;
+```
+
 ## API Reference
 
 <AutoTypeTable

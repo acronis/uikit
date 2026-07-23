@@ -122,6 +122,13 @@ export interface BarChartProps
   showGrid?: boolean;
   showTooltip?: boolean;
   showLegend?: boolean;
+  /**
+   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
+   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` /
+   * `indicator` — to customize formatting, per-series rows, or extra fields
+   * without composing recharts yourself. Ignored when `showTooltip` is false.
+   */
+  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
@@ -143,6 +150,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      tooltipContent,
       ...props
     },
     ref
@@ -236,7 +244,9 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                 />
               </>
             )}
-            {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
+            {showTooltip && (
+              <ChartTooltip content={tooltipContent ?? <ChartTooltipContent />} />
+            )}
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}
             {dataKeys.map((key, index) => {
               // In a stack only the last segment's end is rounded; grouped bars

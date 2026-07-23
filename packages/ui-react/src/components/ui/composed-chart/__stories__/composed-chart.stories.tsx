@@ -171,3 +171,30 @@ export const TooltipOpen: Story = {
     </ChartContainer>
   ),
 };
+
+// Customize the tooltip through the component's `tooltipContent` prop — pass a
+// configured `ChartTooltipContent` from this library (no recharts needed). The
+// tooltip is hover-only.
+export const CustomTooltip: Story = {
+  args: {
+    tooltipContent: (
+      <ChartTooltipContent
+        labelFormatter={(label) => `${label} · fiscal Q3`}
+        formatter={(value, name, item) => (
+          <div className="flex w-full items-center gap-2">
+            <span
+              className="size-2.5 shrink-0 rounded-[2px]"
+              style={{ backgroundColor: item.color }}
+            />
+            <span className="text-muted-foreground">
+              {config[name as keyof typeof config]?.label ?? name}
+            </span>
+            <span className="ms-auto font-mono font-medium tabular-nums">
+              ${Number(value).toLocaleString()}
+            </span>
+          </div>
+        )}
+      />
+    ),
+  },
+};

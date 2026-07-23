@@ -75,6 +75,31 @@ Flip the direction with `reversed`, or hide the on-chart labels / tooltip with
 <FunnelChart config={config} data={data} dataKey="value" nameKey="stage" reversed showLabels={false} />
 ```
 
+## Custom tooltip
+
+Replace the tooltip with a configured `ChartTooltipContent` — imported from the
+same library, so you never compose recharts yourself. Its `formatter` renders
+each row and `labelFormatter` the header, giving you custom formatting, per-series
+content, and extra fields:
+
+```tsx
+import { FunnelChart, ChartTooltipContent } from '@acronis-platform/ui-react';
+
+<FunnelChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="stage"
+  tooltipContent={
+    <ChartTooltipContent
+      nameKey="stage"
+      hideLabel
+      formatter={(value, name) => `${name}: ${value.toLocaleString()}`}
+    />
+  }
+/>;
+```
+
 ## API Reference
 
 <AutoTypeTable
