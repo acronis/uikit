@@ -44,6 +44,7 @@
     "radar-chart",
     "radial-bar-chart",
     "treemap",
+    "histogram",
     "chart-state",
     "description-list",
     "alert",

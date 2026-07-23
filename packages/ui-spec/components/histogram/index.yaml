@@ -1,0 +1,12 @@
+spec_version: '1.0'
+component: Histogram
+name: histogram
+status: draft
+category: data-display
+description: >-
+  A frequency histogram — bins a set of continuous samples (`values`) into
+  equal-width ranges and plots the count of each as contiguous bars. Distinct
+  from `BarChart`, which plots pre-categorized rows: the binning is the
+  component's own job (a pure helper). Built on the shared `Chart` primitives;
+  design-pending v1 (no `--ui-chart-*` palette yet, no `apps/demo` playground).
+since: 0.58.0

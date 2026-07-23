@@ -1,0 +1,29 @@
+spec_version: '1.0'
+component: Histogram
+
+# References only. Values live in @acronis-platform/tokens-pd. Histogram has no
+# token tier of its own — the single series' color is supplied by the caller via
+# `config` (a dedicated `--ui-chart-*` data-viz palette is pending an upstream
+# design pass). The chrome (tooltip, axes, grid) is inherited from the shared
+# Chart primitives, which resolve the semantic tokens below.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-background-surface-primary
+    affects: series
+    description: >-
+      Hairline stroke separating the contiguous bars so they don't blend.
+  - name: --ui-background-surface-primary
+    affects: tooltip-content
+    description: Tooltip surface (bg-background).
+  - name: --ui-text-on-surface-primary
+    affects: tooltip-content
+    description: Tooltip value text (text-foreground).
+  - name: --ui-text-on-surface-secondary
+    affects: x-axis
+    description: >-
+      Muted tooltip label text and axis tick labels
+      (text-muted-foreground / fill-muted-foreground).
+  - name: --ui-border-on-surface-border
+    affects: grid
+    description: Tooltip border and the recharts grid lines (border-border / stroke-border).

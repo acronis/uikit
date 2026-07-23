@@ -425,6 +425,12 @@ const RENDER: Record<string, RenderHint> = {
     // stories (Triangle / Rectangle / NoChrome + TooltipOpen).
     skip: true,
   },
+  histogram: {
+    // Data-driven: requires values / config + a sized box, so a zero-arg render
+    // is meaningless. VR is covered by the hand-written stories (Default /
+    // FewBins / ManyBins / NoChrome + TooltipOpen).
+    skip: true,
+  },
   'radar-chart': {
     // Data-driven: requires data / config / dataKeys / angleKey + a sized box, so
     // a zero-arg render is meaningless. VR is covered by the hand-written stories

@@ -1,0 +1,76 @@
+spec_version: '1.0'
+component: Histogram
+
+# No cva: Histogram has no visual variant axes. `binCount` / `domain` are plain
+# props driving the binning, not conformance-checked variants.
+contract:
+  properties:
+    - name: values
+      type: ReadonlyArray<number>
+      required: true
+      description: Raw continuous samples to bin. Non-finite values are ignored.
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Single-series map of label / color (from the shared Chart primitives),
+        keyed by `dataKey`. Turned into the `--color-<dataKey>` custom property.
+        Color is caller-supplied.
+    - name: dataKey
+      type: string
+      required: false
+      default: "'count'"
+      description: The `config` key that colors + labels the frequency bars.
+    - name: binCount
+      type: number
+      required: false
+      default: '10'
+      description: Number of equal-width bins to split the range into.
+    - name: domain
+      type: '[number, number]'
+      required: false
+      description: >-
+        Fix the binning range instead of deriving it from the data's min/max;
+        samples outside the domain are dropped.
+    - name: barRadius
+      type: number
+      required: false
+      default: '0'
+      description: Corner radius on the top of each bar (0 = square, the histogram default).
+    - name: showGrid
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the CartesianGrid.
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the hover tooltip.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Histogram
+    status: implemented
+    import: "import { Histogram } from '@acronis-platform/ui-react'"
+    example: |
+      <Histogram
+        config={{ count: { label: 'Frequency', color: 'var(--ui-background-brand-secondary)' } }}
+        values={[12, 15, 18, 20, 22, 25, 30, 42]}
+        binCount={10}
+        className="h-[320px] w-[560px]"
+      />
+  vue:
+    component: AvHistogram
+    status: planned
+    import: "import { AvHistogram } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvHistogram :values="values" :bin-count="10" />
+  web-components:
+    element: ui-histogram
+    status: planned
+    import: "import '@acronis-platform/ui-wc/histogram'"
+    example: |
+      <ui-histogram></ui-histogram>

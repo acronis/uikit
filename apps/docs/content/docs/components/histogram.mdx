@@ -1,0 +1,64 @@
+---
+title: Histogram
+description: A frequency histogram — bins continuous samples into equal-width ranges.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { HistogramDemo } from '@/components/demos-react/histogram';
+
+## Usage
+
+```tsx
+import { Histogram } from '@acronis-platform/ui-react';
+import type { ChartConfig } from '@acronis-platform/ui-react';
+```
+
+`Histogram` shows the **distribution** of a single continuous variable: give it
+raw `values` and a per-series `config`, and it bins the samples into equal-width
+ranges and plots the count of each as contiguous bars. Unlike
+[`BarChart`](/components/bar-chart) — which plots pre-categorized rows — the
+binning is the component's own job, so you don't pre-aggregate.
+
+> **Design-pending v1**, built net-new (no demo playground). There is no chart
+> token tier yet, so the bar color references a shared brand/status token — a
+> dedicated `--ui-chart-*` data-viz palette is pending an upstream design pass.
+> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
+> across brands until the real palette lands.
+
+## Examples
+
+<DemoReact>
+  <HistogramDemo />
+</DemoReact>
+
+A distribution binned into 10 equal-width ranges:
+
+```tsx
+const values = [12, 15, 18, 20, 22, 22, 25, 28, 30, 35, 42, 48, 60];
+
+const config = {
+  count: { label: 'Frequency', color: 'var(--ui-background-brand-secondary)' },
+} satisfies ChartConfig;
+
+<Histogram config={config} values={values} binCount={10} className="h-[320px] w-[560px]" />;
+```
+
+Tune the resolution with `binCount`:
+
+```tsx
+<Histogram config={config} values={values} binCount={5} />
+<Histogram config={config} values={values} binCount={20} />
+```
+
+Fix the range with `domain` (samples outside it are dropped):
+
+```tsx
+<Histogram config={config} values={values} domain={[0, 100]} />
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/histogram/histogram.tsx"
+  name="HistogramProps"
+/>

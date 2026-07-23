@@ -1,0 +1,61 @@
+spec_version: '1.0'
+component: Histogram
+
+schematic: |
+  root: <div>                                       (plain wrapper, no variants)
+    container: <ChartContainer>                     (themed, sized, responsive)
+      plot: recharts <BarChart barCategoryGap=0>    (contiguous bars)
+        grid:    <CartesianGrid>                    (horizontal lines)
+        x-axis:  <XAxis dataKey="label">            (bin range labels)
+        y-axis:  <YAxis>                            (frequency / count)
+        series:  one <Bar> (the binned counts)
+        tooltip: <ChartTooltip> → tooltip-content   (hover card: range + count)
+
+root:
+  element: div
+  description: >-
+    Plain wrapper (no CVA variants). Renders the shared `ChartContainer` (sized
+    to fill it) around a recharts `BarChart` whose rows are the computed bins.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      The shared `ChartContainer` — supplies the `--color-<dataKey>` custom
+      property from `config` and themes recharts' internals.
+  - id: plot
+    element: svg
+    description: >-
+      The recharts `BarChart` with `barCategoryGap={0}` so the bars touch,
+      reading as a continuous distribution rather than discrete categories.
+  - id: grid
+    element: g
+    description: '`CartesianGrid` — horizontal frequency lines.'
+  - id: x-axis
+    element: g
+    description: '`XAxis` — one tick per bin, labeled with its range (e.g. "0–10").'
+  - id: y-axis
+    element: g
+    description: '`YAxis` — the frequency (integer counts).'
+  - id: series
+    element: g
+    description: >-
+      A single `Bar` filled from `--color-<dataKey>`, one column per bin,
+      heights = the sample count in each bin.
+  - id: tooltip-content
+    element: div
+    description: >-
+      `ChartTooltipContent` — hover card with the bin range and its count.
+      Rendered when `showTooltip`.
+
+states:
+  - id: bin-count
+    trigger: the binCount prop sets how many equal-width bins the range is split into
+    kind: prop
+    prop: binCount
+    affects: [series, x-axis]
+  - id: empty
+    trigger: values is empty (or no finite samples)
+    kind: prop
+    prop: values
+    affects: [series]
