@@ -3,7 +3,9 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import {
+  Area,
   CartesianGrid,
+  ComposedChart,
   Line,
   LineChart as RechartsLineChart,
   XAxis,
@@ -18,6 +20,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
+  type ChartLegendContentProps,
+  type ChartTooltipContentProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
@@ -62,6 +66,22 @@ export interface LineChartProps
   config: ChartConfig;
   /** Series to plot — one `<Line>` per key. Each must exist in `config` and in every data row. */
   dataKeys: string[];
+  /**
+   * Subset of `dataKeys` to render as comparison/trend overlays (e.g. a
+   * previous quarter or year) — dashed, dimmed, and dot-less, so they read as
+   * secondary to the current-period lines. Keeps each series' own `config` color.
+   */
+  comparisonKeys?: string[];
+  /**
+   * Pairs of `[currentKey, comparisonKey]` to shade a delta band between — a
+   * dimmed area filling the gap between the two series at each point,
+   * visualizing the QoQ/YoY difference. Tinted with the first key's `config`
+   * color. Rows where either value isn't numeric are left un-banded.
+   *
+   * Each pair mints an internal `__band_<n>` field (kept out of the tooltip and
+   * legend), so avoid data/`config` keys with that reserved prefix.
+   */
+  deltaBands?: Array<[string, string]>;
   /** Category axis key (the shared dimension across rows, e.g. `"month"`). */
   xKey: string;
   /** Stroke width of each line. */
@@ -82,6 +102,8 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       config,
       data,
       dataKeys,
+      comparisonKeys,
+      deltaBands,
       xKey,
       curve = 'monotone',
       lineStyle = 'solid',
@@ -97,6 +119,34 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
   ) => {
     const dashArray = lineStyle === 'dashed' ? '5 5' : undefined;
 
+    // Each delta band becomes a synthetic `[min, max]` range field per row that
+    // a recharts <Area> shades. Rows where either series isn't numeric are left
+    // un-banded (the area breaks there).
+    const bands = (deltaBands ?? []).map(([current, comparison], index) => ({
+      field: `__band_${index}`,
+      current,
+      comparison,
+    }));
+    const chartData = bands.length
+      ? data.map((row) => {
+          const augmented: Record<string, unknown> = { ...row };
+          for (const { field, current, comparison } of bands) {
+            const a = row[current];
+            const b = row[comparison];
+            augmented[field] =
+              typeof a === 'number' && typeof b === 'number'
+                ? [Math.min(a, b), Math.max(a, b)]
+                : undefined;
+          }
+          return augmented;
+        })
+      : data;
+
+    // Only a delta band needs an <Area>, which recharts renders under
+    // ComposedChart, not LineChart. Escalate to ComposedChart only then, so
+    // plain line charts keep the LineChart base (and their baselines) untouched.
+    const RootChart = bands.length > 0 ? ComposedChart : RechartsLineChart;
+
     return (
       <div
         ref={ref}
@@ -106,7 +156,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         {...props}
       >
         <ChartContainer config={config} className="size-full">
-          <RechartsLineChart data={data as readonly unknown[]}>
+          <RootChart data={chartData as readonly unknown[]}>
             {showGrid && <CartesianGrid vertical={false} />}
             <XAxis
               dataKey={xKey}
@@ -116,23 +166,82 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               tickMargin={8}
             />
             <YAxis type="number" tickLine={false} axisLine={false} />
-            {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
-            {showLegend && <ChartLegend content={<ChartLegendContent />} />}
-            {dataKeys.map((key) => (
-              <Line
-                key={key}
+            {showTooltip &&
+              (bands.length > 0 ? (
+                <ChartTooltip
+                  content={(props) => (
+                    <ChartTooltipContent
+                      active={props.active}
+                      label={props.label}
+                      // Drop the synthetic delta-band range series — it feeds the
+                      // <Area> but shouldn't surface in the tooltip.
+                      payload={
+                        props.payload?.filter(
+                          (item) => !String(item.dataKey).startsWith('__band_')
+                        ) as ChartTooltipContentProps['payload']
+                      }
+                    />
+                  )}
+                />
+              ) : (
+                <ChartTooltip content={<ChartTooltipContent />} />
+              ))}
+            {showLegend &&
+              (bands.length > 0 ? (
+                <ChartLegend
+                  content={(props) => (
+                    <ChartLegendContent
+                      verticalAlign={props.verticalAlign}
+                      // Drop the synthetic delta-band series from the legend too.
+                      payload={
+                        props.payload?.filter(
+                          (item) => !String(item.dataKey).startsWith('__band_')
+                        ) as ChartLegendContentProps['payload']
+                      }
+                    />
+                  )}
+                />
+              ) : (
+                <ChartLegend content={<ChartLegendContent />} />
+              ))}
+            {/* Delta bands render before the lines so the lines draw on top. */}
+            {bands.map(({ field, current }) => (
+              <Area
+                key={field}
+                dataKey={field}
                 type={curve ?? 'monotone'}
-                dataKey={key}
-                stroke={`var(--color-${key})`}
-                strokeWidth={strokeWidth}
-                strokeDasharray={dashArray}
-                dot={showDots ? { r: 3 } : false}
-                activeDot={showDots ? { r: 5 } : false}
+                stroke="none"
+                fill={`var(--color-${current})`}
+                fillOpacity={0.12}
                 connectNulls={connectNulls}
+                dot={false}
+                activeDot={false}
                 isAnimationActive={false}
+                legendType="none"
+                tooltipType="none"
               />
             ))}
-          </RechartsLineChart>
+            {dataKeys.map((key) => {
+              // Comparison series read as secondary: always dashed, dimmed, and
+              // dot-less, regardless of the global lineStyle / showDots.
+              const isComparison = comparisonKeys?.includes(key);
+              return (
+                <Line
+                  key={key}
+                  type={curve ?? 'monotone'}
+                  dataKey={key}
+                  stroke={`var(--color-${key})`}
+                  strokeWidth={strokeWidth}
+                  strokeDasharray={isComparison ? '5 5' : dashArray}
+                  strokeOpacity={isComparison ? 0.5 : undefined}
+                  dot={!isComparison && showDots ? { r: 3 } : false}
+                  activeDot={!isComparison && showDots ? { r: 5 } : false}
+                  connectNulls={connectNulls}
+                  isAnimationActive={false}
+                />
+              );
+            })}
+          </RootChart>
         </ChartContainer>
       </div>
     );

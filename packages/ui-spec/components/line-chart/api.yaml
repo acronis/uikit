@@ -40,6 +40,20 @@ contract:
       type: string
       required: true
       description: The category dimension key shared across rows.
+    - name: comparisonKeys
+      type: string[]
+      required: false
+      description: >-
+        Subset of `dataKeys` rendered as comparison/trend overlays (e.g. a
+        previous quarter or year) — dashed, dimmed, and dot-less, keeping each
+        series' own `config` color.
+    - name: deltaBands
+      type: '[string, string][]'
+      required: false
+      description: >-
+        Pairs `[current, comparison]` to shade a delta band between — a dimmed
+        area filling the gap between the two series at each point (the QoQ/YoY
+        difference), tinted with the first key's `config` color.
     - name: strokeWidth
       type: number
       required: false

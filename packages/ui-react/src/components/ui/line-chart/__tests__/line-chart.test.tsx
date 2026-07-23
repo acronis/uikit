@@ -80,6 +80,22 @@ describe('LineChart', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
+  // The dashed/dimmed comparison styling is SVG that happy-dom won't paint, so
+  // it's covered by the ComparisonTrend VR story; this guards the prop path
+  // (a comparison overlay renders without crashing).
+  it('renders with a comparison overlay series', () => {
+    const { container } = renderChart({ comparisonKeys: ['mobile'] });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('renders with a delta band between two series', () => {
+    const { container } = renderChart({
+      comparisonKeys: ['mobile'],
+      deltaBands: [['desktop', 'mobile']],
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
   it('forwards a ref to the root element', () => {
     const ref = React.createRef<HTMLDivElement>();
     renderChart({ ref });

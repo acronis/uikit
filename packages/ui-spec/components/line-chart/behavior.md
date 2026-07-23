@@ -69,6 +69,22 @@ Scenario: Legend
 ```
 
 ```gherkin
+Scenario: Comparison / trend overlay
+  Given comparisonKeys lists a subset of dataKeys (e.g. ["lastYear"])
+  Then those series render dashed, dimmed, and without dots
+  And the remaining series render normally (current lineStyle / showDots)
+  And each series keeps its own config color
+```
+
+```gherkin
+Scenario: Delta band between two series
+  Given deltaBands lists a pair [current, comparison] (e.g. [["thisYear","lastYear"]])
+  Then a dimmed area shades the gap between the two series at each point
+  And the band is tinted with the current key's config color and sits behind the lines
+  And points where either series is non-numeric are left un-banded
+```
+
+```gherkin
 Scenario: Empty data
   Given data is an empty array
   Then the chart renders its axes and grid with no lines and does not throw

@@ -77,6 +77,16 @@ const meta = {
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
+    comparisonKeys: {
+      control: 'object',
+      description:
+        'Subset of `dataKeys` drawn as dashed, dimmed comparison overlays (e.g. `["lastYear"]`).',
+    },
+    deltaBands: {
+      control: 'object',
+      description:
+        'Pairs `[current, comparison]` to shade the gap between (e.g. `[["thisYear","lastYear"]]`).',
+    },
   },
 } satisfies Meta<typeof LineChart>;
 
@@ -106,6 +116,46 @@ export const Stepped: Story = {
 // Dashed stroke.
 export const Dashed: Story = {
   args: { lineStyle: 'dashed' },
+};
+
+// QoQ / YoY comparison: the previous-period series is marked via
+// `comparisonKeys`, so it renders dashed + dimmed behind the current one.
+const trendData = [
+  { month: 'Jan', thisYear: 186, lastYear: 120 },
+  { month: 'Feb', thisYear: 305, lastYear: 210 },
+  { month: 'Mar', thisYear: 237, lastYear: 250 },
+  { month: 'Apr', thisYear: 273, lastYear: 190 },
+  { month: 'May', thisYear: 309, lastYear: 230 },
+  { month: 'Jun', thisYear: 314, lastYear: 280 },
+];
+
+const trendConfig = {
+  thisYear: { label: 'This year', color: 'var(--ui-background-brand-secondary)' },
+  lastYear: {
+    label: 'Last year',
+    color: 'var(--ui-background-status-strong-danger)',
+  },
+} satisfies ChartConfig;
+
+export const ComparisonTrend: Story = {
+  args: {
+    data: trendData,
+    config: trendConfig,
+    dataKeys: ['thisYear', 'lastYear'],
+    comparisonKeys: ['lastYear'],
+  },
+};
+
+// The same comparison with a shaded delta band filling the gap between the two
+// series (the QoQ/YoY difference).
+export const ComparisonWithDeltaBand: Story = {
+  args: {
+    data: trendData,
+    config: trendConfig,
+    dataKeys: ['thisYear', 'lastYear'],
+    comparisonKeys: ['lastYear'],
+    deltaBands: [['thisYear', 'lastYear']],
+  },
 };
 
 // All chrome toggled off + dots off — the baseline that would catch a toggle

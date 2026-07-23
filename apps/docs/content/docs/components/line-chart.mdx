@@ -92,6 +92,34 @@ Toggle the chrome and per-point dots with `showGrid` / `showTooltip` /
 />
 ```
 
+Overlay a previous-period series for QoQ/YoY comparison by listing it in
+`comparisonKeys` — those series render dashed, dimmed, and dot-less behind the
+current-period lines, keeping their own `config` color:
+
+```tsx
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['thisYear', 'lastYear']}
+  comparisonKeys={['lastYear']}
+  xKey="month"
+/>
+```
+
+Shade the gap between a current and comparison series with `deltaBands` — pairs
+of `[current, comparison]` keys draw a dimmed area (the delta) behind the lines:
+
+```tsx
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['thisYear', 'lastYear']}
+  comparisonKeys={['lastYear']}
+  deltaBands={[['thisYear', 'lastYear']]}
+  xKey="month"
+/>
+```
+
 ## API Reference
 
 <AutoTypeTable
