@@ -431,6 +431,12 @@ const RENDER: Record<string, RenderHint> = {
     // FewBins / ManyBins / NoChrome + TooltipOpen).
     skip: true,
   },
+  meter: {
+    // Required props (label/value/max/color) — a zero-arg render is invalid. VR
+    // is covered by the hand-written stories (Default / WithoutTooltip /
+    // RankedBreakdown).
+    skip: true,
+  },
   'confidence-cone': {
     // Data-driven: requires data / config / field keys + a sized box, so a
     // zero-arg render is meaningless. VR is covered by the hand-written stories

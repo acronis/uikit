@@ -1,0 +1,74 @@
+spec_version: '1.0'
+component: Meter
+
+# No cva: Meter has no visual variant axes. The bar's extent is driven by
+# value / max; the fill color is a plain prop.
+contract:
+  properties:
+    - name: label
+      type: string
+      required: true
+      description: Row label shown on the left.
+    - name: value
+      type: number
+      required: true
+      description: The value this meter represents.
+    - name: max
+      type: number
+      required: false
+      default: '100'
+      description: Upper bound of the range — the whole the value is a share of.
+    - name: color
+      type: string
+      required: true
+      description: >-
+        Fill color for the bar — an existing semantic `--ui-*` token (or any CSS
+        color). Caller-supplied; there is no chart palette tier yet.
+    - name: valueFormatter
+      type: '(value: number) => string'
+      required: false
+      default: 'toLocaleString'
+      description: Format the numeric value in the label + tooltip.
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: Show the hover tooltip (`label · value of max · %`).
+    - name: tooltip
+      type: ReactNode
+      required: false
+      description: >-
+        Custom tooltip content — replaces the default (dot + label + `value of
+        max · %`) inside the same chart-style card. Ignored when `showTooltip`
+        is false.
+    - name: defaultOpen
+      type: boolean
+      required: false
+      description: Render with the tooltip initially open (Base UI `defaultOpen`).
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Meter
+    status: implemented
+    import: "import { Meter } from '@acronis-platform/ui-react'"
+    example: |
+      <Meter
+        label="Critical"
+        value={6}
+        max={29}
+        color="var(--ui-background-status-strong-danger)"
+      />
+  vue:
+    component: AvMeter
+    status: planned
+    import: "import { AvMeter } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvMeter label="Critical" :value="6" :max="29" color="…" />
+  web-components:
+    element: ui-meter
+    status: planned
+    import: "import '@acronis-platform/ui-wc/meter'"
+    example: |
+      <ui-meter label="Critical" value="6" max="29"></ui-meter>

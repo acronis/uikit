@@ -1,0 +1,29 @@
+spec_version: '1.0'
+component: Meter
+
+# References only. Values live in @acronis-platform/tokens-pd. Meter has no token
+# tier of its own — the fill color is caller-supplied per row via `color` (a
+# dedicated `--ui-chart-*` data-viz palette is pending an upstream design pass).
+# The track, text, and tooltip resolve the shared semantic tokens below.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-border-on-surface-border
+    affects: track
+    description: The full-width rail behind the fill (bg-input → the border token).
+  - name: --ui-text-on-surface-primary
+    affects: value
+    description: The emphasized value text, and the tooltip text (text-foreground).
+  - name: --ui-text-on-surface-secondary
+    affects: label
+    description: >-
+      The label, the `· %` share text, and the tooltip's muted detail
+      (text-muted-foreground).
+  - name: --ui-background-surface-primary
+    affects: tooltip-content
+    description: >-
+      Tooltip card surface — the chart-tooltip look (light card), not the dark
+      bubble (bg-background).
+  - name: --ui-border-on-surface-border
+    affects: tooltip-content
+    description: Tooltip card border (border-border).

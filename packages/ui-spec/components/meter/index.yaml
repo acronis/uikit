@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: Meter
+name: meter
+status: draft
+category: data-display
+description: >-
+  A labelled bar showing a scalar value within a known range — a fractional value
+  / share (`role="meter"`, mirroring the HTML `<meter>` element), as opposed to
+  `Progress` which tracks a task over time. One row: label + `value · %` over a
+  proportional track bar, with a hover tooltip; designed to be stacked into a
+  ranked breakdown (a "bar list"). Design-pending v1 (no `--ui-chart-*` palette;
+  the fill color is caller-supplied per row).
+since: 0.58.0

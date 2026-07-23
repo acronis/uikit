@@ -1,0 +1,73 @@
+---
+title: Meter
+description: A labelled proportional bar for a value within a range — stack into a ranked breakdown.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { MeterDemo } from '@/components/demos-react/meter';
+
+## Usage
+
+```tsx
+import { Meter } from '@acronis-platform/ui-react';
+```
+
+`Meter` shows a scalar value within a known range — a **fractional value / share**
+— as a labelled bar: label + `value · %` over a proportional track, with a hover
+tooltip. It's built on Base UI's `Meter` (`role="meter"`, like the HTML
+`<meter>` element), as opposed to [`Progress`](/components/progress) /
+`ProgressCircle`, which track a task over time. Stack several — sharing one `max`
+(the total), sorted by value — to build a **ranked breakdown** (a "bar list").
+
+> **Design-pending v1.** No chart token tier yet, so the fill `color` is
+> **caller-supplied** per row (a dedicated `--ui-chart-*` data-viz palette is
+> pending an upstream design pass). The tooltip uses the chart-tooltip look
+> (light card). Code Connect deferred.
+
+## Examples
+
+A ranked breakdown built from stacked meters:
+
+<DemoReact>
+  <MeterDemo />
+</DemoReact>
+
+A single meter:
+
+```tsx
+<Meter
+  label="Critical"
+  value={6}
+  max={29}
+  color="var(--ui-background-status-strong-danger)"
+/>
+```
+
+Stack several sharing one `max` (the total), sorted by value:
+
+```tsx
+const rows = [
+  { label: 'High', value: 9, color: 'var(--ui-background-status-strong-warning)' },
+  { label: 'Medium', value: 8, color: 'var(--ui-background-status-strong-info)' },
+  { label: 'Critical', value: 6, color: 'var(--ui-background-status-strong-danger)' },
+];
+const total = rows.reduce((sum, r) => sum + r.value, 0);
+
+<div className="flex flex-col gap-4">
+  {rows
+    .sort((a, b) => b.value - a.value)
+    .map((r) => (
+      <Meter key={r.label} label={r.label} value={r.value} max={total} color={r.color} />
+    ))}
+</div>;
+```
+
+Hide the hover tooltip with `showTooltip={false}`, or format the value with
+`valueFormatter`.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/meter/meter.tsx"
+  name="MeterProps"
+/>

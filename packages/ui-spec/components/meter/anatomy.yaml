@@ -1,0 +1,55 @@
+spec_version: '1.0'
+component: Meter
+
+schematic: |
+  root: <div role="meter" aria-valuenow/min/max/label/valuetext>
+    header:
+      label:  <span>            (row label, left)
+      value:  <span>            (value · %, right)
+    track:    <div>             (full-width rail, bg-input)
+      indicator: <div>          (fill; width = value/max %, caller color)
+    tooltip-content: <Tooltip>  (chart-style card: dot + label + value of max · %)
+
+root:
+  element: div
+  role: meter
+  description: >-
+    Base UI `Meter.Root`. Carries `role="meter"` with `aria-valuenow` /
+    `aria-valuemin` (0) / `aria-valuemax` (max), `aria-labelledby` (wired to
+    `Meter.Label`), and `aria-valuetext` (the formatted "value of max (pct%)").
+    When `showTooltip`, it is the trigger of a Tooltip.
+
+parts:
+  - id: label
+    element: span
+    description: The row label, left-aligned (truncates when narrow).
+  - id: value
+    element: span
+    description: >-
+      The value + its share, right-aligned — the formatted value (emphasized)
+      then `· <pct>%`.
+  - id: track
+    element: div
+    description: The full-width rail (bg-input), the range the fill sits in.
+  - id: indicator
+    element: div
+    description: >-
+      The fill — width is `value / max` as a percentage, background is the
+      caller-supplied `color`.
+  - id: tooltip-content
+    element: div
+    description: >-
+      `TooltipContent` shown on hover/focus — a color dot + label + `value of max
+      · pct%`. Rendered when `showTooltip`.
+
+states:
+  - id: value
+    trigger: value / max set the fill width and the displayed share
+    kind: prop
+    prop: value
+    affects: [indicator, value]
+  - id: no-tooltip
+    trigger: showTooltip is false — the meter renders bare (no Tooltip trigger)
+    kind: prop
+    prop: showTooltip
+    affects: [root, tooltip-content]
