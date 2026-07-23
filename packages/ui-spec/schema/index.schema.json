@@ -16,6 +16,11 @@
     "spec_version": { "type": "string" },
     "component": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]*$" },
     "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "sourceDir": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "ui-react component dir (under src/components/ui) this spec documents, when it differs from `name` — e.g. a component whose source is colocated inside another component's folder."
+    },
     "status": { "enum": ["draft", "ready", "stable", "deprecated"] },
     "category": { "type": "string" },
     "description": { "type": "string" },

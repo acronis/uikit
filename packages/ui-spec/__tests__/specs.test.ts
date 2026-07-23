@@ -182,7 +182,10 @@ describe('token references resolve in tokens-pd', () => {
         `${name}: tokens.yaml contains undefined tokens:\n${missingSpecNames.join('\n')}`
       ).toEqual([]);
 
-      const sourceDir = resolve(UI_REACT_COMPONENTS_DIR, name);
+      const sourceDir = resolve(
+        UI_REACT_COMPONENTS_DIR,
+        loadSpec(name).index.sourceDir ?? name
+      );
       expect(existsSync(sourceDir), `${name}: missing ui-react component dir`).toBe(true);
       if (!existsSync(sourceDir)) return;
 

@@ -46,6 +46,11 @@ interface RenderHint {
 }
 
 const RENDER: Record<string, RenderHint> = {
+  // The variant axis would render eight modals — each a portaled, fixed,
+  // focus-trapping overlay — stacked at screen center, so an auto "All variants"
+  // grid is a misleading (and focus-trap-fighting) snapshot. The hand-written
+  // stories cover each variant in its own story (one clean modal per snapshot).
+  dialog: { skip: true },
   avatar: {
     extraImports: ["import { AvatarFallback } from '../avatar';"],
     sample: '\n      <AvatarFallback>SN</AvatarFallback>\n    ',
@@ -82,30 +87,10 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
-  dialog: {
-    props: 'defaultOpen',
-    extraImports: [
-      "import { DialogContent, DialogHeader, DialogTitle, DialogCloseButton, DialogBody, DialogDescription, DialogFooter } from '../dialog';",
-      "import { Button } from '../../button';",
-    ],
-    sample: [
-      '',
-      '      <DialogContent>',
-      '        <DialogHeader>',
-      '          <DialogTitle>Are you absolutely sure?</DialogTitle>',
-      '          <DialogCloseButton />',
-      '        </DialogHeader>',
-      '        <DialogBody>',
-      '          <DialogDescription>This action cannot be undone.</DialogDescription>',
-      '        </DialogBody>',
-      '        <DialogFooter>',
-      '          <Button variant="ghost">Cancel</Button>',
-      '          <Button variant="destructive">Delete</Button>',
-      '        </DialogFooter>',
-      '      </DialogContent>',
-      '    ',
-    ].join('\n'),
-  },
+  // DialogRoot (the composable primitive spec) has no matching ui-react
+  // folder of its own (its source lives in `dialog/`, sourceDir-mapped) — the
+  // generator resolves folders by spec name, so it always skips before ever
+  // reading a hint. No RENDER entry is needed here.
   popover: {
     props: 'defaultOpen',
     extraImports: [

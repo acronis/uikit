@@ -1,12 +1,96 @@
 spec_version: '1.0'
 component: Dialog
 
-# Framework-agnostic contract for a *composable* modal dialog: the overlay is
-# assembled from parts (see anatomy.yaml). The root owns the open state; the
-# parts render the trigger, scrim, and popup furniture. Property names are
-# neutral; see `adapters` for per-framework syntax.
+# Framework-agnostic contract for the Dialog recipe. It composes the
+# DialogRoot primitive parts, so the open-state / modality / portal props
+# mirror DialogRoot; `variant`, `hasLoading`, `footer` and the body slot are
+# the recipe-specific API.
 contract:
   properties:
+    - name: variant
+      type: "'default' | 'rename' | 'save changes' | 'reset password' | 'discard changes' | 'accept' | 'read-only' | 'wide'"
+      required: false
+      default: "'default'"
+      description: >-
+        Selects the canned title, body copy and footer buttons. `discard changes`
+        uses a destructive primary action; `read-only` shows a single primary
+        action (no secondary button). `wide` has no canned preset — a legacy
+        escape hatch kept for backward compatibility, meant to be paired with
+        `size="large"` and the `footer` prop.
+    - name: hasLoading
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Shows a spinner overlay across the body + footer (inset from just below
+        the header to the bottom, or from the very top when `hasHeader` is
+        `false`).
+    - name: hasHeader
+      type: boolean
+      required: false
+      default: true
+      description: >-
+        Shows the header (title + close button). When `false`, the title is
+        still rendered off-screen so the dialog keeps an accessible name — only
+        the visible bar and close button are omitted. Beyond the strict Figma
+        contract (all seven canned variants always show the header) — a
+        ui-react-only extension, like `wide`/`size="large"`.
+    - name: hasFooter
+      type: boolean
+      required: false
+      default: true
+      description: >-
+        Shows the footer (action buttons). Beyond the strict Figma contract
+        (all seven canned variants always show the footer) — a ui-react-only
+        extension, like `wide`/`size="large"`.
+    - name: title
+      type: string
+      required: false
+      description: >-
+        Overrides the variant's default title, for localization or copy
+        changes.
+    - name: objectName
+      type: string
+      required: false
+      description: >-
+        The real name of the object being acted on (e.g. a file or resource
+        name). Interpolated into the `rename`/`discard changes`/`accept`
+        variants' canned title/body in place of the generic placeholder text
+        (e.g. `rename` → "Rename {objectName}" and the field's prefilled
+        value); ignored by variants that don't reference an object name.
+    - name: objectNameLabel
+      type: string
+      required: false
+      default: "'Object name'"
+      description: >-
+        Overrides the accessible name of the `rename` variant's text field.
+        Ignored by every other variant.
+    - name: secondaryLabel
+      type: string
+      required: false
+      description: >-
+        Overrides the variant's default secondary (dismiss) button label.
+        Passing this on a variant with no secondary button by default (e.g.
+        `read-only`) also makes the button appear. Ignored when `footer` is
+        provided.
+    - name: primaryLabel
+      type: string
+      required: false
+      description: >-
+        Overrides the variant's default primary button label. Ignored when
+        `footer` is provided.
+    - name: footer
+      type: ReactNode
+      required: false
+      description: >-
+        Replaces the footer's action content entirely with free-form buttons —
+        the escape hatch the `wide` variant is meant to be paired with, for
+        legacy call sites that don't fit one of the seven canned presets.
+    - name: closeLabel
+      type: string
+      required: false
+      default: "'Close'"
+      description: Overrides the close button's accessible name.
     - name: open
       type: boolean
       required: false
@@ -15,7 +99,7 @@ contract:
       type: boolean
       required: false
       default: false
-      description: Initial open state when uncontrolled.
+      description: Initial open state when uncontrolled (React `defaultOpen`).
     - name: modal
       type: "boolean | 'trap-focus'"
       required: false
@@ -24,29 +108,22 @@ contract:
         Modal behavior — traps focus and locks background scroll while open.
         `'trap-focus'` keeps the focus trap but allows background interaction.
     - name: size
-      type: "'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'"
+      type: "'sm' | 'large'"
       required: false
       default: "'sm'"
       description: >-
-        Popup max-width (on the content part). xs 464 · sm 512 · md 672 · lg 832
-        · xl 992 · 2xl 1136 (px). Mirrors the reference design's six widths.
+        Popup max-width (forwarded to the underlying content). Defaults to `sm`
+        (512px, the Figma-defined size), or to `large` (832px) when `variant`
+        is `wide`. `large` predates the Figma node and has no design token —
+        a legacy backward-compatibility size, not a design-system width scale.
     - name: portal
       type: boolean
       required: false
       default: true
       description: >-
-        Render the content inside a portal (the content part). Required by the
-        underlying primitive for correct stacking; disable only when supplying
-        your own portal ancestor.
-    - name: render
-      type: 'RenderProp'
-      required: false
-      default: undefined
-      description: >-
-        Composition prop available on the trigger, close, title, description, and
-        other primitive parts — replaces the rendered element with another
-        component (e.g. render the trigger as a Button) while merging props.
-        React-only; other frameworks use their own polymorphism.
+        Render the content inside a portal (forwarded to the underlying content).
+        Required for correct stacking; disable only when supplying your own
+        portal ancestor.
 
   events:
     - name: open-change
@@ -54,13 +131,19 @@ contract:
       description: >-
         Fired when the dialog opens or closes (React: `onOpenChange`). Payload is
         the new open value.
+    - name: primary-action
+      payload: void
+      description: >-
+        Fired when the primary footer button is clicked (React:
+        `onPrimaryAction`). The dialog does not close automatically
+        afterwards — pair it with the open-change event to close it once the
+        action completes. Ignored when `footer` is provided.
 
   content:
     - name: default
       description: >-
-        The composed dialog. Author it from the parts: an optional trigger, plus
-        the content (popup) wrapping an optional header (title + close), a body
-        (with a description), and an optional footer for actions.
+        Body slot. When provided, it replaces the variant's canned body copy
+        while keeping the header and footer chrome.
 
   methods: []
 
@@ -68,46 +151,46 @@ adapters:
   react:
     component: Dialog
     status: implemented
-    import: >-
-      import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle,
-      DialogCloseButton, DialogBody, DialogDescription, DialogFooter } from
-      '@acronis-platform/ui-react'
+    import: "import { Dialog } from '@acronis-platform/ui-react'"
     example: |
-      <Dialog>
-        <DialogTrigger render={<Button variant="secondary">Open</Button>} />
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
-            <DialogCloseButton />
-          </DialogHeader>
-          <DialogBody>
-            <DialogDescription>This action cannot be undone.</DialogDescription>
-          </DialogBody>
-          <DialogFooter>
-            <DialogClose render={<Button variant="ghost">Cancel</Button>} />
-            <Button variant="destructive">Delete</Button>
-          </DialogFooter>
-        </DialogContent>
+      <Dialog
+        variant="discard changes"
+        open={open}
+        onOpenChange={setOpen}
+        onPrimaryAction={() => { discard(); setOpen(false); }}
+      />
+
+      {/* Override the body slot */}
+      <Dialog variant="default" defaultOpen>
+        <p>Any custom content.</p>
       </Dialog>
+
+      {/* Interpolate the real object name into the canned title/body */}
+      <Dialog variant="rename" objectName="Q3 Report.xlsx" open onOpenChange={setOpen} />
+
+      {/* Hide the header and/or footer chrome (beyond the Figma contract) */}
+      <Dialog hasHeader={false} open>
+        <p>Body-only content — no title bar, no close button.</p>
+      </Dialog>
+
+      {/* Legacy wide variant — free-form footer, kept for backward compatibility */}
+      <Dialog variant="wide" size="large" title="Configure discovery agent" open
+        footer={<>
+          <DialogClose render={<Button variant="ghost">Cancel</Button>} />
+          <Button>Configure</Button>
+        </>}
+      />
 
   vue:
     component: AvDialog
     status: planned
-    import: "import { AvDialog, AvDialogContent } from '@acronis-platform/ui-vue'"
+    import: "import { AvDialog } from '@acronis-platform/ui-vue'"
     example: |
-      <AvDialog v-model:open="open">
-        <AvDialogContent>
-          <AvDialogTitle>Are you sure?</AvDialogTitle>
-        </AvDialogContent>
-      </AvDialog>
+      <AvDialog v-model:open="open" variant="save changes" />
 
   web-components:
     element: ui-dialog
     status: planned
     import: "import '@acronis-platform/ui-wc/dialog'"
     example: |
-      <ui-dialog open>
-        <ui-dialog-content>
-          <ui-dialog-title>Are you sure?</ui-dialog-title>
-        </ui-dialog-content>
-      </ui-dialog>
+      <ui-dialog open variant="reset password"></ui-dialog>
