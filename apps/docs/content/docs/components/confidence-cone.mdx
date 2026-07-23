@@ -62,6 +62,24 @@ const config = {
 />;
 ```
 
+Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
+`yUnit` (the x-axis is categorical). The titles inherit the theme token:
+
+```tsx
+<ConfidenceCone
+  config={config}
+  data={data}
+  xKey="month"
+  actualKey="actual"
+  forecastKey="forecast"
+  lowerKey="lower"
+  upperKey="upper"
+  xAxisLabel="Month"
+  yAxisLabel="Revenue"
+  yUnit="k"
+/>
+```
+
 ## API Reference
 
 <AutoTypeTable

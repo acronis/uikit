@@ -103,6 +103,12 @@ export interface LineChartProps
   deltaBands?: Array<[string, string]>;
   /** Category axis key (the shared dimension across rows, e.g. `"month"`). */
   xKey: string;
+  /** Title rendered beneath the horizontal (X) axis. */
+  xAxisLabel?: string;
+  /** Title rendered beside the vertical (Y) axis (rotated). */
+  yAxisLabel?: string;
+  /** Unit suffix appended to Y-axis tick values (recharts `unit`; the X axis is categorical). */
+  yUnit?: string;
   /** Stroke width of each line. */
   strokeWidth?: number;
   /** Render a dot at each data point. */
@@ -124,6 +130,9 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       comparisonKeys,
       deltaBands,
       xKey,
+      xAxisLabel,
+      yAxisLabel,
+      yUnit,
       curve = 'monotone',
       lineStyle = 'solid',
       strokeWidth = 2,
@@ -137,6 +146,21 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
     ref
   ) => {
     const dashArray = lineStyle === 'dashed' ? '5 5' : undefined;
+
+    // Axis titles: the X title sits below the ticks; the Y title is rotated in
+    // the left gutter. Passed to recharts' native `label` (themed via the
+    // `.recharts-label` fill selector on the container).
+    const xAxisTitle = xAxisLabel
+      ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
+      : undefined;
+    const yAxisTitle = yAxisLabel
+      ? {
+          value: yAxisLabel,
+          angle: -90,
+          position: 'insideLeft' as const,
+          style: { textAnchor: 'middle' as const },
+        }
+      : undefined;
 
     // Each delta band becomes a synthetic `[min, max]` range field per row that
     // a recharts <Area> shades. Rows where either series isn't numeric are left
@@ -174,7 +198,10 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         className={cn(lineChartVariants({ curve, lineStyle }), className)}
         {...props}
       >
-        <ChartContainer config={config} className="size-full">
+        <ChartContainer
+          config={config}
+          className="size-full [&_.recharts-label]:fill-foreground"
+        >
           <RootChart data={chartData as readonly unknown[]}>
             {showGrid && <CartesianGrid vertical={false} />}
             <XAxis
@@ -183,8 +210,17 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              height={xAxisLabel ? 48 : undefined}
+              label={xAxisTitle}
             />
-            <YAxis type="number" tickLine={false} axisLine={false} />
+            <YAxis
+              type="number"
+              tickLine={false}
+              axisLine={false}
+              unit={yUnit}
+              width={yAxisLabel ? 72 : undefined}
+              label={yAxisTitle}
+            />
             {showTooltip &&
               (bands.length > 0 ? (
                 <ChartTooltip

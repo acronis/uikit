@@ -30,6 +30,22 @@ contract:
       type: string
       required: true
       description: Numeric field for the vertical axis.
+    - name: xAxisLabel
+      type: string
+      required: false
+      description: Title rendered beneath the horizontal (X) axis.
+    - name: yAxisLabel
+      type: string
+      required: false
+      description: Title rendered beside the vertical (Y) axis (rotated).
+    - name: xUnit
+      type: string
+      required: false
+      description: Unit suffix appended to X-axis tick values (recharts `unit`).
+    - name: yUnit
+      type: string
+      required: false
+      description: Unit suffix appended to Y-axis tick values (recharts `unit`).
     - name: zKey
       type: string
       required: false

@@ -60,6 +60,9 @@ const meta = {
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     domain: { control: 'object' },
+    xAxisLabel: { control: 'text' },
+    yAxisLabel: { control: 'text' },
+    yUnit: { control: 'text' },
   },
 } satisfies Meta<typeof Histogram>;
 
@@ -77,6 +80,16 @@ export const FewBins: Story = {
 // Finer bins.
 export const ManyBins: Story = {
   args: { binCount: 20 },
+};
+
+// Axis titles + a Y-axis unit suffix, forwarded to recharts' native
+// `label` / `unit`. The title inherits the theme token via the container's
+// `.recharts-label` fill selector.
+export const AxisLabels: Story = {
+  args: {
+    xAxisLabel: 'Value range',
+    yAxisLabel: 'Frequency',
+  },
 };
 
 // Chrome toggled off — the baseline that would catch a toggle silently becoming

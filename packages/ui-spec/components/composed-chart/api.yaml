@@ -30,6 +30,20 @@ contract:
       type: string
       required: true
       description: The category dimension key shared across rows.
+    - name: xAxisLabel
+      type: string
+      required: false
+      description: Title rendered beneath the horizontal (X) axis.
+    - name: yAxisLabel
+      type: string
+      required: false
+      description: Title rendered beside the vertical (Y) axis (rotated).
+    - name: yUnit
+      type: string
+      required: false
+      description: >-
+        Unit suffix appended to Y-axis tick values (recharts `unit`); the X axis
+        is categorical.
     - name: curve
       type: "'linear' | 'monotone' | 'step'"
       required: false

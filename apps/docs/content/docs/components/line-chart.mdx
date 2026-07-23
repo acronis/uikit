@@ -120,6 +120,21 @@ of `[current, comparison]` keys draw a dimmed area (the delta) behind the lines:
 />
 ```
 
+Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
+`yUnit` (the x-axis is categorical). The titles inherit the theme token:
+
+```tsx
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  xAxisLabel="Month"
+  yAxisLabel="Sessions"
+  yUnit="k"
+/>
+```
+
 ## API Reference
 
 <AutoTypeTable

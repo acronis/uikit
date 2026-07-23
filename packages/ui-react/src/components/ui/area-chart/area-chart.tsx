@@ -61,6 +61,12 @@ export interface AreaChartProps
   dataKeys: string[];
   /** Category axis key (the shared dimension across rows, e.g. `"month"`). */
   xKey: string;
+  /** Title rendered beneath the horizontal (X) axis. */
+  xAxisLabel?: string;
+  /** Title rendered beside the vertical (Y) axis (rotated). */
+  yAxisLabel?: string;
+  /** Unit suffix appended to Y-axis tick values (recharts `unit`; the X axis is categorical). */
+  yUnit?: string;
   /** Interpolation between points. */
   curve?: 'linear' | 'monotone' | 'step';
   /** Stroke width of each area's top border. */
@@ -84,6 +90,9 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       data,
       dataKeys,
       xKey,
+      xAxisLabel,
+      yAxisLabel,
+      yUnit,
       layout = 'single',
       fill = 'gradient',
       curve = 'monotone',
@@ -101,6 +110,21 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
     const isStacked = layout === 'stacked';
     const isGradient = fill === 'gradient';
 
+    // Axis titles: the X title sits below the ticks; the Y title is rotated in
+    // the left gutter. Passed to recharts' native `label` (themed via the
+    // `.recharts-label` fill selector on the container).
+    const xAxisTitle = xAxisLabel
+      ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
+      : undefined;
+    const yAxisTitle = yAxisLabel
+      ? {
+          value: yAxisLabel,
+          angle: -90,
+          position: 'insideLeft' as const,
+          style: { textAnchor: 'middle' as const },
+        }
+      : undefined;
+
     // recharts renders SVG <defs> once per chart; the gradient ids must be unique
     // across chart instances on the page. useId gives a stable per-instance id;
     // strip the colons React emits (invalid in a url(#…) reference) — same guard
@@ -115,7 +139,10 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
         className={cn(areaChartVariants({ layout, fill }), className)}
         {...props}
       >
-        <ChartContainer config={config} className="size-full">
+        <ChartContainer
+          config={config}
+          className="size-full [&_.recharts-label]:fill-foreground"
+        >
           <RechartsAreaChart data={data as readonly unknown[]}>
             {isGradient && (
               <defs>
@@ -149,8 +176,17 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              height={xAxisLabel ? 48 : undefined}
+              label={xAxisTitle}
             />
-            <YAxis type="number" tickLine={false} axisLine={false} />
+            <YAxis
+              type="number"
+              tickLine={false}
+              axisLine={false}
+              unit={yUnit}
+              width={yAxisLabel ? 72 : undefined}
+              label={yAxisTitle}
+            />
             {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}
             {dataKeys.map((key) => (

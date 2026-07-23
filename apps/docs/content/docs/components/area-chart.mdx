@@ -89,6 +89,21 @@ toggle the chrome / dots with `showGrid` / `showTooltip` / `showLegend` /
 />
 ```
 
+Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
+`yUnit` (the x-axis is categorical). The titles inherit the theme token:
+
+```tsx
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  xAxisLabel="Month"
+  yAxisLabel="Sessions"
+  yUnit="k"
+/>
+```
+
 ## API Reference
 
 <AutoTypeTable

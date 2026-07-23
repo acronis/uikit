@@ -75,6 +75,22 @@ Change the marker with `shape`, and toggle the chrome with `showGrid` /
 <ScatterChart config={config} series={series} xKey="hours" yKey="score" shape="triangle" showLegend={false} />
 ```
 
+Add axis titles and unit suffixes with `xAxisLabel` / `yAxisLabel` / `xUnit` /
+`yUnit` — both axes are numeric here, so both units apply. The titles inherit
+the theme token:
+
+```tsx
+<ScatterChart
+  config={config}
+  series={series}
+  xKey="hours"
+  yKey="score"
+  xAxisLabel="Hours studied"
+  yAxisLabel="Score"
+  yUnit="%"
+/>
+```
+
 ## API Reference
 
 <AutoTypeTable

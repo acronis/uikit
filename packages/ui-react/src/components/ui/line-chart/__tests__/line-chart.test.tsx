@@ -96,6 +96,18 @@ describe('LineChart', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
+  // Axis titles/unit forward to recharts' XAxis/YAxis `label`/`unit`; happy-dom
+  // doesn't paint the SVG, so this only guards the prop path (the rendered titles
+  // are covered by the `AxisLabels` VR story).
+  it('renders with axis titles + a Y unit', () => {
+    const { container } = renderChart({
+      xAxisLabel: 'Month',
+      yAxisLabel: 'Sessions',
+      yUnit: 'k',
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
   // The delta-band tooltip/legend content callbacks route their payload through
   // dropBandSeries to hide the synthetic `__band_*` range series. recharts won't
   // paint that content in happy-dom, so the filter is guarded here directly — an

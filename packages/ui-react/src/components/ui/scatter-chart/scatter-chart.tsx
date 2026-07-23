@@ -59,6 +59,14 @@ export interface ScatterChartProps
   xKey: string;
   /** Numeric field for the vertical axis. */
   yKey: string;
+  /** Title rendered beneath the horizontal (X) axis. */
+  xAxisLabel?: string;
+  /** Title rendered beside the vertical (Y) axis (rotated). */
+  yAxisLabel?: string;
+  /** Unit suffix appended to X-axis tick values (recharts `unit`). */
+  xUnit?: string;
+  /** Unit suffix appended to Y-axis tick values (recharts `unit`). */
+  yUnit?: string;
   /** Optional numeric field mapped to point size (a bubble chart), via recharts `ZAxis`. */
   zKey?: string;
   /** Point-size range `[min, max]` the `zKey` maps into. Ignored when `zKey` is unset (points use recharts' default size). */
@@ -81,6 +89,10 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
       zKey,
       zRange = [60, 400],
       shape = 'circle',
+      xAxisLabel,
+      yAxisLabel,
+      xUnit,
+      yUnit,
       showGrid = true,
       showTooltip = true,
       showLegend = true,
@@ -88,9 +100,27 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
     },
     ref
   ) => {
+    // Axis titles: the X title sits below the ticks; the Y title is rotated in
+    // the left gutter. Passed to recharts' native `label` (themed via the
+    // `.recharts-label` fill selector on the container).
+    const xAxisTitle = xAxisLabel
+      ? { value: xAxisLabel, position: 'insideBottom' as const, offset: -8 }
+      : undefined;
+    const yAxisTitle = yAxisLabel
+      ? {
+          value: yAxisLabel,
+          angle: -90,
+          position: 'insideLeft' as const,
+          style: { textAnchor: 'middle' as const },
+        }
+      : undefined;
+
     return (
       <div ref={ref} className={cn(className)} {...props}>
-        <ChartContainer config={config} className="size-full">
+        <ChartContainer
+          config={config}
+          className="size-full [&_.recharts-label]:fill-foreground"
+        >
           <RechartsScatterChart
             margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
           >
@@ -99,17 +129,23 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
               type="number"
               dataKey={xKey}
               name={xKey}
+              unit={xUnit}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              height={xAxisLabel ? 48 : undefined}
+              label={xAxisTitle}
             />
             <YAxis
               type="number"
               dataKey={yKey}
               name={yKey}
+              unit={yUnit}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              width={yAxisLabel ? 72 : undefined}
+              label={yAxisTitle}
             />
             {zKey && (
               <ZAxis type="number" dataKey={zKey} range={zRange} name={zKey} />

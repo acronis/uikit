@@ -54,6 +54,20 @@ contract:
         Pairs `[current, comparison]` to shade a delta band between — a dimmed
         area filling the gap between the two series at each point (the QoQ/YoY
         difference), tinted with the first key's `config` color.
+    - name: xAxisLabel
+      type: string
+      required: false
+      description: Title rendered beneath the horizontal (X) axis.
+    - name: yAxisLabel
+      type: string
+      required: false
+      description: Title rendered beside the vertical (Y) axis (rotated).
+    - name: yUnit
+      type: string
+      required: false
+      description: >-
+        Unit suffix appended to Y-axis tick values (recharts `unit`); the X axis
+        is categorical.
     - name: strokeWidth
       type: number
       required: false

@@ -50,6 +50,12 @@ export interface ComposedChartProps
   series: ComposedSeries[];
   /** Category axis key (the shared dimension across rows, e.g. `"month"`). */
   xKey: string;
+  /** Title rendered beneath the horizontal (X) axis. */
+  xAxisLabel?: string;
+  /** Title rendered beside the vertical (Y) axis (rotated). */
+  yAxisLabel?: string;
+  /** Unit suffix appended to Y-axis tick values (recharts `unit`; the X axis is categorical). */
+  yUnit?: string;
   /** Interpolation for the line and area series. */
   curve?: 'linear' | 'monotone' | 'step';
   /** Corner radius on the growing end of bar series. */
@@ -69,6 +75,9 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       data,
       series,
       xKey,
+      xAxisLabel,
+      yAxisLabel,
+      yUnit,
       curve = 'monotone',
       barRadius = 4,
       fillOpacity = 0.3,
@@ -79,9 +88,27 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
     },
     ref
   ) => {
+    // Axis titles: the X title sits below the ticks; the Y title is rotated in
+    // the left gutter. Passed to recharts' native `label` (themed via the
+    // `.recharts-label` fill selector on the container).
+    const xAxisTitle = xAxisLabel
+      ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
+      : undefined;
+    const yAxisTitle = yAxisLabel
+      ? {
+          value: yAxisLabel,
+          angle: -90,
+          position: 'insideLeft' as const,
+          style: { textAnchor: 'middle' as const },
+        }
+      : undefined;
+
     return (
       <div ref={ref} className={cn(className)} {...props}>
-        <ChartContainer config={config} className="size-full">
+        <ChartContainer
+          config={config}
+          className="size-full [&_.recharts-label]:fill-foreground"
+        >
           <RechartsComposedChart data={data as readonly unknown[]}>
             {showGrid && <CartesianGrid vertical={false} />}
             <XAxis
@@ -90,8 +117,17 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              height={xAxisLabel ? 48 : undefined}
+              label={xAxisTitle}
             />
-            <YAxis type="number" tickLine={false} axisLine={false} />
+            <YAxis
+              type="number"
+              tickLine={false}
+              axisLine={false}
+              unit={yUnit}
+              width={yAxisLabel ? 72 : undefined}
+              label={yAxisTitle}
+            />
             {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}
             {/* Rendered in the caller's `series` order — recharts paints children
