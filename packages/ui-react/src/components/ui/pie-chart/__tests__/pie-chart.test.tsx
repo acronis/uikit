@@ -72,6 +72,26 @@ describe('PieChart', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
+  // recharts resolves the center Label's content against a computed polar
+  // viewBox that happy-dom never provides, so the center text can't be asserted
+  // here (it's covered by the DonutWithCenterLabel VR story). These guard the
+  // prop path: a donut with centerLabel, and a pie that ignores it, both render.
+  it('renders a donut with a center label', () => {
+    const { container } = renderChart({
+      shape: 'donut',
+      centerLabel: { value: '835', label: 'Visitors' },
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('ignores centerLabel for a pie shape', () => {
+    const { container } = renderChart({
+      shape: 'pie',
+      centerLabel: { value: '835', label: 'Visitors' },
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
   it('forwards a ref to the root element', () => {
     const ref = React.createRef<HTMLDivElement>();
     renderChart({ ref });

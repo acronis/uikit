@@ -42,6 +42,12 @@ contract:
       required: false
       default: '60'
       description: Inner radius of the arc when `shape="donut"` (ignored for `shape="pie"`).
+    - name: centerLabel
+      type: '{ value?: string | number; label?: string | number }'
+      required: false
+      description: >-
+        Custom content for the donut hole — a headline `value` and/or a `label`
+        caption, stacked and centered. Rendered only for `shape="donut"`.
     - name: outerRadius
       type: number
       required: false

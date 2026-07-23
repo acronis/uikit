@@ -60,6 +60,11 @@ const meta = {
   },
   argTypes: {
     shape: { control: 'inline-radio', options: ['pie', 'donut'] },
+    centerLabel: {
+      control: 'object',
+      description:
+        'Donut-only center content: `{ value, label }`. The object editor needs strict JSON — e.g. `{ "value": "835", "label": "Visitors" }`.',
+    },
     innerRadius: { control: { type: 'number', min: 0, max: 120 } },
     outerRadius: { control: { type: 'number', min: 40, max: 160 } },
     paddingAngle: { control: { type: 'number', min: 0, max: 10 } },
@@ -79,6 +84,14 @@ export const Pie_: Story = {
 // A hollow-centre donut.
 export const Donut: Story = {
   args: { shape: 'donut' },
+};
+
+// A donut with a custom center metric (here the total) + a caption.
+export const DonutWithCenterLabel: Story = {
+  args: {
+    shape: 'donut',
+    centerLabel: { value: '835', label: 'Visitors' },
+  },
 };
 
 // Chrome (tooltip + legend) toggled off — the baseline that would catch a toggle

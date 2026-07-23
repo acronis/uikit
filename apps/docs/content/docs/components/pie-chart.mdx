@@ -84,6 +84,21 @@ Separate the slices with `paddingAngle`, and tune the donut hole with
 />
 ```
 
+Fill the donut hole with a headline metric via `centerLabel` — a `value` and an
+optional `label`, centered in the hole (donut only). Compute the value from your
+data, e.g. the total:
+
+```tsx
+<PieChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="browser"
+  shape="donut"
+  centerLabel={{ value: '835', label: 'Visitors' }}
+/>
+```
+
 ## API Reference
 
 <AutoTypeTable

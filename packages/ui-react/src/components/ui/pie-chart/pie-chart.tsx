@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { Cell, Pie, PieChart as RechartsPieChart } from 'recharts';
+import { Cell, Label, Pie, PieChart as RechartsPieChart } from 'recharts';
 
 import { cn } from '@/lib/utils';
 import {
@@ -34,6 +34,15 @@ const pieChartVariants = cva('', {
   },
 });
 
+export interface PieChartCenterLabel {
+  // Rendered as SVG <text>, which only lays out text — hence string | number,
+  // not ReactNode.
+  /** Headline metric rendered large in the donut hole (e.g. a total). */
+  value?: string | number;
+  /** Caption rendered under the value. */
+  label?: string | number;
+}
+
 export interface PieChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof pieChartVariants> {
@@ -56,6 +65,12 @@ export interface PieChartProps
   nameKey: string;
   /** Inner radius of the arc when `shape="donut"` (ignored for `shape="pie"`). */
   innerRadius?: number;
+  /**
+   * Custom content for the donut hole — a headline `value` and/or a `label`
+   * caption, stacked and centered. Rendered only for `shape="donut"` (a filled
+   * pie has no hole).
+   */
+  centerLabel?: PieChartCenterLabel;
   /** Outer radius of the arc. Omit to use recharts' responsive default. */
   outerRadius?: number;
   /** Gap between slices, in degrees. */
@@ -63,6 +78,13 @@ export interface PieChartProps
   showTooltip?: boolean;
   showLegend?: boolean;
 }
+
+// Reserved height (px) of the shared single-row `ChartLegendContent` at the
+// bottom of the chart surface. recharts shifts the donut centre up by half of
+// this to make room for the legend, but a Pie <Label>'s viewBox does not
+// reflect it — so the centre label is nudged up by the same amount. VR
+// baselines guard this value if the legend's height ever changes.
+const LEGEND_ROW_RESERVE = 28;
 
 const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
   (
@@ -73,6 +95,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       dataKey,
       nameKey,
       shape = 'pie',
+      centerLabel,
       innerRadius = 60,
       outerRadius,
       paddingAngle = 0,
@@ -111,11 +134,56 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
                 // Keyed by index, not the name: two rows may share a nameKey
                 // value, which would collide as a React key. Same-named rows
                 // intentionally share a color/config entry via `--color-<name>`.
-                <Cell
-                  key={index}
-                  fill={`var(--color-${entry[nameKey]})`}
-                />
+                <Cell key={index} fill={`var(--color-${entry[nameKey]})`} />
               ))}
+              {shape === 'donut' && centerLabel && (
+                <Label
+                  content={({ viewBox }) => {
+                    if (!viewBox || !('cx' in viewBox)) return null;
+                    const { cx = 0, cy = 0 } = viewBox as {
+                      cx?: number;
+                      cy?: number;
+                    };
+                    // recharts centres the pie in the plot area (surface minus
+                    // the legend), but a Pie <Label>'s viewBox reports the full
+                    // surface centre — so a bottom legend leaves cy half a legend
+                    // row too low. Nudge up onto the real donut centre.
+                    const centerY =
+                      cy - (showLegend ? LEGEND_ROW_RESERVE / 2 : 0);
+                    const hasValue = centerLabel.value != null;
+                    const hasLabel = centerLabel.label != null;
+                    // Straddle centerY when both lines show, so the value + label
+                    // block is centered as a whole (not just the value).
+                    const both = hasValue && hasLabel;
+                    return (
+                      <g>
+                        {hasValue && (
+                          <text
+                            x={cx}
+                            y={both ? centerY - 10 : centerY}
+                            textAnchor="middle"
+                            dominantBaseline="central"
+                            className="fill-foreground text-2xl font-semibold"
+                          >
+                            {centerLabel.value}
+                          </text>
+                        )}
+                        {hasLabel && (
+                          <text
+                            x={cx}
+                            y={both ? centerY + 13 : centerY}
+                            textAnchor="middle"
+                            dominantBaseline="central"
+                            className="fill-muted-foreground text-sm"
+                          >
+                            {centerLabel.label}
+                          </text>
+                        )}
+                      </g>
+                    );
+                  }}
+                />
+              )}
             </Pie>
             {showLegend && (
               <ChartLegend content={<ChartLegendContent nameKey={nameKey} />} />

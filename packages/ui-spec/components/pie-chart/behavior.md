@@ -45,6 +45,19 @@ Scenario: Legend
 ```
 
 ```gherkin
+Scenario: Donut center label
+  Given shape is "donut" and a centerLabel { value, label }
+  Then the value renders large and the label smaller beneath it, centered in the hole
+  And the block stays centered on the donut whether or not a legend is shown
+```
+
+```gherkin
+Scenario: Center label ignored for a pie
+  Given shape is "pie" and a centerLabel
+  Then no center content renders (a filled pie has no hole)
+```
+
+```gherkin
 Scenario: Empty data
   Given data is an empty array
   Then the chart renders with no slices and does not throw
