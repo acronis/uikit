@@ -53,6 +53,25 @@ const lineChartVariants = cva('', {
   },
 });
 
+// Reserved field prefix for the synthetic delta-band range series. Each band
+// mints one `__band_<n>` field that feeds an <Area>; it must never surface in
+// the tooltip or legend (those describe only real, caller-supplied series).
+const BAND_FIELD_PREFIX = '__band_';
+
+/**
+ * Drop the synthetic delta-band range series from a recharts tooltip/legend
+ * payload, keeping the real series (and their order). recharts already excludes
+ * the band via `legendType`/`tooltipType="none"`, so this is a second, explicit
+ * guard — hence it's unit-tested rather than relying on that behavior.
+ */
+export function dropBandSeries<T extends { dataKey?: unknown }>(
+  payload: readonly T[] | undefined
+): T[] | undefined {
+  return payload?.filter(
+    (item) => !String(item.dataKey).startsWith(BAND_FIELD_PREFIX)
+  );
+}
+
 export interface LineChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof lineChartVariants> {
@@ -123,7 +142,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
     // a recharts <Area> shades. Rows where either series isn't numeric are left
     // un-banded (the area breaks there).
     const bands = (deltaBands ?? []).map(([current, comparison], index) => ({
-      field: `__band_${index}`,
+      field: `${BAND_FIELD_PREFIX}${index}`,
       current,
       comparison,
     }));
@@ -173,11 +192,9 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                     <ChartTooltipContent
                       active={props.active}
                       label={props.label}
-                      // Drop the synthetic delta-band range series — it feeds the
-                      // <Area> but shouldn't surface in the tooltip.
                       payload={
-                        props.payload?.filter(
-                          (item) => !String(item.dataKey).startsWith('__band_')
+                        dropBandSeries(
+                          props.payload
                         ) as ChartTooltipContentProps['payload']
                       }
                     />
@@ -192,10 +209,9 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                   content={(props) => (
                     <ChartLegendContent
                       verticalAlign={props.verticalAlign}
-                      // Drop the synthetic delta-band series from the legend too.
                       payload={
-                        props.payload?.filter(
-                          (item) => !String(item.dataKey).startsWith('__band_')
+                        dropBandSeries(
+                          props.payload
                         ) as ChartLegendContentProps['payload']
                       }
                     />

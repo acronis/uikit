@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { LineChart } from '../line-chart';
+import { LineChart, dropBandSeries } from '../line-chart';
 import type { ChartConfig } from '../../chart';
 
 const data = [
@@ -94,6 +94,32 @@ describe('LineChart', () => {
       deltaBands: [['desktop', 'mobile']],
     });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  // The delta-band tooltip/legend content callbacks route their payload through
+  // dropBandSeries to hide the synthetic `__band_*` range series. recharts won't
+  // paint that content in happy-dom, so the filter is guarded here directly — an
+  // inverted predicate would otherwise ship silently.
+  describe('dropBandSeries', () => {
+    const real = [{ dataKey: 'thisYear' }, { dataKey: 'lastYear' }];
+
+    it('drops synthetic band series while keeping real series in order', () => {
+      const payload = [real[0], { dataKey: '__band_0' }, real[1]];
+      expect(dropBandSeries(payload)).toEqual(real);
+    });
+
+    it('keeps every series when none is a band series', () => {
+      expect(dropBandSeries(real)).toEqual(real);
+    });
+
+    it('handles a numeric or missing dataKey without dropping it', () => {
+      const payload = [{ dataKey: 0 }, { dataKey: undefined }];
+      expect(dropBandSeries(payload)).toEqual(payload);
+    });
+
+    it('returns undefined for an undefined payload', () => {
+      expect(dropBandSeries(undefined)).toBeUndefined();
+    });
   });
 
   it('forwards a ref to the root element', () => {
