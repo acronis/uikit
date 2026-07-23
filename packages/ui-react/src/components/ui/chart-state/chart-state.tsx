@@ -54,10 +54,14 @@ const ChartState = React.forwardRef<HTMLDivElement, ChartStateProps>(
       )}
       {...props}
       // The status/alert live-region contract is intrinsic to the state, so it
-      // wins over any consumer-passed a11y prop (spread above).
+      // wins over any consumer-passed a11y prop (spread above). No `aria-busy`
+      // here: this element IS the live region, and some AT defer announcing a
+      // busy region's content until busy clears — but this placeholder is
+      // unmounted (swapped for the chart) rather than un-busied, so a busy flag
+      // would risk swallowing the "Data is loading…" announcement. A consumer
+      // that wants a busy signal sets `aria-busy` on the chart-slot container.
       role={state === 'error' ? 'alert' : 'status'}
       aria-live={state === 'error' ? 'assertive' : 'polite'}
-      aria-busy={state === 'loading' || undefined}
     >
       {/* aria-hidden: the root is already the loading live region (+ the label),
           so the Spinner's own role="status"/sr-only would double-announce. */}

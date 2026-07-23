@@ -3,8 +3,9 @@
 ## Rendering per state
 
 - **Given** `state="loading"`, **when** rendered, **then** it shows the shared
-  `Spinner` (lg) above the label "Data is loading…" and marks the region
-  `aria-busy`.
+  `Spinner` (lg) above the label "Data is loading…" and announces the label via
+  its `role="status"` live region (no `aria-busy`, which could defer that
+  announcement).
 - **Given** `state="empty"`, **when** rendered, **then** it shows the inbox glyph
   above the label "No data found".
 - **Given** `state="error"`, **when** rendered, **then** it shows the warning

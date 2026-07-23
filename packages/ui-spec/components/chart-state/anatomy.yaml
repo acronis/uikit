@@ -13,7 +13,8 @@ root:
   description: >-
     Centered column that fills its slot (`size-full`, `min-h-32`). Announces as
     a live region — `role="status"` (`aria-live="polite"`) for loading/empty and
-    `role="alert"` (`aria-live="assertive"`) for error; `aria-busy` while loading.
+    `role="alert"` (`aria-live="assertive"`) for error. No `aria-busy` on the
+    region itself — it would risk suppressing the loading announcement.
 
 parts:
   - id: glyph

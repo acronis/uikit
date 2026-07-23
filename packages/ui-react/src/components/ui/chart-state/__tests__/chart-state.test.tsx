@@ -12,9 +12,21 @@ describe('ChartState', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Data is loading…');
   });
 
-  it('keeps the state a11y contract when a conflicting role prop is passed', () => {
-    render(<ChartState state="loading" role="region" data-testid="cs" />);
-    expect(screen.getByTestId('cs')).toHaveAttribute('role', 'status');
+  it('keeps the full state a11y contract when conflicting a11y props are passed', () => {
+    render(
+      <ChartState
+        state="loading"
+        role="region"
+        aria-live="off"
+        data-testid="cs"
+      />
+    );
+    // The intrinsic live-region contract (role + aria-live) wins over the
+    // consumer props, and the region is never marked busy.
+    const el = screen.getByTestId('cs');
+    expect(el).toHaveAttribute('role', 'status');
+    expect(el).toHaveAttribute('aria-live', 'polite');
+    expect(el).not.toHaveAttribute('aria-busy');
   });
 
   it('renders the empty state with its default label', () => {
@@ -48,9 +60,12 @@ describe('ChartState', () => {
     ).toBeInTheDocument();
   });
 
-  it('marks the loading state busy', () => {
+  it('does not mark the loading live region busy (would suppress the announcement)', () => {
     render(<ChartState state="loading" data-testid="cs" />);
-    expect(screen.getByTestId('cs')).toHaveAttribute('aria-busy', 'true');
+    const el = screen.getByTestId('cs');
+    expect(el).toHaveAttribute('role', 'status');
+    expect(el).toHaveAttribute('aria-live', 'polite');
+    expect(el).not.toHaveAttribute('aria-busy');
   });
 
   it('forwards the ref', () => {
