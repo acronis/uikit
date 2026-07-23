@@ -63,6 +63,12 @@ export interface ConfidenceConeProps
   lowerKey: string;
   /** Field for the cone's upper bound. */
   upperKey: string;
+  /** Title rendered beneath the horizontal (X) axis. */
+  xAxisLabel?: string;
+  /** Title rendered beside the vertical (Y) axis (rotated). */
+  yAxisLabel?: string;
+  /** Unit suffix appended to Y-axis tick values (recharts `unit`; the X axis is categorical). */
+  yUnit?: string;
   /** Stroke width of the actual + forecast lines. */
   strokeWidth?: number;
   /**
@@ -87,6 +93,9 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       forecastKey,
       lowerKey,
       upperKey,
+      xAxisLabel,
+      yAxisLabel,
+      yUnit,
       strokeWidth = 2,
       showForecastRegion = true,
       showGrid = true,
@@ -96,6 +105,18 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
     },
     ref
   ) => {
+    const xAxisTitle = xAxisLabel
+      ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
+      : undefined;
+    const yAxisTitle = yAxisLabel
+      ? {
+          value: yAxisLabel,
+          angle: -90,
+          position: 'insideLeft' as const,
+          style: { textAnchor: 'middle' as const },
+        }
+      : undefined;
+
     // Augment each row with the `[lower, upper]` band tuple the Area shades.
     // Rows missing a numeric bound are left un-coned (the band breaks there).
     const chartData = data.map((row) => {
@@ -119,7 +140,10 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
 
     return (
       <div ref={ref} className={cn(className)} {...props}>
-        <ChartContainer config={config} className="size-full">
+        <ChartContainer
+          config={config}
+          className="size-full [&_.recharts-label]:fill-foreground"
+        >
           <ComposedChart data={chartData as readonly unknown[]}>
             {showGrid && <CartesianGrid vertical={false} />}
             <XAxis
@@ -128,8 +152,17 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              height={xAxisLabel ? 48 : undefined}
+              label={xAxisTitle}
             />
-            <YAxis type="number" tickLine={false} axisLine={false} />
+            <YAxis
+              type="number"
+              tickLine={false}
+              axisLine={false}
+              unit={yUnit}
+              width={yAxisLabel ? 72 : undefined}
+              label={yAxisTitle}
+            />
             {/* Set the forecast region off from the actuals (behind everything). */}
             {forecastStart != null && lastX != null && (
               <ReferenceArea

@@ -67,6 +67,10 @@ const meta = {
       description:
         'One line or an array. Each: `{ value }` (fixed) or `{ average: true | "<key>" }`, with an optional `{ label }`. The object editor needs **strict JSON** (double-quoted keys) — e.g. `[{ "value": 300, "label": "Target" }]` — then click the submit arrow.',
     },
+    xAxisLabel: { control: 'text' },
+    yAxisLabel: { control: 'text' },
+    xUnit: { control: 'text' },
+    yUnit: { control: 'text' },
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
@@ -116,6 +120,17 @@ export const MultipleReferenceLines: Story = {
       { value: 300, label: 'Target' },
       { average: true, label: 'Average' },
     ],
+  },
+};
+
+// Axis titles + a Y-axis unit suffix, forwarded to recharts' native
+// `label` / `unit`. The title inherits the theme token via the container's
+// `.recharts-label` fill selector.
+export const AxisLabels: Story = {
+  args: {
+    xAxisLabel: 'Month',
+    yAxisLabel: 'Sessions',
+    yUnit: 'k',
   },
 };
 

@@ -72,6 +72,9 @@ const meta = {
   },
   argTypes: {
     strokeWidth: { control: { type: 'number', min: 1, max: 6 } },
+    xAxisLabel: { control: 'text' },
+    yAxisLabel: { control: 'text' },
+    yUnit: { control: 'text' },
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
@@ -83,6 +86,17 @@ type Story = StoryObj<typeof meta>;
 
 // Actual (solid) + forecast (dashed) + the widening prediction cone.
 export const Default: Story = {};
+
+// Axis titles + a Y-axis unit suffix, forwarded to recharts' native
+// `label` / `unit`. The title inherits the theme token via the container's
+// `.recharts-label` fill selector.
+export const AxisLabels: Story = {
+  args: {
+    xAxisLabel: 'Month',
+    yAxisLabel: 'Revenue',
+    yUnit: 'k',
+  },
+};
 
 // Chrome toggled off — the baseline that would catch a toggle silently becoming
 // a no-op (the unit env can't paint recharts chrome).

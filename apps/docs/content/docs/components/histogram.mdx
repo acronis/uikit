@@ -56,6 +56,18 @@ Fix the range with `domain` (samples outside it are dropped):
 <Histogram config={config} values={values} domain={[0, 100]} />
 ```
 
+Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
+`yUnit` (the x-axis is the bin label). The titles inherit the theme token:
+
+```tsx
+<Histogram
+  config={config}
+  values={values}
+  xAxisLabel="Value range"
+  yAxisLabel="Frequency"
+/>
+```
+
 ## API Reference
 
 <AutoTypeTable

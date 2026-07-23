@@ -85,6 +85,24 @@ so the line paints on top:
 Tune the shared knobs with `curve` (line/area interpolation), `barRadius`,
 `fillOpacity`, and the `showGrid` / `showTooltip` / `showLegend` toggles.
 
+Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
+`yUnit` (the x-axis is categorical). The titles inherit the theme token:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  series={[
+    { key: 'revenue', type: 'bar' },
+    { key: 'profit', type: 'line' },
+  ]}
+  xKey="month"
+  xAxisLabel="Month"
+  yAxisLabel="Amount"
+  yUnit="$"
+/>
+```
+
 ## API Reference
 
 <AutoTypeTable

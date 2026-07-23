@@ -81,6 +81,9 @@ const meta = {
     curve: { control: 'inline-radio', options: ['linear', 'monotone', 'step'] },
     barRadius: { control: { type: 'number', min: 0, max: 20 } },
     fillOpacity: { control: { type: 'number', min: 0, max: 1, step: 0.1 } },
+    xAxisLabel: { control: 'text' },
+    yAxisLabel: { control: 'text' },
+    yUnit: { control: 'text' },
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
@@ -108,6 +111,17 @@ export const BarAreaLine: Story = {
       { key: 'forecast', type: 'area' },
       { key: 'profit', type: 'line' },
     ],
+  },
+};
+
+// Axis titles + a Y-axis unit suffix, forwarded to recharts' native
+// `label` / `unit`. The title inherits the theme token via the container's
+// `.recharts-label` fill selector.
+export const AxisLabels: Story = {
+  args: {
+    xAxisLabel: 'Month',
+    yAxisLabel: 'Amount',
+    yUnit: '$',
   },
 };
 

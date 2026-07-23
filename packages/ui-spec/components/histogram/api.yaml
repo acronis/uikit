@@ -32,6 +32,20 @@ contract:
       description: >-
         Fix the binning range instead of deriving it from the data's min/max;
         samples outside the domain are dropped.
+    - name: xAxisLabel
+      type: string
+      required: false
+      description: Title rendered beneath the horizontal (X) axis.
+    - name: yAxisLabel
+      type: string
+      required: false
+      description: Title rendered beside the vertical (Y) axis (rotated).
+    - name: yUnit
+      type: string
+      required: false
+      description: >-
+        Unit suffix appended to Y-axis tick values (recharts `unit`); the X axis
+        is the bin label.
     - name: barRadius
       type: number
       required: false

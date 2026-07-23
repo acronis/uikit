@@ -82,6 +82,19 @@ describe('ScatterChart', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
+  // Axis titles/units forward to recharts' XAxis/YAxis `label`/`unit`; happy-dom
+  // doesn't paint the SVG, so this only guards the prop path (the rendered titles
+  // are covered by the `AxisLabels` VR story) — both axes are numeric here.
+  it('renders with axis titles + units on both axes', () => {
+    const { container } = renderChart({
+      xAxisLabel: 'Spend',
+      yAxisLabel: 'Conversions',
+      xUnit: '$',
+      yUnit: '%',
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
   it('forwards a ref to the root element', () => {
     const ref = React.createRef<HTMLDivElement>();
     renderChart({ ref });

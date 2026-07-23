@@ -78,6 +78,9 @@ const meta = {
     fillOpacity: { control: { type: 'number', min: 0, max: 1, step: 0.1 } },
     showDots: { control: 'boolean' },
     connectNulls: { control: 'boolean' },
+    xAxisLabel: { control: 'text' },
+    yAxisLabel: { control: 'text' },
+    yUnit: { control: 'text' },
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
@@ -100,6 +103,17 @@ export const Stacked: Story = {
 // Flat translucent fill instead of a gradient.
 export const SolidFill: Story = {
   args: { fill: 'solid' },
+};
+
+// Axis titles + a Y-axis unit suffix, forwarded to recharts' native
+// `label` / `unit`. The title inherits the theme token via the container's
+// `.recharts-label` fill selector.
+export const AxisLabels: Story = {
+  args: {
+    xAxisLabel: 'Month',
+    yAxisLabel: 'Sessions',
+    yUnit: 'k',
+  },
 };
 
 // All chrome toggled off + a solid flat fill — the baseline that would catch a

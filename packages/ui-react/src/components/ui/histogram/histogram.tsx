@@ -94,6 +94,12 @@ export interface HistogramProps
   binCount?: number;
   /** Fix the binning range instead of deriving it from the data's min/max. */
   domain?: [number, number];
+  /** Title rendered beneath the horizontal (X) axis. */
+  xAxisLabel?: string;
+  /** Title rendered beside the vertical (Y) axis (rotated). */
+  yAxisLabel?: string;
+  /** Unit suffix appended to Y-axis tick values (recharts `unit`; the X axis is the bin label). */
+  yUnit?: string;
   /** Corner radius on the top of each bar. */
   barRadius?: number;
   showGrid?: boolean;
@@ -109,6 +115,9 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
       dataKey = 'count',
       binCount = 10,
       domain,
+      xAxisLabel,
+      yAxisLabel,
+      yUnit,
       barRadius = 0,
       showGrid = true,
       showTooltip = true,
@@ -116,6 +125,18 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
     },
     ref
   ) => {
+    const xAxisTitle = xAxisLabel
+      ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
+      : undefined;
+    const yAxisTitle = yAxisLabel
+      ? {
+          value: yAxisLabel,
+          angle: -90,
+          position: 'insideLeft' as const,
+          style: { textAnchor: 'middle' as const },
+        }
+      : undefined;
+
     const bins = React.useMemo(
       () => computeHistogramBins(values, binCount, domain),
       [values, binCount, domain]
@@ -130,11 +151,28 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
         className={cn(className)}
         {...props}
       >
-        <ChartContainer config={config} className="size-full">
+        <ChartContainer
+          config={config}
+          className="size-full [&_.recharts-label]:fill-foreground"
+        >
           <RechartsBarChart data={data} barCategoryGap={0}>
             {showGrid && <CartesianGrid vertical={false} />}
-            <XAxis dataKey="label" tickLine={false} axisLine={false} />
-            <YAxis type="number" tickLine={false} axisLine={false} allowDecimals={false} />
+            <XAxis
+              dataKey="label"
+              tickLine={false}
+              axisLine={false}
+              height={xAxisLabel ? 48 : undefined}
+              label={xAxisTitle}
+            />
+            <YAxis
+              type="number"
+              tickLine={false}
+              axisLine={false}
+              allowDecimals={false}
+              unit={yUnit}
+              width={yAxisLabel ? 72 : undefined}
+              label={yAxisTitle}
+            />
             {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
             <Bar
               dataKey={dataKey}

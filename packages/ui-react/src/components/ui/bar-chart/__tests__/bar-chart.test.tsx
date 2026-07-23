@@ -98,6 +98,21 @@ describe('BarChart', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
+  // Axis titles/units forward to recharts' XAxis/YAxis `label`/`unit`; happy-dom
+  // doesn't paint the SVG, so this only guards the prop path (the rendered titles
+  // are covered by the `AxisLabels` VR story) — for both orientations.
+  it('renders with axis titles + units in both orientations', () => {
+    const axis = { xAxisLabel: 'Month', yAxisLabel: 'Sessions', yUnit: 'k', xUnit: '$' };
+    const vertical = renderChart(axis);
+    expect(
+      vertical.container.querySelector('[data-slot="chart"]')
+    ).toBeInTheDocument();
+    const horizontal = renderChart({ ...axis, orientation: 'horizontal' });
+    expect(
+      horizontal.container.querySelector('[data-slot="chart"]')
+    ).toBeInTheDocument();
+  });
+
   it('forwards a ref to the root element', () => {
     const ref = React.createRef<HTMLDivElement>();
     renderChart({ ref });

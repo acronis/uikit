@@ -80,6 +80,18 @@ describe('AreaChart', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
+  // Axis titles/unit forward to recharts' XAxis/YAxis `label`/`unit`; happy-dom
+  // doesn't paint the SVG, so this only guards the prop path (the rendered titles
+  // are covered by the `AxisLabels` VR story).
+  it('renders with axis titles + a Y unit', () => {
+    const { container } = renderChart({
+      xAxisLabel: 'Month',
+      yAxisLabel: 'Sessions',
+      yUnit: 'k',
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
   it('forwards a ref to the root element', () => {
     const ref = React.createRef<HTMLDivElement>();
     renderChart({ ref });

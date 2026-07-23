@@ -47,6 +47,26 @@ contract:
         line, a fixed `value` wins; otherwise the mean of one series
         (`average: '<key>'`) or of every plotted series (`average: true`). An
         optional `label` captions each.
+    - name: xAxisLabel
+      type: string
+      required: false
+      description: Title rendered beneath the horizontal (X) axis.
+    - name: yAxisLabel
+      type: string
+      required: false
+      description: Title rendered beside the vertical (Y) axis (rotated).
+    - name: xUnit
+      type: string
+      required: false
+      description: >-
+        Unit suffix appended to X-axis tick values (recharts `unit`); applies
+        when the X axis is numeric (horizontal orientation).
+    - name: yUnit
+      type: string
+      required: false
+      description: >-
+        Unit suffix appended to Y-axis tick values (recharts `unit`); applies
+        when the Y axis is numeric (vertical orientation).
     - name: barRadius
       type: number
       required: false

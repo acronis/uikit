@@ -41,6 +41,20 @@ contract:
       type: string
       required: true
       description: Field for the cone's upper bound.
+    - name: xAxisLabel
+      type: string
+      required: false
+      description: Title rendered beneath the horizontal (X) axis.
+    - name: yAxisLabel
+      type: string
+      required: false
+      description: Title rendered beside the vertical (Y) axis (rotated).
+    - name: yUnit
+      type: string
+      required: false
+      description: >-
+        Unit suffix appended to Y-axis tick values (recharts `unit`); the X axis
+        is categorical.
     - name: strokeWidth
       type: number
       required: false

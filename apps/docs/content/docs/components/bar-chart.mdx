@@ -105,6 +105,23 @@ of every plotted series when `true`). An optional `label` captions it. Pass an
   referenceLine={[{ value: 300, label: 'Target' }, { average: true, label: 'Average' }]} />
 ```
 
+Add axis titles and a unit suffix with `xAxisLabel` / `yAxisLabel` / `yUnit`
+(`xUnit` also applies in `orientation="horizontal"`, where the x-axis is
+numeric). The titles inherit the theme token, so they stay legible in both
+modes:
+
+```tsx
+<BarChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  xAxisLabel="Month"
+  yAxisLabel="Sessions"
+  yUnit="k"
+/>
+```
+
 ## API Reference
 
 <AutoTypeTable

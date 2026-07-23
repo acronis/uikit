@@ -83,6 +83,10 @@ const meta = {
       options: ['circle', 'square', 'triangle', 'diamond', 'star', 'cross', 'wye'],
     },
     zKey: { control: 'text' },
+    xAxisLabel: { control: 'text' },
+    yAxisLabel: { control: 'text' },
+    xUnit: { control: 'text' },
+    yUnit: { control: 'text' },
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
@@ -103,6 +107,18 @@ export const Bubble: Story = {
 // Triangle markers instead of the default circles.
 export const TriangleMarkers: Story = {
   args: { shape: 'triangle' },
+};
+
+// Axis titles + unit suffixes on both numeric axes, forwarded to recharts'
+// native `label` / `unit`. The title inherits the theme token via the
+// container's `.recharts-label` fill selector.
+export const AxisLabels: Story = {
+  args: {
+    xAxisLabel: 'Spend',
+    yAxisLabel: 'Conversions',
+    xUnit: '$',
+    yUnit: '%',
+  },
 };
 
 // All chrome toggled off — the baseline that would catch a toggle silently

@@ -109,6 +109,14 @@ export interface BarChartProps
    * series `average`. Pass a single object or an array to draw several at once.
    */
   referenceLine?: BarChartReferenceLine | BarChartReferenceLine[];
+  /** Title rendered beneath the horizontal (X) axis. */
+  xAxisLabel?: string;
+  /** Title rendered beside the vertical (Y) axis (rotated). */
+  yAxisLabel?: string;
+  /** Unit suffix on X-axis tick values (recharts `unit`) — applies when the X axis is numeric (`orientation="horizontal"`). */
+  xUnit?: string;
+  /** Unit suffix on Y-axis tick values (recharts `unit`) — applies when the Y axis is numeric (`orientation="vertical"`). */
+  yUnit?: string;
   /** Corner radius applied to the growing end of each bar. */
   barRadius?: number;
   showGrid?: boolean;
@@ -125,6 +133,10 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       dataKeys,
       xKey,
       referenceLine,
+      xAxisLabel,
+      yAxisLabel,
+      xUnit,
+      yUnit,
       orientation = 'vertical',
       layout = 'grouped',
       barRadius = 4,
@@ -145,6 +157,21 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         : [referenceLine]
       : [];
 
+    // Axis titles: the X title sits below the ticks; the Y title is rotated in
+    // the left gutter. Passed to recharts' native `label` (themed via the
+    // `.recharts-label` fill selector on the container).
+    const xAxisTitle = xAxisLabel
+      ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
+      : undefined;
+    const yAxisTitle = yAxisLabel
+      ? {
+          value: yAxisLabel,
+          angle: -90,
+          position: 'insideLeft' as const,
+          style: { textAnchor: 'middle' as const },
+        }
+      : undefined;
+
     // Round only the growing end: top for vertical bars, right for horizontal.
     const endRadius: [number, number, number, number] =
       orientation === 'horizontal'
@@ -159,7 +186,10 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         className={cn(barChartVariants({ orientation, layout }), className)}
         {...props}
       >
-        <ChartContainer config={config} className="size-full">
+        <ChartContainer
+          config={config}
+          className="size-full [&_.recharts-label]:fill-foreground"
+        >
           <RechartsBarChart data={data as readonly unknown[]} layout={rechartsLayout}>
             {showGrid && (
               <CartesianGrid
@@ -169,13 +199,21 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
             )}
             {orientation === 'horizontal' ? (
               <>
-                <XAxis type="number" tickLine={false} axisLine={false} />
+                <XAxis
+                  type="number"
+                  tickLine={false}
+                  axisLine={false}
+                  unit={xUnit}
+                  height={xAxisLabel ? 48 : undefined}
+                  label={xAxisTitle}
+                />
                 <YAxis
                   dataKey={xKey}
                   type="category"
                   tickLine={false}
                   axisLine={false}
-                  width={80}
+                  width={yAxisLabel ? 96 : 80}
+                  label={yAxisTitle}
                 />
               </>
             ) : (
@@ -185,8 +223,17 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   type="category"
                   tickLine={false}
                   axisLine={false}
+                  height={xAxisLabel ? 48 : undefined}
+                  label={xAxisTitle}
                 />
-                <YAxis type="number" tickLine={false} axisLine={false} />
+                <YAxis
+                  type="number"
+                  tickLine={false}
+                  axisLine={false}
+                  unit={yUnit}
+                  width={yAxisLabel ? 72 : undefined}
+                  label={yAxisTitle}
+                />
               </>
             )}
             {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}

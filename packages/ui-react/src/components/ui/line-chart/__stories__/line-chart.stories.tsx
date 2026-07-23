@@ -74,6 +74,9 @@ const meta = {
     strokeWidth: { control: { type: 'number', min: 1, max: 6 } },
     showDots: { control: 'boolean' },
     connectNulls: { control: 'boolean' },
+    xAxisLabel: { control: 'text' },
+    yAxisLabel: { control: 'text' },
+    yUnit: { control: 'text' },
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
@@ -155,6 +158,17 @@ export const ComparisonWithDeltaBand: Story = {
     dataKeys: ['thisYear', 'lastYear'],
     comparisonKeys: ['lastYear'],
     deltaBands: [['thisYear', 'lastYear']],
+  },
+};
+
+// Axis titles + a Y-axis unit suffix, forwarded to recharts' native
+// `label` / `unit`. The title inherits the theme token via the container's
+// `.recharts-label` fill selector.
+export const AxisLabels: Story = {
+  args: {
+    xAxisLabel: 'Month',
+    yAxisLabel: 'Sessions',
+    yUnit: 'k',
   },
 };
 
