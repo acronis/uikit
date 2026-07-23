@@ -82,6 +82,7 @@ Scenario: Delta band between two series
   Then a dimmed area shades the gap between the two series at each point
   And the band is tinted with the current key's config color and sits behind the lines
   And points where either series is non-numeric are left un-banded
+  And the band is not surfaced as its own tooltip row or legend entry
 ```
 
 ```gherkin
