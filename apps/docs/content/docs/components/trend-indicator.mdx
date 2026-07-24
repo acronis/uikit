@@ -1,0 +1,78 @@
+---
+title: TrendIndicator
+description: A direction + sentiment change indicator, inline or as a compact badge.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { TrendIndicatorDemo } from '@/components/demos-react/trend-indicator';
+
+## Usage
+
+```tsx
+import { TrendIndicator } from '@acronis-platform/ui-react';
+```
+
+`TrendIndicator` shows **how a metric changed** versus a reference — a direction
+glyph, an already-formatted change value, and an optional comparison label. It is
+purely presentational: the consumer computes the trend and passes a ready value;
+the component never diffs numbers, rounds, or interprets domain rules.
+
+### Direction is not sentiment
+
+The key design decision: `direction` is the maths (up / down / flat), `sentiment`
+is whether that change is good (positive / negative / neutral). The kit can't
+assume up = good — revenue ↑ is positive, threats ↑ is negative, MTTR ↓ is
+positive. Always pass both.
+
+## Examples
+
+<DemoReact>
+  <TrendIndicatorDemo />
+</DemoReact>
+
+Inline, next to a metric:
+
+```tsx
+<TrendIndicator
+  direction="up"
+  sentiment="positive"
+  value="12%"
+  comparisonLabel="vs previous quarter"
+/>
+```
+
+The same arrow, opposite sentiment (an increase that's bad):
+
+```tsx
+<TrendIndicator direction="up" sentiment="negative" value="35%" comparisonLabel="threats" />
+```
+
+A qualitative change (no number):
+
+```tsx
+<TrendIndicator direction="up" sentiment="positive" value="Improving" />
+```
+
+A compact tinted badge for tables and dense headers:
+
+```tsx
+<TrendIndicator variant="badge" direction="down" sentiment="negative" value="8%" />
+```
+
+Provide a full accessible sentence with `ariaLabel` (the glyph is decorative):
+
+```tsx
+<TrendIndicator
+  direction="up"
+  sentiment="positive"
+  value="12%"
+  ariaLabel="Revenue increased 12% compared with the previous quarter"
+/>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/trend-indicator/trend-indicator.tsx"
+  name="TrendIndicatorProps"
+/>

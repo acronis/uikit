@@ -1,0 +1,87 @@
+spec_version: '1.0'
+component: TrendIndicator
+
+# `sentiment`, `size` and `variant` are the cva axes (their enums match the cva
+# keys in the ui-react source). `direction` selects the glyph (not a style axis).
+# The kit never computes the trend — `value` arrives already formatted.
+contract:
+  properties:
+    - name: direction
+      type: "'up' | 'down' | 'flat'"
+      required: true
+      description: >-
+        What changed mathematically — selects the direction glyph (up/down trend
+        arrows, or a horizontal arrow for flat).
+    - name: sentiment
+      type: "'positive' | 'negative' | 'neutral'"
+      required: false
+      default: neutral
+      description: >-
+        Whether the change is good, bad, or neutral — drives the color. Separate
+        from `direction`, because up/down is not inherently good/bad.
+    - name: value
+      type: ReactNode
+      required: false
+      description: >-
+        Already-formatted change to display — numeric (`12%`, `3.5 h`) or
+        qualitative (`Improving`, `4.2 h → 2.8 h`). Never computed by the kit.
+    - name: comparisonLabel
+      type: ReactNode
+      required: false
+      description: Secondary comparison caption, e.g. "vs previous quarter", "YoY".
+    - name: tooltip
+      type: ReactNode
+      required: false
+      description: Contextual hint shown on hover/focus (Base UI Tooltip).
+    - name: showIcon
+      type: boolean
+      required: false
+      default: 'true'
+      description: Show the leading direction glyph (color alone isn't enough).
+    - name: ariaLabel
+      type: string
+      required: false
+      description: >-
+        Full accessible sentence describing the trend, applied via `role="img"`.
+        Without it, assistive tech reads the visible value / comparison text and
+        the glyph stays decorative.
+    - name: size
+      type: "'small' | 'medium'"
+      required: false
+      default: medium
+      description: Text and icon size. `small` for tables / next to a Metric.
+    - name: variant
+      type: "'inline' | 'badge'"
+      required: false
+      default: inline
+      description: >-
+        `inline` = glyph + text; `badge` = the same in a compact status-tinted
+        pill for tables and dense headers.
+
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: TrendIndicator
+    status: implemented
+    import: "import { TrendIndicator } from '@acronis-platform/ui-react'"
+    example: |
+      <TrendIndicator
+        direction="up"
+        sentiment="positive"
+        value="12%"
+        comparisonLabel="vs previous quarter"
+      />
+  vue:
+    component: AvTrendIndicator
+    status: planned
+    import: "import { AvTrendIndicator } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvTrendIndicator direction="up" sentiment="positive" value="12%" />
+  web-components:
+    element: ui-trend-indicator
+    status: planned
+    import: "import '@acronis-platform/ui-wc/trend-indicator'"
+    example: |
+      <ui-trend-indicator direction="up" sentiment="positive" value="12%"></ui-trend-indicator>
