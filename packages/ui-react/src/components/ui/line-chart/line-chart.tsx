@@ -231,7 +231,22 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
             />
             {showTooltip &&
               (tooltipContent ? (
-                <ChartTooltip content={tooltipContent} />
+                <ChartTooltip
+                  // Strip the synthetic delta bands before the caller's tooltip
+                  // sees them — the `__band_*` series feed the Areas, not the
+                  // tooltip (a no-op when no bands are configured).
+                  content={(tp) => {
+                    const merged = {
+                      ...tp,
+                      payload: dropBandSeries(tp.payload),
+                    };
+                    return typeof tooltipContent === 'function'
+                      ? tooltipContent(merged as typeof tp)
+                      : React.isValidElement(tooltipContent)
+                        ? React.cloneElement(tooltipContent, merged)
+                        : null;
+                  }}
+                />
               ) : bands.length > 0 ? (
                 <ChartTooltip
                   content={(props) => (

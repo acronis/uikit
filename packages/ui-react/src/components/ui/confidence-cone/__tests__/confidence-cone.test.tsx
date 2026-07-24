@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { ConfidenceCone } from '../confidence-cone';
+import { ConfidenceCone, dropConeBand } from '../confidence-cone';
 import { ChartTooltipContent, type ChartConfig } from '../../chart';
 
 const data = [
@@ -94,6 +94,28 @@ describe('ConfidenceCone', () => {
       ],
     });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  // The default tooltip and any caller-supplied `tooltipContent` both route
+  // their payload through dropConeBand to hide the synthetic `__cone` range
+  // series. recharts won't paint that content in happy-dom, so the filter is
+  // guarded here directly — an inverted predicate would otherwise leak an
+  // unlabeled `__cone` row into a consumer's custom tooltip.
+  describe('dropConeBand', () => {
+    const real = [{ dataKey: 'actual' }, { dataKey: 'forecast' }];
+
+    it('drops the synthetic cone band while keeping real series in order', () => {
+      const payload = [real[0], { dataKey: '__cone' }, real[1]];
+      expect(dropConeBand(payload)).toEqual(real);
+    });
+
+    it('keeps every series when none is the cone band', () => {
+      expect(dropConeBand(real)).toEqual(real);
+    });
+
+    it('returns undefined for an undefined payload', () => {
+      expect(dropConeBand(undefined)).toBeUndefined();
+    });
   });
 
   it('forwards a ref to the root element', () => {

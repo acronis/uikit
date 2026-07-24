@@ -1,6 +1,9 @@
+import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
+  Area,
   CartesianGrid,
+  ComposedChart,
   Line,
   LineChart as RechartsLineChart,
   XAxis,
@@ -12,6 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
+  type ChartTooltipContentProps,
 } from '../../chart';
 
 // Series colors are supplied by the caller via `config`. There is no chart token
@@ -222,30 +226,98 @@ export const TooltipOpen: Story = {
   ),
 };
 
-// Customize the tooltip through the component's `tooltipContent` prop — pass a
-// configured `ChartTooltipContent` from this library (no recharts needed).
+// A configured `ChartTooltipContent` (from this library, no recharts needed):
 // `labelFormatter` adds an extra header field; `formatter` renders each row
-// (swatch + config label + unit-suffixed value). The tooltip is hover-only.
+// (swatch + config label + unit-suffixed value). Shared by the two stories below.
+const customTooltipContent = (
+  <ChartTooltipContent
+    labelFormatter={(label) => `${label} · fiscal Q3`}
+    formatter={(value, name, item) => (
+      <div className="flex w-full items-center gap-2">
+        <span
+          className="size-2.5 shrink-0 rounded-[2px]"
+          style={{ backgroundColor: item.color }}
+        />
+        <span className="text-muted-foreground">
+          {trendConfig[name as keyof typeof trendConfig]?.label ??
+            config[name as keyof typeof config]?.label ??
+            name}
+        </span>
+        <span className="ms-auto font-mono font-medium tabular-nums">
+          {Number(value).toLocaleString()}k
+        </span>
+      </div>
+    )}
+  />
+);
+
+// Customize the tooltip through the component's `tooltipContent` prop — this is
+// the usage example (autodocs). The tooltip is hover-only, so it isn't painted
+// here; `CustomTooltipOpen` below is the visual-regression case.
 export const CustomTooltip: Story = {
-  args: {
-    tooltipContent: (
-      <ChartTooltipContent
-        labelFormatter={(label) => `${label} · fiscal Q3`}
-        formatter={(value, name, item) => (
-          <div className="flex w-full items-center gap-2">
-            <span
-              className="size-2.5 shrink-0 rounded-[2px]"
-              style={{ backgroundColor: item.color }}
-            />
-            <span className="text-muted-foreground">
-              {config[name as keyof typeof config]?.label ?? name}
-            </span>
-            <span className="ms-auto font-mono font-medium tabular-nums">
-              {Number(value).toLocaleString()}k
-            </span>
-          </div>
-        )}
-      />
-    ),
+  args: { tooltipContent: customTooltipContent },
+};
+
+// The same custom tooltip, forced open for the VR baseline — built on the
+// delta-band composition so the baseline proves the synthetic `__band_*` range
+// series is filtered out: the tooltip shows only the real thisYear/lastYear
+// rows, never a stray `__band_0` row.
+export const CustomTooltipOpen: Story = {
+  render: () => {
+    const bandData = trendData.map((d) => ({
+      ...d,
+      __band_0: [
+        Math.min(d.thisYear, d.lastYear),
+        Math.max(d.thisYear, d.lastYear),
+      ],
+    }));
+    return (
+      <ChartContainer config={trendConfig} className="h-[320px] w-[560px]">
+        <ComposedChart data={bandData}>
+          <CartesianGrid vertical={false} />
+          <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+          <ChartTooltip
+            defaultIndex={2}
+            active
+            content={(tp) =>
+              React.cloneElement(customTooltipContent, {
+                ...tp,
+                payload: tp.payload?.filter(
+                  (item) => !String(item.dataKey).startsWith('__band_')
+                ),
+              } as ChartTooltipContentProps)
+            }
+          />
+          <Area
+            dataKey="__band_0"
+            type="monotone"
+            stroke="none"
+            fill="var(--color-thisYear)"
+            fillOpacity={0.12}
+            dot={false}
+            activeDot={false}
+            isAnimationActive={false}
+          />
+          <Line
+            type="monotone"
+            dataKey="thisYear"
+            stroke="var(--color-thisYear)"
+            strokeWidth={2}
+            dot={{ r: 3 }}
+            isAnimationActive={false}
+          />
+          <Line
+            type="monotone"
+            dataKey="lastYear"
+            stroke="var(--color-lastYear)"
+            strokeWidth={2}
+            strokeDasharray="5 5"
+            strokeOpacity={0.5}
+            dot={false}
+            isAnimationActive={false}
+          />
+        </ComposedChart>
+      </ChartContainer>
+    );
   },
 };

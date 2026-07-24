@@ -117,30 +117,55 @@ export const TooltipOpen: Story = {
   ),
 };
 
-// Customize the tooltip through the component's `tooltipContent` prop — pass a
-// configured `ChartTooltipContent` from this library (no recharts needed).
-// Hover-only.
+// A configured `ChartTooltipContent` (from this library, no recharts needed).
+// Shared by the two stories below.
+const customTooltipContent = (
+  <ChartTooltipContent
+    nameKey="stage"
+    hideLabel
+    formatter={(value, name, item) => (
+      <div className="flex w-full items-center gap-2">
+        <span
+          className="size-2.5 shrink-0 rounded-[2px]"
+          style={{ backgroundColor: item.color }}
+        />
+        <span className="text-muted-foreground">
+          {config[name as keyof typeof config]?.label ?? name}
+        </span>
+        <span className="ms-auto font-mono font-medium tabular-nums">
+          {Number(value).toLocaleString()}
+        </span>
+      </div>
+    )}
+  />
+);
+
+// Customize the tooltip through the component's `tooltipContent` prop — this is
+// the usage example (autodocs). The tooltip is hover-only, so it isn't painted
+// here; `CustomTooltipOpen` below is the visual-regression case.
 export const CustomTooltip: Story = {
-  args: {
-    tooltipContent: (
-      <ChartTooltipContent
-        nameKey="stage"
-        hideLabel
-        formatter={(value, name, item) => (
-          <div className="flex w-full items-center gap-2">
-            <span
-              className="size-2.5 shrink-0 rounded-[2px]"
-              style={{ backgroundColor: item.color }}
-            />
-            <span className="text-muted-foreground">
-              {config[name as keyof typeof config]?.label ?? name}
-            </span>
-            <span className="ms-auto font-mono font-medium tabular-nums">
-              {Number(value).toLocaleString()}
-            </span>
-          </div>
-        )}
-      />
-    ),
-  },
+  args: { tooltipContent: customTooltipContent },
+};
+
+// The same custom tooltip, forced open for the VR baseline: like `TooltipOpen`,
+// this renders the raw composition (recharts can't open a hover tooltip
+// statically otherwise) with the shared custom content wired in.
+export const CustomTooltipOpen: Story = {
+  render: () => (
+    <ChartContainer config={config} className="h-[380px] w-[460px]">
+      <RechartsFunnelChart margin={{ top: 8, right: 96, bottom: 8, left: 24 }}>
+        <ChartTooltip defaultIndex={1} active content={customTooltipContent} />
+        <Funnel
+          dataKey="value"
+          nameKey="stage"
+          data={data.map((d) => ({ ...d, fill: `var(--color-${d.stage})` }))}
+          isAnimationActive={false}
+        >
+          {data.map((entry) => (
+            <Cell key={entry.stage} fill={`var(--color-${entry.stage})`} />
+          ))}
+        </Funnel>
+      </RechartsFunnelChart>
+    </ChartContainer>
+  ),
 };

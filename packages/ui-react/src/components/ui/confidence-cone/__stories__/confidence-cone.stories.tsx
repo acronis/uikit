@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   Area,
@@ -98,25 +99,96 @@ export const AxisLabels: Story = {
   },
 };
 
-// Customize the tooltip through the component's `tooltipContent` prop — pass a
-// configured `ChartTooltipContent` from this library (no recharts needed). The
-// synthetic cone band is already excluded from the payload. The tooltip is
-// hover-only.
+// A configured `ChartTooltipContent` (from this library, no recharts needed).
+// Shared by the two stories below. The synthetic cone band is filtered out of
+// the payload by the component before this content sees it.
+const customTooltipContent = (
+  <ChartTooltipContent
+    labelFormatter={(label) => `${label} · projection`}
+    formatter={(value, name) => (
+      <div className="flex w-full justify-between gap-3">
+        <span className="capitalize text-muted-foreground">{name}</span>
+        <span className="font-mono font-medium tabular-nums">
+          {Number(value).toLocaleString()}
+        </span>
+      </div>
+    )}
+  />
+);
+
+// Customize the tooltip through the component's `tooltipContent` prop — this is
+// the usage example (autodocs). The tooltip is hover-only, so it isn't painted
+// here; `CustomTooltipOpen` below is the visual-regression case.
 export const CustomTooltip: Story = {
-  args: {
-    tooltipContent: (
-      <ChartTooltipContent
-        labelFormatter={(label) => `${label} · projection`}
-        formatter={(value, name) => (
-          <div className="flex w-full justify-between gap-3">
-            <span className="capitalize text-muted-foreground">{name}</span>
-            <span className="font-mono font-medium tabular-nums">
-              {Number(value).toLocaleString()}
-            </span>
-          </div>
-        )}
-      />
-    ),
+  args: { tooltipContent: customTooltipContent },
+};
+
+// The same custom tooltip, forced open for the VR baseline. Like `TooltipOpen`,
+// this renders the raw composition with the synthetic `__cone` band filtered out
+// of the payload — the baseline proves the custom tooltip shows only the real
+// actual/forecast rows, never a stray `__cone: [lower, upper]` row.
+export const CustomTooltipOpen: Story = {
+  render: () => {
+    const coneData = data.map((d) => ({
+      ...d,
+      __cone:
+        typeof d.lower === 'number' && typeof d.upper === 'number'
+          ? [d.lower, d.upper]
+          : undefined,
+    }));
+    return (
+      <ChartContainer config={config} className="h-[320px] w-[560px]">
+        <ComposedChart data={coneData}>
+          <CartesianGrid vertical={false} />
+          <XAxis dataKey="month" tickLine={false} axisLine={false} />
+          <YAxis tickLine={false} axisLine={false} />
+          <ChartTooltip
+            defaultIndex={7}
+            active
+            content={(tp) =>
+              React.cloneElement(customTooltipContent, {
+                ...tp,
+                payload: tp.payload?.filter(
+                  (item) => item.dataKey !== '__cone'
+                ),
+              } as ChartTooltipContentProps)
+            }
+          />
+          <Area
+            dataKey="__cone"
+            type="monotone"
+            stroke="none"
+            fill="var(--color-forecast)"
+            fillOpacity={0.15}
+            dot={false}
+            activeDot={false}
+            isAnimationActive={false}
+          />
+          <Area
+            dataKey="actual"
+            type="monotone"
+            stroke="var(--color-actual)"
+            strokeWidth={2}
+            fill="var(--color-actual)"
+            fillOpacity={0.15}
+            dot={false}
+            activeDot={false}
+            connectNulls
+            isAnimationActive={false}
+          />
+          <Line
+            dataKey="forecast"
+            type="monotone"
+            stroke="var(--color-forecast)"
+            strokeWidth={2}
+            strokeDasharray="5 5"
+            dot={false}
+            connectNulls
+            isAnimationActive={false}
+          />
+        </ComposedChart>
+      </ChartContainer>
+    );
   },
 };
 
