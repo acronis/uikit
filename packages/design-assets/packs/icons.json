@@ -113,7 +113,10 @@
               "apple--24",
               "apple--32",
               "apple-ab--24",
-              "apple-ab--32"
+              "apple-ab--32",
+              "mac",
+              "macOS",
+              "iOS"
             ]
           }
         },
@@ -141,6 +144,19 @@
             "category": ["Solid"],
             "tags": ["logo", "storage", "cloud", "brand"],
             "legacyNames": ["box--16", "box--24"]
+          }
+        },
+        "CircleSmallSolid": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/CircleSmallSolid.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Component"],
+            "tags": ["carousel"],
+            "legacyNames": []
           }
         },
         "Cis": {
@@ -193,6 +209,19 @@
             "category": ["Solid"],
             "tags": ["logo", "brand"],
             "legacyNames": ["communigate--32"]
+          }
+        },
+        "Commvault": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/Commvault.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Solid"],
+            "tags": ["logo", "brand", "backup"],
+            "legacyNames": []
           }
         },
         "ComplianceE8": {
@@ -1014,6 +1043,19 @@
             "category": ["Solid"],
             "tags": ["logo", "nas", "brand"],
             "legacyNames": ["synology--16", "synology--32"]
+          }
+        },
+        "Veeam": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/Veeam.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Solid"],
+            "tags": ["logo", "brand", "backup"],
+            "legacyNames": []
           }
         },
         "VirusTotal": {
@@ -2006,7 +2048,11 @@
           "metadata": {
             "category": ["Documents"],
             "tags": ["runbook", "playbook", "execute"],
-            "legacyNames": ["execute-runbook--24", "execute-runbook-o--24"]
+            "legacyNames": [
+              "execute-runbook--24",
+              "execute-runbook-o--24",
+              "playbook-o--16"
+            ]
           }
         },
         "BookUser": {
@@ -2671,7 +2717,7 @@
           },
           "platforms": ["PD"],
           "metadata": {
-            "category": ["Symbols"],
+            "category": ["Component"],
             "tags": ["checkbox"],
             "legacyNames": []
           }
@@ -2874,6 +2920,19 @@
             "category": ["Shapes"],
             "tags": ["unshelve", "direction", "north"],
             "legacyNames": ["unshelve-o--16"]
+          }
+        },
+        "CircleArrowsCircle": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/CircleArrowsCircle.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Shapes"],
+            "tags": ["status"],
+            "legacyNames": []
           }
         },
         "CircleBan": {
@@ -3225,6 +3284,19 @@
               "new-group-ab--32",
               "new-group-ab-o--32"
             ]
+          }
+        },
+        "CircleReply": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/CircleReply.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Shapes"],
+            "tags": ["status", "reply"],
+            "legacyNames": []
           }
         },
         "CircleSmall": {
@@ -5299,7 +5371,11 @@
               "laptop-vm-enabled-ill--96",
               "laptop-windows-disabled-ill--96",
               "laptop-windows-enabled-ill--96",
-              "macbook-ill--72"
+              "macbook-ill--72",
+              "laptop-default-enabled-ill--96-protection-console",
+              "laptop-win-enabled-ill--96",
+              "laptop-windows-enabled--96",
+              "laptop-windows-enabled-ill--96-protection-console"
             ]
           }
         },
@@ -5981,7 +6057,7 @@
           },
           "platforms": ["PD"],
           "metadata": {
-            "category": ["Symbols"],
+            "category": ["Component"],
             "tags": ["checkbox"],
             "legacyNames": []
           }
@@ -6020,6 +6096,7 @@
               "workstation-included--24",
               "adv-backup-pack-workstation--24",
               "resource-ab--32",
+              "resource-ab--24",
               "devices-ab--32",
               "workstations--32",
               "workstation-mix--32",
@@ -6947,7 +7024,7 @@
           },
           "platforms": ["PD"],
           "metadata": {
-            "category": ["Symbols"],
+            "category": ["Component"],
             "tags": [],
             "legacyNames": []
           }
@@ -8479,7 +8556,7 @@
           },
           "platforms": ["PD"],
           "metadata": {
-            "category": ["Symbols"],
+            "category": ["Component"],
             "tags": [],
             "legacyNames": []
           }
@@ -8861,6 +8938,19 @@
         }
       },
       "assets": {
+        "CircleArrowsCircleBlue": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/CircleArrowsCircleBlue.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Multicolor"],
+            "tags": ["status", "ticket", "reopened"],
+            "legacyNames": []
+          }
+        },
         "CircleCheckGreen": {
           "values": {
             "24": {
@@ -8977,6 +9067,19 @@
           "metadata": {
             "category": ["Multicolor"],
             "tags": ["alert", "status", "notification", "play", "run"],
+            "legacyNames": []
+          }
+        },
+        "CircleReplyBlue": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/CircleReplyBlue.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Multicolor"],
+            "tags": ["status", "ticket", "response", "received"],
             "legacyNames": []
           }
         },
@@ -9099,7 +9202,11 @@
               "idle",
               "unknown"
             ],
-            "legacyNames": ["dot-unknown--16", "dot-chart-grey--16"]
+            "legacyNames": [
+              "dot-unknown--16",
+              "dot-chart-grey--16",
+              "dot-chart-neutral--16"
+            ]
           }
         },
         "DotGreen": {
@@ -9145,7 +9252,11 @@
               "error",
               "emergency"
             ],
-            "legacyNames": ["dot-chart-danger--16", "dot-danger--16"]
+            "legacyNames": [
+              "dot-chart-danger--16",
+              "dot-danger--16",
+              "dot-chart-red--16"
+            ]
           }
         },
         "DotYellow": {
@@ -9158,7 +9269,11 @@
           "metadata": {
             "category": ["Multicolor"],
             "tags": ["alert", "status", "notification", "warning"],
-            "legacyNames": ["dot-chart-warning--16", "dot-warning--16"]
+            "legacyNames": [
+              "dot-chart-warning--16",
+              "dot-warning--16",
+              "dot-chart-yellow--16"
+            ]
           }
         },
         "TriangleWarningYellow": {
