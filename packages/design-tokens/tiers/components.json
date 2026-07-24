@@ -3879,9 +3879,9 @@
           "$type": "dimension",
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{units.size.320}",
-            "default": "{units.size.320}",
-            "virtuozzo": "{units.size.320}"
+            "deep_sky_itkontoret": "{units.size.384}",
+            "default": "{units.size.384}",
+            "virtuozzo": "{units.size.384}"
           }
         }
       }
@@ -4113,18 +4113,48 @@
       }
     },
     "sidebar": {
-      "width": {
-        "$extensions": {
-          "com.figma.hiddenFromPublishing": true,
-          "com.figma.scopes": ["ALL_SCOPES"],
-          "com.figma.variableId": "VariableID:6571:21715"
+      "container": {
+        "width": {
+          "$extensions": {
+            "com.figma.hiddenFromPublishing": true,
+            "com.figma.scopes": ["WIDTH_HEIGHT"],
+            "com.figma.variableId": "VariableID:6571:21715"
+          },
+          "$type": "dimension",
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{units.size.256}",
+            "default": "{units.size.256}",
+            "virtuozzo": "{units.size.256}"
+          }
+        }
+      },
+      "header": {
+        "height": {
+          "$extensions": {
+            "com.figma.scopes": ["WIDTH_HEIGHT"],
+            "com.figma.variableId": "VariableID:7329:25221"
+          },
+          "$type": "dimension",
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{units.size.64}",
+            "default": "{units.size.64}",
+            "virtuozzo": "{units.size.64}"
+          }
         },
-        "$type": "dimension",
-        "platforms": ["PD"],
-        "values": {
-          "deep_sky_itkontoret": "{units.size.256}",
-          "default": "{units.size.256}",
-          "virtuozzo": "{units.size.256}"
+        "paddingX": {
+          "$extensions": {
+            "com.figma.scopes": ["GAP"],
+            "com.figma.variableId": "VariableID:7329:25222"
+          },
+          "$type": "dimension",
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{units.gap.16}",
+            "default": "{units.gap.16}",
+            "virtuozzo": "{units.gap.16}"
+          }
         }
       }
     }
