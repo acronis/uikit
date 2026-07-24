@@ -44,7 +44,7 @@ export default {
         "chat-global-border-width": "1px",
         "chat-container-collapsed-width": "48px",
         "chat-container-expanded-max-width": "512px",
-        "chat-container-expanded-min-width": "320px",
+        "chat-container-expanded-min-width": "384px",
         "chat-header-height": "64px",
         "chat-header-padding-x": "16px",
         "chat-menu-item-collapsed-max-width": "48px",
@@ -52,7 +52,9 @@ export default {
         "chat-menu-item-expanded-min-width": "224px",
         "chat-menu-item-height": "40px",
         "chat-menu-item-padding-x": "16px",
-        "chat-sidebar-width": "256px"
+        "chat-sidebar-container-width": "256px",
+        "chat-sidebar-header-height": "64px",
+        "chat-sidebar-header-padding-x": "16px"
       }
     },
   },

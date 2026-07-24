@@ -8,7 +8,7 @@ export default {
       "backgroundColor": {
         "backdrop-element-primary": "light-dark(rgb(255 255 255 / 0.949), rgb(48 50 54 / 0.949))",
         "backdrop-element-secondary": "light-dark(rgb(248 250 252 / 0.949), rgb(24 25 27 / 0.949))",
-        "backdrop-screen": "light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898))",
+        "backdrop-screen": "light-dark(rgb(25 27 35 / 0.898), rgb(109 114 120 / 0.898))",
         "brand-primary": "light-dark(rgb(0 105 142), rgb(12 12 14))",
         "brand-primary-active": "light-dark(rgb(0 173 247), rgb(81 157 246))",
         "brand-primary-disabled": "light-dark(rgb(194 237 255), rgb(85 89 94))",

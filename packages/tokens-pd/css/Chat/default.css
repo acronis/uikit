@@ -7,7 +7,7 @@
   --ui-chat-container-collapsed-width: 48px;
   --ui-chat-container-color: light-dark(rgb(255 255 255), rgb(31 32 34));
   --ui-chat-container-expanded-max-width: 512px;
-  --ui-chat-container-expanded-min-width: 320px;
+  --ui-chat-container-expanded-min-width: 384px;
   --ui-chat-global-border-color: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-chat-global-border-style: solid;
   --ui-chat-global-border-width: 1px;
@@ -24,7 +24,9 @@
   --ui-chat-menu-item-icon-color: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-chat-menu-item-label-color: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-chat-menu-item-padding-x: 16px;
-  --ui-chat-sidebar-width: 256px;
+  --ui-chat-sidebar-container-width: 256px;
+  --ui-chat-sidebar-header-height: 64px;
+  --ui-chat-sidebar-header-padding-x: 16px;
 }
 
 [data-theme='light'], :host([data-theme='light']) {
