@@ -36,6 +36,18 @@ import {
 // <Area> shades; kept out of the tooltip/legend (see the filters below).
 const BAND_KEY = '__cone';
 
+/**
+ * Drop the synthetic cone-band range series from a recharts tooltip/legend
+ * payload, keeping the real actual/forecast series (and their order). Applied to
+ * both the default tooltip and any caller-supplied `tooltipContent`, so the
+ * `__cone` band never surfaces regardless of which path renders.
+ */
+export function dropConeBand<T extends { dataKey?: unknown }>(
+  payload: readonly T[] | undefined
+): T[] | undefined {
+  return payload?.filter((item) => item.dataKey !== BAND_KEY);
+}
+
 export interface ConfidenceConeProps
   extends Omit<React.ComponentProps<'div'>, 'children'> {
   /**
@@ -83,9 +95,10 @@ export interface ConfidenceConeProps
   /**
    * Replace the default tooltip. Pass a configured `ChartTooltipContent`
    * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
-   * to customize the tooltip without composing recharts yourself. The default
-   * already filters the synthetic cone band; a custom tooltip should filter a
-   * `__cone` payload item too. Ignored when `showTooltip` is false.
+   * to customize the tooltip without composing recharts yourself. The synthetic
+   * cone band is filtered out of the payload before your tooltip sees it, so a
+   * `__cone` item never reaches your formatter. Ignored when `showTooltip` is
+   * false.
    */
   tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
@@ -191,7 +204,18 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
             )}
             {showTooltip &&
               (tooltipContent ? (
-                <ChartTooltip content={tooltipContent} />
+                <ChartTooltip
+                  // Strip the synthetic band before the caller's tooltip sees
+                  // it — the `__cone` series feeds the Area, not the tooltip.
+                  content={(tp) => {
+                    const merged = { ...tp, payload: dropConeBand(tp.payload) };
+                    return typeof tooltipContent === 'function'
+                      ? tooltipContent(merged as typeof tp)
+                      : React.isValidElement(tooltipContent)
+                        ? React.cloneElement(tooltipContent, merged)
+                        : null;
+                  }}
+                />
               ) : (
                 <ChartTooltip
                   content={(tp) => (
@@ -200,8 +224,8 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
                       label={tp.label}
                       // The synthetic band feeds the Area, not the tooltip.
                       payload={
-                        tp.payload?.filter(
-                          (item) => item.dataKey !== BAND_KEY
+                        dropConeBand(
+                          tp.payload
                         ) as ChartTooltipContentProps['payload']
                       }
                     />

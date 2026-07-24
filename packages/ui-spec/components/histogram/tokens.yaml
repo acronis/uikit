@@ -18,7 +18,7 @@ tokens:
     description: Tooltip surface (bg-background).
   - name: --ui-text-on-surface-primary
     affects: tooltip-content
-    description: Tooltip value text (text-foreground).
+    description: Tooltip value text and axis titles (text-foreground / fill-foreground).
   - name: --ui-text-on-surface-secondary
     affects: x-axis
     description: >-

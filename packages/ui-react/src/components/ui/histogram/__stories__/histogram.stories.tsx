@@ -92,21 +92,51 @@ export const AxisLabels: Story = {
   },
 };
 
-// Customize the tooltip through the component's `tooltipContent` prop — pass a
-// configured `ChartTooltipContent` from this library (no recharts needed).
-// The tooltip is hover-only.
+// A configured `ChartTooltipContent` (from this library, no recharts needed).
+// Shared by the two stories below.
+const customTooltipContent = (
+  <ChartTooltipContent
+    labelFormatter={(label) => `Range ${label}`}
+    formatter={(value) => (
+      <span className="font-mono font-medium tabular-nums">
+        {Number(value).toLocaleString()} samples
+      </span>
+    )}
+  />
+);
+
+// Customize the tooltip through the component's `tooltipContent` prop — this is
+// the usage example (autodocs). The tooltip is hover-only, so it isn't painted
+// here; `CustomTooltipOpen` below is the visual-regression case.
 export const CustomTooltip: Story = {
-  args: {
-    tooltipContent: (
-      <ChartTooltipContent
-        labelFormatter={(label) => `Range ${label}`}
-        formatter={(value) => (
-          <span className="font-mono font-medium tabular-nums">
-            {Number(value).toLocaleString()} samples
-          </span>
-        )}
-      />
-    ),
+  args: { tooltipContent: customTooltipContent },
+};
+
+// The same custom tooltip, forced open for the VR baseline: like `TooltipOpen`,
+// this renders the raw composition (recharts can't open a hover tooltip
+// statically otherwise) with the shared custom content wired in.
+export const CustomTooltipOpen: Story = {
+  render: () => {
+    const data = computeHistogramBins(values, 10).map((bin) => ({
+      label: bin.label,
+      count: bin.count,
+    }));
+    return (
+      <ChartContainer config={config} className="h-[320px] w-[560px]">
+        <RechartsBarChart data={data} barCategoryGap={0}>
+          <CartesianGrid vertical={false} />
+          <XAxis dataKey="label" tickLine={false} axisLine={false} />
+          <ChartTooltip defaultIndex={3} active content={customTooltipContent} />
+          <Bar
+            dataKey="count"
+            fill="var(--color-count)"
+            stroke="var(--ui-background-surface-primary)"
+            strokeWidth={1}
+            isAnimationActive={false}
+          />
+        </RechartsBarChart>
+      </ChartContainer>
+    );
   },
 };
 
