@@ -1,0 +1,49 @@
+---
+title: Loading
+description: A composite loading indicator — a spinning ring plus an optional label — for four placement contexts.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { LoadingDemo } from "@/components/demos-react/loading";
+
+## Usage
+
+```tsx
+import { Loading } from '@acronis-platform/ui-react';
+```
+
+`Loading` pairs a spinning ring with an optional label, in one of four
+placement-context `variant`s: `inline` sits flush in text flow;
+`onSurfacePrimary`/`onSurfaceSecondary` render as rounded, padded chips over a
+primary/secondary app surface; `onScreen` is a higher-contrast dark chip for
+placing over busy/photo/video surfaces. Each variant is themed by its own
+`--ui-loading-<variant>-*` tokens. It's the app-facing standalone loading
+indicator in this library — the internal `Spinner` primitive it wraps for its
+icon isn't exported for direct use.
+
+## Examples
+
+
+<DemoReact>
+  <LoadingDemo />
+</DemoReact>
+
+```tsx
+<Loading />
+<Loading variant="onSurfacePrimary" label="Fetching your data…" />
+<Loading variant="onSurfaceSecondary" />
+<Loading variant="onScreen" hasLabel={false} />
+```
+
+## Accessibility
+
+The root is `role="status"` — a polite live region. The icon is
+`aria-hidden`, so the visible label's text (or, when `hasLabel` is false, the
+root's `aria-label`) is the single accessible announcement.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/loading/loading.tsx"
+  name="LoadingProps"
+/>

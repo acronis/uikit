@@ -1,10 +1,13 @@
 spec_version: '1.0'
 component: Spinner
 name: spinner
-status: draft
+status: deprecated
 category: feedback
 description: >-
   An indeterminate loading indicator — a spinning ring in four sizes. Ported from
   the legacy shadcn-uikit `Spinner`; a CSS spinner (no primitive), colored by the
-  shared brand token via currentColor.
+  shared brand token via currentColor. As of 0.58.0, deliberately NOT exported
+  from `@acronis-platform/ui-react`'s public entry point — it is an internal
+  primitive consumed by `Loading` (icon) and `Toast` (a small inline icon). Apps
+  building a standalone loading state should use `Loading` instead.
 since: 0.15.0

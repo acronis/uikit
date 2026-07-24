@@ -1,0 +1,39 @@
+spec_version: '1.0'
+component: DialogFooterDefault
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-footer-default-color,
+      affects: root,
+      description: Root background color,
+    }
+  - {
+      name: --ui-footer-default-border-color,
+      affects: root,
+      description: Top border color,
+    }
+  - {
+      name: --ui-footer-default-border-width,
+      affects: root,
+      description: Top border width (1px),
+    }
+  - {
+      name: --ui-footer-global-height,
+      affects: root,
+      description: Fixed row height (64px),
+    }
+  - {
+      name: --ui-footer-global-gap,
+      affects: root,
+      description: Gap between the start slot and the actions / between actions,
+    }
+  - {
+      name: --ui-footer-global-padding-x,
+      affects: root,
+      description: Horizontal padding,
+    }

@@ -13,6 +13,7 @@
 @import '@acronis-platform/tokens-pd/css/ButtonMenu/default.css';
 @import '@acronis-platform/tokens-pd/css/ButtonIcon/default.css';
 @import '@acronis-platform/tokens-pd/css/CardFilter/default.css';
+@import '@acronis-platform/tokens-pd/css/Loading/default.css';
 @import '@acronis-platform/tokens-pd/css/Switch/default.css';
 @import '@acronis-platform/tokens-pd/css/Checkbox/default.css';
 @import '@acronis-platform/tokens-pd/css/Chip/default.css';
@@ -53,7 +54,8 @@
    Ported from ui-legacy's tailwind.preset; registered as a Tailwind v4 utility
    (`animate-indeterminate-progress`) keyed to Base UI's `data-[indeterminate]`. */
 @theme {
-  --animate-indeterminate-progress: indeterminate-progress 1.5s ease-in-out infinite;
+  --animate-indeterminate-progress: indeterminate-progress 1.5s ease-in-out
+    infinite;
 }
 
 /* Viewport breakpoints pinned to the design team's px ranges (sm/md unset,

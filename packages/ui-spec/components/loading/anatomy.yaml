@@ -1,0 +1,67 @@
+spec_version: '1.0'
+component: Loading
+
+schematic: |
+  root: <div role="status"> (variant container)
+  +-------------------------------------+
+  |  icon: <Spinner aria-hidden>        |
+  |  label: <span> "Data is loading…"   |
+  +-------------------------------------+
+     inline             -> flex row, no container fill, 16px icon
+     onSurfacePrimary   -> flex column chip, --ui-loading-element-container-color-primary, 32px icon
+     onSurfaceSecondary -> flex column chip, --ui-loading-element-container-color-secondary, 32px icon
+     onScreen           -> flex column chip, --ui-loading-screen-container-color, 48px icon, white content
+
+root:
+  element: div
+  role: status
+  description: >-
+    A polite live region. Carries `aria-label` equal to `label` when the label
+    is not visibly rendered (`hasLabel=false`); when visible, the label's own
+    text content is the region's accessible announcement.
+
+parts:
+  - id: icon
+    description: >-
+      The `Spinner` primitive, `aria-hidden` (decorative — the root already
+      carries the accessible name/announcement). Size and color come from the
+      `--ui-loading-<variant>-icon-*` tokens for the active variant.
+    element: div
+  - id: label
+    description: >-
+      Optional visible text (`hasLabel`). Styled from
+      `--ui-loading-<variant>-label-color`. Hidden visually (but still
+      accessible via the root's `aria-label`) when `hasLabel` is false.
+    element: span
+    optional: true
+    visible_when: hasLabel is true
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [icon, label]
+
+# Placement context is a prop (variant), not a pseudo/internal state — it fully
+# determines container styling, icon size/color, and label color together.
+states:
+  - id: inline
+    trigger: "variant === 'inline' (default)"
+    kind: prop
+    prop: variant
+    affects: [root, icon, label]
+  - id: onSurfacePrimary
+    trigger: "variant === 'onSurfacePrimary'"
+    kind: prop
+    prop: variant
+    affects: [root, icon, label]
+  - id: onSurfaceSecondary
+    trigger: "variant === 'onSurfaceSecondary'"
+    kind: prop
+    prop: variant
+    affects: [root, icon, label]
+  - id: onScreen
+    trigger: "variant === 'onScreen'"
+    kind: prop
+    prop: variant
+    affects: [root, icon, label]

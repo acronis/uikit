@@ -1,0 +1,60 @@
+---
+title: DialogFooterDefault
+description: A bottom action bar for panels, dialogs, and sheets.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { DialogFooterDefaultDemo } from "@/components/demos-react/dialog-footer-default";
+
+## Usage
+
+```tsx
+import { Button, DialogFooterDefault, Link } from '@acronis-platform/ui-react';
+```
+
+`DialogFooterDefault` lays out end-aligned actions — passed as `children`,
+typically a secondary and a primary `Button` — plus an optional start slot: a
+truncated `description`, or a `link` (a `Link` element). `description` and
+`link` are mutually exclusive; pass at most one. When neither is set, the
+actions sit flush to the end. Themed by the `--ui-footer-*` tier.
+
+## Examples
+
+
+<DemoReact>
+  <DialogFooterDefaultDemo />
+</DemoReact>
+
+```tsx
+<DialogFooterDefault>
+  <Button variant="secondary">Cancel</Button>
+  <Button>Save</Button>
+</DialogFooterDefault>
+
+<DialogFooterDefault description="Changes are saved automatically as you type.">
+  <Button variant="secondary">Cancel</Button>
+  <Button>Save</Button>
+</DialogFooterDefault>
+
+<DialogFooterDefault link={<Link href="/docs">Learn more</Link>}>
+  <Button variant="secondary">Cancel</Button>
+  <Button>Save</Button>
+</DialogFooterDefault>
+```
+
+## When to use
+
+- The bottom action row of a panel/dialog/sheet — e.g. Cancel + Save.
+- When the actions need brief accompanying context (a description) or a
+  related link (e.g. "Learn more").
+
+## When not to use
+
+- For a bulk-action/selection bar above a list or table — use `Toolbar`.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/dialog-footer-default/dialog-footer-default.tsx"
+  name="DialogFooterDefaultProps"
+/>

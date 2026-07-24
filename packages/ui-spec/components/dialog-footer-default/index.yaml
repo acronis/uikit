@@ -1,0 +1,18 @@
+spec_version: '1.0'
+component: DialogFooterDefault
+name: dialog-footer-default
+status: ready
+category: layout
+description: >-
+  A bottom action bar (panel/dialog/sheet footer) — end-aligned actions plus
+  an optional start slot: a truncated description, or a link. The Figma
+  `variant` (default / withDescription / withLink) is structural, following
+  from which slot is passed, not a separate prop.
+since: 0.58.0
+dependencies:
+  components:
+    - Button
+    - Link
+figma:
+  node: '4220-3445'
+  codeConnect: packages/ui-react/src/components/ui/dialog-footer-default/dialog-footer-default.figma.tsx

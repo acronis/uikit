@@ -16,7 +16,7 @@ indeterminate sliding bar when the length is unknown.
 
 ## When not to use
 
-- For a small inline busy indicator — use `Spinner`.
+- For a small inline busy indicator — use `Loading`.
 - For a status that isn't progress (e.g. a count) — use a different component.
 
 ## Parts

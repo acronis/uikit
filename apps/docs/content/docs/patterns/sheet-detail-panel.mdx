@@ -8,7 +8,7 @@ import { SheetDetailPanelDemo } from "@/components/demos-react/patterns/sheet-de
 
 The approved way to present "details of the selected thing" beside its list. A
 **`Sheet`** anchored to the right edge with a header (title + close), a body that
-switches by **content state** (loading → **`Spinner`**, empty/error →
+switches by **content state** (loading → **`Loading`**, empty/error →
 **`Empty`**, otherwise a key/value property list), and a footer of **`Button`**
 actions. This is the React composition of the Vue kit's feature-rich `Details`
 component — its content-state, properties, and action-bar behavior live in the
@@ -34,7 +34,7 @@ recipe, not as props baked into the `Sheet` primitive.
 - Hand-rolling a fixed side panel instead of composing `Sheet` — you lose the
   focus trap, scroll lock, ARIA, and animations.
 - Mixing states — switch the **whole** body by `contentState`; don't scatter a
-  spinner/empty inline among real content.
+  loading/empty state inline among real content.
 - More than ~2–3 primary footer actions — overflow belongs in a menu.
 - Omitting `SheetTitle` — the panel then has no accessible name.
 
@@ -52,7 +52,7 @@ by a `contentState`:
     </SheetHeader>
     <SheetBody>
       {contentState === 'loading' ? (
-        <div className="flex h-full items-center justify-center"><Spinner /></div>
+        <div className="flex h-full items-center justify-center"><Loading /></div>
       ) : contentState === 'empty' ? (
         <Empty>
           <EmptyHeader>

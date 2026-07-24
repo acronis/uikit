@@ -17,7 +17,7 @@ header, a centered illustration / message / action, and an optional footer.
 ## When not to use
 
 - A full-page or in-table empty state — use `Empty`.
-- A loading state — use `Spinner` (busy) or `Progress` (determinate).
+- A loading state — use `Loading` (busy) or `Progress` (determinate).
 
 ## Parts
 

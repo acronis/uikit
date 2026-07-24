@@ -30,7 +30,8 @@ export type MessageKey =
   | 'search'
   | 'greeting'
   | 'notifications'
-  | 'email';
+  | 'email'
+  | 'loading';
 
 export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
   en: {
@@ -40,6 +41,7 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     greeting: 'Welcome',
     notifications: 'Enable notifications',
     email: 'Email address',
+    loading: 'Loading…',
   },
   de: {
     submit: 'Absenden',
@@ -48,6 +50,7 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     greeting: 'Willkommen',
     notifications: 'Benachrichtigungen aktivieren',
     email: 'E-Mail-Adresse',
+    loading: 'Wird geladen…',
   },
   fr: {
     submit: 'Envoyer',
@@ -56,6 +59,7 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     greeting: 'Bienvenue',
     notifications: 'Activer les notifications',
     email: 'Adresse e-mail',
+    loading: 'Chargement…',
   },
   ja: {
     submit: '送信',
@@ -64,6 +68,7 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     greeting: 'ようこそ',
     notifications: '通知を有効にする',
     email: 'メールアドレス',
+    loading: '読み込み中…',
   },
   ar: {
     submit: 'إرسال',
@@ -72,6 +77,7 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     greeting: 'مرحبًا',
     notifications: 'تفعيل الإشعارات',
     email: 'عنوان البريد الإلكتروني',
+    loading: 'جارٍ التحميل…',
   },
   he: {
     submit: 'שליחה',
@@ -80,6 +86,7 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     greeting: 'ברוך הבא',
     notifications: 'הפעלת התראות',
     email: 'כתובת אימייל',
+    loading: 'טוען…',
   },
 };
 

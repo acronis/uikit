@@ -11,6 +11,7 @@ import {
   EmptyDescription,
   EmptyHeader,
   EmptyTitle,
+  Loading,
   Sheet,
   SheetBody,
   SheetClose,
@@ -19,7 +20,6 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  Spinner,
 } from '@acronis-platform/ui-react';
 
 type ContentState = 'content' | 'loading' | 'empty';
@@ -63,7 +63,7 @@ export function SheetDetailPanelDemo() {
           <SheetBody>
             {state === 'loading' ? (
               <div className="flex h-40 items-center justify-center">
-                <Spinner />
+                <Loading />
               </div>
             ) : state === 'empty' ? (
               <Empty>

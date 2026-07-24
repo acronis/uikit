@@ -1,0 +1,64 @@
+spec_version: '1.0'
+component: DialogFooterDefault
+
+contract:
+  properties:
+    - name: description
+      type: string
+      required: false
+      description: >-
+        Truncated description text next to the actions. Mutually exclusive
+        with `link` — set at most one.
+    - name: link
+      type: ReactNode
+      required: false
+      description: >-
+        A `Link` (or similar) element next to the actions. Mutually
+        exclusive with `description` — set at most one.
+  events: []
+  methods: []
+
+  content:
+    - name: default
+      description: >-
+        End-aligned actions — typically a secondary and a primary `Button`.
+        DialogFooterDefault imposes no button count or order.
+
+adapters:
+  react:
+    component: DialogFooterDefault
+    status: implemented
+    import: "import { DialogFooterDefault } from '@acronis-platform/ui-react'"
+    example: |
+      <DialogFooterDefault>
+        <Button variant="secondary">Cancel</Button>
+        <Button>Save</Button>
+      </DialogFooterDefault>
+
+      <DialogFooterDefault description="Changes are saved automatically as you type.">
+        <Button variant="secondary">Cancel</Button>
+        <Button>Save</Button>
+      </DialogFooterDefault>
+
+      <DialogFooterDefault link={<Link href="/docs">Learn more</Link>}>
+        <Button variant="secondary">Cancel</Button>
+        <Button>Save</Button>
+      </DialogFooterDefault>
+  vue:
+    component: AvDialogFooterDefault
+    status: planned
+    import: "import { AvDialogFooterDefault } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvDialogFooterDefault description="Changes are saved automatically as you type.">
+        <AvButton variant="secondary">Cancel</AvButton>
+        <AvButton>Save</AvButton>
+      </AvDialogFooterDefault>
+  web-components:
+    element: ui-dialog-footer-default
+    status: planned
+    import: "import '@acronis-platform/ui-wc/dialog-footer-default'"
+    example: |
+      <ui-dialog-footer-default description="Changes are saved automatically as you type.">
+        <ui-button variant="secondary">Cancel</ui-button>
+        <ui-button>Save</ui-button>
+      </ui-dialog-footer-default>

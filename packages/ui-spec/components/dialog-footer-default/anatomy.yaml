@@ -1,0 +1,56 @@
+spec_version: '1.0'
+component: DialogFooterDefault
+
+schematic: |
+  root: <div> (flex row, 64px tall, top border)
+  +---------------------------------------------------------------+
+  |  [description or link]                          actions       |
+  |  (flex-1, truncates)          |  Button(s), typically 2        |
+  +---------------------------------------------------------------+
+     description -> --ui-footer-* container only; text color is the shared
+                     `text-foreground` (--ui-text-on-surface-primary)
+     link        -> holds a `Link` (or similar) element; not truncated
+     actions     -> end-aligned; root falls back to justify-end when neither
+                    description nor link is given
+
+root:
+  element: div
+  description: >-
+    Flex row, fixed 64px height, top border, horizontal padding — themed by
+    the `--ui-footer-*` tier. Falls back to `justify-end` when neither
+    `description` nor `link` is passed, so actions stay flush to the end.
+
+parts:
+  - id: description
+    description: >-
+      Truncated (single-line, ellipsis) text next to the actions. Uses the
+      shared `text-foreground` color, not a Footer-specific token.
+    element: p
+    optional: true
+    visible_when: the `description` prop is set
+  - id: link
+    description: >-
+      Holds a consumer-supplied `Link` (or similar) element next to the
+      actions. Not truncated — the Figma design fixes it to a 32px row height
+      instead.
+    element: div
+    optional: true
+    visible_when: the `link` prop is set
+  - id: actions
+    description: >-
+      End-aligned action content (`children`) — typically a secondary and a
+      primary `Button`. DialogFooterDefault imposes no button count or order;
+      it only lays the row out.
+    element: div
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [description, link, actions]
+
+# `description` and `link` are structural — which slot is passed, not a
+# `variant` prop — mirroring Breadcrumb's "current page" (a different part,
+# not a duplicated state prop). DialogFooterDefault has no interaction states
+# of its own; any interactivity lives on the composed Button/Link children.
+states: []

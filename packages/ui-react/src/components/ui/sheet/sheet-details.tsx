@@ -12,7 +12,7 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from '../empty';
-import { Spinner } from '../spinner';
+import { Loading } from '../loading';
 import {
   Sheet,
   SheetBody,
@@ -28,7 +28,7 @@ import {
 // `SheetDetails` is the preset for the `sheet-detail-panel` usage pattern — the
 // "easy path that IS the pattern". It bakes a right-anchored Sheet's header
 // (title + close), a body that switches by `contentState`
-// (loading → Spinner, empty/error → Empty, else a key/value property list or
+// (loading → Loading, empty/error → Empty, else a key/value property list or
 // custom children), and an optional footer of actions — so consumers don't
 // re-assemble (or hand-roll) the recipe. For anything outside the recipe, compose
 // the `Sheet*` parts directly. (React composition of the Vue kit's `Details`.)
@@ -92,7 +92,7 @@ function SheetDetailsBody({
   if (contentState === 'loading') {
     return (
       <div className="flex h-40 items-center justify-center">
-        <Spinner />
+        <Loading />
       </div>
     );
   }

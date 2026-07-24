@@ -15,19 +15,20 @@ adapters:
   react:
     component: Spinner
     status: implemented
-    import: "import { Spinner } from '@acronis-platform/ui-react'"
+    import: "Not exported from '@acronis-platform/ui-react' — internal only, used by `Loading`/`Toast`."
     example: |
-      <Spinner />
+      // Internal usage only (packages/ui-react/src/components/ui/loading/loading.tsx,
+      // .../toast/toast.tsx) — not importable by app code:
       <Spinner size="lg" className="text-muted-foreground" />
   vue:
     component: AvSpinner
     status: planned
-    import: "import { AvSpinner } from '@acronis-platform/ui-vue'"
+    import: 'Not planned for public export — see AvLoading.'
     example: |
-      <AvSpinner size="lg" />
+      // Internal only; apps should use AvLoading.
   web-components:
     element: ui-spinner
     status: planned
-    import: "import '@acronis-platform/ui-wc/spinner'"
+    import: 'Not planned for public export — see ui-loading.'
     example: |
-      <ui-spinner size="lg"></ui-spinner>
+      // Internal only; apps should use ui-loading.

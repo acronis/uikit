@@ -1,0 +1,89 @@
+spec_version: '1.0'
+component: Loading
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-loading-inline-container-gap,
+      affects: root,
+      description: Gap between icon and label — inline variant,
+    }
+  - {
+      name: --ui-loading-inline-icon-color,
+      affects: icon,
+      description: Spinner ring color — inline variant,
+    }
+  - {
+      name: --ui-loading-inline-label-color,
+      affects: label,
+      description: Label text color — inline variant,
+    }
+  - {
+      name: --ui-loading-element-container-color-primary,
+      affects: root,
+      description: Chip background — onSurfacePrimary variant,
+    }
+  - {
+      name: --ui-loading-element-container-color-secondary,
+      affects: root,
+      description: Chip background — onSurfaceSecondary variant,
+    }
+  - {
+      name: --ui-loading-element-container-gap,
+      affects: root,
+      description: Gap between icon and label — onSurfacePrimary/onSurfaceSecondary variants,
+    }
+  - {
+      name: --ui-loading-element-container-padding-x,
+      affects: root,
+      description: Chip horizontal padding — onSurfacePrimary/onSurfaceSecondary variants,
+    }
+  - {
+      name: --ui-loading-element-container-padding-y,
+      affects: root,
+      description: Chip vertical padding — onSurfacePrimary/onSurfaceSecondary variants,
+    }
+  - {
+      name: --ui-loading-element-icon-color,
+      affects: icon,
+      description: Spinner ring color — onSurfacePrimary/onSurfaceSecondary variants,
+    }
+  - {
+      name: --ui-loading-element-label-color,
+      affects: label,
+      description: Label text color — onSurfacePrimary/onSurfaceSecondary variants,
+    }
+  - {
+      name: --ui-loading-screen-container-color,
+      affects: root,
+      description: Chip background — onScreen variant,
+    }
+  - {
+      name: --ui-loading-screen-container-gap,
+      affects: root,
+      description: Gap between icon and label — onScreen variant,
+    }
+  - {
+      name: --ui-loading-screen-container-padding-x,
+      affects: root,
+      description: Chip horizontal padding — onScreen variant,
+    }
+  - {
+      name: --ui-loading-screen-container-padding-y,
+      affects: root,
+      description: Chip vertical padding — onScreen variant,
+    }
+  - {
+      name: --ui-loading-screen-icon-color,
+      affects: icon,
+      description: Spinner ring color — onScreen variant,
+    }
+  - {
+      name: --ui-loading-screen-label-color,
+      affects: label,
+      description: Label text color — onScreen variant,
+    }

@@ -17,7 +17,7 @@ value and whose color tracks the level.
 ## When not to use
 
 - A full-width determinate bar — use the linear `Progress`.
-- An indeterminate "busy" state — use `Spinner`.
+- An indeterminate "busy" state — use `Loading`.
 
 ## Example
 

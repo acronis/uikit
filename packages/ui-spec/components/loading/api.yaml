@@ -1,0 +1,50 @@
+spec_version: '1.0'
+component: Loading
+
+contract:
+  properties:
+    - name: variant
+      type: "'inline' | 'onSurfacePrimary' | 'onSurfaceSecondary' | 'onScreen'"
+      required: false
+      default: "'inline'"
+      description: >-
+        Placement context. `inline` sits flush in text flow; `onSurfacePrimary`/
+        `onSurfaceSecondary` are card-like chips for a primary/secondary app
+        surface; `onScreen` is the higher-contrast dark chip for busy/photo/video
+        surfaces. Each maps to its own `--ui-loading-<variant>-*` tokens.
+    - name: hasLabel
+      type: boolean
+      required: false
+      default: true
+      description: >-
+        Whether `label` renders visibly. When false, `label` is still exposed
+        to assistive tech via the root's `aria-label`.
+    - name: label
+      type: string
+      required: false
+      default: "'Data is loading…'"
+      description: The loading message.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Loading
+    status: implemented
+    import: "import { Loading } from '@acronis-platform/ui-react'"
+    example: |
+      <Loading />
+      <Loading variant="onSurfacePrimary" label="Fetching your data…" />
+      <Loading variant="onScreen" hasLabel={false} />
+  vue:
+    component: AvLoading
+    status: planned
+    import: "import { AvLoading } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvLoading variant="onSurfacePrimary" label="Fetching your data…" />
+  web-components:
+    element: ui-loading
+    status: planned
+    import: "import '@acronis-platform/ui-wc/loading'"
+    example: |
+      <ui-loading variant="onSurfacePrimary" label="Fetching your data…"></ui-loading>

@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: Loading
+name: loading
+status: ready
+category: feedback
+description: >-
+  A composite loading indicator — a spinning ring plus an optional label — for
+  four placement contexts: inline (flush in text flow), two card-like chips for
+  a primary/secondary app surface, and a higher-contrast chip for busy/photo
+  surfaces. Distinct from `Spinner` (the bare ring primitive it reuses for its
+  icon): `Spinner` has no label or container and is unaffected by this addition.
+since: 0.58.0
+figma:
+  node: '4370-2909'
+  codeConnect: packages/ui-react/src/components/ui/loading/loading.figma.tsx

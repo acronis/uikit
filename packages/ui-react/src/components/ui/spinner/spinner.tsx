@@ -9,6 +9,12 @@ import { cn } from '@/lib/utils';
 // brand action blue via `text-secondary` (--ui-background-brand-secondary, used
 // through `border-current`), replacing the legacy `--spinner-color` var.
 // Override the color with a `text-*` class. `size` mirrors the legacy scale.
+//
+// Internal primitive — deliberately NOT re-exported from `src/index.ts` (mirrors
+// the InputBox/SearchBox pattern). Consumed by `Loading` (its icon), `Toast` (a
+// small inline icon), and `ChartState`. Apps building a standalone loading
+// state should use `Loading`, which wraps this ring with a label and
+// placement-context container tokens.
 const spinnerVariants = cva(
   'inline-block animate-spin rounded-full border-2 border-solid border-current border-r-transparent text-secondary',
   {

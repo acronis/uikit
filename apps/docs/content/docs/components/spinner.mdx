@@ -1,38 +1,27 @@
 ---
 title: Spinner
-description: An indeterminate loading indicator — a spinning ring in four sizes.
+description: An internal spinning-ring primitive — use Loading for a standalone loading indicator.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { SpinnerDemo } from "@/components/demos-react/spinner";
+> **Internal only, as of `ui-react` 0.58.0.** `Spinner` is no longer exported
+> from `@acronis-platform/ui-react`'s public entry point. It remains an
+> internal primitive consumed by [`Loading`](/components/loading) (its icon)
+> and `Toast` (a small inline icon).
+>
+> Building a standalone loading state? Use [`Loading`](/components/loading)
+> instead — it wraps the same spinning ring with a label and
+> placement-context container tokens (`inline`, `onSurfacePrimary`,
+> `onSurfaceSecondary`, `onScreen`).
 
-## Usage
+## Migrating
 
-```tsx
-import { Spinner } from '@acronis-platform/ui-react';
+```diff
+- import { Spinner } from '@acronis-platform/ui-react';
+- <Spinner size="lg" />
++ import { Loading } from '@acronis-platform/ui-react';
++ <Loading />
 ```
 
-`Spinner` is a CSS spinning ring with a `role="status"` live region and an
-sr-only "Loading…" label. It comes in four `size`s and defaults to the brand
-blue; override the color with any `text-*` class. This is a design-pending v1; a
-`--ui-spinner-*` tier is pending a Figma pass.
-
-## Examples
-
-
-<DemoReact>
-  <SpinnerDemo />
-</DemoReact>
-
-```tsx
-<Spinner />
-<Spinner size="lg" />
-<Spinner size="sm" className="text-muted-foreground" />
-```
-
-## API Reference
-
-<AutoTypeTable
-  path="../../packages/ui-react/src/components/ui/spinner/spinner.tsx"
-  name="SpinnerProps"
-/>
+`Loading`'s three larger sizes (16 / 32 / 48px) line up with `Spinner`'s
+`sm` / `lg` / `xl`; pass `hasLabel={false}` to drop the visible label while
+keeping it announced via `aria-label`.

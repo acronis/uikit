@@ -18,9 +18,9 @@ describe('SheetDetails', () => {
     expect(screen.getByText('ken99@example.com')).toBeInTheDocument();
   });
 
-  it('shows a spinner in the loading state', () => {
+  it('shows a loading indicator in the loading state', () => {
     render(<SheetDetails open title="Details" contentState="loading" properties={properties} />);
-    expect(screen.getByRole('status', { name: 'Loading' })).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('Data is loading…');
     expect(screen.queryByText('Status')).not.toBeInTheDocument();
   });
 

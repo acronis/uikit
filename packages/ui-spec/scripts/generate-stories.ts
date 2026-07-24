@@ -566,6 +566,13 @@ const RENDER: Record<string, RenderHint> = {
     // covered by the hand-written stories (Default / MoreActions / Disabled).
     skip: true,
   },
+  'dialog-footer-default': {
+    // A layout wrapper needing Button action children, with no `variant`/`size`
+    // prop of its own (the Figma variant is structural, not a prop — see
+    // anatomy.yaml). VR is covered by the hand-written stories (Default /
+    // WithDescription / WithLink).
+    skip: true,
+  },
   'progress-circle': {
     // Driven by `value`; render a representative filled ring (per size grid).
     props: 'value={75} showValue',
