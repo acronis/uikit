@@ -1,0 +1,32 @@
+spec_version: '1.0'
+component: TrendIndicator
+
+# References only. Values live in @acronis-platform/tokens-pd and resolve per
+# brand/theme at paint time; never restate values here. TrendIndicator has no
+# dedicated token tier — sentiment maps to the semantic status text tokens (the
+# glyph inherits the color via currentColor), and the badge variant adds the
+# matching light status-background tint.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-text-on-status-success
+    affects: root
+    description: Text + glyph color for the `positive` sentiment.
+  - name: --ui-text-on-status-danger
+    affects: root
+    description: Text + glyph color for the `negative` sentiment.
+  - name: --ui-text-on-status-neutral
+    affects: root
+    description: Text + glyph color for the `neutral` sentiment.
+  - name: --ui-background-status-success
+    affects: root
+    description: Badge tint for the `positive` sentiment (variant="badge").
+  - name: --ui-background-status-danger
+    affects: root
+    description: Badge tint for the `negative` sentiment (variant="badge").
+  - name: --ui-background-status-neutral
+    affects: root
+    description: Badge tint for the `neutral` sentiment (variant="badge").
+  - name: --ui-text-on-surface-secondary
+    affects: comparison-label
+    description: Muted color for the comparison label.

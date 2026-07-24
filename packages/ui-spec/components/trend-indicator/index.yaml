@@ -1,0 +1,14 @@
+spec_version: '1.0'
+component: TrendIndicator
+name: trend-indicator
+status: draft
+category: data-display
+description: >-
+  A small presentational trend/delta indicator — a direction glyph, an
+  already-formatted change value, and an optional comparison label. It separates
+  `direction` (what happened mathematically) from `sentiment` (whether that is
+  good or bad), so the kit never assumes up = good. Inline or compact badge, two
+  sizes. Design-pending v1 (no Figma node yet).
+dependencies:
+  components:
+    - Tooltip
