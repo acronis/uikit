@@ -28,8 +28,9 @@ import {
 // dashed line over the forecast period, and a shaded band (the "cone") between
 // a lower and upper bound that typically widens with the horizon — visualizing
 // growing uncertainty. Built on the shared Chart primitives; no new tokens
-// (series colors are caller-supplied via `config`, and the band is tinted with
-// the forecast series' color).
+// (series colors are caller-supplied via `config`). The whole metric renders in
+// one hue — actual and forecast differ by line style, not color — so the cone
+// band and the forecast line both reuse the actual series' color.
 
 // The band is a synthetic `[lower, upper]` range field per row that a recharts
 // <Area> shades; kept out of the tooltip/legend (see the filters below).
@@ -48,7 +49,8 @@ export interface ConfidenceConeProps
    * Per-series map of `label` / `color` for the actual + forecast lines
    * (imported from the shared `Chart` primitives). Colors are caller-supplied —
    * reference an existing semantic `--ui-*` token; there is no chart palette tier
-   * yet. The cone band is tinted with the forecast series' color.
+   * yet. The cone band and the forecast line both reuse the actual series'
+   * color — actual and forecast differ by line style, not hue.
    */
   config: ChartConfig;
   /** Category / time axis key (the shared dimension across rows). */

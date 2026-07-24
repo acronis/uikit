@@ -69,6 +69,10 @@ const Meter = React.forwardRef<HTMLDivElement, MeterProps>(
       <MeterPrimitive.Root
         value={value}
         max={safeMax}
+        // Base UI derives aria-valuemax from the (clamped) max prop; override it
+        // back to the real max so the numeric ARIA triad agrees with the
+        // aria-valuetext / visible text on a degenerate max<=0 row.
+        aria-valuemax={max}
         aria-valuetext={`${valueFormatter(value)} of ${valueFormatter(max)} (${pct}%)`}
         // When wrapped in a Tooltip the meter div is the trigger; make it
         // focusable so keyboard users can open the tooltip (hover-only

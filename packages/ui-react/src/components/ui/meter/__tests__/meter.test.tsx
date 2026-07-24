@@ -36,6 +36,11 @@ describe('Meter', () => {
   it('guards a zero max (0%, no divide-by-zero)', () => {
     render(<Meter label="Empty" value={0} max={0} color="red" />);
     expect(screen.getByText('· 0%')).toBeInTheDocument();
+    // aria-valuemax reports the real max, not the internally-clamped one, so the
+    // numeric ARIA agrees with aria-valuetext (avoids "0 of 0" vs valuemax=1).
+    const meter = screen.getByRole('meter');
+    expect(meter).toHaveAttribute('aria-valuemax', '0');
+    expect(meter).toHaveAttribute('aria-valuetext', '0 of 0 (0%)');
   });
 
   it('renders without the tooltip trigger when showTooltip is false', () => {

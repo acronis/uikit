@@ -73,7 +73,6 @@ export function computeHistogramBins(
     if (v < min || v > max) continue;
     let idx = Math.floor((v - min) / width);
     if (idx >= binCount) idx = binCount - 1; // the max value
-    if (idx < 0) idx = 0;
     bins[idx].count += 1;
   }
   return bins;
