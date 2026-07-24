@@ -1,0 +1,147 @@
+spec_version: '1.0'
+component: Metric
+
+schematic: |
+  ┌────────────────────────────────────────────┐
+  │ GROSS MARGIN  (ⓘ tooltip-info)  [Last 30 days]│  label-row: label + caption
+  │ [◐ icon-badge] 73 %      ↘ 5% vs prev quarter │  value-row: value + unit + badge · trend
+  │ supporting-text                              │
+  │ … body …                                     │
+  └────────────────────────────────────────────┘
+  parts: label-row (label + tooltip-info + caption)
+       · value-row (icon-badge + value + unit + badge + trend)
+       · supporting-text · body
+  status -> icon-badge tint · size -> value / icon-badge / label sizing
+
+root:
+  element: Card
+  description: >-
+    A Card (border, radius, subtle shadow, padding) holding a label row
+    (space-between) over a value row (space-between), then optional supporting
+    text and an optional `children` body. `size` scales the value/badge/label;
+    `status` tints the icon badge (a subtle cue, not a full color fill).
+
+parts:
+  - id: label-row
+    description: The label and an optional info tooltip on the left; an optional caption on the right.
+  - id: label
+    description: What the value measures — an uppercase note heading. Truncates when narrow.
+  - id: tooltip-info
+    description: Optional info button (named by `tooltipLabel`) revealing `tooltip` on hover/focus.
+    optional: true
+    visible_when: a `tooltip` is provided
+  - id: caption
+    description: Optional top-right caption aligned with the label — e.g. a timeframe Tag.
+    optional: true
+    visible_when: a `caption` is provided
+  - id: value-row
+    description: The icon badge, value + unit, and optional metadata badge on the left; the trend on the right.
+  - id: icon-badge
+    description: >-
+      Optional status-tinted rounded badge holding a contextual icon
+      (`aria-hidden`), before the value.
+    element: span
+    optional: true
+    visible_when: an `icon` is provided
+  - id: value
+    description: The primary value — the highest-hierarchy element. Skeleton when `loading`.
+  - id: unit
+    description: Optional unit beside the value at a smaller, muted size.
+    optional: true
+    visible_when: a `unit` is provided
+  - id: badge
+    description: Optional small metadata slot beside the value (e.g. a Tag).
+    optional: true
+    visible_when: a `badge` is provided
+  - id: trend
+    description: Optional trend slot on the right — typically a TrendIndicator.
+    optional: true
+    visible_when: a `trend` is provided
+  - id: supporting-text
+    description: Optional secondary line under the value.
+    optional: true
+    visible_when: a `supportingText` is provided
+  - id: body
+    description: >-
+      Optional card body below the header (`children`) — e.g. a chart, a
+      Separator, an AI-insight line. Composed by the consumer.
+    optional: true
+    visible_when: '`children` are provided'
+
+layout:
+  type: flex
+  direction: column
+  align: stretch
+  order: [label-row, value-row, supporting-text, body]
+
+states:
+  - {
+      id: neutral,
+      trigger: "status === 'neutral'",
+      kind: prop,
+      prop: status,
+      affects: [icon-badge],
+    }
+  - {
+      id: info,
+      trigger: "status === 'info'",
+      kind: prop,
+      prop: status,
+      affects: [icon-badge],
+    }
+  - {
+      id: success,
+      trigger: "status === 'success'",
+      kind: prop,
+      prop: status,
+      affects: [icon-badge],
+    }
+  - {
+      id: warning,
+      trigger: "status === 'warning'",
+      kind: prop,
+      prop: status,
+      affects: [icon-badge],
+    }
+  - {
+      id: danger,
+      trigger: "status === 'danger'",
+      kind: prop,
+      prop: status,
+      affects: [icon-badge],
+    }
+  - {
+      id: critical,
+      trigger: "status === 'critical'",
+      kind: prop,
+      prop: status,
+      affects: [icon-badge],
+    }
+  - {
+      id: small,
+      trigger: "size === 'small'",
+      kind: prop,
+      prop: size,
+      affects: [root, value, icon-badge],
+    }
+  - {
+      id: medium,
+      trigger: "size === 'medium'",
+      kind: prop,
+      prop: size,
+      affects: [root, value, icon-badge],
+    }
+  - {
+      id: large,
+      trigger: "size === 'large'",
+      kind: prop,
+      prop: size,
+      affects: [root, value, icon-badge],
+    }
+  - {
+      id: loading,
+      trigger: 'loading is true',
+      kind: prop,
+      prop: loading,
+      affects: [value],
+    }

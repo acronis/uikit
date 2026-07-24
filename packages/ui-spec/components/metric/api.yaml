@@ -1,0 +1,110 @@
+spec_version: '1.0'
+component: Metric
+
+# `size` and `status` are the cva axes (their enums match the cva keys in the
+# ui-react source). Everything else is a content slot; the kit never computes or
+# formats the value.
+contract:
+  properties:
+    - name: label
+      type: ReactNode
+      required: true
+      description: What the value measures — rendered as an uppercase note heading.
+    - name: value
+      type: ReactNode
+      required: true
+      description: >-
+        The primary value, already formatted (`73`, `"94%"`, `"$72K"`). The kit
+        does not format currency, units, or decimals.
+    - name: unit
+      type: ReactNode
+      required: false
+      description: Unit next to the value at a smaller, muted size (`"%"`, `"hours"`).
+    - name: caption
+      type: ReactNode
+      required: false
+      description: Top-right caption aligned with the label — e.g. a timeframe Tag.
+    - name: trend
+      type: ReactNode
+      required: false
+      description: Trend slot on the right of the value — typically a TrendIndicator.
+    - name: supportingText
+      type: ReactNode
+      required: false
+      description: >-
+        Secondary line below the value — e.g. a target or note.
+    - name: badge
+      type: ReactNode
+      required: false
+      description: Small metadata slot beside the value — e.g. a Tag.
+    - name: icon
+      type: ReactNode
+      required: false
+      description: >-
+        Icon shown in a status-tinted badge before the value. Cloned to the
+        badge's size (icons size from a `size` prop, not CSS).
+    - name: tooltip
+      type: ReactNode
+      required: false
+      description: Contextual hint on an info affordance next to the label (Base UI Tooltip).
+    - name: tooltipLabel
+      type: string
+      required: false
+      default: More information
+      description: Accessible name for the info affordance that reveals `tooltip`.
+    - name: loading
+      type: boolean
+      required: false
+      default: 'false'
+      description: Show a skeleton in place of the value, preserving its space.
+    - name: size
+      type: "'small' | 'medium' | 'large'"
+      required: false
+      default: medium
+      description: Value / badge / label typography scale.
+    - name: status
+      type: "'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'critical'"
+      required: false
+      default: neutral
+      description: Semantic status — tints the icon badge (a subtle cue, not a full color fill).
+
+  content:
+    - name: default
+      description: >-
+        Optional card body below the header (`children`) — e.g. a chart, a
+        Separator, an AI-insight line. Composed by the consumer.
+
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Metric
+    status: implemented
+    import: "import { Metric } from '@acronis-platform/ui-react'"
+    example: |
+      <Metric
+        label="Gross margin"
+        status="critical"
+        icon={<ChartPieIcon />}
+        caption={<Tag>Last 30 days</Tag>}
+        value="73"
+        unit="%"
+        trend={<TrendIndicator direction="down" sentiment="negative" value="5%" size="small" />}
+      >
+        <BarChart {...} />
+        <Separator className="my-3" />
+        <p>Margin eroding — check labor cost per client…</p>
+      </Metric>
+  vue:
+    component: AvMetric
+    status: planned
+    import: "import { AvMetric } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvMetric label="Gross margin" value="73" unit="%" status="critical" />
+  web-components:
+    element: ui-metric
+    status: planned
+    import: "import '@acronis-platform/ui-wc/metric'"
+    example: |
+      <ui-metric label="Gross margin" value="73" unit="%"></ui-metric>
