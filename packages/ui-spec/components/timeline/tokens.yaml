@@ -1,0 +1,59 @@
+spec_version: '1.0'
+component: Timeline
+
+# References only. Values live in @acronis-platform/tokens-pd and resolve per
+# brand/theme at paint time; never restate values here. Timeline has no dedicated
+# token tier — the marker uses the status text/pressed families (same as Metric's
+# icon badge), the connector uses the shared border token, and the text uses the
+# surface text tokens. Geometry uses the Tailwind scale (no --ui-* type/space tier).
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-border-on-surface-border
+    affects: connector
+    description: The connector line (bg-border).
+  - name: --ui-text-on-surface-primary
+    affects: title
+    description: Event title color (text-foreground).
+  - name: --ui-text-on-surface-secondary
+    affects: description
+    description: Timestamp, description, and metadata muted text (text-muted-foreground).
+  - name: --ui-text-on-status-neutral
+    affects: marker
+    description: Marker dot / icon color for status="neutral".
+  - name: --ui-text-on-status-info
+    affects: marker
+    description: Marker dot / icon color for status="info".
+  - name: --ui-text-on-status-success
+    affects: marker
+    description: Marker dot / icon color for status="success".
+  - name: --ui-text-on-status-warning
+    affects: marker
+    description: Marker dot / icon color for status="warning".
+  - name: --ui-text-on-status-danger
+    affects: marker
+    description: Marker dot / icon color for status="danger".
+  - name: --ui-text-on-status-critical
+    affects: marker
+    description: Marker dot / icon color for status="critical".
+  - name: --ui-background-status-neutral-pressed
+    affects: marker
+    description: Icon marker badge fill for status="neutral".
+  - name: --ui-background-status-info-pressed
+    affects: marker
+    description: Icon marker badge fill for status="info".
+  - name: --ui-background-status-success-pressed
+    affects: marker
+    description: Icon marker badge fill for status="success".
+  - name: --ui-background-status-warning-pressed
+    affects: marker
+    description: Icon marker badge fill for status="warning".
+  - name: --ui-background-status-danger-pressed
+    affects: marker
+    description: Icon marker badge fill for status="danger".
+  - name: --ui-background-status-critical-pressed
+    affects: marker
+    description: Icon marker badge fill for status="critical".
+  - name: --ui-background-surface-primary
+    affects: marker
+    description: Fill behind a `current` ringed marker (bg-background).

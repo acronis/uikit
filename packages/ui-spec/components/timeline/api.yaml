@@ -1,0 +1,99 @@
+spec_version: '1.0'
+component: Timeline
+
+# `size` and `density` are the cva axes on Timeline (their enums match the cva
+# keys in the ui-react source). The remaining rows document Timeline.Item, whose
+# status/current/disabled are plain props (not cva). The kit never sorts,
+# groups, or interprets events.
+contract:
+  properties:
+    # ── Timeline ──
+    - name: size
+      type: "'small' | 'medium'"
+      required: false
+      default: medium
+      description: Text scale for the list (and marker sizing). Provided to items via context.
+    - name: density
+      type: "'compact' | 'default'"
+      required: false
+      default: default
+      description: Vertical rhythm between items — `compact` for sidebars / popovers.
+    # ── Timeline.Item ──
+    - name: title
+      type: ReactNode
+      required: true
+      description: (Timeline.Item) The event title — the primary line.
+    - name: timestamp
+      type: ReactNode
+      required: false
+      description: (Timeline.Item) Event time — pass a `<time dateTime>` for an accessible stamp.
+    - name: description
+      type: ReactNode
+      required: false
+      description: (Timeline.Item) Optional secondary description.
+    - name: status
+      type: "'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'critical'"
+      required: false
+      default: neutral
+      description: (Timeline.Item) Semantic status — tints the marker (never large blocks of text).
+    - name: icon
+      type: ReactNode
+      required: false
+      description: (Timeline.Item) Icon shown in a status-tinted marker badge instead of the dot.
+    - name: metadata
+      type: ReactNode
+      required: false
+      description: (Timeline.Item) Metadata slot under the description — e.g. Tags.
+    - name: actions
+      type: ReactNode
+      required: false
+      description: (Timeline.Item) Actions slot — e.g. a Link or ButtonMenu.
+    - name: current
+      type: boolean
+      required: false
+      default: 'false'
+      description: (Timeline.Item) Emphasize as the current item (a ringed marker).
+    - name: disabled
+      type: boolean
+      required: false
+      default: 'false'
+      description: (Timeline.Item) Dim a non-applicable / inactive item.
+
+  content:
+    - name: default
+      description: >-
+        `Timeline` takes `Timeline.Item`s as children; each `Timeline.Item` takes
+        optional expandable detail (e.g. an Accordion) as its children.
+
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: Timeline
+    status: implemented
+    import: "import { Timeline } from '@acronis-platform/ui-react'"
+    example: |
+      <Timeline>
+        <Timeline.Item
+          timestamp={<time dateTime="2026-07-24T10:35:00+02:00">24 Jul 2026, 10:35</time>}
+          title="Backup success rate dropped"
+          description="Fell from 96% to 72%"
+          status="critical"
+          metadata={<Tag>Backup</Tag>}
+          actions={<Link href="#details">View details</Link>}
+        />
+        <Timeline.Item title="P1 ticket resolved" status="success" />
+      </Timeline>
+  vue:
+    component: AvTimeline
+    status: planned
+    import: "import { AvTimeline } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvTimeline><AvTimelineItem title="Event" status="success" /></AvTimeline>
+  web-components:
+    element: ui-timeline
+    status: planned
+    import: "import '@acronis-platform/ui-wc/timeline'"
+    example: |
+      <ui-timeline></ui-timeline>

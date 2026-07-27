@@ -1,0 +1,147 @@
+spec_version: '1.0'
+component: Timeline
+
+schematic: |
+  <ol> (root)
+   ├─ <li> item ────────────────────────────────
+   │   ● marker    24 Jul 2026, 10:35   ← timestamp
+   │   │ connector  Backup rate dropped  ← title
+   │   │            Fell 96% → 72%       ← description
+   │   │            [Backup] [Customer]  ← metadata
+   │   │            View details         ← actions
+   │   │            (… body …)           ← body (expandable)
+   └─ <li> item (last: connector hidden)
+  parts: item · marker · connector · timestamp · title · description
+       · metadata · actions · body
+  status -> marker tint · current -> ringed marker · size / density -> spacing
+
+root:
+  element: ol
+  description: >-
+    A semantic ordered list. `size` scales the text; `density` sets the vertical
+    rhythm between items; the connector on the last item is hidden.
+
+parts:
+  - id: item
+    description: One event — a `<li>` (Timeline.Item) with a marker column and a content column.
+    element: li
+  - id: marker
+    description: >-
+      The status-tinted dot (or, with an `icon`, a `-pressed` badge) at the start
+      of the item. `current` renders it as a ring. Decorative (`aria-hidden`).
+  - id: connector
+    description: The vertical line joining an item's marker to the next. Decorative; hidden on the last item.
+  - id: timestamp
+    description: Event time (`timestamp`) — pass a `<time dateTime>` for a machine-readable stamp.
+    optional: true
+    visible_when: a `timestamp` is provided
+  - id: title
+    description: The event title (primary line).
+  - id: description
+    description: Optional secondary description line.
+    optional: true
+    visible_when: a `description` is provided
+  - id: metadata
+    description: Optional metadata slot (e.g. Tags) under the description.
+    optional: true
+    visible_when: '`metadata` is provided'
+  - id: actions
+    description: Optional actions slot (e.g. a Link / ButtonMenu).
+    optional: true
+    visible_when: '`actions` is provided'
+  - id: body
+    description: Optional expandable detail composed by the caller (e.g. an Accordion) — the item's `children`.
+    optional: true
+    visible_when: '`children` are provided'
+
+layout:
+  type: flex
+  direction: column
+  align: stretch
+  order: [item]
+
+states:
+  - {
+      id: neutral,
+      trigger: "status === 'neutral'",
+      kind: prop,
+      prop: status,
+      affects: [marker],
+    }
+  - {
+      id: info,
+      trigger: "status === 'info'",
+      kind: prop,
+      prop: status,
+      affects: [marker],
+    }
+  - {
+      id: success,
+      trigger: "status === 'success'",
+      kind: prop,
+      prop: status,
+      affects: [marker],
+    }
+  - {
+      id: warning,
+      trigger: "status === 'warning'",
+      kind: prop,
+      prop: status,
+      affects: [marker],
+    }
+  - {
+      id: danger,
+      trigger: "status === 'danger'",
+      kind: prop,
+      prop: status,
+      affects: [marker],
+    }
+  - {
+      id: critical,
+      trigger: "status === 'critical'",
+      kind: prop,
+      prop: status,
+      affects: [marker],
+    }
+  - {
+      id: current,
+      trigger: 'current is true',
+      kind: prop,
+      prop: current,
+      affects: [marker],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled is true',
+      kind: prop,
+      prop: disabled,
+      affects: [item],
+    }
+  - {
+      id: small,
+      trigger: "size === 'small'",
+      kind: prop,
+      prop: size,
+      affects: [root, marker],
+    }
+  - {
+      id: medium,
+      trigger: "size === 'medium'",
+      kind: prop,
+      prop: size,
+      affects: [root, marker],
+    }
+  - {
+      id: compact,
+      trigger: "density === 'compact'",
+      kind: prop,
+      prop: density,
+      affects: [item],
+    }
+  - {
+      id: default,
+      trigger: "density === 'default'",
+      kind: prop,
+      prop: density,
+      affects: [item],
+    }
