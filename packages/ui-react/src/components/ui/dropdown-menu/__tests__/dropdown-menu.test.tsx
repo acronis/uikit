@@ -9,6 +9,9 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '../dropdown-menu';
 
@@ -101,6 +104,28 @@ describe('DropdownMenu', () => {
     expect(groups[0]).toHaveClass(
       'py-[var(--ui-button-menu-dropdown-section-container-padding-y)]'
     );
+  });
+
+  it('centers the sub-trigger cascade chevron against the label', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>Share</DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem>Copy link</DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    const chevron = screen
+      .getByRole('menuitem', { name: /Share/ })
+      .querySelector('svg');
+    expect(chevron).toHaveClass('self-center', 'ms-auto');
   });
 
   it('forwards the ref to the popup', () => {
