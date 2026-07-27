@@ -74,6 +74,13 @@ describe('DialogRoot', () => {
     );
   });
 
+  it('applies the strong drop-shadow matching the legacy Dialog', () => {
+    render(<OpenDialog />);
+    expect(screen.getByRole('dialog')).toHaveClass(
+      'shadow-[0px_10px_20px_rgba(36,49,67,0.9)]'
+    );
+  });
+
   it('defaults to the sm size (--ui-dialog-container-size-sm / 512px)', () => {
     render(<OpenDialog />);
     expect(screen.getByRole('dialog')).toHaveClass(

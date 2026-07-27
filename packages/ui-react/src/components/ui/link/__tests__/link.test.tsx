@@ -20,6 +20,13 @@ describe('Link', () => {
     );
   });
 
+  it('does not override the underline position (matches ButtonGhost)', () => {
+    render(<Link href="/docs">Docs</Link>);
+    expect(screen.getByRole('link', { name: 'Docs' })).not.toHaveClass(
+      '[text-underline-position:from-font]'
+    );
+  });
+
   it('renders the external icon when external', () => {
     const { container } = render(
       <Link href="https://x.test" external>

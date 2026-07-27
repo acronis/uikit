@@ -80,7 +80,8 @@ export function useFilterSearchFilters(): FilterSearchFiltersContextValue {
   return context;
 }
 
-export interface FilterSearchFiltersProps {
+export interface FilterSearchFiltersProps
+  extends Omit<React.ComponentPropsWithoutRef<'button'>, 'value' | 'onValueChange'> {
   /** The applied filter values, keyed by an arbitrary consumer-chosen id. */
   value: Record<string, unknown>;
   /** Called with the committed filters when Apply is pressed. */
@@ -102,7 +103,7 @@ export interface FilterSearchFiltersProps {
 const FilterSearchFilters = React.forwardRef<
   HTMLButtonElement,
   FilterSearchFiltersProps
->(({ value, onValueChange, onApply, label = 'Filters', children, className }, ref) => {
+>(({ value, onValueChange, onApply, label = 'Filters', children, className, ...rest }, ref) => {
   const [open, setOpen] = React.useState(false);
   const [draft, setDraft] = React.useState<Record<string, unknown>>(value);
 
@@ -157,6 +158,7 @@ const FilterSearchFilters = React.forwardRef<
               'group data-[popup-open]:border-[var(--ui-button-secondary-container-border-color-active)] data-[popup-open]:bg-[var(--ui-button-secondary-container-color-active)] data-[popup-open]:text-[var(--ui-button-secondary-label-color-active)]',
               className
             )}
+            {...rest}
           />
         }
       >

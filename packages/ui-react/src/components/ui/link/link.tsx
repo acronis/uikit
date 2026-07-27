@@ -40,7 +40,7 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       props: mergeProps<'a'>(
         {
           className: cn(
-            'inline-flex items-center gap-[var(--ui-link-global-container-gap)] rounded-sm text-sm font-semibold leading-6 outline-none transition-colors [text-underline-position:from-font] [&_svg]:size-4 [&_svg]:shrink-0',
+            'inline-flex items-center gap-[var(--ui-link-global-container-gap)] rounded-sm text-sm font-semibold leading-6 outline-none transition-colors [&_svg]:size-4 [&_svg]:shrink-0',
             'text-[var(--ui-link-normal-text-color-idle)] [text-decoration:var(--ui-link-global-text-decoration-idle)] [&_svg]:text-[var(--ui-link-normal-external-icon-color-idle)]',
             'hover:text-[var(--ui-link-normal-text-color-hover)] hover:[text-decoration:var(--ui-link-global-text-decoration-hover)] hover:[&_svg]:text-[var(--ui-link-normal-external-icon-color-hover)]',
             'active:text-[var(--ui-link-normal-text-color-active)] active:[text-decoration:var(--ui-link-global-text-decoration-active)] active:[&_svg]:text-[var(--ui-link-normal-external-icon-color-active)]',

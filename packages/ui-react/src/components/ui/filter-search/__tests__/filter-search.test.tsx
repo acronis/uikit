@@ -145,6 +145,19 @@ describe('FilterSearchFilters', () => {
     expect(screen.getByRole('button', { name: 'Filters' })).toBeInTheDocument();
   });
 
+  it('forwards passthrough props like data-testid to the trigger button', () => {
+    render(
+      <FilterSearchFilters
+        value={{}}
+        onValueChange={() => {}}
+        data-testid="filters-trigger"
+      />
+    );
+    expect(screen.getByTestId('filters-trigger')).toBe(
+      screen.getByRole('button', { name: 'Filters' })
+    );
+  });
+
   it('opens the popover from the trigger', async () => {
     const user = userEvent.setup();
     render(<FiltersHarness />);
