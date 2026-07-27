@@ -6,7 +6,8 @@ not gitignored), grouped into `css/`, `tailwind/`, and `dtcg/` dirs. The CSS
 
 - `css/default.css` — semantic tier, default brand (full): every `--ui-*` color +
   dimension custom property (colors in both light and dark), followed by the
-  `.ui-typography-*` utility classes.
+  `.ui-typography-*` utility classes and the `.ui-p*`/`.ui-m*`/`.ui-gap*`
+  (+ `.ui-mx-auto`) spacing utility classes.
 - `css/brand-b.css` — semantic tier, non-default brand: **override-only** (below).
 - `css/<component>/default.css` — component tier, default brand (full), one dir per
   component (`button/`, `breadcrumb/`, …).
@@ -72,6 +73,28 @@ token with `ui`:
 Colors are always wrapped in `light-dark()`, even when both modes resolve to the
 same value. Gradients, dimensions, and typography are mode-invariant, so they
 appear once with a single value.
+
+## Spacing utility classes
+
+Every `spacing.*` semantic token also emits a full padding/margin/gap utility
+grammar, in addition to its `--ui-spacing-*` custom property — for
+framework-agnostic (non-Tailwind) consumers who can't extend a Tailwind
+preset. `spacingUtilityClasses` (`hooks/formats/spacing-utility-classes.ts`)
+derives the `{property}{direction}-{size}` classes Tailwind's own engine would
+generate for free once a preset key exists:
+
+| Prefix                  | Property                                                                                                                                                                           |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `p`/`m`                 | `padding`/`margin`                                                                                                                                                                 |
+| `px`/`mx`               | `padding-inline`/`margin-inline`                                                                                                                                                   |
+| `py`/`my`               | `padding-block`/`margin-block`                                                                                                                                                     |
+| `pt`/`mt`, `pb`/`mb`    | `padding-top`/`margin-top`, `padding-bottom`/`margin-bottom`                                                                                                                       |
+| `pl`/`ml`, `pr`/`mr`    | `padding-left`/`margin-left`, `padding-right`/`margin-right` (physical — do not mirror under `dir="rtl"`)                                                                          |
+| `ps`/`ms`, `pe`/`me`    | `padding-inline-start`/`margin-inline-start`, `padding-inline-end`/`margin-inline-end` (logical — use these instead of `pl`/`pr`/`ml`/`mr` for anything that should mirror in RTL) |
+| `gap`, `gap-x`, `gap-y` | `gap`, `column-gap`, `row-gap`                                                                                                                                                     |
+
+Plus one static, non-token-driven class emitted once per build:
+`.ui-mx-auto { margin-inline: auto; }`.
 
 ## Gradients
 

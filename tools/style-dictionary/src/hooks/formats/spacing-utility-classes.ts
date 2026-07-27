@@ -11,6 +11,8 @@ const PADDING_DIRECTIONS: Record<string, string> = {
   pb: 'padding-bottom',
   pl: 'padding-left',
   pr: 'padding-right',
+  ps: 'padding-inline-start',
+  pe: 'padding-inline-end',
 };
 
 const MARGIN_DIRECTIONS: Record<string, string> = {
@@ -21,6 +23,8 @@ const MARGIN_DIRECTIONS: Record<string, string> = {
   mb: 'margin-bottom',
   ml: 'margin-left',
   mr: 'margin-right',
+  ms: 'margin-inline-start',
+  me: 'margin-inline-end',
 };
 
 const GAP_DIRECTIONS: Record<string, string> = {
