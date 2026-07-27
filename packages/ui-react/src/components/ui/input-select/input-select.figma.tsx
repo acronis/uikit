@@ -69,12 +69,15 @@ figma.connect(
   {
     variant: { variant: 'data' },
     props: {
-      hasSearch: figma.boolean('hasSearch'),
+      hasSearch: figma.boolean('hasSearch', {
+        true: <InputSelectSearch placeholder="Search…" />,
+        false: undefined,
+      }),
       sectionList: figma.children('sectionList'),
     },
     example: ({ hasSearch, sectionList }) => (
       <InputSelectContent>
-        {hasSearch && <InputSelectSearch placeholder="Search…" />}
+        {hasSearch}
         <InputSelectSection>{sectionList}</InputSelectSection>
       </InputSelectContent>
     ),
@@ -87,11 +90,14 @@ figma.connect(
   {
     variant: { variant: 'loading' },
     props: {
-      hasSearch: figma.boolean('hasSearch'),
+      hasSearch: figma.boolean('hasSearch', {
+        true: <InputSelectSearch placeholder="Search…" />,
+        false: undefined,
+      }),
     },
     example: ({ hasSearch }) => (
       <InputSelectContent>
-        {hasSearch && <InputSelectSearch placeholder="Search…" />}
+        {hasSearch}
         <InputSelectStatus variant="loading">Data is loading…</InputSelectStatus>
       </InputSelectContent>
     ),
@@ -104,11 +110,14 @@ figma.connect(
   {
     variant: { variant: 'empty' },
     props: {
-      hasSearch: figma.boolean('hasSearch'),
+      hasSearch: figma.boolean('hasSearch', {
+        true: <InputSelectSearch placeholder="Search…" />,
+        false: undefined,
+      }),
     },
     example: ({ hasSearch }) => (
       <InputSelectContent>
-        {hasSearch && <InputSelectSearch placeholder="Search…" />}
+        {hasSearch}
         <InputSelectStatus variant="empty">No data found</InputSelectStatus>
       </InputSelectContent>
     ),
@@ -121,11 +130,14 @@ figma.connect(
   {
     variant: { variant: 'error' },
     props: {
-      hasSearch: figma.boolean('hasSearch'),
+      hasSearch: figma.boolean('hasSearch', {
+        true: <InputSelectSearch placeholder="Search…" />,
+        false: undefined,
+      }),
     },
     example: ({ hasSearch }) => (
       <InputSelectContent>
-        {hasSearch && <InputSelectSearch placeholder="Search…" />}
+        {hasSearch}
         <InputSelectStatus variant="error" action={<a href="#">Try again</a>}>
           Something went wrong
         </InputSelectStatus>
@@ -142,19 +154,21 @@ figma.connect(
   {
     variant: { variant: 'data' },
     props: {
-      hasRecent: figma.boolean('hasRecent'),
-      listRecent: figma.children('listRecent'),
-      listBrowse: figma.children('listBrowse'),
-    },
-    example: ({ hasRecent, listRecent, listBrowse }) => (
-      <InputSelectContent>
-        <InputSelectSearch placeholder="Search…" />
-        {hasRecent && (
+      hasRecent: figma.boolean('hasRecent', {
+        true: (
           <InputSelectSection>
             <InputSelectSectionLabel>Recent</InputSelectSectionLabel>
-            {listRecent}
+            {figma.children('listRecent')}
           </InputSelectSection>
-        )}
+        ),
+        false: undefined,
+      }),
+      listBrowse: figma.children('listBrowse'),
+    },
+    example: ({ hasRecent, listBrowse }) => (
+      <InputSelectContent>
+        <InputSelectSearch placeholder="Search…" />
+        {hasRecent}
         <InputSelectSection>
           <InputSelectSectionLabel>Browse</InputSelectSectionLabel>
           {listBrowse}

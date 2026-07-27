@@ -5,14 +5,17 @@
 # per deployment, so each deploy replaces the whole site. A separate per-app
 # deploy workflow would clobber the others.
 #
-# Trigger: GitHub Release published. \`release.yml\` is configured with
-# \`createGithubReleases: true\`, so a successful Changesets publish
-# emits the release event we listen to here — meaning the Pages site
-# only updates when a real version of the UI library ships, not on
-# every push to main.
+# Trigger: every push to main, plus GitHub Release published (kept so a
+# release always re-deploys even if a prior push-triggered deploy failed)
+# and manual workflow_dispatch. Push-triggered runs are best-effort: build
+# and deploy failures are logged but do not fail the job, so a broken Pages
+# deploy never blocks or shows as a failing check on the commit.
 name: Demo & Storybook - Deploy to Pages
 
 on:
+  push:
+    branches: [main]
+
   release:
     types: [published]
 
@@ -25,16 +28,18 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# One deployment at a time. Push-triggered runs cancel a stale in-progress
+# push build (only the latest commit's site matters); release/manual runs
+# should still be allowed to finish, so cancellation only applies to pushes.
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'push' }}
 
 jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
+    continue-on-error: ${{ github.event_name == 'push' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -105,15 +110,28 @@ jobs:
         with:
           path: apps/demo/dist
 
+      - name: Log build failure
+        if: failure() && github.event_name == 'push'
+        run: 'echo "### :warning: Pages build failed for this push — see the failed step above. Deploy was skipped; the site was not updated." >> "$GITHUB_STEP_SUMMARY"'
+
   # Deployment job
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    # NOTE: needs.build.result reports 'success' even when a step failed,
+    # because build's own continue-on-error masks the failure from this
+    # gate — so on push this job always attempts to run. If the artifact
+    # upload didn't happen, deploy-pages fails fast and is logged below.
     needs: build
+    continue-on-error: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     name: Deploy
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Log deploy failure
+        if: failure() && github.event_name == 'push'
+        run: 'echo "### :warning: Pages deploy failed for this push — see the failed step above." >> "$GITHUB_STEP_SUMMARY"'
