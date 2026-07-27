@@ -5,12 +5,16 @@ import {
   BREAKPOINT_3XL,
   BREAKPOINT_4XL,
   BREAKPOINT_LG,
+  BREAKPOINT_MD,
+  BREAKPOINT_SM,
   BREAKPOINT_XL,
   getViewportWidth,
 } from '../breakpoints';
 
 describe('breakpoints', () => {
   it('matches the px values pinned in src/styles/index.css', () => {
+    expect(BREAKPOINT_SM).toBe(640);
+    expect(BREAKPOINT_MD).toBe(768);
     expect(BREAKPOINT_LG).toBe(1024);
     expect(BREAKPOINT_XL).toBe(1280);
     expect(BREAKPOINT_2XL).toBe(1440);

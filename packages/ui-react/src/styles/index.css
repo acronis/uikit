@@ -76,18 +76,23 @@
 
 /* Viewport breakpoints pinned to the design team's px ranges (sm/md unset,
    fall through to Tailwind's 640px/768px defaults):
+     sm   640px   (Tailwind default, not overridden here)
+     md   768px   (Tailwind default, not overridden here)
      lg   1024px  range 1024-1280
      xl   1280px  range 1281-1440
      2xl  1440px  range 1441-1680
      3xl  1680px  range 1681-1920
      4xl  1920px  range 1920+
 
-   KEEP IN SYNC with src/lib/breakpoints.ts, which mirrors these same rem
-   values as JS constants (BREAKPOINT_LG/XL/2XL/3XL/4XL) for components/utils
-   that need the breakpoint as a plain number (e.g. reading window.innerWidth).
-   Tailwind v4's `@theme` breakpoints are compile-time-only — there is no
-   runtime `:root` custom property for JS to read instead — so a value
-   changed here must be changed there too, in the same commit.
+   KEEP IN SYNC with src/lib/breakpoints.ts, which mirrors these same values
+   as JS constants (BREAKPOINT_SM/MD/LG/XL/2XL/3XL/4XL), and with the
+   --ui-breakpoint-* :root block below. If sm/md ever get an explicit
+   --breakpoint-sm/-md override here, BREAKPOINT_SM/MD and
+   --ui-breakpoint-sm/-md must be updated in the same change, or the public
+   constants would silently diverge from the internal ones. Tailwind v4's
+   `@theme` breakpoints are compile-time-only — there is no runtime `:root`
+   custom property for JS to read instead — so a value changed here must be
+   changed in the other two places too, in the same commit.
 */
 @theme {
   --breakpoint-lg: 64rem;
@@ -95,6 +100,25 @@
   --breakpoint-2xl: 90rem;
   --breakpoint-3xl: 105rem;
   --breakpoint-4xl: 120rem;
+}
+
+/* Hand-authored (not style-dictionary-generated — no Figma source exists for
+   these) runtime custom properties mirroring the @theme block above, for the
+   one thing a plain CSS var can do that @media conditions can't: sizing an
+   element to match a breakpoint outside a conditional context, e.g.
+   `max-width: var(--ui-breakpoint-lg)`. These do NOT help write a
+   `@media (min-width: 1024px)` query — that still needs the literal number
+   (see BREAKPOINT_LG etc. in src/lib/breakpoints.ts). KEEP IN SYNC with the
+   @theme block above and src/lib/breakpoints.ts. */
+:root,
+:host {
+  --ui-breakpoint-sm: 640px;
+  --ui-breakpoint-md: 768px;
+  --ui-breakpoint-lg: 1024px;
+  --ui-breakpoint-xl: 1280px;
+  --ui-breakpoint-2xl: 1440px;
+  --ui-breakpoint-3xl: 1680px;
+  --ui-breakpoint-4xl: 1920px;
 }
 @keyframes indeterminate-progress {
   0% {
