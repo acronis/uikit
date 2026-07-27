@@ -20,11 +20,10 @@ describe('Link', () => {
     );
   });
 
-  it('does not override the underline position (matches ButtonGhost)', () => {
+  it('does not set text-underline-position (matches ButtonGhost, which has no such override either)', () => {
     render(<Link href="/docs">Docs</Link>);
-    expect(screen.getByRole('link', { name: 'Docs' })).not.toHaveClass(
-      '[text-underline-position:from-font]'
-    );
+    const linkClasses = screen.getByRole('link', { name: 'Docs' }).className;
+    expect(linkClasses).not.toMatch(/text-underline-position/);
   });
 
   it('renders the external icon when external', () => {
