@@ -1,4 +1,3 @@
-import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   Area,
@@ -9,13 +8,12 @@ import {
   XAxis,
 } from 'recharts';
 
-import { LineChart } from '../line-chart';
+import { LineChart, createBandStrippedTooltip } from '../line-chart';
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-  type ChartTooltipContentProps,
 } from '../../chart';
 
 // Series colors are supplied by the caller via `config`. There is no chart token
@@ -259,9 +257,10 @@ export const CustomTooltip: Story = {
 };
 
 // The same custom tooltip, forced open for the VR baseline — built on the
-// delta-band composition so the baseline proves the synthetic `__band_*` range
-// series is filtered out: the tooltip shows only the real thisYear/lastYear
-// rows, never a stray `__band_0` row.
+// delta-band composition and routed through the component's real
+// `createBandStrippedTooltip` wrapper, so the baseline proves the shipped filter
+// drops the synthetic `__band_*` series: only the real thisYear/lastYear rows
+// show, never a stray `__band_0` row.
 export const CustomTooltipOpen: Story = {
   render: () => {
     const bandData = trendData.map((d) => ({
@@ -279,14 +278,7 @@ export const CustomTooltipOpen: Story = {
           <ChartTooltip
             defaultIndex={2}
             active
-            content={(tp) =>
-              React.cloneElement(customTooltipContent, {
-                ...tp,
-                payload: tp.payload?.filter(
-                  (item) => !String(item.dataKey).startsWith('__band_')
-                ),
-              } as ChartTooltipContentProps)
-            }
+            content={createBandStrippedTooltip(customTooltipContent)}
           />
           <Area
             dataKey="__band_0"

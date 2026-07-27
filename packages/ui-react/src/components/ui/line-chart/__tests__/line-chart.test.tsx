@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { LineChart, dropBandSeries } from '../line-chart';
+import {
+  LineChart,
+  createBandStrippedTooltip,
+  dropBandSeries,
+} from '../line-chart';
 import { ChartTooltipContent, type ChartConfig } from '../../chart';
 
 const data = [
@@ -131,6 +135,52 @@ describe('LineChart', () => {
 
     it('returns undefined for an undefined payload', () => {
       expect(dropBandSeries(undefined)).toBeUndefined();
+    });
+  });
+
+  // The prop path in the component is a wrapper (createBandStrippedTooltip) that
+  // strips the bands, then mounts the caller's tooltip exactly as recharts would
+  // — a function via createElement, an element via cloneElement. Exercised
+  // directly here because recharts doesn't paint the tooltip in happy-dom; an
+  // inverted predicate would leak a `__band_*` row into the caller's tooltip.
+  describe('createBandStrippedTooltip', () => {
+    const payload = [
+      { dataKey: 'thisYear', name: 'This year', value: 305 },
+      { dataKey: '__band_0', name: 'band', value: [200, 305] },
+      { dataKey: 'lastYear', name: 'Last year', value: 200 },
+    ];
+
+    function Probe({
+      payload: p,
+    }: {
+      payload?: ReadonlyArray<{ dataKey?: unknown }>;
+    }) {
+      return (
+        <div data-testid="keys">
+          {(p ?? []).map((item) => String(item.dataKey)).join(',')}
+        </div>
+      );
+    }
+
+    function renderWrapped(
+      content: Parameters<typeof createBandStrippedTooltip>[0]
+    ) {
+      const Wrapped = createBandStrippedTooltip(content) as unknown as React.FC<{
+        payload: typeof payload;
+        active: boolean;
+      }>;
+      render(<Wrapped payload={payload} active />);
+      return screen.getByTestId('keys').textContent;
+    }
+
+    it('strips band series before a function-form tooltip renders', () => {
+      expect(renderWrapped((p) => <Probe payload={p.payload} />)).toBe(
+        'thisYear,lastYear'
+      );
+    });
+
+    it('strips band series before an element-form tooltip renders', () => {
+      expect(renderWrapped(<Probe />)).toBe('thisYear,lastYear');
     });
   });
 

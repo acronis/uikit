@@ -75,7 +75,7 @@ contract:
       default: 'true'
       description: Render the legend.
     - name: tooltipContent
-      type: ReactElement
+      type: 'ReactElement | ((props) => ReactNode)'
       required: false
       description: >-
         Replace the default tooltip. Pass a configured ChartTooltipContent (from
