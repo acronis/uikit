@@ -2443,5 +2443,25 @@
         "platforms": ["PD"]
       }
     }
+  },
+  "spacing": {
+    "$type": "dimension",
+    "0": { "$value": "{units.gap.0}", "platforms": ["PD"] },
+    "2": { "$value": "{units.gap.2}", "platforms": ["PD"] },
+    "4": { "$value": "{units.gap.4}", "platforms": ["PD"] },
+    "6": { "$value": "{units.gap.6}", "platforms": ["PD"] },
+    "8": { "$value": "{units.gap.8}", "platforms": ["PD"] },
+    "12": { "$value": "{units.gap.12}", "platforms": ["PD"] },
+    "16": { "$value": "{units.gap.16}", "platforms": ["PD"] },
+    "20": { "$value": "{units.gap.20}", "platforms": ["PD"] },
+    "24": { "$value": "{units.gap.24}", "platforms": ["PD"] },
+    "32": { "$value": "{units.gap.32}", "platforms": ["PD"] },
+    "40": { "$value": "{units.gap.40}", "platforms": ["PD"] },
+    "48": { "$value": "{units.gap.48}", "platforms": ["PD"] },
+    "56": { "$value": "{units.gap.56}", "platforms": ["PD"] },
+    "64": { "$value": "{units.gap.64}", "platforms": ["PD"] },
+    "72": { "$value": "{units.gap.72}", "platforms": ["PD"] },
+    "88": { "$value": "{units.gap.88}", "platforms": ["PD"] },
+    "96": { "$value": "{units.gap.96}", "platforms": ["PD"] }
   }
 }

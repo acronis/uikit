@@ -359,6 +359,25 @@ export default {
             "fontWeight": "700"
           }
         ]
+      },
+      "spacing": {
+        "spacing-0": "0px",
+        "spacing-2": "2px",
+        "spacing-4": "4px",
+        "spacing-6": "6px",
+        "spacing-8": "8px",
+        "spacing-12": "12px",
+        "spacing-16": "16px",
+        "spacing-20": "20px",
+        "spacing-24": "24px",
+        "spacing-32": "32px",
+        "spacing-40": "40px",
+        "spacing-48": "48px",
+        "spacing-56": "56px",
+        "spacing-64": "64px",
+        "spacing-72": "72px",
+        "spacing-88": "88px",
+        "spacing-96": "96px"
       }
     },
   },

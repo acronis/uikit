@@ -8,8 +8,10 @@ import type { TransformedToken } from 'style-dictionary/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { collectDecls, serializeCss } from '../formats/css-light-dark';
+import { spacingUtilityClasses, STATIC_SPACING_CLASSES } from '../formats/spacing-utility-classes';
 import { normalizeTree } from '../preprocessors/acronis-dtcg';
 import { buildThemeExtend, colorKeyFromPath, routeColor, scopeToNamespace } from '../../tailwind';
+import { diffDecls } from '../../tokens';
 
 // ── normalizeTree (stage 1) ──────────────────────────────────────────────────
 
@@ -210,6 +212,82 @@ describe('collectDecls', () => {
       token({ name: 'a-token', $type: 'dimension', $value: '1px' }),
     ]);
     expect(css.indexOf('--a-token')).toBeLessThan(css.indexOf('--b-token'));
+  });
+
+  it('emits both the custom property and the full utility class set for a spacing token', () => {
+    const css = render([
+      token({ name: 'ui-spacing-8', path: ['spacing', '8'], $type: 'dimension', $value: '8px' }),
+    ]);
+    expect(css).toContain('--ui-spacing-8: 8px;');
+    for (const selector of [
+      '.ui-p-8',
+      '.ui-px-8',
+      '.ui-py-8',
+      '.ui-pt-8',
+      '.ui-pb-8',
+      '.ui-pl-8',
+      '.ui-pr-8',
+      '.ui-m-8',
+      '.ui-mx-8',
+      '.ui-my-8',
+      '.ui-mt-8',
+      '.ui-mb-8',
+      '.ui-ml-8',
+      '.ui-mr-8',
+      '.ui-gap-8',
+      '.ui-gap-x-8',
+      '.ui-gap-y-8',
+    ]) {
+      expect(css).toContain(`${selector} {\n  `);
+    }
+    expect(css).toContain('padding: var(--ui-spacing-8);');
+    expect(css).toContain('padding-inline: var(--ui-spacing-8);');
+    expect(css).toContain('margin: var(--ui-spacing-8);');
+    expect(css).toContain('column-gap: var(--ui-spacing-8);');
+    expect(css).toContain('row-gap: var(--ui-spacing-8);');
+  });
+});
+
+describe('spacingUtilityClasses', () => {
+  it('returns one selector per property/direction combination, all referencing the same var', () => {
+    const classes = spacingUtilityClasses('ui-spacing-16', '16');
+    expect(classes.size).toBe(17); // 7 padding + 7 margin + 3 gap
+    for (const block of classes.values()) {
+      expect(block).toContain('var(--ui-spacing-16)');
+    }
+  });
+});
+
+describe('STATIC_SPACING_CLASSES', () => {
+  it('renders .ui-mx-auto once', () => {
+    const withoutStatic = render([token({ name: 'ui-x', $type: 'dimension', $value: '1px' })]);
+    expect(withoutStatic).not.toContain('.ui-mx-auto');
+
+    const { vars, classes } = collectDecls([token({ name: 'ui-x', $type: 'dimension', $value: '1px' })], new Map());
+    for (const [selector, block] of STATIC_SPACING_CLASSES) classes.set(selector, block);
+    const withStatic = serializeCss({ brand: 'acronis', tier: 'semantics', isOverride: false, vars, classes });
+    expect(withStatic.match(/\.ui-mx-auto/g)).toHaveLength(1);
+    expect(withStatic).toContain('margin-inline: auto;');
+  });
+
+  it('brand override omits spacing when identical to the default (no diff)', () => {
+    const base = collectDecls(
+      [token({ name: 'ui-spacing-8', path: ['spacing', '8'], $type: 'dimension', $value: '8px' })],
+      new Map()
+    );
+    for (const [selector, block] of STATIC_SPACING_CLASSES) base.classes.set(selector, block);
+
+    // A non-default brand resolves the identical spacing tokens (spacing has
+    // no brand axis), so its slice is byte-identical to the default's.
+    const brand = collectDecls(
+      [token({ name: 'ui-spacing-8', path: ['spacing', '8'], $type: 'dimension', $value: '8px' })],
+      new Map()
+    );
+    for (const [selector, block] of STATIC_SPACING_CLASSES) brand.classes.set(selector, block);
+
+    const { vars, classes } = diffDecls(base, brand);
+    expect(vars.size).toBe(0);
+    expect(classes.size).toBe(0);
   });
 });
 

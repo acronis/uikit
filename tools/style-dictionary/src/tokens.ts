@@ -24,6 +24,7 @@ import type { Config, TransformedToken } from 'style-dictionary/types';
 import { STATIC_HOOKS } from './hooks';
 import { isEmittableToken } from './hooks/filters/semantic-only';
 import { collectDecls, type Decls, serializeCss } from './hooks/formats/css-light-dark';
+import { STATIC_SPACING_CLASSES } from './hooks/formats/spacing-utility-classes';
 import { normalizeTree } from './hooks/preprocessors/acronis-dtcg';
 import { ACRONIS_CSS_GROUP } from './hooks/transforms';
 import {
@@ -334,6 +335,12 @@ export async function buildCss(filter: Filter): Promise<void> {
 
     const decls = new Map<string, Decls>();
     for (const [slice, toks] of bySlice) decls.set(slice, collectDecls(toks, darkColors));
+    // Static, non-token-driven utility — added once per brand (identically) so
+    // it renders in the base file but never shows up as a brand-override diff.
+    const semantics = decls.get('semantics');
+    if (semantics) {
+      for (const [selector, block] of STATIC_SPACING_CLASSES) semantics.classes.set(selector, block);
+    }
     perBrand.set(brand.name, decls);
   }
 
