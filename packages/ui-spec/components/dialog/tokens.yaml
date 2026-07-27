@@ -3,46 +3,132 @@ component: Dialog
 
 # References only. Values live in @acronis-platform/tokens-pd (generated from
 # @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
-# This is a design-pending v1: no `--ui-dialog-*` component tier exists yet, so
-# the dialog consumes the shared *semantic* tokens (via the bridged Tailwind
-# names bg-muted / bg-background / text-foreground / text-muted-foreground /
-# border-border, plus direct var() refs for the overlay and focus ring). Replace
-# these with a `--ui-dialog-*` tier if/when a Figma pass introduces one.
+#
+# Container geometry/color comes from the shared DialogContent (dialog.tsx),
+# themed by the `--ui-dialog-container-*` tokens. `size="large"` (832px) is a
+# legacy backward-compatibility value with no matching token — an intentional
+# exception (see dialog.tsx), not an oversight. Header + footer geometry/color
+# below resolve to the `--ui-dialog-header-*` / `--ui-footer-*` tiers — this
+# component tier was reconciled against the Figma "DialogDefault" node
+# (6343:58898). Footer buttons / the rename field / the spinner delegate to the
+# Button, InputText and Spinner token tiers (documented in those components'
+# specs). The `wide` variant's free-form `footer` content reuses the same
+# `--ui-footer-*` bar tokens; only the buttons inside it are caller-supplied.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
   - {
       name: --ui-background-backdrop-screen,
       affects: overlay,
-      description: Scrim color behind the popup (direct var ref),
+      description: Scrim color behind the popup (via DialogContent overlay),
     }
   - {
-      name: --ui-background-surface-secondary,
-      affects: root,
-      description: Popup body surface (bridged as `bg-muted`),
+      name: --ui-dialog-container-color,
+      affects: container,
+      description: Popup container surface,
     }
   - {
-      name: --ui-background-surface-primary,
+      name: --ui-dialog-container-border-radius,
+      affects: container,
+      description: Popup container corner radius,
+    }
+  - {
+      name: --ui-dialog-container-width-min,
+      affects: container,
+      description: Popup container minimum width,
+    }
+  - {
+      name: --ui-dialog-header-color,
       affects: header,
-      description: Header / footer bar surface (bridged as `bg-background`),
+      description: Header bar surface,
     }
   - {
-      name: --ui-text-on-surface-primary,
+      name: --ui-dialog-header-border-color,
+      affects: header,
+      description: Header bottom divider color,
+    }
+  - {
+      name: --ui-dialog-header-gap,
+      affects: header,
+      description: Gap between the title and the close button,
+    }
+  - {
+      name: --ui-dialog-header-height,
+      affects: header,
+      description: Header bar height,
+    }
+  - {
+      name: --ui-dialog-header-padding-x,
+      affects: header,
+      description: Header bar horizontal padding,
+    }
+  - {
+      name: --ui-dialog-header-title-color,
       affects: title,
-      description: Title / default text color (bridged as `text-foreground`),
+      description: 'Header title color (bridged via `text-foreground`; identical value in the default brand)',
     }
   - {
-      name: --ui-text-on-surface-secondary,
-      affects: description,
-      description: 'Description + idle close-icon color (bridged as text-muted-foreground)',
+      name: --ui-dialog-body-gap,
+      affects: body,
+      description: Gap between stacked body elements,
     }
   - {
-      name: --ui-border-on-surface-border,
-      affects: header,
-      description: Header bottom / footer top divider (bridged as `border-border`),
+      name: --ui-dialog-body-height-min,
+      affects: body,
+      description: Body minimum height,
+    }
+  - {
+      name: --ui-footer-default-color,
+      affects: footer,
+      description: Footer bar surface,
+    }
+  - {
+      name: --ui-footer-default-border-color,
+      affects: footer,
+      description: Footer top divider color,
+    }
+  - {
+      name: --ui-footer-global-gap,
+      affects: footer,
+      description: Gap between footer buttons,
+    }
+  - {
+      name: --ui-footer-global-height,
+      affects: footer,
+      description: Footer bar height,
+    }
+  - {
+      name: --ui-footer-global-padding-x,
+      affects: footer,
+      description: Footer bar horizontal padding,
+    }
+  - {
+      name: --ui-button-icon-global-icon-color-idle,
+      affects: close-button,
+      description: 'Close-icon color, constant across idle/hover/active in the default brand',
+    }
+  - {
+      name: --ui-button-icon-global-container-color-hover,
+      affects: close-button,
+      description: Close-button background on hover,
+    }
+  - {
+      name: --ui-button-icon-global-container-color-active,
+      affects: close-button,
+      description: Close-button background when pressed,
+    }
+  - {
+      name: --ui-button-icon-global-icon-color-disabled,
+      affects: close-button,
+      description: Close-icon color when the close button is disabled,
     }
   - {
       name: --ui-focus-primary,
-      affects: close,
+      affects: close-button,
       description: Focus-visible ring on the close button,
+    }
+  - {
+      name: --ui-loading-element-container-color-secondary,
+      affects: loading-overlay,
+      description: 'Loading overlay base color (`Loading` variant="onSurfaceSecondary")',
     }

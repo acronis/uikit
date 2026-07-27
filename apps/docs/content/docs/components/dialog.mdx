@@ -9,114 +9,139 @@ import { DialogDemo } from "@/components/demos-react/dialog";
 ## Usage
 
 ```tsx
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogCloseButton,
-  DialogBody,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-} from '@acronis-platform/ui-react';
+import { Dialog } from '@acronis-platform/ui-react';
 ```
 
-`Dialog` is a compound component built on Base UI's Dialog primitive (focus trap,
-scroll lock, `Esc`/outside-press dismissal, and ARIA come from Base UI). `Dialog`
-owns the open state; `DialogTrigger` opens it; `DialogContent` is the portaled,
-centered popup wrapping a `DialogHeader` (with `DialogTitle` + `DialogCloseButton`),
-a `DialogBody` (with `DialogDescription`), and a `DialogFooter` of actions. The
-trigger, close, title, and description parts are polymorphic via Base UI's
-`render` prop. This is a design-pending v1: with no `--ui-dialog-*` token tier
-yet, the surface, overlay, text, and border resolve to the shared semantic tokens.
+`Dialog` is the sanctioned way to build a dialog. A single `variant` prop
+selects one of seven canned use-cases — `default`, `rename`, `save changes`,
+`reset password`, `discard changes`, `accept`, `read-only` — each with its own
+title, body copy, and footer buttons, so product code doesn't hand-assemble the
+same header/body/footer boilerplate every time. `children` overrides the body
+slot; `hasLoading` shows a spinner overlay across the body + footer. It's built
+internally on Base UI's Dialog primitive (focus trap, scroll lock,
+`Esc`/outside-press dismissal, and ARIA come from Base UI), but that primitive
+is not itself exported — if none of the seven variants fit your use case, raise
+it with the design system team rather than reaching for a lower-level API.
+
+An eighth `wide` variant is a legacy escape hatch — no Figma preset, meant to
+be paired with a fully custom `title`/`children`/`footer` — kept only for
+backward compatibility with pre-existing wider dialogs; prefer one of the
+seven canned variants for new work.
 
 ## Examples
-
 
 <DemoReact>
   <DialogDemo />
 </DemoReact>
 
-A confirmation dialog:
-
-```tsx
-<Dialog>
-  <DialogTrigger render={<Button variant="secondary">Open dialog</Button>} />
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Are you absolutely sure?</DialogTitle>
-      <DialogCloseButton />
-    </DialogHeader>
-    <DialogBody>
-      <DialogDescription>This action cannot be undone.</DialogDescription>
-    </DialogBody>
-    <DialogFooter>
-      <DialogClose render={<Button variant="ghost">Cancel</Button>} />
-      <Button variant="destructive">Delete account</Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
-```
-
-Controlled — drive `open` yourself and react to `onOpenChange`:
+A canned use-case, controlled open state. `onPrimaryAction` fires when the
+primary footer button is clicked — the dialog doesn't close on its own, so
+close it yourself once the action completes:
 
 ```tsx
 const [open, setOpen] = useState(false);
 
-<Dialog open={open} onOpenChange={setOpen}>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Session expired</DialogTitle>
-    </DialogHeader>
-    <DialogBody>
-      <DialogDescription>Please sign in again to continue.</DialogDescription>
-    </DialogBody>
-    <DialogFooter>
-      <Button onClick={() => setOpen(false)}>OK</Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>;
+<Dialog
+  variant="discard changes"
+  open={open}
+  onOpenChange={setOpen}
+  onPrimaryAction={() => {
+    discardChanges();
+    setOpen(false);
+  }}
+/>;
 ```
 
-Pick a width with `DialogContent`'s `size` — `xs` (464px), `sm` (512px,
-default), `md` (672px), `lg` (832px), `xl` (992px), or `2xl` (1136px):
+Override the body slot while keeping the header/footer chrome:
 
 ```tsx
-<Dialog>
-  <DialogTrigger render={<Button variant="secondary">Open</Button>} />
-  <DialogContent size="lg">
-    <DialogHeader>
-      <DialogTitle>Configure discovery agent</DialogTitle>
-      <DialogCloseButton />
-    </DialogHeader>
-    <DialogBody>{/* … */}</DialogBody>
-  </DialogContent>
+<Dialog variant="default" defaultOpen>
+  <p>Any custom body content.</p>
 </Dialog>
+```
+
+Busy state — the body and footer become `inert` (unfocusable, unclickable) and
+the popup gets `aria-busy="true"` while `hasLoading` is set; `loadingLabel`
+overrides the overlay's accessible name:
+
+```tsx
+<Dialog variant="save changes" hasLoading loadingLabel="Enregistrement…" open />
+```
+
+Localize the canned copy — `title`, `secondaryLabel`, `primaryLabel`,
+`closeLabel`, and `loadingLabel` all override the variant's default English
+string:
+
+```tsx
+<Dialog
+  variant="discard changes"
+  title="Modifications non enregistrées"
+  secondaryLabel="Retour"
+  primaryLabel="Confirmer"
+  closeLabel="Fermer"
+  open
+/>
+```
+
+`rename`, `discard changes`, and `accept` embed a generic "object name"
+placeholder in their canned title/body. Pass `objectName` to interpolate the
+real name (e.g. a file being renamed) instead of overriding `title`/`children`
+by hand:
+
+```tsx
+<Dialog variant="rename" objectName="Q3 Report.xlsx" open onOpenChange={setOpen} />
+```
+
+The `rename` variant's text field accessible name is also overridable via
+`objectNameLabel` (default `'Object name'`):
+
+```tsx
+<Dialog variant="rename" objectNameLabel="Nom de l'objet" open onOpenChange={setOpen} />
 ```
 
 When the dialog renders inside an isolated container (e.g. a shadow root), pass a
 `portalContainer` so the popup inherits that scope's styles:
 
 ```tsx
-<DialogContent portalContainer={mountNode}>{/* … */}</DialogContent>
+<Dialog portalContainer={mountNode}>{/* … */}</Dialog>
+```
+
+Hide the header and/or footer chrome for a body-only dialog. Both default to
+`true`; this is beyond the strict Figma contract (all seven canned variants
+always show both). When the header is hidden, the title still renders
+off-screen so the dialog keeps an accessible name:
+
+```tsx
+<Dialog hasHeader={false} open>
+  <p>Body-only content — no title bar, no close button.</p>
+</Dialog>
+```
+
+Legacy `wide` variant — a free-form footer for pre-existing wider dialogs that
+don't fit one of the seven canned use-cases:
+
+```tsx
+import { Button, DialogClose } from '@acronis-platform/ui-react';
+
+<Dialog
+  variant="wide"
+  size="large"
+  title="Configure discovery agent"
+  open
+  footer={
+    <>
+      <DialogClose render={<Button variant="ghost">Cancel</Button>} />
+      <Button>Configure</Button>
+    </>
+  }
+>
+  <p>Any custom body content.</p>
+</Dialog>
 ```
 
 ## API Reference
 
-### DialogContent
-
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/dialog/dialog.docs.ts"
-  name="DialogContentProps"
+  name="DialogProps"
 />
-
-`Dialog` (root) accepts the Base UI Dialog root props — `open` / `defaultOpen`,
-`onOpenChange`, and `modal`. The remaining parts (`DialogTrigger`, `DialogClose`,
-`DialogTitle`, `DialogDescription`, `DialogOverlay`, `DialogPortal`) wrap the
-matching Base UI Dialog parts and accept their props (including `render` for
-composition); `DialogHeader`, `DialogBody`, and `DialogFooter` accept the standard
-attributes of the `<div>` they render. See the
-[Base UI Dialog docs](https://base-ui.com/react/components/dialog) for the full
-prop surface.

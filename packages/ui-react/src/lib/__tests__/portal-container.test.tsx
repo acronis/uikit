@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/tooltip';
 
 import {
-  Dialog,
+  DialogRoot,
   DialogContent,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -127,10 +127,10 @@ describe('PortalContainerProvider integration', () => {
 
     render(
       <PortalContainerProvider container={container}>
-        <Dialog>
+        <DialogRoot>
           <DialogTrigger>Open Dialog</DialogTrigger>
           <DialogContent>Dialog inside</DialogContent>
-        </Dialog>
+        </DialogRoot>
       </PortalContainerProvider>
     );
 

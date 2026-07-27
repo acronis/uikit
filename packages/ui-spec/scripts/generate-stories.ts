@@ -46,6 +46,11 @@ interface RenderHint {
 }
 
 const RENDER: Record<string, RenderHint> = {
+  // The variant axis would render eight modals — each a portaled, fixed,
+  // focus-trapping overlay — stacked at screen center, so an auto "All variants"
+  // grid is a misleading (and focus-trap-fighting) snapshot. The hand-written
+  // stories cover each variant in its own story (one clean modal per snapshot).
+  dialog: { skip: true },
   avatar: {
     extraImports: ["import { AvatarFallback } from '../avatar';"],
     sample: '\n      <AvatarFallback>SN</AvatarFallback>\n    ',
@@ -82,29 +87,14 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
-  dialog: {
-    props: 'defaultOpen',
-    extraImports: [
-      "import { DialogContent, DialogHeader, DialogTitle, DialogCloseButton, DialogBody, DialogDescription, DialogFooter } from '../dialog';",
-      "import { Button } from '../../button';",
-    ],
-    sample: [
-      '',
-      '      <DialogContent>',
-      '        <DialogHeader>',
-      '          <DialogTitle>Are you absolutely sure?</DialogTitle>',
-      '          <DialogCloseButton />',
-      '        </DialogHeader>',
-      '        <DialogBody>',
-      '          <DialogDescription>This action cannot be undone.</DialogDescription>',
-      '        </DialogBody>',
-      '        <DialogFooter>',
-      '          <Button variant="ghost">Cancel</Button>',
-      '          <Button variant="destructive">Delete</Button>',
-      '        </DialogFooter>',
-      '      </DialogContent>',
-      '    ',
-    ].join('\n'),
+  'dialog-root': {
+    // DialogRoot is the composable primitive spec (`sourceDir`-mapped to
+    // `dialog/` — it has no `dialog-root/` folder of its own in ui-react) and
+    // is internal-only: not exported from the package root, no Figma node.
+    // Explicit here (rather than relying on `generate()`'s folder-existence
+    // check to skip it) so this doesn't silently start emitting a generated
+    // story if the generator is ever taught to resolve `sourceDir`.
+    skip: true,
   },
   popover: {
     props: 'defaultOpen',

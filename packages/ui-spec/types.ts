@@ -6,6 +6,8 @@ export interface IndexSpec {
   spec_version: string;
   component: string;
   name: string;
+  /** ui-react component dir (under src/components/ui), when it differs from `name`. */
+  sourceDir?: string;
   status: ComponentStatus;
   category: string;
   description: string;

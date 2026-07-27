@@ -1,0 +1,117 @@
+spec_version: '1.0'
+component: DialogRoot
+
+# Framework-agnostic contract for a *composable* modal dialog: the overlay is
+# assembled from parts (see anatomy.yaml). The root owns the open state; the
+# parts render the trigger, scrim, and popup furniture. Property names are
+# neutral; see `adapters` for per-framework syntax.
+contract:
+  properties:
+    - name: open
+      type: boolean
+      required: false
+      description: Controlled open state. Pair with the change event.
+    - name: default-open
+      type: boolean
+      required: false
+      default: false
+      description: Initial open state when uncontrolled.
+    - name: modal
+      type: "boolean | 'trap-focus'"
+      required: false
+      default: true
+      description: >-
+        Modal behavior — traps focus and locks background scroll while open.
+        `'trap-focus'` keeps the focus trap but allows background interaction.
+    - name: size
+      type: "'sm' | 'large'"
+      required: false
+      default: "'sm'"
+      description: >-
+        Popup max-width (on the content part). `sm` (512px) has a
+        Figma-defined token (`--ui-dialog-container-size-sm`); `large` (832px)
+        is a legacy backward-compatibility size with no design token, kept for
+        existing call sites (see the public `Dialog` recipe's `wide` variant).
+    - name: portal
+      type: boolean
+      required: false
+      default: true
+      description: >-
+        Render the content inside a portal (the content part). Required by the
+        underlying primitive for correct stacking; disable only when supplying
+        your own portal ancestor.
+    - name: render
+      type: 'RenderProp'
+      required: false
+      default: undefined
+      description: >-
+        Composition prop available on the trigger, close, title, description, and
+        other primitive parts — replaces the rendered element with another
+        component (e.g. render the trigger as a Button) while merging props.
+        React-only; other frameworks use their own polymorphism.
+
+  events:
+    - name: open-change
+      payload: boolean
+      description: >-
+        Fired when the dialog opens or closes (React: `onOpenChange`). Payload is
+        the new open value.
+
+  content:
+    - name: default
+      description: >-
+        The composed dialog. Author it from the parts: an optional trigger, plus
+        the content (popup) wrapping an optional header (title + close), a body
+        (with a description), and an optional footer for actions.
+
+  methods: []
+
+adapters:
+  react:
+    component: DialogRoot
+    status: implemented
+    import: >-
+      Internal-only — NOT exported from '@acronis-platform/ui-react'.
+      `Dialog` (the recipe) is the sole public entry point; these parts are an
+      implementation detail it composes internally
+      (src/components/ui/dialog/dialog.tsx).
+    example: |
+      // Internal usage only (e.g. inside Dialog or its tests):
+      <DialogRoot>
+        <DialogTrigger render={<Button variant="secondary">Open</Button>} />
+        <DialogContent>
+          <DialogHeaderRoot>
+            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogCloseButton />
+          </DialogHeaderRoot>
+          <DialogBodyRoot>
+            <DialogDescription>This action cannot be undone.</DialogDescription>
+          </DialogBodyRoot>
+          <DialogFooterRoot>
+            <DialogClose render={<Button variant="ghost">Cancel</Button>} />
+            <Button variant="destructive">Delete</Button>
+          </DialogFooterRoot>
+        </DialogContent>
+      </DialogRoot>
+
+  vue:
+    component: AvDialogRoot
+    status: planned
+    import: "import { AvDialogRoot, AvDialogContent } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvDialogRoot v-model:open="open">
+        <AvDialogContent>
+          <AvDialogTitle>Are you sure?</AvDialogTitle>
+        </AvDialogContent>
+      </AvDialogRoot>
+
+  web-components:
+    element: ui-dialog-root
+    status: planned
+    import: "import '@acronis-platform/ui-wc/dialog-root'"
+    example: |
+      <ui-dialog-root open>
+        <ui-dialog-content>
+          <ui-dialog-title>Are you sure?</ui-dialog-title>
+        </ui-dialog-content>
+      </ui-dialog-root>

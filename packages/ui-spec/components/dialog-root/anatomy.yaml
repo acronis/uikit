@@ -1,0 +1,145 @@
+spec_version: '1.0'
+component: DialogRoot
+
+schematic: |
+  trigger: <button> (opens the dialog)
+
+  ─ when open ─────────────────────────────────────────────────
+  overlay: full-screen scrim
+  +===========================================================+
+  |  root: <div role="dialog"> (centered popup)               |
+  |   +-----------------------------------------------------+ |
+  |   | header:  title .................... close (×)       | |
+  |   +-----------------------------------------------------+ |
+  |   | body:                                               | |
+  |   |   description                                       | |
+  |   |   …content…                                         | |
+  |   +-----------------------------------------------------+ |
+  |   | footer:                    [Cancel] [Confirm]       | |
+  |   +-----------------------------------------------------+ |
+  +===========================================================+
+     root    -> --ui-dialog-container-* body + shadow, rounded
+     header / footer -> bg-background (surface-primary) bars, border-border (no Figma node yet)
+     overlay -> var(--ui-background-backdrop-screen)
+     close   -> times icon, --ui-button-icon-global-icon-color-idle (constant across states) → hover/active bg
+
+root:
+  element: div
+  role: dialog
+  description: >-
+    The modal popup (Base UI `Dialog.Popup`), centered and portaled. Carries
+    `role="dialog"`/`aria-modal`, is labelled by the title and described by the
+    description, traps focus, and locks scroll while open.
+
+parts:
+  - id: trigger
+    description: >-
+      The control that opens the dialog (Base UI `Dialog.Trigger`). Polymorphic
+      via `render` — usually a Button. Optional; a controlled dialog needs none.
+    element: button
+    optional: true
+  - id: overlay
+    description: >-
+      Full-screen scrim (Base UI `Dialog.Backdrop`) behind the popup, tinted with
+      `--ui-background-backdrop-screen`. Clicking it dismisses a non-modal dialog.
+    element: div
+  - id: header
+    description: >-
+      Top bar holding the title and close button. White surface
+      (`bg-background`) with a bottom divider.
+    element: div
+    optional: true
+  - id: title
+    description: >-
+      The dialog's accessible name (Base UI `Dialog.Title`), wired to
+      `aria-labelledby`. Uses `text-foreground`.
+    element: h2
+  - id: close
+    description: >-
+      Icon button (Base UI `Dialog.Close` + a times icon) that dismisses the
+      dialog. Labelled "Close" for screen readers.
+    element: button
+    optional: true
+  - id: body
+    description: Scrollable content region between the header and footer.
+    element: div
+    optional: true
+  - id: description
+    description: >-
+      Supporting text (Base UI `Dialog.Description`), wired to
+      `aria-describedby`. Uses `text-muted-foreground`.
+    element: p
+    optional: true
+  - id: footer
+    description: >-
+      Bottom action bar (right-aligned). White surface (`bg-background`) with a
+      top divider.
+    element: div
+    optional: true
+
+layout:
+  type: flex
+  direction: column
+  order: [header, body, footer]
+
+# Dialog owns one piece of internal state, `open`, plus the logic mapping
+# interaction -> state -> visibility. The open/closed visual states are therefore
+# `internal` (driven by this state), reached via the controlled prop or a play
+# interaction (see transitions).
+internal_state:
+  - id: open
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [open]
+    controlled_default: default-open
+    emits: open-change
+    changed_by: >-
+      trigger click opens; close button / Esc / outside-press / a Close part
+      closes (when uncontrolled)
+    description: Whether the dialog is shown; reflected to the popup + overlay.
+
+transitions:
+  # `interactive` is intentionally omitted: the generated-story harness would
+  # auto-emit a play that clicks the root, which doesn't model "click the trigger
+  # to open" / "press Esc to close". The open state is exercised by the hand
+  # stories (defaultOpen) and the component tests instead.
+  - id: open
+    state: open
+    from: false
+    on: trigger click
+    to: true
+    effect: emits open-change(true)
+    when_controlled: >-
+      internal value does NOT change; the component emits open-change and the
+      consumer must update the `open` prop.
+  - id: close
+    state: open
+    from: true
+    on: close button / Esc / outside press
+    to: false
+    effect: emits open-change(false)
+    when_controlled: >-
+      internal value does NOT change; the component emits open-change and the
+      consumer must update the `open` prop.
+
+states:
+  - {
+      id: open,
+      trigger: 'internal open === true (data-[open])',
+      kind: internal,
+      affects: [root, overlay],
+    }
+  - {
+      id: closed,
+      trigger: 'internal open === false (data-[closed])',
+      kind: internal,
+      affects: [root, overlay],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on the close button,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [close],
+    }

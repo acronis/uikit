@@ -1,0 +1,83 @@
+spec_version: '1.0'
+component: DialogRoot
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The container is themed by the `--ui-dialog-container-*` tokens and the close
+# button by the `--ui-button-icon-global-*` tokens (reconciled against the
+# Figma "DialogDefault" node, 6343:58898, which instantiates a ButtonIcon for
+# the close control). `size="large"` (832px) has no token — a legacy
+# backward-compatibility value, not listed below. The composable DialogHeaderRoot /
+# DialogFooterRoot parts below have no Figma node of their own yet, so they still
+# consume the shared *semantic* tokens (via the bridged Tailwind names
+# bg-background / text-foreground / text-muted-foreground / border-border).
+# Replace those with the `--ui-dialog-header-*` / `--ui-footer-*` tiers once
+# that part gets its own reconciliation pass.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-background-backdrop-screen,
+      affects: overlay,
+      description: Scrim color behind the popup (direct var ref),
+    }
+  - {
+      name: --ui-dialog-container-color,
+      affects: root,
+      description: Popup container surface,
+    }
+  - {
+      name: --ui-dialog-container-border-radius,
+      affects: root,
+      description: Popup container corner radius,
+    }
+  - {
+      name: --ui-dialog-container-width-min,
+      affects: root,
+      description: Popup container minimum width,
+    }
+  - {
+      name: --ui-dialog-container-size-sm,
+      affects: root,
+      description: '`size="sm"` (default) popup max-width',
+    }
+  - {
+      name: --ui-background-surface-primary,
+      affects: header,
+      description: 'DialogHeaderRoot / DialogFooterRoot surface (bridged as `bg-background`; no Figma node yet)',
+    }
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: title,
+      description: Title / default text color (bridged as `text-foreground`),
+    }
+  - {
+      name: --ui-text-on-surface-secondary,
+      affects: description,
+      description: 'Description color (bridged as `text-muted-foreground`)',
+    }
+  - {
+      name: --ui-border-on-surface-border,
+      affects: header,
+      description: 'DialogHeaderRoot / DialogFooterRoot divider (bridged as `border-border`; no Figma node yet)',
+    }
+  - {
+      name: --ui-button-icon-global-icon-color-idle,
+      affects: close,
+      description: 'Close-icon color, constant across idle/hover/active in the default brand',
+    }
+  - {
+      name: --ui-button-icon-global-container-color-hover,
+      affects: close,
+      description: Close-button background on hover,
+    }
+  - {
+      name: --ui-button-icon-global-container-color-active,
+      affects: close,
+      description: Close-button background when pressed,
+    }
+  - {
+      name: --ui-focus-primary,
+      affects: close,
+      description: Focus-visible ring on the close button,
+    }
