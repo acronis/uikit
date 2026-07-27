@@ -347,7 +347,7 @@ describe('cva ↔ contract conformance', () => {
     const groups = extractCvaGroups(source);
     const api = loadSpec('dialog').api;
 
-    // `size` (the six width steps) is the only cva axis.
+    // `size` (the two width steps, `sm`/`large`) is the only cva axis.
     expect(Object.keys(groups)).toEqual(['size']);
     expect(groups.size.sort()).toEqual(enumMembers(api, 'size').sort());
   });

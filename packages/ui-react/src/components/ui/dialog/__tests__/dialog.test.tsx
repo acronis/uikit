@@ -427,4 +427,15 @@ describe('Dialog', () => {
       screen.queryByRole('button', { name: 'Confirm' })
     ).not.toBeInTheDocument();
   });
+
+  it('forwards keepMounted so the closed popup stays in the DOM (hidden)', () => {
+    render(<Dialog open={false} keepMounted />);
+    expect(screen.getByText('Dialog title')).toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('does not render the popup when closed without keepMounted', () => {
+    render(<Dialog open={false} />);
+    expect(screen.queryByText('Dialog title')).not.toBeInTheDocument();
+  });
 });

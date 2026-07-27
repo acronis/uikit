@@ -22,6 +22,7 @@ figma:
 dependencies:
   components:
     - DialogRoot
+    - DialogFooterDefault
     - Button
     - InputText
     - Loading

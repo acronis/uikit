@@ -118,6 +118,11 @@ tokens:
       description: Close-button background when pressed,
     }
   - {
+      name: --ui-button-icon-global-icon-color-disabled,
+      affects: close-button,
+      description: Close-icon color when the close button is disabled,
+    }
+  - {
       name: --ui-focus-primary,
       affects: close-button,
       description: Focus-visible ring on the close button,

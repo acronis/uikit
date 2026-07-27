@@ -103,6 +103,8 @@ export interface DialogProps {
   portal?: boolean;
   /** Portal container. Pass a shadow-root mount for isolated-style previews. */
   portalContainer?: HTMLElement | null;
+  /** Keep the content mounted while closed. */
+  keepMounted?: boolean;
   /** Extra classes merged onto the popup container. */
   className?: string;
   /** Controlled open state. Pair with `onOpenChange`. */

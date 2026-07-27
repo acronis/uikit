@@ -535,6 +535,8 @@ export interface DialogProps extends Omit<DialogRootProps, 'children'> {
   portal?: boolean;
   /** Portal container (forwarded to `DialogContent`). */
   portalContainer?: DialogContentProps['portalContainer'];
+  /** Keep the content mounted while closed (forwarded to `DialogContent`). */
+  keepMounted?: DialogContentProps['keepMounted'];
   /** Extra classes merged onto the popup container. */
   className?: string;
 }
@@ -559,6 +561,7 @@ const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
       size,
       portal,
       portalContainer,
+      keepMounted,
       className,
       ...rootProps
     },
@@ -584,6 +587,7 @@ const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
           size={resolvedSize}
           portal={portal}
           portalContainer={portalContainer}
+          keepMounted={keepMounted}
           className={className}
           aria-busy={hasLoading || undefined}
         >

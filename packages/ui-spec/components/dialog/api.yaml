@@ -134,6 +134,12 @@ contract:
         Render the content inside a portal (forwarded to the underlying content).
         Required for correct stacking; disable only when supplying your own
         portal ancestor.
+    - name: keepMounted
+      type: boolean
+      required: false
+      description: >-
+        Keep the content mounted while closed (forwarded to the underlying
+        content's portal).
 
   events:
     - name: open-change
