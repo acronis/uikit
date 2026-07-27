@@ -109,6 +109,7 @@ export * from './components/ui/toggle-group';
 export * from './components/ui/toolbar';
 export * from './components/ui/tooltip';
 export * from './components/ui/tag';
+export * from './components/ui/timeline';
 // `Badge` is an alias of `Tag`. The legacy generic shadcn Badge is replaced by
 // the design-system-native Tag (its own `--ui-tag-*` token tier, icon slot, and
 // sizes); Tag's variants are exactly Badge's status set. No separate component.

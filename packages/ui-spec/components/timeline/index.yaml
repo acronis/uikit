@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: Timeline
+name: timeline
+status: draft
+category: data-display
+description: >-
+  A presentational, chronological list of events — an activity feed, audit log,
+  or status history. `Timeline` + `Timeline.Item` render a semantic ordered list
+  with a connector line, status markers, and a timestamp / title / description
+  hierarchy, plus optional icon, metadata, actions, and expandable children. It
+  owns structure and layout only; it never sorts, groups, fetches, or interprets
+  events, and ships no domain event types or icons. Not a temporal chart.
+  Design-pending v1 (no Figma node yet).
+dependencies:
+  components: []

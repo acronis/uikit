@@ -1,0 +1,73 @@
+---
+title: Timeline
+description: A chronological event list — activity feed, audit log, or status history.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { TimelineDemo } from '@/components/demos-react/timeline';
+
+## Usage
+
+```tsx
+import { Timeline } from '@acronis-platform/ui-react';
+```
+
+`Timeline` renders a **chronological list of events** as a semantic ordered list
+(`<ol>`/`<li>`) with a connector line, status markers, and a timestamp / title /
+description hierarchy. It is purely presentational: it never sorts, groups,
+fetches, or interprets events, and ships no domain event types or icons — the
+consumer passes ordered `Timeline.Item`s with a resolved `status`, `icon`, and a
+formatted `timestamp`.
+
+It is **not** a temporal chart — use a Line / Area / Composed chart for trends.
+
+## Examples
+
+<DemoReact>
+  <TimelineDemo />
+</DemoReact>
+
+```tsx
+<Timeline>
+  <Timeline.Item
+    timestamp={<time dateTime="2026-07-24T10:35:00+02:00">24 Jul 2026, 10:35</time>}
+    title="Backup success rate dropped"
+    description="Fell from 96% to 72%"
+    status="critical"
+    icon={<ChartPieIcon />}
+    metadata={<Tag>Backup</Tag>}
+    actions={<Link href="#details">View details</Link>}
+  />
+  <Timeline.Item title="P1 support ticket resolved" status="success" />
+</Timeline>
+```
+
+`status` (`neutral`, `info`, `success`, `warning`, `danger`, `critical`) tints
+the **marker** only — a dot, or an icon in a `-pressed` badge — never large
+blocks of text. Use `current` for a process's current step and `disabled` to dim
+an inactive item.
+
+Set the rhythm with `density` (`compact` for sidebars / popovers) and the text
+scale with `size`:
+
+```tsx
+<Timeline density="compact" size="small">
+  <Timeline.Item timestamp="10:30" title="Deployed v2.4.1" status="success" />
+  <Timeline.Item timestamp="10:12" title="Build passed" status="info" />
+</Timeline>
+```
+
+Compose `Tag` (metadata), `Link` / `ButtonMenu` (actions), and `Accordion`
+(expandable detail, as an item's `children`).
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/timeline/timeline.tsx"
+  name="TimelineProps"
+/>
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/timeline/timeline.tsx"
+  name="TimelineItemProps"
+/>
