@@ -87,10 +87,15 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
-  // DialogRoot (the composable primitive spec) has no matching ui-react
-  // folder of its own (its source lives in `dialog/`, sourceDir-mapped) — the
-  // generator resolves folders by spec name, so it always skips before ever
-  // reading a hint. No RENDER entry is needed here.
+  'dialog-root': {
+    // DialogRoot is the composable primitive spec (`sourceDir`-mapped to
+    // `dialog/` — it has no `dialog-root/` folder of its own in ui-react) and
+    // is internal-only: not exported from the package root, no Figma node.
+    // Explicit here (rather than relying on `generate()`'s folder-existence
+    // check to skip it) so this doesn't silently start emitting a generated
+    // story if the generator is ever taught to resolve `sourceDir`.
+    skip: true,
+  },
   popover: {
     props: 'defaultOpen',
     extraImports: [

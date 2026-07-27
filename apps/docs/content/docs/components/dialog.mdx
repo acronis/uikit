@@ -23,9 +23,10 @@ internally on Base UI's Dialog primitive (focus trap, scroll lock,
 is not itself exported — if none of the seven variants fit your use case, raise
 it with the design system team rather than reaching for a lower-level API.
 
-An eighth `wide` variant is a legacy escape hatch — no canned preset, a
-fully custom `footer` — kept only for backward compatibility with pre-existing
-wider dialogs; prefer one of the seven canned variants for new work.
+An eighth `wide` variant is a legacy escape hatch — no Figma preset, meant to
+be paired with a fully custom `title`/`children`/`footer` — kept only for
+backward compatibility with pre-existing wider dialogs; prefer one of the
+seven canned variants for new work.
 
 ## Examples
 
@@ -59,14 +60,17 @@ Override the body slot while keeping the header/footer chrome:
 </Dialog>
 ```
 
-Busy state:
+Busy state — the body and footer become `inert` (unfocusable, unclickable) and
+the popup gets `aria-busy="true"` while `hasLoading` is set; `loadingLabel`
+overrides the overlay's accessible name:
 
 ```tsx
-<Dialog variant="save changes" hasLoading open />
+<Dialog variant="save changes" hasLoading loadingLabel="Enregistrement…" open />
 ```
 
-Localize the canned copy — `title`, `secondaryLabel`, `primaryLabel`, and
-`closeLabel` all override the variant's default English string:
+Localize the canned copy — `title`, `secondaryLabel`, `primaryLabel`,
+`closeLabel`, and `loadingLabel` all override the variant's default English
+string:
 
 ```tsx
 <Dialog

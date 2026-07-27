@@ -264,6 +264,28 @@ describe('Dialog', () => {
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 
+  it('lets loadingLabel override the loading overlay accessible name', () => {
+    render(<Dialog open hasLoading loadingLabel="Chargement…" />);
+    expect(screen.getByRole('status', { name: 'Chargement…' })).toBeInTheDocument();
+  });
+
+  it('marks the body and footer inert while hasLoading, so their buttons are unreachable', () => {
+    render(<Dialog open hasLoading />);
+    const cancelButton = screen.getByRole('button', { name: 'Cancel' });
+    expect(cancelButton.closest('[inert]')).not.toBeNull();
+  });
+
+  it('does not mark the body/footer inert when hasLoading is false', () => {
+    render(<Dialog open />);
+    const cancelButton = screen.getByRole('button', { name: 'Cancel' });
+    expect(cancelButton.closest('[inert]')).toBeNull();
+  });
+
+  it('marks the popup aria-busy while hasLoading', () => {
+    render(<Dialog open hasLoading />);
+    expect(screen.getByRole('dialog')).toHaveAttribute('aria-busy', 'true');
+  });
+
   it('renders the header and footer by default', () => {
     render(<Dialog open />);
     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
@@ -371,6 +393,17 @@ describe('Dialog', () => {
     expect(screen.getByRole('dialog')).toHaveClass(
       'max-w-[var(--ui-dialog-container-size-sm)]'
     );
+  });
+
+  it('renders the wide variant fallback title, body, and footer when uncustomized', () => {
+    render(<Dialog open variant="wide" />);
+    const dialog = screen.getByRole('dialog');
+    expect(within(dialog).getByText('Dialog title')).toBeInTheDocument();
+    expect(
+      within(dialog).getByText('Drop any content into this slot.')
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Confirm' })).toBeInTheDocument();
   });
 
   it('lets the footer prop replace the canned footer with free-form actions', () => {

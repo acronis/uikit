@@ -64,7 +64,7 @@ All portaling components respect `PortalContainerProvider`:
 | `PopoverContent` | Positioner + popup |
 | `DropdownMenuContent` | Positioner + popup |
 | `TooltipContent` | Positioner + popup |
-| `DialogContent` | Backdrop + popup |
+| `Dialog` | Backdrop + popup |
 | `SheetContent` | Backdrop + popup |
 | `SelectContent` / `InputSelectContent` | Positioner + popup |
 | `ComboboxContent` | Positioner + popup |
@@ -118,11 +118,8 @@ that must overlay the entire viewport), pass `portalContainer` directly:
   </Popover>
 
   {/* This dialog portals to document.body (explicit override) */}
-  <Dialog>
-    <DialogTrigger>Open</DialogTrigger>
-    <DialogContent portalContainer={document.body}>
-      Full-screen overlay
-    </DialogContent>
+  <Dialog portalContainer={document.body} open>
+    Full-screen overlay
   </Dialog>
 </PortalContainerProvider>
 ```

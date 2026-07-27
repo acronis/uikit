@@ -84,6 +84,15 @@ Scenario: The loading overlay covers body and footer
   And it is hidden when hasLoading is false
 ```
 
+```gherkin
+Scenario: The loading overlay actually blocks interaction, not just the click
+  Given an open Dialog with hasLoading = true
+  Then the body and footer are inert — unfocusable, unclickable, and hidden
+  from assistive tech, not merely visually obscured
+  And the popup carries aria-busy="true"
+  And loadingLabel overrides the overlay's accessible name
+```
+
 ## Header and footer optionality
 
 ```gherkin

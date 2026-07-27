@@ -32,7 +32,7 @@ export interface DialogContentProps {
 export interface DialogProps {
   /**
    * Selects the canned title / body / footer preset. Defaults to `'default'`.
-   * `'wide'` is a legacy escape hatch (no canned preset) kept for backward
+   * `'wide'` is a legacy escape hatch (no Figma preset) kept for backward
    * compatibility — pair it with `size="large"` and the `footer` prop.
    */
   variant?:
@@ -44,15 +44,20 @@ export interface DialogProps {
     | 'accept'
     | 'read-only'
     | 'wide';
-  /** Show a spinner overlay across the body + footer. */
+  /**
+   * Show a spinner overlay across the body + footer, and make both `inert`
+   * so a keyboard user can't activate the obscured footer buttons.
+   */
   hasLoading?: boolean;
+  /** Overrides the loading overlay's accessible label. Ignored when `hasLoading` is `false`. */
+  loadingLabel?: string;
   /**
    * Show the header (title + close button). Defaults to `true`. When `false`,
    * the title is still rendered off-screen so the dialog keeps an accessible
    * name — only the visible bar and close button are omitted.
    */
   hasHeader?: boolean;
-  /** Show the footer (action buttons). Defaults to `true`. */
+  /** Show the footer (action buttons). Defaults to `true`. When `false`, `footer` is not rendered either. */
   hasFooter?: boolean;
   /** Overrides the variant's default body content. */
   children?: React.ReactNode;

@@ -263,11 +263,16 @@ function DialogHeader({ title, closeLabel }: DialogHeaderProps) {
 // `DialogBodyRoot` composable primitive above.
 interface DialogBodyProps {
   children: React.ReactNode;
+  /** Makes the body unfocusable/unclickable while the loading overlay is shown. */
+  inert?: boolean;
 }
 
-function DialogBody({ children }: DialogBodyProps) {
+function DialogBody({ children, inert }: DialogBodyProps) {
   return (
-    <div className="flex min-h-[var(--ui-dialog-body-height-min)] flex-col justify-center gap-[var(--ui-dialog-body-gap)] px-4 py-[var(--ui-dialog-body-padding-y)]">
+    <div
+      inert={inert}
+      className="flex min-h-[var(--ui-dialog-body-height-min)] flex-col justify-center gap-[var(--ui-dialog-body-gap)] px-4 py-[var(--ui-dialog-body-padding-y)]"
+    >
       {typeof children === 'string' ? (
         <p className="text-sm leading-6 text-foreground">{children}</p>
       ) : (
@@ -333,8 +338,9 @@ function DialogFooterActions({
 // Colors resolve to shipped semantic tokens via the bridged Tailwind names the
 // Dialog family already uses (text-foreground, the backdrop + focus tokens
 // inside DialogContent / DialogCloseButton) and the Button / InputText token
-// tiers — nothing is hand-authored. The loading scrim is surface-secondary at
-// 95% alpha (`bg-muted/95`), matching the design's translucent surface fill.
+// tiers — nothing is hand-authored. The loading scrim renders `Loading`'s
+// `onSurfaceSecondary` variant (`--ui-loading-element-container-color-secondary`),
+// matching the design's translucent surface fill.
 //
 // Header + footer geometry/color resolve to the `--ui-dialog-header-*` /
 // `--ui-footer-*` tiers, reconciled against the DialogDefault Figma node.
@@ -432,8 +438,9 @@ const DIALOG_VARIANT_CONTENT: Record<DialogVariant, DialogVariantContent> = {
     primaryCloses: true,
   },
   // No Figma preset — a legacy, free-form escape hatch (see the `footer` prop
-  // and the `Large` story). These defaults only show if the caller overrides
-  // neither `footer` nor `primaryLabel`/`secondaryLabel`.
+  // and the `Large` story). This fallback title/body/footer only renders if
+  // the caller supplies neither `footer` nor `title`/`children` — every real
+  // `wide` call site overrides them.
   wide: {
     title: 'Dialog title',
     body: 'Drop any content into this slot.',
@@ -452,8 +459,17 @@ export interface DialogProps extends Omit<DialogRootProps, 'children'> {
    * compatibility — pair it with `size="large"` and the `footer` prop.
    */
   variant?: DialogVariant;
-  /** Show a spinner overlay across the body + footer. */
+  /**
+   * Show a spinner overlay across the body + footer, and make both `inert`
+   * (unfocusable, unclickable, hidden from assistive tech) so a keyboard user
+   * can't activate the visually obscured footer buttons while busy.
+   */
   hasLoading?: boolean;
+  /**
+   * Overrides the loading overlay's accessible label. Defaults to `Loading`'s
+   * own default (`'Data is loading…'`). Ignored when `hasLoading` is `false`.
+   */
+  loadingLabel?: string;
   /**
    * Show the header (title + close button). Defaults to `true`. When `false`,
    * the title is still rendered off-screen so the dialog keeps an accessible
@@ -465,7 +481,9 @@ export interface DialogProps extends Omit<DialogRootProps, 'children'> {
   /**
    * Show the footer (action buttons). Defaults to `true`. Beyond the strict
    * Figma contract (all seven `DialogDefault` variants always show the
-   * footer); a ui-react-only extension, like `wide`/`size="large"`.
+   * footer); a ui-react-only extension, like `wide`/`size="large"`. When
+   * `false`, `footer` (and the canned footer it would otherwise replace) is
+   * not rendered either.
    */
   hasFooter?: boolean;
   /** Overrides the variant's default body content. */
@@ -502,7 +520,8 @@ export interface DialogProps extends Omit<DialogRootProps, 'children'> {
   /**
    * Replaces the footer's action content entirely with free-form buttons —
    * the escape hatch the `wide` variant is meant to be paired with, for
-   * legacy call sites that don't fit one of the seven canned presets.
+   * legacy call sites that don't fit one of the seven canned presets. Ignored
+   * (along with the canned footer) when `hasFooter` is `false`.
    */
   footer?: React.ReactNode;
   /** Overrides the close button's accessible name. Defaults to `'Close'`. */
@@ -525,6 +544,7 @@ const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
     {
       variant = 'default',
       hasLoading = false,
+      loadingLabel,
       hasHeader = true,
       hasFooter = true,
       children,
@@ -565,6 +585,7 @@ const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
           portal={portal}
           portalContainer={portalContainer}
           className={className}
+          aria-busy={hasLoading || undefined}
         >
           {hasHeader ? (
             <DialogHeader title={titleText} closeLabel={closeLabel} />
@@ -573,10 +594,10 @@ const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
             <DialogTitle className="sr-only">{titleText}</DialogTitle>
           )}
 
-          <DialogBody>{bodyContent}</DialogBody>
+          <DialogBody inert={hasLoading}>{bodyContent}</DialogBody>
 
           {hasFooter && (
-            <DialogFooterDefault>
+            <DialogFooterDefault inert={hasLoading}>
               {footer ?? (
                 <DialogFooterActions
                   secondaryLabel={secondaryLabelText}
@@ -593,6 +614,7 @@ const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
             <Loading
               variant="onSurfaceSecondary"
               hasLabel={false}
+              label={loadingLabel}
               className={cn(
                 'absolute inset-x-0 bottom-0 rounded-none',
                 hasHeader ? 'top-[var(--ui-dialog-header-height)]' : 'top-0'

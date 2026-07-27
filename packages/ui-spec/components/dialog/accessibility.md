@@ -15,7 +15,10 @@ management and keyboard handling (via `DialogContent`/`DialogTitle`/
   the close button — the dialog is then dismissed via `Escape` or a
   caller-supplied action instead.
 - The loading overlay's spinner carries `role="status"` with an accessible name
-  ("Loading") so the busy state is announced.
+  (`loadingLabel`, defaulting to `Loading`'s own `'Data is loading…'`) so the
+  busy state is announced. The popup itself carries `aria-busy="true"`, and the
+  body + footer are made `inert` — not just visually obscured — so a keyboard
+  user cannot tab to or activate the footer buttons while `hasLoading` is set.
 - The `rename` variant's text field has a built-in accessible name
   (`aria-label="Object name"`) — the field renders without a visible label in
   the design, so the component supplies the label itself.

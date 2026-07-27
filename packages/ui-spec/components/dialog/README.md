@@ -7,12 +7,10 @@ same `DialogRoot` + `DialogHeader` + `DialogFooter` boilerplate each time. In
 Figma the matching component set is named "DialogDefault"; the code-facing
 name is `Dialog`.
 
-> **Status: draft (design-pending geometry).** Colors and typography resolve to
-> shipped semantic tokens, but there is no `--ui-dialog-*`/`--ui-footer-*` token
-> tier yet, so container/header/footer geometry (radius, widths, heights,
-> paddings, gaps, divider widths) is applied as plain Tailwind utilities — a
-> tracked exception, not an oversight. Reconcile with a Dialog/Footer tier once
-> the design team ships one. See `tokens.yaml`.
+> **Status: draft.** Container/header/footer geometry and color resolve to the
+> `--ui-dialog-*`/`--ui-footer-*` token tier (reconciled against the Figma
+> "DialogDefault" node). `size="large"` (832px) is the one exception — a legacy
+> backward-compatibility value with no matching token. See `tokens.yaml`.
 
 ## When to use
 

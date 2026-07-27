@@ -28,6 +28,7 @@ export type MessageKey =
   | 'submit'
   | 'cancel'
   | 'search'
+  | 'greeting'
   | 'notifications'
   | 'email'
   | 'loading';
@@ -37,6 +38,7 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     submit: 'Submit',
     cancel: 'Cancel',
     search: 'Search',
+    greeting: 'Welcome',
     notifications: 'Enable notifications',
     email: 'Email address',
     loading: 'Loading…',
@@ -45,6 +47,7 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     submit: 'Absenden',
     cancel: 'Abbrechen',
     search: 'Suchen',
+    greeting: 'Willkommen',
     notifications: 'Benachrichtigungen aktivieren',
     email: 'E-Mail-Adresse',
     loading: 'Wird geladen…',
@@ -53,6 +56,7 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     submit: 'Envoyer',
     cancel: 'Annuler',
     search: 'Rechercher',
+    greeting: 'Bienvenue',
     notifications: 'Activer les notifications',
     email: 'Adresse e-mail',
     loading: 'Chargement…',
@@ -61,6 +65,7 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     submit: '送信',
     cancel: 'キャンセル',
     search: '検索',
+    greeting: 'ようこそ',
     notifications: '通知を有効にする',
     email: 'メールアドレス',
     loading: '読み込み中…',
@@ -69,6 +74,7 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     submit: 'إرسال',
     cancel: 'إلغاء',
     search: 'بحث',
+    greeting: 'مرحبًا',
     notifications: 'تفعيل الإشعارات',
     email: 'عنوان البريد الإلكتروني',
     loading: 'جارٍ التحميل…',
@@ -77,6 +83,7 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     submit: 'שליחה',
     cancel: 'ביטול',
     search: 'חיפוש',
+    greeting: 'ברוך הבא',
     notifications: 'הפעלת התראות',
     email: 'כתובת אימייל',
     loading: 'טוען…',

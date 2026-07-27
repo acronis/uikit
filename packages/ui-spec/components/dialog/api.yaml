@@ -14,7 +14,7 @@ contract:
       description: >-
         Selects the canned title, body copy and footer buttons. `discard changes`
         uses a destructive primary action; `read-only` shows a single primary
-        action (no secondary button). `wide` has no canned preset — a legacy
+        action (no secondary button). `wide` has no Figma preset — a legacy
         escape hatch kept for backward compatibility, meant to be paired with
         `size="large"` and the `footer` prop.
     - name: hasLoading
@@ -24,7 +24,16 @@ contract:
       description: >-
         Shows a spinner overlay across the body + footer (inset from just below
         the header to the bottom, or from the very top when `hasHeader` is
-        `false`).
+        `false`), and makes both `inert` (unfocusable, unclickable, hidden from
+        assistive tech) so a keyboard user can't activate the obscured footer
+        buttons while busy.
+    - name: loadingLabel
+      type: string
+      required: false
+      default: "'Data is loading…'"
+      description: >-
+        Overrides the loading overlay's accessible label. Ignored when
+        `hasLoading` is `false`.
     - name: hasHeader
       type: boolean
       required: false
@@ -42,7 +51,8 @@ contract:
       description: >-
         Shows the footer (action buttons). Beyond the strict Figma contract
         (all seven canned variants always show the footer) — a ui-react-only
-        extension, like `wide`/`size="large"`.
+        extension, like `wide`/`size="large"`. When `false`, `footer` is not
+        rendered either.
     - name: title
       type: string
       required: false
