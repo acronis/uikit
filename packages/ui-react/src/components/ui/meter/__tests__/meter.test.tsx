@@ -27,7 +27,7 @@ describe('Meter', () => {
         value={1240}
         max={5000}
         color="red"
-        valueFormatter={(v) => `$${v.toLocaleString()}`}
+        valueFormatter={(v) => `$${v.toLocaleString('en-US')}`}
       />
     );
     expect(screen.getByText('$1,240')).toBeInTheDocument();
