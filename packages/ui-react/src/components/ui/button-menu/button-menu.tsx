@@ -26,7 +26,7 @@ import { cn } from '@/lib/utils';
 // Figma focus state is a 3px `--ui-focus-primary` ring flush to the button edge
 // (no offset) — `ring-[3px]`, no `ring-offset`.
 const buttonMenuVariants = cva(
-  'inline-flex h-[var(--ui-button-menu-global-container-height)] min-w-[var(--ui-button-menu-global-container-width-min)] items-center justify-center gap-[var(--ui-button-menu-global-container-gap)] whitespace-nowrap rounded-[var(--ui-button-menu-global-container-border-radius)] border border-transparent px-[var(--ui-button-menu-global-container-padding-x)] text-sm font-semibold leading-6 transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)] disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-[var(--ui-button-menu-global-icon-size)] [&_svg]:shrink-0',
+  'inline-flex h-[var(--ui-button-menu-global-container-height)] min-w-[var(--ui-button-menu-global-container-width-min)] cursor-pointer items-center justify-center gap-[var(--ui-button-menu-global-container-gap)] whitespace-nowrap rounded-[var(--ui-button-menu-global-container-border-radius)] border border-transparent px-[var(--ui-button-menu-global-container-padding-x)] text-sm font-semibold leading-6 transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)] disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-[var(--ui-button-menu-global-icon-size)] [&_svg]:shrink-0',
   {
     variants: {
       variant: {
