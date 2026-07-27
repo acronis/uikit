@@ -138,7 +138,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
     {...props}
   >
     {children}
-    <ChevronRightIcon className="ms-auto text-[var(--ui-button-menu-dropdown-extras-cascade-icon-color)] rtl:rotate-180" />
+    <ChevronRightIcon className="ms-auto self-center text-[var(--ui-button-menu-dropdown-extras-cascade-icon-color)] rtl:rotate-180" />
   </MenuPrimitive.SubmenuTrigger>
 ));
 DropdownMenuSubTrigger.displayName = 'DropdownMenuSubTrigger';
