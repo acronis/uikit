@@ -1,0 +1,14 @@
+spec_version: '1.0'
+component: ButtonIconInput
+name: button-icon-input
+status: ready
+category: actions
+description: >-
+  A smaller icon-only button (20×20, 16px glyph) meant to live inside an
+  input's box (e.g. a clear or reveal affordance), as opposed to `ButtonIcon`'s
+  standalone 32×32 sizing. `variant` (`normal` / `error`) mirrors the tone of
+  the field it sits in.
+since: 0.58.0
+figma:
+  node: '5304-5404'
+  codeConnect: packages/ui-react/src/components/ui/button-icon-input/button-icon-input.figma.tsx

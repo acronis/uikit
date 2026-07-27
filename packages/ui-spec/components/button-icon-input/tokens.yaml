@@ -1,0 +1,63 @@
+spec_version: '1.0'
+component: ButtonIconInput
+
+# References only — values live in @acronis-platform/tokens-pd. Unlike
+# ButtonIcon, `normal` and `error` don't share a `global` color tier — each
+# variant has its own idle/hover/active container + icon token set (only
+# geometry is shared, under `global`). The design has no `disabled` variant for
+# `error` (only `normal` does), so `disabled` always uses the `normal`
+# disabled tokens regardless of `variant` — there is no `error` disabled icon
+# token to reference.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Geometry (root) — shared by both variants ──
+  - { name: --ui-button-icon-input-global-container-width, affects: root }
+  - { name: --ui-button-icon-input-global-container-height, affects: root }
+  - {
+      name: --ui-button-icon-input-global-container-border-radius,
+      affects: root,
+    }
+
+  # ── normal variant ──
+  - { name: --ui-button-icon-input-normal-container-color-idle, affects: root }
+  - { name: --ui-button-icon-input-normal-container-color-hover, affects: root }
+  - {
+      name: --ui-button-icon-input-normal-container-color-active,
+      affects: root,
+    }
+  - {
+      name: --ui-button-icon-input-normal-container-color-disabled,
+      affects: root,
+      description: Also used for the `error` variant's disabled state — no separate error-disabled token exists,
+    }
+  - { name: --ui-button-icon-input-normal-icon-color-idle, affects: icon }
+  - { name: --ui-button-icon-input-normal-icon-color-hover, affects: icon }
+  - { name: --ui-button-icon-input-normal-icon-color-active, affects: icon }
+  - {
+      name: --ui-button-icon-input-normal-icon-color-disabled,
+      affects: icon,
+      description: Also used for the `error` variant's disabled state — no separate error-disabled token exists,
+    }
+  - { name: --ui-button-icon-input-normal-icon-size, affects: icon }
+
+  # ── error variant (no disabled tokens — see `normal-*-disabled` above) ──
+  - { name: --ui-button-icon-input-error-container-color-idle, affects: root }
+  - { name: --ui-button-icon-input-error-container-color-hover, affects: root }
+  - { name: --ui-button-icon-input-error-container-color-active, affects: root }
+  - { name: --ui-button-icon-input-error-icon-color-idle, affects: icon }
+  - { name: --ui-button-icon-input-error-icon-color-hover, affects: icon }
+  - { name: --ui-button-icon-input-error-icon-color-active, affects: icon }
+  - { name: --ui-button-icon-input-error-icon-size, affects: icon }
+
+  # ── Focus rings ──
+  - {
+      name: --ui-focus-primary,
+      affects: root,
+      description: Focus-visible ring color for the `normal` variant,
+    }
+  - {
+      name: --ui-focus-error,
+      affects: root,
+      description: Focus-visible ring color for the `error` variant,
+    }

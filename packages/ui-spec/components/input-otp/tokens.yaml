@@ -1,0 +1,44 @@
+spec_version: '1.0'
+component: InputOTP
+
+# References only — values live in @acronis-platform/tokens-pd. There is no
+# disabled treatment in the design (the item's `state` variant is only
+# idle/focused), so `disabled` falls back to the generic `disabled:opacity-50`
+# convention used elsewhere in this package — no token reference for it.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Slot geometry ──
+  - { name: --ui-input-otp-box-width, affects: slot }
+  - { name: --ui-input-otp-box-height, affects: slot }
+  - { name: --ui-input-otp-box-border-radius, affects: slot }
+  - { name: --ui-input-otp-box-border-width, affects: slot }
+  - { name: --ui-input-otp-box-padding-x, affects: slot }
+  - { name: --ui-input-otp-box-padding-y, affects: slot }
+  - { name: --ui-input-otp-container-justify-content, affects: root }
+
+  # ── Slot fill + text ──
+  - { name: --ui-input-otp-box-color, affects: slot }
+  - { name: --ui-input-otp-value-color, affects: slot }
+  - { name: --ui-input-otp-placeholder-color, affects: slot }
+
+  # ── Slot border (idle / focused / error) ──
+  - { name: --ui-input-otp-box-border-color-idle, affects: slot }
+  - {
+      name: --ui-input-otp-box-border-color-active,
+      affects: slot,
+      description: Border color while a slot is focused,
+    }
+  - { name: --ui-input-otp-box-border-color-error, affects: slot }
+
+  # ── Focus rings ──
+  - {
+      name: --ui-focus-primary,
+      affects: slot,
+      description: Focus-visible ring color,
+    }
+  - {
+      name: --ui-focus-error,
+      affects: slot,
+      description: Focus-visible ring color while `error` is set,
+    }

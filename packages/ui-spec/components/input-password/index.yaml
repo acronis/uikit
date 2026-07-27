@@ -1,0 +1,17 @@
+spec_version: '1.0'
+component: InputPassword
+name: input-password
+status: ready
+category: forms
+description: >-
+  A single-line password field: an optional label (with an optional required
+  marker), the value box with a built-in show/hide toggle, and an optional
+  description or error message. Its own `--ui-input-password-*` token tier
+  covers the box down to fill/border (unlike `InputText`, it doesn't build on
+  the bare `Input` primitive).
+since: 0.58.0
+dependencies:
+  components: [ButtonIconInput]
+figma:
+  node: '6325-11375'
+  codeConnect: packages/ui-react/src/components/ui/input-password/input-password.figma.tsx

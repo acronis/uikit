@@ -1,0 +1,86 @@
+spec_version: '1.0'
+component: InputPassword
+
+contract:
+  properties:
+    - name: label
+      type: ReactNode
+      required: false
+      description: Field label rendered above the box, associated via `htmlFor`/`id`.
+    - name: required
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Appends a required marker (`*`) after the label and sets `aria-required`
+        on the input.
+    - name: description
+      type: ReactNode
+      required: false
+      description: Helper text below the box. Hidden while `error` is set.
+    - name: error
+      type: ReactNode
+      required: false
+      description: >-
+        Error message below the box. Its presence switches the field to the
+        error treatment (red box border + red message + error-toned toggle).
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables the field and the toggle button (native `<input disabled>`).
+    - name: showPasswordLabel
+      type: string
+      required: false
+      default: "'Show password'"
+      description: Accessible name for the toggle button while the password is hidden.
+    - name: hidePasswordLabel
+      type: string
+      required: false
+      default: "'Hide password'"
+      description: Accessible name for the toggle button while the password is shown.
+    - name: value
+      type: string
+      required: false
+      description: Controlled value.
+
+  events:
+    - name: change
+      payload: ChangeEvent<HTMLInputElement>
+      description: Native input change — forwarded to the underlying `<input>`.
+
+  content:
+    - name: label
+      description: The label content.
+    - name: description
+      description: The helper text.
+    - name: error
+      description: The error message.
+
+adapters:
+  react:
+    component: InputPassword
+    status: implemented
+    import: "import { InputPassword } from '@acronis-platform/ui-react'"
+    example: |
+      <InputPassword label="Password" description="At least 8 characters" />
+
+      {/* Error */}
+      <InputPassword
+        label="Password"
+        value={value}
+        error="Too short"
+        onChange={onChange}
+      />
+  vue:
+    element: AvInputPassword
+    status: planned
+    import: "import { AvInputPassword } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvInputPassword label="Password" v-model="password" />
+  web-components:
+    element: ui-input-password
+    status: planned
+    import: "import '@acronis-platform/ui-wc/input-password'"
+    example: |
+      <ui-input-password label="Password"></ui-input-password>

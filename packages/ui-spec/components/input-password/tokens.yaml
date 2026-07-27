@@ -1,0 +1,73 @@
+spec_version: '1.0'
+component: InputPassword
+
+# References only — values live in @acronis-platform/tokens-pd. Unlike
+# InputText, the box itself isn't the bare `Input` primitive — InputPassword
+# has its own `--ui-input-password-*` tier down to fill/border. The `toggle`
+# part is a `ButtonIconInput` (see its own spec for `--ui-button-icon-input-*`
+# tokens) — not listed here since it's a dependency component, not this
+# component's own tier.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Field container ──
+  - { name: --ui-input-password-global-container-gap, affects: root }
+  - { name: --ui-input-password-global-container-width-min, affects: root }
+  - { name: --ui-input-password-global-container-label-gap, affects: label }
+
+  # ── Label + required marker ──
+  - { name: --ui-input-password-global-label-color-idle, affects: label }
+  - { name: --ui-input-password-global-label-color-disabled, affects: label }
+  - { name: --ui-input-password-global-required-color, affects: required }
+
+  # ── Box geometry ──
+  - { name: --ui-input-password-global-box-height, affects: box }
+  - { name: --ui-input-password-global-box-border-radius, affects: box }
+  - { name: --ui-input-password-global-box-border-width, affects: box }
+  - { name: --ui-input-password-global-box-padding-x, affects: box }
+  - { name: --ui-input-password-global-box-padding-y, affects: box }
+  - {
+      name: --ui-input-password-global-box-gap,
+      affects: box,
+      description: Gap between the value input and the toggle button,
+    }
+
+  # ── Box fill ──
+  - { name: --ui-input-password-global-box-color-idle, affects: box }
+  - { name: --ui-input-password-global-box-color-hover, affects: box }
+  - { name: --ui-input-password-global-box-color-disabled, affects: box }
+
+  # ── Value / placeholder text ──
+  - { name: --ui-input-password-global-value-color-idle, affects: input }
+  - { name: --ui-input-password-global-value-color-disabled, affects: input }
+  - { name: --ui-input-password-global-placeholder-color-idle, affects: input }
+  - {
+      name: --ui-input-password-global-placeholder-color-disabled,
+      affects: input,
+    }
+
+  # ── Box border (normal + error) ──
+  - { name: --ui-input-password-normal-box-border-color-idle, affects: box }
+  - { name: --ui-input-password-normal-box-border-color-hover, affects: box }
+  - { name: --ui-input-password-normal-box-border-color-disabled, affects: box }
+  - { name: --ui-input-password-error-msg-box-border-color-idle, affects: box }
+  - { name: --ui-input-password-error-msg-box-border-color-hover, affects: box }
+
+  # ── Description + error message ──
+  - {
+      name: --ui-input-password-normal-description-color-idle,
+      affects: description,
+    }
+  - {
+      name: --ui-input-password-normal-description-color-disabled,
+      affects: description,
+    }
+  - { name: --ui-input-password-error-msg-error-color, affects: error }
+
+  # ── Focus rings ──
+  - { name: --ui-focus-primary, affects: box, description: Box focus ring }
+  - {
+      name: --ui-focus-error,
+      affects: box,
+      description: Box focus ring while `error` is set,
+    }

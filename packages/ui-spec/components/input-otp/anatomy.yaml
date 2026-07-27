@@ -1,0 +1,50 @@
+spec_version: '1.0'
+component: InputOTP
+
+schematic: |
+  +----+  +----+  +----+  +----+  +----+  +----+
+  |slot|  |slot|  |slot|  |slot|  |slot|  |slot|   root: <div role="group">
+  +----+  +----+  +----+  +----+  +----+  +----+
+
+root:
+  element: div
+  role: group
+  description: >-
+    The row container for the slots. Bare — no label/description; a future
+    `Field` wrapper composes those around it, same as the `Input` primitive.
+
+parts:
+  - id: slot
+    description: >-
+      A single-character `<input>`. Repeated `length` times (default 6). Shows
+      a numbered placeholder (its own 1-based position) while empty.
+    element: input
+
+layout:
+  type: row
+  direction: horizontal
+  align: center
+  order: [slot]
+
+states:
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on a slot,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [slot],
+    }
+  - {
+      id: error,
+      trigger: 'error === true',
+      kind: prop,
+      prop: error,
+      affects: [slot],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true',
+      kind: prop,
+      prop: disabled,
+      affects: [slot],
+    }

@@ -1,0 +1,71 @@
+spec_version: '1.0'
+component: InputOTP
+
+contract:
+  properties:
+    - name: length
+      type: number
+      required: false
+      default: 6
+      description: Number of single-character slots.
+    - name: value
+      type: string
+      required: false
+      description: Controlled value (the digits entered so far, left to right).
+    - name: defaultValue
+      type: string
+      required: false
+      description: Initial value for uncontrolled usage.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables every slot.
+    - name: error
+      type: boolean
+      required: false
+      default: false
+      description: Switches every slot to the error treatment.
+    - name: autoFocus
+      type: boolean
+      required: false
+      default: false
+      description: Focuses the first slot on mount.
+    - name: slotAriaLabel
+      type: '(index: number, length: number) => string'
+      required: false
+      default: '(index, length) => `Digit ${index} of ${length}`'
+      description: >-
+        Builds the accessible name for a slot from its 1-based index and the
+        total length.
+
+  events:
+    - name: change
+      payload: 'string'
+      description: Fires with the full value on every change.
+    - name: complete
+      payload: 'string'
+      description: Fires once, the moment the value reaches `length` characters.
+
+adapters:
+  react:
+    component: InputOTP
+    status: implemented
+    import: "import { InputOTP } from '@acronis-platform/ui-react'"
+    example: |
+      <InputOTP length={6} onComplete={(code) => submit(code)} />
+
+      {/* Error */}
+      <InputOTP error defaultValue="123456" />
+  vue:
+    element: AvInputOtp
+    status: planned
+    import: "import { AvInputOtp } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvInputOtp :length="6" v-model="code" />
+  web-components:
+    element: ui-input-otp
+    status: planned
+    import: "import '@acronis-platform/ui-wc/input-otp'"
+    example: |
+      <ui-input-otp length="6"></ui-input-otp>

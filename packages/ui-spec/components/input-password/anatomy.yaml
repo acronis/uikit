@@ -1,0 +1,102 @@
+spec_version: '1.0'
+component: InputPassword
+
+schematic: |
+  +-------------------------------+
+  |  label  required              |   root: <div> (field, vertical stack)
+  +-------------------------------+
+  |  [ box: input          toggle ]|  box: themed container; input: borderless value input; toggle: show/hide button
+  +-------------------------------+
+  |  description | error          |   description (normal) OR error (error state)
+  +-------------------------------+
+
+root:
+  element: div
+  role: group
+  description: >-
+    The field container — a vertical stack of the label, the box, and the
+    description / error message. Width is fluid with a minimum from
+    `--ui-input-password-global-container-width-min`.
+
+parts:
+  - id: label
+    description: The field label, rendered above the box (`<label htmlFor>`).
+    element: label
+  - id: required
+    description: The required marker (`*`) after the label; shown when `required`.
+    element: span
+  - id: box
+    description: >-
+      The themed container (border, fill) holding the value input and the
+      toggle button side by side.
+    element: div
+  - id: input
+    description: >-
+      The borderless, transparent value input inside `box` — value/placeholder
+      text and the `type="password" | "text"` toggle.
+    element: input
+  - id: toggle
+    description: >-
+      Show/hide button inside `box` (a `ButtonIconInput`); toggles `input`'s
+      type and its own icon between hidden (crossed-eye) and shown (eye).
+    element: button
+  - id: description
+    description: Helper text below the box (normal state).
+    element: p
+  - id: error
+    description: Error message below the box; replaces the description when `error` is set.
+    element: p
+
+layout:
+  type: stack
+  direction: vertical
+  align: start
+  order: [label, box, description, error]
+
+states:
+  - {
+      id: hover,
+      trigger: pointer hover over the box,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [box],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on the input,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [box],
+    }
+  - {
+      id: error,
+      trigger: 'error is set',
+      kind: prop,
+      prop: error,
+      affects: [box, toggle, error],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true',
+      kind: prop,
+      prop: disabled,
+      affects: [label, box, input, toggle, description],
+    }
+  - {
+      id: visible,
+      trigger: activating the toggle button,
+      kind: internal,
+      affects: [input, toggle],
+    }
+
+internal_state:
+  - id: visible
+    type: boolean
+    initial: false
+    values: [false, true]
+    changed_by: 'click on the toggle button'
+    description: >-
+      Whether the value renders as plain text (`type="text"`, eye icon) or
+      masked (`type="password"`, crossed-eye icon). Fully internal — not
+      exposed as a prop; nothing in the design calls for a consumer-controlled
+      mode.

@@ -1,0 +1,49 @@
+spec_version: '1.0'
+component: ButtonIconInput
+
+schematic: |
+  +--------+
+  |  icon  |   root: <button> 20x20
+  +--------+
+  icon: single glyph, 16px, centered
+
+root:
+  element: button
+  role: button
+  description: 20×20 square icon-only button surface (background, radius) — sized to sit inside an input's box.
+
+parts:
+  - id: icon
+    description: The single glyph (the button's content), sized to 16px.
+    element: svg
+
+# Pure function of its props — no internal state.
+states:
+  - {
+      id: hover,
+      trigger: pointer hover,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [root, icon],
+    }
+  - {
+      id: active,
+      trigger: pointer or keyboard activation,
+      kind: pseudo,
+      pseudo: ':active',
+      affects: [root, icon],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [root],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true',
+      kind: prop,
+      prop: disabled,
+      affects: [root, icon],
+    }

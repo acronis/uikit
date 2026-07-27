@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: InputOTP
+name: input-otp
+status: ready
+category: forms
+description: >-
+  A bare row of single-character boxes for entering a one-time code. No
+  label/description — like `Input`, field furniture is a future `Field`
+  wrapper. Typing a digit advances focus to the next slot; Backspace on an
+  empty slot clears and moves back; pasting a full code distributes it across
+  the slots.
+since: 0.58.0
+figma:
+  node: '6327-27477'
+  codeConnect: packages/ui-react/src/components/ui/input-otp/input-otp.figma.tsx

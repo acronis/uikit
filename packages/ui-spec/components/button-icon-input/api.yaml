@@ -1,0 +1,61 @@
+spec_version: '1.0'
+component: ButtonIconInput
+
+contract:
+  properties:
+    - name: variant
+      type: "'normal' | 'error'"
+      required: false
+      default: "'normal'"
+      description: >-
+        Visual tone — mirrors the field the button is embedded in. Each variant
+        has its own idle/hover/active/disabled container + icon tokens and its
+        own focus ring color (`--ui-focus-primary` for `normal`,
+        `--ui-focus-error` for `error`).
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables interaction and applies the disabled token set.
+    - name: type
+      type: "'button' | 'submit' | 'reset'"
+      required: false
+      default: "'button'"
+      description: Native HTML button type.
+    - name: aria-label
+      type: string
+      required: false
+      description: >-
+        Accessible name. Required in practice — this control is icon-only and
+        has no text to name it.
+
+  events:
+    - name: click
+      payload: MouseEvent
+      description: Fired on activation. Not fired while disabled.
+
+  content:
+    - name: default
+      description: A single icon (SVG), sized to 16px and tinted via currentColor.
+
+adapters:
+  react:
+    component: ButtonIconInput
+    status: implemented
+    import: "import { ButtonIconInput } from '@acronis-platform/ui-react'"
+    example: |
+      <ButtonIconInput aria-label="Show password">
+        <EyeIcon />
+      </ButtonIconInput>
+  vue:
+    element: AvButtonIconInput
+    status: planned
+    import: "import { AvButtonIconInput } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvButtonIconInput aria-label="Show password"><EyeIcon /></AvButtonIconInput>
+  web-components:
+    element: ui-button-icon-input
+    status: planned
+    import: "import '@acronis-platform/ui-wc/button-icon-input'"
+    example: |
+      <ui-button-icon-input aria-label="Show password"><!-- icon --></ui-button-icon-input>
