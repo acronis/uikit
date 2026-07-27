@@ -1,4 +1,3 @@
-import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   Area,
@@ -9,7 +8,11 @@ import {
   YAxis,
 } from 'recharts';
 
-import { ConfidenceCone } from '../confidence-cone';
+import {
+  ConfidenceCone,
+  createConeTooltip,
+  dropConeBand,
+} from '../confidence-cone';
 import {
   ChartContainer,
   ChartTooltip,
@@ -123,10 +126,11 @@ export const CustomTooltip: Story = {
   args: { tooltipContent: customTooltipContent },
 };
 
-// The same custom tooltip, forced open for the VR baseline. Like `TooltipOpen`,
-// this renders the raw composition with the synthetic `__cone` band filtered out
-// of the payload — the baseline proves the custom tooltip shows only the real
-// actual/forecast rows, never a stray `__cone: [lower, upper]` row.
+// The same custom tooltip, forced open for the VR baseline. recharts only paints
+// a tooltip on hover, so the raw composition is used purely to open it statically
+// (`defaultIndex` + `active`) — but the tooltip content routes through the
+// component's real `createConeTooltip` wrapper, so the baseline proves the
+// shipped filter shows only the actual/forecast rows, never a `__cone` row.
 export const CustomTooltipOpen: Story = {
   render: () => {
     const coneData = data.map((d) => ({
@@ -145,14 +149,7 @@ export const CustomTooltipOpen: Story = {
           <ChartTooltip
             defaultIndex={7}
             active
-            content={(tp) =>
-              React.cloneElement(customTooltipContent, {
-                ...tp,
-                payload: tp.payload?.filter(
-                  (item) => item.dataKey !== '__cone'
-                ),
-              } as ChartTooltipContentProps)
-            }
+            content={createConeTooltip(customTooltipContent)}
           />
           <Area
             dataKey="__cone"
@@ -224,9 +221,7 @@ export const TooltipOpen: Story = {
                 active={tp.active}
                 label={tp.label}
                 payload={
-                  tp.payload?.filter(
-                    (item) => item.dataKey !== '__cone'
-                  ) as ChartTooltipContentProps['payload']
+                  dropConeBand(tp.payload) as ChartTooltipContentProps['payload']
                 }
               />
             )}

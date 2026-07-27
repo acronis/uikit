@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { ConfidenceCone, dropConeBand } from '../confidence-cone';
+import {
+  ConfidenceCone,
+  createConeTooltip,
+  dropConeBand,
+} from '../confidence-cone';
 import { ChartTooltipContent, type ChartConfig } from '../../chart';
 
 const data = [
@@ -115,6 +119,50 @@ describe('ConfidenceCone', () => {
 
     it('returns undefined for an undefined payload', () => {
       expect(dropConeBand(undefined)).toBeUndefined();
+    });
+  });
+
+  // The prop path in the component is a wrapper (createConeTooltip) that strips
+  // the band, then mounts the caller's tooltip exactly as recharts would — a
+  // function via createElement, an element via cloneElement. Exercised directly
+  // here because recharts doesn't paint the tooltip in happy-dom; an inverted
+  // filter would leak a `__cone` row into the caller's tooltip and fail this.
+  describe('createConeTooltip', () => {
+    const payload = [
+      { dataKey: 'actual', name: 'Actual', value: 150 },
+      { dataKey: '__cone', name: 'cone', value: [150, 176] },
+      { dataKey: 'forecast', name: 'Forecast', value: 162 },
+    ];
+
+    function Probe({
+      payload: p,
+    }: {
+      payload?: ReadonlyArray<{ dataKey?: unknown }>;
+    }) {
+      return (
+        <div data-testid="keys">
+          {(p ?? []).map((item) => String(item.dataKey)).join(',')}
+        </div>
+      );
+    }
+
+    function renderWrapped(content: Parameters<typeof createConeTooltip>[0]) {
+      const Wrapped = createConeTooltip(content) as unknown as React.FC<{
+        payload: typeof payload;
+        active: boolean;
+      }>;
+      render(<Wrapped payload={payload} active />);
+      return screen.getByTestId('keys').textContent;
+    }
+
+    it('strips the cone band before a function-form tooltip renders', () => {
+      expect(renderWrapped((p) => <Probe payload={p.payload} />)).toBe(
+        'actual,forecast'
+      );
+    });
+
+    it('strips the cone band before an element-form tooltip renders', () => {
+      expect(renderWrapped(<Probe />)).toBe('actual,forecast');
     });
   });
 

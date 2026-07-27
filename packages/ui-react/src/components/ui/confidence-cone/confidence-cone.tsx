@@ -48,6 +48,36 @@ export function dropConeBand<T extends { dataKey?: unknown }>(
   return payload?.filter((item) => item.dataKey !== BAND_KEY);
 }
 
+/**
+ * Wrap a caller-supplied `tooltipContent` so the synthetic cone band is stripped
+ * from the payload before it renders, while preserving recharts' own mount
+ * semantics — a function is mounted via `createElement` (its own component
+ * identity + hook state), an element via `cloneElement`. This mirrors what the
+ * pass-through charts get by handing `content` straight to recharts, so a
+ * function-form tooltip keeps its state across re-renders here too. The returned
+ * component is a stable content type (memoize it on `tooltipContent`).
+ */
+type TooltipContentType = NonNullable<
+  React.ComponentProps<typeof ChartTooltip>['content']
+>;
+type TooltipContentFn = Extract<TooltipContentType, (...args: never[]) => unknown>;
+type TooltipRenderProps = Parameters<TooltipContentFn>[0];
+
+export function createConeTooltip(tooltipContent: TooltipContentType) {
+  return function ConeTooltip(props: TooltipRenderProps) {
+    const merged = {
+      ...props,
+      payload: dropConeBand(props.payload),
+    } as TooltipRenderProps;
+    return typeof tooltipContent === 'function'
+      ? React.createElement(
+          tooltipContent as React.FunctionComponent<TooltipRenderProps>,
+          merged
+        )
+      : React.cloneElement(tooltipContent, merged);
+  };
+}
+
 export interface ConfidenceConeProps
   extends Omit<React.ComponentProps<'div'>, 'children'> {
   /**
@@ -127,6 +157,13 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
     },
     ref
   ) => {
+    // Memoized so recharts sees a stable content type across renders — a fresh
+    // wrapper each render would remount the caller's tooltip and reset its state.
+    const customTooltip = React.useMemo(
+      () => (tooltipContent ? createConeTooltip(tooltipContent) : undefined),
+      [tooltipContent]
+    );
+
     const xAxisTitle = xAxisLabel
       ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
       : undefined;
@@ -203,19 +240,10 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
               />
             )}
             {showTooltip &&
-              (tooltipContent ? (
-                <ChartTooltip
-                  // Strip the synthetic band before the caller's tooltip sees
-                  // it — the `__cone` series feeds the Area, not the tooltip.
-                  content={(tp) => {
-                    const merged = { ...tp, payload: dropConeBand(tp.payload) };
-                    return typeof tooltipContent === 'function'
-                      ? tooltipContent(merged as typeof tp)
-                      : React.isValidElement(tooltipContent)
-                        ? React.cloneElement(tooltipContent, merged)
-                        : null;
-                  }}
-                />
+              (customTooltip ? (
+                // Strips the synthetic band before the caller's tooltip sees it
+                // — the `__cone` series feeds the Area, not the tooltip.
+                <ChartTooltip content={customTooltip} />
               ) : (
                 <ChartTooltip
                   content={(tp) => (
@@ -238,8 +266,8 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
                   <ChartLegendContent
                     verticalAlign={lp.verticalAlign}
                     payload={
-                      lp.payload?.filter(
-                        (item) => item.dataKey !== BAND_KEY
+                      dropConeBand(
+                        lp.payload
                       ) as ChartLegendContentProps['payload']
                     }
                   />

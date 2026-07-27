@@ -72,6 +72,36 @@ export function dropBandSeries<T extends { dataKey?: unknown }>(
   );
 }
 
+type TooltipContentType = NonNullable<
+  React.ComponentProps<typeof ChartTooltip>['content']
+>;
+type TooltipContentFn = Extract<TooltipContentType, (...args: never[]) => unknown>;
+type TooltipRenderProps = Parameters<TooltipContentFn>[0];
+
+/**
+ * Wrap a caller-supplied `tooltipContent` so the synthetic delta bands are
+ * stripped from the payload before it renders, while preserving recharts' own
+ * mount semantics — a function is mounted via `createElement` (its own component
+ * identity + hook state), an element via `cloneElement`. This mirrors what the
+ * pass-through charts get by handing `content` straight to recharts, so a
+ * function-form tooltip keeps its state across re-renders here too. The returned
+ * component is a stable content type (memoize it on `tooltipContent`).
+ */
+export function createBandStrippedTooltip(tooltipContent: TooltipContentType) {
+  return function BandStrippedTooltip(props: TooltipRenderProps) {
+    const merged = {
+      ...props,
+      payload: dropBandSeries(props.payload),
+    } as TooltipRenderProps;
+    return typeof tooltipContent === 'function'
+      ? React.createElement(
+          tooltipContent as React.FunctionComponent<TooltipRenderProps>,
+          merged
+        )
+      : React.cloneElement(tooltipContent, merged);
+  };
+}
+
 export interface LineChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof lineChartVariants> {
@@ -155,6 +185,14 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
   ) => {
     const dashArray = lineStyle === 'dashed' ? '5 5' : undefined;
 
+    // Memoized so recharts sees a stable content type across renders — a fresh
+    // wrapper each render would remount the caller's tooltip and reset its state.
+    const customTooltip = React.useMemo(
+      () =>
+        tooltipContent ? createBandStrippedTooltip(tooltipContent) : undefined,
+      [tooltipContent]
+    );
+
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
     // the left gutter. Passed to recharts' native `label` (themed via the
     // `.recharts-label` fill selector on the container).
@@ -230,23 +268,11 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               label={yAxisTitle}
             />
             {showTooltip &&
-              (tooltipContent ? (
-                <ChartTooltip
-                  // Strip the synthetic delta bands before the caller's tooltip
-                  // sees them — the `__band_*` series feed the Areas, not the
-                  // tooltip (a no-op when no bands are configured).
-                  content={(tp) => {
-                    const merged = {
-                      ...tp,
-                      payload: dropBandSeries(tp.payload),
-                    };
-                    return typeof tooltipContent === 'function'
-                      ? tooltipContent(merged as typeof tp)
-                      : React.isValidElement(tooltipContent)
-                        ? React.cloneElement(tooltipContent, merged)
-                        : null;
-                  }}
-                />
+              (customTooltip ? (
+                // Strips the synthetic delta bands before the caller's tooltip
+                // sees them — the `__band_*` series feed the Areas, not the
+                // tooltip (a no-op when no bands are configured).
+                <ChartTooltip content={customTooltip} />
               ) : bands.length > 0 ? (
                 <ChartTooltip
                   content={(props) => (
