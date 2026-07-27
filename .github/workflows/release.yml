@@ -1,6 +1,6 @@
 # Release flow driven by changesets.
 #
-# On every push to main, this workflow does ONE of:
+# Triggered manually (workflow_dispatch). Run it to do ONE of:
 #   1. If unpublished changesets exist (.changeset/*.md), it opens
 #      (or updates) a "Version Packages" PR that bumps versions in
 #      package.json files and rewrites CHANGELOG.md.
@@ -24,8 +24,7 @@
 name: Release
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
