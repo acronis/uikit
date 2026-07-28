@@ -91,37 +91,3 @@ export const Last: Story = {
 export const SingleSlide: Story = {
   render: () => <SingleSlideFooter />,
 };
-
-// Demonstrates that Back/Next/Close and the position list's accessible name
-// are localizable via props, not baked into the component.
-export const CustomLabels: Story = {
-  render: () => (
-    <DialogRoot open>
-      <DialogContent aria-label="Carousel dialog">
-        <Carousel
-          opts={{ startIndex: 1 }}
-          className="w-full border border-border"
-        >
-          <CarouselContent>
-            <CarouselItem className="flex h-40 items-center justify-center">
-              Diapositive 1
-            </CarouselItem>
-            <CarouselItem className="flex h-40 items-center justify-center">
-              Diapositive 2
-            </CarouselItem>
-            <CarouselItem className="flex h-40 items-center justify-center">
-              Diapositive 3
-            </CarouselItem>
-          </CarouselContent>
-          <DialogFooterCarousel
-            backLabel="Précédent"
-            nextLabel="Suivant"
-            closeLabel="Fermer"
-            positionLabel="Position de la diapositive"
-            dotAriaLabel={(index, count) => `Diapositive ${index} sur ${count}`}
-          />
-        </Carousel>
-      </DialogContent>
-    </DialogRoot>
-  ),
-};
