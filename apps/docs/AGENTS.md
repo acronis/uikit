@@ -43,8 +43,10 @@ and `context/roadmap.md` if any of that needs restoring later.
   `packages/ui-spec/patterns/<name>/pattern.yaml`). Each page pairs usage +
   code-snippet examples + `<AutoTypeTable>` with a **live `<DemoReact>`**
   preview (shadow-root isolated) — see "ui-react live demos" below.
-- `content/docs/packages/` — the ecosystem section (`tokens-pd`, `icons-react`,
-  `icons-sprite`, `design-tokens`, `design-assets`).
+- `content/docs/packages/` — the published-package inventory (`ui-react`,
+  `tokens-pd`, `icons-react`, `icons-sprite`, `design-tokens`,
+  `design-assets`). `ui-legacy` is published too but frozen and intentionally
+  left out (see below).
 - `src/components/demos-react/` — `'use client'` demos for the **ui-react**
   pages, importing straight from `@acronis-platform/ui-react`. One
   `<Name>Demo` per component, rendered through `<DemoReact>` (see below).
