@@ -139,13 +139,21 @@ describe('DialogWelcome', () => {
 
     it('forwards footer label overrides to DialogFooterCarousel', () => {
       render(
-        <DialogWelcome open aria-label="Welcome tour" nextLabel="Suivant" positionLabel="Position">
+        <DialogWelcome
+          open
+          aria-label="Welcome tour"
+          nextLabel="Suivant"
+          positionLabel="Position"
+          dotAriaLabel={(index, count) => `Dot ${index}/${count}`}
+        >
           {Slide({ title: 'Slide 1' })}
           {Slide({ title: 'Slide 2' })}
         </DialogWelcome>
       );
       expect(screen.getByRole('button', { name: 'Suivant' })).toBeInTheDocument();
       expect(screen.getByRole('list', { name: 'Position' })).toBeInTheDocument();
+      // mockCarousel.slideCount (3) drives the dot count, not the 2 real slides passed above.
+      expect(screen.getByRole('listitem', { name: 'Dot 1/3' })).toBeInTheDocument();
     });
 
     it('renders only the first 5 slides when given more than 5', () => {

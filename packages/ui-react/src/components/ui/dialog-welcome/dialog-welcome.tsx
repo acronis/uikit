@@ -152,6 +152,8 @@ interface DialogWelcomeBaseProps extends Omit<
   backLabel?: DialogFooterCarouselProps['backLabel'];
   /** Forwarded to the inner `DialogFooterCarousel`'s `nextLabel`. Ignored in the `single` layout. */
   nextLabel?: DialogFooterCarouselProps['nextLabel'];
+  /** Forwarded to the inner `DialogFooterCarousel`'s `dotAriaLabel`. Ignored in the `single` layout. */
+  dotAriaLabel?: DialogFooterCarouselProps['dotAriaLabel'];
   /** Forwarded to the inner `Carousel` (e.g. `{ startIndex }`). Ignored in the `single` layout. */
   opts?: CarouselProps['opts'];
   /** Forwarded to the inner `Carousel`, called once with the Embla API instance. Ignored in the `single` layout. */
@@ -188,6 +190,7 @@ function DialogWelcome({
   positionLabel,
   backLabel,
   nextLabel,
+  dotAriaLabel,
   opts,
   setApi,
   size,
@@ -239,6 +242,7 @@ function DialogWelcome({
               backLabel={backLabel}
               nextLabel={nextLabel}
               closeLabel={closeLabel}
+              dotAriaLabel={dotAriaLabel}
             />
           </Carousel>
         ) : (

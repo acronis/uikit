@@ -140,6 +140,29 @@ describe('Carousel', () => {
     expect(setApi).toHaveBeenCalled();
   });
 
+  it("wires Embla's direction option to the root node's computed style", () => {
+    // happy-dom doesn't implement the UA-stylesheet `[dir] { direction }`
+    // default, so `getComputedStyle` is mocked here to exercise the
+    // `useLayoutEffect` correction in carousel.tsx that reads it — the same
+    // path a real browser takes when a nearer ancestor's `dir` disagrees
+    // with `document.documentElement.dir`.
+    const originalGetComputedStyle = window.getComputedStyle;
+    const spy = vi.spyOn(window, 'getComputedStyle').mockImplementation((element, ...rest) => {
+      const style = originalGetComputedStyle.call(window, element, ...rest);
+      if (element.getAttribute?.('role') !== 'region') {
+        return style;
+      }
+      const wrapped = Object.create(style);
+      Object.defineProperty(wrapped, 'direction', { value: 'rtl', enumerable: true });
+      return wrapped;
+    });
+    const setApi = vi.fn();
+    render(<BasicCarousel setApi={setApi} />);
+    const api = setApi.mock.calls[0][0];
+    expect(api.internalEngine().options.direction).toBe('rtl');
+    spy.mockRestore();
+  });
+
   it('exposes the real slide count and selected index through context', async () => {
     const user = userEvent.setup();
     let context: { selectedIndex: number; slideCount: number } | undefined;

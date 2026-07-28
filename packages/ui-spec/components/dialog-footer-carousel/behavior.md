@@ -50,8 +50,10 @@ Scenario: The indicator matches the real slide count, within [1, 5]
 
 ```gherkin
 Scenario: Too many slides
-  Given a Carousel with more than 5 slides (e.g. used standalone, bypassing
-        DialogWelcome's own children slice)
+  Given a Carousel with more than 5 slides — not reachable through the public
+        API today (DialogWelcome slices to 5 before mounting the Carousel,
+        and Carousel/CarouselItem aren't exported for standalone use); this is
+        defensive behavior for a future direct Carousel consumer
   Then DialogFooterCarousel renders only the first 5 dot slots
 ```
 

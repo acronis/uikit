@@ -23,12 +23,16 @@ import * as React from 'react';
  * receives focus. Pass every control that can occupy the vacated slot, most
  * preferred first.
  *
- * The latch is cleared, not just set, during render: without an `else`, once
+ * The latch is cleared, not just set, during render, for any render where
+ * focus is observably outside the container: without the `else if`, once
  * focus had been inside the container it would stay "was inside" forever,
  * even after focus later moves to some unrelated element outside the
  * container without an unmount. Since the effect below runs on every commit
  * (no dependency array), a later, wholly unrelated blur-to-`document.body`
- * would then incorrectly yank focus back into `fallbackRefs`.
+ * would then incorrectly yank focus back into `fallbackRefs`. (The one render
+ * this doesn't cover — activeElement already at `document.body` — leaves the
+ * latch as-is; that state is never observed in practice because the redirect
+ * effect below already clears it in the same commit that produced it.)
  */
 export function useRestoreFocusOnUnmount(
   containerRef: React.RefObject<HTMLElement | null>,
