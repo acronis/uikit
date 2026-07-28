@@ -47,6 +47,18 @@
     -moz-osx-font-smoothing: grayscale;
     text-underline-offset: 3px;
   }
+
+  /* `:root, :host` mirrors the compound selector `tokens-pd`'s own generated
+     CSS uses for its custom properties (packages/tokens-pd/css/default.css),
+     so both a document-level consumer and an isolated shadow-DOM mount (see
+     apps/docs's ShadowDemo) get Inter instead of Tailwind preflight's
+     generic `ui-sans-serif` stack. Matches the generated `.ui-typography-*`
+     fallback chain (tools/style-dictionary's Inter scalar transform) so text
+     inside and outside those classes agrees. */
+  :root,
+  :host {
+    font-family: Inter, system-ui, sans-serif;
+  }
 }
 
 /* Theme switches via the `[data-theme]` attribute (set by the consumer /
