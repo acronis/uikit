@@ -113,7 +113,34 @@ Call these (no skill prerequisite for reads):
 
 3. `get_context_for_code_connect({ nodeId, fileKey })` — **exact** Figma
    property names + variant options. Use this to write Code Connect; never
-   guess property names.
+   guess property names. This is also the API-native equivalent of Figma
+   Desktop's "Explore component behaviour" dev-mode panel — its top-level
+   `properties` object (e.g. `variant.variantOptions`) is the same ground-
+   truth property surface that panel renders as dropdowns, so there's no
+   need to ask the user to open Figma Desktop and check it by hand.
+
+   **Hard rule: every real property on the target node becomes a real prop
+   (or a deliberate, justified override — see Phase 3), never silently
+   dropped.** Treating a Figma `variant` as purely derived when Figma models
+   it as an actual component property is a bug, not a simplification (see
+   the `DialogWelcome` worked example below, which missed exactly this on an
+   earlier pass).
+
+   > ⚠️ **The response is not scoped to one component.** `descendants`
+   > includes a separate `properties`/`variants` group for every composed
+   > instance nested inside the target node (e.g. reading `DialogWelcome`
+   > also returns a `DialogFooterCarousel` descendant group with its own
+   > `variant` options, because `DialogFooterCarousel` is instanced inside
+   > it). Each nested group belongs to **that instance's own component** —
+   > confirm it by reading _that_ node's own `get_context_for_code_connect`
+   > directly. **Never lift a nested descendant's properties into the outer
+   > component's own prop API** — the outer component should forward
+   > specific, named props into the child (as `DialogWelcome` already
+   > forwards `backLabel`/`nextLabel`/`positionLabel` into its inner
+   > `DialogFooterCarousel`), not re-expose the child's own `variant` (or any
+   > other child-owned property) as if it were the outer component's. Only
+   > the **top-level** `properties` object (the target node itself) is
+   > subject to the hard rule above.
 
 Write down, from the design:
 
@@ -128,6 +155,55 @@ Write down, from the design:
 > A node may be a single item even if the frame shows a full assembly (the
 > breadcrumb node `1017:2852` is one item with a `state` variant, not the whole
 > trail). Confirm via `get_context_for_code_connect`.
+
+### Component sets (variants)
+
+Some Figma nodes are a **component set** — a group of variant instances Figma
+already treats as one design unit. Recognize one from
+`get_context_for_code_connect`'s top-level `properties.variant.variantOptions`
+(the full list of variant names) and from `get_design_context`'s returned
+function: a component-set node's `variant` prop type is the **union of every
+variant** (e.g. `variant?: "default" | "rename" | "save changes" | …`), with
+the whole body branching on `isX = variant === "x"` checks — one function,
+every state, in a single response.
+
+An **individual variant node** (one specific member of that set) returns the
+same shape of function, but "locked": the `variant` prop type has only that
+one literal (e.g. `variant?: "start"`), and the body has no branching at all
+— just that one state's flat JSX.
+
+Both are valid entry points into the same node tree — pick by what you need:
+
+- **The component-set (group) node** — one call returns every variant's
+  markup, and `get_context_for_code_connect` on it returns the full merged
+  prop contract (every `variantOptions` entry) plus every descendant's own
+  `variants: […]` array showing which states it appears in. Prefer this for
+  the initial read — it's the authoritative, complete contract in one call.
+- **An individual variant node** — no branching noise; useful to
+  double-check one specific state's exact classes/tokens once you already
+  know the overall shape (e.g. confirming the root container's className is
+  identical across variants, or checking a state's own literal copy).
+
+> **Worked examples** (fileKey `lrU3ydIyvPYQNE6ixdsKtJ`):
+>
+> - `DialogFooterCarousel` — group `6353:5864` (all 3 variants); individual
+>   variants `6353:5873` (start), `6353:5869` (middle), `6353:5865` (end).
+> - `DialogDefault` — group `6343:58898` (all 7 variants: default, rename,
+>   save changes, reset password, discard changes, accept, read-only);
+>   individual variants include `4220:3529` (default), `6343:59825` (rename).
+
+**The root container is the code's `<ComponentName>VariantsContainer`.** In
+every variant, the outermost wrapping element carries the _same_ layout/
+background/token classes — only its Figma `id` and its children differ per
+variant (confirmed by diffing the group node's root `<div>` against each
+individual variant node's root `<div>`: identical `className`, only the
+conditional `id={isX ? … : …}` and inner content change). That outer wrapper
+is exactly what Phase 3 extracts as a small, unexported local component named
+`<ComponentName>VariantsContainer` — see `DialogFooterCarouselVariantsContainer`
+in `dialog-footer-carousel.tsx` for the worked example. It owns only the
+structural chrome shared by every variant; each variant's actual content
+composes inside it as children. This keeps the "same across every variant"
+styling in one place instead of duplicating it per variant branch.
 
 ---
 
@@ -266,6 +342,18 @@ mergeProps<'tag'>({…}, props) })`.
 For a **composable** component, export the full set of parts (see breadcrumb:
 `Breadcrumb`, `BreadcrumbList`, `BreadcrumbItem`, `BreadcrumbLink`,
 `BreadcrumbPage`, `BreadcrumbSeparator`, `BreadcrumbEllipsis`).
+
+**If the Figma node is a component set (variants)** — see Phase 1's
+"Component sets" section — extract the shared outer wrapper as a small,
+unexported `<ComponentName>VariantsContainer` local component (`React.forwardRef`
+over the layout/background/token classes common to every variant); each
+variant's own content composes inside it as children, instead of duplicating
+that shared styling per variant branch. When the outer component (the one
+with the public `forwardRef`) also needs its own internal ref on that same
+root node (e.g. a hook that reads the DOM element directly), merge the two
+with `mergeRefs` from `@/lib/merge-refs` rather than hand-rolling the
+callback — see `DialogFooterCarouselVariantsContainer` in
+`dialog-footer-carousel.tsx` for the worked example of both.
 
 **Figma Code Connect** (`<name>.figma.tsx`) — header status comment
 (`COMPLETE` once URL + props verified), `figma.connect(Component, url, { props,
@@ -464,3 +552,33 @@ aria-disabled`), a **part**, not a state.
   `BreadcrumbPage` vs `BreadcrumbLink` + separator.
 - ui-spec `breadcrumb/` documents the composable parts; "current page" lives in
   `anatomy.parts`, only the link pseudo-states live in `anatomy.states`.
+
+## Worked example: DialogWelcome's `variant` (node 7162-26459)
+
+- `get_design_context` on the component-set node returns a `variant?:
+"carousel" | "single"` union, and `get_context_for_code_connect`'s
+  top-level `properties` lists `variant.variantOptions: ["carousel",
+  "single"]` — a real component property, not an interaction state. An
+  earlier pass treated it as purely derived (layout inferred from
+  `<DialogWelcomeSlide>` child count) and left it out of the props entirely
+  — reasonable-looking, but a genuine miss against that same
+  `get_context_for_code_connect` response, later caught by the user.
+- **The fix kept the good part of the original design** (deriving layout
+  from real slide count by default, so a caller never keeps a redundant prop
+  in sync with their own children) **while adding the missing real property**:
+  `variant?: 'carousel' | 'single'` is now optional and, when passed,
+  _overrides_ the count-derived default (`variant="carousel"` keeps the
+  carousel chrome for a single slide; `variant="single"` with 2+ slides
+  dev-warns and drops the rest). Optional-override is the right shape here
+  specifically because the count-derived default has no failure mode of its
+  own to preserve — a literal required `variant` prop would have reintroduced
+  the exact desync risk the original design was (correctly) avoiding.
+- **The same `get_context_for_code_connect` response also included a
+  `DialogFooterCarousel` descendant group** (with its own `variant` options)
+  nested under `DialogWelcome`'s — that group belongs to
+  `DialogFooterCarousel`'s own component and is **not** re-exposed as
+  `DialogWelcome`'s `variant`; `DialogWelcome` already forwards
+  `backLabel`/`nextLabel`/`positionLabel`/etc. into it by name instead.
+- Code Connect: `variant` maps directly (`figma.enum('variant', { single:
+'single', carousel: 'carousel' })`) and is passed straight through in the
+  example — no more indirection through a synthesized `slideCount`.
