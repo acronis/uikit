@@ -229,7 +229,11 @@ function DialogWelcome({
         aria-labelledby={ariaLabelledBy}
       >
         {isCarousel ? (
-          <Carousel opts={opts} setApi={setApi}>
+          <Carousel
+            opts={opts}
+            setApi={setApi}
+            initialSlideCount={slides.slice(0, MAX_SLIDES).length}
+          >
             <CarouselContent>
               {slides.slice(0, MAX_SLIDES).map((slide, index) => (
                 <CarouselItem key={index}>

@@ -28,6 +28,14 @@ export interface CarouselProps extends React.HTMLAttributes<HTMLDivElement> {
   plugins?: CarouselPlugin;
   orientation?: 'horizontal' | 'vertical';
   setApi?: (api: CarouselApi) => void;
+  /**
+   * Seeds the `slideCount` context value before Embla's own effect reports
+   * the real count (which then confirms/overwrites it via the existing
+   * `onSelect` sync — no behavior change once Embla settles). Without this,
+   * `slideCount` starts at 0 for the first render(s) of every mount, which
+   * `DialogFooterCarousel` misreads as a single-slide dialog.
+   */
+  initialSlideCount?: number;
 }
 
 interface CarouselContextProps {
@@ -74,7 +82,16 @@ function useCarousel() {
 
 const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
   (
-    { orientation = 'horizontal', opts, setApi, plugins, className, children, ...props },
+    {
+      orientation = 'horizontal',
+      opts,
+      setApi,
+      plugins,
+      initialSlideCount,
+      className,
+      children,
+      ...props
+    },
     ref
   ) => {
     const rootRef = React.useRef<HTMLDivElement>(null);
@@ -86,8 +103,8 @@ const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
     );
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
-    const [selectedIndex, setSelectedIndex] = React.useState(0);
-    const [slideCount, setSlideCount] = React.useState(0);
+    const [selectedIndex, setSelectedIndex] = React.useState(opts?.startIndex ?? 0);
+    const [slideCount, setSlideCount] = React.useState(initialSlideCount ?? 0);
 
     const onSelect = React.useCallback((api: CarouselApi) => {
       if (!api) {
