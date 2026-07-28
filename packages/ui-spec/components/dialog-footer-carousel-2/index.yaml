@@ -1,0 +1,19 @@
+spec_version: '1.0'
+component: DialogFooterCarousel2
+name: dialog-footer-carousel-2
+status: draft
+category: layout
+description: >-
+  Experimental — a bottom action bar for a multi-step (carousel) dialog: a
+  `Back` button (hidden on the first slide), a dot slide indicator, and a
+  `Next`/call-to-action button. The `variant` (start / middle / end) tracks the
+  active slide's position. Parallel to a future carousel-dialog-footer
+  primitive; not yet renamed/kept — see `DialogWelcome2`, which owns the
+  actual Embla carousel engine and drives this component's props.
+since: 0.58.0
+dependencies:
+  components:
+    - Button
+figma:
+  node: '6353-5864'
+  codeConnect: packages/ui-react/src/components/ui/dialog-footer-carousel-2/dialog-footer-carousel-2.figma.tsx

@@ -1,0 +1,67 @@
+spec_version: '1.0'
+component: DialogFooterCarousel2
+
+schematic: |
+  root: <div> (flex row, 64px tall, themed footer bar)
+  +---------------------------------------------------------------+
+  |  [boxLeft: Back]        boxRight: Next / Call to action ->    |
+  |                 * o o  (listIndicator)                        |
+  +---------------------------------------------------------------+
+     boxLeft       -> holds the `Back` button; empty on the first slide
+     listIndicator -> one dot per slide; the active dot uses a stronger color
+     boxRight      -> `Next` on the first/middle slide, the call-to-action
+                       label on the last slide
+
+  Rendered via the internal `CarouselDialog2` row (not separately specced —
+  an implementation-only part, like `DialogHeaderRoot`/`DialogFooterRoot` are
+  for `Dialog`).
+
+root:
+  element: div
+  description: >-
+    Flex row, fixed 64px height, horizontal padding — themed by the shared
+    `--ui-footer-*` tier (the same geometry `DialogFooterDefault` uses).
+    Falls back to `justify-end` on `variant="start"`, mirroring the Figma
+    export (harmless once the row's own `flex-1` already fills the bar).
+
+parts:
+  - id: boxLeft
+    description: Holds the `Back` button.
+    element: div
+    optional: true
+    visible_when: 'variant is `"middle"` or `"end"` (hidden on `"start"`)'
+  - id: listIndicator
+    description: >-
+      One dot per slide (`slideCount`). Each dot is a button; clicking it
+      calls `onSelectIndex` with that slide's index. The active slide's dot
+      (`selectedIndex`) renders in `--ui-glyph-on-surface-primary`; the rest in
+      `--ui-glyph-on-surface-disabled`.
+    element: div
+  - id: boxRight
+    description: >-
+      Holds the `Next` button (`variant="start" | "middle"`) or the
+      call-to-action button (`variant="end"`).
+    element: div
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [boxLeft, listIndicator, boxRight]
+
+states:
+  - id: start
+    trigger: 'variant="start"'
+    kind: prop
+    prop: variant
+    affects: [boxLeft, boxRight]
+  - id: middle
+    trigger: 'variant="middle"'
+    kind: prop
+    prop: variant
+    affects: [boxLeft, boxRight]
+  - id: end
+    trigger: 'variant="end"'
+    kind: prop
+    prop: variant
+    affects: [boxLeft, boxRight]

@@ -19,6 +19,7 @@ export * from './components/ui/button-menu';
 export * from './components/ui/calendar';
 export * from './components/ui/card';
 export * from './components/ui/card-filter';
+export * from './components/ui/carousel-dialog-2';
 export * from './components/ui/chart';
 export * from './components/ui/chart-state';
 export * from './components/ui/checkbox';
@@ -36,7 +37,9 @@ export {
   type DialogProps,
   type DialogVariant,
 } from './components/ui/dialog';
+export * from './components/ui/dialog-footer-carousel-2';
 export * from './components/ui/dialog-footer-default';
+export * from './components/ui/dialog-welcome-2';
 export * from './components/ui/dropdown-menu';
 export * from './components/ui/empty';
 export * from './components/ui/field';

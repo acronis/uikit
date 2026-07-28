@@ -1,0 +1,145 @@
+spec_version: '1.0'
+component: DialogWelcome2
+
+schematic: |
+  ─ variant="carousel" ──────────────────────────────────────────
+  +===========================================================+
+  |  container: <div role="dialog"> (centered popup card)      |
+  |   +-----------------------------------------------------+ |
+  |   | image (active slide)                                 | |
+  |   | title (active slide)                                 | |
+  |   | description (active slide)                           | |
+  |   +-----------------------------------------------------+ |
+  |   | footer: DialogFooterCarousel2 (Back / dots / Next)   | |
+  +===========================================================+
+
+  ─ variant="single" ─────────────────────────────────────────────
+  +===========================================================+
+  |  container: <div role="dialog"> (centered popup card)      |
+  |   +-----------------------------------------------------+ |
+  |   | image / title / description                          | |
+  |   | primaryAction: Button                                 | |
+  |   | close: Button (ghost, "Close")                        | |
+  +===========================================================+
+
+     container   -> reuses DialogContent's `--ui-dialog-container-*` chrome
+     image       -> --ui-background-surface-active placeholder surface
+     title / description -> text-foreground
+     footer      -> DialogFooterCarousel2 (not re-specced here — its own spec)
+
+root:
+  element: div
+  role: dialog
+  description: >-
+    The modal popup (Base UI `Dialog.Popup`, reused directly from `Dialog`'s
+    `DialogContent` — same `--ui-dialog-container-*` chrome), centered and
+    portaled. Carries `role="dialog"`/`aria-modal`, is labelled by the active
+    slide's title, traps focus, and locks scroll while open.
+
+parts:
+  - id: container
+    description: >-
+      The rounded surface card (the popup) that holds the body and, for
+      `variant="carousel"`, the footer. Reuses `Dialog`'s `DialogContent`
+      unmodified — same `--ui-dialog-container-*` tokens, fixed at `size="sm"`
+      (512px, the only width the Figma "DialogWelcome" node defines).
+    element: div
+  - id: image
+    description: >-
+      Illustration/media for the active slide (`slides[i].image` for
+      `variant="carousel"`, the `image` prop for `variant="single"`). Falls
+      back to a plain `--ui-background-surface-active` placeholder surface
+      when omitted, matching the Figma mock.
+    element: div
+  - id: title
+    description: >-
+      The active slide's title. Doubles as the dialog's accessible name (Base
+      UI `Dialog.Title`, wired to `aria-labelledby`) — only the active slide
+      renders the real `Dialog.Title`; the rest render a plain, visually
+      identical heading so there's exactly one accessible name at a time.
+    element: h2
+  - id: description
+    description: >-
+      The active slide's description. Doubles as the dialog's accessible
+      description (Base UI `Dialog.Description`, wired to
+      `aria-describedby`) with the same single-active-instance rule as
+      `title`.
+    element: p
+  - id: footer
+    description: >-
+      A `DialogFooterCarousel2` instance driven by this component's Embla
+      engine (`onBack`/`onNext`/`onSelectIndex` map to `scrollPrev`/
+      `scrollNext`/`scrollTo`; `variant` derives from the selected index's
+      position: first → `"start"`, last → `"end"`, otherwise `"middle"`). See
+      `dialog-footer-carousel-2`'s own spec for its anatomy.
+    element: div
+    optional: true
+    visible_when: 'variant="carousel"'
+  - id: primaryAction
+    description: The call-to-action `Button` (`primaryLabel`, default `'Call to action'`).
+    element: button
+    optional: true
+    visible_when: 'variant="single"'
+  - id: close
+    description: >-
+      A ghost `Button` (`closeLabel`, default `'Close'`) that dismisses the
+      dialog via `Dialog.Close`.
+    element: button
+    optional: true
+    visible_when: 'variant="single"'
+
+layout:
+  type: flex
+  direction: column
+  order: [image, title, description, footer]
+
+internal_state:
+  - id: open
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [open]
+    controlled_default: default-open
+    emits: open-change
+    changed_by: >-
+      controlled `open`/`default-open`; `close` / Esc / outside-press closes
+      when uncontrolled
+    description: Whether the dialog is shown; reflected to the popup + overlay.
+  - id: selected-index
+    type: number
+    initial: 0
+    controllable_via: [selected-index]
+    emits: selected-index-change
+    changed_by: >-
+      `Next`/`Back`/a dot click in the `footer` part, or a swipe/drag gesture
+      on the slide track (all via the internal Embla instance)
+    description: >-
+      The active slide index (`variant="carousel"` only). Uncontrolled by
+      default — there is no `defaultSelectedIndex` prop; it always starts
+      at `0`.
+
+states:
+  - id: variant
+    trigger: 'variant selects the carousel-vs-single layout'
+    kind: prop
+    prop: variant
+    affects: [footer, primaryAction, close]
+  - {
+      id: open,
+      trigger: 'internal open === true (data-[open])',
+      kind: internal,
+      affects: [root, container],
+    }
+  - {
+      id: closed,
+      trigger: 'internal open === false (data-[closed])',
+      kind: internal,
+      affects: [root, container],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on an interactive part,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [footer, primaryAction, close],
+    }
