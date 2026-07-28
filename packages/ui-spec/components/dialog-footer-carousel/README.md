@@ -29,7 +29,7 @@ dot count/active index, from that Carousel's own context — it takes no
 | ------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `back`  | `button` (`Button`)                 | Scrolls to the earlier slide. Hidden on the first slide.                                                                      |
 | `dots`  | `div`                               | Slide-position indicator (one dot per slide); the active dot's own circle is solid, idle dots are dimmer — no container fill. |
-| `next`  | `button` (`Button`)                 | Scrolls to the later slide. Hidden on the last slide.                                                                         |
+| `next`  | `button` (`Button`)                 | Scrolls to the later slide. Hidden on the last slide, swapped for `close`.                                                    |
 | `close` | `button` (`Button` + `DialogClose`) | Closes the ambient Dialog. Shown only on the last slide, in `next`'s place.                                                   |
 
 ## Example
@@ -60,8 +60,10 @@ Normally you won't reach for this directly — pass 2 or more
 
 The repo has no i18n library, so this component's own visible/accessible
 text is overridable via props rather than baked in: `backLabel`/`nextLabel`/
-`closeLabel` (default "Back"/"Next"/"Close") and `positionLabel` (the `dots`
-list's `aria-label`, default "Slide position"). See `api.yaml`.
+`closeLabel` (default "Back"/"Next"/"Close"), `positionLabel` (the `dots`
+list's `aria-label`, default "Slide position"), and `dotAriaLabel` (each
+individual dot's `aria-label`, a `(index, count) => string` builder — default
+`` `Slide ${index} of ${count}` ``). See `api.yaml`.
 
 ```tsx
 <DialogFooterCarousel
@@ -69,5 +71,6 @@ list's `aria-label`, default "Slide position"). See `api.yaml`.
   nextLabel="Suivant"
   closeLabel="Fermer"
   positionLabel="Position de la diapositive"
+  dotAriaLabel={(index, count) => `Diapositive ${index} sur ${count}`}
 />
 ```

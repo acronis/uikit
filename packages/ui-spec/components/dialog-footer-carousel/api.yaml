@@ -3,8 +3,8 @@ component: DialogFooterCarousel
 
 # State (first/middle/last) is entirely derived from the ambient Carousel
 # context (see anatomy.yaml's `position` internal_state), never a prop. The
-# four properties below are purely localization overrides for the component's
-# own visible/accessible text — there is no i18n library in this repo, so a
+# properties below are purely localization overrides for the component's own
+# visible/accessible text — there is no i18n library in this repo, so a
 # consumer localizes by passing these.
 contract:
   properties:
@@ -28,6 +28,13 @@ contract:
       required: false
       default: "'Close'"
       description: Visible label (and accessible name) of the `close` part.
+    - name: dotAriaLabel
+      type: '(index: number, count: number) => string'
+      required: false
+      default: '(index, count) => `Slide ${index} of ${count}`'
+      description: >-
+        Builds each position dot's accessible name from its 1-based index and
+        the total dot count.
   content: []
   methods: []
 

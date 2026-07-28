@@ -25,16 +25,26 @@ import {
 // (`carousel`) — the exact component already built against and Code-Connected
 // to its own separately-linked Figma node (6353:5864).
 //
-// `variant` is not a prop — like Breadcrumb's "current page" (a part, not a
-// state) it's derived from how many `<DialogWelcomeSlide>` children are
-// passed: exactly one renders the `single` layout (image + text + a CTA/Close
-// button pair); two or more render the `carousel` layout, where each slide
-// keeps its own image + text (Figma only shows one static frame per variant,
-// so its footer-contains-only-controls / body-sits-outside-the-carousel
-// nesting is an artifact of that single-frame view, not an instruction to
-// split body and slide data apart in code — every real slide's content must
-// travel with it). The carousel's own Embla-driven scroll animates the
-// slide-to-slide transition; no separate transition code is needed.
+// `variant` IS a real Figma component property (confirmed via
+// get_context_for_code_connect's `variantOptions: ["carousel", "single"]`) —
+// mirrored here as an *optional* override, not the primary driver: by
+// default (variant omitted) the layout is still derived from how many real
+// `<DialogWelcomeSlide>` children are passed (exactly one → `single`; two or
+// more → `carousel`), so a caller never has to keep an explicit prop in sync
+// with their own children. Passing `variant` explicitly forces that layout
+// regardless of slide count — e.g. `variant="carousel"` keeps the carousel
+// chrome (and its footer) for a single-slide step, matching
+// DialogFooterCarousel's own single-slide support. Forcing `variant="single"`
+// with more than one real slide silently renders only the first — the rest
+// are dropped.
+//
+// Each slide keeps its own image + text (Figma only shows one static frame
+// per variant, so its footer-contains-only-controls / body-sits-outside-the-
+// carousel nesting is an artifact of that single-frame view, not an
+// instruction to split body and slide data apart in code — every real
+// slide's content must travel with it). The carousel's own Embla-driven
+// scroll animates the slide-to-slide transition; no separate transition code
+// is needed.
 //
 // Built on DialogRoot/DialogContent directly (Dialog's own primitive parts)
 // — never the `Dialog` recipe, which always renders its own header/body/
@@ -45,7 +55,6 @@ import {
 // fully, then went `aria-hidden`/inert once the inner popup opened on top,
 // never actually removed). DialogWelcome has no header by design in either
 // layout, so it skips the recipe entirely.
-const MIN_SLIDES = 1;
 const MAX_SLIDES = 5;
 
 export interface DialogWelcomeSlideProps {
@@ -122,6 +131,15 @@ interface DialogWelcomeBaseProps extends Omit<
 > {
   /** One `<DialogWelcomeSlide>` per slide. Exactly one renders the `single` layout (CTA + Close); 2–5 render the `carousel` layout (Back/Next/Close + position dots), dropping the CTA/Close pair. */
   children: React.ReactNode;
+  /**
+   * Forces the `single` or `carousel` layout instead of deriving it from the
+   * number of `<DialogWelcomeSlide>` children. Optional — when omitted, the
+   * layout is inferred from slide count (exactly 1 → `single`, 2+ →
+   * `carousel`). Pass `"carousel"` to keep the carousel chrome for a single
+   * slide; passing `"single"` with more than one real slide renders only the
+   * first, dropping the rest.
+   */
+  variant?: 'carousel' | 'single';
   /** The `single` layout's primary (call-to-action) button label. Ignored in the `carousel` layout. */
   primaryLabel?: string;
   /** Fires when the `single` layout's primary button is clicked. Does not close the dialog itself — pair with `open`/`onOpenChange` if the action should close it. Ignored in the `carousel` layout. */
@@ -163,6 +181,7 @@ export type DialogWelcomeProps = DialogWelcomeBaseProps &
 
 function DialogWelcome({
   children,
+  variant,
   primaryLabel = 'Call to action',
   onPrimaryAction,
   closeLabel = 'Close',
@@ -180,21 +199,20 @@ function DialogWelcome({
   'aria-labelledby': ariaLabelledBy,
   ...rootProps
 }: DialogWelcomeProps) {
-  const slides = React.Children.toArray(children);
+  // Only real <DialogWelcomeSlide> elements count as slides — a stray
+  // non-slide child (or a falsy one from a conditional like `cond &&
+  // <DialogWelcomeSlide />`) must not be counted, and 0 real slides must not
+  // fall through to rendering `slides[0]` (undefined) as the single layout.
+  const slides = React.Children.toArray(children).filter(
+    (child): child is React.ReactElement<DialogWelcomeSlideProps> =>
+      React.isValidElement(child) && child.type === DialogWelcomeSlide
+  );
 
-  if (
-    process.env.NODE_ENV !== 'production' &&
-    (slides.length < MIN_SLIDES || slides.length > MAX_SLIDES)
-  ) {
-    console.error(
-      `DialogWelcome: expected between ${MIN_SLIDES} and ${MAX_SLIDES} slides, received ${slides.length}.` +
-        (slides.length > MAX_SLIDES
-          ? ` Rendering only the first ${MAX_SLIDES}.`
-          : '')
-    );
+  if (slides.length === 0) {
+    return null;
   }
 
-  const isCarousel = slides.length > 1;
+  const isCarousel = variant ? variant === 'carousel' : slides.length > 1;
 
   return (
     <DialogRoot {...rootProps}>

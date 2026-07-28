@@ -22,7 +22,7 @@ function FooterAtIndex({ startIndex }: { startIndex: number }) {
       <DialogContent aria-label="Carousel dialog">
         <Carousel
           opts={{ startIndex }}
-          className="w-full max-w-[464px] border border-border"
+          className="w-full border border-border"
         >
           <CarouselContent>
             <CarouselItem className="flex h-40 items-center justify-center">
@@ -51,7 +51,7 @@ function SingleSlideFooter() {
   return (
     <DialogRoot open>
       <DialogContent aria-label="Carousel dialog">
-        <Carousel className="w-full max-w-[464px] border border-border">
+        <Carousel className="w-full border border-border">
           <CarouselContent>
             <CarouselItem className="flex h-40 items-center justify-center">
               Only slide
@@ -82,7 +82,7 @@ function FooterWithSlideCount({
       <DialogContent aria-label="Carousel dialog">
         <Carousel
           opts={{ startIndex }}
-          className="w-full max-w-[464px] border border-border"
+          className="w-full border border-border"
         >
           <CarouselContent>
             {Array.from({ length: count }, (_, index) => (
@@ -104,7 +104,13 @@ function FooterWithSlideCount({
 const meta = {
   title: 'UI/DialogFooterCarousel',
   component: DialogFooterCarousel,
-  parameters: { layout: 'centered' },
+  // Every story here mounts a real <Carousel> inside an animating Dialog
+  // (data-[open]:animate-in zoom/fade) — the dialog's own resize as it scales
+  // in can retrigger Embla's layout measurement mid-transition, so the VR
+  // capture must wait for both to settle instead of racing a mid-scroll
+  // frame (same `animationDelay` convention as tooltip/select's own popup
+  // stories).
+  parameters: { layout: 'centered', snapshot: { animationDelay: 400 } },
   tags: ['autodocs'],
 } satisfies Meta<typeof DialogFooterCarousel>;
 
@@ -138,15 +144,6 @@ export const FourSlides: Story = {
   render: () => <FooterWithSlideCount count={4} startIndex={1} />,
 };
 
-// A slide count above the footer's own enforced maximum, paired directly
-// with a bare `<Carousel>` (bypassing `<CarouselDialog>`'s children slice) —
-// the dot indicator still caps at 5 (the first active) and a development-mode
-// console warning is logged, exactly like CarouselDialog's own TooManySlides
-// story.
-export const TooManySlides: Story = {
-  render: () => <FooterWithSlideCount count={11} startIndex={0} />,
-};
-
 // Demonstrates that Back/Next/Close and the position list's accessible name
 // are localizable via props, not baked into the component.
 export const CustomLabels: Story = {
@@ -155,7 +152,7 @@ export const CustomLabels: Story = {
       <DialogContent aria-label="Carousel dialog">
         <Carousel
           opts={{ startIndex: 1 }}
-          className="w-full max-w-[464px] border border-border"
+          className="w-full border border-border"
         >
           <CarouselContent>
             <CarouselItem className="flex h-40 items-center justify-center">
@@ -173,6 +170,7 @@ export const CustomLabels: Story = {
             nextLabel="Suivant"
             closeLabel="Fermer"
             positionLabel="Position de la diapositive"
+            dotAriaLabel={(index, count) => `Diapositive ${index} sur ${count}`}
           />
         </Carousel>
       </DialogContent>

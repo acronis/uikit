@@ -25,6 +25,13 @@ const meta = {
         'One `<DialogWelcomeSlide>` per slide. Exactly one renders the `single` layout (CTA + Close); 2–5 render the `carousel` layout.',
       table: { type: { summary: 'ReactNode' }, category: 'Content' },
     },
+    variant: {
+      control: 'select',
+      options: ['carousel', 'single'],
+      description:
+        'Forces the `single`/`carousel` layout instead of deriving it from slide count. Optional — omit to auto-detect from `children`.',
+      table: { type: { summary: "'carousel' | 'single'" }, category: 'Appearance' },
+    },
     primaryLabel: {
       control: 'text',
       description: "The `single` layout's call-to-action button label.",
@@ -94,7 +101,14 @@ export const Single: Story = {
   ),
 };
 
+// `animationDelay` (all three carousel-layout stories below): each mounts a
+// real <Carousel> inside this Dialog's own animate-in zoom/fade — the
+// dialog's resize as it scales in can retrigger Embla's layout measurement
+// mid-transition, so the VR capture must wait for both to settle instead of
+// racing a mid-scroll frame. `Single` has no Carousel, so it isn't exposed to
+// this and doesn't need the delay.
 export const Carousel: Story = {
+  parameters: { snapshot: { animationDelay: 400 } },
   render: () => (
     <DialogWelcome open aria-label="Welcome tour">
       {slides(3)}
@@ -102,23 +116,27 @@ export const Carousel: Story = {
   ),
 };
 
-// With only 2 slides, the footer never reaches its "middle" state — the very
-// first navigation already lands on the last slide (Back appears, Next is
-// replaced by Close). Mirrors CarouselDialog's own TwoSlides story.
-export const CarouselTwoSlides: Story = {
+// The enforced maximum (5 slides), seeded at the last slide: Back shown, a
+// 5-dot indicator with the last dot active, Close in place of Next.
+export const CarouselLastSlide: Story = {
+  parameters: { snapshot: { animationDelay: 400 } },
   render: () => (
-    <DialogWelcome open aria-label="Welcome tour">
-      {slides(2)}
+    <DialogWelcome open aria-label="Welcome tour" opts={{ startIndex: 4 }}>
+      {slides(5)}
     </DialogWelcome>
   ),
 };
 
-// The enforced maximum (5 slides), seeded at the last slide: Back shown, a
-// 5-dot indicator with the last dot active, Close in place of Next.
-export const CarouselLastSlide: Story = {
+// `variant="carousel"` forces the carousel chrome (footer + position dot)
+// for a single slide, instead of auto-detecting the `single` layout from
+// slide count — matching Figma's own `variant` component property. The
+// single-slide carousel resolves to DialogFooterCarousel's own 'last' state:
+// no Next, Close reachable.
+export const CarouselForcedSingleSlide: Story = {
+  parameters: { snapshot: { animationDelay: 400 } },
   render: () => (
-    <DialogWelcome open aria-label="Welcome tour" opts={{ startIndex: 4 }}>
-      {slides(5)}
+    <DialogWelcome open aria-label="Welcome" variant="carousel">
+      {slides(1)}
     </DialogWelcome>
   ),
 };

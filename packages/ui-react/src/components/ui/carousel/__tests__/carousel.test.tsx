@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -66,6 +66,54 @@ describe('Carousel', () => {
     expect(api.selectedScrollSnap()).toBe(0);
     await user.click(screen.getByRole('button', { name: 'Next slide' }));
     expect(api.selectedScrollSnap()).toBe(1);
+  });
+
+  it('navigates with ArrowLeft/ArrowRight in horizontal orientation', () => {
+    const setApi = vi.fn();
+    render(<BasicCarousel opts={{ loop: true }} setApi={setApi} />);
+    const api = setApi.mock.calls[0][0];
+    const region = screen.getByRole('region');
+    expect(api.selectedScrollSnap()).toBe(0);
+    fireEvent.keyDown(region, { key: 'ArrowRight' });
+    expect(api.selectedScrollSnap()).toBe(1);
+    fireEvent.keyDown(region, { key: 'ArrowLeft' });
+    expect(api.selectedScrollSnap()).toBe(0);
+  });
+
+  it('navigates with ArrowUp/ArrowDown in vertical orientation', () => {
+    const setApi = vi.fn();
+    render(<BasicCarousel orientation="vertical" opts={{ loop: true }} setApi={setApi} />);
+    const api = setApi.mock.calls[0][0];
+    const region = screen.getByRole('region');
+    expect(api.selectedScrollSnap()).toBe(0);
+    fireEvent.keyDown(region, { key: 'ArrowDown' });
+    expect(api.selectedScrollSnap()).toBe(1);
+    fireEvent.keyDown(region, { key: 'ArrowUp' });
+    expect(api.selectedScrollSnap()).toBe(0);
+  });
+
+  it('ignores ArrowLeft/ArrowRight in vertical orientation', () => {
+    const setApi = vi.fn();
+    render(<BasicCarousel orientation="vertical" opts={{ loop: true }} setApi={setApi} />);
+    const api = setApi.mock.calls[0][0];
+    const region = screen.getByRole('region');
+    fireEvent.keyDown(region, { key: 'ArrowRight' });
+    expect(api.selectedScrollSnap()).toBe(0);
+  });
+
+  it('accepts custom previousLabel/nextLabel props', () => {
+    render(
+      <Carousel>
+        <CarouselContent>
+          <CarouselItem>Slide 1</CarouselItem>
+          <CarouselItem>Slide 2</CarouselItem>
+        </CarouselContent>
+        <CarouselPrevious previousLabel="Show previous slide" />
+        <CarouselNext nextLabel="Show next slide" />
+      </Carousel>
+    );
+    expect(screen.getByRole('button', { name: 'Show previous slide' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Show next slide' })).toBeInTheDocument();
   });
 
   it('throws when a part is rendered outside <Carousel />', () => {

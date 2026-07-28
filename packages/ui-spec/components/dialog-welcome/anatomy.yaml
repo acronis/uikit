@@ -72,10 +72,12 @@ layout:
   direction: column
   order: [image, text, actions]
 
-# The layout itself (single vs carousel) is a structural difference driven by
-# slide count, not internal state — DialogWelcome adds no state of its own
-# beyond what Dialog and Carousel already own (see CarouselDialog's own
-# anatomy for the identical reasoning).
+# The layout itself (single vs carousel) is a structural difference, not
+# internal state — DialogWelcome adds no state of its own beyond what Dialog
+# and Carousel already own (see CarouselDialog's own anatomy for the
+# identical reasoning). Driven by slide count by default, or forced by the
+# optional `variant` prop (api.yaml) when passed — either way it selects
+# which parts render, it doesn't add a new state axis.
 internal_state:
   - id: open
     type: boolean

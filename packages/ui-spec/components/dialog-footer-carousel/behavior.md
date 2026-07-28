@@ -53,13 +53,6 @@ Scenario: Too many slides
   Given a Carousel with more than 5 slides (e.g. used standalone, bypassing
         DialogWelcome's own children slice)
   Then DialogFooterCarousel renders only the first 5 dot slots
-  And a development-mode console warning is logged
-```
-
-```gherkin
-Scenario: Too few slides
-  Given a Carousel with fewer than 1 slide
-  Then a development-mode console warning is logged
 ```
 
 ## Closing

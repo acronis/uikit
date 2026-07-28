@@ -1,14 +1,19 @@
 # DialogWelcome
 
 A second Dialog "recipe" alongside `Dialog` (DialogDefault): headerless, its
-body is an image plus a centered title/description. The layout is derived
-from slide count, not a prop:
+body is an image plus a centered title/description. The layout defaults to
+being derived from slide count, but can be forced via the optional `variant`
+prop (a real Figma component property):
 
 - **Exactly one** `<DialogWelcomeSlide>` child renders the `single` layout —
   a call-to-action button and a "Close" button, stacked below the text.
 - **2–5** children render the `carousel` layout — each slide keeps its own
   image/text, and navigation is the existing `DialogFooterCarousel`
   (Back/Next/Close + a one-dot-per-slide position indicator).
+- Pass `variant="carousel"` or `variant="single"` to force that layout
+  regardless of slide count — e.g. keep the carousel chrome for a single
+  step in a multi-step flow. Forcing `single` with more than one real slide
+  silently drops the rest.
 
 ## When to use
 
@@ -22,16 +27,15 @@ from slide count, not a prop:
 - If slide position needs to be a URL param — the `carousel` layout stays
   routing-agnostic; wire it yourself via `setApi` + `opts.startIndex`.
 - No autoplay, no looping — this v1 supports neither.
-- For more than 5 steps — DialogWelcome caps at 5 slides (dev-warns and
-  renders only the first 5 beyond that).
+- For more than 5 steps — DialogWelcome caps at 5 slides (renders only the
+  first 5 beyond that).
 
 ## Slide count
 
-`children` must resolve to between 1 and 5 `<DialogWelcomeSlide>`s — exactly
+`children` should resolve to between 1 and 5 `<DialogWelcomeSlide>`s — exactly
 one selects the `single` layout, 2 or more select the `carousel` layout (whose
-footer dot indicator renders exactly one dot per slide). Outside the [1, 5]
-range DialogWelcome logs a development-mode console warning; above 5 it also
-renders only the first 5 children, dropping the rest.
+footer dot indicator renders exactly one dot per slide). Zero real slides
+renders nothing; above 5, only the first 5 reach the Carousel.
 
 ## Parts
 

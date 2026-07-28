@@ -10,8 +10,23 @@ contract:
         One `<DialogWelcomeSlide>` per slide. Exactly one resolves to the
         `single` layout (a CTA + Close button pair, no footer); 2–5 resolve
         to the `carousel` layout (each slide's own image/text, navigated by
-        `DialogFooterCarousel`). Fewer than 1 or more than 5 is dev-warned;
-        above 5 only the first 5 reach the Carousel.
+        `DialogFooterCarousel`). Zero real slides renders nothing; above 5
+        only the first 5 reach the Carousel. Overridden by `variant` when
+        present.
+    - name: variant
+      type: "'carousel' | 'single'"
+      required: false
+      default: undefined
+      description: >-
+        Forces the `single`/`carousel` layout instead of deriving it from
+        `children`'s slide count. A real Figma component property (confirmed
+        via get_context_for_code_connect's `variantOptions`), mirrored here as
+        an optional override rather than the primary driver — the
+        count-derived default still applies when omitted, so a caller never
+        has to keep this in sync with their own children. `variant="carousel"`
+        keeps the carousel chrome for a single slide (DialogFooterCarousel's
+        own single-slide 'last' state); `variant="single"` with more than one
+        real slide renders only the first, dropping the rest.
     - name: primaryLabel
       type: string
       required: false

@@ -90,7 +90,15 @@ const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
 
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLDivElement>) => {
-        if (event.key === 'ArrowLeft') {
+        if (orientation === 'vertical') {
+          if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            scrollPrev();
+          } else if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            scrollNext();
+          }
+        } else if (event.key === 'ArrowLeft') {
           event.preventDefault();
           scrollPrev();
         } else if (event.key === 'ArrowRight') {
@@ -98,7 +106,7 @@ const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
           scrollNext();
         }
       },
-      [scrollPrev, scrollNext]
+      [orientation, scrollPrev, scrollNext]
     );
 
     React.useEffect(() => {
@@ -166,7 +174,7 @@ const CarouselContent = React.forwardRef<
         ref={ref}
         className={cn(
           'flex',
-          orientation === 'horizontal' ? '-ml-4' : '-mt-4 flex-col',
+          orientation === 'horizontal' ? '-ms-4' : '-mt-4 flex-col',
           className
         )}
         {...props}
@@ -189,7 +197,7 @@ const CarouselItem = React.forwardRef<
       aria-roledescription="slide"
       className={cn(
         'min-w-0 shrink-0 grow-0 basis-full',
-        orientation === 'horizontal' ? 'pl-4' : 'pt-4',
+        orientation === 'horizontal' ? 'ps-4' : 'pt-4',
         className
       )}
       {...props}
@@ -198,21 +206,26 @@ const CarouselItem = React.forwardRef<
 });
 CarouselItem.displayName = 'CarouselItem';
 
+interface CarouselPreviousProps
+  extends React.ComponentPropsWithoutRef<typeof ButtonIcon> {
+  previousLabel?: string;
+}
+
 const CarouselPrevious = React.forwardRef<
   React.ElementRef<typeof ButtonIcon>,
-  React.ComponentPropsWithoutRef<typeof ButtonIcon>
->(({ className, variant = 'secondary', ...props }, ref) => {
+  CarouselPreviousProps
+>(({ className, variant = 'secondary', previousLabel = 'Previous slide', ...props }, ref) => {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel();
 
   return (
     <ButtonIcon
       ref={ref}
       variant={variant}
-      aria-label="Previous slide"
+      aria-label={previousLabel}
       className={cn(
         'absolute',
         orientation === 'horizontal'
-          ? '-left-12 top-1/2 -translate-y-1/2'
+          ? '-start-12 top-1/2 -translate-y-1/2'
           : '-top-12 left-1/2 -translate-x-1/2 rotate-90',
         className
       )}
@@ -220,27 +233,32 @@ const CarouselPrevious = React.forwardRef<
       onClick={scrollPrev}
       {...props}
     >
-      <ArrowLeftIcon />
+      <ArrowLeftIcon className={orientation === 'horizontal' ? 'rtl:rotate-180' : undefined} />
     </ButtonIcon>
   );
 });
 CarouselPrevious.displayName = 'CarouselPrevious';
 
+interface CarouselNextProps
+  extends React.ComponentPropsWithoutRef<typeof ButtonIcon> {
+  nextLabel?: string;
+}
+
 const CarouselNext = React.forwardRef<
   React.ElementRef<typeof ButtonIcon>,
-  React.ComponentPropsWithoutRef<typeof ButtonIcon>
->(({ className, variant = 'secondary', ...props }, ref) => {
+  CarouselNextProps
+>(({ className, variant = 'secondary', nextLabel = 'Next slide', ...props }, ref) => {
   const { orientation, scrollNext, canScrollNext } = useCarousel();
 
   return (
     <ButtonIcon
       ref={ref}
       variant={variant}
-      aria-label="Next slide"
+      aria-label={nextLabel}
       className={cn(
         'absolute',
         orientation === 'horizontal'
-          ? '-right-12 top-1/2 -translate-y-1/2'
+          ? '-end-12 top-1/2 -translate-y-1/2'
           : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
         className
       )}
@@ -248,7 +266,7 @@ const CarouselNext = React.forwardRef<
       onClick={scrollNext}
       {...props}
     >
-      <ArrowRightIcon />
+      <ArrowRightIcon className={orientation === 'horizontal' ? 'rtl:rotate-180' : undefined} />
     </ButtonIcon>
   );
 });

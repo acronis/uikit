@@ -116,6 +116,66 @@ describe('DialogFooterCarousel', () => {
     expect(dotStates()).toEqual([false, false, true]);
   });
 
+  it('still shows Close on the last slide when the ambient Carousel loops (canScrollPrev/canScrollNext always true)', () => {
+    // opts={{ loop: true }} on the ambient <Carousel> pins Embla's
+    // canScrollPrev/canScrollNext at true forever — state must come from
+    // selectedIndex/slideCount instead, or Close never renders.
+    mockCarousel.canScrollPrev = true;
+    mockCarousel.canScrollNext = true;
+    mockCarousel.selectedIndex = 2;
+    mockCarousel.slideCount = 3;
+    render(
+      <DialogRoot open>
+        <DialogContent aria-label="Carousel dialog">
+          <DialogFooterCarousel />
+        </DialogContent>
+      </DialogRoot>
+    );
+    expect(
+      screen.queryByRole('button', { name: 'Next' })
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
+  });
+
+  it('with exactly 2 slides, never reaches middle: first slide shows Next, second shows Close', () => {
+    mockCarousel.canScrollPrev = false;
+    mockCarousel.canScrollNext = true;
+    mockCarousel.selectedIndex = 0;
+    mockCarousel.slideCount = 2;
+    const { rerender } = render(
+      <DialogRoot open>
+        <DialogContent aria-label="Carousel dialog">
+          <DialogFooterCarousel />
+        </DialogContent>
+      </DialogRoot>
+    );
+    expect(
+      screen.queryByRole('button', { name: 'Back' })
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Close' })
+    ).not.toBeInTheDocument();
+    expect(dotStates()).toEqual([true, false]);
+
+    mockCarousel.canScrollPrev = true;
+    mockCarousel.canScrollNext = false;
+    mockCarousel.selectedIndex = 1;
+    rerender(
+      <DialogRoot open>
+        <DialogContent aria-label="Carousel dialog">
+          <DialogFooterCarousel />
+        </DialogContent>
+      </DialogRoot>
+    );
+    expect(screen.getByRole('button', { name: 'Back' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Next' })
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
+    expect(dotStates()).toEqual([false, true]);
+  });
+
   it('renders one dot per slide, not a fixed count', () => {
     mockCarousel.canScrollPrev = true;
     mockCarousel.canScrollNext = true;
@@ -142,33 +202,16 @@ describe('DialogFooterCarousel', () => {
     expect(dotStates()).toEqual([true]);
   });
 
-  it('caps the dot indicator at 5 and warns when the ambient slide count exceeds 5', () => {
-    const consoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+  it('caps the dot indicator at 5 when the ambient slide count exceeds 5', () => {
     mockCarousel.canScrollPrev = true;
     mockCarousel.canScrollNext = true;
     mockCarousel.selectedIndex = 7;
     mockCarousel.slideCount = 11;
     render(<DialogFooterCarousel />);
     expect(screen.getAllByRole('listitem')).toHaveLength(5);
-    expect(consoleError).toHaveBeenCalledWith(
-      expect.stringContaining('expected between 1 and 5 slides, received 11')
-    );
-    consoleError.mockRestore();
   });
 
-  it('does not warn when the ambient slide count is within [1, 5]', () => {
-    const consoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-    mockCarousel.slideCount = 5;
-    render(<DialogFooterCarousel />);
-    expect(consoleError).not.toHaveBeenCalled();
-    consoleError.mockRestore();
-  });
-
-  it('both-disabled state (single slide): resolves to last, with Close reachable', () => {
+  it('both-disabled state (single slide): resolves to last, no Back, Close reachable', () => {
     renderBothDisabled();
     expect(
       screen.queryByRole('button', { name: 'Back' })
@@ -200,6 +243,113 @@ describe('DialogFooterCarousel', () => {
     renderLast(onOpenChange);
     await user.click(screen.getByRole('button', { name: 'Close' }));
     expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
+  });
+
+  it('gives each dot an accessible name', () => {
+    renderMiddle();
+    const dots = screen.getAllByRole('listitem');
+    expect(dots.map((dot) => dot.getAttribute('aria-label'))).toEqual([
+      'Slide 1 of 3',
+      'Slide 2 of 3',
+      'Slide 3 of 3',
+    ]);
+  });
+
+  it('builds each dot accessible name via the dotAriaLabel prop override', () => {
+    mockCarousel.canScrollPrev = true;
+    mockCarousel.canScrollNext = true;
+    render(
+      <DialogFooterCarousel
+        dotAriaLabel={(index, count) => `Diapositive ${index} sur ${count}`}
+      />
+    );
+    const dots = screen.getAllByRole('listitem');
+    expect(dots.map((dot) => dot.getAttribute('aria-label'))).toEqual([
+      'Diapositive 1 sur 3',
+      'Diapositive 2 sur 3',
+      'Diapositive 3 sur 3',
+    ]);
+  });
+
+  it('moves focus from Next to Close when the swap happens while Next is focused', () => {
+    mockCarousel.canScrollPrev = true;
+    mockCarousel.canScrollNext = true;
+    mockCarousel.selectedIndex = 1;
+    mockCarousel.slideCount = 3;
+    const { rerender } = render(
+      <DialogRoot open>
+        <DialogContent aria-label="Carousel dialog">
+          <DialogFooterCarousel />
+        </DialogContent>
+      </DialogRoot>
+    );
+    screen.getByRole('button', { name: 'Next' }).focus();
+
+    mockCarousel.canScrollNext = false;
+    mockCarousel.selectedIndex = 2;
+    rerender(
+      <DialogRoot open>
+        <DialogContent aria-label="Carousel dialog">
+          <DialogFooterCarousel />
+        </DialogContent>
+      </DialogRoot>
+    );
+    expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus();
+  });
+
+  it('moves focus from Close to Next when the swap reverses while Close is focused', () => {
+    mockCarousel.canScrollPrev = true;
+    mockCarousel.canScrollNext = false;
+    mockCarousel.selectedIndex = 2;
+    mockCarousel.slideCount = 3;
+    const { rerender } = render(
+      <DialogRoot open>
+        <DialogContent aria-label="Carousel dialog">
+          <DialogFooterCarousel />
+        </DialogContent>
+      </DialogRoot>
+    );
+    screen.getByRole('button', { name: 'Close' }).focus();
+
+    mockCarousel.canScrollNext = true;
+    mockCarousel.selectedIndex = 1;
+    rerender(
+      <DialogRoot open>
+        <DialogContent aria-label="Carousel dialog">
+          <DialogFooterCarousel />
+        </DialogContent>
+      </DialogRoot>
+    );
+    expect(screen.getByRole('button', { name: 'Next' })).toHaveFocus();
+  });
+
+  it('moves focus from Back to Next when Back unmounts while it holds focus', () => {
+    mockCarousel.canScrollPrev = true;
+    mockCarousel.canScrollNext = true;
+    mockCarousel.selectedIndex = 1;
+    mockCarousel.slideCount = 3;
+    const { rerender } = render(
+      <DialogRoot open>
+        <DialogContent aria-label="Carousel dialog">
+          <DialogFooterCarousel />
+        </DialogContent>
+      </DialogRoot>
+    );
+    screen.getByRole('button', { name: 'Back' }).focus();
+
+    mockCarousel.canScrollPrev = false;
+    mockCarousel.selectedIndex = 0;
+    rerender(
+      <DialogRoot open>
+        <DialogContent aria-label="Carousel dialog">
+          <DialogFooterCarousel />
+        </DialogContent>
+      </DialogRoot>
+    );
+    expect(
+      screen.queryByRole('button', { name: 'Back' })
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Next' })).toHaveFocus();
   });
 
   it('overrides Back/Next/Close labels and the position list name via props', () => {
