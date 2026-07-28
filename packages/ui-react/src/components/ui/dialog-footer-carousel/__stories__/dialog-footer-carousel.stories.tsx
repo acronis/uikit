@@ -64,43 +64,6 @@ function SingleSlideFooter() {
   );
 }
 
-// Renders `count` slides, seeded at `startIndex` — the position indicator
-// renders one dot per real slide (capped at 5) and marks the real
-// `selectedScrollSnap()` active (see behavior.md); these stories vary the
-// total to exercise that across boundary counts. Pairing the footer directly
-// with a bare `<Carousel>` (bypassing `<CarouselDialog>`) is only done here
-// to demonstrate the footer's own [1, 5] contract in isolation.
-function FooterWithSlideCount({
-  count,
-  startIndex,
-}: {
-  count: number;
-  startIndex: number;
-}) {
-  return (
-    <DialogRoot open>
-      <DialogContent aria-label="Carousel dialog">
-        <Carousel
-          opts={{ startIndex }}
-          className="w-full border border-border"
-        >
-          <CarouselContent>
-            {Array.from({ length: count }, (_, index) => (
-              <CarouselItem
-                key={index}
-                className="flex h-40 items-center justify-center"
-              >
-                Slide {index + 1} of {count}
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <DialogFooterCarousel />
-        </Carousel>
-      </DialogContent>
-    </DialogRoot>
-  );
-}
-
 const meta = {
   title: 'UI/DialogFooterCarousel',
   component: DialogFooterCarousel,
@@ -121,27 +84,12 @@ export const First: Story = {
   render: () => <FooterAtIndex startIndex={0} />,
 };
 
-export const Middle: Story = {
-  render: () => <FooterAtIndex startIndex={1} />,
-};
-
 export const Last: Story = {
   render: () => <FooterAtIndex startIndex={2} />,
 };
 
 export const SingleSlide: Story = {
   render: () => <SingleSlideFooter />,
-};
-
-// With only 2 slides, the footer never reaches its "middle" state — the very
-// first navigation already lands on the last slide (Back appears, Next is
-// replaced by Close).
-export const TwoSlides: Story = {
-  render: () => <FooterWithSlideCount count={2} startIndex={0} />,
-};
-
-export const FourSlides: Story = {
-  render: () => <FooterWithSlideCount count={4} startIndex={1} />,
 };
 
 // Demonstrates that Back/Next/Close and the position list's accessible name
