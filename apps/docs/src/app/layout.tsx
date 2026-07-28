@@ -8,7 +8,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <RootProvider search={{ options: { type: 'static' } }}>
+        <RootProvider
+          search={{
+            options: {
+              type: 'static',
+              api: `${process.env.NEXT_PUBLIC_DOCS_BASE_PATH ?? ''}/api/search`,
+            },
+          }}
+        >
           {children}
           <Toaster />
         </RootProvider>
