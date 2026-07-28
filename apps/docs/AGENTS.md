@@ -33,7 +33,7 @@ and `context/roadmap.md` if any of that needs restoring later.
 
 - `content/docs/` — MDX pages + `meta.json` files controlling sidebar order.
   Top-level order: `getting-started`, `theming`, `typography`,
-  `token-reference`, `components`, `icons`, `packages`.
+  `token-reference`, `components`, `icons`, `packages`, `shadow-dom`.
 - `content/docs/components/` — one MDX file per **ui-react** component, plus a
   `---Layout---` subsection (app-shell, auth-layout, page-header,
   page-content, stack, grid, section — layout primitives, not one-off pages)

@@ -1,0 +1,145 @@
+---
+title: Shadow DOM Integration
+description: How to render @acronis-platform/ui-react inside a shadow-DOM micro-frontend with fully styled portaled components and zero host style leakage.
+---
+
+# Shadow DOM Integration
+
+When `@acronis-platform/ui-react` runs inside a **shadow-DOM micro-frontend**
+(MFE), portaled components — Popover, DropdownMenu, Tooltip, Dialog, Sheet,
+Select, Combobox, and Toaster — mount their popups into `document.body` by
+default. This means the popup escapes the shadow boundary and loses access to
+the adopted stylesheets, rendering **unstyled**.
+
+`PortalContainerProvider` solves this by redirecting all portals into a container
+inside the shadow root.
+
+## Quick setup
+
+```tsx
+import { PortalContainerProvider } from '@acronis-platform/ui-react';
+
+function ShadowMFE({ shadowRoot }: { shadowRoot: ShadowRoot }) {
+  // 1. Create a mount point inside the shadow root
+  const mountRef = useRef<HTMLDivElement>(null);
+
+  // 2. Adopt ui-react's CSS onto the shadow root
+  useEffect(() => {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(uiReactCssText); // your bundled/fetched CSS
+    shadowRoot.adoptedStyleSheets = [sheet];
+  }, [shadowRoot]);
+
+  // 3. Wrap your app — all portals now render inside the shadow root
+  return (
+    <div ref={mountRef}>
+      <PortalContainerProvider container={mountRef.current}>
+        <App />
+      </PortalContainerProvider>
+    </div>
+  );
+}
+```
+
+That's it. Every portaling component automatically picks up the container from
+context. No need to pass `portalContainer` to each component individually.
+
+## How it works
+
+1. **`PortalContainerProvider`** sets a React context with the target DOM element.
+2. Each portaling component calls **`usePortalContainer()`** internally to read
+   the context.
+3. The component passes the resolved container to the Base UI `Portal` primitive,
+   which creates a React portal into that element instead of `document.body`.
+4. An explicit **`portalContainer` prop** on any individual component always
+   takes precedence over the context — useful for edge cases where one popup
+   needs a different container.
+
+## Affected components
+
+All portaling components respect `PortalContainerProvider`:
+
+| Component | Portal target |
+|-----------|---------------|
+| `PopoverContent` | Positioner + popup |
+| `DropdownMenuContent` | Positioner + popup |
+| `TooltipContent` | Positioner + popup |
+| `Dialog` | Backdrop + popup |
+| `SheetContent` | Backdrop + popup |
+| `SelectContent` / `InputSelectContent` | Positioner + popup |
+| `ComboboxContent` | Positioner + popup |
+| `Toaster` | Viewport + toasts |
+
+## Adopting styles
+
+ui-react's CSS is authored for `:root, :host`, so the same stylesheet works
+inside a shadow root. The recommended approach:
+
+```ts
+// Fetch or import ui-react's compiled CSS
+import cssText from '@acronis-platform/ui-react/styles?raw';
+
+// Build a Constructable Stylesheet and adopt it
+const sheet = new CSSStyleSheet();
+sheet.replaceSync(cssText);
+shadowRoot.adoptedStyleSheets = [sheet];
+```
+
+This keeps ui-react's Tailwind Preflight and design tokens **inside** the shadow
+boundary — they never touch the host document.
+
+## Theming inside the shadow root
+
+ui-react uses `light-dark()` with the `[data-theme]` attribute. Set it on your
+mount element:
+
+```tsx
+<div data-theme="light">
+  <PortalContainerProvider container={mountEl}>
+    <App />
+  </PortalContainerProvider>
+</div>
+```
+
+To follow the host page's theme, observe `document.documentElement` for
+`data-theme` or `class` changes and mirror them onto your shadow mount.
+
+## Overriding per-component
+
+If a specific component needs to portal elsewhere (e.g. a full-screen dialog
+that must overlay the entire viewport), pass `portalContainer` directly:
+
+```tsx
+<PortalContainerProvider container={shadowMount}>
+  {/* This popover portals into the shadow root (from context) */}
+  <Popover>
+    <PopoverTrigger>Open</PopoverTrigger>
+    <PopoverContent>Inside shadow</PopoverContent>
+  </Popover>
+
+  {/* This dialog portals to document.body (explicit override) */}
+  <Dialog portalContainer={document.body} open>
+    Full-screen overlay
+  </Dialog>
+</PortalContainerProvider>
+```
+
+## Known caveats
+
+- **Positioning**: Base UI uses `position: fixed` for positioners. This works
+  inside shadow roots, but breaks if an ancestor has `transform`, `contain`, or
+  `will-change` set — those create a new containing block for fixed positioning.
+  Avoid these CSS properties on shadow-root ancestors.
+- **z-index**: Portaled content inside a shadow root participates in the shadow
+  root's stacking context, not the document's. This is usually desirable (popups
+  stay inside the MFE), but means a shadow-hosted popup cannot overlay content
+  outside the shadow root.
+- **Focus management**: Base UI's focus trapping and restoration work across
+  shadow boundaries in modern browsers (Chrome 90+, Firefox 96+, Safari 16.4+).
+
+## API reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/lib/portal-container.tsx"
+  name="PortalContainerProviderProps"
+/>
