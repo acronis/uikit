@@ -1,0 +1,43 @@
+# packages/icons-react/docker-compose.storybook.yml
+#
+# Build context is the repo root (../..) because the Dockerfile needs the
+# workspace manifests (pnpm-workspace.yaml, pnpm-lock.yaml) to install deps.
+# Host volume paths in this file are resolved relative to THIS file's
+# directory (packages/icons-react/), so e.g. ./storybook-static refers to
+# packages/icons-react/storybook-static.
+#
+# Invoke from anywhere with:
+#   docker compose -f packages/icons-react/docker-compose.storybook.yml up ...
+services:
+  storybook:
+    build:
+      context: ../..
+      dockerfile: packages/icons-react/Dockerfile.storybook
+    image: icons-react-storybook
+    # No host port mapping: the test-runner reaches Storybook over the compose
+    # network (http://storybook:6006) and the healthcheck uses the container's
+    # own localhost, so binding a host port only risks clashing with a running
+    # `storybook dev` / a leftover container.
+    # Serve the pre-built static output from the host — no build step in Docker
+    volumes:
+      - ./storybook-static:/app/packages/icons-react/storybook-static:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:6006 || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  test-runner:
+    # Reuse the image the `storybook` service builds — declaring `build:` here
+    # too makes both services export the same tag concurrently under compose
+    # bake, which races ("image already exists") on a clean build.
+    image: icons-react-storybook
+    command: pnpm exec test-storybook --url http://storybook:6006 --maxWorkers=4
+    environment:
+      - STORYBOOK_COLOR_MODE=${STORYBOOK_COLOR_MODE:-light}
+    depends_on:
+      storybook:
+        condition: service_healthy
+    volumes:
+      - ./test/__snapshots__:/app/packages/icons-react/test/__snapshots__

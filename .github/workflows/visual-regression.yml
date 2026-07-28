@@ -21,6 +21,11 @@ jobs:
             filter: '@acronis-platform/ui-react'
             dir: packages/ui-react
             color_mode: dark
+          # icons-react renders currentColor icons whose color is story-fixed,
+          # not theme-driven — a single (light) pass, like ui-legacy.
+          - name: icons-react
+            filter: '@acronis-platform/icons-react'
+            dir: packages/icons-react
     name: visual-regression (${{ matrix.name }}${{ matrix.color_mode && format(', {0}', matrix.color_mode) || '' }})
     steps:
       - uses: actions/checkout@v6
@@ -54,6 +59,11 @@ jobs:
               - 'packages/design-tokens/**'
               - 'packages/icons-react/**'
               - 'packages/design-assets/**'
+              - '.github/workflows/visual-regression.yml'
+            icons-react:
+              - 'packages/icons-react/**'
+              - 'packages/design-assets/**'
+              - 'tools/style-dictionary/**'
               - '.github/workflows/visual-regression.yml'
 
       - name: Setup PNPM
