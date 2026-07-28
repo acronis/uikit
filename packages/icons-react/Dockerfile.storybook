@@ -1,0 +1,36 @@
+# syntax=docker/dockerfile:1
+# Dockerfile.storybook
+#
+# This image does NOT build Storybook — the static output is built on the host
+# (where the Vite cache + generated src/packs already live) and mounted as a
+# volume at runtime. The image only provides Playwright + pnpm deps + the
+# test-runner config.
+FROM mcr.microsoft.com/playwright:v1.60.0-jammy
+
+WORKDIR /app
+
+RUN npm install -g pnpm@10.27.0
+
+# Copy workspace manifests only — invalidated on lockfile/manifest changes (rare).
+# pnpm install --frozen-lockfile resolves the dependency graph for every importer
+# present on disk, so icons-react's full `workspace:*` closure must be copied:
+#   icons-react → design-assets, style-dictionary
+#   style-dictionary → design-assets, design-tokens
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY packages/icons-react/package.json ./packages/icons-react/
+COPY packages/design-assets/package.json ./packages/design-assets/
+COPY packages/design-tokens/package.json ./packages/design-tokens/
+COPY tools/style-dictionary/package.json ./tools/style-dictionary/
+
+# Install deps — pnpm content-addressable store is cached between builds
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile
+
+# Copy only the Storybook/test-runner config — not the full source tree
+COPY packages/icons-react/.storybook ./packages/icons-react/.storybook
+
+WORKDIR /app/packages/icons-react
+
+# storybook-static/ is mounted as a read-only volume from the host at runtime.
+# See docker-compose.storybook.yml for the volume declaration.
+CMD ["pnpm", "exec", "http-server", "storybook-static", "-p", "6006", "--silent"]

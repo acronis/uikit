@@ -1,0 +1,36 @@
+# BuildKit (syntax=docker/dockerfile:1) reads <Dockerfile>.dockerignore when
+# present, overriding the default repo-root .dockerignore. The build context
+# is the repo root, so paths here are relative to that.
+
+# VCS
+.git
+.github
+
+# Per-workspace build outputs and caches
+**/node_modules
+**/dist
+**/.next
+**/.source
+**/storybook-static
+**/coverage
+**/.vite
+**/.cache
+**/.turbo
+**/.worktrees
+
+# Editor / OS / debug
+.idea
+.vscode
+*.swp
+*.swo
+.DS_Store
+*.log
+
+# Local env files
+**/.env
+**/.env.*.local
+
+# Docs and meta — not needed inside the image
+docs
+**/*.md
+LICENSE
