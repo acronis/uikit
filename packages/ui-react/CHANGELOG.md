@@ -1,5 +1,175 @@
 # @acronis-platform/ui-react
 
+## 0.58.0
+
+### Major Changes
+
+- [#578](https://github.com/acronis/uikit/pull/578) [`5bd88e2`](https://github.com/acronis/uikit/commit/5bd88e2253f1ecc454e6f299f713e821b8cb06d0) Thanks [@madjorr](https://github.com/madjorr)! - Add `Dialog`, a variant-driven dialog recipe built on an internal, non-exported
+  composable primitive. A single `variant` prop selects one of eight canned
+  use-cases (`default`, `rename`, `save changes`, `reset password`, `discard
+changes`, `accept`, `read-only`, `wide`) — each with its own title, body copy,
+  and footer buttons; `children` overrides the body slot, `hasLoading` shows a
+  loading overlay across the body + footer, and `hasHeader`/`hasFooter` (both
+  default `true`) hide the header and/or footer for a body-only dialog (the
+  title still renders off-screen for accessibility when the header is hidden).
+
+  Localize or override canned copy with `title`, `secondaryLabel`,
+  `primaryLabel`, `closeLabel`, `objectName` (interpolated into the `rename`/
+  `discard changes`/`accept` variants' copy), and `objectNameLabel` (the
+  `rename` field's accessible name). Attach behavior to the primary footer
+  button with `onPrimaryAction` — the dialog does not close automatically;
+  pair it with `open`/`onOpenChange`. The `wide` variant takes a `footer` prop
+  for free-form footer content instead of canned buttons, and defaults
+  `size` to `"large"` (832px, no design token); the default `size="sm"`
+  (512px) resolves to the `--ui-dialog-*`/`--ui-footer-*` token tier.
+
+  Only `Dialog` and `DialogClose` (required by `wide`'s custom-footer escape
+  hatch) are exported for building dialogs — the composable primitive parts
+  are an internal implementation detail.
+
+  **Migration:** build dialogs with `Dialog` and its `variant` prop. If you
+  were importing dialog primitive parts (`DialogContent`, `DialogTrigger`,
+  `DialogHeader`, `DialogFooter`, `DialogBody`, `DialogDescription`,
+  `DialogCloseButton`, etc.) directly via a deep import, those are no longer
+  exported from the package root.
+
+- [#584](https://github.com/acronis/uikit/pull/584) [`66d6eb9`](https://github.com/acronis/uikit/commit/66d6eb96a4c42275b04a34e554b04be55f5ef4fd) Thanks [@madjorr](https://github.com/madjorr)! - Add `Loading` and `DialogFooterDefault`; **`Spinner` is no longer exported** from the package's public entry point.
+
+  `Loading` is the new app-facing, composite loading indicator (spinner + optional label) with four placement-context variants (`inline`, `onSurfacePrimary`, `onSurfaceSecondary`, `onScreen`), themed by the new `--ui-loading-*` tier. `DialogFooterDefault` is a bottom action bar (panel/dialog/sheet footer) with end-aligned actions and an optional start slot (a truncated description, or a `Link`), themed by the new `--ui-footer-*` tier.
+
+  **Breaking change:** `Spinner` becomes an internal-only primitive (mirroring the existing `InputBox`/`SearchBox` pattern) — it's no longer re-exported from `@acronis-platform/ui-react`, though it still exists internally as `Loading`'s icon and `Toast`'s small inline icon. `SheetDetails`'s loading content state now renders `Loading` instead of a bare `Spinner`.
+
+  Migrate direct `Spinner` usage to `Loading`:
+
+  ```diff
+  - import { Spinner } from '@acronis-platform/ui-react';
+  - <Spinner size="lg" />
+  + import { Loading } from '@acronis-platform/ui-react';
+  + <Loading variant="onSurfacePrimary" />
+  ```
+
+  `Loading`'s three larger icon sizes (16 / 32 / 48px) line up with `Spinner`'s `sm` / `lg` / `xl`; pass `hasLabel={false}` to drop the visible label while keeping it announced via `aria-label`.
+
+### Minor Changes
+
+- [#568](https://github.com/acronis/uikit/pull/568) [`0deda5c`](https://github.com/acronis/uikit/commit/0deda5c1a62038cf827844979e5c097749c3b583) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `AreaChart` — a typed recharts composition over the shared `Chart` primitives, with `layout` (single / stacked) and `fill` (solid / gradient) variants, a `curve` control, per-point dots, null-gap bridging, and a themed tooltip/legend/axes/grid with caller-supplied series colors. Single vs multi area follows from the number of `dataKeys`. Initial version ported from the apps/demo `AreaChartPlayground`; design + data-viz palette reconciliation pending.
+
+- [#583](https://github.com/acronis/uikit/pull/583) [`22a0068`](https://github.com/acronis/uikit/commit/22a006811e0f359e841819462da561eaca222957) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - `BarChart`: add a `referenceLine` prop — one or more dashed reference/average lines on the value axis (Y for vertical bars, X for horizontal). Pass a single config or an array. Each is driven by a fixed `value`, or a computed `average` (the mean of one series by key, or of every plotted series when `true`), with an optional `label` caption. Themed from the existing `--ui-text-on-surface-secondary` token.
+
+- [#587](https://github.com/acronis/uikit/pull/587) [`f3607ce`](https://github.com/acronis/uikit/commit/f3607ce8764082c5b5014f701db2c3920e978a3c) Thanks [@madjorr](https://github.com/madjorr)! - Add `ButtonIconInput` — a smaller icon-only button (20×20, 16px glyph) meant to live inside an input's box, with `normal`/`error` variants that mirror the field it's embedded in. Themed by the dedicated `--ui-button-icon-input-*` token tier; used internally by `InputPassword`'s show/hide toggle.
+
+- [#570](https://github.com/acronis/uikit/pull/570) [`eb83efc`](https://github.com/acronis/uikit/commit/eb83efcc92c5b3d05e004ffc4ba44bc98e01888e) Thanks [@madjorr](https://github.com/madjorr)! - Add a controlled `selected` prop to `CardFilter` (`variant="clickable"` only), matching `Chip`'s pattern. Sets `aria-pressed`/`data-selected` on the rendered button and applies the existing hover/active container tokens when selected — no new tokens.
+
+- [#588](https://github.com/acronis/uikit/pull/588) [`53f0349`](https://github.com/acronis/uikit/commit/53f034991dc3dbe1cb5c6ac92c1aa2898cf47424) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Expose axis-title and unit props on the cartesian charts. `BarChart`,
+  `LineChart`, `AreaChart`, `ComposedChart`, `ScatterChart`, `ConfidenceCone` and
+  `Histogram` now accept `xAxisLabel` / `yAxisLabel` (forwarded to recharts' native
+  axis `label`) and a `unit` suffix on their numeric axes (`yUnit`, plus `xUnit`
+  where the x-axis is numeric — `ScatterChart` and horizontal `BarChart`). Axis
+  titles inherit the theme token via a `.recharts-label` fill selector, so they
+  stay legible in light and dark.
+
+- [#588](https://github.com/acronis/uikit/pull/588) [`de2ab26`](https://github.com/acronis/uikit/commit/de2ab2634c7d31022e955e5bbe9ef606d6c454e5) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Let consumers customize chart tooltips without composing recharts. `BarChart`,
+  `LineChart`, `AreaChart`, `ComposedChart`, `ScatterChart`, `PieChart`,
+  `RadarChart`, `RadialBarChart`, `FunnelChart`, `Treemap`, `ConfidenceCone` and
+  `Histogram` now accept a `tooltipContent` prop — pass a configured
+  `ChartTooltipContent` (imported from this library) with a `formatter` /
+  `labelFormatter` / `indicator` to control formatting, per-series rows, and extra
+  fields. For `LineChart` (delta bands) and `ConfidenceCone` (the prediction
+  cone), the synthetic range series is filtered out of the payload before a custom
+  tooltip sees it. Defaults are unchanged.
+
+- [#576](https://github.com/acronis/uikit/pull/576) [`bdd9a1f`](https://github.com/acronis/uikit/commit/bdd9a1f924a410f439d56f94efad4225da1421d5) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `ChartState` — a shared loading / empty / error placeholder for the chart types, rendered in place of a chart inside the same sized slot. A compact status block: a leading glyph (the shared `Spinner` / `InboxIcon` / `CircleWarningIcon`) over a centered label, with an optional retry `action` for the error state and a per-state `message` override. Ported from the Figma InputSelect dropdown states and kept visually in step with the shipped `InputSelectStatus`; themes from existing semantic `--ui-*` tokens (no `--ui-chart-*` tier yet).
+
+- [#572](https://github.com/acronis/uikit/pull/572) [`8c0e072`](https://github.com/acronis/uikit/commit/8c0e072954398ba40f73b57519c363b1ace904f8) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `ComposedChart` — a typed recharts composition over the shared `Chart` primitives. Plots a `series` list over one shared category axis where each entry picks its own render `type` (bar / line / area), in the caller's order (later entries paint on top). Shared `curve` / `barRadius` / `fillOpacity` controls and a themed tooltip/legend/axes/grid with caller-supplied series colors. No CVA variants (the mix is data-driven via `series[].type`). Initial version ported from the apps/demo `ComposedChartPlayground`; design + data-viz palette reconciliation pending.
+
+- [#586](https://github.com/acronis/uikit/pull/586) [`1b8175e`](https://github.com/acronis/uikit/commit/1b8175e55f420ed823b3abae96117e7beeb7823b) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `ConfidenceCone` — a forecast chart over the shared `Chart` primitives, shown as one metric in one color: a solid line + filled area over the actual period, a dashed line over the forecast, and a shaded prediction band (the "cone") between a lower and upper bound that widens with the horizon. A dashed divider and a subtle shaded region set the forecast off from the actuals (`showForecastRegion`). Composes over recharts' `ComposedChart`; the synthetic band range series is filtered out of the tooltip and legend, and the areas never mark points. Distinct from the conversion `FunnelChart`. Design-pending v1 — metric color caller-supplied via `config` (no `--ui-chart-*` palette yet), Code Connect deferred.
+
+- [#572](https://github.com/acronis/uikit/pull/572) [`188f4a9`](https://github.com/acronis/uikit/commit/188f4a993120280e8c8c928a1924057b5122cdef) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `FunnelChart` — a typed recharts composition over the shared `Chart` primitives. Plots a single series of stages (rows) as stacked, narrowing segments, with per-stage `Cell` colors from a `nameKey`-keyed `config`, on-chart stage labels, and a themed tooltip (no legend — the inline labels name every stage). One `lastShape` variant (triangle / rectangle) plus a `reversed` toggle. Initial version ported from the apps/demo `FunnelChartPlayground`; design + data-viz palette reconciliation pending.
+
+- [#586](https://github.com/acronis/uikit/pull/586) [`44075e9`](https://github.com/acronis/uikit/commit/44075e90faea99ecec725f9114ec4d4579766ce6) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `Histogram` — a frequency histogram over the shared `Chart` primitives. Takes raw `values` and bins them into `binCount` equal-width ranges (with an optional fixed `domain`), plotting the count of each as contiguous bars. Distinct from `BarChart`: the binning is the component's own job via a pure, unit-tested helper. Design-pending v1 — bar color is caller-supplied via `config` (no `--ui-chart-*` palette yet), Code Connect deferred.
+
+- [#587](https://github.com/acronis/uikit/pull/587) [`f3607ce`](https://github.com/acronis/uikit/commit/f3607ce8764082c5b5014f701db2c3920e978a3c) Thanks [@madjorr](https://github.com/madjorr)! - Add `InputOTP` — a bare row of single-character boxes for entering a one-time code, with auto-advance between slots, Backspace-to-previous, and paste-to-fill-all support. `length` controls the slot count (default 6); `error`/`disabled`/`autoFocus`/`onComplete` round out the API. Themed by the `--ui-input-otp-*` token tier.
+
+- [#587](https://github.com/acronis/uikit/pull/587) [`f3607ce`](https://github.com/acronis/uikit/commit/f3607ce8764082c5b5014f701db2c3920e978a3c) Thanks [@madjorr](https://github.com/madjorr)! - Add `InputPassword` — a single-line password field (label / required / description / error, matching `InputText`'s conventions) with a built-in show/hide toggle rendered via `ButtonIconInput`. Has its own `--ui-input-password-*` token tier down to the box fill/border, rather than building on the bare `Input` primitive.
+
+- [#583](https://github.com/acronis/uikit/pull/583) [`c72d584`](https://github.com/acronis/uikit/commit/c72d5847ba0df3453bb73472060e51d8f5589217) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - `LineChart`: add QoQ/YoY trend-comparison support — `comparisonKeys` renders a subset of `dataKeys` as dashed, dimmed, dot-less overlays (e.g. a previous quarter or year) keeping each series' own `config` color, and `deltaBands` shades the gap between `[current, comparison]` pairs with a dimmed area (the delta) behind the lines. (Internally the chart now composes over recharts' `ComposedChart` so lines and the band coexist.)
+
+- [#568](https://github.com/acronis/uikit/pull/568) [`96fe81a`](https://github.com/acronis/uikit/commit/96fe81a46539820c0355382e24505dbf764920ab) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `LineChart` — a typed recharts composition over the shared `Chart` primitives, with `curve` (linear / monotone / step) and `lineStyle` (solid / dashed) variants, per-point dots, null-gap bridging, and a themed tooltip/legend/axes/grid with caller-supplied series colors. Single vs multi line follows from the number of `dataKeys`. Initial version ported from the apps/demo `ChartPlayground`; design + data-viz palette reconciliation pending.
+
+- [#586](https://github.com/acronis/uikit/pull/586) [`eafec97`](https://github.com/acronis/uikit/commit/eafec97d6a481fa61247434bf5a21d87e5775840) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `Meter` — a labelled proportional bar for a value within a known range (a fractional value / share), built on Base UI's `Meter` (`role="meter"`, like the HTML `<meter>` element), as opposed to `Progress`/`ProgressCircle` which track a task over time. One row: label + `value · %` over a track bar, with a chart-style hover tooltip (light card); stack several sharing one `max` to build a ranked breakdown (a "bar list"). Fill color is caller-supplied per row. Design-pending v1 — no `--ui-chart-*` palette yet, Code Connect deferred.
+
+- [#591](https://github.com/acronis/uikit/pull/591) [`08dee19`](https://github.com/acronis/uikit/commit/08dee1995a70b5591514c07d549320e54c223ccf) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `Metric` — a presentational dashboard metric card modelled on the MetricCard
+  design: a label (+ optional caption) over a primary value with an optional
+  status-tinted icon badge, unit, and trend, plus optional supporting text and a
+  composable `children` body (a chart, a `Meter` breakdown, a `Separator`, an
+  insight line). It is a Card and composes `TrendIndicator` for the trend slot;
+  `size` scales the typography, `status` subtly tints the icon badge, and `loading`
+  shows a skeleton. Purely presentational — the consumer passes a ready-formatted
+  value and resolved status; the kit never computes, formats, or interprets the
+  data. Initial version (design + token-tier reconciliation pending).
+
+- [#583](https://github.com/acronis/uikit/pull/583) [`9696497`](https://github.com/acronis/uikit/commit/969649771ce9279e81b798fecd0283cadfa609e7) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - `PieChart`: add a `centerLabel` prop for the donut hole — a headline `value` and an optional `label`, rendered as centered SVG text (donut shape only; ignored for a filled pie). The block stays centered on the donut whether or not a legend is shown. Themed from the existing `--ui-text-on-surface-primary` / `--ui-text-on-surface-secondary` tokens (`text-foreground` / `text-muted-foreground`).
+
+- [#568](https://github.com/acronis/uikit/pull/568) [`bb593d3`](https://github.com/acronis/uikit/commit/bb593d368a2eeb9496bc7fdddfbe4c46b9b920f4) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `PieChart` — a typed recharts composition over the shared `Chart` primitives, with a `shape` (pie / donut) variant, per-slice `Cell` colors from a `nameKey`-keyed `config`, adjustable `innerRadius` / `outerRadius` / `paddingAngle`, and a themed tooltip/legend. Initial version ported from the apps/demo `PieChartPlayground`; design + data-viz palette reconciliation pending.
+
+- [#582](https://github.com/acronis/uikit/pull/582) [`55eaedd`](https://github.com/acronis/uikit/commit/55eaedd10c49a5aa98f5c52098a2c85341ec62b8) Thanks [@madjorr](https://github.com/madjorr)! - Theme `Popover`'s container from the new `--ui-popover-container-*` tokens (color, border, radius, min/max width) per Figma node 6364:17907, and add optional `PopoverBody`/`PopoverFooter` parts for the body-rhythm (`--ui-popover-body-*`) and default action-row footer (`--ui-footer-*`) recipe shown in that node.
+
+  `PopoverContent` no longer hardcodes `w-72`, `p-4`, or `shadow-md` — width now comes from the token-driven min/max width above, and the flat container no longer renders a shadow. Consumers relying on the old fixed width/padding/shadow should wrap their content in the new `PopoverBody` (and `PopoverFooter` for an action row) to restore the equivalent spacing.
+
+- [#575](https://github.com/acronis/uikit/pull/575) [`cea473c`](https://github.com/acronis/uikit/commit/cea473c865c3e95aa441fdd5cde241ccf7138ac2) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `RadarChart` — a typed recharts composition over the shared `Chart` primitives (the first polar chart type). Plots a set of series `dataKeys` over one shared angular axis (`angleKey`) with a polar grid, spoke labels, tooltip, and legend; caller-supplied series colors. One `gridType` variant (polygon / circle), plus `fillOpacity` / `strokeWidth` / `showDots` controls. Scopes the polar angle-axis labels to the muted-foreground token locally (the shared container themes only cartesian ticks — a tracked primitives gap). Initial version ported from the apps/demo `RadarChartPlayground`; design + data-viz palette reconciliation pending.
+
+- [#575](https://github.com/acronis/uikit/pull/575) [`4cebb8c`](https://github.com/acronis/uikit/commit/4cebb8c752e3a49b010d951aed9e71af10784cdd) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `RadialBarChart` — a typed recharts composition over the shared `Chart` primitives (a polar/radial type). Plots each data row as a concentric arc sized by `dataKey`, colored per `nameKey`, with an optional muted background track, tooltip, and legend; caller-supplied arc colors. No CVA variants — the sweep (`startAngle` / `endAngle`) and radii are plain geometry props (full ring or gauge). Rows are stamped with `fill` so a real hover resolves the arc color in the tooltip. Initial version ported from the apps/demo `RadialChartPlayground`; design + data-viz palette reconciliation pending.
+
+- [#572](https://github.com/acronis/uikit/pull/572) [`ec3272e`](https://github.com/acronis/uikit/commit/ec3272e565502583a9d7082afd85518f50ac6b48) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `ScatterChart` — a typed recharts composition over the shared `Chart` primitives. Plots a `series` list (each with its own point array) on numeric `xKey` / `yKey` axes, with an optional `zKey` for bubble sizing, a `shape` marker prop, and a themed tooltip/legend/axes/grid with caller-supplied series colors. No CVA variants (scatter's expressiveness is in the data mapping). Initial version ported from the apps/demo `ScatterChartPlayground`; design + data-viz palette reconciliation pending.
+
+- [#591](https://github.com/acronis/uikit/pull/591) [`5754be7`](https://github.com/acronis/uikit/commit/5754be71ebad0e1ad76fe02ad5adc223c00e33e6) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `Timeline` — a presentational, chronological event list (`Timeline` +
+  `Timeline.Item`) for activity feeds, audit logs, and status history. Renders a
+  semantic `<ol>`/`<li>` with a connector line, status markers (a dot, or an icon
+  in a status-tinted badge), and a timestamp / title / description hierarchy, plus
+  optional metadata, actions, and expandable `children`. `size` and `density` come
+  from `Timeline` via context; `status`
+  (neutral/info/success/warning/danger/critical) tints only the marker; `current`
+  rings it and `disabled` dims the item. Purely presentational — it never sorts,
+  groups, fetches, or interprets events, and ships no domain event types or icons.
+  Composes with Tag / Link / Accordion. Initial version (design + token-tier
+  reconciliation pending).
+
+- [#575](https://github.com/acronis/uikit/pull/575) [`1365e93`](https://github.com/acronis/uikit/commit/1365e93a0c991c4edf5cef64830825ab4372e1bc) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `Treemap` — a typed recharts composition over the shared `Chart` primitives. Tiles a flat set of leaves into rectangles sized by `dataKey` and colored per `nameKey`, with on-cell labels and a tooltip (no axes, grid, or legend). Themed through a custom cell renderer (recharts' default has no token hooks); rows are stamped with `fill` so a real hover resolves the cell color. No CVA variants — `aspectRatio` is a plain prop and nesting is out of v1 scope. On-cell labels use the `--ui-text-on-status-strong-neutral` token over the saturated series colors. Initial version ported from the apps/demo `TreemapChartPlayground`; design + data-viz palette reconciliation pending.
+
+- [#591](https://github.com/acronis/uikit/pull/591) [`cb51082`](https://github.com/acronis/uikit/commit/cb5108226534fdf061abedfd5e03e472ee898632) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `TrendIndicator` — a small presentational primitive showing how a metric
+  changed (a direction glyph + a caller-formatted value + an optional comparison
+  label). It separates `direction` (up/down/flat) from `sentiment`
+  (positive/negative/neutral) so the kit never assumes up = good; renders inline or
+  as a compact status-tinted badge in two sizes, with an optional tooltip and an
+  `ariaLabel` for a full accessible sentence. Purely presentational — never
+  computes or formats the trend (initial version; design + data-viz reconciliation
+  pending).
+
+### Patch Changes
+
+- [#594](https://github.com/acronis/uikit/pull/594) [`650d057`](https://github.com/acronis/uikit/commit/650d0573e07c4195f82d07ed9ff392b69510f28e) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Fix `ButtonMenu` missing a pointer cursor on hover. `cursor-pointer` now lives on the shared base class (matching `Button`), so the trigger shows `cursor: pointer` when hovered and reverts to the default cursor while disabled via `disabled:pointer-events-none`.
+
+- [#570](https://github.com/acronis/uikit/pull/570) [`12da069`](https://github.com/acronis/uikit/commit/12da069a24f0defef303ef1deba448e870b6bb81) Thanks [@madjorr](https://github.com/madjorr)! - Fix `CardFilter` (`variant="clickable"`) setting `type="button"`/`aria-pressed` even when composed via `render` onto a non-button element, producing invalid ARIA/HTML on the rendered element (e.g. `render={<a href="/alerts" />}`). Both attributes now only apply to the default `<button>` root; `data-selected` continues to apply regardless of the rendered element.
+
+- [#570](https://github.com/acronis/uikit/pull/570) [`6966931`](https://github.com/acronis/uikit/commit/696693101c9a551a64ecc395aacd0f6814981cb8) Thanks [@madjorr](https://github.com/madjorr)! - Fix `Chip` missing a pointer cursor on the `removable` variant and its remove button. `cursor-pointer` now lives on the shared base class (covering `removable` too, not just `selectable`) and is set explicitly on the remove button, since native buttons reset cursor via the UA stylesheet.
+
+- [#565](https://github.com/acronis/uikit/pull/565) [`2db668a`](https://github.com/acronis/uikit/commit/2db668a744b0e66e0d82ac8c2fb0e9964cf74ae2) Thanks [@heygabecom](https://github.com/heygabecom)! - Sync design tokens with Figma.
+
+  Adds `red_home_pl` brand primitives (8 new ButtonPrimary/SidebarPrimary tokens), `units.size.76` and `units.size.320`, and 6 new semantic tokens (`colors.glyph.onStatusStrong.primary`, `colors.glyph.onSurface.neutral-dark`, `colors.text.onBrand/onStatus/onSurface.link-idle`, `typography.headings.display-numeric`); removes 3 deprecated `*.link` semantic tokens. Updates 155 semantic color and 4 gradient mode values, restructures the Link component (24 new / 18 removed tokens), and applies structural and mode-value updates across 22 components (Avatar, Breadcrumb, Button, ButtonIcon, ButtonMenu, CardFilter, Checkbox, Chip, InputDatePicker, InputSearch, InputSelect, InputText, InputTextArea, Radio, Resizable, SearchGlobal, SidebarPrimary, SidebarSecondary, Switch, Table, Tag, Tooltip).
+
+  Regenerates `@acronis-platform/tokens-pd` from the updated tiers and re-themes the affected `@acronis-platform/ui-react` components to the renamed tokens: Link (`--ui-link-*` now split into `normal`/`global`/`inverse`; only `normal`/`global` are wired), Table + DataTable (`--ui-table-global-row-color-*` → `--ui-table-data-row-color-*`, `--ui-table-global-cell-border-color` → `--ui-table-global-row-border-color`, `--ui-table-header-cell-padding-x` → `--ui-table-global-cell-padding-x`), and the InputSearch/InputText clear buttons (their dropped clear-icon token now uses the ghost ButtonIcon glyph token `--ui-button-icon-global-icon-color-idle`). The Table selected-row active background value changes as part of the sync.
+
+- [#594](https://github.com/acronis/uikit/pull/594) [`8ed0d77`](https://github.com/acronis/uikit/commit/8ed0d776206544f810e33d48db41000999420a83) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Fix the cascade (submenu) chevron in `DropdownMenuSubTrigger` sitting too high. The menu item row is `items-start`, so the 16px chevron pinned to the top of the label's 24px line box; it now uses `self-center` to align vertically against the label.
+
+- [#593](https://github.com/acronis/uikit/pull/593) [`3464ae2`](https://github.com/acronis/uikit/commit/3464ae2d211f43c0b1b61476376f9e5174f8d541) Thanks [@madjorr](https://github.com/madjorr)! - Fix three low-risk bugs: `Link`'s hover underline position no longer diverges from `ButtonGhost` (removed a stray `text-underline-position` override); `FilterSearchFilters` forwards passthrough props (e.g. `data-testid`) to its trigger button again; and a global `font-family` fallback prevents shadow-DOM consumers from rendering with a serif UA default.
+
+- [#570](https://github.com/acronis/uikit/pull/570) [`9ded1b0`](https://github.com/acronis/uikit/commit/9ded1b070b91548f296af31d9f8255c30839ce29) Thanks [@madjorr](https://github.com/madjorr)! - Fix the clear (×) button on `InputSearch`/`Search` and `InputText` missing hover/active background treatments (`InputText`'s was also missing `cursor-pointer`). Both now reuse the existing `--ui-button-icon-global-container-color-hover/active` tokens and size the button to `size-5` so the background pill has room around the icon.
+
+- [#590](https://github.com/acronis/uikit/pull/590) [`c013e6f`](https://github.com/acronis/uikit/commit/c013e6f7a3a45e07b559daa93071bb33f5b54b41) Thanks [@madjorr](https://github.com/madjorr)! - Fix `InputSelect`'s Figma Code Connect mapping rendering the search field's placeholder example even when the design's `hasSearch` boolean is `false`. `hasSearch` (and the data variant's `hasRecent`) now resolve directly to the example element via `figma.boolean`'s true/false map instead of a truthy render gate on the raw boolean.
+
+- Updated dependencies [[`2db668a`](https://github.com/acronis/uikit/commit/2db668a744b0e66e0d82ac8c2fb0e9964cf74ae2), [`4724a08`](https://github.com/acronis/uikit/commit/4724a08fac134432ed3467111bcdfed95e87b08f), [`b5ab04c`](https://github.com/acronis/uikit/commit/b5ab04c0f355c0778bfea88e0b22382da025f8ff), [`c8308cd`](https://github.com/acronis/uikit/commit/c8308cdd317bdf20c45193c972deea822918054c), [`b0dbbe0`](https://github.com/acronis/uikit/commit/b0dbbe093aab49adb0fc0fda8c0f76109a4a6541)]:
+  - @acronis-platform/tokens-pd@2.3.0
+
 ## 0.57.1
 
 ### Patch Changes
