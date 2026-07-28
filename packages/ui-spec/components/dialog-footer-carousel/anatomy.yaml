@@ -1,0 +1,114 @@
+spec_version: '1.0'
+component: DialogFooterCarousel
+
+schematic: |
+  root: <div> (footer bar, wraps the "DialogFooterCarousel" Figma node)
+  +----------------------------------------------------------------+
+  |  [back]        dots: ( o ) ( o ) ( o )              [next]     |
+  |                                                     [close]    |
+  +----------------------------------------------------------------+
+  back:  secondary Button, hidden in state=first
+  dots:  one slot per real Carousel slide; the active one's own circle is
+         solid, idle circles are a dimmer tone — no container fill
+  next:  default Button, hidden in state=last
+  close: default Button composed with DialogClose, shown only in state=last,
+         occupying next's slot
+
+root:
+  element: div
+  description: >-
+    The footer bar. Not polymorphic (no `render` prop) — a plain `<div>`
+    reading Carousel context via `useCarousel()` to derive its state.
+
+parts:
+  - id: back
+    description: >-
+      Scrolls to the earlier slide. A `Button` (`secondary` variant) calling
+      `scrollPrev()`. Hidden (not rendered) whenever there's no earlier slide
+      to scroll to (ambient Carousel context: canScrollPrev() === false) —
+      this is keyed directly to canScrollPrev, not to state=first, so a
+      single-slide Carousel (state=last, canScrollPrev() === false) also
+      hides it.
+    element: button
+    optional: true
+    visible_when: 'canScrollPrev() === true'
+  - id: dots
+    description: >-
+      The slide-position indicator. Renders one slot per real Carousel slide
+      (Embla's `scrollSnapList().length`), capped to 5 (a development-mode
+      console warning is logged outside the [1, 5] range — the same range
+      DialogWelcome enforces on its children), with the slot at the real
+      `selectedScrollSnap()` index marked active — Figma's own default
+      preview shows 3 dots, but the row is a `children`-overridable slot in
+      the design, not a fixed 3-step indicator. Each slot is a 16px hit-box
+      (matching Figma's own CircleSmall bounding box) around a 9.6px
+      filled-circle glyph; there is no container fill — the active glyph is
+      solid, idle glyphs are a dimmer tone of the same color. Confirmed via
+      Figma screenshot (the earlier "idle and active share one glyph color,
+      only the container differs" reading was wrong).
+    element: div
+  - id: next
+    description: >-
+      Scrolls to the later slide. A `Button` (`default` variant) calling
+      `scrollNext()`. Hidden (not rendered) in state=last.
+    element: button
+    optional: true
+    visible_when: "state !== 'last'"
+  - id: close
+    description: >-
+      Closes the ambient Dialog. A `Button` (`default` variant) composed with
+      `DialogClose` via Base UI's `render` prop (not a manual `onClick`), so
+      activating it actually closes the dialog. Rendered only in state=last,
+      in `next`'s slot. Requires a `Dialog` ancestor once this state is
+      reached.
+    element: button
+    optional: true
+    visible_when: "state === 'last'"
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [back, dots, next]
+
+states:
+  - id: first
+    trigger: 'no earlier slide (ambient Carousel context: canScrollPrev() === false)'
+    kind: internal
+    affects: [back, dots, next, close]
+  - id: middle
+    trigger: 'both an earlier and a later slide exist'
+    kind: internal
+    affects: [back, dots, next, close]
+  - id: last
+    trigger: >-
+      no later slide (ambient Carousel context: canScrollNext() === false),
+      or a Carousel with exactly one slide — the single-slide case resolves
+      here (not to state=first) so Close is always reachable
+    kind: internal
+    affects: [back, dots, next, close]
+  - id: hover
+    trigger: pointer hover over a control
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [back, next, close]
+  - id: focus-visible
+    trigger: keyboard focus on a control
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [back, next, close]
+  - id: active
+    trigger: pointer or keyboard activation of a control
+    kind: pseudo
+    pseudo: ':active'
+    affects: [back, next, close]
+
+internal_state:
+  - id: position
+    type: "'first' | 'middle' | 'last'"
+    values: [first, middle, last]
+    initial: first
+    description: >-
+      Derived every render from the ambient Carousel context's
+      canScrollPrev()/canScrollNext() — never set directly, so it has no
+      controlling prop, uncontrolled default, or change event.

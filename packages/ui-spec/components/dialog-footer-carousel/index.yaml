@@ -1,0 +1,22 @@
+spec_version: '1.0'
+component: DialogFooterCarousel
+name: dialog-footer-carousel
+status: ready
+category: overlays
+description: >-
+  The footer bar for a CarouselDialog: a Back/Next/Close action pair flanking
+  a slide-position indicator with one dot per real slide (Embla's
+  scrollSnapList/selectedScrollSnap). Its first/middle/last treatment is
+  derived every render from the ambient Carousel context
+  (canScrollPrev/canScrollNext) — never a prop. Backed by two real Figma
+  nodes, implemented as one part: the wrapping bar ("DialogFooterCarousel" in
+  Figma's own naming) and its inner row ("CarouselDialog" in Figma's naming —
+  inverted from this library's, where CarouselDialog is the whole modal).
+since: 0.58.0
+dependencies:
+  components:
+    - Button
+    - DialogClose
+figma:
+  node: '6353-5864'
+  codeConnect: packages/ui-react/src/components/ui/dialog-footer-carousel/dialog-footer-carousel.figma.tsx

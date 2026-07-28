@@ -1,0 +1,100 @@
+spec_version: '1.0'
+component: Carousel
+
+schematic: |
+  root: <div role="region" aria-roledescription="carousel">
+  +---------------------------------------------------------------+
+  |  [previous]   content: <div> (overflow-hidden track)          |
+  |               +-----------+  +-----------+  +-----------+     |
+  |               | item      |  | item       |  | item      |    |
+  |               | [content] |  | [content]  |  | [content] |    |
+  |               +-----------+  +-----------+  +-----------+     |
+  |                                                    [next]     |
+  +---------------------------------------------------------------+
+     previous / next -> ButtonIcon (--ui-button-icon-*); no --ui-carousel-*
+                          tier exists — the track/item themselves carry no
+                          color, only layout (flex + Embla-driven transform).
+
+root:
+  element: div
+  role: region
+  description: >-
+    The scroll region. Not polymorphic (no `render` prop) — a plain `<div>`
+    labeled `aria-roledescription="carousel"`, capturing arrow-key navigation
+    via `onKeyDownCapture`.
+
+parts:
+  - id: content
+    description: >-
+      The scrollable track (`<div>`, overflow-hidden) wrapping an inner flex
+      row/column that Embla transforms to scroll between items. Owns the
+      negative outer margin that offsets each item's leading padding.
+    element: div
+  - id: item
+    description: >-
+      A single slide (`<div role="group" aria-roledescription="slide">`).
+      Holds arbitrary children (e.g. a `Card`). Sized via `basis-full` by
+      default; override `className` for a multi-item-per-view layout
+      (`md:basis-1/2`, …).
+    element: div
+  - id: previous
+    description: >-
+      Control that scrolls to the earlier slide. A `ButtonIcon` (`secondary`
+      variant, absolutely positioned outside the track), disabled when there
+      is no earlier slide. Requires no separate accessible-name prop — it sets
+      its own `aria-label="Previous slide"`.
+    element: button
+    optional: true
+  - id: next
+    description: >-
+      Control that scrolls to the later slide. A `ButtonIcon` (`secondary`
+      variant, absolutely positioned outside the track), disabled when there
+      is no later slide. Sets its own `aria-label="Next slide"`.
+    element: button
+    optional: true
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [previous, content, next]
+
+# `orientation="vertical"` flips `content`'s inner flow to a column and swaps
+# `previous`/`next`'s side offsets for top/bottom ones (rotated 90°); the
+# anatomy is otherwise unchanged.
+states:
+  - id: previous-disabled
+    trigger: 'no earlier slide to scroll to (Embla canScrollPrev() === false)'
+    kind: internal
+    affects: [previous]
+  - id: next-disabled
+    trigger: 'no later slide to scroll to (Embla canScrollNext() === false)'
+    kind: internal
+    affects: [next]
+  - id: hover
+    trigger: pointer hover over a control
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [previous, next]
+  - id: focus-visible
+    trigger: keyboard focus on a control
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [previous, next]
+  - id: active
+    trigger: pointer or keyboard activation of a control
+    kind: pseudo
+    pseudo: ':active'
+    affects: [previous, next]
+
+internal_state:
+  - id: previous-disabled
+    type: boolean
+    values: [false, true]
+    initial: true
+    description: Whether the previous control is disabled (no earlier slide).
+  - id: next-disabled
+    type: boolean
+    values: [false, true]
+    initial: false
+    description: Whether the next control is disabled (no later slide).

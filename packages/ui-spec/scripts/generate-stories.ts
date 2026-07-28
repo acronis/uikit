@@ -209,6 +209,30 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  carousel: {
+    props: 'className="w-full max-w-xs"',
+    extraImports: [
+      "import { CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '../carousel';",
+      "import { Card, CardContent } from '../../card';",
+    ],
+    sample: [
+      '',
+      '      <CarouselContent>',
+      '        {Array.from({ length: 5 }).map((_, index) => (',
+      '          <CarouselItem key={index}>',
+      '            <Card>',
+      '              <CardContent className="flex aspect-square items-center justify-center p-6">',
+      '                <span className="text-4xl font-semibold">{index + 1}</span>',
+      '              </CardContent>',
+      '            </Card>',
+      '          </CarouselItem>',
+      '        ))}',
+      '      </CarouselContent>',
+      '      <CarouselPrevious />',
+      '      <CarouselNext />',
+      '    ',
+    ].join('\n'),
+  },
   'scroll-area': {
     props:
       'className="h-48 w-64 rounded-md border border-border [&_[data-slot=scroll-area-scrollbar]]:opacity-100"',
@@ -816,11 +840,13 @@ function generate(name: string): boolean {
     `import { ${comp} } from '../${name}';`,
   ].join('\n');
 
+  const titleRoot = index.internal ? 'Internal' : 'UI';
+
   const file = `${HEADER}
 ${imports}
 
 const meta = {
-  title: 'UI/${index.component}/All States (generated)',
+  title: '${titleRoot}/${index.component}/All States (generated)',
   component: ${comp},
 } satisfies Meta<typeof ${comp}>;
 

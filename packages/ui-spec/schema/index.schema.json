@@ -25,6 +25,7 @@
     "category": { "type": "string" },
     "description": { "type": "string" },
     "since": { "type": "string" },
+    "internal": { "type": "boolean" },
     "dependencies": {
       "type": "object",
       "additionalProperties": false,

@@ -1,0 +1,47 @@
+spec_version: '1.0'
+component: DialogFooterCarousel
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The Back/Next/Close buttons are ui-react's own `Button` (secondary/default)
+# and own their own token set — see that component's spec; only the dots
+# here are themed directly (reusing the already-tokenized ButtonIcon tier,
+# same rationale as Carousel's previous/next controls).
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-button-icon-global-icon-color-active,
+      affects: dots,
+      description: The active dot's own circle fill; unlike a real ButtonIcon there is no surrounding container box/fill.,
+    }
+  - {
+      name: --ui-button-icon-global-icon-color-disabled,
+      affects: dots,
+      description: Every idle dot's own circle fill (a dimmer tone than the active dot) — reused from ButtonIcon's disabled tone; dots themselves are never disabled/interactive.,
+    }
+  - {
+      name: --ui-carousel-dialog-list-indicator-gap,
+      affects: dots,
+      description: Gap between the dot slots' 16px hit-boxes (not their 9.6px circles).,
+    }
+  - {
+      name: --ui-footer-global-height,
+      affects: root,
+      description: Height of the footer bar.,
+    }
+  - {
+      name: --ui-footer-global-gap,
+      affects: root,
+      description: Gap between the bar's boxLeft/dots/boxRight regions.,
+    }
+  - {
+      name: --ui-footer-global-padding-x,
+      affects: root,
+      description: Horizontal padding of the footer bar.,
+    }
+  - {
+      name: --ui-footer-carousel-color,
+      affects: root,
+      description: Footer bar's own background fill. Resolves to transparent — Figma's "unset" placeholder for this node.,
+    }

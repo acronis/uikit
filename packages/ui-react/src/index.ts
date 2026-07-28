@@ -19,6 +19,13 @@ export * from './components/ui/button-menu';
 export * from './components/ui/calendar';
 export * from './components/ui/card';
 export * from './components/ui/card-filter';
+// `Carousel` (the standalone slider — root, content, previous/next arrows,
+// `useCarousel`) is internal: not ready for public use (design-pending v1,
+// no Figma reconciliation), only consumed internally by `DialogWelcome`'s
+// `carousel` layout. `CarouselItem` (+ the `CarouselApi` type, for typing a
+// `setApi` callback) stay public since `DialogFooterCarousel`'s own stories
+// pair it with a bare `<Carousel>` standalone.
+export { CarouselItem, type CarouselApi } from './components/ui/carousel';
 export * from './components/ui/chart';
 export * from './components/ui/chart-state';
 export * from './components/ui/checkbox';
@@ -36,7 +43,9 @@ export {
   type DialogProps,
   type DialogVariant,
 } from './components/ui/dialog';
+export * from './components/ui/dialog-footer-carousel';
 export * from './components/ui/dialog-footer-default';
+export * from './components/ui/dialog-welcome';
 export * from './components/ui/dropdown-menu';
 export * from './components/ui/empty';
 export * from './components/ui/field';
@@ -113,10 +122,7 @@ export * from './components/ui/timeline';
 // `Badge` is an alias of `Tag`. The legacy generic shadcn Badge is replaced by
 // the design-system-native Tag (its own `--ui-tag-*` token tier, icon slot, and
 // sizes); Tag's variants are exactly Badge's status set. No separate component.
-export {
-  Tag as Badge,
-  type TagProps as BadgeProps,
-} from './components/ui/tag';
+export { Tag as Badge, type TagProps as BadgeProps } from './components/ui/tag';
 export * from './components/ui/treemap';
 export * from './components/ui/trend-indicator';
 export * from './components/ui/widget-placeholder';

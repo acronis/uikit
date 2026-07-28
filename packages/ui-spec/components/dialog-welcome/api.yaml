@@ -1,0 +1,124 @@
+spec_version: '1.0'
+component: DialogWelcome
+
+contract:
+  properties:
+    - name: children
+      type: ReactNode
+      required: true
+      description: >-
+        One `<DialogWelcomeSlide>` per slide. Exactly one resolves to the
+        `single` layout (a CTA + Close button pair, no footer); 2–5 resolve
+        to the `carousel` layout (each slide's own image/text, navigated by
+        `DialogFooterCarousel`). Fewer than 1 or more than 5 is dev-warned;
+        above 5 only the first 5 reach the Carousel.
+    - name: primaryLabel
+      type: string
+      required: false
+      default: "'Call to action'"
+      description: The `single` layout's primary (call-to-action) button label. Ignored in the `carousel` layout.
+    - name: closeLabel
+      type: string
+      required: false
+      default: "'Close'"
+      description: >-
+        The close control's label — the `single` layout's "Close" link and
+        the `carousel` layout's last-slide "Close" button.
+    - name: positionLabel
+      type: string
+      required: false
+      default: "'Slide position'"
+      description: Forwarded to `DialogFooterCarousel`'s `positionLabel`. Ignored in the `single` layout.
+    - name: backLabel
+      type: string
+      required: false
+      default: "'Back'"
+      description: Forwarded to `DialogFooterCarousel`'s `backLabel`. Ignored in the `single` layout.
+    - name: nextLabel
+      type: string
+      required: false
+      default: "'Next'"
+      description: Forwarded to `DialogFooterCarousel`'s `nextLabel`. Ignored in the `single` layout.
+    - name: opts
+      type: EmblaOptionsType
+      required: false
+      default: undefined
+      description: Forwarded to the inner Carousel (e.g. `{ startIndex }`). Ignored in the `single` layout.
+    - name: size
+      type: "'sm' | 'large'"
+      required: false
+      default: "'sm'"
+      description: Forwarded to `DialogContent` (popup max-width).
+    - name: open
+      type: boolean
+      required: false
+      description: Forwarded to `DialogRoot`. Controlled open state.
+    - name: default-open
+      type: boolean
+      required: false
+      default: false
+      description: Forwarded to `DialogRoot`. Initial open state when uncontrolled.
+    - name: aria-label
+      type: string
+      required: false
+      description: >-
+        Accessible name for the dialog, forwarded to `DialogContent`. There
+        is no header/title slot here, so one of `aria-label`/`aria-labelledby`
+        is required for the dialog to have an accessible name.
+    - name: aria-labelledby
+      type: string
+      required: false
+      description: >-
+        Accessible name via reference to an element id rendered inside a
+        slide, forwarded to `DialogContent`. Prefer this over `aria-label`
+        when the name is also visible on-screen.
+
+  events:
+    - name: onPrimaryAction
+      payload: '() => void'
+      description: >-
+        Fires when the `single` layout's CTA button is clicked. Does not
+        close the dialog itself — pair with `open`/`onOpenChange` if the
+        action should close it. Ignored in the `carousel` layout.
+    - name: setApi
+      payload: '(api: CarouselApi) => void'
+      description: Forwarded to the inner Carousel; called once with the underlying Embla API instance. Ignored in the `single` layout.
+    - name: open-change
+      payload: boolean
+      description: >-
+        Forwarded to `DialogRoot` (React: `onOpenChange`). Fires when the
+        dialog opens or closes, including via a Close control.
+
+  content:
+    - name: children
+      description: One `<DialogWelcomeSlide>` per slide.
+
+  methods: []
+
+adapters:
+  react:
+    component: DialogWelcome
+    status: implemented
+    import: "import { DialogWelcome, DialogWelcomeSlide } from '@acronis-platform/ui-react'"
+    example: |
+      <DialogWelcome open aria-label="Welcome">
+        <DialogWelcomeSlide image={<img src="…" />} title="Feature" description="…" />
+      </DialogWelcome>
+
+  vue:
+    element: AvDialogWelcome
+    status: planned
+    import: "import { AvDialogWelcome, AvDialogWelcomeSlide } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvDialogWelcome v-model:open="open">
+        <AvDialogWelcomeSlide title="Feature" description="…" />
+      </AvDialogWelcome>
+
+  web-components:
+    element: ui-dialog-welcome
+    status: planned
+    import: "import '@acronis-platform/ui-wc/dialog-welcome'"
+    example: |
+      <ui-dialog-welcome open>
+        <ui-dialog-welcome-slide title="Feature" description="…"></ui-dialog-welcome-slide>
+      </ui-dialog-welcome>

@@ -1,0 +1,26 @@
+spec_version: '1.0'
+component: DialogWelcome
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+#
+# Container geometry/color comes from the shared DialogContent (dialog.tsx),
+# themed by the `--ui-dialog-container-*` tokens — see Dialog's own spec for
+# that tier. The `single` layout's CTA/Close buttons are ui-react's own
+# `Button` (default/ghost) and own their own token set — see that component's
+# spec. The `carousel` layout's footer is `DialogFooterCarousel`, reused
+# verbatim — see its own spec. Only the image placeholder frame and the
+# title/description text below are new styling this component introduces.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-background-surface-active,
+      affects: image,
+      description: The image frame's placeholder fill until real media is supplied.,
+    }
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: text,
+      description: Title and description text color.,
+    }

@@ -76,6 +76,8 @@
     "dialog-footer-default",
     "---Overlays---",
     "dialog",
+    "dialog-welcome",
+    "dialog-footer-carousel",
     "dropdown-menu",
     "popover",
     "tooltip",

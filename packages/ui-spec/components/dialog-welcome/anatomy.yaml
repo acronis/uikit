@@ -1,0 +1,105 @@
+spec_version: '1.0'
+component: DialogWelcome
+
+schematic: |
+  Figma node 7162:26459, variants `single` / `carousel`. No header in either.
+
+  ─ single (1 slide) ────────────────────────────────────────────
+  overlay: full-screen scrim
+  +===============================================================+
+  |  root: <div role="dialog"> (centered popup, no header)        |
+  |   +-----------------------------------------------------------+
+  |   | image  [ illustration frame, 272px tall ]                 |
+  |   | text   Title / Description (centered)                     |
+  |   | actions  [ Call to action ]   [ Close ]                   |
+  |   +-----------------------------------------------------------+
+  +===============================================================+
+
+  ─ carousel (2–5 slides) ────────────────────────────────────────
+  +===============================================================+
+  |  root: <div role="dialog"> (centered popup, no header)        |
+  |   +-----------------------------------------------------------+
+  |   | content: one slide (image + text) per child               |
+  |   +-----------------------------------------------------------+
+  |   | footer:  [Back]   ( o )( o )( o )   [Next] / [Close]      |
+  |   +-----------------------------------------------------------+
+  +===============================================================+
+     root/overlay -> Dialog's own primitive parts (DialogRoot/DialogContent),
+                     not the `Dialog` recipe — there is no header slot here.
+     footer        -> `DialogFooterCarousel`'s own spec (real Figma node
+                     6353:5864) — the same component, reused verbatim.
+
+root:
+  element: div
+  role: dialog
+  description: >-
+    The modal popup — `DialogContent` (Base UI `Dialog.Popup`), the same
+    primitive part `Dialog` and `CarouselDialog` use. Traps focus, locks
+    scroll, portaled.
+
+parts:
+  - id: overlay
+    description: Full-screen scrim behind the popup. Same part as Dialog's own `overlay`.
+    element: div
+  - id: image
+    description: >-
+      The slide's illustration frame — a 272px-tall rounded box; a bare
+      colored placeholder until the caller supplies real media via
+      `DialogWelcomeSlide`'s `image` prop.
+    element: div
+  - id: text
+    description: Centered title (`Title`) + description (`Description`), per slide.
+    element: div
+  - id: actions
+    description: >-
+      `single` layout only: a primary "call to action" button + a ghost
+      "Close" link, stacked and centered below the text.
+    element: div
+  - id: content
+    description: >-
+      `carousel` layout only: the scrollable slide track (Carousel's
+      `content` part) wrapping one slide (image + text) per child.
+    element: div
+  - id: footer
+    description: >-
+      `carousel` layout only: `DialogFooterCarousel`, rendered inside the
+      `Carousel` so it can read navigation state from context. See its own
+      spec for its first/middle/last anatomy.
+    element: div
+
+layout:
+  type: flex
+  direction: column
+  order: [image, text, actions]
+
+# The layout itself (single vs carousel) is a structural difference driven by
+# slide count, not internal state — DialogWelcome adds no state of its own
+# beyond what Dialog and Carousel already own (see CarouselDialog's own
+# anatomy for the identical reasoning).
+internal_state:
+  - id: open
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [open]
+    controlled_default: default-open
+    emits: open-change
+    changed_by: >-
+      the `single` layout's Close button, or the `carousel` layout's footer
+      Close control (last slide); trigger/Esc/outside-press behave exactly
+      as in Dialog
+    description: Whether the dialog is shown; forwarded verbatim to/from DialogRoot.
+
+states:
+  - {
+      id: open,
+      trigger: 'internal open === true (data-[open])',
+      kind: internal,
+      affects: [root, overlay],
+    }
+  - {
+      id: closed,
+      trigger: 'internal open === false (data-[closed])',
+      kind: internal,
+      affects: [root, overlay],
+    }

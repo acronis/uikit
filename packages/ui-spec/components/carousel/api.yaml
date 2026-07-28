@@ -1,0 +1,75 @@
+spec_version: '1.0'
+component: Carousel
+
+# Framework-agnostic contract for a *composable* carousel: the slider is
+# assembled from parts (see anatomy.yaml). Property names are neutral; see
+# `adapters` for the per-framework syntax.
+contract:
+  properties:
+    - name: orientation
+      type: "'horizontal' | 'vertical'"
+      required: false
+      default: horizontal
+      description: Scroll axis. Flips the content track's flow and the nav controls' offset side.
+    - name: opts
+      type: EmblaOptionsType
+      required: false
+      default: undefined
+      description: Underlying Embla carousel options (e.g. `loop`, `align`), passed through verbatim.
+    - name: plugins
+      type: EmblaPluginType[]
+      required: false
+      default: undefined
+      description: Embla plugins (e.g. autoplay), passed through verbatim.
+
+  events:
+    - name: setApi
+      payload: '(api: CarouselApi) => void'
+      description: Called once with the underlying Embla API instance after initialization.
+
+  content:
+    - name: default
+      description: >-
+        The composed slider. Author it from the parts: a content track
+        wrapping one item per slide, and optional previous/next controls.
+        Each item may hold arbitrary content (e.g. a `Card`).
+
+  methods: []
+
+adapters:
+  react:
+    component: Carousel
+    status: implemented
+    import: >-
+      import { Carousel, CarouselContent, CarouselItem, CarouselPrevious,
+      CarouselNext } from '@acronis-platform/ui-react'
+    example: |
+      <Carousel className="w-full max-w-xs">
+        <CarouselContent>
+          <CarouselItem>Slide 1</CarouselItem>
+          <CarouselItem>Slide 2</CarouselItem>
+          <CarouselItem>Slide 3</CarouselItem>
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+
+  vue:
+    component: AvCarousel
+    status: planned
+    import: "import { AvCarousel, AvCarouselItem } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvCarousel>
+        <AvCarouselItem>Slide 1</AvCarouselItem>
+        <AvCarouselItem>Slide 2</AvCarouselItem>
+      </AvCarousel>
+
+  web-components:
+    element: ui-carousel
+    status: planned
+    import: "import '@acronis-platform/ui-wc/carousel'"
+    example: |
+      <ui-carousel>
+        <ui-carousel-item>Slide 1</ui-carousel-item>
+        <ui-carousel-item>Slide 2</ui-carousel-item>
+      </ui-carousel>

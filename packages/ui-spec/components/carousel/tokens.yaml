@@ -1,0 +1,45 @@
+spec_version: '1.0'
+component: Carousel
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# This is a design-pending v1: no `--ui-carousel-*` component tier exists yet.
+# The content/item parts carry no color at all (pure Embla-driven layout,
+# same as legacy) — the only themed parts are the previous/next controls,
+# which reuse the already-tokenized `ButtonIcon` component (its own spec owns
+# the full token set; these are the subset Carousel's default `secondary`
+# variant actually paints). Replace this composition with a `--ui-carousel-*`
+# tier if/when a Figma pass introduces one.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-button-icon-global-container-color-idle,
+      affects: previous,
+      description: Nav control background — idle (via ButtonIcon),
+    }
+  - {
+      name: --ui-button-icon-global-container-color-hover,
+      affects: previous,
+      description: Nav control background — hover (via ButtonIcon),
+    }
+  - {
+      name: --ui-button-icon-global-container-color-disabled,
+      affects: previous,
+      description: Nav control background — disabled (via ButtonIcon),
+    }
+  - {
+      name: --ui-button-icon-global-icon-color-idle,
+      affects: previous,
+      description: Nav arrow icon color — idle (via ButtonIcon),
+    }
+  - {
+      name: --ui-button-icon-secondary-container-border-color-idle,
+      affects: previous,
+      description: Nav control border color — idle (via ButtonIcon `secondary`),
+    }
+  - {
+      name: --ui-focus-primary,
+      affects: previous,
+      description: Focus-visible ring color on a nav control (via ButtonIcon),
+    }

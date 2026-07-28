@@ -1,0 +1,119 @@
+---
+title: Dialog Welcome
+description: A headerless welcome/onboarding dialog — a single call-to-action screen, or a multi-step carousel.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import {
+  DialogWelcomeSingleDemo,
+  DialogWelcomeCarouselDemo,
+} from '@/components/demos-react/dialog-welcome';
+
+## Usage
+
+```tsx
+import { DialogWelcome, DialogWelcomeSlide } from '@acronis-platform/ui-react';
+```
+
+`DialogWelcome` is a second Dialog "recipe" alongside [`Dialog`](/components/dialog):
+headerless, its body is an image plus a centered title/description. Its layout
+is derived from how many `DialogWelcomeSlide` children you pass — it is not a
+prop:
+
+- **Exactly one** child renders the **single** layout — a call-to-action
+  button and a "Close" button, stacked below the text.
+- **2–5** children render the **carousel** layout — each slide keeps its own
+  image/text, navigated by [`DialogFooterCarousel`](/components/dialog-footer-carousel)
+  (Back/Next/Close + a one-dot-per-slide position indicator).
+
+## Examples
+
+### Single layout
+
+<DemoReact>
+  <DialogWelcomeSingleDemo />
+</DemoReact>
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<DialogWelcome
+  open={open}
+  onOpenChange={setOpen}
+  aria-label="Welcome"
+  onPrimaryAction={() => setOpen(false)}
+>
+  <DialogWelcomeSlide
+    image={<img src="/welcome.png" alt="" />}
+    title="Welcome to the new dashboard"
+    description="Here's a quick look at what's new."
+  />
+</DialogWelcome>;
+```
+
+### Carousel layout
+
+<DemoReact>
+  <DialogWelcomeCarouselDemo />
+</DemoReact>
+
+```tsx
+<DialogWelcome open={open} onOpenChange={setOpen} aria-label="Product tour">
+  <DialogWelcomeSlide
+    image={<img src="/step-1.png" alt="" />}
+    title="Step one"
+    description="…"
+  />
+  <DialogWelcomeSlide
+    image={<img src="/step-2.png" alt="" />}
+    title="Step two"
+    description="…"
+  />
+  <DialogWelcomeSlide
+    image={<img src="/step-3.png" alt="" />}
+    title="Step three"
+    description="…"
+  />
+</DialogWelcome>
+```
+
+Seeding the initial slide or observing changes externally (e.g. from a URL param):
+
+```tsx
+<DialogWelcome
+  open={open}
+  onOpenChange={setOpen}
+  aria-label="Product tour"
+  opts={{ startIndex }}
+  setApi={(api) => api?.on('select', () => syncUrl(api.selectedScrollSnap()))}
+>
+  {/* … */}
+</DialogWelcome>
+```
+
+## Slide count
+
+`children` must resolve to between 1 and 5 `DialogWelcomeSlide`s — exactly one
+selects the single layout, 2 or more select the carousel layout. Outside the
+[1, 5] range DialogWelcome logs a development-mode console warning; above 5 it
+also renders only the first 5 children, dropping the rest.
+
+## Parts
+
+| Part                   | Purpose                                                                                             |
+| ---------------------- | --------------------------------------------------------------------------------------------------- |
+| `DialogWelcomeSlide`   | A slide's image + centered title/description.                                                       |
+| CTA + Close buttons    | Single layout only — a primary call-to-action button and a ghost "Close" link, stacked/centered.    |
+| `DialogFooterCarousel` | Carousel layout only — the Back/Next/Close + dot-indicator footer, driving navigation from context. |
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/dialog-welcome/dialog-welcome.tsx"
+  name="DialogWelcomeProps"
+/>
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/dialog-welcome/dialog-welcome.tsx"
+  name="DialogWelcomeSlideProps"
+/>

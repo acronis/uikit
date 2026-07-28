@@ -47,6 +47,10 @@ function norm(v) {
     if (h.length === 4) h = h.split('').map((c) => c + c).join('');
     const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
     const a = h.length >= 8 ? +(parseInt(h.slice(6, 8), 16) / 255).toFixed(3) : 1;
+    // Fully-transparent is visually identical regardless of RGB — canonicalize
+    // so Figma's magenta "unset fill" sentinel (#FF00FF00) compares equal to
+    // CSS `transparent` / rgba(0,0,0,0) instead of false-flagging as VALUE-DIFF.
+    if (a === 0) return 'transparent';
     return `${r},${g},${b},${a}`;
   }
   // rgb(r g b / a) | rgb(r,g,b) | rgba(...)
@@ -55,6 +59,7 @@ function norm(v) {
     const parts = m[1].replace('/', ' ').split(/[\s,]+/).filter(Boolean).map(Number);
     const [r, g, b] = parts;
     const a = parts.length >= 4 ? +parts[3].toFixed(3) : 1;
+    if (a === 0) return 'transparent';
     return `${r},${g},${b},${a}`;
   }
   // dimension like "12px" / "0.5rem"

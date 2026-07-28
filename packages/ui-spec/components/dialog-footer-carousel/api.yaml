@@ -1,0 +1,69 @@
+spec_version: '1.0'
+component: DialogFooterCarousel
+
+# State (first/middle/last) is entirely derived from the ambient Carousel
+# context (see anatomy.yaml's `position` internal_state), never a prop. The
+# four properties below are purely localization overrides for the component's
+# own visible/accessible text — there is no i18n library in this repo, so a
+# consumer localizes by passing these.
+contract:
+  properties:
+    - name: positionLabel
+      type: string
+      required: false
+      default: "'Slide position'"
+      description: Accessible name (`aria-label`) for the slide-position indicator (`dots` part).
+    - name: backLabel
+      type: string
+      required: false
+      default: "'Back'"
+      description: Visible label (and accessible name) of the `back` part.
+    - name: nextLabel
+      type: string
+      required: false
+      default: "'Next'"
+      description: Visible label (and accessible name) of the `next` part.
+    - name: closeLabel
+      type: string
+      required: false
+      default: "'Close'"
+      description: Visible label (and accessible name) of the `close` part.
+  content: []
+  methods: []
+
+adapters:
+  react:
+    component: DialogFooterCarousel
+    status: implemented
+    import: "import { DialogFooterCarousel } from '@acronis-platform/ui-react'"
+    example: |
+      <Carousel opts={{ startIndex: 0 }}>
+        <CarouselContent>
+          <CarouselItem>Slide 1</CarouselItem>
+          <CarouselItem>Slide 2</CarouselItem>
+          <CarouselItem>Slide 3</CarouselItem>
+        </CarouselContent>
+        <DialogFooterCarousel />
+      </Carousel>
+
+  vue:
+    element: AvDialogFooterCarousel
+    status: planned
+    import: "import { AvDialogFooterCarousel } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvCarousel :opts="{ startIndex: 0 }">
+        <AvCarouselContent>
+          <AvCarouselItem>Slide 1</AvCarouselItem>
+        </AvCarouselContent>
+        <AvDialogFooterCarousel />
+      </AvCarousel>
+
+  web-components:
+    element: ui-dialog-footer-carousel
+    status: planned
+    import: "import '@acronis-platform/ui-wc/dialog-footer-carousel'"
+    example: |
+      <ui-carousel opts='{"startIndex": 0}'>
+        <ui-carousel-item>Slide 1</ui-carousel-item>
+        <ui-dialog-footer-carousel></ui-dialog-footer-carousel>
+      </ui-carousel>

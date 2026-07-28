@@ -12,6 +12,9 @@ export interface IndexSpec {
   category: string;
   description: string;
   since?: string;
+  /** Not exported from the public API — kept under `Internal/` in Storybook,
+   *  not `UI/`. See `generate-stories.ts`'s story-title selection. */
+  internal?: boolean;
   dependencies?: { components?: string[] };
   figma?: { node?: string; codeConnect?: string };
 }

@@ -42,6 +42,9 @@ catalogs:
     date-fns:
       specifier: 4.3.0
       version: 4.3.0
+    embla-carousel-react:
+      specifier: 8.6.0
+      version: 8.6.0
     eslint:
       specifier: 9.39.4
       version: 9.39.4
@@ -578,7 +581,7 @@ importers:
         specifier: 'catalog:'
         version: 4.3.0
       embla-carousel-react:
-        specifier: 8.6.0
+        specifier: 'catalog:'
         version: 8.6.0(react@19.2.6)
       next-themes:
         specifier: 'catalog:'
@@ -740,6 +743,9 @@ importers:
       date-fns:
         specifier: 'catalog:'
         version: 4.3.0
+      embla-carousel-react:
+        specifier: 'catalog:'
+        version: 8.6.0(react@19.2.6)
       react-day-picker:
         specifier: 10.0.1
         version: 10.0.1(@types/react@19.2.15)(react@19.2.6)

@@ -1,0 +1,24 @@
+spec_version: '1.0'
+component: DialogWelcome
+name: dialog-welcome
+status: ready
+category: overlays
+description: >-
+  A second Dialog "recipe" alongside `Dialog` (DialogDefault): headerless, its
+  body is an image plus a centered title/description. With exactly one
+  `DialogWelcomeSlide` child it renders the `single` layout (a CTA + Close
+  button pair); with 2–5 it renders the `carousel` layout (each slide keeps
+  its own image/text, navigated by the existing `DialogFooterCarousel`). The
+  layout is structural, not a prop — derived from slide count.
+since: 0.58.0
+dependencies:
+  components:
+    - DialogRoot
+    - DialogContent
+    - DialogClose
+    - Button
+    - Carousel
+    - DialogFooterCarousel
+figma:
+  node: '7162-26459'
+  codeConnect: packages/ui-react/src/components/ui/dialog-welcome/dialog-welcome.figma.tsx
