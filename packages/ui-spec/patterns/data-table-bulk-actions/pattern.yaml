@@ -33,7 +33,7 @@ components:
   - DataTable
 
 demo: apps/docs/src/components/demos-react/patterns/data-table-bulk-actions.tsx
-docs: apps/docs/content/docs/patterns/data-table-bulk-actions.mdx
+docs: apps/docs/content/docs/components/data-table-bulk-actions.mdx
 
 # Approved starting point. One `useReactTable` instance feeds the checkbox column,
 # the bulk bar (via getSelectedRowModel), and DataTablePagination. The bar swaps

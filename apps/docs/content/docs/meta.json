@@ -7,11 +7,7 @@
     "styling-utilities",
     "token-reference",
     "components",
-    "layouts",
-    "patterns",
     "icons",
-    "packages",
-    "guides",
-    "legacy"
+    "packages"
   ]
 }

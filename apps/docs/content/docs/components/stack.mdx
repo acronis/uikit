@@ -1,0 +1,40 @@
+---
+title: Stack
+description: A flexbox layout primitive — row or column with gap and alignment.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { StackDemo } from "@/components/demos-react/stack";
+
+## Usage
+
+```tsx
+import { Stack } from '@acronis-platform/ui-react';
+```
+
+`Stack` is a flexbox layout primitive: arrange children in a row or column with a
+chosen `gap`, `align`, `justify`, and `wrap` — without hand-writing flex utilities.
+
+> Design-pending v1, ported 1:1 from the legacy `shadcn-uikit` stack.
+
+## Examples
+
+<DemoReact>
+  <StackDemo />
+</DemoReact>
+
+```tsx
+<Stack direction="horizontal" gap="sm" align="center">
+  <Button>Save</Button>
+  <Button variant="ghost">Cancel</Button>
+</Stack>
+```
+
+For two-dimensional layouts use [`Grid`](/components/grid).
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/stack/stack.tsx"
+  name="StackProps"
+/>
