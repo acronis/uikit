@@ -11,3 +11,9 @@ packages/tokens-pd/dtcg
 # Design-token source tiers are formatted by the figma-to-design-tokens skill
 # emitters (DtcgFormatter), which own their house style. Keep Prettier out of them.
 packages/design-tokens/tiers
+
+# Generated, committed icon-name map (scripts/generate-legacy-map.ts). Prettier
+# rewraps its arrays into a different shape than the generator emits, which
+# breaks the CI freshness check that compares the committed file to a fresh
+# `generate` run. Keep Prettier out so the two stay byte-identical.
+packages/icons-react/legacy-icon-map.json

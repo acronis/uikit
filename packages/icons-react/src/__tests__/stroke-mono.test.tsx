@@ -28,8 +28,11 @@ describe('stroke-mono icons', () => {
     expect(svg).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('applies the rule-derived stroke width per size', () => {
-    // 24 → 2 (master), 16 → 1.6px ⇒ 2.4 user units, 32 → 2.5px ⇒ 1.875.
+  it('applies the design-assets stroke rule per size', () => {
+    // Faithful to design-assets: stroke-mono `24` is the master (2 user units);
+    // its `16` variant applies `scale-16` + `stroke-1-6`, compensating the 24→16
+    // downscale so the 1.6px design stroke renders as 2.4 user units (= 1.6·24/16)
+    // — matching the Figma `sm/stroke` = 1.6px and staying consistent with stroke-multi.
     expect(svgOf(render(<BoltIcon />).container)).toHaveAttribute(
       'stroke-width',
       '2'
@@ -37,10 +40,6 @@ describe('stroke-mono icons', () => {
     expect(svgOf(render(<BoltIcon size={16} />).container)).toHaveAttribute(
       'stroke-width',
       '2.4'
-    );
-    expect(svgOf(render(<BoltIcon size={32} />).container)).toHaveAttribute(
-      'stroke-width',
-      '1.875'
     );
   });
 

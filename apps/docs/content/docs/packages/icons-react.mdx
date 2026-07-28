@@ -6,8 +6,9 @@ description: Tree-shakeable React icon components, generated from the Acronis ic
 import { Callout } from 'fumadocs-ui/components/callout';
 
 `@acronis-platform/icons-react` ships React icon components, **generated** from
-the Acronis icon SVG sources. Each icon is a small component that renders one
-24px master at any size, with stroke width auto-scaled to match the design.
+`@acronis-platform/design-assets`. Each icon renders at the dimensions the
+design set defines (today `16` and `24`, default `24`), with the stroke width
+resolved from the design rules per size — see [The `size` prop](#the-size-prop).
 
 ## Packs and subpath exports
 
@@ -39,7 +40,7 @@ export function Example() {
   return (
     <>
       <BanIcon />
-      <ChevronDownIcon size={32} />
+      <ChevronDownIcon size={16} />
     </>
   );
 }
@@ -51,15 +52,18 @@ identifier stays valid (`365-sync` → `Icon365Sync`).
 
 ## The `size` prop
 
-`size` defaults to `24`. The icon renders the single 24px master at the
-requested pixel size, and for stroke packs the stroke width auto-scales per size
-(1.6px @16, 2px @24, 2.5px @32) so outlines stay visually consistent:
+`size` is the dimension axis **design-assets defines** for the pack — today
+`16 | 24`, defaulting to the canonical `24`. It is a strict, generated union:
+only the dimensions design defines are allowed (no arbitrary sizes), and it
+tracks design-assets automatically. Each dimension carries its own
+design-resolved artwork + stroke width:
 
 ```tsx
 <ChevronDownIcon size={16} />
 <ChevronDownIcon size={24} /> {/* default */}
-<ChevronDownIcon size={32} />
 ```
+
+Need a different box? Size it with CSS — the design set stays the source of truth.
 
 ## `currentColor` theming
 

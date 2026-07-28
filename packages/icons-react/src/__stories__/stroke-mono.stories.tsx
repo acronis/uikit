@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BoltIcon, icons, type IconName } from '../packs/stroke-mono';
 
 /**
- * The `stroke-mono` pack, generated from `@acronis-platform/icons-svg-next`.
+ * The `stroke-mono` pack, generated from `@acronis-platform/design-assets`.
  * Icons use `currentColor` (inherit text color) and apply the design size +
  * stroke rules via the `size` prop.
  */
@@ -23,7 +23,6 @@ export const Sizes: Story = {
     <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
       <BoltIcon size={16} />
       <BoltIcon size={24} />
-      <BoltIcon size={32} />
     </div>
   ),
 };
@@ -32,13 +31,13 @@ export const InheritsColor: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 24, fontSize: 32 }}>
       <span style={{ color: '#1763cf' }}>
-        <BoltIcon size={32} />
+        <BoltIcon size={24} />
       </span>
       <span style={{ color: '#d4380d' }}>
-        <BoltIcon size={32} />
+        <BoltIcon size={24} />
       </span>
       <span style={{ color: 'currentColor' }}>
-        <BoltIcon size={32} />
+        <BoltIcon size={24} />
       </span>
     </div>
   ),

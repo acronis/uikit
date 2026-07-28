@@ -166,6 +166,13 @@ jobs:
       - name: Verify generated tokens-pd is committed
         run: git diff --exit-code -- packages/tokens-pd
 
+      # icons-react's legacy-icon-map.json is generated from design-assets and
+      # committed (its per-pack components under src/packs are gitignored). Fail
+      # the build if a design-assets change wasn't re-generated + committed — the
+      # `pnpm -r build` above regenerates it, so a clean diff proves it's fresh.
+      - name: Verify generated icons-react legacy map is committed
+        run: git diff --exit-code -- packages/icons-react/legacy-icon-map.json
+
       - name: Test (per workspace)
         run: |
           set -euo pipefail

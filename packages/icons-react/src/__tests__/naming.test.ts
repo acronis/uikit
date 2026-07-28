@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { pascalCase, toComponentName } from '../lib/naming';
+import { kebabCase, pascalCase, toComponentName } from '../lib/naming';
 
 describe('toComponentName', () => {
   it('suffixes normal names with Icon', () => {
@@ -25,5 +25,26 @@ describe('toComponentName', () => {
 
   it('pascalCase drops empty segments from stray separators', () => {
     expect(pascalCase('a--b_c')).toBe('ABC');
+  });
+});
+
+describe('kebabCase', () => {
+  it('splits camel boundaries in a design-assets PascalCase key', () => {
+    expect(kebabCase('ChevronDown')).toBe('chevron-down');
+    expect(kebabCase('AppWindowArrow')).toBe('app-window-arrow');
+    expect(kebabCase('CircleCheckGreen')).toBe('circle-check-green');
+    expect(kebabCase('AcronisAiMulti')).toBe('acronis-ai-multi');
+  });
+
+  it('keeps digit runs attached (matches the source SVG basenames)', () => {
+    expect(kebabCase('Microsoft365')).toBe('microsoft365');
+    expect(kebabCase('ComplianceE8')).toBe('compliance-e8');
+    expect(kebabCase('S3')).toBe('s3');
+  });
+
+  it('round-trips back to the same component name as the kebab form', () => {
+    for (const key of ['ChevronDown', 'AppWindowArrow', 'Microsoft365']) {
+      expect(pascalCase(kebabCase(key))).toBe(key);
+    }
   });
 });

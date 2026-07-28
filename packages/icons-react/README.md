@@ -1,7 +1,7 @@
 # @acronis-platform/icons-react
 
 React icon components, generated from
-[`@acronis-platform/icons-svg-next`](../icons-svg-next). Tree-shakeable, themed
+[`@acronis-platform/design-assets`](../design-assets). Tree-shakeable, themed
 via `currentColor`, with the design-system size/stroke rules baked in.
 
 ## Install
@@ -29,8 +29,10 @@ export function Example() {
 }
 ```
 
-`size` applies the design size + stroke rules — e.g. `size={16}` renders at 16px
-with a 1.6px stroke, `size={32}` at 32px with 2.5px, matching the design.
+`size` is the strict, generated dimension axis design-assets defines for the
+pack (today `16 | 24`, default `24`) — each dimension carries its own
+design-resolved artwork and stroke width. Only the dimensions design defines are
+allowed; size a different box with CSS.
 
 ### Dynamic lookup
 
@@ -48,7 +50,7 @@ const Icon = icons['chevron-down'];
 ## Develop
 
 ```sh
-pnpm --filter @acronis-platform/icons-react generate    # regenerate from icons-svg-next
+pnpm --filter @acronis-platform/icons-react generate    # regenerate from design-assets
 pnpm --filter @acronis-platform/icons-react storybook    # browse the gallery
 pnpm --filter @acronis-platform/icons-react test         # Vitest + RTL
 pnpm --filter @acronis-platform/icons-react build        # generate + lib bundle
