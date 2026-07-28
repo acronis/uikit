@@ -34,8 +34,7 @@ root:
   role: dialog
   description: >-
     The modal popup — `DialogContent` (Base UI `Dialog.Popup`), the same
-    primitive part `Dialog` and `CarouselDialog` use. Traps focus, locks
-    scroll, portaled.
+    primitive part `Dialog` uses. Traps focus, locks scroll, portaled.
 
 parts:
   - id: overlay
@@ -74,8 +73,7 @@ layout:
 
 # The layout itself (single vs carousel) is a structural difference, not
 # internal state — DialogWelcome adds no state of its own beyond what Dialog
-# and Carousel already own (see CarouselDialog's own anatomy for the
-# identical reasoning). Driven by slide count by default, or forced by the
+# and Carousel already own. Driven by slide count by default, or forced by the
 # optional `variant` prop (api.yaml) when passed — either way it selects
 # which parts render, it doesn't add a new state axis.
 internal_state:

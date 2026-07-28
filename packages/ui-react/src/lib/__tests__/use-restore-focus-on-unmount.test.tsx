@@ -83,4 +83,35 @@ describe('useRestoreFocusOnUnmount', () => {
       rerender(<Harness showA={false} showB={false} showC={false} />)
     ).not.toThrow();
   });
+
+  it('does not steal focus for a later, unrelated blur-to-body once focus has moved outside the container without an unmount', () => {
+    const { rerender } = render(
+      <>
+        <button>Outside</button>
+        <Harness showA showB showC />
+      </>
+    );
+    screen.getByRole('button', { name: 'A' }).focus();
+    // Focus leaves the container for an unrelated reason, with no unmount.
+    screen.getByRole('button', { name: 'Outside' }).focus();
+    // A render observes the moved-away focus, clearing the latch.
+    rerender(
+      <>
+        <button>Outside</button>
+        <Harness showA showB showC />
+      </>
+    );
+
+    // Some unrelated, later commit blurs to body (e.g. an outside element
+    // unmounting) while this component happens to re-render.
+    screen.getByRole('button', { name: 'Outside' }).blur();
+    rerender(
+      <>
+        <button>Outside</button>
+        <Harness showA showB={false} showC />
+      </>
+    );
+
+    expect(document.activeElement).toBe(document.body);
+  });
 });

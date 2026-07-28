@@ -569,7 +569,8 @@ aria-disabled`), a **part**, not a state.
   `variant?: 'carousel' | 'single'` is now optional and, when passed,
   _overrides_ the count-derived default (`variant="carousel"` keeps the
   carousel chrome for a single slide; `variant="single"` with 2+ slides
-  dev-warns and drops the rest). Optional-override is the right shape here
+  silently renders only the first, dropping the rest — no dev warning).
+  Optional-override is the right shape here
   specifically because the count-derived default has no failure mode of its
   own to preserve — a literal required `variant` prop would have reintroduced
   the exact desync risk the original design was (correctly) avoiding.

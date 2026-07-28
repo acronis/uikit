@@ -5,6 +5,7 @@ import useEmblaCarousel, {
 import { ArrowLeftIcon, ArrowRightIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
+import { mergeRefs } from '@/lib/merge-refs';
 import { ButtonIcon } from '@/components/ui/button-icon';
 
 // Initial version ported from `@acronis-platform/shadcn-uikit`'s `carousel`
@@ -45,6 +46,22 @@ interface CarouselContextProps {
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
 
+// The DOM's `dir` can be set on any ancestor (the app shell, not this
+// component — see context/conventions.md#rtl), so it's read from computed
+// style on the carousel's own root rather than assumed to live on
+// `document.documentElement`. Guessed once synchronously (matches whatever
+// `document.documentElement.dir` already is) so the very first Embla init
+// already gets it right in the common case; `useLayoutEffect` below corrects
+// the guess from the actual rendered node before paint if a nearer ancestor
+// disagrees. Embla's own `direction` option (distinct from `axis`) drives its
+// internal scroll-position math — the CSS track mirrors on its own via
+// logical utilities, but drag direction and scroll targets do not.
+function getInitialDirection(): 'ltr' | 'rtl' {
+  return typeof document !== 'undefined' && document.documentElement.dir === 'rtl'
+    ? 'rtl'
+    : 'ltr';
+}
+
 function useCarousel() {
   const context = React.useContext(CarouselContext);
 
@@ -60,8 +77,11 @@ const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
     { orientation = 'horizontal', opts, setApi, plugins, className, children, ...props },
     ref
   ) => {
+    const rootRef = React.useRef<HTMLDivElement>(null);
+    const [direction, setDirection] = React.useState<'ltr' | 'rtl'>(getInitialDirection);
+
     const [carouselRef, api] = useEmblaCarousel(
-      { ...opts, axis: orientation === 'horizontal' ? 'x' : 'y' },
+      { ...opts, axis: orientation === 'horizontal' ? 'x' : 'y', direction },
       plugins
     );
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
@@ -109,6 +129,21 @@ const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
       [orientation, scrollPrev, scrollNext]
     );
 
+    React.useLayoutEffect(() => {
+      const node = rootRef.current;
+
+      if (!node) {
+        return;
+      }
+
+      setDirection(window.getComputedStyle(node).direction === 'rtl' ? 'rtl' : 'ltr');
+    }, []);
+
+    // Memoized so the callback ref's identity is stable across renders
+    // unless the forwarded `ref` itself changes — otherwise React would
+    // detach (null) and reattach the DOM node on every commit.
+    const mergedRef = React.useMemo(() => mergeRefs(rootRef, ref), [ref]);
+
     React.useEffect(() => {
       if (!api || !setApi) {
         return;
@@ -147,7 +182,7 @@ const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
         }}
       >
         <div
-          ref={ref}
+          ref={mergedRef}
           onKeyDownCapture={handleKeyDown}
           className={cn('relative', className)}
           role="region"

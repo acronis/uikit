@@ -19,13 +19,15 @@ export * from './components/ui/button-menu';
 export * from './components/ui/calendar';
 export * from './components/ui/card';
 export * from './components/ui/card-filter';
-// `Carousel` (the standalone slider — root, content, previous/next arrows,
-// `useCarousel`) is internal: not ready for public use (design-pending v1,
-// no Figma reconciliation), only consumed internally by `DialogWelcome`'s
-// `carousel` layout. `CarouselItem` (+ the `CarouselApi` type, for typing a
-// `setApi` callback) stay public since `DialogFooterCarousel`'s own stories
-// pair it with a bare `<Carousel>` standalone.
-export { CarouselItem, type CarouselApi } from './components/ui/carousel';
+// `Carousel` (the standalone slider — root, content, item, previous/next
+// arrows, `useCarousel`) is internal: not ready for public use (design-pending
+// v1, no Figma reconciliation), only consumed internally by `DialogWelcome`'s
+// `carousel` layout via a relative import. `CarouselItem` stays unexported
+// too — it calls `useCarousel()` and throws outside a `<Carousel>` provider,
+// which nothing public can construct. Only `CarouselApi` stays public: it's
+// part of `DialogWelcome`'s own public prop types (`setApi`/`opts`), so
+// consumers need it to type their `setApi` callback.
+export { type CarouselApi } from './components/ui/carousel';
 export * from './components/ui/chart';
 export * from './components/ui/chart-state';
 export * from './components/ui/checkbox';

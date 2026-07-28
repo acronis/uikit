@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DialogWelcome, DialogWelcomeSlide } from '../dialog-welcome';
 
 // Embla reports zero-size scroll snaps under jsdom/happy-dom (see
-// DialogFooterCarousel's/CarouselDialog's own tests), so the carousel-layout
+// DialogFooterCarousel's own tests), so the carousel-layout
 // boundary scenarios below drive DialogFooterCarousel's state through a
 // mocked useCarousel(), keeping Carousel/CarouselContent/CarouselItem real —
 // this exercises the actual composition, not just the footer in isolation.

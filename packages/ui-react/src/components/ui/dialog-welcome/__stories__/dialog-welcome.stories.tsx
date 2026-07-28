@@ -7,9 +7,9 @@ import { DialogWelcomeSlide } from '../dialog-welcome';
 const meta = {
   title: 'UI/DialogWelcome',
   component: DialogWelcome,
-  // See CarouselDialog's own story meta for why `inline: false` — autodocs
-  // mounts the primary story twice on one Docs page, and two simultaneously
-  // open Dialogs fight over Base UI's modal manager.
+  // `inline: false` — autodocs mounts the primary story twice on one Docs
+  // page, and two simultaneously open Dialogs fight over Base UI's modal
+  // manager.
   parameters: {
     layout: 'centered',
     docs: { story: { inline: false, height: '600px' } },

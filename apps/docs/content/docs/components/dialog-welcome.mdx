@@ -16,15 +16,20 @@ import { DialogWelcome, DialogWelcomeSlide } from '@acronis-platform/ui-react';
 ```
 
 `DialogWelcome` is a second Dialog "recipe" alongside [`Dialog`](/components/dialog):
-headerless, its body is an image plus a centered title/description. Its layout
-is derived from how many `DialogWelcomeSlide` children you pass — it is not a
-prop:
+headerless, its body is an image plus a centered title/description. By
+default, its layout is derived from how many `DialogWelcomeSlide` children you
+pass:
 
 - **Exactly one** child renders the **single** layout — a call-to-action
   button and a "Close" button, stacked below the text.
 - **2–5** children render the **carousel** layout — each slide keeps its own
   image/text, navigated by [`DialogFooterCarousel`](/components/dialog-footer-carousel)
   (Back/Next/Close + a one-dot-per-slide position indicator).
+
+An optional `variant?: 'carousel' | 'single'` prop overrides that
+count-derived default: `variant="carousel"` keeps the carousel chrome for a
+single slide, and `variant="single"` forces the single layout, dropping any
+slides beyond the first. Omit `variant` to keep the count-derived behavior.
 
 ## Examples
 
@@ -95,8 +100,8 @@ Seeding the initial slide or observing changes externally (e.g. from a URL param
 
 `children` must resolve to between 1 and 5 `DialogWelcomeSlide`s — exactly one
 selects the single layout, 2 or more select the carousel layout. Outside the
-[1, 5] range DialogWelcome logs a development-mode console warning; above 5 it
-also renders only the first 5 children, dropping the rest.
+[1, 5] range this is handled silently: 0 real slides render nothing, and above
+5 only the first 5 children render, dropping the rest.
 
 ## Parts
 

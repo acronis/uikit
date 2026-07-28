@@ -1,6 +1,6 @@
 ---
 title: Dialog Footer Carousel
-description: The Back/Next/Close action pair and 3-dot slide-position indicator composed inside DialogWelcome's carousel layout.
+description: The Back/Next/Close action pair and one-dot-per-slide position indicator composed inside DialogWelcome's carousel layout.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
@@ -13,18 +13,19 @@ import { DialogFooterCarousel } from '@acronis-platform/ui-react';
 ```
 
 `DialogFooterCarousel` is the footer bar for [`DialogWelcome`](/components/dialog-welcome)'s
-`carousel` layout: a Back/Next/Close action pair flanking a fixed three-dot
-slide-position indicator. It reads
-`canScrollPrev`/`canScrollNext`/`scrollPrev`/`scrollNext` from the ambient
-`<Carousel>` context and takes no `variant`/`state` prop — the row always
-reflects the Carousel's real position, always rendering exactly 3 dot slots
-regardless of slide count.
+`carousel` layout: a Back/Next/Close action pair flanking a slide-position
+indicator with one dot per slide. It takes no `variant`/`state` prop — its
+first/middle/last treatment and its dot count/active index are derived from
+the ambient `<Carousel>` context's `selectedIndex`/`slideCount` (not
+`canScrollPrev`/`canScrollNext`, which stay permanently `true` when the
+Carousel loops and would hide the Close button forever).
 
 Its `close` control assumes a `Dialog` ancestor (it composes `Button` with
-`DialogClose`). Since the `<Carousel>` context provider it depends on isn't
-part of the public API, you won't normally reach for `DialogFooterCarousel`
-directly — pass 2 or more `DialogWelcomeSlide` children to `DialogWelcome`,
-which composes it for you and forwards its label props (see below).
+`DialogClose`). It also requires an ambient `<Carousel>` context provider to
+read its position from — that provider isn't part of the public API, so
+`DialogFooterCarousel` can't currently be constructed standalone outside of
+`DialogWelcome`: pass 2 or more `DialogWelcomeSlide` children to it, and it
+composes `DialogFooterCarousel` for you, forwarding the label props below.
 
 ## Examples
 
@@ -37,7 +38,7 @@ which composes it for you and forwards its label props (see below).
 | Part    | Element (default)                   | Purpose                                                                     |
 | ------- | ----------------------------------- | --------------------------------------------------------------------------- |
 | `back`  | `button` (`Button`)                 | Scrolls to the earlier slide. Hidden on the first slide.                    |
-| `dots`  | `div`                               | 3-slot slide-position indicator; the active slot's container fills.         |
+| `dots`  | `div`                               | One-dot-per-slide position indicator; the active dot's own fill changes color — there is no surrounding container box. |
 | `next`  | `button` (`Button`)                 | Scrolls to the later slide. Hidden on the last slide.                       |
 | `close` | `button` (`Button` + `DialogClose`) | Closes the ambient Dialog. Shown only on the last slide, in `next`'s place. |
 
@@ -52,6 +53,7 @@ text is overridable via props rather than baked in:
   nextLabel="Suivant"
   closeLabel="Fermer"
   positionLabel="Position de la diapositive"
+  dotAriaLabel={(index, count) => `Diapositive ${index} sur ${count}`}
 />
 ```
 

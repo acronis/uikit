@@ -38,11 +38,11 @@ import { useCarousel } from '../carousel';
 // its real `selectedScrollSnap()`, instead of collapsing every slide count
 // onto the 3-variant first/middle/last row.
 //
-// The indicator owns the same [1, 5] slide range CarouselDialog enforces on
-// its children (kept in sync with CarouselDialog's own MIN_SLIDES/MAX_SLIDES)
-// — enforced again at this level because the footer is also usable
-// standalone, paired directly with a bare `<Carousel>` that bypasses
-// CarouselDialog's slice.
+// The indicator owns the same [1, 5] slide range DialogWelcome enforces on
+// its own children (kept in sync with DialogWelcome's own MAX_SLIDES) —
+// enforced again at this level because the footer is also usable standalone,
+// paired directly with a bare `<Carousel>` that bypasses DialogWelcome's own
+// slice.
 
 const MAX_SLIDES = 5;
 
@@ -258,6 +258,11 @@ const DialogFooterCarousel = React.forwardRef<
     const closeRef = React.useRef<HTMLButtonElement>(null);
     useRestoreFocusOnUnmount(rootRef, [nextRef, closeRef]);
 
+    // Memoized so the callback ref's identity is stable across renders
+    // unless the forwarded `ref` itself changes — otherwise React would
+    // detach (null) and reattach the DOM node on every commit.
+    const mergedRef = React.useMemo(() => mergeRefs(rootRef, ref), [ref]);
+
     const dotIndices = React.useMemo(
       () =>
         Array.from(
@@ -269,7 +274,7 @@ const DialogFooterCarousel = React.forwardRef<
 
     return (
       <DialogFooterCarouselVariantsContainer
-        ref={mergeRefs(rootRef, ref)}
+        ref={mergedRef}
         className={className}
         {...props}
       >

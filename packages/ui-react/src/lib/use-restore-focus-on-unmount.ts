@@ -22,6 +22,13 @@ import * as React from 'react';
  * `fallbackRefs` is checked in order; the first one with a mounted node
  * receives focus. Pass every control that can occupy the vacated slot, most
  * preferred first.
+ *
+ * The latch is cleared, not just set, during render: without an `else`, once
+ * focus had been inside the container it would stay "was inside" forever,
+ * even after focus later moves to some unrelated element outside the
+ * container without an unmount. Since the effect below runs on every commit
+ * (no dependency array), a later, wholly unrelated blur-to-`document.body`
+ * would then incorrectly yank focus back into `fallbackRefs`.
  */
 export function useRestoreFocusOnUnmount(
   containerRef: React.RefObject<HTMLElement | null>,
@@ -31,6 +38,8 @@ export function useRestoreFocusOnUnmount(
 
   if (containerRef.current?.contains(document.activeElement)) {
     wasFocusInsideRef.current = true;
+  } else if (document.activeElement !== document.body) {
+    wasFocusInsideRef.current = false;
   }
 
   React.useEffect(() => {

@@ -171,7 +171,7 @@ interface DialogWelcomeBaseProps extends Omit<
 // There is no `DialogTitle` slot here (this dialog has no header), so
 // `aria-label`/`aria-labelledby` can't be optional the way Dialog's own props
 // are — one of the two must be supplied for the dialog to have an accessible
-// name, mirroring CarouselDialog's same enforced union.
+// name.
 type DialogWelcomeAccessibleNameProps =
   | { 'aria-label': string; 'aria-labelledby'?: never }
   | { 'aria-label'?: never; 'aria-labelledby': string };
