@@ -7,6 +7,12 @@ import chalk from 'chalk';
 import { getBaseConfig } from './config';
 import { checkStrokeIntegrity } from './check-stroke-integrity';
 import { checkUnlinked } from './check-unlinked';
+import {
+  abortRevert,
+  ensureCleanBeforeSync,
+  finalizeGate,
+  parseGateOptions,
+} from './diff-gate';
 import { discoverPacks } from './discover-packs';
 import { generateLinkedReport } from './generate-linked-report';
 import { syncPack, type PackSyncResult } from './sync-pack';
@@ -14,6 +20,7 @@ import { validateManifest } from './validate-manifest';
 
 async function main(): Promise<void> {
   const config = getBaseConfig();
+  const gate = parseGateOptions();
 
   if (!config.token) {
     console.error(chalk.red.bold('Token not found. Please add FIGMA_SYNC_TOKEN to .env.local'));
@@ -31,6 +38,9 @@ async function main(): Promise<void> {
   console.log(chalk.bold('\n🎨 Figma Design Assets Sync\n'));
   console.log(`  File:    ${config.fileKey}`);
   console.log(`  Section: ${config.sectionNodeId}\n`);
+
+  // Diff-gate: require a clean packs/ up front so a decline can revert cleanly.
+  const gateActive = ensureCleanBeforeSync(gate);
 
   let packs;
   try {
@@ -50,6 +60,7 @@ async function main(): Promise<void> {
       const error = err as Error & { cause?: Error };
       console.error(chalk.red.bold(`\n✗ Error syncing ${pack.packName}:`), error.message);
       if (error.cause) console.error(chalk.red('  Cause:'), error.cause.message);
+      abortRevert(gateActive);
       process.exit(1);
     }
   }
@@ -73,6 +84,7 @@ async function main(): Promise<void> {
   const ajvResult = spawnSync(ajvCmd, { stdio: 'inherit', shell: true });
   if (ajvResult.status !== 0) {
     console.error(chalk.red.bold('\n✗ Schema validation failed'));
+    abortRevert(gateActive);
     process.exit(1);
   }
 
@@ -122,10 +134,11 @@ async function main(): Promise<void> {
 
   if (hasLegacyDuplicates) {
     console.error(chalk.red.bold('\n✗ Duplicate legacyNames found — resolve before committing\n'));
+    abortRevert(gateActive);
     process.exit(1);
   }
 
-  console.log(chalk.green.bold('\n\n✓ All done!\n'));
+  await finalizeGate(gateActive, gate);
 }
 
 main();

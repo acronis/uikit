@@ -2,12 +2,17 @@
   "$comment": "AUTHORITATIVE legacy @acronis-platform/shadcn-uikit icon name -> @acronis-platform/icons-react name. Generated from the design-assets legacyNames bridge — do not hand-edit. Regenerate: pnpm --filter @acronis-platform/icons-react generate:legacy-map",
   "meta": {
     "defaultVariant": "stroke-mono",
-    "variants": ["stroke-mono", "solid-mono", "stroke-multi", "solid-multi"],
+    "variants": [
+      "stroke-mono",
+      "solid-mono",
+      "stroke-multi",
+      "solid-multi"
+    ],
     "counts": {
       "total": 1144,
-      "mapped": 1079,
+      "mapped": 1080,
       "colored": 49,
-      "unresolved": 16
+      "unresolved": 15
     }
   },
   "icons": {
@@ -1217,6 +1222,16 @@
       "variants": {
         "stroke-mono": "FlashDriveIcon",
         "solid-mono": null,
+        "stroke-multi": null,
+        "solid-multi": null
+      }
+    },
+    "BoxIcon": {
+      "asset": "BoxLogo",
+      "source": "box",
+      "variants": {
+        "stroke-mono": null,
+        "solid-mono": "BoxLogoIcon",
         "stroke-multi": null,
         "solid-multi": null
       }
@@ -11197,7 +11212,6 @@
     }
   },
   "unresolved": {
-    "BoxIcon": "NOT_IN_ANY_PACK(BoxLogoIcon)",
     "ConnectBrandedIllIcon": "NO_LEGACY_NAME_MATCH",
     "ConnectWhiteLabelIllIcon": "NO_LEGACY_NAME_MATCH",
     "DotChartBrownIcon": "NO_LEGACY_NAME_MATCH",

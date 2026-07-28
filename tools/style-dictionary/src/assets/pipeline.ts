@@ -89,7 +89,7 @@ function usesColorRule(values: Values, rules: Map<string, Rule>): boolean {
 }
 
 /** One resolvable rendering style: a synthesized flat manifest + its color mode + React label. */
-interface StyleUnit {
+export interface StyleUnit {
   /** React `variant` member + SVG subdir name (group id, or the pack name for a flat pack). */
   label: string;
   manifest: PackManifest;
@@ -97,7 +97,7 @@ interface StyleUnit {
 }
 
 /** Expand a pack into its rendering styles: one per `assetsGroups` entry, or a single flat style. */
-function expandStyles(pack: PackManifest, rules: Map<string, Rule>): StyleUnit[] {
+export function expandStyles(pack: PackManifest, rules: Map<string, Rule>): StyleUnit[] {
   if (pack.assetsGroups) {
     return Object.entries(pack.assetsGroups).map(([groupId, group]) => {
       const values = effectiveGroupValues(pack.values, group.$values);

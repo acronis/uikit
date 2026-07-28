@@ -385,6 +385,40 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
+  apps/kitchen-sink:
+    dependencies:
+      '@acronis-platform/icons-react':
+        specifier: workspace:*
+        version: link:../../packages/icons-react
+      '@acronis-platform/ui-react':
+        specifier: workspace:*
+        version: link:../../packages/ui-react
+      '@base-ui/react':
+        specifier: 'catalog:'
+        version: 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.15)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.6
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.6(react@19.2.6)
+    devDependencies:
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.15
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.15)
+      '@vitejs/plugin-react':
+        specifier: 5.1.1
+        version: 5.1.1(vite@6.4.2(@types/node@25.9.1)(jiti@2.7.0)(lightningcss@1.32.0)(sass-embedded@1.100.0)(sass@1.100.0)(tsx@4.22.3)(yaml@2.9.0))
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vite:
+        specifier: 'catalog:'
+        version: 6.4.2(@types/node@25.9.1)(jiti@2.7.0)(lightningcss@1.32.0)(sass-embedded@1.100.0)(sass@1.100.0)(tsx@4.22.3)(yaml@2.9.0)
+
   packages/design-assets:
     devDependencies:
       '@acronis-platform/figma-design-assets-sync':
@@ -423,9 +457,12 @@ importers:
 
   packages/icons-react:
     devDependencies:
-      '@acronis-platform/icons-svg-next':
+      '@acronis-platform/design-assets':
         specifier: workspace:*
-        version: link:../icons-svg-next
+        version: link:../design-assets
+      '@acronis-platform/style-dictionary':
+        specifier: workspace:*
+        version: link:../../tools/style-dictionary
       '@storybook/addon-a11y':
         specifier: 10.4.1
         version: 10.4.1(storybook@10.4.1(@testing-library/dom@10.4.0)(@types/react@19.2.15)(prettier@3.8.3)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))

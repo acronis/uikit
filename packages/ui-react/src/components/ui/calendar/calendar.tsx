@@ -159,7 +159,9 @@ const calendarComponents: Partial<CustomComponents> = {
       {...props}
     />
   ),
-  Chevron: ({ className, orientation, ...props }) => {
+  // Drop react-day-picker's numeric `size` — these chevrons render at the
+  // fixed design size (16); icons-react's `size` is the 16|24 design axis.
+  Chevron: ({ className, orientation, size: _size, ...props }) => {
     // Mirror the horizontal nav chevrons under RTL — `react-day-picker`
     // hardcodes orientation "left"/"right" for previous/next regardless of
     // direction, so we flip them ourselves. Applied on the icon we own via

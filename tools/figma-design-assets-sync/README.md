@@ -22,6 +22,20 @@ pnpm --filter @acronis-platform/design-assets sync
 # → tsx ../../tools/figma-design-assets-sync/src/index.ts  (cwd = packages/design-assets)
 ```
 
+### Diff-gate
+
+The sync writes into `packs/`, then **shows the diff (added / modified / deleted) and reverts
+unless you approve it** — so a Figma change never lands silently. It requires `packs/` to be
+clean first (commit or stash pending work), because a decline restores `packs/` to `HEAD`.
+
+| Flag           | Behavior                                                              |
+| -------------- | --------------------------------------------------------------------- |
+| _(none)_       | Interactive: sync, print the diff, prompt `[y/N]`; revert on decline. |
+| `--dry-run`    | Preview: sync, print the diff, always revert (nothing persists).      |
+| `--yes` / `-y` | Skip the gate and keep the changes (automation / CI).                 |
+
+The gate is disabled automatically when cwd is not a git work tree.
+
 ## Configuration
 
 Copy `.env.local.example` to `packages/design-assets/.env.local` and fill in:

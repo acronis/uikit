@@ -12,7 +12,7 @@ type Story = StoryObj;
 function Gallery({
   icons,
 }: {
-  icons: Record<string, ComponentType<{ size?: number }>>;
+  icons: Record<string, ComponentType>;
 }) {
   return (
     <div
@@ -34,7 +34,7 @@ function Gallery({
             fontSize: 10,
           }}
         >
-          <Icon size={32} />
+          <Icon />
           <span style={{ color: '#888' }}>{name}</span>
         </div>
       ))}

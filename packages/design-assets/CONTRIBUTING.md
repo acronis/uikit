@@ -233,10 +233,13 @@ The Figma sync tool (`tools/figma-design-assets-sync`) pulls SVG icons from a Fi
 regenerates a pack manifest. See its own
 [`README.md`](../../tools/figma-design-assets-sync/README.md) for setup and usage.
 
-After running the sync, always:
+The sync is **diff-gated**: it requires a clean `packs/`, then shows what it added / modified /
+**deleted** and reverts unless you approve — so nothing lands unreviewed (mirrors the token
+sync). Flags: `--dry-run` previews the diff and always reverts; `--yes`/`-y` skips the gate and
+writes directly (for automation). After a sync you should still:
 
-1. **Review the diff** — check that nothing was removed unexpectedly.
-2. **Run `pnpm validate`** — the sync does not run it automatically.
+1. **Review the diff** — the gate prints it; confirm nothing was removed unexpectedly.
+2. **Run `pnpm validate`** — the sync's schema check is not a substitute for the full validate.
 3. **Re-apply any hand-authored changes** the sync may have overwritten (see warning above).
 
 ---

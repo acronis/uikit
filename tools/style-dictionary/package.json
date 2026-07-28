@@ -4,6 +4,10 @@
   "private": true,
   "description": "Translation tool: builds @acronis-platform/design-tokens into per-brand CSS custom properties via an intermediate DTCG pass.",
   "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    "./assets": "./src/assets/index.ts"
+  },
   "scripts": {
     "build": "tsx src/index.ts",
     "dev": "echo \"no dev server (run build)\" && exit 0",

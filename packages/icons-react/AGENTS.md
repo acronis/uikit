@@ -1,46 +1,63 @@
 # AGENTS.md — `packages/icons-react`
 
 `@acronis-platform/icons-react` — React icon components **generated from**
-[`@acronis-platform/icons-svg-next`](../icons-svg-next). Published.
+[`@acronis-platform/design-assets`](../design-assets). Published.
 
 Repo-wide rules live in the repo root's `./context/`. This file documents
 only what's specific to this workspace.
 
 ## Icons are generated, not authored
 
-`scripts/generate-icons.ts` reads the icons-svg-next name-list manifests
-(`src/figma/*.json`) + flat 24px SVG masters (`src/svg/*.svg`) and emits
-per-icon React components under `src/packs/<pack>/` — **gitignored**,
-regenerated on `build` / `typecheck` / `test` / `storybook`. Don't hand-edit
-anything under `src/packs/`; change the upstream icon (re-sync icons-svg-next)
-or the generator.
+`scripts/generate-icons.ts` reads design-assets' `packs/icons.json` —
+per-pack `assetsGroups`, each asset pointing at its flat 24px master SVG via
+`values.24.$file` — and emits per-icon React components under
+`src/packs/<pack>/` — **gitignored**, regenerated on
+`build` / `typecheck` / `test` / `storybook`. Don't hand-edit anything under
+`src/packs/`; change the icon in design-assets (re-run its Figma sync) or the
+generator. `scripts/generate-legacy-map.ts` also reads design-assets
+(`metadata.legacyNames`) to emit the committed `legacy-map`.
 
 The hand-written code is small:
 
-- `src/lib/svg-icon.tsx` — the shared `<SvgIcon>` renderer (size → width/
-  height, `currentColor`, rule-driven stroke width, a11y).
+- `src/lib/svg-icon.tsx` — the shared `<SvgIcon>` renderer: picks the artwork
+  for the requested `size` from a per-size `sizes` map, sets width/height, lifts
+  a uniform stroke width to the root, and handles a11y (`title` → `role="img"`).
 - `scripts/generate-icons.ts` — the generator.
-- `scripts/packs.ts` — the **single source of truth** for which packs are
-  built and the size/stroke rule (`ICON_SIZES`, `STROKE_WIDTH_PX`). Add a pack
-  here (and a matching `exports` subpath + Vite entry).
+- `scripts/packs.ts` — the **single source of truth** for which packs are built
+  (the four subpaths). Add a pack here (and a matching `exports` subpath + Vite
+  entry). Sizes/strokes/colors are NOT configured here — they come from
+  design-assets.
 
-## How the icons-svg-next model maps to components
+## How the design-assets model maps to components
 
-- One 24px master SVG per icon, flat in `icons-svg-next/src/svg/`. Each pack's
-  icon names come from its manifest(s): a pack reads every manifest named
-  `<pack>` or `<pack>-<category>` (so `stroke-mono` merges its six category
-  manifests — `stroke-mono-arrows`, `…-shapes`, …) and resolves each name to
-  `svg/<name>.svg`. **No per-size SVGs exist.**
-- The size/stroke rule is a constant (`STROKE_WIDTH_PX` in `packs.ts`: 1.6px
-  @16, 2px @24, 2.5px @32 — matching the Figma "icon components (generated)"
-  set). The generator converts it into a `size → stroke-width` (viewBox units)
-  map baked into each stroke pack's `icon.tsx`, applied at runtime via the
-  `size` prop, so one master renders at any size with the designed stroke.
-- **mono** packs → `stroke`/`fill` become `currentColor` (inherit text
-  color). **multi** packs → authored colors (incl. gradients) are kept
-  verbatim; gradient/clip `id`s are namespaced per icon (`<asset>-<id>`) so
-  they don't collide when multiple icons render on one page. Stroke packs
-  still take their stroke width from the rule even when multicolor.
+- **design-assets is the source of truth; this package mirrors it.** Anything
+  not expressible from design-assets (e.g. an arbitrary render size) is out; a
+  discrepancy is fixed in design-assets, never compensated here.
+- The generator reuses the canonical resolver + executor from
+  `@acronis-platform/style-dictionary/assets` (the same code the token/asset
+  build uses — never a reimplementation): `expandStyles` turns the `icons`
+  pack's four `assetsGroups` into flat styles (one per pack here, 1:1 by name),
+  `resolveAsset` resolves each asset's per-size variants (`values.<size>` merged
+  from pack ⊕ group `$values` ⊕ asset), and `executeSvg` applies that size's
+  ordered rules (`scale`/`stroke`/`color`) to the leaf SVG.
+- **Size axis = whatever design-assets declares** (today `16` and `24`, `24`
+  canonical); `size` is typed `16 | 24`. There is no 32. Stroke widths are the
+  executor's output of the design `stroke-*` rules — not a constant. (The
+  stroke-mono `16` variant applies `scale-16` + `stroke-1-6`: `scale-16`
+  compensates the 24→16 downscale so the 1.6px design stroke renders as 2.4 user
+  units, matching Figma's `sm/stroke` = 1.6px and stroke-multi.)
+- **Per-size artwork.** The generator emits one entry in each component's
+  `SIZES` map per design-defined variant; identical geometry is deduped into a
+  shared constant, so today (single 24 master + rule-derived 16) each icon has
+  one geometry + per-size stroke width. If design-assets ever gives a size its
+  own `$file`/`$from` (distinct artwork), that size renders its own geometry —
+  `<SvgIcon>` selects by `size`, never the canonical scaled.
+- Icon keys: design-assets keys each icon in **PascalCase** (`ChevronDown`); the
+  generator kebab-cases it (`chevron-down`) for the registry key / file name /
+  id slug, so the public names are exactly what the library has always exposed.
+- **mono** packs (a group whose rules include `current-color`) → the executor
+  recolors to `currentColor`, which the generator lifts to the root `<svg>`.
+  **multi** packs → authored colors (incl. gradients) are kept verbatim.
 
 ## Public API
 
@@ -55,15 +72,16 @@ The hand-written code is small:
 
 ## Packs
 
-All four icons-svg-next packs are generated (see `scripts/packs.ts`):
-`stroke-mono` (395), `solid-mono` (59), `stroke-multi` (12), `solid-multi` (1).
-Counts grow as the upstream `@acronis-platform/icons-svg-next` set does — no
-code change needed. `@acronis-platform/ui-react` depends on this package so
-components/stories can compose icons.
+All four design-assets icon `assetsGroups` are generated (see `scripts/packs.ts`):
+`stroke-mono` (392), `solid-mono` (69), `stroke-multi` (15), `solid-multi` (1).
+Counts grow as the design-assets set does — no code change needed.
+`@acronis-platform/ui-react` depends on this package so components/stories can
+compose icons.
 
-The icons-svg-next source is a live WIP surface, so generated names can include
-collisions (`*-duplicate`) and size-suffixed strays (`agent-qnap--32`) until the
-Figma source is cleaned; fix at the source and re-sync rather than hand-editing.
+design-assets is a curated, validated source (its `validate` gate + linked
+report run in the sync), so generated names are stable; a rename or removal
+there changes the public API and must ship a matching (major) Changeset. Fix
+the icon in design-assets and re-sync rather than hand-editing.
 
 ## When you change anything
 

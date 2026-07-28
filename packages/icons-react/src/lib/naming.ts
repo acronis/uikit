@@ -11,6 +11,22 @@ export function pascalCase(name: string): string {
 }
 
 /**
+ * PascalCase asset key → kebab-case, e.g. `AppWindowArrow` → `app-window-arrow`.
+ *
+ * design-assets keys its icons in PascalCase (`ChevronDown`); the generator
+ * uses this to derive the registry key + generated file name + per-icon id slug
+ * so those stay the same kebab strings the library has always exposed (a digit
+ * run stays attached, `Microsoft365` → `microsoft365`, matching the source SVG
+ * basenames). Round-trips with `pascalCase` for these keys.
+ */
+export function kebabCase(name: string): string {
+  return name
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
+    .toLowerCase();
+}
+
+/**
  * Map an asset name to a valid React component identifier.
  *
  * Normal names take the `Icon` suffix (`ban` → `BanIcon`). A JS identifier
