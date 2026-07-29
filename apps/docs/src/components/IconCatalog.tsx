@@ -18,8 +18,8 @@ const PACKS = [
 
 type PackId = (typeof PACKS)[number]['id'];
 
-/** The rendered pixel sizes offered by the size toggle. */
-const SIZES = [16, 24, 32] as const;
+/** The rendered pixel sizes offered by the size toggle (the dimensions icons-react actually ships). */
+const SIZES = [16, 24] as const;
 type IconSize = (typeof SIZES)[number];
 
 /**
