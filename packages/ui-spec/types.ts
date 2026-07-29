@@ -1,6 +1,16 @@
 /** TypeScript shapes for the four YAML files of a component spec. */
 
-export type ComponentStatus = 'draft' | 'ready' | 'stable' | 'deprecated';
+export type ComponentStatus = 'draft' | 'ready' | 'stable';
+
+/** public (default, importable by devs) or internal (not exported from the package root). */
+export type ComponentVisibility = 'public' | 'internal';
+
+export interface Deprecated {
+  since?: string;
+  /** The `name` of the component spec that replaces this one. */
+  replacement: string;
+  reason?: string;
+}
 
 export interface IndexSpec {
   spec_version: string;
@@ -9,6 +19,10 @@ export interface IndexSpec {
   /** ui-react component dir (under src/components/ui), when it differs from `name`. */
   sourceDir?: string;
   status: ComponentStatus;
+  /** Omit for a normal, public component. */
+  visibility?: ComponentVisibility;
+  /** Omit unless the component is obsolete and has a replacement. */
+  deprecated?: Deprecated;
   category: string;
   description: string;
   since?: string;

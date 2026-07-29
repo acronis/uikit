@@ -164,7 +164,11 @@ contains and exit — don't run devil-advocate on nothing.
      bash .claude/skills/component-readiness/scripts/audit.sh <X> refs/pr/<num>
      ```
      Its SPEC/TESTS/FIGMA verdict answers "did stories/spec/Code Connect get
-     updated" — don't hand-roll that check here.
+     updated" — don't hand-roll that check here. Its `VISIBLE` column (and the
+     CI-authoritative `packages/ui-spec/__tests__/visibility.test.ts`) covers a
+     component newly marked `visibility: internal`/`deprecated` in this PR:
+     flag a PR that changes either field without that suite passing, rather
+     than re-deriving the barrel/docs/Storybook checks by hand.
 
 6. **First-pass bug hunt (tier a)** — for each candidate issue, read
    surrounding code/comments for actual intent before calling it a

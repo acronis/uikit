@@ -36,6 +36,10 @@ export interface SpinnerProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof spinnerVariants> {}
 
+/**
+ * @internal Not exported from the public entry point — consumed by Loading/Toast.
+ * @deprecated Use `Loading` for a standalone loading indicator.
+ */
 const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
   ({ className, size, ...props }, ref) => (
     <div

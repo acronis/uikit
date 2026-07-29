@@ -10,6 +10,7 @@ import { notFound } from 'next/navigation';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { AutoTypeTable, type AutoTypeTableProps } from 'fumadocs-typescript/ui';
 import { createGenerator } from 'fumadocs-typescript';
+import { ComponentStatusCallout } from '@/components/component-status-callout';
 
 // fumadocs-typescript v5 split the TS analyzer out of <AutoTypeTable>: the
 // component now requires a `generator` prop rather than constructing one
@@ -34,6 +35,10 @@ export default async function Page({
     <DocsPage toc={page.data.toc}>
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
+      <ComponentStatusCallout
+        internal={page.data.internal}
+        deprecated={page.data.deprecated}
+      />
       <DocsBody>
         <MDX
           components={{

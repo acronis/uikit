@@ -649,6 +649,12 @@ const arr = (values: string[]): string =>
 
 const cap = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
 
+/** Renders as a `[Internal, Deprecated]` suffix on the Storybook sidebar
+ *  group name, so the status is visible in the tree without opening the
+ *  component's autodocs page. Empty when neither applies. */
+const titleBadge = (tags: string[]): string =>
+  tags.length ? ` [${tags.map(cap).join(', ')}]` : '';
+
 function buildStories(
   comp: string,
   api: ApiSpec,
@@ -816,12 +822,18 @@ function generate(name: string): boolean {
     `import { ${comp} } from '../${name}';`,
   ].join('\n');
 
+  const tags = [
+    ...(index.visibility === 'internal' ? ['internal'] : []),
+    ...(index.deprecated ? ['deprecated'] : []),
+  ];
+  const tagsLine = tags.length ? `\n  tags: [${tags.map((t) => `'${t}'`).join(', ')}],` : '';
+
   const file = `${HEADER}
 ${imports}
 
 const meta = {
-  title: 'UI/${index.component}/All States (generated)',
-  component: ${comp},
+  title: 'UI/${index.component}${titleBadge(tags)}/All States (generated)',
+  component: ${comp},${tagsLine}
 } satisfies Meta<typeof ${comp}>;
 
 export default meta;

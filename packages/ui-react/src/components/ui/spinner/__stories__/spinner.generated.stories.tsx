@@ -6,8 +6,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Spinner } from '../spinner';
 
 const meta = {
-  title: 'UI/Spinner/All States (generated)',
+  title: 'UI/Spinner [Internal, Deprecated]/All States (generated)',
   component: Spinner,
+  tags: ['internal', 'deprecated'],
 } satisfies Meta<typeof Spinner>;
 
 export default meta;

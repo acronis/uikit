@@ -23,7 +23,13 @@
 #   SPEC      ui-spec 7-file set present
 #   TESTS     __tests__/<name>.test.tsx present
 #   CODECONN  <name>.figma.tsx present + marked COMPLETE
-#   VERDICT   READY | DRIFT (token/import/impl failure) | INCOMPLETE (spec/tests/CC gap)
+#   VISIBLE   "-" for a normal component; for one marked visibility:internal and/or
+#             deprecated in index.yaml, PASS/FAIL on: not exported from ui-react's
+#             src/index.ts barrel, docs .mdx frontmatter declares it (+ replacement
+#             when deprecated), Storybook tags declare it. Mirrors the enforcement
+#             in packages/ui-spec/__tests__/visibility.test.ts (CI-authoritative;
+#             this column is the fast static preview).
+#   VERDICT   READY | DRIFT (token/import/impl/visibility failure) | INCOMPLETE (spec/tests/CC gap)
 #
 # Three more checks run per component but are printed as non-blocking advisory
 # notes, not columns (they're heuristic greps, prone to false positives —
@@ -89,8 +95,8 @@ defined="$(mktemp)"
 grep -rho -- '--ui-[a-z0-9-]*' "$TOKENS" | sort -u > "$defined"
 
 fail=0
-printf '%-22s %-7s %-8s %-6s %-8s %-6s %-8s %s\n' COMPONENT TOKENS IMPORTS IMPL SPEC TESTS FIGMA VERDICT
-printf '%-22s %-7s %-8s %-6s %-8s %-6s %-8s %s\n' "----------------------" "------" "-------" "-----" "-------" "-----" "-------" "-------"
+printf '%-22s %-7s %-8s %-6s %-8s %-6s %-8s %-7s %s\n' COMPONENT TOKENS IMPORTS IMPL SPEC TESTS FIGMA VISIBLE VERDICT
+printf '%-22s %-7s %-8s %-6s %-8s %-6s %-8s %-7s %s\n' "----------------------" "------" "-------" "-----" "-------" "-----" "-------" "-------" "-------"
 
 for c in $comps; do
   if [ ! -d "$UI/$c" ]; then
@@ -175,6 +181,43 @@ for c in $comps; do
     fig=LINKED
   fi
 
+  # ---- VISIBLE: internal/deprecated components must not be exported, and must
+  # be flagged in docs + Storybook (deprecated must also name its replacement).
+  mdx="apps/docs/content/docs/components/$c.mdx"
+  vis="-"
+  vis_hits=""
+  is_internal=""; is_deprecated=""
+  if [ -f "$idx" ]; then
+    grep -qE '^visibility:[[:space:]]*internal' "$idx" && is_internal=1
+    grep -qE '^deprecated:' "$idx" && is_deprecated=1
+  fi
+  if [ -n "$is_internal" ] || [ -n "$is_deprecated" ]; then
+    vis=PASS
+    grep -qF "components/ui/$c" packages/ui-react/src/index.ts 2>/dev/null \
+      && { vis=FAIL; vis_hits="$vis_hits exported-from-barrel"; }
+    if [ -n "$is_internal" ]; then
+      grep -qE '^internal:[[:space:]]*true' "$mdx" 2>/dev/null \
+        || { vis=FAIL; vis_hits="$vis_hits docs-missing-internal-frontmatter"; }
+    fi
+    if [ -n "$is_deprecated" ]; then
+      replacement="$(grep -E '^[[:space:]]+replacement:' "$idx" 2>/dev/null | head -1 \
+                     | sed -E 's/.*replacement:[[:space:]]*//; s/[[:space:]]*$//')"
+      grep -qE '^[[:space:]]*replacement:[[:space:]]*'"$replacement"'[[:space:]]*$' "$mdx" 2>/dev/null \
+        || { vis=FAIL; vis_hits="$vis_hits docs-missing-deprecated-frontmatter"; }
+    fi
+    story_files="$(find "$UI/$c/__stories__" -maxdepth 1 -name '*.stories.tsx' 2>/dev/null)"
+    if [ -z "$story_files" ]; then
+      vis=FAIL; vis_hits="$vis_hits no-stories-file"
+    else
+      [ -n "$is_internal" ] \
+        && ! grep -qE "tags:.*'internal'" $story_files 2>/dev/null \
+        && { vis=FAIL; vis_hits="$vis_hits stories-missing-internal-tag"; }
+      [ -n "$is_deprecated" ] \
+        && ! grep -qE "tags:.*'deprecated'" $story_files 2>/dev/null \
+        && { vis=FAIL; vis_hits="$vis_hits stories-missing-deprecated-tag"; }
+    fi
+  fi
+
   # ---- I18N / RTL: non-blocking advisory heuristics (component's own .tsx only) ----
   i18n_hits=""
   rtl_hits=""
@@ -191,7 +234,6 @@ for c in $comps; do
   # never blocking. Prop-mention check only runs when the component declares
   # its own Props interface (skips React.ComponentProps<'tag'>-only components,
   # which have nothing custom to document).
-  mdx="apps/docs/content/docs/components/$c.mdx"
   main_tsx="$UI/$c/$c.tsx"
   docs_missing_props=""
   if [ -f "$main_tsx" ]; then
@@ -207,7 +249,7 @@ for c in $comps; do
   fi
 
   # ---- VERDICT ----
-  if [ "$tok" = FAIL ] || [ "$imp" = FAIL ] || [ "$impl" = FAIL ]; then
+  if [ "$tok" = FAIL ] || [ "$imp" = FAIL ] || [ "$impl" = FAIL ] || [ "$vis" = FAIL ]; then
     verdict="DRIFT"; fail=1
   elif [ "$spec" != PASS ] || [ "$tst" != PASS ] || [ "$fig" = NONE ] || [ "$fig" = PARTIAL ]; then
     verdict="INCOMPLETE"
@@ -215,7 +257,7 @@ for c in $comps; do
     verdict="READY"
   fi
 
-  printf '%-22s %-7s %-8s %-6s %-8s %-6s %-8s %s\n' "$c" "$tok" "$imp" "$impl" "$spec" "$tst" "$fig" "$verdict"
+  printf '%-22s %-7s %-8s %-6s %-8s %-6s %-8s %-7s %s\n' "$c" "$tok" "$imp" "$impl" "$spec" "$tst" "$fig" "$vis" "$verdict"
   [ -n "$dangling" ]      && echo "    ↳ dangling tokens: $(printf '%s' "$dangling" | tr '\n' ' ')"
   [ -n "$miss_imp" ]      && echo "    ↳ missing tier imports (add to $STYLES): $miss_imp"
   [ "$impl" = FAIL ]      && echo "    ↳ Radix/asChild found (ui-react is Base UI only): $(printf '%s' "$impl_hits" | tr '\n' ' ')"
@@ -226,6 +268,7 @@ for c in $comps; do
   [ "$fig" = PARTIAL ]    && echo "    ↳ Figma link incomplete (one side missing or codeConnect path broken)"
   [ "$fig" = DRAFT ]      && echo "    ↳ Code Connect not COMPLETE ($ff)"
   [ -n "$fig_node" ]      && echo "    ↳ figma parity: spec node $fig_node, code-connect node ${cc_node:-none} — run live diff (SKILL §Figma design parity)"
+  [ "$vis" = FAIL ]       && echo "    ↳ internal/deprecated component not fully flagged:$vis_hits"
   [ -n "$prose_stale" ]   && echo "    ↳ (non-blocking) stale token names in spec prose: $(printf '%s' "$prose_stale" | tr '\n' ' ')"
   [ -n "$i18n_hits" ]     && echo "    ↳ (advisory) possible hardcoded label — confirm it's a prop default, not inlined:$i18n_hits"
   [ -n "$rtl_hits" ]      && echo "    ↳ (advisory) physical directional utility — confirm dir=\"rtl\" still renders correctly, prefer logical (ms-/me-/ps-/pe-/start-/end-):$rtl_hits"

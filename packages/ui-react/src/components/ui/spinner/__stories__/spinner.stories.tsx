@@ -3,10 +3,19 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Spinner } from '../spinner';
 
 const meta = {
-  title: 'UI/Spinner',
+  title: 'UI/Spinner [Internal, Deprecated]',
   component: Spinner,
-  parameters: { layout: 'centered' },
-  tags: ['autodocs'],
+  parameters: {
+    layout: 'centered',
+    docs: {
+      description: {
+        component:
+          '**Internal.** Not exported from the public entry point — consumed by `Loading`/`Toast`.\n\n' +
+          '**Deprecated.** Use `Loading` for a standalone loading indicator.',
+      },
+    },
+  },
+  tags: ['autodocs', 'internal', 'deprecated'],
   argTypes: {
     size: {
       control: 'inline-radio',

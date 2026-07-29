@@ -21,7 +21,25 @@
       "pattern": "^[a-z][a-z0-9-]*$",
       "description": "ui-react component dir (under src/components/ui) this spec documents, when it differs from `name` — e.g. a component whose source is colocated inside another component's folder."
     },
-    "status": { "enum": ["draft", "ready", "stable", "deprecated"] },
+    "status": { "enum": ["draft", "ready", "stable"] },
+    "visibility": {
+      "enum": ["public", "internal"],
+      "description": "public (default, importable by devs) or internal (not exported from the package root — a primitive consumed only by other components)."
+    },
+    "deprecated": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["replacement"],
+      "properties": {
+        "since": { "type": "string" },
+        "replacement": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "The `name` of the component spec that replaces this one."
+        },
+        "reason": { "type": "string" }
+      }
+    },
     "category": { "type": "string" },
     "description": { "type": "string" },
     "since": { "type": "string" },
