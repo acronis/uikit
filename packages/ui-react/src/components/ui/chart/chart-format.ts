@@ -12,11 +12,35 @@
 // unaffected. Formatters coerce to a number and pass non-numeric values through
 // untouched (a category axis stays readable if a formatter is applied to it).
 
+import type { ChartTooltipContentType } from './chart';
+
 /** A recharts-compatible tick formatter: `(value, index) => label`. */
 export type TickFormatter = (value: number | string, index?: number) => string;
 
-/** Axis knobs shared by every cartesian chart. All optional; axes show by default. */
-export interface CartesianAxisProps {
+/**
+ * Props shared by every cartesian chart (Bar, Line, Area, Composed, Scatter,
+ * ConfidenceCone, Histogram) — chrome toggles, axis titles/units, tick
+ * formatting/visibility, and grid trim. All optional. `showLegend` and `xUnit`
+ * are deliberately *not* here: `showLegend` doesn't apply to `Histogram` and
+ * `xUnit` only to charts with a numeric X axis, so they stay per-component.
+ */
+export interface CartesianChartProps {
+  /** Render the CartesianGrid. Defaults to `true`. */
+  showGrid?: boolean;
+  /** Render the hover tooltip. Defaults to `true`. */
+  showTooltip?: boolean;
+  /**
+   * Replace the default tooltip. Pass a configured `ChartTooltipContent` (from
+   * this library) — e.g. with a `formatter` / `labelFormatter` — to customize it
+   * without composing recharts yourself. Ignored when `showTooltip` is false.
+   */
+  tooltipContent?: ChartTooltipContentType;
+  /** Title rendered beneath the X axis. */
+  xAxisLabel?: string;
+  /** Title rendered beside the Y axis (rotated). */
+  yAxisLabel?: string;
+  /** Unit suffix appended to the numeric axis's tick values (recharts `unit`). */
+  yUnit?: string;
   /** Show the X axis (its ticks + title). Defaults to `true`. */
   showXAxis?: boolean;
   /** Show the Y axis (its ticks + title). Defaults to `true`. */
@@ -25,6 +49,36 @@ export interface CartesianAxisProps {
   xTickFormatter?: TickFormatter;
   /** Format each Y-axis tick value — e.g. `formatCompactNumber` or a `createTickFormatter(...)`. */
   yTickFormatter?: TickFormatter;
+  /**
+   * Rotate the X-axis tick labels by this many degrees. A negative angle (e.g.
+   * `-45`) tilts them up toward the right; the tick anchor + axis height adjust
+   * to keep long labels readable.
+   */
+  xAxisAngle?: number;
+  /**
+   * X-axis tick density — a fixed number (show every Nth tick), or a recharts
+   * placement strategy that thins ticks while keeping the ends legible.
+   */
+  xAxisInterval?:
+    | number
+    | 'preserveStart'
+    | 'preserveEnd'
+    | 'preserveStartEnd'
+    | 'equidistantPreserveStart';
+  /** Desired number of Y-axis ticks (recharts `tickCount`; treated as a hint, not exact). */
+  yAxisTickCount?: number;
+  /**
+   * Y-axis domain preset: `auto` (recharts' padded default), `dataMin-dataMax`
+   * (tight to the data), or `zero` (anchor the axis at 0). Applies to the
+   * numeric Y axis.
+   */
+  yAxisDomain?: 'auto' | 'dataMin-dataMax' | 'zero';
+  /** Draw grid lines dashed instead of solid. */
+  gridDashed?: boolean;
+  /** Show horizontal grid lines. Defaults to each chart's own default when unset. */
+  gridHorizontal?: boolean;
+  /** Show vertical grid lines. Defaults to each chart's own default when unset. */
+  gridVertical?: boolean;
 }
 
 const toNumber = (value: number | string): number | null => {

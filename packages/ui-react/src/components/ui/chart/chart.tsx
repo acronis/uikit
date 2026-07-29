@@ -151,6 +151,11 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
+/** The `content` a caller passes to override the default tooltip (recharts' `Tooltip['content']`). */
+export type ChartTooltipContentType = React.ComponentProps<
+  typeof ChartTooltip
+>['content'];
+
 function ChartTooltipContent({
   active,
   payload,

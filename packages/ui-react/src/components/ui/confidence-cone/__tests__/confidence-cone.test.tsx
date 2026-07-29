@@ -43,11 +43,18 @@ describe('ConfidenceCone', () => {
   // Axis visibility + tick formatting forward to recharts' XAxis/YAxis `hide` /
   // `tickFormatter`. happy-dom can't lay out recharts ticks (the visuals are
   // covered by the axis-formatting VR stories), so assert it renders cleanly.
-  it('renders with axis toggles and a tick formatter', () => {
+  it('renders with axis/grid config and tick formatters', () => {
     const { container } = renderChart({
       showXAxis: false,
       showYAxis: true,
       yTickFormatter: (value) => `$${value}`,
+      xAxisAngle: -45,
+      xAxisInterval: 'preserveStartEnd',
+      yAxisTickCount: 4,
+      yAxisDomain: 'zero',
+      gridDashed: true,
+      gridHorizontal: true,
+      gridVertical: false,
     });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });

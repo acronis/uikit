@@ -9,4 +9,9 @@ Add axis visibility toggles and tick value formatting to the cartesian charts
 format tick values. Ships shared `formatCompactNumber` (thousands/millions),
 `formatPercent`, and a `createTickFormatter(Intl.NumberFormatOptions)` factory
 (for currency, fixed decimals, locales) — any function is also a valid
-formatter. Defaults preserve existing rendering.
+formatter. Also adds `xAxisAngle`, `xAxisInterval`, `yAxisTickCount`,
+`yAxisDomain` (`auto`/`dataMin-dataMax`/`zero`), and `gridDashed` /
+`gridHorizontal` / `gridVertical` for tick placement, domain, and grid trim.
+These shared props live on a common `CartesianChartProps` interface (which also
+now carries the previously per-chart `showGrid` / `showTooltip` / `xAxisLabel` /
+`yAxisLabel` / `yUnit` / `tooltipContent`). Defaults preserve existing rendering.

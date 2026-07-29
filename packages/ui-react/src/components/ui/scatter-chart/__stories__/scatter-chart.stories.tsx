@@ -96,6 +96,17 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// New shared axis/grid knobs: rotated X ticks, a zero-anchored Y domain, a
+// fixed Y tick count, and a dashed grid. See "Formatting and hiding axes".
+export const AxisAndGridConfig: Story = {
+  args: {
+    xAxisAngle: -45,
+    yAxisDomain: 'zero',
+    yAxisTickCount: 4,
+    gridDashed: true,
+  },
+};
+
 // Two groups plotted as points on shared x/y axes.
 export const Grouped: Story = {};
 

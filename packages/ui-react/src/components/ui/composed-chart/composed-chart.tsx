@@ -19,7 +19,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-  type CartesianAxisProps,
+  type CartesianChartProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. A composed
@@ -38,7 +38,7 @@ export interface ComposedSeries {
 
 export interface ComposedChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    CartesianAxisProps {
+    CartesianChartProps {
   /** Row-per-category data. Each object holds `xKey` + one numeric field per series. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -52,28 +52,13 @@ export interface ComposedChartProps
   series: ComposedSeries[];
   /** Category axis key (the shared dimension across rows, e.g. `"month"`). */
   xKey: string;
-  /** Title rendered beneath the horizontal (X) axis. */
-  xAxisLabel?: string;
-  /** Title rendered beside the vertical (Y) axis (rotated). */
-  yAxisLabel?: string;
-  /** Unit suffix appended to Y-axis tick values (recharts `unit`; the X axis is categorical). */
-  yUnit?: string;
   /** Interpolation for the line and area series. */
   curve?: 'linear' | 'monotone' | 'step';
   /** Corner radius on the growing end of bar series. */
   barRadius?: number;
   /** Flat-fill opacity for area series. */
   fillOpacity?: number;
-  showGrid?: boolean;
-  showTooltip?: boolean;
   showLegend?: boolean;
-  /**
-   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
-   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` /
-   * `indicator` — to customize formatting, per-series rows, or extra fields
-   * without composing recharts yourself. Ignored when `showTooltip` is false.
-   */
-  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
@@ -97,6 +82,13 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       showYAxis = true,
       xTickFormatter,
       yTickFormatter,
+      xAxisAngle,
+      xAxisInterval,
+      yAxisTickCount,
+      yAxisDomain,
+      gridDashed,
+      gridHorizontal,
+      gridVertical,
       tooltipContent,
       ...props
     },
@@ -117,6 +109,13 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
         }
       : undefined;
 
+    const yDomain: React.ComponentProps<typeof YAxis>['domain'] =
+      yAxisDomain === 'zero'
+        ? [0, 'auto']
+        : yAxisDomain === 'dataMin-dataMax'
+          ? ['dataMin', 'dataMax']
+          : undefined;
+
     return (
       <div ref={ref} className={cn(className)} {...props}>
         <ChartContainer
@@ -124,7 +123,13 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RechartsComposedChart data={data as readonly unknown[]}>
-            {showGrid && <CartesianGrid vertical={false} />}
+            {showGrid && (
+              <CartesianGrid
+                horizontal={gridHorizontal ?? true}
+                vertical={gridVertical ?? false}
+                strokeDasharray={gridDashed ? '3 3' : undefined}
+              />
+            )}
             <XAxis
               dataKey={xKey}
               type="category"
@@ -133,7 +138,12 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
               axisLine={false}
               tickMargin={8}
               tickFormatter={xTickFormatter}
-              height={xAxisLabel ? 48 : undefined}
+              angle={xAxisAngle}
+              interval={xAxisInterval}
+              textAnchor={
+                xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
+              }
+              height={xAxisLabel ? 48 : xAxisAngle != null ? 50 : undefined}
               label={xAxisTitle}
             />
             <YAxis
@@ -143,6 +153,8 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
               axisLine={false}
               unit={yUnit}
               tickFormatter={yTickFormatter}
+              tickCount={yAxisTickCount}
+              domain={yDomain}
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />
