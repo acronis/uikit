@@ -22,6 +22,7 @@ import {
   type ChartConfig,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
+  type CartesianAxisProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
@@ -104,7 +105,8 @@ export function createBandStrippedTooltip(tooltipContent: TooltipContentType) {
 
 export interface LineChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    VariantProps<typeof lineChartVariants> {
+    VariantProps<typeof lineChartVariants>,
+    CartesianAxisProps {
   /** Row-per-point data. Each object holds the category key + one numeric field per series (`null` breaks the line unless `connectNulls`). */
   data: ReadonlyArray<Record<string, string | number | null>>;
   /**
@@ -178,6 +180,10 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      showXAxis = true,
+      showYAxis = true,
+      xTickFormatter,
+      yTickFormatter,
       tooltipContent,
       ...props
     },
@@ -253,17 +259,21 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
             <XAxis
               dataKey={xKey}
               type="category"
+              hide={!showXAxis}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              tickFormatter={xTickFormatter}
               height={xAxisLabel ? 48 : undefined}
               label={xAxisTitle}
             />
             <YAxis
               type="number"
+              hide={!showYAxis}
               tickLine={false}
               axisLine={false}
               unit={yUnit}
+              tickFormatter={yTickFormatter}
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />

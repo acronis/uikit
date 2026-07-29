@@ -75,8 +75,8 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
   lowerKey="lower"
   upperKey="upper"
   xAxisLabel="Month"
-  yAxisLabel="Revenue"
-  yUnit="k"
+  yAxisLabel="Storage"
+  yUnit="GB"
 />
 ```
 
@@ -103,6 +103,28 @@ import { ConfidenceCone, ChartTooltipContent } from '@acronis-platform/ui-react'
       formatter={(value, name) => `${name}: ${value.toLocaleString()}`}
     />
   }
+/>;
+```
+
+Format the tick values with `xTickFormatter` / `yTickFormatter`, or hide an axis
+with `showXAxis` / `showYAxis` — the shared axis knobs described under
+[Formatting and hiding axes](/components/chart#formatting-and-hiding-axes). This is
+how an MRR axis reads as `$146.5K`:
+
+```tsx
+import { ConfidenceCone, createTickFormatter } from '@acronis-platform/ui-react';
+
+<ConfidenceCone
+  config={config}
+  data={data}
+  xKey="month"
+  actualKey="actual"
+  forecastKey="forecast"
+  lowerKey="lower"
+  upperKey="upper"
+  yTickFormatter={createTickFormatter({
+    style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1,
+  })}
 />;
 ```
 

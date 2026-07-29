@@ -22,6 +22,7 @@ import {
   type ChartConfig,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
+  type CartesianAxisProps,
 } from '../chart';
 
 // A forecast confidence-cone: a solid line over the known/actual period, a
@@ -79,7 +80,8 @@ export function createConeTooltip(tooltipContent: TooltipContentType) {
 }
 
 export interface ConfidenceConeProps
-  extends Omit<React.ComponentProps<'div'>, 'children'> {
+  extends Omit<React.ComponentProps<'div'>, 'children'>,
+    CartesianAxisProps {
   /**
    * Row-per-point data — the shared x dimension plus the actual / forecast /
    * bound fields. Rows are naturally sparse (a point has either an actual or a
@@ -152,6 +154,10 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      showXAxis = true,
+      showYAxis = true,
+      xTickFormatter,
+      yTickFormatter,
       tooltipContent,
       ...props
     },
@@ -208,17 +214,21 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
             <XAxis
               dataKey={xKey}
               type="category"
+              hide={!showXAxis}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              tickFormatter={xTickFormatter}
               height={xAxisLabel ? 48 : undefined}
               label={xAxisTitle}
             />
             <YAxis
               type="number"
+              hide={!showYAxis}
               tickLine={false}
               axisLine={false}
               unit={yUnit}
+              tickFormatter={yTickFormatter}
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />

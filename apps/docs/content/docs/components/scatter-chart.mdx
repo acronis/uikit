@@ -115,6 +115,25 @@ import { ScatterChart, ChartTooltipContent } from '@acronis-platform/ui-react';
 />;
 ```
 
+Format the tick values with `xTickFormatter` / `yTickFormatter`, or hide an axis
+with `showXAxis` / `showYAxis` — the shared axis knobs described under
+[Formatting and hiding axes](/components/chart#formatting-and-hiding-axes). A
+formatter can map numbers to labels, which the `unit` suffix can't:
+
+```tsx
+import { ScatterChart } from '@acronis-platform/ui-react';
+
+<ScatterChart
+  config={config}
+  series={series}
+  xKey="hours"
+  yKey="score"
+  yTickFormatter={(score) =>
+    Number(score) >= 80 ? 'High' : Number(score) >= 60 ? 'Mid' : 'Low'
+  }
+/>;
+```
+
 ## API Reference
 
 <AutoTypeTable

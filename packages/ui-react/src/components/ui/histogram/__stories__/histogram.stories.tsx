@@ -173,3 +173,9 @@ export const TooltipOpen: Story = {
     );
   },
 };
+
+// Hide the frequency (Y) axis with `showYAxis` for a cleaner distribution
+// shape — not something a `unit` suffix can do.
+export const HiddenYAxis: Story = {
+  args: { showYAxis: false },
+};

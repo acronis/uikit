@@ -130,8 +130,8 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
   dataKeys={['desktop', 'mobile']}
   xKey="month"
   xAxisLabel="Month"
-  yAxisLabel="Sessions"
-  yUnit="k"
+  yAxisLabel="Response time"
+  yUnit="ms"
 />
 ```
 
@@ -156,6 +156,27 @@ import { LineChart, ChartTooltipContent } from '@acronis-platform/ui-react';
       formatter={(value, name) => `${name}: ${value.toLocaleString()}k`}
     />
   }
+/>;
+```
+
+Format the tick values with `xTickFormatter` / `yTickFormatter`, or hide an axis
+with `showXAxis` / `showYAxis` — the shared axis knobs described under
+[Formatting and hiding axes](/components/chart#formatting-and-hiding-axes). Unlike
+`unit`, a formatter _transforms_ the value (abbreviate, currency, map to a label);
+hiding both axes gives a sparkline:
+
+```tsx
+import { LineChart, createTickFormatter } from '@acronis-platform/ui-react';
+
+// Compact currency — 146500 → "$146.5K"
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  yTickFormatter={createTickFormatter({
+    style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1,
+  })}
 />;
 ```
 

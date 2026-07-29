@@ -32,6 +32,18 @@ function renderChart(
 }
 
 describe('ComposedChart', () => {
+  // Axis visibility + tick formatting forward to recharts' XAxis/YAxis `hide` /
+  // `tickFormatter`. happy-dom can't lay out recharts ticks (the visuals are
+  // covered by the axis-formatting VR stories), so assert it renders cleanly.
+  it('renders with axis toggles and a tick formatter', () => {
+    const { container } = renderChart({
+      showXAxis: false,
+      showYAxis: true,
+      yTickFormatter: (value) => `$${value}`,
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
   it('renders the shared chart wrapper', () => {
     const { container } = renderChart();
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();

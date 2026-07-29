@@ -19,6 +19,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
+  type CartesianAxisProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. A composed
@@ -36,7 +37,8 @@ export interface ComposedSeries {
 }
 
 export interface ComposedChartProps
-  extends Omit<React.ComponentProps<'div'>, 'children'> {
+  extends Omit<React.ComponentProps<'div'>, 'children'>,
+    CartesianAxisProps {
   /** Row-per-category data. Each object holds `xKey` + one numeric field per series. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -91,6 +93,10 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      showXAxis = true,
+      showYAxis = true,
+      xTickFormatter,
+      yTickFormatter,
       tooltipContent,
       ...props
     },
@@ -122,17 +128,21 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
             <XAxis
               dataKey={xKey}
               type="category"
+              hide={!showXAxis}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              tickFormatter={xTickFormatter}
               height={xAxisLabel ? 48 : undefined}
               label={xAxisTitle}
             />
             <YAxis
               type="number"
+              hide={!showYAxis}
               tickLine={false}
               axisLine={false}
               unit={yUnit}
+              tickFormatter={yTickFormatter}
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />
