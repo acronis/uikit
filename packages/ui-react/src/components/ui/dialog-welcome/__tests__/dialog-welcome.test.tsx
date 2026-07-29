@@ -246,6 +246,32 @@ describe('DialogWelcome', () => {
     expect(screen.getByText('Second feature')).toBeInTheDocument();
   });
 
+  it('fires onSelectedIndexChange exactly once per controlled navigation', async () => {
+    const user = userEvent.setup();
+    const onSelectedIndexChange = vi.fn();
+    function ControlledWrapper() {
+      const [selectedIndex, setSelectedIndex] = useState(2);
+      return (
+        <DialogWelcome
+          open
+          slides={SLIDES}
+          selectedIndex={selectedIndex}
+          onSelectedIndexChange={(index) => {
+            onSelectedIndexChange(index);
+            setSelectedIndex(index);
+          }}
+        />
+      );
+    }
+    render(<ControlledWrapper />);
+    onSelectedIndexChange.mockClear();
+
+    await user.click(screen.getByRole('button', { name: 'Back' }));
+
+    expect(onSelectedIndexChange).toHaveBeenCalledTimes(1);
+    expect(onSelectedIndexChange).toHaveBeenCalledWith(1);
+  });
+
   it('fires onSelectedIndexChange exactly once on mount', () => {
     const onSelectedIndexChange = vi.fn();
     render(

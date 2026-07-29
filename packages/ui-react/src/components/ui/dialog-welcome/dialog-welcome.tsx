@@ -156,14 +156,25 @@ function useDialogWelcomeCarousel({
     if (!emblaApi) return;
     const onSelect = () => {
       const index = emblaApi.selectedScrollSnap();
-      if (isControlledRef.current && !onSelectedIndexChangeRef.current) {
-        // Embla is draggable regardless of controlled state, so a swipe can
-        // still move it physically even though clicks are correctly no-ops
-        // in this configuration (controlled with no way to move the prop
-        // forward). Snap back instead of leaving the visible slide diverged
-        // from the one carrying the dialog's accessible name.
+      if (isControlledRef.current) {
+        if (!onSelectedIndexChangeRef.current) {
+          // Embla is draggable regardless of controlled state, so a swipe can
+          // still move it physically even though clicks are correctly no-ops
+          // in this configuration (controlled with no way to move the prop
+          // forward). Snap back instead of leaving the visible slide diverged
+          // from the one carrying the dialog's accessible name.
+          if (index !== selectedIndexRef.current) {
+            emblaApi.scrollTo(selectedIndexRef.current, true);
+          }
+          return;
+        }
+        // A click/dot handler reports the new index directly, then the resync
+        // effect below drives Embla to match via `scrollTo`, which re-emits
+        // this same `select` event. Only forward it when it disagrees with
+        // the last known controlled index, or a single navigation double-
+        // fires the consumer's `onSelectedIndexChange` (e.g. analytics).
         if (index !== selectedIndexRef.current) {
-          emblaApi.scrollTo(selectedIndexRef.current, true);
+          onSelectedIndexChangeRef.current(index);
         }
         return;
       }
