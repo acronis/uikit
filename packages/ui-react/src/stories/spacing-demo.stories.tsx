@@ -5,8 +5,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 // JS from this file ships. Mirrors `breakpoints-demo.stories.tsx`: it exists
 // so design/QA can see the effect of the framework-agnostic
 // `.ui-p-*`/`.ui-m-*`/`.ui-gap-*` spacing utility classes (generated from the
-// `spacing.*` semantic tokens) at every scale step, and doubles as a visual
-// regression net for this feature going forward. Colors/borders below are
+// `units.gap` primitive scale via dedicated build code, not a semantic token)
+// at every scale step, and doubles as a visual regression net for this
+// feature going forward. Colors/borders below are
 // plain CSS (a `<style>` block), not Tailwind palette utilities — Tailwind's
 // source scanning isn't scoped to the lib build's `__stories__` glob, so any
 // `bg-blue-500`-style utility written here would still be extracted as a
@@ -95,8 +96,8 @@ const meta: Meta<typeof SpacingDemo> = {
       description: {
         component:
           'Live demo of the `.ui-p-*`/`.ui-m-*`/`.ui-gap-*` (+ `.ui-mx-auto`) ' +
-          'spacing utility classes, generated from the `spacing.*` semantic ' +
-          'tokens for framework-agnostic (non-Tailwind) consumers. One row ' +
+          'spacing utility classes, generated from the `units.gap` primitive ' +
+          'scale for framework-agnostic (non-Tailwind) consumers. One row ' +
           'per scale step.',
       },
     },

@@ -15,8 +15,6 @@
 
 import type { TransformedToken } from 'style-dictionary/types';
 
-import { spacingUtilityClasses } from './spacing-utility-classes';
-
 export const CSS_LIGHT_DARK = 'css/light-dark';
 
 /** Resolved declarations of one token slice, keyed for rendering and diffing. */
@@ -57,11 +55,6 @@ export function collectDecls(
         classes.set(`.${token.name}`, token.$value);
       } else {
         skipped.push(`${token.name} (typography)`);
-      }
-    } else if (token.path[0] === 'spacing' && typeof token.$value === 'string') {
-      vars.set(token.name, token.$value);
-      for (const [selector, block] of spacingUtilityClasses(token.name, token.path[1])) {
-        classes.set(selector, block);
       }
     } else if (typeof token.$value === 'string') {
       // dimension / scalar / gradient — already CSS-ready (theme-invariant).

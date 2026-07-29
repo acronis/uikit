@@ -1,7 +1,9 @@
-// Framework-agnostic spacing utility classes, generated from the `spacing.*`
-// semantic tokens for consumers who don't extend the Tailwind preset (see
-// context/output.md). Mirrors the `{property}{direction}-{size}` grammar
-// Tailwind's own engine derives for free once a preset key exists.
+// Framework-agnostic margin/padding/gap utility classes, generated from the
+// `units.gap.*` primitive scale (via the dedicated build code in `tokens.ts`,
+// not the normal semantic-alias pipeline — see context/output.md) for
+// consumers who don't extend the Tailwind preset. Mirrors the
+// `{property}{direction}-{size}` grammar Tailwind's own engine derives for
+// free once a preset key exists.
 
 const PADDING_DIRECTIONS: Record<string, string> = {
   p: 'padding',
@@ -34,12 +36,12 @@ const GAP_DIRECTIONS: Record<string, string> = {
 };
 
 /**
- * Selector→block entries for one resolved spacing token: the full padding,
+ * Selector→block entries for one resolved gap size: the full padding,
  * margin, and gap grammar at that size, all referencing the same custom
- * property so a brand override (were spacing ever to gain one) only needs to
+ * property so a brand override (were gap ever to gain one) only needs to
  * change the variable, not every class.
  */
-export function spacingUtilityClasses(varName: string, sizeKey: string): Map<string, string> {
+export function gapUtilityClasses(varName: string, sizeKey: string): Map<string, string> {
   const classes = new Map<string, string>();
   const value = `var(--${varName})`;
 
@@ -55,6 +57,6 @@ export function spacingUtilityClasses(varName: string, sizeKey: string): Map<str
 }
 
 /** Static, non-token-driven utility emitted once per build (not per size). */
-export const STATIC_SPACING_CLASSES: ReadonlyMap<string, string> = new Map([
+export const STATIC_GAP_CLASSES: ReadonlyMap<string, string> = new Map([
   ['.ui-mx-auto', 'margin-inline: auto;'],
 ]);

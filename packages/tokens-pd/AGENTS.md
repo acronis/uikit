@@ -59,18 +59,21 @@ Three top-level dirs — `css/`, `tailwind/`, `dtcg/`:
   Tailwind's role-namespaced model — colors land in `backgroundColor`/`textColor`/
   `borderColor`/`fill`/`ringColor` with the role word and `ui-` prefix dropped
   (`bg-surface-primary`, `fill-on-surface-primary`, `ring-brand`); gradients in
-  `backgroundImage` (`bg-ai-idle`); dimensions land in `spacing` keyed
-  `spacing-<n>` (`p-spacing-8`, `gap-x-spacing-16`) — deliberately not bare `<n>`,
-  so it never collides with Tailwind's own default numeric spacing scale. The
-  semantic vocabulary and each component ship as **separate** presets so
-  component utilities stay opt-in.
-- **Spacing utilities.** `spacing.*` semantic tokens (aliasing the `units.gap`
-  primitive scale) emit three ways: `--ui-spacing-*` custom properties,
-  framework-agnostic `.ui-p-*`/`.ui-px-*`/`.ui-py-*`/`.ui-pt-*`/`.ui-pb-*`/
-  `.ui-pl-*`/`.ui-pr-*` (padding), the same seven for `m`/margin, `.ui-gap-*`/
-  `.ui-gap-x-*`/`.ui-gap-y-*`, plus a static `.ui-mx-auto` — and the
-  `spacing-*` Tailwind preset keys above. Not brand-dependent, so non-default
-  brand override files carry no spacing entries.
+  `backgroundImage` (`bg-ai-idle`); component dimensions land in `spacing` keyed
+  `<component>-<part>` (`p-button-global-gap`). The semantic vocabulary and each
+  component ship as **separate** presets so component utilities stay opt-in.
+- **Spacing/gap utilities.** Generated directly from the `units.gap` **primitive**
+  scale by dedicated build code in the tool (`tokens.ts`'s `resolveGapTokens` +
+  `hooks/formats/gap-utility-classes.ts`) — not a semantic token; `design-tokens/
+tiers/*.json` is Figma-sourced only and there is no `spacing` group in Figma,
+  only `gap`. Emits three ways: `--ui-gap-*` custom properties, framework-agnostic
+  `.ui-p-*`/`.ui-px-*`/`.ui-py-*`/`.ui-pt-*`/`.ui-pb-*`/`.ui-pl-*`/`.ui-pr-*`
+  (padding), the same seven for `m`/margin, `.ui-gap-*`/`.ui-gap-x-*`/
+  `.ui-gap-y-*`, plus a static `.ui-mx-auto` — and `gap-<n>` keys (`p-gap-8`,
+  `gap-x-gap-16`) in the shared semantic Tailwind preset's `spacing` namespace,
+  deliberately not bare `<n>` so it never collides with Tailwind's own default
+  numeric spacing scale. Not brand-dependent, so non-default brand override files
+  carry no gap entries.
 
 See `../../context/releasing.md` for the Changesets / publish flow. The tool's
 own conventions live in [`../../tools/style-dictionary/AGENTS.md`](../../tools/style-dictionary/AGENTS.md).

@@ -74,12 +74,17 @@ Colors are always wrapped in `light-dark()`, even when both modes resolve to the
 same value. Gradients, dimensions, and typography are mode-invariant, so they
 appear once with a single value.
 
-## Spacing utility classes
+## Gap utility classes
 
-Every `spacing.*` semantic token also emits a full padding/margin/gap utility
-grammar, in addition to its `--ui-spacing-*` custom property — for
-framework-agnostic (non-Tailwind) consumers who can't extend a Tailwind
-preset. `spacingUtilityClasses` (`hooks/formats/spacing-utility-classes.ts`)
+Every numeric `units.gap.*` **primitive** size also emits a full
+padding/margin/gap utility grammar, in addition to its `--ui-gap-*` custom
+property — for framework-agnostic (non-Tailwind) consumers who can't extend a
+Tailwind preset. This is **not** a semantic token: `design-tokens/tiers/*.json`
+is Figma-sourced only (there is no `spacing` group in Figma, only `gap`), so
+`tokens.ts`'s `resolveGapTokens` reads `units.gap.*` directly — bypassing
+`isEmittableToken`'s primitive-root filter — and feeds it into `buildCss`'s
+`semantics` slice via dedicated code, the same way `STATIC_GAP_CLASSES` is
+special-cased. `gapUtilityClasses` (`hooks/formats/gap-utility-classes.ts`)
 derives the `{property}{direction}-{size}` classes Tailwind's own engine would
 generate for free once a preset key exists:
 
@@ -113,7 +118,11 @@ object (`{ theme: { extend: … } }`) consumed via `@config`. Values are
 **baked** resolved literals (colors as `light-dark()`, gradients into
 `backgroundImage`, typography into `fontSize`/`fontFamily`, dimensions into
 `spacing`/`borderRadius`), keyed with the `ui-` prefix — so a preset is
-self-contained (no `--ui-*` dependency) and brand selection is build-time.
+self-contained (no `--ui-*` dependency) and brand selection is build-time. The
+shared semantic (`tokens`) preset also gets `gap-<n>` keys merged into its
+`spacing` namespace directly from `resolveGapTokens`, independent of the
+token-driven `buildThemeExtend` pass above (`units.gap` isn't a normal token
+in the resolved stream — see "Gap utility classes").
 
 The color/gradient → Tailwind-namespace routing (which theme namespace a token
 lands in — `backgroundColor`, `textColor`, `borderColor`, `fill`, `ringColor`,

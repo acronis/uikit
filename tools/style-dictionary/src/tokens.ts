@@ -24,7 +24,7 @@ import type { Config, TransformedToken } from 'style-dictionary/types';
 import { STATIC_HOOKS } from './hooks';
 import { isEmittableToken } from './hooks/filters/semantic-only';
 import { collectDecls, type Decls, serializeCss } from './hooks/formats/css-light-dark';
-import { STATIC_SPACING_CLASSES } from './hooks/formats/spacing-utility-classes';
+import { gapUtilityClasses, STATIC_GAP_CLASSES } from './hooks/formats/gap-utility-classes';
 import { normalizeTree } from './hooks/preprocessors/acronis-dtcg';
 import { ACRONIS_CSS_GROUP } from './hooks/transforms';
 import {
@@ -273,6 +273,39 @@ export async function resolveTokens(
   return allTokens.filter(isEmittableToken);
 }
 
+/**
+ * Resolve `units.gap.*` primitives directly — bypassing `resolveTokens`'s
+ * `isEmittableToken` filter, which drops the `units` primitive root from every
+ * normal CSS/Tailwind output (that filter stays as-is; this reads the platform
+ * tokens before it applies, the same way `STATIC_SPACING_CLASSES` used to be
+ * special-cased). Gap sizes carry no brand/theme axis (a single mode-invariant
+ * `$value` per size), so a single primitives-light read is enough. Only
+ * numeric size keys (`0`, `2`, … `96`) are collected — the primitive scale also
+ * carries non-numeric variants (e.g. `neg-6`) that component tokens alias
+ * directly; those aren't part of this utility scale.
+ */
+export async function resolveGapTokens(filter: Filter): Promise<Map<string, string>> {
+  const key: PlatformKey = `${filter}-css`;
+  const sd = makeSd({
+    tokens: readView('primitives-light'),
+    platforms: { [key]: { transformGroup: ACRONIS_CSS_GROUP } },
+  });
+  const { allTokens } = await sd.getPlatformTokens(key);
+
+  const gap = new Map<string, string>();
+  for (const token of allTokens) {
+    if (
+      token.path[0] === 'units' &&
+      token.path[1] === 'gap' &&
+      /^\d+$/.test(token.path[2]) &&
+      typeof token.$value === 'string'
+    ) {
+      gap.set(token.path[2], token.$value);
+    }
+  }
+  return gap;
+}
+
 /** Resolve a theme to a `path → value` map of its color tokens (already `rgb()`). */
 export async function resolveColorMap(
   filter: Filter,
@@ -319,6 +352,11 @@ function cleanCssOutputs(): void {
 export async function buildCss(filter: Filter): Promise<void> {
   cleanCssOutputs();
 
+  // `units.gap.*` has no brand/theme axis, so resolve it once and reuse it
+  // identically across every brand below (mirrors how STATIC_GAP_CLASSES is
+  // added once per brand rather than to the default only).
+  const gapTokens = await resolveGapTokens(filter);
+
   // brand → slice → resolved declarations.
   const perBrand = new Map<string, Map<string, Decls>>();
   for (const brand of BRANDS) {
@@ -335,11 +373,19 @@ export async function buildCss(filter: Filter): Promise<void> {
 
     const decls = new Map<string, Decls>();
     for (const [slice, toks] of bySlice) decls.set(slice, collectDecls(toks, darkColors));
-    // Static, non-token-driven utility — added once per brand (identically) so
-    // it renders in the base file but never shows up as a brand-override diff.
+    // Static, non-token-driven utility + the units.gap-derived vars/classes —
+    // added once per brand (identically) so they render in the base file but
+    // never show up as a brand-override diff.
     const semantics = decls.get('semantics');
     if (semantics) {
-      for (const [selector, block] of STATIC_SPACING_CLASSES) semantics.classes.set(selector, block);
+      for (const [selector, block] of STATIC_GAP_CLASSES) semantics.classes.set(selector, block);
+      for (const [sizeKey, pxValue] of gapTokens) {
+        const varName = `ui-gap-${sizeKey}`;
+        semantics.vars.set(varName, pxValue);
+        for (const [selector, block] of gapUtilityClasses(varName, sizeKey)) {
+          semantics.classes.set(selector, block);
+        }
+      }
     }
     perBrand.set(brand.name, decls);
   }

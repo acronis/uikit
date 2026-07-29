@@ -22,7 +22,7 @@ Output is grouped into three top-level directories — `css/`, `tailwind/`, `dtc
 | `css/deep_sky_itkontoret.css`                | semantic  | Non-default brand — only the tokens that differ from `default`                                       |
 | `css/<component>/default.css`                | component | Default brand — that component's tokens (`button/`, `tooltip/`, …)                                   |
 | `css/<component>/deep_sky_itkontoret.css`    | component | Non-default brand — only the component tokens that differ                                            |
-| `tailwind/<brand>/tokens.js`                 | semantic  | Tailwind preset of the shared semantic vocabulary (**baked** values), incl. `spacing-*` keys         |
+| `tailwind/<brand>/tokens.js`                 | semantic  | Tailwind preset of the shared semantic vocabulary (**baked** values), incl. `gap-*` keys             |
 | `tailwind/<brand>/components/<component>.js` | component | One preset per component — opt-in, so its utilities aren't suggested globally                        |
 | `dtcg/*.json`                                | —         | The 100%-DTCG intermediate (per-mode), for generic DTCG tooling                                      |
 
@@ -77,9 +77,11 @@ package — it is a published home for the tool's token output.
 
 - Colors (incl. `light-dark()` theming and gradients as `linear-gradient(...)`),
   typography utility classes, spacing (margin/padding/gap), and component dimensions.
-- Spacing ships three ways from the same `spacing.*` semantic tokens: `--ui-spacing-*`
-  custom properties, framework-agnostic `.ui-p-*`/`.ui-m-*`/`.ui-gap-*` utility classes
-  (plus `.ui-mx-auto`), and `spacing-*` Tailwind preset keys (e.g. `p-spacing-8`,
-  `gap-x-spacing-16`) — not brand-dependent, so it carries no override-file entries.
+- Spacing ships three ways, generated directly from the `units.gap` **primitive**
+  scale by dedicated build code (not a semantic token — see the tool's
+  `context/output.md`): `--ui-gap-*` custom properties, framework-agnostic
+  `.ui-p-*`/`.ui-m-*`/`.ui-gap-*` utility classes (plus `.ui-mx-auto`), and `gap-*`
+  Tailwind preset keys (e.g. `p-gap-8`, `gap-x-gap-16`) — not brand-dependent, so it
+  carries no override-file entries.
 - Non-default brands are emitted as **override-only** files: a token appears in
   `deep_sky_itkontoret.css` only when its value differs from `default` or is new in that brand.

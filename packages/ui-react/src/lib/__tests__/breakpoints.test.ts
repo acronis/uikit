@@ -8,8 +8,6 @@ import {
   BREAKPOINT_3XL,
   BREAKPOINT_4XL,
   BREAKPOINT_LG,
-  BREAKPOINT_MD,
-  BREAKPOINT_SM,
   BREAKPOINT_XL,
   getViewportWidth,
   ROOT_FONT_SIZE_PX,
@@ -32,8 +30,6 @@ function readRootPx(name: string): number {
 
 describe('breakpoints', () => {
   it('matches the px values pinned in src/styles/index.css', () => {
-    expect(BREAKPOINT_SM).toBe(640);
-    expect(BREAKPOINT_MD).toBe(768);
     expect(BREAKPOINT_LG).toBe(1024);
     expect(BREAKPOINT_XL).toBe(1280);
     expect(BREAKPOINT_2XL).toBe(1440);
@@ -50,8 +46,6 @@ describe('breakpoints', () => {
   });
 
   it('matches the --ui-breakpoint-* :root/:host block in src/styles/index.css', () => {
-    expect(BREAKPOINT_SM).toBe(readRootPx('sm'));
-    expect(BREAKPOINT_MD).toBe(readRootPx('md'));
     expect(BREAKPOINT_LG).toBe(readRootPx('lg'));
     expect(BREAKPOINT_XL).toBe(readRootPx('xl'));
     expect(BREAKPOINT_2XL).toBe(readRootPx('2xl'));
