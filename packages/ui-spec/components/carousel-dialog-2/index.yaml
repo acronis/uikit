@@ -9,7 +9,10 @@ description: >-
   `Next`/call-to-action button. Parallel to a future carousel primitive, not
   yet renamed/kept. Pure controls — no Embla import; the slide count/index/
   callbacks are threaded down from `DialogWelcome2`, which owns the carousel
-  engine.
+  engine. Deliberately NOT exported from `@acronis-platform/ui-react`'s public
+  entry point — it is an internal primitive consumed only by
+  `DialogFooterCarousel2`. Apps building a welcome/onboarding carousel dialog
+  should use `DialogWelcome2` instead.
 since: 0.58.0
 dependencies:
   components:

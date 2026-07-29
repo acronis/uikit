@@ -12,6 +12,9 @@ import { Button } from '../button';
 // a `Next`/call-to-action button (`boxRight`). Pure controls — no Embla import
 // here; the slide count/index/callbacks are threaded down from
 // `DialogWelcome2`, which owns the carousel engine.
+//
+// Internal only — not exported from the package's public entry point. Apps
+// building a welcome/onboarding carousel dialog should use `DialogWelcome2`.
 
 export type CarouselDialog2Variant = 'first' | 'middle' | 'last';
 
