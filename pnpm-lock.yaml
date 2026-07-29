@@ -317,6 +317,9 @@ importers:
       '@acronis-platform/icons-react':
         specifier: workspace:*
         version: link:../../packages/icons-react
+      '@acronis-platform/shadcn-uikit':
+        specifier: workspace:*
+        version: link:../../packages/ui-legacy
       '@acronis-platform/ui-react':
         specifier: workspace:*
         version: link:../../packages/ui-react
