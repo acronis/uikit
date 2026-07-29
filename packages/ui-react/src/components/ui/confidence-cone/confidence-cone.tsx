@@ -22,7 +22,7 @@ import {
   type ChartConfig,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
-  type CartesianAxisProps,
+  type CartesianChartProps,
 } from '../chart';
 
 // A forecast confidence-cone: a solid line over the known/actual period, a
@@ -81,7 +81,7 @@ export function createConeTooltip(tooltipContent: TooltipContentType) {
 
 export interface ConfidenceConeProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    CartesianAxisProps {
+    CartesianChartProps {
   /**
    * Row-per-point data — the shared x dimension plus the actual / forecast /
    * bound fields. Rows are naturally sparse (a point has either an actual or a
@@ -107,12 +107,6 @@ export interface ConfidenceConeProps
   lowerKey: string;
   /** Field for the cone's upper bound. */
   upperKey: string;
-  /** Title rendered beneath the horizontal (X) axis. */
-  xAxisLabel?: string;
-  /** Title rendered beside the vertical (Y) axis (rotated). */
-  yAxisLabel?: string;
-  /** Unit suffix appended to Y-axis tick values (recharts `unit`; the X axis is categorical). */
-  yUnit?: string;
   /** Stroke width of the actual + forecast lines. */
   strokeWidth?: number;
   /**
@@ -121,18 +115,7 @@ export interface ConfidenceConeProps
    * band over the forecast region.
    */
   showForecastRegion?: boolean;
-  showGrid?: boolean;
-  showTooltip?: boolean;
   showLegend?: boolean;
-  /**
-   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
-   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
-   * to customize the tooltip without composing recharts yourself. The synthetic
-   * cone band is filtered out of the payload before your tooltip sees it, so a
-   * `__cone` item never reaches your formatter. Ignored when `showTooltip` is
-   * false.
-   */
-  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
@@ -158,6 +141,13 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       showYAxis = true,
       xTickFormatter,
       yTickFormatter,
+      xAxisAngle,
+      xAxisInterval,
+      yAxisTickCount,
+      yAxisDomain,
+      gridDashed,
+      gridHorizontal,
+      gridVertical,
       tooltipContent,
       ...props
     },
@@ -181,6 +171,13 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
           style: { textAnchor: 'middle' as const },
         }
       : undefined;
+
+    const yDomain: React.ComponentProps<typeof YAxis>['domain'] =
+      yAxisDomain === 'zero'
+        ? [0, 'auto']
+        : yAxisDomain === 'dataMin-dataMax'
+          ? ['dataMin', 'dataMax']
+          : undefined;
 
     // Augment each row with the `[lower, upper]` band tuple the Area shades.
     // Rows missing a numeric bound are left un-coned (the band breaks there).
@@ -210,7 +207,13 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <ComposedChart data={chartData as readonly unknown[]}>
-            {showGrid && <CartesianGrid vertical={false} />}
+            {showGrid && (
+              <CartesianGrid
+                horizontal={gridHorizontal ?? true}
+                vertical={gridVertical ?? false}
+                strokeDasharray={gridDashed ? '3 3' : undefined}
+              />
+            )}
             <XAxis
               dataKey={xKey}
               type="category"
@@ -219,7 +222,12 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
               axisLine={false}
               tickMargin={8}
               tickFormatter={xTickFormatter}
-              height={xAxisLabel ? 48 : undefined}
+              angle={xAxisAngle}
+              interval={xAxisInterval}
+              textAnchor={
+                xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
+              }
+              height={xAxisLabel ? 48 : xAxisAngle != null ? 50 : undefined}
               label={xAxisTitle}
             />
             <YAxis
@@ -229,6 +237,8 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
               axisLine={false}
               unit={yUnit}
               tickFormatter={yTickFormatter}
+              tickCount={yAxisTickCount}
+              domain={yDomain}
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />

@@ -15,7 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-  type CartesianAxisProps,
+  type CartesianChartProps,
 } from '../chart';
 
 // A histogram bins a set of continuous samples into equal-width ranges and plots
@@ -81,7 +81,7 @@ export function computeHistogramBins(
 
 export interface HistogramProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    CartesianAxisProps {
+    CartesianChartProps {
   /** Raw continuous samples to bin (non-finite values are ignored). */
   values: ReadonlyArray<number>;
   /**
@@ -96,23 +96,8 @@ export interface HistogramProps
   binCount?: number;
   /** Fix the binning range instead of deriving it from the data's min/max. */
   domain?: [number, number];
-  /** Title rendered beneath the horizontal (X) axis. */
-  xAxisLabel?: string;
-  /** Title rendered beside the vertical (Y) axis (rotated). */
-  yAxisLabel?: string;
-  /** Unit suffix appended to Y-axis tick values (recharts `unit`; the X axis is the bin label). */
-  yUnit?: string;
   /** Corner radius on the top of each bar. */
   barRadius?: number;
-  showGrid?: boolean;
-  showTooltip?: boolean;
-  /**
-   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
-   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
-   * to customize the tooltip without composing recharts yourself. Ignored when
-   * `showTooltip` is false.
-   */
-  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
@@ -134,6 +119,13 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
       showYAxis = true,
       xTickFormatter,
       yTickFormatter,
+      xAxisAngle,
+      xAxisInterval,
+      yAxisTickCount,
+      yAxisDomain,
+      gridDashed,
+      gridHorizontal,
+      gridVertical,
       tooltipContent,
       ...props
     },
@@ -150,6 +142,13 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
           style: { textAnchor: 'middle' as const },
         }
       : undefined;
+
+    const yDomain: React.ComponentProps<typeof YAxis>['domain'] =
+      yAxisDomain === 'zero'
+        ? [0, 'auto']
+        : yAxisDomain === 'dataMin-dataMax'
+          ? ['dataMin', 'dataMax']
+          : undefined;
 
     const bins = React.useMemo(
       () => computeHistogramBins(values, binCount, domain),
@@ -170,14 +169,25 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RechartsBarChart data={data} barCategoryGap={0}>
-            {showGrid && <CartesianGrid vertical={false} />}
+            {showGrid && (
+              <CartesianGrid
+                horizontal={gridHorizontal ?? true}
+                vertical={gridVertical ?? false}
+                strokeDasharray={gridDashed ? '3 3' : undefined}
+              />
+            )}
             <XAxis
               dataKey="label"
               hide={!showXAxis}
               tickLine={false}
               axisLine={false}
               tickFormatter={xTickFormatter}
-              height={xAxisLabel ? 48 : undefined}
+              angle={xAxisAngle}
+              interval={xAxisInterval}
+              textAnchor={
+                xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
+              }
+              height={xAxisLabel ? 48 : xAxisAngle != null ? 50 : undefined}
               label={xAxisTitle}
             />
             <YAxis
@@ -188,6 +198,8 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
               allowDecimals={false}
               unit={yUnit}
               tickFormatter={yTickFormatter}
+              tickCount={yAxisTickCount}
+              domain={yDomain}
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />

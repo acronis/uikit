@@ -19,7 +19,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-  type CartesianAxisProps,
+  type CartesianChartProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
@@ -92,7 +92,7 @@ export function barChartReferenceValue(
 export interface BarChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof barChartVariants>,
-    CartesianAxisProps {
+    CartesianChartProps {
   /** Row-per-category data. Each object holds the category key + one numeric field per series. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -111,26 +111,11 @@ export interface BarChartProps
    * series `average`. Pass a single object or an array to draw several at once.
    */
   referenceLine?: BarChartReferenceLine | BarChartReferenceLine[];
-  /** Title rendered beneath the horizontal (X) axis. */
-  xAxisLabel?: string;
-  /** Title rendered beside the vertical (Y) axis (rotated). */
-  yAxisLabel?: string;
   /** Unit suffix on X-axis tick values (recharts `unit`) — applies when the X axis is numeric (`orientation="horizontal"`). */
   xUnit?: string;
-  /** Unit suffix on Y-axis tick values (recharts `unit`) — applies when the Y axis is numeric (`orientation="vertical"`). */
-  yUnit?: string;
   /** Corner radius applied to the growing end of each bar. */
   barRadius?: number;
-  showGrid?: boolean;
-  showTooltip?: boolean;
   showLegend?: boolean;
-  /**
-   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
-   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` /
-   * `indicator` — to customize formatting, per-series rows, or extra fields
-   * without composing recharts yourself. Ignored when `showTooltip` is false.
-   */
-  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
@@ -156,6 +141,13 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       showYAxis = true,
       xTickFormatter,
       yTickFormatter,
+      xAxisAngle,
+      xAxisInterval,
+      yAxisTickCount,
+      yAxisDomain,
+      gridDashed,
+      gridHorizontal,
+      gridVertical,
       tooltipContent,
       ...props
     },
@@ -186,6 +178,13 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         }
       : undefined;
 
+    const yDomain: React.ComponentProps<typeof YAxis>['domain'] =
+      yAxisDomain === 'zero'
+        ? [0, 'auto']
+        : yAxisDomain === 'dataMin-dataMax'
+          ? ['dataMin', 'dataMax']
+          : undefined;
+
     // Round only the growing end: top for vertical bars, right for horizontal.
     const endRadius: [number, number, number, number] =
       orientation === 'horizontal'
@@ -207,8 +206,9 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
           <RechartsBarChart data={data as readonly unknown[]} layout={rechartsLayout}>
             {showGrid && (
               <CartesianGrid
-                horizontal={orientation === 'vertical'}
-                vertical={orientation === 'horizontal'}
+                horizontal={gridHorizontal ?? orientation === 'vertical'}
+                vertical={gridVertical ?? orientation === 'horizontal'}
+                strokeDasharray={gridDashed ? '3 3' : undefined}
               />
             )}
             {orientation === 'horizontal' ? (
@@ -220,7 +220,12 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   axisLine={false}
                   unit={xUnit}
                   tickFormatter={xTickFormatter}
-                  height={xAxisLabel ? 48 : undefined}
+                  angle={xAxisAngle}
+                  interval={xAxisInterval}
+                  textAnchor={
+                    xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
+                  }
+                  height={xAxisLabel ? 48 : xAxisAngle != null ? 50 : undefined}
                   label={xAxisTitle}
                 />
                 <YAxis
@@ -230,6 +235,8 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={yTickFormatter}
+                  tickCount={yAxisTickCount}
+                  domain={yDomain}
                   width={yAxisLabel ? 96 : 80}
                   label={yAxisTitle}
                 />
@@ -243,7 +250,12 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={xTickFormatter}
-                  height={xAxisLabel ? 48 : undefined}
+                  angle={xAxisAngle}
+                  interval={xAxisInterval}
+                  textAnchor={
+                    xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
+                  }
+                  height={xAxisLabel ? 48 : xAxisAngle != null ? 50 : undefined}
                   label={xAxisTitle}
                 />
                 <YAxis
@@ -253,6 +265,8 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   axisLine={false}
                   unit={yUnit}
                   tickFormatter={yTickFormatter}
+                  tickCount={yAxisTickCount}
+                  domain={yDomain}
                   width={yAxisLabel ? 72 : undefined}
                   label={yAxisTitle}
                 />

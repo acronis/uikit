@@ -17,4 +17,4 @@ export {
   formatPercent,
   createTickFormatter,
 } from './chart-format';
-export type { TickFormatter, CartesianAxisProps } from './chart-format';
+export type { TickFormatter, CartesianChartProps } from './chart-format';

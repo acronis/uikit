@@ -22,7 +22,7 @@ import {
   type ChartConfig,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
-  type CartesianAxisProps,
+  type CartesianChartProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
@@ -106,7 +106,7 @@ export function createBandStrippedTooltip(tooltipContent: TooltipContentType) {
 export interface LineChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof lineChartVariants>,
-    CartesianAxisProps {
+    CartesianChartProps {
   /** Row-per-point data. Each object holds the category key + one numeric field per series (`null` breaks the line unless `connectNulls`). */
   data: ReadonlyArray<Record<string, string | number | null>>;
   /**
@@ -135,28 +135,13 @@ export interface LineChartProps
   deltaBands?: Array<[string, string]>;
   /** Category axis key (the shared dimension across rows, e.g. `"month"`). */
   xKey: string;
-  /** Title rendered beneath the horizontal (X) axis. */
-  xAxisLabel?: string;
-  /** Title rendered beside the vertical (Y) axis (rotated). */
-  yAxisLabel?: string;
-  /** Unit suffix appended to Y-axis tick values (recharts `unit`; the X axis is categorical). */
-  yUnit?: string;
   /** Stroke width of each line. */
   strokeWidth?: number;
   /** Render a dot at each data point. */
   showDots?: boolean;
   /** Bridge `null` gaps in the data instead of breaking the line. */
   connectNulls?: boolean;
-  showGrid?: boolean;
-  showTooltip?: boolean;
   showLegend?: boolean;
-  /**
-   * Replace the default tooltip. Pass a configured `ChartTooltipContent`
-   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` /
-   * `indicator` — to customize formatting, per-series rows, or extra fields
-   * without composing recharts yourself. Ignored when `showTooltip` is false.
-   */
-  tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
 }
 
 const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
@@ -184,12 +169,25 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       showYAxis = true,
       xTickFormatter,
       yTickFormatter,
+      xAxisAngle,
+      xAxisInterval,
+      yAxisTickCount,
+      yAxisDomain,
+      gridDashed,
+      gridHorizontal,
+      gridVertical,
       tooltipContent,
       ...props
     },
     ref
   ) => {
     const dashArray = lineStyle === 'dashed' ? '5 5' : undefined;
+    const yDomain: React.ComponentProps<typeof YAxis>['domain'] =
+      yAxisDomain === 'zero'
+        ? [0, 'auto']
+        : yAxisDomain === 'dataMin-dataMax'
+          ? ['dataMin', 'dataMax']
+          : undefined;
 
     // Memoized so recharts sees a stable content type across renders — a fresh
     // wrapper each render would remount the caller's tooltip and reset its state.
@@ -255,7 +253,13 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RootChart data={chartData as readonly unknown[]}>
-            {showGrid && <CartesianGrid vertical={false} />}
+            {showGrid && (
+              <CartesianGrid
+                horizontal={gridHorizontal ?? true}
+                vertical={gridVertical ?? false}
+                strokeDasharray={gridDashed ? '3 3' : undefined}
+              />
+            )}
             <XAxis
               dataKey={xKey}
               type="category"
@@ -264,7 +268,12 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               axisLine={false}
               tickMargin={8}
               tickFormatter={xTickFormatter}
-              height={xAxisLabel ? 48 : undefined}
+              angle={xAxisAngle}
+              interval={xAxisInterval}
+              textAnchor={
+                xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
+              }
+              height={xAxisLabel ? 48 : xAxisAngle != null ? 50 : undefined}
               label={xAxisTitle}
             />
             <YAxis
@@ -274,6 +283,8 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               axisLine={false}
               unit={yUnit}
               tickFormatter={yTickFormatter}
+              tickCount={yAxisTickCount}
+              domain={yDomain}
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />

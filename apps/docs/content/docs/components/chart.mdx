@@ -127,6 +127,29 @@ import {
   showXAxis={false} showYAxis={false} showGrid={false} showLegend={false} />;
 ```
 
+### Tick spacing, domain & grid
+
+The same shared props also tune tick placement, the Y domain, and the grid:
+
+- `xAxisAngle` — rotate X tick labels (e.g. `-45`) when they'd otherwise overlap.
+- `xAxisInterval` — thin dense ticks (`preserveStartEnd`, or a fixed step count).
+- `yAxisTickCount` — a hint for how many Y ticks to draw.
+- `yAxisDomain` — `auto` (padded default), `dataMin-dataMax` (tight), or `zero` (anchor at 0).
+- `gridDashed`, `gridHorizontal`, `gridVertical` — dash or trim the grid lines.
+
+```tsx
+<BarChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  xAxisAngle={-45}
+  yAxisDomain="zero"
+  yAxisTickCount={4}
+  gridDashed
+/>;
+```
+
 ## API Reference
 
 `ChartContainer` takes the chart `config` and the recharts plot as children:

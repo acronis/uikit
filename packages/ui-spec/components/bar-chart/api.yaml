@@ -117,6 +117,36 @@ contract:
       type: '(value: number | string, index?: number) => string'
       required: false
       description: Format each Y-axis tick value (see xTickFormatter).
+    - name: xAxisAngle
+      type: number
+      required: false
+      description: Rotate the X-axis tick labels by this many degrees (a negative angle tilts them up toward the right); the tick anchor + axis height adjust.
+    - name: xAxisInterval
+      type: "number | 'preserveStart' | 'preserveEnd' | 'preserveStartEnd' | 'equidistantPreserveStart'"
+      required: false
+      description: X-axis tick density — a fixed step, or a recharts placement strategy that thins ticks while keeping the ends legible.
+    - name: yAxisTickCount
+      type: number
+      required: false
+      description: Desired number of Y-axis ticks (recharts tickCount; a hint, not exact).
+    - name: yAxisDomain
+      type: "'auto' | 'dataMin-dataMax' | 'zero'"
+      required: false
+      description: >-
+        Y-axis domain preset — auto (recharts' padded default), dataMin-dataMax
+        (tight to the data), or zero (anchor the axis at 0).
+    - name: gridDashed
+      type: boolean
+      required: false
+      description: Draw grid lines dashed instead of solid.
+    - name: gridHorizontal
+      type: boolean
+      required: false
+      description: Show horizontal grid lines (defaults to the chart's own default when unset).
+    - name: gridVertical
+      type: boolean
+      required: false
+      description: Show vertical grid lines (defaults to the chart's own default when unset).
   events: []
   methods: []
 
