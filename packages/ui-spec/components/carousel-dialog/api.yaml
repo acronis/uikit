@@ -1,0 +1,86 @@
+spec_version: '1.0'
+component: CarouselDialog
+
+contract:
+  properties:
+    - name: variant
+      type: "'first' | 'middle' | 'last'"
+      required: false
+      default: "'first'"
+      description: Which slide position this renders for.
+    - name: slideCount
+      type: number
+      required: false
+      default: 1
+      description: Total number of slides, used to render the dot indicator.
+    - name: selectedIndex
+      type: number
+      required: false
+      default: 0
+      description: The currently active slide index (0-based).
+    - name: backLabel
+      type: string
+      required: false
+      default: "'Back'"
+      description: '`Back` button label.'
+    - name: nextLabel
+      type: string
+      required: false
+      default: "'Next'"
+      description: '`Next` button label (`variant="first" | "middle"`).'
+    - name: primaryLabel
+      type: string
+      required: false
+      default: "'Call to action'"
+      description: Call-to-action button label (`variant="last"`).
+    - name: goToSlideLabel
+      type: '(index: number, count: number) => string'
+      required: false
+      description: Builds each dot's accessible name from its 0-based index and the slide count.
+
+  events:
+    - name: select-index
+      payload: number
+      description: Fired when a dot is activated, with its slide index (React `onSelectIndex`).
+    - name: back
+      description: Fired when `Back` (hidden on `variant="first"`) is activated (React `onBack`).
+    - name: next
+      description: Fired when `Next` (`variant="first" | "middle"`) is activated (React `onNext`).
+    - name: primary-action
+      description: Fired when the call-to-action button (`variant="last"`) is activated (React `onPrimaryAction`).
+
+adapters:
+  react:
+    component: CarouselDialog
+    status: implemented
+    import: "import { CarouselDialog } from '@acronis-platform/ui-react'"
+    example: |
+      <CarouselDialog
+        variant="middle"
+        slideCount={3}
+        selectedIndex={1}
+        onSelectIndex={setSelectedIndex}
+        onBack={() => embla.scrollPrev()}
+        onNext={() => embla.scrollNext()}
+      />
+  vue:
+    component: AvCarouselDialog
+    status: planned
+    import: "import { AvCarouselDialog } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvCarouselDialog
+        variant="middle"
+        :slide-count="3"
+        :selected-index="1"
+        @select-index="onSelectIndex"
+      />
+  web-components:
+    element: ui-carousel-dialog
+    status: planned
+    import: "import '@acronis-platform/ui-wc/carousel-dialog'"
+    example: |
+      <ui-carousel-dialog
+        variant="middle"
+        slide-count="3"
+        selected-index="1"
+      ></ui-carousel-dialog>

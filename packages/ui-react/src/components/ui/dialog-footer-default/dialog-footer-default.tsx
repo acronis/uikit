@@ -27,7 +27,7 @@ const DialogFooterDefault = React.forwardRef<HTMLDivElement, DialogFooterDefault
       <div
         ref={ref}
         className={cn(
-          'flex h-[var(--ui-footer-global-height)] items-center gap-[var(--ui-footer-global-gap)] border-t-[length:var(--ui-footer-default-border-width)] border-solid border-[color:var(--ui-footer-default-border-color)] bg-[var(--ui-footer-default-color)] px-[var(--ui-footer-global-padding-x)]',
+          'flex h-[var(--ui-footer-global-height)] shrink-0 items-center gap-[var(--ui-footer-global-gap)] border-t-[length:var(--ui-footer-default-border-width)] border-solid border-[color:var(--ui-footer-default-border-color)] bg-[var(--ui-footer-default-color)] px-[var(--ui-footer-global-padding-x)]',
           !hasStart && 'justify-end',
           className
         )}

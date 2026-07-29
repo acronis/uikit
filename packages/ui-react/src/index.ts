@@ -36,7 +36,9 @@ export {
   type DialogProps,
   type DialogVariant,
 } from './components/ui/dialog';
+export * from './components/ui/dialog-footer-carousel';
 export * from './components/ui/dialog-footer-default';
+export * from './components/ui/dialog-welcome';
 export * from './components/ui/dropdown-menu';
 export * from './components/ui/empty';
 export * from './components/ui/field';

@@ -1,0 +1,141 @@
+spec_version: '1.0'
+component: DialogWelcome
+
+# Framework-agnostic contract. It composes the DialogRoot primitive parts (via
+# Dialog's own DialogContent — the open-state / modality / portal props
+# mirror DialogRoot exactly, same as Dialog's own api.yaml), plus the
+# carousel/single body content and, for variant="carousel", an Embla-driven
+# DialogFooterCarousel.
+contract:
+  properties:
+    - name: variant
+      type: "'carousel' | 'single'"
+      required: false
+      default: "'carousel'"
+      description: Selects the Figma-defined layout.
+    - name: slides
+      type: 'Array<{ image?: ReactNode; title: string; description: string }>'
+      required: false
+      default: 3-item placeholder ('Title' / 'Feature description.')
+      description: Slides shown one at a time (`variant="carousel"`).
+    - name: selected-index
+      type: number
+      required: false
+      description: >-
+        Controls the active slide (`variant="carousel"`). Uncontrolled
+        (starting at `0`) when omitted.
+    - name: back-label
+      type: string
+      required: false
+      default: "'Back'"
+      description: '`Back` button label (`variant="carousel"`).'
+    - name: next-label
+      type: string
+      required: false
+      default: "'Next'"
+      description: '`Next` button label (`variant="carousel"`).'
+    - name: go-to-slide-label
+      type: '(index: number, count: number) => string'
+      required: false
+      description: Builds each carousel dot's accessible name (`variant="carousel"`).
+    - name: image
+      type: ReactNode
+      required: false
+      description: Illustration/media (`variant="single"`).
+    - name: title
+      type: string
+      required: false
+      default: "'Title'"
+      description: '`variant="single"` title.'
+    - name: description
+      type: string
+      required: false
+      default: "'Feature description.'"
+      description: '`variant="single"` description.'
+    - name: close-label
+      type: string
+      required: false
+      default: "'Close'"
+      description: '`Close` link label (`variant="single"`).'
+    - name: primary-label
+      type: string
+      required: false
+      default: "'Call to action'"
+      description: Call-to-action button label.
+    - name: open
+      type: boolean
+      required: false
+      description: Controlled open state. Pair with the change event.
+    - name: default-open
+      type: boolean
+      required: false
+      default: false
+      description: Initial open state when uncontrolled (React `defaultOpen`).
+    - name: modal
+      type: "boolean | 'trap-focus'"
+      required: false
+      default: true
+      description: Modal behavior — traps focus and locks background scroll while open.
+    - name: portal
+      type: boolean
+      required: false
+      default: true
+      description: Render the popup inside a portal (forwarded to `DialogContent`).
+    - name: keep-mounted
+      type: boolean
+      required: false
+      description: Keep the popup mounted while closed (forwarded to `DialogContent`).
+
+  events:
+    - name: open-change
+      payload: boolean
+      description: Fired when the dialog opens or closes (React `onOpenChange`).
+    - name: selected-index-change
+      payload: number
+      description: >-
+        Fired whenever the active slide changes (React `onSelectedIndexChange`,
+        `variant="carousel"`).
+    - name: close-action
+      description: >-
+        Fired when `Close` is activated, before the dialog closes (React
+        `onCloseAction`, `variant="single"`).
+    - name: primary-action
+      description: Fired when the call-to-action button is activated (React `onPrimaryAction`).
+
+adapters:
+  react:
+    component: DialogWelcome
+    status: implemented
+    import: "import { DialogWelcome } from '@acronis-platform/ui-react'"
+    example: |
+      <DialogWelcome
+        variant="carousel"
+        slides={[
+          { title: 'Automated backups', description: 'Your data is backed up on a schedule you control.' },
+          { title: 'Instant recovery', description: 'Restore a full workload in minutes, not hours.' },
+        ]}
+        open={open}
+        onOpenChange={setOpen}
+        onPrimaryAction={() => setOpen(false)}
+      />
+
+      <DialogWelcome
+        variant="single"
+        title="You're all set"
+        description="Your workspace is ready to go."
+        primaryLabel="Get started"
+        open={open}
+        onOpenChange={setOpen}
+      />
+  vue:
+    component: AvDialogWelcome
+    status: planned
+    import: "import { AvDialogWelcome } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvDialogWelcome v-model:open="open" variant="carousel" :slides="slides" />
+  web-components:
+    element: ui-dialog-welcome
+    status: planned
+    import: "import '@acronis-platform/ui-wc/dialog-welcome'"
+    example: |
+      <ui-dialog-welcome open variant="single" title="You're all set"></ui-dialog-welcome>

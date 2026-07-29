@@ -740,6 +740,9 @@ importers:
       date-fns:
         specifier: 'catalog:'
         version: 4.3.0
+      embla-carousel-react:
+        specifier: 8.6.0
+        version: 8.6.0(react@19.2.6)
       react-day-picker:
         specifier: 10.0.1
         version: 10.0.1(@types/react@19.2.15)(react@19.2.6)
@@ -5895,6 +5898,7 @@ packages:
   git-raw-commits@5.0.1:
     resolution: {integrity: sha512-Y+csSm2GD/PCSh6Isd/WiMjNAydu0VBiG9J7EdQsNA5P9uXvLayqjmTsNlK5Gs9IhblFZqOU0yid5Il5JPoLiQ==}
     engines: {node: '>=18'}
+    deprecated: Deprecated and no longer maintained. Use @conventional-changelog/git-client instead.
     hasBin: true
 
   github-slugger@2.0.0:

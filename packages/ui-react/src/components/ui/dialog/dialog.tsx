@@ -45,13 +45,19 @@ import { Loading } from '../loading';
 // parts internally. (In Figma the matching component set is named
 // "DialogDefault"; the code-facing name stays `Dialog` — see dialog.figma.tsx.)
 
+// Figma's "DialogWelcome" frame (variant=carousel, node 6353:6164) wraps its
+// popup preview in a `p-[48px]` ancestor — the minimum margin the popup must
+// keep from the viewport edge on any screen size. `max-w`/`max-h` (not
+// padding, since the popup itself is centered via `fixed` + transform)
+// enforce it here so every consumer keeps that margin, not just the frame
+// that surfaced it.
 const dialogContentVariants = cva(
-  'fixed left-1/2 top-1/2 z-50 flex w-full min-w-[var(--ui-dialog-container-width-min)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[var(--ui-dialog-container-border-radius)] bg-[var(--ui-dialog-container-color)] text-foreground shadow-lg duration-200 data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95',
+  'fixed left-1/2 top-1/2 z-50 flex max-h-[calc(100dvh-96px)] w-full min-w-[var(--ui-dialog-container-width-min)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[var(--ui-dialog-container-border-radius)] bg-[var(--ui-dialog-container-color)] text-foreground shadow-lg duration-200 data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95',
   {
     variants: {
       size: {
-        sm: 'max-w-[var(--ui-dialog-container-size-sm)]',
-        large: 'max-w-[832px]',
+        sm: 'max-w-[min(var(--ui-dialog-container-size-sm),calc(100dvw-96px))]',
+        large: 'max-w-[min(832px,calc(100dvw-96px))]',
       },
     },
     defaultVariants: {
@@ -250,7 +256,7 @@ interface DialogHeaderProps {
 
 function DialogHeader({ title, closeLabel }: DialogHeaderProps) {
   return (
-    <div className="flex h-[var(--ui-dialog-header-height)] items-center gap-[var(--ui-dialog-header-gap)] border-b-[length:var(--ui-dialog-header-border-width)] border-[var(--ui-dialog-header-border-color)] bg-[var(--ui-dialog-header-color)] px-[var(--ui-dialog-header-padding-x)]">
+    <div className="flex h-[var(--ui-dialog-header-height)] shrink-0 items-center gap-[var(--ui-dialog-header-gap)] border-b-[length:var(--ui-dialog-header-border-width)] border-[var(--ui-dialog-header-border-color)] bg-[var(--ui-dialog-header-color)] px-[var(--ui-dialog-header-padding-x)]">
       <DialogTitle>{title}</DialogTitle>
       <DialogCloseButton closeLabel={closeLabel} />
     </div>
@@ -271,7 +277,7 @@ function DialogBody({ children, inert }: DialogBodyProps) {
   return (
     <div
       inert={inert}
-      className="flex min-h-[var(--ui-dialog-body-height-min)] flex-col justify-center gap-[var(--ui-dialog-body-gap)] px-4 py-[var(--ui-dialog-body-padding-y)]"
+      className="flex min-h-[var(--ui-dialog-body-height-min)] flex-col justify-center-safe gap-[var(--ui-dialog-body-gap)] overflow-y-auto px-4 py-[var(--ui-dialog-body-padding-y)]"
     >
       {typeof children === 'string' ? (
         <p className="text-sm leading-6 text-foreground">{children}</p>

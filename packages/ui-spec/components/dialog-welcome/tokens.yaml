@@ -1,0 +1,71 @@
+spec_version: '1.0'
+component: DialogWelcome
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+#
+# `container`/`overlay` reuse Dialog's own DialogContent/DialogOverlay
+# unmodified — same `--ui-dialog-container-*` / backdrop tokens (see
+# `dialog`'s own tokens.yaml). `footer` reuses `DialogFooterCarousel` — its
+# bar chrome and dot-indicator tokens are listed below (also documented in its
+# own spec, mirroring how Dialog's tokens.yaml repeats DialogFooterDefault's
+# footer tokens). `primaryAction`/`close` delegate to the Button token tiers
+# (documented in Button's own spec) — not repeated here.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-background-backdrop-screen,
+      affects: root,
+      description: Scrim color behind the popup (via the reused DialogOverlay),
+    }
+  - {
+      name: --ui-dialog-container-color,
+      affects: container,
+      description: Popup container surface,
+    }
+  - {
+      name: --ui-dialog-container-border-radius,
+      affects: container,
+      description: Popup container corner radius,
+    }
+  - {
+      name: --ui-dialog-container-width-min,
+      affects: container,
+      description: Popup container minimum width,
+    }
+  - {
+      name: --ui-background-surface-active,
+      affects: image,
+      description: 'Placeholder illustration surface color (when no `image`/`slides[i].image` is given)',
+    }
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: title,
+      description: 'Title color (bridged via `text-foreground`; identical value in the default brand)',
+    }
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: description,
+      description: 'Description color (bridged via `text-foreground`; same token as `title`, matching the Figma design)',
+    }
+  - {
+      name: --ui-footer-carousel-color,
+      affects: footer,
+      description: Footer bar background (transparent by default — via DialogFooterCarousel),
+    }
+  - {
+      name: --ui-footer-global-height,
+      affects: footer,
+      description: Footer bar height (via DialogFooterCarousel),
+    }
+  - {
+      name: --ui-footer-global-padding-x,
+      affects: footer,
+      description: Footer bar horizontal padding (via DialogFooterCarousel),
+    }
+  - {
+      name: --ui-carousel-dialog-list-indicator-gap,
+      affects: footer,
+      description: Gap between the footer's dot indicators (via DialogFooterCarousel),
+    }

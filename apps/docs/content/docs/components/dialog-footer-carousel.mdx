@@ -1,0 +1,62 @@
+---
+title: DialogFooterCarousel
+description: A dialog footer bar hosting carousel navigation and a dot indicator.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { DialogFooterCarouselDemo } from "@/components/demos-react/dialog-footer-carousel";
+
+## Usage
+
+```tsx
+import { DialogFooterCarousel } from '@acronis-platform/ui-react';
+```
+
+`DialogFooterCarousel` is the footer bar `DialogWelcome`'s `carousel` variant
+renders internally. Its `variant` prop selects which slide position it renders
+for: `'start'` hides `Back`, `'end'` swaps `Next` for the call-to-action button,
+`'middle'` shows both `Back` and `Next`. Geometry and background resolve to the
+same `--ui-footer-*` tier as `DialogFooterDefault` — this is the same footer
+chrome, filled with carousel navigation instead of end-aligned actions.
+
+Most consumers should reach for `DialogWelcome` directly; this component is
+exported for the rare case of building a fully custom carousel dialog around
+`Dialog`'s primitive parts.
+
+## Examples
+
+<DemoReact>
+  <DialogFooterCarouselDemo />
+</DemoReact>
+
+```tsx
+const [selectedIndex, setSelectedIndex] = useState(0);
+const slideCount = 3;
+
+<DialogFooterCarousel
+  variant={selectedIndex === 0 ? 'start' : selectedIndex === slideCount - 1 ? 'end' : 'middle'}
+  slideCount={slideCount}
+  selectedIndex={selectedIndex}
+  onSelectIndex={setSelectedIndex}
+  onBack={() => setSelectedIndex((index) => Math.max(index - 1, 0))}
+  onNext={() => setSelectedIndex((index) => Math.min(index + 1, slideCount - 1))}
+/>;
+```
+
+## When to use
+
+- Inside `DialogWelcome`'s `carousel` variant (the default, internal usage).
+- A fully custom carousel dialog built on `Dialog`'s primitive parts, when
+  `DialogWelcome`'s canned layout doesn't fit.
+
+## When not to use
+
+- A dialog footer with end-aligned action buttons instead of carousel
+  navigation — use `DialogFooterDefault`.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/dialog-footer-carousel/dialog-footer-carousel.tsx"
+  name="DialogFooterCarouselProps"
+/>
