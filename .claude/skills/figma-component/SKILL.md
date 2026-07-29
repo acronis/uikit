@@ -115,6 +115,33 @@ Call these (no skill prerequisite for reads):
    property names + variant options. Use this to write Code Connect; never
    guess property names.
 
+### Context frame (portal/overlay components only)
+
+If the target composes a portal/overlay Base UI primitive — Dialog, Popover,
+Menu, Tooltip, Toast, Drawer/Sheet, or anything else that renders backdrop,
+anchor, or viewport-relative chrome — **the target node alone is not enough.**
+Figma commonly documents that shared chrome's contract on an **ancestor**
+frame wrapping the component preview (e.g. a dialog's backdrop scrim +
+viewport edge-inset, a popover's anchor offset + collision padding, a toast's
+safe-area offset + stack gap), not on the content node itself. Reading only
+the node you were handed makes that layer invisible — not rejected, just
+never seen.
+
+- Call `get_metadata` one level up from the target `nodeId` (the parent, and
+  its parent if still ambiguous).
+- **Real requirement vs. canvas organization:** an ancestor only matters if it
+  has its own fill/padding/effects. If it's an empty grouping frame or a
+  label-only artboard, ignore it. If it has real styling, read it with
+  `get_design_context` too and extract the structural facts: backdrop
+  color/opacity, edge margin/inset, anchor offset + collision padding,
+  stacking gap, safe-area.
+- These facts almost always resolve to **generic/semantic tokens** already
+  used by an existing shared primitive (e.g. `--ui-background-backdrop-screen`
+  on `DialogOverlay`) — which is exactly why they're easy to miss: Phase 2's
+  token gate only checks that a token _resolves_, not that the _structural
+  behavior_ it's part of (an edge-inset, a collision-padding prop) is actually
+  implemented anywhere. Carry these facts into Phase 2's parity check below.
+
 Write down, from the design:
 
 - **Variants / states.** Which are real props (map to `variant`/`size`/
@@ -206,6 +233,47 @@ overrides only honor the referenced token.
 > per shipped component. A new component with its own tier (`--ui-<name>-*`) will
 > render **unstyled** until you add its tier import there. Verify the token is
 > defined: `grep -rn "<name>" packages/tokens-pd/css/<name>/default.css`.
+
+### Shared-chrome parity check (portal/overlay components only)
+
+The token-resolution gate above only proves a `--ui-*` name **exists** — it
+says nothing about whether the **structural behavior** it's part of is
+actually implemented. A generic token used on shared chrome (a backdrop
+color, a viewport edge-inset) will pass that gate trivially if it's already
+wired into some _other_ component, even if the specific feature you need is
+missing everywhere.
+
+For every structural fact captured in Phase 1's "Context frame" step, grep
+the actual **shared primitive source** — not the new component you're about
+to write — for a real implementation of it:
+
+```bash
+grep -n "inset\|backdrop\|collision\|offset\|safe-area" \
+  packages/ui-react/src/components/ui/<primitive>/<primitive>.tsx
+```
+
+- **Found** → the shared primitive already handles it; your new component
+  gets it for free by composing that primitive. Nothing to add.
+- **Missing** → this is a **primitive-level gap**, not something to patch
+  inside the new component. Fix it once in the shared file (its own
+  changeset, since it improves every consumer), then compose it as normal.
+  Do not hardcode the missing behavior locally — that fixes one component and
+  leaves every other consumer of the same primitive still wrong.
+
+> **Worked example.** `DialogWelcome`'s Figma frame (`variant=carousel`,
+> node `6353:6164`) wraps the `Container` node in a
+> `bg-[--semantics/colors/background/backdrop/screen] p-[gap-48]` ancestor —
+> Figma's convention for previewing a modal against its darkened backdrop
+> with a minimum 48px viewport margin. The backdrop color was already correctly wired
+> (`DialogOverlay` in `dialog.tsx` uses the equivalent
+> `--ui-background-backdrop-screen`), so the token gate found nothing wrong.
+> But `dialogContentVariants` in the same file centers the popup with plain
+> `fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2` and no edge-inset
+> constraint — so on a narrow viewport the popup can touch the screen edges,
+> contradicting the design. This was missed because Phase 1 only read the
+> `Container` node (one level below the backdrop frame), and even a full read
+> would have passed the old Phase 2 gate, which only checks token existence,
+> not this kind of structural completeness.
 
 **Primitive.** Prefer a `@base-ui/react` primitive when one exists (check
 `node_modules/@base-ui/react/`). For anything stateful/interactive (dialog,
@@ -433,6 +501,11 @@ the committed baselines still pass, and commit no PNGs.
       defaults, not inlined literals.
 - [ ] No physical directional utility where a logical one applies; directional
       icons that should mirror under `dir="rtl"` have an explicit variant.
+- [ ] For portal/overlay components: context frame (if present) checked for
+      shared-chrome structural facts (backdrop, edge-inset, anchor offset,
+      collision padding, stacking gap) not owned by this component; each
+      verified against the shared primitive's actual implementation, not just
+      token resolution.
 - [ ] `__tests__/<name>.test.tsx` — render, variants/states, a11y roles, ref,
       `render`-prop composition.
 - [ ] `__stories__/<name>.stories.tsx` (hand) + `<name>.generated.stories.tsx`.
