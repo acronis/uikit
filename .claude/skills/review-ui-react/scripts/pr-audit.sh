@@ -10,8 +10,8 @@
 #   bash .claude/skills/review-ui-react/scripts/pr-audit.sh <pr-number> [--ci]
 #
 # Sections printed (parsed by the calling skill, not by humans):
-#   PREFLIGHT, PR_METADATA, SCOPE, TOKEN_CHECK, CONVENTION_CHECK,
-#   GENERATED_ARTIFACT_FRESHNESS, CI_CHECKS (only with --ci)
+#   PREFLIGHT, FETCH, PR_METADATA, FETCH_VERIFY, SCOPE, TOKEN_CHECK,
+#   CONVENTION_CHECK, GENERATED_ARTIFACT_FRESHNESS, CI_CHECKS (only with --ci)
 #
 # The interpretive parts (is a finding real, does a pattern repeat elsewhere,
 # devil-advocate verification) are NOT here — this script only surfaces facts.
@@ -49,16 +49,35 @@ echo "REPO: ${REPO:-unknown}"
 echo
 echo "=== FETCH ==="
 git fetch origin main >/dev/null 2>&1 && echo "origin/main: updated" || echo "origin/main: FETCH FAILED"
-if git fetch origin "pull/$NUM/head:$PR_REF" >/dev/null 2>&1; then
+# The leading "+" forces the update even when the PR's history diverged from
+# what refs/pr/$NUM already points to locally (rebase/amend/force-push) — a
+# plain refspec only allows a fast-forward and would silently leave the old,
+# stale commit in place while reporting success on the next line.
+if git fetch origin "+pull/$NUM/head:$PR_REF" >/dev/null; then
   echo "$PR_REF: updated"
 else
-  echo "$PR_REF: FETCH FAILED (shallow clone? try: git fetch --unshallow origin)"
+  echo "$PR_REF: FETCH FAILED (see git error above; check for shallow clone or run again)"
   exit 1
 fi
 
 echo
 echo "=== PR_METADATA ==="
 gh pr view "$NUM" --json state,baseRefName,isDraft,title,author,additions,deletions,changedFiles,url,headRefOid,isCrossRepository 2>/dev/null
+
+echo
+echo "=== FETCH_VERIFY ==="
+HEAD_REF_OID="$(gh pr view "$NUM" --json headRefOid -q .headRefOid 2>/dev/null)"
+LOCAL_REF_SHA="$(git rev-parse "$PR_REF" 2>/dev/null)"
+if [ -z "$HEAD_REF_OID" ]; then
+  echo "FETCH_VERIFY: FAIL — could not read headRefOid from gh pr view."
+  exit 1
+elif [ "$LOCAL_REF_SHA" != "$HEAD_REF_OID" ]; then
+  echo "FETCH_VERIFY: FAIL — $PR_REF is at $LOCAL_REF_SHA but the PR's current head is $HEAD_REF_OID."
+  echo "  The local ref does not reflect the PR's real head (stale fetch, or the PR moved"
+  echo "  between the fetch above and this check) — aborting rather than reviewing a stale diff."
+  exit 1
+fi
+echo "FETCH_VERIFY: OK — $PR_REF matches PR head ($HEAD_REF_OID)"
 
 echo
 echo "=== SCOPE ==="

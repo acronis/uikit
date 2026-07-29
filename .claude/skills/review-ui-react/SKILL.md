@@ -107,8 +107,14 @@ contains and exit — don't run devil-advocate on nothing.
    anything else — most of the mechanical work is already done for you.
    - If it prints `AUTH: FAIL`, stop and tell the developer to run
      `gh auth login`, then retry.
-   - If it fails to fetch `refs/pr/<num>` (shallow clone), ask before
-     running `git fetch --unshallow origin` — it can be slow.
+   - If it fails to fetch `refs/pr/<num>`, or `FETCH_VERIFY` reports a
+     mismatch, this is a **hard abort** — do not retry silently. Read the git
+     error the script printed: only if it names a shallow clone should you
+     ask before running `git fetch --unshallow origin` and re-invoking the
+     script; any other failure (most commonly the PR having been
+     rebased/amended/force-pushed since a prior run) won't be fixed by
+     `--unshallow`, so report the failure to the developer instead of
+     retrying blind.
    - Cross-check `PR_METADATA.baseRefName` — if it isn't `main`, stop and ask
      whether to review against the actual base or abort (the script still
      diffed against `origin/main`, so a mismatch here means the diff itself
@@ -284,7 +290,25 @@ contains and exit — don't run devil-advocate on nothing.
     (see structure below). If it already exists, ask: overwrite, or write a
     `-<timestamp>` suffixed copy — never silently clobber.
 
-12. **Print a short terminal summary** (verdict, top findings, report path)
+12. **Clean up local state** — now that the report file is fully written,
+    remove the local ref this run created so a fresh invocation always
+    starts clean and repeated reviews of the same PR don't accumulate
+    `refs/pr/*` clutter:
+
+    ```bash
+    git update-ref -d refs/pr/<num>
+    ```
+
+    This deletes only that one local ref (a no-op if it's already gone) and
+    must run **only after** step 11 has finished writing the report. It must
+    never touch the report file, the developer's working tree, or their
+    checked-out branch. This is a hygiene safety net, not the fix for stale
+    reviews — the forced fetch in the script (`+pull/<num>/head:refs/pr/<num>`)
+    is what actually keeps a single run correct; this step just guarantees a
+    leftover ref from an interrupted or earlier run can't confuse the next
+    one.
+
+13. **Print a short terminal summary** (verdict, top findings, report path)
     so the developer doesn't have to open the file for the headline.
 
 ---
@@ -369,11 +393,21 @@ that this PR doesn't touch `packages/ui-react` or anything that affects it.
   never touches the developer's working tree or current branch, never posts
   to GitHub. It writes exactly one report file.
 - **Non-destructive GitHub access.** The PR is fetched into `refs/pr/<num>`
-  (`git fetch origin pull/<num>/head:refs/pr/<num>`) — this works for
-  fork PRs too, since GitHub mirrors them into the base repo's `refs/pull/*`
-  namespace. `main` freshness comes from `git fetch origin main` only; the
-  developer's checked-out branch (even if it happens to be `main`) is never
-  fast-forwarded or switched.
+  with a forced refspec
+  (`git fetch origin +pull/<num>/head:refs/pr/<num>`) so the ref always
+  reflects the PR's real current head even after a rebase/amend/force-push —
+  this works for fork PRs too, since GitHub mirrors them into the base
+  repo's `refs/pull/*` namespace. `main` freshness comes from
+  `git fetch origin main` only; the developer's checked-out branch (even if
+  it happens to be `main`) is never fast-forwarded or switched. A hard
+  `FETCH_VERIFY` check in the script cross-checks the fetched local SHA
+  against `gh pr view`'s `headRefOid` and aborts on any mismatch, so a stale
+  fetch can never silently drive the rest of the review.
+- **No lingering local git state.** The one local ref this skill creates
+  (`refs/pr/<num>`) is deleted once the report is fully written (step 12) —
+  a fresh invocation, or a re-review of the same PR after it changes, never
+  starts from a leftover ref. The report file is the only thing that
+  persists after a run.
 - **Local-only token/style truth.** All `--ui-*` resolution and
   generated-artifact freshness checks read `packages/tokens-pd`,
   `packages/design-tokens`, `packages/icons-svg(-next)`, and
