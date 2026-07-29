@@ -41,6 +41,14 @@ interface DialogWelcome2SlideBodyProps {
   description: string;
   /** Whether this slide currently owns the dialog's accessible name/description. */
   active: boolean;
+  /**
+   * Whether this renders the DialogBody's own bottom padding (Figma's
+   * `py-16` applied around the whole body). `false` when more DialogBody
+   * content (e.g. the `single` variant's buttons) follows, so the caller can
+   * apply the correct `gap-12` between them instead of stacking padding on
+   * top of a gap.
+   */
+  withBottomPadding?: boolean;
 }
 
 function DialogWelcome2SlideBody({
@@ -48,9 +56,15 @@ function DialogWelcome2SlideBody({
   title,
   description,
   active,
+  withBottomPadding = true,
 }: DialogWelcome2SlideBodyProps) {
   return (
-    <div className="flex w-full flex-col items-center gap-3 py-4">
+    <div
+      className={cn(
+        'flex w-full flex-col items-center gap-3 pt-4',
+        withBottomPadding && 'pb-4'
+      )}
+    >
       <div className="w-full overflow-hidden rounded-lg px-4">
         <div className="flex h-[272px] w-full items-center justify-center rounded bg-[var(--ui-background-surface-active)]">
           {image}
@@ -280,12 +294,13 @@ function ContainerNoSlides({
   onCloseAction,
 }: ContainerNoSlidesProps) {
   return (
-    <div className={cn('flex w-full flex-col items-center gap-2 pb-4')}>
+    <div className="flex w-full flex-col items-center gap-3 pb-4">
       <DialogWelcome2SlideBody
         image={image}
         title={title}
         description={description}
         active
+        withBottomPadding={false}
       />
       <div className="flex w-full flex-col items-center gap-2 px-4">
         <Button onClick={onPrimaryAction}>

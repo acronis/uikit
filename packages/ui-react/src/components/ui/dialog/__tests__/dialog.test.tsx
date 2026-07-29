@@ -77,7 +77,7 @@ describe('DialogRoot', () => {
   it('defaults to the sm size (--ui-dialog-container-size-sm / 512px)', () => {
     render(<OpenDialog />);
     expect(screen.getByRole('dialog')).toHaveClass(
-      'max-w-[var(--ui-dialog-container-size-sm)]'
+      'max-w-[min(var(--ui-dialog-container-size-sm),calc(100dvw-96px))]'
     );
   });
 
@@ -89,7 +89,9 @@ describe('DialogRoot', () => {
         </DialogContent>
       </DialogRoot>
     );
-    expect(screen.getByRole('dialog')).toHaveClass('max-w-[832px]');
+    expect(screen.getByRole('dialog')).toHaveClass(
+      'max-w-[min(832px,calc(100dvw-96px))]'
+    );
   });
 
   it('forwards the ref to the popup element', () => {
@@ -385,13 +387,15 @@ describe('Dialog', () => {
 
   it('defaults the wide variant to the large size', () => {
     render(<Dialog open variant="wide" />);
-    expect(screen.getByRole('dialog')).toHaveClass('max-w-[832px]');
+    expect(screen.getByRole('dialog')).toHaveClass(
+      'max-w-[min(832px,calc(100dvw-96px))]'
+    );
   });
 
   it('lets size override the variant default (wide at sm)', () => {
     render(<Dialog open variant="wide" size="sm" />);
     expect(screen.getByRole('dialog')).toHaveClass(
-      'max-w-[var(--ui-dialog-container-size-sm)]'
+      'max-w-[min(var(--ui-dialog-container-size-sm),calc(100dvw-96px))]'
     );
   });
 
