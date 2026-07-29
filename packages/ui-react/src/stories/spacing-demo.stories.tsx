@@ -7,12 +7,13 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 // `.ui-p-*`/`.ui-m-*`/`.ui-gap-*` spacing utility classes (generated from the
 // `units.gap` primitive scale via dedicated build code, not a semantic token)
 // at every scale step, and doubles as a visual regression net for this
-// feature going forward. Colors/borders below are
-// plain CSS (a `<style>` block), not Tailwind palette utilities — Tailwind's
-// source scanning isn't scoped to the lib build's `__stories__` glob, so any
-// `bg-blue-500`-style utility written here would still be extracted as a
-// candidate and get baked into the published `dist/ui-react.css`. Plain CSS
-// property/selector text isn't a Tailwind candidate, so it can't leak.
+// feature going forward. Colors/borders below are plain CSS (a `<style>`
+// block) referencing `--ui-*` tokens directly, not Tailwind palette
+// utilities — Tailwind's source scanning isn't scoped to the lib build's
+// `__stories__` glob, so any `bg-blue-500`-style utility written here would
+// still be extracted as a candidate and get baked into the published
+// `dist/ui-react.css`. Plain CSS property/selector text isn't a Tailwind
+// candidate, so it can't leak.
 const SPACING_SCALE = [
   0, 2, 4, 6, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64, 72, 88, 96,
 ] as const;
@@ -54,12 +55,12 @@ function SpacingDemo() {
   return (
     <div className="p-8">
       <style>{`
-        .spacing-swatch { background-color: #3b82f6; }
-        .spacing-row { border-bottom: 1px solid #e5e7eb; }
-        .spacing-step { color: #6b7280; }
-        .spacing-box { border: 1px dashed #d1d5db; }
-        .spacing-fill { background-color: #f3f4f6; }
-        .spacing-label { color: #4b5563; }
+        .spacing-swatch { background-color: var(--ui-background-brand-primary-active); }
+        .spacing-row { border-bottom: 1px solid var(--ui-border-on-surface-divider); }
+        .spacing-step { color: var(--ui-text-on-surface-secondary); }
+        .spacing-box { border: 1px dashed var(--ui-border-on-surface-border); }
+        .spacing-fill { background-color: var(--ui-background-surface-secondary); }
+        .spacing-label { color: var(--ui-text-on-surface-primary); }
       `}</style>
 
       <div className="spacing-label mb-4 flex gap-6 font-mono text-xs font-semibold">
