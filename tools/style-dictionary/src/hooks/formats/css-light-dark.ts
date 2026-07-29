@@ -73,6 +73,49 @@ const indent = (block: string): string =>
     .map((line) => `  ${line}`)
     .join('\n');
 
+// Every emitted class is an unlayered, single-class selector (specificity
+// 0-1-0), so — for the padding/margin grammar specifically — textual order in
+// the stylesheet is what decides which rule wins when two classes land on the
+// same element (e.g. `ui-px-16 ui-ps-0`). Plain alphabetical order sorts every
+// side-specific prefix (pb/pe/pl/pr/ps/pt) *before* the axis prefixes (px/py),
+// so an axis utility would always beat a side utility regardless of which one
+// is more specific to the developer's intent. Rank base < axis < side so a
+// side utility always wins over an axis utility, matching Tailwind's override
+// semantics; classes outside this grammar (typography, gap) fall through to
+// alphabetical order.
+const SPACING_PREFIX_RANK: Record<string, number> = {
+  p: 0,
+  m: 0,
+  px: 1,
+  py: 1,
+  mx: 1,
+  my: 1,
+  pt: 2,
+  pb: 2,
+  pl: 2,
+  pr: 2,
+  ps: 2,
+  pe: 2,
+  mt: 2,
+  mb: 2,
+  ml: 2,
+  mr: 2,
+  ms: 2,
+  me: 2,
+};
+
+const spacingSortKey = (selector: string): [number, string] => {
+  const prefix = /^\.ui-([a-z]+)-/.exec(selector)?.[1];
+  const rank = prefix !== undefined ? SPACING_PREFIX_RANK[prefix] : undefined;
+  return [rank ?? -1, selector];
+};
+
+const compareClassSelectors = ([a]: [string, string], [b]: [string, string]): number => {
+  const [rankA, keyA] = spacingSortKey(a);
+  const [rankB, keyB] = spacingSortKey(b);
+  return rankA !== rankB ? rankA - rankB : keyA.localeCompare(keyB);
+};
+
 export interface SerializeOptions {
   brand: string;
   /** `semantic` or a component name — recorded in the file header. */
@@ -97,7 +140,7 @@ export function serializeCss({
     .join('\n');
 
   const classBlocks = [...classes.entries()]
-    .sort(([a], [b]) => a.localeCompare(b))
+    .sort(compareClassSelectors)
     .map(([selector, block]) => `${selector} {\n${indent(block)}\n}`)
     .join('\n\n');
 

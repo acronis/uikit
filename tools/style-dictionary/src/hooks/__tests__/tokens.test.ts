@@ -216,6 +216,25 @@ describe('collectDecls', () => {
     expect(css.indexOf('--a-token')).toBeLessThan(css.indexOf('--b-token'));
   });
 
+  // Every emitted class is an unlayered, single-class selector, so document
+  // order decides which rule wins when two classes land on the same element.
+  // Side-specific utilities (physical or logical) must always render after
+  // the axis utilities they're meant to override — plain alphabetical order
+  // gets this backwards (px/py sort after every pt/pb/pl/pr/ps/pe prefix).
+  it('orders side-specific padding/margin classes after axis classes, regardless of size', () => {
+    const { vars, classes } = collectDecls([], new Map());
+    for (const [selector, block] of gapUtilityClasses('ui-gap-16', '16')) classes.set(selector, block);
+    for (const [selector, block] of gapUtilityClasses('ui-gap-24', '24')) classes.set(selector, block);
+    const css = serializeCss({ brand: 'acronis', tier: 'semantics', isOverride: false, vars, classes });
+
+    for (const side of ['.ui-pt-16', '.ui-pb-16', '.ui-pl-16', '.ui-pr-16', '.ui-ps-16', '.ui-pe-16']) {
+      expect(css.indexOf('.ui-px-16')).toBeLessThan(css.indexOf(side));
+      expect(css.indexOf('.ui-py-16')).toBeLessThan(css.indexOf(side));
+    }
+    // Different sizes must not defeat the prefix-category ordering.
+    expect(css.indexOf('.ui-px-24')).toBeLessThan(css.indexOf('.ui-ps-16'));
+  });
+
 });
 
 describe('gapUtilityClasses', () => {
@@ -224,6 +243,40 @@ describe('gapUtilityClasses', () => {
     expect(classes.size).toBe(21); // 9 padding + 9 margin + 3 gap
     for (const block of classes.values()) {
       expect(block).toContain('var(--ui-gap-16)');
+    }
+  });
+
+  // Pins each selector to its CSS property — a swap in PADDING_DIRECTIONS/
+  // MARGIN_DIRECTIONS (e.g. ps↔pe or ml↔mr) would still pass the size/var
+  // assertion above but silently break the logical (RTL-mirroring) or
+  // physical side utilities.
+  it('maps each selector to the correct CSS property', () => {
+    const classes = gapUtilityClasses('ui-gap-16', '16');
+    const expected: Record<string, string> = {
+      '.ui-p-16': 'padding',
+      '.ui-px-16': 'padding-inline',
+      '.ui-py-16': 'padding-block',
+      '.ui-pt-16': 'padding-top',
+      '.ui-pb-16': 'padding-bottom',
+      '.ui-pl-16': 'padding-left',
+      '.ui-pr-16': 'padding-right',
+      '.ui-ps-16': 'padding-inline-start',
+      '.ui-pe-16': 'padding-inline-end',
+      '.ui-m-16': 'margin',
+      '.ui-mx-16': 'margin-inline',
+      '.ui-my-16': 'margin-block',
+      '.ui-mt-16': 'margin-top',
+      '.ui-mb-16': 'margin-bottom',
+      '.ui-ml-16': 'margin-left',
+      '.ui-mr-16': 'margin-right',
+      '.ui-ms-16': 'margin-inline-start',
+      '.ui-me-16': 'margin-inline-end',
+      '.ui-gap-16': 'gap',
+      '.ui-gap-x-16': 'column-gap',
+      '.ui-gap-y-16': 'row-gap',
+    };
+    for (const [selector, property] of Object.entries(expected)) {
+      expect(classes.get(selector)).toBe(`${property}: var(--ui-gap-16);`);
     }
   });
 });

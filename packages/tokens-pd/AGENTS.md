@@ -67,9 +67,10 @@ Three top-level dirs — `css/`, `tailwind/`, `dtcg/`:
   `hooks/formats/gap-utility-classes.ts`) — not a semantic token; `design-tokens/
 tiers/*.json` is Figma-sourced only and there is no `spacing` group in Figma,
   only `gap`. Emits three ways: `--ui-gap-*` custom properties, framework-agnostic
-  `.ui-p-*`/`.ui-px-*`/`.ui-py-*`/`.ui-pt-*`/`.ui-pb-*`/`.ui-pl-*`/`.ui-pr-*`
-  (padding), the same seven for `m`/margin, `.ui-gap-*`/`.ui-gap-x-*`/
-  `.ui-gap-y-*`, plus a static `.ui-mx-auto` — and `gap-<n>` keys (`p-gap-8`,
+  `.ui-p-*`/`.ui-px-*`/`.ui-py-*`/`.ui-pt-*`/`.ui-pb-*`/`.ui-pl-*`/`.ui-pr-*`/
+  `.ui-ps-*`/`.ui-pe-*` (padding — the last two are the logical/RTL-mirroring
+  inline-start/inline-end pair), the same nine for `m`/margin, `.ui-gap-*`/
+  `.ui-gap-x-*`/`.ui-gap-y-*`, plus a static `.ui-mx-auto` — and `gap-<n>` keys (`p-gap-8`,
   `gap-x-gap-16`) in the shared semantic Tailwind preset's `spacing` namespace,
   deliberately not bare `<n>` so it never collides with Tailwind's own default
   numeric spacing scale. Not brand-dependent, so non-default brand override files

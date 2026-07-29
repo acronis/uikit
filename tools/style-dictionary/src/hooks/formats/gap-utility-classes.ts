@@ -1,9 +1,11 @@
 // Framework-agnostic margin/padding/gap utility classes, generated from the
 // `units.gap.*` primitive scale (via the dedicated build code in `tokens.ts`,
 // not the normal semantic-alias pipeline — see context/output.md) for
-// consumers who don't extend the Tailwind preset. Mirrors the
-// `{property}{direction}-{size}` grammar Tailwind's own engine derives for
-// free once a preset key exists.
+// consumers who don't extend the Tailwind preset. Named `.ui-{property}
+// {direction}-{size}` — deliberately not the `{property}{direction}-gap-{size}`
+// Tailwind itself would derive from the `spacing['gap-<n>']` preset key (see
+// `tailwind.ts`), so this class grammar never collides with Tailwind's own
+// numeric spacing scale.
 
 const PADDING_DIRECTIONS: Record<string, string> = {
   p: 'padding',
