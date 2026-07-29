@@ -2,6 +2,7 @@ import * as React from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 
 import { cn } from '@/lib/utils';
+import { useDocDir } from '@/lib/use-doc-dir';
 
 import { Button } from '../button';
 import {
@@ -110,11 +111,28 @@ function useDialogWelcomeCarousel({
   selectedIndexProp,
   onSelectedIndexChange,
 }: UseDialogWelcomeCarouselOptions) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
-  const [internalIndex, setInternalIndex] = React.useState(0);
+  const dir = useDocDir();
   const isControlled = selectedIndexProp !== undefined;
+  // Mount Embla already on the (clamped) controlled slide instead of its
+  // default 0 — otherwise the initial `onSelect()` below reports a phantom
+  // "slide 0" before the resync effect corrects it, which a consumer wiring
+  // analytics off `onSelectedIndexChange` would log as a real event.
+  const initialIndex = Math.min(
+    Math.max(selectedIndexProp ?? 0, 0),
+    Math.max(slideCount - 1, 0)
+  );
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    direction: dir,
+    startIndex: initialIndex,
+  });
+  const [internalIndex, setInternalIndex] = React.useState(0);
+  // Two-sided: an out-of-range (e.g. negative) `selectedIndex` must still
+  // resolve to a real slide, or no slide would carry the dialog's
+  // Title/Description (see dialog-welcome/accessibility.md's one-active-slide
+  // invariant).
   const selectedIndex = Math.min(
-    selectedIndexProp ?? internalIndex,
+    Math.max(selectedIndexProp ?? internalIndex, 0),
     Math.max(slideCount - 1, 0)
   );
 
@@ -127,10 +145,28 @@ function useDialogWelcomeCarousel({
     onSelectedIndexChangeRef.current = onSelectedIndexChange;
   }, [onSelectedIndexChange]);
 
+  // Read fresh on every Embla event without forcing the subscription effect
+  // below to resubscribe (same reasoning as `onSelectedIndexChangeRef`).
+  const isControlledRef = React.useRef(isControlled);
+  isControlledRef.current = isControlled;
+  const selectedIndexRef = React.useRef(selectedIndex);
+  selectedIndexRef.current = selectedIndex;
+
   React.useEffect(() => {
     if (!emblaApi) return;
     const onSelect = () => {
       const index = emblaApi.selectedScrollSnap();
+      if (isControlledRef.current && !onSelectedIndexChangeRef.current) {
+        // Embla is draggable regardless of controlled state, so a swipe can
+        // still move it physically even though clicks are correctly no-ops
+        // in this configuration (controlled with no way to move the prop
+        // forward). Snap back instead of leaving the visible slide diverged
+        // from the one carrying the dialog's accessible name.
+        if (index !== selectedIndexRef.current) {
+          emblaApi.scrollTo(selectedIndexRef.current, true);
+        }
+        return;
+      }
       setInternalIndex(index);
       onSelectedIndexChangeRef.current?.(index);
     };
@@ -145,14 +181,18 @@ function useDialogWelcomeCarousel({
 
   React.useEffect(() => {
     if (selectedIndexProp === undefined || !emblaApi) return;
-    if (emblaApi.selectedScrollSnap() !== selectedIndexProp) {
+    if (emblaApi.selectedScrollSnap() !== selectedIndex) {
       // `jump: true` — a controlled `selectedIndex` change snaps instantly
       // rather than animating. Without it, the initial sync on mount races
       // the smooth-scroll animation, so an immediate screenshot (e.g. VR)
       // can catch a mid-scroll frame instead of the settled slide.
-      emblaApi.scrollTo(selectedIndexProp, true);
+      emblaApi.scrollTo(selectedIndex, true);
     }
-  }, [emblaApi, selectedIndexProp]);
+  }, [emblaApi, selectedIndexProp, selectedIndex]);
+
+  React.useEffect(() => {
+    emblaApi?.reInit({ direction: dir });
+  }, [emblaApi, dir]);
 
   // Controlled mode never drives Embla directly from Back/Next/dot clicks —
   // only the resync effect above (keyed to `selectedIndexProp`) does. This
@@ -232,7 +272,6 @@ function ContainerCarousel({
   primaryLabel,
   goToSlideLabel,
 }: ContainerCarouselProps) {
-  const slideCount = slides.length;
   return (
     <>
       <div ref={emblaRef} className="w-full overflow-hidden">
@@ -254,21 +293,19 @@ function ContainerCarousel({
           ))}
         </div>
       </div>
-      {slideCount > 0 && (
-        <DialogFooterCarousel
-          variant={footerVariant}
-          slideCount={slideCount}
-          selectedIndex={selectedIndex}
-          onSelectIndex={onSelectIndex}
-          onBack={onBack}
-          onNext={onNext}
-          onPrimaryAction={onPrimaryAction}
-          backLabel={backLabel}
-          nextLabel={nextLabel}
-          primaryLabel={primaryLabel}
-          goToSlideLabel={goToSlideLabel}
-        />
-      )}
+      <DialogFooterCarousel
+        variant={footerVariant}
+        slideCount={slides.length}
+        selectedIndex={selectedIndex}
+        onSelectIndex={onSelectIndex}
+        onBack={onBack}
+        onNext={onNext}
+        onPrimaryAction={onPrimaryAction}
+        backLabel={backLabel}
+        nextLabel={nextLabel}
+        primaryLabel={primaryLabel}
+        goToSlideLabel={goToSlideLabel}
+      />
     </>
   );
 }

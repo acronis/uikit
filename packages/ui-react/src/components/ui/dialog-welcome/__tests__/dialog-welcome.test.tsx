@@ -1,5 +1,5 @@
 import { createRef, useState } from 'react';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -29,13 +29,15 @@ const { emblaState } = vi.hoisted(() => ({
           scrollPrev: () => void;
           on: (event: string, cb: () => void) => void;
           off: (event: string, cb: () => void) => void;
+          reInit: (options?: { direction?: 'ltr' | 'rtl' }) => void;
         },
   },
 }));
 
 vi.mock('embla-carousel-react', () => ({
-  default: () => {
+  default: (options?: { startIndex?: number }) => {
     if (!emblaState.api) {
+      emblaState.selected = options?.startIndex ?? 0;
       const emit = (event: string) =>
         emblaState.listeners[event]?.forEach((cb) => cb());
       emblaState.api = {
@@ -60,6 +62,7 @@ vi.mock('embla-carousel-react', () => ({
             emblaState.listeners[event] ?? []
           ).filter((fn) => fn !== cb);
         },
+        reInit: vi.fn(),
       };
     }
     return [() => {}, emblaState.api];
@@ -70,6 +73,7 @@ beforeEach(() => {
   emblaState.selected = 0;
   emblaState.listeners = {};
   emblaState.api = undefined;
+  document.documentElement.dir = '';
 });
 
 const SLIDES = [
@@ -255,5 +259,35 @@ describe('DialogWelcome', () => {
     rerender(renderWithInlineCallback());
 
     expect(calls).toEqual([0]);
+  });
+
+  it('snaps back a drag that moves Embla off a controlled index with no onSelectedIndexChange wired', () => {
+    render(<DialogWelcome open slides={SLIDES} selectedIndex={2} />);
+    expect(screen.getByText('Third feature')).toBeInTheDocument();
+
+    // Simulate Embla's own drag handling moving the physical position
+    // directly (bypassing the component's Back/Next/dot handlers, which
+    // already no-op in this configuration).
+    act(() => {
+      emblaState.api?.scrollTo(0);
+    });
+
+    expect(screen.getByRole('heading', { name: 'Third feature' })).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toHaveAccessibleName('Third feature');
+  });
+
+  it('clamps a negative selectedIndex to the first slide instead of hiding every slide', () => {
+    render(<DialogWelcome open slides={SLIDES} selectedIndex={-1} />);
+    expect(screen.getByRole('heading', { name: 'First feature' })).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toHaveAccessibleName('First feature');
+  });
+
+  it('initializes and re-initializes the carousel with the document direction', async () => {
+    document.documentElement.dir = 'rtl';
+    render(<DialogWelcome open slides={SLIDES} />);
+
+    await waitFor(() => {
+      expect(emblaState.api?.reInit).toHaveBeenCalledWith({ direction: 'rtl' });
+    });
   });
 });

@@ -60,11 +60,6 @@ tokens:
       description: Footer bar height (via DialogFooterCarousel),
     }
   - {
-      name: --ui-footer-global-gap,
-      affects: footer,
-      description: Gap inside the footer bar (via DialogFooterCarousel),
-    }
-  - {
       name: --ui-footer-global-padding-x,
       affects: footer,
       description: Footer bar horizontal padding (via DialogFooterCarousel),

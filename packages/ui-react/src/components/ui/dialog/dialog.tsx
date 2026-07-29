@@ -45,11 +45,12 @@ import { Loading } from '../loading';
 // parts internally. (In Figma the matching component set is named
 // "DialogDefault"; the code-facing name stays `Dialog` — see dialog.figma.tsx.)
 
-// Figma's "DialogWelcome" frame (7162:26459) wraps its popup preview in a
-// `p-[48px]` ancestor — the minimum margin the popup must keep from the
-// viewport edge on any screen size. `max-w`/`max-h` (not padding, since the
-// popup itself is centered via `fixed` + transform) enforce it here so every
-// consumer keeps that margin, not just the frame that surfaced it.
+// Figma's "DialogWelcome" frame (variant=carousel, node 6353:6164) wraps its
+// popup preview in a `p-[48px]` ancestor — the minimum margin the popup must
+// keep from the viewport edge on any screen size. `max-w`/`max-h` (not
+// padding, since the popup itself is centered via `fixed` + transform)
+// enforce it here so every consumer keeps that margin, not just the frame
+// that surfaced it.
 const dialogContentVariants = cva(
   'fixed left-1/2 top-1/2 z-50 flex max-h-[calc(100dvh-96px)] w-full min-w-[var(--ui-dialog-container-width-min)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[var(--ui-dialog-container-border-radius)] bg-[var(--ui-dialog-container-color)] text-foreground shadow-lg duration-200 data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95',
   {
@@ -276,7 +277,7 @@ function DialogBody({ children, inert }: DialogBodyProps) {
   return (
     <div
       inert={inert}
-      className="flex min-h-[var(--ui-dialog-body-height-min)] flex-col justify-center gap-[var(--ui-dialog-body-gap)] px-4 py-[var(--ui-dialog-body-padding-y)]"
+      className="flex min-h-[var(--ui-dialog-body-height-min)] flex-col justify-center gap-[var(--ui-dialog-body-gap)] overflow-y-auto px-4 py-[var(--ui-dialog-body-padding-y)]"
     >
       {typeof children === 'string' ? (
         <p className="text-sm leading-6 text-foreground">{children}</p>
