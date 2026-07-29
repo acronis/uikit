@@ -1,0 +1,18 @@
+spec_version: '1.0'
+component: CarouselDialog2
+name: carousel-dialog-2
+status: draft
+category: layout
+description: >-
+  Experimental — the control row inside a `DialogFooterCarousel2`: a `Back`
+  button (hidden on the first slide), a dot slide indicator, and a
+  `Next`/call-to-action button. Parallel to a future carousel primitive, not
+  yet renamed/kept. Pure controls — no Embla import; the slide count/index/
+  callbacks are threaded down from `DialogWelcome2`, which owns the carousel
+  engine.
+since: 0.58.0
+dependencies:
+  components:
+    - Button
+figma:
+  node: '6353-4718'

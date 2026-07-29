@@ -1,5 +1,5 @@
 spec_version: '1.0'
-component: DialogFooterCarousel2
+component: CarouselDialog2
 
 # References only. Values live in @acronis-platform/tokens-pd (generated from
 # @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
@@ -7,21 +7,6 @@ component: DialogFooterCarousel2
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - {
-      name: --ui-footer-carousel-color,
-      affects: root,
-      description: Root background color (transparent by default — inherits the surface behind it),
-    }
-  - {
-      name: --ui-footer-global-height,
-      affects: root,
-      description: Fixed row height (64px),
-    }
-  - {
-      name: --ui-footer-global-padding-x,
-      affects: root,
-      description: Horizontal padding,
-    }
   - {
       name: --ui-carousel-dialog-list-indicator-gap,
       affects: listIndicator,

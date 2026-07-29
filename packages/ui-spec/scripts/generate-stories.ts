@@ -635,6 +635,12 @@ const RENDER: Record<string, RenderHint> = {
     // renders a real dot indicator instead of an empty one.
     props: 'slideCount={3} selectedIndex={0}',
   },
+  'carousel-dialog-2': {
+    // `slideCount`/`selectedIndex` default to 1/0 — fix them to a
+    // representative 3-slide carousel so the generated `variant` matrix
+    // renders a real dot indicator instead of a single dot.
+    props: 'slideCount={3} selectedIndex={0}',
+  },
 };
 
 const HEADER =

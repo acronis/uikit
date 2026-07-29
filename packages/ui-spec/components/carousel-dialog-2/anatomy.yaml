@@ -1,46 +1,45 @@
 spec_version: '1.0'
-component: DialogFooterCarousel2
+component: CarouselDialog2
 
 schematic: |
-  root: <div> (flex row, 64px tall, themed footer bar)
+  root: <div> (flex row, 32px tall, full width, space-between)
   +---------------------------------------------------------------+
-  |  [boxLeft: Back]        boxRight: Next / Call to action ->    |
-  |                 * o o  (listIndicator)                        |
+  |  boxLeft: Back        * o o (listIndicator)   boxRight: Next  |
   +---------------------------------------------------------------+
      boxLeft       -> holds the `Back` button; empty on the first slide
      listIndicator -> one dot per slide; the active dot uses a stronger color
      boxRight      -> `Next` on the first/middle slide, the call-to-action
                        label on the last slide
 
-  Rendered via the nested `CarouselDialog2` row — see its own spec for the
-  boxLeft/listIndicator/boxRight anatomy; this component only supplies the
-  themed bar around it.
+  Hosted inside `DialogFooterCarousel2`'s themed footer bar (not separately
+  specced here — that component only supplies the bar's background/height/
+  padding around this row).
 
 root:
   element: div
   description: >-
-    Flex row, fixed 64px height, horizontal padding — themed by the shared
-    `--ui-footer-*` tier (the same geometry `DialogFooterDefault` uses). Its
-    sole child is the `flex-1` `CarouselDialog2` row, which fills the bar and
-    owns the actual boxLeft/listIndicator/boxRight layout internally.
+    Flex row, fixed 32px height, full width, `justify-between` across the
+    three parts. No tokens of its own — geometry only; color comes from the
+    parts below and from the nested `Button` instances.
 
 parts:
   - id: boxLeft
     description: Holds the `Back` button.
     element: div
     optional: true
-    visible_when: 'variant is `"middle"` or `"end"` (hidden on `"start"`)'
+    visible_when: 'variant is `"middle"` or `"last"` (hidden on `"first"`)'
   - id: listIndicator
     description: >-
       One dot per slide (`slideCount`). Each dot is a button; clicking it
       calls `onSelectIndex` with that slide's index. The active slide's dot
       (`selectedIndex`) renders in `--ui-glyph-on-surface-primary`; the rest in
-      `--ui-glyph-on-surface-disabled`.
+      `--ui-glyph-on-surface-disabled`. Gap between dots comes from
+      `--ui-carousel-dialog-list-indicator-gap`.
     element: div
   - id: boxRight
     description: >-
-      Holds the `Next` button (`variant="start" | "middle"`) or the
-      call-to-action button (`variant="end"`).
+      Holds the `Next` button (`variant="first" | "middle"`) or the
+      call-to-action button (`variant="last"`).
     element: div
 
 layout:
@@ -50,8 +49,8 @@ layout:
   order: [boxLeft, listIndicator, boxRight]
 
 states:
-  - id: start
-    trigger: 'variant="start"'
+  - id: first
+    trigger: 'variant="first"'
     kind: prop
     prop: variant
     affects: [boxLeft, boxRight]
@@ -60,8 +59,8 @@ states:
     kind: prop
     prop: variant
     affects: [boxLeft, boxRight]
-  - id: end
-    trigger: 'variant="end"'
+  - id: last
+    trigger: 'variant="last"'
     kind: prop
     prop: variant
     affects: [boxLeft, boxRight]

@@ -14,6 +14,7 @@ since: 0.58.0
 dependencies:
   components:
     - Button
+    - CarouselDialog2
 figma:
   node: '6353-5864'
   codeConnect: packages/ui-react/src/components/ui/dialog-footer-carousel-2/dialog-footer-carousel-2.figma.tsx

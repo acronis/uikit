@@ -1,4 +1,4 @@
-import { createRef } from 'react';
+import { createRef, useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -15,43 +15,61 @@ const { emblaState } = vi.hoisted(() => ({
   emblaState: {
     selected: 0,
     listeners: {} as Record<string, Array<() => void>>,
+    // The real `useEmblaCarousel` keeps a stable `api` reference across
+    // re-renders of the same mount (it's backed by `useState`, not created
+    // fresh every call) — cache it here too, or an effect keyed to `emblaApi`
+    // would spuriously re-run on every render, masking bugs the real hook
+    // never exhibits.
+    api: undefined as
+      | undefined
+      | {
+          selectedScrollSnap: () => number;
+          scrollTo: (index: number) => void;
+          scrollNext: () => void;
+          scrollPrev: () => void;
+          on: (event: string, cb: () => void) => void;
+          off: (event: string, cb: () => void) => void;
+        },
   },
 }));
 
 vi.mock('embla-carousel-react', () => ({
   default: () => {
-    const emit = (event: string) =>
-      emblaState.listeners[event]?.forEach((cb) => cb());
-    const api = {
-      selectedScrollSnap: () => emblaState.selected,
-      scrollTo: (index: number) => {
-        emblaState.selected = index;
-        emit('select');
-      },
-      scrollNext: () => {
-        emblaState.selected += 1;
-        emit('select');
-      },
-      scrollPrev: () => {
-        emblaState.selected -= 1;
-        emit('select');
-      },
-      on: (event: string, cb: () => void) => {
-        (emblaState.listeners[event] ??= []).push(cb);
-      },
-      off: (event: string, cb: () => void) => {
-        emblaState.listeners[event] = (emblaState.listeners[event] ?? []).filter(
-          (fn) => fn !== cb
-        );
-      },
-    };
-    return [() => {}, api];
+    if (!emblaState.api) {
+      const emit = (event: string) =>
+        emblaState.listeners[event]?.forEach((cb) => cb());
+      emblaState.api = {
+        selectedScrollSnap: () => emblaState.selected,
+        scrollTo: (index: number) => {
+          emblaState.selected = index;
+          emit('select');
+        },
+        scrollNext: () => {
+          emblaState.selected += 1;
+          emit('select');
+        },
+        scrollPrev: () => {
+          emblaState.selected -= 1;
+          emit('select');
+        },
+        on: (event: string, cb: () => void) => {
+          (emblaState.listeners[event] ??= []).push(cb);
+        },
+        off: (event: string, cb: () => void) => {
+          emblaState.listeners[event] = (
+            emblaState.listeners[event] ?? []
+          ).filter((fn) => fn !== cb);
+        },
+      };
+    }
+    return [() => {}, emblaState.api];
   },
 }));
 
 beforeEach(() => {
   emblaState.selected = 0;
   emblaState.listeners = {};
+  emblaState.api = undefined;
 });
 
 const SLIDES = [
@@ -163,5 +181,79 @@ describe('DialogWelcome2', () => {
     const ref = createRef<HTMLDivElement>();
     render(<DialogWelcome2 ref={ref} open slides={SLIDES} />);
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
+  });
+
+  it('reaches the end footer variant with a single slide (call-to-action reachable)', () => {
+    render(
+      <DialogWelcome2
+        open
+        slides={[{ title: 'Only feature', description: 'Only description.' }]}
+        primaryLabel="Get started"
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Get started' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Next' })).not.toBeInTheDocument();
+  });
+
+  it('falls back to the default slides when slides is explicitly empty', () => {
+    render(<DialogWelcome2 open slides={[]} />);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Title' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument();
+  });
+
+  it('does not move a controlled carousel when onSelectedIndexChange is not wired', async () => {
+    const user = userEvent.setup();
+    render(<DialogWelcome2 open slides={SLIDES} selectedIndex={2} />);
+    expect(screen.getByText('Third feature')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Next' })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Back' }));
+
+    // Embla never physically moved (no callback to update the prop), so the
+    // rendered slide/footer must still match the untouched `selectedIndex`.
+    expect(screen.getByText('Third feature')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Next' })).not.toBeInTheDocument();
+  });
+
+  it('moves a controlled carousel once the consumer applies onSelectedIndexChange', async () => {
+    const user = userEvent.setup();
+    function ControlledWrapper() {
+      const [selectedIndex, setSelectedIndex] = useState(2);
+      return (
+        <DialogWelcome2
+          open
+          slides={SLIDES}
+          selectedIndex={selectedIndex}
+          onSelectedIndexChange={setSelectedIndex}
+        />
+      );
+    }
+    render(<ControlledWrapper />);
+    expect(screen.getByText('Third feature')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Back' }));
+
+    expect(screen.getByText('Second feature')).toBeInTheDocument();
+  });
+
+  it('does not re-invoke onSelectedIndexChange merely because its identity changed', () => {
+    const calls: number[] = [];
+    const renderWithInlineCallback = () => (
+      <DialogWelcome2
+        open
+        slides={SLIDES}
+        onSelectedIndexChange={(index) => calls.push(index)}
+      />
+    );
+    const { rerender } = render(renderWithInlineCallback());
+    expect(calls).toEqual([0]);
+
+    // A fresh inline callback each render (a new identity) must not force the
+    // subscription effect to re-run and re-report the unchanged slide index.
+    rerender(renderWithInlineCallback());
+    rerender(renderWithInlineCallback());
+
+    expect(calls).toEqual([0]);
   });
 });

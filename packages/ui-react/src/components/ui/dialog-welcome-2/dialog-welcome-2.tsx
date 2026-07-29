@@ -99,17 +99,27 @@ function useDialogWelcome2Carousel({
 }: UseDialogWelcome2CarouselOptions) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [internalIndex, setInternalIndex] = React.useState(0);
+  const isControlled = selectedIndexProp !== undefined;
   const selectedIndex = Math.min(
     selectedIndexProp ?? internalIndex,
     Math.max(slideCount - 1, 0)
   );
+
+  // `onSelectedIndexChange` is read from a ref, not a `useEffect` dependency,
+  // so an inline (non-memoized) consumer callback can't force this effect to
+  // re-subscribe — which would call `onSelect()` again on the same slide and,
+  // if the consumer's callback triggers a re-render, loop indefinitely.
+  const onSelectedIndexChangeRef = React.useRef(onSelectedIndexChange);
+  React.useEffect(() => {
+    onSelectedIndexChangeRef.current = onSelectedIndexChange;
+  }, [onSelectedIndexChange]);
 
   React.useEffect(() => {
     if (!emblaApi) return;
     const onSelect = () => {
       const index = emblaApi.selectedScrollSnap();
       setInternalIndex(index);
-      onSelectedIndexChange?.(index);
+      onSelectedIndexChangeRef.current?.(index);
     };
     onSelect();
     emblaApi.on('select', onSelect);
@@ -118,7 +128,7 @@ function useDialogWelcome2Carousel({
       emblaApi.off('select', onSelect);
       emblaApi.off('reInit', onSelect);
     };
-  }, [emblaApi, onSelectedIndexChange]);
+  }, [emblaApi]);
 
   React.useEffect(() => {
     if (selectedIndexProp === undefined || !emblaApi) return;
@@ -131,24 +141,43 @@ function useDialogWelcome2Carousel({
     }
   }, [emblaApi, selectedIndexProp]);
 
+  // Controlled mode never drives Embla directly from Back/Next/dot clicks —
+  // only the resync effect above (keyed to `selectedIndexProp`) does. This
+  // keeps Embla's physical position from drifting away from the prop when a
+  // consumer passes `selectedIndex` without wiring `onSelectedIndexChange`.
   const handleSelectIndex = React.useCallback(
-    (index: number) => emblaApi?.scrollTo(index),
-    [emblaApi]
+    (index: number) => {
+      if (isControlled) {
+        onSelectedIndexChange?.(index);
+      } else {
+        emblaApi?.scrollTo(index);
+      }
+    },
+    [isControlled, emblaApi, onSelectedIndexChange]
   );
-  const handleBack = React.useCallback(
-    () => emblaApi?.scrollPrev(),
-    [emblaApi]
-  );
-  const handleNext = React.useCallback(
-    () => emblaApi?.scrollNext(),
-    [emblaApi]
-  );
+  const handleBack = React.useCallback(() => {
+    if (isControlled) {
+      onSelectedIndexChange?.(Math.max(selectedIndex - 1, 0));
+    } else {
+      emblaApi?.scrollPrev();
+    }
+  }, [isControlled, emblaApi, onSelectedIndexChange, selectedIndex]);
+  const handleNext = React.useCallback(() => {
+    if (isControlled) {
+      onSelectedIndexChange?.(Math.min(selectedIndex + 1, slideCount - 1));
+    } else {
+      emblaApi?.scrollNext();
+    }
+  }, [isControlled, emblaApi, onSelectedIndexChange, selectedIndex, slideCount]);
 
+  // Check `slideCount - 1` first: for a single-slide carousel, index 0 is
+  // both the first AND last slide, and 'end' (unlocking the primary action)
+  // must win.
   const footerVariant: DialogFooterCarousel2Variant =
-    selectedIndex === 0
-      ? 'start'
-      : selectedIndex === slideCount - 1
-        ? 'end'
+    selectedIndex === slideCount - 1
+      ? 'end'
+      : selectedIndex === 0
+        ? 'start'
         : 'middle';
 
   return {
@@ -342,7 +371,11 @@ const DialogWelcome2 = React.forwardRef<HTMLDivElement, DialogWelcome2Props>(
     ref
   ) => {
     const isCarousel = variant === 'carousel';
-    const slideCount = slides.length;
+    // An explicit `slides={[]}` would otherwise mount no Title/Description
+    // and suppress the footer, leaving the dialog with no accessible name —
+    // fall back to the default placeholder slides instead.
+    const resolvedSlides = slides.length > 0 ? slides : DEFAULT_SLIDES;
+    const slideCount = resolvedSlides.length;
 
     const {
       emblaRef,
@@ -369,7 +402,7 @@ const DialogWelcome2 = React.forwardRef<HTMLDivElement, DialogWelcome2Props>(
         >
           {isCarousel ? (
             <ContainerCarousel
-              slides={slides}
+              slides={resolvedSlides}
               selectedIndex={selectedIndex}
               emblaRef={emblaRef}
               footerVariant={footerVariant}

@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { DialogFooterCarousel2 } from '../dialog-footer-carousel-2';
 
 describe('DialogFooterCarousel2', () => {
-  it('renders the start variant without a Back button, end-aligned', () => {
+  it('renders the start variant without a Back button', () => {
     render(
       <DialogFooterCarousel2
         data-testid="footer"
@@ -15,7 +15,6 @@ describe('DialogFooterCarousel2', () => {
         selectedIndex={0}
       />
     );
-    expect(screen.getByTestId('footer')).toHaveClass('justify-end');
     expect(screen.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument();
   });
@@ -29,7 +28,6 @@ describe('DialogFooterCarousel2', () => {
         selectedIndex={1}
       />
     );
-    expect(screen.getByTestId('footer')).not.toHaveClass('justify-end');
     expect(screen.getByRole('button', { name: 'Back' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument();
   });

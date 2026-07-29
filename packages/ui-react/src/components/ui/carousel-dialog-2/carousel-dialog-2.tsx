@@ -102,7 +102,7 @@ const CarouselDialog2 = React.forwardRef<HTMLDivElement, CarouselDialog2Props>(
                 aria-current={isActive || undefined}
                 aria-label={goToSlideLabel(index, slideCount)}
                 onClick={() => onSelectIndex?.(index)}
-                className="relative block size-4 shrink-0 cursor-pointer"
+                className="relative block size-4 shrink-0 cursor-pointer rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)]"
               >
                 <span
                   className={cn(
