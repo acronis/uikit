@@ -256,7 +256,7 @@ interface DialogHeaderProps {
 
 function DialogHeader({ title, closeLabel }: DialogHeaderProps) {
   return (
-    <div className="flex h-[var(--ui-dialog-header-height)] items-center gap-[var(--ui-dialog-header-gap)] border-b-[length:var(--ui-dialog-header-border-width)] border-[var(--ui-dialog-header-border-color)] bg-[var(--ui-dialog-header-color)] px-[var(--ui-dialog-header-padding-x)]">
+    <div className="flex h-[var(--ui-dialog-header-height)] shrink-0 items-center gap-[var(--ui-dialog-header-gap)] border-b-[length:var(--ui-dialog-header-border-width)] border-[var(--ui-dialog-header-border-color)] bg-[var(--ui-dialog-header-color)] px-[var(--ui-dialog-header-padding-x)]">
       <DialogTitle>{title}</DialogTitle>
       <DialogCloseButton closeLabel={closeLabel} />
     </div>
@@ -277,7 +277,7 @@ function DialogBody({ children, inert }: DialogBodyProps) {
   return (
     <div
       inert={inert}
-      className="flex min-h-[var(--ui-dialog-body-height-min)] flex-col justify-center gap-[var(--ui-dialog-body-gap)] overflow-y-auto px-4 py-[var(--ui-dialog-body-padding-y)]"
+      className="flex min-h-[var(--ui-dialog-body-height-min)] flex-col justify-center-safe gap-[var(--ui-dialog-body-gap)] overflow-y-auto px-4 py-[var(--ui-dialog-body-padding-y)]"
     >
       {typeof children === 'string' ? (
         <p className="text-sm leading-6 text-foreground">{children}</p>

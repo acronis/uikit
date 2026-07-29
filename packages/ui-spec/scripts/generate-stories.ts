@@ -630,9 +630,9 @@ const RENDER: Record<string, RenderHint> = {
     skip: true,
   },
   'dialog-footer-carousel': {
-    // `slideCount`/`selectedIndex` are required with no default — fix them to
-    // a representative 3-slide carousel so the generated `variant` matrix
-    // renders a real dot indicator instead of an empty one.
+    // `slideCount`/`selectedIndex` default to 1/0 — fix them to a
+    // representative 3-slide carousel so the generated `variant` matrix
+    // renders a real dot indicator instead of a single dot.
     props: 'slideCount={3} selectedIndex={0}',
   },
   'carousel-dialog': {

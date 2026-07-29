@@ -1,0 +1,105 @@
+---
+title: DialogWelcome
+description: An onboarding/announcement dialog with a feature carousel or a single-slide layout.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { DialogWelcomeDemo } from "@/components/demos-react/dialog-welcome";
+
+## Usage
+
+```tsx
+import { DialogWelcome } from '@acronis-platform/ui-react';
+```
+
+`DialogWelcome` is the sanctioned way to build an onboarding or feature-announcement
+dialog. A `variant` prop selects one of two Figma-defined layouts: `'carousel'`
+(default) steps through `slides` — each an image/title/description — via a
+`DialogFooterCarousel` bar with `Back`/`Next`/dot navigation and a call-to-action
+button on the last slide; `'single'` renders one image/title/description with a
+`Close` link and a call-to-action button, no footer bar. It's built internally on
+Base UI's Dialog primitive (focus trap, scroll lock, `Esc`/outside-press dismissal,
+and ARIA come from Base UI), but that primitive is not itself exported.
+
+## Examples
+
+<DemoReact>
+  <DialogWelcomeDemo />
+</DemoReact>
+
+A controlled carousel dialog. `onPrimaryAction` fires when the last slide's
+call-to-action button is clicked — the dialog doesn't close on its own, so close
+it yourself once the action completes:
+
+```tsx
+const [open, setOpen] = useState(false);
+
+const slides = [
+  { title: 'Automated backups', description: 'Your data is backed up on a schedule you control.' },
+  { title: 'Instant recovery', description: 'Restore a full workload in minutes, not hours.' },
+  { title: 'Built-in protection', description: 'Ransomware detection runs on every backup automatically.' },
+];
+
+<DialogWelcome
+  variant="carousel"
+  slides={slides}
+  open={open}
+  onOpenChange={setOpen}
+  onPrimaryAction={() => setOpen(false)}
+/>;
+```
+
+Control the active slide directly, e.g. to resume onboarding where a user left off:
+
+```tsx
+<DialogWelcome variant="carousel" slides={slides} selectedIndex={1} open onOpenChange={setOpen} />
+```
+
+The `single` layout — one slide, a `Close` link instead of carousel navigation:
+
+```tsx
+<DialogWelcome
+  variant="single"
+  title="New: Instant recovery"
+  description="Restore a full workload in minutes, not hours."
+  primaryLabel="Try it now"
+  onPrimaryAction={() => setOpen(false)}
+  open
+  onOpenChange={setOpen}
+/>
+```
+
+Pass each slide's own illustration/media via `image`:
+
+```tsx
+<DialogWelcome
+  variant="carousel"
+  slides={slides.map((slide, index) => ({ ...slide, image: <img src={`/slide-${index}.png`} alt="" /> }))}
+  open
+  onOpenChange={setOpen}
+/>
+```
+
+When the dialog renders inside an isolated container (e.g. a shadow root), pass a
+`portalContainer` so the popup inherits that scope's styles:
+
+```tsx
+<DialogWelcome portalContainer={mountNode} open onOpenChange={setOpen} />
+```
+
+## When to use
+
+- First-run onboarding that introduces a few key features one at a time.
+- A single feature-announcement modal shown once (e.g. after a release).
+
+## When not to use
+
+- For a task the user must complete or acknowledge before proceeding (rename,
+  confirm, discard changes) — use `Dialog`.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/dialog-welcome/dialog-welcome.docs.ts"
+  name="DialogWelcomeProps"
+/>

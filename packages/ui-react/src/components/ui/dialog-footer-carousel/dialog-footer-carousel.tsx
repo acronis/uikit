@@ -66,7 +66,7 @@ const DialogFooterCarousel = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          'flex h-[var(--ui-footer-global-height)] items-center bg-[var(--ui-footer-carousel-color)] px-[var(--ui-footer-global-padding-x)]',
+          'flex h-[var(--ui-footer-global-height)] shrink-0 items-center bg-[var(--ui-footer-carousel-color)] px-[var(--ui-footer-global-padding-x)]',
           className
         )}
         {...props}
