@@ -1,0 +1,19 @@
+spec_version: '1.0'
+component: DialogWelcome
+name: dialog-welcome
+status: draft
+category: overlay
+description: >-
+  An onboarding dialog with two layouts: `carousel` (a multi-slide feature
+  tour driven by a real Embla carousel engine, with a `DialogFooterCarousel`
+  footer) and `single` (one image/title/description body with a primary
+  action and a `Close` link). Built from scratch — does not reuse any
+  existing carousel implementation in this repo.
+since: 0.58.0
+dependencies:
+  components:
+    - Button
+    - DialogFooterCarousel
+figma:
+  node: '7162-26459'
+  codeConnect: packages/ui-react/src/components/ui/dialog-welcome/dialog-welcome.figma.tsx

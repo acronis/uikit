@@ -622,20 +622,20 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
-  'dialog-welcome-2': {
+  'dialog-welcome': {
     // A portaled, focus-trapping modal, like `Dialog` — an auto "All variants"
     // grid would stack two stacked modals at screen center. VR is covered by
     // the hand-written stories (Carousel / CarouselMiddleSlide /
     // CarouselLastSlide / CarouselWithImages / Single).
     skip: true,
   },
-  'dialog-footer-carousel-2': {
+  'dialog-footer-carousel': {
     // `slideCount`/`selectedIndex` are required with no default — fix them to
     // a representative 3-slide carousel so the generated `variant` matrix
     // renders a real dot indicator instead of an empty one.
     props: 'slideCount={3} selectedIndex={0}',
   },
-  'carousel-dialog-2': {
+  'carousel-dialog': {
     // `slideCount`/`selectedIndex` default to 1/0 — fix them to a
     // representative 3-slide carousel so the generated `variant` matrix
     // renders a real dot indicator instead of a single dot.
