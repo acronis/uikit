@@ -18,3 +18,4 @@ dependencies:
     - Button
 figma:
   node: '6353-4718'
+  codeConnect: packages/ui-react/src/components/ui/carousel-dialog/carousel-dialog.figma.tsx

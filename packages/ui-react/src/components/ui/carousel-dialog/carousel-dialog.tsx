@@ -82,7 +82,6 @@ const CarouselDialog = React.forwardRef<HTMLDivElement, CarouselDialogProps>(
             'flex min-w-0 flex-1 flex-col items-start justify-center',
             isFirst && 'h-8'
           )}
-          data-name="boxLeft"
         >
           {!isFirst && (
             <Button variant="secondary" onClick={onBack}>
@@ -93,7 +92,6 @@ const CarouselDialog = React.forwardRef<HTMLDivElement, CarouselDialogProps>(
 
         <div
           className="flex shrink-0 items-center gap-[var(--ui-carousel-dialog-list-indicator-gap)]"
-          data-name="ListIndicator"
         >
           {Array.from({ length: slideCount }, (_, index) => {
             const isActive = index === selectedIndex;
@@ -121,7 +119,6 @@ const CarouselDialog = React.forwardRef<HTMLDivElement, CarouselDialogProps>(
 
         <div
           className="flex min-w-0 flex-1 flex-col items-end justify-center"
-          data-name="boxRight"
         >
           <Button onClick={isLast ? onPrimaryAction : onNext}>
             {isLast ? primaryLabel : nextLabel}

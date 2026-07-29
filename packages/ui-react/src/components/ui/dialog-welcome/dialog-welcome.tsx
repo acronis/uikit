@@ -190,8 +190,22 @@ function useDialogWelcomeCarousel({
     }
   }, [emblaApi, selectedIndexProp, selectedIndex]);
 
+  // Skip the first time this effect sees a non-null `emblaApi` — Embla was
+  // already constructed with that render's `dir` (see `useEmblaCarousel`
+  // above), so re-running `reInit` immediately is redundant. Worse, Embla's
+  // `reInit` synchronously re-emits `'reInit'` even when nothing changed,
+  // which would re-invoke the `onSelect` listener registered by the mount
+  // effect above and double-fire `onSelectedIndexChange` on mount. Only a
+  // genuine post-mount `dir` change (e.g. `useDocDir`'s SSR-safe resync, or
+  // the document's `dir` actually flipping at runtime) should call `reInit`.
+  const skipNextReInitRef = React.useRef(true);
   React.useEffect(() => {
-    emblaApi?.reInit({ direction: dir });
+    if (!emblaApi) return;
+    if (skipNextReInitRef.current) {
+      skipNextReInitRef.current = false;
+      return;
+    }
+    emblaApi.reInit({ direction: dir });
   }, [emblaApi, dir]);
 
   // Controlled mode never drives Embla directly from Back/Next/dot clicks —

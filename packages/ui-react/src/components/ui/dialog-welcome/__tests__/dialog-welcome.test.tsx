@@ -62,7 +62,12 @@ vi.mock('embla-carousel-react', () => ({
             emblaState.listeners[event] ?? []
           ).filter((fn) => fn !== cb);
         },
-        reInit: vi.fn(),
+        // The real Embla `reInit` synchronously re-emits `'reInit'` on every
+        // call, regardless of whether anything actually changed — replicate
+        // that here, or a spurious mount-time `reInit` call would silently
+        // pass tests instead of double-firing `onSelectedIndexChange` like
+        // the real library does.
+        reInit: vi.fn(() => emit('reInit')),
       };
     }
     return [() => {}, emblaState.api];
@@ -239,6 +244,19 @@ describe('DialogWelcome', () => {
     await user.click(screen.getByRole('button', { name: 'Back' }));
 
     expect(screen.getByText('Second feature')).toBeInTheDocument();
+  });
+
+  it('fires onSelectedIndexChange exactly once on mount', () => {
+    const onSelectedIndexChange = vi.fn();
+    render(
+      <DialogWelcome
+        open
+        slides={SLIDES}
+        onSelectedIndexChange={onSelectedIndexChange}
+      />
+    );
+    expect(onSelectedIndexChange).toHaveBeenCalledTimes(1);
+    expect(onSelectedIndexChange).toHaveBeenCalledWith(0);
   });
 
   it('does not re-invoke onSelectedIndexChange merely because its identity changed', () => {

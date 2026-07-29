@@ -36,6 +36,19 @@ Scenario: Jumping directly to a slide
 ```
 
 ```gherkin
+Scenario: Controlled without a change handler
+  Given an open DialogWelcome carousel with a controlled `selectedIndex`
+    and no `onSelectedIndexChange` wired
+  When Back, Next, or a dot is activated
+  Then nothing happens — these controls only ever call
+    `onSelectedIndexChange`, which is absent, so the carousel cannot move
+  When a drag gesture moves the carousel's physical position directly
+  Then it snaps back to the controlled `selectedIndex` instead of leaving
+    the visible slide out of sync with the slide carrying the dialog's
+    accessible name
+```
+
+```gherkin
 Scenario: Non-active slides are inert
   Given an open DialogWelcome carousel with more than one slide
   Then every slide except the active one is `aria-hidden` and `inert` —
