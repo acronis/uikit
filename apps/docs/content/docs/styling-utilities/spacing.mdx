@@ -1,0 +1,128 @@
+---
+title: Spacing
+description: Framework-agnostic .ui-p-*/.ui-m-*/.ui-gap-* padding, margin, and gap utility classes.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+[`@acronis-platform/tokens-pd`](/packages/tokens-pd) generates the full
+margin/padding/gap utility grammar from the design system's spacing scale
+(`css/default.css`), so both Tailwind and non-Tailwind
+[`@acronis-platform/ui-react`](/getting-started) consumers can space their
+layouts from the same scale instead of arbitrary values.
+
+<Callout type="info">
+  The scale is generated from the `units.gap` **primitive** token — it is not
+  a semantic token, and it is not brand-dependent. There is one scale, shared
+  by every brand.
+</Callout>
+
+## Scale
+
+| Step | Value |
+| ---: | ----: |
+|    0 |   0px |
+|    2 |   2px |
+|    4 |   4px |
+|    6 |   6px |
+|    8 |   8px |
+|   12 |  12px |
+|   16 |  16px |
+|   20 |  20px |
+|   24 |  24px |
+|   32 |  32px |
+|   40 |  40px |
+|   48 |  48px |
+|   56 |  56px |
+|   64 |  64px |
+|   72 |  72px |
+|   88 |  88px |
+|   96 |  96px |
+
+Each step is also a CSS custom property, `--ui-gap-<step>` (e.g.
+`--ui-gap-16: 16px`), for use in hand-written CSS:
+
+```css
+.my-element {
+  padding: var(--ui-gap-16);
+}
+```
+
+## Utility classes
+
+Loading `css/default.css` (bundled by `@acronis-platform/ui-react/styles`) also
+ships `.ui-{property}{direction}-{step}` classes for every step above — usable
+directly in markup with no Tailwind build step:
+
+```tsx
+<div className="ui-p-16 ui-gap-8">
+  <span className="ui-m-4">Item</span>
+</div>
+```
+
+| Prefix | Property             |
+| ------ | -------------------- |
+| `p`    | `padding`             |
+| `px`   | `padding-inline`      |
+| `py`   | `padding-block`       |
+| `pt`   | `padding-top`         |
+| `pb`   | `padding-bottom`      |
+| `pl`   | `padding-left`        |
+| `pr`   | `padding-right`       |
+| `ps`   | `padding-inline-start`|
+| `pe`   | `padding-inline-end`  |
+
+The same nine directions exist for `m`/margin (`m`, `mx`, `my`, `mt`, `mb`,
+`ml`, `mr`, `ms`, `me`). `gap` only has three: `gap`, `gap-x` (`column-gap`),
+`gap-y` (`row-gap`).
+
+<Callout type="warn">
+  Prefer the logical pairs — `ps`/`pe` and `ms`/`me` — over the physical
+  `pl`/`pr`/`ml`/`mr` ones. Logical properties mirror automatically under
+  `dir="rtl"`; physical ones don't.
+</Callout>
+
+A cascade note: side-specific classes (`pt`/`pb`/`pl`/`pr`/`ps`/`pe`) are
+generated **after** axis classes (`px`/`py`) in the stylesheet, so an
+"axis + side override" pairing works regardless of which class appears first
+in `className`:
+
+```tsx
+<div className="ui-px-16 ui-ps-0" />
+```
+
+There's also one static, non-scale utility:
+
+```tsx
+<div className="ui-mx-auto w-24" />
+```
+
+## Tailwind
+
+The scale is also exposed as `spacing` keys in the semantic Tailwind preset
+(`tailwind/<brand>/tokens.js`), namespaced `gap-<step>` — deliberately not a
+bare `<step>` — so it never collides with Tailwind's own default numeric
+spacing scale:
+
+```tsx
+<div className="p-gap-16 gap-x-gap-8" />
+```
+
+```ts
+// tailwind.config.ts
+import tokens from '@acronis-platform/tokens-pd/tailwind/default/tokens.js';
+
+export default {
+  presets: [tokens],
+};
+```
+
+Any Tailwind spacing utility accepts the `gap-<step>` key —
+`p-gap-16`, `mx-gap-24`, `gap-x-gap-8`, `space-y-gap-4`, and so on.
+
+<Callout type="warn">
+  All of the above is generated from `@acronis-platform/design-tokens` by the
+  `tools/style-dictionary` pipeline and committed to git. Never hand-edit
+  `css/default.css` or the Tailwind presets directly — change the upstream
+  token and rebuild.
+</Callout>

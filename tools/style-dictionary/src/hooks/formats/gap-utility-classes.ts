@@ -1,0 +1,64 @@
+// Framework-agnostic margin/padding/gap utility classes, generated from the
+// `units.gap.*` primitive scale (via the dedicated build code in `tokens.ts`,
+// not the normal semantic-alias pipeline — see context/output.md) for
+// consumers who don't extend the Tailwind preset. Named `.ui-{property}
+// {direction}-{size}` — deliberately not the `{property}{direction}-gap-{size}`
+// Tailwind itself would derive from the `spacing['gap-<n>']` preset key (see
+// `tailwind.ts`), so this class grammar never collides with Tailwind's own
+// numeric spacing scale.
+
+const PADDING_DIRECTIONS: Record<string, string> = {
+  p: 'padding',
+  px: 'padding-inline',
+  py: 'padding-block',
+  pt: 'padding-top',
+  pb: 'padding-bottom',
+  pl: 'padding-left',
+  pr: 'padding-right',
+  ps: 'padding-inline-start',
+  pe: 'padding-inline-end',
+};
+
+const MARGIN_DIRECTIONS: Record<string, string> = {
+  m: 'margin',
+  mx: 'margin-inline',
+  my: 'margin-block',
+  mt: 'margin-top',
+  mb: 'margin-bottom',
+  ml: 'margin-left',
+  mr: 'margin-right',
+  ms: 'margin-inline-start',
+  me: 'margin-inline-end',
+};
+
+const GAP_DIRECTIONS: Record<string, string> = {
+  gap: 'gap',
+  'gap-x': 'column-gap',
+  'gap-y': 'row-gap',
+};
+
+/**
+ * Selector→block entries for one resolved gap size: the full padding,
+ * margin, and gap grammar at that size, all referencing the same custom
+ * property so a brand override (were gap ever to gain one) only needs to
+ * change the variable, not every class.
+ */
+export function gapUtilityClasses(varName: string, sizeKey: string): Map<string, string> {
+  const classes = new Map<string, string>();
+  const value = `var(--${varName})`;
+
+  for (const [prefix, property] of Object.entries({
+    ...PADDING_DIRECTIONS,
+    ...MARGIN_DIRECTIONS,
+    ...GAP_DIRECTIONS,
+  })) {
+    classes.set(`.ui-${prefix}-${sizeKey}`, `${property}: ${value};`);
+  }
+
+  return classes;
+}
+
+/** Static, non-token-driven utility emitted once per build (not per size). */
+export const STATIC_GAP_CLASSES: ReadonlyMap<string, string> = new Map([
+  ['.ui-mx-auto', 'margin-inline: auto;'],
+]);

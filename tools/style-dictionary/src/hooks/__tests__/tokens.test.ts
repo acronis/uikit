@@ -8,8 +8,10 @@ import type { TransformedToken } from 'style-dictionary/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { collectDecls, serializeCss } from '../formats/css-light-dark';
+import { gapUtilityClasses, STATIC_GAP_CLASSES } from '../formats/gap-utility-classes';
 import { normalizeTree } from '../preprocessors/acronis-dtcg';
 import { buildThemeExtend, colorKeyFromPath, routeColor, scopeToNamespace } from '../../tailwind';
+import { diffDecls } from '../../tokens';
 
 // ── normalizeTree (stage 1) ──────────────────────────────────────────────────
 
@@ -30,11 +32,13 @@ const SOURCE = {
       },
     },
   },
-  spacing: {
-    sm: {
-      $type: 'dimension',
-      platforms: ['PD'],
-      $value: { value: 8, unit: 'px' },
+  units: {
+    gap: {
+      '8': {
+        $type: 'dimension',
+        platforms: ['PD'],
+        $value: { value: 8, unit: 'px' },
+      },
     },
   },
   font: {
@@ -93,9 +97,9 @@ describe('normalizeTree', () => {
   });
 
   it('passes a native dimension `$value` { value, unit } through untouched', () => {
-    const sm = at(normalizeTree(SOURCE, 'light', 'PD'), 'spacing', 'sm');
-    expect(sm.$type).toBe('dimension');
-    expect(sm.$value).toEqual({ value: 8, unit: 'px' });
+    const gap8 = at(normalizeTree(SOURCE, 'light', 'PD'), 'units', 'gap', '8');
+    expect(gap8.$type).toBe('dimension');
+    expect(gap8.$value).toEqual({ value: 8, unit: 'px' });
   });
 
   it('passes plain fontWeight (number) and fontFamily (string) scalars through untouched', () => {
@@ -210,6 +214,105 @@ describe('collectDecls', () => {
       token({ name: 'a-token', $type: 'dimension', $value: '1px' }),
     ]);
     expect(css.indexOf('--a-token')).toBeLessThan(css.indexOf('--b-token'));
+  });
+
+  // Every emitted class is an unlayered, single-class selector, so document
+  // order decides which rule wins when two classes land on the same element.
+  // Side-specific utilities (physical or logical) must always render after
+  // the axis utilities they're meant to override — plain alphabetical order
+  // gets this backwards (px/py sort after every pt/pb/pl/pr/ps/pe prefix).
+  it('orders side-specific padding/margin classes after axis classes, regardless of size', () => {
+    const { vars, classes } = collectDecls([], new Map());
+    for (const [selector, block] of gapUtilityClasses('ui-gap-16', '16')) classes.set(selector, block);
+    for (const [selector, block] of gapUtilityClasses('ui-gap-24', '24')) classes.set(selector, block);
+    const css = serializeCss({ brand: 'acronis', tier: 'semantics', isOverride: false, vars, classes });
+
+    for (const side of ['.ui-pt-16', '.ui-pb-16', '.ui-pl-16', '.ui-pr-16', '.ui-ps-16', '.ui-pe-16']) {
+      expect(css.indexOf('.ui-px-16')).toBeLessThan(css.indexOf(side));
+      expect(css.indexOf('.ui-py-16')).toBeLessThan(css.indexOf(side));
+    }
+    // Different sizes must not defeat the prefix-category ordering.
+    expect(css.indexOf('.ui-px-24')).toBeLessThan(css.indexOf('.ui-ps-16'));
+  });
+
+});
+
+describe('gapUtilityClasses', () => {
+  it('returns one selector per property/direction combination, all referencing the same var', () => {
+    const classes = gapUtilityClasses('ui-gap-16', '16');
+    expect(classes.size).toBe(21); // 9 padding + 9 margin + 3 gap
+    for (const block of classes.values()) {
+      expect(block).toContain('var(--ui-gap-16)');
+    }
+  });
+
+  // Pins each selector to its CSS property — a swap in PADDING_DIRECTIONS/
+  // MARGIN_DIRECTIONS (e.g. ps↔pe or ml↔mr) would still pass the size/var
+  // assertion above but silently break the logical (RTL-mirroring) or
+  // physical side utilities.
+  it('maps each selector to the correct CSS property', () => {
+    const classes = gapUtilityClasses('ui-gap-16', '16');
+    const expected: Record<string, string> = {
+      '.ui-p-16': 'padding',
+      '.ui-px-16': 'padding-inline',
+      '.ui-py-16': 'padding-block',
+      '.ui-pt-16': 'padding-top',
+      '.ui-pb-16': 'padding-bottom',
+      '.ui-pl-16': 'padding-left',
+      '.ui-pr-16': 'padding-right',
+      '.ui-ps-16': 'padding-inline-start',
+      '.ui-pe-16': 'padding-inline-end',
+      '.ui-m-16': 'margin',
+      '.ui-mx-16': 'margin-inline',
+      '.ui-my-16': 'margin-block',
+      '.ui-mt-16': 'margin-top',
+      '.ui-mb-16': 'margin-bottom',
+      '.ui-ml-16': 'margin-left',
+      '.ui-mr-16': 'margin-right',
+      '.ui-ms-16': 'margin-inline-start',
+      '.ui-me-16': 'margin-inline-end',
+      '.ui-gap-16': 'gap',
+      '.ui-gap-x-16': 'column-gap',
+      '.ui-gap-y-16': 'row-gap',
+    };
+    for (const [selector, property] of Object.entries(expected)) {
+      expect(classes.get(selector)).toBe(`${property}: var(--ui-gap-16);`);
+    }
+  });
+});
+
+describe('STATIC_GAP_CLASSES', () => {
+  it('renders .ui-mx-auto once', () => {
+    const withoutStatic = render([token({ name: 'ui-x', $type: 'dimension', $value: '1px' })]);
+    expect(withoutStatic).not.toContain('.ui-mx-auto');
+
+    const { vars, classes } = collectDecls([token({ name: 'ui-x', $type: 'dimension', $value: '1px' })], new Map());
+    for (const [selector, block] of STATIC_GAP_CLASSES) classes.set(selector, block);
+    const withStatic = serializeCss({ brand: 'acronis', tier: 'semantics', isOverride: false, vars, classes });
+    expect(withStatic.match(/\.ui-mx-auto/g)).toHaveLength(1);
+    expect(withStatic).toContain('margin-inline: auto;');
+  });
+
+  it('brand override omits gap vars/classes when identical to the default (no diff)', () => {
+    // `tokens.ts`'s dedicated gap resolution path (not collectDecls) injects
+    // `--ui-gap-*` vars + classes identically into every brand's semantics
+    // slice, since `units.gap` carries no brand axis — this pins that
+    // identical inputs diff to nothing, the same way STATIC_GAP_CLASSES does.
+    const base = collectDecls(
+      [token({ name: 'ui-gap-8', path: ['units', 'gap', '8'], $type: 'dimension', $value: '8px' })],
+      new Map()
+    );
+    for (const [selector, block] of STATIC_GAP_CLASSES) base.classes.set(selector, block);
+
+    const brand = collectDecls(
+      [token({ name: 'ui-gap-8', path: ['units', 'gap', '8'], $type: 'dimension', $value: '8px' })],
+      new Map()
+    );
+    for (const [selector, block] of STATIC_GAP_CLASSES) brand.classes.set(selector, block);
+
+    const { vars, classes } = diffDecls(base, brand);
+    expect(vars.size).toBe(0);
+    expect(classes.size).toBe(0);
   });
 });
 

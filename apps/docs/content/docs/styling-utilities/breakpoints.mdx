@@ -1,0 +1,81 @@
+---
+title: Breakpoints
+description: The viewport breakpoint scale as Tailwind @theme values, CSS variables, and JS constants.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+[`@acronis-platform/ui-react`](/getting-started) pins the design team's
+viewport breakpoint scale in three places that are kept in sync: Tailwind's
+`@theme` block, a set of `--ui-breakpoint-*` CSS custom properties, and public
+JS constants.
+
+## Scale
+
+| Breakpoint | Value  | Range        |
+| ---------- | -----: | ------------ |
+| `sm`       |  640px | Tailwind stock default (unoverridden) |
+| `md`       |  768px | Tailwind stock default (unoverridden) |
+| `lg`       | 1024px | 1024–1280    |
+| `xl`       | 1280px | 1281–1440    |
+| `2xl`      | 1440px | 1441–1680    |
+| `3xl`      | 1680px | 1681–1920    |
+| `4xl`      | 1920px | 1920+        |
+
+`sm`/`md` are Tailwind's own, unoverridden defaults — the design system has no
+override for them. `lg`/`xl`/`2xl`/`3xl`/`4xl` are design-team values, pushed
+past Tailwind's stock breakpoints for this scale's larger viewport ranges.
+
+## Tailwind responsive variants
+
+Because `lg`–`4xl` are declared in ui-react's `@theme` block, the standard
+Tailwind responsive prefixes apply the design system's values automatically —
+no config needed for consumers who load `@acronis-platform/ui-react/styles`:
+
+```tsx
+<div className="flex-col lg:flex-row 2xl:max-w-4xl" />
+```
+
+## CSS variables
+
+For sizing an element to match a breakpoint **outside** a `@media`/`@container`
+conditional (e.g. capping a width), `--ui-breakpoint-*` custom properties
+mirror the same `lg`–`4xl` values as plain px:
+
+```css
+.panel {
+  max-width: var(--ui-breakpoint-lg);
+}
+```
+
+<Callout type="warn">
+  These variables don't help write a `@media (min-width: 1024px)` query —
+  Tailwind v4's `@theme` breakpoints are compile-time-only, so there is no
+  runtime CSS variable for that. Use the JS constants below for
+  breakpoint-driven logic instead.
+</Callout>
+
+There are no `--ui-breakpoint-sm`/`-md` variables — only the overridden
+`lg`–`4xl` values are exposed.
+
+## JS constants
+
+`@acronis-platform/ui-react` exports the same `lg`–`4xl` values as pixel
+numbers, plus an SSR-safe viewport-width reader:
+
+```tsx
+import { BREAKPOINT_LG, BREAKPOINT_XL, getViewportWidth } from '@acronis-platform/ui-react';
+
+const isWide = (getViewportWidth() ?? 0) >= BREAKPOINT_LG; // 1024
+```
+
+Available constants: `BREAKPOINT_LG` (1024), `BREAKPOINT_XL` (1280),
+`BREAKPOINT_2XL` (1440), `BREAKPOINT_3XL` (1680), `BREAKPOINT_4XL` (1920).
+`getViewportWidth()` returns `window.innerWidth`, or `undefined` when there is
+no `window` (e.g. server-side rendering).
+
+<Callout type="info">
+  `sm`/`md` are intentionally not exported as constants — same reason they
+  have no `--ui-breakpoint-*` variable: they're Tailwind's stock defaults, not
+  a real design-team override.
+</Callout>

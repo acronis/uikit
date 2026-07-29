@@ -6,7 +6,8 @@ not gitignored), grouped into `css/`, `tailwind/`, and `dtcg/` dirs. The CSS
 
 - `css/default.css` — semantic tier, default brand (full): every `--ui-*` color +
   dimension custom property (colors in both light and dark), followed by the
-  `.ui-typography-*` utility classes.
+  `.ui-typography-*` utility classes and the `.ui-p*`/`.ui-m*`/`.ui-gap*`
+  (+ `.ui-mx-auto`) spacing utility classes.
 - `css/brand-b.css` — semantic tier, non-default brand: **override-only** (below).
 - `css/<component>/default.css` — component tier, default brand (full), one dir per
   component (`button/`, `breadcrumb/`, …).
@@ -73,6 +74,33 @@ Colors are always wrapped in `light-dark()`, even when both modes resolve to the
 same value. Gradients, dimensions, and typography are mode-invariant, so they
 appear once with a single value.
 
+## Gap utility classes
+
+Every numeric `units.gap.*` **primitive** size also emits a full
+padding/margin/gap utility grammar, in addition to its `--ui-gap-*` custom
+property — for framework-agnostic (non-Tailwind) consumers who can't extend a
+Tailwind preset. This is **not** a semantic token: `design-tokens/tiers/*.json`
+is Figma-sourced only (there is no `spacing` group in Figma, only `gap`), so
+`tokens.ts`'s `resolveGapTokens` reads `units.gap.*` directly — bypassing
+`isEmittableToken`'s primitive-root filter — and feeds it into `buildCss`'s
+`semantics` slice via dedicated code, the same way `STATIC_GAP_CLASSES` is
+special-cased. `gapUtilityClasses` (`hooks/formats/gap-utility-classes.ts`)
+derives the `{property}{direction}-{size}` classes Tailwind's own engine would
+generate for free once a preset key exists:
+
+| Prefix                  | Property                                                                                                                                                                           |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `p`/`m`                 | `padding`/`margin`                                                                                                                                                                 |
+| `px`/`mx`               | `padding-inline`/`margin-inline`                                                                                                                                                   |
+| `py`/`my`               | `padding-block`/`margin-block`                                                                                                                                                     |
+| `pt`/`mt`, `pb`/`mb`    | `padding-top`/`margin-top`, `padding-bottom`/`margin-bottom`                                                                                                                       |
+| `pl`/`ml`, `pr`/`mr`    | `padding-left`/`margin-left`, `padding-right`/`margin-right` (physical — do not mirror under `dir="rtl"`)                                                                          |
+| `ps`/`ms`, `pe`/`me`    | `padding-inline-start`/`margin-inline-start`, `padding-inline-end`/`margin-inline-end` (logical — use these instead of `pl`/`pr`/`ml`/`mr` for anything that should mirror in RTL) |
+| `gap`, `gap-x`, `gap-y` | `gap`, `column-gap`, `row-gap`                                                                                                                                                     |
+
+Plus one static, non-token-driven class emitted once per build:
+`.ui-mx-auto { margin-inline: auto; }`.
+
 ## Gradients
 
 Gradient tokens live under the top-level `gradients.*` root of `semantics.json`
@@ -90,7 +118,11 @@ object (`{ theme: { extend: … } }`) consumed via `@config`. Values are
 **baked** resolved literals (colors as `light-dark()`, gradients into
 `backgroundImage`, typography into `fontSize`/`fontFamily`, dimensions into
 `spacing`/`borderRadius`), keyed with the `ui-` prefix — so a preset is
-self-contained (no `--ui-*` dependency) and brand selection is build-time.
+self-contained (no `--ui-*` dependency) and brand selection is build-time. The
+shared semantic (`tokens`) preset also gets `gap-<n>` keys merged into its
+`spacing` namespace directly from `resolveGapTokens`, independent of the
+token-driven `buildThemeExtend` pass above (`units.gap` isn't a normal token
+in the resolved stream — see "Gap utility classes").
 
 The color/gradient → Tailwind-namespace routing (which theme namespace a token
 lands in — `backgroundColor`, `textColor`, `borderColor`, `fill`, `ringColor`,

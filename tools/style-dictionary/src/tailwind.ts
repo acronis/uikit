@@ -17,7 +17,14 @@ import {
   tailwindDir,
   tailwindTokensPreset,
 } from './platforms';
-import { BRANDS, resolveColorMap, resolveTokens, semanticRoots, tailwindRoleMap } from './tokens';
+import {
+  BRANDS,
+  resolveColorMap,
+  resolveGapTokens,
+  resolveTokens,
+  semanticRoots,
+  tailwindRoleMap,
+} from './tokens';
 
 // Partition tokens by tier: the shared semantic vocabulary (colors + gradients +
 // typography) → one base `tokens` preset; every other first path segment is a
@@ -328,6 +335,12 @@ const DTS =
 
 export async function buildTailwind(filter: Filter): Promise<void> {
   rmSync(tailwindDir(), { recursive: true, force: true });
+
+  // `units.gap.*` has no brand/theme axis; resolve once and merge it into every
+  // brand's `tokens` preset (independent of the token-driven preset generation
+  // below — gap sizes never flow through `buildThemeExtend`).
+  const gapTokens = await resolveGapTokens(filter);
+
   for (const brand of BRANDS) {
     const darkColors = await resolveColorMap(filter, brand, 'dark');
     const tokens = await resolveTokens(filter, brand, 'light');
@@ -343,6 +356,9 @@ export async function buildTailwind(filter: Filter): Promise<void> {
 
     const emit = (dest: string, slice: string): void => {
       const theme = buildThemeExtend(bySlice.get(slice) ?? [], darkColors);
+      if (slice === 'tokens') {
+        for (const [sizeKey, pxValue] of gapTokens) theme.spacing[`gap-${sizeKey}`] = pxValue;
+      }
       mkdirSync(path.dirname(dest), { recursive: true });
       writeFileSync(dest, renderPreset(brand.name, slice, theme));
       writeFileSync(dest.replace(/\.js$/, '.d.ts'), DTS);

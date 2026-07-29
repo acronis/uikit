@@ -359,6 +359,25 @@ export default {
             "fontWeight": "700"
           }
         ]
+      },
+      "spacing": {
+        "gap-0": "0px",
+        "gap-2": "2px",
+        "gap-4": "4px",
+        "gap-6": "6px",
+        "gap-8": "8px",
+        "gap-12": "12px",
+        "gap-16": "16px",
+        "gap-20": "20px",
+        "gap-24": "24px",
+        "gap-32": "32px",
+        "gap-40": "40px",
+        "gap-48": "48px",
+        "gap-56": "56px",
+        "gap-64": "64px",
+        "gap-72": "72px",
+        "gap-88": "88px",
+        "gap-96": "96px"
       }
     },
   },
