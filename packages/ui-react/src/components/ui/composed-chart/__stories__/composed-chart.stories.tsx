@@ -13,6 +13,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  formatCompactNumber,
   type ChartConfig,
 } from '../../chart';
 
@@ -232,4 +233,10 @@ export const CustomTooltipOpen: Story = {
       </RechartsComposedChart>
     </ChartContainer>
   ),
+};
+
+// Compact the shared value axis with `yTickFormatter` — `4200 → "4.2K"`. A real
+// value transform beyond what a `unit` suffix can do.
+export const CompactValueAxis: Story = {
+  args: { yTickFormatter: formatCompactNumber },
 };

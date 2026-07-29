@@ -17,6 +17,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  createTickFormatter,
   type ChartConfig,
   type ChartTooltipContentProps,
 } from '../../chart';
@@ -88,6 +89,33 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Compact currency on the MRR axis — `146500 → "$146.5K"`. A `unit` suffix
+// can't abbreviate the value or prefix `$`.
+const mrrData = [
+  { month: 'Aug', actual: 92900 },
+  { month: 'Sep', actual: 101200 },
+  { month: 'Oct', actual: 112400 },
+  { month: 'Nov', actual: 121800 },
+  { month: 'Dec', actual: 133500 },
+  { month: 'Jan', actual: 146500, forecast: 146500, lower: 146500, upper: 146500 },
+  { month: 'Feb', forecast: 158000, lower: 150000, upper: 168000 },
+  { month: 'Mar', forecast: 171000, lower: 156000, upper: 190000 },
+  { month: 'Apr', forecast: 185000, lower: 160000, upper: 214000 },
+  { month: 'May', forecast: 200000, lower: 163000, upper: 240000 },
+];
+
+export const CompactCurrencyAxis: Story = {
+  args: {
+    data: mrrData,
+    yTickFormatter: createTickFormatter({
+      style: 'currency',
+      currency: 'USD',
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    }),
+  },
+};
+
 // Actual (solid) + forecast (dashed) + the widening prediction cone.
 export const Default: Story = {};
 
@@ -97,8 +125,8 @@ export const Default: Story = {};
 export const AxisLabels: Story = {
   args: {
     xAxisLabel: 'Month',
-    yAxisLabel: 'Revenue',
-    yUnit: 'k',
+    yAxisLabel: 'Storage',
+    yUnit: 'GB',
   },
 };
 

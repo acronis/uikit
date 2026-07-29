@@ -95,6 +95,28 @@ contract:
         this library) — e.g. with a formatter / labelFormatter — to customize the
         tooltip content without composing recharts. Ignored when showTooltip is
         false.
+    - name: showXAxis
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the X axis (its ticks and title). Set false to hide it.
+    - name: showYAxis
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the Y axis (its ticks and title). Set false to hide it.
+    - name: xTickFormatter
+      type: '(value: number | string, index?: number) => string'
+      required: false
+      description: >-
+        Format each X-axis tick value. Unlike the `unit` suffix (append-only), a
+        formatter transforms the value — abbreviate, prefix a symbol, or map to a
+        label. Use formatCompactNumber / formatPercent / createTickFormatter from
+        the shared Chart primitives, or any function.
+    - name: yTickFormatter
+      type: '(value: number | string, index?: number) => string'
+      required: false
+      description: Format each Y-axis tick value (see xTickFormatter).
   events: []
   methods: []
 

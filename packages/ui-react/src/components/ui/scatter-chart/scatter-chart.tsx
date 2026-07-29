@@ -18,6 +18,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
+  type CartesianAxisProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. Unlike the
@@ -45,7 +46,8 @@ export interface ScatterSeries {
 }
 
 export interface ScatterChartProps
-  extends Omit<React.ComponentProps<'div'>, 'children'> {
+  extends Omit<React.ComponentProps<'div'>, 'children'>,
+    CartesianAxisProps {
   /** One `<Scatter>` per entry — each with its own point array. Use a single entry for an ungrouped scatter. */
   series: ScatterSeries[];
   /**
@@ -103,6 +105,10 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      showXAxis = true,
+      showYAxis = true,
+      xTickFormatter,
+      yTickFormatter,
       tooltipContent,
       ...props
     },
@@ -138,9 +144,11 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
               dataKey={xKey}
               name={xKey}
               unit={xUnit}
+              hide={!showXAxis}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              tickFormatter={xTickFormatter}
               height={xAxisLabel ? 48 : undefined}
               label={xAxisTitle}
             />
@@ -149,9 +157,11 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
               dataKey={yKey}
               name={yKey}
               unit={yUnit}
+              hide={!showYAxis}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              tickFormatter={yTickFormatter}
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />

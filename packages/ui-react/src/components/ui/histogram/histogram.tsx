@@ -15,6 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
+  type CartesianAxisProps,
 } from '../chart';
 
 // A histogram bins a set of continuous samples into equal-width ranges and plots
@@ -79,7 +80,8 @@ export function computeHistogramBins(
 }
 
 export interface HistogramProps
-  extends Omit<React.ComponentProps<'div'>, 'children'> {
+  extends Omit<React.ComponentProps<'div'>, 'children'>,
+    CartesianAxisProps {
   /** Raw continuous samples to bin (non-finite values are ignored). */
   values: ReadonlyArray<number>;
   /**
@@ -128,6 +130,10 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
       barRadius = 0,
       showGrid = true,
       showTooltip = true,
+      showXAxis = true,
+      showYAxis = true,
+      xTickFormatter,
+      yTickFormatter,
       tooltipContent,
       ...props
     },
@@ -167,17 +173,21 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
             {showGrid && <CartesianGrid vertical={false} />}
             <XAxis
               dataKey="label"
+              hide={!showXAxis}
               tickLine={false}
               axisLine={false}
+              tickFormatter={xTickFormatter}
               height={xAxisLabel ? 48 : undefined}
               label={xAxisTitle}
             />
             <YAxis
               type="number"
+              hide={!showYAxis}
               tickLine={false}
               axisLine={false}
               allowDecimals={false}
               unit={yUnit}
+              tickFormatter={yTickFormatter}
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />

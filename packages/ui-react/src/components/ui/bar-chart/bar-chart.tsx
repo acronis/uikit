@@ -19,6 +19,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
+  type CartesianAxisProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
@@ -90,7 +91,8 @@ export function barChartReferenceValue(
 
 export interface BarChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    VariantProps<typeof barChartVariants> {
+    VariantProps<typeof barChartVariants>,
+    CartesianAxisProps {
   /** Row-per-category data. Each object holds the category key + one numeric field per series. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -150,6 +152,10 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      showXAxis = true,
+      showYAxis = true,
+      xTickFormatter,
+      yTickFormatter,
       tooltipContent,
       ...props
     },
@@ -209,17 +215,21 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
               <>
                 <XAxis
                   type="number"
+                  hide={!showXAxis}
                   tickLine={false}
                   axisLine={false}
                   unit={xUnit}
+                  tickFormatter={xTickFormatter}
                   height={xAxisLabel ? 48 : undefined}
                   label={xAxisTitle}
                 />
                 <YAxis
                   dataKey={xKey}
                   type="category"
+                  hide={!showYAxis}
                   tickLine={false}
                   axisLine={false}
+                  tickFormatter={yTickFormatter}
                   width={yAxisLabel ? 96 : 80}
                   label={yAxisTitle}
                 />
@@ -229,16 +239,20 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                 <XAxis
                   dataKey={xKey}
                   type="category"
+                  hide={!showXAxis}
                   tickLine={false}
                   axisLine={false}
+                  tickFormatter={xTickFormatter}
                   height={xAxisLabel ? 48 : undefined}
                   label={xAxisTitle}
                 />
                 <YAxis
                   type="number"
+                  hide={!showYAxis}
                   tickLine={false}
                   axisLine={false}
                   unit={yUnit}
+                  tickFormatter={yTickFormatter}
                   width={yAxisLabel ? 72 : undefined}
                   label={yAxisTitle}
                 />

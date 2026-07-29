@@ -13,6 +13,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  createTickFormatter,
   type ChartConfig,
 } from '../../chart';
 
@@ -169,8 +170,8 @@ export const ComparisonWithDeltaBand: Story = {
 export const AxisLabels: Story = {
   args: {
     xAxisLabel: 'Month',
-    yAxisLabel: 'Sessions',
-    yUnit: 'k',
+    yAxisLabel: 'Response time',
+    yUnit: 'ms',
   },
 };
 
@@ -311,5 +312,49 @@ export const CustomTooltipOpen: Story = {
         </ComposedChart>
       </ChartContainer>
     );
+  },
+};
+
+const mrrData = [
+  { month: 'Aug', mrr: 92900 },
+  { month: 'Sep', mrr: 101200 },
+  { month: 'Oct', mrr: 112400 },
+  { month: 'Nov', mrr: 121800 },
+  { month: 'Dec', mrr: 133500 },
+  { month: 'Jan', mrr: 146500 },
+];
+
+const mrrConfig = {
+  mrr: { label: 'MRR', color: 'var(--ui-background-brand-secondary)' },
+} satisfies ChartConfig;
+
+// Compact currency on the value axis — `146500 → "$146.5K"`. A `unit` suffix
+// can only append text; it can't abbreviate the value or prefix `$`.
+export const CompactCurrencyAxis: Story = {
+  args: {
+    config: mrrConfig,
+    data: mrrData,
+    dataKeys: ['mrr'],
+    yTickFormatter: createTickFormatter({
+      style: 'currency',
+      currency: 'USD',
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    }),
+  },
+};
+
+// Hide both axes with `showXAxis` / `showYAxis` for a compact sparkline — not
+// possible with a `unit` suffix at all.
+export const Sparkline: Story = {
+  args: {
+    config: mrrConfig,
+    data: mrrData,
+    dataKeys: ['mrr'],
+    showXAxis: false,
+    showYAxis: false,
+    showGrid: false,
+    showLegend: false,
+    className: 'h-[120px] w-[360px]',
   },
 };

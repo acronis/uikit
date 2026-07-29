@@ -81,6 +81,52 @@ The tooltip indicator can be a `dot` (default), `line`, or `dashed`:
 <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
 ```
 
+## Formatting and hiding axes
+
+Every cartesian chart — `BarChart`, `LineChart`, `AreaChart`, `ComposedChart`,
+`ScatterChart`, `ConfidenceCone`, `Histogram` — shares the same axis knobs:
+
+- `showXAxis` / `showYAxis` (default `true`) — hide either axis (its ticks and
+  title). Useful for compact/sparkline layouts.
+- `xTickFormatter` / `yTickFormatter` — format each tick value. Unlike the
+  `unit` suffix (which only _appends_ text), a formatter can **transform** the
+  value: abbreviate it, prefix a currency symbol, or map a number to a label.
+
+Ready-made formatters ship alongside the chart primitives; any
+`(value) => string` function also works:
+
+- `formatCompactNumber` — `146500 → "146.5K"`, `1_500_000 → "1.5M"`.
+- `formatPercent` — `41.8 → "41.8%"`.
+- `createTickFormatter(options)` — a factory over `Intl.NumberFormat` options
+  (currency, fixed decimals, a specific locale).
+
+```tsx
+import {
+  LineChart,
+  ScatterChart,
+  formatCompactNumber,
+  createTickFormatter,
+} from '@acronis-platform/ui-react';
+
+// Abbreviate large values — 146500 → "146.5K"
+<LineChart config={config} data={data} dataKeys={['mrr']} xKey="month"
+  yTickFormatter={formatCompactNumber} />;
+
+// Compact currency via the Intl factory — 146500 → "$146.5K"
+<LineChart config={config} data={data} dataKeys={['mrr']} xKey="month"
+  yTickFormatter={createTickFormatter({
+    style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1,
+  })} />;
+
+// Map values to labels
+<ScatterChart config={config} series={series} xKey="hours" yKey="score"
+  yTickFormatter={(score) => (Number(score) >= 80 ? 'High' : 'Low')} />;
+
+// Hide both axes for a sparkline
+<LineChart config={config} data={data} dataKeys={['mrr']} xKey="month"
+  showXAxis={false} showYAxis={false} showGrid={false} showLegend={false} />;
+```
+
 ## API Reference
 
 `ChartContainer` takes the chart `config` and the recharts plot as children:

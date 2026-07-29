@@ -89,6 +89,17 @@ import { Histogram, ChartTooltipContent } from '@acronis-platform/ui-react';
 />;
 ```
 
+Hide an axis with `showXAxis` / `showYAxis`, or format its ticks with
+`xTickFormatter` / `yTickFormatter` — the shared axis knobs described under
+[Formatting and hiding axes](/components/chart#formatting-and-hiding-axes):
+
+```tsx
+import { Histogram } from '@acronis-platform/ui-react';
+
+// Hide the frequency (Y) axis for a cleaner distribution shape
+<Histogram config={config} values={values} binCount={10} showYAxis={false} />;
+```
+
 ## API Reference
 
 <AutoTypeTable

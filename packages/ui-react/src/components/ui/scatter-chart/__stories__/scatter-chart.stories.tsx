@@ -215,3 +215,12 @@ export const CustomTooltipOpen: Story = {
     </ChartContainer>
   ),
 };
+
+// Map numeric ticks to labels with `yTickFormatter` — a value→band transform
+// (`score → Low / Mid / High`) a `unit` suffix can't express.
+export const MappedValueAxis: Story = {
+  args: {
+    yTickFormatter: (score) =>
+      Number(score) >= 80 ? 'High' : Number(score) >= 60 ? 'Mid' : 'Low',
+  },
+};

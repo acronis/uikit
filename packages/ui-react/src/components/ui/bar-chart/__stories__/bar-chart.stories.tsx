@@ -6,6 +6,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  formatCompactNumber,
   type ChartConfig,
 } from '../../chart';
 
@@ -129,8 +130,8 @@ export const MultipleReferenceLines: Story = {
 export const AxisLabels: Story = {
   args: {
     xAxisLabel: 'Month',
-    yAxisLabel: 'Sessions',
-    yUnit: 'k',
+    yAxisLabel: 'Response time',
+    yUnit: 'ms',
   },
 };
 
@@ -141,9 +142,9 @@ export const HorizontalAxisLabels: Story = {
   args: {
     orientation: 'horizontal',
     dataKeys: ['desktop'],
-    xAxisLabel: 'Sessions',
+    xAxisLabel: 'Response time',
     yAxisLabel: 'Month',
-    xUnit: 'k',
+    xUnit: 'ms',
   },
 };
 
@@ -222,4 +223,29 @@ export const CustomTooltipOpen: Story = {
       </RechartsBarChart>
     </ChartContainer>
   ),
+};
+
+// Compact the value axis with `yTickFormatter` — `146500 → "146.5K"`. A real
+// value transform, which the plain `unit` suffix can't do (it can only append
+// text).
+const revenueData = [
+  { month: 'Jan', revenue: 128600 },
+  { month: 'Feb', revenue: 187400 },
+  { month: 'Mar', revenue: 146500 },
+  { month: 'Apr', revenue: 212300 },
+  { month: 'May', revenue: 173900 },
+  { month: 'Jun', revenue: 246800 },
+];
+
+const revenueConfig = {
+  revenue: { label: 'Revenue', color: 'var(--ui-background-brand-secondary)' },
+} satisfies ChartConfig;
+
+export const CompactValueAxis: Story = {
+  args: {
+    config: revenueConfig,
+    data: revenueData,
+    dataKeys: ['revenue'],
+    yTickFormatter: formatCompactNumber,
+  },
 };

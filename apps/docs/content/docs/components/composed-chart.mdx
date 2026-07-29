@@ -127,6 +127,26 @@ import { ComposedChart, ChartTooltipContent } from '@acronis-platform/ui-react';
 />;
 ```
 
+Format the tick values with `xTickFormatter` / `yTickFormatter`, or hide an axis
+with `showXAxis` / `showYAxis` — the shared axis knobs described under
+[Formatting and hiding axes](/components/chart#formatting-and-hiding-axes). Unlike
+`unit`, a formatter _transforms_ the value (abbreviate, currency, map to a label):
+
+```tsx
+import { ComposedChart, formatCompactNumber } from '@acronis-platform/ui-react';
+
+<ComposedChart
+  config={config}
+  data={data}
+  series={[
+    { key: 'revenue', type: 'bar' },
+    { key: 'profit', type: 'line' },
+  ]}
+  xKey="month"
+  yTickFormatter={formatCompactNumber}
+/>;
+```
+
 ## API Reference
 
 <AutoTypeTable
