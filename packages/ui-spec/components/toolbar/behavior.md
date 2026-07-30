@@ -40,6 +40,21 @@ ButtonMenu children (including inside a ToolbarActions child)
 **When** it renders
 **Then** every nested Button/ButtonMenu is enabled
 
+### Closes an open overflow menu when the Toolbar becomes disabled
+
+**Given** a ToolbarActionList whose overflow menu is open
+**When** the ancestor Toolbar's `disabled` becomes `true`
+**Then** the menu closes and its items are disabled — the menu renders in a
+portal, outside the `<fieldset>` subtree the native cascade reaches, so the
+disabled state is carried to it in the same render rather than observed off
+the DOM afterwards
+
+### Keeps the overflow menu closed once the Toolbar is re-enabled
+
+**Given** a Toolbar that was disabled while its overflow menu was open
+**When** `disabled` becomes `false` again
+**Then** the menu stays closed until the user opens it again
+
 ---
 
 ## Actions Area

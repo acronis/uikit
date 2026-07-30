@@ -35,18 +35,32 @@ import {
 // balloons to fit every action before that measurement ever runs, so it
 // always measures "everything fits" and the row never collapses.
 
+// The fieldset cascade only reaches descendants, so anything a nested part
+// renders in a portal (see `ToolbarActionList`'s overflow menu) has to learn
+// the disabled state another way. This carries it in React, deliberately
+// rather than reading the fieldset's `disabled` attribute back out of the DOM:
+// an out-of-React side channel (a MutationObserver on the attribute) resolves
+// one render *after* the fact, so the portal renders enabled for a beat, and
+// its `setState` lands outside React's own scheduling — which under React 19's
+// act environment is intermittently never flushed at all, leaving the portal
+// enabled forever.
+const ToolbarDisabledContext = React.createContext(false);
+
 export type ToolbarProps = React.ComponentPropsWithoutRef<'fieldset'>;
 
 const Toolbar = React.forwardRef<HTMLFieldSetElement, ToolbarProps>(
-  ({ className, ...props }, ref) => (
-    <fieldset
-      ref={ref}
-      className={cn(
-        'm-0 flex min-w-0 items-center gap-4 border-0 p-0',
-        className
-      )}
-      {...props}
-    />
+  ({ className, disabled, ...props }, ref) => (
+    <ToolbarDisabledContext.Provider value={!!disabled}>
+      <fieldset
+        ref={ref}
+        className={cn(
+          'm-0 flex min-w-0 items-center gap-4 border-0 p-0',
+          className
+        )}
+        disabled={disabled}
+        {...props}
+      />
+    </ToolbarDisabledContext.Provider>
   )
 );
 Toolbar.displayName = 'Toolbar';
@@ -248,24 +262,19 @@ const ToolbarActionList = React.forwardRef<
     const [moreMenuOpen, setMoreMenuOpen] = React.useState(false);
     // The overflow menu renders in a portal, outside the ancestor
     // `<fieldset>`'s DOM subtree, so the native disabled-cascade (see
-    // `Toolbar` above) never reaches its items. Tracked separately here so a
-    // menu already open when the fieldset becomes disabled gets closed, and
-    // its items stay disabled even if forced open again (e.g. via a ref).
-    const [ancestorDisabled, setAncestorDisabled] = React.useState(false);
+    // `Toolbar` above) never reaches its items — they read the state off
+    // context instead, so a menu already open when the toolbar becomes
+    // disabled gets closed, and its items stay disabled even if forced open
+    // again (e.g. via a ref).
+    const ancestorDisabled = React.useContext(ToolbarDisabledContext);
 
-    React.useEffect(() => {
-      const fieldset = containerRef.current?.closest('fieldset');
-      if (!fieldset) return;
-      const sync = () => setAncestorDisabled(fieldset.disabled);
-      sync();
-      const observer = new MutationObserver(sync);
-      observer.observe(fieldset, {
-        attributes: true,
-        attributeFilter: ['disabled'],
-      });
-      return () => observer.disconnect();
-    }, []);
+    // Gating the `open` prop (rather than only resetting the state below)
+    // closes the menu in the very commit the toolbar becomes disabled — an
+    // effect would leave it open for one frame.
+    const menuOpen = moreMenuOpen && !ancestorDisabled;
 
+    // Still clear the stored state, or re-enabling the toolbar would pop the
+    // menu back open on its own.
     React.useEffect(() => {
       if (ancestorDisabled) setMoreMenuOpen(false);
     }, [ancestorDisabled]);
@@ -349,7 +358,7 @@ const ToolbarActionList = React.forwardRef<
         ))}
         {hiddenActions.length > 0 && (
           <DropdownMenu
-            open={moreMenuOpen}
+            open={menuOpen}
             onOpenChange={setMoreMenuOpen}
             disabled={ancestorDisabled}
           >
