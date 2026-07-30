@@ -1,0 +1,95 @@
+---
+title: SankeyChart
+description: A typed Sankey flow diagram — nodes + links, width proportional to value.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { SankeyChartDemo } from '@/components/demos-react/sankey-chart';
+
+## Usage
+
+```tsx
+import { SankeyChart } from '@acronis-platform/ui-react';
+import type { ChartConfig } from '@acronis-platform/ui-react';
+```
+
+`SankeyChart` is a typed composition over the shared [`Chart`](/components/chart)
+primitives, built on recharts' `Sankey`. Give it a graph (`data.nodes` +
+`data.links`) and a per-node `config` — it renders a themed flow diagram where
+each link's width is proportional to its value and each ribbon is tinted by its
+**target** node, so you don't hand-compose recharts children. There are no axes,
+grid, or legend.
+
+Node `name`s are the color keys, **keyed into `config`**: `SankeyChart` turns them
+into the `--color-<name>` custom properties the node bars fill from. They must be
+unique and CSS-safe; `config[name].label` carries the human-readable text.
+
+> **Design-pending v1.** Built on recharts' `Sankey` (no demo playground existed).
+> There is no chart token tier yet, so the example colors reference the shared
+> status tokens; a dedicated `--ui-chart-*` data-viz palette is pending an upstream
+> design pass. `--ui-background-status-strong-*` is chromatic in every brand. A
+> light "total"/parent shade (e.g. a periwinkle "All tenants") isn't in the
+> semantic palette yet, so such nodes borrow the strong hue for now.
+
+## Examples
+
+<DemoReact>
+  <SankeyChartDemo />
+</DemoReact>
+
+A flow of nodes and links, ribbon width proportional to value:
+
+```tsx
+const data = {
+  nodes: [{ name: 'all' }, { name: 'certified' }, { name: 'expired' }],
+  links: [
+    { source: 0, target: 1, value: 209 },
+    { source: 0, target: 2, value: 31 },
+  ],
+};
+
+const config = {
+  all: { label: 'All tenants', color: 'var(--ui-background-status-strong-info)' },
+  certified: { label: 'Certified', color: 'var(--ui-background-status-strong-info)' },
+  expired: { label: 'Expired', color: 'var(--ui-background-status-strong-danger)' },
+} satisfies ChartConfig;
+
+<SankeyChart config={config} data={data} className="h-[360px] w-[620px]" />;
+```
+
+Tune the geometry with `nodePadding` / `nodeWidth` / `linkCurvature`, auto-order
+nodes with `sort`, hide the on-chart labels with `showLabels`, and show a
+built-in legend (color dot + label + value + %) with `showLegend`:
+
+```tsx
+<SankeyChart
+  config={config}
+  data={data}
+  nodeWidth={16}
+  linkCurvature={0.6}
+  showLabels={false}
+  showLegend
+/>;
+```
+
+`showLegend` provides that count/% legend (each node's value + share of the
+largest node) — the "Certification compliance" card is just `showLabels={false}`
++ `showLegend`. Give a link an explicit `color` to override its default target
+tint; an explicit color renders full-opacity to match its node bar, while the
+default tinted ribbons stay at 35%:
+
+```tsx
+const data = {
+  nodes: [{ name: 'all' }, { name: 'certified' }],
+  links: [
+    { source: 0, target: 1, value: 209, color: 'var(--ui-background-brand-primary-disabled)' },
+  ],
+};
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sankey-chart/sankey-chart.tsx"
+  name="SankeyChartProps"
+/>

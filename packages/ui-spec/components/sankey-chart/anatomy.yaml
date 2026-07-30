@@ -1,0 +1,63 @@
+spec_version: '1.0'
+component: SankeyChart
+
+schematic: |
+  root: <div>                                       (wrapper)
+    container: <ChartContainer>                     (themed, sized, responsive)
+      plot: recharts <Sankey data node link>
+        nodes:   one bar per node (filled per name) + optional side label
+        links:   one ribbon per link (width ∝ value, tinted per target)
+        tooltip: <ChartTooltip> → tooltip-content   (hover card)
+    legend: <div> color dot + label per node        (optional, showLegend)
+
+root:
+  element: div
+  description: >-
+    The wrapper. Renders the shared `ChartContainer` (sized to fill it) around
+    the recharts `Sankey`. Sankey has no CVA variants, so the root carries no
+    variant data-attributes.
+
+parts:
+  - id: container
+    element: div
+    description: >-
+      The shared `ChartContainer` — supplies the per-node `--color-<name>` custom
+      properties from `config` and themes recharts' internals.
+  - id: plot
+    element: svg
+    description: The recharts `Sankey` holding the node bars, link ribbons, and tooltip.
+  - id: nodes
+    element: g
+    description: >-
+      One bar per node, filled from its `--color-<name>` var, rendered by a custom
+      `node` renderer. When `showLabels` is on, each bar gets its `config` label on
+      the readable side (right for sources, left for sinks).
+  - id: links
+    element: g
+    description: >-
+      One ribbon per link, its width the resolved flow value, stroked in the
+      target node's `--color-<name>` at low opacity, rendered by a custom `link`
+      renderer.
+  - id: tooltip-content
+    element: div
+    description: >-
+      `ChartTooltipContent` — hover card with one row for the hovered node/link
+      (color indicator + name + value). Rendered when `showTooltip`.
+  - id: legend
+    element: div
+    description: >-
+      Optional legend below the chart — a color dot + label per node (from
+      `config`), plus the node's computed value and share of the largest node.
+      Rendered when `showLegend`.
+
+states:
+  - id: labels
+    trigger: the showLabels prop renders each node's name beside its bar
+    kind: prop
+    prop: showLabels
+    affects: [nodes]
+  - id: legend
+    trigger: the showLegend prop renders the node legend below the chart
+    kind: prop
+    prop: showLegend
+    affects: [legend]

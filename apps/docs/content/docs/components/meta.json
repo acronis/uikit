@@ -51,6 +51,7 @@
     "treemap",
     "histogram",
     "confidence-cone",
+    "sankey-chart",
     "chart-state",
     "description-list",
     "alert",

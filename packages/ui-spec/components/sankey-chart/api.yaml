@@ -1,0 +1,97 @@
+spec_version: '1.0'
+component: SankeyChart
+
+# Framework-agnostic contract. SankeyChart has NO cva variant axes — geometry
+# (nodePadding / nodeWidth / linkCurvature) is plain props, so there are no
+# variant enums to conformance-check. Themed via custom node/link renderers.
+contract:
+  properties:
+    - name: data
+      type: '{ nodes: ReadonlyArray<{ name: string }>; links: ReadonlyArray<{ source: number; target: number; value: number; color?: string }> }'
+      required: true
+      description: >-
+        The graph. `nodes` carry a CSS-safe `name` (the color/config key); `links`
+        reference nodes by their index in `nodes` and carry the flow `value` that
+        sizes the ribbon, plus an optional `color` (rendered at full opacity to
+        match its node; omit for the target node's color at 35%).
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Per-node map of label / color, keyed by the node's `name` (from the shared
+        Chart primitives). Turned into `--color-<name>` custom properties. Colors
+        are caller-supplied.
+    - name: nodePadding
+      type: number
+      required: false
+      default: '24'
+      description: Vertical gap between nodes in the same column.
+    - name: nodeWidth
+      type: number
+      required: false
+      default: '12'
+      description: Thickness of each node bar.
+    - name: linkCurvature
+      type: number
+      required: false
+      default: '0.5'
+      description: Curviness of the link ribbons (0 = straight, 1 = fully curved).
+    - name: sort
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Sort nodes vertically to minimize link crossings (recharts' relaxation).
+        Defaults to false — nodes render in the given order per column, which keeps
+        curated flows tidy; set true to auto-order.
+    - name: showLabels
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render each node's `config` label beside its bar.
+    - name: showLegend
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Render a legend below the chart — a color dot + label per node, with its
+        computed value (incoming flow) and share of the largest node.
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: Render the hover tooltip.
+    - name: tooltipContent
+      type: 'ReactElement | ((props) => ReactNode)'
+      required: false
+      description: >-
+        Replace the default tooltip. Pass a configured ChartTooltipContent (from
+        this library) — e.g. with a formatter / labelFormatter — to customize the
+        tooltip content without composing recharts. Ignored when showTooltip is
+        false.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: SankeyChart
+    status: implemented
+    import: "import { SankeyChart } from '@acronis-platform/ui-react'"
+    example: |
+      <SankeyChart
+        config={config}
+        data={{ nodes, links }}
+        className="h-[360px] w-[620px]"
+      />
+  vue:
+    component: AvSankeyChart
+    status: planned
+    import: "import { AvSankeyChart } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvSankeyChart :config="config" :data="{ nodes, links }" />
+  web-components:
+    element: ui-sankey-chart
+    status: planned
+    import: "import '@acronis-platform/ui-wc/sankey-chart'"
+    example: |
+      <ui-sankey-chart></ui-sankey-chart>

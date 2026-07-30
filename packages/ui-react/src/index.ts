@@ -72,6 +72,7 @@ export * from './components/ui/pie-chart';
 export * from './components/ui/popover';
 export * from './components/ui/progress';
 export * from './components/ui/progress-circle';
+export * from './components/ui/sankey-chart';
 export * from './components/ui/scatter-chart';
 export * from './components/ui/scroll-area';
 export * from './components/ui/search-global';
