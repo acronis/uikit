@@ -51,7 +51,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/ScatterChart',
+  title: 'Widgets/ScatterChart',
   component: ScatterChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

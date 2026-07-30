@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Meter } from '../meter';
 
 const meta = {
-  title: 'UI/Meter',
+  title: 'Widgets/Meter',
   component: Meter,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

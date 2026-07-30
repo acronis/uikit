@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TrendIndicator } from '../trend-indicator';
 
 const meta = {
-  title: 'UI/TrendIndicator',
+  title: 'Widgets/TrendIndicator',
   component: TrendIndicator,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

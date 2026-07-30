@@ -47,7 +47,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/ConfidenceCone',
+  title: 'Widgets/ConfidenceCone',
   component: ConfidenceCone,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
