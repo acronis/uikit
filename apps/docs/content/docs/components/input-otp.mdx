@@ -48,22 +48,25 @@ const [code, setCode] = React.useState('');
 A shorter code — `length` sets the number of boxes:
 
 ```tsx
-<InputOTP length={4} />
+<InputOTP aria-label="Verification code" length={4} />
 ```
 
 Error and disabled states:
 
 ```tsx
-<InputOTP error defaultValue="123456" />
+<InputOTP aria-label="Verification code" error defaultValue="123456" />
 
-<InputOTP disabled defaultValue="123456" />
+<InputOTP aria-label="Verification code" disabled defaultValue="123456" />
 ```
 
 Each box is named `Digit N of length` for assistive tech. Override that with
 `slotAriaLabel` to localize it:
 
 ```tsx
-<InputOTP slotAriaLabel={(index, length) => t('otp.digit', { index, length })} />
+<InputOTP
+  aria-label="Verification code"
+  slotAriaLabel={(index, length) => t('otp.digit', { index, length })}
+/>
 ```
 
 ## API Reference

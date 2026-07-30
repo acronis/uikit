@@ -2,9 +2,10 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-// Internal primitive: the bare single-line input box behind the public
-// `InputText` field (which is also exported as `Input`). Not exported from the
-// package; consumed by `input-text`. Themed by the dedicated next-gen `--ui-input-text-*`
+// The bare single-line input box behind the public `InputText` field (which is
+// also exported as `Input`). Exported in its own right for pairing with `Field`
+// (`<FieldControl render={<InputBox />} />`) — use `InputText` when a bundled
+// label/description/error is wanted instead. Themed by the dedicated next-gen `--ui-input-text-*`
 // token tier from @acronis-platform/tokens-pd. The box fill (`global-box-color-*`)
 // and the normal border (`normal-box-border-color-*`) are wired per state: idle /
 // hover / focus / disabled. The `normal-box-border-color-*` tier has no `-active`,

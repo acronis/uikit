@@ -37,8 +37,8 @@ to_kebab() { printf '%s' "$1" | sed -E 's/([a-z0-9])([A-Z])/\1-\2/g' | tr '[:upp
 
 arg="${1:-all}"
 if [ "$arg" = "all" ]; then
-  # Public components only: exported from index.ts, minus internal-only
-  # sub-parts (carousel-dialog, search) that are never re-exported.
+  # Every component dir under $UI, minus internal-only sub-parts
+  # (carousel-dialog, search) that are never exported from index.ts.
   comps=$(ls "$UI" | grep -vE '^(carousel-dialog|search)$')
 else
   comps=$(to_kebab "$arg")
@@ -64,9 +64,14 @@ for c in $comps; do
 
   docs_sha="$(git log -1 --format=%H -- "$mdx" 2>/dev/null)"
   docs_date="$(git log -1 --format=%ci -- "$mdx" 2>/dev/null)"
+  docs_ts="$(git log -1 --format=%ct -- "$mdx" 2>/dev/null)"
   src_date="$(git log -1 --format=%ci -- "$UI/$c" 2>/dev/null)"
+  src_ts="$(git log -1 --format=%ct -- "$UI/$c" 2>/dev/null)"
 
-  if [ -z "$docs_sha" ] || [ -z "$src_date" ] || [[ ! "$src_date" > "$docs_date" ]]; then
+  # Compare unix timestamps (%ct), not the %ci strings above — %ci renders
+  # each commit in its own committer's timezone, and this repo mixes offsets,
+  # so a lexicographic string compare can misorder same-day commits.
+  if [ -z "$docs_sha" ] || [ -z "$src_ts" ] || [ "$src_ts" -le "$docs_ts" ]; then
     printf '%-22s %-10s %-12s %s\n' "$c" "IN_SYNC" "${src_date:0:10}" "${docs_date:0:10}"
     continue
   fi

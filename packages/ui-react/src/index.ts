@@ -76,9 +76,10 @@ export * from './components/ui/scatter-chart';
 export * from './components/ui/scroll-area';
 export * from './components/ui/search-global';
 // `Input` / `Search` / `Textarea` are aliases of the full-field components
-// `InputText` / `InputSearch` / `InputTextArea`. The bare input/search boxes are
-// internal primitives (`InputBox` / `SearchBox`), consumed by those fields and
-// not exported.
+// `InputText` / `InputSearch` / `InputTextArea`. `InputBox` (above, from
+// './components/ui/input') is exported separately for pairing with `Field`
+// (`<FieldControl render={<InputBox />} />`). `SearchBox` has no such pairing
+// yet and stays an internal primitive, consumed only by `input-search`.
 export {
   InputText as Input,
   type InputTextProps as InputProps,

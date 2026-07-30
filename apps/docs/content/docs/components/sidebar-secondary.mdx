@@ -117,14 +117,16 @@ const [expanded, setExpanded] = React.useState(true);
 
 `resizable` defaults to **`true`**, so the panel ships with a `role="separator"`
 edge on its inline-end border. Width is independent of the expanded/collapsed
-state and persists across collapse/expand cycles. It stays token-driven
-(`--ui-sidebar-secondary-expanded-container-width`) until the user actually
-resizes or you pass a controlled `width`, so brand overrides of the token are
-honored out of the box.
+state and persists across collapse/expand cycles. The resting width stays
+token-driven (`--ui-sidebar-secondary-expanded-container-width`) until the user
+actually resizes or you pass a controlled `width`, so brand overrides of the
+token are honored out of the box. The drag range itself is fixed at the
+token's shipped default (256px) and twice that — it does not track a brand
+override of the token's value.
 
 | Interaction                         | Result                                                     |
 | ----------------------------------- | ---------------------------------------------------------- |
-| Drag the edge                       | Resizes between the expanded-width token and twice it      |
+| Drag the edge                       | Resizes between 256px (the token's default) and 512px      |
 | Drag past half the min width        | Collapses the panel to the rail                            |
 | Click the edge                      | Toggles expanded/collapsed                                 |
 | Double-click the edge               | Resets to the default width                                |
