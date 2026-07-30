@@ -97,7 +97,11 @@ parts:
     visible_when: 'variant=collapsed OR variant=expanded'
   - id: sidebar-header
     description: >-
-      The full-width sidebar's branding title ("Acronis AI"), fixed text.
+      The full-width sidebar's branding title ("Acronis AI", overridable via
+      `acronisAiLabel`). `role="heading"` `aria-level="1"` — the panel's own
+      outline root — and also referenced by the sidebar `<aside>`'s
+      `aria-labelledby`, since that landmark otherwise nests inside the root
+      `<aside>` unlabeled.
     element: div
     visible_when: variant=full-width
   - id: sidebar-list
@@ -116,9 +120,11 @@ parts:
     visible_when: variant=full-width
   - id: body-header
     description: >-
-      The conversation body's per-conversation title ("Chat name"), fixed
-      placeholder text — there is no prop/slot yet for a consumer to supply
-      the real title (see README.md's open questions).
+      The conversation body's per-conversation title ("Chat name",
+      overridable via `conversationTitle`) — there is still no prop/slot for
+      a consumer to bind it to real per-conversation data (see README.md's
+      open questions). `role="heading"` `aria-level="2"`, a subsection of
+      `sidebar-header`'s level-1 heading.
     element: div
     visible_when: variant=full-width
   - id: body-feed

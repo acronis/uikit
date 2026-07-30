@@ -46,24 +46,6 @@ describe('ChatHeaderCollapsed', () => {
     expect(container.querySelectorAll('svg')).toHaveLength(0);
   });
 
-  it('accepts hasHistory without any visual effect (no-op today)', () => {
-    const { container: withoutHistory } = render(
-      <ChatHeaderCollapsed icon={<svg />} />
-    );
-    const { container: withHistory } = render(
-      <ChatHeaderCollapsed icon={<svg />} hasHistory />
-    );
-    expect(withHistory.querySelector('header')?.className).toBe(
-      withoutHistory.querySelector('header')?.className
-    );
-    expect(withHistory.querySelectorAll('svg')).toHaveLength(1);
-  });
-
-  it('does not forward hasHistory onto the DOM element', () => {
-    render(<ChatHeaderCollapsed data-testid="header" hasHistory />);
-    expect(screen.getByTestId('header')).not.toHaveAttribute('hashistory');
-  });
-
   it('forwards the ref to the underlying header', () => {
     const ref = createRef<HTMLElement>();
     render(<ChatHeaderCollapsed ref={ref} />);

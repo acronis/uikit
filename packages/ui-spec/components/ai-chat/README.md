@@ -59,16 +59,16 @@ directly (see "When to use" above).
 
 ## Parts
 
-| Part                                 | Composed from                            | Notes                                                                             |
-| ------------------------------------ | ---------------------------------------- | --------------------------------------------------------------------------------- |
-| `header` (collapsed)                 | `ChatHeaderCollapsed`                    | Branding glyph (`AcronisAiMultiIcon`).                                            |
-| `nav-chat` / `nav-tasks` (collapsed) | `ChatMenuItemCollapsed`                  | Icon-only equivalents of the expanded header's tabs.                              |
-| `header-tabs` (expanded)             | `ChatHeaderExpanded` + placeholder tabs  | Fixed "Acronis AI" / "Tasks" tabs — see that component's own placeholder warning. |
-| `feed` / `body-feed`                 | the `Feed` SLOT                          | The **only** consumer-supplied content — via `children`.                          |
-| `footer` / `sidebar-footer`          | `ChatMenuItem` / `ChatMenuItemCollapsed` | Variant-switch actions — wired, see "Variant switching + resize."                 |
-| `resize-edge`                        | —                                        | `resizable` only. Draggable start-border handle; collapsed/expanded only.         |
-| `sidebar-header` / `body-header`     | plain text                               | Fixed "Acronis AI" / "Chat name".                                                 |
-| `sidebar-list`                       | `ChatMenuItem`                           | One fixed "New chat" item.                                                        |
+| Part                                 | Composed from                            | Notes                                                                                                                  |
+| ------------------------------------ | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `header` (collapsed)                 | `ChatHeaderCollapsed`                    | Branding glyph (`AcronisAiMultiIcon`).                                                                                 |
+| `nav-chat` / `nav-tasks` (collapsed) | `ChatMenuItemCollapsed`                  | Icon-only equivalents of the expanded header's tabs.                                                                   |
+| `header-tabs` (expanded)             | `ChatHeaderExpanded` + placeholder tabs  | Fixed "Acronis AI" / "Tasks" tabs (labels localizable, see that component's own placeholder warning).                  |
+| `feed` / `body-feed`                 | the `Feed` SLOT                          | The **only** consumer-supplied content — via `children`.                                                               |
+| `footer` / `sidebar-footer`          | `ChatMenuItem` / `ChatMenuItemCollapsed` | Variant-switch actions — wired, see "Variant switching + resize."                                                      |
+| `resize-edge`                        | —                                        | `resizable` only. Draggable start-border handle; collapsed/expanded only.                                              |
+| `sidebar-header` / `body-header`     | plain text                               | Fixed "Acronis AI" / "Chat name" (localizable via `acronisAiLabel`/`conversationTitle`); level-1/level-2 heading pair. |
+| `sidebar-list`                       | `ChatMenuItem`                           | One fixed "New chat" item.                                                                                             |
 
 ## Examples
 
@@ -108,6 +108,24 @@ directly (see "When to use" above).
 </AiChat>
 ```
 
+### Localized labels
+
+Every accessible name/label/shortcut `AiChat` renders on its own is only a
+prop default — override it to localize. See `accessibility.md` for the full
+list.
+
+```tsx
+<AiChat
+  variant="expanded"
+  acronisAiLabel="Acronis AI"
+  tasksTabLabel="Aufgaben"
+  maximizeChatLabel="Chat maximieren"
+  collapseChatLabel="Chat einklappen"
+>
+  <ConversationFeed messages={messages} />
+</AiChat>
+```
+
 ## Open questions
 
 These are unresolved product/design decisions raised while building this
@@ -119,11 +137,12 @@ actual behavior, not just its look, so none are answered here:
 `resizable` adds a drag + collapse-snap edge, combining Figma's discrete
 actions with a continuous drag rather than picking one exclusively.
 
-1. **What should `hasHistory` actually reveal on each header variant?**
-   `ChatHeaderCollapsed.hasHistory` is a documented no-op and
+1. **What should `hasHistory` actually reveal on the expanded header?**
    `ChatHeaderExpanded.hasHistory` adds a button with no visible difference in
-   the captured instance (both default `false` here). `AiChat` doesn't expose
+   the captured instance (defaults `false`). `AiChat` doesn't expose
    `hasHistory` itself — it would need a resolved answer before doing so.
+   (`ChatHeaderCollapsed`'s own `hasHistory` was removed — it was accepted
+   but never wired to anything, dead weight rather than a real open question.)
 2. **Are the shortcut label `?` suffixes (`⌘H?`, `⌘C?`, `⌘N?`) in Figma
    placeholders or intentional?** This implementation renders them **without**
    the `?` (`⌘H`, `⌘C`, `⌘N`), on the assumption it's a Figma placeholder

@@ -24,21 +24,10 @@ import { TagIcon } from '../tag-icon';
 // the same duplicate binding ChatHeaderExpanded already flagged; both are
 // 16px today, but a header must follow the *header* token or a brand that
 // re-themes only one of them would drift. Flagged to design.)
-//
-// `hasHistory` is accepted but intentionally a no-op: the one captured
-// instance has it `false` with no visible change anywhere in the node, so
-// there is nothing to render differently yet. Plumbed through so the prop
-// exists on the API and a future design pass can wire real behavior to it
-// without a breaking change.
 export interface ChatHeaderCollapsedProps
   extends React.HTMLAttributes<HTMLElement> {
   /** The branding glyph, centered at 16px inside the composed `TagIcon`. */
   icon?: React.ReactNode;
-  /**
-   * The Figma `hasHistory` property. Currently a no-op — see the file-level
-   * comment above.
-   */
-  hasHistory?: boolean;
   /**
    * Replace the rendered `<header>` with another element or component
    * (Base UI composition).
@@ -53,7 +42,7 @@ export interface ChatHeaderCollapsedProps
 const ChatHeaderCollapsed = React.forwardRef<
   HTMLElement,
   ChatHeaderCollapsedProps
->(({ className, icon, hasHistory: _hasHistory, render, ...props }, ref) =>
+>(({ className, icon, render, ...props }, ref) =>
   useRender({
     render,
     ref,

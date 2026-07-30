@@ -33,6 +33,4 @@ layout:
   order: [icon]
 
 # There is no `state`/`variant` axis on this node — a single static band.
-# `hasHistory` is a real Figma property but has no observable effect in the
-# only captured instance, so it is not modeled as a state here (see api.yaml).
 states: []

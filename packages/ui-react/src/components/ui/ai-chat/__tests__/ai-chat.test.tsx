@@ -17,7 +17,11 @@ describe('AiChat', () => {
 
       const root = screen.getByTestId('root');
       expect(root).toHaveClass('w-[var(--ui-chat-container-collapsed-width)]');
-      expect(screen.getByRole('banner')).toBeInTheDocument();
+      // Not `getByRole('banner')` — this `<header>` is nested inside the
+      // root `<aside>` landmark, so per HTML-AAM it maps to `generic`, not
+      // `banner` (see chat-header-expanded's "Avoiding a duplicate banner
+      // landmark" doc for the same distinction on its sibling component).
+      expect(root.querySelector('header')).toBeInTheDocument();
     });
 
     it('renders the icon-only nav and footer actions', () => {
@@ -186,6 +190,123 @@ describe('AiChat', () => {
 
       await user.click(screen.getByRole('button', { name: /Minimize chat/ }));
       expect(onVariantChange).toHaveBeenCalledWith('expanded');
+    });
+  });
+
+  describe('localization', () => {
+    it('overrides every collapsed-rail label', () => {
+      render(
+        <AiChat
+          variant="collapsed"
+          chatNavLabel="Chat DE"
+          tasksNavLabel="Tasks DE"
+          maximizeChatLabel="Maximize DE"
+          showFullWidthChatLabel="Full-width DE"
+        />
+      );
+
+      expect(screen.getByRole('button', { name: 'Chat DE' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Tasks DE' })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Maximize DE' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Full-width DE' })
+      ).toBeInTheDocument();
+    });
+
+    it('overrides every expanded-panel label and shortcut', () => {
+      render(
+        <AiChat
+          variant="expanded"
+          acronisAiLabel="Acronis AI DE"
+          tasksTabLabel="Tasks DE"
+          maximizeChatLabel="Maximize DE"
+          maximizeChatShortcut="^H"
+          collapseChatLabel="Collapse DE"
+          collapseChatShortcut="^C"
+        />
+      );
+
+      expect(
+        screen.getByRole('tab', { name: 'Acronis AI DE' })
+      ).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: 'Tasks DE' })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /Maximize DE/ })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /Collapse DE/ })
+      ).toBeInTheDocument();
+      expect(screen.getByText('^H')).toBeInTheDocument();
+      expect(screen.getByText('^C')).toBeInTheDocument();
+    });
+
+    it('overrides every full-width label, shortcut, and title', () => {
+      render(
+        <AiChat
+          variant="full-width"
+          acronisAiLabel="Acronis AI DE"
+          newChatLabel="New chat DE"
+          newChatShortcut="^N"
+          minimizeChatLabel="Minimize DE"
+          collapseChatLabel="Collapse DE"
+          conversationTitle="Conversation DE"
+        />
+      );
+
+      expect(screen.getByText('Acronis AI DE')).toBeInTheDocument();
+      expect(screen.getByText('Conversation DE')).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /New chat DE/ })
+      ).toBeInTheDocument();
+      expect(screen.getByText('^N')).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /Minimize DE/ })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /Collapse DE/ })
+      ).toBeInTheDocument();
+    });
+
+    it('overrides the resize-edge tooltip', async () => {
+      const user = userEvent.setup();
+      render(
+        <AiChat
+          defaultVariant="expanded"
+          resizable
+          resizeTooltip="Drag me DE"
+        />
+      );
+
+      await user.hover(screen.getByRole('separator'));
+      expect(await screen.findByText('Drag me DE')).toBeInTheDocument();
+    });
+  });
+
+  describe('accessibility', () => {
+    it('labels the full-width sidebar landmark distinctly from the root landmark', () => {
+      render(<AiChat variant="full-width" />);
+
+      const asides = screen.getAllByRole('complementary');
+      expect(asides).toHaveLength(2);
+      const [root, sidebar] = asides;
+      expect(root).not.toHaveAttribute('aria-labelledby');
+      expect(sidebar).toHaveAttribute('aria-labelledby');
+      expect(
+        screen.getByRole('complementary', { name: 'Acronis AI' })
+      ).toBe(sidebar);
+    });
+
+    it('gives the full-width sidebar and body headings a real 1/2 hierarchy', () => {
+      render(<AiChat variant="full-width" />);
+
+      expect(
+        screen.getByRole('heading', { level: 1, name: 'Acronis AI' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { level: 2, name: 'Chat name' })
+      ).toBeInTheDocument();
     });
   });
 

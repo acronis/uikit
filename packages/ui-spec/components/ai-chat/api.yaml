@@ -7,6 +7,12 @@ component: AiChat
 # a code-only addition, not a Figma-bound one. No composed child's own prop
 # (ChatHeaderExpanded's `hasHistory`, ChatMenuItem's `label`, etc.) is
 # flattened here.
+#
+# The label/shortcut/title properties below are localization overrides only
+# — they change the TEXT of fixed content, not what content exists. The
+# content-MODEL gaps (a real chat-history list, a real per-conversation data
+# source for `conversationTitle`, a real tab/unread-count model) are
+# unchanged and still tracked in README.md's "Open questions".
 contract:
   properties:
     - name: variant
@@ -52,6 +58,110 @@ contract:
       default: "'Resize chat'"
       description: Accessible label for the resize edge (`role="separator"`).
 
+    - name: resizeTooltip
+      type: ReactNode
+      required: false
+      default: the Resize/Drag/Reset-size copy documented in behavior.md
+      description: >-
+        Tooltip content shown on the resize edge (`resizable` only). Pass
+        `null` to hide the tooltip entirely.
+
+    - name: chatNavLabel
+      type: string
+      required: false
+      default: "'Chat'"
+      description: Accessible name for the collapsed rail's "Chat" nav item.
+
+    - name: tasksNavLabel
+      type: string
+      required: false
+      default: "'Tasks (new activity)'"
+      description: >-
+        Accessible name for the collapsed rail's "Tasks" nav item (reflects
+        unread activity).
+
+    - name: maximizeChatLabel
+      type: string
+      required: false
+      default: "'Maximize chat'"
+      description: >-
+        Label for the "grow the chat" action — shared by the collapsed
+        rail's icon button (`collapsed` → `expanded`) and the expanded
+        panel's footer button (`expanded` → `full-width`).
+
+    - name: maximizeChatShortcut
+      type: string
+      required: false
+      default: "'⌘H'"
+      description: >-
+        Keyboard-shortcut hint shown alongside `maximizeChatLabel` (and, for
+        the reverse direction, `minimizeChatLabel`).
+
+    - name: showFullWidthChatLabel
+      type: string
+      required: false
+      default: "'Show full-width chat'"
+      description: >-
+        Label for the collapsed rail's "jump straight to full-width" action.
+
+    - name: collapseChatLabel
+      type: string
+      required: false
+      default: "'Collapse chat'"
+      description: >-
+        Label for the "shrink the chat" action, shared by the expanded and
+        full-width footers (both transition to `collapsed`).
+
+    - name: collapseChatShortcut
+      type: string
+      required: false
+      default: "'⌘C'"
+      description: Keyboard-shortcut hint shown alongside `collapseChatLabel`.
+
+    - name: newChatLabel
+      type: string
+      required: false
+      default: "'New chat'"
+      description: >-
+        Label for the full-width sidebar's "start a new conversation"
+        action.
+
+    - name: newChatShortcut
+      type: string
+      required: false
+      default: "'⌘N'"
+      description: Keyboard-shortcut hint shown alongside `newChatLabel`.
+
+    - name: minimizeChatLabel
+      type: string
+      required: false
+      default: "'Minimize chat'"
+      description: >-
+        Label for the full-width footer's "return to the expanded panel"
+        action.
+
+    - name: acronisAiLabel
+      type: string
+      required: false
+      default: "'Acronis AI'"
+      description: >-
+        Branding label — shared by the expanded header's first tab and the
+        full-width sidebar's heading.
+
+    - name: tasksTabLabel
+      type: string
+      required: false
+      default: "'Tasks'"
+      description: Label for the expanded header's second tab.
+
+    - name: conversationTitle
+      type: string
+      required: false
+      default: "'Chat name'"
+      description: >-
+        The active conversation's title, shown in the full-width body
+        header.
+
     - name: render
       type: RenderProp
       required: false
@@ -65,11 +175,10 @@ contract:
         The chat feed/content area — wired to the Figma `Feed` SLOT. Only
         rendered for `expanded` and `full-width`; the `collapsed` rail has no
         room to show it and renders a decorative spacer instead. There is
-        deliberately no other content-configuring prop: the header tab set,
-        the chat-history list, the per-conversation title, and the
-        footer/menu action labels are NOT bound to a Figma property on this
-        component either, so they ship as fixed content pending the open
-        questions in README.md.
+        deliberately no other content-configuring prop: the header tab set
+        and the chat-history list are NOT bound to a Figma property on this
+        component either, so they ship as fixed content (localizable via the
+        label props above) pending the open questions in README.md.
 
   events:
     - name: onVariantChange

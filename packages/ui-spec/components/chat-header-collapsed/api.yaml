@@ -1,9 +1,9 @@
 spec_version: '1.0'
 component: ChatHeaderCollapsed
 
-# Scoped to this Figma node only: an icon slot (composed through TagIcon) and
-# the Figma hasHistory flag. Nothing from TagIcon's own color/token surface is
-# flattened onto this contract — TagIcon is composed as-is, always violet.
+# Scoped to this Figma node only: an icon slot (composed through TagIcon).
+# Nothing from TagIcon's own color/token surface is flattened onto this
+# contract — TagIcon is composed as-is, always violet.
 contract:
   properties:
     - name: icon
@@ -12,16 +12,6 @@ contract:
       description: >-
         The branding glyph, centered at 16px inside the composed `TagIcon`
         (a 32px violet chip).
-    - name: hasHistory
-      type: boolean
-      required: false
-      default: false
-      description: >-
-        Mirrors the Figma `hasHistory` property. Currently a no-op: the one
-        captured instance has it `false` with no visible change anywhere in
-        the node, so there is nothing to render differently yet. Kept on the
-        contract so a future design pass can wire real behavior without a
-        breaking change.
 
   events: []
 

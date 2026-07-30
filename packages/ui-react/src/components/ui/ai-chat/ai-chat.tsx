@@ -117,6 +117,66 @@ export interface AiChatProps extends React.HTMLAttributes<HTMLElement> {
   /** Accessible label for the resize edge (`role="separator"`). Defaults to `'Resize chat'`. */
   resizeAriaLabel?: string;
   /**
+   * Tooltip content shown on the resize edge (`resizable` only). Pass `null`
+   * to hide the tooltip entirely.
+   */
+  resizeTooltip?: React.ReactNode;
+  /** Accessible name for the collapsed rail's "Chat" nav item. @default 'Chat' */
+  chatNavLabel?: string;
+  /**
+   * Accessible name for the collapsed rail's "Tasks" nav item (reflects
+   * unread activity). @default 'Tasks (new activity)'
+   */
+  tasksNavLabel?: string;
+  /**
+   * Label for the "grow the chat" action — shared by the collapsed rail's
+   * icon button (`collapsed` → `expanded`) and the expanded panel's footer
+   * button (`expanded` → `full-width`). @default 'Maximize chat'
+   */
+  maximizeChatLabel?: string;
+  /**
+   * Keyboard-shortcut hint shown alongside `maximizeChatLabel` (and, for the
+   * reverse direction, `minimizeChatLabel`). @default '⌘H'
+   */
+  maximizeChatShortcut?: string;
+  /**
+   * Label for the collapsed rail's "jump straight to full-width" action.
+   * @default 'Show full-width chat'
+   */
+  showFullWidthChatLabel?: string;
+  /**
+   * Label for the "shrink the chat" action, shared by the expanded and
+   * full-width footers (both transition to `collapsed`).
+   * @default 'Collapse chat'
+   */
+  collapseChatLabel?: string;
+  /** Keyboard-shortcut hint shown alongside `collapseChatLabel`. @default '⌘C' */
+  collapseChatShortcut?: string;
+  /**
+   * Label for the full-width sidebar's "start a new conversation" action.
+   * @default 'New chat'
+   */
+  newChatLabel?: string;
+  /** Keyboard-shortcut hint shown alongside `newChatLabel`. @default '⌘N' */
+  newChatShortcut?: string;
+  /**
+   * Label for the full-width footer's "return to the expanded panel" action.
+   * @default 'Minimize chat'
+   */
+  minimizeChatLabel?: string;
+  /**
+   * Branding label — shared by the expanded header's first tab and the
+   * full-width sidebar's heading. @default 'Acronis AI'
+   */
+  acronisAiLabel?: string;
+  /** Label for the expanded header's second tab. @default 'Tasks' */
+  tasksTabLabel?: string;
+  /**
+   * The active conversation's title, shown in the full-width body header.
+   * @default 'Chat name'
+   */
+  conversationTitle?: string;
+  /**
    * The chat feed/content area. Only rendered for `expanded` and
    * `full-width` — the `collapsed` rail has no room to show it.
    */
@@ -375,6 +435,20 @@ const AiChat = React.forwardRef<HTMLElement, AiChatProps>(
       width: widthProp,
       onWidthChange,
       resizeAriaLabel = 'Resize chat',
+      resizeTooltip = defaultResizeTooltip,
+      chatNavLabel = 'Chat',
+      tasksNavLabel = 'Tasks (new activity)',
+      maximizeChatLabel = 'Maximize chat',
+      maximizeChatShortcut = '⌘H',
+      showFullWidthChatLabel = 'Show full-width chat',
+      collapseChatLabel = 'Collapse chat',
+      collapseChatShortcut = '⌘C',
+      newChatLabel = 'New chat',
+      newChatShortcut = '⌘N',
+      minimizeChatLabel = 'Minimize chat',
+      acronisAiLabel = 'Acronis AI',
+      tasksTabLabel = 'Tasks',
+      conversationTitle = 'Chat name',
       children,
       render,
       ...props
@@ -386,6 +460,10 @@ const AiChat = React.forwardRef<HTMLElement, AiChatProps>(
       defaultVariant,
       onVariantChange
     );
+
+    // Labels the full-width sidebar's <aside> landmark, disambiguating it
+    // from the root <aside> it nests inside.
+    const sidebarHeadingId = React.useId();
 
     const isWidthControlled = widthProp !== undefined;
     const [widthState, setWidthState] = React.useState(
@@ -451,12 +529,12 @@ const AiChat = React.forwardRef<HTMLElement, AiChatProps>(
                   />
                   <ChatMenuItemCollapsed
                     icon={<MessageTextIcon size={16} />}
-                    aria-label="Chat"
+                    aria-label={chatNavLabel}
                   />
                   <ChatMenuItemCollapsed
                     icon={<ClipboardTextIcon size={16} />}
                     hasAlert
-                    aria-label="Tasks (new activity)"
+                    aria-label={tasksNavLabel}
                   />
                   <div
                     className="min-h-0 w-full flex-1"
@@ -471,12 +549,12 @@ const AiChat = React.forwardRef<HTMLElement, AiChatProps>(
                   >
                     <ChatMenuItemCollapsed
                       icon={<PanelLeftCloseIcon size={16} />}
-                      aria-label="Maximize chat"
+                      aria-label={maximizeChatLabel}
                       onClick={() => setVariant('expanded')}
                     />
                     <ChatMenuItemCollapsed
                       icon={<ChevronsLeftIcon size={16} />}
-                      aria-label="Show full-width chat"
+                      aria-label={showFullWidthChatLabel}
                       onClick={() => setVariant('full-width')}
                     />
                   </footer>
@@ -489,9 +567,9 @@ const AiChat = React.forwardRef<HTMLElement, AiChatProps>(
                         `SegmentControl` once it ships in Figma. */}
                     <ChatHeaderExpandedTabs>
                       <ChatHeaderExpandedTab active>
-                        Acronis AI
+                        {acronisAiLabel}
                       </ChatHeaderExpandedTab>
-                      <ChatHeaderExpandedTab>Tasks</ChatHeaderExpandedTab>
+                      <ChatHeaderExpandedTab>{tasksTabLabel}</ChatHeaderExpandedTab>
                     </ChatHeaderExpandedTabs>
                   </ChatHeaderExpanded>
                   <div className="min-h-0 w-full flex-1 overflow-auto">
@@ -505,24 +583,24 @@ const AiChat = React.forwardRef<HTMLElement, AiChatProps>(
                   >
                     <ChatMenuItem
                       icon={<PanelLeftCloseIcon size={16} />}
-                      label="Maximize chat"
+                      label={maximizeChatLabel}
                       hasExtras
                       extras={
                         <ChatMenuItemExtras
                           variant="shortcut"
-                          labelShortcut="⌘H"
+                          labelShortcut={maximizeChatShortcut}
                         />
                       }
                       onClick={() => setVariant('full-width')}
                     />
                     <ChatMenuItem
                       icon={<ChevronsRightIcon size={16} />}
-                      label="Collapse chat"
+                      label={collapseChatLabel}
                       hasExtras
                       extras={
                         <ChatMenuItemExtras
                           variant="shortcut"
-                          labelShortcut="⌘C"
+                          labelShortcut={collapseChatShortcut}
                         />
                       }
                       onClick={() => setVariant('collapsed')}
@@ -532,6 +610,7 @@ const AiChat = React.forwardRef<HTMLElement, AiChatProps>(
               ) : (
                 <>
                   <aside
+                    aria-labelledby={sidebarHeadingId}
                     className={cn(
                       'flex h-full flex-col items-start overflow-clip',
                       'w-[var(--ui-chat-sidebar-container-width)] shrink-0',
@@ -539,23 +618,24 @@ const AiChat = React.forwardRef<HTMLElement, AiChatProps>(
                     )}
                   >
                     <div
+                      id={sidebarHeadingId}
                       className="flex h-[var(--ui-chat-sidebar-header-height)] w-full shrink-0 items-center overflow-clip px-[var(--ui-chat-sidebar-header-padding-x)]"
                       role="heading"
-                      aria-level={2}
+                      aria-level={1}
                     >
                       <p className="truncate text-2xl leading-8 text-foreground">
-                        Acronis AI
+                        {acronisAiLabel}
                       </p>
                     </div>
                     <div className="flex min-h-0 w-full flex-1 flex-col items-start overflow-auto">
                       <ChatMenuItem
                         icon={<PlusIcon size={16} />}
-                        label="New chat"
+                        label={newChatLabel}
                         hasExtras
                         extras={
                           <ChatMenuItemExtras
                             variant="shortcut"
-                            labelShortcut="⌘N"
+                            labelShortcut={newChatShortcut}
                           />
                         }
                       />
@@ -568,24 +648,24 @@ const AiChat = React.forwardRef<HTMLElement, AiChatProps>(
                     >
                       <ChatMenuItem
                         icon={<PanelLeftOpenIcon size={16} />}
-                        label="Minimize chat"
+                        label={minimizeChatLabel}
                         hasExtras
                         extras={
                           <ChatMenuItemExtras
                             variant="shortcut"
-                            labelShortcut="⌘H"
+                            labelShortcut={maximizeChatShortcut}
                           />
                         }
                         onClick={() => setVariant('expanded')}
                       />
                       <ChatMenuItem
                         icon={<ChevronsRightIcon size={16} />}
-                        label="Collapse chat"
+                        label={collapseChatLabel}
                         hasExtras
                         extras={
                           <ChatMenuItemExtras
                             variant="shortcut"
-                            labelShortcut="⌘C"
+                            labelShortcut={collapseChatShortcut}
                           />
                         }
                         onClick={() => setVariant('collapsed')}
@@ -599,7 +679,7 @@ const AiChat = React.forwardRef<HTMLElement, AiChatProps>(
                       aria-level={2}
                     >
                       <p className="truncate text-2xl leading-8 text-foreground">
-                        Chat name
+                        {conversationTitle}
                       </p>
                     </div>
                     <div className="min-h-0 w-full flex-1 overflow-auto">
@@ -612,6 +692,7 @@ const AiChat = React.forwardRef<HTMLElement, AiChatProps>(
                 <AiChatResizeEdge
                   ctx={resizeContext}
                   resizeAriaLabel={resizeAriaLabel}
+                  resizeTooltip={resizeTooltip}
                 />
               )}
             </>

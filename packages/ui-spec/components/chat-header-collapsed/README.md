@@ -14,18 +14,6 @@ branding glyph, composed through the shared `TagIcon`.
   additionally composes tabs and icon actions.
 - As a generic icon badge — use `TagIcon` directly.
 
-## `hasHistory` is currently a no-op
-
-The Figma `hasHistory` boolean is on the component's API, but wiring nothing
-to it is intentional, not a gap in this implementation: the only Figma
-instance captured has it `false`, with no visible difference documented
-anywhere in the node. Rather than guess a visual (its sibling
-`ChatHeaderExpanded` shows a history icon button for the same property name,
-but that behavior isn't confirmed here), the prop is plumbed through so a
-future design pass can add real behavior without a breaking API change. Ask
-design what `hasHistory=true` should reveal on this node before assuming
-parity with `ChatHeaderExpanded`.
-
 ## Examples
 
 ```tsx

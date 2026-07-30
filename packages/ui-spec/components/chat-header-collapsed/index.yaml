@@ -7,11 +7,6 @@ description: >-
   Header bar of the *collapsed* AI-chat rail: a static 48px band centering one
   branding glyph, composed through the shared `TagIcon`. Unlike its
   `ChatHeaderExpanded` sibling, it holds no tabs and no actions.
-
-  The Figma `hasHistory` boolean is plumbed through the API but is currently a
-  no-op: the one captured instance has it `false` with no visible change
-  anywhere in the node. It is kept on the contract so a future design pass can
-  wire real behavior to it without a breaking change — see behavior.md.
 since: 0.59.0
 dependencies:
   components: [TagIcon]

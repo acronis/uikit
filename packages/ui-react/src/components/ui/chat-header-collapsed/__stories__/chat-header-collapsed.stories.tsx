@@ -23,16 +23,6 @@ const meta = {
         'The branding glyph, centered at 16px inside the composed `TagIcon`.',
       table: { type: { summary: 'ReactNode' }, category: 'Content' },
     },
-    hasHistory: {
-      control: 'boolean',
-      description:
-        'Mirrors the Figma `hasHistory` property. Currently a no-op — the captured instance shows no visible change for either value.',
-      table: {
-        type: { summary: 'boolean' },
-        defaultValue: { summary: 'false' },
-        category: 'Appearance',
-      },
-    },
     render: {
       control: false,
       description:
@@ -59,11 +49,6 @@ export const Default: Story = {};
 
 export const WithoutIcon: Story = {
   args: { icon: undefined },
-};
-
-/** `hasHistory` currently renders identically either way — see the docs note. */
-export const WithHistory: Story = {
-  args: { hasHistory: true },
 };
 
 /** The collapsed rail: the header band sitting above a stack of menu rows. */
