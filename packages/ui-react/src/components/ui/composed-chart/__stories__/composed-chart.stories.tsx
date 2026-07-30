@@ -251,3 +251,10 @@ export const CustomTooltipOpen: Story = {
 export const CompactValueAxis: Story = {
   args: { yTickFormatter: formatCompactNumber },
 };
+
+// Hide both axes with `showXAxis` / `showYAxis` — the compact/sparkline layout.
+// Carries a baseline so a regression in either toggle is caught visually; the
+// unit tests can't assert it (recharts needs a laid-out container).
+export const HiddenAxes: Story = {
+  args: { showXAxis: false, showYAxis: false },
+};

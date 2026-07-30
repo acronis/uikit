@@ -129,13 +129,26 @@ import {
 
 ### Tick spacing, domain & grid
 
-The same shared props also tune tick placement, the Y domain, and the grid:
+The same shared props also tune tick placement, the value-axis domain, and the grid:
 
 - `xAxisAngle` — rotate X tick labels (e.g. `-45`) when they'd otherwise overlap.
-- `xAxisInterval` — thin dense ticks (`preserveStartEnd`, or a fixed step count).
-- `yAxisTickCount` — a hint for how many Y ticks to draw.
-- `yAxisDomain` — `auto` (padded default), `dataMin-dataMax` (tight), or `zero` (anchor at 0).
+  Combine it with `xAxisLabel`; the axis reserves room for both.
+- `xAxisInterval` — thin dense ticks: a placement strategy (`preserveStartEnd`), or
+  the number of ticks to **skip** between two rendered ones (`0` shows every tick,
+  `1` every other one, `2` every third).
+- `yAxisTickCount` — a hint for how many value-axis ticks to draw.
+- `yAxisDomain` — `auto` (fit the data at both ends; the axis need not include 0),
+  `zero` (anchor at 0), or `dataMin-dataMax` (tight, no padding).
 - `gridDashed`, `gridHorizontal`, `gridVertical` — dash or trim the grid lines.
+
+**Note:** omitting `yAxisDomain` leaves the domain to recharts, whose default is
+already anchored at 0 — so `zero` is the explicit form of the default rather than a
+change to it. Use `auto` when you want the axis to fit the data instead.
+
+`yAxisTickCount` and `yAxisDomain` apply to whichever axis carries the *values*.
+That's Y for every chart except `BarChart` with `orientation="horizontal"`, where
+the bars grow along X — there they drive the X axis, and `xUnit` (not `yUnit`)
+carries the unit suffix.
 
 ```tsx
 <BarChart

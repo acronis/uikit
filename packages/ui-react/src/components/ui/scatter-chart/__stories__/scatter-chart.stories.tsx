@@ -235,3 +235,10 @@ export const MappedValueAxis: Story = {
       Number(score) >= 80 ? 'High' : Number(score) >= 60 ? 'Mid' : 'Low',
   },
 };
+
+// Hide both axes with `showXAxis` / `showYAxis` — the compact/sparkline layout.
+// Carries a baseline so a regression in either toggle is caught visually; the
+// unit tests can't assert it (recharts needs a laid-out container).
+export const HiddenAxes: Story = {
+  args: { showXAxis: false, showYAxis: false },
+};

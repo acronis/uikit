@@ -15,3 +15,18 @@ formatter. Also adds `xAxisAngle`, `xAxisInterval`, `yAxisTickCount`,
 These shared props live on a common `CartesianChartProps` interface (which also
 now carries the previously per-chart `showGrid` / `showTooltip` / `xAxisLabel` /
 `yAxisLabel` / `yUnit` / `tooltipContent`). Defaults preserve existing rendering.
+
+Notes on the value-axis props:
+
+- `yAxisDomain="auto"` fits the data at both ends and need not include 0.
+  Omitting the prop keeps recharts' default, which is already zero-anchored — so
+  `zero` is the explicit form of that default, not a change to it.
+- `yAxisTickCount` / `yAxisDomain` drive whichever axis carries the values: Y for
+  most charts, X for `BarChart` with `orientation="horizontal"` (recharts ignores
+  both on a category axis).
+- `xAxisInterval`'s numeric form is the number of ticks _skipped_ between two
+  rendered ones (recharts `interval`), so `2` shows every third tick.
+- `xAxisAngle` and `xAxisLabel` can be combined; the X axis reserves room for both.
+- The bundled `formatCompactNumber` / `formatPercent` format in `en`; use
+  `createTickFormatter(options, locale)` for anything else. Blank and
+  whitespace-only tick values pass through all three unchanged.

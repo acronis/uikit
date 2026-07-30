@@ -117,11 +117,30 @@ export const SolidFill: Story = {
   args: { fill: 'solid' },
 };
 
+// Response times in ms — real units, so `yUnit`/`xUnit` read truthfully. (The
+// session-count data above has no unit; the former `yUnit="k"` was an
+// abbreviation masquerading as one.)
+const latencyData = [
+  { month: 'Jan', p95: 180 },
+  { month: 'Feb', p95: 240 },
+  { month: 'Mar', p95: 210 },
+  { month: 'Apr', p95: 320 },
+  { month: 'May', p95: 260 },
+  { month: 'Jun', p95: 290 },
+];
+
+const latencyConfig = {
+  p95: { label: 'p95 latency', color: 'var(--ui-background-brand-secondary)' },
+} satisfies ChartConfig;
+
 // Axis titles + a Y-axis unit suffix, forwarded to recharts' native
 // `label` / `unit`. The title inherits the theme token via the container's
 // `.recharts-label` fill selector.
 export const AxisLabels: Story = {
   args: {
+    config: latencyConfig,
+    data: latencyData,
+    dataKeys: ['p95'],
     xAxisLabel: 'Month',
     yAxisLabel: 'Response time',
     yUnit: 'ms',
@@ -271,4 +290,11 @@ export const CompactValueAxis: Story = {
     dataKeys: ['revenue'],
     yTickFormatter: formatCompactNumber,
   },
+};
+
+// Hide both axes with `showXAxis` / `showYAxis` — the compact/sparkline layout.
+// Carries a baseline so a regression in either toggle is caught visually; the
+// unit tests can't assert it (recharts needs a laid-out container).
+export const HiddenAxes: Story = {
+  args: { showXAxis: false, showYAxis: false },
 };

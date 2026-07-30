@@ -1,16 +1,20 @@
 // Shared axis helpers for the cartesian chart components (BarChart, LineChart,
-// AreaChart, ComposedChart, ScatterChart, ConfidenceCone, Histogram). Two
+// AreaChart, ComposedChart, ScatterChart, ConfidenceCone, Histogram). Three
 // concerns live here so every chart formats + toggles axes the same way rather
 // than each reimplementing it:
 //
-//  1. `CartesianAxisProps` — the common axis knobs each cartesian chart mixes
+//  1. `CartesianChartProps` — the common axis knobs each cartesian chart mixes
 //     into its own props (show/hide either axis, per-axis tick formatting).
 //  2. A small set of tick formatters (+ a factory) callers pass to
 //     `xTickFormatter` / `yTickFormatter`.
+//  3. `resolveAxisDomain` — maps the `yAxisDomain` preset to a recharts
+//     `domain`, shared so all 7 charts can't drift apart on it.
 //
 // These format only the axis *tick labels*; series colors and tokens are
 // unaffected. Formatters coerce to a number and pass non-numeric values through
 // untouched (a category axis stays readable if a formatter is applied to it).
+
+import type { AxisDomainItem } from 'recharts';
 
 import type { ChartTooltipContentType } from './chart';
 
@@ -39,7 +43,11 @@ export interface CartesianChartProps {
   xAxisLabel?: string;
   /** Title rendered beside the Y axis (rotated). */
   yAxisLabel?: string;
-  /** Unit suffix appended to the numeric axis's tick values (recharts `unit`). */
+  /**
+   * Unit suffix appended to the Y axis's tick values (recharts `unit`) — applies
+   * when the Y axis is the numeric one. `BarChart` with
+   * `orientation="horizontal"` puts the values on X instead; use `xUnit` there.
+   */
   yUnit?: string;
   /** Show the X axis (its ticks + title). Defaults to `true`. */
   showXAxis?: boolean;
@@ -56,8 +64,9 @@ export interface CartesianChartProps {
    */
   xAxisAngle?: number;
   /**
-   * X-axis tick density — a fixed number (show every Nth tick), or a recharts
-   * placement strategy that thins ticks while keeping the ends legible.
+   * X-axis tick density — a recharts placement strategy, or a fixed number of
+   * ticks to *skip* between two rendered ones (recharts `interval`: `0` shows
+   * every tick, `1` every other one, `2` every third, …).
    */
   xAxisInterval?:
     | number
@@ -65,12 +74,20 @@ export interface CartesianChartProps {
     | 'preserveEnd'
     | 'preserveStartEnd'
     | 'equidistantPreserveStart';
-  /** Desired number of Y-axis ticks (recharts `tickCount`; treated as a hint, not exact). */
+  /**
+   * Desired number of ticks on the value axis (recharts `tickCount`; a hint, not
+   * exact). Applies to whichever axis holds the values — Y for most charts, X for
+   * `BarChart` with `orientation="horizontal"`.
+   */
   yAxisTickCount?: number;
   /**
-   * Y-axis domain preset: `auto` (recharts' padded default), `dataMin-dataMax`
-   * (tight to the data), or `zero` (anchor the axis at 0). Applies to the
-   * numeric Y axis.
+   * Value-axis domain preset. Applies to whichever axis holds the values — Y for
+   * most charts, X for `BarChart` with `orientation="horizontal"`.
+   *
+   * - `auto` — fit the data at both ends; the axis need not include 0.
+   * - `zero` — anchor the axis at 0. This is also recharts' behavior when the
+   *   prop is omitted, so it's the explicit form of the default.
+   * - `dataMin-dataMax` — tight to the data, with no padding.
    */
   yAxisDomain?: 'auto' | 'dataMin-dataMax' | 'zero';
   /** Draw grid lines dashed instead of solid. */
@@ -81,14 +98,45 @@ export interface CartesianChartProps {
   gridVertical?: boolean;
 }
 
+/**
+ * Map a `yAxisDomain` preset to a recharts `domain`. Shared by all 7 cartesian
+ * charts, and applied to whichever axis holds the values (X for horizontal bars).
+ *
+ * `undefined` (no preset) is left to recharts, whose default is `[0, 'auto']` —
+ * i.e. already zero-anchored. That's why `auto` has to be spelled out as
+ * `['auto', 'auto']`: passing `undefined` for it would silently anchor at 0 and
+ * make the preset indistinguishable from `zero`.
+ */
+export function resolveAxisDomain(
+  preset: 'auto' | 'dataMin-dataMax' | 'zero' | undefined
+): Readonly<[AxisDomainItem, AxisDomainItem]> | undefined {
+  switch (preset) {
+    case 'auto':
+      return ['auto', 'auto'];
+    case 'zero':
+      return [0, 'auto'];
+    case 'dataMin-dataMax':
+      return ['dataMin', 'dataMax'];
+    default:
+      return undefined;
+  }
+}
+
 const toNumber = (value: number | string): number | null => {
+  // `Number('')` and `Number(' ')` are 0, not NaN — so blank strings have to be
+  // rejected before the finite check, or an empty tick label would render "0".
+  if (typeof value === 'string' && value.trim() === '') return null;
   const n = typeof value === 'number' ? value : Number(value);
   return Number.isFinite(n) ? n : null;
 };
 
 /**
  * Compact thousands/millions: `1234 → "1.2K"`, `1_500_000 → "1.5M"`. Non-numeric
- * values pass through unchanged. Use for large-count axes (revenue, users, …).
+ * values (including blank strings) pass through unchanged. Use for large-count
+ * axes (revenue, users, …).
+ *
+ * Formats in `en`. For another locale use
+ * `createTickFormatter({ notation: 'compact', maximumFractionDigits: 1 }, locale)`.
  */
 export const formatCompactNumber: TickFormatter = (value) => {
   const n = toNumber(value);
@@ -101,7 +149,12 @@ export const formatCompactNumber: TickFormatter = (value) => {
 
 /**
  * Append a percent sign to an already-scaled value: `41.8 → "41.8%"`. (The value
- * is treated as a percentage, not a 0–1 fraction.) Non-numeric values pass through.
+ * is treated as a percentage, not a 0–1 fraction.) Non-numeric values (including
+ * blank strings) pass through.
+ *
+ * Appends a bare `%`, which is not how every locale writes it. For locale-correct
+ * output on values that really are fractions, use
+ * `createTickFormatter({ style: 'percent' }, locale)`.
  */
 export const formatPercent: TickFormatter = (value) => {
   const n = toNumber(value);
