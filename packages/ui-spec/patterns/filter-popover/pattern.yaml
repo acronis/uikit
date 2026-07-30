@@ -32,7 +32,7 @@ components:
   - Button
 
 demo: apps/docs/src/components/demos-react/patterns/filter-popover.tsx
-docs: apps/docs/content/docs/patterns/filter-popover.mdx
+docs: apps/docs/content/docs/components/filter-popover.mdx
 
 # Approved starting point. Anchor the panel to the trigger's start edge
 # (align="start"); the shape — a titled panel of InputSelect fields over a

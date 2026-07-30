@@ -1,20 +1,23 @@
 # Contributing to `@acronis-platform/shadcn-uikit-demos`
 
 This is the **source-only** shared demos workspace — reusable demo
-components consumed by both `apps/demo` and `apps/docs`. **Private**,
-not published, **no changeset needed**.
+components consumed by `apps/demo`. **Private**, not published,
+**no changeset needed**.
 
 See [the root CONTRIBUTING.md](../../CONTRIBUTING.md) for the umbrella
 process. See [AGENTS.md](AGENTS.md) for technical context (the
 source-only consumption pattern, peer deps, what this workspace is NOT for).
 
+`apps/docs` does not consume this package — its ui-react demos live
+directly in `apps/docs/src/components/demos-react/` (see
+[apps/docs/AGENTS.md](../docs/AGENTS.md)).
+
 ## What goes here
 
-- A demo component that **both** `apps/demo` and `apps/docs` need.
-- The official, canonical demo for a published library component
-  (i.e. the one referenced from the docs page).
+- A demo component reused across multiple `apps/demo` pages.
+- The official, canonical demo for a published library component.
 
-If only one consumer needs the demo, put it in that consumer's `src/`
+If only one consumer needs the demo, put it in `apps/demo/src/`
 instead and skip this workspace.
 
 ## What does NOT go here
@@ -34,19 +37,7 @@ instead and skip this workspace.
    export * from './ButtonBasic';
    export * from './ButtonVariants';
    ```
-3. **For `apps/docs` consumption**: add a thin client wrapper under
-   `apps/docs/src/components/demos/` that adds `'use client'` and
-   re-exports your demo. Demo components use hooks and browser APIs;
-   they need the directive, but this workspace doesn't add it (it
-   exports server-compatible source).
-4. **For `apps/docs` consumption**: reference the demo from an MDX
-   page in `apps/docs/content/docs/components/`:
-   ```mdx
-   <DemoPreview sourcePath="apps/demos/src/button/ButtonVariants.tsx" ... />
-   ```
-   See [apps/docs/AGENTS.md](../docs/AGENTS.md) for the `sourcePath`
-   convention (relative to monorepo root).
-5. **For `apps/demo` consumption**: import directly without a wrapper.
+3. **For `apps/demo` consumption**: import directly without a wrapper.
 
 ## Verification
 
@@ -55,9 +46,8 @@ pnpm --filter @acronis-platform/shadcn-uikit-demos typecheck
 pnpm --filter @acronis-platform/shadcn-uikit-demos lint
 ```
 
-There is no build step and no test suite in this workspace. Verify your demo renders by running `apps/demo` or `apps/docs` with the demo wired in.
-Verify your demo renders by running `apps/demo` or `apps/docs` with the
-demo wired in.
+There is no build step and no test suite in this workspace. Verify your
+demo renders by running `apps/demo` with the demo wired in.
 
 ## Dependency version note
 

@@ -37,7 +37,7 @@ components:
   - Empty
 
 demo: apps/docs/src/components/demos-react/patterns/sheet-detail-panel.tsx
-docs: apps/docs/content/docs/patterns/sheet-detail-panel.mdx
+docs: apps/docs/content/docs/components/sheet-detail-panel.mdx
 
 # Approved starting point. Switch the whole body by `contentState`; keep the
 # header (title + close) and footer (actions) stable across states.

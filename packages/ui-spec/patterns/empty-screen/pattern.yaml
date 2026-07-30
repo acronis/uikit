@@ -28,4 +28,4 @@ components:
   - SidebarPrimary
 
 demo: apps/docs/src/components/demos-react/empty-screen.tsx
-docs: apps/docs/content/docs/patterns/empty-screen.mdx
+docs: apps/docs/content/docs/components/empty-screen.mdx

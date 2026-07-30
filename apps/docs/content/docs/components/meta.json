@@ -82,6 +82,21 @@
     "popover",
     "tooltip",
     "toast",
-    "sheet"
+    "sheet",
+    "---Layout---",
+    "app-shell",
+    "auth-layout",
+    "page-header",
+    "page-content",
+    "stack",
+    "grid",
+    "section",
+    "---Patterns---",
+    "dashboard",
+    "app-shell-pattern",
+    "filter-popover",
+    "data-table-bulk-actions",
+    "sheet-detail-panel",
+    "empty-screen"
   ]
 }

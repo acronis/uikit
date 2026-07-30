@@ -29,4 +29,4 @@ components:
   - WidgetPlaceholder
 
 demo: apps/docs/src/components/demos-react/dashboard.tsx
-docs: apps/docs/content/docs/patterns/dashboard.mdx
+docs: apps/docs/content/docs/components/dashboard.mdx

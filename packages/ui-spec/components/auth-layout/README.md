@@ -11,7 +11,7 @@ Figma (node `4906-362342`).
 
 ## When not to use
 
-- An authenticated app screen — use [App Shell](/layouts/app-shell).
+- An authenticated app screen — use [App Shell](/components/app-shell).
 - A modal confirmation — use `Dialog`.
 
 ## Parts

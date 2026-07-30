@@ -2,6 +2,7 @@
   "title": "Packages",
   "pages": [
     "index",
+    "ui-react",
     "tokens-pd",
     "icons-react",
     "icons-sprite",

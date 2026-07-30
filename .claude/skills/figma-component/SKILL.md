@@ -493,6 +493,99 @@ the committed baselines still pass, and commit no PNGs.
 
 ---
 
+## Phase 6 — Document in apps/docs (components section)
+
+Add a documentation page so the new component shows up in the docs site's
+**Components** section in the same style as every other ui-react page. Three
+pieces: a **live demo**, an **MDX page**, and a **nav entry**.
+
+**1. Live demo** — `apps/docs/src/components/demos-react/<name>.tsx`:
+
+- `'use client'` at the top (the demo uses ui-react's client components).
+- Import the component(s) from `@acronis-platform/ui-react` (and icons from
+  `@acronis-platform/icons-react/<pack>`), and `export function <Name>Demo()`
+  rendering a representative composition — mirror the hand-written story.
+- **Network-free**, same rule as the VR stories ([[vr-stories-no-network]]): no
+  remote images; data-URI/local only.
+- If the component has **portaled overlays** (menu/select/tooltip popups), read
+  `useShadowMount()` and pass it as the primitive's `portalContainer` so the
+  popup inherits the shadow root's styles (see `demos-react/input-select.tsx`).
+
+**2. MDX page** — `apps/docs/content/docs/components/<name>.mdx`. Mirror an
+existing page (`breadcrumb.mdx` for a compound component, `card-filter.mdx` for a
+single one):
+
+````mdx
+---
+title: <Name> # PascalCase
+description: <one line> # reuse the spec index.yaml description
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { <Name>Demo } from "@/components/demos-react/<name>";
+
+## Usage
+
+\`\`\`tsx
+import { <Name> } from '@acronis-platform/ui-react';
+\`\`\`
+
+<prose: what it is, the parts, polymorphism via the `render` prop, which tokens
+theme it — note it's a design-pending v1 if useful>
+
+## Examples
+
+<DemoReact>
+  <<Name>Demo />
+</DemoReact>
+
+<one fenced ```tsx``` block per meaningful example, mirroring the hand stories>
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/<name>/<name>.tsx"
+  name="<Name>Props"
+/>
+````
+
+- `<AutoTypeTable>` is a **global** MDX component — do **not** import it. Its
+  `path` is **relative to `apps/docs/`** (`../../packages/ui-react/...`), unlike
+  `DemoPreview` paths. `name` is an **exported** prop interface.
+- **Compound component:** emit one `<AutoTypeTable>` per distinct exported props
+  interface, then a sentence covering the parts that just take native element
+  attributes (see `breadcrumb.mdx`). When several parts **share one** interface
+  (e.g. Card's `CardPartProps`), one table + a sentence ("all parts accept …")
+  is enough.
+- If `AutoTypeTable` can't resolve a type (re-exported Base UI props, complex
+  generics, a part with no own interface), add a `.docs.ts` companion next to the
+  component source and point `path` at that instead.
+
+**3. Nav entry** — add `"<name>"` to the `pages` array in
+`apps/docs/content/docs/components/meta.json`, under the right `---Section---`
+divider (`Buttons & Actions`, `Inputs & Forms`, `Data Display`,
+`Navigation & Layout`, `Overlays`). Pick by category; add a new divider only if
+none fits.
+
+**Verify the docs build** (no test suite here — it's build-verified):
+
+```bash
+pnpm --filter @acronis-platform/uikit-docs typecheck   # demo .tsx compiles
+pnpm --filter @acronis-platform/uikit-docs build       # MDX + AutoTypeTable resolve, page renders
+```
+
+A broken `AutoTypeTable` `path`/`name` or a missing demo import fails the build,
+not typecheck — so run the build.
+
+> **Live demos need ui-react's _compiled_ CSS — already handled, but know why.**
+> `<DemoReact>` mounts the demo in a shadow root that adopts ui-react's compiled
+> `dist/ui-react.css` (served by `/api/ui-react-css`), a **gitignored** artifact.
+> `apps/docs` has `predev`/`prebuild` hooks that run `pnpm --filter @acronis-platform/ui-react build`
+> first, so `uikit-docs dev`/`build` regenerate it automatically (≈1.5s) — no
+> extra step needed here.
+
+---
+
 ## Output checklist (done = all green)
 
 - [ ] `src/components/ui/<name>/<name>.tsx` — Base UI + `--ui-*` tokens, no hex.
@@ -516,6 +609,9 @@ the committed baselines still pass, and commit no PNGs.
 - [ ] `packages/ui-spec/components/<name>/` — 7 files, `ui-spec test` green.
 - [ ] Changeset for `@acronis-platform/ui-react`.
 - [ ] test / typecheck / lint / build all pass; `pnpm -r typecheck` clean.
+- [ ] `apps/docs`: `src/components/demos-react/<name>.tsx` (live demo) +
+      `content/docs/components/<name>.mdx` (Usage / Examples / API Reference) +
+      `meta.json` nav entry; `uikit-docs build` passes.
 
 ---
 

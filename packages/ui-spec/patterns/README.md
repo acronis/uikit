@@ -28,8 +28,9 @@ by `__tests__/patterns.test.ts`. Key fields:
 
 ## Two audiences
 
-- **Humans** see each pattern rendered + explained in the docs site's
-  **Patterns** section (`apps/docs/content/docs/patterns/`), with a live demo
+- **Humans** see each pattern rendered + explained under the **Patterns**
+  heading of the docs site's Components section
+  (`apps/docs/content/docs/components/`), with a live demo
   (`apps/docs/src/components/demos-react/patterns/`).
 - **Agents** read `pattern.yaml` as the source of truth for the sanctioned
   composition — the `example` is the approved starting point; the

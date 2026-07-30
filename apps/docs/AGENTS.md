@@ -23,42 +23,41 @@ pnpm --filter @acronis-platform/uikit-docs dev
 ## What this site documents
 
 The site is **focused on `@acronis-platform/ui-react`** (the next-gen Base UI
-library) and its ecosystem packages. The legacy `@acronis-platform/shadcn-uikit`
-library is documented under a deprecated **Legacy** section
-(`content/docs/legacy/`).
+library) and its ecosystem packages. There is no legacy `@acronis-platform/shadcn-uikit`
+section — that library's docs were removed; layouts and usage patterns are
+documented as **Layout** / **Patterns** subsections of the Components page
+instead of their own top-level sections. See `context/e1-theme-delivery.md`
+and `context/roadmap.md` if any of that needs restoring later.
 
 ## Content structure
 
 - `content/docs/` — MDX pages + `meta.json` files controlling sidebar order.
-  Top-level order: `index`, `getting-started`, `theming`, `components`, `icons`,
-  `packages`, `guides`, `legacy`.
-- `content/docs/components/` — one MDX file per **ui-react** component. Each
-  pairs usage + code-snippet examples + `<AutoTypeTable>` with a **live
-  `<DemoReact>`** preview (shadow-root isolated) — see "ui-react live demos"
-  below. (They do **not** use the legacy `<DemoPreview>`.)
-- `content/docs/packages/` — the ecosystem section (`tokens-pd`, `icons-react`,
-  `icons-sprite`, `design-tokens`, `design-assets`).
-- `content/docs/legacy/` — the deprecated legacy library: a deprecation
-  notice (`index.mdx`), the relocated legacy component pages
-  (`legacy/components/`, ~50 files), and the legacy forms guide
-  (`legacy/forms.mdx`). These pages **keep their live `<DemoPreview>`** widgets.
-- `src/components/DemoPreview.tsx` — async RSC for live preview + source toggle
-  (used by the legacy pages only).
-- `src/components/demos/` — client-wrapper files that re-export from
-  `@acronis-platform/shadcn-uikit-demos` and add `'use client'`. Demo
-  components use hooks and browser APIs, so they need that directive;
-  the shared demos package doesn't add it, so the wrappers do. **These pull
-  from the legacy library** (`shadcn-uikit-demos` → `shadcn-uikit/react`) and
-  back the **legacy** pages only.
+  Top-level order: `getting-started`, `theming`, `typography`,
+  `styling-utilities`, `token-reference`, `components`, `icons`, `packages`,
+  `shadow-dom`.
+- `content/docs/components/` — one MDX file per **ui-react** component, plus a
+  `---Layout---` subsection (app-shell, auth-layout, page-header,
+  page-content, stack, grid, section — layout primitives, not one-off pages)
+  and a `---Patterns---` subsection (dashboard, app-shell-pattern,
+  filter-popover, data-table-bulk-actions, sheet-detail-panel, empty-screen —
+  approved multi-component compositions, backed by
+  `packages/ui-spec/patterns/<name>/pattern.yaml`). Each page pairs usage +
+  code-snippet examples + `<AutoTypeTable>` with a **live `<DemoReact>`**
+  preview (shadow-root isolated) — see "ui-react live demos" below.
+- `content/docs/packages/` — the published-package inventory (`ui-react`,
+  `tokens-pd`, `icons-react`, `icons-sprite`, `design-tokens`,
+  `design-assets`). `ui-legacy` is published too but frozen and intentionally
+  left out (see below).
 - `src/components/demos-react/` — `'use client'` demos for the **ui-react**
   pages, importing straight from `@acronis-platform/ui-react`. One
   `<Name>Demo` per component, rendered through `<DemoReact>` (see below).
+  `demos-react/patterns/` holds the pattern demos.
 - `src/components/DemoReact.tsx` + `src/components/ShadowDemo.tsx` — the
   ui-react live-preview wrapper: `ShadowDemo` mounts the demo in a **shadow
   root** that adopts ui-react's stylesheet (fetched from `/api/ui-react-css`),
-  isolating it from the legacy + Fumadocs CSS on the global document.
+  isolating it from the Fumadocs CSS on the global document.
 - `src/components/IconCatalog.tsx` — searchable catalog rendering the
-  `@acronis-platform/icons-react` packs (`/docs/icons`).
+  `@acronis-platform/icons-react` packs (`/icons`).
 
 ## ui-react live demos (shadow-root isolated)
 
@@ -77,7 +76,7 @@ shared demos package at all. Instead:
   (`ShadowDemo`) that adopts ui-react's stylesheet from `/api/ui-react-css`.
 
 The shadow boundary keeps ui-react's Tailwind preflight from colliding with the
-legacy + Fumadocs CSS loaded globally on the docs document. For components with
+Fumadocs CSS loaded globally on the docs document. For components with
 portaled overlays (Select/Tooltip popups), the demo reads `useShadowMount()` and
 passes it as the primitive's `portalContainer` so the popup inherits the shadow's
 styles. See `card-filter.tsx` / `input-select.tsx` for the pattern.
@@ -100,17 +99,6 @@ styles. See `card-filter.tsx` / `input-select.tsx` for the pattern.
 
 These are easy to get wrong because the conventions differ by component:
 
-### `<DemoPreview sourcePath="...">`
-
-`sourcePath` is **relative to the monorepo root**, not the docs app:
-
-```
-sourcePath="apps/demos/src/button/ButtonVariants.tsx"
-```
-
-`DemoPreview` resolves this via `resolve(process.cwd(), '..', '..', sourcePath)`
-because `process.cwd()` is `apps/docs/` at build time.
-
 ### `<AutoTypeTable path="...">`
 
 `AutoTypeTable` paths are **relative to `apps/docs/`**:
@@ -118,8 +106,6 @@ because `process.cwd()` is `apps/docs/` at build time.
 ```
 <AutoTypeTable path="../../packages/ui-react/src/components/ui/button/button.tsx" name="ButtonProps" />
 ```
-
-(Legacy pages still point at `../../packages/ui-legacy/src/components/ui/<x>.tsx`.)
 
 For compound components or types that `AutoTypeTable` cannot resolve
 (re-exported Base UI types, complex CVA generics, parts with no exported prop
@@ -129,7 +115,7 @@ interface), use a `.docs.ts` companion file alongside the component source:
 <AutoTypeTable path="../../packages/ui-react/src/components/ui/<component>/<component>.docs.ts" name="..." />
 ```
 
-Several `.docs.ts` companions exist in `ui-legacy`. Only create a new one when
+Only create a new one when
 `AutoTypeTable` fails to produce a useful table from the original source — many
 ui-react compound parts (e.g. the `InputSelect*` family) extend Base UI props
 without their own interface, so they need a companion or should be documented
@@ -149,6 +135,18 @@ Fumadocs `source` uses `baseUrl: '/'` and the catch-all lives at
 keeps URLs single-segment under the deploy basePath (`/uikit/docs/<page>`, not
 `/uikit/docs/docs/<page>`). Internal links therefore point at `/<page>` (e.g.
 `/components/button`), never `/docs/<page>`.
+
+### Redirects for moved pages
+
+The site is a **static export** deployed to GitHub Pages (see
+`.github/workflows/demo-deploy.yml`), so `next.config.mjs`'s `redirects()`
+never runs in production — there's no server to serve them from. When a page
+moves, add a literal route at the old path with `src/components/LegacyRedirect.tsx`
+(client-side `router.replace`), e.g. `src/app/layouts/page.tsx` →
+`<LegacyRedirect to="/components" />`. See `src/app/layouts/`, `src/app/patterns/`,
+and `src/app/guides/shadow-dom/` for examples from the legacy/guides/layouts/patterns
+restructuring. Content that was deleted outright (no replacement) is left to
+`not-found.tsx` instead of a fake redirect.
 
 ## Search
 
