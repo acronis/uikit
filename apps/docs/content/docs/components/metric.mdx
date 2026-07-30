@@ -12,56 +12,131 @@ import { MetricDemo } from '@/components/demos-react/metric';
 import { Metric } from '@acronis-platform/ui-react';
 ```
 
-`Metric` is a presentational metric card modelled on the dashboard MetricCard
-design: a label (+ optional caption) over a primary value — with an optional
-status-tinted icon badge, unit, and trend — plus an optional body for a chart,
-breakdown, or insight. It is purely presentational: the consumer passes a
-ready-formatted `value` and a resolved `status`; the kit never computes or
-formats the value, converts units, or decides whether a value is good or bad.
+`Metric` renders a [`Card`](/components/card) laid out after the Figma MetricCard
+node: a label row (label, an optional info tooltip, an optional top-right
+`caption`) over a value row (an optional status-tinted icon badge, the `value` and
+`unit`, an optional `trend` on the right), then optional `supportingText`, then
+whatever you pass as `children`. It is presentational only — you pass a
+ready-formatted `value` and a resolved `status`; the kit never does maths, unit
+conversion, or "is this good or bad" logic.
+
+> **Design-pending v1** — the Figma node is a reference, not a published
+> component, so there is no `--ui-metric-*` tier yet. Colors come from the
+> semantic `--ui-*` status tokens and geometry from the Tailwind scale.
 
 ## Examples
+
+A compact tile on the left; on the right, the same card with a stacked
+[`Meter`](/components/meter) breakdown, a `Separator`, and an insight line dropped
+into `children`:
 
 <DemoReact>
   <MetricDemo />
 </DemoReact>
 
-A simple metric with a unit, status, and a composed `TrendIndicator`:
-
 ```tsx
 <Metric
+  className="w-[220px]"
   label="Endpoint coverage"
   value="94"
   unit="%"
   status="success"
   icon={<ChartPieIcon />}
   supportingText="Target: 98%"
-  trend={<TrendIndicator direction="up" sentiment="positive" value="2%" size="small" />}
+  trend={
+    <TrendIndicator direction="up" sentiment="positive" value="2%" size="small" />
+  }
 />
-```
 
-Metric is a Card, so drop a chart, a `Meter` breakdown, a `Separator`, or an
-insight line into its `children` to build a full dashboard tile:
-
-```tsx
 <Metric
+  className="w-[314px]"
   label="At-risk customers"
   status="critical"
   icon={<ChartPieIcon />}
-  caption={<Tag>Now</Tag>}
+  caption={<Tag variant="neutral" size="sm">Now</Tag>}
   value="3"
-  trend={<TrendIndicator direction="up" sentiment="negative" value="1" size="small" />}
+  trend={
+    <TrendIndicator
+      direction="up"
+      sentiment="negative"
+      value="1"
+      comparisonLabel="this week"
+      size="small"
+    />
+  }
 >
-  <Meter label="Healthy" value={46} max={54} color="var(--ui-background-status-strong-success)" showTooltip={false} />
-  <Meter label="At risk" value={3} max={54} color="var(--ui-background-status-strong-critical)" showTooltip={false} />
+  <div className="mt-3 flex flex-col gap-2.5">
+    <Meter label="Healthy" value={46} max={54} color="var(--ui-background-status-strong-success)" showTooltip={false} />
+    <Meter label="Unhealthy" value={5} max={54} color="var(--ui-background-status-strong-warning)" showTooltip={false} />
+    <Meter label="At risk" value={3} max={54} color="var(--ui-background-status-strong-critical)" showTooltip={false} />
+  </div>
   <Separator className="my-3" />
-  <p>+3 customers predicted at-risk within 30 days.</p>
+  <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
+    +3 customers predicted at-risk within 30 days — act before renewal.
+  </p>
 </Metric>
 ```
 
-`status` (`neutral`, `info`, `success`, `warning`, `danger`, `critical`) tints
-the **icon badge** only — the `--ui-background-status-<status>-pressed` fill with
-the `--ui-text-on-status-<status>` icon color — a subtle cue, never a full color
-fill, so many metrics read calmly together. No data is `value="—"`, not `0`.
+`status` — `neutral` (default), `info`, `success`, `warning`, `danger`,
+`critical` — tints the **icon badge** only: a
+`--ui-background-status-<status>-pressed` fill with a matching
+`--ui-text-on-status-<status>` icon. It is deliberately a subtle cue rather than a
+full color fill, so a row of metrics reads calmly together. When a metric has no
+data, pass an em-dash (`value="—"`) rather than `0` — zero is a real measurement.
+
+`badge` is a fourth slot, sitting immediately after the value and unit; use it for
+a short qualifier such as a [`Tag`](/components/tag), keeping `caption` for the
+timeframe in the label row:
+
+```tsx
+<Metric
+  label="Anomaly score"
+  value="6.4"
+  badge={
+    <Tag variant="warning" size="sm">
+      Elevated
+    </Tag>
+  }
+  caption={
+    <Tag variant="neutral" size="sm">
+      Last 7 days
+    </Tag>
+  }
+/>
+```
+
+`size` (`small` · `medium` · `large`) scales the label, value, unit, supporting
+text, and icon badge together. The badge icon is cloned with the matching pixel
+`size` so `icons-react` picks the designed stroke weight:
+
+```tsx
+<Metric size="small" label="MTTR" value="2.8" unit="hours" />
+<Metric size="large" label="ARR" value="$72K" trend={<TrendIndicator direction="up" sentiment="positive" value="8%" />} />
+```
+
+Pass `tooltip` to add an info affordance next to the label. Give it a meaningful
+`tooltipLabel` — that's the accessible name of the trigger (it defaults to
+`"More information"`):
+
+```tsx
+<Metric
+  label="Gross margin"
+  value="73"
+  unit="%"
+  tooltip="Revenue minus cost of goods, over the trailing 30 days."
+  tooltipLabel="About gross margin"
+/>
+```
+
+`loading` swaps the value for a [`Skeleton`](/components/skeleton) of the same
+size, so the card doesn't reflow when the number arrives:
+
+```tsx
+<Metric label="Endpoint coverage" value="94" unit="%" loading />
+```
+
+To plot a series over time, compose a chart into `children` rather than reaching
+for a different component — `Metric` owns the header, not the visualization.
 
 ## API Reference
 

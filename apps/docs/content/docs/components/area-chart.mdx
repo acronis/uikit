@@ -13,23 +13,39 @@ import { AreaChart } from '@acronis-platform/ui-react';
 import type { ChartConfig } from '@acronis-platform/ui-react';
 ```
 
-`AreaChart` is a typed composition over the shared [`Chart`](/components/chart)
-primitives. Give it `data`, a per-series `config`, the series to plot
-(`dataKeys`), and the category key (`xKey`) — it renders a themed recharts area
-chart (tooltip, legend, axes, grid included), so you don't hand-compose recharts
-children.
+`AreaChart` is a typed recharts composition over the shared
+[`Chart`](/components/chart) primitives. Give it `data`, a per-series `config`,
+the series to plot (`dataKeys`), and the category key (`xKey`) — it renders a
+themed recharts area chart with tooltip, legend, axes, and grid, so you never
+hand-compose recharts children.
 
 Series colors are supplied by the caller through `config`: each entry maps a data
 key to a `label` and a `color`. `AreaChart` turns those into the `--color-<key>`
 custom properties its areas stroke and fill from. Single vs multi area simply
 follows from how many `dataKeys` you plot.
 
+Use it to emphasize the **magnitude** of a trend over a continuous or ordered
+dimension (traffic over time, cumulative usage), or part-to-whole composition
+over time via `layout="stacked"`. When readers need to compare exact values across
+a few series, prefer [`LineChart`](/components/line-chart) — overlapping fills
+obscure each other. For a quantity across discrete categories use
+[`BarChart`](/components/bar-chart); for a single metric a
+[`Tag`](/components/tag) or plain text; for row-level detail a
+[`Table`](/components/table) / [`DataTable`](/components/data-table).
+
+Pair the chart with a text alternative (caption, summary, or adjacent data table)
+and give it an accessible name — `aria-label` / `aria-labelledby` pass through to
+the wrapper element. Keep either the legend or the tooltip visible, and when
+overlapping translucency hurts legibility switch to `layout="stacked"` or
+`fill="solid"`.
+
 > **Design-pending v1**, ported from the demo `AreaChartPlayground`. There is no
-> chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands.
+> chart token tier yet, so the example colors reference the shared semantic
+> `--ui-*` brand/status tokens — a dedicated `--ui-chart-*` data-viz palette is
+> pending an upstream design pass. `--ui-background-status-strong-*` is chromatic
+> in every brand; `--ui-background-brand-secondary` is brand-dependent, so it is
+> not color-stable across brands until the real palette lands. Translucent fills
+> lower a color's effective contrast — check yours against the surface.
 
 ## Examples
 
@@ -37,7 +53,7 @@ follows from how many `dataKeys` you plot.
   <AreaChartDemo />
 </DemoReact>
 
-A multi-series area chart with the default gradient fill, a themed tooltip and
+A multi-series area chart with the default gradient fill, a themed tooltip, and a
 legend:
 
 ```tsx
@@ -61,22 +77,24 @@ const config = {
 />;
 ```
 
-Stack the series into one band with `layout="stacked"`:
+Stack the series into one band with `layout="stacked"` — the value axis then grows
+to the stacked total rather than the largest series:
 
 ```tsx
 <AreaChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" layout="stacked" />
 ```
 
-Use a flat translucent fill instead of the gradient with `fill="solid"` (tune it
-with `fillOpacity`):
+Use a flat translucent fill instead of the vertical gradient with `fill="solid"`,
+tuned by `fillOpacity` (the gradient controls its own stops, so `fillOpacity` is
+ignored there):
 
 ```tsx
 <AreaChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" fill="solid" fillOpacity={0.3} />
 ```
 
 Change the interpolation with `curve` (`linear`, `monotone`, or `step`), and
-toggle the chrome / dots with `showGrid` / `showTooltip` / `showLegend` /
-`showDots`:
+toggle the chrome and per-point dots with `showGrid` / `showTooltip` /
+`showLegend` / `showDots`:
 
 ```tsx
 <AreaChart
@@ -85,8 +103,21 @@ toggle the chrome / dots with `showGrid` / `showTooltip` / `showLegend` /
   dataKeys={['desktop', 'mobile']}
   xKey="month"
   curve="step"
+  showDots
   showLegend={false}
 />
+```
+
+A `null` value breaks the area at that point. Bridge the gap with `connectNulls`:
+
+```tsx
+const sparse = [
+  { month: 'Jan', desktop: 186 },
+  { month: 'Feb', desktop: null },
+  { month: 'Mar', desktop: 237 },
+];
+
+<AreaChart config={config} data={sparse} dataKeys={['desktop']} xKey="month" connectNulls />;
 ```
 
 Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
@@ -104,12 +135,9 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
 />
 ```
 
-## Custom tooltip
-
 Replace the tooltip with a configured `ChartTooltipContent` — imported from the
-same library, so you never compose recharts yourself. Its `formatter` renders
-each row and `labelFormatter` the header, giving you custom formatting, per-series
-content, and extra fields:
+same library, so you still never compose recharts yourself. Its `formatter`
+renders each row and `labelFormatter` the header:
 
 ```tsx
 import { AreaChart, ChartTooltipContent } from '@acronis-platform/ui-react';

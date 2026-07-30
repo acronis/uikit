@@ -3,8 +3,8 @@ title: ButtonMenu
 description: A button that opens a dropdown menu, with a trailing chevron.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { ButtonMenuDemo } from "@/components/demos-react/button-menu";
+import { DemoReact } from '@/components/DemoReact';
+import { ButtonMenuDemo } from '@/components/demos-react/button-menu';
 
 ## Usage
 
@@ -12,27 +12,36 @@ import { ButtonMenuDemo } from "@/components/demos-react/button-menu";
 import { ButtonMenu } from '@acronis-platform/ui-react';
 ```
 
-`ButtonMenu` is a Button-like trigger — a label followed by a chevron that
-points up while the menu is open. It is polymorphic via Base UI's `useRender`
-(the `render` prop). Keep the `open` prop in sync with the menu or popover it
-controls; `open` flips the chevron, applies the open (active) treatment, and
-reflects `aria-expanded`.
+`ButtonMenu` renders a Button-like `<button>` — your label followed by a 16px
+chevron it appends itself — styled by the `--ui-button-menu-*` design tokens.
+It is polymorphic via Base UI's `useRender`, so the `render` prop can turn it
+into the trigger of the menu it opens.
+
+`ButtonMenu` owns only the trigger; the popup is yours. Keep `open` in sync
+with that popup's state: it flips the chevron down → up, applies the open
+(`*-active`) treatment, and reflects `aria-expanded`.
 
 ## Examples
 
+Two variants — `primary` (the default, solid) and `secondary` (bordered with a
+transparent fill). The third button below is `open`, the fourth `disabled`:
 
 <DemoReact>
   <ButtonMenuDemo />
 </DemoReact>
 
-Two variants — `primary` (default) and `secondary`:
-
 ```tsx
-<ButtonMenu>Actions</ButtonMenu>
-<ButtonMenu variant="secondary">Filters</ButtonMenu>
+<ButtonMenu variant="primary">Actions</ButtonMenu>
+<ButtonMenu variant="secondary">Filter</ButtonMenu>
+<ButtonMenu variant="secondary" open>
+  Sort by
+</ButtonMenu>
+<ButtonMenu variant="primary" disabled>
+  Export
+</ButtonMenu>
 ```
 
-Wire `open` to the controlled menu state:
+Wire `open` to the state of the menu you control:
 
 ```tsx
 const [open, setOpen] = React.useState(false);
@@ -42,11 +51,35 @@ const [open, setOpen] = React.useState(false);
 </ButtonMenu>
 ```
 
-Disabled state:
+With [DropdownMenu](/components/dropdown-menu), pass the button to
+`DropdownMenuTrigger`'s `render` prop. The menu owns the ARIA wiring and
+dismissal; control its `open` state so you can hand the same value to
+`ButtonMenu` and keep the chevron in step:
+
+```tsx
+const [open, setOpen] = React.useState(false);
+
+<DropdownMenu open={open} onOpenChange={setOpen}>
+  <DropdownMenuTrigger
+    render={
+      <ButtonMenu variant="secondary" open={open}>
+        Actions
+      </ButtonMenu>
+    }
+  />
+  <DropdownMenuContent>{/* DropdownMenuItem… */}</DropdownMenuContent>
+</DropdownMenu>
+```
+
+Disabled state uses dedicated disabled tokens (not opacity):
 
 ```tsx
 <ButtonMenu disabled>Actions</ButtonMenu>
 ```
+
+For a plain action with no menu use [Button](/components/button); to pick one
+option from a list and show the chosen value use
+[InputSelect](/components/input-select).
 
 ## API Reference
 

@@ -7,11 +7,26 @@ description: Page scaffolds and layout primitives for arranging an app's structu
 with named slots for other components, and low-level primitives for arranging
 content.
 
-- [App Shell](/layouts/app-shell) — the full-page application scaffold (sidebar +
-  header + main slots).
-- [Stack](/layouts/stack) — one-dimensional flex layout.
-- [Grid](/layouts/grid) — responsive two-dimensional grid.
-- [Section](/layouts/section) — a titled content block.
+Full-page scaffolds:
+
+- [`AppShell`](/layouts/app-shell) — the application frame (sidebar, sticky
+  header, scrolling main, optional footer).
+- [`AppShellChat`](/layouts/app-shell-chat) — the same frame plus a resizable
+  chat panel beside the page content.
+- [`AuthLayout`](/layouts/auth-layout) — a centered card for unauthenticated
+  flows.
+
+Page regions:
+
+- [`PageHeader`](/layouts/page-header) — a page's title row with tags, actions,
+  and an optional description.
+- [`PageContent`](/layouts/page-content) — the padded gutter for a page's body.
+- [`Section`](/layouts/section) — a titled content block.
+
+Primitives:
+
+- [`Stack`](/layouts/stack) — one-dimensional flex layout.
+- [`Grid`](/layouts/grid) — responsive two-dimensional grid.
 
 For the recommended way to assemble a full screen, see the
 [App Shell pattern](/patterns/app-shell).

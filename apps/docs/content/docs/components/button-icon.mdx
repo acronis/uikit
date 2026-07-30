@@ -3,8 +3,8 @@ title: ButtonIcon
 description: An icon-only button for compact, glyph-driven actions.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { ButtonIconDemo } from "@/components/demos-react/button-icon";
+import { DemoReact } from '@/components/DemoReact';
+import { ButtonIconDemo } from '@/components/demos-react/button-icon';
 
 ## Usage
 
@@ -12,40 +12,62 @@ import { ButtonIconDemo } from "@/components/demos-react/button-icon";
 import { ButtonIcon } from '@acronis-platform/ui-react';
 ```
 
-`ButtonIcon` is a square (32px) icon-only `<button>`. The icon is passed as
-`children`. It is polymorphic via Base UI's `useRender` (the `render` prop).
-Always provide an `aria-label` (or `aria-labelledby`) so the control has an
-accessible name.
+`ButtonIcon` renders a square 32px `<button>` with a single 24px glyph centered
+in it, styled by the `--ui-button-icon-*` design tokens. The icon is passed as
+`children` — nothing is injected. It is polymorphic via Base UI's `useRender` —
+pass the `render` prop to render it as another element while keeping the button
+styling and merged props.
+
+The control has no text, so always give it an `aria-label` (or
+`aria-labelledby`) for its accessible name.
 
 ## Examples
 
+Two variants — `ghost` (the default, borderless) and `secondary` (a 1px
+container border). Both share the same container fill and glyph colors:
 
 <DemoReact>
   <ButtonIconDemo />
 </DemoReact>
 
-Two visual variants — `ghost` (default, no border) and `secondary` (1px
-border):
-
 ```tsx
-import { PencilIcon } from '@acronis-platform/icons-react/stroke-mono';
+import {
+  PlusIcon,
+  PencilIcon,
+  CogIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
 
-<ButtonIcon aria-label="Edit">
-  <PencilIcon />
+<ButtonIcon variant="ghost" aria-label="Add">
+  <PlusIcon />
 </ButtonIcon>
-
 <ButtonIcon variant="secondary" aria-label="Edit">
   <PencilIcon />
 </ButtonIcon>
+<ButtonIcon variant="secondary" aria-label="Settings" disabled>
+  <CogIcon />
+</ButtonIcon>
 ```
 
-Disabled state:
+Disabled state uses dedicated disabled tokens (not opacity) and suppresses the
+click:
 
 ```tsx
 <ButtonIcon aria-label="Edit" disabled>
   <PencilIcon />
 </ButtonIcon>
 ```
+
+Render as another element with `render` (Base UI composition):
+
+```tsx
+<ButtonIcon render={<a href="/settings" />} aria-label="Settings">
+  <CogIcon />
+</ButtonIcon>
+```
+
+For an action that needs a text label use [Button](/components/button); for a
+compact affordance that sits inside a text field's box use
+[ButtonIconInput](/components/button-icon-input).
 
 ## API Reference
 

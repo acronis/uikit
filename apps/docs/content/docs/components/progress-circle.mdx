@@ -1,10 +1,10 @@
 ---
 title: ProgressCircle
-description: A circular (radial) progress indicator whose arc fills with the value and colors by level.
+description: A circular progress ring whose arc fills with the value and colors by level.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { ProgressCircleDemo } from "@/components/demos-react/progress-circle";
+import { DemoReact } from '@/components/DemoReact';
+import { ProgressCircleDemo } from '@/components/demos-react/progress-circle';
 
 ## Usage
 
@@ -12,42 +12,68 @@ import { ProgressCircleDemo } from "@/components/demos-react/progress-circle";
 import { ProgressCircle } from '@acronis-platform/ui-react';
 ```
 
-`ProgressCircle` is a compact circular progress ring — an SVG arc that fills with
-`value` and whose color tracks the level (danger → critical → warning → success),
-with an optional numeric or icon center. It wraps the Base UI Progress primitive
-for `role="progressbar"` semantics. The sibling of the linear `Progress`; use it
-for at-a-glance scores in table cells, cards, and widgets. Design-pending v1 on
-the shared status tokens (no dedicated tier).
+`ProgressCircle` renders a hand-drawn SVG ring wrapped in Base UI's `Progress`
+primitive, so it carries `role="progressbar"` with the right
+`aria-valuenow`/`min`/`max` while drawing a radial arc that Base UI's linear-only
+`Track`/`Indicator` can't. `size` picks the diameter and stroke — `tiny` 16px,
+`sm` (default) 24px, `md` 40px, `lg` 64px — and the ring sets its own layout box
+to match.
+
+> Design-pending v1, built from the Cyber-Compliance "Compliance %" design and
+> the Vue kit's `AvProgressRadial`. There is no `--ui-progress-circle-*` tier: the
+> arc uses the shared status colors (`--ui-text-on-status-*`), the track
+> `--ui-border-on-surface-border`, and the center label the surface foreground.
 
 ## Examples
+
+`showValue` prints the rounded percentage in the center; `showIcon` prints the
+level's status icon instead (and wins over `showValue`). The last item composes a
+bare ring with an external label, the pattern for a table cell:
 
 <DemoReact>
   <ProgressCircleDemo />
 </DemoReact>
 
 ```tsx
+<ProgressCircle value={25} size="md" showValue />
+<ProgressCircle value={50} size="md" showValue />
 <ProgressCircle value={75} size="md" showValue />
-<ProgressCircle value={25} size="sm" />            {/* arc auto-colors to danger */}
-<ProgressCircle value={100} size="lg" showIcon />  {/* success check in center */}
-```
+<ProgressCircle value={100} size="md" showIcon />
 
-By default the arc color is **derived from the value** (danger → critical → warning →
-success), like the Vue `AvProgressRadial`. Set `status` to force a level, or use
-`status="brand"` for a single neutral color (generic progress, not a score):
-
-```tsx
-<ProgressCircle value={60} status="brand" showValue />  {/* brand blue, not orange */}
-<ProgressCircle value={90} status="danger" showValue /> {/* forced danger */}
-```
-
-In a table cell, compose the ring with an external label:
-
-```tsx
 <div className="flex items-center gap-2">
   <ProgressCircle value={81} size="sm" />
   <span className="text-sm">81%</span>
 </div>
 ```
+
+With no `status`, the arc color is **derived from the value** — under 40% danger,
+under 60% critical, under 80% warning, otherwise success. Set `status` to pin a
+level, or use `status="brand"` for a single neutral color when the ring shows
+generic progress rather than a score:
+
+```tsx
+<ProgressCircle value={60} status="brand" showValue />
+<ProgressCircle value={90} status="danger" showValue />
+```
+
+`brand` has no status icon, so `showIcon` renders nothing for it. For any other
+center content, pass `children` — it takes priority over both `showIcon` and
+`showValue`:
+
+```tsx
+<ProgressCircle value={42} size="lg">
+  <span className="text-xs">42/100</span>
+</ProgressCircle>
+```
+
+`value` is clamped to `[0, max]`, so out-of-range data can't overdraw the arc:
+
+```tsx
+<ProgressCircle value={7} max={12} size="md" showValue />
+```
+
+For a full-width determinate bar use [`Progress`](/components/progress); for an
+indeterminate busy state use [`Loading`](/components/loading).
 
 ## API Reference
 

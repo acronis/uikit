@@ -7,18 +7,38 @@ deprecated:
   reason: Superseded by Loading, which adds a label and container.
 ---
 
-`Spinner` remains an internal primitive consumed by [`Loading`](/components/loading)
-(its icon) and `Toast` (a small inline icon).
+`Spinner` is a bare CSS spinning ring — a `role="status"` `<div>` with a
+`border-current` ring and four `size`s (`sm` 16px, `md` 24px, `lg` 32px,
+`xl` 48px). It has no `--ui-spinner-*` token tier of its own; the ring inherits
+`currentColor`, defaulting to the brand action blue via `text-secondary`.
+
+It stays an internal primitive: it is **not** re-exported from
+`@acronis-platform/ui-react`, so it can't be imported directly. Inside the
+library it backs [`Loading`](/components/loading)'s icon, `Toast`'s small inline
+loading icon, and `ChartState`'s loading state.
 
 ## Migrating
+
+Use [`Loading`](/components/loading) instead. It wraps the same ring with a
+label and a placement-context container, and its `variant` — not a `size` prop —
+picks the ring size:
 
 ```diff
 - import { Spinner } from '@acronis-platform/ui-react';
 - <Spinner size="lg" />
 + import { Loading } from '@acronis-platform/ui-react';
-+ <Loading />
++ <Loading variant="onSurfacePrimary" />
 ```
 
-`Loading`'s three larger sizes (16 / 32 / 48px) line up with `Spinner`'s
-`sm` / `lg` / `xl`; pass `hasLabel={false}` to drop the visible label while
-keeping it announced via `aria-label`.
+| `Spinner` size | Closest `Loading` variant                 | Ring |
+| -------------- | ----------------------------------------- | ---- |
+| `sm`           | `inline`                                  | 16px |
+| `lg`           | `onSurfacePrimary` / `onSurfaceSecondary` | 32px |
+| `xl`           | `onScreen`                                | 48px |
+
+`Spinner`'s `md` (24px) has no `Loading` equivalent — pick the neighbouring size
+that fits the placement.
+
+`Loading` shows a visible label by default (`"Data is loading…"`). Pass
+`hasLabel={false}` for the ring alone; the label is still announced via the
+root's `aria-label`, so the indicator keeps an accessible name.

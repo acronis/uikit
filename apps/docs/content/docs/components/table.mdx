@@ -3,8 +3,8 @@ title: Table
 description: Displays rows and columns of data, with sortable headers and selectable rows.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { TableDemo } from "@/components/demos-react/table";
+import { DemoReact } from '@/components/DemoReact';
+import { TableDemo } from '@/components/demos-react/table';
 
 ## Usage
 
@@ -21,23 +21,73 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`Table` is a compound component over native table elements. `TableHeader` holds
-column-header rows of `TableHead`; `TableBody` holds data rows of `TableCell`;
-`TableFooter` and `TableCaption` are optional. `TableHead` can be `sortable`
-(renders a sort affordance + `aria-sort`), and `TableRow` takes a `selected`
-flag. Themed by the `--ui-table-*` token tier. Cell content — checkboxes, tags,
-links, numbers — is your own composition. This is a design-pending v1; a
-TanStack-backed `DataTable` (sorting/selection/pagination logic) is planned on
-top of these primitives.
+`Table` is a set of composable parts over native table elements — `Table` wraps a
+`<table>` in a horizontally scrollable container, `TableHeader`/`TableBody`/
+`TableFooter` are the sections, `TableRow` is a `<tr>`, `TableHead` a `<th>`, and
+`TableCell` a `<td>`. Unlike most ported components, a `--ui-table-*` tier already
+exists, so the parts theme directly from it: cell padding and min height from
+`--ui-table-global-cell-*`, row fills from `--ui-table-data-row-color-{idle,hover,active}`,
+header labels and sort glyphs from `--ui-table-header-*`.
+
+The parts render structure and state only. Cell content — checkboxes, tags, links,
+numbers — is your composition, and so is the sorting and selection logic (or use
+the headless hooks below).
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` table and informed by
+> the pre-release Figma Table design. For a grid whose sorting, filtering,
+> pagination, and selection are managed for you, use
+> [`DataTable`](/components/data-table), which composes these same parts.
 
 ## Examples
 
+A selectable, sortable table. `TableHead sortable` renders the sort affordance and
+sets `aria-sort`; `TableRow selected` applies the active row token and
+`data-state="selected"`:
 
 <DemoReact>
   <TableDemo />
 </DemoReact>
 
-A basic table with a footer:
+```tsx
+<Table style={{ width: 560 }}>
+  <TableHeader>
+    <TableRow>
+      <TableHead>
+        <Checkbox aria-label="Select all" />
+      </TableHead>
+      <TableHead sortable sortDirection="asc">
+        Workload
+      </TableHead>
+      <TableHead sortable>Last backup</TableHead>
+      <TableHead>Status</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow selected>
+      <TableCell>
+        <Checkbox defaultChecked aria-label="Select row" />
+      </TableCell>
+      <TableCell>web-server-01</TableCell>
+      <TableCell>26 Jan, 2026</TableCell>
+      <TableCell>
+        <Tag>Protected</Tag>
+      </TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>
+        <Checkbox aria-label="Select row" />
+      </TableCell>
+      <TableCell>db-primary</TableCell>
+      <TableCell>26 Jan, 2026</TableCell>
+      <TableCell>
+        <Tag>Protected</Tag>
+      </TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+A table with a summary footer and a caption:
 
 ```tsx
 <Table>
@@ -45,26 +95,27 @@ A basic table with a footer:
   <TableHeader>
     <TableRow>
       <TableHead>Invoice</TableHead>
-      <TableHead className="text-right">Amount</TableHead>
+      <TableHead className="text-end">Amount</TableHead>
     </TableRow>
   </TableHeader>
   <TableBody>
     <TableRow>
       <TableCell className="font-medium">INV001</TableCell>
-      <TableCell className="text-right">$250.00</TableCell>
+      <TableCell className="text-end">$250.00</TableCell>
     </TableRow>
   </TableBody>
   <TableFooter>
     <TableRow>
       <TableCell>Total</TableCell>
-      <TableCell className="text-right">$250.00</TableCell>
+      <TableCell className="text-end">$250.00</TableCell>
     </TableRow>
   </TableFooter>
 </Table>
 ```
 
-Sortable headers — the consumer owns the sorting logic and updates
-`sortDirection`:
+`sortDirection` is `'asc' | 'desc' | false` — `false` means "sortable but not
+currently sorted", which is what draws the neutral two-way glyph. You own the
+sort; `onSort` just tells you the header was activated:
 
 ```tsx
 const [dir, setDir] = useState<'asc' | 'desc' | false>(false);
@@ -78,16 +129,62 @@ const [dir, setDir] = useState<'asc' | 'desc' | false>(false);
 </TableHead>;
 ```
 
-Selectable rows — mark the row `selected` and render a `Checkbox` in a leading
-cell:
+Cells and headers are single-line with a fixed 40px row height by default. `wrap`
+drops that height and lets the content flow onto several lines:
 
 ```tsx
-<TableRow selected={checked}>
-  <TableCell>
-    <Checkbox checked={checked} onCheckedChange={setChecked} aria-label="Select row" />
-  </TableCell>
-  <TableCell>web-server-01</TableCell>
-</TableRow>
+<TableCell wrap>{longDescription}</TableCell>
+```
+
+### Headless state hooks
+
+Two hooks drive the parts without pulling in `@tanstack/react-table`.
+`useSortState` owns client-side single-column sort and returns props shaped for
+`TableHead` — `toggleSort` cycles none → asc → desc → none:
+
+```tsx
+import { useSortState } from '@acronis-platform/ui-react';
+
+const { sortedData, getSortDirection, toggleSort } = useSortState({ data });
+
+<TableHead
+  sortable
+  sortDirection={getSortDirection('name')}
+  onSort={() => toggleSort('name')}
+>
+  Name
+</TableHead>;
+```
+
+The default comparator is alphanumeric (so `item2` sorts before `item10`); pass
+`comparators` to override a column, or `getValue` to read a nested field.
+`useTableUrlState` is the other hook — it syncs pagination, sorting, and column
+filters to the URL query string under namespaced `tbl_*` keys via
+`history.pushState` + `popstate`, so it stays router-agnostic.
+
+### Pagination and column visibility
+
+`TablePagination` and `TableViewOptions` are TanStack-independent twins of the
+`DataTable` chrome, driven by plain props so they pair with these primitives:
+
+```tsx
+<TablePagination
+  pageIndex={pageIndex}
+  pageCount={pageCount}
+  pageSize={pageSize}
+  totalRows={rows.length}
+  selectedRows={selection.size}
+  onPageIndexChange={setPageIndex}
+  onPageSizeChange={setPageSize}
+/>
+
+<TableViewOptions
+  columns={[
+    { id: 'workload', label: 'Workload', hidden: false },
+    { id: 'lastBackup', label: 'Last backup', hidden: true },
+  ]}
+  onToggle={toggleColumn}
+/>
 ```
 
 ## API Reference
@@ -106,6 +203,27 @@ cell:
   name="TableRowProps"
 />
 
-`Table`, `TableHeader`, `TableBody`, `TableFooter`, `TableCell`, and
-`TableCaption` accept the standard attributes of the element they render
-(`<table>`, `<thead>`, `<tbody>`, `<tfoot>`, `<td>`, `<caption>`).
+### TableCell
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/table/table.tsx"
+  name="TableCellProps"
+/>
+
+### TablePagination
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/table/table-pagination.tsx"
+  name="TablePaginationProps"
+/>
+
+### TableViewOptions
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/table/table-view-options.tsx"
+  name="TableViewOptionsProps"
+/>
+
+`Table`, `TableHeader`, `TableBody`, `TableFooter`, and `TableCaption` take the
+native attributes of the element they render (`<table>`, `<thead>`, `<tbody>`,
+`<tfoot>`, `<caption>`).

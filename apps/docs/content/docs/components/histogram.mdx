@@ -13,17 +13,37 @@ import { Histogram } from '@acronis-platform/ui-react';
 import type { ChartConfig } from '@acronis-platform/ui-react';
 ```
 
-`Histogram` shows the **distribution** of a single continuous variable: give it
-raw `values` and a per-series `config`, and it bins the samples into equal-width
-ranges and plots the count of each as contiguous bars. Unlike
-[`BarChart`](/components/bar-chart) — which plots pre-categorized rows — the
-binning is the component's own job, so you don't pre-aggregate.
+`Histogram` is a typed recharts composition over the shared
+[`Chart`](/components/chart) primitives that shows the **distribution** of a single
+continuous variable. Give it raw `values` and a single-series `config` — it bins the
+samples into equal-width ranges and plots the count of each as contiguous bars, with
+axes, grid, and a tooltip. The binning is the component's own job, so you don't
+pre-aggregate.
 
-> **Design-pending v1**, built net-new (no demo playground). There is no chart
-> token tier yet, so the bar color references a shared brand/status token — a
-> dedicated `--ui-chart-*` data-viz palette is pending an upstream design pass.
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands.
+The bar color is supplied by the caller through `config`, keyed by `dataKey`
+(default `'count'`), and turned into the `--color-<key>` custom property the bars
+fill from. A hairline in the surface color separates the contiguous bars so they
+don't blend into one mass.
+
+Use it to see how many samples fall in each value range (response times, scores,
+file sizes) and to spot the shape of a distribution: skew, spread, modality,
+outliers. To compare **named** categories use [`BarChart`](/components/bar-chart) —
+it plots pre-categorized rows rather than binning continuous data. For part-to-whole
+use [`PieChart`](/components/pie-chart), and for the relationship between two
+variables, [`ScatterChart`](/components/scatter-chart).
+
+Pair the chart with a text alternative (caption, summary, or adjacent data table)
+and give it an accessible name — `aria-label` / `aria-labelledby` pass through to
+the wrapper element. Keep `showTooltip` on: the x-axis bin labels and the tooltip
+are what carry each range and count, so nothing depends on the bar color alone.
+Choose a `binCount` where the labels don't collide but the distribution stays
+legible.
+
+> **Design-pending v1**, built net-new (there is no demo playground for it). There is
+> no chart token tier yet, so the bar color references a shared semantic `--ui-*`
+> brand token — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
+> design pass. `--ui-background-brand-secondary` is brand-dependent, so it is not
+> color-stable across brands until the real palette lands.
 
 ## Examples
 
@@ -31,7 +51,8 @@ binning is the component's own job, so you don't pre-aggregate.
   <HistogramDemo />
 </DemoReact>
 
-A distribution binned into 10 equal-width ranges:
+A distribution binned into 10 equal-width ranges. The `config` key must match
+`dataKey`, which defaults to `'count'`:
 
 ```tsx
 const values = [12, 15, 18, 20, 22, 22, 25, 28, 30, 35, 42, 48, 60];
@@ -43,21 +64,25 @@ const config = {
 <Histogram config={config} values={values} binCount={10} className="h-[320px] w-[560px]" />;
 ```
 
-Tune the resolution with `binCount`:
+`binCount` sets the resolution — coarse bins summarize, fine bins reveal structure
+at the cost of noise:
 
 ```tsx
 <Histogram config={config} values={values} binCount={5} />
 <Histogram config={config} values={values} binCount={20} />
 ```
 
-Fix the range with `domain` (samples outside it are dropped):
+By default the range spans the data's own min and max. Fix it with `domain` to
+compare several histograms on the same scale — samples outside the domain are
+**dropped**, and the maximum value lands in the last (inclusive) bin:
 
 ```tsx
 <Histogram config={config} values={values} domain={[0, 100]} />
 ```
 
-Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
-`yUnit` (the x-axis is the bin label). The titles inherit the theme token:
+Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` / `yUnit`
+(the x-axis carries the bin label). Round the bar tops with `barRadius`, and drop
+the grid with `showGrid={false}`:
 
 ```tsx
 <Histogram
@@ -65,14 +90,13 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
   values={values}
   xAxisLabel="Value range"
   yAxisLabel="Frequency"
+  barRadius={2}
 />
 ```
 
-## Custom tooltip
-
 Replace the tooltip with a configured `ChartTooltipContent` — imported from the
-same library, so you never compose recharts yourself. Its `formatter` renders
-each row and `labelFormatter` the header:
+same library, so you still never compose recharts yourself. Its `labelFormatter`
+receives the bin's range label:
 
 ```tsx
 import { Histogram, ChartTooltipContent } from '@acronis-platform/ui-react';
@@ -94,4 +118,11 @@ import { Histogram, ChartTooltipContent } from '@acronis-platform/ui-react';
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/histogram/histogram.tsx"
   name="HistogramProps"
+/>
+
+Each computed bin is a `HistogramBin`:
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/histogram/histogram.tsx"
+  name="HistogramBin"
 />

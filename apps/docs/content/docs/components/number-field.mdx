@@ -1,10 +1,10 @@
 ---
 title: NumberField
-description: A numeric input with decrement / increment steppers.
+description: A numeric input with decrement and increment steppers.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { NumberFieldDemo } from "@/components/demos-react/number-field";
+import { DemoReact } from '@/components/DemoReact';
+import { NumberFieldDemo } from '@/components/demos-react/number-field';
 
 ## Usage
 
@@ -18,16 +18,25 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`NumberField` is a numeric input with − / + steppers, `min` / `max` / `step`, and
-keyboard stepping (↑/↓, PageUp/PageDown), built on
-[Base UI's NumberField](https://base-ui.com/react/components/number-field). The box
-reuses the InputText token tier, so it matches the other inputs. Compose the parts
-in any order inside `NumberFieldGroup`; give the steppers and input accessible
-names (or pair the field with a [`Field`](/components/field)).
+`NumberField` is a compound numeric input built on
+[Base UI's NumberField](https://base-ui.com/react/components/number-field) —
+parsing, clamping, and keyboard stepping (↑/↓, PageUp/PageDown, Home/End) come
+from the primitive. `NumberField` is the root and owns `value` / `min` / `max` /
+`step`; `NumberFieldGroup` is the bordered box; `NumberFieldDecrement` and
+`NumberFieldIncrement` are real `<button>`s that default to a minus / plus icon,
+and `NumberFieldInput` is the centered input. There is no `--ui-number-field-*`
+token tier: the box reuses the `--ui-input-text-*` tier so it matches
+[`InputText`](/components/input-text), and the steppers use the shared
+`--ui-text-on-surface-*` / `--ui-background-surface-hover` tokens.
 
-> Design-pending v1, ported from the legacy `shadcn-uikit` number-field.
+> Status: draft (design-pending v1), ported from the legacy `shadcn-uikit`
+> number-field.
 
 ## Examples
+
+The steppers sit inside the box on either side of the input. Give each one an
+accessible name, and name the input itself — or pair the whole field with a
+[`Field`](/components/field) and a `FieldLabel`:
 
 <DemoReact>
   <NumberFieldDemo />
@@ -43,12 +52,85 @@ names (or pair the field with a [`Field`](/components/field)).
 </NumberField>
 ```
 
-For an approximate value across a range use [`Slider`](/components/slider); for
-free text use [`InputText`](/components/input-text).
+Both steppers accept children, so the default icons can be replaced:
+
+```tsx
+<NumberFieldDecrement aria-label="Decrease">−</NumberFieldDecrement>
+<NumberFieldIncrement aria-label="Increase">+</NumberFieldIncrement>
+```
+
+`step` sets what the steppers and arrow keys move by; `largeStep` applies while
+Shift is held and `smallStep` while the meta key is. `snapOnStep` snaps to
+multiples of `step`:
+
+```tsx
+<NumberField
+  defaultValue={1.5}
+  min={0}
+  max={10}
+  step={0.5}
+  largeStep={2}
+  snapOnStep
+>
+  <NumberFieldGroup>
+    <NumberFieldDecrement aria-label="Decrease" />
+    <NumberFieldInput aria-label="Weight" />
+    <NumberFieldIncrement aria-label="Increase" />
+  </NumberFieldGroup>
+</NumberField>
+```
+
+Format the displayed value with `Intl.NumberFormat` options, and let the wheel
+change it while the input is focused and hovered:
+
+```tsx
+<NumberField
+  defaultValue={49}
+  format={{ style: 'currency', currency: 'USD' }}
+  allowWheelScrub
+>
+  {/* …group… */}
+</NumberField>
+```
+
+Controlled, where the empty input is `null` rather than `0`:
+
+```tsx
+const [quantity, setQuantity] = React.useState<number | null>(1);
+
+<NumberField value={quantity} onValueChange={setQuantity} min={1}>
+  {/* …group… */}
+</NumberField>;
+```
+
+`disabled` and `readOnly` both apply to the input and both steppers; the box
+picks up its disabled border and surface from the `--ui-input-text-*` tier:
+
+```tsx
+<NumberField defaultValue={3} disabled>
+  {/* …group… */}
+</NumberField>
+```
+
+Inside a [`Form`](/components/form), `name` keys the submitted value and
+`required` blocks submission while the field is empty. For an approximate value
+across a range use [`Slider`](/components/slider); for free text use
+[`InputText`](/components/input-text).
 
 ## API Reference
 
-`NumberField` re-exports Base UI's NumberField.Root props — `value` /
-`defaultValue` / `min` / `max` / `step` / `disabled` / `onValueChange`.
+### NumberField
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/number-field/number-field.docs.ts"
+  name="NumberFieldProps"
+/>
+
 `NumberFieldGroup`, `NumberFieldInput`, `NumberFieldDecrement`, and
-`NumberFieldIncrement` accept their Base UI part props plus `className`.
+`NumberFieldIncrement` add no props of their own — each extends the matching Base
+UI part (`NumberField.Group` / `.Input` / `.Decrement` / `.Increment`) plus
+`className`. The two steppers render their `children` when given, falling back to
+the minus / plus icon. Base UI's `NumberField.ScrubArea` is not wrapped here; use
+`allowWheelScrub` on the root instead. See the
+[Base UI NumberField docs](https://base-ui.com/react/components/number-field) for
+the full prop surface.

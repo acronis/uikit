@@ -3,8 +3,8 @@ title: CardFilter
 description: A compact stat or filter card with a label, optional icon, and value.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { CardFilterDemo } from "@/components/demos-react/card-filter";
+import { DemoReact } from '@/components/DemoReact';
+import { CardFilterDemo } from '@/components/demos-react/card-filter';
 
 ## Usage
 
@@ -12,32 +12,43 @@ import { CardFilterDemo } from "@/components/demos-react/card-filter";
 import { CardFilter } from '@acronis-platform/ui-react';
 ```
 
-`CardFilter` is a compact card showing a caption label above a prominent value
-(with an optional leading icon). The `clickable` variant renders a `<button>`
-with hover/active/focus treatments and is polymorphic via Base UI's `useRender`
-(the `render` prop); `static` / `static-empty` are presentational. Themed by the
-`--ui-card-filter-*` tokens.
+`CardFilter` renders a 224px-wide card: a small caption `label` above a content
+row holding an optional 16px `icon` and a large `value`. Geometry — width, 64px
+min height, radius, padding, content gap, border width — and every state color
+come from the `--ui-card-filter-*` tokens.
+
+`variant` decides both the look and the element. `clickable` renders a `<button>`
+and is polymorphic through Base UI's `useRender`, so a `render` prop can swap in a
+router link; `static` and `static-empty` render a `<div>` and stay idle — per the
+Figma constraint, a non-clickable card carries no hover, active, or focus state.
 
 ## Examples
 
+The three variants: a static stat, a clickable filter mid-toggle, and an empty
+placeholder:
 
 <DemoReact>
   <CardFilterDemo />
 </DemoReact>
 
-A static stat card:
-
 ```tsx
-<CardFilter label="Active devices" value="1,284" />
+<CardFilter variant="static" label="Total workloads" value="128" icon={<ServerIcon />} />
+<CardFilter
+  variant="clickable"
+  label="Alerts"
+  value="7"
+  icon={<CircleWarningIcon />}
+  selected={selected}
+  onClick={() => setSelected((prev) => !prev)}
+/>
+<CardFilter variant="static-empty" label="Pending" />
 ```
 
-A clickable filter (renders a button) with an icon. `selected` is
-controlled — flip it in `onClick` to toggle the active styling:
+`selected` applies only to `clickable`. It is controlled — flip it yourself — and
+it both applies the active styling and exposes the card as a pressed toggle via
+`aria-pressed`:
 
 ```tsx
-import { useState } from 'react';
-import { ShieldIcon } from '@acronis-platform/icons-react/stroke-mono';
-
 const [selected, setSelected] = useState(false);
 
 <CardFilter
@@ -47,14 +58,32 @@ const [selected, setSelected] = useState(false);
   icon={<ShieldIcon />}
   selected={selected}
   onClick={() => setSelected((prev) => !prev)}
-/>
+/>;
 ```
 
-An empty placeholder (renders an em-dash, no icon):
+`static-empty` is the placeholder slot: it ignores `value` and `icon` and prints
+an en-dash in the disabled value color, so a grid of cards keeps its shape while a
+metric is unavailable:
 
 ```tsx
 <CardFilter variant="static-empty" label="Pending" />
 ```
+
+Use `render` to make a clickable card navigate instead of toggling. The card's
+props and classes merge onto the element you pass:
+
+```tsx
+<CardFilter
+  variant="clickable"
+  label="Alerts"
+  value="12"
+  render={<a href="/alerts" />}
+/>
+```
+
+For richer, multi-field content use [`Card`](/components/card) or
+[`Metric`](/components/metric); for a primary call to action use
+[`Button`](/components/button).
 
 ## API Reference
 

@@ -19,14 +19,26 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`Card` is a compound component: a bordered, rounded surface assembled from parts.
-`CardHeader` stacks a `CardTitle` and `CardDescription`; `CardContent` holds the
-body; `CardFooter` lays out actions in a row. All parts are optional and
-polymorphic via Base UI's `useRender` (the `render` prop) — render `CardTitle` as
-a real heading, or the root as an `<article>`. This is a design-pending v1: with
-no `--ui-card-*` token tier yet, the surface, text, and border resolve to the
-shared semantic tokens (`--ui-background-surface-primary`,
-`--ui-text-on-surface-primary`, `--ui-border-on-surface-border`).
+`Card` is a compound component with no variants: a bordered, rounded surface
+assembled from parts. `CardHeader` stacks a `CardTitle` and `CardDescription`;
+`CardContent` holds the body; `CardFooter` lays out actions in a row. Every part
+is optional, renders a `<div>` by default, and shares one prop shape —
+`CardPartProps` — including a `render` prop for Base UI composition, so
+`CardTitle` can become a real heading and the root an `<article>`.
+
+Design-pending v1, ported from the legacy `shadcn-uikit` card: with no
+`--ui-card-*` token tier yet, the surface, text, and border resolve to shared
+semantic tokens through the bridged Tailwind names —
+`--ui-background-surface-primary`, `--ui-text-on-surface-primary`,
+`--ui-border-on-surface-border`, and `--ui-text-on-surface-secondary` for the
+description. Radius, padding, gaps, and the shadow carry over from legacy
+verbatim; an elevated-surface token may replace the primary surface once a
+mockup lands.
+
+Use it to group related information into a self-contained block. For a compact
+single-stat tile with built-in variants and interactivity use
+[`CardFilter`](/components/card-filter); for modal or overlay surfaces use
+[`Dialog`](/components/dialog) / [`Popover`](/components/popover).
 
 ## Examples
 
@@ -43,7 +55,7 @@ A card with a header, body, and footer actions:
     <CardDescription>Last successful run 5 minutes ago.</CardDescription>
   </CardHeader>
   <CardContent>
-    <p>All 24 workloads are protected and up to date.</p>
+    <p className="text-sm">All 24 workloads are protected and up to date.</p>
   </CardContent>
   <CardFooter className="gap-2">
     <Button>View report</Button>
@@ -52,7 +64,7 @@ A card with a header, body, and footer actions:
 </Card>
 ```
 
-Just a header and content:
+Header and content only — every part is optional:
 
 ```tsx
 <Card className="w-[350px]">
@@ -61,15 +73,20 @@ Just a header and content:
     <CardDescription>3.2 TB of 5 TB used.</CardDescription>
   </CardHeader>
   <CardContent>
-    <p>64% of your quota is currently consumed.</p>
+    <p className="text-sm">64% of your quota is currently consumed.</p>
   </CardContent>
 </Card>
 ```
 
-Render the title as a real heading for a correct document outline:
+Render the title as a real heading for a correct document outline, and the root
+as an `<article>`:
 
 ```tsx
-<CardTitle render={<h2 />}>Section title</CardTitle>
+<Card render={<article />}>
+  <CardHeader>
+    <CardTitle render={<h3 />}>Section title</CardTitle>
+  </CardHeader>
+</Card>
 ```
 
 ## API Reference

@@ -11,11 +11,14 @@ import {
 
 export function AuthLayoutDemo() {
   return (
-    <div className="h-[520px] rounded-md bg-[var(--ui-background-surface-secondary)]">
+    <div
+      style={{ height: 520 }}
+      className="w-full rounded-md bg-[var(--ui-background-surface-secondary)]"
+    >
       <AuthLayout className="h-full min-h-0">
         <AuthLayoutCard>
           <AuthLayoutLogo>
-            <span className="text-base font-semibold">Sign in</span>
+            <h1 className="text-base font-semibold">Sign in</h1>
           </AuthLayoutLogo>
           <div className="flex flex-col gap-4">
             <InputText label="Email" type="email" placeholder="you@example.com" />

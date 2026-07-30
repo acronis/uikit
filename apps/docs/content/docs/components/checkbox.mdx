@@ -1,10 +1,10 @@
 ---
 title: Checkbox
-description: A binary on/off selection, with optional label and description.
+description: An independent on/off choice, with an optional label and description.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { CheckboxDemo } from "@/components/demos-react/checkbox";
+import { DemoReact } from '@/components/DemoReact';
+import { CheckboxDemo } from '@/components/demos-react/checkbox';
 
 ## Usage
 
@@ -12,41 +12,97 @@ import { CheckboxDemo } from "@/components/demos-react/checkbox";
 import { Checkbox } from '@acronis-platform/ui-react';
 ```
 
-`Checkbox` wraps Base UI's `Checkbox` primitive — keyboard interaction, focus
-management, and ARIA come from Base UI. It supports `checked`, `unchecked`, and
-`indeterminate` states, themed by the `--ui-checkbox-*` tokens.
+`Checkbox` wraps Base UI's
+[Checkbox](https://base-ui.com/react/components/checkbox) primitive — a
+`<span role="checkbox">` plus a hidden native input, so keyboard interaction,
+focus management, form participation, and ARIA come from Base UI. The box has
+three logical states, `unchecked`, `checked`, and `indeterminate`, each with its
+own idle / hover / active / disabled fill, border, and glyph tokens from the
+`--ui-checkbox-*` tier. The glyph is a check when checked and a minus when
+indeterminate.
+
+Passing `label` and/or `description` composes the full field: the row becomes a
+`<label>` (so clicking the text toggles the box), the box gains the design's
+alignment margin so it centers on the first text line, and it is wired to the
+text via `aria-labelledby` / `aria-describedby`. With neither, the bare box
+renders on its own — name it with `aria-label`. Because the checkbox carries its
+own label, [`Field`](/components/field) is only needed to **group** several under
+a legend (`FieldSet` + `FieldGroup`), never to label one.
 
 ## Examples
 
+Labeled, checked, indeterminate, and disabled boxes:
 
 <DemoReact>
   <CheckboxDemo />
 </DemoReact>
 
-A bare checkbox (name it with `aria-label`):
-
 ```tsx
-<Checkbox aria-label="Accept terms" />
+<Checkbox label="Enable notifications" />
+<Checkbox label="Run nightly backup" defaultChecked />
+<Checkbox label="Indeterminate" indeterminate />
+<Checkbox label="Locked policy" defaultChecked disabled />
 ```
 
-With a `label` and optional `description` — the whole row becomes clickable:
+Add a `description` for secondary text under the label. Both slots accept
+arbitrary nodes:
 
 ```tsx
-<Checkbox label="Email notifications" />
-
 <Checkbox
   label="Email notifications"
   description="Send a summary every morning."
 />
 ```
 
-Controlled and indeterminate states:
+The bare box, for a table header or a custom row layout:
 
 ```tsx
-<Checkbox label="Selected" checked />
-<Checkbox label="Mixed" indeterminate />
-<Checkbox label="Disabled" disabled />
+<Checkbox aria-label="Select all rows" />
 ```
+
+`indeterminate` is a flag of its own, not a third value of `checked`: it renders
+the minus glyph and `aria-checked="mixed"`, and clicking never cycles into it —
+which is what makes the select-all-with-partial-selection pattern work. Drive it
+from the selection it summarizes:
+
+```tsx
+const allSelected = selected.length === rows.length;
+
+<Checkbox
+  aria-label="Select all rows"
+  checked={allSelected}
+  indeterminate={selected.length > 0 && !allSelected}
+  onCheckedChange={(checked) => setSelected(checked ? rows : [])}
+/>;
+```
+
+Controlled usage goes through Base UI's `onCheckedChange`, which receives the new
+checked value:
+
+```tsx
+const [accepted, setAccepted] = React.useState(false);
+
+<Checkbox
+  label="I accept the terms"
+  checked={accepted}
+  onCheckedChange={setAccepted}
+/>;
+```
+
+In a form, `name` and `value` land on the hidden native input, `required` blocks
+submission until the box is ticked, and `readOnly` shows a value the user cannot
+change:
+
+```tsx
+<Checkbox label="I accept the terms" name="terms" value="accepted" required />
+<Checkbox label="Managed by policy" checked readOnly />
+```
+
+Use `Checkbox` for an independent choice, or for a multi-select list, that takes
+effect when the form is submitted. For a setting that applies immediately use
+[`Switch`](/components/switch); for one choice out of several use
+[`Radio`](/components/radio); for view or format options in a toolbar use
+[`ToggleGroup`](/components/toggle-group).
 
 ## API Reference
 
@@ -54,3 +110,9 @@ Controlled and indeterminate states:
   path="../../packages/ui-react/src/components/ui/checkbox/checkbox.tsx"
   name="CheckboxProps"
 />
+
+`CheckboxProps` extends the Base UI `Checkbox.Root` props, so it also accepts
+`checked` / `defaultChecked`, `onCheckedChange`, `indeterminate`, `disabled`,
+`readOnly`, `required`, `name`, `value`, `inputRef`, and `render`. See the
+[Base UI Checkbox docs](https://base-ui.com/react/components/checkbox) for the
+full surface.

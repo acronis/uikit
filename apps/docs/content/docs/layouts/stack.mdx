@@ -1,10 +1,10 @@
 ---
 title: Stack
-description: A flexbox layout primitive — row or column with gap and alignment.
+description: A flexbox layout primitive — row or column with gap, alignment, and wrapping.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { StackDemo } from "@/components/demos-react/stack";
+import { DemoReact } from '@/components/DemoReact';
+import { StackDemo } from '@/components/demos-react/stack';
 
 ## Usage
 
@@ -12,8 +12,17 @@ import { StackDemo } from "@/components/demos-react/stack";
 import { Stack } from '@acronis-platform/ui-react';
 ```
 
-`Stack` is a flexbox layout primitive: arrange children in a row or column with a
-chosen `gap`, `align`, `justify`, and `wrap` — without hand-writing flex utilities.
+`Stack` renders a single flex `<div>` so you don't hand-write flex utilities for
+routine one-dimensional layouts:
+
+- `direction` — `vertical` (default) or `horizontal`
+- `gap` — `none`, `xs`, `sm`, `md` (default), `lg`, `xl`
+- `align` — `start`, `center`, `end`, `stretch` (default)
+- `justify` — `start` (default), `center`, `end`, `between`
+- `wrap` — `false` (default) or `true`
+
+`Stack` has **no tokens of its own** — it is layout-only, with no color or
+surface, and it renders its children untouched in source order.
 
 > Design-pending v1, ported 1:1 from the legacy `shadcn-uikit` stack.
 
@@ -30,11 +39,38 @@ chosen `gap`, `align`, `justify`, and `wrap` — without hand-writing flex utili
 </Stack>
 ```
 
-For two-dimensional layouts use [`Grid`](/layouts/grid).
+A vertical stack is the default — use it for form and settings columns:
+
+```tsx
+<Stack gap="lg">
+  <InputText label="Name" />
+  <InputText label="Email" type="email" />
+</Stack>
+```
+
+`justify="between"` pushes the ends apart, which is how a toolbar keeps its
+trailing actions flush; `wrap` lets a long row reflow onto several lines:
+
+```tsx
+<Stack direction="horizontal" justify="between" align="center">
+  <SectionTitle>Backup plans</SectionTitle>
+  <Button>Create plan</Button>
+</Stack>
+
+<Stack direction="horizontal" gap="sm" wrap>
+  {tags.map((tag) => (
+    <Tag key={tag}>{tag}</Tag>
+  ))}
+</Stack>
+```
+
+For two-dimensional layouts use [`Grid`](/layouts/grid). `Stack` carries no
+semantics, so wrap it in — or replace it with — something meaningful (a
+[`Section`](/layouts/section), a `<ul>`) when the content calls for it.
 
 ## API Reference
 
 <AutoTypeTable
-  path="../../packages/ui-react/src/components/ui/stack/stack.tsx"
+  path="../../packages/ui-react/src/components/ui/stack/stack.docs.ts"
   name="StackProps"
 />

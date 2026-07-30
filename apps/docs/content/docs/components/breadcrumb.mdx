@@ -3,8 +3,8 @@ title: Breadcrumb
 description: Shows the path to the current page within a navigation hierarchy.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { BreadcrumbDemo } from "@/components/demos-react/breadcrumb";
+import { DemoReact } from '@/components/DemoReact';
+import { BreadcrumbDemo } from '@/components/demos-react/breadcrumb';
 
 ## Usage
 
@@ -20,22 +20,34 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`Breadcrumb` is a compound component. The structure is a single
-`BreadcrumbList` containing `BreadcrumbItem` parts, each holding a
-`BreadcrumbLink` (a navigable ancestor) or a `BreadcrumbPage` (the current page),
-separated by `BreadcrumbSeparator`. Use `BreadcrumbEllipsis` to collapse a long
-trail. `Breadcrumb` and `BreadcrumbLink` are polymorphic via Base UI's
-`useRender` (the `render` prop) — pass a router link for client-side
-navigation.
+`Breadcrumb` renders a `<nav aria-label="breadcrumb">` landmark around an
+ordered trail, kept as explicit compound parts so the hierarchy stays visible in
+markup. Nest a single `BreadcrumbList` (`<ol>`) of `BreadcrumbItem` (`<li>`)
+parts, each holding either a `BreadcrumbLink` (a navigable ancestor) or a
+`BreadcrumbPage` (the current page, always last), with `BreadcrumbSeparator`
+between them.
+
+Colors come from the `--ui-breadcrumb-*` token tier: links use
+`--ui-breadcrumb-link-label-color-idle` and darken through the `-hover` /
+`-active` tokens, the current page uses `--ui-breadcrumb-page-label-color`, and
+the chevron uses `--ui-breadcrumb-separator-icon-color` at
+`--ui-breadcrumb-separator-icon-size`. The inter-item gap is
+`--ui-breadcrumb-list-gap`. The default chevron flips under `dir="rtl"`.
+
+`Breadcrumb` and `BreadcrumbLink` are polymorphic via Base UI's `useRender` (the
+`render` prop) — pass a router link for client-side navigation.
+
+Use it to orient users inside a multi-level hierarchy, especially when they
+arrive by deep link or search. Skip it for flat or single-level navigation; use a
+Stepper for wizards and [`Tabs`](/components/tabs) for sibling views.
 
 ## Examples
-
 
 <DemoReact>
   <BreadcrumbDemo />
 </DemoReact>
 
-A typical trail:
+A typical trail — links for the ancestors, `BreadcrumbPage` for the leaf:
 
 ```tsx
 <Breadcrumb>
@@ -55,7 +67,8 @@ A typical trail:
 </Breadcrumb>
 ```
 
-Collapse intermediate levels with `BreadcrumbEllipsis`:
+Truncation is author-driven: collapse the middle items yourself and drop a
+`BreadcrumbEllipsis` in their place, keeping the first and last visible.
 
 ```tsx
 <Breadcrumb>
@@ -75,12 +88,20 @@ Collapse intermediate levels with `BreadcrumbEllipsis`:
 </Breadcrumb>
 ```
 
+Pass `children` to `BreadcrumbSeparator` to replace the default chevron:
+
+```tsx
+<BreadcrumbSeparator>/</BreadcrumbSeparator>
+```
+
 Render a link as a router link with `render`:
 
 ```tsx
 import { Link as RouterLink } from 'react-router';
 
-<BreadcrumbLink render={<RouterLink to="/products" />}>Products</BreadcrumbLink>
+<BreadcrumbLink render={<RouterLink to="/products" />}>
+  Products
+</BreadcrumbLink>;
 ```
 
 ## API Reference
@@ -101,4 +122,5 @@ import { Link as RouterLink } from 'react-router';
 
 The remaining parts (`BreadcrumbList`, `BreadcrumbItem`, `BreadcrumbPage`,
 `BreadcrumbSeparator`, `BreadcrumbEllipsis`) accept the standard attributes of
-the element they render.
+the element they render — `<ol>`, `<li>`, `<span>`, `<li>`, and `<span>`
+respectively.

@@ -3,8 +3,8 @@ title: Grid
 description: A responsive CSS-grid layout primitive.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { GridDemo } from "@/components/demos-react/grid";
+import { DemoReact } from '@/components/DemoReact';
+import { GridDemo } from '@/components/demos-react/grid';
 
 ## Usage
 
@@ -12,8 +12,14 @@ import { GridDemo } from "@/components/demos-react/grid";
 import { Grid } from '@acronis-platform/ui-react';
 ```
 
-`Grid` lays children into a `cols` column count that steps down at smaller
-breakpoints, with a configurable `gap`.
+`Grid` renders a single `<div>` with CSS-grid utilities: `cols` picks the column
+count (`1`, `2`, `3`, `4`, `6`, or `12` — default `3`) and `gap` the spacing
+between cells (`none`, `sm`, `md`, `lg`, `xl` — default `md`). Column counts step
+down at smaller widths rather than overflowing, so a `cols={4}` grid becomes two
+columns and then one.
+
+`Grid` has **no tokens of its own** — it is layout-only, with no color, border, or
+surface. It takes whatever children you give it and does not wrap or style them.
 
 > Design-pending v1, ported 1:1 from the legacy `shadcn-uikit` grid.
 
@@ -25,24 +31,42 @@ breakpoints, with a configurable `gap`.
 
 ```tsx
 <Grid cols={3} gap="md">
-  {items.map((i) => <Card key={i.id} {...i} />)}
+  {items.map((item) => (
+    <Card key={item.id} {...item} />
+  ))}
 </Grid>
 ```
 
-For one-dimensional rows/columns use [`Stack`](/layouts/stack); for tabular data
-use [`Table`](/components/table).
-
-With `container`, columns respond to the grid's **own width** (container queries)
-instead of the viewport — ideal for widget grids inside [App Shell](/layouts/app-shell),
-whose width changes as the sidebar expands:
+By default the steps are keyed to the **viewport**. Pass `container` and they are
+keyed to the grid's own available width instead (via container queries) — the
+right behavior for a widget grid inside [`AppShell`](/layouts/app-shell), whose
+content width shrinks as the sidebar expands:
 
 ```tsx
-<Grid container cols={3}>{cells}</Grid>
+<Grid container cols={3}>
+  {widgets}
+</Grid>
 ```
+
+`container` adds one wrapping `div` (the `@container/grid` element) around the
+grid; `className` and the forwarded `ref` still land on the grid itself.
+
+`className` is merged last, so a one-off column rule wins over the variant:
+
+```tsx
+<Grid cols={2} className="lg:grid-cols-5">
+  {cells}
+</Grid>
+```
+
+For one-dimensional rows and columns use [`Stack`](/layouts/stack); for tabular
+data use [`Table`](/components/table) or
+[`DataTable`](/components/data-table). `Grid` is presentational — it does not
+convey row/column relationships to assistive technology.
 
 ## API Reference
 
 <AutoTypeTable
-  path="../../packages/ui-react/src/components/ui/grid/grid.tsx"
+  path="../../packages/ui-react/src/components/ui/grid/grid.docs.ts"
   name="GridProps"
 />

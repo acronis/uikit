@@ -1,0 +1,88 @@
+---
+title: ButtonIconInput
+description: A compact icon-only button sized to sit inside an input's box.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { ButtonIconInputDemo } from '@/components/demos-react/button-icon-input';
+
+## Usage
+
+```tsx
+import { ButtonIconInput } from '@acronis-platform/ui-react';
+```
+
+`ButtonIconInput` renders a 20×20 `<button>` with a single 16px glyph, styled by
+the `--ui-button-icon-input-*` design tokens. It is the in-field sibling of
+[ButtonIcon](/components/button-icon) (32×32 with a 24px glyph): use it for an
+affordance that lives **inside** a text field's box — a reveal or clear control
+— where it has to match the field's tone and metrics. `InputPassword` uses it
+for its own show/hide toggle.
+
+The box geometry is shared (`--ui-button-icon-input-global-container-*`), but
+unlike `ButtonIcon` the **colors** are not: `normal` and `error` each own their
+container, glyph, and icon-size tokens, and each gets its own focus ring
+(`--ui-focus-primary` and `--ui-focus-error` respectively). The icon is passed
+as `children`, `type` defaults to `"button"` so the control never submits a form
+by accident, and the component is polymorphic via Base UI's `useRender` (the
+`render` prop).
+
+The control has no text, so always give it an `aria-label` (or
+`aria-labelledby`) for its accessible name.
+
+## Examples
+
+`variant="normal"` (the default) and `variant="error"`, which mirrors the red
+of a field in its error state — plus the disabled treatment:
+
+<DemoReact>
+  <ButtonIconInputDemo />
+</DemoReact>
+
+```tsx
+import { EyeIcon, TimesIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<ButtonIconInput aria-label="Show password">
+  <EyeIcon />
+</ButtonIconInput>
+<ButtonIconInput variant="error" aria-label="Clear">
+  <TimesIcon />
+</ButtonIconInput>
+<ButtonIconInput aria-label="Clear" disabled>
+  <TimesIcon />
+</ButtonIconInput>
+```
+
+Drive `variant` from the field's own error state so the two stay in sync:
+
+```tsx
+<ButtonIconInput
+  variant={hasError ? 'error' : 'normal'}
+  aria-label={visible ? 'Hide password' : 'Show password'}
+  aria-pressed={visible}
+  onClick={() => setVisible((prev) => !prev)}
+>
+  {visible ? <EyeIcon /> : <EyeCrossedIcon />}
+</ButtonIconInput>
+```
+
+`disabled` suppresses the click and applies the `normal` disabled tokens
+whatever the `variant` — the design defines no separate disabled treatment for
+`error`:
+
+```tsx
+<ButtonIconInput variant="error" aria-label="Clear" disabled>
+  <TimesIcon />
+</ButtonIconInput>
+```
+
+Its 20×20 box is well below the 44×44 touch-target guideline. That is
+intentional for an in-field affordance; don't reach for it as a standalone
+control — use [ButtonIcon](/components/button-icon) instead.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/button-icon-input/button-icon-input.tsx"
+  name="ButtonIconInputProps"
+/>

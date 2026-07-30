@@ -1,32 +1,41 @@
 ---
 title: ScrollArea
-description: A scrollable region with a custom overlay scrollbar that floats over the content and reserves no layout space.
+description: A scrollable region with a custom overlay scrollbar that reserves no layout space.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { ScrollAreaDemo } from "@/components/demos-react/scroll-area";
+import { DemoReact } from '@/components/DemoReact';
+import { ScrollAreaDemo } from '@/components/demos-react/scroll-area';
 
 ## Usage
 
 ```tsx
-import { ScrollArea } from '@acronis-platform/ui-react';
+import { ScrollArea, ScrollBar } from '@acronis-platform/ui-react';
 ```
 
-`ScrollArea` is a scrollable region built on the Base UI Scroll Area primitive.
+`ScrollArea` is a scrollable region built on
+[Base UI's Scroll Area](https://base-ui.com/react/components/scroll-area).
 Unlike a native `overflow: auto` element, its scrollbar is a **custom overlay**:
 it floats over the content and reserves **no** layout space, so full-bleed
 content (e.g. edge-to-edge selected rows in a sidebar) is never cropped by a
-scrollbar gutter — on every OS and browser, not just where the platform provides
-overlay scrollbars. The bar is hidden at rest and revealed on hover/scroll.
+scrollbar gutter and the layout never shifts when the bar appears — on every OS
+and browser, not just where the platform provides overlay scrollbars. The bar is
+hidden at rest and revealed on hover or while scrolling.
 
-The all-in-one `ScrollArea` renders the viewport, content, and built-in
-scrollbar(s); `orientation` (`'vertical'` default · `'horizontal'` · `'both'`)
-selects which bars appear, and `'both'` also renders the corner. For custom
-scrollbar placement, compose the exported `ScrollBar` part directly. The thumb
-is themed by `--ui-border-on-surface-border` (and `--ui-border-on-surface-border-active`
-on hover); the focused viewport shows a `--ui-focus-brand` ring.
+The all-in-one `ScrollArea` renders the root, viewport, content, and built-in
+scrollbar(s). `orientation` (`'vertical'` default · `'horizontal'` · `'both'`)
+selects which bars appear; `'both'` also renders the corner. Every other prop
+passes through to Base UI's `ScrollArea.Root`. For custom scrollbar placement,
+compose the exported `ScrollBar` part directly.
 
-> Design-pending v1: ported from the legacy shadcn-uikit `ScrollArea`.
+There is no `--ui-scroll-area-*` token tier: the thumb uses
+`--ui-border-on-surface-border`, deepening to
+`--ui-border-on-surface-border-active` on hover, and the focused viewport draws a
+`--ui-focus-brand` ring. Design-pending v1, ported from the legacy `shadcn-uikit`
+scroll area.
+
+Use it for a fixed-height (or fixed-width) region whose content can overflow —
+sidebars, menus, popovers, lists, code blocks. Leave page-level scrolling to the
+browser, and pair a virtualizer with the viewport for very large data sets.
 
 ## Examples
 
@@ -34,23 +43,25 @@ on hover); the focused viewport shows a `--ui-focus-brand` ring.
   <ScrollAreaDemo />
 </DemoReact>
 
+A fixed-size vertical region:
+
 ```tsx
 <ScrollArea className="h-72 w-64 rounded-md border border-border">
   {longList}
 </ScrollArea>
 ```
 
+Both axes — also renders the corner between the two bars:
+
 ```tsx
-// Both axes (also renders the corner)
 <ScrollArea orientation="both" className="h-72 w-96">
   {wideTallContent}
 </ScrollArea>
 ```
 
-```tsx
-// Compose the parts directly
-import { ScrollArea, ScrollBar } from '@acronis-platform/ui-react';
+Compose `ScrollBar` directly when you need custom scrollbar placement:
 
+```tsx
 <ScrollArea orientation="horizontal">
   {row}
   <ScrollBar orientation="horizontal" />
@@ -59,10 +70,17 @@ import { ScrollArea, ScrollBar } from '@acronis-platform/ui-react';
 
 ## API Reference
 
+### ScrollArea
+
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/scroll-area/scroll-area.tsx"
   name="ScrollAreaProps"
 />
 
-`ScrollBar` accepts the Base UI `ScrollArea.Scrollbar` props (notably
-`orientation` and `keepMounted`).
+### ScrollBar
+
+`ScrollBarProps` is an alias for Base UI's `ScrollArea.Scrollbar` props —
+notably `orientation` (`'vertical'` default · `'horizontal'`) and `keepMounted`.
+See the
+[Base UI Scroll Area docs](https://base-ui.com/react/components/scroll-area) for
+the full prop surface.

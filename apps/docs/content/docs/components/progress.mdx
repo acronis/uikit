@@ -3,8 +3,8 @@ title: Progress
 description: A bar showing the completion of a known-length task, or an indeterminate sliding bar.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { ProgressDemo } from "@/components/demos-react/progress";
+import { DemoReact } from '@/components/DemoReact';
+import { ProgressDemo } from '@/components/demos-react/progress';
 
 ## Usage
 
@@ -12,22 +12,53 @@ import { ProgressDemo } from "@/components/demos-react/progress";
 import { Progress } from '@acronis-platform/ui-react';
 ```
 
-`Progress` wraps the Base UI Progress primitive and shows the completion of a
-task. Pass a `value` (0–`max`) for a determinate bar, or `value={null}` for an
-indeterminate sliding bar. The bar carries `role="progressbar"` with the right
-ARIA value range. This is a design-pending v1; the track uses `bg-input` and the
-indicator the brand blue (`bg-secondary`) pending a Figma pass.
+`Progress` wraps Base UI's `Progress` primitive (`Root` → `Track` →
+`Indicator`) as an 8px full-width rail with a rounded fill. The root carries
+`role="progressbar"` and the ARIA value range derived from `value` / `min` /
+`max`. Pass a `value` for a determinate bar; omit it (or pass `null`) for an
+indeterminate sliding bar.
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` progress. There is no
+> `--ui-progress-*` tier yet: the track uses the shared border token via
+> `bg-input` and the fill the brand action blue via `bg-secondary`.
 
 ## Examples
+
+Determinate bars plus an indeterminate one. The bar has no intrinsic width — it
+fills its container, so set the width on the wrapper (or via `className`):
 
 <DemoReact>
   <ProgressDemo />
 </DemoReact>
 
 ```tsx
-<Progress value={40} />
-<Progress value={null} /> {/* indeterminate */}
+<div className="flex w-80 flex-col gap-4">
+  <Progress value={25} />
+  <Progress value={50} />
+  <Progress value={75} />
+  <Progress value={null} />
+</div>
 ```
+
+When `value` is `null`, Base UI sets `data-indeterminate` on the indicator, which
+swaps the determinate width transition for the sliding `indeterminate-progress`
+keyframe. `<Progress />` with no `value` is the same thing:
+
+```tsx
+<Progress />
+<Progress value={null} />
+```
+
+Use `min` / `max` when your scale isn't 0–100:
+
+```tsx
+<Progress value={7} max={12} />
+```
+
+For an in-progress operation with no measurable length, prefer
+[`Loading`](/components/loading). For a percentage shown in a compact circle, use
+[`ProgressCircle`](/components/progress-circle); for a bar that grades a value
+against thresholds, use [`Meter`](/components/meter).
 
 ## API Reference
 
@@ -35,3 +66,6 @@ indicator the brand blue (`bg-secondary`) pending a Figma pass.
   path="../../packages/ui-react/src/components/ui/progress/progress.docs.ts"
   name="ProgressProps"
 />
+
+`ProgressProps` also accepts every Base UI `Progress.Root` prop; the companion
+above documents the ones callers set directly.

@@ -1,6 +1,6 @@
 ---
 title: LineChart
-description: A typed line chart — single or multi-series, with curve and dashed variants.
+description: A typed line chart — curve and dash variants, comparison overlays, and delta bands.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
@@ -13,23 +13,38 @@ import { LineChart } from '@acronis-platform/ui-react';
 import type { ChartConfig } from '@acronis-platform/ui-react';
 ```
 
-`LineChart` is a typed composition over the shared [`Chart`](/components/chart)
-primitives. Give it `data`, a per-series `config`, the series to plot
-(`dataKeys`), and the category key (`xKey`) — it renders a themed recharts line
-chart (tooltip, legend, axes, grid included), so you don't hand-compose recharts
-children.
+`LineChart` is a typed recharts composition over the shared
+[`Chart`](/components/chart) primitives. Give it `data`, a per-series `config`,
+the series to plot (`dataKeys`), and the category key (`xKey`) — it renders a
+themed recharts line chart with tooltip, legend, axes, and grid, so you never
+hand-compose recharts children.
 
 Series colors are supplied by the caller through `config`: each entry maps a data
 key to a `label` and a `color`. `LineChart` turns those into the `--color-<key>`
 custom properties its lines stroke from. Single vs multi line simply follows from
 how many `dataKeys` you plot.
 
-> **Design-pending v1**, ported from the demo `ChartPlayground`. There is no
-> chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands.
+Use it for a trend over a continuous or ordered dimension (revenue by month,
+latency over time) and to compare the trends of a few series on shared axes. For a
+quantity across discrete categories use [`BarChart`](/components/bar-chart); for
+part-to-whole of a single total, [`PieChart`](/components/pie-chart); when the
+magnitude of the trend matters more than the exact values,
+[`AreaChart`](/components/area-chart); when the projection needs an explicit
+uncertainty range, [`ConfidenceCone`](/components/confidence-cone). A single
+metric belongs in a [`Tag`](/components/tag) or plain text, and row-level detail
+in a [`Table`](/components/table) / [`DataTable`](/components/data-table).
+
+Pair the chart with a text alternative (caption, summary, or adjacent data table)
+and give it an accessible name — `aria-label` / `aria-labelledby` pass through to
+the wrapper element. Keep either the legend or the tooltip visible; `lineStyle`
+and `curve` are the non-color channels available to you.
+
+> **Design-pending v1**, ported from the demo `ChartPlayground`. There is no chart
+> token tier yet, so the example colors reference the shared semantic `--ui-*`
+> brand/status tokens — a dedicated `--ui-chart-*` data-viz palette is pending an
+> upstream design pass. `--ui-background-status-strong-*` is chromatic in every
+> brand; `--ui-background-brand-secondary` is brand-dependent, so it is not
+> color-stable across brands until the real palette lands.
 
 ## Examples
 
@@ -66,15 +81,11 @@ Plot a single series by passing one `dataKey`:
 <LineChart config={config} data={data} dataKeys={['desktop']} xKey="month" />
 ```
 
-Change the interpolation with `curve` (`linear`, `monotone`, or `step`):
+Change the interpolation with `curve` (`linear`, `monotone`, or `step`) and dash
+the strokes with `lineStyle="dashed"`:
 
 ```tsx
 <LineChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" curve="step" />
-```
-
-Dash the strokes with `lineStyle="dashed"`:
-
-```tsx
 <LineChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" lineStyle="dashed" />
 ```
 
@@ -92,22 +103,30 @@ Toggle the chrome and per-point dots with `showGrid` / `showTooltip` /
 />
 ```
 
-Overlay a previous-period series for QoQ/YoY comparison by listing it in
+Overlay a previous-period series for a QoQ/YoY comparison by listing it in
 `comparisonKeys` — those series render dashed, dimmed, and dot-less behind the
-current-period lines, keeping their own `config` color:
+current-period lines, so they read as secondary while keeping their own `config`
+color:
 
 ```tsx
+const config = {
+  thisYear: { label: 'This year', color: 'var(--ui-background-brand-secondary)' },
+  lastYear: { label: 'Last year', color: 'var(--ui-background-status-strong-danger)' },
+} satisfies ChartConfig;
+
 <LineChart
   config={config}
   data={data}
   dataKeys={['thisYear', 'lastYear']}
   comparisonKeys={['lastYear']}
   xKey="month"
-/>
+/>;
 ```
 
-Shade the gap between a current and comparison series with `deltaBands` — pairs
-of `[current, comparison]` keys draw a dimmed area (the delta) behind the lines:
+Shade the gap between a current and a comparison series with `deltaBands` — pairs
+of `[current, comparison]` keys draw a dimmed area (the delta) behind the lines,
+tinted with the first key's color. The band is kept out of the tooltip and legend
+rows, and points where either value isn't numeric are left un-banded:
 
 ```tsx
 <LineChart
@@ -135,12 +154,10 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
 />
 ```
 
-## Custom tooltip
-
 Replace the tooltip with a configured `ChartTooltipContent` — imported from the
-same library, so you never compose recharts yourself. Its `formatter` renders
-each row and `labelFormatter` the header, giving you custom formatting, per-series
-content, and extra fields:
+same library, so you still never compose recharts yourself. Its `formatter`
+renders each row and `labelFormatter` the header; any `deltaBands` series is
+filtered out of the payload before your tooltip sees it:
 
 ```tsx
 import { LineChart, ChartTooltipContent } from '@acronis-platform/ui-react';

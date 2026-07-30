@@ -3,25 +3,43 @@ title: Tabs
 description: Switches between related panels of content within the same context.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { TabsDemo } from "@/components/demos-react/tabs";
+import { DemoReact } from '@/components/DemoReact';
+import { TabsDemo } from '@/components/demos-react/tabs';
 
 ## Usage
 
 ```tsx
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@acronis-platform/ui-react';
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from '@acronis-platform/ui-react';
 ```
 
-`Tabs` is a compound component built on Base UI's Tabs primitive (roving focus,
-arrow-key navigation, and ARIA come from Base UI). `Tabs` owns the selected
-value; `TabsList` holds the `TabsTrigger`s (a bordered segmented control), and
-each `TabsContent` shows when its `value` matches the selected tab. This is a
-design-pending v1 themed from the shared brand tokens — the active segment is
-filled (`bg-primary`); a `--ui-tabs-*` tier and the final active treatment are
-pending a Figma pass.
+`Tabs` is a compound component built on
+[Base UI's Tabs](https://base-ui.com/react/components/tabs), which supplies the
+roving focus, arrow-key navigation, and the `tablist` / `tab` / `tabpanel` ARIA
+wiring. `Tabs` owns the selected value; `TabsList` holds the `TabsTrigger`s as a
+bordered segmented control; each `TabsContent` shows when its `value` matches the
+selected tab. A trigger and the panel it controls are paired by sharing the same
+`value`.
+
+Design-pending v1, ported from the legacy `shadcn-uikit` tabs. There is no
+`--ui-tabs-*` token tier yet, so segments theme from the shared brand tokens: an
+idle trigger draws its border and label from the `secondary` bridge (the action
+blue, `--ui-background-brand-secondary` — not `primary`, which is the dark navy),
+and the active segment renders **filled** — `bg-secondary` with a pure-white
+`text-primary-foreground` label, like the default `Button`. The legacy
+`bg-primary/10` tint was dropped to avoid an opacity hack; the final treatment
+(filled vs. tinted vs. underline) is still to be confirmed. Focus rings use
+`--ui-focus-primary`.
+
+Use it to switch between a few peer views of the same area. Don't use it to
+navigate between routes (use links or a nav), for sequential steps (use a
+wizard/stepper), or for more tabs than fit comfortably in a segmented strip.
 
 ## Examples
-
 
 <DemoReact>
   <TabsDemo />
@@ -50,12 +68,20 @@ const [tab, setTab] = useState('account');
 </Tabs>;
 ```
 
-Vertical orientation switches arrow-key navigation to Up/Down:
+`orientation="vertical"` switches arrow-key navigation to Up/Down:
 
 ```tsx
 <Tabs defaultValue="account" orientation="vertical">
   {/* … */}
 </Tabs>
+```
+
+A disabled tab can't be selected and is skipped by arrow-key navigation:
+
+```tsx
+<TabsTrigger value="billing" disabled>
+  Billing
+</TabsTrigger>
 ```
 
 ## API Reference

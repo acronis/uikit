@@ -3,8 +3,8 @@ title: Accordion
 description: A vertical set of expandable disclosure sections.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { AccordionDemo } from "@/components/demos-react/accordion";
+import { DemoReact } from '@/components/DemoReact';
+import { AccordionDemo } from '@/components/demos-react/accordion';
 
 ## Usage
 
@@ -17,13 +17,19 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`Accordion` is a vertical set of disclosure sections — each a header trigger over a
-height-animating panel — built on
-[Base UI's Accordion](https://base-ui.com/react/components/accordion). One section
-is open at a time by default; pass `multiple` to allow several. Each
-`AccordionItem` needs a `value`; control the open set with `value` / `defaultValue`.
+`Accordion` is a vertical set of disclosure sections — each a header trigger over
+a height-animating panel — built on
+[Base UI's Accordion](https://base-ui.com/react/components/accordion), which
+supplies the roving focus, arrow-key navigation, and ARIA wiring. One section is
+open at a time by default; pass `multiple` to allow several. Each
+`AccordionItem` carries a `value`, and the root's `value` / `defaultValue` holds
+the array of open values.
 
-> Design-pending v1, ported from the legacy `shadcn-uikit` accordion.
+Design-pending v1, ported from the legacy `shadcn-uikit` accordion: there is no
+`--ui-accordion-*` token tier yet, so the item divider uses the shared
+`--ui-border-on-surface-border` token, the panel text uses
+`--ui-text-on-surface-secondary`, and the trigger's focus ring uses
+`--ui-focus-primary`. The chevron rotates 180° while its panel is open.
 
 ## Examples
 
@@ -31,16 +37,26 @@ is open at a time by default; pass `multiple` to allow several. Each
   <AccordionDemo />
 </DemoReact>
 
+One section open at a time, with the first pre-opened:
+
 ```tsx
 <Accordion defaultValue={['plan']}>
   <AccordionItem value="plan">
-    <AccordionTrigger>What is included?</AccordionTrigger>
-    <AccordionContent>Backup, recovery, and anti-malware.</AccordionContent>
+    <AccordionTrigger>What is included in the plan?</AccordionTrigger>
+    <AccordionContent>
+      Backup, recovery, and anti-malware for all registered workloads.
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="devices">
+    <AccordionTrigger>How many devices can I protect?</AccordionTrigger>
+    <AccordionContent>
+      Up to the seat count in your subscription; add more at any time.
+    </AccordionContent>
   </AccordionItem>
 </Accordion>
 ```
 
-Allow several sections open at once:
+Allow several sections open at once with `multiple`:
 
 ```tsx
 <Accordion multiple defaultValue={['plan', 'support']}>
@@ -48,13 +64,47 @@ Allow several sections open at once:
 </Accordion>
 ```
 
+Controlled — drive the open set and react to changes:
+
+```tsx
+const [open, setOpen] = useState(['plan']);
+
+<Accordion value={open} onValueChange={setOpen}>
+  {/* … */}
+</Accordion>;
+```
+
+Disable a single section:
+
+```tsx
+<Accordion>
+  <AccordionItem value="archived" disabled>
+    <AccordionTrigger>Archived backups</AccordionTrigger>
+    <AccordionContent>Not available on this plan.</AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
 For a single optional section use [`Collapsible`](/components/collapsible); for
-switching between views use [`Tabs`](/components/tabs).
+switching between peer views use [`Tabs`](/components/tabs).
 
 ## API Reference
 
-`Accordion` re-exports Base UI's Accordion.Root props — `value` / `defaultValue`
-(arrays of open item values) / `multiple` / `disabled` / `onValueChange`.
-`AccordionItem` (needs a `value`),
-`AccordionTrigger`, and `AccordionContent` accept their Base UI part props plus
-`className`.
+### Accordion
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/accordion/accordion.docs.ts"
+  name="AccordionProps"
+/>
+
+### AccordionItem
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/accordion/accordion.docs.ts"
+  name="AccordionItemProps"
+/>
+
+`AccordionTrigger` and `AccordionContent` take `className` and `children` plus
+the Base UI `Accordion.Trigger` / `Accordion.Panel` pass-throughs — see the
+[Base UI Accordion docs](https://base-ui.com/react/components/accordion) for the
+full prop surface.

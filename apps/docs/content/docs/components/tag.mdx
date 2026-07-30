@@ -3,8 +3,8 @@ title: Tag
 description: A compact label for a status, category, or keyword.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { TagDemo } from "@/components/demos-react/tag";
+import { DemoReact } from '@/components/DemoReact';
+import { TagDemo } from '@/components/demos-react/tag';
 
 ## Usage
 
@@ -12,8 +12,11 @@ import { TagDemo } from "@/components/demos-react/tag";
 import { Tag } from '@acronis-platform/ui-react';
 ```
 
-`Tag` renders a `<span>` styled by the `--ui-tag-*` tokens. An optional leading
-`icon` is rendered at 16px before the label.
+`Tag` renders a `<span>` pill styled by the `--ui-tag-*` tokens: `variant` picks
+the container fill, border, label, and icon colors, while geometry — radius,
+border width, gap, padding, min/max width, icon size — comes from the shared
+`--ui-tag-global-*` tokens. It is presentational and non-interactive; the label
+truncates rather than wrapping.
 
 > **`Badge` is an alias of `Tag`.** The legacy generic shadcn `Badge` is replaced
 > by the design-system-native `Tag`, which carries its own token tier, icon slot,
@@ -22,12 +25,12 @@ import { Tag } from '@acronis-platform/ui-react';
 
 ## Examples
 
+Seven variants, one per semantic role. The default is `neutral`; `ai` paints a
+gradient border over a tinted fill:
 
 <DemoReact>
   <TagDemo />
 </DemoReact>
-
-Semantic variants (default is `neutral`):
 
 ```tsx
 <Tag variant="info">Info</Tag>
@@ -39,22 +42,28 @@ Semantic variants (default is `neutral`):
 <Tag variant="ai">AI</Tag>
 ```
 
-Two sizes — `default` (24px) and `sm` (20px):
+Pass an `icon` for a 16px leading glyph. Nothing is injected automatically:
+
+```tsx
+import { CircleCheckIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<Tag variant="success" icon={<CircleCheckIcon />}>
+  Protected
+</Tag>;
+```
+
+`size` only changes the height — `default` is 24px, `sm` is 20px; padding is the
+same in both:
 
 ```tsx
 <Tag variant="info">Default</Tag>
-<Tag variant="info" size="sm">Small</Tag>
-```
-
-With a leading icon:
-
-```tsx
-import { CheckIcon } from '@acronis-platform/icons-react/stroke-mono';
-
-<Tag variant="success" icon={<CheckIcon />}>
-  Completed
+<Tag variant="info" size="sm">
+  Small
 </Tag>
 ```
+
+For a label the user can remove or toggle, use [`Chip`](/components/chip) — a
+`Tag` implies no action.
 
 ## API Reference
 

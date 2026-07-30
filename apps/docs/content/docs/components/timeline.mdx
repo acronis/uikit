@@ -12,43 +12,103 @@ import { TimelineDemo } from '@/components/demos-react/timeline';
 import { Timeline } from '@acronis-platform/ui-react';
 ```
 
-`Timeline` renders a **chronological list of events** as a semantic ordered list
-(`<ol>`/`<li>`) with a connector line, status markers, and a timestamp / title /
-description hierarchy. It is purely presentational: it never sorts, groups,
-fetches, or interprets events, and ships no domain event types or icons — the
-consumer passes ordered `Timeline.Item`s with a resolved `status`, `icon`, and a
-formatted `timestamp`.
+`Timeline` renders a semantic ordered list (`<ol>` of `<li>`s) with a marker
+column — a status dot or icon badge plus the connector line — beside a timestamp /
+title / description hierarchy. `Timeline.Item` is the only child it expects;
+intervening headings or groups aren't supported. The connector auto-hides on the
+last item. `size` and `density` are set once on the root and reach items through
+context.
 
-It is **not** a temporal chart — use a Line / Area / Composed chart for trends.
+It is purely presentational: it never sorts, groups, fetches, paginates, or
+interprets events, and it ships no domain event types or icons. Pass ordered items
+with a resolved `status`, an `icon`, and an already-formatted `timestamp`. For
+trends over time, use a chart instead.
+
+> **Design-pending v1** — no Figma node yet, so there is no `--ui-timeline-*`
+> tier. Markers reuse the same status palette as
+> [`Metric`](/components/metric): `--ui-text-on-status-*` for the dot and
+> `--ui-background-status-*-pressed` for the icon badge.
 
 ## Examples
+
+Three events with icon markers, metadata [`Tag`](/components/tag)s, and a `Link`
+action:
 
 <DemoReact>
   <TimelineDemo />
 </DemoReact>
 
 ```tsx
-<Timeline>
+<Timeline className="w-[380px]">
   <Timeline.Item
-    timestamp={<time dateTime="2026-07-24T10:35:00+02:00">24 Jul 2026, 10:35</time>}
+    timestamp={
+      <time dateTime="2026-07-24T10:35:00+02:00">24 Jul 2026, 10:35</time>
+    }
     title="Backup success rate dropped"
-    description="Fell from 96% to 72%"
+    description="Success rate fell from 96% to 72%"
     status="critical"
     icon={<ChartPieIcon />}
-    metadata={<Tag>Backup</Tag>}
+    metadata={
+      <>
+        <Tag variant="neutral" size="sm">
+          Backup
+        </Tag>
+        <Tag variant="neutral" size="sm">
+          Customer A
+        </Tag>
+      </>
+    }
     actions={<Link href="#details">View details</Link>}
   />
-  <Timeline.Item title="P1 support ticket resolved" status="success" />
+  <Timeline.Item
+    timestamp={
+      <time dateTime="2026-07-23T16:20:00+02:00">23 Jul 2026, 16:20</time>
+    }
+    title="P1 support ticket resolved"
+    description="Resolution improved the customer health score"
+    status="success"
+    icon={<CircleCheckIcon />}
+  />
+  <Timeline.Item
+    timestamp={
+      <time dateTime="2026-07-22T09:10:00+02:00">22 Jul 2026, 09:10</time>
+    }
+    title="Security policy updated"
+    status="info"
+    icon={<CircleInfoIcon />}
+  />
 </Timeline>
 ```
 
-`status` (`neutral`, `info`, `success`, `warning`, `danger`, `critical`) tints
-the **marker** only — a dot, or an icon in a `-pressed` badge — never large
-blocks of text. Use `current` for a process's current step and `disabled` to dim
-an inactive item.
+`title` is the only required item prop. Without an `icon`, the marker is a plain
+filled dot in the `status` family (`neutral` is the default):
 
-Set the rhythm with `density` (`compact` for sidebars / popovers) and the text
-scale with `size`:
+```tsx
+<Timeline>
+  <Timeline.Item title="Deployed v2.4.1" status="success" />
+  <Timeline.Item title="Build passed" status="info" />
+  <Timeline.Item title="Commit pushed" />
+</Timeline>
+```
+
+Wrap the timestamp in a `<time dateTime>` element so the stamp is
+machine-readable as well as human-readable — `Timeline` renders whatever node you
+pass and formats nothing.
+
+`current` rings the marker to mark the step in progress; `disabled` dims an
+inactive item, announces it via `aria-disabled`, and stops its slotted controls
+taking pointer input:
+
+```tsx
+<Timeline>
+  <Timeline.Item title="Scan completed" status="success" />
+  <Timeline.Item title="Remediation in progress" status="warning" current />
+  <Timeline.Item title="Report delivery" disabled />
+</Timeline>
+```
+
+Set the rhythm with `density` (`compact` for sidebars and popovers, `default`
+otherwise) and the text scale with `size`:
 
 ```tsx
 <Timeline density="compact" size="small">
@@ -57,15 +117,25 @@ scale with `size`:
 </Timeline>
 ```
 
-Compose `Tag` (metadata), `Link` / `ButtonMenu` (actions), and `Accordion`
-(expandable detail, as an item's `children`).
+An item's `children` render below the actions row — use it for caller-composed
+expandable detail, e.g. an `Accordion`:
+
+```tsx
+<Timeline.Item title="Policy applied to 42 devices" status="info">
+  <Accordion>{/* per-device breakdown */}</Accordion>
+</Timeline.Item>
+```
 
 ## API Reference
+
+### Timeline
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/timeline/timeline.tsx"
   name="TimelineProps"
 />
+
+### Timeline.Item
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/timeline/timeline.tsx"

@@ -3,8 +3,8 @@ title: Avatar
 description: Represents a user or entity with an image or initials.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { AvatarDemo } from "@/components/demos-react/avatar";
+import { DemoReact } from '@/components/DemoReact';
+import { AvatarDemo } from '@/components/demos-react/avatar';
 
 ## Usage
 
@@ -17,53 +17,73 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`Avatar` wraps Base UI's `Avatar` primitive — `AvatarImage` is hidden until the
-image loads, revealing `AvatarFallback` (typically initials). Stack several in
-`AvatarGroup` for an overlapping cluster. The fallback color is set by the
-`color` prop and themed by the `--ui-avatar-*` tokens.
+`Avatar` wraps Base UI's `Avatar` primitive (`Root` / `Image` / `Fallback`) and
+renders a 32px circle with a 2px outset ring, sized and themed by the
+`--ui-avatar-*` tokens. `AvatarImage` stays hidden until the image loads, so
+`AvatarFallback` — usually the entity's initials — shows until then and stays
+shown if the image fails. `AvatarGroup` lays several avatars out as an
+overlapping row; the ring is what separates them visually.
 
 ## Examples
 
+The `color` prop picks one of five schemes; it tints the fallback background
+(`--ui-avatar-color-<scheme>`) and the initials
+(`--ui-avatar-label-color-<scheme>`). The default is `teal`. The last group in
+the preview is an `AvatarGroup`:
 
 <DemoReact>
   <AvatarDemo />
 </DemoReact>
 
-An avatar with an image and an initials fallback:
-
 ```tsx
-<Avatar>
-  <AvatarImage src="/users/jane.png" alt="Jane Doe" />
-  <AvatarFallback>JD</AvatarFallback>
+<Avatar color="teal">
+  <AvatarFallback>SN</AvatarFallback>
 </Avatar>
-```
-
-Initials only, with a color (default is `teal`):
-
-```tsx
 <Avatar color="violet">
-  <AvatarFallback>AB</AvatarFallback>
+  <AvatarFallback>GA</AvatarFallback>
+</Avatar>
+<Avatar color="red">
+  <AvatarFallback>SI</AvatarFallback>
+</Avatar>
+<Avatar color="yellow">
+  <AvatarFallback>IG</AvatarFallback>
 </Avatar>
 <Avatar color="orange">
-  <AvatarFallback>CD</AvatarFallback>
+  <AvatarFallback>OR</AvatarFallback>
 </Avatar>
 ```
 
-An overlapping group:
+Add an `AvatarImage` to show a photo, keeping the fallback as the pre-load and
+error state. `color` is effectively ignored once the image is visible:
+
+```tsx
+<Avatar color="teal">
+  <AvatarImage src="/users/sam-nguyen.png" alt="Sam Nguyen" />
+  <AvatarFallback>SN</AvatarFallback>
+</Avatar>
+```
+
+Stack avatars in an `AvatarGroup` to show a set of participants compactly. Each
+avatar after the first is pulled back by `--ui-avatar-global-avatar-group-gap`,
+and later avatars paint above earlier ones:
 
 ```tsx
 <AvatarGroup>
   <Avatar color="teal">
-    <AvatarFallback>JD</AvatarFallback>
+    <AvatarFallback>SN</AvatarFallback>
   </Avatar>
   <Avatar color="violet">
-    <AvatarFallback>AB</AvatarFallback>
+    <AvatarFallback>GA</AvatarFallback>
   </Avatar>
   <Avatar color="red">
     <AvatarFallback>+3</AvatarFallback>
   </Avatar>
 </AvatarGroup>
 ```
+
+`Avatar` is presentational — it owns no focus or accessible name. To make one
+actionable, wrap it in a real control (a `Button` or a link) that carries the
+label.
 
 ## API Reference
 

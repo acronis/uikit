@@ -3,8 +3,8 @@ title: Separator
 description: A thin rule that divides content, horizontally or vertically.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { SeparatorDemo } from "@/components/demos-react/separator";
+import { DemoReact } from '@/components/DemoReact';
+import { SeparatorDemo } from '@/components/demos-react/separator';
 
 ## Usage
 
@@ -12,30 +12,55 @@ import { SeparatorDemo } from "@/components/demos-react/separator";
 import { Separator } from '@acronis-platform/ui-react';
 ```
 
-`Separator` is a 1px rule built on Base UI's Separator primitive (it sets the
-`separator` role and `aria-orientation`). It's `horizontal` by default; pass
-`orientation="vertical"` for a vertical divider (inside a height-bearing flex
-row). It uses the shared `bg-border` divider token.
+`Separator` is a 1px rule built on
+[Base UI's Separator](https://base-ui.com/react/components/separator), which sets
+the `separator` role and `aria-orientation` so the divide is announced rather
+than purely visual. It is `horizontal` by default (full width, 1px tall); pass
+`orientation="vertical"` for a full-height, 1px-wide rule — that variant needs a
+parent with a resolved height, so put it inside a height-bearing flex row.
+
+There is no `--ui-separator-*` token tier: the line uses the shared divider
+token `--ui-border-on-surface-border` via the bridged `bg-border` name, so a
+brand override follows automatically. Spacing is yours to set with `className`.
+
+Use it to separate groups of content or controls. Don't reach for it purely for
+spacing — use margin or padding. Inside a dropdown, group items into
+`DropdownMenuGroup`s instead; non-first groups draw their own top border.
 
 ## Examples
-
 
 <DemoReact>
   <SeparatorDemo />
 </DemoReact>
 
-```tsx
-<Separator className="my-4" />
+A horizontal rule between blocks:
 
-<div className="flex h-5 items-center gap-4">
-  <span>Backup</span>
+```tsx
+<div className="space-y-1">
+  <h4 className="text-sm font-medium leading-none">Workloads</h4>
+  <p className="text-sm">Manage and protect your devices.</p>
+</div>
+<Separator className="my-4" />
+```
+
+Vertical rules between inline items — note the height on the row:
+
+```tsx
+<div className="flex h-5 items-center gap-4 text-sm">
+  <div>Backup</div>
   <Separator orientation="vertical" />
-  <span>Recovery</span>
+  <div>Recovery</div>
+  <Separator orientation="vertical" />
+  <div>Reports</div>
 </div>
 ```
 
 ## API Reference
 
-`Separator` accepts the standard `<div>` attributes plus **`orientation`**
-(`'horizontal'` | `'vertical'`, default `'horizontal'`), which sets
-`aria-orientation` and swaps the 1px dimension.
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/separator/separator.docs.ts"
+  name="SeparatorProps"
+/>
+
+All other props pass through to the Base UI `Separator` and land on the rendered
+`<div>`.

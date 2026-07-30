@@ -3,31 +3,64 @@ title: Sheet
 description: A modal side panel anchored to a screen edge — for detail views and focused tasks without leaving the page.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { SheetDemo } from "@/components/demos-react/sheet";
+import { DemoReact } from '@/components/DemoReact';
+import { SheetDemo } from '@/components/demos-react/sheet';
 
 ## Usage
 
 ```tsx
 import {
-  Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle,
-  SheetCloseButton, SheetBody, SheetDescription, SheetFooter,
+  Sheet,
+  SheetBody,
+  SheetClose,
+  SheetCloseButton,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from '@acronis-platform/ui-react';
 ```
 
-`Sheet` is a modal side panel — the same Base UI Dialog primitive the `Dialog`
-component uses (focus trap, scroll lock, ARIA), anchored to a screen edge via
-`side` (`top` / `right` / `bottom` / `left`, default `right`) with a slide
-transition. Compose it from parts: a trigger, the content panel, and an optional
-header (title + close), body (with a description), and footer. This is a
-design-pending v1 themed on the shared semantic tokens like the Dialog family.
+`Sheet` renders a portaled panel pinned to a screen edge with a slide
+transition. There is **no `--ui-sheet-*` token tier yet**, so this
+design-pending v1 themes on the shared semantic tokens the same way the `Dialog`
+family does: the panel on `bg-muted` (`--ui-background-surface-secondary`), the
+header and footer bars on `bg-background`
+(`--ui-background-surface-primary`) divided by `border-border`, the title on
+`text-foreground`, the description and close icon on `text-muted-foreground`, and
+the close button's focus ring on `--ui-focus-primary`.
 
-> **`Details` is an alias.** The Vue UI kit called this side panel `Details`. The
-> full part family is re-exported under `Details*` (`Details`, `DetailsContent`,
-> `DetailsHeader`, …) for a 1:1 migration — `import { Details } from
-> '@acronis-platform/ui-react'`. Prefer `Sheet` in new code.
+It is a **compound** component. `Sheet` is the root and owns the open state;
+`SheetTrigger` opens it (polymorphic via `render`); `SheetContent` is the portaled
+panel, with `side` picking the edge; and `SheetHeader` (title + close),
+`SheetBody`, `SheetDescription`, and `SheetFooter` are the optional layout parts.
+`SheetClose` makes any element dismiss the panel, and `SheetCloseButton` is the
+ready-made × icon button for the header.
+
+It's built on the **same Base UI Dialog primitive** as `Dialog`, so it is a real
+modal: focus is trapped inside the open panel and returns to the trigger on
+close, background scroll is locked, `Esc` and an outside press dismiss it, and
+the panel carries `role="dialog"` + `aria-modal`, labelled by `SheetTitle` via
+`aria-labelledby` and described by `SheetDescription` via `aria-describedby`.
+Always include a `SheetTitle` so the panel has an accessible name.
+
+Unlike `Dialog`, a sheet renders **no backdrop** — it opens on top of the page
+rather than behind a scrim. `SheetOverlay` is still exported for drop-in
+compatibility with older call sites, but it is no longer part of what
+`SheetContent` renders.
+
+> **`Details` is an alias.** The Vue UI kit called this side panel `Details`, so
+> the whole part family is re-exported under `Details*` (`Details`,
+> `DetailsContent`, `DetailsHeader`, `DetailsTitle`, `DetailsBody`,
+> `DetailsFooter`, …) for a 1:1 migration. Prefer `Sheet` in new code.
 
 ## Examples
+
+A right-anchored detail panel: header with the title and close button, a
+scrollable body, and an end-aligned footer of actions. `SheetClose` turns the
+footer's "Close" button into a dismiss control:
 
 <DemoReact>
   <SheetDemo />
@@ -42,33 +75,62 @@ design-pending v1 themed on the shared semantic tokens like the Dialog family.
       <SheetCloseButton />
     </SheetHeader>
     <SheetBody>
-      <SheetDescription>Inspect the selected workload.</SheetDescription>
+      <SheetDescription>
+        Inspect and act on the selected workload without leaving the page.
+      </SheetDescription>
     </SheetBody>
     <SheetFooter>
+      <SheetClose render={<Button variant="ghost">Close</Button>} />
       <Button>Edit</Button>
     </SheetFooter>
   </SheetContent>
 </Sheet>
 ```
 
-`side` anchors the panel to any edge — `left`/`right` are full-height,
-`top`/`bottom` full-width:
+`side` anchors the panel to any edge and picks the slide direction. `right` is the
+default; `left`/`right` are full-height (three-quarters wide, capped at `max-w-md`
+from the `sm` breakpoint up) and `top`/`bottom` are full-width, capped at `80vh`:
 
 ```tsx
-<SheetContent side="left"> … </SheetContent>
+<SheetContent side="left">{/* … */}</SheetContent>
+<SheetContent side="top">{/* … */}</SheetContent>
+<SheetContent side="bottom">{/* … */}</SheetContent>
+```
+
+Controlled — drive `open` and react to `onOpenChange`. `modal` comes from the
+Base UI root: `'trap-focus'` keeps the focus trap but leaves background scroll and
+pointer interaction alone, and `false` drops both:
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<Sheet open={open} onOpenChange={setOpen}>
+  {/* …trigger + content… */}
+</Sheet>;
+```
+
+When the sheet renders inside an isolated container (e.g. a shadow root), pass a
+`portalContainer` so the panel inherits that scope's styles. The docs preview
+relies on this — `DemoReact` supplies the container through
+`PortalContainerProvider`, so the demo above needs no extra plumbing. Set
+`portal={false}` only when you supply your own `SheetPortal` ancestor:
+
+```tsx
+<SheetContent portalContainer={mountNode}>{/* … */}</SheetContent>
 ```
 
 ## Preset: `SheetDetails`
 
-For the common "details of the selected item" panel, use the **`SheetDetails`**
-preset — the easy path that *is* the
-[sheet-detail-panel pattern](/patterns/sheet-detail-panel). It bakes the header
-(title + close), a body that switches by `contentState`
-(`loading` → Loading, `empty`/`error` → Empty, else a property list or custom
-children), and an optional footer of actions:
+For the common "details of the selected item" panel, reach for the **`SheetDetails`**
+preset first — the easy path that _is_ the
+[sheet-detail-panel pattern](/patterns/sheet-detail-panel). It assembles a
+right-anchored sheet's header (title + close), a body that switches on
+`contentState` (`loading` → `Loading`, `empty`/`error` → `Empty`, otherwise a
+`DescriptionList` of `properties` or your own `children`), and an optional footer
+of `actions`:
 
 ```tsx
-import { SheetDetails, Button } from '@acronis-platform/ui-react';
+import { Button, SheetDetails } from '@acronis-platform/ui-react';
 
 <SheetDetails
   open={open}
@@ -80,18 +142,45 @@ import { SheetDetails, Button } from '@acronis-platform/ui-react';
     { label: 'Owner', value: 'ken99@example.com' },
   ]}
   actions={<Button>Edit</Button>}
+/>;
+```
+
+The empty and error states ship default copy, both overridable:
+
+```tsx
+<SheetDetails
+  title="Workload details"
+  contentState="error"
+  errorTitle="Couldn't load the workload"
+  errorDescription="Check your connection and try again."
+  open
 />
 ```
 
-Reach for the composable `Sheet*` parts (above) only when you need a layout the
+Reach for the composable `Sheet*` parts above only when you need a layout the
 preset doesn't cover.
 
 ## API Reference
 
-The root `Sheet` (and `Details`) forwards the Base UI Dialog root props
-(`open`, `defaultOpen`, `onOpenChange`, `modal`). `SheetContent` adds:
+### SheetContent
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/sheet/sheet.docs.ts"
   name="SheetContentProps"
 />
+
+### SheetDetails
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sheet/sheet-details.tsx"
+  name="SheetDetailsProps"
+/>
+
+`Sheet` (and its `Details` alias) forwards the Base UI Dialog root props —
+`open` / `defaultOpen` / `onOpenChange`, plus `modal` (default `true`) and
+`disablePointerDismissal`. `SheetTrigger`, `SheetClose`, `SheetTitle`, and
+`SheetDescription` are the matching Base UI parts with styling applied;
+`SheetHeader`, `SheetBody`, and `SheetFooter` accept the standard attributes of
+the `<div>` they render. See the
+[Base UI Dialog docs](https://base-ui.com/react/components/dialog) for the full
+prop surface of each part.

@@ -1,10 +1,10 @@
 ---
 title: Calendar
-description: A day-grid for selecting a single date, multiple dates, or a range.
+description: A day grid for selecting a single date, multiple dates, or a range.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { CalendarDemo } from "@/components/demos-react/calendar";
+import { DemoReact } from '@/components/DemoReact';
+import { CalendarDemo } from '@/components/demos-react/calendar';
 
 ## Usage
 
@@ -12,25 +12,40 @@ import { CalendarDemo } from "@/components/demos-react/calendar";
 import { Calendar } from '@acronis-platform/ui-react';
 ```
 
-`Calendar` is a pure day-grid built on [`react-day-picker`](https://daypicker.dev)'s
-`DayPicker`. It supports `single`, `multiple`, and `range` selection (`mode`) and
-one or more months side by side (`numberOfMonths`), with prev/next chevrons at the
-outer edges of the month row. Keyboard navigation, focus management, and the
-selection model are handled by `react-day-picker`.
+`Calendar` is a bare day grid built on
+[`react-day-picker`](https://daypicker.dev)'s `DayPicker` (v10) — selection,
+month navigation, roving focus, and the ARIA grid semantics all come from that
+library, and every `DayPicker` prop passes through. It is not a Base UI
+primitive and it renders no popover of its own: for a date **field** use
+[`InputDatePicker`](/components/input-date-picker) as the trigger, or
+[`DateRangePicker`](/components/date-range-picker) for the pre-composed range
+field that embeds this grid in a popover.
 
-This is a **design-pending v1** ported from the legacy library: no `--ui-calendar-*`
-token tier exists yet, so it themes off the shared semantic vocabulary
-(`bg-background` / `text-foreground` for the surface, the brand-primary tokens for
-selected days and range endpoints, `bg-accent` for the range middle). It will be
-reconciled against the Figma design once a mockup lands.
+No `--ui-calendar-*` token tier exists yet (this is a design-pending v1 ported
+from the legacy library), so the grid themes off the shared semantic
+vocabulary: `bg-background` / `text-foreground` for the surface and idle days,
+`--ui-background-brand-primary` + `--ui-glyph-on-brand-primary` for the
+selected day and range endpoints, `bg-accent` for the range-middle band,
+`--ui-text-on-surface-disabled` for disabled days, and `--ui-focus-primary` for
+the focus ring. Two defaults differ from `react-day-picker`'s: the week starts
+on Monday (`weekStartsOn={1}`) and outside days are shown.
 
 ## Examples
+
+A dual-month range grid. `numberOfMonths` renders the months side by side with a
+single previous/next pair at the outer edges of the row, and the chevrons mirror
+under `dir="rtl"`:
 
 <DemoReact>
   <CalendarDemo />
 </DemoReact>
 
-A single-date calendar:
+```tsx
+<Calendar mode="range" numberOfMonths={2} defaultMonth={new Date(2026, 6, 1)} />
+```
+
+A controlled single date. Clicking the selected day again clears the selection,
+so `onSelect` can receive `undefined`:
 
 ```tsx
 const [selected, setSelected] = React.useState<Date>();
@@ -38,29 +53,83 @@ const [selected, setSelected] = React.useState<Date>();
 <Calendar mode="single" selected={selected} onSelect={setSelected} />
 ```
 
-A dual-month range calendar:
+`mode="multiple"` collects a set of dates and `min` / `max` bound how many may be
+picked:
+
+```tsx
+const [dates, setDates] = React.useState<Date[]>([]);
+
+<Calendar mode="multiple" max={3} selected={dates} onSelect={setDates} />
+```
+
+A controlled range uses `react-day-picker`'s `DateRange`:
 
 ```tsx
 import type { DateRange } from 'react-day-picker';
 
 const [range, setRange] = React.useState<DateRange>();
 
-<Calendar mode="range" numberOfMonths={2} selected={range} onSelect={setRange} />
+<Calendar
+  mode="range"
+  numberOfMonths={2}
+  selected={range}
+  onSelect={setRange}
+/>
 ```
 
-Disable specific days or weekends with a matcher:
+`disabled` takes a matcher or an array of them — a date, a `{ from, to }` range,
+a `{ before }` / `{ after }` bound, a `{ dayOfWeek }` set, or a predicate. A
+disabled day is a `disabled` `<button>`, so clicking it does not fire
+`onSelect`:
 
 ```tsx
 <Calendar
   mode="single"
-  disabled={[new Date(2026, 6, 4), { dayOfWeek: [0, 6] }]}
+  disabled={[new Date(2026, 6, 4), { dayOfWeek: [0, 6] }, { after: new Date() }]}
+/>
+```
+
+`startMonth` / `endMonth` bound the navigable range instead — the previous or
+next chevron at the edge goes `aria-disabled`:
+
+```tsx
+<Calendar
+  mode="single"
+  startMonth={new Date(2026, 0)}
+  endMonth={new Date(2026, 11)}
+/>
+```
+
+`captionLayout` swaps the boxed "July 2026" label for native month/year
+`<select>` dropdowns:
+
+```tsx
+<Calendar mode="single" captionLayout="dropdown" />
+```
+
+`CalendarDayButton` is exported as the day-cell renderer this component installs,
+so a custom `components.DayButton` can wrap it rather than reimplement the
+selected / range / focus treatment:
+
+```tsx
+import { Calendar, CalendarDayButton } from '@acronis-platform/ui-react';
+
+<Calendar
+  mode="single"
+  components={{
+    DayButton: (props) => (
+      <CalendarDayButton {...props} title={props.day.date.toDateString()} />
+    ),
+  }}
 />
 ```
 
 ## API Reference
 
-`Calendar` forwards every [`react-day-picker` `DayPicker` prop](https://daypicker.dev/api/interfaces/PropsBase);
-the table below covers the props most commonly set.
+`CalendarProps` is `React.ComponentProps<typeof DayPicker>` — the full,
+mode-discriminated `react-day-picker` prop union. The table below covers the
+props callers reach for; see the
+[`DayPicker` API](https://daypicker.dev/api/interfaces/PropsBase) for the rest.
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/calendar/calendar.docs.ts"

@@ -1,35 +1,78 @@
 ---
 title: Label
-description: A caption for a form control — small, medium-weight text tied to an input.
+description: Captions a form control with small, medium-weight text.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { LabelDemo } from "@/components/demos-react/label";
+import { DemoReact } from '@/components/DemoReact';
+import { LabelDemo } from '@/components/demos-react/label';
 
 ## Usage
 
 ```tsx
-import { Label } from '@acronis-platform/ui-react';
+import { Label, labelClassName } from '@acronis-platform/ui-react';
 ```
 
-`Label` renders a native `<label>` with small, medium-weight type. Associate it
-with a control via `htmlFor` (the control's `id`) so clicking the label focuses
-the control and assistive tech reads it as the control's accessible name. When a
-preceding `peer`-marked control is disabled, the label dims. This is a
-design-pending v1; a `--ui-label-*` tier is pending a Figma pass.
+`Label` renders a native `<label>` — no Base UI primitive, no state of its own. It
+sets small, medium-weight type and nothing else: the text color is inherited
+(`text-foreground`, i.e. `--ui-text-on-surface-primary`), so there is no
+`--ui-label-*` token tier. Its class string is exported as `labelClassName` and is
+what [`Field`](/components/field)'s `FieldLabel` builds on, so both read the same.
+`Label` is the manual option — you own the `htmlFor`/`id` pairing. Where the
+association can be wired for you, prefer `FieldLabel` inside a `Field`, or the
+built-in `label` prop of the self-contained fields
+([`InputText`](/components/input-text),
+[`InputSearch`](/components/input-search),
+[`InputSelect`](/components/input-select)).
+
+> Status: draft (design-pending v1), ported from the legacy `shadcn-uikit` label.
+> A `--ui-label-*` tier awaits a Figma pass.
 
 ## Examples
+
+Point `htmlFor` at the control's `id` so clicking the label focuses the control and
+assistive tech reads the label as the control's accessible name:
 
 <DemoReact>
   <LabelDemo />
 </DemoReact>
 
 ```tsx
-<div className="flex flex-col gap-2">
+<div className="flex w-64 flex-col gap-2">
   <Label htmlFor="email">Email address</Label>
-  <Input id="email" placeholder="name@acronis.com" />
+  <InputText id="email" placeholder="name@acronis.com" />
 </div>
 ```
+
+`Label` dims (and shows a not-allowed cursor) when a disabled control marked with
+Tailwind's `peer` class precedes it in the DOM. The dimming is visual only — the
+control's own `disabled` state is what assistive tech announces:
+
+```tsx
+<div className="flex items-center gap-2">
+  <input id="terms" type="checkbox" className="peer" disabled />
+  <Label htmlFor="terms">Accept terms and conditions</Label>
+</div>
+```
+
+`className` merges onto the label, so a `text-*` utility overrides the inherited
+color:
+
+```tsx
+<Label htmlFor="retention" className="text-muted-foreground">
+  Retention (optional)
+</Label>
+```
+
+Use `labelClassName` when a non-`<label>` element needs to read as a field caption
+— for example a group heading that must not be associated with a single control:
+
+```tsx
+<span className={labelClassName}>Retention</span>
+```
+
+Helper and error text below a control is not a `Label`: use `FieldDescription` /
+`FieldError` from [`Field`](/components/field), or the field's own `description` /
+`error` prop.
 
 ## API Reference
 
@@ -37,3 +80,6 @@ design-pending v1; a `--ui-label-*` tier is pending a Figma pass.
   path="../../packages/ui-react/src/components/ui/label/label.docs.ts"
   name="LabelProps"
 />
+
+`Label` forwards its ref to the `<label>` element and accepts every other native
+`<label>` attribute. `labelClassName` is the raw Tailwind class string behind it.

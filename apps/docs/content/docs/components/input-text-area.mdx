@@ -3,8 +3,8 @@ title: InputTextArea
 description: A multi-line text field with label, description, and error support.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { InputTextAreaDemo } from "@/components/demos-react/input-text-area";
+import { DemoReact } from '@/components/DemoReact';
+import { InputTextAreaDemo } from '@/components/demos-react/input-text-area';
 
 ## Usage
 
@@ -12,52 +12,73 @@ import { InputTextAreaDemo } from "@/components/demos-react/input-text-area";
 import { InputTextArea } from '@acronis-platform/ui-react';
 ```
 
-`InputTextArea` wraps a native `<textarea>` and adds the field furniture — an
-optional label (with a `required` marker), helper description, and error
-message. Without a label it renders just the box. Themed by the
-`--ui-input-text-area-*` tokens.
+`InputTextArea` renders a native `<textarea>` and adds the field furniture: an
+optional label (with a `required` marker) and a helper `description` or `error`
+message below the box. No Base UI primitive is involved; `ref` and `className`
+target the `<textarea>` itself, so without a `label` it renders just the box.
+Themed by the `--ui-input-text-area-*` tokens — the box is 96px tall at
+minimum (`--ui-input-text-area-box-height-min`) and resizes vertically only.
 
-> **`Textarea` is an alias of `InputTextArea`.** The legacy bare `Textarea` box
-> is replaced by this design-system-native field; `import { Textarea } from
-> '@acronis-platform/ui-react'` re-exports `InputTextArea` — same props. Without
-> a `label` it's a drop-in for the bare textarea. Prefer `InputTextArea` in new
-> code.
+The label, message, and required marker are wired to the textarea via `htmlFor`,
+`aria-describedby`, `aria-required`, and `aria-invalid`, so the field is
+self-contained and does not need a [`Field`](/components/field) wrapper.
+
+> **`Textarea` is an alias of `InputTextArea`.** `import { Textarea } from
+> '@acronis-platform/ui-react'` re-exports `InputTextArea`, and `TextareaProps`
+> re-exports `InputTextAreaProps` — same component, same props. Prefer
+> `InputTextArea` in new code.
 
 ## Examples
 
+A labeled field with helper text, and the same field in its required + error
+state:
 
 <DemoReact>
   <InputTextAreaDemo />
 </DemoReact>
 
-A labeled multi-line field:
-
 ```tsx
-<InputTextArea label="Description" placeholder="Add details…" />
-```
-
-Required and error states:
-
-```tsx
-<InputTextArea label="Comment" required />
+<InputTextArea
+  label="Description"
+  placeholder="Describe the policy…"
+  description="Markdown is supported."
+/>
 
 <InputTextArea
-  label="Comment"
+  label="Notes"
+  required
+  placeholder="Required notes"
   error="This field is required."
 />
 ```
 
-With helper text and a row count:
+Setting `error` switches the field to its error treatment: the box takes the red
+error border, the focus ring becomes `--ui-focus-error`, and the error message
+replaces the `description`. Passing `aria-invalid` directly triggers the same
+box treatment without rendering a message — useful when the message lives
+elsewhere on the form:
 
 ```tsx
-<InputTextArea
-  label="Notes"
-  description="Markdown is supported."
-  rows={6}
-/>
+<InputTextArea label="Notes" aria-invalid />
+```
+
+Native `<textarea>` attributes pass through, so set the initial height with
+`rows` and cap the length with `maxLength`:
+
+```tsx
+<InputTextArea label="Notes" description="Markdown is supported." rows={6} />
+```
+
+Disabled uses dedicated disabled tokens for the box, label, and message:
+
+```tsx
+<InputTextArea label="Notes" defaultValue="Nightly backup window." disabled />
 ```
 
 ## API Reference
+
+`InputTextAreaProps` also accepts every native `<textarea>` attribute (`rows`,
+`placeholder`, `name`, `maxLength`, `onChange`, …).
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/input-text-area/input-text-area.tsx"

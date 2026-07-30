@@ -3,8 +3,8 @@ title: Empty
 description: A centered empty-state placeholder shown when there is no data or content.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { EmptyDemo } from "@/components/demos-react/empty";
+import { DemoReact } from '@/components/DemoReact';
+import { EmptyDemo } from '@/components/demos-react/empty';
 
 ## Usage
 
@@ -20,32 +20,25 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`Empty` is a compound component for empty states. `Empty` is a centered column;
-`EmptyIcon` holds an optional 72px glyph; `EmptyHeader` groups an `EmptyTitle`
-(foreground) and an `EmptyDescription` (muted); `EmptyActions` and `EmptyLinks`
-hold a primary action and supporting links. All parts are optional. This is a
-design-pending v1 themed from the shared semantic text tokens; a `--ui-empty-*`
-tier is pending a Figma pass.
+`Empty` is a set of composable parts, not a configurable component — there are no
+variants. `Empty` is the centered, muted column (max 448px wide); `EmptyIcon` is a
+fixed 72px slot whose SVG fills it; `EmptyHeader` groups `EmptyTitle` (an `<h3>`
+in the foreground color) and `EmptyDescription` (a muted `<p>`); `EmptyActions`
+holds the primary action and `EmptyLinks` any supporting links. Every part is
+optional.
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` empty. There is no
+> `--ui-empty-*` tier yet: the title uses `text-foreground`
+> (`--ui-text-on-surface-primary`) and the description and icon
+> `text-muted-foreground` (`--ui-text-on-surface-secondary`).
 
 ## Examples
 
+The full stack — icon, header, and a primary action:
 
 <DemoReact>
   <EmptyDemo />
 </DemoReact>
-
-A title and description only:
-
-```tsx
-<Empty>
-  <EmptyHeader>
-    <EmptyTitle>No data</EmptyTitle>
-    <EmptyDescription>There is no data to display.</EmptyDescription>
-  </EmptyHeader>
-</Empty>
-```
-
-With an icon and a primary action:
 
 ```tsx
 <Empty>
@@ -54,7 +47,9 @@ With an icon and a primary action:
   </EmptyIcon>
   <EmptyHeader>
     <EmptyTitle>No backups found</EmptyTitle>
-    <EmptyDescription>Create your first backup plan.</EmptyDescription>
+    <EmptyDescription>
+      Create your first backup plan to start protecting this workload.
+    </EmptyDescription>
   </EmptyHeader>
   <EmptyActions>
     <Button>Create backup plan</Button>
@@ -62,10 +57,41 @@ With an icon and a primary action:
 </Empty>
 ```
 
+A header on its own is enough when there's nothing to do about it — a filter that
+matched nothing, for instance:
+
+```tsx
+<Empty>
+  <EmptyHeader>
+    <EmptyTitle>No devices match these filters</EmptyTitle>
+    <EmptyDescription>
+      Try widening the date range or clearing a filter.
+    </EmptyDescription>
+  </EmptyHeader>
+</Empty>
+```
+
+Use `EmptyLinks` for secondary, non-committal routes out of the empty state,
+below the primary action:
+
+```tsx
+<EmptyActions>
+  <Button>Create backup plan</Button>
+</EmptyActions>
+<EmptyLinks>
+  <Link href="/docs/backup">Read the backup guide</Link>
+</EmptyLinks>
+```
+
+`Empty` is for "there is nothing here", not for "we're fetching" or "it broke".
+For a pending state use [`Skeleton`](/components/skeleton) or
+[`Loading`](/components/loading); for a failure, show an error with a retry; for
+an empty dashboard widget use
+[`WidgetPlaceholder`](/components/widget-placeholder).
+
 ## API Reference
 
-`Empty` has no props of its own — each part is a styled element that accepts the
-standard attributes of what it renders: `Empty`, `EmptyIcon`, `EmptyHeader`,
-`EmptyActions`, and `EmptyLinks` are `<div>`s; `EmptyTitle` is an `<h3>`; and
-`EmptyDescription` is a `<p>`. Compose them and pass `className` / native
-attributes as needed.
+`Empty` exposes no props of its own. Each part is a styled element that accepts
+the native attributes of what it renders plus `className`: `Empty`, `EmptyIcon`,
+`EmptyHeader`, `EmptyActions`, and `EmptyLinks` are `<div>`s, `EmptyTitle` is an
+`<h3>`, and `EmptyDescription` is a `<p>`.

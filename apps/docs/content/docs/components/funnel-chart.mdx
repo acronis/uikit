@@ -13,22 +13,41 @@ import { FunnelChart } from '@acronis-platform/ui-react';
 import type { ChartConfig } from '@acronis-platform/ui-react';
 ```
 
-`FunnelChart` is a typed composition over the shared [`Chart`](/components/chart)
-primitives. Give it `data` (one row per stage), a per-stage `config`, the value
-field (`dataKey`), and the label field (`nameKey`) — it renders a themed recharts
-funnel (on-chart stage labels and a tooltip included), so you don't hand-compose
-recharts children. There's no legend — the inline labels already name every stage.
+`FunnelChart` is a typed recharts composition over the shared
+[`Chart`](/components/chart) primitives. Give it `data` (one row per stage), a
+per-stage `config`, the value field (`dataKey`), and the label field (`nameKey`) —
+it renders a themed recharts funnel with on-chart stage labels and a tooltip, so
+you never hand-compose recharts children. There is **no legend**: the inline labels
+already name every stage.
 
-Stage colors are supplied by the caller through `config`, **keyed by each
-`nameKey` value**: `FunnelChart` turns those into the `--color-<name>` custom
-properties its segments fill from.
+Stage colors are supplied by the caller through `config`, **keyed by each `nameKey`
+value**: `FunnelChart` turns those into the `--color-<name>` custom properties its
+segments fill from.
+
+Use it for progression — and drop-off — through the ordered stages of a process: a
+conversion funnel, a recruitment pipeline, an onboarding flow. A handful of
+monotonically decreasing stages reads best. For unordered categories or
+part-to-whole of a single total use [`PieChart`](/components/pie-chart) or
+[`BarChart`](/components/bar-chart); for a trend over time,
+[`LineChart`](/components/line-chart) or [`AreaChart`](/components/area-chart).
+Don't use it for values that don't decrease stage to stage — the funnel metaphor
+misleads. Despite the similar silhouette,
+[`ConfidenceCone`](/components/confidence-cone) is a different thing: a forecast
+with an uncertainty band.
+
+Pair the chart with a text alternative and give it an accessible name via
+`aria-label` / `aria-labelledby` (native attributes pass through to the wrapper
+element). The caption or table should **state the stage-to-stage drop-off**, which
+the funnel only implies. Keep `showLabels` on — with no legend, the inline labels
+and the tooltip are the only naming channels — and make sure adjacent stage colors
+are distinguishable from each other.
 
 > **Design-pending v1**, ported from the demo `FunnelChartPlayground`. There is no
-> chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands.
+> chart token tier yet, so the example colors reference the shared semantic
+> `--ui-*` brand/status tokens — a dedicated `--ui-chart-*` data-viz palette is
+> pending an upstream design pass. `--ui-background-status-strong-*` is chromatic
+> in every brand; `--ui-background-brand-secondary` is brand-dependent, so it is
+> not color-stable across brands until the real palette lands.
 
 ## Examples
 
@@ -36,7 +55,8 @@ properties its segments fill from.
   <FunnelChartDemo />
 </DemoReact>
 
-A conversion funnel with on-chart stage labels and a themed tooltip:
+A conversion funnel with on-chart stage labels and a themed tooltip. Note that
+`config` is keyed by the `nameKey` **values**:
 
 ```tsx
 const data = [
@@ -62,25 +82,29 @@ const config = {
 />;
 ```
 
-End the funnel flat instead of at a point with `lastShape="rectangle"`:
+`lastShape="triangle"` (the default) narrows the funnel to a point. Use
+`lastShape="rectangle"` to end it flat, so every stage reads as a trapezoid:
 
 ```tsx
 <FunnelChart config={config} data={data} dataKey="value" nameKey="stage" lastShape="rectangle" />
 ```
 
-Flip the direction with `reversed`, or hide the on-chart labels / tooltip with
-`showLabels` / `showTooltip`:
+Flip the funnel so it widens toward the bottom with `reversed`:
 
 ```tsx
-<FunnelChart config={config} data={data} dataKey="value" nameKey="stage" reversed showLabels={false} />
+<FunnelChart config={config} data={data} dataKey="value" nameKey="stage" reversed />
 ```
 
-## Custom tooltip
+Hide the on-chart labels or the tooltip with `showLabels` / `showTooltip` — keep at
+least one of them, since a funnel has no legend:
+
+```tsx
+<FunnelChart config={config} data={data} dataKey="value" nameKey="stage" showLabels={false} />
+```
 
 Replace the tooltip with a configured `ChartTooltipContent` — imported from the
-same library, so you never compose recharts yourself. Its `formatter` renders
-each row and `labelFormatter` the header, giving you custom formatting, per-series
-content, and extra fields:
+same library, so you still never compose recharts yourself. Point it at the same
+`nameKey` so each row resolves its stage label:
 
 ```tsx
 import { FunnelChart, ChartTooltipContent } from '@acronis-platform/ui-react';

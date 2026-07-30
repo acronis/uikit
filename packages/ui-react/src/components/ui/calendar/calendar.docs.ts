@@ -19,10 +19,22 @@ export interface CalendarProps {
   selected?: unknown;
   /** Called when the selection changes. */
   onSelect?: (selected: unknown) => void;
+  /** Minimum number of days selectable in `multiple` / `range` mode. */
+  min?: number;
+  /** Maximum number of days selectable in `multiple` / `range` mode. */
+  max?: number;
   /** Matcher (or array of matchers) for days that cannot be selected. */
   disabled?: unknown;
   /** The month rendered first (uncontrolled). */
   defaultMonth?: Date;
+  /** Earliest navigable month — disables the previous chevron at the edge. */
+  startMonth?: Date;
+  /** Latest navigable month — disables the next chevron at the edge. */
+  endMonth?: Date;
+  /** First day of the week (0 = Sunday … 6 = Saturday). Defaults to `1` (Monday). */
+  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  /** Overrides for `react-day-picker`'s internal components (e.g. `DayButton`). */
+  components?: unknown;
   /** Extra classes merged onto the calendar root. */
   className?: string;
 }

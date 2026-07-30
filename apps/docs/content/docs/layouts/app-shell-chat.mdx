@@ -1,0 +1,197 @@
+---
+title: AppShellChat
+description: A three-section application scaffold whose chat panel resizes against the page content.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { AppShellChatDemo } from '@/components/demos-react/app-shell-chat';
+
+## Usage
+
+```tsx
+import {
+  AppShellChat,
+  AppShellChatSidebar,
+  AppShellChatContent,
+  AppShellChatContentHeader,
+  AppShellChatContentBody,
+  AppShellChatChat,
+  AppShellChatChatHeader,
+  AppShellChatChatBody,
+  useAppShellChatInitialLayout,
+} from '@acronis-platform/ui-react';
+```
+
+`AppShellChat` is a three-section scaffold — a navigation rail
+(`AppShellChatSidebar`), a page column (`AppShellChatContent`), and a resizable
+chat panel (`AppShellChatChat`) — for screens that pair page content with a
+persistent assistant. It is **distinct from [`AppShell`](/layouts/app-shell)**,
+which is the simpler sidebar + sticky-header + main shell; reach for
+`AppShellChat` only when the chat panel is part of the frame.
+
+There is no `--ui-app-shell-chat-*` token tier: the scaffold is a pure layout
+composition over shared tokens. The root and the chat panel use
+`--ui-background-surface-primary` (bridged `bg-background`), the page column uses
+`--ui-background-surface-secondary` (bridged `bg-muted`, the same canvas
+`SidebarSecondary` sits on), and the seams use
+`--ui-border-on-surface-divider`. The resize edge reuses the shared
+`--ui-resizable-*` and `--ui-focus-primary` tokens.
+
+The rail is a plain slot, so drop [`SidebarPrimary`](/components/sidebar-primary)
+— and optionally [`SidebarSecondary`](/components/sidebar-secondary) — into it
+yourself. `useAppShellChatInitialLayout()` reads the viewport once at mount and
+returns the `defaultExpanded` values to wire into each sidebar; the chat panel's
+own responsive width needs no wiring.
+
+Mapped to the [AppShellChat Figma](https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=3484-2105).
+
+## Examples
+
+Drag the chat panel's inner edge to resize it against the page content;
+double-click the edge (or press `Home` while it is focused) to reset the width,
+and the arrow keys nudge it by 16px:
+
+<DemoReact>
+  <AppShellChatDemo />
+</DemoReact>
+
+```tsx
+function Screen() {
+  const initialLayout = useAppShellChatInitialLayout();
+
+  return (
+    <AppShellChat className="h-screen">
+      <AppShellChatSidebar>
+        <SidebarPrimary defaultExpanded={initialLayout.primaryExpanded}>
+          …
+        </SidebarPrimary>
+        <SidebarSecondary defaultExpanded={initialLayout.secondaryExpanded}>
+          …
+        </SidebarSecondary>
+      </AppShellChatSidebar>
+      <AppShellChatContent>
+        <AppShellChatContentHeader>
+          <PageHeader>…</PageHeader>
+        </AppShellChatContentHeader>
+        <AppShellChatContentBody>{children}</AppShellChatContentBody>
+      </AppShellChatContent>
+      <AppShellChatChat aria-label="Acronis AI">
+        <AppShellChatChatHeader label="Acronis AI" />
+        <AppShellChatChatBody>{chat}</AppShellChatChatBody>
+      </AppShellChatChat>
+    </AppShellChat>
+  );
+}
+```
+
+`SidebarSecondary` is optional — a screen without second-level navigation just
+omits it, and the rail is `SidebarPrimary` alone.
+
+### Sizing model
+
+The page column is the only flex-growing section and can shrink to zero without
+unmounting; the chat panel always has an explicit pixel width and never a
+percentage. That is what makes expanding, collapsing, or resizing a sidebar
+reflow the page column only — the chat keeps its width either way. It also means
+`AppShellChat` deliberately does **not** build on
+[`Resizable`](/components/resizable), which sizes panels as a percentage of their
+group.
+
+Resizing the chat runs from a 48px floor up to the row's *actual* available
+width, measured at drag start — so with the sidebars collapsed the chat can take
+the whole row. There is no separate collapse or full-width toggle.
+
+### Chat header actions and the icon-only rail
+
+`AppShellChatChatHeader` takes the title as `label` (or as children) and trailing
+controls as `actions`. At the 48px floor the panel switches to
+`data-state="collapsed"`: the header shows only the Acronis mark with the label
+as its hover tooltip, and both `actions` and `AppShellChatChatBody` are hidden.
+
+```tsx
+<AppShellChatChatHeader
+  label="Acronis AI"
+  actions={
+    <ButtonIcon aria-label="Chat options">
+      <EllipsisIcon size={16} />
+    </ButtonIcon>
+  }
+/>
+```
+
+### Controlled width
+
+Leave `width` unset and the chat panel is breakpoint-responsive in plain CSS —
+512px at 1680px and up, 448px from 1280px, and the 48px rail below that —
+reflowing live until the user drags or keyboard-resizes it. Pass `width` to own
+the value yourself; `onWidthChange` fires on every drag/keyboard change either
+way:
+
+```tsx
+const [width, setWidth] = useState(448);
+
+<AppShellChatChat width={width} onWidthChange={setWidth}>
+  …
+</AppShellChatChat>;
+```
+
+Localize the resize edge's accessible name and tooltip with `resizeAriaLabel`
+and `resizeTooltip`; pass `resizeTooltip={null}` to suppress the tooltip:
+
+```tsx
+<AppShellChatChat resizeAriaLabel={t('resizeChat')} resizeTooltip={null}>
+  …
+</AppShellChatChat>
+```
+
+For a transient chat overlay use [`Sheet`](/components/sheet) or
+[`Popover`](/components/popover) instead of this scaffold.
+
+## Parts
+
+| Export                      | Element | Purpose                                                         |
+| --------------------------- | ------- | --------------------------------------------------------------- |
+| `AppShellChat`              | `div`   | The full-height row.                                            |
+| `AppShellChatSidebar`       | `aside` | Rail slot for SidebarPrimary (+ SidebarSecondary).              |
+| `AppShellChatContent`       | `div`   | Page column; grows and can shrink to zero, never unmounts.       |
+| `AppShellChatContentHeader` | `div`   | Page header row, with a bottom divider.                          |
+| `AppShellChatContentBody`   | `div`   | Scrolling page body.                                             |
+| `AppShellChatChat`          | `aside` | The resizable chat panel (renders its own resize edge).          |
+| `AppShellChatChatHeader`    | `div`   | Chat header — title + actions, or the icon-only rail when compact. |
+| `AppShellChatChatBody`      | `div`   | Scrolling chat body; hidden while compact.                       |
+
+The resize edge is rendered automatically inside `AppShellChatChat` as a
+`role="separator"` control and is not a public part.
+
+## API Reference
+
+### AppShellChatChat
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/app-shell-chat/app-shell-chat.docs.ts"
+  name="AppShellChatChatProps"
+/>
+
+### AppShellChatChatHeader
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/app-shell-chat/app-shell-chat.docs.ts"
+  name="AppShellChatChatHeaderProps"
+/>
+
+### useAppShellChatInitialLayout
+
+Returns the breakpoint-derived initial sidebar layout, resolved once at first
+render and never re-derived — wire each field into the matching sidebar's
+`defaultExpanded` prop.
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/app-shell-chat/app-shell-chat.tsx"
+  name="AppShellChatInitialLayout"
+/>
+
+The remaining parts (`AppShellChat`, `AppShellChatSidebar`,
+`AppShellChatContent`, `AppShellChatContentHeader`, `AppShellChatContentBody`,
+`AppShellChatChatBody`) declare no props of their own — each accepts the native
+attributes of the element it renders, including `className`, and forwards its
+`ref`.

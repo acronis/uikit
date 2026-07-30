@@ -12,54 +12,76 @@ import { TrendIndicatorDemo } from '@/components/demos-react/trend-indicator';
 import { TrendIndicator } from '@acronis-platform/ui-react';
 ```
 
-`TrendIndicator` shows **how a metric changed** versus a reference — a direction
-glyph, an already-formatted change value, and an optional comparison label. It is
-purely presentational: the consumer computes the trend and passes a ready value;
-the component never diffs numbers, rounds, or interprets domain rules.
+`TrendIndicator` renders a `<span>` holding a direction glyph, an
+already-formatted change `value`, and an optional `comparisonLabel`. It is purely
+presentational: you compute the trend and pass a ready value; the component never
+diffs numbers, rounds, or applies domain rules. `sentiment` drives the color
+through the semantic `--ui-text-on-status-*` tokens (the glyph inherits it via
+`currentColor`), and the `badge` variant adds the matching
+`--ui-background-status-*` tint.
 
 ### Direction is not sentiment
 
-The key design decision: `direction` is the maths (up / down / flat), `sentiment`
-is whether that change is good (positive / negative / neutral). The kit can't
-assume up = good — revenue ↑ is positive, threats ↑ is negative, MTTR ↓ is
-positive. Always pass both.
+`direction` is the maths (`up` / `down` / `flat`); `sentiment` is whether that
+change is good (`positive` / `negative` / `neutral`). The kit can't assume up =
+good — revenue ↑ is positive, threats ↑ is negative, MTTR ↓ is positive. Always
+pass both. `direction` is the only required prop; `sentiment` defaults to
+`neutral`.
 
 ## Examples
+
+Four inline indicators showing the same three glyphs against different sentiments,
+then the compact `badge` variant:
 
 <DemoReact>
   <TrendIndicatorDemo />
 </DemoReact>
 
-Inline, next to a metric:
-
 ```tsx
-<TrendIndicator
-  direction="up"
-  sentiment="positive"
-  value="12%"
-  comparisonLabel="vs previous quarter"
-/>
+<TrendIndicator direction="up" sentiment="positive" value="8%" comparisonLabel="revenue QoQ" />
+<TrendIndicator direction="up" sentiment="negative" value="35%" comparisonLabel="threats this quarter" />
+<TrendIndicator direction="down" sentiment="positive" value="1.4 h" comparisonLabel="MTTR over 6 months" />
+<TrendIndicator direction="flat" sentiment="neutral" value="Stable" comparisonLabel="ticket volume" />
+
+<div className="flex items-center gap-2">
+  <TrendIndicator variant="badge" direction="up" sentiment="positive" value="12%" />
+  <TrendIndicator variant="badge" direction="down" sentiment="negative" value="8%" />
+  <TrendIndicator variant="badge" direction="flat" sentiment="neutral" value="0%" />
+</div>
 ```
 
-The same arrow, opposite sentiment (an increase that's bad):
-
-```tsx
-<TrendIndicator direction="up" sentiment="negative" value="35%" comparisonLabel="threats" />
-```
-
-A qualitative change (no number):
+`value` can be qualitative rather than numeric — the component renders whatever
+node you give it:
 
 ```tsx
 <TrendIndicator direction="up" sentiment="positive" value="Improving" />
+<TrendIndicator direction="down" sentiment="positive" value="4.2 h → 2.8 h" />
 ```
 
-A compact tinted badge for tables and dense headers:
+Two sizes, `small` and `medium` (the default), scale the text, gap, and glyph
+together. Use `small` inside a [`Metric`](/components/metric)'s `trend` slot or a
+dense table cell:
 
 ```tsx
-<TrendIndicator variant="badge" direction="down" sentiment="negative" value="8%" />
+<TrendIndicator size="small" direction="up" sentiment="positive" value="2%" />
 ```
 
-Provide a full accessible sentence with `ariaLabel` (the glyph is decorative):
+The glyph is on by default because color alone isn't a sufficient cue. Drop it
+with `showIcon={false}` only where the direction is already unambiguous:
+
+```tsx
+<TrendIndicator
+  direction="flat"
+  sentiment="neutral"
+  value="0%"
+  showIcon={false}
+/>
+```
+
+Pass `ariaLabel` for a complete, localized accessible sentence. With it the whole
+indicator becomes one `role="img"` and the inner text is decorative; without it,
+assistive tech reads the visible `value` / `comparisonLabel` and the glyph is
+hidden:
 
 ```tsx
 <TrendIndicator
@@ -69,6 +91,20 @@ Provide a full accessible sentence with `ariaLabel` (the glyph is decorative):
   ariaLabel="Revenue increased 12% compared with the previous quarter"
 />
 ```
+
+`tooltip` adds a contextual hint. Supplying it also makes the indicator
+keyboard-reachable, so the hint isn't hover-only:
+
+```tsx
+<TrendIndicator
+  direction="up"
+  sentiment="negative"
+  value="35%"
+  tooltip="1,204 threats blocked this quarter, up from 892."
+/>
+```
+
+To plot a trend over time rather than summarize it, use a line or area chart.
 
 ## API Reference
 

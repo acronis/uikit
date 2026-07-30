@@ -1,10 +1,10 @@
 ---
-title: Page Content
+title: PageContent
 description: The padded gutter region for a page's body.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { PageContentDemo } from "@/components/demos-react/page-content";
+import { DemoReact } from '@/components/DemoReact';
+import { PageContentDemo } from '@/components/demos-react/page-content';
 
 ## Usage
 
@@ -12,10 +12,15 @@ import { PageContentDemo } from "@/components/demos-react/page-content";
 import { PageContent } from '@acronis-platform/ui-react';
 ```
 
-`PageContent` is the padded gutter for a page's body. It renders a `<div>` (not
-`<main>`) so it nests inside [`AppShellMain`](/layouts/app-shell) without
-duplicating the `main` landmark; if you use it without the App Shell, wrap it in
-your own `<main>`.
+`PageContent` is the standard page gutter: a single `<div>` that grows to fill
+its parent and applies the page padding. It has **no tokens of its own** — no
+color, border, or surface, just layout — so the page canvas comes from whatever
+it sits on.
+
+It renders a `<div>` rather than a `<main>` on purpose, so it nests inside
+[`AppShellMain`](/layouts/app-shell) without adding a second `main` landmark.
+Used outside the App Shell, wrap it in your own `<main>`. `PageContent` is the
+gutter, not the scroll container — scrolling belongs to `AppShellMain`.
 
 ## Examples
 
@@ -26,15 +31,36 @@ your own `<main>`.
 ```tsx
 <AppShellMain>
   <PageContent>
-    <PageHeader>…</PageHeader>
+    <PageHeader>
+      <PageHeaderRow>
+        <PageHeaderTitle>Reports</PageHeaderTitle>
+      </PageHeaderRow>
+    </PageHeader>
     {children}
   </PageContent>
 </AppShellMain>
 ```
 
+Standalone, supply the landmark yourself:
+
+```tsx
+<main>
+  <PageContent>{children}</PageContent>
+</main>
+```
+
+Override the padding with `className` when a page needs a flush edge — for
+example a full-bleed table or map:
+
+```tsx
+<PageContent className="p-0">
+  <DataTable … />
+</PageContent>
+```
+
 ## API Reference
 
 <AutoTypeTable
-  path="../../packages/ui-react/src/components/ui/page-content/page-content.tsx"
+  path="../../packages/ui-react/src/components/ui/page-content/page-content.docs.ts"
   name="PageContentProps"
 />

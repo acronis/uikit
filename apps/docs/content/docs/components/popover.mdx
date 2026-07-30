@@ -3,42 +3,58 @@ title: Popover
 description: A floating panel anchored to a trigger, for secondary content or quick actions.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { PopoverDemo } from "@/components/demos-react/popover";
+import { DemoReact } from '@/components/DemoReact';
+import { PopoverDemo } from '@/components/demos-react/popover';
 
 ## Usage
 
 ```tsx
 import {
   Popover,
-  PopoverTrigger,
-  PopoverContent,
   PopoverBody,
+  PopoverContent,
   PopoverFooter,
+  PopoverPortal,
+  PopoverTrigger,
 } from '@acronis-platform/ui-react';
 ```
 
-`Popover` is a compound component built on Base UI's Popover primitive
-(positioning, focus management, outside-press / Esc dismissal). `Popover` owns
-the open state; `PopoverTrigger` toggles and anchors it; `PopoverContent` is the
-portaled, positioned popup (`side` / `align` / `sideOffset`), themed by the
-`--ui-popover-*` container tokens (color, border, radius, min/max width).
-`PopoverBody` and `PopoverFooter` are optional parts for the body-rhythm and
-default action-row footer recipe shown in Figma — themed by
-`--ui-popover-body-*` and the shared `--ui-footer-*` tier respectively.
+`Popover` renders a portaled, anchored panel styled by the `--ui-popover-*`
+design tokens — container color, border color and width, radius, and min/max
+width. Text stays on the bridged `text-foreground` semantic token, which the
+design references directly rather than through a Popover-specific token.
+Enter/exit animations key off Base UI's `data-[open]` / `data-[closed]` /
+`data-[side]` attributes.
+
+It is a **compound** component. `Popover` is the root and owns the open state;
+`PopoverTrigger` toggles the panel and acts as its positioning anchor;
+`PopoverContent` is the portaled, positioned popup (`side` / `align` /
+`sideOffset`). Two optional parts match the Figma node's slots: `PopoverBody`
+wraps the main content with the `--ui-popover-body-*` gap and vertical padding,
+and `PopoverFooter` is the default end-aligned action row on the shared
+`--ui-footer-*` tier.
+
+Positioning, focus management, `Esc` and outside-press dismissal, and the
+`role="dialog"` / `aria-haspopup` / `aria-expanded` / `aria-controls` wiring all
+come from Base UI's Popover primitive. Unlike `Dialog`, a popover is
+**non-modal** by default: focus moves into the panel on open and returns to the
+trigger on close, but it is _not_ trapped and background scroll is not locked —
+tabbing past the last focusable element continues into the page. Give the panel
+an accessible name when its purpose isn't self-evident: render a heading inside
+and reference it, or pass `aria-label` / `aria-labelledby` on the content.
 
 ## Examples
 
+A panel with a heading and supporting copy, wrapped in `PopoverBody` for the
+design's vertical rhythm:
 
 <DemoReact>
   <PopoverDemo />
 </DemoReact>
 
-A popover with a heading and description:
-
 ```tsx
 <Popover>
-  <PopoverTrigger render={<Button variant="secondary">Open</Button>} />
+  <PopoverTrigger render={<Button variant="secondary">Open popover</Button>} />
   <PopoverContent>
     <PopoverBody>
       <h4 className="font-medium leading-none">Dimensions</h4>
@@ -50,11 +66,13 @@ A popover with a heading and description:
 </Popover>
 ```
 
-With the default action-row footer (Cancel + Apply):
+(The preview above adds `defaultOpen` to the root so the panel stays visible.)
+
+With the default action-row footer — the Figma "Popover" recipe, Cancel + Apply:
 
 ```tsx
 <Popover>
-  <PopoverTrigger render={<Button variant="secondary">Open</Button>} />
+  <PopoverTrigger render={<Button variant="secondary">Filters</Button>} />
   <PopoverContent>
     <PopoverBody>Drop any content into this slot.</PopoverBody>
     <PopoverFooter>
@@ -65,15 +83,21 @@ With the default action-row footer (Cancel + Apply):
 </Popover>
 ```
 
-Position it with `side` / `align`:
+Position the panel with `side`, `align`, and `sideOffset`. It defaults to
+`side="bottom"` / `align="center"` at a 4px offset, and flips or shifts to stay
+in the viewport when space is tight:
 
 ```tsx
-<PopoverContent side="right" align="start">
-  {/* … */}
+<PopoverContent side="right" align="start" sideOffset={8}>
+  <PopoverBody>
+    Anchored to the trigger's right, aligned to its start edge.
+  </PopoverBody>
 </PopoverContent>
 ```
 
-Controlled — drive `open` and react to `onOpenChange`:
+Controlled — drive `open` and react to `onOpenChange`. Pass `modal` on the root
+to opt into a scroll lock (`true`) or a focus trap without one
+(`'trap-focus'`):
 
 ```tsx
 const [open, setOpen] = useState(false);
@@ -84,7 +108,14 @@ const [open, setOpen] = useState(false);
 ```
 
 When the popover renders inside an isolated container (e.g. a shadow root), pass
-a `portalContainer` so the popup inherits that scope's styles.
+a `portalContainer` so the panel inherits that scope's styles. The docs previews
+rely on this — `DemoReact` supplies the container through
+`PortalContainerProvider`, so the demo above needs no extra plumbing. Set
+`portal={false}` only when you supply your own `PopoverPortal` ancestor:
+
+```tsx
+<PopoverContent portalContainer={mountNode}>{/* … */}</PopoverContent>
+```
 
 ## API Reference
 
@@ -95,9 +126,9 @@ a `portalContainer` so the popup inherits that scope's styles.
   name="PopoverContentProps"
 />
 
-`Popover` (root) accepts the Base UI Popover root props — `open` /
-`defaultOpen`, `onOpenChange`. `PopoverTrigger` and `PopoverPortal` wrap the
-matching Base UI parts. `PopoverBody` and `PopoverFooter` accept the standard
-attributes of the `<div>` they render. See the
-[Base UI Popover docs](https://base-ui.com/react/components/popover) for the full
-prop surface.
+`Popover` (root) takes the Base UI Popover root props — `open` / `defaultOpen` /
+`onOpenChange`, plus `modal` (default `false`). `PopoverTrigger` and
+`PopoverPortal` are the matching Base UI parts unchanged. `PopoverBody` and
+`PopoverFooter` accept the standard attributes of the `<div>` they render. See
+the [Base UI Popover docs](https://base-ui.com/react/components/popover) for the
+full prop surface of each part.

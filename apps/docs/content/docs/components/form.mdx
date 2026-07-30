@@ -1,36 +1,55 @@
 ---
 title: Form
-description: A native form with consolidated validation, built on Base UI Form.
+description: A native form that coordinates validation across its fields.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { FormDemo } from "@/components/demos-react/form";
+import { DemoReact } from '@/components/DemoReact';
+import { FormDemo } from '@/components/demos-react/form';
 
 ## Usage
 
 ```tsx
-import { Form, Field, FieldLabel, FieldControl, FieldError } from '@acronis-platform/ui-react';
+import {
+  Form,
+  Field,
+  FieldLabel,
+  FieldControl,
+  FieldDescription,
+  FieldError,
+  InputBox,
+  Button,
+} from '@acronis-platform/ui-react';
 ```
 
-`Form` is a native `<form>` with consolidated validation, built on
-[Base UI's Form](https://base-ui.com/react/components/form). It coordinates the
-[`Field`](/components/field)s it contains — collecting their values by `name`,
-validating on submit (or per `validationMode`), surfacing server `errors` keyed by
-field name, and calling `onFormSubmit(values)` once every field is valid.
+`Form` renders a native `<form>` — built on
+[Base UI's Form](https://base-ui.com/react/components/form) — that coordinates the
+[`Field`](/components/field)s inside it. It collects each field's value by that
+field's `name`, triggers their validation on submit (or per `validationMode`),
+merges externally supplied `errors` onto the matching field, and calls
+`onFormSubmit(values)` only once every field is valid, calling `preventDefault()`
+on the native submit event. It adds no tokens and no chrome beyond a vertical
+stack with a gap; all color and typography come from the fields and controls it
+composes.
 
-> Design-pending v1. The legacy `shadcn-uikit` form wrapped
-> [react-hook-form](https://react-hook-form.com); this version **drops that
-> dependency** and validates through Base UI's Field. If you need react-hook-form
-> or TanStack Form, use them around plain `Field`s — `Form` is the lightweight,
-> dependency-free default.
+`Form` **does not** bundle a schema or form-state library — there is no
+react-hook-form, no Zod, no resolver. Validation is whatever the controls declare
+natively (`required`, `type="email"`, `min`, `pattern`, …) plus each `Field`'s own
+`validate` function. If you need schema validation, cross-field logic, field
+arrays, or wizards, drive those with your library of choice around plain `Field`s
+and skip `Form`.
+
+> Status: draft (design-pending v1). The legacy `shadcn-uikit` form wrapped
+> [react-hook-form](https://react-hook-form.com) with `FormProvider` / `Controller`;
+> this version drops that dependency entirely.
 
 ## Examples
+
+A sign-in form. Each `Field` carries a `name`, which is both the key in the
+submitted values and the key `errors` are matched against:
 
 <DemoReact>
   <FormDemo />
 </DemoReact>
-
-A sign-in form — values are collected by each field's `name`:
 
 ```tsx
 <Form onFormSubmit={(values) => signIn(values)}>
@@ -48,24 +67,85 @@ A sign-in form — values are collected by each field's `name`:
 </Form>
 ```
 
-Show server-side errors after a failed submit — key them by field `name`:
+A field that fails validation blocks the submit: `onFormSubmit` is not called, the
+control gets `aria-invalid`, and that field's `FieldError` shows the message.
+
+Server-side failures come back in through `errors`, keyed by field `name`:
 
 ```tsx
-<Form errors={{ email: 'That email is already registered.' }}>
+const [errors, setErrors] = React.useState({});
+
+<Form
+  errors={errors}
+  onFormSubmit={async (values) => {
+    const result = await createAccount(values);
+    if (!result.ok) setErrors({ email: 'That email is already registered.' });
+  }}
+>
   <Field name="email">
     <FieldLabel>Email</FieldLabel>
     <FieldControl render={<InputBox type="email" />} />
     <FieldError />
   </Field>
+  <Button type="submit">Create account</Button>
+</Form>;
+```
+
+`validationMode` moves validation earlier for every field. A `Field`'s own
+`validationMode` takes precedence, so one field can differ from the form:
+
+```tsx
+<Form validationMode="onBlur" onFormSubmit={save}>
+  <Field name="workspace" validationMode="onChange">
+    <FieldLabel>Workspace</FieldLabel>
+    <FieldControl render={<InputBox required />} />
+    <FieldError />
+  </Field>
 </Form>
+```
+
+Custom rules live on the field, not the form — `validate` returns the message, or
+`null` when the value is fine:
+
+```tsx
+<Form onFormSubmit={save}>
+  <Field
+    name="port"
+    validate={(value) =>
+      Number(value) > 1023 ? null : 'Use a port above 1023.'
+    }
+  >
+    <FieldLabel>Port</FieldLabel>
+    <FieldControl render={<InputBox type="number" required />} />
+    <FieldError />
+  </Field>
+  <Button type="submit">Save</Button>
+</Form>
+```
+
+`actionsRef` exposes an imperative `validate()` — every field, or one by name —
+for validating without a submit:
+
+```tsx
+const actionsRef = React.useRef(null);
+
+<Form actionsRef={actionsRef} onFormSubmit={save}>
+  {/* …fields… */}
+</Form>;
+
+actionsRef.current.validate();
+actionsRef.current.validate('email');
 ```
 
 ## API Reference
 
 <AutoTypeTable
-  path="../../packages/ui-react/src/components/ui/form/form.tsx"
+  path="../../packages/ui-react/src/components/ui/form/form.docs.ts"
   name="FormProps"
 />
 
-`onFormSubmit(values, details)` fires on a valid submit with the collected field
-values keyed by name. `Form` also forwards the native `<form>` attributes.
+`FormProps` is generic over the collected value shape
+(`FormProps<{ email: string }>`), which types `onFormSubmit`'s first argument.
+`Form` also forwards the native `<form>` attributes and Base UI's `render` prop.
+The per-field surface — `name`, `validate`, `validationMode`, `invalid`, and the
+label / description / error slots — belongs to [`Field`](/components/field).

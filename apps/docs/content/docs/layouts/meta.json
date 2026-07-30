@@ -3,6 +3,7 @@
   "pages": [
     "index",
     "app-shell",
+    "app-shell-chat",
     "auth-layout",
     "page-header",
     "page-content",

@@ -1,0 +1,131 @@
+---
+title: Toolbar
+description: A horizontal bulk-action row for a list or table, with an auto-collapsing overflow menu.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { ToolbarDemo } from '@/components/demos-react/toolbar';
+
+## Usage
+
+```tsx
+import {
+  Toolbar,
+  ToolbarActionList,
+  ToolbarActions,
+} from '@acronis-platform/ui-react';
+```
+
+`Toolbar` is a horizontal action row shown above or below a list/table — bulk
+actions for the current selection, an optional overflow control, and an optional
+trailing status area. It renders a `<fieldset>` reset to a flex row, so
+`disabled` cascades to every nested `Button` / `ButtonMenu` through the
+platform's own fieldset behavior — no prop-drilling.
+
+There is **no `--ui-toolbar-*` token tier**: `Toolbar` only lays out controls,
+and each action is a consumer-supplied `Button` / `ButtonMenu` bringing its own
+tokens. The 16px row gap and the 8px gap inside `ToolbarActions` are plain
+utilities, the same precedent as [`FilterSearch`](/components/filter-search).
+
+Three parts compose it:
+
+- `Toolbar` — the root row. Children render in source order.
+- `ToolbarActions` — the trailing, end-aligned area (a status text, or a
+  selection counter plus an action). It grows to fill leftover space but never
+  shrinks below its content.
+- `ToolbarActionList` — an optional self-collapsing action row. Give it an
+  `actions` array and it measures the available width, moving trailing actions
+  into a "More actions" `ButtonMenu` + dropdown once they no longer fit. Its
+  root is Base UI's `Toolbar.Root`, so the row is one Tab stop with arrow-key
+  roving focus between the visible actions and the overflow trigger. (Base UI's
+  `Toolbar.Root` does not forward `enableHomeAndEndKeys`, so Home/End are not
+  supported.)
+
+For search and filtering above a table use
+[`FilterSearch`](/components/filter-search) instead — `Toolbar` has no search
+field, filter popover, or applied-filter chips.
+
+## Examples
+
+<DemoReact>
+  <ToolbarDemo />
+</DemoReact>
+
+Actions composed directly, with a selection counter in the trailing area — use
+this when the action list is short and fixed:
+
+```tsx
+<Toolbar>
+  <Button variant="ghost">Protect</Button>
+  <Button variant="ghost">Recover</Button>
+  <ButtonMenu variant="secondary">More actions</ButtonMenu>
+  <ToolbarActions>
+    <span className="text-sm">6 items selected:</span>
+    <Button variant="ghost">Deselect</Button>
+  </ToolbarActions>
+</Toolbar>
+```
+
+`ToolbarActionList` collapses on its own — the trailing actions move into "More
+actions" as soon as the row runs out of room:
+
+```tsx
+<Toolbar>
+  <ToolbarActionList
+    actions={[
+      { key: 'protect', label: 'Protect', onSelect: protectSelection },
+      { key: 'recover', label: 'Recover', onSelect: recoverSelection },
+      { key: 'move', label: 'Move to group', onSelect: moveSelection },
+      {
+        key: 'delete',
+        label: 'Delete',
+        onSelect: deleteSelection,
+        disabled: true,
+      },
+    ]}
+  />
+  <ToolbarActions>
+    <span className="text-sm">25 of 1250 items loaded</span>
+  </ToolbarActions>
+</Toolbar>
+```
+
+A single action plus a status counter — `ToolbarActions` still holds the trailing
+edge:
+
+```tsx
+<Toolbar>
+  <Button variant="ghost">Refresh</Button>
+  <ToolbarActions>
+    <span className="text-sm">25 of 1250 items loaded</span>
+  </ToolbarActions>
+</Toolbar>
+```
+
+`disabled` on the root disables every nested control at once — including the
+overflow menu's items, which live in a portal outside the fieldset:
+
+```tsx
+<Toolbar disabled>
+  <ToolbarActionList actions={actions} />
+</Toolbar>
+```
+
+## API Reference
+
+### ToolbarActionList
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/toolbar/toolbar.tsx"
+  name="ToolbarActionListProps"
+/>
+
+### ToolbarActionListItem
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/toolbar/toolbar.tsx"
+  name="ToolbarActionListItem"
+/>
+
+`Toolbar` accepts the standard `<fieldset>` attributes (notably `disabled`);
+`ToolbarActions` accepts the standard `<div>` attributes.

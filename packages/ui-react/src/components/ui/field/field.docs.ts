@@ -10,9 +10,17 @@ export interface FieldProps {
   invalid?: boolean;
   /** Disables the field and its control. */
   disabled?: boolean;
-  /** Identifies the field when a form is submitted. */
+  /** Identifies the field when a form is submitted (and keys its `Form` value). */
   name?: string;
-  /** When the field validates. */
+  /**
+   * Custom validation — return the error message(s), or `null` when valid. Async
+   * functions are supported but do not block an `onSubmit` submission.
+   */
+  validate?: (
+    value: unknown,
+    formValues: Record<string, unknown>
+  ) => string | string[] | null | Promise<string | string[] | null>;
+  /** When the field validates. Takes precedence over `Form`'s `validationMode`. */
   validationMode?: 'onSubmit' | 'onBlur' | 'onChange';
   children?: React.ReactNode;
   className?: string;

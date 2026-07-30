@@ -13,23 +13,39 @@ import { RadialBarChart } from '@acronis-platform/ui-react';
 import type { ChartConfig } from '@acronis-platform/ui-react';
 ```
 
-`RadialBarChart` is a typed composition over the shared [`Chart`](/components/chart)
-primitives. Give it `data`, a per-arc `config`, the value field (`dataKey`), and
-the label field (`nameKey`) — it renders a themed recharts radial bar chart
-(concentric arcs, an optional background track, tooltip, and legend), so you
-don't hand-compose recharts children.
+`RadialBarChart` is a typed recharts composition over the shared
+[`Chart`](/components/chart) primitives. Give it `data`, a per-arc `config`, the
+value field (`dataKey`), and the label field (`nameKey`) — it renders a themed
+recharts radial bar chart with concentric arcs, an optional background track, a
+tooltip, and a legend, so you never hand-compose recharts children.
 
 Each data row becomes a concentric arc (like a pie's slices unrolled into rings).
 Arc colors are supplied by the caller through `config`, **keyed by each `nameKey`
 value**: `RadialBarChart` turns those into the `--color-<name>` custom properties
-its arcs fill from.
+its arcs fill from, so keep the names CSS-safe.
+
+Use it for a compact, decorative comparison of a few categories (device or browser
+share) or a gauge-style readout via `startAngle` / `endAngle` — when the circular
+form is worth more than precise value comparison. For accurate magnitude
+comparison prefer [`BarChart`](/components/bar-chart): arc length on a curve
+distorts. For part-to-whole of a single total [`PieChart`](/components/pie-chart)
+reads more directly, and a trend over time belongs in
+[`LineChart`](/components/line-chart) or [`AreaChart`](/components/area-chart). For
+progress toward a single goal, use [`Progress`](/components/progress) or
+[`ProgressCircle`](/components/progress-circle) instead of a one-arc chart.
+
+Pair the chart with a text alternative (caption, summary, or adjacent data table)
+and give it an accessible name — `aria-label` / `aria-labelledby` pass through to
+the wrapper element. **Keep `showLegend` (or the tooltip) on**: the arcs carry no
+inline labels of their own. Make sure adjacent arc colors are distinguishable from
+each other.
 
 > **Design-pending v1**, ported from the demo `RadialChartPlayground`. There is no
-> chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands.
+> chart token tier yet, so the example colors reference the shared semantic
+> `--ui-*` brand/status tokens — a dedicated `--ui-chart-*` data-viz palette is
+> pending an upstream design pass. `--ui-background-status-strong-*` is chromatic
+> in every brand; `--ui-background-brand-secondary` is brand-dependent, so it is
+> not color-stable across brands until the real palette lands.
 
 ## Examples
 
@@ -37,8 +53,8 @@ its arcs fill from.
   <RadialBarChartDemo />
 </DemoReact>
 
-Concentric arcs sweeping a full circle, with a background track, tooltip and
-legend:
+Concentric arcs sweeping a full clockwise circle (`startAngle={90}` /
+`endAngle={-270}`, the defaults), with a background track, tooltip, and legend:
 
 ```tsx
 const data = [
@@ -64,21 +80,31 @@ const config = {
 />;
 ```
 
-Make a half-circle gauge with `startAngle` / `endAngle`:
+Make a half-circle gauge by narrowing the sweep:
 
 ```tsx
 <RadialBarChart config={config} data={data} dataKey="value" nameKey="browser" startAngle={180} endAngle={0} />
 ```
 
-Tune the radii (`innerRadius` / `outerRadius`), `cornerRadius`, and toggle the
-`showBackground` track / `showTooltip` / `showLegend`.
+Tune the geometry with `innerRadius` / `outerRadius` / `cornerRadius`, and drop the
+muted track behind each arc with `showBackground={false}`:
 
-## Custom tooltip
+```tsx
+<RadialBarChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="browser"
+  innerRadius={50}
+  outerRadius={130}
+  cornerRadius={8}
+  showBackground={false}
+/>
+```
 
 Replace the tooltip with a configured `ChartTooltipContent` — imported from the
-same library, so you never compose recharts yourself. Its `formatter` renders
-each row and `labelFormatter` the header, giving you custom formatting, per-series
-content, and extra fields:
+same library, so you still never compose recharts yourself. Point it at the same
+`nameKey` so each row resolves its arc label:
 
 ```tsx
 import { RadialBarChart, ChartTooltipContent } from '@acronis-platform/ui-react';

@@ -1,10 +1,10 @@
 ---
-title: App Shell
-description: The full-page application scaffold — sidebar, header, and main slots.
+title: AppShell
+description: The full-page application scaffold — sidebar, header, main, and footer slots.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { AppShellDemo } from "@/components/demos-react/app-shell";
+import { DemoReact } from '@/components/DemoReact';
+import { AppShellDemo } from '@/components/demos-react/app-shell';
 
 ## Usage
 
@@ -19,17 +19,30 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`AppShell` is the full-page application scaffold — a **slot-based layout**: a
-sidebar column beside a body column of a sticky header over the scrolling main
-content. Drop [`SidebarPrimary`](/components/sidebar-primary) (and optionally
-[`SidebarSecondary`](/components/sidebar-secondary)) into the sidebar slot,
-[`SearchGlobal`](/components/search-global) into the header, and your page into
-main. The scaffold only paints surfaces + a header/footer divider; the slotted
-components bring their own styling.
+`AppShell` is the top-level frame of an authenticated app screen: a full-height
+row of a navigation column (`AppShellSidebar`) beside a body column
+(`AppShellBody`) that stacks a sticky header (`AppShellHeader`) over the
+scrolling main region (`AppShellMain`), with an optional `AppShellFooter`
+pinned below it.
+
+It is a **slot-based, layout-only** scaffold. There is no `--ui-app-shell-*`
+token tier — the scaffold paints only the page surface
+(`--ui-background-surface-primary`, via the bridged `bg-background`) and the
+header/footer dividers (`--ui-border-on-surface-border`, via `border-border`).
+Everything else comes from what you put in the slots:
+[`SidebarPrimary`](/components/sidebar-primary) (and optionally
+[`SidebarSecondary`](/components/sidebar-secondary)) in the sidebar,
+[`SearchGlobal`](/components/search-global) in the header, and the page —
+typically a [`PageHeader`](/layouts/page-header) inside a
+[`PageContent`](/layouts/page-content) — in main. The parts carry no width of
+their own, so size them with `className`.
 
 Mapped to the [App Shell Figma](https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2782-1495).
 
 ## Examples
+
+The sidebar fills the left column at its own width, the header stays pinned, and
+main scrolls independently:
 
 <DemoReact>
   <AppShellDemo />
@@ -38,30 +51,63 @@ Mapped to the [App Shell Figma](https://www.figma.com/design/lrU3ydIyvPYQNE6ixds
 ```tsx
 <AppShell>
   <AppShellSidebar>
-    <SidebarPrimary … />
+    <SidebarPrimary>…</SidebarPrimary>
   </AppShellSidebar>
   <AppShellBody>
     <AppShellHeader>
-      <SearchGlobal … />
+      <SearchGlobal />
     </AppShellHeader>
-    <AppShellMain>{children}</AppShellMain>
+    <AppShellMain>
+      <PageContent>{children}</PageContent>
+    </AppShellMain>
+    <AppShellFooter>© Acronis International GmbH</AppShellFooter>
   </AppShellBody>
 </AppShell>
 ```
 
-For the full slot assembly with the real nav + search components, see the
-[App Shell pattern](/patterns/app-shell).
+A screen with second-level navigation puts both sidebars in the same slot — they
+sit side by side, left of the body:
+
+```tsx
+<AppShellSidebar>
+  <SidebarPrimary>…</SidebarPrimary>
+  <SidebarSecondary>…</SidebarSecondary>
+</AppShellSidebar>
+```
+
+Use `className` to size or restyle a slot; only the header height and the
+header/footer gutters are fixed:
+
+```tsx
+<AppShellSidebar className="w-64" />
+<AppShellMain className="p-6" />
+```
+
+For the full assembly with the real navigation and search components, see the
+[App Shell pattern](/patterns/app-shell). For an unauthenticated screen use
+[`AuthLayout`](/layouts/auth-layout); for a screen with a persistent, resizable
+assistant panel use [`AppShellChat`](/layouts/app-shell-chat). For a sub-region
+of a page reach for [`Section`](/layouts/section),
+[`Stack`](/layouts/stack), or [`Grid`](/layouts/grid) instead.
 
 ## Parts
 
-| Export            | Element    | Purpose                                          |
-| ----------------- | ---------- | ------------------------------------------------ |
-| `AppShell`        | `div`      | The full-height row.                             |
-| `AppShellSidebar` | `aside`    | Left nav column (SidebarPrimary [+ Secondary]).  |
-| `AppShellBody`    | `div`      | The body column filling the rest.                |
-| `AppShellHeader`  | `header`   | Sticky top bar (global search + actions).        |
-| `AppShellMain`    | `main`     | Scrolling page content.                          |
-| `AppShellFooter`  | `footer`   | Optional bottom bar.                             |
+| Export            | Element  | Purpose                                            |
+| ----------------- | -------- | -------------------------------------------------- |
+| `AppShell`        | `div`    | The full-height row.                               |
+| `AppShellSidebar` | `aside`  | Navigation column (SidebarPrimary [+ Secondary]).  |
+| `AppShellBody`    | `div`    | The body column filling the remaining width.       |
+| `AppShellHeader`  | `header` | Sticky top bar (global search + account).          |
+| `AppShellMain`    | `main`   | Scrolling page content.                            |
+| `AppShellFooter`  | `footer` | Optional bottom bar.                               |
 
-All parts accept their native element attributes plus `className` (use it to size
-the sidebar, pad main, etc.).
+The slots render semantic landmarks, so use exactly one `AppShellMain` per page
+(one `main` landmark) and add a focusable "skip to main content" link before the
+shell when the navigation is long.
+
+## API Reference
+
+`AppShell` and its parts declare no props of their own. Each accepts the native
+attributes of the element it renders — `div`, `aside`, `div`, `header`, `main`,
+and `footer` respectively — including `className` for slot sizing, and forwards
+its `ref` to that element.

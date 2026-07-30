@@ -3,8 +3,8 @@ title: Link
 description: An inline text link with an optional external-link icon.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { LinkDemo } from "@/components/demos-react/link";
+import { DemoReact } from '@/components/DemoReact';
+import { LinkDemo } from '@/components/demos-react/link';
 
 ## Usage
 
@@ -12,47 +12,71 @@ import { LinkDemo } from "@/components/demos-react/link";
 import { Link } from '@acronis-platform/ui-react';
 ```
 
-`Link` is an inline, semibold text link themed by the `--ui-link-*` tokens
-(underline appears on hover). It is polymorphic via Base UI's `useRender` — pass
-the `render` prop to render a router `Link` instead of the default `<a>`.
+`Link` renders a native `<a>` — semibold 14/24 inline text — styled by the
+`--ui-link-*` design tokens, which wire each state's own color and text
+decoration (the underline appears on hover only). It is polymorphic via Base
+UI's `useRender` — pass the `render` prop to render a router link instead while
+keeping the styling and merged props.
+
+The Figma component's fixed 32px container height is deliberately **not**
+applied, so a `Link` flows inline within prose rather than reserving a row of
+its own.
 
 ## Examples
 
+An internal link, an external one (`external` appends a trailing
+external-link icon), and a `disabled` one:
 
 <DemoReact>
   <LinkDemo />
 </DemoReact>
 
-A basic link:
-
 ```tsx
-<Link href="/">Documentation</Link>
+<Link href="#">Documentation</Link>
+<Link href="#" external>
+  Open in console
+</Link>
+<Link href="#" disabled>
+  Unavailable
+</Link>
 ```
 
-Append a trailing external-link icon for links that leave the app:
+For links that really leave the app, pair `external` with the native anchor
+attributes — they pass straight through:
 
 ```tsx
-<Link href="https://acronis.com" external>
+<Link
+  href="https://www.acronis.com"
+  external
+  target="_blank"
+  rel="noopener noreferrer"
+>
   Acronis website
 </Link>
 ```
 
-`disabled` makes the link inert — disabled color, removed from the tab order, no
-navigation:
+`disabled` makes the link inert: it drops the `href`, sets `aria-disabled`,
+takes the link out of the tab order, and applies the disabled color instead of
+any underline.
 
 ```tsx
-<Link href="/" disabled>
-  Documentation
+<Link href="/settings" disabled>
+  Settings
 </Link>
 ```
 
-Render as a router link with `render` (Base UI composition):
+Render as a router link with `render` (Base UI composition), so client-side
+routing works and the `Link` styling is kept:
 
 ```tsx
 import { Link as RouterLink } from 'react-router';
 
 <Link render={<RouterLink to="/dashboard" />}>Dashboard</Link>
 ```
+
+For a user-initiated **action** rather than navigation, use
+[Button](/components/button) — its `ghost` variant reads like a link but stays
+a real button.
 
 ## API Reference
 

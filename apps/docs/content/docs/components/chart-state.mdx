@@ -1,6 +1,6 @@
 ---
 title: ChartState
-description: A shared loading / empty / error placeholder for the chart types.
+description: A shared loading, empty, or error placeholder for the chart types.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
@@ -12,21 +12,40 @@ import { ChartStateDemo } from '@/components/demos-react/chart-state';
 import { ChartState } from '@acronis-platform/ui-react';
 ```
 
-`ChartState` is the shared placeholder the [chart](/components/chart) types show
-in place of the chart itself — while data is loading, when there is nothing to
-plot, or when the fetch failed. It's a compact status block: a leading glyph
-(spinner / inbox / warning) over a centered label, sized to fill the same slot a
-chart would occupy.
+`ChartState` is the shared placeholder the [chart](/components/chart) types show **in
+place of** the chart itself — while data is in flight, when there is nothing to plot,
+or when the fetch failed. It's a compact status block: a leading glyph (spinner,
+inbox, or warning) over a centered label. It fills the slot it's given and falls back
+to a minimum height in an unsized parent, so it drops straight into the same sized
+box a chart would occupy.
 
-Drive it with the required `state` prop (`loading` | `empty` | `error`). Each
-state carries a default label; override it with `message`. The error state also
-takes an optional `action` (e.g. a retry button).
+Drive it with the required `state` prop (`loading` | `empty` | `error`). Each state
+carries a default label, which `message` overrides. The `error` state also takes an
+optional `action` — that node is rendered for `error` only, and ignored for `loading`
+and `empty`.
 
-> **Design-pending v1**, ported from the Figma InputSelect dropdown states and
-> kept visually in step with the shipped `InputSelectStatus`. There is no chart
-> token tier yet, so it themes from existing semantic tokens directly (the label
-> from `--ui-text-on-surface-primary`, the glyphs from `--ui-glyph-on-status-*`,
-> and the loading spinner from the shared `Spinner`).
+Use it whenever a chart can't render yet, and use it across every chart type rather
+than hand-rolling a placeholder per chart. For a full-page empty state — illustration,
+title, description, primary action — reach for [`Empty`](/components/empty), the
+larger page-level sibling. For a bare loading indicator with no surrounding message,
+use [`Spinner`](/components/spinner) directly.
+
+The root element **is** the live region: `loading` and `empty` announce politely via
+`role="status"`, `error` assertively via `role="alert"`. Those attributes are applied
+after the prop spread, so a consumer attribute can't clobber the contract. Two things
+to get right on your side: **don't put `aria-busy` on `ChartState`** — put it on the
+chart-slot container if you need a busy signal (same guidance as
+[`Skeleton`](/components/skeleton)) — and pass a real interactive control, e.g. a
+[`Button`](/components/button), as `action` so retry is focusable and keyboard
+operable.
+
+> **Design-pending v1**, ported from the Figma InputSelect dropdown states and kept
+> visually in step with the shipped `InputSelectStatus`. There is no chart token tier
+> yet, so it themes from existing semantic `--ui-*` tokens directly: the label from
+> `--ui-text-on-surface-primary`, the empty and error glyphs from
+> `--ui-glyph-on-status-info` / `--ui-glyph-on-status-warning`, and the loading
+> indicator from the shared [`Spinner`](/components/spinner). The glyph color is never
+> the only cue — the label carries the meaning.
 
 ## Examples
 
@@ -34,7 +53,16 @@ takes an optional `action` (e.g. a retry button).
   <ChartStateDemo />
 </DemoReact>
 
-Swap the chart for the matching state:
+The three states, each with its default label — "Data is loading…", "No data found",
+and "Something went wrong":
+
+```tsx
+<ChartState state="loading" />
+<ChartState state="empty" />
+<ChartState state="error" />
+```
+
+In practice, swap the chart for the matching state inside the same sized slot:
 
 ```tsx
 function Sales({ status, data, config, refetch }) {
@@ -56,10 +84,11 @@ function Sales({ status, data, config, refetch }) {
 }
 ```
 
-Override a state's default label with `message`:
+Override any state's default label with `message`:
 
 ```tsx
 <ChartState state="empty" message="No results for the selected range" />
+<ChartState state="error" message="Could not load usage data" />
 ```
 
 ## API Reference

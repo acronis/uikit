@@ -31,7 +31,12 @@ type Payment = {
 const payments: Payment[] = [
   { id: 'p1', amount: 316, status: 'success', email: 'ken99@example.com' },
   { id: 'p2', amount: 242, status: 'success', email: 'abe45@example.com' },
-  { id: 'p3', amount: 837, status: 'processing', email: 'monserrat@example.com' },
+  {
+    id: 'p3',
+    amount: 837,
+    status: 'processing',
+    email: 'monserrat@example.com',
+  },
   { id: 'p4', amount: 874, status: 'success', email: 'silas22@example.com' },
   { id: 'p5', amount: 721, status: 'failed', email: 'carmella@example.com' },
   { id: 'p6', amount: 100, status: 'pending', email: 'test@example.com' },
@@ -66,18 +71,26 @@ const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
     cell: ({ row }) => (
-      <Tag variant={STATUS_VARIANT[row.original.status]}>{row.original.status}</Tag>
+      <Tag variant={STATUS_VARIANT[row.original.status]}>
+        {row.original.status}
+      </Tag>
     ),
   },
   {
     accessorKey: 'email',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Email" />
+    ),
   },
   {
     accessorKey: 'amount',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Amount" />
+    ),
     cell: ({ row }) => (
       <div className="font-medium">${row.original.amount.toFixed(2)}</div>
     ),
@@ -107,8 +120,14 @@ export function DataTableDemo() {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <DataTableToolbar table={table} searchKey="email" searchPlaceholder="Filter emails…" />
-      <DataTable columns={columns} data={payments} />
+      <DataTableToolbar
+        table={table}
+        searchKey="email"
+        searchPlaceholder="Filter emails…"
+      />
+      {/* One shared instance: the toolbar's search/filters/visibility and the
+          pagination controls drive the same grid. */}
+      <DataTable table={table} />
       <DataTablePagination table={table} />
     </div>
   );

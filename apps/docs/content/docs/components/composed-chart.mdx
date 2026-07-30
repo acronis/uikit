@@ -1,6 +1,6 @@
 ---
 title: ComposedChart
-description: A typed composed chart — mix bars, lines, and areas on one axis.
+description: A typed composed chart — mix bars, lines, and areas on one shared axis.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
@@ -13,25 +13,41 @@ import { ComposedChart } from '@acronis-platform/ui-react';
 import type { ChartConfig } from '@acronis-platform/ui-react';
 ```
 
-`ComposedChart` is a typed composition over the shared [`Chart`](/components/chart)
-primitives. Give it `data`, a per-series `config`, and a `series` list where each
-entry picks its own render `type` (`bar` / `line` / `area`) over one shared
-category axis (`xKey`) — it renders a themed recharts composed chart (tooltip,
-legend, axes, grid included), so you don't hand-compose recharts children.
+`ComposedChart` is a typed recharts composition over the shared
+[`Chart`](/components/chart) primitives. Give it `data`, a per-series `config`, and
+a `series` list where each entry picks its own render `type` (`bar` / `line` /
+`area`) over one shared category axis (`xKey`) — it renders a themed recharts
+composed chart with tooltip, legend, axes, and grid, so you never hand-compose
+recharts children.
 
 Series colors are supplied by the caller through `config`, keyed by each
 `series[].key`: `ComposedChart` turns those into the `--color-<key>` custom
 properties its marks paint from. Series render **in the order you list them** —
-recharts paints children back-to-front, so later entries sit on top. Order them
-so a thin line comes after the bars/areas it should overlay.
+recharts paints children back-to-front, so later entries sit on top. Order them so
+a thin line comes after the bars and areas it should overlay.
+
+Use it to overlay related measures that read better in different shapes (revenue
+bars with a profit-margin line, volume bars behind a trend area), or to emphasize
+one series against a backdrop of others. When every series is the same kind,
+prefer [`BarChart`](/components/bar-chart),
+[`LineChart`](/components/line-chart), or [`AreaChart`](/components/area-chart).
+This v1 shares a **single Y axis**, so measures with wildly different scales
+belong in separate charts. For part-to-whole use
+[`PieChart`](/components/pie-chart).
+
+Pair the chart with a text alternative (caption, summary, or adjacent data table)
+and give it an accessible name — `aria-label` / `aria-labelledby` pass through to
+the wrapper element. Keep either the legend or the tooltip visible (the differing
+render types are your second channel), and **call out the shared scale in the
+caption** when mixed series differ a lot in magnitude.
 
 > **Design-pending v1**, ported from the demo `ComposedChartPlayground`. There is
-> no chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands. This v1 shares a single Y axis
-> across all series.
+> no chart token tier yet, so the example colors reference the shared semantic
+> `--ui-*` brand/status tokens — a dedicated `--ui-chart-*` data-viz palette is
+> pending an upstream design pass. `--ui-background-status-strong-*` is chromatic
+> in every brand; `--ui-background-brand-secondary` is brand-dependent, so it is
+> not color-stable across brands until the real palette lands. An area series'
+> `fillOpacity` lowers its effective contrast — check yours against the surface.
 
 ## Examples
 
@@ -66,8 +82,8 @@ const config = {
 />;
 ```
 
-Mix all three render types — list them back-to-front (bar, then area, then line)
-so the line paints on top:
+Mix all three render types. Because paint order follows the array, list them
+back-to-front — bar, then area, then line — so the thin line lands on top:
 
 ```tsx
 <ComposedChart
@@ -82,8 +98,39 @@ so the line paints on top:
 />
 ```
 
-Tune the shared knobs with `curve` (line/area interpolation), `barRadius`,
-`fillOpacity`, and the `showGrid` / `showTooltip` / `showLegend` toggles.
+Reordering the same entries reorders the painted layers — here the bars cover the
+area:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  series={[
+    { key: 'forecast', type: 'area' },
+    { key: 'revenue', type: 'bar' },
+  ]}
+  xKey="month"
+/>
+```
+
+Tune the shared knobs with `curve` (line and area interpolation), `barRadius`
+(rounding on the bars' growing end), `fillOpacity` (area fills), and the
+`showGrid` / `showTooltip` / `showLegend` toggles:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  series={[
+    { key: 'revenue', type: 'bar' },
+    { key: 'forecast', type: 'area' },
+  ]}
+  xKey="month"
+  curve="linear"
+  barRadius={0}
+  fillOpacity={0.15}
+/>
+```
 
 Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
 `yUnit` (the x-axis is categorical). The titles inherit the theme token:
@@ -103,12 +150,9 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
 />
 ```
 
-## Custom tooltip
-
 Replace the tooltip with a configured `ChartTooltipContent` — imported from the
-same library, so you never compose recharts yourself. Its `formatter` renders
-each row and `labelFormatter` the header, giving you custom formatting, per-series
-content, and extra fields:
+same library, so you still never compose recharts yourself. Its `formatter`
+renders each row and `labelFormatter` the header:
 
 ```tsx
 import { ComposedChart, ChartTooltipContent } from '@acronis-platform/ui-react';
@@ -116,7 +160,10 @@ import { ComposedChart, ChartTooltipContent } from '@acronis-platform/ui-react';
 <ComposedChart
   config={config}
   data={data}
-  series={[{ key: 'revenue', type: 'bar' }, { key: 'profit', type: 'line' }]}
+  series={[
+    { key: 'revenue', type: 'bar' },
+    { key: 'profit', type: 'line' },
+  ]}
   xKey="month"
   tooltipContent={
     <ChartTooltipContent
@@ -132,4 +179,11 @@ import { ComposedChart, ChartTooltipContent } from '@acronis-platform/ui-react';
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/composed-chart/composed-chart.tsx"
   name="ComposedChartProps"
+/>
+
+Each entry of `series` is a `ComposedSeries`:
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/composed-chart/composed-chart.tsx"
+  name="ComposedSeries"
 />

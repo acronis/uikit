@@ -1,10 +1,10 @@
 ---
 title: SidebarSecondary
-description: The secondary navigation panel, with collapsible sections and sub-menus.
+description: The contextual second-level navigation panel, with collapsible sections and a resizable width.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { SidebarSecondaryDemo } from "@/components/demos-react/sidebar-secondary";
+import { DemoReact } from '@/components/DemoReact';
+import { SidebarSecondaryDemo } from '@/components/demos-react/sidebar-secondary';
 
 ## Usage
 
@@ -23,21 +23,56 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`SidebarSecondary` is the second-level navigation panel that sits beside
-[`SidebarPrimary`](/components/sidebar-primary). It supports expandable
-`SidebarSecondarySection`s for grouping items. The panel itself owns a
-controlled/uncontrolled `expanded` width state. `SidebarSecondary` and the
-menu-item parts are polymorphic via the `render` prop. Themed by the
-`--ui-sidebar-secondary-*` tokens.
+`SidebarSecondary` is the contextual, second-level navigation panel that sits
+beside [`SidebarPrimary`](/components/sidebar-primary), listing the destinations
+inside the currently selected top-level area. It renders a `<nav>` and owns a
+controlled/uncontrolled `expanded` state (default `true`). Compose a
+`SidebarSecondaryHeader` for the area title, a `SidebarSecondaryContent` holding
+`SidebarSecondarySection`s (each a `SidebarSecondarySectionLabel` plus a
+`SidebarSecondaryMenu` of `SidebarSecondaryMenuItem` rows), and an optional
+`SidebarSecondaryFooter`.
+
+Like the primary rail, `expanded` is a **width reflow**: the root sets
+`data-state="expanded|collapsed"` and the token switch happens through attribute
+selectors. Collapsing swaps the section list for a vertical location breadcrumb
+that the root renders itself — it derives the parent label from
+`SidebarSecondaryHeader` and the current label from the `selected`
+`SidebarSecondaryMenuItem` through context, so nothing extra to author and no JS
+branch (both halves stay in the DOM, toggled by CSS).
+
+Set `resizable` to add a drag edge on the panel's trailing border: drag to
+resize, click to toggle collapse, double-click to reset the width. The width
+clamps between the
+`--ui-sidebar-secondary-expanded-container-width` default (256px) and twice
+that, and `width` / `onWidthChange` make it controllable. The edge's accessible
+name and its two tooltips (`resizeAriaLabel`, `resizeTooltipExpanded`,
+`resizeTooltipCollapsed`) are all props — pass `null` to a tooltip to suppress
+it.
+
+Every color and metric comes from the `--ui-sidebar-secondary-*` token tier.
+Menu-item wiring **diverges from the primary rail**: `selected` /
+`unselected` only swaps the container fill, while the icon and label use the
+shared global color tokens across both variants and every interaction state.
+`SidebarSecondarySection` accepts `expandable` to become a Base UI Collapsible,
+turning its label into the disclosure toggle. Truncated labels reveal a tooltip
+only when actually clipped.
+
+`SidebarSecondary` and `SidebarSecondaryMenuItem` are polymorphic via the
+`render` prop. Unlike the primary rail, `icon` is optional here.
+
+Use it for second-level navigation within a selected top-level area, including
+grouped and labelled sections. For app-wide navigation use
+[`SidebarPrimary`](/components/sidebar-primary); for a popover of actions use
+[`DropdownMenu`](/components/dropdown-menu). This component models **one**
+disclosure level — deeper trees need a different pattern.
 
 ## Examples
-
 
 <DemoReact>
   <SidebarSecondaryDemo />
 </DemoReact>
 
-A panel with a section and a sub-menu:
+Two labelled sections and a footer collapse trigger:
 
 ```tsx
 <SidebarSecondary>
@@ -58,35 +93,83 @@ A panel with a section and a sub-menu:
     <SidebarSecondarySection>
       <SidebarSecondarySectionLabel>Resources</SidebarSecondarySectionLabel>
       <SidebarSecondaryMenu>
-        <SidebarSecondaryMenuItem href="#" icon={<BoxIcon />} selected>
+        <SidebarSecondaryMenuItem href="#" icon={<BoxIcon />}>
           Backups
         </SidebarSecondaryMenuItem>
-        <SidebarSecondaryMenuItem href="#">
-          Archived
-        </SidebarSecondaryMenuItem>
+        <SidebarSecondaryMenuItem href="#">Archived</SidebarSecondaryMenuItem>
       </SidebarSecondaryMenu>
     </SidebarSecondarySection>
   </SidebarSecondaryContent>
 
   <SidebarSecondaryFooter>
     <SidebarSecondaryMenu>
-      <SidebarSecondaryCollapseTrigger icon={<ChevronLeftIcon />}>
-        Collapse
+      <SidebarSecondaryCollapseTrigger icon={<PanelLeftIcon />}>
+        Collapse menu
       </SidebarSecondaryCollapseTrigger>
     </SidebarSecondaryMenu>
   </SidebarSecondaryFooter>
 </SidebarSecondary>
 ```
 
-An expandable section (the second collapse level):
+An expandable section — the label becomes the disclosure toggle, and
+`unreadRollup` surfaces a badge while the section is closed:
 
 ```tsx
 <SidebarSecondarySection expandable defaultOpen>
-  <SidebarSecondarySectionLabel>Settings</SidebarSecondarySectionLabel>
+  <SidebarSecondarySectionLabel
+    unreadRollup={
+      <Tag variant="info" size="sm">
+        4
+      </Tag>
+    }
+    actions={
+      <ButtonIcon aria-label="Add policy">
+        <PlusIcon />
+      </ButtonIcon>
+    }
+  >
+    Policies
+  </SidebarSecondarySectionLabel>
   <SidebarSecondaryMenu>
-    <SidebarSecondaryMenuItem href="#">General</SidebarSecondaryMenuItem>
+    <SidebarSecondaryMenuItem href="#">Backup</SidebarSecondaryMenuItem>
+    <SidebarSecondaryMenuItem href="#">Antivirus</SidebarSecondaryMenuItem>
   </SidebarSecondaryMenu>
 </SidebarSecondarySection>
+```
+
+A resizable panel — drag the trailing edge, click it to toggle collapse,
+double-click to reset the width:
+
+```tsx
+const [width, setWidth] = useState(256);
+
+<SidebarSecondary resizable width={width} onWidthChange={setWidth}>
+  {/* … */}
+</SidebarSecondary>;
+```
+
+Controlled collapse — `SidebarSecondaryCollapseTrigger` always emits
+`onExpandedChange`:
+
+```tsx
+const [expanded, setExpanded] = useState(true);
+
+<SidebarSecondary expanded={expanded} onExpandedChange={setExpanded}>
+  {/* … */}
+</SidebarSecondary>;
+```
+
+A trailing affordance on a row, and a row rendered as a router link:
+
+```tsx
+<SidebarSecondaryMenuItem href="#">
+  Alerts
+  <SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘A" />
+</SidebarSecondaryMenuItem>
+
+<SidebarSecondaryMenuItem render={<Link to="/dashboard" />}>
+  Dashboard
+</SidebarSecondaryMenuItem>
 ```
 
 ## API Reference
@@ -103,6 +186,20 @@ An expandable section (the second collapse level):
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
   name="SidebarSecondaryHeaderProps"
+/>
+
+### SidebarSecondarySection
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
+  name="SidebarSecondarySectionProps"
+/>
+
+### SidebarSecondarySectionLabel
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
+  name="SidebarSecondarySectionLabelProps"
 />
 
 ### SidebarSecondaryMenuItem
@@ -126,9 +223,7 @@ An expandable section (the second collapse level):
   name="SidebarSecondaryCollapseTriggerProps"
 />
 
-`SidebarSecondarySection` adds `expandable` plus `open` / `defaultOpen` /
-`onOpenChange` for the expandable-section collapse level.
-The remaining structural parts
-(`SidebarSecondaryContent`, `SidebarSecondarySectionLabel`,
-`SidebarSecondaryMenu`, `SidebarSecondaryFooter`) accept the standard attributes
-of the element they render.
+`SidebarSecondaryContent`, `SidebarSecondaryMenu`, and
+`SidebarSecondaryFooter` accept the standard attributes of the element they
+render. `sidebarSecondaryMenuItemVariants` is exported too, for styling a custom
+row with the same treatment.

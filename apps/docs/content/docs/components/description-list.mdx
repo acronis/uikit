@@ -3,26 +3,37 @@ title: DescriptionList
 description: A key/value data list — rows of label → value with optional status icons, descriptions, and action links.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { DescriptionListDemo } from "@/components/demos-react/description-list";
+import { DemoReact } from '@/components/DemoReact';
+import { DescriptionListDemo } from '@/components/demos-react/description-list';
 
 ## Usage
 
 ```tsx
 import {
-  DescriptionList, DescriptionListItem, DescriptionListLabel,
-  DescriptionListValue, DescriptionListValueDescription, DescriptionListActions,
+  DescriptionList,
+  DescriptionListItem,
+  DescriptionListLabel,
+  DescriptionListValue,
+  DescriptionListValueDescription,
+  DescriptionListActions,
 } from '@acronis-platform/ui-react';
 ```
 
-`DescriptionList` displays **key/value data** — a semantic `<dl>` of rows, each a
-`label` and a `value`. The value is a slot: plain text, a status (leading icon +
-value + a muted description), or action **`Link`**s. Rows have a full-bleed top
-divider while the content stays inset. Composes the shared semantic tokens — no
-dedicated tier. The status icon color is caller-applied via
-`--ui-text-on-status-*`.
+`DescriptionList` renders a semantic `<dl>`; each `DescriptionListItem` is a
+two-column grid holding a `<dt>` label and a `<dd>` value. The value is a slot —
+plain text, a status (leading icon, value, and a muted description), or action
+links. The row's top divider is full-bleed while the content stays inset by
+`px-6`, which is what gives the card look from the "Service status" design.
+
+There is no `--ui-description-list-*` tier; the parts compose the shared semantic
+tokens — `text-foreground` for label and value, `text-muted-foreground` for the
+description, `border-border` for the divider. The status icon's color is
+caller-applied from `--ui-text-on-status-*`.
 
 ## Examples
+
+A service-status panel: two plain status rows, one row whose value is a
+description plus action links, and one that's a link on its own:
 
 <DemoReact>
   <DescriptionListDemo />
@@ -48,7 +59,9 @@ dedicated tier. The status icon color is caller-applied via
     <DescriptionListValue>
       <CogIcon className="text-[var(--ui-text-on-status-warning)]" />
       <div>
-        <DescriptionListValueDescription>Issue description</DescriptionListValueDescription>
+        <DescriptionListValueDescription>
+          Issue description here (based on alert)
+        </DescriptionListValueDescription>
         <DescriptionListActions className="mt-1">
           <Link href="#fix">Action to fix</Link>
           <Link href="#alert">View alert</Link>
@@ -56,22 +69,66 @@ dedicated tier. The status icon color is caller-applied via
       </div>
     </DescriptionListValue>
   </DescriptionListItem>
+
+  <DescriptionListItem>
+    <DescriptionListLabel>Disaster recovery</DescriptionListLabel>
+    <DescriptionListValue>
+      <ShieldCheckIcon className="text-muted-foreground" />
+      <Link href="#enable">Enable service</Link>
+    </DescriptionListValue>
+  </DescriptionListItem>
 </DescriptionList>
 ```
 
-The label column width is set with the `--description-list-label` custom property
-(default `14rem`); inside a padded container, add `-mx-6` to the list so dividers
-stay full-bleed.
+The simplest form is a plain property list with no icons:
 
-## Parts
+```tsx
+<DescriptionList>
+  <DescriptionListItem>
+    <DescriptionListLabel>Hostname</DescriptionListLabel>
+    <DescriptionListValue>ws-prod-04.acme.internal</DescriptionListValue>
+  </DescriptionListItem>
+  <DescriptionListItem>
+    <DescriptionListLabel>Operating system</DescriptionListLabel>
+    <DescriptionListValue>Windows Server 2022</DescriptionListValue>
+  </DescriptionListItem>
+</DescriptionList>
+```
+
+A direct `<svg>` child of `DescriptionListValue` is sized to 16px and top-aligned
+with the first line, so status icons line up without extra classes.
+
+The label column is `14rem` wide by default. Override it with the
+`--description-list-label` custom property — on the list for all rows, or on a
+single item:
+
+```tsx
+<DescriptionList style={{ '--description-list-label': '10rem' }}>
+```
+
+Inside an already-padded container, add `-mx-6` to the list so the dividers stay
+full-bleed instead of inheriting the container's inset:
+
+```tsx
+<div className="px-6 py-4">
+  <DescriptionList className="-mx-6">…</DescriptionList>
+</div>
+```
+
+For many rows and columns of records use [`Table`](/components/table) or
+[`DataTable`](/components/data-table); a `DescriptionList` describes **one**
+entity.
+
+## API Reference
+
+The parts have no props of their own — each accepts the native attributes of the
+element it renders, plus `className`.
 
 | Part                              | Element | Purpose                                    |
 | --------------------------------- | ------- | ------------------------------------------ |
-| `DescriptionList`                 | dl      | The list container.                        |
-| `DescriptionListItem`             | div     | A row (label + value); full-bleed divider. |
-| `DescriptionListLabel`            | dt      | The key (left column).                     |
-| `DescriptionListValue`            | dd      | The value (right column); icon + content.  |
-| `DescriptionListValueDescription` | p       | Muted secondary line under the value.      |
-| `DescriptionListActions`          | div     | A row of action links within a value.      |
-
-All parts accept native element attributes (`className`, …).
+| `DescriptionList`                 | `dl`    | The list container.                        |
+| `DescriptionListItem`             | `div`   | A row (label + value); full-bleed divider. |
+| `DescriptionListLabel`            | `dt`    | The key (left column).                     |
+| `DescriptionListValue`            | `dd`    | The value (right column); icon + content.  |
+| `DescriptionListValueDescription` | `p`     | Muted secondary line under the value.      |
+| `DescriptionListActions`          | `div`   | A row of action links within a value.      |

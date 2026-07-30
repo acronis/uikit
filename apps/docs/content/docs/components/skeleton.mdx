@@ -3,8 +3,8 @@ title: Skeleton
 description: A pulsing placeholder box for loading states.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { SkeletonDemo } from "@/components/demos-react/skeleton";
+import { DemoReact } from '@/components/DemoReact';
+import { SkeletonDemo } from '@/components/demos-react/skeleton';
 
 ## Usage
 
@@ -12,13 +12,20 @@ import { SkeletonDemo } from "@/components/demos-react/skeleton";
 import { Skeleton } from '@acronis-platform/ui-react';
 ```
 
-`Skeleton` is a pulsing placeholder that reserves layout space while content
-loads, reducing layout shift. Its shape and size come from the `className` you
-pass; the fill uses a subtle gray surface token.
+`Skeleton` renders a `<div>` with a pulse animation that reserves layout space
+while content loads, reducing layout shift. It has no size of its own — width,
+height, and radius come from the `className` you pass. The fill is the
+`--ui-background-surface-active` gray, chosen over the near-invisible
+`--ui-background-surface-secondary` so the placeholder reads on a white surface
+and stays subtle in dark mode.
 
-> Design-pending v1, ported from the legacy `shadcn-uikit` skeleton.
+> Design-pending v1, ported from the legacy `shadcn-uikit` skeleton. It has no
+> dedicated `--ui-skeleton-*` tier yet.
 
 ## Examples
+
+Compose several skeletons into the shape of the content they stand in for — here
+an avatar plus two lines of text:
 
 <DemoReact>
   <SkeletonDemo />
@@ -35,7 +42,9 @@ pass; the fill uses a subtle gray surface token.
 ```
 
 For indeterminate work with no known shape use [`Loading`](/components/loading);
-for determinate progress use [`Progress`](/components/progress).
+for determinate progress use [`Progress`](/components/progress) or
+[`ProgressCircle`](/components/progress-circle). For an empty result set rather
+than a pending one, use [`Empty`](/components/empty).
 
 ## API Reference
 
@@ -44,5 +53,5 @@ for determinate progress use [`Progress`](/components/progress).
   name="SkeletonProps"
 />
 
-`Skeleton` accepts all native `<div>` attributes; set width / height / radius via
-`className`.
+`SkeletonProps` is `React.HTMLAttributes<HTMLDivElement>` — every native `<div>`
+attribute passes through, and sizing is entirely up to `className`.

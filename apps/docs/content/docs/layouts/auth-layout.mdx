@@ -1,10 +1,10 @@
 ---
-title: Auth Layout
+title: AuthLayout
 description: A centered-card layout for sign-in, sign-up, and verification flows.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { AuthLayoutDemo } from "@/components/demos-react/auth-layout";
+import { DemoReact } from '@/components/DemoReact';
+import { AuthLayoutDemo } from '@/components/demos-react/auth-layout';
 
 ## Usage
 
@@ -17,14 +17,22 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`AuthLayout` is the centered-card chrome for unauthenticated screens — sign-in,
-sign-up, forgot-password, 2FA. It centers a surface `AuthLayoutCard` on the page,
-with a brand/title slot (`AuthLayoutLogo`), the form as children, and a footer of
-links (`AuthLayoutFooter`). Mapped to the
-[Main-menu-improvements Figma](https://www.figma.com/design/OkbBd4RX3Y5qI9Q0WwFD7u/Main-menu-improvements?node-id=4906-362342).
+`AuthLayout` is the chrome for unauthenticated screens — sign-in, sign-up,
+forgot-password, 2FA. It centers `AuthLayoutCard` on a full-height page surface;
+the card holds a brand/title slot (`AuthLayoutLogo`), the form as its children,
+and a footer of links or helper text (`AuthLayoutFooter`).
 
-> The form inside carries the semantics — use a [`Field`](/components/field) /
-> [`Form`](/components/form) with a labelled heading.
+There is no `--ui-auth-layout-*` token tier. The page and the card both use
+`--ui-background-surface-primary` (bridged `bg-background`), the card's border is
+`--ui-border-on-surface-border` (`border-border`), and the footer is muted with
+`--ui-text-on-surface-secondary` (`text-muted-foreground`). The card is capped at
+`max-w-sm` — widen it with `className` when a flow needs more room.
+
+Mapped to the [Main-menu-improvements Figma](https://www.figma.com/design/OkbBd4RX3Y5qI9Q0WwFD7u/Main-menu-improvements?node-id=4906-362342).
+
+> `AuthLayout` is presentational chrome only. The semantics come from the form
+> inside — use [`Field`](/components/field) / [`Form`](/components/form) with a
+> real heading so the screen has an accessible name and the inputs are labelled.
 
 ## Examples
 
@@ -35,26 +43,50 @@ links (`AuthLayoutFooter`). Mapped to the
 ```tsx
 <AuthLayout>
   <AuthLayoutCard>
-    <AuthLayoutLogo><span className="text-base font-semibold">Sign in</span></AuthLayoutLogo>
-    <Field>
-      <FieldLabel>Email</FieldLabel>
-      <FieldControl render={<InputBox type="email" />} />
-    </Field>
-    <Button className="w-full">Sign in</Button>
-    <AuthLayoutFooter><a href="#">Forgot password?</a></AuthLayoutFooter>
+    <AuthLayoutLogo>
+      <h1 className="text-base font-semibold">Sign in</h1>
+    </AuthLayoutLogo>
+    <div className="flex flex-col gap-4">
+      <InputText label="Email" type="email" placeholder="you@example.com" />
+      <InputText label="Password" type="password" />
+      <Button className="w-full">Sign in</Button>
+    </div>
+    <AuthLayoutFooter>
+      <a className="underline underline-offset-4" href="/forgot-password">
+        Forgot password?
+      </a>
+    </AuthLayoutFooter>
   </AuthLayoutCard>
 </AuthLayout>
 ```
 
-For an authenticated app screen use [App Shell](/layouts/app-shell).
+The same chrome frames every step of an auth flow — swap the children for the
+registration fields, a 2FA code entry, or a reset-link confirmation, and put the
+product logo in `AuthLayoutLogo`:
+
+```tsx
+<AuthLayoutLogo>
+  <AcronisLogo />
+</AuthLayoutLogo>
+```
+
+For an authenticated app screen use [`AppShell`](/layouts/app-shell); for a
+confirmation inside an existing screen use [`Dialog`](/components/dialog).
 
 ## Parts
 
-| Export             | Purpose                                |
-| ------------------ | -------------------------------------- |
-| `AuthLayout`       | Full-page centered container.          |
-| `AuthLayoutCard`   | The centered surface card (max-w-sm).  |
-| `AuthLayoutLogo`   | Top brand / title slot.                |
-| `AuthLayoutFooter` | Bottom muted links / helper text.      |
+| Export             | Element | Purpose                                     |
+| ------------------ | ------- | ------------------------------------------- |
+| `AuthLayout`       | `div`   | Full-page centered container.               |
+| `AuthLayoutCard`   | `div`   | The centered surface card (`max-w-sm`).     |
+| `AuthLayoutLogo`   | `div`   | Top brand / title slot.                     |
+| `AuthLayoutFooter` | `div`   | Bottom muted links / helper text.           |
 
-All parts accept their native element attributes plus `className`.
+Keep the footer links real `<a>` elements or buttons, and don't rely on color
+alone to mark them.
+
+## API Reference
+
+`AuthLayout`, `AuthLayoutCard`, `AuthLayoutLogo`, and `AuthLayoutFooter` declare
+no props of their own — each accepts the standard `<div>` attributes, including
+`className`, and forwards its `ref` to that `div`.

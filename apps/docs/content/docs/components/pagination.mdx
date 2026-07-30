@@ -3,8 +3,8 @@ title: Pagination
 description: Navigation for paged content — previous / next, page links, and an ellipsis.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { PaginationDemo } from "@/components/demos-react/pagination";
+import { DemoReact } from '@/components/DemoReact';
+import { PaginationDemo } from '@/components/demos-react/pagination';
 
 ## Usage
 
@@ -20,12 +20,24 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`Pagination` is a `<nav>` landmark with previous / next controls, numbered page
-links (`isActive` marks the current page), and an ellipsis for skipped ranges.
-It's presentational — wire the navigation (`href` or `onClick`) and decide the
-active page yourself.
+`Pagination` renders a `<nav role="navigation" aria-label="pagination">` landmark
+around a `<ul>` of page controls: `PaginationPrevious` / `PaginationNext`
+chevrons, numbered `PaginationLink`s, and `PaginationEllipsis` for a skipped
+range. It is markup-only — no Base UI primitive, no internal page state. You wire
+each link (`href` or `onClick`) and mark the current page with `isActive`, which
+sets `aria-current="page"` and the selected treatment.
 
-> Design-pending v1, ported from the legacy `shadcn-uikit` pagination.
+There is no `--ui-pagination-*` token tier: the compact square links are styled
+from the shared semantic tokens rather than the `Button` variants (whose
+min-width tokens don't fit a square link). Page numbers use
+`--ui-text-on-surface-primary`, the active page sits on
+`--ui-background-surface-active`, inactive links hover to
+`--ui-background-surface-hover`, and focus draws a `--ui-focus-primary` ring.
+
+Reach for it when a long list or table is split into pages with direct page
+access. Inside a [`DataTable`](/components/data-table) use its built-in
+`DataTablePagination` instead; for continuous loading use infinite scroll or a
+"Load more" button.
 
 ## Examples
 
@@ -33,28 +45,63 @@ active page yourself.
   <PaginationDemo />
 </DemoReact>
 
+A trail with a current page and a skipped range:
+
 ```tsx
 <Pagination>
   <PaginationContent>
-    <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
-    <PaginationItem><PaginationLink href="#">1</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationLink href="#" isActive>2</PaginationLink></PaginationItem>
-    <PaginationItem><PaginationEllipsis /></PaginationItem>
-    <PaginationItem><PaginationNext href="#" /></PaginationItem>
+    <PaginationItem>
+      <PaginationPrevious href="#" />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="#">1</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="#" isActive>
+        2
+      </PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationEllipsis />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="#">10</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext href="#" />
+    </PaginationItem>
   </PaginationContent>
 </Pagination>
 ```
 
-Inside a [`DataTable`](/components/data-table) use its built-in
-`DataTablePagination` instead.
+Client-side paging — the links take any `<a>` attributes, so drive them with
+`onClick` instead of `href`:
+
+```tsx
+<PaginationLink
+  href="#"
+  isActive={page === n}
+  onClick={(event) => {
+    event.preventDefault();
+    setPage(n);
+  }}
+>
+  {n}
+</PaginationLink>
+```
 
 ## API Reference
+
+### PaginationLink
+
+`PaginationPrevious` and `PaginationNext` take the same props — they render a
+`PaginationLink` with the chevron and the matching `aria-label`.
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/pagination/pagination.tsx"
   name="PaginationLinkProps"
 />
 
-`Pagination`, `PaginationContent`, `PaginationItem`, and `PaginationEllipsis`
-accept their native element attributes; `PaginationPrevious` / `PaginationNext`
-take the same props as `PaginationLink`.
+`Pagination` (`<nav>`), `PaginationContent` (`<ul>`), `PaginationItem` (`<li>`),
+and `PaginationEllipsis` (`<span>`) accept the standard attributes of the element
+they render.

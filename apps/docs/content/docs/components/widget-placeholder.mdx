@@ -3,8 +3,8 @@ title: WidgetPlaceholder
 description: An empty-state placeholder for a dashboard widget — header, illustration, message, and action.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { WidgetPlaceholderDemo } from "@/components/demos-react/widget-placeholder";
+import { DemoReact } from '@/components/DemoReact';
+import { WidgetPlaceholderDemo } from '@/components/demos-react/widget-placeholder';
 
 ## Usage
 
@@ -22,13 +22,23 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`WidgetPlaceholder` is a composable empty-state for a dashboard widget: a bordered
-card with a header (icon + title), a centered illustration / message / action, and
-an optional footer. Set `interactive` to make the whole card focusable and
-clickable. This is a design-pending v1 on semantic tokens; a
-`--ui-widget-placeholder-*` tier is pending a Figma pass.
+`WidgetPlaceholder` is the empty state of a **dashboard widget**: a rounded,
+bordered card composed from parts. The header row pairs a 16px
+`WidgetPlaceholderIcon` with a truncating `WidgetPlaceholderTitle`;
+`WidgetPlaceholderContent` is the centered body column holding a 72px
+`WidgetPlaceholderImage`, a `WidgetPlaceholderText` message, and an inline
+`WidgetPlaceholderAction`; `WidgetPlaceholderFooter` adds a small metadata line.
+The card has no intrinsic size — give it the widget's dimensions via `className`.
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` widget placeholder.
+> There is no `--ui-widget-placeholder-*` tier yet: the card uses
+> `border-border` + `bg-background`, the header icon and action the brand action
+> blue via `text-secondary`, and the illustration a muted stand-in for the legacy
+> soft-brand tint.
 
 ## Examples
+
+A widget with nothing in it yet, offering a way to get started:
 
 <DemoReact>
   <WidgetPlaceholderDemo />
@@ -37,32 +47,62 @@ clickable. This is a design-pending v1 on semantic tokens; a
 ```tsx
 <WidgetPlaceholder className="h-[220px] w-[320px]">
   <WidgetPlaceholderHeader>
-    <WidgetPlaceholderIcon><ChartBarVerticalIcon /></WidgetPlaceholderIcon>
+    <WidgetPlaceholderIcon>
+      <ChartBarVerticalIcon />
+    </WidgetPlaceholderIcon>
     <WidgetPlaceholderTitle>Backup statistics</WidgetPlaceholderTitle>
   </WidgetPlaceholderHeader>
   <WidgetPlaceholderContent>
-    <WidgetPlaceholderImage><ChartBarVerticalIcon /></WidgetPlaceholderImage>
+    <WidgetPlaceholderImage>
+      <ChartBarVerticalIcon />
+    </WidgetPlaceholderImage>
     <WidgetPlaceholderText>No data available yet</WidgetPlaceholderText>
     <WidgetPlaceholderAction>Set up backup plan</WidgetPlaceholderAction>
   </WidgetPlaceholderContent>
 </WidgetPlaceholder>
 ```
 
-A clickable widget tile with a footer:
+`interactive` makes the whole card the affordance: it becomes focusable
+(`tabindex="0"`), takes hover and active surface tints, and shows the standard 3px
+`--ui-focus-primary` ring. It only styles and exposes the card — wire the behavior
+with `onClick`:
 
 ```tsx
-<WidgetPlaceholder interactive className="w-[320px]" onClick={configure}>
+<WidgetPlaceholder interactive className="w-[320px]" onClick={configureWidget}>
   <WidgetPlaceholderHeader>
-    <WidgetPlaceholderIcon><ShieldCheckIcon /></WidgetPlaceholderIcon>
+    <WidgetPlaceholderIcon>
+      <ShieldCheckIcon />
+    </WidgetPlaceholderIcon>
     <WidgetPlaceholderTitle>Protection status</WidgetPlaceholderTitle>
   </WidgetPlaceholderHeader>
   <WidgetPlaceholderContent>
-    <WidgetPlaceholderImage><ShieldCheckIcon /></WidgetPlaceholderImage>
+    <WidgetPlaceholderImage>
+      <ShieldCheckIcon />
+    </WidgetPlaceholderImage>
     <WidgetPlaceholderText>No devices protected</WidgetPlaceholderText>
   </WidgetPlaceholderContent>
   <WidgetPlaceholderFooter>Last checked: never</WidgetPlaceholderFooter>
 </WidgetPlaceholder>
 ```
+
+Every part is optional — a header plus a text-only body is a valid placeholder:
+
+```tsx
+<WidgetPlaceholder className="h-[160px] w-[320px]">
+  <WidgetPlaceholderHeader>
+    <WidgetPlaceholderTitle>Alerts</WidgetPlaceholderTitle>
+  </WidgetPlaceholderHeader>
+  <WidgetPlaceholderContent>
+    <WidgetPlaceholderText>
+      No alerts in the last 24 hours
+    </WidgetPlaceholderText>
+  </WidgetPlaceholderContent>
+</WidgetPlaceholder>
+```
+
+For a full-page or in-table empty state use [`Empty`](/components/empty); for a
+widget that's still loading use [`Skeleton`](/components/skeleton) or
+[`Loading`](/components/loading).
 
 ## API Reference
 
@@ -70,3 +110,5 @@ A clickable widget tile with a footer:
   path="../../packages/ui-react/src/components/ui/widget-placeholder/widget-placeholder.docs.ts"
   name="WidgetPlaceholderProps"
 />
+
+Every sub-part takes plain `<div>` attributes plus `className`.

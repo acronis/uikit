@@ -1,6 +1,6 @@
 ---
-title: Page Header
-description: A page's header region — title + tags/actions, and an optional description.
+title: PageHeader
+description: A page's header region — title with tags and actions, plus an optional description.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
@@ -20,14 +20,26 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`PageHeader` is the header region at the top of a page's content (inside the App
-Shell's main, not the app-wide [`AppShellHeader`](/layouts/app-shell)). It stacks a
-title row (`PageHeaderRow` — title left, an optional edit icon-button, a tags slot,
-an actions slot) and an optional description row, capped at 512px. A breadcrumb, if
-you need one, is a separate [`Breadcrumb`](/components/breadcrumb) rendered as a
-sibling above `PageHeader` — it's not one of its parts. Mapped to the
-[Page Header Figma](https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=2905-7678)
-"PageHeader" master component.
+`PageHeader` is the header region at the top of a page's own content — inside
+[`AppShellMain`](/layouts/app-shell), not the app-wide `AppShellHeader`. It
+stacks a title row (`PageHeaderRow`: the `<h1>` title, an optional edit button, a
+tags slot, and an actions slot) over an optional description row capped at 512px.
+
+There is no `--ui-page-header-*` token tier — `PageHeader` composes existing
+atoms, which carry their own tokens. Its own two colors are the title
+(`--ui-text-on-surface-primary`, via the bridged `text-foreground`) and the
+description (`--ui-text-on-surface-secondary`, via `text-muted-foreground`).
+
+Both slots share the row's remaining width, so actions stay flush to the end even
+when there are no tags. Two things are deliberately **not** parts: the edit
+affordance next to the title or description is a plain
+[`ButtonIcon`](/components/button-icon) you place as a sibling, and a breadcrumb
+trail is a separate [`Breadcrumb`](/components/breadcrumb) rendered above
+`PageHeader` — never nested inside it.
+
+Mapped to the
+[PageHeader Figma](https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=2905-7678)
+master component.
 
 ## Examples
 
@@ -39,20 +51,42 @@ sibling above `PageHeader` — it's not one of its parts. Mapped to the
 <PageHeader>
   <PageHeaderRow>
     <PageHeaderTitle>Reports</PageHeaderTitle>
+    <ButtonIcon variant="secondary" aria-label="Edit title">
+      <PencilIcon size={16} />
+    </ButtonIcon>
     <PageHeaderTags>
       <Tag variant="info">Customer</Tag>
     </PageHeaderTags>
     <PageHeaderActions>
+      <Button variant="ghost">Export</Button>
       <Button>New report</Button>
     </PageHeaderActions>
   </PageHeaderRow>
   <PageHeaderDescriptionRow>
-    <PageHeaderDescription>All scheduled reports.</PageHeaderDescription>
+    <PageHeaderDescription>
+      All scheduled and on-demand reports for your workloads.
+    </PageHeaderDescription>
   </PageHeaderDescriptionRow>
 </PageHeader>
 ```
 
-### Editable title/description (full-page wizards)
+### With a breadcrumb
+
+The breadcrumb is a sibling above the header, not a part of it:
+
+```tsx
+<div className="flex flex-col gap-2">
+  <Breadcrumb>…</Breadcrumb>
+  <PageHeader>…</PageHeader>
+</div>
+```
+
+### Editable title or description
+
+Full-page wizards that let the user rename the page put a `ButtonIcon` next to
+the title (or the description) — the same atom in either row, so there is no
+dedicated part. Give it a descriptive `aria-label`, since the pencil alone has no
+accessible name:
 
 ```tsx
 <PageHeaderRow>
@@ -63,16 +97,55 @@ sibling above `PageHeader` — it's not one of its parts. Mapped to the
 </PageHeaderRow>
 ```
 
+### Overflow
+
+Both slots collapse all-or-nothing rather than showing however many items fit.
+
+`PageHeaderTags` measures its full set of tags against the space available. When
+they don't fit it renders the **first** tag plus a `+N` tag whose tooltip lists
+the hidden labels — reachable by keyboard focus, not hover only:
+
+```tsx
+<PageHeaderTags>
+  <Tag variant="info">Customer</Tag>
+  <Tag variant="success">Protected</Tag>
+  <Tag variant="warning">Quota exceeded</Tag>
+</PageHeaderTags>
+```
+
+`PageHeaderActions` folds every `variant="secondary"` `Button` under a single
+"More actions" `ButtonIcon` dropdown, in their original order, when the full set
+doesn't fit. Primary buttons are never folded, and neither is any non-`Button`
+action (a [`ButtonMenu`](/components/button-menu) trigger, for instance) — folding
+only reduces a plain button with one click action to a menu item:
+
+```tsx
+<PageHeaderActions>
+  <Button variant="secondary">Export</Button>
+  <Button variant="secondary">Duplicate</Button>
+  <Button>New report</Button>
+</PageHeaderActions>
+```
+
 ## Parts
 
-| Export                     | Element | Purpose                                                |
-| -------------------------- | ------- | ------------------------------------------------------ |
-| `PageHeader`               | `div`   | The banner region.                                     |
-| `PageHeaderRow`            | `div`   | Title row: title, optional edit button, tags, actions. |
-| `PageHeaderTitle`          | `h1`    | The page title.                                        |
-| `PageHeaderTags`           | `div`   | Optional tags slot (e.g. `Tag` chips).                 |
-| `PageHeaderActions`        | `div`   | Trailing action buttons.                               |
-| `PageHeaderDescriptionRow` | `div`   | Optional description row (max 512px).                  |
-| `PageHeaderDescription`    | `p`     | Muted supporting text.                                 |
+| Export                     | Element | Purpose                                                                    |
+| -------------------------- | ------- | -------------------------------------------------------------------------- |
+| `PageHeader`               | `div`   | The region (`role="banner"`).                                              |
+| `PageHeaderRow`            | `div`   | Title row: title, optional edit button, tags, actions.                     |
+| `PageHeaderTitle`          | `h1`    | The page title.                                                            |
+| `PageHeaderTags`           | `div`   | Optional tags slot; collapses to the first tag + a `+N` tag with a tooltip. |
+| `PageHeaderActions`        | `div`   | Trailing actions; folds secondary buttons under a "More actions" menu.     |
+| `PageHeaderDescriptionRow` | `div`   | Optional description row (max 512px).                                      |
+| `PageHeaderDescription`    | `p`     | Muted supporting text.                                                     |
 
-All parts accept their native element attributes plus `className`.
+`PageHeaderTitle` is the page's `<h1>`, so use one `PageHeader` per page and keep
+[`SectionTitle`](/layouts/section)'s `<h2>` beneath it. Label any icon-only
+action — placement alone doesn't name a control.
+
+## API Reference
+
+`PageHeader` and its parts declare no props of their own. Each accepts the native
+attributes of the element it renders — `div` for the region, rows, and both
+slots, `h1` for the title, `p` for the description — including `className`, and
+forwards its `ref` to that element.

@@ -1,10 +1,10 @@
 ---
 title: SidebarPrimary
-description: The primary navigation rail, with a collapsible width.
+description: The app-level navigation rail, with a collapsible width.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { SidebarPrimaryDemo } from "@/components/demos-react/sidebar-primary";
+import { DemoReact } from '@/components/DemoReact';
+import { SidebarPrimaryDemo } from '@/components/demos-react/sidebar-primary';
 
 ## Usage
 
@@ -22,26 +22,52 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`SidebarPrimary` is the top-level navigation rail. It renders a `<nav>` and owns
-a controlled/uncontrolled `expanded` (rail width) state. Compose a
-`SidebarPrimaryHeader`, a `SidebarPrimaryContent` (one or more
-`SidebarPrimarySection`s of `SidebarPrimaryMenu` → `SidebarPrimaryMenuItem`), and
-a `SidebarPrimaryFooter`. `SidebarPrimary` and `SidebarPrimaryMenuItem` are
-polymorphic via Base UI's `useRender` (the `render` prop) — pass a router link
-for menu items. Themed by the `--ui-sidebar-primary-*` tokens.
+`SidebarPrimary` is the app-level navigation rail — the persistent shell listing
+the product's top-level destinations. It renders a `<nav aria-label="Primary">`
+and owns a controlled/uncontrolled `expanded` state (default `true`). Compose a
+`SidebarPrimaryHeader` for the logo, a `SidebarPrimaryContent` holding one or
+more `SidebarPrimarySection`s of `SidebarPrimaryMenu` → `SidebarPrimaryMenuItem`,
+and a pinned `SidebarPrimaryFooter`.
+
+`expanded` is a **width reflow, not a show/hide**: the root sets
+`data-state="expanded|collapsed"` and every metric token has a distinct
+`collapsed-*` / `expanded-*` name switched by attribute selector, so the rail
+narrows to icons instead of unmounting. Collapsed rows keep their label as
+`sr-only` and gain a tooltip; extras are hidden. `SidebarPrimaryContent` scrolls
+inside a [`ScrollArea`](/components/scroll-area) so its overlay scrollbar never
+crops a full-bleed selected row.
+
+Every color and metric comes from the `--ui-sidebar-primary-*` token tier, with
+each interaction state (`idle` / `hover` / `active`) wired to its own token per
+`selected` / `unselected` variant. Rows are square — the tier ships no radius
+token — and the focus ring reuses the shared `--ui-focus-brand`.
+
+`SidebarPrimary` and `SidebarPrimaryMenuItem` are polymorphic via Base UI's
+`useRender` (the `render` prop), so a row can be a router `Link` or a
+`<button>`. Because a collapsed row is icon-only, `icon` is **required** on
+`SidebarPrimaryMenuItem` unless you opt out explicitly with `noIcon`.
+
+Use it for app-wide navigation between top-level areas. For contextual,
+second-level navigation within a section use
+[`SidebarSecondary`](/components/sidebar-secondary); for a popover of actions use
+[`DropdownMenu`](/components/dropdown-menu); for location within a hierarchy use
+[`Breadcrumb`](/components/breadcrumb).
 
 ## Examples
-
 
 <DemoReact>
   <SidebarPrimaryDemo />
 </DemoReact>
 
-A full rail:
+A full rail — twin logos, a section of destinations, and a footer collapse
+trigger:
 
 ```tsx
 <SidebarPrimary>
-  <SidebarPrimaryHeader logo={<ProductLogo />} collapsedLogo={<ProductMark />} />
+  <SidebarPrimaryHeader
+    logo={<ProductLogo />}
+    collapsedLogo={<ProductMark />}
+  />
   <SidebarPrimaryContent>
     <SidebarPrimarySection>
       <SidebarPrimaryMenu>
@@ -56,32 +82,70 @@ A full rail:
   </SidebarPrimaryContent>
   <SidebarPrimaryFooter>
     <SidebarPrimaryMenu>
-      <SidebarPrimaryCollapseTrigger icon={<ChevronsLeftIcon />}>
-        Collapse
+      <SidebarPrimaryCollapseTrigger icon={<PanelLeftIcon />}>
+        Collapse menu
       </SidebarPrimaryCollapseTrigger>
     </SidebarPrimaryMenu>
   </SidebarPrimaryFooter>
 </SidebarPrimary>
 ```
 
-A trailing affordance on a menu item with `SidebarPrimaryMenuItemExtras`:
+A trailing affordance on a row with `SidebarPrimaryMenuItemExtras`. The `tag`
+slot is constrained to `size="sm"` in Figma, so always pass that size:
 
 ```tsx
 <SidebarPrimaryMenuItem href="#" icon={<InboxIcon />}>
   My inbox
-  <SidebarPrimaryMenuItemExtras variant="tag" tag={<Tag variant="info">3</Tag>} />
+  <SidebarPrimaryMenuItemExtras
+    variant="tag"
+    tag={
+      <Tag variant="info" size="sm">
+        3
+      </Tag>
+    }
+  />
 </SidebarPrimaryMenuItem>
 ```
 
-Controlled collapse:
+The other `variant`s cover an external-link glyph, a keyboard shortcut, or both
+a tag and the glyph:
 
 ```tsx
-const [expanded, setExpanded] = React.useState(true);
+<SidebarPrimaryMenuItemExtras variant="shortcut" shortcut="⌘H" />
+<SidebarPrimaryMenuItemExtras variant="externalLink" />
+```
+
+Controlled collapse — `SidebarPrimaryCollapseTrigger` always emits
+`onExpandedChange`, so a controlled consumer just reacts to it:
+
+```tsx
+const [expanded, setExpanded] = useState(true);
 
 <SidebarPrimary expanded={expanded} onExpandedChange={setExpanded}>
   {/* … */}
-</SidebarPrimary>
+</SidebarPrimary>;
 ```
+
+Render a row as a router link:
+
+```tsx
+<SidebarPrimaryMenuItem render={<Link to="/assets" />} icon={<BoxIcon />}>
+  Assets
+</SidebarPrimaryMenuItem>
+```
+
+The rail is icon-only when collapsed, so a row without an icon must say so:
+
+```tsx
+<SidebarPrimaryMenuItem href="#" noIcon>
+  Release notes
+</SidebarPrimaryMenuItem>
+```
+
+The product logo is a consumer-provided child — the component ships no Logo
+part. `SidebarPrimaryHeader` sizes whatever `img` / `svg` you slot in (32px
+collapsed, 48px expanded) and tints any `currentColor` mark via the logo-color
+token.
 
 ## API Reference
 
@@ -94,9 +158,9 @@ const [expanded, setExpanded] = React.useState(true);
 
 ### SidebarPrimaryHeader
 
-`logo` and `collapsedLogo` let you swap distinct graphics per rail state (e.g.
-a full lockup vs. a monogram) instead of resizing/hiding one node. When
-neither is given, `children` renders in both states.
+`logo` and `collapsedLogo` swap distinct graphics per rail state (a full lockup
+vs. a monogram) instead of resizing one node. When neither is given, `children`
+renders in both states.
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/sidebar-primary/sidebar-primary.tsx"
@@ -124,6 +188,7 @@ neither is given, `children` renders in both states.
   name="SidebarPrimaryCollapseTriggerProps"
 />
 
-The other structural parts (`SidebarPrimaryContent`, `SidebarPrimaryFooter`,
-`SidebarPrimarySection`, `SidebarPrimaryMenu`) accept the standard attributes
-of the element they render.
+The structural parts (`SidebarPrimaryContent`, `SidebarPrimaryFooter`,
+`SidebarPrimarySection`, `SidebarPrimaryMenu`) accept the standard attributes of
+the element they render. `sidebarPrimaryMenuItemVariants` is exported too, for
+styling a custom row with the same treatment.

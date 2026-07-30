@@ -1,10 +1,10 @@
 ---
 title: Field
-description: A form-field wrapper that ties a control to its label, description, and error.
+description: Ties a form control to its label, description, and error.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { FieldDemo } from "@/components/demos-react/field";
+import { DemoReact } from '@/components/DemoReact';
+import { FieldDemo } from '@/components/demos-react/field';
 
 ## Usage
 
@@ -15,32 +15,51 @@ import {
   FieldControl,
   FieldDescription,
   FieldError,
+  FieldSet,
+  FieldLegend,
+  FieldGroup,
+  FieldContent,
+  FieldTitle,
+  FieldSeparator,
+  InputBox,
 } from '@acronis-platform/ui-react';
 ```
 
-`Field` ties a control to its label, description, and error. Built on
-[Base UI's Field](https://base-ui.com/react/components/field), it wires the
-`for` / `id` / `aria-describedby` / `aria-invalid` associations and validity state
-automatically — no manual plumbing. The structural parts (`FieldSet`,
-`FieldLegend`, `FieldGroup`, `FieldContent`, `FieldSeparator`) compose and group
-fields.
+`Field` is the form furniture around a control. Built on
+[Base UI's Field](https://base-ui.com/react/components/field), it owns the label,
+description, and error slots and wires the `for` / `id` / `aria-describedby` /
+`aria-invalid` associations plus the validity state automatically — no manual
+plumbing. It also owns per-field validation (`validate`, `validationMode`,
+`invalid`), which [`Form`](/components/form) triggers and collects across every
+field by `name`. `FieldSet`, `FieldLegend`, `FieldGroup`, `FieldContent`,
+`FieldTitle`, and `FieldSeparator` are plain styled markup for composing and
+grouping fields — Base UI has no equivalents. `Field` has no token tier of its
+own; it is layout chrome over the shared semantic vocabulary, with error text on
+`--ui-text-on-status-danger` and description text on
+`--ui-text-on-surface-secondary`. The wrapped control keeps its own tokens.
 
-Pair Field with the **bare** controls: render a native input through
-`FieldControl` (`render={<InputBox />}`). The self-contained `InputText` /
-`InputSearch` / `InputSelect` already include their own label/description/error —
-use those directly instead. `Checkbox` / `Switch` self-label too (their own
-`label` prop); use `Field`/`FieldSet` only to **group** them.
+Pair `Field` with the **bare** controls: render a native input through
+`FieldControl`'s `render` prop (`render={<InputBox />}`). The self-contained fields
+— [`InputText`](/components/input-text),
+[`InputSearch`](/components/input-search),
+[`InputSelect`](/components/input-select) — already ship their own
+label/description/error, so use those directly instead of wrapping them.
+[`Checkbox`](/components/checkbox) and [`Switch`](/components/switch) self-label
+through their own `label` prop; use `Field` / `FieldSet` only to **group** them,
+never to add a second label. For a caption outside a `Field`, use
+[`Label`](/components/label).
 
-> Design-pending v1, ported from the legacy `shadcn-uikit` field and rebuilt on
-> Base UI Field.
+> Status: draft (design-pending v1), ported from the legacy `shadcn-uikit` field
+> and rebuilt on Base UI Field.
 
 ## Examples
+
+A text field with a description, and a set of self-labeling checkboxes under a
+legend:
 
 <DemoReact>
   <FieldDemo />
 </DemoReact>
-
-A text field with a description, auto-wired to the control:
 
 ```tsx
 <Field>
@@ -50,7 +69,9 @@ A text field with a description, auto-wired to the control:
 </Field>
 ```
 
-An invalid field with an error message:
+`FieldError` shows itself according to the control's validity. When validation is
+controlled outside the field, set `invalid` on the `Field` and force the message
+with `match`:
 
 ```tsx
 <Field invalid>
@@ -60,7 +81,68 @@ An invalid field with an error message:
 </Field>
 ```
 
-Group related, self-labeling controls under a legend:
+`match` also accepts a single `ValidityState` key, so one field can carry a
+message per failure mode:
+
+```tsx
+<Field name="email">
+  <FieldLabel>Email</FieldLabel>
+  <FieldControl render={<InputBox type="email" required />} />
+  <FieldError match="valueMissing">Enter your email address.</FieldError>
+  <FieldError match="typeMismatch">
+    That isn't a valid email address.
+  </FieldError>
+</Field>
+```
+
+Validate the value yourself with `validate`, and pick when it runs with
+`validationMode`:
+
+```tsx
+<Field
+  name="workspace"
+  validationMode="onBlur"
+  validate={(value) =>
+    String(value).length < 3 ? 'Use at least 3 characters.' : null
+  }
+>
+  <FieldLabel>Workspace</FieldLabel>
+  <FieldControl render={<InputBox />} />
+  <FieldError />
+</Field>
+```
+
+`orientation` lays the label out above the control (`vertical`, the default),
+beside it (`horizontal`), or stacked until the `@md` container width and inline
+above it (`responsive`). The responsive variant measures the nearest `FieldGroup`,
+so wrap it in one:
+
+```tsx
+<FieldGroup>
+  <Field orientation="horizontal">
+    <FieldLabel>Workspace</FieldLabel>
+    <FieldControl render={<InputBox />} />
+  </Field>
+  <Field orientation="responsive">
+    <FieldLabel>Region</FieldLabel>
+    <FieldControl render={<InputBox />} />
+  </Field>
+</FieldGroup>
+```
+
+`disabled` on the `Field` takes precedence over the control's own `disabled` and
+dims the label with it:
+
+```tsx
+<Field disabled>
+  <FieldLabel>Email</FieldLabel>
+  <FieldControl render={<InputBox />} />
+  <FieldDescription>This field is disabled.</FieldDescription>
+</Field>
+```
+
+Group related controls in a `FieldSet` with a `FieldLegend`. `FieldLegend`'s
+`label` variant renders the smaller caption size for a sub-group:
 
 ```tsx
 <FieldSet>
@@ -72,43 +154,74 @@ Group related, self-labeling controls under a legend:
 </FieldSet>
 ```
 
-Lay the label out beside the control:
+`FieldContent` stacks a label and description into one column so they sit beside
+the control instead of above and below it:
 
 ```tsx
 <Field orientation="horizontal">
-  <FieldLabel>Workspace</FieldLabel>
+  <FieldContent>
+    <FieldLabel>Workspace</FieldLabel>
+    <FieldDescription>Used in your workspace URL.</FieldDescription>
+  </FieldContent>
   <FieldControl render={<InputBox />} />
 </Field>
 ```
 
+`FieldTitle` is the same treatment as a label but is **not** a `<label>` — use it
+to head a field that has no single control to associate with, and keep
+`FieldLabel` for the one that does.
+
+`FieldSeparator` divides fields inside a `FieldGroup`, optionally with a centered
+label over the rule:
+
+```tsx
+<FieldGroup>
+  <Field>
+    <FieldLabel>First name</FieldLabel>
+    <FieldControl render={<InputBox />} />
+  </Field>
+  <FieldSeparator>and</FieldSeparator>
+  <Field>
+    <FieldLabel>Last name</FieldLabel>
+    <FieldControl render={<InputBox />} />
+  </Field>
+</FieldGroup>
+```
+
 ## API Reference
 
-`Field` (the root) carries the layout + validation props:
+### Field
+
+The root — layout, validation, and the field context every other part reads.
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/field/field.docs.ts"
   name="FieldProps"
 />
 
-`FieldError` shows a validation message:
+### FieldError
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/field/field.docs.ts"
   name="FieldErrorProps"
 />
 
-`FieldLegend` heads a `FieldSet`:
+### FieldLegend
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/field/field.docs.ts"
   name="FieldLegendProps"
 />
 
-`FieldLabel`, `FieldControl`, `FieldDescription`, `FieldContent`, `FieldTitle`,
-`FieldGroup`, and `FieldSeparator` accept the props of their underlying element
-(or Base UI Field part) plus `className`.
+`FieldLabel`, `FieldControl`, and `FieldDescription` add no props of their own —
+each extends the matching Base UI part (`Field.Label` / `Field.Control` /
+`Field.Description`) plus `className`, and `FieldControl`'s `render` prop is what
+wires a bare control. See the
+[Base UI Field docs](https://base-ui.com/react/components/field) for that surface.
+`FieldSet` renders a `<fieldset>`, `FieldGroup` / `FieldContent` / `FieldTitle` /
+`FieldSeparator` render `<div>`s, and each accepts that element's native
+attributes plus `className`.
 
 > `FieldLabel`, `FieldControl`, `FieldDescription`, and `FieldError` are Base UI
-> Field parts — render them **inside a `Field`** (they throw without the Field
-> context). For a group-level heading, use `FieldLegend` inside a `FieldSet`, not a
-> bare `FieldDescription`.
+> Field parts — render them **inside a `Field`**; they throw without the Field
+> context. For a group-level heading use `FieldLegend` inside a `FieldSet`.

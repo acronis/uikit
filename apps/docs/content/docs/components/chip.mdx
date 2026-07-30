@@ -1,0 +1,90 @@
+---
+title: Chip
+description: A compact, interactive label — a removable token or a selectable toggle.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { ChipDemo } from '@/components/demos-react/chip';
+
+## Usage
+
+```tsx
+import { Chip } from '@acronis-platform/ui-react';
+```
+
+`Chip` renders a pill whose fill, border, label, and icon come from the
+`--ui-chip-*` tokens (geometry included: height, gap, padding, min-width, radius,
+border width, icon size). `variant` selects the interaction model — `removable`
+(the default) adds a trailing × button, `selectable` turns the pill into a toggle
+button. Both states are **controlled**: `Chip` renders the visual state and emits
+intent; your code owns the data.
+
+Use `Chip` when the label is actionable. For a static status or category label,
+use [`Tag`](/components/tag).
+
+## Examples
+
+The first row is `removable` — activating the × fires `onRemove` and the consumer
+drops the entry. The second row is `selectable`, driven by `selected`:
+
+<DemoReact>
+  <ChipDemo />
+</DemoReact>
+
+```tsx
+<div className="flex flex-wrap items-center gap-2">
+  {filters.map((filter) => (
+    <Chip
+      key={filter}
+      removeLabel={`Remove ${filter}`}
+      onRemove={() => setFilters(filters.filter((f) => f !== filter))}
+    >
+      {filter}
+    </Chip>
+  ))}
+</div>
+```
+
+A `selectable` chip is exposed as `role="button"` with `aria-pressed`, and Enter
+or Space activate it like a native button:
+
+```tsx
+<Chip
+  variant="selectable"
+  selected={onlyMine}
+  onClick={() => setOnlyMine(!onlyMine)}
+>
+  Only my devices
+</Chip>
+```
+
+Pass an `icon` for a 16px leading glyph, tinted by
+`--ui-chip-global-icon-color`:
+
+```tsx
+import { CircleInfoIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<Chip variant="selectable" icon={<CircleInfoIcon />}>
+  With icon
+</Chip>;
+```
+
+The remove button's accessible name defaults to `"Remove"`. When several chips
+are on screen, give each a contextual `removeLabel` so screen-reader users can
+tell them apart:
+
+```tsx
+<Chip removeLabel="Remove Status: Active" onRemove={dropStatusFilter}>
+  Status: Active
+</Chip>
+```
+
+Focus is marked with the shared 3px `--ui-focus-primary` ring — on the × button
+for `removable` (via `focus-within`) and on the pill itself for `selectable`.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/chip/chip.tsx"
+  name="ChipProps"
+/>

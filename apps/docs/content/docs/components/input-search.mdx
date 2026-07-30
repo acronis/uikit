@@ -1,10 +1,10 @@
 ---
 title: InputSearch
-description: A Search box wrapped with field furniture (label, required marker).
+description: A search field with a leading magnifier, a clear button, and an optional label.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { InputSearchDemo } from "@/components/demos-react/input-search";
+import { DemoReact } from '@/components/DemoReact';
+import { InputSearchDemo } from '@/components/demos-react/input-search';
 
 ## Usage
 
@@ -12,31 +12,48 @@ import { InputSearchDemo } from "@/components/demos-react/input-search";
 import { InputSearch } from '@acronis-platform/ui-react';
 ```
 
-`InputSearch` wraps [`Search`](/components/search) and adds an optional
-label above the box (with a `required` marker). Every other prop — `placeholder`,
-`value`, `onClear`, `disabled`, … — passes straight through to `Search`. A
-visible label names the field automatically.
+`InputSearch` composes the internal `SearchBox` primitive — a bordered box
+holding a leading magnifier, a borderless native `<input type="search">`, and a
+trailing clear (×) button — and adds an optional label above it (with a
+`required` marker). No Base UI primitive is involved. Every other prop
+(`placeholder`, `value`, `onChange`, `onClear`, `disabled`, …) passes straight
+through to the input. Themed by the `--ui-input-search-*` tokens; the box owns
+its hover / focus / disabled state via `:focus-within`, so keyboard focus paints
+one 3px `--ui-focus-primary` ring around the whole box.
+
+Unlike [`InputText`](/components/input-text), this field has **no description or
+error message** — it carries only a label and the required marker.
+
+> **`Search` is an alias of `InputSearch`.** `import { Search } from
+> '@acronis-platform/ui-react'` re-exports `InputSearch`, and `SearchProps`
+> re-exports `InputSearchProps` — same component, same props. For the page-level
+> global search affordance use [`SearchGlobal`](/components/search-global)
+> instead.
 
 ## Examples
 
+A labeled search field, and the same field disabled:
 
 <DemoReact>
   <InputSearchDemo />
 </DemoReact>
 
-A labeled search field:
-
 ```tsx
-<InputSearch label="Find a report" placeholder="Search…" />
+<InputSearch label="Find a workload" placeholder="Search workloads…" />
+
+<InputSearch label="Disabled" placeholder="Search…" disabled />
 ```
 
-Required:
+Required appends a `*` after the label and sets `aria-required` on the input:
 
 ```tsx
 <InputSearch label="Search" required placeholder="Type to search" />
 ```
 
-Controlled, with a clear handler (forwarded to `Search`):
+The clear button appears on its own whenever the field is non-empty and enabled
+— controlled or uncontrolled. Activating it empties the input, dispatches a
+native change event (so `onChange` fires either way), refocuses the input, and
+then calls `onClear`:
 
 ```tsx
 const [query, setQuery] = React.useState('');
@@ -44,15 +61,25 @@ const [query, setQuery] = React.useState('');
 <InputSearch
   label="Search"
   value={query}
-  onChange={(e) => setQuery(e.target.value)}
+  onChange={(event) => setQuery(event.target.value)}
   onClear={() => setQuery('')}
-/>
+/>;
+```
+
+Omit `label` to render just the box — for a toolbar or table header. With no
+visible label, name the field with `aria-label`; otherwise it falls back to the
+primitive's built-in `"Search"` name:
+
+```tsx
+<InputSearch aria-label="Search workloads" placeholder="Search…" />
 ```
 
 ## API Reference
 
-`InputSearchProps` extends [`SearchProps`](/components/search), so it also
-accepts every prop documented there.
+Beyond the two props below, `InputSearchProps` accepts `onClear` (called after
+the clear button empties the field) plus every native `<input>` attribute
+(`placeholder`, `value`, `name`, `onChange`, `disabled`, …). The `SearchBox`
+primitive it wraps is internal and not exported.
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/input-search/input-search.tsx"

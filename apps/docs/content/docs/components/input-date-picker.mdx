@@ -3,8 +3,8 @@ title: InputDatePicker
 description: A date-field trigger for a single date or a date range.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { InputDatePickerDemo } from "@/components/demos-react/input-date-picker";
+import { DemoReact } from '@/components/DemoReact';
+import { InputDatePickerDemo } from '@/components/demos-react/input-date-picker';
 
 ## Usage
 
@@ -12,34 +12,42 @@ import { InputDatePickerDemo } from "@/components/demos-react/input-date-picker"
 import { InputDatePicker } from '@acronis-platform/ui-react';
 ```
 
-`InputDatePicker` is the field trigger for a date picker — a labeled box with a
-trailing calendar icon that displays the formatted selection and opens a
-consumer-owned calendar popup. It supports a single date or a start–end range
-via `pickerType`. Themed by the `--ui-input-text-*` tokens.
+`InputDatePicker` is the date-field **trigger**: a native `<button>` box showing
+a formatted date (or `start – end` when `pickerType="dateRange"`) plus a trailing
+calendar icon, wrapped in the field furniture — an optional `label` with a
+required `*`, and a `description` or `error` message below. It is themed by the
+`--ui-input-date-picker-*` tier, with the box border wired per state (idle /
+hover / `open` / focus / disabled) and an error set that swaps the border and the
+focus ring to `--ui-focus-error`.
 
-This component renders the *field*; wiring it to an actual calendar popup and
-formatting the dates is the consumer's responsibility (pass formatted strings as
-`value` / `startDate` / `endDate`, and toggle `open`).
+The calendar popup is deliberately not part of this component: it renders no
+Base UI primitive and holds no date state. You format the dates yourself and
+pass strings as `value` / `startDate` / `endDate`, then wire your own overlay to
+`onClick` and reflect it back through `open` (which paints the active border and
+sets `aria-expanded`). For the pre-composed range field — trigger, popover,
+dual-month calendar, and an Apply footer — use
+[`DateRangePicker`](/components/date-range-picker) instead of assembling it.
 
 ## Examples
 
+A single-date field with helper text, and the disabled state (which uses
+dedicated disabled tokens rather than opacity):
 
 <DemoReact>
   <InputDatePickerDemo />
 </DemoReact>
 
-A single-date field:
-
 ```tsx
 <InputDatePicker
-  label="Start date"
-  pickerType="date"
-  placeholder="Select a date"
-  value="Jun 25, 2026"
+  label="Due date"
+  placeholder="Pick a date"
+  description="When the backup must complete."
 />
+<InputDatePicker label="Start" placeholder="Pick a date" disabled />
 ```
 
-A date-range field:
+`pickerType="dateRange"` renders both ends with a `separator` (default `–`)
+between them:
 
 ```tsx
 <InputDatePicker
@@ -47,21 +55,64 @@ A date-range field:
   pickerType="dateRange"
   startDate="Jun 1, 2026"
   endDate="Jun 30, 2026"
-  separator="–"
 />
 ```
 
-Required, error, and open states:
+`required` appends the `*` marker and sets `aria-required`. `error` replaces the
+description, switches the box to the error border, and is linked to the trigger
+via `aria-describedby`:
 
 ```tsx
-<InputDatePicker label="Date" required placeholder="Select a date" />
+<InputDatePicker label="Due date" required placeholder="Pick a date" />
 
-<InputDatePicker label="Date" error="Pick a date." />
+<InputDatePicker label="Due date" error="Pick a valid date" />
+```
 
-<InputDatePicker label="Date" open value="Jun 25, 2026" />
+Wiring it to a [`Calendar`](/components/calendar) in a
+[`Popover`](/components/popover). `PopoverTrigger`'s `render` prop hands the
+trigger props to `InputDatePicker`, and `open` keeps the active border in sync:
+
+```tsx
+import {
+  Calendar,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@acronis-platform/ui-react';
+import { format } from 'date-fns';
+
+const [open, setOpen] = React.useState(false);
+const [selected, setSelected] = React.useState<Date>();
+
+<Popover open={open} onOpenChange={setOpen}>
+  <PopoverTrigger
+    render={
+      <InputDatePicker
+        label="Due date"
+        placeholder="Pick a date"
+        value={selected && format(selected, 'MMM d, yyyy')}
+        open={open}
+      />
+    }
+  />
+  <PopoverContent align="start" className="w-auto max-w-none p-0">
+    <Calendar
+      mode="single"
+      selected={selected}
+      onSelect={(date) => {
+        setSelected(date);
+        setOpen(false);
+      }}
+    />
+  </PopoverContent>
+</Popover>
 ```
 
 ## API Reference
+
+`InputDatePickerProps` extends the native `<button>` attributes (minus `value`),
+so `onClick`, `disabled`, `id`, and `aria-invalid` all work as usual — the label
+is associated with an auto-generated `id` when you don't supply one.
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/input-date-picker/input-date-picker.tsx"

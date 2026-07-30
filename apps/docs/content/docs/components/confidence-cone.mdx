@@ -1,6 +1,6 @@
 ---
 title: ConfidenceCone
-description: A forecast chart with a widening prediction band (the confidence cone).
+description: A forecast chart with a widening prediction band — the confidence cone.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
@@ -13,19 +13,39 @@ import { ConfidenceCone } from '@acronis-platform/ui-react';
 import type { ChartConfig } from '@acronis-platform/ui-react';
 ```
 
-`ConfidenceCone` plots a projection with **explicit uncertainty** as one metric
-in one color: a solid line + filled area over the known/actual period, a dashed
-line over the forecast, and a shaded band (the "cone") between a lower and upper
-bound that widens with the horizon. A dashed divider and a subtle shaded region
-set the forecast off from the actuals (toggle with `showForecastRegion`). Point
-the field-name props at your columns (`actualKey`, `forecastKey`, `lowerKey`,
-`upperKey`); the band is drawn behind the lines and kept out of the tooltip and
-legend, and actual vs forecast differ by line style, not hue.
+`ConfidenceCone` is a typed recharts composition over the shared
+[`Chart`](/components/chart) primitives that plots a projection with **explicit
+uncertainty**: a solid line and filled area over the known/actual period, a dashed
+line over the forecast, and a shaded band (the "cone") between a lower and an upper
+bound that typically widens with the horizon. A dashed divider and a subtle shaded
+region set the forecast off from the actuals. You point the field-name props at your
+columns (`xKey`, `actualKey`, `forecastKey`, `lowerKey`, `upperKey`) and never
+hand-compose recharts children.
 
-> **Design-pending v1**, built net-new (no demo playground). There is no chart
-> token tier yet, so the metric color references a shared brand token — a
-> dedicated `--ui-chart-*` data-viz palette is pending an upstream design pass.
-> The actual area and cone band reuse that color at low opacity.
+The whole metric renders in **one hue** — actual and forecast differ by line style,
+not color — so the cone band and the forecast line both reuse the actual series'
+`config` color. The band itself is a synthetic series drawn behind the lines and kept
+out of the tooltip and legend, including any tooltip you supply. Avoid a data field
+named `__cone`; it's reserved for that internal series.
+
+Use it when the plausible range matters as much as the point estimate: capacity,
+license, or revenue forecasts. For a plain trend with no forecast use
+[`LineChart`](/components/line-chart), which also covers comparison overlays and
+delta bands. Despite the similar silhouette,
+[`FunnelChart`](/components/funnel-chart) is a different thing — stage-by-stage
+conversion, not a projection.
+
+Pair the chart with a text alternative — a caption or an adjacent table carrying the
+actual, forecast, and bound values — and give it an accessible name via `aria-label`
+/ `aria-labelledby` (native attributes pass through to the wrapper element). Keep
+the legend or tooltip on so actual vs forecast is labelled: the dashed line is a
+redundant cue, not the only distinction.
+
+> **Design-pending v1**, built net-new (there is no demo playground for it). There is
+> no chart token tier yet, so the metric color references a shared semantic `--ui-*`
+> brand token — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
+> design pass. The actual area and the cone band reuse that color at low opacity, so
+> check its contrast against the surface.
 
 ## Examples
 
@@ -33,8 +53,9 @@ legend, and actual vs forecast differ by line style, not hue.
   <ConfidenceConeDemo />
 </DemoReact>
 
-Give the hand-off point both an `actual` and a `forecast` (with `lower = upper`
-so the cone starts at a point) to make the two lines meet:
+Rows are naturally sparse: a point carries either an actual or a forecast plus its
+bounds. Give the hand-off point **both** an `actual` and a `forecast`, with
+`lower = upper`, so the cone starts at a point and the two lines meet:
 
 ```tsx
 const data = [
@@ -62,8 +83,43 @@ const config = {
 />;
 ```
 
-Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
-`yUnit` (the x-axis is categorical). The titles inherit the theme token:
+`showForecastRegion` (on by default) draws the dashed divider at the hand-off plus
+the shaded region behind the forecast. Set it to `false` to remove both and let the
+cone alone mark the projection:
+
+```tsx
+<ConfidenceCone
+  config={config}
+  data={data}
+  xKey="month"
+  actualKey="actual"
+  forecastKey="forecast"
+  lowerKey="lower"
+  upperKey="upper"
+  showForecastRegion={false}
+/>
+```
+
+Rows without a numeric `lower` and `upper` are simply left un-coned, which is how
+the actual-only period renders no band. Tune the lines with `strokeWidth`, and drop
+the chrome with `showGrid` / `showTooltip` / `showLegend`:
+
+```tsx
+<ConfidenceCone
+  config={config}
+  data={data}
+  xKey="month"
+  actualKey="actual"
+  forecastKey="forecast"
+  lowerKey="lower"
+  upperKey="upper"
+  strokeWidth={3}
+  showGrid={false}
+/>
+```
+
+Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` / `yUnit`
+(the x-axis is categorical). The titles inherit the theme token:
 
 ```tsx
 <ConfidenceCone
@@ -80,11 +136,10 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
 />
 ```
 
-## Custom tooltip
-
 Replace the tooltip with a configured `ChartTooltipContent` — imported from the
-same library, so you never compose recharts yourself. The synthetic cone band is
-already excluded from the payload:
+same library, so you still never compose recharts yourself. The synthetic cone band
+is filtered out of the payload before your tooltip sees it, so a `__cone` item never
+reaches your formatter:
 
 ```tsx
 import { ConfidenceCone, ChartTooltipContent } from '@acronis-platform/ui-react';

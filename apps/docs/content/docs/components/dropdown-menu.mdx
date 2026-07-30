@@ -3,51 +3,76 @@ title: DropdownMenu
 description: A menu of actions anchored to a trigger, opened on demand.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { DropdownMenuDemo } from "@/components/demos-react/dropdown-menu";
+import { DemoReact } from '@/components/DemoReact';
+import { DropdownMenuDemo } from '@/components/demos-react/dropdown-menu';
 
 ## Usage
 
 ```tsx
 import {
+  ButtonMenu,
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuPortal,
   DropdownMenuShortcut,
   DropdownMenuSub,
-  DropdownMenuSubTrigger,
   DropdownMenuSubContent,
-  ButtonMenu,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
 } from '@acronis-platform/ui-react';
 ```
 
-`DropdownMenu` is a compound component built on Base UI's Menu primitive
-(positioning, roving focus, typeahead, outside-press / Esc dismissal, ARIA).
-Themed by the `--ui-button-menu-dropdown-*` token tier from
-`@acronis-platform/tokens-pd`. `DropdownMenu` owns the open state;
-`DropdownMenuTrigger` opens it (typically composed with a `ButtonMenu`); and
-`DropdownMenuContent` is the portaled popup holding `DropdownMenuGroup`s of
-`DropdownMenuItem`s — with optional shortcuts and nested submenus.
+`DropdownMenu` renders a portaled, anchored popup of action rows, styled by the
+`--ui-button-menu-dropdown-*` design tokens — container color, border, radius and
+padding; per-state item background (`*-item-container-color-idle` / `-hover` /
+`-active`); item label and icon color; the section divider on non-first groups;
+and the shortcut and cascade-icon colors under `*-extras-*`. Enter/exit
+animations key off Base UI's `data-[open]` / `data-[closed]` / `data-[side]`
+attributes.
+
+It is a **compound** component. `DropdownMenu` is the root and owns the open
+state; `DropdownMenuTrigger` opens it (compose it with a `ButtonMenu` via
+`render`); `DropdownMenuContent` is the portaled, positioned popup holding
+`DropdownMenuGroup` sections of `DropdownMenuItem` rows, optionally with a
+`DropdownMenuShortcut` hint or a nested `DropdownMenuSub`.
+
+Everything interactive comes from Base UI's Menu primitive: collision-aware
+positioning, roving focus with typeahead, `Esc` and outside-press dismissal, and
+the `aria-haspopup="menu"` / `aria-expanded` / `role="menu"` / `role="menuitem"`
+wiring. On open, focus moves to the first item; **Arrow Up/Down** move the
+highlight, **Home/End** jump to first/last, typing jumps to a matching item,
+**Arrow Right** opens a submenu and **Arrow Left** closes it, and **Esc** closes
+the whole menu and returns focus to the trigger. Activating an item runs its
+action and closes the menu. The focus ring (`--ui-focus-primary`, 3px inset)
+appears only on keyboard navigation, never on pointer interaction.
 
 ## Examples
+
+An actions menu with a `ButtonMenu` trigger. Multiple `DropdownMenuGroup`s render
+an automatic top-border separator between sections — the non-first group gets the
+border, so you never place a separator by hand:
 
 <DemoReact>
   <DropdownMenuDemo />
 </DemoReact>
 
-A basic actions menu with a `ButtonMenu` trigger:
-
 ```tsx
 <DropdownMenu>
-  <DropdownMenuTrigger render={<ButtonMenu variant="secondary">Actions</ButtonMenu>} />
+  <DropdownMenuTrigger
+    render={<ButtonMenu variant="secondary">Actions</ButtonMenu>}
+  />
   <DropdownMenuContent>
     <DropdownMenuGroup>
       <DropdownMenuItem>
-        Profile <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+        Profile
+        <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
       </DropdownMenuItem>
-      <DropdownMenuItem>Settings</DropdownMenuItem>
+      <DropdownMenuItem>
+        Settings
+        <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+      </DropdownMenuItem>
     </DropdownMenuGroup>
     <DropdownMenuGroup>
       <DropdownMenuItem>Log out</DropdownMenuItem>
@@ -56,21 +81,70 @@ A basic actions menu with a `ButtonMenu` trigger:
 </DropdownMenu>
 ```
 
-Multiple `DropdownMenuGroup`s render an automatic top-border separator between
-sections (non-first groups get the border).
+(The preview above adds `defaultOpen` to the root so the popup stays visible.)
 
-A nested submenu:
+Position the popup with `side`, `align`, and `sideOffset` on the content. It
+defaults to `bottom` at a 4px offset, and flips or shifts to stay in the
+viewport when space is tight:
 
 ```tsx
-<DropdownMenuSub>
-  <DropdownMenuSubTrigger>More tools</DropdownMenuSubTrigger>
-  <DropdownMenuSubContent>
-    <DropdownMenuGroup>
-      <DropdownMenuItem>Import</DropdownMenuItem>
-      <DropdownMenuItem>Export</DropdownMenuItem>
-    </DropdownMenuGroup>
-  </DropdownMenuSubContent>
-</DropdownMenuSub>
+<DropdownMenuContent side="right" align="start" sideOffset={8}>
+  <DropdownMenuGroup>
+    <DropdownMenuItem>Rename</DropdownMenuItem>
+    <DropdownMenuItem>Duplicate</DropdownMenuItem>
+  </DropdownMenuGroup>
+</DropdownMenuContent>
+```
+
+A nested submenu. `DropdownMenuSubTrigger` renders its own trailing chevron (and
+mirrors it under `dir="rtl"`), so pass only the label:
+
+```tsx
+<DropdownMenuContent>
+  <DropdownMenuGroup>
+    <DropdownMenuItem>Import</DropdownMenuItem>
+    <DropdownMenuSub>
+      <DropdownMenuSubTrigger>More tools</DropdownMenuSubTrigger>
+      <DropdownMenuSubContent>
+        <DropdownMenuGroup>
+          <DropdownMenuItem>Export as CSV</DropdownMenuItem>
+          <DropdownMenuItem>Export as JSON</DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuSubContent>
+    </DropdownMenuSub>
+  </DropdownMenuGroup>
+</DropdownMenuContent>
+```
+
+`inset` left-pads an item (or a submenu trigger) so its label aligns with rows
+that carry a leading indicator, and `disabled` (a Base UI `Menu.Item` prop) dims
+the row and takes it out of the roving order:
+
+```tsx
+<DropdownMenuGroup>
+  <DropdownMenuItem inset>Aligned with icon rows</DropdownMenuItem>
+  <DropdownMenuItem disabled>Not available</DropdownMenuItem>
+</DropdownMenuGroup>
+```
+
+Controlled — drive `open` and react to `onOpenChange`:
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<DropdownMenu open={open} onOpenChange={setOpen}>
+  {/* …trigger + content… */}
+</DropdownMenu>;
+```
+
+When the menu renders inside an isolated container (e.g. a shadow root), pass a
+`portalContainer` so the popup inherits that scope's styles. The docs previews
+rely on this — `DemoReact` supplies the container through
+`PortalContainerProvider`, so the demo above needs no extra plumbing. Set
+`portal={false}` only when you supply your own `DropdownMenuPortal` ancestor:
+
+```tsx
+<DropdownMenuContent portalContainer={mountNode}>{/* … */}</DropdownMenuContent>
 ```
 
 ## API Reference
@@ -82,8 +156,12 @@ A nested submenu:
   name="DropdownMenuContentProps"
 />
 
-`DropdownMenu` (root) accepts the Base UI Menu root props — `open` /
-`defaultOpen`, `onOpenChange`. `DropdownMenuItem` / `DropdownMenuSubTrigger`
-take an `inset` flag. See the
+`DropdownMenu` (root) takes the Base UI Menu root props — `open` /
+`defaultOpen` / `onOpenChange`, plus `modal` (default `true`).
+`DropdownMenuItem` and `DropdownMenuSubTrigger` add an `inset` flag on top of
+the Base UI `Menu.Item` / `Menu.SubmenuTrigger` props; `DropdownMenuSubContent`
+takes `sideOffset` (default `4`) and renders inside its parent popup rather than
+its own portal. `DropdownMenuShortcut` accepts the standard attributes of the
+`<span>` it renders. See the
 [Base UI Menu docs](https://base-ui.com/react/components/menu) for the full prop
 surface of each part.

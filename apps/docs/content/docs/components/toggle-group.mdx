@@ -3,48 +3,143 @@ title: ToggleGroup
 description: A set of pressable toggle buttons, plus a standalone Toggle.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { ToggleGroupDemo } from "@/components/demos-react/toggle-group";
+import { DemoReact } from '@/components/DemoReact';
+import { ToggleGroupDemo } from '@/components/demos-react/toggle-group';
 
 ## Usage
 
 ```tsx
-import { Toggle, ToggleGroup, ToggleGroupItem } from '@acronis-platform/ui-react';
+import {
+  Toggle,
+  ToggleGroup,
+  ToggleGroupItem,
+} from '@acronis-platform/ui-react';
 ```
 
-`ToggleGroup` is a set of pressable toggle buttons — single or multiple selection
-— built on [Base UI's Toggle / ToggleGroup](https://base-ui.com/react/components/toggle-group).
-Each `ToggleGroupItem` needs a `value`; control the pressed set with `value` /
-`defaultValue`. `Toggle` is the same button used standalone for an independent
-on/off control. Give icon-only toggles an `aria-label`.
+`ToggleGroup` wraps Base UI's
+[ToggleGroup](https://base-ui.com/react/components/toggle-group), and both
+`ToggleGroupItem` and the standalone `Toggle` wrap Base UI's
+[Toggle](https://base-ui.com/react/components/toggle) — arrow-key roving focus,
+the pressed-state bookkeeping, and `aria-pressed` come from Base UI. The group
+tracks an **array** of pressed values and each item needs a `value`; `Toggle` is
+the same 36px-tall button used on its own with `pressed` / `defaultPressed`. There
+is no `--ui-toggle-*` token tier: items are transparent when idle and use the
+semantic surface tokens (`--ui-background-surface-hover` on hover,
+`--ui-background-surface-active` when pressed) with
+`--ui-text-on-surface-primary` text and a `--ui-focus-primary` focus ring.
 
 > Design-pending v1, ported from the legacy `shadcn-uikit` toggle-group.
 
 ## Examples
+
+A single-selection view switcher plus a standalone toggle. Icon-only buttons need
+an `aria-label`, and the group needs one too:
 
 <DemoReact>
   <ToggleGroupDemo />
 </DemoReact>
 
 ```tsx
+import {
+  LayoutGridIcon,
+  LayoutTableIcon,
+  ListIcon,
+  StarIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
+
 <ToggleGroup defaultValue={['grid']} aria-label="View mode">
-  <ToggleGroupItem value="grid" aria-label="Grid view"><LayoutGridIcon size={16} /></ToggleGroupItem>
-  <ToggleGroupItem value="list" aria-label="List view"><ListIcon size={16} /></ToggleGroupItem>
+  <ToggleGroupItem value="grid" aria-label="Grid view">
+    <LayoutGridIcon size={16} />
+  </ToggleGroupItem>
+  <ToggleGroupItem value="table" aria-label="Table view">
+    <LayoutTableIcon size={16} />
+  </ToggleGroupItem>
+  <ToggleGroupItem value="list" aria-label="List view">
+    <ListIcon size={16} />
+  </ToggleGroupItem>
+</ToggleGroup>
+
+<Toggle defaultPressed aria-label="Favorite">
+  <StarIcon size={16} />
+  Favorite
+</Toggle>;
+```
+
+A group is single-selection by default — pressing an item releases the previous
+one. Set `multiple` to keep several pressed at once, as in a formatting toolbar:
+
+```tsx
+<ToggleGroup multiple defaultValue={['bold']} aria-label="Text format">
+  <ToggleGroupItem value="bold" aria-label="Bold">
+    B
+  </ToggleGroupItem>
+  <ToggleGroupItem value="italic" aria-label="Italic">
+    I
+  </ToggleGroupItem>
 </ToggleGroup>
 ```
 
-A standalone toggle:
+Controlled — `onValueChange` receives the next array of pressed values:
 
 ```tsx
-<Toggle aria-label="Favorite"><StarIcon size={16} /> Favorite</Toggle>
+const [view, setView] = React.useState(['grid']);
+
+<ToggleGroup value={view} onValueChange={setView} aria-label="View mode">
+  <ToggleGroupItem value="grid" aria-label="Grid view">
+    <LayoutGridIcon size={16} />
+  </ToggleGroupItem>
+  <ToggleGroupItem value="list" aria-label="List view">
+    <ListIcon size={16} />
+  </ToggleGroupItem>
+</ToggleGroup>;
 ```
 
-For choosing a form value use [`RadioGroup`](/components/radio) or
-[`InputSelect`](/components/input-select); for a single labelled on/off setting use
-[`Switch`](/components/switch).
+`orientation="vertical"` switches the arrow keys to the vertical axis and stacks
+the items at a common width. `disabled` works on the group or on one item:
+
+```tsx
+<ToggleGroup
+  orientation="vertical"
+  defaultValue={['grid']}
+  aria-label="View mode"
+>
+  <ToggleGroupItem value="grid" aria-label="Grid view">
+    <LayoutGridIcon size={16} />
+  </ToggleGroupItem>
+  <ToggleGroupItem value="list" aria-label="List view" disabled>
+    <ListIcon size={16} />
+  </ToggleGroupItem>
+</ToggleGroup>
+```
+
+Use a toggle group for view or format options that apply immediately. For a form
+value use [`RadioGroup`](/components/radio) or
+[`InputSelect`](/components/input-select); for a single labelled on/off setting
+use [`Switch`](/components/switch).
 
 ## API Reference
 
-`ToggleGroup` re-exports Base UI's ToggleGroup props (`value` / `defaultValue` /
-`disabled` / `onValueChange`). `ToggleGroupItem` and `Toggle` are Base UI Toggles
-(`value`, `pressed` / `defaultPressed`, `disabled`) plus `className`.
+### ToggleGroup
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/toggle-group/toggle-group.docs.ts"
+  name="ToggleGroupProps"
+/>
+
+### Toggle / ToggleGroupItem
+
+`ToggleGroupItem` and `Toggle` are the same component with the same props —
+`ToggleGroupItem` is the name to use inside a group:
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/toggle-group/toggle-group.docs.ts"
+  name="ToggleProps"
+/>
+
+All three parts also accept `className` and the props of the element they render
+(a `<div>` for the group, a `<button>` for the toggles), plus Base UI's `render`
+prop for element composition. The tables above are a curated companion file: the
+components declare no props interface of their own, so see the
+[Base UI ToggleGroup](https://base-ui.com/react/components/toggle-group) and
+[Base UI Toggle](https://base-ui.com/react/components/toggle) docs for the full
+surface.

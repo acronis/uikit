@@ -1,10 +1,10 @@
 ---
 title: Chart
-description: A theming layer over recharts — container, tooltip, and legend chrome.
+description: The shared chart primitive tier — container, tooltip, and legend chrome over recharts.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { ChartDemo } from "@/components/demos-react/chart";
+import { DemoReact } from '@/components/DemoReact';
+import { ChartDemo } from '@/components/demos-react/chart';
 
 ## Usage
 
@@ -20,23 +20,52 @@ import {
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 ```
 
-`Chart` is a thin theming layer over [recharts](https://recharts.org).
-`ChartContainer` supplies the series colors and themes recharts' internals (grid,
-axis, cursor) with the semantic token vocabulary; `ChartTooltipContent` and
-`ChartLegendContent` give the tooltip and legend the Acronis look. You compose the
-chart type itself — `BarChart`, `LineChart`, `AreaChart`, `PieChart`, … — from
-recharts primitives.
+`Chart` is not a chart — it is the **shared primitive tier** every per-type chart
+in this library is built on. `ChartContainer` wraps a recharts
+`ResponsiveContainer`, supplies the per-series colors, and themes recharts'
+internals (grid, axis ticks, cursor, sectors) with the semantic token vocabulary.
+`ChartTooltipContent` and `ChartLegendContent` give the tooltip and legend the
+Acronis look; `ChartTooltip` and `ChartLegend` are direct re-exports of recharts'
+`Tooltip` and `Legend`.
 
 Series colors are supplied by the caller through `config`: each entry maps a data
-key to a `label` and a `color` (or a per-theme `{ light, dark }` pair).
-`ChartContainer` turns those into `--color-<key>` custom properties you reference
-from the recharts `fill` / `stroke` props.
+key to a `label` and either a `color` or a per-theme `{ light, dark }` pair.
+`ChartContainer` injects those as `--color-<key>` custom properties that you
+reference from recharts' `fill` / `stroke` props. A `config` entry with no color
+injects no stylesheet at all, so recharts falls back to its own defaults.
+
+Reach for `Chart` directly when you need a plot shape the typed charts don't
+cover, or recharts children they don't expose. For the common shapes, prefer the
+typed compositions — [`BarChart`](/components/bar-chart),
+[`LineChart`](/components/line-chart), [`AreaChart`](/components/area-chart),
+[`PieChart`](/components/pie-chart),
+[`ScatterChart`](/components/scatter-chart),
+[`ComposedChart`](/components/composed-chart),
+[`RadarChart`](/components/radar-chart),
+[`FunnelChart`](/components/funnel-chart),
+[`RadialBarChart`](/components/radial-bar-chart),
+[`Treemap`](/components/treemap), [`Histogram`](/components/histogram),
+[`ConfidenceCone`](/components/confidence-cone) — which take `data` + `config`
+and compose the recharts children for you. Don't use any chart for a single
+metric (a [`Tag`](/components/tag) or plain text reads better), for tabular
+detail ([`Table`](/components/table) /
+[`DataTable`](/components/data-table)), or for progress toward a goal
+([`Progress`](/components/progress) /
+[`ProgressCircle`](/components/progress-circle)).
+
+Pair every chart with a text alternative — a caption, a summary, or an adjacent
+data table — and give `ChartContainer` an `aria-label` / `aria-labelledby` when
+the chart is meaningful standalone (native `div` attributes pass through). Never
+set `hideLabel` and `hideIndicator` together on `ChartTooltipContent`: that
+leaves color as the only channel.
 
 > **Design-pending v1**, ported from the legacy `shadcn-uikit` chart. There is no
-> chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated data-viz palette is pending an upstream design pass.
-> `recharts` resolves as a dependency of `@acronis-platform/ui-react`; import the
-> chart primitives directly from `recharts`.
+> chart token tier yet, so the examples reference the shared semantic `--ui-*`
+> brand/status tokens — a dedicated `--ui-chart-*` data-viz palette is pending an
+> upstream design pass. Caller-supplied series colors are the caller's
+> responsibility: keep them at 3:1 against the surface and distinguishable under
+> color-vision deficiency. `recharts` resolves as a dependency of
+> `@acronis-platform/ui-react`; import its primitives directly from `recharts`.
 
 ## Examples
 
@@ -44,9 +73,16 @@ from the recharts `fill` / `stroke` props.
   <ChartDemo />
 </DemoReact>
 
-A bar chart with a themed tooltip and legend:
+A hand-composed bar plot with a themed tooltip and legend. The `--color-<key>`
+properties come from `config`:
 
 ```tsx
+const data = [
+  { month: 'Jan', desktop: 186, mobile: 80 },
+  { month: 'Feb', desktop: 305, mobile: 200 },
+  { month: 'Mar', desktop: 237, mobile: 120 },
+];
+
 const config = {
   desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
   mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
@@ -64,7 +100,8 @@ const config = {
 </ChartContainer>;
 ```
 
-Per-theme colors switch with the active theme:
+A series can carry a per-theme color pair instead of one `color`. The dark value
+is scoped under `[data-theme='dark']`, so it switches with the active theme:
 
 ```tsx
 const config = {
@@ -75,10 +112,34 @@ const config = {
 } satisfies ChartConfig;
 ```
 
-The tooltip indicator can be a `dot` (default), `line`, or `dashed`:
+The tooltip indicator can be a `dot` (default), `line`, or `dashed`. `hideLabel`
+drops the header row, `hideIndicator` the swatch — use at most one of them:
 
 ```tsx
 <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
+<ChartTooltip content={<ChartTooltipContent indicator="dashed" hideLabel />} />
+```
+
+For charts whose rows are named rather than keyed by column (a pie, funnel, or
+treemap), point the tooltip and legend at the name field with `nameKey`:
+
+```tsx
+<ChartTooltip content={<ChartTooltipContent nameKey="browser" hideLabel />} />
+<ChartLegend content={<ChartLegendContent nameKey="browser" />} />
+```
+
+`formatter` renders each row and `labelFormatter` the header, so you can format
+values, add units, or add extra fields without leaving the themed shell:
+
+```tsx
+<ChartTooltip
+  content={
+    <ChartTooltipContent
+      labelFormatter={(label) => `${label} · fiscal Q3`}
+      formatter={(value, name) => `${name}: ${value.toLocaleString()}k`}
+    />
+  }
+/>
 ```
 
 ## API Reference
@@ -90,9 +151,17 @@ The tooltip indicator can be a `dot` (default), `line`, or `dashed`:
   name="ChartContainerProps"
 />
 
-`ChartTooltipContent` and `ChartLegendContent` are passed to recharts' `Tooltip` /
-`Legend` via their `content` prop. They accept the display options
-`hideLabel`, `hideIndicator`, `indicator` (`'dot' | 'line' | 'dashed'`),
-`hideIcon`, `nameKey`, and `labelKey` on top of recharts' content props.
-`ChartTooltip` and `ChartLegend` are direct re-exports of recharts' `Tooltip` and
-`Legend`.
+`ChartTooltipContent` is passed to `ChartTooltip` via its `content` prop, on top
+of recharts' own tooltip content props:
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/chart/chart.tsx"
+  name="ChartTooltipContentProps"
+/>
+
+`ChartLegendContent` is passed to `ChartLegend` the same way:
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/chart/chart.tsx"
+  name="ChartLegendContentProps"
+/>

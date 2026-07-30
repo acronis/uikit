@@ -3,8 +3,8 @@ title: Toast
 description: A transient notification shown in a corner stack, triggered with the imperative toast() API.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { ToastDemo } from "@/components/demos-react/toast";
+import { DemoReact } from '@/components/DemoReact';
+import { ToastDemo } from '@/components/demos-react/toast';
 
 ## Usage
 
@@ -12,22 +12,42 @@ import { ToastDemo } from "@/components/demos-react/toast";
 import { Toaster, toast } from '@acronis-platform/ui-react';
 ```
 
-Render a single `<Toaster />` near the app root, then call the imperative
-`toast(...)` API from anywhere — including outside React, since the manager is
-module-level. Rebuilt on the Base UI toast primitive (no Sonner dependency). This
-is a design-pending v1 on semantic tokens: a neutral card surface with the status
-conveyed by a colored leading icon; a `--ui-toast-*` tier and per-status tinting
-are pending a Figma pass.
+`Toaster` renders the toast region: a portaled stack pinned to the bottom
+**inline-end** corner (so it mirrors under `dir="rtl"`), 384px wide, holding one
+card per queued toast. Each card is a neutral surface — `bg-background`,
+`border-border`, a shadow — with the status carried by a colored leading icon
+from the `--ui-text-on-status-*` tokens: a check for `success`, an info glyph, a
+warning triangle, a cross for `error`, and a `Spinner` for `loading`.
+
+> **Design-pending v1.** There is no `--ui-toast-*` token tier yet, so the card
+> themes on the shared semantic tokens and per-status surface tinting is still
+> pending a Figma pass. Ported from the legacy `shadcn-uikit` `sonner` wrapper and
+> rebuilt on Base UI's toast primitive — there is no Sonner dependency.
+
+Unlike the other overlays this is **not** a compound API. Render a single
+`<Toaster />` near the app root, then call the imperative `toast(...)` API from
+anywhere — including outside React, since the toast manager is module-level:
 
 ```tsx
 // once, near the app root
-<Toaster />
+<Toaster />;
 
 // anywhere
 toast.success('Profile saved', { description: 'Your changes were saved.' });
 ```
 
+Toasts auto-dismiss after `timeout` (default 5000 ms) and the stack shows at most
+`limit` at a time (default 3), dropping the oldest to make room. Nothing steals
+focus: Base UI's viewport is a polite live region, so a new toast is announced
+without interrupting, and the card's close and action buttons are reachable by
+keyboard through the region. Because a toast disappears on its own, never put
+information the user must act on — or must not miss — in one; use a `Dialog` or an
+inline message instead.
+
 ## Examples
+
+The status variants, plus a toast carrying an inline action. Click a button to
+push one onto the stack:
 
 <DemoReact>
   <ToastDemo />
@@ -35,30 +55,88 @@ toast.success('Profile saved', { description: 'Your changes were saved.' });
 
 ```tsx
 toast('Event created', { description: 'Monday, January 3rd at 6:00 PM' });
-toast.success('Profile saved');
-toast.error('Delete failed', { description: 'Please try again.' });
+toast.success('Profile saved', {
+  description: 'Your changes have been saved.',
+});
+toast.error('Delete failed', {
+  description: 'Please try again or contact support.',
+});
 toast.info('Event created', {
-  description: 'Monday at 6:00 PM',
+  description: 'Monday, January 3rd at 6:00 PM',
   action: { label: 'Undo', onClick: undo },
 });
 ```
 
+A `loading` toast persists — it sets `timeout: 0`, so it stays until you update or
+dismiss it. Re-adding with the same `id` updates the existing card in place and
+resets its dismiss timer, which is how a long operation reports its outcome:
+
+```tsx
+const id = toast.loading('Uploading…');
+
+await upload();
+toast.success('Upload complete', { id });
+```
+
+`toast.promise` wires that lifecycle up for you:
+
+```tsx
+toast.promise(save(), {
+  loading: 'Saving…',
+  success: 'Saved',
+  error: 'Could not save',
+});
+```
+
+`toast.dismiss` closes one toast by id, or every toast when called with no
+argument:
+
+```tsx
+const id = toast.warning('Session expires in 1 minute');
+
+toast.dismiss(id);
+toast.dismiss();
+```
+
+Change the region's defaults on the `Toaster` itself:
+
+```tsx
+<Toaster timeout={8000} limit={5} />
+```
+
+When the toasts render inside an isolated container (e.g. a shadow root), pass a
+`portalContainer` so the stack inherits that scope's styles. The docs preview
+relies on this — `DemoReact` supplies the container through
+`PortalContainerProvider`, so the demo above needs no extra plumbing:
+
+```tsx
+<Toaster portalContainer={mountNode} />
+```
+
 ## The `toast` API
 
-| Method                                  | Description                                            |
-| --------------------------------------- | ------------------------------------------------------ |
-| `toast(title, options?)`                | A neutral toast. Returns the toast id.                 |
-| `toast.success / info / warning / error`| Status variants (sets the icon).                       |
-| `toast.loading(title, options?)`        | A persistent spinner toast (no auto-dismiss).          |
-| `toast.dismiss(id?)`                    | Dismiss one toast, or all when `id` is omitted.        |
-| `toast.promise(promise, { loading, success, error })` | Tie a toast to a promise's lifecycle.    |
+| Method                                                | Description                                           |
+| ----------------------------------------------------- | ----------------------------------------------------- |
+| `toast(title, options?)`                              | A neutral toast, with no status icon. Returns its id. |
+| `toast.success / info / warning / error`              | Status variants — each sets the leading icon.         |
+| `toast.loading(title, options?)`                      | A persistent spinner toast (`timeout: 0`).            |
+| `toast.dismiss(id?)`                                  | Dismiss one toast, or all when `id` is omitted.       |
+| `toast.promise(promise, { loading, success, error })` | Tie a toast to a promise's lifecycle.                 |
 
-`options`: `description`, `timeout` (ms; `0` = persist), `action` (`{ label,
-onClick }`), and `id` (re-adding the same id updates the toast in place).
+`options` accepts `description` (the secondary line), `timeout` (ms; `0` keeps
+the toast until dismissed), `action` (`{ label, onClick }` — a single inline
+button), and `id` (re-adding the same id updates the toast in place).
 
 ## API Reference
+
+### Toaster
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/toast/toast.docs.ts"
   name="ToasterProps"
 />
+
+There is no per-toast React component to take props — a toast's content comes
+from the `toast(...)` call. See the
+[Base UI Toast docs](https://base-ui.com/react/components/toast) for the
+underlying primitive.

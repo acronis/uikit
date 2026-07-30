@@ -16,10 +16,29 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`Resizable` wraps [`react-resizable-panels`](https://github.com/bvaughn/react-resizable-panels).
 `ResizablePanelGroup` lays out `ResizablePanel` children along an `orientation`
 (`horizontal` or `vertical`), separated by a `ResizableHandle` the user drags.
-The handle is themed by the `--ui-resizable-*` tokens.
+Base UI has no resizable primitive, so this is the one component in the library
+that wraps a third party —
+[`react-resizable-panels`](https://github.com/bvaughn/react-resizable-panels) v4
+(`Group` / `Panel` / `Separator`) — behind the familiar shadcn part names.
+
+The handle is a 9px-wide hit area (1px divider plus 4px padding each side)
+themed by the `--ui-resizable-*` token tier. Each interaction state is wired to
+its own token so brands can diverge: the line is
+`--ui-border-on-surface-border` at rest,
+`--ui-resizable-border-color-hover` on pointer hover, and
+`--ui-resizable-border-color-active` while dragging; the resting cursor is
+`--ui-resizable-cursor` and keyboard focus paints a 3px `--ui-focus-primary`
+ring on the line itself. `orientation="vertical"` stacks the panels, turning the
+handle into a horizontal line with an `ns-resize` cursor.
+
+Reach for it on split layouts the user should be able to re-proportion — sidebar
+plus content, list plus detail, editor plus preview. Not for fixed layout chrome,
+and not for reordering items (that's drag-and-drop).
+
+> The group needs a bounded height (or width, when vertical) from its container —
+> set one on the group or its parent.
 
 ## Examples
 
@@ -30,7 +49,7 @@ The handle is themed by the `--ui-resizable-*` tokens.
 A horizontal split (sidebar + content):
 
 ```tsx
-<ResizablePanelGroup orientation="horizontal">
+<ResizablePanelGroup orientation="horizontal" className="h-64">
   <ResizablePanel defaultSize={40} minSize={20}>
     Sidebar
   </ResizablePanel>
@@ -39,13 +58,27 @@ A horizontal split (sidebar + content):
 </ResizablePanelGroup>
 ```
 
-A vertical split (editor + preview):
+A vertical split (editor + preview) — panels stacked, handle horizontal:
 
 ```tsx
-<ResizablePanelGroup orientation="vertical">
+<ResizablePanelGroup orientation="vertical" className="h-96">
   <ResizablePanel defaultSize={60}>Editor</ResizablePanel>
   <ResizableHandle />
   <ResizablePanel defaultSize={40}>Preview</ResizablePanel>
+</ResizablePanelGroup>
+```
+
+Three panels with constraints on the middle one:
+
+```tsx
+<ResizablePanelGroup orientation="horizontal" className="h-64">
+  <ResizablePanel defaultSize={25}>Navigation</ResizablePanel>
+  <ResizableHandle />
+  <ResizablePanel defaultSize={50} minSize={30} maxSize={70}>
+    List
+  </ResizablePanel>
+  <ResizableHandle />
+  <ResizablePanel defaultSize={25}>Details</ResizablePanel>
 </ResizablePanelGroup>
 ```
 

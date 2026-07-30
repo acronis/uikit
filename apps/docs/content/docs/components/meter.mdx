@@ -12,27 +12,67 @@ import { MeterDemo } from '@/components/demos-react/meter';
 import { Meter } from '@acronis-platform/ui-react';
 ```
 
-`Meter` shows a scalar value within a known range — a **fractional value / share**
-— as a labelled bar: label + `value · %` over a proportional track, with a hover
-tooltip. It's built on Base UI's `Meter` (`role="meter"`, like the HTML
-`<meter>` element), as opposed to [`Progress`](/components/progress) /
-`ProgressCircle`, which track a task over time. Stack several — sharing one `max`
-(the total), sorted by value — to build a **ranked breakdown** (a "bar list").
+`Meter` wraps Base UI's `Meter` primitive (`Root` / `Label` / `Track` /
+`Indicator`) as one row: the label on the left, `value · %` on the right, and a
+proportional track bar below. `role="meter"` — mirroring the HTML `<meter>`
+element — is the point: a meter reports a **scalar value within a known range**,
+whereas [`Progress`](/components/progress) tracks a task over time. Stack several
+sharing one `max` to build a ranked breakdown (a "bar list").
 
-> **Design-pending v1.** No chart token tier yet, so the fill `color` is
-> **caller-supplied** per row (a dedicated `--ui-chart-*` data-viz palette is
-> pending an upstream design pass). The tooltip uses the chart-tooltip look
-> (light card). Code Connect deferred.
+> **Design-pending v1.** There is no `--ui-chart-*` data-viz palette yet, so the
+> fill `color` is **caller-supplied** per row; the track reuses the shared
+> `bg-input`. Code Connect is deferred.
 
 ## Examples
 
-A ranked breakdown built from stacked meters:
+A ranked breakdown: four meters sharing one `max` (the total), sorted by value:
 
 <DemoReact>
   <MeterDemo />
 </DemoReact>
 
-A single meter:
+```tsx
+const rows = [
+  {
+    label: 'Critical',
+    value: 6,
+    color: 'var(--ui-background-status-strong-danger)',
+  },
+  {
+    label: 'High',
+    value: 9,
+    color: 'var(--ui-background-status-strong-warning)',
+  },
+  {
+    label: 'Medium',
+    value: 8,
+    color: 'var(--ui-background-status-strong-info)',
+  },
+  {
+    label: 'Low',
+    value: 6,
+    color: 'var(--ui-background-status-strong-success)',
+  },
+];
+const total = rows.reduce((sum, r) => sum + r.value, 0);
+
+<div className="flex w-[360px] flex-col gap-4">
+  {[...rows]
+    .sort((a, b) => b.value - a.value)
+    .map((r) => (
+      <Meter
+        key={r.label}
+        label={r.label}
+        value={r.value}
+        max={total}
+        color={r.color}
+      />
+    ))}
+</div>;
+```
+
+A single meter, where `max` is the whole the value is a share of. `label`,
+`value`, and `color` are the three required props; `max` defaults to `100`:
 
 ```tsx
 <Meter
@@ -43,27 +83,31 @@ A single meter:
 />
 ```
 
-Stack several sharing one `max` (the total), sorted by value:
+Reference an existing semantic `--ui-*` token for `color` rather than a literal —
+the status tokens are chromatic across brands, so rows read consistently until the
+real data-viz palette lands.
+
+`valueFormatter` formats the numeric value in both the row and the tooltip:
 
 ```tsx
-const rows = [
-  { label: 'High', value: 9, color: 'var(--ui-background-status-strong-warning)' },
-  { label: 'Medium', value: 8, color: 'var(--ui-background-status-strong-info)' },
-  { label: 'Critical', value: 6, color: 'var(--ui-background-status-strong-danger)' },
-];
-const total = rows.reduce((sum, r) => sum + r.value, 0);
-
-<div className="flex flex-col gap-4">
-  {rows
-    .sort((a, b) => b.value - a.value)
-    .map((r) => (
-      <Meter key={r.label} label={r.label} value={r.value} max={total} color={r.color} />
-    ))}
-</div>;
+<Meter
+  label="Backups"
+  value={1_482_000_000}
+  max={4_000_000_000}
+  color="var(--ui-background-status-strong-info)"
+  valueFormatter={(v) => `${(v / 1e9).toFixed(2)} GB`}
+/>
 ```
 
-Hide the hover tooltip with `showTooltip={false}`, or format the value with
-`valueFormatter`.
+The hover tooltip (`label`, `value of max`, `%`) is on by default and the row is
+made focusable so keyboard users can open it. Pass `showTooltip={false}` to drop
+it, or `tooltip` to replace its contents while keeping the chart-style card:
+
+```tsx
+<Meter label="Low" value={6} max={29} color="…" showTooltip={false} />
+
+<Meter label="Low" value={6} max={29} color="…" tooltip={<span>6 of 29 devices</span>} />
+```
 
 ## API Reference
 

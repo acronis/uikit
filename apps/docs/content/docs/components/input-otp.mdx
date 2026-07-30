@@ -1,0 +1,95 @@
+---
+title: InputOTP
+description: A row of single-character boxes for entering a one-time code.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { InputOTPDemo } from '@/components/demos-react/input-otp';
+
+## Usage
+
+```tsx
+import { InputOTP } from '@acronis-platform/ui-react';
+```
+
+`InputOTP` renders a `role="group"` row of `length` single-character `<input>`
+slots (6 by default) for a one-time code. No Base UI primitive is involved —
+each slot is a native input, and the component owns the focus choreography:
+typing a digit advances to the next slot, Backspace on an empty slot clears and
+moves back to the previous one, ArrowLeft / ArrowRight step between slots, and
+pasting distributes the code across the slots from the focused one onward.
+Themed by the `--ui-input-otp-*` tokens.
+
+Codes are numeric-only by design. `inputMode="numeric"` and `pattern="[0-9]*"`
+are mobile-keyboard hints, so digits are also enforced in JS: a non-digit
+keystroke is rejected and non-digit characters are stripped from a paste. Each
+slot carries `autocomplete="one-time-code"`, so browser and password-manager
+autofill works — including when it drops the whole code into a single slot.
+
+Like the bare `InputBox`, `InputOTP` renders no label, description, or error
+message. It forwards arbitrary `<div>` props, so name the group with `aria-label`
+or `aria-labelledby` and render any message yourself.
+
+## Examples
+
+A controlled 6-digit code, and a filled code in the error state:
+
+<DemoReact>
+  <InputOTPDemo />
+</DemoReact>
+
+```tsx
+const [code, setCode] = React.useState('');
+
+<InputOTP aria-label="Verification code" value={code} onChange={setCode} />
+
+<InputOTP aria-label="Expired code" defaultValue="123456" error />
+```
+
+`onChange` fires with the full value on every edit. `onComplete` fires once the
+moment every slot is filled, and will not fire again until the value drops below
+`length` and is completed anew:
+
+```tsx
+<InputOTP
+  autoFocus
+  aria-label="Verification code"
+  onComplete={(code) => verify(code)}
+/>
+```
+
+Shorten or lengthen the code with `length`. Each empty slot shows its own 1-based
+position as a placeholder:
+
+```tsx
+<InputOTP length={4} aria-label="PIN" />
+```
+
+`error` reddens every box and switches the focus ring to `--ui-focus-error`; it
+also sets `aria-invalid` on every slot. The design has no disabled treatment, so
+`disabled` falls back to the package-wide dimmed convention and takes every slot
+out of the tab order:
+
+```tsx
+<InputOTP disabled defaultValue="123456" aria-label="Verification code" />
+```
+
+Each slot is named `Digit N of length` by default. Override that for
+localization with `slotAriaLabel`:
+
+```tsx
+<InputOTP
+  aria-label="Code de vérification"
+  slotAriaLabel={(index, length) => `Chiffre ${index} sur ${length}`}
+/>
+```
+
+## API Reference
+
+`InputOTPProps` also accepts every native `<div>` attribute except `children`,
+`onChange`, and `defaultValue`, which the component redefines.
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-otp/input-otp.tsx"
+  name="InputOTPProps"
+/>

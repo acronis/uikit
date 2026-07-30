@@ -1,10 +1,10 @@
 ---
 title: Select
-description: Choose one option from a list (alias of the InputSelect family).
+description: Choose from a list of predefined options; an alias of the InputSelect family.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { SelectDemo } from "@/components/demos-react/select";
+import { DemoReact } from '@/components/DemoReact';
+import { SelectDemo } from '@/components/demos-react/select';
 
 ## Usage
 
@@ -20,61 +20,121 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`Select` is an alias of the [`InputSelect`](/components/input-select)
-family, themed by the `--ui-input-select-*` tokens and built on Base UI's
-`Select` primitive. The `Select*` names map onto the corresponding
-`InputSelect*` parts (`SelectGroup` → `InputSelectSection`, `SelectGroupLabel` →
-`InputSelectSection­Label`). **Prefer importing `InputSelect*` directly in new
-code** — `Select` exists for compatibility.
+`Select` is a set of aliases for the [`InputSelect`](/components/input-select)
+parts, so it is the same Base UI
+[`Select`](https://base-ui.com/react/components/select) composition themed by the
+`--ui-input-select-*` tokens: `Select` → `InputSelect`, `SelectGroup` →
+`InputSelectSection`, `SelectGroupLabel` → `InputSelectSectionLabel`, and the
+trigger / value / content / item names map one-to-one. The alias set is the bare
+control — it has no label, description, or error part, so give the trigger an
+accessible name. **Prefer importing `InputSelect*` directly in new code**;
+`Select` exists for compatibility, and only the `InputSelect*` names cover the
+field furniture, in-dropdown search, expander, and status rows.
 
 ## Examples
 
+A single-select with a preselected value. `items` lets `SelectValue` render the
+selected option's label while the popup is closed:
 
 <DemoReact>
   <SelectDemo />
 </DemoReact>
 
-A basic select:
-
 ```tsx
-<Select items={fruitItems}>
-  <SelectTrigger aria-label="Fruit">
-    <SelectValue placeholder="Select an option" />
+const regions = { us: 'United States', eu: 'Europe', apac: 'Asia Pacific' };
+
+<Select items={regions} defaultValue="eu">
+  <SelectTrigger aria-label="Region">
+    <SelectValue placeholder="Select a region" />
   </SelectTrigger>
   <SelectContent>
-    <SelectItem value="apple">Apple</SelectItem>
-    <SelectItem value="banana">Banana</SelectItem>
-    <SelectItem value="grapes">Grapes</SelectItem>
+    <SelectItem value="us">United States</SelectItem>
+    <SelectItem value="eu">Europe</SelectItem>
+    <SelectItem value="apac">Asia Pacific</SelectItem>
   </SelectContent>
 </Select>
 ```
 
-A disabled trigger:
+Controlled, with `value` and `onValueChange`:
 
 ```tsx
-<Select items={fruitItems} disabled>
-  <SelectTrigger aria-label="Fruit">
-    <SelectValue placeholder="Select an option" />
+const [region, setRegion] = React.useState<string | null>(null);
+
+<Select items={regions} value={region} onValueChange={setRegion}>
+  <SelectTrigger aria-label="Region">
+    <SelectValue placeholder="Select a region" />
   </SelectTrigger>
   <SelectContent>{/* …items… */}</SelectContent>
 </Select>
 ```
 
-Grouped options:
+`disabled` on the root blocks opening and applies the disabled tokens:
+
+```tsx
+<Select items={regions} defaultValue="eu" disabled>
+  <SelectTrigger aria-label="Region">
+    <SelectValue placeholder="Select a region" />
+  </SelectTrigger>
+  <SelectContent>{/* …items… */}</SelectContent>
+</Select>
+```
+
+`SelectGroup` + `SelectGroupLabel` split the options into labeled sections, each
+divided from the previous one by a top border:
 
 ```tsx
 <SelectContent>
   <SelectGroup>
-    <SelectGroupLabel>Fruits</SelectGroupLabel>
-    <SelectItem value="apple">Apple</SelectItem>
-    <SelectItem value="banana">Banana</SelectItem>
+    <SelectGroupLabel>Americas</SelectGroupLabel>
+    <SelectItem value="us">United States</SelectItem>
+  </SelectGroup>
+  <SelectGroup>
+    <SelectGroupLabel>EMEA</SelectGroupLabel>
+    <SelectItem value="eu">Europe</SelectItem>
   </SelectGroup>
 </SelectContent>
 ```
 
+With `multiple`, every row shows a leading checkbox, the popup stays open, and
+the value is an array:
+
+```tsx
+<Select items={regions} multiple value={regionIds} onValueChange={setRegionIds}>
+  <SelectTrigger aria-label="Regions">
+    <SelectValue placeholder="Select regions" />
+  </SelectTrigger>
+  <SelectContent>{/* …items… */}</SelectContent>
+</Select>
+```
+
 ## API Reference
 
-The `Select*` parts are re-exports of the `InputSelect*` parts and share their
-props. See [InputSelect](/components/input-select) for the full reference
-and the [Base UI Select docs](https://base-ui.com/react/components/select) for
-each primitive's prop surface.
+The tables below are the `InputSelect` parts these names alias.
+
+### Select
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-select/input-select.docs.ts"
+  name="InputSelectProps"
+/>
+
+### SelectContent
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-select/input-select.docs.ts"
+  name="InputSelectContentProps"
+/>
+
+### SelectItem
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-select/input-select.tsx"
+  name="InputSelectItemProps"
+/>
+
+`SelectTrigger`, `SelectValue`, `SelectGroup`, and `SelectGroupLabel` add styling
+to the corresponding Base UI `Select.Trigger` / `Select.Value` / `Select.Group` /
+`Select.GroupLabel` props — see the
+[Base UI Select docs](https://base-ui.com/react/components/select) for those prop
+surfaces, and [InputSelect](/components/input-select) for the parts that have no
+`Select*` alias.

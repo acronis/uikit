@@ -13,22 +13,40 @@ import { PieChart } from '@acronis-platform/ui-react';
 import type { ChartConfig } from '@acronis-platform/ui-react';
 ```
 
-`PieChart` is a typed composition over the shared [`Chart`](/components/chart)
-primitives. Give it `data`, a per-slice `config`, the value field (`dataKey`),
-and the label field (`nameKey`) — it renders a themed recharts pie chart (tooltip
-and legend included), so you don't hand-compose recharts children.
+`PieChart` is a typed recharts composition over the shared
+[`Chart`](/components/chart) primitives. Give it `data`, a per-slice `config`, the
+value field (`dataKey`), and the label field (`nameKey`) — it renders a themed
+recharts pie chart with tooltip and legend, so you never hand-compose recharts
+children.
 
 Unlike the cartesian charts, a pie plots a **single** `dataKey` across rows and
 names each slice by `nameKey`. Slice colors are supplied by the caller through
 `config`, **keyed by each slice's `nameKey` value**: `PieChart` turns those into
-the `--color-<name>` custom properties its slices fill from.
+the `--color-<name>` custom properties its slices fill from. Rows sharing a name
+intentionally share one `config` entry and color.
+
+Use it for part-to-whole proportions across a handful of categories, or as a
+compact at-a-glance distribution (device share, channel split);
+`shape="donut"` gives a lighter footprint and a centre for a total. Past roughly
+six categories — or when several slices are similar in size — switch to
+[`BarChart`](/components/bar-chart), which compares magnitudes far more precisely.
+For a trend over time use [`LineChart`](/components/line-chart) or
+[`AreaChart`](/components/area-chart), and for exact values a
+[`Table`](/components/table) / [`DataTable`](/components/data-table) — angles are
+hard to read.
+
+Pair the chart with a text alternative (caption, summary, or adjacent data table)
+and give it an accessible name — `aria-label` / `aria-labelledby` pass through to
+the wrapper element. Keep either the legend or the tooltip visible, prefer a
+handful of slices (roll the tail into an "Other" slice), and make sure adjacent
+slice colors are distinguishable from **each other**, not just from the surface.
 
 > **Design-pending v1**, ported from the demo `PieChartPlayground`. There is no
-> chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands.
+> chart token tier yet, so the example colors reference the shared semantic
+> `--ui-*` brand/status tokens — a dedicated `--ui-chart-*` data-viz palette is
+> pending an upstream design pass. `--ui-background-status-strong-*` is chromatic
+> in every brand; `--ui-background-brand-secondary` is brand-dependent, so it is
+> not color-stable across brands until the real palette lands.
 
 ## Examples
 
@@ -36,7 +54,8 @@ the `--color-<name>` custom properties its slices fill from.
   <PieChartDemo />
 </DemoReact>
 
-A donut chart with a themed tooltip and legend:
+A donut chart with a themed tooltip and legend. Note that `config` is keyed by the
+`nameKey` **values**, not by a column name:
 
 ```tsx
 const data = [
@@ -63,14 +82,14 @@ const config = {
 />;
 ```
 
-Use a filled pie with `shape="pie"` (the default):
+`shape="pie"` (the default) fills the centre instead:
 
 ```tsx
 <PieChart config={config} data={data} dataKey="value" nameKey="browser" />
 ```
 
-Separate the slices with `paddingAngle`, and tune the donut hole with
-`innerRadius`:
+Separate the slices with `paddingAngle`, and tune the geometry with `innerRadius`
+(donut only) and `outerRadius`:
 
 ```tsx
 <PieChart
@@ -85,8 +104,8 @@ Separate the slices with `paddingAngle`, and tune the donut hole with
 ```
 
 Fill the donut hole with a headline metric via `centerLabel` — a `value` and an
-optional `label`, centered in the hole (donut only). Compute the value from your
-data, e.g. the total:
+optional `label`, stacked and centered. Compute the value from your data, e.g. the
+total. Both fields render as SVG text, so pass a string or number:
 
 ```tsx
 <PieChart
@@ -99,12 +118,16 @@ data, e.g. the total:
 />
 ```
 
-## Custom tooltip
+A filled pie has no hole, so `centerLabel` renders nothing when `shape="pie"`:
+
+```tsx
+{/* centerLabel is ignored here */}
+<PieChart config={config} data={data} dataKey="value" nameKey="browser" shape="pie" centerLabel={{ value: '835' }} />
+```
 
 Replace the tooltip with a configured `ChartTooltipContent` — imported from the
-same library, so you never compose recharts yourself. Its `formatter` renders
-each row and `labelFormatter` the header, giving you custom formatting, per-series
-content, and extra fields:
+same library, so you still never compose recharts yourself. Point it at the same
+`nameKey` so each row resolves its slice label:
 
 ```tsx
 import { PieChart, ChartTooltipContent } from '@acronis-platform/ui-react';
@@ -129,4 +152,11 @@ import { PieChart, ChartTooltipContent } from '@acronis-platform/ui-react';
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/pie-chart/pie-chart.tsx"
   name="PieChartProps"
+/>
+
+`centerLabel` takes a `PieChartCenterLabel`:
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/pie-chart/pie-chart.tsx"
+  name="PieChartCenterLabel"
 />

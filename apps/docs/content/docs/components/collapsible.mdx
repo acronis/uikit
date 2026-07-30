@@ -3,8 +3,8 @@ title: Collapsible
 description: A trigger that toggles a height-animating panel.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { CollapsibleDemo } from "@/components/demos-react/collapsible";
+import { DemoReact } from '@/components/DemoReact';
+import { CollapsibleDemo } from '@/components/demos-react/collapsible';
 
 ## Usage
 
@@ -16,14 +16,20 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`Collapsible` is a disclosure primitive — a trigger toggles a height-animating
+`Collapsible` is the disclosure primitive — a trigger toggles a height-animating
 panel — built on
-[Base UI's Collapsible](https://base-ui.com/react/components/collapsible). It's the
-primitive behind [`Accordion`](/components/accordion) and the sidebars; use it
-directly for a single show/hide section. The trigger is polymorphic via the
-`render` prop (e.g. render it as a `Button`).
+[Base UI's Collapsible](https://base-ui.com/react/components/collapsible). It is
+the primitive behind [`Accordion`](/components/accordion) and the sidebars; reach
+for it directly when you have a single optional section rather than a set.
 
-> Design-pending v1, ported from the legacy `shadcn-uikit` collapsible.
+`Collapsible` and `CollapsibleTrigger` are straight re-exports of the Base UI
+parts, so the trigger composes via the `render` prop (e.g. render it as a
+`Button`). Only `CollapsibleContent` adds styling, and it contributes no color of
+its own — just `overflow: hidden` plus the 200ms `height` transition driven by
+Base UI's `data-starting-style` / `data-ending-style` attributes. Style the panel
+body yourself.
+
+Design-pending v1, ported from the legacy `shadcn-uikit` collapsible.
 
 ## Examples
 
@@ -31,15 +37,56 @@ directly for a single show/hide section. The trigger is polymorphic via the
   <CollapsibleDemo />
 </DemoReact>
 
+A trigger rendered as a `Button`, open by default:
+
 ```tsx
-<Collapsible>
+<Collapsible defaultOpen>
+  <CollapsibleTrigger
+    render={<Button variant="ghost" className="w-full justify-start" />}
+  >
+    Show advanced settings
+  </CollapsibleTrigger>
+  <CollapsibleContent>
+    <div className="px-3 py-2 text-sm">
+      These options change how backups are scheduled and retained.
+    </div>
+  </CollapsibleContent>
+</Collapsible>
+```
+
+Controlled — drive `open` and react to `onOpenChange`:
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<Collapsible open={open} onOpenChange={setOpen}>
   <CollapsibleTrigger>Show advanced settings</CollapsibleTrigger>
+  <CollapsibleContent>…</CollapsibleContent>
+</Collapsible>;
+```
+
+Keep the panel findable by the browser's page search while collapsed:
+
+```tsx
+<Collapsible hiddenUntilFound>
+  <CollapsibleTrigger>Release notes</CollapsibleTrigger>
   <CollapsibleContent>…</CollapsibleContent>
 </Collapsible>
 ```
 
+For a set of mutually-exclusive sections use
+[`Accordion`](/components/accordion).
+
 ## API Reference
 
-`Collapsible` re-exports Base UI's Collapsible.Root props — `open` /
-`defaultOpen` / `disabled` / `onOpenChange`. `CollapsibleTrigger` and
-`CollapsibleContent` accept their Base UI part props plus `className`.
+### Collapsible
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/collapsible/collapsible.docs.ts"
+  name="CollapsibleProps"
+/>
+
+`CollapsibleTrigger` and `CollapsibleContent` take `className` and `children`
+plus the Base UI `Collapsible.Trigger` / `Collapsible.Panel` pass-throughs — see
+the [Base UI Collapsible docs](https://base-ui.com/react/components/collapsible)
+for the full prop surface.

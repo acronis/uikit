@@ -1,10 +1,10 @@
 ---
 title: InputText
-description: A text input field with label, description, error, and clear support.
+description: A single-line text field with label, description, error, and clear support.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { InputTextDemo } from "@/components/demos-react/input-text";
+import { DemoReact } from '@/components/DemoReact';
+import { InputTextDemo } from '@/components/demos-react/input-text';
 
 ## Usage
 
@@ -12,37 +12,62 @@ import { InputTextDemo } from "@/components/demos-react/input-text";
 import { InputText } from '@acronis-platform/ui-react';
 ```
 
-`InputText` wraps a native `<input>` and adds the full field furniture — an
-optional label (with a `required` marker), helper description, error message,
-and an optional clear button. Without a label it renders just the box. Themed by
-the `--ui-input-text-*` tokens.
+`InputText` composes the bare `InputBox` primitive and adds the field
+furniture: an optional label (with a `required` marker), a helper `description`
+or `error` message below the box, and an optional clear (✕) button. It is a
+native `<input>` — no Base UI primitive is involved — and `ref` / `className`
+target that input, so without a `label` it renders just the box. Themed by the
+`--ui-input-text-*` tokens.
+
+The label, message, and required marker are wired to the input via `htmlFor`,
+`aria-describedby`, `aria-required`, and `aria-invalid`, so the field is
+self-contained: it does not need a [`Field`](/components/field) wrapper. Use
+`Field` with the bare `InputBox` instead when you need Base UI's validation
+plumbing.
+
+> **`Input` is an alias of `InputText`.** `import { Input } from
+> '@acronis-platform/ui-react'` re-exports `InputText`, and `InputProps`
+> re-exports `InputTextProps` — same component, same props. Prefer `InputText`
+> in new code.
 
 ## Examples
 
+A labeled field with helper text, and the same field in its required + error
+state:
 
 <DemoReact>
   <InputTextDemo />
 </DemoReact>
 
-A labeled field with helper text:
-
 ```tsx
-<InputText label="Full name" description="As it appears on your ID." />
-```
-
-Required and error states:
-
-```tsx
-<InputText label="Email" required placeholder="you@example.com" />
+<InputText
+  label="Workload name"
+  placeholder="e.g. web-server-01"
+  description="A friendly name for the workload."
+/>
 
 <InputText
   label="Email"
-  error="Enter a valid email address."
+  required
   placeholder="you@example.com"
+  error="Enter a valid email address."
+  defaultValue="not-an-email"
 />
 ```
 
-A clearable, controlled field:
+Setting `error` switches the whole field to its error treatment: the box takes
+the red error border (via `aria-invalid`), the focus ring becomes
+`--ui-focus-error`, and the error message replaces the `description`.
+
+Disabled uses dedicated disabled tokens for the box, label, and message:
+
+```tsx
+<InputText label="Workload name" defaultValue="web-server-01" disabled />
+```
+
+The clear button requires a **controlled** value — it appears only while
+`clearable` is set, `value` is non-empty, and the field is enabled. Clearing is
+the consumer's job; `onClear` is the notification:
 
 ```tsx
 const [value, setValue] = React.useState('');
@@ -51,12 +76,22 @@ const [value, setValue] = React.useState('');
   label="Search term"
   clearable
   value={value}
-  onChange={(e) => setValue(e.target.value)}
+  onChange={(event) => setValue(event.target.value)}
   onClear={() => setValue('')}
-/>
+/>;
+```
+
+Omit `label`, `description`, and `error` to render the box on its own — useful
+inside a custom layout that supplies its own furniture:
+
+```tsx
+<InputText placeholder="Filter…" aria-label="Filter" />
 ```
 
 ## API Reference
+
+`InputTextProps` also accepts every native `<input>` attribute (`type`,
+`placeholder`, `name`, `maxLength`, `onChange`, …).
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/input-text/input-text.tsx"

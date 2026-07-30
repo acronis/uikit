@@ -3,8 +3,8 @@ title: Alert
 description: A status banner with severity variants and composable parts.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { AlertDemo } from "@/components/demos-react/alert";
+import { DemoReact } from '@/components/DemoReact';
+import { AlertDemo } from '@/components/demos-react/alert';
 
 ## Usage
 
@@ -15,25 +15,48 @@ import {
   AlertContent,
   AlertTitle,
   AlertDescription,
+  AlertActions,
 } from '@acronis-platform/ui-react';
 ```
 
-`Alert` is an inline status banner (`role="alert"`). The `variant` sets the
-severity — `info` (default), `success`, `warning`, `critical`, `destructive`,
-`ai`, or `neutral` — driving the surface, text, and accent-border colors from the
-`--ui-*` status tokens. Compose it with `AlertIcon` + `AlertContent`
-(`AlertTitle` / `AlertDescription`).
+`Alert` renders a rounded `role="alert"` banner. `variant` — `info` (the default),
+`success`, `warning`, `critical`, `destructive`, `ai`, or `neutral` — pairs the
+pale `--ui-background-status-*` surface with a full border in the saturated
+`--ui-background-status-strong-*` color, and tints **only the icon** to match; the
+text stays `--ui-*` foreground so it keeps its contrast. (`ai` has no `strong`
+surface token, so its border and icon use `--ui-text-on-status-ai`.)
 
-> Design-pending v1, ported from the legacy `shadcn-uikit` alert.
+The banner is composed, not configured: `AlertIcon` for the leading glyph,
+`AlertContent` for the text column (`AlertTitle` + `AlertDescription`), and
+`AlertActions` for buttons.
+
+> Design-pending v1, ported from the legacy `shadcn-uikit` alert and reconciled
+> against the Figma banner design.
 
 ## Examples
+
+Three severities, then a banner with an action at the right edge:
 
 <DemoReact>
   <AlertDemo />
 </DemoReact>
 
 ```tsx
-import { CircleWarningIcon } from '@acronis-platform/icons-react/stroke-mono';
+<Alert variant="info">
+  <AlertIcon><CircleInfoIcon size={16} /></AlertIcon>
+  <AlertContent>
+    <AlertTitle>Heads up!</AlertTitle>
+    <AlertDescription>You can add components to your app using the CLI.</AlertDescription>
+  </AlertContent>
+</Alert>
+
+<Alert variant="success">
+  <AlertIcon><CircleCheckIcon size={16} /></AlertIcon>
+  <AlertContent>
+    <AlertTitle>Saved</AlertTitle>
+    <AlertDescription>Your changes were saved.</AlertDescription>
+  </AlertContent>
+</Alert>
 
 <Alert variant="destructive">
   <AlertIcon><CircleWarningIcon size={16} /></AlertIcon>
@@ -44,16 +67,25 @@ import { CircleWarningIcon } from '@acronis-platform/icons-react/stroke-mono';
 </Alert>
 ```
 
-Add an action with `AlertActions`. As a direct child of `Alert` (after
-`AlertContent`) it sits at the **right edge** — `AlertContent` is `flex-1`, so add
+`AlertIcon` is a slot, not an icon — pass the glyph yourself. It sits in a box
+matched to the title's line height so it optically aligns with the first line of
+text, and it takes its color from the `Alert` variant.
+
+`AlertActions` has two placements. As a **direct child of `Alert`** after
+`AlertContent` it sits at the right edge, because `AlertContent` is `flex-1`; add
 `self-center` to center it vertically:
 
 ```tsx
 <Alert variant="info">
-  <AlertIcon><CircleInfoIcon size={16} /></AlertIcon>
+  <AlertIcon>
+    <CircleInfoIcon size={16} />
+  </AlertIcon>
   <AlertContent>
     <AlertTitle>Protect non-compliant devices</AlertTitle>
-    <AlertDescription>Ensure a protection plan is applied…</AlertDescription>
+    <AlertDescription>
+      Ensure a protection plan is applied and a scan has completed within the
+      last 24 hours.
+    </AlertDescription>
   </AlertContent>
   <AlertActions className="self-center">
     <Button>View devices</Button>
@@ -61,13 +93,13 @@ Add an action with `AlertActions`. As a direct child of `Alert` (after
 </Alert>
 ```
 
-Place `AlertActions` **inside** `AlertContent` (after the description) and it flows
-**under** the text:
+Placed **inside `AlertContent`** after the description, it flows below the text —
+the right choice for two or more buttons:
 
 ```tsx
 <AlertContent>
   <AlertTitle>Protect non-compliant devices</AlertTitle>
-  <AlertDescription>Ensure a protection plan is applied…</AlertDescription>
+  <AlertDescription>Ensure a protection plan is applied.</AlertDescription>
   <AlertActions className="mt-2">
     <Button>View devices</Button>
     <Button variant="ghost">Dismiss</Button>
@@ -75,8 +107,18 @@ Place `AlertActions` **inside** `AlertContent` (after the description) and it fl
 </AlertContent>
 ```
 
-For transient, auto-dismissing notifications use [`Toast`](/components/toast); for
-a blocking confirmation use [`Dialog`](/components/dialog).
+A title alone is fine — `AlertDescription` is optional, and so is `AlertIcon`:
+
+```tsx
+<Alert variant="warning">
+  <AlertContent>
+    <AlertTitle>Two devices are missing a protection plan.</AlertTitle>
+  </AlertContent>
+</Alert>
+```
+
+For a transient, auto-dismissing notification use [`Toast`](/components/toast);
+for a blocking confirmation use [`Dialog`](/components/dialog).
 
 ## API Reference
 
@@ -86,4 +128,5 @@ a blocking confirmation use [`Dialog`](/components/dialog).
 />
 
 `AlertIcon`, `AlertContent`, `AlertTitle`, `AlertDescription`, and `AlertActions`
-accept the props of their underlying element plus `className`.
+take the native attributes of their element (`<div>`, except `AlertTitle`'s
+`<h5>`) plus `className`.

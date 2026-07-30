@@ -1,10 +1,10 @@
 ---
 title: InputSelect
-description: A select field with label, options, sections, search, and status states.
+description: A select field with a label, options, sections, in-dropdown search, and status rows.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { InputSelectDemo } from "@/components/demos-react/input-select";
+import { DemoReact } from '@/components/DemoReact';
+import { InputSelectDemo } from '@/components/demos-react/input-select';
 
 ## Usage
 
@@ -29,96 +29,135 @@ import {
 } from '@acronis-platform/ui-react';
 ```
 
-`InputSelect` is a compound select built on Base UI's `Select` primitive —
-keyboard navigation, typeahead, focus management, and ARIA come from Base UI.
-`InputSelect` owns the value; `InputSelectField` wraps the label/trigger/
-description/error furniture, and `InputSelectContent` holds the
-`InputSelectItem` options (optionally grouped into `InputSelectSection`s, with an
-`InputSelectSearch` filter). Themed by the `--ui-input-select-*` tokens.
+`InputSelect` is the select **field**: the root owns the open and selection
+state, `InputSelectField` stacks the label, trigger, and description/error, and
+`InputSelectContent` is the portaled dropdown holding `InputSelectItem` options —
+optionally grouped into `InputSelectSection`s, filtered by an `InputSelectSearch`
+row, or replaced by an `InputSelectStatus`. Keyboard navigation, type-ahead,
+focus management, and ARIA come from Base UI's
+[`Select`](https://base-ui.com/react/components/select) primitive; the colors,
+sizes, and radii resolve to the `--ui-input-select-*` token tier.
+[`Select`](/components/select) is an alias of this family. Reach for
+[`Combobox`](/components/combobox) instead when the field itself should be
+typeable.
 
 ## Examples
 
+A labeled, required field with a description and a preselected value. Pass
+`items` on the root so `InputSelectValue` renders the selected option's label
+rather than the raw value while the popup is closed:
 
 <DemoReact>
   <InputSelectDemo />
 </DemoReact>
 
-A labeled select with a description:
-
 ```tsx
-<InputSelect items={fruitItems}>
+const regions = { us: 'United States', eu: 'Europe', apac: 'Asia Pacific' };
+
+<InputSelect items={regions} defaultValue="eu">
   <InputSelectField>
-    <InputSelectLabel>Fruit</InputSelectLabel>
+    <InputSelectLabel required>Region</InputSelectLabel>
     <InputSelectTrigger>
-      <InputSelectValue placeholder="Select an option" />
+      <InputSelectValue placeholder="Select a region" />
     </InputSelectTrigger>
-    <InputSelectDescription>Pick your favourite</InputSelectDescription>
+    <InputSelectDescription>Where workloads are stored.</InputSelectDescription>
   </InputSelectField>
   <InputSelectContent>
-    <InputSelectItem value="apple">Apple</InputSelectItem>
-    <InputSelectItem value="banana">Banana</InputSelectItem>
-    <InputSelectItem value="grapes">Grapes</InputSelectItem>
+    <InputSelectItem value="us">United States</InputSelectItem>
+    <InputSelectItem value="eu">Europe</InputSelectItem>
+    <InputSelectItem value="apac">Asia Pacific</InputSelectItem>
   </InputSelectContent>
 </InputSelect>
 ```
 
-Required, with an error message:
+The error treatment is driven by `aria-invalid` on the trigger: the border and
+the focus ring switch to their error tokens. `InputSelectError` replaces the
+description:
 
 ```tsx
-<InputSelect items={fruitItems}>
+<InputSelect items={regions}>
   <InputSelectField>
-    <InputSelectLabel required>Fruit</InputSelectLabel>
-    <InputSelectTrigger>
-      <InputSelectValue placeholder="Select an option" />
+    <InputSelectLabel required>Region</InputSelectLabel>
+    <InputSelectTrigger aria-invalid>
+      <InputSelectValue placeholder="Select a region" />
     </InputSelectTrigger>
-    <InputSelectError>Please choose a fruit</InputSelectError>
+    <InputSelectError>Please choose a region</InputSelectError>
   </InputSelectField>
   <InputSelectContent>{/* …items… */}</InputSelectContent>
 </InputSelect>
 ```
 
-A searchable, sectioned list:
+`disabled` on the root makes the trigger inert and applies the dedicated
+disabled tokens (not opacity):
+
+```tsx
+<InputSelect items={regions} defaultValue="eu" disabled>
+  {/* …field + content… */}
+</InputSelect>
+```
+
+With `multiple`, each row shows a leading checkbox instead of a trailing check,
+the row background stays the unselected color, and the popup stays open so
+several options can be picked. The value is an array:
+
+```tsx
+<InputSelect items={regions} multiple value={regionIds} onValueChange={setRegionIds}>
+  {/* …field + content… */}
+</InputSelect>
+```
+
+`InputSelectSearch` filters the list without any wiring — it drives the field's
+filter context, and each flat `InputSelectItem` hides itself when its label
+doesn't match. `InputSelectSection` groups items under an
+`InputSelectSectionLabel` and draws a divider above itself unless it is the first
+child of the dropdown:
 
 ```tsx
 <InputSelectContent>
-  <InputSelectSearch aria-label="Filter" placeholder="Search" />
+  <InputSelectSearch aria-label="Filter regions" placeholder="Search" />
   <InputSelectSection>
-    <InputSelectSectionLabel>Fruits</InputSelectSectionLabel>
-    <InputSelectItem value="apple">Apple</InputSelectItem>
-    <InputSelectItem value="banana">Banana</InputSelectItem>
+    <InputSelectSectionLabel>Americas</InputSelectSectionLabel>
+    <InputSelectItem value="us">United States</InputSelectItem>
+  </InputSelectSection>
+  <InputSelectSection>
+    <InputSelectSectionLabel>EMEA</InputSelectSectionLabel>
+    <InputSelectItem value="eu">Europe</InputSelectItem>
   </InputSelectSection>
 </InputSelectContent>
 ```
 
-A tree / hierarchy, with icons and indentation. `InputSelectExpander` is a
-non-selectable row that expands or collapses a group; `InputSelectItem`'s
-`indent` reserves the leading nesting spacer (levels 1–3 → 16 / 40 / 64 px) and
-`icon` renders a leading glyph:
+Pass `textValue` on an item whose `children` aren't plain text so it can still be
+matched, and `value`/`onChange` on `InputSelectSearch` to control the query
+externally (the field keeps its internal query synced to a controlled value).
+
+Hierarchies use `InputSelectExpander`, a non-selectable row that toggles a group
+open. `indent` reserves the leading nesting spacer (levels 1–3 → 16 / 40 / 64 px)
+and `icon` renders a leading glyph on either part:
 
 ```tsx
 <InputSelectContent>
+  <InputSelectSearch aria-label="Search tenants" placeholder="Search…" />
   <InputSelectExpander
     expanded={open}
-    onToggle={() => setOpen((o) => !o)}
-    icon={<BriefcaseIcon size={16} />}
+    onToggle={() => setOpen((value) => !value)}
+    icon={<BuildingIcon size={16} />}
   >
     DataBridge Systems
   </InputSelectExpander>
-  <InputSelectItem value="eu" indent={2} hidden={!open}>
+  <InputSelectItem value="eu" indent={2} hidden={!open} icon={<BriefcaseIcon size={16} />}>
     EU region
   </InputSelectItem>
 </InputSelectContent>
 ```
 
-Keep collapsed children mounted and toggle `hidden` (rather than unmounting
-them) so Base UI's selection-by-index stays stable. When a search query is
-active, flat `InputSelectItem`s auto-hide against it; a tree that computes its
-own visibility reads the live query with `useInputSelectFilter()`. Pass
-`textValue` on an item whose `children` aren't plain text so it can still be
-matched, and `value`/`onChange` on `InputSelectSearch` to control the query
-externally.
+Keep collapsed children mounted and toggle `hidden` rather than unmounting them:
+Base UI tracks the selection by list index, so removing the selected row lets a
+sibling inherit its index and render a phantom check. A tree that computes its
+own visibility reads the live query with `useInputSelectFilter()` instead of
+relying on per-item auto-hiding.
 
-A loading / empty / error status inside the content:
+`InputSelectStatus` replaces the items with a loading, empty, or error row. The
+`error` variant also renders an optional trailing `action`:
 
 ```tsx
 <InputSelectContent>
@@ -126,12 +165,47 @@ A loading / empty / error status inside the content:
     variant="error"
     action={<Button variant="ghost">Try again</Button>}
   >
-    Couldn't load options
+    Something went wrong
   </InputSelectStatus>
 </InputSelectContent>
 ```
 
 ## API Reference
+
+### InputSelect
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-select/input-select.docs.ts"
+  name="InputSelectProps"
+/>
+
+### InputSelectLabel
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-select/input-select.docs.ts"
+  name="InputSelectLabelProps"
+/>
+
+### InputSelectContent
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-select/input-select.docs.ts"
+  name="InputSelectContentProps"
+/>
+
+### InputSelectItem
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-select/input-select.tsx"
+  name="InputSelectItemProps"
+/>
+
+### InputSelectExpander
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-select/input-select.tsx"
+  name="InputSelectExpanderProps"
+/>
 
 ### InputSelectStatus
 
@@ -140,18 +214,12 @@ A loading / empty / error status inside the content:
   name="InputSelectStatusProps"
 />
 
-The other parts (`InputSelect`, `InputSelectField`, `InputSelectLabel`,
-`InputSelectTrigger`, `InputSelectValue`, `InputSelectContent`,
-`InputSelectSearch`, `InputSelectGroup`, `InputSelectSection`,
-`InputSelectSectionLabel`, `InputSelectDescription`, `InputSelectError`) extend
-the corresponding Base UI `Select` primitive props. `InputSelect` accepts
-`items`, `defaultValue` / `value`, and Base UI `Select` root props;
-`InputSelectContent` adds `side` / `align` for positioning. See the
-[Base UI Select docs](https://base-ui.com/react/components/select) for the full
-prop surface.
-
-`InputSelectItem` extends the Base UI `Select.Item` props and adds `icon`,
-`indent`, and `textValue`. `InputSelectExpander` is a plain button (not a
-`Select.Item`) with `expanded`, `onToggle`, `icon`, and `indent`.
-`useInputSelectFilter()` returns the live `{ query, setQuery }` and must be
-called inside an `InputSelect`.
+The remaining parts add styling only. `InputSelectTrigger`, `InputSelectValue`,
+`InputSelectSection`, and `InputSelectSectionLabel` extend the corresponding
+Base UI `Select.Trigger` / `Select.Value` / `Select.Group` / `Select.GroupLabel`
+props, and `InputSelectGroup` is Base UI's unstyled `Select.Group` — see the
+[Base UI Select docs](https://base-ui.com/react/components/select) for those prop
+surfaces. `InputSelectField` takes `<div>` props, `InputSelectSearch` takes
+`<input>` props, and `InputSelectDescription` / `InputSelectError` take `<p>`
+props. `useInputSelectFilter()` returns the live `{ query, setQuery }` and throws
+when called outside an `InputSelect`.

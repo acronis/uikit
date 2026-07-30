@@ -1,10 +1,10 @@
 ---
 title: Slider
-description: Choose a number (or a range) within a min/max by dragging.
+description: Picks a number, or a range, within a min/max by dragging.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { SliderDemo } from "@/components/demos-react/slider";
+import { DemoReact } from '@/components/DemoReact';
+import { SliderDemo } from '@/components/demos-react/slider';
 
 ## Usage
 
@@ -12,14 +12,23 @@ import { SliderDemo } from "@/components/demos-react/slider";
 import { Slider } from '@acronis-platform/ui-react';
 ```
 
-`Slider` lets the user pick a number — or a range, by passing an array value (two
-thumbs) — within a `min`/`max`, snapped to `step`. Built on
-[Base UI's Slider](https://base-ui.com/react/components/slider). Give it an
-accessible name via `aria-label` or a [`Field`](/components/field).
+`Slider` is a single component — the control, track, filled indicator, and thumbs
+are rendered internally — built on
+[Base UI's Slider](https://base-ui.com/react/components/slider). The thumb count
+follows the length of `value` / `defaultValue`, so an array renders a range. There
+is no `--ui-slider-*` token tier yet: the rail uses
+`--ui-border-on-surface-border`, the filled indicator and the thumb border use the
+brand action color `--ui-background-brand-secondary`, and the focus/drag ring uses
+`--ui-focus-primary`. Only the horizontal layout is styled. Give the slider an
+accessible name with `aria-label`, or pair it with a [`Field`](/components/field)
+and a `FieldLabel`.
 
-> Design-pending v1, ported from the legacy `shadcn-uikit` slider.
+> Status: draft (design-pending v1), ported from the legacy `shadcn-uikit` slider.
 
 ## Examples
+
+A single value and a two-thumb range — `Slider` normalizes a plain number into a
+one-entry array before handing it to Base UI:
 
 <DemoReact>
   <SliderDemo />
@@ -30,12 +39,60 @@ accessible name via `aria-label` or a [`Field`](/components/field).
 <Slider defaultValue={[20, 80]} aria-label="Price range" />
 ```
 
-For precise numeric entry use a number field / `InputText`; for a few discrete
-choices use `RadioGroup` or a toggle group.
+Bound and quantize the range with `min` / `max` / `step`. `largeStep` is what
+PageUp/PageDown and Shift+Arrow move by:
+
+```tsx
+<Slider
+  defaultValue={2}
+  min={0}
+  max={10}
+  step={0.5}
+  largeStep={2}
+  aria-label="Rating"
+/>
+```
+
+Controlled, with `onValueChange`. Because the wrapper always passes an array to
+Base UI, the callback receives an array even for a single-value slider:
+
+```tsx
+const [values, setValues] = React.useState([40]);
+
+<Slider value={values} onValueChange={setValues} aria-label="Volume" />;
+```
+
+On a range, `minStepsBetweenValues` keeps a gap between the thumbs and
+`thumbCollisionBehavior` decides what happens when they meet:
+
+```tsx
+<Slider
+  defaultValue={[20, 80]}
+  minStepsBetweenValues={10}
+  thumbCollisionBehavior="none"
+  aria-label="Price range"
+/>
+```
+
+Disabled repoints the fill and the thumb border to a neutral gray
+(`--ui-background-status-strong-neutral`) and dims the thumb:
+
+```tsx
+<Slider defaultValue={40} disabled aria-label="Volume" />
+```
+
+For precise numeric entry use [`NumberField`](/components/number-field) or
+[`InputText`](/components/input-text); for a handful of discrete choices use
+[`Radio`](/components/radio) or [`ToggleGroup`](/components/toggle-group).
 
 ## API Reference
 
 <AutoTypeTable
-  path="../../packages/ui-react/src/components/ui/slider/slider.tsx"
+  path="../../packages/ui-react/src/components/ui/slider/slider.docs.ts"
   name="SliderProps"
 />
+
+`Slider` forwards every other Base UI `Slider.Root` prop (`format`, `locale`,
+`form`, `thumbAlignment`, …) plus the remaining `<div>` attributes. See the
+[Base UI Slider docs](https://base-ui.com/react/components/slider) for the full
+prop surface.

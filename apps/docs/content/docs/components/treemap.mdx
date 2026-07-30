@@ -1,6 +1,6 @@
 ---
 title: Treemap
-description: A typed treemap — nested rectangles sized by value.
+description: A typed treemap — a flat set of rectangles sized by value.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
@@ -13,24 +13,40 @@ import { Treemap } from '@acronis-platform/ui-react';
 import type { ChartConfig } from '@acronis-platform/ui-react';
 ```
 
-`Treemap` is a typed composition over the shared [`Chart`](/components/chart)
-primitives. Give it `data`, a per-leaf `config`, the size field (`dataKey`), and
-the label field (`nameKey`) — it renders a themed recharts treemap (cells sized
-by value, colored and labelled per name, with a tooltip), so you don't
-hand-compose recharts children. There are no axes, grid, or legend.
+`Treemap` is a typed recharts composition over the shared
+[`Chart`](/components/chart) primitives. Give it `data`, a per-leaf `config`, the
+size field (`dataKey`), and the label field (`nameKey`) — it tiles the leaves into
+rectangles sized by value, colored and labelled per name, with a tooltip. There are
+no axes, grid, or legend, and you never hand-compose recharts children.
 
 Cell colors are supplied by the caller through `config`, **keyed by each `nameKey`
-value**: `Treemap` turns those into the `--color-<name>` custom properties its
-cells fill from.
+value**: `Treemap` turns those into the `--color-<name>` custom properties its cells
+fill from, so keep the names unique and CSS-safe. The cells are painted by a custom
+renderer, since recharts' default gives every cell the same fill and offers no token
+hooks.
 
-> **Design-pending v1**, ported from the demo `TreemapChartPlayground` — a flat
-> treemap (a list of leaves). There is no chart token tier yet, so the example
-> colors reference the shared brand/status tokens, and on-cell labels use the
-> `--ui-text-on-status-strong-neutral` token over them; a dedicated `--ui-chart-*`
-> data-viz palette (with matched per-cell label colors) is pending an upstream
-> design pass. `--ui-background-status-strong-*` is
-> chromatic in every brand; `--ui-background-brand-secondary` is brand-dependent,
-> so it is not color-stable across brands until the real palette lands.
+Use it for part-to-whole across many items where **relative size** matters more than
+precise values — disk usage, portfolio weight, category volume — or as a compact,
+space-filling overview of a flat set of categories. For precise value comparison use
+[`BarChart`](/components/bar-chart): area is hard to judge. With only a few
+categories a [`BarChart`](/components/bar-chart) or
+[`PieChart`](/components/pie-chart) reads better. This v1 renders a **flat** set of
+leaves — there is no hierarchical drill-down.
+
+Pair the chart with a text alternative (caption, summary, or adjacent data table)
+and give it an accessible name — `aria-label` / `aria-labelledby` pass through to
+the wrapper element. **Keep `showTooltip` on** so cells too small to carry a label
+stay identifiable, and keep adjacent cell colors distinguishable from each other.
+
+> **Design-pending v1**, ported from the demo `TreemapChartPlayground`. There is no
+> chart token tier yet, so the example colors reference the shared semantic `--ui-*`
+> brand/status tokens, and on-cell labels use `--ui-text-on-status-strong-neutral`
+> (constant light text in both themes) — so **pick cell colors dark enough for light
+> label text**. A dedicated `--ui-chart-*` data-viz palette, with matched per-cell
+> label colors, is pending an upstream design pass.
+> `--ui-background-status-strong-*` is chromatic in every brand;
+> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
+> across brands until the real palette lands.
 
 ## Examples
 
@@ -38,7 +54,8 @@ cells fill from.
   <TreemapDemo />
 </DemoReact>
 
-Leaves sized by value, colored and labelled per name, with a tooltip:
+Leaves sized by value, colored and labelled per name, with a tooltip. Note that
+`config` is keyed by the `nameKey` **values**:
 
 ```tsx
 const data = [
@@ -64,19 +81,24 @@ const config = {
 />;
 ```
 
-Change the tiling with `aspectRatio`, and hide the on-cell labels or tooltip with
-`showLabels` / `showTooltip`:
+`showLabels` (on by default) centers each leaf's name in its cell. Cells too small
+to fit a label omit it rather than overflow, which is why the tooltip matters. Turn
+labels off entirely for a pure heat-map look:
 
 ```tsx
-<Treemap config={config} data={data} dataKey="size" nameKey="name" aspectRatio={2.5} showLabels={false} />
+<Treemap config={config} data={data} dataKey="size" nameKey="name" showLabels={false} />
 ```
 
-## Custom tooltip
+`aspectRatio` is the width-to-height ratio the tiling targets — widen it for
+letterboxed cells, narrow it for squarer ones:
+
+```tsx
+<Treemap config={config} data={data} dataKey="size" nameKey="name" aspectRatio={2.5} />
+```
 
 Replace the tooltip with a configured `ChartTooltipContent` — imported from the
-same library, so you never compose recharts yourself. Its `formatter` renders
-each row and `labelFormatter` the header, giving you custom formatting, per-series
-content, and extra fields:
+same library, so you still never compose recharts yourself. Point it at the same
+`nameKey` so each row resolves its cell label:
 
 ```tsx
 import { Treemap, ChartTooltipContent } from '@acronis-platform/ui-react';

@@ -10,6 +10,9 @@ export function ButtonMenuDemo() {
       <ButtonMenu variant="secondary" open>
         Sort by
       </ButtonMenu>
+      <ButtonMenu variant="primary" disabled>
+        Export
+      </ButtonMenu>
     </>
   );
 }

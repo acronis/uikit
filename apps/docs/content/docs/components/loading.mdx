@@ -1,10 +1,10 @@
 ---
 title: Loading
-description: A composite loading indicator — a spinning ring plus an optional label — for four placement contexts.
+description: A spinning ring plus an optional label, for four placement contexts.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { LoadingDemo } from "@/components/demos-react/loading";
+import { DemoReact } from '@/components/DemoReact';
+import { LoadingDemo } from '@/components/demos-react/loading';
 
 ## Usage
 
@@ -12,34 +12,55 @@ import { LoadingDemo } from "@/components/demos-react/loading";
 import { Loading } from '@acronis-platform/ui-react';
 ```
 
-`Loading` pairs a spinning ring with an optional label, in one of four
-placement-context `variant`s: `inline` sits flush in text flow;
-`onSurfacePrimary`/`onSurfaceSecondary` render as rounded, padded chips over a
-primary/secondary app surface; `onScreen` is a higher-contrast dark chip for
-placing over busy/photo/video surfaces. Each variant is themed by its own
-`--ui-loading-<variant>-*` tokens. It's the app-facing standalone loading
-indicator in this library — the internal `Spinner` primitive it wraps for its
-icon isn't exported for direct use.
+`Loading` pairs a spinning ring with an optional label and is themed by the
+`--ui-loading-*` tokens — one set per placement context. `variant` picks the
+context: `inline` (the default) sits flush in text flow with no container;
+`onSurfacePrimary` / `onSurfaceSecondary` are rounded, padded chips for a primary
+or secondary app surface; `onScreen` is the higher-contrast dark chip for placing
+over a busy photo or video surface. The variant also fixes the ring size (16px
+inline, 32px on a surface, 48px on screen).
+
+This is the app-facing standalone loading indicator. The bare
+[`Spinner`](/components/spinner) ring it reuses for its icon is an internal
+primitive and isn't exported for direct use.
 
 ## Examples
 
+The four variants. `onScreen` is shown over a dark backdrop, which is what it's
+designed for:
 
 <DemoReact>
   <LoadingDemo />
 </DemoReact>
 
 ```tsx
-<Loading />
-<Loading variant="onSurfacePrimary" label="Fetching your data…" />
+<Loading variant="inline" />
+<Loading variant="onSurfacePrimary" />
 <Loading variant="onSurfaceSecondary" />
-<Loading variant="onScreen" hasLabel={false} />
+<div className="bg-[#191b23] p-6">
+  <Loading variant="onScreen" />
+</div>
+```
+
+The label defaults to `"Data is loading…"`. Override it with `label` to describe
+the actual operation:
+
+```tsx
+<Loading variant="onSurfacePrimary" label="Fetching your data…" />
+```
+
+Set `hasLabel={false}` to hide the text. It is still exposed to assistive
+technology as the root's `aria-label`, so the indicator keeps an accessible name:
+
+```tsx
+<Loading variant="onScreen" hasLabel={false} label="Rendering preview…" />
 ```
 
 ## Accessibility
 
-The root is `role="status"` — a polite live region. The icon is
-`aria-hidden`, so the visible label's text (or, when `hasLabel` is false, the
-root's `aria-label`) is the single accessible announcement.
+The root is `role="status"` — a polite live region. The ring is `aria-hidden`, so
+the visible label (or, with `hasLabel={false}`, the root's `aria-label`) is the
+single announcement; nothing is announced twice.
 
 ## API Reference
 

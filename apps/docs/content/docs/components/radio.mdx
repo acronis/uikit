@@ -1,10 +1,10 @@
 ---
 title: Radio
-description: Mutually exclusive selection within a group.
+description: One choice out of several mutually exclusive options.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { RadioDemo } from "@/components/demos-react/radio";
+import { DemoReact } from '@/components/DemoReact';
+import { RadioDemo } from '@/components/demos-react/radio';
 
 ## Usage
 
@@ -12,22 +12,33 @@ import { RadioDemo } from "@/components/demos-react/radio";
 import { RadioGroup, Radio } from '@acronis-platform/ui-react';
 ```
 
-`RadioGroup` and `Radio` wrap Base UI's `RadioGroup` / `Radio` primitives —
-keyboard arrow navigation, focus management, and ARIA come from Base UI. The
-group owns the selected value; each `Radio` takes a `value`. Styled by the
-`--ui-radio-*` tokens.
+`RadioGroup` and `Radio` wrap Base UI's
+[RadioGroup / Radio](https://base-ui.com/react/components/radio) primitives —
+arrow-key navigation, roving focus (the group is a single tab stop), the hidden
+native input, and ARIA come from Base UI. Radios are mutually exclusive, so the
+**group** owns the selected value and each `Radio` carries a `value`. `RadioGroup`
+renders a `<div role="radiogroup">` that defaults to a vertical stack (`flex-col`
+with an 8px gap); override it with `className`.
+
+The circle is themed by the `--ui-radio-*` tier, which mirrors
+`--ui-checkbox-*`: two logical states (`unchecked` and `checked`), each with its
+own idle / hover / active / disabled fill and border tokens, plus the inner dot's
+own fill.
+
+Unlike [`Checkbox`](/components/checkbox) and [`Switch`](/components/switch),
+`Radio` has **no** `label` prop — it renders only the circle. Wrap it in a
+`<label>` with the option text so the text is clickable and names the option.
 
 ## Examples
 
+An uncontrolled group with three options:
 
 <DemoReact>
   <RadioDemo />
 </DemoReact>
 
-A basic uncontrolled group:
-
 ```tsx
-<RadioGroup defaultValue="weekly">
+<RadioGroup defaultValue="weekly" aria-label="Frequency">
   <label>
     <Radio value="daily" /> Daily
   </label>
@@ -40,25 +51,31 @@ A basic uncontrolled group:
 </RadioGroup>
 ```
 
-Controlled:
+Controlled usage goes through the group's `onValueChange`, which receives the
+newly selected value:
 
 ```tsx
-const [value, setValue] = React.useState('weekly');
+const [frequency, setFrequency] = React.useState('weekly');
 
-<RadioGroup value={value} onValueChange={setValue}>
+<RadioGroup
+  value={frequency}
+  onValueChange={setFrequency}
+  aria-label="Frequency"
+>
   <label>
     <Radio value="daily" /> Daily
   </label>
   <label>
     <Radio value="weekly" /> Weekly
   </label>
-</RadioGroup>
+</RadioGroup>;
 ```
 
-A disabled option:
+`disabled` works on either level — on the group to disable every option, or on a
+single `Radio`:
 
 ```tsx
-<RadioGroup defaultValue="daily">
+<RadioGroup defaultValue="daily" aria-label="Frequency">
   <label>
     <Radio value="daily" /> Daily
   </label>
@@ -67,6 +84,27 @@ A disabled option:
   </label>
 </RadioGroup>
 ```
+
+Lay the options out in a row by overriding the group's stack:
+
+```tsx
+<RadioGroup defaultValue="yes" aria-label="Confirm" className="flex-row gap-4">
+  <label>
+    <Radio value="yes" /> Yes
+  </label>
+  <label>
+    <Radio value="no" /> No
+  </label>
+</RadioGroup>
+```
+
+In a form, put `name` on the group — it applies to the hidden native input for
+every option. The group also accepts `required` and `readOnly`.
+
+Use a radio group for one choice out of a small, always-visible set. Past roughly
+five options prefer [`InputSelect`](/components/input-select); for independent
+choices use [`Checkbox`](/components/checkbox); for view or format options in a
+toolbar use [`ToggleGroup`](/components/toggle-group).
 
 ## API Reference
 
@@ -83,3 +121,11 @@ A disabled option:
   path="../../packages/ui-react/src/components/ui/radio/radio.tsx"
   name="RadioProps"
 />
+
+Both types alias the corresponding Base UI props verbatim: `RadioGroupProps`
+carries `value` / `defaultValue`, `onValueChange`, `name`, `disabled`,
+`readOnly`, `required`, and `render`; `RadioProps` carries the required `value`
+plus `disabled`, `readOnly`, `required`, and `render`. A group value is not
+limited to a string — it is whatever type the items' `value`s use. See the
+[Base UI Radio docs](https://base-ui.com/react/components/radio) for the full
+surface.

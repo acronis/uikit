@@ -1,10 +1,10 @@
 ---
 title: SearchGlobal
-description: A prominent global search field with a gradient border.
+description: The app-wide search field, with a gradient border and a shortcut hint.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { SearchGlobalDemo } from "@/components/demos-react/search-global";
+import { DemoReact } from '@/components/DemoReact';
+import { SearchGlobalDemo } from '@/components/demos-react/search-global';
 
 ## Usage
 
@@ -12,41 +12,70 @@ import { SearchGlobalDemo } from "@/components/demos-react/search-global";
 import { SearchGlobal } from '@acronis-platform/ui-react';
 ```
 
-`SearchGlobal` is the app-level global search field — a leading magnifier, the
-input, and an optional trailing keyboard-shortcut hint. It paints a gradient
-border via the `--ui-input-search-*` tokens and accepts every standard
-`<input>` attribute.
+`SearchGlobal` renders a pill-shaped box around a leading magnifier, a borderless
+native `<input type="search">`, and a trailing keyboard-shortcut hint. It is a
+single element rather than a compound set — every other `<input>` attribute
+(`value`, `defaultValue`, `onChange`, `name`, `autoFocus`, …) passes through to
+the inner input, and the ref forwards to it. Sizes, colors, and typography come
+from the `--ui-search-global-*` token tier; the border is a brand **gradient**, so
+it is painted as a padding-box / border-box background rather than a
+`border-color`, and swaps per state (idle / hover / active) with a 3px
+`--ui-focus-primary` ring on `:focus-within`. Use it for the one app-wide search
+entry point in a header or command bar — for in-page or table filtering use
+[`InputSearch`](/components/input-search).
 
 ## Examples
 
+The defaults: a `Search anything` placeholder, a `⌘K` hint, and a `Search`
+accessible name (the field has no visible label).
 
 <DemoReact>
   <SearchGlobalDemo />
 </DemoReact>
 
-A global search field with the default shortcut hint:
-
 ```tsx
-<SearchGlobal placeholder="Search everything…" />
+<SearchGlobal placeholder="Search anything" shortcut="⌘K" />
 ```
 
-Customize or hide the shortcut hint:
+`shortcut` takes any node; pass `null` to drop the hint entirely. It is
+decorative (`aria-hidden`) and binds nothing — wire the real shortcut yourself and
+keep the hint in sync with it:
 
 ```tsx
-<SearchGlobal placeholder="Search…" shortcut="⌘K" />
-<SearchGlobal placeholder="Search…" shortcut={null} />
+<SearchGlobal shortcut="/" />
+<SearchGlobal shortcut={null} />
 ```
 
-Controlled:
+Controlled, with an explicit accessible name:
 
 ```tsx
 const [query, setQuery] = React.useState('');
 
 <SearchGlobal
+  aria-label="Search the platform"
   value={query}
-  onChange={(e) => setQuery(e.target.value)}
-  placeholder="Search everything…"
+  onChange={(event) => setQuery(event.target.value)}
 />
+```
+
+Focus the field from a `⌘K` handler through the forwarded ref — the common way to
+make the hint real:
+
+```tsx
+const inputRef = React.useRef<HTMLInputElement>(null);
+
+React.useEffect(() => {
+  const onKeyDown = (event: KeyboardEvent) => {
+    if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+      event.preventDefault();
+      inputRef.current?.focus();
+    }
+  };
+  window.addEventListener('keydown', onKeyDown);
+  return () => window.removeEventListener('keydown', onKeyDown);
+}, []);
+
+<SearchGlobal ref={inputRef} />
 ```
 
 ## API Reference

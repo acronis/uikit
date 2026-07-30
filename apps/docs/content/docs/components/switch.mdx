@@ -1,10 +1,10 @@
 ---
 title: Switch
-description: Toggle between two states.
+description: A binary on/off toggle for a setting that applies immediately.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { SwitchDemo } from "@/components/demos-react/switch";
+import { DemoReact } from '@/components/DemoReact';
+import { SwitchDemo } from '@/components/demos-react/switch';
 
 ## Usage
 
@@ -12,37 +12,60 @@ import { SwitchDemo } from "@/components/demos-react/switch";
 import { Switch } from '@acronis-platform/ui-react';
 ```
 
-`Switch` wraps Base UI's `Switch` primitive — keyboard interaction, focus
-management, and ARIA come from Base UI. A 32×16 track with a 12px thumb, themed
-by the `--ui-switch-*` tokens.
+`Switch` wraps Base UI's [Switch](https://base-ui.com/react/components/switch)
+primitive — a `<span role="switch">` plus a hidden native input, so keyboard
+interaction, focus management, form participation, and ARIA come from Base UI. It
+renders a 32×16 track with a 12px thumb, themed by the `--ui-switch-*` `box` /
+`tick` tokens: the track fill is wired per checked state (`off` / `on`), and
+disabled swaps to the muted fill plus a 1px inset border. The design has no hover
+or active color change. The thumb's travel is direction-aware, so it mirrors under
+`dir="rtl"`.
+
+Passing `label` composes the full field: the toggle and its text in a clickable
+`<label>` row, wired via `aria-labelledby`. With no label, the bare toggle
+renders — name it with `aria-label`. The switch carries its own label, so
+[`Field`](/components/field) is only needed to **group** several under a legend.
 
 ## Examples
 
+Labeled switches, on and off, plus a locked one:
 
 <DemoReact>
   <SwitchDemo />
 </DemoReact>
 
-A bare switch (name it with `aria-label`):
+```tsx
+<Switch label="Wi-Fi" defaultChecked />
+<Switch label="Airplane mode" />
+<Switch label="Locked on" defaultChecked disabled />
+```
+
+The bare toggle, for a table cell or a settings row that supplies its own text:
 
 ```tsx
 <Switch aria-label="Enable notifications" />
 ```
 
-With a `label` — the whole row becomes clickable:
+Controlled usage goes through Base UI's `onCheckedChange`, which receives the new
+checked value:
 
 ```tsx
-<Switch label="Enable notifications" />
+const [enabled, setEnabled] = React.useState(false);
+
+<Switch label="Dark mode" checked={enabled} onCheckedChange={setEnabled} />;
 ```
 
-Controlled and disabled states:
+In a form, `name` and `value` land on the hidden native input; `readOnly` keeps
+the toggle focusable but non-interactive, unlike `disabled`:
 
 ```tsx
-const [checked, setChecked] = React.useState(false);
-
-<Switch label="Dark mode" checked={checked} onCheckedChange={setChecked} />
-<Switch label="Locked setting" checked disabled />
+<Switch label="Nightly backup" name="backup" value="nightly" />
+<Switch label="Managed by policy" checked readOnly />
 ```
+
+Use `Switch` for a setting that takes effect the moment it is flipped. For a
+choice that is submitted with a form use [`Checkbox`](/components/checkbox); for
+one option out of several use [`Radio`](/components/radio).
 
 ## API Reference
 
@@ -50,3 +73,9 @@ const [checked, setChecked] = React.useState(false);
   path="../../packages/ui-react/src/components/ui/switch/switch.tsx"
   name="SwitchProps"
 />
+
+`SwitchProps` extends the Base UI `Switch.Root` props, so it also accepts
+`checked` / `defaultChecked`, `onCheckedChange`, `disabled`, `readOnly`,
+`required`, `name`, `value`, `uncheckedValue`, `inputRef`, and `render`. See the
+[Base UI Switch docs](https://base-ui.com/react/components/switch) for the full
+surface.
