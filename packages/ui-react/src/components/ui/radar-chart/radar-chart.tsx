@@ -16,7 +16,9 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
+  resolveAnimation,
   type ChartConfig,
+  type ChartAnimationProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives — the first
@@ -41,7 +43,8 @@ const radarChartVariants = cva('', {
 
 export interface RadarChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    VariantProps<typeof radarChartVariants> {
+    VariantProps<typeof radarChartVariants>,
+    ChartAnimationProps {
   /** Row-per-axis data. Each object holds the `angleKey` label + one numeric field per series. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -90,10 +93,20 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       showTooltip = true,
       showLegend = true,
       tooltipContent,
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
       ...props
     },
     ref
   ) => {
+    const animation = resolveAnimation({
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
+    });
     return (
       <div
         ref={ref}
@@ -126,7 +139,7 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
                 fillOpacity={fillOpacity}
                 strokeWidth={strokeWidth}
                 dot={showDots ? { r: 3 } : false}
-                isAnimationActive={false}
+                {...animation}
               />
             ))}
           </RechartsRadarChart>

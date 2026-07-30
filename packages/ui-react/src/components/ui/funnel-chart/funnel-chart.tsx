@@ -9,7 +9,9 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  resolveAnimation,
   type ChartConfig,
+  type ChartAnimationProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The single
@@ -34,7 +36,8 @@ const funnelChartVariants = cva('', {
 
 export interface FunnelChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    VariantProps<typeof funnelChartVariants> {
+    VariantProps<typeof funnelChartVariants>,
+    ChartAnimationProps {
   /** Row-per-stage data. Each object holds the stage's `nameKey` label + its `dataKey` numeric value. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -79,10 +82,20 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
       showLabels = true,
       showTooltip = true,
       tooltipContent,
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
       ...props
     },
     ref
   ) => {
+    const animation = resolveAnimation({
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
+    });
     // Stamp each row with its `fill` (the shadcn data-driven pattern). A Funnel's
     // default fill is grey (#808080) and recharts doesn't carry a per-segment
     // color on the tooltip/legend payload item, so putting the color on the data
@@ -118,7 +131,7 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
               data={seriesData}
               lastShapeType={lastShape ?? 'triangle'}
               reversed={reversed}
-              isAnimationActive={false}
+              {...animation}
             >
               {seriesData.map((entry, index) => (
                 // Keyed by index, not the name: two stages could share a nameKey

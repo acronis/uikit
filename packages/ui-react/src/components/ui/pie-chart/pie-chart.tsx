@@ -11,7 +11,9 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
+  resolveAnimation,
   type ChartConfig,
+  type ChartAnimationProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The single
@@ -45,7 +47,8 @@ export interface PieChartCenterLabel {
 
 export interface PieChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    VariantProps<typeof pieChartVariants> {
+    VariantProps<typeof pieChartVariants>,
+    ChartAnimationProps {
   /** Row-per-slice data. Each object holds the slice's `nameKey` label + its `dataKey` numeric value. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -109,10 +112,20 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       showTooltip = true,
       showLegend = true,
       tooltipContent,
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
       ...props
     },
     ref
   ) => {
+    const animation = resolveAnimation({
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
+    });
     const resolvedInnerRadius = shape === 'donut' ? innerRadius : 0;
 
     return (
@@ -140,7 +153,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
               innerRadius={resolvedInnerRadius}
               outerRadius={outerRadius}
               paddingAngle={paddingAngle}
-              isAnimationActive={false}
+              {...animation}
             >
               {data.map((entry, index) => (
                 // Keyed by index, not the name: two rows may share a nameKey

@@ -69,6 +69,12 @@ const meta = {
     aspectRatio: { control: { type: 'number', min: 0.5, max: 4, step: 0.1 } },
     showLabels: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
+    animate: { control: 'boolean' },
+    animationDuration: { control: { type: 'number' } },
+    animationEasing: {
+      control: 'select',
+      options: ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
+    },
   },
 } satisfies Meta<typeof Treemap>;
 
@@ -94,4 +100,11 @@ export const NoChrome: Story = {
 // it painting a full black box when there are no leaves to cover it.
 export const EmptyData: Story = {
   args: { data: [] },
+};
+
+// Entrance animation on — a live example. Excluded from VR (snapshot.skip):
+// the motion is non-deterministic, so it must not become a baseline.
+export const Animated: Story = {
+  parameters: { snapshot: { skip: true } },
+  args: { animate: true, animationDuration: 800 },
 };

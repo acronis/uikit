@@ -15,8 +15,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   resolveAxisDomain,
+  resolveAnimation,
   type ChartConfig,
   type CartesianChartProps,
+  type ChartAnimationProps,
 } from '../chart';
 
 // A histogram bins a set of continuous samples into equal-width ranges and plots
@@ -82,7 +84,8 @@ export function computeHistogramBins(
 
 export interface HistogramProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    CartesianChartProps {
+    CartesianChartProps,
+    ChartAnimationProps {
   /** Raw continuous samples to bin (non-finite values are ignored). */
   values: ReadonlyArray<number>;
   /**
@@ -128,10 +131,20 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
       gridHorizontal,
       gridVertical,
       tooltipContent,
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
       ...props
     },
     ref
   ) => {
+    const animation = resolveAnimation({
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
+    });
     const xAxisTitle = xAxisLabel
       ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
       : undefined;
@@ -218,7 +231,7 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
               stroke="var(--ui-background-surface-primary)"
               strokeWidth={1}
               radius={barRadius > 0 ? [barRadius, barRadius, 0, 0] : undefined}
-              isAnimationActive={false}
+              {...animation}
             />
           </RechartsBarChart>
         </ChartContainer>

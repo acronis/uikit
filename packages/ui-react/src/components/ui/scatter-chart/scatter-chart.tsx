@@ -18,8 +18,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   resolveAxisDomain,
+  resolveAnimation,
   type ChartConfig,
   type CartesianChartProps,
+  type ChartAnimationProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. Unlike the
@@ -48,7 +50,8 @@ export interface ScatterSeries {
 
 export interface ScatterChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    CartesianChartProps {
+    CartesianChartProps,
+    ChartAnimationProps {
   /** One `<Scatter>` per entry — each with its own point array. Use a single entry for an ungrouped scatter. */
   series: ScatterSeries[];
   /**
@@ -103,10 +106,20 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
       gridHorizontal,
       gridVertical,
       tooltipContent,
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
       ...props
     },
     ref
   ) => {
+    const animation = resolveAnimation({
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
+    });
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
     // the left gutter. Passed to recharts' native `label` (themed via the
     // `.recharts-label` fill selector on the container).
@@ -198,7 +211,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
                 data={s.data as Record<string, number>[]}
                 fill={`var(--color-${s.key})`}
                 shape={shape}
-                isAnimationActive={false}
+                {...animation}
               />
             ))}
           </RechartsScatterChart>

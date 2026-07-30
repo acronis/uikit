@@ -122,6 +122,56 @@ export function resolveAxisDomain(
   }
 }
 
+/** recharts animation easing curves. */
+export type ChartAnimationEasing =
+  | 'ease'
+  | 'ease-in'
+  | 'ease-out'
+  | 'ease-in-out'
+  | 'linear';
+
+/**
+ * Entrance-animation props shared by *every* chart type (not just the cartesian
+ * ones) — charts hardcode `isAnimationActive={false}` otherwise. All optional and
+ * off by default, so an unset chart renders byte-identically to before (and its
+ * VR baselines stay stable). Spread `resolveAnimation(props)` onto each series.
+ */
+export interface ChartAnimationProps {
+  /** Enable entrance animation. Defaults to `false` (keeps output/baselines stable). */
+  animate?: boolean;
+  /** Animation duration in ms (recharts `animationDuration`). */
+  animationDuration?: number;
+  /** Delay before the animation starts, in ms (recharts `animationBegin`). */
+  animationBegin?: number;
+  /** Easing curve (recharts `animationEasing`). */
+  animationEasing?: ChartAnimationEasing;
+}
+
+/** The resolved recharts animation props to spread onto a series/shape. */
+export interface ResolvedAnimation {
+  isAnimationActive: boolean;
+  animationDuration?: number;
+  animationBegin?: number;
+  animationEasing?: ChartAnimationEasing;
+}
+
+/**
+ * Turn the shared `ChartAnimationProps` into the recharts series props. `animate`
+ * drives `isAnimationActive` (default `false`); the timing props only appear when
+ * given, so an unset chart spreads exactly `{ isAnimationActive: false }` — the
+ * previous hardcoded value.
+ */
+export function resolveAnimation(props: ChartAnimationProps): ResolvedAnimation {
+  const { animate = false, animationDuration, animationBegin, animationEasing } =
+    props;
+  return {
+    isAnimationActive: animate,
+    ...(animationDuration !== undefined ? { animationDuration } : {}),
+    ...(animationBegin !== undefined ? { animationBegin } : {}),
+    ...(animationEasing !== undefined ? { animationEasing } : {}),
+  };
+}
+
 const toNumber = (value: number | string): number | null => {
   // `Number('')` and `Number(' ')` are 0, not NaN — so blank strings have to be
   // rejected before the finite check, or an empty tick label would render "0".
