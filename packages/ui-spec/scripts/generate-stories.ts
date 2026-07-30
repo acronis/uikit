@@ -43,6 +43,12 @@ interface RenderHint {
    *  called, so a generated "All States" story is a blank snapshot). Such
    *  components rely on their hand-written stories for VR. */
   skip?: boolean;
+  /** Object-body string (e.g. `"label: 'Menu item'"`) placed on the generated
+   *  meta's `args`. Required when the component has a `required: true` prop
+   *  in api.yaml — CSF3 typing demands every Story satisfy required props,
+   *  and a bare `render`-only story doesn't, even though `props`/`sample`
+   *  supply real values at the JSX call site above. */
+  metaArgs?: string;
 }
 
 const RENDER: Record<string, RenderHint> = {
@@ -267,6 +273,25 @@ const RENDER: Record<string, RenderHint> = {
     ],
     props: 'icon={<MessageTextIcon />}',
     ariaLabel: 'Chats',
+  },
+  // Static branding band: the glyph is a prop, not children, and an empty
+  // header would snapshot as a bare band with nothing inside it.
+  'chat-header-collapsed': {
+    extraImports: [
+      "import { MessageTextIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    props: 'icon={<MessageTextIcon />}',
+  },
+  // Expanded rail row: `label` is a required prop (the row's own accessible
+  // name), not children — an empty row would snapshot with no text at all.
+  // `metaArgs` satisfies the required `label` for CSF3 typing (see the
+  // RenderHint doc comment above).
+  'chat-menu-item': {
+    extraImports: [
+      "import { MessageTextIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    props: 'icon={<MessageTextIcon />} label="Menu item"',
+    metaArgs: "label: 'Menu item'",
   },
   // Composable: tab content arrives as children (there is deliberately no
   // flattened `tabs` prop), so without a sample the header would snapshot as an
@@ -881,7 +906,7 @@ ${imports}
 
 const meta = {
   title: 'UI/${index.component}/All States (generated)',
-  component: ${comp},
+  component: ${comp},${hint.metaArgs ? `\n  args: { ${hint.metaArgs} },` : ''}
 } satisfies Meta<typeof ${comp}>;
 
 export default meta;

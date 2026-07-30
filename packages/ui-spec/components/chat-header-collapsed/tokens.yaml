@@ -1,0 +1,32 @@
+spec_version: '1.0'
+component: ChatHeaderCollapsed
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+#
+# `--ui-chat-header-padding-x` is used here rather than the design's literal
+# `components/Chat/menuItem/paddingX` binding — the same duplicate-binding
+# deviation ChatHeaderExpanded already flagged (both resolve to 16px today).
+# A header should follow the header token so a brand that re-themes only one
+# of them does not drift; flagged to design.
+#
+# TagIcon's own tokens (`--ui-avatar-color-violet`, `-label-color-violet`,
+# `--ui-gap-8`) are NOT re-listed here — they belong to TagIcon's own spec,
+# composed as-is.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Geometry (root) ──
+  - name: --ui-chat-header-height
+    affects: root
+  - name: --ui-chat-container-collapsed-width
+    affects: root
+  - name: --ui-chat-header-padding-x
+    affects: root
+  - name: --ui-chat-global-border-width
+    affects: root
+  - name: --ui-chat-global-border-style
+    affects: root
+  - name: --ui-chat-global-border-color
+    affects: root

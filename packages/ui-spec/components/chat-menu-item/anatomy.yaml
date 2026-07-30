@@ -1,0 +1,92 @@
+spec_version: '1.0'
+component: ChatMenuItem
+
+schematic: |
+  min 224px, fills its container
+  +----------------------------------------+
+  | [icon]  Menu item            [extras]  |   root: <button> (40px tall, 1px
+  +----------------------------------------+         inline-start seam)
+   ^        ^                     ^
+   |        label -- visible text  extras -- optional trailing cluster
+   icon -- 16px glyph (optional)
+
+root:
+  element: button
+  role: button
+  description: >-
+    The full-width row (min 224px, fills its container). 40px tall,
+    horizontally padded, with a 1px inline-start border that continues the
+    chat rail's seam. The visible `label` is its own accessible name.
+
+parts:
+  - id: icon
+    description: >-
+      The 16px glyph slot, vertically centred. Mono icons inherit
+      `--ui-chat-menu-item-icon-color` through `currentColor`.
+    element: span
+    optional: true
+    visible_when: an `icon` is provided
+  - id: label
+    description: >-
+      The chat's title. Truncates rather than wraps to a second line, and
+      takes the remaining row width so `extras` stays flush to the end.
+    element: span
+  - id: extras
+    description: >-
+      The trailing affordance cluster, composed by the consumer as a
+      `ChatMenuItemExtras` element (its own `labelTag`/`labelShortcut`/`variant`
+      are configured on that element, not flattened here).
+    element: span
+    optional: true
+    visible_when: '`hasExtras` is true'
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [icon, label, extras]
+
+# `state` has two real prop values: `idle` (default) and `active` (the
+# currently-open chat — a persistent selection indicator, not a mouse-press
+# state). The design's `hover` and `focused` siblings are interaction states,
+# so they are pseudo-states here rather than prop values.
+states:
+  - {
+      id: idle,
+      trigger: "state === 'idle'",
+      kind: prop,
+      prop: state,
+      affects: [root],
+    }
+  - {
+      id: active,
+      trigger: "state === 'active'",
+      kind: prop,
+      prop: state,
+      affects: [root],
+    }
+  - {
+      id: has-extras,
+      trigger: 'hasExtras === true',
+      kind: prop,
+      prop: hasExtras,
+      affects: [extras],
+    }
+  - {
+      id: hover,
+      trigger: 'pointer over the row',
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [root],
+    }
+  - {
+      id: focused,
+      trigger: 'keyboard focus',
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [root],
+    }
+# There is intentionally NO disabled state: the Figma component set defines
+# none and the `--ui-chat-*` tier ships no disabled fill, so the native
+# `<button>` `disabled` attribute still blocks activation but carries no
+# distinct styling.

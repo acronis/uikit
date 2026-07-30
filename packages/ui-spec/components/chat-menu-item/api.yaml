@@ -1,0 +1,78 @@
+spec_version: '1.0'
+component: ChatMenuItem
+
+# Scoped to this Figma node only: an icon slot, a required label, the
+# idle/active fill axis, and a hasExtras/extras pair for the composed trailing
+# cluster. ChatMenuItemExtras' own labelTag/labelShortcut/variant props are
+# NOT flattened onto this contract — they belong to the element the consumer
+# passes through `extras`.
+contract:
+  properties:
+    - name: state
+      type: "'idle' | 'active'"
+      required: false
+      default: idle
+      description: >-
+        Fill wiring — the single `cva` axis, mirroring the live Figma `state`
+        property. `active` marks the currently-open chat (also sets
+        `aria-current="page"`); the Figma set's `hover` / `focused` siblings
+        are interaction states, painted as pseudo-states, not values of this
+        prop.
+    - name: icon
+      type: ReactNode
+      required: false
+      description: >-
+        The 16px glyph identifying the chat. Mono icons inherit
+        `--ui-chat-menu-item-icon-color` through `currentColor`.
+    - name: label
+      type: string
+      required: true
+      description: The chat's title, rendered as the row's visible label.
+    - name: hasExtras
+      type: boolean
+      required: false
+      default: false
+      description: Show the trailing `extras` cluster.
+    - name: extras
+      type: ReactNode
+      required: false
+      description: >-
+        The trailing affordance cluster, composed by the consumer as a
+        `ChatMenuItemExtras` element. Only rendered when `hasExtras` is set.
+
+  events:
+    - name: click
+      description: >-
+        Fired when the item is activated by pointer or keyboard (Enter / Space)
+        — the native button activation event.
+
+  content: []
+
+  methods: []
+
+adapters:
+  react:
+    component: ChatMenuItem
+    status: implemented
+    import: "import { ChatMenuItem } from '@acronis-platform/ui-react'"
+    example: |
+      <ChatMenuItem label="Assistant" icon={<MessageTextIcon />} />
+      <ChatMenuItem label="Q3 roadmap" icon={<MessageTextIcon />} state="active" />
+      <ChatMenuItem
+        label="Assistant"
+        icon={<MessageTextIcon />}
+        hasExtras
+        extras={<ChatMenuItemExtras labelTag="Beta" />}
+      />
+  vue:
+    component: AvChatMenuItem
+    status: planned
+    import: "import { AvChatMenuItem } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvChatMenuItem label="Assistant" state="active" />
+  web-components:
+    element: ui-chat-menu-item
+    status: planned
+    import: "import '@acronis-platform/ui-wc/chat-menu-item'"
+    example: |
+      <ui-chat-menu-item label="Assistant" state="active"></ui-chat-menu-item>

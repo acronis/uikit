@@ -1,0 +1,50 @@
+spec_version: '1.0'
+component: ChatHeaderCollapsed
+
+# Scoped to this Figma node only: an icon slot (composed through TagIcon) and
+# the Figma hasHistory flag. Nothing from TagIcon's own color/token surface is
+# flattened onto this contract — TagIcon is composed as-is, always violet.
+contract:
+  properties:
+    - name: icon
+      type: ReactNode
+      required: false
+      description: >-
+        The branding glyph, centered at 16px inside the composed `TagIcon`
+        (a 32px violet chip).
+    - name: hasHistory
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Mirrors the Figma `hasHistory` property. Currently a no-op: the one
+        captured instance has it `false` with no visible change anywhere in
+        the node, so there is nothing to render differently yet. Kept on the
+        contract so a future design pass can wire real behavior without a
+        breaking change.
+
+  events: []
+
+  content: []
+
+  methods: []
+
+adapters:
+  react:
+    component: ChatHeaderCollapsed
+    status: implemented
+    import: "import { ChatHeaderCollapsed } from '@acronis-platform/ui-react'"
+    example: |
+      <ChatHeaderCollapsed icon={<MessageTextIcon />} />
+  vue:
+    component: AvChatHeaderCollapsed
+    status: planned
+    import: "import { AvChatHeaderCollapsed } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvChatHeaderCollapsed />
+  web-components:
+    element: ui-chat-header-collapsed
+    status: planned
+    import: "import '@acronis-platform/ui-wc/chat-header-collapsed'"
+    example: |
+      <ui-chat-header-collapsed></ui-chat-header-collapsed>

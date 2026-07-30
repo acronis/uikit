@@ -1,0 +1,38 @@
+spec_version: '1.0'
+component: ChatHeaderCollapsed
+
+schematic: |
+  48px
+  +--------------+
+  |    [icon]    |   root: <header> (64px tall, 1px bottom seam)
+  +--------------+
+         ^
+         icon -- composed TagIcon (32px violet chip), centered
+
+root:
+  element: header
+  role: banner
+  description: >-
+    The static 48px-wide, 64px-tall band at the top of the collapsed chat
+    rail, with a 1px bottom border continuing the rail's seam. Purely
+    decorative — it renders no interactive content.
+
+parts:
+  - id: icon
+    description: >-
+      The branding glyph, centered inside a composed `TagIcon` (32px violet
+      chip). Optional — an empty `TagIcon` still renders as an empty chip.
+    element: span
+    optional: true
+    visible_when: an `icon` is provided
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [icon]
+
+# There is no `state`/`variant` axis on this node — a single static band.
+# `hasHistory` is a real Figma property but has no observable effect in the
+# only captured instance, so it is not modeled as a state here (see api.yaml).
+states: []

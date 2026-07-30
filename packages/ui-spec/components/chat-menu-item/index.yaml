@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: ChatMenuItem
+name: chat-menu-item
+status: ready
+category: navigation
+description: >-
+  One row of the chat rail while the rail is expanded: a 16px icon, a visible
+  label, and an optional trailing ChatMenuItemExtras cluster. `state="active"`
+  marks the currently-open chat.
+since: 0.59.0
+dependencies:
+  components: [ChatMenuItemExtras]
+figma:
+  node: '6516-2333'
+  codeConnect: packages/ui-react/src/components/ui/chat-menu-item/chat-menu-item.figma.tsx
