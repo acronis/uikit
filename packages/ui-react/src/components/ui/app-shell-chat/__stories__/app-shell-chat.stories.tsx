@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   BoltIcon,
@@ -38,11 +39,9 @@ import {
   SidebarSecondarySectionLabel,
 } from '../../sidebar-secondary';
 import { TooltipProvider } from '../../tooltip';
+import { AiChat, type AiChatVariant } from '../../ai-chat';
 import {
   AppShellChat,
-  AppShellChatChat,
-  AppShellChatChatBody,
-  AppShellChatChatHeader,
   AppShellChatContent,
   AppShellChatContentBody,
   AppShellChatContentHeader,
@@ -211,8 +210,8 @@ function SecondaryNav({ defaultExpanded }: { defaultExpanded?: boolean }) {
   );
 }
 
-// The dashed placeholder boxes are raw, unbound Figma demo fills (not design
-// tokens) — hardcoded here in the story only, never in the component source.
+// The dashed placeholder box is a raw, unbound Figma demo fill (not a design
+// token) — hardcoded here in the story only, never in the component source.
 function ContentPlaceholder() {
   return (
     <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-[#9747ff] bg-[#f9f4ff]">
@@ -221,32 +220,48 @@ function ContentPlaceholder() {
   );
 }
 
-function ChatPlaceholder() {
-  return (
-    <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-[#4784ff] bg-[#f4faff]">
-      <span className="text-2xl text-[#4784ff]">Chat</span>
-    </div>
-  );
-}
+const chatFeedPlaceholder = (
+  <p className="p-4 text-sm text-muted-foreground">
+    Conversation content goes here.
+  </p>
+);
 
-// One fully interactive story: both sidebars expand/collapse/resize, and Chat
-// resizes against Content (down to an icon-only rail, up to full width when
-// there's room) — all via real (uncontrolled) component state, so every
-// affordance is draggable. Chat's own width is plain responsive CSS (no
-// wiring needed — see `app-shell-chat.tsx`); `useAppShellChatInitialLayout`
+// `AiChat` is how the Chat panel is actually composed here — it renders its
+// own header/footer/border/width per `variant`, so it sits directly beside
+// `AppShellChatContent` rather than inside `AppShellChatChat` (nesting would
+// double up both chrome). `resizable` turns on AiChat's own drag-resize +
+// collapse-snap (mirroring `SidebarSecondaryResizeEdge`) and wires the
+// footer/rail buttons to real variant transitions — see ai-chat.tsx.
+//
+// `variant` is CONTROLLED here (not `defaultVariant`) because this shell
+// needs to react to it: `full-width` is AiChat's own immersive takeover (a
+// chat-list sidebar + conversation column filling all remaining space), so
+// `AppShellChatContent` must unmount while it's active rather than sitting
+// alongside it as a second `flex-1` competing for the same row — matching
+// how the Figma `full-width` instance is used. `useAppShellChatInitialLayout`
 // resolves the sidebars' breakpoint-appropriate INITIAL `defaultExpanded`
 // once at mount, which DOES need wiring explicitly since AppShellChatSidebar
 // is a plain slot, not a fixed pairing AppShellChat owns.
-export const Default: Story = {
-  render: () => {
-    const initialLayout = useAppShellChatInitialLayout();
-    return (
-      <TooltipProvider delay={0}>
-        <AppShellChat className="h-screen">
-          <AppShellChatSidebar>
-            <PrimaryNav defaultExpanded={initialLayout.primaryExpanded} />
+function AppShellWithAiChat({
+  initialVariant,
+  includeSecondarySidebar = true,
+}: {
+  initialVariant: AiChatVariant;
+  includeSecondarySidebar?: boolean;
+}) {
+  const initialLayout = useAppShellChatInitialLayout();
+  const [variant, setVariant] = React.useState<AiChatVariant>(initialVariant);
+
+  return (
+    <TooltipProvider delay={0}>
+      <AppShellChat className="h-screen">
+        <AppShellChatSidebar>
+          <PrimaryNav defaultExpanded={initialLayout.primaryExpanded} />
+          {includeSecondarySidebar && (
             <SecondaryNav defaultExpanded={initialLayout.secondaryExpanded} />
-          </AppShellChatSidebar>
+          )}
+        </AppShellChatSidebar>
+        {variant !== 'full-width' && (
           <AppShellChatContent>
             <AppShellChatContentHeader>
               <span className="ui-typography-headings-title text-[var(--ui-text-on-surface-primary)]">
@@ -257,16 +272,22 @@ export const Default: Story = {
               <ContentPlaceholder />
             </AppShellChatContentBody>
           </AppShellChatContent>
-          <AppShellChatChat>
-            <AppShellChatChatHeader label="Acronis AI" />
-            <AppShellChatChatBody>
-              <ChatPlaceholder />
-            </AppShellChatChatBody>
-          </AppShellChatChat>
-        </AppShellChat>
-      </TooltipProvider>
-    );
-  },
+        )}
+        <AiChat
+          variant={variant}
+          onVariantChange={setVariant}
+          resizable
+          className="shrink-0"
+        >
+          {chatFeedPlaceholder}
+        </AiChat>
+      </AppShellChat>
+    </TooltipProvider>
+  );
+}
+
+export const Default: Story = {
+  render: () => <AppShellWithAiChat initialVariant="expanded" />,
 };
 
 // SidebarSecondary is optional — `AppShellChatSidebar` is a plain slot, not a
@@ -274,71 +295,24 @@ export const Default: Story = {
 // second-level navigation just omits it and the rail is SidebarPrimary alone.
 export const WithoutSecondarySidebar: Story = {
   name: 'Without SidebarSecondary',
-  render: () => {
-    const initialLayout = useAppShellChatInitialLayout();
-    return (
-      <TooltipProvider delay={0}>
-        <AppShellChat className="h-screen">
-          <AppShellChatSidebar>
-            <PrimaryNav defaultExpanded={initialLayout.primaryExpanded} />
-          </AppShellChatSidebar>
-          <AppShellChatContent>
-            <AppShellChatContentHeader>
-              <span className="ui-typography-headings-title text-[var(--ui-text-on-surface-primary)]">
-                Page header
-              </span>
-            </AppShellChatContentHeader>
-            <AppShellChatContentBody>
-              <ContentPlaceholder />
-            </AppShellChatContentBody>
-          </AppShellChatContent>
-          <AppShellChatChat>
-            <AppShellChatChatHeader label="Acronis AI" />
-            <AppShellChatChatBody>
-              <ChatPlaceholder />
-            </AppShellChatChatBody>
-          </AppShellChatChat>
-        </AppShellChat>
-      </TooltipProvider>
-    );
-  },
+  render: () => (
+    <AppShellWithAiChat
+      initialVariant="expanded"
+      includeSecondarySidebar={false}
+    />
+  ),
 };
 
-// Chat's icon-only rail (the 48px floor, `data-state="collapsed"`) — a
-// controlled `width={48}` so this baseline is deterministic regardless of
-// the test-runner's viewport (Chat's UNCONTROLLED default is live/responsive
-// — see the "Responsive layout" section of ui-spec's `behavior.md` — so
-// pinning it here isn't testing the live breakpoint behavior, just this
-// visual state).
+// AiChat's 48px icon-only rail — starts `collapsed` but stays interactive
+// (drag the edge out, or click "Maximize chat"/"Show full-width chat").
 export const CollapsedChat: Story = {
-  name: 'Chat — collapsed (icon-only) rail',
-  render: () => {
-    const initialLayout = useAppShellChatInitialLayout();
-    return (
-      <TooltipProvider delay={0}>
-        <AppShellChat className="h-screen">
-          <AppShellChatSidebar>
-            <PrimaryNav defaultExpanded={initialLayout.primaryExpanded} />
-            <SecondaryNav defaultExpanded={initialLayout.secondaryExpanded} />
-          </AppShellChatSidebar>
-          <AppShellChatContent>
-            <AppShellChatContentHeader>
-              <span className="ui-typography-headings-title text-[var(--ui-text-on-surface-primary)]">
-                Page header
-              </span>
-            </AppShellChatContentHeader>
-            <AppShellChatContentBody>
-              <ContentPlaceholder />
-            </AppShellChatContentBody>
-          </AppShellChatContent>
-          <AppShellChatChat width={48}>
-            <AppShellChatChatHeader label="Acronis AI" />
-            <AppShellChatChatBody>
-              <ChatPlaceholder />
-            </AppShellChatChatBody>
-          </AppShellChatChat>
-        </AppShellChat>
-      </TooltipProvider>
-    );
-  },
+  name: 'Chat — collapsed rail',
+  render: () => <AppShellWithAiChat initialVariant="collapsed" />,
+};
+
+// AiChat's full-width mode — starts as the takeover described above, but
+// stays interactive ("Minimize chat"/"Collapse chat" bring Content back).
+export const FullWidthChat: Story = {
+  name: 'Chat — full-width',
+  render: () => <AppShellWithAiChat initialVariant="full-width" />,
 };

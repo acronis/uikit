@@ -24,11 +24,61 @@ const meta = {
     variant: {
       control: 'select',
       options: ['collapsed', 'expanded', 'full-width'],
-      description: 'Which of the three AI-chat layouts to render.',
+      description:
+        'Controlled variant. Leave unset (use `defaultVariant` below) for ' +
+        'uncontrolled use — otherwise variant-switch buttons/drag-resize only ' +
+        'fire `onVariantChange` and never change the render themselves.',
       table: {
         type: { summary: "'collapsed' | 'expanded' | 'full-width'" },
         defaultValue: { summary: "'full-width'" },
         category: 'Appearance',
+      },
+    },
+    defaultVariant: {
+      control: 'select',
+      options: ['collapsed', 'expanded', 'full-width'],
+      description: 'Uncontrolled initial variant. Ignored when `variant` is set.',
+      table: {
+        type: { summary: "'collapsed' | 'expanded' | 'full-width'" },
+        defaultValue: { summary: "'full-width'" },
+        category: 'Appearance',
+      },
+    },
+    onVariantChange: {
+      control: false,
+      description: 'Fires whenever a button or drag-resize changes the variant.',
+      table: { type: { summary: '(variant) => void' }, category: 'Events' },
+    },
+    resizable: {
+      control: 'boolean',
+      description:
+        'Enable the draggable resize edge on the start border. Dragging within ' +
+        "`expanded`'s width range resizes it live; dragging past the floor snaps " +
+        'to `collapsed` (and back out past the same threshold re-expands it) — ' +
+        'mirroring `SidebarSecondary`. No edge renders for `full-width`.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+        category: 'Behavior',
+      },
+    },
+    width: {
+      control: false,
+      description: 'Controlled width in px while `variant="expanded"` (only meaningful with `resizable`).',
+      table: { type: { summary: 'number' }, category: 'Behavior' },
+    },
+    onWidthChange: {
+      control: false,
+      description: 'Fires when the width changes due to a drag/keyboard interaction.',
+      table: { type: { summary: '(width) => void' }, category: 'Events' },
+    },
+    resizeAriaLabel: {
+      control: false,
+      description: "Accessible label for the resize edge (`role=\"separator\"`).",
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: "'Resize chat'" },
+        category: 'Accessibility',
       },
     },
     children: {
@@ -98,4 +148,26 @@ export const AllVariants: Story = {
       <AiChat variant="full-width" />
     </div>
   ),
+};
+
+/**
+ * Uncontrolled + `resizable`: every variant-switch action is wired instead of
+ * inert. Drag the panel's start edge — it resizes live while `expanded`,
+ * snaps to `collapsed` past the floor, and re-expands dragging back out past
+ * the same threshold (mirroring `SidebarSecondary`'s collapse-on-drag). Or
+ * use the footer/rail buttons (Maximize/Minimize/Collapse chat, "Show
+ * full-width chat"). This is one answer to the README's "how does a consumer
+ * move between variants" open question — combining the discrete actions
+ * Figma drew with a continuous drag, rather than picking one exclusively.
+ */
+export const Interactive: Story = {
+  args: {
+    defaultVariant: 'expanded',
+    resizable: true,
+    children: (
+      <p className="p-4 text-sm text-muted-foreground">
+        Conversation content goes here.
+      </p>
+    ),
+  },
 };

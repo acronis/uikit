@@ -1,6 +1,7 @@
 import { createRef } from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 
 import { AiChat } from '../ai-chat';
 
@@ -130,5 +131,79 @@ describe('AiChat', () => {
   it('merges a consumer className onto the root', () => {
     render(<AiChat className="custom-chat" data-testid="root" />);
     expect(screen.getByTestId('root')).toHaveClass('custom-chat');
+  });
+
+  describe('variant switching', () => {
+    it('is uncontrolled via defaultVariant — clicking a footer action changes the render', async () => {
+      const user = userEvent.setup();
+      render(<AiChat defaultVariant="expanded" />);
+
+      await user.click(screen.getByRole('button', { name: /Collapse chat/ }));
+
+      expect(
+        screen.getByRole('button', { name: 'Maximize chat' })
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('tab', { name: 'Acronis AI' })
+      ).not.toBeInTheDocument();
+    });
+
+    it('calls onVariantChange for every wired action', async () => {
+      const user = userEvent.setup();
+      const onVariantChange = vi.fn();
+      render(<AiChat defaultVariant="expanded" onVariantChange={onVariantChange} />);
+
+      await user.click(screen.getByRole('button', { name: /Maximize chat/ }));
+      expect(onVariantChange).toHaveBeenCalledWith('full-width');
+    });
+
+    it('when variant is controlled, a click only fires onVariantChange and does not self-update', async () => {
+      const user = userEvent.setup();
+      const onVariantChange = vi.fn();
+      render(<AiChat variant="expanded" onVariantChange={onVariantChange} />);
+
+      await user.click(screen.getByRole('button', { name: /Collapse chat/ }));
+
+      expect(onVariantChange).toHaveBeenCalledWith('collapsed');
+      // Still rendering the controlled `expanded` variant — the consumer
+      // didn't feed the new value back in.
+      expect(screen.getByRole('tab', { name: 'Acronis AI' })).toBeInTheDocument();
+    });
+
+    it('collapsed rail: "Maximize chat" expands and "Show full-width chat" goes full-width', async () => {
+      const user = userEvent.setup();
+      const onVariantChange = vi.fn();
+      render(<AiChat defaultVariant="collapsed" onVariantChange={onVariantChange} />);
+
+      await user.click(screen.getByRole('button', { name: 'Show full-width chat' }));
+      expect(onVariantChange).toHaveBeenCalledWith('full-width');
+    });
+
+    it('full-width sidebar: "Minimize chat" returns to expanded, "Collapse chat" collapses', async () => {
+      const user = userEvent.setup();
+      const onVariantChange = vi.fn();
+      render(<AiChat defaultVariant="full-width" onVariantChange={onVariantChange} />);
+
+      await user.click(screen.getByRole('button', { name: /Minimize chat/ }));
+      expect(onVariantChange).toHaveBeenCalledWith('expanded');
+    });
+  });
+
+  describe('resizable', () => {
+    it('does not render a resize edge by default', () => {
+      render(<AiChat defaultVariant="expanded" />);
+      expect(screen.queryByRole('separator')).not.toBeInTheDocument();
+    });
+
+    it('renders a resize edge for expanded and collapsed, but not full-width', () => {
+      const { rerender } = render(<AiChat defaultVariant="expanded" resizable />);
+      expect(screen.getByRole('separator')).toBeInTheDocument();
+
+      rerender(<AiChat variant="collapsed" resizable />);
+      expect(screen.getByRole('separator')).toBeInTheDocument();
+
+      rerender(<AiChat variant="full-width" resizable />);
+      expect(screen.queryByRole('separator')).not.toBeInTheDocument();
+    });
   });
 });

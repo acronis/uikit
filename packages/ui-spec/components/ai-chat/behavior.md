@@ -66,17 +66,83 @@ Given/When/Then scenarios for the root AI-chat shell.
   README.md's "Open questions" for what would need to be resolved before this
   can change.
 
-## Variant-switch actions
+## Variant switching + resize
 
-**Scenario: the actions render but do nothing**
+`variant` follows the controlled/uncontrolled idiom: pass `variant` +
+`onVariantChange` to own the value, or `defaultVariant` (default `'full-width'`)
+to let `AiChat` manage it internally. Every scenario below applies in both
+modes — "changes to X" means "the uncontrolled value becomes X, or
+`onVariantChange(X)` fires if controlled."
 
-- **Given** any variant's footer/nav actions (Maximize/Minimize/Collapse chat,
-  the collapsed rail's footer icons, "New chat")
-- **When** one is activated
-- **Then** nothing happens — no `onClick` is wired. The interaction model for
-  moving between variants (discrete actions with keyboard shortcuts, as shown
-  here, vs. the unrelated `AppShellChat`'s continuous drag-resize) is an open
-  product question (README.md), not an oversight.
+**Scenario: collapsed's footer actions**
+
+- **Given** `variant="collapsed"`
+- **When** "Maximize chat" is activated
+- **Then** the variant changes to `expanded`.
+- **When** "Show full-width chat" is activated instead
+- **Then** the variant changes to `full-width`.
+
+**Scenario: expanded's footer actions**
+
+- **Given** `variant="expanded"`
+- **When** "Maximize chat" (`⌘H`) is activated
+- **Then** the variant changes to `full-width`.
+- **When** "Collapse chat" (`⌘C`) is activated instead
+- **Then** the variant changes to `collapsed`.
+
+**Scenario: full-width's sidebar-footer actions**
+
+- **Given** `variant="full-width"`
+- **When** "Minimize chat" (`⌘H`) is activated
+- **Then** the variant changes to `expanded`.
+- **When** "Collapse chat" (`⌘C`) is activated instead
+- **Then** the variant changes to `collapsed`.
+- **And** "New chat" (`⌘N`) remains inert regardless — it starts a new
+  conversation, not a variant transition, and there is no chat-session model
+  yet to wire it to (README.md's "Open questions").
+
+**Scenario: resizable drag-resize within expanded**
+
+- **Given** `resizable` and `variant="expanded"`
+- **When** the start-border edge is dragged toward the row's start (growing
+  the panel) or away from it (shrinking)
+- **Then** the width tracks the pointer, clamped to [384px, 512px] — the same
+  bounds as the static `expanded` width.
+
+**Scenario: dragging past the floor snaps to collapsed, not clamps**
+
+- **Given** `resizable` and `variant="expanded"`
+- **When** the edge is dragged narrower than the 192px collapse threshold
+  (half of `expanded`'s 384px floor — mirrors `SidebarSecondary`'s
+  `collapseThreshold`)
+- **Then** the variant changes to `collapsed` instead of stopping at 384px.
+
+**Scenario: dragging back out re-expands from collapsed**
+
+- **Given** `resizable` and `variant="collapsed"`
+- **When** the edge is dragged past the same 192px threshold
+- **Then** the variant changes to `expanded`.
+
+**Scenario: no resize edge on full-width**
+
+- **Given** `resizable` and `variant="full-width"`
+- **Then** no resize edge renders — full-width is a takeover layout with no
+  meaningful boundary to drag (see the "When not to use" note in README.md
+  about composing this beside another `flex-1` region).
+
+**Scenario: keyboard resize mirrors the drag thresholds**
+
+- **Given** `resizable`, the resize edge focused, and `variant="expanded"`
+- **When** the shrink-direction arrow key is pressed enough times to go below
+  384px
+- **Then** the variant changes to `collapsed` (matching the drag behavior)
+  instead of clamping at 384px.
+- **Given** `variant="collapsed"` instead
+- **When** the grow-direction arrow key is pressed
+- **Then** the variant changes to `expanded`.
+- **Given** any resizable state
+- **When** `Home` is pressed
+- **Then** the width resets to 512px, expanding first if `collapsed`.
 
 ## Composition
 

@@ -14,25 +14,48 @@ Figma: [`AI-Chat` node 7329-24933](https://www.figma.com/design/lrU3ydIyvPYQNE6i
 
 > ### ⚠ `status: draft` — see "Open questions" below
 >
-> This component's visual composition is complete and tested, but three real
-> product decisions are unresolved. Ship it as a static shell; do not build
-> consumer-facing variant-switching or content-configuration on top of it
-> until these are answered.
+> This component's visual composition is complete and tested, and variant
+> switching + resize now have real behavior (see below). Two smaller product
+> decisions are still unresolved, and the content-slot gap (a real
+> chat-history list, per-conversation title, tab set) is unchanged — do not
+> build consumer-facing content-configuration on top of it until that's
+> answered.
 
 ## When to use
 
 - As the root container for an AI-chat panel that needs to present as a
   collapsed rail, a docked panel, or a full-width workspace.
+- As the resizable chat panel beside `AppShellChat`'s `AppShellChatContent` —
+  pass `resizable` and compose it directly as a sibling (not inside
+  `AppShellChatChat`, which would double up header/footer/border chrome).
+  See `app-shell-chat.stories.tsx` in `packages/ui-react` for the composition.
 
 ## When not to use
 
-- **For a drag-resizable chat panel** — use the existing, unrelated
-  `AppShellChat`, which implements continuous drag-resize instead of this
-  component's discrete `variant` values. Do not merge the two: they encode
-  different, currently-unconfirmed interaction models (see below).
 - **When you need a configurable chat-history list, tab set, or
   per-conversation title** — none of those are exposed yet. See "Open
   questions."
+
+## Variant switching + resize
+
+`variant` is controllable (`variant`/`onVariantChange`) or uncontrolled
+(`defaultVariant`, default `'full-width'`). Every footer/rail button now
+actually switches variants — see `behavior.md`'s "Variant switching + resize"
+for the full Maximize/Minimize/Collapse chat mapping. `resizable` additionally
+adds a draggable edge on the panel's start border: dragging within
+`expanded`'s 384-512px range resizes it live, and dragging past the 192px
+floor snaps to `collapsed` instead of clamping — the same collapse-on-drag
+idiom `SidebarSecondary` uses, just applied across three variants instead of
+two. No edge renders for `full-width`.
+
+This answers the previous "how does a consumer move between variants?"
+question by combining both interaction models Figma implied (discrete
+`⌘H`/`⌘C`/`⌘N` actions and a continuous drag) instead of picking one
+exclusively — and supersedes the old guidance to keep this component and
+`AppShellChat`'s drag-resize apart. `AppShellChat`'s `AppShellChatChat` still
+exists for consumers who want its generic header/body slots without AiChat's
+fixed content, but the actual AI-chat integration is `AiChat` composed
+directly (see "When to use" above).
 
 ## Parts
 
@@ -42,7 +65,8 @@ Figma: [`AI-Chat` node 7329-24933](https://www.figma.com/design/lrU3ydIyvPYQNE6i
 | `nav-chat` / `nav-tasks` (collapsed) | `ChatMenuItemCollapsed`                  | Icon-only equivalents of the expanded header's tabs.                              |
 | `header-tabs` (expanded)             | `ChatHeaderExpanded` + placeholder tabs  | Fixed "Acronis AI" / "Tasks" tabs — see that component's own placeholder warning. |
 | `feed` / `body-feed`                 | the `Feed` SLOT                          | The **only** consumer-supplied content — via `children`.                          |
-| `footer` / `sidebar-footer`          | `ChatMenuItem` / `ChatMenuItemCollapsed` | Variant-switch actions. Inert — see "Open questions."                             |
+| `footer` / `sidebar-footer`          | `ChatMenuItem` / `ChatMenuItemCollapsed` | Variant-switch actions — wired, see "Variant switching + resize."                 |
+| `resize-edge`                        | —                                        | `resizable` only. Draggable start-border handle; collapsed/expanded only.         |
 | `sidebar-header` / `body-header`     | plain text                               | Fixed "Acronis AI" / "Chat name".                                                 |
 | `sidebar-list`                       | `ChatMenuItem`                           | One fixed "New chat" item.                                                        |
 
@@ -76,32 +100,37 @@ Figma: [`AI-Chat` node 7329-24933](https://www.figma.com/design/lrU3ydIyvPYQNE6i
 <AiChat render={<div />}>{/* … */}</AiChat>
 ```
 
+### Resizable, composed beside AppShellChat's Content
+
+```tsx
+<AiChat variant={variant} onVariantChange={setVariant} resizable>
+  <ConversationFeed messages={messages} />
+</AiChat>
+```
+
 ## Open questions
 
 These are unresolved product/design decisions raised while building this
 component — not implementation gaps to guess at. Each changes `AiChat`'s
 actual behavior, not just its look, so none are answered here:
 
-1. **How does a consumer move between the three variants?** Figma shows
-   discrete footer/menu toggle actions with keyboard-shortcut hints (`⌘H` /
-   `⌘C` / `⌘N`) — a different interaction model from the existing, unrelated
-   `AppShellChat`'s continuous drag-resize. This component ships those
-   actions as **inert buttons** (no `onClick`, no `onVariantChange` prop)
-   until the intended model is confirmed. Once it is, this likely needs
-   either an `onVariantChange` callback or fully uncontrolled internal state
-   with real keyboard-shortcut wiring.
-2. **What should `hasHistory` actually reveal on each header variant?**
+~~1. How does a consumer move between the three variants?~~ **Resolved** — see
+"Variant switching + resize" above: footer/rail buttons are wired, and
+`resizable` adds a drag + collapse-snap edge, combining Figma's discrete
+actions with a continuous drag rather than picking one exclusively.
+
+1. **What should `hasHistory` actually reveal on each header variant?**
    `ChatHeaderCollapsed.hasHistory` is a documented no-op and
    `ChatHeaderExpanded.hasHistory` adds a button with no visible difference in
    the captured instance (both default `false` here). `AiChat` doesn't expose
    `hasHistory` itself — it would need a resolved answer before doing so.
-3. **Are the shortcut label `?` suffixes (`⌘H?`, `⌘C?`, `⌘N?`) in Figma
+2. **Are the shortcut label `?` suffixes (`⌘H?`, `⌘C?`, `⌘N?`) in Figma
    placeholders or intentional?** This implementation renders them **without**
    the `?` (`⌘H`, `⌘C`, `⌘N`), on the assumption it's a Figma placeholder
    artifact — a literal `?` in a shipped shortcut hint would read as broken.
    Confirm before this ships broadly.
 
-A fourth, related gap surfaced during implementation: **Figma's own property
+A third, related gap surfaced during implementation: **Figma's own property
 list for `AiChat` is only `variant` and the `Feed` slot** (verified via
 Code Connect metadata) — the header tab set, the chat-history list (today
 just one fixed "New chat" item), and the per-conversation title ("Chat name")

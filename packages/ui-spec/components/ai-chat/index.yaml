@@ -14,21 +14,26 @@ description: >-
 
   The root's Figma property list (verified via get_context_for_code_connect) is
   only `variant` and a `Feed` SLOT — no other content shown in the design
-  (the header tab set, the chat-history list, the per-conversation title, the
-  footer variant-switch actions) is bound to a component property there either.
-  This component's own prop surface mirrors that exactly: `variant` plus
-  `children` (wired to the `Feed` slot for `expanded`/`full-width` only — the
-  collapsed rail has no room to show it). Everything else ships as fixed,
-  non-localizable English copy matching the captured instance, and the
-  variant-switch actions are inert (no `onClick`) pending the open questions
-  below.
+  (the header tab set, the chat-history list, the per-conversation title) is
+  bound to a component property there either. This component's own content
+  surface mirrors that: `children` is wired to the `Feed` slot for
+  `expanded`/`full-width` only — the collapsed rail has no room to show it.
+  Everything else ships as fixed, non-localizable English copy matching the
+  captured instance.
 
-  `status: draft` (not `ready`) because three real, product-owned questions are
-  unresolved — see README.md's "Open questions": (1) the interaction model for
-  moving between variants (discrete actions with `⌘H`/`⌘C`/`⌘N`, shown here, vs.
-  the unrelated `AppShellChat`'s continuous drag-resize), (2) what `hasHistory`
-  should reveal on each header variant, and (3) whether the `⌘H?`/`⌘C?`/`⌘N?`
-  suffixes in Figma are placeholders (dropped here) or intentional.
+  The variant-switch actions ARE wired (`onClick` on every footer/rail button)
+  and `resizable` adds a drag-to-resize/collapse-snap edge, mirroring
+  `SidebarSecondary` — see behavior.md's "Variant switching + resize". This
+  answers open question (1) below: both interaction models Figma implied
+  (discrete `⌘H`/`⌘C`/`⌘N` actions and a continuous drag) are wired together
+  rather than picking one exclusively.
+
+  `status: draft` (not `ready`) because two real, product-owned questions are
+  still unresolved — see README.md's "Open questions": (1) what `hasHistory`
+  should reveal on each header variant, and (2) whether the `⌘H?`/`⌘C?`/`⌘N?`
+  suffixes in Figma are placeholders (dropped here) or intentional. The
+  content-slot gap (a real chat-history list, per-conversation title, tab set)
+  is unchanged and still blocks `ready` too.
 since: 0.59.0
 dependencies:
   components:

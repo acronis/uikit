@@ -1,10 +1,12 @@
 spec_version: '1.0'
 component: AiChat
 
-# The property list is deliberately minimal — mirrors the Figma component's
-# own property list exactly (`variant` + the `Feed` SLOT, verified via
-# get_context_for_code_connect). No composed child's own prop (ChatHeaderExpanded's
-# `hasHistory`, ChatMenuItem's `label`, etc.) is flattened here.
+# `variant` + the `Feed` SLOT still mirror the Figma component's own property
+# list exactly (verified via get_context_for_code_connect) — Figma has no
+# property for resize/width, so `resizable`/`width`/`onWidthChange` below are
+# a code-only addition, not a Figma-bound one. No composed child's own prop
+# (ChatHeaderExpanded's `hasHistory`, ChatMenuItem's `label`, etc.) is
+# flattened here.
 contract:
   properties:
     - name: variant
@@ -12,8 +14,43 @@ contract:
       required: false
       default: "'full-width'"
       description: >-
-        Which of the three AI-chat layouts to render. Mirrors the Figma
-        `variant` property (options: collapsed | expanded | full-width).
+        Controlled variant. Mirrors the Figma `variant` property (options:
+        collapsed | expanded | full-width). When provided, variant-switch
+        buttons and drag-resize only fire `onVariantChange` — the component
+        never changes itself. Omit it (use `defaultVariant`) for normal
+        uncontrolled use.
+
+    - name: defaultVariant
+      type: "'collapsed' | 'expanded' | 'full-width'"
+      required: false
+      default: "'full-width'"
+      description: >-
+        Uncontrolled initial variant. Ignored when `variant` is provided.
+
+    - name: resizable
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Enable the draggable resize edge on the panel's start border.
+        Dragging within `expanded`'s width range (384-512px) resizes it live;
+        dragging past the floor snaps to `collapsed` (and back out past the
+        same threshold re-expands it), mirroring `SidebarSecondary`'s
+        collapse-on-drag. No edge renders for `full-width` — see
+        behavior.md.
+
+    - name: width
+      type: number
+      required: false
+      description: >-
+        Controlled width in px while `variant="expanded"`. Only meaningful
+        with `resizable`.
+
+    - name: resizeAriaLabel
+      type: string
+      required: false
+      default: "'Resize chat'"
+      description: Accessible label for the resize edge (`role="separator"`).
 
     - name: render
       type: RenderProp
@@ -34,12 +71,22 @@ contract:
         component either, so they ship as fixed content pending the open
         questions in README.md.
 
-  events: []
-  # No events in this version. The variant-switch actions (Maximize/Minimize/
-  # Collapse chat, New chat) render as inert buttons — the interaction model
-  # for moving between variants (discrete actions vs. a drag-resize, like the
-  # unrelated `AppShellChat`) is an open product question, not an oversight.
-  # See README.md's "Open questions" and behavior.md.
+  events:
+    - name: onVariantChange
+      payload: "'collapsed' | 'expanded' | 'full-width'"
+      description: >-
+        Fires whenever a footer/rail button or a drag-resize past the
+        collapse threshold changes the variant — in both controlled and
+        uncontrolled use.
+    - name: onWidthChange
+      payload: number
+      description: >-
+        Fires when the width changes due to a drag/keyboard interaction while
+        `resizable` and `variant="expanded"`.
+  # The variant-switch actions (Maximize/Minimize/Collapse chat) ARE wired —
+  # see behavior.md's "Variant switching + resize". "New chat" stays inert:
+  # it starts a new conversation, not a variant transition, and there is no
+  # chat-session model yet to wire it to (see README.md's "Open questions").
 
 adapters:
   react:

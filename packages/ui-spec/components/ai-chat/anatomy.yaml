@@ -18,6 +18,10 @@ schematic: |
   | footer |
   +--------+
 
+  resize-edge: not drawn to scale above — a 17px drag handle straddling the
+  collapsed/expanded panel's start border (`resizable` only; no equivalent on
+  full-width).
+
   header:        (collapsed) `ChatHeaderCollapsed` — branding glyph only
   nav-chat:      (collapsed) `ChatMenuItemCollapsed` icon-only "Chat" nav item
   nav-tasks:     (collapsed) `ChatMenuItemCollapsed` icon-only "Tasks" nav item, alert dot
@@ -30,6 +34,7 @@ schematic: |
   sidebar-footer:(full-width) the variant-switch action row (Minimize/Collapse chat)
   body-header:   (full-width) per-conversation title ("Chat name")
   body-feed:     (full-width) the `Feed` SLOT — consumer content via `children`
+  resize-edge:   (collapsed, expanded — resizable only) the draggable resize handle
 
 root:
   element: aside
@@ -120,6 +125,16 @@ parts:
     description: The `Feed` SLOT for the full-width variant. Rendered from `children`.
     element: div
     visible_when: variant=full-width
+  - id: resize-edge
+    description: >-
+      The draggable resize handle on the panel's start border, shown only
+      when the `resizable` prop is set. Dragging within `expanded`'s width
+      range resizes it live; past the floor it snaps `variant` to `collapsed`
+      (and dragging back out past the same threshold re-expands it) —
+      mirroring `SidebarSecondary`'s resize edge. Not part of Figma's
+      `AiChat` property list — a code-only addition (see behavior.md).
+    element: div
+    visible_when: 'resizable AND (variant=collapsed OR variant=expanded)'
 
 layout:
   type: variant-dependent
@@ -149,4 +164,11 @@ states:
       prop: variant,
       affects:
         [sidebar-header, sidebar-list, sidebar-footer, body-header, body-feed],
+    }
+  - {
+      id: resizable-edge,
+      trigger: 'the resizable prop is set (and variant is collapsed or expanded)',
+      kind: prop,
+      prop: resizable,
+      affects: [resize-edge],
     }
