@@ -94,6 +94,15 @@ contract:
       type: "'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear'"
       required: false
       description: Easing curve.
+    - name: showLabels
+      type: boolean
+      required: false
+      default: 'false'
+      description: Render a value label on each slice.
+    - name: labelFormatter
+      type: '(value) => string'
+      required: false
+      description: Format each label value (reuses the tick formatters).
   events: []
   methods: []
 

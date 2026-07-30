@@ -19,6 +19,9 @@ export {
   createTickFormatter,
   resolveAxisDomain,
   resolveAnimation,
+  toLabelFormatter,
+  CHART_LABEL_FILL,
+  CHART_LABEL_FONT_SIZE,
 } from './chart-format';
 export type {
   TickFormatter,
@@ -26,4 +29,6 @@ export type {
   ChartAnimationProps,
   ChartAnimationEasing,
   ResolvedAnimation,
+  ChartDataLabelProps,
+  CartesianLabelPosition,
 } from './chart-format';

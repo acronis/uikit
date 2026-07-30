@@ -6,6 +6,7 @@ import {
   Area,
   AreaChart as RechartsAreaChart,
   CartesianGrid,
+  LabelList,
   XAxis,
   YAxis,
 } from 'recharts';
@@ -19,9 +20,14 @@ import {
   ChartTooltipContent,
   resolveAxisDomain,
   resolveAnimation,
+  toLabelFormatter,
+  CHART_LABEL_FILL,
+  CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type CartesianChartProps,
   type ChartAnimationProps,
+  type ChartDataLabelProps,
+  type CartesianLabelPosition,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
@@ -54,7 +60,8 @@ export interface AreaChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof areaChartVariants>,
     CartesianChartProps,
-    ChartAnimationProps {
+    ChartAnimationProps,
+    ChartDataLabelProps {
   /** Row-per-point data. Each object holds the category key + one numeric field per series (`null` breaks the area unless `connectNulls`). */
   data: ReadonlyArray<Record<string, string | number | null>>;
   /**
@@ -78,6 +85,8 @@ export interface AreaChartProps
   /** Bridge `null` gaps in the data instead of breaking the area. */
   connectNulls?: boolean;
   showLegend?: boolean;
+  /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
+  labelPosition?: CartesianLabelPosition;
 }
 
 const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
@@ -117,6 +126,9 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       animationDuration,
       animationBegin,
       animationEasing,
+      showLabels = false,
+      labelPosition,
+      labelFormatter,
       ...props
     },
     ref
@@ -252,7 +264,17 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                 activeDot={showDots ? { r: 5 } : false}
                 connectNulls={connectNulls}
                 {...animation}
-              />
+              >
+                {showLabels && (
+                  <LabelList
+                    dataKey={key}
+                    position={labelPosition ?? 'top'}
+                    formatter={toLabelFormatter(labelFormatter)}
+                    fill={CHART_LABEL_FILL}
+                    fontSize={CHART_LABEL_FONT_SIZE}
+                  />
+                )}
+              </Area>
             ))}
           </RechartsAreaChart>
         </ChartContainer>

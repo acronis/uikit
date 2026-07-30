@@ -96,6 +96,19 @@ contract:
       type: "'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear'"
       required: false
       description: Easing curve.
+    - name: showLabels
+      type: boolean
+      required: false
+      default: 'false'
+      description: Render a value label on each data point/segment.
+    - name: labelPosition
+      type: "'top' | 'bottom' | 'left' | 'right' | 'center' | 'insideTop' | 'insideBottom' | 'insideLeft' | 'insideRight' | 'insideStart' | 'insideEnd'"
+      required: false
+      description: Where the value labels sit.
+    - name: labelFormatter
+      type: '(value) => string'
+      required: false
+      description: Format each label value (reuses the tick formatters).
   events: []
   methods: []
 

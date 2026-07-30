@@ -75,6 +75,19 @@ const meta = {
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
+    showLabels: { control: 'boolean' },
+    labelPosition: {
+      control: 'select',
+      options: [
+        'top',
+        'bottom',
+        'center',
+        'insideTop',
+        'insideBottom',
+        'insideStart',
+        'insideEnd',
+      ],
+    },
     animate: { control: 'boolean' },
     animationDuration: { control: { type: 'number' } },
     animationEasing: {
@@ -95,6 +108,18 @@ export const AxisAndGridConfig: Story = {
     yAxisDomain: 'zero',
     yAxisTickCount: 4,
     gridDashed: true,
+  },
+};
+
+// Data labels on each bar (T15): the value at the growing end, formatted with the
+// same compact formatter the axis can use. A single series keeps the labels from
+// colliding in a grouped chart.
+export const Labels: Story = {
+  args: {
+    dataKeys: ['desktop'],
+    showLabels: true,
+    labelFormatter: formatCompactNumber,
+    showLegend: false,
   },
 };
 

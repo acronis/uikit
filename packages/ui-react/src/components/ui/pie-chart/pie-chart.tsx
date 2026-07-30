@@ -2,7 +2,13 @@
 
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { Cell, Label, Pie, PieChart as RechartsPieChart } from 'recharts';
+import {
+  Cell,
+  Label,
+  LabelList,
+  Pie,
+  PieChart as RechartsPieChart,
+} from 'recharts';
 
 import { cn } from '@/lib/utils';
 import {
@@ -12,8 +18,12 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   resolveAnimation,
+  toLabelFormatter,
+  CHART_LABEL_FILL,
+  CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartAnimationProps,
+  type ChartDataLabelProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The single
@@ -48,7 +58,8 @@ export interface PieChartCenterLabel {
 export interface PieChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof pieChartVariants>,
-    ChartAnimationProps {
+    ChartAnimationProps,
+    ChartDataLabelProps {
   /** Row-per-slice data. Each object holds the slice's `nameKey` label + its `dataKey` numeric value. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -116,6 +127,8 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       animationDuration,
       animationBegin,
       animationEasing,
+      showLabels = false,
+      labelFormatter,
       ...props
     },
     ref
@@ -207,6 +220,14 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
                       </g>
                     );
                   }}
+                />
+              )}
+              {showLabels && (
+                <LabelList
+                  dataKey={dataKey}
+                  formatter={toLabelFormatter(labelFormatter)}
+                  fill={CHART_LABEL_FILL}
+                  fontSize={CHART_LABEL_FONT_SIZE}
                 />
               )}
             </Pie>

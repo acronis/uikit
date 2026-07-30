@@ -172,6 +172,54 @@ export function resolveAnimation(props: ChartAnimationProps): ResolvedAnimation 
   };
 }
 
+/** Where a data label sits on a cartesian series (recharts `LabelList` position). */
+export type CartesianLabelPosition =
+  | 'top'
+  | 'bottom'
+  | 'left'
+  | 'right'
+  | 'center'
+  | 'insideTop'
+  | 'insideBottom'
+  | 'insideLeft'
+  | 'insideRight'
+  | 'insideStart'
+  | 'insideEnd';
+
+/**
+ * Data-label props shared by the charts that can annotate each point/segment with
+ * its value. `labelPosition` stays per-chart (the valid position set differs by
+ * family), but `showLabels` + `labelFormatter` are common. Label formatting reuses
+ * the same `TickFormatter` type as the axes, so a label and its axis read the same.
+ */
+export interface ChartDataLabelProps {
+  /** Render a value label on each data point/segment. Defaults to `false`. */
+  showLabels?: boolean;
+  /** Format each label value — pass the same formatter used on the value axis. */
+  labelFormatter?: TickFormatter;
+}
+
+/**
+ * Token fill + size for data labels, legible over the chart surface in light and
+ * dark. Labels default to an *outside* position (e.g. `top`), so this is the
+ * on-surface text color rather than an on-fill color.
+ */
+export const CHART_LABEL_FILL = 'var(--ui-text-on-surface-primary)';
+export const CHART_LABEL_FONT_SIZE = 12;
+
+/**
+ * Adapt a `TickFormatter` to recharts' `LabelList` `formatter` prop, whose value
+ * type is wider (it can be `undefined`). Returns `undefined` when no formatter is
+ * given, so a label renders its raw value. Lets labels reuse the same formatters
+ * as the value axis.
+ */
+export function toLabelFormatter(
+  formatter: TickFormatter | undefined
+): ((value: unknown) => string) | undefined {
+  if (!formatter) return undefined;
+  return (value: unknown) => formatter(value as number | string);
+}
+
 const toNumber = (value: number | string): number | null => {
   // `Number('')` and `Number(' ')` are 0, not NaN — so blank strings have to be
   // rejected before the finite check, or an empty tick label would render "0".

@@ -1,7 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { Cell, RadialBar, RadialBarChart as RechartsRadialBarChart } from 'recharts';
+import {
+  Cell,
+  LabelList,
+  RadialBar,
+  RadialBarChart as RechartsRadialBarChart,
+} from 'recharts';
 
 import { cn } from '@/lib/utils';
 import {
@@ -11,8 +16,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   resolveAnimation,
+  toLabelFormatter,
+  CHART_LABEL_FILL,
+  CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartAnimationProps,
+  type ChartDataLabelProps,
+  type CartesianLabelPosition,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives (a polar/radial
@@ -23,7 +33,8 @@ import {
 // startAngle/endAngle props so a caller can build a gauge or a full ring.
 export interface RadialBarChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    ChartAnimationProps {
+    ChartAnimationProps,
+    ChartDataLabelProps {
   /** Row-per-arc data. Each object holds the arc's `nameKey` label + its `dataKey` numeric value. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -63,6 +74,11 @@ export interface RadialBarChartProps
    * recharts yourself. Ignored when `showTooltip` is false.
    */
   tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
+  /**
+   * Position of the value labels when `showLabels` is on. Defaults to
+   * `insideStart` — the labels sit inside each arc.
+   */
+  labelPosition?: CartesianLabelPosition;
 }
 
 const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
@@ -86,6 +102,9 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
       animationDuration,
       animationBegin,
       animationEasing,
+      showLabels = false,
+      labelPosition,
+      labelFormatter,
       ...props
     },
     ref
@@ -136,6 +155,15 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
                 // intentionally share a color/config entry via `--color-<name>`.
                 <Cell key={index} fill={`var(--color-${entry[nameKey]})`} />
               ))}
+              {showLabels && (
+                <LabelList
+                  dataKey={dataKey}
+                  position={labelPosition ?? 'insideStart'}
+                  formatter={toLabelFormatter(labelFormatter)}
+                  fill={CHART_LABEL_FILL}
+                  fontSize={CHART_LABEL_FONT_SIZE}
+                />
+              )}
             </RadialBar>
             {showLegend && (
               <ChartLegend content={<ChartLegendContent nameKey={nameKey} />} />

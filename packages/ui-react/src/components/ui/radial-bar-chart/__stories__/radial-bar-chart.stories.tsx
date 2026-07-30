@@ -10,6 +10,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  formatCompactNumber,
   type ChartConfig,
 } from '../../chart';
 
@@ -80,6 +81,19 @@ const meta = {
     animationEasing: {
       control: 'select',
       options: ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
+    },
+    showLabels: { control: 'boolean' },
+    labelPosition: {
+      control: 'select',
+      options: [
+        'top',
+        'bottom',
+        'center',
+        'insideTop',
+        'insideBottom',
+        'insideStart',
+        'insideEnd',
+      ],
     },
   },
 } satisfies Meta<typeof RadialBarChart>;
@@ -190,4 +204,12 @@ export const CustomTooltipOpen: Story = {
 export const Animated: Story = {
   parameters: { snapshot: { skip: true } },
   args: { animate: true, animationDuration: 800 },
+};
+
+// Value labels inside each arc, compact-formatted.
+export const Labels: Story = {
+  args: {
+    showLabels: true,
+    labelFormatter: formatCompactNumber,
+  },
 };

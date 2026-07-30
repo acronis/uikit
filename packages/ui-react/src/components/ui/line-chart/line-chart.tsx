@@ -6,6 +6,7 @@ import {
   Area,
   CartesianGrid,
   ComposedChart,
+  LabelList,
   Line,
   LineChart as RechartsLineChart,
   XAxis,
@@ -21,11 +22,16 @@ import {
   ChartTooltipContent,
   resolveAxisDomain,
   resolveAnimation,
+  toLabelFormatter,
+  CHART_LABEL_FILL,
+  CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
   type CartesianChartProps,
   type ChartAnimationProps,
+  type ChartDataLabelProps,
+  type CartesianLabelPosition,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
@@ -110,7 +116,8 @@ export interface LineChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof lineChartVariants>,
     CartesianChartProps,
-    ChartAnimationProps {
+    ChartAnimationProps,
+    ChartDataLabelProps {
   /** Row-per-point data. Each object holds the category key + one numeric field per series (`null` breaks the line unless `connectNulls`). */
   data: ReadonlyArray<Record<string, string | number | null>>;
   /**
@@ -146,6 +153,8 @@ export interface LineChartProps
   /** Bridge `null` gaps in the data instead of breaking the line. */
   connectNulls?: boolean;
   showLegend?: boolean;
+  /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
+  labelPosition?: CartesianLabelPosition;
 }
 
 const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
@@ -185,6 +194,9 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       animationDuration,
       animationBegin,
       animationEasing,
+      showLabels = false,
+      labelPosition,
+      labelFormatter,
       ...props
     },
     ref
@@ -379,7 +391,17 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                   activeDot={!isComparison && showDots ? { r: 5 } : false}
                   connectNulls={connectNulls}
                   {...animation}
-                />
+                >
+                  {showLabels && (
+                    <LabelList
+                      dataKey={key}
+                      position={labelPosition ?? 'top'}
+                      formatter={toLabelFormatter(labelFormatter)}
+                      fill={CHART_LABEL_FILL}
+                      fontSize={CHART_LABEL_FONT_SIZE}
+                    />
+                  )}
+                </Line>
               );
             })}
           </RootChart>
