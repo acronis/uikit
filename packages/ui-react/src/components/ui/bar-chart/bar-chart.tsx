@@ -18,6 +18,7 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
+  resolveAxisDomain,
   type ChartConfig,
   type CartesianChartProps,
 } from '../chart';
@@ -178,12 +179,15 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         }
       : undefined;
 
-    const yDomain: React.ComponentProps<typeof YAxis>['domain'] =
-      yAxisDomain === 'zero'
-        ? [0, 'auto']
-        : yAxisDomain === 'dataMin-dataMax'
-          ? ['dataMin', 'dataMax']
-          : undefined;
+    const yDomain = resolveAxisDomain(yAxisDomain);
+
+    // Room for the X tick row: recharts' default 30, plus a rotated tick row
+    // (+20) and/or the axis title (+18). Additive — both can be present at once,
+    // which the old label-or-angle ternary under-allocated.
+    const xAxisHeight =
+      xAxisLabel || xAxisAngle != null
+        ? 30 + (xAxisAngle != null ? 20 : 0) + (xAxisLabel ? 18 : 0)
+        : undefined;
 
     // Round only the growing end: top for vertical bars, right for horizontal.
     const endRadius: [number, number, number, number] =
@@ -213,6 +217,9 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
             )}
             {orientation === 'horizontal' ? (
               <>
+                {/* Horizontal bars put the values on X, so the value-axis
+                    props (tickCount/domain) belong here — recharts ignores both
+                    on the category axis. */}
                 <XAxis
                   type="number"
                   hide={!showXAxis}
@@ -225,7 +232,9 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   textAnchor={
                     xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
                   }
-                  height={xAxisLabel ? 48 : xAxisAngle != null ? 50 : undefined}
+                  tickCount={yAxisTickCount}
+                  domain={yDomain}
+                  height={xAxisHeight}
                   label={xAxisTitle}
                 />
                 <YAxis
@@ -235,8 +244,6 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={yTickFormatter}
-                  tickCount={yAxisTickCount}
-                  domain={yDomain}
                   width={yAxisLabel ? 96 : 80}
                   label={yAxisTitle}
                 />
@@ -255,7 +262,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   textAnchor={
                     xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
                   }
-                  height={xAxisLabel ? 48 : xAxisAngle != null ? 50 : undefined}
+                  height={xAxisHeight}
                   label={xAxisTitle}
                 />
                 <YAxis

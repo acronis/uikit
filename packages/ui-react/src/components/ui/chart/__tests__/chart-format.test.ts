@@ -4,6 +4,7 @@ import {
   createTickFormatter,
   formatCompactNumber,
   formatPercent,
+  resolveAxisDomain,
 } from '../chart-format';
 
 describe('formatCompactNumber', () => {
@@ -25,6 +26,13 @@ describe('formatCompactNumber', () => {
   it('passes non-numeric values through unchanged', () => {
     expect(formatCompactNumber('Jan')).toBe('Jan');
   });
+
+  // `Number('')` is 0, not NaN — so a blank label used to render as "0".
+  it('passes blank and whitespace-only values through unchanged', () => {
+    expect(formatCompactNumber('')).toBe('');
+    expect(formatCompactNumber(' ')).toBe(' ');
+    expect(formatCompactNumber('\t')).toBe('\t');
+  });
 });
 
 describe('formatPercent', () => {
@@ -35,6 +43,34 @@ describe('formatPercent', () => {
 
   it('passes non-numeric values through unchanged', () => {
     expect(formatPercent('n/a')).toBe('n/a');
+  });
+
+  it('passes blank and whitespace-only values through unchanged', () => {
+    expect(formatPercent('')).toBe('');
+    expect(formatPercent(' ')).toBe(' ');
+  });
+});
+
+describe('resolveAxisDomain', () => {
+  it('anchors at zero for the "zero" preset', () => {
+    expect(resolveAxisDomain('zero')).toEqual([0, 'auto']);
+  });
+
+  it('fits the data tightly for "dataMin-dataMax"', () => {
+    expect(resolveAxisDomain('dataMin-dataMax')).toEqual(['dataMin', 'dataMax']);
+  });
+
+  it('leaves an unset preset to recharts', () => {
+    expect(resolveAxisDomain(undefined)).toBeUndefined();
+  });
+
+  // recharts' own default for an unspecified numeric domain is [0, 'auto'], so
+  // "auto" has to be spelled out — mapping it to undefined would make it render
+  // identically to "zero" and the preset would be a silent no-op.
+  it('spells out "auto" so it differs from "zero" and from the default', () => {
+    expect(resolveAxisDomain('auto')).toEqual(['auto', 'auto']);
+    expect(resolveAxisDomain('auto')).not.toEqual(resolveAxisDomain('zero'));
+    expect(resolveAxisDomain('auto')).not.toEqual(resolveAxisDomain(undefined));
   });
 });
 

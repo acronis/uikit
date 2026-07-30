@@ -19,6 +19,7 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
+  resolveAxisDomain,
   type ChartConfig,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
@@ -182,12 +183,15 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
     ref
   ) => {
     const dashArray = lineStyle === 'dashed' ? '5 5' : undefined;
-    const yDomain: React.ComponentProps<typeof YAxis>['domain'] =
-      yAxisDomain === 'zero'
-        ? [0, 'auto']
-        : yAxisDomain === 'dataMin-dataMax'
-          ? ['dataMin', 'dataMax']
-          : undefined;
+    const yDomain = resolveAxisDomain(yAxisDomain);
+
+    // Room for the X tick row: recharts' default 30, plus a rotated tick row
+    // (+20) and/or the axis title (+18). Additive — both can be present at once,
+    // which the old label-or-angle ternary under-allocated.
+    const xAxisHeight =
+      xAxisLabel || xAxisAngle != null
+        ? 30 + (xAxisAngle != null ? 20 : 0) + (xAxisLabel ? 18 : 0)
+        : undefined;
 
     // Memoized so recharts sees a stable content type across renders — a fresh
     // wrapper each render would remount the caller's tooltip and reset its state.
@@ -273,7 +277,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               textAnchor={
                 xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
               }
-              height={xAxisLabel ? 48 : xAxisAngle != null ? 50 : undefined}
+              height={xAxisHeight}
               label={xAxisTitle}
             />
             <YAxis

@@ -124,17 +124,26 @@ contract:
     - name: xAxisInterval
       type: "number | 'preserveStart' | 'preserveEnd' | 'preserveStartEnd' | 'equidistantPreserveStart'"
       required: false
-      description: X-axis tick density — a fixed step, or a recharts placement strategy that thins ticks while keeping the ends legible.
+      description: >-
+        X-axis tick density — a recharts placement strategy, or a fixed number of
+        ticks to skip between two rendered ones (recharts interval: 0 shows every
+        tick, 1 every other one, 2 every third).
     - name: yAxisTickCount
       type: number
       required: false
-      description: Desired number of Y-axis ticks (recharts tickCount; a hint, not exact).
+      description: >-
+        Desired number of ticks on the value axis (recharts tickCount; a hint, not
+        exact). Applies to whichever axis holds the values — Y for most charts, X
+        for BarChart with orientation="horizontal".
     - name: yAxisDomain
       type: "'auto' | 'dataMin-dataMax' | 'zero'"
       required: false
       description: >-
-        Y-axis domain preset — auto (recharts' padded default), dataMin-dataMax
-        (tight to the data), or zero (anchor the axis at 0).
+        Value-axis domain preset — auto (fit the data at both ends; the axis need
+        not include 0), zero (anchor the axis at 0, which is also recharts'
+        behaviour when the prop is omitted), or dataMin-dataMax (tight to the
+        data, no padding). Applies to whichever axis holds the values — Y for most
+        charts, X for BarChart with orientation="horizontal".
     - name: gridDashed
       type: boolean
       required: false

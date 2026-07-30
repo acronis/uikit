@@ -19,6 +19,7 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
+  resolveAxisDomain,
   type ChartConfig,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
@@ -172,12 +173,15 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
         }
       : undefined;
 
-    const yDomain: React.ComponentProps<typeof YAxis>['domain'] =
-      yAxisDomain === 'zero'
-        ? [0, 'auto']
-        : yAxisDomain === 'dataMin-dataMax'
-          ? ['dataMin', 'dataMax']
-          : undefined;
+    const yDomain = resolveAxisDomain(yAxisDomain);
+
+    // Room for the X tick row: recharts' default 30, plus a rotated tick row
+    // (+20) and/or the axis title (+18). Additive — both can be present at once,
+    // which the old label-or-angle ternary under-allocated.
+    const xAxisHeight =
+      xAxisLabel || xAxisAngle != null
+        ? 30 + (xAxisAngle != null ? 20 : 0) + (xAxisLabel ? 18 : 0)
+        : undefined;
 
     // Augment each row with the `[lower, upper]` band tuple the Area shades.
     // Rows missing a numeric bound are left un-coned (the band breaks there).
@@ -227,7 +231,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
               textAnchor={
                 xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
               }
-              height={xAxisLabel ? 48 : xAxisAngle != null ? 50 : undefined}
+              height={xAxisHeight}
               label={xAxisTitle}
             />
             <YAxis

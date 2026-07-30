@@ -17,6 +17,7 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
+  resolveAxisDomain,
   type ChartConfig,
   type CartesianChartProps,
 } from '../chart';
@@ -131,12 +132,15 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
         }
       : undefined;
 
-    const yDomain: React.ComponentProps<typeof YAxis>['domain'] =
-      yAxisDomain === 'zero'
-        ? [0, 'auto']
-        : yAxisDomain === 'dataMin-dataMax'
-          ? ['dataMin', 'dataMax']
-          : undefined;
+    const yDomain = resolveAxisDomain(yAxisDomain);
+
+    // Room for the X tick row: recharts' default 30, plus a rotated tick row
+    // (+20) and/or the axis title (+18). Additive — both can be present at once,
+    // which the old label-or-angle ternary under-allocated.
+    const xAxisHeight =
+      xAxisLabel || xAxisAngle != null
+        ? 30 + (xAxisAngle != null ? 20 : 0) + (xAxisLabel ? 18 : 0)
+        : undefined;
 
     // recharts renders SVG <defs> once per chart; the gradient ids must be unique
     // across chart instances on the page. useId gives a stable per-instance id;
@@ -202,7 +206,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               textAnchor={
                 xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
               }
-              height={xAxisLabel ? 48 : xAxisAngle != null ? 50 : undefined}
+              height={xAxisHeight}
               label={xAxisTitle}
             />
             <YAxis

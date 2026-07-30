@@ -135,11 +135,30 @@ export const MultipleReferenceLines: Story = {
   },
 };
 
+// Response times in ms — real units, so `yUnit`/`xUnit` read truthfully. (The
+// session-count data above has no unit; the former `yUnit="k"` was an
+// abbreviation masquerading as one.)
+const latencyData = [
+  { month: 'Jan', p95: 180 },
+  { month: 'Feb', p95: 240 },
+  { month: 'Mar', p95: 210 },
+  { month: 'Apr', p95: 320 },
+  { month: 'May', p95: 260 },
+  { month: 'Jun', p95: 290 },
+];
+
+const latencyConfig = {
+  p95: { label: 'p95 latency', color: 'var(--ui-background-brand-secondary)' },
+} satisfies ChartConfig;
+
 // Axis titles + a Y-axis unit suffix, forwarded to recharts' native
 // `label` / `unit`. The title inherits the theme token via the container's
 // `.recharts-label` fill selector.
 export const AxisLabels: Story = {
   args: {
+    config: latencyConfig,
+    data: latencyData,
+    dataKeys: ['p95'],
     xAxisLabel: 'Month',
     yAxisLabel: 'Response time',
     yUnit: 'ms',
@@ -152,10 +171,27 @@ export const AxisLabels: Story = {
 export const HorizontalAxisLabels: Story = {
   args: {
     orientation: 'horizontal',
-    dataKeys: ['desktop'],
+    config: latencyConfig,
+    data: latencyData,
+    dataKeys: ['p95'],
     xAxisLabel: 'Response time',
     yAxisLabel: 'Month',
     xUnit: 'ms',
+  },
+};
+
+// Horizontal bars put the values on X, so the value-axis props have to reach the
+// numeric X axis — `yAxisDomain`/`yAxisTickCount` are routed there. Recharts
+// silently ignores both on a category axis, so this baseline is what catches a
+// regression back to the category axis.
+export const HorizontalValueAxisDomain: Story = {
+  args: {
+    orientation: 'horizontal',
+    config: latencyConfig,
+    data: latencyData,
+    dataKeys: ['p95'],
+    yAxisDomain: 'dataMin-dataMax',
+    yAxisTickCount: 3,
   },
 };
 
@@ -258,5 +294,26 @@ export const CompactValueAxis: Story = {
     data: revenueData,
     dataKeys: ['revenue'],
     yTickFormatter: formatCompactNumber,
+  },
+};
+
+// Hide both axes with `showXAxis` / `showYAxis` — the compact/sparkline layout.
+// Carries a baseline so a regression in either toggle is caught visually; the
+// unit tests can't assert it (recharts needs a laid-out container).
+export const HiddenAxes: Story = {
+  args: { showXAxis: false, showYAxis: false },
+};
+
+// A rotated tick row *and* an axis title at once — the X axis has to reserve room
+// for both, which the earlier label-or-angle height ternary under-allocated.
+export const RotatedTicksWithAxisTitle: Story = {
+  args: {
+    config: latencyConfig,
+    data: latencyData,
+    dataKeys: ['p95'],
+    xAxisAngle: -45,
+    xAxisLabel: 'Month',
+    yAxisLabel: 'Response time',
+    yUnit: 'ms',
   },
 };
