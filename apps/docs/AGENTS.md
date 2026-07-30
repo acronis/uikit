@@ -136,6 +136,18 @@ keeps URLs single-segment under the deploy basePath (`/uikit/docs/<page>`, not
 `/uikit/docs/docs/<page>`). Internal links therefore point at `/<page>` (e.g.
 `/components/button`), never `/docs/<page>`.
 
+### Redirects for moved pages
+
+The site is a **static export** deployed to GitHub Pages (see
+`.github/workflows/demo-deploy.yml`), so `next.config.mjs`'s `redirects()`
+never runs in production — there's no server to serve them from. When a page
+moves, add a literal route at the old path with `src/components/LegacyRedirect.tsx`
+(client-side `router.replace`), e.g. `src/app/layouts/page.tsx` →
+`<LegacyRedirect to="/components" />`. See `src/app/layouts/`, `src/app/patterns/`,
+and `src/app/guides/shadow-dom/` for examples from the legacy/guides/layouts/patterns
+restructuring. Content that was deleted outright (no replacement) is left to
+`not-found.tsx` instead of a fake redirect.
+
 ## Search
 
 The search API at `src/app/api/search/route.ts` uses Fumadocs

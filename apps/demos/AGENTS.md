@@ -1,8 +1,8 @@
 # AGENTS.md — `apps/demos`
 
 `@acronis-platform/shadcn-uikit-demos` — a **source-only** workspace
-that houses reusable component demos consumed by `apps/demo` and
-`apps/docs`. **Private**, not published.
+that houses reusable component demos consumed by `apps/demo`.
+**Private**, not published.
 
 Cross-cutting topics live in `../../context/*.md`. This file documents
 only what is specific to this workspace.
@@ -12,7 +12,7 @@ only what is specific to this workspace.
 This is the workspace's defining characteristic. All scripts are
 intentional no-ops:
 
-- `build` → `echo "no build (consumed via source by demo/docs)" && exit 0`
+- `build` → `echo "no build (consumed via source by apps/demo)" && exit 0`
 - `clean`, `test`, `test:watch` → `echo … && exit 0`
 
 The package is consumed **via source** through the `exports` map:
@@ -24,8 +24,8 @@ The package is consumed **via source** through the `exports` map:
 }
 ```
 
-Consumers (`apps/demo`, `apps/docs`) compile the TypeScript directly as
-part of their own build. There is no `dist/` and no watch mode.
+`apps/demo` compiles the TypeScript directly as part of its own build.
+There is no `dist/` and no watch mode.
 
 The only scripts that actually run are `lint`, `lint:fix`, and
 `typecheck`.
@@ -46,12 +46,11 @@ The only scripts that actually run are `lint`, `lint:fix`, and
 
 1. Create `src/<component>/<Demo>.tsx`.
 2. Re-export from `src/<component>/index.ts`.
-3. In `apps/docs`, add a thin client wrapper under
-   `apps/docs/src/components/demos/` that adds `'use client'` and
-   re-exports the demo. Then reference it from an MDX page with
-   `<DemoPreview sourcePath="apps/demos/src/<component>/<Demo>.tsx" ... />`
-   (see `apps/docs/AGENTS.md` for the path conventions).
-4. In `apps/demo`, the demo can be imported directly without a wrapper.
+3. In `apps/demo`, the demo can be imported directly without a wrapper.
+
+`apps/docs` does **not** consume this package — its ui-react demos live
+in `apps/docs/src/components/demos-react/` and import straight from
+`@acronis-platform/ui-react` (see `apps/docs/AGENTS.md`).
 
 ## What this workspace is NOT for
 
