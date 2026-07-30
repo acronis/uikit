@@ -9,7 +9,7 @@ import { Separator } from '../../separator';
 import { Meter } from '../../meter';
 
 const meta = {
-  title: 'UI/Metric',
+  title: 'Widgets/Metric',
   component: Metric,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

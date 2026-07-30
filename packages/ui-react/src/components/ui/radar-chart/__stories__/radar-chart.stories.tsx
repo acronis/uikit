@@ -34,7 +34,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/RadarChart',
+  title: 'Widgets/RadarChart',
   component: RadarChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

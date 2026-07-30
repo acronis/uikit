@@ -29,7 +29,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/CategoryBar',
+  title: 'Widgets/CategoryBar',
   component: CategoryBar,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

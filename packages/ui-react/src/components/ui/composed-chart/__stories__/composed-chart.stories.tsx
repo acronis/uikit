@@ -47,7 +47,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/ComposedChart',
+  title: 'Widgets/ComposedChart',
   component: ComposedChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

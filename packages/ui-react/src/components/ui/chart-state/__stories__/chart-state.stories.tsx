@@ -4,7 +4,7 @@ import { Button } from '../../button';
 import { ChartState } from '../chart-state';
 
 const meta = {
-  title: 'UI/ChartState',
+  title: 'Widgets/ChartState',
   component: ChartState,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

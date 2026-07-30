@@ -38,7 +38,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/FunnelChart',
+  title: 'Widgets/FunnelChart',
   component: FunnelChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

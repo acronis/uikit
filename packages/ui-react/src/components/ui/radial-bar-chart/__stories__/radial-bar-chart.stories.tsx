@@ -36,7 +36,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/RadialBarChart',
+  title: 'Widgets/RadialBarChart',
   component: RadialBarChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

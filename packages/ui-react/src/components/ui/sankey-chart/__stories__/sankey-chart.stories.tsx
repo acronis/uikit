@@ -32,7 +32,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/SankeyChart',
+  title: 'Widgets/SankeyChart',
   component: SankeyChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

@@ -40,7 +40,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/LineChart',
+  title: 'Widgets/LineChart',
   component: LineChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

@@ -32,7 +32,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/PieChart',
+  title: 'Widgets/PieChart',
   component: PieChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

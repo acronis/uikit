@@ -38,7 +38,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/AreaChart',
+  title: 'Widgets/AreaChart',
   component: AreaChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

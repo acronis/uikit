@@ -40,7 +40,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/Treemap',
+  title: 'Widgets/Treemap',
   component: Treemap,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

@@ -30,7 +30,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/BarChart',
+  title: 'Widgets/BarChart',
   component: BarChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

@@ -30,7 +30,7 @@ const config = {
 } satisfies ChartConfig;
 
 const meta = {
-  title: 'UI/Histogram',
+  title: 'Widgets/Histogram',
   component: Histogram,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
