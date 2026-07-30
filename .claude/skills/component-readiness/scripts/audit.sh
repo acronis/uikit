@@ -58,13 +58,20 @@ SCRIPT_ROOT="$(git -C "$(dirname "${BASH_SOURCE[0]}")" rev-parse --show-toplevel
 REF="${2:-}"
 WORKTREE=""
 if [ -n "$REF" ]; then
+  # Defensive: a prior run killed mid-audit (not a normal exit) skips the EXIT
+  # trap below and leaves its worktree registered under .git/worktrees even
+  # after its tmpdir is gone. Prune that stale metadata BEFORE adding a new
+  # one so it can never be mistaken for live state or block this run.
+  git -C "$SCRIPT_ROOT" worktree prune --expire=now >/dev/null 2>&1 || true
   WORKTREE="$(mktemp -d)"
   if ! git -C "$SCRIPT_ROOT" worktree add --detach --quiet "$WORKTREE" "$REF" >/dev/null 2>&1; then
     echo "ERROR: could not create a worktree for ref '$REF'" >&2
     rm -rf "$WORKTREE"
     exit 1
   fi
-  trap 'git -C "$SCRIPT_ROOT" worktree remove --force "$WORKTREE" >/dev/null 2>&1; rm -rf "$WORKTREE" 2>/dev/null' EXIT
+  # EXIT covers normal/early exits; INT/TERM covers a killed run so a fresh
+  # worktree from THIS run doesn't itself become tomorrow's orphan.
+  trap 'git -C "$SCRIPT_ROOT" worktree remove --force "$WORKTREE" >/dev/null 2>&1; rm -rf "$WORKTREE" 2>/dev/null' EXIT INT TERM
   ROOT="$WORKTREE"
 else
   ROOT="$SCRIPT_ROOT"

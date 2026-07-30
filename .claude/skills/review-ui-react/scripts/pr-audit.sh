@@ -36,6 +36,19 @@ STYLES=packages/ui-react/src/styles/index.css
 TIER_B_RE='^packages/design-tokens/|^tools/style-dictionary/|^packages/tokens-pd/|^packages/icons-svg/|^packages/icons-svg-next/|^packages/icons-sprite/'
 TIER_D_RE='^apps/docs/|^apps/demo/|^apps/demos/'
 
+# Statelessness contract: this script must behave identically whether this is
+# the first time <NUM> has ever been reviewed or the tenth time in a row.
+# Two guarantees enforce that:
+#   1. Wipe any leftover $PR_REF from a prior run (interrupted, killed, or
+#      simply never cleaned up) BEFORE doing anything else — never trust that
+#      a previous invocation left things tidy.
+#   2. Delete $PR_REF again on the way out, unconditionally, via a trap — so
+#      it happens on every exit path (success, early exit 1, or the
+#      SHORT_CIRCUIT return) instead of depending on the caller remembering a
+#      manual cleanup step. No local git state survives this script.
+git update-ref -d "$PR_REF" >/dev/null 2>&1 || true
+trap 'git update-ref -d "$PR_REF" >/dev/null 2>&1 || true' EXIT
+
 echo "=== PREFLIGHT ==="
 if ! gh auth status >/dev/null 2>&1; then
   echo "AUTH: FAIL — run: gh auth login"
@@ -46,9 +59,51 @@ echo "AUTH: OK"
 REPO="$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null)"
 echo "REPO: ${REPO:-unknown}"
 
+# Fork guard — this skill's fetch/diff logic hardcodes the "origin" remote,
+# but every gh command below (pr view/diff/checks) resolves independently
+# against whatever repo `gh` considers current (it prefers an "upstream"
+# remote over "origin" when both exist, e.g. a fork checkout with origin =
+# your fork and upstream = the base repo). If those two disagree, `git fetch
+# origin +pull/<n>/head:...` fetches PR refs from the WRONG repository — at
+# best it fails outright (no such ref), at worst (if the fork happens to
+# have its own same-numbered PR) it fetches an unrelated PR's commits while
+# FETCH_VERIFY is the only thing standing between that and a silently wrong
+# review. Check this explicitly, up front, instead of relying on that as an
+# incidental safety net.
+ORIGIN_URL="$(git remote get-url origin 2>/dev/null)"
+if [ -z "$ORIGIN_URL" ]; then
+  echo "FORK_CHECK: FAIL — no 'origin' remote configured; this skill requires origin to be the base repo."
+  exit 1
+fi
+ORIGIN_REPO="$(gh repo view "$ORIGIN_URL" --json nameWithOwner -q .nameWithOwner 2>/dev/null)"
+if [ -z "$REPO" ] || [ -z "$ORIGIN_REPO" ]; then
+  echo "FORK_CHECK: FAIL — could not resolve the repo for 'origin' and/or gh's current repo; aborting rather than guessing."
+  exit 1
+elif [ "$ORIGIN_REPO" != "$REPO" ]; then
+  echo "FORK_CHECK: FAIL — 'origin' is $ORIGIN_REPO but gh resolves the base repo as $REPO."
+  echo "  This is a fork checkout (origin = your fork, a separate remote = the base repo)."
+  echo "  This skill assumes 'origin' IS the base repo it reviews PRs against — fetching PR refs"
+  echo "  from the wrong repo can silently review the wrong commits. Re-run this from a checkout"
+  echo "  where 'origin' points at $REPO (e.g. swap remotes, or reclone non-forked)."
+  exit 1
+fi
+echo "FORK_CHECK: OK — origin matches $REPO"
+
 echo
 echo "=== FETCH ==="
-git fetch origin main >/dev/null 2>&1 && echo "origin/main: updated" || echo "origin/main: FETCH FAILED"
+# Forced, same reasoning as the PR fetch below: origin/main may have been
+# rewritten (rare, but possible), and a non-force fetch would then either no-op
+# or fail while leaving the OLD local origin/main in place. Unlike before, a
+# failed main fetch is now a hard abort (exit 1) rather than a printed warning
+# the rest of the script silently ignores — every downstream diff/scope/token
+# check is computed against origin/main, so a stale main means every result
+# in this run is wrong, not just one section of it.
+if git fetch origin +main:refs/remotes/origin/main >/dev/null 2>&1; then
+  echo "origin/main: updated"
+else
+  echo "origin/main: FETCH FAILED — aborting rather than diffing against a stale local origin/main."
+  exit 1
+fi
 # The leading "+" forces the update even when the PR's history diverged from
 # what refs/pr/$NUM already points to locally (rebase/amend/force-push) — a
 # plain refspec only allows a fast-forward and would silently leave the old,

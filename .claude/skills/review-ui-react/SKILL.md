@@ -89,6 +89,26 @@ contains and exit — don't run devil-advocate on nothing.
 
 ---
 
+## Statelessness contract
+
+This skill must behave identically on the first review of a PR and the
+tenth re-review of the same PR after it changed — it must never be aware it
+ran before. Two layers enforce that:
+
+- **On disk / in git**: the script resets its own state before AND after
+  every run (see step 2 and step 12) — no local ref, worktree, or temp file
+  it creates is allowed to outlive or influence a later invocation.
+- **In the conversation**: if this skill is invoked again for a PR number
+  already discussed earlier in this session, treat it as a cold start
+  anyway. Re-run `pr-audit.sh`, re-run `gh pr diff`, re-read `git show`
+  content — do not answer from an earlier turn's tool output, findings, or
+  report content still sitting in context. The PR may have gained commits,
+  lost commits, or been rebased since that earlier turn; the only source of
+  truth is what this run's fetch actually returns. If a finding from a
+  previous run of this skill on the same PR still applies, it will show up
+  again on its own because the underlying code is still there — it should
+  never be asserted from memory of the earlier run.
+
 ## Steps
 
 1. **Parse the argument** — a bare PR number, a full GitHub URL, or a number
@@ -107,6 +127,19 @@ contains and exit — don't run devil-advocate on nothing.
    anything else — most of the mechanical work is already done for you.
    - If it prints `AUTH: FAIL`, stop and tell the developer to run
      `gh auth login`, then retry.
+   - If it prints `FORK_CHECK: FAIL`, **stop — this is a hard, by-design
+     block, not a bug to work around.** It means the checkout's `origin`
+     remote doesn't match the repo `gh` resolves as the PR's home (a fork
+     checkout: `origin` = the developer's fork, some other remote = the base
+     repo). This skill only runs when `origin` IS the base repo, because
+     every fetch is hardcoded against `origin` — in a fork checkout that
+     would fetch PR refs from the wrong repository, at best failing outright
+     and at worst (if the fork happens to have its own same-numbered PR)
+     silently reviewing unrelated commits. Tell the developer exactly what
+     the script reported (which repo `origin` points at vs. which repo `gh`
+     resolved) and that they need to run this from a checkout where `origin`
+     is the base repo — do not attempt to fetch from the other remote
+     yourself as a workaround.
    - If it fails to fetch `refs/pr/<num>`, or `FETCH_VERIFY` reports a
      mismatch, this is a **hard abort** — do not retry silently. Read the git
      error the script printed: only if it names a shallow clone should you
@@ -287,26 +320,23 @@ contains and exit — don't run devil-advocate on nothing.
     Important → Nit.
 
 11. **Write the report** to the repo root as `uikit-pr-<number>-review.md`
-    (see structure below). If it already exists, ask: overwrite, or write a
-    `-<timestamp>` suffixed copy — never silently clobber.
+    (see structure below), **always overwriting** any existing file with that
+    name unconditionally — no ask, no `-<timestamp>` suffixed copy. A prior
+    run's report for the same PR number is stale by definition once the PR
+    has moved; keeping it around (under this name or a suffixed one) only
+    risks the developer reading old findings by mistake. The report is the
+    one piece of this skill's output that's meant to persist — but each write
+    replaces the last, it never accumulates.
 
-12. **Clean up local state** — now that the report file is fully written,
-    remove the local ref this run created so a fresh invocation always
-    starts clean and repeated reviews of the same PR don't accumulate
-    `refs/pr/*` clutter:
-
-    ```bash
-    git update-ref -d refs/pr/<num>
-    ```
-
-    This deletes only that one local ref (a no-op if it's already gone) and
-    must run **only after** step 11 has finished writing the report. It must
-    never touch the report file, the developer's working tree, or their
-    checked-out branch. This is a hygiene safety net, not the fix for stale
-    reviews — the forced fetch in the script (`+pull/<num>/head:refs/pr/<num>`)
-    is what actually keeps a single run correct; this step just guarantees a
-    leftover ref from an interrupted or earlier run can't confuse the next
-    one.
+12. **Local git state cleanup is automatic — not a step you perform.** The
+    script deletes `refs/pr/<num>` itself, both defensively on entry (in case
+    a prior run was killed before cleaning up) and unconditionally on exit via
+    a trap (success, early abort, or `SHORT_CIRCUIT`) — see `pr-audit.sh`.
+    Do not add a manual `git update-ref -d` step here: the point of doing it
+    inside the script is that it happens whether or not the calling agent
+    remembers to, which is what makes a run stateless. The forced fetch
+    (`+pull/<num>/head:refs/pr/<num>`) is what keeps a single run correct;
+    the trap-based delete is what guarantees no ref survives _between_ runs.
 
 13. **Print a short terminal summary** (verdict, top findings, report path)
     so the developer doesn't have to open the file for the headline.
@@ -403,10 +433,20 @@ that this PR doesn't touch `packages/ui-react` or anything that affects it.
   `FETCH_VERIFY` check in the script cross-checks the fetched local SHA
   against `gh pr view`'s `headRefOid` and aborts on any mismatch, so a stale
   fetch can never silently drive the rest of the review.
-- **No lingering local git state.** The one local ref this skill creates
-  (`refs/pr/<num>`) is deleted once the report is fully written (step 12) —
-  a fresh invocation, or a re-review of the same PR after it changes, never
-  starts from a leftover ref. The report file is the only thing that
+- **Base-repo checkouts only.** `pr-audit.sh` hard-aborts (`FORK_CHECK: FAIL`)
+  before fetching anything if `origin` doesn't match the repo `gh` resolves
+  as current — i.e. a fork checkout (`origin` = your fork, some other remote
+  = the base repo). Every fetch in this skill targets `origin` by name; in a
+  fork checkout that silently targets the wrong repository. There is no
+  workaround mode — point `origin` at the base repo and re-run.
+- **No lingering local git state.** `pr-audit.sh` deletes `refs/pr/<num>`
+  defensively on entry and unconditionally on every exit path via a trap —
+  not as a step the calling agent has to remember. A killed/interrupted run
+  can't poison the next one, and a normal run never leaves the ref behind
+  either. `component-readiness/audit.sh`'s worktree (used in step 5) is the
+  same story: pruned defensively before creation, removed via an
+  `EXIT INT TERM` trap after. See "Statelessness contract" above — the
+  report file (always overwritten, never suffixed) is the only thing that
   persists after a run.
 - **Local-only token/style truth.** All `--ui-*` resolution and
   generated-artifact freshness checks read `packages/tokens-pd`,
