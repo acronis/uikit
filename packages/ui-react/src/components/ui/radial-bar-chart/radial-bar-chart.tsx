@@ -10,7 +10,9 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
+  resolveAnimation,
   type ChartConfig,
+  type ChartAnimationProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives (a polar/radial
@@ -20,7 +22,8 @@ import {
 // data mapping, not a visual "mode". The angular sweep is exposed as
 // startAngle/endAngle props so a caller can build a gauge or a full ring.
 export interface RadialBarChartProps
-  extends Omit<React.ComponentProps<'div'>, 'children'> {
+  extends Omit<React.ComponentProps<'div'>, 'children'>,
+    ChartAnimationProps {
   /** Row-per-arc data. Each object holds the arc's `nameKey` label + its `dataKey` numeric value. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -79,10 +82,20 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
       showTooltip = true,
       showLegend = true,
       tooltipContent,
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
       ...props
     },
     ref
   ) => {
+    const animation = resolveAnimation({
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
+    });
     // Stamp each row with its `fill` (the shadcn data-driven pattern) so a real
     // hover resolves the arc color in the tooltip — recharts' RadialBar, like
     // Funnel, carries no per-arc color on the tooltip payload item.
@@ -115,7 +128,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
               dataKey={dataKey}
               background={showBackground}
               cornerRadius={cornerRadius}
-              isAnimationActive={false}
+              {...animation}
             >
               {seriesData.map((entry, index) => (
                 // Keyed by index, not the name: two arcs could share a nameKey

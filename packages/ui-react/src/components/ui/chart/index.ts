@@ -18,5 +18,12 @@ export {
   formatPercent,
   createTickFormatter,
   resolveAxisDomain,
+  resolveAnimation,
 } from './chart-format';
-export type { TickFormatter, CartesianChartProps } from './chart-format';
+export type {
+  TickFormatter,
+  CartesianChartProps,
+  ChartAnimationProps,
+  ChartAnimationEasing,
+  ResolvedAnimation,
+} from './chart-format';

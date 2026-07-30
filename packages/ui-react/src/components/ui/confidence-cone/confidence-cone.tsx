@@ -20,10 +20,12 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   resolveAxisDomain,
+  resolveAnimation,
   type ChartConfig,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
   type CartesianChartProps,
+  type ChartAnimationProps,
 } from '../chart';
 
 // A forecast confidence-cone: a solid line over the known/actual period, a
@@ -82,7 +84,8 @@ export function createConeTooltip(tooltipContent: TooltipContentType) {
 
 export interface ConfidenceConeProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    CartesianChartProps {
+    CartesianChartProps,
+    ChartAnimationProps {
   /**
    * Row-per-point data — the shared x dimension plus the actual / forecast /
    * bound fields. Rows are naturally sparse (a point has either an actual or a
@@ -150,10 +153,20 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       gridHorizontal,
       gridVertical,
       tooltipContent,
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
       ...props
     },
     ref
   ) => {
+    const animation = resolveAnimation({
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
+    });
     // Memoized so recharts sees a stable content type across renders — a fresh
     // wrapper each render would remount the caller's tooltip and reset its state.
     const customTooltip = React.useMemo(
@@ -310,7 +323,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
               connectNulls={false}
               dot={false}
               activeDot={false}
-              isAnimationActive={false}
+              {...animation}
               legendType="none"
               tooltipType="none"
             />
@@ -324,7 +337,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
               dot={false}
               activeDot={false}
               connectNulls
-              isAnimationActive={false}
+              {...animation}
             />
             <Line
               dataKey={forecastKey}
@@ -334,7 +347,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
               strokeDasharray="5 5"
               dot={false}
               connectNulls
-              isAnimationActive={false}
+              {...animation}
             />
           </ComposedChart>
         </ChartContainer>

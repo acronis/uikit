@@ -18,8 +18,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   resolveAxisDomain,
+  resolveAnimation,
   type ChartConfig,
   type CartesianChartProps,
+  type ChartAnimationProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
@@ -51,7 +53,8 @@ const areaChartVariants = cva('', {
 export interface AreaChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof areaChartVariants>,
-    CartesianChartProps {
+    CartesianChartProps,
+    ChartAnimationProps {
   /** Row-per-point data. Each object holds the category key + one numeric field per series (`null` breaks the area unless `connectNulls`). */
   data: ReadonlyArray<Record<string, string | number | null>>;
   /**
@@ -110,10 +113,20 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       gridHorizontal,
       gridVertical,
       tooltipContent,
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
       ...props
     },
     ref
   ) => {
+    const animation = resolveAnimation({
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
+    });
     const isStacked = layout === 'stacked';
     const isGradient = fill === 'gradient';
 
@@ -238,7 +251,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                 dot={showDots ? { r: 3 } : false}
                 activeDot={showDots ? { r: 5 } : false}
                 connectNulls={connectNulls}
-                isAnimationActive={false}
+                {...animation}
               />
             ))}
           </RechartsAreaChart>

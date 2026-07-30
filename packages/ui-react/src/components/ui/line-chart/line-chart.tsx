@@ -20,10 +20,12 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   resolveAxisDomain,
+  resolveAnimation,
   type ChartConfig,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
   type CartesianChartProps,
+  type ChartAnimationProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
@@ -107,7 +109,8 @@ export function createBandStrippedTooltip(tooltipContent: TooltipContentType) {
 export interface LineChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof lineChartVariants>,
-    CartesianChartProps {
+    CartesianChartProps,
+    ChartAnimationProps {
   /** Row-per-point data. Each object holds the category key + one numeric field per series (`null` breaks the line unless `connectNulls`). */
   data: ReadonlyArray<Record<string, string | number | null>>;
   /**
@@ -178,10 +181,20 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       gridHorizontal,
       gridVertical,
       tooltipContent,
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
       ...props
     },
     ref
   ) => {
+    const animation = resolveAnimation({
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
+    });
     const dashArray = lineStyle === 'dashed' ? '5 5' : undefined;
     const yDomain = resolveAxisDomain(yAxisDomain);
 
@@ -344,7 +357,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                 connectNulls={connectNulls}
                 dot={false}
                 activeDot={false}
-                isAnimationActive={false}
+                {...animation}
                 legendType="none"
                 tooltipType="none"
               />
@@ -365,7 +378,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                   dot={!isComparison && showDots ? { r: 3 } : false}
                   activeDot={!isComparison && showDots ? { r: 5 } : false}
                   connectNulls={connectNulls}
-                  isAnimationActive={false}
+                  {...animation}
                 />
               );
             })}

@@ -70,6 +70,12 @@ const meta = {
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
+    animate: { control: 'boolean' },
+    animationDuration: { control: { type: 'number' } },
+    animationEasing: {
+      control: 'select',
+      options: ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
+    },
   },
 } satisfies Meta<typeof RadarChart>;
 
@@ -183,4 +189,11 @@ export const CustomTooltipOpen: Story = {
       </RechartsRadarChart>
     </ChartContainer>
   ),
+};
+
+// Entrance animation on — a live example. Excluded from VR (snapshot.skip):
+// the motion is non-deterministic, so it must not become a baseline.
+export const Animated: Story = {
+  parameters: { snapshot: { skip: true } },
+  args: { animate: true, animationDuration: 800 },
 };

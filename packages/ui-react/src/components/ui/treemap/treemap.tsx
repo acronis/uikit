@@ -8,7 +8,9 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  resolveAnimation,
   type ChartConfig,
+  type ChartAnimationProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. A treemap is
@@ -76,7 +78,8 @@ export function TreemapCell({
 }
 
 export interface TreemapProps
-  extends Omit<React.ComponentProps<'div'>, 'children'> {
+  extends Omit<React.ComponentProps<'div'>, 'children'>,
+    ChartAnimationProps {
   /** Row-per-leaf data. Each object holds the leaf's `nameKey` label + its `dataKey` numeric size. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -120,10 +123,20 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
       showLabels = true,
       showTooltip = true,
       tooltipContent,
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
       ...props
     },
     ref
   ) => {
+    const animation = resolveAnimation({
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
+    });
     // Stamp each row with its `fill` (the shadcn data-driven pattern) so a real
     // hover resolves the cell color in the tooltip — recharts' Treemap carries no
     // per-cell color on the tooltip payload item.
@@ -140,7 +153,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
             dataKey={dataKey}
             nameKey={nameKey}
             aspectRatio={aspectRatio}
-            isAnimationActive={false}
+            {...animation}
             content={<TreemapCell showLabels={showLabels} />}
           >
             {showTooltip && (

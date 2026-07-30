@@ -19,8 +19,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   resolveAxisDomain,
+  resolveAnimation,
   type ChartConfig,
   type CartesianChartProps,
+  type ChartAnimationProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
@@ -93,7 +95,8 @@ export function barChartReferenceValue(
 export interface BarChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof barChartVariants>,
-    CartesianChartProps {
+    CartesianChartProps,
+    ChartAnimationProps {
   /** Row-per-category data. Each object holds the category key + one numeric field per series. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -150,10 +153,20 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       gridHorizontal,
       gridVertical,
       tooltipContent,
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
       ...props
     },
     ref
   ) => {
+    const animation = resolveAnimation({
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
+    });
     // Our `orientation` is bar-direction; recharts' `layout` is the opposite axis.
     const rechartsLayout = orientation === 'horizontal' ? 'vertical' : 'horizontal';
     const isStacked = layout === 'stacked';
@@ -294,7 +307,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   fill={`var(--color-${key})`}
                   stackId={isStacked ? 'a' : undefined}
                   radius={barRadius > 0 && rounded ? endRadius : undefined}
-                  isAnimationActive={false}
+                  {...animation}
                 />
               );
             })}

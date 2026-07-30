@@ -19,8 +19,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   resolveAxisDomain,
+  resolveAnimation,
   type ChartConfig,
   type CartesianChartProps,
+  type ChartAnimationProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. A composed
@@ -39,7 +41,8 @@ export interface ComposedSeries {
 
 export interface ComposedChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    CartesianChartProps {
+    CartesianChartProps,
+    ChartAnimationProps {
   /** Row-per-category data. Each object holds `xKey` + one numeric field per series. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -91,10 +94,20 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       gridHorizontal,
       gridVertical,
       tooltipContent,
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
       ...props
     },
     ref
   ) => {
+    const animation = resolveAnimation({
+      animate,
+      animationDuration,
+      animationBegin,
+      animationEasing,
+    });
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
     // the left gutter. Passed to recharts' native `label` (themed via the
     // `.recharts-label` fill selector on the container).
@@ -182,7 +195,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                         ? [barRadius, barRadius, 0, 0]
                         : undefined
                     }
-                    isAnimationActive={false}
+                    {...animation}
                   />
                 );
               }
@@ -195,7 +208,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                     stroke={color}
                     fill={color}
                     fillOpacity={fillOpacity}
-                    isAnimationActive={false}
+                    {...animation}
                   />
                 );
               }
@@ -207,7 +220,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                   stroke={color}
                   strokeWidth={2}
                   dot={false}
-                  isAnimationActive={false}
+                  {...animation}
                 />
               );
             })}

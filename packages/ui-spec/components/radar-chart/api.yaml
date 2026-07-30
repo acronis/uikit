@@ -71,6 +71,25 @@ contract:
         this library) — e.g. with a formatter / labelFormatter — to customize the
         tooltip content without composing recharts. Ignored when showTooltip is
         false.
+    - name: animate
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Enable entrance animation. Off by default so output/baselines are
+        unchanged.
+    - name: animationDuration
+      type: number
+      required: false
+      description: Animation duration in ms.
+    - name: animationBegin
+      type: number
+      required: false
+      description: Delay before the animation starts, in ms.
+    - name: animationEasing
+      type: "'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear'"
+      required: false
+      description: Easing curve.
   events: []
   methods: []
 

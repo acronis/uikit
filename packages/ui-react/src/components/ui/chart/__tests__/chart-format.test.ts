@@ -4,6 +4,7 @@ import {
   createTickFormatter,
   formatCompactNumber,
   formatPercent,
+  resolveAnimation,
   resolveAxisDomain,
 } from '../chart-format';
 
@@ -105,5 +106,44 @@ describe('createTickFormatter', () => {
   it('passes non-numeric values through unchanged', () => {
     const format = createTickFormatter({ style: 'percent' });
     expect(format('Feb')).toBe('Feb');
+  });
+});
+
+describe('resolveAnimation', () => {
+  it('defaults to animation off, matching the previous hardcoded value', () => {
+    expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
+  });
+
+  it('enables animation when animate is true', () => {
+    expect(resolveAnimation({ animate: true })).toEqual({
+      isAnimationActive: true,
+    });
+  });
+
+  it('includes only the timing props that are provided', () => {
+    expect(
+      resolveAnimation({ animate: true, animationDuration: 400 })
+    ).toEqual({ isAnimationActive: true, animationDuration: 400 });
+  });
+
+  it('passes through duration, begin, and easing', () => {
+    expect(
+      resolveAnimation({
+        animate: true,
+        animationDuration: 300,
+        animationBegin: 50,
+        animationEasing: 'ease-in-out',
+      })
+    ).toEqual({
+      isAnimationActive: true,
+      animationDuration: 300,
+      animationBegin: 50,
+      animationEasing: 'ease-in-out',
+    });
+  });
+
+  it('omits undefined timing props rather than emitting undefined keys', () => {
+    const resolved = resolveAnimation({ animate: false });
+    expect(Object.keys(resolved)).toEqual(['isAnimationActive']);
   });
 });

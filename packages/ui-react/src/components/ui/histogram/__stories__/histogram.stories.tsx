@@ -63,6 +63,12 @@ const meta = {
     xAxisLabel: { control: 'text' },
     yAxisLabel: { control: 'text' },
     yUnit: { control: 'text' },
+    animate: { control: 'boolean' },
+    animationDuration: { control: { type: 'number' } },
+    animationEasing: {
+      control: 'select',
+      options: ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
+    },
   },
 } satisfies Meta<typeof Histogram>;
 
@@ -189,4 +195,11 @@ export const TooltipOpen: Story = {
 // shape — not something a `unit` suffix can do.
 export const HiddenYAxis: Story = {
   args: { showYAxis: false },
+};
+
+// Entrance animation on — a live example. Excluded from VR (snapshot.skip):
+// the motion is non-deterministic, so it must not become a baseline.
+export const Animated: Story = {
+  parameters: { snapshot: { skip: true } },
+  args: { animate: true, animationDuration: 800 },
 };
