@@ -15,14 +15,16 @@ import { InputDatePicker } from '@acronis-platform/ui-react';
 `InputDatePicker` is the field trigger for a date picker — a labeled box with a
 trailing calendar icon that displays the formatted selection and opens a
 consumer-owned calendar popup. It supports a single date or a start–end range
-via `pickerType`. Themed by the `--ui-input-text-*` tokens.
+via `pickerType`. Themed by the `--ui-input-date-picker-*` tokens.
 
 This component renders the *field*; wiring it to an actual calendar popup and
 formatting the dates is the consumer's responsibility (pass formatted strings as
-`value` / `startDate` / `endDate`, and toggle `open`).
+`value` / `startDate` / `endDate`, and toggle `open`). To build that popup, pair
+it with [`Calendar`](/components/calendar) — or, for a ready-made range field,
+use [`DateRangePicker`](/components/date-range-picker), which already composes
+this trigger with a dual-month range calendar and a Reset/Apply footer.
 
 ## Examples
-
 
 <DemoReact>
   <InputDatePickerDemo />

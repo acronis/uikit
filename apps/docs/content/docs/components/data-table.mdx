@@ -1,6 +1,6 @@
 ---
 title: DataTable
-description: A data grid on TanStack react-table — sorting, filtering, selection, pagination, and row expansion.
+description: A data grid on TanStack react-table — sorting, filtering, selection, pagination, row expansion, column resizing, sticky columns, and server-driven data.
 ---
 
 import { DemoReact } from "@/components/DemoReact";
@@ -15,28 +15,47 @@ import {
   DataTableToolbar,
   DataTablePagination,
   DataTableViewOptions,
+  DataTableExpandTrigger,
 } from '@acronis-platform/ui-react';
 import type { ColumnDef } from '@tanstack/react-table';
 ```
 
 `DataTable` is a data grid built on [TanStack react-table](https://tanstack.com/table)
-v8, composed over the `Table` primitives. It manages sorting, filtering, column
-visibility, row selection, pagination, and optional row expansion. The companion
+v8, composed over the `Table` primitives. Given `columns` and `data` it builds
+and owns its own table instance — sorting, filtering, column visibility, row
+selection, pagination, row expansion, column resizing and column pinning all
+live in the component. Alternatively pass a `table` instance you built with
+`useReactTable` and `DataTable` renders from that one instead, owning no state
+of its own (see [Server-driven usage](#server-driven-usage)). The companion
 parts — `DataTableColumnHeader`, `DataTableToolbar`, `DataTablePagination`,
-`DataTableViewOptions` — operate on a TanStack `table` instance you build with
-`useReactTable`. This is a design-pending v1; it reuses the `Table` component's
-`--ui-table-*` tokens (the wrapper border matches the cell borders).
+`DataTableViewOptions`, `DataTableExpandTrigger` — always operate on a table
+instance (or a row of one). This is a design-pending v1; it reuses the `Table`
+component's `--ui-table-*` tokens (the wrapper border matches the cell borders).
 
 A `DataTableColumnHeader` sorts in a **single click**: the trailing arrow toggles
 ascending → descending and shows the direction with an up/down arrow in the brand
 blue, or a muted up/down arrow when the column is unsorted. Column hiding lives in
 the toolbar's `DataTableViewOptions` menu, keeping sorting to one click.
 
+## Parts
+
+| Export                   | Purpose                                                                                   |
+| ------------------------ | ----------------------------------------------------------------------------------------- |
+| `DataTable`              | The grid. Owns its state from `columns`/`data`, or renders a caller-built `table`.         |
+| `DataTableColumnHeader`  | Single-click sortable header (↑ / ↓ / ↕). Use in a column's `header`.                      |
+| `DataTableToolbar`       | Search box, per-column filter popover, applied-filter chips, view options. Takes a `table`. |
+| `DataTablePagination`    | Selection count, rows-per-page select, page controls. Takes a `table`.                     |
+| `DataTableViewOptions`   | Column-visibility menu (TanStack adapter over the `TableViewOptions` primitive).            |
+| `DataTableExpandTrigger` | Chevron toggle for a row's expansion, placed inside a column's `cell`.                      |
+
 ## Examples
 
 <DemoReact>
   <DataTableDemo />
 </DemoReact>
+
+The simplest form — `DataTable` builds its own instance from `columns` and
+`data`:
 
 ```tsx
 const columns: ColumnDef<Payment>[] = [
@@ -50,15 +69,55 @@ const columns: ColumnDef<Payment>[] = [
 <DataTable columns={columns} data={payments} />
 ```
 
-For a toolbar + pagination, build the table instance yourself and pass it to the
-companion parts:
+That internal instance includes the paginated row model, so it shows **TanStack's
+default 10 rows per page**. Since the page controls live in
+`DataTablePagination` — which needs a table instance — a grid with more than a
+page of rows should either share one instance (below) or switch to
+[infinite scroll](#infinite-scroll).
+
+### Toolbar and pagination
+
+Build the instance yourself and pass **the same one** to the toolbar, the grid
+and the pagination, so search, sorting, selection and paging all agree:
 
 ```tsx
-const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel(), /* … */ });
+const table = useReactTable({
+  data,
+  columns,
+  getCoreRowModel: getCoreRowModel(),
+  getSortedRowModel: getSortedRowModel(),
+  getFilteredRowModel: getFilteredRowModel(),
+  getPaginationRowModel: getPaginationRowModel(),
+  onSortingChange: setSorting,
+  onColumnFiltersChange: setColumnFilters,
+  onRowSelectionChange: setRowSelection,
+  state: { sorting, columnFilters, rowSelection },
+});
 
 <DataTableToolbar table={table} searchKey="email" />
-<DataTable columns={columns} data={data} />
-<DataTablePagination table={table} />
+<DataTable table={table} />
+<DataTablePagination table={table} pageSizeOptions={[5, 10, 20]} />
+```
+
+With `table` passed, `DataTable` configures nothing on that instance — the
+props it would otherwise use to configure its own become no-ops
+(`enableColumnResizing`, `getRowCanExpand`, `manualSorting`, `sorting`,
+`onSortingChange`, `columnVisibility`, `onColumnVisibilityChange`,
+`onColumnSizingChange`, `paginationMode`, `onLoadMore`, `loadMoreRootMargin`,
+`hasNextPage`, `isLoadingMore`), and `meta.pin` pinning is skipped too — set the
+equivalents on your own instance (pin via TanStack's `column.pin()`).
+
+If you'd rather keep `DataTable`'s own state and only *share* a slice of it with
+a toolbar, pass `columns`/`data` plus the controlled state you need in both
+places:
+
+```tsx
+<DataTable
+  columns={columns}
+  data={pageRows}
+  columnVisibility={columnVisibility}
+  onColumnVisibilityChange={setColumnVisibility}
+/>
 ```
 
 ### Presentational flags
@@ -71,6 +130,293 @@ Borrowed from the Vue `AvTable`, these are pure visual props on `DataTable`:
 <DataTable columns={columns} data={rows} highlightCurrentRow /> {/* click to highlight */}
 <DataTable columns={columns} data={[]} skeleton skeletonRows={5} /> {/* loading */}
 ```
+
+### Sorting
+
+Sorting is client-side by default. For a non-alphabetic order, give the column a
+TanStack `sortingFn`:
+
+```tsx
+const SEVERITY_RANK = { Critical: 0, Error: 1, Warning: 2, Running: 3 };
+
+{
+  accessorKey: 'severity',
+  sortingFn: (rowA, rowB) =>
+    SEVERITY_RANK[rowA.original.severity] - SEVERITY_RANK[rowB.original.severity],
+  header: ({ column }) => <DataTableColumnHeader column={column} title="Severity" />,
+}
+```
+
+For **server-side** sorting set `manualSorting` and drive the state yourself —
+`DataTable` reports what the user asked for and skips its own comparator, so
+already-sorted `data` isn't re-sorted:
+
+```tsx
+<DataTable
+  columns={columns}
+  data={serverRows}
+  manualSorting
+  sorting={sorting}
+  onSortingChange={(updater) => {
+    const next = typeof updater === 'function' ? updater(sorting) : updater;
+    setSorting(next);
+    refetch(next); // mapping sort state to a query stays your job
+  }}
+/>
+```
+
+### Filtering
+
+`DataTableToolbar` wires a plain text search to one column via `searchKey`, and
+renders the `DataTableViewOptions` menu in its actions slot. Without filter
+fields it also renders a **Reset** button whenever a filter is applied:
+
+```tsx
+<DataTableToolbar
+  table={table}
+  leading={<TenantSwitcher />}        {/* optional scope switcher, before search */}
+  searchKey="email"
+  searchPlaceholder="Filter emails…"
+/>
+```
+
+Pass filter fields as `children` for **per-column filtering**. They render
+inside a `FilterSearchFilters` popover, and an applied-filter chip row appears
+below the toolbar. Each field reads and writes the popover's **draft** through
+`useFilterSearchFilters()`, keyed by column id — Apply commits the draft to the
+table's column filters (leaving the `searchKey` text filter untouched), Cancel
+reverts it, and removing a chip clears that one column:
+
+```tsx
+function SeverityFilterField() {
+  const { filters, setFilter } = useFilterSearchFilters();
+  return (
+    <InputSelect
+      items={options}
+      value={(filters.severity as string) ?? 'all'}
+      onValueChange={(next) => setFilter('severity', next === 'all' ? undefined : next)}
+    >
+      {/* … */}
+    </InputSelect>
+  );
+}
+
+<DataTableToolbar
+  table={table}
+  filtersLabel="Filters"
+  getFilterChipLabel={(key, value) => `${key}: ${String(value)}`}
+>
+  <SeverityFilterField />
+</DataTableToolbar>
+```
+
+The column the field targets needs a matching `filterFn` (e.g.
+`filterFn: 'equals'`) on its `ColumnDef`.
+
+### Pagination
+
+`DataTablePagination` renders the selected-row count, a rows-per-page `Select`
+(`pageSizeOptions`, default `[10, 20, 30, 40, 50]`), the current page indicator,
+and first / previous / next / last icon buttons (first and last appear from the
+`lg` breakpoint up). It needs an instance with `getPaginationRowModel()`.
+
+```tsx
+<DataTablePagination table={table} pageSizeOptions={[5, 10, 20]} />
+```
+
+### Column resizing
+
+`enableColumnResizing` renders a drag handle at each resizable header's trailing
+edge (TanStack's `columnResizeMode: 'onChange'`, so widths track the drag live).
+Pass `onColumnSizingChange` to persist widths, and opt individual columns out
+with `enableResizing: false`:
+
+```tsx
+<DataTable
+  columns={columns}
+  data={rows}
+  enableColumnResizing
+  onColumnSizingChange={(updater) => persistWidths(updater)}
+/>
+```
+
+Resizing makes every column's width deterministic, so give each column an
+explicit `size` (otherwise TanStack's 150px default applies to columns you never
+touched — noticeable on narrow checkbox/chevron columns). Without
+`enableColumnResizing`, a column only gets a fixed width if its `ColumnDef` sets
+`size`; the rest stay in native table auto-layout.
+
+The handle is keyboard-operable: focus it and use <kbd>←</kbd>/<kbd>→</kbd> to
+step 10px, or <kbd>Shift</kbd> + arrow for 50px, clamped to the column's
+`minSize`/`maxSize`.
+
+### Sticky (pinned) and wrapping columns
+
+`ColumnDef.meta` is augmented by ui-react with two flags. `pin` drives TanStack's
+native column pinning and renders the column as `position: sticky` cells (with an
+opaque row background so scrolled cells don't show through); `wrap` lets a
+column's header and cells wrap onto multiple lines instead of truncating,
+mirroring the `Table` primitives' `wrap` prop.
+
+```tsx
+const columns: ColumnDef<Device>[] = [
+  { accessorKey: 'name', header: 'Name', meta: { pin: 'left' }, size: 150 },
+  { accessorKey: 'note', header: 'Note', meta: { wrap: true }, size: 280 },
+  { accessorKey: 'status', header: 'Status', meta: { pin: 'right' }, size: 120 },
+];
+```
+
+Removing a `meta.pin` un-pins the column on the next render. Pinning is driven
+only for `DataTable`'s own instance — with an external `table`, pin columns
+yourself via `column.pin()`.
+
+### Row expansion
+
+`getRowCanExpand` marks which rows can expand, `renderExpandedRow` renders the
+detail row beneath them (spanning every visible column). Put a
+`DataTableExpandTrigger` in a column's `cell` so the affordance sits in a real
+column instead of relying on a whole-row click:
+
+```tsx
+const columns: ColumnDef<Payment>[] = [
+  {
+    id: 'expand',
+    header: () => null,
+    cell: ({ row }) => <DataTableExpandTrigger row={row} />,
+    size: 44,
+    enableSorting: false,
+    enableHiding: false,
+  },
+  // …
+];
+
+<DataTable
+  columns={columns}
+  data={payments}
+  getRowCanExpand={() => true}
+  renderExpandedRow={(row) => <PaymentDetails payment={row.original} />}
+/>
+```
+
+The trigger renders nothing for a row that can't expand. With an external
+`table`, configure `getRowCanExpand` + `getExpandedRowModel()` on that instance
+— `renderExpandedRow` is still honored.
+
+### Custom rows and empty state
+
+`renderRow` replaces `DataTable`'s per-cell render path for a row entirely,
+which is the escape hatch for a memoized row that must survive frequent parent
+re-renders (e.g. a polling screen). The exported `getCellStyle`,
+`getPinnedStyle` and `getColumnWidth` helpers let a custom row keep the default
+cell styling:
+
+```tsx
+const PolicyRowView = memo(
+  ({ row }: { row: Row<Policy> }) => (
+    <TableRow>
+      <TableCell>{row.original.name}</TableCell>
+      <TableCell>{row.original.status}</TableCell>
+    </TableRow>
+  ),
+  (prev, next) => prev.row.original === next.row.original
+);
+
+<DataTable
+  columns={columns}
+  data={rows}
+  renderRow={(row) => <PolicyRowView key={row.id} row={row} />}
+/>
+```
+
+A `renderRow` row never gets an expanded-content row appended — read
+`row.getIsExpanded()` and render it yourself if you need both.
+
+`renderEmptyState` replaces the default "No results." row and receives
+`hasFilters`, so you can tell "no data at all" from "no matches" (the copy and
+its localization stay yours):
+
+```tsx
+<DataTable
+  columns={columns}
+  data={rows}
+  renderEmptyState={({ hasFilters }) => (
+    <EmptyScreen title={hasFilters ? t('noMatches') : t('noDevices')} />
+  )}
+/>
+```
+
+### Infinite scroll
+
+`paginationMode="infinite"` drops the paginated row model — `data` is the full
+accumulated array you append to — and renders a sentinel row that calls
+`onLoadMore` as it scrolls into view. While `isLoadingMore` is true, further
+calls are suppressed and a trailing loading row renders (`role="status"` +
+`aria-live="polite"`, with screen-reader-only "Loading more rows…" text):
+
+```tsx
+<DataTable
+  columns={columns}
+  data={loadedRows}
+  paginationMode="infinite"
+  onLoadMore={loadNextPage}
+  loadMoreRootMargin="200px"
+  hasNextPage={hasNextPage}
+  isLoadingMore={isLoadingMore}
+/>
+```
+
+- Fetching, cursor/offset tracking, dedup and accumulating `data` stay yours.
+- The sentinel needs at least one rendered row, so it **cannot drive the first
+  fetch** — seed page one yourself (e.g. on mount).
+- `loadMoreRootMargin` (CSS margin syntax) fires `onLoadMore` before the
+  sentinel is literally visible. Tune it against your page size: a large margin
+  with small pages can legitimately trigger several calls back to back.
+- It does not compose with virtualization — for a very large accumulated list
+  use the `VirtualScrolling` recipe over the raw `Table` primitives.
+
+### Server-driven usage
+
+The three server-facing pieces compose: render from your own instance (`table`),
+or keep `DataTable`'s and hand it `manualSorting` + `paginationMode="infinite"`
++ `renderRow`. The `Server-driven` recipe story shows the second shape end to
+end — manual sorting, polling-driven infinite scroll and memoized rows, with no
+external instance at all.
+
+### Bookmarkable URL state
+
+`useTableUrlState` mirrors pagination, sorting and column filters into the query
+string so a view is bookmarkable and restores on load. It is router-agnostic —
+it only uses `window.location` + `history.pushState`/`popstate` — and its keys
+are namespaced (`tbl_page`, `tbl_size`, `tbl_sort`, `tbl_filter`) so they can't
+collide with the rest of the URL. Wire its setters into a `useReactTable`
+instance's controlled state:
+
+```tsx
+import { useTableUrlState } from '@acronis-platform/ui-react';
+
+const { state, setPagination, setSorting, setColumnFilters } = useTableUrlState({
+  defaultPageSize: 5,
+});
+
+const table = useReactTable({
+  data,
+  columns,
+  getCoreRowModel: getCoreRowModel(),
+  getFilteredRowModel: getFilteredRowModel(),
+  getPaginationRowModel: getPaginationRowModel(),
+  onPaginationChange: setPagination,
+  onSortingChange: setSorting,
+  onColumnFiltersChange: setColumnFilters,
+  state: { pagination: state.pagination, sorting: state.sorting, columnFilters: state.columnFilters },
+});
+```
+
+Encoding: `tbl_page` is 1-based, `tbl_sort` is `id:asc|desc` pairs joined by
+`,`, `tbl_filter` is `id:<encoded-value>` pairs joined by `,`. Defaults are
+omitted (page 1 and the default page size never appear), and setters called
+together in one handler collapse into a single history entry. Override the keys
+with `paramKeys`, and reuse the pure `parseTableUrlState` /
+`serializeTableUrlState` helpers to seed state on the server or in a test.
 
 ### Advanced recipes
 
@@ -87,10 +433,71 @@ see the `UI/DataTable/Recipes` stories in Storybook.
   (keeps the column layout intact). Add `@tanstack/react-virtual` yourself.
 - **Column reorder** — `state.columnOrder` + `onColumnOrderChange`, with native
   HTML5 `draggable` headers (no extra DnD dependency).
+- **Toolbar + date range** — a `DateRangePicker` period field living inside the
+  toolbar's filters popover (popover over popover).
+- **Server-driven** — `manualSorting` + `paginationMode="infinite"` + a memoized
+  `renderRow`, all through `DataTable`'s own props.
+
+## Accessibility
+
+- Renders a real `table` through the `Table` primitives, so headers and cells
+  keep native table semantics.
+- The sort control is a real button (Enter/Space) labelled "Sort by _title_";
+  direction is conveyed by the arrow icon next to the always-visible title.
+- The resize handle is a `role="separator"` with `aria-orientation="vertical"`,
+  `aria-valuenow`/`min`/`max` and a "Resize column" label; arrow keys resize it.
+- `DataTableExpandTrigger` is a button carrying `aria-expanded` and an "Expand
+  row" / "Collapse row" label.
+- Pagination controls are icon buttons with explicit labels; the rows-per-page
+  select is labelled "Rows per page".
+- Selection checkboxes need your own `aria-label` ("Select row" / "Select all")
+  — they have no visible label in the cell.
+- The infinite-scroll loading row announces itself politely, so a fetch in
+  flight isn't conveyed by the animated placeholder alone.
 
 ## API Reference
+
+### DataTable
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/data-table/data-table.docs.ts"
   name="DataTableProps"
 />
+
+### Column meta
+
+Set on a `ColumnDef`, not on `DataTable` (ui-react augments TanStack's
+`ColumnMeta`).
+
+| Key    | Type                  | Purpose                                                |
+| ------ | --------------------- | ------------------------------------------------------ |
+| `pin`  | `'left' \| 'right'`   | Pin the column to that edge (sticky on horizontal scroll). |
+| `wrap` | `boolean`             | Let the column's header + cells wrap onto multiple lines.  |
+
+### Companion parts
+
+| Component                | Props                                                                                                                  |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| `DataTableColumnHeader`  | `column` (required), `title` (required), plus any `button` attribute.                                                    |
+| `DataTableToolbar`       | `table` (required), `leading`, `searchKey`, `searchPlaceholder` (default `'Filter…'`), `children`, `filtersLabel` (default `'Filters'`), `getFilterChipLabel`. |
+| `DataTablePagination`    | `table` (required), `pageSizeOptions` (default `[10, 20, 30, 40, 50]`).                                                  |
+| `DataTableViewOptions`   | `table` (required).                                                                                                     |
+| `DataTableExpandTrigger` | `row` (required), plus any `button` attribute; forwards a ref.                                                           |
+
+### useTableUrlState
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/hooks/use-table-url-state.ts"
+  name="UseTableUrlStateOptions"
+/>
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/hooks/use-table-url-state.ts"
+  name="UseTableUrlStateResult"
+/>
+
+### Style helpers
+
+`getPinnedStyle(column)`, `getColumnWidth(column, enableColumnResizing)` and
+`getCellStyle(cell, enableColumnResizing)` are exported so a `renderRow` row can
+reproduce `DataTable`'s own cell styling.

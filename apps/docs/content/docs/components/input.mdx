@@ -1,0 +1,89 @@
+---
+title: InputBox
+description: The bare single-line input box, without the label, description, or error furniture that InputText adds.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { InputBoxDemo } from "@/components/demos-react/input";
+
+## Usage
+
+```tsx
+import { InputBox } from '@acronis-platform/ui-react';
+```
+
+`InputBox` is the low-level box the text fields are built on: a native `<input>`
+whose geometry (32px height, 4px radius, 12px horizontal padding), border, fill,
+value and placeholder colors are wired to the `--ui-input-text-*` token tier —
+and nothing else. It renders no label, description, error message, or clear
+button. `type` defaults to `text`; the ref is forwarded to the underlying
+`<input>`, and `className` merges with the token classes.
+
+> **Naming.** The `Input` export from `@acronis-platform/ui-react` is an alias of
+> [`InputText`](/components/input-text), not this primitive. Import `InputBox` by
+> name to get the bare box.
+
+Reach for `InputBox` when the surrounding furniture comes from somewhere else —
+most often as the control of a [`Field`](/components/field), which wires the
+`for` / `id` / `aria-describedby` / `aria-invalid` associations for you:
+
+```tsx
+<Field>
+  <FieldLabel>Email</FieldLabel>
+  <FieldControl render={<InputBox type="email" />} />
+</Field>
+```
+
+If you just want a labeled text field, use [`InputText`](/components/input-text)
+instead — it composes `InputBox` and adds the label, `required` marker,
+description, error message, and optional clear button.
+[`InputSearch`](/components/input-search),
+[`InputTextArea`](/components/input-text-area), and `InputPassword` do **not**
+build on `InputBox`; the design gives each of them its own box and token tier.
+
+## Examples
+
+<DemoReact>
+  <InputBoxDemo />
+</DemoReact>
+
+A plain box with a placeholder. Because there's no label, give it an accessible
+name yourself — `aria-label` here, or a `<label htmlFor>` / `FieldLabel` when one
+is rendered:
+
+```tsx
+<InputBox aria-label="Workload name" placeholder="e.g. web-server-01" />
+```
+
+The error treatment is driven entirely by `aria-invalid` — it swaps the border to
+the error color and, on focus, the focus ring to `--ui-focus-error`:
+
+```tsx
+<InputBox aria-label="Email" type="email" defaultValue="not-an-email" aria-invalid />
+```
+
+`disabled` uses the disabled box, border, value, and placeholder tokens:
+
+```tsx
+<InputBox aria-label="Tenant" defaultValue="acronis-prod" disabled />
+```
+
+Controlled, as with any native input:
+
+```tsx
+const [value, setValue] = React.useState('');
+
+<InputBox
+  aria-label="Workload name"
+  value={value}
+  onChange={(e) => setValue(e.target.value)}
+/>
+```
+
+## API Reference
+
+`InputBoxProps` is an alias of `React.ComponentPropsWithoutRef<'input'>` — it
+adds no props of its own, so `InputBox` accepts every native `<input>` attribute
+(`type`, `value`, `defaultValue`, `placeholder`, `disabled`, `readOnly`,
+`required`, `aria-invalid`, `onChange`, …) plus `className`, and forwards its ref
+to the `<input>` element.

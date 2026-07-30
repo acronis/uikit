@@ -18,6 +18,11 @@ one or more months side by side (`numberOfMonths`), with prev/next chevrons at t
 outer edges of the month row. Keyboard navigation, focus management, and the
 selection model are handled by `react-day-picker`.
 
+Two defaults are set by this wrapper rather than inherited from `DayPicker`: the
+week starts on **Monday** (`weekStartsOn={1}`) and outside days are shown
+(`showOutsideDays`). Both are overridable per instance. Under `dir="rtl"` the grid
+mirrors and the prev/next chevrons flip with it.
+
 This is a **design-pending v1** ported from the legacy library: no `--ui-calendar-*`
 token tier exists yet, so it themes off the shared semantic vocabulary
 (`bg-background` / `text-foreground` for the surface, the brand-primary tokens for
@@ -56,6 +61,16 @@ Disable specific days or weekends with a matcher:
   disabled={[new Date(2026, 6, 4), { dayOfWeek: [0, 6] }]}
 />
 ```
+
+Swap the boxed month/year caption for jump-to dropdowns with `captionLayout`
+(`label` — the default — or `dropdown` / `dropdown-months` / `dropdown-years`):
+
+```tsx
+<Calendar mode="single" captionLayout="dropdown" />
+```
+
+To pair the grid with a text-field trigger and a popover, use
+[`DateRangePicker`](/components/date-range-picker), which composes this component.
 
 ## API Reference
 

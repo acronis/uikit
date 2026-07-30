@@ -1,6 +1,6 @@
 ---
 title: InputSearch
-description: A Search box wrapped with field furniture (label, required marker).
+description: A search box wrapped with field furniture (label, required marker).
 ---
 
 import { DemoReact } from "@/components/DemoReact";
@@ -12,10 +12,22 @@ import { InputSearchDemo } from "@/components/demos-react/input-search";
 import { InputSearch } from '@acronis-platform/ui-react';
 ```
 
-`InputSearch` wraps [`Search`](/components/search) and adds an optional
-label above the box (with a `required` marker). Every other prop — `placeholder`,
-`value`, `onClear`, `disabled`, … — passes straight through to `Search`. A
-visible label names the field automatically.
+`InputSearch` wraps an internal search box — a bordered field holding a leading
+magnifier, a borderless native `<input>`, and a trailing clear button — and adds
+an optional label above it (with a `required` marker). Every other prop —
+`placeholder`, `value`, `onClear`, `disabled`, … — passes straight through to the
+input. A visible label names the field automatically. Themed by the
+`--ui-input-search-*` tokens.
+
+`Search` is exported as an alias of `InputSearch`, so `import { Search }` gives
+you the same component.
+
+`className` is merged onto the **outer wrapper**, not the input — use it to size
+the whole field:
+
+```tsx
+<InputSearch aria-label="Search" placeholder="Search table" className="w-56" />
+```
 
 ## Examples
 
@@ -36,7 +48,7 @@ Required:
 <InputSearch label="Search" required placeholder="Type to search" />
 ```
 
-Controlled, with a clear handler (forwarded to `Search`):
+Controlled, with a clear handler:
 
 ```tsx
 const [query, setQuery] = React.useState('');
@@ -49,10 +61,22 @@ const [query, setQuery] = React.useState('');
 />
 ```
 
+## Clear button
+
+The clear (×) button appears whenever the field is non-empty and not disabled.
+Activating it empties the input, refocuses it, and fires a native change event
+with an empty value before calling `onClear` — so controlled and uncontrolled
+usage both stay in sync.
+
+It renders as a ghost icon button: the glyph uses
+`--ui-button-icon-global-icon-color-idle`, and it paints
+`--ui-button-icon-global-container-color-hover` /
+`--ui-button-icon-global-container-color-active` backgrounds on hover and press.
+
 ## API Reference
 
-`InputSearchProps` extends [`SearchProps`](/components/search), so it also
-accepts every prop documented there.
+`InputSearchProps` extends the internal search box's props, so it also accepts
+every native `<input>` attribute plus `onClear`.
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/input-search/input-search.tsx"

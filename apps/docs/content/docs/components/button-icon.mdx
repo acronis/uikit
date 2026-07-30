@@ -19,7 +19,6 @@ accessible name.
 
 ## Examples
 
-
 <DemoReact>
   <ButtonIconDemo />
 </DemoReact>
@@ -43,6 +42,14 @@ Disabled state:
 
 ```tsx
 <ButtonIcon aria-label="Edit" disabled>
+  <PencilIcon />
+</ButtonIcon>
+```
+
+Render as another element with `render` (Base UI composition):
+
+```tsx
+<ButtonIcon aria-label="Edit" render={<a href="/settings/profile" />}>
   <PencilIcon />
 </ButtonIcon>
 ```

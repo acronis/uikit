@@ -20,7 +20,6 @@ with hover/active/focus treatments and is polymorphic via Base UI's `useRender`
 
 ## Examples
 
-
 <DemoReact>
   <CardFilterDemo />
 </DemoReact>
@@ -50,11 +49,40 @@ const [selected, setSelected] = useState(false);
 />
 ```
 
+`selected` is optional. Omit it for a plain action card that runs a command
+instead of toggling a filter — the card then keeps default button semantics
+(no `aria-pressed`) rather than announcing as an unpressed toggle:
+
+```tsx
+<CardFilter variant="clickable" label="Alerts" value="7" onClick={openAlerts} />
+```
+
 An empty placeholder (renders an em-dash, no icon):
 
 ```tsx
 <CardFilter variant="static-empty" label="Pending" />
 ```
+
+Render as another element with `render` (Base UI composition) — e.g. a filter
+that navigates:
+
+```tsx
+<CardFilter
+  variant="clickable"
+  label="Alerts"
+  value="7"
+  render={<a href="/alerts" />}
+/>
+```
+
+## Accessibility
+
+`aria-pressed` and `type="button"` apply only to the default `<button>` root,
+and `aria-pressed` only when `selected` is passed explicitly — that pairing
+would be invalid ARIA/HTML on a link or other element, so both are omitted when
+you compose via `render`. The `data-selected` styling hook is still set
+regardless of the rendered element, so a selected card composed as a link keeps
+its active treatment.
 
 ## API Reference
 

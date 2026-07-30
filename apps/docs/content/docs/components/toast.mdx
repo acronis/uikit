@@ -56,6 +56,15 @@ toast.info('Event created', {
 `options`: `description`, `timeout` (ms; `0` = persist), `action` (`{ label,
 onClick }`), and `id` (re-adding the same id updates the toast in place).
 
+## Portaling
+
+`<Toaster />` renders the stack in a portal, pinned to the page's bottom-end
+corner (bottom-right in LTR, bottom-left in RTL). When the app runs inside an
+isolated container (e.g. a shadow root), wrap it in `PortalContainerProvider` so
+the stack mounts inside that scope and inherits its styles — see
+[Shadow DOM Integration](/shadow-dom). An explicit `portalContainer` on
+`<Toaster />` overrides the context for that region.
+
 ## API Reference
 
 <AutoTypeTable

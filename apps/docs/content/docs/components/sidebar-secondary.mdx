@@ -1,6 +1,6 @@
 ---
 title: SidebarSecondary
-description: The secondary navigation panel, with collapsible sections and sub-menus.
+description: The secondary navigation panel, with collapsible sections and a resizable width.
 ---
 
 import { DemoReact } from "@/components/DemoReact";
@@ -26,9 +26,22 @@ import {
 `SidebarSecondary` is the second-level navigation panel that sits beside
 [`SidebarPrimary`](/components/sidebar-primary). It supports expandable
 `SidebarSecondarySection`s for grouping items. The panel itself owns a
-controlled/uncontrolled `expanded` width state. `SidebarSecondary` and the
-menu-item parts are polymorphic via the `render` prop. Themed by the
+controlled/uncontrolled `expanded` width state and — unless you opt out with
+`resizable={false}` — a draggable resize edge on its inline-end border (see
+[Resizing](#resizing)). The root renders a `<nav>` labelled
+`"Section navigation"` by default. `SidebarSecondary` and the menu-item parts
+are polymorphic via the `render` prop. Themed by the
 `--ui-sidebar-secondary-*` tokens.
+
+The collapsed rail's vertical breadcrumb is rendered by the root
+**automatically** — it derives the parent label from `SidebarSecondaryHeader`
+and the current-page label from the `selected` `SidebarSecondaryMenuItem`, so
+there is nothing to wire up and no part to place.
+
+Row labels truncate rather than wrap, and a label that is actually clipped
+gets a tooltip on hover (anchored to the row, opening to the inline-end side).
+In the collapsed rail every icon-only row shows its label as a tooltip so it
+stays identifiable.
 
 ## Examples
 
@@ -37,7 +50,7 @@ menu-item parts are polymorphic via the `render` prop. Themed by the
   <SidebarSecondaryDemo />
 </DemoReact>
 
-A panel with a section and a sub-menu:
+A panel with two sections and a footer collapse trigger:
 
 ```tsx
 <SidebarSecondary>
@@ -78,7 +91,8 @@ A panel with a section and a sub-menu:
 </SidebarSecondary>
 ```
 
-An expandable section (the second collapse level):
+An expandable section — the in-panel disclosure level, on top of the panel's
+own expanded/collapsed width:
 
 ```tsx
 <SidebarSecondarySection expandable defaultOpen>
@@ -88,6 +102,59 @@ An expandable section (the second collapse level):
   </SidebarSecondaryMenu>
 </SidebarSecondarySection>
 ```
+
+Controlled collapse:
+
+```tsx
+const [expanded, setExpanded] = React.useState(true);
+
+<SidebarSecondary expanded={expanded} onExpandedChange={setExpanded}>
+  {/* … */}
+</SidebarSecondary>
+```
+
+## Resizing
+
+`resizable` defaults to **`true`**, so the panel ships with a `role="separator"`
+edge on its inline-end border. Width is independent of the expanded/collapsed
+state and persists across collapse/expand cycles. It stays token-driven
+(`--ui-sidebar-secondary-expanded-container-width`) until the user actually
+resizes or you pass a controlled `width`, so brand overrides of the token are
+honored out of the box.
+
+| Interaction                         | Result                                                     |
+| ----------------------------------- | ---------------------------------------------------------- |
+| Drag the edge                       | Resizes between the expanded-width token and twice it      |
+| Drag past half the min width        | Collapses the panel to the rail                            |
+| Click the edge                      | Toggles expanded/collapsed                                 |
+| Double-click the edge               | Resets to the default width                                |
+| <kbd>←</kbd> / <kbd>→</kbd>         | Shrinks/grows by 16px; past the minimum collapses the rail |
+| <kbd>Enter</kbd> / <kbd>Space</kbd> | Toggles expanded/collapsed                                 |
+| <kbd>Home</kbd>                     | Expands (if collapsed) and resets to the default width     |
+
+Arrow keys follow the writing direction — under `dir="rtl"` <kbd>←</kbd> grows
+and <kbd>→</kbd> shrinks.
+
+The edge is labelled `'Resize sidebar'` and its hover tooltip explains the
+drag/click/double-click gestures. All of that copy is English by default and
+must be localized by the consumer — or suppressed with `null`:
+
+```tsx
+<SidebarSecondary
+  resizeAriaLabel="Redimensionar la barra lateral"
+  resizeTooltipExpanded={
+    <>
+      <span className="font-semibold">Redimensionar:</span> Arrastrar
+    </>
+  }
+  resizeTooltipCollapsed={null} // no tooltip while collapsed
+>
+  {/* … */}
+</SidebarSecondary>
+```
+
+To opt out of resizing entirely, pass `resizable={false}` — the edge is not
+rendered and the width follows the tokens alone.
 
 ## API Reference
 
@@ -103,6 +170,39 @@ An expandable section (the second collapse level):
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
   name="SidebarSecondaryHeaderProps"
+/>
+
+### SidebarSecondarySection
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
+  name="SidebarSecondarySectionProps"
+/>
+
+### SidebarSecondarySectionLabel
+
+`actions` renders trailing header controls (e.g. a ghost `ButtonIcon`) as a
+**sibling** of the expandable section's toggle, never nested inside it — so
+activating an action doesn't toggle the section. `unreadRollup` is a summary
+badge that only shows while an expandable section is closed; it is ignored on
+static sections.
+
+```tsx
+<SidebarSecondarySectionLabel
+  actions={
+    <ButtonIcon variant="ghost" aria-label="Add policy">
+      <PlusIcon />
+    </ButtonIcon>
+  }
+  unreadRollup={<Tag variant="info">3</Tag>}
+>
+  Policies
+</SidebarSecondarySectionLabel>
+```
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
+  name="SidebarSecondarySectionLabelProps"
 />
 
 ### SidebarSecondaryMenuItem
@@ -121,14 +221,16 @@ An expandable section (the second collapse level):
 
 ### SidebarSecondaryCollapseTrigger
 
+A single `icon` covers both directions — it rotates 180° between the expanded
+and collapsed states. While collapsed the button's label is `sr-only` and
+`expandTooltip` (default `'Expand'`, so localize it) is shown on hover instead.
+`extras` is the same trailing slot as on a menu item, for a shortcut hint.
+
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"
   name="SidebarSecondaryCollapseTriggerProps"
 />
 
-`SidebarSecondarySection` adds `expandable` plus `open` / `defaultOpen` /
-`onOpenChange` for the expandable-section collapse level.
-The remaining structural parts
-(`SidebarSecondaryContent`, `SidebarSecondarySectionLabel`,
+The remaining structural parts (`SidebarSecondaryContent`,
 `SidebarSecondaryMenu`, `SidebarSecondaryFooter`) accept the standard attributes
 of the element they render.

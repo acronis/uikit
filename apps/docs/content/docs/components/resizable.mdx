@@ -27,7 +27,7 @@ The handle is themed by the `--ui-resizable-*` tokens.
   <ResizableDemo />
 </DemoReact>
 
-A horizontal split (sidebar + content):
+A horizontal split — panels side by side, vertical divider (sidebar + content):
 
 ```tsx
 <ResizablePanelGroup orientation="horizontal">
@@ -39,7 +39,7 @@ A horizontal split (sidebar + content):
 </ResizablePanelGroup>
 ```
 
-A vertical split (editor + preview):
+A vertical split — panels stacked, horizontal divider (editor + preview):
 
 ```tsx
 <ResizablePanelGroup orientation="vertical">
@@ -48,6 +48,38 @@ A vertical split (editor + preview):
   <ResizablePanel defaultSize={40}>Preview</ResizablePanel>
 </ResizablePanelGroup>
 ```
+
+The group fills its container (`h-full w-full`), so give it — or an ancestor — a
+bounded height for a horizontal split, and a bounded width for a vertical one.
+
+## Handle states
+
+The handle is a 9px hit area around a 1px divider line (4px of padding each
+side). The line reads `--ui-border-on-surface-border` at rest,
+`--ui-resizable-border-color-hover` on pointer hover, and
+`--ui-resizable-border-color-active` while dragging; the cursor is
+`--ui-resizable-cursor` (`ew-resize`), or `ns-resize` when the panels are
+stacked.
+
+On keyboard focus the line itself paints a 3px `--ui-focus-primary` ring and
+takes the active color, so the ring stays centered on the divider instead of
+outlining the whole hit area. The ring is dropped again during a drag — a
+pointer resize shows only the active line.
+
+The divider is drawn with a logical border (inline-start for a vertical divider,
+block-start for a stacked one) rather than a filled strip, so it pixel-snaps at
+fractional handle positions and renders correctly under `dir="rtl"`.
+
+## Keyboard
+
+| Key                                   | Action                                           |
+| ------------------------------------- | ------------------------------------------------ |
+| <kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> | Moves focus to / from a handle                   |
+| <kbd>←</kbd> / <kbd>→</kbd>           | Resizes by 5% in a `horizontal` group            |
+| <kbd>↑</kbd> / <kbd>↓</kbd>           | Resizes by 5% in a `vertical` group              |
+| <kbd>Home</kbd> / <kbd>End</kbd>      | Resizes to the handle's minimum / maximum extent |
+| <kbd>Enter</kbd>                      | Toggles an adjacent `collapsible` panel          |
+| <kbd>F6</kbd> / <kbd>Shift+F6</kbd>   | Moves to the next / previous handle in the group |
 
 ## API Reference
 

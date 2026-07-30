@@ -21,7 +21,8 @@ import {
 primitive — hover/focus open behavior, positioning, portalling, and ARIA come
 from Base UI. `TooltipTrigger` is polymorphic via the `render` prop, so it can
 wrap any element (such as a `Button`). Wrap your app (or a subtree) in
-`TooltipProvider` to share open/close timing across tooltips.
+`TooltipProvider` to share open/close timing across tooltips — it applies a
+300ms open delay by default, overridable with `delay`.
 
 ## Examples
 
@@ -48,6 +49,23 @@ Position the content with `side` (and optionally `align`):
 </Tooltip>
 ```
 
+Use `anchor` when the popup should be positioned against something other than
+the trigger — for example a truncating label inside a full-width row, where the
+tooltip should align to the row's edge rather than the label's:
+
+```tsx
+const rowRef = React.useRef<HTMLDivElement>(null);
+
+<div ref={rowRef} className="flex w-full">
+  <Tooltip>
+    <TooltipTrigger
+      render={<span className="truncate">A very long label</span>}
+    />
+    <TooltipContent anchor={rowRef}>A very long label</TooltipContent>
+  </Tooltip>
+</div>;
+```
+
 Share timing across many tooltips with a provider:
 
 ```tsx
@@ -60,10 +78,20 @@ Share timing across many tooltips with a provider:
 </TooltipProvider>
 ```
 
+## Portaling
+
+`TooltipContent` renders the popup in a portal. When the tooltip lives inside an
+isolated container (e.g. a shadow root), wrap the app in
+`PortalContainerProvider` so the popup mounts inside that scope and inherits its
+styles — see [Shadow DOM Integration](/shadow-dom). An explicit
+`portalContainer` on `TooltipContent` overrides the context for a single
+tooltip.
+
 ## API Reference
 
 These parts re-export Base UI's `Tooltip` primitives and do not define their own
-named prop interfaces. `TooltipContent` additionally accepts `side`, `align`,
+named prop interfaces. `TooltipContent` additionally accepts `side` (default
+`'top'`), `align` (default `'center'`), `sideOffset` (default `6`), `anchor`,
 `portalContainer`, and `keepMounted` to control positioning and portalling.
 Refer to the [Base UI Tooltip docs](https://base-ui.com/react/components/tooltip)
 for the full prop surface of each part.

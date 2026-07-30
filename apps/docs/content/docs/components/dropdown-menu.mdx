@@ -19,6 +19,7 @@ import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
+  DropdownMenuPortal,
   ButtonMenu,
 } from '@acronis-platform/ui-react';
 ```
@@ -59,19 +60,30 @@ A basic actions menu with a `ButtonMenu` trigger:
 Multiple `DropdownMenuGroup`s render an automatic top-border separator between
 sections (non-first groups get the border).
 
-A nested submenu:
+A nested submenu. `DropdownMenuSub` sits **inside** a `DropdownMenuGroup`,
+alongside the other items — the group supplies the row padding and gap, so a
+sub-trigger placed directly in `DropdownMenuContent` would not line up with its
+siblings:
 
 ```tsx
-<DropdownMenuSub>
-  <DropdownMenuSubTrigger>More tools</DropdownMenuSubTrigger>
-  <DropdownMenuSubContent>
-    <DropdownMenuGroup>
-      <DropdownMenuItem>Import</DropdownMenuItem>
-      <DropdownMenuItem>Export</DropdownMenuItem>
-    </DropdownMenuGroup>
-  </DropdownMenuSubContent>
-</DropdownMenuSub>
+<DropdownMenuContent>
+  <DropdownMenuGroup>
+    <DropdownMenuItem>Edit</DropdownMenuItem>
+    <DropdownMenuSub>
+      <DropdownMenuSubTrigger>More tools</DropdownMenuSubTrigger>
+      <DropdownMenuSubContent>
+        <DropdownMenuGroup>
+          <DropdownMenuItem>Import</DropdownMenuItem>
+          <DropdownMenuItem>Export</DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuSubContent>
+    </DropdownMenuSub>
+  </DropdownMenuGroup>
+</DropdownMenuContent>
 ```
+
+`DropdownMenuSubTrigger` renders a trailing cascade chevron (mirrored under
+`dir="rtl"`) and opens the submenu on hover or **ArrowRight**.
 
 ## API Reference
 
@@ -84,6 +96,8 @@ A nested submenu:
 
 `DropdownMenu` (root) accepts the Base UI Menu root props — `open` /
 `defaultOpen`, `onOpenChange`. `DropdownMenuItem` / `DropdownMenuSubTrigger`
-take an `inset` flag. See the
+take an `inset` flag. Items also accept Base UI's `closeOnClick` — pass
+`closeOnClick={false}` to keep the menu open while the user toggles several rows
+(this is how `TableViewOptions` builds its column-visibility panel). See the
 [Base UI Menu docs](https://base-ui.com/react/components/menu) for the full prop
 surface of each part.
