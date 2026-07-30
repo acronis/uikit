@@ -11,6 +11,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  formatCompactNumber,
   type ChartConfig,
 } from '../../chart';
 
@@ -75,6 +76,19 @@ const meta = {
     animationEasing: {
       control: 'select',
       options: ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
+    },
+    showLabels: { control: 'boolean' },
+    labelPosition: {
+      control: 'select',
+      options: [
+        'top',
+        'bottom',
+        'center',
+        'insideTop',
+        'insideBottom',
+        'insideStart',
+        'insideEnd',
+      ],
     },
   },
 } satisfies Meta<typeof RadarChart>;
@@ -196,4 +210,14 @@ export const CustomTooltipOpen: Story = {
 export const Animated: Story = {
   parameters: { snapshot: { skip: true } },
   args: { animate: true, animationDuration: 800 },
+};
+
+// Value labels on each axis point. Reduced to one series so the labels
+// don't collide.
+export const Labels: Story = {
+  args: {
+    dataKeys: ['alice'],
+    showLabels: true,
+    labelFormatter: formatCompactNumber,
+  },
 };

@@ -6,6 +6,7 @@ import {
   Bar,
   BarChart as RechartsBarChart,
   CartesianGrid,
+  LabelList,
   ReferenceLine,
   XAxis,
   YAxis,
@@ -20,9 +21,14 @@ import {
   ChartTooltipContent,
   resolveAxisDomain,
   resolveAnimation,
+  toLabelFormatter,
+  CHART_LABEL_FILL,
+  CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type CartesianChartProps,
   type ChartAnimationProps,
+  type ChartDataLabelProps,
+  type CartesianLabelPosition,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
@@ -96,7 +102,8 @@ export interface BarChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof barChartVariants>,
     CartesianChartProps,
-    ChartAnimationProps {
+    ChartAnimationProps,
+    ChartDataLabelProps {
   /** Row-per-category data. Each object holds the category key + one numeric field per series. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -120,6 +127,11 @@ export interface BarChartProps
   /** Corner radius applied to the growing end of each bar. */
   barRadius?: number;
   showLegend?: boolean;
+  /**
+   * Position of the value labels when `showLabels` is on. Defaults to the growing
+   * end — `top` for vertical bars, `right` for horizontal.
+   */
+  labelPosition?: CartesianLabelPosition;
 }
 
 const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
@@ -157,6 +169,9 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       animationDuration,
       animationBegin,
       animationEasing,
+      showLabels = false,
+      labelPosition,
+      labelFormatter,
       ...props
     },
     ref
@@ -167,6 +182,10 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       animationBegin,
       animationEasing,
     });
+    // Labels sit at the growing end of the bar by default: above vertical bars,
+    // to the right of horizontal ones.
+    const barLabelPosition =
+      labelPosition ?? (orientation === 'horizontal' ? 'right' : 'top');
     // Our `orientation` is bar-direction; recharts' `layout` is the opposite axis.
     const rechartsLayout = orientation === 'horizontal' ? 'vertical' : 'horizontal';
     const isStacked = layout === 'stacked';
@@ -308,7 +327,17 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   stackId={isStacked ? 'a' : undefined}
                   radius={barRadius > 0 && rounded ? endRadius : undefined}
                   {...animation}
-                />
+                >
+                  {showLabels && (
+                    <LabelList
+                      dataKey={key}
+                      position={barLabelPosition}
+                      formatter={toLabelFormatter(labelFormatter)}
+                      fill={CHART_LABEL_FILL}
+                      fontSize={CHART_LABEL_FONT_SIZE}
+                    />
+                  )}
+                </Bar>
               );
             })}
             {referenceLines.map((ref, index) => {

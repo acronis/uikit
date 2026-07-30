@@ -6,6 +6,7 @@ import {
   Bar,
   CartesianGrid,
   ComposedChart as RechartsComposedChart,
+  LabelList,
   Line,
   XAxis,
   YAxis,
@@ -20,9 +21,14 @@ import {
   ChartTooltipContent,
   resolveAxisDomain,
   resolveAnimation,
+  toLabelFormatter,
+  CHART_LABEL_FILL,
+  CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type CartesianChartProps,
   type ChartAnimationProps,
+  type ChartDataLabelProps,
+  type CartesianLabelPosition,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. A composed
@@ -42,7 +48,8 @@ export interface ComposedSeries {
 export interface ComposedChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     CartesianChartProps,
-    ChartAnimationProps {
+    ChartAnimationProps,
+    ChartDataLabelProps {
   /** Row-per-category data. Each object holds `xKey` + one numeric field per series. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -63,6 +70,8 @@ export interface ComposedChartProps
   /** Flat-fill opacity for area series. */
   fillOpacity?: number;
   showLegend?: boolean;
+  /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
+  labelPosition?: CartesianLabelPosition;
 }
 
 const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
@@ -98,6 +107,9 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       animationDuration,
       animationBegin,
       animationEasing,
+      showLabels = false,
+      labelPosition,
+      labelFormatter,
       ...props
     },
     ref
@@ -196,7 +208,17 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                         : undefined
                     }
                     {...animation}
-                  />
+                  >
+                    {showLabels && (
+                      <LabelList
+                        dataKey={s.key}
+                        position={labelPosition ?? 'top'}
+                        formatter={toLabelFormatter(labelFormatter)}
+                        fill={CHART_LABEL_FILL}
+                        fontSize={CHART_LABEL_FONT_SIZE}
+                      />
+                    )}
+                  </Bar>
                 );
               }
               if (s.type === 'area') {
@@ -209,7 +231,17 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                     fill={color}
                     fillOpacity={fillOpacity}
                     {...animation}
-                  />
+                  >
+                    {showLabels && (
+                      <LabelList
+                        dataKey={s.key}
+                        position={labelPosition ?? 'top'}
+                        formatter={toLabelFormatter(labelFormatter)}
+                        fill={CHART_LABEL_FILL}
+                        fontSize={CHART_LABEL_FONT_SIZE}
+                      />
+                    )}
+                  </Area>
                 );
               }
               return (
@@ -221,7 +253,17 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                   strokeWidth={2}
                   dot={false}
                   {...animation}
-                />
+                >
+                  {showLabels && (
+                    <LabelList
+                      dataKey={s.key}
+                      position={labelPosition ?? 'top'}
+                      formatter={toLabelFormatter(labelFormatter)}
+                      fill={CHART_LABEL_FILL}
+                      fontSize={CHART_LABEL_FONT_SIZE}
+                    />
+                  )}
+                </Line>
               );
             })}
           </RechartsComposedChart>

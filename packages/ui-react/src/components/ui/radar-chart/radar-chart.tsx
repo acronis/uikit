@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import {
+  LabelList,
   PolarAngleAxis,
   PolarGrid,
   Radar,
@@ -17,8 +18,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   resolveAnimation,
+  toLabelFormatter,
+  CHART_LABEL_FILL,
+  CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartAnimationProps,
+  type ChartDataLabelProps,
+  type CartesianLabelPosition,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives — the first
@@ -44,7 +50,8 @@ const radarChartVariants = cva('', {
 export interface RadarChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof radarChartVariants>,
-    ChartAnimationProps {
+    ChartAnimationProps,
+    ChartDataLabelProps {
   /** Row-per-axis data. Each object holds the `angleKey` label + one numeric field per series. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -75,6 +82,8 @@ export interface RadarChartProps
    * without composing recharts yourself. Ignored when `showTooltip` is false.
    */
   tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
+  /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
+  labelPosition?: CartesianLabelPosition;
 }
 
 const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
@@ -97,6 +106,9 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       animationDuration,
       animationBegin,
       animationEasing,
+      showLabels = false,
+      labelPosition,
+      labelFormatter,
       ...props
     },
     ref
@@ -140,7 +152,17 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
                 strokeWidth={strokeWidth}
                 dot={showDots ? { r: 3 } : false}
                 {...animation}
-              />
+              >
+                {showLabels && (
+                  <LabelList
+                    dataKey={key}
+                    position={labelPosition ?? 'top'}
+                    formatter={toLabelFormatter(labelFormatter)}
+                    fill={CHART_LABEL_FILL}
+                    fontSize={CHART_LABEL_FONT_SIZE}
+                  />
+                )}
+              </Radar>
             ))}
           </RechartsRadarChart>
         </ChartContainer>

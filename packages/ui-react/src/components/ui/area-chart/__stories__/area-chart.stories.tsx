@@ -91,6 +91,19 @@ const meta = {
       control: 'select',
       options: ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
     },
+    showLabels: { control: 'boolean' },
+    labelPosition: {
+      control: 'select',
+      options: [
+        'top',
+        'bottom',
+        'center',
+        'insideTop',
+        'insideBottom',
+        'insideStart',
+        'insideEnd',
+      ],
+    },
   },
 } satisfies Meta<typeof AreaChart>;
 
@@ -310,4 +323,14 @@ export const HiddenAxes: Story = {
 export const Animated: Story = {
   parameters: { snapshot: { skip: true } },
   args: { animate: true, animationDuration: 800 },
+};
+
+// Value labels on each point, compact-formatted. Reduced to one series so
+// the labels don't collide.
+export const Labels: Story = {
+  args: {
+    dataKeys: ['desktop'],
+    showLabels: true,
+    labelFormatter: formatCompactNumber,
+  },
 };

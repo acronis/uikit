@@ -70,6 +70,7 @@ const meta = {
     paddingAngle: { control: { type: 'number', min: 0, max: 10 } },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
+    showLabels: { control: 'boolean' },
     animate: { control: 'boolean' },
     animationDuration: { control: { type: 'number' } },
     animationEasing: {
@@ -90,6 +91,11 @@ export const Pie_: Story = {
 // A hollow-centre donut.
 export const Donut: Story = {
   args: { shape: 'donut' },
+};
+
+// Data labels (T15): each slice's value drawn on the arc.
+export const Labels: Story = {
+  args: { shape: 'pie', showLabels: true },
 };
 
 // A donut with a custom center metric (here the total) + a caption.
