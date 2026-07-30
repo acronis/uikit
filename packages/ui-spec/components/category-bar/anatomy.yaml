@@ -1,0 +1,52 @@
+spec_version: '1.0'
+component: CategoryBar
+
+schematic: |
+  root: <div>                                        (flex column wrapper)
+    track: <div role="img">                          (the bar; aria-label summary)
+      segments: one <div> per datum (width ∝ value, filled per key)
+        tooltip-content: <div>                        (hover card, per segment)
+    legend: <ul> color dot + label + value + %        (optional, showLegend)
+
+root:
+  element: div
+  description: >-
+    The wrapper — a flex column holding the bar track and the optional legend.
+    CategoryBar has one CVA axis (`size`), applied to the track's height.
+
+parts:
+  - id: track
+    element: div
+    description: >-
+      The bar itself — a rounded, clipped flex row of segments with a
+      `role="img"` and an `aria-label` summarizing the segments (a caller can
+      override the summary). Its height is set by the `size` variant.
+  - id: segments
+    element: div
+    description: >-
+      One div per datum, `flex-grow` proportional to its value over the total
+      (basis 0, so widths are exactly value/total), filled from
+      `config[key].color`. A zero-value segment collapses.
+  - id: tooltip-content
+    element: div
+    description: >-
+      Per-segment hover card — a color dot + the segment's `config` label + its
+      value and share as a percentage. Rendered when `showTooltip`.
+  - id: legend
+    element: ul
+    description: >-
+      Optional legend below the bar — a color dot + label per segment (from
+      `config`), plus the segment's value and its share of the total as a
+      percentage. Rendered when `showLegend`.
+
+states:
+  - id: legend
+    trigger: the showLegend prop renders the segment legend below the bar
+    kind: prop
+    prop: showLegend
+    affects: [legend]
+  - id: tooltip
+    trigger: the showTooltip prop wraps each segment in a hover tooltip
+    kind: prop
+    prop: showTooltip
+    affects: [segments, tooltip-content]

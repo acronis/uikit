@@ -1,0 +1,14 @@
+spec_version: '1.0'
+component: CategoryBar
+name: category-bar
+status: draft
+category: data-display
+description: >-
+  A single horizontal bar split into proportional colored segments — one
+  part-to-whole across a handful of categories in one row (onboarding stages,
+  certification status, a pass/fail split). Each segment's width is its value
+  over the sum of all values; segment colors are caller-supplied via `config`.
+  A plain flex composition (not a recharts chart) with one CVA axis (`size`),
+  an optional count/% legend, and per-segment hover tooltips. Design-pending
+  v1 — no chart token tier exists yet.
+since: 0.58.0

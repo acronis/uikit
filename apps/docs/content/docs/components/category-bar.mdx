@@ -1,0 +1,70 @@
+---
+title: CategoryBar
+description: A single bar split into proportional colored category segments.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { CategoryBarDemo } from '@/components/demos-react/category-bar';
+
+## Usage
+
+```tsx
+import { CategoryBar } from '@acronis-platform/ui-react';
+import type { ChartConfig } from '@acronis-platform/ui-react';
+```
+
+`CategoryBar` renders a single horizontal bar split into proportional colored
+segments — a part-to-whole across a handful of categories, in one row. Give it a
+`data` array (`key` + `value`) and a per-segment `config` (label + color); each
+segment's width is its value over the total. It's a plain flex composition, not a
+recharts chart, so there are no axes or grid.
+
+Segment `key`s are the color keys, **keyed into `config`**; they must be unique
+and CSS-safe. `config[key].label` carries the human-readable text.
+
+> **Design-pending v1.** There is no chart token tier yet, so the example colors
+> reference the shared status tokens; a dedicated `--ui-chart-*` data-viz palette
+> is pending an upstream design pass. Hues absent from the semantic palette (a
+> light blue, a purple) borrow the nearest existing token, and borrowed
+> brand/status tokens are brand-dependent.
+
+## Examples
+
+<DemoReact>
+  <CategoryBarDemo />
+</DemoReact>
+
+A three-part split that sums to 100, with the count/% legend:
+
+```tsx
+const config = {
+  passed: { label: 'Passed', color: 'var(--ui-background-status-strong-success)' },
+  warnings: { label: 'Warnings', color: 'var(--ui-background-status-strong-warning)' },
+  failed: { label: 'Failed', color: 'var(--ui-background-status-strong-danger)' },
+} satisfies ChartConfig;
+
+<CategoryBar
+  config={config}
+  data={[
+    { key: 'passed', value: 68 },
+    { key: 'warnings', value: 22 },
+    { key: 'failed', value: 10 },
+  ]}
+  showLegend
+/>;
+```
+
+`showLegend` renders a color dot + label per segment plus each segment's value
+and its share of the total. Set the track height with `size` (`sm` / `md` /
+`lg`), and hover a segment for its tooltip (`showTooltip`, on by default).
+
+```tsx
+<CategoryBar config={config} data={data} size="lg" showTooltip={false} />;
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/category-bar/category-bar.tsx"
+  name="CategoryBarProps"
+/>
