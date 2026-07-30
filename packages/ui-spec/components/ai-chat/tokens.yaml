@@ -1,0 +1,38 @@
+spec_version: '1.0'
+component: AiChat
+
+# References only — values live in @acronis-platform/tokens-pd. Every name
+# below is a `var(--ui-*)` referenced directly in ai-chat.tsx (verified against
+# packages/tokens-pd/css/ — the /figma-component Phase 2 hard gate). Tokens
+# consumed only by the composed child components (ChatHeaderCollapsed,
+# ChatHeaderExpanded, ChatMenuItem, ChatMenuItemCollapsed, ChatMenuItemExtras,
+# and — for the placeholder tabs — the SegmentControl tier) are that
+# component's own contract and are not repeated here.
+#
+# Two bridged Tailwind names are also used (`bg-background`, `text-foreground`)
+# — they resolve to `--ui-background-surface-primary` / `--ui-text-on-surface-primary`
+# via the `@theme inline` bridge in styles/index.css, not a direct `var(--ui-*)`
+# reference, so they are not listed as tokens.yaml entries per the source-scan
+# convention (see chat-header-expanded/tokens.yaml for the same pattern with
+# `--ui-gap-16`).
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Root container (variant-dependent geometry) ──
+  - { name: --ui-chat-container-color, affects: root }
+  - { name: --ui-chat-container-collapsed-width, affects: root }
+  - { name: --ui-chat-container-expanded-min-width, affects: root }
+  - { name: --ui-chat-container-expanded-max-width, affects: root }
+  - { name: --ui-chat-global-border-width, affects: root }
+  - { name: --ui-chat-global-border-style, affects: root }
+  - { name: --ui-chat-global-border-color, affects: root }
+
+  # ── full-width sidebar/body headers ──
+  - { name: --ui-chat-sidebar-container-width, affects: sidebar-header }
+  - { name: --ui-chat-sidebar-header-height, affects: sidebar-header }
+  - { name: --ui-chat-sidebar-header-padding-x, affects: sidebar-header }
+  - name: --ui-chat-header-height
+    affects: body-header
+    description: >-
+      Reused for the body's header band height so it lines up with the
+      sidebar header — Figma binds both to the same 64px value.

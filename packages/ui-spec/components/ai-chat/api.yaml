@@ -1,0 +1,68 @@
+spec_version: '1.0'
+component: AiChat
+
+# The property list is deliberately minimal — mirrors the Figma component's
+# own property list exactly (`variant` + the `Feed` SLOT, verified via
+# get_context_for_code_connect). No composed child's own prop (ChatHeaderExpanded's
+# `hasHistory`, ChatMenuItem's `label`, etc.) is flattened here.
+contract:
+  properties:
+    - name: variant
+      type: "'collapsed' | 'expanded' | 'full-width'"
+      required: false
+      default: "'full-width'"
+      description: >-
+        Which of the three AI-chat layouts to render. Mirrors the Figma
+        `variant` property (options: collapsed | expanded | full-width).
+
+    - name: render
+      type: RenderProp
+      required: false
+      description: >-
+        Base UI composition — replace the rendered `<aside>` with another
+        element or component. Props and class names are merged onto it.
+
+  content:
+    - name: children
+      description: >-
+        The chat feed/content area — wired to the Figma `Feed` SLOT. Only
+        rendered for `expanded` and `full-width`; the `collapsed` rail has no
+        room to show it and renders a decorative spacer instead. There is
+        deliberately no other content-configuring prop: the header tab set,
+        the chat-history list, the per-conversation title, and the
+        footer/menu action labels are NOT bound to a Figma property on this
+        component either, so they ship as fixed content pending the open
+        questions in README.md.
+
+  events: []
+  # No events in this version. The variant-switch actions (Maximize/Minimize/
+  # Collapse chat, New chat) render as inert buttons — the interaction model
+  # for moving between variants (discrete actions vs. a drag-resize, like the
+  # unrelated `AppShellChat`) is an open product question, not an oversight.
+  # See README.md's "Open questions" and behavior.md.
+
+adapters:
+  react:
+    component: AiChat
+    status: implemented
+    import: "import { AiChat } from '@acronis-platform/ui-react'"
+    example: |
+      <AiChat variant="full-width">
+        <ConversationFeed messages={messages} />
+      </AiChat>
+  vue:
+    element: AvAiChat
+    status: planned
+    import: "import { AvAiChat } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvAiChat variant="full-width">
+        <ConversationFeed :messages="messages" />
+      </AvAiChat>
+  web-components:
+    element: ui-ai-chat
+    status: planned
+    import: "import '@acronis-platform/ui-wc/ai-chat'"
+    example: |
+      <ui-ai-chat variant="full-width">
+        <conversation-feed></conversation-feed>
+      </ui-ai-chat>

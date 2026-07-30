@@ -1,0 +1,42 @@
+spec_version: '1.0'
+component: AiChat
+name: ai-chat
+status: draft
+category: navigation
+description: >-
+  The root AI-chat shell (Figma "AI-Chat" component set, node 7329-24933).
+  Switches between three structurally distinct layouts via `variant` —
+  `collapsed` (a 48px icon-only rail), `expanded` (a 384-512px tabbed panel),
+  and `full-width` (a two-pane chat-list-sidebar + conversation-body layout) —
+  assembled from the already-shipped `ChatHeaderCollapsed`, `ChatHeaderExpanded`,
+  `ChatMenuItem`, and `ChatMenuItemCollapsed` (plus `ChatMenuItemExtras` for the
+  shortcut labels).
+
+  The root's Figma property list (verified via get_context_for_code_connect) is
+  only `variant` and a `Feed` SLOT — no other content shown in the design
+  (the header tab set, the chat-history list, the per-conversation title, the
+  footer variant-switch actions) is bound to a component property there either.
+  This component's own prop surface mirrors that exactly: `variant` plus
+  `children` (wired to the `Feed` slot for `expanded`/`full-width` only — the
+  collapsed rail has no room to show it). Everything else ships as fixed,
+  non-localizable English copy matching the captured instance, and the
+  variant-switch actions are inert (no `onClick`) pending the open questions
+  below.
+
+  `status: draft` (not `ready`) because three real, product-owned questions are
+  unresolved — see README.md's "Open questions": (1) the interaction model for
+  moving between variants (discrete actions with `⌘H`/`⌘C`/`⌘N`, shown here, vs.
+  the unrelated `AppShellChat`'s continuous drag-resize), (2) what `hasHistory`
+  should reveal on each header variant, and (3) whether the `⌘H?`/`⌘C?`/`⌘N?`
+  suffixes in Figma are placeholders (dropped here) or intentional.
+since: 0.59.0
+dependencies:
+  components:
+    - ChatHeaderCollapsed
+    - ChatHeaderExpanded
+    - ChatMenuItem
+    - ChatMenuItemCollapsed
+    - ChatMenuItemExtras
+figma:
+  node: '7329-24933'
+  codeConnect: packages/ui-react/src/components/ui/ai-chat/ai-chat.figma.tsx

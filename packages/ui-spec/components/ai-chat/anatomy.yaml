@@ -1,0 +1,152 @@
+spec_version: '1.0'
+component: AiChat
+
+schematic: |
+  collapsed (48px)          expanded (384-512px)         full-width (fills row)
+  +--------+                +------------------------+   +--------+---------------------+
+  | header |                | header-tabs   actions  |   |sidebar-|      body-header      |
+  +--------+                +------------------------+   | header |-----------------------+
+  | nav-   |                |                         |   +--------+                       |
+  | chat   |                |          feed           |   |sidebar-|                       |
+  +--------+                |                         |   | list   |       body-feed        |
+  | nav-   |                |                         |   +--------+                       |
+  | tasks  |                +------------------------+   |sidebar-|                       |
+  +--------+                |         footer          |   | footer |                       |
+  | feed-  |                +------------------------+   +--------+---------------------+
+  | spacer |
+  +--------+
+  | footer |
+  +--------+
+
+  header:        (collapsed) `ChatHeaderCollapsed` — branding glyph only
+  nav-chat:      (collapsed) `ChatMenuItemCollapsed` icon-only "Chat" nav item
+  nav-tasks:     (collapsed) `ChatMenuItemCollapsed` icon-only "Tasks" nav item, alert dot
+  feed-spacer:   (collapsed) decorative flex-1 filler — the design shows no content here
+  header-tabs:   (expanded) `ChatHeaderExpanded` composing PLACEHOLDER SegmentControl tabs
+  feed:          (expanded, full-width) the `Feed` SLOT — consumer content via `children`
+  footer:        (collapsed, expanded) the variant-switch action row
+  sidebar-header:(full-width) app branding title ("Acronis AI")
+  sidebar-list:  (full-width) chat-history list — one fixed "New chat" `ChatMenuItem` today
+  sidebar-footer:(full-width) the variant-switch action row (Minimize/Collapse chat)
+  body-header:   (full-width) per-conversation title ("Chat name")
+  body-feed:     (full-width) the `Feed` SLOT — consumer content via `children`
+
+root:
+  element: aside
+  role: complementary
+  description: >-
+    The chat panel/rail. Layout direction and width are entirely driven by
+    `variant`: `collapsed`/`expanded` are a single flex column; `full-width` is
+    a flex row of a fixed-width sidebar plus a flexible body. The `render` prop
+    can swap the element.
+
+parts:
+  - id: header
+    description: >-
+      The collapsed rail's header band — a composed `ChatHeaderCollapsed`
+      centering a branding glyph (`AcronisAiMultiIcon`).
+    element: header
+    visible_when: variant=collapsed
+  - id: nav-chat
+    description: >-
+      Icon-only nav item for the chat view, composed via `ChatMenuItemCollapsed`
+      (`MessageTextIcon`, accessible name "Chat").
+    element: button
+    visible_when: variant=collapsed
+  - id: nav-tasks
+    description: >-
+      Icon-only nav item for the tasks view, composed via `ChatMenuItemCollapsed`
+      (`ClipboardTextIcon`, `hasAlert`, accessible name "Tasks (new activity)").
+      Mirrors the `header-tabs` Tasks tab shown in `expanded`.
+    element: button
+    visible_when: variant=collapsed
+  - id: feed-spacer
+    description: >-
+      A decorative flex-1 filler occupying the space the Feed slot takes in the
+      other two variants. Not the `Feed` SLOT — the 48px rail has no room to
+      show conversation content, and the captured Figma instance renders
+      nothing here either.
+    element: div
+    visible_when: variant=collapsed
+  - id: header-tabs
+    description: >-
+      The expanded panel's header, composed via `ChatHeaderExpanded` wrapping
+      the PLACEHOLDER `ChatHeaderExpandedTabs`/`ChatHeaderExpandedTab` (see
+      that component's own spec). Tab labels ("Acronis AI", "Tasks") are fixed
+      here — Figma exposes no property on `AiChat` itself to configure them.
+    element: header
+    visible_when: variant=expanded
+  - id: feed
+    description: >-
+      The `Feed` SLOT (Figma property `Feed#7461:3`) — the one region Figma
+      itself marks as swappable content. Rendered from `children`.
+    element: div
+    visible_when: 'variant=expanded OR variant=full-width'
+  - id: footer
+    description: >-
+      The variant-switch action row: `Maximize chat`/icon-only-equivalent and
+      `Collapse chat`/icon-only-equivalent, composed via `ChatMenuItem`
+      (expanded) or `ChatMenuItemCollapsed` (collapsed). Inert in this version
+      — see behavior.md.
+    element: footer
+    visible_when: 'variant=collapsed OR variant=expanded'
+  - id: sidebar-header
+    description: >-
+      The full-width sidebar's branding title ("Acronis AI"), fixed text.
+    element: div
+    visible_when: variant=full-width
+  - id: sidebar-list
+    description: >-
+      The chat-history list region. Renders one fixed `ChatMenuItem` ("New
+      chat", `PlusIcon`, `⌘N` shortcut) — the captured Figma instance shows no
+      other entries, and there is no prop/slot yet for a consumer to supply a
+      real history list (see README.md's open questions).
+    element: div
+    visible_when: variant=full-width
+  - id: sidebar-footer
+    description: >-
+      The sidebar's variant-switch action row ("Minimize chat", "Collapse
+      chat"), composed via `ChatMenuItem`. Inert in this version.
+    element: footer
+    visible_when: variant=full-width
+  - id: body-header
+    description: >-
+      The conversation body's per-conversation title ("Chat name"), fixed
+      placeholder text — there is no prop/slot yet for a consumer to supply
+      the real title (see README.md's open questions).
+    element: div
+    visible_when: variant=full-width
+  - id: body-feed
+    description: The `Feed` SLOT for the full-width variant. Rendered from `children`.
+    element: div
+    visible_when: variant=full-width
+
+layout:
+  type: variant-dependent
+  direction: horizontal
+  align: start
+  order: [header, feed, footer]
+
+states:
+  - {
+      id: layout-collapsed,
+      trigger: 'the root renders the icon-only rail',
+      kind: prop,
+      prop: variant,
+      affects: [header, nav-chat, nav-tasks, feed-spacer, footer],
+    }
+  - {
+      id: layout-expanded,
+      trigger: 'the root renders the tabbed panel',
+      kind: prop,
+      prop: variant,
+      affects: [header-tabs, feed, footer],
+    }
+  - {
+      id: layout-full-width,
+      trigger: 'the root renders the two-pane layout',
+      kind: prop,
+      prop: variant,
+      affects:
+        [sidebar-header, sidebar-list, sidebar-footer, body-header, body-feed],
+    }
