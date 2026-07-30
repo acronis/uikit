@@ -1,0 +1,17 @@
+spec_version: '1.0'
+component: ChatMenuItemExtras
+name: chat-menu-item-extras
+status: ready
+category: navigation
+description: >-
+  The trailing affordance cluster on a chat menu item: either a small status Tag
+  or a keyboard-shortcut label, right-aligned at the end of the row. `variant`
+  is a discriminant that selects which single child renders — the cluster itself
+  is identical for both values.
+since: 0.59.0
+dependencies:
+  components:
+    - Tag
+figma:
+  node: 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=7329-52341'
+  codeConnect: packages/ui-react/src/components/ui/chat-menu-item-extras/chat-menu-item-extras.figma.tsx

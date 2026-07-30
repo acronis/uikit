@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: ChatMenuItemCollapsed
+name: chat-menu-item-collapsed
+status: ready
+category: navigation
+description: >-
+  One row of the chat rail while the rail is collapsed to its 48px width: an
+  icon-only control with an optional red alert dot. Because the label has no
+  room, the accessible name must be supplied by the consumer.
+since: 0.59.0
+dependencies:
+  components: []
+figma:
+  node: '7329-25084'
+  codeConnect: packages/ui-react/src/components/ui/chat-menu-item-collapsed/chat-menu-item-collapsed.figma.tsx

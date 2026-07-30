@@ -1,0 +1,47 @@
+spec_version: '1.0'
+component: ChatMenuItemCollapsed
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+#
+# Every name below is the `--ui-*` form of a `components/Chat/*` design variable
+# the Figma node binds, plus the shared `--ui-focus-primary` ring colour. Three of
+# the node's remaining variables have no `--ui-*` counterpart in tokens-pd and so
+# cannot be listed: `stroke/width-3` and `radius/radius-4` (the focus ring's 3px
+# width / 4px radius — the kit expresses both as utilities, the same way every
+# other component does) and `components/Icon/_global/sm/size` + `.../sm/stroke`
+# (the 16px glyph box and its 1.6px stroke, which
+# @acronis-platform/icons-react bakes into its `size={16}` artwork).
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Geometry (root) ──
+  - name: --ui-chat-menu-item-height
+    affects: root
+  - name: --ui-chat-menu-item-collapsed-max-width
+    affects: root
+  - name: --ui-chat-menu-item-padding-x
+    affects: root
+  - name: --ui-chat-menu-item-expanded-gap
+    affects: root
+  - name: --ui-chat-global-border-width
+    affects: root
+  - name: --ui-chat-global-border-color
+    affects: root
+
+  # ── Fill, one token per interaction state ──
+  - name: --ui-chat-menu-item-color-idle
+    affects: root
+  - name: --ui-chat-menu-item-color-hover
+    affects: root
+  - name: --ui-chat-menu-item-color-active
+    affects: root
+
+  # ── Focus ring (shared semantic token) ──
+  - name: --ui-focus-primary
+    affects: root
+
+  # ── Glyph ──
+  - name: --ui-chat-menu-item-icon-color
+    affects: icon

@@ -1,0 +1,121 @@
+spec_version: '1.0'
+component: ChatHeaderExpanded
+
+schematic: |
+  +---------------------------------------------------------------------+
+  |  +-----------------------------------+       +-------------------+  |
+  |  |  [ tab ] [ tab (o) ]  |<>|        |       |  ( H )   ( + )    |  |
+  |  +-----------------------------------+       +-------------------+  |
+  +---------------------------------------------------------------------+
+   ^ root: <header>, height 64px, bottom hairline, inline padding 16px
+
+  tabs:            the pill tab group (fill, 1px border, 8px radius) — PLACEHOLDER
+                   for the standalone SegmentControl component
+  tab:             one pill tab; `role="tab"`, idle or selected (shown "(o)")
+  tab-counter:     optional count inside a tab, rendered as an `ai`/`sm` Tag
+  tab-scroll:      "|<>|" — optional overflow affordance pinned to the group's
+                   inline-end edge; a pair of chevron buttons
+  actions:         inline-end action cluster, 16px gap
+  action-history:  "( H )" — optional conversation-history ButtonIcon (hasHistory)
+  action-new-chat: "( + )" — the always-present new-chat ButtonIcon
+
+root:
+  element: header
+  role: banner
+  description: >-
+    The header band: 64px tall, horizontally padded, with a 1px bottom hairline,
+    laying out the tab group and the action cluster with `justify-content:
+    space-between`. Full-width so it fits the expanded chat panel it belongs to.
+    The `render` prop can swap the element (e.g. to a plain `div` when the
+    surrounding page already owns the `banner` landmark).
+
+parts:
+  - id: tabs
+    description: >-
+      The pill tab group container — fill, 1px border, 8px radius, 4px inset
+      padding, and a `role="tablist"` row inside. PLACEHOLDER: stands in for the
+      standalone SegmentControl component, which is still in progress in Figma.
+    element: div
+  - id: tab
+    description: >-
+      A single pill tab (`role="tab"`, `aria-selected`). Selected tabs get a
+      raised fill plus a visible border; idle tabs are transparent with muted
+      label color and their own hover treatment. PLACEHOLDER (SegmentControlItem).
+    element: button
+  - id: tab-counter
+    description: >-
+      Optional trailing count inside a tab, rendered through the shared `Tag`
+      component with the `ai` variant at `sm` size (per this node's design).
+    element: span
+  - id: tab-scroll
+    description: >-
+      Optional overflow-scroll affordance: two chevron buttons pinned flush to
+      the tab group's inline-end edge, each with a logical inline-start
+      separator. Renders the design's chrome only — scrolling behavior belongs
+      to the real SegmentControl.
+    element: div
+  - id: actions
+    description: The inline-end action cluster, laid out in a row with a 16px gap.
+    element: div
+  - id: action-history
+    description: >-
+      Optional conversation-history action — a `secondary` ButtonIcon with a
+      clock/rotation glyph, shown when `hasHistory` is set. Rendered before the
+      new-chat action.
+    element: button
+  - id: action-new-chat
+    description: >-
+      The primary new-chat action — a `secondary` ButtonIcon with a plus glyph.
+      Always present.
+    element: button
+
+# The root distributes its two regions with `justify-content: space-between`.
+layout:
+  type: row
+  direction: horizontal
+  align: center
+  order: [tabs, actions]
+
+states:
+  - {
+      id: tab-hover,
+      trigger: pointer hover over an idle tab,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [tab],
+    }
+  - {
+      id: tab-pressed,
+      trigger: pointer or keyboard activation of a tab,
+      kind: pseudo,
+      pseudo: ':active',
+      affects: [tab],
+    }
+  - {
+      id: tab-focus-visible,
+      trigger: keyboard focus on a tab or a scroll affordance button,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [tab, tab-scroll],
+    }
+  - {
+      id: tab-selected,
+      trigger: 'the tab represents the active view',
+      kind: prop,
+      prop: active,
+      affects: [tab],
+    }
+  - {
+      id: history-shown,
+      trigger: 'the panel offers conversation history',
+      kind: prop,
+      prop: hasHistory,
+      affects: [actions, action-history],
+    }
+  - {
+      id: tab-scroll-shown,
+      trigger: 'the tabs overflow their container',
+      kind: prop,
+      prop: hasScroll,
+      affects: [tabs, tab-scroll],
+    }

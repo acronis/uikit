@@ -22,6 +22,9 @@ export * from './components/ui/card';
 export * from './components/ui/card-filter';
 export * from './components/ui/chart';
 export * from './components/ui/chart-state';
+export * from './components/ui/chat-header-expanded';
+export * from './components/ui/chat-menu-item-collapsed';
+export * from './components/ui/chat-menu-item-extras';
 export * from './components/ui/checkbox';
 export * from './components/ui/chip';
 export * from './components/ui/collapsible';
@@ -112,6 +115,7 @@ export * from './components/ui/toggle-group';
 export * from './components/ui/toolbar';
 export * from './components/ui/tooltip';
 export * from './components/ui/tag';
+export * from './components/ui/tag-icon';
 export * from './components/ui/timeline';
 // `Badge` is an alias of `Tag`. The legacy generic shadcn Badge is replaced by
 // the design-system-native Tag (its own `--ui-tag-*` token tier, icon slot, and

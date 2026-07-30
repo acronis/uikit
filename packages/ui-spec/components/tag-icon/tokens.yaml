@@ -1,0 +1,35 @@
+spec_version: '1.0'
+component: TagIcon
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+#
+# TagIcon has no component tier of its own. Figma binds its tint to the shared
+# Avatar palette (`components/Avatar/color/*` and
+# `components/Avatar/label/color/*`) and its padding to the `gap/gap-8` unit
+# primitive, which is `--ui-gap-8` in the semantic tier.
+#
+# Two geometry facts from the design have NO token in tokens-pd and are
+# therefore expressed with the equivalent Tailwind scale utilities in the React
+# implementation, not hand-authored values:
+#   - the 32px box: Figma binds `size/size-32`, but the Units size primitives are
+#     not emitted into tokens-pd at all -> `size-8`
+#   - the 8px corner radius: not bound to any Figma variable at all (a literal
+#     on the node) and no radius primitive exists -> `rounded-lg`
+# Both should become token references once design ships the primitives.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Geometry ──
+  - name: --ui-gap-8
+    affects: root
+    description: Padding on every side of the badge (Figma `gap/gap-8`).
+
+  # ── violet ──
+  - name: --ui-avatar-color-violet
+    affects: root
+    description: Container tint for the violet scheme.
+  - name: --ui-avatar-label-color-violet
+    affects: icon
+    description: Glyph color for the violet scheme (inherited via `currentColor`).

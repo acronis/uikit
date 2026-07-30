@@ -1,0 +1,68 @@
+spec_version: '1.0'
+component: ChatMenuItemExtras
+
+schematic: |
+  variant="tag"                  variant="shortcut"
+  +--------------------+         +--------------------+
+  |            ( tag ) |         |          shortcut  |   root: <span> (cluster)
+  +--------------------+         +--------------------+
+                    ^                            ^
+                    tag  (Tag, info/sm)          shortcut  (text)
+
+  root: inline flex, items centered, content pushed to the logical END
+        (flex-end — mirrors under dir="rtl"), min-height 24px, overflow clipped.
+        Exactly one part renders at a time.
+
+root:
+  element: span
+  description: >-
+    The cluster — a non-interactive inline `<span>`. No background, border, or
+    radius of its own: it only lays out its single child at the logical end of
+    the menu-item row with the MenuItemExtras container gap. Identical for every
+    `variant`.
+
+parts:
+  - id: tag
+    description: >-
+      A status/label pill for the `tag` variant. Rendered by the shipped `Tag`
+      component, which Figma pins here to `variant="info"` and `size="sm"` (no
+      other Tag variant or size is offered on this node). All of its colors and
+      geometry come from Tag's own `--ui-tag-*` tier, not from this component.
+    element: span
+    optional: true
+    visible_when: variant === 'tag'
+  - id: shortcut
+    description: >-
+      A keyboard-shortcut label (e.g. `⌘H`) for the `shortcut` variant. Plain
+      text at the body/default type scale in the muted shortcut color, aligned to
+      the logical end and never wrapped.
+    element: span
+    optional: true
+    visible_when: variant === 'shortcut'
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [tag, shortcut]
+
+# ChatMenuItemExtras is a pure function of its props — it is non-interactive, so
+# it has no pseudo-states and no internal state. Each `variant` value is a
+# prop-driven state that swaps which part is present.
+states:
+  - {
+      id: tag,
+      trigger: "variant === 'tag'",
+      kind: prop,
+      prop: variant,
+      affects: [tag],
+      exclusive_with: [shortcut],
+    }
+  - {
+      id: shortcut,
+      trigger: "variant === 'shortcut'",
+      kind: prop,
+      prop: variant,
+      affects: [shortcut],
+      exclusive_with: [tag],
+    }

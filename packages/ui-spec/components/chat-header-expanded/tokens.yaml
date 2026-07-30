@@ -1,0 +1,90 @@
+spec_version: '1.0'
+component: ChatHeaderExpanded
+
+# References only — values live in @acronis-platform/tokens-pd. Every name below
+# was resolved against packages/tokens-pd/css/ before use (the /figma-component
+# Phase 2 hard gate).
+#
+# Three tiers are in play:
+#   --ui-chat-*            the header band itself (own tier, newly imported)
+#   --ui-segment-control-* the PLACEHOLDER pill tabs (real, already-shipped tier;
+#                          moves to the SegmentControl spec once that component
+#                          is extracted)
+#   --ui-gap-16            the action cluster gap (semantic primitive)
+# The action buttons and the tab counter are the shared ButtonIcon / Tag
+# components and are themed by their own tiers (--ui-button-icon-*, --ui-tag-*);
+# those are that component's contract, not this one's, so they are not repeated
+# here.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Header band (root) ──
+  - { name: --ui-chat-header-height, affects: root }
+  - name: --ui-chat-header-padding-x
+    affects: root
+    description: >-
+      Inline padding. The Figma node binds this to
+      `components/Chat/menuItem/paddingX`; we use the header token instead so a
+      brand that re-themes only one of the two cannot drift. Same value today.
+  - { name: --ui-chat-global-border-width, affects: root }
+  - { name: --ui-chat-global-border-style, affects: root }
+  - { name: --ui-chat-global-border-color, affects: root }
+
+  # ── Action cluster ──
+  - name: --ui-gap-16
+    affects: actions
+    description: Gap between the action buttons (Figma `gap/gap-16`).
+
+  # ── Tab group container (PLACEHOLDER — moves to the SegmentControl spec) ──
+  - { name: --ui-segment-control-container-height, affects: tabs }
+  - { name: --ui-segment-control-container-color, affects: tabs }
+  - { name: --ui-segment-control-container-border-color, affects: tabs }
+  - { name: --ui-segment-control-container-border-width, affects: tabs }
+  - { name: --ui-segment-control-container-border-style, affects: tabs }
+  - { name: --ui-segment-control-container-border-radius, affects: tabs }
+  - { name: --ui-segment-control-container-padding-x, affects: tabs }
+  - { name: --ui-segment-control-container-padding-y, affects: tabs }
+  - { name: --ui-segment-control-container-gap, affects: tabs }
+
+  # ── Tab geometry (PLACEHOLDER) ──
+  - { name: --ui-segment-control-item-height, affects: tab }
+  - { name: --ui-segment-control-item-gap, affects: tab }
+  - { name: --ui-segment-control-item-padding-x, affects: tab }
+  - { name: --ui-segment-control-item-padding-y, affects: tab }
+  - name: --ui-segment-control-item-border-radius
+    affects: tab
+    description: >-
+      Used for both the idle and selected tab. The Figma idle variant binds its
+      radius to `components/Button/_global/container/borderRadius` instead —
+      same 4px value, but a SegmentControl item must not follow a Button token.
+      Flagged to the design team.
+  - { name: --ui-segment-control-item-border-width, affects: tab }
+  - { name: --ui-segment-control-item-border-style, affects: tab }
+
+  # ── Tab fill / border / label, one token per interaction state (PLACEHOLDER) ──
+  - { name: --ui-segment-control-item-color-idle, affects: tab }
+  - { name: --ui-segment-control-item-color-hover, affects: tab }
+  - { name: --ui-segment-control-item-color-active, affects: tab }
+  - { name: --ui-segment-control-item-border-color-idle, affects: tab }
+  - { name: --ui-segment-control-item-border-color-hover, affects: tab }
+  - { name: --ui-segment-control-item-border-color-active, affects: tab }
+  - { name: --ui-segment-control-value-color-idle, affects: tab }
+  - { name: --ui-segment-control-value-color-hover, affects: tab }
+  - { name: --ui-segment-control-value-color-active, affects: tab }
+
+  # ── Overflow-scroll affordance (PLACEHOLDER) ──
+  - { name: --ui-segment-control-box-icon-height, affects: tab-scroll }
+  - { name: --ui-segment-control-box-icon-width, affects: tab-scroll }
+  - { name: --ui-segment-control-box-icon-border-color, affects: tab-scroll }
+  - { name: --ui-segment-control-box-icon-border-width, affects: tab-scroll }
+  - { name: --ui-segment-control-box-icon-border-style, affects: tab-scroll }
+  - { name: --ui-segment-control-box-icon-color-idle, affects: tab-scroll }
+  - { name: --ui-segment-control-box-icon-color-hover, affects: tab-scroll }
+  - { name: --ui-segment-control-box-icon-color-active, affects: tab-scroll }
+
+  # ── Focus ring ──
+  - name: --ui-focus-primary
+    affects: tab
+    description: >-
+      Focus-visible ring color, on both the tabs and the `tab-scroll` affordance
+      buttons.

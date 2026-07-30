@@ -1,0 +1,56 @@
+spec_version: '1.0'
+component: TagIcon
+
+# `color` is the only cva axis (its enum matches the cva keys in the ui-react
+# source). The glyph is a slot property rather than a child so the badge can
+# guarantee the 16px size and centering.
+contract:
+  properties:
+    - name: color
+      type: "'violet'"
+      required: false
+      default: violet
+      description: >-
+        Palette scheme that tints the badge. Maps to `--ui-avatar-color-<scheme>`
+        (container) and `--ui-avatar-label-color-<scheme>` (glyph). The Figma
+        component set declares eight schemes (blue, violet, teal, gray, red,
+        orange, yellow, green); only the ones with a token in
+        @acronis-platform/tokens-pd may be exposed, and only `violet` is
+        reviewed and shipped so far.
+    - name: icon
+      type: ReactNode
+      required: false
+      description: >-
+        The glyph to render, centered and constrained to 16px. Backs the `Icon`
+        slot in Figma. Omitting it yields an empty tinted badge.
+
+  events: []
+
+  content: []
+
+  methods: []
+
+adapters:
+  react:
+    component: TagIcon
+    status: implemented
+    import: "import { TagIcon } from '@acronis-platform/ui-react'"
+    example: |
+      import { MessageTextIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+      <TagIcon color="violet" icon={<MessageTextIcon />} />
+
+      {/* Label it when the glyph's meaning is not repeated nearby */}
+      <TagIcon role="img" aria-label="Draft" icon={<MessageTextIcon />} />
+  vue:
+    component: AvTagIcon
+    status: planned
+    import: "import { AvTagIcon } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvTagIcon color="violet"><MessageTextIcon /></AvTagIcon>
+  web-components:
+    element: ui-tag-icon
+    status: planned
+    import: "import '@acronis-platform/ui-wc/tag-icon'"
+    example: |
+      <ui-tag-icon color="violet"><svg slot="icon"></svg></ui-tag-icon>

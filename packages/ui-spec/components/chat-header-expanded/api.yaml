@@ -1,0 +1,144 @@
+spec_version: '1.0'
+component: ChatHeaderExpanded
+
+# The property list is flat across all composable parts (as for Breadcrumb):
+# `hasHistory` / `newChatLabel` / `historyLabel` / `render` belong to
+# ChatHeaderExpanded; `hasScroll` / `scrollBackwardLabel` / `scrollForwardLabel`
+# to ChatHeaderExpandedTabs; `active` / `counter` to ChatHeaderExpandedTab.
+contract:
+  properties:
+    - name: hasHistory
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Show the secondary conversation-history icon button before the primary
+        new-chat action. Mirrors the Figma `hasHistory` property.
+
+    - name: newChatLabel
+      type: string
+      required: false
+      default: "'New chat'"
+      description: >-
+        Accessible name for the new-chat action button. The literal exists only
+        as this prop's default so consumers can localize it.
+
+    - name: historyLabel
+      type: string
+      required: false
+      default: "'Chat history'"
+      description: >-
+        Accessible name for the conversation-history button. The literal exists
+        only as this prop's default so consumers can localize it.
+
+    - name: render
+      type: RenderProp
+      required: false
+      description: >-
+        Base UI composition — replace the rendered `<header>` with another
+        element or component. Props and class names are merged onto it.
+
+    - name: hasScroll
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        `ChatHeaderExpandedTabs` only. Render the overflow-scroll affordance —
+        two chevron buttons pinned to the group's inline-end edge. Mirrors the
+        Figma SegmentControl `hasScroll` property. Renders chrome only; the
+        scrolling behavior belongs to the future standalone SegmentControl.
+
+    - name: scrollBackwardLabel
+      type: string
+      required: false
+      default: "'Scroll tabs backward'"
+      description: >-
+        `ChatHeaderExpandedTabs` only. Accessible name for the backward scroll
+        affordance button.
+
+    - name: scrollForwardLabel
+      type: string
+      required: false
+      default: "'Scroll tabs forward'"
+      description: >-
+        `ChatHeaderExpandedTabs` only. Accessible name for the forward scroll
+        affordance button.
+
+    - name: active
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        `ChatHeaderExpandedTab` only. Marks the tab as the selected one — sets
+        `aria-selected` and applies the raised fill / visible border / strong
+        label color. Mirrors the Figma SegmentControlItem `state=active` variant.
+        Selection is controlled by the consumer; there is no internal state.
+
+    - name: counter
+      type: ReactNode
+      required: false
+      description: >-
+        `ChatHeaderExpandedTab` only. Optional trailing count. Pass the count
+        itself (e.g. `7`); the tab wraps it in the shared `Tag` component with
+        the `ai` variant at `sm` size. Mirrors the Figma `hasCounter` property.
+        `0` renders — only `null`/`undefined` are treated as absent.
+
+  events:
+    - name: click
+      payload: MouseEvent
+      description: >-
+        Fired on activation of a `ChatHeaderExpandedTab` (the consumer flips its
+        own selection state in the handler). The `action-new-chat` /
+        `action-history` buttons are rendered internally and carry no handler
+        prop in this version: the prop surface is intentionally limited to the
+        Figma node's own properties (`hasHistory`) plus the accessible-name props
+        the localization convention requires. Attaching behavior to them needs a
+        follow-up decision (an `onNewChat` / `onHistory` pair, or an `actions`
+        slot) — an open question, not an oversight. See README.md.
+
+  content:
+    - name: children
+      description: >-
+        The composed tab group — a `ChatHeaderExpandedTabs` wrapping one or more
+        `ChatHeaderExpandedTab`. Tab labels are consumer-supplied, so they are
+        localizable at the consumer's layer. There is deliberately no flattened
+        `tabs` array prop.
+
+adapters:
+  react:
+    component: ChatHeaderExpanded
+    status: implemented
+    import: "import { ChatHeaderExpanded, ChatHeaderExpandedTabs, ChatHeaderExpandedTab } from '@acronis-platform/ui-react'"
+    example: |
+      <ChatHeaderExpanded hasHistory>
+        <ChatHeaderExpandedTabs>
+          <ChatHeaderExpandedTab active onClick={() => setView('chat')}>
+            Acronis AI
+          </ChatHeaderExpandedTab>
+          <ChatHeaderExpandedTab counter={7} onClick={() => setView('tasks')}>
+            Tasks
+          </ChatHeaderExpandedTab>
+        </ChatHeaderExpandedTabs>
+      </ChatHeaderExpanded>
+  vue:
+    element: AvChatHeaderExpanded
+    status: planned
+    import: "import { AvChatHeaderExpanded } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvChatHeaderExpanded has-history>
+        <AvChatHeaderExpandedTabs>
+          <AvChatHeaderExpandedTab active>Acronis AI</AvChatHeaderExpandedTab>
+          <AvChatHeaderExpandedTab :counter="7">Tasks</AvChatHeaderExpandedTab>
+        </AvChatHeaderExpandedTabs>
+      </AvChatHeaderExpanded>
+  web-components:
+    element: ui-chat-header-expanded
+    status: planned
+    import: "import '@acronis-platform/ui-wc/chat-header-expanded'"
+    example: |
+      <ui-chat-header-expanded has-history>
+        <ui-chat-header-expanded-tabs>
+          <ui-chat-header-expanded-tab active>Acronis AI</ui-chat-header-expanded-tab>
+          <ui-chat-header-expanded-tab counter="7">Tasks</ui-chat-header-expanded-tab>
+        </ui-chat-header-expanded-tabs>
+      </ui-chat-header-expanded>

@@ -1,0 +1,67 @@
+spec_version: '1.0'
+component: ChatMenuItemCollapsed
+
+# The contract is deliberately small: a glyph slot, an alert flag, and the fill
+# axis. Nothing from the composed alert-dot icon is flattened onto this
+# component, and no props are borrowed from the sibling chat/sidebar components.
+contract:
+  properties:
+    - name: variant
+      type: "'idle'"
+      required: false
+      default: idle
+      description: >-
+        Fill wiring — the single `cva` axis, mirroring the Figma `variant`
+        property. `idle` is the only signed-off value; the Figma set's `hover` /
+        `active` / `focused` siblings are interaction states, painted as
+        pseudo-states, not values of this prop.
+    - name: icon
+      type: ReactNode
+      required: false
+      description: >-
+        The 16px glyph shown in place of the label while the rail is collapsed.
+        Mono icons inherit `--ui-chat-menu-item-icon-color` through
+        `currentColor`.
+    - name: hasAlert
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Show the red alert dot over the glyph's top-end corner. It renders the
+        shipped `DotRed` icon and is decorative — repeat the alert in the
+        accessible name.
+
+  events:
+    - name: click
+      description: >-
+        Fired when the item is activated by pointer or keyboard (Enter / Space)
+        — the native button activation event.
+
+  content: []
+
+  methods: []
+
+adapters:
+  react:
+    component: ChatMenuItemCollapsed
+    status: implemented
+    import: "import { ChatMenuItemCollapsed } from '@acronis-platform/ui-react'"
+    example: |
+      <ChatMenuItemCollapsed aria-label="Chats" icon={<MessageTextIcon />} />
+      <ChatMenuItemCollapsed
+        aria-label="Chats, unread messages"
+        icon={<MessageTextIcon />}
+        hasAlert
+      />
+  vue:
+    component: AvChatMenuItemCollapsed
+    status: planned
+    import: "import { AvChatMenuItemCollapsed } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvChatMenuItemCollapsed aria-label="Chats" has-alert />
+  web-components:
+    element: ui-chat-menu-item-collapsed
+    status: planned
+    import: "import '@acronis-platform/ui-wc/chat-menu-item-collapsed'"
+    example: |
+      <ui-chat-menu-item-collapsed aria-label="Chats" has-alert></ui-chat-menu-item-collapsed>

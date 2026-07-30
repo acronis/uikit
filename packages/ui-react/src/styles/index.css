@@ -39,6 +39,10 @@
 @import '@acronis-platform/tokens-pd/css/Footer/default.css';
 @import '@acronis-platform/tokens-pd/css/Popover/default.css';
 @import '@acronis-platform/tokens-pd/css/Carousel/default.css';
+@import '@acronis-platform/tokens-pd/css/Chat/default.css';
+/* SegmentControl is imported for ChatHeaderExpanded's inlined placeholder pill
+   tabs; the standalone SegmentControl component itself is not shipped yet. */
+@import '@acronis-platform/tokens-pd/css/SegmentControl/default.css';
 
 @layer base {
   *,

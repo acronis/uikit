@@ -1,0 +1,32 @@
+spec_version: '1.0'
+component: ChatHeaderExpanded
+name: chat-header-expanded
+status: ready
+category: navigation
+description: >-
+  Header bar of the *expanded* AI-chat panel: a pill tab group on the inline-start
+  side and a group of icon actions on the inline-end side, on a 64px band with a
+  bottom hairline. Tab content is composed (`ChatHeaderExpandedTabs` +
+  `ChatHeaderExpandedTab` children), not configured through flattened props, so
+  tab labels stay under the consumer's control and therefore localizable.
+
+  PLACEHOLDER WARNING: `ChatHeaderExpandedTabs` / `ChatHeaderExpandedTab` are a
+  temporary, component-local stand-in for the standalone `SegmentControl`
+  component, which is still in progress in Figma and must not be extracted yet.
+  They are styled from the real, already shipped `--ui-segment-control-*` tier,
+  so the visuals are correct even though the component boundary is not. When
+  SegmentControl ships, build `components/ui/segment-control/` from its own node,
+  delete these two parts, and re-point this spec, the stories, and the Code
+  Connect example at it. See README.md for the full swap checklist and the list
+  of behaviors the placeholder deliberately omits (roving-tabindex arrow-key
+  navigation, `aria-controls`→tabpanel wiring, real overflow scrolling, and a
+  disabled item state).
+
+  The Figma component set's `variant` (chat | tasks) property is deliberately NOT
+  a React prop: it encodes which tab is selected — expressed here by `active` on
+  a composed tab — and which trailing action icon shows (`chat` → Plus, `tasks` →
+  BarsFilter). Only the `chat` variant's Plus action is implemented.
+since: 0.59.0
+figma:
+  node: '7329-24759'
+  codeConnect: packages/ui-react/src/components/ui/chat-header-expanded/chat-header-expanded.figma.tsx

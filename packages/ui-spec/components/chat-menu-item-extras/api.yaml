@@ -1,0 +1,62 @@
+spec_version: '1.0'
+component: ChatMenuItemExtras
+
+# `variant` is a discriminant, not a style axis — the root cluster carries the
+# same classes for every value, so the React implementation deliberately uses no
+# `cva` (a cva whose keys all mapped to an empty class string would be pure
+# indirection). The two label props are per-variant content slots: only the one
+# matching the active variant is read; the other is ignored.
+contract:
+  properties:
+    - name: variant
+      type: "'tag' | 'shortcut'"
+      required: false
+      default: tag
+      description: >-
+        Which trailing affordance to render. `tag` renders a `Tag`; `shortcut`
+        renders a keyboard-shortcut label. Exactly one part is rendered. The
+        default mirrors the Figma component set's own default variant.
+    - name: labelTag
+      type: string
+      required: false
+      description: >-
+        Tag text, read only when `variant="tag"`. Passed as the `Tag`'s children;
+        the Tag is fixed to `variant="info" size="sm"` per the Figma node.
+    - name: labelShortcut
+      type: string
+      required: false
+      description: >-
+        Keyboard-shortcut text (e.g. `⌘H`), read only when `variant="shortcut"`.
+
+  events: []
+
+  content:
+    - name: tag
+      description: >-
+        Supplied via the `labelTag` property rather than a slot — the Tag's
+        variant and size are fixed by the design, so the slot is text-only.
+    - name: shortcut
+      description: Supplied via the `labelShortcut` property. Text only.
+
+  methods: []
+
+adapters:
+  react:
+    component: ChatMenuItemExtras
+    status: implemented
+    import: "import { ChatMenuItemExtras } from '@acronis-platform/ui-react'"
+    example: |
+      <ChatMenuItemExtras variant="tag" labelTag="Beta" />
+      <ChatMenuItemExtras variant="shortcut" labelShortcut="⌘H" />
+  vue:
+    component: AvChatMenuItemExtras
+    status: planned
+    import: "import { AvChatMenuItemExtras } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvChatMenuItemExtras variant="shortcut" label-shortcut="⌘H" />
+  web-components:
+    element: ui-chat-menu-item-extras
+    status: planned
+    import: "import '@acronis-platform/ui-wc/chat-menu-item-extras'"
+    example: |
+      <ui-chat-menu-item-extras variant="shortcut" label-shortcut="⌘H"></ui-chat-menu-item-extras>

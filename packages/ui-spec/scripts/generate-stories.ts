@@ -140,19 +140,22 @@ const RENDER: Record<string, RenderHint> = {
       '        <TableRow>',
       '          <TableHead sortable sortDirection="asc">Invoice</TableHead>',
       '          <TableHead>Status</TableHead>',
-      '          <TableHead className="text-right">Amount</TableHead>',
+      // Logical `text-end`, not physical `text-right` — the committed story was
+      // hand-fixed to the RTL-safe utility, so the hint has to match or every
+      // regeneration silently reintroduces the physical one.
+      '          <TableHead className="text-end">Amount</TableHead>',
       '        </TableRow>',
       '      </TableHeader>',
       '      <TableBody>',
       '        <TableRow>',
       '          <TableCell>INV001</TableCell>',
       '          <TableCell>Paid</TableCell>',
-      '          <TableCell className="text-right">$250.00</TableCell>',
+      '          <TableCell className="text-end">$250.00</TableCell>',
       '        </TableRow>',
       '        <TableRow selected>',
       '          <TableCell>INV002</TableCell>',
       '          <TableCell>Pending</TableCell>',
-      '          <TableCell className="text-right">$150.00</TableCell>',
+      '          <TableCell className="text-end">$150.00</TableCell>',
       '        </TableRow>',
       '      </TableBody>',
       '    ',
@@ -252,6 +255,36 @@ const RENDER: Record<string, RenderHint> = {
   },
   switch: { ariaLabel: 'Toggle' },
   checkbox: { ariaLabel: 'Accept' },
+  // Both variants are content-driven: `tag` renders `labelTag`, `shortcut`
+  // renders `labelShortcut`. Supply both so neither variant snapshots empty
+  // (only the one matching the active variant is read).
+  'chat-menu-item-extras': { props: 'labelTag="Label" labelShortcut="⌘H"' },
+  // Icon-only rail row: the glyph is a prop, not children, and an empty row
+  // would snapshot as a bare 48x40 rectangle.
+  'chat-menu-item-collapsed': {
+    extraImports: [
+      "import { MessageTextIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    props: 'icon={<MessageTextIcon />}',
+    ariaLabel: 'Chats',
+  },
+  // Composable: tab content arrives as children (there is deliberately no
+  // flattened `tabs` prop), so without a sample the header would snapshot as an
+  // empty band with only its action buttons. The tab parts are a PLACEHOLDER for
+  // the unshipped standalone SegmentControl — swap this sample when that lands.
+  'chat-header-expanded': {
+    extraImports: [
+      "import { ChatHeaderExpandedTabs, ChatHeaderExpandedTab } from '../chat-header-expanded';",
+    ],
+    sample: [
+      '',
+      '      <ChatHeaderExpandedTabs>',
+      '        <ChatHeaderExpandedTab active>Acronis AI</ChatHeaderExpandedTab>',
+      '        <ChatHeaderExpandedTab counter={7}>Tasks</ChatHeaderExpandedTab>',
+      '      </ChatHeaderExpandedTabs>',
+      '    ',
+    ].join('\n'),
+  },
   radio: {
     ariaLabel: 'Plan',
     extraImports: ["import { Radio } from '../radio';"],
@@ -302,6 +335,14 @@ const RENDER: Record<string, RenderHint> = {
     ].join('\n'),
   },
   tag: { sample: 'Label' },
+  // Icon-only badge: the glyph is a prop, not children, and an empty badge would
+  // be an indistinguishable tinted square in the snapshot.
+  'tag-icon': {
+    extraImports: [
+      "import { SquareDashedIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    props: 'icon={<SquareDashedIcon />}',
+  },
   select: {
     extraImports: [
       "import { SelectTrigger, SelectValue, SelectContent, SelectItem } from '../select';",

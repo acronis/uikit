@@ -1,0 +1,89 @@
+spec_version: '1.0'
+component: ChatMenuItemCollapsed
+
+schematic: |
+  48px
+  +--------------+
+  ||   (alert)   |   root: <button> (40px tall, 1px inline-start seam)
+  ||   [icon]    |
+  +--------------+
+   ^   ^     ^
+   |   |     alert  -- optional red dot, top-end of the glyph
+   |   icon   -- 16px glyph (the only visible content)
+   seam -- the rail's inline-start border
+
+root:
+  element: button
+  role: button
+  description: >-
+    The full-width (48px) row. 40px tall, horizontally padded, with a 1px
+    inline-start border that continues the chat rail's seam. It is icon-only, so
+    it has no text content of its own — the accessible name comes from the
+    consumer's `aria-label` / `aria-labelledby`.
+
+parts:
+  - id: icon
+    description: >-
+      The 16px glyph slot, vertically centred. Mono icons inherit
+      `--ui-chat-menu-item-icon-color` through `currentColor`. Also the
+      positioning context for the alert dot.
+    element: span
+    optional: true
+    visible_when: an `icon` is provided
+  - id: alert
+    description: >-
+      The shipped red alert dot (`DotRedIcon`, 16px box / 8px dot), overlapping
+      the glyph's top-end corner. Decorative (`aria-hidden`) — the alert must
+      also be carried by the root's accessible name.
+    element: svg
+    optional: true
+    visible_when: '`hasAlert` is true'
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [icon]
+
+# `variant` has a single signed-off value (`idle`); the design's other three
+# component-set siblings (hover / active / focused) are interaction states, so
+# they are pseudo-states here rather than prop values.
+states:
+  - {
+      id: idle,
+      trigger: "variant === 'idle'",
+      kind: prop,
+      prop: variant,
+      affects: [root],
+    }
+  - {
+      id: has-alert,
+      trigger: 'hasAlert === true',
+      kind: prop,
+      prop: hasAlert,
+      affects: [alert],
+    }
+  - {
+      id: hover,
+      trigger: 'pointer over the row',
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [root],
+    }
+  - {
+      id: active,
+      trigger: 'pressed',
+      kind: pseudo,
+      pseudo: ':active',
+      affects: [root],
+    }
+  - {
+      id: focused,
+      trigger: 'keyboard focus',
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [root],
+    }
+# There is intentionally NO disabled state: the Figma component set defines none
+# and the `--ui-chat-*` tier ships no disabled fill, so the native `<button>`
+# `disabled` attribute still blocks activation but carries no distinct styling.

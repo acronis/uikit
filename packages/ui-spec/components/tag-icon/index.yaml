@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: TagIcon
+name: tag-icon
+status: ready
+category: data-display
+description: >-
+  An icon-only tag — a 32px tinted rounded square holding a single 16px icon.
+  A compact, non-interactive marker that carries meaning through its glyph
+  instead of a text label. Tinted from the shared Avatar palette.
+since: 0.59.0
+dependencies:
+  components: []
+figma:
+  node: '5144-27622'
+  codeConnect: packages/ui-react/src/components/ui/tag-icon/tag-icon.figma.tsx

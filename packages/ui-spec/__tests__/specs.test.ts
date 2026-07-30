@@ -442,6 +442,23 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.orientation.sort()).toEqual(enumMembers(api, 'orientation'));
   });
 
+  it('ChatMenuItemCollapsed: api.yaml variant enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/chat-menu-item-collapsed/chat-menu-item-collapsed.tsx'
+      ),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('chat-menu-item-collapsed').api;
+
+    // `variant` has the single signed-off `idle` value — the Figma set's
+    // hover/active/focused siblings are pseudo-states, not cva keys.
+    expect(Object.keys(groups)).toEqual(['variant']);
+    expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
+  });
+
   it('Avatar: api.yaml color enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/avatar/avatar.tsx'),

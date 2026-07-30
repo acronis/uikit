@@ -1,0 +1,45 @@
+spec_version: '1.0'
+component: TagIcon
+
+schematic: |
+  +--------+
+  |        |   root: <span>, 32px box, 8px radius, tinted container
+  |  icon  |         8px padding on every side
+  |        |   icon: the single glyph, centered at 16px
+  +--------+
+
+  color -> container background + glyph color (one token pair per scheme)
+
+root:
+  element: span
+  description: >-
+    The badge — a 32px square with an 8px radius, tinted by `color` and
+    centering its single child. Presentational: no role, no tab stop, and no
+    text of its own. It is not a `Tag`: there is no label slot and no border,
+    and the palette is the shared Avatar one rather than Tag's status tier.
+
+parts:
+  - id: icon
+    description: >-
+      The glyph, centered and constrained to 16px. Supplied by the consumer via
+      the `icon` property; the badge only owns the box, the tint, and the size.
+    element: svg
+    optional: true
+    visible_when: an `icon` is provided
+
+# A single centered child inside a fixed 32px box.
+layout:
+  type: stack
+  align: center
+  order: [icon]
+
+# TagIcon is a pure function of its props — non-interactive, so no pseudo-states
+# and no component-owned state. The only visual axis is the `color` scheme.
+states:
+  - {
+      id: violet,
+      trigger: "color === 'violet'",
+      kind: prop,
+      prop: color,
+      affects: [root, icon],
+    }
