@@ -1,0 +1,23 @@
+spec_version: '1.0'
+component: SankeyChart
+
+# References only. Values live in @acronis-platform/tokens-pd. SankeyChart has no
+# token tier of its own — node bar fills and link ribbon tints are supplied by
+# the caller via `config` (a dedicated `--ui-chart-*` data-viz palette is pending
+# an upstream design pass). The tooltip chrome is inherited from the shared Chart
+# primitives.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-text-on-surface-primary
+    affects: nodes
+    description: Node label text (fill-foreground), shown when showLabels is on.
+  - name: --ui-background-surface-primary
+    affects: tooltip-content
+    description: Tooltip surface (bg-background).
+  - name: --ui-text-on-surface-secondary
+    affects: tooltip-content
+    description: Muted tooltip label text (text-muted-foreground).
+  - name: --ui-border-on-surface-border
+    affects: tooltip-content
+    description: Tooltip border (border-border).

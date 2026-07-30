@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: SankeyChart
+name: sankey-chart
+status: draft
+category: data-display
+description: >-
+  A typed Sankey flow-diagram composition over the shared `Chart` primitives.
+  Renders a graph of `nodes` + `links` where each link's width is proportional to
+  its flow value, inside a `ChartContainer`, with token-themed node bars and link
+  ribbons plus a tooltip. No axes, grid, or legend — and no variant axes; geometry
+  (`nodePadding` / `nodeWidth` / `linkCurvature`) is plain props. Themed through
+  custom node/link renderers (recharts' defaults paint one flat grey and have no
+  token hooks). Built on recharts' `Sankey` primitive (no apps/demo playground
+  existed).
+since: 0.58.0
