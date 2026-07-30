@@ -479,7 +479,7 @@ not typecheck — so run the build.
 
 ## Phase 6 — Verify & changeset
 
-Identical to `/figma-component` Phase 5.
+Identical to `/figma-component` Phase 6.
 
 ```bash
 pnpm --filter @acronis-platform/ui-react test
@@ -513,7 +513,7 @@ pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker:all       
 
 When you **remove or rename** a story, delete BOTH its baselines. Never commit
 baselines rendered on macOS/Windows — they won't match CI's Linux renderer. (See
-the `/figma-component` Phase 5 notes for the single-mode variants and the
+the `/figma-component` Phase 6 notes for the single-mode variants and the
 "zero PNGs rewritten on `--update`" case.)
 
 ---

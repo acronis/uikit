@@ -97,11 +97,13 @@ semantic analysis, so judge each hit:
 **Non-blocking advisory — Docs:** `apps/docs/content/docs/components/<name>.mdx`
 existence and a prop-mention check (only runs when the component declares its
 own `Props` interface — nothing to check for a component that's purely
-`React.ComponentProps<'tag'>`). Never blocking, because not every component has
-a docs page by design — only `/legacy-component` writes one (Phase 5);
-`/figma-component` doesn't touch `apps/docs` at all. A missing page or an
-unmentioned prop is a genuine signal on a component you know went through
-`/legacy-component` or has a docs page already; it's expected noise otherwise.
+`React.ComponentProps<'tag'>`). Never blocking here, because this script is a
+**static, read-only** pass and can't judge whether an `--update` run's diff
+actually required a docs edit (that's an agent judgment call — see
+`/figma-component` Phase 5 and `/legacy-component` Phase 5, which both now
+write/sync this page). A missing page is a genuine signal for any exported,
+non-`internal`/`deprecated` component — it means neither skill's docs phase
+has run for it yet, or it predates their docs coverage.
 
 ---
 

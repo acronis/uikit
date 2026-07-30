@@ -4,8 +4,10 @@ description: >
   Bring a "ready for dev" component from Figma into the Acronis UI Kit, or
   update an existing one. Drives the full recipe: read the Figma node, map it
   to Base UI + --ui-* tokens, implement in packages/ui-react (component, tests,
-  stories, Figma Code Connect), and write/refresh its framework-agnostic spec in
-  packages/ui-spec. Invoke with /figma-component <ComponentName> <figma-url>.
+  stories, Figma Code Connect), write/refresh its framework-agnostic spec in
+  packages/ui-spec, and sync its apps/docs page so the public docs site never
+  drifts from the ui-react source. Invoke with /figma-component <ComponentName>
+  <figma-url>.
 ---
 
 # Figma → ui-react component
@@ -21,6 +23,7 @@ Read the workspace contracts first — they override anything here on conflict:
   [packages/ui-react/context/conventions.md](../../../packages/ui-react/context/conventions.md),
   [packages/ui-react/context/figma-code-connect.md](../../../packages/ui-react/context/figma-code-connect.md)
 - ui-spec: [packages/ui-spec/AGENTS.md](../../../packages/ui-spec/AGENTS.md)
+- apps/docs: [apps/docs/AGENTS.md](../../../apps/docs/AGENTS.md) — read before Phase 5.
 
 **Reference implementation to copy patterns from:**
 `packages/ui-react/src/components/ui/button/` and
@@ -367,7 +370,101 @@ baseline; add any new message keys to `.storybook/i18n.ts` (all six locales).
 
 ---
 
-## Phase 5 — Verify & changeset
+## Phase 5 — Sync apps/docs (components section)
+
+**Scope: `packages/ui-react` component pages only** —
+`apps/docs/content/docs/components/<name>.mdx` and its live demo. Never touch
+`content/docs/legacy/` (the deprecated `shadcn-uikit` section — a different
+library, not this skill's concern) or non-component docs (`theming`,
+`packages`, `guides`). This is the page developers read to consume `<name>` in
+their own apps — every run of this skill, new or `--update`, ends by making
+sure that page still tells the truth about the component Phases 1–4 just
+produced. Read `apps/docs/AGENTS.md` for the shadow-root live-demo mechanics
+and `<AutoTypeTable>` path rules before editing.
+
+First, does a page exist for `<name>`?
+
+```bash
+ls apps/docs/content/docs/components/<name>.mdx 2>/dev/null && echo EXISTS || echo MISSING
+```
+
+### Case A — no page exists (new component)
+
+Write the full page — same recipe as `/legacy-component` Phase 5:
+
+1. **Live demo** — `apps/docs/src/components/demos-react/<name>.tsx`:
+   `'use client'`, imports the component from `@acronis-platform/ui-react`
+   (icons from `@acronis-platform/icons-react/<pack>`), exports
+   `<Name>Demo()` rendering a representative composition mirroring the
+   hand-written story. Network-free (no remote images). For portaled
+   overlays (menu/select/tooltip popups), read `useShadowMount()` and pass it
+   as the primitive's `portalContainer`.
+2. **MDX page** — `apps/docs/content/docs/components/<name>.mdx`: `## Usage`
+   prose (what it is, its parts, polymorphism via `render`, which tokens
+   theme it) / `## Examples` (`<DemoReact><<Name>Demo /></DemoReact>` + one
+   fenced `tsx` block per meaningful variant/state, mirroring the hand
+   stories) / `## API Reference` via one
+   `<AutoTypeTable path="../../packages/ui-react/src/components/ui/<name>/<name>.tsx" name="<Name>Props" />`
+   per exported prop interface. If `AutoTypeTable` can't resolve a type
+   (re-exported Base UI props, complex generics, a part with no own
+   interface), add a `.docs.ts` companion next to the component source and
+   point `path` at that instead.
+3. **Nav entry** — add `"<name>"` to the `pages` array in
+   `apps/docs/content/docs/components/meta.json`, under the right section
+   divider (`Buttons & Actions`, `Inputs & Forms`, `Data Display`,
+   `Navigation & Layout`, `Overlays`).
+
+Skip only if the spec's `index.yaml` sets `visibility: internal` or
+`deprecated` — those are intentionally absent from the docs nav (see
+`packages/ui-spec/__tests__/visibility.test.ts`).
+
+### Case B — page already exists (`--update`)
+
+**Don't rewrite it wholesale.** Diff what Phases 1–4 actually changed and
+judge whether the page is now wrong or incomplete — a full-page regen is a
+separate, larger job (like the historical `docs(ui-react): regenerate
+component doc pages from source` pass), not this skill's concern:
+
+```bash
+git diff --stat -- packages/ui-react/src/components/ui/<name>/ packages/ui-spec/components/<name>/
+```
+
+Then check each kind of change this run made against what it implies for the
+docs page:
+
+| Changed this run                                                       | Docs impact                                                                                      | Action                                                                                                                                                                               |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Prop added / removed / renamed, or its type changed                    | `<AutoTypeTable>` reads the real source live — a table pointed at `<name>.tsx` **self-updates**. | **No edit needed**, unless a `.docs.ts` companion is used (static — update it to match) or a wholly new exported prop interface appeared (add a new `<AutoTypeTable>` block for it). |
+| New `variant` / `size` enum value                                      | The API table shows the new value, but no example demonstrates it.                               | Add a fenced example (and extend the live demo if it's worth showing).                                                                                                               |
+| New state / part / structural distinction                              | Same — the table can't show behavior.                                                            | Extend `## Usage` prose + add an example.                                                                                                                                            |
+| Token rename / re-theme (Phase 2) with no prop/behavior change         | Visuals come from the token, not from doc text.                                                  | No edit needed — confirm no prose names the specific `--ui-*` token that got renamed.                                                                                                |
+| Bug fix, no API/behavior change                                        | Docs already described the intended (correct) behavior.                                          | No edit needed, unless the bug was itself documented as "expected" somewhere in prose.                                                                                               |
+| Design-only visual refresh (Phase 1 states/geometry) with the same API | `## Usage` prose about what the component _is_ is unaffected.                                    | No edit needed.                                                                                                                                                                      |
+
+If nothing in the diff crosses a row above, say explicitly that the docs page
+needs no change — don't touch it just to have touched it. If it does, edit
+only the affected section(s) (a sentence in `## Usage`, one new example, the
+`.docs.ts` companion) rather than regenerating the whole file.
+
+> **On a MISSING page during `--update`:** the component predates this
+> skill's docs coverage. Treat it as Case A (write the full page) unless
+> `index.yaml` marks it `internal`/`deprecated`.
+
+### Verify
+
+No test suite here — build-verified, per `apps/docs/AGENTS.md`:
+
+```bash
+pnpm --filter @acronis-platform/uikit-docs typecheck   # demo .tsx compiles
+pnpm --filter @acronis-platform/uikit-docs build       # MDX + AutoTypeTable resolve, page renders
+```
+
+A broken `AutoTypeTable` `path`/`name` or a missing demo import fails the
+**build**, not typecheck — run the build, not just typecheck.
+
+---
+
+## Phase 6 — Verify & changeset
 
 ```bash
 pnpm --filter @acronis-platform/ui-react test
@@ -441,6 +538,11 @@ the committed baselines still pass, and commit no PNGs.
       `<id>--dark.png` committed (orphans deleted).
 - [ ] `<name>.figma.tsx` — `COMPLETE`, validated by `figma:connect`.
 - [ ] `packages/ui-spec/components/<name>/` — 7 files, `ui-spec test` green.
+- [ ] `apps/docs` synced: new component → demo + `.mdx` page + `meta.json` nav
+      entry added; `--update` → existing page's `## Usage`/examples/`.docs.ts`
+      updated only where this run's diff actually changed the prop/variant/
+      state/part surface (explicitly noted as "no change needed" otherwise);
+      `uikit-docs build` passes.
 - [ ] Changeset for `@acronis-platform/ui-react`.
 - [ ] test / typecheck / lint / build all pass; `pnpm -r typecheck` clean.
 
