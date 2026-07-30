@@ -1,0 +1,94 @@
+spec_version: '1.0'
+component: CategoryBar
+
+# Framework-agnostic contract. `size` is the single cva variant axis (its enum
+# is conformance-checked against the cva keys in ui-react). Segment colors come
+# from `config`, not a token tier.
+contract:
+  properties:
+    - name: data
+      type: 'ReadonlyArray<{ key: string; value: number }>'
+      required: true
+      description: >-
+        Ordered segments (left → right). Each `key` indexes `config` for the
+        segment's label and color; each segment's width is its `value` over the
+        sum of all values.
+    - name: config
+      type: ChartConfig
+      required: true
+      description: >-
+        Per-segment map of label / color, keyed by the segment's `key` (from the
+        shared Chart primitives). Colors are caller-supplied (existing `--ui-*`
+        tokens).
+    - name: size
+      type: "'sm' | 'md' | 'lg'"
+      required: false
+      default: "'md'"
+      description: Track height.
+    - name: showLegend
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Render a legend below the bar — a color dot + label per segment, its
+        value, and its share of the total as a percentage.
+    - name: showTooltip
+      type: boolean
+      required: false
+      default: 'true'
+      description: >-
+        Wrap each segment in a hover tooltip (dot + label + value + %).
+    - name: tooltipContent
+      type: '(segment: { key; value; label; percent; color }) => ReactNode'
+      required: false
+      description: >-
+        Custom tooltip content per segment — replaces the default (dot + label +
+        `value · %`) inside the same card. Ignored when showTooltip is false.
+    - name: valueFormatter
+      type: '(value: number) => string'
+      required: false
+      default: 'toLocaleString()'
+      description: Format the numeric value shown in the legend and tooltip.
+    - name: defaultOpenIndex
+      type: number
+      required: false
+      description: >-
+        Render the tooltip for this segment index initially open (for visual
+        regression / testing; the tooltip is otherwise hover-only).
+    - name: aria-label
+      type: string
+      required: false
+      description: >-
+        Accessible summary of the whole bar. Defaults to a locale-neutral
+        `label value` list built from the data; pass a fuller sentence if you
+        have one.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: CategoryBar
+    status: implemented
+    import: "import { CategoryBar } from '@acronis-platform/ui-react'"
+    example: |
+      <CategoryBar
+        config={config}
+        data={[
+          { key: 'passed', value: 68 },
+          { key: 'warnings', value: 22 },
+          { key: 'failed', value: 10 },
+        ]}
+        showLegend
+      />
+  vue:
+    component: AvCategoryBar
+    status: planned
+    import: "import { AvCategoryBar } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvCategoryBar :config="config" :data="data" show-legend />
+  web-components:
+    element: ui-category-bar
+    status: planned
+    import: "import '@acronis-platform/ui-wc/category-bar'"
+    example: |
+      <ui-category-bar></ui-category-bar>

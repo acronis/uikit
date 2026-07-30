@@ -1,0 +1,188 @@
+'use client';
+
+import * as React from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+
+import { cn } from '@/lib/utils';
+import { type ChartConfig } from '../chart';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
+
+// A category bar: a single horizontal bar split into proportional colored
+// segments — one part-to-whole across a handful of categories, in one row
+// (onboarding stages, certification status, a rating scale). Unlike `Meter`
+// (one value per row, stacked into a bar list), all segments share the same bar.
+// It's a plain flex composition, not a recharts chart: each segment's width is
+// `value / total`, so exact proportions and the count/% legend are direct DOM,
+// with no axes/grid to hide. Segment colors are caller-supplied via `config`
+// (existing semantic `--ui-*` tokens); there is no chart palette tier yet.
+
+const defaultFormat = (value: number) => value.toLocaleString();
+
+// Track height only — the flex/rounded/overflow chrome is static.
+const categoryBarVariants = cva('flex w-full overflow-hidden rounded-full bg-input', {
+  variants: {
+    size: {
+      sm: 'h-1.5',
+      md: 'h-2.5',
+      lg: 'h-4',
+    },
+  },
+  defaultVariants: {
+    size: 'md',
+  },
+});
+
+export interface CategoryBarSegment {
+  /** Key into `config` for this segment's label + color. */
+  key: string;
+  /** The segment's value — its width is this over the sum of all values. */
+  value: number;
+}
+
+/** The resolved segment passed to a custom `tooltipContent` renderer. */
+export interface CategoryBarTooltipContext extends CategoryBarSegment {
+  /** Resolved `config` label (falls back to the key). */
+  label: string;
+  /** Share of the total as a rounded percentage (0–100). */
+  percent: number;
+  /** Resolved segment color from `config`. */
+  color?: string;
+}
+
+export interface CategoryBarProps
+  extends Omit<React.ComponentProps<'div'>, 'children'>,
+    VariantProps<typeof categoryBarVariants> {
+  /** Ordered segments (left → right). Widths are proportional to `value`. */
+  data: ReadonlyArray<CategoryBarSegment>;
+  /** Maps each segment `key` to a `label` and `color` (an existing `--ui-*` token). */
+  config: ChartConfig;
+  /** Show the legend below the bar (color dot + label + value + %). */
+  showLegend?: boolean;
+  /** Show a hover tooltip per segment (dot + label + value + %). */
+  showTooltip?: boolean;
+  /**
+   * Custom tooltip content per segment — replaces the default (dot + label +
+   * `value · %`) inside the same card. Ignored when `showTooltip` is false.
+   */
+  tooltipContent?: (segment: CategoryBarTooltipContext) => React.ReactNode;
+  /** Format the numeric value (legend + tooltip). Defaults to `toLocaleString()`. */
+  valueFormatter?: (value: number) => string;
+  /** Render the tooltip for this segment index initially open (VR/testing). */
+  defaultOpenIndex?: number;
+  /**
+   * Accessible summary of the whole bar. Defaults to a `label value` list built
+   * from the data; pass a fuller sentence for screen readers if you have one.
+   */
+  'aria-label'?: string;
+}
+
+const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
+  (
+    {
+      className,
+      data,
+      config,
+      size,
+      showLegend = false,
+      showTooltip = true,
+      tooltipContent,
+      valueFormatter = defaultFormat,
+      defaultOpenIndex,
+      'aria-label': ariaLabel,
+      ...props
+    },
+    ref
+  ) => {
+    const total = data.reduce((sum, seg) => sum + seg.value, 0);
+    const labelFor = (key: string) => String(config[key]?.label ?? key);
+    const pctOf = (value: number) =>
+      total > 0 ? Math.round((value / total) * 100) : 0;
+
+    // A locale-neutral fallback: "<label> <value>" pairs. Consumers can pass a
+    // fuller `aria-label` sentence.
+    const summary =
+      ariaLabel ??
+      data.map((seg) => `${labelFor(seg.key)} ${valueFormatter(seg.value)}`).join(', ');
+
+    return (
+      <div ref={ref} className={cn('flex w-full flex-col gap-3', className)} {...props}>
+        <div className={categoryBarVariants({ size })} role="img" aria-label={summary}>
+          {data.map((seg, index) => {
+            const color = config[seg.key]?.color;
+            // flex-grow proportional to value with a zero basis → widths are
+            // exactly value/total; a zero-value segment collapses.
+            const segment = (
+              <div
+                key={seg.key}
+                className="h-full min-w-0"
+                style={{ flex: `${seg.value} 0 0%`, backgroundColor: color }}
+              />
+            );
+
+            if (!showTooltip) return segment;
+
+            return (
+              <Tooltip key={seg.key} defaultOpen={index === defaultOpenIndex}>
+                <TooltipTrigger render={segment} />
+                <TooltipContent
+                  className={cn(
+                    'border border-border bg-background text-foreground shadow-md',
+                    !tooltipContent && 'flex items-center gap-2'
+                  )}
+                >
+                  {tooltipContent ? (
+                    tooltipContent({
+                      key: seg.key,
+                      value: seg.value,
+                      label: labelFor(seg.key),
+                      percent: pctOf(seg.value),
+                      color,
+                    })
+                  ) : (
+                    <>
+                      <span
+                        className="size-2.5 shrink-0 rounded-full"
+                        style={{ backgroundColor: color }}
+                      />
+                      <span className="font-semibold">{labelFor(seg.key)}</span>
+                      <span className="text-muted-foreground tabular-nums">
+                        {valueFormatter(seg.value)} · {pctOf(seg.value)}%
+                      </span>
+                    </>
+                  )}
+                </TooltipContent>
+              </Tooltip>
+            );
+          })}
+        </div>
+
+        {showLegend && (
+          <ul className="flex flex-wrap justify-between gap-x-6 gap-y-3">
+            {data.map((seg) => (
+              <li key={seg.key} className="flex flex-col gap-1.5">
+                <span className="flex items-center gap-1.5 text-sm leading-none text-muted-foreground">
+                  <span
+                    className="size-2.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: config[seg.key]?.color }}
+                  />
+                  {labelFor(seg.key)}
+                </span>
+                <span className="flex items-baseline gap-1.5 leading-none tabular-nums">
+                  <span className="text-base font-semibold text-foreground">
+                    {valueFormatter(seg.value)}
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    {pctOf(seg.value)}%
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  }
+);
+CategoryBar.displayName = 'CategoryBar';
+
+export { CategoryBar, categoryBarVariants };

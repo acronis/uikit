@@ -267,6 +267,22 @@ describe('cva ↔ contract conformance', () => {
     }
   });
 
+  it('CategoryBar: api.yaml size enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/category-bar/category-bar.tsx'
+      ),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('category-bar').api;
+
+    // `size` (sm / md / lg) is the only cva axis.
+    expect(Object.keys(groups)).toEqual(['size']);
+    expect(groups.size.sort()).toEqual(enumMembers(api, 'size'));
+  });
+
   it('ButtonIcon: api.yaml variant enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(
