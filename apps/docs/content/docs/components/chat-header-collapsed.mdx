@@ -1,0 +1,69 @@
+---
+title: ChatHeaderCollapsed
+description: The header band of the collapsed AI-chat rail, centering one branding glyph.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DemoReact } from '@/components/DemoReact';
+import { ChatHeaderCollapsedDemo } from '@/components/demos-react/chat-header-collapsed';
+
+## Usage
+
+```tsx
+import { ChatHeaderCollapsed } from '@acronis-platform/ui-react';
+```
+
+`ChatHeaderCollapsed` is the header of the collapsed (48px) AI-chat rail: a
+static band with a bottom hairline, centering a single branding glyph composed
+through [`TagIcon`](/components/tag-icon). It holds no tabs and no actions —
+that is its [`ChatHeaderExpanded`](/components/chat-header-expanded) sibling.
+It renders a `<header>` (swap it with the `render` prop) and is purely
+presentational. Themed by the `--ui-chat-*` tokens.
+
+<Callout type="warn">
+  **Interim primitive.** This is an early piece of the AI-chat sidebar shell,
+  built to serve [`AiChat`](/components/ai-chat) rather than as a
+  general-purpose header. Its prop surface is scoped to what the Figma node
+  exposes today and may change as the chat surface is finalized.
+</Callout>
+
+## Examples
+
+<DemoReact>
+  <ChatHeaderCollapsedDemo />
+</DemoReact>
+
+At the top of a collapsed rail, above the stack of
+[`ChatMenuItemCollapsed`](/components/chat-menu-item-collapsed) rows:
+
+```tsx
+import {
+  ChatHeaderCollapsed,
+  ChatMenuItemCollapsed,
+} from '@acronis-platform/ui-react';
+import { AcronisAiMultiIcon } from '@acronis-platform/icons-react/solid-multi';
+import { MessageTextIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<div className="flex w-12 flex-col">
+  <ChatHeaderCollapsed icon={<AcronisAiMultiIcon size={16} />} />
+  <ChatMenuItemCollapsed
+    aria-label="Chat"
+    icon={<MessageTextIcon size={16} />}
+  />
+</div>;
+```
+
+Avoiding a nested `banner` landmark by rendering a plain element:
+
+```tsx
+<ChatHeaderCollapsed render={<div />} icon={<AcronisAiMultiIcon size={16} />} />
+```
+
+## API Reference
+
+### ChatHeaderCollapsed
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/chat-header-collapsed/chat-header-collapsed.tsx"
+  name="ChatHeaderCollapsedProps"
+/>

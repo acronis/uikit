@@ -1,0 +1,143 @@
+---
+title: ChatHeaderExpanded
+description: The header bar of the expanded AI-chat panel — pill tabs plus icon actions.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DemoReact } from '@/components/DemoReact';
+import { ChatHeaderExpandedDemo } from '@/components/demos-react/chat-header-expanded';
+
+## Usage
+
+```tsx
+import {
+  ChatHeaderExpanded,
+  ChatHeaderExpandedTabs,
+  ChatHeaderExpandedTab,
+} from '@acronis-platform/ui-react';
+```
+
+`ChatHeaderExpanded` is the top bar of the expanded AI-chat panel: a pill tab
+group on the inline-start side, icon actions on the inline-end side, on a band
+with a bottom hairline. Tab content is **composed**, not configured — pass
+`ChatHeaderExpandedTabs` / `ChatHeaderExpandedTab` as `children` so labels stay
+under your control (and therefore localizable). It renders a `<header>` (swap it
+with the `render` prop). Themed by the `--ui-chat-*` tokens; the tabs use the
+`--ui-segment-control-*` tier.
+
+<Callout type="warn">
+  **The pill tabs are a placeholder — do not build on them.**
+  `ChatHeaderExpandedTabs` and `ChatHeaderExpandedTab` are a deliberately local
+  stand-in for the standalone `SegmentControl` component, which is still in
+  progress in Figma. They are styled from the real, shipped
+  `--ui-segment-control-*` tokens so they *look* right, but the component
+  boundary is temporary: when `SegmentControl` ships, both parts are deleted and
+  this component composes it instead. They intentionally lack roving-tabindex
+  arrow-key navigation, `aria-controls` → tabpanel wiring, real overflow
+  scrolling, and a disabled item state. For real tab panels use
+  [`Tabs`](/components/tabs).
+</Callout>
+
+## Examples
+
+<DemoReact>
+  <ChatHeaderExpandedDemo />
+</DemoReact>
+
+The default — chat view selected, with a count on the second tab:
+
+```tsx
+<ChatHeaderExpanded>
+  <ChatHeaderExpandedTabs>
+    <ChatHeaderExpandedTab active>Acronis AI</ChatHeaderExpandedTab>
+    <ChatHeaderExpandedTab counter={7}>Tasks</ChatHeaderExpandedTab>
+  </ChatHeaderExpandedTabs>
+</ChatHeaderExpanded>
+```
+
+Selection lives with the consumer — the component keeps no internal state:
+
+```tsx
+const [view, setView] = React.useState<'chat' | 'tasks'>('chat');
+
+<ChatHeaderExpanded hasHistory>
+  <ChatHeaderExpandedTabs>
+    <ChatHeaderExpandedTab
+      active={view === 'chat'}
+      onClick={() => setView('chat')}
+    >
+      Acronis AI
+    </ChatHeaderExpandedTab>
+    <ChatHeaderExpandedTab
+      active={view === 'tasks'}
+      counter={pendingTasks.length}
+      onClick={() => setView('tasks')}
+    >
+      Tasks
+    </ChatHeaderExpandedTab>
+  </ChatHeaderExpandedTabs>
+</ChatHeaderExpanded>;
+```
+
+The overflow affordance — `hasScroll` renders the two chevron buttons pinned to
+the group's inline-end edge:
+
+```tsx
+<ChatHeaderExpandedTabs hasScroll className="max-w-[214px]">
+  <ChatHeaderExpandedTab active>Acronis AI</ChatHeaderExpandedTab>
+  <ChatHeaderExpandedTab counter={7}>Tasks</ChatHeaderExpandedTab>
+  <ChatHeaderExpandedTab>Automations</ChatHeaderExpandedTab>
+</ChatHeaderExpandedTabs>
+```
+
+Localizing the action labels — the English strings are only prop defaults:
+
+```tsx
+<ChatHeaderExpanded
+  hasHistory
+  newChatLabel="Neuer Chat"
+  historyLabel="Chatverlauf"
+>
+  {/* … */}
+</ChatHeaderExpanded>
+```
+
+Avoiding a duplicate `banner` landmark:
+
+```tsx
+<ChatHeaderExpanded render={<div />}>{/* … */}</ChatHeaderExpanded>
+```
+
+## Known gaps
+
+- **The icon actions have no click handlers.** The prop surface is scoped to the
+  Figma node's own properties, so the "New chat" (and `hasHistory` "Chat
+  history") buttons render but cannot be wired yet. A follow-up decides between
+  an `onNewChat` / `onHistory` pair and an `actions` slot.
+- **`hasScroll` is chrome only.** It renders the two scroll buttons but does not
+  scroll or compute overflow — the real `SegmentControl` will own that behavior.
+- **Only the Figma `chat` variant's trailing action is implemented.** The
+  `tasks` variant's `BarsFilter` glyph is not.
+
+## API Reference
+
+### ChatHeaderExpanded
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/chat-header-expanded/chat-header-expanded.tsx"
+  name="ChatHeaderExpandedProps"
+/>
+
+### ChatHeaderExpandedTabs
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/chat-header-expanded/chat-header-expanded.tsx"
+  name="ChatHeaderExpandedTabsProps"
+/>
+
+### ChatHeaderExpandedTab
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/chat-header-expanded/chat-header-expanded.tsx"
+  name="ChatHeaderExpandedTabProps"
+/>

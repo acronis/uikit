@@ -1,0 +1,99 @@
+---
+title: ChatMenuItem
+description: One row of the expanded chat rail — icon, label, and an optional trailing cluster.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DemoReact } from '@/components/DemoReact';
+import { ChatMenuItemDemo } from '@/components/demos-react/chat-menu-item';
+
+## Usage
+
+```tsx
+import { ChatMenuItem, ChatMenuItemExtras } from '@acronis-platform/ui-react';
+```
+
+`ChatMenuItem` is one row of the AI-chat rail while the rail is expanded: a
+`<button>` holding a 16px `icon`, a visible `label`, and — with `hasExtras` — a
+trailing [`ChatMenuItemExtras`](/components/chat-menu-item-extras) cluster you
+compose yourself. The visible `label` is the button's accessible name, so no
+`aria-label` is needed. Themed by the `--ui-chat-*` tokens.
+
+For the collapsed (48px, icon-only) rail use
+[`ChatMenuItemCollapsed`](/components/chat-menu-item-collapsed) instead.
+
+<Callout type="warn">
+  **Interim primitive — the API may change.** This is an early part of the
+  AI-chat sidebar shell, built to serve [`AiChat`](/components/ai-chat) rather
+  than as a general navigation row. Its prop surface is scoped to what the Figma
+  node exposes today: there is no hint/secondary-text slot (the
+  `--ui-chat-menu-item-hint-color` token exists but is unused), and `state`
+  carries only the two values the design signed off. Treat it as provisional
+  until the chat surface is finalized.
+</Callout>
+
+## Examples
+
+<DemoReact>
+  <ChatMenuItemDemo />
+</DemoReact>
+
+A rail list, with the currently-open chat marked:
+
+```tsx
+import { MessageTextIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<div className="flex w-64 flex-col">
+  <ChatMenuItem
+    label="Q3 roadmap"
+    icon={<MessageTextIcon size={16} />}
+    state="active"
+  />
+  <ChatMenuItem label="Assistant" icon={<MessageTextIcon size={16} />} />
+</div>;
+```
+
+A trailing status tag, or a keyboard-shortcut hint — configure the cluster on
+the `ChatMenuItemExtras` element you pass in, not on `ChatMenuItem`:
+
+```tsx
+<ChatMenuItem
+  label="Assistant"
+  icon={<MessageTextIcon size={16} />}
+  hasExtras
+  extras={<ChatMenuItemExtras variant="tag" labelTag="Beta" />}
+/>
+
+<ChatMenuItem
+  label="New chat"
+  icon={<PlusIcon size={16} />}
+  hasExtras
+  extras={<ChatMenuItemExtras variant="shortcut" labelShortcut="⌘N" />}
+/>
+```
+
+## State
+
+`state` has two values:
+
+| `state`  | Meaning                                                                     |
+| -------- | --------------------------------------------------------------------------- |
+| `idle`   | Default. Paints its own `hover` token on `:hover`.                          |
+| `active` | The currently-open chat — a persistent highlight, not a mouse-press effect. |
+
+`state="active"` also sets `aria-current="page"`, matching the convention used
+by [`SidebarPrimary`](/components/sidebar-primary) and
+[`SidebarSecondary`](/components/sidebar-secondary). The Figma component set's
+`hover` and `focused` siblings are interaction states, painted via `:hover` /
+`:focus-visible` against their own tokens rather than exposed as prop values.
+
+## API Reference
+
+### ChatMenuItem
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/chat-menu-item/chat-menu-item.tsx"
+  name="ChatMenuItemProps"
+/>
+
+`chatMenuItemVariants` is exported for composing the row's classes elsewhere.

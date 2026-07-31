@@ -1,0 +1,83 @@
+---
+title: TagIcon
+description: An icon-only tag — a 32px tinted rounded square holding a single 16px glyph.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DemoReact } from '@/components/DemoReact';
+import { TagIconDemo } from '@/components/demos-react/tag-icon';
+
+## Usage
+
+```tsx
+import { TagIcon } from '@acronis-platform/ui-react';
+```
+
+`TagIcon` marks or categorizes something without spending horizontal space on a
+label: a 32px tinted rounded square containing one 16px glyph. It renders a plain
+`<span>` with no role and no text of its own — presentational by default.
+
+It is **not** a wrapper around [`Tag`](/components/tag). `Tag` owns the status
+palette (`--ui-tag-*`), a border, and two heights; `TagIcon` is a fixed 32px
+square tinted from the shared Avatar palette (`--ui-avatar-color-*` for the
+container, `--ui-avatar-label-color-*` for the glyph), which is why `color` names
+a palette scheme rather than a semantic status.
+
+<Callout type="warn">
+  **Only the `violet` scheme ships today.** The Figma component set declares
+  eight `Color` variants (blue, violet, teal, gray, red, orange, yellow, green),
+  but the Avatar token tier defines five and has no blue, gray, or green. Rather
+  than hand-author missing values, `color` is scoped to the reviewed scheme —
+  the rest are additive once design ships their tokens. Expect this prop's union
+  to grow.
+</Callout>
+
+## Examples
+
+<DemoReact>
+  <TagIconDemo />
+</DemoReact>
+
+Decorative — the meaning is carried by the adjacent text, so leave the glyph
+unlabeled and assistive tech skips it:
+
+```tsx
+import { MessageTextIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<div className="flex items-center gap-2">
+  <TagIcon icon={<MessageTextIcon size={16} />} />
+  <span>Chat transcript</span>
+</div>;
+```
+
+Meaningful — the glyph is the only carrier, so label it:
+
+```tsx
+<TagIcon
+  role="img"
+  aria-label="Chat transcript"
+  icon={<MessageTextIcon size={16} />}
+/>
+```
+
+## When not to use
+
+- **You need a text label** — use [`Tag`](/components/tag).
+- **It should be clickable** — use [`ButtonIcon`](/components/button-icon).
+  `TagIcon` has no role, no tab stop, and no activation.
+- **It represents a person or entity** — use [`Avatar`](/components/avatar).
+  `TagIcon` borrows the Avatar color tokens but is a square badge for a glyph,
+  not an identity.
+- **You just need a bare icon** — import it from
+  `@acronis-platform/icons-react` directly; `TagIcon` adds the tinted container.
+
+## API Reference
+
+### TagIcon
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/tag-icon/tag-icon.tsx"
+  name="TagIconProps"
+/>
+
+`tagIconVariants` is exported for composing the container's classes elsewhere.

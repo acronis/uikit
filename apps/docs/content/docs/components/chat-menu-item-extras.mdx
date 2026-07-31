@@ -1,0 +1,82 @@
+---
+title: ChatMenuItemExtras
+description: The trailing affordance on a chat menu item — a status tag or a keyboard shortcut.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DemoReact } from '@/components/DemoReact';
+import { ChatMenuItemExtrasDemo } from '@/components/demos-react/chat-menu-item-extras';
+
+## Usage
+
+```tsx
+import { ChatMenuItemExtras } from '@acronis-platform/ui-react';
+```
+
+`ChatMenuItemExtras` is the trailing cluster at the end of a
+[`ChatMenuItem`](/components/chat-menu-item) row: either a small status
+[`Tag`](/components/tag) (`variant="tag"`) or a keyboard-shortcut label
+(`variant="shortcut"`). It renders a `<span>` and is purely presentational — the
+enclosing menu item is the control.
+
+`variant` is a **discriminant, not a style axis**: the cluster's own layout is
+identical for both values and only the single child changes, so there is no
+`cva` here. Only the label prop matching the active variant is read.
+
+<Callout type="warn">
+  **Interim primitive — the API may change.** This is an early part of the
+  AI-chat sidebar shell, built to serve [`AiChat`](/components/ai-chat). Two
+  things about it are still open with design: it is themed from the
+  `--ui-sidebar-secondary-menu-item-extras-global-*` tokens (the design node's
+  own bindings) rather than a Chat-owned tier, and the Figma set's third
+  `externalLink` variant is deliberately not implemented. Both may change the
+  prop surface.
+</Callout>
+
+## Examples
+
+<DemoReact>
+  <ChatMenuItemExtrasDemo />
+</DemoReact>
+
+Standalone, both variants:
+
+```tsx
+<ChatMenuItemExtras variant="tag" labelTag="Beta" />
+<ChatMenuItemExtras variant="shortcut" labelShortcut="⌘H" />
+```
+
+In place on a menu row — pass it through the row's `extras` prop and set
+`hasExtras`:
+
+```tsx
+<ChatMenuItem
+  label="Assistant"
+  icon={<MessageTextIcon size={16} />}
+  hasExtras
+  extras={<ChatMenuItemExtras variant="tag" labelTag="Beta" />}
+/>
+```
+
+For the primary sidebar's rows, use `SidebarPrimaryMenuItemExtras`
+([`SidebarPrimary`](/components/sidebar-primary)) — the sibling affordance for
+that surface.
+
+## Variants
+
+| `variant`  | Renders                                                              |
+| ---------- | -------------------------------------------------------------------- |
+| `tag`      | Default. A `Tag` (`variant="info" size="sm"`) containing `labelTag`. |
+| `shortcut` | A text label containing `labelShortcut` (e.g. `"⌘H"`).               |
+
+The cluster is end-aligned with a direction-aware flex `justify-end`, so it
+mirrors correctly under `dir="rtl"`.
+
+## API Reference
+
+### ChatMenuItemExtras
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/chat-menu-item-extras/chat-menu-item-extras.tsx"
+  name="ChatMenuItemExtrasProps"
+/>

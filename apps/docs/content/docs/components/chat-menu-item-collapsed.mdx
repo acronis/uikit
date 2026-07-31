@@ -1,0 +1,87 @@
+---
+title: ChatMenuItemCollapsed
+description: One icon-only row of the collapsed chat rail, with an optional alert dot.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DemoReact } from '@/components/DemoReact';
+import { ChatMenuItemCollapsedDemo } from '@/components/demos-react/chat-menu-item-collapsed';
+
+## Usage
+
+```tsx
+import { ChatMenuItemCollapsed } from '@acronis-platform/ui-react';
+```
+
+`ChatMenuItemCollapsed` is one row of the AI-chat rail while the rail is
+collapsed to its 48px width: an icon-only `<button>` with an optional red alert
+dot (`hasAlert`) over the glyph's top-end corner. Themed by the `--ui-chat-*`
+tokens.
+
+<Callout type="warn">
+  **Interim primitive — the API may change.** This is an early part of the
+  AI-chat sidebar shell, built to serve [`AiChat`](/components/ai-chat) rather
+  than as a general icon button (for that, use
+  [`ButtonIcon`](/components/button-icon)). Its prop surface is scoped to what
+  the Figma node exposes today — `variant` has the single `idle` value the
+  design signed off — and should be treated as provisional until the chat
+  surface is finalized.
+</Callout>
+
+<Callout type="info">
+  **An accessible name is required.** The row renders no text, so pass an
+  `aria-label` (or `aria-labelledby`). When `hasAlert` is set, say so in that
+  label — the dot itself is `aria-hidden`.
+</Callout>
+
+## Examples
+
+<DemoReact>
+  <ChatMenuItemCollapsedDemo />
+</DemoReact>
+
+A collapsed rail, one row per destination:
+
+```tsx
+import {
+  ClipboardTextIcon,
+  MessageTextIcon,
+  PlusIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
+
+<div className="flex w-12 flex-col">
+  <ChatMenuItemCollapsed aria-label="New chat" icon={<PlusIcon size={16} />} />
+  <ChatMenuItemCollapsed
+    aria-label="Chat"
+    icon={<MessageTextIcon size={16} />}
+  />
+  <ChatMenuItemCollapsed
+    aria-label="Tasks (new activity)"
+    icon={<ClipboardTextIcon size={16} />}
+    hasAlert
+  />
+</div>;
+```
+
+## Variants
+
+`variant` has a single value, `idle` — the state this node was signed off with.
+The Figma component set's `hover`, `active`, and `focused` siblings are
+interaction states, painted via `:hover` / `:active` / `:focus-visible` against
+their own `--ui-chat-menu-item-color-*` tokens rather than exposed as prop
+values. Adding a second value later is purely additive.
+
+The rail seam is drawn as an `inline-start` border, so it mirrors under
+`dir="rtl"` — as does the alert dot's position.
+
+## API Reference
+
+### ChatMenuItemCollapsed
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/chat-menu-item-collapsed/chat-menu-item-collapsed.tsx"
+  name="ChatMenuItemCollapsedProps"
+/>
+
+`chatMenuItemCollapsedVariants` is exported for composing the row's classes
+elsewhere.

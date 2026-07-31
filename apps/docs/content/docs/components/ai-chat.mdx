@@ -1,0 +1,150 @@
+---
+title: AiChat
+description: The root AI-chat shell — a collapsed rail, a docked panel, or a full-width workspace.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DemoReact } from '@/components/DemoReact';
+import { AiChatDemo } from '@/components/demos-react/ai-chat';
+
+## Usage
+
+```tsx
+import { AiChat } from '@acronis-platform/ui-react';
+```
+
+`AiChat` is the root container of the AI-chat surface. It switches between three
+structurally distinct layouts via `variant`:
+
+| `variant`    | Layout                                                                |
+| ------------ | --------------------------------------------------------------------- |
+| `collapsed`  | A 48px icon-only rail.                                                |
+| `expanded`   | A 384–512px panel with tabbed navigation.                             |
+| `full-width` | Two panes: a fixed-width chat-list sidebar + a full-height chat body. |
+
+It renders an `<aside>` (swap it with the `render` prop) and is assembled from
+already-shipped parts — [`ChatHeaderCollapsed`](/components/chat-header-collapsed),
+[`ChatHeaderExpanded`](/components/chat-header-expanded),
+[`ChatMenuItem`](/components/chat-menu-item),
+[`ChatMenuItemCollapsed`](/components/chat-menu-item-collapsed), and
+[`ChatMenuItemExtras`](/components/chat-menu-item-extras). Themed by the
+`--ui-chat-*` tokens.
+
+<Callout type="warn">
+  **Interim component — the API will change.** `AiChat` ships as an early
+  sidebar primitive, not a finished chat product surface: its spec is `status:
+  draft`. `variant` and `children` (the feed) plus the label props are the
+  entire content surface — there is **no** API yet for a real chat-history list,
+  a per-conversation title bound to a conversation, or a configurable tab set,
+  and the expanded header's tabs are themselves a
+  [placeholder](/components/chat-header-expanded) standing in for a future
+  `SegmentControl`. Don't build consumer-facing content configuration on top of
+  it until those slots exist.
+</Callout>
+
+## Examples
+
+<DemoReact>
+  <AiChatDemo />
+</DemoReact>
+
+The default (`full-width`) layout, with feed content:
+
+```tsx
+<AiChat>
+  <ConversationFeed messages={messages} />
+</AiChat>
+```
+
+The collapsed rail — `children` is not rendered here, the rail has no room for
+it:
+
+```tsx
+<AiChat variant="collapsed" />
+```
+
+Uncontrolled, with the draggable resize edge. Every footer/rail button switches
+variant, and dragging the panel's start border resizes it live within
+`expanded`'s 384–512px range:
+
+```tsx
+<AiChat defaultVariant="expanded" resizable>
+  <ConversationFeed messages={messages} />
+</AiChat>
+```
+
+Controlled — the component never changes its own variant, it only reports the
+requested one:
+
+```tsx
+const [variant, setVariant] = React.useState<AiChatVariant>('expanded');
+
+<AiChat variant={variant} onVariantChange={setVariant} resizable>
+  <ConversationFeed messages={messages} />
+</AiChat>;
+```
+
+Localizing the built-in labels — every string `AiChat` renders on its own is a
+prop default, so override the ones you need:
+
+```tsx
+<AiChat
+  variant="expanded"
+  tasksTabLabel="Aufgaben"
+  maximizeChatLabel="Chat maximieren"
+  collapseChatLabel="Chat einklappen"
+  conversationTitle={conversation.title}
+>
+  <ConversationFeed messages={messages} />
+</AiChat>
+```
+
+Swapping the root element (to avoid a second `complementary` landmark, for
+example):
+
+```tsx
+<AiChat render={<div />}>{/* … */}</AiChat>
+```
+
+## Resize behavior
+
+With `resizable`, a `role="separator"` handle renders on the panel's
+inline-start border for `collapsed` and `expanded` (never for `full-width` — a
+takeover layout, not a split):
+
+- **Drag** resizes `expanded` live, clamped to 384–512px. Dragging past the
+  192px floor snaps to `variant="collapsed"`; dragging back out past the same
+  threshold re-expands — the same collapse-on-drag idiom
+  [`SidebarSecondary`](/components/sidebar-secondary) uses.
+- **Double-click** resets to the default width (512px), expanding first if
+  collapsed.
+- **`ArrowLeft` / `ArrowRight`** resize by 16px (mirrored under `dir="rtl"`);
+  shrinking past the floor snaps to `collapsed`. **`Home`** resets the width.
+
+## Known gaps
+
+- **The `⌘H` / `⌘C` / `⌘N` hints are text only.** They are rendered as
+  shortcut labels but are not bound as real keyboard shortcuts — binding them
+  without a confirmed interaction model would risk clashing with a consumer
+  app's own bindings. Wire the equivalent actions yourself via
+  `onVariantChange` if you need them.
+- **Every built-in string is a prop with an English default.** There is no i18n
+  runtime in this library — localize by passing the props listed in the API
+  reference below. The one exception is the resize handle's default tooltip
+  ("Resize: Drag / Reset size: Double click"), which has no per-string props:
+  replace the whole node via `resizeTooltip`, or pass `resizeTooltip={null}` to
+  hide it.
+- **The feed has no live region.** If conversation content streams in, the
+  component you pass as `children` owns its own `aria-live` behavior.
+
+## API Reference
+
+### AiChat
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/ai-chat/ai-chat.tsx"
+  name="AiChatProps"
+/>
+
+`AiChatVariant` (`'collapsed' | 'expanded' | 'full-width'`) is exported
+alongside the component for typing controlled state.
