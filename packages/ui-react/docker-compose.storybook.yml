@@ -34,6 +34,10 @@ services:
     command: pnpm exec test-storybook --url http://storybook:6006 --maxWorkers=4
     environment:
       - STORYBOOK_COLOR_MODE=${STORYBOOK_COLOR_MODE:-light}
+      # Forwarded (not inherited automatically by compose) so Jest's CI-mode
+      # snapshot handling is active in the container, matching real CI — a
+      # missing baseline fails the run instead of being written and passing.
+      - CI=${CI:-true}
     depends_on:
       storybook:
         condition: service_healthy

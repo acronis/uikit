@@ -37,6 +37,14 @@ COPY packages/ui-react/.storybook ./packages/ui-react/.storybook
 
 WORKDIR /app/packages/ui-react
 
+# Jest (via @storybook/test-runner) only refuses to write a NEW baseline for a
+# missing snapshot when it detects CI mode (ci-info reads this var) — default it
+# on so a docker-compose invocation with no explicit CI forwarding still fails
+# loudly on a missing baseline instead of silently creating one. Overridable via
+# docker-compose's `environment:` (e.g. the update override doesn't need to
+# touch this — `--updateSnapshot` wins over CI mode regardless).
+ENV CI=true
+
 # storybook-static/ is mounted as a read-only volume from the host at runtime.
 # See docker-compose.storybook.yml for the volume declaration.
 CMD ["pnpm", "exec", "http-server", "storybook-static", "-p", "6006", "--silent"]
