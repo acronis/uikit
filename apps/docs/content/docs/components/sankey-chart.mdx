@@ -17,8 +17,8 @@ import type { ChartConfig } from '@acronis-platform/ui-react';
 primitives, built on recharts' `Sankey`. Give it a graph (`data.nodes` +
 `data.links`) and a per-node `config` — it renders a themed flow diagram where
 each link's width is proportional to its value and each ribbon is tinted by its
-**target** node, so you don't hand-compose recharts children. There are no axes,
-grid, or legend.
+**target** node, so you don't hand-compose recharts children. There are no axes
+or grid; a count/% legend is opt-in via `showLegend` (see below).
 
 Node `name`s are the color keys, **keyed into `config`**: `SankeyChart` turns them
 into the `--color-<name>` custom properties the node bars fill from. They must be
@@ -86,6 +86,35 @@ const data = {
   ],
 };
 ```
+
+### Tooltip
+
+`showTooltip` (on by default) shows a hover card for the hovered node or link —
+a color dot matching the ribbon, the `source → target` config labels, and the
+value. Set `showTooltip={false}` to drop it, or pass `tooltipContent` to replace
+the card's content with your own render function while keeping the same trigger
+behavior:
+
+```tsx
+<SankeyChart
+  config={config}
+  data={data}
+  tooltipContent={({ active, payload }) =>
+    active && payload?.length ? (
+      <div className="rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs">
+        {Number(payload[0]?.value).toLocaleString()} users
+      </div>
+    ) : null
+  }
+/>;
+```
+
+The tooltip is pointer-only: recharts' `Sankey` has no accessibility layer (no
+keyboard focus), so keep the values reachable in text — `showLegend`, a caption,
+or an adjacent table — rather than only on hover.
+
+`config` colors can also be per-theme (`theme: { light, dark }`) instead of a
+flat `color`; both node bars and the legend/tooltip dots resolve either form.
 
 ## API Reference
 

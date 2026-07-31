@@ -64,6 +64,30 @@ the token is**, not by habit:
   may define a distinct per-state value, and only the referenced token is
   honored. See `components/ui/button/button.tsx`.
 
+## Storybook story titles
+
+A story's `title` puts it in one of these top-level sections — pick by what the
+component _is_, not by where its files live:
+
+- **`UI/<Component>`** — the default. Every primitive and composite control:
+  buttons, inputs, overlays, layout primitives, navigation, feedback.
+- **`Widgets/<Component>`** — dashboard/data-display widgets: every chart
+  (`Chart` primitives + the per-type charts), plus the small dashboard readouts
+  built to sit next to them (`Meter`, `Metric`, `TrendIndicator`, `CategoryBar`,
+  `ChartState`). These are read-only data presentations composed for a dashboard
+  surface, not controls a user operates.
+- **`Foundations/*`**, **`Themes/*`**, **`Icons/*`** — token/theme/icon
+  catalogues, not components.
+
+The section is the only thing that differs; everything else (one `__stories__/`
+directory per component, autodocs, VR baselines) is the same. Renaming a title
+renames every VR baseline file for that component, so regenerate the baselines
+in the same change.
+
+`WidgetPlaceholder` (a dashboard widget's empty state, so arguably `Widgets/`)
+still sits under `UI/`. Moving it is a rename of its eight baselines with no
+behavior change — worth doing on its own, not folded into an unrelated PR.
+
 ## Accessibility
 
 - Lean on Base UI primitives for keyboard nav, focus management, and ARIA.

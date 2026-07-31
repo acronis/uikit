@@ -4,7 +4,12 @@ import * as React from 'react';
 import { Sankey as RechartsSankey, Rectangle } from 'recharts';
 
 import { cn } from '@/lib/utils';
-import { ChartContainer, ChartTooltip, type ChartConfig } from '../chart';
+import {
+  ChartContainer,
+  ChartStyle,
+  ChartTooltip,
+  type ChartConfig,
+} from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives — a flow
 // diagram where link width is proportional to the value flowing between nodes.
@@ -68,6 +73,7 @@ export interface SankeyChartProps
   showLabels?: boolean;
   /** Render a legend (color dot + label + value + % per node) below the chart. */
   showLegend?: boolean;
+  /** Show a hover tooltip on nodes and links (dot + `source → target` + value). */
   showTooltip?: boolean;
   /**
    * Replace the default tooltip. Pass a configured `ChartTooltipContent`
@@ -188,22 +194,28 @@ function SankeyLinkShape({
 // Parse that name to a color dot (the target node's color) + the mapped config
 // labels joined with an arrow + the value — driven by `config`, so it's reliable
 // where the shared ChartTooltipContent can't resolve the Sankey payload.
-function makeSankeyTooltip(
+//
+// Exported (module-only, not from the package barrel) so its branches can be
+// unit-tested directly: recharts can't lay out a Sankey in happy-dom, and its
+// hover tooltip has no statically-open form the component exposes, so rendering
+// `<SankeyChart>` never reaches this code.
+export function makeSankeyTooltip(
   config: ChartConfig,
   links: ReadonlyArray<SankeyChartLink>,
   nodes: ReadonlyArray<SankeyChartNode>
 ) {
-  const labelFor = (key: string) => String(config[key]?.label ?? key);
+  const labelFor = (key: string): React.ReactNode => config[key]?.label ?? key;
   // Resolve each link's dot color by its "source - target" name (which is the
-  // tooltip item's name): the link's own color if set, else the target's.
-  const styleByName = new Map<string, { color?: string; opacity: number }>();
+  // tooltip item's name): the link's own color if set, else the target's, via
+  // the `--color-<name>` bridge so a per-theme config resolves too.
+  const styleByName = new Map<string, { color: string; opacity: number }>();
   for (const link of links) {
     const source = nodes[link.source]?.name ?? '';
     const target = nodes[link.target]?.name ?? '';
     // Mirror the ribbon: an explicit color renders full-opacity; the default
     // target tint renders at 35%.
     styleByName.set(source + ' - ' + target, {
-      color: link.color ?? config[target]?.color,
+      color: link.color ?? `var(--color-${target})`,
       opacity: link.color ? 1 : 0.35,
     });
   }
@@ -222,26 +234,47 @@ function makeSankeyTooltip(
     const item = payload[0];
     const parts = String(item?.name ?? '').split(' - ');
     const targetKey = parts[parts.length - 1];
-    const label = parts.map((key) => labelFor(key)).join(' → ');
     const linkStyle = styleByName.get(String(item?.name ?? ''));
-    const dotColor = linkStyle?.color ?? config[targetKey]?.color;
+    const dotColor = linkStyle?.color ?? `var(--color-${targetKey})`;
     const dotOpacity = linkStyle?.opacity ?? 1;
     const value = item?.value;
     return (
-      <div className="flex items-center gap-2 rounded-[var(--ui-tooltip-container-border-radius)] border border-border bg-background px-2.5 py-1.5 text-xs text-foreground shadow-md">
+      <div className="flex items-center gap-2 rounded-[var(--ui-tooltip-container-border-radius)] border border-border bg-background px-[var(--ui-tooltip-container-padding-x)] py-[var(--ui-tooltip-container-padding-y)] text-xs text-foreground shadow-md">
         <span
           className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
           style={{ backgroundColor: dotColor, opacity: dotOpacity }}
         />
-        <span className="text-muted-foreground">{label}</span>
+        <span className="text-muted-foreground">
+          {/* A config label can be any ReactNode, so the arrow-joined label is
+              built as nodes rather than stringified. */}
+          {parts.map((key, index) => (
+            <React.Fragment key={`${key}-${index}`}>
+              {index > 0 && ' → '}
+              {labelFor(key)}
+            </React.Fragment>
+          ))}
+        </span>
         {value != null && (
           <span className="ms-2 font-medium tabular-nums">
-            {typeof value === 'number' ? value.toLocaleString() : String(value)}
+            {formatTooltipValue(value)}
           </span>
         )}
       </div>
     );
   };
+}
+
+// recharts types a tooltip item's value as a scalar *or* a range tuple; a plain
+// `String()` would print "1,2" for the tuple, so format each part and join.
+function formatTooltipValue(
+  value: number | string | ReadonlyArray<number | string>
+): string {
+  if (Array.isArray(value)) {
+    return value.map((part) => formatTooltipValue(part)).join(' – ');
+  }
+  return typeof value === 'number'
+    ? value.toLocaleString()
+    : String(value as string);
 }
 
 const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
@@ -262,6 +295,9 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
     },
     ref
   ) => {
+    const uniqueId = React.useId();
+    const chartId = `chart-${uniqueId.replace(/:/g, '')}`;
+
     // Node indices that appear as a link `source` have outgoing flow — used by
     // the node renderer to place the label on the readable side.
     const sourceIndices = React.useMemo(
@@ -300,7 +336,16 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
     }, [data]);
 
     return (
-      <div ref={ref} className={cn('flex flex-col', className)} {...props}>
+      <div
+        ref={ref}
+        // The legend sits outside `ChartContainer`, so the root carries its own
+        // `--color-<name>` scope for it (the plot and the recharts-portaled
+        // tooltip resolve theirs from ChartContainer's).
+        data-chart={chartId}
+        className={cn('flex flex-col', className)}
+        {...props}
+      >
+        <ChartStyle id={chartId} config={config} />
         <ChartContainer config={config} className="min-h-0 flex-1">
           <RechartsSankey
             data={data as { nodes: SankeyChartNode[]; links: SankeyChartLink[] }}
@@ -316,7 +361,11 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
             // positions every node by its distance from the source, keeping the
             // flow's columns intact.
             align="left"
-            margin={{ top: 8, right: 120, bottom: 8, left: 24 }}
+            // Node labels never extend past the plot's right edge: a node in the
+            // last column has no outgoing links, so its label is drawn to the
+            // LEFT of its bar (see the node renderer). Only a small gutter is
+            // needed here — a wide reserve would just shrink the diagram.
+            margin={{ top: 8, right: 24, bottom: 8, left: 24 }}
           >
             {showTooltip && (
               <ChartTooltip content={tooltipContent ?? defaultTooltip} />
@@ -329,7 +378,7 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
               <div key={name} className="flex items-center gap-2">
                 <span
                   className="size-2.5 shrink-0 rounded-full"
-                  style={{ backgroundColor: config[name]?.color }}
+                  style={{ backgroundColor: `var(--color-${name})` }}
                 />
                 <span className="truncate text-muted-foreground">
                   {config[name]?.label ?? name}

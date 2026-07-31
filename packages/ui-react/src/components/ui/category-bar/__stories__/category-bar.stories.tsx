@@ -146,9 +146,3 @@ export const CustomTooltipOpen: Story = {
     ),
   },
 };
-
-// Chrome off — no legend, no tooltip triggers — so a toggle silently becoming a
-// no-op changes this baseline (the bar alone).
-export const NoChrome: Story = {
-  args: { showLegend: false, showTooltip: false },
-};
