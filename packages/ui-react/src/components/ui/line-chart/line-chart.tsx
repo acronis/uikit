@@ -4,6 +4,7 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import {
   Area,
+  Brush,
   CartesianGrid,
   ComposedChart,
   LabelList,
@@ -22,6 +23,7 @@ import {
   ChartTooltipContent,
   resolveAxisDomain,
   resolveAnimation,
+  resolveBrushProps,
   toLabelFormatter,
   resolveLabelFillClass,
   CHART_LABEL_MARGIN,
@@ -31,6 +33,7 @@ import {
   type ChartTooltipContentProps,
   type CartesianChartProps,
   type ChartAnimationProps,
+  type ChartBrushProps,
   type ChartDataLabelProps,
   type CartesianLabelPosition,
 } from '../chart';
@@ -118,6 +121,7 @@ export interface LineChartProps
     VariantProps<typeof lineChartVariants>,
     CartesianChartProps,
     ChartAnimationProps,
+    ChartBrushProps,
     ChartDataLabelProps {
   /** Row-per-point data. Each object holds the category key + one numeric field per series (`null` breaks the line unless `connectNulls`). */
   data: ReadonlyArray<Record<string, string | number | null>>;
@@ -198,6 +202,9 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       showLabels = false,
       labelPosition,
       labelFormatter,
+      showBrush = false,
+      brushHeight,
+      brushAriaLabel,
       ...props
     },
     ref
@@ -409,6 +416,13 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                 </Line>
               );
             })}
+            {showBrush && (
+              <Brush
+                dataKey={xKey}
+                tickFormatter={xTickFormatter}
+                {...resolveBrushProps({ brushHeight, brushAriaLabel })}
+              />
+            )}
           </RootChart>
         </ChartContainer>
       </div>

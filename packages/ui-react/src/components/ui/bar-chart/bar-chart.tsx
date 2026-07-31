@@ -5,6 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import {
   Bar,
   BarChart as RechartsBarChart,
+  Brush,
   CartesianGrid,
   LabelList,
   ReferenceLine,
@@ -21,6 +22,7 @@ import {
   ChartTooltipContent,
   resolveAxisDomain,
   resolveAnimation,
+  resolveBrushProps,
   toLabelFormatter,
   resolveLabelFillClass,
   resolveCartesianLabelPosition,
@@ -28,6 +30,7 @@ import {
   type ChartConfig,
   type CartesianChartProps,
   type ChartAnimationProps,
+  type ChartBrushProps,
   type ChartDataLabelProps,
   type CartesianLabelPosition,
 } from '../chart';
@@ -104,6 +107,7 @@ export interface BarChartProps
     VariantProps<typeof barChartVariants>,
     CartesianChartProps,
     ChartAnimationProps,
+    ChartBrushProps,
     ChartDataLabelProps {
   /** Row-per-category data. Each object holds the category key + one numeric field per series. */
   data: ReadonlyArray<Record<string, string | number>>;
@@ -173,6 +177,9 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       showLabels = false,
       labelPosition,
       labelFormatter,
+      showBrush = false,
+      brushHeight,
+      brushAriaLabel,
       ...props
     },
     ref
@@ -375,6 +382,17 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                 />
               );
             })}
+            {showBrush && (
+              <Brush
+                dataKey={xKey}
+                // The brush slices rows by index, so its captions come from
+                // whichever axis holds the categories — Y for horizontal bars.
+                tickFormatter={
+                  orientation === 'horizontal' ? yTickFormatter : xTickFormatter
+                }
+                {...resolveBrushProps({ brushHeight, brushAriaLabel })}
+              />
+            )}
           </RechartsBarChart>
         </ChartContainer>
       </div>

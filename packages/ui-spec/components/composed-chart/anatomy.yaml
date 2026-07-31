@@ -13,6 +13,7 @@ schematic: |
         series:  one <Bar> / <Line> / <Area> per series[] entry (per its type)
         tooltip: <ChartTooltip> → tooltip-content   (hover card)
         legend:  <ChartLegend>  → legend-content    (per-series swatch + label)
+        brush:   <Brush>                            (only when showBrush)
 
 root:
   element: div
@@ -60,6 +61,12 @@ parts:
       `curve`), or `<Line>` (curved by `curve`). Rendered in the caller's
       `series` order — later entries paint on top. Each paints from its
       `--color-<key>` var.
+  - id: brush
+    element: g
+    description: >-
+      `<Brush>` — the range selector rendered beneath the plot when `showBrush`
+      is set. `brushHeight` sizes the strip; the handles and the range captions
+      take the muted text token, the strip its secondary-surface background.
   - id: tooltip-content
     element: div
     description: >-

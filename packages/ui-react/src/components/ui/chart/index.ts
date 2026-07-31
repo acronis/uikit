@@ -22,10 +22,13 @@ export {
   toLabelFormatter,
   resolveLabelFillClass,
   resolveCartesianLabelPosition,
+  resolveBrushProps,
   CHART_LABEL_MARGIN,
   CHART_LABEL_FILL_CLASS,
   CHART_LABEL_FILL_ON_SERIES_CLASS,
   CHART_LABEL_FONT_SIZE,
+  CHART_BRUSH_HEIGHT,
+  CHART_BRUSH_ARIA_LABEL,
 } from './chart-format';
 export type {
   TickFormatter,
@@ -39,4 +42,6 @@ export type {
   CartesianLabelPosition,
   PolarLabelPosition,
   ChartLabelPosition,
+  ChartBrushProps,
+  ResolvedBrush,
 } from './chart-format';

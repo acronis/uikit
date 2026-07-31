@@ -20,6 +20,13 @@ tokens:
     description: >-
       Muted tooltip/legend label text and axis tick labels
       (text-muted-foreground / fill-muted-foreground).
+  - name: --ui-text-on-surface-secondary
+    affects: brush
+    description: >-
+      The range brush's border, its handle fill and its range captions — recharts
+      derives all three from the single `stroke` prop. A mid-grey text token
+      rather than the border one so the handles' hardcoded white grip lines stay
+      visible; it is theme-stable, so they read in light and dark alike.
   - name: --ui-border-on-surface-border
     affects: grid
     description: >-
@@ -27,4 +34,7 @@ tokens:
       (border-border / stroke-border).
   - name: --ui-background-surface-secondary
     affects: series
-    description: Recharts muted fills — tooltip cursor behind a hovered category (fill-muted).
+    description: Recharts muted fills — the tooltip cursor behind a hovered category (fill-muted).
+  - name: --ui-background-surface-secondary
+    affects: brush
+    description: The range brush strip's background (recharts `fill`).

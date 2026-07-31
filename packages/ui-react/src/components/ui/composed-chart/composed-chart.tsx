@@ -4,6 +4,7 @@ import * as React from 'react';
 import {
   Area,
   Bar,
+  Brush,
   CartesianGrid,
   ComposedChart as RechartsComposedChart,
   LabelList,
@@ -21,6 +22,7 @@ import {
   ChartTooltipContent,
   resolveAxisDomain,
   resolveAnimation,
+  resolveBrushProps,
   toLabelFormatter,
   resolveLabelFillClass,
   CHART_LABEL_MARGIN,
@@ -28,6 +30,7 @@ import {
   type ChartConfig,
   type CartesianChartProps,
   type ChartAnimationProps,
+  type ChartBrushProps,
   type ChartDataLabelProps,
   type CartesianLabelPosition,
   type ChartYAxisTarget,
@@ -75,6 +78,7 @@ export interface ComposedChartProps
     CartesianChartProps,
     SecondaryYAxisProps,
     ChartAnimationProps,
+    ChartBrushProps,
     ChartDataLabelProps {
   /** Row-per-category data. Each object holds `xKey` + one numeric field per series. */
   data: ReadonlyArray<Record<string, string | number>>;
@@ -160,6 +164,9 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       showLabels = false,
       labelPosition,
       labelFormatter,
+      showBrush = false,
+      brushHeight,
+      brushAriaLabel,
       ...props
     },
     ref
@@ -379,6 +386,13 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                 </Line>
               );
             })}
+            {showBrush && (
+              <Brush
+                dataKey={xKey}
+                tickFormatter={xTickFormatter}
+                {...resolveBrushProps({ brushHeight, brushAriaLabel })}
+              />
+            )}
           </RechartsComposedChart>
         </ChartContainer>
       </div>

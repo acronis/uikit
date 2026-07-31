@@ -75,6 +75,9 @@ const meta = {
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
+    showBrush: { control: 'boolean' },
+    brushHeight: { control: { type: 'number', min: 16, max: 80 } },
+    brushAriaLabel: { control: 'text' },
     showLabels: { control: 'boolean' },
     labelPosition: {
       control: 'select',
@@ -369,5 +372,35 @@ export const StackedLabels: Story = {
     layout: 'stacked',
     showLabels: true,
     labelFormatter: formatCompactNumber,
+  },
+};
+
+// A longer series than the six-point default, so the brush has a range worth
+// zooming into. Built from a formula rather than 24 literal rows — it stays
+// deterministic, which the visual baseline requires.
+const weeklyData = Array.from({ length: 24 }, (_, index) => ({
+  month: `W${index + 1}`,
+  desktop: 150 + ((index * 37) % 120),
+  mobile: 90 + ((index * 23) % 80),
+}));
+
+// `showBrush` adds a range selector under the plot: drag a handle (or the
+// selected window itself) to zoom the series into a slice of the data.
+export const RangeBrush: Story = {
+  args: {
+    data: weeklyData,
+    dataKeys: ['desktop', 'mobile'],
+    showBrush: true,
+  },
+};
+
+// The brush always reads left-to-right, but for horizontal bars the categories
+// live on the Y axis — so its captions come from `yTickFormatter`, not `x`.
+export const RangeBrushHorizontal: Story = {
+  args: {
+    data: weeklyData,
+    dataKeys: ['desktop'],
+    orientation: 'horizontal',
+    showBrush: true,
   },
 };

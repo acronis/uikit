@@ -6,9 +6,12 @@ import {
   formatPercent,
   resolveAnimation,
   resolveAxisDomain,
+  resolveBrushProps,
   resolveCartesianLabelPosition,
   resolveLabelFillClass,
   toLabelFormatter,
+  CHART_BRUSH_ARIA_LABEL,
+  CHART_BRUSH_HEIGHT,
   CHART_LABEL_FILL_CLASS,
   CHART_LABEL_FILL_ON_SERIES_CLASS,
 } from '../chart-format';
@@ -284,5 +287,47 @@ describe('resolveCartesianLabelPosition', () => {
         ).toBe('insideEnd');
       }
     }
+  });
+});
+
+describe('resolveBrushProps', () => {
+  it('falls back to the shared brush height', () => {
+    expect(resolveBrushProps({}).height).toBe(CHART_BRUSH_HEIGHT);
+    expect(resolveBrushProps({ brushHeight: undefined }).height).toBe(
+      CHART_BRUSH_HEIGHT
+    );
+  });
+
+  it('honors a caller height', () => {
+    expect(resolveBrushProps({ brushHeight: 48 }).height).toBe(48);
+  });
+
+  // recharts drops the brush entirely for height <= 0, so passing one through
+  // would turn `showBrush` into a silent no-op rather than a sized-down strip.
+  it('falls back rather than letting a non-positive height erase the brush', () => {
+    for (const brushHeight of [0, -1, -28]) {
+      expect(resolveBrushProps({ brushHeight }).height).toBe(CHART_BRUSH_HEIGHT);
+    }
+  });
+
+  // recharts' own defaults are the literals '#fff' / '#666', which ignore the
+  // theme entirely — both have to be replaced with token references or the brush
+  // stays light in dark mode.
+  it('drives both colors from --ui-* tokens', () => {
+    const { fill, stroke } = resolveBrushProps({});
+    expect(fill).toMatch(/^var\(--ui-[a-z-]+\)$/);
+    expect(stroke).toMatch(/^var\(--ui-[a-z-]+\)$/);
+    expect(fill).not.toBe(stroke);
+  });
+
+  // Without an explicit ariaLabel recharts names both handles from a `name`
+  // field on the data row — which our charts never require, so it announces
+  // "Min value: undefined, Max value: undefined".
+  it('always names the handles, and lets the caller override the default', () => {
+    expect(resolveBrushProps({}).ariaLabel).toBe(CHART_BRUSH_ARIA_LABEL);
+    expect(resolveBrushProps({}).ariaLabel).not.toMatch(/undefined/);
+    expect(
+      resolveBrushProps({ brushAriaLabel: 'Selector de rango' }).ariaLabel
+    ).toBe('Selector de rango');
   });
 });

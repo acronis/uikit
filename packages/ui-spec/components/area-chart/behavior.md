@@ -87,3 +87,21 @@ Scenario: Reduced motion
   Then the entrance animation does not play and the series render at their final geometry
   And the same applies when rendering on the server
 ```
+
+```gherkin
+Scenario: Range brush
+  Given showBrush is true
+  Then a brush strip renders beneath the plot with a handle at each end
+  And dragging a handle (or the selected window) zooms the series to that slice
+  And the category axis and tooltip follow the selected range
+  And the brush renders whether or not the category axis is shown
+  And unset renders no brush
+```
+
+```gherkin
+Scenario: Range brush keyboard and accessible name
+  Given showBrush is true
+  Then each of the two handles is reachable by Tab
+  And the focused handle moves one row per left/right arrow key press
+  And each handle exposes brushAriaLabel as its accessible name
+```

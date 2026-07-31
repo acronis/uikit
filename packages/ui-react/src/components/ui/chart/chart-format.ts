@@ -398,6 +398,85 @@ export function toLabelFormatter(
     value == null ? '' : formatter(value as number | string);
 }
 
+/**
+ * Range-brush props for the cartesian charts that support one — `BarChart`,
+ * `LineChart`, `AreaChart`, `ComposedChart`. Deliberately not folded into
+ * `CartesianChartProps`: `ScatterChart` plots a continuous X (the brush indexes
+ * rows, not values) and `Histogram` / `ConfidenceCone` render a derived series,
+ * so a brush over their row order would slice the wrong thing.
+ */
+export interface ChartBrushProps {
+  /**
+   * Render a range brush beneath the chart — drag its handles (or the selected
+   * window) to zoom the series to a slice of the data. Defaults to `false`.
+   */
+  showBrush?: boolean;
+  /** Height of the brush strip in px. Defaults to 28. */
+  brushHeight?: number;
+  /**
+   * Accessible name for the brush's two range handles. Both are focusable
+   * `role="slider"` elements, so they need one. Defaults to
+   * `'Chart range selector'`.
+   */
+  brushAriaLabel?: string;
+}
+
+/**
+ * Height of the brush strip. recharts' own default is 40, which eats an eighth
+ * of a 320px-tall dashboard widget; 28 still fits the travellers and the
+ * range captions.
+ */
+export const CHART_BRUSH_HEIGHT = 28;
+
+/**
+ * Accessible name for the brush handles. recharts' own fallback is
+ * `"Min value: ".concat(start, ", Max value: ").concat(end)`, where both halves
+ * come from a `name` property on the data row — a field none of our charts
+ * require, so it announces "Min value: undefined, Max value: undefined". Always
+ * pass `ariaLabel` to suppress it.
+ */
+export const CHART_BRUSH_ARIA_LABEL = 'Chart range selector';
+
+/** The resolved recharts brush props to spread onto a `<Brush>`. */
+export interface ResolvedBrush {
+  height: number;
+  fill: string;
+  stroke: string;
+  travellerWidth: number;
+  ariaLabel: string;
+}
+
+/**
+ * Theme + size a recharts `<Brush>` from the shared `ChartBrushProps`.
+ *
+ * recharts derives the *whole* brush from two color props, so both have to be
+ * chosen for every element they reach (`cartesian/Brush.js`):
+ * - `fill` paints only the strip's background rect.
+ * - `stroke` paints its border, the traveller handles' **fill**, the selected
+ *   window at 20% opacity, and the range caption text.
+ *
+ * Hence the mid-grey text token rather than the border one: the travellers are
+ * solid `stroke`-colored rects with two hardcoded `#fff` grip lines drawn on
+ * top, so a pale stroke would render the grips invisible in light mode. That
+ * token is theme-stable (same grey in light and dark), and white grips read
+ * against it either way.
+ */
+export function resolveBrushProps({
+  brushHeight,
+  brushAriaLabel = CHART_BRUSH_ARIA_LABEL,
+}: Omit<ChartBrushProps, 'showBrush'>): ResolvedBrush {
+  return {
+    // recharts drops the brush entirely when height <= 0, which would turn
+    // `showBrush` into a silent no-op — treat a non-positive height as unset.
+    height:
+      brushHeight != null && brushHeight > 0 ? brushHeight : CHART_BRUSH_HEIGHT,
+    fill: 'var(--ui-background-surface-secondary)',
+    stroke: 'var(--ui-text-on-surface-secondary)',
+    travellerWidth: 8,
+    ariaLabel: brushAriaLabel,
+  };
+}
+
 const toNumber = (value: number | string): number | null => {
   // `Number('')` and `Number(' ')` are 0, not NaN — so blank strings have to be
   // rejected before the finite check, or an empty tick label would render "0".

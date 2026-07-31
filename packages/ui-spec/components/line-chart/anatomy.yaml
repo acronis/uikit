@@ -11,6 +11,7 @@ schematic: |
         series:  one <Line type=curve> per dataKey  (solid or dashed stroke)
         tooltip: <ChartTooltip> → tooltip-content   (hover card)
         legend:  <ChartLegend>  → legend-content    (per-series swatch + label)
+        brush:   <Brush>                            (only when showBrush)
 
 root:
   element: div
@@ -46,6 +47,12 @@ parts:
       One `Line` per entry in `dataKeys`, stroked from its `--color-<key>` var.
       `curve` sets the interpolation (`type`); `lineStyle` sets solid vs dashed;
       `showDots` toggles the per-point dot.
+  - id: brush
+    element: g
+    description: >-
+      `<Brush>` — the range selector rendered beneath the plot when `showBrush`
+      is set. `brushHeight` sizes the strip; the handles and the range captions
+      take the muted text token, the strip its secondary-surface background.
   - id: tooltip-content
     element: div
     description: >-

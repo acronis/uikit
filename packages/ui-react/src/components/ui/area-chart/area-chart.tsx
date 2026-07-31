@@ -5,6 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import {
   Area,
   AreaChart as RechartsAreaChart,
+  Brush,
   CartesianGrid,
   LabelList,
   XAxis,
@@ -20,6 +21,7 @@ import {
   ChartTooltipContent,
   resolveAxisDomain,
   resolveAnimation,
+  resolveBrushProps,
   toLabelFormatter,
   resolveLabelFillClass,
   resolveCartesianLabelPosition,
@@ -28,6 +30,7 @@ import {
   type ChartConfig,
   type CartesianChartProps,
   type ChartAnimationProps,
+  type ChartBrushProps,
   type ChartDataLabelProps,
   type CartesianLabelPosition,
 } from '../chart';
@@ -63,6 +66,7 @@ export interface AreaChartProps
     VariantProps<typeof areaChartVariants>,
     CartesianChartProps,
     ChartAnimationProps,
+    ChartBrushProps,
     ChartDataLabelProps {
   /** Row-per-point data. Each object holds the category key + one numeric field per series (`null` breaks the area unless `connectNulls`). */
   data: ReadonlyArray<Record<string, string | number | null>>;
@@ -131,6 +135,9 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       showLabels = false,
       labelPosition,
       labelFormatter,
+      showBrush = false,
+      brushHeight,
+      brushAriaLabel,
       ...props
     },
     ref
@@ -287,6 +294,13 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                 )}
               </Area>
             ))}
+            {showBrush && (
+              <Brush
+                dataKey={xKey}
+                tickFormatter={xTickFormatter}
+                {...resolveBrushProps({ brushHeight, brushAriaLabel })}
+              />
+            )}
           </RechartsAreaChart>
         </ChartContainer>
       </div>
