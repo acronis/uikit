@@ -1,0 +1,77 @@
+---
+title: ButtonIconInput
+description: A compact icon-only button sized to sit inside an input's box.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { ButtonIconInputDemo } from "@/components/demos-react/button-icon-input";
+
+## Usage
+
+```tsx
+import { ButtonIconInput } from '@acronis-platform/ui-react';
+```
+
+`ButtonIconInput` is a small (20px) icon-only `<button>` meant to live inside a
+field's box — the reveal toggle in `InputPassword`, a clear affordance in a text
+field — as opposed to `ButtonIcon`'s standalone 32px sizing. The icon is passed
+as `children` and rendered at 16px. It is polymorphic via Base UI's `useRender`
+(the `render` prop) and themed by the `--ui-button-icon-input-*` tokens. Always
+provide an `aria-label` (or `aria-labelledby`) so the control has an accessible
+name.
+
+## Examples
+
+
+<DemoReact>
+  <ButtonIconInputDemo />
+</DemoReact>
+
+Two tones — `normal` (default) and `error`. Match the variant to the state of the
+field the button sits in:
+
+```tsx
+import { TimesIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<ButtonIconInput aria-label="Clear">
+  <TimesIcon />
+</ButtonIconInput>
+
+<ButtonIconInput variant="error" aria-label="Clear">
+  <TimesIcon />
+</ButtonIconInput>
+```
+
+A reveal toggle, the pattern `InputPassword` uses internally — swap the glyph and
+the accessible name together, and expose the state with `aria-pressed`:
+
+```tsx
+import { useState } from 'react';
+import { EyeIcon, EyeCrossedIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+const [visible, setVisible] = useState(false);
+
+<ButtonIconInput
+  aria-label={visible ? 'Hide password' : 'Show password'}
+  aria-pressed={visible}
+  onClick={() => setVisible((prev) => !prev)}
+>
+  {visible ? <EyeIcon /> : <EyeCrossedIcon />}
+</ButtonIconInput>
+```
+
+Disabled state. The design defines a single disabled treatment, so `disabled`
+renders the same regardless of `variant`:
+
+```tsx
+<ButtonIconInput aria-label="Clear" disabled>
+  <TimesIcon />
+</ButtonIconInput>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/button-icon-input/button-icon-input.tsx"
+  name="ButtonIconInputProps"
+/>

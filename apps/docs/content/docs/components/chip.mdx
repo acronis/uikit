@@ -1,0 +1,88 @@
+---
+title: Chip
+description: A compact, interactive label — a removable token or a selectable toggle.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { ChipDemo } from "@/components/demos-react/chip";
+
+## Usage
+
+```tsx
+import { Chip } from '@acronis-platform/ui-react';
+```
+
+`Chip` renders a `<div>` pill styled by the `--ui-chip-*` tokens — the box
+fill/border carry their own idle, hover, and active values, the label color is
+per variant (`--ui-chip-removable-label-color` /
+`--ui-chip-selectable-label-color`), and geometry (height, gap, padding,
+min-width, radius, border width, icon size) is tokenized too. The focus ring
+reuses the shared `--ui-focus-primary`. An optional leading `icon` is rendered
+at 16px before the label, and the label truncates with an ellipsis when it
+overflows.
+
+> **`Chip` is interactive; [`Tag`](/components/tag) is not.** Use `Tag` for a
+> static status, category, or keyword label. Reach for `Chip` when the label
+> itself carries an action — `removable` adds a trailing × button, `selectable`
+> turns the pill into a toggle (`role="button"` + `aria-pressed`). Both are
+> **controlled**: `Chip` renders the visual state and emits intent, the consumer
+> owns the data.
+
+## Examples
+
+
+<DemoReact>
+  <ChipDemo />
+</DemoReact>
+
+Two variants (default is `removable`):
+
+```tsx
+<Chip variant="removable" onRemove={() => removeFilter(id)}>Status: Active</Chip>
+<Chip variant="selectable" selected={on} onClick={() => setOn(!on)}>Only my devices</Chip>
+```
+
+`removable` — the trailing × is a real `<button>`. Name it with `removeLabel`
+(default `"Remove"`) whenever several chips are on screen:
+
+```tsx
+<Chip removeLabel="Remove Status: Active" onRemove={() => removeFilter('status')}>
+  Status: Active
+</Chip>
+```
+
+`selectable` — a controlled toggle. Pass `selected` for the active styling and
+`aria-pressed`, and flip it from `onClick` (Enter and Space activate it too):
+
+```tsx
+const [selected, setSelected] = useState(false);
+
+<Chip
+  variant="selectable"
+  selected={selected}
+  onClick={() => setSelected((prev) => !prev)}
+>
+  Needs attention
+</Chip>
+```
+
+With a leading icon:
+
+```tsx
+import { CircleInfoIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<Chip variant="selectable" icon={<CircleInfoIcon />}>
+  Needs attention
+</Chip>
+```
+
+Hover, pressed, and focus are interaction states, not props — they come from the
+`--ui-chip-*` hover/active tokens and the focus ring, so there is nothing to
+pass for them.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/chip/chip.tsx"
+  name="ChipProps"
+/>

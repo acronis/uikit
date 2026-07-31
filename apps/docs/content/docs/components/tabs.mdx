@@ -17,8 +17,13 @@ arrow-key navigation, and ARIA come from Base UI). `Tabs` owns the selected
 value; `TabsList` holds the `TabsTrigger`s (a bordered segmented control), and
 each `TabsContent` shows when its `value` matches the selected tab. This is a
 design-pending v1 themed from the shared brand tokens — the active segment is
-filled (`bg-primary`); a `--ui-tabs-*` tier and the final active treatment are
-pending a Figma pass.
+filled with the brand action blue (`bg-secondary`, the same blue the default
+Button uses) and carries a pure-white label; a `--ui-tabs-*` tier and the final
+active treatment are pending a Figma pass.
+
+Adjacent segments collapse their shared border and only the two outer ends are
+rounded. Both are expressed with logical properties, so the strip mirrors
+automatically under `dir="rtl"`.
 
 ## Examples
 
@@ -50,7 +55,11 @@ const [tab, setTab] = useState('account');
 </Tabs>;
 ```
 
-Vertical orientation switches arrow-key navigation to Up/Down:
+Vertical orientation switches arrow-key navigation to Up/Down and sets
+`aria-orientation="vertical"`. Only the keyboard and ARIA behavior changes —
+`TabsList`'s own styling is the horizontal segmented strip (row layout,
+collapsed inner borders, rounded inline ends), so a genuinely vertical strip
+needs layout classes of your own until the Figma pass defines one:
 
 ```tsx
 <Tabs defaultValue="account" orientation="vertical">

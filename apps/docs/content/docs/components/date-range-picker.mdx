@@ -22,14 +22,19 @@ only **Apply** commits the range via `onValueChange`. Use `value` for controlled
 usage or `defaultValue` for uncontrolled (which is also the target of "Reset to
 default").
 
+The two editable fields read and write dates in the trigger's `MMM d, yyyy`
+format (locale-fixed for now — locale-aware parsing isn't supported yet).
+Partial or invalid text leaves the draft untouched; **clearing** a field clears
+that end of the draft, so an open-ended range can be applied. Typing an end date
+earlier than the start is allowed while drafting — the calendar highlights the
+band chronologically and **Apply** commits the two ends ordered. **Apply** is
+disabled while the draft equals the applied range, and **Reset to default**
+while it equals `defaultValue`.
+
 This is a **design-pending v1** ported from the legacy library — no dedicated token
 tier; the trigger brings `--ui-input-date-picker-*` and the calendar / popover /
 buttons bring their own semantic tokens. It will be reconciled against the Figma
 design once a mockup lands (presets are intentionally out of scope for v1).
-
-> The live preview below shows the closed trigger. `DateRangePicker` does not
-> expose a `portalContainer`, so its open popover portals outside this page's
-> shadow-root preview; view the open panel in Storybook.
 
 ## Examples
 

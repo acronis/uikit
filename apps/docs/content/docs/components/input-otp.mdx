@@ -1,0 +1,77 @@
+---
+title: InputOTP
+description: A row of single-character boxes for entering a fixed-length one-time code.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { InputOTPDemo } from "@/components/demos-react/input-otp";
+
+## Usage
+
+```tsx
+import { InputOTP } from '@acronis-platform/ui-react';
+```
+
+`InputOTP` renders `length` single-character boxes (6 by default) for a one-time
+code — an SMS or authenticator code. Typing a digit advances focus to the next
+box, Backspace on an empty box clears and moves back to the previous one,
+ArrowLeft/ArrowRight move between boxes, and pasting a code (or a
+password-manager autofill) distributes it across the boxes from the focused one
+onward. Input is digit-only: a non-digit keystroke is rejected and non-digit
+characters are stripped from a paste.
+
+Like `InputText` without a label, this is the bare control — no label,
+description, or error message. Pass `aria-label`/`aria-labelledby` on the root to
+name the group; the error message belongs to the surrounding field markup. Themed
+by the `--ui-input-otp-*` tokens.
+
+## Examples
+
+<DemoReact>
+  <InputOTPDemo />
+</DemoReact>
+
+An uncontrolled field that submits itself once the last digit lands:
+
+```tsx
+<InputOTP aria-label="Verification code" autoFocus onComplete={(code) => verify(code)} />
+```
+
+A controlled field:
+
+```tsx
+const [code, setCode] = React.useState('');
+
+<InputOTP aria-label="Verification code" value={code} onChange={setCode} />
+```
+
+A shorter code — `length` sets the number of boxes:
+
+```tsx
+<InputOTP aria-label="Verification code" length={4} />
+```
+
+Error and disabled states:
+
+```tsx
+<InputOTP aria-label="Verification code" error defaultValue="123456" />
+
+<InputOTP aria-label="Verification code" disabled defaultValue="123456" />
+```
+
+Each box is named `Digit N of length` for assistive tech. Override that with
+`slotAriaLabel` to localize it:
+
+```tsx
+<InputOTP
+  aria-label="Verification code"
+  slotAriaLabel={(index, length) => t('otp.digit', { index, length })}
+/>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-otp/input-otp.tsx"
+  name="InputOTPProps"
+/>

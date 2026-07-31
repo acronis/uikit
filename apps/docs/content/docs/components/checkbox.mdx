@@ -29,6 +29,10 @@ A bare checkbox (name it with `aria-label`):
 <Checkbox aria-label="Accept terms" />
 ```
 
+The box is `align-middle`, so a bare checkbox stays vertically centered against
+adjacent inline text (e.g. in a table cell) rather than sitting on the text
+baseline.
+
 With a `label` and optional `description` — the whole row becomes clickable:
 
 ```tsx
@@ -40,13 +44,24 @@ With a `label` and optional `description` — the whole row becomes clickable:
 />
 ```
 
-Controlled and indeterminate states:
+Controlled:
 
 ```tsx
-<Checkbox label="Selected" checked />
-<Checkbox label="Mixed" indeterminate />
-<Checkbox label="Disabled" disabled />
+const [checked, setChecked] = React.useState(false);
+
+<Checkbox label="Selected" checked={checked} onCheckedChange={setChecked} />
 ```
+
+Indeterminate and disabled states:
+
+```tsx
+<Checkbox label="Mixed" indeterminate />
+<Checkbox label="Locked policy" defaultChecked disabled />
+```
+
+`indeterminate` is set by the consumer and is independent of `checked` —
+clicking does not clear it, and it wins over `checked` for the rendered glyph
+and `aria-checked="mixed"`.
 
 ## API Reference
 

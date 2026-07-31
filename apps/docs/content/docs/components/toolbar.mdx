@@ -1,0 +1,146 @@
+---
+title: Toolbar
+description: A horizontal action row for bulk actions above or below a list or table, with trailing actions that collapse into a More actions menu when they no longer fit.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { ToolbarDemo } from "@/components/demos-react/toolbar";
+
+## Usage
+
+```tsx
+import {
+  Toolbar,
+  ToolbarActionList,
+  ToolbarActions,
+} from '@acronis-platform/ui-react';
+```
+
+`Toolbar` is a compound component with three parts. `Toolbar` is the root: a
+horizontal flex row (16px gap) that renders as a `<fieldset>`, so setting
+`disabled` on it disables every nested `Button`/`ButtonMenu` through the native
+fieldset cascade — no prop needs to reach each child. `ToolbarActionList` is the
+self-collapsing action row (Figma's `ListActions` part), driven by an `actions`
+array rather than children. `ToolbarActions` is the optional trailing area,
+right-aligned with an 8px gap — a status text ("25 of 1250 items loaded") or a
+selection counter plus an action ("6 items selected: Deselect").
+
+Children render in source order. Use `ToolbarActionList` when the action set is
+long or dynamic; compose plain `Button`/`ButtonMenu` children directly on
+`Toolbar` when the row is short and fixed and auto-collapse isn't needed.
+
+`Toolbar` carries no dedicated `--ui-toolbar-*` token tier: every action is a
+`Button`/`ButtonMenu` instance bringing its own tokens, and the toolbar only
+lays them out.
+
+### Responsive overflow
+
+`ToolbarActionList` collapses on its own — there are no breakpoint props to
+wire. It measures the width its actions need against the space actually left in
+the row (the parent `Toolbar`'s width minus its siblings' natural widths and the
+gaps between them), and re-measures through a `ResizeObserver` on the parent and
+on each sibling. As long as everything fits, every action renders inline as a
+ghost `Button` in source order. The moment they don't, it reserves room for a
+`More actions` trigger, keeps as many **leading** actions inline as still fit,
+and moves the remaining **trailing** ones into that trigger's dropdown menu.
+Each action's `onSelect` and `disabled` behave the same whether it renders
+inline or inside the menu, so nothing has to change when the row resizes.
+
+Because the split is measured, not declared, a growing sibling also triggers it
+— a selection counter ticking from "6 items selected" up to "1206 items
+selected" pushes actions into the overflow menu without the container's own
+width changing.
+
+### Accessibility
+
+`ToolbarActionList`'s root implements the WAI-ARIA `toolbar` pattern via Base
+UI: `role="toolbar"`, one Tab stop into the row, and arrow keys moving roving
+focus between the visible actions and the overflow trigger. A `disabled` action
+is skipped by arrow keys rather than left focusable-but-inert, matching every
+other disabled `Button` in the kit. Home/End are not supported (a Base UI
+limitation). Plain `Button`/`ButtonMenu` children composed directly on `Toolbar`
+keep their own individual Tab stops instead — the `<fieldset>` root does not
+manage focus, and is left with its implicit `group` role.
+
+## Examples
+
+<DemoReact>
+  <ToolbarDemo />
+</DemoReact>
+
+A selection action bar whose actions collapse as the row narrows:
+
+```tsx
+const ACTIONS = [
+  { key: 'protect', label: 'Protect', onSelect: () => protect(selection) },
+  { key: 'backup', label: 'Back up now', onSelect: () => backUp(selection) },
+  { key: 'recover', label: 'Recover', onSelect: () => recover(selection) },
+  { key: 'group', label: 'Move to group', onSelect: () => moveToGroup(selection) },
+  { key: 'delete', label: 'Delete', onSelect: () => remove(selection) },
+];
+
+<Toolbar aria-label="Workload actions">
+  <ToolbarActionList actions={ACTIONS} moreActionsLabel="More actions" />
+  <ToolbarActions>
+    <span>{selected.length} items selected:</span>
+    <Button variant="ghost" onClick={deselectAll}>
+      Deselect
+    </Button>
+  </ToolbarActions>
+</Toolbar>
+```
+
+A short, fixed row — compose the controls directly and add your own overflow
+`ButtonMenu` if you need one:
+
+```tsx
+<Toolbar>
+  <Button variant="ghost">First action</Button>
+  <Button variant="ghost">Second action</Button>
+  <ButtonMenu variant="secondary">More actions</ButtonMenu>
+  <ToolbarActions>
+    <span>25 of 1250 items loaded</span>
+  </ToolbarActions>
+</Toolbar>
+```
+
+Disable the whole row — including controls inside `ToolbarActions` and items in
+the overflow menu — with the native `disabled` attribute on the root:
+
+```tsx
+<Toolbar disabled>
+  <ToolbarActionList actions={ACTIONS} />
+</Toolbar>
+```
+
+## API Reference
+
+### Toolbar
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/toolbar/toolbar.tsx"
+  name="ToolbarProps"
+/>
+
+### ToolbarActions
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/toolbar/toolbar.tsx"
+  name="ToolbarActionsProps"
+/>
+
+### ToolbarActionList
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/toolbar/toolbar.tsx"
+  name="ToolbarActionListProps"
+/>
+
+### ToolbarActionListItem
+
+The shape of each entry in `ToolbarActionList`'s `actions` array.
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/toolbar/toolbar.tsx"
+  name="ToolbarActionListItem"
+/>

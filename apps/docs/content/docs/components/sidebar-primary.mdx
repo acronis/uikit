@@ -28,7 +28,9 @@ a controlled/uncontrolled `expanded` (rail width) state. Compose a
 `SidebarPrimarySection`s of `SidebarPrimaryMenu` → `SidebarPrimaryMenuItem`), and
 a `SidebarPrimaryFooter`. `SidebarPrimary` and `SidebarPrimaryMenuItem` are
 polymorphic via Base UI's `useRender` (the `render` prop) — pass a router link
-for menu items. Themed by the `--ui-sidebar-primary-*` tokens.
+for menu items. Every menu item carries a leading `icon`, since that icon is the
+only visible part of the row once the rail is collapsed. Themed by the
+`--ui-sidebar-primary-*` tokens.
 
 ## Examples
 
@@ -56,24 +58,42 @@ A full rail:
   </SidebarPrimaryContent>
   <SidebarPrimaryFooter>
     <SidebarPrimaryMenu>
-      <SidebarPrimaryCollapseTrigger icon={<ChevronsLeftIcon />}>
-        Collapse
+      <SidebarPrimaryCollapseTrigger
+        icon={<ChevronsLeftIcon />}
+        expandTooltip="Expand menu"
+      >
+        Collapse menu
       </SidebarPrimaryCollapseTrigger>
     </SidebarPrimaryMenu>
   </SidebarPrimaryFooter>
 </SidebarPrimary>
 ```
 
-A trailing affordance on a menu item with `SidebarPrimaryMenuItemExtras`:
+A trailing affordance goes in the `extras` prop, not in `children` — `children`
+is the label, and anything nested there is clipped by its truncation. Figma only
+offers `size="sm"` for the tag slot, so always pass a small `Tag`:
 
 ```tsx
-<SidebarPrimaryMenuItem href="#" icon={<InboxIcon />}>
+<SidebarPrimaryMenuItem
+  href="#"
+  icon={<InboxIcon />}
+  extras={
+    <SidebarPrimaryMenuItemExtras
+      variant="tag"
+      tag={
+        <Tag variant="info" size="sm">
+          3
+        </Tag>
+      }
+    />
+  }
+>
   My inbox
-  <SidebarPrimaryMenuItemExtras variant="tag" tag={<Tag variant="info">3</Tag>} />
 </SidebarPrimaryMenuItem>
 ```
 
-Controlled collapse:
+Controlled collapse — the trigger above still works, it just reports the next
+value instead of owning it:
 
 ```tsx
 const [expanded, setExpanded] = React.useState(true);
@@ -82,6 +102,67 @@ const [expanded, setExpanded] = React.useState(true);
   {/* … */}
 </SidebarPrimary>
 ```
+
+`icon` is required on a menu item, so a row that genuinely has no icon has to opt
+out explicitly with `noIcon`:
+
+```tsx
+<SidebarPrimaryMenuItem href="#" noIcon>
+  Legacy console
+</SidebarPrimaryMenuItem>
+```
+
+## Behavior
+
+### Collapsing the rail
+
+- `SidebarPrimaryCollapseTrigger` flips the rail width itself: it updates the
+  uncontrolled state and always emits `onExpandedChange`, so it works in both
+  controlled and uncontrolled modes.
+- One `icon` covers both states — it rotates 180° when the rail collapses (and
+  the rotation inverts under RTL, so a chevron keeps pointing the way the rail
+  will move). Don't pass a separate "expand" glyph.
+- Collapsed, labels stay in the DOM as `sr-only`, trailing extras are hidden,
+  the header padding shrinks and the logo swaps to `collapsedLogo`. The header
+  row keeps a constant height across the transition so the menu below it doesn't
+  jump while the two logo graphics swap.
+- While collapsed, the trigger shows `expandTooltip` (defaults to `'Expand'`) —
+  pass a localized string.
+
+### Tooltips on truncated and collapsed labels
+
+- Expanded: a row whose label is actually clipped opens a tooltip with the full
+  label. Rows that fit never open one, and hovering the icon or the extras
+  doesn't open it either — only the label does.
+- Collapsed: every row always opens a tooltip with its label, because the
+  `sr-only` label itself can't be hovered.
+- Either way the tooltip is anchored to the whole row rather than the shrinking
+  label, and opens to the side (right in LTR, left in RTL) instead of on top.
+- Wrap the rail (or the app) in `TooltipProvider` to share open/close delays. In
+  a shadow-DOM host, wrap it in `PortalContainerProvider` so these internal
+  tooltips portal inside the shadow root — see [Shadow DOM](/shadow-dom).
+
+### Right-to-left
+
+- Spacing, text alignment and the collapse icon's rotation are pure CSS
+  (logical properties plus `ltr:`/`rtl:` variants), so they mirror off the
+  nearest `dir` ancestor.
+- Tooltip placement is decided in JS from the **document root**'s direction (its
+  `dir` attribute or computed `direction`). A `dir="rtl"` set only on an inner
+  wrapper mirrors the layout but leaves tooltips opening to the right.
+
+## Accessibility
+
+- The root is a `<nav>` landmark; `aria-label` defaults to `"Primary"` —
+  override it when a page has more than one navigation landmark.
+- Menus are `<ul>`/`<li>` and rows are native `<a>`s (or whatever `render`
+  supplies). The current row carries `aria-current="page"`.
+- Tab moves between rows; both Enter and Space activate one (Space is handled
+  explicitly so link rows match the button-rendered ones).
+- The collapse trigger is a `<button>` whose `aria-expanded` reflects the rail
+  state.
+- Labels are never removed when collapsed, only visually hidden, so each
+  icon-only row keeps its accessible name.
 
 ## API Reference
 
@@ -104,6 +185,9 @@ neither is given, `children` renders in both states.
 />
 
 ### SidebarPrimaryMenuItem
+
+`icon` looks optional below because the table flattens the prop union; at the
+type level an item must supply either `icon` or `noIcon`, never neither.
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/sidebar-primary/sidebar-primary.tsx"

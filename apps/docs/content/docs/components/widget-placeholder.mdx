@@ -64,6 +64,17 @@ A clickable widget tile with a footer:
 </WidgetPlaceholder>
 ```
 
+## Accessibility
+
+The static placeholder is presentational — the parts are plain elements with no
+imposed roles, so their text is read in document order. `interactive` only makes
+the root focusable (`tabindex=0`) and paints the focus ring; it adds no role and
+no key handling. Prefer putting the real control inside — a `Button`/`Link` in
+`WidgetPlaceholderAction` — so it has an accessible name and keyboard semantics.
+If the whole card must be the only control, also give it `role="button"`, an
+`aria-label`, and Enter/Space handling. Keep the meaning in
+`WidgetPlaceholderText`; the illustration is decorative.
+
 ## API Reference
 
 <AutoTypeTable

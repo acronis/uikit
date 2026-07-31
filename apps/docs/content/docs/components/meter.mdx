@@ -62,8 +62,9 @@ const total = rows.reduce((sum, r) => sum + r.value, 0);
 </div>;
 ```
 
-Hide the hover tooltip with `showTooltip={false}`, or format the value with
-`valueFormatter`.
+Hide the hover tooltip with `showTooltip={false}`, format the value with
+`valueFormatter`, or replace the tooltip's contents with `tooltip` — a custom
+node rendered inside the same chart-style card.
 
 ## API Reference
 

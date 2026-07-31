@@ -36,7 +36,9 @@ seven canned variants for new work.
 
 A canned use-case, controlled open state. `onPrimaryAction` fires when the
 primary footer button is clicked — the dialog doesn't close on its own, so
-close it yourself once the action completes:
+close it yourself once the action completes. (`read-only` is the one exception:
+its single "Done" button both fires `onPrimaryAction` and dismisses the
+dialog.)
 
 ```tsx
 const [open, setOpen] = useState(false);
@@ -99,11 +101,39 @@ The `rename` variant's text field accessible name is also overridable via
 <Dialog variant="rename" objectNameLabel="Nom de l'objet" open onOpenChange={setOpen} />
 ```
 
+The popup always keeps a 48px minimum margin from every viewport edge — each
+`size` is capped at `calc(100dvw - 96px)` wide and the popup at
+`calc(100dvh - 96px)` tall — so a narrow or short viewport shrinks the dialog
+rather than letting it run off-screen. Within that clamp the header and footer
+hold their token heights and never compress; the body absorbs the remaining
+space and scrolls on its own, so don't wrap `children` in another scroll
+container. Short body content stays vertically centered, while content taller
+than the available space scrolls with the top edge always reachable:
+
+```tsx
+<Dialog variant="read-only" open>
+  {longLegalText.map((paragraph) => (
+    <p key={paragraph}>{paragraph}</p>
+  ))}
+</Dialog>
+```
+
 When the dialog renders inside an isolated container (e.g. a shadow root), pass a
 `portalContainer` so the popup inherits that scope's styles:
 
 ```tsx
 <Dialog portalContainer={mountNode}>{/* … */}</Dialog>
+```
+
+`keepMounted` leaves the popup markup in the DOM while the dialog is closed
+(hidden, and not exposed as a `dialog` to assistive tech) instead of unmounting
+it — reach for it when the body holds state or an expensive child you don't
+want torn down and rebuilt on every open:
+
+```tsx
+<Dialog keepMounted open={open} onOpenChange={setOpen}>
+  <ExpensiveForm />
+</Dialog>
 ```
 
 Hide the header and/or footer chrome for a body-only dialog. Both default to

@@ -15,11 +15,11 @@ import { Button, DialogFooterDefault, Link } from '@acronis-platform/ui-react';
 `DialogFooterDefault` lays out end-aligned actions — passed as `children`,
 typically a secondary and a primary `Button` — plus an optional start slot: a
 truncated `description`, or a `link` (a `Link` element). `description` and
-`link` are mutually exclusive; pass at most one. When neither is set, the
-actions sit flush to the end. Themed by the `--ui-footer-*` tier.
+`link` are mutually exclusive; pass at most one — if both are set,
+`description` wins and the `link` slot is not rendered. When neither is set,
+the actions sit flush to the end. Themed by the `--ui-footer-*` tier.
 
 ## Examples
-
 
 <DemoReact>
   <DialogFooterDefaultDemo />

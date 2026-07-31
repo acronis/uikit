@@ -64,6 +64,13 @@ const frameworks = [
 Pair it with a [`Field`](/components/field) for a label, description, and error,
 or set `aria-label` on `ComboboxInput`.
 
+`ComboboxContent` renders the dropdown in a portal. When the combobox lives
+inside an isolated container (e.g. a shadow root), wrap the app in
+`PortalContainerProvider` so the popup mounts inside that scope and inherits its
+styles — see [Shadow DOM Integration](/shadow-dom). An explicit
+`portalContainer` on `ComboboxContent` overrides the context for a single
+dropdown.
+
 ## API Reference
 
 <AutoTypeTable
@@ -73,6 +80,8 @@ or set `aria-label` on `ComboboxInput`.
 
 The root (`Combobox`) takes Base UI Combobox props — `items`, `value` /
 `defaultValue`, `onValueChange`, `multiple`, `open` / `defaultOpen`, `disabled`,
-`name`. `ComboboxContent`, `ComboboxList`, `ComboboxItem`, `ComboboxEmpty`,
+`name`. `ComboboxContent` accepts the Base UI popup props plus `side`
+(default `'bottom'`), `align` (default `'start'`), `sideOffset` (default `4`),
+and `portalContainer`. `ComboboxList`, `ComboboxItem`, `ComboboxEmpty`,
 `ComboboxGroup`, and `ComboboxGroupLabel` accept their Base UI part props plus
 `className`.

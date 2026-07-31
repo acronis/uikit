@@ -15,9 +15,10 @@ import { DialogWelcome } from '@acronis-platform/ui-react';
 `DialogWelcome` is the sanctioned way to build an onboarding or feature-announcement
 dialog. A `variant` prop selects one of two Figma-defined layouts: `'carousel'`
 (default) steps through `slides` — each an image/title/description — via a
-`DialogFooterCarousel` bar with `Back`/`Next`/dot navigation and a call-to-action
-button on the last slide; `'single'` renders one image/title/description with a
-`Close` link and a call-to-action button, no footer bar. It's built internally on
+`DialogFooterCarousel` bar with `Back`/`Next`/dot navigation (or by dragging or
+swiping the slide itself) and a call-to-action button on the last slide;
+`'single'` renders one image/title/description with a `Close` link and a
+call-to-action button, no footer bar. It's built internally on
 Base UI's Dialog primitive (focus trap, scroll lock, `Esc`/outside-press dismissal,
 and ARIA come from Base UI), but that primitive is not itself exported.
 
@@ -49,11 +50,30 @@ const slides = [
 />;
 ```
 
-Control the active slide directly, e.g. to resume onboarding where a user left off:
+Control the active slide with `selectedIndex`, e.g. to resume onboarding where a
+user left off. Always pair it with `onSelectedIndexChange`: the `Back`/`Next`/dot
+controls only ever _report_ the index they want, they never move the carousel
+themselves. Without the handler the dialog is pinned to `selectedIndex` — clicks
+do nothing and a drag snaps back, so the visible slide can't drift away from the
+one carrying the dialog's accessible name:
 
 ```tsx
-<DialogWelcome variant="carousel" slides={slides} selectedIndex={1} open onOpenChange={setOpen} />
+const [slideIndex, setSlideIndex] = useState(1);
+
+<DialogWelcome
+  variant="carousel"
+  slides={slides}
+  selectedIndex={slideIndex}
+  onSelectedIndexChange={setSlideIndex}
+  open
+  onOpenChange={setOpen}
+/>;
 ```
+
+`onSelectedIndexChange` fires exactly once per navigation, so each call maps to a
+single user action — safe to forward straight to analytics. Uncontrolled, it also
+fires once on mount with the starting index (`0`); controlled, it stays silent on
+mount because the carousel already opens on `selectedIndex`.
 
 The `single` layout — one slide, a `Close` link instead of carousel navigation:
 

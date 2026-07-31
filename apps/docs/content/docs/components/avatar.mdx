@@ -22,6 +22,14 @@ image loads, revealing `AvatarFallback` (typically initials). Stack several in
 `AvatarGroup` for an overlapping cluster. The fallback color is set by the
 `color` prop and themed by the `--ui-avatar-*` tokens.
 
+There is no `size` prop: the avatar is a fixed 32px circle
+(`--ui-avatar-global-avatar-size`). The 2px separator ring
+(`--ui-avatar-global-avatar-border-border-width` /
+`-border-color`) is drawn **outside** that circle as a `box-shadow`, matching
+Figma's `strokeAlign: OUTSIDE` — so the colored circle is the full 32px and the
+layout box stays 32px. Don't swap it for a `border-*` utility: a CSS border is
+drawn inside the border-box and would shrink the visible circle to 28px.
+
 ## Examples
 
 
@@ -64,6 +72,11 @@ An overlapping group:
   </Avatar>
 </AvatarGroup>
 ```
+
+Every avatar after the first is offset by the negative
+`--ui-avatar-global-avatar-group-gap`, so the rings form the layered look and
+later avatars paint above earlier ones. The offset is logical, so the stack
+mirrors automatically under `dir="rtl"`.
 
 ## API Reference
 

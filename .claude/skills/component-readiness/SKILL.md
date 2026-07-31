@@ -8,8 +8,10 @@ description: >
   ui-react (Base UI only), that the ui-spec 7-file set is present and
   conformance passes, that tests exist, and that the Figma link is intact
   (index.yaml node + a COMPLETE Code Connect) — plus advisory heuristics for
-  hardcoded labels, physical directional (RTL-risk) utilities, and a missing or
-  stale apps/docs page. A deep mode adds Figma design parity: structural
+  hardcoded labels, physical directional (RTL-risk) utilities, and a missing
+  apps/docs page or one with undocumented props (a narrower signal than true
+  content staleness — see docs-sync-audit.sh for that). A deep mode adds Figma
+  design parity: structural
   (variants/states), value-level (each design variable's value == the referenced
   --ui-* token's resolved value), and an advisory screenshot pixel-diff — via the
   Figma MCP + bundled scripts. Reports a READY / DRIFT / INCOMPLETE matrix; never
@@ -97,10 +99,16 @@ semantic analysis, so judge each hit:
 existence and a prop-mention check (only runs when the component declares its
 own `Props` interface — nothing to check for a component that's purely
 `React.ComponentProps<'tag'>`). Never blocking, because not every component has
-a docs page by design — only `/legacy-component` writes one (Phase 5);
-`/figma-component` doesn't touch `apps/docs` at all. A missing page or an
-unmentioned prop is a genuine signal on a component you know went through
-`/legacy-component` or has a docs page already; it's expected noise otherwise.
+a docs page yet. Both `/legacy-component` (Phase 5) and `/figma-component`
+(Phase 6) write one. A missing page or an unmentioned prop is a genuine signal.
+
+This presence/prop-mention check is **not** the same as true content
+staleness — it can't tell you a page's _prose_ or _examples_ still match
+current behavior, only that a prop name string appears somewhere in the file.
+For that, run the companion `scripts/docs-sync-audit.sh [name | all]`, which
+compares each docs page's last-touched commit against its component's
+meaningful source/spec commits since (filtering out test/story/Code-Connect-only
+commits) to flag real drift, not just missing props.
 
 ---
 
@@ -112,6 +120,13 @@ spec-files / tests / Code-Connect checks and prints the matrix:
 ```bash
 bash .claude/skills/component-readiness/scripts/audit.sh all          # or a single component
 bash .claude/skills/component-readiness/scripts/audit.sh InputTextArea
+```
+
+**1b. Docs-sync pass (fast, no build)** — real content-staleness signal for docs
+pages, using git history rather than a prop-name grep:
+
+```bash
+bash .claude/skills/component-readiness/scripts/docs-sync-audit.sh all        # or a single component
 ```
 
 **2. Dynamic checks (run for the target component, or repo-wide before a release).**

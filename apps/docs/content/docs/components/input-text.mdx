@@ -12,10 +12,17 @@ import { InputTextDemo } from "@/components/demos-react/input-text";
 import { InputText } from '@acronis-platform/ui-react';
 ```
 
-`InputText` wraps a native `<input>` and adds the full field furniture — an
-optional label (with a `required` marker), helper description, error message,
-and an optional clear button. Without a label it renders just the box. Themed by
-the `--ui-input-text-*` tokens.
+`InputText` composes the bare [`InputBox`](/components/input) primitive and adds
+the full field furniture — an optional label (with a `required` marker), helper
+description, error message, and an optional clear button. Without a label it
+renders just the box. Themed by the `--ui-input-text-*` tokens; the clear button
+reuses the ghost `--ui-button-icon-*` tokens for its glyph and its hover/active
+background.
+
+> **Naming.** The `Input` export of `@acronis-platform/ui-react` is an alias of
+> `InputText` (and `InputProps` of `InputTextProps`), so importing `Input` gives
+> you this labelled field — not a bare control. For that, import
+> [`InputBox`](/components/input) by name.
 
 ## Examples
 
@@ -30,7 +37,9 @@ A labeled field with helper text:
 <InputText label="Full name" description="As it appears on your ID." />
 ```
 
-Required and error states:
+Required and error states. `required` appends a `*` to the label and sets
+`aria-required`; `error` switches the box to its error border (via
+`aria-invalid`) and replaces `description` with the error message:
 
 ```tsx
 <InputText label="Email" required placeholder="you@example.com" />
@@ -42,7 +51,9 @@ Required and error states:
 />
 ```
 
-A clearable, controlled field:
+A clearable, controlled field. The clear button only renders while `clearable` is
+set, the **controlled** `value` is non-empty, and the field isn't `disabled` — an
+uncontrolled field (`defaultValue`) never shows it:
 
 ```tsx
 const [value, setValue] = React.useState('');

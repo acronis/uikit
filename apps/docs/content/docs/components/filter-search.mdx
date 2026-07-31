@@ -29,14 +29,23 @@ a form (Reset filters / Cancel / Apply) over a **draft** copy of the applied
 filters. It snapshots `value` on open, lets field children mutate the draft,
 and only commits it back through `onValueChange` (plus the optional
 `onApply`) when **Apply** is pressed — disabled until the draft actually
-differs from the applied value. **Cancel**, Escape, and outside-press revert
-the draft. Fields that don't fit the popover's height scroll internally.
+differs from the applied value. That comparison is **structural** (a deep
+compare, not reference identity), so re-picking the same array or object value
+leaves Apply disabled. **Cancel**, Escape, and outside-press revert the draft.
+Fields that don't fit the popover's height scroll internally.
+
+Any prop it doesn't consume itself is forwarded to the trigger button, so
+`data-testid`, `id`, `disabled`, and `aria-*` land on the real `<button>`
+(`className` is merged onto it too).
 
 `FilterSearchAppliedFilters` renders the currently applied filters as
 removable chips, plus a top-level **Reset filters** action that clears
 everything immediately (no popover involved). It's a separate component,
 rendered as a sibling row **below** `FilterSearch`, and renders nothing when
-there are no applied filters.
+there are no applied filters. Chip labels default to `"<key>: <value>"` —
+array values are joined with `", "` and object values are JSON-stringified.
+Pass `getFilterChipLabel(key, value)` whenever the raw key or a stringified
+object isn't presentable (a localized field name, a formatted date range).
 
 Filter fields are supplied as plain `children` inside `FilterSearchFilters`.
 Each field wires itself to the draft with the `useFilterSearchFilters()`
@@ -48,14 +57,22 @@ function StatusField() {
   const { filters, setFilter } = useFilterSearchFilters();
   return (
     <InputSelect
-      value={(filters.status as string) ?? null}
-      onValueChange={(value) => setFilter('status', value)}
+      value={(filters.status as string) ?? 'all'}
+      onValueChange={(value) =>
+        setFilter('status', value === 'all' ? undefined : value)
+      }
     >
       {/* … */}
     </InputSelect>
   );
 }
 ```
+
+Calling `setFilter(key, undefined)` **deletes** that key from the draft instead
+of storing a literal `undefined`. Route a field's "all"/"any" option through it,
+as above — an unset filter is the absence of a key, so it stays out of the
+applied set and out of the chip row rather than showing a `status: undefined`
+chip that can't be cleared.
 
 Group fields with a `Separator` as a layout convention if desired. Calling
 `useFilterSearchFilters()` outside a `<FilterSearchFilters>` popover throws.
@@ -155,4 +172,4 @@ With trailing action buttons:
 
 The `useFilterSearchFilters()` hook returns the current draft `filters` map
 and a `setFilter(key, value)` setter for wiring filter-field children to the
-popover draft.
+popover draft — passing `undefined` as the value drops the key from the draft.

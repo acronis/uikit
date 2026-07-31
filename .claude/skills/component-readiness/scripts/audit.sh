@@ -36,9 +36,10 @@
 #               should be used instead
 #   DOCS hint   apps/docs/content/docs/components/<name>.mdx is missing, or a
 #               prop declared in the component's own Props interface isn't
-#               mentioned anywhere in it (both are heuristic — not every
-#               component gets a docs page via /figma-component, only
-#               /legacy-component writes one; judge each hit)
+#               mentioned anywhere in it (both are heuristic — judge each hit).
+#               This is presence/prop-mention only, not content staleness — for
+#               a git-history-based staleness check, use the companion
+#               docs-sync-audit.sh in this same directory.
 #
 # What this script does NOT check (needs reading, not grepping — see SKILL.md
 # §Implementation conformance / §Spec & docs content accuracy, an agent step):
@@ -186,11 +187,11 @@ for c in $comps; do
     [ -n "$r" ] && rtl_hits="$rtl_hits$f:$(printf '\n%s' "$r" | sed 's/^/    /')"
   done < <(find "$UI/$c" -maxdepth 1 -name '*.tsx' ! -name '*.stories.tsx' ! -name '*.test.tsx' ! -name '*.figma.tsx' 2>/dev/null)
 
-  # ---- DOCS: advisory only — not every component gets a docs page via
-  # /figma-component (only /legacy-component writes one), so a missing page is
-  # never blocking. Prop-mention check only runs when the component declares
-  # its own Props interface (skips React.ComponentProps<'tag'>-only components,
-  # which have nothing custom to document).
+  # ---- DOCS: advisory only — a missing page is never blocking (both
+  # /legacy-component and /figma-component write one, but older components may
+  # predate that convention). Prop-mention check only runs when the component
+  # declares its own Props interface (skips React.ComponentProps<'tag'>-only
+  # components, which have nothing custom to document).
   mdx="apps/docs/content/docs/components/$c.mdx"
   main_tsx="$UI/$c/$c.tsx"
   docs_missing_props=""
@@ -229,7 +230,7 @@ for c in $comps; do
   [ -n "$prose_stale" ]   && echo "    ↳ (non-blocking) stale token names in spec prose: $(printf '%s' "$prose_stale" | tr '\n' ' ')"
   [ -n "$i18n_hits" ]     && echo "    ↳ (advisory) possible hardcoded label — confirm it's a prop default, not inlined:$i18n_hits"
   [ -n "$rtl_hits" ]      && echo "    ↳ (advisory) physical directional utility — confirm dir=\"rtl\" still renders correctly, prefer logical (ms-/me-/ps-/pe-/start-/end-):$rtl_hits"
-  [ ! -f "$mdx" ]         && echo "    ↳ (advisory) no docs page ($mdx) — expected only if this went through /legacy-component"
+  [ ! -f "$mdx" ]         && echo "    ↳ (advisory) no docs page ($mdx)"
   [ -n "$docs_missing_props" ] && echo "    ↳ (advisory) props not mentioned in docs ($mdx):$docs_missing_props"
   rm -f "$refs"
 done
