@@ -199,6 +199,27 @@ contract:
       type: '(value) => string'
       required: false
       description: Format each label value (reuses the tick formatters).
+    - name: showBrush
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Render a range brush beneath the chart — drag a handle (or the selected
+        window) to zoom the series into a slice of the data.
+    - name: brushHeight
+      type: number
+      required: false
+      default: '28'
+      description: >-
+        Height of the brush strip in px. A non-positive value falls back to the
+        default rather than erasing the brush.
+    - name: brushAriaLabel
+      type: string
+      required: false
+      default: "'Chart range selector'"
+      description: >-
+        Accessible name for the brush's two range handles, which are focusable
+        `role="slider"` elements. Consumers localize by passing their own.
   events: []
   methods: []
 

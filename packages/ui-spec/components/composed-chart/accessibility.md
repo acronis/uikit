@@ -2,6 +2,22 @@
 
 - recharts' `accessibilityLayer` is **on by default** (recharts v3), giving the
   chart keyboard focus and an accessible description of the plotted points.
+- The **range brush** (`showBrush`) is the only interactive control these charts
+  render. It adds two focusable `role="slider"` handles: Tab reaches each one and
+  the left/right arrow keys move the selection a row at a time, so the whole
+  feature is operable without a pointer.
+  - Both handles take their accessible name from `brushAriaLabel` (default
+    `'Chart range selector'`); pass your own to localize it. Never leave it to
+    recharts' fallback, which names the handles from a `name` field on the data
+    row and otherwise announces "Min value: undefined, Max value: undefined".
+  - The handles keep a visible focus indicator: the shared `ChartContainer`
+    suppresses outlines on recharts layers, so it re-enables one for
+    `.recharts-brush-traveller` specifically (an `outline`, since `box-shadow`
+    does not paint on SVG children).
+  - The two range captions only appear while a handle is hovered, dragged, or
+    focused — they are a supplement to the category axis, not a replacement for
+    it. Zooming changes which rows are plotted, so **pair the brush with a text
+    alternative that reflects the current range** rather than the full series.
 - A composed chart is inherently visual. **Pair it with a text alternative** — a
   caption, a summary sentence, or an adjacent data table carrying the same
   numbers — and give the chart an accessible name (`aria-label` /

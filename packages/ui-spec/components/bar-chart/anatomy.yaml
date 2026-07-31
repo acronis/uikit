@@ -11,6 +11,7 @@ schematic: |
         series:  one <Bar> per dataKey (grouped side-by-side or stacked)
         tooltip: <ChartTooltip> → tooltip-content   (hover card)
         legend:  <ChartLegend>  → legend-content    (per-series swatch + label)
+        brush:   <Brush>                            (only when showBrush)
 
 root:
   element: div
@@ -51,6 +52,12 @@ parts:
     description: >-
       One `Bar` per entry in `dataKeys`, filled from its `--color-<key>` var.
       Side-by-side when `layout=grouped`; sharing a `stackId` when `stacked`.
+  - id: brush
+    element: g
+    description: >-
+      `<Brush>` — the range selector rendered beneath the plot when `showBrush`
+      is set. `brushHeight` sizes the strip; the handles and the range captions
+      take the muted text token, the strip its secondary-surface background.
   - id: tooltip-content
     element: div
     description: >-

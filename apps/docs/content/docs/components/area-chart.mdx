@@ -180,6 +180,25 @@ at every position — the surface, not the series color, is what shows behind th
 Labels are off by default — with more than one series they collide easily, so turn
 them on for a single series or a chart with room to spare.
 
+## Range brush
+
+Long series don't have to be read all at once: `showBrush` renders a range
+selector under the plot. Drag a handle — or the selected window itself — and the
+series, its category axis, and the tooltip all follow the selection. `brushHeight`
+sizes the strip (28px by default):
+
+```tsx
+<AreaChart config={config} data={data} dataKeys={['desktop']} xKey="month" showBrush />
+```
+
+The brush indexes rows, so it slices the category axis. It is independent of
+`showXAxis`, so a chart with its axis hidden still gets a working brush. The two
+range captions appear on the strip while you hover, drag, or focus a handle.
+
+Both handles are focusable `role="slider"` elements: Tab reaches them, and the
+arrow keys move the selection one row at a time. Pass `brushAriaLabel` to
+localize their accessible name (it defaults to `'Chart range selector'`).
+
 ## API Reference
 
 <AutoTypeTable

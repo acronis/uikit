@@ -126,6 +126,23 @@ describe('ComposedChart', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
+  // The brush props are consumed here, not forwarded — dropping one from the
+  // destructure would spread it onto the wrapper as an invalid DOM attribute.
+  // The rendered strip itself is covered in `chart/__tests__/chart-brush.test.tsx`,
+  // which stubs the layout recharts needs before it will draw a brush at all.
+  it('consumes the range-brush props instead of forwarding them to the DOM', () => {
+    const { container } = renderChart({
+      showBrush: true,
+      brushHeight: 40,
+      brushAriaLabel: 'Range',
+    });
+    const wrapper = container.firstElementChild;
+    expect(wrapper).not.toBeNull();
+    expect(
+      wrapper!.getAttributeNames().filter((name) => /brush/i.test(name))
+    ).toEqual([]);
+  });
+
 });
 
 // recharts needs a laid-out container, which happy-dom does not provide, so the

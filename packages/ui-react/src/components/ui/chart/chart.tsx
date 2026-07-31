@@ -108,6 +108,13 @@ function ChartContainer({
         data-chart={chartId}
         className={cn(
           "[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border flex aspect-video justify-center text-xs [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
+          // A `<Brush>` traveller is the one `.recharts-layer` that is a real
+          // control (`role="slider"`, tabbable, arrow-key driven), so the blanket
+          // `outline-hidden` above would leave it with no focus indicator. Restore
+          // one — the `:focus-visible` pseudo-class outranks that rule, so this
+          // wins regardless of the order Tailwind emits them in. An `outline`
+          // rather than the usual `ring`: box-shadow doesn't paint on SVG children.
+          '[&_.recharts-brush-traveller:focus-visible]:[outline:3px_solid_var(--ui-focus-primary)] [&_.recharts-brush-traveller:focus-visible]:[outline-offset:1px]',
           className
         )}
         {...props}

@@ -88,6 +88,9 @@ const meta = {
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
+    showBrush: { control: 'boolean' },
+    brushHeight: { control: { type: 'number', min: 16, max: 80 } },
+    brushAriaLabel: { control: 'text' },
     animate: { control: 'boolean' },
     animationDuration: { control: { type: 'number' } },
     animationBegin: { control: { type: 'number' } },
@@ -431,5 +434,27 @@ export const AllSeriesSecondaryYAxis: Story = {
       { key: 'conversion', type: 'line', yAxis: 'secondary' },
     ],
     secondaryYTickFormatter: formatCompactNumber,
+  },
+};
+
+// A longer series than the six-point default, so the brush has a range worth
+// zooming into. Built from a formula rather than 24 literal rows — it stays
+// deterministic, which the visual baseline requires.
+const weeklyData = Array.from({ length: 24 }, (_, index) => ({
+  month: `W${index + 1}`,
+  revenue: 4200 + ((index * 370) % 2400),
+  profit: 1800 + ((index * 230) % 1600),
+}));
+
+// `showBrush` adds a range selector under the plot: drag a handle (or the
+// selected window itself) to zoom the series into a slice of the data.
+export const RangeBrush: Story = {
+  args: {
+    data: weeklyData,
+    series: [
+      { key: 'revenue', type: 'bar' },
+      { key: 'profit', type: 'line' },
+    ],
+    showBrush: true,
   },
 };
