@@ -168,10 +168,10 @@ same formatters as the axes, so a label and its axis read alike:
 <AreaChart config={config} data={data} dataKeys={['desktop']} xKey="month" showLabels labelFormatter={formatCompactNumber} />
 ```
 
-`labelPosition` moves them; the default is the series' growing end (`top`, or
-`right` for horizontal bars). Under `layout="stacked"` that end is covered by the
-next segment, so each value centres inside its own segment instead — and switches
-to a token that stays legible over the fill:
+`labelPosition` moves them; the default is `top`. Under `layout="stacked"` that
+end is covered by the next segment, so each value centres inside its own segment
+instead. An area's fill is translucent, so labels keep the on-surface text color
+at every position — the surface, not the series color, is what shows behind them:
 
 ```tsx
 <AreaChart config={config} data={data} dataKeys={['desktop']} xKey="month" showLabels labelPosition="insideEnd" />

@@ -232,6 +232,17 @@ describe('resolveLabelFillClass', () => {
     }
   });
 
+  // An area's fill is a gradient/low-opacity wash, so an on-series label is really
+  // drawn over the tinted surface — the white on-fill token vanishes into it in
+  // light mode.
+  it('keeps the on-surface token for a translucent series at every position', () => {
+    for (const position of ['top', 'center', 'insideEnd', 'centerTop'] as const) {
+      expect(resolveLabelFillClass(position, { translucentSeries: true })).toBe(
+        CHART_LABEL_FILL_CLASS
+      );
+    }
+  });
+
   it('keeps the two fills distinct', () => {
     expect(CHART_LABEL_FILL_CLASS).not.toBe(CHART_LABEL_FILL_ON_SERIES_CLASS);
   });

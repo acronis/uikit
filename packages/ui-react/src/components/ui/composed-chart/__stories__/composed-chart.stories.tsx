@@ -290,11 +290,28 @@ export const Animated: Story = {
   args: { animate: true, animationDuration: 800 },
 };
 
-// Value labels on each segment, compact-formatted. Reduced to a single
-// series so the labels don't collide.
+// Value labels across all three mark types, compact-formatted. The shared `data`
+// packs the series into one narrow band (so the line isn't flattened), which
+// would stack the three label rows on top of each other — this set gives each
+// series its own band instead, one clear label row per mark type. Series render
+// back-to-front: bars, the area washing over them, then the line.
+const labelData = [
+  { month: 'Jan', revenue: 7400, forecast: 4600, profit: 1400 },
+  { month: 'Feb', revenue: 8200, forecast: 5200, profit: 1800 },
+  { month: 'Mar', revenue: 7000, forecast: 4400, profit: 1200 },
+  { month: 'Apr', revenue: 8600, forecast: 5400, profit: 2000 },
+  { month: 'May', revenue: 7600, forecast: 4800, profit: 1600 },
+  { month: 'Jun', revenue: 8800, forecast: 5000, profit: 2200 },
+];
+
 export const Labels: Story = {
   args: {
-    series: [{ key: 'revenue', type: 'bar' }],
+    data: labelData,
+    series: [
+      { key: 'revenue', type: 'bar' },
+      { key: 'forecast', type: 'area' },
+      { key: 'profit', type: 'line' },
+    ],
     showLabels: true,
     labelFormatter: formatCompactNumber,
   },

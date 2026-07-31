@@ -233,8 +233,9 @@ export interface ChartDataLabelProps {
 export const CHART_LABEL_FILL_CLASS = 'fill-[var(--ui-text-on-surface-primary)]!';
 
 /**
- * Fill for a label that sits on the *series fill* — any `inside*` position, a
- * polar mid-radius/centroid placement, or a stacked segment. The on-surface
+ * Fill for a label that sits on an *opaque series fill* — any `inside*`
+ * position, a polar mid-radius/centroid placement, or a stacked bar/arc segment
+ * (an area's fill is translucent, so it uses the on-surface token). The on-surface
  * token must not be used there: it resolves near-white in dark mode and drops to
  * ~1.6:1 against the saturated status/brand fills the charts colour series with,
  * failing the `accessibility/contrast` grammar rule (`must`, WCAG 1.4.3). This is
@@ -282,9 +283,9 @@ const ON_SERIES_LABEL_POSITIONS = new Set<ChartLabelPosition>([
  *
  * The stacked branch is the reason this isn't inlined: a stacked segment has no
  * free space at its growing end — the next segment is drawn there — so a `top`
- * label lands *inside* its neighbour, in the on-surface colour, over a saturated
- * fill. Centring it in its own segment is both the readable placement and the
- * one `resolveLabelFill` will pair with the on-fill token.
+ * label lands *inside* its neighbour rather than over its own segment. Centring
+ * it in its own segment is the readable placement; `resolveLabelFillClass` then
+ * pairs it with the fill that has contrast over that family's series colour.
  */
 export function resolveCartesianLabelPosition(options: {
   labelPosition?: CartesianLabelPosition;
@@ -307,8 +308,18 @@ export function resolveCartesianLabelPosition(options: {
  * container to theme axis titles, and a `LabelList`'s text carries
  * `.recharts-label` too — so a CSS rule would quietly beat an SVG presentation
  * attribute and undo the contrast fix.
+ *
+ * `translucentSeries` opts a family out of the on-fill token: an area's fill is
+ * a gradient (0.8 → 0.1 alpha) or a flat `fillOpacity`, so what sits behind the
+ * label is the surface tinted by the series colour, not the series colour. The
+ * white on-fill token disappears into it in light mode — the theme-inverting
+ * on-surface token is the readable one there, and stays white in dark mode.
  */
-export function resolveLabelFillClass(position: ChartLabelPosition): string {
+export function resolveLabelFillClass(
+  position: ChartLabelPosition,
+  options: { translucentSeries?: boolean } = {}
+): string {
+  if (options.translucentSeries) return CHART_LABEL_FILL_CLASS;
   return ON_SERIES_LABEL_POSITIONS.has(position)
     ? CHART_LABEL_FILL_ON_SERIES_CLASS
     : CHART_LABEL_FILL_CLASS;
