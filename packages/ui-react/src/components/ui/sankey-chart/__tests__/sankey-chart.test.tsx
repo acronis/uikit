@@ -215,7 +215,10 @@ describe('SankeyChart default tooltip', () => {
     const { container } = render(
       <Tooltip active payload={[{ name: 'all - certified', value: [1000, 2000] }]} />
     );
-    expect(container.textContent).toContain('1,000 – 2,000');
+    // the tooltip localises each part, so derive the expectation from the same
+    // locale the test process runs under instead of hardcoding en-US grouping
+    const expected = `${(1000).toLocaleString()} – ${(2000).toLocaleString()}`;
+    expect(container.textContent).toContain(expected);
     expect(container.textContent).not.toContain('1000,2000');
   });
 
