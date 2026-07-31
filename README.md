@@ -1,17 +1,15 @@
 # Acronis UI Kit
 
-A pnpm monorepo for the Acronis design system: two React component
-libraries, a design-token pipeline (Figma → JSON → CSS/Tailwind), icon
-packages, design-data packages, and supporting apps and tooling.
+A pnpm monorepo for the Acronis design system: a React component library, a
+design-token pipeline (Figma → JSON → CSS/Tailwind), icon packages,
+design-data packages, and supporting apps and tooling.
 
-**Architecture in brief:** The next-generation library (`@acronis-platform/ui-react`)
-is built on [Base UI](https://base-ui.com/) unstyled primitives and themed by
+**Architecture in brief:** `@acronis-platform/ui-react` is built on
+[Base UI](https://base-ui.com/) unstyled primitives and themed by
 `@acronis-platform/tokens-pd` (`--ui-*` CSS custom properties generated from
-`@acronis-platform/design-tokens`). The legacy library
-(`@acronis-platform/shadcn-uikit`) follows [shadcn/ui](https://ui.shadcn.com/)
-principles on Base UI + Radix primitives. Tailwind CSS is used **internally** to
-compile styles — consumers receive fully pre-built CSS and can use any styling
-solution in their own project. No Tailwind installation required.
+`@acronis-platform/design-tokens`). Tailwind CSS is used **internally** to
+compile styles — consumers receive fully pre-built CSS and can use any
+styling solution in their own project. No Tailwind installation required.
 
 ## 📦 Workspaces
 
@@ -21,8 +19,7 @@ The repo is organized into four top-level directories: `context/` (shared docs),
 
 | Path                          | Package                                  | Published | Role                                                                         |
 | ----------------------------- | ---------------------------------------- | --------- | ---------------------------------------------------------------------------- |
-| `packages/ui-react/`          | `@acronis-platform/ui-react`             | **yes**   | Next-gen React library on **Base UI**, themed by `tokens-pd`. New work here. |
-| `packages/ui-legacy/`         | `@acronis-platform/shadcn-uikit`         | **yes**   | Legacy shadcn-style React library (Base UI + Radix), 4 shipped themes.       |
+| `packages/ui-react/`          | `@acronis-platform/ui-react`             | **yes**   | The React component library, built on **Base UI**, themed by `tokens-pd`.    |
 | `packages/icons-react/`       | `@acronis-platform/icons-react`          | **yes**   | React icon components generated from `design-assets` (tree-shakeable).       |
 | `packages/icons-sprite/`      | `@acronis-platform/icons-sprite`         | **yes**   | Generated SVG sprites built from `icons-svg`.                                |
 | `packages/icons-svg/`         | `@acronis-platform/icons-svg`            | no        | Raw SVG icon sources fetched from Figma + manifests (source-only).           |
@@ -30,15 +27,14 @@ The repo is organized into four top-level directories: `context/` (shared docs),
 | `packages/design-tokens/`     | `@acronis-platform/design-tokens`        | **yes**   | DTCG-2025.10 design tokens (primitives / semantics / components). Data only. |
 | `packages/design-assets/`     | `@acronis-platform/design-assets`        | **yes**   | Icon/illustration manifests + bundled binaries. Data only.                   |
 | `packages/tokens-pd/`         | `@acronis-platform/tokens-pd`            | **yes**   | Generated per-brand CSS vars, per-component CSS, Tailwind presets, DTCG.     |
-| `apps/demo/`                  | `@acronis-platform/shadcn-uikit-demo`    | no        | Vite SPA showcasing components with live theme switching.                    |
 | `apps/docs/`                  | `@acronis-platform/uikit-docs`           | no        | Next.js 15 + Fumadocs documentation site.                                    |
-| `apps/demos/`                 | `@acronis-platform/shadcn-uikit-demos`   | no        | Shared demo components (source-only, no build).                              |
 | `tools/style-dictionary/`     | `@acronis-platform/style-dictionary`     | no        | Style Dictionary v5 build: `design-tokens` → `tokens-pd` CSS/presets.        |
 | `tools/figma-icons-fetcher/`  | `@acronis-platform/figma-icons-fetcher`  | no        | Fetches + SVGO-optimizes icons from Figma into the `icons-svg*` packages.    |
 | `tools/figma-token-exporter/` | `@acronis-platform/figma-token-exporter` | no        | Self-hosted Figma plugin + receiver that exports variables/styles to tokens. |
 
-See [`AGENTS.md`](./AGENTS.md) for the authoritative workspace map and the
-per-workspace `AGENTS.md` files for area-specific conventions.
+See [`AGENTS.md`](./AGENTS.md) for the complete workspace map (including
+internal tooling and demo apps) and the per-workspace `AGENTS.md` files for
+area-specific conventions.
 
 ## 🚀 Getting Started
 
@@ -61,21 +57,24 @@ pnpm install
 pnpm run build
 ```
 
-### Running the Demo
+### Exploring Components
+
+- **[Storybook](https://acronis.github.io/uikit/storybook-react/)** — every
+  component, all variants, light + dark.
+- **[Documentation site](https://acronis.github.io/uikit/docs/)** — usage
+  guides, API references, and patterns (Next.js + Fumadocs, `apps/docs`).
+
+Run either locally instead:
 
 ```bash
-# Start the demo application
-cd apps/demo
-pnpm run dev
+# Storybook for @acronis-platform/ui-react
+pnpm --filter @acronis-platform/ui-react storybook
+
+# Documentation site (apps/docs)
+pnpm --filter @acronis-platform/uikit-docs dev
 ```
 
-The demo will be available at `http://localhost:3000`.
-
 ## 📖 Usage (`@acronis-platform/ui-react`)
-
-`@acronis-platform/ui-react` is the next-generation library and the recommended
-starting point for new work. For the legacy shadcn library see
-[`packages/ui-legacy/README.md`](./packages/ui-legacy/README.md).
 
 ### Installation
 
@@ -149,17 +148,25 @@ function MyComponent() {
 
 ### Available Components
 
-The library covers layout (`Card`, `AppShell`, `Grid`, `Stack`, `Section`,
-`Separator`, `ScrollArea`, `Resizable`), navigation (`Breadcrumb`, `Tabs`,
-`Pagination`, `SidebarPrimary`, `SidebarSecondary`, `SearchGlobal`), forms
-(`InputText`, `InputSearch`, `InputTextArea`, `InputSelect`, `InputDatePicker`,
-`Combobox`, `Select`, `Checkbox`, `Radio`, `Switch`, `Slider`, `NumberField`,
-`Field`, `Form`, `Label`), buttons (`Button`, `ButtonIcon`, `ButtonMenu`),
-overlays (`Dialog`, `Sheet`, `Popover`, `Tooltip`, `DropdownMenu`), feedback
-(`Alert`, `Tag`/`Badge`, `Chip`, `Progress`, `ProgressCircle`, `Spinner`,
-`Skeleton`, `Toast`, `Empty`), and data display (`Table`, `DataTable`, `Chart`,
-`Avatar`, `DescriptionList`, `Accordion`, `Collapsible`). See the full export
-surface in [`packages/ui-react/src/index.ts`](./packages/ui-react/src/index.ts).
+The library covers layout (`AppShell`, `AppShellChat`, `AuthLayout`, `Card`,
+`CardFilter`, `Grid`, `Stack`, `Section`, `PageContent`, `PageHeader`,
+`Separator`, `ScrollArea`, `Resizable`, `Toolbar`), navigation (`Breadcrumb`,
+`Tabs`, `Pagination`, `SidebarPrimary`, `SidebarSecondary`, `SearchGlobal`,
+`Link`), forms (`InputText`, `InputSearch`, `InputTextArea`, `InputSelect`,
+`InputDatePicker`, `InputPassword`, `InputOtp`, `Combobox`, `Select`,
+`Checkbox`, `Radio`, `Switch`, `Slider`, `NumberField`, `Calendar`,
+`DateRangePicker`, `Field`, `Form`, `Label`), buttons (`Button`, `ButtonIcon`,
+`ButtonMenu`), overlays (`Dialog`, `Sheet`, `Popover`, `Tooltip`,
+`DropdownMenu`), feedback (`Alert`, `Tag`/`Badge`, `Chip`, `Progress`,
+`ProgressCircle`, `Spinner`, `Skeleton`, `Toast`, `Empty`), data display
+(`Table`, `DataTable`, `Avatar`, `DescriptionList`, `Accordion`,
+`Collapsible`, `Timeline`, `ToggleGroup`), and data visualization (`Chart` and
+per-type charts — `AreaChart`, `BarChart`, `LineChart`, `PieChart`,
+`ComposedChart`, `RadarChart`, `RadialBarChart`, `ScatterChart`,
+`FunnelChart`, `SankeyChart`, `Histogram`, `Treemap` — plus dashboard
+readouts `Meter`, `Metric`, `TrendIndicator`, `CategoryBar`,
+`WidgetPlaceholder`). See the full export surface in
+[`packages/ui-react/src/index.ts`](./packages/ui-react/src/index.ts).
 
 Icons are provided by [`@acronis-platform/icons-react`](./packages/icons-react).
 
@@ -204,14 +211,14 @@ const className = cn(
 ## 🎨 Styling & Theming
 
 Tailwind CSS is used **internally** as a build-time tool to compile component
-styles. It is **not** part of the public API — both libraries ship standard,
+styles. It is **not** part of the public API — the library ships standard,
 pre-built CSS, so consumers can use any styling solution (CSS Modules, SCSS,
-plain CSS, Tailwind of any version, etc.). No Tailwind installation is required
-to consume the kit.
+plain CSS, Tailwind of any version, etc.). No Tailwind installation is
+required to consume the kit.
 
-### Tokens (`ui-react`)
+### Tokens
 
-The next-gen library is themed entirely by `--ui-*` CSS custom properties from
+The library is themed entirely by `--ui-*` CSS custom properties from
 `@acronis-platform/tokens-pd`, which are generated from
 `@acronis-platform/design-tokens` via `@acronis-platform/style-dictionary`. The
 token layer ships inside `@acronis-platform/ui-react/styles`; light/dark and
@@ -222,26 +229,90 @@ The token pipeline (and the Figma sync used to refresh it) is documented in the
 workspace docs for [`design-tokens`](./packages/design-tokens/AGENTS.md) and
 [`tokens-pd`](./packages/tokens-pd/AGENTS.md).
 
-### Themes (`ui-legacy`)
+### Fonts
 
-The legacy library ships four CSS themes (`acronis-default`, `acronis-ocean`,
-`cyber-chat`, `acronis-white-label`) plus a runtime theme/color-mode API
-(`initializeThemeSystem`, `applyTheme`, `applyColorMode`, `applyNavVariant`) and
-a `tw-animate-css` peer dependency. See
-[`packages/ui-legacy/README.md`](./packages/ui-legacy/README.md) and
-[Theme Documentation](./apps/docs/THEMES.md) for the full theming guide.
+The design tokens use **Inter** as the default family, and the generated CSS
+emits a graceful fallback stack (`font-family: Inter, system-ui, sans-serif`).
+The library deliberately **does not bundle the font** — loading it is the
+consumer's choice, so you control hosting, subsets, and weights.
+
+To render in Inter, self-host it (recommended — no third-party CDN,
+GDPR-safe). [`@fontsource/inter`](https://fontsource.org/fonts/inter) (SIL
+Open Font License) is the simplest route:
+
+```bash
+pnpm add @fontsource/inter
+```
+
+```tsx
+// Load only the weights you use (the typography scale uses 400/500/600/700).
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+
+import '@acronis-platform/ui-react/styles';
+```
+
+> The static `@fontsource/inter` registers the family as `Inter`, which
+> matches the token output. The variable package `@fontsource-variable/inter`
+> registers `Inter Variable` instead, so it won't match `font-family: Inter`
+> without an extra alias — prefer the static package unless you add that
+> mapping yourself.
+
+If you skip this step, text falls back to `system-ui` / the platform
+sans-serif.
+
+### Breakpoints
+
+`ui-react` pins its own viewport scale (Tailwind's `sm`/`md` stay at the
+stock 640px/768px; `lg`/`xl`/`2xl`/`3xl`/`4xl` are overridden). It's exposed
+three ways so it stays usable both inside and outside a Tailwind build:
+
+```ts
+import {
+  BREAKPOINT_LG, // 1024px
+  BREAKPOINT_XL, // 1280px
+  BREAKPOINT_2XL, // 1440px
+  BREAKPOINT_3XL, // 1680px
+  BREAKPOINT_4XL, // 1920px
+  getViewportWidth, // SSR-safe window.innerWidth read
+} from '@acronis-platform/ui-react';
+```
+
+- **JS constants** (above) — for conditional logic in your own code (e.g.
+  deciding what to render at a given width).
+- **`--ui-breakpoint-lg/xl/2xl/3xl/4xl`** CSS custom properties — for sizing
+  an element to match a breakpoint outside a media query (e.g.
+  `max-width: var(--ui-breakpoint-lg)`).
+- **Tailwind `lg:`/`xl:`/`2xl:`/`3xl:`/`4xl:` variants** — if you build your
+  own styles with Tailwind, importing `@acronis-platform/ui-react`'s
+  `@theme` values keeps your breakpoints in sync with the kit's.
+
+### Icon Sizing
+
+[`@acronis-platform/icons-react`](./packages/icons-react) components take a
+strict `size` prop — the only dimensions design-assets defines for the pack
+(today `16 | 24`, default `24`), each with its own hand-tuned artwork and
+stroke width:
+
+```tsx
+import { BoltIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<BoltIcon size={16} title="Power" />;
+```
+
+To size the box an icon sits in (e.g. a button's icon slot), size that
+container with CSS — don't scale the SVG itself.
 
 ## 🏗️ Project Structure
 
 ```
 uikit/
 ├── apps/                       # Deployed apps (private)
-│   ├── demo/                   # Vite SPA          (@acronis-platform/shadcn-uikit-demo)
-│   ├── demos/                  # Shared demos      (@acronis-platform/shadcn-uikit-demos)
 │   └── docs/                   # Next.js + Fumadocs (@acronis-platform/uikit-docs)
 ├── packages/                   # Published libraries + design data
 │   ├── ui-react/               # Base UI library    (@acronis-platform/ui-react)
-│   ├── ui-legacy/              # shadcn library     (@acronis-platform/shadcn-uikit)
 │   ├── icons-react/            # React icons        (@acronis-platform/icons-react)
 │   ├── icons-sprite/           # SVG sprites        (@acronis-platform/icons-sprite)
 │   ├── icons-svg/              # Raw SVG sources    (@acronis-platform/icons-svg)
@@ -256,11 +327,15 @@ uikit/
 ├── context/                    # Cross-workspace docs (conventions, commits, releasing)
 ├── .changeset/                 # Pending changesets (each PR adds one)
 ├── .github/workflows/          # ci, release, demo-deploy, visual-regression
-├── AGENTS.md                   # Authoritative workspace map (for AI agents + humans)
+├── AGENTS.md                   # Complete workspace map (for AI agents + humans)
 ├── package.json                # Workspace root: scripts + shared devDeps
 ├── pnpm-workspace.yaml         # pnpm workspaces + dependency catalog
 └── README.md
 ```
+
+> This tree omits internal-only workspaces (demo apps, build tooling) that
+> aren't relevant to consuming the library — see [`AGENTS.md`](./AGENTS.md)
+> for the complete map.
 
 ## 🛠️ Scripts
 
@@ -340,11 +415,10 @@ export function App() {
 ## 📚 Documentation
 
 - [`AGENTS.md`](./AGENTS.md) — authoritative workspace map + conventions
-- [ui-react package](./packages/ui-react) — next-gen Base UI component library
-- [ui-legacy package](./packages/ui-legacy/README.md) — legacy shadcn library + theming
+- [ui-react package](./packages/ui-react) — the Base UI component library
+- [Storybook](https://acronis.github.io/uikit/storybook-react/) — live component gallery
+- [Documentation site](https://acronis.github.io/uikit/docs/) — usage guides + API reference (source: [`apps/docs`](./apps/docs/README.md))
 - [design-tokens](./packages/design-tokens/AGENTS.md) / [tokens-pd](./packages/tokens-pd/AGENTS.md) — token pipeline
-- [Theme System Guide](./apps/docs/THEMES.md) — legacy theme usage guide
-- [Demo Package Documentation](./apps/demo/README.md)
 
 ## 📝 License
 
@@ -358,8 +432,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 🔗 Links
 
-- [Base UI](https://base-ui.com/) — unstyled primitives (primary, `ui-react`)
-- [shadcn/ui](https://ui.shadcn.com/) — the original inspiration (`ui-legacy`)
-- [Radix UI](https://www.radix-ui.com/) — unstyled primitives (`ui-legacy`: NavigationMenu, Slot)
+- [Base UI](https://base-ui.com/) — unstyled primitives
 - [Tailwind CSS](https://tailwindcss.com/) — internal build tool
 - [DTCG](https://www.designtokens.org/) — design token format used by `design-tokens`
