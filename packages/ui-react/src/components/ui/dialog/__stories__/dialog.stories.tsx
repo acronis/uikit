@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ColumnDef } from '@tanstack/react-table';
 
 import { Button } from '../../button';
+import { DataTable } from '../../data-table';
 import { Dialog, DialogClose } from '../dialog';
 
 const VARIANTS = [
@@ -258,6 +260,130 @@ export const NoHeaderNoFooter: Story = {
         outside press; the dialog still has an accessible name from the
         off-screen title.
       </p>
+    </Dialog>
+  ),
+};
+
+// The popup grows with its body up to the viewport-margin bound
+// (`calc(100dvh-96px)`); past that bound the body itself scrolls instead of
+// the popup overflowing its frame. Stacking many real paragraphs reliably
+// exceeds that bound regardless of the Storybook viewport.
+export const TallContent: Story = {
+  render: () => (
+    <Dialog variant="default" defaultOpen>
+      <div className="flex flex-col gap-3 text-sm leading-6 text-foreground">
+        <p className="font-semibold">
+          Top of the body — scroll down to reach the bottom marker.
+        </p>
+        {Array.from({ length: 40 }, (_, i) => (
+          <p key={i}>Paragraph {i + 1} of representative body content.</p>
+        ))}
+        <p className="font-semibold">
+          Bottom of the body — the popup itself never grows past its margin.
+        </p>
+      </div>
+    </Dialog>
+  ),
+};
+
+// The popup's width is fixed to one of the predefined `size` values (never
+// content-driven) — non-wrapping content wider than that fixed width scrolls
+// horizontally inside the body instead of being clipped at the popup edge.
+export const WideContent: Story = {
+  render: () => (
+    <Dialog variant="default" defaultOpen>
+      <p className="whitespace-nowrap text-sm leading-6 text-foreground">
+        This single line of non-wrapping text is intentionally wider than the
+        dialog&apos;s fixed popup width, so the body must scroll horizontally
+        to reveal the rest of it.
+      </p>
+    </Dialog>
+  ),
+};
+
+// Both scroll axes at once: content that's both taller and wider than the
+// popup's bounds. The body scrolls in whichever direction is needed —
+// vertically for the paragraphs, horizontally for the non-wrapping line —
+// independently of each other, in a single scroll container: per the CSS
+// overflow spec, `overflow-y-auto` alone already makes `overflow-x` compute
+// to `auto` too, so no separate horizontal scroll container is needed.
+export const OverflowXY: Story = {
+  render: () => (
+    <Dialog variant="default" defaultOpen>
+      <div className="flex flex-col gap-3 text-sm leading-6 text-foreground">
+        <p className="whitespace-nowrap font-semibold">
+          This non-wrapping line is wider than the dialog — scroll right to
+          read the rest of it, and scroll down for more paragraphs below.
+        </p>
+        {Array.from({ length: 40 }, (_, i) => (
+          <p key={i} className="whitespace-nowrap">
+            Row {i + 1}: another non-wrapping line, just as wide as the first.
+          </p>
+        ))}
+      </div>
+    </Dialog>
+  ),
+};
+
+interface DataRow {
+  id: string;
+  name: string;
+  status: 'active' | 'suspended' | 'pending';
+  region: string;
+  plan: string;
+  usage: string;
+  lastSeen: string;
+  owner: string;
+}
+
+const DATA_TABLE_COLUMNS: ColumnDef<DataRow>[] = [
+  { accessorKey: 'id', header: 'ID' },
+  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'status', header: 'Status' },
+  { accessorKey: 'region', header: 'Region' },
+  { accessorKey: 'plan', header: 'Plan' },
+  { accessorKey: 'usage', header: 'Usage' },
+  { accessorKey: 'lastSeen', header: 'Last seen' },
+  { accessorKey: 'owner', header: 'Owner' },
+];
+
+const DATA_TABLE_STATUSES: DataRow['status'][] = [
+  'active',
+  'suspended',
+  'pending',
+];
+
+const DATA_TABLE_ROWS: DataRow[] = Array.from({ length: 30 }, (_, i) => ({
+  id: `WS-${1000 + i}`,
+  name: `Workspace ${i + 1}`,
+  status: DATA_TABLE_STATUSES[i % DATA_TABLE_STATUSES.length],
+  region: ['us-east', 'eu-west', 'ap-south'][i % 3],
+  plan: ['Starter', 'Business', 'Enterprise'][i % 3],
+  usage: `${(i * 7) % 100}%`,
+  lastSeen: `2026-0${(i % 9) + 1}-1${i % 9}`,
+  owner: `owner-${i + 1}@example.com`,
+}));
+
+// A `wide` dialog with a real `DataTable` (30 rows) dropped into the body —
+// the same grow-then-scroll behavior as `TallContent`, but with a
+// representative composed component instead of synthetic content: all 8
+// columns fit within the `large` popup width, so only the rows overflow —
+// the body scrolls vertically for the rows that don't fit, no
+// special-casing needed. (`DataTable`'s own `Table` wrapper — see
+// table.tsx's `overflow-auto` — would scroll its columns horizontally on a
+// narrower popup or with more columns; this story doesn't hit that case.)
+export const WideDataTable: Story = {
+  render: () => (
+    <Dialog
+      variant="wide"
+      size="large"
+      title="Workspaces"
+      defaultOpen
+      footer={
+        <DialogClose render={<Button variant="secondary">Close</Button>} />
+      }
+    >
+      <DataTable columns={DATA_TABLE_COLUMNS} data={DATA_TABLE_ROWS} bordered />
     </Dialog>
   ),
 };

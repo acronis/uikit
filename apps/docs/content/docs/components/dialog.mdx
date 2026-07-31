@@ -106,9 +106,16 @@ The popup always keeps a 48px minimum margin from every viewport edge — each
 `calc(100dvh - 96px)` tall — so a narrow or short viewport shrinks the dialog
 rather than letting it run off-screen. Within that clamp the header and footer
 hold their token heights and never compress; the body absorbs the remaining
-space and scrolls on its own, so don't wrap `children` in another scroll
-container. Short body content stays vertically centered, while content taller
-than the available space scrolls with the top edge always reachable:
+space and scrolls on its own, so don't add another *vertical* scroll container
+around `children` — that would create two competing vertical scrollbars.
+Short body content stays vertically centered, while content taller than the
+available space scrolls with the top edge always reachable. The popup's width
+is likewise fixed to whichever `size` is active, never content-driven — wide,
+non-wrapping content (e.g. a table that doesn't wrap) scrolls horizontally
+within the body instead of widening the popup. A component with its own
+horizontal-only scroll region (e.g. `DataTable`) composes fine here since it
+doesn't compete with the body's vertical scroll:
+
 
 ```tsx
 <Dialog variant="read-only" open>
