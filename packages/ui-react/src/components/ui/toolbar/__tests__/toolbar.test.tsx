@@ -482,6 +482,47 @@ describe('ToolbarActionList', () => {
     });
   });
 
+  it('keeps the overflow menu closed after the Toolbar is re-enabled', async () => {
+    // The disabled state gates the menu's `open` prop, so the stored open
+    // state has to be cleared too — otherwise re-enabling the toolbar pops
+    // the menu back open on its own, with no user interaction.
+    mockGeometry({ itemWidth: 100, clientWidth: 250 });
+    const { rerender } = render(
+      <Toolbar>
+        <ToolbarActionList actions={THREE_ACTIONS} />
+      </Toolbar>
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'More actions' }));
+    expect(
+      await screen.findByRole('menuitem', { name: 'Second action' })
+    ).toBeInTheDocument();
+
+    rerender(
+      <Toolbar disabled>
+        <ToolbarActionList actions={THREE_ACTIONS} />
+      </Toolbar>
+    );
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('menuitem', { name: 'Second action' })
+      ).not.toBeInTheDocument();
+    });
+
+    rerender(
+      <Toolbar>
+        <ToolbarActionList actions={THREE_ACTIONS} />
+      </Toolbar>
+    );
+
+    expect(
+      screen.queryByRole('menuitem', { name: 'Second action' })
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'More actions' })).toHaveAttribute(
+      'aria-expanded',
+      'false'
+    );
+  });
+
   it('re-measures correctly when actions shrinks, without stale phantom widths', () => {
     // Regression for a bug where the invisible clones' width refs (keyed by
     // array index) kept stale trailing entries once `actions` shrank, adding
