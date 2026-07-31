@@ -30,6 +30,8 @@ import {
   type ChartAnimationProps,
   type ChartDataLabelProps,
   type CartesianLabelPosition,
+  type ChartYAxisTarget,
+  type SecondaryYAxisProps,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. A composed
@@ -46,16 +48,32 @@ export type ComposedSeriesType = 'bar' | 'line' | 'area';
 // "later entry paints on top". The band stays under the axis layer (500).
 const SERIES_Z_INDEX_BASE = 100;
 
+// recharts keys every axis by id, defaulting to `0` on both `YAxis` and each
+// graphical item. The primary axis keeps that implicit id rather than taking an
+// explicit one, so a chart with no secondary series renders byte-identically —
+// and `CartesianGrid` (whose own `yAxisId` defaults to `0`) keeps drawing its
+// horizontal lines against the primary scale, which is the only readable choice:
+// gridlines from two different scales would cross at meaningless heights.
+const SECONDARY_Y_AXIS_ID = 'secondary';
+
 export interface ComposedSeries {
   /** Column key to plot — must match a `config` entry; drives its `--color-<key>` paint. */
   key: string;
   /** How this series renders. */
   type: ComposedSeriesType;
+  /**
+   * Which value axis this series is measured against. Defaults to `primary`.
+   * The secondary axis is rendered only when at least one series selects it — use
+   * it when a series carries a different unit or magnitude (a rate next to a
+   * count) that a shared scale would flatten.
+   */
+  yAxis?: ChartYAxisTarget;
 }
 
 export interface ComposedChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     CartesianChartProps,
+    SecondaryYAxisProps,
     ChartAnimationProps,
     ChartDataLabelProps {
   /** Row-per-category data. Each object holds `xKey` + one numeric field per series. */
@@ -80,6 +98,23 @@ export interface ComposedChartProps
   showLegend?: boolean;
   /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
   labelPosition?: CartesianLabelPosition;
+}
+
+// A rotated value-axis title, angled so it reads from the outside in — upward on a
+// left axis (the convention), downward on a right one, where -90° would put the
+// text's baseline against the plot.
+function resolveYAxisTitle(
+  label: string | undefined,
+  orientation: 'left' | 'right'
+) {
+  if (!label) return undefined;
+  return {
+    value: label,
+    angle: orientation === 'left' ? -90 : 90,
+    position:
+      orientation === 'left' ? ('insideLeft' as const) : ('insideRight' as const),
+    style: { textAnchor: 'middle' as const },
+  };
 }
 
 const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
@@ -107,6 +142,13 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       xAxisInterval,
       yAxisTickCount,
       yAxisDomain,
+      yAxisOrientation,
+      showSecondaryYAxis = true,
+      secondaryYAxisLabel,
+      secondaryYUnit,
+      secondaryYTickFormatter,
+      secondaryYAxisTickCount,
+      secondaryYAxisDomain,
       gridDashed,
       gridHorizontal,
       gridVertical,
@@ -135,16 +177,23 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
     const xAxisTitle = xAxisLabel
       ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
       : undefined;
-    const yAxisTitle = yAxisLabel
-      ? {
-          value: yAxisLabel,
-          angle: -90,
-          position: 'insideLeft' as const,
-          style: { textAnchor: 'middle' as const },
-        }
-      : undefined;
+    // The secondary axis is derived from the series, not from a flag of its own:
+    // that makes the two impossible-to-render states unrepresentable — an axis with
+    // no series measured against it (an arbitrary domain drawn over the plot), and a
+    // series pointing at an id no axis declares (recharts falls back to an implicit
+    // axis, silently plotting it on the wrong scale).
+    const hasSecondaryYAxis = series.some((s) => s.yAxis === 'secondary');
+    const primaryOrientation = yAxisOrientation ?? 'left';
+    const secondaryOrientation = primaryOrientation === 'left' ? 'right' : 'left';
+
+    const yAxisTitle = resolveYAxisTitle(yAxisLabel, primaryOrientation);
+    const secondaryYAxisTitle = resolveYAxisTitle(
+      secondaryYAxisLabel,
+      secondaryOrientation
+    );
 
     const yDomain = resolveAxisDomain(yAxisDomain);
+    const secondaryYDomain = resolveAxisDomain(secondaryYAxisDomain);
 
     // Room for the X tick row: recharts' default 30, plus a rotated tick row
     // (+20) and/or the axis title (+18). Additive — both can be present at once,
@@ -192,6 +241,11 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
             <YAxis
               type="number"
               hide={!showYAxis}
+              // Spread only when set. `orientation={undefined}` would resolve to the
+              // same `left`, but the key's presence moves it ahead of `width` in the
+              // props object recharts spreads onto its tick labels — reordering the
+              // SVG attributes of every existing chart for no functional gain.
+              {...(yAxisOrientation ? { orientation: yAxisOrientation } : {})}
               tickLine={false}
               axisLine={false}
               unit={yUnit}
@@ -201,6 +255,22 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />
+            {hasSecondaryYAxis && (
+              <YAxis
+                yAxisId={SECONDARY_Y_AXIS_ID}
+                type="number"
+                hide={!showSecondaryYAxis}
+                orientation={secondaryOrientation}
+                tickLine={false}
+                axisLine={false}
+                unit={secondaryYUnit}
+                tickFormatter={secondaryYTickFormatter}
+                tickCount={secondaryYAxisTickCount}
+                domain={secondaryYDomain}
+                width={secondaryYAxisLabel ? 72 : undefined}
+                label={secondaryYAxisTitle}
+              />
+            )}
             {showTooltip && (
               <ChartTooltip content={tooltipContent ?? <ChartTooltipContent />} />
             )}
@@ -211,11 +281,17 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
             {series.map((s, index) => {
               const color = `var(--color-${s.key})`;
               const zIndex = SERIES_Z_INDEX_BASE + index;
+              // `undefined` is recharts' own default (id `0`, the primary axis) —
+              // `resolveDefaultProps` fills it in — so a series that opts out of the
+              // secondary axis passes exactly what it passed before this prop existed.
+              const yAxisId =
+                s.yAxis === 'secondary' ? SECONDARY_Y_AXIS_ID : undefined;
               if (s.type === 'bar') {
                 return (
                   <Bar
                     key={s.key}
                     dataKey={s.key}
+                    yAxisId={yAxisId}
                     fill={color}
                     radius={
                       barRadius > 0
@@ -243,6 +319,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                     key={s.key}
                     type={curve}
                     dataKey={s.key}
+                    yAxisId={yAxisId}
                     stroke={color}
                     fill={color}
                     fillOpacity={fillOpacity}
@@ -268,6 +345,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                   key={s.key}
                   type={curve}
                   dataKey={s.key}
+                  yAxisId={yAxisId}
                   stroke={color}
                   strokeWidth={2}
                   dot={false}

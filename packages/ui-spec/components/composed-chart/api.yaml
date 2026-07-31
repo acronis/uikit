@@ -21,10 +21,12 @@ contract:
       type: ComposedSeries[]
       required: true
       description: >-
-        Series to plot, each `{ key, type }`. `type` is `bar` / `line` / `area`.
-        Rendered in array order — later entries sit on top, whatever their mark
-        type; order them so a thin line comes after the bars/areas it should
-        overlay. Each key must exist in `config` and every data row.
+        Series to plot, each `{ key, type, yAxis? }`. `type` is `bar` / `line` /
+        `area`. Rendered in array order — later entries sit on top, whatever their
+        mark type; order them so a thin line comes after the bars/areas it should
+        overlay. `yAxis` is `primary` (the default) or `secondary`, selecting which
+        value axis the series is measured against. Each key must exist in `config`
+        and every data row.
     - name: xKey
       type: string
       required: true
@@ -130,6 +132,46 @@ contract:
         behaviour when the prop is omitted), or dataMin-dataMax (tight to the
         data, no padding). Applies to whichever axis holds the values — Y for most
         charts, X for BarChart with orientation="horizontal".
+    - name: yAxisOrientation
+      type: "'left' | 'right'"
+      required: false
+      default: "'left'"
+      description: >-
+        Which side the primary value axis sits on. The secondary axis always takes
+        the opposite side, so the pair mirrors as a whole.
+    - name: showSecondaryYAxis
+      type: boolean
+      required: false
+      default: 'true'
+      description: >-
+        Render the secondary axis's ticks and title. Setting it false keeps the
+        second scale — series measured against it stay scaled that way — and drops
+        only its chrome, the meaning showYAxis has for the primary axis. Inert
+        unless a series selects the secondary axis.
+    - name: secondaryYAxisLabel
+      type: string
+      required: false
+      description: Title rendered beside the secondary value axis (rotated).
+    - name: secondaryYUnit
+      type: string
+      required: false
+      description: Unit suffix appended to the secondary axis's tick values.
+    - name: secondaryYTickFormatter
+      type: '(value: number | string, index?: number) => string'
+      required: false
+      description: Format each secondary-axis tick value — the counterpart of yTickFormatter.
+    - name: secondaryYAxisTickCount
+      type: number
+      required: false
+      description: >-
+        Desired number of ticks on the secondary axis (recharts tickCount; a hint,
+        not exact).
+    - name: secondaryYAxisDomain
+      type: "'auto' | 'dataMin-dataMax' | 'zero'"
+      required: false
+      description: >-
+        Domain preset for the secondary axis — the same presets as yAxisDomain,
+        resolved independently of it.
     - name: gridDashed
       type: boolean
       required: false

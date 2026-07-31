@@ -17,13 +17,46 @@ children.
 - Overlaying related measures with different shapes — e.g. revenue **bars** with
   a profit-margin **line**, or volume **bars** behind a trend **area**.
 - Emphasizing one series (line on top) against a backdrop of others (bars/areas).
+- Two measures whose **units or magnitudes** differ (a count and a rate) — put one
+  on the secondary value axis so neither flattens the other.
 
 ## When not to use
 
 - All series are the same kind — use `BarChart`, `LineChart`, or `AreaChart`.
-- The measures have wildly different scales that mislead on one axis (this v1
-  shares a single Y axis) — split into separate charts.
 - Part-to-whole — use a pie/donut chart.
+- Two measures a reader would want to compare **directly**, value against value —
+  two scales make any crossing point an artifact of the domains, not a fact about
+  the data. Split into separate charts (or share one axis) instead.
+
+## Two value axes
+
+A series opts in with `yAxis: 'secondary'`, and the second axis appears on the
+side opposite the primary one:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  series={[
+    { key: 'revenue', type: 'bar' },
+    { key: 'conversion', type: 'line', yAxis: 'secondary' },
+  ]}
+  xKey="month"
+  secondaryYUnit="%"
+/>
+```
+
+Each axis takes its own unit, tick formatter, tick count, and domain
+(`secondaryYUnit`, `secondaryYTickFormatter`, `secondaryYAxisTickCount`,
+`secondaryYAxisDomain`, `secondaryYAxisLabel`). `yAxisOrientation` moves the
+primary axis to the right and mirrors the pair; `showSecondaryYAxis: false` keeps
+the second scale but drops its chrome. The grid's horizontal lines follow the
+primary axis only — a second set from a different domain would cross the first at
+meaningless heights.
+
+Give the two axes matching domain presets when you want their tick rows to line
+up; a tightly fitted (`auto`) secondary domain will otherwise place its ticks
+between the primary axis's gridlines.
 
 ## Variants
 

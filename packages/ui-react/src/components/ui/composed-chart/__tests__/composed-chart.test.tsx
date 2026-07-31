@@ -172,3 +172,54 @@ describe('ComposedChart animation and data labels', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 });
+
+// The second value axis is only *rendered* by recharts, which needs a laid-out
+// container happy-dom never provides — so the two scales themselves are covered by
+// the `SecondaryYAxis*` VR stories. These assert the contract this composition
+// owns: the per-series opt-in and every secondary-axis prop mount, and a chart
+// that never opts in stays on the single-axis path.
+describe('ComposedChart secondary Y axis', () => {
+  const dualSeries = [
+    { key: 'revenue', type: 'bar' as const },
+    { key: 'orders', type: 'line' as const, yAxis: 'secondary' as const },
+  ];
+
+  it('accepts a per-series secondary-axis assignment with its own axis config', () => {
+    const { container } = renderChart({
+      series: dualSeries,
+      secondaryYAxisLabel: 'Orders',
+      secondaryYUnit: ' pcs',
+      secondaryYTickFormatter: (value) => `${value}!`,
+      secondaryYAxisTickCount: 3,
+      secondaryYAxisDomain: 'dataMin-dataMax',
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts a hidden secondary axis (the scale stays, its chrome goes)', () => {
+    const { container } = renderChart({
+      series: dualSeries,
+      showSecondaryYAxis: false,
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts a right-oriented primary axis, with and without a second scale', () => {
+    const single = renderChart({ yAxisOrientation: 'right' });
+    expect(single.container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+
+    const dual = renderChart({ series: dualSeries, yAxisOrientation: 'right' });
+    expect(dual.container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  // The secondary-axis props are inert without a series asking for the axis — no
+  // second axis is rendered, so setting them can't shift a single-scale chart.
+  it('ignores the secondary-axis props when no series selects that axis', () => {
+    const { container } = renderChart({
+      secondaryYAxisLabel: 'Unused',
+      secondaryYUnit: '%',
+      secondaryYAxisDomain: 'auto',
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+});

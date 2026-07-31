@@ -122,6 +122,53 @@ export function resolveAxisDomain(
   }
 }
 
+/**
+ * Which value axis a series is measured against, on a chart that can carry two.
+ *
+ * `secondary` is the opt-in: the second axis exists only when at least one series
+ * asks for it, so a chart whose series all leave this unset keeps the single
+ * shared scale — and its recharts output — exactly as before.
+ */
+export type ChartYAxisTarget = 'primary' | 'secondary';
+
+/**
+ * Second value-axis props, for a chart whose series can be measured on two
+ * independent scales. **Only `ComposedChart` implements these today.** It is the
+ * one chart in the suite where two scales are unambiguous: its series already
+ * differ in mark type, so a bar read against the left axis and a line against the
+ * right can't be mistaken for two marks sharing one. On a single-mark chart (Bar,
+ * Area) two scales invite comparing heights that aren't comparable, which is why
+ * these props are not mixed into `CartesianChartProps`.
+ *
+ * The primary axis is configured through `CartesianChartProps` (`yAxisLabel`,
+ * `yUnit`, `yTickFormatter`, `yAxisTickCount`, `yAxisDomain`, `showYAxis`); each
+ * prop here is its counterpart on the second axis, so the two scales format and
+ * bound themselves independently.
+ */
+export interface SecondaryYAxisProps {
+  /**
+   * Which side the *primary* value axis sits on. Defaults to `left`. The secondary
+   * axis always takes the opposite side.
+   */
+  yAxisOrientation?: 'left' | 'right';
+  /**
+   * Show the secondary axis's ticks + title. Defaults to `true`. Setting it false
+   * keeps the second *scale* (series still measure against it) and only drops its
+   * chrome — the same meaning `showYAxis` has for the primary axis.
+   */
+  showSecondaryYAxis?: boolean;
+  /** Title rendered beside the secondary axis (rotated). */
+  secondaryYAxisLabel?: string;
+  /** Unit suffix appended to the secondary axis's tick values (recharts `unit`). */
+  secondaryYUnit?: string;
+  /** Format each secondary-axis tick value — the counterpart of `yTickFormatter`. */
+  secondaryYTickFormatter?: TickFormatter;
+  /** Desired number of ticks on the secondary axis (recharts `tickCount`; a hint, not exact). */
+  secondaryYAxisTickCount?: number;
+  /** Domain preset for the secondary axis — same presets as `yAxisDomain`. */
+  secondaryYAxisDomain?: 'auto' | 'dataMin-dataMax' | 'zero';
+}
+
 /** recharts animation easing curves. */
 export type ChartAnimationEasing =
   | 'ease'

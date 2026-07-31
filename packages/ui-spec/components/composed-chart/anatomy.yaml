@@ -7,7 +7,9 @@ schematic: |
       plot: recharts <ComposedChart>
         grid:    <CartesianGrid>                    (horizontal value lines)
         x-axis:  <XAxis>   category (xKey)
-        y-axis:  <YAxis>   numeric value axis
+        y-axis:  <YAxis>   primary numeric value axis
+        y-axis-secondary: <YAxis>  second value axis, opposite side
+                                   (only when a series selects it)
         series:  one <Bar> / <Line> / <Area> per series[] entry (per its type)
         tooltip: <ChartTooltip> → tooltip-content   (hover card)
         legend:  <ChartLegend>  → legend-content    (per-series swatch + label)
@@ -36,7 +38,17 @@ parts:
     description: '`XAxis` — the category axis (`xKey`).'
   - id: y-axis
     element: g
-    description: '`YAxis` — the numeric value axis (shared across all series).'
+    description: >-
+      `YAxis` — the primary numeric value axis, shared by every series that does
+      not select the secondary one. Sits on the side given by `yAxisOrientation`
+      (left by default), and is the axis the grid's horizontal lines follow.
+  - id: y-axis-secondary
+    element: g
+    description: >-
+      A second `YAxis` on the opposite side, with its own unit, tick formatter,
+      tick count, and domain. Present only when at least one `series[]` entry sets
+      `yAxis: secondary`; `showSecondaryYAxis: false` hides its chrome while
+      keeping its scale.
   - id: series
     element: g
     description: >-
@@ -62,3 +74,8 @@ states:
     kind: prop
     prop: curve
     affects: [series]
+  - id: dual-value-axis
+    trigger: a series[] entry sets yAxis to secondary
+    kind: prop
+    prop: series
+    affects: [y-axis-secondary, series]

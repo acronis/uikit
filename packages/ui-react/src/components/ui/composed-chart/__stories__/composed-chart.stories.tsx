@@ -95,6 +95,10 @@ const meta = {
       control: 'select',
       options: ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
     },
+    yAxisOrientation: { control: 'inline-radio', options: ['left', 'right'] },
+    showSecondaryYAxis: { control: 'boolean' },
+    secondaryYAxisLabel: { control: 'text' },
+    secondaryYUnit: { control: 'text' },
     showLabels: { control: 'boolean' },
     labelPosition: {
       control: 'select',
@@ -314,5 +318,102 @@ export const Labels: Story = {
     ],
     showLabels: true,
     labelFormatter: formatCompactNumber,
+  },
+};
+
+// Two scales, two magnitudes: revenue in the thousands, conversion rate in
+// single-digit percent. This is the case the secondary axis exists for — on the
+// shared axis the rate collapses onto the baseline (see `SecondaryYAxisShared`
+// below, the same data with one scale).
+const dualAxisData = [
+  { month: 'Jan', revenue: 4200, conversion: 3.1 },
+  { month: 'Feb', revenue: 3100, conversion: 2.4 },
+  { month: 'Mar', revenue: 6500, conversion: 5.2 },
+  { month: 'Apr', revenue: 4900, conversion: 4.1 },
+  { month: 'May', revenue: 5400, conversion: 6.3 },
+  { month: 'Jun', revenue: 4800, conversion: 5.8 },
+];
+
+const dualAxisConfig = {
+  revenue: { label: 'Revenue', color: 'var(--ui-background-brand-secondary)' },
+  conversion: {
+    label: 'Conversion',
+    color: 'var(--ui-background-status-strong-success)',
+  },
+} satisfies ChartConfig;
+
+const dualAxisSeries = [
+  { key: 'revenue', type: 'bar' as const },
+  { key: 'conversion', type: 'line' as const, yAxis: 'secondary' as const },
+];
+
+// A series opts in with `yAxis: 'secondary'`; the second axis appears on the
+// opposite side, with its own unit, formatter, and domain.
+export const SecondaryYAxis: Story = {
+  args: {
+    data: dualAxisData,
+    config: dualAxisConfig,
+    series: dualAxisSeries,
+    yTickFormatter: formatCompactNumber,
+    secondaryYUnit: '%',
+    // Zero-anchored (recharts' own default, spelled out) so both axes divide their
+    // range into the same number of steps and their tick rows line up. `auto` fits
+    // the rate tightly instead — 2.1%, 3.15%, … — and its ticks then fall between
+    // the gridlines the primary axis draws.
+    secondaryYAxisDomain: 'zero',
+  },
+};
+
+// The same data on one shared scale — the contrast story. The conversion line sits
+// flat on the baseline here, which is the regression this feature is judged
+// against: if the two baselines ever look alike, the second axis stopped applying.
+export const SecondaryYAxisShared: Story = {
+  args: {
+    data: dualAxisData,
+    config: dualAxisConfig,
+    series: [
+      { key: 'revenue', type: 'bar' },
+      { key: 'conversion', type: 'line' },
+    ],
+    yTickFormatter: formatCompactNumber,
+  },
+};
+
+// A title per axis, each rotated to read from the outside in.
+export const SecondaryYAxisLabels: Story = {
+  args: {
+    data: dualAxisData,
+    config: dualAxisConfig,
+    series: dualAxisSeries,
+    yAxisLabel: 'Revenue',
+    yUnit: '$',
+    secondaryYAxisLabel: 'Conversion',
+    secondaryYUnit: '%',
+  },
+};
+
+// `yAxisOrientation` flips the primary axis to the right; the secondary always
+// takes the opposite side, so the whole pair mirrors.
+export const YAxisOrientationRight: Story = {
+  args: {
+    data: dualAxisData,
+    config: dualAxisConfig,
+    series: dualAxisSeries,
+    yAxisOrientation: 'right',
+    yTickFormatter: formatCompactNumber,
+    secondaryYUnit: '%',
+  },
+};
+
+// `showSecondaryYAxis: false` drops the second axis's chrome but keeps its scale —
+// the line stays scaled against it. Baselined because the unit env can't tell an
+// honoured toggle from a no-op.
+export const SecondaryYAxisHidden: Story = {
+  args: {
+    data: dualAxisData,
+    config: dualAxisConfig,
+    series: dualAxisSeries,
+    yTickFormatter: formatCompactNumber,
+    showSecondaryYAxis: false,
   },
 };

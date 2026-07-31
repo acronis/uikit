@@ -30,8 +30,7 @@ comes after the bars/areas it should overlay.
 > tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
 > design pass. `--ui-background-status-strong-*` is chromatic in every brand;
 > `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands. This v1 shares a single Y axis
-> across all series.
+> across brands until the real palette lands.
 
 ## Examples
 
@@ -102,6 +101,48 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
   yUnit="$"
 />
 ```
+
+## Two value axes
+
+Two measures whose units or magnitudes differ — a count and a rate — flatten each
+other on one scale: the smaller series sits on the baseline. A series opts in to a
+second axis with `yAxis: 'secondary'`, and it renders on the side opposite the
+primary one:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  series={[
+    { key: 'revenue', type: 'bar' },
+    { key: 'conversion', type: 'line', yAxis: 'secondary' },
+  ]}
+  xKey="month"
+  yTickFormatter={formatCompactNumber}
+  secondaryYUnit="%"
+/>
+```
+
+Each axis resolves independently: `secondaryYAxisLabel`, `secondaryYUnit`,
+`secondaryYTickFormatter`, `secondaryYAxisTickCount`, and `secondaryYAxisDomain`
+are the counterparts of the primary axis's `yAxisLabel` / `yUnit` /
+`yTickFormatter` / `yAxisTickCount` / `yAxisDomain`. Give the two the same domain
+preset when you want their tick rows to align — a tightly fitted (`auto`) secondary
+domain places its ticks between the primary axis's gridlines.
+
+`yAxisOrientation="right"` moves the primary axis to the right; the secondary always
+takes the opposite side, so the pair mirrors as a whole. `showSecondaryYAxis={false}`
+keeps the second scale — the series stays measured against it — and drops only its
+ticks and title, the meaning `showYAxis` has for the primary axis.
+
+The second axis exists only while a series asks for it, so the secondary props are
+inert on a single-scale chart, and the horizontal grid lines always follow the
+primary axis (a second set from a different domain would cross the first at
+meaningless heights).
+
+Reach for one axis, not two, when a reader would compare the series value against
+value: with two scales, where the marks cross is a consequence of the domains you
+picked rather than a fact about the data.
 
 ## Custom tooltip
 
