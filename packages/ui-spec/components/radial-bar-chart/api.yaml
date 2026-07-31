@@ -102,9 +102,13 @@ contract:
       default: 'false'
       description: Render a value label on each data point/segment.
     - name: labelPosition
-      type: "'top' | 'bottom' | 'left' | 'right' | 'center' | 'insideTop' | 'insideBottom' | 'insideLeft' | 'insideRight' | 'insideStart' | 'insideEnd'"
+      type: "'outside' | 'center' | 'centerTop' | 'centerBottom' | 'insideStart' | 'insideEnd' | 'end'"
       required: false
-      description: Where the value labels sit.
+      default: "'insideStart'"
+      description: >-
+        Where the value labels sit on the arc. Polar positions only — the
+        cartesian ones collapse to the same mid-radius placement. Inside
+        placements switch the label to the on-fill token.
     - name: labelFormatter
       type: '(value) => string'
       required: false

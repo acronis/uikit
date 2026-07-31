@@ -19,7 +19,7 @@ import {
   ChartTooltipContent,
   resolveAnimation,
   toLabelFormatter,
-  CHART_LABEL_FILL,
+  resolveLabelFillClass,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartAnimationProps,
@@ -86,6 +86,11 @@ export interface RadarChartProps
   labelPosition?: CartesianLabelPosition;
 }
 
+// Distance from the polygon to the category tick text when value labels are on
+// (recharts' default is 8). Has to clear a CHART_LABEL_FONT_SIZE line plus the
+// LabelList's own 5px offset, or the topmost vertex's value overlaps its tick.
+const RADAR_LABEL_TICK_SIZE = 30;
+
 const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
   (
     {
@@ -119,6 +124,7 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       animationBegin,
       animationEasing,
     });
+    const radarLabelPosition = labelPosition ?? 'top';
     return (
       <div
         ref={ref}
@@ -140,7 +146,18 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
               <ChartTooltip content={tooltipContent ?? <ChartTooltipContent />} />
             )}
             {showGrid && <PolarGrid gridType={gridType ?? 'polygon'} />}
-            <PolarAngleAxis dataKey={angleKey} />
+            <PolarAngleAxis
+              dataKey={angleKey}
+              // Push the category ticks out when value labels are on. recharts
+              // gives a Radar's label list a *cartesian* viewBox (width/height 0
+              // at the vertex), so `top` offsets straight up in screen space —
+              // at the topmost vertex the value lands on its own category tick.
+              // The tick text is drawn at `outerRadius + tickSize`, so this is
+              // the only lever that adds *absolute* clearance: shrinking
+              // outerRadius scales the tick ring down with the polygon and keeps
+              // the overlap.
+              tickSize={showLabels ? RADAR_LABEL_TICK_SIZE : undefined}
+            />
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}
             {dataKeys.map((key) => (
               <Radar
@@ -156,9 +173,9 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
                 {showLabels && (
                   <LabelList
                     dataKey={key}
-                    position={labelPosition ?? 'top'}
+                    position={radarLabelPosition}
                     formatter={toLabelFormatter(labelFormatter)}
-                    fill={CHART_LABEL_FILL}
+                    className={resolveLabelFillClass(radarLabelPosition)}
                     fontSize={CHART_LABEL_FONT_SIZE}
                   />
                 )}

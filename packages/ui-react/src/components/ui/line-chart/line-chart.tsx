@@ -23,7 +23,8 @@ import {
   resolveAxisDomain,
   resolveAnimation,
   toLabelFormatter,
-  CHART_LABEL_FILL,
+  resolveLabelFillClass,
+  CHART_LABEL_MARGIN,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartLegendContentProps,
@@ -207,6 +208,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       animationBegin,
       animationEasing,
     });
+    const lineLabelPosition = labelPosition ?? 'top';
     const dashArray = lineStyle === 'dashed' ? '5 5' : undefined;
     const yDomain = resolveAxisDomain(yAxisDomain);
 
@@ -281,7 +283,10 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
           config={config}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
-          <RootChart data={chartData as readonly unknown[]}>
+          <RootChart
+            data={chartData as readonly unknown[]}
+            margin={showLabels ? CHART_LABEL_MARGIN : undefined}
+          >
             {showGrid && (
               <CartesianGrid
                 horizontal={gridHorizontal ?? true}
@@ -395,9 +400,9 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                   {showLabels && (
                     <LabelList
                       dataKey={key}
-                      position={labelPosition ?? 'top'}
+                      position={lineLabelPosition}
                       formatter={toLabelFormatter(labelFormatter)}
-                      fill={CHART_LABEL_FILL}
+                      className={resolveLabelFillClass(lineLabelPosition)}
                       fontSize={CHART_LABEL_FONT_SIZE}
                     />
                   )}

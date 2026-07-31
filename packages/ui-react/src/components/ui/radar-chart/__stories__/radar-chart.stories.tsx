@@ -73,6 +73,7 @@ const meta = {
     showLegend: { control: 'boolean' },
     animate: { control: 'boolean' },
     animationDuration: { control: { type: 'number' } },
+    animationBegin: { control: { type: 'number' } },
     animationEasing: {
       control: 'select',
       options: ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
@@ -83,9 +84,13 @@ const meta = {
       options: [
         'top',
         'bottom',
+        'left',
+        'right',
         'center',
         'insideTop',
         'insideBottom',
+        'insideLeft',
+        'insideRight',
         'insideStart',
         'insideEnd',
       ],

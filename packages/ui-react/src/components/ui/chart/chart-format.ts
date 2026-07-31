@@ -149,23 +149,29 @@ export interface ChartAnimationProps {
 
 /** The resolved recharts animation props to spread onto a series/shape. */
 export interface ResolvedAnimation {
-  isAnimationActive: boolean;
+  isAnimationActive: boolean | 'auto';
   animationDuration?: number;
   animationBegin?: number;
   animationEasing?: ChartAnimationEasing;
 }
 
 /**
- * Turn the shared `ChartAnimationProps` into the recharts series props. `animate`
- * drives `isAnimationActive` (default `false`); the timing props only appear when
- * given, so an unset chart spreads exactly `{ isAnimationActive: false }` — the
- * previous hardcoded value.
+ * Turn the shared `ChartAnimationProps` into the recharts series props. The
+ * timing props only appear when given, so an unset chart spreads exactly
+ * `{ isAnimationActive: false }` — the previous hardcoded value.
+ *
+ * `animate` maps to recharts' `'auto'`, not to a literal `true`: `'auto'` is the
+ * only value that honors `prefers-reduced-motion` (and disables the animation in
+ * SSR). recharts resolves it as
+ * `isActive = isActiveProp === 'auto' ? !isSsr && !prefersReducedMotion : isActiveProp`,
+ * so a literal `true` would force motion on users who asked for none — this
+ * library has no other reduced-motion escape hatch.
  */
 export function resolveAnimation(props: ChartAnimationProps): ResolvedAnimation {
   const { animate = false, animationDuration, animationBegin, animationEasing } =
     props;
   return {
-    isAnimationActive: animate,
+    isAnimationActive: animate ? 'auto' : false,
     ...(animationDuration !== undefined ? { animationDuration } : {}),
     ...(animationBegin !== undefined ? { animationBegin } : {}),
     ...(animationEasing !== undefined ? { animationEasing } : {}),
@@ -187,6 +193,26 @@ export type CartesianLabelPosition =
   | 'insideEnd';
 
 /**
+ * Where a data label sits on a *polar* series (Pie, RadialBar). Deliberately not
+ * `CartesianLabelPosition`: recharts routes a polar label list through
+ * `getAttrsOfPolarLabel` / `renderRadialLabel`, which understand only these
+ * seven values — every cartesian-only position (`top`, `insideLeft`, …) silently
+ * collapses to the same mid-radius placement, so offering them would advertise
+ * distinctions that don't exist.
+ */
+export type PolarLabelPosition =
+  | 'outside'
+  | 'center'
+  | 'centerTop'
+  | 'centerBottom'
+  | 'insideStart'
+  | 'insideEnd'
+  | 'end';
+
+/** Any position accepted by the suite's data labels. */
+export type ChartLabelPosition = CartesianLabelPosition | PolarLabelPosition;
+
+/**
  * Data-label props shared by the charts that can annotate each point/segment with
  * its value. `labelPosition` stays per-chart (the valid position set differs by
  * family), but `showLabels` + `labelFormatter` are common. Label formatting reuses
@@ -200,24 +226,111 @@ export interface ChartDataLabelProps {
 }
 
 /**
- * Token fill + size for data labels, legible over the chart surface in light and
- * dark. Labels default to an *outside* position (e.g. `top`), so this is the
- * on-surface text color rather than an on-fill color.
+ * Fill for a label that sits on the chart *surface* — i.e. an outside position
+ * (`top`, `right`, polar `outside`). Inverts with the theme, so it only works
+ * against the surface background.
  */
-export const CHART_LABEL_FILL = 'var(--ui-text-on-surface-primary)';
+export const CHART_LABEL_FILL_CLASS = 'fill-[var(--ui-text-on-surface-primary)]!';
+
+/**
+ * Fill for a label that sits on the *series fill* — any `inside*` position, a
+ * polar mid-radius/centroid placement, or a stacked segment. The on-surface
+ * token must not be used there: it resolves near-white in dark mode and drops to
+ * ~1.6:1 against the saturated status/brand fills the charts colour series with,
+ * failing the `accessibility/contrast` grammar rule (`must`, WCAG 1.4.3). This is
+ * the same "text on a strong colored surface" token `Treemap` already uses; it is
+ * white in both themes, so it holds up over every series colour.
+ */
+export const CHART_LABEL_FILL_ON_SERIES_CLASS =
+  'fill-[var(--ui-text-on-status-strong-neutral)]!';
+
 export const CHART_LABEL_FONT_SIZE = 12;
 
 /**
+ * Plot-area inset to apply when a Line/Area series carries outside data labels.
+ * recharts hands those label lists `parentViewBox: undefined` (its own source
+ * calls this out as a bug in `cartesian/Line.js`), so `getCartesianPosition`'s
+ * `clamp` has nothing to clamp against and the first/last point's value is cut
+ * off at the SVG edge. Widening the margin is the only lever a composition over
+ * recharts has. `Bar` does pass a `parentViewBox`, so bar series don't need it.
+ */
+export const CHART_LABEL_MARGIN = {
+  top: 16,
+  right: 24,
+  bottom: 5,
+  left: 12,
+} as const;
+
+/** Positions that draw the label on top of the series fill rather than the surface. */
+const ON_SERIES_LABEL_POSITIONS = new Set<ChartLabelPosition>([
+  'center',
+  'centerTop',
+  'centerBottom',
+  'insideTop',
+  'insideBottom',
+  'insideLeft',
+  'insideRight',
+  'insideStart',
+  'insideEnd',
+  'end',
+]);
+
+/**
+ * Resolve where a cartesian value label sits, given the caller's override, the
+ * layout, and the position of the series' growing end (`top` for a vertical bar
+ * or a line/area point, `right` for a horizontal bar).
+ *
+ * The stacked branch is the reason this isn't inlined: a stacked segment has no
+ * free space at its growing end — the next segment is drawn there — so a `top`
+ * label lands *inside* its neighbour, in the on-surface colour, over a saturated
+ * fill. Centring it in its own segment is both the readable placement and the
+ * one `resolveLabelFill` will pair with the on-fill token.
+ */
+export function resolveCartesianLabelPosition(options: {
+  labelPosition?: CartesianLabelPosition;
+  isStacked?: boolean;
+  growingEnd?: CartesianLabelPosition;
+}): CartesianLabelPosition {
+  const { labelPosition, isStacked = false, growingEnd = 'top' } = options;
+  if (labelPosition !== undefined) return labelPosition;
+  return isStacked ? 'center' : growingEnd;
+}
+
+/**
+ * Pick the label fill that actually has contrast at `position`. Callers must pass
+ * the *resolved* position (after their own default), never `undefined` for a
+ * polar chart — recharts' polar fallback is a mid-radius placement, which is on
+ * the fill even though no `inside*` value was given.
+ *
+ * Returns a `className`, not a `fill` attribute, and the utility is `!`-flagged:
+ * the cartesian charts scope `[&_.recharts-label]:fill-foreground` on their
+ * container to theme axis titles, and a `LabelList`'s text carries
+ * `.recharts-label` too — so a CSS rule would quietly beat an SVG presentation
+ * attribute and undo the contrast fix.
+ */
+export function resolveLabelFillClass(position: ChartLabelPosition): string {
+  return ON_SERIES_LABEL_POSITIONS.has(position)
+    ? CHART_LABEL_FILL_ON_SERIES_CLASS
+    : CHART_LABEL_FILL_CLASS;
+}
+
+/**
  * Adapt a `TickFormatter` to recharts' `LabelList` `formatter` prop, whose value
- * type is wider (it can be `undefined`). Returns `undefined` when no formatter is
- * given, so a label renders its raw value. Lets labels reuse the same formatters
- * as the value axis.
+ * type is wider. Returns `undefined` when no formatter is given, so a label
+ * renders its raw value. Lets labels reuse the same formatters as the value axis.
+ *
+ * Null/undefined is filtered out rather than forwarded: recharts builds a label
+ * entry for *every* point including the null ones that `connectNulls` is meant to
+ * bridge, and the tick formatters coerce (`formatCompactNumber(null)` is `"0"`,
+ * `formatPercent(undefined)` is `"undefined"`) — which would paint a phantom
+ * value over an intentional gap.
  */
 export function toLabelFormatter(
   formatter: TickFormatter | undefined
 ): ((value: unknown) => string) | undefined {
   if (!formatter) return undefined;
-  return (value: unknown) => formatter(value as number | string);
+  return (value: unknown) =>
+    value == null ? '' : formatter(value as number | string);
 }
 
 const toNumber = (value: number | string): number | null => {

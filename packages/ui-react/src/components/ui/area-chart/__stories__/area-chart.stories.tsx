@@ -87,6 +87,7 @@ const meta = {
     showLegend: { control: 'boolean' },
     animate: { control: 'boolean' },
     animationDuration: { control: { type: 'number' } },
+    animationBegin: { control: { type: 'number' } },
     animationEasing: {
       control: 'select',
       options: ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
@@ -97,9 +98,13 @@ const meta = {
       options: [
         'top',
         'bottom',
+        'left',
+        'right',
         'center',
         'insideTop',
         'insideBottom',
+        'insideLeft',
+        'insideRight',
         'insideStart',
         'insideEnd',
       ],
@@ -330,6 +335,16 @@ export const Animated: Story = {
 export const Labels: Story = {
   args: {
     dataKeys: ['desktop'],
+    showLabels: true,
+    labelFormatter: formatCompactNumber,
+  },
+};
+
+// Labels on a *stacked* area — same layout-aware default as the stacked bar:
+// centred in its own band, on the on-fill label token.
+export const StackedLabels: Story = {
+  args: {
+    layout: 'stacked',
     showLabels: true,
     labelFormatter: formatCompactNumber,
   },

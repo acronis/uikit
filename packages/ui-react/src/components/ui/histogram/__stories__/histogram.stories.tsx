@@ -65,6 +65,7 @@ const meta = {
     yUnit: { control: 'text' },
     animate: { control: 'boolean' },
     animationDuration: { control: { type: 'number' } },
+    animationBegin: { control: { type: 'number' } },
     animationEasing: {
       control: 'select',
       options: ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],

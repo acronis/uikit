@@ -100,6 +100,20 @@ import { Histogram } from '@acronis-platform/ui-react';
 <Histogram config={config} values={values} binCount={10} showYAxis={false} />;
 ```
 
+## Animation
+
+Charts render statically by default. Opt in to an entrance animation with
+`animate`, and tune it with `animationDuration` / `animationBegin` /
+`animationEasing`:
+
+```tsx
+<Histogram config={config} data={data} animate animationDuration={800} animationEasing="ease-out" />
+```
+
+`animate` honors `prefers-reduced-motion`: for a visitor who has asked their
+system to reduce motion, the series render at their final geometry with no
+animation (the same applies when rendering on the server).
+
 ## API Reference
 
 <AutoTypeTable

@@ -22,7 +22,8 @@ import {
   resolveAxisDomain,
   resolveAnimation,
   toLabelFormatter,
-  CHART_LABEL_FILL,
+  resolveLabelFillClass,
+  resolveCartesianLabelPosition,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type CartesianChartProps,
@@ -182,13 +183,16 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       animationBegin,
       animationEasing,
     });
-    // Labels sit at the growing end of the bar by default: above vertical bars,
-    // to the right of horizontal ones.
-    const barLabelPosition =
-      labelPosition ?? (orientation === 'horizontal' ? 'right' : 'top');
     // Our `orientation` is bar-direction; recharts' `layout` is the opposite axis.
     const rechartsLayout = orientation === 'horizontal' ? 'vertical' : 'horizontal';
     const isStacked = layout === 'stacked';
+    // Labels sit at the growing end of the bar: above vertical bars, to the
+    // right of horizontal ones — or centred in the segment when stacked.
+    const barLabelPosition = resolveCartesianLabelPosition({
+      labelPosition,
+      isStacked,
+      growingEnd: orientation === 'horizontal' ? 'right' : 'top',
+    });
 
     const referenceLines = referenceLine
       ? Array.isArray(referenceLine)
@@ -333,7 +337,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                       dataKey={key}
                       position={barLabelPosition}
                       formatter={toLabelFormatter(labelFormatter)}
-                      fill={CHART_LABEL_FILL}
+                      className={resolveLabelFillClass(barLabelPosition)}
                       fontSize={CHART_LABEL_FONT_SIZE}
                     />
                   )}

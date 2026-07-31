@@ -22,7 +22,8 @@ import {
   resolveAxisDomain,
   resolveAnimation,
   toLabelFormatter,
-  CHART_LABEL_FILL,
+  resolveLabelFillClass,
+  CHART_LABEL_MARGIN,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type CartesianChartProps,
@@ -120,6 +121,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       animationBegin,
       animationEasing,
     });
+    const seriesLabelPosition = labelPosition ?? 'top';
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
     // the left gutter. Passed to recharts' native `label` (themed via the
     // `.recharts-label` fill selector on the container).
@@ -151,7 +153,12 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
           config={config}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
-          <RechartsComposedChart data={data as readonly unknown[]}>
+          <RechartsComposedChart
+            data={data as readonly unknown[]}
+            // Line/area series don't clamp their labels to the plot (see
+            // CHART_LABEL_MARGIN); a composed chart can hold either.
+            margin={showLabels ? CHART_LABEL_MARGIN : undefined}
+          >
             {showGrid && (
               <CartesianGrid
                 horizontal={gridHorizontal ?? true}
@@ -212,9 +219,9 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                     {showLabels && (
                       <LabelList
                         dataKey={s.key}
-                        position={labelPosition ?? 'top'}
+                        position={seriesLabelPosition}
                         formatter={toLabelFormatter(labelFormatter)}
-                        fill={CHART_LABEL_FILL}
+                        className={resolveLabelFillClass(seriesLabelPosition)}
                         fontSize={CHART_LABEL_FONT_SIZE}
                       />
                     )}
@@ -235,9 +242,9 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                     {showLabels && (
                       <LabelList
                         dataKey={s.key}
-                        position={labelPosition ?? 'top'}
+                        position={seriesLabelPosition}
                         formatter={toLabelFormatter(labelFormatter)}
-                        fill={CHART_LABEL_FILL}
+                        className={resolveLabelFillClass(seriesLabelPosition)}
                         fontSize={CHART_LABEL_FONT_SIZE}
                       />
                     )}
@@ -257,9 +264,9 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                   {showLabels && (
                     <LabelList
                       dataKey={s.key}
-                      position={labelPosition ?? 'top'}
+                      position={seriesLabelPosition}
                       formatter={toLabelFormatter(labelFormatter)}
-                      fill={CHART_LABEL_FILL}
+                      className={resolveLabelFillClass(seriesLabelPosition)}
                       fontSize={CHART_LABEL_FONT_SIZE}
                     />
                   )}

@@ -7,7 +7,9 @@ import {
   createConeTooltip,
   dropConeBand,
 } from '../confidence-cone';
-import { ChartTooltipContent, type ChartConfig } from '../../chart';
+import { ChartTooltipContent, type ChartConfig,
+  resolveAnimation,
+} from '../../chart';
 
 const data = [
   { month: 'Jan', actual: 100 },
@@ -194,5 +196,34 @@ describe('ConfidenceCone', () => {
   it('merges a caller className onto the root', () => {
     const { container } = renderChart({ className: 'h-[300px] w-[500px]' });
     expect(container.firstElementChild).toHaveClass('h-[300px]', 'w-[500px]');
+  });
+});
+
+// recharts needs a laid-out container, which happy-dom does not provide, so the
+// rendered labels/animation are covered by the visual-regression stories. These
+// assert the prop contract itself: the composition accepts every new prop and
+// mounts, and the animation resolves to the reduced-motion-aware value rather
+// than a literal `true`.
+describe('ConfidenceCone animation and data labels', () => {
+  it('is not animated unless asked', () => {
+    expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
+    const { container } = renderChart();
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('resolves animate to "auto" so prefers-reduced-motion is honored', () => {
+    expect(
+      resolveAnimation({ animate: true, animationDuration: 800 })
+    ).toEqual({ isAnimationActive: 'auto', animationDuration: 800 });
+  });
+
+  it('accepts the full animation prop set without throwing', () => {
+    const { container } = renderChart({
+      animate: true,
+      animationDuration: 400,
+      animationBegin: 50,
+      animationEasing: 'ease-in-out',
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 });

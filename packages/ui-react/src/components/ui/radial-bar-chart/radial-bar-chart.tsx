@@ -17,12 +17,12 @@ import {
   ChartTooltipContent,
   resolveAnimation,
   toLabelFormatter,
-  CHART_LABEL_FILL,
+  resolveLabelFillClass,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartAnimationProps,
   type ChartDataLabelProps,
-  type CartesianLabelPosition,
+  type PolarLabelPosition,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives (a polar/radial
@@ -76,9 +76,10 @@ export interface RadialBarChartProps
   tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
   /**
    * Position of the value labels when `showLabels` is on. Defaults to
-   * `insideStart` — the labels sit inside each arc.
+   * `insideStart` — the labels sit inside each arc, and therefore render in the
+   * on-fill label token so they stay legible over the arc colour.
    */
-  labelPosition?: CartesianLabelPosition;
+  labelPosition?: PolarLabelPosition;
 }
 
 const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
@@ -115,6 +116,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
       animationBegin,
       animationEasing,
     });
+    const arcLabelPosition = labelPosition ?? 'insideStart';
     // Stamp each row with its `fill` (the shadcn data-driven pattern) so a real
     // hover resolves the arc color in the tooltip — recharts' RadialBar, like
     // Funnel, carries no per-arc color on the tooltip payload item.
@@ -158,9 +160,9 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
               {showLabels && (
                 <LabelList
                   dataKey={dataKey}
-                  position={labelPosition ?? 'insideStart'}
+                  position={arcLabelPosition}
                   formatter={toLabelFormatter(labelFormatter)}
-                  fill={CHART_LABEL_FILL}
+                  className={resolveLabelFillClass(arcLabelPosition)}
                   fontSize={CHART_LABEL_FONT_SIZE}
                 />
               )}

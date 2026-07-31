@@ -81,15 +81,20 @@ const meta = {
       options: [
         'top',
         'bottom',
+        'left',
+        'right',
         'center',
         'insideTop',
         'insideBottom',
+        'insideLeft',
+        'insideRight',
         'insideStart',
         'insideEnd',
       ],
     },
     animate: { control: 'boolean' },
     animationDuration: { control: { type: 'number' } },
+    animationBegin: { control: { type: 'number' } },
     animationEasing: {
       control: 'select',
       options: ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
@@ -354,4 +359,15 @@ export const RotatedTicksWithAxisTitle: Story = {
 export const Animated: Story = {
   parameters: { snapshot: { skip: true } },
   args: { animate: true, animationDuration: 800 },
+};
+
+// Labels on a *stacked* bar. Guards the layout-aware default: a stacked segment
+// has no room at its growing end, so each value centres inside its own segment
+// and switches to the on-fill label token.
+export const StackedLabels: Story = {
+  args: {
+    layout: 'stacked',
+    showLabels: true,
+    labelFormatter: formatCompactNumber,
+  },
 };

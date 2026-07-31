@@ -98,6 +98,41 @@ import { RadialBarChart, ChartTooltipContent } from '@acronis-platform/ui-react'
 />;
 ```
 
+## Animation
+
+Charts render statically by default. Opt in to an entrance animation with
+`animate`, and tune it with `animationDuration` / `animationBegin` /
+`animationEasing`:
+
+```tsx
+<RadialBarChart config={config} data={data} dataKey="visitors" nameKey="browser" animate animationDuration={800} animationEasing="ease-out" />
+```
+
+`animate` honors `prefers-reduced-motion`: for a visitor who has asked their
+system to reduce motion, the series render at their final geometry with no
+animation (the same applies when rendering on the server).
+
+## Data labels
+
+Annotate each point with its value using `showLabels`. `labelFormatter` takes the
+same formatters as the axes, so a label and its axis read alike:
+
+```tsx
+<RadialBarChart config={config} data={data} dataKey="visitors" nameKey="browser" showLabels labelFormatter={formatCompactNumber} />
+```
+
+Labels sit `outside` the arc by default, on the chart surface. `labelPosition`
+takes the polar placements — `outside`, `center`, `centerTop`, `centerBottom`,
+`insideStart`, `insideEnd`, `end`. The on-arc placements switch the label to a
+token that stays legible over a saturated series colour:
+
+```tsx
+<RadialBarChart config={config} data={data} dataKey="visitors" nameKey="browser" showLabels labelPosition="insideStart" />
+```
+
+Labels are off by default — with more than one series they collide easily, so turn
+them on for a single series or a chart with room to spare.
+
 ## API Reference
 
 <AutoTypeTable

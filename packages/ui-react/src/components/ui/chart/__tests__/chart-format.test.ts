@@ -6,6 +6,11 @@ import {
   formatPercent,
   resolveAnimation,
   resolveAxisDomain,
+  resolveCartesianLabelPosition,
+  resolveLabelFillClass,
+  toLabelFormatter,
+  CHART_LABEL_FILL_CLASS,
+  CHART_LABEL_FILL_ON_SERIES_CLASS,
 } from '../chart-format';
 
 describe('formatCompactNumber', () => {
@@ -114,16 +119,28 @@ describe('resolveAnimation', () => {
     expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
   });
 
-  it('enables animation when animate is true', () => {
+  // 'auto' rather than `true`: it is the only value recharts resolves against
+  // prefers-reduced-motion (and SSR). A literal `true` would force the motion.
+  it('maps animate to recharts\' reduced-motion-aware "auto"', () => {
     expect(resolveAnimation({ animate: true })).toEqual({
-      isAnimationActive: true,
+      isAnimationActive: 'auto',
     });
+  });
+
+  it('never emits a literal true, which would bypass prefers-reduced-motion', () => {
+    for (const props of [
+      { animate: true },
+      { animate: true, animationDuration: 400 },
+      { animate: true, animationBegin: 10, animationEasing: 'linear' as const },
+    ]) {
+      expect(resolveAnimation(props).isAnimationActive).not.toBe(true);
+    }
   });
 
   it('includes only the timing props that are provided', () => {
     expect(
       resolveAnimation({ animate: true, animationDuration: 400 })
-    ).toEqual({ isAnimationActive: true, animationDuration: 400 });
+    ).toEqual({ isAnimationActive: 'auto', animationDuration: 400 });
   });
 
   it('passes through duration, begin, and easing', () => {
@@ -135,7 +152,7 @@ describe('resolveAnimation', () => {
         animationEasing: 'ease-in-out',
       })
     ).toEqual({
-      isAnimationActive: true,
+      isAnimationActive: 'auto',
       animationDuration: 300,
       animationBegin: 50,
       animationEasing: 'ease-in-out',
@@ -145,5 +162,116 @@ describe('resolveAnimation', () => {
   it('omits undefined timing props rather than emitting undefined keys', () => {
     const resolved = resolveAnimation({ animate: false });
     expect(Object.keys(resolved)).toEqual(['isAnimationActive']);
+  });
+});
+
+describe('toLabelFormatter', () => {
+  it('returns undefined with no formatter, so labels render their raw value', () => {
+    expect(toLabelFormatter(undefined)).toBeUndefined();
+  });
+
+  it('applies the tick formatter to a normal value', () => {
+    const format = toLabelFormatter(formatCompactNumber)!;
+    expect(format(1234)).toBe('1.2K');
+    expect(format('2500')).toBe('2.5K');
+  });
+
+  // recharts builds a label entry for *every* point, including the null gaps
+  // `connectNulls` bridges — and the tick formatters coerce, so forwarding the
+  // null would paint "0" (or "undefined") over an intentional gap.
+  it('renders nothing for a null or undefined value instead of coercing it', () => {
+    const compact = toLabelFormatter(formatCompactNumber)!;
+    expect(compact(null)).toBe('');
+    expect(compact(undefined)).toBe('');
+    expect(formatCompactNumber(null as never)).toBe('0');
+
+    const percent = toLabelFormatter(formatPercent)!;
+    expect(percent(null)).toBe('');
+    expect(percent(undefined)).toBe('');
+  });
+
+  it('still formats zero, which is a real value and not a gap', () => {
+    const format = toLabelFormatter(formatCompactNumber)!;
+    expect(format(0)).toBe('0');
+  });
+});
+
+describe('resolveLabelFillClass', () => {
+  it('uses the on-surface token for positions outside the shape', () => {
+    for (const position of ['top', 'bottom', 'left', 'right', 'outside'] as const) {
+      expect(resolveLabelFillClass(position)).toBe(CHART_LABEL_FILL_CLASS);
+    }
+  });
+
+  // The on-surface token inverts with the theme and drops to ~1.6:1 over the
+  // saturated series fills in dark mode — below the `must`-severity contrast rule.
+  it('uses the on-fill token for every position that sits on the series', () => {
+    for (const position of [
+      'center',
+      'centerTop',
+      'centerBottom',
+      'insideTop',
+      'insideBottom',
+      'insideLeft',
+      'insideRight',
+      'insideStart',
+      'insideEnd',
+      'end',
+    ] as const) {
+      expect(resolveLabelFillClass(position)).toBe(CHART_LABEL_FILL_ON_SERIES_CLASS);
+    }
+  });
+
+  // The cartesian charts scope `[&_.recharts-label]:fill-foreground` on their
+  // container to theme axis titles, and a LabelList's text also carries
+  // `.recharts-label` — so the fill has to be an `!`-flagged class, not an SVG
+  // `fill` attribute, or that CSS rule silently wins and undoes the contrast fix.
+  it('emits an important-flagged class so container CSS cannot override it', () => {
+    for (const position of ['top', 'center', 'insideStart', 'outside'] as const) {
+      expect(resolveLabelFillClass(position)).toMatch(/^fill-\[var\(--ui-[a-z-]+\)\]!$/);
+    }
+  });
+
+  it('keeps the two fills distinct', () => {
+    expect(CHART_LABEL_FILL_CLASS).not.toBe(CHART_LABEL_FILL_ON_SERIES_CLASS);
+  });
+});
+
+describe('resolveCartesianLabelPosition', () => {
+  it('defaults to the series growing end', () => {
+    expect(resolveCartesianLabelPosition({})).toBe('top');
+    expect(resolveCartesianLabelPosition({ growingEnd: 'right' })).toBe('right');
+  });
+
+  // A stacked segment's growing end is covered by the next segment, so a `top`
+  // label would render inside its neighbour — in the on-surface colour, over a
+  // saturated fill. Both orientations have to fall back to the segment centre.
+  it('centres the label inside its own segment when stacked', () => {
+    expect(resolveCartesianLabelPosition({ isStacked: true })).toBe('center');
+    expect(
+      resolveCartesianLabelPosition({ isStacked: true, growingEnd: 'right' })
+    ).toBe('center');
+  });
+
+  it('pairs the stacked default with the on-fill token', () => {
+    const stacked = resolveCartesianLabelPosition({ isStacked: true });
+    expect(resolveLabelFillClass(stacked)).toBe(CHART_LABEL_FILL_ON_SERIES_CLASS);
+
+    const grouped = resolveCartesianLabelPosition({ isStacked: false });
+    expect(resolveLabelFillClass(grouped)).toBe(CHART_LABEL_FILL_CLASS);
+  });
+
+  it('lets an explicit position win over every default', () => {
+    for (const isStacked of [true, false]) {
+      for (const growingEnd of ['top', 'right'] as const) {
+        expect(
+          resolveCartesianLabelPosition({
+            labelPosition: 'insideEnd',
+            isStacked,
+            growingEnd,
+          })
+        ).toBe('insideEnd');
+      }
+    }
   });
 });
