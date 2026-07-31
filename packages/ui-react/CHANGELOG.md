@@ -1,5 +1,19 @@
 # @acronis-platform/ui-react
 
+## 0.60.0
+
+### Minor Changes
+
+- [#605](https://github.com/acronis/uikit/pull/605) [`4253c07`](https://github.com/acronis/uikit/commit/4253c0718538bcf600982516ae5bd8d3b0a58947) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `CategoryBar` — a single horizontal bar split into proportional colored category segments, with an optional count/% legend and per-segment tooltips (initial version; design + data-viz palette reconciliation pending).
+
+- [#605](https://github.com/acronis/uikit/pull/605) [`e9d351a`](https://github.com/acronis/uikit/commit/e9d351a99d3252c352900def525e409bfaaf0706) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `SankeyChart` — a typed Sankey flow-diagram over the shared `Chart`
+  primitives (built on recharts' `Sankey`). Renders a `nodes` + `links` graph with
+  token-themed node bars and target-tinted link ribbons (width ∝ flow value),
+  optional node labels, a tooltip, and geometry props (`nodePadding` / `nodeWidth`
+  / `linkCurvature` / `sort`). Initial design-pending v1 — colors borrow existing
+  semantic `--ui-*` tokens until the `--ui-chart-*` palette lands; Figma Code
+  Connect deferred.
+
 ## 0.59.0
 
 ### Minor Changes
