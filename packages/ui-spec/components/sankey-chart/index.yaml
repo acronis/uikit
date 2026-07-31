@@ -13,4 +13,4 @@ description: >-
   custom node/link renderers (recharts' defaults paint one flat grey and have no
   token hooks). Built on recharts' `Sankey` primitive (no apps/demo playground
   existed).
-since: 0.59.0
+since: 0.60.0

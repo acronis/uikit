@@ -1,5 +1,11 @@
 # @acronis-platform/tokens-pd
 
+## 2.4.0
+
+### Minor Changes
+
+- [#592](https://github.com/acronis/uikit/pull/592) [`ef714a6`](https://github.com/acronis/uikit/commit/ef714a65fd8fd0a94b9bd853b4a66fa98f8fab9f) Thanks [@madjorr](https://github.com/madjorr)! - Generate a full margin/padding/gap utility grammar directly from the existing `units.gap` primitive scale (0–96px) — `--ui-gap-*` custom properties, framework-agnostic `.ui-p-*`/`.ui-m-*`/`.ui-gap-*` classes (+ `.ui-mx-auto`) in `tokens-pd/css/default.css`, and `gap-*` keys in the Tailwind presets (`p-gap-8`, `gap-x-gap-16`, …).
+
 ## 2.3.0
 
 ### Minor Changes

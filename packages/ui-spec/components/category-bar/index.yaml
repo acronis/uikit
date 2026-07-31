@@ -11,4 +11,4 @@ description: >-
   A plain flex composition (not a recharts chart) with one CVA axis (`size`),
   an optional count/% legend, and per-segment hover tooltips. Design-pending
   v1 — no chart token tier exists yet.
-since: 0.59.0
+since: 0.60.0
