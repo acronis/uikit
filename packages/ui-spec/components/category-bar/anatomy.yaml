@@ -12,7 +12,11 @@ root:
   element: div
   description: >-
     The wrapper — a flex column holding the bar track and the optional legend.
-    CategoryBar has one CVA axis (`size`), applied to the track's height.
+    CategoryBar has one CVA axis (`size`), applied to the track's height. It
+    carries a `data-chart` scope and renders the shared `ChartStyle`, which turns
+    each `config` entry into a `--color-<key>` custom property (so a per-theme
+    `theme` entry resolves like a flat `color`); segments and legend dots
+    reference those properties rather than the config value directly.
 
 parts:
   - id: track
@@ -31,7 +35,9 @@ parts:
     element: div
     description: >-
       Per-segment hover card — a color dot + the segment's `config` label + its
-      value and share as a percentage. Rendered when `showTooltip`.
+      value and share as a percentage. Rendered when `showTooltip`. Because the
+      popup is portaled out of the root, it repeats the root's `data-chart` scope
+      and `ChartStyle` so the `--color-<key>` properties resolve inside it too.
   - id: legend
     element: ul
     description: >-

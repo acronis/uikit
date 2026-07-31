@@ -41,8 +41,12 @@ parts:
   - id: tooltip-content
     element: div
     description: >-
-      `ChartTooltipContent` — hover card with one row for the hovered node/link
-      (color indicator + name + value). Rendered when `showTooltip`.
+      Hover card with one row for the hovered node/link (color indicator +
+      `source → target` config labels + value), rendered when `showTooltip`. A
+      Sankey-specific renderer, not the shared `ChartTooltipContent`: that one
+      cannot resolve recharts' Sankey payload (which carries no config color and
+      names a link `"source - target"`). It reuses the shared tooltip chrome
+      tokens, and `tooltipContent` replaces it.
   - id: legend
     element: div
     description: >-

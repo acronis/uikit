@@ -62,6 +62,43 @@ and its share of the total. Set the track height with `size` (`sm` / `md` /
 <CategoryBar config={config} data={data} size="lg" showTooltip={false} />;
 ```
 
+Format the numbers with `valueFormatter` (it drives both the legend and the
+tooltip; defaults to `toLocaleString()`), and replace the tooltip body with
+`tooltipContent` — it receives the resolved segment, so you keep the value and
+share without recomputing them:
+
+```tsx
+<CategoryBar
+  config={config}
+  data={data}
+  showLegend
+  valueFormatter={(value) => `${value} checks`}
+  tooltipContent={({ label, value, percent, color }) => (
+    <div className="flex items-center gap-1.5">
+      <span className="size-2.5 rounded-full" style={{ backgroundColor: color }} />
+      {label}: {value} ({percent}%)
+    </div>
+  )}
+/>;
+```
+
+`color` there is the segment's `var(--color-<key>)` reference rather than a
+literal, so it resolves both a flat `color` and a per-theme
+`theme: { light, dark }` config entry. `label` is whatever the config carries —
+a string or any node.
+
+The tooltip is pointer-driven: the segments sit inside a `role="img"` bar, so
+they are deliberately not separate focusable controls. The bar's `aria-label`
+(auto-generated from the data, or your own) is what assistive tech reads —
+`showLegend` is the way to put the same numbers on screen for everyone.
+
+For a visual-regression or test render, `defaultOpenIndex` opens one segment's
+tooltip on mount:
+
+```tsx
+<CategoryBar config={config} data={data} defaultOpenIndex={0} />;
+```
+
 ## API Reference
 
 <AutoTypeTable

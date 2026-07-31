@@ -21,3 +21,14 @@ tokens:
   - name: --ui-border-on-surface-border
     affects: tooltip-content
     description: Tooltip border (border-border).
+  - name: --ui-tooltip-container-border-radius
+    affects: tooltip-content
+    description: >-
+      Tooltip corner radius — the shared tooltip tier, so this card matches the
+      Tooltip primitive and the other charts' tooltips.
+  - name: --ui-tooltip-container-padding-x
+    affects: tooltip-content
+    description: Tooltip horizontal padding (shared tooltip tier).
+  - name: --ui-tooltip-container-padding-y
+    affects: tooltip-content
+    description: Tooltip vertical padding (shared tooltip tier).

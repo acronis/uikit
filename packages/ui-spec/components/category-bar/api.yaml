@@ -44,6 +44,9 @@ contract:
       description: >-
         Custom tooltip content per segment — replaces the default (dot + label +
         `value · %`) inside the same card. Ignored when showTooltip is false.
+        `label` is the resolved config label (any node, not just a string) and
+        `color` is the segment's `var(--color-<key>)` reference, so it resolves a
+        flat `color` and a per-theme `theme` config alike.
     - name: valueFormatter
       type: '(value: number) => string'
       required: false

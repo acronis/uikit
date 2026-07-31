@@ -32,10 +32,43 @@ describe('CategoryBar', () => {
     // flex-grow carries the value; basis is 0 so widths are exactly value/total.
     expect((segments[0] as HTMLElement).style.flex).toBe('42 0 0%');
     expect((segments[1] as HTMLElement).style.flex).toBe('32 0 0%');
-    expect((segments[0] as HTMLElement).style.backgroundColor).toBe(
-      'rgb(23 99 207)'
-    );
     expect(container.firstElementChild).toBeInstanceOf(HTMLDivElement);
+  });
+
+  it('fills each segment through the --color-* bridge, not the raw config color', () => {
+    const { container } = renderBar({ showTooltip: false });
+    const segments = screen.getByRole('img').children;
+    expect((segments[0] as HTMLElement).style.backgroundColor).toBe(
+      'var(--color-registered)'
+    );
+    // ChartStyle resolves the bridge to the config's own value.
+    expect(container.querySelector('style')?.innerHTML ?? '').toContain(
+      '--color-registered: rgb(23 99 207)'
+    );
+  });
+
+  it('colors segments from a per-theme config, which has no flat color', () => {
+    const themed = {
+      registered: { label: 'Registered', theme: { light: '#aaa', dark: '#222' } },
+      trained: { label: 'Trained', theme: { light: '#0a0', dark: '#3f3' } },
+    } satisfies ChartConfig;
+    const { container } = render(
+      <CategoryBar
+        showTooltip={false}
+        config={themed}
+        data={[
+          { key: 'registered', value: 42 },
+          { key: 'trained', value: 32 },
+        ]}
+      />
+    );
+    const css = container.querySelector('style')?.innerHTML ?? '';
+    expect(css).toContain('--color-registered: #aaa');
+    expect(css).toContain('--color-trained: #3f3');
+    const segments = screen.getByRole('img').children;
+    expect((segments[0] as HTMLElement).style.backgroundColor).toBe(
+      'var(--color-registered)'
+    );
   });
 
   it('builds an accessible summary from the data', () => {
@@ -48,6 +81,26 @@ describe('CategoryBar', () => {
   it('uses a caller-supplied aria-label over the generated summary', () => {
     renderBar({ 'aria-label': 'Onboarding funnel' });
     expect(screen.getByRole('img')).toHaveAccessibleName('Onboarding funnel');
+  });
+
+  it('renders a ReactNode label as a node and keeps the summary a plain string', () => {
+    const richConfig = {
+      registered: {
+        label: <em>Registered</em>,
+        color: 'rgb(23 99 207)',
+      },
+    } satisfies ChartConfig;
+    const { container } = render(
+      <CategoryBar
+        showLegend
+        config={richConfig}
+        data={[{ key: 'registered', value: 42 }]}
+      />
+    );
+    expect(container.querySelector('em')?.textContent).toBe('Registered');
+    expect(container.textContent).not.toContain('[object Object]');
+    // An element label can't go into aria-label, so the summary uses the key.
+    expect(screen.getByRole('img')).toHaveAccessibleName('registered 42');
   });
 
   it('renders a legend with each segment value + % when showLegend is on', () => {

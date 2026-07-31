@@ -4,7 +4,7 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { type ChartConfig } from '../chart';
+import { ChartStyle, type ChartConfig } from '../chart';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 
 // A category bar: a single horizontal bar split into proportional colored
@@ -15,6 +15,13 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 // `value / total`, so exact proportions and the count/% legend are direct DOM,
 // with no axes/grid to hide. Segment colors are caller-supplied via `config`
 // (existing semantic `--ui-*` tokens); there is no chart palette tier yet.
+//
+// Colors are consumed through the same `--color-<key>` bridge the recharts
+// charts use: `ChartStyle` emits one custom property per config entry, so a
+// `theme: { light, dark }` entry works as well as a flat `color` — reading
+// `config[key].color` directly would render a themed config colorless. The
+// tooltip is portaled out of the bar's DOM, so its popup carries its own
+// `data-chart` scope + `ChartStyle` to keep the bridge resolvable there.
 
 const defaultFormat = (value: number) => value.toLocaleString();
 
@@ -41,12 +48,16 @@ export interface CategoryBarSegment {
 
 /** The resolved segment passed to a custom `tooltipContent` renderer. */
 export interface CategoryBarTooltipContext extends CategoryBarSegment {
-  /** Resolved `config` label (falls back to the key). */
-  label: string;
+  /** Resolved `config` label (falls back to the key); may be any `ReactNode`. */
+  label: React.ReactNode;
   /** Share of the total as a rounded percentage (0–100). */
   percent: number;
-  /** Resolved segment color from `config`. */
-  color?: string;
+  /**
+   * CSS color reference for the segment — the `var(--color-<key>)` bridge, which
+   * resolves the config entry's `color` or its per-theme `theme` value. Usable
+   * anywhere a CSS color is (e.g. a `style` background); not a literal value.
+   */
+  color: string;
 }
 
 export interface CategoryBarProps
@@ -93,8 +104,21 @@ const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
     },
     ref
   ) => {
+    const uniqueId = React.useId();
+    const chartId = `chart-${uniqueId.replace(/:/g, '')}`;
+
     const total = data.reduce((sum, seg) => sum + seg.value, 0);
-    const labelFor = (key: string) => String(config[key]?.label ?? key);
+    const labelFor = (key: string): React.ReactNode => config[key]?.label ?? key;
+    // The aria-label has to be a plain string, so a rich (element) label can't
+    // be used there — fall back to the key rather than stringifying it into
+    // "[object Object]".
+    const labelTextFor = (key: string) => {
+      const label = config[key]?.label;
+      return typeof label === 'string' || typeof label === 'number'
+        ? String(label)
+        : key;
+    };
+    const colorOf = (key: string) => `var(--color-${key})`;
     const pctOf = (value: number) =>
       total > 0 ? Math.round((value / total) * 100) : 0;
 
@@ -102,13 +126,21 @@ const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
     // fuller `aria-label` sentence.
     const summary =
       ariaLabel ??
-      data.map((seg) => `${labelFor(seg.key)} ${valueFormatter(seg.value)}`).join(', ');
+      data
+        .map((seg) => `${labelTextFor(seg.key)} ${valueFormatter(seg.value)}`)
+        .join(', ');
 
     return (
-      <div ref={ref} className={cn('flex w-full flex-col gap-3', className)} {...props}>
+      <div
+        ref={ref}
+        data-chart={chartId}
+        className={cn('flex w-full flex-col gap-3', className)}
+        {...props}
+      >
+        <ChartStyle id={chartId} config={config} />
         <div className={categoryBarVariants({ size })} role="img" aria-label={summary}>
           {data.map((seg, index) => {
-            const color = config[seg.key]?.color;
+            const color = colorOf(seg.key);
             // flex-grow proportional to value with a zero basis → widths are
             // exactly value/total; a zero-value segment collapses.
             const segment = (
@@ -125,11 +157,15 @@ const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
               <Tooltip key={seg.key} defaultOpen={index === defaultOpenIndex}>
                 <TooltipTrigger render={segment} />
                 <TooltipContent
+                  // The popup is portaled out of the bar, so it needs its own
+                  // `data-chart` scope for the `--color-*` bridge to resolve.
+                  data-chart={chartId}
                   className={cn(
                     'border border-border bg-background text-foreground shadow-md',
                     !tooltipContent && 'flex items-center gap-2'
                   )}
                 >
+                  <ChartStyle id={chartId} config={config} />
                   {tooltipContent ? (
                     tooltipContent({
                       key: seg.key,
@@ -163,7 +199,7 @@ const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
                 <span className="flex items-center gap-1.5 text-sm leading-none text-muted-foreground">
                   <span
                     className="size-2.5 shrink-0 rounded-full"
-                    style={{ backgroundColor: config[seg.key]?.color }}
+                    style={{ backgroundColor: colorOf(seg.key) }}
                   />
                   {labelFor(seg.key)}
                 </span>

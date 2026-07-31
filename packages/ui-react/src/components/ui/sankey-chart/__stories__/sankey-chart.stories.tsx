@@ -71,11 +71,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// NOTE: there is deliberately no forced-open-tooltip VR story here. recharts has
-// no `defaultIndex` for `Sankey`, so a tooltip cannot be opened statically for a
-// screenshot (a forced-open baseline renders blank). The tooltip is covered by a
-// unit test and by the `CustomTooltip` story's custom render instead — the
-// absence of a `TooltipOpen` VR case is intentional, not a coverage gap.
+// NOTE: there is no forced-open-tooltip VR story here, unlike the other charts.
+// recharts DOES accept a statically-open tooltip on `Sankey` — its payload
+// searcher takes a string `defaultIndex` like "link-0" — but only on a raw
+// `<ChartTooltip active defaultIndex>` inside a hand-composed `<Sankey>`, the way
+// `BarChart`'s `TooltipOpen` story does it. Here that would mean duplicating this
+// component's custom `node`/`link` renderers in the story, where they would drift
+// from the real ones and make the baseline lie. The tooltip renderer is a plain
+// function instead, unit-tested branch by branch in
+// `__tests__/sankey-chart.test.tsx` ("SankeyChart default tooltip").
 
 // The simple default flow with on-chart labels + tooltip.
 export const Default: Story = {};
@@ -227,9 +231,9 @@ export const CustomTooltip: Story = {
 };
 
 // The "Certification compliance" dashboard card — its own six-node dataset, with
-// on-chart labels off and a two-column legend carrying each node's count + share
-// of the 240 total. The count/% breakdown isn't a built-in (`showLegend` gives
-// names only), so the card composes it; shown here as the reference usage.
+// on-chart labels off and the built-in `showLegend` legend, which carries each
+// node's count and its share of the largest node (240 here). Shown as the
+// reference usage: the card is just `showLabels={false}` + `showLegend`.
 const certData = {
   nodes: [
     { name: 'all' },
