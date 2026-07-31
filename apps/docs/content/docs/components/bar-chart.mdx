@@ -163,6 +163,41 @@ import { BarChart, formatCompactNumber } from '@acronis-platform/ui-react';
 />;
 ```
 
+## Animation
+
+Charts render statically by default. Opt in to an entrance animation with
+`animate`, and tune it with `animationDuration` / `animationBegin` /
+`animationEasing`:
+
+```tsx
+<BarChart config={config} data={data} dataKeys={['desktop']} xKey="month" animate animationDuration={800} animationEasing="ease-out" />
+```
+
+`animate` honors `prefers-reduced-motion`: for a visitor who has asked their
+system to reduce motion, the series render at their final geometry with no
+animation (the same applies when rendering on the server).
+
+## Data labels
+
+Annotate each point with its value using `showLabels`. `labelFormatter` takes the
+same formatters as the axes, so a label and its axis read alike:
+
+```tsx
+<BarChart config={config} data={data} dataKeys={['desktop']} xKey="month" showLabels labelFormatter={formatCompactNumber} />
+```
+
+`labelPosition` moves them; the default is the series' growing end (`top`, or
+`right` for horizontal bars). Under `layout="stacked"` that end is covered by the
+next segment, so each value centres inside its own segment instead — and switches
+to a token that stays legible over the fill:
+
+```tsx
+<BarChart config={config} data={data} dataKeys={['desktop']} xKey="month" showLabels labelPosition="insideEnd" />
+```
+
+Labels are off by default — with more than one series they collide easily, so turn
+them on for a single series or a chart with room to spare.
+
 ## API Reference
 
 <AutoTypeTable

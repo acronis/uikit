@@ -71,8 +71,21 @@ const meta = {
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
     showLabels: { control: 'boolean' },
+    labelPosition: {
+      control: 'select',
+      options: [
+        'outside',
+        'center',
+        'centerTop',
+        'centerBottom',
+        'insideStart',
+        'insideEnd',
+        'end',
+      ],
+    },
     animate: { control: 'boolean' },
     animationDuration: { control: { type: 'number' } },
+    animationBegin: { control: { type: 'number' } },
     animationEasing: {
       control: 'select',
       options: ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
@@ -210,4 +223,10 @@ export const CustomTooltipOpen: Story = {
 export const Animated: Story = {
   parameters: { snapshot: { skip: true } },
   args: { animate: true, animationDuration: 800 },
+};
+
+// Labels placed on the arc rather than outside it. Uses the on-fill label token,
+// which is the only one legible over a caller-supplied saturated slice colour.
+export const LabelsInside: Story = {
+  args: { shape: 'pie', showLabels: true, labelPosition: 'insideStart' },
 };

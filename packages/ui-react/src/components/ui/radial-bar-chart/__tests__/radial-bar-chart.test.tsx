@@ -3,7 +3,9 @@ import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { RadialBarChart } from '../radial-bar-chart';
-import { ChartTooltipContent, type ChartConfig } from '../../chart';
+import { ChartTooltipContent, type ChartConfig,
+  resolveAnimation,
+} from '../../chart';
 
 const data = [
   { browser: 'Chrome', value: 65 },
@@ -90,4 +92,49 @@ describe('RadialBarChart', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
+});
+
+// recharts needs a laid-out container, which happy-dom does not provide, so the
+// rendered labels/animation are covered by the visual-regression stories. These
+// assert the prop contract itself: the composition accepts every new prop and
+// mounts, and the animation resolves to the reduced-motion-aware value rather
+// than a literal `true`.
+describe('RadialBarChart animation and data labels', () => {
+  it('is not animated unless asked', () => {
+    expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
+    const { container } = renderChart();
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('resolves animate to "auto" so prefers-reduced-motion is honored', () => {
+    expect(
+      resolveAnimation({ animate: true, animationDuration: 800 })
+    ).toEqual({ isAnimationActive: 'auto', animationDuration: 800 });
+  });
+
+  it('accepts the full animation prop set without throwing', () => {
+    const { container } = renderChart({
+      animate: true,
+      animationDuration: 400,
+      animationBegin: 50,
+      animationEasing: 'ease-in-out',
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts the data-label props without throwing', () => {
+    const { container } = renderChart({
+      showLabels: true,
+      labelFormatter: (value) => `${value} u`,
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts an explicit labelPosition override', () => {
+    const { container } = renderChart({
+      showLabels: true,
+      labelPosition: 'insideEnd',
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
 });

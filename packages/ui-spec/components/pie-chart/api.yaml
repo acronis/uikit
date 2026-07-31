@@ -99,6 +99,15 @@ contract:
       required: false
       default: 'false'
       description: Render a value label on each slice.
+    - name: labelPosition
+      type: "'outside' | 'center' | 'centerTop' | 'centerBottom' | 'insideStart' | 'insideEnd' | 'end'"
+      required: false
+      default: "'outside'"
+      description: >-
+        Where the value labels sit. Defaults to outside the arc, on the chart
+        surface — the only placement guaranteed to have contrast against
+        caller-supplied slice colors. Inside placements switch the label to the
+        on-fill token.
     - name: labelFormatter
       type: '(value) => string'
       required: false

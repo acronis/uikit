@@ -128,6 +128,20 @@ import { ConfidenceCone, createTickFormatter } from '@acronis-platform/ui-react'
 />;
 ```
 
+## Animation
+
+Charts render statically by default. Opt in to an entrance animation with
+`animate`, and tune it with `animationDuration` / `animationBegin` /
+`animationEasing`:
+
+```tsx
+<ConfidenceCone config={config} data={data} animate animationDuration={800} animationEasing="ease-out" />
+```
+
+`animate` honors `prefers-reduced-motion`: for a visitor who has asked their
+system to reduce motion, the series render at their final geometry with no
+animation (the same applies when rendering on the server).
+
 ## API Reference
 
 <AutoTypeTable

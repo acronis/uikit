@@ -19,11 +19,12 @@ import {
   ChartTooltipContent,
   resolveAnimation,
   toLabelFormatter,
-  CHART_LABEL_FILL,
+  resolveLabelFillClass,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartAnimationProps,
   type ChartDataLabelProps,
+  type PolarLabelPosition,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The single
@@ -98,6 +99,13 @@ export interface PieChartProps
    * recharts yourself. Ignored when `showTooltip` is false.
    */
   tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
+  /**
+   * Position of the value labels when `showLabels` is on. Defaults to `outside`,
+   * which keeps them on the chart surface — the only placement that reliably
+   * has contrast, since slice fills are caller-supplied saturated colors. The
+   * on-arc placements are available but switch to the on-fill label token.
+   */
+  labelPosition?: PolarLabelPosition;
 }
 
 // Reserved height (px) of the shared single-row `ChartLegendContent` at the
@@ -128,6 +136,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       animationBegin,
       animationEasing,
       showLabels = false,
+      labelPosition,
       labelFormatter,
       ...props
     },
@@ -139,6 +148,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       animationBegin,
       animationEasing,
     });
+    const pieLabelPosition = labelPosition ?? 'outside';
     const resolvedInnerRadius = shape === 'donut' ? innerRadius : 0;
 
     return (
@@ -225,8 +235,12 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
               {showLabels && (
                 <LabelList
                   dataKey={dataKey}
+                  // Always explicit: recharts' polar fallback for an unset
+                  // position is the sector centroid — inside the fill — which
+                  // is exactly the placement the on-surface token can't survive.
+                  position={pieLabelPosition}
                   formatter={toLabelFormatter(labelFormatter)}
-                  fill={CHART_LABEL_FILL}
+                  className={resolveLabelFillClass(pieLabelPosition)}
                   fontSize={CHART_LABEL_FONT_SIZE}
                 />
               )}

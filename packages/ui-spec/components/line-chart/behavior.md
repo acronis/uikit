@@ -90,3 +90,18 @@ Scenario: Empty data
   Given data is an empty array
   Then the chart renders its axes and grid with no lines and does not throw
 ```
+
+```gherkin
+Scenario: Entrance animation is opt-in
+  Given animate is unset
+  Then the series render at their final geometry with no entrance animation
+  And the committed visual baselines are unaffected
+```
+
+```gherkin
+Scenario: Reduced motion
+  Given animate is true
+  And a user with prefers-reduced-motion
+  Then the entrance animation does not play and the series render at their final geometry
+  And the same applies when rendering on the server
+```

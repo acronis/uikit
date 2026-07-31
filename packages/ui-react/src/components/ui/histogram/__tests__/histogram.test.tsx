@@ -3,7 +3,9 @@ import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { Histogram, computeHistogramBins } from '../histogram';
-import { ChartTooltipContent, type ChartConfig } from '../../chart';
+import { ChartTooltipContent, type ChartConfig,
+  resolveAnimation,
+} from '../../chart';
 
 const config = {
   count: { label: 'Frequency', color: 'rgb(23 99 207)' },
@@ -146,5 +148,34 @@ describe('computeHistogramBins', () => {
   it('ignores non-finite values', () => {
     const bins = computeHistogramBins([1, NaN, 2, Infinity, 3], 3);
     expect(bins.reduce((sum, b) => sum + b.count, 0)).toBe(3);
+  });
+});
+
+// recharts needs a laid-out container, which happy-dom does not provide, so the
+// rendered labels/animation are covered by the visual-regression stories. These
+// assert the prop contract itself: the composition accepts every new prop and
+// mounts, and the animation resolves to the reduced-motion-aware value rather
+// than a literal `true`.
+describe('Histogram animation and data labels', () => {
+  it('is not animated unless asked', () => {
+    expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
+    const { container } = renderChart();
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('resolves animate to "auto" so prefers-reduced-motion is honored', () => {
+    expect(
+      resolveAnimation({ animate: true, animationDuration: 800 })
+    ).toEqual({ isAnimationActive: 'auto', animationDuration: 800 });
+  });
+
+  it('accepts the full animation prop set without throwing', () => {
+    const { container } = renderChart({
+      animate: true,
+      animationDuration: 400,
+      animationBegin: 50,
+      animationEasing: 'ease-in-out',
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 });

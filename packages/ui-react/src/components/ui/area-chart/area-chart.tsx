@@ -21,7 +21,9 @@ import {
   resolveAxisDomain,
   resolveAnimation,
   toLabelFormatter,
-  CHART_LABEL_FILL,
+  resolveLabelFillClass,
+  resolveCartesianLabelPosition,
+  CHART_LABEL_MARGIN,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type CartesianChartProps,
@@ -140,6 +142,10 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       animationEasing,
     });
     const isStacked = layout === 'stacked';
+    const areaLabelPosition = resolveCartesianLabelPosition({
+      labelPosition,
+      isStacked,
+    });
     const isGradient = fill === 'gradient';
 
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
@@ -185,7 +191,10 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
           config={config}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
-          <RechartsAreaChart data={data as readonly unknown[]}>
+          <RechartsAreaChart
+            data={data as readonly unknown[]}
+            margin={showLabels ? CHART_LABEL_MARGIN : undefined}
+          >
             {isGradient && (
               <defs>
                 {dataKeys.map((key) => (
@@ -268,9 +277,9 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                 {showLabels && (
                   <LabelList
                     dataKey={key}
-                    position={labelPosition ?? 'top'}
+                    position={areaLabelPosition}
                     formatter={toLabelFormatter(labelFormatter)}
-                    fill={CHART_LABEL_FILL}
+                    className={resolveLabelFillClass(areaLabelPosition)}
                     fontSize={CHART_LABEL_FONT_SIZE}
                   />
                 )}

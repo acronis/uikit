@@ -20,7 +20,11 @@ export {
   resolveAxisDomain,
   resolveAnimation,
   toLabelFormatter,
-  CHART_LABEL_FILL,
+  resolveLabelFillClass,
+  resolveCartesianLabelPosition,
+  CHART_LABEL_MARGIN,
+  CHART_LABEL_FILL_CLASS,
+  CHART_LABEL_FILL_ON_SERIES_CLASS,
   CHART_LABEL_FONT_SIZE,
 } from './chart-format';
 export type {
@@ -31,4 +35,6 @@ export type {
   ResolvedAnimation,
   ChartDataLabelProps,
   CartesianLabelPosition,
+  PolarLabelPosition,
+  ChartLabelPosition,
 } from './chart-format';
