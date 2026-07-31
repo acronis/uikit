@@ -279,7 +279,9 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                     dataKey={key}
                     position={areaLabelPosition}
                     formatter={toLabelFormatter(labelFormatter)}
-                    className={resolveLabelFillClass(areaLabelPosition)}
+                    className={resolveLabelFillClass(areaLabelPosition, {
+                      translucentSeries: true,
+                    })}
                     fontSize={CHART_LABEL_FONT_SIZE}
                   />
                 )}

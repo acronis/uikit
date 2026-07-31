@@ -29,8 +29,8 @@ children.
 
 None. ComposedChart has no CVA variant axes — the mix is data-driven via each
 `series[].type` (`bar` / `line` / `area`). Series render in the order you list
-them (recharts paints children back-to-front, so later entries sit on top) —
-order them so a thin line comes after the bars/areas it should overlay.
+them (later entries sit on top, whatever their mark type) — order them so a thin
+line comes after the bars/areas it should overlay.
 
 ## Example
 

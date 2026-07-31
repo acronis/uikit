@@ -22,8 +22,8 @@ legend, axes, grid included), so you don't hand-compose recharts children.
 Series colors are supplied by the caller through `config`, keyed by each
 `series[].key`: `ComposedChart` turns those into the `--color-<key>` custom
 properties its marks paint from. Series render **in the order you list them** —
-recharts paints children back-to-front, so later entries sit on top. Order them
-so a thin line comes after the bars/areas it should overlay.
+later entries sit on top, whatever their mark type. Order them so a thin line
+comes after the bars/areas it should overlay.
 
 > **Design-pending v1**, ported from the demo `ComposedChartPlayground`. There is
 > no chart token tier yet, so the example colors reference the shared brand/status
@@ -170,10 +170,10 @@ same formatters as the axes, so a label and its axis read alike:
 <ComposedChart config={config} data={data} series={series} xKey="month" showLabels labelFormatter={formatCompactNumber} />
 ```
 
-`labelPosition` moves them; the default is the series' growing end (`top`, or
-`right` for horizontal bars). Under `layout="stacked"` that end is covered by the
-next segment, so each value centres inside its own segment instead — and switches
-to a token that stays legible over the fill:
+`labelPosition` moves them; the default is the series' growing end (`top`). A
+label placed on an opaque bar fill switches to a token that stays legible over
+it; an area series keeps the on-surface color, since its translucent fill lets
+the surface show through:
 
 ```tsx
 <ComposedChart config={config} data={data} series={series} xKey="month" showLabels labelPosition="insideEnd" />

@@ -17,6 +17,7 @@ Scenario: Paint order follows the series array
   Given series lists a bar then a line
   Then the bar paints first and the line paints on top of it
   And reordering the series entries reorders the painted layers
+  And the order holds across mark types — an area listed after a bar covers that bar
 ```
 
 ```gherkin

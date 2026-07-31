@@ -39,6 +39,13 @@ import {
 // "per-series type"). The variation lives in the `series[].type` list instead.
 export type ComposedSeriesType = 'bar' | 'line' | 'area';
 
+// recharts 3 paints graphical items into z-index layers keyed by their *type*
+// (Area 100, Bar 300, Line 400), so JSX order alone decides nothing across
+// types — an area would always sit under the bars however the caller ordered
+// `series`. Giving each entry an explicit z-index from its index restores
+// "later entry paints on top". The band stays under the axis layer (500).
+const SERIES_Z_INDEX_BASE = 100;
+
 export interface ComposedSeries {
   /** Column key to plot — must match a `config` entry; drives its `--color-<key>` paint. */
   key: string;
@@ -198,11 +205,12 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
               <ChartTooltip content={tooltipContent ?? <ChartTooltipContent />} />
             )}
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}
-            {/* Rendered in the caller's `series` order — recharts paints children
-                back-to-front, so later entries sit on top. Order them so thin
-                marks (a line) come after the areas/bars they should overlay. */}
-            {series.map((s) => {
+            {/* Rendered back-to-front in the caller's `series` order — later
+                entries sit on top. Order them so thin marks (a line) come after
+                the areas/bars they should overlay. */}
+            {series.map((s, index) => {
               const color = `var(--color-${s.key})`;
+              const zIndex = SERIES_Z_INDEX_BASE + index;
               if (s.type === 'bar') {
                 return (
                   <Bar
@@ -214,6 +222,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                         ? [barRadius, barRadius, 0, 0]
                         : undefined
                     }
+                    zIndex={zIndex}
                     {...animation}
                   >
                     {showLabels && (
@@ -237,6 +246,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                     stroke={color}
                     fill={color}
                     fillOpacity={fillOpacity}
+                    zIndex={zIndex}
                     {...animation}
                   >
                     {showLabels && (
@@ -244,7 +254,9 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                         dataKey={s.key}
                         position={seriesLabelPosition}
                         formatter={toLabelFormatter(labelFormatter)}
-                        className={resolveLabelFillClass(seriesLabelPosition)}
+                        className={resolveLabelFillClass(seriesLabelPosition, {
+                          translucentSeries: true,
+                        })}
                         fontSize={CHART_LABEL_FONT_SIZE}
                       />
                     )}
@@ -259,6 +271,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                   stroke={color}
                   strokeWidth={2}
                   dot={false}
+                  zIndex={zIndex}
                   {...animation}
                 >
                   {showLabels && (
