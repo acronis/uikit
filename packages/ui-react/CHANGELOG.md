@@ -1,5 +1,66 @@
 # @acronis-platform/ui-react
 
+## 0.59.0
+
+### Minor Changes
+
+- [#600](https://github.com/acronis/uikit/pull/600) [`0e0d6c3`](https://github.com/acronis/uikit/commit/0e0d6c35abfaef3448818b965b0576a41a3e8153) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add axis visibility toggles and tick value formatting to the cartesian charts
+  (`BarChart`, `LineChart`, `AreaChart`, `ComposedChart`, `ScatterChart`,
+  `ConfidenceCone`, `Histogram`). Each now accepts `showXAxis` / `showYAxis`
+  (default `true`) to hide either axis, and `xTickFormatter` / `yTickFormatter` to
+  format tick values. Ships shared `formatCompactNumber` (thousands/millions),
+  `formatPercent`, and a `createTickFormatter(Intl.NumberFormatOptions)` factory
+  (for currency, fixed decimals, locales) — any function is also a valid
+  formatter. Also adds `xAxisAngle`, `xAxisInterval`, `yAxisTickCount`,
+  `yAxisDomain` (`auto`/`dataMin-dataMax`/`zero`), and `gridDashed` /
+  `gridHorizontal` / `gridVertical` for tick placement, domain, and grid trim.
+  These shared props live on a common `CartesianChartProps` interface (which also
+  now carries the previously per-chart `showGrid` / `showTooltip` / `xAxisLabel` /
+  `yAxisLabel` / `yUnit` / `tooltipContent`). Defaults preserve existing rendering.
+
+  Notes on the value-axis props:
+  - `yAxisDomain="auto"` fits the data at both ends and need not include 0.
+    Omitting the prop keeps recharts' default, which is already zero-anchored — so
+    `zero` is the explicit form of that default, not a change to it.
+  - `yAxisTickCount` / `yAxisDomain` drive whichever axis carries the values: Y for
+    most charts, X for `BarChart` with `orientation="horizontal"` (recharts ignores
+    both on a category axis).
+  - `xAxisInterval`'s numeric form is the number of ticks _skipped_ between two
+    rendered ones (recharts `interval`), so `2` shows every third tick.
+  - `xAxisAngle` and `xAxisLabel` can be combined; the X axis reserves room for both.
+  - The bundled `formatCompactNumber` / `formatPercent` format in `en`; use
+    `createTickFormatter(options, locale)` for anything else. Blank and
+    whitespace-only tick values pass through all three unchanged.
+
+- [#598](https://github.com/acronis/uikit/pull/598) [`614b1e9`](https://github.com/acronis/uikit/commit/614b1e9484d6b0473bb9df4f437af60e0c920262) Thanks [@madjorr](https://github.com/madjorr)! - Add `DialogWelcome`, a two-layout onboarding dialog (`carousel` — a multi-slide
+  feature tour driven by a real Embla carousel engine — and `single`), with its
+  `DialogFooterCarousel` footer. Also fixes the shared `Dialog`/`DialogContent`
+  popup to keep the Figma-defined 48px minimum viewport edge-inset, which
+  affects every `Dialog` consumer.
+
+- [#592](https://github.com/acronis/uikit/pull/592) [`cad9c83`](https://github.com/acronis/uikit/commit/cad9c83a78b99c9dd4f3cf590eafeb8b152ea0bb) Thanks [@madjorr](https://github.com/madjorr)! - Publicly export `BREAKPOINT_LG/XL/2XL/3XL/4XL`, `ROOT_FONT_SIZE_PX`, and `getViewportWidth` from `src/lib/breakpoints.ts`, and add hand-authored `--ui-breakpoint-*` CSS custom properties for sizing elements outside `@media`/`@container` conditions (which can't read custom properties). Breakpoints were previously internal-only despite being usable by consumers. `ROOT_FONT_SIZE_PX` assumes the default, unoverridden `html { font-size }` (16px) — this package sets none.
+
+### Patch Changes
+
+- [#597](https://github.com/acronis/uikit/pull/597) [`1c484bc`](https://github.com/acronis/uikit/commit/1c484bca3170edd9dffff35f9fd0c40da7c83297) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Fix `Calendar`'s `Chevron` override forwarding `react-day-picker`'s numeric `size` onto the icon, which overrode the intended `size={16}` for the dropdown (`captionLayout="dropdown"`) caption chevron (rendering it at 18px). `react-day-picker`'s `size` is now dropped, so all calendar chevrons render at the fixed design size (16) — aligning with `@acronis-platform/icons-react`'s strict `16 | 24` size axis.
+
+- [#604](https://github.com/acronis/uikit/pull/604) [`a1fe171`](https://github.com/acronis/uikit/commit/a1fe1715a3f9b902b7abee4e79d990f7068a965b) Thanks [@madjorr](https://github.com/madjorr)! - Correct stale comments on `InputBox`/`index.ts` that described it as an unexported internal primitive — it is exported for pairing with `Field` (`<FieldControl render={<InputBox />} />`). No behavior or API change.
+
+- [#607](https://github.com/acronis/uikit/pull/607) [`e8d5839`](https://github.com/acronis/uikit/commit/e8d5839b0b7f5631f045a107f54d992ef37c3762) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - fix(toolbar): carry the disabled state to the overflow menu through React
+
+  `ToolbarActionList` learned that its ancestor `Toolbar` had become disabled by
+  running a `MutationObserver` over the `<fieldset>`'s `disabled` attribute. That
+  resolved a render late — the portalled overflow menu stayed interactive for a
+  beat after the toolbar was disabled — and the resulting `setState` landed
+  outside React's own scheduling, where it could be dropped entirely, leaving an
+  open menu enabled indefinitely. The state now comes from the `Toolbar` via
+  context and gates the menu's `open` prop, so it closes in the same commit.
+
+- Updated dependencies [[`43c6085`](https://github.com/acronis/uikit/commit/43c608573c6d008ef380363ef673f914ce4a28de), [`43c6085`](https://github.com/acronis/uikit/commit/43c608573c6d008ef380363ef673f914ce4a28de), [`ef714a6`](https://github.com/acronis/uikit/commit/ef714a65fd8fd0a94b9bd853b4a66fa98f8fab9f)]:
+  - @acronis-platform/design-assets@0.4.1
+  - @acronis-platform/icons-react@0.6.0
+  - @acronis-platform/tokens-pd@2.4.0
+
 ## 0.58.0
 
 ### Major Changes
