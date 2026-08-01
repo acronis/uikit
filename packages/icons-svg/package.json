@@ -34,7 +34,7 @@
   "devDependencies": {
     "@acronis-platform/figma-icons-fetcher": "workspace:*",
     "@types/node": "catalog:",
-    "tsx": "^4.20.0",
+    "tsx": "^4.23.1",
     "typescript": "catalog:"
   }
 }
