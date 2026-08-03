@@ -57,6 +57,34 @@ contract:
       required: false
       default: '0'
       description: Gap between slices, in degrees.
+    - name: cornerRadius
+      type: number
+      required: false
+      description: Corner radius of each slice.
+    - name: startAngle
+      type: number
+      required: false
+      description: >-
+        Angle the sweep starts at, in degrees (0 is 3 o'clock, counter-clockwise).
+        Pair with endAngle for a semicircle (180 → 0) or an arc.
+    - name: endAngle
+      type: number
+      required: false
+      description: Angle the sweep ends at, in degrees. Defaults to a full 360 circle.
+    - name: minAngle
+      type: number
+      required: false
+      description: >-
+        Smallest angle a non-zero slice may occupy, in degrees — keeps a tiny
+        slice visible (and hoverable) at the cost of being drawn out of
+        proportion.
+    - name: sliceSettings
+      type: 'Record<string, { color?: string; hideLabel?: boolean; labelFormat?: PieChartLabelFormat }>'
+      required: false
+      description: >-
+        Per-slice overrides keyed by the slice's nameKey value: its color, and
+        whether/how its data label reads. A name with no entry keeps the
+        chart-level behavior.
     - name: showTooltip
       type: boolean
       required: false
@@ -67,14 +95,30 @@ contract:
       required: false
       default: 'true'
       description: Render the legend.
+    - name: legendPos
+      type: "'top' | 'bottom'"
+      required: false
+      default: "'bottom'"
+      description: Which edge the legend sits on.
+    - name: margin
+      type: '{ top?: number; right?: number; bottom?: number; left?: number }'
+      required: false
+      description: Plot-area margin, in px. Omit to use the renderer's default (5 on every side).
     - name: tooltipContent
       type: 'ReactElement | ((props) => ReactNode)'
       required: false
       description: >-
         Replace the default tooltip. Pass a configured ChartTooltipContent (from
         this library) — e.g. with a formatter / labelFormatter — to customize the
-        tooltip content without composing recharts. Ignored when showTooltip is
-        false.
+        tooltip content without composing recharts. Takes precedence over
+        tooltipFormat. Ignored when showTooltip is false.
+    - name: tooltipFormat
+      type: "'value' | 'value-percent'"
+      required: false
+      default: "'value'"
+      description: >-
+        How the default tooltip reads a slice: its value alone, or the value
+        followed by its share of the total.
     - name: animate
       type: boolean
       required: false
@@ -107,11 +151,31 @@ contract:
         Where the value labels sit. Defaults to outside the arc, on the chart
         surface — the only placement guaranteed to have contrast against
         caller-supplied slice colors. Inside placements switch the label to the
-        on-fill token.
+        on-fill token. Ignored when labelLine is on — a leader line only ever
+        ends outside the arc.
+    - name: labelFormat
+      type: "'value' | 'name-value' | 'name-percent' | 'percent'"
+      required: false
+      default: "'value'"
+      description: >-
+        What each data label reads — the value alone, or the slice name and/or
+        its share of the total (to one decimal). Overridable per slice via
+        sliceSettings.
+    - name: labelLine
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Draw a leader line from each slice to its data label, in the slice's own
+        color. Moves the labels outside the arc; a slice whose label is hidden by
+        sliceSettings gets no line either.
     - name: labelFormatter
       type: '(value) => string'
       required: false
-      description: Format each label value (reuses the tick formatters).
+      description: >-
+        Format each label value (reuses the tick formatters). Applies to the
+        numeric part only, so labels stay in the same units under every
+        labelFormat.
   events: []
   methods: []
 

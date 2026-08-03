@@ -32,6 +32,58 @@ Scenario: Padding between slices
 ```
 
 ```gherkin
+Scenario: Partial sweep
+  Given a startAngle of 180 and an endAngle of 0
+  Then the slices are laid out over that half turn instead of a full circle
+  And their relative sizes are unchanged
+```
+
+```gherkin
+Scenario: Rounded slices
+  Given cornerRadius is greater than 0
+  Then each slice's corners are rounded by that radius
+```
+
+```gherkin
+Scenario: Minimum slice angle
+  Given minAngle is greater than 0
+  Then every non-zero slice occupies at least that angle
+  And a slice smaller than it is drawn out of proportion so it stays hoverable
+```
+
+```gherkin
+Scenario: Data-label format
+  Given showLabels is true
+  And labelFormat is one of value, name-value, name-percent or percent
+  Then each slice's label reads its value, its name, and/or its share of the
+    sum of every slice value, to one decimal
+  And a labelFormatter formats the numeric part only
+```
+
+```gherkin
+Scenario: Percent with nothing to divide by
+  Given a percent-bearing labelFormat
+  And the slice values sum to zero (or are non-numeric)
+  Then name-percent falls back to the slice name and percent renders no label
+```
+
+```gherkin
+Scenario: Leader lines
+  Given showLabels and labelLine are both true
+  Then a line runs from each slice to its label, in that slice's colour
+  And the labels sit outside the arc regardless of labelPosition
+```
+
+```gherkin
+Scenario: Per-slice overrides
+  Given a sliceSettings entry keyed by a slice's nameKey value
+  Then that slice takes the entry's colour and labelFormat in place of the
+    chart-level ones
+  And an entry with hideLabel drops that slice's label — and its leader line —
+    while every other slice keeps its own
+```
+
+```gherkin
 Scenario: Tooltip on hover
   Given showTooltip is true
   When the user hovers a slice
@@ -39,16 +91,26 @@ Scenario: Tooltip on hover
 ```
 
 ```gherkin
+Scenario: Tooltip value format
+  Given tooltipFormat is "value-percent"
+  When the user hovers a slice
+  Then the card shows that slice's value followed by its share of the total
+  And a tooltipContent of the caller's own takes precedence over the preset
+```
+
+```gherkin
 Scenario: Legend
   Given showLegend is true
   Then a swatch + label renders for each slice (from nameKey / config)
+  And it sits on the edge given by legendPos (bottom by default)
 ```
 
 ```gherkin
 Scenario: Donut center label
   Given shape is "donut" and a centerLabel { value, label }
   Then the value renders large and the label smaller beneath it, centered in the hole
-  And the block stays centered on the donut whether or not a legend is shown
+  And the block stays centered on the donut whether or not a legend is shown,
+    and on whichever edge legendPos puts it
 ```
 
 ```gherkin

@@ -68,9 +68,28 @@ const meta = {
     innerRadius: { control: { type: 'number', min: 0, max: 120 } },
     outerRadius: { control: { type: 'number', min: 40, max: 160 } },
     paddingAngle: { control: { type: 'number', min: 0, max: 10 } },
+    cornerRadius: { control: { type: 'number', min: 0, max: 24 } },
+    startAngle: { control: { type: 'number', min: -360, max: 360 } },
+    endAngle: { control: { type: 'number', min: -360, max: 360 } },
+    minAngle: { control: { type: 'number', min: 0, max: 45 } },
+    sliceSettings: {
+      control: 'object',
+      description:
+        'Per-slice overrides keyed by the slice name — e.g. `{ "Edge": { "hideLabel": true } }`. The object editor needs strict JSON.',
+    },
     showTooltip: { control: 'boolean' },
+    tooltipFormat: {
+      control: 'inline-radio',
+      options: ['value', 'value-percent'],
+    },
     showLegend: { control: 'boolean' },
+    legendPos: { control: 'inline-radio', options: ['top', 'bottom'] },
     showLabels: { control: 'boolean' },
+    labelFormat: {
+      control: 'select',
+      options: ['value', 'name-value', 'name-percent', 'percent'],
+    },
+    labelLine: { control: 'boolean' },
     labelPosition: {
       control: 'select',
       options: [
@@ -229,4 +248,83 @@ export const Animated: Story = {
 // which is the only one legible over a caller-supplied saturated slice colour.
 export const LabelsInside: Story = {
   args: { shape: 'pie', showLabels: true, labelPosition: 'insideStart' },
+};
+
+// A half-sweep: `startAngle`/`endAngle` turn the same data into a semicircle.
+// A half arc only fills half its box, so it wants a short, wide one.
+export const Semicircle: Story = {
+  args: {
+    shape: 'donut',
+    startAngle: 180,
+    endAngle: 0,
+    className: 'h-[240px] w-[360px]',
+  },
+};
+
+// Rounded, separated slices: `cornerRadius` on top of a `paddingAngle` gap.
+export const RoundedSlices: Story = {
+  args: { shape: 'donut', cornerRadius: 8, paddingAngle: 4 },
+};
+
+// Slice labels naming their share instead of their raw value. Named labels are
+// long, so — like the leader-line stories — this one gets a wider box to sit in.
+export const LabelsNamePercent: Story = {
+  args: {
+    shape: 'pie',
+    showLabels: true,
+    labelFormat: 'name-percent',
+    className: 'h-[360px] w-[520px]',
+  },
+};
+
+// Leader lines connect each slice to its label. This is the only mode recharts
+// can draw lines in, so the labels always sit outside the arc (`labelPosition`
+// no longer applies). The wider box is deliberate: a label reaching out past the
+// arc needs horizontal room, or it is clipped at the surface edge.
+export const LabelsWithLeaderLines: Story = {
+  args: {
+    shape: 'donut',
+    showLabels: true,
+    labelLine: true,
+    labelFormat: 'name-percent',
+    className: 'h-[360px] w-[520px]',
+  },
+};
+
+// Per-slice overrides: one slice recoloured, one with its label dropped, one
+// reading its raw value while the rest show a percentage. The hidden slice
+// loses its leader line too, rather than keeping a line that points at nothing.
+export const SliceOverrides: Story = {
+  args: {
+    shape: 'pie',
+    showLabels: true,
+    labelLine: true,
+    labelFormat: 'percent',
+    className: 'h-[360px] w-[520px]',
+    sliceSettings: {
+      Firefox: { color: 'var(--ui-background-status-strong-neutral)' },
+      Edge: { hideLabel: true },
+      Chrome: { labelFormat: 'name-value' },
+    },
+  },
+};
+
+// The legend above the chart. For a donut this also flips the centre-label
+// nudge: recharts reserves the legend row at the top, so the arc centre moves
+// down rather than up.
+export const LegendTop: Story = {
+  args: {
+    shape: 'donut',
+    legendPos: 'top',
+    centerLabel: { value: '835', label: 'Visitors' },
+  },
+};
+
+// The `value-percent` tooltip preset — a slice's value followed by its share,
+// without hand-rolling a `tooltipContent`. The tooltip is hover-only and this
+// preset lives inside the component (recharts can only force one open on a raw
+// composition), so this is a usage example, not a visual-regression case.
+export const TooltipValuePercent: Story = {
+  parameters: { snapshot: { skip: true } },
+  args: { shape: 'donut', tooltipFormat: 'value-percent' },
 };

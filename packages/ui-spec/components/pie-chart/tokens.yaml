@@ -15,6 +15,17 @@ tokens:
   - name: --ui-text-on-surface-primary
     affects: tooltip-content
     description: Tooltip value text (text-foreground).
+  - name: --ui-text-on-surface-primary
+    affects: data-label
+    description: >-
+      Fill of a data label that sits on the chart surface — an `outside`
+      placement, including every leader-line label.
+  - name: --ui-text-on-status-strong-neutral
+    affects: data-label
+    description: >-
+      Fill of a data label placed on the slice itself (any on-arc
+      `labelPosition`) — white in both themes, so it survives a saturated
+      caller-supplied slice colour.
   - name: --ui-text-on-surface-secondary
     affects: legend-content
     description: >-
