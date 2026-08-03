@@ -67,11 +67,78 @@ contract:
       description: >-
         Unit suffix appended to Y-axis tick values (recharts `unit`); applies
         when the Y axis is numeric (vertical orientation).
+    - name: referenceArea
+      type: 'Area | Area[]  where Area = { from?: string | number; to?: string | number; label?: string; highlightTicks?: boolean; divider?: boolean }'
+      required: false
+      description: >-
+        One or more shaded bands behind a range of categories — e.g. a forecast
+        period. `from`/`to` are inclusive and take either the category's value
+        or its 0-based row index; an omitted bound runs to that end of the data.
+        The category ticks under a band pick up the accent styling unless
+        `highlightTicks` is false, and `divider` adds a dashed rule on the
+        band's leading edge for a forecast hand-off.
+    - name: barSettings
+      type: 'Record<string, { from?: string | number; to?: string | number; fill?: string; opacity?: number; dashed?: boolean; shape?: BarShape; background?: boolean | string }>'
+      required: false
+      description: >-
+        Per-series style override for a range of categories, keyed by `dataKeys`
+        entry — e.g. a projection tail that reads translucent and dashed over
+        its own track. `background` takes `true` for a full-height track or a
+        data field name to cap it at that row's value (the headroom up to an
+        upper bound, which stacks on the bar and so needs `layout="grouped"`).
+        Bars outside the range, and series with no entry, render normally.
     - name: barRadius
       type: number
       required: false
       default: '4'
       description: Corner radius on the growing end of each bar (0 for square corners).
+    - name: barShape
+      type: "'rounded' | 'pill' | 'gradient' | 'pattern'"
+      required: false
+      default: "'rounded'"
+      description: >-
+        How every bar is painted: the growing end rounded by `barRadius`, a
+        capsule, a fade of the series color, or diagonal hatching in it.
+        Per-range overrides come from `barSettings`.
+    - name: barSize
+      type: number
+      required: false
+      description: Fixed bar thickness in px; unset, recharts sizes bars from the available width.
+    - name: maxBarSize
+      type: number
+      required: false
+      description: Upper bound on the computed bar thickness, in px.
+    - name: barGap
+      type: number | string
+      required: false
+      description: Gap between the bars of one category, in px or a percentage string.
+    - name: barCategoryGap
+      type: number | string
+      required: false
+      description: Gap between category groups, in px or a percentage string.
+    - name: minPointSize
+      type: number
+      required: false
+      description: Minimum rendered length for a non-zero bar, in px, so tiny values stay visible.
+    - name: showBackground
+      type: boolean
+      required: false
+      default: 'false'
+      description: Draw a full-height track behind every bar.
+    - name: backgroundFill
+      type: string
+      required: false
+      default: "'var(--ui-background-surface-secondary)'"
+      description: Fill for the track background.
+    - name: showActiveBar
+      type: boolean
+      required: false
+      default: 'false'
+      description: Highlight the hovered bar.
+    - name: activeBar
+      type: '{ fill?: string; opacity?: number }'
+      required: false
+      description: Painting of the hovered bar when `showActiveBar` is on; defaults to the series color.
     - name: showGrid
       type: boolean
       required: false

@@ -30,6 +30,19 @@
   caller-supplied** via `config` — pick values that meet 3:1 against the surface
   and are distinguishable for color-vision deficiencies. The borrowed semantic
   tokens are a design-pending stopgap until the `--ui-chart-*` palette lands.
+- A **highlighted range** (`referenceArea`) is carried by more than one channel:
+  the band's shading, the italic accent on the ticks it covers, and the optional
+  `divider` rule. Caption it (`label`) when the reason for the highlight is not
+  obvious from the surrounding copy, since none of those channels is announced.
+- A **`barSettings` range** likewise should not lean on `opacity` alone —
+  `dashed`, or `shape: 'pattern'`, distinguishes those bars by texture rather
+  than by color or lightness, which survives both color-vision deficiency and a
+  low-quality display. Restate the distinction in text (a caption, the tooltip)
+  because it is purely visual.
+- A **capped track** (`background: '<field>'`) is decoration: it is deliberately
+  excluded from the tooltip rows and the legend, so the bound it depicts is not
+  otherwise available. Surface that number in the tooltip or a table if it
+  matters to the reader.
 - Watch recharts issue [#4809](https://github.com/recharts/recharts/issues/4809)
   on the a11y layer for heavily-customized charts.
 

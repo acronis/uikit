@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Bar, BarChart as RechartsBarChart, CartesianGrid, XAxis } from 'recharts';
+import * as React from 'react';
+import { Bar, BarChart as RechartsBarChart, CartesianGrid, Cell, XAxis } from 'recharts';
 
-import { BarChart } from '../bar-chart';
+import { BarChart, dropHeadroomSeries } from '../bar-chart';
 import {
   ChartContainer,
   ChartTooltip,
@@ -403,4 +404,253 @@ export const RangeBrushHorizontal: Story = {
     orientation: 'horizontal',
     showBrush: true,
   },
+};
+// The acceptance case for the styling knobs: the tail of the series reads as a
+// projection — translucent, dashed, over its own ghost track — inside a shaded
+// band whose category ticks pick up the accent styling.
+export const ForecastRange: Story = {
+  args: {
+    dataKeys: ['desktop', 'mobile'],
+    referenceArea: { from: 'Apr', label: 'Forecast', divider: true },
+    barSettings: {
+      desktop: { from: 'Apr', opacity: 0.35, dashed: true, background: true },
+      mobile: { from: 'Apr', opacity: 0.35, dashed: true, background: true },
+    },
+  },
+};
+
+// The same override addressed by row index rather than category value, and
+// bounded on both ends — the highlight sits in the middle of the series.
+export const HighlightedRange: Story = {
+  args: {
+    dataKeys: ['desktop'],
+    referenceArea: { from: 2, to: 3 },
+    barSettings: { desktop: { from: 2, to: 3, fill: 'var(--ui-background-status-strong-warning)' } },
+  },
+};
+
+// A band on a horizontal chart runs along the category axis (Y here), and the
+// tick accent follows it.
+export const HorizontalForecastRange: Story = {
+  args: {
+    orientation: 'horizontal',
+    dataKeys: ['desktop'],
+    referenceArea: { from: 'Apr', label: 'Forecast' },
+    barSettings: { desktop: { from: 'Apr', opacity: 0.35, dashed: true } },
+  },
+};
+
+// Bar shapes beyond the default rounded end.
+export const PillBars: Story = {
+  args: { dataKeys: ['desktop', 'mobile'], barShape: 'pill' },
+};
+
+export const GradientBars: Story = {
+  args: { dataKeys: ['desktop', 'mobile'], barShape: 'gradient' },
+};
+
+export const PatternBars: Story = {
+  args: { dataKeys: ['desktop', 'mobile'], barShape: 'pattern' },
+};
+
+// A pattern fill applied to one range only — hatching sets the projection apart
+// without relying on color, which stays readable for colorblind viewers.
+export const PatternRange: Story = {
+  args: {
+    dataKeys: ['desktop'],
+    barSettings: { desktop: { from: 'Apr', shape: 'pattern' } },
+  },
+};
+
+// The track behind every bar, plus the sizing knobs: a fixed thickness with a
+// tighter gap between the bars of a category.
+export const TrackBackgroundAndSizing: Story = {
+  args: {
+    dataKeys: ['desktop', 'mobile'],
+    showBackground: true,
+    barSize: 16,
+    barGap: 2,
+    barCategoryGap: '25%',
+  },
+};
+
+// `minPointSize` keeps a near-zero value visible as a sliver rather than
+// vanishing into the axis.
+export const MinPointSize: Story = {
+  args: {
+    dataKeys: ['desktop'],
+    data: [
+      { month: 'Jan', desktop: 186 },
+      { month: 'Feb', desktop: 0.4 },
+      { month: 'Mar', desktop: 237 },
+      { month: 'Apr', desktop: 0 },
+    ],
+    minPointSize: 4,
+  },
+};
+
+
+// The Intelligence "churn vs new customers" widget, reproduced: six months of
+// actuals, then a three-month projection that reads as provisional — translucent
+// and dashed, each bar carrying the headroom up to its upper bound — inside a
+// shaded band whose ticks pick up the accent styling.
+const churnRows: Array<Record<string, string | number>> = [
+  { month: 'Feb', new: 9, churned: 3.9 },
+  { month: 'Mar', new: 8, churned: 2.9 },
+  { month: 'Apr', new: 7, churned: 3.9 },
+  { month: 'May', new: 9, churned: 4.9 },
+  { month: 'Jun', new: 11, churned: 3.9 },
+  { month: 'Jul', new: 12, churned: 2.9 },
+  { month: 'Aug', new: 12.6, churned: 2.7, newMax: 14.6, churnedMax: 4.1 },
+  { month: 'Sep', new: 13.3, churned: 2.4, newMax: 16, churnedMax: 4.4 },
+  { month: 'Oct', new: 13.9, churned: 2.2, newMax: 17.2, churnedMax: 4.7 },
+];
+
+// The component synthesizes the headroom fields from `background: '<field>'`;
+// the raw open-tooltip composition below has to plot them directly.
+const churnData: Array<Record<string, string | number>> = churnRows.map(
+  (row) => {
+    const withHeadroom: Record<string, string | number> = { ...row };
+    (
+      [
+        ['new', 'newMax'],
+        ['churned', 'churnedMax'],
+      ] as const
+    ).forEach(([key, upperKey]) => {
+      const value = row[key];
+      const upper = row[upperKey];
+      if (typeof value === 'number' && typeof upper === 'number') {
+        withHeadroom[`__headroom_${key}`] = upper - value;
+      }
+    });
+    return withHeadroom;
+  }
+);
+
+const churnConfig = {
+  new: { label: 'New', color: 'var(--ui-background-status-strong-success)' },
+  churned: { label: 'Churned', color: 'var(--ui-background-status-strong-danger)' },
+} satisfies ChartConfig;
+
+// The forecast months read as estimates in the tooltip too: the header says so
+// and each value carries a tilde. Shared by the example and its open-tooltip
+// baseline below. The locale is pinned so the baseline can't drift with the
+// renderer's default.
+const FORECAST_FROM = 'Aug';
+const isForecast = (month: string) =>
+  churnRows.findIndex((row) => row.month === month) >=
+  churnRows.findIndex((row) => row.month === FORECAST_FROM);
+
+const churnLabelFormatter = (label: unknown) =>
+  isForecast(String(label)) ? `${label} · forecast` : String(label);
+
+// Loose parameter types so the same function satisfies both the library's
+// `formatter` signature and recharts' own.
+const churnValueFormatter = (
+  value: unknown,
+  name: unknown,
+  item: { color?: string; payload?: Record<string, unknown> }
+) => (
+  <div className="flex w-full items-center gap-2">
+    <span
+      className="size-2.5 shrink-0 rounded-[2px]"
+      style={{ backgroundColor: item.color }}
+    />
+    <span className="text-muted-foreground">
+      {churnConfig[name as keyof typeof churnConfig]?.label ?? String(name)}
+    </span>
+    <span className="ms-auto font-medium tabular-nums">
+      {isForecast(String(item.payload?.month)) ? '~' : ''}
+      {Number(value).toLocaleString('en-US')}
+    </span>
+  </div>
+);
+
+const churnTooltipContent = (
+  <ChartTooltipContent
+    labelFormatter={churnLabelFormatter}
+    formatter={churnValueFormatter}
+  />
+);
+
+export const ChurnVsNewCustomers: Story = {
+  args: {
+    config: churnConfig,
+    data: churnData,
+    dataKeys: ['new', 'churned'],
+    xKey: 'month',
+    barSize: 14,
+    barGap: 2,
+    yAxisDomain: 'zero',
+    yAxisTickCount: 5,
+    referenceArea: { from: 'Aug', divider: true },
+    tooltipContent: churnTooltipContent,
+    barSettings: {
+      new: { from: 'Aug', opacity: 0.35, dashed: true, background: 'newMax' },
+      churned: { from: 'Aug', opacity: 0.35, dashed: true, background: 'churnedMax' },
+    },
+    className: 'h-[320px] w-[640px]',
+  },
+  render: (args) => (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-baseline justify-between">
+        <span className="text-sm uppercase tracking-wide text-muted-foreground">
+          Churn vs new customers
+        </span>
+        <span className="text-sm text-muted-foreground">Per month</span>
+      </div>
+      <BarChart {...args} />
+    </div>
+  ),
+};
+
+// The example's tooltip, on a forecast month. Like the other open-tooltip
+// stories this renders the raw composition, since recharts only opens a tooltip
+// statically through its own `defaultIndex`.
+export const ChurnVsNewCustomersTooltipOpen: Story = {
+  render: () => (
+    <ChartContainer config={churnConfig} className="h-[320px] w-[640px]">
+      <RechartsBarChart data={churnData} barSize={14} barGap={2}>
+        <CartesianGrid horizontal vertical={false} />
+        <XAxis dataKey="month" tickLine={false} axisLine={false} />
+        <ChartTooltip
+          defaultIndex={6}
+          active
+          content={(props) => (
+            <ChartTooltipContent
+              {...props}
+              payload={dropHeadroomSeries(props.payload) as never}
+              labelFormatter={churnLabelFormatter}
+              formatter={churnValueFormatter}
+            />
+          )}
+        />
+        {(['new', 'churned'] as const).map((key) => (
+          <React.Fragment key={key}>
+            <Bar dataKey={key} stackId={key} fill={`var(--color-${key})`} isAnimationActive={false}>
+              {churnData.map((row) => (
+                <Cell
+                  key={String(row.month)}
+                  fillOpacity={isForecast(String(row.month)) ? 0.35 : 1}
+                  stroke={isForecast(String(row.month)) ? `var(--color-${key})` : undefined}
+                  strokeDasharray={isForecast(String(row.month)) ? '4 3' : undefined}
+                  radius={isForecast(String(row.month)) ? undefined : 4}
+                />
+              ))}
+            </Bar>
+            <Bar
+              dataKey={`__headroom_${key}`}
+              stackId={key}
+              fill={`var(--color-${key})`}
+              fillOpacity={0.25}
+              radius={4}
+              legendType="none"
+              tooltipType="none"
+              isAnimationActive={false}
+            />
+          </React.Fragment>
+        ))}
+      </RechartsBarChart>
+    </ChartContainer>
+  ),
 };

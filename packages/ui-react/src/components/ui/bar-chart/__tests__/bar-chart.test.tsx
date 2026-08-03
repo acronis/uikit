@@ -1,11 +1,41 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
-import { BarChart, barChartReferenceValue } from '../bar-chart';
+import {
+  BarChart,
+  barChartCategoryRange,
+  barChartReferenceValue,
+  dropHeadroomSeries,
+  withSeriesColor,
+} from '../bar-chart';
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
+
+beforeAll(() => {
+  // happy-dom's ResizeObserver never reports a size, so recharts'
+  // ResponsiveContainer renders nothing and its children never mount. The bar
+  // styling below is per-bar SVG, so these tests need the real output.
+  class SizedResizeObserver {
+    constructor(private readonly callback: ResizeObserverCallback) {}
+    observe(target: Element) {
+      this.callback(
+        [
+          {
+            target,
+            contentRect: { width: 600, height: 300 },
+          } as unknown as ResizeObserverEntry,
+        ],
+        this as unknown as ResizeObserver
+      );
+    }
+    unobserve() {}
+    disconnect() {}
+  }
+  globalThis.ResizeObserver =
+    SizedResizeObserver as unknown as typeof ResizeObserver;
+});
 
 const data = [
   { month: 'Jan', desktop: 186, mobile: 80 },
@@ -257,5 +287,360 @@ describe('BarChart animation and data labels', () => {
       labelPosition: 'center',
     });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+});
+
+describe('barChartCategoryRange', () => {
+  it('resolves category values to inclusive row indices', () => {
+    expect(barChartCategoryRange({ from: 'Feb', to: 'Mar' }, data, 'month')).toEqual([
+      1, 2,
+    ]);
+  });
+
+  it('resolves a numeric bound as a row index', () => {
+    expect(barChartCategoryRange({ from: 1 }, data, 'month')).toEqual([1, 2]);
+  });
+
+  it('prefers a matching category value over the index reading', () => {
+    const numeric = [{ q: 3, sales: 1 }, { q: 1, sales: 2 }, { q: 2, sales: 3 }];
+    // `1` is a real category here (row 1), not "index 1" by coincidence — the
+    // value match wins so numeric categories stay addressable.
+    expect(barChartCategoryRange({ from: 1, to: 2 }, numeric, 'q')).toEqual([1, 2]);
+  });
+
+  it('runs to the ends of the data when a bound is omitted', () => {
+    expect(barChartCategoryRange({}, data, 'month')).toEqual([0, 2]);
+    expect(barChartCategoryRange({ to: 'Feb' }, data, 'month')).toEqual([0, 1]);
+  });
+
+  it('returns undefined for an unknown bound, an inverted range, or no data', () => {
+    expect(barChartCategoryRange({ from: 'Dec' }, data, 'month')).toBeUndefined();
+    expect(barChartCategoryRange({ from: 9 }, data, 'month')).toBeUndefined();
+    expect(
+      barChartCategoryRange({ from: 'Mar', to: 'Jan' }, data, 'month')
+    ).toBeUndefined();
+    expect(barChartCategoryRange({ from: 'Jan' }, [], 'month')).toBeUndefined();
+  });
+});
+
+describe('BarChart styling knobs', () => {
+  it('styles only the bars inside a barSettings range', () => {
+    const { container } = renderChart({
+      dataKeys: ['desktop'],
+      barSettings: { desktop: { from: 'Feb', opacity: 0.4, dashed: true } },
+    });
+    const bars = container.querySelectorAll('.recharts-bar-rectangle path');
+    expect(bars).toHaveLength(3);
+    expect(bars[0]).not.toHaveAttribute('stroke-dasharray');
+    expect(bars[0]).not.toHaveAttribute('fill-opacity', '0.4');
+    [bars[1], bars[2]].forEach((bar) => {
+      expect(bar).toHaveAttribute('stroke-dasharray', '4 3');
+      expect(bar).toHaveAttribute('fill-opacity', '0.4');
+      expect(bar).toHaveAttribute('stroke', 'var(--color-desktop)');
+    });
+  });
+
+  it('leaves series without a barSettings entry untouched', () => {
+    const { container } = renderChart({
+      barSettings: { desktop: { from: 'Feb', dashed: true } },
+    });
+    const dashed = container.querySelectorAll('[stroke-dasharray="4 3"]');
+    // Only the two matched desktop bars, none of the three mobile ones.
+    expect(dashed).toHaveLength(2);
+  });
+
+  it('paints a shaded band behind a category range', () => {
+    const { container } = renderChart({
+      referenceArea: { from: 'Feb', label: 'Forecast' },
+    });
+    expect(
+      container.querySelector('.recharts-reference-area')
+    ).toBeInTheDocument();
+    expect(container.textContent).toContain('Forecast');
+  });
+
+  // recharts measures text to lay a tick out, which happy-dom can't do, so every
+  // tick renders empty here — the accent styling is covered by the
+  // ForecastRange VR story. This guards the prop path instead.
+  it('renders a highlighted range in both orientations without throwing', () => {
+    expect(
+      renderChart({
+        referenceArea: { from: 'Feb' },
+      }).container.querySelector('.recharts-reference-area')
+    ).toBeInTheDocument();
+    expect(
+      renderChart({
+        orientation: 'horizontal',
+        referenceArea: { from: 'Feb', highlightTicks: false },
+      }).container.querySelector('.recharts-reference-area')
+    ).toBeInTheDocument();
+  });
+
+  it('rules the leading edge of a band only when asked', () => {
+    const plain = renderChart({ referenceArea: { from: 'Feb' } });
+    expect(
+      plain.container.querySelectorAll('.recharts-reference-area line')
+    ).toHaveLength(0);
+
+    const ruled = renderChart({ referenceArea: { from: 'Feb', divider: true } });
+    const rule = ruled.container.querySelector('.recharts-reference-area line');
+    expect(rule).toHaveAttribute('stroke-dasharray', '4 4');
+    // Vertical bars put the categories on X, so the rule is a vertical line.
+    expect(rule?.getAttribute('x1')).toBe(rule?.getAttribute('x2'));
+    expect(rule?.getAttribute('y1')).not.toBe(rule?.getAttribute('y2'));
+  });
+
+  it('rules the top edge of a band on a horizontal chart', () => {
+    const { container } = renderChart({
+      orientation: 'horizontal',
+      referenceArea: { from: 'Feb', divider: true },
+    });
+    const rule = container.querySelector('.recharts-reference-area line');
+    expect(rule?.getAttribute('y1')).toBe(rule?.getAttribute('y2'));
+    expect(rule?.getAttribute('x1')).not.toBe(rule?.getAttribute('x2'));
+  });
+
+  it('rounds every corner for the pill shape', () => {
+    const { container } = renderChart({
+      dataKeys: ['desktop'],
+      barShape: 'pill',
+    });
+    // recharts clamps the radius to half the bar, so the oversized value the
+    // component passes is what makes a capsule at any width.
+    expect(
+      container.querySelector('.recharts-bar-rectangle path')
+    ).toHaveAttribute('radius', '9999');
+  });
+
+  it('draws a track background for every bar, or only the matched range', () => {
+    const all = renderChart({ dataKeys: ['desktop'], showBackground: true });
+    expect(
+      all.container.querySelectorAll('.recharts-bar-background-rectangle')
+    ).toHaveLength(3);
+
+    const ranged = renderChart({
+      dataKeys: ['desktop'],
+      barSettings: { desktop: { from: 'Feb', background: true } },
+    });
+    // Only the two bars inside the range get a track.
+    const backgrounds = ranged.container.querySelectorAll(
+      '.recharts-bar-background-rectangle'
+    );
+    expect(backgrounds).toHaveLength(2);
+    expect(backgrounds[0]).toHaveAttribute(
+      'fill',
+      'var(--ui-background-surface-secondary)'
+    );
+  });
+
+  it('caps a track at an upper-bound field, stacked on its own bar', () => {
+    const bounded: Array<Record<string, string | number>> = [
+      { month: 'Jan', desktop: 100 },
+      { month: 'Feb', desktop: 120, ceiling: 150 },
+      { month: 'Mar', desktop: 130, ceiling: 170 },
+    ];
+    const { container } = render(
+      <BarChart
+        config={config}
+        data={bounded}
+        dataKeys={['desktop']}
+        xKey="month"
+        barSettings={{ desktop: { from: 'Feb', background: 'ceiling' } }}
+      />
+    );
+    // One series plus its headroom series; the headroom only covers the range.
+    const layers = container.querySelectorAll('.recharts-bar');
+    expect(layers).toHaveLength(2);
+    const headroom = layers[1].querySelectorAll('.recharts-rectangle');
+    expect(headroom).toHaveLength(2);
+    // 150 - 120 and 170 - 130 sit above bars of 120 and 130, so the headroom is
+    // the shorter of the two rectangles in each category.
+    expect(Number(headroom[0].getAttribute('height'))).toBeGreaterThan(0);
+    expect(headroom[0].getAttribute('fill-opacity')).toBe('0.25');
+  });
+
+  it('keeps the headroom series out of the legend and the tooltip', () => {
+    const rows: Array<Record<string, string | number>> = [
+      { month: 'Jan', desktop: 100 },
+      { month: 'Feb', desktop: 120, ceiling: 150 },
+    ];
+    const { container } = render(
+      <BarChart
+        config={config}
+        data={rows}
+        dataKeys={['desktop']}
+        xKey="month"
+        barSettings={{ desktop: { from: 'Feb', background: 'ceiling' } }}
+      />
+    );
+    // One legend entry for the real series, none for its decoration.
+    expect(
+      container.querySelectorAll('.recharts-legend-wrapper [class*="rounded"]')
+    ).toHaveLength(1);
+    expect(container.textContent).not.toContain('__headroom_');
+  });
+
+  it('ignores a capped track when the bars are stacked', () => {
+    const { container } = renderChart({
+      layout: 'stacked',
+      barSettings: { desktop: { from: 'Feb', background: 'mobile' } },
+    });
+    // Just the two real series — no synthetic headroom inside the stack.
+    expect(container.querySelectorAll('.recharts-bar')).toHaveLength(2);
+  });
+
+  it('paints gradient and pattern shapes from per-chart defs', () => {
+    const gradient = renderChart({ dataKeys: ['desktop'], barShape: 'gradient' });
+    expect(gradient.container.querySelector('linearGradient')).toBeInTheDocument();
+    expect(
+      gradient.container.querySelector('.recharts-bar-rectangle path')
+    ).toHaveAttribute('fill', expect.stringContaining('url(#') as unknown as string);
+
+    const pattern = renderChart({ dataKeys: ['desktop'], barShape: 'pattern' });
+    expect(pattern.container.querySelector('pattern')).toBeInTheDocument();
+  });
+
+  it('never wipes the series color when the active bar has no fill', () => {
+    const { container } = renderChart({ dataKeys: ['desktop'], showActiveBar: true });
+    // recharts spreads the activeBar option over the bar's own props, so an
+    // explicit `undefined` fill would leave the hovered bar unfilled (black).
+    container
+      .querySelectorAll('.recharts-bar-rectangle path')
+      .forEach((bar) => expect(bar).toHaveAttribute('fill'));
+  });
+
+  it('keeps the rounded end on an in-range bar with no headroom to stack', () => {
+    const partial: Array<Record<string, string | number>> = [
+      { month: 'Jan', desktop: 100 },
+      // In range, but the upper bound is missing…
+      { month: 'Feb', desktop: 120 },
+      // …and here it is no higher than the value.
+      { month: 'Mar', desktop: 130, ceiling: 130 },
+    ];
+    const { container } = render(
+      <BarChart
+        config={config}
+        data={partial}
+        dataKeys={['desktop']}
+        xKey="month"
+        barSettings={{ desktop: { from: 'Feb', background: 'ceiling' } }}
+      />
+    );
+    const paths = (root: HTMLElement) =>
+      Array.from(
+        root.querySelectorAll('.recharts-bar-rectangle .recharts-rectangle')
+      ).map((bar) => bar.getAttribute('d'));
+
+    // recharts only emits a `radius` attribute for a numeric radius, so the
+    // rounding is compared through the drawn path: identical to a chart with no
+    // barSettings at all, because no row here has headroom to stack.
+    const plain = render(
+      <BarChart
+        config={config}
+        data={partial}
+        dataKeys={['desktop']}
+        xKey="month"
+      />
+    );
+    expect(paths(container)).toEqual(paths(plain.container));
+  });
+
+  it('floors a tiny bar with minPointSize but leaves a zero at nothing', () => {
+    const { container } = render(
+      <BarChart
+        config={config}
+        data={[
+          { month: 'Jan', desktop: 100 },
+          { month: 'Feb', desktop: 0.4 },
+          { month: 'Mar', desktop: 0 },
+        ]}
+        dataKeys={['desktop']}
+        xKey="month"
+        minPointSize={4}
+      />
+    );
+    const heights = Array.from(
+      container.querySelectorAll('.recharts-bar-rectangle .recharts-rectangle')
+    ).map((bar) => Number(bar.getAttribute('height')));
+    // The 0.4 bar is floored to 4px; the true zero draws no rectangle at all.
+    expect(heights).toEqual([expect.any(Number), 4]);
+  });
+
+  it('colors the legend swatch from the series, not the paint server', () => {
+    // A gradient/pattern bar fills from url(#…), which paints SVG but is not a
+    // usable CSS background — the swatch would render blank.
+    (['gradient', 'pattern'] as const).forEach((barShape) => {
+      const { container } = renderChart({ dataKeys: ['desktop'], barShape });
+      const swatch = container.querySelector<HTMLElement>(
+        '.recharts-legend-wrapper [class*="rounded"]'
+      );
+      expect(swatch?.style.backgroundColor).toBe('var(--color-desktop)');
+    });
+  });
+
+  it('accepts the sizing, active-bar and minPointSize knobs', () => {
+    const { container } = renderChart({
+      barSize: 12,
+      maxBarSize: 24,
+      barGap: 2,
+      barCategoryGap: '20%',
+      minPointSize: 3,
+      showActiveBar: true,
+      activeBar: { fill: 'rgb(0 0 0)', opacity: 0.8 },
+    });
+    const bars = container.querySelectorAll('.recharts-bar-rectangle path');
+    expect(bars.length).toBeGreaterThan(0);
+    // barSize is honored rather than computed from the available width.
+    expect(bars[0]).toHaveAttribute('width', '12');
+  });
+});
+
+// recharts still lists a `legendType="none"` bar in the payload, so the filter
+// below is what keeps the synthetic headroom series out of the chrome. Guarded
+// directly — an inverted predicate would drop the real series instead.
+describe('dropHeadroomSeries', () => {
+  const real = [{ dataKey: 'desktop' }, { dataKey: 'mobile' }];
+
+  it('drops the headroom series while keeping real series in order', () => {
+    expect(
+      dropHeadroomSeries([real[0], { dataKey: '__headroom_desktop' }, real[1]])
+    ).toEqual(real);
+  });
+
+  it('keeps every series when none is synthetic', () => {
+    expect(dropHeadroomSeries(real)).toEqual(real);
+  });
+
+  it('restores dataKeys order when asked', () => {
+    // Per-series stacks reorder recharts' payload; the legend must not follow.
+    expect(
+      dropHeadroomSeries([real[1], { dataKey: '__headroom_mobile' }, real[0]], [
+        'desktop',
+        'mobile',
+      ])
+    ).toEqual(real);
+  });
+
+  it('returns undefined for an undefined payload', () => {
+    expect(dropHeadroomSeries(undefined)).toBeUndefined();
+  });
+});
+
+// The legend swatch and the tooltip dot are CSS backgrounds, so a bar filled
+// from an SVG paint server has to fall back to its series color.
+describe('withSeriesColor', () => {
+  it('swaps a url(#…) fill for the series custom property', () => {
+    expect(
+      withSeriesColor([{ dataKey: 'desktop', color: 'url(#bar-1-pattern-desktop)' }])
+    ).toEqual([{ dataKey: 'desktop', color: 'var(--color-desktop)' }]);
+  });
+
+  it('leaves a plain color and a missing one alone', () => {
+    const plain = [{ dataKey: 'desktop', color: 'var(--color-desktop)' }, { dataKey: 'mobile' }];
+    expect(withSeriesColor(plain)).toEqual(plain);
+  });
+
+  it('returns undefined for an undefined payload', () => {
+    expect(withSeriesColor(undefined)).toBeUndefined();
   });
 });

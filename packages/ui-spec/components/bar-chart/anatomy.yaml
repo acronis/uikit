@@ -8,7 +8,9 @@ schematic: |
         grid:    <CartesianGrid>                    (one axis of lines)
         x-axis:  <XAxis>   category or number by orientation
         y-axis:  <YAxis>   number or category by orientation
+        band:    <ReferenceArea> per referenceArea entry (behind the bars)
         series:  one <Bar> per dataKey (grouped side-by-side or stacked)
+          bar-track: <rect> full-height track behind a bar (optional)
         tooltip: <ChartTooltip> → tooltip-content   (hover card)
         legend:  <ChartLegend>  → legend-content    (per-series swatch + label)
         brush:   <Brush>                            (only when showBrush)
@@ -52,12 +54,22 @@ parts:
     description: >-
       One `Bar` per entry in `dataKeys`, filled from its `--color-<key>` var.
       Side-by-side when `layout=grouped`; sharing a `stackId` when `stacked`.
-  - id: brush
+  - id: band
     element: g
     description: >-
-      `<Brush>` — the range selector rendered beneath the plot when `showBrush`
-      is set. `brushHeight` sizes the strip; the handles and the range captions
-      take the muted text token, the strip its secondary-surface background.
+      A `ReferenceArea` per `referenceArea` entry — a shaded region spanning a
+      range of the category axis, drawn behind the bars. Its label captions the
+      band, and the category ticks it covers render in the accent style unless
+      the entry sets `highlightTicks: false`. With `divider`, a dashed rule
+      marks the band's leading edge.
+  - id: bar-track
+    element: rect
+    description: >-
+      The track behind a bar. Drawn for every bar when `showBackground` is on,
+      or only over a `barSettings` range when that entry sets `background`.
+      `background: true` fills the plot height; a data field name caps the track
+      at that row's value, rendering it as a headroom segment stacked on the bar
+      (grouped layout only).
   - id: tooltip-content
     element: div
     description: >-
@@ -68,6 +80,12 @@ parts:
     description: >-
       `ChartLegendContent` — one swatch + label per series. Rendered when
       `showLegend`.
+  - id: brush
+    element: g
+    description: >-
+      `<Brush>` — the range selector rendered beneath the plot when `showBrush`
+      is set. `brushHeight` sizes the strip; the handles and the range captions
+      take the muted text token, the strip its secondary-surface background.
 
 states:
   - id: orientation-variant
@@ -82,3 +100,13 @@ states:
     # `stacked` sums the series, so it also grows the value-axis domain and its
     # grid ticks — not just the series arrangement.
     affects: [series, x-axis, y-axis, grid]
+  - id: range-override
+    trigger: a barSettings entry matches the bar's category
+    kind: prop
+    prop: barSettings
+    affects: [series, bar-track]
+  - id: bar-hover
+    trigger: the pointer is over a bar and showActiveBar is on
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [series]
