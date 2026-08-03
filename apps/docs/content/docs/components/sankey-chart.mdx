@@ -59,7 +59,7 @@ const config = {
 
 Tune the geometry with `nodePadding` / `nodeWidth` / `linkCurvature`, auto-order
 nodes with `sort`, hide the on-chart labels with `showLabels`, and show a
-built-in legend (color dot + label + value + %) with `showLegend`:
+built-in legend (color swatch + label + value + %) with `showLegend`:
 
 ```tsx
 <SankeyChart
@@ -114,7 +114,8 @@ keyboard focus), so keep the values reachable in text — `showLegend`, a captio
 or an adjacent table — rather than only on hover.
 
 `config` colors can also be per-theme (`theme: { light, dark }`) instead of a
-flat `color`; both node bars and the legend/tooltip dots resolve either form.
+flat `color`; both node bars and the legend swatch / tooltip dots resolve either
+form.
 
 ## API Reference
 

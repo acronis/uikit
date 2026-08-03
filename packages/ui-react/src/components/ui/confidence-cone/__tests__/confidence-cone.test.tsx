@@ -6,6 +6,7 @@ import {
   ConfidenceCone,
   createConeTooltip,
   dropConeBand,
+  keepMetricSeries,
 } from '../confidence-cone';
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
@@ -66,13 +67,6 @@ describe('ConfidenceCone', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
-  it('wires the actual + forecast colors from config into --color-* custom properties', () => {
-    const { container } = renderChart();
-    const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-actual: rgb(23 99 207)');
-    expect(style).toContain('--color-forecast: rgb(240 160 30)');
-  });
-
   it('renders with chrome toggled off', () => {
     const { container } = renderChart({
       showGrid: false,
@@ -121,6 +115,29 @@ describe('ConfidenceCone', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
+  // The metric is one hue: the cone and the forecast line paint with the actual
+  // series' color, and the forecast key's own `--color-*` is re-pointed at it so
+  // a caller's second color can't slip back in through a custom tooltip.
+  it('wires config colors into --color-*, forecast included, from one hue', () => {
+    const { container } = renderChart();
+    const css = container.querySelector('style')?.innerHTML ?? '';
+    expect(css).toContain('--color-actual: rgb(23 99 207)');
+    expect(css).toContain('--color-forecast: rgb(23 99 207)');
+    expect(css).not.toContain('rgb(240 160 30)');
+  });
+
+  it('keeps a per-theme actual color when re-pointing the forecast', () => {
+    const { container } = renderChart({
+      config: {
+        actual: { label: 'Actual', theme: { light: '#aaa', dark: '#222' } },
+        forecast: { label: 'Forecast', color: 'rgb(240 160 30)' },
+      },
+    });
+    const css = container.querySelector('style')?.innerHTML ?? '';
+    expect(css).toContain('--color-forecast: #aaa');
+    expect(css).toContain('--color-forecast: #222');
+  });
+
   // The default tooltip and any caller-supplied `tooltipContent` both route
   // their payload through dropConeBand to hide the synthetic `__cone` range
   // series. recharts won't paint that content in happy-dom, so the filter is
@@ -140,6 +157,27 @@ describe('ConfidenceCone', () => {
 
     it('returns undefined for an undefined payload', () => {
       expect(dropConeBand(undefined)).toBeUndefined();
+    });
+  });
+
+  // Actual, forecast and cone are one metric in one hue, so the legend names it
+  // once. Guarded directly for the same reason as dropConeBand.
+  describe('keepMetricSeries', () => {
+    it('keeps only the actual series, dropping the forecast and the band', () => {
+      expect(
+        keepMetricSeries(
+          [
+            { dataKey: 'actual' },
+            { dataKey: '__cone' },
+            { dataKey: 'forecast' },
+          ],
+          'actual'
+        )
+      ).toEqual([{ dataKey: 'actual' }]);
+    });
+
+    it('returns undefined for an undefined payload', () => {
+      expect(keepMetricSeries(undefined, 'actual')).toBeUndefined();
     });
   });
 
@@ -212,9 +250,9 @@ describe('ConfidenceCone animation and data labels', () => {
   });
 
   it('resolves animate to "auto" so prefers-reduced-motion is honored', () => {
-    expect(
-      resolveAnimation({ animate: true, animationDuration: 800 })
-    ).toEqual({ isAnimationActive: 'auto', animationDuration: 800 });
+    expect(resolveAnimation({ animate: true, animationDuration: 800 })).toEqual(
+      { isAnimationActive: 'auto', animationDuration: 800 }
+    );
   });
 
   it('accepts the full animation prop set without throwing', () => {

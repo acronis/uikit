@@ -5,8 +5,8 @@ schematic: |
   container: <div data-slot="chart">  (provides series colors via chart-style)
     chart-style:    injected <style> mapping config → --color-<key> vars
     <recharts plot> bars / lines / area / pie — composed by the caller
-    tooltip-content: hover card — label + per-series indicator + value
-    legend-content:  per-series swatch + label row
+    tooltip-content: hover card — label + per-series dot + value
+    legend-content:  per-series marker (swatch or line) + label row
 
 root:
   element: div
@@ -33,22 +33,22 @@ parts:
     element: div
     description: >-
       ChartTooltipContent — the hover tooltip body: an optional label, then one
-      row per series with a color indicator (dot / line / dashed), name, and value.
-      Passed to recharts' Tooltip via its `content` prop (ChartTooltip).
+      row per series with a round color dot, the series name, and its value. The
+      dot is the tooltip's own vocabulary — it does not follow the legend's
+      marker. Passed to recharts' Tooltip via its `content` prop (ChartTooltip).
   - id: legend-content
     element: div
     description: >-
-      ChartLegendContent — the legend body: one swatch + label per series. Passed
-      to recharts' Legend via its `content` prop (ChartLegend).
+      ChartLegendContent — the legend body: one marker + label per series, laid
+      out from the start edge. Stroke-drawn series (recharts legend type `line`,
+      i.e. lines and areas) get a line marker — dashed via a repeating gradient
+      when the series carries a `strokeDasharray`; every other series gets a
+      square swatch. Passed to recharts' Legend via its `content` prop
+      (ChartLegend).
 
 states:
   - id: tooltip-active
     trigger: a data point is hovered/focused (recharts sets active)
     kind: prop
     prop: active
-    affects: [tooltip-content]
-  - id: indicator-style
-    trigger: indicator is set to line or dashed instead of the default dot
-    kind: prop
-    prop: indicator
     affects: [tooltip-content]

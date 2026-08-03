@@ -198,7 +198,7 @@ const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
               <li key={seg.key} className="flex flex-col gap-1.5">
                 <span className="flex items-center gap-1.5 text-sm leading-none text-muted-foreground">
                   <span
-                    className="size-2.5 shrink-0 rounded-full"
+                    className="size-2.5 shrink-0 rounded-sm"
                     style={{ backgroundColor: colorOf(seg.key) }}
                   />
                   {labelFor(seg.key)}

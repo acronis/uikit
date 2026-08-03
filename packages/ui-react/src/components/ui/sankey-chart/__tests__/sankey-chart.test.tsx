@@ -130,10 +130,10 @@ describe('SankeyChart', () => {
     const css = container.querySelector('style')?.innerHTML ?? '';
     expect(css).toContain('--color-all: #aaa');
     expect(css).toContain('--color-certified: #3f3');
-    // The legend dot references the bridge, so it is colored even though the
+    // The legend swatch references the bridge, so it is colored even though the
     // config carries no flat `color`.
-    const dot = container.querySelector<HTMLElement>('.rounded-full');
-    expect(dot?.style.backgroundColor).toBe('var(--color-all)');
+    const swatch = container.querySelector<HTMLElement>('.rounded-sm');
+    expect(swatch?.style.backgroundColor).toBe('var(--color-all)');
   });
 });
 

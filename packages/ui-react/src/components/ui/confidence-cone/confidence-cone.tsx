@@ -53,6 +53,19 @@ export function dropConeBand<T extends { dataKey?: unknown }>(
 }
 
 /**
+ * Reduce a legend payload to the one metric the chart plots. Actual, forecast
+ * and cone are three recharts series painting a single metric in a single hue,
+ * so the legend names it once — with the actual series' swatch — instead of
+ * listing the line styles as if they were separate series.
+ */
+export function keepMetricSeries<T extends { dataKey?: unknown }>(
+  payload: readonly T[] | undefined,
+  actualKey: string
+): T[] | undefined {
+  return payload?.filter((item) => item.dataKey === actualKey);
+}
+
+/**
  * Wrap a caller-supplied `tooltipContent` so the synthetic cone band is stripped
  * from the payload before it renders, while preserving recharts' own mount
  * semantics — a function is mounted via `createElement` (its own component
@@ -188,6 +201,24 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
 
     const yDomain = resolveAxisDomain(yAxisDomain);
 
+    // One hue for the whole metric. The cone and the forecast line already paint
+    // with the actual series' color; re-pointing the forecast key's own
+    // `--color-*` at it too means nothing downstream — a custom tooltip, a
+    // caller's `var(--color-<forecastKey>)` — can reintroduce a second color.
+    const seriesConfig = React.useMemo(() => {
+      const actual = config[actualKey];
+      const forecast = config[forecastKey];
+      if (!actual || !forecast) return config;
+      return {
+        ...config,
+        [forecastKey]: {
+          label: forecast.label,
+          icon: forecast.icon,
+          ...(actual.theme ? { theme: actual.theme } : { color: actual.color }),
+        },
+      } as ChartConfig;
+    }, [config, actualKey, forecastKey]);
+
     // Room for the X tick row: recharts' default 30, plus a rotated tick row
     // (+20) and/or the axis title (+18). Additive — both can be present at once,
     // which the old label-or-angle ternary under-allocated.
@@ -220,7 +251,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
     return (
       <div ref={ref} className={cn(className)} {...props}>
         <ChartContainer
-          config={config}
+          config={seriesConfig}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <ComposedChart data={chartData as readonly unknown[]}>
@@ -303,8 +334,9 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
                   <ChartLegendContent
                     verticalAlign={lp.verticalAlign}
                     payload={
-                      dropConeBand(
-                        lp.payload
+                      keepMetricSeries(
+                        lp.payload,
+                        actualKey
                       ) as ChartLegendContentProps['payload']
                     }
                   />
@@ -338,6 +370,9 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
               activeDot={false}
               connectNulls
               {...animation}
+              // The legend names the metric once, so it carries the swatch that
+              // stands for the whole series rather than the actual line's style.
+              legendType="rect"
             />
             <Line
               dataKey={forecastKey}

@@ -14,7 +14,7 @@ schematic: |
         actual:   <Area dataKey=actualKey>          (solid line + filled area)
         forecast: <Line dataKey=forecastKey>        (dashed)
         tooltip:  <ChartTooltip> → tooltip-content  (band filtered out)
-        legend:   <ChartLegend>  → legend-content   (band filtered out)
+        legend:   <ChartLegend>  → legend-content   (one entry: the metric)
 
 root:
   element: div
@@ -72,8 +72,11 @@ parts:
   - id: legend-content
     element: div
     description: >-
-      `ChartLegendContent` — a swatch + label for actual and forecast; the band
-      is filtered out. Rendered when `showLegend`.
+      `ChartLegendContent` — one swatch + label for the metric. Actual, forecast
+      and the band are three recharts series painting a single metric in a single
+      hue (the forecast key's `--color-*` is re-pointed at the actual series'
+      color), so only the actual series reaches the legend. Rendered when
+      `showLegend`.
 
 states:
   - id: forecast-region

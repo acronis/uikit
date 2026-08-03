@@ -20,7 +20,10 @@ bound that widens with the horizon. A dashed divider and a subtle shaded region
 set the forecast off from the actuals (toggle with `showForecastRegion`). Point
 the field-name props at your columns (`actualKey`, `forecastKey`, `lowerKey`,
 `upperKey`); the band is drawn behind the lines and kept out of the tooltip and
-legend, and actual vs forecast differ by line style, not hue.
+legend, and actual vs forecast differ by line style, not hue. Because the three
+recharts series are one metric, the legend names it once — a single swatch under
+the actual series' label — and the forecast key's color is re-pointed at the
+actual series' color, so `config` can't paint the metric in two hues.
 
 > **Design-pending v1**, built net-new (no demo playground). There is no chart
 > token tier yet, so the metric color references a shared brand token — a
