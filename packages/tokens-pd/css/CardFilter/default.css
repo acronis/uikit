@@ -19,8 +19,8 @@
   --ui-card-filter-global-container-padding-x: 16px;
   --ui-card-filter-global-container-padding-y: 8px;
   --ui-card-filter-global-content-gap: 8px;
-  --ui-card-filter-global-label-color: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-card-filter-static-value-color-disabled: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-card-filter-global-label-color: light-dark(rgb(97 101 107), rgb(135 139 146));
+  --ui-card-filter-static-value-color-disabled: light-dark(rgb(97 101 107), rgb(135 139 146));
   --ui-card-filter-static-value-color-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
 }
 

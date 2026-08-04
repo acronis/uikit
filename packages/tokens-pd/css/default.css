@@ -179,7 +179,7 @@
   --ui-text-on-surface-link-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-text-on-surface-link-pressed: light-dark(rgb(6 54 121), rgb(190 215 244));
   --ui-text-on-surface-primary: light-dark(rgb(24 25 27), rgb(244 245 245));
-  --ui-text-on-surface-secondary: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-text-on-surface-secondary: light-dark(rgb(97 101 107), rgb(135 139 146));
 }
 
 [data-theme='light'], :host([data-theme='light']) {
@@ -410,6 +410,14 @@
   letter-spacing: 0px;
 }
 
+.ui-typography-body-default-numeric {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0px;
+}
+
 .ui-typography-body-form-label {
   font-family: Inter, system-ui, sans-serif;
   font-size: 14px;
@@ -483,6 +491,14 @@
 }
 
 .ui-typography-headings-lead {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0px;
+}
+
+.ui-typography-headings-lead-numeric {
   font-family: Inter, system-ui, sans-serif;
   font-size: 18px;
   font-weight: 400;

@@ -21,8 +21,8 @@
   --ui-input-text-area-container-label-gap: 4px;
   --ui-input-text-area-container-width-min: 256px;
   --ui-input-text-area-description-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
-  --ui-input-text-area-description-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-input-text-area-description-color-idle: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-input-text-area-description-color-hover: light-dark(rgb(97 101 107), rgb(135 139 146));
+  --ui-input-text-area-description-color-idle: light-dark(rgb(97 101 107), rgb(135 139 146));
   --ui-input-text-area-error-msg-box-border-color-hover: light-dark(rgb(226 54 54), rgb(229 77 77));
   --ui-input-text-area-error-msg-box-border-color-idle: light-dark(rgb(226 54 54), rgb(229 77 77));
   --ui-input-text-area-error-msg-error-color: light-dark(rgb(226 54 54), rgb(229 77 77));
@@ -30,8 +30,8 @@
   --ui-input-text-area-label-color-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-input-text-area-label-color-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-input-text-area-placeholder-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
-  --ui-input-text-area-placeholder-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-input-text-area-placeholder-color-idle: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-input-text-area-placeholder-color-hover: light-dark(rgb(97 101 107), rgb(135 139 146));
+  --ui-input-text-area-placeholder-color-idle: light-dark(rgb(97 101 107), rgb(135 139 146));
   --ui-input-text-area-required-color: light-dark(rgb(226 54 54), rgb(229 77 77));
   --ui-input-text-area-value-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-input-text-area-value-color-hover: light-dark(rgb(24 25 27), rgb(244 245 245));

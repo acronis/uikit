@@ -17,7 +17,7 @@ export default {
       "textColor": {
         "segment-control-value-active": "light-dark(rgb(24 25 27), rgb(244 245 245))",
         "segment-control-value-hover": "light-dark(rgb(24 25 27), rgb(244 245 245))",
-        "segment-control-value-idle": "light-dark(rgb(109 114 120), rgb(109 114 120))"
+        "segment-control-value-idle": "light-dark(rgb(97 101 107), rgb(135 139 146))"
       },
       "borderColor": {
         "segment-control-box-icon-border-color": "light-dark(rgb(214 228 245), rgb(48 50 54))",

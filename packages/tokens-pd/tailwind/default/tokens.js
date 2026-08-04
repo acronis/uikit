@@ -114,7 +114,7 @@ export default {
         "on-surface-link-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "on-surface-link-pressed": "light-dark(rgb(6 54 121), rgb(190 215 244))",
         "on-surface-primary": "light-dark(rgb(24 25 27), rgb(244 245 245))",
-        "on-surface-secondary": "light-dark(rgb(109 114 120), rgb(109 114 120))"
+        "on-surface-secondary": "light-dark(rgb(97 101 107), rgb(135 139 146))"
       },
       "borderColor": {
         "border-on-brand": "light-dark(rgb(255 255 255 / 0.102), rgb(255 255 255 / 0.102))",
@@ -179,6 +179,7 @@ export default {
       "fontFamily": {
         "typography-body-accent": "Inter, system-ui, sans-serif",
         "typography-body-default": "Inter, system-ui, sans-serif",
+        "typography-body-default-numeric": "Inter, system-ui, sans-serif",
         "typography-body-form-label": "Inter, system-ui, sans-serif",
         "typography-body-heading": "Inter, system-ui, sans-serif",
         "typography-body-strong": "Inter, system-ui, sans-serif",
@@ -189,6 +190,7 @@ export default {
         "typography-headings-display": "Inter, system-ui, sans-serif",
         "typography-headings-display-numeric": "Inter, system-ui, sans-serif",
         "typography-headings-lead": "Inter, system-ui, sans-serif",
+        "typography-headings-lead-numeric": "Inter, system-ui, sans-serif",
         "typography-headings-title": "Inter, system-ui, sans-serif",
         "typography-headings-title-accent": "Inter, system-ui, sans-serif",
         "typography-link-default": "Inter, system-ui, sans-serif",
@@ -208,6 +210,14 @@ export default {
           }
         ],
         "typography-body-default": [
+          "14px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "0px",
+            "fontWeight": "400"
+          }
+        ],
+        "typography-body-default-numeric": [
           "14px",
           {
             "lineHeight": "24px",
@@ -288,6 +298,14 @@ export default {
           }
         ],
         "typography-headings-lead": [
+          "18px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "0px",
+            "fontWeight": "400"
+          }
+        ],
+        "typography-headings-lead-numeric": [
           "18px",
           {
             "lineHeight": "24px",

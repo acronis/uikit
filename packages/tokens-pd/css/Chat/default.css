@@ -20,7 +20,7 @@
   --ui-chat-menu-item-expanded-gap: 8px;
   --ui-chat-menu-item-expanded-min-width: 224px;
   --ui-chat-menu-item-height: 40px;
-  --ui-chat-menu-item-hint-color: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-chat-menu-item-hint-color: light-dark(rgb(97 101 107), rgb(135 139 146));
   --ui-chat-menu-item-icon-color: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-chat-menu-item-label-color: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-chat-menu-item-padding-x: 16px;

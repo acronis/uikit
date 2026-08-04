@@ -23,8 +23,8 @@
   --ui-input-text-global-label-color-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-input-text-global-label-color-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-input-text-global-placeholder-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
-  --ui-input-text-global-placeholder-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-input-text-global-placeholder-color-idle: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-input-text-global-placeholder-color-hover: light-dark(rgb(97 101 107), rgb(135 139 146));
+  --ui-input-text-global-placeholder-color-idle: light-dark(rgb(97 101 107), rgb(135 139 146));
   --ui-input-text-global-required-color: light-dark(rgb(226 54 54), rgb(229 77 77));
   --ui-input-text-global-value-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-input-text-global-value-color-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
@@ -33,8 +33,8 @@
   --ui-input-text-normal-box-border-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-input-text-normal-box-border-color-idle: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-input-text-normal-description-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
-  --ui-input-text-normal-description-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-input-text-normal-description-color-idle: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-input-text-normal-description-color-hover: light-dark(rgb(97 101 107), rgb(135 139 146));
+  --ui-input-text-normal-description-color-idle: light-dark(rgb(97 101 107), rgb(135 139 146));
 }
 
 [data-theme='light'], :host([data-theme='light']) {

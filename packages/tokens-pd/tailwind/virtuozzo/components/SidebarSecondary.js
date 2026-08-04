@@ -16,10 +16,10 @@ export default {
       },
       "textColor": {
         "sidebar-secondary-menu-item-global-label": "light-dark(rgb(24 25 27), rgb(244 245 245))",
-        "sidebar-secondary-menu-item-extras-global-shortcut": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "sidebar-secondary-menu-item-extras-global-shortcut": "light-dark(rgb(97 101 107), rgb(135 139 146))",
         "sidebar-secondary-section-label-section": "light-dark(rgb(24 25 27), rgb(244 245 245))",
         "sidebar-secondary-global-header-label": "light-dark(rgb(24 25 27), rgb(244 245 245))",
-        "sidebar-secondary-collapsed-breadcrumb-label": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "sidebar-secondary-collapsed-breadcrumb-label": "light-dark(rgb(97 101 107), rgb(135 139 146))",
         "sidebar-secondary-collapsed-label-current-page": "light-dark(rgb(24 25 27), rgb(244 245 245))"
       },
       "borderColor": {

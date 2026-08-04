@@ -4,6 +4,9 @@
 :root, :host {
   color-scheme: light dark;
 
+  --ui-avatar-color-blue: light-dark(rgb(214 228 245), rgb(48 50 54));
+  --ui-avatar-color-gray: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-avatar-color-green: light-dark(rgb(209 240 214), rgb(15 87 33));
   --ui-avatar-color-orange: light-dark(rgb(255 222 194), rgb(128 58 0));
   --ui-avatar-color-red: light-dark(rgb(251 218 218), rgb(130 23 23));
   --ui-avatar-color-teal: light-dark(rgb(209 240 237), rgb(4 73 67));
@@ -17,6 +20,9 @@
   --ui-avatar-global-avatar-size: 32px;
   --ui-avatar-global-container-gap: 8px;
   --ui-avatar-global-text-color: light-dark(rgb(24 25 27), rgb(244 245 245));
+  --ui-avatar-label-color-blue: light-dark(rgb(6 54 121), rgb(190 215 244));
+  --ui-avatar-label-color-gray: light-dark(rgb(61 63 67), rgb(215 217 219));
+  --ui-avatar-label-color-green: light-dark(rgb(15 87 33), rgb(209 240 214));
   --ui-avatar-label-color-orange: light-dark(rgb(153 69 0), rgb(255 222 194));
   --ui-avatar-label-color-red: light-dark(rgb(152 27 27), rgb(251 218 218));
   --ui-avatar-label-color-teal: light-dark(rgb(4 73 67), rgb(209 240 237));
