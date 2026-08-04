@@ -26,7 +26,8 @@
               "default": "{palette.transparent.white.inverse-95}",
               "light-gray": "{palette.transparent.white.inverse-95}",
               "telstra": "{palette.transparent.white.inverse-95}",
-              "virtuozzo": "{palette.transparent.white.inverse-95}"
+              "virtuozzo": "{palette.transparent.white.inverse-95}",
+              "yellow-1c": "{palette.transparent.white.inverse-95}"
             }
           },
           "secondary": {
@@ -40,7 +41,8 @@
               "default": "{palette.transparent.blue.inverse-95}",
               "light-gray": "{palette.transparent.blue.inverse-95}",
               "telstra": "{palette.transparent.blue.inverse-95}",
-              "virtuozzo": "{palette.transparent.blue.inverse-95}"
+              "virtuozzo": "{palette.transparent.blue.inverse-95}",
+              "yellow-1c": "{palette.transparent.blue.inverse-95}"
             }
           }
         },
@@ -55,7 +57,8 @@
             "default": "{palette.transparent.dark.fixed-90}",
             "light-gray": "{palette.transparent.dark.fixed-90}",
             "telstra": "{palette.transparent.dark.fixed-90}",
-            "virtuozzo": "{palette.transparent.dark.fixed-90}"
+            "virtuozzo": "{palette.transparent.dark.fixed-90}",
+            "yellow-1c": "{palette.transparent.dark.fixed-90}"
           }
         }
       },
@@ -71,7 +74,8 @@
             "default": "{palette.blue.13}",
             "light-gray": "{branding.light_gray.SidebarPrimary.background.idle}",
             "telstra": "{branding.telstra.SidebarPrimary.background.idle}",
-            "virtuozzo": "{branding.virtuozzo.SidebarPrimary.idle}"
+            "virtuozzo": "{branding.virtuozzo.SidebarPrimary.idle}",
+            "yellow-1c": "{branding.yellow_1c.SidebarPrimary.background.idle}"
           }
         },
         "primary-active": {
@@ -85,7 +89,8 @@
             "default": "{palette.blue.7}",
             "light-gray": "{branding.light_gray.SidebarPrimary.background.active}",
             "telstra": "{branding.telstra.SidebarPrimary.background.active}",
-            "virtuozzo": "{branding.virtuozzo.SidebarPrimary.active}"
+            "virtuozzo": "{branding.virtuozzo.SidebarPrimary.active}",
+            "yellow-1c": "{branding.yellow_1c.SidebarPrimary.background.active}"
           }
         },
         "primary-disabled": {
@@ -99,7 +104,8 @@
             "default": "{palette.blue.5}",
             "light-gray": "{branding.light_gray.SidebarPrimary.background.disabled}",
             "telstra": "{branding.telstra.SidebarPrimary.background.disabled}",
-            "virtuozzo": "{branding.virtuozzo.SidebarPrimary.disabled}"
+            "virtuozzo": "{branding.virtuozzo.SidebarPrimary.disabled}",
+            "yellow-1c": "{branding.yellow_1c.SidebarPrimary.background.disabled}"
           }
         },
         "primary-hover": {
@@ -113,7 +119,8 @@
             "default": "{palette.blue.12}",
             "light-gray": "{branding.light_gray.SidebarPrimary.background.hover}",
             "telstra": "{branding.telstra.SidebarPrimary.background.hover}",
-            "virtuozzo": "{branding.virtuozzo.SidebarPrimary.hover}"
+            "virtuozzo": "{branding.virtuozzo.SidebarPrimary.hover}",
+            "yellow-1c": "{branding.yellow_1c.SidebarPrimary.background.hover}"
           }
         },
         "secondary": {
@@ -127,7 +134,8 @@
             "default": "{palette.blue.7}",
             "light-gray": "{branding.light_gray.ButtonPrimary.idle}",
             "telstra": "{branding.telstra.ButtonPrimary.idle}",
-            "virtuozzo": "{branding.virtuozzo.ButtonPrimary.idle}"
+            "virtuozzo": "{branding.virtuozzo.ButtonPrimary.idle}",
+            "yellow-1c": "{branding.yellow_1c.ButtonPrimary.idle}"
           }
         },
         "secondary-active": {
@@ -141,7 +149,8 @@
             "default": "{palette.blue.9}",
             "light-gray": "{branding.light_gray.ButtonPrimary.active}",
             "telstra": "{branding.telstra.ButtonPrimary.active}",
-            "virtuozzo": "{branding.virtuozzo.ButtonPrimary.active}"
+            "virtuozzo": "{branding.virtuozzo.ButtonPrimary.active}",
+            "yellow-1c": "{branding.yellow_1c.ButtonPrimary.active}"
           }
         },
         "secondary-disabled": {
@@ -155,7 +164,8 @@
             "default": "{palette.blue.3}",
             "light-gray": "{branding.light_gray.ButtonPrimary.disabled}",
             "telstra": "{branding.telstra.ButtonPrimary.disabled}",
-            "virtuozzo": "{branding.virtuozzo.ButtonPrimary.disabled}"
+            "virtuozzo": "{branding.virtuozzo.ButtonPrimary.disabled}",
+            "yellow-1c": "{branding.yellow_1c.ButtonPrimary.disabled}"
           }
         },
         "secondary-hover": {
@@ -169,7 +179,8 @@
             "default": "{palette.blue.8}",
             "light-gray": "{branding.light_gray.ButtonPrimary.hover}",
             "telstra": "{branding.telstra.ButtonPrimary.hover}",
-            "virtuozzo": "{branding.virtuozzo.ButtonPrimary.hover}"
+            "virtuozzo": "{branding.virtuozzo.ButtonPrimary.hover}",
+            "yellow-1c": "{branding.yellow_1c.ButtonPrimary.hover}"
           }
         }
       },
@@ -185,7 +196,8 @@
             "default": "{palette.transparent.dark.inverse-100}",
             "light-gray": "{palette.transparent.dark.inverse-100}",
             "telstra": "{palette.transparent.dark.inverse-100}",
-            "virtuozzo": "{palette.transparent.dark.inverse-100}"
+            "virtuozzo": "{palette.transparent.dark.inverse-100}",
+            "yellow-1c": "{palette.transparent.dark.inverse-100}"
           }
         }
       },
@@ -201,7 +213,8 @@
             "default": "{palette.violet.1}",
             "light-gray": "{palette.violet.1}",
             "telstra": "{palette.violet.1}",
-            "virtuozzo": "{palette.violet.1}"
+            "virtuozzo": "{palette.violet.1}",
+            "yellow-1c": "{palette.violet.1}"
           }
         },
         "ai-hover": {
@@ -215,7 +228,8 @@
             "default": "{palette.violet.2}",
             "light-gray": "{palette.violet.2}",
             "telstra": "{palette.violet.2}",
-            "virtuozzo": "{palette.violet.2}"
+            "virtuozzo": "{palette.violet.2}",
+            "yellow-1c": "{palette.violet.2}"
           }
         },
         "ai-pressed": {
@@ -229,7 +243,8 @@
             "default": "{palette.violet.3}",
             "light-gray": "{palette.violet.3}",
             "telstra": "{palette.violet.3}",
-            "virtuozzo": "{palette.violet.3}"
+            "virtuozzo": "{palette.violet.3}",
+            "yellow-1c": "{palette.violet.3}"
           }
         },
         "critical": {
@@ -243,7 +258,8 @@
             "default": "{palette.orange.1}",
             "light-gray": "{palette.orange.1}",
             "telstra": "{palette.orange.1}",
-            "virtuozzo": "{palette.orange.1}"
+            "virtuozzo": "{palette.orange.1}",
+            "yellow-1c": "{palette.orange.1}"
           }
         },
         "critical-hover": {
@@ -257,7 +273,8 @@
             "default": "{palette.orange.2}",
             "light-gray": "{palette.orange.2}",
             "telstra": "{palette.orange.2}",
-            "virtuozzo": "{palette.orange.2}"
+            "virtuozzo": "{palette.orange.2}",
+            "yellow-1c": "{palette.orange.2}"
           }
         },
         "critical-pressed": {
@@ -271,7 +288,8 @@
             "default": "{palette.orange.3}",
             "light-gray": "{palette.orange.3}",
             "telstra": "{palette.orange.3}",
-            "virtuozzo": "{palette.orange.3}"
+            "virtuozzo": "{palette.orange.3}",
+            "yellow-1c": "{palette.orange.3}"
           }
         },
         "danger": {
@@ -285,7 +303,8 @@
             "default": "{palette.red.1}",
             "light-gray": "{palette.red.1}",
             "telstra": "{palette.red.1}",
-            "virtuozzo": "{palette.red.1}"
+            "virtuozzo": "{palette.red.1}",
+            "yellow-1c": "{palette.red.1}"
           }
         },
         "danger-hover": {
@@ -299,7 +318,8 @@
             "default": "{palette.red.2}",
             "light-gray": "{palette.red.2}",
             "telstra": "{palette.red.2}",
-            "virtuozzo": "{palette.red.2}"
+            "virtuozzo": "{palette.red.2}",
+            "yellow-1c": "{palette.red.2}"
           }
         },
         "danger-pressed": {
@@ -313,7 +333,8 @@
             "default": "{palette.red.3}",
             "light-gray": "{palette.red.3}",
             "telstra": "{palette.red.3}",
-            "virtuozzo": "{palette.red.3}"
+            "virtuozzo": "{palette.red.3}",
+            "yellow-1c": "{palette.red.3}"
           }
         },
         "info": {
@@ -327,7 +348,8 @@
             "default": "{palette.electricblue.1}",
             "light-gray": "{palette.electricblue.1}",
             "telstra": "{palette.electricblue.1}",
-            "virtuozzo": "{palette.electricblue.1}"
+            "virtuozzo": "{palette.electricblue.1}",
+            "yellow-1c": "{palette.electricblue.1}"
           }
         },
         "info-hover": {
@@ -341,7 +363,8 @@
             "default": "{palette.electricblue.2}",
             "light-gray": "{palette.electricblue.2}",
             "telstra": "{palette.electricblue.2}",
-            "virtuozzo": "{palette.electricblue.2}"
+            "virtuozzo": "{palette.electricblue.2}",
+            "yellow-1c": "{palette.electricblue.2}"
           }
         },
         "info-pressed": {
@@ -355,7 +378,8 @@
             "default": "{palette.electricblue.3}",
             "light-gray": "{palette.electricblue.3}",
             "telstra": "{palette.electricblue.3}",
-            "virtuozzo": "{palette.electricblue.3}"
+            "virtuozzo": "{palette.electricblue.3}",
+            "yellow-1c": "{palette.electricblue.3}"
           }
         },
         "neutral": {
@@ -369,7 +393,8 @@
             "default": "{palette.base}",
             "light-gray": "{palette.base}",
             "telstra": "{palette.base}",
-            "virtuozzo": "{palette.base}"
+            "virtuozzo": "{palette.base}",
+            "yellow-1c": "{palette.base}"
           }
         },
         "neutral-hover": {
@@ -383,7 +408,8 @@
             "default": "{palette.grayscale.1}",
             "light-gray": "{palette.grayscale.1}",
             "telstra": "{palette.grayscale.1}",
-            "virtuozzo": "{palette.grayscale.1}"
+            "virtuozzo": "{palette.grayscale.1}",
+            "yellow-1c": "{palette.grayscale.1}"
           }
         },
         "neutral-pressed": {
@@ -397,7 +423,8 @@
             "default": "{palette.grayscale.2}",
             "light-gray": "{palette.grayscale.2}",
             "telstra": "{palette.grayscale.2}",
-            "virtuozzo": "{palette.grayscale.2}"
+            "virtuozzo": "{palette.grayscale.2}",
+            "yellow-1c": "{palette.grayscale.2}"
           }
         },
         "off": {
@@ -411,7 +438,8 @@
             "default": "{palette.blue.3}",
             "light-gray": "{palette.grayscale.3}",
             "telstra": "{palette.grayscale.3}",
-            "virtuozzo": "{palette.grayscale.3}"
+            "virtuozzo": "{palette.grayscale.3}",
+            "yellow-1c": "{palette.grayscale.3}"
           }
         },
         "on": {
@@ -425,7 +453,8 @@
             "default": "{palette.green.6}",
             "light-gray": "{palette.green.6}",
             "telstra": "{palette.green.6}",
-            "virtuozzo": "{palette.green.6}"
+            "virtuozzo": "{palette.green.6}",
+            "yellow-1c": "{palette.green.6}"
           }
         },
         "success": {
@@ -439,7 +468,8 @@
             "default": "{palette.green.1}",
             "light-gray": "{palette.green.1}",
             "telstra": "{palette.green.1}",
-            "virtuozzo": "{palette.green.1}"
+            "virtuozzo": "{palette.green.1}",
+            "yellow-1c": "{palette.green.1}"
           }
         },
         "success-hover": {
@@ -453,7 +483,8 @@
             "default": "{palette.green.2}",
             "light-gray": "{palette.green.2}",
             "telstra": "{palette.green.2}",
-            "virtuozzo": "{palette.green.2}"
+            "virtuozzo": "{palette.green.2}",
+            "yellow-1c": "{palette.green.2}"
           }
         },
         "success-pressed": {
@@ -467,7 +498,8 @@
             "default": "{palette.green.3}",
             "light-gray": "{palette.green.3}",
             "telstra": "{palette.green.3}",
-            "virtuozzo": "{palette.green.3}"
+            "virtuozzo": "{palette.green.3}",
+            "yellow-1c": "{palette.green.3}"
           }
         },
         "warning": {
@@ -481,7 +513,8 @@
             "default": "{palette.yellow.1}",
             "light-gray": "{palette.yellow.1}",
             "telstra": "{palette.yellow.1}",
-            "virtuozzo": "{palette.yellow.1}"
+            "virtuozzo": "{palette.yellow.1}",
+            "yellow-1c": "{palette.yellow.1}"
           }
         },
         "warning-hover": {
@@ -495,7 +528,8 @@
             "default": "{palette.yellow.2}",
             "light-gray": "{palette.yellow.2}",
             "telstra": "{palette.yellow.2}",
-            "virtuozzo": "{palette.yellow.2}"
+            "virtuozzo": "{palette.yellow.2}",
+            "yellow-1c": "{palette.yellow.2}"
           }
         },
         "warning-pressed": {
@@ -509,7 +543,8 @@
             "default": "{palette.yellow.3}",
             "light-gray": "{palette.yellow.3}",
             "telstra": "{palette.yellow.3}",
-            "virtuozzo": "{palette.yellow.3}"
+            "virtuozzo": "{palette.yellow.3}",
+            "yellow-1c": "{palette.yellow.3}"
           }
         }
       },
@@ -525,7 +560,8 @@
             "default": "{palette.orange.7}",
             "light-gray": "{palette.orange.7}",
             "telstra": "{palette.orange.7}",
-            "virtuozzo": "{palette.orange.7}"
+            "virtuozzo": "{palette.orange.7}",
+            "yellow-1c": "{palette.orange.7}"
           }
         },
         "critical-hover": {
@@ -539,7 +575,8 @@
             "default": "{palette.orange.8}",
             "light-gray": "{palette.orange.8}",
             "telstra": "{palette.orange.8}",
-            "virtuozzo": "{palette.orange.8}"
+            "virtuozzo": "{palette.orange.8}",
+            "yellow-1c": "{palette.orange.8}"
           }
         },
         "critical-pressed": {
@@ -553,7 +590,8 @@
             "default": "{palette.orange.9}",
             "light-gray": "{palette.orange.9}",
             "telstra": "{palette.orange.9}",
-            "virtuozzo": "{palette.orange.9}"
+            "virtuozzo": "{palette.orange.9}",
+            "yellow-1c": "{palette.orange.9}"
           }
         },
         "danger": {
@@ -567,7 +605,8 @@
             "default": "{palette.red.7}",
             "light-gray": "{palette.red.7}",
             "telstra": "{palette.red.7}",
-            "virtuozzo": "{palette.red.7}"
+            "virtuozzo": "{palette.red.7}",
+            "yellow-1c": "{palette.red.7}"
           }
         },
         "danger-hover": {
@@ -581,7 +620,8 @@
             "default": "{palette.red.9}",
             "light-gray": "{palette.red.9}",
             "telstra": "{palette.red.9}",
-            "virtuozzo": "{palette.red.9}"
+            "virtuozzo": "{palette.red.9}",
+            "yellow-1c": "{palette.red.9}"
           }
         },
         "danger-pressed": {
@@ -595,7 +635,8 @@
             "default": "{palette.red.10}",
             "light-gray": "{palette.red.10}",
             "telstra": "{palette.red.10}",
-            "virtuozzo": "{palette.red.10}"
+            "virtuozzo": "{palette.red.10}",
+            "yellow-1c": "{palette.red.10}"
           }
         },
         "info": {
@@ -609,7 +650,8 @@
             "default": "{palette.blue.7}",
             "light-gray": "{palette.blue.7}",
             "telstra": "{palette.blue.7}",
-            "virtuozzo": "{palette.blue.7}"
+            "virtuozzo": "{palette.blue.7}",
+            "yellow-1c": "{palette.blue.7}"
           }
         },
         "info-hover": {
@@ -623,7 +665,8 @@
             "default": "{palette.blue.8}",
             "light-gray": "{palette.blue.8}",
             "telstra": "{palette.blue.8}",
-            "virtuozzo": "{palette.blue.8}"
+            "virtuozzo": "{palette.blue.8}",
+            "yellow-1c": "{palette.blue.8}"
           }
         },
         "info-pressed": {
@@ -637,7 +680,8 @@
             "default": "{palette.blue.9}",
             "light-gray": "{palette.blue.9}",
             "telstra": "{palette.blue.9}",
-            "virtuozzo": "{palette.blue.9}"
+            "virtuozzo": "{palette.blue.9}",
+            "yellow-1c": "{palette.blue.9}"
           }
         },
         "neutral": {
@@ -651,7 +695,8 @@
             "default": "{palette.grayscale.7}",
             "light-gray": "{palette.grayscale.7}",
             "telstra": "{palette.grayscale.7}",
-            "virtuozzo": "{palette.grayscale.7}"
+            "virtuozzo": "{palette.grayscale.7}",
+            "yellow-1c": "{palette.grayscale.7}"
           }
         },
         "neutral-hover": {
@@ -665,7 +710,8 @@
             "default": "{palette.grayscale.8}",
             "light-gray": "{palette.grayscale.8}",
             "telstra": "{palette.grayscale.8}",
-            "virtuozzo": "{palette.grayscale.8}"
+            "virtuozzo": "{palette.grayscale.8}",
+            "yellow-1c": "{palette.grayscale.8}"
           }
         },
         "neutral-pressed": {
@@ -679,7 +725,8 @@
             "default": "{palette.grayscale.9}",
             "light-gray": "{palette.grayscale.9}",
             "telstra": "{palette.grayscale.9}",
-            "virtuozzo": "{palette.grayscale.9}"
+            "virtuozzo": "{palette.grayscale.9}",
+            "yellow-1c": "{palette.grayscale.9}"
           }
         },
         "success": {
@@ -693,7 +740,8 @@
             "default": "{palette.green.7}",
             "light-gray": "{palette.green.7}",
             "telstra": "{palette.green.7}",
-            "virtuozzo": "{palette.green.7}"
+            "virtuozzo": "{palette.green.7}",
+            "yellow-1c": "{palette.green.7}"
           }
         },
         "success-hover": {
@@ -707,7 +755,8 @@
             "default": "{palette.green.8}",
             "light-gray": "{palette.green.8}",
             "telstra": "{palette.green.8}",
-            "virtuozzo": "{palette.green.8}"
+            "virtuozzo": "{palette.green.8}",
+            "yellow-1c": "{palette.green.8}"
           }
         },
         "success-pressed": {
@@ -721,7 +770,8 @@
             "default": "{palette.green.9}",
             "light-gray": "{palette.green.9}",
             "telstra": "{palette.green.9}",
-            "virtuozzo": "{palette.green.9}"
+            "virtuozzo": "{palette.green.9}",
+            "yellow-1c": "{palette.green.9}"
           }
         },
         "warning": {
@@ -735,7 +785,8 @@
             "default": "{palette.yellow.7}",
             "light-gray": "{palette.yellow.7}",
             "telstra": "{palette.yellow.7}",
-            "virtuozzo": "{palette.yellow.7}"
+            "virtuozzo": "{palette.yellow.7}",
+            "yellow-1c": "{palette.yellow.7}"
           }
         },
         "warning-hover": {
@@ -749,7 +800,8 @@
             "default": "{palette.yellow.8}",
             "light-gray": "{palette.yellow.8}",
             "telstra": "{palette.yellow.8}",
-            "virtuozzo": "{palette.yellow.8}"
+            "virtuozzo": "{palette.yellow.8}",
+            "yellow-1c": "{palette.yellow.8}"
           }
         },
         "warning-pressed": {
@@ -763,7 +815,8 @@
             "default": "{palette.yellow.9}",
             "light-gray": "{palette.yellow.9}",
             "telstra": "{palette.yellow.9}",
-            "virtuozzo": "{palette.yellow.9}"
+            "virtuozzo": "{palette.yellow.9}",
+            "yellow-1c": "{palette.yellow.9}"
           }
         }
       },
@@ -779,7 +832,8 @@
             "default": "{palette.blue.2}",
             "light-gray": "{palette.grayscale.2}",
             "telstra": "{palette.grayscale.2}",
-            "virtuozzo": "{palette.grayscale.2}"
+            "virtuozzo": "{palette.grayscale.2}",
+            "yellow-1c": "{palette.grayscale.2}"
           }
         },
         "hover": {
@@ -793,7 +847,8 @@
             "default": "{palette.blue.1}",
             "light-gray": "{palette.grayscale.1}",
             "telstra": "{palette.grayscale.1}",
-            "virtuozzo": "{palette.grayscale.1}"
+            "virtuozzo": "{palette.grayscale.1}",
+            "yellow-1c": "{palette.grayscale.1}"
           }
         },
         "primary": {
@@ -807,7 +862,8 @@
             "default": "{palette.base}",
             "light-gray": "{palette.base}",
             "telstra": "{palette.base}",
-            "virtuozzo": "{palette.base}"
+            "virtuozzo": "{palette.base}",
+            "yellow-1c": "{palette.base}"
           }
         },
         "secondary": {
@@ -821,7 +877,8 @@
             "default": "{palette.blue.0}",
             "light-gray": "{palette.grayscale.0}",
             "telstra": "{palette.grayscale.0}",
-            "virtuozzo": "{palette.grayscale.0}"
+            "virtuozzo": "{palette.grayscale.0}",
+            "yellow-1c": "{palette.grayscale.0}"
           }
         }
       },
@@ -836,7 +893,8 @@
           "default": "{palette.transparent.clear}",
           "light-gray": "{palette.transparent.clear}",
           "telstra": "{palette.transparent.clear}",
-          "virtuozzo": "{palette.transparent.clear}"
+          "virtuozzo": "{palette.transparent.clear}",
+          "yellow-1c": "{palette.transparent.clear}"
         }
       }
     },
@@ -853,7 +911,8 @@
             "default": "{palette.transparent.white.fixed-10}",
             "light-gray": "{palette.transparent.white.fixed-10}",
             "telstra": "{palette.transparent.white.fixed-10}",
-            "virtuozzo": "{palette.transparent.white.fixed-10}"
+            "virtuozzo": "{palette.transparent.white.fixed-10}",
+            "yellow-1c": "{palette.transparent.white.fixed-10}"
           }
         },
         "border-active": {
@@ -867,7 +926,8 @@
             "default": "{palette.grayscale.0}",
             "light-gray": "{palette.grayscale.0}",
             "telstra": "{palette.grayscale.0}",
-            "virtuozzo": "{palette.grayscale.0}"
+            "virtuozzo": "{palette.grayscale.0}",
+            "yellow-1c": "{palette.grayscale.0}"
           }
         },
         "divider": {
@@ -881,7 +941,8 @@
             "default": "{palette.transparent.white.fixed-10}",
             "light-gray": "{palette.transparent.white.fixed-10}",
             "telstra": "{palette.transparent.white.fixed-10}",
-            "virtuozzo": "{palette.transparent.white.fixed-10}"
+            "virtuozzo": "{palette.transparent.white.fixed-10}",
+            "yellow-1c": "{palette.transparent.white.fixed-10}"
           }
         }
       },
@@ -897,7 +958,8 @@
             "default": "{palette.violet.4}",
             "light-gray": "{palette.violet.4}",
             "telstra": "{palette.violet.4}",
-            "virtuozzo": "{palette.violet.4}"
+            "virtuozzo": "{palette.violet.4}",
+            "yellow-1c": "{palette.violet.4}"
           }
         },
         "aiStrong": {
@@ -912,7 +974,8 @@
             "default": "{gradients.ai.idle}",
             "light-gray": "{gradients.ai.idle}",
             "telstra": "{gradients.ai.idle}",
-            "virtuozzo": "{gradients.ai.idle}"
+            "virtuozzo": "{gradients.ai.idle}",
+            "yellow-1c": "{gradients.ai.idle}"
           }
         },
         "critical": {
@@ -926,7 +989,8 @@
             "default": "{palette.orange.4}",
             "light-gray": "{palette.orange.4}",
             "telstra": "{palette.orange.4}",
-            "virtuozzo": "{palette.orange.4}"
+            "virtuozzo": "{palette.orange.4}",
+            "yellow-1c": "{palette.orange.4}"
           }
         },
         "criticalStrong": {
@@ -940,7 +1004,8 @@
             "default": "{palette.orange.8}",
             "light-gray": "{palette.orange.8}",
             "telstra": "{palette.orange.8}",
-            "virtuozzo": "{palette.orange.8}"
+            "virtuozzo": "{palette.orange.8}",
+            "yellow-1c": "{palette.orange.8}"
           }
         },
         "danger": {
@@ -954,7 +1019,8 @@
             "default": "{palette.red.4}",
             "light-gray": "{palette.red.4}",
             "telstra": "{palette.red.4}",
-            "virtuozzo": "{palette.red.4}"
+            "virtuozzo": "{palette.red.4}",
+            "yellow-1c": "{palette.red.4}"
           }
         },
         "dangerStrong": {
@@ -968,7 +1034,8 @@
             "default": "{palette.red.8}",
             "light-gray": "{palette.red.8}",
             "telstra": "{palette.red.8}",
-            "virtuozzo": "{palette.red.8}"
+            "virtuozzo": "{palette.red.8}",
+            "yellow-1c": "{palette.red.8}"
           }
         },
         "info": {
@@ -982,7 +1049,8 @@
             "default": "{palette.electricblue.4}",
             "light-gray": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
-            "virtuozzo": "{palette.electricblue.4}"
+            "virtuozzo": "{palette.electricblue.4}",
+            "yellow-1c": "{palette.electricblue.4}"
           }
         },
         "infoStrong": {
@@ -996,7 +1064,8 @@
             "default": "{palette.electricblue.8}",
             "light-gray": "{palette.electricblue.8}",
             "telstra": "{palette.electricblue.8}",
-            "virtuozzo": "{palette.electricblue.8}"
+            "virtuozzo": "{palette.electricblue.8}",
+            "yellow-1c": "{palette.electricblue.8}"
           }
         },
         "neutral": {
@@ -1010,7 +1079,8 @@
             "default": "{palette.grayscale.4}",
             "light-gray": "{palette.grayscale.4}",
             "telstra": "{palette.grayscale.4}",
-            "virtuozzo": "{palette.grayscale.4}"
+            "virtuozzo": "{palette.grayscale.4}",
+            "yellow-1c": "{palette.grayscale.4}"
           }
         },
         "neutralStrong": {
@@ -1024,7 +1094,8 @@
             "default": "{palette.grayscale.8}",
             "light-gray": "{palette.grayscale.8}",
             "telstra": "{palette.grayscale.8}",
-            "virtuozzo": "{palette.grayscale.8}"
+            "virtuozzo": "{palette.grayscale.8}",
+            "yellow-1c": "{palette.grayscale.8}"
           }
         },
         "success": {
@@ -1038,7 +1109,8 @@
             "default": "{palette.green.4}",
             "light-gray": "{palette.green.4}",
             "telstra": "{palette.green.4}",
-            "virtuozzo": "{palette.green.4}"
+            "virtuozzo": "{palette.green.4}",
+            "yellow-1c": "{palette.green.4}"
           }
         },
         "successStrong": {
@@ -1052,7 +1124,8 @@
             "default": "{palette.green.8}",
             "light-gray": "{palette.green.8}",
             "telstra": "{palette.green.8}",
-            "virtuozzo": "{palette.green.8}"
+            "virtuozzo": "{palette.green.8}",
+            "yellow-1c": "{palette.green.8}"
           }
         },
         "warning": {
@@ -1066,7 +1139,8 @@
             "default": "{palette.yellow.4}",
             "light-gray": "{palette.yellow.4}",
             "telstra": "{palette.yellow.4}",
-            "virtuozzo": "{palette.yellow.4}"
+            "virtuozzo": "{palette.yellow.4}",
+            "yellow-1c": "{palette.yellow.4}"
           }
         },
         "warningStrong": {
@@ -1080,7 +1154,8 @@
             "default": "{palette.yellow.8}",
             "light-gray": "{palette.yellow.8}",
             "telstra": "{palette.yellow.8}",
-            "virtuozzo": "{palette.yellow.8}"
+            "virtuozzo": "{palette.yellow.8}",
+            "yellow-1c": "{palette.yellow.8}"
           }
         }
       },
@@ -1096,7 +1171,8 @@
             "default": "{palette.blue.3}",
             "light-gray": "{palette.grayscale.3}",
             "telstra": "{palette.grayscale.3}",
-            "virtuozzo": "{palette.grayscale.3}"
+            "virtuozzo": "{palette.grayscale.3}",
+            "yellow-1c": "{palette.grayscale.3}"
           }
         },
         "border-active": {
@@ -1110,7 +1186,8 @@
             "default": "{palette.blue.7}",
             "light-gray": "{palette.grayscale.7}",
             "telstra": "{palette.grayscale.7}",
-            "virtuozzo": "{palette.grayscale.7}"
+            "virtuozzo": "{palette.grayscale.7}",
+            "yellow-1c": "{palette.grayscale.7}"
           }
         },
         "border-error": {
@@ -1124,7 +1201,8 @@
             "default": "{palette.red.7}",
             "light-gray": "{palette.red.7}",
             "telstra": "{palette.red.7}",
-            "virtuozzo": "{palette.red.7}"
+            "virtuozzo": "{palette.red.7}",
+            "yellow-1c": "{palette.red.7}"
           }
         },
         "divider": {
@@ -1138,7 +1216,8 @@
             "default": "{palette.blue.3}",
             "light-gray": "{palette.grayscale.3}",
             "telstra": "{palette.grayscale.3}",
-            "virtuozzo": "{palette.grayscale.3}"
+            "virtuozzo": "{palette.grayscale.3}",
+            "yellow-1c": "{palette.grayscale.3}"
           }
         }
       },
@@ -1153,7 +1232,8 @@
           "default": "{palette.transparent.clear}",
           "light-gray": "{palette.transparent.clear}",
           "telstra": "{palette.transparent.clear}",
-          "virtuozzo": "{palette.transparent.clear}"
+          "virtuozzo": "{palette.transparent.clear}",
+          "yellow-1c": "{palette.transparent.clear}"
         }
       }
     },
@@ -1169,7 +1249,8 @@
           "default": "{palette.blue.4}",
           "light-gray": "{palette.blue.4}",
           "telstra": "{palette.blue.4}",
-          "virtuozzo": "{palette.blue.4}"
+          "virtuozzo": "{palette.blue.4}",
+          "yellow-1c": "{palette.blue.4}"
         }
       },
       "error": {
@@ -1183,7 +1264,8 @@
           "default": "{palette.red.4}",
           "light-gray": "{palette.red.4}",
           "telstra": "{palette.red.4}",
-          "virtuozzo": "{palette.red.4}"
+          "virtuozzo": "{palette.red.4}",
+          "yellow-1c": "{palette.red.4}"
         }
       },
       "primary": {
@@ -1197,7 +1279,8 @@
           "default": "{palette.blue.4}",
           "light-gray": "{palette.blue.4}",
           "telstra": "{palette.blue.4}",
-          "virtuozzo": "{palette.blue.4}"
+          "virtuozzo": "{palette.blue.4}",
+          "yellow-1c": "{palette.blue.4}"
         }
       },
       "secondary": {
@@ -1211,7 +1294,8 @@
           "default": "{palette.blue.4}",
           "light-gray": "{palette.blue.4}",
           "telstra": "{palette.blue.4}",
-          "virtuozzo": "{palette.blue.4}"
+          "virtuozzo": "{palette.blue.4}",
+          "yellow-1c": "{palette.blue.4}"
         }
       }
     },
@@ -1228,7 +1312,8 @@
             "default": "{palette.blue.7}",
             "light-gray": "{palette.grayscale.7}",
             "telstra": "{palette.grayscale.7}",
-            "virtuozzo": "{palette.grayscale.7}"
+            "virtuozzo": "{palette.grayscale.7}",
+            "yellow-1c": "{palette.grayscale.7}"
           }
         },
         "screenPrimary": {
@@ -1242,7 +1327,8 @@
             "default": "{palette.transparent.white.fixed-100}",
             "light-gray": "{palette.transparent.white.fixed-100}",
             "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}"
+            "virtuozzo": "{palette.transparent.white.fixed-100}",
+            "yellow-1c": "{palette.transparent.white.fixed-100}"
           }
         }
       },
@@ -1258,7 +1344,8 @@
             "default": "{palette.transparent.white.fixed-10}",
             "light-gray": "{palette.transparent.white.fixed-10}",
             "telstra": "{palette.transparent.white.fixed-10}",
-            "virtuozzo": "{palette.transparent.white.fixed-10}"
+            "virtuozzo": "{palette.transparent.white.fixed-10}",
+            "yellow-1c": "{palette.transparent.white.fixed-10}"
           }
         },
         "primary": {
@@ -1272,7 +1359,8 @@
             "default": "{palette.transparent.white.fixed-100}",
             "light-gray": "{palette.transparent.white.fixed-100}",
             "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}"
+            "virtuozzo": "{palette.transparent.white.fixed-100}",
+            "yellow-1c": "{palette.transparent.white.fixed-100}"
           }
         },
         "secondary": {
@@ -1286,7 +1374,8 @@
             "default": "{palette.transparent.white.fixed-60}",
             "light-gray": "{palette.transparent.white.fixed-60}",
             "telstra": "{palette.transparent.white.fixed-60}",
-            "virtuozzo": "{palette.transparent.white.fixed-60}"
+            "virtuozzo": "{palette.transparent.white.fixed-60}",
+            "yellow-1c": "{palette.transparent.white.fixed-60}"
           }
         }
       },
@@ -1302,7 +1391,8 @@
             "default": "{palette.transparent.white.fixed-100}",
             "light-gray": "{palette.transparent.white.fixed-100}",
             "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}"
+            "virtuozzo": "{palette.transparent.white.fixed-100}",
+            "yellow-1c": "{palette.transparent.white.fixed-100}"
           }
         }
       },
@@ -1318,7 +1408,8 @@
             "default": "{palette.violet.11}",
             "light-gray": "{palette.violet.11}",
             "telstra": "{palette.violet.11}",
-            "virtuozzo": "{palette.violet.11}"
+            "virtuozzo": "{palette.violet.11}",
+            "yellow-1c": "{palette.violet.11}"
           }
         },
         "critical": {
@@ -1332,7 +1423,8 @@
             "default": "{palette.orange.11}",
             "light-gray": "{palette.orange.11}",
             "telstra": "{palette.orange.11}",
-            "virtuozzo": "{palette.orange.11}"
+            "virtuozzo": "{palette.orange.11}",
+            "yellow-1c": "{palette.orange.11}"
           }
         },
         "danger": {
@@ -1346,7 +1438,8 @@
             "default": "{palette.red.11}",
             "light-gray": "{palette.red.11}",
             "telstra": "{palette.red.11}",
-            "virtuozzo": "{palette.red.11}"
+            "virtuozzo": "{palette.red.11}",
+            "yellow-1c": "{palette.red.11}"
           }
         },
         "disabled": {
@@ -1360,7 +1453,8 @@
             "default": "{palette.blue.3}",
             "light-gray": "{palette.grayscale.3}",
             "telstra": "{palette.grayscale.3}",
-            "virtuozzo": "{palette.grayscale.3}"
+            "virtuozzo": "{palette.grayscale.3}",
+            "yellow-1c": "{palette.grayscale.3}"
           }
         },
         "info": {
@@ -1374,7 +1468,8 @@
             "default": "{palette.electricblue.11}",
             "light-gray": "{palette.electricblue.11}",
             "telstra": "{palette.electricblue.11}",
-            "virtuozzo": "{palette.electricblue.11}"
+            "virtuozzo": "{palette.electricblue.11}",
+            "yellow-1c": "{palette.electricblue.11}"
           }
         },
         "neutral": {
@@ -1388,7 +1483,8 @@
             "default": "{palette.grayscale.11}",
             "light-gray": "{palette.grayscale.11}",
             "telstra": "{palette.grayscale.11}",
-            "virtuozzo": "{palette.grayscale.11}"
+            "virtuozzo": "{palette.grayscale.11}",
+            "yellow-1c": "{palette.grayscale.11}"
           }
         },
         "primary": {
@@ -1402,7 +1498,8 @@
             "default": "{palette.electricblue.11}",
             "light-gray": "{palette.electricblue.11}",
             "telstra": "{palette.electricblue.11}",
-            "virtuozzo": "{palette.electricblue.11}"
+            "virtuozzo": "{palette.electricblue.11}",
+            "yellow-1c": "{palette.electricblue.11}"
           }
         },
         "success": {
@@ -1416,7 +1513,8 @@
             "default": "{palette.green.11}",
             "light-gray": "{palette.green.11}",
             "telstra": "{palette.green.11}",
-            "virtuozzo": "{palette.green.11}"
+            "virtuozzo": "{palette.green.11}",
+            "yellow-1c": "{palette.green.11}"
           }
         },
         "warning": {
@@ -1430,7 +1528,8 @@
             "default": "{palette.yellow.11}",
             "light-gray": "{palette.yellow.11}",
             "telstra": "{palette.yellow.11}",
-            "virtuozzo": "{palette.yellow.11}"
+            "virtuozzo": "{palette.yellow.11}",
+            "yellow-1c": "{palette.yellow.11}"
           }
         }
       },
@@ -1446,7 +1545,8 @@
             "default": "{palette.transparent.white.fixed-100}",
             "light-gray": "{palette.transparent.white.fixed-100}",
             "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}"
+            "virtuozzo": "{palette.transparent.white.fixed-100}",
+            "yellow-1c": "{palette.transparent.white.fixed-100}"
           }
         }
       },
@@ -1462,7 +1562,8 @@
             "default": "{palette.blue.13}",
             "light-gray": "{palette.blue.13}",
             "telstra": "{palette.blue.13}",
-            "virtuozzo": "{palette.blue.13}"
+            "virtuozzo": "{palette.blue.13}",
+            "yellow-1c": "{palette.blue.13}"
           }
         },
         "destructive": {
@@ -1476,7 +1577,8 @@
             "default": "{palette.red.7}",
             "light-gray": "{palette.red.7}",
             "telstra": "{palette.red.7}",
-            "virtuozzo": "{palette.red.7}"
+            "virtuozzo": "{palette.red.7}",
+            "yellow-1c": "{palette.red.7}"
           }
         },
         "disabled": {
@@ -1490,7 +1592,8 @@
             "default": "{palette.blue.3}",
             "light-gray": "{palette.grayscale.5}",
             "telstra": "{palette.grayscale.5}",
-            "virtuozzo": "{palette.grayscale.5}"
+            "virtuozzo": "{palette.grayscale.5}",
+            "yellow-1c": "{palette.grayscale.5}"
           }
         },
         "neutral": {
@@ -1504,7 +1607,8 @@
             "default": "{palette.grayscale.4}",
             "light-gray": "{palette.grayscale.4}",
             "telstra": "{palette.grayscale.4}",
-            "virtuozzo": "{palette.grayscale.4}"
+            "virtuozzo": "{palette.grayscale.4}",
+            "yellow-1c": "{palette.grayscale.4}"
           }
         },
         "neutral-dark": {
@@ -1518,7 +1622,8 @@
             "default": "{palette.grayscale.10}",
             "light-gray": "{palette.grayscale.10}",
             "telstra": "{palette.grayscale.10}",
-            "virtuozzo": "{palette.grayscale.10}"
+            "virtuozzo": "{palette.grayscale.10}",
+            "yellow-1c": "{palette.grayscale.10}"
           }
         },
         "primary": {
@@ -1532,7 +1637,8 @@
             "default": "{palette.blue.7}",
             "light-gray": "{palette.grayscale.10}",
             "telstra": "{palette.grayscale.10}",
-            "virtuozzo": "{palette.grayscale.10}"
+            "virtuozzo": "{palette.grayscale.10}",
+            "yellow-1c": "{palette.grayscale.10}"
           }
         }
       }
@@ -1550,7 +1656,8 @@
             "default": "{palette.electricblue.4}",
             "light-gray": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
-            "virtuozzo": "{palette.electricblue.4}"
+            "virtuozzo": "{palette.electricblue.4}",
+            "yellow-1c": "{palette.electricblue.4}"
           }
         },
         "elementLink-hover": {
@@ -1564,7 +1671,8 @@
             "default": "{palette.electricblue.4}",
             "light-gray": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
-            "virtuozzo": "{palette.electricblue.4}"
+            "virtuozzo": "{palette.electricblue.4}",
+            "yellow-1c": "{palette.electricblue.4}"
           }
         },
         "elementLink-idle": {
@@ -1578,7 +1686,8 @@
             "default": "{palette.electricblue.7}",
             "light-gray": "{palette.electricblue.7}",
             "telstra": "{palette.electricblue.7}",
-            "virtuozzo": "{palette.electricblue.7}"
+            "virtuozzo": "{palette.electricblue.7}",
+            "yellow-1c": "{palette.electricblue.7}"
           }
         },
         "elementPrimary": {
@@ -1592,7 +1701,8 @@
             "default": "{palette.transparent.dark.inverse-100}",
             "light-gray": "{palette.transparent.dark.inverse-100}",
             "telstra": "{palette.transparent.dark.inverse-100}",
-            "virtuozzo": "{palette.transparent.dark.inverse-100}"
+            "virtuozzo": "{palette.transparent.dark.inverse-100}",
+            "yellow-1c": "{palette.transparent.dark.inverse-100}"
           }
         },
         "screenLink-active": {
@@ -1606,7 +1716,8 @@
             "default": "{palette.electricblue.4}",
             "light-gray": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
-            "virtuozzo": "{palette.electricblue.4}"
+            "virtuozzo": "{palette.electricblue.4}",
+            "yellow-1c": "{palette.electricblue.4}"
           }
         },
         "screenLink-hover": {
@@ -1620,7 +1731,8 @@
             "default": "{palette.electricblue.4}",
             "light-gray": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
-            "virtuozzo": "{palette.electricblue.4}"
+            "virtuozzo": "{palette.electricblue.4}",
+            "yellow-1c": "{palette.electricblue.4}"
           }
         },
         "screenLink-idle": {
@@ -1634,7 +1746,8 @@
             "default": "{palette.electricblue.4}",
             "light-gray": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
-            "virtuozzo": "{palette.electricblue.4}"
+            "virtuozzo": "{palette.electricblue.4}",
+            "yellow-1c": "{palette.electricblue.4}"
           }
         },
         "screenPrimary": {
@@ -1648,7 +1761,8 @@
             "default": "{palette.transparent.white.fixed-100}",
             "light-gray": "{palette.transparent.white.fixed-100}",
             "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}"
+            "virtuozzo": "{palette.transparent.white.fixed-100}",
+            "yellow-1c": "{palette.transparent.white.fixed-100}"
           }
         },
         "screenSecondary": {
@@ -1662,7 +1776,8 @@
             "default": "{palette.transparent.white.fixed-60}",
             "light-gray": "{palette.transparent.white.fixed-60}",
             "telstra": "{palette.transparent.white.fixed-60}",
-            "virtuozzo": "{palette.transparent.white.fixed-60}"
+            "virtuozzo": "{palette.transparent.white.fixed-60}",
+            "yellow-1c": "{palette.transparent.white.fixed-60}"
           }
         }
       },
@@ -1678,7 +1793,8 @@
             "default": "{palette.transparent.white.fixed-30}",
             "light-gray": "{palette.transparent.white.fixed-30}",
             "telstra": "{palette.transparent.white.fixed-30}",
-            "virtuozzo": "{palette.transparent.white.fixed-30}"
+            "virtuozzo": "{palette.transparent.white.fixed-30}",
+            "yellow-1c": "{palette.transparent.white.fixed-30}"
           }
         },
         "link-disabled": {
@@ -1692,7 +1808,8 @@
             "default": "{palette.transparent.white.fixed-30}",
             "light-gray": "{palette.transparent.white.fixed-30}",
             "telstra": "{palette.transparent.white.fixed-30}",
-            "virtuozzo": "{palette.transparent.white.fixed-30}"
+            "virtuozzo": "{palette.transparent.white.fixed-30}",
+            "yellow-1c": "{palette.transparent.white.fixed-30}"
           }
         },
         "link-hover": {
@@ -1706,7 +1823,8 @@
             "default": "{palette.blue.5}",
             "light-gray": "{palette.blue.5}",
             "telstra": "{palette.blue.5}",
-            "virtuozzo": "{palette.blue.5}"
+            "virtuozzo": "{palette.blue.5}",
+            "yellow-1c": "{palette.blue.5}"
           }
         },
         "link-idle": {
@@ -1720,7 +1838,8 @@
             "default": "{palette.blue.7}",
             "light-gray": "{palette.blue.7}",
             "telstra": "{palette.blue.7}",
-            "virtuozzo": "{palette.blue.7}"
+            "virtuozzo": "{palette.blue.7}",
+            "yellow-1c": "{palette.blue.7}"
           }
         },
         "link-pressed": {
@@ -1734,7 +1853,8 @@
             "default": "{palette.blue.3}",
             "light-gray": "{palette.blue.3}",
             "telstra": "{palette.blue.3}",
-            "virtuozzo": "{palette.blue.3}"
+            "virtuozzo": "{palette.blue.3}",
+            "yellow-1c": "{palette.blue.3}"
           }
         },
         "primary": {
@@ -1748,7 +1868,8 @@
             "default": "{palette.transparent.white.fixed-100}",
             "light-gray": "{palette.transparent.white.fixed-100}",
             "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}"
+            "virtuozzo": "{palette.transparent.white.fixed-100}",
+            "yellow-1c": "{palette.transparent.white.fixed-100}"
           }
         },
         "secondary": {
@@ -1762,7 +1883,8 @@
             "default": "{palette.transparent.white.fixed-60}",
             "light-gray": "{palette.transparent.white.fixed-60}",
             "telstra": "{palette.transparent.white.fixed-60}",
-            "virtuozzo": "{palette.transparent.white.fixed-60}"
+            "virtuozzo": "{palette.transparent.white.fixed-60}",
+            "yellow-1c": "{palette.transparent.white.fixed-60}"
           }
         }
       },
@@ -1778,7 +1900,8 @@
             "default": "{palette.transparent.white.inverse-100}",
             "light-gray": "{palette.transparent.white.inverse-100}",
             "telstra": "{palette.transparent.white.inverse-100}",
-            "virtuozzo": "{palette.transparent.white.inverse-100}"
+            "virtuozzo": "{palette.transparent.white.inverse-100}",
+            "yellow-1c": "{palette.transparent.white.inverse-100}"
           }
         },
         "secondary": {
@@ -1792,7 +1915,8 @@
             "default": "{palette.transparent.white.fixed-60}",
             "light-gray": "{palette.transparent.white.fixed-60}",
             "telstra": "{palette.transparent.white.fixed-60}",
-            "virtuozzo": "{palette.transparent.white.fixed-60}"
+            "virtuozzo": "{palette.transparent.white.fixed-60}",
+            "yellow-1c": "{palette.transparent.white.fixed-60}"
           }
         }
       },
@@ -1808,7 +1932,8 @@
             "default": "{palette.violet.11}",
             "light-gray": "{palette.violet.11}",
             "telstra": "{palette.violet.11}",
-            "virtuozzo": "{palette.violet.11}"
+            "virtuozzo": "{palette.violet.11}",
+            "yellow-1c": "{palette.violet.11}"
           }
         },
         "critical": {
@@ -1822,7 +1947,8 @@
             "default": "{palette.orange.11}",
             "light-gray": "{palette.orange.11}",
             "telstra": "{palette.orange.11}",
-            "virtuozzo": "{palette.orange.11}"
+            "virtuozzo": "{palette.orange.11}",
+            "yellow-1c": "{palette.orange.11}"
           }
         },
         "danger": {
@@ -1836,7 +1962,8 @@
             "default": "{palette.red.11}",
             "light-gray": "{palette.red.11}",
             "telstra": "{palette.red.11}",
-            "virtuozzo": "{palette.red.11}"
+            "virtuozzo": "{palette.red.11}",
+            "yellow-1c": "{palette.red.11}"
           }
         },
         "info": {
@@ -1850,7 +1977,8 @@
             "default": "{palette.electricblue.11}",
             "light-gray": "{palette.electricblue.11}",
             "telstra": "{palette.electricblue.11}",
-            "virtuozzo": "{palette.electricblue.11}"
+            "virtuozzo": "{palette.electricblue.11}",
+            "yellow-1c": "{palette.electricblue.11}"
           }
         },
         "link-disabled": {
@@ -1864,7 +1992,8 @@
             "default": "{palette.electricblue.5}",
             "light-gray": "{palette.electricblue.5}",
             "telstra": "{palette.electricblue.5}",
-            "virtuozzo": "{palette.electricblue.5}"
+            "virtuozzo": "{palette.electricblue.5}",
+            "yellow-1c": "{palette.electricblue.5}"
           }
         },
         "link-hover": {
@@ -1878,7 +2007,8 @@
             "default": "{palette.electricblue.13}",
             "light-gray": "{palette.electricblue.13}",
             "telstra": "{palette.electricblue.13}",
-            "virtuozzo": "{palette.electricblue.13}"
+            "virtuozzo": "{palette.electricblue.13}",
+            "yellow-1c": "{palette.electricblue.13}"
           }
         },
         "link-idle": {
@@ -1892,7 +2022,8 @@
             "default": "{palette.electricblue.11}",
             "light-gray": "{palette.electricblue.11}",
             "telstra": "{palette.electricblue.11}",
-            "virtuozzo": "{palette.electricblue.11}"
+            "virtuozzo": "{palette.electricblue.11}",
+            "yellow-1c": "{palette.electricblue.11}"
           }
         },
         "link-pressed": {
@@ -1906,7 +2037,8 @@
             "default": "{palette.electricblue.14}",
             "light-gray": "{palette.electricblue.14}",
             "telstra": "{palette.electricblue.14}",
-            "virtuozzo": "{palette.electricblue.14}"
+            "virtuozzo": "{palette.electricblue.14}",
+            "yellow-1c": "{palette.electricblue.14}"
           }
         },
         "neutral": {
@@ -1920,7 +2052,8 @@
             "default": "{palette.grayscale.11}",
             "light-gray": "{palette.grayscale.11}",
             "telstra": "{palette.grayscale.11}",
-            "virtuozzo": "{palette.grayscale.11}"
+            "virtuozzo": "{palette.grayscale.11}",
+            "yellow-1c": "{palette.grayscale.11}"
           }
         },
         "primary": {
@@ -1934,7 +2067,8 @@
             "default": "{palette.grayscale.14}",
             "light-gray": "{palette.grayscale.14}",
             "telstra": "{palette.grayscale.14}",
-            "virtuozzo": "{palette.grayscale.14}"
+            "virtuozzo": "{palette.grayscale.14}",
+            "yellow-1c": "{palette.grayscale.14}"
           }
         },
         "secondary": {
@@ -1948,7 +2082,8 @@
             "default": "{palette.grayscale.11}",
             "light-gray": "{palette.grayscale.11}",
             "telstra": "{palette.grayscale.11}",
-            "virtuozzo": "{palette.grayscale.11}"
+            "virtuozzo": "{palette.grayscale.11}",
+            "yellow-1c": "{palette.grayscale.11}"
           }
         },
         "success": {
@@ -1962,7 +2097,8 @@
             "default": "{palette.green.11}",
             "light-gray": "{palette.green.11}",
             "telstra": "{palette.green.11}",
-            "virtuozzo": "{palette.green.11}"
+            "virtuozzo": "{palette.green.11}",
+            "yellow-1c": "{palette.green.11}"
           }
         },
         "warning": {
@@ -1976,7 +2112,8 @@
             "default": "{palette.yellow.11}",
             "light-gray": "{palette.yellow.11}",
             "telstra": "{palette.yellow.11}",
-            "virtuozzo": "{palette.yellow.11}"
+            "virtuozzo": "{palette.yellow.11}",
+            "yellow-1c": "{palette.yellow.11}"
           }
         }
       },
@@ -1992,7 +2129,8 @@
             "default": "{palette.transparent.white.fixed-100}",
             "light-gray": "{palette.transparent.white.fixed-100}",
             "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}"
+            "virtuozzo": "{palette.transparent.white.fixed-100}",
+            "yellow-1c": "{palette.transparent.white.fixed-100}"
           }
         },
         "critical": {
@@ -2006,7 +2144,8 @@
             "default": "{palette.transparent.white.fixed-100}",
             "light-gray": "{palette.transparent.white.fixed-100}",
             "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}"
+            "virtuozzo": "{palette.transparent.white.fixed-100}",
+            "yellow-1c": "{palette.transparent.white.fixed-100}"
           }
         },
         "danger": {
@@ -2020,7 +2159,8 @@
             "default": "{palette.transparent.white.fixed-100}",
             "light-gray": "{palette.transparent.white.fixed-100}",
             "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}"
+            "virtuozzo": "{palette.transparent.white.fixed-100}",
+            "yellow-1c": "{palette.transparent.white.fixed-100}"
           }
         },
         "info": {
@@ -2034,7 +2174,8 @@
             "default": "{palette.transparent.white.fixed-100}",
             "light-gray": "{palette.transparent.white.fixed-100}",
             "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}"
+            "virtuozzo": "{palette.transparent.white.fixed-100}",
+            "yellow-1c": "{palette.transparent.white.fixed-100}"
           }
         },
         "link": {
@@ -2048,7 +2189,8 @@
             "default": "{palette.electricblue.11}",
             "light-gray": "{palette.electricblue.11}",
             "telstra": "{palette.electricblue.11}",
-            "virtuozzo": "{palette.electricblue.11}"
+            "virtuozzo": "{palette.electricblue.11}",
+            "yellow-1c": "{palette.electricblue.11}"
           }
         },
         "neutral": {
@@ -2062,7 +2204,8 @@
             "default": "{palette.transparent.white.fixed-100}",
             "light-gray": "{palette.transparent.white.fixed-100}",
             "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}"
+            "virtuozzo": "{palette.transparent.white.fixed-100}",
+            "yellow-1c": "{palette.transparent.white.fixed-100}"
           }
         },
         "primary": {
@@ -2076,7 +2219,8 @@
             "default": "{palette.grayscale.0}",
             "light-gray": "{palette.grayscale.0}",
             "telstra": "{palette.grayscale.0}",
-            "virtuozzo": "{palette.grayscale.0}"
+            "virtuozzo": "{palette.grayscale.0}",
+            "yellow-1c": "{palette.grayscale.0}"
           }
         },
         "secondary": {
@@ -2090,7 +2234,8 @@
             "default": "{palette.grayscale.2}",
             "light-gray": "{palette.grayscale.2}",
             "telstra": "{palette.grayscale.2}",
-            "virtuozzo": "{palette.grayscale.2}"
+            "virtuozzo": "{palette.grayscale.2}",
+            "yellow-1c": "{palette.grayscale.2}"
           }
         },
         "success": {
@@ -2104,7 +2249,8 @@
             "default": "{palette.transparent.white.fixed-100}",
             "light-gray": "{palette.transparent.white.fixed-100}",
             "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}"
+            "virtuozzo": "{palette.transparent.white.fixed-100}",
+            "yellow-1c": "{palette.transparent.white.fixed-100}"
           }
         },
         "warning": {
@@ -2118,7 +2264,8 @@
             "default": "{palette.transparent.white.fixed-100}",
             "light-gray": "{palette.transparent.white.fixed-100}",
             "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}"
+            "virtuozzo": "{palette.transparent.white.fixed-100}",
+            "yellow-1c": "{palette.transparent.white.fixed-100}"
           }
         }
       },
@@ -2134,7 +2281,8 @@
             "default": "{palette.red.7}",
             "light-gray": "{palette.red.7}",
             "telstra": "{palette.red.7}",
-            "virtuozzo": "{palette.red.7}"
+            "virtuozzo": "{palette.red.7}",
+            "yellow-1c": "{palette.red.7}"
           }
         },
         "disabled": {
@@ -2148,7 +2296,8 @@
             "default": "{palette.grayscale.5}",
             "light-gray": "{palette.grayscale.5}",
             "telstra": "{palette.grayscale.5}",
-            "virtuozzo": "{palette.grayscale.5}"
+            "virtuozzo": "{palette.grayscale.5}",
+            "yellow-1c": "{palette.grayscale.5}"
           }
         },
         "link-disabled": {
@@ -2162,7 +2311,8 @@
             "default": "{palette.blue.3}",
             "light-gray": "{palette.grayscale.3}",
             "telstra": "{palette.grayscale.3}",
-            "virtuozzo": "{palette.grayscale.3}"
+            "virtuozzo": "{palette.grayscale.3}",
+            "yellow-1c": "{palette.grayscale.3}"
           }
         },
         "link-hover": {
@@ -2176,7 +2326,8 @@
             "default": "{palette.blue.8}",
             "light-gray": "{palette.grayscale.11}",
             "telstra": "{palette.grayscale.11}",
-            "virtuozzo": "{palette.grayscale.11}"
+            "virtuozzo": "{palette.grayscale.11}",
+            "yellow-1c": "{palette.grayscale.11}"
           }
         },
         "link-idle": {
@@ -2190,7 +2341,8 @@
             "default": "{palette.blue.7}",
             "light-gray": "{palette.grayscale.10}",
             "telstra": "{palette.grayscale.10}",
-            "virtuozzo": "{palette.grayscale.10}"
+            "virtuozzo": "{palette.grayscale.10}",
+            "yellow-1c": "{palette.grayscale.10}"
           }
         },
         "link-pressed": {
@@ -2204,7 +2356,8 @@
             "default": "{palette.blue.11}",
             "light-gray": "{palette.grayscale.12}",
             "telstra": "{palette.grayscale.12}",
-            "virtuozzo": "{palette.grayscale.12}"
+            "virtuozzo": "{palette.grayscale.12}",
+            "yellow-1c": "{palette.grayscale.12}"
           }
         },
         "primary": {
@@ -2218,7 +2371,8 @@
             "default": "{palette.grayscale.14}",
             "light-gray": "{palette.grayscale.14}",
             "telstra": "{palette.grayscale.14}",
-            "virtuozzo": "{palette.grayscale.14}"
+            "virtuozzo": "{palette.grayscale.14}",
+            "yellow-1c": "{palette.grayscale.14}"
           }
         },
         "secondary": {
@@ -2232,7 +2386,8 @@
             "default": "{palette.grayscale.8}",
             "light-gray": "{palette.grayscale.8}",
             "telstra": "{palette.grayscale.8}",
-            "virtuozzo": "{palette.grayscale.8}"
+            "virtuozzo": "{palette.grayscale.8}",
+            "yellow-1c": "{palette.grayscale.8}"
           }
         }
       }
@@ -2314,6 +2469,22 @@
             }
           ],
           "virtuozzo": [
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [234.11, 56.57, 38.82]
+              },
+              "position": 0.2
+            },
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [303.09, 69.78, 27.25]
+              },
+              "position": 1
+            }
+          ],
+          "yellow-1c": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -2418,6 +2589,22 @@
               },
               "position": 1
             }
+          ],
+          "yellow-1c": [
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [234.38, 100, 93.73]
+              },
+              "position": 0.2
+            },
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [303.24, 100, 92.75]
+              },
+              "position": 1
+            }
           ]
         }
       },
@@ -2508,6 +2695,22 @@
               },
               "position": 1
             }
+          ],
+          "yellow-1c": [
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [233.75, 58.54, 48.24]
+              },
+              "position": 0.2
+            },
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [303.22, 69.3, 42.16]
+              },
+              "position": 1
+            }
           ]
         }
       },
@@ -2584,6 +2787,22 @@
             }
           ],
           "virtuozzo": [
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [233.93, 73.04, 54.9]
+              },
+              "position": 0.2
+            },
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [303.19, 97.18, 58.24]
+              },
+              "position": 1
+            }
+          ],
+          "yellow-1c": [
             {
               "color": {
                 "colorSpace": "hsl",
