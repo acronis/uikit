@@ -1920,9 +1920,9 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.grayscale.7}",
-            "default": "{palette.grayscale.7}",
-            "virtuozzo": "{palette.grayscale.7}"
+            "deep_sky_itkontoret": "{palette.grayscale.8}",
+            "default": "{palette.grayscale.8}",
+            "virtuozzo": "{palette.grayscale.8}"
           }
         }
       }
@@ -2194,6 +2194,19 @@
         },
         "platforms": ["PD"]
       },
+      "default-numeric": {
+        "$extensions": {
+          "com.figma.styleId": "S:011c39a28cae2de4f962d863965cacc1ef7ccd51,"
+        },
+        "$value": {
+          "fontFamily": "{font.font-family.default}",
+          "fontSize": "{font.font-size.14}",
+          "fontWeight": "{font.font-weight.regular}",
+          "letterSpacing": "{font.letter-spacing.0}",
+          "lineHeight": "{font.line-height.24}"
+        },
+        "platforms": ["PD"]
+      },
       "form-label": {
         "$extensions": {
           "com.figma.styleId": "S:b44be8f3fabe30023a200eb551b32c22125726bf,"
@@ -2321,6 +2334,19 @@
       "lead": {
         "$extensions": {
           "com.figma.styleId": "S:654373584eff0fed592ee0ef65b944d2b65989cf,"
+        },
+        "$value": {
+          "fontFamily": "{font.font-family.default}",
+          "fontSize": "{font.font-size.18}",
+          "fontWeight": "{font.font-weight.regular}",
+          "letterSpacing": "{font.letter-spacing.0}",
+          "lineHeight": "{font.line-height.24}"
+        },
+        "platforms": ["PD"]
+      },
+      "lead-numeric": {
+        "$extensions": {
+          "com.figma.styleId": "S:984c0161eb7d9a59762f9dd2104a83ba5945a4d3,"
         },
         "$value": {
           "fontFamily": "{font.font-family.default}",
