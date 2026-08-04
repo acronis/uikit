@@ -55,6 +55,24 @@ describe('Chart', () => {
     expect(wrapper).toHaveAttribute('id', 'usage');
   });
 
+  // recharts hardcodes a white outline on sectors, dots and funnel trapezoids,
+  // which no theme reaches — in dark mode it reads as a light hairline around
+  // every segment. The container neutralizes all three; happy-dom applies no
+  // Tailwind, so the guard is the rule's presence.
+  it("neutralizes recharts' hardcoded white outlines", () => {
+    const { container } = render(
+      <ChartContainer config={config} id="usage">
+        <BarChart data={[]} />
+      </ChartContainer>
+    );
+    const wrapper = container.querySelector('[data-slot="chart"]');
+    ['sector', 'dot', 'trapezoid'].forEach((part) => {
+      expect(wrapper?.className).toContain(
+        `[&_.recharts-${part}[stroke='#fff']]:stroke-transparent`
+      );
+    });
+  });
+
   it('injects per-series --color-* custom properties from the config', () => {
     const { container } = render(
       <ChartContainer config={config} id="usage">
