@@ -14,8 +14,9 @@ tokens:
   - name: --ui-text-on-surface-secondary
     affects: angle-axis
     description: >-
-      Polar angle-axis (spoke) labels and muted tooltip/legend label text
-      (fill-muted-foreground / text-muted-foreground).
+      Polar angle-axis (spoke) labels, radius-axis (value scale) tick labels, and
+      muted tooltip/legend label text (fill-muted-foreground /
+      text-muted-foreground).
   - name: --ui-background-surface-primary
     affects: tooltip-content
     description: Tooltip surface (bg-background).
@@ -25,5 +26,5 @@ tokens:
   - name: --ui-border-on-surface-border
     affects: grid
     description: >-
-      Tooltip border and the recharts polar-grid web lines
-      (border-border / stroke-border).
+      Tooltip border, the recharts polar-grid web lines, and the radius-axis
+      scale line (border-border / stroke-border).

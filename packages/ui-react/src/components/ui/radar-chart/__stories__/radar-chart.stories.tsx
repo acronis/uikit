@@ -95,6 +95,34 @@ const meta = {
         'insideEnd',
       ],
     },
+    dotRadius: { control: { type: 'number', min: 1, max: 8 } },
+    activeDot: { control: 'boolean' },
+    radialLines: { control: 'boolean' },
+    showAngleAxis: { control: 'boolean' },
+    angleAxisOrientation: {
+      control: 'inline-radio',
+      options: ['outer', 'inner'],
+    },
+    angleAxisLine: { control: 'boolean' },
+    angleAxisLineType: {
+      control: 'inline-radio',
+      options: ['polygon', 'circle'],
+    },
+    angleTickLine: { control: 'boolean' },
+    angleTickSize: { control: { type: 'number', min: 0, max: 40 } },
+    showRadiusAxis: { control: 'boolean' },
+    radiusAxisAngle: { control: { type: 'number', min: -180, max: 180 } },
+    radiusAxisOrientation: {
+      control: 'inline-radio',
+      options: ['left', 'right', 'middle'],
+    },
+    radiusAxisDomain: { control: 'inline-radio', options: ['auto', 'fixed'] },
+    radiusAxisDomainMax: { control: { type: 'number' } },
+    radiusAxisTickCount: { control: { type: 'number', min: 2, max: 10 } },
+    radiusAxisReversed: { control: 'boolean' },
+    startAngle: { control: { type: 'number', min: -360, max: 360 } },
+    endAngle: { control: { type: 'number', min: -360, max: 360 } },
+    legendPosition: { control: 'inline-radio', options: ['top', 'bottom'] },
   },
 } satisfies Meta<typeof RadarChart>;
 
@@ -225,4 +253,80 @@ export const Labels: Story = {
     showLabels: true,
     labelFormatter: formatCompactNumber,
   },
+};
+
+// The value scale, pinned to the subject maximum (150) rather than the largest
+// value in the data — so the areas read as absolute scores.
+export const RadiusAxis: Story = {
+  args: {
+    dataKeys: ['alice', 'bob'],
+    showRadiusAxis: true,
+    radiusAxisAngle: 90,
+    radiusAxisDomain: 'fixed',
+    radiusAxisDomainMax: 150,
+    radiusAxisTickCount: 4,
+  },
+};
+
+// The same scale inverted — 0 at the outer ring, the maximum at the centre — for
+// a metric where less is better.
+export const RadiusAxisReversed: Story = {
+  args: {
+    dataKeys: ['alice'],
+    showRadiusAxis: true,
+    radiusAxisAngle: 90,
+    radiusAxisDomain: 'fixed',
+    radiusAxisDomainMax: 150,
+    radiusAxisReversed: true,
+  },
+};
+
+// Spoke labels moved inside the web, with a circular outline matching the
+// circular grid and no tick lines.
+export const AngleAxisInside: Story = {
+  args: {
+    gridType: 'circle',
+    angleAxisOrientation: 'inner',
+    angleAxisLineType: 'circle',
+    angleTickLine: false,
+  },
+};
+
+// The web without its spokes — only the concentric rings.
+export const NoRadialLines: Story = {
+  args: { radialLines: false },
+};
+
+// Custom geometry: a hole at the centre (which separates the series where they
+// all bottom out), a smaller web, and the sweep rotated off 12 o'clock.
+export const Geometry: Story = {
+  args: {
+    innerRadius: 40,
+    outerRadius: '70%',
+    startAngle: 45,
+    endAngle: -315,
+    margin: { top: 16, right: 16, bottom: 16, left: 16 },
+  },
+};
+
+// Per-series overrides: one series as a heavy outline over a barely-tinted fill
+// with dots, the other recolored away from its `config` entry (which carries the
+// new color into its legend swatch too).
+export const SeriesStyling: Story = {
+  args: {
+    dataKeys: ['alice', 'bob'],
+    seriesSettings: {
+      alice: { fillOpacity: 0.05, strokeWidth: 3, dot: true, dotRadius: 4 },
+      bob: {
+        color: 'var(--ui-background-status-strong-warning)',
+        fillOpacity: 0.4,
+        strokeWidth: 1,
+      },
+    },
+  },
+};
+
+// The legend above the chart instead of below it.
+export const LegendTop: Story = {
+  args: { legendPosition: 'top' },
 };

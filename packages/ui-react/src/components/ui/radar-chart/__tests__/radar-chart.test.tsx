@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { RadarChart } from '../radar-chart';
+import { RadarChart, radarRadiusAxisDomain } from '../radar-chart';
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
@@ -147,6 +147,129 @@ describe('RadarChart animation and data labels', () => {
       showLabels: true,
       labelPosition: 'center',
     });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+});
+
+// The radius axis is what maps a value to a radius, so its domain decides
+// whether a radar reads as an absolute profile or a relative one. That mapping is
+// pure, so it is asserted directly — the rendered scale is a VR story.
+describe('radarRadiusAxisDomain', () => {
+  it('leaves an unset preset to recharts (the data max)', () => {
+    expect(radarRadiusAxisDomain(undefined, undefined)).toBeUndefined();
+    // A maximum on its own does nothing — it only applies under `fixed`.
+    expect(radarRadiusAxisDomain(undefined, 150)).toBeUndefined();
+  });
+
+  it('pins the outer ring to the given maximum under "fixed"', () => {
+    expect(radarRadiusAxisDomain('fixed', 150)).toEqual([0, 150]);
+  });
+
+  it('falls back to the data top when "fixed" has no maximum', () => {
+    expect(radarRadiusAxisDomain('fixed', undefined)).toEqual([0, 'auto']);
+  });
+
+  it('fits the data at both ends under "auto"', () => {
+    expect(radarRadiusAxisDomain('auto', 150)).toEqual(['auto', 'auto']);
+  });
+});
+
+// As above, recharts needs a laid-out container to paint, so these assert the
+// prop contract: the composition accepts each new polar-axis / geometry /
+// per-series knob and mounts. The rendered result is covered by the VR stories.
+describe('RadarChart polar axes, geometry and per-series settings', () => {
+  it('accepts the radius-axis prop set', () => {
+    const { container } = renderChart({
+      showRadiusAxis: true,
+      radiusAxisAngle: 90,
+      radiusAxisOrientation: 'middle',
+      radiusAxisDomain: 'fixed',
+      radiusAxisDomainMax: 150,
+      radiusAxisTickCount: 4,
+      radiusAxisReversed: true,
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  // A domain (or a reversal) mounts the axis even with the scale hidden — that is
+  // how a chart is scaled to a known maximum without showing the ticks.
+  it('accepts a radius-axis domain while the scale stays hidden', () => {
+    const { container } = renderChart({
+      showRadiusAxis: false,
+      radiusAxisDomain: 'fixed',
+      radiusAxisDomainMax: 150,
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts the angle-axis and grid prop set', () => {
+    const { container } = renderChart({
+      showAngleAxis: false,
+      angleAxisOrientation: 'inner',
+      angleAxisLine: false,
+      angleAxisLineType: 'circle',
+      angleTickLine: false,
+      angleTickSize: 16,
+      radialLines: false,
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts the geometry prop set', () => {
+    const { container } = renderChart({
+      cx: '40%',
+      cy: 180,
+      startAngle: 45,
+      endAngle: -315,
+      innerRadius: 40,
+      outerRadius: '70%',
+      margin: { top: 16, right: 16, bottom: 16, left: 16 },
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts per-series overrides for a subset of the plotted series', () => {
+    const { container } = renderChart({
+      seriesSettings: {
+        alice: {
+          color: 'rgb(1 2 3)',
+          stroke: 'rgb(4 5 6)',
+          fillOpacity: 0.05,
+          strokeWidth: 3,
+          dot: true,
+          dotRadius: 4,
+          activeDot: false,
+        },
+      },
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    // A per-series color is applied to the series' fill/stroke, not to the
+    // `--color-<key>` custom properties — `config` still injects those, so the
+    // series a caller *doesn't* override keeps reading its config color.
+    const style = container.querySelector('style')?.innerHTML ?? '';
+    expect(style).toContain('--color-alice: rgb(23 99 207)');
+    expect(style).toContain('--color-bob: rgb(220 53 69)');
+  });
+
+  it('ignores seriesSettings keys that are not plotted', () => {
+    const { container } = renderChart({
+      dataKeys: ['alice'],
+      seriesSettings: { carol: { fillOpacity: 0.9 } },
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts the dot and active-dot chart-level knobs', () => {
+    const { container } = renderChart({
+      showDots: true,
+      dotRadius: 5,
+      activeDot: false,
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts a top legend', () => {
+    const { container } = renderChart({ legendPosition: 'top' });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 });
