@@ -3,8 +3,6 @@ title: Shadow DOM Integration
 description: How to render @acronis-platform/ui-react inside a shadow-DOM micro-frontend with fully styled portaled components and zero host style leakage.
 ---
 
-# Shadow DOM Integration
-
 When `@acronis-platform/ui-react` runs inside a **shadow-DOM micro-frontend**
 (MFE), portaled components — Popover, DropdownMenu, Tooltip, Dialog, Sheet,
 Select, Combobox, and Toaster — mount their popups into `document.body` by
@@ -16,24 +14,23 @@ inside the shadow root.
 
 ## Quick setup
 
+If your host already renders the app inside its shadow root, all you need is a
+container element to point the provider at:
+
 ```tsx
+import { useState } from 'react';
 import { PortalContainerProvider } from '@acronis-platform/ui-react';
 
-function ShadowMFE({ shadowRoot }: { shadowRoot: ShadowRoot }) {
-  // 1. Create a mount point inside the shadow root
-  const mountRef = useRef<HTMLDivElement>(null);
+function ShadowMFE() {
+  // Hold the mount element in state, not a ref: the provider reads `container`
+  // during render, and populating a ref doesn't trigger one. With a ref, the
+  // provider keeps the `null` it saw on the first render — and a `null`
+  // container renders no popup at all, so overlays silently never open.
+  const [mount, setMount] = useState<HTMLElement | null>(null);
 
-  // 2. Adopt ui-react's CSS onto the shadow root
-  useEffect(() => {
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(uiReactCssText); // your bundled/fetched CSS
-    shadowRoot.adoptedStyleSheets = [sheet];
-  }, [shadowRoot]);
-
-  // 3. Wrap your app — all portals now render inside the shadow root
   return (
-    <div ref={mountRef}>
-      <PortalContainerProvider container={mountRef.current}>
+    <div ref={setMount}>
+      <PortalContainerProvider container={mount}>
         <App />
       </PortalContainerProvider>
     </div>
@@ -43,6 +40,16 @@ function ShadowMFE({ shadowRoot }: { shadowRoot: ShadowRoot }) {
 
 That's it. Every portaling component automatically picks up the container from
 context. No need to pass `portalContainer` to each component individually.
+
+Passing the state setter straight to `ref` is the shortest correct form — React
+calls it with the element on mount (and with `null` on unmount), so the provider
+re-renders exactly once with the real container.
+
+If your app also **creates** the shadow root, attach it and render into it with
+`createPortal` first — see
+[`ShadowDemo.tsx`](https://github.com/acronis/uikit/blob/main/apps/docs/src/components/ShadowDemo.tsx),
+which is what powers the live previews on these component pages — then adopt the
+stylesheet as shown in [Adopting styles](#adopting-styles).
 
 ## How it works
 
@@ -59,16 +66,16 @@ context. No need to pass `portalContainer` to each component individually.
 
 All portaling components respect `PortalContainerProvider`:
 
-| Component | Portal target |
-|-----------|---------------|
-| `PopoverContent` | Positioner + popup |
-| `DropdownMenuContent` | Positioner + popup |
-| `TooltipContent` | Positioner + popup |
-| `Dialog` | Backdrop + popup |
-| `SheetContent` | Backdrop + popup |
+| Component                              | Portal target      |
+| -------------------------------------- | ------------------ |
+| `PopoverContent`                       | Positioner + popup |
+| `DropdownMenuContent`                  | Positioner + popup |
+| `TooltipContent`                       | Positioner + popup |
+| `Dialog`                               | Backdrop + popup   |
+| `SheetContent`                         | Backdrop + popup   |
 | `SelectContent` / `InputSelectContent` | Positioner + popup |
-| `ComboboxContent` | Positioner + popup |
-| `Toaster` | Viewport + toasts |
+| `ComboboxContent`                      | Positioner + popup |
+| `Toaster`                              | Viewport + toasts  |
 
 ## Adopting styles
 
