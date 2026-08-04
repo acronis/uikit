@@ -32,16 +32,21 @@ The repo is organized into four top-level directories: `context/` (shared docs),
 | `tools/figma-icons-fetcher/`  | `@acronis-platform/figma-icons-fetcher`  | no        | Fetches + SVGO-optimizes icons from Figma into the `icons-svg*` packages.    |
 | `tools/figma-token-exporter/` | `@acronis-platform/figma-token-exporter` | no        | Self-hosted Figma plugin + receiver that exports variables/styles to tokens. |
 
-See [`AGENTS.md`](./AGENTS.md) for the complete workspace map (including
-internal tooling and demo apps) and the per-workspace `AGENTS.md` files for
-area-specific conventions.
+This table covers the workspaces relevant to consuming the kit. It omits the
+demo apps, the `ui-spec` spike, and `packages/ui-legacy/`
+(`@acronis-platform/shadcn-uikit`) — still published, but in
+maintenance/freeze and available only while consumers migrate, per its
+[deprecation notice](./packages/ui-legacy/README.md). See
+[`AGENTS.md`](./AGENTS.md) for the full workspace map and the per-workspace
+`AGENTS.md` files for area-specific conventions.
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm 10+
+- Node.js 22.x (see [`.nvmrc`](./.nvmrc); CI builds on Node 22)
+- pnpm 10.27.0 — pinned via the root `packageManager` field, so
+  `corepack enable` picks up the right version automatically
 
 ### Installation (development)
 
@@ -153,12 +158,12 @@ The library covers layout (`AppShell`, `AppShellChat`, `AuthLayout`, `Card`,
 `Separator`, `ScrollArea`, `Resizable`, `Toolbar`), navigation (`Breadcrumb`,
 `Tabs`, `Pagination`, `SidebarPrimary`, `SidebarSecondary`, `SearchGlobal`,
 `Link`), forms (`InputText`, `InputSearch`, `InputTextArea`, `InputSelect`,
-`InputDatePicker`, `InputPassword`, `InputOtp`, `Combobox`, `Select`,
+`InputDatePicker`, `InputPassword`, `InputOTP`, `Combobox`, `Select`,
 `Checkbox`, `Radio`, `Switch`, `Slider`, `NumberField`, `Calendar`,
 `DateRangePicker`, `Field`, `Form`, `Label`), buttons (`Button`, `ButtonIcon`,
 `ButtonMenu`), overlays (`Dialog`, `Sheet`, `Popover`, `Tooltip`,
 `DropdownMenu`), feedback (`Alert`, `Tag`/`Badge`, `Chip`, `Progress`,
-`ProgressCircle`, `Spinner`, `Skeleton`, `Toast`, `Empty`), data display
+`ProgressCircle`, `Loading`, `Skeleton`, `Toast`, `Empty`), data display
 (`Table`, `DataTable`, `Avatar`, `DescriptionList`, `Accordion`,
 `Collapsible`, `Timeline`, `ToggleGroup`), and data visualization (`Chart` and
 per-type charts — `AreaChart`, `BarChart`, `LineChart`, `PieChart`,
@@ -266,8 +271,9 @@ sans-serif.
 ### Breakpoints
 
 `ui-react` pins its own viewport scale (Tailwind's `sm`/`md` stay at the
-stock 640px/768px; `lg`/`xl`/`2xl`/`3xl`/`4xl` are overridden). It's exposed
-three ways so it stays usable both inside and outside a Tailwind build:
+stock 640px/768px; `lg`/`xl`/`2xl`/`3xl`/`4xl` are overridden). The kit's own
+components already use it; it's exposed two ways so you can match it in your
+code and styles:
 
 ```ts
 import {
@@ -285,9 +291,15 @@ import {
 - **`--ui-breakpoint-lg/xl/2xl/3xl/4xl`** CSS custom properties — for sizing
   an element to match a breakpoint outside a media query (e.g.
   `max-width: var(--ui-breakpoint-lg)`).
-- **Tailwind `lg:`/`xl:`/`2xl:`/`3xl:`/`4xl:` variants** — if you build your
-  own styles with Tailwind, importing `@acronis-platform/ui-react`'s
-  `@theme` values keeps your breakpoints in sync with the kit's.
+
+> **Building your own styles with Tailwind?** Importing the kit's stylesheet
+> does **not** configure your Tailwind build. The published CSS is already
+> compiled, so the `@theme` block that registers these breakpoints is gone by
+> the time you import it — the values survive only as inert `:root` custom
+> properties. Your `lg:`/`xl:` happen to match Tailwind's stock scale, but
+> `2xl:` silently compiles to Tailwind's 1536px instead of the kit's 1440px,
+> and `3xl:`/`4xl:` don't resolve at all. Redeclare the values above in your
+> own `@theme` block to stay in sync.
 
 ### Icon Sizing
 
@@ -327,15 +339,16 @@ uikit/
 ├── context/                    # Cross-workspace docs (conventions, commits, releasing)
 ├── .changeset/                 # Pending changesets (each PR adds one)
 ├── .github/workflows/          # ci, release, demo-deploy, visual-regression
-├── AGENTS.md                   # Complete workspace map (for AI agents + humans)
+├── AGENTS.md                   # Full workspace map (for AI agents + humans)
 ├── package.json                # Workspace root: scripts + shared devDeps
 ├── pnpm-workspace.yaml         # pnpm workspaces + dependency catalog
 └── README.md
 ```
 
-> This tree omits internal-only workspaces (demo apps, build tooling) that
-> aren't relevant to consuming the library — see [`AGENTS.md`](./AGENTS.md)
-> for the complete map.
+> Abridged: this tree leaves out the workspaces you don't need in order to
+> consume the library — the demo apps, the `ui-spec` spike, the deprecated
+> `packages/ui-legacy/`, and some internal tooling. See
+> [`AGENTS.md`](./AGENTS.md) for the full map.
 
 ## 🛠️ Scripts
 
@@ -417,7 +430,7 @@ export function App() {
 - [`AGENTS.md`](./AGENTS.md) — authoritative workspace map + conventions
 - [ui-react package](./packages/ui-react) — the Base UI component library
 - [Storybook](https://acronis.github.io/uikit/storybook-react/) — live component gallery
-- [Documentation site](https://acronis.github.io/uikit/docs/) — usage guides + API reference (source: [`apps/docs`](./apps/docs/README.md))
+- [Documentation site](https://acronis.github.io/uikit/docs/) — usage guides + API reference (source: [`apps/docs`](./apps/docs))
 - [design-tokens](./packages/design-tokens/AGENTS.md) / [tokens-pd](./packages/tokens-pd/AGENTS.md) — token pipeline
 
 ## 📝 License
