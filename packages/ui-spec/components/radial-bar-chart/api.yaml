@@ -21,7 +21,14 @@ contract:
     - name: dataKey
       type: string
       required: true
-      description: The numeric field that sizes each arc.
+      description: The numeric field that sizes each arc. Ignored when dataKeys is set.
+    - name: dataKeys
+      type: string[]
+      required: false
+      description: >-
+        Multi-metric mode: one arc per key instead of one per row, colored and
+        named from config keyed by the KEY (the cartesian-chart convention).
+        Every metric shares one angular scale, so pair it with valueDomain.
     - name: nameKey
       type: string
       required: true
@@ -49,11 +56,82 @@ contract:
       required: false
       default: '-270'
       description: Angle (degrees) the arcs sweep to (default is a full clockwise circle).
+    - name: valueDomain
+      type: '[number, number]'
+      required: false
+      description: >-
+        The value range the sweep represents. Without it every arc is drawn
+        relative to the largest value in the data, so a single value always fills
+        the sweep — which is never what a gauge means.
     - name: cornerRadius
       type: number
       required: false
       default: '4'
       description: Corner radius on each arc's ends.
+    - name: cx
+      type: number | string
+      required: false
+      default: "'50%'"
+      description: Horizontal center of the arcs, in px or a percentage of the width.
+    - name: cy
+      type: number | string
+      required: false
+      default: "'50%'"
+      description: >-
+        Vertical center of the arcs, in px or a percentage of the height. Worth
+        moving for a half-circle gauge, whose drawn half otherwise sits in the
+        upper half of the surface.
+    - name: barSize
+      type: number
+      required: false
+      description: Thickness of each arc, in px. Omit to let the radii and gaps size it.
+    - name: barGap
+      type: number | string
+      required: false
+      description: Gap between the arcs of different metrics in one band, in px.
+    - name: barCategoryGap
+      type: number | string
+      required: false
+      description: Gap between bands, in px or a percentage string.
+    - name: minAngle
+      type: number
+      required: false
+      description: >-
+        Smallest angle a non-zero arc may occupy, in degrees, so a tiny value
+        stays visible. The floor also applies to a 0, which then reads as a small
+        positive — leave unset when a metric can legitimately be zero.
+    - name: margin
+      type: '{ top?: number; right?: number; bottom?: number; left?: number }'
+      required: false
+      description: Plot-area margin, in px. Omit for recharts' default (5 a side).
+    - name: segments
+      type: number
+      required: false
+      description: >-
+        Draw a single-value gauge's ring as this many equal segments, notched
+        apart. Single row + single metric only, and needs valueDomain. The ring is
+        then synthetic geometry, so the arc labels and the legend are suppressed
+        and showBackground is redundant (the unreached segments are the track);
+        the tooltip reads the metric wherever the ring is hovered.
+    - name: segmentGap
+      type: number
+      required: false
+      default: '3'
+      description: >-
+        Gap between a segmented gauge's segments, in degrees. Clamped so the
+        segments always keep at least half the sweep.
+    - name: centerLabel
+      type: '{ value?: string | number; label?: string | number }'
+      required: false
+      description: >-
+        The readout in the hole — a headline value and/or a caption, stacked and
+        centered. Needs an innerRadius big enough to hold the text; it is not
+        clipped to the hole.
+    - name: showPolarGrid
+      type: boolean
+      required: false
+      default: 'false'
+      description: Draw the concentric polar grid behind the arcs.
     - name: showBackground
       type: boolean
       required: false
@@ -109,10 +187,20 @@ contract:
         Where the value labels sit on the arc. Polar positions only — the
         cartesian ones collapse to the same mid-radius placement. Inside
         placements switch the label to the on-fill token.
+    - name: labelFormat
+      type: "'value' | 'name-value'"
+      required: false
+      default: "'value'"
+      description: >-
+        What each data label reads — the value alone, or the arc's name and its
+        value. The name is the row's nameKey value, or the metric's config label
+        in multi-metric mode.
     - name: labelFormatter
       type: '(value) => string'
       required: false
-      description: Format each label value (reuses the tick formatters).
+      description: >-
+        Format each label value (reuses the tick formatters). Formats only the
+        numeric part, so a label and its tooltip stay in the same units.
   events: []
   methods: []
 

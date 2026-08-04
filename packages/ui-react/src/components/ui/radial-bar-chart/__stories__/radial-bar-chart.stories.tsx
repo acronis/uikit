@@ -96,6 +96,12 @@ const meta = {
         'end',
       ],
     },
+    labelFormat: { control: 'select', options: ['value', 'name-value'] },
+    showPolarGrid: { control: 'boolean' },
+    barSize: { control: { type: 'number', min: 2, max: 60 } },
+    barGap: { control: { type: 'number' } },
+    barCategoryGap: { control: { type: 'text' } },
+    minAngle: { control: { type: 'number', min: 0, max: 90 } },
   },
 } satisfies Meta<typeof RadialBarChart>;
 
@@ -212,5 +218,128 @@ export const Labels: Story = {
   args: {
     showLabels: true,
     labelFormatter: formatCompactNumber,
+  },
+};
+
+// Each label reads its arc's name alongside the value. A name-value label is
+// long, so the innermost arc needs enough circumference to hold it — hence the
+// wider `innerRadius` than the default.
+export const LabelsNameValue: Story = {
+  args: {
+    showLabels: true,
+    labelFormat: 'name-value',
+    innerRadius: 70,
+    outerRadius: 145,
+  },
+};
+
+// The gauge: one value arc over its track, with the readout in the hole. The
+// `valueDomain` is what makes it a gauge — without it a single value always
+// fills the sweep. `cy` pulls the centre down so the drawn half is centred.
+const gaugeData = [{ browser: 'Chrome', value: 65 }];
+
+export const SingleValueGauge: Story = {
+  args: {
+    data: gaugeData,
+    valueDomain: [0, 100],
+    startAngle: 180,
+    endAngle: 0,
+    innerRadius: 80,
+    outerRadius: 130,
+    // Half a ring only needs half the height; `cy` puts the baseline near the
+    // bottom of that box so the drawn half fills it.
+    cy: 190,
+    barSize: 22,
+    centerLabel: { value: '65%', label: 'of quota used' },
+    // One arc names itself through the readout, so the legend would only repeat
+    // it. The tooltip stays — it's the only way to read the exact value.
+    showLegend: false,
+    className: 'h-[240px] w-[360px]',
+  },
+};
+
+// The same readout in a full ring of concentric arcs.
+export const CenterLabel: Story = {
+  args: {
+    innerRadius: 60,
+    outerRadius: 130,
+    centerLabel: { value: '175', label: 'sessions' },
+  },
+};
+
+// Multi-metric: one arc per `dataKeys` entry, colored and named by the metric
+// (so `config` is keyed by the key here, not by `nameKey`). A shared
+// `valueDomain` is what keeps the two arcs comparable.
+const metricData = [{ tier: 'Production', used: 72, quota: 90 }];
+
+const metricConfig = {
+  used: { label: 'Used', color: 'var(--ui-background-brand-secondary)' },
+  quota: { label: 'Quota', color: 'var(--ui-background-status-strong-warning)' },
+} satisfies ChartConfig;
+
+// Labels are intentionally off here: recharts rotates an arc label to follow its
+// arc, and on a half sweep the start of the arc is vertical — the legend and the
+// tooltip carry the metric names instead. `Labels*` covers the label formats.
+export const MultiMetric: Story = {
+  args: {
+    config: metricConfig,
+    data: metricData,
+    dataKeys: ['used', 'quota'],
+    dataKey: 'used',
+    nameKey: 'tier',
+    valueDomain: [0, 100],
+    startAngle: 180,
+    endAngle: 0,
+    innerRadius: 70,
+    outerRadius: 140,
+    cy: 190,
+    barSize: 20,
+    className: 'h-[260px] w-[380px]',
+  },
+};
+
+// The segmented gauge: one metric cut into notched segments, filled up to its
+// value, with the readout in the ring. The unreached segments are the track, so
+// `showBackground` plays no part, and the legend is suppressed — the pieces are
+// geometry, not data rows. Hovering any of them reads the metric and its maximum.
+export const SegmentedGauge: Story = {
+  args: {
+    // `nameKey` values become part of a custom-property name, so they stay
+    // CSS-safe — the human-readable copy lives in `config.label` / `centerLabel`.
+    data: [{ criteria: 'criteria', value: 29 }],
+    config: {
+      criteria: {
+        label: 'Criteria met',
+        color: 'var(--ui-background-brand-secondary)',
+      },
+    },
+    dataKey: 'value',
+    nameKey: 'criteria',
+    valueDomain: [0, 38],
+    segments: 8,
+    segmentGap: 4,
+    innerRadius: 88,
+    outerRadius: 120,
+    centerLabel: { value: 29, label: '/ 38 criteria met' },
+  },
+};
+
+// The concentric polar grid behind the arcs.
+export const PolarGrid: Story = {
+  args: { showPolarGrid: true, showBackground: false },
+};
+
+// `minAngle` floors a tiny arc so it stays visible and hoverable — here the
+// 0.4 row would otherwise be a hairline.
+export const MinAngle: Story = {
+  args: {
+    data: [
+      { browser: 'Chrome', value: 65 },
+      { browser: 'Safari', value: 50 },
+      { browser: 'Firefox', value: 35 },
+      { browser: 'Edge', value: 0.4 },
+    ],
+    valueDomain: [0, 100],
+    minAngle: 12,
   },
 };

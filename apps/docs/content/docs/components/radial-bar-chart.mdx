@@ -70,8 +70,105 @@ Make a half-circle gauge with `startAngle` / `endAngle`:
 <RadialBarChart config={config} data={data} dataKey="value" nameKey="browser" startAngle={180} endAngle={0} />
 ```
 
+The order of the two angles is the sweep's direction — `90 → -270` runs clockwise,
+`-270 → 90` counter-clockwise.
+
 Tune the radii (`innerRadius` / `outerRadius`), `cornerRadius`, and toggle the
-`showBackground` track / `showTooltip` / `showLegend`.
+`showBackground` track / `showTooltip` / `showLegend`. `showPolarGrid` adds the
+concentric grid behind the arcs, and `cx` / `cy` / `barSize` / `barGap` /
+`barCategoryGap` / `margin` place and size the ring itself.
+
+## Gauges
+
+A gauge needs a **scale**. Without `valueDomain`, every arc is drawn relative to
+the largest value in the data — so a single value always fills the whole sweep,
+which is never what a gauge means. Give it the metric's own range and the arc
+becomes that fraction of the sweep, over the `showBackground` track:
+
+```tsx
+<RadialBarChart
+  config={{ Used: { label: 'Used', color: 'var(--ui-background-brand-secondary)' } }}
+  data={[{ metric: 'Used', value: 65 }]}
+  dataKey="value"
+  nameKey="metric"
+  valueDomain={[0, 100]}
+  startAngle={180}
+  endAngle={0}
+  innerRadius={80}
+  outerRadius={130}
+  cy={190}
+  centerLabel={{ value: '65%', label: 'of quota used' }}
+  showLegend={false}
+  className="h-[240px] w-[360px]"
+/>
+```
+
+`centerLabel` puts the readout in the hole — a headline `value` and/or a `label`
+caption. Give `innerRadius` enough room to hold the text; it isn't clipped to the
+hole. For a half sweep, `cy` moves the baseline down so the drawn half fills its
+box.
+
+`minAngle` floors a tiny arc (in degrees) so it stays visible and hoverable. The
+floor applies to a `0` too, which then reads as a small positive value — leave it
+unset when a metric can legitimately be zero.
+
+## Segmented gauge
+
+`segments` cuts a single-value gauge's ring into equal segments, notched apart by
+`segmentGap` degrees:
+
+```tsx
+<RadialBarChart
+  config={{ criteria: { label: 'Criteria met', color: 'var(--ui-background-brand-secondary)' } }}
+  data={[{ criteria: 'criteria', value: 29 }]}
+  dataKey="value"
+  nameKey="criteria"
+  valueDomain={[0, 38]}
+  segments={8}
+  segmentGap={4}
+  innerRadius={88}
+  outerRadius={120}
+  centerLabel={{ value: 29, label: '/ 38 criteria met' }}
+  className="h-[360px] w-[360px]"
+/>
+```
+
+The segments up to the value take the arc's color and the rest the muted track, so
+`showBackground` plays no part. The notches are geometry rather than data rows,
+which is why the arc labels and the legend are suppressed — put the reading in
+`centerLabel`. The tooltip stays and reports the metric (with the `valueDomain`
+maximum when there is one) wherever on the ring it's hovered.
+
+Segments only apply to a **single-value** gauge: with more than one row, or with
+`dataKeys`, the chart renders its normal concentric arcs.
+
+## Multi-metric
+
+`dataKeys` plots one arc per metric instead of one per row. Colors and legend
+labels then come from `config` keyed by the **metric key** — the same convention as
+the cartesian charts — while `nameKey` names the band they share:
+
+```tsx
+<RadialBarChart
+  config={{
+    used: { label: 'Used', color: 'var(--ui-background-brand-secondary)' },
+    quota: { label: 'Quota', color: 'var(--ui-background-status-strong-warning)' },
+  }}
+  data={[{ tier: 'Production', used: 72, quota: 90 }]}
+  dataKeys={['used', 'quota']}
+  dataKey="used"
+  nameKey="tier"
+  valueDomain={[0, 100]}
+  startAngle={180}
+  endAngle={0}
+  cy={190}
+  className="h-[260px] w-[380px]"
+/>
+```
+
+Every metric shares one angular scale, so pass `valueDomain` when they're measured
+against a known maximum — otherwise they're scaled against the largest value
+present and the biggest arc always looks complete.
 
 ## Custom tooltip
 
@@ -121,13 +218,22 @@ same formatters as the axes, so a label and its axis read alike:
 <RadialBarChart config={config} data={data} dataKey="visitors" nameKey="browser" showLabels labelFormatter={formatCompactNumber} />
 ```
 
-Labels sit `outside` the arc by default, on the chart surface. `labelPosition`
-takes the polar placements — `outside`, `center`, `centerTop`, `centerBottom`,
-`insideStart`, `insideEnd`, `end`. The on-arc placements switch the label to a
-token that stays legible over a saturated series colour:
+Labels sit `insideStart` by default — inside the arc, in a token that stays legible
+over a saturated series colour. `labelPosition` takes the polar placements:
+`outside`, `center`, `centerTop`, `centerBottom`, `insideStart`, `insideEnd`,
+`end`; `outside` moves them onto the chart surface instead:
 
 ```tsx
-<RadialBarChart config={config} data={data} dataKey="visitors" nameKey="browser" showLabels labelPosition="insideStart" />
+<RadialBarChart config={config} data={data} dataKey="visitors" nameKey="browser" showLabels labelPosition="outside" />
+```
+
+`labelFormat` decides what a label reads — `value` (the default) or `name-value`,
+which prefixes the arc's name (its `nameKey` value, or the metric's `config` label
+in multi-metric mode). A name-value label is long and recharts curves it along its
+arc, so give the innermost arc enough circumference to hold it:
+
+```tsx
+<RadialBarChart config={config} data={data} dataKey="visitors" nameKey="browser" showLabels labelFormat="name-value" innerRadius={70} />
 ```
 
 Labels are off by default — with more than one series they collide easily, so turn
