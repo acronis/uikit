@@ -5,9 +5,11 @@ schematic: |
   root: <div data-last-shape>                       (variant wrapper)
     container: <ChartContainer>                     (themed, sized, responsive)
       plot: recharts <FunnelChart>
-        series:  <Funnel> with one <Cell> per stage row (stacked segments)
-        labels:  <LabelList> stage names beside the segments (when showLabels)
+        series:  <Funnel> with one <Cell> per visible stage row (stacked segments)
+        labels:  <LabelList> per-stage label beside or on the segment (when showLabels)
+        value-labels: second <LabelList> carrying the value (when showValueLabels)
         tooltip: <ChartTooltip> → tooltip-content   (hover card)
+        legend:  <ChartLegend> → legend-content     (optional, showLegend)
 
 root:
   element: div
@@ -29,20 +31,43 @@ parts:
   - id: series
     element: g
     description: >-
-      The `Funnel` — one `Cell` per data row, each a segment sized by `dataKey`
-      and filled from its `--color-<name>` var. `lastShape=triangle` narrows the
-      final segment to a point; `rectangle` ends it flat. `reversed` flips the
-      direction.
+      The `Funnel` — one `Cell` per visible data row, each a segment sized by
+      `dataKey`. In `palette` colour mode a segment fills from its
+      `--color-<name>` var; in `gradient` mode every segment fills from one hue
+      mixed progressively toward the surface, so the funnel reads as a ramp. A
+      `stageSettings` entry overrides one segment's colour or drops it from the
+      funnel. `stroke` / `strokeWidth` outline the segments and `funnelWidth`
+      narrows them. `lastShape=triangle` narrows the final segment to a point;
+      `rectangle` ends it flat. `reversed` flips the direction.
   - id: labels
     element: g
     description: >-
-      `LabelList` — each stage's `nameKey` label beside its segment. Rendered
-      when `showLabels`.
+      `LabelList` — one label per visible stage, carrying its name, its value, its
+      conversion from the widest stage, or a pair of those (`labelFormat`); a pair
+      narrows the funnel to leave itself room to wrap into.
+      `labelPosition` puts it beside the segment (`right` / `left`) or on it
+      (`inside`); the fill follows, so an on-segment label keeps its contrast over
+      a saturated fill. Rendered when `showLabels`.
+  - id: value-labels
+    element: g
+    description: >-
+      A second `LabelList` carrying each stage's value, so a stage's name and its
+      number can sit on opposite sides of the funnel. `valuePosition` defaults to
+      the side opposite `labelPosition` — following the names rather than pinning
+      itself to one edge — and can be set explicitly, including onto the segments.
+      Rendered when `showValueLabels`.
   - id: tooltip-content
     element: div
     description: >-
       `ChartTooltipContent` — hover card with one row for the hovered stage
       (color indicator + name + value). Rendered when `showTooltip`.
+  - id: legend-content
+    element: div
+    description: >-
+      `ChartLegendContent` — one marker + label per visible stage, on the edge
+      given by `legendPos`. The renderer builds no legend payload for a funnel
+      series, so the component synthesizes one from the visible stages; a hidden
+      stage has no entry. Rendered when `showLegend`.
 
 states:
   - id: last-shape-variant
@@ -54,4 +79,14 @@ states:
     trigger: the reversed prop flips the funnel direction
     kind: prop
     prop: reversed
+    affects: [series]
+  - id: stage-hidden
+    trigger: a stageSettings entry hides its stage
+    kind: prop
+    prop: stageSettings
+    affects: [series, labels, value-labels, legend-content]
+  - id: segment-active
+    trigger: the pointer enters a segment and showActiveShape is set
+    kind: pseudo
+    pseudo: ':hover'
     affects: [series]

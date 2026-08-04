@@ -5,16 +5,33 @@ component: FunnelChart
 # token tier of its own — stage colors are supplied by the caller via `config`
 # (a dedicated `--ui-chart-*` data-viz palette is pending an upstream design
 # pass). The tooltip chrome is inherited from the shared Chart primitives; the
-# on-chart labels use the foreground text token.
+# labels use the shared chart label tokens, picked by where each label sits.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
   - name: --ui-text-on-surface-primary
     affects: labels
-    description: On-chart stage labels (fill-foreground) and tooltip value text (text-foreground).
+    description: >-
+      Labels sitting beside the funnel, on the card surface, and tooltip value
+      text (text-foreground).
+  - name: --ui-text-on-status-strong-neutral
+    affects: labels
+    description: >-
+      Labels sitting on a segment (labelPosition/valuePosition `inside`) — white
+      in both themes, so it holds its contrast over a saturated stage fill.
+  - name: --ui-border-on-surface-border-active
+    affects: series
+    description: Outline on the hovered segment when showActiveShape is set.
+  - name: --ui-border-on-surface-border
+    affects: series
+    description: >-
+      Default segment border when strokeWidth is set without a stroke — the
+      renderer's own default there is a hardcoded white the container neutralizes.
   - name: --ui-background-surface-primary
-    affects: tooltip-content
-    description: Tooltip surface (bg-background).
+    affects: series, tooltip-content
+    description: >-
+      Tooltip surface (bg-background), and what gradient color mode mixes each
+      stage's hue toward so the ramp stays opaque against the card.
   - name: --ui-text-on-surface-secondary
     affects: tooltip-content
     description: Muted tooltip label text (text-muted-foreground).

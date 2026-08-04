@@ -67,6 +67,31 @@ const meta = {
     lastShape: { control: 'inline-radio', options: ['triangle', 'rectangle'] },
     reversed: { control: 'boolean' },
     showLabels: { control: 'boolean' },
+    labelFormat: {
+      control: 'select',
+      options: [
+        'name',
+        'value',
+        'percent',
+        'name-value',
+        'name-percent',
+        'value-percent',
+      ],
+    },
+    labelPosition: {
+      control: 'inline-radio',
+      options: ['right', 'left', 'inside'],
+    },
+    showValueLabels: { control: 'boolean' },
+    valuePosition: {
+      control: 'inline-radio',
+      options: ['right', 'left', 'inside'],
+    },
+    showLegend: { control: 'boolean' },
+    legendPos: { control: 'inline-radio', options: ['top', 'bottom'] },
+    colorMode: { control: 'inline-radio', options: ['palette', 'gradient'] },
+    showActiveShape: { control: 'boolean' },
+    funnelWidth: { control: { type: 'number' } },
     showTooltip: { control: 'boolean' },
     animate: { control: 'boolean' },
     animationDuration: { control: { type: 'number' } },
@@ -175,6 +200,102 @@ export const CustomTooltipOpen: Story = {
       </RechartsFunnelChart>
     </ChartContainer>
   ),
+};
+
+// The legend names the stages below the funnel. Off by default — a funnel
+// already labels its stages on the chart — so it's opt-in for the cases where
+// the on-chart labels carry values instead of names.
+export const WithLegend: Story = {
+  args: { showLegend: true, labelFormat: 'value', labelPosition: 'right' },
+};
+
+// The same legend on the top edge.
+export const LegendTop: Story = {
+  args: {
+    showLegend: true,
+    legendPos: 'top',
+    labelFormat: 'value',
+  },
+};
+
+// One hue ramped from the widest stage to the narrowest, instead of a colour per
+// stage. The ramp's base is the first stage's own `config` colour unless
+// `gradientColor` names another.
+export const GradientColors: Story = {
+  args: {
+    colorMode: 'gradient',
+    showLegend: true,
+    labelFormat: 'name-percent',
+  },
+};
+
+// A ramp off a caller-supplied hue.
+export const GradientBrandHue: Story = {
+  args: {
+    colorMode: 'gradient',
+    gradientColor: 'var(--ui-background-brand-primary)',
+    labelFormat: 'name-percent',
+  },
+};
+
+// `stageSettings` recolours one stage and drops another. A hidden stage leaves
+// the funnel entirely, so the conversions are measured over what's left.
+export const PerStage: Story = {
+  args: {
+    stageSettings: {
+      // The `strong` status tokens are the data-viz-weight ones; the plain
+      // `status-*` backgrounds are tints for banners and wash out as a fill.
+      Trials: { color: 'var(--ui-background-status-strong-info)' },
+      Purchases: { hidden: true },
+    },
+    labelFormat: 'name-percent',
+  },
+};
+
+// Both label lists at once: the name on one side of the funnel, its value on the
+// other. The default `valuePosition`, so the last stage's number stays legible —
+// a funnel narrows, so its tail segments can't hold a label.
+export const ValueLabels: Story = {
+  args: { showValueLabels: true },
+};
+
+// Labels on the segments. Only the short formats fit down there, so this pairs an
+// `inside` conversion with the legend carrying the names.
+export const InsideLabels: Story = {
+  args: {
+    labelPosition: 'inside',
+    labelFormat: 'percent',
+    showLegend: true,
+  },
+};
+
+// The stage names on the left instead. `valuePosition` isn't set: the values
+// default to the side opposite the names, so they follow them to the right.
+export const LeftLabels: Story = {
+  args: {
+    labelPosition: 'left',
+    labelFormat: 'name-percent',
+    showValueLabels: true,
+  },
+};
+
+// `showActiveShape` outlines the hovered segment instead of recolouring it. The
+// hover itself is not deterministic, so this is excluded from VR (it exists for
+// the docs/controls); the outline is asserted in the unit tests.
+export const ActiveShape: Story = {
+  args: { showActiveShape: true, labelFormat: 'name-percent' },
+  parameters: { snapshot: { skip: true } },
+};
+
+// Segment borders + a narrowed funnel: `stroke` / `strokeWidth` separate the
+// stages, `funnelWidth` keeps the shape off the labels.
+export const SegmentBorders: Story = {
+  args: {
+    stroke: 'var(--ui-border-on-surface-border)',
+    strokeWidth: 2,
+    funnelWidth: '65%',
+    showValueLabels: true,
+  },
 };
 
 // Entrance animation on — a live example. Excluded from VR (snapshot.skip):
