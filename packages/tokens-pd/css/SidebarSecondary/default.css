@@ -4,7 +4,7 @@
 :root, :host {
   color-scheme: light dark;
 
-  --ui-sidebar-secondary-collapsed-breadcrumb-label-color: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-sidebar-secondary-collapsed-breadcrumb-label-color: light-dark(rgb(97 101 107), rgb(135 139 146));
   --ui-sidebar-secondary-collapsed-container-content-gap: 4px;
   --ui-sidebar-secondary-collapsed-container-content-padding-y: 16px;
   --ui-sidebar-secondary-collapsed-container-header-padding-x: 8px;
@@ -28,7 +28,7 @@
   --ui-sidebar-secondary-menu-item-extras-global-container-gap: 8px;
   --ui-sidebar-secondary-menu-item-extras-global-external-icon-color: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-sidebar-secondary-menu-item-extras-global-external-icon-size: 16px;
-  --ui-sidebar-secondary-menu-item-extras-global-shortcut-color: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-sidebar-secondary-menu-item-extras-global-shortcut-color: light-dark(rgb(97 101 107), rgb(135 139 146));
   --ui-sidebar-secondary-menu-item-global-container-gap: 8px;
   --ui-sidebar-secondary-menu-item-global-container-height-min: 40px;
   --ui-sidebar-secondary-menu-item-global-container-padding-x: 16px;

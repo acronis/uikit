@@ -14,6 +14,9 @@ export default {
       },
       "textColor": {
         "avatar-global-text": "light-dark(rgb(24 25 27), rgb(244 245 245))",
+        "avatar-label-blue": "light-dark(rgb(6 54 121), rgb(190 215 244))",
+        "avatar-label-gray": "light-dark(rgb(61 63 67), rgb(215 217 219))",
+        "avatar-label-green": "light-dark(rgb(15 87 33), rgb(209 240 214))",
         "avatar-label-orange": "light-dark(rgb(153 69 0), rgb(255 222 194))",
         "avatar-label-red": "light-dark(rgb(152 27 27), rgb(251 218 218))",
         "avatar-label-teal": "light-dark(rgb(4 73 67), rgb(209 240 237))",

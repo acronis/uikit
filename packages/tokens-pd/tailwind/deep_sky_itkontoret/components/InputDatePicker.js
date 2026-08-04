@@ -15,8 +15,8 @@ export default {
         "input-date-picker-global-label-hover": "light-dark(rgb(24 25 27), rgb(244 245 245))",
         "input-date-picker-global-label-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))",
         "input-date-picker-global-placeholder-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
-        "input-date-picker-global-placeholder-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
-        "input-date-picker-global-placeholder-idle": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "input-date-picker-global-placeholder-hover": "light-dark(rgb(97 101 107), rgb(135 139 146))",
+        "input-date-picker-global-placeholder-idle": "light-dark(rgb(97 101 107), rgb(135 139 146))",
         "input-date-picker-global-required": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "input-date-picker-global-separator-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
         "input-date-picker-global-separator-hover": "light-dark(rgb(24 25 27), rgb(244 245 245))",
@@ -26,8 +26,8 @@ export default {
         "input-date-picker-global-value-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))",
         "input-date-picker-error-error-msg": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "input-date-picker-normal-description-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
-        "input-date-picker-normal-description-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
-        "input-date-picker-normal-description-idle": "light-dark(rgb(109 114 120), rgb(109 114 120))"
+        "input-date-picker-normal-description-hover": "light-dark(rgb(97 101 107), rgb(135 139 146))",
+        "input-date-picker-normal-description-idle": "light-dark(rgb(97 101 107), rgb(135 139 146))"
       },
       "borderColor": {
         "input-date-picker-error-box-border-color-active": "light-dark(rgb(226 54 54), rgb(229 77 77))",

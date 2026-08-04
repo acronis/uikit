@@ -10,25 +10,9 @@ export default {
         "button-group-global-box-hover": "light-dark(rgb(238 242 247), rgb(46 47 50))",
         "button-group-global-box-idle": "light-dark(transparent, transparent)"
       },
-      "textColor": {
-        "button-group-global-value": "light-dark(rgb(24 25 27), rgb(244 245 245))"
-      },
       "borderColor": {
         "button-group-global-container-border-color": "light-dark(rgb(214 228 245), rgb(48 50 54))",
         "button-group-global-separator": "light-dark(rgb(214 228 245), rgb(48 50 54))"
-      },
-      "fontFamily": {
-        "button-group-global-value-text-style": "Inter, system-ui, sans-serif"
-      },
-      "fontSize": {
-        "button-group-global-value-text-style": [
-          "14px",
-          {
-            "lineHeight": "24px",
-            "letterSpacing": "0px",
-            "fontWeight": "600"
-          }
-        ]
       },
       "spacing": {
         "button-group-global-box-height": "32px",

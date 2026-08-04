@@ -20,7 +20,7 @@ export default {
         "button-menu-secondary-container-idle": "light-dark(transparent, transparent)"
       },
       "textColor": {
-        "button-menu-dropdown-extras-shortcut-label": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "button-menu-dropdown-extras-shortcut-label": "light-dark(rgb(97 101 107), rgb(135 139 146))",
         "button-menu-dropdown-item-label": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "button-menu-primary-label": "light-dark(rgb(255 255 255), rgb(255 255 255))",
         "button-menu-secondary-label-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",

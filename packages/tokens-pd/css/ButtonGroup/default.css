@@ -15,7 +15,6 @@
   --ui-button-group-global-container-border-width: 1px;
   --ui-button-group-global-separator-border-width: 1px;
   --ui-button-group-global-separator-color: light-dark(rgb(214 228 245), rgb(48 50 54));
-  --ui-button-group-global-value-color: light-dark(rgb(24 25 27), rgb(244 245 245));
 }
 
 [data-theme='light'], :host([data-theme='light']) {
@@ -24,12 +23,4 @@
 
 [data-theme='dark'], :host([data-theme='dark']) {
   color-scheme: dark;
-}
-
-.ui-button-group-global-value-text-style {
-  font-family: Inter, system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 24px;
-  letter-spacing: 0px;
 }

@@ -25,7 +25,7 @@
   --ui-checkbox-global-container-gap: 8px;
   --ui-checkbox-global-container-width-max: 632px;
   --ui-checkbox-global-container-width-min: 16px;
-  --ui-checkbox-global-description-color: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-checkbox-global-description-color: light-dark(rgb(97 101 107), rgb(135 139 146));
   --ui-checkbox-global-label-color: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-checkbox-indeterminate-box-border-color-active: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-checkbox-indeterminate-box-border-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));

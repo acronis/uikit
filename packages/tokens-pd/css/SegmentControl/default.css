@@ -36,7 +36,7 @@
   --ui-segment-control-item-padding-y: 4px;
   --ui-segment-control-value-color-active: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-segment-control-value-color-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
-  --ui-segment-control-value-color-idle: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-segment-control-value-color-idle: light-dark(rgb(97 101 107), rgb(135 139 146));
 }
 
 [data-theme='light'], :host([data-theme='light']) {

@@ -15,16 +15,16 @@ export default {
         "input-password-global-label-hover": "light-dark(rgb(24 25 27), rgb(244 245 245))",
         "input-password-global-label-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))",
         "input-password-global-placeholder-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
-        "input-password-global-placeholder-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
-        "input-password-global-placeholder-idle": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "input-password-global-placeholder-hover": "light-dark(rgb(97 101 107), rgb(135 139 146))",
+        "input-password-global-placeholder-idle": "light-dark(rgb(97 101 107), rgb(135 139 146))",
         "input-password-global-required": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "input-password-global-value-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
         "input-password-global-value-hover": "light-dark(rgb(24 25 27), rgb(244 245 245))",
         "input-password-global-value-idle": "light-dark(rgb(24 25 27), rgb(244 245 245))",
         "input-password-error-msg-error": "light-dark(rgb(226 54 54), rgb(229 77 77))",
         "input-password-normal-description-disabled": "light-dark(rgb(175 178 182), rgb(85 89 94))",
-        "input-password-normal-description-hover": "light-dark(rgb(109 114 120), rgb(109 114 120))",
-        "input-password-normal-description-idle": "light-dark(rgb(109 114 120), rgb(109 114 120))"
+        "input-password-normal-description-hover": "light-dark(rgb(97 101 107), rgb(135 139 146))",
+        "input-password-normal-description-idle": "light-dark(rgb(97 101 107), rgb(135 139 146))"
       },
       "borderColor": {
         "input-password-error-msg-box-border-color-hover": "light-dark(rgb(226 54 54), rgb(229 77 77))",

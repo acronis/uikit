@@ -16,7 +16,7 @@
   --ui-input-select-dropdown-container-status-padding-y: 16px;
   --ui-input-select-dropdown-container-status-width-min: 128px;
   --ui-input-select-dropdown-dropdown-search-gap: 8px;
-  --ui-input-select-dropdown-dropdown-search-label-color-placeholder: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-input-select-dropdown-dropdown-search-label-color-placeholder: light-dark(rgb(97 101 107), rgb(135 139 146));
   --ui-input-select-dropdown-dropdown-search-label-color-value: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-input-select-dropdown-dropdown-search-padding-x: 12px;
   --ui-input-select-dropdown-dropdown-search-padding-y: 12px;
@@ -66,8 +66,8 @@
   --ui-input-select-global-label-color-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-input-select-global-label-color-idle: light-dark(rgb(24 25 27), rgb(244 245 245));
   --ui-input-select-global-placeholder-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
-  --ui-input-select-global-placeholder-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-input-select-global-placeholder-color-idle: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-input-select-global-placeholder-color-hover: light-dark(rgb(97 101 107), rgb(135 139 146));
+  --ui-input-select-global-placeholder-color-idle: light-dark(rgb(97 101 107), rgb(135 139 146));
   --ui-input-select-global-required-color: light-dark(rgb(226 54 54), rgb(229 77 77));
   --ui-input-select-global-value-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
   --ui-input-select-global-value-color-hover: light-dark(rgb(24 25 27), rgb(244 245 245));
@@ -76,8 +76,8 @@
   --ui-input-select-normal-box-border-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-input-select-normal-box-border-color-idle: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-input-select-normal-description-color-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));
-  --ui-input-select-normal-description-color-hover: light-dark(rgb(109 114 120), rgb(109 114 120));
-  --ui-input-select-normal-description-color-idle: light-dark(rgb(109 114 120), rgb(109 114 120));
+  --ui-input-select-normal-description-color-hover: light-dark(rgb(97 101 107), rgb(135 139 146));
+  --ui-input-select-normal-description-color-idle: light-dark(rgb(97 101 107), rgb(135 139 146));
   --ui-input-select-normal-icon-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-input-select-normal-icon-color-hover: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-input-select-normal-icon-color-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
