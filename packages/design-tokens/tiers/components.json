@@ -259,7 +259,7 @@
         "orange": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
-            "com.figma.scopes": ["TEXT_FILL"],
+            "com.figma.scopes": ["SHAPE_FILL", "TEXT_FILL"],
             "com.figma.variableId": "VariableID:3332:1764"
           },
           "$type": "color",
@@ -273,7 +273,7 @@
         "red": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
-            "com.figma.scopes": ["TEXT_FILL"],
+            "com.figma.scopes": ["SHAPE_FILL", "TEXT_FILL"],
             "com.figma.variableId": "VariableID:3332:1763"
           },
           "$type": "color",
@@ -287,7 +287,7 @@
         "teal": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
-            "com.figma.scopes": ["TEXT_FILL"],
+            "com.figma.scopes": ["SHAPE_FILL", "TEXT_FILL"],
             "com.figma.variableId": "VariableID:3111:189"
           },
           "$type": "color",
@@ -301,7 +301,7 @@
         "violet": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
-            "com.figma.scopes": ["TEXT_FILL"],
+            "com.figma.scopes": ["SHAPE_FILL", "TEXT_FILL"],
             "com.figma.variableId": "VariableID:3332:1753"
           },
           "$type": "color",
@@ -315,7 +315,7 @@
         "yellow": {
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
-            "com.figma.scopes": ["TEXT_FILL"],
+            "com.figma.scopes": ["SHAPE_FILL", "TEXT_FILL"],
             "com.figma.variableId": "VariableID:3332:1765"
           },
           "$type": "color",
