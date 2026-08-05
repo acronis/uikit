@@ -90,6 +90,13 @@ Scenario: Grid lines follow the primary axis
 ```
 
 ```gherkin
+Scenario: Every series opts in, leaving the primary axis empty
+  Given every series entry sets yAxis to "secondary"
+  Then the primary axis is not rendered and gives up its gutter
+  And the horizontal grid lines follow the secondary axis instead
+```
+
+```gherkin
 Scenario: Empty data
   Given data is an empty array
   Then the chart renders its axes and grid with no series marks and does not throw

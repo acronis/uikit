@@ -52,7 +52,8 @@ Each axis takes its own unit, tick formatter, tick count, and domain
 primary axis to the right and mirrors the pair; `showSecondaryYAxis: false` keeps
 the second scale but drops its chrome. The grid's horizontal lines follow the
 primary axis only — a second set from a different domain would cross the first at
-meaningless heights.
+meaningless heights. If every series opts in, the primary axis has nothing measured
+against it: it isn't rendered, and the grid follows the secondary axis instead.
 
 Give the two axes matching domain presets when you want their tick rows to line
 up; a tightly fitted (`auto`) secondary domain will otherwise place its ticks

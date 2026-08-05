@@ -41,7 +41,10 @@ parts:
     description: >-
       `YAxis` — the primary numeric value axis, shared by every series that does
       not select the secondary one. Sits on the side given by `yAxisOrientation`
-      (left by default), and is the axis the grid's horizontal lines follow.
+      (left by default), and is the axis the grid's horizontal lines follow. Not
+      rendered at all when every series selects the secondary axis: it would have
+      nothing measured against it, so it gives up its gutter and the grid follows
+      the secondary axis instead.
   - id: y-axis-secondary
     element: g
     description: >-

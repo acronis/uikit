@@ -417,3 +417,19 @@ export const SecondaryYAxisHidden: Story = {
     showSecondaryYAxis: false,
   },
 };
+
+// Every series on the secondary axis — the degenerate opt-in. The primary axis has
+// nothing measured against it, so it gives up its gutter and the grid follows the
+// axis that does. Baselined because that's the whole difference: unguarded, this
+// renders a blank left gutter and only two grid lines.
+export const AllSeriesSecondaryYAxis: Story = {
+  args: {
+    data: dualAxisData,
+    config: dualAxisConfig,
+    series: [
+      { key: 'revenue', type: 'bar', yAxis: 'secondary' },
+      { key: 'conversion', type: 'line', yAxis: 'secondary' },
+    ],
+    secondaryYTickFormatter: formatCompactNumber,
+  },
+};

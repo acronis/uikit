@@ -12,7 +12,13 @@
   render types (bar vs line vs area) add a second, non-color channel.
 - Mixed series can share one value axis even when their magnitudes differ wildly
   (e.g. revenue vs order-count) — call out the scale in the caption so a small
-  bar next to a tall line isn't misread. This v1 uses a single shared Y axis.
+  bar next to a tall line isn't misread.
+- With **two value axes** (`yAxis: 'secondary'`), which series is measured against
+  which scale is conveyed by position alone: nothing in the legend, the tooltip,
+  or the accessible description names an axis, and the tooltip renders the two
+  values without their units. Say it in the text alternative — "revenue in $ on
+  the left, conversion in % on the right" — and prefer a `secondaryYAxisLabel` +
+  `yAxisLabel` pair so the mapping is at least visible to a sighted reader.
 - The chrome (tooltip, legend, axis ticks, grid) resolves to semantic `--ui-*`
   tokens that meet contrast in light and dark. **Series colors are
   caller-supplied** via `config` — pick values that meet 3:1 against the surface

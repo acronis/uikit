@@ -214,11 +214,27 @@ describe('ComposedChart secondary Y axis', () => {
 
   // The secondary-axis props are inert without a series asking for the axis — no
   // second axis is rendered, so setting them can't shift a single-scale chart.
-  it('ignores the secondary-axis props when no series selects that axis', () => {
+  // That they're *ignored* is what the `SecondaryYAxisShared` baseline shows; here
+  // the claim is only that setting them on a single-scale chart is accepted.
+  it('accepts the secondary-axis props when no series selects that axis', () => {
     const { container } = renderChart({
       secondaryYAxisLabel: 'Unused',
       secondaryYUnit: '%',
       secondaryYAxisDomain: 'auto',
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  // Every series on the secondary axis leaves the primary one empty. recharts gives
+  // a tickless axis a blank gutter and collapses the grid onto it, so the component
+  // hides that axis and re-points the grid — visible in the `AllSeriesSecondaryYAxis`
+  // baseline, which happy-dom can't distinguish from the unguarded render.
+  it('accepts every series opting into the secondary axis', () => {
+    const { container } = renderChart({
+      series: [
+        { key: 'revenue', type: 'bar', yAxis: 'secondary' },
+        { key: 'orders', type: 'line', yAxis: 'secondary' },
+      ],
     });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
