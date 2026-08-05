@@ -54,6 +54,9 @@ Scenario: Tooltip on hover
 Scenario: Legend
   Given showLegend is true
   Then a swatch + label renders for each series in dataKeys
+  And the entries follow the dataKeys order, not the underlying chart library's
+      default alphabetical sort
+  And the order does not change when bar-styling props (barShape, barSettings) are set
 ```
 
 ```gherkin
@@ -177,6 +180,7 @@ Scenario: Bar shape
 Scenario: Bar sizing
   Given barSize, maxBarSize, barGap, barCategoryGap or minPointSize is set
   Then the bar thickness, the gaps around it, and the floor for a non-zero value follow those values
+  And a value of exactly 0 still renders nothing, including a zero segment inside a stack
 ```
 
 ```gherkin
@@ -184,4 +188,5 @@ Scenario: Active bar on hover
   Given showActiveBar is true
   When the user hovers a bar
   Then that bar repaints with the activeBar fill and opacity, defaulting to the series color
+  And a bar that carries a barSettings track keeps that track while it is hovered
 ```

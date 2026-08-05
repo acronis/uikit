@@ -9,3 +9,5 @@ Add the bar-styling knobs to `BarChart`.
 **Painting.** `barShape` adds `pill`, `gradient` and `pattern` alongside the default `rounded`; a `barSettings` entry can override it for its range, so hatching can set a projection apart without relying on color.
 
 **Sizing and chrome.** `barSize`, `maxBarSize`, `barGap`, `barCategoryGap` and `minPointSize` forward to recharts; `showBackground` / `backgroundFill` draw a full-height track behind every bar; `showActiveBar` / `activeBar` highlight the bar under the pointer.
+
+**Legend order.** `BarChart` legend entries now follow the `dataKeys` order instead of the chart library's default alphabetical sort by series name. Charts whose `dataKeys` were already alphabetical are unaffected.

@@ -43,7 +43,9 @@ tokens:
     affects: brush
     description: The range brush strip's background (recharts `fill`).
   - name: --ui-background-brand-primary
-    affects: x-axis
+    affects: band
     description: >-
       Accent for the category ticks a `referenceArea` covers, so the highlighted
-      range reads on the axis too (fill-primary).
+      range reads on the axis too (fill-primary). The ticks are the x-axis ones
+      for vertical bars and the y-axis ones when `orientation="horizontal"` —
+      whichever axis carries the categories.

@@ -2,14 +2,18 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import { beforeAll, describe, expect, it } from 'vitest';
 
+import { BarChart as RechartsBarChart } from 'recharts';
+
 import {
   BarChart,
   barChartCategoryRange,
   barChartReferenceValue,
+  createTrackShape,
   dropHeadroomSeries,
+  NormalizedTooltipContent,
   withSeriesColor,
 } from '../bar-chart';
-import { ChartTooltipContent, type ChartConfig,
+import { ChartContainer, ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
 
@@ -376,6 +380,45 @@ describe('BarChart styling knobs', () => {
     ).toBeInTheDocument();
   });
 
+  // The index recharts hands a custom tick is its position in the list actually
+  // rendered, which a numeric `interval` (and, in a browser, the default
+  // `preserveEnd` dropping labels that don't fit) has already filtered. Keying
+  // the accent off it instead of the tick's data row put the highlight on the
+  // wrong categories — here it would land on nothing at all.
+  it('accents the ticks of the band by data row, not by tick position', () => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
+    const rows = months.map((month, i) => ({ month, desktop: 100 + i }));
+    const { container } = render(
+      <BarChart
+        config={config}
+        data={rows}
+        dataKeys={['desktop']}
+        xKey="month"
+        // Keeps every 3rd tick: rows 0 (Jan), 3 (Apr) and 6 (Jul).
+        xAxisInterval={2}
+        referenceArea={{ from: 'Jul' }}
+      />
+    );
+
+    // The value axis keeps recharts' default tick renderer, so the category
+    // ticks are the ones drawn by ours.
+    const categoryTicks = Array.from(container.querySelectorAll('text')).filter(
+      (tick) => !tick.classList.contains('recharts-cartesian-axis-tick-value')
+    );
+    expect(categoryTicks.map((tick) => tick.textContent)).toEqual([
+      'Jan',
+      'Apr',
+      'Jul',
+    ]);
+    // Keyed off the tick position this would accent nothing, since the band
+    // starts at row 6 and only positions 0-2 are ever handed out.
+    expect(
+      categoryTicks
+        .filter((tick) => tick.classList.contains('fill-primary'))
+        .map((tick) => tick.textContent)
+    ).toEqual(['Jul']);
+  });
+
   it('rules the leading edge of a band only when asked', () => {
     const plain = renderChart({ referenceArea: { from: 'Feb' } });
     expect(
@@ -592,6 +635,174 @@ describe('BarChart styling knobs', () => {
     expect(bars.length).toBeGreaterThan(0);
     // barSize is honored rather than computed from the available width.
     expect(bars[0]).toHaveAttribute('width', '12');
+  });
+
+  // recharts hands the minPointSize callback the bar's top edge, which inside a
+  // stack is the running total — a zero segment riding on a non-zero stack
+  // would clear a `value !== 0` check and get a sliver it should not have.
+  it('leaves a zero at nothing under minPointSize even when stacked', () => {
+    const rows = [
+      { month: 'Jan', desktop: 100, mobile: 40 },
+      // mobile is zero here, but it stacks on a non-zero desktop.
+      { month: 'Feb', desktop: 120, mobile: 0 },
+    ];
+    const { container } = render(
+      <BarChart
+        config={config}
+        data={rows}
+        dataKeys={['desktop', 'mobile']}
+        xKey="month"
+        layout="stacked"
+        minPointSize={6}
+      />
+    );
+    const mobileBar = container.querySelectorAll('.recharts-bar')[1];
+    const heights = Array.from(
+      mobileBar.querySelectorAll('.recharts-bar-rectangle path')
+    ).map((bar) => Number(bar.getAttribute('height')));
+    // Only Jan's segment is drawn; floored off the stack total, Feb's zero
+    // would have picked up a 6px sliver of its own.
+    expect(heights).toHaveLength(1);
+    expect(heights[0]).toBeGreaterThan(0);
+  });
+
+  // recharts sorts legend entries alphabetically by series name by default
+  // (`itemSorter: 'value'`), so the order has to be restored unconditionally —
+  // gating that on the bar styling made a paint-server shape silently reorder
+  // the legend.
+  it('keeps the legend in dataKeys order whatever the bar styling', () => {
+    const labels = (props: Partial<React.ComponentProps<typeof BarChart>>) =>
+      Array.from(
+        renderChart({ dataKeys: ['mobile', 'desktop'], ...props }).container
+          .querySelectorAll('.recharts-legend-wrapper > div > div')
+      ).map((entry) => entry.textContent);
+
+    expect(labels({})).toEqual(['Mobile', 'Desktop']);
+    expect(labels({ barShape: 'gradient' })).toEqual(['Mobile', 'Desktop']);
+  });
+});
+
+// A range-scoped track is drawn by a custom `<Bar shape>`; recharts swaps that
+// shape out for the `activeBar` option while a bar is hovered, so the active
+// option has to redraw the track itself or it blinks out under the pointer.
+describe('createTrackShape', () => {
+  const geometry = {
+    x: 10,
+    y: 20,
+    width: 8,
+    height: 40,
+    fill: 'rgb(23 99 207)',
+    background: { x: 10, y: 0, width: 8, height: 100 },
+  } as unknown as Parameters<ReturnType<typeof createTrackShape>>[0];
+
+  it('draws the track for a row inside the range, and not outside it', () => {
+    const shape = createTrackShape({
+      inRange: (row) => row === 1,
+      trackFill: 'rgb(1 2 3)',
+    });
+
+    const inside = render(<svg>{shape({ ...geometry, index: 1 })}</svg>);
+    expect(
+      inside.container.querySelector('.recharts-bar-background-rectangle')
+    ).toBeInTheDocument();
+
+    const outside = render(<svg>{shape({ ...geometry, index: 0 })}</svg>);
+    expect(
+      outside.container.querySelector('.recharts-bar-background-rectangle')
+    ).not.toBeInTheDocument();
+  });
+
+  it('keeps the track while applying the active paint to the bar', () => {
+    const shape = createTrackShape({
+      inRange: () => true,
+      trackFill: 'rgb(1 2 3)',
+      paint: { fill: 'rgb(0 0 0)', fillOpacity: 0.85 },
+    });
+    const { container } = render(<svg>{shape({ ...geometry, index: 0 })}</svg>);
+
+    expect(
+      container.querySelector('.recharts-bar-background-rectangle')
+    ).toBeInTheDocument();
+    // The track is drawn first, so the bar itself is the last path.
+    const paths = Array.from(container.querySelectorAll('path'));
+    const bar = paths[paths.length - 1];
+    expect(bar).toHaveAttribute('fill', 'rgb(0 0 0)');
+    expect(bar).toHaveAttribute('fill-opacity', '0.85');
+  });
+});
+
+// The chrome always goes through this, so it has to be a no-op for an ordinary
+// chart and still strip/recolor when a headroom or paint-server series is in
+// play. The open-tooltip story renders a raw recharts composition, so this is
+// the only thing covering the component's own tooltip path.
+describe('NormalizedTooltipContent', () => {
+  const payload = [
+    {
+      dataKey: 'desktop',
+      name: 'desktop',
+      value: 1,
+      color: 'url(#p)',
+      payload: { month: 'Jan', desktop: 1 },
+    },
+    {
+      dataKey: '__headroom_desktop',
+      name: '__headroom_desktop',
+      value: 2,
+      payload: { month: 'Jan' },
+    },
+  ] as never;
+
+  function renderIn(node: React.ReactNode) {
+    return render(
+      <ChartContainer config={config} className="h-[300px] w-[500px]">
+        <RechartsBarChart data={data}>{node as never}</RechartsBarChart>
+      </ChartContainer>
+    );
+  }
+
+  it('strips the headroom row and recolors the dot for the default tooltip', () => {
+    const { container } = renderIn(
+      <NormalizedTooltipContent active label="Jan" payload={payload} />
+    );
+    expect(container.textContent).toContain('Desktop');
+    expect(container.textContent).not.toContain('__headroom_');
+  });
+
+  it('normalizes before a caller-supplied element tooltip renders', () => {
+    const seen: unknown[] = [];
+    const { container } = renderIn(
+      <NormalizedTooltipContent
+        active
+        label="Jan"
+        payload={payload}
+        content={
+          <ChartTooltipContent
+            formatter={(value, name) => {
+              seen.push(name);
+              return <span>{String(value)}</span>;
+            }}
+          />
+        }
+      />
+    );
+    expect(seen).toEqual(['desktop']);
+    expect(container.textContent).not.toContain('__headroom_');
+  });
+
+  it('normalizes before a caller-supplied function tooltip renders', () => {
+    const seen: unknown[] = [];
+    renderIn(
+      <NormalizedTooltipContent
+        active
+        label="Jan"
+        payload={payload}
+        content={(props) => {
+          seen.push(props.payload?.map((item) => item.dataKey));
+          return null;
+        }}
+      />
+    );
+    expect(seen).toEqual([['desktop']]);
   });
 });
 

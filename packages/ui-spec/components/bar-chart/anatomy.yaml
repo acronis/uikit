@@ -63,10 +63,11 @@ parts:
       the entry sets `highlightTicks: false`. With `divider`, a dashed rule
       marks the band's leading edge.
   - id: bar-track
-    element: rect
+    element: path
     description: >-
-      The track behind a bar. Drawn for every bar when `showBackground` is on,
-      or only over a `barSettings` range when that entry sets `background`.
+      The track behind a bar (a recharts `Rectangle`, so a `path`). Drawn for
+      every bar when `showBackground` is on, or only over a `barSettings` range
+      when that entry sets `background`.
       `background: true` fills the plot height; a data field name caps the track
       at that row's value, rendering it as a headroom segment stacked on the bar
       (grouped layout only).
