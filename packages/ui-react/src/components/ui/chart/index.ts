@@ -30,6 +30,8 @@ export {
 export type {
   TickFormatter,
   CartesianChartProps,
+  ChartYAxisTarget,
+  SecondaryYAxisProps,
   ChartAnimationProps,
   ChartAnimationEasing,
   ResolvedAnimation,
