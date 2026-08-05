@@ -380,14 +380,45 @@ describe('BarChart styling knobs', () => {
     ).toBeInTheDocument();
   });
 
-  // The index recharts hands a custom tick is its position in the list actually
-  // rendered, which a numeric `interval` (and, in a browser, the default
-  // `preserveEnd` dropping labels that don't fit) has already filtered. Keying
-  // the accent off it instead of the tick's data row put the highlight on the
-  // wrong categories — here it would land on nothing at all.
+  // Neither index a tick carries is the data row: the `index` prop is a
+  // position in the filtered list recharts actually renders, and `payload.index`
+  // is relative to whatever slice a brush leaves. Keying the accent off either
+  // put the highlight on the wrong categories — here it would land on nothing.
+  const accentMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
+  const accentRows = accentMonths.map((month, i) => ({ month, desktop: 100 + i }));
+
+  // The value axis keeps recharts' default tick renderer, so the category ticks
+  // are the ones drawn by ours.
+  const categoryTicksOf = (container: HTMLElement) =>
+    Array.from(container.querySelectorAll('text')).filter(
+      (tick) => !tick.classList.contains('recharts-cartesian-axis-tick-value')
+    );
+
+  // Coexistence guard only: happy-dom can't drive a brush drag (see
+  // chart/__tests__/chart-brush.test.tsx for what it takes to render the strip
+  // at all), and an undragged brush still leaves the indices absolute — so this
+  // would pass against the row-index lookup too. The drift a dragged selection
+  // causes is what the value-based match above rules out by construction.
+  it('accents the ticks of the band alongside a brush', () => {
+    const { container } = render(
+      <BarChart
+        config={config}
+        data={accentRows}
+        dataKeys={['desktop']}
+        xKey="month"
+        showBrush
+        referenceArea={{ from: 'Jul' }}
+      />
+    );
+    expect(
+      categoryTicksOf(container)
+        .filter((tick) => tick.classList.contains('fill-primary'))
+        .map((tick) => tick.textContent)
+    ).toEqual(['Jul', 'Aug', 'Sep']);
+  });
+
   it('accents the ticks of the band by data row, not by tick position', () => {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
-    const rows = months.map((month, i) => ({ month, desktop: 100 + i }));
+    const rows = accentRows;
     const { container } = render(
       <BarChart
         config={config}
@@ -400,11 +431,7 @@ describe('BarChart styling knobs', () => {
       />
     );
 
-    // The value axis keeps recharts' default tick renderer, so the category
-    // ticks are the ones drawn by ours.
-    const categoryTicks = Array.from(container.querySelectorAll('text')).filter(
-      (tick) => !tick.classList.contains('recharts-cartesian-axis-tick-value')
-    );
+    const categoryTicks = categoryTicksOf(container);
     expect(categoryTicks.map((tick) => tick.textContent)).toEqual([
       'Jan',
       'Apr',

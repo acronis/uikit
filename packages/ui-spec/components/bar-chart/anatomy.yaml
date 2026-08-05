@@ -10,7 +10,7 @@ schematic: |
         y-axis:  <YAxis>   number or category by orientation
         band:    <ReferenceArea> per referenceArea entry (behind the bars)
         series:  one <Bar> per dataKey (grouped side-by-side or stacked)
-          bar-track: <rect> full-height track behind a bar (optional)
+          bar-track: <path> full-height track behind a bar (optional)
         tooltip: <ChartTooltip> → tooltip-content   (hover card)
         legend:  <ChartLegend>  → legend-content    (per-series swatch + label)
         brush:   <Brush>                            (only when showBrush)

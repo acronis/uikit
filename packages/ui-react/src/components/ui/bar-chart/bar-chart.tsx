@@ -821,31 +821,33 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         })
       : data;
 
-    // The ticks under a band pick up the accent styling unless the band opts out.
-    const highlightedTicks = referenceAreas
-      .filter(({ area }) => area.highlightTicks !== false)
-      .map(({ range }) => range);
-    const isTickHighlighted = (index: number) =>
-      highlightedTicks.some(([start, end]) => index >= start && index <= end);
+    // The ticks under a band pick up the accent styling unless the band opts
+    // out. Resolved to the categories' own values rather than kept as row
+    // indices, because neither index a tick carries can be trusted here: the
+    // `index` prop is a position in the list recharts actually renders, which
+    // a numeric `interval` (and the default `preserveEnd`, dropping labels that
+    // don't fit) has already filtered, and `payload.index` is relative to the
+    // slice a `showBrush` selection leaves. The value survives both.
+    const highlightedValues = new Set(
+      referenceAreas
+        .filter(({ area }) => area.highlightTicks !== false)
+        .flatMap(({ range }) =>
+          data.slice(range[0], range[1] + 1).map((row) => row[xKey])
+        )
+    );
 
     // recharts places the tick and hands the element its final geometry; we
     // reuse its own <Text> so angle/anchor behavior is unchanged and only add
-    // the accent styling for the highlighted range.
-    //
-    // The two indices below are NOT interchangeable. `index` is the tick's
-    // position in the list recharts actually renders, which is filtered — by a
-    // numeric `interval`, and by the default `preserveEnd` dropping labels that
-    // don't fit. `payload.index` is the data row. So the range lookup has to go
-    // through `payload.index` or the accent lands on the wrong categories,
-    // while the formatter keeps `index` because that is what recharts passes
-    // its own `tickFormatter`.
-    const categoryTick = highlightedTicks.length
+    // the accent styling for the highlighted range. The formatter still takes
+    // the rendered position, since that is what recharts passes its own
+    // `tickFormatter`.
+    const categoryTick = highlightedValues.size
       ? ({
           payload,
           index,
           ...tickProps
         }: {
-          payload: { value: string | number; index?: number };
+          payload: { value: string | number };
           index: number;
         }) => {
           const formatter =
@@ -858,8 +860,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
               {...tickProps}
               className={cn(
                 'fill-muted-foreground',
-                isTickHighlighted(payload.index ?? index) &&
-                  'fill-primary italic'
+                highlightedValues.has(payload.value) && 'fill-primary italic'
               )}
               fontSize={12}
             >
@@ -888,15 +889,19 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       if (settings.shape) usedShapes.add(settings.shape);
     });
     // recharts applies a flat minPointSize to zeroes too, which would draw a
-    // sliver where there is nothing to show. It hands the callback the bar's
-    // top edge, which inside a stack is the running total rather than the row's
-    // own value — a zero segment on a non-zero stack would slip through — so
-    // the value is read back off the row instead.
+    // sliver where there is nothing to show. For a grouped bar it hands the
+    // callback the row's own value, but inside a stack it hands the running
+    // total, so a zero segment riding on a non-zero stack would slip through —
+    // there the value is read back off the row instead. That read uses the
+    // index recharts counts from the *displayed* slice, so a stacked chart
+    // whose brush has been dragged off its full range falls back to flooring
+    // the zero; the plain (unbrushed) stack, which is what the prop is for, is
+    // exact.
     const minPointSizeFor = (key: string) =>
       minPointSize === undefined
         ? undefined
-        : (_top: number | undefined | null, row: number) => {
-            const own = chartData[row]?.[key];
+        : (top: number | undefined | null, row: number) => {
+            const own = isStacked ? chartData[row]?.[key] : top;
             return typeof own === 'number' && own !== 0 ? minPointSize : 0;
           };
 
