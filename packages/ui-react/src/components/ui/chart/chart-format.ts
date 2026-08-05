@@ -141,14 +141,21 @@ export type ChartYAxisTarget = 'primary' | 'secondary';
  * these props are not mixed into `CartesianChartProps`.
  *
  * The primary axis is configured through `CartesianChartProps` (`yAxisLabel`,
- * `yUnit`, `yTickFormatter`, `yAxisTickCount`, `yAxisDomain`, `showYAxis`); each
- * prop here is its counterpart on the second axis, so the two scales format and
- * bound themselves independently.
+ * `yUnit`, `yTickFormatter`, `yAxisTickCount`, `yAxisDomain`, `showYAxis`); every
+ * `secondary*` prop here is its counterpart on the second axis, so the two scales
+ * format and bound themselves independently, and each is inert until a series
+ * selects that axis.
+ *
+ * `yAxisOrientation` is the exception on both counts: it places the *primary*
+ * axis, and it applies whether or not a second one exists. It lives here because
+ * it is only meaningful once a chart can mirror a pair of axes — a single-axis
+ * chart has no second side to give up.
  */
 export interface SecondaryYAxisProps {
   /**
    * Which side the *primary* value axis sits on. Defaults to `left`. The secondary
-   * axis always takes the opposite side.
+   * axis always takes the opposite side. Unlike the `secondary*` props below, this
+   * one applies to a single-scale chart too.
    */
   yAxisOrientation?: 'left' | 'right';
   /**

@@ -178,11 +178,20 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
       : undefined;
     // The secondary axis is derived from the series, not from a flag of its own:
-    // that makes the two impossible-to-render states unrepresentable — an axis with
-    // no series measured against it (an arbitrary domain drawn over the plot), and a
-    // series pointing at an id no axis declares (recharts falls back to an implicit
-    // axis, silently plotting it on the wrong scale).
+    // that keeps a series from pointing at an id no axis declares, where recharts
+    // falls back to an implicit axis — the series still scales off its own data, but
+    // silently loses the domain/tickCount/formatter/unit that axis was configured
+    // with, and renders no chrome for it.
     const hasSecondaryYAxis = series.some((s) => s.yAxis === 'secondary');
+    // The mirror case the `series` opt-in can't rule out on its own: every series
+    // asks for the secondary axis, leaving the primary one with nothing measured
+    // against it. recharts gives an axis with no graphical items no ticks at all, so
+    // it paints a blank gutter and `CartesianGrid` — which follows it — collapses to
+    // the two plot boundaries. Hand the gutter and the grid to the axis that does
+    // have the series. Both conditionals are inert on every other chart shape, so
+    // single-axis output is untouched.
+    const hasPrimarySeries = series.some((s) => s.yAxis !== 'secondary');
+    const primaryYAxisIsOrphaned = hasSecondaryYAxis && !hasPrimarySeries;
     const primaryOrientation = yAxisOrientation ?? 'left';
     const secondaryOrientation = primaryOrientation === 'left' ? 'right' : 'left';
 
@@ -217,6 +226,12 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
           >
             {showGrid && (
               <CartesianGrid
+                // Spread only when the primary axis has no series (see above) —
+                // `yAxisId={undefined}` resolves to the same `0` but reorders the
+                // grid's SVG attributes on every existing chart.
+                {...(primaryYAxisIsOrphaned
+                  ? { yAxisId: SECONDARY_Y_AXIS_ID }
+                  : {})}
                 horizontal={gridHorizontal ?? true}
                 vertical={gridVertical ?? false}
                 strokeDasharray={gridDashed ? '3 3' : undefined}
@@ -240,7 +255,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
             />
             <YAxis
               type="number"
-              hide={!showYAxis}
+              hide={!showYAxis || primaryYAxisIsOrphaned}
               // Spread only when set. `orientation={undefined}` would resolve to the
               // same `left`, but the key's presence moves it ahead of `width` in the
               // props object recharts spreads onto its tick labels — reordering the

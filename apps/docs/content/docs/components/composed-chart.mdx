@@ -136,9 +136,16 @@ keeps the second scale — the series stays measured against it — and drops on
 ticks and title, the meaning `showYAxis` has for the primary axis.
 
 The second axis exists only while a series asks for it, so the secondary props are
-inert on a single-scale chart, and the horizontal grid lines always follow the
-primary axis (a second set from a different domain would cross the first at
-meaningless heights).
+inert on a single-scale chart, and the horizontal grid lines follow the primary
+axis (a second set from a different domain would cross the first at meaningless
+heights). If *every* series opts in, the primary axis has nothing measured against
+it: it isn't rendered, gives up its gutter, and the grid follows the secondary axis
+instead.
+
+The two axes are told apart by position alone — neither the legend nor the tooltip
+names one, and the tooltip shows both values without their units. Label the axes
+(`yAxisLabel` / `secondaryYAxisLabel`) whenever the units aren't obvious from the
+series names.
 
 Reach for one axis, not two, when a reader would compare the series value against
 value: with two scales, where the marks cross is a consequence of the domains you
