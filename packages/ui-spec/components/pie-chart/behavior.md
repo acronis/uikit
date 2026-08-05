@@ -57,14 +57,22 @@ Scenario: Data-label format
   And labelFormat is one of value, name-value, name-percent or percent
   Then each slice's label reads its value, its name, and/or its share of the
     sum of every slice value, to one decimal
-  And a labelFormatter formats the numeric part only
+  And a labelFormatter formats the slice's value, so it reaches the value and
+    name-value formats only — a share is always rendered as NN.N%
 ```
 
 ```gherkin
 Scenario: Percent with nothing to divide by
   Given a percent-bearing labelFormat
-  And the slice values sum to zero (or are non-numeric)
+  And the slice values sum to zero, or this slice's value is non-numeric
   Then name-percent falls back to the slice name and percent renders no label
+```
+
+```gherkin
+Scenario: Slice with no value at all
+  Given a data row that carries no dataKey field
+  Then the name-bearing formats fall back to the bare slice name
+  And the value-only formats render no label, rather than an empty one
 ```
 
 ```gherkin
@@ -102,7 +110,7 @@ Scenario: Tooltip value format
 Scenario: Legend
   Given showLegend is true
   Then a swatch + label renders for each slice (from nameKey / config)
-  And it sits on the edge given by legendPos (bottom by default)
+  And it sits on the edge given by legendPosition (bottom by default)
 ```
 
 ```gherkin
@@ -110,7 +118,7 @@ Scenario: Donut center label
   Given shape is "donut" and a centerLabel { value, label }
   Then the value renders large and the label smaller beneath it, centered in the hole
   And the block stays centered on the donut whether or not a legend is shown,
-    and on whichever edge legendPos puts it
+    and on whichever edge legendPosition puts it
 ```
 
 ```gherkin

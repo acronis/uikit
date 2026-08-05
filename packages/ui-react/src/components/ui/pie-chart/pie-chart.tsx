@@ -25,6 +25,7 @@ import {
   CHART_LABEL_FILL_CLASS,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartTooltipContentProps,
   type ChartAnimationProps,
   type ChartDataLabelProps,
   type PolarLabelPosition,
@@ -103,11 +104,15 @@ const slicePercentText = (
  * Compose one slice's data-label text. Exported for unit tests; not part of the
  * package's public API.
  *
- * A percent needs a numeric slice value *and* a non-zero total, so the two
- * percent formats degrade rather than print `NaN%`: `name-percent` falls back
- * to the bare name and `percent` to an empty label (which renders no `<text>`
- * at all). `labelFormatter` only ever formats the numeric part, so a chart's
- * labels and its tooltip stay in the same units under every format.
+ * A percent needs a numeric slice value *and* a non-zero total, and a value
+ * label needs a value at all — so every format degrades rather than printing
+ * `NaN%` or a dangling `"Chrome: "`. The two name-carrying formats fall back to
+ * the bare name; the value-only ones to `''`, which `resolveSliceLabel`
+ * normalizes to `null` (the one value recharts renders no `<text>` for).
+ *
+ * `labelFormatter` formats the slice's *value*, so it reaches `value` and
+ * `name-value` only. A percent is always composed by `slicePercentText` and
+ * never passes through the formatter.
  */
 export function pieChartLabelText(options: {
   format: PieChartLabelFormat;
@@ -123,7 +128,7 @@ export function pieChartLabelText(options: {
 
   switch (format) {
     case 'name-value':
-      return `${name}: ${valueText}`;
+      return valueText ? `${name}: ${valueText}` : `${name}`;
     case 'name-percent':
       return percentText ? `${name}: ${percentText}` : `${name}`;
     case 'percent':
@@ -131,6 +136,84 @@ export function pieChartLabelText(options: {
     default:
       return valueText;
   }
+}
+
+/**
+ * The row renderer behind `tooltipFormat="value-percent"` — a slice's value
+ * followed by its share. Exported for unit tests; not part of the package's
+ * public API.
+ *
+ * A `formatter` replaces the default row wholesale, so the swatch and the name
+ * are rebuilt here to match it: the shared `ChartTooltipContent` prefers a
+ * `config` entry's `icon` over the color swatch, and this has to do the same or
+ * a chart with icons would silently lose them under this preset — and the
+ * name/value `gap-4`, which has to be repeated here because a `formatter`
+ * replaces the shared row that carries it.
+ */
+export function pieChartValuePercentRow(options: {
+  config: ChartConfig;
+  total: number;
+}): NonNullable<ChartTooltipContentProps['formatter']> {
+  const { config, total } = options;
+  // Named rather than an arrow: it returns JSX, so an anonymous function reads
+  // to eslint-plugin-react as a component with no display name.
+  return function ValuePercentRow(value, name, item) {
+    const itemConfig = config[String(name)];
+    const percent = slicePercentText(value, total);
+    const valueText = value?.toLocaleString() ?? '';
+    return (
+      <>
+        {itemConfig?.icon ? (
+          <itemConfig.icon />
+        ) : (
+          <div
+            // Dotted, not the legend's square swatch: the shared row's
+            // "a row is always dotted, whatever marker the legend gives that
+            // series" invariant applies here too.
+            className="h-2.5 w-2.5 shrink-0 rounded-full"
+            style={{ backgroundColor: item.payload?.fill ?? item.color }}
+          />
+        )}
+        {/*
+         * Mirrors the shared default row's `gap-4` (see `ChartTooltipContent`):
+         * a `formatter` replaces that row wholesale, so the floor under the
+         * name/value separation has to be restated here. Without it a value
+         * *and* its share outgrows the tooltip's `min-w-[8rem]`, leaving
+         * `justify-between` no free space to distribute.
+         */}
+        <div className="flex flex-1 items-center justify-between gap-4 leading-none">
+          <span className="text-muted-foreground">
+            {itemConfig?.label ?? name}
+          </span>
+          <span className="font-medium tabular-nums text-foreground">
+            {percent ? `${valueText} (${percent})` : valueText}
+          </span>
+        </div>
+      </>
+    );
+  };
+}
+
+/**
+ * The configured `ChartTooltipContent` for `tooltipFormat="value-percent"`.
+ * Exported so the visual-regression story renders the very same element the
+ * component does — recharts can only open a hover tooltip statically via
+ * `defaultIndex` on a raw composition, so the preset has to be reachable from
+ * outside the component to be snapshotted at all.
+ */
+export function pieChartValuePercentTooltip(options: {
+  nameKey: string;
+  config: ChartConfig;
+  total: number;
+}): React.ReactElement {
+  const { nameKey, config, total } = options;
+  return (
+    <ChartTooltipContent
+      nameKey={nameKey}
+      hideLabel
+      formatter={pieChartValuePercentRow({ config, total })}
+    />
+  );
 }
 
 export interface PieChartCenterLabel {
@@ -181,6 +264,10 @@ export interface PieChartProps
   /**
    * Angle the sweep starts at, in degrees (0 is 3 o'clock, counter-clockwise).
    * Pair with `endAngle` for a semicircle (`180` → `0`) or an arc.
+   *
+   * A partial sweep still centres on the full plot area, so a half turn fills
+   * only half its box — give the chart a short, wide one rather than expecting
+   * the arc to grow into a square.
    */
   startAngle?: number;
   /** Angle the sweep ends at, in degrees. Defaults to a full `360` circle. */
@@ -199,7 +286,7 @@ export interface PieChartProps
   showTooltip?: boolean;
   showLegend?: boolean;
   /** Which edge the legend sits on. Defaults to `bottom`. */
-  legendPos?: 'top' | 'bottom';
+  legendPosition?: 'top' | 'bottom';
   /** Plot-area margin, in px. Omit to use recharts' default (5 on every side). */
   margin?: { top?: number; right?: number; bottom?: number; left?: number };
   /**
@@ -214,6 +301,9 @@ export interface PieChartProps
    * How the default tooltip reads a slice: its `value` alone (the default), or
    * the value followed by its share of the total (`value-percent`). The preset
    * covers the common case without hand-rolling a `tooltipContent`.
+   *
+   * The share is rendered as `NN.N%`, same as a data label's — not locale-aware.
+   * Pass your own `tooltipContent` if you need to format it.
    */
   tooltipFormat?: PieChartTooltipFormat;
   /**
@@ -228,6 +318,10 @@ export interface PieChartProps
    * What each data label reads when `showLabels` is on — the value alone (the
    * default), or the slice name and/or its share of the total. Overridable per
    * slice via `sliceSettings`.
+   *
+   * `labelFormatter` formats the slice's *value*, so it reaches `value` and
+   * `name-value` only: a share is always rendered as `NN.N%` (a `.` decimal and
+   * a bare `%`, not locale-aware) and never passes through the formatter.
    */
   labelFormat?: PieChartLabelFormat;
   /**
@@ -242,11 +336,12 @@ export interface PieChartProps
   labelLine?: boolean;
 }
 
-// Reserved height (px) of the shared single-row `ChartLegendContent` at the
-// bottom of the chart surface. recharts shifts the donut centre up by half of
-// this to make room for the legend, but a Pie <Label>'s viewBox does not
-// reflect it — so the centre label is nudged up by the same amount. VR
-// baselines guard this value if the legend's height ever changes.
+// Reserved height (px) of the shared single-row `ChartLegendContent` on
+// whichever edge `legendPosition` puts it — the same on both, since the legend's
+// own padding is symmetric (`pt-3` / `pb-3`). recharts shifts the donut centre
+// away from that edge by half of this to make room, but a Pie <Label>'s viewBox
+// does not reflect it — so the centre label is nudged by the same amount, in the
+// same direction. VR baselines guard this value if the legend's height changes.
 const LEGEND_ROW_RESERVE = 28;
 
 const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
@@ -269,7 +364,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       sliceSettings,
       showTooltip = true,
       showLegend = true,
-      legendPos = 'bottom',
+      legendPosition = 'bottom',
       margin,
       tooltipContent,
       tooltipFormat = 'value',
@@ -302,20 +397,23 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       0
     );
 
-    // Returns null (not '') for a slice whose label is switched off: recharts
-    // renders no <text> at all for a nullish label value, where an empty string
-    // would still emit an element.
+    // Always null, never '', for a slice with nothing to show — whether its
+    // label was switched off or its format degraded to empty. recharts renders
+    // no <text> at all for a nullish label value (`Label` bails on `isNullish`),
+    // where an empty string still emits one wrapping an empty <tspan>.
     const resolveSliceLabel = (row: PieChartDatum | undefined): string | null => {
       if (!row) return null;
       const settings = sliceSettings?.[String(row[nameKey])];
       if (settings?.hideLabel) return null;
-      return pieChartLabelText({
-        format: settings?.labelFormat ?? labelFormat,
-        name: row[nameKey],
-        value: row[dataKey],
-        total,
-        formatter: labelFormatter,
-      });
+      return (
+        pieChartLabelText({
+          format: settings?.labelFormat ?? labelFormat,
+          name: row[nameKey],
+          value: row[dataKey],
+          total,
+          formatter: labelFormatter,
+        }) || null
+      );
     };
 
     // Leader lines are the one thing a `LabelList` can't draw: recharts only
@@ -374,34 +472,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
                 content={
                   tooltipContent ??
                   (tooltipFormat === 'value-percent' ? (
-                    <ChartTooltipContent
-                      nameKey={nameKey}
-                      hideLabel
-                      // A formatter replaces the whole row, so the swatch and the
-                      // name are rebuilt here to match the default row's layout.
-                      formatter={(value, name, item) => {
-                        const percent = slicePercentText(value, total);
-                        const valueText = value?.toLocaleString() ?? '';
-                        return (
-                          <>
-                            <div
-                              className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
-                              style={{
-                                backgroundColor: item.payload?.fill ?? item.color,
-                              }}
-                            />
-                            <div className="flex flex-1 items-center justify-between leading-none">
-                              <span className="text-muted-foreground">
-                                {config[String(name)]?.label ?? name}
-                              </span>
-                              <span className="font-medium tabular-nums text-foreground">
-                                {percent ? `${valueText} (${percent})` : valueText}
-                              </span>
-                            </div>
-                          </>
-                        );
-                      }}
-                    />
+                    pieChartValuePercentTooltip({ nameKey, config, total })
                   ) : (
                     <ChartTooltipContent nameKey={nameKey} hideLabel />
                   ))
@@ -451,7 +522,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
                     // legend row was reserved.
                     const legendNudge = showLegend ? LEGEND_ROW_RESERVE / 2 : 0;
                     const centerY =
-                      cy + (legendPos === 'top' ? legendNudge : -legendNudge);
+                      cy + (legendPosition === 'top' ? legendNudge : -legendNudge);
                     const hasValue = centerLabel.value != null;
                     const hasLabel = centerLabel.label != null;
                     // Straddle centerY when both lines show, so the value + label
@@ -506,11 +577,11 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
             </Pie>
             {showLegend && (
               <ChartLegend
-                verticalAlign={legendPos}
+                verticalAlign={legendPosition}
                 content={
                   <ChartLegendContent
                     nameKey={nameKey}
-                    verticalAlign={legendPos}
+                    verticalAlign={legendPosition}
                   />
                 }
               />

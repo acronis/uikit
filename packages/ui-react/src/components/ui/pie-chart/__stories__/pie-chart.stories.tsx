@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Cell, Pie, PieChart as RechartsPieChart } from 'recharts';
 
-import { PieChart } from '../pie-chart';
+import { PieChart, pieChartValuePercentTooltip } from '../pie-chart';
 import {
   ChartContainer,
   ChartTooltip,
@@ -83,7 +83,7 @@ const meta = {
       options: ['value', 'value-percent'],
     },
     showLegend: { control: 'boolean' },
-    legendPos: { control: 'inline-radio', options: ['top', 'bottom'] },
+    legendPosition: { control: 'inline-radio', options: ['top', 'bottom'] },
     showLabels: { control: 'boolean' },
     labelFormat: {
       control: 'select',
@@ -315,16 +315,53 @@ export const SliceOverrides: Story = {
 export const LegendTop: Story = {
   args: {
     shape: 'donut',
-    legendPos: 'top',
+    legendPosition: 'top',
     centerLabel: { value: '835', label: 'Visitors' },
   },
 };
 
 // The `value-percent` tooltip preset — a slice's value followed by its share,
-// without hand-rolling a `tooltipContent`. The tooltip is hover-only and this
-// preset lives inside the component (recharts can only force one open on a raw
-// composition), so this is a usage example, not a visual-regression case.
+// without hand-rolling a `tooltipContent`. This is the usage example (autodocs);
+// the tooltip is hover-only, so `TooltipValuePercentOpen` below is the
+// visual-regression case.
 export const TooltipValuePercent: Story = {
   parameters: { snapshot: { skip: true } },
   args: { shape: 'donut', tooltipFormat: 'value-percent' },
+};
+
+// The same preset, forced open for the VR baseline. Like `TooltipOpen` and
+// `CustomTooltipOpen` this renders the raw composition (recharts can only open a
+// hover tooltip statically via `defaultIndex`), but wires in the component's own
+// preset element rather than a copy of it, so the baseline can't drift from what
+// `tooltipFormat="value-percent"` actually renders.
+const valuePercentTotal = data.reduce((sum, row) => sum + row.value, 0);
+
+export const TooltipValuePercentOpen: Story = {
+  render: () => (
+    <ChartContainer config={config} className="h-[360px] w-[360px]">
+      <RechartsPieChart>
+        <ChartTooltip
+          defaultIndex={0}
+          active
+          content={pieChartValuePercentTooltip({
+            nameKey: 'browser',
+            config,
+            total: valuePercentTotal,
+          })}
+        />
+        <Pie
+          data={data}
+          dataKey="value"
+          nameKey="browser"
+          innerRadius={60}
+          outerRadius={120}
+          isAnimationActive={false}
+        >
+          {data.map((entry) => (
+            <Cell key={entry.browser} fill={`var(--color-${entry.browser})`} />
+          ))}
+        </Pie>
+      </RechartsPieChart>
+    </ChartContainer>
+  ),
 };
