@@ -59,6 +59,10 @@ export interface RadarChartSeriesSettings {
   /**
    * Outline color, when it should read differently from the fill (e.g. a solid
    * outline over a barely-tinted area). Defaults to the fill.
+   *
+   * recharts derives a Radar's legend/tooltip color from its stroke first, so
+   * setting this alone also recolors that series' legend swatch and tooltip dot
+   * — set `color` too if the marker should keep following the fill.
    */
   stroke?: string;
   /** Fill opacity for this series, overriding the chart-level `fillOpacity`. */
@@ -95,10 +99,62 @@ export function radarRadiusAxisDomain(
     case 'auto':
       return ['auto', 'auto'];
     case 'fixed':
-      return [0, max ?? 'auto'];
+      // A maximum that isn't a positive, finite number can't bound a scale that
+      // grows outward from 0: `[0, 0]` collapses the web onto its centre and a
+      // negative inverts it. A computed max (`Math.max` over an empty or all-zero
+      // series) reaches this, so fall back to the data's own top — the same
+      // behavior as `fixed` with no maximum at all.
+      return [0, max !== undefined && Number.isFinite(max) && max > 0 ? max : 'auto'];
     default:
       return undefined;
   }
+}
+
+/** The chart-level styling a `seriesSettings` entry overrides. */
+export interface RadarSeriesDefaults {
+  fillOpacity: number;
+  strokeWidth: number;
+  showDots: boolean;
+  dotRadius: number;
+  activeDot: boolean | undefined;
+}
+
+/** Resolved recharts `<Radar>` styling for one series. */
+export interface RadarSeriesStyle {
+  fill: string;
+  stroke: string;
+  fillOpacity: number;
+  strokeWidth: number;
+  dot: { r: number } | false;
+  activeDot: boolean | undefined;
+}
+
+/**
+ * Fold a series' `seriesSettings` entry over the chart-level styling. Exported
+ * for unit tests; not part of the package's public API.
+ *
+ * Every fallback is `??`, not `||`, so a deliberate falsy override survives —
+ * `fillOpacity: 0` (outline only), `strokeWidth: 0` (fill only), `dot: false`
+ * and `activeDot: false` all have to beat a truthy chart-level value. An
+ * un-overridden fill stays the `--color-<key>` custom property the shared
+ * `ChartContainer` injects from `config`, so the series a caller doesn't name
+ * keeps reading its config color.
+ */
+export function radarSeriesStyle(
+  key: string,
+  settings: RadarChartSeriesSettings | undefined,
+  defaults: RadarSeriesDefaults
+): RadarSeriesStyle {
+  const fill = settings?.color ?? `var(--color-${key})`;
+  const dot = settings?.dot ?? defaults.showDots;
+  return {
+    fill,
+    stroke: settings?.stroke ?? fill,
+    fillOpacity: settings?.fillOpacity ?? defaults.fillOpacity,
+    strokeWidth: settings?.strokeWidth ?? defaults.strokeWidth,
+    dot: dot ? { r: settings?.dotRadius ?? defaults.dotRadius } : false,
+    activeDot: settings?.activeDot ?? defaults.activeDot,
+  };
 }
 
 export interface RadarChartProps
@@ -126,8 +182,9 @@ export interface RadarChartProps
   /**
    * Per-series style overrides, keyed by a `dataKeys` entry — color, outline, and
    * dots for one series while the rest keep the chart-level values. Keys that
-   * aren't plotted are ignored. An overridden color follows through to that
-   * series' legend swatch and tooltip indicator.
+   * aren't plotted are ignored. An overridden `color` — or `stroke`, which
+   * recharts reads first — follows through to that series' legend swatch and
+   * tooltip dot.
    */
   seriesSettings?: Record<string, RadarChartSeriesSettings>;
   /** Fill opacity of each radar area. */
@@ -179,15 +236,20 @@ export interface RadarChartProps
    * an area can be read as a number and not only compared to its neighbours.
    * Defaults to `false` (recharts draws no radius axis unless asked).
    *
-   * The `radiusAxisAngle` / `radiusAxisOrientation` / `radiusAxisTickCount` knobs
-   * describe that drawn scale, so they need it shown. `radiusAxisDomain` and
-   * `radiusAxisReversed` also apply while it's hidden — they scale the web.
+   * `radiusAxisAngle` and `radiusAxisOrientation` only describe the drawn scale,
+   * so they need it shown. `radiusAxisDomain`, `radiusAxisReversed` and
+   * `radiusAxisTickCount` apply while it's hidden too — the first two scale the
+   * web, and the third sets how many rings the grid draws (recharts takes the
+   * grid's concentric radii from the radius axis' ticks).
    */
   showRadiusAxis?: boolean;
   /**
    * Angle the value scale is drawn at, in degrees counter-clockwise from 3
-   * o'clock (recharts' default is `0`). Point it along a spoke — or between two
-   * — so its ticks don't sit on top of the areas.
+   * o'clock (recharts' default is `0`). Point it *between* two spokes: on a
+   * spoke, the outermost tick collides with that category's own label.
+   *
+   * The ticks sit over the areas at any angle — a radar's plot area is its
+   * areas — so this trades one overlap for none of the other.
    */
   radiusAxisAngle?: number;
   /** Which side of the scale its tick labels sit on. Defaults to `right`. */
@@ -207,9 +269,17 @@ export interface RadarChartProps
    * known maximum without displaying the ticks.
    */
   radiusAxisDomain?: 'auto' | 'fixed';
-  /** The value at the outer ring when `radiusAxisDomain` is `fixed`. */
+  /**
+   * The value at the outer ring when `radiusAxisDomain` is `fixed`. Must be
+   * positive — a `0` or negative maximum can't bound an outward-growing scale, so
+   * it falls back to the data's own top.
+   */
   radiusAxisDomainMax?: number;
-  /** Desired number of ticks on the value scale (a hint, not exact). */
+  /**
+   * Desired number of ticks on the value scale (a hint, not exact). Defaults to
+   * recharts' `5`. Also sets how many rings the grid draws, whether or not the
+   * scale itself is shown.
+   */
   radiusAxisTickCount?: number;
   /**
    * Invert the value scale — the maximum at the centre and 0 at the outer ring —
@@ -237,7 +307,11 @@ export interface RadarChartProps
   innerRadius?: number | string;
   /** Outer radius of the web, in px or a percentage of the available radius. Defaults to `80%`. */
   outerRadius?: number | string;
-  /** Plot-area margin, in px. Omit to use recharts' default (5 on every side). */
+  /**
+   * Plot-area margin, in px. Omit it entirely to use recharts' default (5 on
+   * every side) — passing the object replaces all four, and recharts fills the
+   * sides you leave out with `0`, not with `5`. Name every side you want.
+   */
   margin?: { top?: number; right?: number; bottom?: number; left?: number };
   showTooltip?: boolean;
   showLegend?: boolean;
@@ -245,9 +319,9 @@ export interface RadarChartProps
   legendPosition?: 'top' | 'bottom';
   /**
    * Replace the default tooltip. Pass a configured `ChartTooltipContent`
-   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` /
-   * `indicator` — to customize formatting, per-series rows, or extra fields
-   * without composing recharts yourself. Ignored when `showTooltip` is false.
+   * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
+   * to customize formatting, per-series rows, or extra fields without composing
+   * recharts yourself. Ignored when `showTooltip` is false.
    */
   tooltipContent?: React.ComponentProps<typeof ChartTooltip>['content'];
   /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
@@ -403,22 +477,23 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
               />
             )}
             {dataKeys.map((key) => {
-              const settings = seriesSettings?.[key];
-              const fill = settings?.color ?? `var(--color-${key})`;
-              const seriesDot = settings?.dot ?? showDots;
-              const seriesActiveDot = settings?.activeDot ?? activeDot;
+              const series = radarSeriesStyle(key, seriesSettings?.[key], {
+                fillOpacity,
+                strokeWidth,
+                showDots,
+                dotRadius,
+                activeDot,
+              });
               return (
                 <Radar
                   key={key}
                   dataKey={key}
-                  stroke={settings?.stroke ?? fill}
-                  fill={fill}
-                  fillOpacity={settings?.fillOpacity ?? fillOpacity}
-                  strokeWidth={settings?.strokeWidth ?? strokeWidth}
-                  dot={
-                    seriesDot ? { r: settings?.dotRadius ?? dotRadius } : false
-                  }
-                  activeDot={seriesActiveDot}
+                  stroke={series.stroke}
+                  fill={series.fill}
+                  fillOpacity={series.fillOpacity}
+                  strokeWidth={series.strokeWidth}
+                  dot={series.dot}
+                  activeDot={series.activeDot}
                   {...animation}
                 >
                   {showLabels && (
@@ -426,7 +501,14 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
                       dataKey={key}
                       position={radarLabelPosition}
                       formatter={toLabelFormatter(labelFormatter)}
-                      className={resolveLabelFillClass(radarLabelPosition)}
+                      // A radar area is a flat `fillOpacity`, so an `inside*`
+                      // label sits on the *surface tinted by* the series color,
+                      // not on the color itself — the white on-fill token
+                      // disappears into it in light mode. Same call as the other
+                      // translucent families (Area, the composed chart's areas).
+                      className={resolveLabelFillClass(radarLabelPosition, {
+                        translucentSeries: true,
+                      })}
                       fontSize={CHART_LABEL_FONT_SIZE}
                     />
                   )}

@@ -2,7 +2,11 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { RadarChart, radarRadiusAxisDomain } from '../radar-chart';
+import {
+  RadarChart,
+  radarRadiusAxisDomain,
+  radarSeriesStyle,
+} from '../radar-chart';
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
@@ -171,6 +175,108 @@ describe('radarRadiusAxisDomain', () => {
 
   it('fits the data at both ends under "auto"', () => {
     expect(radarRadiusAxisDomain('auto', 150)).toEqual(['auto', 'auto']);
+    expect(radarRadiusAxisDomain('auto', undefined)).toEqual(['auto', 'auto']);
+  });
+
+  // A maximum that can't bound a scale growing outward from 0 would collapse the
+  // web onto its centre (0) or invert it (negative). A computed max reaches this
+  // — `Math.max` over an empty or all-zero series is 0 — so it has to degrade to
+  // the data's own top rather than render nothing.
+  it('ignores a maximum that cannot bound the scale', () => {
+    expect(radarRadiusAxisDomain('fixed', 0)).toEqual([0, 'auto']);
+    expect(radarRadiusAxisDomain('fixed', -5)).toEqual([0, 'auto']);
+    expect(radarRadiusAxisDomain('fixed', Number.NaN)).toEqual([0, 'auto']);
+    expect(radarRadiusAxisDomain('fixed', Number.POSITIVE_INFINITY)).toEqual([
+      0,
+      'auto',
+    ]);
+  });
+});
+
+// The per-series fold is the other half of the composition that is pure, so it is
+// asserted directly: happy-dom gives recharts no layout, so a rendered <Radar>
+// never reaches the DOM and its resolved fill/stroke can only be checked here.
+describe('radarSeriesStyle', () => {
+  const defaults = {
+    fillOpacity: 0.3,
+    strokeWidth: 2,
+    showDots: false,
+    dotRadius: 3,
+    activeDot: undefined,
+  };
+
+  it('falls back to the config-injected custom property for an unnamed series', () => {
+    expect(radarSeriesStyle('alice', undefined, defaults)).toEqual({
+      fill: 'var(--color-alice)',
+      stroke: 'var(--color-alice)',
+      fillOpacity: 0.3,
+      strokeWidth: 2,
+      dot: false,
+      activeDot: undefined,
+    });
+  });
+
+  it('applies an overridden color to both the fill and the outline', () => {
+    const style = radarSeriesStyle(
+      'alice',
+      { color: 'rgb(1 2 3)' },
+      defaults
+    );
+    expect(style.fill).toBe('rgb(1 2 3)');
+    expect(style.stroke).toBe('rgb(1 2 3)');
+  });
+
+  it('keeps an explicit stroke distinct from the fill', () => {
+    const style = radarSeriesStyle(
+      'alice',
+      { color: 'rgb(1 2 3)', stroke: 'rgb(4 5 6)' },
+      defaults
+    );
+    expect(style.fill).toBe('rgb(1 2 3)');
+    expect(style.stroke).toBe('rgb(4 5 6)');
+  });
+
+  // A stroke on its own still leaves the fill on the config color — which is also
+  // why it moves the legend swatch: recharts reads a Radar's marker color from
+  // the stroke first.
+  it('leaves the fill on the config color when only the stroke is set', () => {
+    const style = radarSeriesStyle('alice', { stroke: 'rgb(4 5 6)' }, defaults);
+    expect(style.fill).toBe('var(--color-alice)');
+    expect(style.stroke).toBe('rgb(4 5 6)');
+  });
+
+  it('sizes a per-series dot, and opts one series in while the chart is off', () => {
+    expect(radarSeriesStyle('alice', { dot: true }, defaults).dot).toEqual({
+      r: 3,
+    });
+    expect(
+      radarSeriesStyle('alice', { dot: true, dotRadius: 6 }, defaults).dot
+    ).toEqual({ r: 6 });
+    expect(
+      radarSeriesStyle('alice', undefined, { ...defaults, showDots: true }).dot
+    ).toEqual({ r: 3 });
+  });
+
+  // Every override is `??`, not `||` — a deliberate falsy value has to beat a
+  // truthy chart-level one, or "outline only" and "opt this series out of the
+  // dots" are both unreachable.
+  it('honors a falsy override over a truthy chart-level value', () => {
+    const chartLevel = {
+      fillOpacity: 0.3,
+      strokeWidth: 2,
+      showDots: true,
+      dotRadius: 3,
+      activeDot: true,
+    };
+    const style = radarSeriesStyle(
+      'alice',
+      { fillOpacity: 0, strokeWidth: 0, dot: false, activeDot: false },
+      chartLevel
+    );
+    expect(style.fillOpacity).toBe(0);
+    expect(style.strokeWidth).toBe(0);
+    expect(style.dot).toBe(false);
+    expect(style.activeDot).toBe(false);
   });
 });
 

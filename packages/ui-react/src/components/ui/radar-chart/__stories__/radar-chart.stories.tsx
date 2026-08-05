@@ -255,13 +255,28 @@ export const Labels: Story = {
   },
 };
 
+// The same labels drawn over the area instead of on the surface above it. Covers
+// the translucent-fill label token: a radar's fill is a flat `fillOpacity`, so an
+// `inside*` label has to read against the *tinted surface*, not against the
+// series color — the white on-fill token would vanish here in light mode.
+export const LabelsInside: Story = {
+  args: {
+    dataKeys: ['alice'],
+    showLabels: true,
+    labelPosition: 'insideEnd',
+    labelFormatter: formatCompactNumber,
+  },
+};
+
 // The value scale, pinned to the subject maximum (150) rather than the largest
-// value in the data — so the areas read as absolute scores.
+// value in the data — so the areas read as absolute scores. The scale is angled
+// between two spokes: along one, its outermost tick lands on that category's own
+// label.
 export const RadiusAxis: Story = {
   args: {
     dataKeys: ['alice', 'bob'],
     showRadiusAxis: true,
-    radiusAxisAngle: 90,
+    radiusAxisAngle: 60,
     radiusAxisDomain: 'fixed',
     radiusAxisDomainMax: 150,
     radiusAxisTickCount: 4,
@@ -274,7 +289,7 @@ export const RadiusAxisReversed: Story = {
   args: {
     dataKeys: ['alice'],
     showRadiusAxis: true,
-    radiusAxisAngle: 90,
+    radiusAxisAngle: 60,
     radiusAxisDomain: 'fixed',
     radiusAxisDomainMax: 150,
     radiusAxisReversed: true,
@@ -311,7 +326,8 @@ export const Geometry: Story = {
 
 // Per-series overrides: one series as a heavy outline over a barely-tinted fill
 // with dots, the other recolored away from its `config` entry (which carries the
-// new color into its legend swatch too).
+// new color into its legend swatch too). `alice` keeps its `config` color, so its
+// swatch is unchanged — only a `color`/`stroke` override moves the marker.
 export const SeriesStyling: Story = {
   args: {
     dataKeys: ['alice', 'bob'],

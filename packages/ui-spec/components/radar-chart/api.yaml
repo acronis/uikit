@@ -42,8 +42,9 @@ contract:
       description: >-
         Per-series style overrides keyed by a `dataKeys` entry — `color`,
         `stroke`, `fillOpacity`, `strokeWidth`, `dot`, `dotRadius`, `activeDot`.
-        Unplotted keys are ignored. An overridden color carries into that series'
-        legend swatch and tooltip indicator.
+        Unplotted keys are ignored. An overridden `color` — or `stroke`, which
+        the renderer reads first — carries into that series' legend swatch and
+        tooltip dot.
     - name: fillOpacity
       type: number
       required: false
@@ -125,12 +126,19 @@ contract:
       default: 'false'
       description: >-
         Render the value scale — a radial axis of ticks from the centre outward,
-        so an area reads as a number and not only as a comparison.
+        so an area reads as a number and not only as a comparison. Only
+        `radiusAxisAngle` and `radiusAxisOrientation` need it shown;
+        `radiusAxisDomain`, `radiusAxisReversed` and `radiusAxisTickCount` apply
+        either way.
     - name: radiusAxisAngle
       type: number
       required: false
       default: '0'
-      description: Angle the value scale is drawn at, in degrees counter-clockwise from 3 o'clock.
+      description: >-
+        Angle the value scale is drawn at, in degrees counter-clockwise from 3
+        o'clock. Point it between two spokes — along one, its outermost tick
+        collides with that category's own label. The ticks sit over the areas at
+        any angle.
     - name: radiusAxisOrientation
       type: "'left' | 'right' | 'middle'"
       required: false
@@ -148,12 +156,17 @@ contract:
     - name: radiusAxisDomainMax
       type: number
       required: false
-      description: The value at the outer ring when `radiusAxisDomain` is `fixed`.
+      description: >-
+        The value at the outer ring when `radiusAxisDomain` is `fixed`. Must be
+        positive — a `0` or negative maximum cannot bound a scale that grows
+        outward from 0, so it falls back to the data's own top.
     - name: radiusAxisTickCount
       type: number
       required: false
       default: '5'
-      description: Desired number of ticks on the value scale (a hint, not exact).
+      description: >-
+        Desired number of ticks on the value scale (a hint, not exact). Also sets
+        how many rings the grid draws, whether or not the scale is shown.
     - name: radiusAxisReversed
       type: boolean
       required: false
@@ -198,7 +211,9 @@ contract:
     - name: margin
       type: '{ top?: number; right?: number; bottom?: number; left?: number }'
       required: false
-      description: Plot-area margin, in px.
+      description: >-
+        Plot-area margin, in px. Passing the object replaces all four sides; a
+        side left out is `0`, not the default `5`, so name every side.
     - name: showTooltip
       type: boolean
       required: false

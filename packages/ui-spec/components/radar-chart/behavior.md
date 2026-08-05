@@ -58,6 +58,14 @@ Scenario: Inverted scale
 ```
 
 ```gherkin
+Scenario: Unusable fixed maximum
+  Given radiusAxisDomain is "fixed"
+  And radiusAxisDomainMax is zero, negative, or not a finite number
+  Then the outer ring falls back to the data's own largest value
+  And the web is neither collapsed onto its centre nor inverted
+```
+
+```gherkin
 Scenario: Grid spokes
   Given radialLines is false
   Then the web keeps its concentric rings and drops the radial spokes
@@ -74,8 +82,10 @@ Scenario: Dots
 Scenario: Per-series overrides
   Given seriesSettings has an entry keyed by a plotted dataKeys entry
   Then that series uses the entry's color/stroke/opacity/width/dots
+  And a color or stroke override also moves that series' legend swatch and tooltip dot
   And every other series keeps the chart-level values
   And an entry for a key that is not plotted is ignored
+  And a deliberately falsy override (zero opacity or width, dots off) wins over the chart-level value
 ```
 
 ```gherkin
@@ -130,7 +140,9 @@ Scenario: Reduced motion
   to bridge — a series missing a value renders as a spike into the middle, which
   reads as a zero. Every plotted series therefore needs a value in every row;
   drop the whole category row instead.
-- **A per-series legend marker shape.** The shared `ChartLegendContent` paints one
-  uniform swatch per series, so a series' recharts `legendType` has no visible
-  effect here. It belongs with the legend-marker rework of the shared `Chart`
-  primitives, which is where the marker becomes a function of the series.
+- **A per-series legend marker shape.** The shared `ChartLegendContent` now picks
+  a marker from the series' `legendType` (swatch / line / dashed), so a per-series
+  shape became expressible once that rework landed. It stays unexposed here on
+  purpose: a radar paints filled areas, so every series wants the swatch, and
+  choosing per series is a design call across the whole chart suite rather than
+  one component's prop.
