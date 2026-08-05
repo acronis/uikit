@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -38,7 +39,12 @@ import {
 describe('usePortalContainer', () => {
   function Spy() {
     const container = usePortalContainer();
-    const label = container === undefined ? 'undefined' : container === null ? 'null' : 'element';
+    const label =
+      container === undefined
+        ? 'undefined'
+        : container === null
+          ? 'null'
+          : 'element';
     return <span data-testid="spy">{label}</span>;
   }
 
@@ -57,13 +63,15 @@ describe('usePortalContainer', () => {
     expect(screen.getByTestId('spy').textContent).toBe('element');
   });
 
-  it('allows null container (portals go to document.body)', () => {
+  it('passes a null container through unchanged', () => {
     render(
       <PortalContainerProvider container={null}>
         <Spy />
       </PortalContainerProvider>
     );
-    // null is a valid value — Base UI treats null as document.body
+    // The hook is a plain pass-through: null reaches the component as null.
+    // What that does to an actual portal is asserted below — it is NOT a
+    // fallback to document.body.
     expect(screen.getByTestId('spy').textContent).toBe('null');
   });
 });
@@ -182,5 +190,58 @@ describe('PortalContainerProvider integration', () => {
     await screen.findByText('Tip text');
     expect(container.textContent).toContain('Tip text');
     document.body.removeChild(container);
+  });
+});
+
+// ── A null container is not a fallback ──────────────────────────────────────
+
+describe('null container', () => {
+  // A null container renders NO popup — it does not fall back to
+  // document.body. This is why the container must be held in state: a plain
+  // `useRef` leaves the provider with the `null` it saw on the first render,
+  // and the overlay then silently never opens. See the Shadow DOM guide.
+  it('renders no popup at all', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <PortalContainerProvider container={null}>
+        <Popover>
+          <PopoverTrigger>Open</PopoverTrigger>
+          <PopoverContent>Popup content</PopoverContent>
+        </Popover>
+      </PortalContainerProvider>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+
+    expect(screen.queryByText('Popup content')).toBeNull();
+    expect(document.body.textContent).not.toContain('Popup content');
+  });
+
+  it('renders the popup once the container arrives via state', async () => {
+    const user = userEvent.setup();
+
+    // The documented pattern: a callback ref that is the state setter, so the
+    // provider re-renders with the real element.
+    function App() {
+      const [mount, setMount] = useState<HTMLElement | null>(null);
+      return (
+        <div ref={setMount} data-testid="mount">
+          <PortalContainerProvider container={mount}>
+            <Popover>
+              <PopoverTrigger>Open</PopoverTrigger>
+              <PopoverContent>Popup content</PopoverContent>
+            </Popover>
+          </PortalContainerProvider>
+        </div>
+      );
+    }
+
+    render(<App />);
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+
+    expect(
+      screen.getByTestId('mount').contains(screen.getByText('Popup content'))
+    ).toBe(true);
   });
 });
