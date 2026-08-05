@@ -6,7 +6,7 @@ schematic: |
     track: <div role="img">                          (the bar; aria-label summary)
       segments: one <div> per datum (width ∝ value, filled per key)
         tooltip-content: <div>                        (hover card, per segment)
-    legend: <ul> color dot + label + value + %        (optional, showLegend)
+    legend: <ul> color swatch + label + value + %     (optional, showLegend)
 
 root:
   element: div
@@ -15,7 +15,7 @@ root:
     CategoryBar has one CVA axis (`size`), applied to the track's height. It
     carries a `data-chart` scope and renders the shared `ChartStyle`, which turns
     each `config` entry into a `--color-<key>` custom property (so a per-theme
-    `theme` entry resolves like a flat `color`); segments and legend dots
+    `theme` entry resolves like a flat `color`); segments and legend swatches
     reference those properties rather than the config value directly.
 
 parts:
@@ -41,7 +41,7 @@ parts:
   - id: legend
     element: ul
     description: >-
-      Optional legend below the bar — a color dot + label per segment (from
+      Optional legend below the bar — a color swatch + label per segment (from
       `config`), plus the segment's value and its share of the total as a
       percentage. Rendered when `showLegend`.
 

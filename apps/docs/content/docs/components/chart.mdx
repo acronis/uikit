@@ -75,12 +75,6 @@ const config = {
 } satisfies ChartConfig;
 ```
 
-The tooltip indicator can be a `dot` (default), `line`, or `dashed`:
-
-```tsx
-<ChartTooltip content={<ChartTooltipContent indicator="line" />} />
-```
-
 ## Formatting and hiding axes
 
 Every cartesian chart — `BarChart`, `LineChart`, `AreaChart`, `ComposedChart`,
@@ -172,9 +166,16 @@ carries the unit suffix.
   name="ChartContainerProps"
 />
 
+`ChartLegendContent` picks its marker from the series' recharts legend type:
+stroke-drawn series (`<Line>` and `<Area>`) get a line marker — dashed when the
+series sets a `strokeDasharray` — and everything else gets a square swatch. A
+series that paints a stroke but should read as one swatch (as in
+`ConfidenceCone`) sets `legendType="rect"`. Tooltip rows keep their round dot
+either way.
+
 `ChartTooltipContent` and `ChartLegendContent` are passed to recharts' `Tooltip` /
 `Legend` via their `content` prop. They accept the display options
-`hideLabel`, `hideIndicator`, `indicator` (`'dot' | 'line' | 'dashed'`),
-`hideIcon`, `nameKey`, and `labelKey` on top of recharts' content props.
+`hideLabel`, `hideIndicator`, `hideIcon`, `nameKey`, and `labelKey` on top of
+recharts' content props.
 `ChartTooltip` and `ChartLegend` are direct re-exports of recharts' `Tooltip` and
 `Legend`.

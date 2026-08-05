@@ -377,7 +377,7 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
             {nodeStats.map(({ name, value, pct }) => (
               <div key={name} className="flex items-center gap-2">
                 <span
-                  className="size-2.5 shrink-0 rounded-full"
+                  className="size-2.5 shrink-0 rounded-sm"
                   style={{ backgroundColor: `var(--color-${name})` }}
                 />
                 <span className="truncate text-muted-foreground">

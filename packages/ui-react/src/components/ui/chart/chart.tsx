@@ -33,13 +33,19 @@ type ChartContextProps = {
   config: ChartConfig;
 };
 
+/**
+ * How a series is marked in the legend. A filled series reads as a square
+ * swatch; a stroke-drawn one (line, area) as the line it paints — dashed when
+ * the stroke is. The tooltip always dots its rows instead.
+ */
+type ChartSeriesMarker = 'swatch' | 'line' | 'dashed';
+
 export type ChartTooltipContentProps = Partial<
   TooltipContentProps<ValueType, NameType>
 > & {
   className?: string;
   hideLabel?: boolean;
   hideIndicator?: boolean;
-  indicator?: 'line' | 'dot' | 'dashed';
   nameKey?: string;
   labelKey?: string;
   labelFormatter?: (
@@ -149,6 +155,38 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   );
 };
 
+/** The marker drawn next to a series' name in the legend. */
+function SeriesMarker({
+  marker,
+  color,
+  className,
+}: {
+  marker: ChartSeriesMarker;
+  color?: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        'shrink-0',
+        marker === 'swatch'
+          ? 'h-2.5 w-2.5 rounded-sm'
+          : 'h-[3px] w-4 rounded-full',
+        className
+      )}
+      style={
+        marker === 'dashed'
+          ? {
+              // A dashed stroke can't be drawn with a background color, so the
+              // dash pattern is painted as a gradient.
+              backgroundImage: `repeating-linear-gradient(90deg, ${color} 0 4px, transparent 4px 7px)`,
+            }
+          : { backgroundColor: color }
+      }
+    />
+  );
+}
+
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
 /** The `content` a caller passes to override the default tooltip (recharts' `Tooltip['content']`). */
@@ -161,7 +199,6 @@ function ChartTooltipContent({
   payload,
   label,
   className,
-  indicator = 'dot',
   hideLabel = false,
   hideIndicator = false,
   labelFormatter,
@@ -217,8 +254,6 @@ function ChartTooltipContent({
     return null;
   }
 
-  const nestLabel = payload.length === 1 && indicator !== 'dot';
-
   return (
     <div
       className={cn(
@@ -226,7 +261,7 @@ function ChartTooltipContent({
         className
       )}
     >
-      {!nestLabel ? tooltipLabel : null}
+      {tooltipLabel}
       <div className="grid gap-1.5">
         {payload.map((item, index) => {
           const key = `${nameKey || item.name || item.dataKey || 'value'}`;
@@ -236,10 +271,7 @@ function ChartTooltipContent({
           return (
             <div
               key={key}
-              className={cn(
-                'flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground',
-                indicator === 'dot' && 'items-center'
-              )}
+              className="flex w-full flex-wrap items-center gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground"
             >
               {formatter && item?.value !== undefined && item.name ? (
                 formatter(item.value, item.name, item, index, payload)
@@ -249,38 +281,18 @@ function ChartTooltipContent({
                     <itemConfig.icon />
                   ) : (
                     !hideIndicator && (
+                      // A row is always dotted, whatever marker the legend
+                      // gives that series.
                       <div
-                        className={cn(
-                          'shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)',
-                          {
-                            'h-2.5 w-2.5': indicator === 'dot',
-                            'h-4 w-1': indicator === 'line',
-                            'h-4 w-0 border-[1.5px] border-dashed bg-transparent':
-                              indicator === 'dashed',
-                            'my-0.5': nestLabel && indicator === 'dashed',
-                          }
-                        )}
-                        style={
-                          {
-                            '--color-bg': indicatorColor,
-                            '--color-border': indicatorColor,
-                          } as React.CSSProperties
-                        }
+                        className="h-2.5 w-2.5 shrink-0 rounded-full"
+                        style={{ backgroundColor: indicatorColor }}
                       />
                     )
                   )}
-                  <div
-                    className={cn(
-                      'flex flex-1 justify-between leading-none',
-                      nestLabel ? 'items-end' : 'items-center'
-                    )}
-                  >
-                    <div className="grid gap-1.5">
-                      {nestLabel ? tooltipLabel : null}
-                      <span className="text-muted-foreground">
-                        {itemConfig?.label || item.name}
-                      </span>
-                    </div>
+                  <div className="flex flex-1 items-center justify-between leading-none">
+                    <span className="text-muted-foreground">
+                      {itemConfig?.label || item.name}
+                    </span>
                     {item.value != null && (
                       <span className="font-medium tabular-nums text-foreground">
                         {item.value.toLocaleString()}
@@ -315,7 +327,7 @@ function ChartLegendContent({
   return (
     <div
       className={cn(
-        'flex items-center justify-center gap-4',
+        'flex items-center justify-start gap-4',
         verticalAlign === 'top' ? 'pb-3' : 'pt-3',
         className
       )}
@@ -323,6 +335,13 @@ function ChartLegendContent({
       {payload.map((item) => {
         const key = `${nameKey || item.dataKey || 'value'}`;
         const itemConfig = getPayloadConfigFromPayload(config, item, key);
+        // recharts types stroke-drawn series (<Line>, <Area>) as `line`; a chart
+        // that wants a swatch instead sets the series' `legendType="rect"`.
+        const dashArray = (
+          item.payload as { strokeDasharray?: string | number } | undefined
+        )?.strokeDasharray;
+        const marker: ChartSeriesMarker =
+          item.type !== 'line' ? 'swatch' : dashArray ? 'dashed' : 'line';
 
         return (
           <div
@@ -334,12 +353,7 @@ function ChartLegendContent({
             {itemConfig?.icon && !hideIcon ? (
               <itemConfig.icon />
             ) : (
-              <div
-                className="h-2 w-2 shrink-0 rounded-[2px]"
-                style={{
-                  backgroundColor: item.color,
-                }}
-              />
+              <SeriesMarker marker={marker} color={item.color} />
             )}
             {itemConfig?.label}
           </div>

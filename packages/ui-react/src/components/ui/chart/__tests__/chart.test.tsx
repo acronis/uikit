@@ -1,9 +1,10 @@
 import { BarChart } from 'recharts';
 import { render } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import {
   ChartContainer,
+  ChartLegendContent,
   ChartTooltipContent,
   type ChartConfig,
 } from '../index';
@@ -12,6 +13,33 @@ const config = {
   desktop: { label: 'Desktop', color: 'rgb(23 99 207)' },
   mobile: { label: 'Mobile', color: 'rgb(220 53 69)' },
 } satisfies ChartConfig;
+
+beforeAll(() => {
+  // happy-dom's ResizeObserver never reports a size, so recharts'
+  // ResponsiveContainer renders nothing and its children never mount.
+  class SizedResizeObserver {
+    constructor(private readonly callback: ResizeObserverCallback) {}
+    observe(target: Element) {
+      this.callback(
+        [
+          {
+            target,
+            contentRect: { width: 400, height: 300 },
+          } as unknown as ResizeObserverEntry,
+        ],
+        this as unknown as ResizeObserver
+      );
+    }
+    unobserve() {}
+    disconnect() {}
+  }
+  globalThis.ResizeObserver =
+    SizedResizeObserver as unknown as typeof ResizeObserver;
+});
+
+// The fields recharts always puts on a tooltip row; the content reads
+// `payload.fill` for the marker color.
+const ROW = { graphicalItemId: 'item-1', payload: {} };
 
 describe('Chart', () => {
   it('renders the chart wrapper with a stable data-chart id', () => {
@@ -59,6 +87,82 @@ describe('Chart', () => {
       </ChartContainer>
     );
     expect(container.querySelector('style')).not.toBeInTheDocument();
+  });
+
+  it('renders a start-aligned legend with 10px rounded-sm swatches', () => {
+    const { container } = render(
+      <ChartContainer config={config} id="usage">
+        <ChartLegendContent
+          payload={[
+            { value: 'Desktop', dataKey: 'desktop', color: 'rgb(23 99 207)' },
+            { value: 'Mobile', dataKey: 'mobile', color: 'rgb(220 53 69)' },
+          ]}
+        />
+      </ChartContainer>
+    );
+    const swatches = container.querySelectorAll('.rounded-sm');
+    expect(swatches).toHaveLength(2);
+    swatches.forEach((swatch) => {
+      expect(swatch).toHaveClass('h-2.5', 'w-2.5');
+    });
+    expect(container.querySelector('.rounded-full')).not.toBeInTheDocument();
+    expect(swatches[0]?.parentElement?.parentElement).toHaveClass(
+      'justify-start'
+    );
+  });
+
+  it('renders a line marker for stroke series and dashes it from strokeDasharray', () => {
+    const { container } = render(
+      <ChartContainer config={config} id="usage">
+        <ChartLegendContent
+          payload={[
+            {
+              value: 'Desktop',
+              dataKey: 'desktop',
+              color: 'var(--color-desktop)',
+              type: 'line',
+            },
+            {
+              value: 'Mobile',
+              dataKey: 'mobile',
+              color: 'var(--color-mobile)',
+              type: 'line',
+              payload: { strokeDasharray: '5 5' },
+            },
+          ]}
+        />
+      </ChartContainer>
+    );
+    const markers =
+      container.querySelectorAll<HTMLElement>('.rounded-full.w-4');
+    expect(markers).toHaveLength(2);
+    expect(markers[0]?.style.backgroundColor).toBe('var(--color-desktop)');
+    expect(markers[0]?.style.backgroundImage).toBe('');
+    expect(markers[1]?.style.backgroundColor).toBe('');
+    expect(markers[1]?.style.backgroundImage).toBe(
+      'repeating-linear-gradient(90deg, var(--color-mobile) 0 4px, transparent 4px 7px)'
+    );
+    // A stroke series never falls back to the square swatch.
+    expect(container.querySelector('.rounded-sm')).not.toBeInTheDocument();
+  });
+
+  it('dots every tooltip row, whatever marker the legend gives the series', () => {
+    const { container } = render(
+      <ChartContainer config={config} id="usage">
+        <ChartTooltipContent
+          active
+          payload={[
+            { ...ROW, dataKey: 'desktop', name: 'desktop', value: 12 },
+            { ...ROW, dataKey: 'mobile', name: 'mobile', value: 8 },
+          ]}
+        />
+      </ChartContainer>
+    );
+    const dots = container.querySelectorAll('.rounded-full');
+    expect(dots).toHaveLength(2);
+    dots.forEach((dot) => expect(dot).toHaveClass('h-2.5', 'w-2.5'));
+    // The legend's square swatch never leaks into the tooltip.
+    expect(container.querySelector('.rounded-sm')).not.toBeInTheDocument();
   });
 
   it('throws when a content part is used outside a ChartContainer', () => {

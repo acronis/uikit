@@ -8,7 +8,7 @@ schematic: |
         nodes:   one bar per node (filled per name) + optional side label
         links:   one ribbon per link (width ∝ value, tinted per target)
         tooltip: <ChartTooltip> → tooltip-content   (hover card)
-    legend: <div> color dot + label per node        (optional, showLegend)
+    legend: <div> color swatch + label per node     (optional, showLegend)
 
 root:
   element: div
@@ -50,7 +50,7 @@ parts:
   - id: legend
     element: div
     description: >-
-      Optional legend below the chart — a color dot + label per node (from
+      Optional legend below the chart — a color swatch + label per node (from
       `config`), plus the node's computed value and share of the largest node.
       Rendered when `showLegend`.
 

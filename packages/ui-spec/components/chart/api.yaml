@@ -19,11 +19,6 @@ contract:
       description: >-
         Whether the tooltip is showing (set by recharts on hover/focus). Drives
         ChartTooltipContent rendering.
-    - name: indicator
-      type: "'dot' | 'line' | 'dashed'"
-      required: false
-      default: "'dot'"
-      description: Shape of the per-series color indicator in the tooltip.
     - name: hideLabel
       type: boolean
       required: false
@@ -33,7 +28,7 @@ contract:
       type: boolean
       required: false
       default: 'false'
-      description: Hide the per-series color indicator in the tooltip.
+      description: Hide the per-series color dot in the tooltip.
     - name: hideIcon
       type: boolean
       required: false
