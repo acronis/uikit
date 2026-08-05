@@ -135,12 +135,20 @@ unset when a metric can legitimately be zero.
 
 The segments up to the value take the arc's color and the rest the muted track, so
 `showBackground` plays no part. The notches are geometry rather than data rows,
-which is why the arc labels and the legend are suppressed — put the reading in
-`centerLabel`. The tooltip stays and reports the metric (with the `valueDomain`
-maximum when there is one) wherever on the ring it's hovered.
+which is why the arc labels and the legend are suppressed — so `centerLabel` is
+the chart's only always-visible reading here, not decoration. Give it the value
+and its scale. The tooltip stays and reports the metric (with the `valueDomain`
+maximum when there is one) wherever on the ring it's hovered, but a hover-only
+tooltip can't be the only place a value exists.
 
-Segments only apply to a **single-value** gauge: with more than one row, or with
-`dataKeys`, the chart renders its normal concentric arcs.
+Segments only apply to a **single-value** gauge. Anything else falls back to the
+normal concentric arcs, legend included, rather than erroring: more than one row,
+`dataKeys` set, fewer than two segments, or a `dataKey` value that isn't a number
+(a stringified `"29"` off an API).
+
+A `valueDomain` that can't place a value — no span (`[n, n]`) or inverted
+(`[max, min]`) — draws the ring as all track. A gauge that can't read its scale
+reports no progress rather than guessing at one.
 
 ## Multi-metric
 

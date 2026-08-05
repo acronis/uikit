@@ -1,11 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   Cell,
+  PolarAngleAxis,
   RadialBar,
   RadialBarChart as RechartsRadialBarChart,
 } from 'recharts';
 
-import { RadialBarChart } from '../radial-bar-chart';
+import {
+  RadialBarChart,
+  RadialBarChartSegmentedTooltipContent,
+  radialBarChartBandName,
+  radialBarChartSegmentFill,
+  radialBarChartSegments,
+} from '../radial-bar-chart';
 import {
   ChartContainer,
   ChartTooltip,
@@ -298,29 +305,160 @@ export const MultiMetric: Story = {
   },
 };
 
+// The tooltip is hover-only, so the multi-metric header — which names the band
+// rather than recharts' bare radius-axis index — never lands in a normal
+// story's baseline. Same raw-composition trick as `TooltipOpen`.
+export const MultiMetricTooltipOpen: Story = {
+  render: () => (
+    <ChartContainer config={metricConfig} className="h-[260px] w-[380px]">
+      <RechartsRadialBarChart
+        data={metricData}
+        innerRadius={70}
+        outerRadius={140}
+        startAngle={180}
+        endAngle={0}
+        cy={190}
+        barSize={20}
+      >
+        <PolarAngleAxis
+          type="number"
+          domain={[0, 100]}
+          tick={false}
+          axisLine={false}
+        />
+        <ChartTooltip
+          defaultIndex={0}
+          active
+          content={
+            <ChartTooltipContent
+              labelFormatter={(_, payload) =>
+                radialBarChartBandName(
+                  payload?.[0]?.payload as
+                    | Record<string, string | number>
+                    | undefined,
+                  'tier'
+                )
+              }
+            />
+          }
+        />
+        {(['used', 'quota'] as const).map((key) => (
+          <RadialBar
+            key={key}
+            dataKey={key}
+            fill={`var(--color-${key})`}
+            background
+            cornerRadius={4}
+            isAnimationActive={false}
+          />
+        ))}
+      </RechartsRadialBarChart>
+    </ChartContainer>
+  ),
+};
+
 // The segmented gauge: one metric cut into notched segments, filled up to its
 // value, with the readout in the ring. The unreached segments are the track, so
 // `showBackground` plays no part, and the legend is suppressed — the pieces are
 // geometry, not data rows. Hovering any of them reads the metric and its maximum.
+//
+// `nameKey` values become part of a custom-property name, so they stay CSS-safe —
+// the human-readable copy lives in `config.label` / `centerLabel`.
+const segmentedRow = { criteria: 'criteria', value: 29 };
+
+const segmentedConfig = {
+  criteria: {
+    label: 'Criteria met',
+    color: 'var(--ui-background-brand-secondary)',
+  },
+} satisfies ChartConfig;
+
+const SEGMENTED_GEOMETRY = {
+  valueDomain: [0, 38] as [number, number],
+  segments: 8,
+  segmentGap: 4,
+  innerRadius: 88,
+  outerRadius: 120,
+};
+
 export const SegmentedGauge: Story = {
   args: {
-    // `nameKey` values become part of a custom-property name, so they stay
-    // CSS-safe — the human-readable copy lives in `config.label` / `centerLabel`.
-    data: [{ criteria: 'criteria', value: 29 }],
-    config: {
-      criteria: {
-        label: 'Criteria met',
-        color: 'var(--ui-background-brand-secondary)',
-      },
-    },
+    data: [segmentedRow],
+    config: segmentedConfig,
     dataKey: 'value',
     nameKey: 'criteria',
-    valueDomain: [0, 38],
-    segments: 8,
-    segmentGap: 4,
-    innerRadius: 88,
-    outerRadius: 120,
+    ...SEGMENTED_GEOMETRY,
     centerLabel: { value: 29, label: '/ 38 criteria met' },
+  },
+};
+
+// A segmented ring's series are geometry, so its tooltip rebuilds the reading
+// from the data row ("Criteria met — 29 / 38") instead of naming the hovered
+// piece. That's a whole custom row, and it only exists on hover — so it needs its
+// own forced-open baseline.
+//
+// The ring is assembled from the same exported helpers the component uses
+// (`radialBarChartSegments` + `radialBarChartSegmentFill` +
+// `RadialBarChartSegmentedTooltipContent`), so this story can't drift away from
+// the real rendering the way a hand-copied ring would.
+export const SegmentedGaugeTooltipOpen: Story = {
+  render: () => {
+    const pieces = radialBarChartSegments({
+      value: segmentedRow.value,
+      domain: SEGMENTED_GEOMETRY.valueDomain,
+      segments: SEGMENTED_GEOMETRY.segments,
+      gap: SEGMENTED_GEOMETRY.segmentGap,
+      sweep: 360,
+      closed: true,
+    });
+    const row = {
+      ...segmentedRow,
+      ...Object.fromEntries(pieces.map((piece) => [piece.key, piece.degrees])),
+    };
+
+    return (
+      <ChartContainer config={segmentedConfig} className="h-[360px] w-[360px]">
+        <RechartsRadialBarChart
+          data={[row]}
+          innerRadius={SEGMENTED_GEOMETRY.innerRadius}
+          outerRadius={SEGMENTED_GEOMETRY.outerRadius}
+          startAngle={90}
+          endAngle={-270}
+        >
+          <PolarAngleAxis
+            type="number"
+            domain={[0, 360]}
+            tick={false}
+            axisLine={false}
+          />
+          <ChartTooltip
+            defaultIndex={0}
+            active
+            cursor={false}
+            content={
+              <RadialBarChartSegmentedTooltipContent
+                config={segmentedConfig}
+                row={row}
+                nameKey="criteria"
+                dataKey="value"
+                domainMax={SEGMENTED_GEOMETRY.valueDomain[1]}
+              />
+            }
+          />
+          {pieces.map((piece) => (
+            <RadialBar
+              key={piece.key}
+              dataKey={piece.key}
+              stackId="segments"
+              name="criteria"
+              fill={radialBarChartSegmentFill(piece.kind, 'criteria')}
+              cornerRadius={4}
+              isAnimationActive={false}
+            />
+          ))}
+        </RechartsRadialBarChart>
+      </ChartContainer>
+    );
   },
 };
 

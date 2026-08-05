@@ -71,8 +71,17 @@ Scenario: Segmented gauge
 ```gherkin
 Scenario: Segments only apply to a single-value gauge
   Given segments is set
-  But data holds more than one row, or dataKeys is set
-  Then the chart renders its normal concentric arcs and ignores segments
+  But data holds more than one row, or dataKeys is set,
+    or segments is fewer than two, or the dataKey value is not a number
+  Then the chart renders its normal concentric arcs, legend included,
+    and ignores segments
+```
+
+```gherkin
+Scenario: A domain that cannot place a value
+  Given segments and a valueDomain with no span ([n, n]) or an inverted one
+  Then the ring renders as all track and no value is claimed
+  Because a gauge that cannot read its scale must not report progress
 ```
 
 ```gherkin

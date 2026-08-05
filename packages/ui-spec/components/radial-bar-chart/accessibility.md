@@ -8,9 +8,14 @@
   same numbers — and give the chart an accessible name (`aria-label` /
   `aria-labelledby` referencing a visible heading). The wrapper forwards native
   `div` attributes, so `aria-*` pass through.
-- Do **not** rely on color alone to distinguish arcs. Keep `showLegend` (or the
-  tooltip) visible so each color is paired with a text label — the radial arcs
-  carry no inline labels of their own.
+- Do **not** rely on color alone to distinguish arcs. Keep `showLegend` (or
+  `showLabels`) on so each color is paired with a text label — the radial arcs
+  carry none of their own. The tooltip does **not** count as that pairing: it is
+  hover/focus-only, so it can't be the only place a value exists.
+- A **segmented gauge** (`segments`) suppresses both the legend and the arc
+  labels unconditionally — its ring is geometry, not data rows. `centerLabel` is
+  therefore not decorative there but the chart's only always-visible reading;
+  give it the value and its scale (`29`, `/ 38 criteria met`).
 - The chrome (tooltip, legend) and the muted background track resolve to semantic
   `--ui-*` tokens that meet contrast in light and dark. **Arc colors are
   caller-supplied** via `config` — pick values that meet 3:1 against the surface

@@ -109,10 +109,13 @@ contract:
       required: false
       description: >-
         Draw a single-value gauge's ring as this many equal segments, notched
-        apart. Single row + single metric only, and needs valueDomain. The ring is
-        then synthetic geometry, so the arc labels and the legend are suppressed
-        and showBackground is redundant (the unreached segments are the track);
-        the tooltip reads the metric wherever the ring is hovered.
+        apart. Needs valueDomain, and applies only to a single-value gauge:
+        anything else — more than one row, dataKeys set, fewer than two segments,
+        or a dataKey value that is not a number — falls back to the normal
+        concentric arcs (legend included) rather than erroring. The ring is then
+        synthetic geometry, so the arc labels and the legend are suppressed and
+        showBackground is redundant (the unreached segments are the track); the
+        tooltip reads the metric wherever the ring is hovered.
     - name: segmentGap
       type: number
       required: false

@@ -120,12 +120,14 @@ export function radialBarChartSegments(options: {
   const segmentDegrees = (sweep - gap * gapCount) / segments;
   const [min, max] = domain;
   const span = max - min;
+  // A domain with no span (`[n, n]`) or an inverted one (`[max, min]`) cannot
+  // place a value on the ring at all, so there is no fraction to draw and the
+  // ring stays empty. It deliberately does not fall back to comparing the value
+  // against zero: that reported a *full* ring for `{ value: 5, domain: [100,
+  // 100] }`, i.e. claimed completion the data never supported. For a gauge,
+  // under-reading a domain that says nothing is the safe direction.
   const fraction =
-    span > 0
-      ? Math.min(Math.max((value - min) / span, 0), 1)
-      : value > 0
-        ? 1
-        : 0;
+    span > 0 ? Math.min(Math.max((value - min) / span, 0), 1) : 0;
   // The value maps onto the *drawn* ring, so the gaps never eat into it.
   let remainingValue = fraction * segmentDegrees * segments;
 
@@ -146,6 +148,131 @@ export function radialBarChartSegments(options: {
     }
   }
   return pieces;
+}
+
+/**
+ * Fill for one piece of a segmented gauge's ring. Exported for unit tests and so
+ * the forced-open tooltip story can build a ring from the real implementation
+ * rather than a copy of it; not part of the package's public API.
+ */
+export function radialBarChartSegmentFill(
+  kind: RadialBarChartSegment['kind'],
+  colorName: string | number
+): string {
+  if (kind === 'gap') return 'transparent';
+  // The unreached remainder plays the part `showBackground`'s track plays on a
+  // continuous arc, so it takes the same muted surface.
+  return kind === 'track'
+    ? 'var(--ui-background-surface-secondary)'
+    : `var(--color-${colorName})`;
+}
+
+/**
+ * What a segmented gauge's tooltip reads. Exported for unit tests; not part of
+ * the package's public API.
+ *
+ * A segmented ring's series are pieces of geometry, so recharts would offer the
+ * hovered piece's own name and length ("seg-3-value", 41.2°). Hovering anywhere
+ * on the ring should read the metric instead, so the reading is rebuilt from the
+ * data row.
+ */
+export function radialBarChartSegmentedReading(options: {
+  config: ChartConfig;
+  row: RadialBarChartDatum;
+  nameKey: string;
+  dataKey: string;
+  /** The `valueDomain` maximum, when the gauge has one. */
+  domainMax?: number;
+}): { colorName: string; label: React.ReactNode; valueText: string } {
+  const { config, row, nameKey, dataKey, domainMax } = options;
+  const colorName = String(row[nameKey]);
+  const value = row[dataKey];
+  const valueText =
+    typeof value === 'number' ? value.toLocaleString() : String(value ?? '');
+  return {
+    colorName,
+    label: config[colorName]?.label ?? colorName,
+    // The gauge's scale is the other half of the reading, so a known maximum
+    // comes along: "29 / 38", not a bare "29".
+    valueText:
+      domainMax == null
+        ? valueText
+        : `${valueText} / ${domainMax.toLocaleString()}`,
+  };
+}
+
+/**
+ * The tooltip a segmented gauge shows — the same swatch/name/value layout the
+ * default `ChartTooltipContent` row uses, dot included, over the reading from
+ * `radialBarChartSegmentedReading`. Exported for the forced-open
+ * visual-regression story; not part of the package's public API.
+ *
+ * `payload` is trimmed to one row: a radial tooltip is axis-shared and collects a
+ * row from every series — two dozen identical rows for one metric.
+ * (`tooltipType="none"` only tags them, and scoping the tooltip to the hovered
+ * item instead would drop it in the corner — unlike Pie/Bar sectors, a RadialBar
+ * sector carries no tooltip coordinate.)
+ *
+ * A real component rather than a closure so it can be handed to `ChartTooltip`
+ * as an *element*: recharts `cloneElement`s an element but `createElement`s a
+ * function, and a closure rebuilt each render is a new element *type* — which
+ * remounts the tooltip on every parent render instead of updating it.
+ */
+export function RadialBarChartSegmentedTooltipContent({
+  active,
+  payload,
+  ...reading
+}: {
+  active?: boolean;
+  // Loosely typed on purpose: recharts' own payload generics are wider than the
+  // shared `ChartTooltipContentProps` accepts, and only the row count matters.
+  payload?: readonly unknown[];
+  config: ChartConfig;
+  row: RadialBarChartDatum;
+  nameKey: string;
+  dataKey: string;
+  domainMax?: number;
+}) {
+  const { colorName, label, valueText } =
+    radialBarChartSegmentedReading(reading);
+
+  return (
+    <ChartTooltipContent
+      active={active}
+      payload={payload?.slice(0, 1) as ChartTooltipContentProps['payload']}
+      hideLabel
+      formatter={() => (
+        <>
+          <div
+            className="h-2.5 w-2.5 shrink-0 rounded-full"
+            style={{ backgroundColor: `var(--color-${colorName})` }}
+          />
+          <div className="flex flex-1 items-center justify-between gap-2 leading-none">
+            <span className="text-muted-foreground">{label}</span>
+            <span className="font-medium tabular-nums text-foreground">
+              {valueText}
+            </span>
+          </div>
+        </>
+      )}
+    />
+  );
+}
+
+/**
+ * The band a multi-metric tooltip's header names. Exported for unit tests; not
+ * part of the package's public API.
+ *
+ * Each tooltip row is one metric, so the header names the band the hovered arc
+ * belongs to. recharts' own label is the radius-axis index, which reads as a
+ * bare number.
+ */
+export function radialBarChartBandName(
+  row: RadialBarChartDatum | undefined,
+  nameKey: string
+): string {
+  const name = row?.[nameKey];
+  return name == null ? '' : String(name);
 }
 
 export interface RadialBarChartProps
@@ -227,8 +354,11 @@ export interface RadialBarChartProps
   margin?: { top?: number; right?: number; bottom?: number; left?: number };
   /**
    * Draw the gauge's ring as this many equal segments, notched apart — the
-   * segmented-gauge look. Applies to a **single-value gauge** only (one row, no
-   * `dataKeys`) and needs `valueDomain` to know what a full ring means.
+   * segmented-gauge look. Applies to a **single-value gauge** only and needs
+   * `valueDomain` to know what a full ring means. Anything that isn't one — more
+   * than one row, `dataKeys` set, fewer than two segments, or a `dataKey` value
+   * that isn't a number (a stringified `"29"` off an API) — falls back to the
+   * normal concentric arcs, legend included, rather than erroring.
    *
    * The ring is then synthetic geometry rather than data rows, so the arc labels
    * and the legend are suppressed: put the readout in `centerLabel`. The tooltip
@@ -335,6 +465,12 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
       data.length === 1 &&
       typeof data[0][dataKey] === 'number';
     const seriesKeys = isMultiMetric ? dataKeys! : [dataKey];
+    // Stable across renders so the memoized legend content below keeps its
+    // identity; `seriesKeys` itself is a fresh array every render.
+    const legendKeys = React.useMemo(
+      () => (dataKeys?.length ? dataKeys : [dataKey]),
+      [dataKeys, dataKey]
+    );
     const sweep = Math.abs(endAngle - startAngle);
     const ringSegments = isSegmented
       ? radialBarChartSegments({
@@ -373,69 +509,12 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
         ]
       : seriesData;
 
-    const segmentFill = (kind: RadialBarChartSegment['kind']) => {
-      if (kind === 'gap') return 'transparent';
-      // The unreached remainder plays the part `showBackground`'s track plays on
-      // a continuous arc, so it takes the same muted surface.
-      return kind === 'track'
-        ? 'var(--ui-background-surface-secondary)'
-        : `var(--color-${data[0][nameKey]})`;
-    };
-
-    // A segmented ring's series are pieces of geometry, so recharts would offer
-    // the hovered piece's own name and length ("seg-3-value", 41.2°). Hovering
-    // anywhere on the ring should read the metric instead, so the row is rebuilt
-    // from the data: the same swatch/name/value layout as the default row.
-    //
-    // A content *function*, so the payload can be trimmed first: a radial
-    // tooltip is axis-shared, and it collects a row from every series — two dozen
-    // identical rows for one metric. (`tooltipType="none"` only tags them, and
-    // scoping the tooltip to the hovered item instead would drop it in the corner
-    // — unlike Pie/Bar sectors, a RadialBar sector carries no tooltip coordinate.)
-    const segmentedTooltipContent = ({
-      active,
-      payload,
-    }: {
-      active?: boolean;
-      // Loosely typed on purpose: recharts' own payload generics are wider than
-      // the shared `ChartTooltipContentProps` accepts, and only the row count
-      // matters here.
-      payload?: readonly unknown[];
-    }) => (
-      <ChartTooltipContent
-        active={active}
-        payload={payload?.slice(0, 1) as ChartTooltipContentProps['payload']}
-        hideLabel
-        formatter={() => {
-          const row = data[0];
-          const name = String(row[nameKey]);
-          const label = config[name]?.label ?? name;
-          const value = row[dataKey];
-          const [, domainMax] = valueDomain ?? [];
-          return (
-            <>
-              <div
-                className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
-                style={{ backgroundColor: `var(--color-${name})` }}
-              />
-              <div className="flex flex-1 items-center justify-between gap-2 leading-none">
-                <span className="text-muted-foreground">{label}</span>
-                <span className="font-medium tabular-nums text-foreground">
-                  {typeof value === 'number' ? value.toLocaleString() : value}
-                  {/* The gauge's scale is the other half of the reading, so a
-                      known maximum comes along: "29 / 38", not a bare "29". */}
-                  {domainMax != null && ` / ${domainMax.toLocaleString()}`}
-                </span>
-              </div>
-            </>
-          );
-        }}
-      />
-    );
-
     // recharts measures the radial floor in degrees, then extends the arc by
-    // `mathSign(sweep || minPointSize)` — so a positive floor grows a
-    // counter-clockwise chart's arcs backwards. Carry the sweep's own sign.
+    // `mathSign(deltaAngle || minPointSize)`, where `deltaAngle` is the *arc's*
+    // own angular length (RadialBar.js). So for a non-zero arc the floor already
+    // grows along the arc's direction whatever sign it carries; the sign only
+    // decides which way an arc of exactly zero degrees grows. Carry the sweep's
+    // sign so that one grows forwards on a counter-clockwise chart too.
     const minPointSize =
       minAngle === undefined
         ? undefined
@@ -449,17 +528,25 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
     // multi-metric payload is composed here, and passed as a content *function*:
     // recharts clones a content *element* with its own row-derived payload, which
     // would overwrite ours.
-    const legendContent = isMultiMetric ? (
+    //
+    // Memoized because recharts `createElement`s a function content — a new
+    // closure each render is a new element *type*, which would remount the whole
+    // legend on every parent render instead of updating it.
+    const multiMetricLegendContent = React.useCallback(
       () => (
         <ChartLegendContent
-          payload={seriesKeys.map((key) => ({
+          payload={legendKeys.map((key) => ({
             value: key,
             dataKey: key,
             color: `var(--color-${key})`,
             type: 'rect' as const,
           }))}
         />
-      )
+      ),
+      [legendKeys]
+    );
+    const legendContent = isMultiMetric ? (
+      multiMetricLegendContent
     ) : (
       <ChartLegendContent nameKey={nameKey} />
     );
@@ -563,19 +650,23 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
                 content={
                   tooltipContent ??
                   (isSegmented ? (
-                    segmentedTooltipContent
+                    <RadialBarChartSegmentedTooltipContent
+                      config={config}
+                      row={data[0]}
+                      nameKey={nameKey}
+                      dataKey={dataKey}
+                      domainMax={valueDomain?.[1]}
+                    />
                   ) : isMultiMetric ? (
                     <ChartTooltipContent
-                      // Each row is one metric, so the header names the band the
-                      // hovered arc belongs to. recharts' own label is the radius
-                      // axis index, which reads as a bare number.
-                      labelFormatter={(_, payload) => {
-                        const row = payload?.[0]?.payload as
-                          | RadialBarChartDatum
-                          | undefined;
-                        const name = row?.[nameKey];
-                        return name == null ? '' : String(name);
-                      }}
+                      labelFormatter={(_, payload) =>
+                        radialBarChartBandName(
+                          payload?.[0]?.payload as
+                            | RadialBarChartDatum
+                            | undefined,
+                          nameKey
+                        )
+                      }
                     />
                   ) : (
                     <ChartTooltipContent nameKey={nameKey} hideLabel />
@@ -594,7 +685,10 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
                   // The metric's name, so the hover has a row to key off at all
                   // (`ChartTooltipContent` keys its row off `name`).
                   name={String(data[0][nameKey])}
-                  fill={segmentFill(segment.kind)}
+                  fill={radialBarChartSegmentFill(
+                    segment.kind,
+                    data[0][nameKey]
+                  )}
                   cornerRadius={cornerRadius}
                   {...animation}
                 >
