@@ -176,6 +176,29 @@ export interface SecondaryYAxisProps {
   secondaryYAxisDomain?: 'auto' | 'dataMin-dataMax' | 'zero';
 }
 
+/**
+ * How a series interpolates between its points (recharts `type`), shared by the
+ * Line and Area families so both offer the same set:
+ *
+ * - `linear` — straight segments between points.
+ * - `monotone` — smoothed, without overshooting a point's value.
+ * - `natural` — a natural cubic spline; smoother than `monotone`, but it may
+ *   overshoot, so read it as a trend rather than exact values.
+ * - `basis` — a B-spline that is *not* required to pass through the points at
+ *   all; the smoothest option, and the least literal.
+ * - `step` — right-angle segments, changing value at the midpoint between two
+ *   points; `stepBefore` changes at the leading point and `stepAfter` at the
+ *   trailing one.
+ */
+export type ChartCurveType =
+  | 'linear'
+  | 'monotone'
+  | 'natural'
+  | 'basis'
+  | 'step'
+  | 'stepBefore'
+  | 'stepAfter';
+
 /** recharts animation easing curves. */
 export type ChartAnimationEasing =
   | 'ease'
@@ -396,6 +419,107 @@ export function toLabelFormatter(
   if (!formatter) return undefined;
   return (value: unknown) =>
     value == null ? '' : formatter(value as number | string);
+}
+
+/**
+ * A dashed rule across the value axis — a target, a threshold, or a series
+ * average. Shared by the cartesian charts that draw one (`BarChart`,
+ * `LineChart`, `AreaChart`) so the config reads the same on all three.
+ */
+export interface ChartReferenceLine {
+  /** Fixed position on the value axis. Takes precedence over `average`. */
+  value?: number;
+  /**
+   * Draw the line at the mean of one series (a `dataKeys` entry) or, when
+   * `true`, of every plotted series' values.
+   */
+  average?: boolean | string;
+  /** Optional caption rendered alongside the line. */
+  label?: string;
+}
+
+/**
+ * Normalize the `referenceLine` prop — a single config or an array — to a list.
+ * Every chart accepts both forms, so this keeps the render path uniform.
+ */
+export function toReferenceLineList(
+  referenceLine: ChartReferenceLine | ChartReferenceLine[] | undefined
+): ChartReferenceLine[] {
+  if (!referenceLine) return [];
+  return Array.isArray(referenceLine) ? referenceLine : [referenceLine];
+}
+
+/**
+ * Resolve a `referenceLine` config to a position on the value axis: a fixed
+ * `value` wins; otherwise the mean of the requested series (a single `dataKeys`
+ * entry, or all of them when `average` is `true`). Returns `undefined` when
+ * there is nothing to draw (no config, or no numeric values to average) — the
+ * caller skips the line rather than drawing it at 0.
+ */
+export function resolveChartReferenceValue(
+  referenceLine: ChartReferenceLine | undefined,
+  data: ReadonlyArray<Record<string, string | number | null>>,
+  dataKeys: string[]
+): number | undefined {
+  if (!referenceLine) return undefined;
+  if (typeof referenceLine.value === 'number') return referenceLine.value;
+  if (!referenceLine.average) return undefined;
+
+  const keys =
+    typeof referenceLine.average === 'string'
+      ? [referenceLine.average]
+      : dataKeys;
+  const nums = data.flatMap((row) =>
+    keys
+      .map((key) => row[key])
+      .filter((value): value is number => typeof value === 'number')
+  );
+  if (nums.length === 0) return undefined;
+  return nums.reduce((sum, n) => sum + n, 0) / nums.length;
+}
+
+/**
+ * Stroke (and caption fill) of a reference rule. The muted text token, so the
+ * rule reads as annotation rather than as another series — and stays legible in
+ * both themes without competing with the series colors.
+ */
+export const CHART_REFERENCE_LINE_STROKE =
+  'var(--ui-text-on-surface-secondary)';
+
+/** Where a reference line's caption sits relative to the rule. */
+export type ChartReferenceLabelPosition =
+  | 'top'
+  | 'insideTopLeft'
+  | 'insideTopRight'
+  | 'insideBottomLeft'
+  | 'insideBottomRight';
+
+/**
+ * The recharts props that paint a reference rule: a dashed line in the muted
+ * text token with an optional caption. Shared so the three charts that draw one
+ * can't drift on the stroke, dash pattern, or caption styling.
+ *
+ * `ifOverflow: 'extendDomain'` is part of the contract, not a detail: a target
+ * above the data maximum is exactly the case a reference line is for, and
+ * recharts' default (`discard`) would silently drop it.
+ */
+export function resolveReferenceLineProps(
+  label: string | undefined,
+  labelPosition: ChartReferenceLabelPosition = 'insideTopRight'
+) {
+  return {
+    stroke: CHART_REFERENCE_LINE_STROKE,
+    strokeDasharray: '4 4',
+    ifOverflow: 'extendDomain' as const,
+    label: label
+      ? {
+          value: label,
+          position: labelPosition,
+          fill: CHART_REFERENCE_LINE_STROKE,
+          fontSize: CHART_LABEL_FONT_SIZE,
+        }
+      : undefined,
+  };
 }
 
 /**

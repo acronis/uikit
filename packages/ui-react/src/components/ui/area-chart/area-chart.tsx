@@ -8,6 +8,7 @@ import {
   Brush,
   CartesianGrid,
   LabelList,
+  ReferenceLine,
   XAxis,
   YAxis,
 } from 'recharts';
@@ -25,13 +26,18 @@ import {
   toLabelFormatter,
   resolveLabelFillClass,
   resolveCartesianLabelPosition,
+  resolveChartReferenceValue,
+  resolveReferenceLineProps,
+  toReferenceLineList,
   CHART_LABEL_MARGIN,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type CartesianChartProps,
   type ChartAnimationProps,
   type ChartBrushProps,
+  type ChartCurveType,
   type ChartDataLabelProps,
+  type ChartReferenceLine,
   type CartesianLabelPosition,
 } from '../chart';
 
@@ -61,6 +67,35 @@ const areaChartVariants = cva('', {
   },
 });
 
+/**
+ * Style override for one series, keyed by its `dataKeys` entry. Anything left
+ * unset falls back to the chart-wide prop, so an entry only states what differs
+ * — e.g. a projection band that reads fainter than the actuals beside it.
+ */
+export interface AreaChartAreaSettings {
+  /** Stroke and fill color. Defaults to the series' `config` color. */
+  color?: string;
+  /** Width of this series' top border. Defaults to the chart's `strokeWidth`. */
+  strokeWidth?: number;
+  /** Dash this series' top border. */
+  dashed?: boolean;
+  /** Interpolation for this series only. Defaults to the chart's `curve`. */
+  curveType?: ChartCurveType;
+  /**
+   * Fill opacity for this series. Under `fill="gradient"` it scales the
+   * gradient's own alpha rather than replacing it.
+   */
+  fillOpacity?: number;
+  /** Render this series' per-point dots. Defaults to the chart's `showDots`. */
+  showDots?: boolean;
+  /** Dot radius for this series, in px. Defaults to the chart's `dotSize`. */
+  dotSize?: number;
+  /** Show/hide this series' value labels, overriding the chart's `showLabels`. */
+  showLabel?: boolean;
+  /** Position of this series' value labels. Defaults to the chart's `labelPosition`. */
+  labelPosition?: CartesianLabelPosition;
+}
+
 export interface AreaChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof areaChartVariants>,
@@ -81,15 +116,35 @@ export interface AreaChartProps
   /** Category axis key (the shared dimension across rows, e.g. `"month"`). */
   xKey: string;
   /** Interpolation between points. */
-  curve?: 'linear' | 'monotone' | 'step';
+  curve?: ChartCurveType;
   /** Stroke width of each area's top border. */
   strokeWidth?: number;
   /** Flat-fill opacity — used only when `fill="solid"` (gradient controls its own stops). */
   fillOpacity?: number;
   /** Render a dot at each data point. */
   showDots?: boolean;
+  /** Radius of each point's dot, in px. Its hover dot is 2px larger. */
+  dotSize?: number;
+  /**
+   * Enlarge the hovered point's dot. Defaults to following `showDots`, so pass
+   * it explicitly to get hover dots on a dot-less area (`showDots={false}` with
+   * `showActiveDot`) or a static-only area (dots without the hover one).
+   */
+  showActiveDot?: boolean;
   /** Bridge `null` gaps in the data instead of breaking the area. */
   connectNulls?: boolean;
+  /**
+   * Per-series style overrides, keyed by `dataKeys` entry. Series with no entry
+   * render from the chart-wide props.
+   */
+  areaSettings?: Record<string, AreaChartAreaSettings>;
+  /**
+   * One or more dashed reference/average lines on the value axis — a target, a
+   * threshold, or a series mean. Pass a single object or an array to draw
+   * several at once. On a stacked chart the value is read against the stack's
+   * axis, not one series.
+   */
+  referenceLine?: ChartReferenceLine | ChartReferenceLine[];
   showLegend?: boolean;
   /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
   labelPosition?: CartesianLabelPosition;
@@ -112,7 +167,11 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       strokeWidth = 2,
       fillOpacity = 0.4,
       showDots = false,
+      dotSize = 3,
+      showActiveDot,
       connectNulls = false,
+      areaSettings,
+      referenceLine,
       showGrid = true,
       showTooltip = true,
       showLegend = true,
@@ -154,6 +213,18 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       isStacked,
     });
     const isGradient = fill === 'gradient';
+    const referenceLines = toReferenceLineList(referenceLine);
+
+    // A series' `color` override has to reach its gradient stops too, or a
+    // gradient-filled chart would keep painting the `config` color.
+    const colorFor = (key: string) =>
+      areaSettings?.[key]?.color ?? `var(--color-${key})`;
+
+    // The plot inset is needed as soon as *any* series carries outside labels —
+    // a per-series `showLabel` counts, not only the chart-wide `showLabels`.
+    const hasLabels =
+      showLabels ||
+      Object.values(areaSettings ?? {}).some((settings) => settings.showLabel);
 
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
     // the left gutter. Passed to recharts' native `label` (themed via the
@@ -200,7 +271,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
         >
           <RechartsAreaChart
             data={data as readonly unknown[]}
-            margin={showLabels ? CHART_LABEL_MARGIN : undefined}
+            margin={hasLabels ? CHART_LABEL_MARGIN : undefined}
           >
             {isGradient && (
               <defs>
@@ -213,16 +284,8 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                     x2="0"
                     y2="1"
                   >
-                    <stop
-                      offset="5%"
-                      stopColor={`var(--color-${key})`}
-                      stopOpacity={0.8}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor={`var(--color-${key})`}
-                      stopOpacity={0.1}
-                    />
+                    <stop offset="5%" stopColor={colorFor(key)} stopOpacity={0.8} />
+                    <stop offset="95%" stopColor={colorFor(key)} stopOpacity={0.1} />
                   </linearGradient>
                 ))}
               </defs>
@@ -266,34 +329,62 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               <ChartTooltip content={tooltipContent ?? <ChartTooltipContent />} />
             )}
             {showLegend && <ChartLegend content={<ChartLegendContent />} />}
-            {dataKeys.map((key) => (
-              <Area
-                key={key}
-                type={curve ?? 'monotone'}
-                dataKey={key}
-                stackId={isStacked ? 'a' : undefined}
-                stroke={`var(--color-${key})`}
-                strokeWidth={strokeWidth}
-                fill={isGradient ? `url(#${gradientId}-${key})` : `var(--color-${key})`}
-                fillOpacity={isGradient ? 1 : fillOpacity}
-                dot={showDots ? { r: 3 } : false}
-                activeDot={showDots ? { r: 5 } : false}
-                connectNulls={connectNulls}
-                {...animation}
-              >
-                {showLabels && (
-                  <LabelList
-                    dataKey={key}
-                    position={areaLabelPosition}
-                    formatter={toLabelFormatter(labelFormatter)}
-                    className={resolveLabelFillClass(areaLabelPosition, {
-                      translucentSeries: true,
-                    })}
-                    fontSize={CHART_LABEL_FONT_SIZE}
-                  />
-                )}
-              </Area>
-            ))}
+            {dataKeys.map((key) => {
+              const settings = areaSettings?.[key];
+              const seriesDots = settings?.showDots ?? showDots;
+              const dotRadius = settings?.dotSize ?? dotSize;
+              // The hover dot follows the static dots unless asked otherwise, so
+              // a chart that sets neither renders exactly as before.
+              const activeDot = showActiveDot ?? seriesDots;
+              const seriesLabel = settings?.showLabel ?? showLabels;
+              const seriesLabelPosition =
+                settings?.labelPosition ?? areaLabelPosition;
+              return (
+                <Area
+                  key={key}
+                  type={settings?.curveType ?? curve ?? 'monotone'}
+                  dataKey={key}
+                  stackId={isStacked ? 'a' : undefined}
+                  stroke={colorFor(key)}
+                  strokeWidth={settings?.strokeWidth ?? strokeWidth}
+                  strokeDasharray={settings?.dashed ? '5 5' : undefined}
+                  fill={
+                    isGradient ? `url(#${gradientId}-${key})` : colorFor(key)
+                  }
+                  fillOpacity={
+                    settings?.fillOpacity ?? (isGradient ? 1 : fillOpacity)
+                  }
+                  dot={seriesDots ? { r: dotRadius } : false}
+                  activeDot={activeDot ? { r: dotRadius + 2 } : false}
+                  connectNulls={connectNulls}
+                  {...animation}
+                >
+                  {seriesLabel && (
+                    <LabelList
+                      dataKey={key}
+                      position={seriesLabelPosition}
+                      formatter={toLabelFormatter(labelFormatter)}
+                      className={resolveLabelFillClass(seriesLabelPosition, {
+                        translucentSeries: true,
+                      })}
+                      fontSize={CHART_LABEL_FONT_SIZE}
+                    />
+                  )}
+                </Area>
+              );
+            })}
+            {/* Annotations draw over the series they describe. */}
+            {referenceLines.map((ref, index) => {
+              const value = resolveChartReferenceValue(ref, data, dataKeys);
+              if (value === undefined) return null;
+              return (
+                <ReferenceLine
+                  key={`${ref.label ?? 'ref'}-${index}`}
+                  y={value}
+                  {...resolveReferenceLineProps(ref.label)}
+                />
+              );
+            })}
             {showBrush && (
               <Brush
                 dataKey={xKey}

@@ -49,7 +49,10 @@ const data = [
 
 const config = {
   desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
-  mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
+  mobile: {
+    label: 'Mobile',
+    color: 'var(--ui-background-status-strong-danger)',
+  },
 } satisfies ChartConfig;
 
 <AreaChart
@@ -64,18 +67,43 @@ const config = {
 Stack the series into one band with `layout="stacked"`:
 
 ```tsx
-<AreaChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" layout="stacked" />
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  layout="stacked"
+/>
 ```
 
 Use a flat translucent fill instead of the gradient with `fill="solid"` (tune it
 with `fillOpacity`):
 
 ```tsx
-<AreaChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" fill="solid" fillOpacity={0.3} />
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  fill="solid"
+  fillOpacity={0.3}
+/>
 ```
 
-Change the interpolation with `curve` (`linear`, `monotone`, or `step`), and
-toggle the chrome / dots with `showGrid` / `showTooltip` / `showLegend` /
+Change the interpolation with `curve`. Seven types are available, from most to
+least literal about the data:
+
+| `curve`              | Reads as                                                                                      |
+| -------------------- | --------------------------------------------------------------------------------------------- |
+| `linear`             | Straight segments between points.                                                             |
+| `monotone` (default) | Smoothed, never overshooting a point's value.                                                 |
+| `natural`            | A natural cubic spline — smoother, but it may overshoot, so read it as a trend.               |
+| `basis`              | A B-spline that need not pass through the points at all; the smoothest, least literal option. |
+| `step`               | Right angles, changing value at the midpoint between two points.                              |
+| `stepBefore`         | The same, changing at the leading point.                                                      |
+| `stepAfter`          | The same, changing at the trailing point.                                                     |
+
+Toggle the chrome / dots with `showGrid` / `showTooltip` / `showLegend` /
 `showDots`:
 
 ```tsx
@@ -84,8 +112,23 @@ toggle the chrome / dots with `showGrid` / `showTooltip` / `showLegend` /
   data={data}
   dataKeys={['desktop', 'mobile']}
   xKey="month"
-  curve="step"
+  curve="stepAfter"
   showLegend={false}
+/>
+```
+
+`dotSize` sets the dot radius (3px by default; the hover dot is always 2px
+larger). `showActiveDot` decides the hover dot on its own — unset it follows
+`showDots`:
+
+```tsx
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  showDots
+  dotSize={5}
 />
 ```
 
@@ -103,6 +146,55 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
   yUnit="ms"
 />
 ```
+
+## Per-series overrides
+
+`areaSettings` restyles one series without touching the others — keyed by data
+key, and any field left out falls back to the chart-wide prop. A faint dashed
+projection beside solid actuals, for instance:
+
+```tsx
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['actual', 'projected']}
+  xKey="month"
+  areaSettings={{
+    projected: { dashed: true, fillOpacity: 0.1 },
+  }}
+/>
+```
+
+Each entry takes `color`, `strokeWidth`, `dashed`, `curveType`, `fillOpacity`,
+`showDots`, `dotSize`, and the label controls (`showLabel`, `labelPosition`) — so
+one series can carry value labels while the rest stay clean. A `color` override
+also recolors that series' gradient stops, and under `fill="gradient"` a
+`fillOpacity` scales the gradient's own alpha rather than replacing it.
+
+## Reference line
+
+`referenceLine` draws a dashed rule across the value axis — a target, a
+threshold, or a series average. Pass one config or an array:
+
+```tsx
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  referenceLine={[
+    { value: 320, label: 'Target' },
+    { average: true, label: 'Average' },
+  ]}
+/>
+```
+
+A fixed `value` wins; otherwise `average` takes the mean of one series
+(`average: 'desktop'`) or of every plotted series (`average: true`) — and nothing
+is drawn when there are no numeric values to average. The rule extends the axis
+domain, so a target above the data maximum stays visible instead of being
+clipped. On a stacked chart the value is read against the stack's axis, not one
+series. `BarChart` and `LineChart` take the same config.
 
 ## Custom tooltip
 
@@ -152,7 +244,15 @@ Charts render statically by default. Opt in to an entrance animation with
 `animationEasing`:
 
 ```tsx
-<AreaChart config={config} data={data} dataKeys={['desktop']} xKey="month" animate animationDuration={800} animationEasing="ease-out" />
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  animate
+  animationDuration={800}
+  animationEasing="ease-out"
+/>
 ```
 
 `animate` honors `prefers-reduced-motion`: for a visitor who has asked their
@@ -165,7 +265,14 @@ Annotate each point with its value using `showLabels`. `labelFormatter` takes th
 same formatters as the axes, so a label and its axis read alike:
 
 ```tsx
-<AreaChart config={config} data={data} dataKeys={['desktop']} xKey="month" showLabels labelFormatter={formatCompactNumber} />
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  showLabels
+  labelFormatter={formatCompactNumber}
+/>
 ```
 
 `labelPosition` moves them; the default is `top`. Under `layout="stacked"` that
@@ -174,7 +281,14 @@ instead. An area's fill is translucent, so labels keep the on-surface text color
 at every position — the surface, not the series color, is what shows behind them:
 
 ```tsx
-<AreaChart config={config} data={data} dataKeys={['desktop']} xKey="month" showLabels labelPosition="insideEnd" />
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  showLabels
+  labelPosition="insideEnd"
+/>
 ```
 
 Labels are off by default — with more than one series they collide easily, so turn
@@ -188,7 +302,13 @@ series, its category axis, and the tooltip all follow the selection. `brushHeigh
 sizes the strip (28px by default):
 
 ```tsx
-<AreaChart config={config} data={data} dataKeys={['desktop']} xKey="month" showBrush />
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  showBrush
+/>
 ```
 
 The brush indexes rows, so it slices the category axis. It is independent of

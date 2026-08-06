@@ -27,6 +27,12 @@ tokens:
       derives all three from the single `stroke` prop. A mid-grey text token
       rather than the border one so the handles' hardcoded white grip lines stay
       visible; it is theme-stable, so they read in light and dark alike.
+  - name: --ui-text-on-surface-secondary
+    affects: rule
+    description: >-
+      The dashed `referenceLine` rule and its caption, so an annotation reads as
+      muted next to the series colors (recharts' own default is the literal
+      `#ccc`).
   - name: --ui-border-on-surface-border
     affects: grid
     description: >-

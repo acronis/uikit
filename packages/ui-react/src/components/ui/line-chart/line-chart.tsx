@@ -10,6 +10,7 @@ import {
   LabelList,
   Line,
   LineChart as RechartsLineChart,
+  ReferenceLine,
   XAxis,
   YAxis,
 } from 'recharts';
@@ -26,6 +27,9 @@ import {
   resolveBrushProps,
   toLabelFormatter,
   resolveLabelFillClass,
+  resolveChartReferenceValue,
+  resolveReferenceLineProps,
+  toReferenceLineList,
   CHART_LABEL_MARGIN,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
@@ -34,14 +38,17 @@ import {
   type CartesianChartProps,
   type ChartAnimationProps,
   type ChartBrushProps,
+  type ChartCurveType,
   type ChartDataLabelProps,
+  type ChartReferenceLine,
   type CartesianLabelPosition,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
 // axes are the design's Line-chart variant set: `curve` (how the segments
-// interpolate between points — straight, smoothed, or stepped) and `lineStyle`
-// (a solid or dashed stroke). "single" vs "multi" line is not a variant — it
+// interpolate between points — straight, smoothed, or stepped; the seven values
+// are documented on the shared `ChartCurveType`) and `lineStyle` (a solid or
+// dashed stroke). "single" vs "multi" line is not a variant — it
 // falls out of how many `dataKeys` the caller plots. The classes stay empty
 // because recharts' SVG — not CSS — draws the lines: `curve` drives each
 // `<Line type>` and `lineStyle` drives its `strokeDasharray`. CVA is kept so the
@@ -54,7 +61,11 @@ const lineChartVariants = cva('', {
     curve: {
       linear: '',
       monotone: '',
+      natural: '',
+      basis: '',
       step: '',
+      stepBefore: '',
+      stepAfter: '',
     },
     lineStyle: {
       solid: '',
@@ -116,6 +127,34 @@ export function createBandStrippedTooltip(tooltipContent: TooltipContentType) {
   };
 }
 
+/**
+ * Style override for one series, keyed by its `dataKeys` entry. Anything left
+ * unset falls back to the chart-wide prop, so an entry only states what differs
+ * — e.g. one thicker, dashed "target" line among otherwise identical series.
+ *
+ * A series listed in `comparisonKeys` keeps its dashed, dimmed, dot-less
+ * treatment: `color`, `strokeWidth` and `curveType` still apply to it, but
+ * `showDots` / `dotSize` do not (the overlay is defined by having no dots).
+ */
+export interface LineChartLineSettings {
+  /** Stroke color. Defaults to the series' `config` color. */
+  color?: string;
+  /** Stroke width. Defaults to the chart's `strokeWidth`. */
+  strokeWidth?: number;
+  /** Dash this series' stroke, whatever the chart-wide `lineStyle` is. */
+  dashed?: boolean;
+  /** Interpolation for this series only. Defaults to the chart's `curve`. */
+  curveType?: ChartCurveType;
+  /** Render this series' per-point dots. Defaults to the chart's `showDots`. */
+  showDots?: boolean;
+  /** Dot radius for this series, in px. Defaults to the chart's `dotSize`. */
+  dotSize?: number;
+  /** Show/hide this series' value labels, overriding the chart's `showLabels`. */
+  showLabel?: boolean;
+  /** Position of this series' value labels. Defaults to the chart's `labelPosition`. */
+  labelPosition?: CartesianLabelPosition;
+}
+
 export interface LineChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof lineChartVariants>,
@@ -155,8 +194,27 @@ export interface LineChartProps
   strokeWidth?: number;
   /** Render a dot at each data point. */
   showDots?: boolean;
+  /** Radius of each point's dot, in px. Its hover dot is 2px larger. */
+  dotSize?: number;
+  /**
+   * Enlarge the hovered point's dot. Defaults to following `showDots`, so pass
+   * it explicitly to get hover dots on a dot-less line (`showDots={false}`
+   * with `showActiveDot`) or a static-only line (dots without the hover one).
+   */
+  showActiveDot?: boolean;
   /** Bridge `null` gaps in the data instead of breaking the line. */
   connectNulls?: boolean;
+  /**
+   * Per-series style overrides, keyed by `dataKeys` entry. Series with no entry
+   * render from the chart-wide props.
+   */
+  lineSettings?: Record<string, LineChartLineSettings>;
+  /**
+   * One or more dashed reference/average lines on the value axis — a target, a
+   * threshold, or a series mean. Pass a single object or an array to draw
+   * several at once.
+   */
+  referenceLine?: ChartReferenceLine | ChartReferenceLine[];
   showLegend?: boolean;
   /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
   labelPosition?: CartesianLabelPosition;
@@ -179,7 +237,11 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       lineStyle = 'solid',
       strokeWidth = 2,
       showDots = true,
+      dotSize = 3,
+      showActiveDot,
       connectNulls = false,
+      lineSettings,
+      referenceLine,
       showGrid = true,
       showTooltip = true,
       showLegend = true,
@@ -216,8 +278,19 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       animationEasing,
     });
     const lineLabelPosition = labelPosition ?? 'top';
-    const dashArray = lineStyle === 'dashed' ? '5 5' : undefined;
     const yDomain = resolveAxisDomain(yAxisDomain);
+    const referenceLines = toReferenceLineList(referenceLine);
+
+    // A series' own `color` override also tints its delta band, so the band
+    // keeps following the line it belongs to.
+    const colorFor = (key: string) =>
+      lineSettings?.[key]?.color ?? `var(--color-${key})`;
+
+    // The plot inset is needed as soon as *any* series carries outside labels —
+    // a per-series `showLabel` counts, not only the chart-wide `showLabels`.
+    const hasLabels =
+      showLabels ||
+      Object.values(lineSettings ?? {}).some((settings) => settings.showLabel);
 
     // Room for the X tick row: recharts' default 30, plus a rotated tick row
     // (+20) and/or the axis title (+18). Additive — both can be present at once,
@@ -292,7 +365,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         >
           <RootChart
             data={chartData as readonly unknown[]}
-            margin={showLabels ? CHART_LABEL_MARGIN : undefined}
+            margin={hasLabels ? CHART_LABEL_MARGIN : undefined}
           >
             {showGrid && (
               <CartesianGrid
@@ -376,7 +449,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                 dataKey={field}
                 type={curve ?? 'monotone'}
                 stroke="none"
-                fill={`var(--color-${current})`}
+                fill={colorFor(current)}
                 fillOpacity={0.12}
                 connectNulls={connectNulls}
                 dot={false}
@@ -390,30 +463,53 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               // Comparison series read as secondary: always dashed, dimmed, and
               // dot-less, regardless of the global lineStyle / showDots.
               const isComparison = comparisonKeys?.includes(key);
+              const settings = lineSettings?.[key];
+              const seriesDots =
+                !isComparison && (settings?.showDots ?? showDots);
+              const dotRadius = settings?.dotSize ?? dotSize;
+              // The hover dot follows the static dots unless asked otherwise, so
+              // a chart that sets neither renders exactly as before.
+              const activeDot = !isComparison && (showActiveDot ?? seriesDots);
+              const seriesDashed = settings?.dashed ?? lineStyle === 'dashed';
+              const seriesLabel = settings?.showLabel ?? showLabels;
+              const seriesLabelPosition =
+                settings?.labelPosition ?? lineLabelPosition;
               return (
                 <Line
                   key={key}
-                  type={curve ?? 'monotone'}
+                  type={settings?.curveType ?? curve ?? 'monotone'}
                   dataKey={key}
-                  stroke={`var(--color-${key})`}
-                  strokeWidth={strokeWidth}
-                  strokeDasharray={isComparison ? '5 5' : dashArray}
+                  stroke={colorFor(key)}
+                  strokeWidth={settings?.strokeWidth ?? strokeWidth}
+                  strokeDasharray={isComparison || seriesDashed ? '5 5' : undefined}
                   strokeOpacity={isComparison ? 0.5 : undefined}
-                  dot={!isComparison && showDots ? { r: 3 } : false}
-                  activeDot={!isComparison && showDots ? { r: 5 } : false}
+                  dot={seriesDots ? { r: dotRadius } : false}
+                  activeDot={activeDot ? { r: dotRadius + 2 } : false}
                   connectNulls={connectNulls}
                   {...animation}
                 >
-                  {showLabels && (
+                  {seriesLabel && (
                     <LabelList
                       dataKey={key}
-                      position={lineLabelPosition}
+                      position={seriesLabelPosition}
                       formatter={toLabelFormatter(labelFormatter)}
-                      className={resolveLabelFillClass(lineLabelPosition)}
+                      className={resolveLabelFillClass(seriesLabelPosition)}
                       fontSize={CHART_LABEL_FONT_SIZE}
                     />
                   )}
                 </Line>
+              );
+            })}
+            {/* Annotations draw over the series they describe. */}
+            {referenceLines.map((ref, index) => {
+              const value = resolveChartReferenceValue(ref, data, dataKeys);
+              if (value === undefined) return null;
+              return (
+                <ReferenceLine
+                  key={`${ref.label ?? 'ref'}-${index}`}
+                  y={value}
+                  {...resolveReferenceLineProps(ref.label)}
+                />
               );
             })}
             {showBrush && (

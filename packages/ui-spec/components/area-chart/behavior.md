@@ -42,8 +42,65 @@ Scenario: Solid fill
 
 ```gherkin
 Scenario: Curve interpolation (default monotone)
-  Given curve is "linear", "monotone", or "step"
+  Given curve is one of linear, monotone, natural, basis, step, stepBefore, stepAfter
   Then every area's top edge uses that recharts `type`
+  And "natural" smooths further than "monotone" and may overshoot, while "basis" need not pass through the points
+  And "stepBefore" / "stepAfter" move the step to the leading or trailing point
+  And each type draws distinct geometry — an unrecognized value would silently fall back to straight segments
+```
+
+```gherkin
+Scenario: Dots
+  Given showDots is true
+  Then a dot renders at each data point with radius dotSize
+  And hovering a point enlarges its active dot by 2px
+  And showActiveDot decides the hover dot on its own when set, instead of following showDots
+```
+
+```gherkin
+Scenario: Restyle one series
+  Given areaSettings maps "mobile" to { dashed: true, fillOpacity: 0.1, showDots: false }
+  Then only the "mobile" area has a dashed top edge, a fainter fill, and no dots
+  And every other series renders from the chart-wide props
+  And an unset field in the entry falls back to the chart-wide prop
+```
+
+```gherkin
+Scenario: Recolor one series
+  Given areaSettings maps a series to a color
+  And fill is "gradient"
+  Then that series' gradient stops take the override color, not its config color
+  And the other series keep their config colors
+```
+
+```gherkin
+Scenario: Per-series value labels
+  Given areaSettings maps a series to { showLabel: false }
+  And showLabels is true
+  Then that series renders no value labels while the others do
+  And a { showLabel: true } entry labels only that series with showLabels unset
+```
+
+```gherkin
+Scenario: Reference line
+  Given referenceLine is { value: 250, label: "Target" }
+  Then a dashed rule draws across the value axis at 250, captioned "Target"
+  And it is drawn in the muted text token, over the series
+  And the axis domain extends to include it, so a target above the data maximum stays visible
+```
+
+```gherkin
+Scenario: Averaged reference line
+  Given referenceLine is { average: true } (or a single series key)
+  Then the rule draws at the mean of every plotted series' values (or that one series)
+  And when there is nothing numeric to average, no rule is drawn
+```
+
+```gherkin
+Scenario: Multiple reference lines
+  Given referenceLine is an array of configs (e.g. a fixed target and an average)
+  Then one dashed rule draws per config
+  And each is resolved independently (a config with nothing to draw is skipped)
 ```
 
 ```gherkin

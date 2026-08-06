@@ -57,10 +57,16 @@ contract:
         Unit suffix appended to Y-axis tick values (recharts `unit`); the X axis
         is categorical.
     - name: curve
-      type: "'linear' | 'monotone' | 'step'"
+      type: "'linear' | 'monotone' | 'natural' | 'basis' | 'step' | 'stepBefore' | 'stepAfter'"
       required: false
       default: "'monotone'"
-      description: Interpolation between points — straight, smoothed, or stepped.
+      description: >-
+        Interpolation between points. `linear` = straight segments; `monotone` =
+        a smoothed curve that never overshoots a point; `natural` = a natural
+        cubic spline (smoother, may overshoot); `basis` = the smoothest option,
+        and not required to pass through the points at all; `step` = right-angle
+        segments changing at the midpoint, with `stepBefore` / `stepAfter`
+        changing at the leading or trailing point instead.
     - name: strokeWidth
       type: number
       required: false
@@ -76,6 +82,37 @@ contract:
       required: false
       default: 'false'
       description: Render a dot at each data point.
+    - name: dotSize
+      type: number
+      required: false
+      default: '3'
+      description: Radius of each point's dot, in px. Its hover dot is 2px larger.
+    - name: showActiveDot
+      type: boolean
+      required: false
+      description: >-
+        Enlarge the hovered point's dot. Defaults to following `showDots`, so set
+        it explicitly for a hover-only area (dots off, active dot on) or a
+        static-only area (dots on, active dot off).
+    - name: areaSettings
+      type: 'Record<string, { color?: string; strokeWidth?: number; dashed?: boolean; curveType?: CurveType; fillOpacity?: number; showDots?: boolean; dotSize?: number; showLabel?: boolean; labelPosition?: LabelPosition }>'
+      required: false
+      description: >-
+        Per-series style override keyed by `dataKeys` entry — anything unset falls
+        back to the chart-wide prop, so an entry states only what differs (e.g. a
+        faint dashed projection beside solid actuals). `color` also recolors that
+        series' gradient stops; under `fill="gradient"` a `fillOpacity` scales the
+        gradient's own alpha rather than replacing it.
+    - name: referenceLine
+      type: 'Line | Line[]  where Line = { value?: number; average?: boolean | string; label?: string }'
+      required: false
+      description: >-
+        One or more dashed reference/average lines on the value axis. Pass a
+        single object or an array. Per line, a fixed `value` wins; otherwise the
+        mean of one series (`average: '<key>'`) or of every plotted series
+        (`average: true`). An optional `label` captions each. On a stacked chart
+        the value is read against the stack's axis, not one series. The same
+        config shape as `BarChart` / `LineChart`.
     - name: connectNulls
       type: boolean
       required: false

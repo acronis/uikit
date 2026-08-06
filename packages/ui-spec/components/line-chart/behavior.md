@@ -28,9 +28,12 @@ Scenario: Multiple lines
 
 ```gherkin
 Scenario: Curve interpolation (default monotone)
-  Given curve is "linear", "monotone", or "step"
+  Given curve is one of linear, monotone, natural, basis, step, stepBefore, stepAfter
   Then every line uses that recharts `type`
-  And "linear" draws straight segments, "monotone" smooths them, "step" draws right angles
+  And "linear" draws straight segments, "monotone" smooths them without overshooting a point
+  And "natural" smooths further and may overshoot, while "basis" need not pass through the points
+  And "step" draws right angles at the midpoint, "stepBefore" at the leading point, "stepAfter" at the trailing one
+  And each type draws distinct geometry — an unrecognized value would silently fall back to straight segments
 ```
 
 ```gherkin
@@ -42,9 +45,63 @@ Scenario: Dashed line style
 ```gherkin
 Scenario: Dots
   Given showDots is true
-  Then a dot renders at each data point
-  And hovering a point enlarges its active dot
+  Then a dot renders at each data point with radius dotSize
+  And hovering a point enlarges its active dot by 2px
   But when showDots is false neither the static dots nor the hover active dot render
+```
+
+```gherkin
+Scenario: Hover dot independent of the static dots
+  Given showActiveDot is set
+  Then it decides the hover dot on its own instead of following showDots
+  And showDots false with showActiveDot true gives a bare line that still emphasizes the hovered point
+  And showDots true with showActiveDot false gives static dots with no hover emphasis
+```
+
+```gherkin
+Scenario: Restyle one series
+  Given lineSettings maps "mobile" to { dashed: true, strokeWidth: 3, showDots: false }
+  Then only the "mobile" line is dashed, thicker, and dot-less
+  And every other series renders from the chart-wide props
+  And an unset field in the entry falls back to the chart-wide prop
+```
+
+```gherkin
+Scenario: A comparison overlay keeps its treatment
+  Given a series is listed in comparisonKeys
+  And its lineSettings entry sets showDots true
+  Then the series still renders dot-less — the overlay treatment wins
+  But its color, strokeWidth and curveType overrides still apply
+```
+
+```gherkin
+Scenario: Per-series value labels
+  Given lineSettings maps a series to { showLabel: false }
+  And showLabels is true
+  Then that series renders no value labels while the others do
+  And a { showLabel: true } entry labels only that series with showLabels unset
+```
+
+```gherkin
+Scenario: Reference line
+  Given referenceLine is { value: 250, label: "Target" }
+  Then a dashed rule draws across the value axis at 250, captioned "Target"
+  And it is drawn in the muted text token, over the series
+  And the axis domain extends to include it, so a target above the data maximum stays visible
+```
+
+```gherkin
+Scenario: Averaged reference line
+  Given referenceLine is { average: true } (or a single series key)
+  Then the rule draws at the mean of every plotted series' values (or that one series)
+  And when there is nothing numeric to average, no rule is drawn
+```
+
+```gherkin
+Scenario: Multiple reference lines
+  Given referenceLine is an array of configs (e.g. a fixed target and an average)
+  Then one dashed rule draws per config
+  And each is resolved independently (a config with nothing to draw is skipped)
 ```
 
 ```gherkin

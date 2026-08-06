@@ -32,8 +32,12 @@ import {
   toLabelFormatter,
   resolveLabelFillClass,
   resolveCartesianLabelPosition,
+  resolveChartReferenceValue,
+  resolveReferenceLineProps,
+  toReferenceLineList,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartReferenceLine,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
   type CartesianChartProps,
@@ -568,46 +572,12 @@ function rangeCells({
   });
 }
 
-export interface BarChartReferenceLine {
-  /** Fixed position on the value axis. Takes precedence over `average`. */
-  value?: number;
-  /**
-   * Draw the line at the mean of one series (a `dataKeys` entry) or, when
-   * `true`, of every plotted series' values.
-   */
-  average?: boolean | string;
-  /** Optional caption rendered alongside the line. */
-  label?: string;
-}
-
 /**
- * Resolve a `referenceLine` config to a position on the value axis: a fixed
- * `value` wins; otherwise the mean of the requested series (a single `dataKeys`
- * entry, or all of them when `average` is `true`). Returns `undefined` when
- * there is nothing to draw (no config, or no numeric values to average).
- * Exported for unit tests; not part of the package's public API.
+ * A dashed target/threshold/average rule on the value axis. The shape is shared
+ * with `LineChart` and `AreaChart` (`ChartReferenceLine`), so the same config
+ * moves between the three charts unchanged.
  */
-export function barChartReferenceValue(
-  referenceLine: BarChartReferenceLine | undefined,
-  data: ReadonlyArray<Record<string, string | number>>,
-  dataKeys: string[]
-): number | undefined {
-  if (!referenceLine) return undefined;
-  if (typeof referenceLine.value === 'number') return referenceLine.value;
-  if (!referenceLine.average) return undefined;
-
-  const keys =
-    typeof referenceLine.average === 'string'
-      ? [referenceLine.average]
-      : dataKeys;
-  const nums = data.flatMap((row) =>
-    keys
-      .map((key) => row[key])
-      .filter((value): value is number => typeof value === 'number')
-  );
-  if (nums.length === 0) return undefined;
-  return nums.reduce((sum, n) => sum + n, 0) / nums.length;
-}
+export type BarChartReferenceLine = ChartReferenceLine;
 
 export interface BarChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
@@ -760,11 +730,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       growingEnd: orientation === 'horizontal' ? 'right' : 'top',
     });
 
-    const referenceLines = referenceLine
-      ? Array.isArray(referenceLine)
-        ? referenceLine
-        : [referenceLine]
-      : [];
+    const referenceLines = toReferenceLineList(referenceLine);
 
     // Bands + the per-series overrides resolved to inclusive row indices once,
     // so the Cells below are a lookup rather than a search per bar.
@@ -1206,33 +1172,20 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
               );
             })}
             {referenceLines.map((ref, index) => {
-              const value = barChartReferenceValue(ref, data, dataKeys);
+              const value = resolveChartReferenceValue(ref, data, dataKeys);
               if (value === undefined) return null;
               return (
                 <ReferenceLine
                   key={`${ref.label ?? 'ref'}-${index}`}
                   // Draw on the value axis: Y for vertical bars, X for horizontal.
                   {...(orientation === 'horizontal' ? { x: value } : { y: value })}
-                  stroke="var(--ui-text-on-surface-secondary)"
-                  strokeDasharray="4 4"
-                  // extendDomain so a target beyond the data max stays visible.
-                  ifOverflow="extendDomain"
-                  label={
-                    ref.label
-                      ? {
-                          value: ref.label,
-                          // Sit the caption at the top of the line: above the
-                          // right end of a horizontal line (vertical bars), or
-                          // above the top of a vertical line (horizontal bars).
-                          position:
-                            orientation === 'horizontal'
-                              ? 'top'
-                              : 'insideTopRight',
-                          fill: 'var(--ui-text-on-surface-secondary)',
-                          fontSize: 12,
-                        }
-                      : undefined
-                  }
+                  // The caption sits at the top of the line: above the right end
+                  // of a horizontal line (vertical bars), or above the top of a
+                  // vertical line (horizontal bars).
+                  {...resolveReferenceLineProps(
+                    ref.label,
+                    orientation === 'horizontal' ? 'top' : 'insideTopRight'
+                  )}
                 />
               );
             })}

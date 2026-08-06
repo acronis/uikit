@@ -71,12 +71,32 @@ const meta = {
   },
   argTypes: {
     curve: {
-      control: 'inline-radio',
-      options: ['linear', 'monotone', 'step'],
+      control: 'select',
+      options: [
+        'linear',
+        'monotone',
+        'natural',
+        'basis',
+        'step',
+        'stepBefore',
+        'stepAfter',
+      ],
     },
     lineStyle: { control: 'inline-radio', options: ['solid', 'dashed'] },
     strokeWidth: { control: { type: 'number', min: 1, max: 6 } },
     showDots: { control: 'boolean' },
+    dotSize: { control: { type: 'number', min: 1, max: 10 } },
+    showActiveDot: { control: 'boolean' },
+    lineSettings: {
+      control: 'object',
+      description:
+        'Per-series overrides keyed by data key, e.g. `{ mobile: { dashed: true, strokeWidth: 3 } }`.',
+    },
+    referenceLine: {
+      control: 'object',
+      description:
+        'A dashed target/average rule, e.g. `{ value: 250, label: "Target" }` or `{ average: true }`.',
+    },
     connectNulls: { control: 'boolean' },
     xAxisLabel: { control: 'text' },
     yAxisLabel: { control: 'text' },
@@ -161,6 +181,59 @@ export const Stepped: Story = {
 // Dashed stroke.
 export const Dashed: Story = {
   args: { lineStyle: 'dashed' },
+};
+
+// The four curve types beyond linear/monotone/step, side by side on one series
+// so the interpolation is the only difference: `natural` and `basis` smooth more
+// (and `basis` need not pass through the points), while `stepBefore` /
+// `stepAfter` move the step to the leading or trailing point.
+export const ExtendedCurves: Story = {
+  render: (args) => (
+    <div className="grid grid-cols-2 gap-4">
+      {(['natural', 'basis', 'stepBefore', 'stepAfter'] as const).map((curve) => (
+        <div key={curve} className="space-y-1">
+          <p className="text-xs text-muted-foreground">{curve}</p>
+          <LineChart
+            {...args}
+            curve={curve}
+            dataKeys={['desktop']}
+            showLegend={false}
+            className="h-[160px] w-[260px]"
+          />
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+// Bigger dots for a sparse series; `showActiveDot` is independent, so a
+// dot-less line can still emphasize the hovered point.
+export const DotSizing: Story = {
+  args: { dataKeys: ['desktop'], dotSize: 6 },
+};
+
+// Per-series overrides: the target line reads thicker and dashed in its own
+// color, and the secondary series loses its dots — without touching the third.
+export const PerSeriesStyling: Story = {
+  args: {
+    lineSettings: {
+      desktop: { strokeWidth: 3 },
+      mobile: { dashed: true, showDots: false },
+      tablet: { curveType: 'stepAfter', dotSize: 5 },
+    },
+  },
+};
+
+// A fixed target plus the mean of every plotted series, both captioned. The rule
+// extends the axis domain, so a target above the data maximum stays visible.
+export const ReferenceLines: Story = {
+  args: {
+    dataKeys: ['desktop'],
+    referenceLine: [
+      { value: 320, label: 'Target' },
+      { average: true, label: 'Average' },
+    ],
+  },
 };
 
 // QoQ / YoY comparison: the previous-period series is marked via
