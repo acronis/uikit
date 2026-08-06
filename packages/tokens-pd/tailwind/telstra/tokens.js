@@ -396,6 +396,11 @@ export default {
         "gap-72": "72px",
         "gap-88": "88px",
         "gap-96": "96px"
+      },
+      "boxShadow": {
+        "lg": "0px 24px 48px 0px light-dark(rgb(0 0 0 / 0.502), rgb(0 0 0 / 0.302))",
+        "md": "0px 16px 32px 0px light-dark(rgb(0 0 0 / 0.102), rgb(0 0 0 / 0.4))",
+        "sm": "0px 8px 16px 0px light-dark(rgb(0 0 0 / 0.302), rgb(0 0 0 / 0.698))"
       }
     },
   },

@@ -131,6 +131,9 @@
   --ui-gradients-ai-disabled: linear-gradient(90deg, rgb(223 226 255) 20%, rgb(255 218 253) 100%);
   --ui-gradients-ai-hover: linear-gradient(90deg, rgb(51 66 195) 20%, rgb(182 33 174) 100%);
   --ui-gradients-ai-idle: linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
+  --ui-shadow-lg: 0px 24px 48px 0px light-dark(rgb(0 0 0 / 0.502), rgb(0 0 0 / 0.302));
+  --ui-shadow-md: 0px 16px 32px 0px light-dark(rgb(0 0 0 / 0.102), rgb(0 0 0 / 0.4));
+  --ui-shadow-sm: 0px 8px 16px 0px light-dark(rgb(0 0 0 / 0.302), rgb(0 0 0 / 0.698));
   --ui-text-on-backdrop-element-link-active: light-dark(rgb(190 215 244), rgb(41 81 122));
   --ui-text-on-backdrop-element-link-hover: light-dark(rgb(190 215 244), rgb(41 81 122));
   --ui-text-on-backdrop-element-link-idle: light-dark(rgb(23 99 207), rgb(81 157 246));
