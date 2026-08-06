@@ -28,6 +28,36 @@ export interface Decls {
 }
 
 /**
+ * Split a rendered box-shadow into its geometry and its color. Relies on the
+ * `shadow/css` transform's contract that the shorthand is exactly four lengths
+ * followed by the color — the color itself contains spaces (`rgb(0 0 0 / 0.4)`),
+ * so splitting on the last space would not work.
+ */
+function splitShadow(value: string): { geometry: string; color: string } | null {
+  const parts = value.split(' ');
+  if (parts.length < 5) return null;
+  return { geometry: parts.slice(0, 4).join(' '), color: parts.slice(4).join(' ') };
+}
+
+/**
+ * A shadow's light and dark renderings → one theme-aware CSS value, or `null`
+ * when they can't be combined (differing geometry, or an unparseable shorthand).
+ *
+ * `light-dark()` is a COLOR function: valid only where CSS expects a `<color>`,
+ * so `box-shadow: light-dark(<shadow>, <shadow>)` is invalid. The pair goes in
+ * the shadow's color slot instead — which is the only part that varies by theme.
+ * Shared by the CSS format and the Tailwind preset builder so both render a
+ * shadow identically.
+ */
+export function composeShadowLightDark(light: string, dark: string): string | null {
+  if (light === dark) return light;
+  const l = splitShadow(light);
+  const d = splitShadow(dark);
+  if (!l || !d || l.geometry !== d.geometry) return null;
+  return `${l.geometry} light-dark(${l.color}, ${d.color})`;
+}
+
+/**
  * Collect a resolved token slice into declaration maps. `darkTokens` maps a
  * token path (`a.b.c`) to its resolved dark-mode color value; a color with no
  * dark entry falls back to its light value.
@@ -56,6 +86,18 @@ export function collectDecls(
       } else {
         skipped.push(`${token.name} (typography)`);
       }
+    } else if (token.$type === 'shadow') {
+      const light = typeof token.$value === 'string' ? token.$value : null;
+      if (light === null) {
+        skipped.push(`${token.name} (shadow)`);
+        continue;
+      }
+      const composed = composeShadowLightDark(light, darkTokens.get(token.path.join('.')) ?? light);
+      if (composed === null) {
+        skipped.push(`${token.name} (shadow: theme-varying geometry)`);
+        continue;
+      }
+      vars.set(token.name, composed);
     } else if (typeof token.$value === 'string') {
       // dimension / scalar / gradient — already CSS-ready (theme-invariant).
       vars.set(token.name, token.$value);

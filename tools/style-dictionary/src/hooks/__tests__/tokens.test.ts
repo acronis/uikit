@@ -200,6 +200,52 @@ describe('collectDecls', () => {
     expect(css).toContain('  font-family: Inter;');
   });
 
+  // `light-dark()` is a COLOR function — it is only valid where CSS expects a
+  // <color>, so it cannot wrap a whole box-shadow. The theme pair has to be spliced
+  // into the shadow's color slot instead.
+  it('splices light-dark() into the color slot when only the shadow color varies by theme', () => {
+    const css = render(
+      [
+        token({
+          name: 'ui-shadow-md',
+          path: ['shadow', 'md'],
+          $type: 'shadow',
+          $value: '0px 16px 32px 0px rgb(0 0 0 / 0.102)',
+        }),
+      ],
+      new Map([['shadow.md', '0px 16px 32px 0px rgb(0 0 0 / 0.4)']])
+    );
+    expect(css).toContain(
+      '--ui-shadow-md: 0px 16px 32px 0px light-dark(rgb(0 0 0 / 0.102), rgb(0 0 0 / 0.4));'
+    );
+  });
+
+  it('emits a theme-invariant shadow unwrapped', () => {
+    const value = '0px 16px 32px 0px rgb(0 0 0 / 0.102)';
+    const css = render(
+      [token({ name: 'ui-shadow-md', path: ['shadow', 'md'], $type: 'shadow', $value: value })],
+      new Map([['shadow.md', value]])
+    );
+    expect(css).toContain(`--ui-shadow-md: ${value};`);
+    expect(css).not.toContain('light-dark');
+  });
+
+  it('skips a shadow whose geometry varies by theme rather than emitting something wrong', () => {
+    const { skipped, vars } = collectDecls(
+      [
+        token({
+          name: 'ui-shadow-md',
+          path: ['shadow', 'md'],
+          $type: 'shadow',
+          $value: '0px 16px 32px 0px rgb(0 0 0 / 0.102)',
+        }),
+      ],
+      new Map([['shadow.md', '0px 99px 32px 0px rgb(0 0 0 / 0.4)']])
+    );
+    expect(vars.has('ui-shadow-md')).toBe(false);
+    expect(skipped).toContain('ui-shadow-md (shadow: theme-varying geometry)');
+  });
+
   it('collects unrepresentable tokens into the skipped list', () => {
     const { skipped } = collectDecls(
       [token({ name: 'grad', $type: 'gradient', $value: { stops: [] } as unknown as string })],
@@ -535,6 +581,42 @@ describe('buildThemeExtend', () => {
     );
     expect(theme.spacing['button-global-gap']).toBe('8px');
     expect(theme.borderRadius['button-global-radius']).toBe('4px');
+  });
+
+  it('puts shadows in boxShadow, with the theme pair spliced into the color slot', () => {
+    const theme = buildThemeExtend(
+      [
+        tok({
+          name: 'ui-shadow-md',
+          path: ['shadow', 'md'],
+          $type: 'shadow',
+          $value: '0px 16px 32px 0px rgb(0 0 0 / 0.102)',
+        }),
+      ],
+      new Map([['shadow.md', '0px 16px 32px 0px rgb(0 0 0 / 0.4)']])
+    );
+    // The `shadow` role word is redundant with the namespace, so it is dropped —
+    // the key `md` yields the utility `shadow-md`, not `shadow-shadow-md`.
+    expect(theme.boxShadow.md).toBe(
+      '0px 16px 32px 0px light-dark(rgb(0 0 0 / 0.102), rgb(0 0 0 / 0.4))'
+    );
+    expect(theme.spacing.md).toBeUndefined();
+  });
+
+  it('drops the redundant trailing role word from a component shadow key', () => {
+    const theme = buildThemeExtend(
+      [
+        tok({
+          name: 'ui-toast-global-container-shadow',
+          path: ['Toast', '_global', 'container', 'shadow'],
+          $type: 'shadow',
+          $value: '0px 16px 32px 0px rgb(0 0 0 / 0.102)',
+        }),
+      ],
+      new Map()
+    );
+    // `shadow-toast-global-container`, not `shadow-toast-global-container-shadow`.
+    expect(theme.boxShadow['toast-global-container']).toBeDefined();
   });
 
   it('throws on a key collision instead of silently overwriting', () => {

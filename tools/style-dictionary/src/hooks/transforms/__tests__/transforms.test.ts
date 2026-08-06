@@ -9,6 +9,7 @@ import { describe, expect, it } from 'vitest';
 
 import { type DtcgColor, hslColorToRgb, colorHslToRgb } from '../color-hsl-rgb';
 import { gradientCss } from '../gradient-css';
+import { shadowCss } from '../shadow-css';
 import { uiName } from '../name-ui';
 import { formatDimension } from '../dimension-px';
 import { isEmittableToken } from '../../filters/semantic-only';
@@ -159,5 +160,49 @@ describe('isEmittableToken (semantic-only filter)', () => {
   it('keeps emitted tiers (semantic + component)', () => {
     expect(isEmittableToken({ path: ['colors', 'background', 'brand', 'primary'] })).toBe(true);
     expect(isEmittableToken({ path: ['button', 'primary', 'background', 'idle'] })).toBe(true);
+  });
+});
+
+describe('shadowCss', () => {
+  const transform = (value: unknown): string =>
+    (shadowCss.transform as (t: TransformedToken) => string)({
+      $type: 'shadow',
+      $value: value,
+    } as TransformedToken);
+
+  const md = {
+    offsetX: { value: 0, unit: 'px' },
+    offsetY: { value: 16, unit: 'px' },
+    blur: { value: 32, unit: 'px' },
+    spread: { value: 0, unit: 'px' },
+    color: hsl(0, 0, 0, 0.102),
+  };
+
+  it('renders the CSS box-shadow shorthand with the color last', () => {
+    expect(transform(md)).toBe('0px 16px 32px 0px rgb(0 0 0 / 0.102)');
+  });
+
+  it('accepts sub-fields already resolved to CSS strings', () => {
+    expect(transform({ ...md, blur: '32px' })).toBe('0px 16px 32px 0px rgb(0 0 0 / 0.102)');
+  });
+
+  it('MUST be transitive — a composite whose sub-fields are aliases is only transformed on the post-resolution pass', () => {
+    expect(shadowCss.transitive).toBe(true);
+  });
+
+  it('only claims shadow tokens', () => {
+    const filter = shadowCss.filter as (t: TransformedToken) => boolean;
+    expect(filter({ $type: 'shadow' } as TransformedToken)).toBe(true);
+    expect(filter({ $type: 'color' } as TransformedToken)).toBe(false);
+  });
+});
+
+describe('isEmittableToken — shadow primitives', () => {
+  it('drops the shadow primitive parts (resolution inputs for the semantic composite)', () => {
+    expect(isEmittableToken({ path: ['shadows', 'md', 'blur'] })).toBe(false);
+  });
+
+  it('keeps the semantic shadow composite', () => {
+    expect(isEmittableToken({ path: ['shadow', 'md'] })).toBe(true);
   });
 });

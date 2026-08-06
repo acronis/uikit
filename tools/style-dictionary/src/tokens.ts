@@ -315,7 +315,9 @@ export async function resolveColorMap(
   const tokens = await resolveTokens(filter, brand, theme);
   return new Map(
     tokens
-      .filter((t) => t.$type === 'color')
+      // Shadows ride along: their color part varies by theme, so `collectDecls`
+      // needs the dark rendering to splice a light-dark() into the color slot.
+      .filter((t) => t.$type === 'color' || t.$type === 'shadow')
       .map((t) => [t.path.join('.'), t.$value as string])
   );
 }
