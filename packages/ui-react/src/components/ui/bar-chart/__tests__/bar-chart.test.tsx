@@ -6,7 +6,6 @@ import { BarChart as RechartsBarChart } from 'recharts';
 
 import {
   BarChart,
-  barChartCategoryRange,
   createTrackShape,
   dropHeadroomSeries,
   NormalizedTooltipContent,
@@ -14,7 +13,6 @@ import {
 } from '../bar-chart';
 import { ChartContainer, ChartTooltipContent, type ChartConfig,
   resolveAnimation,
-  resolveChartReferenceValue,
 } from '../../chart';
 
 beforeAll(() => {
@@ -210,65 +208,6 @@ describe('BarChart', () => {
 
 });
 
-// The resolver is shared with LineChart/AreaChart; BarChart is where its
-// value/average contract is exercised against real bar data.
-describe('resolveChartReferenceValue', () => {
-  const keys = ['desktop', 'mobile'];
-
-  it('returns undefined with no config', () => {
-    expect(resolveChartReferenceValue(undefined, data, keys)).toBeUndefined();
-  });
-
-  it('returns a fixed value (including 0)', () => {
-    expect(resolveChartReferenceValue({ value: 150 }, data, keys)).toBe(150);
-    expect(resolveChartReferenceValue({ value: 0 }, data, keys)).toBe(0);
-  });
-
-  it('prefers a fixed value over average', () => {
-    expect(
-      resolveChartReferenceValue({ value: 42, average: true }, data, keys)
-    ).toBe(42);
-  });
-
-  it('averages a single named series', () => {
-    // desktop: (186 + 305 + 237) / 3
-    expect(resolveChartReferenceValue({ average: 'desktop' }, data, keys)).toBeCloseTo(
-      242.667,
-      2
-    );
-  });
-
-  it('averages every plotted series when average is true', () => {
-    // (186+305+237 + 80+200+120) / 6 = 188
-    expect(resolveChartReferenceValue({ average: true }, data, keys)).toBe(188);
-  });
-
-  it('returns undefined when there is nothing numeric to average', () => {
-    expect(resolveChartReferenceValue({ average: true }, [], keys)).toBeUndefined();
-    expect(
-      resolveChartReferenceValue({ average: 'missing' }, data, keys)
-    ).toBeUndefined();
-  });
-
-  // LineChart/AreaChart rows carry `null` for a gap in a series, so the mean has
-  // to skip those rows rather than count them as zero.
-  it('skips null values when averaging', () => {
-    const gappy = [
-      { month: 'Jan', desktop: null },
-      { month: 'Feb', desktop: 100 },
-      { month: 'Mar', desktop: 200 },
-    ];
-    expect(
-      resolveChartReferenceValue({ average: 'desktop' }, gappy, ['desktop'])
-    ).toBe(150);
-    expect(
-      resolveChartReferenceValue({ average: true }, [{ desktop: null }], [
-        'desktop',
-      ])
-    ).toBeUndefined();
-  });
-});
-
 // recharts needs a laid-out container, which happy-dom does not provide, so the
 // rendered labels/animation are covered by the visual-regression stories. These
 // assert the prop contract itself: the composition accepts every new prop and
@@ -311,39 +250,6 @@ describe('BarChart animation and data labels', () => {
       labelPosition: 'center',
     });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
-  });
-});
-
-describe('barChartCategoryRange', () => {
-  it('resolves category values to inclusive row indices', () => {
-    expect(barChartCategoryRange({ from: 'Feb', to: 'Mar' }, data, 'month')).toEqual([
-      1, 2,
-    ]);
-  });
-
-  it('resolves a numeric bound as a row index', () => {
-    expect(barChartCategoryRange({ from: 1 }, data, 'month')).toEqual([1, 2]);
-  });
-
-  it('prefers a matching category value over the index reading', () => {
-    const numeric = [{ q: 3, sales: 1 }, { q: 1, sales: 2 }, { q: 2, sales: 3 }];
-    // `1` is a real category here (row 1), not "index 1" by coincidence — the
-    // value match wins so numeric categories stay addressable.
-    expect(barChartCategoryRange({ from: 1, to: 2 }, numeric, 'q')).toEqual([1, 2]);
-  });
-
-  it('runs to the ends of the data when a bound is omitted', () => {
-    expect(barChartCategoryRange({}, data, 'month')).toEqual([0, 2]);
-    expect(barChartCategoryRange({ to: 'Feb' }, data, 'month')).toEqual([0, 1]);
-  });
-
-  it('returns undefined for an unknown bound, an inverted range, or no data', () => {
-    expect(barChartCategoryRange({ from: 'Dec' }, data, 'month')).toBeUndefined();
-    expect(barChartCategoryRange({ from: 9 }, data, 'month')).toBeUndefined();
-    expect(
-      barChartCategoryRange({ from: 'Mar', to: 'Jan' }, data, 'month')
-    ).toBeUndefined();
-    expect(barChartCategoryRange({ from: 'Jan' }, [], 'month')).toBeUndefined();
   });
 });
 

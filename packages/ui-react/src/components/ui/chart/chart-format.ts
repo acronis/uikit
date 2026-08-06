@@ -123,6 +123,52 @@ export function resolveAxisDomain(
 }
 
 /**
+ * A category range on a cartesian chart: `from`/`to` accept either the
+ * category's value (an `xKey` cell, e.g. `'Sep'`) or its 0-based row index. Both
+ * ends are inclusive, and either can be omitted to run to that end of the data.
+ * Shared by the charts that scope something to a slice of the categories — a
+ * reference band, a per-series style override.
+ */
+export interface ChartCategoryRange {
+  from?: string | number;
+  to?: string | number;
+}
+
+/**
+ * Resolve a category range to inclusive row indices. A bound is either the
+ * category's own value (matched against the `xKey` cell) or a 0-based index;
+ * an omitted bound runs to that end of the data. Returns `undefined` when the
+ * data is empty or the range resolves to nothing (an unknown value, or a `to`
+ * that lands before its `from`).
+ *
+ * Exported for unit tests; not part of the package's public API.
+ */
+export function resolveCategoryRange(
+  range: ChartCategoryRange,
+  data: ReadonlyArray<Record<string, unknown>>,
+  xKey: string
+): [number, number] | undefined {
+  if (data.length === 0) return undefined;
+
+  const resolve = (bound: string | number | undefined, fallback: number) => {
+    if (bound === undefined) return fallback;
+    // A numeric bound is an index unless the categories are numbers themselves,
+    // in which case matching a category value is the more useful reading.
+    const asValue = data.findIndex((row) => row[xKey] === bound);
+    if (asValue !== -1) return asValue;
+    if (typeof bound === 'number' && Number.isInteger(bound)) {
+      return bound >= 0 && bound < data.length ? bound : -1;
+    }
+    return -1;
+  };
+
+  const start = resolve(range.from, 0);
+  const end = resolve(range.to, data.length - 1);
+  if (start === -1 || end === -1 || start > end) return undefined;
+  return [start, end];
+}
+
+/**
  * Which value axis a series is measured against, on a chart that can carry two.
  *
  * `secondary` is the opt-in: the second axis exists only when at least one series
@@ -468,10 +514,14 @@ export function toReferenceLineList(
  * entry, or all of them when `average` is `true`). Returns `undefined` when
  * there is nothing to draw (no config, or no numeric values to average) — the
  * caller skips the line rather than drawing it at 0.
+ *
+ * Rows are `unknown`-valued because `ComposedChart` types its data that way; the
+ * body only ever reads cells that are numbers, so a wider row type costs nothing
+ * and saves every caller a cast.
  */
 export function resolveChartReferenceValue(
   referenceLine: ChartReferenceLine | undefined,
-  data: ReadonlyArray<Record<string, string | number | null>>,
+  data: ReadonlyArray<Record<string, unknown>>,
   dataKeys: string[]
 ): number | undefined {
   if (!referenceLine) return undefined;

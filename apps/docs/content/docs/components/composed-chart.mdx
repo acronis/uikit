@@ -83,6 +83,8 @@ so the line paints on top:
 
 Tune the shared knobs with `curve` (line/area interpolation), `barRadius`,
 `fillOpacity`, and the `showGrid` / `showTooltip` / `showLegend` toggles.
+`legendPosition` moves the legend above the plot, and `tooltipCursor={false}`
+drops the hover band behind the tooltip.
 
 Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
 `yUnit` (the x-axis is categorical). The titles inherit the theme token:
@@ -101,6 +103,124 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
   yUnit="$"
 />
 ```
+
+## Orientation
+
+`orientation="horizontal"` grows the marks rightward: the categories move to the
+y-axis, the values to the x-axis, the grid lines turn vertical, and each bar
+rounds its right end instead of its top. Reach for it when the category labels are
+long enough to crowd a bottom axis:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  series={[
+    { key: 'revenue', type: 'bar' },
+    { key: 'profit', type: 'line' },
+  ]}
+  xKey="month"
+  orientation="horizontal"
+/>
+```
+
+The value-axis props follow the values: `xUnit` and `xTickFormatter` format the
+tick values there, while `yAxisTickCount` / `yAxisDomain` keep their meaning
+("whichever axis holds the values") and `yTickFormatter` formats the categories. A
+second value axis renders as a second x-axis along the top edge.
+
+## Per-series styling
+
+Every styling prop on the chart is the **default a series can override**, keyed by
+the same name on its `series[]` entry — so one call sets the house style and each
+series departs from it only where it needs to:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  xKey="month"
+  strokeWidth={3}
+  series={[
+    { key: 'revenue', type: 'bar', barSize: 18, barRadius: 2 },
+    // A projection: dashed, thinner than the chart default, its own color.
+    {
+      key: 'forecast',
+      type: 'line',
+      strokeDasharray: '5 5',
+      strokeWidth: 1.5,
+      color: 'var(--ui-background-status-strong-warning)',
+    },
+    { key: 'profit', type: 'line', showDots: true },
+  ]}
+/>
+```
+
+The overridable set is `color`, `curve`, `strokeWidth`, `strokeDasharray`,
+`showDots`, `showActiveDots`, `connectNulls`, `barRadius`, `barSize`,
+`showActiveBar`, `showBackground`, `fillOpacity`, and `legendType` — plus
+`stackId` and `yAxis`, which have no chart-level counterpart. `legendType: 'none'`
+keeps a series off the legend while it still renders and appears in the tooltip;
+`'line'` / `'rect'` pick its marker (the wider recharts icon set isn't exposed —
+the legend draws its own marker and reads only those cases).
+
+Bar geometry is set on the chart: `barSize`, `barGap` (between bars of one
+category), `barCategoryGap` (between the groups), and `showBackground` /
+`backgroundFill` for a track behind every bar. `margin` insets the plot — any side
+left out keeps the chart's own default, which is already widened when `showLabels`
+is on.
+
+A `null` value breaks its line/area at that point; `connectNulls` bridges the gap,
+on the chart or on one series.
+
+## Stacking
+
+Series that share a `stackId` are summed into one stack — **bars with bars, areas
+with areas**:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  xKey="month"
+  series={[
+    { key: 'revenue', type: 'bar', stackId: 'total' },
+    { key: 'forecast', type: 'bar', stackId: 'total' },
+    { key: 'profit', type: 'line' },
+  ]}
+/>
+```
+
+The ids are namespaced per mark type, so reusing one id across types can't merge a
+bar into an area's stack; a line ignores it (recharts doesn't stack lines). Only
+the segment at the top of a stack rounds its corners, and data labels centre in
+their own segment — a stacked segment has no free space at its growing end.
+
+## Reference lines and bands
+
+`referenceLine` draws a dashed rule at a fixed `value`, at the `average` of one
+series (or of all of them with `average: true`), or — with `category` — *across*
+the categories at one of them: the hand-off between actuals and forecast.
+`referenceArea` shades a band behind a range of categories. Both accept an array:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  series={series}
+  xKey="month"
+  referenceLine={[
+    { value: 6000, label: 'Target' },
+    { average: 'revenue', label: 'Avg' },
+    { category: 'Apr' },
+  ]}
+  referenceArea={{ from: 'Apr', label: 'Forecast' }}
+/>
+```
+
+A band's `from` / `to` are inclusive and take either the category's own value or
+its row index; omit one to run to that end of the data. A reference whose category
+isn't in the data draws nothing rather than guessing a position.
 
 ## Two value axes
 

@@ -30,6 +30,57 @@ Scenario: Curve interpolation (default monotone)
 Scenario: Bar corner radius
   Given barRadius is greater than 0
   Then each bar series rounds its growing end by that radius
+  And in a stack only the segment at the top of the stack is rounded
+```
+
+```gherkin
+Scenario: Orientation re-roles both axes
+  Given orientation is "horizontal"
+  Then the marks grow rightward with the categories on the y-axis and the values on x
+  And the grid lines run vertically
+  And each bar rounds its right end instead of its top
+  And a secondary value axis renders as a second x-axis along the top edge
+```
+
+```gherkin
+Scenario: A series overrides a chart-level default
+  Given the chart sets strokeWidth
+  And one series entry sets its own strokeWidth
+  Then that series uses its own value and every other series uses the chart's
+  And the same holds for color, curve, strokeDasharray, showDots, showActiveDots,
+      connectNulls, barRadius, barSize, showActiveBar, showBackground and fillOpacity
+```
+
+```gherkin
+Scenario: Series stack by shared id, within a mark type
+  Given two bar series and two area series, each pair sharing a stackId
+  Then each pair is summed into one stack
+  And a bar and an area sharing the same id are not merged into one stack
+  And a line series ignores stackId
+```
+
+```gherkin
+Scenario: Null values break a series unless bridged
+  Given a data row whose series value is null
+  Then the line/area breaks at that point
+  And with connectNulls the gap is bridged into one continuous mark
+```
+
+```gherkin
+Scenario: Reference rules and bands
+  Given a referenceLine with a value or an average of a series
+  Then a dashed rule renders at that position on the value axis
+  And a referenceLine with a category renders a rule across the categories at it
+  And a category that is not in the data renders no rule
+  And a referenceArea shades the band spanning its from/to categories
+  And each renders its label when one is given
+```
+
+```gherkin
+Scenario: A series is kept off the legend
+  Given a series entry sets legendType to "none"
+  Then the legend renders every other series and omits that one
+  And the series itself still renders and appears in the tooltip
 ```
 
 ```gherkin
@@ -49,6 +100,7 @@ Scenario: Tooltip on hover
 Scenario: Legend
   Given showLegend is true
   Then a swatch + label renders for each series
+  And legendPosition places it above or below the plot (default below)
 ```
 
 ```gherkin
