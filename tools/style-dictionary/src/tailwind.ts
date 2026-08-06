@@ -10,6 +10,7 @@ import path from 'node:path';
 
 import type { TransformedToken } from 'style-dictionary/types';
 
+import { composeShadowLightDark } from './hooks/formats/css-light-dark';
 import {
   type Filter,
   rel,
@@ -70,6 +71,7 @@ interface ThemeExtend {
   fontSize: Record<string, [string, Record<string, string>]>;
   spacing: Record<string, string>;
   borderRadius: Record<string, string>;
+  boxShadow: Record<string, string>;
 }
 
 const emptyTheme = (): ThemeExtend => ({
@@ -83,9 +85,17 @@ const emptyTheme = (): ThemeExtend => ({
   fontSize: {},
   spacing: {},
   borderRadius: {},
+  boxShadow: {},
 });
 
 const stripUi = (name: string): string => name.replace(/^ui-/, '');
+
+// Tailwind's boxShadow namespace already spells the role in the utility prefix
+// (`shadow-*`), so a `shadow` segment in the key only stutters — `shadow-shadow-md`,
+// `shadow-toast-global-container-shadow`. Drop it from either end, the same way a
+// semantic color drops its role word. Interior segments are left alone: they
+// disambiguate siblings.
+const shadowKey = (key: string): string => key.replace(/^shadow-|-shadow$/g, '') || key;
 
 // ── Color / gradient → Tailwind namespace routing ────────────────────────────
 // Acronis tokens encode their role in the path (semantic: `background`, `text`,
@@ -305,6 +315,19 @@ export function buildThemeExtend(
       const key = stripUi(token.name);
       if (key.includes('radius')) put(theme.borderRadius, key, value, token.path);
       else put(theme.spacing, key, value, token.path);
+    } else if (token.$type === 'shadow') {
+      // Shadows are not a color namespace — Tailwind's is `boxShadow` (→ `shadow-*`).
+      // Like colors they are theme-aware, but the pair goes inside the shadow's
+      // color slot; `composeShadowLightDark` owns that rule for CSS and Tailwind alike.
+      if (value === null) continue;
+      const composed = composeShadowLightDark(value, darkColors.get(token.path.join('.')) ?? value);
+      if (composed === null) {
+        console.warn(
+          `tailwind: skipped shadow with theme-varying geometry (kept in tiers): ${token.path.join('.')}`,
+        );
+        continue;
+      }
+      put(theme.boxShadow, shadowKey(stripUi(token.name)), composed, token.path);
     }
   }
   return theme;
