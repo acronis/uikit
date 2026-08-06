@@ -3,6 +3,8 @@ title: FunnelChart
 description: A typed funnel chart for stage-by-stage progression and drop-off.
 ---
 
+import { Callout } from 'fumadocs-ui/components/callout';
+
 import { DemoReact } from '@/components/DemoReact';
 import { FunnelChartDemo } from '@/components/demos-react/funnel-chart';
 
@@ -17,7 +19,9 @@ import type { ChartConfig } from '@acronis-platform/ui-react';
 primitives. Give it `data` (one row per stage), a per-stage `config`, the value
 field (`dataKey`), and the label field (`nameKey`) — it renders a themed recharts
 funnel (on-chart stage labels and a tooltip included), so you don't hand-compose
-recharts children. There's no legend — the inline labels already name every stage.
+recharts children. The legend is opt-in (`showLegend`) — the on-chart labels
+already name every stage, so it earns its space only when those labels carry
+values or conversions instead.
 
 Stage colors are supplied by the caller through `config`, **keyed by each
 `nameKey` value**: `FunnelChart` turns those into the `--color-<name>` custom
@@ -48,9 +52,18 @@ const data = [
 
 const config = {
   Visits: { label: 'Visits', color: 'var(--ui-background-brand-secondary)' },
-  Signups: { label: 'Signups', color: 'var(--ui-background-status-strong-success)' },
-  Trials: { label: 'Trials', color: 'var(--ui-background-status-strong-warning)' },
-  Purchases: { label: 'Purchases', color: 'var(--ui-background-status-strong-danger)' },
+  Signups: {
+    label: 'Signups',
+    color: 'var(--ui-background-status-strong-success)',
+  },
+  Trials: {
+    label: 'Trials',
+    color: 'var(--ui-background-status-strong-warning)',
+  },
+  Purchases: {
+    label: 'Purchases',
+    color: 'var(--ui-background-status-strong-danger)',
+  },
 } satisfies ChartConfig;
 
 <FunnelChart
@@ -65,14 +78,200 @@ const config = {
 End the funnel flat instead of at a point with `lastShape="rectangle"`:
 
 ```tsx
-<FunnelChart config={config} data={data} dataKey="value" nameKey="stage" lastShape="rectangle" />
+<FunnelChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="stage"
+  lastShape="rectangle"
+/>
 ```
 
 Flip the direction with `reversed`, or hide the on-chart labels / tooltip with
 `showLabels` / `showTooltip`:
 
 ```tsx
-<FunnelChart config={config} data={data} dataKey="value" nameKey="stage" reversed showLabels={false} />
+<FunnelChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="stage"
+  reversed
+  showLabels={false}
+/>
+```
+
+## Labels
+
+`labelFormat` decides what each stage's label says: its `name` (the default), its
+`value`, its `percent`, or a pair — `name-value`, `name-percent`, `value-percent`.
+
+A percentage is the stage's share of the **widest stage** — its conversion from
+the top of the funnel. Unlike a pie's slices, a funnel's stages are nested subsets
+of each other rather than parts of a whole, so a share of the sum wouldn't mean
+anything. The base is the largest value, not the first row, so an unsorted funnel
+still tops out at `100.0%`.
+
+```tsx
+<FunnelChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="stage"
+  labelFormat="name-percent"
+/>
+```
+
+`labelPosition` puts the label beside the segment (`right`, the default, or
+`left`) or on it (`inside`). The label color follows: beside the funnel it sits on
+the card surface, on a segment it switches to the on-fill token so it keeps its
+contrast over a saturated stage color. Override it with `labelFill` only when
+neither works on your surface.
+
+<Callout type="warn">
+  `inside` only works while every stage is wide enough to hold its text. A
+  funnel narrows by definition, so its last stages usually aren't — the text
+  runs past the segment onto the surface, where the on-fill color (white in both
+  themes) has nothing to sit on and disappears in light mode. Pair `inside` with
+  a short format (`percent`, `value`) and let the legend carry the names, or
+  keep the labels beside the funnel.
+</Callout>
+
+`showValueLabels` adds a second label carrying the value. `valuePosition` places
+it, and defaults to the side **opposite `labelPosition`** — so it follows the names
+rather than pinning itself to one edge, and the two lists never stack:
+
+```tsx
+<FunnelChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="stage"
+  showValueLabels
+/>
+```
+
+`labelFormatter` formats only the numeric part of a label, so a label and its
+tooltip can share one formatter. `percentFormatter` formats the conversion share
+separately — it receives a fraction (`0.52`) and defaults to `"52.0%"`:
+
+```tsx
+import { createTickFormatter } from '@acronis-platform/ui-react';
+
+<FunnelChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="stage"
+  labelFormat="name-percent"
+  percentFormatter={createTickFormatter(
+    { style: 'percent', minimumFractionDigits: 1 },
+    'de-DE'
+  )}
+/>;
+```
+
+You don't normally need `margin` or `funnelWidth`: a composite `labelFormat`
+beside the funnel narrows the funnel on its own to leave the label room to wrap
+into.
+
+<Callout>
+  Label room comes from `funnelWidth`, not `margin`. A label word-wraps against
+  the gap between its own segment and the **plot area's** edge — and a margin
+  moves that edge inward together with the funnel, so widening `margin.right`
+  leaves a long label with *less* room, not more. Narrowing the funnel is what
+  frees real space, because the plot area stays put. There is no equivalent
+  lever for `labelPosition="left"`: the widest segment always sits flush against
+  the plot area's left edge, so a long left-hand label wraps regardless.
+</Callout>
+
+`margin` is merged over the defaults per side, so `margin={{ right: 160 }}` keeps
+the default top, bottom and left. Reach for it when a label can't wrap at all (one
+long word) and you need more room before the SVG edge.
+
+## Legend
+
+`showLegend` renders one entry per visible stage, labelled and colored from
+`config`; `legendPos` moves it to the top edge.
+
+```tsx
+<FunnelChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="stage"
+  labelFormat="value"
+  showLegend
+  legendPos="top"
+/>
+```
+
+## Coloring
+
+`colorMode="gradient"` ramps a single hue from the widest stage down to the
+narrowest instead of giving each stage its own color — useful when the stages are
+one metric dropping off rather than four unrelated categories. The ramp's base is
+the first stage's own color — its `stageSettings` override if it has one, otherwise
+its `config` color — unless `gradientColor` names another; each stage below it is
+mixed further toward the surface, so every segment stays opaque and on-segment
+labels keep their contrast.
+
+```tsx
+<FunnelChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="stage"
+  colorMode="gradient"
+  gradientColor="var(--ui-background-brand-primary)"
+/>
+```
+
+`stageSettings` overrides one stage at a time, keyed by its `nameKey` value:
+`color` wins over both `config` and `colorMode`, and `hidden` drops the stage
+from the funnel, its labels, the legend, and the conversion percentages.
+
+```tsx
+<FunnelChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="stage"
+  stageSettings={{
+    Trials: { color: 'var(--ui-background-status-strong-info)' },
+    Purchases: { hidden: true },
+  }}
+/>
+```
+
+## Segment style and geometry
+
+`stroke` / `strokeWidth` separate the stages with a border, `funnelWidth` narrows
+the shape (px or a percentage of the plot area), and `margin` overrides the
+reserved insets described above. `showActiveShape` outlines the hovered segment
+rather than changing its fill, so it keeps the color that ties it to its legend
+entry.
+
+`strokeWidth` on its own is enough: the renderer's own default segment border is a
+hardcoded white that the chart container neutralizes, so a bare `strokeWidth` would
+otherwise widen an invisible line. Given alone it pairs with
+`--ui-border-on-surface-border`.
+
+Use the **`strong`** status tokens (`--ui-background-status-strong-info`, …) for
+stage colors, not the plain `--ui-background-status-*` ones — those are the light
+tints meant for banners and they wash out as a chart fill.
+
+```tsx
+<FunnelChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="stage"
+  stroke="var(--ui-border-on-surface-border)"
+  strokeWidth={2}
+  funnelWidth="65%"
+  showActiveShape
+/>
 ```
 
 ## Custom tooltip
@@ -107,7 +306,13 @@ Charts render statically by default. Opt in to an entrance animation with
 `animationEasing`:
 
 ```tsx
-<FunnelChart config={config} data={data} animate animationDuration={800} animationEasing="ease-out" />
+<FunnelChart
+  config={config}
+  data={data}
+  animate
+  animationDuration={800}
+  animationEasing="ease-out"
+/>
 ```
 
 `animate` honors `prefers-reduced-motion`: for a visitor who has asked their

@@ -45,7 +45,131 @@ contract:
       type: boolean
       required: false
       default: 'true'
-      description: Render each stage's name beside its segment.
+      description: Render a label for each stage — see labelFormat and labelPosition.
+    - name: labelFormat
+      type: "'name' | 'value' | 'percent' | 'name-value' | 'name-percent' | 'value-percent'"
+      required: false
+      default: "'name'"
+      description: >-
+        What each stage's label says. A percentage is the stage's share of the
+        widest stage — its conversion from the top of the funnel, not a share of
+        the sum, because a funnel's stages are nested subsets rather than parts of
+        a whole. The value is formatted by labelFormatter and the share by
+        percentFormatter. A composite format (a pair) narrows the funnel to leave
+        itself room, unless funnelWidth says otherwise.
+    - name: labelPosition
+      type: "'right' | 'left' | 'inside'"
+      required: false
+      default: "'right'"
+      description: >-
+        Where each stage's label sits. `right`/`left` place it beside the segment
+        on the chart surface; `inside` centres it on the segment, which switches
+        the label to the on-fill color so it keeps contrast over a saturated fill.
+        `inside` only works while every stage is wide enough to hold the text — a
+        funnel narrows, so its last stages often are not; keep the text short
+        there (`percent`) or leave the labels beside the funnel.
+    - name: showValueLabels
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Render a second label carrying the stage's value, so the name and the
+        number can sit on opposite sides of the funnel.
+    - name: valuePosition
+      type: "'right' | 'left' | 'inside'"
+      required: false
+      default: the side opposite labelPosition
+      description: >-
+        Where the value label sits. Defaults to the side opposite labelPosition,
+        where every stage has room — so it follows the names rather than pinning
+        itself to one edge, which would overprint them when the names move. See
+        labelPosition before choosing inside.
+    - name: labelFill
+      type: string
+      required: false
+      description: >-
+        Color for both label lists, overriding the contrast-matched default. Pass
+        a --ui-* token; only needed when the default doesn't work on the surface.
+    - name: labelFormatter
+      type: '(value: number | string, index?: number) => string'
+      required: false
+      description: Format the numeric part of a label.
+    - name: percentFormatter
+      type: '(value: number | string, index?: number) => string'
+      required: false
+      description: >-
+        Format the conversion share behind the percent formats. Receives the share
+        as a fraction (0.52); defaults to a one-decimal bare percentage ("52.0%").
+        Replace it for a locale that doesn't write a bare percent sign.
+    - name: showLegend
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Render the legend — one entry per visible stage. Off by default because a
+        funnel labels its stages on the chart.
+    - name: legendPos
+      type: "'top' | 'bottom'"
+      required: false
+      default: "'bottom'"
+      description: Which edge the legend sits on.
+    - name: colorMode
+      type: "'palette' | 'gradient'"
+      required: false
+      default: "'palette'"
+      description: >-
+        How the stages are colored. `palette` gives each stage its own config
+        color; `gradient` ramps one hue from the widest stage down to the
+        narrowest, mixing it toward the surface so every segment stays opaque.
+    - name: gradientColor
+      type: string
+      required: false
+      description: >-
+        The hue gradient mode ramps. Defaults to the first visible stage's own
+        color — including a stageSettings color set on it, since that is what the
+        stage actually paints with. Ignored when colorMode is palette.
+    - name: stageSettings
+      type: 'Record<string, { color?: string; hidden?: boolean }>'
+      required: false
+      description: >-
+        Per-stage overrides keyed by the stage's nameKey value. `color` wins over
+        both config and colorMode; `hidden` drops the stage from the funnel, its
+        labels, the legend, and the conversion percentages.
+    - name: showActiveShape
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Outline the hovered segment, rather than changing its fill, so it keeps
+        the color that ties it to its legend entry and label.
+    - name: stroke
+      type: string
+      required: false
+      description: >-
+        Segment border color — reference an existing --ui-* token. Defaults to the
+        border token when strokeWidth is set on its own, because the renderer's own
+        default is a hardcoded white the container neutralizes.
+    - name: strokeWidth
+      type: number
+      required: false
+      description: Segment border width, in px. Implies a default stroke when given alone.
+    - name: funnelWidth
+      type: number | string
+      required: false
+      description: >-
+        Funnel width — px, or a percentage of the plot area ('70%'). Defaults to
+        the full plot area, except that a composite labelFormat beside the funnel
+        narrows it: the renderer word-wraps a label against the gap between its
+        segment and the plot-area edge, so narrowing the funnel is what creates
+        label room. A margin cannot — it moves that edge inward with the funnel.
+    - name: margin
+      type: '{ top?: number; right?: number; bottom?: number; left?: number }'
+      required: false
+      description: >-
+        Plot-area margin, in px, merged over the defaults per side so passing one
+        side keeps the others. It reserves the side a label list sits on so
+        unwrappable text isn't clipped at the SVG edge — see funnelWidth for the
+        label's wrap room.
     - name: showTooltip
       type: boolean
       required: false
