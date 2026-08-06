@@ -20373,15 +20373,15 @@
             "com.figma.scopes": ["ALL_SCOPES"],
             "com.figma.variableId": "VariableID:8349:48661"
           },
-          "$type": "string",
+          "$type": "shadow",
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "shadow-md",
-            "default": "shadow-md",
-            "light-gray": "shadow-md",
-            "telstra": "shadow-md",
-            "virtuozzo": "shadow-md",
-            "yellow-1c": "shadow-md"
+            "deep_sky_itkontoret": "{shadow.md}",
+            "default": "{shadow.md}",
+            "light-gray": "{shadow.md}",
+            "telstra": "{shadow.md}",
+            "virtuozzo": "{shadow.md}",
+            "yellow-1c": "{shadow.md}"
           }
         },
         "statusWidth": {

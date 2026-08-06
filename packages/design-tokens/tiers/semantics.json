@@ -2822,6 +2822,150 @@
       }
     }
   },
+  "shadow": {
+    "$type": "shadow",
+    "lg": {
+      "platforms": ["PD"],
+      "values": {
+        "deep_sky_itkontoret": {
+          "blur": "{shadows.lg.blur}",
+          "color": "{shadows.lg.color}",
+          "offsetX": "{shadows.lg.positionX}",
+          "offsetY": "{shadows.lg.positionY}",
+          "spread": "{shadows.lg.spread}"
+        },
+        "default": {
+          "blur": "{shadows.lg.blur}",
+          "color": "{shadows.lg.color}",
+          "offsetX": "{shadows.lg.positionX}",
+          "offsetY": "{shadows.lg.positionY}",
+          "spread": "{shadows.lg.spread}"
+        },
+        "light-gray": {
+          "blur": "{shadows.lg.blur}",
+          "color": "{shadows.lg.color}",
+          "offsetX": "{shadows.lg.positionX}",
+          "offsetY": "{shadows.lg.positionY}",
+          "spread": "{shadows.lg.spread}"
+        },
+        "telstra": {
+          "blur": "{shadows.lg.blur}",
+          "color": "{shadows.lg.color}",
+          "offsetX": "{shadows.lg.positionX}",
+          "offsetY": "{shadows.lg.positionY}",
+          "spread": "{shadows.lg.spread}"
+        },
+        "virtuozzo": {
+          "blur": "{shadows.lg.blur}",
+          "color": "{shadows.lg.color}",
+          "offsetX": "{shadows.lg.positionX}",
+          "offsetY": "{shadows.lg.positionY}",
+          "spread": "{shadows.lg.spread}"
+        },
+        "yellow-1c": {
+          "blur": "{shadows.lg.blur}",
+          "color": "{shadows.lg.color}",
+          "offsetX": "{shadows.lg.positionX}",
+          "offsetY": "{shadows.lg.positionY}",
+          "spread": "{shadows.lg.spread}"
+        }
+      }
+    },
+    "md": {
+      "platforms": ["PD"],
+      "values": {
+        "deep_sky_itkontoret": {
+          "blur": "{shadows.md.blur}",
+          "color": "{shadows.md.color}",
+          "offsetX": "{shadows.md.positionX}",
+          "offsetY": "{shadows.md.positionY}",
+          "spread": "{shadows.md.spread}"
+        },
+        "default": {
+          "blur": "{shadows.md.blur}",
+          "color": "{shadows.md.color}",
+          "offsetX": "{shadows.md.positionX}",
+          "offsetY": "{shadows.md.positionY}",
+          "spread": "{shadows.md.spread}"
+        },
+        "light-gray": {
+          "blur": "{shadows.md.blur}",
+          "color": "{shadows.md.color}",
+          "offsetX": "{shadows.md.positionX}",
+          "offsetY": "{shadows.md.positionY}",
+          "spread": "{shadows.md.spread}"
+        },
+        "telstra": {
+          "blur": "{shadows.md.blur}",
+          "color": "{shadows.md.color}",
+          "offsetX": "{shadows.md.positionX}",
+          "offsetY": "{shadows.md.positionY}",
+          "spread": "{shadows.md.spread}"
+        },
+        "virtuozzo": {
+          "blur": "{shadows.md.blur}",
+          "color": "{shadows.md.color}",
+          "offsetX": "{shadows.md.positionX}",
+          "offsetY": "{shadows.md.positionY}",
+          "spread": "{shadows.md.spread}"
+        },
+        "yellow-1c": {
+          "blur": "{shadows.md.blur}",
+          "color": "{shadows.md.color}",
+          "offsetX": "{shadows.md.positionX}",
+          "offsetY": "{shadows.md.positionY}",
+          "spread": "{shadows.md.spread}"
+        }
+      }
+    },
+    "sm": {
+      "platforms": ["PD"],
+      "values": {
+        "deep_sky_itkontoret": {
+          "blur": "{shadows.sm.blur}",
+          "color": "{shadows.sm.color}",
+          "offsetX": "{shadows.sm.positionX}",
+          "offsetY": "{shadows.sm.positionY}",
+          "spread": "{shadows.sm.spread}"
+        },
+        "default": {
+          "blur": "{shadows.sm.blur}",
+          "color": "{shadows.sm.color}",
+          "offsetX": "{shadows.sm.positionX}",
+          "offsetY": "{shadows.sm.positionY}",
+          "spread": "{shadows.sm.spread}"
+        },
+        "light-gray": {
+          "blur": "{shadows.sm.blur}",
+          "color": "{shadows.sm.color}",
+          "offsetX": "{shadows.sm.positionX}",
+          "offsetY": "{shadows.sm.positionY}",
+          "spread": "{shadows.sm.spread}"
+        },
+        "telstra": {
+          "blur": "{shadows.sm.blur}",
+          "color": "{shadows.sm.color}",
+          "offsetX": "{shadows.sm.positionX}",
+          "offsetY": "{shadows.sm.positionY}",
+          "spread": "{shadows.sm.spread}"
+        },
+        "virtuozzo": {
+          "blur": "{shadows.sm.blur}",
+          "color": "{shadows.sm.color}",
+          "offsetX": "{shadows.sm.positionX}",
+          "offsetY": "{shadows.sm.positionY}",
+          "spread": "{shadows.sm.spread}"
+        },
+        "yellow-1c": {
+          "blur": "{shadows.sm.blur}",
+          "color": "{shadows.sm.color}",
+          "offsetX": "{shadows.sm.positionX}",
+          "offsetY": "{shadows.sm.positionY}",
+          "spread": "{shadows.sm.spread}"
+        }
+      }
+    }
+  },
   "typography": {
     "$type": "typography",
     "body": {
