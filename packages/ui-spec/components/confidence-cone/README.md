@@ -5,8 +5,17 @@ time series with actual values, forecast values, and a lower/upper bound per
 forecast point; it draws the actuals as a solid line with a filled area, the
 forecast as a dashed line, and the uncertainty as a shaded band that widens with
 the horizon — plus a divider and shaded region setting the forecast off from the
-actuals. It's **one metric in one color**: actual vs forecast differ by line
-style (solid vs dashed), not hue.
+actuals. Each metric is **one color**: actual vs forecast differ by line style
+(solid vs dashed), not hue.
+
+`series` plots several metrics against one shared axis, each with its own
+columns, hue and independent cone; `actualType="line"` drops the fill under the
+actuals so the cones stay the only shaded regions (worth it as soon as there is
+more than one metric). Omitting a series' bound keys gives a band-less
+projection — a bare dashed line, for a model with a point estimate but no
+interval. `referenceLine` adds dashed value-axis thresholds, `showDots` marks
+points (filled on the actuals, hollow on the projection), and
+`styleForecastTicks` italicizes and accents the projected period's X ticks.
 
 > **Design-pending v1.** No chart token tier yet, so the metric color is
 > **caller-supplied** via `config` (a dedicated `--ui-chart-*` data-viz palette

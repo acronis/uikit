@@ -80,6 +80,9 @@ const meta = {
     xAxisLabel: { control: 'text' },
     yAxisLabel: { control: 'text' },
     yUnit: { control: 'text' },
+    actualType: { control: 'inline-radio', options: ['area', 'line'] },
+    showDots: { control: 'boolean' },
+    styleForecastTicks: { control: 'boolean' },
     showGrid: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
@@ -136,6 +139,144 @@ export const CompactCurrencyAxis: Story = {
 
 // Actual (solid) + forecast (dashed) + the widening prediction cone.
 export const Default: Story = {};
+
+// Mark each point: filled on the observed values, hollow on the projection — so
+// a point reads as measured or predicted without consulting the line style.
+export const Dots: Story = {
+  args: { showDots: true },
+};
+
+// A dashed horizontal threshold on the value axis (a target, a capacity limit).
+// Pass an array to draw several at once.
+export const Threshold: Story = {
+  args: { referenceLine: { value: 190, label: 'Capacity' } },
+};
+
+// Italic, metric-colored X ticks over the projected periods — the columns read
+// as projected even where the shaded region is off.
+export const StyledForecastTicks: Story = {
+  args: { styleForecastTicks: true, showForecastRegion: false },
+};
+
+// `actualType="line"` drops the filled region under the actuals, leaving the
+// cone as the only shaded area — the fill reads as noise once a chart carries
+// more than one metric, or where the band is the point.
+export const ActualAsLine: Story = {
+  args: { actualType: 'line' },
+};
+
+// Omit `lowerKey`/`upperKey` for a band-less projection: the actual line hands
+// off to a bare dashed forecast, with no cone. For a metric whose model gives a
+// point estimate but no interval.
+export const NoBand: Story = {
+  args: { lowerKey: undefined, upperKey: undefined },
+};
+
+// The single-series forecast in full: cone + threshold + dots + styled ticks.
+export const SingleSeriesForecast: Story = {
+  args: {
+    showDots: true,
+    styleForecastTicks: true,
+    referenceLine: { value: 190, label: 'Capacity' },
+  },
+};
+
+// Several metrics against one shared axis, each with its own actual / forecast /
+// bound fields, its own hue and its own independent cone. Drawn with
+// `actualType="line"`: with more than one metric, stacked area fills muddy each
+// other and the cones, so the bands stay the only shaded regions.
+const multiData = [
+  { month: 'Jan', storage: 100, backups: 40 },
+  { month: 'Feb', storage: 118, backups: 46 },
+  { month: 'Mar', storage: 112, backups: 51 },
+  { month: 'Apr', storage: 130, backups: 55 },
+  { month: 'May', storage: 141, backups: 58 },
+  {
+    month: 'Jun',
+    storage: 150,
+    storageForecast: 150,
+    storageLower: 150,
+    storageUpper: 150,
+    backups: 62,
+    backupsForecast: 62,
+    backupsLower: 62,
+    backupsUpper: 62,
+  },
+  {
+    month: 'Jul',
+    storageForecast: 162,
+    storageLower: 150,
+    storageUpper: 176,
+    backupsForecast: 66,
+    backupsLower: 63,
+    backupsUpper: 70,
+  },
+  {
+    month: 'Aug',
+    storageForecast: 173,
+    storageLower: 154,
+    storageUpper: 196,
+    backupsForecast: 71,
+    backupsLower: 65,
+    backupsUpper: 78,
+  },
+  {
+    month: 'Sep',
+    storageForecast: 185,
+    storageLower: 158,
+    storageUpper: 218,
+    backupsForecast: 74,
+    backupsLower: 66,
+    backupsUpper: 85,
+  },
+  {
+    month: 'Oct',
+    storageForecast: 198,
+    storageLower: 160,
+    storageUpper: 240,
+    backupsForecast: 79,
+    backupsLower: 67,
+    backupsUpper: 94,
+  },
+];
+
+const multiConfig = {
+  storage: { label: 'Storage', color: 'var(--ui-background-brand-secondary)' },
+  storageForecast: { label: 'Storage forecast' },
+  backups: {
+    label: 'Backups',
+    color: 'var(--ui-background-status-strong-success)',
+  },
+  backupsForecast: { label: 'Backups forecast' },
+} satisfies ChartConfig;
+
+export const MultiSeries: Story = {
+  args: {
+    data: multiData,
+    config: multiConfig,
+    actualType: 'line',
+    series: [
+      {
+        actualKey: 'storage',
+        forecastKey: 'storageForecast',
+        lowerKey: 'storageLower',
+        upperKey: 'storageUpper',
+      },
+      {
+        actualKey: 'backups',
+        forecastKey: 'backupsForecast',
+        lowerKey: 'backupsLower',
+        upperKey: 'backupsUpper',
+      },
+    ],
+    // `series` supersedes the single-series shorthand; cleared so the args table
+    // doesn't advertise columns this data doesn't have.
+    actualKey: undefined,
+    forecastKey: undefined,
+    lowerKey: undefined,
+    upperKey: undefined,
+  },
+};
 
 // Axis titles + a Y-axis unit suffix, forwarded to recharts' native
 // `label` / `unit`. The title inherits the theme token via the container's

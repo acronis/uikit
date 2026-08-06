@@ -4,23 +4,25 @@ component: ConfidenceCone
 schematic: |
   root: <div>                                       (plain wrapper, no variants)
     container: <ChartContainer>                     (themed, sized, responsive)
-      plot: recharts <ComposedChart>                (one metric color throughout)
-        grid:     <CartesianGrid>                   (horizontal lines)
-        x-axis:   <XAxis dataKey=xKey>              (time / category)
-        y-axis:   <YAxis>                           (value)
-        region:   <ReferenceArea>                   (shaded forecast region, behind all)
-        divider:  <ReferenceLine>                   (dashed vertical at the hand-off)
-        cone:     <Area dataKey=__cone>             (band [lower, upper], tinted, behind lines)
-        actual:   <Area dataKey=actualKey>          (solid line + filled area)
-        forecast: <Line dataKey=forecastKey>        (dashed)
-        tooltip:  <ChartTooltip> → tooltip-content  (band filtered out)
-        legend:   <ChartLegend>  → legend-content   (one entry: the metric)
+      plot: recharts <ComposedChart>                (one color per metric)
+        grid:      <CartesianGrid>                  (horizontal lines)
+        x-axis:    <XAxis dataKey=xKey>             (time / category; forecast ticks styled)
+        y-axis:    <YAxis>                          (value)
+        region:    <ReferenceArea>                  (shaded forecast region, behind all)
+        divider:   <ReferenceLine>                  (dashed vertical at the hand-off)
+        threshold: <ReferenceLine y=value>          (dashed horizontal, 0..n)
+        per series, in this order — all cones, then all actuals, then all forecasts:
+          cone:     <Area dataKey=__cone:actualKey> (band [lower, upper], tinted, behind lines)
+          actual:   <Area|Line dataKey=actualKey>   (solid; filled area unless actualType="line")
+          forecast: <Line dataKey=forecastKey>      (dashed)
+        tooltip:   <ChartTooltip> → tooltip-content (bands filtered out)
+        legend:    <ChartLegend>  → legend-content  (one entry per metric)
 
 root:
   element: div
   description: >-
     Plain wrapper (no CVA variants). Renders the shared `ChartContainer` around a
-    recharts `ComposedChart` composing the cone band + the two lines.
+    recharts `ComposedChart` composing each series' cone band + two lines.
 
 parts:
   - id: container
@@ -42,25 +44,38 @@ parts:
   - id: cone
     element: g
     description: >-
-      An `Area` over a synthetic `[lower, upper]` range field, tinted with the
-      single metric color at low opacity and drawn behind the lines. Breaks where
-      a bound is missing (e.g. the actual-only period). Never marks points.
+      One `Area` per coned series over a synthetic `[lower, upper]` range field,
+      tinted with that series' metric color at low opacity and drawn behind every
+      line. Breaks where a bound is missing (e.g. the actual-only period). A
+      series that omits `lowerKey`/`upperKey` has no cone at all. Never marks
+      points.
   - id: actual
     element: g
     description: >-
-      An `Area` over `actualKey` — a solid line with a filled region in the metric
-      color (low opacity), the known/observed values. Never marks points.
+      One mark per series over its `actualKey` — the known/observed values, a
+      solid line in that series' metric color. An `Area` with a low-opacity fill
+      beneath it by default, or a bare `Line` with `actualType="line"`. Marks each
+      point with a filled dot when `showDots`.
   - id: forecast
     element: g
     description: >-
-      A dashed `Line` over `forecastKey` — the projection, in the same metric
-      color (actual vs forecast differ by line style, not hue).
+      One dashed `Line` per series over its `forecastKey` — the projection, in the
+      same metric color as its actual (actual vs forecast differ by line style,
+      not hue). Marks each point with a hollow dot when `showDots`.
+  - id: threshold
+    element: g
+    description: >-
+      A dashed horizontal `ReferenceLine` on the value axis per `referenceLine`
+      entry, with an optional caption at its right end. Extends the domain so a
+      threshold beyond the data max stays visible.
   - id: grid
     element: g
     description: '`CartesianGrid` — horizontal value lines.'
   - id: x-axis
     element: g
-    description: '`XAxis` — the time/category dimension (`xKey`).'
+    description: >-
+      `XAxis` — the time/category dimension (`xKey`). With `styleForecastTicks`,
+      the ticks over the projected period render italic in the first series' hue.
   - id: y-axis
     element: g
     description: '`YAxis` — the value axis.'
@@ -72,10 +87,10 @@ parts:
   - id: legend-content
     element: div
     description: >-
-      `ChartLegendContent` — one swatch + label for the metric. Actual, forecast
-      and the band are three recharts series painting a single metric in a single
-      hue (the forecast key's `--color-*` is re-pointed at the actual series'
-      color), so only the actual series reaches the legend. Rendered when
+      `ChartLegendContent` — one swatch + label per metric. A series' actual,
+      forecast and band are three recharts series painting a single metric in a
+      single hue (each forecast key's `--color-*` is re-pointed at its actual
+      series' color), so only the actual series reach the legend. Rendered when
       `showLegend`.
 
 states:
@@ -89,6 +104,26 @@ states:
     kind: prop
     prop: showForecastRegion
     affects: [region, divider]
+  - id: band-less
+    trigger: a series omits lowerKey / upperKey — a point projection with no interval
+    kind: prop
+    prop: series
+    affects: [cone]
+  - id: actual-as-line
+    trigger: actualType="line" drops the filled region under the observed values
+    kind: prop
+    prop: actualType
+    affects: [actual]
+  - id: dotted
+    trigger: showDots marks each point — filled on the actuals, hollow on the projection
+    kind: prop
+    prop: showDots
+    affects: [actual, forecast]
+  - id: styled-forecast-ticks
+    trigger: styleForecastTicks italicizes + accents the projected period's X ticks
+    kind: prop
+    prop: styleForecastTicks
+    affects: [x-axis]
   - id: empty
     trigger: data is an empty array
     kind: prop

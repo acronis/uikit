@@ -2,7 +2,7 @@ spec_version: '1.0'
 component: ConfidenceCone
 
 # No cva: ConfidenceCone has no visual variant axes. The field-name props map
-# columns onto the actual line / forecast line / cone bounds.
+# columns onto each series' actual line / forecast line / cone bounds.
 contract:
   properties:
     - name: data
@@ -17,30 +17,67 @@ contract:
       description: >-
         Per-series map of label / color for the actual + forecast lines (from the
         shared Chart primitives). Turned into `--color-<key>` custom properties.
-        The cone band and the forecast line both reuse the actual series' color —
-        actual and forecast differ by line style, not hue. Caller-supplied.
+        Each metric renders in one hue: its cone band and forecast line both reuse
+        its actual series' color — actual and forecast differ by line style, not
+        hue. Caller-supplied.
     - name: xKey
       type: string
       required: true
       description: The time / category dimension key shared across rows.
+    - name: series
+      type: 'ReadonlyArray<{ actualKey: string; forecastKey: string; lowerKey?: string; upperKey?: string }>'
+      required: false
+      description: >-
+        Plot several metrics against one shared axis — each with its own actual /
+        forecast / bound fields and its own hue (from config[actualKey]). Takes
+        precedence over the single-series actualKey / forecastKey / lowerKey /
+        upperKey shorthand; pass one form or the other, not both.
     - name: actualKey
       type: string
-      required: true
+      required: false
       description: >-
-        Field for the known/actual values — drawn as a solid line with a filled
-        area.
+        Single-series shorthand — field for the known/actual values, drawn as a
+        solid line with a filled area. Ignored when series is set.
     - name: forecastKey
       type: string
-      required: true
-      description: Field for the projected values — drawn as a dashed line.
+      required: false
+      description: >-
+        Single-series shorthand — field for the projected values, drawn as a
+        dashed line. Ignored when series is set.
     - name: lowerKey
       type: string
-      required: true
-      description: Field for the cone's lower bound.
+      required: false
+      description: >-
+        Field for the cone's lower bound. Omit (with upperKey) for a band-less
+        projection: a bare dashed forecast line, no cone.
     - name: upperKey
       type: string
-      required: true
-      description: Field for the cone's upper bound.
+      required: false
+      description: >-
+        Field for the cone's upper bound. Omit (with lowerKey) for a band-less
+        projection: a bare dashed forecast line, no cone.
+    - name: showDots
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Mark each data point — a filled dot on the observed values, a hollow one
+        on the projection — so a point reads as measured or predicted at a glance.
+    - name: styleForecastTicks
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Italicize the X-axis ticks over the forecast period and paint them in the
+        first series' hue, so the projected columns read as projected even when
+        the shaded region is off.
+    - name: referenceLine
+      type: '{ value: number; label?: string } | Array<{ value: number; label?: string }>'
+      required: false
+      description: >-
+        One or more dashed horizontal thresholds on the value axis — e.g. a target
+        or a capacity limit. Pass a single object or an array to draw several. A
+        threshold beyond the data max extends the domain so it stays visible.
     - name: xAxisLabel
       type: string
       required: false
@@ -55,6 +92,14 @@ contract:
       description: >-
         Unit suffix appended to Y-axis tick values (recharts `unit`); the X axis
         is categorical.
+    - name: actualType
+      type: "'area' | 'line'"
+      required: false
+      default: "'area'"
+      description: >-
+        How the known/actual period is drawn — a filled area under the line, or a
+        bare line, for a chart where the cone should be the only shaded region or
+        where several metrics' fills would muddy each other.
     - name: strokeWidth
       type: number
       required: false

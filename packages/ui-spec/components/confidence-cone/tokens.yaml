@@ -2,12 +2,12 @@ spec_version: '1.0'
 component: ConfidenceCone
 
 # References only. Values live in @acronis-platform/tokens-pd. ConfidenceCone has
-# no token tier of its own — the metric color is supplied by the caller via
+# no token tier of its own — the metric colors are supplied by the caller via
 # `config` (a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-# design pass). The whole metric uses one color: the actual area, the forecast
-# line, and the cone band all reuse the actual series' color (the cone/area fills
-# at low opacity). The chrome + forecast-region marker resolve the semantic
-# tokens below.
+# design pass). Each metric uses one color: its actual area, forecast line, and
+# cone band all reuse its actual series' color (the cone/area fills at low
+# opacity), and so do its dots and the styled forecast ticks. The chrome,
+# forecast-region marker and thresholds resolve the semantic tokens below.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
@@ -20,6 +20,14 @@ tokens:
   - name: --ui-background-surface-primary
     affects: tooltip-content
     description: Tooltip surface (bg-background).
+  - name: --ui-background-surface-primary
+    affects: forecast
+    description: >-
+      Fill of the hollow projected dots, so the dashed line does not show through
+      their middle.
+  - name: --ui-text-on-surface-secondary
+    affects: threshold
+    description: Stroke and caption of the dashed value-axis thresholds.
   - name: --ui-text-on-surface-primary
     affects: tooltip-content
     description: Tooltip value text and axis titles (text-foreground / fill-foreground).

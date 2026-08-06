@@ -1,1 +1,6 @@
-export { ConfidenceCone, type ConfidenceConeProps } from './confidence-cone';
+export {
+  ConfidenceCone,
+  type ConfidenceConeProps,
+  type ConfidenceConeSeries,
+  type ConfidenceConeReferenceLine,
+} from './confidence-cone';
