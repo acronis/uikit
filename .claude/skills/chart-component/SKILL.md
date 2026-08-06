@@ -236,6 +236,57 @@ of its own, so a bare Server Component importing this chart would break without
 it. (The broader "which ui-react components should carry the directive" question
 is a separate, package-wide design call — charts are the clear-cut case.)
 
+**No inline components inside a conditional.** A chart type branches a lot — one
+mapping per `dataKeys` mode, a segmented variant, an optional centre readout — and
+the tempting shape is a ternary or `&&` whose branches are JSX subtrees written in
+place. Don't. **If a branch is more than ~2 lines of JSX, extract it into a named
+module-scope component (or, for a subtree that closes over many locals, a named
+helper function) and leave the call site one line.**
+
+```tsx
+// ✗ a subtree inlined into the conditional
+<RechartsXChart>
+  {isSegmented
+    ? ringSegments.map((segment, index) => (
+        <RadialBar key={segment.key} dataKey={segment.key} stackId="segments">
+          {index === 0 && centerLabelNode}
+          {/* …8 more props, and the same again for the other branch… */}
+        </RadialBar>
+      ))
+    : seriesKeys.map(/* …30 more lines… */)}
+</RechartsXChart>;
+
+// ✓ each branch is a named component, so the chart body stays one line per child
+<RechartsXChart>
+  {isSegmented ? (
+    <XChartSegmentedSeries ringSegments={ringSegments} /* … */ />
+  ) : (
+    <XChartSeries seriesKeys={seriesKeys} /* … */ />
+  )}
+</RechartsXChart>;
+```
+
+Why it's safe with recharts 3: a chart finds its graphical items through the
+**store** — each series component dispatches its own registration on render — not
+by scanning its children for their types, so grouping series inside a component of
+your own is invisible to it. Two constraints survive extraction: a series that
+reads its _own_ children by type (`RadialBar`/`Bar`/`Pie`/`Scatter`/`Funnel` call
+`findAllByType(children, Cell)`) needs its `Cell`s to stay **direct** children, and
+`<Label>`/`<LabelList>` must stay inside the series element that owns them. Verify
+by diffing the rendered DOM before and after — an extraction that is purely
+structural must leave it byte-identical, which also means the VR baselines don't
+need regenerating.
+
+The same rule covers `content` props: pass `ChartTooltip`/`ChartLegend` a
+configured **element** (`content={<ChartTooltipContent … />}`), and when the choice
+of element is conditional, put the branching in a small named function
+(`getDefaultTooltipContent()`) rather than nesting ternaries in the JSX attribute.
+If a `content` genuinely must be a **function** (recharts `cloneElement`s an
+element but `createElement`s a function, so only the function form can keep a
+payload you composed yourself), memoize it with `useCallback` — a fresh closure
+each render is a new element _type_, which remounts the subtree instead of
+updating it.
+
 **Code Connect — deferred.** Write `<name>.figma.tsx` with the `NEEDS_FIGMA_URL`
 status marker, real prop mappings, placeholder URL (identical to
 `/legacy-component` Phase 3).

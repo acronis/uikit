@@ -26,6 +26,7 @@ import {
   type ChartDataLabelProps,
   type ChartTooltipContentProps,
   type PolarLabelPosition,
+  type ResolvedAnimation,
   type TickFormatter,
 } from '../chart';
 
@@ -50,6 +51,63 @@ export interface RadialBarChartCenterLabel {
   value?: string | number;
   /** Caption rendered under the value. */
   label?: string | number;
+}
+
+/**
+ * The readout in the hole at the centre of the arcs — a headline value over a
+ * caption. Rendered as a recharts `<Label>`, which is what supplies the polar
+ * viewBox the text centres itself on.
+ *
+ * There is one readout for the whole chart, so it hangs off the first series
+ * drawn — every series shares the same viewBox.
+ */
+function RadialBarChartCenterLabelContent({
+  centerLabel,
+}: {
+  centerLabel: RadialBarChartCenterLabel;
+}) {
+  return (
+    <Label
+      content={({ viewBox }) => {
+        if (!viewBox || !('cx' in viewBox)) return null;
+        const { cx: centerX = 0, cy: centerY = 0 } = viewBox as {
+          cx?: number;
+          cy?: number;
+        };
+        const hasValue = centerLabel.value != null;
+        const hasLabel = centerLabel.label != null;
+        // Straddle the centre when both lines show, so the value + label block
+        // is centered as a whole (not just the value).
+        const both = hasValue && hasLabel;
+        return (
+          <g>
+            {hasValue && (
+              <text
+                x={centerX}
+                y={both ? centerY - 10 : centerY}
+                textAnchor="middle"
+                dominantBaseline="central"
+                className="fill-foreground text-2xl font-semibold"
+              >
+                {centerLabel.value}
+              </text>
+            )}
+            {hasLabel && (
+              <text
+                x={centerX}
+                y={both ? centerY + 13 : centerY}
+                textAnchor="middle"
+                dominantBaseline="central"
+                className="fill-muted-foreground text-sm"
+              >
+                {centerLabel.label}
+              </text>
+            )}
+          </g>
+        );
+      }}
+    />
+  );
 }
 
 /**
@@ -273,6 +331,156 @@ export function radialBarChartBandName(
 ): string {
   const name = row?.[nameKey];
   return name == null ? '' : String(name);
+}
+
+/**
+ * What an arc's data label calls the arc: the row's own `nameKey` value, or — in
+ * multi-metric mode, where one arc *is* one metric — that metric's `config` label.
+ */
+function radialBarChartArcName(options: {
+  key: string;
+  row: RadialBarChartDatum | undefined;
+  isMultiMetric: boolean;
+  nameKey: string;
+  config: ChartConfig;
+}): string | number | undefined {
+  const { key, row, isMultiMetric, nameKey, config } = options;
+  if (!isMultiMetric) return row?.[nameKey];
+  // ChartConfig labels are ReactNode; only a plain string/number can go into an
+  // SVG <text>.
+  const label = config[key]?.label;
+  return typeof label === 'string' || typeof label === 'number' ? label : key;
+}
+
+/**
+ * The default mapping's arcs: one `RadialBar` per series — one for the single
+ * `dataKey`, or one per `dataKeys` entry in multi-metric mode — drawn
+ * concentrically.
+ *
+ * recharts collects its graphical items from the store (each `RadialBar`
+ * registers itself on render) rather than by scanning the chart's children for
+ * their types, so grouping them inside a component of our own is invisible to it.
+ * The `Cell`s stay direct children of their `RadialBar`, which *does* read its own
+ * children by type.
+ */
+function RadialBarChartSeries({
+  seriesKeys,
+  seriesData,
+  isMultiMetric,
+  config,
+  nameKey,
+  showBackground,
+  cornerRadius,
+  minPointSize,
+  animation,
+  centerLabel,
+  showLabels,
+  labelPosition,
+  labelFormat,
+  labelFormatter,
+}: {
+  seriesKeys: string[];
+  seriesData: RadialBarChartDatum[];
+  isMultiMetric: boolean;
+  config: ChartConfig;
+  nameKey: string;
+  showBackground: boolean;
+  cornerRadius: number;
+  minPointSize: number | undefined;
+  animation: ResolvedAnimation;
+  centerLabel: RadialBarChartCenterLabel | undefined;
+  showLabels: boolean;
+  labelPosition: PolarLabelPosition;
+  labelFormat: RadialBarChartLabelFormat;
+  labelFormatter?: TickFormatter;
+}) {
+  return seriesKeys.map((key, seriesIndex) => (
+    <RadialBar
+      key={key}
+      dataKey={key}
+      fill={isMultiMetric ? `var(--color-${key})` : undefined}
+      background={showBackground}
+      cornerRadius={cornerRadius}
+      minPointSize={minPointSize}
+      {...animation}
+    >
+      {!isMultiMetric &&
+        seriesData.map((entry, index) => (
+          // Keyed by index, not the name: two arcs could share a nameKey
+          // value, which would collide as a React key. Same-named arcs
+          // intentionally share a color/config entry via `--color-<name>`.
+          <Cell key={index} fill={`var(--color-${entry[nameKey]})`} />
+        ))}
+      {seriesIndex === 0 && centerLabel && (
+        <RadialBarChartCenterLabelContent centerLabel={centerLabel} />
+      )}
+      {showLabels && (
+        <LabelList
+          // `valueAccessor` rather than `dataKey`: the label text can
+          // carry the arc's name, which only the whole row (single
+          // metric) or the metric's config entry can supply. recharts
+          // ignores the accessor when a dataKey is set, so the two
+          // can't be combined.
+          valueAccessor={(entry) =>
+            radialBarChartLabelText({
+              format: labelFormat,
+              name: radialBarChartArcName({
+                key,
+                row: entry.payload as RadialBarChartDatum | undefined,
+                isMultiMetric,
+                nameKey,
+                config,
+              }),
+              value: entry.value as string | number | undefined,
+              formatter: labelFormatter,
+            })
+          }
+          position={labelPosition}
+          className={resolveLabelFillClass(labelPosition)}
+          fontSize={CHART_LABEL_FONT_SIZE}
+        />
+      )}
+    </RadialBar>
+  ));
+}
+
+/**
+ * A segmented gauge's ring: the pieces from `radialBarChartSegments` as one stack
+ * of synthetic series, so they lay out sequentially around the ring instead of
+ * concentrically and the `gap` pieces read as notches.
+ */
+function RadialBarChartSegmentedSeries({
+  ringSegments,
+  row,
+  nameKey,
+  cornerRadius,
+  animation,
+  centerLabel,
+}: {
+  ringSegments: RadialBarChartSegment[];
+  row: RadialBarChartDatum;
+  nameKey: string;
+  cornerRadius: number;
+  animation: ResolvedAnimation;
+  centerLabel: RadialBarChartCenterLabel | undefined;
+}) {
+  return ringSegments.map((segment, index) => (
+    <RadialBar
+      key={segment.key}
+      dataKey={segment.key}
+      stackId="segments"
+      // The metric's name, so the hover has a row to key off at all
+      // (`ChartTooltipContent` keys its row off `name`).
+      name={String(row[nameKey])}
+      fill={radialBarChartSegmentFill(segment.kind, row[nameKey])}
+      cornerRadius={cornerRadius}
+      {...animation}
+    >
+      {index === 0 && centerLabel && (
+        <RadialBarChartCenterLabelContent centerLabel={centerLabel} />
+      )}
+    </RadialBar>
+  ));
 }
 
 export interface RadialBarChartProps
@@ -551,60 +759,37 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
       <ChartLegendContent nameKey={nameKey} />
     );
 
-    const arcName = (key: string, row: RadialBarChartDatum | undefined) => {
-      if (!isMultiMetric) return row?.[nameKey];
-      // ChartConfig labels are ReactNode; only a plain string/number can go into
-      // an SVG <text>.
-      const label = config[key]?.label;
-      return typeof label === 'string' || typeof label === 'number'
-        ? label
-        : key;
-    };
+    // The built-in tooltip reading, which each mapping composes differently: a
+    // segmented ring rebuilds it from the data row, multi-metric renames the
+    // header after the band, and the default mapping reads the hovered arc.
+    const getDefaultTooltipContent = () => {
+      if (isSegmented) {
+        return (
+          <RadialBarChartSegmentedTooltipContent
+            config={config}
+            row={data[0]}
+            nameKey={nameKey}
+            dataKey={dataKey}
+            domainMax={valueDomain?.[1]}
+          />
+        );
+      }
 
-    // One readout for the whole chart, so it hangs off the first series drawn —
-    // every series shares the same polar viewBox.
-    const centerLabelNode = centerLabel ? (
-      <Label
-        content={({ viewBox }) => {
-          if (!viewBox || !('cx' in viewBox)) return null;
-          const { cx: centerX = 0, cy: centerY = 0 } = viewBox as {
-            cx?: number;
-            cy?: number;
-          };
-          const hasValue = centerLabel.value != null;
-          const hasLabel = centerLabel.label != null;
-          // Straddle the centre when both lines show, so the value + label block
-          // is centered as a whole (not just the value).
-          const both = hasValue && hasLabel;
-          return (
-            <g>
-              {hasValue && (
-                <text
-                  x={centerX}
-                  y={both ? centerY - 10 : centerY}
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  className="fill-foreground text-2xl font-semibold"
-                >
-                  {centerLabel.value}
-                </text>
-              )}
-              {hasLabel && (
-                <text
-                  x={centerX}
-                  y={both ? centerY + 13 : centerY}
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  className="fill-muted-foreground text-sm"
-                >
-                  {centerLabel.label}
-                </text>
-              )}
-            </g>
-          );
-        }}
-      />
-    ) : null;
+      if (isMultiMetric) {
+        return (
+          <ChartTooltipContent
+            labelFormatter={(_, payload) =>
+              radialBarChartBandName(
+                payload?.[0]?.payload as RadialBarChartDatum | undefined,
+                nameKey
+              )
+            }
+          />
+        );
+      }
+
+      return <ChartTooltipContent nameKey={nameKey} hideLabel />;
+    };
 
     return (
       <div ref={ref} className={cn(className)} {...props}>
@@ -647,101 +832,36 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
                 // active, which on a segmented ring is one metric either way —
                 // it just draws a hairline across the gauge.
                 cursor={isSegmented ? false : undefined}
-                content={
-                  tooltipContent ??
-                  (isSegmented ? (
-                    <RadialBarChartSegmentedTooltipContent
-                      config={config}
-                      row={data[0]}
-                      nameKey={nameKey}
-                      dataKey={dataKey}
-                      domainMax={valueDomain?.[1]}
-                    />
-                  ) : isMultiMetric ? (
-                    <ChartTooltipContent
-                      labelFormatter={(_, payload) =>
-                        radialBarChartBandName(
-                          payload?.[0]?.payload as
-                            | RadialBarChartDatum
-                            | undefined,
-                          nameKey
-                        )
-                      }
-                    />
-                  ) : (
-                    <ChartTooltipContent nameKey={nameKey} hideLabel />
-                  ))
-                }
+                content={tooltipContent ?? getDefaultTooltipContent()}
               />
             )}
-            {isSegmented &&
-              // One stack, so the pieces lay out sequentially around the ring
-              // instead of concentrically; the `gap` pieces are the notches.
-              ringSegments.map((segment, index) => (
-                <RadialBar
-                  key={segment.key}
-                  dataKey={segment.key}
-                  stackId="segments"
-                  // The metric's name, so the hover has a row to key off at all
-                  // (`ChartTooltipContent` keys its row off `name`).
-                  name={String(data[0][nameKey])}
-                  fill={radialBarChartSegmentFill(
-                    segment.kind,
-                    data[0][nameKey]
-                  )}
-                  cornerRadius={cornerRadius}
-                  {...animation}
-                >
-                  {index === 0 && centerLabelNode}
-                </RadialBar>
-              ))}
-            {!isSegmented &&
-              seriesKeys.map((key, seriesIndex) => (
-                <RadialBar
-                  key={key}
-                  dataKey={key}
-                  fill={isMultiMetric ? `var(--color-${key})` : undefined}
-                  background={showBackground}
-                  cornerRadius={cornerRadius}
-                  minPointSize={minPointSize}
-                  {...animation}
-                >
-                  {!isMultiMetric &&
-                    seriesData.map((entry, index) => (
-                      // Keyed by index, not the name: two arcs could share a nameKey
-                      // value, which would collide as a React key. Same-named arcs
-                      // intentionally share a color/config entry via `--color-<name>`.
-                      <Cell
-                        key={index}
-                        fill={`var(--color-${entry[nameKey]})`}
-                      />
-                    ))}
-                  {seriesIndex === 0 && centerLabelNode}
-                  {showLabels && (
-                    <LabelList
-                      // `valueAccessor` rather than `dataKey`: the label text can
-                      // carry the arc's name, which only the whole row (single
-                      // metric) or the metric's config entry can supply. recharts
-                      // ignores the accessor when a dataKey is set, so the two
-                      // can't be combined.
-                      valueAccessor={(entry) =>
-                        radialBarChartLabelText({
-                          format: labelFormat,
-                          name: arcName(
-                            key,
-                            entry.payload as RadialBarChartDatum | undefined
-                          ),
-                          value: entry.value as string | number | undefined,
-                          formatter: labelFormatter,
-                        })
-                      }
-                      position={arcLabelPosition}
-                      className={resolveLabelFillClass(arcLabelPosition)}
-                      fontSize={CHART_LABEL_FONT_SIZE}
-                    />
-                  )}
-                </RadialBar>
-              ))}
+            {isSegmented ? (
+              <RadialBarChartSegmentedSeries
+                ringSegments={ringSegments}
+                row={data[0]}
+                nameKey={nameKey}
+                cornerRadius={cornerRadius}
+                animation={animation}
+                centerLabel={centerLabel}
+              />
+            ) : (
+              <RadialBarChartSeries
+                seriesKeys={seriesKeys}
+                seriesData={seriesData}
+                isMultiMetric={isMultiMetric}
+                config={config}
+                nameKey={nameKey}
+                showBackground={showBackground}
+                cornerRadius={cornerRadius}
+                minPointSize={minPointSize}
+                animation={animation}
+                centerLabel={centerLabel}
+                showLabels={showLabels}
+                labelPosition={arcLabelPosition}
+                labelFormat={labelFormat}
+                labelFormatter={labelFormatter}
+              />
+            )}
             {showLegend && !isSegmented && (
               <ChartLegend content={legendContent} />
             )}
