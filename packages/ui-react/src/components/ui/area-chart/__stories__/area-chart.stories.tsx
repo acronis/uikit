@@ -72,12 +72,32 @@ const meta = {
     layout: { control: 'inline-radio', options: ['single', 'stacked'] },
     fill: { control: 'inline-radio', options: ['solid', 'gradient'] },
     curve: {
-      control: 'inline-radio',
-      options: ['linear', 'monotone', 'step'],
+      control: 'select',
+      options: [
+        'linear',
+        'monotone',
+        'natural',
+        'basis',
+        'step',
+        'stepBefore',
+        'stepAfter',
+      ],
     },
     strokeWidth: { control: { type: 'number', min: 0, max: 6 } },
     fillOpacity: { control: { type: 'number', min: 0, max: 1, step: 0.1 } },
     showDots: { control: 'boolean' },
+    dotSize: { control: { type: 'number', min: 1, max: 10 } },
+    showActiveDot: { control: 'boolean' },
+    areaSettings: {
+      control: 'object',
+      description:
+        'Per-series overrides keyed by data key, e.g. `{ mobile: { dashed: true, fillOpacity: 0.1 } }`.',
+    },
+    referenceLine: {
+      control: 'object',
+      description:
+        'A dashed target/average rule, e.g. `{ value: 250, label: "Target" }` or `{ average: true }`.',
+    },
     connectNulls: { control: 'boolean' },
     xAxisLabel: { control: 'text' },
     yAxisLabel: { control: 'text' },
@@ -142,6 +162,54 @@ export const Stacked: Story = {
 // Flat translucent fill instead of a gradient.
 export const SolidFill: Story = {
   args: { fill: 'solid' },
+};
+
+// The four curve types beyond linear/monotone/step, side by side on one series
+// so the interpolation is the only difference: `natural` and `basis` smooth more
+// (and `basis` need not pass through the points), while `stepBefore` /
+// `stepAfter` move the step to the leading or trailing point.
+export const ExtendedCurves: Story = {
+  render: (args) => (
+    <div className="grid grid-cols-2 gap-4">
+      {(['natural', 'basis', 'stepBefore', 'stepAfter'] as const).map((curve) => (
+        <div key={curve} className="space-y-1">
+          <p className="text-xs text-muted-foreground">{curve}</p>
+          <AreaChart
+            {...args}
+            curve={curve}
+            dataKeys={['desktop']}
+            showLegend={false}
+            className="h-[160px] w-[260px]"
+          />
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+// Per-series overrides: a faint, dashed projection beside solid actuals, and a
+// third series stepped with its own dots.
+export const PerSeriesStyling: Story = {
+  args: {
+    fill: 'solid',
+    showDots: true,
+    areaSettings: {
+      mobile: { dashed: true, fillOpacity: 0.1, showDots: false },
+      tablet: { curveType: 'stepAfter', dotSize: 5 },
+    },
+  },
+};
+
+// A fixed target plus the mean of the plotted series, both captioned. The rule
+// extends the axis domain, so a target above the data maximum stays visible.
+export const ReferenceLines: Story = {
+  args: {
+    dataKeys: ['desktop'],
+    referenceLine: [
+      { value: 320, label: 'Target' },
+      { average: true, label: 'Average' },
+    ],
+  },
 };
 
 // Response times in ms — real units, so `yUnit`/`xUnit` read truthfully. (The

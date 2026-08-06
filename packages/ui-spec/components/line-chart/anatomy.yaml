@@ -9,6 +9,7 @@ schematic: |
         x-axis:  <XAxis>   category (xKey)
         y-axis:  <YAxis>   numeric value axis
         series:  one <Line type=curve> per dataKey  (solid or dashed stroke)
+        rule:    <ReferenceLine> per referenceLine entry (over the series)
         tooltip: <ChartTooltip> → tooltip-content   (hover card)
         legend:  <ChartLegend>  → legend-content    (per-series swatch + label)
         brush:   <Brush>                            (only when showBrush)
@@ -46,7 +47,14 @@ parts:
     description: >-
       One `Line` per entry in `dataKeys`, stroked from its `--color-<key>` var.
       `curve` sets the interpolation (`type`); `lineStyle` sets solid vs dashed;
-      `showDots` toggles the per-point dot.
+      `showDots` toggles the per-point dot and `dotSize` its radius. A
+      `lineSettings` entry overrides any of those for one series.
+  - id: rule
+    element: g
+    description: >-
+      A `ReferenceLine` per `referenceLine` entry — a dashed rule across the
+      value axis at a fixed value or a series mean, drawn over the series with an
+      optional caption at its top right.
   - id: brush
     element: g
     description: >-

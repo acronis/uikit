@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
 import {
   LineChart,
@@ -10,6 +10,10 @@ import {
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
+import {
+  giveTheChartASize,
+  restoreTheChartSize,
+} from '../../chart/__tests__/sized-chart';
 
 const data = [
   { month: 'Jan', desktop: 186, mobile: 80 },
@@ -289,5 +293,156 @@ describe('LineChart animation and data labels', () => {
       labelPosition: 'center',
     });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+});
+
+// These need real geometry: the curve set, the dot radii, and the per-series
+// overrides are all only observable on the painted SVG, which recharts skips
+// entirely at 0×0 (see `sized-chart`).
+describe('LineChart curves, dots and per-series overrides', () => {
+  afterEach(restoreTheChartSize);
+
+  const CURVES = [
+    'linear',
+    'monotone',
+    'natural',
+    'basis',
+    'step',
+    'stepBefore',
+    'stepAfter',
+  ] as const;
+
+  function curvePaths(props: Partial<React.ComponentProps<typeof LineChart>>) {
+    giveTheChartASize();
+    const { container, unmount } = renderChart({ dataKeys: ['desktop'], ...props });
+    const paths = [...container.querySelectorAll('.recharts-line-curve')].map(
+      (path) => path.getAttribute('d')
+    );
+    return { paths, container, unmount };
+  }
+
+  // A curve value that recharts doesn't recognize silently draws a straight
+  // line, so identical geometry between two types is the failure to catch.
+  it('draws distinct geometry for every curve type', () => {
+    const drawn = CURVES.map((curve) => {
+      const { paths, unmount } = curvePaths({ curve });
+      unmount();
+      restoreTheChartSize();
+      expect(paths[0]).toBeTruthy();
+      return paths[0];
+    });
+    expect(new Set(drawn).size).toBe(CURVES.length);
+  });
+
+  it('mirrors an extended curve variant onto the root', () => {
+    const { container } = renderChart({ curve: 'stepAfter' });
+    expect(container.firstElementChild).toHaveAttribute(
+      'data-curve',
+      'stepAfter'
+    );
+  });
+
+  it('sizes the point dots from dotSize', () => {
+    giveTheChartASize();
+    const { container } = renderChart({ dataKeys: ['desktop'], dotSize: 6 });
+    const dots = container.querySelectorAll('.recharts-line-dot');
+    expect(dots.length).toBeGreaterThan(0);
+    for (const dot of dots) expect(dot).toHaveAttribute('r', '6');
+  });
+
+  it('keeps the static dots when only the hover dot is turned off', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      dataKeys: ['desktop'],
+      showActiveDot: false,
+    });
+    expect(
+      container.querySelectorAll('.recharts-line-dot').length
+    ).toBeGreaterThan(0);
+  });
+
+  it('draws no static dots for a hover-only line', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      dataKeys: ['desktop'],
+      showDots: false,
+      showActiveDot: true,
+    });
+    expect(container.querySelectorAll('.recharts-line-dot')).toHaveLength(0);
+  });
+
+  it('restyles one series without touching the others', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      lineSettings: {
+        mobile: { color: 'rgb(1 2 3)', strokeWidth: 4, dashed: true },
+      },
+    });
+    // The curves follow `dataKeys` order: desktop first, then mobile.
+    const [desktop, mobile] = container.querySelectorAll('.recharts-line-curve');
+    expect(mobile).toHaveAttribute('stroke', 'rgb(1 2 3)');
+    expect(mobile).toHaveAttribute('stroke-width', '4');
+    expect(mobile).toHaveAttribute('stroke-dasharray', '5 5');
+    expect(desktop).toHaveAttribute('stroke', 'var(--color-desktop)');
+    expect(desktop).toHaveAttribute('stroke-width', '2');
+    expect(desktop).not.toHaveAttribute('stroke-dasharray');
+  });
+
+  it('gives one series its own curve type', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      curve: 'linear',
+      lineSettings: { mobile: { curveType: 'natural' } },
+    });
+    const [desktop, mobile] = container.querySelectorAll('.recharts-line-curve');
+    expect(desktop!.getAttribute('d')).not.toBe(mobile!.getAttribute('d'));
+    // A natural spline is drawn with cubic segments; a linear one is not.
+    expect(mobile!.getAttribute('d')).toContain('C');
+    expect(desktop!.getAttribute('d')).not.toContain('C');
+  });
+
+  it('turns dots off for one series and resizes another', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      lineSettings: { desktop: { showDots: false }, mobile: { dotSize: 5 } },
+    });
+    const dots = container.querySelectorAll('.recharts-line-dot');
+    expect(dots).toHaveLength(data.length);
+    for (const dot of dots) expect(dot).toHaveAttribute('r', '5');
+  });
+
+  // A comparison overlay is *defined* by reading as secondary, so the dot
+  // settings must not be able to promote it back to a primary-looking line.
+  it('keeps a comparison series dot-less even when its settings ask for dots', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      comparisonKeys: ['mobile'],
+      lineSettings: { desktop: { showDots: false }, mobile: { showDots: true } },
+    });
+    expect(container.querySelectorAll('.recharts-line-dot')).toHaveLength(0);
+  });
+
+  it('opts one series out of the chart-wide value labels', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      showLabels: true,
+      lineSettings: { mobile: { showLabel: false } },
+    });
+    const labels = container.querySelectorAll('.recharts-label-list text');
+    expect(labels).toHaveLength(data.length);
+    expect([...labels].map((label) => label.textContent)).toEqual(
+      data.map((row) => String(row.desktop))
+    );
+  });
+
+  it('labels a single series without the chart-wide toggle', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      lineSettings: { mobile: { showLabel: true, labelPosition: 'bottom' } },
+    });
+    const labels = container.querySelectorAll('.recharts-label-list text');
+    expect([...labels].map((label) => label.textContent)).toEqual(
+      data.map((row) => String(row.mobile))
+    );
   });
 });

@@ -48,7 +48,10 @@ const data = [
 
 const config = {
   desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
-  mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
+  mobile: {
+    label: 'Mobile',
+    color: 'var(--ui-background-status-strong-danger)',
+  },
 } satisfies ChartConfig;
 
 <LineChart
@@ -66,16 +69,39 @@ Plot a single series by passing one `dataKey`:
 <LineChart config={config} data={data} dataKeys={['desktop']} xKey="month" />
 ```
 
-Change the interpolation with `curve` (`linear`, `monotone`, or `step`):
+Change the interpolation with `curve`. Seven types are available, from most to
+least literal about the data:
+
+| `curve`              | Reads as                                                                                      |
+| -------------------- | --------------------------------------------------------------------------------------------- |
+| `linear`             | Straight segments between points.                                                             |
+| `monotone` (default) | Smoothed, never overshooting a point's value.                                                 |
+| `natural`            | A natural cubic spline — smoother, but it may overshoot, so read it as a trend.               |
+| `basis`              | A B-spline that need not pass through the points at all; the smoothest, least literal option. |
+| `step`               | Right angles, changing value at the midpoint between two points.                              |
+| `stepBefore`         | The same, changing at the leading point.                                                      |
+| `stepAfter`          | The same, changing at the trailing point.                                                     |
 
 ```tsx
-<LineChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" curve="step" />
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  curve="stepAfter"
+/>
 ```
 
 Dash the strokes with `lineStyle="dashed"`:
 
 ```tsx
-<LineChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" lineStyle="dashed" />
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  lineStyle="dashed"
+/>
 ```
 
 Toggle the chrome and per-point dots with `showGrid` / `showTooltip` /
@@ -89,6 +115,23 @@ Toggle the chrome and per-point dots with `showGrid` / `showTooltip` /
   xKey="month"
   showDots={false}
   connectNulls
+/>
+```
+
+`dotSize` sets the dot radius (3px by default; the hover dot is always 2px
+larger). `showActiveDot` decides the hover dot on its own — unset it follows
+`showDots`, so pass it to get a bare line that still emphasizes the hovered
+point, or static dots with no hover emphasis:
+
+```tsx
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  dotSize={6}
+  showDots={false}
+  showActiveDot
 />
 ```
 
@@ -135,6 +178,57 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
 />
 ```
 
+## Per-series overrides
+
+`lineSettings` restyles one series without touching the others — keyed by data
+key, and any field left out falls back to the chart-wide prop:
+
+```tsx
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile', 'tablet']}
+  xKey="month"
+  lineSettings={{
+    desktop: { strokeWidth: 3 },
+    mobile: { dashed: true, showDots: false },
+    tablet: { curveType: 'stepAfter', dotSize: 5 },
+  }}
+/>
+```
+
+Each entry takes `color`, `strokeWidth`, `dashed`, `curveType`, `showDots`,
+`dotSize`, and the label controls (`showLabel`, `labelPosition`) — so one series
+can carry value labels while the rest stay clean.
+
+A series listed in `comparisonKeys` keeps its dashed, dimmed, dot-less treatment:
+`color`, `strokeWidth` and `curveType` still apply to it, but `showDots` /
+`dotSize` do not — an overlay is defined by reading as secondary.
+
+## Reference line
+
+`referenceLine` draws a dashed rule across the value axis — a target, a
+threshold, or a series average. Pass one config or an array:
+
+```tsx
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  referenceLine={[
+    { value: 320, label: 'Target' },
+    { average: true, label: 'Average' },
+  ]}
+/>
+```
+
+A fixed `value` wins; otherwise `average` takes the mean of one series
+(`average: 'desktop'`) or of every plotted series (`average: true`) — and nothing
+is drawn when there are no numeric values to average. The rule extends the axis
+domain, so a target above the data maximum stays visible instead of being
+clipped. `BarChart` and `AreaChart` take the same config.
+
 ## Custom tooltip
 
 Replace the tooltip with a configured `ChartTooltipContent` — imported from the
@@ -175,7 +269,10 @@ import { LineChart, createTickFormatter } from '@acronis-platform/ui-react';
   dataKeys={['desktop']}
   xKey="month"
   yTickFormatter={createTickFormatter({
-    style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1,
+    style: 'currency',
+    currency: 'USD',
+    notation: 'compact',
+    maximumFractionDigits: 1,
   })}
 />;
 ```
@@ -187,7 +284,15 @@ Charts render statically by default. Opt in to an entrance animation with
 `animationEasing`:
 
 ```tsx
-<LineChart config={config} data={data} dataKeys={['desktop']} xKey="month" animate animationDuration={800} animationEasing="ease-out" />
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  animate
+  animationDuration={800}
+  animationEasing="ease-out"
+/>
 ```
 
 `animate` honors `prefers-reduced-motion`: for a visitor who has asked their
@@ -200,7 +305,14 @@ Annotate each point with its value using `showLabels`. `labelFormatter` takes th
 same formatters as the axes, so a label and its axis read alike:
 
 ```tsx
-<LineChart config={config} data={data} dataKeys={['desktop']} xKey="month" showLabels labelFormatter={formatCompactNumber} />
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  showLabels
+  labelFormatter={formatCompactNumber}
+/>
 ```
 
 `labelPosition` moves them; the default is the series' growing end (`top`, or
@@ -209,7 +321,14 @@ next segment, so each value centres inside its own segment instead — and switc
 to a token that stays legible over the fill:
 
 ```tsx
-<LineChart config={config} data={data} dataKeys={['desktop']} xKey="month" showLabels labelPosition="insideEnd" />
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  showLabels
+  labelPosition="insideEnd"
+/>
 ```
 
 Labels are off by default — with more than one series they collide easily, so turn
@@ -223,7 +342,13 @@ series, its category axis, and the tooltip all follow the selection. `brushHeigh
 sizes the strip (28px by default):
 
 ```tsx
-<LineChart config={config} data={data} dataKeys={['desktop']} xKey="month" showBrush />
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  showBrush
+/>
 ```
 
 The brush indexes rows, so it slices the category axis. It is independent of

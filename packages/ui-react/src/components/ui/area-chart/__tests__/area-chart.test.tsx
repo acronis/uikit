@@ -1,11 +1,15 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
 import { AreaChart } from '../area-chart';
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
+import {
+  giveTheChartASize,
+  restoreTheChartSize,
+} from '../../chart/__tests__/sized-chart';
 
 const data = [
   { month: 'Jan', desktop: 186, mobile: 80 },
@@ -197,5 +201,131 @@ describe('AreaChart animation and data labels', () => {
       labelPosition: 'center',
     });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+});
+
+// These need real geometry: the curve set, the dot radii, and the per-series
+// overrides are all only observable on the painted SVG, which recharts skips
+// entirely at 0×0 (see `sized-chart`).
+describe('AreaChart curves, dots and per-series overrides', () => {
+  afterEach(restoreTheChartSize);
+
+  const CURVES = [
+    'linear',
+    'monotone',
+    'natural',
+    'basis',
+    'step',
+    'stepBefore',
+    'stepAfter',
+  ] as const;
+
+  // A curve value that recharts doesn't recognize silently draws straight
+  // segments, so identical geometry between two types is the failure to catch.
+  it('draws distinct geometry for every curve type', () => {
+    const drawn = CURVES.map((curve) => {
+      giveTheChartASize();
+      const { container, unmount } = renderChart({
+        dataKeys: ['desktop'],
+        curve,
+      });
+      const path = container
+        .querySelector('.recharts-area-curve')
+        ?.getAttribute('d');
+      unmount();
+      restoreTheChartSize();
+      expect(path).toBeTruthy();
+      return path;
+    });
+    expect(new Set(drawn).size).toBe(CURVES.length);
+  });
+
+  it('sizes the point dots from dotSize', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      dataKeys: ['desktop'],
+      showDots: true,
+      dotSize: 6,
+    });
+    const dots = container.querySelectorAll('.recharts-area-dot');
+    expect(dots.length).toBeGreaterThan(0);
+    for (const dot of dots) expect(dot).toHaveAttribute('r', '6');
+  });
+
+  it('draws no static dots for a hover-only area', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      dataKeys: ['desktop'],
+      showActiveDot: true,
+    });
+    expect(container.querySelectorAll('.recharts-area-dot')).toHaveLength(0);
+  });
+
+  it('restyles one series without touching the others', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      fill: 'solid',
+      areaSettings: {
+        mobile: {
+          color: 'rgb(1 2 3)',
+          strokeWidth: 4,
+          dashed: true,
+          fillOpacity: 0.1,
+        },
+      },
+    });
+    // The curves follow `dataKeys` order: desktop first, then mobile.
+    const [desktop, mobile] = container.querySelectorAll('.recharts-area-curve');
+    expect(mobile).toHaveAttribute('stroke', 'rgb(1 2 3)');
+    expect(mobile).toHaveAttribute('stroke-width', '4');
+    expect(mobile).toHaveAttribute('stroke-dasharray', '5 5');
+    expect(desktop).toHaveAttribute('stroke', 'var(--color-desktop)');
+    expect(desktop).not.toHaveAttribute('stroke-dasharray');
+
+    const [desktopFill, mobileFill] =
+      container.querySelectorAll('.recharts-area-area');
+    expect(mobileFill).toHaveAttribute('fill-opacity', '0.1');
+    expect(desktopFill).toHaveAttribute('fill-opacity', '0.4');
+  });
+
+  // The fill is painted from a gradient def, so a color override that stopped at
+  // the stroke would leave the series' body in its config color.
+  it('recolors a gradient series through its own stops', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      areaSettings: { mobile: { color: 'rgb(1 2 3)' } },
+    });
+    const stops = [...container.querySelectorAll('linearGradient')].flatMap(
+      (gradient) =>
+        [...gradient.querySelectorAll('stop')].map((stop) =>
+          stop.getAttribute('stop-color')
+        )
+    );
+    expect(stops).toContain('rgb(1 2 3)');
+    expect(stops).toContain('var(--color-desktop)');
+    expect(stops).not.toContain('var(--color-mobile)');
+  });
+
+  it('opts one series out of the chart-wide value labels', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      showLabels: true,
+      areaSettings: { mobile: { showLabel: false } },
+    });
+    const labels = container.querySelectorAll('.recharts-label-list text');
+    expect([...labels].map((label) => label.textContent)).toEqual(
+      data.map((row) => String(row.desktop))
+    );
+  });
+
+  it('labels a single series without the chart-wide toggle', () => {
+    giveTheChartASize();
+    const { container } = renderChart({
+      areaSettings: { mobile: { showLabel: true, labelPosition: 'bottom' } },
+    });
+    const labels = container.querySelectorAll('.recharts-label-list text');
+    expect([...labels].map((label) => label.textContent)).toEqual(
+      data.map((row) => String(row.mobile))
+    );
   });
 });

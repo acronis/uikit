@@ -7,7 +7,6 @@ import { BarChart as RechartsBarChart } from 'recharts';
 import {
   BarChart,
   barChartCategoryRange,
-  barChartReferenceValue,
   createTrackShape,
   dropHeadroomSeries,
   NormalizedTooltipContent,
@@ -15,6 +14,7 @@ import {
 } from '../bar-chart';
 import { ChartContainer, ChartTooltipContent, type ChartConfig,
   resolveAnimation,
+  resolveChartReferenceValue,
 } from '../../chart';
 
 beforeAll(() => {
@@ -210,27 +210,29 @@ describe('BarChart', () => {
 
 });
 
-describe('barChartReferenceValue', () => {
+// The resolver is shared with LineChart/AreaChart; BarChart is where its
+// value/average contract is exercised against real bar data.
+describe('resolveChartReferenceValue', () => {
   const keys = ['desktop', 'mobile'];
 
   it('returns undefined with no config', () => {
-    expect(barChartReferenceValue(undefined, data, keys)).toBeUndefined();
+    expect(resolveChartReferenceValue(undefined, data, keys)).toBeUndefined();
   });
 
   it('returns a fixed value (including 0)', () => {
-    expect(barChartReferenceValue({ value: 150 }, data, keys)).toBe(150);
-    expect(barChartReferenceValue({ value: 0 }, data, keys)).toBe(0);
+    expect(resolveChartReferenceValue({ value: 150 }, data, keys)).toBe(150);
+    expect(resolveChartReferenceValue({ value: 0 }, data, keys)).toBe(0);
   });
 
   it('prefers a fixed value over average', () => {
     expect(
-      barChartReferenceValue({ value: 42, average: true }, data, keys)
+      resolveChartReferenceValue({ value: 42, average: true }, data, keys)
     ).toBe(42);
   });
 
   it('averages a single named series', () => {
     // desktop: (186 + 305 + 237) / 3
-    expect(barChartReferenceValue({ average: 'desktop' }, data, keys)).toBeCloseTo(
+    expect(resolveChartReferenceValue({ average: 'desktop' }, data, keys)).toBeCloseTo(
       242.667,
       2
     );
@@ -238,13 +240,13 @@ describe('barChartReferenceValue', () => {
 
   it('averages every plotted series when average is true', () => {
     // (186+305+237 + 80+200+120) / 6 = 188
-    expect(barChartReferenceValue({ average: true }, data, keys)).toBe(188);
+    expect(resolveChartReferenceValue({ average: true }, data, keys)).toBe(188);
   });
 
   it('returns undefined when there is nothing numeric to average', () => {
-    expect(barChartReferenceValue({ average: true }, [], keys)).toBeUndefined();
+    expect(resolveChartReferenceValue({ average: true }, [], keys)).toBeUndefined();
     expect(
-      barChartReferenceValue({ average: 'missing' }, data, keys)
+      resolveChartReferenceValue({ average: 'missing' }, data, keys)
     ).toBeUndefined();
   });
 });

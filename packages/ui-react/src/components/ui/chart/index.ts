@@ -23,6 +23,10 @@ export {
   resolveLabelFillClass,
   resolveCartesianLabelPosition,
   resolveBrushProps,
+  resolveChartReferenceValue,
+  resolveReferenceLineProps,
+  toReferenceLineList,
+  CHART_REFERENCE_LINE_STROKE,
   CHART_LABEL_MARGIN,
   CHART_LABEL_FILL_CLASS,
   CHART_LABEL_FILL_ON_SERIES_CLASS,
@@ -32,6 +36,9 @@ export {
 } from './chart-format';
 export type {
   TickFormatter,
+  ChartCurveType,
+  ChartReferenceLine,
+  ChartReferenceLabelPosition,
   CartesianChartProps,
   ChartYAxisTarget,
   SecondaryYAxisProps,
