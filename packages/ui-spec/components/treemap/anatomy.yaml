@@ -2,11 +2,13 @@ spec_version: '1.0'
 component: Treemap
 
 schematic: |
-  root: <div>                                       (wrapper)
+  root: <div>                                       (wrapper; a flex column with a legend)
     container: <ChartContainer>                     (themed, sized, responsive)
       plot: recharts <Treemap data dataKey nameKey aspectRatio content>
-        cells:   one rect per leaf (sized by dataKey, filled per nameKey) + on-cell label
+        cells:   one rounded tile per leaf (sized by dataKey, filled per nameKey)
+                 + label block (config label + optional second line)
         tooltip: <ChartTooltip> → tooltip-content   (hover card)
+    legend: legend-content                          (row beside the plot, opt-in)
 
 root:
   element: div
@@ -20,26 +22,47 @@ parts:
     element: div
     description: >-
       The shared `ChartContainer` — supplies the per-leaf `--color-<name>` custom
-      properties from `config` and themes recharts' internals.
+      properties from `config` and themes recharts' internals. When the legend is
+      shown it shares the wrapper as a flex line with the legend row, giving up the
+      height the legend takes: a treemap tiles its whole surface, so a legend drawn
+      inside the plot would cover the tiles.
   - id: plot
     element: svg
     description: The recharts `Treemap` holding the tiled cells and the tooltip.
   - id: cells
     element: g
     description: >-
-      One rect per leaf, sized by `dataKey`, filled from its `--color-<name>` var
-      and separated by a surface-colored stroke, with a centered white on-cell
-      label (shown when the cell is large enough and `showLabels`). Rendered by a
-      custom `content` cell renderer.
+      One rounded rect per leaf, sized by `dataKey`, filled from its
+      `--color-<name>` var and inset so the surface shows through as a gutter
+      between tiles, carrying the label block: the leaf's config label plus an
+      optional second line from `secondaryKeys`, anchored per `labelAlign`. Both
+      lines truncate to the tile and are dropped when it has no room — the second
+      line first, then the name. Rendered by a custom `content` cell renderer; the
+      label block itself is HTML in a `foreignObject`, so it truncates and mirrors
+      (`text-start`) through CSS like the rest of the kit rather than through
+      hand-computed SVG text coordinates.
   - id: tooltip-content
     element: div
     description: >-
       `ChartTooltipContent` — hover card with one row for the hovered leaf (color
       indicator + name + value). Rendered when `showTooltip`.
+  - id: legend-content
+    element: div
+    description: >-
+      `ChartLegendContent` — one swatch + label per distinct leaf name, in a row of
+      its own on the edge `legendPos` names, wrapping onto further rows when the
+      entries outgrow the width. Rendered when `showLegend`, from a payload the
+      treemap synthesizes (recharts registers none for a treemap) and with `config`
+      passed as a prop, since the row sits outside the container.
 
 states:
   - id: labels
-    trigger: the showLabels prop renders each leaf's name inside its cell
+    trigger: the showLabels prop renders each leaf's label inside its cell
     kind: prop
     prop: showLabels
     affects: [cells]
+  - id: legend
+    trigger: the showLegend prop renders one legend entry per leaf
+    kind: prop
+    prop: showLegend
+    affects: [container, legend-content]

@@ -3,11 +3,11 @@
 import { Treemap, type ChartConfig } from '@acronis-platform/ui-react';
 
 const data = [
-  { name: 'React', size: 2400 },
-  { name: 'Vue', size: 1600 },
-  { name: 'Angular', size: 1200 },
-  { name: 'Svelte', size: 800 },
-  { name: 'Solid', size: 500 },
+  { name: 'React', size: 2400, count: 24 },
+  { name: 'Vue', size: 1600, count: 16 },
+  { name: 'Angular', size: 1200, count: 12 },
+  { name: 'Svelte', size: 800, count: 8 },
+  { name: 'Solid', size: 500, count: 5 },
 ];
 
 // Cell colors are caller-supplied via `config`, keyed by each leaf's nameKey
@@ -28,6 +28,11 @@ export function TreemapDemo() {
       data={data}
       dataKey="size"
       nameKey="name"
+      secondaryKeys={['size', 'count']}
+      secondaryFormatter={(value, index) =>
+        index === 0 ? `${value} kB` : `${value} files`
+      }
+      showLegend
       style={{ height: 320, width: 520 }}
     />
   );

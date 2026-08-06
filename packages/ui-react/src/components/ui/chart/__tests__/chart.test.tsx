@@ -111,6 +111,33 @@ describe('Chart', () => {
     );
   });
 
+  // A chart type whose renderer can't lay a legend out inside the plot (Treemap)
+  // renders the shared legend beside it, outside the container — so the config has
+  // to be passable as a prop rather than only through the container's context.
+  it('renders outside a ChartContainer when handed the config', () => {
+    const { container } = render(
+      <ChartLegendContent
+        config={config}
+        payload={[
+          { value: 'Desktop', dataKey: 'desktop', color: 'rgb(23 99 207)' },
+        ]}
+      />
+    );
+    expect(container).toHaveTextContent('Desktop');
+    expect(container.querySelector('.rounded-sm')).toBeInTheDocument();
+  });
+
+  it('renders nothing outside a ChartContainer without a config', () => {
+    const { container } = render(
+      <ChartLegendContent
+        payload={[
+          { value: 'Desktop', dataKey: 'desktop', color: 'rgb(23 99 207)' },
+        ]}
+      />
+    );
+    expect(container).toBeEmptyDOMElement();
+  });
+
   it('renders a line marker for stroke series and dashes it from strokeDasharray', () => {
     const { container } = render(
       <ChartContainer config={config} id="usage">

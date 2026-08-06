@@ -69,6 +69,13 @@ export type ChartLegendContentProps = {
   verticalAlign?: LegendProps['verticalAlign'];
   payload?: LegendPayload[];
   nameKey?: string;
+  /**
+   * The series config the entries take their labels and icons from. Defaults to
+   * the enclosing `ChartContainer`'s — pass it only to render the legend *outside*
+   * the container, which a chart type has to do when the renderer can't lay a
+   * legend out inside its plot (see `Treemap`).
+   */
+  config?: ChartConfig;
 };
 
 const ChartContext = React.createContext<ChartContextProps | null>(null);
@@ -334,17 +341,27 @@ function ChartLegendContent({
   payload,
   verticalAlign = 'bottom',
   nameKey,
+  config: configFromProps,
 }: ChartLegendContentProps) {
-  const { config } = useChart();
+  // The context, not `useChart()`: a caller that passes its own `config` is
+  // rendering the legend outside the container, where the context is absent by
+  // design rather than by mistake.
+  const contextConfig = React.useContext(ChartContext)?.config;
+  const config = configFromProps ?? contextConfig;
 
-  if (!payload?.length) {
+  if (!payload?.length || !config) {
     return null;
   }
 
   return (
     <div
       className={cn(
-        'flex items-center justify-start gap-4',
+        // Wraps rather than overflowing: a legend with many entries (a treemap's
+        // one-per-tile, a pie's one-per-slice) is wider than the chart on a narrow
+        // surface, and a row that can't wrap paints past the chart's edge. The
+        // column gap is unchanged, so a legend that already fits on one row keeps
+        // its exact layout.
+        'flex flex-wrap items-center justify-start gap-x-4 gap-y-2',
         verticalAlign === 'top' ? 'pb-3' : 'pt-3',
         className
       )}

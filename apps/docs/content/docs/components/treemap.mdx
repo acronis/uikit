@@ -16,8 +16,8 @@ import type { ChartConfig } from '@acronis-platform/ui-react';
 `Treemap` is a typed composition over the shared [`Chart`](/components/chart)
 primitives. Give it `data`, a per-leaf `config`, the size field (`dataKey`), and
 the label field (`nameKey`) — it renders a themed recharts treemap (cells sized
-by value, colored and labelled per name, with a tooltip), so you don't
-hand-compose recharts children. There are no axes, grid, or legend.
+by value, colored and labelled per name, with a tooltip and an opt-in legend), so
+you don't hand-compose recharts children. There are no axes or grid.
 
 Cell colors are supplied by the caller through `config`, **keyed by each `nameKey`
 value**: `Treemap` turns those into the `--color-<name>` custom properties its
@@ -51,8 +51,14 @@ const data = [
 const config = {
   React: { label: 'React', color: 'var(--ui-background-brand-secondary)' },
   Vue: { label: 'Vue', color: 'var(--ui-background-status-strong-success)' },
-  Angular: { label: 'Angular', color: 'var(--ui-background-status-strong-danger)' },
-  Svelte: { label: 'Svelte', color: 'var(--ui-background-status-strong-warning)' },
+  Angular: {
+    label: 'Angular',
+    color: 'var(--ui-background-status-strong-danger)',
+  },
+  Svelte: {
+    label: 'Svelte',
+    color: 'var(--ui-background-status-strong-warning)',
+  },
 } satisfies ChartConfig;
 
 <Treemap
@@ -68,7 +74,78 @@ Change the tiling with `aspectRatio`, and hide the on-cell labels or tooltip wit
 `showLabels` / `showTooltip`:
 
 ```tsx
-<Treemap config={config} data={data} dataKey="size" nameKey="name" aspectRatio={2.5} showLabels={false} />
+<Treemap
+  config={config}
+  data={data}
+  dataKey="size"
+  nameKey="name"
+  aspectRatio={2.5}
+  showLabels={false}
+/>
+```
+
+## Cell labels
+
+Each cell is labelled with its leaf's name, anchored at the tile's bottom-left
+corner. The name shown is the leaf's **`config` label**, not its raw `nameKey`
+value — that value becomes part of a `--color-<name>` custom property, so it has
+to be CSS-safe, and a leaf whose display name contains a space is keyed by a slug
+with the real name in its config entry (the same one the legend and tooltip show).
+
+`secondaryKeys` adds a second line built from any other fields on the row — a
+value, a count, or both — and `secondaryFormatter` formats each of them, receiving
+the field's index in `secondaryKeys` so one formatter can cover fields of
+different kinds:
+
+```tsx
+<Treemap
+  config={config}
+  data={data} // [{ name: 'React', size: 2400, count: 24 }, …]
+  dataKey="size"
+  nameKey="name"
+  secondaryKeys={['size', 'count']}
+  secondaryFormatter={(value, index) =>
+    index === 0 ? `${value} kB` : `${value} files`
+  }
+/>
+```
+
+Labels degrade with the tile: a cell too short for two lines keeps just its name,
+a line wider than its cell is truncated with an ellipsis, and a tile too small for a
+label at all is left blank — which is the case the legend covers. The block hugs the
+tile's start edge, so it mirrors under `dir="rtl"`. Use `labelAlign` to anchor it at
+the tile's top-left corner, or to center it in the tile:
+
+```tsx
+<Treemap
+  config={config}
+  data={data}
+  dataKey="size"
+  nameKey="name"
+  labelAlign="center"
+/>
+```
+
+Pass `secondarySeparator` to change what goes between the values — a space-padded
+middot by default — when that reads wrong for your locale.
+
+## Legend
+
+`showLegend` renders one entry per leaf — the same markers, labels and `config`
+lookup as every other chart type — and `legendPos` picks its edge. It's off by
+default, since a treemap labels its cells; turn it on when the small tiles are too
+narrow to name themselves. The legend is laid out as a row of the chart rather than
+over the tiles, and wraps onto further rows when the entries outgrow the width:
+
+```tsx
+<Treemap
+  config={config}
+  data={data}
+  dataKey="size"
+  nameKey="name"
+  showLegend
+  legendPos="top"
+/>
 ```
 
 ## Custom tooltip
@@ -103,7 +180,13 @@ Charts render statically by default. Opt in to an entrance animation with
 `animationEasing`:
 
 ```tsx
-<Treemap config={config} data={data} animate animationDuration={800} animationEasing="ease-out" />
+<Treemap
+  config={config}
+  data={data}
+  animate
+  animationDuration={800}
+  animationEasing="ease-out"
+/>
 ```
 
 `animate` honors `prefers-reduced-motion`: for a visitor who has asked their
