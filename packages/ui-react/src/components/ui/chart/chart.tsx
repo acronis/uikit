@@ -303,16 +303,6 @@ function ChartTooltipContent({
                       />
                     )
                   )}
-                  {/*
-                   * `gap-4` puts a floor under the name/value separation.
-                   * `justify-between` alone only separates them while the
-                   * container has free space to distribute — which the tooltip's
-                   * `min-w-[8rem]` guarantees for a short value and not for a
-                   * long one (a currency `tickFormatter`, a `labelFormatter`
-                   * with units, a value plus its share), where the two would
-                   * otherwise butt up against each other. A minimum, so a row
-                   * with slack renders as before.
-                   */}
                   <div className="flex flex-1 items-center justify-between gap-4 leading-none">
                     <span className="text-muted-foreground">
                       {itemConfig?.label || item.name}
