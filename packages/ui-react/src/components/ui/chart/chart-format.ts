@@ -202,6 +202,10 @@ export interface SecondaryYAxisProps {
    * Which side the *primary* value axis sits on. Defaults to `left`. The secondary
    * axis always takes the opposite side. Unlike the `secondary*` props below, this
    * one applies to a single-scale chart too.
+   *
+   * Inert on a chart whose marks grow horizontally: the value axis is X there, so
+   * the primary sits along the bottom edge and the secondary along the top, and
+   * neither has a left/right side to pick.
    */
   yAxisOrientation?: 'left' | 'right';
   /**

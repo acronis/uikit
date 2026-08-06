@@ -612,3 +612,41 @@ export const PlotMargin: Story = {
     yTickFormatter: formatCompactNumber,
   },
 };
+
+// The references turn with the marks: a value rule stands vertical once the
+// values are on X, a category rule lies flat across them, and the band runs down
+// the category axis instead of along it. The captions swap ends to match.
+export const HorizontalReferences: Story = {
+  args: {
+    orientation: 'horizontal',
+    series: [
+      { key: 'revenue', type: 'bar' },
+      { key: 'profit', type: 'line' },
+    ],
+    referenceLine: [
+      { value: 6000, label: 'Target' },
+      { category: 'Apr' },
+    ],
+    referenceArea: { from: 'Apr', label: 'Forecast' },
+    xTickFormatter: formatCompactNumber,
+  },
+};
+
+// A rule belongs to one scale. `average: 'conversion'` reads off the secondary
+// axis it is measured against, so it lands mid-plot against the 0–8% scale;
+// averaged against revenue it would sit flat on the baseline — the regression
+// this baseline is judged against. The revenue target is the contrast: an
+// explicit primary-axis rule, well clear of it.
+export const SecondaryAxisReference: Story = {
+  args: {
+    data: dualAxisData,
+    config: dualAxisConfig,
+    series: dualAxisSeries,
+    yTickFormatter: formatCompactNumber,
+    secondaryYUnit: '%',
+    referenceLine: [
+      { average: 'conversion', label: 'Avg conversion' },
+      { value: 6500, label: 'Revenue target' },
+    ],
+  },
+};

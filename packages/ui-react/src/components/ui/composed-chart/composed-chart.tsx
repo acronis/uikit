@@ -121,6 +121,10 @@ const DEFAULT_CHART_MARGIN = { top: 5, right: 5, bottom: 5, left: 5 } as const;
 /** Fill opacity of a hovered bar when `showActiveBar` is on. */
 const ACTIVE_BAR_FILL_OPACITY = 0.85;
 
+// Headroom for the caption a vertical reference rule hangs above the plot. Sized
+// to the 12px caption plus its descender, matching CHART_LABEL_MARGIN's top.
+const REFERENCE_LABEL_MARGIN = { top: 16 } as const;
+
 export interface ComposedSeries {
   /** Column key to plot — must match a `config` entry; drives its `--color-<key>` paint. */
   key: string;
@@ -148,8 +152,10 @@ export interface ComposedSeries {
   /** Interpolation, overriding the chart's `curve`. Line and area series only. */
   curve?: ComposedCurveType;
   /**
-   * Stroke width, overriding the chart's `strokeWidth`. On a bar series it sizes
-   * the dashed outline `strokeDasharray` draws, since a bar has no other stroke.
+   * Stroke width, overriding the chart's `strokeWidth` on a line or area series.
+   * On a bar it sizes the dashed outline `strokeDasharray` draws — a bar has no
+   * other stroke, so the chart-level default never reaches one and this is the
+   * only way to set it.
    */
   strokeWidth?: number;
   /**
@@ -190,6 +196,15 @@ export interface ComposedChartReferenceLine extends ChartReferenceLine {
    * its 0-based row index.
    */
   category?: string | number;
+  /**
+   * Which value axis the rule is measured against, on a chart carrying two.
+   * Defaults to the axis of the series named by `average`, and to `primary`
+   * otherwise — so a target read off the secondary scale lands on it rather
+   * than being plotted against the primary one. `average: true` then pools only
+   * the series on this axis, never two scales at once. Inert while no series
+   * selects the secondary axis.
+   */
+  yAxis?: ChartYAxisTarget;
 }
 
 /** A shaded band behind a range of categories. */
@@ -224,8 +239,9 @@ export interface ComposedChartProps
   /** Category axis key (the shared dimension across rows, e.g. `"month"`). */
   xKey: string;
   /**
-   * One or more dashed reference lines — on the value axis (`value` / `average`)
-   * or across the category axis (`category`). Pass a single object or an array.
+   * One or more dashed reference lines — on a value axis (`value` / `average`,
+   * placed by the entry's `yAxis`) or across the category axis (`category`).
+   * Pass a single object or an array.
    */
   referenceLine?: ComposedChartReferenceLine | ComposedChartReferenceLine[];
   /**
@@ -394,7 +410,12 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
     const primaryOrientation = yAxisOrientation ?? 'left';
     const secondaryOrientation = primaryOrientation === 'left' ? 'right' : 'left';
 
-    const yAxisTitle = resolveYAxisTitle(yAxisLabel, primaryOrientation);
+    // The category axis is pinned to the left when the marks grow horizontally,
+    // so its title is angled for that side whatever `yAxisOrientation` says.
+    const yAxisTitle = resolveYAxisTitle(
+      yAxisLabel,
+      isHorizontal ? 'left' : primaryOrientation
+    );
     const secondaryYAxisTitle = resolveYAxisTitle(
       secondaryYAxisLabel,
       secondaryOrientation
@@ -431,15 +452,6 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
         ? 30 + (xAxisAngle != null ? 20 : 0) + (xAxisLabel ? 18 : 0)
         : undefined;
 
-    // Line/area series don't clamp their labels to the plot (see
-    // CHART_LABEL_MARGIN); a composed chart can hold either. A caller-supplied
-    // margin overrides that per side rather than replacing it, so asking for one
-    // wider gutter can't silently drop the label headroom.
-    const labelMargin = showLabels ? CHART_LABEL_MARGIN : undefined;
-    const resolvedMargin = margin
-      ? { ...DEFAULT_CHART_MARGIN, ...labelMargin, ...margin }
-      : labelMargin;
-
     const referenceLines = referenceLine
       ? Array.isArray(referenceLine)
         ? referenceLine
@@ -459,7 +471,18 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
         ): entry is { area: ComposedChartReferenceArea; range: [number, number] } =>
           entry.range !== undefined
       );
-    const seriesKeys = series.map((s) => s.key);
+    // A reference rule belongs to one scale, so both halves of it — which keys
+    // an `average` pools, and which axis the result is plotted against — have to
+    // agree. When the primary axis is orphaned every series is on the secondary
+    // one, so that becomes the default rather than leaving `average: true` with
+    // an empty key set.
+    const defaultReferenceAxis: ChartYAxisTarget = primaryValueAxisIsOrphaned
+      ? 'secondary'
+      : 'primary';
+    const seriesAxisOf = (s: ComposedSeries) => s.yAxis ?? 'primary';
+    const seriesAxisByKey = new Map(series.map((s) => [s.key, seriesAxisOf(s)]));
+    const seriesKeysOn = (target: ChartYAxisTarget) =>
+      series.filter((s) => seriesAxisOf(s) === target).map((s) => s.key);
     const hiddenLegendKeys = new Set(
       series.filter((s) => s.legendType === 'none').map((s) => s.key)
     );
@@ -467,6 +490,81 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
     // whose category cell is null has no position on the axis — recharts types
     // its reference coordinates as `string | number`.
     const categoryAt = (row: number) => data[row]?.[xKey] ?? undefined;
+
+    // Resolved up here, not inside the map, because the plot margin below has to
+    // know whether any rule will hang a caption above the plot.
+    const resolvedReferenceLines = referenceLines
+      .map((line) => {
+        // A category rule is placed by the category's own value, so an index
+        // bound is resolved back to it first.
+        const categoryRange =
+          line.category !== undefined
+            ? resolveCategoryRange(
+                { from: line.category, to: line.category },
+                data,
+                xKey
+              )
+            : undefined;
+        // An `average` naming one series is read off that series' own scale
+        // unless the caller says otherwise; anything else falls back to the
+        // chart's default axis.
+        const lineAxis =
+          line.yAxis ??
+          (typeof line.average === 'string'
+            ? (seriesAxisByKey.get(line.average) ?? defaultReferenceAxis)
+            : defaultReferenceAxis);
+        const value = resolveChartReferenceValue(line, data, seriesKeysOn(lineAxis));
+        const category = categoryRange
+          ? categoryAt(categoryRange[0])
+          : undefined;
+        // The value position wins when both are given; a category that resolves
+        // to nothing (an unknown bound) draws no rule.
+        const position =
+          value !== undefined
+            ? isHorizontal
+              ? { x: value }
+              : { y: value }
+            : category !== undefined
+              ? isHorizontal
+                ? { y: category }
+                : { x: category }
+              : undefined;
+        // A value rule runs across the value axis, so it is drawn vertical
+        // exactly when the values are on X — and a category rule the other way
+        // round.
+        const isVerticalRule = (value !== undefined) === isHorizontal;
+        return { line, lineAxis, position, isVerticalRule };
+      })
+      .filter(
+        (
+          entry
+        ): entry is typeof entry & { position: Record<string, string | number> } =>
+          entry.position !== undefined
+      );
+
+    // Line/area series don't clamp their labels to the plot (see
+    // CHART_LABEL_MARGIN); a composed chart can hold either. A caller-supplied
+    // margin overrides that per side rather than replacing it, so asking for one
+    // wider gutter can't silently drop the label headroom.
+    const labelMargin = showLabels ? CHART_LABEL_MARGIN : undefined;
+    // A vertical rule hangs its caption off the top end, outside the plot, where
+    // recharts' 5px inset clips it — the same headroom problem CHART_LABEL_MARGIN
+    // solves for data labels, so it is reserved the same way rather than left for
+    // the caller to discover and pass a `margin` for.
+    const referenceLabelMargin = resolvedReferenceLines.some(
+      (entry) => entry.line.label && entry.isVerticalRule
+    )
+      ? REFERENCE_LABEL_MARGIN
+      : undefined;
+    const resolvedMargin =
+      margin || labelMargin || referenceLabelMargin
+        ? {
+            ...(margin ? DEFAULT_CHART_MARGIN : {}),
+            ...referenceLabelMargin,
+            ...labelMargin,
+            ...margin,
+          }
+        : undefined;
 
     // Only the segment at the growing end of a stack rounds its corners — the
     // ones below it butt against the next segment.
@@ -537,7 +635,11 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                   dataKey={xKey}
                   type="category"
                   hide={!showYAxis}
-                  {...(yAxisOrientation ? { orientation: yAxisOrientation } : {})}
+                  // `yAxisOrientation` picks the side of the *value* axis, which
+                  // is X here — a left/right choice it has no room for, and one
+                  // the secondary axis already spends on the top edge. Moving the
+                  // category axis with it instead would satisfy the prop name and
+                  // break its contract, so it stays inert in this orientation.
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={yTickFormatter}
@@ -826,42 +928,16 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                 />
               );
             })}
-            {referenceLines.map((line, index) => {
-              // A category rule is placed by the category's own value, so an
-              // index bound is resolved back to it first.
-              const categoryRange =
-                line.category !== undefined
-                  ? resolveCategoryRange(
-                      { from: line.category, to: line.category },
-                      data,
-                      xKey
-                    )
-                  : undefined;
-              const value = resolveChartReferenceValue(line, data, seriesKeys);
-              const category = categoryRange
-                ? categoryAt(categoryRange[0])
-                : undefined;
-              // The value position wins when both are given; a category that
-              // resolves to nothing (an unknown bound) draws no rule.
-              const position =
-                value !== undefined
-                  ? isHorizontal
-                    ? { x: value }
-                    : { y: value }
-                  : category !== undefined
-                    ? isHorizontal
-                      ? { y: category }
-                      : { x: category }
-                    : undefined;
-              if (!position) return null;
-              // A value rule runs across the value axis, so it is drawn vertical
-              // exactly when the values are on X — and a category rule the other
-              // way round.
-              const isVerticalRule = (value !== undefined) === isHorizontal;
-              return (
+            {resolvedReferenceLines.map(
+              ({ line, lineAxis, position, isVerticalRule }, index) => (
                 <ReferenceLine
                   key={`${line.label ?? 'ref'}-${index}`}
-                  {...orphanedAxisBinding}
+                  // Binding to an id no axis declares makes recharts invent an
+                  // implicit one (see `hasSecondaryValueAxis`), so the request is
+                  // only honored once a series has brought that axis into being.
+                  {...(lineAxis === 'secondary' && hasSecondaryValueAxis
+                    ? valueAxisBinding('secondary')
+                    : {})}
                   {...position}
                   stroke="var(--ui-text-on-surface-secondary)"
                   strokeDasharray="4 4"
@@ -873,7 +949,8 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                           value: line.label,
                           // Sit the caption at the top of the rule: above the
                           // right end of a horizontal one, above the top of a
-                          // vertical one.
+                          // vertical one (which the plot margin reserves room
+                          // for — see REFERENCE_LABEL_MARGIN).
                           position: isVerticalRule ? 'top' : 'insideTopRight',
                           fill: 'var(--ui-text-on-surface-secondary)',
                           fontSize: 12,
@@ -881,8 +958,8 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                       : undefined
                   }
                 />
-              );
-            })}
+              )
+            )}
             {showBrush && (
               <Brush
                 dataKey={xKey}

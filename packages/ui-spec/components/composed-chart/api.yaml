@@ -62,17 +62,22 @@ contract:
       type: string
       required: false
       description: >-
-        Unit suffix appended to Y-axis tick values (recharts `unit`); the X axis
-        is categorical.
+        Unit suffix appended to Y-axis tick values (recharts `unit`). Applies while
+        the values are on Y, which is the default orientation; with
+        `orientation="horizontal"` they move to X and `xUnit` takes over.
     - name: referenceLine
       type: ComposedChartReferenceLine | ComposedChartReferenceLine[]
       required: false
       description: >-
         One or more dashed rules. A `value` (or an `average` of one/every series)
-        places the rule on the value axis; a `category` places it across the
+        places the rule on a value axis; a `category` places it across the
         category axis at that category — the hand-off into a forecast. Each takes
         an optional `label`; a value position wins when both are given, and a
-        category that is not in the data draws nothing.
+        category that is not in the data draws nothing. On a chart with two value
+        axes, `yAxis` picks the scale the rule is measured against — defaulting to
+        the axis of the series named by `average`, and to `primary` otherwise — and
+        `average: true` pools only the series on that axis, so two scales are never
+        averaged together.
     - name: referenceArea
       type: ComposedChartReferenceArea | ComposedChartReferenceArea[]
       required: false
@@ -146,8 +151,8 @@ contract:
       required: false
       description: >-
         Plot-area inset. Any side left out keeps the chart's own default (which is
-        already widened when `showLabels` is on, so a label's value can't be clipped
-        at the plot edge).
+        already widened when `showLabels` is on, and when a labelled reference rule
+        stands vertical, so neither caption can be clipped at the plot edge).
     - name: tooltipCursor
       type: boolean
       required: false
@@ -231,8 +236,8 @@ contract:
       required: false
       description: >-
         Desired number of ticks on the value axis (recharts tickCount; a hint, not
-        exact). Applies to whichever axis holds the values — Y for most charts, X
-        for BarChart with orientation="horizontal".
+        exact). Applies to whichever axis holds the values — Y by default, X with
+        orientation="horizontal".
     - name: yAxisDomain
       type: "'auto' | 'dataMin-dataMax' | 'zero'"
       required: false
@@ -240,15 +245,18 @@ contract:
         Value-axis domain preset — auto (fit the data at both ends; the axis need
         not include 0), zero (anchor the axis at 0, which is also recharts'
         behaviour when the prop is omitted), or dataMin-dataMax (tight to the
-        data, no padding). Applies to whichever axis holds the values — Y for most
-        charts, X for BarChart with orientation="horizontal".
+        data, no padding). Applies to whichever axis holds the values — Y by
+        default, X with orientation="horizontal".
     - name: yAxisOrientation
       type: "'left' | 'right'"
       required: false
       default: "'left'"
       description: >-
         Which side the primary value axis sits on. The secondary axis always takes
-        the opposite side, so the pair mirrors as a whole.
+        the opposite side, so the pair mirrors as a whole. Inert with
+        orientation="horizontal": the value axis is X there, so the primary sits
+        along the bottom edge and the secondary along the top, and neither has a
+        left/right side to pick.
     - name: showSecondaryYAxis
       type: boolean
       required: false

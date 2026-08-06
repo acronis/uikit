@@ -104,13 +104,21 @@ hand-off between actuals and forecast. `referenceArea` shades a band behind a
 range of categories (`from`/`to`, inclusive, each a category value or a row
 index). Both take an array to draw several.
 
+A rule belongs to **one scale**. On a chart carrying two value axes, `yAxis` picks
+which — defaulting to the axis of the series named by `average`, and to `primary`
+otherwise — and `average: true` pools only the series measured against that axis.
+Averaging a count and a rate together, or plotting a rate's mean against a count's
+scale, would put the rule somewhere meaningless; neither can happen by accident.
+
 ## Variants
 
 `orientation` (`vertical` — the default — / `horizontal`) is the one CVA variant
 axis: it is the direction the marks grow, and it re-roles both axes. Horizontal
 puts the categories on the y-axis and the values on x, turns the grid lines
 vertical, rounds each bar's right end instead of its top, and renders a secondary
-value axis as a second x-axis along the top edge.
+value axis as a second x-axis along the top edge. `yAxisOrientation` goes inert
+there — the value axis is X, so the primary sits along the bottom and the
+secondary along the top, and neither has a left/right side to pick.
 
 The mark mix is _not_ a variant — it is data-driven via each `series[].type`
 (`bar` / `line` / `area`). Series render in the order you list them (later entries

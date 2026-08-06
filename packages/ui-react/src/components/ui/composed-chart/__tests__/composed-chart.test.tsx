@@ -280,6 +280,74 @@ describe('ComposedChart orientation', () => {
     expect(container.querySelectorAll('.recharts-xAxis')).toHaveLength(2);
     expect(container.querySelectorAll('.recharts-yAxis')).toHaveLength(1);
   });
+
+  // `yAxisOrientation` picks the side of the *value* axis. That axis is X when
+  // the marks grow horizontally, so there is no left/right side to take and the
+  // prop goes inert — it must not move the category axis instead.
+  it('leaves yAxisOrientation inert when horizontal', () => {
+    const plain = renderChart({ series: barLine, orientation: 'horizontal' });
+    const flipped = renderChart({
+      series: barLine,
+      orientation: 'horizontal',
+      yAxisOrientation: 'right',
+    });
+    const categoryTickX = (result: ReturnType<typeof renderChart>) =>
+      result.container
+        .querySelector(
+          '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
+        )
+        ?.getAttribute('x');
+    expect(categoryTickX(plain)).toBeTruthy();
+    expect(categoryTickX(flipped)).toBe(categoryTickX(plain));
+  });
+
+  // The band runs along the category axis, which is Y here — so it spans the
+  // full plot width and only part of its height, the opposite of the vertical
+  // case.
+  it('lays a reference band along the category axis when horizontal', () => {
+    const rect = (orientation: 'vertical' | 'horizontal') => {
+      const { container } = renderChart({
+        series: barLine,
+        orientation,
+        referenceArea: { from: 'Feb', to: 'Mar' },
+      });
+      const node = container.querySelector('.recharts-reference-area-rect');
+      return {
+        width: Number(node?.getAttribute('width')),
+        height: Number(node?.getAttribute('height')),
+      };
+    };
+    const vertical = rect('vertical');
+    const horizontal = rect('horizontal');
+    expect(vertical.width).toBeLessThan(horizontal.width);
+    expect(horizontal.height).toBeLessThan(vertical.height);
+  });
+
+  // A value rule crosses the value axis, so it stands vertical when the values
+  // are on X — and a category rule turns the other way round.
+  it('turns both kinds of reference rule when horizontal', () => {
+    const rule = (props: Partial<React.ComponentProps<typeof ComposedChart>>) => {
+      const { container } = renderChart({
+        series: barLine,
+        orientation: 'horizontal',
+        ...props,
+      });
+      const line = container.querySelector('.recharts-reference-line line');
+      return {
+        x1: line?.getAttribute('x1'),
+        x2: line?.getAttribute('x2'),
+        y1: line?.getAttribute('y1'),
+        y2: line?.getAttribute('y2'),
+      };
+    };
+    const value = rule({ referenceLine: { value: 2000 } });
+    expect(value.x1).toBe(value.x2);
+    expect(value.y1).not.toBe(value.y2);
+
+    const category = rule({ referenceLine: { category: 'Feb' } });
+    expect(category.y1).toBe(category.y2);
+    expect(category.x1).not.toBe(category.x2);
+  });
 });
 
 describe('ComposedChart per-series config', () => {
@@ -527,6 +595,65 @@ describe('ComposedChart references, margin and legend placement', () => {
     expect(container.querySelector('.recharts-reference-line')).toBeNull();
   });
 
+  // A rule belongs to one scale. `orders` (98–156) lives on the secondary axis
+  // while `revenue` (1398–9800) sets the primary one, so plotting its average
+  // against the primary scale would pin the rule to the baseline.
+  describe('on a chart with two value axes', () => {
+    const dualSeries = [
+      { key: 'revenue', type: 'bar' as const },
+      { key: 'orders', type: 'line' as const, yAxis: 'secondary' as const },
+    ];
+    const ruleY = (props: Partial<React.ComponentProps<typeof ComposedChart>>) =>
+      Number(
+        renderChart({ series: dualSeries, ...props }).container
+          .querySelector('.recharts-reference-line line')
+          ?.getAttribute('y1')
+      );
+    // The primary axis fits 1398–9800 into the plot, so a rule at ~127 (the
+    // orders mean) drawn against it sits within a few px of the baseline.
+    // Rendered per test, not once: the sized ResizeObserver recharts needs is
+    // only installed in `beforeAll`, after the describe body has run.
+    const baselineY = () => ruleY({ referenceLine: { value: 0 } });
+
+    it('reads an average off the axis of the series it names', () => {
+      const onSecondary = ruleY({ referenceLine: { average: 'orders' } });
+      // ~127 of a 98–156 scale lands mid-plot, nowhere near the baseline.
+      expect(baselineY() - onSecondary).toBeGreaterThan(50);
+    });
+
+    it('pools only the series on the axis a rule is drawn against', () => {
+      // `average: true` defaults to the primary axis, so it must average
+      // `revenue` alone (4532.67) rather than mixing in the orders scale.
+      const pooled = ruleY({ referenceLine: { average: true } });
+      const revenueOnly = ruleY({ referenceLine: { average: 'revenue' } });
+      expect(pooled).toBeCloseTo(revenueOnly, 5);
+    });
+
+    it('places a fixed value on the axis the caller names', () => {
+      const onPrimary = ruleY({ referenceLine: { value: 130 } });
+      const onSecondary = ruleY({
+        referenceLine: { value: 130, yAxis: 'secondary' },
+      });
+      // 130 is near the floor of the revenue scale but mid-range for orders.
+      const baseline = baselineY();
+      expect(baseline - onPrimary).toBeLessThan(20);
+      expect(baseline - onSecondary).toBeGreaterThan(50);
+    });
+  });
+
+  // Without a series on that axis there is no secondary axis to bind to, and
+  // recharts would invent an implicit one — so the request is ignored and the
+  // rule stays on the primary scale.
+  it('ignores a secondary yAxis request on a single-scale chart', () => {
+    const y = (props: Partial<React.ComponentProps<typeof ComposedChart>>) =>
+      renderChart(props).container
+        .querySelector('.recharts-reference-line line')
+        ?.getAttribute('y1');
+    expect(y({ referenceLine: { value: 2000, yAxis: 'secondary' } })).toBe(
+      y({ referenceLine: { value: 2000 } })
+    );
+  });
+
   it('shades a band behind a range of categories', () => {
     const { container } = renderChart({
       referenceArea: { from: 'Feb', to: 'Mar', label: 'Forecast' },
@@ -594,6 +721,28 @@ describe('ComposedChart references, margin and legend placement', () => {
       );
     expect(gridX(renderChart({ margin: { left: 48 } }))).toBeGreaterThan(
       gridX(renderChart())
+    );
+  });
+
+  // A vertical rule hangs its caption above the plot, which recharts' 5px inset
+  // would clip. The chart reserves the headroom itself rather than making the
+  // caller discover it — but only when such a caption exists.
+  it('reserves top headroom for a labelled vertical rule', () => {
+    const plotTop = (props: Partial<React.ComponentProps<typeof ComposedChart>>) =>
+      Number(
+        renderChart(props)
+          .container.querySelector('.recharts-cartesian-grid-horizontal line')
+          ?.getAttribute('y1')
+      );
+    const bare = plotTop({});
+    // A category rule is vertical in the default orientation.
+    expect(plotTop({ referenceLine: { category: 'Feb', label: 'Today' } })
+    ).toBeGreaterThan(bare);
+    // The same rule without a caption has nothing to clip, so nothing is added.
+    expect(plotTop({ referenceLine: { category: 'Feb' } })).toBe(bare);
+    // A value rule captions itself inside the plot, so it needs no headroom.
+    expect(plotTop({ referenceLine: { value: 2000, label: 'Target' } })).toBe(
+      bare
     );
   });
 

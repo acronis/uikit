@@ -40,6 +40,7 @@ Scenario: Orientation re-roles both axes
   And the grid lines run vertically
   And each bar rounds its right end instead of its top
   And a secondary value axis renders as a second x-axis along the top edge
+  And yAxisOrientation is inert, leaving the category axis where it is
 ```
 
 ```gherkin
@@ -74,6 +75,20 @@ Scenario: Reference rules and bands
   And a category that is not in the data renders no rule
   And a referenceArea shades the band spanning its from/to categories
   And each renders its label when one is given
+  And with orientation "horizontal" a value rule stands vertical, a category rule
+      lies flat, and the band runs down the category axis
+  And a labelled vertical rule reserves plot headroom for the caption it hangs
+      above the plot, so it is not clipped
+```
+
+```gherkin
+Scenario: A reference rule belongs to one value axis
+  Given a chart with a primary and a secondary value axis
+  When a referenceLine averages a series measured against the secondary axis
+  Then the rule is drawn against that axis, not the primary one
+  And "average: true" pools only the series on the axis the rule is drawn against
+  And an explicit yAxis on the rule overrides both
+  And a secondary yAxis is ignored while no series has brought that axis into being
 ```
 
 ```gherkin
