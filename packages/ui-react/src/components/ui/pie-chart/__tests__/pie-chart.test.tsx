@@ -2,7 +2,11 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { PieChart } from '../pie-chart';
+import {
+  PieChart,
+  pieChartLabelText,
+  pieChartValuePercentRow,
+} from '../pie-chart';
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
@@ -160,6 +164,220 @@ describe('PieChart animation and data labels', () => {
       showLabels: true,
       labelPosition: 'insideEnd',
     });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+});
+
+// The label text is the one piece of the slice-label work that doesn't need a
+// laid-out chart, so it's asserted directly. `total` is the sum of every slice
+// value (275 + 200 + 187 = 662 for the fixture above).
+describe('pieChartLabelText', () => {
+  const base = { name: 'Chrome', value: 275, total: 662 } as const;
+
+  it('renders the raw value by default', () => {
+    expect(pieChartLabelText({ ...base, format: 'value' })).toBe('275');
+  });
+
+  it('pairs the name with the value', () => {
+    expect(pieChartLabelText({ ...base, format: 'name-value' })).toBe(
+      'Chrome: 275'
+    );
+  });
+
+  it('pairs the name with the share of the total', () => {
+    expect(pieChartLabelText({ ...base, format: 'name-percent' })).toBe(
+      'Chrome: 41.5%'
+    );
+  });
+
+  it('renders the share alone', () => {
+    expect(pieChartLabelText({ ...base, format: 'percent' })).toBe('41.5%');
+  });
+
+  it('formats only the numeric part, so labels match the value axis', () => {
+    expect(
+      pieChartLabelText({
+        ...base,
+        format: 'name-value',
+        formatter: (value) => `${value} users`,
+      })
+    ).toBe('Chrome: 275 users');
+  });
+
+  // The formatter formats a *value*, so the two percent formats never route
+  // through it — a share is always `NN.N%`. Guards the documented contract.
+  it('leaves the percent formats untouched by the formatter', () => {
+    const formatter = (value: number | string) => `${value} users`;
+    expect(
+      pieChartLabelText({ ...base, format: 'percent', formatter })
+    ).toBe('41.5%');
+    expect(
+      pieChartLabelText({ ...base, format: 'name-percent', formatter })
+    ).toBe('Chrome: 41.5%');
+  });
+
+  // A zero total (all-zero or non-numeric data) would divide to NaN; the two
+  // percent formats degrade instead of printing it.
+  it('drops the percent when there is nothing to divide by', () => {
+    expect(
+      pieChartLabelText({ name: 'Chrome', value: 0, total: 0, format: 'percent' })
+    ).toBe('');
+    expect(
+      pieChartLabelText({
+        name: 'Chrome',
+        value: 0,
+        total: 0,
+        format: 'name-percent',
+      })
+    ).toBe('Chrome');
+  });
+
+  it('passes a non-numeric value through as text', () => {
+    expect(
+      pieChartLabelText({ name: 'Chrome', value: 'n/a', total: 662, format: 'value' })
+    ).toBe('n/a');
+  });
+
+  // The other half of the percent contract: a share needs a numeric value *and*
+  // a non-zero total. A non-numeric value degrades even when the total is fine.
+  it('drops the percent for a non-numeric value even with a usable total', () => {
+    expect(
+      pieChartLabelText({
+        name: 'Chrome',
+        value: 'n/a',
+        total: 662,
+        format: 'percent',
+      })
+    ).toBe('');
+    expect(
+      pieChartLabelText({
+        name: 'Chrome',
+        value: 'n/a',
+        total: 662,
+        format: 'name-percent',
+      })
+    ).toBe('Chrome');
+  });
+
+  // A row that carries no `dataKey` field at all — the data type permits it, so
+  // every format has to degrade rather than print a dangling "Chrome: ".
+  it('degrades to the bare name (or nothing) when the row has no value', () => {
+    const missing = { name: 'Chrome', value: undefined, total: 662 } as const;
+    expect(pieChartLabelText({ ...missing, format: 'value' })).toBe('');
+    expect(pieChartLabelText({ ...missing, format: 'name-value' })).toBe('Chrome');
+    expect(pieChartLabelText({ ...missing, format: 'name-percent' })).toBe('Chrome');
+    expect(pieChartLabelText({ ...missing, format: 'percent' })).toBe('');
+  });
+});
+
+// The `value-percent` tooltip row renders outside recharts' layout, so unlike
+// the chart itself it can be asserted directly — the formatter is a plain
+// function of (value, name, item) and its output is ordinary JSX.
+describe('pieChartValuePercentRow', () => {
+  const total = 662;
+  const item = {
+    payload: { browser: 'Chrome', value: 275, fill: 'rgb(23 99 207)' },
+    color: 'rgb(23 99 207)',
+  } as unknown as Parameters<ReturnType<typeof pieChartValuePercentRow>>[2];
+
+  function renderRow(
+    value: number | string,
+    name: string,
+    rowConfig: ChartConfig = config
+  ) {
+    const row = pieChartValuePercentRow({ config: rowConfig, total });
+    return render(<>{row(value, name, item, 0, [])}</>);
+  }
+
+  it("reads a slice as its value and its share of the total", () => {
+    const { container } = renderRow(275, 'Chrome');
+    expect(container.textContent).toContain('275 (41.5%)');
+  });
+
+  it('labels the row from config, falling back to the raw name', () => {
+    expect(renderRow(275, 'Chrome').container.textContent).toContain('Chrome');
+    // Edge is absent from `config` — the row still names the slice.
+    expect(renderRow(173, 'Edge').container.textContent).toContain('Edge');
+  });
+
+  it('paints the swatch from the slice fill', () => {
+    const { container } = renderRow(275, 'Chrome');
+    const swatch = container.querySelector('div[style]');
+    expect(swatch).toHaveStyle({ backgroundColor: 'rgb(23 99 207)' });
+  });
+
+  // The shared default row prefers a config icon over the swatch; the preset has
+  // to agree, or turning on `tooltipFormat` would silently drop the icon.
+  it('renders a config icon in place of the swatch', () => {
+    const { container } = renderRow(275, 'Chrome', {
+      Chrome: {
+        label: 'Chrome',
+        color: 'rgb(23 99 207)',
+        icon: () => <svg data-testid="slice-icon" />,
+      },
+    });
+    expect(container.querySelector('[data-testid="slice-icon"]')).toBeInTheDocument();
+    expect(container.querySelector('div[style]')).not.toBeInTheDocument();
+  });
+
+  it('falls back to the value alone when there is no share to show', () => {
+    const row = pieChartValuePercentRow({ config, total: 0 });
+    const { container } = render(<>{row(275, 'Chrome', item, 0, [])}</>);
+    expect(container.textContent).toContain('275');
+    expect(container.textContent).not.toContain('%');
+  });
+});
+
+// Geometry, per-slice overrides and the leader-line label path all need a
+// painted SVG, which happy-dom never gives recharts — these guard the prop
+// plumbing; the VR stories cover what they draw.
+describe('PieChart geometry, slices and chrome', () => {
+  it('accepts the sweep and corner geometry', () => {
+    const { container } = renderChart({
+      startAngle: 180,
+      endAngle: 0,
+      cornerRadius: 6,
+      minAngle: 4,
+      paddingAngle: 2,
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts per-slice color, label and format overrides', () => {
+    const { container } = renderChart({
+      showLabels: true,
+      labelFormat: 'name-percent',
+      sliceSettings: {
+        Chrome: { color: 'rgb(0 0 0)' },
+        Safari: { hideLabel: true },
+        Firefox: { labelFormat: 'value' },
+      },
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts labelled slices with leader lines', () => {
+    const { container } = renderChart({
+      showLabels: true,
+      labelLine: true,
+      labelFormat: 'name-value',
+      sliceSettings: { Safari: { hideLabel: true } },
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts a top legend and a custom margin', () => {
+    const { container } = renderChart({
+      shape: 'donut',
+      centerLabel: { value: '662', label: 'Visitors' },
+      legendPosition: 'top',
+      margin: { top: 16, right: 16, bottom: 16, left: 16 },
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts the value-percent tooltip preset', () => {
+    const { container } = renderChart({ tooltipFormat: 'value-percent' });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 });

@@ -99,6 +99,54 @@ data, e.g. the total:
 />
 ```
 
+## Slice geometry
+
+`startAngle` / `endAngle` set the sweep, so the same data can read as a
+semicircle or an arc instead of a full circle (0° is 3 o'clock and angles run
+counter-clockwise). `cornerRadius` rounds each slice, and `minAngle` keeps a tiny
+slice big enough to see and hover — at the cost of drawing it out of proportion.
+
+A partial sweep still centres on the full plot area, so a half turn fills only
+half its box: give a semicircle a short, wide chart rather than a square one.
+
+```tsx
+<PieChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="browser"
+  shape="donut"
+  startAngle={180}
+  endAngle={0}
+  cornerRadius={8}
+  paddingAngle={4}
+  minAngle={4}
+/>
+```
+
+## Per-slice overrides
+
+`sliceSettings` overrides one slice at a time, keyed by its `nameKey` value: its
+`color` (in place of the `config` entry), whether it carries a data label
+(`hideLabel`), and how that label reads (`labelFormat`). Every unlisted slice
+keeps the chart-level behaviour:
+
+```tsx
+<PieChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="browser"
+  showLabels
+  labelFormat="percent"
+  sliceSettings={{
+    Firefox: { color: 'var(--ui-background-status-strong-neutral)' },
+    Edge: { hideLabel: true },
+    Chrome: { labelFormat: 'name-value' },
+  }}
+/>
+```
+
 ## Custom tooltip
 
 Replace the tooltip with a configured `ChartTooltipContent` — imported from the
@@ -122,6 +170,32 @@ import { PieChart, ChartTooltipContent } from '@acronis-platform/ui-react';
     />
   }
 />;
+```
+
+For the common case — a slice's value next to its share of the total — reach for
+the `tooltipFormat` preset instead of writing a `tooltipContent`:
+
+```tsx
+<PieChart config={config} data={data} dataKey="value" nameKey="browser" tooltipFormat="value-percent" />
+```
+
+A `tooltipContent` of your own takes precedence over the preset.
+
+## Legend and margin
+
+`legendPosition` moves the legend to the top edge, and `margin` sets the plot-area
+inset (in px) — useful when outside labels or leader lines run close to the
+chart's bounds:
+
+```tsx
+<PieChart
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="browser"
+  legendPosition="top"
+  margin={{ top: 16, right: 24, bottom: 16, left: 24 }}
+/>
 ```
 
 ## Animation
@@ -154,6 +228,28 @@ token that stays legible over a saturated series colour:
 
 ```tsx
 <PieChart config={config} data={data} dataKey="visitors" nameKey="browser" showLabels labelPosition="insideStart" />
+```
+
+`labelFormat` changes what a label reads: its `value` (the default), its
+`name-value` pair, its `name-percent` pair, or the `percent` alone. A percentage
+is the slice's share of the sum of every slice value, to one decimal.
+`labelFormatter` formats the slice's **value**, so it reaches `value` and
+`name-value` only — a share is always rendered as `NN.N%` (a `.` decimal
+separator and a bare `%`, not locale-aware) and never passes through it:
+
+```tsx
+<PieChart config={config} data={data} dataKey="visitors" nameKey="browser" showLabels labelFormat="name-percent" />
+```
+
+Turn on `labelLine` to connect each slice to its label with a leader line in the
+slice's own colour. Leader lines only exist outside the arc, so `labelPosition`
+no longer applies in that mode. A label reaching out past the arc needs
+horizontal room: give the chart a box wider than it is tall, or shrink the arc
+with `outerRadius` / `margin`, or the outermost labels are clipped at the surface
+edge.
+
+```tsx
+<PieChart config={config} data={data} dataKey="visitors" nameKey="browser" showLabels labelLine labelFormat="name-percent" />
 ```
 
 Labels are off by default — with more than one series they collide easily, so turn

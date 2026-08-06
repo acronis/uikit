@@ -6,6 +6,7 @@ schematic: |
     container: <ChartContainer>                     (themed, sized, responsive)
       plot: recharts <PieChart>
         slices:  <Pie dataKey nameKey> with one <Cell> per row (arc segments)
+        labels:  data-label per slice, optionally with a label-line
         tooltip: <ChartTooltip> → tooltip-content   (hover card)
         legend:  <ChartLegend>  → legend-content    (per-slice swatch + label)
 
@@ -31,6 +32,17 @@ parts:
       The `Pie` — one `Cell` per data row, each an arc segment sized by `dataKey`
       and filled from its `--color-<name>` var. `shape=donut` sets an
       `innerRadius` (hollow centre); `shape=pie` fills to the centre.
+  - id: data-label
+    element: text
+    description: >-
+      One value label per slice, rendered when `showLabels`. Reads its value,
+      name and/or share per `labelFormat` (overridable per slice), and sits
+      where `labelPosition` puts it — outside the arc by default.
+  - id: label-line
+    element: path
+    description: >-
+      The leader line from a slice to its `data-label`, in that slice's colour.
+      Rendered when `labelLine` is on, and only for slices that carry a label.
   - id: tooltip-content
     element: div
     description: >-
