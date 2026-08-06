@@ -51,30 +51,25 @@ const CHART_RECT = {
  * Stub the layout APIs recharts measures, so it paints its SVG in happy-dom.
  *
  * `ResponsiveContainer` reads `getBoundingClientRect()` once on mount and then
- * follows the observer, so both have to be stubbed. Two details matter:
+ * follows the observer, so both have to be stubbed. happy-dom defines the rect
+ * once, on `Element.prototype` — patching that one prototype covers every
+ * element type, and patching a subclass's prototype as well would capture this
+ * wrapper as its own "original" and leave it installed after the restore.
  *
- * - happy-dom implements the rect on `HTMLElement.prototype`, which shadows
- *   `Element.prototype` — patching only the latter leaves the chart at recharts'
- *   -1 sentinel size, drawing nothing at all.
- * - Only the responsive container may report the size. recharts also measures
- *   the legend wrapper; if that reported the full height too, it would claim the
- *   whole plot area and the series would again render at zero height.
+ * Only the responsive container may report the size. recharts also measures the
+ * legend wrapper; if that reported the full height too, it would claim the whole
+ * plot area and the series would again render at zero height.
  */
 export function giveTheChartASize() {
   vi.stubGlobal('ResizeObserver', SizedResizeObserver);
-  const patched = [Element.prototype, HTMLElement.prototype].map((proto) => {
-    const original = proto.getBoundingClientRect;
-    proto.getBoundingClientRect = function (this: Element) {
-      return this.classList?.contains('recharts-responsive-container')
-        ? CHART_RECT
-        : original.call(this);
-    };
-    return () => {
-      proto.getBoundingClientRect = original;
-    };
-  });
+  const original = Element.prototype.getBoundingClientRect;
+  Element.prototype.getBoundingClientRect = function (this: Element) {
+    return this.classList?.contains('recharts-responsive-container')
+      ? CHART_RECT
+      : original.call(this);
+  };
   restoreRect = () => {
-    for (const restore of patched) restore();
+    Element.prototype.getBoundingClientRect = original;
   };
 }
 

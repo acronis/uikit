@@ -104,15 +104,19 @@ contract:
         series' gradient stops; under `fill="gradient"` a `fillOpacity` scales the
         gradient's own alpha rather than replacing it.
     - name: referenceLine
-      type: 'Line | Line[]  where Line = { value?: number; average?: boolean | string; label?: string }'
+      type: "Line | Line[]  where Line = { value?: number; average?: boolean | string; label?: string; labelPosition?: 'top' | 'insideTopLeft' | 'insideTopRight' | 'insideBottomLeft' | 'insideBottomRight' }"
       required: false
       description: >-
         One or more dashed reference/average lines on the value axis. Pass a
         single object or an array. Per line, a fixed `value` wins; otherwise the
         mean of one series (`average: '<key>'`) or of every plotted series
-        (`average: true`). An optional `label` captions each. On a stacked chart
-        the value is read against the stack's axis, not one series. The same
-        config shape as `BarChart` / `LineChart`.
+        (`average: true`). An optional `label` captions each, at the rule's top
+        right unless `labelPosition` moves it away from a series it would sit on.
+        On a stacked chart the value is read against the stack's axis, which
+        measures stack totals — `average` still means the mean of the individual
+        series' values, so pass an explicit `value` when the rule should compare
+        against the stacked total. The same config shape as `BarChart` /
+        `LineChart`.
     - name: connectNulls
       type: boolean
       required: false

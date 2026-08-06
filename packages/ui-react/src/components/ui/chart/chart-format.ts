@@ -421,6 +421,14 @@ export function toLabelFormatter(
     value == null ? '' : formatter(value as number | string);
 }
 
+/** Where a reference line's caption sits relative to the rule. */
+export type ChartReferenceLabelPosition =
+  | 'top'
+  | 'insideTopLeft'
+  | 'insideTopRight'
+  | 'insideBottomLeft'
+  | 'insideBottomRight';
+
 /**
  * A dashed rule across the value axis — a target, a threshold, or a series
  * average. Shared by the cartesian charts that draw one (`BarChart`,
@@ -436,6 +444,11 @@ export interface ChartReferenceLine {
   average?: boolean | string;
   /** Optional caption rendered alongside the line. */
   label?: string;
+  /**
+   * Where the caption sits. Defaults to the chart's own placement — move it
+   * when the rule lands where the series already is and the two collide.
+   */
+  labelPosition?: ChartReferenceLabelPosition;
 }
 
 /**
@@ -486,18 +499,13 @@ export function resolveChartReferenceValue(
 export const CHART_REFERENCE_LINE_STROKE =
   'var(--ui-text-on-surface-secondary)';
 
-/** Where a reference line's caption sits relative to the rule. */
-export type ChartReferenceLabelPosition =
-  | 'top'
-  | 'insideTopLeft'
-  | 'insideTopRight'
-  | 'insideBottomLeft'
-  | 'insideBottomRight';
-
 /**
  * The recharts props that paint a reference rule: a dashed line in the muted
  * text token with an optional caption. Shared so the three charts that draw one
  * can't drift on the stroke, dash pattern, or caption styling.
+ *
+ * `labelPosition` is the chart's default placement; a config's own
+ * `labelPosition` overrides it at the call site.
  *
  * `ifOverflow: 'extendDomain'` is part of the contract, not a detail: a target
  * above the data maximum is exactly the case a reference line is for, and

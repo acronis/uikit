@@ -281,10 +281,13 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
     const yDomain = resolveAxisDomain(yAxisDomain);
     const referenceLines = toReferenceLineList(referenceLine);
 
-    // A series' own `color` override also tints its delta band, so the band
-    // keeps following the line it belongs to.
+    // A series' own `color` and `curveType` overrides also drive its delta band,
+    // so the band keeps following the line it belongs to instead of the
+    // chart-wide defaults.
     const colorFor = (key: string) =>
       lineSettings?.[key]?.color ?? `var(--color-${key})`;
+    const curveFor = (key: string) =>
+      lineSettings?.[key]?.curveType ?? curve ?? 'monotone';
 
     // The plot inset is needed as soon as *any* series carries outside labels —
     // a per-series `showLabel` counts, not only the chart-wide `showLabels`.
@@ -447,7 +450,9 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               <Area
                 key={field}
                 dataKey={field}
-                type={curve ?? 'monotone'}
+                // An <Area> takes one interpolation, so a pair whose two series
+                // set different `curveType`s can only follow the current one.
+                type={curveFor(current)}
                 stroke="none"
                 fill={colorFor(current)}
                 fillOpacity={0.12}
@@ -477,7 +482,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               return (
                 <Line
                   key={key}
-                  type={settings?.curveType ?? curve ?? 'monotone'}
+                  type={curveFor(key)}
                   dataKey={key}
                   stroke={colorFor(key)}
                   strokeWidth={settings?.strokeWidth ?? strokeWidth}
@@ -508,7 +513,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                 <ReferenceLine
                   key={`${ref.label ?? 'ref'}-${index}`}
                   y={value}
-                  {...resolveReferenceLineProps(ref.label)}
+                  {...resolveReferenceLineProps(ref.label, ref.labelPosition)}
                 />
               );
             })}

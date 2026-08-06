@@ -163,6 +163,10 @@ of `[current, comparison]` keys draw a dimmed area (the delta) behind the lines:
 />
 ```
 
+A band takes the current key's color and `curveType`, so it keeps hugging the
+line it belongs to. A pair whose two series set different `curveType`s can only
+follow the current one.
+
 Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
 `yUnit` (the x-axis is categorical). The titles inherit the theme token:
 
@@ -224,10 +228,31 @@ threshold, or a series average. Pass one config or an array:
 ```
 
 A fixed `value` wins; otherwise `average` takes the mean of one series
-(`average: 'desktop'`) or of every plotted series (`average: true`) — and nothing
-is drawn when there are no numeric values to average. The rule extends the axis
+(`average: 'desktop'`) or of every plotted series (`average: true`, which counts
+any `comparisonKeys` overlay too) — `null` values are skipped, and nothing is
+drawn when there are no numeric values to average. The rule extends the axis
 domain, so a target above the data maximum stays visible instead of being
-clipped. `BarChart` and `AreaChart` take the same config.
+clipped.
+
+Each caption sits at its rule's top right. Where that lands on the series,
+`labelPosition` moves it (`top`, `insideTopLeft`, `insideTopRight`,
+`insideBottomLeft`, `insideBottomRight`):
+
+```tsx
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  referenceLine={{
+    average: true,
+    label: 'Average',
+    labelPosition: 'insideBottomLeft',
+  }}
+/>
+```
+
+`BarChart` and `AreaChart` take the same config.
 
 ## Custom tooltip
 

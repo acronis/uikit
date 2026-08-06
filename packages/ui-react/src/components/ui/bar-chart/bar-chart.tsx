@@ -1179,12 +1179,13 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   key={`${ref.label ?? 'ref'}-${index}`}
                   // Draw on the value axis: Y for vertical bars, X for horizontal.
                   {...(orientation === 'horizontal' ? { x: value } : { y: value })}
-                  // The caption sits at the top of the line: above the right end
-                  // of a horizontal line (vertical bars), or above the top of a
-                  // vertical line (horizontal bars).
+                  // By default the caption sits at the top of the line: above the
+                  // right end of a horizontal line (vertical bars), or above the
+                  // top of a vertical line (horizontal bars).
                   {...resolveReferenceLineProps(
                     ref.label,
-                    orientation === 'horizontal' ? 'top' : 'insideTopRight'
+                    ref.labelPosition ??
+                      (orientation === 'horizontal' ? 'top' : 'insideTopRight')
                   )}
                 />
               );

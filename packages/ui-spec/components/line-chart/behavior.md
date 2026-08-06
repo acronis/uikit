@@ -88,12 +88,15 @@ Scenario: Reference line
   Then a dashed rule draws across the value axis at 250, captioned "Target"
   And it is drawn in the muted text token, over the series
   And the axis domain extends to include it, so a target above the data maximum stays visible
+  And the caption sits at the rule's top right unless labelPosition moves it
 ```
 
 ```gherkin
 Scenario: Averaged reference line
   Given referenceLine is { average: true } (or a single series key)
   Then the rule draws at the mean of every plotted series' values (or that one series)
+  And a comparisonKeys overlay counts as a plotted series in that mean
+  And null values are skipped rather than counted as zero
   And when there is nothing numeric to average, no rule is drawn
 ```
 
@@ -138,6 +141,7 @@ Scenario: Delta band between two series
   Given deltaBands lists a pair [current, comparison] (e.g. [["thisYear","lastYear"]])
   Then a dimmed area shades the gap between the two series at each point
   And the band is tinted with the current key's config color and sits behind the lines
+  And it follows the current key's curveType, so its edges match the line it shades
   And points where either series is non-numeric are left un-banded
   And the band is not surfaced as its own tooltip row or legend entry
 ```
