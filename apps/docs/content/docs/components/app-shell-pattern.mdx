@@ -9,7 +9,7 @@ import { AppShellDemo } from "@/components/demos-react/app-shell";
 The **App Shell** layout (see the [App Shell component](/components/app-shell)) is a
 slot-based scaffold. This pattern is the sanctioned way to fill those slots for a
 top-level authenticated screen: `SidebarPrimary` (and optionally
-`SidebarSecondary`) in the sidebar, `SearchGlobal` + account/actions in the header,
+`SidebarSecondary`) in the sidebar, account/actions in the header,
 and the routed page in main.
 
 <DemoReact>
@@ -21,7 +21,7 @@ and the routed page in main.
 ```tsx
 import {
   AppShell, AppShellSidebar, AppShellBody, AppShellHeader, AppShellMain,
-  SidebarPrimary, SearchGlobal,
+  SidebarPrimary,
 } from '@acronis-platform/ui-react';
 
 <AppShell>
@@ -31,7 +31,6 @@ import {
   </AppShellSidebar>
   <AppShellBody>
     <AppShellHeader>
-      <SearchGlobal … />
       {/* account menu / actions pushed to the right with ml-auto */}
     </AppShellHeader>
     <AppShellMain>{children}</AppShellMain>
@@ -53,4 +52,4 @@ import {
 
 - Hand-rolling a fixed sidebar/header with raw `div`s instead of the slots — you lose the landmark semantics and the sticky-header / scrolling-main behavior.
 - Putting page content in `AppShellHeader`, or rendering more than one `AppShellMain` (breaks the single `main` landmark).
-- Overriding the slotted components' colors from the scaffold — let `SidebarPrimary` / `SearchGlobal` own their tokens.
+- Overriding the slotted components' colors from the scaffold — let `SidebarPrimary` own its tokens.

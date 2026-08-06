@@ -15,7 +15,7 @@ and an optional description or error message. It composes the bare
 - For a bare input with no label/description (e.g. inside a custom layout) — use
   the `Input` primitive directly.
 - For multi-line text — use `InputTextArea`.
-- For a search field with a leading icon — use `Search` / `SearchGlobal`.
+- For a search field with a leading icon — use `Search`.
 
 ## Examples
 

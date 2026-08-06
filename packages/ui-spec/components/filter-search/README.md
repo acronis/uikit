@@ -26,7 +26,6 @@ favor of living here, next to the toolbar it always appeared alongside).
 
 ## When NOT to Use
 
-- **Global search** — use SearchGlobal.
 - **Form layouts** — use a form component, not a toolbar.
 - **Navigation bars** — use a dedicated nav component.
 

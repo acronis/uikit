@@ -17,7 +17,6 @@ import {
 } from '@acronis-platform/icons-react/stroke-mono';
 import { AcronisIcon } from '@acronis-platform/icons-react/solid-mono';
 
-import { SearchGlobal } from '../../search-global';
 import {
   PageHeader,
   PageHeaderRow,
@@ -191,18 +190,8 @@ function SecondaryNav({ expanded }: { expanded?: boolean }) {
 function Header() {
   return (
     <AppShellHeader>
-      {/* A 3-column grid (1fr · auto · 1fr) truly centers the search regardless
-          of the account label's width — equal side columns keep the middle
-          centered (a flex spacer approach gets pulled off-center by the search's
-          own width). */}
-      <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-4">
-        <span aria-hidden="true" />
-        <SearchGlobal
-          aria-label="Search"
-          placeholder="Search…"
-          className="w-[28rem] justify-self-center"
-        />
-        <span className="justify-self-end text-sm text-[var(--ui-text-on-surface-secondary)]">
+      <div className="flex w-full items-center justify-end gap-4">
+        <span className="text-sm text-[var(--ui-text-on-surface-secondary)]">
           admin@acronis.com
         </span>
       </div>

@@ -18,7 +18,7 @@ figma.connect(
       <AppShell>
         <AppShellSidebar>{/* SidebarPrimary */}</AppShellSidebar>
         <AppShellBody>
-          <AppShellHeader>{/* SearchGlobal + actions */}</AppShellHeader>
+          <AppShellHeader>{/* actions */}</AppShellHeader>
           <AppShellMain>{/* page content */}</AppShellMain>
         </AppShellBody>
       </AppShell>

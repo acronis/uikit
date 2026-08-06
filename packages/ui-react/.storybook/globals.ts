@@ -29,7 +29,6 @@ import inputSearchDeepSky from '@acronis-platform/tokens-pd/css/InputSearch/deep
 import inputSelectDeepSky from '@acronis-platform/tokens-pd/css/InputSelect/deep_sky_itkontoret.css?raw';
 import inputDatePickerDeepSky from '@acronis-platform/tokens-pd/css/InputDatePicker/deep_sky_itkontoret.css?raw';
 import linkDeepSky from '@acronis-platform/tokens-pd/css/Link/deep_sky_itkontoret.css?raw';
-import searchGlobalDeepSky from '@acronis-platform/tokens-pd/css/SearchGlobal/deep_sky_itkontoret.css?raw';
 import radioDeepSky from '@acronis-platform/tokens-pd/css/Radio/deep_sky_itkontoret.css?raw';
 import breadcrumbDeepSky from '@acronis-platform/tokens-pd/css/Breadcrumb/deep_sky_itkontoret.css?raw';
 import resizableDeepSky from '@acronis-platform/tokens-pd/css/Resizable/deep_sky_itkontoret.css?raw';
@@ -58,7 +57,6 @@ const DEEP_SKY_OVERRIDES = [
   inputSelectDeepSky,
   inputDatePickerDeepSky,
   linkDeepSky,
-  searchGlobalDeepSky,
   radioDeepSky,
   breadcrumbDeepSky,
   resizableDeepSky,

@@ -4,11 +4,11 @@ import { cn } from '@/lib/utils';
 
 // The full-page application scaffold from the Figma App Shell (node 2782-1495):
 // a left sidebar column (holds SidebarPrimary, optionally a secondary menu) beside
-// a body column of a sticky header (with the global search) over the scrolling
-// main content. Layout-only — the rich parts come from SidebarPrimary /
-// SidebarSecondary / SearchGlobal placed inside these slots. Surfaces use the
-// shared `--ui-*` tokens (bg-background / border-border; a bare `border` is
-// transparent in ui-react, so borders name `border-border`).
+// a body column of a sticky header over the scrolling main content. Layout-only
+// — the rich parts come from SidebarPrimary / SidebarSecondary placed inside
+// these slots. Surfaces use the shared `--ui-*` tokens (bg-background /
+// border-border; a bare `border` is transparent in ui-react, so borders name
+// `border-border`).
 
 const AppShell = React.forwardRef<
   HTMLDivElement,

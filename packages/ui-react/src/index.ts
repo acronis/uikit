@@ -76,7 +76,6 @@ export * from './components/ui/progress-circle';
 export * from './components/ui/sankey-chart';
 export * from './components/ui/scatter-chart';
 export * from './components/ui/scroll-area';
-export * from './components/ui/search-global';
 // `Input` / `Search` / `Textarea` are aliases of the full-field components
 // `InputText` / `InputSearch` / `InputTextArea`. `InputBox` (above, from
 // './components/ui/input') is exported separately for pairing with `Field`

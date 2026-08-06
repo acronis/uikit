@@ -5,9 +5,9 @@ status: ready
 category: layout
 description: >-
   The full-page application scaffold — a sidebar column (primary nav, optionally a
-  secondary menu) beside a body column of a sticky header (with global search) over
-  the scrolling main content. A slot-based layout: drop SidebarPrimary /
-  SidebarSecondary / SearchGlobal and your page content into its slots.
+  secondary menu) beside a body column of a sticky header over the scrolling main
+  content. A slot-based layout: drop SidebarPrimary / SidebarSecondary, your
+  header content and your page content into its slots.
 since: 0.52.0
 figma:
   node: 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2782-1495'

@@ -13,7 +13,6 @@ import {
   EmptyHeader,
   EmptyIcon,
   EmptyTitle,
-  SearchGlobal,
 } from '@acronis-platform/ui-react';
 import { InboxIcon } from '@acronis-platform/icons-react/stroke-mono';
 
@@ -38,9 +37,7 @@ export function EmptyScreenDemo() {
           ))}
         </AppShellSidebar>
         <AppShellBody>
-          <AppShellHeader>
-            <SearchGlobal aria-label="Search" placeholder="Search…" className="max-w-md" />
-          </AppShellHeader>
+          <AppShellHeader />
           <AppShellMain className="grid place-items-center p-6">
             <Empty>
               <EmptyHeader>
