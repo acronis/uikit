@@ -55,6 +55,9 @@ export default {
       },
       "borderRadius": {
         "toast-global-container-border-radius": "8px"
+      },
+      "boxShadow": {
+        "toast-global-container": "0px 16px 32px 0px light-dark(rgb(0 0 0 / 0.102), rgb(0 0 0 / 0.4))"
       }
     },
   },

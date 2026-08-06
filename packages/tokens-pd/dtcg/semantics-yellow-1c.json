@@ -1738,6 +1738,39 @@
       }
     }
   },
+  "shadow": {
+    "$type": "shadow",
+    "lg": {
+      "$type": "shadow",
+      "$value": {
+        "blur": "{shadows.lg.blur}",
+        "color": "{shadows.lg.color}",
+        "offsetX": "{shadows.lg.positionX}",
+        "offsetY": "{shadows.lg.positionY}",
+        "spread": "{shadows.lg.spread}"
+      }
+    },
+    "md": {
+      "$type": "shadow",
+      "$value": {
+        "blur": "{shadows.md.blur}",
+        "color": "{shadows.md.color}",
+        "offsetX": "{shadows.md.positionX}",
+        "offsetY": "{shadows.md.positionY}",
+        "spread": "{shadows.md.spread}"
+      }
+    },
+    "sm": {
+      "$type": "shadow",
+      "$value": {
+        "blur": "{shadows.sm.blur}",
+        "color": "{shadows.sm.color}",
+        "offsetX": "{shadows.sm.positionX}",
+        "offsetY": "{shadows.sm.positionY}",
+        "spread": "{shadows.sm.spread}"
+      }
+    }
+  },
   "typography": {
     "$type": "typography",
     "body": {
