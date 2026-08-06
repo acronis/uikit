@@ -8,8 +8,10 @@ feat(charts): add rich cell labels and a legend to Treemap
 legend at all. It now carries the label block the design asks for, plus the legend
 for the tiles too small to hold one.
 
-**Labels.** The block is anchored at the tile's bottom-left corner, per the design;
-`labelAlign` moves it to the top-left corner or centers it (the previous look). The
+**Labels.** The block is anchored at the tile's bottom start corner, per the design;
+`labelAlign` moves it to the top start corner or centers it (the previous look). Its
+values are named for the start edge rather than a physical corner because they
+mirror under `dir="rtl"`. The
 name shown is the leaf's `config` **label** rather than its raw `nameKey` value:
 that value becomes part of a `--color-<name>` custom property, so it has to be
 CSS-safe, and a leaf whose display name has a space in it is keyed by a slug — the
@@ -17,11 +19,13 @@ slug is not what belongs on the tile. `secondaryKeys` adds a second line built f
 any other fields on the row — a value, a count, or both — joined by
 `secondarySeparator` and formatted by `secondaryFormatter`, which receives each
 field's index so one formatter can cover fields of different kinds. A field a row
-doesn't carry is skipped instead of leaving a dangling separator.
+doesn't carry — or that the formatter returns empty for — is skipped instead of
+leaving a dangling separator.
 
 Both lines degrade with the tile: a cell too short for two lines keeps just its
 name, each line truncates with an ellipsis, and a tile too small for a label at all
-is left blank. The title is set in the chart label size at semibold and the second
+is left blank. The thresholds are measured in rendered line boxes rather than font
+sizes, so a label is never drawn into a tile that would clip it. The title is set in the chart label size at semibold and the second
 line one step down, so the hierarchy is weight and size rather than a second color,
 which the on-strong secondary text token can't provide (it resolves to a dark grey
 in dark mode, over a fill that stays saturated).
@@ -58,7 +62,10 @@ useful beyond it:
   on one row keeps its exact layout.
 - it accepts the series `config` as a prop, so it can render outside its
   `ChartContainer` (where the context doesn't reach). Charts that keep their legend
-  inside the plot pass nothing and still read the context.
+  inside the plot pass nothing and still read the context; rendering it with neither
+  a prop nor a container still throws, as it always did.
+- an entry with no `config` label falls back to the series key, the way the tooltip
+  row already did, instead of rendering a marker with no text.
 
 Existing treemaps keep their behavior except for the label placement, the tile
 shape, and cells now showing their config label; the legend is off by default.

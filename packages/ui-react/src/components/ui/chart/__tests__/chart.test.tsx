@@ -127,15 +127,37 @@ describe('Chart', () => {
     expect(container.querySelector('.rounded-sm')).toBeInTheDocument();
   });
 
-  it('renders nothing outside a ChartContainer without a config', () => {
+  // Passing a `config` is the *only* sanctioned way to render outside the
+  // container. Everything else is a misuse, and stays as loud as it is for the
+  // tooltip — a legend with no config cannot label itself, so an empty row would
+  // just hide the mistake.
+  it('throws outside a ChartContainer when given no config either', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() =>
+      render(
+        <ChartLegendContent
+          payload={[
+            { value: 'Desktop', dataKey: 'desktop', color: 'rgb(23 99 207)' },
+          ]}
+        />
+      )
+    ).toThrow(/must be used within a <ChartContainer \/> or given a `config`/);
+    spy.mockRestore();
+  });
+
+  // `label` is optional on a ChartConfig entry and the payload lookup can miss, so
+  // the entry falls back to the series key rather than rendering a bare marker.
+  it('falls back to the series key when the config entry has no label', () => {
     const { container } = render(
-      <ChartLegendContent
-        payload={[
-          { value: 'Desktop', dataKey: 'desktop', color: 'rgb(23 99 207)' },
-        ]}
-      />
+      <ChartContainer config={{ desktop: { color: 'rgb(23 99 207)' } }} id="nl">
+        <ChartLegendContent
+          payload={[
+            { value: 'desktop', dataKey: 'desktop', color: 'rgb(23 99 207)' },
+          ]}
+        />
+      </ChartContainer>
     );
-    expect(container).toBeEmptyDOMElement();
+    expect(container).toHaveTextContent('desktop');
   });
 
   it('renders a line marker for stroke series and dashes it from strokeDasharray', () => {

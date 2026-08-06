@@ -40,7 +40,9 @@ parts:
       line first, then the name. Rendered by a custom `content` cell renderer; the
       label block itself is HTML in a `foreignObject`, so it truncates and mirrors
       (`text-start`) through CSS like the rest of the kit rather than through
-      hand-computed SVG text coordinates.
+      hand-computed SVG text coordinates. Every alignment keeps each line as wide
+      as the tile, since a line only ellipsizes against a box it does not size
+      itself to.
   - id: tooltip-content
     element: div
     description: >-

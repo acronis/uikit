@@ -28,11 +28,12 @@ import {
 // of leaves).
 
 /**
- * Where a cell's label block sits inside its rectangle. `bottom-left` is the
- * design's placement; `center` is what the chart drew before the block had a
- * second line.
+ * Where a cell's label block sits inside its rectangle. Named logically, not
+ * physically: the corner variants anchor to the tile's *start* edge, so they
+ * mirror under `dir="rtl"`. `bottom-start` is the design's placement; `center`
+ * is what the chart drew before the block had a second line.
  */
-export type TreemapLabelAlign = 'bottom-left' | 'top-left' | 'center';
+export type TreemapLabelAlign = 'bottom-start' | 'top-start' | 'center';
 
 // Cell shape: each tile is inset by the gap on every side, so neighbouring tiles
 // are separated by the surface showing through rather than by a stroke, and the
@@ -41,20 +42,28 @@ const CELL_GAP = 2;
 const CELL_RADIUS = 6;
 
 // Label geometry, in px. The block's own layout is CSS (see the renderer); these
-// are the sizes the tile has to clear for it to be worth drawing at all — one
-// line, or two — matching the padding and type sizes the label is styled with.
+// are the heights the tile has to clear for a label to fit *without being
+// clipped* — one line, or two.
+//
+// Line boxes, not font sizes: Tailwind's `--text-xs--line-height` is 4/3, so the
+// `text-xs` title renders a 16px line box, and the second line inherits that same
+// ratio (an arbitrary `text-[11px]` sets font-size only) for ~14.7px. Measuring by
+// font size instead would let a tile pass the threshold and still have the block's
+// `overflow-hidden` eat the top of the first line.
 const CELL_PADDING = 12;
-const TITLE_FONT_SIZE = CHART_LABEL_FONT_SIZE;
+const LINE_HEIGHT_RATIO = 4 / 3;
 const SECONDARY_FONT_SIZE = 11;
-const LINE_GAP = 4;
+const TITLE_LINE_HEIGHT = Math.ceil(CHART_LABEL_FONT_SIZE * LINE_HEIGHT_RATIO);
+const SECONDARY_LINE_HEIGHT = Math.ceil(
+  SECONDARY_FONT_SIZE * LINE_HEIGHT_RATIO
+);
 
 // The smallest tile that gets a label at all, and the height a second line
 // additionally needs. Below the first threshold a cell stays blank rather than
 // showing a stub — the label would be wider than the tile it names.
 const MIN_LABEL_WIDTH = 64;
-const MIN_LABEL_HEIGHT = CELL_PADDING * 2 + TITLE_FONT_SIZE;
-const MIN_TWO_LINE_HEIGHT =
-  CELL_PADDING * 2 + TITLE_FONT_SIZE + LINE_GAP + SECONDARY_FONT_SIZE;
+const MIN_LABEL_HEIGHT = CELL_PADDING * 2 + TITLE_LINE_HEIGHT;
+const MIN_TWO_LINE_HEIGHT = MIN_LABEL_HEIGHT + SECONDARY_LINE_HEIGHT;
 
 /**
  * Compose a cell's second line out of the caller's `secondaryKeys`. Empty and
@@ -71,7 +80,12 @@ export function treemapSecondaryLabel(options: {
   const parts = keys.flatMap((key, index) => {
     const value = row[key];
     if (value == null || value === '') return [];
-    return [formatter ? formatter(value, index) : String(value)];
+    // Emptiness is re-checked *after* formatting, not just on the raw value: a
+    // formatter that blanks a field it doesn't want to show (a zero, a sentinel)
+    // would otherwise contribute an empty part and put back the dangling
+    // separator this function exists to avoid.
+    const part = formatter ? formatter(value, index) : String(value);
+    return part === '' ? [] : [part];
   });
   return parts.length ? parts.join(separator) : undefined;
 }
@@ -92,15 +106,23 @@ interface TreemapCellProps {
   labelAlign?: TreemapLabelAlign;
 }
 
-// How the label block sits in its tile. `text-start` and the flex alignment are
-// what make the corner-anchored variants mirror under `dir="rtl"` — the same
-// logical utilities every other component uses, which is why the label is HTML in
-// a `foreignObject` rather than SVG `<text>`: `x`/`text-anchor` are physical, so a
-// mirrored label would need the direction read in JS and applied by hand.
+// How the label block sits in its tile. `text-start`/`text-center` and the
+// block-axis `justify-*` are what make the corner-anchored variants mirror under
+// `dir="rtl"` — the same logical utilities every other component uses, which is
+// why the label is HTML in a `foreignObject` rather than SVG `<text>`:
+// `x`/`text-anchor` are physical, so a mirrored label would need the direction
+// read in JS and applied by hand.
+//
+// Every variant leaves the cross axis on the default `items-stretch`, including
+// `center`. Centering the line is `text-center`'s job, not `items-center`'s:
+// `items-center` would size each line to its own text instead of to the tile, and
+// a `truncate` line only ellipsizes when it is the *tile* that constrains it — a
+// shrink-to-fit line is never narrower than its text, so it would silently
+// overflow and be hard-clipped on both edges instead.
 const LABEL_ALIGN_CLASS: Record<TreemapLabelAlign, string> = {
-  'bottom-left': 'justify-end text-start',
-  'top-left': 'justify-start text-start',
-  center: 'items-center justify-center text-center',
+  'bottom-start': 'justify-end text-start',
+  'top-start': 'justify-start text-start',
+  center: 'justify-center text-center',
 };
 
 // Cell renderer: fill each rounded rect from its `--color-<name>` var, inset it so
@@ -116,7 +138,7 @@ export function TreemapCell({
   primaryLabel,
   secondaryLabel,
   showLabels = true,
-  labelAlign = 'bottom-left',
+  labelAlign = 'bottom-start',
 }: TreemapCellProps) {
   // recharts invokes `content` for the synthetic root node too (full chart
   // dimensions, empty name). Skip any name-less node — otherwise its rect has no
@@ -130,10 +152,14 @@ export function TreemapCell({
   const tileWidth = Math.max(0, width - CELL_GAP * 2);
   const tileHeight = Math.max(0, height - CELL_GAP * 2);
 
+  // `>=` on the heights: they are exact fits (padding + line boxes), so a tile
+  // that measures one of them exactly has room for that label. The width is a
+  // judgement call about how narrow a label is still worth reading, not a fit, so
+  // it stays a strict `>`.
   const canLabel =
-    showLabels && tileWidth > MIN_LABEL_WIDTH && tileHeight > MIN_LABEL_HEIGHT;
+    showLabels && tileWidth > MIN_LABEL_WIDTH && tileHeight >= MIN_LABEL_HEIGHT;
   const secondary =
-    canLabel && secondaryLabel && tileHeight > MIN_TWO_LINE_HEIGHT
+    canLabel && secondaryLabel && tileHeight >= MIN_TWO_LINE_HEIGHT
       ? secondaryLabel
       : undefined;
 
@@ -187,7 +213,16 @@ export function TreemapCell({
 
 export interface TreemapProps
   extends Omit<React.ComponentProps<'div'>, 'children'>, ChartAnimationProps {
-  /** Row-per-leaf data. Each object holds the leaf's `nameKey` label + its `dataKey` numeric size. */
+  /**
+   * Row-per-leaf data. Each object holds the leaf's `nameKey` label + its
+   * `dataKey` numeric size.
+   *
+   * `fill`, `primaryLabel` and `secondaryLabel` are reserved: the chart stamps
+   * them onto a copy of each row to carry the cell color and the two label lines
+   * through to the renderer (recharts hands the whole row to `content`, so
+   * anything the cell needs has to be on it). A row of your own carrying one of
+   * those names may end up driving what the tile paints.
+   */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
    * Per-leaf map of `label` / `color`, keyed by the leaf's `nameKey` value
@@ -209,10 +244,11 @@ export interface TreemapProps
   /** Render each leaf's label inside its cell (when it fits). */
   showLabels?: boolean;
   /**
-   * Where a cell's label sits. Defaults to `bottom-left` — the design's
+   * Where a cell's label sits. Defaults to `bottom-start` — the design's
    * placement, which keeps the label anchored to a tile corner as the tiling
-   * reflows. `top-left` anchors it to the opposite corner; `center` centers the
-   * block in the tile.
+   * reflows. `top-start` anchors it to the opposite corner; `center` centers the
+   * block in the tile. The corner variants are named for the tile's *start* edge
+   * because they mirror under `dir="rtl"`.
    */
   labelAlign?: TreemapLabelAlign;
   /**
@@ -255,7 +291,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
       nameKey,
       aspectRatio = 4 / 3,
       showLabels = true,
-      labelAlign = 'bottom-left',
+      labelAlign = 'bottom-start',
       secondaryKeys,
       secondaryFormatter,
       secondarySeparator = ' · ',

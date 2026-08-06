@@ -68,7 +68,11 @@ const meta = {
   argTypes: {
     aspectRatio: { control: { type: 'number', min: 0.5, max: 4, step: 0.1 } },
     showLabels: { control: 'boolean' },
-    labelAlign: { control: 'inline-radio', options: ['top-left', 'center'] },
+    labelAlign: {
+      control: 'inline-radio',
+      options: ['bottom-start', 'top-start', 'center'],
+    },
+    secondaryKeys: { control: 'object' },
     secondarySeparator: { control: 'text' },
     showTooltip: { control: 'boolean' },
     showLegend: { control: 'boolean' },
@@ -104,10 +108,32 @@ export const SecondaryLabels: Story = {
   },
 };
 
+// The block hung from the tile's opposite corner — the top start edge — rather
+// than the default bottom one.
+export const TopStartLabels: Story = {
+  args: { labelAlign: 'top-start', secondaryKeys: ['size'] },
+};
+
 // The pre-`labelAlign` placement: the block centered in its cell instead of
-// anchored to the tile's top-left corner.
+// anchored to the tile's bottom start corner.
+//
+// The first leaf's label is deliberately longer than even the widest tile: a
+// centered line has to truncate against the *tile*, and a baseline where the
+// label happens to fit would go on passing if it started sizing itself to its own
+// text instead (which is what an `items-center` on the block would do — the label
+// would then overrun the tile and be clipped on both edges, with no ellipsis).
 export const CenteredLabels: Story = {
-  args: { labelAlign: 'center', secondaryKeys: ['size'] },
+  args: {
+    labelAlign: 'center',
+    secondaryKeys: ['size'],
+    config: {
+      ...config,
+      React: {
+        ...config.React,
+        label: 'React, the client rendering runtime, and its build toolchain',
+      },
+    },
+  },
 };
 
 // The legend — one entry per leaf, on the same markers and labels as every other
@@ -141,7 +167,10 @@ export const SmallTiles: Story = {
       { name: 'disqualified', amount: 9400, deals: 1 },
     ],
     config: {
-      won: { label: 'Won', color: 'var(--ui-background-status-strong-success)' },
+      won: {
+        label: 'Won',
+        color: 'var(--ui-background-status-strong-success)',
+      },
       approved: {
         label: 'Approved',
         color: 'var(--ui-background-brand-secondary)',
@@ -158,7 +187,10 @@ export const SmallTiles: Story = {
         label: 'Draft',
         color: 'var(--ui-background-status-strong-neutral)',
       },
-      lost: { label: 'Lost', color: 'var(--ui-background-status-strong-danger)' },
+      lost: {
+        label: 'Lost',
+        color: 'var(--ui-background-status-strong-danger)',
+      },
       disqualified: {
         label: 'Disqualified',
         color: 'var(--ui-background-status-strong-critical)',

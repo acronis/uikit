@@ -151,7 +151,7 @@ describe('Treemap cell labels', () => {
   });
 
   it('hangs the label from the tile start edge, top, when asked', () => {
-    const { container } = renderChart({ labelAlign: 'top-left' });
+    const { container } = renderChart({ labelAlign: 'top-start' });
     expect(labelBlock(container)).toHaveClass('justify-start', 'text-start');
   });
 
@@ -162,6 +162,18 @@ describe('Treemap cell labels', () => {
       (line) => expect(line).toHaveClass('truncate')
     );
   });
+
+  // `truncate` only ellipsizes a line the *tile* constrains. `items-center` would
+  // size each line to its own text instead, so a name longer than its tile would
+  // overflow and be hard-clipped on both edges with no ellipsis — centering is
+  // `text-center`'s job, and the cross axis has to stay on `items-stretch`.
+  it.each(['bottom-start', 'top-start', 'center'] as const)(
+    'keeps the lines tile-width so they can ellipsize (%s)',
+    (labelAlign) => {
+      const { container } = renderChart({ labelAlign });
+      expect(labelBlock(container)).not.toHaveClass('items-center');
+    }
+  );
 
   // The tooltip opens on the tile's own hover, so the label must not swallow it.
   it('leaves the tile to receive the pointer', () => {
@@ -440,6 +452,41 @@ describe('TreemapCell', () => {
     expect(cellText(container)).toEqual(['React', '2,400 · 24']);
   });
 
+  // The thresholds are line boxes, not font sizes: `text-xs` renders 16px tall
+  // (Tailwind's 4/3 ratio), so one line needs 12*2 + 16 = 40px of tile and two
+  // need a further 15. A tile between the font-size sum (36) and the real fit
+  // would pass a font-size-based check and then have its first line clipped by
+  // the block's `overflow-hidden`. Node height = tile height + the 2px gutter
+  // on each side.
+  it.each([
+    { height: 44, tile: 40, labelled: true },
+    { height: 43, tile: 39, labelled: false },
+  ])('labels a $tile px tile: $labelled', ({ height, labelled }) => {
+    const { container } = render(
+      <svg>
+        <TreemapCell name="React" width={160} height={height} />
+      </svg>
+    );
+    expect(cellText(container)).toEqual(labelled ? ['React'] : []);
+  });
+
+  it.each([
+    { height: 59, tile: 55, lines: ['React', '2,400'] },
+    { height: 58, tile: 54, lines: ['React'] },
+  ])('fits two lines in a $tile px tile: $lines', ({ height, lines }) => {
+    const { container } = render(
+      <svg>
+        <TreemapCell
+          name="React"
+          secondaryLabel="2,400"
+          width={160}
+          height={height}
+        />
+      </svg>
+    );
+    expect(cellText(container)).toEqual(lines);
+  });
+
   // "Degrade gracefully": the second line goes before the title does.
   it('drops the second line on a cell too short for it, keeping the title', () => {
     const { container } = render(
@@ -491,6 +538,32 @@ describe('treemapSecondaryLabel', () => {
         separator: ' · ',
       })
     ).toBe('2400');
+  });
+
+  // The two guards combined: a field that is present (so the raw-value check
+  // passes) but that the caller's formatter blanks. Checking only the raw value
+  // would put the dangling separator straight back.
+  it('skips a field the formatter blanks, not just an empty raw value', () => {
+    expect(
+      treemapSecondaryLabel({
+        row: { size: 0, count: 24 },
+        keys: ['size', 'count'],
+        separator: ' · ',
+        formatter: (value, index) =>
+          index === 0 && value === 0 ? '' : String(value),
+      })
+    ).toBe('24');
+  });
+
+  it('has no line when the formatter blanks every field', () => {
+    expect(
+      treemapSecondaryLabel({
+        row,
+        keys: ['size', 'count'],
+        separator: ' · ',
+        formatter: () => '',
+      })
+    ).toBeUndefined();
   });
 
   it('has no line when no field carries a value', () => {

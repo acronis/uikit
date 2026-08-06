@@ -303,6 +303,16 @@ function ChartTooltipContent({
                       />
                     )
                   )}
+                  {/*
+                   * `gap-4` puts a floor under the name/value separation.
+                   * `justify-between` alone only separates them while the
+                   * container has free space to distribute — which the tooltip's
+                   * `min-w-[8rem]` guarantees for a short value and not for a
+                   * long one (a currency `tickFormatter`, a `labelFormatter`
+                   * with units, a value plus its share), where the two would
+                   * otherwise butt up against each other. A minimum, so a row
+                   * with slack renders as before.
+                   */}
                   <div className="flex flex-1 items-center justify-between gap-4 leading-none">
                     <span className="text-muted-foreground">
                       {itemConfig?.label || item.name}
@@ -333,13 +343,21 @@ function ChartLegendContent({
   nameKey,
   config: configFromProps,
 }: ChartLegendContentProps) {
-  // The context, not `useChart()`: a caller that passes its own `config` is
-  // rendering the legend outside the container, where the context is absent by
-  // design rather than by mistake.
+  // The context read directly rather than through `useChart()`: a caller that
+  // passes its own `config` is rendering the legend outside the container, where
+  // the context is absent by design rather than by mistake. Every other caller
+  // still gets `useChart()`'s error — the legend has no way to label itself
+  // without a config, and failing loudly beats rendering an empty row.
   const contextConfig = React.useContext(ChartContext)?.config;
   const config = configFromProps ?? contextConfig;
 
-  if (!payload?.length || !config) {
+  if (!config) {
+    throw new Error(
+      'ChartLegendContent must be used within a <ChartContainer /> or given a `config` prop'
+    );
+  }
+
+  if (!payload?.length) {
     return null;
   }
 
@@ -379,7 +397,15 @@ function ChartLegendContent({
             ) : (
               <SeriesMarker marker={marker} color={item.color} />
             )}
-            {itemConfig?.label}
+            {/*
+             * Falls back to the series key, the way the tooltip row and the
+             * treemap's on-cell label both do. `label` is optional on a
+             * `ChartConfig` entry, and `getPayloadConfigFromPayload` can miss
+             * entirely, so without this an entry renders as a marker with no
+             * text — worst on the charts whose legend is the only place a series
+             * is named.
+             */}
+            {itemConfig?.label ?? item.value}
           </div>
         );
       })}

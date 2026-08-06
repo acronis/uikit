@@ -23,10 +23,12 @@ tokens:
     affects: tooltip-content
     description: Tooltip value text (text-foreground).
   - name: --ui-text-on-surface-secondary
-    affects: legend-content
+    affects: tooltip-content, legend-content
     description: >-
-      Muted tooltip/legend label text
-      (text-muted-foreground / fill-muted-foreground).
+      Muted tooltip row label (text-muted-foreground), and a legend entry's
+      custom `config` icon when one is given
+      (`[&>svg]:text-muted-foreground`) — a legend entry's own label text
+      inherits the surface's text color rather than this token.
   - name: --ui-border-on-surface-border
     affects: tooltip-content
     description: Tooltip border (border-border).

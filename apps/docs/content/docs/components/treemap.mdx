@@ -86,7 +86,7 @@ Change the tiling with `aspectRatio`, and hide the on-cell labels or tooltip wit
 
 ## Cell labels
 
-Each cell is labelled with its leaf's name, anchored at the tile's bottom-left
+Each cell is labelled with its leaf's name, anchored at the tile's bottom start
 corner. The name shown is the leaf's **`config` label**, not its raw `nameKey`
 value — that value becomes part of a `--color-<name>` custom property, so it has
 to be CSS-safe, and a leaf whose display name contains a space is keyed by a slug
@@ -113,8 +113,10 @@ different kinds:
 Labels degrade with the tile: a cell too short for two lines keeps just its name,
 a line wider than its cell is truncated with an ellipsis, and a tile too small for a
 label at all is left blank — which is the case the legend covers. The block hugs the
-tile's start edge, so it mirrors under `dir="rtl"`. Use `labelAlign` to anchor it at
-the tile's top-left corner, or to center it in the tile:
+tile's start edge, so it mirrors under `dir="rtl"` — which is why the corner
+values are named `bottom-start` / `top-start` rather than for a physical corner.
+Use `labelAlign` to anchor the block at the tile's opposite corner, or to center
+it in the tile:
 
 ```tsx
 <Treemap

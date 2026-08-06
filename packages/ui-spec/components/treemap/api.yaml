@@ -41,13 +41,14 @@ contract:
       default: 'true'
       description: Render each leaf's label inside its cell (when it fits).
     - name: labelAlign
-      type: "'bottom-left' | 'top-left' | 'center'"
+      type: "'bottom-start' | 'top-start' | 'center'"
       required: false
-      default: "'bottom-left'"
+      default: "'bottom-start'"
       description: >-
-        Where a cell's label block sits — anchored at the tile's bottom-left
-        corner (the design's placement), at its top-left corner, or centered in
-        the tile.
+        Where a cell's label block sits — anchored at the tile's bottom start
+        corner (the design's placement), at its top start corner, or centered in
+        the tile. Named for the start edge, not a physical one: the corner
+        variants mirror under dir="rtl".
     - name: secondaryKeys
       type: ReadonlyArray<string>
       required: false
