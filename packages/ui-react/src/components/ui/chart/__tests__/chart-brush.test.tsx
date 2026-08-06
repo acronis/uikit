@@ -1,5 +1,5 @@
 import { fireEvent, render } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { AreaChart } from '../../area-chart';
 import { BarChart } from '../../bar-chart';
@@ -10,6 +10,7 @@ import {
   CHART_BRUSH_HEIGHT,
   type ChartConfig,
 } from '../index';
+import { giveTheChartASize } from './chart-layout';
 
 // The range brush is a shared cartesian-chart feature (`ChartBrushProps` +
 // `resolveBrushProps`), so the four charts that carry one are exercised together
@@ -25,64 +26,6 @@ const config = {
   desktop: { label: 'Desktop', color: 'rgb(23 99 207)' },
   mobile: { label: 'Mobile', color: 'rgb(220 53 69)' },
 } satisfies ChartConfig;
-
-const CHART_WIDTH = 600;
-const CHART_HEIGHT = 400;
-
-// recharts' ResponsiveContainer measures its box through a ResizeObserver, which
-// happy-dom never fires — so the chart renders at 0×0 and every SVG child bails
-// out (`<Brush>` returns null for a non-positive width/height). Feeding it a size
-// is what makes the brush observable in a unit test at all; without it the only
-// honest assertion left is "the chart root exists", which passes with or without
-// the feature.
-class SizedResizeObserver {
-  constructor(private readonly callback: ResizeObserverCallback) {}
-  observe(target: Element) {
-    this.callback(
-      [
-        {
-          target,
-          contentRect: {
-            width: CHART_WIDTH,
-            height: CHART_HEIGHT,
-          } as DOMRectReadOnly,
-        } as ResizeObserverEntry,
-      ],
-      this as unknown as ResizeObserver
-    );
-  }
-  unobserve() {}
-  disconnect() {}
-}
-
-let restoreRect: (() => void) | undefined;
-
-function giveTheChartASize() {
-  vi.stubGlobal('ResizeObserver', SizedResizeObserver);
-  const original = Element.prototype.getBoundingClientRect;
-  Element.prototype.getBoundingClientRect = function () {
-    return {
-      width: CHART_WIDTH,
-      height: CHART_HEIGHT,
-      top: 0,
-      left: 0,
-      right: CHART_WIDTH,
-      bottom: CHART_HEIGHT,
-      x: 0,
-      y: 0,
-      toJSON: () => ({}),
-    } as DOMRect;
-  };
-  restoreRect = () => {
-    Element.prototype.getBoundingClientRect = original;
-  };
-}
-
-afterEach(() => {
-  restoreRect?.();
-  restoreRect = undefined;
-  vi.unstubAllGlobals();
-});
 
 type BrushProps = {
   showBrush?: boolean;
