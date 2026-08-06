@@ -18,7 +18,7 @@ when_to_use:
   - Keeping filter controls tucked away until the user wants them.
 when_not_to_use:
   - A single always-visible filter — render the field inline instead of a popover.
-  - Free-text search — use a search field (InputSearch / SearchGlobal), not selects.
+  - Free-text search — use a search field (InputSearch), not selects.
   - A blocking, full-screen task — use a Dialog.
 
 anti_patterns:

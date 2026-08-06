@@ -14,7 +14,6 @@ furniture.
 
 - For a bare search box with no label (e.g. in a toolbar or table header) — use
   the [`Search`](../search/README.md) box directly.
-- For the page-level global search affordance — use `SearchGlobal`.
 - For a plain labelled text field with no leading magnifier — use `InputText`.
 
 ## Examples

@@ -17,7 +17,7 @@ adapters:
       <AppShell>
         <AppShellSidebar><SidebarPrimary … /></AppShellSidebar>
         <AppShellBody>
-          <AppShellHeader><SearchGlobal … /></AppShellHeader>
+          <AppShellHeader>{header}</AppShellHeader>
           <AppShellMain>{children}</AppShellMain>
         </AppShellBody>
       </AppShell>

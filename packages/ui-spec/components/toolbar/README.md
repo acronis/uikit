@@ -17,7 +17,6 @@ rows are selected or bulk actions are available.
 - **Search/filtering above a table** — use `FilterSearch` or
   `DataTableToolbar`. Toolbar has no search field, filter popover, or
   applied-filter chips.
-- **Global search** — use `SearchGlobal`.
 - **Navigation bars** — use a dedicated nav component.
 
 ## Related Components

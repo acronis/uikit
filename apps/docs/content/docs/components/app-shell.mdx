@@ -23,8 +23,7 @@ import {
 sidebar column beside a body column of a sticky header over the scrolling main
 content. Drop [`SidebarPrimary`](/components/sidebar-primary) (and optionally
 [`SidebarSecondary`](/components/sidebar-secondary)) into the sidebar slot,
-[`SearchGlobal`](/components/search-global) into the header, and your page into
-main. The scaffold only paints surfaces + a header/footer divider; the slotted
+your header content into the header, and your page into main. The scaffold only paints surfaces + a header/footer divider; the slotted
 components bring their own styling.
 
 Mapped to the [App Shell Figma](https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2782-1495).
@@ -41,9 +40,7 @@ Mapped to the [App Shell Figma](https://www.figma.com/design/lrU3ydIyvPYQNE6ixds
     <SidebarPrimary … />
   </AppShellSidebar>
   <AppShellBody>
-    <AppShellHeader>
-      <SearchGlobal … />
-    </AppShellHeader>
+    <AppShellHeader>{/* account menu / actions */}</AppShellHeader>
     <AppShellMain>{children}</AppShellMain>
   </AppShellBody>
 </AppShell>

@@ -2,8 +2,8 @@
 
 The full-page application scaffold: a sidebar column beside a body column of a
 sticky header over the scrolling main content. A **slot-based layout** — drop
-`SidebarPrimary` / `SidebarSecondary` into the sidebar, `SearchGlobal` into the
-header, and your page into main.
+`SidebarPrimary` / `SidebarSecondary` into the sidebar, your header content into
+the header, and your page into main.
 
 Mapped to the App Shell Figma (node `2782-1495`).
 
@@ -37,7 +37,7 @@ import {
 <AppShell>
   <AppShellSidebar><SidebarPrimary … /></AppShellSidebar>
   <AppShellBody>
-    <AppShellHeader><SearchGlobal … /></AppShellHeader>
+    <AppShellHeader>{header}</AppShellHeader>
     <AppShellMain>{children}</AppShellMain>
   </AppShellBody>
 </AppShell>;
