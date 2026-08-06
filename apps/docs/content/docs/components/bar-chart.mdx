@@ -86,6 +86,9 @@ Toggle the chrome and corner rounding with `showGrid` / `showTooltip` /
 />
 ```
 
+Legend entries follow the order you declare in `dataKeys`, so the legend reads
+left to right in the same order as the bars in a group.
+
 Overlay a dashed reference line on the value axis with `referenceLine` — either a
 fixed target `value`, or a computed `average` (the mean of one series by key, or
 of every plotted series when `true`). An optional `label` captions it. Pass an
@@ -119,6 +122,111 @@ modes:
   xAxisLabel="Month"
   yAxisLabel="Response time"
   yUnit="ms"
+/>
+```
+
+## Bar styling
+
+`barShape` changes how every bar is painted — `rounded` (the default, the growing
+end rounded by `barRadius`), `pill`, `gradient`, or `pattern` (diagonal hatching
+in the series color, which reads without relying on hue):
+
+```tsx
+<BarChart config={config} data={data} dataKeys={['desktop']} xKey="month" barShape="pill" />
+```
+
+Size the bars with `barSize` / `maxBarSize` and the spacing with `barGap`
+(between the bars of one category) / `barCategoryGap` (between categories).
+`minPointSize` keeps a near-zero value visible as a sliver, and `showBackground`
+draws a full-height track behind every bar (`backgroundFill` recolors it):
+
+```tsx
+<BarChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  barSize={16}
+  barGap={2}
+  barCategoryGap="25%"
+  minPointSize={4}
+  showBackground
+/>
+```
+
+`showActiveBar` highlights the bar under the pointer; `activeBar` sets its `fill`
+and `opacity` (it keeps the series color by default).
+
+## Highlighting a range
+
+`referenceArea` shades a range of categories — a forecast period, a quarter under
+review. `from`/`to` are inclusive and take either the category's own value or its
+0-based row index, and an omitted bound runs to that end of the data. The
+category ticks under the band pick up the accent styling unless you pass
+`highlightTicks: false`, and `divider` marks the hand-off with a dashed rule on
+the band's leading edge:
+
+```tsx
+<BarChart config={config} data={data} dataKeys={['desktop']} xKey="month"
+  referenceArea={{ from: 'Apr', label: 'Forecast', divider: true }} />
+```
+
+`barSettings` restyles the bars of one series over the same kind of range, keyed
+by `dataKeys` entry. Combine the two to make a projection read as provisional —
+translucent and dashed, over its own track, inside the band:
+
+```tsx
+<BarChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  referenceArea={{ from: 'Apr', label: 'Forecast' }}
+  barSettings={{
+    desktop: { from: 'Apr', opacity: 0.35, dashed: true, background: true },
+    mobile: { from: 'Apr', opacity: 0.35, dashed: true, background: true },
+  }}
+/>
+```
+
+Each entry takes `fill`, `opacity`, `dashed`, `shape` (any `barShape` value) and
+`background`. Bars outside the range — and series with no entry — render
+normally, so a grouped or stacked chart keeps its usual painting everywhere else.
+
+`background` is either `true` for a full-height track, or the name of a data
+field to cap it at that row's value — the headroom between a projection and its
+upper bound. A capped track stacks on its own bar, so it needs the default
+`layout="grouped"`, and it stays out of the tooltip and the legend:
+
+```tsx
+const data = [
+  // …actuals…
+  { month: 'Aug', new: 12.6, newMax: 14.6 },
+  { month: 'Sep', new: 13.3, newMax: 16 },
+];
+
+<BarChart config={config} data={data} dataKeys={['new']} xKey="month"
+  referenceArea={{ from: 'Aug' }}
+  barSettings={{ new: { from: 'Aug', opacity: 0.35, dashed: true, background: 'newMax' } }} />
+```
+
+A capped track is decoration for the bar under it, so it never becomes a tooltip
+row or a legend entry. Pair the range with a `tooltipContent` when the projection
+should read as an estimate there too:
+
+```tsx
+<BarChart
+  config={config}
+  data={data}
+  dataKeys={['new']}
+  xKey="month"
+  referenceArea={{ from: 'Aug', divider: true }}
+  barSettings={{ new: { from: 'Aug', opacity: 0.35, dashed: true, background: 'newMax' } }}
+  tooltipContent={
+    <ChartTooltipContent
+      labelFormatter={(label) => (isForecast(label) ? `${label} · forecast` : label)}
+    />
+  }
 />
 ```
 

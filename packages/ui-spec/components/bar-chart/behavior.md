@@ -54,6 +54,9 @@ Scenario: Tooltip on hover
 Scenario: Legend
   Given showLegend is true
   Then a swatch + label renders for each series in dataKeys
+  And the entries follow the dataKeys order, not the underlying chart library's
+      default alphabetical sort
+  And the order does not change when bar-styling props (barShape, barSettings) are set
 ```
 
 ```gherkin
@@ -115,4 +118,75 @@ Scenario: Range brush keyboard and accessible name
   Then each of the two handles is reachable by Tab
   And the focused handle moves one row per left/right arrow key press
   And each handle exposes brushAriaLabel as its accessible name
+```
+
+```gherkin
+Scenario: Highlight a range of categories
+  Given referenceArea is { from: "Apr" }
+  Then a shaded band spans from the "Apr" category through the last one
+  And the category ticks it covers render in the accent style, italic
+  But the accent is skipped when the entry sets highlightTicks: false
+```
+
+```gherkin
+Scenario: Address a range by index or by value
+  Given a referenceArea or barSettings entry with from and/or to
+  Then a bound matching a category's own value selects that category
+  And an integer bound with no matching category selects that row index
+  And an omitted bound runs to that end of the data
+  And nothing is drawn when a bound resolves to no category, or to lies before from
+```
+
+```gherkin
+Scenario: Mark the hand-off into a forecast
+  Given a referenceArea entry sets divider: true
+  Then a dashed rule draws on the band's leading edge
+  And it follows the category axis — the band's left edge for vertical bars, its top edge for horizontal ones
+```
+
+```gherkin
+Scenario: Restyle one series over a range
+  Given barSettings maps "desktop" to { from: "Apr", opacity: 0.35, dashed: true }
+  Then the "desktop" bars from "Apr" onward render translucent with a dashed outline in the series color
+  And the "desktop" bars before "Apr" render normally
+  And every other series renders normally
+```
+
+```gherkin
+Scenario: Track behind a bar
+  Given showBackground is true
+  Then a full-height track renders behind every bar, filled with backgroundFill
+  And a barSettings entry with background: true limits that track to its own range
+```
+
+```gherkin
+Scenario: Cap a track at an upper bound
+  Given a barSettings entry sets background to a data field name
+  Then the matched bars carry a headroom segment from their value up to that field's value
+  And the headroom stacks on its own bar, so the series stay side by side
+  And it is excluded from the tooltip rows and the legend entries
+  But it is not drawn at all under layout="stacked"
+```
+
+```gherkin
+Scenario: Bar shape
+  Given barShape is "pill"
+  Then every corner of each bar is rounded into a capsule
+  And "gradient" fades the series color along the bar while "pattern" hatches it
+  And a barSettings entry's shape overrides the chart's for its own range
+```
+
+```gherkin
+Scenario: Bar sizing
+  Given barSize, maxBarSize, barGap, barCategoryGap or minPointSize is set
+  Then the bar thickness, the gaps around it, and the floor for a non-zero value follow those values
+  And a value of exactly 0 still renders nothing, including a zero segment inside a stack
+```
+
+```gherkin
+Scenario: Active bar on hover
+  Given showActiveBar is true
+  When the user hovers a bar
+  Then that bar repaints with the activeBar fill and opacity, defaulting to the series color
+  And a bar that carries a barSettings track keeps that track while it is hovered
 ```

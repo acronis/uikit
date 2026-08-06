@@ -30,6 +30,23 @@ grid included — so you don't hand-compose recharts children.
 | `orientation` | `vertical` · `horizontal` | Bars grow up (category on x) vs right (category on y). |
 | `layout`      | `grouped` · `stacked`     | Series side-by-side vs summed on a shared stack.       |
 
+## Highlighting a range
+
+A projection, a quarter under review, or any other stretch of the category axis
+can be set apart without leaving the component:
+
+- `referenceArea` shades the range, captions it, accents the ticks it covers,
+  and optionally rules its leading edge (`divider`).
+- `barSettings` restyles one series over a range — `fill`, `opacity`, `dashed`,
+  `shape`, and a track via `background` (`true` for the full plot height, or a
+  data field name to cap it at that row's value, i.e. the headroom up to an
+  upper bound).
+
+Both address a range as `{ from, to }`, inclusive, taking either a category's
+own value or its row index; an omitted bound runs to that end of the data. A
+capped track stacks on its bar, so it needs the default `layout="grouped"`, and
+it never becomes a tooltip row or a legend entry.
+
 ## Example
 
 ```tsx

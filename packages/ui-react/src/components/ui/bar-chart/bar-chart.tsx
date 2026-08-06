@@ -7,11 +7,17 @@ import {
   BarChart as RechartsBarChart,
   Brush,
   CartesianGrid,
+  Cell,
   LabelList,
+  ReferenceArea,
   ReferenceLine,
+  Rectangle,
+  Text,
   XAxis,
   YAxis,
 } from 'recharts';
+
+import type { BarShapeProps } from 'recharts/types/cartesian/Bar';
 
 import { cn } from '@/lib/utils';
 import {
@@ -28,6 +34,8 @@ import {
   resolveCartesianLabelPosition,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartLegendContentProps,
+  type ChartTooltipContentProps,
   type CartesianChartProps,
   type ChartAnimationProps,
   type ChartBrushProps,
@@ -60,6 +68,505 @@ const barChartVariants = cva('', {
     layout: 'grouped',
   },
 });
+
+/**
+ * How a bar is painted. `rounded` rounds the growing end by `barRadius`; `pill`
+ * rounds every corner to a capsule; `gradient` fades the series color down the
+ * bar; `pattern` fills it with diagonal hatching in the series color (a
+ * colorblind-safe way to set a subset of bars apart).
+ */
+export type BarChartBarShape = 'rounded' | 'pill' | 'gradient' | 'pattern';
+
+/**
+ * A category range: `from`/`to` accept either the category's value (a `xKey`
+ * cell, e.g. `'Sep'`) or its 0-based row index. Both ends are inclusive, and
+ * either can be omitted to run to that end of the data.
+ */
+export interface BarChartCategoryRange {
+  from?: string | number;
+  to?: string | number;
+}
+
+/**
+ * Style override for one series over a range of categories — e.g. "the forecast
+ * tail from September onward reads translucent and dashed". Anything left unset
+ * keeps the series' normal painting.
+ */
+export interface BarChartBarSettings extends BarChartCategoryRange {
+  /** Fill for the matched bars. Defaults to the series color. */
+  fill?: string;
+  /** Fill opacity for the matched bars. */
+  opacity?: number;
+  /** Outline the matched bars with a dashed stroke in the series color. */
+  dashed?: boolean;
+  /** Shape for the matched bars, overriding the chart's `barShape`. */
+  shape?: BarChartBarShape;
+  /**
+   * Track behind the matched bars: `true` fills the plot height, while a data
+   * field name caps it at that row's value — the headroom between a projection
+   * and its upper bound. A capped track stacks on its bar, so it needs the
+   * default `layout="grouped"`; under `layout="stacked"` it is ignored.
+   */
+  background?: boolean | string;
+}
+
+/** A shaded band behind a range of categories. */
+export interface BarChartReferenceArea extends BarChartCategoryRange {
+  /** Caption above the band. */
+  label?: string;
+  /**
+   * Mark the category ticks under the band — accent color, italic — so the
+   * highlighted range reads on the axis too. On by default.
+   */
+  highlightTicks?: boolean;
+  /**
+   * Draw a dashed rule at the band's leading edge — the hand-off into a
+   * forecast. Off by default.
+   */
+  divider?: boolean;
+}
+
+/**
+ * Resolve a category range to inclusive row indices. A bound is either the
+ * category's own value (matched against the `xKey` cell) or a 0-based index;
+ * an omitted bound runs to that end of the data. Returns `undefined` when the
+ * data is empty or the range resolves to nothing (an unknown value, or a `to`
+ * that lands before its `from`).
+ *
+ * Exported for unit tests; not part of the package's public API.
+ */
+export function barChartCategoryRange(
+  range: BarChartCategoryRange,
+  data: ReadonlyArray<Record<string, string | number>>,
+  xKey: string
+): [number, number] | undefined {
+  if (data.length === 0) return undefined;
+
+  const resolve = (bound: string | number | undefined, fallback: number) => {
+    if (bound === undefined) return fallback;
+    // A numeric bound is an index unless the categories are numbers themselves,
+    // in which case matching a category value is the more useful reading.
+    const asValue = data.findIndex((row) => row[xKey] === bound);
+    if (asValue !== -1) return asValue;
+    if (typeof bound === 'number' && Number.isInteger(bound)) {
+      return bound >= 0 && bound < data.length ? bound : -1;
+    }
+    return -1;
+  };
+
+  const start = resolve(range.from, 0);
+  const end = resolve(range.to, data.length - 1);
+  if (start === -1 || end === -1 || start > end) return undefined;
+  return [start, end];
+}
+
+// Reserved field prefix for the synthetic headroom series a capped track
+// stacks onto its bar. It must never surface in the tooltip or the legend.
+const HEADROOM_FIELD_PREFIX = '__headroom_';
+
+/**
+ * Drop the synthetic headroom series from a recharts tooltip/legend payload,
+ * keeping the real series (and their order). `legendType`/`tooltipType="none"`
+ * are set on those bars too, but recharts still lists them, so this filter is
+ * what actually keeps them out — hence it's unit-tested.
+ */
+export function dropHeadroomSeries<T extends { dataKey?: unknown }>(
+  payload: readonly T[] | undefined,
+  dataKeys?: string[]
+): T[] | undefined {
+  const real = payload?.filter(
+    (item) => !String(item.dataKey).startsWith(HEADROOM_FIELD_PREFIX)
+  );
+  // recharts sorts the legend payload alphabetically by series name by default
+  // (its `itemSorter: 'value'`), so passing `dataKeys` puts the entries back in
+  // the order the caller declared them.
+  return dataKeys
+    ? real?.slice().sort(
+        (a, b) =>
+          dataKeys.indexOf(String(a.dataKey)) -
+          dataKeys.indexOf(String(b.dataKey))
+      )
+    : real;
+}
+
+/**
+ * Swap a paint-server fill back to the series color for the chrome. A
+ * `gradient` / `pattern` bar fills from `url(#…)`, which paints SVG but means
+ * nothing as a CSS background — the legend swatch and the tooltip dot would
+ * render blank — so they fall back to the series' own `--color-<key>`.
+ */
+export function withSeriesColor<T extends { dataKey?: unknown; color?: string }>(
+  payload: readonly T[] | undefined
+): T[] | undefined {
+  return payload?.map((item) =>
+    item.color?.startsWith('url(')
+      ? { ...item, color: `var(--color-${String(item.dataKey)})` }
+      : item
+  );
+}
+
+type TooltipContentType = NonNullable<
+  React.ComponentProps<typeof ChartTooltip>['content']
+>;
+type TooltipContentFn = Extract<
+  TooltipContentType,
+  (...args: never[]) => unknown
+>;
+type TooltipRenderProps = Parameters<TooltipContentFn>[0];
+
+type LegendContentType = NonNullable<
+  React.ComponentProps<typeof ChartLegend>['content']
+>;
+type LegendContentFn = Extract<LegendContentType, (...args: never[]) => unknown>;
+type LegendRenderProps = Parameters<LegendContentFn>[0];
+
+/**
+ * Tooltip content that normalizes recharts' payload before anything renders it:
+ * the synthetic headroom series stripped, the rows put back in `dataKeys` order,
+ * and paint-server fills swapped back to the series color. Falls through to a
+ * caller-supplied `content`, preserving recharts' own mount semantics — a
+ * function via `createElement` (its own component identity + hook state), an
+ * element via `cloneElement`.
+ *
+ * This is a component rather than a per-render wrapper factory on purpose:
+ * recharts renders `content` by cloning the element it is given
+ * (`Tooltip.js:27-28`), so a stable module-level type here means the subtree is
+ * never remounted, whatever the caller passes.
+ */
+export function NormalizedTooltipContent({
+  content,
+  dataKeys,
+  ...props
+}: Partial<TooltipRenderProps> & {
+  content?: TooltipContentType;
+  dataKeys?: string[];
+}) {
+  const merged = {
+    ...props,
+    payload: withSeriesColor(dropHeadroomSeries(props.payload, dataKeys)),
+  } as TooltipRenderProps;
+
+  if (!content) {
+    return <ChartTooltipContent {...(merged as ChartTooltipContentProps)} />;
+  }
+  return typeof content === 'function'
+    ? React.createElement(
+        content as React.FunctionComponent<TooltipRenderProps>,
+        merged
+      )
+    : React.cloneElement(content, merged);
+}
+
+/**
+ * Legend content over the same normalization. Ordering is the reason this
+ * applies unconditionally: recharts sorts legend entries alphabetically by
+ * series name by default (`itemSorter: 'value'`), so without putting them back
+ * in `dataKeys` order the legend would silently reorder itself depending on
+ * which bar-styling props happen to be set.
+ */
+export function NormalizedLegendContent({
+  dataKeys,
+  ...props
+}: Partial<LegendRenderProps> & { dataKeys: string[] }) {
+  return (
+    <ChartLegendContent
+      verticalAlign={props.verticalAlign}
+      payload={
+        withSeriesColor(
+          dropHeadroomSeries(props.payload, dataKeys)
+        ) as ChartLegendContentProps['payload']
+      }
+    />
+  );
+}
+
+/** Paint overrides recharts spreads over a bar to mark it as the active one. */
+interface BarPaintOverride {
+  fill?: string;
+  fillOpacity?: number;
+}
+
+/**
+ * Draw a bar, optionally over its full-height track (recharts hands a custom
+ * `<Bar shape>` the track geometry alongside the bar's). Only geometry and
+ * paint props are forwarded — recharts also passes the whole data entry, and
+ * spreading that onto an SVG node would leak data fields into the DOM.
+ *
+ * `paint` is how the active bar keeps its track: recharts swaps a custom
+ * `shape` out for the `activeBar` option while a bar is hovered
+ * (`Bar.js` `BarRectangleWithActiveState`), so the active option has to be a
+ * shape of its own that redraws the track and applies the highlight itself.
+ */
+function renderBarWithTrack({
+  bar,
+  track,
+  trackFill,
+  paint,
+}: {
+  bar: Omit<BarShapeProps, 'background' | 'index'>;
+  track?: BarShapeProps['background'];
+  trackFill: string;
+  paint?: BarPaintOverride;
+}) {
+  return (
+    <>
+      {track && (
+        <Rectangle
+          className="recharts-bar-background-rectangle"
+          x={track.x ?? undefined}
+          y={track.y ?? undefined}
+          width={track.width ?? undefined}
+          height={track.height ?? undefined}
+          fill={trackFill}
+        />
+      )}
+      <Rectangle
+        x={bar.x ?? undefined}
+        y={bar.y ?? undefined}
+        width={bar.width ?? undefined}
+        height={bar.height ?? undefined}
+        radius={bar.radius}
+        fill={paint?.fill ?? bar.fill}
+        fillOpacity={paint?.fillOpacity ?? bar.fillOpacity}
+        stroke={bar.stroke}
+        strokeWidth={bar.strokeWidth}
+        strokeDasharray={bar.strokeDasharray}
+      />
+    </>
+  );
+}
+
+/**
+ * Build the `<Bar shape>` that draws a range-scoped track. recharts' own
+ * `background` is all-or-nothing per series, so the track is drawn per row and
+ * hidden where the range doesn't apply.
+ */
+export function createTrackShape({
+  inRange,
+  trackFill,
+  paint,
+}: {
+  inRange: (row: number) => boolean;
+  trackFill: string;
+  paint?: BarPaintOverride;
+}) {
+  return ({ background: track, index: row, ...bar }: BarShapeProps) =>
+    renderBarWithTrack({
+      bar,
+      track: inRange(row) ? track : undefined,
+      trackFill,
+      paint,
+    });
+}
+
+/**
+ * Draw a highlight band plus a dashed rule on its leading edge: the left edge
+ * for vertical bars (the category axis runs along X), the top edge otherwise.
+ *
+ * The band's own paint comes from the props recharts hands the shape — a
+ * `<ReferenceArea shape>` still receives the element's `fill`/`fillOpacity`
+ * (`ReferenceArea.js` `renderRect`), so hardcoding them here would quietly
+ * ignore whatever the caller set.
+ */
+function renderBandWithDivider({
+  band,
+  vertical,
+}: {
+  band: {
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    fill?: string;
+    fillOpacity?: number;
+  };
+  vertical: boolean;
+}) {
+  const { x = 0, y = 0, width = 0, height = 0, fill, fillOpacity } = band;
+  return (
+    <>
+      <Rectangle
+        className="recharts-reference-area-rect"
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        fill={fill}
+        fillOpacity={fillOpacity}
+      />
+      <line
+        x1={x}
+        y1={y}
+        x2={vertical ? x : x + width}
+        y2={vertical ? y + height : y}
+        stroke="var(--ui-border-on-surface-border)"
+        strokeDasharray="4 4"
+      />
+    </>
+  );
+}
+
+/**
+ * The `<defs>` a `gradient` / `pattern` bar fills from — one paint server per
+ * series, since each is painted in that series' own color. Ids are namespaced
+ * by the chart instance so two charts on a page can't collide.
+ *
+ * Safe to render as a component: unlike `Bar`'s cells, the chart renders its
+ * children straight through rather than looking them up by type.
+ */
+function BarPaintServers({
+  id,
+  dataKeys,
+  shapes,
+  horizontal,
+}: {
+  id: string;
+  dataKeys: string[];
+  shapes: ReadonlySet<BarChartBarShape>;
+  /** Bars grow along X, so a gradient runs left-to-right instead of top-down. */
+  horizontal: boolean;
+}) {
+  const hasGradient = shapes.has('gradient');
+  const hasPattern = shapes.has('pattern');
+  if (!hasGradient && !hasPattern) return null;
+
+  return (
+    <defs>
+      {dataKeys.map((key) => (
+        <React.Fragment key={key}>
+          {hasGradient && (
+            <linearGradient
+              id={`${id}-gradient-${key}`}
+              x1="0"
+              y1="0"
+              x2={horizontal ? '1' : '0'}
+              y2={horizontal ? '0' : '1'}
+            >
+              <stop
+                offset="0%"
+                stopColor={`var(--color-${key})`}
+                stopOpacity={1}
+              />
+              <stop
+                offset="100%"
+                stopColor={`var(--color-${key})`}
+                stopOpacity={0.35}
+              />
+            </linearGradient>
+          )}
+          {hasPattern && (
+            <pattern
+              id={`${id}-pattern-${key}`}
+              patternUnits="userSpaceOnUse"
+              width={6}
+              height={6}
+              patternTransform="rotate(45)"
+            >
+              <rect
+                width={6}
+                height={6}
+                fill={`var(--color-${key})`}
+                fillOpacity={0.25}
+              />
+              <line
+                x1={0}
+                y1={0}
+                x2={0}
+                y2={6}
+                stroke={`var(--color-${key})`}
+                strokeWidth={3}
+              />
+            </pattern>
+          )}
+        </React.Fragment>
+      ))}
+    </defs>
+  );
+}
+
+/** Corner radius as recharts' `Rectangle` takes it: one value or a 4-tuple. */
+type BarRadius = number | [number, number, number, number] | undefined;
+
+interface RangeCellsOptions {
+  data: ReadonlyArray<Record<string, string | number>>;
+  /** `data` plus the synthetic headroom fields, if any were added. */
+  chartData: ReadonlyArray<Record<string, string | number>>;
+  xKey: string;
+  seriesKey: string;
+  settings: BarChartBarSettings;
+  /** Inclusive row bounds the settings apply to. */
+  range: [number, number];
+  headroomKey: string | undefined;
+  barShape: BarChartBarShape;
+  rounded: boolean;
+  fillOf: (key: string, shape: BarChartBarShape) => string;
+  radiusFor: (shape: BarChartBarShape, rounded: boolean) => BarRadius;
+}
+
+/**
+ * The `<Cell>` list that applies a series' `barSettings` over its range: the
+ * matched rows take the override fill/opacity/dash/shape, the rest keep the
+ * series' normal painting.
+ *
+ * A plain function returning the elements, deliberately not a component:
+ * `Bar` discovers its cells with `findAllByType(props.children, Cell)`
+ * (recharts `Bar.js`), which matches each direct child on its own display
+ * name. Wrapping these in a component would make that lookup find nothing and
+ * silently drop every per-range style — no error, just unstyled bars.
+ * Returning an array keeps them direct children, since recharts' `toArray`
+ * flattens arrays and unwraps fragments.
+ */
+function rangeCells({
+  data,
+  chartData,
+  xKey,
+  seriesKey,
+  settings,
+  range,
+  headroomKey,
+  barShape,
+  rounded,
+  fillOf,
+  radiusFor,
+}: RangeCellsOptions) {
+  const { fill, opacity, dashed } = settings;
+
+  return data.map((row, rowIndex) => {
+    const on = rowIndex >= range[0] && rowIndex <= range[1];
+    const shape = (on && settings.shape) || barShape;
+    // Only a row that actually carries headroom gives up its rounded end — a
+    // row in range whose upper bound is missing, or no higher than its value,
+    // keeps it.
+    const stacksHeadroom =
+      headroomKey !== undefined &&
+      Number(
+        (chartData[rowIndex] as Record<string, unknown>)?.[
+          `${HEADROOM_FIELD_PREFIX}${seriesKey}`
+        ]
+      ) > 0;
+
+    return (
+      <Cell
+        key={`${seriesKey}-${String(row[xKey])}-${rowIndex}`}
+        fill={
+          on ? (fill ?? fillOf(seriesKey, shape)) : fillOf(seriesKey, barShape)
+        }
+        fillOpacity={on ? opacity : undefined}
+        stroke={on && dashed ? `var(--color-${seriesKey})` : undefined}
+        strokeWidth={on && dashed ? 1 : undefined}
+        strokeDasharray={on && dashed ? '4 3' : undefined}
+        // Cell types `radius` as the SVG attribute, but it feeds recharts'
+        // Rectangle, which takes the 4-tuple. A bar with headroom stacked on it
+        // hands the rounded end to that segment instead.
+        radius={
+          (stacksHeadroom ? undefined : radiusFor(shape, rounded)) as
+            | number
+            | undefined
+        }
+      />
+    );
+  });
+}
 
 export interface BarChartReferenceLine {
   /** Fixed position on the value axis. Takes precedence over `average`. */
@@ -127,10 +634,50 @@ export interface BarChartProps
    * series `average`. Pass a single object or an array to draw several at once.
    */
   referenceLine?: BarChartReferenceLine | BarChartReferenceLine[];
+  /**
+   * One or more shaded bands behind a range of categories — e.g. a forecast
+   * period. Pass a single object or an array to draw several.
+   */
+  referenceArea?: BarChartReferenceArea | BarChartReferenceArea[];
+  /**
+   * Per-series style override for a range of categories, keyed by `dataKeys`
+   * entry. Bars outside a series' range — and series with no entry — render
+   * normally.
+   */
+  barSettings?: Record<string, BarChartBarSettings>;
   /** Unit suffix on X-axis tick values (recharts `unit`) — applies when the X axis is numeric (`orientation="horizontal"`). */
   xUnit?: string;
   /** Corner radius applied to the growing end of each bar. */
   barRadius?: number;
+  /** How every bar is painted. Per-range overrides come from `barSettings`. */
+  barShape?: BarChartBarShape;
+  /** Fixed bar thickness, in px. Unset, recharts sizes bars from the available width. */
+  barSize?: number;
+  /** Upper bound on the computed bar thickness, in px. */
+  maxBarSize?: number;
+  /** Gap between bars of the same category, in px or a percentage string. */
+  barGap?: number | string;
+  /** Gap between category groups, in px or a percentage string. */
+  barCategoryGap?: number | string;
+  /**
+   * Minimum rendered length for a bar, in px, so a tiny value stays visible. A
+   * value of exactly `0` still renders nothing — a floor on it would read as a
+   * small positive.
+   */
+  minPointSize?: number;
+  /** Draw a full-height track behind every bar. */
+  showBackground?: boolean;
+  /** Fill for the track background. Defaults to the secondary surface. */
+  backgroundFill?: string;
+  /** Highlight the hovered bar. */
+  showActiveBar?: boolean;
+  /** Painting of the hovered bar when `showActiveBar` is on. */
+  activeBar?: {
+    /** Fill for the hovered bar. Defaults to the series color. */
+    fill?: string;
+    /** Fill opacity for the hovered bar. */
+    opacity?: number;
+  };
   showLegend?: boolean;
   /**
    * Position of the value labels when `showLabels` is on. Defaults to the growing
@@ -148,6 +695,8 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       dataKeys,
       xKey,
       referenceLine,
+      referenceArea,
+      barSettings,
       xAxisLabel,
       yAxisLabel,
       xUnit,
@@ -155,6 +704,16 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       orientation = 'vertical',
       layout = 'grouped',
       barRadius = 4,
+      barShape = 'rounded',
+      barSize,
+      maxBarSize,
+      barGap,
+      barCategoryGap,
+      minPointSize,
+      showBackground = false,
+      backgroundFill = 'var(--ui-background-surface-secondary)',
+      showActiveBar = false,
+      activeBar,
       showGrid = true,
       showTooltip = true,
       showLegend = true,
@@ -207,6 +766,152 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         : [referenceLine]
       : [];
 
+    // Bands + the per-series overrides resolved to inclusive row indices once,
+    // so the Cells below are a lookup rather than a search per bar.
+    const referenceAreas = (
+      referenceArea
+        ? Array.isArray(referenceArea)
+          ? referenceArea
+          : [referenceArea]
+        : []
+    )
+      .map((area) => ({ area, range: barChartCategoryRange(area, data, xKey) }))
+      .filter(
+        (entry): entry is { area: BarChartReferenceArea; range: [number, number] } =>
+          entry.range !== undefined
+      );
+
+    const settingsByKey = new Map(
+      dataKeys.flatMap((key) => {
+        const settings = barSettings?.[key];
+        const range = settings
+          ? barChartCategoryRange(settings, data, xKey)
+          : undefined;
+        return settings && range ? [[key, { settings, range }] as const] : [];
+      })
+    );
+
+    // A capped track is drawn as a synthetic remainder (upper bound minus the
+    // bar's own value) stacked on the bar, so recharts scales and animates it
+    // rather than us guessing the axis scale from a mid-animation geometry.
+    const headroomKeys = new Map(
+      isStacked
+        ? []
+        : Array.from(settingsByKey, ([key, entry]) =>
+            typeof entry.settings.background === 'string'
+              ? ([key, entry.settings.background] as const)
+              : undefined
+          ).filter((pair): pair is readonly [string, string] => pair !== undefined)
+    );
+
+    const chartData = headroomKeys.size
+      ? data.map((row, rowIndex) => {
+          const extra: Record<string, number> = {};
+          headroomKeys.forEach((upperKey, key) => {
+            const entry = settingsByKey.get(key);
+            if (!entry) return;
+            const [start, end] = entry.range;
+            if (rowIndex < start || rowIndex > end) return;
+            const value = row[key];
+            const upper = row[upperKey];
+            if (typeof value !== 'number' || typeof upper !== 'number') return;
+            extra[`${HEADROOM_FIELD_PREFIX}${key}`] = Math.max(0, upper - value);
+          });
+          return { ...row, ...extra };
+        })
+      : data;
+
+    // The ticks under a band pick up the accent styling unless the band opts
+    // out. Resolved to the categories' own values rather than kept as row
+    // indices, because neither index a tick carries can be trusted here: the
+    // `index` prop is a position in the list recharts actually renders, which
+    // a numeric `interval` (and the default `preserveEnd`, dropping labels that
+    // don't fit) has already filtered, and `payload.index` is relative to the
+    // slice a `showBrush` selection leaves. The value survives both.
+    const highlightedValues = new Set(
+      referenceAreas
+        .filter(({ area }) => area.highlightTicks !== false)
+        .flatMap(({ range }) =>
+          data.slice(range[0], range[1] + 1).map((row) => row[xKey])
+        )
+    );
+
+    // recharts places the tick and hands the element its final geometry; we
+    // reuse its own <Text> so angle/anchor behavior is unchanged and only add
+    // the accent styling for the highlighted range. The formatter still takes
+    // the rendered position, since that is what recharts passes its own
+    // `tickFormatter`.
+    const categoryTick = highlightedValues.size
+      ? ({
+          payload,
+          index,
+          ...tickProps
+        }: {
+          payload: { value: string | number };
+          index: number;
+        }) => {
+          const formatter =
+            orientation === 'horizontal' ? yTickFormatter : xTickFormatter;
+          const value = formatter
+            ? formatter(payload.value as never, index)
+            : payload.value;
+          return (
+            <Text
+              {...tickProps}
+              className={cn(
+                'fill-muted-foreground',
+                highlightedValues.has(payload.value) && 'fill-primary italic'
+              )}
+              fontSize={12}
+            >
+              {value}
+            </Text>
+          );
+        }
+      : undefined;
+
+    // recharts spreads this over the bar's own props, so an explicitly
+    // `undefined` fill would wipe the series color (an unfilled path paints
+    // black). Only set what the caller asked for, and dim by default so
+    // `showActiveBar` alone is visible.
+    const activeBarOption = showActiveBar
+      ? {
+          ...(activeBar?.fill !== undefined ? { fill: activeBar.fill } : {}),
+          fillOpacity: activeBar?.opacity ?? 0.85,
+        }
+      : false;
+
+    // `gradient` and `pattern` paint from an SVG def, so the ids have to be
+    // unique per chart instance — same guard the shared container applies.
+    const defsId = `bar-${React.useId().replace(/:/g, '')}`;
+    const usedShapes = new Set<BarChartBarShape>([barShape]);
+    settingsByKey.forEach(({ settings }) => {
+      if (settings.shape) usedShapes.add(settings.shape);
+    });
+    // recharts applies a flat minPointSize to zeroes too, which would draw a
+    // sliver where there is nothing to show. For a grouped bar it hands the
+    // callback the row's own value, but inside a stack it hands the running
+    // total, so a zero segment riding on a non-zero stack would slip through —
+    // there the value is read back off the row instead. That read uses the
+    // index recharts counts from the *displayed* slice, so a stacked chart
+    // whose brush has been dragged off its full range falls back to flooring
+    // the zero; the plain (unbrushed) stack, which is what the prop is for, is
+    // exact.
+    const minPointSizeFor = (key: string) =>
+      minPointSize === undefined
+        ? undefined
+        : (top: number | undefined | null, row: number) => {
+            const own = isStacked ? chartData[row]?.[key] : top;
+            return typeof own === 'number' && own !== 0 ? minPointSize : 0;
+          };
+
+    const fillOf = (key: string, shape: BarChartBarShape) =>
+      shape === 'gradient'
+        ? `url(#${defsId}-gradient-${key})`
+        : shape === 'pattern'
+          ? `url(#${defsId}-pattern-${key})`
+          : `var(--color-${key})`;
+
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
     // the left gutter. Passed to recharts' native `label` (themed via the
     // `.recharts-label` fill selector on the container).
@@ -237,6 +942,14 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       orientation === 'horizontal'
         ? [0, barRadius, barRadius, 0]
         : [barRadius, barRadius, 0, 0];
+    // A pill rounds every corner; recharts clamps the radius to half the bar's
+    // shorter side, so an oversized number gives a true capsule at any width.
+    const radiusFor = (shape: BarChartBarShape, rounded: boolean) =>
+      shape === 'pill'
+        ? 9999
+        : barRadius > 0 && rounded
+          ? endRadius
+          : undefined;
 
     return (
       <div
@@ -250,7 +963,20 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
           config={config}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
-          <RechartsBarChart data={data as readonly unknown[]} layout={rechartsLayout}>
+          <RechartsBarChart
+            data={chartData as readonly unknown[]}
+            layout={rechartsLayout}
+            barSize={barSize}
+            maxBarSize={maxBarSize}
+            barGap={barGap}
+            barCategoryGap={barCategoryGap}
+          >
+            <BarPaintServers
+              id={defsId}
+              dataKeys={dataKeys}
+              shapes={usedShapes}
+              horizontal={orientation === 'horizontal'}
+            />
             {showGrid && (
               <CartesianGrid
                 horizontal={gridHorizontal ?? orientation === 'vertical'}
@@ -286,6 +1012,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   hide={!showYAxis}
                   tickLine={false}
                   axisLine={false}
+                  tick={categoryTick}
                   tickFormatter={yTickFormatter}
                   width={yAxisLabel ? 96 : 80}
                   label={yAxisTitle}
@@ -299,6 +1026,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                   hide={!showXAxis}
                   tickLine={false}
                   axisLine={false}
+                  tick={categoryTick}
                   tickFormatter={xTickFormatter}
                   angle={xAxisAngle}
                   interval={xAxisInterval}
@@ -322,23 +1050,86 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                 />
               </>
             )}
+            {/* Both take the normalization unconditionally: gating it on
+                "is a headroom/paint-server series in play" is what let the
+                legend's ordering drift between otherwise identical charts. The
+                helpers are no-ops when there is nothing to strip or recolor. */}
             {showTooltip && (
-              <ChartTooltip content={tooltipContent ?? <ChartTooltipContent />} />
+              <ChartTooltip
+                content={
+                  <NormalizedTooltipContent
+                    content={tooltipContent}
+                    dataKeys={dataKeys}
+                  />
+                }
+              />
             )}
-            {showLegend && <ChartLegend content={<ChartLegendContent />} />}
+            {showLegend && (
+              <ChartLegend
+                content={<NormalizedLegendContent dataKeys={dataKeys} />}
+              />
+            )}
             {dataKeys.map((key, index) => {
               // In a stack only the last segment's end is rounded; grouped bars
               // each round their own end.
               const rounded = isStacked ? index === dataKeys.length - 1 : true;
+              const entry = settingsByKey.get(key);
+              const inRange = (row: number) =>
+                entry !== undefined &&
+                row >= entry.range[0] &&
+                row <= entry.range[1];
+              // recharts takes one `background` per series, so a range-scoped
+              // one is drawn per row: hidden where it doesn't apply.
+              const rangeBackground = entry?.settings.background === true;
+              const headroomKey = headroomKeys.get(key);
               return (
+                <React.Fragment key={key}>
                 <Bar
-                  key={key}
                   dataKey={key}
-                  fill={`var(--color-${key})`}
-                  stackId={isStacked ? 'a' : undefined}
-                  radius={barRadius > 0 && rounded ? endRadius : undefined}
+                  fill={fillOf(key, barShape)}
+                  // Its own stack, so the headroom sits on this series' bar
+                  // while the series stay side by side.
+                  stackId={isStacked ? 'a' : headroomKey ? key : undefined}
+                  radius={radiusFor(barShape, rounded)}
+                  minPointSize={minPointSizeFor(key)}
+                  background={
+                    showBackground ? { fill: backgroundFill } : undefined
+                  }
+                  shape={
+                    rangeBackground
+                      ? createTrackShape({
+                          inRange,
+                          trackFill: backgroundFill,
+                        })
+                      : undefined
+                  }
+                  // A range-scoped track has to be redrawn by the active option
+                  // too, or the track blinks out while its bar is hovered.
+                  activeBar={
+                    rangeBackground && activeBarOption
+                      ? createTrackShape({
+                          inRange,
+                          trackFill: backgroundFill,
+                          paint: activeBarOption,
+                        })
+                      : activeBarOption
+                  }
                   {...animation}
                 >
+                  {entry &&
+                    rangeCells({
+                      data,
+                      chartData,
+                      xKey,
+                      seriesKey: key,
+                      settings: entry.settings,
+                      range: entry.range,
+                      headroomKey,
+                      barShape,
+                      rounded,
+                      fillOf,
+                      radiusFor,
+                    })}
                   {showLabels && (
                     <LabelList
                       dataKey={key}
@@ -349,6 +1140,69 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                     />
                   )}
                 </Bar>
+                {headroomKey && (
+                  <Bar
+                    dataKey={`${HEADROOM_FIELD_PREFIX}${key}`}
+                    stackId={key}
+                    fill={`var(--color-${key})`}
+                    fillOpacity={0.25}
+                    radius={radiusFor(barShape, true)}
+                    // Decoration for the bar below it — never its own row in the
+                    // tooltip or entry in the legend.
+                    legendType="none"
+                    tooltipType="none"
+                    {...animation}
+                  />
+                )}
+                </React.Fragment>
+              );
+            })}
+            {referenceAreas.map(({ area, range }, index) => {
+              const [start, end] = range;
+              return (
+                <ReferenceArea
+                  key={`${area.label ?? 'area'}-${index}`}
+                  // Bands run along the category axis: X for vertical bars, Y
+                  // for horizontal ones.
+                  {...(orientation === 'horizontal'
+                    ? {
+                        y1: data[start]?.[xKey],
+                        y2: data[end]?.[xKey],
+                      }
+                    : {
+                        x1: data[start]?.[xKey],
+                        x2: data[end]?.[xKey],
+                      })}
+                  fill="var(--ui-background-surface-secondary)"
+                  fillOpacity={0.6}
+                  ifOverflow="extendDomain"
+                  // A ReferenceLine would sit on the tick's centre; the rule
+                  // belongs on the band's edge, which only the band knows.
+                  shape={
+                    area.divider
+                      ? (bandProps: {
+                          x?: number;
+                          y?: number;
+                          width?: number;
+                          height?: number;
+                        }) =>
+                          renderBandWithDivider({
+                            band: bandProps,
+                            vertical: orientation !== 'horizontal',
+                          })
+                      : undefined
+                  }
+                  label={
+                    area.label
+                      ? {
+                          value: area.label,
+                          position: 'insideTop',
+                          fill: 'var(--ui-text-on-surface-secondary)',
+                          fontSize: 12,
+                        }
+                      : undefined
+                  }
+                />
               );
             })}
             {referenceLines.map((ref, index) => {

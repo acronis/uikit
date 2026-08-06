@@ -30,11 +30,22 @@ tokens:
   - name: --ui-border-on-surface-border
     affects: grid
     description: >-
-      Tooltip border and the recharts grid / cursor lines
-      (border-border / stroke-border).
+      Tooltip border, the recharts grid / cursor lines
+      (border-border / stroke-border), and the dashed rule a `referenceArea`
+      draws on its leading edge when `divider` is set.
   - name: --ui-background-surface-secondary
     affects: series
-    description: Recharts muted fills — the tooltip cursor rectangle behind a hovered bar (fill-muted).
+    description: >-
+      Recharts muted fills — the tooltip cursor rectangle behind a hovered bar
+      (fill-muted) — plus the `referenceArea` band and the default
+      `backgroundFill` of a bar track.
   - name: --ui-background-surface-secondary
     affects: brush
     description: The range brush strip's background (recharts `fill`).
+  - name: --ui-background-brand-primary
+    affects: band
+    description: >-
+      Accent for the category ticks a `referenceArea` covers, so the highlighted
+      range reads on the axis too (fill-primary). The ticks are the x-axis ones
+      for vertical bars and the y-axis ones when `orientation="horizontal"` —
+      whichever axis carries the categories.
