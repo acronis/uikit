@@ -106,6 +106,34 @@ describe.each(CHARTS)('$name reference line', ({ render: renderChart }) => {
     ).toHaveLength(2);
   });
 
+  // The default caption sits at the rule's top right, where a rising series
+  // often already is — so a config has to be able to move its own caption.
+  it('honors a per-line caption position', () => {
+    giveTheChartASize();
+    // recharts renders a reference line's caption as a sibling of the rule's
+    // group, not inside it, so find it by its text rather than by ancestor.
+    const caption = (line: ChartReferenceLine) => {
+      const { container, unmount } = render(
+        renderChart({ referenceLine: line })
+      );
+      const text = [...container.querySelectorAll('.recharts-label')].find(
+        (node) => node.textContent === 'Target'
+      );
+      const at = [text?.getAttribute('x'), text?.getAttribute('y')];
+      unmount();
+      return at;
+    };
+
+    const fallback = caption({ value: 250, label: 'Target' });
+    const moved = caption({
+      value: 250,
+      label: 'Target',
+      labelPosition: 'insideBottomLeft',
+    });
+    expect(fallback.every(Boolean)).toBe(true);
+    expect(moved).not.toEqual(fallback);
+  });
+
   it('skips an entry with nothing to draw instead of falling back to 0', () => {
     giveTheChartASize();
     const { container } = render(

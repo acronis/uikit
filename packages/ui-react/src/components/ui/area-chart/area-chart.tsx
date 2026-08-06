@@ -381,7 +381,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                 <ReferenceLine
                   key={`${ref.label ?? 'ref'}-${index}`}
                   y={value}
-                  {...resolveReferenceLineProps(ref.label)}
+                  {...resolveReferenceLineProps(ref.label, ref.labelPosition)}
                 />
               );
             })}

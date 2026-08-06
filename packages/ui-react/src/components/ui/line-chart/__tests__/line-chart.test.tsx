@@ -445,4 +445,31 @@ describe('LineChart curves, dots and per-series overrides', () => {
       data.map((row) => String(row.mobile))
     );
   });
+
+  // A band shades the gap between two lines, so an edge drawn with a different
+  // interpolation than the line it belongs to no longer bounds it.
+  it('draws a delta band with the current series own curve type', () => {
+    const bandPath = (props: Partial<React.ComponentProps<typeof LineChart>>) => {
+      giveTheChartASize();
+      const { container, unmount } = renderChart({
+        curve: 'linear',
+        deltaBands: [['desktop', 'mobile']],
+        ...props,
+      });
+      // The band is stroke-less, so recharts paints only its filled outline —
+      // there is no separate top-edge curve path to read.
+      const d = container
+        .querySelector('.recharts-area-area')
+        ?.getAttribute('d');
+      unmount();
+      restoreTheChartSize();
+      return d;
+    };
+
+    // A natural spline is drawn with cubic segments; a linear one is not.
+    expect(bandPath({})).not.toContain('C');
+    expect(
+      bandPath({ lineSettings: { desktop: { curveType: 'natural' } } })
+    ).toContain('C');
+  });
 });

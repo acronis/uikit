@@ -206,8 +206,9 @@ export const ExtendedCurves: Story = {
   ),
 };
 
-// Bigger dots for a sparse series; `showActiveDot` is independent, so a
-// dot-less line can still emphasize the hovered point.
+// Bigger dots for a sparse series. The hover dot follows them at +2px unless
+// `showActiveDot` is set, which decouples the two (not shown — a hover state
+// isn't captured in a static story).
 export const DotSizing: Story = {
   args: { dataKeys: ['desktop'], dotSize: 6 },
 };

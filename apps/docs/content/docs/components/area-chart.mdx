@@ -190,11 +190,33 @@ threshold, or a series average. Pass one config or an array:
 ```
 
 A fixed `value` wins; otherwise `average` takes the mean of one series
-(`average: 'desktop'`) or of every plotted series (`average: true`) — and nothing
-is drawn when there are no numeric values to average. The rule extends the axis
-domain, so a target above the data maximum stays visible instead of being
-clipped. On a stacked chart the value is read against the stack's axis, not one
-series. `BarChart` and `LineChart` take the same config.
+(`average: 'desktop'`) or of every plotted series (`average: true`) — `null`
+values are skipped, and nothing is drawn when there are no numeric values to
+average. The rule extends the axis domain, so a target above the data maximum
+stays visible instead of being clipped.
+
+Each caption sits at its rule's top right. Where that lands on the series,
+`labelPosition` moves it (`top`, `insideTopLeft`, `insideTopRight`,
+`insideBottomLeft`, `insideBottomRight`):
+
+```tsx
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['desktop']}
+  xKey="month"
+  referenceLine={{
+    average: true,
+    label: 'Average',
+    labelPosition: 'insideBottomLeft',
+  }}
+/>
+```
+
+Under `layout="stacked"` the value is read against the stack's axis, which
+measures stack totals — but `average` is still the mean of the individual
+series' values, so pass an explicit `value` when the rule should compare against
+the stacked total. `BarChart` and `LineChart` take the same config.
 
 ## Custom tooltip
 

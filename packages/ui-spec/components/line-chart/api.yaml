@@ -104,14 +104,16 @@ contract:
         treatment: `color` / `strokeWidth` / `curveType` still apply to it, but
         `showDots` / `dotSize` do not.
     - name: referenceLine
-      type: 'Line | Line[]  where Line = { value?: number; average?: boolean | string; label?: string }'
+      type: "Line | Line[]  where Line = { value?: number; average?: boolean | string; label?: string; labelPosition?: 'top' | 'insideTopLeft' | 'insideTopRight' | 'insideBottomLeft' | 'insideBottomRight' }"
       required: false
       description: >-
         One or more dashed reference/average lines on the value axis. Pass a
         single object or an array. Per line, a fixed `value` wins; otherwise the
         mean of one series (`average: '<key>'`) or of every plotted series
-        (`average: true`). An optional `label` captions each. The same config
-        shape as `BarChart` / `AreaChart`.
+        (`average: true`, which includes any `comparisonKeys` overlay). An
+        optional `label` captions each, at the rule's top right unless
+        `labelPosition` moves it away from a series it would sit on. The same
+        config shape as `BarChart` / `AreaChart`.
     - name: connectNulls
       type: boolean
       required: false

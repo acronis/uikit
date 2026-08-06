@@ -87,13 +87,17 @@ Scenario: Reference line
   Then a dashed rule draws across the value axis at 250, captioned "Target"
   And it is drawn in the muted text token, over the series
   And the axis domain extends to include it, so a target above the data maximum stays visible
+  And the caption sits at the rule's top right unless labelPosition moves it
 ```
 
 ```gherkin
 Scenario: Averaged reference line
   Given referenceLine is { average: true } (or a single series key)
   Then the rule draws at the mean of every plotted series' values (or that one series)
+  And null values are skipped rather than counted as zero
   And when there is nothing numeric to average, no rule is drawn
+  But under layout="stacked" the axis measures stack totals while the mean is still per-series,
+    so an explicit value is the honest way to compare against the stacked total
 ```
 
 ```gherkin

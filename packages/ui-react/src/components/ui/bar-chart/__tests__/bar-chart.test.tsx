@@ -249,6 +249,24 @@ describe('resolveChartReferenceValue', () => {
       resolveChartReferenceValue({ average: 'missing' }, data, keys)
     ).toBeUndefined();
   });
+
+  // LineChart/AreaChart rows carry `null` for a gap in a series, so the mean has
+  // to skip those rows rather than count them as zero.
+  it('skips null values when averaging', () => {
+    const gappy = [
+      { month: 'Jan', desktop: null },
+      { month: 'Feb', desktop: 100 },
+      { month: 'Mar', desktop: 200 },
+    ];
+    expect(
+      resolveChartReferenceValue({ average: 'desktop' }, gappy, ['desktop'])
+    ).toBe(150);
+    expect(
+      resolveChartReferenceValue({ average: true }, [{ desktop: null }], [
+        'desktop',
+      ])
+    ).toBeUndefined();
+  });
 });
 
 // recharts needs a laid-out container, which happy-dom does not provide, so the
