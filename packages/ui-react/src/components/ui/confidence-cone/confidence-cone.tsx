@@ -8,6 +8,7 @@ import {
   Line,
   ReferenceArea,
   ReferenceLine,
+  Text,
   XAxis,
   YAxis,
 } from 'recharts';
@@ -21,6 +22,7 @@ import {
   ChartTooltipContent,
   resolveAxisDomain,
   resolveAnimation,
+  CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
@@ -36,33 +38,41 @@ import {
 // one hue — actual and forecast differ by line style, not color — so the cone
 // band and the forecast line both reuse the actual series' color.
 
-// The band is a synthetic `[lower, upper]` range field per row that a recharts
-// <Area> shades; kept out of the tooltip/legend (see the filters below).
-const BAND_KEY = '__cone';
+// Each series' band is a synthetic `[lower, upper]` range field per row that a
+// recharts <Area> shades; kept out of the tooltip/legend (see the filters
+// below). One band per series, so the key carries the series' actual key — the
+// whole `__cone` prefix is reserved.
+const BAND_PREFIX = '__cone';
+const bandKeyFor = (actualKey: string) => `${BAND_PREFIX}:${actualKey}`;
 
 /**
- * Drop the synthetic cone-band range series from a recharts tooltip/legend
+ * Drop every synthetic cone-band range series from a recharts tooltip/legend
  * payload, keeping the real actual/forecast series (and their order). Applied to
- * both the default tooltip and any caller-supplied `tooltipContent`, so the
- * `__cone` band never surfaces regardless of which path renders.
+ * both the default tooltip and any caller-supplied `tooltipContent`, so no band
+ * surfaces regardless of which path renders or how many series are plotted.
  */
 export function dropConeBand<T extends { dataKey?: unknown }>(
   payload: readonly T[] | undefined
 ): T[] | undefined {
-  return payload?.filter((item) => item.dataKey !== BAND_KEY);
+  return payload?.filter(
+    (item) =>
+      !(typeof item.dataKey === 'string' && item.dataKey.startsWith(BAND_PREFIX))
+  );
 }
 
 /**
- * Reduce a legend payload to the one metric the chart plots. Actual, forecast
- * and cone are three recharts series painting a single metric in a single hue,
- * so the legend names it once — with the actual series' swatch — instead of
- * listing the line styles as if they were separate series.
+ * Reduce a legend payload to the metrics the chart plots — one entry per series.
+ * A series' actual, forecast and cone are three recharts series painting a
+ * single metric in a single hue, so the legend names each metric once, with its
+ * actual series' swatch, instead of listing line styles as separate series.
  */
 export function keepMetricSeries<T extends { dataKey?: unknown }>(
   payload: readonly T[] | undefined,
-  actualKey: string
+  actualKeys: readonly string[]
 ): T[] | undefined {
-  return payload?.filter((item) => item.dataKey === actualKey);
+  return payload?.filter(
+    (item) => typeof item.dataKey === 'string' && actualKeys.includes(item.dataKey)
+  );
 }
 
 /**
@@ -95,37 +105,161 @@ export function createConeTooltip(tooltipContent: TooltipContentType) {
   };
 }
 
-export interface ConfidenceConeProps
+/**
+ * One plotted metric: its actual / forecast columns and, optionally, the two
+ * bound columns that shade its cone. Omit `lowerKey`/`upperKey` for a band-less
+ * metric — a solid line handing off to a bare dashed projection.
+ */
+export interface ConfidenceConeSeries {
+  /** Field for the known/actual values — drawn as a solid line with a filled area. */
+  actualKey: string;
+  /** Field for the projected values — drawn as a dashed line. */
+  forecastKey: string;
+  /** Field for the cone's lower bound. Omit (with `upperKey`) for no cone. */
+  lowerKey?: string;
+  /** Field for the cone's upper bound. Omit (with `lowerKey`) for no cone. */
+  upperKey?: string;
+}
+
+/**
+ * The x values of the projected period — every row carrying a forecast value for
+ * at least one series, in data order. The first is the hand-off point (where the
+ * shaded region and divider start); the whole set drives the forecast tick
+ * styling, matched by value so tick `interval` can't skew it the way a tick
+ * index would. Exported for unit tests; not part of the package's public API.
+ */
+export function forecastPeriodX(
+  data: ReadonlyArray<Record<string, string | number | null | undefined>>,
+  series: readonly ConfidenceConeSeries[],
+  xKey: string
+): Array<string | number | null | undefined> {
+  return data
+    .filter((row) => series.some(({ forecastKey }) => typeof row[forecastKey] === 'number'))
+    .map((row) => row[xKey]);
+}
+
+/**
+ * Build the X-axis tick renderer that sets the projected columns apart: italic,
+ * in the metric's hue. Styled inline rather than through the `fill` attribute
+ * recharts hands every tick, so the accent survives the class-based tick color
+ * a chart theme may apply. A custom tick owns its own text, so the caller's
+ * `xTickFormatter` is applied here — recharts only applies it to default ticks.
+ * Exported for unit tests; not part of the package's public API.
+ */
+export function createForecastTick(
+  forecastX: ReadonlySet<string | number | null | undefined>,
+  color: string,
+  tickFormatter?: CartesianChartProps['xTickFormatter']
+) {
+  return function ForecastTick({
+    payload,
+    index,
+    ...tickProps
+  }: {
+    payload?: { value?: string | number };
+    index?: number;
+  }) {
+    const value = payload?.value;
+    return (
+      <Text
+        {...tickProps}
+        style={
+          value != null && forecastX.has(value)
+            ? { fontStyle: 'italic', fill: color }
+            : undefined
+        }
+      >
+        {tickFormatter && value != null ? tickFormatter(value, index) : value}
+      </Text>
+    );
+  };
+}
+
+/** A dashed horizontal threshold on the value axis. */
+export interface ConfidenceConeReferenceLine {
+  /** Position on the value (Y) axis. */
+  value: number;
+  /** Optional caption rendered at the line's right end. */
+  label?: string;
+}
+
+/**
+ * Every prop except the one-form-or-the-other requirement `ConfidenceConeProps`
+ * layers on below. Exported so the stories can type their `Meta` on a single
+ * object shape — Storybook can't split a union's required args between `meta.args`
+ * and a story's. Not re-exported from `index.ts`; not part of the public API.
+ */
+export interface ConfidenceConeBaseProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     CartesianChartProps,
     ChartAnimationProps {
   /**
-   * Row-per-point data — the shared x dimension plus the actual / forecast /
-   * bound fields. Rows are naturally sparse (a point has either an actual or a
-   * forecast + bounds), so missing fields are allowed. Avoid a field named
-   * `__cone` — it's reserved for the internal prediction-band series.
+   * Row-per-point data — the shared x dimension plus each series' actual /
+   * forecast / bound fields. Rows are naturally sparse (a point has either an
+   * actual or a forecast + bounds), so missing fields are allowed. Avoid fields
+   * starting with `__cone` — that prefix is reserved for the internal
+   * prediction-band series.
    */
   data: ReadonlyArray<Record<string, string | number | null | undefined>>;
   /**
    * Per-series map of `label` / `color` for the actual + forecast lines
    * (imported from the shared `Chart` primitives). Colors are caller-supplied —
    * reference an existing semantic `--ui-*` token; there is no chart palette tier
-   * yet. The cone band and the forecast line both reuse the actual series'
-   * color — actual and forecast differ by line style, not hue.
+   * yet. Each metric renders in one hue: its cone band and forecast line both
+   * reuse its actual series' color — actual and forecast differ by line style,
+   * not hue.
    */
   config: ChartConfig;
   /** Category / time axis key (the shared dimension across rows). */
   xKey: string;
-  /** Field for the known/actual values — drawn as a solid line with a filled area. */
-  actualKey: string;
-  /** Field for the projected values — drawn as a dashed line. */
-  forecastKey: string;
-  /** Field for the cone's lower bound. */
-  lowerKey: string;
-  /** Field for the cone's upper bound. */
-  upperKey: string;
+  /**
+   * Plot several metrics against one shared axis — each with its own actual /
+   * forecast / bound fields and its own hue (from `config[actualKey]`). Takes
+   * precedence over the single-series `actualKey`/`forecastKey`/`lowerKey`/
+   * `upperKey` shorthand below; pass one form or the other, not both. One of the
+   * two forms is required.
+   */
+  series?: readonly ConfidenceConeSeries[];
+  /**
+   * Single-series shorthand — field for the known/actual values, drawn as a
+   * solid line with a filled area. Required (with `forecastKey`) unless `series`
+   * is set, which supersedes it.
+   */
+  actualKey?: string;
+  /**
+   * Single-series shorthand — field for the projected values, drawn as a dashed
+   * line. Required (with `actualKey`) unless `series` is set, which supersedes
+   * it.
+   */
+  forecastKey?: string;
+  /** Field for the cone's lower bound. Omit (with `upperKey`) for no cone. */
+  lowerKey?: string;
+  /** Field for the cone's upper bound. Omit (with `lowerKey`) for no cone. */
+  upperKey?: string;
+  /**
+   * How the known/actual period is drawn: a filled `area` under the line (the
+   * default), or a bare `line` — for a chart where the cone is the only shaded
+   * region, or where several metrics' fills would muddy each other.
+   */
+  actualType?: 'area' | 'line';
   /** Stroke width of the actual + forecast lines. */
   strokeWidth?: number;
+  /**
+   * Mark each data point: a filled dot on the observed values, a hollow one on
+   * the projection — so a point reads as measured or predicted at a glance.
+   */
+  showDots?: boolean;
+  /**
+   * Italicize the X-axis ticks over the forecast period and paint them in the
+   * first series' hue, so the projected columns read as projected even when the
+   * shaded region is off.
+   */
+  styleForecastTicks?: boolean;
+  /**
+   * One or more dashed horizontal thresholds on the value axis — e.g. a target
+   * or a capacity limit. Pass a single object or an array to draw several.
+   */
+  referenceLine?: ConfidenceConeReferenceLine | ConfidenceConeReferenceLine[];
   /**
    * Set off the forecast period from the actuals with a dashed divider at the
    * hand-off point (the first row with a forecast value) and a subtle shaded
@@ -135,6 +269,20 @@ export interface ConfidenceConeProps
   showLegend?: boolean;
 }
 
+/**
+ * Which columns to plot has to be spelled out one way or the other: the `series`
+ * array, or the flat `actualKey` + `forecastKey` shorthand. Expressed as a union
+ * so a chart with neither is a compile error rather than a silent plot of axes
+ * and nothing else. Both forms together stay legal — `series` wins (see
+ * `plotted`), which is what the multi-series stories rely on to clear the args
+ * table.
+ */
+export type ConfidenceConeProps = ConfidenceConeBaseProps &
+  (
+    | { series: readonly ConfidenceConeSeries[] }
+    | { actualKey: string; forecastKey: string }
+  );
+
 const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
   (
     {
@@ -142,6 +290,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       config,
       data,
       xKey,
+      series,
       actualKey,
       forecastKey,
       lowerKey,
@@ -149,7 +298,11 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       xAxisLabel,
       yAxisLabel,
       yUnit,
+      actualType = 'area',
       strokeWidth = 2,
+      showDots = false,
+      styleForecastTicks = false,
+      referenceLine,
       showForecastRegion = true,
       showGrid = true,
       showTooltip = true,
@@ -174,6 +327,13 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
     },
     ref
   ) => {
+    // The flat *Key props are the single-series shorthand for `series`.
+    const plotted = React.useMemo<readonly ConfidenceConeSeries[]>(() => {
+      if (series?.length) return series;
+      if (!actualKey || !forecastKey) return [];
+      return [{ actualKey, forecastKey, lowerKey, upperKey }];
+    }, [series, actualKey, forecastKey, lowerKey, upperKey]);
+
     const animation = resolveAnimation({
       animate,
       animationDuration,
@@ -201,23 +361,25 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
 
     const yDomain = resolveAxisDomain(yAxisDomain);
 
-    // One hue for the whole metric. The cone and the forecast line already paint
-    // with the actual series' color; re-pointing the forecast key's own
-    // `--color-*` at it too means nothing downstream — a custom tooltip, a
-    // caller's `var(--color-<forecastKey>)` — can reintroduce a second color.
+    // One hue per metric. Each cone and forecast line already paints with its own
+    // series' actual color; re-pointing that series' forecast key's `--color-*`
+    // at it too means nothing downstream — a custom tooltip, a caller's
+    // `var(--color-<forecastKey>)` — can reintroduce a second color.
     const seriesConfig = React.useMemo(() => {
-      const actual = config[actualKey];
-      const forecast = config[forecastKey];
-      if (!actual || !forecast) return config;
-      return {
-        ...config,
-        [forecastKey]: {
+      let next: ChartConfig | undefined;
+      for (const { actualKey: aKey, forecastKey: fKey } of plotted) {
+        const actual = config[aKey];
+        const forecast = config[fKey];
+        if (!actual || !forecast) continue;
+        next ??= { ...config };
+        next[fKey] = {
           label: forecast.label,
           icon: forecast.icon,
           ...(actual.theme ? { theme: actual.theme } : { color: actual.color }),
-        },
-      } as ChartConfig;
-    }, [config, actualKey, forecastKey]);
+        };
+      }
+      return next ?? config;
+    }, [config, plotted]);
 
     // Room for the X tick row: recharts' default 30, plus a rotated tick row
     // (+20) and/or the axis title (+18). Additive — both can be present at once,
@@ -227,26 +389,40 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
         ? 30 + (xAxisAngle != null ? 20 : 0) + (xAxisLabel ? 18 : 0)
         : undefined;
 
-    // Augment each row with the `[lower, upper]` band tuple the Area shades.
-    // Rows missing a numeric bound are left un-coned (the band breaks there).
+    // Augment each row with one `[lower, upper]` band tuple per coned series for
+    // its Area to shade. Rows missing a numeric bound are left un-coned (the
+    // band breaks there); a series without bounds gets no band at all.
     const chartData = data.map((row) => {
-      const lower = row[lowerKey];
-      const upper = row[upperKey];
-      return {
-        ...row,
-        [BAND_KEY]:
+      const next: Record<string, unknown> = { ...row };
+      for (const { actualKey: aKey, lowerKey: lKey, upperKey: uKey } of plotted) {
+        if (!lKey || !uKey) continue;
+        const lower = row[lKey];
+        const upper = row[uKey];
+        next[bandKeyFor(aKey)] =
           typeof lower === 'number' && typeof upper === 'number'
             ? [lower, upper]
-            : undefined,
-      };
+            : undefined;
+      }
+      return next;
     });
 
-    // The forecast begins at the first row carrying a forecast value; set that
-    // region off from the actuals with a shaded band + a divider at the hand-off.
-    const forecastStart = showForecastRegion
-      ? data.find((row) => typeof row[forecastKey] === 'number')?.[xKey]
-      : undefined;
+    const forecastX = forecastPeriodX(data, plotted, xKey);
+    // Set the projected period off from the actuals with a shaded band + a
+    // divider at the hand-off.
+    const forecastStart = showForecastRegion ? forecastX[0] : undefined;
     const lastX = data[data.length - 1]?.[xKey];
+
+    const renderForecastTick = createForecastTick(
+      new Set(forecastX),
+      `var(--color-${plotted[0]?.actualKey})`,
+      xTickFormatter
+    );
+
+    const referenceLines = referenceLine
+      ? Array.isArray(referenceLine)
+        ? referenceLine
+        : [referenceLine]
+      : [];
 
     return (
       <div ref={ref} className={cn(className)} {...props}>
@@ -270,6 +446,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
               axisLine={false}
               tickMargin={8}
               tickFormatter={xTickFormatter}
+              tick={styleForecastTicks ? renderForecastTick : undefined}
               angle={xAxisAngle}
               interval={xAxisInterval}
               textAnchor={
@@ -307,6 +484,26 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
                 strokeDasharray="4 4"
               />
             )}
+            {referenceLines.map((ref, index) => (
+              <ReferenceLine
+                key={`${ref.label ?? 'threshold'}-${index}`}
+                y={ref.value}
+                stroke="var(--ui-text-on-surface-secondary)"
+                strokeDasharray="4 4"
+                // extendDomain so a threshold beyond the data max stays visible.
+                ifOverflow="extendDomain"
+                label={
+                  ref.label
+                    ? {
+                        value: ref.label,
+                        position: 'insideTopRight',
+                        fill: 'var(--ui-text-on-surface-secondary)',
+                        fontSize: CHART_LABEL_FONT_SIZE,
+                      }
+                    : undefined
+                }
+              />
+            ))}
             {showTooltip &&
               (customTooltip ? (
                 // Strips the synthetic band before the caller's tooltip sees it
@@ -336,54 +533,115 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
                     payload={
                       keepMetricSeries(
                         lp.payload,
-                        actualKey
+                        plotted.map((s) => s.actualKey)
                       ) as ChartLegendContentProps['payload']
                     }
                   />
                 )}
               />
             )}
-            {/* The cone renders first so the lines draw on top. One color for the
-                whole metric — actual and forecast differ by line style, not hue —
-                so the cone + forecast line reuse the actual series' color. */}
-            <Area
-              dataKey={BAND_KEY}
-              type="monotone"
-              stroke="none"
-              fill={`var(--color-${actualKey})`}
-              fillOpacity={0.15}
-              connectNulls={false}
-              dot={false}
-              activeDot={false}
-              {...animation}
-              legendType="none"
-              tooltipType="none"
-            />
-            <Area
-              dataKey={actualKey}
-              type="monotone"
-              stroke={`var(--color-${actualKey})`}
-              strokeWidth={strokeWidth}
-              fill={`var(--color-${actualKey})`}
-              fillOpacity={0.15}
-              dot={false}
-              activeDot={false}
-              connectNulls
-              {...animation}
-              // The legend names the metric once, so it carries the swatch that
-              // stands for the whole series rather than the actual line's style.
-              legendType="rect"
-            />
-            <Line
-              dataKey={forecastKey}
-              type="monotone"
-              stroke={`var(--color-${actualKey})`}
-              strokeWidth={strokeWidth}
-              strokeDasharray="5 5"
-              dot={false}
-              connectNulls
-              {...animation}
-            />
+            {/* Every cone renders before any line, so the lines draw on top of
+                all of them. One color per metric — actual and forecast differ by
+                line style, not hue — so a cone + forecast line reuse their
+                series' actual color. */}
+            {plotted.map(({ actualKey: aKey, lowerKey: lKey, upperKey: uKey }) =>
+              lKey && uKey ? (
+                <Area
+                  key={bandKeyFor(aKey)}
+                  dataKey={bandKeyFor(aKey)}
+                  type="monotone"
+                  stroke="none"
+                  fill={`var(--color-${aKey})`}
+                  fillOpacity={0.15}
+                  connectNulls={false}
+                  dot={false}
+                  activeDot={false}
+                  {...animation}
+                  legendType="none"
+                  tooltipType="none"
+                />
+              ) : null
+            )}
+            {plotted.map(({ actualKey: aKey }) => {
+              // An area and a line take the same props here; only the region
+              // under the curve (and the mark recharts draws) differ. A `Line`
+              // gets no fill at all — `fillOpacity: 0` would also erase its dots.
+              const ActualMark = actualType === 'line' ? Line : Area;
+              const areaFill =
+                actualType === 'line'
+                  ? undefined
+                  : { fill: `var(--color-${aKey})`, fillOpacity: 0.15 };
+              return (
+                <ActualMark
+                  key={aKey}
+                  dataKey={aKey}
+                  type="monotone"
+                  stroke={`var(--color-${aKey})`}
+                  strokeWidth={strokeWidth}
+                  {...areaFill}
+                  // Observed points read as measured: LineChart's dot geometry
+                  // (r 3, 2px ring) filled with the metric hue. The ring is that
+                  // same hue, so the mark is solid — and wide enough against the
+                  // 2px line not to read as a mere thickening of it.
+                  // `fillOpacity: 1` is load-bearing: recharts merges the parent
+                  // mark's own presentation props into every dot it draws, so an
+                  // `<Area>`'s 0.15 would otherwise wash the dot out to a halo.
+                  dot={
+                    showDots
+                      ? {
+                          r: 3,
+                          fill: `var(--color-${aKey})`,
+                          fillOpacity: 1,
+                          stroke: `var(--color-${aKey})`,
+                          strokeWidth: 2,
+                        }
+                      : false
+                  }
+                  activeDot={showDots ? { r: 5 } : false}
+                  connectNulls
+                  {...animation}
+                  // The legend names the metric once, so it carries the swatch that
+                  // stands for the whole series rather than the actual line's style.
+                  legendType="rect"
+                />
+              );
+            })}
+            {plotted.map(({ actualKey: aKey, forecastKey: fKey }) => (
+              <Line
+                key={fKey}
+                dataKey={fKey}
+                type="monotone"
+                stroke={`var(--color-${aKey})`}
+                strokeWidth={strokeWidth}
+                strokeDasharray="5 5"
+                // Projected points read as predicted: the same LineChart dot,
+                // inverted — the metric's hue as the ring, the surface color as
+                // the fill, so the dashed line doesn't show through the middle.
+                // (LineChart leaves the fill to recharts, whose `Line` defaults it
+                // to `#fff`; the token is that same white in the light theme and
+                // also holds up in the dark one.)
+                // `strokeDasharray: 'none'` is load-bearing: recharts merges the
+                // parent mark's presentation props into every dot, so this line's
+                // `5 5` would otherwise break each dot's ring into two arcs.
+                dot={
+                  showDots
+                    ? {
+                        r: 3,
+                        fill: 'var(--ui-background-surface-primary)',
+                        stroke: `var(--color-${aKey})`,
+                        strokeWidth: 2,
+                        strokeDasharray: 'none',
+                      }
+                    : false
+                }
+                // Paired with `dot` the way every other chart does it — left
+                // unset, the projection would keep recharts' default active dot
+                // while the actuals had none (and a different radius when on).
+                activeDot={showDots ? { r: 5 } : false}
+                connectNulls
+                {...animation}
+              />
+            ))}
           </ComposedChart>
         </ChartContainer>
       </div>

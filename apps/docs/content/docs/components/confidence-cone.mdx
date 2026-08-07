@@ -25,6 +25,10 @@ recharts series are one metric, the legend names it once — a single swatch und
 the actual series' label — and the forecast key's color is re-pointed at the
 actual series' color, so `config` can't paint the metric in two hues.
 
+Pass `series` to plot several metrics against one shared axis, omit the bound
+keys for a projection with no cone, and layer on `referenceLine` thresholds,
+`showDots` and `styleForecastTicks` — each covered below.
+
 > **Design-pending v1**, built net-new (no demo playground). There is no chart
 > token tier yet, so the metric color references a shared brand token — a
 > dedicated `--ui-chart-*` data-viz palette is pending an upstream design pass.
@@ -80,6 +84,108 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
   xAxisLabel="Month"
   yAxisLabel="Storage"
   yUnit="GB"
+/>
+```
+
+## Several metrics on one axis
+
+Pass `series` to plot more than one metric against the same axis. Each entry
+names its own actual / forecast / bound columns and takes its hue from
+`config[actualKey]`, so every metric gets an independent cone. Every cone is
+drawn behind every line, and the legend names each metric once:
+
+```tsx
+<ConfidenceCone
+  config={{
+    storage: { label: 'Storage', color: 'var(--ui-background-brand-secondary)' },
+    storageForecast: { label: 'Storage forecast' },
+    backups: { label: 'Backups', color: 'var(--ui-background-status-strong-success)' },
+    backupsForecast: { label: 'Backups forecast' },
+  }}
+  data={data}
+  xKey="month"
+  series={[
+    {
+      actualKey: 'storage',
+      forecastKey: 'storageForecast',
+      lowerKey: 'storageLower',
+      upperKey: 'storageUpper',
+    },
+    {
+      actualKey: 'backups',
+      forecastKey: 'backupsForecast',
+      lowerKey: 'backupsLower',
+      upperKey: 'backupsUpper',
+    },
+  ]}
+/>
+```
+
+`series` supersedes the single-series `actualKey` / `forecastKey` / `lowerKey` /
+`upperKey` shorthand — pass one form or the other, not both. One of the two is
+required: the types reject a chart that names no columns at all.
+
+## Actual as a line
+
+By default the observed period is an **area**: a solid line with a low-opacity
+fill beneath it. Set `actualType="line"` to drop that fill and leave the cone as
+the only shaded region — worth doing as soon as a chart carries more than one
+metric, where overlapping fills muddy each other and the bands:
+
+```tsx
+<ConfidenceCone
+  config={config}
+  data={data}
+  xKey="month"
+  actualKey="actual"
+  forecastKey="forecast"
+  lowerKey="lower"
+  upperKey="upper"
+  actualType="line"
+/>
+```
+
+## Projection without a cone
+
+Omit `lowerKey` and `upperKey` when a model gives a point estimate but no
+interval: the actual line hands off to a bare dashed forecast, with no band. It
+works per series, so a coned metric and a band-less one can share a chart:
+
+```tsx
+<ConfidenceCone
+  config={config}
+  data={data}
+  xKey="month"
+  actualKey="actual"
+  forecastKey="forecast"
+/>
+```
+
+## Thresholds, dots and forecast ticks
+
+`referenceLine` draws a dashed horizontal threshold on the value axis — a
+target, a capacity limit — with an optional caption at its right end; pass an
+array to draw several. A threshold beyond the data max extends the domain so it
+stays visible.
+
+`showDots` marks each point: **filled** on the observed values, **hollow** on the
+projection, so a point reads as measured or predicted without tracing the line
+style. `styleForecastTicks` italicizes the X ticks over the projected period and
+paints them in the first series' hue — useful when `showForecastRegion` is off
+and the shaded region isn't there to mark the horizon:
+
+```tsx
+<ConfidenceCone
+  config={config}
+  data={data}
+  xKey="month"
+  actualKey="actual"
+  forecastKey="forecast"
+  lowerKey="lower"
+  upperKey="upper"
+  referenceLine={{ value: 190, label: 'Capacity' }}
+  showDots
+  styleForecastTicks
 />
 ```
 
