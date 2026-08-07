@@ -57,3 +57,21 @@ tokens:
     affects: root
   - name: --ui-avatar-label-color-orange
     affects: fallback
+
+  # ── blue ──
+  - name: --ui-avatar-color-blue
+    affects: root
+  - name: --ui-avatar-label-color-blue
+    affects: fallback
+
+  # ── gray ──
+  - name: --ui-avatar-color-gray
+    affects: root
+  - name: --ui-avatar-label-color-gray
+    affects: fallback
+
+  # ── green ──
+  - name: --ui-avatar-color-green
+    affects: root
+  - name: --ui-avatar-label-color-green
+    affects: fallback

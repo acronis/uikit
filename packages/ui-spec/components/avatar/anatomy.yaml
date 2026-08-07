@@ -86,3 +86,24 @@ states:
       prop: color,
       affects: [root, fallback],
     }
+  - {
+      id: blue,
+      trigger: "color === 'blue'",
+      kind: prop,
+      prop: color,
+      affects: [root, fallback],
+    }
+  - {
+      id: gray,
+      trigger: "color === 'gray'",
+      kind: prop,
+      prop: color,
+      affects: [root, fallback],
+    }
+  - {
+      id: green,
+      trigger: "color === 'green'",
+      kind: prop,
+      prop: color,
+      affects: [root, fallback],
+    }

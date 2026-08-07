@@ -599,6 +599,77 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  timeline: {
+    extraImports: [
+      "import { CircleInfoIcon } from '@acronis-platform/icons-react/stroke-mono';",
+      // Relative to the generated file's `__stories__/` directory.
+      "import { Tag } from '../../tag';",
+    ],
+    // The shared `Variants` wrapper is a flex row, and Timeline fills its container:
+    // without a fixed width the two variants would squeeze each other until the
+    // cards collapse. `shrink-0` keeps each at a readable width and lets them wrap.
+    props: 'className="w-[520px] shrink-0"',
+    // Timeline is driven by children, and an empty `<Timeline />` snapshots as a
+    // blank box. The generator can only drive *root* props, and Timeline's real
+    // axes (`level`, `branchStart`, `collapsible`, `connector`) all live on
+    // `Timeline.Item` — so the only way a generated snapshot covers the anatomy is
+    // for this sample to exercise it directly. It descends L1 → L2 → L3 and back to
+    // L1, which paints every part in one shot: both marker shapes, a tag, a
+    // timestamp, a description, the elbow at two depths, a derived connector that
+    // stops at the end of each branch, the divider, and the card body.
+    //
+    // Only the first row is `collapsible` — that paints the disclosure control for
+    // the hover / focus-visible stories, and it is the row that carries a body, so
+    // the control always reveals something. A `collapsible` row with neither a body
+    // nor descendants would render a chevron that does nothing.
+    sample: [
+      '',
+      '      <Timeline.Item',
+      '        collapsible',
+      '        icon={<CircleInfoIcon />}',
+      '        title="Title"',
+      '        tag={<Tag variant="warning">Tag</Tag>}',
+      '        timestamp="Dec 22, 08:30 AM"',
+      '        description="Description"',
+      '      >',
+      '        <div style={{ display: \'grid\', gridTemplateColumns: \'1fr 2fr\', gap: 24, padding: \'8px 16px\' }}>',
+      '          <span>Section title</span>',
+      '          <span style={{ fontWeight: 500 }}>Section description</span>',
+      '        </div>',
+      '      </Timeline.Item>',
+      '      <Timeline.Item',
+      '        level={2}',
+      '        branchStart',
+      '        icon={<CircleInfoIcon />}',
+      '        title="Title"',
+      '        tag={<Tag variant="warning">Tag</Tag>}',
+      '        timestamp="Dec 22, 08:31 AM"',
+      '        description="Description"',
+      '      />',
+      '      <Timeline.Item',
+      '        level={3}',
+      '        branchStart',
+      '        icon={<CircleInfoIcon />}',
+      '        title="Title"',
+      '        timestamp="Dec 22, 08:32 AM"',
+      '        description="Description"',
+      '      />',
+      '      <Timeline.Item',
+      '        level={3}',
+      '        icon={<CircleInfoIcon />}',
+      '        title="Title"',
+      '        timestamp="Dec 22, 08:33 AM"',
+      '        description="Description"',
+      '      />',
+      '      <Timeline.Item',
+      '        icon={<CircleInfoIcon />}',
+      '        title="Title"',
+      '        timestamp="Dec 22, 09:00 AM"',
+      '        description="Description"',
+      '      />',
+      '    ',
+    ].join('\n'),
+  },
   breadcrumb: {
     ariaLabel: 'breadcrumb',
     extraImports: [

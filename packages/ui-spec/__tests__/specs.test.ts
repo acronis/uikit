@@ -466,7 +466,7 @@ describe('cva ↔ contract conformance', () => {
     const groups = extractCvaGroups(source);
     const api = loadSpec('avatar').api;
 
-    // `color` (the five Figma color schemes) is the only cva axis.
+    // `color` (the eight Figma color schemes) is the only cva axis.
     expect(Object.keys(groups)).toEqual(['color']);
     expect(groups.color.sort()).toEqual(enumMembers(api, 'color'));
   });
