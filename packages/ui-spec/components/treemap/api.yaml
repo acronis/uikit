@@ -26,9 +26,10 @@ contract:
       type: string
       required: true
       description: >-
-        The label field that names each leaf (drives the on-cell label, tooltip,
-        and `--color-<name>` lookup). Values should be unique and CSS-safe (they
-        become part of a custom-property name).
+        The field that keys each leaf (drives the legend, tooltip, and
+        `--color-<name>` lookup). Values should be unique and CSS-safe (they
+        become part of a custom-property name) — the human name shown on the tile
+        is the leaf's config label.
     - name: aspectRatio
       type: number
       required: false
@@ -38,12 +39,50 @@ contract:
       type: boolean
       required: false
       default: 'true'
-      description: Render each leaf's name inside its cell (when it fits).
+      description: Render each leaf's label inside its cell (when it fits).
+    - name: labelAlign
+      type: "'bottom-start' | 'top-start' | 'center'"
+      required: false
+      default: "'bottom-start'"
+      description: >-
+        Where a cell's label block sits — anchored at the tile's bottom start
+        corner (the design's placement), at its top start corner, or centered in
+        the tile. Named for the start edge, not a physical one: the corner
+        variants mirror under dir="rtl".
+    - name: secondaryKeys
+      type: ReadonlyArray<string>
+      required: false
+      description: >-
+        Fields whose values make up a second label line under the leaf's name
+        (e.g. a value and a count). Dropped on cells too short to hold it.
+    - name: secondaryFormatter
+      type: '(value: number | string, index?: number) => string'
+      required: false
+      description: >-
+        Format each secondary value. Receives the field's index in secondaryKeys,
+        so one formatter can cover fields of different kinds.
+    - name: secondarySeparator
+      type: string
+      required: false
+      default: "' · '"
+      description: Separator drawn between multiple secondary values.
     - name: showTooltip
       type: boolean
       required: false
       default: 'true'
       description: Render the hover tooltip.
+    - name: showLegend
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Render the legend — one entry per distinct leaf name. Off by default: a
+        treemap labels its own cells.
+    - name: legendPos
+      type: "'top' | 'bottom'"
+      required: false
+      default: "'bottom'"
+      description: Which edge the legend sits on.
     - name: tooltipContent
       type: 'ReactElement | ((props) => ReactNode)'
       required: false

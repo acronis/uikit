@@ -129,6 +129,55 @@ describe('Chart', () => {
     );
   });
 
+  // A chart type whose renderer can't lay a legend out inside the plot (Treemap)
+  // renders the shared legend beside it, outside the container — so the config has
+  // to be passable as a prop rather than only through the container's context.
+  it('renders outside a ChartContainer when handed the config', () => {
+    const { container } = render(
+      <ChartLegendContent
+        config={config}
+        payload={[
+          { value: 'Desktop', dataKey: 'desktop', color: 'rgb(23 99 207)' },
+        ]}
+      />
+    );
+    expect(container).toHaveTextContent('Desktop');
+    expect(container.querySelector('.rounded-sm')).toBeInTheDocument();
+  });
+
+  // Passing a `config` is the *only* sanctioned way to render outside the
+  // container. Everything else is a misuse, and stays as loud as it is for the
+  // tooltip — a legend with no config cannot label itself, so an empty row would
+  // just hide the mistake.
+  it('throws outside a ChartContainer when given no config either', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() =>
+      render(
+        <ChartLegendContent
+          payload={[
+            { value: 'Desktop', dataKey: 'desktop', color: 'rgb(23 99 207)' },
+          ]}
+        />
+      )
+    ).toThrow(/must be used within a <ChartContainer \/> or given a `config`/);
+    spy.mockRestore();
+  });
+
+  // `label` is optional on a ChartConfig entry and the payload lookup can miss, so
+  // the entry falls back to the series key rather than rendering a bare marker.
+  it('falls back to the series key when the config entry has no label', () => {
+    const { container } = render(
+      <ChartContainer config={{ desktop: { color: 'rgb(23 99 207)' } }} id="nl">
+        <ChartLegendContent
+          payload={[
+            { value: 'desktop', dataKey: 'desktop', color: 'rgb(23 99 207)' },
+          ]}
+        />
+      </ChartContainer>
+    );
+    expect(container).toHaveTextContent('desktop');
+  });
+
   it('renders a line marker for stroke series and dashes it from strokeDasharray', () => {
     const { container } = render(
       <ChartContainer config={config} id="usage">
