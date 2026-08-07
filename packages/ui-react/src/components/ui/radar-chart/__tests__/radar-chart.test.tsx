@@ -240,7 +240,9 @@ describe('RadarChart data labels', () => {
   // on-surface token, not the on-fill one, at either position.
   it('renders the labels in the on-surface fill token', () => {
     const { container } = renderSized({ showLabels: true });
-    for (const label of container.querySelectorAll('.recharts-label-list text'))
+    const labels = container.querySelectorAll('.recharts-label-list text');
+    expect(labels.length).toBeGreaterThan(0);
+    for (const label of labels)
       expect(label.getAttribute('class')).toContain(
         'fill-[var(--ui-text-on-surface-primary)]'
       );

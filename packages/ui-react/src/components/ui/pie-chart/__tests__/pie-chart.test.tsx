@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -43,6 +43,28 @@ function renderChart(props: Partial<React.ComponentProps<typeof PieChart>> = {})
 const slicesOf = (container: Element) => [
   ...container.querySelectorAll<SVGPathElement>('.recharts-sector'),
 ];
+
+/**
+ * The geometry recharts baked into a slice: its arc runs `M <start> A r,r,…
+ * <end> L <centre> Z`, so the radius, both arc endpoints and the pie's centre
+ * are all readable off the one `d`.
+ */
+const arcOf = (slice: SVGPathElement) => {
+  const [startX, startY, radius, , , , , endX, endY, cx, cy] = slice
+    .getAttribute('d')!
+    .match(/-?[\d.]+/g)!
+    .map(Number);
+  return { startX, startY, radius, endX, endY, cx, cy };
+};
+
+/** How wide a slice sweeps, in degrees — the angle its arc spans at the centre. */
+const sweepOf = (slice: SVGPathElement) => {
+  const { startX, startY, endX, endY, cx, cy } = arcOf(slice);
+  // SVG y grows downward, so a clockwise sweep runs *down* in atan2 terms.
+  const start = Math.atan2(startY - cy, startX - cx);
+  const end = Math.atan2(endY - cy, endX - cx);
+  return (((start - end) * 180) / Math.PI + 360) % 360;
+};
 
 const dataLabelsOf = (container: Element) =>
   [...container.querySelectorAll('.recharts-label-list text')].map(
@@ -156,6 +178,16 @@ describe('PieChart', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
+  // The preset is reached the way a user reaches it — recharts only renders the
+  // wired-in content element once a slice is hovered.
+  it('renders the value-percent tooltip preset on hover', () => {
+    const { container } = renderChart({ tooltipFormat: 'value-percent' });
+    fireEvent.mouseOver(slicesOf(container)[0]);
+    // 275 of 662 — the default row prints the bare value, this one its share too.
+    expect(
+      container.querySelector('.recharts-tooltip-wrapper')
+    ).toHaveTextContent('275 (41.5%)');
+  });
 });
 
 // The motion itself is a visual-regression concern; what matters here is that
@@ -310,9 +342,9 @@ describe('pieChartLabelText', () => {
   });
 });
 
-// The `value-percent` tooltip row renders outside recharts' layout, so unlike
-// the chart itself it can be asserted directly — the formatter is a plain
-// function of (value, name, item) and its output is ordinary JSX.
+// The row the `value-percent` preset installs is a plain formatter of
+// (value, name, item) returning ordinary JSX, so its own cases are asserted
+// here rather than through a hovered chart — that only covers the wiring.
 describe('pieChartValuePercentRow', () => {
   const total = 662;
   const item = {
@@ -380,6 +412,38 @@ describe('PieChart geometry, slices and chrome', () => {
     const halfSlices = slicesOf(half.container);
     expect(halfSlices).toHaveLength(3);
     expect(halfSlices[0].getAttribute('d')).not.toBe(fullFirst);
+  });
+
+  // A slice worth a fraction of a percent draws as a hairline nobody can hover;
+  // `minAngle` is the floor that keeps it reachable, at the cost of drawing it
+  // out of proportion.
+  it('widens a hairline slice to the minAngle floor', () => {
+    const lopsided = [...data.slice(0, 2), { browser: 'Firefox', value: 1 }];
+
+    const unfloored = renderChart({ data: lopsided });
+    expect(sweepOf(slicesOf(unfloored.container)[2])).toBeLessThan(1);
+    unfloored.unmount();
+
+    const floored = renderChart({ data: lopsided, minAngle: 30 });
+    expect(sweepOf(slicesOf(floored.container)[2])).toBeGreaterThanOrEqual(30);
+  });
+
+  // recharts sizes the default arc off the plot box — 80% of half its shorter
+  // side — and reserves 5px a side when no margin is given. The faked layout is
+  // 400px tall, so height is what binds: 60px of margin costs 0.8 × (60 − 5) of
+  // radius.
+  it('shrinks the arc by the margin the caller reserves', () => {
+    const tight = renderChart();
+    const tightRadius = arcOf(slicesOf(tight.container)[0]).radius;
+    tight.unmount();
+
+    const roomy = renderChart({
+      margin: { top: 60, right: 60, bottom: 60, left: 60 },
+    });
+    expect(arcOf(slicesOf(roomy.container)[0]).radius).toBeCloseTo(
+      tightRadius - 0.8 * (60 - 5),
+      1
+    );
   });
 
   // `cornerRadius` rounds each slice tip, which recharts draws as extra arc

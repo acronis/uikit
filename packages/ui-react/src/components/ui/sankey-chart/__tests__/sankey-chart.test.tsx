@@ -51,6 +51,12 @@ const ribbonsOf = (container: Element) =>
     (path) => path.getAttribute('fill') === 'none'
   );
 
+/** Top edge of each node bar, in `data.nodes` order — the bar's `d` starts there. */
+const nodeTopsOf = (container: Element) =>
+  nodeBarsOf(container).map((bar) =>
+    Number(bar.getAttribute('d')!.match(/^M \S+,(\S+)/)![1])
+  );
+
 const nodeLabelsOf = (container: Element) => [
   ...container.querySelectorAll<SVGTextElement>('svg text'),
 ];
@@ -179,17 +185,32 @@ describe('SankeyChart', () => {
     expect(ribbon).toHaveAttribute('stroke-opacity', '1');
   });
 
-  // `sort` hands node ordering to recharts' relaxation; the default keeps the
-  // authored order, so the two must not lay out identically.
-  it('reorders the nodes when sort is enabled', () => {
-    const authored = renderChart();
-    const authoredY = nodeBarsOf(authored.container).map((bar) =>
-      bar.getAttribute('d')
-    );
+  // `sort` only moves a node when the authored order disagrees with the one the
+  // relaxation settles on — the fixture above already agrees, so an uncrossing
+  // graph is what makes the prop observable at all: `all` feeds the *lower*
+  // target and `certified` the upper one, so sorting swaps the source column.
+  it('reorders a column whose authored order crosses the flows', () => {
+    const crossing = {
+      nodes: [
+        { name: 'all' },
+        { name: 'certified' },
+        { name: 'noCert' },
+        { name: 'valid' },
+      ],
+      links: [
+        { source: 0, target: 3, value: 200 },
+        { source: 1, target: 2, value: 200 },
+      ],
+    };
+
+    const authored = renderChart({ data: crossing });
+    const [authoredAll, authoredCertified] = nodeTopsOf(authored.container);
+    expect(authoredAll).toBeLessThan(authoredCertified);
     authored.unmount();
 
-    const sorted = renderChart({ sort: true });
-    expect(nodeBarsOf(sorted.container)).toHaveLength(authoredY.length);
+    const sorted = renderChart({ data: crossing, sort: true });
+    const [sortedAll, sortedCertified] = nodeTopsOf(sorted.container);
+    expect(sortedAll).toBeGreaterThan(sortedCertified);
   });
 
   it('draws a single-link graph as two nodes and one ribbon', () => {

@@ -258,13 +258,21 @@ them on for a single series or a chart with room to spare.
 ## Accessibility
 
 `PieChart` sets no `role` and no `aria-*` of its own, and the SVG the arc is drawn
-into has no accessible name — recharts emits an empty `<title>` / `<desc>` pair and
-nothing else. It does switch its own accessibility layer on for this chart type, so
-the plot is a tab stop carrying `role="application"`: a focus stop that announces
-neither a name nor any data. The component exposes no way to turn that off.
+into has no accessible name. That gap belongs to this component rather than
+recharts: recharts takes `title`, `desc` and `role` as first-class chart props and
+writes them straight into the plot's `<svg>`, but `PieChart` passes none of them
+down — it spreads the props you give it onto its own root `<div>` and hands the
+recharts chart only the data it computes itself, so the `<title>` / `<desc>` pair
+recharts always emits stays empty. recharts' accessibility layer is on by default
+and is not switched off here, so the plot is also a tab stop carrying
+`role="application"`: a focus stop that announces neither a name nor any data. The
+component exposes no way to turn that off.
 
-The root is a plain `<div>` that spreads the props you pass, so a role and a label
-land on it:
+So put the name on the root, which spreads the props you pass. Choose the role
+before copying the snippet: `role="img"` names the chart but also makes its subtree
+presentational, and it does not remove the focusable plot inside it — wrapping the
+chart in a `<figure>` with a `<figcaption>` is often the better fit here.
+`aria-labelledby` works the same way as `aria-label`.
 
 ```tsx
 <PieChart
@@ -276,10 +284,6 @@ land on it:
   nameKey="browser"
 />
 ```
-
-`aria-labelledby` works the same way. Wrapping the chart in a `<figure>` with a
-`<figcaption>` is often the better fit here, since `role="img"` names the chart but
-doesn't remove the focusable plot inside it.
 
 Either way, a name is not a text alternative. A pie is a visual encoding of numbers,
 so the numbers themselves have to be reachable as text — a caption, a summary
@@ -296,10 +300,18 @@ readouts you compose alongside them — mirrors on its own, because it is ordina
 flow layout built from logical CSS utilities. The plot area deliberately stays
 left-to-right: recharts places every mark in physical SVG coordinates, so mirroring
 it would flip the reading order of the data without flipping the geometry that
-encodes it. That holds without a `direction` override: recharts computes those
-coordinates itself, so the plot does not mirror even when the page does. For a pie that means the sweep still runs from `startAngle` to `endAngle`
-the same way in both directions, and the slice labels, their leader lines and the
-`centerLabel` stay where the geometry puts them.
+encodes it. `ChartContainer` holds that in place by pinning `.recharts-surface` to
+`direction: ltr`. The sweep from `startAngle` to `endAngle` runs the same way in
+both directions either way — an angle is not a reading direction — and the
+`centerLabel` is anchored `middle`, so neither depends on the pin.
+
+The slice labels do. `labelPosition="outside"`, the default when `showLabels` is on,
+is the one placement recharts anchors with the direction-relative SVG keywords
+`text-anchor: start` / `end`, picked per slice from which side of the centre it
+falls on; the leader lines `labelLine` draws are placed from the same geometry.
+Without the pin an inherited `dir="rtl"` would mirror each of those labels back
+across its own slice while the leader line stayed put. The pin stops at the surface,
+so the legend and the tooltip — HTML outside it — still mirror with the page.
 
 ## API Reference
 

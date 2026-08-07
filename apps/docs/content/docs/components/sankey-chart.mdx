@@ -154,12 +154,18 @@ legend (plain DOM below the diagram), and any readouts you compose alongside the
 mirrors on its own, because it is ordinary flow layout built from logical CSS
 utilities. The plot area deliberately stays left-to-right: recharts places every mark
 in physical SVG coordinates, so mirroring it would flip the reading order of the data
-without flipping the geometry that encodes it. That holds without a `direction`
-override: recharts computes those coordinates itself, so the plot does not mirror
-even when the page does. For a Sankey that also fixes the labels: the
-columns run from source to sink left to right, and a node's label sits on the side
-its links choose — to the right of a node with outgoing flow, to the left of a
-terminal one — which is a property of the flow, not of the reading direction.
+without flipping the geometry that encodes it. `ChartContainer` holds that in place
+by pinning `.recharts-surface` to `direction: ltr`.
+
+For a Sankey that pin fixes the labels as much as the diagram. The node renderer
+anchors each label with `text-anchor: start` or `end` depending on whether the node
+has outgoing flow, and those two SVG keywords resolve against the inherited
+`direction` — so without the pin an inherited `dir="rtl"` would mirror every label
+back across its anchor and lay it over the node it belongs to. With it, the columns
+run from source to sink left to right and a node's label sits on the side its links
+choose — to the right of a node with outgoing flow, to the left of a terminal one —
+which is a property of the flow, not of the reading direction. The pin stops at the
+surface, so the tooltip and the legend still mirror with the page.
 
 ## API Reference
 

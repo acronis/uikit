@@ -126,6 +126,24 @@ function ChartContainer({
           // wins regardless of the order Tailwind emits them in. An `outline`
           // rather than the usual `ring`: box-shadow doesn't paint on SVG children.
           '[&_.recharts-brush-traveller:focus-visible]:[outline:3px_solid_var(--ui-focus-primary)] [&_.recharts-brush-traveller:focus-visible]:[outline-offset:1px]',
+          // recharts anchors its axis tick text with the *direction-relative*
+          // SVG keywords (`text-anchor: start|end`, see `getTickTextAnchor` in
+          // `CartesianAxis`), while placing every mark at a computed physical
+          // coordinate. Inheriting `direction: rtl` therefore flips only the
+          // text: an `end`-anchored Y tick mirrors about its anchor and lands
+          // inside the plot (measured: +24px to +39px), rotated ticks shift
+          // ~+15px, and a `ReferenceLine` label at the right edge overflows the
+          // surface. Pinning the surface keeps the plot's own coordinate system
+          // consistent with the geometry recharts computed for it. The chrome
+          // that *should* mirror — tooltip and legend — is HTML outside
+          // `.recharts-surface`, so it is unaffected.
+          //
+          // `Treemap` is the exception: its cell labels are HTML in a
+          // `<foreignObject>` *inside* the surface, put there precisely so they
+          // mirror with the page (see `treemap.tsx`). That is ordinary flow
+          // layout, not a computed SVG coordinate, so the pin has to stop at the
+          // `<foreignObject>` boundary and hand the page's direction back.
+          '[&_.recharts-surface]:[direction:ltr] rtl:[&_.recharts-surface_foreignObject]:[direction:rtl]',
           className
         )}
         {...props}

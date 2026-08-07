@@ -103,7 +103,7 @@ function CategoryBarSegmentTooltip({
   segmentKey,
   value,
   valueFormatter,
-  render,
+  renderContent,
 }: {
   chartId: string;
   config: ChartConfig;
@@ -113,19 +113,21 @@ function CategoryBarSegmentTooltip({
   segmentKey: string;
   value: number;
   valueFormatter: (value: number) => string;
-  render?: (segment: CategoryBarTooltipContext) => React.ReactNode;
+  // Not named `render`: in this package that name is reserved for Base UI's
+  // polymorphic composition prop (see `<TooltipTrigger render={…} />` below).
+  renderContent?: (segment: CategoryBarTooltipContext) => React.ReactNode;
 }) {
   return (
     <TooltipContent
       data-chart={chartId}
       className={cn(
         'border border-border bg-background text-foreground shadow-md',
-        !render && 'flex items-center gap-2'
+        !renderContent && 'flex items-center gap-2'
       )}
     >
       <ChartStyle id={chartId} config={config} />
-      {render ? (
-        render({ key: segmentKey, value, label, percent, color })
+      {renderContent ? (
+        renderContent({ key: segmentKey, value, label, percent, color })
       ) : (
         <>
           <span
@@ -220,7 +222,7 @@ const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
                   segmentKey={seg.key}
                   value={seg.value}
                   valueFormatter={valueFormatter}
-                  render={tooltipContent}
+                  renderContent={tooltipContent}
                 />
               </Tooltip>
             );

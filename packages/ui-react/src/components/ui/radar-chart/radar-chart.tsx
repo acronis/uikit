@@ -337,10 +337,12 @@ const RADAR_LABEL_TICK_SIZE = 30;
 /**
  * One series' `<Radar>` (and its value labels).
  *
- * Called as a plain function, never mounted as `<RadarSeries />`: recharts
- * matches a chart's children by element *type*, so a wrapper component would
- * hide the `<Radar>` from `RadarChart`'s child scan — and the `<LabelList>` from
- * `Radar`'s — and the series would simply not be drawn.
+ * Called as a plain function rather than mounted as `<RadarSeries />`, purely
+ * to keep the chart's children readable as a flat list — recharts imposes no
+ * constraint here. `RadarChart` picks up the series from the store `<Radar>`
+ * registers itself in, and `Radar` passes its children straight through to a
+ * label-list context instead of scanning them by type. `<Cell>` is the only
+ * child recharts still looks up by element type, and a radar series has none.
  */
 function radarSeries({
   seriesKey,

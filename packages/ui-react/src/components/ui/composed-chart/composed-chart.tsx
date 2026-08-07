@@ -564,10 +564,13 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
     });
 
     // Everything from here to the `return` is lifted out of the returned tree
-    // only to keep it readable as a flat list of chart children. The `render*`
-    // helpers are plain functions, never components: recharts identifies its
-    // children by element type (`XAxis`, `Bar`, …), so a wrapper component would
-    // hide them from the chart.
+    // only to keep it readable as a flat list of chart children. Nothing in
+    // recharts forces the `render*` helpers to be plain functions: axes and
+    // series register themselves with the chart's store, and `<Cell>` is the
+    // only child still looked up by element type — a component wrapper renders
+    // fine (see AreaChart's `AreaFillGradients`). They stay functions because
+    // they are declared inside the render body, where a component would get a
+    // fresh element type on every render and remount its subtree.
 
     // The two orientations stay two whole blocks rather than one parameterised
     // axis pair: they swap which axis is `type="number"` and which carries the

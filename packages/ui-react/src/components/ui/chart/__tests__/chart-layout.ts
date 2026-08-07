@@ -43,11 +43,13 @@ const CHART_RECT = {
 let installed = false;
 let originalGetBoundingClientRect: Element['getBoundingClientRect'] | null =
   null;
+let originalResizeObserver: typeof globalThis.ResizeObserver | undefined;
 
 function install() {
   if (installed) return;
   installed = true;
 
+  originalResizeObserver = globalThis.ResizeObserver;
   vi.stubGlobal('ResizeObserver', SizedResizeObserver);
   const original = Element.prototype.getBoundingClientRect;
   originalGetBoundingClientRect = original;
@@ -66,7 +68,12 @@ function restore() {
     Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
     originalGetBoundingClientRect = null;
   }
-  vi.unstubAllGlobals();
+  // Restoring the one global this helper stubbed, rather than
+  // `vi.unstubAllGlobals()`: this runs as an `afterEach` in every chart suite,
+  // so the blanket form would also tear down a `vi.stubGlobal` the calling test
+  // made for its own reasons.
+  vi.stubGlobal('ResizeObserver', originalResizeObserver);
+  originalResizeObserver = undefined;
 }
 
 /**
@@ -90,8 +97,9 @@ function restore() {
  *
  * Call it inside the test, before rendering. Cleanup is registered automatically,
  * so no `afterEach` is needed at the call site. Calling it more than once in the
- * same test (a loop that renders one chart per case) is a no-op — re-stubbing
- * would capture this wrapper as its own "original".
+ * same test (a loop that renders one chart per case) re-stubs nothing — that
+ * would capture this wrapper as its own "original" — though each call does queue
+ * its own teardown, and the second one finds the patches already lifted.
  */
 export function giveTheChartASize() {
   install();
@@ -121,18 +129,37 @@ export function giveEveryChartASize() {
  * false — and a test written the obvious way passes vacuously instead of
  * asserting anything. (Descendant selectors themselves are fine here; `svg text`
  * and `clipPath rect` both work.)
+ *
+ * `'x'` and `'y'` mean *both* axes of that dimension, so on a chart with a
+ * secondary scale they return the two axes' ticks concatenated. Pass a single
+ * side (`'left'`, `'right'`, `'top'`, `'bottom'`) to assert against one of them
+ * — the orientation attribute is the only thing separating them.
+ *
+ * An empty result means "no tick carried that orientation", which is also what
+ * you get if a recharts upgrade stops emitting the attribute. Assert a length
+ * before looping, or a broken selector reads as a chart with no ticks.
  */
-export function axisTicks(container: Element, axis: 'x' | 'y'): Element[] {
-  const sides = axis === 'x' ? ['bottom', 'top'] : ['left', 'right'];
+export type ChartAxisSide = 'left' | 'right' | 'top' | 'bottom';
+
+export function axisTicks(
+  container: Element,
+  axis: 'x' | 'y' | ChartAxisSide
+): Element[] {
+  const sides =
+    axis === 'x'
+      ? ['bottom', 'top']
+      : axis === 'y'
+        ? ['left', 'right']
+        : [axis];
   return [
     ...container.querySelectorAll('.recharts-cartesian-axis-tick-value'),
   ].filter((tick) => sides.includes(tick.getAttribute('orientation') ?? ''));
 }
 
-/** Text of every tick on one cartesian axis — see `axisTicks` for the caveat. */
+/** Text of every tick on one cartesian axis — see `axisTicks` for the caveats. */
 export function axisTickLabels(
   container: Element,
-  axis: 'x' | 'y'
+  axis: 'x' | 'y' | ChartAxisSide
 ): (string | null)[] {
   return axisTicks(container, axis).map((tick) => tick.textContent);
 }

@@ -158,9 +158,9 @@ describe.each(CHARTS)(
       const { container } = render(
         renderChart({ showBrush: true, brushAriaLabel: 'Selector de rango' })
       );
-      for (const handle of container.querySelectorAll(
-        '.recharts-brush-traveller'
-      )) {
+      const handles = container.querySelectorAll('.recharts-brush-traveller');
+      expect(handles.length).toBeGreaterThan(0);
+      for (const handle of handles) {
         expect(handle).toHaveAttribute('aria-label', 'Selector de rango');
       }
     });

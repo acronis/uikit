@@ -162,7 +162,11 @@ carries the unit suffix.
 `ChartContainer` renders a plain `<div>` with no role and no accessible name of
 its own — it spreads whatever props you pass, so `role="img"` plus an
 `aria-label` (or an `aria-labelledby` pointing at the visible heading) is how a
-chart gets named. Nothing in the kit synthesizes a name from `config`.
+chart gets named. No recharts-backed chart in the kit synthesizes a name from
+`config`. The exception is [CategoryBar](/components/category-bar), which is
+plain DOM rather than a plot: it joins each segment's `config` label and
+formatted value into a summary and applies it as `role="img"` plus `aria-label`,
+which a caller can replace by passing an `aria-label` of their own.
 
 An SVG plot is not readable as data, so the numbers have to exist as text
 somewhere — a caption, a summary sentence, or an adjacent table. The chrome
@@ -172,11 +176,14 @@ next to its value. Don't hide the label and the indicator together, and never
 let color be the only thing separating two series.
 
 recharts' own accessibility layer is on by default, which gives the plot surface
-`tabindex="0"` and `role="application"`: while it has focus, <kbd>←</kbd> /
-<kbd>→</kbd> walk the tooltip across data points and <kbd>Enter</kbd> pins it.
-That focus stop is not visibly indicated — the container's `outline-hidden`
-rules, which exist to strip recharts' stray outlines off layers and sectors,
-cover the surface too.
+`tabindex="0"` and `role="application"`: focusing it opens the tooltip on the
+first data point, and while it has focus <kbd>←</kbd> / <kbd>→</kbd> walk that
+tooltip across the others. <kbd>Enter</kbd> toggles the tooltip rather than
+pinning it, and because focus has already opened it, the first <kbd>Enter</kbd>
+closes it — press it again, or press an arrow key, to bring it back. That focus
+stop is not visibly indicated — the container's `outline-hidden` rules, which
+exist to strip recharts' stray outlines off layers and sectors, cover the
+surface too.
 
 A `<Brush>` traveller is the exception, because it is a genuine control:
 recharts renders each of the two handles as `role="slider"` with `tabindex="0"`,
@@ -206,20 +213,39 @@ from logical CSS utilities. The plot area does not.
 That split is the point. recharts lays every mark out in physical SVG
 coordinates, so a category axis that ran right-to-left would flip the reading
 order of the data without flipping the geometry that encodes it — the bars, the
-line, and the axis they belong to would stop agreeing. Nothing has to force
-this: because those coordinates are computed rather than laid out by the
-document, the plot keeps its orientation whatever `direction` the page inherits,
-and recharts anchors its own axis and label text explicitly.
+line, and the axis they belong to would stop agreeing. `ChartContainer` holds
+the split in place by pinning `.recharts-surface` to `direction: ltr`.
 
-The one exception is content recharts renders as HTML inside a `<foreignObject>`
-rather than as SVG — the [Treemap](/components/treemap)'s cell labels — which is
-flow layout again, and mirrors with the page.
+That pin does real work; it is not a belt over an already-safe layout. recharts
+puts each *mark* at a coordinate it has computed in physical space, but it
+anchors the *text* with the direction-relative SVG keywords `text-anchor: start`
+and `end` — see `getTickTextAnchor` in `CartesianAxis`, and its counterparts on
+`PolarAngleAxis` and `PolarRadiusAxis`. The kit does the same where it sets an
+anchor itself, for rotated X-axis ticks and for a Sankey node's label. Those two
+keywords resolve against the inherited `direction`, so under an inherited
+`dir="rtl"` the text mirrors about its anchor while the geometry it labels stays
+put. Measured in Chromium against the built Storybook: `end`-anchored Y-axis
+ticks move 24–39px and land inside the plot area, rotated X-axis ticks shift
+about 15px, and a `ReferenceLine` label at the right edge overflows the surface.
+Text anchored `middle` is direction-immune and measured a shift of exactly
+zero — unrotated X-axis tick labels, axis titles and `LabelList` data labels are
+all in that group.
+
+The pin stopping at the surface is what keeps it safe: the tooltip and the
+legend are HTML rendered *outside* `.recharts-surface`, so they never inherit it
+and still mirror with the page.
+
+The one thing inside the surface that is not SVG is the
+[Treemap](/components/treemap)'s cell labels, which its cell renderer lays out
+as HTML in a `<foreignObject>`. Sitting inside the surface, they inherit the pin
+along with the plot: a `labelAlign` start edge resolves to the tile's left in
+both directions rather than following the page.
 
 This is what mainstream charting libraries do by default too: the plot keeps its
 physical orientation and only the surrounding UI mirrors. The non-SVG widgets —
 [CategoryBar](/components/category-bar), [Meter](/components/meter),
 [Metric](/components/metric), [TrendIndicator](/components/trend-indicator) —
-are plain DOM and mirror fully instead.
+sit outside the surface entirely, are plain DOM, and mirror fully instead.
 
 If a chart genuinely has to read right-to-left, that is a decision about the
 data, not about the page: reverse the category axis with recharts' own

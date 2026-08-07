@@ -68,14 +68,37 @@ describe('AreaChart axes and grid', () => {
     for (const tick of ticks) expect(tick).toMatch(/k$/);
   });
 
+  it('thins the value axis to the requested tick count', () => {
+    const { container } = renderChart({ yAxisTickCount: 4 });
+    expect(axisTickLabels(container, 'y')).toHaveLength(4);
+  });
+
   it('anchors rotated ticks on the side they lean towards', () => {
     const { container } = renderChart({ xAxisAngle: -45 });
     expect(axisTicks(container, 'x')[0]).toHaveAttribute('text-anchor', 'end');
   });
 
+  // The interval is a keep-every-Nth filter over the category ticks, so it is
+  // only observable against the unthinned row it drops ticks from.
+  it('thins the X ticks through the caller interval', () => {
+    const every = renderChart();
+    expect(axisTickLabels(every.container, 'x')).toEqual(['Jan', 'Feb', 'Mar']);
+    every.unmount();
+
+    const thinned = renderChart({ xAxisInterval: 1 });
+    expect(axisTickLabels(thinned.container, 'x')).toEqual(['Jan', 'Mar']);
+  });
+
+  // `zero` is also recharts' behavior for an unset domain, so the floor is only
+  // observable against a preset that fits the data instead — this data starts
+  // at 80, which `auto` rounds down to the nice tick below it.
   it('floors the Y domain at zero on request', () => {
-    const { container } = renderChart({ yAxisDomain: 'zero' });
-    expect(axisTickLabels(container, 'y')[0]).toBe('0');
+    const fitted = renderChart({ yAxisDomain: 'auto' });
+    expect(axisTickLabels(fitted.container, 'y')[0]).toBe('65');
+    fitted.unmount();
+
+    const floored = renderChart({ yAxisDomain: 'zero' });
+    expect(axisTickLabels(floored.container, 'y')[0]).toBe('0');
   });
 
   it('renders the axis titles as their own labels', () => {
