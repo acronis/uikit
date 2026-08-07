@@ -29,6 +29,7 @@ import {
   resolveCartesianLabelPosition,
   resolveCategoryRange,
   resolveChartReferenceValue,
+  resolveReferenceLineProps,
   toLabelFormatter,
   resolveLabelFillClass,
   CHART_LABEL_MARGIN,
@@ -939,24 +940,16 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                     ? valueAxisBinding('secondary')
                     : {})}
                   {...position}
-                  stroke="var(--ui-text-on-surface-secondary)"
-                  strokeDasharray="4 4"
-                  // extendDomain so a target beyond the data max stays visible.
-                  ifOverflow="extendDomain"
-                  label={
-                    line.label
-                      ? {
-                          value: line.label,
-                          // Sit the caption at the top of the rule: above the
-                          // right end of a horizontal one, above the top of a
-                          // vertical one (which the plot margin reserves room
-                          // for — see REFERENCE_LABEL_MARGIN).
-                          position: isVerticalRule ? 'top' : 'insideTopRight',
-                          fill: 'var(--ui-text-on-surface-secondary)',
-                          fontSize: 12,
-                        }
-                      : undefined
-                  }
+                  // Caption at the top of the rule by default: above the right
+                  // end of a horizontal one, above the top of a vertical one
+                  // (which the plot margin reserves room for — see
+                  // REFERENCE_LABEL_MARGIN). A config's own `labelPosition`
+                  // overrides that, as on the other cartesian charts.
+                  {...resolveReferenceLineProps(
+                    line.label,
+                    line.labelPosition ??
+                      (isVerticalRule ? 'top' : 'insideTopRight')
+                  )}
                 />
               )
             )}

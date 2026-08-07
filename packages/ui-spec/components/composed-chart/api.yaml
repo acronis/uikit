@@ -77,7 +77,8 @@ contract:
         axes, `yAxis` picks the scale the rule is measured against — defaulting to
         the axis of the series named by `average`, and to `primary` otherwise — and
         `average: true` pools only the series on that axis, so two scales are never
-        averaged together.
+        averaged together. `labelPosition` moves the caption off its default (the
+        top of the rule) when the rule lands where the series already is.
     - name: referenceArea
       type: ComposedChartReferenceArea | ComposedChartReferenceArea[]
       required: false
