@@ -17,21 +17,25 @@ import {
 
 import { cn } from '@/lib/utils';
 import {
+  CHART_LABEL_FONT_SIZE,
+  CHART_LABEL_MARGIN,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-  resolveAxisDomain,
   resolveAnimation,
+  resolveAxisDomain,
   resolveBrushProps,
-  toLabelFormatter,
-  resolveLabelFillClass,
   resolveChartReferenceValue,
+  resolveLabelFillClass,
   resolveReferenceLineProps,
+  resolveRotatedTickAnchor,
+  resolveXAxisHeight,
+  resolveXAxisTitle,
+  resolveYAxisTitle,
+  toLabelFormatter,
   toReferenceLineList,
-  CHART_LABEL_MARGIN,
-  CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
@@ -101,6 +105,11 @@ type TooltipContentType = NonNullable<
   React.ComponentProps<typeof ChartTooltip>['content']
 >;
 type TooltipContentFn = Extract<TooltipContentType, (...args: never[]) => unknown>;
+type LegendContentFn = Extract<
+  React.ComponentProps<typeof ChartLegend>['content'],
+  (...args: never[]) => unknown
+>;
+type LegendContentProps = Parameters<LegendContentFn>[0];
 type TooltipRenderProps = Parameters<TooltipContentFn>[0];
 
 /**
@@ -295,13 +304,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       showLabels ||
       Object.values(lineSettings ?? {}).some((settings) => settings.showLabel);
 
-    // Room for the X tick row: recharts' default 30, plus a rotated tick row
-    // (+20) and/or the axis title (+18). Additive — both can be present at once,
-    // which the old label-or-angle ternary under-allocated.
-    const xAxisHeight =
-      xAxisLabel || xAxisAngle != null
-        ? 30 + (xAxisAngle != null ? 20 : 0) + (xAxisLabel ? 18 : 0)
-        : undefined;
+    const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
 
     // Memoized so recharts sees a stable content type across renders — a fresh
     // wrapper each render would remount the caller's tooltip and reset its state.
@@ -314,17 +317,8 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
     // the left gutter. Passed to recharts' native `label` (themed via the
     // `.recharts-label` fill selector on the container).
-    const xAxisTitle = xAxisLabel
-      ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
-      : undefined;
-    const yAxisTitle = yAxisLabel
-      ? {
-          value: yAxisLabel,
-          angle: -90,
-          position: 'insideLeft' as const,
-          style: { textAnchor: 'middle' as const },
-        }
-      : undefined;
+    const xAxisTitle = resolveXAxisTitle(xAxisLabel);
+    const yAxisTitle = resolveYAxisTitle(yAxisLabel);
 
     // Each delta band becomes a synthetic `[min, max]` range field per row that
     // a recharts <Area> shades. Rows where either series isn't numeric are left
@@ -334,6 +328,41 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       current,
       comparison,
     }));
+
+    // A delta band is a synthetic `__band_*` series feeding an <Area>, not a
+    // trend of its own — so it has to be stripped from the tooltip rows and the
+    // legend entries before either is rendered. A caller's own tooltip is
+    // already wrapped for that above; these cover the two default contents.
+    const hasBands = bands.length > 0;
+    const tooltipNode =
+      customTooltip ??
+      (hasBands ? (
+        (props: TooltipRenderProps) => (
+          <ChartTooltipContent
+            active={props.active}
+            label={props.label}
+            payload={
+              dropBandSeries(
+                props.payload
+              ) as ChartTooltipContentProps['payload']
+            }
+          />
+        )
+      ) : (
+        <ChartTooltipContent />
+      ));
+    const legendNode = hasBands ? (
+      (props: LegendContentProps) => (
+        <ChartLegendContent
+          verticalAlign={props.verticalAlign}
+          payload={
+            dropBandSeries(props.payload) as ChartLegendContentProps['payload']
+          }
+        />
+      )
+    ) : (
+      <ChartLegendContent />
+    );
     const chartData = bands.length
       ? data.map((row) => {
           const augmented: Record<string, unknown> = { ...row };
@@ -387,9 +416,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               tickFormatter={xTickFormatter}
               angle={xAxisAngle}
               interval={xAxisInterval}
-              textAnchor={
-                xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
-              }
+              textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
               height={xAxisHeight}
               label={xAxisTitle}
             />
@@ -405,46 +432,8 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />
-            {showTooltip &&
-              (customTooltip ? (
-                // Strips the synthetic delta bands before the caller's tooltip
-                // sees them — the `__band_*` series feed the Areas, not the
-                // tooltip (a no-op when no bands are configured).
-                <ChartTooltip content={customTooltip} />
-              ) : bands.length > 0 ? (
-                <ChartTooltip
-                  content={(props) => (
-                    <ChartTooltipContent
-                      active={props.active}
-                      label={props.label}
-                      payload={
-                        dropBandSeries(
-                          props.payload
-                        ) as ChartTooltipContentProps['payload']
-                      }
-                    />
-                  )}
-                />
-              ) : (
-                <ChartTooltip content={<ChartTooltipContent />} />
-              ))}
-            {showLegend &&
-              (bands.length > 0 ? (
-                <ChartLegend
-                  content={(props) => (
-                    <ChartLegendContent
-                      verticalAlign={props.verticalAlign}
-                      payload={
-                        dropBandSeries(
-                          props.payload
-                        ) as ChartLegendContentProps['payload']
-                      }
-                    />
-                  )}
-                />
-              ) : (
-                <ChartLegend content={<ChartLegendContent />} />
-              ))}
+            {showTooltip && <ChartTooltip content={tooltipNode} />}
+            {showLegend && <ChartLegend content={legendNode} />}
             {/* Delta bands render before the lines so the lines draw on top. */}
             {bands.map(({ field, current }) => (
               <Area

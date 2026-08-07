@@ -18,22 +18,26 @@ import {
 
 import { cn } from '@/lib/utils';
 import {
+  CHART_LABEL_FONT_SIZE,
+  CHART_LABEL_MARGIN,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-  resolveAxisDomain,
   resolveAnimation,
+  resolveAxisDomain,
   resolveBrushProps,
   resolveCartesianLabelPosition,
   resolveCategoryRange,
   resolveChartReferenceValue,
-  resolveReferenceLineProps,
-  toLabelFormatter,
   resolveLabelFillClass,
-  CHART_LABEL_MARGIN,
-  CHART_LABEL_FONT_SIZE,
+  resolveReferenceLineProps,
+  resolveRotatedTickAnchor,
+  resolveXAxisHeight,
+  resolveXAxisTitle,
+  resolveYAxisTitle,
+  toLabelFormatter,
   type ChartConfig,
   type ChartLegendContentProps,
   type CartesianChartProps,
@@ -293,22 +297,12 @@ export interface ComposedChartProps
   labelPosition?: CartesianLabelPosition;
 }
 
-// A rotated value-axis title, angled so it reads from the outside in — upward on a
-// left axis (the convention), downward on a right one, where -90° would put the
-// text's baseline against the plot.
-function resolveYAxisTitle(
-  label: string | undefined,
-  orientation: 'left' | 'right'
-) {
-  if (!label) return undefined;
-  return {
-    value: label,
-    angle: orientation === 'left' ? -90 : 90,
-    position:
-      orientation === 'left' ? ('insideLeft' as const) : ('insideRight' as const),
-    style: { textAnchor: 'middle' as const },
-  };
-}
+// recharts types a legend's `content` as an element *or* a render function.
+// Naming that union is what lets the content be built above the returned tree
+// (see `legendContent`) without hand-typing the props the render form is given.
+type LegendContentType = NonNullable<
+  React.ComponentProps<typeof ChartLegend>['content']
+>;
 
 const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
   (
@@ -390,9 +384,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
     // the side gutter. Passed to recharts' native `label` (themed via the
     // `.recharts-label` fill selector on the container).
-    const xAxisTitle = xAxisLabel
-      ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
-      : undefined;
+    const xAxisTitle = resolveXAxisTitle(xAxisLabel);
     // The secondary axis is derived from the series, not from a flag of its own:
     // that keeps a series from pointing at an id no axis declares, where recharts
     // falls back to an implicit axis — the series still scales off its own data, but
@@ -423,9 +415,10 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
     );
     // Horizontal puts the second scale on a top X axis, where a rotated title
     // would read sideways over the plot.
-    const secondaryXAxisTitle = secondaryYAxisLabel
-      ? { value: secondaryYAxisLabel, position: 'insideTop' as const, offset: 0 }
-      : undefined;
+    const secondaryXAxisTitle = resolveXAxisTitle(
+      secondaryYAxisLabel,
+      'insideTop'
+    );
 
     const yDomain = resolveAxisDomain(yAxisDomain);
     const secondaryYDomain = resolveAxisDomain(secondaryYAxisDomain);
@@ -445,13 +438,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       ? valueAxisBinding('secondary')
       : {};
 
-    // Room for the X tick row: recharts' default 30, plus a rotated tick row
-    // (+20) and/or the axis title (+18). Additive — both can be present at once,
-    // which the old label-or-angle ternary under-allocated.
-    const xAxisHeight =
-      xAxisLabel || xAxisAngle != null
-        ? 30 + (xAxisAngle != null ? 20 : 0) + (xAxisLabel ? 18 : 0)
-        : undefined;
+    const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
 
     const referenceLines = referenceLine
       ? Array.isArray(referenceLine)
@@ -576,6 +563,344 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       }
     });
 
+    // Everything from here to the `return` is lifted out of the returned tree
+    // only to keep it readable as a flat list of chart children. The `render*`
+    // helpers are plain functions, never components: recharts identifies its
+    // children by element type (`XAxis`, `Bar`, …), so a wrapper component would
+    // hide them from the chart.
+
+    // The two orientations stay two whole blocks rather than one parameterised
+    // axis pair: they swap which axis is `type="number"` and which carries the
+    // categories, and they differ in props recharts treats as present-but-
+    // undefined vs absent (see the `orientation` note below), which a shared
+    // element would have to reintroduce prop by prop anyway.
+
+    // Horizontal marks put the values on X, so the value-axis props
+    // (unit/tickCount/domain) belong on the X axis here — recharts ignores them
+    // on the category axis.
+    const renderHorizontalAxes = () => (
+      <>
+        <XAxis
+          type="number"
+          hide={!showXAxis || primaryValueAxisIsOrphaned}
+          tickLine={false}
+          axisLine={false}
+          unit={xUnit}
+          tickFormatter={xTickFormatter}
+          angle={xAxisAngle}
+          interval={xAxisInterval}
+          textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
+          tickCount={yAxisTickCount}
+          domain={yDomain}
+          height={xAxisHeight}
+          label={xAxisTitle}
+        />
+        <YAxis
+          dataKey={xKey}
+          type="category"
+          hide={!showYAxis}
+          // `yAxisOrientation` picks the side of the *value* axis, which
+          // is X here — a left/right choice it has no room for, and one
+          // the secondary axis already spends on the top edge. Moving the
+          // category axis with it instead would satisfy the prop name and
+          // break its contract, so it stays inert in this orientation.
+          tickLine={false}
+          axisLine={false}
+          tickFormatter={yTickFormatter}
+          width={yAxisLabel ? 96 : 80}
+          label={yAxisTitle}
+        />
+        {hasSecondaryValueAxis && (
+          <XAxis
+            xAxisId={SECONDARY_VALUE_AXIS_ID}
+            type="number"
+            hide={!showSecondaryYAxis}
+            orientation="top"
+            tickLine={false}
+            axisLine={false}
+            unit={secondaryYUnit}
+            tickFormatter={secondaryYTickFormatter}
+            tickCount={secondaryYAxisTickCount}
+            domain={secondaryYDomain}
+            label={secondaryXAxisTitle}
+          />
+        )}
+      </>
+    );
+
+    const renderVerticalAxes = () => (
+      <>
+        <XAxis
+          dataKey={xKey}
+          type="category"
+          hide={!showXAxis}
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          tickFormatter={xTickFormatter}
+          angle={xAxisAngle}
+          interval={xAxisInterval}
+          textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
+          height={xAxisHeight}
+          label={xAxisTitle}
+        />
+        <YAxis
+          type="number"
+          hide={!showYAxis || primaryValueAxisIsOrphaned}
+          // Spread only when set. `orientation={undefined}` would resolve to the
+          // same `left`, but the key's presence moves it ahead of `width` in the
+          // props object recharts spreads onto its tick labels — reordering the
+          // SVG attributes of every existing chart for no functional gain.
+          {...(yAxisOrientation ? { orientation: yAxisOrientation } : {})}
+          tickLine={false}
+          axisLine={false}
+          unit={yUnit}
+          tickFormatter={yTickFormatter}
+          tickCount={yAxisTickCount}
+          domain={yDomain}
+          width={yAxisLabel ? 72 : undefined}
+          label={yAxisTitle}
+        />
+        {hasSecondaryValueAxis && (
+          <YAxis
+            yAxisId={SECONDARY_VALUE_AXIS_ID}
+            type="number"
+            hide={!showSecondaryYAxis}
+            orientation={secondaryOrientation}
+            tickLine={false}
+            axisLine={false}
+            unit={secondaryYUnit}
+            tickFormatter={secondaryYTickFormatter}
+            tickCount={secondaryYAxisTickCount}
+            domain={secondaryYDomain}
+            width={secondaryYAxisLabel ? 72 : undefined}
+            label={secondaryYAxisTitle}
+          />
+        )}
+      </>
+    );
+
+    // recharts keeps a `legendType="none"` series in the legend payload (it only
+    // drops its icon), so hiding an entry is this filter's job — the same guard
+    // `BarChart` applies to its synthetic series. Only wired up when a series
+    // asks for it, so every other chart keeps the plain content element.
+    const legendContent: LegendContentType =
+      hiddenLegendKeys.size > 0
+        ? (legendProps) => (
+            <ChartLegendContent
+              verticalAlign={legendPosition}
+              payload={
+                legendProps.payload?.filter(
+                  (item) => !hiddenLegendKeys.has(String(item.dataKey))
+                ) as ChartLegendContentProps['payload']
+              }
+            />
+          )
+        : <ChartLegendContent verticalAlign={legendPosition} />;
+
+    const renderSeries = (s: ComposedSeries, index: number) => {
+      const color = s.color ?? `var(--color-${s.key})`;
+      const zIndex = SERIES_Z_INDEX_BASE + index;
+      const axisBinding = valueAxisBinding(s.yAxis);
+      const stackId =
+        s.stackId && s.type !== 'line' ? `${s.type}-${s.stackId}` : undefined;
+      const seriesFillOpacity = s.fillOpacity ?? fillOpacity;
+      const seriesConnectNulls = s.connectNulls ?? connectNulls;
+      const seriesShowDots = s.showDots ?? showDots;
+      const seriesShowActiveDots = s.showActiveDots ?? showActiveDots;
+      const seriesLegendType = s.legendType ? { legendType: s.legendType } : {};
+      // A stacked segment has no free space at its growing end (the next
+      // segment is drawn there), so its labels centre in their own
+      // segment instead.
+      const seriesLabelPosition = resolveCartesianLabelPosition({
+        labelPosition,
+        isStacked: stackId !== undefined,
+        growingEnd: isHorizontal ? 'right' : 'top',
+      });
+      const label = showLabels ? (
+        <LabelList
+          dataKey={s.key}
+          position={seriesLabelPosition}
+          formatter={toLabelFormatter(labelFormatter)}
+          className={resolveLabelFillClass(seriesLabelPosition, {
+            translucentSeries: s.type === 'area',
+          })}
+          fontSize={CHART_LABEL_FONT_SIZE}
+        />
+      ) : null;
+
+      if (s.type === 'bar') {
+        const radius = s.barRadius ?? barRadius;
+        const rounded =
+          stackId === undefined || lastIndexInStack.get(stackId) === index;
+        const barBackground = s.showBackground ?? showBackground;
+        // recharts spreads the active option over the bar's own props, so
+        // an explicit `undefined` fill would wipe the series color (an
+        // unfilled path paints black) — only dim it.
+        const barActive = s.showActiveBar ?? showActiveBar;
+        return (
+          <Bar
+            key={s.key}
+            dataKey={s.key}
+            {...axisBinding}
+            fill={color}
+            radius={
+              radius > 0 && rounded
+                ? isHorizontal
+                  ? [0, radius, radius, 0]
+                  : [radius, radius, 0, 0]
+                : undefined
+            }
+            zIndex={zIndex}
+            {...(stackId ? { stackId } : {})}
+            {...(s.barSize !== undefined ? { barSize: s.barSize } : {})}
+            {...(s.fillOpacity !== undefined
+              ? { fillOpacity: s.fillOpacity }
+              : {})}
+            // A bar has no outline of its own, so a dash pattern brings
+            // one with it — in the series colour, at the series' stroke
+            // width if it set one.
+            {...(s.strokeDasharray !== undefined
+              ? {
+                  stroke: color,
+                  strokeDasharray: s.strokeDasharray,
+                  ...(s.strokeWidth !== undefined
+                    ? { strokeWidth: s.strokeWidth }
+                    : {}),
+                }
+              : {})}
+            {...(barBackground ? { background: { fill: backgroundFill } } : {})}
+            {...(barActive
+              ? { activeBar: { fillOpacity: ACTIVE_BAR_FILL_OPACITY } }
+              : {})}
+            {...seriesLegendType}
+            {...animation}
+          >
+            {label}
+          </Bar>
+        );
+      }
+      if (s.type === 'area') {
+        const width = s.strokeWidth ?? strokeWidth;
+        const areaStrokeWidth =
+          width !== undefined ? { strokeWidth: width } : {};
+        return (
+          <Area
+            key={s.key}
+            type={s.curve ?? curve}
+            dataKey={s.key}
+            {...axisBinding}
+            stroke={color}
+            fill={color}
+            fillOpacity={seriesFillOpacity}
+            zIndex={zIndex}
+            {...(stackId ? { stackId } : {})}
+            // Areas keep recharts' own thinner outline unless a width is
+            // asked for: the chart-level default exists for the lines,
+            // where 2px is this suite's stroke.
+            {...areaStrokeWidth}
+            {...(s.strokeDasharray !== undefined
+              ? { strokeDasharray: s.strokeDasharray }
+              : {})}
+            dot={seriesShowDots ? { r: 3 } : false}
+            {...(seriesShowActiveDots !== undefined
+              ? { activeDot: seriesShowActiveDots ? { r: 5 } : false }
+              : {})}
+            connectNulls={seriesConnectNulls}
+            {...seriesLegendType}
+            {...animation}
+          >
+            {label}
+          </Area>
+        );
+      }
+      return (
+        <Line
+          key={s.key}
+          type={s.curve ?? curve}
+          dataKey={s.key}
+          {...axisBinding}
+          stroke={color}
+          strokeWidth={s.strokeWidth ?? strokeWidth ?? 2}
+          dot={seriesShowDots ? { r: 3 } : false}
+          zIndex={zIndex}
+          {...(s.strokeDasharray !== undefined
+            ? { strokeDasharray: s.strokeDasharray }
+            : {})}
+          {...(seriesShowActiveDots !== undefined
+            ? { activeDot: seriesShowActiveDots ? { r: 5 } : false }
+            : {})}
+          connectNulls={seriesConnectNulls}
+          {...seriesLegendType}
+          {...animation}
+        >
+          {label}
+        </Line>
+      );
+    };
+
+    const renderReferenceArea = (
+      { area, range }: (typeof referenceAreas)[number],
+      index: number
+    ) => {
+      const [start, end] = range;
+      return (
+        <ReferenceArea
+          key={`${area.label ?? 'area'}-${index}`}
+          {...orphanedAxisBinding}
+          // Bands run along the category axis: X by default, Y when the
+          // marks grow horizontally.
+          {...(isHorizontal
+            ? { y1: categoryAt(start), y2: categoryAt(end) }
+            : { x1: categoryAt(start), x2: categoryAt(end) })}
+          fill="var(--ui-background-surface-secondary)"
+          fillOpacity={0.6}
+          zIndex={REFERENCE_AREA_Z_INDEX}
+          ifOverflow="extendDomain"
+          label={
+            area.label
+              ? {
+                  value: area.label,
+                  position: 'insideTop',
+                  fill: 'var(--ui-text-on-surface-secondary)',
+                  fontSize: 12,
+                }
+              : undefined
+          }
+        />
+      );
+    };
+
+    const renderReferenceLine = (
+      {
+        line,
+        lineAxis,
+        position,
+        isVerticalRule,
+      }: (typeof resolvedReferenceLines)[number],
+      index: number
+    ) => (
+      <ReferenceLine
+        key={`${line.label ?? 'ref'}-${index}`}
+        // Binding to an id no axis declares makes recharts invent an
+        // implicit one (see `hasSecondaryValueAxis`), so the request is
+        // only honored once a series has brought that axis into being.
+        {...(lineAxis === 'secondary' && hasSecondaryValueAxis
+          ? valueAxisBinding('secondary')
+          : {})}
+        {...position}
+        // Caption at the top of the rule by default: above the right
+        // end of a horizontal one, above the top of a vertical one
+        // (which the plot margin reserves room for — see
+        // REFERENCE_LABEL_MARGIN). A config's own `labelPosition`
+        // overrides that, as on the other cartesian charts.
+        {...resolveReferenceLineProps(
+          line.label,
+          line.labelPosition ?? (isVerticalRule ? 'top' : 'insideTopRight')
+        )}
+      />
+    );
+
     return (
       <div
         ref={ref}
@@ -606,120 +931,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
                 strokeDasharray={gridDashed ? '3 3' : undefined}
               />
             )}
-            {isHorizontal ? (
-              <>
-                {/* Horizontal marks put the values on X, so the value-axis props
-                    (unit/tickCount/domain) belong here — recharts ignores them on
-                    the category axis. */}
-                <XAxis
-                  type="number"
-                  hide={!showXAxis || primaryValueAxisIsOrphaned}
-                  tickLine={false}
-                  axisLine={false}
-                  unit={xUnit}
-                  tickFormatter={xTickFormatter}
-                  angle={xAxisAngle}
-                  interval={xAxisInterval}
-                  textAnchor={
-                    xAxisAngle != null
-                      ? xAxisAngle < 0
-                        ? 'end'
-                        : 'start'
-                      : undefined
-                  }
-                  tickCount={yAxisTickCount}
-                  domain={yDomain}
-                  height={xAxisHeight}
-                  label={xAxisTitle}
-                />
-                <YAxis
-                  dataKey={xKey}
-                  type="category"
-                  hide={!showYAxis}
-                  // `yAxisOrientation` picks the side of the *value* axis, which
-                  // is X here — a left/right choice it has no room for, and one
-                  // the secondary axis already spends on the top edge. Moving the
-                  // category axis with it instead would satisfy the prop name and
-                  // break its contract, so it stays inert in this orientation.
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={yTickFormatter}
-                  width={yAxisLabel ? 96 : 80}
-                  label={yAxisTitle}
-                />
-                {hasSecondaryValueAxis && (
-                  <XAxis
-                    xAxisId={SECONDARY_VALUE_AXIS_ID}
-                    type="number"
-                    hide={!showSecondaryYAxis}
-                    orientation="top"
-                    tickLine={false}
-                    axisLine={false}
-                    unit={secondaryYUnit}
-                    tickFormatter={secondaryYTickFormatter}
-                    tickCount={secondaryYAxisTickCount}
-                    domain={secondaryYDomain}
-                    label={secondaryXAxisTitle}
-                  />
-                )}
-              </>
-            ) : (
-              <>
-                <XAxis
-                  dataKey={xKey}
-                  type="category"
-                  hide={!showXAxis}
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                  tickFormatter={xTickFormatter}
-                  angle={xAxisAngle}
-                  interval={xAxisInterval}
-                  textAnchor={
-                    xAxisAngle != null
-                      ? xAxisAngle < 0
-                        ? 'end'
-                        : 'start'
-                      : undefined
-                  }
-                  height={xAxisHeight}
-                  label={xAxisTitle}
-                />
-                <YAxis
-                  type="number"
-                  hide={!showYAxis || primaryValueAxisIsOrphaned}
-                  // Spread only when set. `orientation={undefined}` would resolve to the
-                  // same `left`, but the key's presence moves it ahead of `width` in the
-                  // props object recharts spreads onto its tick labels — reordering the
-                  // SVG attributes of every existing chart for no functional gain.
-                  {...(yAxisOrientation ? { orientation: yAxisOrientation } : {})}
-                  tickLine={false}
-                  axisLine={false}
-                  unit={yUnit}
-                  tickFormatter={yTickFormatter}
-                  tickCount={yAxisTickCount}
-                  domain={yDomain}
-                  width={yAxisLabel ? 72 : undefined}
-                  label={yAxisTitle}
-                />
-                {hasSecondaryValueAxis && (
-                  <YAxis
-                    yAxisId={SECONDARY_VALUE_AXIS_ID}
-                    type="number"
-                    hide={!showSecondaryYAxis}
-                    orientation={secondaryOrientation}
-                    tickLine={false}
-                    axisLine={false}
-                    unit={secondaryYUnit}
-                    tickFormatter={secondaryYTickFormatter}
-                    tickCount={secondaryYAxisTickCount}
-                    domain={secondaryYDomain}
-                    width={secondaryYAxisLabel ? 72 : undefined}
-                    label={secondaryYAxisTitle}
-                  />
-                )}
-              </>
-            )}
+            {isHorizontal ? renderHorizontalAxes() : renderVerticalAxes()}
             {showTooltip && (
               <ChartTooltip
                 {...(tooltipCursor ? {} : { cursor: false })}
@@ -729,230 +941,15 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
             {showLegend && (
               <ChartLegend
                 verticalAlign={legendPosition}
-                content={
-                  // recharts keeps a `legendType="none"` series in the legend
-                  // payload (it only drops its icon), so hiding an entry is this
-                  // filter's job — the same guard `BarChart` applies to its
-                  // synthetic series. Only wired up when a series asks for it, so
-                  // every other chart keeps the plain content element.
-                  hiddenLegendKeys.size > 0
-                    ? (legendProps) => (
-                        <ChartLegendContent
-                          verticalAlign={legendPosition}
-                          payload={
-                            legendProps.payload?.filter(
-                              (item) =>
-                                !hiddenLegendKeys.has(String(item.dataKey))
-                            ) as ChartLegendContentProps['payload']
-                          }
-                        />
-                      )
-                    : <ChartLegendContent verticalAlign={legendPosition} />
-                }
+                content={legendContent}
               />
             )}
             {/* Rendered back-to-front in the caller's `series` order — later
                 entries sit on top. Order them so thin marks (a line) come after
                 the areas/bars they should overlay. */}
-            {series.map((s, index) => {
-              const color = s.color ?? `var(--color-${s.key})`;
-              const zIndex = SERIES_Z_INDEX_BASE + index;
-              const axisBinding = valueAxisBinding(s.yAxis);
-              const stackId =
-                s.stackId && s.type !== 'line'
-                  ? `${s.type}-${s.stackId}`
-                  : undefined;
-              const seriesFillOpacity = s.fillOpacity ?? fillOpacity;
-              const seriesConnectNulls = s.connectNulls ?? connectNulls;
-              const seriesShowDots = s.showDots ?? showDots;
-              const seriesShowActiveDots = s.showActiveDots ?? showActiveDots;
-              const seriesLegendType = s.legendType
-                ? { legendType: s.legendType }
-                : {};
-              // A stacked segment has no free space at its growing end (the next
-              // segment is drawn there), so its labels centre in their own
-              // segment instead.
-              const seriesLabelPosition = resolveCartesianLabelPosition({
-                labelPosition,
-                isStacked: stackId !== undefined,
-                growingEnd: isHorizontal ? 'right' : 'top',
-              });
-              const label = showLabels ? (
-                <LabelList
-                  dataKey={s.key}
-                  position={seriesLabelPosition}
-                  formatter={toLabelFormatter(labelFormatter)}
-                  className={resolveLabelFillClass(seriesLabelPosition, {
-                    translucentSeries: s.type === 'area',
-                  })}
-                  fontSize={CHART_LABEL_FONT_SIZE}
-                />
-              ) : null;
-
-              if (s.type === 'bar') {
-                const radius = s.barRadius ?? barRadius;
-                const rounded =
-                  stackId === undefined ||
-                  lastIndexInStack.get(stackId) === index;
-                const barBackground = s.showBackground ?? showBackground;
-                // recharts spreads the active option over the bar's own props, so
-                // an explicit `undefined` fill would wipe the series color (an
-                // unfilled path paints black) — only dim it.
-                const barActive = s.showActiveBar ?? showActiveBar;
-                return (
-                  <Bar
-                    key={s.key}
-                    dataKey={s.key}
-                    {...axisBinding}
-                    fill={color}
-                    radius={
-                      radius > 0 && rounded
-                        ? isHorizontal
-                          ? [0, radius, radius, 0]
-                          : [radius, radius, 0, 0]
-                        : undefined
-                    }
-                    zIndex={zIndex}
-                    {...(stackId ? { stackId } : {})}
-                    {...(s.barSize !== undefined ? { barSize: s.barSize } : {})}
-                    {...(s.fillOpacity !== undefined
-                      ? { fillOpacity: s.fillOpacity }
-                      : {})}
-                    // A bar has no outline of its own, so a dash pattern brings
-                    // one with it — in the series colour, at the series' stroke
-                    // width if it set one.
-                    {...(s.strokeDasharray !== undefined
-                      ? {
-                          stroke: color,
-                          strokeDasharray: s.strokeDasharray,
-                          ...(s.strokeWidth !== undefined
-                            ? { strokeWidth: s.strokeWidth }
-                            : {}),
-                        }
-                      : {})}
-                    {...(barBackground
-                      ? { background: { fill: backgroundFill } }
-                      : {})}
-                    {...(barActive
-                      ? { activeBar: { fillOpacity: ACTIVE_BAR_FILL_OPACITY } }
-                      : {})}
-                    {...seriesLegendType}
-                    {...animation}
-                  >
-                    {label}
-                  </Bar>
-                );
-              }
-              if (s.type === 'area') {
-                const width = s.strokeWidth ?? strokeWidth;
-                const areaStrokeWidth =
-                  width !== undefined ? { strokeWidth: width } : {};
-                return (
-                  <Area
-                    key={s.key}
-                    type={s.curve ?? curve}
-                    dataKey={s.key}
-                    {...axisBinding}
-                    stroke={color}
-                    fill={color}
-                    fillOpacity={seriesFillOpacity}
-                    zIndex={zIndex}
-                    {...(stackId ? { stackId } : {})}
-                    // Areas keep recharts' own thinner outline unless a width is
-                    // asked for: the chart-level default exists for the lines,
-                    // where 2px is this suite's stroke.
-                    {...areaStrokeWidth}
-                    {...(s.strokeDasharray !== undefined
-                      ? { strokeDasharray: s.strokeDasharray }
-                      : {})}
-                    dot={seriesShowDots ? { r: 3 } : false}
-                    {...(seriesShowActiveDots !== undefined
-                      ? { activeDot: seriesShowActiveDots ? { r: 5 } : false }
-                      : {})}
-                    connectNulls={seriesConnectNulls}
-                    {...seriesLegendType}
-                    {...animation}
-                  >
-                    {label}
-                  </Area>
-                );
-              }
-              return (
-                <Line
-                  key={s.key}
-                  type={s.curve ?? curve}
-                  dataKey={s.key}
-                  {...axisBinding}
-                  stroke={color}
-                  strokeWidth={s.strokeWidth ?? strokeWidth ?? 2}
-                  dot={seriesShowDots ? { r: 3 } : false}
-                  zIndex={zIndex}
-                  {...(s.strokeDasharray !== undefined
-                    ? { strokeDasharray: s.strokeDasharray }
-                    : {})}
-                  {...(seriesShowActiveDots !== undefined
-                    ? { activeDot: seriesShowActiveDots ? { r: 5 } : false }
-                    : {})}
-                  connectNulls={seriesConnectNulls}
-                  {...seriesLegendType}
-                  {...animation}
-                >
-                  {label}
-                </Line>
-              );
-            })}
-            {referenceAreas.map(({ area, range }, index) => {
-              const [start, end] = range;
-              return (
-                <ReferenceArea
-                  key={`${area.label ?? 'area'}-${index}`}
-                  {...orphanedAxisBinding}
-                  // Bands run along the category axis: X by default, Y when the
-                  // marks grow horizontally.
-                  {...(isHorizontal
-                    ? { y1: categoryAt(start), y2: categoryAt(end) }
-                    : { x1: categoryAt(start), x2: categoryAt(end) })}
-                  fill="var(--ui-background-surface-secondary)"
-                  fillOpacity={0.6}
-                  zIndex={REFERENCE_AREA_Z_INDEX}
-                  ifOverflow="extendDomain"
-                  label={
-                    area.label
-                      ? {
-                          value: area.label,
-                          position: 'insideTop',
-                          fill: 'var(--ui-text-on-surface-secondary)',
-                          fontSize: 12,
-                        }
-                      : undefined
-                  }
-                />
-              );
-            })}
-            {resolvedReferenceLines.map(
-              ({ line, lineAxis, position, isVerticalRule }, index) => (
-                <ReferenceLine
-                  key={`${line.label ?? 'ref'}-${index}`}
-                  // Binding to an id no axis declares makes recharts invent an
-                  // implicit one (see `hasSecondaryValueAxis`), so the request is
-                  // only honored once a series has brought that axis into being.
-                  {...(lineAxis === 'secondary' && hasSecondaryValueAxis
-                    ? valueAxisBinding('secondary')
-                    : {})}
-                  {...position}
-                  // Caption at the top of the rule by default: above the right
-                  // end of a horizontal one, above the top of a vertical one
-                  // (which the plot margin reserves room for — see
-                  // REFERENCE_LABEL_MARGIN). A config's own `labelPosition`
-                  // overrides that, as on the other cartesian charts.
-                  {...resolveReferenceLineProps(
-                    line.label,
-                    line.labelPosition ??
-                      (isVerticalRule ? 'top' : 'insideTopRight')
-                  )}
-                />
-              )
-            )}
+            {series.map(renderSeries)}
+            {referenceAreas.map(renderReferenceArea)}
+            {resolvedReferenceLines.map(renderReferenceLine)}
             {showBrush && (
               <Brush
                 dataKey={xKey}

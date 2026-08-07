@@ -136,6 +136,74 @@ export interface MetricProps
   children?: React.ReactNode;
 }
 
+type MetricSize = keyof typeof BADGE_SIZE;
+type MetricStatus = keyof typeof STATUS_BADGE;
+
+/**
+ * The status-tinted icon chip beside the value.
+ *
+ * The icon is cloned rather than sized in CSS because icons-react icons pick
+ * their designed stroke weight from the `size` prop — scaling them with CSS
+ * would thin or thicken the stroke off-design.
+ */
+function MetricIconBadge({
+  icon,
+  size,
+  status,
+}: {
+  icon: React.ReactNode;
+  size: MetricSize;
+  status: MetricStatus;
+}) {
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        'flex shrink-0 items-center justify-center rounded-lg [&_svg]:shrink-0',
+        BADGE_SIZE[size],
+        STATUS_BADGE[status]
+      )}
+    >
+      {React.isValidElement(icon)
+        ? React.cloneElement(icon as React.ReactElement<{ size?: number }>, {
+            size: BADGE_ICON_PX[size],
+          })
+        : icon}
+    </span>
+  );
+}
+
+/** The headline number and its unit, sharing one baseline. */
+function MetricValue({
+  value,
+  unit,
+  size,
+}: {
+  value: React.ReactNode;
+  unit?: React.ReactNode;
+  size: MetricSize;
+}) {
+  return (
+    <>
+      <span
+        className={cn(
+          'font-bold leading-none tabular-nums text-foreground',
+          VALUE_SIZE[size]
+        )}
+      >
+        {value}
+      </span>
+      {unit != null && (
+        <span
+          className={cn('font-medium text-muted-foreground', UNIT_SIZE[size])}
+        >
+          {unit}
+        </span>
+      )}
+    </>
+  );
+}
+
 const Metric = React.forwardRef<HTMLDivElement, MetricProps>(
   (
     {
@@ -200,46 +268,17 @@ const Metric = React.forwardRef<HTMLDivElement, MetricProps>(
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2">
             {icon != null && (
-              <span
-                aria-hidden
-                className={cn(
-                  'flex shrink-0 items-center justify-center rounded-lg [&_svg]:shrink-0',
-                  BADGE_SIZE[resolvedSize],
-                  STATUS_BADGE[resolvedStatus]
-                )}
-              >
-                {React.isValidElement(icon)
-                  ? React.cloneElement(
-                      icon as React.ReactElement<{ size?: number }>,
-                      { size: BADGE_ICON_PX[resolvedSize] }
-                    )
-                  : icon}
-              </span>
+              <MetricIconBadge
+                icon={icon}
+                size={resolvedSize}
+                status={resolvedStatus}
+              />
             )}
             <div className="flex min-w-0 items-baseline gap-1">
               {loading ? (
                 <Skeleton className={SKELETON_SIZE[resolvedSize]} />
               ) : (
-                <>
-                  <span
-                    className={cn(
-                      'font-bold leading-none tabular-nums text-foreground',
-                      VALUE_SIZE[resolvedSize]
-                    )}
-                  >
-                    {value}
-                  </span>
-                  {unit != null && (
-                    <span
-                      className={cn(
-                        'font-medium text-muted-foreground',
-                        UNIT_SIZE[resolvedSize]
-                      )}
-                    >
-                      {unit}
-                    </span>
-                  )}
-                </>
+                <MetricValue value={value} unit={unit} size={resolvedSize} />
               )}
               {badge != null && <span className="ms-1 self-center">{badge}</span>}
             </div>

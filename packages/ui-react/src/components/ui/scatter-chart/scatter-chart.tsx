@@ -17,8 +17,12 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-  resolveAxisDomain,
   resolveAnimation,
+  resolveAxisDomain,
+  resolveRotatedTickAnchor,
+  resolveXAxisHeight,
+  resolveXAxisTitle,
+  resolveYAxisTitle,
   type ChartConfig,
   type CartesianChartProps,
   type ChartAnimationProps,
@@ -123,27 +127,16 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
     // the left gutter. Passed to recharts' native `label` (themed via the
     // `.recharts-label` fill selector on the container).
-    const xAxisTitle = xAxisLabel
-      ? { value: xAxisLabel, position: 'insideBottom' as const, offset: -8 }
-      : undefined;
-    const yAxisTitle = yAxisLabel
-      ? {
-          value: yAxisLabel,
-          angle: -90,
-          position: 'insideLeft' as const,
-          style: { textAnchor: 'middle' as const },
-        }
-      : undefined;
+    const xAxisTitle = resolveXAxisTitle(
+      xAxisLabel,
+      'insideBottom',
+      -8
+    );
+    const yAxisTitle = resolveYAxisTitle(yAxisLabel);
 
     const yDomain = resolveAxisDomain(yAxisDomain);
 
-    // Room for the X tick row: recharts' default 30, plus a rotated tick row
-    // (+20) and/or the axis title (+18). Additive — both can be present at once,
-    // which the old label-or-angle ternary under-allocated.
-    const xAxisHeight =
-      xAxisLabel || xAxisAngle != null
-        ? 30 + (xAxisAngle != null ? 20 : 0) + (xAxisLabel ? 18 : 0)
-        : undefined;
+    const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
 
     return (
       <div ref={ref} className={cn(className)} {...props}>
@@ -173,9 +166,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
               tickFormatter={xTickFormatter}
               angle={xAxisAngle}
               interval={xAxisInterval}
-              textAnchor={
-                xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
-              }
+              textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
               height={xAxisHeight}
               label={xAxisTitle}
             />

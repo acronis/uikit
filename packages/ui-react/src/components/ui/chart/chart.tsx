@@ -212,6 +212,84 @@ export type ChartTooltipContentType = React.ComponentProps<
   typeof ChartTooltip
 >['content'];
 
+/**
+ * What `getPayloadConfigFromPayload` resolves a payload item to — the lookup can
+ * miss, so every consumer has to cope with `undefined`. Derived from the helper
+ * rather than restated, so the two can't drift.
+ */
+type ChartItemConfig = ReturnType<typeof getPayloadConfigFromPayload>;
+
+/** One row of the tooltip's payload, after the `active`/empty guard. */
+type ChartTooltipItem = NonNullable<
+  ChartTooltipContentProps['payload']
+>[number];
+
+/**
+ * One tooltip row. Its own three-way branching (caller formatter, config icon,
+ * default dot) is what drove the nesting in `ChartTooltipContent`; as a
+ * component the map body reads as a single element.
+ */
+function ChartTooltipRow({
+  item,
+  index,
+  payload,
+  itemConfig,
+  indicatorColor,
+  hideIndicator,
+  formatter,
+}: {
+  item: ChartTooltipItem;
+  index: number;
+  payload: NonNullable<ChartTooltipContentProps['payload']>;
+  itemConfig: ChartItemConfig;
+  indicatorColor?: string;
+  hideIndicator: boolean;
+  formatter: ChartTooltipContentProps['formatter'];
+}) {
+  return (
+    <div className="flex w-full flex-wrap items-center gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground">
+      {formatter && item?.value !== undefined && item.name ? (
+        formatter(item.value, item.name, item, index, payload)
+      ) : (
+        <>
+          {itemConfig?.icon ? (
+            <itemConfig.icon />
+          ) : (
+            !hideIndicator && (
+              // A row is always dotted, whatever marker the legend
+              // gives that series.
+              <div
+                className="h-2.5 w-2.5 shrink-0 rounded-full"
+                style={{ backgroundColor: indicatorColor }}
+              />
+            )
+          )}
+          {/*
+           * `gap-4` puts a floor under the name/value separation.
+           * `justify-between` alone only separates them while the
+           * container has free space to distribute — which the tooltip's
+           * `min-w-[8rem]` guarantees for a short value and not for a
+           * long one (a currency `tickFormatter`, a `labelFormatter`
+           * with units, a value plus its share), where the two would
+           * otherwise butt up against each other. A minimum, so a row
+           * with slack renders as before.
+           */}
+          <div className="flex flex-1 items-center justify-between gap-4 leading-none">
+            <span className="text-muted-foreground">
+              {itemConfig?.label || item.name}
+            </span>
+            {item.value != null && (
+              <span className="font-medium tabular-nums text-foreground">
+                {item.value.toLocaleString()}
+              </span>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function ChartTooltipContent({
   active,
   payload,
@@ -283,53 +361,18 @@ function ChartTooltipContent({
       <div className="grid gap-1.5">
         {payload.map((item, index) => {
           const key = `${nameKey || item.name || item.dataKey || 'value'}`;
-          const itemConfig = getPayloadConfigFromPayload(config, item, key);
-          const indicatorColor = color || item.payload.fill || item.color;
 
           return (
-            <div
+            <ChartTooltipRow
               key={key}
-              className="flex w-full flex-wrap items-center gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground"
-            >
-              {formatter && item?.value !== undefined && item.name ? (
-                formatter(item.value, item.name, item, index, payload)
-              ) : (
-                <>
-                  {itemConfig?.icon ? (
-                    <itemConfig.icon />
-                  ) : (
-                    !hideIndicator && (
-                      // A row is always dotted, whatever marker the legend
-                      // gives that series.
-                      <div
-                        className="h-2.5 w-2.5 shrink-0 rounded-full"
-                        style={{ backgroundColor: indicatorColor }}
-                      />
-                    )
-                  )}
-                  {/*
-                   * `gap-4` puts a floor under the name/value separation.
-                   * `justify-between` alone only separates them while the
-                   * container has free space to distribute — which the tooltip's
-                   * `min-w-[8rem]` guarantees for a short value and not for a
-                   * long one (a currency `tickFormatter`, a `labelFormatter`
-                   * with units, a value plus its share), where the two would
-                   * otherwise butt up against each other. A minimum, so a row
-                   * with slack renders as before.
-                   */}
-                  <div className="flex flex-1 items-center justify-between gap-4 leading-none">
-                    <span className="text-muted-foreground">
-                      {itemConfig?.label || item.name}
-                    </span>
-                    {item.value != null && (
-                      <span className="font-medium tabular-nums text-foreground">
-                        {item.value.toLocaleString()}
-                      </span>
-                    )}
-                  </div>
-                </>
-              )}
-            </div>
+              item={item}
+              index={index}
+              payload={payload}
+              itemConfig={getPayloadConfigFromPayload(config, item, key)}
+              indicatorColor={color || item.payload.fill || item.color}
+              hideIndicator={hideIndicator}
+              formatter={formatter}
+            />
           );
         })}
       </div>
@@ -338,6 +381,51 @@ function ChartTooltipContent({
 }
 
 const ChartLegend = RechartsPrimitive.Legend;
+
+/**
+ * One legend entry. Split out so the marker it has to derive from the payload
+ * sits next to the markup that uses it, instead of above a nested map body.
+ */
+function ChartLegendEntry({
+  item,
+  itemConfig,
+  hideIcon,
+}: {
+  item: LegendPayload;
+  itemConfig: ChartItemConfig;
+  hideIcon: boolean;
+}) {
+  // recharts types stroke-drawn series (<Line>, <Area>) as `line`; a chart
+  // that wants a swatch instead sets the series' `legendType="rect"`.
+  const dashArray = (
+    item.payload as { strokeDasharray?: string | number } | undefined
+  )?.strokeDasharray;
+  const marker: ChartSeriesMarker =
+    item.type !== 'line' ? 'swatch' : dashArray ? 'dashed' : 'line';
+
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground'
+      )}
+    >
+      {itemConfig?.icon && !hideIcon ? (
+        <itemConfig.icon />
+      ) : (
+        <SeriesMarker marker={marker} color={item.color} />
+      )}
+      {/*
+       * Falls back to the series key, the way the tooltip row and the
+       * treemap's on-cell label both do. `label` is optional on a
+       * `ChartConfig` entry, and `getPayloadConfigFromPayload` can miss
+       * entirely, so without this an entry renders as a marker with no
+       * text — worst on the charts whose legend is the only place a series
+       * is named.
+       */}
+      {itemConfig?.label ?? item.value}
+    </div>
+  );
+}
 
 function ChartLegendContent({
   className,
@@ -380,37 +468,14 @@ function ChartLegendContent({
     >
       {payload.map((item) => {
         const key = `${nameKey || item.dataKey || 'value'}`;
-        const itemConfig = getPayloadConfigFromPayload(config, item, key);
-        // recharts types stroke-drawn series (<Line>, <Area>) as `line`; a chart
-        // that wants a swatch instead sets the series' `legendType="rect"`.
-        const dashArray = (
-          item.payload as { strokeDasharray?: string | number } | undefined
-        )?.strokeDasharray;
-        const marker: ChartSeriesMarker =
-          item.type !== 'line' ? 'swatch' : dashArray ? 'dashed' : 'line';
 
         return (
-          <div
+          <ChartLegendEntry
             key={item.value}
-            className={cn(
-              'flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground'
-            )}
-          >
-            {itemConfig?.icon && !hideIcon ? (
-              <itemConfig.icon />
-            ) : (
-              <SeriesMarker marker={marker} color={item.color} />
-            )}
-            {/*
-             * Falls back to the series key, the way the tooltip row and the
-             * treemap's on-cell label both do. `label` is optional on a
-             * `ChartConfig` entry, and `getPayloadConfigFromPayload` can miss
-             * entirely, so without this an entry renders as a marker with no
-             * text — worst on the charts whose legend is the only place a series
-             * is named.
-             */}
-            {itemConfig?.label ?? item.value}
-          </div>
+            item={item}
+            itemConfig={getPayloadConfigFromPayload(config, item, key)}
+            hideIcon={hideIcon}
+          />
         );
       })}
     </div>

@@ -21,22 +21,26 @@ import type { BarShapeProps } from 'recharts/types/cartesian/Bar';
 
 import { cn } from '@/lib/utils';
 import {
+  CHART_LABEL_FONT_SIZE,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-  resolveAxisDomain,
   resolveAnimation,
+  resolveAxisDomain,
   resolveBrushProps,
-  resolveCategoryRange,
-  toLabelFormatter,
-  resolveLabelFillClass,
   resolveCartesianLabelPosition,
+  resolveCategoryRange,
   resolveChartReferenceValue,
+  resolveLabelFillClass,
   resolveReferenceLineProps,
+  resolveRotatedTickAnchor,
+  resolveXAxisHeight,
+  resolveXAxisTitle,
+  resolveYAxisTitle,
+  toLabelFormatter,
   toReferenceLineList,
-  CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartReferenceLine,
   type ChartLegendContentProps,
@@ -322,6 +326,39 @@ export function createTrackShape({
 }
 
 /**
+ * The `shape` / `activeBar` pair one series' `<Bar>` is given.
+ *
+ * They resolve together because recharts swaps a custom `shape` out for the
+ * `activeBar` option while a bar is hovered: a range-scoped track has to be
+ * redrawn by the active option too, or the track blinks out under the cursor.
+ */
+function resolveBarShapes({
+  rangeBackground,
+  inRange,
+  trackFill,
+  activeBarOption,
+}: {
+  /**
+   * recharts takes one `background` per series, so a range-scoped one is drawn
+   * per row by a custom shape instead: hidden where it doesn't apply.
+   */
+  rangeBackground: boolean;
+  inRange: (row: number) => boolean;
+  trackFill: string;
+  activeBarOption: BarPaintOverride | false;
+}) {
+  if (!rangeBackground) {
+    return { shape: undefined, activeBar: activeBarOption };
+  }
+  return {
+    shape: createTrackShape({ inRange, trackFill }),
+    activeBar: activeBarOption
+      ? createTrackShape({ inRange, trackFill, paint: activeBarOption })
+      : activeBarOption,
+  };
+}
+
+/**
  * Draw a highlight band plus a dashed rule on its leading edge: the left edge
  * for vertical bars (the category axis runs along X), the top edge otherwise.
  *
@@ -366,6 +403,40 @@ function renderBandWithDivider({
       />
     </>
   );
+}
+
+/**
+ * The `<ReferenceArea shape>` for a band, or `undefined` so recharts draws its
+ * own rect. A custom shape is only needed for the leading-edge rule: a
+ * `ReferenceLine` would sit on the tick's centre, and only the band knows where
+ * its own edge is.
+ */
+function resolveBandShape({
+  divider,
+  vertical,
+}: {
+  divider: boolean | undefined;
+  vertical: boolean;
+}) {
+  if (!divider) return undefined;
+  return (band: { x?: number; y?: number; width?: number; height?: number }) =>
+    renderBandWithDivider({ band, vertical });
+}
+
+/**
+ * A band's caption as recharts' native `label`. `'insideTop'` is asserted
+ * because, read outside the JSX attribute, it would widen to `string` and stop
+ * matching recharts' `Position` union.
+ */
+function resolveBandLabel(label: string | undefined) {
+  return label
+    ? {
+        value: label,
+        position: 'insideTop' as const,
+        fill: 'var(--ui-text-on-surface-secondary)',
+        fontSize: 12,
+      }
+    : undefined;
 }
 
 /**
@@ -832,27 +903,12 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
     // the left gutter. Passed to recharts' native `label` (themed via the
     // `.recharts-label` fill selector on the container).
-    const xAxisTitle = xAxisLabel
-      ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
-      : undefined;
-    const yAxisTitle = yAxisLabel
-      ? {
-          value: yAxisLabel,
-          angle: -90,
-          position: 'insideLeft' as const,
-          style: { textAnchor: 'middle' as const },
-        }
-      : undefined;
+    const xAxisTitle = resolveXAxisTitle(xAxisLabel);
+    const yAxisTitle = resolveYAxisTitle(yAxisLabel);
 
     const yDomain = resolveAxisDomain(yAxisDomain);
 
-    // Room for the X tick row: recharts' default 30, plus a rotated tick row
-    // (+20) and/or the axis title (+18). Additive — both can be present at once,
-    // which the old label-or-angle ternary under-allocated.
-    const xAxisHeight =
-      xAxisLabel || xAxisAngle != null
-        ? 30 + (xAxisAngle != null ? 20 : 0) + (xAxisLabel ? 18 : 0)
-        : undefined;
+    const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
 
     // Round only the growing end: top for vertical bars, right for horizontal.
     const endRadius: [number, number, number, number] =
@@ -867,6 +923,212 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         : barRadius > 0 && rounded
           ? endRadius
           : undefined;
+
+    // Both take the normalization unconditionally: gating it on "is a
+    // headroom/paint-server series in play" is what let the legend's ordering
+    // drift between otherwise identical charts. The helpers are no-ops when
+    // there is nothing to strip or recolor.
+    const tooltipElement = (
+      <NormalizedTooltipContent content={tooltipContent} dataKeys={dataKeys} />
+    );
+    const legendElement = <NormalizedLegendContent dataKeys={dataKeys} />;
+
+    // The long chart children are lifted into these renderers so the returned
+    // tree reads as a flat list. They are plain functions, not components:
+    // recharts looks some of its children up by element type (see `rangeCells`
+    // above), so what they return has to stay a *direct* child — an array or a
+    // fragment is flattened, a component wrapper would not be.
+
+    // `orientation` decides which axis is numeric, and with it which axis the
+    // value props (unit/tickCount/domain) and the category props (dataKey/tick)
+    // belong to — recharts ignores each set on the other axis. Both branches
+    // stay spelled out because what differs is the prop *set*, not a couple of
+    // values: folding them into one shared props object would trade a readable
+    // fork for a merge whose per-axis prop list has to be re-derived by eye.
+    const renderAxes = () =>
+      orientation === 'horizontal' ? (
+        <>
+          {/* Horizontal bars put the values on X, so the value-axis props
+              (tickCount/domain) belong here — recharts ignores both on the
+              category axis. */}
+          <XAxis
+            type="number"
+            hide={!showXAxis}
+            tickLine={false}
+            axisLine={false}
+            unit={xUnit}
+            tickFormatter={xTickFormatter}
+            angle={xAxisAngle}
+            interval={xAxisInterval}
+            textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
+            tickCount={yAxisTickCount}
+            domain={yDomain}
+            height={xAxisHeight}
+            label={xAxisTitle}
+          />
+          <YAxis
+            dataKey={xKey}
+            type="category"
+            hide={!showYAxis}
+            tickLine={false}
+            axisLine={false}
+            tick={categoryTick}
+            tickFormatter={yTickFormatter}
+            width={yAxisLabel ? 96 : 80}
+            label={yAxisTitle}
+          />
+        </>
+      ) : (
+        <>
+          <XAxis
+            dataKey={xKey}
+            type="category"
+            hide={!showXAxis}
+            tickLine={false}
+            axisLine={false}
+            tick={categoryTick}
+            tickFormatter={xTickFormatter}
+            angle={xAxisAngle}
+            interval={xAxisInterval}
+            textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
+            height={xAxisHeight}
+            label={xAxisTitle}
+          />
+          <YAxis
+            type="number"
+            hide={!showYAxis}
+            tickLine={false}
+            axisLine={false}
+            unit={yUnit}
+            tickFormatter={yTickFormatter}
+            tickCount={yAxisTickCount}
+            domain={yDomain}
+            width={yAxisLabel ? 72 : undefined}
+            label={yAxisTitle}
+          />
+        </>
+      );
+
+    const renderSeries = () =>
+      dataKeys.map((key, index) => {
+        // In a stack only the last segment's end is rounded; grouped bars
+        // each round their own end.
+        const rounded = isStacked ? index === dataKeys.length - 1 : true;
+        const entry = settingsByKey.get(key);
+        const inRange = (row: number) =>
+          entry !== undefined && row >= entry.range[0] && row <= entry.range[1];
+        const headroomKey = headroomKeys.get(key);
+        const { shape, activeBar: activeBarShape } = resolveBarShapes({
+          rangeBackground: entry?.settings.background === true,
+          inRange,
+          trackFill: backgroundFill,
+          activeBarOption,
+        });
+        const cells =
+          entry &&
+          rangeCells({
+            data,
+            chartData,
+            xKey,
+            seriesKey: key,
+            settings: entry.settings,
+            range: entry.range,
+            headroomKey,
+            barShape,
+            rounded,
+            fillOf,
+            radiusFor,
+          });
+        const labels = showLabels && (
+          <LabelList
+            dataKey={key}
+            position={barLabelPosition}
+            formatter={toLabelFormatter(labelFormatter)}
+            className={resolveLabelFillClass(barLabelPosition)}
+            fontSize={CHART_LABEL_FONT_SIZE}
+          />
+        );
+        return (
+          <React.Fragment key={key}>
+            <Bar
+              dataKey={key}
+              fill={fillOf(key, barShape)}
+              // Its own stack, so the headroom sits on this series' bar
+              // while the series stay side by side.
+              stackId={isStacked ? 'a' : headroomKey ? key : undefined}
+              radius={radiusFor(barShape, rounded)}
+              minPointSize={minPointSizeFor(key)}
+              background={showBackground ? { fill: backgroundFill } : undefined}
+              shape={shape}
+              activeBar={activeBarShape}
+              {...animation}
+            >
+              {cells}
+              {labels}
+            </Bar>
+            {headroomKey && (
+              <Bar
+                dataKey={`${HEADROOM_FIELD_PREFIX}${key}`}
+                stackId={key}
+                fill={`var(--color-${key})`}
+                fillOpacity={0.25}
+                radius={radiusFor(barShape, true)}
+                // Decoration for the bar below it — never its own row in the
+                // tooltip or entry in the legend.
+                legendType="none"
+                tooltipType="none"
+                {...animation}
+              />
+            )}
+          </React.Fragment>
+        );
+      });
+
+    const renderReferenceAreas = () =>
+      referenceAreas.map(({ area, range }, index) => {
+        const [start, end] = range;
+        // Bands run along the category axis: X for vertical bars, Y for
+        // horizontal ones.
+        const bounds =
+          orientation === 'horizontal'
+            ? { y1: data[start]?.[xKey], y2: data[end]?.[xKey] }
+            : { x1: data[start]?.[xKey], x2: data[end]?.[xKey] };
+        return (
+          <ReferenceArea
+            key={`${area.label ?? 'area'}-${index}`}
+            {...bounds}
+            fill="var(--ui-background-surface-secondary)"
+            fillOpacity={0.6}
+            ifOverflow="extendDomain"
+            shape={resolveBandShape({
+              divider: area.divider,
+              vertical: orientation !== 'horizontal',
+            })}
+            label={resolveBandLabel(area.label)}
+          />
+        );
+      });
+
+    const renderReferenceLines = () =>
+      referenceLines.map((ref, index) => {
+        const value = resolveChartReferenceValue(ref, data, dataKeys);
+        if (value === undefined) return null;
+        return (
+          <ReferenceLine
+            key={`${ref.label ?? 'ref'}-${index}`}
+            // Draw on the value axis: Y for vertical bars, X for horizontal.
+            {...(orientation === 'horizontal' ? { x: value } : { y: value })}
+            // By default the caption sits at the top of the line: above the
+            // right end of a horizontal line (vertical bars), or above the
+            // top of a vertical line (horizontal bars).
+            {...resolveReferenceLineProps(
+              ref.label,
+              ref.labelPosition ??
+                (orientation === 'horizontal' ? 'top' : 'insideTopRight')
+            )}
+          />
+        );
+      });
 
     return (
       <div
@@ -901,246 +1163,12 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                 strokeDasharray={gridDashed ? '3 3' : undefined}
               />
             )}
-            {orientation === 'horizontal' ? (
-              <>
-                {/* Horizontal bars put the values on X, so the value-axis
-                    props (tickCount/domain) belong here — recharts ignores both
-                    on the category axis. */}
-                <XAxis
-                  type="number"
-                  hide={!showXAxis}
-                  tickLine={false}
-                  axisLine={false}
-                  unit={xUnit}
-                  tickFormatter={xTickFormatter}
-                  angle={xAxisAngle}
-                  interval={xAxisInterval}
-                  textAnchor={
-                    xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
-                  }
-                  tickCount={yAxisTickCount}
-                  domain={yDomain}
-                  height={xAxisHeight}
-                  label={xAxisTitle}
-                />
-                <YAxis
-                  dataKey={xKey}
-                  type="category"
-                  hide={!showYAxis}
-                  tickLine={false}
-                  axisLine={false}
-                  tick={categoryTick}
-                  tickFormatter={yTickFormatter}
-                  width={yAxisLabel ? 96 : 80}
-                  label={yAxisTitle}
-                />
-              </>
-            ) : (
-              <>
-                <XAxis
-                  dataKey={xKey}
-                  type="category"
-                  hide={!showXAxis}
-                  tickLine={false}
-                  axisLine={false}
-                  tick={categoryTick}
-                  tickFormatter={xTickFormatter}
-                  angle={xAxisAngle}
-                  interval={xAxisInterval}
-                  textAnchor={
-                    xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
-                  }
-                  height={xAxisHeight}
-                  label={xAxisTitle}
-                />
-                <YAxis
-                  type="number"
-                  hide={!showYAxis}
-                  tickLine={false}
-                  axisLine={false}
-                  unit={yUnit}
-                  tickFormatter={yTickFormatter}
-                  tickCount={yAxisTickCount}
-                  domain={yDomain}
-                  width={yAxisLabel ? 72 : undefined}
-                  label={yAxisTitle}
-                />
-              </>
-            )}
-            {/* Both take the normalization unconditionally: gating it on
-                "is a headroom/paint-server series in play" is what let the
-                legend's ordering drift between otherwise identical charts. The
-                helpers are no-ops when there is nothing to strip or recolor. */}
-            {showTooltip && (
-              <ChartTooltip
-                content={
-                  <NormalizedTooltipContent
-                    content={tooltipContent}
-                    dataKeys={dataKeys}
-                  />
-                }
-              />
-            )}
-            {showLegend && (
-              <ChartLegend
-                content={<NormalizedLegendContent dataKeys={dataKeys} />}
-              />
-            )}
-            {dataKeys.map((key, index) => {
-              // In a stack only the last segment's end is rounded; grouped bars
-              // each round their own end.
-              const rounded = isStacked ? index === dataKeys.length - 1 : true;
-              const entry = settingsByKey.get(key);
-              const inRange = (row: number) =>
-                entry !== undefined &&
-                row >= entry.range[0] &&
-                row <= entry.range[1];
-              // recharts takes one `background` per series, so a range-scoped
-              // one is drawn per row: hidden where it doesn't apply.
-              const rangeBackground = entry?.settings.background === true;
-              const headroomKey = headroomKeys.get(key);
-              return (
-                <React.Fragment key={key}>
-                <Bar
-                  dataKey={key}
-                  fill={fillOf(key, barShape)}
-                  // Its own stack, so the headroom sits on this series' bar
-                  // while the series stay side by side.
-                  stackId={isStacked ? 'a' : headroomKey ? key : undefined}
-                  radius={radiusFor(barShape, rounded)}
-                  minPointSize={minPointSizeFor(key)}
-                  background={
-                    showBackground ? { fill: backgroundFill } : undefined
-                  }
-                  shape={
-                    rangeBackground
-                      ? createTrackShape({
-                          inRange,
-                          trackFill: backgroundFill,
-                        })
-                      : undefined
-                  }
-                  // A range-scoped track has to be redrawn by the active option
-                  // too, or the track blinks out while its bar is hovered.
-                  activeBar={
-                    rangeBackground && activeBarOption
-                      ? createTrackShape({
-                          inRange,
-                          trackFill: backgroundFill,
-                          paint: activeBarOption,
-                        })
-                      : activeBarOption
-                  }
-                  {...animation}
-                >
-                  {entry &&
-                    rangeCells({
-                      data,
-                      chartData,
-                      xKey,
-                      seriesKey: key,
-                      settings: entry.settings,
-                      range: entry.range,
-                      headroomKey,
-                      barShape,
-                      rounded,
-                      fillOf,
-                      radiusFor,
-                    })}
-                  {showLabels && (
-                    <LabelList
-                      dataKey={key}
-                      position={barLabelPosition}
-                      formatter={toLabelFormatter(labelFormatter)}
-                      className={resolveLabelFillClass(barLabelPosition)}
-                      fontSize={CHART_LABEL_FONT_SIZE}
-                    />
-                  )}
-                </Bar>
-                {headroomKey && (
-                  <Bar
-                    dataKey={`${HEADROOM_FIELD_PREFIX}${key}`}
-                    stackId={key}
-                    fill={`var(--color-${key})`}
-                    fillOpacity={0.25}
-                    radius={radiusFor(barShape, true)}
-                    // Decoration for the bar below it — never its own row in the
-                    // tooltip or entry in the legend.
-                    legendType="none"
-                    tooltipType="none"
-                    {...animation}
-                  />
-                )}
-                </React.Fragment>
-              );
-            })}
-            {referenceAreas.map(({ area, range }, index) => {
-              const [start, end] = range;
-              return (
-                <ReferenceArea
-                  key={`${area.label ?? 'area'}-${index}`}
-                  // Bands run along the category axis: X for vertical bars, Y
-                  // for horizontal ones.
-                  {...(orientation === 'horizontal'
-                    ? {
-                        y1: data[start]?.[xKey],
-                        y2: data[end]?.[xKey],
-                      }
-                    : {
-                        x1: data[start]?.[xKey],
-                        x2: data[end]?.[xKey],
-                      })}
-                  fill="var(--ui-background-surface-secondary)"
-                  fillOpacity={0.6}
-                  ifOverflow="extendDomain"
-                  // A ReferenceLine would sit on the tick's centre; the rule
-                  // belongs on the band's edge, which only the band knows.
-                  shape={
-                    area.divider
-                      ? (bandProps: {
-                          x?: number;
-                          y?: number;
-                          width?: number;
-                          height?: number;
-                        }) =>
-                          renderBandWithDivider({
-                            band: bandProps,
-                            vertical: orientation !== 'horizontal',
-                          })
-                      : undefined
-                  }
-                  label={
-                    area.label
-                      ? {
-                          value: area.label,
-                          position: 'insideTop',
-                          fill: 'var(--ui-text-on-surface-secondary)',
-                          fontSize: 12,
-                        }
-                      : undefined
-                  }
-                />
-              );
-            })}
-            {referenceLines.map((ref, index) => {
-              const value = resolveChartReferenceValue(ref, data, dataKeys);
-              if (value === undefined) return null;
-              return (
-                <ReferenceLine
-                  key={`${ref.label ?? 'ref'}-${index}`}
-                  // Draw on the value axis: Y for vertical bars, X for horizontal.
-                  {...(orientation === 'horizontal' ? { x: value } : { y: value })}
-                  // By default the caption sits at the top of the line: above the
-                  // right end of a horizontal line (vertical bars), or above the
-                  // top of a vertical line (horizontal bars).
-                  {...resolveReferenceLineProps(
-                    ref.label,
-                    ref.labelPosition ??
-                      (orientation === 'horizontal' ? 'top' : 'insideTopRight')
-                  )}
-                />
-              );
-            })}
+            {renderAxes()}
+            {showTooltip && <ChartTooltip content={tooltipElement} />}
+            {showLegend && <ChartLegend content={legendElement} />}
+            {renderSeries()}
+            {renderReferenceAreas()}
+            {renderReferenceLines()}
             {showBrush && (
               <Brush
                 dataKey={xKey}

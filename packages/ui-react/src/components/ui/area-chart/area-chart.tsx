@@ -15,22 +15,26 @@ import {
 
 import { cn } from '@/lib/utils';
 import {
+  CHART_LABEL_FONT_SIZE,
+  CHART_LABEL_MARGIN,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-  resolveAxisDomain,
   resolveAnimation,
+  resolveAxisDomain,
   resolveBrushProps,
-  toLabelFormatter,
-  resolveLabelFillClass,
   resolveCartesianLabelPosition,
   resolveChartReferenceValue,
+  resolveLabelFillClass,
   resolveReferenceLineProps,
+  resolveRotatedTickAnchor,
+  resolveXAxisHeight,
+  resolveXAxisTitle,
+  resolveYAxisTitle,
+  toLabelFormatter,
   toReferenceLineList,
-  CHART_LABEL_MARGIN,
-  CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type CartesianChartProps,
   type ChartAnimationProps,
@@ -150,6 +154,41 @@ export interface AreaChartProps
   labelPosition?: CartesianLabelPosition;
 }
 
+/**
+ * One top-to-bottom fade per series, referenced by each `<Area>`'s `fill`.
+ *
+ * The ids are scoped by `gradientId` because SVG `<defs>` ids are
+ * document-global: two AreaCharts on the same page would otherwise share (and
+ * silently overwrite) each other's stops.
+ */
+function AreaFillGradients({
+  dataKeys,
+  gradientId,
+  colorFor,
+}: {
+  dataKeys: string[];
+  gradientId: string;
+  colorFor: (key: string) => string;
+}) {
+  return (
+    <defs>
+      {dataKeys.map((key) => (
+        <linearGradient
+          key={key}
+          id={`${gradientId}-${key}`}
+          x1="0"
+          y1="0"
+          x2="0"
+          y2="1"
+        >
+          <stop offset="5%" stopColor={colorFor(key)} stopOpacity={0.8} />
+          <stop offset="95%" stopColor={colorFor(key)} stopOpacity={0.1} />
+        </linearGradient>
+      ))}
+    </defs>
+  );
+}
+
 const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
   (
     {
@@ -229,27 +268,12 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
     // the left gutter. Passed to recharts' native `label` (themed via the
     // `.recharts-label` fill selector on the container).
-    const xAxisTitle = xAxisLabel
-      ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
-      : undefined;
-    const yAxisTitle = yAxisLabel
-      ? {
-          value: yAxisLabel,
-          angle: -90,
-          position: 'insideLeft' as const,
-          style: { textAnchor: 'middle' as const },
-        }
-      : undefined;
+    const xAxisTitle = resolveXAxisTitle(xAxisLabel);
+    const yAxisTitle = resolveYAxisTitle(yAxisLabel);
 
     const yDomain = resolveAxisDomain(yAxisDomain);
 
-    // Room for the X tick row: recharts' default 30, plus a rotated tick row
-    // (+20) and/or the axis title (+18). Additive — both can be present at once,
-    // which the old label-or-angle ternary under-allocated.
-    const xAxisHeight =
-      xAxisLabel || xAxisAngle != null
-        ? 30 + (xAxisAngle != null ? 20 : 0) + (xAxisLabel ? 18 : 0)
-        : undefined;
+    const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
 
     // recharts renders SVG <defs> once per chart; the gradient ids must be unique
     // across chart instances on the page. useId gives a stable per-instance id;
@@ -274,21 +298,11 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
             margin={hasLabels ? CHART_LABEL_MARGIN : undefined}
           >
             {isGradient && (
-              <defs>
-                {dataKeys.map((key) => (
-                  <linearGradient
-                    key={key}
-                    id={`${gradientId}-${key}`}
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop offset="5%" stopColor={colorFor(key)} stopOpacity={0.8} />
-                    <stop offset="95%" stopColor={colorFor(key)} stopOpacity={0.1} />
-                  </linearGradient>
-                ))}
-              </defs>
+              <AreaFillGradients
+                dataKeys={dataKeys}
+                gradientId={gradientId}
+                colorFor={colorFor}
+              />
             )}
             {showGrid && (
               <CartesianGrid
@@ -307,9 +321,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               tickFormatter={xTickFormatter}
               angle={xAxisAngle}
               interval={xAxisInterval}
-              textAnchor={
-                xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
-              }
+              textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
               height={xAxisHeight}
               label={xAxisTitle}
             />
