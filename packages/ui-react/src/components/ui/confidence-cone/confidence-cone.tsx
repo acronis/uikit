@@ -22,6 +22,10 @@ import {
   ChartTooltipContent,
   resolveAxisDomain,
   resolveAnimation,
+  resolveRotatedTickAnchor,
+  resolveXAxisHeight,
+  resolveXAxisTitle,
+  resolveYAxisTitle,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartLegendContentProps,
@@ -347,17 +351,8 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       [tooltipContent]
     );
 
-    const xAxisTitle = xAxisLabel
-      ? { value: xAxisLabel, position: 'insideBottom' as const, offset: 0 }
-      : undefined;
-    const yAxisTitle = yAxisLabel
-      ? {
-          value: yAxisLabel,
-          angle: -90,
-          position: 'insideLeft' as const,
-          style: { textAnchor: 'middle' as const },
-        }
-      : undefined;
+    const xAxisTitle = resolveXAxisTitle(xAxisLabel);
+    const yAxisTitle = resolveYAxisTitle(yAxisLabel);
 
     const yDomain = resolveAxisDomain(yAxisDomain);
 
@@ -381,13 +376,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       return next ?? config;
     }, [config, plotted]);
 
-    // Room for the X tick row: recharts' default 30, plus a rotated tick row
-    // (+20) and/or the axis title (+18). Additive — both can be present at once,
-    // which the old label-or-angle ternary under-allocated.
-    const xAxisHeight =
-      xAxisLabel || xAxisAngle != null
-        ? 30 + (xAxisAngle != null ? 20 : 0) + (xAxisLabel ? 18 : 0)
-        : undefined;
+    const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
 
     // Augment each row with one `[lower, upper]` band tuple per coned series for
     // its Area to shade. Rows missing a numeric bound are left un-coned (the
@@ -424,6 +413,238 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
         : [referenceLine]
       : [];
 
+    // Everything from here to the `return` is lifted out of the returned tree
+    // only to keep it readable as a flat list of chart children. The `render*`
+    // helpers are plain functions, never components: recharts identifies its
+    // children by element type (`XAxis`, `Area`, …), so a wrapper component
+    // would hide them from the chart.
+
+    const renderAxes = () => (
+      <>
+        <XAxis
+          dataKey={xKey}
+          type="category"
+          hide={!showXAxis}
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          tickFormatter={xTickFormatter}
+          tick={styleForecastTicks ? renderForecastTick : undefined}
+          angle={xAxisAngle}
+          interval={xAxisInterval}
+          textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
+          height={xAxisHeight}
+          label={xAxisTitle}
+        />
+        <YAxis
+          type="number"
+          hide={!showYAxis}
+          tickLine={false}
+          axisLine={false}
+          unit={yUnit}
+          tickFormatter={yTickFormatter}
+          tickCount={yAxisTickCount}
+          domain={yDomain}
+          width={yAxisLabel ? 72 : undefined}
+          label={yAxisTitle}
+        />
+      </>
+    );
+
+    // Set the forecast region off from the actuals (behind everything).
+    const renderForecastRegion = () => (
+      <>
+        {forecastStart != null && lastX != null && (
+          <ReferenceArea
+            x1={forecastStart}
+            x2={lastX}
+            fill="var(--ui-background-surface-secondary)"
+            fillOpacity={0.5}
+            ifOverflow="extendDomain"
+          />
+        )}
+        {forecastStart != null && (
+          <ReferenceLine
+            x={forecastStart}
+            stroke="var(--ui-border-on-surface-border)"
+            strokeDasharray="4 4"
+          />
+        )}
+      </>
+    );
+
+    const renderThreshold = (
+      threshold: ConfidenceConeReferenceLine,
+      index: number
+    ) => (
+      <ReferenceLine
+        key={`${threshold.label ?? 'threshold'}-${index}`}
+        y={threshold.value}
+        stroke="var(--ui-text-on-surface-secondary)"
+        strokeDasharray="4 4"
+        // extendDomain so a threshold beyond the data max stays visible.
+        ifOverflow="extendDomain"
+        label={
+          threshold.label
+            ? {
+                value: threshold.label,
+                position: 'insideTopRight',
+                fill: 'var(--ui-text-on-surface-secondary)',
+                fontSize: CHART_LABEL_FONT_SIZE,
+              }
+            : undefined
+        }
+      />
+    );
+
+    const renderTooltip = () =>
+      customTooltip ? (
+        // Strips the synthetic band before the caller's tooltip sees it — the
+        // `__cone` series feeds the Area, not the tooltip.
+        <ChartTooltip content={customTooltip} />
+      ) : (
+        <ChartTooltip
+          content={(tp) => (
+            <ChartTooltipContent
+              active={tp.active}
+              label={tp.label}
+              // The synthetic band feeds the Area, not the tooltip.
+              payload={
+                dropConeBand(tp.payload) as ChartTooltipContentProps['payload']
+              }
+            />
+          )}
+        />
+      );
+
+    const renderLegend = () => (
+      <ChartLegend
+        content={(lp) => (
+          <ChartLegendContent
+            verticalAlign={lp.verticalAlign}
+            payload={
+              keepMetricSeries(
+                lp.payload,
+                plotted.map((s) => s.actualKey)
+              ) as ChartLegendContentProps['payload']
+            }
+          />
+        )}
+      />
+    );
+
+    // One color per metric — actual and forecast differ by line style, not hue
+    // — so a cone reuses its series' actual color.
+    const renderConeBand = ({
+      actualKey: aKey,
+      lowerKey: lKey,
+      upperKey: uKey,
+    }: ConfidenceConeSeries) =>
+      lKey && uKey ? (
+        <Area
+          key={bandKeyFor(aKey)}
+          // The band paints in the same hue, at the same opacity, as the
+          // actual series' own area, so nothing on the rendered path tells
+          // the two apart. recharts forwards `data-*` onto the path it
+          // draws; the tests select the band through this.
+          data-slot="confidence-cone-band"
+          dataKey={bandKeyFor(aKey)}
+          type="monotone"
+          stroke="none"
+          fill={`var(--color-${aKey})`}
+          fillOpacity={0.15}
+          connectNulls={false}
+          dot={false}
+          activeDot={false}
+          {...animation}
+          legendType="none"
+          tooltipType="none"
+        />
+      ) : null;
+
+    const renderActualMark = ({ actualKey: aKey }: ConfidenceConeSeries) => {
+      // An area and a line take the same props here; only the region under the
+      // curve (and the mark recharts draws) differ. A `Line` gets no fill at
+      // all — `fillOpacity: 0` would also erase its dots.
+      const ActualMark = actualType === 'line' ? Line : Area;
+      const areaFill =
+        actualType === 'line'
+          ? undefined
+          : { fill: `var(--color-${aKey})`, fillOpacity: 0.15 };
+      // Observed points read as measured: LineChart's dot geometry (r 3, 2px
+      // ring) filled with the metric hue. The ring is that same hue, so the
+      // mark is solid — and wide enough against the 2px line not to read as a
+      // mere thickening of it. `fillOpacity: 1` is load-bearing: recharts
+      // merges the parent mark's own presentation props into every dot it
+      // draws, so an `<Area>`'s 0.15 would otherwise wash the dot out to a halo.
+      const dot = showDots
+        ? {
+            r: 3,
+            fill: `var(--color-${aKey})`,
+            fillOpacity: 1,
+            stroke: `var(--color-${aKey})`,
+            strokeWidth: 2,
+          }
+        : false;
+      return (
+        <ActualMark
+          key={aKey}
+          dataKey={aKey}
+          type="monotone"
+          stroke={`var(--color-${aKey})`}
+          strokeWidth={strokeWidth}
+          {...areaFill}
+          dot={dot}
+          activeDot={showDots ? { r: 5 } : false}
+          connectNulls
+          {...animation}
+          // The legend names the metric once, so it carries the swatch that
+          // stands for the whole series rather than the actual line's style.
+          legendType="rect"
+        />
+      );
+    };
+
+    const renderForecastLine = ({
+      actualKey: aKey,
+      forecastKey: fKey,
+    }: ConfidenceConeSeries) => {
+      // Projected points read as predicted: the same LineChart dot, inverted —
+      // the metric's hue as the ring, the surface color as the fill, so the
+      // dashed line doesn't show through the middle. (LineChart leaves the fill
+      // to recharts, whose `Line` defaults it to `#fff`; the token is that same
+      // white in the light theme and also holds up in the dark one.)
+      // `strokeDasharray: 'none'` is load-bearing: recharts merges the parent
+      // mark's presentation props into every dot, so this line's `5 5` would
+      // otherwise break each dot's ring into two arcs.
+      const dot = showDots
+        ? {
+            r: 3,
+            fill: 'var(--ui-background-surface-primary)',
+            stroke: `var(--color-${aKey})`,
+            strokeWidth: 2,
+            strokeDasharray: 'none',
+          }
+        : false;
+      return (
+        <Line
+          key={fKey}
+          dataKey={fKey}
+          type="monotone"
+          stroke={`var(--color-${aKey})`}
+          strokeWidth={strokeWidth}
+          strokeDasharray="5 5"
+          dot={dot}
+          // Paired with `dot` the way every other chart does it — left unset,
+          // the projection would keep recharts' default active dot while the
+          // actuals had none (and a different radius when on).
+          activeDot={showDots ? { r: 5 } : false}
+          connectNulls
+          {...animation}
+        />
+      );
+    };
+
     return (
       <div ref={ref} className={cn(className)} {...props}>
         <ChartContainer
@@ -438,210 +659,16 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
                 strokeDasharray={gridDashed ? '3 3' : undefined}
               />
             )}
-            <XAxis
-              dataKey={xKey}
-              type="category"
-              hide={!showXAxis}
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={xTickFormatter}
-              tick={styleForecastTicks ? renderForecastTick : undefined}
-              angle={xAxisAngle}
-              interval={xAxisInterval}
-              textAnchor={
-                xAxisAngle != null ? (xAxisAngle < 0 ? 'end' : 'start') : undefined
-              }
-              height={xAxisHeight}
-              label={xAxisTitle}
-            />
-            <YAxis
-              type="number"
-              hide={!showYAxis}
-              tickLine={false}
-              axisLine={false}
-              unit={yUnit}
-              tickFormatter={yTickFormatter}
-              tickCount={yAxisTickCount}
-              domain={yDomain}
-              width={yAxisLabel ? 72 : undefined}
-              label={yAxisTitle}
-            />
-            {/* Set the forecast region off from the actuals (behind everything). */}
-            {forecastStart != null && lastX != null && (
-              <ReferenceArea
-                x1={forecastStart}
-                x2={lastX}
-                fill="var(--ui-background-surface-secondary)"
-                fillOpacity={0.5}
-                ifOverflow="extendDomain"
-              />
-            )}
-            {forecastStart != null && (
-              <ReferenceLine
-                x={forecastStart}
-                stroke="var(--ui-border-on-surface-border)"
-                strokeDasharray="4 4"
-              />
-            )}
-            {referenceLines.map((ref, index) => (
-              <ReferenceLine
-                key={`${ref.label ?? 'threshold'}-${index}`}
-                y={ref.value}
-                stroke="var(--ui-text-on-surface-secondary)"
-                strokeDasharray="4 4"
-                // extendDomain so a threshold beyond the data max stays visible.
-                ifOverflow="extendDomain"
-                label={
-                  ref.label
-                    ? {
-                        value: ref.label,
-                        position: 'insideTopRight',
-                        fill: 'var(--ui-text-on-surface-secondary)',
-                        fontSize: CHART_LABEL_FONT_SIZE,
-                      }
-                    : undefined
-                }
-              />
-            ))}
-            {showTooltip &&
-              (customTooltip ? (
-                // Strips the synthetic band before the caller's tooltip sees it
-                // — the `__cone` series feeds the Area, not the tooltip.
-                <ChartTooltip content={customTooltip} />
-              ) : (
-                <ChartTooltip
-                  content={(tp) => (
-                    <ChartTooltipContent
-                      active={tp.active}
-                      label={tp.label}
-                      // The synthetic band feeds the Area, not the tooltip.
-                      payload={
-                        dropConeBand(
-                          tp.payload
-                        ) as ChartTooltipContentProps['payload']
-                      }
-                    />
-                  )}
-                />
-              ))}
-            {showLegend && (
-              <ChartLegend
-                content={(lp) => (
-                  <ChartLegendContent
-                    verticalAlign={lp.verticalAlign}
-                    payload={
-                      keepMetricSeries(
-                        lp.payload,
-                        plotted.map((s) => s.actualKey)
-                      ) as ChartLegendContentProps['payload']
-                    }
-                  />
-                )}
-              />
-            )}
+            {renderAxes()}
+            {renderForecastRegion()}
+            {referenceLines.map(renderThreshold)}
+            {showTooltip && renderTooltip()}
+            {showLegend && renderLegend()}
             {/* Every cone renders before any line, so the lines draw on top of
-                all of them. One color per metric — actual and forecast differ by
-                line style, not hue — so a cone + forecast line reuse their
-                series' actual color. */}
-            {plotted.map(({ actualKey: aKey, lowerKey: lKey, upperKey: uKey }) =>
-              lKey && uKey ? (
-                <Area
-                  key={bandKeyFor(aKey)}
-                  dataKey={bandKeyFor(aKey)}
-                  type="monotone"
-                  stroke="none"
-                  fill={`var(--color-${aKey})`}
-                  fillOpacity={0.15}
-                  connectNulls={false}
-                  dot={false}
-                  activeDot={false}
-                  {...animation}
-                  legendType="none"
-                  tooltipType="none"
-                />
-              ) : null
-            )}
-            {plotted.map(({ actualKey: aKey }) => {
-              // An area and a line take the same props here; only the region
-              // under the curve (and the mark recharts draws) differ. A `Line`
-              // gets no fill at all — `fillOpacity: 0` would also erase its dots.
-              const ActualMark = actualType === 'line' ? Line : Area;
-              const areaFill =
-                actualType === 'line'
-                  ? undefined
-                  : { fill: `var(--color-${aKey})`, fillOpacity: 0.15 };
-              return (
-                <ActualMark
-                  key={aKey}
-                  dataKey={aKey}
-                  type="monotone"
-                  stroke={`var(--color-${aKey})`}
-                  strokeWidth={strokeWidth}
-                  {...areaFill}
-                  // Observed points read as measured: LineChart's dot geometry
-                  // (r 3, 2px ring) filled with the metric hue. The ring is that
-                  // same hue, so the mark is solid — and wide enough against the
-                  // 2px line not to read as a mere thickening of it.
-                  // `fillOpacity: 1` is load-bearing: recharts merges the parent
-                  // mark's own presentation props into every dot it draws, so an
-                  // `<Area>`'s 0.15 would otherwise wash the dot out to a halo.
-                  dot={
-                    showDots
-                      ? {
-                          r: 3,
-                          fill: `var(--color-${aKey})`,
-                          fillOpacity: 1,
-                          stroke: `var(--color-${aKey})`,
-                          strokeWidth: 2,
-                        }
-                      : false
-                  }
-                  activeDot={showDots ? { r: 5 } : false}
-                  connectNulls
-                  {...animation}
-                  // The legend names the metric once, so it carries the swatch that
-                  // stands for the whole series rather than the actual line's style.
-                  legendType="rect"
-                />
-              );
-            })}
-            {plotted.map(({ actualKey: aKey, forecastKey: fKey }) => (
-              <Line
-                key={fKey}
-                dataKey={fKey}
-                type="monotone"
-                stroke={`var(--color-${aKey})`}
-                strokeWidth={strokeWidth}
-                strokeDasharray="5 5"
-                // Projected points read as predicted: the same LineChart dot,
-                // inverted — the metric's hue as the ring, the surface color as
-                // the fill, so the dashed line doesn't show through the middle.
-                // (LineChart leaves the fill to recharts, whose `Line` defaults it
-                // to `#fff`; the token is that same white in the light theme and
-                // also holds up in the dark one.)
-                // `strokeDasharray: 'none'` is load-bearing: recharts merges the
-                // parent mark's presentation props into every dot, so this line's
-                // `5 5` would otherwise break each dot's ring into two arcs.
-                dot={
-                  showDots
-                    ? {
-                        r: 3,
-                        fill: 'var(--ui-background-surface-primary)',
-                        stroke: `var(--color-${aKey})`,
-                        strokeWidth: 2,
-                        strokeDasharray: 'none',
-                      }
-                    : false
-                }
-                // Paired with `dot` the way every other chart does it — left
-                // unset, the projection would keep recharts' default active dot
-                // while the actuals had none (and a different radius when on).
-                activeDot={showDots ? { r: 5 } : false}
-                connectNulls
-                {...animation}
-              />
-            ))}
+                all of them. */}
+            {plotted.map(renderConeBand)}
+            {plotted.map(renderActualMark)}
+            {plotted.map(renderForecastLine)}
           </ComposedChart>
         </ChartContainer>
       </div>

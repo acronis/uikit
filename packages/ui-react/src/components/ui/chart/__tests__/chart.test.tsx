@@ -1,6 +1,6 @@
 import { BarChart } from 'recharts';
 import { render } from '@testing-library/react';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
   ChartContainer,
@@ -9,33 +9,17 @@ import {
   type ChartConfig,
 } from '../index';
 
+import { CHART_HEIGHT, CHART_WIDTH, giveEveryChartASize } from './chart-layout';
+
+// `ChartContainer` wraps its child in recharts' `ResponsiveContainer`, which
+// renders *no children at all* until it has measured a box — so at 0×0 even the
+// legend and tooltip parts below, which are plain HTML, never reach the DOM.
+giveEveryChartASize();
+
 const config = {
   desktop: { label: 'Desktop', color: 'rgb(23 99 207)' },
   mobile: { label: 'Mobile', color: 'rgb(220 53 69)' },
 } satisfies ChartConfig;
-
-beforeAll(() => {
-  // happy-dom's ResizeObserver never reports a size, so recharts'
-  // ResponsiveContainer renders nothing and its children never mount.
-  class SizedResizeObserver {
-    constructor(private readonly callback: ResizeObserverCallback) {}
-    observe(target: Element) {
-      this.callback(
-        [
-          {
-            target,
-            contentRect: { width: 400, height: 300 },
-          } as unknown as ResizeObserverEntry,
-        ],
-        this as unknown as ResizeObserver
-      );
-    }
-    unobserve() {}
-    disconnect() {}
-  }
-  globalThis.ResizeObserver =
-    SizedResizeObserver as unknown as typeof ResizeObserver;
-});
 
 // The fields recharts always puts on a tooltip row; the content reads
 // `payload.fill` for the marker color.
@@ -53,6 +37,20 @@ describe('Chart', () => {
     expect(wrapper).toHaveAttribute('data-chart', 'chart-usage');
     // The `id` prop is forwarded to the wrapper (for aria-labelledby / anchors).
     expect(wrapper).toHaveAttribute('id', 'usage');
+  });
+
+  // The container's other half: it is what gives recharts a size to draw into.
+  // A chart that never gets measured still mounts its wrapper, so without this
+  // the case above would pass over a surface of nothing.
+  it('hands recharts the measured size of its container', () => {
+    const { container } = render(
+      <ChartContainer config={config} id="usage">
+        <BarChart data={[]} />
+      </ChartContainer>
+    );
+    const surface = container.querySelector('.recharts-surface');
+    expect(surface).toHaveAttribute('width', String(CHART_WIDTH));
+    expect(surface).toHaveAttribute('height', String(CHART_HEIGHT));
   });
 
   // recharts hardcodes a white outline on sectors, dots and funnel trapezoids,

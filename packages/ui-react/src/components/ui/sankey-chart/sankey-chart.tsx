@@ -373,7 +373,10 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
           </RechartsSankey>
         </ChartContainer>
         {showLegend && (
-          <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs">
+          <div
+            data-slot="sankey-chart-legend"
+            className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs"
+          >
             {nodeStats.map(({ name, value, pct }) => (
               <div key={name} className="flex items-center gap-2">
                 <span

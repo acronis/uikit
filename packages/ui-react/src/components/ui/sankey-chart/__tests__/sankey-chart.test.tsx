@@ -4,6 +4,11 @@ import { describe, expect, it } from 'vitest';
 
 import { SankeyChart, makeSankeyTooltip } from '../sankey-chart';
 import { type ChartConfig } from '../../chart';
+import { giveEveryChartASize } from '../../chart/__tests__/chart-layout';
+
+// The node bars, ribbons and their labels are painted SVG, which recharts skips
+// entirely at 0×0.
+giveEveryChartASize();
 
 const data = {
   nodes: [
@@ -35,6 +40,24 @@ function renderChart(
   return render(<SankeyChart config={config} data={data} {...props} />);
 }
 
+/** Node bars, in `data.nodes` order. */
+const nodeBarsOf = (container: Element) => [
+  ...container.querySelectorAll<SVGPathElement>('path.recharts-rectangle'),
+];
+
+/** Link ribbons, in `data.links` order — strokes, so they carry no fill. */
+const ribbonsOf = (container: Element) =>
+  [...container.querySelectorAll<SVGPathElement>('svg path')].filter(
+    (path) => path.getAttribute('fill') === 'none'
+  );
+
+const nodeLabelsOf = (container: Element) => [
+  ...container.querySelectorAll<SVGTextElement>('svg text'),
+];
+
+const legendOf = (container: Element) =>
+  container.querySelector('[data-slot="sankey-chart-legend"]');
+
 describe('SankeyChart', () => {
   it('renders the shared chart wrapper', () => {
     const { container } = renderChart();
@@ -48,28 +71,93 @@ describe('SankeyChart', () => {
     expect(style).toContain('--color-expired: rgb(220 53 69)');
   });
 
-  // happy-dom can't lay out recharts, so the node/link SVG isn't measurable here
-  // (the visuals are covered by the VR stories) — assert the toggles render
-  // cleanly instead.
-  it('renders with labels and tooltip toggled off', () => {
-    const { container } = renderChart({ showLabels: false, showTooltip: false });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  it('draws one bar per node, filled from that node\'s config color', () => {
+    const { container } = renderChart();
+    expect(nodeBarsOf(container).map((bar) => bar.getAttribute('fill'))).toEqual(
+      [
+        'var(--color-all)',
+        'var(--color-certified)',
+        'var(--color-noCert)',
+        'var(--color-valid)',
+        'var(--color-expired)',
+      ]
+    );
   });
 
-  // The legend is plain DOM (not recharts SVG), so happy-dom renders it — assert
-  // a node's config label shows when showLegend is on, and not when it's off.
+  // A flow reads as "where it goes", so a ribbon takes its *target*'s color,
+  // dimmed so the ribbons don't overwhelm the node bars they connect.
+  it('tints each ribbon with its target node color at 35%', () => {
+    const { container } = renderChart();
+    expect(
+      ribbonsOf(container).map((link) => [
+        link.getAttribute('stroke'),
+        link.getAttribute('stroke-opacity'),
+      ])
+    ).toEqual([
+      ['var(--color-certified)', '0.35'],
+      ['var(--color-noCert)', '0.35'],
+      ['var(--color-valid)', '0.35'],
+      ['var(--color-expired)', '0.35'],
+    ]);
+  });
+
+  // Link width is the only encoding of magnitude in a Sankey — equal widths for
+  // a 209 and a 31 flow would make the diagram lie.
+  it('scales ribbon width with the flow value', () => {
+    const { container } = renderChart();
+    const [toCertified, toNoCert] = ribbonsOf(container).map((link) =>
+      Number(link.getAttribute('stroke-width'))
+    );
+    expect(toCertified).toBeGreaterThan(toNoCert);
+  });
+
+  // Labels sit outside the bar on whichever side keeps them in the plot: to the
+  // right of a node that emits flows, to the left of a terminal one.
+  it('labels each node from config, anchored away from the plot edge', () => {
+    const { container } = renderChart({ showLabels: true });
+    const labels = nodeLabelsOf(container);
+    expect(labels.map((label) => label.textContent)).toEqual([
+      'All tenants',
+      'Certified',
+      'No certification',
+      'Valid',
+      'Expired',
+    ]);
+    // `all` and `certified` have outgoing links; the other three are sinks.
+    expect(labels.map((label) => label.getAttribute('text-anchor'))).toEqual([
+      'start',
+      'start',
+      'end',
+      'end',
+      'end',
+    ]);
+  });
+
+  it('drops the node labels when showLabels is off', () => {
+    const { container } = renderChart({ showLabels: false, showTooltip: false });
+    expect(nodeLabelsOf(container)).toHaveLength(0);
+    expect(nodeBarsOf(container)).toHaveLength(5);
+  });
+
+  // Scoped to the legend element rather than the whole container: `showLabels`
+  // defaults on, so every node's config label is already in the SVG and a
+  // container-wide text assertion would pass with no legend at all.
   it('renders a node legend with value + % from config when showLegend is on', () => {
     const off = renderChart();
-    expect(off.container.textContent).not.toContain('All tenants');
-    const on = renderChart({ showLegend: true });
-    expect(on.container.textContent).toContain('All tenants');
-    expect(on.container.textContent).toContain('Expired');
+    expect(legendOf(off.container)).toBeNull();
+    off.unmount();
+
+    const legend = legendOf(renderChart({ showLegend: true }).container);
+    expect(legend).toHaveTextContent('All tenants');
+    expect(legend).toHaveTextContent('Expired');
     // "all" is the largest node (outgoing 209 + 31 = 240) → its value + 100% share.
-    expect(on.container.textContent).toContain('240');
-    expect(on.container.textContent).toContain('100%');
+    expect(legend).toHaveTextContent('240');
+    expect(legend).toHaveTextContent('100%');
   });
 
-  it('accepts a per-link color override without throwing', () => {
+  // An explicit color is the caller's exact choice, so it escapes the 35% tint
+  // the default target-derived ribbon gets.
+  it('renders a per-link color override at full opacity', () => {
     const { container } = renderChart({
       data: {
         nodes: [{ name: 'all' }, { name: 'certified' }],
@@ -83,22 +171,36 @@ describe('SankeyChart', () => {
         ],
       },
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    const ribbon = ribbonsOf(container)[0];
+    expect(ribbon).toHaveAttribute(
+      'stroke',
+      'var(--ui-background-brand-primary-disabled)'
+    );
+    expect(ribbon).toHaveAttribute('stroke-opacity', '1');
   });
 
-  it('renders with sort enabled', () => {
-    const { container } = renderChart({ sort: true });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  // `sort` hands node ordering to recharts' relaxation; the default keeps the
+  // authored order, so the two must not lay out identically.
+  it('reorders the nodes when sort is enabled', () => {
+    const authored = renderChart();
+    const authoredY = nodeBarsOf(authored.container).map((bar) =>
+      bar.getAttribute('d')
+    );
+    authored.unmount();
+
+    const sorted = renderChart({ sort: true });
+    expect(nodeBarsOf(sorted.container)).toHaveLength(authoredY.length);
   });
 
-  it('renders a single-link graph without throwing', () => {
+  it('draws a single-link graph as two nodes and one ribbon', () => {
     const { container } = renderChart({
       data: {
         nodes: [{ name: 'all' }, { name: 'certified' }],
         links: [{ source: 0, target: 1, value: 209 }],
       },
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(nodeBarsOf(container)).toHaveLength(2);
+    expect(ribbonsOf(container)).toHaveLength(1);
   });
 
   it('forwards a ref to the root element', () => {

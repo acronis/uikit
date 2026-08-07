@@ -1,4 +1,4 @@
-import { onTestFinished, vi } from 'vitest';
+import { afterEach, beforeEach, onTestFinished, vi } from 'vitest';
 
 // Test-only helper (not collected as a suite, not part of the published entry
 // points). Shared by the chart tests rather than copied into each one.
@@ -41,6 +41,33 @@ const CHART_RECT = {
 } as DOMRect;
 
 let installed = false;
+let originalGetBoundingClientRect: Element['getBoundingClientRect'] | null =
+  null;
+
+function install() {
+  if (installed) return;
+  installed = true;
+
+  vi.stubGlobal('ResizeObserver', SizedResizeObserver);
+  const original = Element.prototype.getBoundingClientRect;
+  originalGetBoundingClientRect = original;
+  Element.prototype.getBoundingClientRect = function (this: Element) {
+    return this.classList?.contains('recharts-responsive-container')
+      ? CHART_RECT
+      : original.call(this);
+  };
+}
+
+function restore() {
+  if (!installed) return;
+  installed = false;
+
+  if (originalGetBoundingClientRect) {
+    Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+    originalGetBoundingClientRect = null;
+  }
+  vi.unstubAllGlobals();
+}
 
 /**
  * Give recharts a laid-out container for the duration of the calling test.
@@ -67,19 +94,45 @@ let installed = false;
  * would capture this wrapper as its own "original".
  */
 export function giveTheChartASize() {
-  if (installed) return;
-  installed = true;
+  install();
+  onTestFinished(restore);
+}
 
-  vi.stubGlobal('ResizeObserver', SizedResizeObserver);
-  const original = Element.prototype.getBoundingClientRect;
-  Element.prototype.getBoundingClientRect = function (this: Element) {
-    return this.classList?.contains('recharts-responsive-container')
-      ? CHART_RECT
-      : original.call(this);
-  };
-  onTestFinished(() => {
-    Element.prototype.getBoundingClientRect = original;
-    vi.unstubAllGlobals();
-    installed = false;
-  });
+/**
+ * Suite-level form of `giveTheChartASize`, for a file where every case renders a
+ * laid-out chart — including the ones that call `render()` directly instead of
+ * going through a shared `renderChart` helper. Call it once at the top of the
+ * file; it registers its own `beforeEach`/`afterEach`, so the size is in place
+ * whichever way a case renders and is torn down between cases either way.
+ */
+export function giveEveryChartASize() {
+  beforeEach(install);
+  afterEach(restore);
+}
+
+/**
+ * The tick elements recharts painted for one cartesian axis, in document order.
+ *
+ * Selected by recharts' own `orientation` attribute rather than by descending
+ * from `.recharts-xAxis` / `.recharts-yAxis`, because as of recharts 3.8 a tick
+ * is not inside its axis group at all: the labels are hoisted into a separate
+ * top-level `recharts-zIndex-layer_*` that is a *sibling* of the axis. So
+ * `.recharts-xAxis .recharts-text` matches nothing and `axis.contains(tick)` is
+ * false — and a test written the obvious way passes vacuously instead of
+ * asserting anything. (Descendant selectors themselves are fine here; `svg text`
+ * and `clipPath rect` both work.)
+ */
+export function axisTicks(container: Element, axis: 'x' | 'y'): Element[] {
+  const sides = axis === 'x' ? ['bottom', 'top'] : ['left', 'right'];
+  return [
+    ...container.querySelectorAll('.recharts-cartesian-axis-tick-value'),
+  ].filter((tick) => sides.includes(tick.getAttribute('orientation') ?? ''));
+}
+
+/** Text of every tick on one cartesian axis — see `axisTicks` for the caveat. */
+export function axisTickLabels(
+  container: Element,
+  axis: 'x' | 'y'
+): (string | null)[] {
+  return axisTicks(container, axis).map((tick) => tick.textContent);
 }

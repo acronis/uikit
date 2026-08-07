@@ -1,36 +1,21 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { render, waitFor } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 import { ComposedChart } from '../composed-chart';
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
 
-beforeAll(() => {
-  // happy-dom's ResizeObserver never reports a size, so recharts'
-  // ResponsiveContainer renders nothing and its children never mount. The
-  // per-series styling, stacking and orientation below are SVG output, so those
-  // tests need the real thing.
-  class SizedResizeObserver {
-    constructor(private readonly callback: ResizeObserverCallback) {}
-    observe(target: Element) {
-      this.callback(
-        [
-          {
-            target,
-            contentRect: { width: 600, height: 300 },
-          } as unknown as ResizeObserverEntry,
-        ],
-        this as unknown as ResizeObserver
-      );
-    }
-    unobserve() {}
-    disconnect() {}
-  }
-  globalThis.ResizeObserver =
-    SizedResizeObserver as unknown as typeof ResizeObserver;
-});
+import {
+  axisTickLabels,
+  axisTicks,
+  giveEveryChartASize,
+} from '../../chart/__tests__/chart-layout';
+
+// The mixed bar/line/area geometry, stacking and orientation asserted below are
+// painted SVG, which recharts skips entirely at 0×0.
+giveEveryChartASize();
 
 const data = [
   { month: 'Jan', revenue: 2400, profit: 1600, orders: 120 },
@@ -58,27 +43,84 @@ function renderChart(
   );
 }
 
-describe('ComposedChart', () => {
-  // Axis visibility + tick formatting forward to recharts' XAxis/YAxis `hide` /
-  // `tickFormatter`; how the rotated/thinned tick row actually lays out is a
-  // visual question the axis-formatting VR stories own, so this guards the prop
-  // path against a plumbing regression.
-  it('renders with axis/grid config and tick formatters', () => {
+const barsOf = (container: Element) => [
+  ...container.querySelectorAll<SVGPathElement>('.recharts-bar-rectangle path'),
+];
+const linesOf = (container: Element) => [
+  ...container.querySelectorAll<SVGPathElement>('.recharts-line-curve'),
+];
+const areasOf = (container: Element) => [
+  ...container.querySelectorAll<SVGPathElement>('.recharts-area-curve'),
+];
+
+describe('ComposedChart axes and grid', () => {
+  it('hides an axis without dropping the other', () => {
+    const { container } = renderChart({ showXAxis: false, showYAxis: true });
+    expect(container.querySelector('.recharts-xAxis')).toBeNull();
+    expect(container.querySelector('.recharts-yAxis')).not.toBeNull();
+  });
+
+  it('runs tick values through the caller formatter', () => {
     const { container } = renderChart({
-      showXAxis: false,
-      showYAxis: true,
       yTickFormatter: (value) => `$${value}`,
-      xAxisAngle: -45,
-      xAxisInterval: 'preserveStartEnd',
-      yAxisTickCount: 4,
-      yAxisDomain: 'zero',
-      gridDashed: true,
+    });
+    const ticks = axisTickLabels(container, 'y');
+    expect(ticks.length).toBeGreaterThan(0);
+    for (const tick of ticks) expect(tick).toMatch(/^\$/);
+  });
+
+  it('appends the Y unit to every tick', () => {
+    const { container } = renderChart({ yUnit: '$' });
+    const ticks = axisTickLabels(container, 'y');
+    expect(ticks.length).toBeGreaterThan(0);
+    for (const tick of ticks) expect(tick).toMatch(/\$$/);
+  });
+
+  it('anchors rotated ticks on the side they lean towards', () => {
+    const { container } = renderChart({ xAxisAngle: -45 });
+    expect(axisTicks(container, 'x')[0]).toHaveAttribute('text-anchor', 'end');
+  });
+
+  it('floors the Y domain at zero on request', () => {
+    const { container } = renderChart({ yAxisDomain: 'zero' });
+    expect(axisTickLabels(container, 'y')[0]).toBe('0');
+  });
+
+  it('renders the axis titles as their own labels', () => {
+    const { container } = renderChart({
+      xAxisLabel: 'Month',
+      yAxisLabel: 'Amount',
+    });
+    const titles = [...container.querySelectorAll('.recharts-label')].map(
+      (label) => label.textContent
+    );
+    expect(titles).toContain('Month');
+    expect(titles).toContain('Amount');
+  });
+
+  it('draws only the grid direction it was asked for', () => {
+    const { container } = renderChart({
       gridHorizontal: true,
       gridVertical: false,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(
+      container.querySelectorAll('.recharts-cartesian-grid-horizontal line')
+        .length
+    ).toBeGreaterThan(0);
+    expect(
+      container.querySelectorAll('.recharts-cartesian-grid-vertical line')
+    ).toHaveLength(0);
   });
 
+  it('dashes the grid on request', () => {
+    const { container } = renderChart({ gridDashed: true });
+    expect(
+      container.querySelector('.recharts-cartesian-grid-horizontal line')
+    ).toHaveAttribute('stroke-dasharray', '3 3');
+  });
+});
+
+describe('ComposedChart', () => {
   it('renders the shared chart wrapper', () => {
     const { container } = renderChart();
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
@@ -92,39 +134,53 @@ describe('ComposedChart', () => {
     expect(style).toContain('--color-orders: rgb(220 53 69)');
   });
 
-  // These exercise the prop paths (mixed series types, curve, chrome toggles)
-  // against a plumbing/crash regression; how the result looks is covered by the
-  // VR stories, and the SVG the new props emit is asserted further down.
-  it('renders a mixed bar/line/area series set with a stepped curve', () => {
-    const { container } = renderChart({ curve: 'step' });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  // The whole point of the composition: one element per declared series type,
+  // not three bars or three lines.
+  it('draws one mark per series in the type each series declared', () => {
+    const { container } = renderChart();
+    expect(barsOf(container)).toHaveLength(3); // one bar per row of `revenue`
+    expect(linesOf(container)).toHaveLength(1);
+    expect(areasOf(container)).toHaveLength(1);
   });
 
-  it('renders with all chrome toggles off and squared bars', () => {
+  // A curve value recharts doesn't recognize silently draws straight segments,
+  // so identical geometry between two curves is the failure to catch.
+  it('applies the chart-wide curve to the stroked series', () => {
+    const monotone = renderChart();
+    const monotoneLine = linesOf(monotone.container)[0].getAttribute('d');
+    monotone.unmount();
+
+    const step = renderChart({ curve: 'step' });
+    expect(linesOf(step.container)[0].getAttribute('d')).not.toBe(monotoneLine);
+  });
+
+  it('strips the grid and legend when their toggles are off', () => {
     const { container } = renderChart({
       showGrid: false,
       showTooltip: false,
       showLegend: false,
       barRadius: 0,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(container.querySelector('.recharts-cartesian-grid')).toBeNull();
+    expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
+    // The series themselves survive the chrome going away.
+    expect(barsOf(container)).toHaveLength(3);
   });
 
-  it('renders without crashing on empty data', () => {
+  it('rounds the bar tops unless barRadius squares them', () => {
+    const rounded = renderChart();
+    expect(barsOf(rounded.container)[0].getAttribute('d')).toMatch(/[aA]/);
+    rounded.unmount();
+
+    const squared = renderChart({ barRadius: 0 });
+    expect(barsOf(squared.container)[0].getAttribute('d')).not.toMatch(/[aA]/);
+  });
+
+  it('draws no marks but still mounts on empty data', () => {
     const { container } = renderChart({ data: [] });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
-  });
-
-  // Axis titles/unit forward to recharts' XAxis/YAxis `label`/`unit`; this only
-  // guards the prop path (the rendered titles are covered by the `AxisLabels` VR
-  // story).
-  it('renders with axis titles + a Y unit', () => {
-    const { container } = renderChart({
-      xAxisLabel: 'Month',
-      yAxisLabel: 'Amount',
-      yUnit: '$',
-    });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(barsOf(container)).toHaveLength(0);
+    expect(linesOf(container)).toHaveLength(0);
   });
 
   it('forwards a ref to the root element', () => {
@@ -138,9 +194,8 @@ describe('ComposedChart', () => {
     expect(container.firstElementChild).toHaveClass('h-[300px]', 'w-[500px]');
   });
 
-  // The `tooltipContent` prop forwards a custom (library-owned) ChartTooltipContent
-  // to recharts' Tooltip. The tooltip is hover-only, so this guards the prop path
-  // — consumers customize the tooltip without importing recharts.
+  // The tooltip is hover-only, so this guards the prop path — consumers
+  // customize the tooltip without importing recharts.
   it('accepts a custom tooltipContent', () => {
     const { container } = renderChart({
       tooltipContent: (
@@ -169,15 +224,12 @@ describe('ComposedChart', () => {
 
 });
 
-// The rendered labels and the motion itself are covered by the
-// visual-regression stories. These assert the prop contract: the composition
-// accepts every animation/label prop and mounts, and `animate` resolves to the
-// reduced-motion-aware value rather than a literal `true`.
+// The motion itself is a visual-regression concern; what matters here is that
+// `animate` resolves to the reduced-motion-aware value rather than a literal
+// `true`, and that the label props reach the painted marks.
 describe('ComposedChart animation and data labels', () => {
   it('is not animated unless asked', () => {
     expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
-    const { container } = renderChart();
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
   it('resolves animate to "auto" so prefers-reduced-motion is honored', () => {
@@ -186,30 +238,44 @@ describe('ComposedChart animation and data labels', () => {
     ).toEqual({ isAnimationActive: 'auto', animationDuration: 800 });
   });
 
-  it('accepts the full animation prop set without throwing', () => {
+  it('still draws every mark with the full animation prop set', async () => {
     const { container } = renderChart({
       animate: true,
       animationDuration: 400,
       animationBegin: 50,
       animationEasing: 'ease-in-out',
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    await waitFor(() => expect(barsOf(container)).toHaveLength(3));
+    expect(linesOf(container)).toHaveLength(1);
   });
 
-  it('accepts the data-label props without throwing', () => {
+  it('runs the data labels through the caller formatter', () => {
     const { container } = renderChart({
+      series: [{ key: 'revenue', type: 'bar' }],
       showLabels: true,
       labelFormatter: (value) => `${value} u`,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(
+      [...container.querySelectorAll('.recharts-label-list text')].map(
+        (label) => label.textContent
+      )
+    ).toEqual(data.map((row) => `${row.revenue} u`));
   });
 
-  it('accepts an explicit labelPosition override', () => {
-    const { container } = renderChart({
-      showLabels: true,
-      labelPosition: 'center',
-    });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  it('honors an explicit labelPosition override', () => {
+    const labelY = (labelPosition?: 'center') => {
+      const { container, unmount } = renderChart({
+        series: [{ key: 'revenue', type: 'bar' }],
+        showLabels: true,
+        ...(labelPosition ? { labelPosition } : {}),
+      });
+      const ys = [
+        ...container.querySelectorAll('.recharts-label-list text'),
+      ].map((label) => label.getAttribute('y'));
+      unmount();
+      return ys;
+    };
+    expect(labelY('center')).not.toEqual(labelY());
   });
 });
 
@@ -656,7 +722,7 @@ describe('ComposedChart references, margin and legend placement', () => {
     // The primary axis fits 1398–9800 into the plot, so a rule at ~127 (the
     // orders mean) drawn against it sits within a few px of the baseline.
     // Rendered per test, not once: the sized ResizeObserver recharts needs is
-    // only installed in `beforeAll`, after the describe body has run.
+    // installed per case by `giveEveryChartASize`, after the describe body has run.
     const baselineY = () => ruleY({ referenceLine: { value: 0 } });
 
     it('reads an average off the axis of the series it names', () => {

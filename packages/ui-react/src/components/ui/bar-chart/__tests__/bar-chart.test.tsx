@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { render, waitFor } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 import { BarChart as RechartsBarChart } from 'recharts';
 
@@ -14,30 +14,15 @@ import {
 import { ChartContainer, ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
+import {
+  axisTickLabels,
+  axisTicks,
+  giveEveryChartASize,
+} from '../../chart/__tests__/chart-layout';
 
-beforeAll(() => {
-  // happy-dom's ResizeObserver never reports a size, so recharts'
-  // ResponsiveContainer renders nothing and its children never mount. The bar
-  // styling below is per-bar SVG, so these tests need the real output.
-  class SizedResizeObserver {
-    constructor(private readonly callback: ResizeObserverCallback) {}
-    observe(target: Element) {
-      this.callback(
-        [
-          {
-            target,
-            contentRect: { width: 600, height: 300 },
-          } as unknown as ResizeObserverEntry,
-        ],
-        this as unknown as ResizeObserver
-      );
-    }
-    unobserve() {}
-    disconnect() {}
-  }
-  globalThis.ResizeObserver =
-    SizedResizeObserver as unknown as typeof ResizeObserver;
-});
+// Every case here asserts on painted SVG (bar geometry, tick accents, tracks),
+// which recharts skips entirely at 0×0.
+giveEveryChartASize();
 
 const data = [
   { month: 'Jan', desktop: 186, mobile: 80 },
@@ -62,26 +47,85 @@ function renderChart(props: Partial<React.ComponentProps<typeof BarChart>> = {})
   );
 }
 
-describe('BarChart', () => {
-  // Axis visibility + tick formatting forward to recharts' XAxis/YAxis `hide` /
-  // `tickFormatter`. happy-dom can't lay out recharts ticks (the visuals are
-  // covered by the axis-formatting VR stories), so assert it renders cleanly.
-  it('renders with axis/grid config and tick formatters', () => {
+const barsOf = (container: Element) => [
+  ...container.querySelectorAll<SVGPathElement>('.recharts-bar-rectangle path'),
+];
+
+describe('BarChart axes and grid', () => {
+  it('hides an axis without dropping the other', () => {
+    const { container } = renderChart({ showXAxis: false, showYAxis: true });
+    expect(container.querySelector('.recharts-xAxis')).toBeNull();
+    expect(container.querySelector('.recharts-yAxis')).not.toBeNull();
+  });
+
+  it('runs tick values through the caller formatter', () => {
     const { container } = renderChart({
-      showXAxis: false,
-      showYAxis: true,
       yTickFormatter: (value) => `$${value}`,
-      xAxisAngle: -45,
-      xAxisInterval: 'preserveStartEnd',
-      yAxisTickCount: 4,
-      yAxisDomain: 'zero',
-      gridDashed: true,
+    });
+    const ticks = axisTickLabels(container, 'y');
+    expect(ticks.length).toBeGreaterThan(0);
+    for (const tick of ticks) expect(tick).toMatch(/^\$/);
+  });
+
+  it('appends the axis units to their ticks', () => {
+    const { container } = renderChart({ yUnit: 'k' });
+    const ticks = axisTickLabels(container, 'y');
+    expect(ticks.length).toBeGreaterThan(0);
+    for (const tick of ticks) expect(tick).toMatch(/k$/);
+  });
+
+  it('anchors rotated ticks on the side they lean towards', () => {
+    const { container } = renderChart({ xAxisAngle: -45 });
+    expect(axisTicks(container, 'x')[0]).toHaveAttribute('text-anchor', 'end');
+  });
+
+  it('floors the Y domain at zero on request', () => {
+    const { container } = renderChart({ yAxisDomain: 'zero' });
+    expect(axisTickLabels(container, 'y')[0]).toBe('0');
+  });
+
+  it('renders the axis titles as their own labels, in both orientations', () => {
+    const axis = { xAxisLabel: 'Month', yAxisLabel: 'Sessions' };
+    const titlesOf = (container: Element) =>
+      [...container.querySelectorAll('.recharts-label')].map(
+        (label) => label.textContent
+      );
+
+    const vertical = renderChart(axis);
+    expect(titlesOf(vertical.container)).toEqual(
+      expect.arrayContaining(['Month', 'Sessions'])
+    );
+    vertical.unmount();
+
+    const horizontal = renderChart({ ...axis, orientation: 'horizontal' });
+    expect(titlesOf(horizontal.container)).toEqual(
+      expect.arrayContaining(['Month', 'Sessions'])
+    );
+  });
+
+  it('draws only the grid direction it was asked for', () => {
+    const { container } = renderChart({
       gridHorizontal: true,
       gridVertical: false,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(
+      container.querySelectorAll('.recharts-cartesian-grid-horizontal line')
+        .length
+    ).toBeGreaterThan(0);
+    expect(
+      container.querySelectorAll('.recharts-cartesian-grid-vertical line')
+    ).toHaveLength(0);
   });
 
+  it('dashes the grid on request', () => {
+    const { container } = renderChart({ gridDashed: true });
+    expect(
+      container.querySelector('.recharts-cartesian-grid-horizontal line')
+    ).toHaveAttribute('stroke-dasharray', '3 3');
+  });
+});
+
+describe('BarChart', () => {
   it('renders the shared chart wrapper', () => {
     const { container } = renderChart();
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
@@ -111,24 +155,32 @@ describe('BarChart', () => {
     expect(root).toHaveAttribute('data-layout', 'stacked');
   });
 
-  // recharts only paints its SVG once the ResponsiveContainer has real
-  // dimensions, which happy-dom never gives it — so the grid/tooltip/legend
-  // toggles can't be asserted on the rendered chrome here. This exercises the
-  // toggle + barRadius prop paths (guarding against a plumbing/crash regression);
-  // the visual effect of the chrome toggles is covered by the `NoChrome` VR story.
-  it('renders with all chrome toggles off and a squared barRadius', () => {
+  it('strips the grid and legend when their toggles are off', () => {
     const { container } = renderChart({
       showGrid: false,
       showTooltip: false,
       showLegend: false,
       barRadius: 0,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(container.querySelector('.recharts-cartesian-grid')).toBeNull();
+    expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
+    // The bars themselves survive the chrome going away.
+    expect(barsOf(container)).toHaveLength(6);
   });
 
-  it('renders without crashing on empty data', () => {
+  it('rounds the bar tops unless barRadius squares them', () => {
+    const rounded = renderChart();
+    expect(barsOf(rounded.container)[0].getAttribute('d')).toMatch(/[aA]/);
+    rounded.unmount();
+
+    const squared = renderChart({ barRadius: 0 });
+    expect(barsOf(squared.container)[0].getAttribute('d')).not.toMatch(/[aA]/);
+  });
+
+  it('draws no bars but still mounts on empty data', () => {
     const { container } = renderChart({ data: [] });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(barsOf(container)).toHaveLength(0);
   });
 
   it('renders with a fixed reference line and an averaged reference line', () => {
@@ -151,21 +203,6 @@ describe('BarChart', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
-  // Axis titles/units forward to recharts' XAxis/YAxis `label`/`unit`; happy-dom
-  // doesn't paint the SVG, so this only guards the prop path (the rendered titles
-  // are covered by the `AxisLabels` VR story) — for both orientations.
-  it('renders with axis titles + units in both orientations', () => {
-    const axis = { xAxisLabel: 'Month', yAxisLabel: 'Sessions', yUnit: 'k', xUnit: '$' };
-    const vertical = renderChart(axis);
-    expect(
-      vertical.container.querySelector('[data-slot="chart"]')
-    ).toBeInTheDocument();
-    const horizontal = renderChart({ ...axis, orientation: 'horizontal' });
-    expect(
-      horizontal.container.querySelector('[data-slot="chart"]')
-    ).toBeInTheDocument();
-  });
-
   it('forwards a ref to the root element', () => {
     const ref = React.createRef<HTMLDivElement>();
     renderChart({ ref });
@@ -177,9 +214,8 @@ describe('BarChart', () => {
     expect(container.firstElementChild).toHaveClass('h-[300px]', 'w-[500px]');
   });
 
-  // The `tooltipContent` prop forwards a custom (library-owned) ChartTooltipContent
-  // to recharts' Tooltip; happy-dom doesn't paint the tooltip, so this only guards
-  // the prop path — consumers customize the tooltip without importing recharts.
+  // The tooltip is hover-only, so this guards the prop path — consumers
+  // customize the tooltip without importing recharts.
   it('accepts a custom tooltipContent', () => {
     const { container } = renderChart({
       tooltipContent: (
@@ -208,16 +244,12 @@ describe('BarChart', () => {
 
 });
 
-// recharts needs a laid-out container, which happy-dom does not provide, so the
-// rendered labels/animation are covered by the visual-regression stories. These
-// assert the prop contract itself: the composition accepts every new prop and
-// mounts, and the animation resolves to the reduced-motion-aware value rather
-// than a literal `true`.
+// The motion itself is a visual-regression concern; what matters here is that
+// `animate` resolves to the reduced-motion-aware value rather than a literal
+// `true`, and that the label props reach the painted bars.
 describe('BarChart animation and data labels', () => {
   it('is not animated unless asked', () => {
     expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
-    const { container } = renderChart();
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
   it('resolves animate to "auto" so prefers-reduced-motion is honored', () => {
@@ -226,30 +258,43 @@ describe('BarChart animation and data labels', () => {
     ).toEqual({ isAnimationActive: 'auto', animationDuration: 800 });
   });
 
-  it('accepts the full animation prop set without throwing', () => {
+  it('still draws every bar with the full animation prop set', async () => {
     const { container } = renderChart({
       animate: true,
       animationDuration: 400,
       animationBegin: 50,
       animationEasing: 'ease-in-out',
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    await waitFor(() => expect(barsOf(container)).toHaveLength(6));
   });
 
-  it('accepts the data-label props without throwing', () => {
+  it('runs the data labels through the caller formatter', () => {
     const { container } = renderChart({
+      dataKeys: ['desktop'],
       showLabels: true,
       labelFormatter: (value) => `${value} u`,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(
+      [...container.querySelectorAll('.recharts-label-list text')].map(
+        (label) => label.textContent
+      )
+    ).toEqual(data.map((row) => `${row.desktop} u`));
   });
 
-  it('accepts an explicit labelPosition override', () => {
-    const { container } = renderChart({
-      showLabels: true,
-      labelPosition: 'center',
-    });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  it('honors an explicit labelPosition override', () => {
+    const labelY = (labelPosition?: 'center') => {
+      const { container, unmount } = renderChart({
+        dataKeys: ['desktop'],
+        showLabels: true,
+        ...(labelPosition ? { labelPosition } : {}),
+      });
+      const ys = [
+        ...container.querySelectorAll('.recharts-label-list text'),
+      ].map((label) => label.getAttribute('y'));
+      unmount();
+      return ys;
+    };
+    expect(labelY('center')).not.toEqual(labelY());
   });
 });
 
