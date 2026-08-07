@@ -28,6 +28,20 @@ class SizedResizeObserver {
   disconnect() {}
 }
 
+const CHART_RECT = {
+  width: CHART_WIDTH,
+  height: CHART_HEIGHT,
+  top: 0,
+  left: 0,
+  right: CHART_WIDTH,
+  bottom: CHART_HEIGHT,
+  x: 0,
+  y: 0,
+  toJSON: () => ({}),
+} as DOMRect;
+
+let installed = false;
+
 /**
  * Give recharts a laid-out container for the duration of the calling test.
  *
@@ -38,31 +52,34 @@ class SizedResizeObserver {
  * test at all; without it the only honest assertion left is "the chart root
  * exists", which passes whether or not the feature works.
  *
- * Call it inside the test, before rendering. Cleanup is registered automatically,
- * so no `afterEach` is needed at the call site.
+ * Only the responsive container may report the size. recharts also measures the
+ * legend wrapper; if that reported the full height too, it would claim the whole
+ * plot area and the series would again render at zero height.
  *
- * Note the whole document reports this size, the legend included — so a chart
- * whose legend is shown gets its plot area measured away to nothing. Render with
- * `showLegend={false}` when the assertion is about geometry.
+ * happy-dom defines the rect once, on `Element.prototype` — patching that one
+ * prototype covers every element type, and patching a subclass's prototype as
+ * well would capture this wrapper as its own "original" and leave it installed
+ * after the restore.
+ *
+ * Call it inside the test, before rendering. Cleanup is registered automatically,
+ * so no `afterEach` is needed at the call site. Calling it more than once in the
+ * same test (a loop that renders one chart per case) is a no-op — re-stubbing
+ * would capture this wrapper as its own "original".
  */
 export function giveTheChartASize() {
+  if (installed) return;
+  installed = true;
+
   vi.stubGlobal('ResizeObserver', SizedResizeObserver);
   const original = Element.prototype.getBoundingClientRect;
-  Element.prototype.getBoundingClientRect = function () {
-    return {
-      width: CHART_WIDTH,
-      height: CHART_HEIGHT,
-      top: 0,
-      left: 0,
-      right: CHART_WIDTH,
-      bottom: CHART_HEIGHT,
-      x: 0,
-      y: 0,
-      toJSON: () => ({}),
-    } as DOMRect;
+  Element.prototype.getBoundingClientRect = function (this: Element) {
+    return this.classList?.contains('recharts-responsive-container')
+      ? CHART_RECT
+      : original.call(this);
   };
   onTestFinished(() => {
     Element.prototype.getBoundingClientRect = original;
     vi.unstubAllGlobals();
+    installed = false;
   });
 }

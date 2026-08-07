@@ -1,5 +1,5 @@
 import { fireEvent, render } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { AreaChart } from '../../area-chart';
 import { BarChart } from '../../bar-chart';
@@ -10,7 +10,7 @@ import {
   CHART_BRUSH_HEIGHT,
   type ChartConfig,
 } from '../index';
-import { giveTheChartASize, restoreTheChartSize } from './sized-chart';
+import { giveTheChartASize } from './chart-layout';
 
 // The range brush is a shared cartesian-chart feature (`ChartBrushProps` +
 // `resolveBrushProps`), so the four charts that carry one are exercised together
@@ -26,8 +26,6 @@ const config = {
   desktop: { label: 'Desktop', color: 'rgb(23 99 207)' },
   mobile: { label: 'Mobile', color: 'rgb(220 53 69)' },
 } satisfies ChartConfig;
-
-afterEach(restoreTheChartSize);
 
 type BrushProps = {
   showBrush?: boolean;

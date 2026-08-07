@@ -1,22 +1,20 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import {
-  CHART_HEIGHT,
-  CHART_WIDTH,
-  giveTheChartASize,
-  restoreTheChartSize,
-} from './sized-chart';
+import { CHART_HEIGHT, CHART_WIDTH, giveTheChartASize } from './chart-layout';
 
 // The stub reaches into a DOM prototype, so a restore that only looks like it
 // works would silently leak a sized chart into every later test in the file.
-describe('sized-chart', () => {
-  afterEach(restoreTheChartSize);
-
+describe('chart-layout', () => {
   function container() {
     const element = document.createElement('div');
     element.className = 'recharts-responsive-container';
     return element;
   }
+
+  // Captured before the first stub is installed, then asserted against after
+  // that test has finished — the cleanup runs via `onTestFinished`, so it can
+  // only be observed from a later test.
+  const originalRect = Element.prototype.getBoundingClientRect;
 
   it('sizes the responsive container and leaves everything else measured', () => {
     giveTheChartASize();
@@ -27,12 +25,8 @@ describe('sized-chart', () => {
     expect(document.createElement('div').getBoundingClientRect().width).toBe(0);
   });
 
-  it('fully restores the prototype it patched', () => {
-    const original = Element.prototype.getBoundingClientRect;
-    giveTheChartASize();
-    restoreTheChartSize();
-
-    expect(Element.prototype.getBoundingClientRect).toBe(original);
+  it('fully restores the prototype it patched once the test finishes', () => {
+    expect(Element.prototype.getBoundingClientRect).toBe(originalRect);
     expect(
       Object.prototype.hasOwnProperty.call(
         HTMLElement.prototype,

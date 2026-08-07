@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { AreaChart } from '../../area-chart';
 import { BarChart } from '../../bar-chart';
@@ -11,7 +11,7 @@ import {
   type ChartConfig,
   type ChartReferenceLine,
 } from '../index';
-import { giveTheChartASize, restoreTheChartSize } from './sized-chart';
+import { giveTheChartASize } from './chart-layout';
 
 // Reference lines are a shared cartesian-chart annotation (`ChartReferenceLine` +
 // `resolveChartReferenceValue` / `resolveReferenceLineProps`), so the three charts
@@ -71,8 +71,6 @@ const CHARTS = [
     ),
   },
 ] as const;
-
-afterEach(restoreTheChartSize);
 
 describe.each(CHARTS)('$name reference line', ({ render: renderChart }) => {
   it('draws none when the prop is unset', () => {
