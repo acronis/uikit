@@ -58,7 +58,6 @@ export function TimelineTreeDemo() {
   return (
     <Timeline variant="tree" className="w-[560px]">
       <Timeline.Item
-        collapsible
         icon={<CircleInfoIcon />}
         title="Retention policy applied"
         tag={<Tag variant="warning">Warning</Tag>}
@@ -90,7 +89,6 @@ export function TimelineTreeDemo() {
         description="Catalog refreshed"
       />
       <Timeline.Item
-        collapsible
         icon={<CircleInfoIcon />}
         title="Next root event"
         timestamp={
