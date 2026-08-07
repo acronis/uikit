@@ -31,7 +31,6 @@ export const Variants: Story = {
       {VARIANTS.map((v) => (
         <Timeline className="w-[520px] shrink-0" key={v} variant={v}>
           <Timeline.Item
-            collapsible
             icon={<CircleInfoIcon />}
             title="Title"
             tag={<Tag variant="warning">Tag</Tag>}
@@ -89,9 +88,8 @@ export const Variants: Story = {
 export const Hover: Story = {
   parameters: { pseudo: { hover: true } },
   render: () => (
-    <Timeline className="w-[520px] shrink-0">
+    <Timeline className="w-[520px] shrink-0" variant="tree">
       <Timeline.Item
-        collapsible
         icon={<CircleInfoIcon />}
         title="Title"
         tag={<Tag variant="warning">Tag</Tag>}
@@ -146,9 +144,8 @@ export const Hover: Story = {
 
 export const FocusVisible: Story = {
   render: () => (
-    <Timeline className="w-[520px] shrink-0">
+    <Timeline className="w-[520px] shrink-0" variant="tree">
       <Timeline.Item
-        collapsible
         icon={<CircleInfoIcon />}
         title="Title"
         tag={<Tag variant="warning">Tag</Tag>}

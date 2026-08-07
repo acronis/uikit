@@ -4,9 +4,11 @@ component: Timeline
 # `variant` is the only cva axis on Timeline (its enum matches the cva keys in the
 # ui-react source). The remaining rows document Timeline.Item, whose props are
 # plain (not cva). Nesting is flat: a row declares its own `level` and whether it
-# opens a branch, and the root reads those levels to drop the rows beneath a
-# collapsed one — so `collapsible` works with no wiring. The kit never sorts,
-# groups, or interprets events.
+# opens a branch, and the root reads those levels both to place the connectors and
+# to decide which rows get a disclosure control. Branch collapsing is the variant,
+# not a per-row flag — there is deliberately no `collapsible` property. A card's own
+# body disclosure (`collapsibleBody`) is a separate, orthogonal axis that behaves the
+# same under both variants. The kit never sorts, groups, or interprets events.
 contract:
   properties:
     # ── Timeline ──
@@ -15,10 +17,10 @@ contract:
       required: false
       default: default
       description: >-
-        What a collapsible row's disclosure control is, and where it sits. `default`
-        puts a chevron at the trailing edge of the card header, which hides that
-        row's body; `tree` reserves a dedicated button ahead of the marker, which
-        hides the row's descendants and widens the indent step. Given via context.
+        Whether the list collapses. `default` never does. `tree` gives every row
+        that has descendants a disclosure button ahead of its marker, which hides
+        those descendants, and widens the indent step to reserve the button on
+        every row. Given via context.
     # ── Timeline.Item ──
     - name: title
       type: ReactNode
@@ -72,44 +74,67 @@ contract:
         (Timeline.Item) Force the descending connector on or off. Leave it unset —
         the root derives it from the levels, drawing it only when the next visible
         row is at this row's depth or deeper.
-    - name: collapsible
-      type: boolean
-      required: false
-      default: 'false'
-      description: >-
-        (Timeline.Item) Give this row a disclosure control. Under `variant="tree"`
-        collapsing hides the descendant rows; otherwise it hides only this row's
-        own body.
     - name: expanded
       type: boolean
       required: false
-      description: (Timeline.Item) Disclosure state (controlled).
+      description: >-
+        (Timeline.Item) Branch disclosure state (controlled). Only meaningful under
+        `variant="tree"` on a row that has descendants.
     - name: defaultExpanded
       type: boolean
       required: false
       default: 'true'
-      description: (Timeline.Item) Initial disclosure state when uncontrolled.
+      description: (Timeline.Item) Initial branch disclosure state when uncontrolled.
     - name: toggleLabel
       type: string
       required: false
       default: Toggle event details
-      description: (Timeline.Item) Accessible name for the disclosure control.
+      description: (Timeline.Item) Accessible name for the branch disclosure control.
+    - name: collapsibleBody
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        (Timeline.Item) Give this row's card a chevron at the trailing edge of its
+        header that folds the card's own body. Orthogonal to `variant` — it is the
+        card's control, not the timeline's, so it works the same in `default` and
+        `tree`, and a tree row can carry both.
+    - name: bodyExpanded
+      type: boolean
+      required: false
+      description: (Timeline.Item) Card-body disclosure state (controlled).
+    - name: defaultBodyExpanded
+      type: boolean
+      required: false
+      default: 'true'
+      description: (Timeline.Item) Initial card-body disclosure state when uncontrolled.
+    - name: bodyToggleLabel
+      type: string
+      required: false
+      default: Toggle event details
+      description: (Timeline.Item) Accessible name for the card-body disclosure control.
 
   events:
     - name: onExpandedChange
       payload: '(expanded: boolean) => void'
       description: >-
-        (Timeline.Item) Fired with the requested disclosure state whenever the
-        control is activated. Uncontrolled, the root also collapses the row; pass
-        `expanded` to own the state instead.
+        (Timeline.Item) Fired with the requested branch disclosure state whenever
+        the control is activated. Uncontrolled, the root also collapses the branch;
+        pass `expanded` to own the state instead.
+    - name: onBodyExpandedChange
+      payload: '(expanded: boolean) => void'
+      description: >-
+        (Timeline.Item) Fired with the requested card-body disclosure state whenever
+        the card's own chevron is activated.
 
   content:
     - name: default
       description: >-
         `Timeline` takes `Timeline.Item`s as direct children, in visual order —
         never wrapped in a fragment, or their levels cannot be read. Each
-        `Timeline.Item` takes optional card-body content as its children, revealed
-        below a divider and hidden while the row is collapsed.
+        `Timeline.Item` takes optional card-body content as its children, rendered
+        below a divider. Collapsing a *branch* never hides it; only that row's own
+        `collapsibleBody` chevron does.
 
   methods: []
 

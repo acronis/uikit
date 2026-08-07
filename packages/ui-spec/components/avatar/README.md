@@ -1,7 +1,7 @@
 # Avatar
 
 A circular badge for a user or entity — a profile image, or initials on a tinted
-background when no image is available. Five color schemes. Stack several with
+background when no image is available. Eight color schemes. Stack several with
 `AvatarGroup` for an overlapping row (e.g. assignees on a ticket).
 
 ## When to use

@@ -65,18 +65,26 @@ figma.connect(
       }),
       connector: figma.boolean('Connecting line'),
     },
+    // The disclosure control is derived, not a prop — a row only gets one when a
+    // deeper row follows it. So the tree example has to show the branch it opens.
     example: ({ level, branchStart, connector }) => (
       <Timeline variant="tree">
         <Timeline.Item
           level={level}
           branchStart={branchStart}
           connector={connector}
-          collapsible
-          defaultExpanded
           icon={<CircleInfoIcon />}
           title="Title"
           tag={<Tag variant="warning">Tag</Tag>}
           timestamp="Dec 22, 08:30 AM"
+          description="Description"
+        />
+        <Timeline.Item
+          level={3}
+          branchStart
+          icon={<CircleInfoIcon />}
+          title="Title"
+          timestamp="Dec 22, 08:31 AM"
           description="Description"
         />
       </Timeline>

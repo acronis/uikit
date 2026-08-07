@@ -5,7 +5,7 @@ status: ready
 category: data-display
 description: >-
   A user or entity avatar — a circular badge showing a profile image or, when
-  none is available, the entity's initials on a tinted background. Five color
+  none is available, the entity's initials on a tinted background. Eight color
   schemes; stack several with AvatarGroup for an overlapping row.
 since: 0.22.0
 dependencies:
