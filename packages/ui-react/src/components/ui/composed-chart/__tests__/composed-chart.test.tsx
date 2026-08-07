@@ -281,6 +281,50 @@ describe('ComposedChart orientation', () => {
     expect(container.querySelectorAll('.recharts-yAxis')).toHaveLength(1);
   });
 
+  // Counting the axes only proves both were declared. What matters is which one
+  // the secondary series is measured against — a series bound to the wrong axis
+  // still renders, just at the wrong scale. Rescaling one axis has to move the
+  // series on that axis and leave the series on the other one where it was.
+  it('plots a secondary horizontal series against the secondary X axis', () => {
+    const horizontalDualAxis = (
+      props: Partial<React.ComponentProps<typeof ComposedChart>>
+    ) => {
+      const { container } = renderChart({
+        orientation: 'horizontal',
+        series: [
+          { key: 'revenue', type: 'bar' },
+          { key: 'orders', type: 'line', yAxis: 'secondary' },
+        ],
+        ...props,
+      });
+      return {
+        bar: container
+          .querySelector('.recharts-bar-rectangle path')
+          ?.getAttribute('d'),
+        line: container
+          .querySelector('.recharts-line-curve')
+          ?.getAttribute('d'),
+      };
+    };
+
+    const base = horizontalDualAxis({});
+    const rescaledSecondary = horizontalDualAxis({
+      secondaryYAxisDomain: 'dataMin-dataMax',
+    });
+    const rescaledPrimary = horizontalDualAxis({
+      yAxisDomain: 'dataMin-dataMax',
+    });
+
+    expect(base.bar).toBeTruthy();
+    expect(base.line).toBeTruthy();
+
+    expect(rescaledSecondary.line).not.toBe(base.line);
+    expect(rescaledSecondary.bar).toBe(base.bar);
+
+    expect(rescaledPrimary.bar).not.toBe(base.bar);
+    expect(rescaledPrimary.line).toBe(base.line);
+  });
+
   // `yAxisOrientation` picks the side of the *value* axis. That axis is X when
   // the marks grow horizontally, so there is no left/right side to take and the
   // prop goes inert — it must not move the category axis instead.
