@@ -1,15 +1,24 @@
 spec_version: '1.0'
 component: Timeline
 name: timeline
-status: draft
+status: stable
 category: data-display
 description: >-
-  A presentational, chronological list of events — an activity feed, audit log,
+  A presentational, chronological tree of events — an activity feed, audit log,
   or status history. `Timeline` + `Timeline.Item` render a semantic ordered list
-  with a connector line, status markers, and a timestamp / title / description
-  hierarchy, plus optional icon, metadata, actions, and expandable children. It
-  owns structure and layout only; it never sorts, groups, fetches, or interprets
-  events, and ships no domain event types or icons. Not a temporal chart.
-  Design-pending v1 (no Figma node yet).
+  in which each row pairs an Avatar marker with a Card carrying the title, an
+  optional tag, the timestamp, and a description; rows join their parent through
+  an elbow and their next sibling through a vertical connector. Nesting is flat
+  and explicit — a row declares its own `level` (1-3) — so the component owns
+  structure and connector geometry only: it never sorts, groups, fetches, or
+  interprets events, ships no domain event types or icons, and does not manage
+  tree state. Not a temporal chart.
 dependencies:
-  components: []
+  components:
+    - avatar
+    - card
+    - button-icon
+figma:
+  node: >-
+    https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=8077-20862
+  codeConnect: packages/ui-react/src/components/ui/timeline/timeline.figma.tsx

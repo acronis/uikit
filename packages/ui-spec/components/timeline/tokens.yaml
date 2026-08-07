@@ -2,58 +2,47 @@ spec_version: '1.0'
 component: Timeline
 
 # References only. Values live in @acronis-platform/tokens-pd and resolve per
-# brand/theme at paint time; never restate values here. Timeline has no dedicated
-# token tier — the marker uses the status text/pressed families (same as Metric's
-# icon badge), the connector uses the shared border token, and the text uses the
-# surface text tokens. Geometry uses the Tailwind scale (no --ui-* type/space tier).
+# brand/theme at paint time; never restate values here.
+#
+# The Figma widget references `components/Timeline/{connectorColor,gap}`, which
+# are not yet "ready for dev" and have no `--ui-timeline-*` tier. Both are pure
+# aliases in Figma, identical across all six brand modes, so this consumes the
+# alias targets directly: `--ui-border-on-surface-border` (connectorColor) and
+# `--ui-gap-16` (gap). Re-point them at `--ui-timeline-*` once that tier ships.
+#
+# The marker, disclosure button, and card come from Avatar / ButtonIcon / Card, so
+# their own tiers theme those parts; only the tokens Timeline references directly
+# are listed here.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
   - name: --ui-border-on-surface-border
     affects: connector
-    description: The connector line (bg-border).
+    description: >-
+      The connector line and the elbow (Figma `components/Timeline/connectorColor`),
+      and the divider above the card body.
+  - name: --ui-gap-16
+    affects: item
+    description: >-
+      Row gap, marker-to-card gap, and the indent step's spacing term (Figma
+      `components/Timeline/gap`).
+  - name: --ui-gap-8
+    affects: toggle
+    description: Gap between the disclosure button and the marker in tree mode.
+  - name: --ui-avatar-global-avatar-size
+    affects: marker
+    description: >-
+      Marker width — also the connector's vertical origin, the elbow's reach, and
+      the indent step's marker term.
+  - name: --ui-button-icon-global-container-height
+    affects: toggle
+    description: Disclosure button width, part of the tree indent step.
+  - name: --ui-button-icon-global-icon-size
+    affects: marker
+    description: Size of the icon rendered inside the marker.
   - name: --ui-text-on-surface-primary
     affects: title
     description: Event title color (text-foreground).
   - name: --ui-text-on-surface-secondary
     affects: description
-    description: Timestamp, description, and metadata muted text (text-muted-foreground).
-  - name: --ui-text-on-status-neutral
-    affects: marker
-    description: Marker dot / icon color for status="neutral".
-  - name: --ui-text-on-status-info
-    affects: marker
-    description: Marker dot / icon color for status="info".
-  - name: --ui-text-on-status-success
-    affects: marker
-    description: Marker dot / icon color for status="success".
-  - name: --ui-text-on-status-warning
-    affects: marker
-    description: Marker dot / icon color for status="warning".
-  - name: --ui-text-on-status-danger
-    affects: marker
-    description: Marker dot / icon color for status="danger".
-  - name: --ui-text-on-status-critical
-    affects: marker
-    description: Marker dot / icon color for status="critical".
-  - name: --ui-background-status-neutral-pressed
-    affects: marker
-    description: Icon marker badge fill for status="neutral".
-  - name: --ui-background-status-info-pressed
-    affects: marker
-    description: Icon marker badge fill for status="info".
-  - name: --ui-background-status-success-pressed
-    affects: marker
-    description: Icon marker badge fill for status="success".
-  - name: --ui-background-status-warning-pressed
-    affects: marker
-    description: Icon marker badge fill for status="warning".
-  - name: --ui-background-status-danger-pressed
-    affects: marker
-    description: Icon marker badge fill for status="danger".
-  - name: --ui-background-status-critical-pressed
-    affects: marker
-    description: Icon marker badge fill for status="critical".
-  - name: --ui-background-surface-primary
-    affects: marker
-    description: Fill behind a `current` ringed marker (bg-background).
+    description: Timestamp and description muted text (text-muted-foreground).

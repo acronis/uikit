@@ -51,5 +51,6 @@ background when no image is available. Five color schemes. Stack several with
 
 ## Color schemes
 
-`teal` (default), `violet`, `red`, `yellow`, `orange`. Each pairs a tinted
-background with a matching initials color from the `--ui-avatar-*` token tier.
+`teal` (default), `violet`, `red`, `yellow`, `orange`, `blue`, `gray`, `green`.
+Each pairs a tinted background with a matching initials color from the
+`--ui-avatar-*` token tier.

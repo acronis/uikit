@@ -2,57 +2,82 @@ spec_version: '1.0'
 component: Timeline
 
 schematic: |
-  <ol> (root)
-   ├─ <li> item ────────────────────────────────
-   │   ● marker    24 Jul 2026, 10:35   ← timestamp
-   │   │ connector  Backup rate dropped  ← title
-   │   │            Fell 96% → 72%       ← description
-   │   │            [Backup] [Customer]  ← metadata
-   │   │            View details         ← actions
-   │   │            (… body …)           ← body (expandable)
-   └─ <li> item (last: connector hidden)
-  parts: item · marker · connector · timestamp · title · description
-       · metadata · actions · body
-  status -> marker tint · current -> ringed marker · size / density -> spacing
+  <ol> (root)                              variant: default | tree
+   ├─ <li> item ─────────────────────────────────────────────────
+   │  (toggle)  (marker) ┌───────────── card ─────────────────┐
+   │   tree      │       │ title [tag] Dec 22, 08:30 AM (toggle)
+   │   only      │       │ description                  default │
+   │   connector │       ├────────────── divider ──────────────┤
+   │             │       │ (… body …)                          │ ← body
+   │  elbow ─────┘       └─────────────────────────────────────┘
+   └─ <li> item (last visible: connector hidden)
+
+  parts: item · toggle · marker · connector · elbow · card
+       · title · tag · timestamp · description · body
+  level -> indent · branchStart -> elbow · connector -> trailing line
+  variant=tree -> toggle moves ahead of the marker, indent step widens
+  collapsed -> default: this row's body hidden | tree: descendant rows dropped
 
 root:
   element: ol
   description: >-
-    A semantic ordered list. `size` scales the text; `density` sets the vertical
-    rhythm between items; the connector on the last item is hidden.
+    A semantic ordered list of rows in visual order. `variant` places a collapsible
+    row's disclosure control — in the card header (`default`) or ahead of the marker
+    (`tree`, which widens the indent step so every level still aligns). The root
+    reads its children's `level`s to drop the rows beneath a collapsed one and to
+    derive each row's connector.
 
 parts:
   - id: item
-    description: One event — a `<li>` (Timeline.Item) with a marker column and a content column.
+    description: >-
+      One event — a `<li>` (Timeline.Item) holding the marker column, the card,
+      and its connector geometry. Indented by `level`.
     element: li
+  - id: toggle
+    description: >-
+      The disclosure control (a `ButtonIcon` with a chevron) — at the trailing edge
+      of the card header, where collapsing hides this row's body, or ahead of the
+      marker under `variant="tree"`, where it drops the descendant rows instead.
+    element: button
+    optional: true
+    visible_when: the item is `collapsible`
   - id: marker
     description: >-
-      The status-tinted dot (or, with an `icon`, a `-pressed` badge) at the start
-      of the item. `current` renders it as a ring. Decorative (`aria-hidden`).
+      The Avatar at the start of the row, tinted by `color` and holding the `icon`
+      or `initials`. Decorative (`aria-hidden`); Avatar's outset ring is switched
+      off, matching the design's strokeless marker.
   - id: connector
-    description: The vertical line joining an item's marker to the next. Decorative; hidden on the last item.
+    description: >-
+      The vertical line descending from the marker into the row gap, meeting the
+      next row. Decorative; drawn only when the next visible row is at this row's
+      depth or deeper, so it never dangles.
+  - id: elbow
+    description: >-
+      The right angle joining a nested row to its parent's connector. Decorative;
+      drawn only when the row starts a branch.
+    optional: true
+    visible_when: '`branchStart` is true and `level` is greater than 1'
+  - id: card
+    description: The bordered container holding the row's content (a `Card`).
+  - id: title
+    description: The event title (primary line in the card header).
+  - id: tag
+    description: Slot beside the title, before the timestamp — e.g. a `Tag`.
+    optional: true
+    visible_when: a `tag` is provided
   - id: timestamp
     description: Event time (`timestamp`) — pass a `<time dateTime>` for a machine-readable stamp.
     optional: true
     visible_when: a `timestamp` is provided
-  - id: title
-    description: The event title (primary line).
   - id: description
-    description: Optional secondary description line.
+    description: Optional secondary description line under the title.
     optional: true
     visible_when: a `description` is provided
-  - id: metadata
-    description: Optional metadata slot (e.g. Tags) under the description.
-    optional: true
-    visible_when: '`metadata` is provided'
-  - id: actions
-    description: Optional actions slot (e.g. a Link / ButtonMenu).
-    optional: true
-    visible_when: '`actions` is provided'
   - id: body
-    description: Optional expandable detail composed by the caller (e.g. an Accordion) — the item's `children`.
+    description: >-
+      The item's `children`, rendered in the card below a divider.
     optional: true
-    visible_when: '`children` are provided'
+    visible_when: '`children` are provided and the row is not collapsed'
 
 layout:
   type: flex
@@ -62,86 +87,79 @@ layout:
 
 states:
   - {
-      id: neutral,
-      trigger: "status === 'neutral'",
-      kind: prop,
-      prop: status,
-      affects: [marker],
-    }
-  - {
-      id: info,
-      trigger: "status === 'info'",
-      kind: prop,
-      prop: status,
-      affects: [marker],
-    }
-  - {
-      id: success,
-      trigger: "status === 'success'",
-      kind: prop,
-      prop: status,
-      affects: [marker],
-    }
-  - {
-      id: warning,
-      trigger: "status === 'warning'",
-      kind: prop,
-      prop: status,
-      affects: [marker],
-    }
-  - {
-      id: danger,
-      trigger: "status === 'danger'",
-      kind: prop,
-      prop: status,
-      affects: [marker],
-    }
-  - {
-      id: critical,
-      trigger: "status === 'critical'",
-      kind: prop,
-      prop: status,
-      affects: [marker],
-    }
-  - {
-      id: current,
-      trigger: 'current is true',
-      kind: prop,
-      prop: current,
-      affects: [marker],
-    }
-  - {
-      id: disabled,
-      trigger: 'disabled is true',
-      kind: prop,
-      prop: disabled,
-      affects: [item],
-    }
-  - {
-      id: small,
-      trigger: "size === 'small'",
-      kind: prop,
-      prop: size,
-      affects: [root, marker],
-    }
-  - {
-      id: medium,
-      trigger: "size === 'medium'",
-      kind: prop,
-      prop: size,
-      affects: [root, marker],
-    }
-  - {
-      id: compact,
-      trigger: "density === 'compact'",
-      kind: prop,
-      prop: density,
-      affects: [item],
-    }
-  - {
       id: default,
-      trigger: "density === 'default'",
+      trigger: "variant === 'default'",
       kind: prop,
-      prop: density,
+      prop: variant,
+      affects: [root, item, marker],
+    }
+  - {
+      id: tree,
+      trigger: "variant === 'tree'",
+      kind: prop,
+      prop: variant,
+      affects: [root, item, toggle],
+    }
+  - {
+      id: level-1,
+      trigger: 'level === 1',
+      kind: prop,
+      prop: level,
       affects: [item],
+    }
+  - {
+      id: level-2,
+      trigger: 'level === 2',
+      kind: prop,
+      prop: level,
+      affects: [item],
+    }
+  - {
+      id: level-3,
+      trigger: 'level === 3',
+      kind: prop,
+      prop: level,
+      affects: [item],
+    }
+  - {
+      id: branch-start,
+      trigger: 'branchStart is true and level is greater than 1',
+      kind: prop,
+      prop: branchStart,
+      affects: [elbow],
+    }
+  - {
+      id: connected,
+      trigger: 'the next visible row is at this level or deeper',
+      kind: prop,
+      prop: connector,
+      affects: [connector],
+    }
+  - {
+      id: collapsible,
+      trigger: 'collapsible is true',
+      kind: prop,
+      prop: collapsible,
+      affects: [toggle, item],
+    }
+  - {
+      id: expanded,
+      trigger: 'expanded is true',
+      kind: prop,
+      prop: expanded,
+      affects: [toggle, body],
+    }
+  - {
+      id: toggle-hover,
+      trigger: 'pointer over the disclosure button',
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [toggle],
+    }
+  - {
+      id: toggle-focus-visible,
+      trigger: 'keyboard focus on the disclosure button',
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [toggle],
     }

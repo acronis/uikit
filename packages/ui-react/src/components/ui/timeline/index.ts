@@ -3,5 +3,6 @@ export {
   TimelineItem,
   type TimelineProps,
   type TimelineItemProps,
-  type TimelineStatus,
+  type TimelineLevel,
+  type TimelineMarkerColor,
 } from './timeline';

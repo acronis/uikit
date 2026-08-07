@@ -24,7 +24,7 @@ import { cn } from '@/lib/utils';
 // inconsistently for a spread-only ring across engine versions. The raw property
 // emits the literal declaration so every renderer draws the same 2px outset ring.
 //
-// `color` selects one of the five Figma color schemes; it tints the fallback
+// `color` selects one of the eight Figma color schemes; it tints the fallback
 // background (`--ui-avatar-color-<scheme>`) and the initials
 // (`--ui-avatar-label-color-<scheme>`). Initials use the 12px/16px/600 caption
 // style baked into the design (`text-xs font-semibold leading-4`).
@@ -44,6 +44,10 @@ const avatarVariants = cva(
           'bg-[var(--ui-avatar-color-yellow)] text-[var(--ui-avatar-label-color-yellow)]',
         orange:
           'bg-[var(--ui-avatar-color-orange)] text-[var(--ui-avatar-label-color-orange)]',
+        blue: 'bg-[var(--ui-avatar-color-blue)] text-[var(--ui-avatar-label-color-blue)]',
+        gray: 'bg-[var(--ui-avatar-color-gray)] text-[var(--ui-avatar-label-color-gray)]',
+        green:
+          'bg-[var(--ui-avatar-color-green)] text-[var(--ui-avatar-label-color-green)]',
       },
     },
     defaultVariants: {

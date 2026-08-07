@@ -7,7 +7,7 @@ component: Avatar
 contract:
   properties:
     - name: color
-      type: "'teal' | 'violet' | 'red' | 'yellow' | 'orange'"
+      type: "'teal' | 'violet' | 'red' | 'yellow' | 'orange' | 'blue' | 'gray' | 'green'"
       required: false
       default: teal
       description: >-

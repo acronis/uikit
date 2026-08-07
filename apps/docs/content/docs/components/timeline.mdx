@@ -1,10 +1,14 @@
 ---
 title: Timeline
-description: A chronological event list — activity feed, audit log, or status history.
+description: A chronological event tree — activity feed, audit log, or status history.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
-import { TimelineDemo } from '@/components/demos-react/timeline';
+import {
+  TimelineDemo,
+  TimelineTreeDemo,
+  TimelineExpandableDemo,
+} from '@/components/demos-react/timeline';
 
 ## Usage
 
@@ -12,14 +16,18 @@ import { TimelineDemo } from '@/components/demos-react/timeline';
 import { Timeline } from '@acronis-platform/ui-react';
 ```
 
-`Timeline` renders a **chronological list of events** as a semantic ordered list
-(`<ol>`/`<li>`) with a connector line, status markers, and a timestamp / title /
-description hierarchy. It is purely presentational: it never sorts, groups,
-fetches, or interprets events, and ships no domain event types or icons — the
-consumer passes ordered `Timeline.Item`s with a resolved `status`, `icon`, and a
-formatted `timestamp`.
+`Timeline` renders a **chronological tree of events** as a semantic ordered list
+(`<ol>`/`<li>`). Each row pairs an `Avatar` marker with a `Card` carrying the
+title, an optional tag, the timestamp, and a description; rows join their parent
+through an elbow and their next sibling through a vertical connector.
+
+It is purely presentational: it never sorts, groups, fetches, or interprets
+events and ships no domain event types or icons — the consumer passes ordered
+`Timeline.Item`s with a resolved `icon`, `color`, and a formatted `timestamp`.
 
 It is **not** a temporal chart — use a Line / Area / Composed chart for trends.
+It is also not a real tree widget: nesting here is visual only and is not exposed
+to assistive tech.
 
 ## Examples
 
@@ -30,35 +38,124 @@ It is **not** a temporal chart — use a Line / Area / Composed chart for trends
 ```tsx
 <Timeline>
   <Timeline.Item
-    timestamp={<time dateTime="2026-07-24T10:35:00+02:00">24 Jul 2026, 10:35</time>}
+    icon={<TriangleWarningIcon />}
+    color="yellow"
     title="Backup success rate dropped"
-    description="Fell from 96% to 72%"
-    status="critical"
-    icon={<ChartPieIcon />}
-    metadata={<Tag>Backup</Tag>}
-    actions={<Link href="#details">View details</Link>}
+    tag={<Tag variant="warning">Warning</Tag>}
+    timestamp={<time dateTime="2026-07-24T10:35:00+02:00">24 Jul, 10:35</time>}
+    description="Success rate fell from 96% to 72%"
   />
-  <Timeline.Item title="P1 support ticket resolved" status="success" />
+  <Timeline.Item
+    level={2}
+    branchStart
+    icon={<CircleInfoIcon />}
+    title="Three workloads missed their window"
+    description="db-01, db-02, files-07"
+  />
 </Timeline>
 ```
 
-`status` (`neutral`, `info`, `success`, `warning`, `danger`, `critical`) tints
-the **marker** only — a dot, or an icon in a `-pressed` badge — never large
-blocks of text. Use `current` for a process's current step and `disabled` to dim
-an inactive item.
+### Nesting
 
-Set the rhythm with `density` (`compact` for sidebars / popovers) and the text
-scale with `size`:
+`level` (`1`–`3`) sets a row's indent. `branchStart` — Figma's `Nesting` `-First`
+— draws the elbow joining a row to its parent's connector, so it belongs on the
+**first** child of a branch only. The two props are orthogonal, and `branchStart`
+is ignored at `level={1}` because there is no parent to join.
+
+Nesting is **flat and explicit**: the component never derives depth from JSX
+nesting. Render one `Timeline.Item` per visible row, in visual order, and declare
+its level.
+
+Connectors are **derived** from those levels: `Timeline` draws a row's descending
+line only when the next visible row is at its own depth or deeper, so a branch's
+last row, the list's last row, and a row whose descendants were just collapsed
+never leave a line dangling in the margin. Set `connector` explicitly only to
+override that.
 
 ```tsx
-<Timeline density="compact" size="small">
-  <Timeline.Item timestamp="10:30" title="Deployed v2.4.1" status="success" />
-  <Timeline.Item timestamp="10:12" title="Build passed" status="info" />
+<Timeline>
+  <Timeline.Item title="Root" />
+  <Timeline.Item level={2} branchStart title="First child" />
+  <Timeline.Item level={2} title="Last child" />
+  <Timeline.Item title="Next root" />
 </Timeline>
 ```
 
-Compose `Tag` (metadata), `Link` / `ButtonMenu` (actions), and `Accordion`
-(expandable detail, as an item's `children`).
+### Collapsing
+
+A `collapsible` row gets a disclosure control, and **what it collapses follows the
+variant** — matching the two idioms Figma ships.
+
+Under `variant="tree"` it is a hierarchy control: a button ahead of the marker that
+drops every following row deeper than its own. No wiring needed, because `Timeline`
+reads its children's `level`s:
+
+<DemoReact>
+  <TimelineTreeDemo />
+</DemoReact>
+
+```tsx
+<Timeline variant="tree">
+  <Timeline.Item collapsible title="Retention policy applied" />
+  <Timeline.Item level={2} branchStart title="Archive pruned" />
+  <Timeline.Item level={2} connector={false} title="Index rebuilt" />
+  <Timeline.Item title="Next root event" />
+</Timeline>
+```
+
+Pass `expanded` + `onExpandedChange` to own the state yourself, and
+`defaultExpanded={false}` to start collapsed. Items must be **direct** children of
+`Timeline` — wrapping them in a fragment hides their `level` from the root.
+
+That variant also widens the indent step, so levels still align once the extra
+button is reserved.
+
+Under `variant="default"` the control is a chevron at the trailing edge of the card
+header, matching Figma's `Action Button`. It belongs to **that card**: it reveals
+the row's own body below a divider and leaves the rows nested under it untouched.
+
+<DemoReact>
+  <TimelineExpandableDemo />
+</DemoReact>
+
+```tsx
+<Timeline>
+  <Timeline.Item collapsible title="Nightly protection plan failed">
+    <div>Affected workloads: db-01, db-02, files-07</div>
+  </Timeline.Item>
+  <Timeline.Item level={2} branchStart initials="AA" title="Acknowledged" />
+</Timeline>
+```
+
+`toggleLabel` is the control's accessible name. It defaults to an English string,
+so pass a localized value.
+
+### Marker
+
+The marker is an `Avatar` tinted by `color` (`blue` by default; `gray`, `green`,
+`teal`, `violet`, `red`, `yellow`, `orange` are also available), holding either an
+`icon` or `initials` — pass `initials` for people-centric feeds, `icon` for system
+events. Avatar's 2px outset ring is switched off here, matching the design's
+strokeless marker.
+
+The marker is decorative, so its color and glyph must never be the only carrier of
+meaning — put that in the text or a `Tag`.
+
+Compose `Tag` into `tag`, and anything you like as an item's `children`, which
+renders in the card below a divider (and is hidden while the row is collapsed).
+
+## Theming
+
+The connector and elbow use `--ui-border-on-surface-border`; spacing and the
+indent step derive from `--ui-gap-16`, `--ui-gap-8`,
+`--ui-avatar-global-avatar-size`, and
+`--ui-button-icon-global-container-height`. The marker, disclosure button, and
+card are themed by `Avatar`'s, `ButtonIcon`'s, and `Card`'s own token tiers.
+
+The Figma variables `components/Timeline/{connectorColor,gap}` are not yet "ready
+for dev" and have no `--ui-timeline-*` tier. Both are pure aliases in Figma,
+identical across all six brands, so the implementation consumes their alias
+targets directly.
 
 ## API Reference
 

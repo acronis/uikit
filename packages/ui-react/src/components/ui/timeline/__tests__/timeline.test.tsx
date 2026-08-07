@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 
+import { Tag } from '../../tag';
 import { Timeline, TimelineItem } from '../timeline';
 
 describe('Timeline', () => {
@@ -17,151 +19,364 @@ describe('Timeline', () => {
     expect(ol?.querySelectorAll('li')).toHaveLength(2);
   });
 
-  it('renders timestamp, title and description', () => {
+  it('renders the title, tag, timestamp and description slots', () => {
     render(
       <Timeline>
         <Timeline.Item
-          timestamp="Today, 10:30"
           title="Backup success rate dropped"
+          tag={<Tag variant="warning">Warning</Tag>}
+          timestamp="Dec 22, 08:30 AM"
           description="Fell from 96% to 72%"
         />
       </Timeline>
     );
-    expect(screen.getByText('Today, 10:30')).toBeInTheDocument();
     expect(screen.getByText('Backup success rate dropped')).toBeInTheDocument();
+    expect(screen.getByText('Warning')).toBeInTheDocument();
+    expect(screen.getByText('Dec 22, 08:30 AM')).toBeInTheDocument();
     expect(screen.getByText('Fell from 96% to 72%')).toBeInTheDocument();
   });
 
-  it('reflects status on the item and tints the marker', () => {
-    const { container } = render(
-      <Timeline>
-        <Timeline.Item title="Incident" status="danger" />
-      </Timeline>
-    );
-    const li = container.querySelector('li');
-    expect(li).toHaveAttribute('data-status', 'danger');
-    // the plain dot uses the danger status token
-    expect(container.innerHTML).toContain('bg-[var(--ui-text-on-status-danger)]');
-  });
-
-  it('renders an icon in the marker badge instead of the dot', () => {
-    const { container } = render(
-      <Timeline>
-        <Timeline.Item title="Secured" status="success" icon={<svg data-testid="ico" />} />
-      </Timeline>
-    );
-    const icon = container.querySelector('[data-testid="ico"]');
-    expect(icon).toBeInTheDocument();
-    expect(icon?.parentElement?.className).toContain(
-      'bg-[var(--ui-background-status-success-pressed)]'
-    );
-  });
-
-  it('renders metadata, actions and expandable children', () => {
+  it('renders extra content in the card body', () => {
     render(
       <Timeline>
-        <Timeline.Item
-          title="Anomaly"
-          metadata={<span>meta-tag</span>}
-          actions={<a href="#x">View</a>}
-        >
-          <div>extra detail</div>
+        <Timeline.Item title="Event">
+          <p>Nested detail</p>
         </Timeline.Item>
       </Timeline>
     );
-    expect(screen.getByText('meta-tag')).toBeInTheDocument();
-    expect(screen.getByText('View')).toBeInTheDocument();
-    expect(screen.getByText('extra detail')).toBeInTheDocument();
+    expect(screen.getByText('Nested detail')).toBeInTheDocument();
   });
 
-  it('marks current and disabled items', () => {
+  it('defaults to level 1 and reflects the nesting level', () => {
     const { container } = render(
       <Timeline>
-        <Timeline.Item title="Now" current />
-        <Timeline.Item title="Off" disabled />
+        <Timeline.Item title="Root" />
+        <Timeline.Item title="Child" level={2} branchStart />
+        <Timeline.Item title="Grandchild" level={3} />
       </Timeline>
     );
-    const [a, b] = container.querySelectorAll('li');
-    expect(a).toHaveAttribute('data-current', 'true');
-    expect(b).toHaveAttribute('data-disabled', 'true');
-    expect(b.className).toContain('opacity-60');
+    const items = Array.from(container.querySelectorAll('li'));
+    expect(items.map((li) => li.dataset.level)).toEqual(['1', '2', '3']);
   });
 
-  it('gives a disabled item an accessible signal and blocks pointer input', () => {
+  it('draws the elbow only when a nested item starts a branch', () => {
     const { container } = render(
       <Timeline>
-        <Timeline.Item title="Off" disabled />
-        <Timeline.Item title="On" />
+        <Timeline.Item title="Root" branchStart />
+        <Timeline.Item title="Branch" level={2} branchStart />
+        <Timeline.Item title="Sibling" level={2} />
       </Timeline>
     );
-    const [disabled, active] = container.querySelectorAll('li');
-    expect(disabled).toHaveAttribute('aria-disabled', 'true');
-    expect(disabled.className).toContain('pointer-events-none');
-    // An active item carries neither signal.
-    expect(active).not.toHaveAttribute('aria-disabled');
-    expect(active.className).not.toContain('pointer-events-none');
+    const items = Array.from(container.querySelectorAll('li'));
+    // `branchStart` is ignored at level 1 — there is no parent to join.
+    expect(
+      items[0].querySelector('[data-slot="timeline-elbow"]')
+    ).not.toBeInTheDocument();
+    expect(
+      items[1].querySelector('[data-slot="timeline-elbow"]')
+    ).toBeInTheDocument();
+    expect(
+      items[2].querySelector('[data-slot="timeline-elbow"]')
+    ).not.toBeInTheDocument();
   });
 
-  it('rings the icon marker badge for a current item', () => {
+  it('derives the connector from the next visible row, and honors an override', () => {
+    const { container } = render(
+      <Timeline>
+        <Timeline.Item title="Root" />
+        <Timeline.Item title="Child" level={2} branchStart />
+        <Timeline.Item title="Next root" />
+        <Timeline.Item title="Forced" connector />
+      </Timeline>
+    );
+    const items = Array.from(container.querySelectorAll('li'));
+    const hasConnector = (li: HTMLElement) =>
+      li.querySelector('[data-slot="timeline-connector"]') !== null;
+
+    // Reaches a deeper row.
+    expect(hasConnector(items[0])).toBe(true);
+    // The branch's last row: the next row is shallower, so the line would dangle.
+    expect(hasConnector(items[1])).toBe(false);
+    // Reaches a row at its own level.
+    expect(hasConnector(items[2])).toBe(true);
+    // Last row overall — only drawn because it was forced on.
+    expect(hasConnector(items[3])).toBe(true);
+  });
+
+  it("drops a collapsed row's dangling connector", async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <Timeline variant="tree">
+        <Timeline.Item title="Root" collapsible />
+        <Timeline.Item title="Child" level={2} branchStart />
+      </Timeline>
+    );
+    const connector = () =>
+      container.querySelector('[data-slot="timeline-connector"]');
+    // Expanded, the root's line reaches its child.
+    expect(connector()).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button'));
+    // Collapsed, nothing follows it — the line must go with the child.
+    expect(connector()).not.toBeInTheDocument();
+  });
+
+  it('marks the marker and connectors as decorative', () => {
+    const { container } = render(
+      <Timeline>
+        <Timeline.Item title="Event" level={2} branchStart />
+        {/* A following sibling, so the first row's connector is drawn. */}
+        <Timeline.Item title="Sibling" level={2} />
+      </Timeline>
+    );
+    for (const selector of [
+      '[data-slot="timeline-connector"]',
+      '[data-slot="timeline-elbow"]',
+    ]) {
+      expect(container.querySelector(selector)).toHaveAttribute('aria-hidden');
+    }
+  });
+
+  it('reflects the variant on the root', () => {
+    const { container } = render(
+      <Timeline variant="tree">
+        <Timeline.Item title="Event" />
+      </Timeline>
+    );
+    expect(container.querySelector('ol')).toHaveAttribute(
+      'data-variant',
+      'tree'
+    );
+  });
+
+  it('shows the disclosure button in the header, or ahead of the marker in tree mode', () => {
+    const { container, rerender } = render(
+      <Timeline>
+        <Timeline.Item title="Event" collapsible />
+      </Timeline>
+    );
+    const card = container.querySelector('li > div:last-child');
+    expect(card).toContainElement(screen.getByRole('button'));
+
+    rerender(
+      <Timeline variant="tree">
+        <Timeline.Item title="Event" collapsible />
+      </Timeline>
+    );
+    // In tree mode the control lives in the marker column, before the card.
+    const markerColumn = container.querySelector('li > div:first-of-type');
+    expect(markerColumn).toContainElement(screen.getByRole('button'));
+
+    rerender(
+      <Timeline>
+        <Timeline.Item title="Event" />
+      </Timeline>
+    );
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('collapses descendant rows in tree mode without any consumer wiring', async () => {
+    const user = userEvent.setup();
+    render(
+      <Timeline variant="tree">
+        <Timeline.Item title="Root" collapsible />
+        <Timeline.Item title="Child" level={2} branchStart />
+        <Timeline.Item title="Grandchild" level={3} branchStart />
+        <Timeline.Item title="Next root" />
+      </Timeline>
+    );
+    expect(screen.getByText('Child')).toBeInTheDocument();
+    expect(screen.getByText('Grandchild')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button'));
+
+    expect(screen.queryByText('Child')).not.toBeInTheDocument();
+    expect(screen.queryByText('Grandchild')).not.toBeInTheDocument();
+    // A sibling at the collapsed row's own level is unaffected.
+    expect(screen.getByText('Next root')).toBeInTheDocument();
+    expect(screen.getByText('Root')).toBeInTheDocument();
+  });
+
+  it('collapses only the nested branch when a deeper row is collapsed', async () => {
+    const user = userEvent.setup();
+    render(
+      <Timeline variant="tree">
+        <Timeline.Item title="Root" />
+        <Timeline.Item title="Child" level={2} branchStart collapsible />
+        <Timeline.Item title="Grandchild" level={3} branchStart />
+        <Timeline.Item title="Sibling" level={2} />
+      </Timeline>
+    );
+    await user.click(screen.getByRole('button'));
+
+    expect(screen.queryByText('Grandchild')).not.toBeInTheDocument();
+    expect(screen.getByText('Sibling')).toBeInTheDocument();
+    expect(screen.getByText('Root')).toBeInTheDocument();
+  });
+
+  it('starts collapsed with defaultExpanded={false}', () => {
+    render(
+      <Timeline variant="tree">
+        <Timeline.Item title="Root" collapsible defaultExpanded={false} />
+        <Timeline.Item title="Child" level={2} branchStart />
+      </Timeline>
+    );
+    expect(screen.queryByText('Child')).not.toBeInTheDocument();
+    expect(screen.getByRole('button')).toHaveAttribute(
+      'aria-expanded',
+      'false'
+    );
+  });
+
+  it('skips the connector between tree siblings with mismatched marker widths', () => {
+    const { container } = render(
+      <Timeline variant="tree">
+        {/* Reserves a disclosure button, so its marker column is wider... */}
+        <Timeline.Item title="Parent" collapsible />
+        {/* ...than this sibling's, so a straight line between them is impossible. */}
+        <Timeline.Item title="Leaf sibling" />
+        <Timeline.Item title="Another leaf" />
+      </Timeline>
+    );
+    const items = Array.from(container.querySelectorAll('li'));
+    const hasConnector = (li: HTMLElement) =>
+      li.querySelector('[data-slot="timeline-connector"]') !== null;
+
+    expect(hasConnector(items[0])).toBe(false);
+    // Two leaves share a marker width, so their line is fine.
+    expect(hasConnector(items[1])).toBe(true);
+  });
+
+  it('leaves descendant rows alone when a default-variant card collapses', async () => {
+    const user = userEvent.setup();
+    render(
+      <Timeline>
+        <Timeline.Item title="Root" collapsible>
+          <p>Section detail</p>
+        </Timeline.Item>
+        <Timeline.Item title="Child" level={2} branchStart />
+      </Timeline>
+    );
+    await user.click(screen.getByRole('button'));
+
+    // The chevron belongs to the card, so only its own body goes away.
+    expect(screen.queryByText('Section detail')).not.toBeInTheDocument();
+    expect(screen.getByText('Child')).toBeInTheDocument();
+  });
+
+  it('hides the card body while collapsed', async () => {
+    const user = userEvent.setup();
+    render(
+      <Timeline>
+        <Timeline.Item title="Event" collapsible>
+          <p>Section detail</p>
+        </Timeline.Item>
+      </Timeline>
+    );
+    expect(screen.getByText('Section detail')).toBeInTheDocument();
+    await user.click(screen.getByRole('button'));
+    expect(screen.queryByText('Section detail')).not.toBeInTheDocument();
+  });
+
+  it('always shows the body of a non-collapsible item', () => {
+    render(
+      <Timeline>
+        <Timeline.Item title="Event">
+          <p>Section detail</p>
+        </Timeline.Item>
+      </Timeline>
+    );
+    expect(screen.getByText('Section detail')).toBeInTheDocument();
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('reports the requested disclosure state', async () => {
+    const onExpandedChange = vi.fn();
+    const user = userEvent.setup();
     const { container } = render(
       <Timeline>
         <Timeline.Item
-          title="Now"
-          status="info"
-          current
-          icon={<svg data-testid="cur" />}
+          title="Event"
+          collapsible
+          onExpandedChange={onExpandedChange}
         />
       </Timeline>
     );
-    const badge = container.querySelector('[data-testid="cur"]')?.parentElement;
-    expect(badge?.className).toContain('ring-2');
-    expect(badge?.className).toContain('ring-[var(--ui-text-on-status-info)]');
+    const toggle = screen.getByRole('button');
+    const item = container.querySelector('li');
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    expect(item).toHaveAttribute('data-expanded', 'true');
+
+    await user.click(toggle);
+    expect(onExpandedChange).toHaveBeenCalledWith(false);
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(item).toHaveAttribute('data-expanded', 'false');
   });
 
-  it('reflects size and density on the list', () => {
-    const { container } = render(
-      <Timeline size="small" density="compact">
-        <Timeline.Item title="A" />
+  it('honors a controlled expanded state', async () => {
+    const onExpandedChange = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Timeline variant="tree">
+        <Timeline.Item
+          title="Root"
+          collapsible
+          expanded={false}
+          onExpandedChange={onExpandedChange}
+        />
+        <Timeline.Item title="Child" level={2} branchStart />
       </Timeline>
     );
-    const ol = container.querySelector('ol');
-    expect(ol).toHaveAttribute('data-size', 'small');
-    expect(ol).toHaveAttribute('data-density', 'compact');
+    const toggle = screen.getByRole('button');
+    // The consumer owns the state, so the descendant stays hidden after a click.
+    expect(screen.queryByText('Child')).not.toBeInTheDocument();
+    await user.click(toggle);
+    expect(onExpandedChange).toHaveBeenCalledWith(true);
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByText('Child')).not.toBeInTheDocument();
   });
 
-  it('renders a connector per item (last one hidden by the list rule)', () => {
-    const { container } = render(
+  it('names the disclosure button and lets the name be overridden', () => {
+    const { rerender } = render(
       <Timeline>
-        <Timeline.Item title="A" />
-        <Timeline.Item title="B" />
+        <Timeline.Item title="Event" collapsible />
       </Timeline>
     );
     expect(
-      container.querySelectorAll('[data-slot="timeline-connector"]')
-    ).toHaveLength(2);
-    expect(container.querySelector('ol')?.className).toContain(
-      '[&>li:last-child_[data-slot=timeline-connector]]:hidden'
+      screen.getByRole('button', { name: 'Toggle event details' })
+    ).toBeInTheDocument();
+
+    rerender(
+      <Timeline>
+        <Timeline.Item title="Event" collapsible toggleLabel="Mostrar mas" />
+      </Timeline>
     );
+    expect(
+      screen.getByRole('button', { name: 'Mostrar mas' })
+    ).toBeInTheDocument();
   });
 
-  it('forwards refs to the list and an item', () => {
-    const olRef = React.createRef<HTMLOListElement>();
-    const liRef = React.createRef<HTMLLIElement>();
+  it('renders initials in the marker when no icon is given', () => {
     render(
-      <Timeline ref={olRef}>
-        <TimelineItem ref={liRef} title="A" />
+      <Timeline>
+        <Timeline.Item title="Event" initials="MS" />
       </Timeline>
     );
-    expect(olRef.current).toBeInstanceOf(HTMLOListElement);
-    expect(liRef.current).toBeInstanceOf(HTMLLIElement);
+    expect(screen.getByText('MS')).toBeInTheDocument();
   });
 
-  it('merges a caller className onto the list', () => {
-    const { container } = render(
-      <Timeline className="max-w-md">
-        <Timeline.Item title="A" />
+  it('forwards refs and merges class names', () => {
+    const rootRef = React.createRef<HTMLOListElement>();
+    const itemRef = React.createRef<HTMLLIElement>();
+    render(
+      <Timeline ref={rootRef} className="custom-root">
+        <TimelineItem ref={itemRef} className="custom-item" title="Event" />
       </Timeline>
     );
-    expect(container.firstElementChild).toHaveClass('max-w-md');
+    expect(rootRef.current).toBeInstanceOf(HTMLOListElement);
+    expect(itemRef.current).toBeInstanceOf(HTMLLIElement);
+    expect(rootRef.current).toHaveClass('custom-root');
+    expect(itemRef.current).toHaveClass('custom-item');
   });
 });
