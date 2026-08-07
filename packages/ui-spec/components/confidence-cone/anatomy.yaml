@@ -107,7 +107,7 @@ states:
   - id: band-less
     trigger: a series omits lowerKey / upperKey — a point projection with no interval
     kind: prop
-    prop: series
+    prop: lowerKey
     affects: [cone]
   - id: actual-as-line
     trigger: actualType="line" drops the filled region under the observed values

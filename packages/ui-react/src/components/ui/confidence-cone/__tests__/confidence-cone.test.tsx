@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
   ConfidenceCone,
@@ -13,6 +13,31 @@ import {
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
+
+beforeAll(() => {
+  // happy-dom's ResizeObserver never reports a size, so recharts'
+  // ResponsiveContainer renders nothing and its children never mount. The dot
+  // styling below is per-dot SVG, so these tests need the real output.
+  // (Same shim as bar-chart.test.tsx, for the same reason.)
+  class SizedResizeObserver {
+    constructor(private readonly callback: ResizeObserverCallback) {}
+    observe(target: Element) {
+      this.callback(
+        [
+          {
+            target,
+            contentRect: { width: 600, height: 300 },
+          } as unknown as ResizeObserverEntry,
+        ],
+        this as unknown as ResizeObserver
+      );
+    }
+    unobserve() {}
+    disconnect() {}
+  }
+  globalThis.ResizeObserver =
+    SizedResizeObserver as unknown as typeof ResizeObserver;
+});
 
 const data = [
   { month: 'Jan', actual: 100 },
@@ -266,6 +291,60 @@ describe('ConfidenceCone', () => {
   it('renders the actuals as a bare line', () => {
     const { container } = renderChart({ actualType: 'line' });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  // recharts merges the parent mark's own SVG presentation props into every dot
+  // it draws (`Dots` spreads the mark's props under the `dot` object), so a dot
+  // that doesn't restate a property silently inherits the mark's. Two of those
+  // shipped as visual bugs — the actual `<Area>`'s `fillOpacity: 0.15` washed the
+  // observed dot out to a faint halo, and the forecast `<Line>`'s
+  // `strokeDasharray: '5 5'` broke each projected dot's ring into two arcs — so
+  // both are asserted on the rendered circles rather than left to the baselines.
+  describe('showDots', () => {
+    it('draws the observed points solid, not at the area fill opacity', () => {
+      const { container } = renderChart({ showDots: true });
+      const dots = container.querySelectorAll('.recharts-area-dot');
+      expect(dots.length).toBeGreaterThan(0);
+      dots.forEach((dot) => {
+        expect(dot).toHaveAttribute('fill', 'var(--color-actual)');
+        expect(dot).toHaveAttribute('fill-opacity', '1');
+      });
+    });
+
+    it('draws the projected points with an unbroken ring, not a dashed one', () => {
+      const { container } = renderChart({ showDots: true });
+      const dots = container.querySelectorAll('.recharts-line-dot');
+      expect(dots.length).toBeGreaterThan(0);
+      dots.forEach((dot) => {
+        expect(dot).toHaveAttribute('stroke', 'var(--color-actual)');
+        expect(dot).toHaveAttribute('stroke-dasharray', 'none');
+      });
+    });
+
+    // With actualType="line" both marks are Lines, so the observed and projected
+    // dots are told apart by their fill — the metric hue vs the surface token.
+    it('keeps measured and predicted points distinct with actualType="line"', () => {
+      const { container } = renderChart({ showDots: true, actualType: 'line' });
+      const dots = [...container.querySelectorAll('.recharts-line-dot')];
+      const observed = dots.filter(
+        (dot) => dot.getAttribute('fill') === 'var(--color-actual)'
+      );
+      const projected = dots.filter(
+        (dot) =>
+          dot.getAttribute('fill') === 'var(--ui-background-surface-primary)'
+      );
+      expect(observed.length).toBeGreaterThan(0);
+      expect(projected.length).toBeGreaterThan(0);
+      observed.forEach((dot) => expect(dot).toHaveAttribute('fill-opacity', '1'));
+      projected.forEach((dot) =>
+        expect(dot).toHaveAttribute('stroke-dasharray', 'none')
+      );
+    });
+
+    it('marks no points when off', () => {
+      const { container } = renderChart();
+      expect(container.querySelector('.recharts-dot')).toBeNull();
+    });
   });
 
   it('accepts dots, styled forecast ticks and thresholds', () => {

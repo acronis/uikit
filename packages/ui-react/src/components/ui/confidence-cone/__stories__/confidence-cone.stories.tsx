@@ -12,6 +12,7 @@ import {
   ConfidenceCone,
   createConeTooltip,
   dropConeBand,
+  type ConfidenceConeBaseProps,
 } from '../confidence-cone';
 import {
   ChartContainer,
@@ -97,7 +98,11 @@ const meta = {
 } satisfies Meta<typeof ConfidenceCone>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+// Keyed to the base props rather than `typeof meta`: the component's own props are
+// a union (either `series` or the flat shorthand), and Storybook can't tell that
+// `meta.args` already satisfies one branch — every story below that sets only a
+// couple of args would be asked for `series` too.
+type Story = StoryObj<ConfidenceConeBaseProps>;
 
 // New shared axis/grid knobs: rotated X ticks, a zero-anchored Y domain, a
 // fixed Y tick count, and a dashed grid. See "Formatting and hiding axes".
@@ -163,6 +168,12 @@ export const StyledForecastTicks: Story = {
 // more than one metric, or where the band is the point.
 export const ActualAsLine: Story = {
   args: { actualType: 'line' },
+};
+
+// Dots on a bare line: with no area fill beneath them, the filled/hollow
+// contrast between a measured and a predicted point is at its clearest.
+export const DotsOnLine: Story = {
+  args: { actualType: 'line', showDots: true },
 };
 
 // Omit `lowerKey`/`upperKey` for a band-less projection: the actual line hands

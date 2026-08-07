@@ -22,6 +22,7 @@ import {
   ChartTooltipContent,
   resolveAxisDomain,
   resolveAnimation,
+  CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
@@ -182,7 +183,13 @@ export interface ConfidenceConeReferenceLine {
   label?: string;
 }
 
-export interface ConfidenceConeProps
+/**
+ * Every prop except the one-form-or-the-other requirement `ConfidenceConeProps`
+ * layers on below. Exported so the stories can type their `Meta` on a single
+ * object shape — Storybook can't split a union's required args between `meta.args`
+ * and a story's. Not re-exported from `index.ts`; not part of the public API.
+ */
+export interface ConfidenceConeBaseProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     CartesianChartProps,
     ChartAnimationProps {
@@ -209,17 +216,20 @@ export interface ConfidenceConeProps
    * Plot several metrics against one shared axis — each with its own actual /
    * forecast / bound fields and its own hue (from `config[actualKey]`). Takes
    * precedence over the single-series `actualKey`/`forecastKey`/`lowerKey`/
-   * `upperKey` shorthand below; pass one form or the other, not both.
+   * `upperKey` shorthand below; pass one form or the other, not both. One of the
+   * two forms is required.
    */
   series?: readonly ConfidenceConeSeries[];
   /**
    * Single-series shorthand — field for the known/actual values, drawn as a
-   * solid line with a filled area. Ignored when `series` is set.
+   * solid line with a filled area. Required (with `forecastKey`) unless `series`
+   * is set, which supersedes it.
    */
   actualKey?: string;
   /**
    * Single-series shorthand — field for the projected values, drawn as a dashed
-   * line. Ignored when `series` is set.
+   * line. Required (with `actualKey`) unless `series` is set, which supersedes
+   * it.
    */
   forecastKey?: string;
   /** Field for the cone's lower bound. Omit (with `upperKey`) for no cone. */
@@ -258,6 +268,20 @@ export interface ConfidenceConeProps
   showForecastRegion?: boolean;
   showLegend?: boolean;
 }
+
+/**
+ * Which columns to plot has to be spelled out one way or the other: the `series`
+ * array, or the flat `actualKey` + `forecastKey` shorthand. Expressed as a union
+ * so a chart with neither is a compile error rather than a silent plot of axes
+ * and nothing else. Both forms together stay legal — `series` wins (see
+ * `plotted`), which is what the multi-series stories rely on to clear the args
+ * table.
+ */
+export type ConfidenceConeProps = ConfidenceConeBaseProps &
+  (
+    | { series: readonly ConfidenceConeSeries[] }
+    | { actualKey: string; forecastKey: string }
+  );
 
 const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
   (
@@ -474,7 +498,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
                         value: ref.label,
                         position: 'insideTopRight',
                         fill: 'var(--ui-text-on-surface-secondary)',
-                        fontSize: 12,
+                        fontSize: CHART_LABEL_FONT_SIZE,
                       }
                     : undefined
                 }
@@ -559,11 +583,15 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
                   // (r 3, 2px ring) filled with the metric hue. The ring is that
                   // same hue, so the mark is solid — and wide enough against the
                   // 2px line not to read as a mere thickening of it.
+                  // `fillOpacity: 1` is load-bearing: recharts merges the parent
+                  // mark's own presentation props into every dot it draws, so an
+                  // `<Area>`'s 0.15 would otherwise wash the dot out to a halo.
                   dot={
                     showDots
                       ? {
                           r: 3,
                           fill: `var(--color-${aKey})`,
+                          fillOpacity: 1,
                           stroke: `var(--color-${aKey})`,
                           strokeWidth: 2,
                         }
@@ -589,8 +617,12 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
                 // Projected points read as predicted: the same LineChart dot,
                 // inverted — the metric's hue as the ring, the surface color as
                 // the fill, so the dashed line doesn't show through the middle.
-                // (LineChart hardcodes `#fff` there; the token is the same white
-                // in the light theme and also holds up in the dark one.)
+                // (LineChart leaves the fill to recharts, whose `Line` defaults it
+                // to `#fff`; the token is that same white in the light theme and
+                // also holds up in the dark one.)
+                // `strokeDasharray: 'none'` is load-bearing: recharts merges the
+                // parent mark's presentation props into every dot, so this line's
+                // `5 5` would otherwise break each dot's ring into two arcs.
                 dot={
                   showDots
                     ? {
@@ -598,9 +630,14 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
                         fill: 'var(--ui-background-surface-primary)',
                         stroke: `var(--color-${aKey})`,
                         strokeWidth: 2,
+                        strokeDasharray: 'none',
                       }
                     : false
                 }
+                // Paired with `dot` the way every other chart does it — left
+                // unset, the projection would keep recharts' default active dot
+                // while the actuals had none (and a different radius when on).
+                activeDot={showDots ? { r: 5 } : false}
                 connectNulls
                 {...animation}
               />

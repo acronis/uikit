@@ -9,7 +9,9 @@ its own actual / forecast / bound columns and taking its hue from
 `config[actualKey]` — so several forecasts share one axis with independent cones.
 Every synthetic band is stripped from the tooltip and legend, and the legend
 names each metric once. The single-series `actualKey` / `forecastKey` /
-`lowerKey` / `upperKey` props stay as the shorthand for one metric.
+`lowerKey` / `upperKey` props stay as the shorthand for one metric, and one of the
+two forms is required — the props are a union, so a chart naming no columns is a
+compile error rather than an empty plot.
 
 `lowerKey` / `upperKey` are now optional: omit them for a band-less projection (a
 bare dashed forecast line) when a model gives a point estimate but no interval.
