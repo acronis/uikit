@@ -8,7 +8,9 @@ import {
   resolveAxisDomain,
   resolveBrushProps,
   resolveCartesianLabelPosition,
+  resolveCategoryRange,
   resolveLabelFillClass,
+  resolveChartReferenceValue,
   toLabelFormatter,
   CHART_BRUSH_ARIA_LABEL,
   CHART_BRUSH_HEIGHT,
@@ -329,5 +331,104 @@ describe('resolveBrushProps', () => {
     expect(
       resolveBrushProps({ brushAriaLabel: 'Selector de rango' }).ariaLabel
     ).toBe('Selector de rango');
+  });
+});
+
+// The category/value helpers below are shared by every cartesian chart that
+// scopes something to a slice of the categories (a reference band, a per-series
+// override) or draws a target line — BarChart and ComposedChart today.
+const rangeData = [
+  { month: 'Jan', desktop: 186, mobile: 80 },
+  { month: 'Feb', desktop: 305, mobile: 200 },
+  { month: 'Mar', desktop: 237, mobile: 120 },
+];
+
+describe('resolveChartReferenceValue', () => {
+  const keys = ['desktop', 'mobile'];
+
+  it('returns undefined with no config', () => {
+    expect(resolveChartReferenceValue(undefined, rangeData, keys)).toBeUndefined();
+  });
+
+  it('returns a fixed value (including 0)', () => {
+    expect(resolveChartReferenceValue({ value: 150 }, rangeData, keys)).toBe(150);
+    expect(resolveChartReferenceValue({ value: 0 }, rangeData, keys)).toBe(0);
+  });
+
+  it('prefers a fixed value over average', () => {
+    expect(
+      resolveChartReferenceValue({ value: 42, average: true }, rangeData, keys)
+    ).toBe(42);
+  });
+
+  it('averages a single named series', () => {
+    // desktop: (186 + 305 + 237) / 3
+    expect(resolveChartReferenceValue({ average: 'desktop' }, rangeData, keys)).toBeCloseTo(
+      242.667,
+      2
+    );
+  });
+
+  it('averages every plotted series when average is true', () => {
+    // (186+305+237 + 80+200+120) / 6 = 188
+    expect(resolveChartReferenceValue({ average: true }, rangeData, keys)).toBe(188);
+  });
+
+  it('returns undefined when there is nothing numeric to average', () => {
+    expect(resolveChartReferenceValue({ average: true }, [], keys)).toBeUndefined();
+    expect(
+      resolveChartReferenceValue({ average: 'missing' }, rangeData, keys)
+    ).toBeUndefined();
+  });
+
+  // LineChart/AreaChart rows carry `null` for a gap in a series, so the mean has
+  // to skip those rows rather than count them as zero.
+  it('skips null values when averaging', () => {
+    const gappy = [
+      { month: 'Jan', desktop: null },
+      { month: 'Feb', desktop: 100 },
+      { month: 'Mar', desktop: 200 },
+    ];
+    expect(
+      resolveChartReferenceValue({ average: 'desktop' }, gappy, ['desktop'])
+    ).toBe(150);
+    expect(
+      resolveChartReferenceValue({ average: true }, [{ desktop: null }], [
+        'desktop',
+      ])
+    ).toBeUndefined();
+  });
+});
+
+describe('resolveCategoryRange', () => {
+  it('resolves category values to inclusive row indices', () => {
+    expect(resolveCategoryRange({ from: 'Feb', to: 'Mar' }, rangeData, 'month')).toEqual([
+      1, 2,
+    ]);
+  });
+
+  it('resolves a numeric bound as a row index', () => {
+    expect(resolveCategoryRange({ from: 1 }, rangeData, 'month')).toEqual([1, 2]);
+  });
+
+  it('prefers a matching category value over the index reading', () => {
+    const numeric = [{ q: 3, sales: 1 }, { q: 1, sales: 2 }, { q: 2, sales: 3 }];
+    // `1` is a real category here (row 1), not "index 1" by coincidence — the
+    // value match wins so numeric categories stay addressable.
+    expect(resolveCategoryRange({ from: 1, to: 2 }, numeric, 'q')).toEqual([1, 2]);
+  });
+
+  it('runs to the ends of the data when a bound is omitted', () => {
+    expect(resolveCategoryRange({}, rangeData, 'month')).toEqual([0, 2]);
+    expect(resolveCategoryRange({ to: 'Feb' }, rangeData, 'month')).toEqual([0, 1]);
+  });
+
+  it('returns undefined for an unknown bound, an inverted range, or no data', () => {
+    expect(resolveCategoryRange({ from: 'Dec' }, rangeData, 'month')).toBeUndefined();
+    expect(resolveCategoryRange({ from: 9 }, rangeData, 'month')).toBeUndefined();
+    expect(
+      resolveCategoryRange({ from: 'Mar', to: 'Jan' }, rangeData, 'month')
+    ).toBeUndefined();
+    expect(resolveCategoryRange({ from: 'Jan' }, [], 'month')).toBeUndefined();
   });
 });

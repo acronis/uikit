@@ -59,12 +59,71 @@ Give the two axes matching domain presets when you want their tick rows to line
 up; a tightly fitted (`auto`) secondary domain will otherwise place its ticks
 between the primary axis's gridlines.
 
+## Per-series styling and stacking
+
+Every styling prop on the chart is the **default a series can override**, keyed by
+the same name on its `series[]` entry — `color`, `curve`, `strokeWidth`,
+`strokeDasharray`, `showDots`, `showActiveDots`, `connectNulls`, `barRadius`,
+`barSize`, `showActiveBar`, `showBackground`, `fillOpacity`, `legendType`:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  strokeWidth={3}
+  series={[
+    { key: 'revenue', type: 'bar', stackId: 'total' },
+    { key: 'forecast', type: 'bar', stackId: 'total' },
+    // Reads as a projection: dashed, thinner than the chart default, no dots.
+    {
+      key: 'projection',
+      type: 'line',
+      strokeDasharray: '5 5',
+      strokeWidth: 1.5,
+    },
+  ]}
+  xKey="month"
+/>
+```
+
+Series sharing a `stackId` stack — **bars with bars, areas with areas**. The ids
+are namespaced per mark type, so reusing one id across types can't merge a bar
+into an area's stack, and a line ignores it (recharts does not stack lines). Only
+the segment at the top of a stack rounds its corners, and its data labels centre
+in their own segment (a stacked segment has no free space at its growing end).
+
+`legendType: 'none'` keeps a series off the legend; `line` / `rect` pick its
+marker. The wider recharts icon set is deliberately not exposed — the legend draws
+its own marker and reads only those cases.
+
+## References
+
+`referenceLine` draws dashed rules: a fixed `value`, the `average` of one/every
+series, or — with `category` — a rule _across_ the categories at one of them, the
+hand-off between actuals and forecast. `referenceArea` shades a band behind a
+range of categories (`from`/`to`, inclusive, each a category value or a row
+index). Both take an array to draw several.
+
+A rule belongs to **one scale**. On a chart carrying two value axes, `yAxis` picks
+which — defaulting to the axis of the series named by `average`, and to `primary`
+otherwise — and `average: true` pools only the series measured against that axis.
+Averaging a count and a rate together, or plotting a rate's mean against a count's
+scale, would put the rule somewhere meaningless; neither can happen by accident.
+
 ## Variants
 
-None. ComposedChart has no CVA variant axes — the mix is data-driven via each
-`series[].type` (`bar` / `line` / `area`). Series render in the order you list
-them (later entries sit on top, whatever their mark type) — order them so a thin
-line comes after the bars/areas it should overlay.
+`orientation` (`vertical` — the default — / `horizontal`) is the one CVA variant
+axis: it is the direction the marks grow, and it re-roles both axes. Horizontal
+puts the categories on the y-axis and the values on x, turns the grid lines
+vertical, rounds each bar's right end instead of its top, and renders a secondary
+value axis as a second x-axis along the top edge. `yAxisOrientation` goes inert
+there — the value axis is X, so the primary sits along the bottom and the
+secondary along the top, and neither has a left/right side to pick.
+
+The mark mix is _not_ a variant — it is data-driven via each `series[].type`
+(`bar` / `line` / `area`). Series render in the order you list them (later entries
+sit on top, whatever their mark type) — order them so a thin line comes after the
+bars/areas it should overlay.
 
 ## Example
 

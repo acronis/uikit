@@ -49,8 +49,14 @@ const data = [
 
 const config = {
   revenue: { label: 'Revenue', color: 'var(--ui-background-brand-secondary)' },
-  forecast: { label: 'Forecast', color: 'var(--ui-background-status-strong-danger)' },
-  profit: { label: 'Profit', color: 'var(--ui-background-status-strong-success)' },
+  forecast: {
+    label: 'Forecast',
+    color: 'var(--ui-background-status-strong-danger)',
+  },
+  profit: {
+    label: 'Profit',
+    color: 'var(--ui-background-status-strong-success)',
+  },
 } satisfies ChartConfig;
 
 <ComposedChart
@@ -83,9 +89,13 @@ so the line paints on top:
 
 Tune the shared knobs with `curve` (line/area interpolation), `barRadius`,
 `fillOpacity`, and the `showGrid` / `showTooltip` / `showLegend` toggles.
+`legendPosition` moves the legend above the plot, and `tooltipCursor={false}`
+drops the hover band behind the tooltip.
 
-Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
-`yUnit` (the x-axis is categorical). The titles inherit the theme token:
+Add axis titles and a value-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
+`yUnit` (the x-axis is categorical in the default orientation — see
+[Orientation](#orientation) for the horizontal case, where `xUnit` takes over).
+The titles inherit the theme token:
 
 ```tsx
 <ComposedChart
@@ -101,6 +111,144 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
   yUnit="$"
 />
 ```
+
+## Orientation
+
+`orientation="horizontal"` grows the marks rightward: the categories move to the
+y-axis, the values to the x-axis, the grid lines turn vertical, and each bar
+rounds its right end instead of its top. Reach for it when the category labels are
+long enough to crowd a bottom axis:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  series={[
+    { key: 'revenue', type: 'bar' },
+    { key: 'profit', type: 'line' },
+  ]}
+  xKey="month"
+  orientation="horizontal"
+/>
+```
+
+The value-axis props follow the values: `xUnit` and `xTickFormatter` format the
+tick values there, while `yAxisTickCount` / `yAxisDomain` keep their meaning
+("whichever axis holds the values") and `yTickFormatter` formats the categories. A
+second value axis renders as a second x-axis along the top edge, which is also why
+`yAxisOrientation` goes inert here — the primary sits along the bottom and the
+secondary along the top, so neither has a left/right side to pick.
+
+## Per-series styling
+
+Every styling prop on the chart is the **default a series can override**, keyed by
+the same name on its `series[]` entry — so one call sets the house style and each
+series departs from it only where it needs to:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  xKey="month"
+  strokeWidth={3}
+  series={[
+    { key: 'revenue', type: 'bar', barSize: 18, barRadius: 2 },
+    // A projection: dashed, thinner than the chart default, its own color.
+    {
+      key: 'forecast',
+      type: 'line',
+      strokeDasharray: '5 5',
+      strokeWidth: 1.5,
+      color: 'var(--ui-background-status-strong-warning)',
+    },
+    { key: 'profit', type: 'line', showDots: true },
+  ]}
+/>
+```
+
+The overridable set is `color`, `curve`, `strokeWidth`, `strokeDasharray`,
+`showDots`, `showActiveDots`, `connectNulls`, `barRadius`, `barSize`,
+`showActiveBar`, `showBackground`, `fillOpacity`, and `legendType` — plus
+`stackId` and `yAxis`, which have no chart-level counterpart. `legendType: 'none'`
+keeps a series off the legend while it still renders and appears in the tooltip;
+`'line'` / `'rect'` pick its marker (the wider recharts icon set isn't exposed —
+the legend draws its own marker and reads only those cases).
+
+Bar geometry is set on the chart: `barSize`, `barGap` (between bars of one
+category), `barCategoryGap` (between the groups), and `showBackground` /
+`backgroundFill` for a track behind every bar. `margin` insets the plot — any side
+left out keeps the chart's own default, which is already widened when `showLabels`
+is on.
+
+A `null` value breaks its line/area at that point; `connectNulls` bridges the gap,
+on the chart or on one series.
+
+## Stacking
+
+Series that share a `stackId` are summed into one stack — **bars with bars, areas
+with areas**:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  xKey="month"
+  series={[
+    { key: 'revenue', type: 'bar', stackId: 'total' },
+    { key: 'forecast', type: 'bar', stackId: 'total' },
+    { key: 'profit', type: 'line' },
+  ]}
+/>
+```
+
+The ids are namespaced per mark type, so reusing one id across types can't merge a
+bar into an area's stack; a line ignores it (recharts doesn't stack lines). Only
+the segment at the top of a stack rounds its corners, and data labels centre in
+their own segment — a stacked segment has no free space at its growing end.
+
+## Reference lines and bands
+
+`referenceLine` draws a dashed rule at a fixed `value`, at the `average` of one
+series (or of all of them with `average: true`), or — with `category` — _across_
+the categories at one of them: the hand-off between actuals and forecast.
+`referenceArea` shades a band behind a range of categories. Both accept an array:
+
+```tsx
+<ComposedChart
+  config={config}
+  data={data}
+  series={series}
+  xKey="month"
+  referenceLine={[
+    { value: 6000, label: 'Target' },
+    { average: 'revenue', label: 'Avg' },
+    { category: 'Apr' },
+  ]}
+  referenceArea={{ from: 'Apr', label: 'Forecast' }}
+/>
+```
+
+A band's `from` / `to` are inclusive and take either the category's own value or
+its row index; omit one to run to that end of the data. A reference whose category
+isn't in the data draws nothing rather than guessing a position.
+
+A rule belongs to **one scale**, so on a chart with [two value axes](#two-value-axes)
+it is placed against the axis it was measured from: `average` naming a series reads
+off that series' own axis, `average: true` pools only the series on the axis the
+rule is drawn against, and `yAxis` overrides both — the way to put a fixed `value`
+on the secondary scale:
+
+```tsx
+referenceLine={[
+  // Read off the secondary axis, because `conversion` is measured against it.
+  { average: 'conversion', label: 'Avg conversion' },
+  { value: 5, yAxis: 'secondary', label: 'Target rate' },
+]}
+```
+
+Without this, a rate's mean would be plotted against a count's scale and land flat
+on the baseline. A `yAxis: 'secondary'` request is ignored while no series has
+brought that axis into being.
 
 ## Two value axes
 
@@ -138,7 +286,7 @@ ticks and title, the meaning `showYAxis` has for the primary axis.
 The second axis exists only while a series asks for it, so the secondary props are
 inert on a single-scale chart, and the horizontal grid lines follow the primary
 axis (a second set from a different domain would cross the first at meaningless
-heights). If *every* series opts in, the primary axis has nothing measured against
+heights). If _every_ series opts in, the primary axis has nothing measured against
 it: it isn't rendered, gives up its gutter, and the grid follows the secondary axis
 instead.
 
@@ -164,7 +312,10 @@ import { ComposedChart, ChartTooltipContent } from '@acronis-platform/ui-react';
 <ComposedChart
   config={config}
   data={data}
-  series={[{ key: 'revenue', type: 'bar' }, { key: 'profit', type: 'line' }]}
+  series={[
+    { key: 'revenue', type: 'bar' },
+    { key: 'profit', type: 'line' },
+  ]}
   xKey="month"
   tooltipContent={
     <ChartTooltipContent
@@ -202,7 +353,15 @@ Charts render statically by default. Opt in to an entrance animation with
 `animationEasing`:
 
 ```tsx
-<ComposedChart config={config} data={data} series={series} xKey="month" animate animationDuration={800} animationEasing="ease-out" />
+<ComposedChart
+  config={config}
+  data={data}
+  series={series}
+  xKey="month"
+  animate
+  animationDuration={800}
+  animationEasing="ease-out"
+/>
 ```
 
 `animate` honors `prefers-reduced-motion`: for a visitor who has asked their
@@ -215,7 +374,14 @@ Annotate each point with its value using `showLabels`. `labelFormatter` takes th
 same formatters as the axes, so a label and its axis read alike:
 
 ```tsx
-<ComposedChart config={config} data={data} series={series} xKey="month" showLabels labelFormatter={formatCompactNumber} />
+<ComposedChart
+  config={config}
+  data={data}
+  series={series}
+  xKey="month"
+  showLabels
+  labelFormatter={formatCompactNumber}
+/>
 ```
 
 `labelPosition` moves them; the default is the series' growing end (`top`). A
@@ -224,7 +390,14 @@ it; an area series keeps the on-surface color, since its translucent fill lets
 the surface show through:
 
 ```tsx
-<ComposedChart config={config} data={data} series={series} xKey="month" showLabels labelPosition="insideEnd" />
+<ComposedChart
+  config={config}
+  data={data}
+  series={series}
+  xKey="month"
+  showLabels
+  labelPosition="insideEnd"
+/>
 ```
 
 Labels are off by default — with more than one series they collide easily, so turn
@@ -238,7 +411,13 @@ series, its category axis, and the tooltip all follow the selection. `brushHeigh
 sizes the strip (28px by default):
 
 ```tsx
-<ComposedChart config={config} data={data} series={series} xKey="month" showBrush />
+<ComposedChart
+  config={config}
+  data={data}
+  series={series}
+  xKey="month"
+  showBrush
+/>
 ```
 
 The brush indexes rows, so it slices the category axis. It is independent of

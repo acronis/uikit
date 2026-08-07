@@ -1,15 +1,28 @@
 spec_version: '1.0'
 component: ComposedChart
 
-# Framework-agnostic contract. ComposedChart has NO cva variant axes — the mix is
-# data-driven via each `series[].type` (bar / line / area) over one shared
-# category axis — so there are no variant enums to conformance-check.
+# Framework-agnostic contract. `orientation` is the single cva variant axis
+# (conformance-checked against the ui-react cva keys); the mark mix is not a
+# variant — it is data-driven via each `series[].type` (bar / line / area) over
+# one shared category axis.
 contract:
   properties:
+    - name: orientation
+      type: "'vertical' | 'horizontal'"
+      required: false
+      default: "'vertical'"
+      description: >-
+        Direction the marks grow. `vertical` = bars rise and the categories sit on
+        the x-axis; `horizontal` = bars extend rightward, the categories move to
+        the y-axis and the values to x (where a secondary value axis becomes a
+        second x-axis along the top edge).
     - name: data
-      type: ReadonlyArray<Record<string, string | number>>
+      type: ReadonlyArray<Record<string, string | number | null>>
       required: true
-      description: Row-per-category data — each row holds `xKey` plus one numeric field per series.
+      description: >-
+        Row-per-category data — each row holds `xKey` plus one numeric field per
+        series. A null value breaks the line/area at that point unless
+        `connectNulls` is set.
     - name: config
       type: ChartConfig
       required: true
@@ -21,12 +34,18 @@ contract:
       type: ComposedSeries[]
       required: true
       description: >-
-        Series to plot, each `{ key, type, yAxis? }`. `type` is `bar` / `line` /
-        `area`. Rendered in array order — later entries sit on top, whatever their
-        mark type; order them so a thin line comes after the bars/areas it should
-        overlay. `yAxis` is `primary` (the default) or `secondary`, selecting which
-        value axis the series is measured against. Each key must exist in `config`
-        and every data row.
+        Series to plot, each `{ key, type }` plus any per-series override.
+        `type` is `bar` / `line` / `area`. Rendered in array order — later entries
+        sit on top, whatever their mark type; order them so a thin line comes after
+        the bars/areas it should overlay. Each key must exist in `config` and every
+        data row. Per-series keys, each overriding the chart-level default of the
+        same name where one exists — `yAxis` (`primary` / `secondary`, which value
+        axis the series is measured against), `color`, `stackId` (stacks with the
+        series of the same mark type carrying that id; ignored on a line),
+        `curve`, `strokeWidth`, `strokeDasharray`, `showDots`, `showActiveDots`,
+        `connectNulls`, `barRadius`, `barSize`, `showActiveBar`, `showBackground`,
+        `fillOpacity`, and `legendType` (`line` / `rect` / `none`, where `none`
+        keeps the series off the legend).
     - name: xKey
       type: string
       required: true
@@ -43,23 +62,120 @@ contract:
       type: string
       required: false
       description: >-
-        Unit suffix appended to Y-axis tick values (recharts `unit`); the X axis
-        is categorical.
+        Unit suffix appended to Y-axis tick values (recharts `unit`). Applies while
+        the values are on Y, which is the default orientation; with
+        `orientation="horizontal"` they move to X and `xUnit` takes over.
+    - name: referenceLine
+      type: ComposedChartReferenceLine | ComposedChartReferenceLine[]
+      required: false
+      description: >-
+        One or more dashed rules. A `value` (or an `average` of one/every series)
+        places the rule on a value axis; a `category` places it across the
+        category axis at that category — the hand-off into a forecast. Each takes
+        an optional `label`; a value position wins when both are given, and a
+        category that is not in the data draws nothing. On a chart with two value
+        axes, `yAxis` picks the scale the rule is measured against — defaulting to
+        the axis of the series named by `average`, and to `primary` otherwise — and
+        `average: true` pools only the series on that axis, so two scales are never
+        averaged together. `labelPosition` moves the caption off its default (the
+        top of the rule) when the rule lands where the series already is.
+    - name: referenceArea
+      type: ComposedChartReferenceArea | ComposedChartReferenceArea[]
+      required: false
+      description: >-
+        One or more shaded bands behind a range of categories (`from` / `to`,
+        inclusive, each a category value or a row index, either omittable) with an
+        optional `label`.
     - name: curve
       type: "'linear' | 'monotone' | 'step'"
       required: false
       default: "'monotone'"
-      description: Interpolation for the line and area series.
+      description: Interpolation for the line and area series. Per-series `curve` overrides it.
+    - name: xUnit
+      type: string
+      required: false
+      description: >-
+        Unit suffix on the value-axis tick values when the values are on X
+        (`orientation="horizontal"`).
+    - name: strokeWidth
+      type: number
+      required: false
+      default: '2 (line series)'
+      description: >-
+        Stroke width for the line series. Area series keep the thinner outline
+        unless this is set explicitly.
+    - name: showDots
+      type: boolean
+      required: false
+      default: 'false'
+      description: Render a dot at each point of the line and area series.
+    - name: showActiveDots
+      type: boolean
+      required: false
+      description: >-
+        Render the hover dot on the line and area series. Unset, the renderer's own
+        default applies.
+    - name: connectNulls
+      type: boolean
+      required: false
+      default: 'false'
+      description: Bridge null gaps in the data instead of breaking the line/area.
+    - name: barSize
+      type: number
+      required: false
+      description: Fixed bar thickness in px. Unset, bars are sized from the available width.
+    - name: barGap
+      type: number | string
+      required: false
+      description: Gap between bars of the same category, in px or a percentage string.
+    - name: barCategoryGap
+      type: number | string
+      required: false
+      description: Gap between category groups, in px or a percentage string.
+    - name: showBackground
+      type: boolean
+      required: false
+      default: 'false'
+      description: Draw a full-height track behind every bar.
+    - name: backgroundFill
+      type: string
+      required: false
+      default: 'the secondary surface token'
+      description: Fill for the track background.
+    - name: showActiveBar
+      type: boolean
+      required: false
+      default: 'false'
+      description: Highlight the hovered bar.
+    - name: margin
+      type: '{ top?: number; right?: number; bottom?: number; left?: number }'
+      required: false
+      description: >-
+        Plot-area inset. Any side left out keeps the chart's own default (which is
+        already widened when `showLabels` is on, and when a labelled reference rule
+        stands vertical, so neither caption can be clipped at the plot edge).
+    - name: tooltipCursor
+      type: boolean
+      required: false
+      default: 'true'
+      description: Draw the hover cursor (the band/rule under the tooltip).
+    - name: legendPosition
+      type: "'top' | 'bottom'"
+      required: false
+      default: "'bottom'"
+      description: Which edge the legend sits on.
     - name: barRadius
       type: number
       required: false
       default: '4'
-      description: Corner radius on the growing end of bar series (0 for square corners).
+      description: >-
+        Corner radius on the growing end of bar series (0 for square corners). In a
+        stack only the segment at the top of the stack is rounded.
     - name: fillOpacity
       type: number
       required: false
       default: '0.3'
-      description: Flat-fill opacity for area series.
+      description: Flat-fill opacity for area series. Per-series `fillOpacity` overrides it.
     - name: showGrid
       type: boolean
       required: false
@@ -121,8 +237,8 @@ contract:
       required: false
       description: >-
         Desired number of ticks on the value axis (recharts tickCount; a hint, not
-        exact). Applies to whichever axis holds the values — Y for most charts, X
-        for BarChart with orientation="horizontal".
+        exact). Applies to whichever axis holds the values — Y by default, X with
+        orientation="horizontal".
     - name: yAxisDomain
       type: "'auto' | 'dataMin-dataMax' | 'zero'"
       required: false
@@ -130,15 +246,18 @@ contract:
         Value-axis domain preset — auto (fit the data at both ends; the axis need
         not include 0), zero (anchor the axis at 0, which is also recharts'
         behaviour when the prop is omitted), or dataMin-dataMax (tight to the
-        data, no padding). Applies to whichever axis holds the values — Y for most
-        charts, X for BarChart with orientation="horizontal".
+        data, no padding). Applies to whichever axis holds the values — Y by
+        default, X with orientation="horizontal".
     - name: yAxisOrientation
       type: "'left' | 'right'"
       required: false
       default: "'left'"
       description: >-
         Which side the primary value axis sits on. The secondary axis always takes
-        the opposite side, so the pair mirrors as a whole.
+        the opposite side, so the pair mirrors as a whole. Inert with
+        orientation="horizontal": the value axis is X there, so the primary sits
+        along the bottom edge and the secondary along the top, and neither has a
+        left/right side to pick.
     - name: showSecondaryYAxis
       type: boolean
       required: false
@@ -250,8 +369,9 @@ adapters:
         config={config}
         data={data}
         series={[
-          { key: 'revenue', type: 'bar' },
-          { key: 'profit', type: 'line' },
+          { key: 'revenue', type: 'bar', stackId: 'total' },
+          { key: 'forecast', type: 'bar', stackId: 'total' },
+          { key: 'profit', type: 'line', showDots: true },
         ]}
         xKey="month"
         className="h-[320px] w-[560px]"

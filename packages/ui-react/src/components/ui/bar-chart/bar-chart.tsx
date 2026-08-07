@@ -29,6 +29,7 @@ import {
   resolveAxisDomain,
   resolveAnimation,
   resolveBrushProps,
+  resolveCategoryRange,
   toLabelFormatter,
   resolveLabelFillClass,
   resolveCartesianLabelPosition,
@@ -43,6 +44,7 @@ import {
   type CartesianChartProps,
   type ChartAnimationProps,
   type ChartBrushProps,
+  type ChartCategoryRange,
   type ChartDataLabelProps,
   type CartesianLabelPosition,
 } from '../chart';
@@ -82,21 +84,11 @@ const barChartVariants = cva('', {
 export type BarChartBarShape = 'rounded' | 'pill' | 'gradient' | 'pattern';
 
 /**
- * A category range: `from`/`to` accept either the category's value (a `xKey`
- * cell, e.g. `'Sep'`) or its 0-based row index. Both ends are inclusive, and
- * either can be omitted to run to that end of the data.
- */
-export interface BarChartCategoryRange {
-  from?: string | number;
-  to?: string | number;
-}
-
-/**
  * Style override for one series over a range of categories — e.g. "the forecast
  * tail from September onward reads translucent and dashed". Anything left unset
  * keeps the series' normal painting.
  */
-export interface BarChartBarSettings extends BarChartCategoryRange {
+export interface BarChartBarSettings extends ChartCategoryRange {
   /** Fill for the matched bars. Defaults to the series color. */
   fill?: string;
   /** Fill opacity for the matched bars. */
@@ -115,7 +107,7 @@ export interface BarChartBarSettings extends BarChartCategoryRange {
 }
 
 /** A shaded band behind a range of categories. */
-export interface BarChartReferenceArea extends BarChartCategoryRange {
+export interface BarChartReferenceArea extends ChartCategoryRange {
   /** Caption above the band. */
   label?: string;
   /**
@@ -128,40 +120,6 @@ export interface BarChartReferenceArea extends BarChartCategoryRange {
    * forecast. Off by default.
    */
   divider?: boolean;
-}
-
-/**
- * Resolve a category range to inclusive row indices. A bound is either the
- * category's own value (matched against the `xKey` cell) or a 0-based index;
- * an omitted bound runs to that end of the data. Returns `undefined` when the
- * data is empty or the range resolves to nothing (an unknown value, or a `to`
- * that lands before its `from`).
- *
- * Exported for unit tests; not part of the package's public API.
- */
-export function barChartCategoryRange(
-  range: BarChartCategoryRange,
-  data: ReadonlyArray<Record<string, string | number>>,
-  xKey: string
-): [number, number] | undefined {
-  if (data.length === 0) return undefined;
-
-  const resolve = (bound: string | number | undefined, fallback: number) => {
-    if (bound === undefined) return fallback;
-    // A numeric bound is an index unless the categories are numbers themselves,
-    // in which case matching a category value is the more useful reading.
-    const asValue = data.findIndex((row) => row[xKey] === bound);
-    if (asValue !== -1) return asValue;
-    if (typeof bound === 'number' && Number.isInteger(bound)) {
-      return bound >= 0 && bound < data.length ? bound : -1;
-    }
-    return -1;
-  };
-
-  const start = resolve(range.from, 0);
-  const end = resolve(range.to, data.length - 1);
-  if (start === -1 || end === -1 || start > end) return undefined;
-  return [start, end];
 }
 
 // Reserved field prefix for the synthetic headroom series a capped track
@@ -572,13 +530,6 @@ function rangeCells({
   });
 }
 
-/**
- * A dashed target/threshold/average rule on the value axis. The shape is shared
- * with `LineChart` and `AreaChart` (`ChartReferenceLine`), so the same config
- * moves between the three charts unchanged.
- */
-export type BarChartReferenceLine = ChartReferenceLine;
-
 export interface BarChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof barChartVariants>,
@@ -603,7 +554,7 @@ export interface BarChartProps
    * bars, X for horizontal). Each is driven by a fixed `value` or a computed
    * series `average`. Pass a single object or an array to draw several at once.
    */
-  referenceLine?: BarChartReferenceLine | BarChartReferenceLine[];
+  referenceLine?: ChartReferenceLine | ChartReferenceLine[];
   /**
    * One or more shaded bands behind a range of categories — e.g. a forecast
    * period. Pass a single object or an array to draw several.
@@ -741,7 +692,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
           : [referenceArea]
         : []
     )
-      .map((area) => ({ area, range: barChartCategoryRange(area, data, xKey) }))
+      .map((area) => ({ area, range: resolveCategoryRange(area, data, xKey) }))
       .filter(
         (entry): entry is { area: BarChartReferenceArea; range: [number, number] } =>
           entry.range !== undefined
@@ -751,7 +702,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       dataKeys.flatMap((key) => {
         const settings = barSettings?.[key];
         const range = settings
-          ? barChartCategoryRange(settings, data, xKey)
+          ? resolveCategoryRange(settings, data, xKey)
           : undefined;
         return settings && range ? [[key, { settings, range }] as const] : [];
       })

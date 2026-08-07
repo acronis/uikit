@@ -79,9 +79,21 @@ const meta = {
     className: 'h-[320px] w-[560px]',
   },
   argTypes: {
+    orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
     curve: { control: 'inline-radio', options: ['linear', 'monotone', 'step'] },
     barRadius: { control: { type: 'number', min: 0, max: 20 } },
+    barSize: { control: { type: 'number', min: 1, max: 80 } },
+    barGap: { control: { type: 'number', min: 0, max: 40 } },
+    barCategoryGap: { control: 'text' },
     fillOpacity: { control: { type: 'number', min: 0, max: 1, step: 0.1 } },
+    strokeWidth: { control: { type: 'number', min: 1, max: 8 } },
+    showDots: { control: 'boolean' },
+    showActiveDots: { control: 'boolean' },
+    connectNulls: { control: 'boolean' },
+    showBackground: { control: 'boolean' },
+    showActiveBar: { control: 'boolean' },
+    tooltipCursor: { control: 'boolean' },
+    legendPosition: { control: 'inline-radio', options: ['top', 'bottom'] },
     xAxisLabel: { control: 'text' },
     yAxisLabel: { control: 'text' },
     yUnit: { control: 'text' },
@@ -456,5 +468,185 @@ export const RangeBrush: Story = {
       { key: 'profit', type: 'line' },
     ],
     showBrush: true,
+  },
+};
+
+// `orientation="horizontal"` grows the marks rightward: the categories move to
+// the Y axis, the values to X, the grid lines turn vertical, and each bar rounds
+// its right end instead of its top.
+export const HorizontalOrientation: Story = {
+  args: {
+    orientation: 'horizontal',
+    series: [
+      { key: 'revenue', type: 'bar' },
+      { key: 'profit', type: 'line' },
+    ],
+  },
+};
+
+// Two scales on a horizontal chart: the second value axis is an X axis too, so
+// it sits along the top edge rather than opposite the categories.
+export const HorizontalSecondaryAxis: Story = {
+  args: {
+    orientation: 'horizontal',
+    data: dualAxisData,
+    config: dualAxisConfig,
+    series: dualAxisSeries,
+    xTickFormatter: formatCompactNumber,
+    secondaryYUnit: '%',
+    secondaryYAxisDomain: 'zero',
+  },
+};
+
+// Series that share a `stackId` stack — bars with bars, areas with areas. Only
+// the top segment of a stack rounds its corners; the line rides over the total.
+export const StackedBars: Story = {
+  args: {
+    series: [
+      { key: 'revenue', type: 'bar', stackId: 'total' },
+      { key: 'forecast', type: 'bar', stackId: 'total' },
+      { key: 'profit', type: 'line' },
+    ],
+  },
+};
+
+// The same id on two areas builds a stacked band. Ids are namespaced per mark
+// type, so a bar can't be pulled into an area's stack by reusing its id.
+export const StackedAreas: Story = {
+  args: {
+    series: [
+      { key: 'revenue', type: 'area', stackId: 'mix' },
+      { key: 'forecast', type: 'area', stackId: 'mix' },
+    ],
+  },
+};
+
+// Every styling prop on the chart is the default a series overrides: here the
+// forecast reads as a secondary, dashed, dot-less projection next to the solid
+// actuals, and the bar series takes a fixed thickness of its own.
+export const PerSeriesStyling: Story = {
+  args: {
+    series: [
+      { key: 'revenue', type: 'bar', barSize: 18, barRadius: 2 },
+      {
+        key: 'forecast',
+        type: 'line',
+        strokeDasharray: '5 5',
+        strokeWidth: 1.5,
+        legendType: 'line',
+      },
+      { key: 'profit', type: 'line', showDots: true },
+    ],
+  },
+};
+
+// Chart-level series defaults: one stroke width, dots, and `connectNulls` for
+// every line/area that doesn't override them. The gap in `profit` is bridged;
+// `forecast` opts out and breaks instead.
+const gappedData = [
+  { month: 'Jan', revenue: 4200, forecast: 3800, profit: 2400 },
+  { month: 'Feb', revenue: 3100, forecast: null, profit: null },
+  { month: 'Mar', revenue: 6500, forecast: 5200, profit: 4800 },
+  { month: 'Apr', revenue: 4900, forecast: 4100, profit: 2900 },
+  { month: 'May', revenue: 5400, forecast: 4800, profit: 3100 },
+  { month: 'Jun', revenue: 4800, forecast: 5100, profit: 2410 },
+];
+
+export const SeriesDefaults: Story = {
+  args: {
+    data: gappedData,
+    strokeWidth: 3,
+    showDots: true,
+    connectNulls: true,
+    series: [
+      { key: 'revenue', type: 'bar' },
+      { key: 'forecast', type: 'line', connectNulls: false },
+      { key: 'profit', type: 'line' },
+    ],
+  },
+};
+
+// Bar geometry: a track behind every bar, a fixed thickness, and the two gaps
+// (between bars of one category, and between the category groups).
+export const BarGeometry: Story = {
+  args: {
+    series: [
+      { key: 'revenue', type: 'bar' },
+      { key: 'forecast', type: 'bar' },
+      { key: 'profit', type: 'line' },
+    ],
+    showBackground: true,
+    barSize: 16,
+    barGap: 2,
+    barCategoryGap: '30%',
+  },
+};
+
+// References: a dashed target on the value axis, an average of one series, a
+// vertical rule marking the hand-off into the forecast, and the band behind it.
+export const References: Story = {
+  args: {
+    series: [
+      { key: 'revenue', type: 'bar' },
+      { key: 'profit', type: 'line' },
+    ],
+    referenceLine: [
+      { value: 6000, label: 'Target' },
+      { average: 'revenue', label: 'Avg' },
+      { category: 'Apr' },
+    ],
+    referenceArea: { from: 'Apr', label: 'Forecast' },
+  },
+};
+
+// The legend above the plot instead of below it.
+export const LegendTop: Story = {
+  args: { legendPosition: 'top' },
+};
+
+// A wider plot inset — room for long value labels the default gutter would clip.
+// Any side left out keeps the chart's own default.
+export const PlotMargin: Story = {
+  args: {
+    margin: { left: 32, right: 32, top: 24 },
+    yTickFormatter: formatCompactNumber,
+  },
+};
+
+// The references turn with the marks: a value rule stands vertical once the
+// values are on X, a category rule lies flat across them, and the band runs down
+// the category axis instead of along it. The captions swap ends to match.
+export const HorizontalReferences: Story = {
+  args: {
+    orientation: 'horizontal',
+    series: [
+      { key: 'revenue', type: 'bar' },
+      { key: 'profit', type: 'line' },
+    ],
+    referenceLine: [
+      { value: 6000, label: 'Target' },
+      { category: 'Apr' },
+    ],
+    referenceArea: { from: 'Apr', label: 'Forecast' },
+    xTickFormatter: formatCompactNumber,
+  },
+};
+
+// A rule belongs to one scale. `average: 'conversion'` reads off the secondary
+// axis it is measured against, so it lands mid-plot against the 0–8% scale;
+// averaged against revenue it would sit flat on the baseline — the regression
+// this baseline is judged against. The revenue target is the contrast: an
+// explicit primary-axis rule, well clear of it.
+export const SecondaryAxisReference: Story = {
+  args: {
+    data: dualAxisData,
+    config: dualAxisConfig,
+    series: dualAxisSeries,
+    yTickFormatter: formatCompactNumber,
+    secondaryYUnit: '%',
+    referenceLine: [
+      { average: 'conversion', label: 'Avg conversion' },
+      { value: 6500, label: 'Revenue target' },
+    ],
   },
 };

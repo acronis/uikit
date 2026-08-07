@@ -1,11 +1,36 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import { ComposedChart } from '../composed-chart';
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
+
+beforeAll(() => {
+  // happy-dom's ResizeObserver never reports a size, so recharts'
+  // ResponsiveContainer renders nothing and its children never mount. The
+  // per-series styling, stacking and orientation below are SVG output, so those
+  // tests need the real thing.
+  class SizedResizeObserver {
+    constructor(private readonly callback: ResizeObserverCallback) {}
+    observe(target: Element) {
+      this.callback(
+        [
+          {
+            target,
+            contentRect: { width: 600, height: 300 },
+          } as unknown as ResizeObserverEntry,
+        ],
+        this as unknown as ResizeObserver
+      );
+    }
+    unobserve() {}
+    disconnect() {}
+  }
+  globalThis.ResizeObserver =
+    SizedResizeObserver as unknown as typeof ResizeObserver;
+});
 
 const data = [
   { month: 'Jan', revenue: 2400, profit: 1600, orders: 120 },
@@ -35,8 +60,9 @@ function renderChart(
 
 describe('ComposedChart', () => {
   // Axis visibility + tick formatting forward to recharts' XAxis/YAxis `hide` /
-  // `tickFormatter`. happy-dom can't lay out recharts ticks (the visuals are
-  // covered by the axis-formatting VR stories), so assert it renders cleanly.
+  // `tickFormatter`; how the rotated/thinned tick row actually lays out is a
+  // visual question the axis-formatting VR stories own, so this guards the prop
+  // path against a plumbing regression.
   it('renders with axis/grid config and tick formatters', () => {
     const { container } = renderChart({
       showXAxis: false,
@@ -66,11 +92,9 @@ describe('ComposedChart', () => {
     expect(style).toContain('--color-orders: rgb(220 53 69)');
   });
 
-  // recharts only paints its SVG once the ResponsiveContainer has real
-  // dimensions, which happy-dom never gives it — so the bars/lines/areas/chrome
-  // can't be asserted here. These exercise the prop paths (mixed series types,
-  // curve, chrome toggles) against a plumbing/crash regression; the visual
-  // output is covered by the VR stories.
+  // These exercise the prop paths (mixed series types, curve, chrome toggles)
+  // against a plumbing/crash regression; how the result looks is covered by the
+  // VR stories, and the SVG the new props emit is asserted further down.
   it('renders a mixed bar/line/area series set with a stepped curve', () => {
     const { container } = renderChart({ curve: 'step' });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
@@ -91,9 +115,9 @@ describe('ComposedChart', () => {
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
-  // Axis titles/unit forward to recharts' XAxis/YAxis `label`/`unit`; happy-dom
-  // doesn't paint the SVG, so this only guards the prop path (the rendered titles
-  // are covered by the `AxisLabels` VR story).
+  // Axis titles/unit forward to recharts' XAxis/YAxis `label`/`unit`; this only
+  // guards the prop path (the rendered titles are covered by the `AxisLabels` VR
+  // story).
   it('renders with axis titles + a Y unit', () => {
     const { container } = renderChart({
       xAxisLabel: 'Month',
@@ -115,8 +139,8 @@ describe('ComposedChart', () => {
   });
 
   // The `tooltipContent` prop forwards a custom (library-owned) ChartTooltipContent
-  // to recharts' Tooltip; happy-dom doesn't paint the tooltip, so this only guards
-  // the prop path — consumers customize the tooltip without importing recharts.
+  // to recharts' Tooltip. The tooltip is hover-only, so this guards the prop path
+  // — consumers customize the tooltip without importing recharts.
   it('accepts a custom tooltipContent', () => {
     const { container } = renderChart({
       tooltipContent: (
@@ -145,11 +169,10 @@ describe('ComposedChart', () => {
 
 });
 
-// recharts needs a laid-out container, which happy-dom does not provide, so the
-// rendered labels/animation are covered by the visual-regression stories. These
-// assert the prop contract itself: the composition accepts every new prop and
-// mounts, and the animation resolves to the reduced-motion-aware value rather
-// than a literal `true`.
+// The rendered labels and the motion itself are covered by the
+// visual-regression stories. These assert the prop contract: the composition
+// accepts every animation/label prop and mounts, and `animate` resolves to the
+// reduced-motion-aware value rather than a literal `true`.
 describe('ComposedChart animation and data labels', () => {
   it('is not animated unless asked', () => {
     expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
@@ -190,11 +213,606 @@ describe('ComposedChart animation and data labels', () => {
   });
 });
 
-// The second value axis is only *rendered* by recharts, which needs a laid-out
-// container happy-dom never provides — so the two scales themselves are covered by
-// the `SecondaryYAxis*` VR stories. These assert the contract this composition
-// owns: the per-series opt-in and every secondary-axis prop mount, and a chart
-// that never opts in stays on the single-axis path.
+// The chart is rendered into a sized container above, so these assert the SVG
+// the new props actually produce — not just that the composition mounts.
+describe('ComposedChart orientation', () => {
+  const barLine = [
+    { key: 'revenue', type: 'bar' as const },
+    { key: 'orders', type: 'line' as const },
+  ];
+
+  function tickLabels(container: HTMLElement, axis: 'x' | 'y') {
+    return Array.from(
+      container.querySelectorAll(
+        `.recharts-${axis}Axis-tick-labels .recharts-cartesian-axis-tick-value`
+      )
+    ).map((node) => node.textContent);
+  }
+
+  it('defaults to vertical, with the categories on the X axis', () => {
+    const { container } = renderChart({ series: barLine });
+    expect(container.firstElementChild).toHaveAttribute(
+      'data-orientation',
+      'vertical'
+    );
+    expect(tickLabels(container, 'x')).toContain('Jan');
+  });
+
+  it('moves the categories to the Y axis when horizontal', () => {
+    const { container } = renderChart({
+      series: barLine,
+      orientation: 'horizontal',
+    });
+    expect(container.firstElementChild).toHaveAttribute(
+      'data-orientation',
+      'horizontal'
+    );
+    expect(tickLabels(container, 'y')).toContain('Jan');
+    expect(tickLabels(container, 'x')).not.toContain('Jan');
+  });
+
+  // The bars grow rightward, so the rounded end swaps from the top corners to
+  // the right ones — recharts draws that as a different arc path.
+  it('rounds the growing end of a horizontal bar on its right corners', () => {
+    const vertical = renderChart({ series: barLine, barRadius: 6 });
+    const horizontal = renderChart({
+      series: barLine,
+      orientation: 'horizontal',
+      barRadius: 6,
+    });
+    const path = (result: ReturnType<typeof renderChart>) =>
+      result.container.querySelector('.recharts-bar-rectangle path')
+        ?.getAttribute('d') ?? '';
+    expect(path(vertical)).not.toBe('');
+    expect(path(horizontal)).not.toBe(path(vertical));
+  });
+
+  // A second scale in horizontal orientation is an X axis, not a Y one — the
+  // series are measured along X there.
+  it('renders the secondary value axis as a second X axis when horizontal', () => {
+    const { container } = renderChart({
+      orientation: 'horizontal',
+      series: [
+        { key: 'revenue', type: 'bar' },
+        { key: 'orders', type: 'line', yAxis: 'secondary' },
+      ],
+    });
+    expect(container.querySelectorAll('.recharts-xAxis')).toHaveLength(2);
+    expect(container.querySelectorAll('.recharts-yAxis')).toHaveLength(1);
+  });
+
+  // Counting the axes only proves both were declared. What matters is which one
+  // the secondary series is measured against — a series bound to the wrong axis
+  // still renders, just at the wrong scale. Rescaling one axis has to move the
+  // series on that axis and leave the series on the other one where it was.
+  it('plots a secondary horizontal series against the secondary X axis', () => {
+    const horizontalDualAxis = (
+      props: Partial<React.ComponentProps<typeof ComposedChart>>
+    ) => {
+      const { container } = renderChart({
+        orientation: 'horizontal',
+        series: [
+          { key: 'revenue', type: 'bar' },
+          { key: 'orders', type: 'line', yAxis: 'secondary' },
+        ],
+        ...props,
+      });
+      return {
+        bar: container
+          .querySelector('.recharts-bar-rectangle path')
+          ?.getAttribute('d'),
+        line: container
+          .querySelector('.recharts-line-curve')
+          ?.getAttribute('d'),
+      };
+    };
+
+    const base = horizontalDualAxis({});
+    const rescaledSecondary = horizontalDualAxis({
+      secondaryYAxisDomain: 'dataMin-dataMax',
+    });
+    const rescaledPrimary = horizontalDualAxis({
+      yAxisDomain: 'dataMin-dataMax',
+    });
+
+    expect(base.bar).toBeTruthy();
+    expect(base.line).toBeTruthy();
+
+    expect(rescaledSecondary.line).not.toBe(base.line);
+    expect(rescaledSecondary.bar).toBe(base.bar);
+
+    expect(rescaledPrimary.bar).not.toBe(base.bar);
+    expect(rescaledPrimary.line).toBe(base.line);
+  });
+
+  // `yAxisOrientation` picks the side of the *value* axis. That axis is X when
+  // the marks grow horizontally, so there is no left/right side to take and the
+  // prop goes inert — it must not move the category axis instead.
+  it('leaves yAxisOrientation inert when horizontal', () => {
+    const plain = renderChart({ series: barLine, orientation: 'horizontal' });
+    const flipped = renderChart({
+      series: barLine,
+      orientation: 'horizontal',
+      yAxisOrientation: 'right',
+    });
+    const categoryTickX = (result: ReturnType<typeof renderChart>) =>
+      result.container
+        .querySelector(
+          '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
+        )
+        ?.getAttribute('x');
+    expect(categoryTickX(plain)).toBeTruthy();
+    expect(categoryTickX(flipped)).toBe(categoryTickX(plain));
+  });
+
+  // The band runs along the category axis, which is Y here — so it spans the
+  // full plot width and only part of its height, the opposite of the vertical
+  // case.
+  it('lays a reference band along the category axis when horizontal', () => {
+    const rect = (orientation: 'vertical' | 'horizontal') => {
+      const { container } = renderChart({
+        series: barLine,
+        orientation,
+        referenceArea: { from: 'Feb', to: 'Mar' },
+      });
+      const node = container.querySelector('.recharts-reference-area-rect');
+      return {
+        width: Number(node?.getAttribute('width')),
+        height: Number(node?.getAttribute('height')),
+      };
+    };
+    const vertical = rect('vertical');
+    const horizontal = rect('horizontal');
+    expect(vertical.width).toBeLessThan(horizontal.width);
+    expect(horizontal.height).toBeLessThan(vertical.height);
+  });
+
+  // A value rule crosses the value axis, so it stands vertical when the values
+  // are on X — and a category rule turns the other way round.
+  it('turns both kinds of reference rule when horizontal', () => {
+    const rule = (props: Partial<React.ComponentProps<typeof ComposedChart>>) => {
+      const { container } = renderChart({
+        series: barLine,
+        orientation: 'horizontal',
+        ...props,
+      });
+      const line = container.querySelector('.recharts-reference-line line');
+      return {
+        x1: line?.getAttribute('x1'),
+        x2: line?.getAttribute('x2'),
+        y1: line?.getAttribute('y1'),
+        y2: line?.getAttribute('y2'),
+      };
+    };
+    const value = rule({ referenceLine: { value: 2000 } });
+    expect(value.x1).toBe(value.x2);
+    expect(value.y1).not.toBe(value.y2);
+
+    const category = rule({ referenceLine: { category: 'Feb' } });
+    expect(category.y1).toBe(category.y2);
+    expect(category.x1).not.toBe(category.x2);
+  });
+});
+
+describe('ComposedChart per-series config', () => {
+  it('paints a series with its own color instead of the config one', () => {
+    const { container } = renderChart({
+      series: [{ key: 'revenue', type: 'bar', color: 'rgb(1 2 3)' }],
+    });
+    expect(
+      container.querySelector('.recharts-bar-rectangle path')
+    ).toHaveAttribute('fill', 'rgb(1 2 3)');
+  });
+
+  it('overrides stroke width and dash pattern per series', () => {
+    const { container } = renderChart({
+      series: [
+        {
+          key: 'orders',
+          type: 'line',
+          strokeWidth: 5,
+          strokeDasharray: '5 5',
+        },
+      ],
+    });
+    const curve = container.querySelector('.recharts-line-curve');
+    expect(curve).toHaveAttribute('stroke-width', '5');
+    expect(curve).toHaveAttribute('stroke-dasharray', '5 5');
+  });
+
+  // recharts paints the dots into their own z-index layer, so they are counted
+  // over the whole chart rather than inside the line's group: two lines, one
+  // point marker per row, from the single series that opted in.
+  it('renders dots only for the series that asks for them', () => {
+    const { container } = renderChart({
+      series: [
+        { key: 'orders', type: 'line', showDots: true },
+        { key: 'profit', type: 'line' },
+      ],
+    });
+    expect(container.querySelectorAll('.recharts-line-dot')).toHaveLength(
+      data.length
+    );
+  });
+
+  // A bar has no stroke of its own, so the dash pattern has to bring one — in
+  // the series color, or it would paint black.
+  it('outlines a dashed bar series in its own color', () => {
+    const { container } = renderChart({
+      series: [
+        {
+          key: 'revenue',
+          type: 'bar',
+          strokeDasharray: '4 3',
+          strokeWidth: 2,
+        },
+      ],
+    });
+    const bar = container.querySelector('.recharts-bar-rectangle path');
+    expect(bar).toHaveAttribute('stroke', 'var(--color-revenue)');
+    expect(bar).toHaveAttribute('stroke-dasharray', '4 3');
+    expect(bar).toHaveAttribute('stroke-width', '2');
+  });
+
+  it('gives a series its own bar thickness', () => {
+    const { container } = renderChart({
+      series: [{ key: 'revenue', type: 'bar', barSize: 12 }],
+    });
+    expect(
+      container.querySelector('.recharts-bar-rectangle path')
+    ).toHaveAttribute('width', '12');
+  });
+
+  it('draws a track behind the bars of a series that opts in', () => {
+    const plain = renderChart({ series: [{ key: 'revenue', type: 'bar' }] });
+    const tracked = renderChart({
+      series: [{ key: 'revenue', type: 'bar', showBackground: true }],
+    });
+    expect(
+      plain.container.querySelectorAll('.recharts-bar-background-rectangle')
+    ).toHaveLength(0);
+    expect(
+      tracked.container.querySelectorAll('.recharts-bar-background-rectangle')
+    ).toHaveLength(data.length);
+  });
+
+  // `legendType: 'none'` is the one recharts icon value that changes what our
+  // own legend content renders — it drops the entry from the payload entirely.
+  it('keeps a series off the legend with legendType none', () => {
+    const { container } = renderChart({
+      series: [
+        { key: 'revenue', type: 'bar' },
+        { key: 'orders', type: 'line', legendType: 'none' },
+      ],
+    });
+    const legend = container.querySelector('.recharts-legend-wrapper');
+    expect(legend?.textContent).toContain('Revenue');
+    expect(legend?.textContent).not.toContain('Orders');
+  });
+
+  // A null value breaks the line into two sub-paths; `connectNulls` bridges it
+  // back into one.
+  it('bridges null gaps only when connectNulls is on', () => {
+    const gapped = [
+      { month: 'Jan', orders: 120 },
+      { month: 'Feb', orders: null },
+      { month: 'Mar', orders: 156 },
+    ];
+    const countMoves = (container: HTMLElement) =>
+      (
+        container
+          .querySelector('.recharts-line-curve')
+          ?.getAttribute('d')
+          ?.match(/M/g) ?? []
+      ).length;
+    const broken = renderChart({
+      data: gapped,
+      series: [{ key: 'orders', type: 'line' }],
+    });
+    const bridged = renderChart({
+      data: gapped,
+      series: [{ key: 'orders', type: 'line', connectNulls: true }],
+    });
+    expect(countMoves(broken.container)).toBe(2);
+    expect(countMoves(bridged.container)).toBe(1);
+  });
+
+  it('takes the chart-level default when a series sets nothing', () => {
+    const { container } = renderChart({
+      strokeWidth: 4,
+      series: [
+        { key: 'orders', type: 'line' },
+        { key: 'profit', type: 'line', strokeWidth: 1 },
+      ],
+    });
+    const curves = container.querySelectorAll('.recharts-line-curve');
+    expect(curves[0]).toHaveAttribute('stroke-width', '4');
+    expect(curves[1]).toHaveAttribute('stroke-width', '1');
+  });
+});
+
+describe('ComposedChart stacking', () => {
+  it('stacks bars that share a stackId', () => {
+    const grouped = renderChart({
+      series: [
+        { key: 'revenue', type: 'bar' },
+        { key: 'profit', type: 'bar' },
+      ],
+    });
+    const stacked = renderChart({
+      series: [
+        { key: 'revenue', type: 'bar', stackId: 'total' },
+        { key: 'profit', type: 'bar', stackId: 'total' },
+      ],
+    });
+    const firstBarsOf = (result: ReturnType<typeof renderChart>) =>
+      Array.from(result.container.querySelectorAll('.recharts-bar')).map(
+        (layer) => layer.querySelector('.recharts-bar-rectangle path')
+      );
+
+    const [groupedA, groupedB] = firstBarsOf(grouped);
+    expect(groupedA?.getAttribute('x')).not.toBe(groupedB?.getAttribute('x'));
+
+    // Stacked segments share the category's slot and sit on top of each other:
+    // the upper one ends exactly where the lower one starts.
+    const [stackedA, stackedB] = firstBarsOf(stacked);
+    expect(stackedA?.getAttribute('x')).toBe(stackedB?.getAttribute('x'));
+    expect(stackedA?.getAttribute('width')).toBe(
+      stackedB?.getAttribute('width')
+    );
+    const bottom = Number(stackedA?.getAttribute('y'));
+    const top = Number(stackedB?.getAttribute('y'));
+    const topHeight = Number(stackedB?.getAttribute('height'));
+    expect(top + topHeight).toBeCloseTo(bottom, 5);
+  });
+
+  // The ids are namespaced per mark type, so one id can't merge a bar into an
+  // area stack — the bar keeps the full height it has on its own.
+  it('does not stack an area onto a bar that shares its id', () => {
+    const alone = renderChart({ series: [{ key: 'revenue', type: 'bar' }] });
+    const withArea = renderChart({
+      series: [
+        { key: 'revenue', type: 'bar', stackId: 'total' },
+        { key: 'profit', type: 'area', stackId: 'total' },
+      ],
+    });
+    const height = (result: ReturnType<typeof renderChart>) =>
+      result.container
+        .querySelector('.recharts-bar-rectangle path')
+        ?.getAttribute('height');
+    expect(height(withArea)).toBe(height(alone));
+  });
+
+  it('rounds only the segment at the top of a stack', () => {
+    const { container } = renderChart({
+      barRadius: 8,
+      series: [
+        { key: 'revenue', type: 'bar', stackId: 'total' },
+        { key: 'profit', type: 'bar', stackId: 'total' },
+      ],
+    });
+    const [lower, upper] = Array.from(
+      container.querySelectorAll('.recharts-bar')
+    ).map((layer) =>
+      layer.querySelector('.recharts-bar-rectangle path')?.getAttribute('d')
+    );
+    // recharts draws corner arcs with `A`; a square-cornered rect has none.
+    expect(lower).not.toContain('A');
+    expect(upper).toContain('A');
+  });
+});
+
+describe('ComposedChart references, margin and legend placement', () => {
+  it('draws a reference line on the value axis', () => {
+    const { container } = renderChart({
+      referenceLine: { value: 2000, label: 'Target' },
+    });
+    expect(
+      container.querySelector('.recharts-reference-line line')
+    ).toBeInTheDocument();
+    expect(container.textContent).toContain('Target');
+  });
+
+  it('averages the plotted series when asked', () => {
+    const fixed = renderChart({ referenceLine: { value: 2000 } });
+    const averaged = renderChart({ referenceLine: { average: 'revenue' } });
+    const y = (result: ReturnType<typeof renderChart>) =>
+      result.container
+        .querySelector('.recharts-reference-line line')
+        ?.getAttribute('y1');
+    expect(averaged.container.querySelector('.recharts-reference-line')).toBeInTheDocument();
+    expect(y(averaged)).not.toBe(y(fixed));
+  });
+
+  // A category rule runs the other way — across the categories, at one of them.
+  it('draws a vertical rule at a category', () => {
+    const { container } = renderChart({
+      referenceLine: { category: 'Feb', label: 'Today' },
+    });
+    const rule = container.querySelector('.recharts-reference-line line');
+    expect(rule?.getAttribute('x1')).toBe(rule?.getAttribute('x2'));
+    expect(container.textContent).toContain('Today');
+  });
+
+  it('draws nothing for a category that is not in the data', () => {
+    const { container } = renderChart({ referenceLine: { category: 'Dec' } });
+    expect(container.querySelector('.recharts-reference-line')).toBeNull();
+  });
+
+  // A rule belongs to one scale. `orders` (98–156) lives on the secondary axis
+  // while `revenue` (1398–9800) sets the primary one, so plotting its average
+  // against the primary scale would pin the rule to the baseline.
+  describe('on a chart with two value axes', () => {
+    const dualSeries = [
+      { key: 'revenue', type: 'bar' as const },
+      { key: 'orders', type: 'line' as const, yAxis: 'secondary' as const },
+    ];
+    const ruleY = (props: Partial<React.ComponentProps<typeof ComposedChart>>) =>
+      Number(
+        renderChart({ series: dualSeries, ...props }).container
+          .querySelector('.recharts-reference-line line')
+          ?.getAttribute('y1')
+      );
+    // The primary axis fits 1398–9800 into the plot, so a rule at ~127 (the
+    // orders mean) drawn against it sits within a few px of the baseline.
+    // Rendered per test, not once: the sized ResizeObserver recharts needs is
+    // only installed in `beforeAll`, after the describe body has run.
+    const baselineY = () => ruleY({ referenceLine: { value: 0 } });
+
+    it('reads an average off the axis of the series it names', () => {
+      const onSecondary = ruleY({ referenceLine: { average: 'orders' } });
+      // ~127 of a 98–156 scale lands mid-plot, nowhere near the baseline.
+      expect(baselineY() - onSecondary).toBeGreaterThan(50);
+    });
+
+    it('pools only the series on the axis a rule is drawn against', () => {
+      // `average: true` defaults to the primary axis, so it must average
+      // `revenue` alone (4532.67) rather than mixing in the orders scale.
+      const pooled = ruleY({ referenceLine: { average: true } });
+      const revenueOnly = ruleY({ referenceLine: { average: 'revenue' } });
+      expect(pooled).toBeCloseTo(revenueOnly, 5);
+    });
+
+    it('places a fixed value on the axis the caller names', () => {
+      const onPrimary = ruleY({ referenceLine: { value: 130 } });
+      const onSecondary = ruleY({
+        referenceLine: { value: 130, yAxis: 'secondary' },
+      });
+      // 130 is near the floor of the revenue scale but mid-range for orders.
+      const baseline = baselineY();
+      expect(baseline - onPrimary).toBeLessThan(20);
+      expect(baseline - onSecondary).toBeGreaterThan(50);
+    });
+  });
+
+  // Without a series on that axis there is no secondary axis to bind to, and
+  // recharts would invent an implicit one — so the request is ignored and the
+  // rule stays on the primary scale.
+  it('ignores a secondary yAxis request on a single-scale chart', () => {
+    const y = (props: Partial<React.ComponentProps<typeof ComposedChart>>) =>
+      renderChart(props).container
+        .querySelector('.recharts-reference-line line')
+        ?.getAttribute('y1');
+    expect(y({ referenceLine: { value: 2000, yAxis: 'secondary' } })).toBe(
+      y({ referenceLine: { value: 2000 } })
+    );
+  });
+
+  it('shades a band behind a range of categories', () => {
+    const { container } = renderChart({
+      referenceArea: { from: 'Feb', to: 'Mar', label: 'Forecast' },
+    });
+    expect(
+      container.querySelector('.recharts-reference-area-rect')
+    ).toBeInTheDocument();
+    expect(container.textContent).toContain('Forecast');
+  });
+
+  // A band is a backdrop: it has to paint under the marks and over the grid.
+  // recharts' own default (100) collides with the layer the series are pulled
+  // into to order them by array index, which paints the band over the bars.
+  it('paints a band under the series and over the grid', () => {
+    const { container } = renderChart({
+      series: [{ key: 'revenue', type: 'bar' }],
+      referenceArea: { from: 'Feb' },
+    });
+    const layerOf = (selector: string) => {
+      const layer = container
+        .querySelector(selector)
+        ?.closest('[class*="recharts-zIndex-layer_"]');
+      const match = layer?.className.match(/recharts-zIndex-layer_(-?\d+)/);
+      return Number(match?.[1]);
+    };
+    const band = layerOf('.recharts-reference-area');
+    expect(band).toBeLessThan(layerOf('.recharts-bar'));
+    expect(band).toBeGreaterThan(layerOf('.recharts-cartesian-grid'));
+  });
+
+  // The rule is an annotation, so it goes the other way — on top of the marks.
+  it('paints a reference rule over the series', () => {
+    const { container } = renderChart({
+      series: [{ key: 'revenue', type: 'bar' }],
+      referenceLine: { value: 2000 },
+    });
+    const layerOf = (selector: string) => {
+      const layer = container
+        .querySelector(selector)
+        ?.closest('[class*="recharts-zIndex-layer_"]');
+      return Number(
+        layer?.className.match(/recharts-zIndex-layer_(-?\d+)/)?.[1]
+      );
+    };
+    expect(layerOf('.recharts-reference-line')).toBeGreaterThan(
+      layerOf('.recharts-bar')
+    );
+  });
+
+  it('accepts several reference lines and bands at once', () => {
+    const { container } = renderChart({
+      referenceLine: [{ value: 1000 }, { category: 'Feb' }],
+      referenceArea: [{ from: 'Jan', to: 'Jan' }, { from: 'Mar' }],
+    });
+    expect(container.querySelectorAll('.recharts-reference-line')).toHaveLength(2);
+    expect(container.querySelectorAll('.recharts-reference-area')).toHaveLength(2);
+  });
+
+  it('insets the plot by a caller margin', () => {
+    const gridX = (result: ReturnType<typeof renderChart>) =>
+      Number(
+        result.container
+          .querySelector('.recharts-cartesian-grid-horizontal line')
+          ?.getAttribute('x1')
+      );
+    expect(gridX(renderChart({ margin: { left: 48 } }))).toBeGreaterThan(
+      gridX(renderChart())
+    );
+  });
+
+  // A vertical rule hangs its caption above the plot, which recharts' 5px inset
+  // would clip. The chart reserves the headroom itself rather than making the
+  // caller discover it — but only when such a caption exists.
+  it('reserves top headroom for a labelled vertical rule', () => {
+    const plotTop = (props: Partial<React.ComponentProps<typeof ComposedChart>>) =>
+      Number(
+        renderChart(props)
+          .container.querySelector('.recharts-cartesian-grid-horizontal line')
+          ?.getAttribute('y1')
+      );
+    const bare = plotTop({});
+    // A category rule is vertical in the default orientation.
+    expect(plotTop({ referenceLine: { category: 'Feb', label: 'Today' } })
+    ).toBeGreaterThan(bare);
+    // The same rule without a caption has nothing to clip, so nothing is added.
+    expect(plotTop({ referenceLine: { category: 'Feb' } })).toBe(bare);
+    // A value rule captions itself inside the plot, so it needs no headroom.
+    expect(plotTop({ referenceLine: { value: 2000, label: 'Target' } })).toBe(
+      bare
+    );
+  });
+
+  it('puts the legend above the plot when asked', () => {
+    const bottom = renderChart();
+    const top = renderChart({ legendPosition: 'top' });
+    expect(
+      bottom.container.querySelector('.recharts-legend-wrapper > div')
+    ).toHaveClass('pt-3');
+    expect(
+      top.container.querySelector('.recharts-legend-wrapper > div')
+    ).toHaveClass('pb-3');
+  });
+
+  // The cursor only paints while the pointer is over the plot, so this guards
+  // the prop path: `tooltipCursor` is consumed, not forwarded to the wrapper.
+  it('consumes tooltipCursor instead of forwarding it to the DOM', () => {
+    const { container } = renderChart({ tooltipCursor: false });
+    expect(container.firstElementChild).not.toHaveAttribute('tooltipcursor');
+  });
+});
+
+// How the two scales read against each other is covered by the `SecondaryYAxis*`
+// VR stories. These assert the contract this composition owns: the per-series
+// opt-in and every secondary-axis prop mount, and a chart that never opts in
+// stays on the single-axis path.
 describe('ComposedChart secondary Y axis', () => {
   const dualSeries = [
     { key: 'revenue', type: 'bar' as const },
@@ -245,7 +863,7 @@ describe('ComposedChart secondary Y axis', () => {
   // Every series on the secondary axis leaves the primary one empty. recharts gives
   // a tickless axis a blank gutter and collapses the grid onto it, so the component
   // hides that axis and re-points the grid — visible in the `AllSeriesSecondaryYAxis`
-  // baseline, which happy-dom can't distinguish from the unguarded render.
+  // baseline.
   it('accepts every series opting into the secondary axis', () => {
     const { container } = renderChart({
       series: [
