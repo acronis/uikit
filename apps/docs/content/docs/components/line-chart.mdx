@@ -384,6 +384,74 @@ Both handles are focusable `role="slider"` elements: Tab reaches them, and the
 arrow keys move the selection one row at a time. Pass `brushAriaLabel` to
 localize their accessible name (it defaults to `'Chart range selector'`).
 
+## Accessibility
+
+Neither `LineChart` nor the shared `ChartContainer` adds a `role` or an `aria-*`
+attribute of its own. What semantics the chart has come from recharts, whose
+accessibility layer is on by default and is not switched off here: the plot's
+`<svg>` renders `role="application"` with `tabindex="0"`, so Tab reaches it,
+focusing it opens the tooltip on the first category, the left/right arrow keys
+step it along the categories, and Enter pins it.
+
+That surface has no accessible name, though — recharts emits an empty `<title>`
+and `<desc>` and exposes neither, so a screen reader announces an unnamed
+application region. The tooltip is not a live region either: `ChartTooltipContent`
+renders plain markup with no `role="status"` or `aria-live`, so the values it
+reveals as you arrow along are shown but never announced.
+
+Name the chart from the outside. The root is a plain `<div>` that spreads the
+props it doesn't consume, so `role="img"` and `aria-label` (or `aria-labelledby`)
+land on it:
+
+```tsx
+<LineChart
+  role="img"
+  aria-label="Desktop and mobile sessions, January to March"
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+/>
+```
+
+`role="img"` names the chart but also makes its subtree presentational, hiding
+the plot from assistive technology while it stays in the tab order. Where the
+keyboard tooltip should remain reachable, wrap the chart in a `<figure>` with a
+`<figcaption>`, or pass `role="group"` with the same `aria-label`, and leave the
+plot's own semantics alone.
+
+A name is not a text alternative. The chart is a visual encoding of numbers, and
+"Sessions by month" says what the picture is about, not what it shows — so put
+the numbers in text as well: a caption carrying the takeaway, a summary sentence,
+or the same rows in an adjacent [`Table`](/components/table). Series are told
+apart by hue alone unless you say otherwise, so on a multi-series chart reach for
+`lineStyle="dashed"`, `lineSettings[key].dashed`, a distinct `curveType`, or
+per-series dots to give each one a second cue. `comparisonKeys` already carries
+one: an overlay series renders dashed and dimmed, so it reads as secondary
+without depending on its hue.
+
+The [range brush](#range-brush) is the one part of the plot with real control
+semantics. Each traveller is a `role="slider"` element with `tabindex="0"`, named
+by `brushAriaLabel`, and the left/right arrow keys move that end of the selection
+one row at a time — the traveller consumes those keys, so they resize the range
+instead of stepping the tooltip. `ChartContainer` restores the focus outline that
+its blanket `outline-hidden` would otherwise take away. Its `aria-valuenow` is
+recharts' own: the handle's pixel position, not a row index, so what a screen
+reader reads back from it carries no meaning.
+
+## Direction (RTL)
+
+Under `dir="rtl"` the chrome around the plot mirrors on its own — the legend, the
+tooltip, and any readouts you compose alongside the chart are ordinary flow
+layout built from logical CSS utilities. The plot area itself deliberately stays
+left-to-right: recharts lays every mark out in physical SVG coordinates, so a
+mirrored category axis would flip the reading order of the data without flipping
+the geometry that encodes it. `ChartContainer` pins `.recharts-surface` to
+`direction: ltr`, which makes that a guarantee rather than a side effect of
+whatever direction the surrounding page happens to inherit — that inherited
+direction is also what decides the default text anchor of any label recharts
+leaves unanchored. This is what mainstream charting libraries do by default.
+
 ## API Reference
 
 <AutoTypeTable

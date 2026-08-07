@@ -62,6 +62,38 @@ Override a state's default label with `message`:
 <ChartState state="empty" message="No results for the selected range" />
 ```
 
+## Accessibility
+
+The root **is** the live region, and which one depends on the state: `loading`
+and `empty` render `role="status"` with `aria-live="polite"`, `error` renders
+`role="alert"` with `aria-live="assertive"` — a failed fetch interrupts, a
+pending one waits its turn. Both are applied after the prop spread, so the
+contract can't be overwritten by an `aria-live` passed in from outside.
+
+The message is a real `<p>`, so the state is text in the accessible tree rather
+than a colored glyph. The glyphs are decorative: the `loading` `Spinner` is
+explicitly `aria-hidden` (it carries its own `role="status"` and hidden label,
+which would double-announce nested inside this one), and the empty/error icons
+are `aria-hidden` by default the way every `icons-react` icon is until given a
+`title`.
+
+There is deliberately no `aria-busy`. Some screen readers defer announcing a
+busy region's content until the flag clears, and this placeholder is _unmounted_
+— swapped for the chart — rather than un-busied, so the flag would risk
+swallowing the "Data is loading…" announcement entirely. Put `aria-busy` on the
+chart-slot container instead when you need a busy signal.
+
+Pass a real control as `action` (a `Button`): it sits inside the alert region,
+which announces but does not move focus, so the retry has to be reachable on its
+own.
+
+## Direction (RTL)
+
+A centered column of a glyph and text, with no physical directional utilities,
+so it mirrors under `dir="rtl"` with nothing to configure. The message and the
+`action` follow the text direction, and none of the three glyphs (spinner,
+inbox, warning) carry a direction, so none of them flip.
+
 ## API Reference
 
 <AutoTypeTable

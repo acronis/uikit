@@ -63,6 +63,37 @@ the **icon badge** only — the `--ui-background-status-<status>-pressed` fill w
 the `--ui-text-on-status-<status>` icon color — a subtle cue, never a full color
 fill, so many metrics read calmly together. No data is `value="—"`, not `0`.
 
+## Accessibility
+
+`Metric` imposes no roles and sets no accessible name on itself: it is a `Card`
+of ordinary text read in DOM order — label, value, unit, badge, trend,
+supporting text, then whatever the body holds. That order is the reading order,
+and the unit sits next to the value so the two are announced together. If a tile
+needs a name of its own (as a link target, or as a labelled region), pass
+`aria-label` / `role` yourself — they are spread onto the card.
+
+The one label the component owns is on the info affordance: when `tooltip` is
+set, its trigger is a real `<button>` named by `tooltipLabel`, which defaults to
+`"More information"` and is the string to override for a localized UI. The hint
+is keyboard reachable, but it must not be the only place essential information
+lives.
+
+`status` is a visual cue only. It tints the icon badge, and that badge is
+`aria-hidden` — the icon is decorative and the status itself is never announced
+— so the meaning has to sit in the `value`, the `trend`, or the
+`supportingText`. `loading` swaps the value for a `Skeleton` with no live region
+of its own: the value simply leaves the accessible tree and returns, so wrap the
+tile yourself if an update needs announcing.
+
+## Direction (RTL)
+
+Every row is a flex pair separated by `justify-between`, and the only
+directional spacing in the component is logical (`ms-` on the badge slot), so
+the card mirrors fully under `dir="rtl"` — label and value to the inline start,
+caption and trend to the inline end. The slots hold your own nodes, so
+directional artwork inside them is yours to flip; a composed `TrendIndicator`
+already does.
+
 ## API Reference
 
 <AutoTypeTable

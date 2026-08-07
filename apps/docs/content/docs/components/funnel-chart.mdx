@@ -319,6 +319,53 @@ Charts render statically by default. Opt in to an entrance animation with
 system to reduce motion, the series render at their final geometry with no
 animation (the same applies when rendering on the server).
 
+## Accessibility
+
+`FunnelChart` sets no `role` and no `aria-*` of its own, and the SVG the funnel is
+drawn into has no accessible name — recharts emits an empty `<title>` / `<desc>` pair
+and nothing else. It does switch its own accessibility layer on for this chart type,
+so the plot is a tab stop carrying `role="application"`: a focus stop that announces
+neither a name nor any data. The component exposes no way to turn that off.
+
+The root is a plain `<div>` that spreads the props you pass, so a role and a label
+land on it:
+
+```tsx
+<FunnelChart
+  role="img"
+  aria-label="Conversion funnel: 5,000 visits, 2,600 signups, 1,400 trials, 620 purchases"
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="stage"
+/>
+```
+
+`aria-labelledby` works the same way. Wrapping the chart in a `<figure>` with a
+`<figcaption>` is often the better fit here, since `role="img"` names the chart but
+doesn't remove the focusable plot inside it.
+
+Either way, a name is not a text alternative. A funnel is a visual encoding of
+numbers, so the numbers themselves have to be reachable as text — a caption, a
+summary sentence, or a table beside the chart. The stage labels (`showLabels`, on by
+default) and the value labels (`showValueLabels`) are real `<text>` rather than
+pixels, but they sit in the SVG with no structural role, and a stage's name and its
+value are two separate label lists on opposite sides with nothing tying them
+together. `showLegend` and the tooltip are ordinary HTML laid out beside the SVG, so
+the legend is the one part of a funnel that is already reliable text.
+
+## Direction (RTL)
+
+Under `dir="rtl"` the chrome around the plot — the legend, the tooltip, and any
+readouts you compose alongside them — mirrors on its own, because it is ordinary
+flow layout built from logical CSS utilities. The plot area deliberately stays
+left-to-right: recharts places every mark in physical SVG coordinates, so mirroring
+it would flip the reading order of the data without flipping the geometry that
+encodes it. That holds without a `direction` override: recharts computes those
+coordinates itself, so the plot does not mirror even when the page does. A funnel's labels are inside the plot, which is why `labelPosition` and
+`valuePosition` name physical sides: `right` is the right of the funnel in both
+directions, and the plot-area inset reserved for a label follows the same side.
+
 ## API Reference
 
 <AutoTypeTable

@@ -157,6 +157,74 @@ carries the unit suffix.
 />;
 ```
 
+## Accessibility
+
+`ChartContainer` renders a plain `<div>` with no role and no accessible name of
+its own — it spreads whatever props you pass, so `role="img"` plus an
+`aria-label` (or an `aria-labelledby` pointing at the visible heading) is how a
+chart gets named. Nothing in the kit synthesizes a name from `config`.
+
+An SVG plot is not readable as data, so the numbers have to exist as text
+somewhere — a caption, a summary sentence, or an adjacent table. The chrome
+carries part of that: `ChartLegendContent` renders each series' `config` label
+as real DOM text beside its marker, and `ChartTooltipContent` names every series
+next to its value. Don't hide the label and the indicator together, and never
+let color be the only thing separating two series.
+
+recharts' own accessibility layer is on by default, which gives the plot surface
+`tabindex="0"` and `role="application"`: while it has focus, <kbd>←</kbd> /
+<kbd>→</kbd> walk the tooltip across data points and <kbd>Enter</kbd> pins it.
+That focus stop is not visibly indicated — the container's `outline-hidden`
+rules, which exist to strip recharts' stray outlines off layers and sectors,
+cover the surface too.
+
+A `<Brush>` traveller is the exception, because it is a genuine control:
+recharts renders each of the two handles as `role="slider"` with `tabindex="0"`,
+moving the range one row per <kbd>←</kbd> / <kbd>→</kbd> press. `ChartContainer`
+restores an explicit `:focus-visible` outline in `--ui-focus-primary` for it —
+an outline rather than the usual ring, because box-shadow doesn't paint on SVG
+children.
+
+- **Name the handles.** `brushAriaLabel` — on `BarChart`, `LineChart`,
+  `AreaChart` and `ComposedChart`, the four types that take a brush — labels
+  both travellers and defaults to `'Chart range selector'`. That default is not
+  cosmetic: recharts' own fallback builds the name from a `name` field on the
+  data row, which none of these charts require, so without it the handles
+  announce "Min value: undefined, Max value: undefined".
+- The handle's `aria-valuenow` is recharts' pixel offset rather than a data
+  index, so the announced number means nothing. The range captions under the
+  strip — painted while a handle is focused or dragged — are the readable
+  signal.
+
+## Direction (RTL)
+
+Under `dir="rtl"` a chart mirrors in two halves, deliberately. The chrome around
+the plot — the legend, the tooltip card, and whatever readouts you compose
+alongside them — mirrors on its own, because it is ordinary flow layout built
+from logical CSS utilities. The plot area does not.
+
+That split is the point. recharts lays every mark out in physical SVG
+coordinates, so a category axis that ran right-to-left would flip the reading
+order of the data without flipping the geometry that encodes it — the bars, the
+line, and the axis they belong to would stop agreeing. Nothing has to force
+this: because those coordinates are computed rather than laid out by the
+document, the plot keeps its orientation whatever `direction` the page inherits,
+and recharts anchors its own axis and label text explicitly.
+
+The one exception is content recharts renders as HTML inside a `<foreignObject>`
+rather than as SVG — the [Treemap](/components/treemap)'s cell labels — which is
+flow layout again, and mirrors with the page.
+
+This is what mainstream charting libraries do by default too: the plot keeps its
+physical orientation and only the surrounding UI mirrors. The non-SVG widgets —
+[CategoryBar](/components/category-bar), [Meter](/components/meter),
+[Metric](/components/metric), [TrendIndicator](/components/trend-indicator) —
+are plain DOM and mirror fully instead.
+
+If a chart genuinely has to read right-to-left, that is a decision about the
+data, not about the page: reverse the category axis with recharts' own
+`reversed` prop rather than expecting `dir` to do it.
+
 ## API Reference
 
 `ChartContainer` takes the chart `config` and the recharts plot as children:

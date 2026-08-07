@@ -255,6 +255,52 @@ edge.
 Labels are off by default — with more than one series they collide easily, so turn
 them on for a single series or a chart with room to spare.
 
+## Accessibility
+
+`PieChart` sets no `role` and no `aria-*` of its own, and the SVG the arc is drawn
+into has no accessible name — recharts emits an empty `<title>` / `<desc>` pair and
+nothing else. It does switch its own accessibility layer on for this chart type, so
+the plot is a tab stop carrying `role="application"`: a focus stop that announces
+neither a name nor any data. The component exposes no way to turn that off.
+
+The root is a plain `<div>` that spreads the props you pass, so a role and a label
+land on it:
+
+```tsx
+<PieChart
+  role="img"
+  aria-label="Sessions by browser: Chrome 275, Safari 200, Firefox 187, Edge 173"
+  config={config}
+  data={data}
+  dataKey="value"
+  nameKey="browser"
+/>
+```
+
+`aria-labelledby` works the same way. Wrapping the chart in a `<figure>` with a
+`<figcaption>` is often the better fit here, since `role="img"` names the chart but
+doesn't remove the focusable plot inside it.
+
+Either way, a name is not a text alternative. A pie is a visual encoding of numbers,
+so the numbers themselves have to be reachable as text — a caption, a summary
+sentence, or a table beside the chart. The legend and the tooltip are ordinary HTML
+laid out beside the SVG rather than inside it, so the legend already names every
+slice in the document; the slice labels (`showLabels`) and the donut's `centerLabel`
+are real `<text>` rather than pixels, but they sit in the SVG with no structural
+role.
+
+## Direction (RTL)
+
+Under `dir="rtl"` the chrome around the plot — the legend, the tooltip, and any
+readouts you compose alongside them — mirrors on its own, because it is ordinary
+flow layout built from logical CSS utilities. The plot area deliberately stays
+left-to-right: recharts places every mark in physical SVG coordinates, so mirroring
+it would flip the reading order of the data without flipping the geometry that
+encodes it. That holds without a `direction` override: recharts computes those
+coordinates itself, so the plot does not mirror even when the page does. For a pie that means the sweep still runs from `startAngle` to `endAngle`
+the same way in both directions, and the slice labels, their leader lines and the
+`centerLabel` stay where the geometry puts them.
+
 ## API Reference
 
 <AutoTypeTable

@@ -114,6 +114,62 @@ Charts render statically by default. Opt in to an entrance animation with
 system to reduce motion, the series render at their final geometry with no
 animation (the same applies when rendering on the server).
 
+## Accessibility
+
+Neither `Histogram` nor the shared `ChartContainer` adds a `role` or an `aria-*`
+attribute of its own. What semantics the chart has come from recharts, whose
+accessibility layer is on by default and is not switched off here: the plot's
+`<svg>` renders `role="application"` with `tabindex="0"`, so Tab reaches it,
+focusing it opens the tooltip on the first bin, the left/right arrow keys step it
+along the bins, and Enter pins it.
+
+That surface has no accessible name, though — recharts emits an empty `<title>`
+and `<desc>` and exposes neither, so a screen reader announces an unnamed
+application region. The tooltip is not a live region either: `ChartTooltipContent`
+renders plain markup with no `role="status"` or `aria-live`, so the bin range and
+count it reveals as you arrow along are shown but never announced.
+
+Name the chart from the outside. The root is a plain `<div>` that spreads the
+props it doesn't consume, so `role="img"` and `aria-label` (or `aria-labelledby`)
+land on it:
+
+```tsx
+<Histogram
+  role="img"
+  aria-label="Distribution of response times"
+  config={config}
+  values={values}
+  binCount={10}
+/>
+```
+
+`role="img"` names the chart but also makes its subtree presentational, hiding
+the plot from assistive technology while it stays in the tab order. Where the
+keyboard tooltip should remain reachable, wrap the chart in a `<figure>` with a
+`<figcaption>`, or pass `role="group"` with the same `aria-label`, and leave the
+plot's own semantics alone.
+
+A name is not a text alternative. The shape of a distribution — where it peaks,
+how far it spreads, whether it has a tail — is exactly what the picture carries
+and the label does not, so state it: a caption with the takeaway, a summary
+sentence quoting the median and range, or the bin counts in an adjacent
+[`Table`](/components/table). Color does no work here (one series, one hue); the
+bin labels on the category axis are what identifies a bar, so keep `showXAxis` on
+unless the numbers are reachable some other way.
+
+## Direction (RTL)
+
+Under `dir="rtl"` the chrome around the plot mirrors on its own — the legend, the
+tooltip, and any readouts you compose alongside the chart are ordinary flow
+layout built from logical CSS utilities. The plot area itself deliberately stays
+left-to-right: recharts lays every mark out in physical SVG coordinates, so a
+mirrored axis would flip the reading order of the data without flipping the
+geometry that encodes it — here that means the bins stay ordered low to high from
+the left. `ChartContainer` pins `.recharts-surface` to `direction: ltr`, which
+makes that a guarantee rather than a side effect of whatever direction the
+surrounding page happens to inherit. This is what mainstream charting libraries
+do by default.
+
 ## API Reference
 
 <AutoTypeTable

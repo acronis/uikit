@@ -195,6 +195,54 @@ Charts render statically by default. Opt in to an entrance animation with
 system to reduce motion, the series render at their final geometry with no
 animation (the same applies when rendering on the server).
 
+## Accessibility
+
+`Treemap` sets no `role` and no `aria-*` of its own, and recharts draws a treemap
+into a bare `<svg>` — an empty `<title>` / `<desc>` pair, no role, no `tabindex`. So
+the plot has no accessible name and is not a tab stop, which also makes the tooltip
+pointer-only.
+
+The root is a plain `<div>` that spreads the props you pass, so a role and a label
+land on it:
+
+```tsx
+<Treemap
+  role="img"
+  aria-label="Bundle size by framework: React 2400 kB, Vue 1600 kB, Angular 1200 kB, Svelte 800 kB"
+  config={config}
+  data={data}
+  dataKey="size"
+  nameKey="name"
+/>
+```
+
+`aria-labelledby` works the same way, as does wrapping the chart in a `<figure>` with
+a `<figcaption>`.
+
+A name is not a text alternative, though. A treemap is a visual encoding of numbers,
+so the numbers themselves have to be reachable as text — a caption, a summary
+sentence, or a table beside the chart. The cell labels are real text and not glyphs
+painted into an image: the cell renderer lays them out as HTML inside a
+`<foreignObject>`, and a truncated line is a CSS ellipsis, so the full string stays in
+the DOM. They carry no structural role, though, and they are conditional — a tile too
+narrow or too short for one is left blank. That last case is what `showLegend` covers:
+it renders every leaf's name as ordinary HTML in a row of its own, outside the plot.
+
+## Direction (RTL)
+
+Under `dir="rtl"` the chrome around the plot — the legend row, the tooltip, and any
+readouts you compose alongside them — mirrors on its own, because it is ordinary flow
+layout built from logical CSS utilities. The plot area deliberately stays
+left-to-right: recharts places every mark in physical SVG coordinates, so mirroring it
+would flip the reading order of the data without flipping the geometry that encodes
+it. That holds without a `direction` override: recharts computes those coordinates
+itself, so the tiling does not mirror even when the page does.
+
+The cell labels are the exception, deliberately. They are HTML inside a
+`<foreignObject>` rather than SVG `<text>`, so they are flow layout like the rest of
+the chrome: `labelAlign`'s start edge follows the page, which is why the corner
+values are named `bottom-start` / `top-start` rather than for a physical corner.
+
 ## API Reference
 
 <AutoTypeTable

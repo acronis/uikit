@@ -251,6 +251,69 @@ Charts render statically by default. Opt in to an entrance animation with
 system to reduce motion, the series render at their final geometry with no
 animation (the same applies when rendering on the server).
 
+## Accessibility
+
+Neither `ConfidenceCone` nor the shared `ChartContainer` adds a `role` or an
+`aria-*` attribute of its own. What semantics the chart has come from recharts,
+whose accessibility layer is on by default and is not switched off here: the
+plot's `<svg>` renders `role="application"` with `tabindex="0"`, so Tab reaches
+it, focusing it opens the tooltip on the first category, the left/right arrow
+keys step it along the categories, and Enter pins it.
+
+That surface has no accessible name, though — recharts emits an empty `<title>`
+and `<desc>` and exposes neither, so a screen reader announces an unnamed
+application region. The tooltip is not a live region either: `ChartTooltipContent`
+renders plain markup with no `role="status"` or `aria-live`, so the values it
+reveals as you arrow along are shown but never announced.
+
+Name the chart from the outside. The root is a plain `<div>` that spreads the
+props it doesn't consume, so `role="img"` and `aria-label` (or `aria-labelledby`)
+land on it:
+
+```tsx
+<ConfidenceCone
+  role="img"
+  aria-label="Storage used, with a projection and its confidence interval"
+  config={config}
+  data={data}
+  xKey="month"
+  actualKey="actual"
+  forecastKey="forecast"
+  lowerKey="lower"
+  upperKey="upper"
+/>
+```
+
+`role="img"` names the chart but also makes its subtree presentational, hiding
+the plot from assistive technology while it stays in the tab order. Where the
+keyboard tooltip should remain reachable, wrap the chart in a `<figure>` with a
+`<figcaption>`, or pass `role="group"` with the same `aria-label`, and leave the
+plot's own semantics alone.
+
+A name is not a text alternative, and it matters more here than on a plain
+series chart: the whole point of a cone is that the projected values are
+uncertain, and none of that is in the picture for a reader who can't see it. Put
+the numbers and the caveat in text as well — a caption naming the horizon and the
+interval, a summary sentence, or the same rows in an adjacent
+[`Table`](/components/table). The component's own visual distinctions are already
+non-chromatic and worth keeping: actual and forecast differ by line style rather
+than hue (solid versus dashed, one color per metric), `showDots` marks observed
+points filled and projected ones hollow, and `styleForecastTicks` italicizes the
+ticks over the projected period.
+
+## Direction (RTL)
+
+Under `dir="rtl"` the chrome around the plot mirrors on its own — the legend, the
+tooltip, and any readouts you compose alongside the chart are ordinary flow
+layout built from logical CSS utilities. The plot area itself deliberately stays
+left-to-right: recharts lays every mark out in physical SVG coordinates, so a
+mirrored category axis would flip the reading order of the data without flipping
+the geometry that encodes it — and here that order is also the direction of time,
+with the forecast region and its widening cone reading toward the future.
+`ChartContainer` pins `.recharts-surface` to `direction: ltr`, which makes that a
+guarantee rather than a side effect of whatever direction the surrounding page
+happens to inherit. This is what mainstream charting libraries do by default.
+
 ## API Reference
 
 <AutoTypeTable
