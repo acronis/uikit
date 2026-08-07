@@ -344,6 +344,66 @@ export interface PieChartProps
 // same direction. VR baselines guard this value if the legend's height changes.
 const LEGEND_ROW_RESERVE = 28;
 
+/**
+ * Content for the donut hole's centre readout, bound to the legend layout it has
+ * to compensate for.
+ *
+ * recharts centres the pie in the plot area (surface minus the legend), but a
+ * Pie `<Label>`'s viewBox reports the full surface centre — so a bottom legend
+ * leaves `cy` half a legend row too low, and a top legend half a row too high.
+ * The nudge puts the text back on the real donut centre, in whichever direction
+ * the legend row was reserved.
+ */
+function renderCenterLabel({
+  centerLabel,
+  showLegend,
+  legendPosition,
+}: {
+  centerLabel: PieChartCenterLabel;
+  showLegend: boolean;
+  legendPosition: 'top' | 'bottom';
+}) {
+  return function PieChartCenterLabel({ viewBox }: { viewBox?: object }) {
+    if (!viewBox || !('cx' in viewBox)) return null;
+    const { cx = 0, cy = 0 } = viewBox as { cx?: number; cy?: number };
+
+    const legendNudge = showLegend ? LEGEND_ROW_RESERVE / 2 : 0;
+    const centerY = cy + (legendPosition === 'top' ? legendNudge : -legendNudge);
+    const hasValue = centerLabel.value != null;
+    const hasLabel = centerLabel.label != null;
+    // Straddle centerY when both lines show, so the value + label block is
+    // centered as a whole (not just the value).
+    const both = hasValue && hasLabel;
+
+    return (
+      <g>
+        {hasValue && (
+          <text
+            x={cx}
+            y={both ? centerY - 10 : centerY}
+            textAnchor="middle"
+            dominantBaseline="central"
+            className="fill-foreground text-2xl font-semibold"
+          >
+            {centerLabel.value}
+          </text>
+        )}
+        {hasLabel && (
+          <text
+            x={cx}
+            y={both ? centerY + 13 : centerY}
+            textAnchor="middle"
+            dominantBaseline="central"
+            className="fill-muted-foreground text-sm"
+          >
+            {centerLabel.label}
+          </text>
+        )}
+      </g>
+    );
+  };
+}
+
 const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
   (
     {
@@ -508,53 +568,11 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
               ))}
               {shape === 'donut' && centerLabel && (
                 <Label
-                  content={({ viewBox }) => {
-                    if (!viewBox || !('cx' in viewBox)) return null;
-                    const { cx = 0, cy = 0 } = viewBox as {
-                      cx?: number;
-                      cy?: number;
-                    };
-                    // recharts centres the pie in the plot area (surface minus
-                    // the legend), but a Pie <Label>'s viewBox reports the full
-                    // surface centre — so a bottom legend leaves cy half a legend
-                    // row too low, and a top legend half a row too high. Nudge
-                    // onto the real donut centre, in whichever direction the
-                    // legend row was reserved.
-                    const legendNudge = showLegend ? LEGEND_ROW_RESERVE / 2 : 0;
-                    const centerY =
-                      cy + (legendPosition === 'top' ? legendNudge : -legendNudge);
-                    const hasValue = centerLabel.value != null;
-                    const hasLabel = centerLabel.label != null;
-                    // Straddle centerY when both lines show, so the value + label
-                    // block is centered as a whole (not just the value).
-                    const both = hasValue && hasLabel;
-                    return (
-                      <g>
-                        {hasValue && (
-                          <text
-                            x={cx}
-                            y={both ? centerY - 10 : centerY}
-                            textAnchor="middle"
-                            dominantBaseline="central"
-                            className="fill-foreground text-2xl font-semibold"
-                          >
-                            {centerLabel.value}
-                          </text>
-                        )}
-                        {hasLabel && (
-                          <text
-                            x={cx}
-                            y={both ? centerY + 13 : centerY}
-                            textAnchor="middle"
-                            dominantBaseline="central"
-                            className="fill-muted-foreground text-sm"
-                          >
-                            {centerLabel.label}
-                          </text>
-                        )}
-                      </g>
-                    );
-                  }}
+                  content={renderCenterLabel({
+                    centerLabel,
+                    showLegend,
+                    legendPosition,
+                  })}
                 />
               )}
               {showLabels && !showLeaderLines && (

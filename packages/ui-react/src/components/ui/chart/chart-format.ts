@@ -123,6 +123,71 @@ export function resolveAxisDomain(
 }
 
 /**
+ * `text-anchor` for a rotated X tick row, so the tick's text ends (or begins) at
+ * the tick it labels instead of straddling it. Shared by all 7 cartesian charts.
+ *
+ * A tick rotated anti-clockwise trails off to the lower left, so it must be
+ * anchored at its end; a clockwise one trails to the lower right and is anchored
+ * at its start. Unrotated ticks keep recharts' own default.
+ */
+export function resolveRotatedTickAnchor(
+  angle: number | undefined
+): 'start' | 'end' | undefined {
+  if (angle == null) return undefined;
+  return angle < 0 ? 'end' : 'start';
+}
+
+/**
+ * Height to reserve for the X tick row, or `undefined` to keep recharts' own
+ * default. Shared by all 7 cartesian charts.
+ *
+ * recharts' default 30 covers one upright tick row and nothing else, so a
+ * rotated row (+20) and an axis title (+18) each need their own allowance. The
+ * two are additive rather than exclusive — a chart can rotate its ticks *and*
+ * title the axis, which a label-or-angle ternary under-allocates.
+ */
+export function resolveXAxisHeight(
+  label: string | undefined,
+  angle: number | undefined
+): number | undefined {
+  if (!label && angle == null) return undefined;
+  return 30 + (angle != null ? 20 : 0) + (label ? 18 : 0);
+}
+
+/**
+ * recharts `label` for an X axis title, placed below the tick row. Shared by all
+ * 7 cartesian charts; `insideTop` is for a secondary scale on the top edge.
+ */
+export function resolveXAxisTitle(
+  label: string | undefined,
+  position: 'insideBottom' | 'insideTop' = 'insideBottom',
+  offset = 0
+) {
+  if (!label) return undefined;
+  return { value: label, position, offset };
+}
+
+/**
+ * recharts `label` for a rotated value-axis title, angled so it reads from the
+ * outside in — upward on a left axis (the convention), downward on a right one,
+ * where -90° would put the text's baseline against the plot. Shared by all 7
+ * cartesian charts; only `ComposedChart` currently uses the right-hand side.
+ */
+export function resolveYAxisTitle(
+  label: string | undefined,
+  orientation: 'left' | 'right' = 'left'
+) {
+  if (!label) return undefined;
+  return {
+    value: label,
+    angle: orientation === 'left' ? -90 : 90,
+    position:
+      orientation === 'left' ? ('insideLeft' as const) : ('insideRight' as const),
+    style: { textAnchor: 'middle' as const },
+  };
+}
+
+/**
  * A category range on a cartesian chart: `from`/`to` accept either the
  * category's value (an `xKey` cell, e.g. `'Sep'`) or its 0-based row index. Both
  * ends are inclusive, and either can be omitted to run to that end of the data.

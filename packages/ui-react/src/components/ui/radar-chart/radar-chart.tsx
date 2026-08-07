@@ -27,6 +27,7 @@ import {
   type ChartAnimationProps,
   type ChartDataLabelProps,
   type CartesianLabelPosition,
+  type ResolvedAnimation,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives — the first
@@ -333,6 +334,60 @@ export interface RadarChartProps
 // LabelList's own 5px offset, or the topmost vertex's value overlaps its tick.
 const RADAR_LABEL_TICK_SIZE = 30;
 
+/**
+ * One series' `<Radar>` (and its value labels).
+ *
+ * Called as a plain function, never mounted as `<RadarSeries />`: recharts
+ * matches a chart's children by element *type*, so a wrapper component would
+ * hide the `<Radar>` from `RadarChart`'s child scan — and the `<LabelList>` from
+ * `Radar`'s — and the series would simply not be drawn.
+ */
+function radarSeries({
+  seriesKey,
+  style,
+  animation,
+  showLabels,
+  labelPosition,
+  labelFormatter,
+}: {
+  seriesKey: string;
+  style: RadarSeriesStyle;
+  animation: ResolvedAnimation;
+  showLabels: boolean;
+  labelPosition: CartesianLabelPosition;
+  labelFormatter: ChartDataLabelProps['labelFormatter'];
+}) {
+  return (
+    <Radar
+      key={seriesKey}
+      dataKey={seriesKey}
+      stroke={style.stroke}
+      fill={style.fill}
+      fillOpacity={style.fillOpacity}
+      strokeWidth={style.strokeWidth}
+      dot={style.dot}
+      activeDot={style.activeDot}
+      {...animation}
+    >
+      {showLabels && (
+        <LabelList
+          dataKey={seriesKey}
+          position={labelPosition}
+          formatter={toLabelFormatter(labelFormatter)}
+          // A radar area is a flat `fillOpacity`, so an `inside*` label sits on
+          // the *surface tinted by* the series color, not on the color itself —
+          // the white on-fill token disappears into it in light mode. Same call
+          // as the other translucent families (Area, the composed chart's areas).
+          className={resolveLabelFillClass(labelPosition, {
+            translucentSeries: true,
+          })}
+          fontSize={CHART_LABEL_FONT_SIZE}
+        />
+      )}
+    </Radar>
+  );
+}
+
 const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
   (
     {
@@ -403,6 +458,13 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
     // implicit axis — and every existing chart's geometry.
     const hasRadiusAxis =
       showRadiusAxis || radiusDomain !== undefined || radiusAxisReversed;
+    const seriesDefaults: RadarSeriesDefaults = {
+      fillOpacity,
+      strokeWidth,
+      showDots,
+      dotRadius,
+      activeDot,
+    };
 
     return (
       <div
@@ -476,45 +538,20 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
                 content={<ChartLegendContent verticalAlign={legendPosition} />}
               />
             )}
-            {dataKeys.map((key) => {
-              const series = radarSeriesStyle(key, seriesSettings?.[key], {
-                fillOpacity,
-                strokeWidth,
-                showDots,
-                dotRadius,
-                activeDot,
-              });
-              return (
-                <Radar
-                  key={key}
-                  dataKey={key}
-                  stroke={series.stroke}
-                  fill={series.fill}
-                  fillOpacity={series.fillOpacity}
-                  strokeWidth={series.strokeWidth}
-                  dot={series.dot}
-                  activeDot={series.activeDot}
-                  {...animation}
-                >
-                  {showLabels && (
-                    <LabelList
-                      dataKey={key}
-                      position={radarLabelPosition}
-                      formatter={toLabelFormatter(labelFormatter)}
-                      // A radar area is a flat `fillOpacity`, so an `inside*`
-                      // label sits on the *surface tinted by* the series color,
-                      // not on the color itself — the white on-fill token
-                      // disappears into it in light mode. Same call as the other
-                      // translucent families (Area, the composed chart's areas).
-                      className={resolveLabelFillClass(radarLabelPosition, {
-                        translucentSeries: true,
-                      })}
-                      fontSize={CHART_LABEL_FONT_SIZE}
-                    />
-                  )}
-                </Radar>
-              );
-            })}
+            {dataKeys.map((key) =>
+              radarSeries({
+                seriesKey: key,
+                style: radarSeriesStyle(
+                  key,
+                  seriesSettings?.[key],
+                  seriesDefaults
+                ),
+                animation,
+                showLabels,
+                labelPosition: radarLabelPosition,
+                labelFormatter,
+              })
+            )}
           </RechartsRadarChart>
         </ChartContainer>
       </div>

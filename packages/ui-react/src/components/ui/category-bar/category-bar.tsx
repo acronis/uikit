@@ -87,6 +87,61 @@ export interface CategoryBarProps
   'aria-label'?: string;
 }
 
+/**
+ * One segment's hover card.
+ *
+ * It re-declares `data-chart` and re-renders `ChartStyle` because the popup is
+ * portaled out of the bar: outside that subtree the `--color-*` bridge the
+ * swatch reads has nothing to resolve against.
+ */
+function CategoryBarSegmentTooltip({
+  chartId,
+  config,
+  color,
+  label,
+  percent,
+  segmentKey,
+  value,
+  valueFormatter,
+  render,
+}: {
+  chartId: string;
+  config: ChartConfig;
+  color: string;
+  label: React.ReactNode;
+  percent: number;
+  segmentKey: string;
+  value: number;
+  valueFormatter: (value: number) => string;
+  render?: (segment: CategoryBarTooltipContext) => React.ReactNode;
+}) {
+  return (
+    <TooltipContent
+      data-chart={chartId}
+      className={cn(
+        'border border-border bg-background text-foreground shadow-md',
+        !render && 'flex items-center gap-2'
+      )}
+    >
+      <ChartStyle id={chartId} config={config} />
+      {render ? (
+        render({ key: segmentKey, value, label, percent, color })
+      ) : (
+        <>
+          <span
+            className="size-2.5 shrink-0 rounded-full"
+            style={{ backgroundColor: color }}
+          />
+          <span className="font-semibold">{label}</span>
+          <span className="text-muted-foreground tabular-nums">
+            {valueFormatter(value)} · {percent}%
+          </span>
+        </>
+      )}
+    </TooltipContent>
+  );
+}
+
 const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
   (
     {
@@ -156,37 +211,17 @@ const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
             return (
               <Tooltip key={seg.key} defaultOpen={index === defaultOpenIndex}>
                 <TooltipTrigger render={segment} />
-                <TooltipContent
-                  // The popup is portaled out of the bar, so it needs its own
-                  // `data-chart` scope for the `--color-*` bridge to resolve.
-                  data-chart={chartId}
-                  className={cn(
-                    'border border-border bg-background text-foreground shadow-md',
-                    !tooltipContent && 'flex items-center gap-2'
-                  )}
-                >
-                  <ChartStyle id={chartId} config={config} />
-                  {tooltipContent ? (
-                    tooltipContent({
-                      key: seg.key,
-                      value: seg.value,
-                      label: labelFor(seg.key),
-                      percent: pctOf(seg.value),
-                      color,
-                    })
-                  ) : (
-                    <>
-                      <span
-                        className="size-2.5 shrink-0 rounded-full"
-                        style={{ backgroundColor: color }}
-                      />
-                      <span className="font-semibold">{labelFor(seg.key)}</span>
-                      <span className="text-muted-foreground tabular-nums">
-                        {valueFormatter(seg.value)} · {pctOf(seg.value)}%
-                      </span>
-                    </>
-                  )}
-                </TooltipContent>
+                <CategoryBarSegmentTooltip
+                  chartId={chartId}
+                  config={config}
+                  color={color}
+                  label={labelFor(seg.key)}
+                  percent={pctOf(seg.value)}
+                  segmentKey={seg.key}
+                  value={seg.value}
+                  valueFormatter={valueFormatter}
+                  render={tooltipContent}
+                />
               </Tooltip>
             );
           })}
