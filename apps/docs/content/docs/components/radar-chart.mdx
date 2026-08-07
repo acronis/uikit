@@ -65,11 +65,141 @@ Draw the web as smooth circles instead of straight polygon rings with
 `gridType="circle"`:
 
 ```tsx
-<RadarChart config={config} data={data} dataKeys={['alice', 'bob']} angleKey="subject" gridType="circle" />
+<RadarChart
+  config={config}
+  data={data}
+  dataKeys={['alice', 'bob']}
+  angleKey="subject"
+  gridType="circle"
+/>
 ```
 
-Tune the areas with `fillOpacity` / `strokeWidth` / `showDots`, and toggle the
-chrome with `showGrid` / `showTooltip` / `showLegend`.
+Tune the areas with `fillOpacity` / `strokeWidth` / `showDots` (sized by
+`dotRadius`), and toggle the chrome with `showGrid` / `showTooltip` /
+`showLegend`. `legendPosition="top"` moves the legend row above the chart.
+
+## The value scale
+
+A radar has no scale of its own by default: recharts stretches the web so the
+largest value in the data touches the outer ring, which makes an area readable
+only against its neighbours — two charts of the same metric aren't comparable.
+`showRadiusAxis` draws the scale, and `radiusAxisDomain="fixed"` with
+`radiusAxisDomainMax` pins the outer ring to the metric's own maximum, so the
+areas read as absolute profiles:
+
+```tsx
+<RadarChart
+  config={config}
+  data={data}
+  dataKeys={['alice', 'bob']}
+  angleKey="subject"
+  showRadiusAxis
+  radiusAxisAngle={60}
+  radiusAxisDomain="fixed"
+  radiusAxisDomainMax={150}
+  radiusAxisTickCount={4}
+/>
+```
+
+`radiusAxisAngle` rotates the scale. Point it **between two spokes**: along one,
+its outermost tick lands on that category's own label. The ticks sit over the
+areas at any angle — a radar's plot area _is_ its areas — so the angle buys
+clearance from the category labels, not from the fills.
+`radiusAxisOrientation` picks the side its labels sit on, and
+`radiusAxisTickCount` sets how many ticks it asks for — which is also how many
+rings the grid draws, shown or not.
+
+`radiusAxisDomainMax` has to be positive: a `0` or negative maximum can't bound a
+scale growing outward from 0, so it falls back to the data's own top rather than
+collapsing the web.
+
+The domain applies whether or not the scale is drawn, so a chart can be scaled to
+a known maximum without showing the ticks:
+
+```tsx
+<RadarChart
+  config={config}
+  data={data}
+  dataKeys={['alice']}
+  angleKey="subject"
+  radiusAxisDomain="fixed"
+  radiusAxisDomainMax={150}
+/>
+```
+
+For a metric where less is better (latency, error rate), `radiusAxisReversed`
+puts the maximum at the centre so a good profile still reads as a large area.
+
+## Grid and angle axis
+
+`radialLines={false}` drops the web's spokes and keeps its concentric rings.
+The categorical axis around the web is configurable too — `angleAxisOrientation`
+moves its labels inside the web, `angleAxisLineType` matches its outline to a
+circular grid, and `angleAxisLine` / `angleTickLine` / `angleTickSize` control the
+rest:
+
+```tsx
+<RadarChart
+  config={config}
+  data={data}
+  dataKeys={['alice', 'bob']}
+  angleKey="subject"
+  gridType="circle"
+  angleAxisLineType="circle"
+  angleAxisOrientation="inner"
+  angleTickLine={false}
+/>
+```
+
+`showAngleAxis={false}` hides all of that chrome at once. The axis itself stays —
+it's also what names each category — so the tooltip keeps its header.
+
+## Geometry
+
+`cx` / `cy` move the centre, `startAngle` / `endAngle` rotate the sweep,
+`innerRadius` / `outerRadius` size the web (an inner radius separates the series
+where they all bottom out), and `margin` insets the plot area:
+
+```tsx
+<RadarChart
+  config={config}
+  data={data}
+  dataKeys={['alice', 'bob']}
+  angleKey="subject"
+  innerRadius={40}
+  outerRadius="70%"
+  startAngle={45}
+  endAngle={-315}
+/>
+```
+
+Passing `margin` replaces all four sides — a side you leave out is `0`, not the
+default `5` — so name every side you need.
+
+## Per-series styling
+
+`seriesSettings` overrides the chart-level styling for one series, keyed by its
+`dataKeys` entry — `color`, `stroke`, `fillOpacity`, `strokeWidth`, `dot`,
+`dotRadius`, and `activeDot`. Every series not named keeps the chart-level
+values, and an overridden `color` carries into that series' legend swatch and
+tooltip dot — as does `stroke` on its own, which recharts reads first, so set
+`color` too if the marker should keep following the fill:
+
+```tsx
+<RadarChart
+  config={config}
+  data={data}
+  dataKeys={['alice', 'bob']}
+  angleKey="subject"
+  seriesSettings={{
+    alice: { fillOpacity: 0.05, strokeWidth: 3, dot: true, dotRadius: 4 },
+  }}
+/>
+```
+
+Every plotted series needs a value in every row. recharts places a missing one at
+the centre of the web rather than leaving a hole, so it reads as a zero — drop the
+whole category row instead of leaving a series' value out of it.
 
 ## Custom tooltip
 
@@ -101,7 +231,15 @@ Charts render statically by default. Opt in to an entrance animation with
 `animationEasing`:
 
 ```tsx
-<RadarChart config={config} data={data} dataKeys={['alice']} angleKey="subject" animate animationDuration={800} animationEasing="ease-out" />
+<RadarChart
+  config={config}
+  data={data}
+  dataKeys={['alice']}
+  angleKey="subject"
+  animate
+  animationDuration={800}
+  animationEasing="ease-out"
+/>
 ```
 
 `animate` honors `prefers-reduced-motion`: for a visitor who has asked their
@@ -114,16 +252,32 @@ Annotate each point with its value using `showLabels`. `labelFormatter` takes th
 same formatters as the axes, so a label and its axis read alike:
 
 ```tsx
-<RadarChart config={config} data={data} dataKeys={['alice']} angleKey="subject" showLabels labelFormatter={formatCompactNumber} />
+<RadarChart
+  config={config}
+  data={data}
+  dataKeys={['alice']}
+  angleKey="subject"
+  showLabels
+  labelFormatter={formatCompactNumber}
+/>
 ```
 
-`labelPosition` moves them; the default is the series' growing end (`top`, or
-`right` for horizontal bars). Under `layout="stacked"` that end is covered by the
-next segment, so each value centres inside its own segment instead — and switches
-to a token that stays legible over the fill:
+`labelPosition` moves them; the default is `top`, which sits each value above its
+vertex on the chart surface. An `inside*` position draws it over the area
+instead. An area is a translucent fill, so what sits behind the label there is
+the _surface tinted by_ the series color rather than the color itself — the label
+keeps the theme-inverting on-surface token, which stays legible over the tint in
+both themes:
 
 ```tsx
-<RadarChart config={config} data={data} dataKeys={['alice']} angleKey="subject" showLabels labelPosition="insideEnd" />
+<RadarChart
+  config={config}
+  data={data}
+  dataKeys={['alice']}
+  angleKey="subject"
+  showLabels
+  labelPosition="insideEnd"
+/>
 ```
 
 Labels are off by default — with more than one series they collide easily, so turn

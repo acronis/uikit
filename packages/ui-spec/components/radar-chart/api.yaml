@@ -18,7 +18,10 @@ contract:
     - name: data
       type: ReadonlyArray<Record<string, string | number>>
       required: true
-      description: Row-per-axis data — each row holds `angleKey` plus one numeric field per series.
+      description: >-
+        Row-per-axis data — each row holds `angleKey` plus one numeric field per
+        series. Every plotted series needs a value in every row: a missing one is
+        placed at the centre, which reads as a zero rather than as a gap.
     - name: config
       type: ChartConfig
       required: true
@@ -33,6 +36,15 @@ contract:
       type: string
       required: true
       description: The categorical axis key placed around the web (the spokes).
+    - name: seriesSettings
+      type: Record<string, RadarChartSeriesSettings>
+      required: false
+      description: >-
+        Per-series style overrides keyed by a `dataKeys` entry — `color`,
+        `stroke`, `fillOpacity`, `strokeWidth`, `dot`, `dotRadius`, `activeDot`.
+        Unplotted keys are ignored. An overridden `color` — or `stroke`, which
+        the renderer reads first — carries into that series' legend swatch and
+        tooltip dot.
     - name: fillOpacity
       type: number
       required: false
@@ -48,11 +60,160 @@ contract:
       required: false
       default: 'false'
       description: Render a dot at each axis point.
+    - name: dotRadius
+      type: number
+      required: false
+      default: '3'
+      description: Radius of the per-point dots when `showDots` is on.
+    - name: activeDot
+      type: boolean
+      required: false
+      default: 'true'
+      description: >-
+        Enlarge the hovered point's dot. On by default; `false` for a chart that
+        should not react to the pointer.
     - name: showGrid
       type: boolean
       required: false
       default: 'true'
       description: Render the polar grid (the web).
+    - name: radialLines
+      type: boolean
+      required: false
+      default: 'true'
+      description: >-
+        Draw the grid's spokes (the radial lines out to each category). Off
+        leaves only the concentric rings.
+    - name: showAngleAxis
+      type: boolean
+      required: false
+      default: 'true'
+      description: >-
+        Render the categorical axis chrome (spoke labels, tick lines, outer
+        line). The axis itself is kept either way, so the tooltip still names
+        each category.
+    - name: angleAxisOrientation
+      type: "'inner' | 'outer'"
+      required: false
+      default: "'outer'"
+      description: Place the spoke labels outside the web or inside it.
+    - name: angleAxisLine
+      type: boolean
+      required: false
+      default: 'true'
+      description: Draw the line around the web that the spoke labels sit against.
+    - name: angleAxisLineType
+      type: "'polygon' | 'circle'"
+      required: false
+      default: "'polygon'"
+      description: >-
+        Shape of that line. Independent of `gridType`, so pair them to keep a
+        circular web's outline circular.
+    - name: angleTickLine
+      type: boolean
+      required: false
+      default: 'true'
+      description: Draw a tick line from the axis line to each spoke label.
+    - name: angleTickSize
+      type: number
+      required: false
+      description: >-
+        Distance from the web to the spoke labels, in px. Left unset,
+        `showLabels` widens it so a vertex's value clears its category label.
+    - name: showRadiusAxis
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Render the value scale — a radial axis of ticks from the centre outward,
+        so an area reads as a number and not only as a comparison. Only
+        `radiusAxisAngle` and `radiusAxisOrientation` need it shown;
+        `radiusAxisDomain`, `radiusAxisReversed` and `radiusAxisTickCount` apply
+        either way.
+    - name: radiusAxisAngle
+      type: number
+      required: false
+      default: '0'
+      description: >-
+        Angle the value scale is drawn at, in degrees counter-clockwise from 3
+        o'clock. Point it between two spokes — along one, its outermost tick
+        collides with that category's own label. The ticks sit over the areas at
+        any angle.
+    - name: radiusAxisOrientation
+      type: "'left' | 'right' | 'middle'"
+      required: false
+      default: "'right'"
+      description: Which side of the scale its tick labels sit on.
+    - name: radiusAxisDomain
+      type: "'auto' | 'fixed'"
+      required: false
+      description: >-
+        How the value scale (and with it the web) is bounded. Unset — the data's
+        largest value reaches the outer ring; `fixed` — the outer ring is
+        `radiusAxisDomainMax`, which is what makes the radar an absolute profile;
+        `auto` — fit the data at both ends. Applies whether or not the scale is
+        shown.
+    - name: radiusAxisDomainMax
+      type: number
+      required: false
+      description: >-
+        The value at the outer ring when `radiusAxisDomain` is `fixed`. Must be
+        positive — a `0` or negative maximum cannot bound a scale that grows
+        outward from 0, so it falls back to the data's own top.
+    - name: radiusAxisTickCount
+      type: number
+      required: false
+      default: '5'
+      description: >-
+        Desired number of ticks on the value scale (a hint, not exact). Also sets
+        how many rings the grid draws, whether or not the scale is shown.
+    - name: radiusAxisReversed
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Invert the value scale (maximum at the centre) for a metric where less is
+        better.
+    - name: cx
+      type: number | string
+      required: false
+      default: "'50%'"
+      description: Horizontal centre of the web, in px or a percentage of the width.
+    - name: cy
+      type: number | string
+      required: false
+      default: "'50%'"
+      description: Vertical centre of the web, in px or a percentage of the height.
+    - name: startAngle
+      type: number
+      required: false
+      default: '90'
+      description: Angle the first category sits at, in degrees.
+    - name: endAngle
+      type: number
+      required: false
+      default: '-270'
+      description: >-
+        Angle the sweep ends at, in degrees — a full clockwise turn from
+        `startAngle` by default.
+    - name: innerRadius
+      type: number | string
+      required: false
+      default: '0'
+      description: >-
+        Radius of the hole at the centre, in px or a percentage of the available
+        radius. Lifts the grid and the areas off the centre.
+    - name: outerRadius
+      type: number | string
+      required: false
+      default: "'80%'"
+      description: Outer radius of the web, in px or a percentage of the available radius.
+    - name: margin
+      type: '{ top?: number; right?: number; bottom?: number; left?: number }'
+      required: false
+      description: >-
+        Plot-area margin, in px. Passing the object replaces all four sides; a
+        side left out is `0`, not the default `5`, so name every side.
     - name: showTooltip
       type: boolean
       required: false
@@ -63,6 +224,11 @@ contract:
       required: false
       default: 'true'
       description: Render the legend.
+    - name: legendPosition
+      type: "'top' | 'bottom'"
+      required: false
+      default: "'bottom'"
+      description: Which side of the chart the legend sits on.
     - name: tooltipContent
       type: 'ReactElement | ((props) => ReactNode)'
       required: false

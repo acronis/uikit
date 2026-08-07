@@ -4,9 +4,10 @@ component: RadarChart
 schematic: |
   root: <div data-grid-type>                        (variant wrapper)
     container: <ChartContainer>                     (themed, sized, responsive)
-      plot: recharts <RadarChart>
-        grid:      <PolarGrid gridType=…>           (the web; polygon or circle)
+      plot: recharts <RadarChart cx cy start/endAngle inner/outerRadius margin>
+        grid:      <PolarGrid gridType=… radialLines=…>  (the web; polygon or circle)
         angle-axis: <PolarAngleAxis dataKey=angleKey> (spoke labels)
+        radius-axis: <PolarRadiusAxis>                (the value scale; opt-in)
         series:    one <Radar> per dataKey           (stroked + filled area)
         tooltip:   <ChartTooltip> → tooltip-content  (hover card)
         legend:    <ChartLegend>  → legend-content   (per-series swatch + label)
@@ -23,23 +24,36 @@ parts:
     element: div
     description: >-
       The shared `ChartContainer` — supplies the per-series `--color-<key>`
-      custom properties from `config` and themes recharts' internals. Adds a
-      local override scoping the polar angle-axis tick labels to the
-      muted-foreground token (the shared container only themes cartesian ticks).
+      custom properties from `config` and themes recharts' internals. Adds local
+      overrides scoping the polar angle-axis tick labels and the radius-axis
+      scale (its line + ticks) to the muted-foreground / border tokens (the
+      shared container only themes cartesian ticks).
   - id: plot
     element: svg
     description: The recharts `RadarChart` holding the web, angle axis, and series.
   - id: grid
     element: g
-    description: '`PolarGrid` — the web, `gridType=polygon` (straight rings) or `circle`.'
+    description: >-
+      `PolarGrid` — the web, `gridType=polygon` (straight rings) or `circle`,
+      with the radial spokes drawn unless `radialLines` is off.
   - id: angle-axis
     element: g
-    description: '`PolarAngleAxis` — the categorical spokes labelled from `angleKey`.'
+    description: >-
+      `PolarAngleAxis` — the categorical spokes labelled from `angleKey`, with
+      the outer axis line and tick lines. Always mounted (it names each category
+      for the tooltip); `showAngleAxis` only hides its chrome.
+  - id: radius-axis
+    element: g
+    description: >-
+      `PolarRadiusAxis` — the value scale, drawn at `radiusAxisAngle`. Mounted
+      only when it paints the scale (`showRadiusAxis`) or carries a
+      `radiusAxisDomain` / `radiusAxisReversed` that rescales the web.
   - id: series
     element: g
     description: >-
       One `Radar` per entry in `dataKeys`, stroked and filled (at `fillOpacity`)
-      from its `--color-<key>` var; optional per-point dots.
+      from its `--color-<key>` var; optional per-point dots. `seriesSettings`
+      overrides any of that per series.
   - id: tooltip-content
     element: div
     description: >-
@@ -57,3 +71,15 @@ states:
     kind: prop
     prop: gridType
     affects: [grid]
+  - id: value-scale-shown
+    trigger: showRadiusAxis paints the value scale from the centre outward
+    kind: prop
+    prop: showRadiusAxis
+    affects: [radius-axis]
+  - id: value-scale-bounded
+    trigger: >-
+      radiusAxisDomain (with radiusAxisDomainMax) pins the outer ring to a known
+      maximum, rescaling the web whether or not the scale is shown
+    kind: prop
+    prop: radiusAxisDomain
+    affects: [radius-axis, grid, series]
