@@ -2,7 +2,14 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { RadialBarChart } from '../radial-bar-chart';
+import {
+  RadialBarChart,
+  radialBarChartBandName,
+  radialBarChartLabelText,
+  radialBarChartSegmentFill,
+  radialBarChartSegmentedReading,
+  radialBarChartSegments,
+} from '../radial-bar-chart';
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
@@ -134,6 +141,376 @@ describe('RadialBarChart animation and data labels', () => {
     const { container } = renderChart({
       showLabels: true,
       labelPosition: 'insideEnd',
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+});
+
+describe('radialBarChartLabelText', () => {
+  it('reads the value alone by default', () => {
+    expect(
+      radialBarChartLabelText({ format: 'value', name: 'Chrome', value: 65 })
+    ).toBe('65');
+  });
+
+  it('prefixes the arc name under name-value', () => {
+    expect(
+      radialBarChartLabelText({
+        format: 'name-value',
+        name: 'Chrome',
+        value: 65,
+      })
+    ).toBe('Chrome: 65');
+  });
+
+  it('formats only the numeric part, so labels match their tooltip units', () => {
+    expect(
+      radialBarChartLabelText({
+        format: 'name-value',
+        name: 'Chrome',
+        value: 6500,
+        formatter: (value) => `${Number(value) / 1000}k`,
+      })
+    ).toBe('Chrome: 6.5k');
+  });
+
+  it('falls back to the value when there is no name', () => {
+    expect(
+      radialBarChartLabelText({
+        format: 'name-value',
+        name: undefined,
+        value: 65,
+      })
+    ).toBe('65');
+  });
+
+  // An empty string makes recharts render no <text> element at all.
+  it('yields an empty label for a missing value', () => {
+    expect(
+      radialBarChartLabelText({ format: 'value', name: 'Chrome', value: undefined })
+    ).toBe('');
+  });
+
+  // The default runtime combination: `labelFormat` is unset while a caller passes
+  // `labelFormatter`, so `value` + a formatter is the pairing that actually ships.
+  it('applies a formatter under the default value format', () => {
+    expect(
+      radialBarChartLabelText({
+        format: 'value',
+        name: 'Chrome',
+        value: 6500,
+        formatter: (value) => `${Number(value) / 1000}k`,
+      })
+    ).toBe('6.5k');
+  });
+
+  // A nullish value wins over the format, so `name-value` degrades to no label
+  // rather than to a name with a dangling separator ("Chrome: "). PieChart and
+  // FunnelChart currently degrade differently — see #617 / #622.
+  it('drops the name too when the value is missing under name-value', () => {
+    expect(
+      radialBarChartLabelText({
+        format: 'name-value',
+        name: 'Chrome',
+        value: undefined,
+        formatter: (value) => `${value} u`,
+      })
+    ).toBe('');
+  });
+
+  it('renders a zero value rather than treating it as missing', () => {
+    expect(
+      radialBarChartLabelText({ format: 'value', name: 'Chrome', value: 0 })
+    ).toBe('0');
+  });
+});
+
+describe('radialBarChartSegmentFill', () => {
+  it('paints a reached piece in the arc color', () => {
+    expect(radialBarChartSegmentFill('value', 'Chrome')).toBe(
+      'var(--color-Chrome)'
+    );
+  });
+
+  // The unreached remainder stands in for the `showBackground` track.
+  it('paints the unreached remainder in the track surface', () => {
+    expect(radialBarChartSegmentFill('track', 'Chrome')).toBe(
+      'var(--ui-background-surface-secondary)'
+    );
+  });
+
+  // `transparent`, not `none`: the notch still has to take a pointer so the
+  // axis-shared tooltip reads the metric there too.
+  it('leaves a notch transparent', () => {
+    expect(radialBarChartSegmentFill('gap', 'Chrome')).toBe('transparent');
+  });
+});
+
+describe('radialBarChartSegmentedReading', () => {
+  const reading = (
+    overrides: Partial<
+      Parameters<typeof radialBarChartSegmentedReading>[0]
+    > = {}
+  ) =>
+    radialBarChartSegmentedReading({
+      config: { criteria: { label: 'Criteria met' } },
+      row: { criteria: 'criteria', value: 29 },
+      nameKey: 'criteria',
+      dataKey: 'value',
+      domainMax: 38,
+      ...overrides,
+    });
+
+  it('reads the metric against the domain maximum', () => {
+    expect(reading()).toEqual({
+      colorName: 'criteria',
+      label: 'Criteria met',
+      valueText: '29 / 38',
+    });
+  });
+
+  // Without a domain there is no maximum to pair the value with, so it reads bare
+  // rather than inventing a denominator.
+  it('reads the value alone when there is no domain maximum', () => {
+    expect(reading({ domainMax: undefined }).valueText).toBe('29');
+  });
+
+  it('falls back to the nameKey value when config has no label', () => {
+    expect(reading({ config: {} }).label).toBe('criteria');
+  });
+
+  it('groups thousands in both the value and the maximum', () => {
+    expect(
+      reading({ row: { criteria: 'criteria', value: 12345 }, domainMax: 98765 })
+        .valueText
+    ).toBe(`${(12345).toLocaleString()} / ${(98765).toLocaleString()}`);
+  });
+
+  // `segments` needs a numeric value to lay a ring out, so a stringified one never
+  // reaches a segmented chart — but the reading must not print "[object Object]"
+  // or "undefined" if it ever does.
+  it('passes a non-numeric value through unformatted', () => {
+    expect(
+      reading({ row: { criteria: 'criteria', value: 'n/a' } }).valueText
+    ).toBe('n/a / 38');
+  });
+});
+
+describe('radialBarChartBandName', () => {
+  it('names the band the hovered arc belongs to', () => {
+    expect(radialBarChartBandName({ tier: 'Production', used: 72 }, 'tier')).toBe(
+      'Production'
+    );
+  });
+
+  it('coerces a numeric band name', () => {
+    expect(radialBarChartBandName({ tier: 2024, used: 72 }, 'tier')).toBe('2024');
+  });
+
+  // An empty header, not the string "undefined", when the row can't name a band.
+  it('yields an empty header for a missing row or nameKey', () => {
+    expect(radialBarChartBandName(undefined, 'tier')).toBe('');
+    expect(radialBarChartBandName({ used: 72 }, 'tier')).toBe('');
+  });
+});
+
+describe('radialBarChartSegments', () => {
+  const base = {
+    domain: [0, 100] as [number, number],
+    segments: 4,
+    gap: 2,
+    sweep: 360,
+    closed: true,
+  };
+
+  const total = (pieces: ReturnType<typeof radialBarChartSegments>) =>
+    pieces.reduce((sum, piece) => sum + piece.degrees, 0);
+
+  const of = (
+    pieces: ReturnType<typeof radialBarChartSegments>,
+    kind: 'value' | 'track' | 'gap'
+  ) => pieces.filter((piece) => piece.kind === kind);
+
+  it('fills the whole sweep: segments plus their gaps', () => {
+    const pieces = radialBarChartSegments({ ...base, value: 50 });
+    expect(total(pieces)).toBeCloseTo(360);
+    // A closed ring gets one gap per segment (including after the last).
+    expect(of(pieces, 'gap')).toHaveLength(4);
+    expect(of(pieces, 'gap').every((gap) => gap.degrees === 2)).toBe(true);
+  });
+
+  it('leaves the last gap out of an open sweep', () => {
+    const pieces = radialBarChartSegments({
+      ...base,
+      value: 50,
+      sweep: 180,
+      closed: false,
+    });
+    expect(of(pieces, 'gap')).toHaveLength(3);
+    expect(total(pieces)).toBeCloseTo(180);
+  });
+
+  // The value maps onto the drawn ring, so the notches never eat into it.
+  it('splits the ring in the value proportion, gaps excluded', () => {
+    const pieces = radialBarChartSegments({ ...base, value: 50 });
+    const drawn = 360 - 4 * 2;
+    expect(total(of(pieces, 'value'))).toBeCloseTo(drawn / 2);
+    expect(total(of(pieces, 'track'))).toBeCloseTo(drawn / 2);
+  });
+
+  it('splits the one segment the value ends inside', () => {
+    // 30% of 4 segments = 1.2 segments: one whole, one part, two empty.
+    const pieces = radialBarChartSegments({ ...base, value: 30, gap: 0 });
+    const filled = of(pieces, 'value').map((piece) => piece.degrees);
+    expect(filled[0]).toBeCloseTo(90);
+    expect(filled[1]).toBeCloseTo(18);
+    expect(filled[2]).toBe(0);
+    expect(filled[3]).toBe(0);
+  });
+
+  it('keeps a stable key set as the value changes', () => {
+    const keysAt = (value: number) =>
+      radialBarChartSegments({ ...base, value }).map((piece) => piece.key);
+    expect(keysAt(10)).toEqual(keysAt(90));
+  });
+
+  it('honors a domain that does not start at zero', () => {
+    const pieces = radialBarChartSegments({
+      ...base,
+      value: 30,
+      domain: [20, 40],
+      gap: 0,
+    });
+    expect(total(of(pieces, 'value'))).toBeCloseTo(180);
+  });
+
+  it('clamps a value outside the domain to an empty or a full ring', () => {
+    expect(
+      total(of(radialBarChartSegments({ ...base, value: -5 }), 'value'))
+    ).toBe(0);
+    const full = radialBarChartSegments({ ...base, value: 200 });
+    expect(total(of(full, 'track'))).toBeCloseTo(0);
+  });
+
+  // An all-gap ring would render as nothing at all.
+  it('clamps a gap that would leave no room for the segments', () => {
+    const pieces = radialBarChartSegments({ ...base, value: 100, gap: 400 });
+    expect(total(of(pieces, 'gap'))).toBeCloseTo(180);
+    expect(total(of(pieces, 'value'))).toBeCloseTo(180);
+  });
+
+  // A negative gap would stretch the pieces past the sweep and overlap them.
+  it('floors a negative gap at zero', () => {
+    const pieces = radialBarChartSegments({ ...base, value: 100, gap: -20 });
+    expect(total(of(pieces, 'gap'))).toBe(0);
+    expect(total(pieces)).toBeCloseTo(360);
+  });
+
+  // A domain with no span can't place a value on the ring, so there is no
+  // fraction to draw. It must not fall back to comparing the value against zero:
+  // that read a *full* ring for a value far below the domain.
+  it('draws nothing for a domain with no span', () => {
+    for (const domain of [
+      [0, 0],
+      [100, 100],
+    ] satisfies [number, number][]) {
+      const pieces = radialBarChartSegments({ ...base, value: 5, domain });
+      expect(total(of(pieces, 'value'))).toBe(0);
+      // The ring itself still renders — every segment is track.
+      expect(total(pieces)).toBeCloseTo(360);
+    }
+  });
+
+  it('draws nothing for an inverted domain', () => {
+    const pieces = radialBarChartSegments({
+      ...base,
+      value: 50,
+      domain: [100, 0],
+    });
+    expect(total(of(pieces, 'value'))).toBe(0);
+    expect(total(pieces)).toBeCloseTo(360);
+  });
+
+  // Guards against the two independent checks combining wrongly: a value that
+  // equals the domain minimum satisfies `span > 0` and still has to read empty.
+  it('draws nothing for a value sitting on the domain minimum', () => {
+    const pieces = radialBarChartSegments({
+      ...base,
+      value: 20,
+      domain: [20, 40],
+    });
+    expect(total(of(pieces, 'value'))).toBe(0);
+  });
+
+  // The exported helper has no `segments > 1` guard of its own (the component
+  // applies one), so a lone open segment must still fill its whole sweep.
+  it('handles a single open segment without a gap', () => {
+    const pieces = radialBarChartSegments({
+      ...base,
+      value: 100,
+      segments: 1,
+      closed: false,
+      sweep: 180,
+    });
+    expect(of(pieces, 'gap')).toHaveLength(0);
+    expect(total(of(pieces, 'value'))).toBeCloseTo(180);
+  });
+});
+
+// Same happy-dom limit as above: the ring's geometry is unit-tested through
+// `radialBarChartSegments` and pictured by the VR stories; these guard the prop
+// paths through the composition.
+describe('RadialBarChart gauge, multi-metric and geometry props', () => {
+  it('accepts the gauge props', () => {
+    const { container } = renderChart({
+      data: [{ browser: 'Chrome', value: 65 }],
+      valueDomain: [0, 100],
+      startAngle: 180,
+      endAngle: 0,
+      cy: 190,
+      centerLabel: { value: '65%', label: 'of quota used' },
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts a segmented gauge', () => {
+    const { container } = renderChart({
+      data: [{ browser: 'Chrome', value: 29 }],
+      valueDomain: [0, 38],
+      segments: 8,
+      segmentGap: 4,
+      centerLabel: { value: 29, label: '/ 38 criteria met' },
+    });
+    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  });
+
+  it('accepts multi-metric dataKeys', () => {
+    const { container } = renderChart({
+      config: {
+        used: { label: 'Used', color: 'rgb(23 99 207)' },
+        quota: { label: 'Quota', color: 'rgb(212 149 42)' },
+      },
+      data: [{ tier: 'Production', used: 72, quota: 90 }],
+      dataKeys: ['used', 'quota'],
+      dataKey: 'used',
+      nameKey: 'tier',
+      valueDomain: [0, 100],
+    });
+    const style = container.querySelector('style')?.innerHTML ?? '';
+    expect(style).toContain('--color-used: rgb(23 99 207)');
+    expect(style).toContain('--color-quota: rgb(212 149 42)');
+  });
+
+  it('accepts the geometry and grid props', () => {
+    const { container } = renderChart({
+      cx: '40%',
+      cy: 120,
+      barSize: 18,
+      barGap: 6,
+      barCategoryGap: '20%',
+      minAngle: 12,
+      margin: { top: 8, right: 8, bottom: 8, left: 8 },
+      showPolarGrid: true,
     });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });

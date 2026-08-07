@@ -4,9 +4,15 @@ component: RadialBarChart
 schematic: |
   root: <div>                                       (wrapper)
     container: <ChartContainer>                     (themed, sized, responsive)
-      plot: recharts <RadialBarChart data start/endAngle inner/outerRadius>
+      plot: recharts <RadialBarChart data start/endAngle inner/outerRadius cx/cy>
+        scale:   <PolarAngleAxis type=number domain> (when valueDomain — no ticks)
+        grid:    <PolarGrid gridType=circle>        (when showPolarGrid)
         series:  <RadialBar dataKey> with one <Cell> per row (concentric arcs)
+                 — or one <RadialBar> per dataKeys entry (multi-metric)
+                 — or one stacked <RadialBar> per ring piece (when segments)
         track:   RadialBar background sectors (muted, when showBackground)
+        labels:  <LabelList> per series (when showLabels)
+        center:  <Label> in the hole (when centerLabel)
         tooltip: <ChartTooltip> → tooltip-content   (hover card)
         legend:  <ChartLegend>  → legend-content    (per-arc swatch + label)
 
@@ -37,7 +43,37 @@ parts:
     element: g
     description: >-
       The RadialBar background sectors behind each arc (muted). Rendered when
-      `showBackground`.
+      `showBackground`. On a segmented gauge the unreached segments play this
+      part instead, in the same muted surface.
+  - id: scale
+    element: g
+    description: >-
+      A tickless `PolarAngleAxis` mapping a value onto a fraction of the sweep.
+      Rendered when `valueDomain` is set (or implicitly for a segmented gauge,
+      whose scale is the sweep in degrees) — without it every arc is drawn
+      relative to the largest value in the data.
+  - id: grid
+    element: g
+    description: >-
+      The concentric `PolarGrid` (circles, no spokes) behind the arcs. Rendered
+      when `showPolarGrid`.
+  - id: labels
+    element: g
+    description: >-
+      A `LabelList` per series — one value label per arc, following the arc.
+      Rendered when `showLabels`; reads `labelFormat` (`value` / `name-value`).
+  - id: center
+    element: g
+    description: >-
+      The readout in the hole: a headline `value` and/or a `label` caption,
+      stacked and centered on the polar centre. Rendered when `centerLabel`.
+  - id: segments
+    element: g
+    description: >-
+      A segmented gauge's ring: one stacked `RadialBar` per piece, laid out
+      sequentially around the sweep — the reached pieces in the arc's color, the
+      unreached in the track's muted surface, separated by transparent notches.
+      Rendered when `segments` is set on a single-row, single-metric chart.
   - id: tooltip-content
     element: div
     description: >-
@@ -55,3 +91,18 @@ states:
     kind: prop
     prop: showBackground
     affects: [track]
+  - id: gauge
+    trigger: valueDomain scales the arcs against a known range instead of the data max
+    kind: prop
+    prop: valueDomain
+    affects: [scale, series]
+  - id: multi-metric
+    trigger: dataKeys plots one arc per metric instead of one per row
+    kind: prop
+    prop: dataKeys
+    affects: [series, legend-content, tooltip-content]
+  - id: segmented
+    trigger: segments cuts a single-value gauge's ring into notched pieces
+    kind: prop
+    prop: segments
+    affects: [segments, track, labels, legend-content, tooltip-content]

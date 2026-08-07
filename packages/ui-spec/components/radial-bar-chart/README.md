@@ -14,8 +14,12 @@ recharts children.
 
 ## When to use
 
-- A compact, decorative comparison of a few categories (device/browser share),
-  or a gauge-style progress readout (via `startAngle`/`endAngle`).
+- A compact, decorative comparison of a few categories (device/browser share).
+- A gauge-style progress readout — one value against a known range. This needs
+  **`valueDomain`**, not just a half sweep: without a domain every arc is scaled
+  against the largest value in the data, so a lone value always fills whatever
+  sweep it is given. Pair it with `centerLabel` for the reading, and `segments`
+  for the notched-ring look.
 - When the circular form is worth more than precise value comparison.
 
 ## When not to use
@@ -28,9 +32,13 @@ recharts children.
 ## Variants
 
 None. RadialBarChart has no CVA variant axes — its sweep (`startAngle` /
-`endAngle`) and radii (`innerRadius` / `outerRadius`) are plain geometry props, so
-a caller can build a full ring or a half-circle gauge; `showBackground` toggles
-the muted track.
+`endAngle`), radii (`innerRadius` / `outerRadius`) and centre (`cx` / `cy`) are
+plain geometry props, so a caller can build a full ring or a half circle;
+`showBackground` toggles the muted track.
+
+What the chart _reads as_ is driven by the data mapping rather than a variant:
+one arc per row (the default), one arc per metric (`dataKeys`), or a single-value
+gauge scaled by `valueDomain` — optionally with its ring notched into `segments`.
 
 ## Example
 
