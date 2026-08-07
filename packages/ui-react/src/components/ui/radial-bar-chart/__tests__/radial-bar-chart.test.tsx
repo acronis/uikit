@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -10,9 +10,20 @@ import {
   radialBarChartSegmentedReading,
   radialBarChartSegments,
 } from '../radial-bar-chart';
-import { ChartTooltipContent, type ChartConfig,
+import {
+  ChartTooltipContent,
+  type ChartConfig,
   resolveAnimation,
 } from '../../chart';
+import {
+  CHART_HEIGHT,
+  CHART_WIDTH,
+  giveEveryChartASize,
+} from '../../chart/__tests__/chart-layout';
+
+// The arcs, track and labels asserted below are painted SVG, which recharts
+// skips entirely at 0×0.
+giveEveryChartASize();
 
 const data = [
   { browser: 'Chrome', value: 65 },
@@ -42,6 +53,61 @@ function renderChart(
   );
 }
 
+/** The value arcs, in `data` order. */
+const arcsOf = (container: Element) => [
+  ...container.querySelectorAll<SVGPathElement>('.recharts-radial-bar-sector'),
+];
+
+/** The unfilled remainder painted behind each arc. */
+const tracksOf = (container: Element) => [
+  ...container.querySelectorAll<SVGPathElement>(
+    '.recharts-radial-bar-background-sector'
+  ),
+];
+
+const dataLabelsOf = (container: Element) =>
+  [...container.querySelectorAll('.recharts-label-list text')].map(
+    (label) => label.textContent
+  );
+
+/** Every `<text>` the chart painted — the center readout, when there is one. */
+const svgTextOf = (container: Element) =>
+  [...container.querySelectorAll('text')].map((text) => text.textContent);
+
+/**
+ * The two great-arc radii of one arc — its outer and its inner edge, in that
+ * order. recharts exposes an arc's geometry only as path data, so the radii have
+ * to be read back out of `d`; render with `cornerRadius: 0` so the little
+ * end-rounding arcs don't show up here too.
+ */
+const radiiOf = (arc: Element) =>
+  [...(arc.getAttribute('d') ?? '').matchAll(/A\s*(\d+(?:\.\d+)?),/g)].map(
+    (match) => Number(match[1])
+  );
+
+/**
+ * Horizontal extent of an arc — a stand-in for its angular length, which recharts
+ * likewise publishes only as path data. An elliptical-arc command carries seven
+ * arguments and only the last two are a point, hence the parse rather than a
+ * coordinate regex.
+ */
+function arcSpanX(arc: Element): number {
+  const xs: number[] = [];
+  for (const [, command, args] of (arc.getAttribute('d') ?? '').matchAll(
+    /([MLA])([-\d.,\s]+)/g
+  )) {
+    const numbers = args
+      .trim()
+      .split(/[\s,]+/)
+      .map(Number);
+    const stride = command === 'A' ? 7 : 2;
+    for (let index = stride - 2; index < numbers.length; index += stride) {
+      xs.push(numbers[index]);
+    }
+  }
+  return Math.max(...xs) - Math.min(...xs);
+}
+
 describe('RadialBarChart', () => {
   it('renders the shared chart wrapper', () => {
     const { container } = renderChart();
@@ -55,25 +121,56 @@ describe('RadialBarChart', () => {
     expect(style).toContain('--color-Edge: rgb(212 149 42)');
   });
 
-  // recharts only paints its SVG once the ResponsiveContainer has real
-  // dimensions, which happy-dom never gives it — so the arcs/track/chrome can't
-  // be asserted here. This exercises the geometry + chrome-toggle prop paths
-  // against a plumbing/crash regression; the visual output is covered by the VR
-  // stories.
-  it('renders a half-circle gauge with the background and chrome toggled off', () => {
+  it('draws one arc per row, filled from its config color', () => {
+    const { container } = renderChart();
+    expect(arcsOf(container).map((arc) => arc.getAttribute('fill'))).toEqual([
+      'var(--color-Chrome)',
+      'var(--color-Safari)',
+      'var(--color-Firefox)',
+      'var(--color-Edge)',
+    ]);
+  });
+
+  // The track is the unfilled remainder behind each arc — without it a gauge
+  // reads as a floating wedge with no scale to measure against.
+  it('draws a background track per arc unless showBackground is off', () => {
+    const withTrack = renderChart();
+    expect(tracksOf(withTrack.container)).toHaveLength(4);
+    withTrack.unmount();
+
+    const bare = renderChart({ showBackground: false });
+    expect(tracksOf(bare.container)).toHaveLength(0);
+    expect(arcsOf(bare.container)).toHaveLength(4);
+  });
+
+  it('sweeps only the arc the start/end angles describe', () => {
+    const full = renderChart();
+    const fullFirst = arcsOf(full.container)[0].getAttribute('d');
+    full.unmount();
+
+    const half = renderChart({ startAngle: 180, endAngle: 0 });
+    expect(arcsOf(half.container)[0].getAttribute('d')).not.toBe(fullFirst);
+  });
+
+  it('drops the legend when its toggle is off', () => {
     const { container } = renderChart({
-      startAngle: 180,
-      endAngle: 0,
-      showBackground: false,
       showTooltip: false,
       showLegend: false,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
   });
 
-  it('renders without crashing on empty data', () => {
+  it('labels the legend from config', () => {
+    const { container } = renderChart({ showLegend: true });
+    const legend = container.querySelector('.recharts-legend-wrapper');
+    expect(legend).toHaveTextContent('Chrome');
+    expect(legend).toHaveTextContent('Edge');
+  });
+
+  it('draws no arcs but still mounts on empty data', () => {
     const { container } = renderChart({ data: [] });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(arcsOf(container)).toHaveLength(0);
   });
 
   it('forwards a ref to the root element', () => {
@@ -87,62 +184,68 @@ describe('RadialBarChart', () => {
     expect(container.firstElementChild).toHaveClass('h-[360px]', 'w-[360px]');
   });
 
-  // The `tooltipContent` prop forwards a custom (library-owned) ChartTooltipContent
-  // to recharts' Tooltip; happy-dom doesn't paint the tooltip, so this only guards
-  // the prop path — consumers customize the tooltip without importing recharts.
+  // The tooltip is hover-only, so this guards the prop path — consumers
+  // customize the tooltip without importing recharts.
   it('accepts a custom tooltipContent', () => {
     const { container } = renderChart({
       tooltipContent: (
-        <ChartTooltipContent formatter={(value) => <span>{String(value)}</span>} />
+        <ChartTooltipContent
+          formatter={(value) => <span>{String(value)}</span>}
+        />
       ),
     });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
-
 });
 
-// recharts needs a laid-out container, which happy-dom does not provide, so the
-// rendered labels/animation are covered by the visual-regression stories. These
-// assert the prop contract itself: the composition accepts every new prop and
-// mounts, and the animation resolves to the reduced-motion-aware value rather
-// than a literal `true`.
+// The motion itself is a visual-regression concern; what matters here is that
+// `animate` resolves to the reduced-motion-aware value rather than a literal
+// `true`, and that the label props reach the painted arcs.
 describe('RadialBarChart animation and data labels', () => {
   it('is not animated unless asked', () => {
     expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
-    const { container } = renderChart();
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
   it('resolves animate to "auto" so prefers-reduced-motion is honored', () => {
-    expect(
-      resolveAnimation({ animate: true, animationDuration: 800 })
-    ).toEqual({ isAnimationActive: 'auto', animationDuration: 800 });
+    expect(resolveAnimation({ animate: true, animationDuration: 800 })).toEqual(
+      { isAnimationActive: 'auto', animationDuration: 800 }
+    );
   });
 
-  it('accepts the full animation prop set without throwing', () => {
+  it('still draws every arc with the full animation prop set', async () => {
     const { container } = renderChart({
       animate: true,
       animationDuration: 400,
       animationBegin: 50,
       animationEasing: 'ease-in-out',
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    await waitFor(() => expect(arcsOf(container)).toHaveLength(4));
   });
 
-  it('accepts the data-label props without throwing', () => {
+  it('runs the data labels through the caller formatter', () => {
     const { container } = renderChart({
       showLabels: true,
       labelFormatter: (value) => `${value} u`,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(dataLabelsOf(container)).toEqual(['65 u', '50 u', '35 u', '25 u']);
   });
 
-  it('accepts an explicit labelPosition override', () => {
-    const { container } = renderChart({
-      showLabels: true,
-      labelPosition: 'insideEnd',
-    });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  // A radial label is placed by transform rather than by `x`/`y`, so the whole
+  // rendered element is compared: an ignored `labelPosition` would produce the
+  // identical markup twice.
+  it('honors an explicit labelPosition override', () => {
+    const markup = (position?: 'insideEnd') => {
+      const { container, unmount } = renderChart({
+        showLabels: true,
+        ...(position ? { labelPosition: position } : {}),
+      });
+      const rendered = container.querySelector(
+        '.recharts-label-list'
+      )!.innerHTML;
+      unmount();
+      return rendered;
+    };
+    expect(markup('insideEnd')).not.toBe(markup());
   });
 });
 
@@ -187,7 +290,11 @@ describe('radialBarChartLabelText', () => {
   // An empty string makes recharts render no <text> element at all.
   it('yields an empty label for a missing value', () => {
     expect(
-      radialBarChartLabelText({ format: 'value', name: 'Chrome', value: undefined })
+      radialBarChartLabelText({
+        format: 'value',
+        name: 'Chrome',
+        value: undefined,
+      })
     ).toBe('');
   });
 
@@ -298,13 +405,15 @@ describe('radialBarChartSegmentedReading', () => {
 
 describe('radialBarChartBandName', () => {
   it('names the band the hovered arc belongs to', () => {
-    expect(radialBarChartBandName({ tier: 'Production', used: 72 }, 'tier')).toBe(
-      'Production'
-    );
+    expect(
+      radialBarChartBandName({ tier: 'Production', used: 72 }, 'tier')
+    ).toBe('Production');
   });
 
   it('coerces a numeric band name', () => {
-    expect(radialBarChartBandName({ tier: 2024, used: 72 }, 'tier')).toBe('2024');
+    expect(radialBarChartBandName({ tier: 2024, used: 72 }, 'tier')).toBe(
+      '2024'
+    );
   });
 
   // An empty header, not the string "undefined", when the row can't name a band.
@@ -457,23 +566,42 @@ describe('radialBarChartSegments', () => {
   });
 });
 
-// Same happy-dom limit as above: the ring's geometry is unit-tested through
-// `radialBarChartSegments` and pictured by the VR stories; these guard the prop
-// paths through the composition.
+// The ring's angular arithmetic is unit-tested through `radialBarChartSegments`;
+// what these cases add is that the geometry props reach the arcs recharts paints.
 describe('RadialBarChart gauge, multi-metric and geometry props', () => {
-  it('accepts the gauge props', () => {
-    const { container } = renderChart({
+  // The gauge reading is the whole point of `valueDomain`: without one a lone row
+  // is its own maximum, so its arc fills the sweep and reads as 100% whatever the
+  // value is.
+  it('reads a single value against valueDomain instead of filling the sweep', () => {
+    const gauge = {
       data: [{ browser: 'Chrome', value: 65 }],
-      valueDomain: [0, 100],
       startAngle: 180,
       endAngle: 0,
       cy: 190,
       centerLabel: { value: '65%', label: 'of quota used' },
-    });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    };
+
+    const scaled = renderChart({ ...gauge, valueDomain: [0, 100] });
+    const arc = arcsOf(scaled.container)[0];
+    expect(arc.getAttribute('d')).not.toBe(
+      tracksOf(scaled.container)[0].getAttribute('d')
+    );
+    // `cy` moves the whole ring; recharts stamps the resolved centre on each arc.
+    expect(arc).toHaveAttribute('cy', '190');
+    expect(svgTextOf(scaled.container)).toEqual(['65%', 'of quota used']);
+    scaled.unmount();
+
+    const unscaled = renderChart(gauge);
+    expect(arcsOf(unscaled.container)[0].getAttribute('d')).toBe(
+      tracksOf(unscaled.container)[0].getAttribute('d')
+    );
   });
 
-  it('accepts a segmented gauge', () => {
+  // A segmented ring is synthetic geometry — one stacked series per piece, the
+  // notches painted transparent so they read as gaps. 29 of 38 covers six whole
+  // segments and part of the seventh, so the seventh is the one segment drawn in
+  // both fills and the eighth is track alone.
+  it('draws a segmented gauge as notched pieces rather than data arcs', () => {
     const { container } = renderChart({
       data: [{ browser: 'Chrome', value: 29 }],
       valueDomain: [0, 38],
@@ -481,7 +609,20 @@ describe('RadialBarChart gauge, multi-metric and geometry props', () => {
       segmentGap: 4,
       centerLabel: { value: 29, label: '/ 38 criteria met' },
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+
+    const fills = arcsOf(container).map((piece) => piece.getAttribute('fill'));
+    expect(fills.filter((fill) => fill === 'transparent')).toHaveLength(8);
+    expect(fills.filter((fill) => fill === 'var(--color-Chrome)')).toHaveLength(
+      7
+    );
+    expect(
+      fills.filter((fill) => fill === 'var(--ui-background-surface-secondary)')
+    ).toHaveLength(2);
+    // The unreached segments *are* the track, so `showBackground`'s own one would
+    // double it, and a legend here would name synthetic pieces instead of data.
+    expect(tracksOf(container)).toHaveLength(0);
+    expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
+    expect(svgTextOf(container)).toEqual(['29', '/ 38 criteria met']);
   });
 
   it('accepts multi-metric dataKeys', () => {
@@ -501,17 +642,112 @@ describe('RadialBarChart gauge, multi-metric and geometry props', () => {
     expect(style).toContain('--color-quota: rgb(212 149 42)');
   });
 
-  it('accepts the geometry and grid props', () => {
+  it('sizes each arc from barSize and spaces the bands with barCategoryGap', () => {
+    const ring = (
+      props: Partial<React.ComponentProps<typeof RadialBarChart>> = {}
+    ) => {
+      const { container, unmount } = renderChart({
+        cornerRadius: 0,
+        ...props,
+      });
+      const [inner, next] = arcsOf(container).map(radiiOf);
+      unmount();
+      return {
+        thickness: inner[0] - inner[1],
+        betweenBands: next[1] - inner[0],
+      };
+    };
+
+    const base = ring();
+    expect(ring({ barSize: 18 }).thickness).toBe(18);
+    expect(base.thickness).not.toBe(18);
+    expect(ring({ barCategoryGap: '20%' }).betweenBands).toBeGreaterThan(
+      base.betweenBands
+    );
+  });
+
+  // A band holds one arc per metric, so `barGap` only has anything to separate
+  // once there are several — on the single-metric mapping it is inert.
+  it('separates one band metrics by barGap', () => {
+    const between = (barGap?: number) => {
+      const { container, unmount } = renderChart({
+        config: {
+          used: { label: 'Used', color: 'rgb(23 99 207)' },
+          quota: { label: 'Quota', color: 'rgb(212 149 42)' },
+        },
+        data: [{ tier: 'Production', used: 72, quota: 90 }],
+        dataKeys: ['used', 'quota'],
+        dataKey: 'used',
+        nameKey: 'tier',
+        valueDomain: [0, 100],
+        cornerRadius: 0,
+        barGap,
+      });
+      const [inner, outer] = arcsOf(container).map(radiiOf);
+      unmount();
+      return outer[1] - inner[0];
+    };
+
+    expect(between(20)).toBeCloseTo(20);
+    expect(between(6)).toBeCloseTo(6);
+    expect(between()).not.toBeCloseTo(20);
+  });
+
+  // Without a floor a near-zero metric is drawn about a pixel wide: present in the
+  // DOM, invisible on screen and impossible to hover.
+  it('keeps a near-zero arc visible with minAngle', () => {
+    const tiny = [
+      { browser: 'Chrome', value: 100 },
+      { browser: 'Safari', value: 0.2 },
+    ];
+    const span = (minAngle?: number) => {
+      const { container, unmount } = renderChart({ data: tiny, minAngle });
+      const width = arcSpanX(arcsOf(container)[1]);
+      unmount();
+      return width;
+    };
+
+    expect(span()).toBeLessThan(5);
+    expect(span(90)).toBeGreaterThan(100);
+  });
+
+  it('centers the ring on cx and cy and insets the plot area by the margin', () => {
     const { container } = renderChart({
       cx: '40%',
       cy: 120,
-      barSize: 18,
-      barGap: 6,
-      barCategoryGap: '20%',
-      minAngle: 12,
       margin: { top: 8, right: 8, bottom: 8, left: 8 },
-      showPolarGrid: true,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+
+    // 40% of the width the shared test layout reports to recharts.
+    expect(arcsOf(container)[0]).toHaveAttribute(
+      'cx',
+      String(CHART_WIDTH * 0.4)
+    );
+    expect(arcsOf(container)[0]).toHaveAttribute('cy', '120');
+    // recharts publishes the plot area as the chart's clip rect, so the margin
+    // is observable there rather than on any arc.
+    const plotArea = container.querySelector('clipPath rect');
+    expect(plotArea).toHaveAttribute('x', '8');
+    expect(plotArea).toHaveAttribute('y', '8');
+    expect(plotArea).toHaveAttribute('width', String(CHART_WIDTH - 16));
+    expect(plotArea).toHaveAttribute('height', String(CHART_HEIGHT - 16));
+  });
+
+  it('draws the polar grid as concentric rings without spokes', () => {
+    const bare = renderChart();
+    expect(bare.container.querySelector('.recharts-polar-grid')).toBeNull();
+    bare.unmount();
+
+    const { container } = renderChart({ showPolarGrid: true });
+    expect(
+      container.querySelectorAll('.recharts-polar-grid-concentric-circle')
+        .length
+    ).toBeGreaterThan(0);
+    // `gridType="circle"`, so never the polygon form; `radialLines={false}`,
+    // because spokes would cut across every arc.
+    expect(
+      container.querySelector('.recharts-polar-grid-concentric-polygon')
+    ).toBeNull();
+    expect(container.querySelector('.recharts-polar-grid-angle')).toBeNull();
   });
 });

@@ -1,12 +1,20 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { AreaChart } from '../area-chart';
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
-import { giveTheChartASize } from '../../chart/__tests__/chart-layout';
+import {
+  axisTickLabels,
+  axisTicks,
+  giveEveryChartASize,
+} from '../../chart/__tests__/chart-layout';
+
+// The curves, dots, labels and chrome asserted below are painted SVG, which
+// recharts skips entirely at 0×0.
+giveEveryChartASize();
 
 const data = [
   { month: 'Jan', desktop: 186, mobile: 80 },
@@ -33,26 +41,78 @@ function renderChart(
   );
 }
 
-describe('AreaChart', () => {
-  // Axis visibility + tick formatting forward to recharts' XAxis/YAxis `hide` /
-  // `tickFormatter`. happy-dom can't lay out recharts ticks (the visuals are
-  // covered by the axis-formatting VR stories), so assert it renders cleanly.
-  it('renders with axis/grid config and tick formatters', () => {
+const curvesOf = (container: Element) => [
+  ...container.querySelectorAll<SVGPathElement>('.recharts-area-curve'),
+];
+
+describe('AreaChart axes and grid', () => {
+  it('hides an axis without dropping the other', () => {
+    const { container } = renderChart({ showXAxis: false, showYAxis: true });
+    expect(container.querySelector('.recharts-xAxis')).toBeNull();
+    expect(container.querySelector('.recharts-yAxis')).not.toBeNull();
+  });
+
+  it('runs tick values through the caller formatter', () => {
     const { container } = renderChart({
-      showXAxis: false,
-      showYAxis: true,
       yTickFormatter: (value) => `$${value}`,
-      xAxisAngle: -45,
-      xAxisInterval: 'preserveStartEnd',
-      yAxisTickCount: 4,
-      yAxisDomain: 'zero',
-      gridDashed: true,
+    });
+    const ticks = axisTickLabels(container, 'y');
+    expect(ticks.length).toBeGreaterThan(0);
+    for (const tick of ticks) expect(tick).toMatch(/^\$/);
+  });
+
+  it('appends the Y unit to every tick', () => {
+    const { container } = renderChart({ yUnit: 'k' });
+    const ticks = axisTickLabels(container, 'y');
+    expect(ticks.length).toBeGreaterThan(0);
+    for (const tick of ticks) expect(tick).toMatch(/k$/);
+  });
+
+  it('anchors rotated ticks on the side they lean towards', () => {
+    const { container } = renderChart({ xAxisAngle: -45 });
+    expect(axisTicks(container, 'x')[0]).toHaveAttribute('text-anchor', 'end');
+  });
+
+  it('floors the Y domain at zero on request', () => {
+    const { container } = renderChart({ yAxisDomain: 'zero' });
+    expect(axisTickLabels(container, 'y')[0]).toBe('0');
+  });
+
+  it('renders the axis titles as their own labels', () => {
+    const { container } = renderChart({
+      xAxisLabel: 'Month',
+      yAxisLabel: 'Sessions',
+    });
+    const titles = [...container.querySelectorAll('.recharts-label')].map(
+      (label) => label.textContent
+    );
+    expect(titles).toContain('Month');
+    expect(titles).toContain('Sessions');
+  });
+
+  it('draws only the grid direction it was asked for', () => {
+    const { container } = renderChart({
       gridHorizontal: true,
       gridVertical: false,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(
+      container.querySelectorAll('.recharts-cartesian-grid-horizontal line')
+        .length
+    ).toBeGreaterThan(0);
+    expect(
+      container.querySelectorAll('.recharts-cartesian-grid-vertical line')
+    ).toHaveLength(0);
   });
 
+  it('dashes the grid on request', () => {
+    const { container } = renderChart({ gridDashed: true });
+    expect(
+      container.querySelector('.recharts-cartesian-grid-horizontal line')
+    ).toHaveAttribute('stroke-dasharray', '3 3');
+  });
+});
+
+describe('AreaChart', () => {
   it('renders the shared chart wrapper', () => {
     const { container } = renderChart();
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
@@ -79,13 +139,7 @@ describe('AreaChart', () => {
     expect(root).toHaveAttribute('data-fill', 'solid');
   });
 
-  // recharts only paints its SVG once the ResponsiveContainer has real
-  // dimensions, which happy-dom never gives it — so the grid/tooltip/legend
-  // toggles can't be asserted on the rendered chrome here. This exercises the
-  // toggle + stroke/dot prop paths (guarding against a plumbing/crash
-  // regression); the visual effect of the chrome toggles is covered by the
-  // `NoChrome` VR story.
-  it('renders with all chrome toggles off, dots off, and a solid fill', () => {
+  it('strips the grid, legend and dots when their toggles are off', () => {
     const { container } = renderChart({
       showGrid: false,
       showTooltip: false,
@@ -94,24 +148,37 @@ describe('AreaChart', () => {
       fill: 'solid',
       connectNulls: true,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(container.querySelector('.recharts-cartesian-grid')).toBeNull();
+    expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
+    expect(container.querySelectorAll('.recharts-area-dot')).toHaveLength(0);
+    // The series itself survives the chrome going away.
+    expect(curvesOf(container)).toHaveLength(2);
   });
 
-  it('renders without crashing on empty data', () => {
+  // A solid fill paints straight from the series color; a gradient fill routes
+  // it through a `<linearGradient>` def instead.
+  it('fills from a gradient def by default and from the color directly when solid', () => {
+    const gradient = renderChart();
+    expect(
+      gradient.container.querySelectorAll('linearGradient').length
+    ).toBeGreaterThan(0);
+    expect(
+      gradient.container
+        .querySelector('.recharts-area-area')
+        ?.getAttribute('fill')
+    ).toMatch(/^url\(#/);
+    gradient.unmount();
+
+    const solid = renderChart({ fill: 'solid' });
+    expect(
+      solid.container.querySelector('.recharts-area-area')?.getAttribute('fill')
+    ).toBe('var(--color-desktop)');
+  });
+
+  it('draws no curves but still mounts on empty data', () => {
     const { container } = renderChart({ data: [] });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
-  });
-
-  // Axis titles/unit forward to recharts' XAxis/YAxis `label`/`unit`; happy-dom
-  // doesn't paint the SVG, so this only guards the prop path (the rendered titles
-  // are covered by the `AxisLabels` VR story).
-  it('renders with axis titles + a Y unit', () => {
-    const { container } = renderChart({
-      xAxisLabel: 'Month',
-      yAxisLabel: 'Sessions',
-      yUnit: 'k',
-    });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(curvesOf(container)).toHaveLength(0);
   });
 
   it('forwards a ref to the root element', () => {
@@ -125,9 +192,8 @@ describe('AreaChart', () => {
     expect(container.firstElementChild).toHaveClass('h-[300px]', 'w-[500px]');
   });
 
-  // The `tooltipContent` prop forwards a custom (library-owned) ChartTooltipContent
-  // to recharts' Tooltip; happy-dom doesn't paint the tooltip, so this only guards
-  // the prop path — consumers customize the tooltip without importing recharts.
+  // The tooltip is hover-only, so this guards the prop path — consumers
+  // customize the tooltip without importing recharts.
   it('accepts a custom tooltipContent', () => {
     const { container } = renderChart({
       tooltipContent: (
@@ -156,16 +222,12 @@ describe('AreaChart', () => {
 
 });
 
-// recharts needs a laid-out container, which happy-dom does not provide, so the
-// rendered labels/animation are covered by the visual-regression stories. These
-// assert the prop contract itself: the composition accepts every new prop and
-// mounts, and the animation resolves to the reduced-motion-aware value rather
-// than a literal `true`.
+// The motion itself is a visual-regression concern; what matters here is that
+// `animate` resolves to the reduced-motion-aware value rather than a literal
+// `true`, and that the label props reach the painted series.
 describe('AreaChart animation and data labels', () => {
   it('is not animated unless asked', () => {
     expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
-    const { container } = renderChart();
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
   it('resolves animate to "auto" so prefers-reduced-motion is honored', () => {
@@ -174,36 +236,48 @@ describe('AreaChart animation and data labels', () => {
     ).toEqual({ isAnimationActive: 'auto', animationDuration: 800 });
   });
 
-  it('accepts the full animation prop set without throwing', () => {
+  it('still draws every series with the full animation prop set', async () => {
     const { container } = renderChart({
       animate: true,
       animationDuration: 400,
       animationBegin: 50,
       animationEasing: 'ease-in-out',
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    await waitFor(() => expect(curvesOf(container)).toHaveLength(2));
   });
 
-  it('accepts the data-label props without throwing', () => {
+  it('runs the data labels through the caller formatter', () => {
     const { container } = renderChart({
+      dataKeys: ['desktop'],
       showLabels: true,
       labelFormatter: (value) => `${value} u`,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(
+      [...container.querySelectorAll('.recharts-label-list text')].map(
+        (label) => label.textContent
+      )
+    ).toEqual(data.map((row) => `${row.desktop} u`));
   });
 
-  it('accepts an explicit labelPosition override', () => {
-    const { container } = renderChart({
-      showLabels: true,
-      labelPosition: 'center',
-    });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  it('honors an explicit labelPosition override', () => {
+    const labelY = (labelPosition?: 'center') => {
+      const { container, unmount } = renderChart({
+        dataKeys: ['desktop'],
+        showLabels: true,
+        ...(labelPosition ? { labelPosition } : {}),
+      });
+      const ys = [
+        ...container.querySelectorAll('.recharts-label-list text'),
+      ].map((label) => label.getAttribute('y'));
+      unmount();
+      return ys;
+    };
+    expect(labelY('center')).not.toEqual(labelY());
   });
 });
 
-// These need real geometry: the curve set, the dot radii, and the per-series
-// overrides are all only observable on the painted SVG, which recharts skips
-// entirely at 0×0 (see `chart-layout`).
+// The curve set, the dot radii and the per-series overrides are only observable
+// on the painted SVG, which recharts skips entirely at 0×0 (see `chart-layout`).
 describe('AreaChart curves, dots and per-series overrides', () => {
   const CURVES = [
     'linear',
@@ -219,7 +293,6 @@ describe('AreaChart curves, dots and per-series overrides', () => {
   // segments, so identical geometry between two types is the failure to catch.
   it('draws distinct geometry for every curve type', () => {
     const drawn = CURVES.map((curve) => {
-      giveTheChartASize();
       const { container, unmount } = renderChart({
         dataKeys: ['desktop'],
         curve,
@@ -235,7 +308,6 @@ describe('AreaChart curves, dots and per-series overrides', () => {
   });
 
   it('sizes the point dots from dotSize', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       dataKeys: ['desktop'],
       showDots: true,
@@ -247,7 +319,6 @@ describe('AreaChart curves, dots and per-series overrides', () => {
   });
 
   it('draws no static dots for a hover-only area', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       dataKeys: ['desktop'],
       showActiveDot: true,
@@ -256,7 +327,6 @@ describe('AreaChart curves, dots and per-series overrides', () => {
   });
 
   it('restyles one series without touching the others', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       fill: 'solid',
       areaSettings: {
@@ -285,7 +355,6 @@ describe('AreaChart curves, dots and per-series overrides', () => {
   // The fill is painted from a gradient def, so a color override that stopped at
   // the stroke would leave the series' body in its config color.
   it('recolors a gradient series through its own stops', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       areaSettings: { mobile: { color: 'rgb(1 2 3)' } },
     });
@@ -301,7 +370,6 @@ describe('AreaChart curves, dots and per-series overrides', () => {
   });
 
   it('opts one series out of the chart-wide value labels', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       showLabels: true,
       areaSettings: { mobile: { showLabel: false } },
@@ -313,7 +381,6 @@ describe('AreaChart curves, dots and per-series overrides', () => {
   });
 
   it('labels a single series without the chart-wide toggle', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       areaSettings: { mobile: { showLabel: true, labelPosition: 'bottom' } },
     });

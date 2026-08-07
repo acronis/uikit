@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -10,6 +10,11 @@ import {
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
+import { giveEveryChartASize } from '../../chart/__tests__/chart-layout';
+
+// The slices, labels, legend and centre text are painted SVG/DOM, which recharts
+// skips entirely at 0×0.
+giveEveryChartASize();
 
 const data = [
   { browser: 'Chrome', value: 275 },
@@ -35,6 +40,19 @@ function renderChart(props: Partial<React.ComponentProps<typeof PieChart>> = {})
   );
 }
 
+const slicesOf = (container: Element) => [
+  ...container.querySelectorAll<SVGPathElement>('.recharts-sector'),
+];
+
+const dataLabelsOf = (container: Element) =>
+  [...container.querySelectorAll('.recharts-label-list text')].map(
+    (label) => label.textContent
+  );
+
+/** Every `<text>` recharts painted — the centre label lives outside the list. */
+const svgTextOf = (container: Element) =>
+  [...container.querySelectorAll('svg text')].map((text) => text.textContent);
+
 describe('PieChart', () => {
   it('renders the shared chart wrapper', () => {
     const { container } = renderChart();
@@ -58,44 +76,62 @@ describe('PieChart', () => {
     expect(container.firstElementChild).toHaveAttribute('data-shape', 'donut');
   });
 
-  // recharts only paints its SVG once the ResponsiveContainer has real
-  // dimensions, which happy-dom never gives it — so the tooltip/legend toggles
-  // can't be asserted on the rendered chrome here. This exercises the toggle +
-  // donut/padding prop paths (guarding against a plumbing/crash regression); the
-  // visual effect of the chrome toggles is covered by the `NoChrome` VR story.
-  it('renders as a donut with chrome toggled off', () => {
+  it('draws one slice per row, filled from its config color', () => {
+    const { container } = renderChart();
+    expect(
+      slicesOf(container).map((slice) => slice.getAttribute('fill'))
+    ).toEqual([
+      'var(--color-Chrome)',
+      'var(--color-Safari)',
+      'var(--color-Firefox)',
+    ]);
+  });
+
+  it('drops the legend when its toggle is off', () => {
     const { container } = renderChart({
       shape: 'donut',
       showTooltip: false,
       showLegend: false,
       paddingAngle: 2,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
+    expect(slicesOf(container)).toHaveLength(3);
   });
 
-  it('renders without crashing on empty data', () => {
+  it('labels the legend from config', () => {
+    const { container } = renderChart();
+    const legend = container.querySelector('.recharts-legend-wrapper');
+    expect(legend).toHaveTextContent('Chrome');
+    expect(legend).toHaveTextContent('Safari');
+    expect(legend).toHaveTextContent('Firefox');
+  });
+
+  it('draws no slices but still mounts on empty data', () => {
     const { container } = renderChart({ data: [] });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(slicesOf(container)).toHaveLength(0);
   });
 
-  // recharts resolves the center Label's content against a computed polar
-  // viewBox that happy-dom never provides, so the center text can't be asserted
-  // here (it's covered by the DonutWithCenterLabel VR story). These guard the
-  // prop path: a donut with centerLabel, and a pie that ignores it, both render.
-  it('renders a donut with a center label', () => {
+  it('renders the center label inside a donut hole', () => {
     const { container } = renderChart({
       shape: 'donut',
       centerLabel: { value: '835', label: 'Visitors' },
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    const texts = svgTextOf(container);
+    expect(texts).toContain('835');
+    expect(texts).toContain('Visitors');
   });
 
+  // A filled pie has no hole to put it in, so the prop is dropped rather than
+  // painted over the slices.
   it('ignores centerLabel for a pie shape', () => {
     const { container } = renderChart({
       shape: 'pie',
       centerLabel: { value: '835', label: 'Visitors' },
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    const texts = svgTextOf(container);
+    expect(texts).not.toContain('835');
+    expect(texts).not.toContain('Visitors');
   });
 
   it('forwards a ref to the root element', () => {
@@ -109,9 +145,8 @@ describe('PieChart', () => {
     expect(container.firstElementChild).toHaveClass('h-[300px]', 'w-[300px]');
   });
 
-  // The `tooltipContent` prop forwards a custom (library-owned) ChartTooltipContent
-  // to recharts' Tooltip; happy-dom doesn't paint the tooltip, so this only guards
-  // the prop path — consumers customize the tooltip without importing recharts.
+  // The tooltip is hover-only, so this guards the prop path — consumers
+  // customize the tooltip without importing recharts.
   it('accepts a custom tooltipContent', () => {
     const { container } = renderChart({
       tooltipContent: (
@@ -123,16 +158,12 @@ describe('PieChart', () => {
 
 });
 
-// recharts needs a laid-out container, which happy-dom does not provide, so the
-// rendered labels/animation are covered by the visual-regression stories. These
-// assert the prop contract itself: the composition accepts every new prop and
-// mounts, and the animation resolves to the reduced-motion-aware value rather
-// than a literal `true`.
+// The motion itself is a visual-regression concern; what matters here is that
+// `animate` resolves to the reduced-motion-aware value rather than a literal
+// `true`, and that turning it on still paints every slice.
 describe('PieChart animation and data labels', () => {
   it('is not animated unless asked', () => {
     expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
-    const { container } = renderChart();
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
   });
 
   it('resolves animate to "auto" so prefers-reduced-motion is honored', () => {
@@ -141,30 +172,39 @@ describe('PieChart animation and data labels', () => {
     ).toEqual({ isAnimationActive: 'auto', animationDuration: 800 });
   });
 
-  it('accepts the full animation prop set without throwing', () => {
+  it('still draws every slice with the full animation prop set', async () => {
     const { container } = renderChart({
       animate: true,
       animationDuration: 400,
       animationBegin: 50,
       animationEasing: 'ease-in-out',
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    await waitFor(() => expect(slicesOf(container)).toHaveLength(3));
   });
 
-  it('accepts the data-label props without throwing', () => {
+  it('runs the data labels through the caller formatter', () => {
     const { container } = renderChart({
       showLabels: true,
       labelFormatter: (value) => `${value} u`,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(dataLabelsOf(container)).toEqual(['275 u', '200 u', '187 u']);
   });
 
-  it('accepts an explicit labelPosition override', () => {
-    const { container } = renderChart({
+  it('honors an explicit labelPosition override', () => {
+    const outside = renderChart({ showLabels: true });
+    const outsideY = [
+      ...outside.container.querySelectorAll('.recharts-label-list text'),
+    ].map((label) => label.getAttribute('y'));
+    outside.unmount();
+
+    const inside = renderChart({
       showLabels: true,
       labelPosition: 'insideEnd',
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    const insideY = [
+      ...inside.container.querySelectorAll('.recharts-label-list text'),
+    ].map((label) => label.getAttribute('y'));
+    expect(insideY).not.toEqual(outsideY);
   });
 });
 
@@ -328,56 +368,94 @@ describe('pieChartValuePercentRow', () => {
   });
 });
 
-// Geometry, per-slice overrides and the leader-line label path all need a
-// painted SVG, which happy-dom never gives recharts — these guard the prop
-// plumbing; the VR stories cover what they draw.
 describe('PieChart geometry, slices and chrome', () => {
-  it('accepts the sweep and corner geometry', () => {
-    const { container } = renderChart({
-      startAngle: 180,
-      endAngle: 0,
-      cornerRadius: 6,
-      minAngle: 4,
-      paddingAngle: 2,
-    });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+  // A half sweep is the semicircle preset; the arcs must actually stop halfway
+  // rather than quietly closing the circle.
+  it('sweeps only the arc the start/end angles describe', () => {
+    const full = renderChart();
+    const fullFirst = slicesOf(full.container)[0].getAttribute('d');
+    full.unmount();
+
+    const half = renderChart({ startAngle: 180, endAngle: 0 });
+    const halfSlices = slicesOf(half.container);
+    expect(halfSlices).toHaveLength(3);
+    expect(halfSlices[0].getAttribute('d')).not.toBe(fullFirst);
   });
 
-  it('accepts per-slice color, label and format overrides', () => {
+  // `cornerRadius` rounds each slice tip, which recharts draws as extra arc
+  // commands — a squared slice has strictly fewer of them.
+  it('rounds the slice corners when cornerRadius asks for it', () => {
+    const squared = renderChart();
+    const squaredArcs = (
+      slicesOf(squared.container)[0].getAttribute('d')!.match(/A/g) ?? []
+    ).length;
+    squared.unmount();
+
+    const rounded = renderChart({ cornerRadius: 6, paddingAngle: 2 });
+    const roundedArcs = (
+      slicesOf(rounded.container)[0].getAttribute('d')!.match(/A/g) ?? []
+    ).length;
+    expect(roundedArcs).toBeGreaterThan(squaredArcs);
+  });
+
+  it('overrides one slice color without touching the others', () => {
+    const { container } = renderChart({
+      sliceSettings: { Chrome: { color: 'rgb(0 0 0)' } },
+    });
+    expect(
+      slicesOf(container).map((slice) => slice.getAttribute('fill'))
+    ).toEqual([
+      'rgb(0 0 0)',
+      'var(--color-Safari)',
+      'var(--color-Firefox)',
+    ]);
+  });
+
+  it('applies the chart-wide label format and the per-slice overrides', () => {
     const { container } = renderChart({
       showLabels: true,
       labelFormat: 'name-percent',
       sliceSettings: {
-        Chrome: { color: 'rgb(0 0 0)' },
         Safari: { hideLabel: true },
         Firefox: { labelFormat: 'value' },
       },
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    const labels = dataLabelsOf(container);
+    // Safari opts out; Chrome keeps the chart-wide name+percent; Firefox
+    // overrides down to the bare value.
+    expect(labels).toHaveLength(2);
+    expect(labels[0]).toMatch(/^Chrome.*%$/);
+    expect(labels[1]).toBe('187');
   });
 
-  it('accepts labelled slices with leader lines', () => {
+  // With `labelLine` on, the labels move off the position-aware `LabelList` onto
+  // recharts' own outside-placement path — so they are the only text in the SVG
+  // — and a slice that opted out gets neither a label nor a line.
+  it('draws a leader line per labelled slice only', () => {
     const { container } = renderChart({
       showLabels: true,
       labelLine: true,
       labelFormat: 'name-value',
       sliceSettings: { Safari: { hideLabel: true } },
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(svgTextOf(container)).toEqual(['Chrome: 275', 'Firefox: 187']);
+    expect(
+      container.querySelectorAll('.recharts-pie-label-line')
+    ).toHaveLength(2);
   });
 
-  it('accepts a top legend and a custom margin', () => {
-    const { container } = renderChart({
-      shape: 'donut',
-      centerLabel: { value: '662', label: 'Visitors' },
-      legendPosition: 'top',
-      margin: { top: 16, right: 16, bottom: 16, left: 16 },
-    });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
-  });
+  it('moves the legend to the top edge on request', () => {
+    const bottom = renderChart({ shape: 'donut' });
+    const bottomStyle = bottom.container
+      .querySelector<HTMLElement>('.recharts-legend-wrapper')!
+      .getAttribute('style')!;
+    expect(bottomStyle).toContain('bottom:');
+    bottom.unmount();
 
-  it('accepts the value-percent tooltip preset', () => {
-    const { container } = renderChart({ tooltipFormat: 'value-percent' });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    const top = renderChart({ shape: 'donut', legendPosition: 'top' });
+    const topStyle = top.container
+      .querySelector<HTMLElement>('.recharts-legend-wrapper')!
+      .getAttribute('style')!;
+    expect(topStyle).toContain('top:');
   });
 });

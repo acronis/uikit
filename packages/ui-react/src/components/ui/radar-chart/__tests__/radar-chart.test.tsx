@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -15,8 +15,12 @@ import {
 import {
   CHART_HEIGHT,
   CHART_WIDTH,
-  giveTheChartASize,
+  giveEveryChartASize,
 } from '../../chart/__tests__/chart-layout';
+
+// The web, axes, series and labels asserted below are painted SVG, which
+// recharts skips entirely at 0×0.
+giveEveryChartASize();
 
 const data = [
   { subject: 'Math', alice: 120, bob: 110 },
@@ -52,15 +56,13 @@ const CENTRE_Y = CHART_HEIGHT / 2;
 const OUTER_RADIUS = 0.8 * ((Math.min(CHART_WIDTH, CHART_HEIGHT) - 10) / 2);
 
 /**
- * Render at a size recharts will actually paint at, with the legend and tooltip
- * off. Both are measured against the same faked box, so a shown legend reports
- * itself as tall as the whole chart and the plot area collapses to nothing —
- * which would make every geometry assertion below meaningless.
+ * Render with the legend and tooltip off, so the geometry helpers below see the
+ * plot's elements and nothing else. The size itself is suite-level (see the top
+ * of the file) — it is what makes that geometry exist at all.
  */
 function renderSized(
   props: Partial<React.ComponentProps<typeof RadarChart>> = {}
 ) {
-  giveTheChartASize();
   return renderChart({ showLegend: false, showTooltip: false, ...props });
 }
 
@@ -133,9 +135,15 @@ describe('RadarChart', () => {
     );
   });
 
-  it('renders without crashing on empty data', () => {
+  it('draws no web but still mounts on empty data', () => {
     const { container } = renderChart({ data: [] });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(seriesAreas(container)).toHaveLength(0);
+    // No rows means no categories either, so the grid has no spokes to hang off.
+    expect(categoryTicks(container)).toEqual([]);
+    expect(
+      container.querySelector('.recharts-polar-grid')
+    ).not.toBeInTheDocument();
   });
 
   it('forwards a ref to the root element', () => {
@@ -149,10 +157,8 @@ describe('RadarChart', () => {
     expect(container.firstElementChild).toHaveClass('h-[360px]', 'w-[360px]');
   });
 
-  // A tooltip only renders while a point is active, which needs a real pointer
-  // interaction over a laid-out chart — the shared primitive's own rendering is
-  // covered in `chart.test.tsx` and by the open-tooltip VR story. This guards the
-  // prop path: consumers customize the tooltip without importing recharts.
+  // The tooltip is hover-only, so this guards the prop path — consumers
+  // customize the tooltip without importing recharts.
   it('accepts a custom tooltipContent', () => {
     const { container } = renderChart({
       tooltipContent: (
@@ -165,9 +171,9 @@ describe('RadarChart', () => {
   });
 });
 
-// The animation props resolve to recharts' `isAnimationActive`, which is
-// behavior rather than markup — so the resolution is asserted directly and the
-// composition only has to accept the set without throwing.
+// The motion itself is a visual-regression concern; what matters here is that
+// `animate` resolves to the reduced-motion-aware value rather than a literal
+// `true`, and that turning the whole prop set on still paints every series.
 describe('RadarChart animation', () => {
   it('is not animated unless asked', () => {
     expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
@@ -179,14 +185,20 @@ describe('RadarChart animation', () => {
     );
   });
 
-  it('accepts the full animation prop set without throwing', () => {
+  // An animated radar starts collapsed on its centre and grows outward, so the
+  // vertices are the first frame rather than the final scale — what this pins is
+  // that every series is still painted, from its own config color.
+  it('still draws every series with the full animation prop set', async () => {
     const { container } = renderChart({
       animate: true,
       animationDuration: 400,
       animationBegin: 50,
       animationEasing: 'ease-in-out',
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    await waitFor(() => expect(seriesAreas(container)).toHaveLength(2));
+    expect(
+      seriesAreas(container).map((area) => area.getAttribute('fill'))
+    ).toEqual(['var(--color-alice)', 'var(--color-bob)']);
   });
 });
 
@@ -280,7 +292,8 @@ describe('RadarChart data labels', () => {
 
 // The radius axis is what maps a value to a radius, so its domain decides
 // whether a radar reads as an absolute profile or a relative one. That mapping is
-// pure, so it is asserted directly — the rendered scale is a VR story.
+// pure, so its edge cases are asserted directly here — the scale it produces is
+// measured off the rendered geometry in `RadarChart radius axis` below.
 describe('radarRadiusAxisDomain', () => {
   it('leaves an unset preset to recharts (the data max)', () => {
     expect(radarRadiusAxisDomain(undefined, undefined)).toBeUndefined();
@@ -728,7 +741,6 @@ describe('RadarChart geometry and legend', () => {
   });
 
   it('renders a legend entry per series, labelled from config', () => {
-    giveTheChartASize();
     const { container } = renderChart({ legendPosition: 'top' });
     expect(
       [...container.querySelectorAll('.recharts-legend-wrapper div div')].map(

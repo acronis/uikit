@@ -11,12 +11,15 @@ import {
   type ChartConfig,
   type ChartReferenceLine,
 } from '../index';
-import { giveTheChartASize } from './chart-layout';
+import { giveEveryChartASize } from './chart-layout';
 
 // Reference lines are a shared cartesian-chart annotation (`ChartReferenceLine` +
 // `resolveChartReferenceValue` / `resolveReferenceLineProps`), so the three charts
 // that draw one are exercised together here rather than each asserting the same
 // thing in its own file.
+
+// A reference line is painted SVG, which recharts skips entirely at 0×0.
+giveEveryChartASize();
 
 const data = [
   { month: 'Jan', desktop: 186, mobile: 80 },
@@ -33,9 +36,12 @@ type ReferenceProps = {
   referenceLine?: ChartReferenceLine | ChartReferenceLine[];
 };
 
+// Whatever each chart type paints for its series. Asserting the *absence* of a
+// reference line is only worth anything next to proof that the chart drew at all.
 const CHARTS = [
   {
     name: 'BarChart',
+    series: '.recharts-bar-rectangle',
     render: (props: ReferenceProps) => (
       <BarChart
         config={config}
@@ -48,6 +54,7 @@ const CHARTS = [
   },
   {
     name: 'LineChart',
+    series: '.recharts-line-curve',
     render: (props: ReferenceProps) => (
       <LineChart
         config={config}
@@ -60,6 +67,7 @@ const CHARTS = [
   },
   {
     name: 'AreaChart',
+    series: '.recharts-area-area',
     render: (props: ReferenceProps) => (
       <AreaChart
         config={config}
@@ -72,76 +80,75 @@ const CHARTS = [
   },
 ] as const;
 
-describe.each(CHARTS)('$name reference line', ({ render: renderChart }) => {
-  it('draws none when the prop is unset', () => {
-    giveTheChartASize();
-    const { container } = render(renderChart({}));
-    expect(container.querySelectorAll('.recharts-reference-line')).toHaveLength(
-      0
-    );
-  });
-
-  it('draws a dashed, token-stroked rule at a fixed value with its caption', () => {
-    giveTheChartASize();
-    const { container } = render(
-      renderChart({ referenceLine: { value: 250, label: 'Target' } })
-    );
-
-    const rule = container.querySelector('.recharts-reference-line-line');
-    // recharts' own default stroke is the literal '#ccc', which ignores the theme.
-    expect(rule).toHaveAttribute('stroke', CHART_REFERENCE_LINE_STROKE);
-    expect(rule).toHaveAttribute('stroke-dasharray', '4 4');
-    expect(container.textContent).toContain('Target');
-  });
-
-  it('draws one rule per entry when given an array', () => {
-    giveTheChartASize();
-    const { container } = render(
-      renderChart({ referenceLine: [{ value: 100 }, { average: true }] })
-    );
-    expect(
-      container.querySelectorAll('.recharts-reference-line-line')
-    ).toHaveLength(2);
-  });
-
-  // The default caption sits at the rule's top right, where a rising series
-  // often already is — so a config has to be able to move its own caption.
-  it('honors a per-line caption position', () => {
-    giveTheChartASize();
-    // recharts renders a reference line's caption as a sibling of the rule's
-    // group, not inside it, so find it by its text rather than by ancestor.
-    const caption = (line: ChartReferenceLine) => {
-      const { container, unmount } = render(
-        renderChart({ referenceLine: line })
-      );
-      const text = [...container.querySelectorAll('.recharts-label')].find(
-        (node) => node.textContent === 'Target'
-      );
-      const at = [text?.getAttribute('x'), text?.getAttribute('y')];
-      unmount();
-      return at;
-    };
-
-    const fallback = caption({ value: 250, label: 'Target' });
-    const moved = caption({
-      value: 250,
-      label: 'Target',
-      labelPosition: 'insideBottomLeft',
+describe.each(CHARTS)(
+  '$name reference line',
+  ({ render: renderChart, series }) => {
+    it('draws none when the prop is unset', () => {
+      const { container } = render(renderChart({}));
+      expect(container.querySelectorAll(series).length).toBeGreaterThan(0);
+      expect(
+        container.querySelectorAll('.recharts-reference-line')
+      ).toHaveLength(0);
     });
-    expect(fallback.every(Boolean)).toBe(true);
-    expect(moved).not.toEqual(fallback);
-  });
 
-  it('skips an entry with nothing to draw instead of falling back to 0', () => {
-    giveTheChartASize();
-    const { container } = render(
-      renderChart({ referenceLine: [{ value: 100 }, { average: 'missing' }] })
-    );
-    expect(
-      container.querySelectorAll('.recharts-reference-line-line')
-    ).toHaveLength(1);
-  });
-});
+    it('draws a dashed, token-stroked rule at a fixed value with its caption', () => {
+      const { container } = render(
+        renderChart({ referenceLine: { value: 250, label: 'Target' } })
+      );
+
+      const rule = container.querySelector('.recharts-reference-line-line');
+      // recharts' own default stroke is the literal '#ccc', which ignores the theme.
+      expect(rule).toHaveAttribute('stroke', CHART_REFERENCE_LINE_STROKE);
+      expect(rule).toHaveAttribute('stroke-dasharray', '4 4');
+      expect(container.textContent).toContain('Target');
+    });
+
+    it('draws one rule per entry when given an array', () => {
+      const { container } = render(
+        renderChart({ referenceLine: [{ value: 100 }, { average: true }] })
+      );
+      expect(
+        container.querySelectorAll('.recharts-reference-line-line')
+      ).toHaveLength(2);
+    });
+
+    // The default caption sits at the rule's top right, where a rising series
+    // often already is — so a config has to be able to move its own caption.
+    it('honors a per-line caption position', () => {
+      // recharts renders a reference line's caption as a sibling of the rule's
+      // group, not inside it, so find it by its text rather than by ancestor.
+      const caption = (line: ChartReferenceLine) => {
+        const { container, unmount } = render(
+          renderChart({ referenceLine: line })
+        );
+        const text = [...container.querySelectorAll('.recharts-label')].find(
+          (node) => node.textContent === 'Target'
+        );
+        const at = [text?.getAttribute('x'), text?.getAttribute('y')];
+        unmount();
+        return at;
+      };
+
+      const fallback = caption({ value: 250, label: 'Target' });
+      const moved = caption({
+        value: 250,
+        label: 'Target',
+        labelPosition: 'insideBottomLeft',
+      });
+      expect(fallback.every(Boolean)).toBe(true);
+      expect(moved).not.toEqual(fallback);
+    });
+
+    it('skips an entry with nothing to draw instead of falling back to 0', () => {
+      const { container } = render(
+        renderChart({ referenceLine: [{ value: 100 }, { average: 'missing' }] })
+      );
+      expect(
+        container.querySelectorAll('.recharts-reference-line-line')
+      ).toHaveLength(1);
+    });
+  }
+);
 
 describe('toReferenceLineList', () => {
   it('normalizes both accepted prop forms', () => {

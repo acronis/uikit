@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { render, waitFor } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 import { Treemap, TreemapCell, treemapSecondaryLabel } from '../treemap';
 import {
@@ -9,30 +9,11 @@ import {
   resolveAnimation,
 } from '../../chart';
 
-beforeAll(() => {
-  // happy-dom's ResizeObserver never reports a size, so recharts'
-  // ResponsiveContainer renders nothing and its children never mount. The cells,
-  // labels and legend below are the real SVG/DOM output, so these tests need the
-  // chart laid out.
-  class SizedResizeObserver {
-    constructor(private readonly callback: ResizeObserverCallback) {}
-    observe(target: Element) {
-      this.callback(
-        [
-          {
-            target,
-            contentRect: { width: 600, height: 400 },
-          } as unknown as ResizeObserverEntry,
-        ],
-        this as unknown as ResizeObserver
-      );
-    }
-    unobserve() {}
-    disconnect() {}
-  }
-  globalThis.ResizeObserver =
-    SizedResizeObserver as unknown as typeof ResizeObserver;
-});
+import { giveEveryChartASize } from '../../chart/__tests__/chart-layout';
+
+// The cells, labels and legend asserted below are the real SVG/DOM output, which
+// recharts skips entirely at 0×0.
+giveEveryChartASize();
 
 const data = [
   { name: 'React', size: 2400, count: 24 },
@@ -72,6 +53,19 @@ const cellText = (container: HTMLElement) =>
 const labelBlock = (container: HTMLElement) =>
   container.querySelector('foreignObject > div');
 
+/** One `<g>` per leaf tile, holding that tile's rect and its label block. */
+const tiles = (container: HTMLElement) => [
+  ...container.querySelectorAll('.recharts-treemap-depth-1'),
+];
+
+/** Where recharts laid each tile out — i.e. the tiling itself. */
+const tileBoxes = (container: HTMLElement) =>
+  [...container.querySelectorAll('rect')].map(
+    (rect) =>
+      `${rect.getAttribute('x')},${rect.getAttribute('y')} ` +
+      `${rect.getAttribute('width')}x${rect.getAttribute('height')}`
+  );
+
 describe('Treemap', () => {
   it('renders the shared chart wrapper', () => {
     const { container } = renderChart();
@@ -90,21 +84,28 @@ describe('Treemap', () => {
     expect(cellText(container)).toEqual(['React', 'Vue', 'Svelte', 'Angular']);
   });
 
-  // The tiling itself is what the VR stories cover; this exercises the
-  // aspectRatio + labels/tooltip toggle prop paths against a plumbing regression.
-  it('renders with a custom aspectRatio and labels/tooltip toggled off', () => {
+  // `aspectRatio` is the ratio recharts squarifies the tiles towards, so a
+  // plumbing regression that dropped it would leave the tiling identical to the
+  // default one — same leaves, same boxes.
+  it('retiles the leaves for a custom aspectRatio, with labels and tooltip off', () => {
     const { container } = renderChart({
       aspectRatio: 1,
       showLabels: false,
       showTooltip: false,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(tiles(container)).toHaveLength(4);
     expect(cellText(container)).toEqual([]);
+    expect(container.querySelector('.recharts-tooltip-wrapper')).toBeNull();
+    expect(tileBoxes(container)).not.toEqual(
+      tileBoxes(renderChart().container)
+    );
   });
 
-  it('renders without crashing on empty data', () => {
+  it('draws no tiles but still mounts on empty data', () => {
     const { container } = renderChart({ data: [] });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(tiles(container)).toHaveLength(0);
+    expect(cellText(container)).toEqual([]);
   });
 
   it('forwards a ref to the root element', () => {
@@ -118,9 +119,8 @@ describe('Treemap', () => {
     expect(container.firstElementChild).toHaveClass('h-[300px]', 'w-[480px]');
   });
 
-  // The `tooltipContent` prop forwards a custom (library-owned) ChartTooltipContent
-  // to recharts' Tooltip; the tooltip only paints on hover, so this guards the prop
-  // path — consumers customize the tooltip without importing recharts.
+  // The tooltip is hover-only, so this guards the prop path — consumers
+  // customize the tooltip without importing recharts.
   it('accepts a custom tooltipContent', () => {
     const { container } = renderChart({
       tooltipContent: (
@@ -573,14 +573,14 @@ describe('treemapSecondaryLabel', () => {
   });
 });
 
-// These assert the prop contract itself: the composition accepts every animation
-// prop and mounts, and the animation resolves to the reduced-motion-aware value
-// rather than a literal `true`.
+// The motion itself is a visual-regression concern; what matters here is that
+// `animate` resolves to the reduced-motion-aware value rather than a literal
+// `true`, and that turning the whole prop set on still paints every tile.
 describe('Treemap animation', () => {
   it('is not animated unless asked', () => {
     expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
     const { container } = renderChart();
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(tiles(container)).toHaveLength(4);
   });
 
   it('resolves animate to "auto" so prefers-reduced-motion is honored', () => {
@@ -589,13 +589,14 @@ describe('Treemap animation', () => {
     );
   });
 
-  it('accepts the full animation prop set without throwing', () => {
+  it('still paints every labelled tile with the full animation prop set', async () => {
     const { container } = renderChart({
       animate: true,
       animationDuration: 400,
       animationBegin: 50,
       animationEasing: 'ease-in-out',
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    await waitFor(() => expect(tiles(container)).toHaveLength(4));
+    expect(cellText(container)).toEqual(['React', 'Vue', 'Svelte', 'Angular']);
   });
 });

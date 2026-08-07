@@ -10,7 +10,15 @@ import {
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
-import { giveTheChartASize } from '../../chart/__tests__/chart-layout';
+import {
+  axisTickLabels,
+  axisTicks,
+  giveEveryChartASize,
+} from '../../chart/__tests__/chart-layout';
+
+// The curves, dots, bands, labels and chrome asserted below are painted SVG,
+// which recharts skips entirely at 0×0.
+giveEveryChartASize();
 
 const data = [
   { month: 'Jan', desktop: 186, mobile: 80 },
@@ -37,26 +45,78 @@ function renderChart(
   );
 }
 
-describe('LineChart', () => {
-  // Axis visibility + tick formatting forward to recharts' XAxis/YAxis `hide` /
-  // `tickFormatter`. happy-dom can't lay out recharts ticks (the visuals are
-  // covered by the axis-formatting VR stories), so assert it renders cleanly.
-  it('renders with axis/grid config and tick formatters', () => {
+const curvesOf = (container: Element) => [
+  ...container.querySelectorAll<SVGPathElement>('.recharts-line-curve'),
+];
+
+describe('LineChart axes and grid', () => {
+  it('hides an axis without dropping the other', () => {
+    const { container } = renderChart({ showXAxis: false, showYAxis: true });
+    expect(container.querySelector('.recharts-xAxis')).toBeNull();
+    expect(container.querySelector('.recharts-yAxis')).not.toBeNull();
+  });
+
+  it('runs tick values through the caller formatter', () => {
     const { container } = renderChart({
-      showXAxis: false,
-      showYAxis: true,
       yTickFormatter: (value) => `$${value}`,
-      xAxisAngle: -45,
-      xAxisInterval: 'preserveStartEnd',
-      yAxisTickCount: 4,
-      yAxisDomain: 'zero',
-      gridDashed: true,
+    });
+    const ticks = axisTickLabels(container, 'y');
+    expect(ticks.length).toBeGreaterThan(0);
+    for (const tick of ticks) expect(tick).toMatch(/^\$/);
+  });
+
+  it('appends the Y unit to every tick', () => {
+    const { container } = renderChart({ yUnit: 'k' });
+    const ticks = axisTickLabels(container, 'y');
+    expect(ticks.length).toBeGreaterThan(0);
+    for (const tick of ticks) expect(tick).toMatch(/k$/);
+  });
+
+  it('anchors rotated ticks on the side they lean towards', () => {
+    const { container } = renderChart({ xAxisAngle: -45 });
+    expect(axisTicks(container, 'x')[0]).toHaveAttribute('text-anchor', 'end');
+  });
+
+  it('floors the Y domain at zero on request', () => {
+    const { container } = renderChart({ yAxisDomain: 'zero' });
+    expect(axisTickLabels(container, 'y')[0]).toBe('0');
+  });
+
+  it('renders the axis titles as their own labels', () => {
+    const { container } = renderChart({
+      xAxisLabel: 'Month',
+      yAxisLabel: 'Sessions',
+    });
+    const titles = [...container.querySelectorAll('.recharts-label')].map(
+      (label) => label.textContent
+    );
+    expect(titles).toContain('Month');
+    expect(titles).toContain('Sessions');
+  });
+
+  it('draws only the grid direction it was asked for', () => {
+    const { container } = renderChart({
       gridHorizontal: true,
       gridVertical: false,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(
+      container.querySelectorAll('.recharts-cartesian-grid-horizontal line')
+        .length
+    ).toBeGreaterThan(0);
+    expect(
+      container.querySelectorAll('.recharts-cartesian-grid-vertical line')
+    ).toHaveLength(0);
   });
 
+  it('dashes the grid on request', () => {
+    const { container } = renderChart({ gridDashed: true });
+    expect(
+      container.querySelector('.recharts-cartesian-grid-horizontal line')
+    ).toHaveAttribute('stroke-dasharray', '3 3');
+  });
+});
+
+describe('LineChart', () => {
   it('renders the shared chart wrapper', () => {
     const { container } = renderChart();
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
@@ -83,13 +143,7 @@ describe('LineChart', () => {
     expect(root).toHaveAttribute('data-line-style', 'dashed');
   });
 
-  // recharts only paints its SVG once the ResponsiveContainer has real
-  // dimensions, which happy-dom never gives it — so the grid/tooltip/legend
-  // toggles can't be asserted on the rendered chrome here. This exercises the
-  // toggle + stroke/dot prop paths (guarding against a plumbing/crash
-  // regression); the visual effect of the chrome toggles is covered by the
-  // `NoChrome` VR story.
-  it('renders with all chrome toggles off, dots off, and dashed strokes', () => {
+  it('strips the grid, legend and dots when their toggles are off', () => {
     const { container } = renderChart({
       showGrid: false,
       showTooltip: false,
@@ -98,40 +152,57 @@ describe('LineChart', () => {
       lineStyle: 'dashed',
       connectNulls: true,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(container.querySelector('.recharts-cartesian-grid')).toBeNull();
+    expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
+    expect(container.querySelectorAll('.recharts-line-dot')).toHaveLength(0);
+    // The series itself survives the chrome going away.
+    expect(curvesOf(container)).toHaveLength(2);
   });
 
-  it('renders without crashing on empty data', () => {
+  it('dashes every stroke under the dashed lineStyle', () => {
+    const solid = renderChart();
+    for (const curve of curvesOf(solid.container)) {
+      expect(curve).not.toHaveAttribute('stroke-dasharray');
+    }
+    solid.unmount();
+
+    const dashed = renderChart({ lineStyle: 'dashed' });
+    for (const curve of curvesOf(dashed.container)) {
+      expect(curve).toHaveAttribute('stroke-dasharray');
+    }
+  });
+
+  it('draws no curves but still mounts on empty data', () => {
     const { container } = renderChart({ data: [] });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(curvesOf(container)).toHaveLength(0);
   });
 
-  // The dashed/dimmed comparison styling is SVG that happy-dom won't paint, so
-  // it's covered by the ComparisonTrend VR story; this guards the prop path
-  // (a comparison overlay renders without crashing).
-  it('renders with a comparison overlay series', () => {
+  // A comparison series is drawn as a dashed overlay so it reads as context
+  // rather than as another first-class trend.
+  it('dashes a comparison overlay but leaves the primary series solid', () => {
     const { container } = renderChart({ comparisonKeys: ['mobile'] });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    const [desktop, mobile] = curvesOf(container);
+    expect(desktop).not.toHaveAttribute('stroke-dasharray');
+    expect(mobile).toHaveAttribute('stroke-dasharray');
   });
 
-  it('renders with a delta band between two series', () => {
-    const { container } = renderChart({
+  // The band is an extra filled area between the two named series — without it
+  // the delta is left for the reader to eyeball.
+  it('fills a delta band between the two named series', () => {
+    const plain = renderChart({ comparisonKeys: ['mobile'] });
+    expect(plain.container.querySelectorAll('.recharts-area-area')).toHaveLength(
+      0
+    );
+    plain.unmount();
+
+    const banded = renderChart({
       comparisonKeys: ['mobile'],
       deltaBands: [['desktop', 'mobile']],
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
-  });
-
-  // Axis titles/unit forward to recharts' XAxis/YAxis `label`/`unit`; happy-dom
-  // doesn't paint the SVG, so this only guards the prop path (the rendered titles
-  // are covered by the `AxisLabels` VR story).
-  it('renders with axis titles + a Y unit', () => {
-    const { container } = renderChart({
-      xAxisLabel: 'Month',
-      yAxisLabel: 'Sessions',
-      yUnit: 'k',
-    });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(
+      banded.container.querySelectorAll('.recharts-area-area').length
+    ).toBeGreaterThan(0);
   });
 
   // The delta-band tooltip/legend content callbacks route their payload through
@@ -308,7 +379,6 @@ describe('LineChart curves, dots and per-series overrides', () => {
   ] as const;
 
   function curvePaths(props: Partial<React.ComponentProps<typeof LineChart>>) {
-    giveTheChartASize();
     const { container, unmount } = renderChart({ dataKeys: ['desktop'], ...props });
     const paths = [...container.querySelectorAll('.recharts-line-curve')].map(
       (path) => path.getAttribute('d')
@@ -337,7 +407,6 @@ describe('LineChart curves, dots and per-series overrides', () => {
   });
 
   it('sizes the point dots from dotSize', () => {
-    giveTheChartASize();
     const { container } = renderChart({ dataKeys: ['desktop'], dotSize: 6 });
     const dots = container.querySelectorAll('.recharts-line-dot');
     expect(dots.length).toBeGreaterThan(0);
@@ -345,7 +414,6 @@ describe('LineChart curves, dots and per-series overrides', () => {
   });
 
   it('keeps the static dots when only the hover dot is turned off', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       dataKeys: ['desktop'],
       showActiveDot: false,
@@ -356,7 +424,6 @@ describe('LineChart curves, dots and per-series overrides', () => {
   });
 
   it('draws no static dots for a hover-only line', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       dataKeys: ['desktop'],
       showDots: false,
@@ -366,7 +433,6 @@ describe('LineChart curves, dots and per-series overrides', () => {
   });
 
   it('restyles one series without touching the others', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       lineSettings: {
         mobile: { color: 'rgb(1 2 3)', strokeWidth: 4, dashed: true },
@@ -383,7 +449,6 @@ describe('LineChart curves, dots and per-series overrides', () => {
   });
 
   it('gives one series its own curve type', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       curve: 'linear',
       lineSettings: { mobile: { curveType: 'natural' } },
@@ -396,7 +461,6 @@ describe('LineChart curves, dots and per-series overrides', () => {
   });
 
   it('turns dots off for one series and resizes another', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       lineSettings: { desktop: { showDots: false }, mobile: { dotSize: 5 } },
     });
@@ -408,7 +472,6 @@ describe('LineChart curves, dots and per-series overrides', () => {
   // A comparison overlay is *defined* by reading as secondary, so the dot
   // settings must not be able to promote it back to a primary-looking line.
   it('keeps a comparison series dot-less even when its settings ask for dots', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       comparisonKeys: ['mobile'],
       lineSettings: { desktop: { showDots: false }, mobile: { showDots: true } },
@@ -417,7 +480,6 @@ describe('LineChart curves, dots and per-series overrides', () => {
   });
 
   it('opts one series out of the chart-wide value labels', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       showLabels: true,
       lineSettings: { mobile: { showLabel: false } },
@@ -430,7 +492,6 @@ describe('LineChart curves, dots and per-series overrides', () => {
   });
 
   it('labels a single series without the chart-wide toggle', () => {
-    giveTheChartASize();
     const { container } = renderChart({
       lineSettings: { mobile: { showLabel: true, labelPosition: 'bottom' } },
     });
@@ -444,7 +505,6 @@ describe('LineChart curves, dots and per-series overrides', () => {
   // interpolation than the line it belongs to no longer bounds it.
   it('draws a delta band with the current series own curve type', () => {
     const bandPath = (props: Partial<React.ComponentProps<typeof LineChart>>) => {
-      giveTheChartASize();
       const { container, unmount } = renderChart({
         curve: 'linear',
         deltaBands: [['desktop', 'mobile']],

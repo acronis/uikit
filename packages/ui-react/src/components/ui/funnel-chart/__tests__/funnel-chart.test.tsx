@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { fireEvent, render } from '@testing-library/react';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { fireEvent, render, waitFor } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 import {
   FunnelChart,
@@ -17,30 +17,11 @@ import {
   resolveAnimation,
 } from '../../chart';
 
-beforeAll(() => {
-  // happy-dom's ResizeObserver never reports a size, so recharts'
-  // ResponsiveContainer renders nothing and its children never mount. The
-  // segments, labels and legend below are the real SVG/DOM output, so these
-  // tests need it laid out.
-  class SizedResizeObserver {
-    constructor(private readonly callback: ResizeObserverCallback) {}
-    observe(target: Element) {
-      this.callback(
-        [
-          {
-            target,
-            contentRect: { width: 600, height: 400 },
-          } as unknown as ResizeObserverEntry,
-        ],
-        this as unknown as ResizeObserver
-      );
-    }
-    unobserve() {}
-    disconnect() {}
-  }
-  globalThis.ResizeObserver =
-    SizedResizeObserver as unknown as typeof ResizeObserver;
-});
+import { giveEveryChartASize } from '../../chart/__tests__/chart-layout';
+
+// The trapezoid segments, labels and legend asserted below are the real SVG/DOM
+// output, which recharts skips entirely at 0×0.
+giveEveryChartASize();
 
 const data = [
   { stage: 'Visits', value: 5000 },
@@ -69,6 +50,18 @@ function renderChart(
     />
   );
 }
+
+const segments = (container: HTMLElement) =>
+  Array.from(container.querySelectorAll('.recharts-funnel-trapezoid path'));
+
+const labelTexts = (container: HTMLElement) =>
+  Array.from(container.querySelectorAll('.recharts-label-list text')).map(
+    (node) => node.textContent
+  );
+
+/** Top edge of each stage's trapezoid, in data order. */
+const stageTops = (container: HTMLElement) =>
+  segments(container).map((path) => Number(path.getAttribute('y')));
 
 describe('FunnelChart', () => {
   it('renders the shared chart wrapper', () => {
@@ -99,21 +92,38 @@ describe('FunnelChart', () => {
     );
   });
 
-  // Geometry (which way the funnel narrows, where the tooltip sits) is what the
-  // VR stories cover; this exercises the reversed + chrome-toggle + labels prop
-  // paths against a plumbing/crash regression.
+  // `reversed` flips which end the funnel opens at, so the stage bands are drawn
+  // bottom-up: the same four tops in the opposite order. The two toggles remove
+  // the chrome around them without touching the segments themselves.
   it('renders reversed with labels off and the tooltip off', () => {
+    const upright = renderChart().container;
     const { container } = renderChart({
       reversed: true,
       showLabels: false,
       showTooltip: false,
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+
+    expect(stageTops(container)).toEqual([...stageTops(upright)].reverse());
+    // The widest stage moved to the bottom but kept its color, so a stage is
+    // still identifiable by the same fill in either direction.
+    expect(segments(container)).toHaveLength(4);
+    expect(segments(container)[0]).toHaveAttribute(
+      'fill',
+      'var(--color-Visits)'
+    );
+
+    expect(labelTexts(container)).toEqual([]);
+    expect(container.querySelector('.recharts-tooltip-wrapper')).toBeNull();
   });
 
   it('renders without crashing on empty data', () => {
     const { container } = renderChart({ data: [] });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    // The plot is still painted — an empty funnel is a chart with no stages, not
+    // a chart that bailed out before drawing.
+    expect(container.querySelector('.recharts-surface')).not.toBeNull();
+    expect(segments(container)).toHaveLength(0);
+    expect(labelTexts(container)).toEqual([]);
   });
 
   it('forwards a ref to the root element', () => {
@@ -127,9 +137,8 @@ describe('FunnelChart', () => {
     expect(container.firstElementChild).toHaveClass('h-[360px]', 'w-[420px]');
   });
 
-  // The `tooltipContent` prop forwards a custom (library-owned) ChartTooltipContent
-  // to recharts' Tooltip; happy-dom doesn't paint the tooltip, so this only guards
-  // the prop path — consumers customize the tooltip without importing recharts.
+  // The tooltip is hover-only, so this guards the prop path — consumers
+  // customize the tooltip without importing recharts.
   it('accepts a custom tooltipContent', () => {
     const { container } = renderChart({
       tooltipContent: (
@@ -142,15 +151,17 @@ describe('FunnelChart', () => {
   });
 });
 
-// The animation itself is non-deterministic and excluded from VR, so these
-// assert the prop contract: the composition accepts every animation prop and
-// mounts, and `animate` resolves to the reduced-motion-aware value rather than a
-// literal `true`.
+// The in-between frames are non-deterministic and excluded from VR, so what is
+// asserted here is the contract around them: `animate` resolves to the
+// reduced-motion-aware value rather than a literal `true`, and the funnel ends
+// up fully painted either way.
 describe('FunnelChart animation and data labels', () => {
   it('is not animated unless asked', () => {
     expect(resolveAnimation({})).toEqual({ isAnimationActive: false });
+    // Nothing to grow in, so the stages are already at their final geometry in
+    // the render's own tick — no waiting for a first frame.
     const { container } = renderChart();
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(segments(container)).toHaveLength(4);
   });
 
   it('resolves animate to "auto" so prefers-reduced-motion is honored', () => {
@@ -159,14 +170,23 @@ describe('FunnelChart animation and data labels', () => {
     );
   });
 
-  it('accepts the full animation prop set without throwing', () => {
+  // An animated funnel paints nothing on the first pass — `animationBegin`
+  // delays the series past the render — so the segments only exist once the
+  // animation has started.
+  it('still paints every stage with the full animation prop set', async () => {
     const { container } = renderChart({
       animate: true,
       animationDuration: 400,
       animationBegin: 50,
       animationEasing: 'ease-in-out',
     });
-    expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+    expect(segments(container)).toHaveLength(0);
+
+    await waitFor(() => expect(segments(container)).toHaveLength(4));
+    expect(segments(container)[0]).toHaveAttribute(
+      'fill',
+      'var(--color-Visits)'
+    );
   });
 });
 
@@ -410,14 +430,6 @@ describe('funnelChartOppositeSide', () => {
     expect(funnelChartOppositeSide('inside')).toBe('right');
   });
 });
-
-const segments = (container: HTMLElement) =>
-  Array.from(container.querySelectorAll('.recharts-funnel-trapezoid path'));
-
-const labelTexts = (container: HTMLElement) =>
-  Array.from(container.querySelectorAll('.recharts-label-list text')).map(
-    (node) => node.textContent
-  );
 
 describe('FunnelChart stages and colors', () => {
   it('paints one segment per stage from its config color', () => {
