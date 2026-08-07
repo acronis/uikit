@@ -322,13 +322,21 @@ animation (the same applies when rendering on the server).
 ## Accessibility
 
 `FunnelChart` sets no `role` and no `aria-*` of its own, and the SVG the funnel is
-drawn into has no accessible name — recharts emits an empty `<title>` / `<desc>` pair
-and nothing else. It does switch its own accessibility layer on for this chart type,
-so the plot is a tab stop carrying `role="application"`: a focus stop that announces
-neither a name nor any data. The component exposes no way to turn that off.
+drawn into has no accessible name. That gap belongs to this component rather than
+recharts: recharts takes `title`, `desc` and `role` as first-class chart props and
+writes them straight into the plot's `<svg>`, but `FunnelChart` passes none of them
+down — it spreads the props you give it onto its own root `<div>` and hands the
+recharts chart only the data it computes itself, so the `<title>` / `<desc>` pair
+recharts always emits stays empty. recharts' accessibility layer is on by default
+and is not switched off here, so the plot is also a tab stop carrying
+`role="application"`: a focus stop that announces neither a name nor any data. The
+component exposes no way to turn that off.
 
-The root is a plain `<div>` that spreads the props you pass, so a role and a label
-land on it:
+So put the name on the root, which spreads the props you pass. Choose the role
+before copying the snippet: `role="img"` names the chart but also makes its subtree
+presentational, and it does not remove the focusable plot inside it — wrapping the
+chart in a `<figure>` with a `<figcaption>` is often the better fit here.
+`aria-labelledby` works the same way as `aria-label`.
 
 ```tsx
 <FunnelChart
@@ -340,10 +348,6 @@ land on it:
   nameKey="stage"
 />
 ```
-
-`aria-labelledby` works the same way. Wrapping the chart in a `<figure>` with a
-`<figcaption>` is often the better fit here, since `role="img"` names the chart but
-doesn't remove the focusable plot inside it.
 
 Either way, a name is not a text alternative. A funnel is a visual encoding of
 numbers, so the numbers themselves have to be reachable as text — a caption, a
@@ -361,10 +365,19 @@ readouts you compose alongside them — mirrors on its own, because it is ordina
 flow layout built from logical CSS utilities. The plot area deliberately stays
 left-to-right: recharts places every mark in physical SVG coordinates, so mirroring
 it would flip the reading order of the data without flipping the geometry that
-encodes it. That holds without a `direction` override: recharts computes those
-coordinates itself, so the plot does not mirror even when the page does. A funnel's labels are inside the plot, which is why `labelPosition` and
-`valuePosition` name physical sides: `right` is the right of the funnel in both
-directions, and the plot-area inset reserved for a label follows the same side.
+encodes it. `ChartContainer` holds that in place by pinning `.recharts-surface` to
+`direction: ltr`.
+
+For a funnel the pin is what fixes the labels, not just the trapezoids. A funnel's
+labels are inside the plot, and recharts anchors a `left`- or `right`-positioned
+label with the direction-relative SVG keywords `text-anchor: start` / `end` —
+under an inherited `dir="rtl"` those would mirror each label back across the
+segment it names, while the segment itself stayed put. With the pin they don't,
+which is why `labelPosition` and `valuePosition` name physical sides: `right` is
+the right of the funnel in both directions, and the plot-area inset reserved for
+a label follows the same side. `labelPosition="inside"` is anchored `middle` and is direction-immune
+either way. The pin stops at the surface, so the legend and the tooltip — HTML
+outside it — still mirror with the page.
 
 ## API Reference
 

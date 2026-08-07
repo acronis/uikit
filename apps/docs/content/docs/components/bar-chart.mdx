@@ -331,19 +331,31 @@ localize their accessible name (it defaults to `'Chart range selector'`).
 Neither `BarChart` nor the shared `ChartContainer` adds a `role` or an `aria-*`
 attribute of its own. What semantics the chart has come from recharts, whose
 accessibility layer is on by default and is not switched off here: the plot's
-`<svg>` renders `role="application"` with `tabindex="0"`, so Tab reaches it,
-focusing it opens the tooltip on the first category, the left/right arrow keys
-step it along the categories, and Enter pins it.
+`<svg>` renders `role="application"` with `tabindex="0"`, so Tab reaches it and
+focusing it opens the tooltip on the first category. The left/right arrow keys
+step it along the categories. Enter *toggles* the tooltip rather than pinning
+it, and since focus has already opened one, the first Enter closes it — press
+Enter again, or an arrow key, to bring it back.
 
-That surface has no accessible name, though — recharts emits an empty `<title>`
-and `<desc>` and exposes neither, so a screen reader announces an unnamed
-application region. The tooltip is not a live region either: `ChartTooltipContent`
-renders plain markup with no `role="status"` or `aria-live`, so the values it
-reveals as you arrow along are shown but never announced.
+That surface has no accessible name, though, and the layer to fix that is this
+one rather than recharts. recharts takes `title`, `desc` and `role` as
+first-class chart props and writes them straight into the plot's `<svg>`;
+`BarChart` passes none of them down, because it spreads the props it doesn't
+consume onto its own root `<div>` and hands the recharts chart only the data and
+margins it computes itself. The `<title>` and `<desc>` recharts always emits
+therefore stay empty and a screen reader announces an unnamed application
+region. The tooltip is not a live region either: `ChartTooltipContent` renders
+plain markup with no `role="status"` or `aria-live`, so the values it reveals as
+you arrow along are shown but never announced.
 
-Name the chart from the outside. The root is a plain `<div>` that spreads the
-props it doesn't consume, so `role="img"` and `aria-label` (or `aria-labelledby`)
-land on it:
+So name the chart from the outside: `role` and `aria-label` (or
+`aria-labelledby`) land on that same root `<div>`. Choose the role before you
+copy the snippet, though. `role="img"` names the chart and also makes its
+subtree presentational, hiding the plot from assistive technology while it stays
+in the tab order; that is the right trade when the picture is the whole message.
+Where the keyboard tooltip should stay reachable, wrap the chart in a `<figure>`
+with a `<figcaption>`, or pass `role="group"` with the same `aria-label`, and
+leave the plot's own semantics alone.
 
 ```tsx
 <BarChart
@@ -355,12 +367,6 @@ land on it:
   xKey="month"
 />
 ```
-
-`role="img"` names the chart but also makes its subtree presentational, hiding
-the plot from assistive technology while it stays in the tab order. Where the
-keyboard tooltip should remain reachable, wrap the chart in a `<figure>` with a
-`<figcaption>`, or pass `role="group"` with the same `aria-label`, and leave the
-plot's own semantics alone.
 
 A name is not a text alternative. The chart is a visual encoding of numbers, and
 "Sessions by month" says what the picture is about, not what it shows — so put
@@ -386,12 +392,21 @@ tooltip, and any readouts you compose alongside the chart are ordinary flow
 layout built from logical CSS utilities. The plot area itself deliberately stays
 left-to-right: recharts lays every mark out in physical SVG coordinates, so a
 mirrored category axis would flip the reading order of the data without flipping
-the geometry that encodes it. `ChartContainer` pins `.recharts-surface` to
-`direction: ltr`, which makes that a guarantee rather than a side effect of
-whatever direction the surrounding page happens to inherit — that inherited
-direction is also what decides the default text anchor of any label recharts
-leaves unanchored. This is what mainstream charting libraries do by default, and
-it holds for `orientation="horizontal"` too: the bars keep growing rightward.
+the geometry that encodes it. This is what mainstream charting libraries do by
+default, and it holds for `orientation="horizontal"` too: the bars keep growing
+rightward.
+
+`ChartContainer` pins `.recharts-surface` to `direction: ltr` so that holds
+whatever the page inherits, and the pin is load-bearing rather than a
+formality: recharts anchors axis tick text with the direction-relative SVG
+keywords `text-anchor: start` / `end` while placing each mark at a coordinate it
+computed in physical space, so an inherited `dir="rtl"` mirrors the text away
+from the geometry — `end`-anchored Y-axis ticks land inside the plot area,
+rotated X-axis ticks drift, and a `ReferenceLine` label at the right edge
+overflows the surface. Text anchored `middle` is direction-immune either way:
+unrotated X-axis ticks, axis titles, and the values `showLabels` draws. Because
+the pin stops at the surface, the tooltip and the legend — HTML outside it —
+still mirror. [`Chart`](/components/chart) carries the measured detail.
 
 ## API Reference
 

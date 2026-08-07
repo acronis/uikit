@@ -363,7 +363,7 @@ function renderCenterLabel({
   showLegend: boolean;
   legendPosition: 'top' | 'bottom';
 }) {
-  return function PieChartCenterLabel({ viewBox }: { viewBox?: object }) {
+  return function CenterLabelContent({ viewBox }: { viewBox?: object }) {
     if (!viewBox || !('cx' in viewBox)) return null;
     const { cx = 0, cy = 0 } = viewBox as { cx?: number; cy?: number };
 

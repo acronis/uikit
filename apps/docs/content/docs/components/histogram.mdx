@@ -119,19 +119,31 @@ animation (the same applies when rendering on the server).
 Neither `Histogram` nor the shared `ChartContainer` adds a `role` or an `aria-*`
 attribute of its own. What semantics the chart has come from recharts, whose
 accessibility layer is on by default and is not switched off here: the plot's
-`<svg>` renders `role="application"` with `tabindex="0"`, so Tab reaches it,
-focusing it opens the tooltip on the first bin, the left/right arrow keys step it
-along the bins, and Enter pins it.
+`<svg>` renders `role="application"` with `tabindex="0"`, so Tab reaches it and
+focusing it opens the tooltip on the first bin. The left/right arrow keys step it
+along the bins. Enter *toggles* the tooltip rather than pinning it, and since
+focus has already opened one, the first Enter closes it — press Enter again, or
+an arrow key, to bring it back.
 
-That surface has no accessible name, though — recharts emits an empty `<title>`
-and `<desc>` and exposes neither, so a screen reader announces an unnamed
-application region. The tooltip is not a live region either: `ChartTooltipContent`
-renders plain markup with no `role="status"` or `aria-live`, so the bin range and
-count it reveals as you arrow along are shown but never announced.
+That surface has no accessible name, though, and the layer to fix that is this
+one rather than recharts. recharts takes `title`, `desc` and `role` as
+first-class chart props and writes them straight into the plot's `<svg>`;
+`Histogram` passes none of them down, because it spreads the props it doesn't
+consume onto its own root `<div>` and hands the recharts chart only the data and
+margins it computes itself. The `<title>` and `<desc>` recharts always emits
+therefore stay empty and a screen reader announces an unnamed application
+region. The tooltip is not a live region either: `ChartTooltipContent` renders
+plain markup with no `role="status"` or `aria-live`, so the bin range and count
+it reveals as you arrow along are shown but never announced.
 
-Name the chart from the outside. The root is a plain `<div>` that spreads the
-props it doesn't consume, so `role="img"` and `aria-label` (or `aria-labelledby`)
-land on it:
+So name the chart from the outside: `role` and `aria-label` (or
+`aria-labelledby`) land on that same root `<div>`. Choose the role before you
+copy the snippet, though. `role="img"` names the chart and also makes its
+subtree presentational, hiding the plot from assistive technology while it stays
+in the tab order; that is the right trade when the picture is the whole message.
+Where the keyboard tooltip should stay reachable, wrap the chart in a `<figure>`
+with a `<figcaption>`, or pass `role="group"` with the same `aria-label`, and
+leave the plot's own semantics alone.
 
 ```tsx
 <Histogram
@@ -142,12 +154,6 @@ land on it:
   binCount={10}
 />
 ```
-
-`role="img"` names the chart but also makes its subtree presentational, hiding
-the plot from assistive technology while it stays in the tab order. Where the
-keyboard tooltip should remain reachable, wrap the chart in a `<figure>` with a
-`<figcaption>`, or pass `role="group"` with the same `aria-label`, and leave the
-plot's own semantics alone.
 
 A name is not a text alternative. The shape of a distribution — where it peaks,
 how far it spreads, whether it has a tail — is exactly what the picture carries
@@ -165,10 +171,19 @@ layout built from logical CSS utilities. The plot area itself deliberately stays
 left-to-right: recharts lays every mark out in physical SVG coordinates, so a
 mirrored axis would flip the reading order of the data without flipping the
 geometry that encodes it — here that means the bins stay ordered low to high from
-the left. `ChartContainer` pins `.recharts-surface` to `direction: ltr`, which
-makes that a guarantee rather than a side effect of whatever direction the
-surrounding page happens to inherit. This is what mainstream charting libraries
-do by default.
+the left. This is what mainstream charting libraries do by default.
+
+`ChartContainer` pins `.recharts-surface` to `direction: ltr` so that holds
+whatever the page inherits, and the pin is load-bearing rather than a
+formality: recharts anchors axis tick text with the direction-relative SVG
+keywords `text-anchor: start` / `end` while placing each mark at a coordinate it
+computed in physical space, so an inherited `dir="rtl"` mirrors the text away
+from the geometry — `end`-anchored Y-axis ticks land inside the plot area and
+rotated X-axis ticks drift. That second case is the one to note here, since bin
+labels are long enough that `xAxisAngle` is common. Text anchored `middle` is
+direction-immune either way: unrotated bin labels and axis titles. Because the
+pin stops at the surface, the tooltip and the legend — HTML outside it — still
+mirror. [`Chart`](/components/chart) carries the measured detail.
 
 ## API Reference
 

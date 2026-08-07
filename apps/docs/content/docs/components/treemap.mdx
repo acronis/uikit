@@ -235,13 +235,19 @@ readouts you compose alongside them — mirrors on its own, because it is ordina
 layout built from logical CSS utilities. The plot area deliberately stays
 left-to-right: recharts places every mark in physical SVG coordinates, so mirroring it
 would flip the reading order of the data without flipping the geometry that encodes
-it. That holds without a `direction` override: recharts computes those coordinates
-itself, so the tiling does not mirror even when the page does.
+it. `ChartContainer` holds that in place by pinning `.recharts-surface` to
+`direction: ltr`.
 
-The cell labels are the exception, deliberately. They are HTML inside a
-`<foreignObject>` rather than SVG `<text>`, so they are flow layout like the rest of
-the chrome: `labelAlign`'s start edge follows the page, which is why the corner
-values are named `bottom-start` / `top-start` rather than for a physical corner.
+The cell labels are the one thing inside the surface that is not SVG: the cell
+renderer lays each one out as HTML in a `<foreignObject>`, aligned with logical
+`text-start` / `justify-*` utilities, which is why `labelAlign`'s corner values are
+named `bottom-start` / `top-start` rather than for a physical corner. A
+`<foreignObject>` is still a child of the surface, though, so it inherits the pin
+along with everything else in the plot. Measured under `dir="rtl"`, the label block
+computes `direction: ltr` and a `bottom-start` label stays at the tile's left
+edge — so in practice the labels sit in the same physical corner as the tiling they
+annotate, in both directions. The legend row and the tooltip are outside the
+surface and mirror with the page as usual.
 
 ## API Reference
 

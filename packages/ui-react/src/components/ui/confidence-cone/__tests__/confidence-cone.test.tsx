@@ -100,15 +100,31 @@ describe('ConfidenceCone axes and grid', () => {
     expect(axisTicks(container, 'x')[0]).toHaveAttribute('text-anchor', 'end');
   });
 
-  it('thins the X ticks through the caller interval, keeping the ends', () => {
-    const every = renderChart({ xAxisInterval: 1 });
-    expect(axisTickLabels(every.container, 'x')).toEqual(['Jan', 'Mar', 'May']);
-    every.unmount();
+  it('thins the X ticks through the caller interval', () => {
+    const { container } = renderChart({ xAxisInterval: 1 });
+    expect(axisTickLabels(container, 'x')).toEqual(['Jan', 'Mar', 'May']);
+  });
 
-    const preserved = renderChart({ xAxisInterval: 'preserveStartEnd' });
+  // recharts only drops a tick once its neighbours would collide, so the named
+  // intervals need far more rows than the five-month fixture to differ at all —
+  // and the one it thins away by default (`preserveEnd`) is the *first* label.
+  it('pins both ends when preserveStartEnd thins a crowded axis', () => {
+    const crowded = Array.from({ length: 200 }, (_, index) => ({
+      month: `p${index}`,
+      actual: 100 + index,
+    }));
+
+    const thinned = renderChart({ data: crowded });
+    expect(axisTickLabels(thinned.container, 'x')[0]).not.toBe('p0');
+    thinned.unmount();
+
+    const preserved = renderChart({
+      data: crowded,
+      xAxisInterval: 'preserveStartEnd',
+    });
     const ticks = axisTickLabels(preserved.container, 'x');
-    expect(ticks[0]).toBe('Jan');
-    expect(ticks[ticks.length - 1]).toBe('May');
+    expect(ticks[0]).toBe('p0');
+    expect(ticks[ticks.length - 1]).toBe('p199');
   });
 
   // `zero` is also recharts' behavior for an unset domain, so the floor is only

@@ -76,14 +76,43 @@ describe('ComposedChart axes and grid', () => {
     for (const tick of ticks) expect(tick).toMatch(/\$$/);
   });
 
+  // Every series in `series` sits on the primary axis, so the Y ticks read here
+  // are that axis' alone — a secondary scale would add its own row to them.
+  it('thins the value axis to the requested tick count', () => {
+    const { container } = renderChart({ yAxisTickCount: 4 });
+    expect(axisTickLabels(container, 'y')).toHaveLength(4);
+  });
+
   it('anchors rotated ticks on the side they lean towards', () => {
     const { container } = renderChart({ xAxisAngle: -45 });
     expect(axisTicks(container, 'x')[0]).toHaveAttribute('text-anchor', 'end');
   });
 
+  // The interval is a keep-every-Nth filter over the category ticks, so it is
+  // only observable against the unthinned row it drops ticks from.
+  it('thins the X ticks through the caller interval', () => {
+    const every = renderChart();
+    expect(axisTickLabels(every.container, 'x')).toEqual(['Jan', 'Feb', 'Mar']);
+    every.unmount();
+
+    const thinned = renderChart({ xAxisInterval: 1 });
+    expect(axisTickLabels(thinned.container, 'x')).toEqual(['Jan', 'Mar']);
+  });
+
+  // `zero` is also recharts' behavior for an unset domain, so the floor is only
+  // observable against a preset that fits the data instead. Drawn on `orders`
+  // (98–156) alone: the full composition spans 98–9800, whose fitted floor
+  // rounds down to a nice tick of 0 anyway, which would make the two presets
+  // indistinguishable again. That one series is on the primary axis, so the
+  // ticks read here are that axis' alone.
   it('floors the Y domain at zero on request', () => {
-    const { container } = renderChart({ yAxisDomain: 'zero' });
-    expect(axisTickLabels(container, 'y')[0]).toBe('0');
+    const narrow = { series: [{ key: 'orders', type: 'line' as const }] };
+    const fitted = renderChart({ ...narrow, yAxisDomain: 'auto' });
+    expect(axisTickLabels(fitted.container, 'y')[0]).toBe('80');
+    fitted.unmount();
+
+    const floored = renderChart({ ...narrow, yAxisDomain: 'zero' });
+    expect(axisTickLabels(floored.container, 'y')[0]).toBe('0');
   });
 
   it('renders the axis titles as their own labels', () => {

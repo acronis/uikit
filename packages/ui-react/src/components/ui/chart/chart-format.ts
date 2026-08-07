@@ -128,7 +128,11 @@ export function resolveAxisDomain(
  *
  * A tick rotated anti-clockwise trails off to the lower left, so it must be
  * anchored at its end; a clockwise one trails to the lower right and is anchored
- * at its start. Unrotated ticks keep recharts' own default.
+ * at its start. Only an *omitted* angle keeps recharts' own default (`middle`):
+ * the branch is on `angle < 0`, so `angle={0}` anchors at `start` like any
+ * clockwise rotation. A caller that normalises "upright" to `0` instead of
+ * leaving `xAxisAngle` off therefore gets the rotated-tick treatment — here and
+ * in `resolveXAxisHeight`.
  */
 export function resolveRotatedTickAnchor(
   angle: number | undefined
@@ -145,6 +149,10 @@ export function resolveRotatedTickAnchor(
  * rotated row (+20) and an axis title (+18) each need their own allowance. The
  * two are additive rather than exclusive — a chart can rotate its ticks *and*
  * title the axis, which a label-or-angle ternary under-allocates.
+ *
+ * The +20 keys off the angle being *present*, not non-zero, so `angle={0}`
+ * reserves the rotated row's height as well — the same edge case
+ * `resolveRotatedTickAnchor` has, kept consistent between the two.
  */
 export function resolveXAxisHeight(
   label: string | undefined,

@@ -136,7 +136,10 @@ export interface MetricProps
   children?: React.ReactNode;
 }
 
-type MetricSize = keyof typeof BADGE_SIZE;
+// Every size-keyed lookup above (LABEL/VALUE/UNIT/SUPPORTING/BADGE/SKELETON) is
+// keyed by the `size` cva axis, so the vocabulary is derived from that axis
+// rather than from whichever one map a given helper happens to index.
+type MetricSize = NonNullable<VariantProps<typeof metricVariants>['size']>;
 type MetricStatus = keyof typeof STATUS_BADGE;
 
 /**

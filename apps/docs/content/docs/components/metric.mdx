@@ -66,9 +66,13 @@ fill, so many metrics read calmly together. No data is `value="—"`, not `0`.
 ## Accessibility
 
 `Metric` imposes no roles and sets no accessible name on itself: it is a `Card`
-of ordinary text read in DOM order — label, value, unit, badge, trend,
-supporting text, then whatever the body holds. That order is the reading order,
-and the unit sits next to the value so the two are announced together. If a tile
+of ordinary text read in DOM order — label, the `tooltip` trigger, caption,
+value, unit, badge, trend, supporting text, then whatever the body holds (the
+`icon` badge sits between the caption and the value in the DOM but is
+`aria-hidden`, so nothing announces it). That order is the reading order, and it
+is not the visual one: `caption` and `trend` are painted at the far end of their
+rows but are read straight after the label and the value respectively. The unit
+sits next to the value, so those two are announced together. If a tile
 needs a name of its own (as a link target, or as a labelled region), pass
 `aria-label` / `role` yourself — they are spread onto the card.
 

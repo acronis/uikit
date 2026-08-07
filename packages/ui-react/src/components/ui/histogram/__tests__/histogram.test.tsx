@@ -162,10 +162,14 @@ describe('Histogram axes and grid', () => {
   });
 
   // Frequencies are counts, so a fractional tick would be meaningless — the
-  // component pins `allowDecimals={false}` for exactly that reason.
+  // component pins `allowDecimals={false}` for exactly that reason. Five ticks
+  // is the count that exposes it: the tallest bin holds 3, which recharts would
+  // otherwise slice into 0.75 steps.
   it('keeps the frequency axis on whole numbers', () => {
-    const { container } = renderChart({ yAxisTickCount: 4 });
-    for (const tick of axisTickLabels(container, 'y')) {
+    const { container } = renderChart({ yAxisTickCount: 5 });
+    const ticks = axisTickLabels(container, 'y');
+    expect(ticks.length).toBeGreaterThan(0);
+    for (const tick of ticks) {
       expect(tick).toMatch(/^\d+$/);
     }
   });
