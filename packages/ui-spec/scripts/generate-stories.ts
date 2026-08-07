@@ -35,6 +35,12 @@ interface RenderHint {
   /** Fixed prop string applied to every generated instance, for components
    *  driven by props rather than children (e.g. CardFilter's `label`/`value`). */
   props?: string;
+  /** Extra props for the single-instance stories only (pseudo-states and
+   *  transitions), never the variant matrix — which sets `variant` itself and
+   *  would end up with a duplicate attribute. Use it when a pseudo-state only
+   *  exists under one variant (e.g. Timeline's disclosure control is `tree`-only,
+   *  so the hover / focus-visible stories have nothing to paint in `default`). */
+  baseProps?: string;
   /** Root component/import to render when it differs from `index.component`
    *  (e.g. Resizable's root export is `ResizablePanelGroup`). */
   root?: string;
@@ -609,23 +615,24 @@ const RENDER: Record<string, RenderHint> = {
     // without a fixed width the two variants would squeeze each other until the
     // cards collapse. `shrink-0` keeps each at a readable width and lets them wrap.
     props: 'className="w-[520px] shrink-0"',
+    // The disclosure control only exists under `variant="tree"`, so the
+    // pseudo-state stories have to render that variant or they paint nothing.
+    baseProps: 'variant="tree"',
     // Timeline is driven by children, and an empty `<Timeline />` snapshots as a
     // blank box. The generator can only drive *root* props, and Timeline's real
-    // axes (`level`, `branchStart`, `collapsible`, `connector`) all live on
-    // `Timeline.Item` — so the only way a generated snapshot covers the anatomy is
-    // for this sample to exercise it directly. It descends L1 → L2 → L3 and back to
-    // L1, which paints every part in one shot: both marker shapes, a tag, a
-    // timestamp, a description, the elbow at two depths, a derived connector that
-    // stops at the end of each branch, the divider, and the card body.
+    // axes (`level`, `branchStart`, `connector`) all live on `Timeline.Item` — so
+    // the only way a generated snapshot covers the anatomy is for this sample to
+    // exercise it directly. It descends L1 → L2 → L3 and back to L1, which paints
+    // every part in one shot: both marker shapes, a tag, a timestamp, a
+    // description, the elbow at two depths, a derived connector that stops at the
+    // end of each branch, the divider, and the card body.
     //
-    // Only the first row is `collapsible` — that paints the disclosure control for
-    // the hover / focus-visible stories, and it is the row that carries a body, so
-    // the control always reveals something. A `collapsible` row with neither a body
-    // nor descendants would render a chevron that does nothing.
+    // Nothing here opts into collapsing: under `tree` the rows that have
+    // descendants derive their own control, which is exactly what the hover /
+    // focus-visible stories need to paint.
     sample: [
       '',
       '      <Timeline.Item',
-      '        collapsible',
       '        icon={<CircleInfoIcon />}',
       '        title="Title"',
       '        tag={<Tag variant="warning">Tag</Tag>}',
@@ -753,7 +760,7 @@ function buildStories(
   const children = hint.sample ?? '';
   const inst = (props: string) =>
     children ? `<${comp}${props}>${children}</${comp}>` : `<${comp}${props} />`;
-  const base = inst(label);
+  const base = inst(label + (hint.baseProps ? ` ${hint.baseProps}` : ''));
 
   const parts: string[] = [];
 

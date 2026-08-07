@@ -19,8 +19,9 @@ their next sibling through a vertical connector.
 - As a full stepper/wizard — a dedicated Stepper is a different component.
 - As a real tree widget — nesting here is visual only, and is not exposed to
   assistive tech.
-- To sort, group, paginate, or virtualize, or to own expand/collapse state — the
-  app does that and passes ordered rows.
+- To sort, group, paginate, or virtualize — the app does that and passes ordered
+  rows. (Branch collapsing _is_ owned here: `variant="tree"` derives it from the
+  levels. Pass `expanded` if you want to own it instead.)
 
 ## Usage
 
@@ -47,14 +48,14 @@ their next sibling through a vertical connector.
 </Timeline>
 ```
 
-A `collapsible` row gets a disclosure control. Its scope follows the variant:
-`variant="tree"` puts a button ahead of the marker that drops the rows beneath it
-— no wiring needed — while `default` puts a chevron in the card header that hides
-only that row's own body:
+Collapsing is the variant, not a per-row flag — there is no `collapsible` prop.
+`variant="default"` never collapses; `variant="tree"` gives every row that has
+descendants a button ahead of its marker that drops the rows beneath it, with no
+wiring needed:
 
 ```tsx
 <Timeline variant="tree">
-  <Timeline.Item collapsible title="Retention policy applied" />
+  <Timeline.Item title="Retention policy applied" />
   <Timeline.Item level={2} branchStart title="Archive pruned" />
   <Timeline.Item level={2} title="Index rebuilt" />
   <Timeline.Item title="Next root event" />
@@ -65,12 +66,23 @@ Pass `expanded` + `onExpandedChange` to own the state instead, and
 `defaultExpanded={false}` to start collapsed. Items must be **direct** children —
 a fragment hides their `level` from the root.
 
+Separately, `collapsibleBody` gives a row's _card_ a chevron in its header that
+folds that card's body. It is orthogonal to `variant` — same behaviour in both, and
+a tree row can carry the branch button and the card chevron at once:
+
+```tsx
+<Timeline.Item collapsibleBody title="Nightly protection plan failed">
+  <BodySection />
+</Timeline.Item>
+```
+
 ## Parts
 
 | Part                                          | Notes                                                               |
 | --------------------------------------------- | ------------------------------------------------------------------- |
 | `item`                                        | One `<li>` — marker column, card, connector geometry.               |
-| `toggle`                                      | Disclosure `ButtonIcon`; `collapsible` rows only.                   |
+| `toggle`                                      | Branch disclosure `ButtonIcon`; `tree` rows with descendants only.  |
+| `body-toggle`                                 | Card-body chevron in the header; `collapsibleBody` rows only.       |
 | `marker`                                      | The `Avatar` holding `icon` or `initials`, tinted by `color`.       |
 | `connector`                                   | Vertical line to the next row. Derived — never dangles.             |
 | `elbow`                                       | Right angle joining a nested row to its parent. `branchStart` only. |

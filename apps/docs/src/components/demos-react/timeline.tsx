@@ -117,11 +117,15 @@ export function TimelineExpandableDemo() {
   return (
     <Timeline className="w-[560px]">
       <Timeline.Item
-        collapsible
+        collapsibleBody
         icon={<CircleWarningIcon />}
         color="red"
         title="Nightly protection plan failed"
+        timestamp={
+          <time dateTime="2026-12-22T09:12:00+01:00">Dec 22, 09:12 AM</time>
+        }
         description="3 of 12 workloads were not protected"
+        bodyToggleLabel="Toggle affected workloads"
       >
         <div className="grid grid-cols-[1fr_2fr] gap-6 px-4 py-2">
           <span className="text-sm leading-6 text-foreground">

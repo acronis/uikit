@@ -19,7 +19,8 @@
 - **Given** `children`
   **Then** they render in the card below a 1px divider, in a region with vertical
   padding only — horizontal padding belongs to the section the consumer supplies,
-  matching Figma's `Card > Body`. A collapsed row hides them.
+  matching Figma's `Card > Body`. Collapsing a _branch_ never hides them; only this
+  row's own `collapsibleBody` chevron does.
 
 ## Nesting is flat
 
@@ -33,43 +34,85 @@
 - **Given** `level` of 1 **and** `branchStart`
   **Then** `branchStart` is ignored — there is no parent to join.
 - The indent step is the marker column plus the gap, so `variant="tree"` (which
-  reserves a disclosure button) indents further per level than `default` does.
+  reserves a disclosure button on every level) indents further per level than
+  `default` does.
 
 ## Connector
 
 - **Given** the next visible row is at this row's level or deeper
+  **and** that row's marker sits in the same column
   **Then** a vertical line descends from the marker into the row gap, meeting that
   row's marker or elbow.
 - **Given** the next visible row is shallower, or there is none
   **Then** no line is drawn — it would dangle in the margin. This covers the last
   row of a branch, the last row of the list, and a row whose descendants were just
   collapsed away.
+- **Given** the next visible row is a `tree` sibling whose marker sits in a
+  different column — one of the two has descendants and so reserves a disclosure
+  button, the other does not
+  **Then** no line is drawn either: a straight line between them is impossible, so
+  the kit omits it rather than drawing a crooked one. This is only reachable once a
+  row has been collapsed, since an expanded row with descendants is always followed
+  by one of them.
 - **Given** an explicit `connector`
   **Then** it overrides that derivation.
-- A row's connector tracks **its own** marker, so a `tree` leaf (no disclosure
-  button) draws its line further toward the inline start than a collapsible
-  sibling does.
+- A row's connector tracks **its own** marker. A row that has descendants always
+  carries the disclosure button, so its connector starts from the same column the
+  elbow of its first child is drawn against — which is why an elbow always meets
+  its parent's line.
 
 ## Disclosure and collapsing
 
-- **Given** `collapsible`
-  **Then** a disclosure control renders — at the trailing edge of the card header,
-  or ahead of the marker under `variant="tree"`. Its chevron points down when
-  expanded and toward the inline end when collapsed.
-- **Given** a collapsed row **and** `variant="default"`
-  **Then** only that row's own body is hidden. The chevron belongs to the card, so
-  the rows nested under it stay visible.
-- **Given** a collapsed row **and** `variant="tree"`
-  **Then** the root also drops every following row whose `level` is greater than
-  the collapsed row's, until the level rises back to it, and drops that row's
+Collapsing is the **variant**, not a per-row opt-in. There is no `collapsible`
+property: a `tree` branch nobody can collapse would be indistinguishable from
+`default` with a wider indent.
+
+- **Given** `variant="default"`
+  **Then** nothing collapses and no disclosure control is rendered.
+- **Given** `variant="tree"` **and** a row that has descendants — the row authored
+  after it is deeper
+  **Then** that row gets a disclosure control ahead of its marker. Its chevron
+  points down when expanded and toward the inline end when collapsed.
+- **Given** `variant="tree"` **and** a row with no descendants
+  **Then** it gets no control, and its marker sits at the start of the indent step
+  rather than after the reserved button.
+- **Given** a collapsed row
+  **Then** the root drops every following row whose `level` is greater than the
+  collapsed row's, until the level rises back to it, and drops that row's
   now-dangling connector. No consumer wiring is needed.
+- **Given** a collapsed row
+  **Then** it keeps its own control — "has descendants" is read from the authored
+  children, not the visible ones, so the branch can always be expanded again.
 - **Given** a collapsed row followed by a sibling at its own level
   **Then** that sibling is unaffected.
 - **Given** the control is activated
   **Then** `onExpandedChange` fires with the requested state. Uncontrolled, the
   root also updates its own state; with `expanded` set, the consumer owns it and
-  the row does not change on its own.
-- Rows default to **expanded**; pass `defaultExpanded={false}` to start collapsed.
+  the branch does not change on its own.
+- Branches default to **expanded**; pass `defaultExpanded={false}` to start
+  collapsed.
+
+## The card's own body disclosure
+
+A second, **orthogonal** control. `collapsibleBody` is not a variant and not tied
+to one: it is the card's chevron, so it behaves identically under `default` and
+`tree`, and a tree row that has descendants can carry both at once. (It lives on
+`Timeline.Item` only until `Card` grows the behaviour itself.)
+
+- **Given** `collapsibleBody`
+  **Then** a chevron renders at the trailing edge of the card header (Figma's
+  `Action Button`), and activating it shows or hides this row's `children`.
+- **Given** `collapsibleBody` **and** a `tree` row that has descendants
+  **Then** the row carries two controls: the branch button ahead of the marker
+  drops the rows below, the header chevron folds this card's body. Neither affects
+  the other.
+- **Given** the header chevron is activated
+  **Then** `onBodyExpandedChange` fires with the requested state. Uncontrolled, the
+  row updates its own state; with `bodyExpanded` set, the consumer owns it.
+- Card bodies default to **shown**; pass `defaultBodyExpanded={false}` to start
+  folded.
+- **Given** no `collapsibleBody`
+  **Then** no chevron renders and the body is always shown.
 
 ## What it does not do
 

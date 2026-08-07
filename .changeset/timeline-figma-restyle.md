@@ -12,24 +12,38 @@ a **breaking API change** for `Timeline.Item`:
   `timestamp`, `description`, and a body below a divider), connected as a
   **tree**: `level` (1–3) sets the indent and `branchStart` draws the elbow
   joining a row to its parent.
-- New on `Timeline`: `variant="tree"`. New on `Timeline.Item`: `collapsible`,
-  `expanded`, `defaultExpanded`, `onExpandedChange`, `toggleLabel`, `connector`,
-  `tag`, `color`, and `initials`.
+- New on `Timeline`: `variant="tree"`. New on `Timeline.Item`: `expanded`,
+  `defaultExpanded`, `onExpandedChange`, `toggleLabel`, `connector`, `tag`,
+  `color`, and `initials`.
 - Removed: `status`, `current`, `disabled`, `metadata`, and `actions` on
   `Timeline.Item`, and `size` / `density` on `Timeline` — none exist in the
   design. `TimelineStatus` is no longer exported. Move `metadata` / `actions`
   content into an item's `children`, which now renders in the card body.
 
-`Timeline` owns collapsing: it reads its children's `level`s, so a `collapsible`
-row hides its body and drops its descendant rows with no wiring from the consumer
-(pass `expanded` to control it instead). The disclosure control sits at the
-trailing edge of the card header, or ahead of the marker under `variant="tree"` —
-the two idioms Figma ships.
+**Collapsing is the variant, not a per-row flag.** There is no `collapsible`
+prop. `variant="default"` never collapses; `variant="tree"` gives every row that
+has descendants a disclosure button ahead of its marker, which drops the rows
+beneath it — derived from the levels, so no wiring is needed (pass `expanded` to
+own the state instead). A branch nobody can collapse would be indistinguishable
+from `default` with a wider indent, so the two ways of saying it are unified into
+one. A collapsed row keeps its control: "has descendants" is read from the rows
+you passed, not the visible ones.
+
+Separately — and **orthogonally** — `Timeline.Item` gains `collapsibleBody`, a
+chevron at the trailing edge of a card's header that folds that card's own body
+(Figma's `Action Button`), with `bodyExpanded` / `defaultBodyExpanded` /
+`onBodyExpandedChange` / `bodyToggleLabel`. It is the card's control, not the
+timeline's: same behaviour under both variants, and a `tree` row with descendants
+can carry both — the branch button drops the rows below, the header chevron folds
+this card. Collapsing a branch never hides a row's own body. This lives on
+`Timeline.Item` only until `Card` grows the behaviour itself.
 
 Connectors are derived from the same level sequence: a row's descending line is
-drawn only when the next visible row is at its own depth or deeper, so a branch's
-last row, the list's last row, and a row whose descendants were just collapsed
-never leave a line dangling. `connector` only overrides that.
+drawn only when the next visible row is at its own depth or deeper **and** its
+marker sits in the same column, so a branch's last row, the list's last row, a
+row whose descendants were just collapsed, and a collapsed row followed by a
+leaf sibling never leave a line dangling or crooked. `connector` only overrides
+that.
 
 Rows must be **direct** children of `Timeline` — wrapping them in a fragment hides
 their `level` from the root.

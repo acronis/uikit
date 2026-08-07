@@ -67,10 +67,10 @@ nesting. Render one `Timeline.Item` per visible row, in visual order, and declar
 its level.
 
 Connectors are **derived** from those levels: `Timeline` draws a row's descending
-line only when the next visible row is at its own depth or deeper, so a branch's
-last row, the list's last row, and a row whose descendants were just collapsed
-never leave a line dangling in the margin. Set `connector` explicitly only to
-override that.
+line only when the next visible row is at its own depth or deeper and its marker
+sits in the same column, so a branch's last row, the list's last row, and a row
+whose descendants were just collapsed never leave a line dangling in the margin.
+Set `connector` explicitly only to override that.
 
 ```tsx
 <Timeline>
@@ -83,12 +83,12 @@ override that.
 
 ### Collapsing
 
-A `collapsible` row gets a disclosure control, and **what it collapses follows the
-variant** — matching the two idioms Figma ships.
+Collapsing is the **variant**, not a per-row flag — there is no `collapsible` prop.
+`variant="default"` never collapses anything.
 
-Under `variant="tree"` it is a hierarchy control: a button ahead of the marker that
-drops every following row deeper than its own. No wiring needed, because `Timeline`
-reads its children's `level`s:
+Under `variant="tree"`, every row that **has descendants** gets a disclosure button
+ahead of its marker, which drops every following row deeper than its own. No wiring
+needed, because `Timeline` reads its children's `level`s:
 
 <DemoReact>
   <TimelineTreeDemo />
@@ -96,12 +96,17 @@ reads its children's `level`s:
 
 ```tsx
 <Timeline variant="tree">
-  <Timeline.Item collapsible title="Retention policy applied" />
+  <Timeline.Item title="Retention policy applied" />
   <Timeline.Item level={2} branchStart title="Archive pruned" />
-  <Timeline.Item level={2} connector={false} title="Index rebuilt" />
+  <Timeline.Item level={2} title="Index rebuilt" />
   <Timeline.Item title="Next root event" />
 </Timeline>
 ```
+
+The first row derives a control because a level-2 row follows it; the two level-2
+rows and the last root row are leaves, so they get none. A collapsed row keeps its
+control — "has descendants" is read from the rows you passed, not the visible ones
+— so a branch can always be reopened.
 
 Pass `expanded` + `onExpandedChange` to own the state yourself, and
 `defaultExpanded={false}` to start collapsed. Items must be **direct** children of
@@ -110,9 +115,14 @@ Pass `expanded` + `onExpandedChange` to own the state yourself, and
 That variant also widens the indent step, so levels still align once the extra
 button is reserved.
 
-Under `variant="default"` the control is a chevron at the trailing edge of the card
-header, matching Figma's `Action Button`. It belongs to **that card**: it reveals
-the row's own body below a divider and leaves the rows nested under it untouched.
+`toggleLabel` is the control's accessible name. It defaults to an English string,
+so pass a localized value.
+
+### Expandable card
+
+Separately from the variant, `collapsibleBody` gives a row's **card** a chevron at
+the trailing edge of its header (Figma's `Action Button`) that folds that card's own
+body. It is the card's control, not the timeline's:
 
 <DemoReact>
   <TimelineExpandableDemo />
@@ -120,15 +130,22 @@ the row's own body below a divider and leaves the rows nested under it untouched
 
 ```tsx
 <Timeline>
-  <Timeline.Item collapsible title="Nightly protection plan failed">
+  <Timeline.Item collapsibleBody title="Nightly protection plan failed">
     <div>Affected workloads: db-01, db-02, files-07</div>
   </Timeline.Item>
   <Timeline.Item level={2} branchStart initials="AA" title="Acknowledged" />
 </Timeline>
 ```
 
-`toggleLabel` is the control's accessible name. It defaults to an English string,
-so pass a localized value.
+The two axes are orthogonal: `collapsibleBody` behaves the same under `default` and
+`tree`, and a tree row with descendants can carry both — the branch button ahead of
+the marker drops the rows below, the header chevron folds this card. Collapsing a
+branch never hides a row's own body.
+
+Pass `bodyExpanded` + `onBodyExpandedChange` to own that state, and
+`defaultBodyExpanded={false}` to start folded. `bodyToggleLabel` names the control.
+
+This lives on `Timeline.Item` only until `Card` grows the behaviour itself.
 
 ### Marker
 

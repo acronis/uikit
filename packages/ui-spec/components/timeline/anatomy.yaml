@@ -5,27 +5,29 @@ schematic: |
   <ol> (root)                              variant: default | tree
    ├─ <li> item ─────────────────────────────────────────────────
    │  (toggle)  (marker) ┌───────────── card ─────────────────┐
-   │   tree      │       │ title [tag] Dec 22, 08:30 AM (toggle)
-   │   only      │       │ description                  default │
-   │   connector │       ├────────────── divider ──────────────┤
-   │             │       │ (… body …)                          │ ← body
+   │  tree rows  │       │ title [tag] Dec 22, 08:30 AM (body- │
+   │  with       │       │ description                 toggle) │
+   │  descendants│       ├────────────── divider ──────────────┤
+   │   connector │       │ (… body …)                          │ ← body
    │  elbow ─────┘       └─────────────────────────────────────┘
    └─ <li> item (last visible: connector hidden)
 
-  parts: item · toggle · marker · connector · elbow · card
+  parts: item · toggle · body-toggle · marker · connector · elbow · card
        · title · tag · timestamp · description · body
   level -> indent · branchStart -> elbow · connector -> trailing line
-  variant=tree -> toggle moves ahead of the marker, indent step widens
-  collapsed -> default: this row's body hidden | tree: descendant rows dropped
+  variant=tree -> rows with descendants get a toggle, indent step widens
+  collapsed -> the descendant rows are dropped (never the row's own body)
+  collapsibleBody -> a chevron in this card's header folds this card's body only
 
 root:
   element: ol
   description: >-
-    A semantic ordered list of rows in visual order. `variant` places a collapsible
-    row's disclosure control — in the card header (`default`) or ahead of the marker
-    (`tree`, which widens the indent step so every level still aligns). The root
-    reads its children's `level`s to drop the rows beneath a collapsed one and to
-    derive each row's connector.
+    A semantic ordered list of rows in visual order. `variant` decides whether the
+    list collapses at all: `default` never does, `tree` gives every row that has
+    descendants a disclosure button ahead of its marker and widens the indent step
+    to reserve it. The root reads its children's `level`s to decide which rows get
+    that control, to drop the rows beneath a collapsed one, and to derive each
+    row's connector.
 
 parts:
   - id: item
@@ -35,12 +37,21 @@ parts:
     element: li
   - id: toggle
     description: >-
-      The disclosure control (a `ButtonIcon` with a chevron) — at the trailing edge
-      of the card header, where collapsing hides this row's body, or ahead of the
-      marker under `variant="tree"`, where it drops the descendant rows instead.
+      The branch disclosure control (a `ButtonIcon` with a chevron), ahead of the
+      marker. Collapsing drops the row's descendant rows; it never hides the row's
+      own body. Derived, not a prop — there is no `collapsible` property.
     element: button
     optional: true
-    visible_when: the item is `collapsible`
+    visible_when: '`variant` is `tree` and the row has descendants'
+  - id: body-toggle
+    description: >-
+      The card's own disclosure control (a `ButtonIcon` with a chevron) at the
+      trailing edge of the card header. Folds this card's body and nothing else —
+      orthogonal to `variant`, so a `tree` row can carry this and the branch toggle
+      at once.
+    element: button
+    optional: true
+    visible_when: '`collapsibleBody` is true'
   - id: marker
     description: >-
       The Avatar at the start of the row, tinted by `color` and holding the `icon`
@@ -49,8 +60,9 @@ parts:
   - id: connector
     description: >-
       The vertical line descending from the marker into the row gap, meeting the
-      next row. Decorative; drawn only when the next visible row is at this row's
-      depth or deeper, so it never dangles.
+      next row's marker or elbow. Decorative; drawn only when the next visible row
+      is at this row's depth or deeper *and* shares this row's marker width, so it
+      never dangles and never runs crooked.
   - id: elbow
     description: >-
       The right angle joining a nested row to its parent's connector. Decorative;
@@ -75,9 +87,10 @@ parts:
     visible_when: a `description` is provided
   - id: body
     description: >-
-      The item's `children`, rendered in the card below a divider.
+      The item's `children`, rendered in the card below a divider. Collapsing a
+      branch never hides it; only this card's own `collapsibleBody` chevron does.
     optional: true
-    visible_when: '`children` are provided and the row is not collapsed'
+    visible_when: '`children` are provided and the card body is not folded'
 
 layout:
   type: flex
@@ -91,7 +104,7 @@ states:
       trigger: "variant === 'default'",
       kind: prop,
       prop: variant,
-      affects: [root, item, marker],
+      affects: [root, item],
     }
   - {
       id: tree,
@@ -130,36 +143,36 @@ states:
     }
   - {
       id: connected,
-      trigger: 'the next visible row is at this level or deeper',
+      trigger: 'the next visible row is at this level or deeper, with the same marker width',
       kind: prop,
       prop: connector,
       affects: [connector],
-    }
-  - {
-      id: collapsible,
-      trigger: 'collapsible is true',
-      kind: prop,
-      prop: collapsible,
-      affects: [toggle, item],
     }
   - {
       id: expanded,
       trigger: 'expanded is true',
       kind: prop,
       prop: expanded,
-      affects: [toggle, body],
+      affects: [toggle, item],
+    }
+  - {
+      id: body-expanded,
+      trigger: 'collapsibleBody is true and the card body is shown',
+      kind: prop,
+      prop: bodyExpanded,
+      affects: [body-toggle, body],
     }
   - {
       id: toggle-hover,
-      trigger: 'pointer over the disclosure button',
+      trigger: 'pointer over a disclosure button',
       kind: pseudo,
       pseudo: ':hover',
-      affects: [toggle],
+      affects: [toggle, body-toggle],
     }
   - {
       id: toggle-focus-visible,
-      trigger: 'keyboard focus on the disclosure button',
+      trigger: 'keyboard focus on a disclosure button',
       kind: pseudo,
       pseudo: ':focus-visible',
-      affects: [toggle],
+      affects: [toggle, body-toggle],
     }

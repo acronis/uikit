@@ -24,14 +24,21 @@ import { Card } from '../card';
 // opens a branch (`branchStart`, Figma's `-First`). Depth is never derived from
 // JSX nesting — that keeps a row's connector geometry a pure function of its own
 // props. Collapsing *is* handled here, though: in `tree` mode `Timeline` reads its
-// children's levels and drops the rows beneath a collapsed one, so a `collapsible`
-// row works with no wiring from the consumer (pass `expanded` to control it).
+// children's levels and drops the rows beneath a collapsed one, so a branch works
+// with no wiring from the consumer (pass `expanded` to control it).
 //
-// The disclosure control matches the two Figma idioms, and its *scope* differs
-// with them: `tree` puts a dedicated button ahead of the marker and treats it as a
-// hierarchy control, collapsing the descendant rows; `default` puts a chevron at
-// the trailing edge of the card header (Figma's `Action Button`), where it belongs
-// to that card and only hides that row's own body.
+// Collapsing is the **variant**, not a per-row flag. `tree` gives every row that
+// has descendants a disclosure button ahead of its marker and widens the indent
+// step to reserve it; `default` never collapses anything. There is no `collapsible`
+// prop, because the two would say the same thing: a tree branch nobody can collapse
+// is just `default` with a wider indent.
+//
+// An expandable *card* is a separate, orthogonal axis — `collapsibleBody` puts a
+// chevron at the trailing edge of a row's card header that folds that card's own
+// body (Figma's `Action Button`). It is not a variant: it behaves identically in
+// `default` and `tree`, and a tree row can carry both controls — the branch one
+// drops the rows below, this one folds this card. It lives here only because
+// `Card` cannot do it yet; move it there once it can.
 //
 // Connector geometry is reproduced with logical CSS borders rather than Figma's
 // two exported 1px SVG strokes (a straight line and a right angle): both are
@@ -45,10 +52,15 @@ import { Card } from '../card';
 // `--ui-gap-16` (gap). Re-point them at `--ui-timeline-*` once that tier ships.
 
 const CONNECTOR_COLOR = 'var(--ui-border-on-surface-border)';
+// Load-bearing invariant: the elbow's vertical lands on the parent's connector
+// only while GAP === MARKER / 2 (16 === 32 / 2 today). The elbow is offset from the
+// child's indent while the connector is offset from the parent's marker centre, and
+// those two coincide at exactly that ratio. If either token moves, every elbow
+// detaches — re-derive the elbow's `insetInlineStart` rather than nudging it.
 const GAP = 'var(--ui-gap-16)';
 /** The Avatar marker's own width — also the elbow's horizontal reach. */
 const MARKER = 'var(--ui-avatar-global-avatar-size)';
-/** Disclosure button + its gap, present only on a collapsible `tree` row. */
+/** Disclosure button + its gap, present only on a `tree` row with descendants. */
 const TOGGLE =
   'calc(var(--ui-button-icon-global-container-height) + var(--ui-gap-8))';
 
@@ -66,6 +78,7 @@ const TimelineContext = React.createContext<{ variant: TimelineVariant }>({
 const TimelineRowContext = React.createContext<{
   expanded: boolean;
   connector: boolean;
+  hasToggle: boolean;
   onToggle: () => void;
 } | null>(null);
 
@@ -88,10 +101,12 @@ const timelineVariants = cva('flex flex-col', {
 export interface TimelineProps
   extends React.ComponentProps<'ol'>, VariantProps<typeof timelineVariants> {
   /**
-   * What a collapsible row's disclosure control is, and where it sits. `default`
-   * puts a chevron at the trailing edge of the card header, which hides that row's
-   * body; `tree` puts a dedicated button ahead of the marker, which hides the row's
-   * descendants and widens the indent step.
+   * Whether the list collapses. `default` never does; `tree` gives every row that
+   * has descendants a disclosure button ahead of its marker, which hides those
+   * descendants, and widens the indent step to reserve it on every row.
+   *
+   * Unrelated to `Timeline.Item`'s `collapsibleBody`, which folds a single card's
+   * own body and works the same under both variants.
    */
   variant?: TimelineVariant;
   /**
@@ -114,14 +129,16 @@ const TimelineRoot = React.forwardRef<HTMLOListElement, TimelineProps>(
       React.isValidElement
     ) as React.ReactElement<TimelineItemProps>[];
 
+    // A row has descendants when the row *authored* after it is deeper. Read from
+    // the full child list, never the visible one: a collapsed row must keep its
+    // disclosure control, or there would be no way to expand it again.
+    const levelAt = (index: number) => items[index]?.props.level ?? 1;
+    const hasDescendants = (index: number) =>
+      index + 1 < items.length && levelAt(index + 1) > levelAt(index);
+
     // Pass 1 — in `tree` mode only, drop the rows beneath a collapsed one. Rows
     // deeper than a collapsed row are hidden until the level rises back to it; one
     // cursor is enough, since a nested collapse can only ever narrow the range.
-    //
-    // The scope of a collapse follows the variant, because the two Figma idioms
-    // mean different things: the `tree` button ahead of the marker is a hierarchy
-    // control, so it hides the descendant rows; the chevron in a `default` card
-    // header belongs to that card, so it only hides that row's own body.
     const visible: {
       element: React.ReactElement<TimelineItemProps>;
       key: string;
@@ -144,7 +161,13 @@ const TimelineRoot = React.forwardRef<HTMLOListElement, TimelineProps>(
           element.props.defaultExpanded ??
           true);
 
-      if (resolved === 'tree' && element.props.collapsible && !expanded) {
+      // Collapsing is the variant, not a per-row opt-in: `tree` rows that have
+      // descendants get the control, `default` rows never do. A tree row without
+      // it would be a branch nobody can collapse — which is just `default` with a
+      // wider indent — so there is nothing for a `collapsible` prop to decide.
+      const hasToggle = resolved === 'tree' && hasDescendants(index);
+
+      if (hasToggle && !expanded) {
         hideBelowLevel = level;
       }
 
@@ -154,7 +177,7 @@ const TimelineRoot = React.forwardRef<HTMLOListElement, TimelineProps>(
         level,
         expanded,
         isControlled,
-        hasToggle: resolved === 'tree' && Boolean(element.props.collapsible),
+        hasToggle,
       });
     });
 
@@ -169,7 +192,11 @@ const TimelineRoot = React.forwardRef<HTMLOListElement, TimelineProps>(
         next != null &&
         (next.level > row.level
           ? // A deeper row bridges the gap with its own elbow, which starts exactly
-            // at this row's marker centre.
+            // at this row's marker centre. That holds because a row with a deeper
+            // row after it has descendants, so in `tree` mode it always carries the
+            // disclosure control and therefore the wide marker column the elbow is
+            // positioned against — the same geometry the `default` variant has by
+            // construction.
             true
           : next.level === row.level &&
             // Same level, but a `tree` row that reserves a disclosure button has a
@@ -184,6 +211,7 @@ const TimelineRoot = React.forwardRef<HTMLOListElement, TimelineProps>(
           value={{
             expanded: row.expanded,
             connector: row.element.props.connector ?? reachesNextRow,
+            hasToggle: row.hasToggle,
             onToggle: () => {
               const nextExpanded = !row.expanded;
               row.element.props.onExpandedChange?.(nextExpanded);
@@ -276,20 +304,35 @@ export interface TimelineItemProps extends Omit<
    */
   connector?: boolean;
   /**
-   * Give this row a disclosure control. Under `variant="tree"` it sits ahead of the
-   * marker and collapsing hides the descendant rows; otherwise it sits in the card
-   * header and collapsing hides only this row's own body.
+   * Branch disclosure state (controlled). Only meaningful under `variant="tree"`
+   * on a row that has descendants — those rows get the control automatically.
    */
-  collapsible?: boolean;
-  /** Disclosure state (controlled). */
   expanded?: boolean;
-  /** Initial disclosure state when uncontrolled. */
+  /** Initial branch disclosure state when uncontrolled. */
   defaultExpanded?: boolean;
   /** Called with the requested disclosure state whenever the control is activated. */
   onExpandedChange?: (expanded: boolean) => void;
-  /** Accessible name for the disclosure control. */
+  /** Accessible name for the branch disclosure control. */
   toggleLabel?: string;
-  /** Card body, revealed below a divider — hidden while the row is collapsed. */
+  /**
+   * Give this row's card a chevron at the trailing edge of its header that shows
+   * and hides the body (Figma's `Action Button`).
+   *
+   * Orthogonal to `variant`: it is the *card's* disclosure, not the timeline's, so
+   * it works the same in `default` and `tree` and a tree row can have both — the
+   * branch control drops the rows below, this one folds this card's own body.
+   * (It lives here only until `Card` grows the behaviour itself.)
+   */
+  collapsibleBody?: boolean;
+  /** Card-body disclosure state (controlled). */
+  bodyExpanded?: boolean;
+  /** Initial card-body disclosure state when uncontrolled. */
+  defaultBodyExpanded?: boolean;
+  /** Called with the requested card-body disclosure state. */
+  onBodyExpandedChange?: (expanded: boolean) => void;
+  /** Accessible name for the card-body disclosure control. */
+  bodyToggleLabel?: string;
+  /** Card body, rendered below a divider. */
   children?: React.ReactNode;
 }
 
@@ -307,11 +350,17 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
       level = 1,
       branchStart = false,
       connector,
-      collapsible = false,
+      // Destructured only to keep them off the `<li>`: the root reads them from
+      // `element.props`, because it owns the disclosure state for the whole branch.
       expanded: expandedProp,
-      defaultExpanded = true,
+      defaultExpanded,
       onExpandedChange,
       toggleLabel = 'Toggle event details',
+      collapsibleBody = false,
+      bodyExpanded: bodyExpandedProp,
+      defaultBodyExpanded = true,
+      onBodyExpandedChange,
+      bodyToggleLabel = 'Toggle event details',
       children,
       ...props
     },
@@ -319,42 +368,45 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
   ) => {
     const { variant } = React.useContext(TimelineContext);
     const row = React.useContext(TimelineRowContext);
-    // Only reached when an item renders outside a `Timeline` — inside one, the
-    // root owns the state so it can also drop the collapsed row's descendants.
-    const [localExpanded, setLocalExpanded] = React.useState(defaultExpanded);
 
-    const expanded = row ? row.expanded : (expandedProp ?? localExpanded);
-    const drawConnector = row ? row.connector : (connector ?? false);
-
-    const handleToggle = () => {
-      if (row) {
-        row.onToggle();
-        return;
-      }
-      const next = !expanded;
-      onExpandedChange?.(next);
-      if (expandedProp === undefined) setLocalExpanded(next);
+    // The card's own disclosure is entirely local — unlike the branch control, it
+    // changes nothing outside this row, so the root has no reason to own it.
+    const [localBodyExpanded, setLocalBodyExpanded] =
+      React.useState(defaultBodyExpanded);
+    const bodyExpanded = bodyExpandedProp ?? localBodyExpanded;
+    const handleBodyToggle = () => {
+      const next = !bodyExpanded;
+      onBodyExpandedChange?.(next);
+      if (bodyExpandedProp === undefined) setLocalBodyExpanded(next);
     };
 
-    const treeToggle = variant === 'tree' && collapsible;
-    const cardToggle = variant === 'default' && collapsible;
+    // All three are resolved by the root: `expanded` and the control depend on the
+    // row's descendants, which only the root can see, and it owns the uncontrolled
+    // state so it can drop those descendants too. Rendered outside a `Timeline`
+    // there is no branch at all, so an item is simply never collapsible.
+    const expanded = row?.expanded ?? true;
+    const drawConnector = row ? row.connector : (connector ?? false);
+    const treeToggle = variant === 'tree' && (row?.hasToggle ?? false);
     // A `tree` leaf drops the disclosure button, so its own marker column is
     // narrower than the indent step — the connector tracks the Avatar, not the step.
     const ownMarker = treeToggle ? `calc(${TOGGLE} + ${MARKER})` : MARKER;
     const drawElbow = branchStart && level > 1;
-    const showBody = children != null && (!collapsible || expanded);
 
-    const toggleButton = (
+    // Collapsed, the chevron points toward the inline end — so it has to mirror
+    // under RTL; logical positioning can't rotate artwork.
+    const chevron = (
+      open: boolean,
+      label: string,
+      onClick: () => void
+    ) => (
       <ButtonIcon
         type="button"
-        aria-label={toggleLabel}
-        aria-expanded={expanded}
-        onClick={handleToggle}
-        // Collapsed, the chevron points toward the inline end — so it has to
-        // mirror under RTL; logical positioning can't rotate artwork.
+        aria-label={label}
+        aria-expanded={open}
+        onClick={onClick}
         className={cn(
           'shrink-0 transition-transform',
-          !expanded && 'ltr:-rotate-90 rtl:rotate-90'
+          !open && 'ltr:-rotate-90 rtl:rotate-90'
         )}
       >
         <ChevronDownIcon />
@@ -366,7 +418,8 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
         ref={ref}
         data-level={level}
         data-branch-start={drawElbow || undefined}
-        data-expanded={collapsible ? expanded : undefined}
+        data-expanded={treeToggle ? expanded : undefined}
+        data-body-expanded={collapsibleBody ? bodyExpanded : undefined}
         style={
           {
             '--timeline-indent': `calc(var(--timeline-step) * ${level - 1})`,
@@ -409,7 +462,7 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
 
         {/* Marker column: the optional tree disclosure button, then the Avatar. */}
         <div className="relative flex shrink-0 items-center gap-[var(--ui-gap-8)]">
-          {treeToggle && toggleButton}
+          {treeToggle && chevron(expanded, toggleLabel, () => row?.onToggle())}
           <Avatar
             aria-hidden
             color={color}
@@ -423,7 +476,7 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
           </Avatar>
         </div>
 
-        {/* Content column: a Card header, plus an optional revealed body. */}
+        {/* Content column: a Card header, plus an optional body below a divider. */}
         <Card className="min-w-0 flex-1 shadow-none">
           <div className="flex min-h-12 items-center gap-[var(--ui-gap-16)] px-4 py-2">
             <div className="flex min-w-0 flex-1 flex-col">
@@ -450,9 +503,10 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
                 </div>
               )}
             </div>
-            {cardToggle && toggleButton}
+            {collapsibleBody &&
+              chevron(bodyExpanded, bodyToggleLabel, handleBodyToggle)}
           </div>
-          {showBody && (
+          {children != null && (!collapsibleBody || bodyExpanded) && (
             <div className="border-t border-border py-2">{children}</div>
           )}
         </Card>

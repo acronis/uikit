@@ -193,13 +193,15 @@ export const BranchEnd: Story = {
   ),
 };
 
-/** Tree mode: collapsible rows get a disclosure button; leaves don't. */
+/**
+ * Tree mode: every row with descendants derives a disclosure button; leaves don't.
+ * No `collapsible` anywhere below — the levels alone drive it.
+ */
 export const Tree: Story = {
   args: { variant: 'tree' },
   render: (args) => (
     <Timeline {...args}>
       <Timeline.Item
-        collapsible
         icon={<CircleInfoIcon />}
         title="Title"
         tag={<WarningTag />}
@@ -209,7 +211,6 @@ export const Tree: Story = {
       <Timeline.Item
         level={2}
         branchStart
-        collapsible
         icon={<CircleInfoIcon />}
         title="Title"
         tag={<WarningTag />}
@@ -246,7 +247,6 @@ export const TreeCollapsed: Story = {
   render: (args) => (
     <Timeline {...args}>
       <Timeline.Item
-        collapsible
         defaultExpanded={false}
         icon={<CircleInfoIcon />}
         title="First group"
@@ -270,7 +270,6 @@ export const TreeCollapsed: Story = {
         timestamp="Dec 22, 08:32 AM"
       />
       <Timeline.Item
-        collapsible
         defaultExpanded={false}
         icon={<CircleInfoIcon />}
         title="Second group"
@@ -299,7 +298,6 @@ export const TreeCollapsing: Story = {
   render: (args) => (
     <Timeline {...args}>
       <Timeline.Item
-        collapsible
         icon={<CircleInfoIcon />}
         title="Retention policy applied"
         tag={<WarningTag />}
@@ -324,7 +322,6 @@ export const TreeCollapsing: Story = {
         description="Catalog refreshed"
       />
       <Timeline.Item
-        collapsible
         icon={<CircleInfoIcon />}
         title="Next root event"
         timestamp="Dec 22, 09:00 AM"
@@ -342,19 +339,65 @@ export const TreeCollapsing: Story = {
 };
 
 /**
- * In `default` mode the chevron sits at the trailing edge of the card header and
- * belongs to that card: it reveals the row's own body, leaving the nested rows
- * below it untouched.
+ * `collapsibleBody` puts a chevron at the trailing edge of a card's header that
+ * folds that card's own body (Figma's `Action Button`). It is the *card's* control,
+ * not the timeline's, so it is unrelated to `variant` and leaves the rows nested
+ * under it untouched. The second row starts folded.
  */
 export const ExpandableCard: Story = {
   render: (args) => (
     <Timeline {...args}>
       <Timeline.Item
-        collapsible
+        collapsibleBody
         icon={<CircleWarningIcon />}
         color="red"
-        title="Title"
-        description="Description"
+        title="Nightly protection plan failed"
+        tag={<WarningTag />}
+        timestamp="Dec 22, 08:30 AM"
+        description="3 of 12 workloads were not protected"
+      >
+        <BodySection />
+      </Timeline.Item>
+      <Timeline.Item
+        collapsibleBody
+        defaultBodyExpanded={false}
+        icon={<TriangleWarningIcon />}
+        color="yellow"
+        title="Success rate dropped"
+        timestamp="Dec 22, 09:15 AM"
+        description="Folded — click the chevron to reveal"
+      >
+        <BodySection />
+      </Timeline.Item>
+      <Timeline.Item
+        level={2}
+        branchStart
+        icon={<CircleInfoIcon />}
+        title="Retention policy applied"
+        timestamp="Dec 22, 10:00 AM"
+        description="Unaffected by the card above"
+      />
+    </Timeline>
+  ),
+};
+
+/**
+ * The two controls are orthogonal. In `tree` mode a row with descendants gets the
+ * branch button ahead of its marker *and*, with `collapsibleBody`, a chevron in its
+ * card header: the first drops the rows below, the second folds this card's body.
+ */
+export const TreeWithExpandableCard: Story = {
+  args: { variant: 'tree' },
+  render: (args) => (
+    <Timeline {...args}>
+      <Timeline.Item
+        collapsibleBody
+        icon={<CircleWarningIcon />}
+        color="red"
+        title="Nightly protection plan failed"
+        tag={<WarningTag />}
+        timestamp="Dec 22, 08:30 AM"
+        description="Branch button ahead of the marker, chevron in the header"
       >
         <BodySection />
       </Timeline.Item>
@@ -363,19 +406,17 @@ export const ExpandableCard: Story = {
         branchStart
         icon={<TriangleWarningIcon />}
         color="yellow"
-        title="Title"
-        tag={<WarningTag />}
-        timestamp="Dec 22, 08:30 AM"
-        description="Description"
+        title="Three workloads missed their window"
+        timestamp="Dec 22, 08:31 AM"
+        description="db-01, db-02, files-07"
       />
       <Timeline.Item
         level={2}
-        icon={<CircleWarningIcon />}
-        color="red"
-        title="Title"
-        tag={<WarningTag />}
-        timestamp="Dec 22, 08:30 AM"
-        description="Description"
+        icon={<CircleCheckIcon />}
+        color="green"
+        title="Retry succeeded"
+        timestamp="Dec 22, 09:02 AM"
+        description="All three workloads protected"
       />
     </Timeline>
   ),
@@ -448,7 +489,6 @@ export const NestingSequence: Story = {
   render: (args) => (
     <Timeline {...args}>
       <Timeline.Item
-        collapsible
         icon={<CircleWarningIcon />}
         color="red"
         title="Title"

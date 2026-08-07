@@ -9,16 +9,17 @@ description: >-
   in which each row pairs an Avatar marker with a Card carrying the title, an
   optional tag, the timestamp, and a description; rows join their parent through
   an elbow and their next sibling through a vertical connector. Nesting is flat
-  and explicit — a row declares its own `level` (1-3) — so the component owns
-  structure and connector geometry only: it never sorts, groups, fetches, or
-  interprets events, ships no domain event types or icons, and does not manage
-  tree state. Not a temporal chart.
+  and explicit — a row declares its own `level` (1-3) — and the root reads those
+  levels to place the connectors and, under `variant="tree"`, to give every row
+  with descendants a disclosure control. It owns structure, connector geometry and
+  branch collapsing only: it never sorts, groups, fetches, or interprets events,
+  holds no tree model of its own, and ships no domain event types or icons. Not a
+  temporal chart.
 dependencies:
   components:
     - avatar
     - card
     - button-icon
 figma:
-  node: >-
-    https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=8077-20862
+  node: 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=8077-20862'
   codeConnect: packages/ui-react/src/components/ui/timeline/timeline.figma.tsx

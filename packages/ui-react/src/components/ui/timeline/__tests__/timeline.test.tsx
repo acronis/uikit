@@ -107,7 +107,7 @@ describe('Timeline', () => {
     const user = userEvent.setup();
     const { container } = render(
       <Timeline variant="tree">
-        <Timeline.Item title="Root" collapsible />
+        <Timeline.Item title="Root" />
         <Timeline.Item title="Child" level={2} branchStart />
       </Timeline>
     );
@@ -149,29 +149,24 @@ describe('Timeline', () => {
     );
   });
 
-  it('shows the disclosure button in the header, or ahead of the marker in tree mode', () => {
+  it('puts the disclosure button ahead of the marker, and only in tree mode', () => {
     const { container, rerender } = render(
-      <Timeline>
-        <Timeline.Item title="Event" collapsible />
-      </Timeline>
-    );
-    const card = container.querySelector('li > div:last-child');
-    expect(card).toContainElement(screen.getByRole('button'));
-
-    rerender(
       <Timeline variant="tree">
-        <Timeline.Item title="Event" collapsible />
+        <Timeline.Item title="Event" />
+        <Timeline.Item level={2} branchStart title="Child" />
       </Timeline>
     );
-    // In tree mode the control lives in the marker column, before the card.
+    // The control lives in the marker column, before the card.
     const markerColumn = container.querySelector('li > div:first-of-type');
     expect(markerColumn).toContainElement(screen.getByRole('button'));
 
     rerender(
       <Timeline>
         <Timeline.Item title="Event" />
+        <Timeline.Item level={2} branchStart title="Child" />
       </Timeline>
     );
+    // The same branch in `default` mode collapses nothing, so there is no control.
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 
@@ -179,16 +174,17 @@ describe('Timeline', () => {
     const user = userEvent.setup();
     render(
       <Timeline variant="tree">
-        <Timeline.Item title="Root" collapsible />
-        <Timeline.Item title="Child" level={2} branchStart />
-        <Timeline.Item title="Grandchild" level={3} branchStart />
+        <Timeline.Item title="Root" toggleLabel="Toggle root" />
+        <Timeline.Item level={2} branchStart title="Child" />
+        <Timeline.Item level={3} branchStart title="Grandchild" />
         <Timeline.Item title="Next root" />
       </Timeline>
     );
     expect(screen.getByText('Child')).toBeInTheDocument();
     expect(screen.getByText('Grandchild')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button'));
+    // No `collapsible` anywhere: the control is derived from having descendants.
+    await user.click(screen.getByRole('button', { name: 'Toggle root' }));
 
     expect(screen.queryByText('Child')).not.toBeInTheDocument();
     expect(screen.queryByText('Grandchild')).not.toBeInTheDocument();
@@ -201,13 +197,20 @@ describe('Timeline', () => {
     const user = userEvent.setup();
     render(
       <Timeline variant="tree">
-        <Timeline.Item title="Root" />
-        <Timeline.Item title="Child" level={2} branchStart collapsible />
-        <Timeline.Item title="Grandchild" level={3} branchStart />
-        <Timeline.Item title="Sibling" level={2} />
+        <Timeline.Item title="Root" toggleLabel="Toggle root" />
+        <Timeline.Item
+          level={2}
+          branchStart
+          title="Child"
+          toggleLabel="Toggle child"
+        />
+        <Timeline.Item level={3} branchStart title="Grandchild" />
+        <Timeline.Item level={2} title="Sibling" />
       </Timeline>
     );
-    await user.click(screen.getByRole('button'));
+    // Both `Root` and `Child` have descendants, so both derive a control.
+    expect(screen.getAllByRole('button')).toHaveLength(2);
+    await user.click(screen.getByRole('button', { name: 'Toggle child' }));
 
     expect(screen.queryByText('Grandchild')).not.toBeInTheDocument();
     expect(screen.getByText('Sibling')).toBeInTheDocument();
@@ -217,7 +220,7 @@ describe('Timeline', () => {
   it('starts collapsed with defaultExpanded={false}', () => {
     render(
       <Timeline variant="tree">
-        <Timeline.Item title="Root" collapsible defaultExpanded={false} />
+        <Timeline.Item title="Root" defaultExpanded={false} />
         <Timeline.Item title="Child" level={2} branchStart />
       </Timeline>
     );
@@ -228,12 +231,63 @@ describe('Timeline', () => {
     );
   });
 
+  it('derives the tree disclosure control from having descendants', () => {
+    const { container } = render(
+      <Timeline variant="tree">
+        <Timeline.Item title="Parent" toggleLabel="Toggle parent" />
+        <Timeline.Item level={2} branchStart title="Child" />
+        <Timeline.Item title="Leaf" />
+      </Timeline>
+    );
+    const items = Array.from(container.querySelectorAll('li'));
+    const hasButton = (li: HTMLElement) =>
+      li.querySelector('button') !== null;
+
+    // No `collapsible` prop is passed anywhere in this tree.
+    expect(hasButton(items[0])).toBe(true);
+    expect(hasButton(items[1])).toBe(false);
+    expect(hasButton(items[2])).toBe(false);
+  });
+
+  it('does not derive a control in the default variant', () => {
+    render(
+      <Timeline>
+        <Timeline.Item title="Parent" />
+        <Timeline.Item level={2} branchStart title="Child" />
+      </Timeline>
+    );
+    // `default`'s chevron reveals the row's own body — that stays opt-in.
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('keeps a collapsed row’s control so it can be expanded again', async () => {
+    const user = userEvent.setup();
+    render(
+      <Timeline variant="tree">
+        <Timeline.Item title="Parent" toggleLabel="Toggle parent" />
+        <Timeline.Item level={2} branchStart title="Child" />
+      </Timeline>
+    );
+    const toggle = () => screen.getByRole('button', { name: 'Toggle parent' });
+
+    await user.click(toggle());
+    expect(screen.queryByText('Child')).not.toBeInTheDocument();
+    // The descendant is gone, but "has descendants" is read from the authored
+    // children — so the control survives and the row is not a dead end.
+    expect(toggle()).toHaveAttribute('aria-expanded', 'false');
+
+    await user.click(toggle());
+    expect(screen.getByText('Child')).toBeInTheDocument();
+  });
+
   it('skips the connector between tree siblings with mismatched marker widths', () => {
     const { container } = render(
       <Timeline variant="tree">
-        {/* Reserves a disclosure button, so its marker column is wider... */}
-        <Timeline.Item title="Parent" collapsible />
-        {/* ...than this sibling's, so a straight line between them is impossible. */}
+        {/* Collapsed, so its own descendant is hidden and the next visible row is
+            the sibling below — which has no branch, so no disclosure button and a
+            narrower marker column. A straight line between them is impossible. */}
+        <Timeline.Item title="Parent" defaultExpanded={false} />
+        <Timeline.Item level={2} branchStart title="Hidden child" />
         <Timeline.Item title="Leaf sibling" />
         <Timeline.Item title="Another leaf" />
       </Timeline>
@@ -242,33 +296,17 @@ describe('Timeline', () => {
     const hasConnector = (li: HTMLElement) =>
       li.querySelector('[data-slot="timeline-connector"]') !== null;
 
+    expect(screen.queryByText('Hidden child')).not.toBeInTheDocument();
     expect(hasConnector(items[0])).toBe(false);
     // Two leaves share a marker width, so their line is fine.
     expect(hasConnector(items[1])).toBe(true);
   });
 
-  it('leaves descendant rows alone when a default-variant card collapses', async () => {
+  it('folds the card body with collapsibleBody, in either variant', async () => {
     const user = userEvent.setup();
-    render(
+    const { rerender } = render(
       <Timeline>
-        <Timeline.Item title="Root" collapsible>
-          <p>Section detail</p>
-        </Timeline.Item>
-        <Timeline.Item title="Child" level={2} branchStart />
-      </Timeline>
-    );
-    await user.click(screen.getByRole('button'));
-
-    // The chevron belongs to the card, so only its own body goes away.
-    expect(screen.queryByText('Section detail')).not.toBeInTheDocument();
-    expect(screen.getByText('Child')).toBeInTheDocument();
-  });
-
-  it('hides the card body while collapsed', async () => {
-    const user = userEvent.setup();
-    render(
-      <Timeline>
-        <Timeline.Item title="Event" collapsible>
+        <Timeline.Item title="Event" collapsibleBody>
           <p>Section detail</p>
         </Timeline.Item>
       </Timeline>
@@ -276,9 +314,95 @@ describe('Timeline', () => {
     expect(screen.getByText('Section detail')).toBeInTheDocument();
     await user.click(screen.getByRole('button'));
     expect(screen.queryByText('Section detail')).not.toBeInTheDocument();
+
+    rerender(
+      <Timeline variant="tree">
+        {/* A fresh key remounts the row, so it starts from its default again. */}
+        <Timeline.Item key="tree" title="Event" collapsibleBody>
+          <p>Section detail</p>
+        </Timeline.Item>
+      </Timeline>
+    );
+    // Same control, same behaviour — it is the card's, not the timeline's.
+    expect(screen.getByText('Section detail')).toBeInTheDocument();
+    await user.click(screen.getByRole('button'));
+    expect(screen.queryByText('Section detail')).not.toBeInTheDocument();
   });
 
-  it('always shows the body of a non-collapsible item', () => {
+  it('keeps the branch and card controls independent on one tree row', async () => {
+    const user = userEvent.setup();
+    render(
+      <Timeline variant="tree">
+        <Timeline.Item
+          title="Root"
+          collapsibleBody
+          toggleLabel="Toggle branch"
+          bodyToggleLabel="Toggle body"
+        >
+          <p>Section detail</p>
+        </Timeline.Item>
+        <Timeline.Item level={2} branchStart title="Child" />
+      </Timeline>
+    );
+    // A row with descendants gets both: the branch button and the card chevron.
+    expect(screen.getAllByRole('button')).toHaveLength(2);
+
+    await user.click(screen.getByRole('button', { name: 'Toggle body' }));
+    // The card folded; the branch is untouched.
+    expect(screen.queryByText('Section detail')).not.toBeInTheDocument();
+    expect(screen.getByText('Child')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Toggle branch' }));
+    // The branch dropped; the card's own state is still its own.
+    expect(screen.queryByText('Child')).not.toBeInTheDocument();
+    expect(screen.queryByText('Section detail')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Toggle body' }));
+    expect(screen.getByText('Section detail')).toBeInTheDocument();
+    expect(screen.queryByText('Child')).not.toBeInTheDocument();
+  });
+
+  it('honors a controlled card-body state', async () => {
+    const onBodyExpandedChange = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(
+      <Timeline>
+        <Timeline.Item
+          title="Event"
+          collapsibleBody
+          bodyExpanded={false}
+          onBodyExpandedChange={onBodyExpandedChange}
+        >
+          <p>Section detail</p>
+        </Timeline.Item>
+      </Timeline>
+    );
+    const toggle = screen.getByRole('button');
+    expect(screen.queryByText('Section detail')).not.toBeInTheDocument();
+    expect(container.querySelector('li')).toHaveAttribute(
+      'data-body-expanded',
+      'false'
+    );
+
+    await user.click(toggle);
+    expect(onBodyExpandedChange).toHaveBeenCalledWith(true);
+    // The consumer owns it, so nothing moved on its own.
+    expect(screen.queryByText('Section detail')).not.toBeInTheDocument();
+  });
+
+  it('starts the card body folded with defaultBodyExpanded={false}', () => {
+    render(
+      <Timeline>
+        <Timeline.Item title="Event" collapsibleBody defaultBodyExpanded={false}>
+          <p>Section detail</p>
+        </Timeline.Item>
+      </Timeline>
+    );
+    expect(screen.queryByText('Section detail')).not.toBeInTheDocument();
+    expect(screen.getByRole('button')).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('renders no card chevron without collapsibleBody', () => {
     render(
       <Timeline>
         <Timeline.Item title="Event">
@@ -290,16 +414,33 @@ describe('Timeline', () => {
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 
+  it('collapsing a branch never hides the row’s own body', async () => {
+    const user = userEvent.setup();
+    render(
+      <Timeline variant="tree">
+        <Timeline.Item title="Root" toggleLabel="Toggle root">
+          <p>Section detail</p>
+        </Timeline.Item>
+        <Timeline.Item level={2} branchStart title="Child" />
+      </Timeline>
+    );
+    expect(screen.getByText('Section detail')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Toggle root' }));
+
+    // The control is a hierarchy control: it drops the branch, never the row's
+    // own body. An expandable card is `Card`'s concern, not the timeline's.
+    expect(screen.queryByText('Child')).not.toBeInTheDocument();
+    expect(screen.getByText('Section detail')).toBeInTheDocument();
+  });
+
   it('reports the requested disclosure state', async () => {
     const onExpandedChange = vi.fn();
     const user = userEvent.setup();
     const { container } = render(
-      <Timeline>
-        <Timeline.Item
-          title="Event"
-          collapsible
-          onExpandedChange={onExpandedChange}
-        />
+      <Timeline variant="tree">
+        <Timeline.Item title="Event" onExpandedChange={onExpandedChange} />
+        <Timeline.Item level={2} branchStart title="Child" />
       </Timeline>
     );
     const toggle = screen.getByRole('button');
@@ -321,7 +462,6 @@ describe('Timeline', () => {
       <Timeline variant="tree">
         <Timeline.Item
           title="Root"
-          collapsible
           expanded={false}
           onExpandedChange={onExpandedChange}
         />
@@ -339,8 +479,9 @@ describe('Timeline', () => {
 
   it('names the disclosure button and lets the name be overridden', () => {
     const { rerender } = render(
-      <Timeline>
-        <Timeline.Item title="Event" collapsible />
+      <Timeline variant="tree">
+        <Timeline.Item title="Event" />
+        <Timeline.Item level={2} branchStart title="Child" />
       </Timeline>
     );
     expect(
@@ -348,12 +489,13 @@ describe('Timeline', () => {
     ).toBeInTheDocument();
 
     rerender(
-      <Timeline>
-        <Timeline.Item title="Event" collapsible toggleLabel="Mostrar mas" />
+      <Timeline variant="tree">
+        <Timeline.Item title="Event" toggleLabel="Mostrar más" />
+        <Timeline.Item level={2} branchStart title="Child" />
       </Timeline>
     );
     expect(
-      screen.getByRole('button', { name: 'Mostrar mas' })
+      screen.getByRole('button', { name: 'Mostrar más' })
     ).toBeInTheDocument();
   });
 
