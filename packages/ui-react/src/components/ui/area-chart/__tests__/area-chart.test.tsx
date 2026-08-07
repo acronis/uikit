@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { AreaChart } from '../area-chart';
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
-import {
-  giveTheChartASize,
-  restoreTheChartSize,
-} from '../../chart/__tests__/sized-chart';
+import { giveTheChartASize } from '../../chart/__tests__/chart-layout';
 
 const data = [
   { month: 'Jan', desktop: 186, mobile: 80 },
@@ -206,10 +203,8 @@ describe('AreaChart animation and data labels', () => {
 
 // These need real geometry: the curve set, the dot radii, and the per-series
 // overrides are all only observable on the painted SVG, which recharts skips
-// entirely at 0×0 (see `sized-chart`).
+// entirely at 0×0 (see `chart-layout`).
 describe('AreaChart curves, dots and per-series overrides', () => {
-  afterEach(restoreTheChartSize);
-
   const CURVES = [
     'linear',
     'monotone',
@@ -233,7 +228,6 @@ describe('AreaChart curves, dots and per-series overrides', () => {
         .querySelector('.recharts-area-curve')
         ?.getAttribute('d');
       unmount();
-      restoreTheChartSize();
       expect(path).toBeTruthy();
       return path;
     });

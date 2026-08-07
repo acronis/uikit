@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import {
   LineChart,
@@ -10,10 +10,7 @@ import {
 import { ChartTooltipContent, type ChartConfig,
   resolveAnimation,
 } from '../../chart';
-import {
-  giveTheChartASize,
-  restoreTheChartSize,
-} from '../../chart/__tests__/sized-chart';
+import { giveTheChartASize } from '../../chart/__tests__/chart-layout';
 
 const data = [
   { month: 'Jan', desktop: 186, mobile: 80 },
@@ -298,10 +295,8 @@ describe('LineChart animation and data labels', () => {
 
 // These need real geometry: the curve set, the dot radii, and the per-series
 // overrides are all only observable on the painted SVG, which recharts skips
-// entirely at 0×0 (see `sized-chart`).
+// entirely at 0×0 (see `chart-layout`).
 describe('LineChart curves, dots and per-series overrides', () => {
-  afterEach(restoreTheChartSize);
-
   const CURVES = [
     'linear',
     'monotone',
@@ -327,7 +322,6 @@ describe('LineChart curves, dots and per-series overrides', () => {
     const drawn = CURVES.map((curve) => {
       const { paths, unmount } = curvePaths({ curve });
       unmount();
-      restoreTheChartSize();
       expect(paths[0]).toBeTruthy();
       return paths[0];
     });
@@ -462,7 +456,6 @@ describe('LineChart curves, dots and per-series overrides', () => {
         .querySelector('.recharts-area-area')
         ?.getAttribute('d');
       unmount();
-      restoreTheChartSize();
       return d;
     };
 
