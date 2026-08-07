@@ -70,6 +70,33 @@ Provide a full accessible sentence with `ariaLabel` (the glyph is decorative):
 />
 ```
 
+## Accessibility
+
+The direction glyph is always `aria-hidden`, so the trend has to reach a screen
+reader as text. Which text depends on `ariaLabel`:
+
+- **With `ariaLabel`**, the root becomes `role="img"` named by your sentence, and
+  that sentence is announced in place of the inner text. It is the only way the
+  direction itself is conveyed, and the kit never synthesizes it — "up" plus
+  "12%" is not a correct, localized statement in every domain.
+- **Without it**, the root takes no role and assistive tech reads the visible
+  `value` and `comparisonLabel` you supplied. That's enough when the value says
+  it on its own ("Improving", "4.2 h → 2.8 h") and thin when it doesn't: a bare
+  "12%" tells a screen-reader user nothing about the direction.
+
+`sentiment` is color and nothing else — no attribute announces whether a change
+is good or bad, so keep that in the surrounding copy. Leave `showIcon` on so the
+direction isn't carried by color alone visually either. When `tooltip` is set
+the root takes `tabIndex={0}`, which makes the hint reachable by keyboard rather
+than by hover alone.
+
+## Direction (RTL)
+
+An inline flex row with no physical directional utilities, so it mirrors under
+`dir="rtl"`. The glyph is the one thing flipped on purpose —
+`rtl:-scale-x-100` — so the up, down, and flat arrows keep pointing along the
+reading direction instead of against it.
+
 ## API Reference
 
 <AutoTypeTable

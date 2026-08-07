@@ -117,6 +117,50 @@ or an adjacent table — rather than only on hover.
 flat `color`; both node bars and the legend swatch / tooltip dots resolve either
 form.
 
+## Accessibility
+
+`SankeyChart` sets no `role` and no `aria-*` of its own, and recharts draws a Sankey
+into a bare `<svg>` — an empty `<title>` / `<desc>` pair, no role, no `tabindex`. So
+the diagram has no accessible name, the plot is not a tab stop, and (as the tooltip
+note above says) the hover card is a reading a keyboard never reaches.
+
+The root is a plain `<div>` that spreads the props you pass, so a role and a label
+land on it:
+
+```tsx
+<SankeyChart
+  role="img"
+  aria-label="Certification status of 240 tenants: 209 certified, 31 expired"
+  config={config}
+  data={data}
+/>
+```
+
+`aria-labelledby` works the same way, as does wrapping the chart in a `<figure>` with
+a `<figcaption>`.
+
+A name is not a text alternative, though. A flow diagram is a visual encoding of
+numbers, so the numbers themselves have to be reachable as text — a caption, a
+summary sentence, or a table beside the chart. `showLegend` is the cheapest route:
+it renders each node's label, value and share as ordinary HTML below the plot rather
+than inside the SVG. The node labels `showLabels` draws are real `<text>` and not
+pixels, but they sit in the SVG with no structural role and carry no value alongside
+the name.
+
+## Direction (RTL)
+
+Under `dir="rtl"` the chrome around the plot — the tooltip, `SankeyChart`'s own
+legend (plain DOM below the diagram), and any readouts you compose alongside them —
+mirrors on its own, because it is ordinary flow layout built from logical CSS
+utilities. The plot area deliberately stays left-to-right: recharts places every mark
+in physical SVG coordinates, so mirroring it would flip the reading order of the data
+without flipping the geometry that encodes it. That holds without a `direction`
+override: recharts computes those coordinates itself, so the plot does not mirror
+even when the page does. For a Sankey that also fixes the labels: the
+columns run from source to sink left to right, and a node's label sits on the side
+its links choose — to the right of a node with outgoing flow, to the left of a
+terminal one — which is a property of the flow, not of the reading direction.
+
 ## API Reference
 
 <AutoTypeTable

@@ -99,6 +99,32 @@ tooltip on mount:
 <CategoryBar config={config} data={data} defaultOpenIndex={0} />;
 ```
 
+## Accessibility
+
+The track is one `role="img"` with an `aria-label`, so assistive tech gets a
+single coherent image rather than a row of unlabelled boxes. The default label
+is a locale-neutral list of `"<label> <value>"` pairs joined with commas —
+"Passed 68, Warnings 22, Failed 10". Three things feed it: `config[key].label`
+(the segment `key` stands in when that label is a node instead of a string or
+number, since an `aria-label` has to be plain text), `valueFormatter` (the same
+one the legend and tooltip use, so a formatter that appends a unit changes the
+announcement too), and the `aria-label` prop, which replaces the generated
+summary outright.
+
+That summary carries the values but not the shares, so the percentages reach a
+screen-reader user only through the legend. The per-segment tooltip is
+pointer-driven and cannot be reached by keyboard at all — the segments are
+non-focusable `<div>`s inside the image — so it must never be the only place a
+number appears.
+
+## Direction (RTL)
+
+Plain DOM throughout — a flex track and a flex legend, with no physical
+directional utilities — so the whole widget mirrors under `dir="rtl"`. The
+segments follow the flex direction, which puts the first entry in `data` at the
+inline start (the right edge) and keeps the bar reading in the same order as the
+text around it. Nothing is flipped by hand; there is no directional artwork.
+
 ## API Reference
 
 <AutoTypeTable

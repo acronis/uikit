@@ -66,6 +66,35 @@ Hide the hover tooltip with `showTooltip={false}`, format the value with
 `valueFormatter`, or replace the tooltip's contents with `tooltip` — a custom
 node rendered inside the same chart-style card.
 
+## Accessibility
+
+`Meter` is Base UI's `Meter`, so the root is a `role="meter"` — a scalar value
+within a known range, which is exactly why it isn't a `progressbar` — carrying
+`aria-valuenow`, `aria-valuemin` (0), `aria-valuemax`, and an accessible name
+wired from the `label` prop through `Meter.Label` and `aria-labelledby`.
+`aria-valuemax` is set back to the real `max` explicitly: a non-positive `max`
+is floored at 1 internally so the fill math can't divide by zero, and the
+numeric triad should still report what you passed.
+
+`aria-valuetext` is what a screen reader actually reads for the value —
+`"<value> of <max> (<percent>%)"`. Both numbers go through `valueFormatter`, so
+a formatter that appends a unit or a currency symbol changes the announcement as
+well as the visible row. The connective wording between them is the component's
+own English and is not reachable through that prop.
+
+With the tooltip on (the default) the root takes `tabIndex={0}` so the hover
+card is reachable by keyboard; with `showTooltip={false}` it is not focusable,
+because there is nothing to reveal. Either way the value and its share are plain
+text in the row, so a stack of meters stays readable without color — which is
+why every fill is paired with its label.
+
+## Direction (RTL)
+
+Plain DOM with no physical directional utilities, so a meter mirrors under
+`dir="rtl"`: the label moves to the inline start (the right) and the
+`value · %` readout to the inline end. Base UI positions the fill with
+`inset-inline-start`, so the bar grows from the same edge the label starts at.
+
 ## API Reference
 
 <AutoTypeTable

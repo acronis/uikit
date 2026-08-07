@@ -148,6 +148,64 @@ Charts render statically by default. Opt in to an entrance animation with
 system to reduce motion, the series render at their final geometry with no
 animation (the same applies when rendering on the server).
 
+## Accessibility
+
+Neither `ScatterChart` nor the shared `ChartContainer` adds a `role` or an
+`aria-*` attribute of its own. What semantics the chart has come from recharts,
+whose accessibility layer is on by default and is not switched off here: the
+plot's `<svg>` renders `role="application"` with `tabindex="0"`, so Tab reaches
+it, focusing it opens the tooltip on the first point, the left/right arrow keys
+step it from point to point, and Enter pins it.
+
+That surface has no accessible name, though — recharts emits an empty `<title>`
+and `<desc>` and exposes neither, so a screen reader announces an unnamed
+application region. The tooltip is not a live region either: `ChartTooltipContent`
+renders plain markup with no `role="status"` or `aria-live`, so the coordinates it
+reveals as you arrow along are shown but never announced.
+
+Name the chart from the outside. The root is a plain `<div>` that spreads the
+props it doesn't consume, so `role="img"` and `aria-label` (or `aria-labelledby`)
+land on it:
+
+```tsx
+<ScatterChart
+  role="img"
+  aria-label="Exam score against hours studied, by class"
+  config={config}
+  series={series}
+  xKey="hours"
+  yKey="score"
+/>
+```
+
+`role="img"` names the chart but also makes its subtree presentational, hiding
+the plot from assistive technology while it stays in the tab order. Where the
+keyboard tooltip should remain reachable, wrap the chart in a `<figure>` with a
+`<figcaption>`, or pass `role="group"` with the same `aria-label`, and leave the
+plot's own semantics alone.
+
+A name is not a text alternative. A scatter exists to show a relationship — the
+correlation, the cluster, the outlier — and that reading is nowhere in the label,
+so state it: a caption with the takeaway, a summary sentence, or the points in an
+adjacent [`Table`](/components/table). Note that `shape` sets the marker for
+_every_ point rather than per series, so on a grouped scatter hue is the only
+thing separating one series from another; when that grouping is part of the
+finding, make sure it survives into the text alternative. The same goes for a
+bubble chart: `zKey` maps a third field to point area, which nothing announces.
+
+## Direction (RTL)
+
+Under `dir="rtl"` the chrome around the plot mirrors on its own — the legend, the
+tooltip, and any readouts you compose alongside the chart are ordinary flow
+layout built from logical CSS utilities. The plot area itself deliberately stays
+left-to-right: recharts lays every mark out in physical SVG coordinates, so a
+mirrored x-axis would flip the reading order of the data without flipping the
+geometry that encodes it — and on a scatter that geometry _is_ the finding, since
+the slope of a cloud of points would reverse with it. `ChartContainer` pins
+`.recharts-surface` to `direction: ltr`, which makes that a guarantee rather than
+a side effect of whatever direction the surrounding page happens to inherit. This
+is what mainstream charting libraries do by default.
+
 ## API Reference
 
 <AutoTypeTable
