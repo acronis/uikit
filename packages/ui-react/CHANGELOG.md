@@ -1,5 +1,365 @@
 # @acronis-platform/ui-react
 
+## 0.61.0
+
+### Major Changes
+
+- [#620](https://github.com/acronis/uikit/pull/620) [`d6c245b`](https://github.com/acronis/uikit/commit/d6c245bb0352324ec094e3e1f70047cbb3be6af2) Thanks [@heygabecom](https://github.com/heygabecom)! - Remove the `SearchGlobal` component — it is no longer part of the design system.
+
+  ### BREAKING CHANGES
+  - **Removed export:** `SearchGlobal` (and `SearchGlobalProps`). The component's
+    `--ui-search-global-*` token tier is being dropped from
+    `@acronis-platform/design-tokens`, so the component can no longer be themed.
+    Consumers rendering a search field should use `InputSearch` (aliased as
+    `Search`), which has its own `--ui-input-search-*` tier.
+
+  `AppShell` is unaffected — it is a slot-based layout and never depended on
+  `SearchGlobal`; only its story and the docs examples referenced it.
+
+### Minor Changes
+
+- [#616](https://github.com/acronis/uikit/pull/616) [`90c421b`](https://github.com/acronis/uikit/commit/90c421b9f3b4aefbf6b83a5b85512ea4fa3bf9bc) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add the bar-styling knobs to `BarChart`.
+
+  **Highlighting a range.** `referenceArea` shades a range of categories (a forecast period, a quarter under review) accents the category ticks beneath it, and optionally marks its leading edge with a dashed `divider`; `barSettings` restyles one series over the same kind of range — `fill`, `opacity`, `dashed`, `shape`, and a per-bar track via `background` (`true` for the full plot height, or a data field name to cap it at that row's value — the headroom between a projection and its upper bound). Both address the range as `{ from, to }`, inclusive, taking either the category's own value or its 0-based row index, with an omitted bound running to that end of the data. Together they make a projection read as provisional — translucent, dashed, over its own track, inside the band — while the rest of the grouped or stacked chart is untouched.
+
+  **Painting.** `barShape` adds `pill`, `gradient` and `pattern` alongside the default `rounded`; a `barSettings` entry can override it for its range, so hatching can set a projection apart without relying on color.
+
+  **Sizing and chrome.** `barSize`, `maxBarSize`, `barGap`, `barCategoryGap` and `minPointSize` forward to recharts; `showBackground` / `backgroundFill` draw a full-height track behind every bar; `showActiveBar` / `activeBar` highlight the bar under the pointer.
+
+  **Legend order.** `BarChart` legend entries now follow the `dataKeys` order instead of the chart library's default alphabetical sort by series name. Charts whose `dataKeys` were already alphabetical are unaffected.
+
+- [#606](https://github.com/acronis/uikit/pull/606) [`dc788eb`](https://github.com/acronis/uikit/commit/dc788eb03885e11e28284ef30b4560982ff31254) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add opt-in entrance animation to every chart component via shared `animate` / `animationDuration` / `animationBegin` / `animationEasing` props (a `resolveAnimation` helper over the shared chart utils). Off by default, so unset charts render identically. `animate` maps to recharts' `isAnimationActive="auto"` rather than a literal `true`, so the animation honors `prefers-reduced-motion` and is skipped during SSR.
+
+- [#606](https://github.com/acronis/uikit/pull/606) [`1e02b9e`](https://github.com/acronis/uikit/commit/1e02b9e99403a2bb05bc083f029ffa35bb53a749) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add opt-in data labels to the Bar, Line, Area, Composed, Radar, RadialBar, and Pie charts via shared `showLabels` / `labelPosition` / `labelFormatter` props (a themed `LabelList` over the shared chart utils, reusing the axis tick formatters). Off by default, so charts without it render unchanged.
+
+  Label placement and colour are resolved per family so the value stays legible: labels drawn on an opaque series fill (any `inside*` position, a stacked bar segment, an on-arc polar placement) use the on-fill text token instead of the on-surface one, area series keep the on-surface token at every position because their fill is translucent, stacked Bar/Area segments centre their value rather than overflowing into the next segment, and Pie/RadialBar accept the polar positions recharts actually honors — Pie defaulting to `outside`. `labelFormatter` no longer coerces a `null` gap into a printed value.
+
+- [#615](https://github.com/acronis/uikit/pull/615) [`c88f052`](https://github.com/acronis/uikit/commit/c88f052c20169265fb40552a1ed91540770699c4) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Give the chart legend and tooltip one marker vocabulary each.
+
+  **Legend.** The shared `ChartLegendContent` lays its entries out from the start edge (they were centred) and marks a series after what it paints: a 10px `rounded-sm` swatch for a filled series (it was an 8px one), or a 16×3px line for a stroke-drawn one — recharts types both `<Line>` and `<Area>` as `line` — painted as a repeating gradient when the series carries a `strokeDasharray`, so a dashed line reads as dashed. A stroke series that should still read as one swatch sets `legendType="rect"`.
+
+  **Tooltip.** Every row keeps a round color dot, whatever marker the legend gives that series. **Breaking:** `ChartTooltipContent`'s `indicator` prop (`'dot' | 'line' | 'dashed'`) is gone along with its vertical-bar and dashed-rule shapes — nothing in the kit used them, and they matched neither the dot nor the legend's line. `hideIndicator` still hides the dot. A caller passing `indicator` should drop the prop; a chart needing a different row marker can render its own `tooltipContent`.
+
+  `CategoryBar` and `SankeyChart` build their own legends; their swatches switch from a circle to the same `rounded-sm` square, while their layouts (a distributed stat row and a two-column grid) stay as they are. Their tooltip dots stay round.
+
+  `ConfidenceCone` now names its metric once in the legend: actual, forecast and the cone band are three recharts series painting one metric, so only the actual series reaches the legend, with a swatch rather than the two line styles listed as separate series. The one-hue rule is enforced rather than incidental — the forecast key's `--color-*` is re-pointed at the actual series' color, so a `config` entry can no longer paint the metric in a second hue through a custom tooltip.
+
+- [#612](https://github.com/acronis/uikit/pull/612) [`d37255b`](https://github.com/acronis/uikit/commit/d37255b7f3b3e0b9f98f601728d65b8d73bb852e) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add an opt-in range brush to the cartesian charts that can carry one — `BarChart`, `LineChart`, `AreaChart` and `ComposedChart` — via shared `showBrush` / `brushHeight` / `brushAriaLabel` props. Dragging a handle (or the selected window) zooms the series into a slice of the data; the category axis and tooltip follow the selection, and it works with the category axis hidden and in either bar orientation. Off by default, so charts without it render unchanged.
+
+  The brush is themed from `--ui-*` tokens rather than recharts' hardcoded `#fff` / `[#666](https://github.com/acronis/uikit/issues/666)` defaults, so the strip, its handles and its range captions read in light and dark alike.
+
+  Its two handles are real controls — focusable `role="slider"` elements driven by the arrow keys — so they are named from `brushAriaLabel` (default `'Chart range selector'`, overridable to localize) instead of recharts' fallback, which reads "Min value: undefined, Max value: undefined" for any data without a `name` field. `ChartContainer` also restores a visible focus indicator on them, which its blanket outline reset would otherwise suppress.
+
+- [#613](https://github.com/acronis/uikit/pull/613) [`4171742`](https://github.com/acronis/uikit/commit/41717422ddb6b0fed460a6c3ca1c888a3fb8839d) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add an opt-in secondary Y axis to `ComposedChart`. A series selects it with `yAxis: 'secondary'`, and the second axis renders on the side opposite the primary one with its own unit, tick formatter, tick count, and domain (`secondaryYUnit`, `secondaryYTickFormatter`, `secondaryYAxisTickCount`, `secondaryYAxisDomain`, `secondaryYAxisLabel`, `showSecondaryYAxis`). This is what a composed chart needs to plot two measures whose units or magnitudes differ — a count next to a rate — where one shared scale flattens the smaller series onto the baseline. `yAxisOrientation` moves the primary axis to the right and mirrors the pair.
+
+  The axis is derived from the series rather than a flag of its own, so a series can't point at an axis that was never declared; and if every series opts into the secondary one, the now-empty primary axis gives up its gutter and the grid follows the axis that has the series, rather than drawing a tickless scale over the plot. A chart where no series opts in keeps the primary axis's implicit recharts id and renders byte-identically — verified by diffing the rendered SVG of every existing `ComposedChart` story before and after. The grid's horizontal lines stay bound to the primary axis; a second set from a different domain would cross the first at meaningless heights.
+
+  `ComposedChart` is the only chart that takes these props: its series already differ in mark type, so a bar read against the left axis and a line against the right can't be mistaken for two marks sharing one scale.
+
+- [#626](https://github.com/acronis/uikit/pull/626) [`f82cace`](https://github.com/acronis/uikit/commit/f82cace32169ff92d9cbfdb1fff845417debc92a) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Extend `ComposedChart` with per-series configuration, stacking and both orientations. Every styling prop on the chart is now the default a `series[]` entry can override by the same name — `color`, `curve`, `strokeWidth`, `strokeDasharray`, `showDots`, `showActiveDots`, `connectNulls`, `barRadius`, `barSize`, `showActiveBar`, `showBackground` and `fillOpacity` — plus per-series `stackId` and `legendType`. Series sharing a `stackId` stack within their mark type (bars with bars, areas with areas; a line ignores it), and only the segment at the top of a stack rounds its corners. The new `orientation` variant (`vertical` · `horizontal`) grows the marks rightward, moving the categories to the y-axis and the values to x — where a secondary value axis becomes a second x-axis along the top edge. `referenceLine` draws a dashed rule at a value, at a series average, or across the categories at one of them, and `referenceArea` shades a band behind a range of categories. A rule belongs to one scale: on a chart with two value axes it is placed against the axis it was measured from — `average` naming a series reads off that series' own axis, `average: true` pools only the series on the axis the rule is drawn against, and a per-rule `yAxis` overrides both. A labelled rule that stands vertical hangs its caption above the plot, so the chart reserves the headroom for it rather than clipping it against the default inset. `yAxisOrientation` is inert under `orientation="horizontal"`, where the value axis is X and has no left/right side to pick. Chart-level `barSize` / `barGap` / `barCategoryGap` / `showBackground` / `backgroundFill` / `showActiveBar` set the bar geometry, `margin` insets the plot, `legendPosition` places the legend, and `tooltipCursor` toggles the hover band. Everything is opt-in, so an existing chart renders unchanged.
+
+  The two range/reference helpers `BarChart` used are now shared by the cartesian charts: `barChartCategoryRange` / `barChartReferenceValue` moved to the `Chart` primitives as `resolveCategoryRange` / `resolveReferenceValue`, and the `BarChartCategoryRange` / `BarChartReferenceLine` types are now `ChartCategoryRange` / `ChartReferenceLine`.
+
+- [#622](https://github.com/acronis/uikit/pull/622) [`839f5d1`](https://github.com/acronis/uikit/commit/839f5d1cc6d7db89d0b30d7fc463b6cf344dc0a3) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - feat(charts): add a legend, gradient coloring, per-stage overrides and advanced labels to FunnelChart
+
+  `FunnelChart` had a `lastShape` variant, `reversed`, and one fixed right-hand name
+  label per stage. It now covers the rest of what a funnel needs, all opt-in.
+
+  **Legend.** `showLegend` renders one entry per visible stage — labelled, colored
+  and marked like every other chart's legend, because it goes through the shared
+  `ChartLegendContent` — and `legendPos` moves it to the top edge. The renderer
+  builds no legend payload for a funnel series (unlike bar/line/area/pie/radar), so
+  the component synthesizes one from its visible stages; without that a `<Legend>`
+  inside a funnel renders empty.
+
+  **Labels.** `labelFormat` says what a label carries — `name` (the default),
+  `value`, `percent`, or a `name-value` / `name-percent` / `value-percent` pair —
+  where a percentage is the stage's conversion from the widest stage, not a share of
+  the sum, because a funnel's stages are nested subsets rather than parts of a
+  whole. The base is the largest value rather than the first row, so an unsorted
+  funnel still tops out at 100%. `labelPosition` places it beside the segment or on
+  it, switching to the on-fill color token so an on-segment label keeps its
+  contrast; `labelFill` overrides that, `labelFormatter` formats the value and
+  `percentFormatter` the share — separately, so a locale that doesn't write a bare
+  `%` can replace only the latter. `showValueLabels` + `valuePosition` add a second
+  label, so a stage's name and its number can sit on opposite sides of the funnel;
+  `valuePosition` defaults to the side **opposite** `labelPosition`, following the
+  names instead of pinning itself to one edge.
+
+  A composite label beside the funnel narrows the **funnel** to make room for
+  itself. The renderer word-wraps a label against the gap between its own segment
+  and the plot area's edge, so a margin can't create that room — it moves the edge
+  inward together with the funnel and leaves the label with less. Narrowing the
+  funnel is the lever that works, because the plot area stays put. `margin` reserves
+  the side a label list sits on so unwrappable text isn't clipped at the SVG edge,
+  and is merged over the defaults per side, so passing one side keeps the others.
+
+  An on-segment (`inside`) label is legible only while every stage is wide enough to
+  hold its text; a funnel narrows, so its tail stages often aren't. That's why the
+  value labels default to the side opposite the names rather than onto the segments,
+  and why `inside` is documented as wanting a short format with the names in the
+  legend. A composite **left-hand** label wraps regardless: the widest segment
+  always sits flush against the plot area's left edge, so there is no room to free.
+
+  **Coloring.** `colorMode="gradient"` ramps one hue — `gradientColor`, or the first
+  visible stage's own color, including a `stageSettings` color set on it — from the
+  widest stage to the narrowest, mixing it toward the surface so every segment stays
+  opaque. `stageSettings` overrides one stage at a time: `color` wins over both
+  `config` and `colorMode`, and `hidden` drops the stage from the funnel, its
+  labels, the legend, and the conversions.
+
+  **Segment style.** `stroke` / `strokeWidth` border the segments — `strokeWidth`
+  alone pairs with the border token, since the renderer's own default there is a
+  hardcoded white the container neutralizes — `funnelWidth` narrows the shape,
+  `margin` sets the plot-area inset, and `showActiveShape` outlines the hovered
+  segment instead of changing its fill.
+
+  Every prop is opt-in and the defaults are unchanged, so an existing funnel renders
+  exactly as before.
+
+- [#625](https://github.com/acronis/uikit/pull/625) [`07eb8c7`](https://github.com/acronis/uikit/commit/07eb8c7d92e1e17f621d5410ea456985d9a38b40) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add the curve set, dot sizing, per-series overrides and reference lines to `LineChart` and `AreaChart`.
+
+  **Curves.** `curve` now takes `natural`, `basis`, `stepBefore` and `stepAfter` alongside `linear`, `monotone` and `step` — from a natural cubic spline (smoother than `monotone`, and free to overshoot a point) to a B-spline that need not pass through the points at all, plus the two one-sided step variants. The default stays `monotone`.
+
+  **Dots.** `dotSize` sets the point radius (3px as before; the hover dot stays 2px larger). `showActiveDot` decouples the hover dot from the static ones — unset it follows `showDots`, so existing charts are unchanged, and setting it gives either a bare line that still emphasizes the hovered point or static dots with no hover emphasis.
+
+  **Per-series overrides.** `lineSettings` / `areaSettings` restyle one series without touching the others, keyed by data key: `color`, `strokeWidth`, `dashed`, `curveType`, `showDots`, `dotSize`, `showLabel` / `labelPosition`, and — on areas — `fillOpacity`. Any field left out falls back to the chart-wide prop. A `color` override also recolors that series' gradient stops on `AreaChart`, and a series listed in `LineChart`'s `comparisonKeys` keeps its dashed, dimmed, dot-less overlay treatment (its `showDots` / `dotSize` entries do not promote it back).
+
+  **Reference lines.** `referenceLine` draws one or more dashed rules across the value axis — a fixed `value`, or the mean of one series or of every plotted series (`average`) — each with an optional caption, in the muted text token. The rule extends the axis domain so a target above the data maximum stays visible. A caption sits at its rule's top right; where that collides with the series, `labelPosition` moves it — on all three charts, `BarChart` included. It is otherwise the same config `BarChart` already accepts; the resolver and styling now live in the shared chart helpers (`ChartReferenceLine`, `resolveChartReferenceValue`, `resolveReferenceLineProps`), and `BarChartReferenceLine` is now an alias of the shared type.
+
+  With all of the new props unset, both charts render exactly as before.
+
+- [#627](https://github.com/acronis/uikit/pull/627) [`efab49d`](https://github.com/acronis/uikit/commit/efab49d6c208b72cd9da666c9f1e562250cab37a) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - feat(charts): plot several metrics in one `ConfidenceCone`, with optional bands, thresholds, dots and styled forecast ticks
+
+  `ConfidenceCone` now takes a `series` array — one entry per metric, each naming
+  its own actual / forecast / bound columns and taking its hue from
+  `config[actualKey]` — so several forecasts share one axis with independent cones.
+  Every synthetic band is stripped from the tooltip and legend, and the legend
+  names each metric once. The single-series `actualKey` / `forecastKey` /
+  `lowerKey` / `upperKey` props stay as the shorthand for one metric, and one of the
+  two forms is required — the props are a union, so a chart naming no columns is a
+  compile error rather than an empty plot.
+
+  `lowerKey` / `upperKey` are now optional: omit them for a band-less projection (a
+  bare dashed forecast line) when a model gives a point estimate but no interval.
+
+  New props: `actualType` (draw the observed period as a bare `line` instead of the
+  default filled `area`, so the cone stays the only shaded region), `referenceLine`
+  (one or more dashed horizontal thresholds on the value axis, with an optional
+  caption), `showDots` (filled dots on the observed values, hollow ones on the
+  projection) and `styleForecastTicks` (italic, metric-colored X ticks over the
+  projected period).
+
+  `keepMetricSeries` now takes an array of actual keys instead of a single key.
+
+- [#617](https://github.com/acronis/uikit/pull/617) [`0486070`](https://github.com/acronis/uikit/commit/0486070bfb78c6739815af4d9dff292392d8ef1c) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Extend `PieChart` with the arc geometry, slice labelling and per-slice controls it was missing. `startAngle` / `endAngle` / `minAngle` shape the sweep (semicircles and arcs) and `cornerRadius` rounds each slice. Data labels gain a `labelFormat` preset (`value` · `name-value` · `name-percent` · `percent`, where a percentage is the slice's share of the total to one decimal) and an opt-in `labelLine` that draws a leader line to each label in the slice's own colour. `sliceSettings` overrides one slice at a time — its `color`, whether it carries a label, and that label's format — and a slice whose label is hidden loses its leader line too. `tooltipFormat="value-percent"` covers the value-and-share tooltip without hand-rolling a `tooltipContent`, and `legendPosition` / `margin` place the legend and the plot area. Everything is opt-in, so an existing chart renders unchanged.
+
+- [#621](https://github.com/acronis/uikit/pull/621) [`83fa1a9`](https://github.com/acronis/uikit/commit/83fa1a9c19d919d0461e63d92d747180a6bc5a42) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add the polar axes, geometry, and per-series styling to `RadarChart`. The chart now has a value scale: `showRadiusAxis` draws a `PolarRadiusAxis` (`radiusAxisAngle` / `radiusAxisOrientation` / `radiusAxisTickCount` / `radiusAxisReversed`), and `radiusAxisDomain="fixed"` with `radiusAxisDomainMax` pins the outer ring to a known maximum so the areas read as absolute profiles instead of being stretched to the largest value in the data — that rescaling applies whether or not the scale itself is shown.
+
+  The categorical axis and the web are configurable too (`showAngleAxis`, `angleAxisOrientation`, `angleAxisLine`, `angleAxisLineType`, `angleTickLine`, `angleTickSize`, `radialLines`), as is the geometry (`cx`, `cy`, `startAngle`, `endAngle`, `innerRadius`, `outerRadius`, `margin`). `seriesSettings` overrides colour, outline, and dots for one series while the rest keep the chart-level values; `dotRadius`, `activeDot`, and `legendPosition` cover the remaining chart-level knobs.
+
+  The new props are additive: with all of them unset the rendered output is unchanged.
+
+  One pre-existing behavior is fixed alongside them. A radar area is a translucent fill, so a value label placed on it (`labelPosition="insideEnd"` and the other `inside*` / `center*` positions) now uses the theme-inverting on-surface token instead of the white on-fill one, matching `AreaChart` and the composed chart's areas — the white token was disappearing into the tinted surface in light mode. Labels at the default `top` position are unaffected.
+
+- [#619](https://github.com/acronis/uikit/pull/619) [`37e3391`](https://github.com/acronis/uikit/commit/37e33914864f7989eb2952a2050c2567d9eb2d27) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Extend `RadialBarChart` into a gauge primitive. `valueDomain` scales the arcs against a known range (without it a single value always fills the sweep, so a gauge could not read correctly), `centerLabel` renders a headline value and caption in the hole, and `segments` / `segmentGap` draw a single-value gauge's ring as notched segments — the reached ones in the arc's color, the rest in the muted track. `dataKeys` adds multi-metric mode (one arc per metric, colored and named from `config` keyed by the metric, as on the cartesian charts), `labelFormat` lets a data label read `name-value`, and `cx` / `cy` / `barSize` / `barGap` / `barCategoryGap` / `minAngle` / `margin` / `showPolarGrid` expose the remaining geometry. All additive: with the new props unset the rendered output is unchanged.
+
+- [#628](https://github.com/acronis/uikit/pull/628) [`6908ab2`](https://github.com/acronis/uikit/commit/6908ab2818643b4b97d754d55bb01005da39d3bc) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Rebuild `Timeline` against the new "ready for dev" Figma widget, and add the
+  `blue` / `gray` / `green` color schemes to `Avatar`.
+
+  The Figma widget is a different component from the design-pending v1, so this is
+  a **breaking API change** for `Timeline.Item`:
+  - Each row is now an `Avatar` marker plus a `Card` (title, optional `tag`,
+    `timestamp`, `description`, and a body below a divider), connected as a
+    **tree**: `level` (1–3) sets the indent, and the root derives the elbow
+    joining a row to its parent from the level sequence.
+  - New on `Timeline`: `variant="tree"`. New on `Timeline.Item`: `expanded`,
+    `defaultExpanded`, `onExpandedChange`, `toggleLabel`, `connector`, `tag`,
+    `color`, and `initials`.
+  - Removed: `status`, `current`, `disabled`, `metadata`, and `actions` on
+    `Timeline.Item`, and `size` / `density` on `Timeline` — none exist in the
+    design. `TimelineStatus` is no longer exported. Move `metadata` / `actions`
+    content into an item's `children`, which now renders in the card body.
+
+  **Collapsing is the variant, not a per-row flag.** There is no `collapsible`
+  prop. `variant="default"` never collapses; `variant="tree"` gives every row that
+  has descendants a disclosure button ahead of its marker, which drops the rows
+  beneath it — derived from the levels, so no wiring is needed (pass `expanded` to
+  own the state instead). A branch nobody can collapse would be indistinguishable
+  from `default` with a wider indent, so the two ways of saying it are unified into
+  one. A collapsed row keeps its control: "has descendants" is read from the rows
+  you passed, not the visible ones.
+
+  Separately — and **orthogonally** — `Timeline.Item` gains `collapsibleBody`, a
+  chevron at the trailing edge of a card's header that folds that card's own body
+  (Figma's `Action Button`), with `bodyExpanded` / `defaultBodyExpanded` /
+  `onBodyExpandedChange` / `bodyToggleLabel`. It is the card's control, not the
+  timeline's: same behaviour under both variants, and a `tree` row with descendants
+  can carry both — the branch button drops the rows below, the header chevron folds
+  this card. Collapsing a branch never hides a row's own body. This lives on
+  `Timeline.Item` only until `Card` grows the behaviour itself.
+
+  **The whole connector geometry is derived from the level sequence.** A row deeper
+  than the one above it opens a branch, so the elbow joining it to its parent is
+  drawn without being declared a second time. A row's descending line is drawn only
+  when the next visible row is at its own depth or deeper, its marker sits in the
+  same column, **and** it actually draws that elbow — so a branch's last row, the
+  list's last row, a row whose descendants were just collapsed, and a collapsed row
+  followed by a leaf sibling never leave a line dangling or crooked. `connector` and
+  `branchStart` are escape hatches for the two halves of that join, resolved
+  together so refusing one drops the other rather than leaving it unattached.
+
+  The two disclosure controls default to **distinct** accessible names —
+  `toggleLabel` is `"Toggle nested events"`, `bodyToggleLabel` is `"Toggle event
+details"` — because a `tree` row can carry both, and a shared default would put
+  two identically-named buttons doing different things in one `<li>`.
+
+  Rows must be **direct** children of `Timeline` — wrapping them in a fragment hides
+  their `level` from the root.
+
+  Figma Code Connect is now `COMPLETE` for both the `TimelineItem` and
+  `TimelineItemTree` component sets.
+
+  The design's `components/Timeline/{connectorColor,gap}` variables are not yet
+  "ready for dev" and have no `--ui-timeline-*` tier. Both are pure aliases in
+  Figma, identical across all six brand modes, so the implementation consumes their
+  alias targets (`--ui-border-on-surface-border`, `--ui-gap-16`) directly.
+
+- [#624](https://github.com/acronis/uikit/pull/624) [`28b2543`](https://github.com/acronis/uikit/commit/28b25431873d7a29ae1e1c07d3ed0bdd089d16f9) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - feat(charts): add rich cell labels and a legend to Treemap
+
+  `Treemap` labelled each cell with its leaf key, centered, on one line, and had no
+  legend at all. It now carries the label block the design asks for, plus the legend
+  for the tiles too small to hold one.
+
+  **Labels.** The block is anchored at the tile's bottom start corner, per the design;
+  `labelAlign` moves it to the top start corner or centers it (the previous look). Its
+  values are named for the start edge rather than a physical corner because they
+  mirror under `dir="rtl"`. The
+  name shown is the leaf's `config` **label** rather than its raw `nameKey` value:
+  that value becomes part of a `--color-<name>` custom property, so it has to be
+  CSS-safe, and a leaf whose display name has a space in it is keyed by a slug — the
+  slug is not what belongs on the tile. `secondaryKeys` adds a second line built from
+  any other fields on the row — a value, a count, or both — joined by
+  `secondarySeparator` and formatted by `secondaryFormatter`, which receives each
+  field's index so one formatter can cover fields of different kinds. A field a row
+  doesn't carry — or that the formatter returns empty for — is skipped instead of
+  leaving a dangling separator.
+
+  Both lines degrade with the tile: a cell too short for two lines keeps just its
+  name, each line truncates with an ellipsis, and a tile too small for a label at all
+  is left blank. The thresholds are measured in rendered line boxes rather than font
+  sizes, so a label is never drawn into a tile that would clip it. The title is set in the chart label size at semibold and the second
+  line one step down, so the hierarchy is weight and size rather than a second color,
+  which the on-strong secondary text token can't provide (it resolves to a dark grey
+  in dark mode, over a fill that stays saturated).
+
+  The block is HTML inside a `foreignObject` rather than SVG `<text>`, which is what
+  lets it behave like every other label in the kit: `truncate` measures the text
+  instead of estimating it, and `text-start` mirrors the block under `dir="rtl"` —
+  SVG's `x`/`text-anchor` are physical, so the same label would otherwise need the
+  direction read in JS and applied by hand.
+
+  **Cell shape.** Each tile is inset inside its node's rectangle with rounded
+  corners, so tiles are separated by the surface showing through instead of by the
+  surface-colored stroke they used to carry.
+
+  **Legend.** `showLegend` renders one entry per distinct leaf name — labelled,
+  colored and marked like every other chart's legend, because it goes through the
+  shared `ChartLegendContent` — and `legendPos` picks its edge. Two things had to be
+  worked around. The renderer builds no legend payload for a treemap (unlike
+  bar/line/area/pie/radar), so the component synthesizes one from its leaves. And a
+  treemap tiles its _whole_ surface rather than a plot area, so a legend drawn inside
+  the plot paints over the tiles: it is rendered as a row of its own beside the chart
+  instead, where normal flow gives it the height it needs and takes that height off
+  the tiled surface. That placement also keeps the tiling correct — a treemap reads
+  its container's size exactly once, and a recharts `<Legend>` can only render after
+  the chart has a size, so the box it read would always be the one from before its own
+  legend existed and the bottom row of tiles would be laid out under the clip.
+
+  **Shared legend.** Two changes to `ChartLegendContent`, both needed by the above and
+  useful beyond it:
+  - it wraps instead of overflowing — a legend with one entry per tile or per slice is
+    wider than the chart on a narrow surface, and a row that can't wrap paints past
+    the chart's edge. The column gap is unchanged, so every legend that already fits
+    on one row keeps its exact layout.
+  - it accepts the series `config` as a prop, so it can render outside its
+    `ChartContainer` (where the context doesn't reach). Charts that keep their legend
+    inside the plot pass nothing and still read the context; rendering it with neither
+    a prop nor a container still throws, as it always did.
+  - an entry with no `config` label falls back to the series key, the way the tooltip
+    row already did, instead of rendering a marker with no text.
+
+  Existing treemaps keep their behavior except for the label placement, the tile
+  shape, and cells now showing their config label; the legend is off by default.
+
+- [#631](https://github.com/acronis/uikit/pull/631) [`f711401`](https://github.com/acronis/uikit/commit/f71140143f4a45b9ea9e218e7d4ce2b7fcdd6772) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Polish pass over the widget set: an RTL fix, two new styling hooks, and four new
+  exported axis helpers.
+
+  `ChartContainer` now pins `.recharts-surface` to `direction: ltr`. recharts
+  anchors its axis tick text with the direction-relative SVG keywords
+  (`text-anchor: start|end`) while placing every mark at a computed physical
+  coordinate, so a chart inheriting `dir="rtl"` flipped only its text: `end`-anchored
+  Y-axis ticks mirrored about their anchor and landed inside the plot (24–39px),
+  rotated ticks shifted ~15px, and a `ReferenceLine` label at the right edge
+  overflowed the surface. Pinning the surface keeps the plot's coordinate system
+  consistent with the geometry recharts computed for it, and leaves the chrome that
+  should mirror — tooltip and legend, which are HTML outside the surface —
+  untouched. Verified in a browser against every cartesian story: the pin restores
+  LTR geometry under `dir="rtl"` and is a no-op under `dir="ltr"`, so no existing
+  visual-regression baseline moved.
+
+  `Treemap` is the one exception, and it is deliberate: its cell labels are HTML in a
+  `<foreignObject>` _inside_ the surface, put there precisely so they mirror with the
+  page. The pin therefore stops at that boundary and hands the page's direction back,
+  so a `labelAlign` start edge still resolves to the tile's right under `dir="rtl"`
+  (measured in Chromium on the rendered chart: the label block computes
+  `direction: rtl` and its line sits against the tile's right edge, one cell-padding
+  in, where under `dir="ltr"` it sits the same distance from the left). A new
+  `Widgets/Chart` "Rtl" story renders both halves of the rule — a bar plot that keeps
+  its LTR geometry next to a treemap whose labels mirror — so the behaviour has a
+  visual-regression baseline instead of resting on a one-off manual measurement.
+
+  `SankeyChart`'s node legend and `ConfidenceCone`'s cone band each gained a
+  `data-slot` (`sankey-chart-legend`, `confidence-cone-band`). Both existed only as
+  unlabelled markup: the Sankey legend was indistinguishable from the node labels
+  in the SVG, and the cone band is a stroke-less `<Area>` painting in the same hue
+  at the same opacity as its metric's own area — telling them apart meant relying
+  on `stroke-width`, which is an accident of the two elements' props rather than a
+  contract. They are addressable now, for styling as well as for tests.
+
+  The axis boilerplate every cartesian chart had copied — the rotated-tick
+  `text-anchor` ternary, the X-axis height allowance, and the two axis-title
+  objects — is now shared as `resolveRotatedTickAnchor`, `resolveXAxisHeight`,
+  `resolveXAxisTitle` and `resolveYAxisTitle`, replacing seven copies of each.
+  These four are exported from the `chart` barrel and so are additions to the
+  package's public surface, which is what makes this a minor rather than a patch.
+
+  Ten components — the shared `Chart` primitives plus `ComposedChart`, `BarChart`,
+  `ConfidenceCone`, `RadarChart`, `PieChart`, `LineChart`, `AreaChart`,
+  `CategoryBar` and `Metric` — had their deepest JSX lifted into named pieces. That
+  part changes no rendered output: it was verified by diffing the serialized markup
+  of several dozen prop combinations per component against the previous
+  implementation, and the visual-regression baselines did not move.
+
+### Patch Changes
+
+- [#622](https://github.com/acronis/uikit/pull/622) [`fca8a59`](https://github.com/acronis/uikit/commit/fca8a59a43e2ffaf14ce84bc25b35ddfeb19963c) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - fix(chart): neutralize recharts' hardcoded white outline on funnel segments
+
+  recharts defaults a `Funnel`'s segment stroke to `#fff`. `ChartContainer` already
+  undid that hardcoded white on pie/radial sectors and line dots, but not on funnel
+  trapezoids — so every `FunnelChart` drew a white hairline between its stages in
+  **both** themes, reading as a light outline around each segment in dark mode. The
+  container now neutralizes `.recharts-trapezoid[stroke='#fff']` alongside the other
+  two. A caller-supplied `stroke` is untouched, so an intentional segment border
+  still paints.
+
+- [#617](https://github.com/acronis/uikit/pull/617) [`5dd5f1d`](https://github.com/acronis/uikit/commit/5dd5f1def097e4492f7e84869c34f255c71f06a5) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Put a floor under the gap between a chart tooltip row's name and its value. The shared `ChartTooltipContent` row separated the two with `justify-between` alone, which only spaces them while the tooltip's `min-w-[8rem]` leaves free space to distribute — so a short value (`275`) read fine while a longer one (a currency tick formatter, a `labelFormatter` with units, a value alongside its share) grew the row past that width and left the name and value touching. Affects every chart that renders the default tooltip row.
+
+- [#606](https://github.com/acronis/uikit/pull/606) [`4ab2a1c`](https://github.com/acronis/uikit/commit/4ab2a1c8f0f203f381f7ac34191e4944b9d803c9) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Fix `ComposedChart` so the paint order actually follows the `series` array. recharts 3 assigns graphical items to z-index layers keyed by mark type (area 100, bar 300, line 400), so an area listed after a bar was still painted underneath it, contradicting the documented "later entries sit on top". Each series now gets an explicit z-index from its position in `series`.
+
+- Updated dependencies [[`1f08b72`](https://github.com/acronis/uikit/commit/1f08b72d64bdd197b6c8debd957727272f05df89)]:
+  - @acronis-platform/tokens-pd@2.5.0
+
 ## 0.60.0
 
 ### Minor Changes
