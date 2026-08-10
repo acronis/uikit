@@ -140,6 +140,12 @@ ran before. Two layers enforce that:
      resolved) and that they need to run this from a checkout where `origin`
      is the base repo — do not attempt to fetch from the other remote
      yourself as a workaround.
+   - If it prints `origin/main: FETCH FAILED`, this is a **hard abort** —
+     every downstream check in this run diffs against `origin/main`, so a
+     stale fetch there makes the whole run's output untrustworthy, not just
+     one section. Report the git error the script printed to the developer
+     instead of retrying blind or falling back to whatever `origin/main` was
+     fetched last time.
    - If it fails to fetch `refs/pr/<num>`, or `FETCH_VERIFY` reports a
      mismatch, this is a **hard abort** — do not retry silently. Read the git
      error the script printed: only if it names a shallow clone should you
@@ -328,15 +334,16 @@ ran before. Two layers enforce that:
     one piece of this skill's output that's meant to persist — but each write
     replaces the last, it never accumulates.
 
-12. **Local git state cleanup is automatic — not a step you perform.** The
-    script deletes `refs/pr/<num>` itself, both defensively on entry (in case
-    a prior run was killed before cleaning up) and unconditionally on exit via
-    a trap (success, early abort, or `SHORT_CIRCUIT`) — see `pr-audit.sh`.
-    Do not add a manual `git update-ref -d` step here: the point of doing it
-    inside the script is that it happens whether or not the calling agent
-    remembers to, which is what makes a run stateless. The forced fetch
-    (`+pull/<num>/head:refs/pr/<num>`) is what keeps a single run correct;
-    the trap-based delete is what guarantees no ref survives _between_ runs.
+12. **Delete `refs/pr/<num>` now that nothing else needs it.** Steps 4 and 5
+    read this ref after `pr-audit.sh` has already returned, so the script
+    itself cannot safely delete it on exit — it defensively wipes a leftover
+    ref from a prior run on entry (see `pr-audit.sh`), but leaves the ref it
+    just fetched in place when it exits. Once the report is written (step 11)
+    and nothing in this skill needs the ref anymore, run
+    `git update-ref -d refs/pr/<num>` yourself as this step. The forced fetch
+    (`+pull/<num>/head:refs/pr/<num>`) is what keeps a single run correct even
+    if this delete is ever skipped; this step is what keeps no ref surviving
+    _between_ runs.
 
 13. **Print a short terminal summary** (verdict, top findings, report path)
     so the developer doesn't have to open the file for the headline.
@@ -427,27 +434,34 @@ that this PR doesn't touch `packages/ui-react` or anything that affects it.
   (`git fetch origin +pull/<num>/head:refs/pr/<num>`) so the ref always
   reflects the PR's real current head even after a rebase/amend/force-push —
   this works for fork PRs too, since GitHub mirrors them into the base
-  repo's `refs/pull/*` namespace. `main` freshness comes from
-  `git fetch origin main` only; the developer's checked-out branch (even if
-  it happens to be `main`) is never fast-forwarded or switched. A hard
-  `FETCH_VERIFY` check in the script cross-checks the fetched local SHA
-  against `gh pr view`'s `headRefOid` and aborts on any mismatch, so a stale
-  fetch can never silently drive the rest of the review.
+  repo's `refs/pull/*` namespace. `main` freshness comes from a forced
+  `git fetch origin +main:refs/remotes/origin/main`, which hard-aborts the
+  whole script on failure (every downstream check diffs against
+  `origin/main`, so a stale fetch there would make every result wrong, not
+  just one section); the developer's checked-out branch (even if it happens
+  to be `main`) is never fast-forwarded or switched. A hard `FETCH_VERIFY`
+  check in the script cross-checks the fetched local SHA against `gh pr
+view`'s `headRefOid` and aborts on any mismatch, so a stale fetch can never
+  silently drive the rest of the review.
 - **Base-repo checkouts only.** `pr-audit.sh` hard-aborts (`FORK_CHECK: FAIL`)
   before fetching anything if `origin` doesn't match the repo `gh` resolves
   as current — i.e. a fork checkout (`origin` = your fork, some other remote
   = the base repo). Every fetch in this skill targets `origin` by name; in a
   fork checkout that silently targets the wrong repository. There is no
   workaround mode — point `origin` at the base repo and re-run.
-- **No lingering local git state.** `pr-audit.sh` deletes `refs/pr/<num>`
-  defensively on entry and unconditionally on every exit path via a trap —
-  not as a step the calling agent has to remember. A killed/interrupted run
-  can't poison the next one, and a normal run never leaves the ref behind
-  either. `component-readiness/audit.sh`'s worktree (used in step 5) is the
-  same story: pruned defensively before creation, removed via an
-  `EXIT INT TERM` trap after. See "Statelessness contract" above — the
-  report file (always overwritten, never suffixed) is the only thing that
-  persists after a run.
+- **No lingering local git state, once the whole review is done.**
+  `pr-audit.sh` defensively deletes a leftover `refs/pr/<num>` from a prior
+  run on entry (after AUTH/FORK_CHECK pass), but leaves the ref it fetches in
+  place on exit — steps 4 and 5 still need it after the script returns. Step
+  12 of this skill deletes it explicitly once the report is written, so a
+  killed/interrupted run can't poison the next one and a completed run never
+  leaves the ref behind either. `component-readiness/audit.sh`'s worktree
+  (used in step 5) is the same story: pruned defensively before creation,
+  removed via an `EXIT` trap after (that trap intentionally does not add
+  `INT`/`TERM` — `EXIT` already fires for those signals, and a non-terminating
+  handler for them would let the script resume against a worktree it just
+  deleted). The report file (always overwritten, never suffixed) is the only
+  thing that persists after a run.
 - **Local-only token/style truth.** All `--ui-*` resolution and
   generated-artifact freshness checks read `packages/tokens-pd`,
   `packages/design-tokens`, `packages/icons-svg(-next)`, and

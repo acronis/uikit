@@ -37,17 +37,16 @@ TIER_B_RE='^packages/design-tokens/|^tools/style-dictionary/|^packages/tokens-pd
 TIER_D_RE='^apps/docs/|^apps/demo/|^apps/demos/'
 
 # Statelessness contract: this script must behave identically whether this is
-# the first time <NUM> has ever been reviewed or the tenth time in a row.
-# Two guarantees enforce that:
-#   1. Wipe any leftover $PR_REF from a prior run (interrupted, killed, or
-#      simply never cleaned up) BEFORE doing anything else — never trust that
-#      a previous invocation left things tidy.
-#   2. Delete $PR_REF again on the way out, unconditionally, via a trap — so
-#      it happens on every exit path (success, early exit 1, or the
-#      SHORT_CIRCUIT return) instead of depending on the caller remembering a
-#      manual cleanup step. No local git state survives this script.
-git update-ref -d "$PR_REF" >/dev/null 2>&1 || true
-trap 'git update-ref -d "$PR_REF" >/dev/null 2>&1 || true' EXIT
+# the first time <NUM> has ever been reviewed or the tenth time in a row. The
+# forced refspec used below (+pull/$NUM/head:$PR_REF) already guarantees that
+# on its own — it overwrites $PR_REF regardless of what it pointed to before.
+# We additionally wipe any leftover $PR_REF from a prior run (interrupted,
+# killed, or simply never cleaned up) once we know this run will actually
+# fetch — i.e. after AUTH/FORK_CHECK pass, not before — so a run that aborts
+# early never destroys a pre-existing ref for no benefit. $PR_REF is left in
+# place when this script exits: the calling skill's steps 4/5 read it after
+# the script returns, so it must survive until the whole review is done. The
+# skill deletes it as its own final step once nothing else needs it.
 
 echo "=== PREFLIGHT ==="
 if ! gh auth status >/dev/null 2>&1; then
@@ -88,6 +87,11 @@ elif [ "$ORIGIN_REPO" != "$REPO" ]; then
   exit 1
 fi
 echo "FORK_CHECK: OK — origin matches $REPO"
+
+# Now that we know this run will actually fetch, wipe any leftover $PR_REF
+# from a prior run (interrupted, killed, or simply never cleaned up) —
+# never trust that a previous invocation left things tidy.
+git update-ref -d "$PR_REF" >/dev/null 2>&1 || true
 
 echo
 echo "=== FETCH ==="

@@ -69,9 +69,11 @@ if [ -n "$REF" ]; then
     rm -rf "$WORKTREE"
     exit 1
   fi
-  # EXIT covers normal/early exits; INT/TERM covers a killed run so a fresh
-  # worktree from THIS run doesn't itself become tomorrow's orphan.
-  trap 'git -C "$SCRIPT_ROOT" worktree remove --force "$WORKTREE" >/dev/null 2>&1; rm -rf "$WORKTREE" 2>/dev/null' EXIT INT TERM
+  # EXIT already covers SIGINT/SIGTERM (bash runs the EXIT trap for those too)
+  # as well as normal/early returns. A non-terminating INT/TERM handler would
+  # instead let the script resume after the worktree it just removed, auditing
+  # a deleted directory — so EXIT alone, without INT/TERM, is correct here.
+  trap 'git -C "$SCRIPT_ROOT" worktree remove --force "$WORKTREE" >/dev/null 2>&1; rm -rf "$WORKTREE" 2>/dev/null' EXIT
   ROOT="$WORKTREE"
 else
   ROOT="$SCRIPT_ROOT"
