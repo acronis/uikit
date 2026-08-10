@@ -181,6 +181,56 @@ const categoryBarConfig = {
   },
 } satisfies ChartConfig;
 
+/**
+ * Right-to-left. The one story that renders the direction rules `ChartContainer`
+ * carries, so the VR baseline is what guards them — the unit tests can only assert
+ * the rules are present, not how Tailwind compiles them.
+ *
+ * Three behaviours in one frame, deliberately: the bar plot keeps its LTR geometry
+ * (categories read Jan→Apr, the value axis stays on the left, the rotated ticks and
+ * both axis titles sit where recharts computed them); the legend row above it
+ * mirrors, because it is HTML outside the surface; and the treemap's cell labels
+ * mirror to their tiles' bottom-right, because they are HTML in a `<foreignObject>`
+ * that the pin deliberately exempts. A regression in either rule moves this
+ * baseline. Pinned to `rtl` via the Direction toolbar global.
+ */
+export const Rtl: Story = {
+  globals: { direction: 'rtl' },
+  args: { config: cartesianConfig, children: <span /> },
+  render: () => (
+    <div className="grid w-[720px] grid-cols-2 gap-6">
+      <div>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Bar chart — plot stays LTR
+        </h3>
+        <BarChart
+          config={cartesianConfig}
+          data={cartesianData}
+          dataKeys={['desktop', 'mobile']}
+          xKey="month"
+          xAxisLabel="Month"
+          yAxisLabel="Sessions"
+          xAxisAngle={-45}
+          className="h-[260px] w-full"
+        />
+      </div>
+      <div>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Treemap — cell labels mirror
+        </h3>
+        <Treemap
+          config={partConfig}
+          data={partData}
+          dataKey="value"
+          nameKey="name"
+          secondaryKeys={['value']}
+          className="h-[260px] w-full"
+        />
+      </div>
+    </div>
+  ),
+};
+
 // Every per-type chart component in the suite, one compact example each.
 // The gallery is taller than the default viewport, so capture the full page
 // (otherwise the lower rows are clipped from the VR baseline).

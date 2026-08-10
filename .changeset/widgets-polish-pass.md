@@ -15,8 +15,19 @@ overflowed the surface. Pinning the surface keeps the plot's coordinate system
 consistent with the geometry recharts computed for it, and leaves the chrome that
 should mirror — tooltip and legend, which are HTML outside the surface —
 untouched. Verified in a browser against every cartesian story: the pin restores
-LTR geometry under `dir="rtl"` and is a no-op under `dir="ltr"`, so no
+LTR geometry under `dir="rtl"` and is a no-op under `dir="ltr"`, so no existing
 visual-regression baseline moved.
+
+`Treemap` is the one exception, and it is deliberate: its cell labels are HTML in a
+`<foreignObject>` _inside_ the surface, put there precisely so they mirror with the
+page. The pin therefore stops at that boundary and hands the page's direction back,
+so a `labelAlign` start edge still resolves to the tile's right under `dir="rtl"`
+(measured in Chromium on the rendered chart: the label block computes
+`direction: rtl` and its line sits against the tile's right edge, one cell-padding
+in, where under `dir="ltr"` it sits the same distance from the left). A new
+`Widgets/Chart` "Rtl" story renders both halves of the rule — a bar plot that keeps
+its LTR geometry next to a treemap whose labels mirror — so the behaviour has a
+visual-regression baseline instead of resting on a one-off manual measurement.
 
 `SankeyChart`'s node legend and `ConfidenceCone`'s cone band each gained a
 `data-slot` (`sankey-chart-legend`, `confidence-cone-band`). Both existed only as
