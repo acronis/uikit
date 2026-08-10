@@ -25,6 +25,11 @@ first.
 `@acronis-platform/ui-react` already pulls this in for you when you import its
 styles entry, so most apps never import it directly.
 
+Alongside colors, typography, and spacing, the semantic tier ships elevation as
+`--ui-shadow-{sm,md,lg}`. The light/dark pair sits **inside the shadow's color
+slot** — `0px 8px 16px 0px light-dark(…, …)` — because `light-dark()` is a color
+function and cannot wrap a whole shadow value.
+
 ## Per-component tiers
 
 Each component has its own CSS under `css/<Component>/default.css` (e.g.
@@ -38,10 +43,12 @@ component-scoped `--ui-*` tokens (such as `--ui-button-global-radius`) and are
 
 ## Brand overrides
 
-Non-default brands ship as **override-only** files. `css/deep_sky_itkontoret.css` contains
-a token only when its value differs from `default` or is new in that brand.
-Brand selection is import-order based — **last import wins** — not a class
-toggle:
+Besides `default`, the package ships `deep_sky_itkontoret`, `light-gray`,
+`telstra`, `virtuozzo`, and `yellow-1c` — each as an **override-only** file
+(`css/<brand>.css` for the semantic tier, `css/<Component>/<brand>.css` for a
+component tier). A brand file contains a token only when its value differs from
+`default` or is new in that brand. Brand selection is import-order based —
+**last import wins** — not a class toggle:
 
 ```css
 @import '@acronis-platform/tokens-pd/css/default.css';
@@ -86,19 +93,21 @@ export default {
 
 Color roles land in Tailwind's role-namespaced keys with the role word and the
 `ui-` prefix dropped — `bg-surface-primary`, `text-on-surface-primary`,
-`border-on-surface-border`, `ring-brand`. Because the values are baked, a preset
-is self-contained, but brand selection happens at build time.
+`border-on-surface-border`, `ring-brand`. Shadows land in `boxShadow`, so the
+preset's `shadow-sm`/`shadow-md`/`shadow-lg` carry the design-system elevation
+instead of Tailwind's defaults. Because the values are baked, a preset is
+self-contained, but brand selection happens at build time.
 
 ## The `--ui-*` naming convention
 
 Every CSS custom property is prefixed `ui` and the token path is flattened with
 hyphens. The `colors` tier root is dropped:
 
-| Token path                            | CSS variable                      |
-| ------------------------------------- | --------------------------------- |
-| `colors.background.surface.primary`   | `--ui-background-surface-primary` |
-| `colors.text.on-surface.primary`      | `--ui-text-on-surface-primary`    |
-| `button._global.radius`               | `--ui-button-global-radius`       |
+| Token path                          | CSS variable                      |
+| ----------------------------------- | --------------------------------- |
+| `colors.background.surface.primary` | `--ui-background-surface-primary` |
+| `colors.text.on-surface.primary`    | `--ui-text-on-surface-primary`    |
+| `button._global.radius`             | `--ui-button-global-radius`       |
 
 ## DTCG intermediate
 
