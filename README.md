@@ -156,8 +156,8 @@ function MyComponent() {
 The library covers layout (`AppShell`, `AppShellChat`, `AuthLayout`, `Card`,
 `CardFilter`, `Grid`, `Stack`, `Section`, `PageContent`, `PageHeader`,
 `Separator`, `ScrollArea`, `Resizable`, `Toolbar`), navigation (`Breadcrumb`,
-`Tabs`, `Pagination`, `SidebarPrimary`, `SidebarSecondary`, `SearchGlobal`,
-`Link`), forms (`InputText`, `InputSearch`, `InputTextArea`, `InputSelect`,
+`Tabs`, `Pagination`, `SidebarPrimary`, `SidebarSecondary`, `Link`), forms
+(`InputText`, `InputSearch`, `InputTextArea`, `InputSelect`,
 `InputDatePicker`, `InputPassword`, `InputOTP`, `Combobox`, `Select`,
 `Checkbox`, `Radio`, `Switch`, `Slider`, `NumberField`, `Calendar`,
 `DateRangePicker`, `Field`, `Form`, `Label`), buttons (`Button`, `ButtonIcon`,
