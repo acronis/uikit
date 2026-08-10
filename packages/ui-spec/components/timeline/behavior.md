@@ -24,13 +24,18 @@
 
 ## Nesting is flat
 
-- `level` is `1 | 2 | 3` and drives the row's indent only. A row's connector
-  geometry is a pure function of its own props — the component never derives depth
-  from JSX nesting, so a consumer renders one row per entry and declares its level.
-  Rows must be **direct** children of `Timeline`, never wrapped in a fragment, or
-  their levels cannot be read.
-- **Given** `level` greater than 1 **and** `branchStart`
-  **Then** an elbow joins the row to its parent's connector.
+- `level` is `1 | 2 | 3` and drives the row's indent. The component never derives
+  depth from JSX nesting: the flat level sequence _is_ the tree, so a consumer
+  renders one row per entry and declares its level, and the root derives the
+  connector geometry from that sequence. Rows must be **direct** children of
+  `Timeline`, never wrapped in a fragment, or their levels cannot be read.
+- **Given** `level` greater than 1 **and** a shallower row above it
+  **Then** the row opens a branch, and an elbow joins it to that row's connector.
+  No second declaration is needed — the level jump already says it.
+- **Given** `level` greater than 1 **and** a row above it at the same level
+  **Then** the row continues the branch and draws no elbow.
+- **Given** an explicit `branchStart`
+  **Then** it overrides that derivation, in both directions.
 - **Given** `level` of 1 **and** `branchStart`
   **Then** `branchStart` is ignored — there is no parent to join.
 - The indent step is the marker column plus the gap, so `variant="tree"` (which
@@ -54,6 +59,10 @@
   the kit omits it rather than drawing a crooked one. This is only reachable once a
   row has been collapsed, since an expanded row with descendants is always followed
   by one of them.
+- **Given** the next visible row is deeper **and** an explicit `branchStart={false}`
+  refuses its elbow
+  **Then** no line is drawn: the connector and the elbow are two halves of one
+  join, resolved together, so neither is ever drawn without the other.
 - **Given** an explicit `connector`
   **Then** it overrides that derivation.
 - A row's connector tracks **its own** marker. A row that has descendants always
@@ -105,7 +114,8 @@ to one: it is the card's chevron, so it behaves identically under `default` and
 - **Given** `collapsibleBody` **and** a `tree` row that has descendants
   **Then** the row carries two controls: the branch button ahead of the marker
   drops the rows below, the header chevron folds this card's body. Neither affects
-  the other.
+  the other, and their default accessible names differ so the two are
+  distinguishable to assistive tech without any override.
 - **Given** the header chevron is activated
   **Then** `onBodyExpandedChange` fires with the requested state. Uncontrolled, the
   row updates its own state; with `bodyExpanded` set, the consumer owns it.

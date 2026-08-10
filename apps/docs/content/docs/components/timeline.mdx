@@ -3,6 +3,7 @@ title: Timeline
 description: A chronological event tree — activity feed, audit log, or status history.
 ---
 
+import { Callout } from 'fumadocs-ui/components/callout';
 import { DemoReact } from '@/components/DemoReact';
 import {
   TimelineDemo,
@@ -47,7 +48,6 @@ to assistive tech.
   />
   <Timeline.Item
     level={2}
-    branchStart
     icon={<CircleInfoIcon />}
     title="Three workloads missed their window"
     description="db-01, db-02, files-07"
@@ -57,29 +57,31 @@ to assistive tech.
 
 ### Nesting
 
-`level` (`1`–`3`) sets a row's indent. `branchStart` — Figma's `Nesting` `-First`
-— draws the elbow joining a row to its parent's connector, so it belongs on the
-**first** child of a branch only. The two props are orthogonal, and `branchStart`
-is ignored at `level={1}` because there is no parent to join.
+`level` (`1`–`3`) sets a row's indent. Nesting is **flat and explicit**: the
+component never derives depth from JSX nesting, so render one `Timeline.Item` per
+visible row, in visual order, and declare its level.
 
-Nesting is **flat and explicit**: the component never derives depth from JSX
-nesting. Render one `Timeline.Item` per visible row, in visual order, and declare
-its level.
-
-Connectors are **derived** from those levels: `Timeline` draws a row's descending
-line only when the next visible row is at its own depth or deeper and its marker
-sits in the same column, so a branch's last row, the list's last row, and a row
-whose descendants were just collapsed never leave a line dangling in the margin.
-Set `connector` explicitly only to override that.
+Everything else follows from that sequence. A row deeper than the one above it
+**opens a branch**, so `Timeline` draws the elbow joining it to its parent's
+connector (Figma's `Nesting` `-First`) — you don't declare the jump twice. And a
+row's descending line is drawn only when the next visible row is at its own depth
+or deeper, sits in the same marker column, and has an elbow to meet — so a
+branch's last row, the list's last row, and a row whose descendants were just
+collapsed never leave a line dangling in the margin.
 
 ```tsx
 <Timeline>
   <Timeline.Item title="Root" />
-  <Timeline.Item level={2} branchStart title="First child" />
+  <Timeline.Item level={2} title="First child" />
   <Timeline.Item level={2} title="Last child" />
   <Timeline.Item title="Next root" />
 </Timeline>
 ```
+
+`connector` and `branchStart` are escape hatches for that derivation — set them
+only to force a line or an elbow on or off. They are resolved as a pair, so
+refusing one half also drops the other rather than leaving it unattached.
+`branchStart` is ignored at `level={1}`, which has no parent to join.
 
 ### Collapsing
 
@@ -97,7 +99,7 @@ needed, because `Timeline` reads its children's `level`s:
 ```tsx
 <Timeline variant="tree">
   <Timeline.Item title="Retention policy applied" />
-  <Timeline.Item level={2} branchStart title="Archive pruned" />
+  <Timeline.Item level={2} title="Archive pruned" />
   <Timeline.Item level={2} title="Index rebuilt" />
   <Timeline.Item title="Next root event" />
 </Timeline>
@@ -118,6 +120,14 @@ button is reserved.
 `toggleLabel` is the control's accessible name. It defaults to an English string,
 so pass a localized value.
 
+<Callout type="info">
+  A tree row can carry this control **and** the card chevron below at once, so
+  their defaults name their own action — `toggleLabel` is `"Toggle nested events"`
+  and `bodyToggleLabel` is `"Toggle event details"`. Keep them distinct when you
+  localize, or a screen-reader user gets two identically-named buttons in the same
+  row doing different things.
+</Callout>
+
 ### Expandable card
 
 Separately from the variant, `collapsibleBody` gives a row's **card** a chevron at
@@ -133,7 +143,7 @@ body. It is the card's control, not the timeline's:
   <Timeline.Item collapsibleBody title="Nightly protection plan failed">
     <div>Affected workloads: db-01, db-02, files-07</div>
   </Timeline.Item>
-  <Timeline.Item level={2} branchStart initials="AA" title="Acknowledged" />
+  <Timeline.Item level={2} initials="AA" title="Acknowledged" />
 </Timeline>
 ```
 

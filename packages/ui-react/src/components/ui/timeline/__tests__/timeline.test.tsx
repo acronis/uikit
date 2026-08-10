@@ -59,7 +59,7 @@ describe('Timeline', () => {
     expect(items.map((li) => li.dataset.level)).toEqual(['1', '2', '3']);
   });
 
-  it('draws the elbow only when a nested item starts a branch', () => {
+  it('draws the elbow only on the row that opens a branch', () => {
     const { container } = render(
       <Timeline>
         <Timeline.Item title="Root" branchStart />
@@ -77,6 +77,46 @@ describe('Timeline', () => {
     ).toBeInTheDocument();
     expect(
       items[2].querySelector('[data-slot="timeline-elbow"]')
+    ).not.toBeInTheDocument();
+  });
+
+  it('derives the elbow from the level jump, with no branchStart', () => {
+    const { container } = render(
+      <Timeline>
+        <Timeline.Item title="Root" />
+        <Timeline.Item title="Child" level={2} />
+        <Timeline.Item title="Grandchild" level={3} />
+        <Timeline.Item title="Sibling" level={3} />
+      </Timeline>
+    );
+    const items = Array.from(container.querySelectorAll('li'));
+    const hasElbow = (li: HTMLElement) =>
+      li.querySelector('[data-slot="timeline-elbow"]') !== null;
+
+    // Being deeper than the row above *is* what opens a branch, so the elbow does
+    // not have to be declared a second time — and the parent's line always lands.
+    expect(hasElbow(items[0])).toBe(false);
+    expect(hasElbow(items[1])).toBe(true);
+    expect(hasElbow(items[2])).toBe(true);
+    // Same level as the row above: continues the branch rather than opening one.
+    expect(hasElbow(items[3])).toBe(false);
+  });
+
+  it('drops the descending line when a deeper row refuses its elbow', () => {
+    const { container } = render(
+      <Timeline>
+        <Timeline.Item title="Root" />
+        <Timeline.Item title="Child" level={2} branchStart={false} />
+      </Timeline>
+    );
+    const items = Array.from(container.querySelectorAll('li'));
+    // The two halves of the join are resolved together: without the elbow there is
+    // nothing for the parent's line to meet, so it is not drawn either.
+    expect(
+      items[1].querySelector('[data-slot="timeline-elbow"]')
+    ).not.toBeInTheDocument();
+    expect(
+      items[0].querySelector('[data-slot="timeline-connector"]')
     ).not.toBeInTheDocument();
   });
 
@@ -485,7 +525,7 @@ describe('Timeline', () => {
       </Timeline>
     );
     expect(
-      screen.getByRole('button', { name: 'Toggle event details' })
+      screen.getByRole('button', { name: 'Toggle nested events' })
     ).toBeInTheDocument();
 
     rerender(
@@ -497,6 +537,25 @@ describe('Timeline', () => {
     expect(
       screen.getByRole('button', { name: 'Mostrar más' })
     ).toBeInTheDocument();
+  });
+
+  it('gives a row carrying both controls two distinct default names', () => {
+    const { container } = render(
+      <Timeline variant="tree">
+        <Timeline.Item title="Root" collapsibleBody>
+          <p>Section detail</p>
+        </Timeline.Item>
+        <Timeline.Item level={2} branchStart title="Child" />
+      </Timeline>
+    );
+    // Both defaults land in the same `<li>`, so a shared string would leave a
+    // screen-reader user with two identically-named buttons doing different things.
+    const names = Array.from(
+      container.querySelectorAll('li:first-of-type button')
+    ).map((button) => button.getAttribute('aria-label'));
+
+    expect(names).toHaveLength(2);
+    expect(new Set(names).size).toBe(2);
   });
 
   it('renders initials in the marker when no icon is given', () => {

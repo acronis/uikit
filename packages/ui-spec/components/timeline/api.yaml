@@ -3,10 +3,11 @@ component: Timeline
 
 # `variant` is the only cva axis on Timeline (its enum matches the cva keys in the
 # ui-react source). The remaining rows document Timeline.Item, whose props are
-# plain (not cva). Nesting is flat: a row declares its own `level` and whether it
-# opens a branch, and the root reads those levels both to place the connectors and
-# to decide which rows get a disclosure control. Branch collapsing is the variant,
-# not a per-row flag — there is deliberately no `collapsible` property. A card's own
+# plain (not cva). Nesting is flat: a row declares its own `level`, and the root
+# reads that sequence to place the connectors *and* the elbows and to decide which
+# rows get a disclosure control. `connector` / `branchStart` only override it.
+# Branch collapsing is the variant, not a per-row flag — there is deliberately no
+# `collapsible` property. A card's own
 # body disclosure (`collapsibleBody`) is a separate, orthogonal axis that behaves the
 # same under both variants. The kit never sorts, groups, or interprets events.
 contract:
@@ -59,14 +60,17 @@ contract:
       type: '1 | 2 | 3'
       required: false
       default: '1'
-      description: (Timeline.Item) Nesting depth — drives the indent only.
+      description: >-
+        (Timeline.Item) Nesting depth — drives the indent, and (as a sequence
+        across rows) the connector and elbow the root derives.
     - name: branchStart
       type: boolean
       required: false
-      default: 'false'
       description: >-
-        (Timeline.Item) This row opens a branch: draw the elbow joining it to its
-        parent's connector. Ignored at `level` 1, which has no parent.
+        (Timeline.Item) Force the elbow joining this row to its parent's connector
+        on or off. Leave it unset — the root derives it from the levels, drawing it
+        whenever this row is deeper than the one above it. Ignored at `level` 1,
+        which has no parent.
     - name: connector
       type: boolean
       required: false
@@ -88,8 +92,11 @@ contract:
     - name: toggleLabel
       type: string
       required: false
-      default: Toggle event details
-      description: (Timeline.Item) Accessible name for the branch disclosure control.
+      default: Toggle nested events
+      description: >-
+        (Timeline.Item) Accessible name for the branch disclosure control — the one
+        that drops this row's descendant rows. Distinct from `bodyToggleLabel` by
+        default, because a tree row can carry both controls at once.
     - name: collapsibleBody
       type: boolean
       required: false
@@ -112,7 +119,9 @@ contract:
       type: string
       required: false
       default: Toggle event details
-      description: (Timeline.Item) Accessible name for the card-body disclosure control.
+      description: >-
+        (Timeline.Item) Accessible name for the card-body disclosure control — the
+        one that folds this row's own body. Distinct from `toggleLabel` by default.
 
   events:
     - name: onExpandedChange
@@ -154,7 +163,6 @@ adapters:
         />
         <Timeline.Item
           level={2}
-          branchStart
           icon={<CircleCheckIcon />}
           color="green"
           title="Archive pruned"

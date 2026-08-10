@@ -20,12 +20,13 @@ import { Card } from '../card';
 // Area / Composed chart for that.
 //
 // Nesting is **flat**, mirroring the Figma `Nesting` variant: a consumer renders
-// one `Timeline.Item` per entry and declares its `level` (1-3) and whether it
-// opens a branch (`branchStart`, Figma's `-First`). Depth is never derived from
-// JSX nesting — that keeps a row's connector geometry a pure function of its own
-// props. Collapsing *is* handled here, though: in `tree` mode `Timeline` reads its
-// children's levels and drops the rows beneath a collapsed one, so a branch works
-// with no wiring from the consumer (pass `expanded` to control it).
+// one `Timeline.Item` per entry and declares its `level` (1-3). Depth is never
+// derived from JSX nesting — the level sequence *is* the tree. `Timeline` reads
+// that sequence and derives the rest: which rows get a disclosure control, which
+// rows are dropped when one collapses, and the whole connector geometry — both a
+// row's descending line and the elbow joining a branch's first row to its parent
+// (Figma's `-First`). `connector` and `branchStart` exist only to override those
+// two, and the pair is resolved together so neither half can be drawn alone.
 //
 // Collapsing is the **variant**, not a per-row flag. `tree` gives every row that
 // has descendants a disclosure button ahead of its marker and widens the indent
@@ -78,6 +79,7 @@ const TimelineContext = React.createContext<{ variant: TimelineVariant }>({
 const TimelineRowContext = React.createContext<{
   expanded: boolean;
   connector: boolean;
+  elbow: boolean;
   hasToggle: boolean;
   onToggle: () => void;
 } | null>(null);
@@ -181,23 +183,39 @@ const TimelineRoot = React.forwardRef<HTMLOListElement, TimelineProps>(
       });
     });
 
-    // Pass 2 — a row's connector descends from its own marker to the *next visible*
-    // row, so it may only be drawn when it actually lands on something. Otherwise
-    // the line dangles in the margin: at the end of the list, at the end of a
-    // branch, and (the case that needs the two passes) once a collapse has removed
-    // the descendants it used to point at.
+    // Pass 2 — the connector and the elbow are two halves of one join, so they are
+    // resolved together and neither can be drawn without the other.
+    //
+    // A row draws the elbow when it is deeper than the row above it: that is what
+    // "opens a branch" means, and reading it from the sequence keeps a level jump
+    // from having to be declared twice. `branchStart` overrides it, like
+    // `connector` overrides the descending line.
+    const drawsElbow = (index: number) => {
+      const row = visible[index];
+      if (row == null || row.level <= 1) return false;
+      const previous = visible[index - 1];
+      return (
+        row.element.props.branchStart ??
+        (previous != null && row.level > previous.level)
+      );
+    };
+
+    // A row's connector descends from its own marker to the *next visible* row, so
+    // it may only be drawn when it actually lands on something. Otherwise the line
+    // dangles in the margin: at the end of the list, at the end of a branch, and
+    // (the case that needs the two passes) once a collapse has removed the
+    // descendants it used to point at.
     const rows = visible.map((row, index) => {
       const next = visible[index + 1];
       const reachesNextRow =
         next != null &&
         (next.level > row.level
           ? // A deeper row bridges the gap with its own elbow, which starts exactly
-            // at this row's marker centre. That holds because a row with a deeper
-            // row after it has descendants, so in `tree` mode it always carries the
-            // disclosure control and therefore the wide marker column the elbow is
-            // positioned against — the same geometry the `default` variant has by
-            // construction.
-            true
+            // at this row's marker centre — so the line lands only if that elbow is
+            // actually drawn. It normally is, since a level jump derives one; it is
+            // not when the consumer refuses it with `branchStart={false}`, and then
+            // this line has nothing to meet.
+            drawsElbow(index + 1)
           : next.level === row.level &&
             // Same level, but a `tree` row that reserves a disclosure button has a
             // wider marker column than one that doesn't — so their markers sit at
@@ -211,6 +229,7 @@ const TimelineRoot = React.forwardRef<HTMLOListElement, TimelineProps>(
           value={{
             expanded: row.expanded,
             connector: row.element.props.connector ?? reachesNextRow,
+            elbow: drawsElbow(index),
             hasToggle: row.hasToggle,
             onToggle: () => {
               const nextExpanded = !row.expanded;
@@ -293,8 +312,10 @@ export interface TimelineItemProps extends Omit<
   /** Nesting depth (Figma `Nesting` L1-L3). Drives the indent only. */
   level?: TimelineLevel;
   /**
-   * This row opens a branch (Figma's `-First`): draw the elbow joining it to its
-   * parent's connector. Ignored at `level={1}`, which has no parent.
+   * Force the elbow joining this row to its parent's connector on or off (Figma's
+   * `Nesting` `-First`). Leave it unset — `Timeline` derives it from the levels,
+   * drawing it whenever this row is deeper than the one above it. Ignored at
+   * `level={1}`, which has no parent.
    */
   branchStart?: boolean;
   /**
@@ -312,7 +333,11 @@ export interface TimelineItemProps extends Omit<
   defaultExpanded?: boolean;
   /** Called with the requested disclosure state whenever the control is activated. */
   onExpandedChange?: (expanded: boolean) => void;
-  /** Accessible name for the branch disclosure control. */
+  /**
+   * Accessible name for the branch disclosure control — the one that drops this
+   * row's descendant rows. Distinct from `bodyToggleLabel` by default, because a
+   * tree row can carry both controls at once.
+   */
   toggleLabel?: string;
   /**
    * Give this row's card a chevron at the trailing edge of its header that shows
@@ -330,7 +355,10 @@ export interface TimelineItemProps extends Omit<
   defaultBodyExpanded?: boolean;
   /** Called with the requested card-body disclosure state. */
   onBodyExpandedChange?: (expanded: boolean) => void;
-  /** Accessible name for the card-body disclosure control. */
+  /**
+   * Accessible name for the card-body disclosure control — the one that folds this
+   * row's own body. Distinct from `toggleLabel` by default.
+   */
   bodyToggleLabel?: string;
   /** Card body, rendered below a divider. */
   children?: React.ReactNode;
@@ -348,14 +376,17 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
       initials,
       color = 'blue',
       level = 1,
-      branchStart = false,
+      branchStart,
       connector,
       // Destructured only to keep them off the `<li>`: the root reads them from
       // `element.props`, because it owns the disclosure state for the whole branch.
       expanded: expandedProp,
       defaultExpanded,
       onExpandedChange,
-      toggleLabel = 'Toggle event details',
+      // The two controls can sit in the same `<li>`, so their default names have to
+      // name their own action — a shared generic default would give one row two
+      // buttons that are indistinguishable to a screen reader.
+      toggleLabel = 'Toggle nested events',
       collapsibleBody = false,
       bodyExpanded: bodyExpandedProp,
       defaultBodyExpanded = true,
@@ -386,11 +417,14 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
     // there is no branch at all, so an item is simply never collapsible.
     const expanded = row?.expanded ?? true;
     const drawConnector = row ? row.connector : (connector ?? false);
+    // Likewise derived by the root, which is the only place the row above is
+    // visible. Standalone there is no row above, so only the explicit prop can
+    // ask for an elbow — and it has nothing to meet, which is the consumer's call.
+    const drawElbow = row ? row.elbow : Boolean(branchStart) && level > 1;
     const treeToggle = variant === 'tree' && (row?.hasToggle ?? false);
     // A `tree` leaf drops the disclosure button, so its own marker column is
     // narrower than the indent step — the connector tracks the Avatar, not the step.
     const ownMarker = treeToggle ? `calc(${TOGGLE} + ${MARKER})` : MARKER;
-    const drawElbow = branchStart && level > 1;
 
     // Collapsed, the chevron points toward the inline end — so it has to mirror
     // under RTL; logical positioning can't rotate artwork.

@@ -14,7 +14,8 @@ schematic: |
 
   parts: item · toggle · body-toggle · marker · connector · elbow · card
        · title · tag · timestamp · description · body
-  level -> indent · branchStart -> elbow · connector -> trailing line
+  level -> indent, elbow (deeper than the row above), trailing line
+  branchStart / connector -> overrides for the elbow / the trailing line
   variant=tree -> rows with descendants get a toggle, indent step widens
   collapsed -> the descendant rows are dropped (never the row's own body)
   collapsibleBody -> a chevron in this card's header folds this card's body only
@@ -61,14 +62,17 @@ parts:
     description: >-
       The vertical line descending from the marker into the row gap, meeting the
       next row's marker or elbow. Decorative; drawn only when the next visible row
-      is at this row's depth or deeper *and* shares this row's marker width, so it
-      never dangles and never runs crooked.
+      is at this row's depth or deeper, shares this row's marker width, and — if it
+      is deeper — actually draws the elbow, so it never dangles and never runs
+      crooked.
   - id: elbow
     description: >-
       The right angle joining a nested row to its parent's connector. Decorative;
-      drawn only when the row starts a branch.
+      drawn on the row that opens a branch — the one deeper than the row above it.
     optional: true
-    visible_when: '`branchStart` is true and `level` is greater than 1'
+    visible_when: >-
+      `level` is greater than 1 and this row is deeper than the row above it (or
+      `branchStart` overrides that)
   - id: card
     description: The bordered container holding the row's content (a `Card`).
   - id: title
@@ -136,14 +140,14 @@ states:
     }
   - {
       id: branch-start,
-      trigger: 'branchStart is true and level is greater than 1',
+      trigger: 'level is greater than 1 and deeper than the row above it',
       kind: prop,
       prop: branchStart,
       affects: [elbow],
     }
   - {
       id: connected,
-      trigger: 'the next visible row is at this level or deeper, with the same marker width',
+      trigger: 'the next visible row is at this level or deeper, with the same marker width and an elbow to meet',
       kind: prop,
       prop: connector,
       affects: [connector],
