@@ -1,5 +1,29 @@
 # @acronis-platform/tokens-pd
 
+## 2.5.0
+
+### Minor Changes
+
+- [#620](https://github.com/acronis/uikit/pull/620) [`1f08b72`](https://github.com/acronis/uikit/commit/1f08b72d64bdd197b6c8debd957727272f05df89) Thanks [@heygabecom](https://github.com/heygabecom)! - Sync design tokens with Figma.
+
+  Populates three new brand themes (light-gray, telstra, yellow-1c) across the semantic
+  and component tiers. Adds numeric typography styles and component tokens for Toast,
+  Alert, Calendar, SegmentControl, AlertRibbon, InputNumPicker, Timer, Avatar and
+  Chat.sidebar. Darkens secondary on-surface text. Removes the SearchGlobal token set
+  along with legacy ButtonGroup tokens.
+
+  Adds shadows end to end: `primitives.shadows.{sm,md,lg}` hold the per-part scalars
+  Figma authors (Figma has no shadow variable type), `semantics.shadow.{sm,md,lg}` compose
+  them into DTCG `$type: shadow` tokens, and components reference those by alias. This
+  ships `--ui-shadow-{sm,md,lg}` and a Tailwind `boxShadow` namespace, with the light/dark
+  pair inside the shadow's color slot (`light-dark()` is a color function and cannot wrap a
+  whole shadow).
+
+### Patch Changes
+
+- Updated dependencies [[`1f08b72`](https://github.com/acronis/uikit/commit/1f08b72d64bdd197b6c8debd957727272f05df89)]:
+  - @acronis-platform/design-tokens@2.4.0
+
 ## 2.4.0
 
 ### Minor Changes
