@@ -23,7 +23,6 @@ export function TimelineDemo() {
       />
       <Timeline.Item
         level={2}
-        branchStart
         icon={<CircleInfoIcon />}
         title="Three workloads missed their window"
         timestamp={
@@ -69,7 +68,6 @@ export function TimelineTreeDemo() {
       />
       <Timeline.Item
         level={2}
-        branchStart
         icon={<CircleCheckIcon />}
         color="green"
         title="Archive pruned"
@@ -99,7 +97,6 @@ export function TimelineTreeDemo() {
       />
       <Timeline.Item
         level={2}
-        branchStart
         icon={<CircleCheckIcon />}
         color="green"
         title="Its own nested row"
@@ -136,7 +133,6 @@ export function TimelineExpandableDemo() {
       </Timeline.Item>
       <Timeline.Item
         level={2}
-        branchStart
         initials="AA"
         color="violet"
         title="Operator acknowledged the alert"

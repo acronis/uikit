@@ -16,6 +16,11 @@
   current state. Its accessible name comes from `toggleLabel`, which defaults to
   an English string — pass a localized value. It is keyboard-reachable and
   activates with Enter/Space; focus is visible via ButtonIcon's focus ring.
+- **Two controls on one row**: a `tree` row with descendants and `collapsibleBody`
+  renders both buttons inside the same `<li>`, performing different actions. Their
+  defaults (`toggleLabel` "Toggle nested events", `bodyToggleLabel` "Toggle event
+  details") name their own action, so the pair is never ambiguous out of the box —
+  keep them distinct when you localize.
 - **Collapsing removes rows from the DOM**, so assistive tech sees the same list a
   sighted user does. It does not set `aria-controls`: the collapsed rows are
   siblings of the control's own `<li>`, not a single wrapping region, so there is

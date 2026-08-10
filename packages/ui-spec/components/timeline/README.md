@@ -38,7 +38,6 @@ their next sibling through a vertical connector.
   />
   <Timeline.Item
     level={2}
-    branchStart
     icon={<CircleCheckIcon />}
     color="green"
     title="Archive pruned"
@@ -56,7 +55,7 @@ wiring needed:
 ```tsx
 <Timeline variant="tree">
   <Timeline.Item title="Retention policy applied" />
-  <Timeline.Item level={2} branchStart title="Archive pruned" />
+  <Timeline.Item level={2} title="Archive pruned" />
   <Timeline.Item level={2} title="Index rebuilt" />
   <Timeline.Item title="Next root event" />
 </Timeline>
@@ -78,28 +77,32 @@ a tree row can carry the branch button and the card chevron at once:
 
 ## Parts
 
-| Part                                          | Notes                                                               |
-| --------------------------------------------- | ------------------------------------------------------------------- |
-| `item`                                        | One `<li>` — marker column, card, connector geometry.               |
-| `toggle`                                      | Branch disclosure `ButtonIcon`; `tree` rows with descendants only.  |
-| `body-toggle`                                 | Card-body chevron in the header; `collapsibleBody` rows only.       |
-| `marker`                                      | The `Avatar` holding `icon` or `initials`, tinted by `color`.       |
-| `connector`                                   | Vertical line to the next row. Derived — never dangles.             |
-| `elbow`                                       | Right angle joining a nested row to its parent. `branchStart` only. |
-| `card`                                        | The bordered `Card` holding the row's content.                      |
-| `title` / `tag` / `timestamp` / `description` | The card header content.                                            |
-| `body`                                        | The item's `children`, below a divider. Hidden while collapsed.     |
+| Part                                          | Notes                                                              |
+| --------------------------------------------- | ------------------------------------------------------------------ |
+| `item`                                        | One `<li>` — marker column, card, connector geometry.              |
+| `toggle`                                      | Branch disclosure `ButtonIcon`; `tree` rows with descendants only. |
+| `body-toggle`                                 | Card-body chevron in the header; `collapsibleBody` rows only.      |
+| `marker`                                      | The `Avatar` holding `icon` or `initials`, tinted by `color`.      |
+| `connector`                                   | Vertical line to the next row. Derived — never dangles.            |
+| `elbow`                                       | Right angle joining a branch's first row to its parent. Derived.   |
+| `card`                                        | The bordered `Card` holding the row's content.                     |
+| `title` / `tag` / `timestamp` / `description` | The card header content.                                           |
+| `body`                                        | The item's `children`, below a divider. Hidden while collapsed.    |
 
 ## Notes
 
-- `level` (1-3) drives the indent only; `branchStart` (Figma's `Nesting` `-First`)
-  draws the elbow. The two are orthogonal, and `branchStart` is ignored at level 1.
-- Connectors are derived from the level sequence, so a branch's last row, the
-  list's last row, and a just-collapsed row never leave a dangling line. `connector`
-  exists only to override that.
+- `level` (1-3) drives the indent and the connector geometry: a row deeper than the
+  one above it opens a branch and draws the elbow (Figma's `Nesting` `-First`).
+  `branchStart` overrides that, and is ignored at level 1.
+- Connectors are derived from the same level sequence, so a branch's last row, the
+  list's last row, and a just-collapsed row never leave a dangling line — and a
+  level jump always draws both halves of the join. `connector` / `branchStart`
+  exist only to override that.
 - The indent step is the marker column plus the gap, so `variant="tree"` indents
   further per level than `default` — every level still aligns.
-- `toggleLabel` defaults to an English string; pass a localized value.
+- `toggleLabel` and `bodyToggleLabel` default to distinct English strings — a tree
+  row can carry both controls, so a shared name would be ambiguous. Pass localized
+  values, and keep them distinct.
 - The marker takes an `icon` or `initials` (icon wins). Avatar's outset ring is
   switched off here, matching the design's strokeless marker.
 - The Figma variables `components/Timeline/{connectorColor,gap}` are not yet

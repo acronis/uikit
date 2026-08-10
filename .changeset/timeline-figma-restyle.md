@@ -10,8 +10,8 @@ a **breaking API change** for `Timeline.Item`:
 
 - Each row is now an `Avatar` marker plus a `Card` (title, optional `tag`,
   `timestamp`, `description`, and a body below a divider), connected as a
-  **tree**: `level` (1–3) sets the indent and `branchStart` draws the elbow
-  joining a row to its parent.
+  **tree**: `level` (1–3) sets the indent, and the root derives the elbow
+  joining a row to its parent from the level sequence.
 - New on `Timeline`: `variant="tree"`. New on `Timeline.Item`: `expanded`,
   `defaultExpanded`, `onExpandedChange`, `toggleLabel`, `connector`, `tag`,
   `color`, and `initials`.
@@ -38,12 +38,20 @@ can carry both — the branch button drops the rows below, the header chevron fo
 this card. Collapsing a branch never hides a row's own body. This lives on
 `Timeline.Item` only until `Card` grows the behaviour itself.
 
-Connectors are derived from the same level sequence: a row's descending line is
-drawn only when the next visible row is at its own depth or deeper **and** its
-marker sits in the same column, so a branch's last row, the list's last row, a
-row whose descendants were just collapsed, and a collapsed row followed by a
-leaf sibling never leave a line dangling or crooked. `connector` only overrides
-that.
+**The whole connector geometry is derived from the level sequence.** A row deeper
+than the one above it opens a branch, so the elbow joining it to its parent is
+drawn without being declared a second time. A row's descending line is drawn only
+when the next visible row is at its own depth or deeper, its marker sits in the
+same column, **and** it actually draws that elbow — so a branch's last row, the
+list's last row, a row whose descendants were just collapsed, and a collapsed row
+followed by a leaf sibling never leave a line dangling or crooked. `connector` and
+`branchStart` are escape hatches for the two halves of that join, resolved
+together so refusing one drops the other rather than leaving it unattached.
+
+The two disclosure controls default to **distinct** accessible names —
+`toggleLabel` is `"Toggle nested events"`, `bodyToggleLabel` is `"Toggle event
+details"` — because a `tree` row can carry both, and a shared default would put
+two identically-named buttons doing different things in one `<li>`.
 
 Rows must be **direct** children of `Timeline` — wrapping them in a fragment hides
 their `level` from the root.
