@@ -74,15 +74,23 @@ if [ -z "$ORIGIN_URL" ]; then
   echo "FORK_CHECK: FAIL — no 'origin' remote configured; this skill requires origin to be the base repo."
   exit 1
 fi
-# Parse owner/repo out of the URL text instead of asking `gh repo view` to
-# resolve it over the network. `gh` treats the URL's host literally, so an
-# SSH config alias for github.com (e.g. origin = git@github-work:owner/repo,
-# common when juggling multiple GitHub identities) makes it try to connect
-# to a host literally named "github-work" and fail — which would otherwise
-# hard-abort every run for that developer even though origin is correct.
+# Parse owner/repo out of the URL text as a fallback source of truth, but
+# note this does NOT make an SSH config host alias for origin (e.g.
+# origin = git@github-work:owner/repo, common when juggling multiple GitHub
+# identities) safe end-to-end: `gh repo view` above resolves the "current
+# repo" by matching remote hosts against its own known-hosts list, and it
+# does not consult ~/.ssh/config to translate an alias back to github.com —
+# so with an aliased origin, REPO comes back empty and every gh command in
+# this skill (not just this check) would fail the same way. There is no
+# workaround here short of pointing origin at the literal host gh knows
+# (github.com, or a configured GH_HOST) — see the FAIL message below.
 ORIGIN_REPO="$(echo "$ORIGIN_URL" | sed -E 's#\.git$##' | sed -E 's#^.*[:/]([^/:]+/[^/:]+)$#\1#')"
 if [ -z "$REPO" ] || [ -z "$ORIGIN_REPO" ]; then
-  echo "FORK_CHECK: FAIL — could not resolve the repo for 'origin' ($ORIGIN_URL) and/or gh's current repo; aborting rather than guessing."
+  echo "FORK_CHECK: FAIL — could not resolve the repo for 'origin' ($ORIGIN_URL) and/or gh's current repo."
+  echo "  If 'origin' uses an SSH config host alias (e.g. git@github-work:owner/repo),"
+  echo "  gh cannot resolve it — every gh command in this skill needs 'origin' to use"
+  echo "  a host gh recognizes (github.com, or your configured GH_HOST). Point 'origin'"
+  echo "  at that literal host and re-run."
   exit 1
 elif [ "$(echo "$ORIGIN_REPO" | tr '[:upper:]' '[:lower:]')" != "$(echo "$REPO" | tr '[:upper:]' '[:lower:]')" ]; then
   echo "FORK_CHECK: FAIL — 'origin' is $ORIGIN_REPO but gh resolves the base repo as $REPO."

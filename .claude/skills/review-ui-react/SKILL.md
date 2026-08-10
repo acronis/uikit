@@ -95,9 +95,12 @@ This skill must behave identically on the first review of a PR and the
 tenth re-review of the same PR after it changed — it must never be aware it
 ran before. Two layers enforce that:
 
-- **On disk / in git**: the script resets its own state before AND after
-  every run (see step 2 and step 12) — no local ref, worktree, or temp file
-  it creates is allowed to outlive or influence a later invocation.
+- **On disk / in git**: no local ref, worktree, or temp file this skill
+  creates is allowed to outlive or influence a later invocation.
+  `pr-audit.sh` defensively wipes a leftover `refs/pr/<num>` from a prior
+  run on entry (step 2), but leaves the ref it fetches in place on exit,
+  since steps 4 and 5 still need to read it after the script returns; step
+  12 of this skill deletes it explicitly once the report is written.
   `pr-audit.sh` also refuses to run at all if another invocation for the
   same PR number is already in flight (`LOCK: FAIL`, see step 2) rather than
   race it on the shared `refs/pr/<num>` ref. That lock only spans the
@@ -458,10 +461,13 @@ view`'s `headRefOid` and aborts on any mismatch, so a stale fetch can never
   as current — i.e. a fork checkout (`origin` = your fork, some other remote
   = the base repo). Every fetch in this skill targets `origin` by name; in a
   fork checkout that silently targets the wrong repository. There is no
-  workaround mode — point `origin` at the base repo and re-run. `origin`'s
-  owner/repo is parsed straight out of `git remote get-url origin` (not
-  resolved via a `gh` network call), so an SSH config host alias for
-  `github.com` doesn't trip a false `FORK_CHECK: FAIL`.
+  workaround mode — point `origin` at the base repo and re-run. Note this
+  check itself first asks `gh repo view` to resolve the current repo, which
+  needs `origin`'s host to be one `gh` recognizes (github.com, or a
+  configured `GH_HOST`); an SSH config host alias for `origin` (e.g.
+  `git@github-work:owner/repo`) makes that resolution fail too, so it is
+  **not** a safe setup — every `gh` command in this skill would fail the
+  same way, not just this check.
 - **One review of a given PR number at a time.** `pr-audit.sh` takes an
   exclusive lock (`LOCK: FAIL` if held) before touching `refs/pr/<num>`,
   since a second concurrent run would race the first on that shared ref's
