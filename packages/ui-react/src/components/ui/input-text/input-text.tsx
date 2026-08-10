@@ -63,7 +63,12 @@ const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
     const hasMessage = message != null && message !== '';
 
     return (
-      <div className="flex w-full min-w-[var(--ui-input-text-global-container-width-min)] flex-col gap-[var(--ui-input-text-global-container-gap)]">
+      <div
+        className={cn(
+          'flex min-w-[var(--ui-input-text-global-container-width-min)] flex-col gap-[var(--ui-input-text-global-container-gap)]',
+          className
+        )}
+      >
         {label != null && label !== '' && (
           <label
             htmlFor={inputId}
@@ -95,7 +100,7 @@ const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
             aria-invalid={hasError || undefined}
             aria-required={required || undefined}
             aria-describedby={hasMessage ? messageId : undefined}
-            className={cn(showClear && 'pe-9', className)}
+            className={cn(showClear && 'pe-9')}
             {...props}
           />
           {showClear && (

@@ -111,4 +111,20 @@ describe('InputText', () => {
       'active:bg-[var(--ui-button-icon-global-container-color-active)]'
     );
   });
+
+  it('does not force the field wrapper to full width, so it can shrink in a constrained flex/grid ancestor', () => {
+    const { container } = render(<InputText label="Email" />);
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper).not.toHaveClass('w-full');
+    expect(wrapper).toHaveClass(
+      'min-w-[var(--ui-input-text-global-container-width-min)]'
+    );
+  });
+
+  it('forwards className to the field wrapper, not the input box', () => {
+    const { container } = render(<InputText label="Email" className="w-24" />);
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper).toHaveClass('w-24');
+    expect(screen.getByLabelText('Email')).not.toHaveClass('w-24');
+  });
 });

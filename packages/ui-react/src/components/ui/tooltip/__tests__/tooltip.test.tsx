@@ -161,4 +161,25 @@ describe('Tooltip', () => {
     await user.hover(screen.getByRole('button', { name: 'Hover me' }));
     expect(await screen.findByText('Helpful hint')).toBeInTheDocument();
   });
+
+  it('sizes the popup to its content by default, bounded by the width tokens', () => {
+    render(<Example defaultOpen />);
+    const popup = screen.getByText('Helpful hint');
+    expect(popup).toHaveClass('w-max');
+    expect(popup).toHaveClass('max-w-[var(--ui-tooltip-container-width-max)]');
+    expect(popup).toHaveClass('min-w-[var(--ui-tooltip-container-width-min)]');
+  });
+
+  it('lets a consumer override the popup width while keeping the token bounds', () => {
+    render(
+      <Tooltip defaultOpen>
+        <TooltipTrigger>Hover me</TooltipTrigger>
+        <TooltipContent className="w-64">Helpful hint</TooltipContent>
+      </Tooltip>
+    );
+    const popup = screen.getByText('Helpful hint');
+    expect(popup).toHaveClass('w-64');
+    expect(popup).not.toHaveClass('w-max');
+    expect(popup).toHaveClass('max-w-[var(--ui-tooltip-container-width-max)]');
+  });
 });

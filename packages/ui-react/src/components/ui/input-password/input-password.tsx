@@ -148,7 +148,12 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
     const hasMessage = message != null && message !== '';
 
     return (
-      <div className="flex w-full min-w-[var(--ui-input-password-global-container-width-min)] flex-col gap-[var(--ui-input-password-global-container-gap)]">
+      <div
+        className={cn(
+          'flex min-w-[var(--ui-input-password-global-container-width-min)] flex-col gap-[var(--ui-input-password-global-container-gap)]',
+          className
+        )}
+      >
         {label != null && label !== '' && (
           <InputPasswordLabel htmlFor={inputId} disabled={disabled} required={required}>
             {label}
@@ -168,8 +173,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
               'min-w-0 flex-1 bg-transparent text-sm leading-6 outline-none',
               disabled
                 ? 'text-[var(--ui-input-password-global-value-color-disabled)] placeholder:text-[var(--ui-input-password-global-placeholder-color-disabled)]'
-                : 'text-[var(--ui-input-password-global-value-color-idle)] placeholder:text-[var(--ui-input-password-global-placeholder-color-idle)]',
-              className
+                : 'text-[var(--ui-input-password-global-value-color-idle)] placeholder:text-[var(--ui-input-password-global-placeholder-color-idle)]'
             )}
             {...props}
           />

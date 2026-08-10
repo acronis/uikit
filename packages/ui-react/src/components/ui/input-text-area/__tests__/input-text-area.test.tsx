@@ -98,11 +98,14 @@ describe('InputTextArea', () => {
     );
   });
 
-  it('merges a custom className onto the textarea', () => {
-    render(<InputTextArea aria-label="Notes" className="custom-class" />);
-    expect(screen.getByRole('textbox', { name: 'Notes' })).toHaveClass(
-      'custom-class',
-      'bg-[var(--ui-input-text-area-box-color-idle)]'
+  it('forwards a custom className to the field wrapper, not the textarea', () => {
+    const { container } = render(
+      <InputTextArea aria-label="Notes" className="custom-class" />
+    );
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper).toHaveClass('custom-class');
+    expect(screen.getByRole('textbox', { name: 'Notes' })).not.toHaveClass(
+      'custom-class'
     );
   });
 
@@ -110,5 +113,14 @@ describe('InputTextArea', () => {
     const ref = createRef<HTMLTextAreaElement>();
     render(<InputTextArea aria-label="Notes" ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLTextAreaElement);
+  });
+
+  it('does not force the field wrapper to full width, so it can shrink in a constrained flex/grid ancestor', () => {
+    const { container } = render(<InputTextArea aria-label="Notes" />);
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper).not.toHaveClass('w-full');
+    expect(wrapper).toHaveClass(
+      'min-w-[var(--ui-input-text-area-container-width-min)]'
+    );
   });
 });

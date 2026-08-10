@@ -156,4 +156,24 @@ describe('InputDatePicker', () => {
       'disabled:cursor-not-allowed'
     );
   });
+
+  it('does not force the field wrapper to full width, so it can shrink in a constrained flex/grid ancestor', () => {
+    const { container } = render(<InputDatePicker label="Due" />);
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper).not.toHaveClass('w-full');
+    expect(wrapper).toHaveClass(
+      'min-w-[var(--ui-input-date-picker-global-container-width-min)]'
+    );
+  });
+
+  it('forwards a custom className to the field wrapper, not the trigger button', () => {
+    const { container } = render(
+      <InputDatePicker label="Due" className="custom-class" />
+    );
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper).toHaveClass('custom-class');
+    expect(screen.getByRole('button', { name: 'Due' })).not.toHaveClass(
+      'custom-class'
+    );
+  });
 });

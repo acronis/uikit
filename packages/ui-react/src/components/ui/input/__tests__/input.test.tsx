@@ -74,4 +74,14 @@ describe('InputBox', () => {
     render(<InputBox aria-label="Name" ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
   });
+
+  it('defaults to filling its container, but a width className replaces w-full rather than losing to it', () => {
+    render(<InputBox aria-label="Name" />);
+    expect(screen.getByRole('textbox', { name: 'Name' })).toHaveClass('w-full');
+
+    render(<InputBox aria-label="Narrow" className="w-24" />);
+    const narrow = screen.getByRole('textbox', { name: 'Narrow' });
+    expect(narrow).toHaveClass('w-24');
+    expect(narrow).not.toHaveClass('w-full');
+  });
 });

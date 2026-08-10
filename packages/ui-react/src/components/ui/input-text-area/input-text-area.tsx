@@ -13,9 +13,10 @@ import { cn } from '@/lib/utils';
 // state (driven by `aria-invalid`) swaps the border to
 // `error-msg-box-border-color-{idle,hover}` and the focus ring to `--ui-focus-error`.
 // Box geometry (96px min-height, 4px radius, 12px padding-x, 8px padding-y) comes
-// from `--ui-input-text-area-box-*`; it grows with vertical resize. `ref` and
-// `className` target the underlying `<textarea>`, so the bare usage
-// (`<InputTextArea placeholder=… />`, no label) renders just the box.
+// from `--ui-input-text-area-box-*`; it grows with vertical resize. `ref` targets
+// the underlying `<textarea>`; `className` targets the field wrapper (label + box
+// + message), so a consumer can size the whole field from a flex/grid ancestor.
+// The bare usage (`<InputTextArea placeholder=… />`, no label) renders just the box.
 export interface InputTextAreaProps
   extends Omit<React.ComponentPropsWithoutRef<'textarea'>, 'children'> {
   /** Field label, rendered above the textarea. */
@@ -56,7 +57,12 @@ const InputTextArea = React.forwardRef<HTMLTextAreaElement, InputTextAreaProps>(
     const hasMessage = message != null && message !== '';
 
     return (
-      <div className="flex w-full min-w-[var(--ui-input-text-area-container-width-min)] flex-col gap-[var(--ui-input-text-area-container-gap)]">
+      <div
+        className={cn(
+          'flex min-w-[var(--ui-input-text-area-container-width-min)] flex-col gap-[var(--ui-input-text-area-container-gap)]',
+          className
+        )}
+      >
         {label != null && label !== '' && (
           <label
             htmlFor={inputId}
@@ -91,8 +97,7 @@ const InputTextArea = React.forwardRef<HTMLTextAreaElement, InputTextAreaProps>(
             'enabled:not-aria-[invalid=true]:hover:bg-[var(--ui-input-text-area-box-color-hover)] enabled:not-aria-[invalid=true]:hover:border-[var(--ui-input-text-area-border-color-hover)] enabled:hover:text-[var(--ui-input-text-area-value-color-hover)] enabled:hover:placeholder:text-[var(--ui-input-text-area-placeholder-color-hover)]',
             'not-aria-[invalid=true]:focus-visible:border-[var(--ui-input-text-area-border-color-focus)] not-aria-[invalid=true]:focus-visible:ring-[var(--ui-focus-primary)]',
             'aria-[invalid=true]:border-[var(--ui-input-text-area-error-msg-box-border-color-idle)] enabled:aria-[invalid=true]:hover:border-[var(--ui-input-text-area-error-msg-box-border-color-hover)] aria-[invalid=true]:focus-visible:border-[var(--ui-input-text-area-error-msg-box-border-color-hover)] aria-[invalid=true]:focus-visible:ring-[var(--ui-focus-error)]',
-            'disabled:cursor-not-allowed disabled:border-[var(--ui-input-text-area-border-color-disabled)] disabled:bg-[var(--ui-input-text-area-box-color-disabled)] disabled:text-[var(--ui-input-text-area-value-color-disabled)] disabled:placeholder:text-[var(--ui-input-text-area-placeholder-color-disabled)]',
-            className
+            'disabled:cursor-not-allowed disabled:border-[var(--ui-input-text-area-border-color-disabled)] disabled:bg-[var(--ui-input-text-area-box-color-disabled)] disabled:text-[var(--ui-input-text-area-value-color-disabled)] disabled:placeholder:text-[var(--ui-input-text-area-placeholder-color-disabled)]'
           )}
           {...props}
         />

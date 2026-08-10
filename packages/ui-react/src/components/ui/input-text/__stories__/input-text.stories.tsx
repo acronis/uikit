@@ -70,3 +70,16 @@ export const Error: Story = {
 export const Disabled: Story = {
   args: { disabled: true, defaultValue: 'Value' },
 };
+
+// The field wrapper no longer hardcodes `w-full`, so two fields in the same
+// flex row size to their own min-width instead of being force-stretched to
+// evenly split the row (PLTFRM-93291).
+export const ConstrainedWidth: Story = {
+  args: { description: undefined },
+  render: (args) => (
+    <div style={{ display: 'flex', gap: 16, width: 400 }}>
+      <InputText {...args} label="Narrow" />
+      <InputText {...args} label="Also narrow" />
+    </div>
+  ),
+};

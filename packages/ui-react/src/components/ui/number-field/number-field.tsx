@@ -22,7 +22,7 @@ const NumberFieldGroup = React.forwardRef<
   <NumberFieldPrimitive.Group
     ref={ref}
     className={cn(
-      'flex h-[var(--ui-input-text-global-box-height)] w-full min-w-0 items-stretch overflow-hidden rounded-[var(--ui-input-text-global-box-border-radius)] border bg-[var(--ui-input-text-global-box-color-idle)] border-[var(--ui-input-text-normal-box-border-color-idle)] transition-colors',
+      'flex h-[var(--ui-input-text-global-box-height)] min-w-0 items-stretch overflow-hidden rounded-[var(--ui-input-text-global-box-border-radius)] border bg-[var(--ui-input-text-global-box-color-idle)] border-[var(--ui-input-text-normal-box-border-color-idle)] transition-colors',
       'not-has-disabled:hover:border-[var(--ui-input-text-normal-box-border-color-hover)]',
       'has-[input:focus-visible]:border-[var(--ui-input-text-normal-box-border-color-hover)] has-[input:focus-visible]:ring-[3px] has-[input:focus-visible]:ring-[var(--ui-focus-primary)]',
       'has-disabled:cursor-not-allowed has-disabled:border-[var(--ui-input-text-normal-box-border-color-disabled)] has-disabled:bg-[var(--ui-input-text-global-box-color-disabled)]',

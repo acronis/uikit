@@ -66,11 +66,16 @@ const meta = {
     description: 'Description message',
   },
   decorators: [
-    (Story) => (
-      <div className="w-64">
+    // The ConstrainedWidth story sets up its own flex layout wider than this
+    // fixed 256px demo box, so it opts out of the shared decorator.
+    (Story, context) =>
+      context.name === 'ConstrainedWidth' ? (
         <Story />
-      </div>
-    ),
+      ) : (
+        <div className="w-64">
+          <Story />
+        </div>
+      ),
   ],
 } satisfies Meta<typeof InputTextArea>;
 
@@ -98,4 +103,18 @@ export const Disabled: Story = {
 // Bare usage — no label/description; the box renders on its own.
 export const Bare: Story = {
   args: { label: undefined, description: undefined, 'aria-label': 'Notes' },
+};
+
+// The field wrapper no longer hardcodes `w-full`, and `className` now targets
+// that wrapper directly, so two fields in the same flex row size to their own
+// min-width instead of being force-stretched to evenly split the row
+// (PLTFRM-93291).
+export const ConstrainedWidth: Story = {
+  args: { description: undefined },
+  render: (args) => (
+    <div style={{ display: 'flex', gap: 24, width: 600 }}>
+      <InputTextArea {...args} label="Narrow" />
+      <InputTextArea {...args} label="Also narrow" />
+    </div>
+  ),
 };

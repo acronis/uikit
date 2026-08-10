@@ -82,3 +82,16 @@ export const Error: Story = {
 export const Disabled: Story = {
   args: { disabled: true, defaultValue: 'hunter2' },
 };
+
+// The field wrapper no longer hardcodes `w-full`, and `className` now targets
+// that wrapper directly, so two fields in the same flex row size to their own
+// min-width instead of being force-stretched to evenly split the row
+// (PLTFRM-93291).
+export const ConstrainedWidth: Story = {
+  render: (args) => (
+    <div style={{ display: 'flex', gap: 16, width: 400 }}>
+      <InputPassword {...args} label="Narrow" />
+      <InputPassword {...args} label="Also narrow" />
+    </div>
+  ),
+};
