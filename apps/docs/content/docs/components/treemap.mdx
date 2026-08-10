@@ -241,13 +241,22 @@ it. `ChartContainer` holds that in place by pinning `.recharts-surface` to
 The cell labels are the one thing inside the surface that is not SVG: the cell
 renderer lays each one out as HTML in a `<foreignObject>`, aligned with logical
 `text-start` / `justify-*` utilities, which is why `labelAlign`'s corner values are
-named `bottom-start` / `top-start` rather than for a physical corner. A
-`<foreignObject>` is still a child of the surface, though, so it inherits the pin
-along with everything else in the plot. Measured under `dir="rtl"`, the label block
-computes `direction: ltr` and a `bottom-start` label stays at the tile's left
-edge — so in practice the labels sit in the same physical corner as the tiling they
-annotate, in both directions. The legend row and the tooltip are outside the
-surface and mirror with the page as usual.
+named `bottom-start` / `top-start` rather than for a physical corner. Those labels
+are the deliberate exception to the pin. A `<foreignObject>` is a child of the
+surface, so it would inherit `direction: ltr` along with everything else in the
+plot — which would defeat the logical utilities. So `ChartContainer` pairs the pin
+with a rule that hands the page's direction back to that subtree, and the labels
+mirror. Measured in Chromium: the label block computes `direction: rtl` under
+`dir="rtl"` and a `bottom-start` line sits against the tile's right edge, one
+cell-padding in, where under `dir="ltr"` it sits the same distance from the
+left — so the corner variants land in the tile's bottom-**right** in RTL. The
+legend row and the tooltip
+are outside the surface and mirror with the page as usual.
+
+The two halves are worth keeping straight: the _tiling_ does not mirror (it is
+geometry recharts computed in physical coordinates, like every other plot), while
+the _labels on it_ do (they are HTML in flow layout). A label therefore reads from
+the same start edge the rest of the page reads from, on a tile that stayed put.
 
 ## API Reference
 

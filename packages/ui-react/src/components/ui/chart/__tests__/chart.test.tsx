@@ -71,6 +71,29 @@ describe('Chart', () => {
     });
   });
 
+  // recharts places every mark at a physical coordinate but anchors tick text
+  // with the direction-relative SVG keywords, so an inherited `dir="rtl"` flips
+  // only the text and it lands inside the plot. The container pins the surface to
+  // LTR, and hands the page's direction back at the `<foreignObject>` boundary so
+  // Treemap's HTML cell labels still mirror. happy-dom applies no Tailwind, so —
+  // like the white-outline case above — the guard is that both rules are present:
+  // it catches a `cn()`/tailwind-merge reorder dropping one, not a change in how
+  // Tailwind compiles them (the RTL story's VR baseline covers that).
+  it('pins the plot surface to LTR but not its foreignObject labels', () => {
+    const { container } = render(
+      <ChartContainer config={config} id="usage">
+        <BarChart data={[]} />
+      </ChartContainer>
+    );
+    const wrapper = container.querySelector('[data-slot="chart"]');
+    expect(wrapper?.className).toContain(
+      '[&_.recharts-surface]:[direction:ltr]'
+    );
+    expect(wrapper?.className).toContain(
+      'rtl:[&_.recharts-surface_foreignObject]:[direction:rtl]'
+    );
+  });
+
   it('injects per-series --color-* custom properties from the config', () => {
     const { container } = render(
       <ChartContainer config={config} id="usage">

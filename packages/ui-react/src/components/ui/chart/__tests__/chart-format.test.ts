@@ -11,6 +11,10 @@ import {
   resolveCategoryRange,
   resolveLabelFillClass,
   resolveChartReferenceValue,
+  resolveRotatedTickAnchor,
+  resolveXAxisHeight,
+  resolveXAxisTitle,
+  resolveYAxisTitle,
   toLabelFormatter,
   CHART_BRUSH_ARIA_LABEL,
   CHART_BRUSH_HEIGHT,
@@ -430,5 +434,122 @@ describe('resolveCategoryRange', () => {
       resolveCategoryRange({ from: 'Mar', to: 'Jan' }, rangeData, 'month')
     ).toBeUndefined();
     expect(resolveCategoryRange({ from: 'Jan' }, [], 'month')).toBeUndefined();
+  });
+});
+
+describe('resolveRotatedTickAnchor', () => {
+  // A tick rotated anti-clockwise trails off to the lower left, so it has to be
+  // anchored at its end; a clockwise one trails to the lower right.
+  it('anchors an anti-clockwise tick at its end and a clockwise one at its start', () => {
+    expect(resolveRotatedTickAnchor(-45)).toBe('end');
+    expect(resolveRotatedTickAnchor(45)).toBe('start');
+  });
+
+  it("keeps recharts' own default only when the angle is omitted", () => {
+    expect(resolveRotatedTickAnchor(undefined)).toBeUndefined();
+  });
+
+  // The documented edge case: the branch is on `angle < 0`, so an explicit `0` is
+  // a clockwise rotation, not "upright". A caller that normalises upright to `0`
+  // instead of leaving `xAxisAngle` off gets `start` rather than recharts'
+  // `middle` — asserted so the two readings can't silently swap.
+  it('treats an explicit zero angle as a rotation, not as unset', () => {
+    expect(resolveRotatedTickAnchor(0)).toBe('start');
+    expect(resolveRotatedTickAnchor(0)).not.toBe(
+      resolveRotatedTickAnchor(undefined)
+    );
+  });
+});
+
+describe('resolveXAxisHeight', () => {
+  it("keeps recharts' default when the row is a plain upright tick row", () => {
+    expect(resolveXAxisHeight(undefined, undefined)).toBeUndefined();
+  });
+
+  it('allows for a rotated row and for a title on their own', () => {
+    expect(resolveXAxisHeight(undefined, -45)).toBe(50);
+    expect(resolveXAxisHeight('Month', undefined)).toBe(48);
+  });
+
+  // The reason the helper exists: the two allowances are additive, not exclusive.
+  // A label-or-angle ternary would return 50 or 48 here and clip whichever of the
+  // two it didn't count.
+  it('adds both allowances when a chart rotates its ticks and titles the axis', () => {
+    expect(resolveXAxisHeight('Month', -45)).toBe(68);
+    expect(resolveXAxisHeight('Month', -45)).toBeGreaterThan(
+      Math.max(
+        resolveXAxisHeight('Month', undefined)!,
+        resolveXAxisHeight(undefined, -45)!
+      )
+    );
+  });
+
+  // Kept deliberately consistent with `resolveRotatedTickAnchor`: the +20 keys off
+  // the angle being present, not non-zero.
+  it('reserves the rotated row for an explicit zero angle too', () => {
+    expect(resolveXAxisHeight(undefined, 0)).toBe(50);
+    expect(resolveXAxisHeight('Month', 0)).toBe(68);
+  });
+
+  it('ignores an empty label the same way it ignores a missing one', () => {
+    expect(resolveXAxisHeight('', undefined)).toBeUndefined();
+    expect(resolveXAxisHeight('', -45)).toBe(50);
+  });
+});
+
+describe('resolveXAxisTitle', () => {
+  it('places the title below the tick row by default', () => {
+    expect(resolveXAxisTitle('Month')).toEqual({
+      value: 'Month',
+      position: 'insideBottom',
+      offset: 0,
+    });
+  });
+
+  it('takes the top edge and an offset for a secondary scale', () => {
+    expect(resolveXAxisTitle('Month', 'insideTop', -8)).toEqual({
+      value: 'Month',
+      position: 'insideTop',
+      offset: -8,
+    });
+  });
+
+  it('renders no title for a missing or empty label', () => {
+    expect(resolveXAxisTitle(undefined)).toBeUndefined();
+    expect(resolveXAxisTitle('')).toBeUndefined();
+  });
+});
+
+describe('resolveYAxisTitle', () => {
+  // Angled so it reads from the outside in: upward on a left axis, downward on a
+  // right one, where -90° would put the text's baseline against the plot.
+  it('angles the title upward on a left axis and downward on a right one', () => {
+    expect(resolveYAxisTitle('Sessions')).toEqual({
+      value: 'Sessions',
+      angle: -90,
+      position: 'insideLeft',
+      style: { textAnchor: 'middle' },
+    });
+    expect(resolveYAxisTitle('Sessions', 'right')).toEqual({
+      value: 'Sessions',
+      angle: 90,
+      position: 'insideRight',
+      style: { textAnchor: 'middle' },
+    });
+  });
+
+  // `middle` is the one anchor keyword that is direction-immune, which is what
+  // keeps the title from mirroring about its anchor under `dir="rtl"`.
+  it('anchors the title at its middle in both orientations', () => {
+    for (const orientation of ['left', 'right'] as const) {
+      expect(resolveYAxisTitle('Sessions', orientation)?.style.textAnchor).toBe(
+        'middle'
+      );
+    }
+  });
+
+  it('renders no title for a missing or empty label', () => {
+    expect(resolveYAxisTitle(undefined)).toBeUndefined();
+    expect(resolveYAxisTitle('')).toBeUndefined();
   });
 });

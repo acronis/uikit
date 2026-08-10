@@ -237,9 +237,11 @@ and still mirror with the page.
 
 The one thing inside the surface that is not SVG is the
 [Treemap](/components/treemap)'s cell labels, which its cell renderer lays out
-as HTML in a `<foreignObject>`. Sitting inside the surface, they inherit the pin
-along with the plot: a `labelAlign` start edge resolves to the tile's left in
-both directions rather than following the page.
+as HTML in a `<foreignObject>`. That is ordinary flow layout, not a computed SVG
+coordinate, so the pin explicitly stops at the `<foreignObject>` boundary and
+hands the page's direction back: under `dir="rtl"` a `labelAlign` start edge
+resolves to the tile's right, mirroring with the page like every other block of
+HTML in the kit.
 
 This is what mainstream charting libraries do by default too: the plot keeps its
 physical orientation and only the surrounding UI mirrors. The non-SVG widgets —
