@@ -106,7 +106,8 @@ src/
                         is what stage 1 calls directly; `acronisDtcg` wraps it as an
                         SD preprocessor (kept for reuse, not currently registered).
     transforms/         color/hsl-to-rgb, gradient/css, dimension/px, scalar/css,
-                        typography/css-class, name/ui + the `acronis/css` transform group.
+                        shadow/css, typography/css-class, name/ui + the `acronis/css`
+                        transform group.
     filters/            semantic-only — drop the primitive roots from CSS output
                         (isEmittableToken is the plain predicate the builder reuses).
     formats/            css/light-dark — collectDecls + serializeCss render the CSS.
