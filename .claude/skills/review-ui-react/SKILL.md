@@ -98,6 +98,12 @@ ran before. Two layers enforce that:
 - **On disk / in git**: the script resets its own state before AND after
   every run (see step 2 and step 12) — no local ref, worktree, or temp file
   it creates is allowed to outlive or influence a later invocation.
+  `pr-audit.sh` also refuses to run at all if another invocation for the
+  same PR number is already in flight (`LOCK: FAIL`, see step 2) rather than
+  race it on the shared `refs/pr/<num>` ref. That lock only spans the
+  script's own runtime, though — don't start a second review of the same PR
+  number while an earlier one is still mid-flow (steps 3–12 not yet done),
+  since those steps read and finally delete that ref outside the script.
 - **In the conversation**: if this skill is invoked again for a PR number
   already discussed earlier in this session, treat it as a cold start
   anyway. Re-run `pr-audit.sh`, re-run `gh pr diff`, re-read `git show`
@@ -140,6 +146,10 @@ ran before. Two layers enforce that:
      resolved) and that they need to run this from a checkout where `origin`
      is the base repo — do not attempt to fetch from the other remote
      yourself as a workaround.
+   - If it prints `LOCK: FAIL`, another review of the same PR number is
+     already running (a concurrent invocation, not this run). Wait for it to
+     finish and re-run — do not delete the lock directory or retry
+     immediately; that's exactly the race this check exists to prevent.
    - If it prints `origin/main: FETCH FAILED`, this is a **hard abort** —
      every downstream check in this run diffs against `origin/main`, so a
      stale fetch there makes the whole run's output untrustworthy, not just
@@ -448,7 +458,15 @@ view`'s `headRefOid` and aborts on any mismatch, so a stale fetch can never
   as current — i.e. a fork checkout (`origin` = your fork, some other remote
   = the base repo). Every fetch in this skill targets `origin` by name; in a
   fork checkout that silently targets the wrong repository. There is no
-  workaround mode — point `origin` at the base repo and re-run.
+  workaround mode — point `origin` at the base repo and re-run. `origin`'s
+  owner/repo is parsed straight out of `git remote get-url origin` (not
+  resolved via a `gh` network call), so an SSH config host alias for
+  `github.com` doesn't trip a false `FORK_CHECK: FAIL`.
+- **One review of a given PR number at a time.** `pr-audit.sh` takes an
+  exclusive lock (`LOCK: FAIL` if held) before touching `refs/pr/<num>`,
+  since a second concurrent run would race the first on that shared ref's
+  delete/fetch. Don't start a second invocation for the same PR number until
+  the first has finished through step 12.
 - **No lingering local git state, once the whole review is done.**
   `pr-audit.sh` defensively deletes a leftover `refs/pr/<num>` from a prior
   run on entry (after AUTH/FORK_CHECK pass), but leaves the ref it fetches in

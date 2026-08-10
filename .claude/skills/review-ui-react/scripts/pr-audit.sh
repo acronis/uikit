@@ -74,11 +74,17 @@ if [ -z "$ORIGIN_URL" ]; then
   echo "FORK_CHECK: FAIL — no 'origin' remote configured; this skill requires origin to be the base repo."
   exit 1
 fi
-ORIGIN_REPO="$(gh repo view "$ORIGIN_URL" --json nameWithOwner -q .nameWithOwner 2>/dev/null)"
+# Parse owner/repo out of the URL text instead of asking `gh repo view` to
+# resolve it over the network. `gh` treats the URL's host literally, so an
+# SSH config alias for github.com (e.g. origin = git@github-work:owner/repo,
+# common when juggling multiple GitHub identities) makes it try to connect
+# to a host literally named "github-work" and fail — which would otherwise
+# hard-abort every run for that developer even though origin is correct.
+ORIGIN_REPO="$(echo "$ORIGIN_URL" | sed -E 's#\.git$##' | sed -E 's#^.*[:/]([^/:]+/[^/:]+)$#\1#')"
 if [ -z "$REPO" ] || [ -z "$ORIGIN_REPO" ]; then
-  echo "FORK_CHECK: FAIL — could not resolve the repo for 'origin' and/or gh's current repo; aborting rather than guessing."
+  echo "FORK_CHECK: FAIL — could not resolve the repo for 'origin' ($ORIGIN_URL) and/or gh's current repo; aborting rather than guessing."
   exit 1
-elif [ "$ORIGIN_REPO" != "$REPO" ]; then
+elif [ "$(echo "$ORIGIN_REPO" | tr '[:upper:]' '[:lower:]')" != "$(echo "$REPO" | tr '[:upper:]' '[:lower:]')" ]; then
   echo "FORK_CHECK: FAIL — 'origin' is $ORIGIN_REPO but gh resolves the base repo as $REPO."
   echo "  This is a fork checkout (origin = your fork, a separate remote = the base repo)."
   echo "  This skill assumes 'origin' IS the base repo it reviews PRs against — fetching PR refs"
@@ -87,6 +93,31 @@ elif [ "$ORIGIN_REPO" != "$REPO" ]; then
   exit 1
 fi
 echo "FORK_CHECK: OK — origin matches $REPO"
+
+# Concurrency guard — $PR_REF is a single ref name keyed only on the PR
+# number, and this script both deletes and (re)fetches it. Two overlapping
+# runs for the same PR number would race on that ref (one run's delete or
+# fetch landing mid-way through another run's fetch/verify/read), so refuse
+# to proceed if another run for this PR number is already in flight rather
+# than corrupt or invalidate it silently. A lock left behind by a run that
+# was killed (not a clean exit) is detected and reclaimed by checking
+# whether its owning pid is still alive.
+LOCK_DIR="$(git rev-parse --git-dir)/uikit-review-lock-$NUM"
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+  LOCK_PID="$(cat "$LOCK_DIR/pid" 2>/dev/null || true)"
+  if [ -n "$LOCK_PID" ] && kill -0 "$LOCK_PID" 2>/dev/null; then
+    echo "LOCK: FAIL — another review of PR $NUM is already running (pid $LOCK_PID). Wait for it to finish, then re-run."
+    exit 1
+  fi
+  rm -rf "$LOCK_DIR"
+  if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+    echo "LOCK: FAIL — could not create the lock directory for PR $NUM."
+    exit 1
+  fi
+fi
+echo $$ >"$LOCK_DIR/pid"
+trap 'rm -rf "$LOCK_DIR"' EXIT
+echo "LOCK: OK"
 
 # Now that we know this run will actually fetch, wipe any leftover $PR_REF
 # from a prior run (interrupted, killed, or simply never cleaned up) —
