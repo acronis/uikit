@@ -111,6 +111,30 @@
 **Then** the fields region scrolls internally (`max-h-80 overflow-y-auto`)
 **And** the footer stays pinned below it
 
+### Footer action labels are overridable
+
+**Given** a FilterSearchFilters rendered with `resetFiltersLabel`, `cancelLabel`,
+and/or `applyLabel`
+**When** the popover is open
+**Then** the footer renders the given labels instead of the English defaults
+("Reset filters" / "Cancel" / "Apply")
+
+### The popover renders inside a constrained portal container without clipping
+
+**Given** a FilterSearchFilters rendered inside a `PortalContainerProvider`
+whose `container` is a small or offset element (e.g. an MFE/Shadow DOM mount)
+**When** the filter trigger is clicked
+**Then** the popover content mounts inside that container
+**And** it is not clipped at the container's own edge — it switches to `fixed`
+positioning by default, which (for a plain overflow-clipping container) keeps
+the platform's own collision boundary resolved against the real viewport
+
+**Given** the same constrained-container setup
+**When** a consumer passes an explicit `collisionBoundary`, `positionMethod`,
+`side`, `align`, `sideOffset`, `portalContainer`, or `contentClassName`
+**Then** that value overrides the computed default and is forwarded to the
+underlying popover
+
 ---
 
 ## FilterSearchAppliedFilters (the applied-filter chip row)
@@ -137,8 +161,22 @@
 **When** a chip's remove control is clicked (e.g. "Remove status filter")
 **Then** `onValueChange` fires with that key dropped
 
+### The remove-filter label is overridable
+
+**Given** a FilterSearchAppliedFilters rendered with a `getRemoveFilterLabel`
+**When** it renders
+**Then** each chip's remove control uses the given label instead of the
+English default `"Remove <key> filter"`
+
 ### Clears all filters when Reset filters is pressed
 
 **Given** a FilterSearchAppliedFilters with one or more applied filters
 **When** its "Reset filters" action is pressed
 **Then** `onValueChange` fires with an empty filters object — immediately, with no popover involved
+
+### The Reset filters label is overridable
+
+**Given** a FilterSearchAppliedFilters rendered with a `resetFiltersLabel`
+**When** it renders
+**Then** the clear-all action shows the given label instead of the English
+default "Reset filters"
