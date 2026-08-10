@@ -1,5 +1,5 @@
 ---
-'@acronis-platform/ui-react': minor
+'@acronis-platform/ui-react': major
 ---
 
 Remove the `SearchGlobal` component — it is no longer part of the design system.
