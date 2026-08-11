@@ -1,0 +1,16 @@
+spec_version: '1.0'
+component: FilterCards
+name: filter-cards
+status: ready
+category: data-display
+description: >-
+  A horizontal row container (the Figma `FilterCards` component) that lays out
+  a set of `CardFilter` items, stretching each to an equal share of the
+  available width. Pure layout — it owns no visual styling of its own besides
+  the inter-card gap. Figma's nested `ListCards` slot maps to `children`.
+since: 0.62.0
+dependencies:
+  components: [CardFilter]
+figma:
+  node: '3278-6606'
+  codeConnect: packages/ui-react/src/components/ui/filter-cards/filter-cards.figma.tsx

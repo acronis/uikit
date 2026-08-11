@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: FilterCards
+
+# References only — values live in @acronis-platform/tokens-pd. FilterCards has
+# no dedicated `--ui-filter-cards-*` tier: it is pure layout, so it consumes the
+# generic gap primitive only. Every other visual token (card fill, border,
+# label/value color) belongs to CardFilter's own spec.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-gap-16,
+      affects: root,
+      description: Gap between cards in the row (16px),
+    }

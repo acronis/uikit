@@ -1,0 +1,72 @@
+---
+title: FilterCards
+description: A horizontal row of CardFilter items, stretched to fill the available width.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { FilterCardsDemo } from "@/components/demos-react/filter-cards";
+
+## Usage
+
+```tsx
+import { FilterCards, CardFilter } from '@acronis-platform/ui-react';
+```
+
+`FilterCards` is a horizontal row container (the Figma `FilterCards`
+component — its nested `ListCards` slot maps to `children`) for `CardFilter`
+items. It owns only the 16px gap between cards and stretches
+each child to an equal share of the row's width, regardless of how many are
+passed in — pure layout, no visual styling of its own. Polymorphic via Base
+UI's `useRender` (the `render` prop).
+
+### Overflow
+
+Cards shrink to fill the row, but never below their own content's natural
+width — a card's label/value is never clipped. If there are enough cards
+that they no longer fit at that natural width, the row overflows its
+container. `FilterCards` adds no scroll or wrap of its own — wrap the row in
+a horizontally scrollable container if that's the desired behavior:
+
+```tsx
+<div className="overflow-x-auto">
+  <FilterCards>{/* many cards */}</FilterCards>
+</div>
+```
+
+## Examples
+
+<DemoReact>
+  <FilterCardsDemo />
+</DemoReact>
+
+A row of stat cards:
+
+```tsx
+<FilterCards>
+  <CardFilter label="Total assets" value="125" />
+  <CardFilter label="Active filters" value="3" />
+  <CardFilter label="Pending" variant="static-empty" />
+</FilterCards>
+```
+
+Mixing a clickable filter into the row:
+
+```tsx
+<FilterCards>
+  <CardFilter label="Total workloads" value="128" />
+  <CardFilter
+    variant="clickable"
+    label="Alerts"
+    value="7"
+    selected={selected}
+    onClick={() => setSelected((prev) => !prev)}
+  />
+</FilterCards>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/filter-cards/filter-cards.tsx"
+  name="FilterCardsProps"
+/>

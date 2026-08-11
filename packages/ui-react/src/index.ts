@@ -44,6 +44,7 @@ export * from './components/ui/dialog-welcome';
 export * from './components/ui/dropdown-menu';
 export * from './components/ui/empty';
 export * from './components/ui/field';
+export * from './components/ui/filter-cards';
 export * from './components/ui/funnel-chart';
 export * from './components/ui/grid';
 export * from './components/ui/histogram';

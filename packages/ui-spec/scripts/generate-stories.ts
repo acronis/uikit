@@ -70,6 +70,19 @@ const RENDER: Record<string, RenderHint> = {
     ],
     props: 'label="Active filters" value="125" icon={<CircleInfoIcon />}',
   },
+  'filter-cards': {
+    extraImports: [
+      "import { CardFilter } from '../../card-filter/card-filter';",
+      "import { SquareDashedIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    sample: [
+      '',
+      '      <CardFilter label="Total assets" value="125" icon={<SquareDashedIcon />} />',
+      '      <CardFilter label="Active filters" value="3" icon={<SquareDashedIcon />} />',
+      '      <CardFilter label="Pending" variant="static-empty" />',
+      '    ',
+    ].join('\n'),
+  },
   sheet: {
     props: 'defaultOpen',
     extraImports: [
