@@ -1,0 +1,41 @@
+spec_version: '1.0'
+component: FilterCards
+
+schematic: |
+  root: <div> (the Figma "FilterCards" component)
+  +--------------------------------------------------------------+
+  |  [card]      [card]      [card]      [card]      [card]      |
+  +--------------------------------------------------------------+
+     card -> a consumer-supplied child (typically CardFilter), stretched
+              via flex-1 to an equal share of the row's width; gap between
+              cards is --ui-gap-16.
+
+root:
+  element: div
+  role: group
+  description: >-
+    Horizontal flex row that fills its container and evenly distributes its
+    children's width. Polymorphic via the `render` prop. `role: group` here is
+    a reasonable authoring choice, not enforced by the component — see
+    accessibility.md.
+
+parts:
+  - id: card
+    description: >-
+      A consumer-supplied child (typically a `CardFilter`), stretched to an
+      equal share of the row's width, but never shrunk below its own
+      content's natural (min-content) width — the row overflows its
+      container rather than clipping a card. Maps to the Figma "ListCards"
+      slot nested inside the "FilterCards" component. Not owned/rendered by
+      FilterCards — passed in as `children`.
+    optional: false
+
+layout:
+  type: flex
+  direction: row
+  align: stretch
+  order: [card]
+
+# Pure layout composition — a function of its children, with no own visual
+# states (CardFilter's interaction states live in its own spec).
+states: []

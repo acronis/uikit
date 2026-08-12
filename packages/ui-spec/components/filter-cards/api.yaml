@@ -1,0 +1,56 @@
+spec_version: '1.0'
+component: FilterCards
+
+contract:
+  properties:
+    - name: render
+      type: 'RenderProp'
+      required: false
+      default: undefined
+      description: >-
+        Base UI composition prop on the root — replaces the rendered `<div>`
+        with another element or component while merging props and classes.
+        React-only; other frameworks use their own polymorphism.
+
+  events: []
+
+  content:
+    - name: default
+      description: >-
+        The cards to lay out in the row — typically a list of `CardFilter`
+        elements. Each child is stretched to an equal share of the available
+        width (flex-1), regardless of how many are passed in.
+
+  methods: []
+
+adapters:
+  react:
+    component: FilterCards
+    status: implemented
+    import: "import { FilterCards, CardFilter } from '@acronis-platform/ui-react'"
+    example: |
+      <FilterCards>
+        <CardFilter label="Total assets" value="125" />
+        <CardFilter label="Active filters" value="3" variant="clickable" />
+        <CardFilter label="Pending" variant="static-empty" />
+      </FilterCards>
+
+  vue:
+    component: AvFilterCards
+    status: planned
+    import: "import { AvFilterCards, AvCardFilter } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvFilterCards>
+        <AvCardFilter label="Total assets" value="125" />
+        <AvCardFilter label="Active filters" value="3" variant="clickable" />
+      </AvFilterCards>
+
+  web-components:
+    element: ui-filter-cards
+    status: planned
+    import: "import '@acronis-platform/ui-wc/filter-cards'"
+    example: |
+      <ui-filter-cards>
+        <ui-card-filter label="Total assets" value="125"></ui-card-filter>
+        <ui-card-filter label="Active filters" value="3" variant="clickable"></ui-card-filter>
+      </ui-filter-cards>
