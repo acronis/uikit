@@ -16406,6 +16406,184 @@
       }
     }
   },
+  "SideSheet": {
+    "container": {
+      "color": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": ["FRAME_FILL"],
+          "com.figma.variableId": "VariableID:9670:39903"
+        },
+        "$type": "color",
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{colors.background.surface.secondary}",
+          "default": "{colors.background.surface.secondary}",
+          "light-gray": "{colors.background.surface.secondary}",
+          "telstra": "{colors.background.surface.secondary}",
+          "virtuozzo": "{colors.background.surface.secondary}",
+          "yellow-1c": "{colors.background.surface.secondary}"
+        }
+      }
+    },
+    "header": {
+      "borderColor": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": ["STROKE_COLOR"],
+          "com.figma.variableId": "VariableID:9670:39912"
+        },
+        "$type": "color",
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{colors.border.onSurface.divider}",
+          "default": "{colors.border.onSurface.divider}",
+          "light-gray": "{colors.border.onSurface.divider}",
+          "telstra": "{colors.border.onSurface.divider}",
+          "virtuozzo": "{colors.border.onSurface.divider}",
+          "yellow-1c": "{colors.border.onSurface.divider}"
+        }
+      },
+      "borderStyle": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.variableId": "VariableID:9670:39910"
+        },
+        "$type": "string",
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "solid",
+          "default": "solid",
+          "light-gray": "solid",
+          "telstra": "solid",
+          "virtuozzo": "solid",
+          "yellow-1c": "solid"
+        }
+      },
+      "borderWidth": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": ["STROKE_FLOAT"],
+          "com.figma.variableId": "VariableID:9670:39911"
+        },
+        "$type": "dimension",
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{units.stroke.1}",
+          "default": "{units.stroke.1}",
+          "light-gray": "{units.stroke.1}",
+          "telstra": "{units.stroke.1}",
+          "virtuozzo": "{units.stroke.1}",
+          "yellow-1c": "{units.stroke.1}"
+        }
+      },
+      "color": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": ["FRAME_FILL"],
+          "com.figma.variableId": "VariableID:9670:39909"
+        },
+        "$type": "color",
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{colors.background.surface.primary}",
+          "default": "{colors.background.surface.primary}",
+          "light-gray": "{colors.background.surface.primary}",
+          "telstra": "{colors.background.surface.primary}",
+          "virtuozzo": "{colors.background.surface.primary}",
+          "yellow-1c": "{colors.background.surface.primary}"
+        }
+      },
+      "gap": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": ["GAP"],
+          "com.figma.variableId": "VariableID:9670:39908"
+        },
+        "$type": "dimension",
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{units.gap.16}",
+          "default": "{units.gap.16}",
+          "light-gray": "{units.gap.16}",
+          "telstra": "{units.gap.16}",
+          "virtuozzo": "{units.gap.16}",
+          "yellow-1c": "{units.gap.16}"
+        }
+      },
+      "paddingX": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": ["GAP"],
+          "com.figma.variableId": "VariableID:9670:39907"
+        },
+        "$type": "dimension",
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{units.gap.16}",
+          "default": "{units.gap.16}",
+          "light-gray": "{units.gap.16}",
+          "telstra": "{units.gap.16}",
+          "virtuozzo": "{units.gap.16}",
+          "yellow-1c": "{units.gap.16}"
+        }
+      },
+      "paddingY": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": ["GAP"],
+          "com.figma.variableId": "VariableID:9670:39918"
+        },
+        "$type": "dimension",
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{units.gap.16}",
+          "default": "{units.gap.16}",
+          "light-gray": "{units.gap.16}",
+          "telstra": "{units.gap.16}",
+          "virtuozzo": "{units.gap.16}",
+          "yellow-1c": "{units.gap.16}"
+        }
+      },
+      "title": {
+        "color": {
+          "$extensions": {
+            "com.figma.hiddenFromPublishing": true,
+            "com.figma.scopes": ["TEXT_FILL"],
+            "com.figma.variableId": "VariableID:9670:39913"
+          },
+          "$type": "color",
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{colors.text.onSurface.primary}",
+            "default": "{colors.text.onSurface.primary}",
+            "light-gray": "{colors.text.onSurface.primary}",
+            "telstra": "{colors.text.onSurface.primary}",
+            "virtuozzo": "{colors.text.onSurface.primary}",
+            "yellow-1c": "{colors.text.onSurface.primary}"
+          }
+        },
+        "textStyle": {
+          "$extensions": {
+            "com.figma.hiddenFromPublishing": true,
+            "com.figma.scopes": ["ALL_SCOPES"],
+            "com.figma.variableId": "VariableID:9670:39914"
+          },
+          "$type": "typography",
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{typography.headings.title}",
+            "default": "{typography.headings.title}",
+            "light-gray": "{typography.headings.title}",
+            "telstra": "{typography.headings.title}",
+            "virtuozzo": "{typography.headings.title}",
+            "yellow-1c": "{typography.headings.title}"
+          }
+        }
+      }
+    }
+  },
   "SidebarPrimary": {
     "MenuItem": {
       "_global": {
