@@ -17,20 +17,19 @@ The repo is organized into four top-level directories: `context/` (shared docs),
 `apps/` (deployed apps, private), `packages/` (published libraries + data), and
 `tools/` (private build tooling).
 
-| Path                          | Package                                  | Published | Role                                                                         |
-| ----------------------------- | ---------------------------------------- | --------- | ---------------------------------------------------------------------------- |
-| `packages/ui-react/`          | `@acronis-platform/ui-react`             | **yes**   | The React component library, built on **Base UI**, themed by `tokens-pd`.    |
-| `packages/icons-react/`       | `@acronis-platform/icons-react`          | **yes**   | React icon components generated from `design-assets` (tree-shakeable).       |
-| `packages/icons-sprite/`      | `@acronis-platform/icons-sprite`         | **yes**   | Generated SVG sprites built from `icons-svg`.                                |
-| `packages/icons-svg/`         | `@acronis-platform/icons-svg`            | no        | Raw SVG icon sources fetched from Figma + manifests (source-only).           |
-| `packages/icons-svg-next/`    | `@acronis-platform/icons-svg-next`       | no        | Raw SVG sources for the next-gen icon set (source-only).                     |
-| `packages/design-tokens/`     | `@acronis-platform/design-tokens`        | **yes**   | DTCG-2025.10 design tokens (primitives / semantics / components). Data only. |
-| `packages/design-assets/`     | `@acronis-platform/design-assets`        | **yes**   | Icon/illustration manifests + bundled binaries. Data only.                   |
-| `packages/tokens-pd/`         | `@acronis-platform/tokens-pd`            | **yes**   | Generated per-brand CSS vars, per-component CSS, Tailwind presets, DTCG.     |
-| `apps/docs/`                  | `@acronis-platform/uikit-docs`           | no        | Next.js 15 + Fumadocs documentation site.                                    |
-| `tools/style-dictionary/`     | `@acronis-platform/style-dictionary`     | no        | Style Dictionary v5 build: `design-tokens` → `tokens-pd` CSS/presets.        |
-| `tools/figma-icons-fetcher/`  | `@acronis-platform/figma-icons-fetcher`  | no        | Fetches + SVGO-optimizes icons from Figma into the `icons-svg*` packages.    |
-| `tools/figma-token-exporter/` | `@acronis-platform/figma-token-exporter` | no        | Self-hosted Figma plugin + receiver that exports variables/styles to tokens. |
+| Path                              | Package                                      | Published | Role                                                                         |
+| --------------------------------- | -------------------------------------------- | --------- | ---------------------------------------------------------------------------- |
+| `packages/ui-react/`              | `@acronis-platform/ui-react`                 | **yes**   | The React component library, built on **Base UI**, themed by `tokens-pd`.    |
+| `packages/icons-react/`           | `@acronis-platform/icons-react`              | **yes**   | React icon components generated from `design-assets` (tree-shakeable).       |
+| `packages/icons-sprite/`          | `@acronis-platform/icons-sprite`             | **yes**   | Generated SVG sprites built from `icons-svg`.                                |
+| `packages/icons-svg/`             | `@acronis-platform/icons-svg`                | no        | Committed raw SVG icon sources + manifests (source-only).                    |
+| `packages/icons-svg-next/`        | `@acronis-platform/icons-svg-next`           | no        | Committed raw SVG sources for the next-gen icon set (source-only).           |
+| `packages/design-tokens/`         | `@acronis-platform/design-tokens`            | **yes**   | DTCG-2025.10 design tokens (primitives / semantics / components). Data only. |
+| `packages/design-assets/`         | `@acronis-platform/design-assets`            | **yes**   | Icon/illustration manifests + bundled binaries. Data only.                   |
+| `packages/tokens-pd/`             | `@acronis-platform/tokens-pd`                | **yes**   | Generated per-brand CSS vars, per-component CSS, Tailwind presets, DTCG.     |
+| `apps/docs/`                      | `@acronis-platform/uikit-docs`               | no        | Next.js 15 + Fumadocs documentation site.                                    |
+| `tools/style-dictionary/`         | `@acronis-platform/style-dictionary`         | no        | Style Dictionary v5 build: `design-tokens` → `tokens-pd` CSS/presets.        |
+| `tools/figma-design-assets-sync/` | `@acronis-platform/figma-design-assets-sync` | no        | Syncs icon SVGs from Figma into `design-assets` and regenerates the pack.    |
 
 This table covers the workspaces relevant to consuming the kit. It omits the
 demo apps, the `ui-spec` spike, and `packages/ui-legacy/`
@@ -230,9 +229,12 @@ token layer ships inside `@acronis-platform/ui-react/styles`; light/dark and
 per-brand values are driven by CSS variables (zero JavaScript overhead,
 SSR-compatible). Override the `--ui-*` variables to customize.
 
-The token pipeline (and the Figma sync used to refresh it) is documented in the
-workspace docs for [`design-tokens`](./packages/design-tokens/AGENTS.md) and
-[`tokens-pd`](./packages/tokens-pd/AGENTS.md).
+The token pipeline is documented in the workspace docs for
+[`design-tokens`](./packages/design-tokens/AGENTS.md) and
+[`tokens-pd`](./packages/tokens-pd/AGENTS.md). Refreshing the tokens from Figma
+is done by a standalone project outside this monorepo
+(`acronis-tokens-updater`), which writes `packages/design-tokens/tiers/*.json`
+directly.
 
 ### Fonts
 
@@ -334,8 +336,7 @@ uikit/
 │   └── tokens-pd/              # Generated CSS/Tailwind (@acronis-platform/tokens-pd)
 ├── tools/                      # Private build tooling
 │   ├── style-dictionary/       # design-tokens → tokens-pd CSS/presets
-│   ├── figma-icons-fetcher/    # Figma → icons-svg* SVG fetcher
-│   └── figma-token-exporter/   # Figma plugin + receiver → token snapshot
+│   └── figma-design-assets-sync/  # Figma → design-assets icon SVGs + pack manifest
 ├── context/                    # Cross-workspace docs (conventions, commits, releasing)
 ├── .changeset/                 # Pending changesets (each PR adds one)
 ├── .github/workflows/          # ci, release, demo-deploy, visual-regression
@@ -375,8 +376,7 @@ pnpm --filter @acronis-platform/ui-react storybook
 ```
 
 The root also exposes token-pipeline shortcuts: `pnpm sd` (build all Style
-Dictionary targets), `pnpm sd:tokens` / `pnpm sd:assets` (subsets), and
-`pnpm tokens:sync` (re-emit `design-tokens` then rebuild `tokens-pd`).
+Dictionary targets) and `pnpm sd:tokens` / `pnpm sd:assets` (subsets).
 
 ## 🚢 Releasing
 

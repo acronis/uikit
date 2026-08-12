@@ -8,8 +8,9 @@ packages/tokens-pd/css
 packages/tokens-pd/tailwind
 packages/tokens-pd/dtcg
 
-# Design-token source tiers are formatted by the figma-to-design-tokens skill
-# emitters (DtcgFormatter), which own their house style. Keep Prettier out of them.
+# Design-token source tiers are written by the external token-sync emitters, which
+# own their house style. Reformatting them here would produce a spurious diff on
+# every sync. Keep Prettier out of them.
 packages/design-tokens/tiers
 
 # Generated, committed icon-name map (scripts/generate-legacy-map.ts). Prettier

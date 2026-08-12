@@ -27,8 +27,6 @@ jobs:
         @acronis-platform/ui-react
         @acronis-platform/ui-spec
         @acronis-platform/figma-design-assets-sync
-        @acronis-platform/figma-icons-fetcher
-        @acronis-platform/figma-token-exporter
         @acronis-platform/style-dictionary
 
     steps:

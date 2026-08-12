@@ -13,7 +13,7 @@ workspace; the deeper conceptual reference lives in
 
 ## Validate
 
-This is the only script that does real work. From the repo root:
+`validate` is the only script that does real work. From the repo root:
 
 ```bash
 pnpm --filter @acronis-platform/design-tokens test       # alias for validate
@@ -22,26 +22,18 @@ pnpm --filter @acronis-platform/design-tokens validate    # ajv-compiles the sch
 
 `--strict=false` is required for the tokens schema — a known ajv quirk from the `properties`/`patternProperties` overlap on `$extensions`. It is already baked into the `validate` script; keep it.
 
-## Emit (re-emit tiers from a Figma snapshot)
-
-```bash
-pnpm --filter @acronis-platform/design-tokens emit
-```
-
-One-command re-emit: builds the normalized snapshot from the
-figma-token-exporter output in `.tmp/figma-tokens/`
-(`figma-snapshot-build.mjs --tmp`), runs the three tier emitters in dependency
-order (`emit-primitives` → `emit-semantics` → `emit-components`), then
-`validate` — fail-fast (`&&`-chained). All scripts live in the
-[`/figma-to-design-tokens`](../../.claude/skills/figma-to-design-tokens/SKILL.md)
-skill; this is the **figma-console-free** path (it reads `.tmp/figma-tokens/`,
-which the exporter writes — no MCP pull). Requires a populated
-`.tmp/figma-tokens/` snapshot. It does **not** rebuild `tokens-pd`, review the
-diff, or fix consumers — run the skill for a diff-gated full sync.
-
 `build` / `dev` / `clean` / `lint` / `typecheck` are intentional no-ops
 — there is nothing to compile in a JSON data package. `test` runs the
 ajv validation so `pnpm -r test` covers this workspace in CI.
+
+## Refreshing the tiers from Figma
+
+The tier files are **not** regenerated inside this monorepo. A standalone
+project, `acronis-tokens-updater`, pulls the Figma variables/styles and writes
+`tiers/*.json` directly. From this repo's side a token refresh is therefore just
+an incoming diff to `tiers/`: run `validate`, rebuild `tokens-pd`
+(`pnpm --filter @acronis-platform/tokens-pd build`), review the resulting CSS
+diff, and add a changeset.
 
 ## Loading context
 
@@ -54,7 +46,6 @@ When a new file lands under `context/`, add a row here in the same change. An un
 | When the task involves…                                                                                                                                          | Load                                             |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
 | Grounding vocabulary (Tier, Group, Mode, Theme, Brand, Collection, token)                                                                                        | [`context/glossary.md`](context/glossary.md)     |
-| Running the canonical one-way Figma → repo sync (export snapshot, `pnpm tokens:sync`, diff review)                                                               | [`context/figma-sync.md`](context/figma-sync.md) |
 | Writing/reading a `.tokens.json` — the files, token shape (`$value`/`$type`/`values`/`platforms`/`$extensions`), modes & themes, the alias chain, platform scope | [`context/manifest.md`](context/manifest.md)     |
 | DTCG conformance & divergence, the `$schema`/Figma discriminator, `$extensions` namespaces (`com.acronis.*`/`com.figma.*`), naming / `$`-prefix / `$type` rules  | [`context/spec.md`](context/spec.md)             |
 | Sizing a token change — whether a change is a major / minor / patch bump, and how to record it                                                                   | [`context/versioning.md`](context/versioning.md) |
