@@ -104,12 +104,13 @@ Call these (no skill prerequisite for reads):
    > upstream token changes. The pipeline — owned by the design team —
    > is the single source of truth.
 
-   **Caveat:** the Figma MCP is **selection-bound** in this setup — both
-   the figma-console Desktop Bridge and the official `mcp__figma__*` Dev
-   Mode server reject reads with "You currently have nothing selected"
-   even when you pass a valid `nodeId`/`fileKey`. The node must be
-   **selected in the Figma desktop app**: ask the user to open the node
-   URL in desktop and click the layer, then retry.
+   > The official `mcp__figma__*` Dev Mode server reads `get_design_context`
+   > and `get_variable_defs` headless, by `nodeId`/`fileKey` alone — no
+   > Figma desktop app, no selection needed (verified 2026-08-12). The
+   > **figma-console Desktop Bridge** is a different, third-party MCP that
+   > _does_ mirror a live desktop session and can reject reads with
+   > "nothing selected" — but it's not part of this recipe; don't confuse
+   > the two if a read fails.
 
 3. `get_context_for_code_connect({ nodeId, fileKey })` — **exact** Figma
    property names + variant options. Use this to write Code Connect; never

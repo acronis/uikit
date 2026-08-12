@@ -181,7 +181,7 @@ Confirms each design variable's **value** equals the resolved value of the
 MCP output and run the (dependency-free) comparator:
 
 ```bash
-# 1. agent: dump the node's design variables to JSON (node must be selected in Figma desktop)
+# 1. agent: dump the node's design variables to JSON (headless — no Figma desktop needed)
 #    get_variable_defs({ nodeId, fileKey })  →  save as figma-vars.json
 # 2. compare against tokens-pd resolved values:
 node .claude/skills/component-readiness/scripts/parity-values.mjs <Component> figma-vars.json [--theme light|dark] [--brand acronis]
@@ -210,11 +210,11 @@ Storybook image to the Figma dims before diffing. **Advisory only** — the two
 aren't pixel-aligned (framing/scale differ), so the % is a delta signal; read the
 diff PNG. Crop the Storybook capture to just the component for the cleanest result.
 
-> **Selection-bound caveat (same as `/figma-component` Phase 1):** the Figma MCP
-> in this setup rejects reads with "nothing selected" even given a valid
-> `nodeId`/`fileKey`. Ask the user to open the node URL in the Figma **desktop**
-> app and click the layer, then retry. If Figma is unavailable, report `FIGMA`
-> linkage status from the static pass and note the live diff was skipped.
+> The official `mcp__figma__*` Dev Mode server reads headless, by
+> `nodeId`/`fileKey` alone — no Figma desktop app or selection needed
+> (verified 2026-08-12; see `/figma-component` Phase 1). If the MCP is
+> unreachable for other reasons (auth, network), report `FIGMA` linkage
+> status from the static pass and note the live diff was skipped.
 
 ---
 
