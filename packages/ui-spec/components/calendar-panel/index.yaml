@@ -1,0 +1,23 @@
+spec_version: '1.0'
+component: CalendarPanel
+name: calendar-panel
+status: draft
+category: forms
+description: >-
+  The Figma "Calendar" panel: a bordered, elevated day-picker panel built on
+  react-day-picker and themed by the dedicated `--ui-calendar-*` token tier. A
+  single `variant` prop selects one of the three selection modes, and each one
+  changes the panel's structure — `single` is one month column with no footer,
+  `multiple` adds a Cancel/Apply footer, and `range` shows two month columns side
+  by side (divided by a vertical rule) sharing one footer. Months are navigated
+  through two `InputSelect` dropdowns in each month's header; there are no
+  prev/next chevrons. `variant` is a plain string union, not a `cva` axis.
+since: 0.62.0
+dependencies:
+  components:
+    - InputSelect
+    - DialogFooterDefault
+    - Button
+figma:
+  node: '8148:10167'
+  codeConnect: packages/ui-react/src/components/ui/calendar-panel/calendar-panel.figma.tsx

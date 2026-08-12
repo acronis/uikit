@@ -1,0 +1,169 @@
+spec_version: '1.0'
+component: CalendarPanel
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+#
+# Composed components own their own tokens; they are documented in their specs,
+# not duplicated here (the same convention dialog/tokens.yaml follows):
+#   • footer bar geometry/color -> DialogFooterDefault (`--ui-footer-*`)
+#   • the Cancel/Apply buttons  -> Button (`--ui-button-*`)
+#   • the month/year dropdowns  -> InputSelect (`--ui-input-select-*`)
+#
+# The day cell's and weekday row's typography come from the generated
+# `.ui-calendar-value-text-style` composite class in the same Calendar tier — a
+# CSS class, not a `--ui-*` custom property, so it cannot be listed below.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-calendar-container-color,
+      affects: root,
+      description: Panel surface,
+    }
+  - {
+      name: --ui-calendar-container-border-color,
+      affects: root,
+      description: Panel border color,
+    }
+  - {
+      name: --ui-calendar-container-border-width,
+      affects: root,
+      description: Panel border width,
+    }
+  - {
+      name: --ui-calendar-container-border-style,
+      affects: root,
+      description: Panel border style,
+    }
+  - {
+      name: --ui-calendar-container-border-radius,
+      affects: root,
+      description: Panel corner radius,
+    }
+  - {
+      name: --ui-calendar-header-gap,
+      affects: month-caption,
+      description: Gap between the month and year dropdowns,
+    }
+  - {
+      name: --ui-calendar-header-padding-x,
+      affects: month-caption,
+      description: Header horizontal padding,
+    }
+  - {
+      name: --ui-calendar-header-padding-y,
+      affects: month-caption,
+      description: Header vertical padding,
+    }
+  - {
+      name: --ui-calendar-header-border-color,
+      affects: month-caption,
+      description: Header bottom divider color,
+    }
+  - {
+      name: --ui-calendar-header-border-width,
+      affects: month-caption,
+      description: Header bottom divider width,
+    }
+  - {
+      name: --ui-calendar-header-border-style,
+      affects: month-caption,
+      description: Header bottom divider style,
+    }
+  - {
+      name: --ui-calendar-body-padding-x,
+      affects: day-grid,
+      description: Day-grid horizontal padding,
+    }
+  - {
+      name: --ui-calendar-body-padding-y,
+      affects: day-grid,
+      description: Day-grid vertical padding,
+    }
+  - {
+      name: --ui-calendar-body-border-color,
+      affects: month-column,
+      description: 'Vertical rule between the two `range` month columns',
+    }
+  - {
+      name: --ui-calendar-body-border-width,
+      affects: month-column,
+      description: 'Vertical rule width (inline-end border, mirrors under RTL)',
+    }
+  - {
+      name: --ui-calendar-body-border-style,
+      affects: month-column,
+      description: Vertical rule style,
+    }
+  - {
+      name: --ui-calendar-item-width-min,
+      affects: day,
+      description: Day cell / weekday cell width,
+    }
+  - {
+      name: --ui-calendar-item-height-min,
+      affects: day,
+      description: Day cell minimum height,
+    }
+  - {
+      name: --ui-calendar-item-color-idle,
+      affects: day,
+      description: Day cell background — idle,
+    }
+  - {
+      name: --ui-calendar-item-color-hover,
+      affects: day,
+      description: 'Day cell background — hover, and the in-range (data-range-middle) fill',
+    }
+  - {
+      name: --ui-calendar-item-color-active,
+      affects: day,
+      description: 'Day cell background — selected day / range endpoint (data-active)',
+    }
+  - {
+      name: --ui-calendar-item-border-idle,
+      affects: day,
+      description: Day cell border — idle,
+    }
+  - {
+      name: --ui-calendar-item-border-hover,
+      affects: day,
+      description: Day cell border — hover,
+    }
+  - {
+      name: --ui-calendar-item-border-active,
+      affects: day,
+      description: Day cell border — selected day / range endpoint,
+    }
+  - {
+      name: --ui-calendar-value-color-idle-primary,
+      affects: day,
+      description: 'Day number color — idle, and in-range days',
+    }
+  - {
+      name: --ui-calendar-value-color-idle-secondary,
+      affects: weekdays,
+      description: Weekday abbreviation color,
+    }
+  - {
+      name: --ui-calendar-value-color-active,
+      affects: day,
+      description: Day number color on a selected day / range endpoint,
+    }
+  - {
+      name: --ui-calendar-value-color-disabled,
+      affects: day,
+      description: Day number color for disabled and outside days,
+    }
+  - {
+      name: --ui-calendar-value-font-variant-numeric,
+      affects: day,
+      description: 'Numeric font variant for day numbers (tabular figures)',
+    }
+  - {
+      name: --ui-focus-primary,
+      affects: day,
+      description: "Focus ring color on the day grid's focused cell (3px)",
+    }
