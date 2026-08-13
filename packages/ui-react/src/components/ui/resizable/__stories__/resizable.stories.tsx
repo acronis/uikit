@@ -1,7 +1,23 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect } from 'storybook/test';
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../resizable';
+
+// The handle must contribute no size to the group, so adjacent panels' edges (and
+// any borders a consumer puts on them) meet. Asserted here rather than left to the
+// visual regression baselines: the shift is ~0.2% of a story's pixels, under the
+// test-runner's 0.5% failureThreshold, so a regression would pass unnoticed.
+const expectPanelsFlush = (
+  canvasElement: HTMLElement,
+  axis: 'horizontal' | 'vertical'
+) => {
+  const [first, second] = canvasElement.querySelectorAll('[data-panel]');
+  const a = first.getBoundingClientRect();
+  const b = second.getBoundingClientRect();
+  const gap = axis === 'horizontal' ? b.left - a.right : b.top - a.bottom;
+  expect(gap).toBeCloseTo(0, 1);
+};
 
 const meta = {
   title: 'UI/Resizable',
@@ -65,9 +81,11 @@ export const Default: Story = {
         </ResizablePanel>
       </ResizablePanelGroup>
     ),
+  play: ({ canvasElement }) => expectPanelsFlush(canvasElement, 'horizontal'),
 };
 
 export const Vertical: Story = {
+  play: ({ canvasElement }) => expectPanelsFlush(canvasElement, 'vertical'),
   render: () =>
     box(
       <ResizablePanelGroup orientation="vertical">
