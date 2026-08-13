@@ -73,6 +73,21 @@ describe('Resizable', () => {
     );
   });
 
+  it('costs no layout space, so the panels it separates stay flush', () => {
+    const { rerender } = render(<Group orientation="horizontal" />);
+    const handle = screen.getByRole('separator');
+    // The 8px hit area is cancelled by -4px margins, so it straddles the panel
+    // boundary instead of pushing the panels apart.
+    expect(handle).toHaveClass('relative', 'w-2', '-mx-1');
+
+    rerender(<Group orientation="vertical" />);
+    expect(handle).toHaveClass(
+      'aria-[orientation=horizontal]:h-2',
+      'aria-[orientation=horizontal]:-my-1',
+      'aria-[orientation=horizontal]:mx-0'
+    );
+  });
+
   it('draws the vertical divider with the inline-start border', () => {
     render(<Group orientation="horizontal" />);
     const handle = screen.getByRole('separator');

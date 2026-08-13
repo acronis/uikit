@@ -216,8 +216,8 @@ export interface SidebarSecondaryProps extends React.ComponentPropsWithoutRef<'n
 // ---------------------------------------------------------------------------
 // SidebarSecondaryResizeEdge — internal drag/click handle on the right edge
 // ---------------------------------------------------------------------------
-// Styled identically to `ResizableHandle` (Figma 4649:6681): 9px hit-area,
-// 1px centered divider, idle → `--ui-border-on-surface-border`,
+// Styled after `ResizableHandle` (Figma 4649:6681): a hit area that takes up no
+// layout space around a 1px divider, idle → `--ui-border-on-surface-border`,
 // hover → `--ui-resizable-border-color-hover`,
 // drag  → `--ui-resizable-border-color-active`.
 // ---------------------------------------------------------------------------
