@@ -7,6 +7,7 @@ const meta = {
   component: TruncateText,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
+  args: { children: 'Acme Corp' },
 } satisfies Meta<typeof TruncateText>;
 
 export default meta;
