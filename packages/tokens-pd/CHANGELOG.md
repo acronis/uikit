@@ -1,5 +1,21 @@
 # @acronis-platform/tokens-pd
 
+## 2.6.0
+
+### Minor Changes
+
+- [#641](https://github.com/acronis/uikit/pull/641) [`0515dda`](https://github.com/acronis/uikit/commit/0515ddabbe1cb196fc5ff2f981280e57a28bc7f6) Thanks [@heygabecom](https://github.com/heygabecom)! - Sync design tokens with Figma.
+
+  Adds the SideSheet component tier: 10 new tokens covering the container fill and
+  the header's surface, divider, spacing and title type, defined across all six
+  brands. Regenerates `tokens-pd` so the new tokens surface as DTCG, CSS custom
+  properties and Tailwind presets.
+
+### Patch Changes
+
+- Updated dependencies [[`0515dda`](https://github.com/acronis/uikit/commit/0515ddabbe1cb196fc5ff2f981280e57a28bc7f6)]:
+  - @acronis-platform/design-tokens@2.5.0
+
 ## 2.5.0
 
 ### Minor Changes
