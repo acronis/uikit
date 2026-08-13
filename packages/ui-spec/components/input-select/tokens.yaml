@@ -46,6 +46,7 @@ tokens:
     }
 
   # ── Chevron ──
+  - { name: --ui-input-select-global-icon-box-size, affects: icon }
   - { name: --ui-input-select-normal-icon-expand-color-idle, affects: icon }
   - { name: --ui-input-select-normal-icon-expand-color-disabled, affects: icon }
 
@@ -147,7 +148,12 @@ tokens:
   - {
       name: --ui-input-select-dropdown-item-global-icon-tenant,
       affects: item,
-      description: Leading tenant-type icon color,
+      description: Leading icon color (item's `icon` prop),
+    }
+  - {
+      name: --ui-input-select-dropdown-item-global-icon-tenant,
+      affects: expander,
+      description: Leading icon color (expander's `icon` prop),
     }
   - {
       name: --ui-input-select-dropdown-item-global-icon-checked,
@@ -156,7 +162,7 @@ tokens:
     }
   - {
       name: --ui-input-select-dropdown-item-global-icon-collapse,
-      affects: item,
+      affects: expander,
       description: Expand/collapse chevron color,
     }
   - { name: --ui-checkbox-global-box-size, affects: indicator }

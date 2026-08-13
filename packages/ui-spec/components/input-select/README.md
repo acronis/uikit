@@ -83,10 +83,15 @@ import {
 | `InputSelectTrigger`      | `<button>` | The combobox box; `aria-invalid` switches to the error look.      |
 | `InputSelectValue`        | `<span>`   | Selected label or placeholder.                                    |
 | `InputSelectContent`      | `<div>`    | The floating listbox popup.                                       |
-| `InputSelectSearch`       | `<div>`    | In-dropdown filter row (presentational).                          |
+| `InputSelectSearch`       | `<div>`    | In-dropdown search row; drives live filtering of the items.       |
 | `InputSelectSection`      | `<div>`    | A labelled group of items.                                        |
 | `InputSelectSectionLabel` | `<div>`    | The group heading.                                                |
 | `InputSelectItem`         | `<div>`    | An option; trailing check (single) / leading checkbox (multiple). |
+| `InputSelectExpander`     | `<button>` | Non-selectable expand/collapse toggle for a tree group.           |
 | `InputSelectDescription`  | `<p>`      | Helper text (normal state).                                       |
 | `InputSelectError`        | `<p>`      | Error message; replaces the description.                          |
 | `InputSelectStatus`       | `<div>`    | Loading / empty / error row shown instead of items.               |
+
+`useInputSelectFilter()` reads the search query set by `InputSelectSearch`;
+use it inside a custom tree/item renderer to filter items the flat
+`InputSelectItem` auto-filter doesn't cover.

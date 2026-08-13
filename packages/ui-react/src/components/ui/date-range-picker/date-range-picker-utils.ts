@@ -1,4 +1,5 @@
-import { format, isValid, parse, startOfDay } from 'date-fns';
+import { format, isValid } from 'date-fns';
+import type { DayPickerLocale } from 'react-day-picker';
 
 /** A start/end date range. Both ends are optional (a partial range while editing). */
 export interface DateRange {
@@ -6,7 +7,12 @@ export interface DateRange {
   to?: Date;
 }
 
-/** The date display / parse pattern used by the trigger and the editable fields. */
+/**
+ * The date display pattern used by the trigger. Fixed month-day-year order
+ * regardless of `locale` — only the month/day/era token *names* localize (see
+ * {@link formatDate}); true locale-aware reordering is a separate, bigger
+ * change (tracked, not done here).
+ */
 export const DISPLAY_FORMAT = 'MMM d, yyyy';
 
 /**
@@ -14,34 +20,15 @@ export const DISPLAY_FORMAT = 'MMM d, yyyy';
  * invalid `Date`. `date-fns`' `format` throws a `RangeError` on an invalid
  * `Date` (e.g. `new Date('garbage')`), so the `isValid` guard is load-bearing —
  * a truthy-but-invalid `Date` must not reach `format`.
- */
-export function formatDate(date: Date | undefined): string {
-  return date && isValid(date) ? format(date, DISPLAY_FORMAT) : '';
-}
-
-/**
- * Parse a {@link DISPLAY_FORMAT} string into a `Date`, or `undefined` when the
- * text is empty, partial (mid-type), or not a real calendar date
- * (e.g. `"Feb 30, 2026"`). The result is normalized to the start of the day so
- * it round-trips with {@link formatDate} — `date-fns`' `parse` fills the unspecified
- * time-of-day from its reference date, which would otherwise leave a "now" time
- * on the value and break equality with the midnight dates the calendar emits.
  *
- * NOTE: the pattern is locale-fixed (US-style `MMM d, yyyy`), matching the
- * `InputDatePicker` trigger. Locale-aware parsing is not yet supported — a
- * known limitation to revisit once the design tier lands.
+ * `locale` only translates the month name via `date-fns`' `format` `options`
+ * — it does not reorder `DISPLAY_FORMAT`'s fixed month-day-year pattern.
  */
-export function parseDate(text: string): Date | undefined {
-  const parsed = parse(text.trim(), DISPLAY_FORMAT, new Date());
-  return isValid(parsed) ? startOfDay(parsed) : undefined;
-}
-
-/** Structural equality of two ranges by their endpoints' timestamps. */
-export function rangesEqual(a: DateRange, b: DateRange): boolean {
-  return (
-    a.from?.getTime() === b.from?.getTime() &&
-    a.to?.getTime() === b.to?.getTime()
-  );
+export function formatDate(
+  date: Date | undefined,
+  locale?: DayPickerLocale
+): string {
+  return date && isValid(date) ? format(date, DISPLAY_FORMAT, { locale }) : '';
 }
 
 /**

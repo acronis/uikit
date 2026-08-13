@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -71,6 +71,53 @@ describe('InputDatePicker', () => {
     const trigger = screen.getByRole('button', { name: 'Due' });
     expect(trigger).toHaveAttribute('aria-expanded', 'true');
     expect(trigger).toHaveAttribute('data-open');
+  });
+
+  it('wires the label, value, and description to their -hover token on trigger hover or open', () => {
+    render(
+      <InputDatePicker label="Due" description="hint" value="Jun 15, 2026" />
+    );
+    expect(screen.getByText('Due')).toHaveClass(
+      'group-has-[button:hover,button[data-open]]/field:text-[var(--ui-input-date-picker-global-label-color-hover)]'
+    );
+    expect(screen.getByText('hint')).toHaveClass(
+      'group-has-[button:hover,button[data-open]]/field:text-[var(--ui-input-date-picker-normal-description-color-hover)]'
+    );
+    const trigger = screen.getByRole('button', { name: 'Due' });
+    expect(trigger).toHaveClass(
+      'enabled:not-aria-[invalid=true]:hover:text-[var(--ui-input-date-picker-global-value-color-hover)]',
+      'not-aria-[invalid=true]:data-[open]:text-[var(--ui-input-date-picker-global-value-color-hover)]'
+    );
+  });
+
+  it('wires the placeholder, separator, and icon to their -hover token on trigger hover or open', () => {
+    render(
+      <InputDatePicker
+        label="Period"
+        pickerType="dateRange"
+        startDate="Jun 1"
+        endDate="Jun 30"
+      />
+    );
+    const trigger = screen.getByRole('button', { name: 'Period' });
+    const separator = within(trigger).getByText('–');
+    expect(separator).toHaveClass(
+      'group-hover/trigger:text-[var(--ui-input-date-picker-global-separator-color-hover)]',
+      'group-data-[open]/trigger:text-[var(--ui-input-date-picker-global-separator-color-hover)]'
+    );
+    expect(trigger.querySelector('svg')).toHaveClass(
+      'group-hover/trigger:text-[var(--ui-input-date-picker-normal-icon-color-hover)]',
+      'group-data-[open]/trigger:text-[var(--ui-input-date-picker-normal-icon-color-hover)]',
+      'group-aria-[invalid=true]/trigger:group-hover/trigger:text-[var(--ui-input-date-picker-error-icon-color-hover)]'
+    );
+  });
+
+  it('sizes the icon box to the icon-box-size token', () => {
+    render(<InputDatePicker label="Due" />);
+    const trigger = screen.getByRole('button', { name: 'Due' });
+    expect(trigger.querySelector('svg')?.parentElement).toHaveClass(
+      'size-[var(--ui-input-date-picker-global-icon-box-size)]'
+    );
   });
 
   it('fires onClick (consumer opens its calendar)', async () => {

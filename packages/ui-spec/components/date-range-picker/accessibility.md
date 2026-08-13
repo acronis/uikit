@@ -1,7 +1,7 @@
 # DateRangePicker — accessibility
 
 Accessibility is inherited from the composed primitives: the `InputDatePicker`
-trigger, the Base UI `Popover`, and the `react-day-picker` `Calendar`.
+trigger, the Base UI `Popover`, and `CalendarPanel`.
 
 ## Trigger
 
@@ -13,23 +13,29 @@ trigger, the Base UI `Popover`, and the `react-day-picker` `Calendar`.
 ## Popover
 
 - Opening moves focus into the popover; `Escape` and an outside press close it and
-  return focus to the trigger. Focus is trapped within the popover while open
-  (Base UI).
+  return focus to the trigger. The popover is a non-modal Base UI `Popover`
+  (no `modal` prop is passed), so focus is **not** trapped — Tab can move focus
+  outside the popover while it remains open.
 
-## Calendar
+## Calendar & footer
 
 - The grid follows the ARIA grid pattern with full keyboard support (arrow keys,
-  `Home`/`End`, `PageUp`/`PageDown`, `Enter`/`Space`) — see the Calendar spec.
-
-## Fields & footer
-
-- The start/end inputs are labelled ("Start date" / "End date") so the draft can
-  be edited without the calendar. The footer buttons ("Reset to default",
-  "Apply") are ordinary labelled buttons and expose their disabled state via the
-  `disabled` attribute.
+  `Home`/`End`, `PageUp`/`PageDown`, `Enter`/`Space`) — see the `CalendarPanel` spec.
+- The footer's "Cancel" and "Apply" buttons are `CalendarPanel`'s own — ordinary
+  labelled buttons.
+- The month and year dropdowns have no visible label, so their accessible names
+  come from `monthLabel` / `yearLabel` (defaulting to "Month" / "Year"); the
+  footer buttons' names come from `cancelLabel` / `applyLabel`. All four —
+  plus `locale` for weekday names and the day cells' own labels, and
+  `formatMonthLabel` for the month names — are props, so a non-English UI has no
+  untranslatable text in the popup.
+- Arrow Left/Right day-grid roaming follows the ambient text direction: it is read
+  from the document (`useDocDir()`) and forwarded to `CalendarPanel`'s `dir`,
+  which `react-day-picker` needs directly (it does not inherit direction via
+  CSS).
 
 ## Contrast
 
 - The trigger uses the `--ui-input-date-picker-*` tier (idle / hover / active /
   error / disabled) so every state is within the palette's contrast budget; the
-  popup content contrast is owned by the composed Calendar / Button / InputText.
+  popup content contrast is owned by the composed `CalendarPanel`.

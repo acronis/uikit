@@ -8,22 +8,23 @@ schematic: |
              │ opens
              ▼
   popup (Popover content) ────────────────────────────────────
-  | calendar:  <   July 2026        August 2026        >       |
+  | calendar:  [Month ⌄][Year ⌄]      [Month ⌄][Year ⌄]         |
   |            Su Mo Tu … Sa       Su Mo Tu … Sa               |
-  |            [range grid, dual-month, mode=range]            |
+  |            [range grid, dual-month, CalendarPanel variant=range,
+  |             hideNavigation — no prev/next chevrons, month/year
+  |             dropdowns are the only navigation]              |
   |-----------------------------------------------------------|
-  | field-start [ Jul 1, 2026 ]  –  field-end [ Jul 15, 2026 ]|
-  |-----------------------------------------------------------|
-  | reset "Reset to default"                    apply "Apply" |
+  | cancel "Cancel"                              apply "Apply" |
   ------------------------------------------------------------
 
 root:
   element: div
-  role: group
   description: >-
-    Wraps the trigger and its popover. The popover is portaled; positioning, focus
+    `Popover.Root` (Base UI) owns the open/draft state and renders no element of
+    its own; the outermost DOM node is the `InputDatePicker` trigger's field
+    `<div>`, which carries no role. The popover is portaled; positioning, focus
     management, and outside-press / Escape dismissal come from the Popover
-    primitive (Base UI).
+    primitive.
 
 parts:
   - id: trigger
@@ -32,29 +33,29 @@ parts:
       start–end range and a calendar icon; activating it opens the popup.
     element: button
   - id: popup
-    description: The Popover content panel holding the calendar, the fields, and the footer.
+    description: >-
+      The Popover content panel holding the `CalendarPanel`. Its own
+      container chrome (border, radius, shadow, background) is neutralized
+      via `className` so only `CalendarPanel`'s chrome is visible; Popover
+      contributes positioning, portaling and dismissal only.
     element: div
   - id: calendar
-    description: A dual-month range `Calendar` (`mode="range"`, `numberOfMonths={2}`) bound to the draft range.
+    description: >-
+      A `CalendarPanel` (`variant="range"`) bound to the draft range; its own
+      Cancel/Apply footer is this component's footer.
     element: div
-  - id: field-start
-    description: An editable text input for the draft range start (`InputText`, `MMM d, yyyy`).
-    element: input
-  - id: field-end
-    description: An editable text input for the draft range end (`InputText`, `MMM d, yyyy`).
-    element: input
-  - id: reset
-    description: The "Reset to default" action reverting the draft to `defaultValue` (disabled when already equal).
+  - id: cancel
+    description: The `CalendarPanel` footer's "Cancel" action, reverting the draft to the applied range and closing the popup.
     element: button
   - id: apply
-    description: The "Apply" action committing the draft via `onValueChange` and closing the popup (disabled when the draft equals the applied range).
+    description: The `CalendarPanel` footer's "Apply" action, committing the draft via `onValueChange` and closing the popup.
     element: button
 
 layout:
   type: stack
   direction: vertical
   align: start
-  order: [trigger, popup, calendar, field-start, field-end, reset, apply]
+  order: [trigger, popup, calendar, cancel, apply]
 
 internal_state:
   - id: open
@@ -66,10 +67,11 @@ internal_state:
     type: DateRange
     initial: 'the applied range (snapshotted on open)'
     controllable_via: [value, default-value]
-    changed_by: calendar selection or typing in the start/end fields
+    changed_by: calendar selection
     description: >-
       The in-progress range being edited inside the popover. Committed to the
-      applied value only on Apply; reverted to the applied value on dismiss.
+      applied value only on Apply; reverted to the applied value on Cancel or
+      dismiss.
 
 states:
   - id: hover

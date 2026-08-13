@@ -12,6 +12,17 @@
 - **Keyboard:** Space / Enter / ArrowDown open the popup; arrows move the highlight;
   Enter selects; Escape closes and returns focus to the trigger; type-ahead matches
   items. In `multiple` mode the popup stays open so several items can be toggled.
+- **Search box keyboard:** when the in-dropdown search row has focus, printable
+  keys are stopped from reaching Base UI's own typeahead (so they type into the
+  box instead of jumping the highlighted item); `Arrow*`/`Home`/`End`/`Enter`/
+  `Escape` still bubble, so the user can move from the search box into the
+  filtered list and select with the keyboard without leaving it first.
+- **Expander:** `InputSelectExpander` is a plain button with `aria-expanded`
+  reflecting its toggle state; it is not a `role="option"` and does not
+  register with Base UI's composite list (unlike `SelectPrimitive.Item`), so
+  Arrow-key roaming inside the listbox skips it entirely — it cannot be
+  reached with the keyboard once the popup is open, only by pointer. It
+  remains a normal native tab stop outside that roving focus order.
 - **Selection indicator:** single-select shows a trailing check on the selected item;
   multiple-select shows a leading checkbox per item (not focusable — the row is the
   control).

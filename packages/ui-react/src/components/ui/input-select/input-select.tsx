@@ -143,7 +143,7 @@ const InputSelectTrigger = React.forwardRef<
     {...props}
   >
     {children}
-    <SelectPrimitive.Icon className="flex shrink-0 items-center text-[var(--ui-input-select-normal-icon-expand-color-idle)] group-data-[disabled]:text-[var(--ui-input-select-normal-icon-expand-color-disabled)]">
+    <SelectPrimitive.Icon className="flex size-[var(--ui-input-select-global-icon-box-size)] shrink-0 items-center justify-center text-[var(--ui-input-select-normal-icon-expand-color-idle)] group-data-[disabled]:text-[var(--ui-input-select-normal-icon-expand-color-disabled)]">
       <ChevronDownIcon
         size={16}
         className="transition-transform group-data-[popup-open]:rotate-180"

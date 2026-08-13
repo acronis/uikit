@@ -39,9 +39,19 @@ can be picked.
 
 ## Search / sections / status
 
-**Given** an in-dropdown search row
-**When** the consumer wires its `value`/`change`
-**Then** it filters the items the consumer renders (the row is presentational).
+**Given** an in-dropdown search row (uncontrolled)
+**When** the user types into it
+**Then** it drives an internal filter query, and each flat `InputSelectItem`
+whose label doesn't match hides itself; tree dropdowns read the query via
+`useInputSelectFilter` and filter their own items. Passing `value`/`onChange`
+controls the query externally instead. Printable keys are kept from Base UI's
+own typeahead while it's focused; Arrow/Home/End/Enter/Escape still bubble so
+the user can move from the search box into the filtered list.
+
+**Given** an `InputSelectExpander` row inside a tree dropdown
+**When** the user clicks it
+**Then** it toggles `aria-expanded` and calls `onToggle` — it is not a
+selectable `SelectPrimitive.Item` and never sets the select value.
 
 **Given** a section with a label
 **Then** its items render under a heading, divided from the previous section by a top

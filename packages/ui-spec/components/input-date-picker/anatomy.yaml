@@ -13,11 +13,11 @@ schematic: |
 
 root:
   element: div
-  role: group
   description: >-
     The field container — a vertical stack of the label, the trigger box, and the
     description / error message. Width is fluid with a minimum from
-    `--ui-input-date-picker-global-container-width-min`.
+    `--ui-input-date-picker-global-container-width-min`. Carries no role
+    attribute.
 
 parts:
   - id: label
@@ -36,20 +36,28 @@ parts:
   - id: value
     description: >-
       The selected date, or the placeholder when empty.
-      `--ui-input-date-picker-global-value-color-*` / `-placeholder-color-*`.
+      `--ui-input-date-picker-global-value-color-*` / `-placeholder-color-*`;
+      both switch to their `-hover` value on trigger hover or `open`.
     element: span
   - id: separator
     description: >-
       The `–` between range dates (`pickerType="dateRange"`).
-      `--ui-input-date-picker-global-separator-color-*`.
+      `--ui-input-date-picker-global-separator-color-*`, switching to
+      `-hover` on trigger hover or `open`.
     element: span
   - id: icon
     description: >-
-      Trailing calendar icon. `--ui-input-date-picker-normal-icon-color-*`, or
-      `-error-icon-color-*` in the error state.
+      Trailing calendar icon, centered in a fixed 20px box
+      (`--ui-input-date-picker-global-icon-box-size`) rather than hugging the
+      glyph. `--ui-input-date-picker-normal-icon-color-*`, or
+      `-error-icon-color-*` in the error state; both switch to their `-hover`
+      value on trigger hover or `open`.
     element: span
   - id: description
-    description: Helper text below the box (normal state).
+    description: >-
+      Helper text below the box (normal state).
+      `--ui-input-date-picker-normal-description-color-*`, switching to
+      `-hover` on trigger hover or `open`.
     element: p
   - id: error
     description: Error message below the box; replaces the description when `error` is set.
@@ -67,7 +75,7 @@ states:
       trigger: pointer hover over the trigger (enabled),
       kind: pseudo,
       pseudo: ':hover',
-      affects: [trigger, icon],
+      affects: [trigger, icon, label, value, separator, description],
     }
   - {
       id: focus-visible,
@@ -81,7 +89,7 @@ states:
       trigger: 'open === true (consumer-owned calendar shown)',
       kind: prop,
       prop: open,
-      affects: [trigger],
+      affects: [trigger, icon, label, value, separator, description],
     }
   - {
       id: error,

@@ -1,6 +1,6 @@
 ---
 title: DateRangePicker
-description: A date-field trigger that opens a dual-month range calendar with editable fields.
+description: A date-field trigger that opens a dual-month range calendar panel.
 ---
 
 import { DemoReact } from "@/components/DemoReact";
@@ -14,27 +14,35 @@ import { DateRangePicker } from '@acronis-platform/ui-react';
 
 `DateRangePicker` composes an [`InputDatePicker`](/components/input-date-picker)
 trigger (`pickerType="dateRange"`) with a [`Popover`](/components/popover) holding
-a dual-month range [`Calendar`](/components/calendar), two editable start/end date
-fields, and a "Reset to default" / "Apply" footer. It follows a draft/commit/revert
-model: the applied range is snapshotted into a draft on open; editing the calendar
-or the text fields mutates only that draft; dismissing the popover reverts it, and
-only **Apply** commits the range via `onValueChange`. Use `value` for controlled
-usage or `defaultValue` for uncontrolled (which is also the target of "Reset to
-default").
+a dual-month range [`CalendarPanel`](/components/calendar-panel)
+(`variant="range"`). It follows a draft/commit/revert model: the applied range is
+snapshotted into a draft on open; selecting days in the calendar mutates only that
+draft; dismissing the popover reverts it. The footer — **Cancel** / **Apply** — is
+`CalendarPanel`'s own: **Cancel** reverts the draft and closes, **Apply** commits
+the range via `onValueChange` and closes. **Apply** is never disabled, so it can
+commit an empty (`{ from: undefined, to: undefined }`) or half-open range if
+pressed before a full range is picked. Use `value` for controlled usage or
+`defaultValue` for uncontrolled.
 
-The two editable fields read and write dates in the trigger's `MMM d, yyyy`
-format (locale-fixed for now — locale-aware parsing isn't supported yet).
-Partial or invalid text leaves the draft untouched; **clearing** a field clears
-that end of the draft, so an open-ended range can be applied. Typing an end date
-earlier than the start is allowed while drafting — the calendar highlights the
-band chronologically and **Apply** commits the two ends ordered. **Apply** is
-disabled while the draft equals the applied range, and **Reset to default**
-while it equals `defaultValue`.
+The calendar's selection constraints and every string the popup renders on its own
+are forwarded to that `CalendarPanel`: `disabledDays`, `min`, `max`,
+`showOutsideDays`, `weekStartsOn`, `fromYear`, `toYear`, `locale`, `monthLabel`,
+`yearLabel`, `formatMonthLabel`, `cancelLabel` and `applyLabel`. `disabledDays` is
+`CalendarPanel`'s `disabled` renamed, because `disabled` here disables the trigger.
+There is no `dir` prop — the ambient text direction is read from the document
+(`useDocDir()`) and passed down, since the day grid needs `dir` directly for
+its Arrow Left/Right roaming.
 
-This is a **design-pending v1** ported from the legacy library — no dedicated token
-tier; the trigger brings `--ui-input-date-picker-*` and the calendar / popover /
-buttons bring their own semantic tokens. It will be reconciled against the Figma
-design once a mockup lands (presets are intentionally out of scope for v1).
+The trigger reads dates back in its own fixed `MMM d, yyyy` format; `locale`
+translates that month name too, but the day/year order stays fixed —
+locale-aware reordering of the trigger's date isn't supported yet.
+
+It owns no dedicated token tier of its own — the trigger brings
+`--ui-input-date-picker-*` and the popup is themed by the composed
+`CalendarPanel` (`--ui-calendar-*`). `Popover` contributes only positioning,
+portaling and dismissal — its own container chrome (border, radius, shadow,
+background) is neutralized so `CalendarPanel`'s own chrome shows through
+instead (presets are intentionally out of scope for v1).
 
 ## Examples
 
@@ -70,6 +78,27 @@ Required, with an error message:
 <DateRangePicker label="Period" required placeholder="Select a date range" />
 
 <DateRangePicker label="Period" error="Please select a valid date range." />
+```
+
+Localized, with the calendar limited to past dates and a 31-night maximum span
+(up to 32 selectable days — `max` counts nights between the range's start and
+end, not selectable days):
+
+```tsx
+import { es } from 'react-day-picker/locale';
+
+<DateRangePicker
+  label="Período"
+  placeholder="Selecciona un rango de fechas"
+  locale={es}
+  monthLabel="Mes"
+  yearLabel="Año"
+  cancelLabel="Cancelar"
+  applyLabel="Aplicar"
+  disabledDays={{ after: new Date() }}
+  max={31}
+  onValueChange={setRange}
+/>
 ```
 
 ## API Reference

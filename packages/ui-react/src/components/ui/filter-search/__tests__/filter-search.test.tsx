@@ -300,12 +300,13 @@ async function openBothPopovers(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole('button', { name: 'Period' }));
 }
 
-// The outer popup is identified by its Cancel button (unique to
-// FilterSearchFilters); the inner popup by the calendar grids + date fields
-// (unique to DateRangePicker). "Apply" is intentionally never queried while both
-// are open — both popups render an Apply button.
-const outerOpen = () => screen.queryByRole('button', { name: 'Cancel' }) !== null;
-const innerOpen = () => screen.queryByLabelText('Start date') !== null;
+// The outer popup is identified by its "Reset filters" button (unique to
+// FilterSearchFilters); the inner popup by its calendar grids (unique to
+// DateRangePicker's CalendarPanel). Both popups render "Cancel"/"Apply" buttons
+// (CalendarPanel's own footer mirrors the outer's), so those labels are never
+// queried unscoped while both are open.
+const outerOpen = () => screen.queryByRole('button', { name: 'Reset filters' }) !== null;
+const innerOpen = () => screen.queryAllByRole('grid').length > 0;
 
 describe('FilterSearchFilters nested popover (DateRangePicker field)', () => {
   it('keeps the outer Filters popup open while the inner calendar is open', async () => {
@@ -330,7 +331,7 @@ describe('FilterSearchFilters nested popover (DateRangePicker field)', () => {
 
     // Both popups portal to document.body appended in open order; the inner
     // (opened second) is a later sibling, so at equal z-index it paints above.
-    const outerMarker = screen.getByRole('button', { name: 'Cancel' });
+    const outerMarker = screen.getByRole('button', { name: 'Reset filters' });
     const innerMarker = screen.getAllByRole('grid')[0];
     expect(
       outerMarker.compareDocumentPosition(innerMarker) &
