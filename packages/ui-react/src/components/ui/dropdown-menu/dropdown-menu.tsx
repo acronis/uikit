@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
-import { ChevronRightIcon } from '@acronis-platform/icons-react/stroke-mono';
+import { CheckIcon, ChevronRightIcon, CircleIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
 import { usePortalContainer } from '@/lib/portal-container';
@@ -35,6 +35,8 @@ const popupClassName =
 
 const itemClassName =
   'relative flex w-full shrink-0 cursor-default select-none items-start gap-[var(--ui-button-menu-dropdown-item-container-gap)] min-h-[var(--ui-button-menu-dropdown-item-container-height)] px-[var(--ui-button-menu-dropdown-item-container-padding-x)] py-[var(--ui-button-menu-dropdown-item-container-padding-y)] text-sm font-semibold leading-6 outline-none transition-colors bg-[var(--ui-button-menu-dropdown-item-container-color-idle)] text-[var(--ui-button-menu-dropdown-item-label-color)] [&_svg]:text-[var(--ui-button-menu-dropdown-item-icon-color)] data-[highlighted]:bg-[var(--ui-button-menu-dropdown-item-container-color-hover)] data-[highlighted]:active:bg-[var(--ui-button-menu-dropdown-item-container-color-active)] [&:focus-visible:not(:hover)]:rounded-[3px] [&:focus-visible:not(:hover)]:ring-[3px] [&:focus-visible:not(:hover)]:ring-inset [&:focus-visible:not(:hover)]:ring-[var(--ui-focus-primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0';
+
+const indicatorItemClassName = cn(itemClassName, 'ps-8');
 
 export interface DropdownMenuContentProps
   extends React.ComponentPropsWithoutRef<typeof MenuPrimitive.Popup> {
@@ -157,12 +159,89 @@ function DropdownMenuShortcut({
 }
 DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';
 
+const DropdownMenuCheckboxItem = React.forwardRef<
+  React.ElementRef<typeof MenuPrimitive.CheckboxItem>,
+  React.ComponentPropsWithoutRef<typeof MenuPrimitive.CheckboxItem>
+>(({ className, children, ...props }, ref) => (
+  <MenuPrimitive.CheckboxItem
+    ref={ref}
+    className={cn(indicatorItemClassName, className)}
+    {...props}
+  >
+    <span className="absolute start-2 flex size-3.5 items-center justify-center text-[var(--ui-button-menu-dropdown-item-icon-color)]">
+      <MenuPrimitive.CheckboxItemIndicator>
+        <CheckIcon className="size-4" />
+      </MenuPrimitive.CheckboxItemIndicator>
+    </span>
+    {children}
+  </MenuPrimitive.CheckboxItem>
+));
+DropdownMenuCheckboxItem.displayName = 'DropdownMenuCheckboxItem';
+
+const DropdownMenuRadioGroup = MenuPrimitive.RadioGroup;
+
+const DropdownMenuRadioItem = React.forwardRef<
+  React.ElementRef<typeof MenuPrimitive.RadioItem>,
+  React.ComponentPropsWithoutRef<typeof MenuPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <MenuPrimitive.RadioItem
+    ref={ref}
+    className={cn(indicatorItemClassName, className)}
+    {...props}
+  >
+    <span className="absolute start-2 flex size-3.5 items-center justify-center text-[var(--ui-button-menu-dropdown-item-icon-color)]">
+      <MenuPrimitive.RadioItemIndicator>
+        <CircleIcon className="size-2 fill-current" />
+      </MenuPrimitive.RadioItemIndicator>
+    </span>
+    {children}
+  </MenuPrimitive.RadioItem>
+));
+DropdownMenuRadioItem.displayName = 'DropdownMenuRadioItem';
+
+const DropdownMenuLabel = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & { inset?: boolean }
+>(({ className, inset, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      'px-[var(--ui-button-menu-dropdown-item-container-padding-x)] py-[var(--ui-button-menu-dropdown-item-container-padding-y)] text-sm font-semibold leading-6 text-[var(--ui-button-menu-dropdown-item-label-color)]',
+      inset && 'ps-8',
+      className
+    )}
+    {...props}
+  />
+));
+DropdownMenuLabel.displayName = 'DropdownMenuLabel';
+
+const DropdownMenuSeparator = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    role="separator"
+    className={cn(
+      'my-[var(--ui-button-menu-dropdown-section-list-gap)] h-[var(--ui-button-menu-dropdown-section-container-border-width)] bg-[var(--ui-button-menu-dropdown-section-container-border-color)]',
+      className
+    )}
+    {...props}
+  />
+));
+DropdownMenuSeparator.displayName = 'DropdownMenuSeparator';
+
 export {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
