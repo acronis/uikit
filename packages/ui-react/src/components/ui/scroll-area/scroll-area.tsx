@@ -21,6 +21,10 @@ const ScrollBar = React.forwardRef<HTMLDivElement, ScrollBarProps>(
       orientation={orientation}
       data-slot="scroll-area-scrollbar"
       className={cn(
+        // Above anything the scrolled content stacks. A scrollbar that content
+        // can paint over is not a scrollbar — sticky table headers stack to z-50,
+        // so the bar must sit above them inside the isolated root.
+        'z-[60]',
         'flex touch-none select-none opacity-0 transition-opacity duration-150',
         // Revealed on hover/scroll; hidden at rest.
         'data-[hovering]:opacity-100 data-[scrolling]:opacity-100',
@@ -43,19 +47,65 @@ export interface ScrollAreaProps
   extends React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> {
   /** Which scrollbar(s) to render. @default 'vertical' */
   orientation?: 'vertical' | 'horizontal' | 'both';
+  /**
+   * Ref to the **viewport** — the element that actually scrolls.
+   *
+   * `ref` reaches the root, which is `overflow: hidden` and never scrolls, so
+   * it reports `scrollTop: 0` and `scrollHeight === clientHeight` forever.
+   * Anything that measures, observes, or programmatically scrolls the region
+   * needs this one instead: a virtualizer's scroll element, an infinite-scroll
+   * observer, a scroll-to-item call.
+   */
+  viewportRef?: React.Ref<HTMLDivElement>;
+  /**
+   * Extra props for the viewport — a scroll handler, a tab index, or
+   * `data-*` attributes that must sit on the element that scrolls rather than
+   * on the wrapper around it.
+   *
+   * The `data-*` index signature is deliberate: JSX grants intrinsic elements
+   * an arbitrary-`data-*` escape hatch, but a props object typed as
+   * `HTMLAttributes` does not get it — so without this, the main thing this
+   * prop exists for (marking the scrolling element for an observer) would not
+   * type-check.
+   */
+  viewportProps?: React.HTMLAttributes<HTMLDivElement> & {
+    readonly [attribute: `data-${string}`]: unknown;
+  };
 }
 
 const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
-  ({ className, children, orientation = 'vertical', ...props }, ref) => (
+  (
+    {
+      className,
+      children,
+      orientation = 'vertical',
+      viewportRef,
+      viewportProps,
+      ...props
+    },
+    ref,
+  ) => (
     <ScrollAreaPrimitive.Root
       ref={ref}
       data-slot="scroll-area"
-      className={cn('relative overflow-hidden', className)}
+      // `isolate` contains the scroll area's stacking order. Without it the
+      // root is `position: relative` with no z-index — not a stacking context
+      // — so a z-index set on scrolled content competes against everything in
+      // the document, and the scrollbar's own z-index would too. Isolating
+      // keeps both local. It is `isolation`, deliberately, not
+      // `contain`/`transform`: those would create a containing block and break
+      // `position: sticky` inside the viewport.
+      className={cn('relative isolate overflow-hidden', className)}
       {...props}
     >
       <ScrollAreaPrimitive.Viewport
+        ref={viewportRef}
         data-slot="scroll-area-viewport"
-        className="size-full rounded-[inherit] outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)]"
+        {...viewportProps}
+        className={cn(
+          'size-full rounded-[inherit] outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-brand)]',
+          viewportProps?.className,
+        )}
       >
         <ScrollAreaPrimitive.Content data-slot="scroll-area-content">
           {children}
@@ -67,7 +117,7 @@ const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
         <ScrollAreaPrimitive.Corner data-slot="scroll-area-corner" />
       )}
     </ScrollAreaPrimitive.Root>
-  )
+  ),
 );
 ScrollArea.displayName = 'ScrollArea';
 
