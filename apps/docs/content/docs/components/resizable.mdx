@@ -54,10 +54,10 @@ bounded height for a horizontal split, and a bounded width for a vertical one.
 
 ## Handle states
 
-The handle is an 8px hit area around a 1px divider line. It costs no layout
-space: the hit area overlays the boundary between the two panels — 4px into each
-— rather than sitting between them, so adjacent panels (and their own borders)
-stay flush against each other. The line reads `--ui-border-on-surface-border` at rest,
+The handle is a 9px hit area around a 1px divider line (4px to each side of it).
+It costs no layout space: the hit area overlays the boundary between the two
+panels rather than sitting between them, so adjacent panels (and their own
+borders) stay flush against each other. The line reads `--ui-border-on-surface-border` at rest,
 `--ui-resizable-border-color-hover` on pointer hover, and
 `--ui-resizable-border-color-active` while dragging; the cursor is
 `--ui-resizable-cursor` (`ew-resize`), or `ns-resize` when the panels are
