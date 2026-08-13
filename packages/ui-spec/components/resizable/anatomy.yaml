@@ -16,8 +16,8 @@ schematic: |
      group  -> the PanelGroup container; lays panels out along one axis
      panel  -> a resizable region; sized by defaultSize / min / max
      handle -> draggable separator (role="separator"); takes up no layout
-               space: an 8px hit area [ ] overlaying the panel boundary
-               (4px into each panel), centered on a 1px divider line |:
+               space: a 9px hit area [ ] overlaying the panel boundary —
+               a 1px divider line | with 4px to each side of it:
                --ui-border-on-surface-border (idle) / -hover / -active
 
 root:
@@ -42,9 +42,9 @@ parts:
   - id: handle
     description: >-
       The draggable separator between two panels (`role="separator"`). Contributes
-      no size to the group's layout — its 8px hit area overlays the boundary
-      between the two panels (4px into each) so their edges stay flush — and
-      renders a 1px divider line centered on that boundary:
+      no size to the group's layout — its 9px hit area (the 1px divider plus 4px
+      each side) overlays the boundary between the two panels so their edges stay
+      flush — and renders the divider line on that boundary:
       `--ui-border-on-surface-border` at rest (idle),
       `--ui-resizable-border-color-hover` on pointer hover,
       `--ui-resizable-border-color-active` while dragging. Shows the
