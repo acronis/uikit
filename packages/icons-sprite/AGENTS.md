@@ -20,8 +20,8 @@ This follows the same model as `packages/tokens-pd`: the build output is
 - `test` runs `build` (verifies generation still works / output is current).
 - Only `sprites/` is published (see `files`); `scripts/` is build-time only.
 
-Re-run `build` and commit the result whenever the upstream icons change — e.g.
-after an `icons-svg` Figma sync (`pull-icons` / the Fetch Figma Icons workflow).
+Re-run `build` and commit the result whenever the upstream `icons-svg` sources
+change — the sprites are committed output, so they go stale silently otherwise.
 
 ## How generation works (`scripts/generate-sprite.ts`)
 

@@ -64,7 +64,7 @@ catalog:
   style-dictionary: 5.4.3
 
   # SVGO v4 — SVG optimizer shared by the icon/sprite tooling:
-  # tools/style-dictionary, tools/figma-icons-fetcher, packages/icons-sprite.
+  # tools/style-dictionary, tools/figma-design-assets-sync, packages/icons-sprite.
   svgo: 4.0.1
 
 # Pin transitive deps that we don't want pnpm to bump.

@@ -29,9 +29,9 @@ afterward.
 
 Why this exists: a `var(--ui-does-not-exist)` reference is a **silent** failure —
 it makes the CSS property invalid and the element falls back to inherited values;
-nothing fails the build, typecheck, lint, or `ui-spec test`. A token-sync (e.g.
-`/figma-to-design-tokens`) can rename or remove tokens out from under a shipped
-component, and the conformance test only regexes token **names**, never checks
+nothing fails the build, typecheck, lint, or `ui-spec test`. A token sync can
+rename or remove tokens out from under a shipped component, and the conformance
+test only regexes token **names**, never checks
 they **exist** in `tokens-pd` (the gap tracked in issue #297). This gate closes
 that gap.
 
