@@ -1,0 +1,278 @@
+spec_version: '1.0'
+component: CalendarPanel
+
+# Framework-agnostic contract for the calendar panel. `variant` is a
+# plain string union (the three react-day-picker selection modes), NOT a `cva`
+# axis — there is no `class-variance-authority` usage in the implementation, so
+# the cva ↔ contract conformance check does not apply to this component.
+#
+# The React implementation exposes callbacks as ordinary props
+# (`onSelect`/`onMonthChange`/`onCancel`/`onApply`), so they are listed under
+# `properties` below; `events` restates the same four as neutral,
+# framework-independent event names for non-React adapters. Any remaining native
+# `<div>` attribute (id, style, aria-*, …) passes through to the root.
+contract:
+  properties:
+    - name: variant
+      type: "'single' | 'multiple' | 'range'"
+      required: false
+      default: "'single'"
+      description: >-
+        Selection mode *and* panel structure. `single` selects one date and
+        renders one month with no footer. `multiple` selects a set of dates and
+        adds the Cancel/Apply footer. `range` selects a start/end pair, renders
+        two months side by side (divided by a vertical rule) and shares one
+        footer. Also reflected on the root as `data-variant`.
+    - name: selected
+      type: 'Date | Date[] | DateRange | undefined'
+      required: false
+      default: undefined
+      description: >-
+        The selected value, shaped by `variant` — a `Date` for `single`, a
+        `Date[]` for `multiple`, a `{ from, to }` range for `range`.
+        Uncontrolled (a starting value the panel then manages itself) when no
+        select handler is given; supplying the handler makes this the single
+        source of truth, per react-day-picker's own controlled/uncontrolled
+        contract.
+    - name: onSelect
+      type: '(selected: Date | Date[] | DateRange | undefined, triggerDate: Date) => void'
+      required: false
+      default: undefined
+      description: >-
+        Called when the selection changes, with the next value and the date that
+        was clicked. Providing it makes `selected` controlled. Neutral event
+        name: `select`.
+    - name: defaultMonth
+      type: Date
+      required: false
+      default: 'the current month'
+      description: >-
+        The month shown initially, when the displayed month is uncontrolled.
+        Ignored once `month` is supplied.
+    - name: month
+      type: Date
+      required: false
+      default: undefined
+      description: >-
+        Controlled displayed month — the first month for `range`. Pair with the
+        month-change event.
+    - name: onMonthChange
+      type: '(month: Date) => void'
+      required: false
+      default: undefined
+      description: >-
+        Called when the displayed month changes (i.e. from the header's month or
+        year dropdown). Neutral event name: `month-change`.
+    - name: disabled
+      type: 'Matcher | Matcher[]'
+      required: false
+      default: undefined
+      description: >-
+        Days that cannot be selected, as a react-day-picker matcher (a date, a
+        date range, a `{ before }`/`{ after }` bound, a day-of-week set, or a
+        predicate) or an array of them. Matched days render in the disabled value
+        color and take no pointer events.
+    - name: min
+      type: number
+      required: false
+      default: undefined
+      description: >-
+        Minimum number of selectable days. Applies to `multiple` and `range`
+        only; ignored for `single`.
+    - name: max
+      type: number
+      required: false
+      default: undefined
+      description: >-
+        Maximum number of selectable days. Applies to `multiple` and `range`
+        only; ignored for `single`.
+    - name: showOutsideDays
+      type: boolean
+      required: false
+      default: true
+      description: >-
+        Render the leading/trailing days of the adjacent months to fill the first
+        and last week rows. Outside days use the disabled value color.
+    - name: weekStartsOn
+      type: '0 | 1 | 2 | 3 | 4 | 5 | 6'
+      required: false
+      default: "the `locale`'s week start, else 1"
+      description: >-
+        First day of the week (0 = Sunday). Defaults to `locale`'s own week
+        start when `locale` is set; falls back to Monday, per the design,
+        when neither is given.
+    - name: fromYear
+      type: number
+      required: false
+      default: 'the current year − 50'
+      description: >-
+        First year offered by the year dropdown (inclusive) and the earliest
+        month the grid can navigate to — via the dropdown, a controlled
+        `month`, or Shift+PageUp/PageDown.
+    - name: toYear
+      type: number
+      required: false
+      default: 'the current year + 50'
+      description: >-
+        Last year offered by the year dropdown (inclusive) and the latest
+        month the grid can navigate to — via the dropdown, a controlled
+        `month`, or Shift+PageUp/PageDown.
+    - name: locale
+      type: Locale
+      required: false
+      default: 'date-fns `enUS`'
+      description: >-
+        Localizes weekday names and the day grid's default accessible labels
+        (e.g. `import { es } from 'react-day-picker/locale'`). Also supplies
+        the fallback week start when `weekStartsOn` is unset. Does not
+        translate `monthLabel`/`yearLabel`/`cancelLabel`/`applyLabel`/
+        `formatMonthLabel` — those are separate props the consumer must
+        localize themselves.
+    - name: dir
+      type: "'ltr' | 'rtl'"
+      required: false
+      default: undefined
+      description: >-
+        Text direction, forwarded to the day grid explicitly. An ancestor's
+        `dir` already mirrors the panel's own layout via logical CSS
+        properties, but the day grid only flips its Arrow Left/Right keyboard
+        roaming when `dir` reaches it directly, so it must also be set here.
+    - name: monthLabel
+      type: string
+      required: false
+      default: "'Month'"
+      description: >-
+        Accessible name of the month dropdown. The dropdown has no visible
+        label in the design, so the component supplies one — override it to
+        localize.
+    - name: yearLabel
+      type: string
+      required: false
+      default: "'Year'"
+      description: >-
+        Accessible name of the year dropdown. The dropdown has no visible label
+        in the design, so the component supplies one — override it to localize.
+    - name: formatMonthLabel
+      type: '(date: Date) => string'
+      required: false
+      default: "date-fns `format(date, 'MMMM')`"
+      description: >-
+        Formats a month's name for the month dropdown's items and value — the
+        hook for localized or abbreviated month names.
+    - name: cancelLabel
+      type: string
+      required: false
+      default: "'Cancel'"
+      description: >-
+        Footer secondary button label. Only rendered for `multiple` / `range`.
+    - name: applyLabel
+      type: string
+      required: false
+      default: "'Apply'"
+      description: >-
+        Footer primary button label. Only rendered for `multiple` / `range`.
+    - name: onCancel
+      type: '() => void'
+      required: false
+      default: undefined
+      description: >-
+        Called when the footer's Cancel button is pressed. The panel neither
+        reverts the selection nor closes itself — the caller decides. Neutral
+        event name: `cancel`.
+    - name: onApply
+      type: '() => void'
+      required: false
+      default: undefined
+      description: >-
+        Called when the footer's Apply button is pressed. The panel does not
+        close itself — the caller commits the selection and dismisses whatever
+        surface holds the panel. Neutral event name: `apply`.
+    - name: className
+      type: string
+      required: false
+      default: undefined
+      description: >-
+        Extra classes merged onto the root panel — e.g. to override the shadow or
+        the width when the panel is embedded in a popover.
+
+  events:
+    - name: select
+      payload: '(Date | Date[] | DateRange | undefined, Date)'
+      description: >-
+        Fired when the selection changes (React: `onSelect`). Payload is the next
+        selection plus the date that was clicked.
+    - name: month-change
+      payload: Date
+      description: >-
+        Fired when the displayed month changes via the header dropdowns (React:
+        `onMonthChange`).
+    - name: cancel
+      payload: void
+      description: >-
+        Fired when the footer's Cancel button is pressed (React: `onCancel`).
+        Never fired for `single`, which has no footer.
+    - name: apply
+      payload: void
+      description: >-
+        Fired when the footer's Apply button is pressed (React: `onApply`). Never
+        fired for `single`, which has no footer.
+
+  content: []
+
+  methods: []
+
+adapters:
+  react:
+    component: CalendarPanel
+    status: implemented
+    import: "import { CalendarPanel } from '@acronis-platform/ui-react'"
+    example: |
+      {/* single — commits on click, no footer */}
+      <CalendarPanel
+        variant="single"
+        selected={date}
+        onSelect={setDate}
+      />
+
+      {/* multiple — a bounded set of dates, committed via Apply */}
+      <CalendarPanel
+        variant="multiple"
+        max={5}
+        selected={dates}
+        onSelect={setDates}
+        onCancel={close}
+        onApply={() => { commit(dates); close(); }}
+      />
+
+      {/* range — two months, one footer */}
+      <CalendarPanel
+        variant="range"
+        selected={range}
+        onSelect={setRange}
+        disabled={{ before: new Date() }}
+        onApply={close}
+      />
+
+      {/* localized labels + a narrower year window */}
+      <CalendarPanel
+        variant="single"
+        monthLabel="Mois"
+        yearLabel="Année"
+        formatMonthLabel={(d) => d.toLocaleString('fr', { month: 'long' })}
+        fromYear={2020}
+        toYear={2030}
+      />
+
+  vue:
+    component: AvCalendarPanel
+    status: planned
+    import: "import { AvCalendarPanel } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvCalendarPanel v-model:selected="range" variant="range" @apply="close" />
+
+  web-components:
+    element: ui-calendar-panel
+    status: planned
+    import: "import '@acronis-platform/ui-wc/calendar-panel'"
+    example: |
+      <ui-calendar-panel variant="multiple" max="5"></ui-calendar-panel>

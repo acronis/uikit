@@ -1,0 +1,230 @@
+spec_version: '1.0'
+component: CalendarPanel
+
+schematic: |
+  root: <div data-slot="calendar-panel" data-variant="single|multiple|range">
+  +=====================================================================+
+  |  month-column (one per displayed month; 2 when variant="range")     |
+  |  +-------------------------------+ | +-------------------------------+
+  |  | month-caption                 | | | month-caption                 |
+  |  |  [ month-select v ][ year-select v ] |  [ month-select v ][ year-select v ]
+  |  +-------------------------------+ | +-------------------------------+
+  |  | day-grid: <table role="grid"> | | | day-grid: <table role="grid"> |
+  |  |  weekdays: Mo Tu We Th Fr Sa Su | |  weekdays: Mo Tu We Th Fr Sa Su
+  |  |   +--+ +--+ +--+ +--+ +--+ ... | |   +--+ +--+ +--+ +--+ +--+ ... |
+  |  |   |day| |day| |day| |day| |day|| |   |day| |day| |day| |day| ... |
+  |  |   +--+ +--+ +--+ +--+ +--+ ... | |   +--+ +--+ +--+ +--+ +--+ ... |
+  |  +-------------------------------+ | +-------------------------------+
+  |                        ^ divider = the first month-column's
+  |                          inline-end border (RTL-mirroring)
+  +---------------------------------------------------------------------+
+  |  footer (only when variant="multiple" | "range")                    |
+  |                                        [ Cancel ]  [ Apply ]        |
+  +=====================================================================+
+     root          -> --ui-calendar-container-* (border, radius, surface) + a
+                      fixed Tailwind shadow (shadow-md, not a token — no
+                      --ui-calendar-container-shadow-* exists)
+     month-caption -> --ui-calendar-header-* (gap, padding, bottom divider)
+     day-grid      -> --ui-calendar-body-* (padding, inline-end divider)
+     day           -> --ui-calendar-item-* box + --ui-calendar-value-* type/color
+                      (data-active = selected day / range endpoint,
+                       data-range-middle = in-range day; mutually exclusive)
+     footer        -> DialogFooterDefault (--ui-footer-*) + two Buttons
+
+root:
+  element: div
+  description: >-
+    The bordered, elevated panel (`<div data-slot="calendar-panel">`), an
+    inline-flex column sized to its content. Carries `data-variant` with the
+    active selection mode, `--ui-calendar-container-*` border/radius/surface and
+    a shadow, and clips its children (`overflow: hidden`) so the month columns
+    sit flush inside the rounded border.
+
+parts:
+  - id: month-column
+    description: >-
+      One displayed month — a 248px-wide column (7 × 32px cells + 2 × 12px body
+      padding) stacking its `month-caption` over its `day-grid`. Rendered once
+      for `single`/`multiple` and twice for `range`. Every column but the last
+      draws the vertical divider between months as its own inline-end border
+      (`--ui-calendar-body-border-*`), so the rule mirrors under `dir="rtl"`.
+    element: div
+  - id: month-caption
+    description: >-
+      The header bar of one `month-column`, holding the month and year
+      dropdowns side by side. `--ui-calendar-header-gap` between them,
+      `--ui-calendar-header-padding-x/y` inset, and a
+      `--ui-calendar-header-border-*` bottom divider. Rendered as a `<header>`,
+      replacing
+      react-day-picker's own `MonthCaption`; the design has no prev/next
+      chevrons, so this bar is the only month-navigation affordance.
+    element: header
+  - id: month-select
+    description: >-
+      The month dropdown — a real `InputSelect` (trigger + popup) listing the
+      twelve months formatted by `formatMonthLabel`, named by `monthLabel`.
+      Choosing an item moves the displayed month while keeping the year.
+      Delegates its own styling to the `--ui-input-select-*` tier.
+    element: button
+  - id: year-select
+    description: >-
+      The year dropdown — a real `InputSelect` listing every year from
+      `fromYear` to `toYear` inclusive, named by `yearLabel`. Choosing an item
+      moves the displayed year while keeping the month. Delegates its own
+      styling to the `--ui-input-select-*` tier.
+    element: button
+  - id: weekdays
+    description: >-
+      The weekday header row of one `day-grid` — seven 32px cells of abbreviated
+      day names in the secondary value color
+      (`--ui-calendar-value-color-idle-secondary`), starting at `weekStartsOn`
+      — the `locale`'s own week start when that prop is unset, and Monday when
+      there is no `locale` either (per the design).
+    element: tr
+  - id: day-grid
+    description: >-
+      The month's day table (react-day-picker's `month_grid`, `role="grid"`) —
+      the `weekdays` row plus one row per week of `day` cells. Padded by
+      `--ui-calendar-body-padding-x/y`; borders are collapsed to zero spacing so
+      the flat cells tile edge to edge. Uses `table-fixed` layout — without it,
+      a single wide weekday abbreviation (some `ar`/`te`/`kn` locales) would
+      widen its column past the fixed 248px month width and the panel's
+      `overflow-hidden` would silently clip a day column.
+    element: table
+  - id: day
+    description: >-
+      One date cell — `CalendarItem`, Figma's "CalendarItem". A flat
+      32×32 `<button>` with no corner rounding in any state (this design has no
+      radius differentiation, so range endpoints get no "pill"). Carries
+      `data-day`, plus the mutually exclusive `data-active` (a selected day or
+      either range endpoint) and `data-range-middle` (a day between the
+      endpoints) so their backgrounds never compete. Outside and disabled days
+      render in `--ui-calendar-value-color-disabled`.
+    element: button
+  - id: footer
+    description: >-
+      The Cancel/Apply action bar — a `DialogFooterDefault` holding a secondary
+      Button (`cancelLabel`) and a primary Button (`applyLabel`). Structural,
+      not a state: it exists only for the `multiple` and `range` variants, where
+      a selection is built up over several clicks and needs an explicit commit;
+      `single` commits on the click itself and renders no footer at all.
+    element: div
+    optional: true
+    visible_when: variant is "multiple" or "range"
+
+layout:
+  type: flex
+  direction: column
+  order: [month-column, footer]
+
+internal_state:
+  - id: selection
+    type: 'Date | Date[] | DateRange | undefined'
+    initial: undefined
+    controllable_via: [selected]
+    emits: select
+    changed_by: >-
+      clicking (or pressing Enter/Space on) a `day`; react-day-picker's own
+      controlled/uncontrolled contract — omitting the change handler leaves the
+      selection self-managed
+    description: >-
+      The currently selected date, dates or range, shaped by `variant`. Drives
+      each `day`'s `data-active` / `data-range-middle`.
+  - id: displayed-month
+    type: Date
+    initial: 'the current month'
+    controllable_via: [month]
+    controlled_default: defaultMonth
+    emits: month-change
+    changed_by: choosing an item in `month-select` or `year-select`
+    description: >-
+      The first month rendered in the panel. `range` additionally renders the
+      following month in a second `month-column`.
+
+transitions:
+  - id: select-day
+    state: selection
+    on: click / Enter / Space on a `day`
+    to: >-
+      single → that date (replacing any previous one); multiple → the date is
+      added, or removed if already selected; range → the range start, then the
+      range end
+    guard: the day is not matched by `disabled`, and `min`/`max` allow the change
+    effect: emits select(nextSelection, triggerDate)
+    when_controlled: >-
+      with `selected` + the change handler supplied, the component renders only
+      what the consumer passes back
+    interactive: true
+  - id: change-month
+    state: displayed-month
+    on: choosing an item in `month-select`
+    to: the same year with the chosen month
+    effect: emits month-change(nextMonth)
+    interactive: true
+  - id: change-year
+    state: displayed-month
+    on: choosing an item in `year-select`
+    to: the chosen year with the same month
+    effect: emits month-change(nextMonth)
+    interactive: true
+
+states:
+  - id: variant
+    trigger: >-
+      variant selects the selection mode *and* the panel structure — the number
+      of `month-column`s (1, or 2 for `range`) and whether the `footer` exists
+    kind: prop
+    prop: variant
+    affects: [root, month-column, footer]
+  - id: outside-day
+    trigger: showOutsideDays renders the adjacent months' leading/trailing days
+    kind: prop
+    prop: showOutsideDays
+    affects: [day]
+  - id: disabled-day
+    trigger: the day matches the `disabled` matcher
+    kind: prop
+    prop: disabled
+    affects: [day]
+  - id: week-start
+    trigger: weekStartsOn shifts which weekday the row and grid begin on
+    kind: prop
+    prop: weekStartsOn
+    affects: [weekdays, day-grid]
+  - id: selected
+    trigger: >-
+      internal selection includes the day, and it is not a range middle
+      (`data-active="true"` — a selected day or either range endpoint)
+    kind: internal
+    affects: [day]
+    exclusive_with: [range-middle]
+  - id: range-middle
+    trigger: >-
+      internal selection is a range and the day falls strictly between its
+      endpoints (`data-range-middle="true"`)
+    kind: internal
+    affects: [day]
+    exclusive_with: [selected]
+  - {
+      id: hover,
+      trigger: 'pointer hover over a day that is not data-active',
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [day],
+    }
+  - {
+      id: focused,
+      trigger:
+        "react-day-picker marks the day grid's roving-focus day as focused
+        (data-focused on the day cell) and the button pulls DOM focus to itself
+        — the ring is keyed off that attribute, not off ':focus-visible'",
+      kind: internal,
+      affects: [day],
+    }
+  - {
+      id: disabled,
+      trigger: 'the day button is disabled (pointer events removed)',
+      kind: pseudo,
+      pseudo: ':disabled',
+      affects: [day],
+    }

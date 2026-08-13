@@ -1,0 +1,128 @@
+---
+title: CalendarPanel
+description: A bordered, elevated day-picker panel with month/year dropdowns and single, multiple or range selection.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { CalendarPanelDemo } from '@/components/demos-react/calendar-panel';
+
+## Usage
+
+```tsx
+import {
+  CalendarPanel,
+  type CalendarPanelRangeProps,
+} from '@acronis-platform/ui-react';
+```
+
+`CalendarPanel` is a self-contained date-picker panel built on
+[`react-day-picker`](https://daypicker.dev): a bordered, elevated card holding a
+header with month and year [`InputSelect`](/components/input-select) dropdowns, a
+month grid of flat 32×32 day cells, and — for the two multi-day variants — a
+[`DialogFooterDefault`](/components/dialog-footer-default) with Cancel and Apply
+[`Button`](/components/button)s. It is a panel, not an overlay: it renders inline
+wherever you place it, so you own the trigger and positioning (drop it into a
+[`Popover`](/components/popover) if you need it anchored).
+
+The `variant` prop is both the selection mode and the panel's structure:
+
+- **`single`** — one month, no footer. `selected` is a `Date`.
+- **`multiple`** — one month plus the Cancel/Apply footer. `selected` is a `Date[]`,
+  bounded by `min`/`max`.
+- **`range`** — two months side by side, divided by a vertical rule and sharing one
+  Cancel/Apply footer. `selected` is a `DateRange` (`{ from, to }`).
+
+Months are navigated through the header dropdowns only — the design has no
+prev/next chevrons — so `fromYear`/`toYear` are worth narrowing when the
+default (±50 years) is too wide; they also clamp how far the grid itself can
+navigate (a controlled `month`, Shift+PageUp/PageDown), not just the dropdown's
+option list. Selection follows react-day-picker's own controlled/uncontrolled
+contract: omit `onSelect` for an uncontrolled panel, or pass `selected` **and**
+`onSelect` to own the value. The week starts on the `locale`'s own first day
+when `locale` is set, falling back to Monday per the design (`weekStartsOn`
+overrides both); outside days are shown by default (`showOutsideDays`). Every
+string the panel renders itself is a prop with an English default —
+`monthLabel`, `yearLabel`, `formatMonthLabel`, `cancelLabel`, `applyLabel` —
+so it can be localized without wrapping; pass `locale` to also localize the
+weekday names and react-day-picker's own accessible labels.
+
+The panel is themed by the dedicated `--ui-calendar-*` token tier (container
+border/radius/background, header border and padding, body padding and the
+range divider, day-cell idle/hover/active/disabled fills, borders and value
+colors); the header dropdowns, footer and buttons bring their own
+`--ui-input-select-*`, `--ui-footer-*` and `--ui-button-*` tokens. Focus
+rings use the shared `--ui-focus-primary` token. Layout uses logical
+properties, so the two `range` months and their divider mirror under
+`dir="rtl"` on any ancestor. The day grid's own Arrow Left/Right keyboard
+roaming only mirrors when `dir` is passed to the panel directly — an
+ancestor's `dir` alone flips the layout but not that roaming.
+
+## Examples
+
+<DemoReact>
+  <CalendarPanelDemo />
+</DemoReact>
+
+A single date, controlled by the parent:
+
+```tsx
+const [selected, setSelected] = React.useState<Date | undefined>(new Date());
+
+<CalendarPanel variant="single" selected={selected} onSelect={setSelected} />;
+```
+
+Several individual dates, capped at four, with Cancel clearing the selection:
+
+```tsx
+const [selected, setSelected] = React.useState<Date[]>([]);
+
+<CalendarPanel
+  variant="multiple"
+  max={4}
+  selected={selected}
+  onSelect={(next) => setSelected(next ?? [])}
+  onCancel={() => setSelected([])}
+  onApply={() => console.log(selected)}
+/>;
+```
+
+A date range across two months:
+
+```tsx
+const [range, setRange] = React.useState<
+  CalendarPanelRangeProps['selected']
+>({
+  from: new Date(2026, 6, 9),
+  to: new Date(2026, 7, 10),
+});
+
+<CalendarPanel
+  variant="range"
+  defaultMonth={new Date(2026, 6, 1)}
+  selected={range}
+  onSelect={setRange}
+  onCancel={() => setRange(undefined)}
+/>;
+```
+
+Localized labels, a narrowed year window and past dates disabled:
+
+```tsx
+<CalendarPanel
+  variant="multiple"
+  fromYear={2020}
+  toYear={2030}
+  disabled={{ before: new Date() }}
+  monthLabel="Mois"
+  yearLabel="Année"
+  cancelLabel="Annuler"
+  applyLabel="Appliquer"
+/>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/calendar-panel/calendar-panel.tsx"
+  name="CalendarPanelProps"
+/>

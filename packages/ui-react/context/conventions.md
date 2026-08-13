@@ -118,7 +118,12 @@ override:
 ## RTL / bidirectional layout
 
 Every component must render correctly under `dir="rtl"` (Base UI/the app
-shell sets `dir` on an ancestor; components don't set it themselves).
+shell sets `dir` on an ancestor; components don't set it themselves). The one
+exception is a component that wraps a primitive whose own keyboard handling
+only mirrors when `dir` reaches it directly rather than via CSS/ancestor
+inheritance — `calendar-panel.tsx`'s `dir` prop forwards to `react-day-picker`
+for exactly this reason (its Arrow Left/Right roaming otherwise stays LTR).
+Add a `dir` prop only for this reason, not as a general pattern.
 
 - **Use logical Tailwind utilities** (`ms-`/`me-`, `ps-`/`pe-`, `start-`/
   `end-`) for anything that should mirror in RTL — never physical ones
