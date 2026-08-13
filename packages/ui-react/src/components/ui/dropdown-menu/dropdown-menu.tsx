@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
-import { CheckIcon, ChevronRightIcon, CircleIcon } from '@acronis-platform/icons-react/stroke-mono';
+import { CheckIcon, ChevronRightIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
 import { usePortalContainer } from '@/lib/portal-container';
@@ -191,7 +191,7 @@ const DropdownMenuRadioItem = React.forwardRef<
   >
     <span className="absolute start-2 flex size-3.5 items-center justify-center text-[var(--ui-button-menu-dropdown-item-icon-color)]">
       <MenuPrimitive.RadioItemIndicator>
-        <CircleIcon className="size-2 fill-current" />
+        <span className="size-2 rounded-full bg-current" />
       </MenuPrimitive.RadioItemIndicator>
     </span>
     {children}
