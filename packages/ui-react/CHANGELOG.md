@@ -1,5 +1,26 @@
 # @acronis-platform/ui-react
 
+## 0.62.0
+
+### Minor Changes
+
+- [#638](https://github.com/acronis/uikit/pull/638) [`92b9236`](https://github.com/acronis/uikit/commit/92b9236f0899fdda098f396c2e57ec8fc2236369) Thanks [@madjorr](https://github.com/madjorr)! - Add `CalendarPanel`: a bordered, elevated date-picker panel built on `react-day-picker`, with `single`, `multiple`, and `range` selection variants (the latter two adding a Cancel/Apply footer), themed by the new `--ui-calendar-*` token tier.
+
+- [#637](https://github.com/acronis/uikit/pull/637) [`affe005`](https://github.com/acronis/uikit/commit/affe005bf6f141308ae621defb6643441bbcf8eb) Thanks [@madjorr](https://github.com/madjorr)! - Add `FilterCards`: a horizontal row container for `CardFilter` items that stretches each child to an equal share of the available width.
+
+### Patch Changes
+
+- [#643](https://github.com/acronis/uikit/pull/643) [`6fda326`](https://github.com/acronis/uikit/commit/6fda3260128f94538becec868ddf48ad60e77f6a) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - fix(resizable): stop `ResizableHandle` from taking up layout space
+
+  The handle's hit area was an in-flow 9px box, so it pushed the panels it
+  separates apart and their edges — including their own borders — could never meet.
+  Those 9px now overlay the panel boundary instead of sitting between them, leaving
+  adjacent panels flush with a single divider line on the boundary. The hit area,
+  the divider and hover, drag, focus-ring and cursor behaviour are unchanged.
+
+- Updated dependencies [[`0515dda`](https://github.com/acronis/uikit/commit/0515ddabbe1cb196fc5ff2f981280e57a28bc7f6)]:
+  - @acronis-platform/tokens-pd@2.6.0
+
 ## 0.61.0
 
 ### Major Changes
