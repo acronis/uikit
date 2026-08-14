@@ -4,9 +4,9 @@ Releases are automated via
 [Changesets](https://github.com/changesets/changesets). The flow below
 applies to **any** published workspace in this monorepo. The published
 packages are `@acronis-platform/shadcn-uikit` (ui-legacy), `ui-react`,
-`icons-react`, `icons-sprite`, `tokens-pd`, `design-tokens`, and
-`design-assets`; the `apps/` and `tools/` workspaces are private (listed
-in `.changeset/config.json`'s `ignore` list).
+`icons-react`, `tokens-pd`, `design-tokens`, and `design-assets`; the
+`apps/` and `tools/` workspaces are private (listed in
+`.changeset/config.json`'s `ignore` list).
 
 ## When to add a Changeset
 

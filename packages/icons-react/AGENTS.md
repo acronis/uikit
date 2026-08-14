@@ -78,8 +78,8 @@ Counts grow as the design-assets set does — no code change needed.
 `@acronis-platform/ui-react` depends on this package so components/stories can
 compose icons.
 
-design-assets is a curated, validated source (its `validate` gate + linked
-report run in the sync), so generated names are stable; a rename or removal
+design-assets is a curated, validated source (its `validate` gate runs in the
+sync), so generated names are stable; a rename or removal
 there changes the public API and must ship a matching (major) Changeset. Fix
 the icon in design-assets and re-sync rather than hand-editing.
 

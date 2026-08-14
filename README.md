@@ -21,8 +21,6 @@ The repo is organized into four top-level directories: `context/` (shared docs),
 | --------------------------------- | -------------------------------------------- | --------- | ---------------------------------------------------------------------------- |
 | `packages/ui-react/`              | `@acronis-platform/ui-react`                 | **yes**   | The React component library, built on **Base UI**, themed by `tokens-pd`.    |
 | `packages/icons-react/`           | `@acronis-platform/icons-react`              | **yes**   | React icon components generated from `design-assets` (tree-shakeable).       |
-| `packages/icons-sprite/`          | `@acronis-platform/icons-sprite`             | **yes**   | Generated SVG sprites built from `icons-svg`.                                |
-| `packages/icons-svg/`             | `@acronis-platform/icons-svg`                | no        | Committed raw SVG icon sources + manifests (source-only).                    |
 | `packages/design-tokens/`         | `@acronis-platform/design-tokens`            | **yes**   | DTCG-2025.10 design tokens (primitives / semantics / components). Data only. |
 | `packages/design-assets/`         | `@acronis-platform/design-assets`            | **yes**   | Icon/illustration manifests + bundled binaries. Data only.                   |
 | `packages/tokens-pd/`             | `@acronis-platform/tokens-pd`                | **yes**   | Generated per-brand CSS vars, per-component CSS, Tailwind presets, DTCG.     |
@@ -327,8 +325,6 @@ uikit/
 ├── packages/                   # Published libraries + design data
 │   ├── ui-react/               # Base UI library    (@acronis-platform/ui-react)
 │   ├── icons-react/            # React icons        (@acronis-platform/icons-react)
-│   ├── icons-sprite/           # SVG sprites        (@acronis-platform/icons-sprite)
-│   ├── icons-svg/              # Raw SVG sources    (@acronis-platform/icons-svg)
 │   ├── design-tokens/          # DTCG tokens (data) (@acronis-platform/design-tokens)
 │   ├── design-assets/          # Asset manifests    (@acronis-platform/design-assets)
 │   └── tokens-pd/              # Generated CSS/Tailwind (@acronis-platform/tokens-pd)

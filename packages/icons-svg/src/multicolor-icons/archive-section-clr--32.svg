@@ -1,9 +1,0 @@
-<svg width="32" height="32" fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-  <g fill="none" fill-rule="evenodd">
-    <path fill="#FFE2A7" fill-rule="nonzero" d="M29 4c.5523 0 1 .4477 1 1v6.5a.5.5 0 0 1-.5.5H28v14c0 .5129-.386.9355-.8834.9933L27 27H5c-.5523 0-1-.4477-1-1V12H2.5a.5.5 0 0 1-.492-.4101L2 11.5V5c0-.5523.4477-1 1-1Z"/>
-    <path fill="#FFDA8E" d="M29 4c.5523 0 1 .4477 1 1v6.5a.5.5 0 0 1-.5.5H28v15c0 .5523-.4477 1-1 1H5c-.5523 0-1-.4477-1-1V12H2.5a.5.5 0 0 1-.5-.5V5c0-.5523.4477-1 1-1zm-2 8H5v15h22zm2-7H3v6h26z"/>
-    <path fill="#E6C480" fill-rule="nonzero" d="M28 26v1c0 .5129-.386.9355-.8834.9933L27 28H5c-.5128 0-.9355-.386-.9933-.8834L4 27v-1c0 .5129.386.9355.8834.9933L5 27h22c.5523 0 1-.4477 1-1M5 12v2H4v-2zm23 0v2h-1v-2z"/>
-    <path fill="#F3D08A" fill-rule="nonzero" d="M5 12h22v2H5z"/>
-    <rect width="8" height="2" x="12" y="17" fill="#98742B" fill-rule="nonzero" rx="1"/>
-  </g>
-</svg>

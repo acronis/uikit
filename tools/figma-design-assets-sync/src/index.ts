@@ -6,7 +6,6 @@ import chalk from 'chalk';
 
 import { getBaseConfig } from './config';
 import { checkStrokeIntegrity } from './check-stroke-integrity';
-import { checkUnlinked } from './check-unlinked';
 import {
   abortRevert,
   ensureCleanBeforeSync,
@@ -14,7 +13,6 @@ import {
   parseGateOptions,
 } from './diff-gate';
 import { discoverPacks } from './discover-packs';
-import { generateLinkedReport } from './generate-linked-report';
 import { syncPack, type PackSyncResult } from './sync-pack';
 import { validateManifest } from './validate-manifest';
 
@@ -105,16 +103,6 @@ async function main(): Promise<void> {
       }
     }
   }
-
-  console.log('\n▸ Unlinked legacy icons...');
-  const unlinked = await checkUnlinked();
-  console.log(`  Monocolor:  ${unlinked.unlinkedMono} unlinked / ${unlinked.totalMono}`);
-  console.log(`  Multicolor: ${unlinked.unlinkedMulti} unlinked / ${unlinked.totalMulti}`);
-  console.log(chalk.dim(`  Report: ${unlinked.reportPath}`));
-
-  console.log('\n▸ Linked icons report...');
-  const linkedReport = await generateLinkedReport();
-  console.log(chalk.dim(`  Report: ${linkedReport}`));
 
   console.log('\n▸ Stroke fill integrity (icons-stroke-mono)...');
   const integrity = await checkStrokeIntegrity();

@@ -1,9 +1,0 @@
-<svg width="32" height="32" fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-  <g fill="none" fill-rule="evenodd">
-    <path fill="#8EBCED" fill-rule="nonzero" d="M30 26V6c0-.5523-.4477-1-1-1H3c-.5523 0-1 .4477-1 1v20c0 .5523.4477 1 1 1h26c.5523 0 1-.4477 1-1"/>
-    <path fill="#4875B3" fill-opacity=".05" fill-rule="nonzero" d="M29 6.5H3c-.5523 0-1 .4477-1 1V9a2 2 0 0 0 .8 1.6l12.6 9.45a1 1 0 0 0 1.2 0l12.6-9.45A2 2 0 0 0 30 9V7.5c0-.5523-.4477-1-1-1"/>
-    <path fill="#BCD2F1" fill-rule="nonzero" d="M29 5H3c-.5523 0-1 .4477-1 1v1.5a2 2 0 0 0 .8 1.6l12.6 9.45a1 1 0 0 0 1.2 0L29.2 9.1a2 2 0 0 0 .8-1.6V6c0-.5523-.4477-1-1-1"/>
-    <path fill="#4875B3" fill-opacity=".1" d="M29 5c.5523 0 1 .4477 1 1v20c0 .5523-.4477 1-1 1H3c-.5523 0-1-.4477-1-1V6c0-.5523.4477-1 1-1zm0 1H3v20h26z"/>
-    <path fill="#255BA2" fill-rule="nonzero" d="M2 25v1c0 .5523.4477 1 1 1h26c.5523 0 1-.4477 1-1v-1c0 .5523-.4477 1-1 1H3c-.5523 0-1-.4477-1-1"/>
-  </g>
-</svg>

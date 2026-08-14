@@ -139,7 +139,6 @@ Published workspaces are:
 - `@acronis-platform/shadcn-uikit` (`packages/ui-legacy`)
 - `@acronis-platform/ui-react`
 - `@acronis-platform/icons-react`
-- `@acronis-platform/icons-sprite`
 - `@acronis-platform/tokens-pd`
 - `@acronis-platform/design-tokens`
 - `@acronis-platform/design-assets`

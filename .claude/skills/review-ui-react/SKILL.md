@@ -15,7 +15,7 @@ description: >
   main — using only local
   tokens-pd/design-tokens data (no Figma value queries), checks whether a
   source change requires a regeneration command that wasn't run in the same
-  PR (design-tokens → tokens-pd, icons-svg → icons-sprite, a component change
+  PR (design-tokens → tokens-pd, a component change
   → its Storybook VR baselines/spec/Code Connect) so a diff that "looks fine"
   doesn't silently ship a stale generated artifact, stops to ask the
   developer if a token can't be resolved, surfaces CI status via
@@ -75,13 +75,13 @@ it — a design-token value change, an icon rename, a demo story whose props
 no longer match. Every changed file is classified into one of five tiers,
 never a binary in/out split:
 
-| Tier                                | Paths                                                                                                                                  | Treatment                                                                                                                                                                                     |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **(a) Primary**                     | `packages/ui-react/**`, `packages/ui-spec/**`                                                                                          | Full review: every check below, unabridged. `ui-spec` is the framework-agnostic spec companion to a ui-react component and is reviewed at the same depth, not as an afterthought.             |
-| **(b) Generated-artifact pipeline** | `packages/design-tokens/**`, `tools/style-dictionary/**`, `packages/tokens-pd/**`, `packages/icons-svg/**`, `packages/icons-sprite/**` | Impact review: does this change break or silently drift something ui-react relies on? Includes the freshness table below.                                                                     |
-| **(c) Declared dependency**         | Resolved dynamically from `packages/ui-react/package.json`'s `@acronis-platform/*` deps (see script)                                   | Impact review, same lens as (b).                                                                                                                                                              |
-| **(d) Consumer**                    | `apps/docs/**`, `apps/demo/**`, `apps/demos/**`                                                                                        | Impact review: per the `qa`/`devil-advocate` "wide-view mandate," does this PR's ui-react change still render/import correctly here (prop renames, the `"use client"`/RSC-manifest landmine)? |
-| **(e) Out-of-scope**                | Everything else                                                                                                                        | Listed in the report for context only. Never reviewed.                                                                                                                                        |
+| Tier                                | Paths                                                                                                | Treatment                                                                                                                                                                                     |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **(a) Primary**                     | `packages/ui-react/**`, `packages/ui-spec/**`                                                        | Full review: every check below, unabridged. `ui-spec` is the framework-agnostic spec companion to a ui-react component and is reviewed at the same depth, not as an afterthought.             |
+| **(b) Generated-artifact pipeline** | `packages/design-tokens/**`, `tools/style-dictionary/**`, `packages/tokens-pd/**`                    | Impact review: does this change break or silently drift something ui-react relies on? Includes the freshness table below.                                                                     |
+| **(c) Declared dependency**         | Resolved dynamically from `packages/ui-react/package.json`'s `@acronis-platform/*` deps (see script) | Impact review, same lens as (b).                                                                                                                                                              |
+| **(d) Consumer**                    | `apps/docs/**`, `apps/demo/**`, `apps/demos/**`                                                      | Impact review: per the `qa`/`devil-advocate` "wide-view mandate," does this PR's ui-react change still render/import correctly here (prop renames, the `"use client"`/RSC-manifest landmine)? |
+| **(e) Out-of-scope**                | Everything else                                                                                      | Listed in the report for context only. Never reviewed.                                                                                                                                        |
 
 If tiers (a)–(d) are **all** empty, stop after the scope step: this PR
 doesn't touch ui-react or anything that affects it. Report what tier (e)
@@ -144,8 +144,8 @@ contains and exit — don't run devil-advocate on nothing.
 5. **Generated-artifact freshness — interpret, don't just relay.** The
    script's `GENERATED_ARTIFACT_FRESHNESS` section is a heuristic, not a
    verdict:
-   - A `FAIL` row (design-tokens↔tokens-pd, icons-svg↔icons-sprite) is a
-     strong Critical candidate, but check whether the design-tokens/icons-svg
+   - A `FAIL` row (design-tokens↔tokens-pd) is a
+     strong Critical candidate, but check whether the design-tokens
      edit actually changes a resolved value (e.g. a JSON key reordering with
      no value change wouldn't require regenerating anything) before reporting
      it — this exact judgment call also gets a second look from
@@ -356,7 +356,6 @@ generated-artifact-pipeline dependencies, and its direct consumers
 | Physical directional utility introduced (advisory — RTL risk)                    | none / flagged (list)       |
 | Visual snapshot PNGs changed                                                     | N/A / flagged               |
 | `tokens-pd` regenerated after `design-tokens` change                             | PASS/FAIL/N/A               |
-| `icons-sprite` regenerated after `icons-svg` change                              | PASS/FAIL/N/A               |
 | `icons-react` icon names still referenced correctly after `design-assets` change | PASS/FLAGGED/N/A            |
 | VR baselines look current for changed components                                 | PASS/FLAGGED/N/A            |
 | Component spec/story completeness (component-readiness)                          | READY/DRIFT/INCOMPLETE/N/A  |
@@ -410,8 +409,7 @@ that this PR doesn't touch `packages/ui-react` or anything that affects it.
   persists after a run.
 - **Local-only token/style truth.** All `--ui-*` resolution and
   generated-artifact freshness checks read `packages/tokens-pd`,
-  `packages/design-tokens`, `packages/icons-svg(-next)`, and
-  `packages/icons-sprite` at the PR's own head commit. Figma is never queried
+  `packages/design-tokens` at the PR's own head commit. Figma is never queried
   for token or style values in this flow.
 - **No local build by default.** CI status comes from `gh pr checks`, not a
   local `pnpm install`/build/test run.

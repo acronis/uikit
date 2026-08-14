@@ -1,8 +1,0 @@
-<svg width="32" height="32" fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-  <g fill="none">
-    <path fill="#505764" d="M5 3c0-.5523.4477-1 1-1h20c.5523 0 1 .4477 1 1v26c0 .5523-.4477 1-1 1H6c-.5523 0-1-.4477-1-1z"/>
-    <path fill="#6DA3DC" d="M6.5 3.5h19v25h-19z"/>
-    <path fill="#FFF" d="M26 2H10l17 25V3c0-.5523-.4477-1-1-1" opacity=".25"/>
-    <path fill="#2D3138" d="M15.5 29.25a.5.5 0 1 1 1.0001.0001A.5.5 0 0 1 15.5 29.25"/>
-  </g>
-</svg>
