@@ -1,10 +1,10 @@
 ---
 title: Alert
-description: A status banner with severity variants and composable parts.
+description: An inline status banner with a leading status line, severity variants, and composable parts.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { AlertDemo } from "@/components/demos-react/alert";
+import { DemoReact } from '@/components/DemoReact';
+import { AlertDemo } from '@/components/demos-react/alert';
 
 ## Usage
 
@@ -13,18 +13,27 @@ import {
   Alert,
   AlertIcon,
   AlertContent,
+  AlertText,
   AlertTitle,
   AlertDescription,
+  AlertActions,
+  AlertClose,
 } from '@acronis-platform/ui-react';
 ```
 
-`Alert` is an inline status banner (`role="alert"`). The `variant` sets the
-severity — `info` (default), `success`, `warning`, `critical`, `destructive`,
-`ai`, or `neutral` — driving the surface, text, and accent-border colors from the
-`--ui-*` status tokens. Compose it with `AlertIcon` + `AlertContent`
-(`AlertTitle` / `AlertDescription`).
+`Alert` is an inline status banner (`role="alert"`). Its surface is **neutral in
+every severity** — the severity is carried by a status-colored border and a 6px
+status line down the leading edge. `variant` selects it: `info` (default),
+`success`, `warning`, `critical`, or `danger`. Every value comes from the
+`--ui-alert-*` token tier, so brand overrides apply without touching the markup.
 
-> Design-pending v1, ported from the legacy `shadcn-uikit` alert.
+`AlertIcon` needs no children — it renders the variant's own multicolor status
+icon (`CircleInfoBlue`, `CircleCheckGreen`, `TriangleWarningYellow`,
+`CircleWarningOrange`, `DiamondWarningRed`). Pass children only to substitute a
+different glyph.
+
+The status line sits on the **inline-start** edge, so it moves to the right under
+`dir="rtl"`; the status icons are direction-agnostic and never mirror.
 
 ## Examples
 
@@ -32,48 +41,60 @@ severity — `info` (default), `success`, `warning`, `critical`, `destructive`,
   <AlertDemo />
 </DemoReact>
 
-```tsx
-import { CircleWarningIcon } from '@acronis-platform/icons-react/stroke-mono';
+The full composition — note that the title and description go inside
+`AlertText`, whose vertical padding is what keeps the first line of text aligned
+with the icon:
 
-<Alert variant="destructive">
-  <AlertIcon><CircleWarningIcon size={16} /></AlertIcon>
+```tsx
+<Alert variant="danger">
+  <AlertIcon />
   <AlertContent>
-    <AlertTitle>Error</AlertTitle>
-    <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
+    <AlertText>
+      <AlertTitle>Session expired</AlertTitle>
+      <AlertDescription>Sign in again to keep working.</AlertDescription>
+    </AlertText>
+  </AlertContent>
+  <AlertClose onClick={dismiss} />
+</Alert>
+```
+
+Add remedies with `AlertActions`, inside `AlertContent` after `AlertText`. The
+row wraps when it runs out of width:
+
+```tsx
+<Alert variant="critical">
+  <AlertIcon />
+  <AlertContent>
+    <AlertText>
+      <AlertTitle>Protect non-compliant devices</AlertTitle>
+      <AlertDescription>Ensure a protection plan is applied…</AlertDescription>
+    </AlertText>
+    <AlertActions>
+      <Button variant="secondary">View devices</Button>
+      <Button variant="ghost">Dismiss for now</Button>
+    </AlertActions>
+  </AlertContent>
+  <AlertClose onClick={dismiss} />
+</Alert>
+```
+
+Rendering `AlertClose` is what makes an alert dismissable — it does not remove
+itself, so wire `onClick` to your own state. Omit it, and the description, for a
+permanent one-line banner:
+
+```tsx
+<Alert variant="success">
+  <AlertIcon />
+  <AlertContent>
+    <AlertText>
+      <AlertTitle>Your changes were saved</AlertTitle>
+    </AlertText>
   </AlertContent>
 </Alert>
 ```
 
-Add an action with `AlertActions`. As a direct child of `Alert` (after
-`AlertContent`) it sits at the **right edge** — `AlertContent` is `flex-1`, so add
-`self-center` to center it vertically:
-
-```tsx
-<Alert variant="info">
-  <AlertIcon><CircleInfoIcon size={16} /></AlertIcon>
-  <AlertContent>
-    <AlertTitle>Protect non-compliant devices</AlertTitle>
-    <AlertDescription>Ensure a protection plan is applied…</AlertDescription>
-  </AlertContent>
-  <AlertActions className="self-center">
-    <Button>View devices</Button>
-  </AlertActions>
-</Alert>
-```
-
-Place `AlertActions` **inside** `AlertContent` (after the description) and it flows
-**under** the text:
-
-```tsx
-<AlertContent>
-  <AlertTitle>Protect non-compliant devices</AlertTitle>
-  <AlertDescription>Ensure a protection plan is applied…</AlertDescription>
-  <AlertActions className="mt-2">
-    <Button>View devices</Button>
-    <Button variant="ghost">Dismiss</Button>
-  </AlertActions>
-</AlertContent>
-```
+`AlertClose`'s accessible name defaults to `"Close"`; override it via
+`ariaLabel` to localize.
 
 For transient, auto-dismissing notifications use [`Toast`](/components/toast); for
 a blocking confirmation use [`Dialog`](/components/dialog).
@@ -85,5 +106,10 @@ a blocking confirmation use [`Dialog`](/components/dialog).
   name="AlertProps"
 />
 
-`AlertIcon`, `AlertContent`, `AlertTitle`, `AlertDescription`, and `AlertActions`
-accept the props of their underlying element plus `className`.
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/alert/alert.tsx"
+  name="AlertCloseProps"
+/>
+
+`AlertIcon`, `AlertContent`, `AlertText`, `AlertTitle`, `AlertDescription`, and
+`AlertActions` accept the props of their underlying element plus `className`.

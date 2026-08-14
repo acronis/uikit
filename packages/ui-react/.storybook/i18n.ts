@@ -31,7 +31,10 @@ export type MessageKey =
   | 'greeting'
   | 'notifications'
   | 'email'
-  | 'loading';
+  | 'loading'
+  | 'close'
+  | 'alertTitle'
+  | 'alertDescription';
 
 export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
   en: {
@@ -42,6 +45,9 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     notifications: 'Enable notifications',
     email: 'Email address',
     loading: 'Loading…',
+    close: 'Close',
+    alertTitle: 'Session expired',
+    alertDescription: 'Sign in again to keep working.',
   },
   de: {
     submit: 'Absenden',
@@ -51,6 +57,9 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     notifications: 'Benachrichtigungen aktivieren',
     email: 'E-Mail-Adresse',
     loading: 'Wird geladen…',
+    close: 'Schließen',
+    alertTitle: 'Sitzung abgelaufen',
+    alertDescription: 'Melden Sie sich erneut an, um weiterzuarbeiten.',
   },
   fr: {
     submit: 'Envoyer',
@@ -60,6 +69,9 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     notifications: 'Activer les notifications',
     email: 'Adresse e-mail',
     loading: 'Chargement…',
+    close: 'Fermer',
+    alertTitle: 'Session expirée',
+    alertDescription: 'Reconnectez-vous pour continuer à travailler.',
   },
   ja: {
     submit: '送信',
@@ -69,6 +81,9 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     notifications: '通知を有効にする',
     email: 'メールアドレス',
     loading: '読み込み中…',
+    close: '閉じる',
+    alertTitle: 'セッションの有効期限が切れました',
+    alertDescription: '作業を続けるには再度サインインしてください。',
   },
   ar: {
     submit: 'إرسال',
@@ -78,6 +93,9 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     notifications: 'تفعيل الإشعارات',
     email: 'عنوان البريد الإلكتروني',
     loading: 'جارٍ التحميل…',
+    close: 'إغلاق',
+    alertTitle: 'انتهت صلاحية الجلسة',
+    alertDescription: 'سجّل الدخول مرة أخرى لمتابعة العمل.',
   },
   he: {
     submit: 'שליחה',
@@ -87,6 +105,9 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     notifications: 'הפעלת התראות',
     email: 'כתובת אימייל',
     loading: 'טוען…',
+    close: 'סגירה',
+    alertTitle: 'פג תוקף ההפעלה',
+    alertDescription: 'היכנס מחדש כדי להמשיך לעבוד.',
   },
 };
 

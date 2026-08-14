@@ -1,56 +1,141 @@
 spec_version: '1.0'
 component: Alert
 
-# References only. Values live in @acronis-platform/tokens-pd. Reconciled with the
-# Figma design: a full border in the saturated status color, a pale status
-# surface, foreground text, and only the icon tinted with the status color. Each
-# variant maps to its pair below; the ai variant has no `strong` surface token so
-# its border/icon use the solid ai text token.
+# References only. Values live in @acronis-platform/tokens-pd (tier: Alert).
+# The severity is carried by exactly two colors per variant — the container
+# border and the leading status line — over a neutral surface shared by all of
+# them. Geometry comes from the _global group.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - name: --ui-text-on-surface-primary
+  # Container
+  - name: --ui-alert-global-container-background
     affects: alert
-    description: Title/description text (text-foreground) — all variants.
-  - name: --ui-background-status-info
+    description: The neutral banner surface, shared by every variant.
+  - name: --ui-alert-global-container-border-width
     affects: alert
-    description: Surface for the info variant.
-  - name: --ui-background-status-strong-info
+    description: Container border width.
+  - name: --ui-alert-global-container-border-radius
+    affects: alert
+    description: Container corner radius; also clips the status line's corners.
+  - name: --ui-alert-global-container-padding-x
+    affects: alert
+    description: Container inline padding.
+  - name: --ui-alert-global-container-padding-y
+    affects: alert
+    description: Container block padding.
+  - name: --ui-alert-global-container-gap
+    affects: alert
+    description: Gap between the icon, content column, and dismiss control.
+  - name: --ui-alert-global-container-width-min
+    affects: alert
+    description: Minimum banner width.
+  - name: --ui-alert-global-container-status-width
+    affects: alert-status-line
+    description: Width of the leading status line.
+
+  # Per-variant severity colors
+  - name: --ui-alert-info-border-color
+    affects: alert
+    description: Container border for the info variant.
+  - name: --ui-alert-info-left-line
+    affects: alert-status-line
+    description: Status line for the info variant.
+  - name: --ui-alert-success-border-color
+    affects: alert
+    description: Container border for the success variant.
+  - name: --ui-alert-success-left-line
+    affects: alert-status-line
+    description: Status line for the success variant.
+  - name: --ui-alert-warning-border-color
+    affects: alert
+    description: Container border for the warning variant.
+  - name: --ui-alert-warning-left-line
+    affects: alert-status-line
+    description: Status line for the warning variant.
+  - name: --ui-alert-critical-border-color
+    affects: alert
+    description: Container border for the critical variant.
+  - name: --ui-alert-critical-left-line
+    affects: alert-status-line
+    description: Status line for the critical variant.
+  - name: --ui-alert-danger-border-color
+    affects: alert
+    description: Container border for the danger variant.
+  - name: --ui-alert-danger-left-line
+    affects: alert-status-line
+    description: Status line for the danger variant.
+
+  # Icon box
+  - name: --ui-alert-global-icon-size
     affects: alert-icon
-    description: Border + icon color for the info variant.
-  - name: --ui-background-status-success
-    affects: alert
-    description: Surface for the success variant.
-  - name: --ui-background-status-strong-success
+    description: Status-icon glyph size.
+  - name: --ui-alert-global-icon-padding-x
     affects: alert-icon
-    description: Border + icon color for the success variant.
-  - name: --ui-background-status-warning
-    affects: alert
-    description: Surface for the warning variant.
-  - name: --ui-background-status-strong-warning
+    description: Icon box inline padding.
+  - name: --ui-alert-global-icon-padding-y
     affects: alert-icon
-    description: Border + icon color for the warning variant.
-  - name: --ui-background-status-critical
-    affects: alert
-    description: Surface for the critical variant.
-  - name: --ui-background-status-strong-critical
-    affects: alert-icon
-    description: Border + icon color for the critical variant.
-  - name: --ui-background-status-danger
-    affects: alert
-    description: Surface for the destructive variant.
-  - name: --ui-background-status-strong-danger
-    affects: alert-icon
-    description: Border + icon color for the destructive variant.
-  - name: --ui-background-status-ai
-    affects: alert
-    description: Surface for the ai variant.
-  - name: --ui-text-on-status-ai
-    affects: alert-icon
-    description: Border + icon color for the ai variant (its -strong token is a gradient).
-  - name: --ui-background-status-neutral
-    affects: alert
-    description: Surface for the neutral variant.
-  - name: --ui-background-status-strong-neutral
-    affects: alert-icon
-    description: Border + icon color for the neutral variant.
+    description: >-
+      Icon box block padding — what aligns the glyph with the first line of the
+      title.
+
+  # Content column
+  - name: --ui-alert-global-content-gap
+    affects: alert-content
+    description: Gap between the text block and the actions row.
+  - name: --ui-alert-global-content-padding-x
+    affects: alert-content
+    description: Content column inline padding.
+  - name: --ui-alert-global-content-padding-y
+    affects: alert-content
+    description: Content column block padding.
+
+  # Text block
+  - name: --ui-alert-global-content-text-container-gap
+    affects: alert-text
+    description: Gap between the title and the description.
+  - name: --ui-alert-global-content-text-container-padding-x
+    affects: alert-text
+    description: Text block inline padding.
+  - name: --ui-alert-global-content-text-container-padding-y
+    affects: alert-text
+    description: >-
+      Text block block padding — the counterpart to the icon box's padding for
+      first-line alignment.
+  - name: --ui-alert-global-content-text-container-title-color
+    affects: alert-title
+    description: Title text color (identical across variants).
+  - name: --ui-alert-global-content-text-container-description-color
+    affects: alert-description
+    description: Description text color (identical across variants).
+
+  # Actions row
+  - name: --ui-alert-global-content-actions-container-gap-x
+    affects: alert-actions
+    description: Horizontal gap between action buttons.
+  - name: --ui-alert-global-content-actions-container-gap-y
+    affects: alert-actions
+    description: Vertical gap between wrapped rows of action buttons.
+  - name: --ui-alert-global-content-actions-container-padding-x
+    affects: alert-actions
+    description: Actions row inline padding.
+  - name: --ui-alert-global-content-actions-container-padding-y
+    affects: alert-actions
+    description: Actions row block padding.
+
+  # Dismiss control — inherited from ButtonIcon's own tier
+  - name: --ui-button-icon-global-container-height
+    affects: alert-close
+    description: Dismiss control box size (via ButtonIcon).
+  - name: --ui-button-icon-global-icon-size
+    affects: alert-close
+    description: Dismiss glyph size (via ButtonIcon).
+  - name: --ui-button-icon-global-icon-color-idle
+    affects: alert-close
+    description: Dismiss glyph color at rest (via ButtonIcon).
+  - name: --ui-button-icon-global-container-color-hover
+    affects: alert-close
+    description: Dismiss control fill on hover (via ButtonIcon).
+  - name: --ui-focus-primary
+    affects: alert-close
+    description: Focus ring on the dismiss control (via ButtonIcon).

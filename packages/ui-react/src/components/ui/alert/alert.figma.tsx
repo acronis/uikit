@@ -1,36 +1,67 @@
-// Figma Code Connect — status: NEEDS_FIGMA_URL
-// Ported from ui-legacy without a "ready for dev" Figma node. A Figma node would
-// map the alert banner (variant + icon/title/description). Replace 'FIGMA_NODE_URL'
-// and flip to COMPLETE via `/figma-component Alert <url> --update`.
+// Figma Code Connect — status: COMPLETE
+// Node 7421:125155 (the "Alert" component set). Property names and variant
+// options come from `get_context_for_code_connect`, not guesswork.
+// `dismissable` / `hasActions` / `hasDescription` are Figma booleans that toggle
+// whole subtrees; in React the equivalent is simply rendering (or not) the
+// corresponding part, so they map to `figma.boolean` with an element per branch.
 import figma from '@figma/code-connect';
 
 import {
   Alert,
+  AlertActions,
+  AlertClose,
   AlertContent,
   AlertDescription,
   AlertIcon,
+  AlertText,
   AlertTitle,
 } from './alert';
 
-figma.connect(Alert, 'FIGMA_NODE_URL', {
-  props: {
-    variant: figma.enum('Variant', {
-      info: 'info',
-      success: 'success',
-      warning: 'warning',
-      critical: 'critical',
-      destructive: 'destructive',
-      ai: 'ai',
-      neutral: 'neutral',
-    }),
-  },
-  example: ({ variant }) => (
-    <Alert variant={variant}>
-      <AlertIcon>{/* status icon */}</AlertIcon>
-      <AlertContent>
-        <AlertTitle>Title</AlertTitle>
-        <AlertDescription>Description</AlertDescription>
-      </AlertContent>
-    </Alert>
-  ),
-});
+figma.connect(
+  Alert,
+  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=7421-125155',
+  {
+    // Pinned explicitly: `AlertClose` only appears inside a `figma.boolean`
+    // value, which the parser stringifies — so it never reaches the
+    // auto-derived import list and the published snippet would reference an
+    // unimported component.
+    imports: [
+      "import { Alert, AlertActions, AlertClose, AlertContent, AlertDescription, AlertIcon, AlertText, AlertTitle } from '@acronis-platform/ui-react';",
+    ],
+    props: {
+      variant: figma.enum('variant', {
+        Info: 'info',
+        Success: 'success',
+        Warning: 'warning',
+        Critical: 'critical',
+        Danger: 'danger',
+      }),
+      title: figma.string('title'),
+      description: figma.boolean('hasDescription', {
+        true: figma.string('description'),
+        false: undefined,
+      }),
+      actions: figma.boolean('hasActions', {
+        true: figma.children('actionsList'),
+        false: undefined,
+      }),
+      closeButton: figma.boolean('dismissable', {
+        true: <AlertClose onClick={() => {}} />,
+        false: undefined,
+      }),
+    },
+    example: ({ variant, title, description, actions, closeButton }) => (
+      <Alert variant={variant}>
+        <AlertIcon />
+        <AlertContent>
+          <AlertText>
+            <AlertTitle>{title}</AlertTitle>
+            <AlertDescription>{description}</AlertDescription>
+          </AlertText>
+          <AlertActions>{actions}</AlertActions>
+        </AlertContent>
+        {closeButton}
+      </Alert>
+    ),
+  }
+);

@@ -1,10 +1,17 @@
 spec_version: '1.0'
 component: Alert
 name: alert
-status: draft
+status: stable
 category: feedback
 description: >-
-  A status banner with severity variants (info / success / warning / critical /
-  destructive / ai / neutral) and composable icon, content, title, and
-  description parts. Ported from the legacy shadcn-uikit `alert`.
+  An inline status banner: a neutral surface carrying its severity through a
+  status-colored border and a status line down the leading edge, with a fixed
+  status icon per severity, composable title / description / action parts, and an
+  optional dismiss control.
 since: 0.48.0
+dependencies:
+  components:
+    - ButtonIcon
+figma:
+  node: '7421:125155'
+  codeConnect: packages/ui-react/src/components/ui/alert/alert.figma.tsx
