@@ -26,6 +26,10 @@ scrollbar placement, compose the exported `ScrollBar` part directly. The thumb
 is themed by `--ui-border-on-surface-border` (and `--ui-border-on-surface-border-active`
 on hover); the focused viewport shows a `--ui-focus-brand` ring.
 
+Use `viewportRef` to forward a ref to the viewport element, and `viewportProps`
+to merge extra HTML attributes onto it — for example, a `tabIndex` to make the
+viewport directly keyboard-focusable, or custom `data-*` attributes for testing.
+
 > Design-pending v1: ported from the legacy shadcn-uikit `ScrollArea`.
 
 ## Examples
@@ -54,6 +58,19 @@ import { ScrollArea, ScrollBar } from '@acronis-platform/ui-react';
 <ScrollArea orientation="horizontal">
   {row}
   <ScrollBar orientation="horizontal" />
+</ScrollArea>
+```
+
+```tsx
+// Forward a ref to the viewport
+const vpRef = useRef<HTMLDivElement>(null);
+<ScrollArea viewportRef={vpRef}>{content}</ScrollArea>
+```
+
+```tsx
+// Merge attrs onto the viewport (keyboard-focusable, testable)
+<ScrollArea viewportProps={{ tabIndex: 0, 'data-testid': 'vp' }}>
+  {content}
 </ScrollArea>
 ```
 
