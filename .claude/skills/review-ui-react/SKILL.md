@@ -150,7 +150,7 @@ contains and exit — don't run devil-advocate on nothing.
      no value change wouldn't require regenerating anything) before reporting
      it — this exact judgment call also gets a second look from
      devil-advocate in step 8.
-   - `ICONS_SVG_NEXT_CHANGED` and `VR_BASELINE_HEURISTIC` are advisory only —
+   - `DESIGN_ASSETS_CHANGED` and `VR_BASELINE_HEURISTIC` are advisory only —
      read them, decide whether they're worth a finding, don't auto-escalate.
    - `HARDCODED_LABELS_ADVISORY` / `RTL_PHYSICAL_UTILITY_ADVISORY` are heuristic
      greps over added lines in changed component source (see
