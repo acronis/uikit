@@ -154,7 +154,7 @@ describe('DropdownMenuCheckboxItem', () => {
     render(
       <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-        <DropdownMenuContent portal={false}>
+        <DropdownMenuContent>
           <DropdownMenuGroup>
             <DropdownMenuCheckboxItem checked>Show toolbar</DropdownMenuCheckboxItem>
           </DropdownMenuGroup>
@@ -168,7 +168,7 @@ describe('DropdownMenuCheckboxItem', () => {
     render(
       <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-        <DropdownMenuContent portal={false}>
+        <DropdownMenuContent>
           <DropdownMenuGroup>
             <DropdownMenuCheckboxItem checked>Enabled</DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem checked={false}>Disabled</DropdownMenuCheckboxItem>
@@ -186,7 +186,7 @@ describe('DropdownMenuRadioGroup / DropdownMenuRadioItem', () => {
     render(
       <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-        <DropdownMenuContent portal={false}>
+        <DropdownMenuContent>
           <DropdownMenuGroup>
             <DropdownMenuRadioGroup value="asc">
               <DropdownMenuRadioItem value="asc">Ascending</DropdownMenuRadioItem>
@@ -204,7 +204,7 @@ describe('DropdownMenuRadioGroup / DropdownMenuRadioItem', () => {
     render(
       <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-        <DropdownMenuContent portal={false}>
+        <DropdownMenuContent>
           <DropdownMenuGroup>
             <DropdownMenuRadioGroup value="a">
               <DropdownMenuRadioItem value="a">Option A</DropdownMenuRadioItem>
@@ -222,7 +222,7 @@ describe('DropdownMenuLabel', () => {
     render(
       <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-        <DropdownMenuContent portal={false}>
+        <DropdownMenuContent>
           <DropdownMenuGroup>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
           </DropdownMenuGroup>
@@ -240,7 +240,7 @@ describe('DropdownMenuLabel', () => {
     render(
       <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-        <DropdownMenuContent portal={false}>
+        <DropdownMenuContent>
           <DropdownMenuGroup>
             <DropdownMenuLabel inset>Indented</DropdownMenuLabel>
           </DropdownMenuGroup>
@@ -256,7 +256,7 @@ describe('DropdownMenuSeparator', () => {
     render(
       <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-        <DropdownMenuContent portal={false}>
+        <DropdownMenuContent>
           <DropdownMenuGroup>
             <DropdownMenuItem>Above</DropdownMenuItem>
             <DropdownMenuSeparator />
