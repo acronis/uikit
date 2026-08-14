@@ -77,7 +77,12 @@ describe('ScrollArea', () => {
   });
 
   it('positions the scrollbar above sticky content with z-[60]', () => {
-    const { container } = render(<ScrollArea>body</ScrollArea>);
+    const { container } = render(
+      <ScrollArea>
+        body
+        <ScrollBar orientation="vertical" keepMounted />
+      </ScrollArea>
+    );
     const scrollbar = container.querySelector('[data-slot="scroll-area-scrollbar"]');
     expect(scrollbar).toHaveClass('z-[60]');
   });
