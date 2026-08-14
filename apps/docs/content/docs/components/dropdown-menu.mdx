@@ -15,6 +15,11 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubTrigger,
@@ -30,7 +35,8 @@ Themed by the `--ui-button-menu-dropdown-*` token tier from
 `@acronis-platform/tokens-pd`. `DropdownMenu` owns the open state;
 `DropdownMenuTrigger` opens it (typically composed with a `ButtonMenu`); and
 `DropdownMenuContent` is the portaled popup holding `DropdownMenuGroup`s of
-`DropdownMenuItem`s — with optional shortcuts and nested submenus.
+`DropdownMenuItem`s — with optional labels, separators, checkbox/radio items,
+shortcuts, and nested submenus.
 
 ## Examples
 
@@ -85,6 +91,40 @@ siblings:
 `DropdownMenuSubTrigger` renders a trailing cascade chevron (mirrored under
 `dir="rtl"`) and opens the submenu on hover or **ArrowRight**.
 
+`DropdownMenuLabel` and `DropdownMenuSeparator` annotate sections within a group.
+Checkbox and radio items let the consumer own the state:
+
+```tsx
+<DropdownMenuContent>
+  <DropdownMenuGroup>
+    <DropdownMenuLabel>View options</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    <DropdownMenuCheckboxItem checked={showGrid} onCheckedChange={setShowGrid}>
+      Show grid
+    </DropdownMenuCheckboxItem>
+    <DropdownMenuCheckboxItem checked={showRuler} onCheckedChange={setShowRuler}>
+      Show ruler
+    </DropdownMenuCheckboxItem>
+  </DropdownMenuGroup>
+</DropdownMenuContent>
+```
+
+`DropdownMenuRadioGroup` / `DropdownMenuRadioItem` follow the same owned-state
+pattern — the consumer supplies `value` / `onValueChange`:
+
+```tsx
+<DropdownMenuContent>
+  <DropdownMenuGroup>
+    <DropdownMenuLabel>Panel position</DropdownMenuLabel>
+    <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+      <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="bottom">Bottom</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="right">Right</DropdownMenuRadioItem>
+    </DropdownMenuRadioGroup>
+  </DropdownMenuGroup>
+</DropdownMenuContent>
+```
+
 ## API Reference
 
 ### DropdownMenuContent
@@ -95,8 +135,10 @@ siblings:
 />
 
 `DropdownMenu` (root) accepts the Base UI Menu root props — `open` /
-`defaultOpen`, `onOpenChange`. `DropdownMenuItem` / `DropdownMenuSubTrigger`
-take an `inset` flag. Items also accept Base UI's `closeOnClick` — pass
+`defaultOpen`, `onOpenChange`. `DropdownMenuItem` / `DropdownMenuLabel` /
+`DropdownMenuSubTrigger` take an `inset` flag. `DropdownMenuCheckboxItem` takes
+`checked` / `onCheckedChange`; `DropdownMenuRadioGroup` takes `value` /
+`onValueChange`. Items also accept Base UI's `closeOnClick` — pass
 `closeOnClick={false}` to keep the menu open while the user toggles several rows
 (this is how `TableViewOptions` builds its column-visibility panel). See the
 [Base UI Menu docs](https://base-ui.com/react/components/menu) for the full prop
