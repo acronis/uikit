@@ -5,9 +5,14 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
@@ -141,5 +146,130 @@ describe('DropdownMenu', () => {
       </DropdownMenu>
     );
     expect(ref.current).toBeInstanceOf(HTMLElement);
+  });
+});
+
+describe('DropdownMenuCheckboxItem', () => {
+  it('renders with indicator indent class', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent portal={false}>
+          <DropdownMenuGroup>
+            <DropdownMenuCheckboxItem checked>Show toolbar</DropdownMenuCheckboxItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    expect(screen.getByRole('menuitemcheckbox', { name: /Show toolbar/ })).toHaveClass('ps-8');
+  });
+
+  it('reflects checked state via aria-checked', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent portal={false}>
+          <DropdownMenuGroup>
+            <DropdownMenuCheckboxItem checked>Enabled</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem checked={false}>Disabled</DropdownMenuCheckboxItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    expect(screen.getByRole('menuitemcheckbox', { name: 'Enabled' })).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByRole('menuitemcheckbox', { name: 'Disabled' })).toHaveAttribute('aria-checked', 'false');
+  });
+});
+
+describe('DropdownMenuRadioGroup / DropdownMenuRadioItem', () => {
+  it('marks only the selected value as checked', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent portal={false}>
+          <DropdownMenuGroup>
+            <DropdownMenuRadioGroup value="asc">
+              <DropdownMenuRadioItem value="asc">Ascending</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="desc">Descending</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    expect(screen.getByRole('menuitemradio', { name: 'Ascending' })).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByRole('menuitemradio', { name: 'Descending' })).toHaveAttribute('aria-checked', 'false');
+  });
+
+  it('applies indicator indent class to radio items', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent portal={false}>
+          <DropdownMenuGroup>
+            <DropdownMenuRadioGroup value="a">
+              <DropdownMenuRadioItem value="a">Option A</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    expect(screen.getByRole('menuitemradio', { name: 'Option A' })).toHaveClass('ps-8');
+  });
+});
+
+describe('DropdownMenuLabel', () => {
+  it('renders label text with token classes', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent portal={false}>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    const label = screen.getByText('My Account');
+    expect(label).toHaveClass(
+      'px-[var(--ui-button-menu-dropdown-item-container-padding-x)]',
+      'text-[var(--ui-button-menu-dropdown-item-label-color)]'
+    );
+  });
+
+  it('applies ps-8 when inset=true', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent portal={false}>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel inset>Indented</DropdownMenuLabel>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    expect(screen.getByText('Indented')).toHaveClass('ps-8');
+  });
+});
+
+describe('DropdownMenuSeparator', () => {
+  it('renders with role=separator and token classes', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent portal={false}>
+          <DropdownMenuGroup>
+            <DropdownMenuItem>Above</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Below</DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    const sep = screen.getByRole('separator');
+    expect(sep).toBeInTheDocument();
+    expect(sep).toHaveClass(
+      'bg-[var(--ui-button-menu-dropdown-section-container-border-color)]',
+      'h-[var(--ui-button-menu-dropdown-section-container-border-width)]'
+    );
   });
 });

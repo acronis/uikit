@@ -1,11 +1,17 @@
+import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { ButtonMenu } from '../../button-menu';
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
@@ -119,4 +125,64 @@ export const WithSubmenu: Story = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
+};
+
+/** Checkbox items — toggled state tracked locally; CheckIcon appears when checked. */
+export const WithCheckboxItems: Story = {
+  render: () => {
+    const [showStatusBar, setShowStatusBar] = React.useState(true);
+    const [showActivityBar, setShowActivityBar] = React.useState(false);
+    const [showPanel, setShowPanel] = React.useState(false);
+    return (
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger render={<ButtonMenu variant="secondary">View</ButtonMenu>} />
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Panels</DropdownMenuLabel>
+            <DropdownMenuCheckboxItem
+              checked={showStatusBar}
+              onCheckedChange={setShowStatusBar}
+            >
+              Status Bar
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={showActivityBar}
+              onCheckedChange={setShowActivityBar}
+            >
+              Activity Bar
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={showPanel}
+              onCheckedChange={setShowPanel}
+            >
+              Panel
+            </DropdownMenuCheckboxItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  },
+};
+
+/** Radio group — only one item selected at a time; dot indicator on the active item. */
+export const WithRadioItems: Story = {
+  render: () => {
+    const [position, setPosition] = React.useState('bottom');
+    return (
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger render={<ButtonMenu variant="secondary">Position</ButtonMenu>} />
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+              <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="bottom">Bottom</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="right">Right</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  },
 };
