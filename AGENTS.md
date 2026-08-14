@@ -38,8 +38,6 @@ distinct role:
 | `packages/ui-legacy/`             | `@acronis-platform/shadcn-uikit`             | **yes**    | Vite library, Storybook 10, Vitest + RTL                                                                         | [AGENTS.md](packages/ui-legacy/AGENTS.md)             |
 | `packages/ui-react/`              | `@acronis-platform/ui-react`                 | **yes**    | Base UI library, Vite, Storybook 10, Vitest + RTL, Tailwind v4                                                   | [AGENTS.md](packages/ui-react/AGENTS.md)              |
 | `packages/icons-react/`           | `@acronis-platform/icons-react`              | **yes**    | React icons generated from `design-assets`, Vite, Storybook, Vitest                                              | [AGENTS.md](packages/icons-react/AGENTS.md)           |
-| `packages/icons-svg/`             | `@acronis-platform/icons-svg`                | no         | Committed raw SVG icon sources (mono/multicolor) + per-page manifests                                            | [AGENTS.md](packages/icons-svg/AGENTS.md)             |
-| `packages/icons-sprite/`          | `@acronis-platform/icons-sprite`             | **yes**    | Generated (committed) SVG sprites built from `icons-svg` (tsx + SVGO)                                            | [AGENTS.md](packages/icons-sprite/AGENTS.md)          |
 | `apps/demo/`                      | `@acronis-platform/shadcn-uikit-demo`        | no         | Vite SPA, React Router v7, Zustand                                                                               | [AGENTS.md](apps/demo/AGENTS.md)                      |
 | `apps/docs/`                      | `@acronis-platform/uikit-docs`               | no         | Next.js 15 + Fumadocs                                                                                            | [AGENTS.md](apps/docs/AGENTS.md)                      |
 | `apps/demos/`                     | `@acronis-platform/shadcn-uikit-demos`       | no         | source-only (no build, no dev server)                                                                            | [AGENTS.md](apps/demos/AGENTS.md)                     |
@@ -58,14 +56,6 @@ distinct role:
 - `packages/icons-react/` — published React icon components, **generated**
   from `@acronis-platform/design-assets` (24px masters + scale/stroke rules
   baked into a `size` prop). Per-pack subpath exports, tree-shakeable.
-- `packages/icons-svg/` — **private, source-only** raw SVG icon sources
-  (monocolor + multicolor), plus per-page JSON manifests. The SVGs are
-  committed and maintained in-repo; there is no automated Figma pull. No
-  build; consumed in-repo from `src/`.
-- `packages/icons-sprite/` — published SVG sprites (combined / monocolor /
-  multicolor) **generated and committed** from `icons-svg` (same model as
-  `tokens-pd`). Its `build` runs `scripts/generate-sprite.ts`; re-run it after
-  changing `icons-svg` sources. Monocolor symbols are `currentColor`-themable.
 - `packages/design-tokens/` and `packages/design-assets/` — the published
   **design-data** packages. These ship JSON (and, for assets, bundled
   binaries) only: no build step, no runtime API. Their one real script

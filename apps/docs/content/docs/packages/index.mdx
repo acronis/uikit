@@ -24,15 +24,14 @@ Build tooling under `tools/` transforms that data:
 
 - `tools/style-dictionary` translates `design-tokens` into CSS custom
   properties, Tailwind presets, and a DTCG intermediate.
-- The icon generator turns the `design-assets` / icon SVG sources into React
-  components and SVG sprites.
+- The icon generator turns the `design-assets` manifests and binaries into
+  React components.
 
-The result is three **generated, published** packages:
+The result is two **generated, published** packages:
 
 - `@acronis-platform/tokens-pd` — per-brand CSS (`--ui-*` custom properties),
   per-component CSS, and Tailwind presets.
 - `@acronis-platform/icons-react` — tree-shakeable React icon components.
-- `@acronis-platform/icons-sprite` — committed SVG sprites.
 
 Finally, `@acronis-platform/ui-react` consumes `tokens-pd` for theming and
 `icons-react` for composed icons.
@@ -41,7 +40,6 @@ Finally, `@acronis-platform/ui-react` consumes `tokens-pd` for theming and
 design-tokens ─┐                        ┌─► tokens-pd ──┐
                ├─► (tools/style-dict.) ─┤               ├─► ui-react
 design-assets ─┘   (icon generator)     └─► icons-react ─┘
-                                        └─► icons-sprite
 ```
 
 ## Published packages
@@ -51,14 +49,12 @@ design-assets ─┘   (icon generator)     └─► icons-react ─┘
 | `@acronis-platform/ui-react`      | Base UI React components, themed via `tokens-pd`           | yes       |
 | `@acronis-platform/tokens-pd`     | Per-brand + per-component CSS, Tailwind presets, DTCG JSON | yes       |
 | `@acronis-platform/icons-react`   | React icon components, per-pack subpath exports            | yes       |
-| `@acronis-platform/icons-sprite`  | Combined / mono / multi SVG sprites                        | yes       |
 | `@acronis-platform/design-tokens` | DTCG-2025.10 token JSON (the source of truth)              | yes       |
 | `@acronis-platform/design-assets` | Icon / illustration JSON manifests + bundled binaries      | yes       |
 
 <Callout type="info">
-  The source SVG package (`icons-svg`), the tooling under `tools/`, and the apps
-  (`demo`, `docs`, `kitchen-sink`) are **private** and not published.
-  `@acronis-platform/shadcn-uikit` (`ui-legacy`) is also published, but it's
-  frozen for new work as part of the `ui-react` migration and isn't documented
-  on this site.
+  The tooling under `tools/` and the apps (`demo`, `docs`, `kitchen-sink`) are
+  **private** and not published. `@acronis-platform/shadcn-uikit` (`ui-legacy`)
+  is also published, but it's frozen for new work as part of the `ui-react`
+  migration and isn't documented on this site.
 </Callout>

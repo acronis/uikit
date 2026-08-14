@@ -33,7 +33,7 @@ WANT_CI=0
 TOKENS_DIR=packages/tokens-pd/css
 STYLES=packages/ui-react/src/styles/index.css
 
-TIER_B_RE='^packages/design-tokens/|^tools/style-dictionary/|^packages/tokens-pd/|^packages/icons-svg/|^packages/icons-sprite/'
+TIER_B_RE='^packages/design-tokens/|^tools/style-dictionary/|^packages/tokens-pd/'
 TIER_D_RE='^apps/docs/|^apps/demo/|^apps/demos/'
 
 echo "=== PREFLIGHT ==="
@@ -256,19 +256,6 @@ if [ "$dt_changed" -gt 0 ]; then
   fi
 else
   echo "DESIGN_TOKENS_TO_TOKENS_PD: n/a (design-tokens tiers unchanged)"
-fi
-
-svg_changed="$(printf '%s\n' "$ALL_FILES" | grep -c '^packages/icons-svg/' || true)"
-sprite_changed="$(printf '%s\n' "$ALL_FILES" | grep -c '^packages/icons-sprite/' || true)"
-if [ "$svg_changed" -gt 0 ]; then
-  if [ "$sprite_changed" -gt 0 ]; then
-    echo "ICONS_SVG_TO_ICONS_SPRITE: PASS (both changed together)"
-  else
-    echo "ICONS_SVG_TO_ICONS_SPRITE: FAIL — icons-svg changed, icons-sprite did not."
-    echo "  Fix: pnpm --filter @acronis-platform/icons-sprite build"
-  fi
-else
-  echo "ICONS_SVG_TO_ICONS_SPRITE: n/a (icons-svg unchanged)"
 fi
 
 assets_changed="$(printf '%s\n' "$ALL_FILES" | grep -c '^packages/design-assets/packs/' || true)"

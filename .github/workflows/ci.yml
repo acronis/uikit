@@ -19,8 +19,6 @@ jobs:
         @acronis-platform/design-assets
         @acronis-platform/design-tokens
         @acronis-platform/icons-react
-        @acronis-platform/icons-sprite
-        @acronis-platform/icons-svg
         @acronis-platform/tokens-pd
         @acronis-platform/shadcn-uikit
         @acronis-platform/ui-react
@@ -45,7 +43,6 @@ jobs:
               - 'packages/ui-legacy/**'
               - 'packages/ui-react/**'
               - 'packages/icons-react/**'
-              - 'packages/icons-sprite/**'
               - 'packages/tokens-pd/**'
               - 'packages/design-tokens/**'
               - 'packages/design-assets/**'

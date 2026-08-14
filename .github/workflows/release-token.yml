@@ -15,7 +15,6 @@
 #   @acronis-platform/design-assets
 #   @acronis-platform/design-tokens
 #   @acronis-platform/icons-react
-#   @acronis-platform/icons-sprite
 #   @acronis-platform/tokens-pd
 #   @acronis-platform/ui-react
 #
@@ -65,9 +64,6 @@ jobs:
       - name: Build tokens-pd
         run: pnpm --filter @acronis-platform/tokens-pd build
 
-      - name: Build icons-sprite
-        run: pnpm --filter @acronis-platform/icons-sprite build
-
       - name: Build icons-react
         run: pnpm --filter @acronis-platform/icons-react build
 
@@ -93,7 +89,6 @@ jobs:
           publish @acronis-platform/design-assets  packages/design-assets
           publish @acronis-platform/design-tokens  packages/design-tokens
           publish @acronis-platform/icons-react    packages/icons-react
-          publish @acronis-platform/icons-sprite   packages/icons-sprite
           publish @acronis-platform/tokens-pd      packages/tokens-pd
           publish @acronis-platform/ui-react       packages/ui-react
         env:
