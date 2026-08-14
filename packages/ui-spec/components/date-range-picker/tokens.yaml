@@ -2,9 +2,11 @@ spec_version: '1.0'
 component: DateRangePicker
 
 # References only — values live in @acronis-platform/tokens-pd. DateRangePicker
-# owns no tokens of its own (design-pending v1): the trigger brings the
-# `--ui-input-date-picker-*` tier, and the popup content is themed by the composed
-# Calendar / Popover / Button / InputText, each of which carries its own tokens.
+# owns no tokens of its own: the trigger brings the `--ui-input-date-picker-*`
+# tier, and the popup content is themed by the composed `CalendarPanel`
+# (`--ui-calendar-*`), which carries its own tokens. Popover contributes only
+# positioning, portaling and dismissal — its own container chrome is
+# neutralized so CalendarPanel's chrome shows through instead.
 # The names below are the trigger's, referenced through the InputDatePicker part.
 source: '@acronis-platform/tokens-pd'
 

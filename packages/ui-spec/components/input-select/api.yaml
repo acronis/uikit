@@ -51,6 +51,13 @@ contract:
       type: string
       required: false
       description: Hint shown by the value part when nothing is selected.
+    - name: items
+      type: Record<string, string>
+      required: false
+      description: >-
+        Map of value → label for every selectable option, so the value part
+        can render a selected option's label while the popup is closed
+        without inspecting the rendered items.
 
   events:
     - name: value-change
@@ -71,7 +78,14 @@ contract:
         on the root so the value part can render a selected option's label while
         the popup is closed.
 
-  methods: []
+  methods:
+    - name: use-input-select-filter
+      signature: '() => { query: string, setQuery: (query: string) => void }'
+      description: >-
+        Reads/sets the search query set by the search part; for custom (e.g.
+        tree) item renderers that need to filter outside the default
+        `InputSelectItem` auto-filter. Must be called within `InputSelect`
+        (React: `useInputSelectFilter`).
 
 adapters:
   react:
@@ -80,8 +94,9 @@ adapters:
     import: >-
       import { InputSelect, InputSelectField, InputSelectLabel, InputSelectTrigger,
       InputSelectValue, InputSelectContent, InputSelectSearch, InputSelectSection,
-      InputSelectSectionLabel, InputSelectItem, InputSelectDescription,
-      InputSelectError, InputSelectStatus } from '@acronis-platform/ui-react'
+      InputSelectSectionLabel, InputSelectItem, InputSelectExpander,
+      InputSelectDescription, InputSelectError, InputSelectStatus,
+      useInputSelectFilter } from '@acronis-platform/ui-react'
     example: |
       <InputSelect items={{ apple: 'Apple', banana: 'Banana' }} value={fruit} onValueChange={setFruit}>
         <InputSelectField>

@@ -1,8 +1,10 @@
 import { useReducer } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { es } from 'react-day-picker/locale';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { Popover, PopoverContent, PopoverTrigger } from '../../popover';
 import { DateRangePicker } from '../date-range-picker';
 
 const JULY_2026 = new Date(2026, 6, 1);
@@ -32,6 +34,19 @@ describe('DateRangePicker', () => {
     expect(screen.getByText('Jul 5, 2026')).toBeInTheDocument();
   });
 
+  it("translates the trigger's month name under a non-default locale, keeping the day/year order fixed", () => {
+    render(
+      <DateRangePicker
+        label="Period"
+        locale={es}
+        value={{ from: new Date(2026, 6, 1), to: new Date(2026, 6, 5) }}
+        onValueChange={() => {}}
+      />
+    );
+    expect(screen.getByText('jul 1, 2026')).toBeInTheDocument();
+    expect(screen.getByText('jul 5, 2026')).toBeInTheDocument();
+  });
+
   it('opens the calendar popover from the trigger', async () => {
     const user = userEvent.setup();
     render(<DateRangePicker label="Period" onValueChange={() => {}} />);
@@ -39,9 +54,8 @@ describe('DateRangePicker', () => {
     await user.click(screen.getByRole('button', { name: 'Period' }));
 
     expect(screen.getByRole('button', { name: 'Apply' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
     expect(screen.getAllByRole('grid')).toHaveLength(2);
-    expect(screen.getByLabelText('Start date')).toBeInTheDocument();
-    expect(screen.getByLabelText('End date')).toBeInTheDocument();
   });
 
   it('commits the drafted range on Apply and closes', async () => {
@@ -88,25 +102,25 @@ describe('DateRangePicker', () => {
     expect(onValueChange).not.toHaveBeenCalled();
   });
 
-  it('enables "Reset to default" only after the draft diverges', async () => {
+  it('reverts the draft and closes on Cancel without committing', async () => {
     const user = userEvent.setup();
+    const onValueChange = vi.fn();
     render(
       <DateRangePicker
         label="Period"
         defaultValue={{ from: JULY_2026 }}
-        onValueChange={() => {}}
+        onValueChange={onValueChange}
       />
     );
 
     await user.click(screen.getByRole('button', { name: 'Period' }));
-    const reset = screen.getByRole('button', { name: 'Reset to default' });
-    expect(reset).toBeDisabled();
-
     await user.click(screen.getAllByText('15')[0]);
-    expect(reset).toBeEnabled();
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
 
-    await user.click(reset);
-    expect(reset).toBeDisabled();
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(
+      screen.queryByRole('button', { name: 'Apply' })
+    ).not.toBeInTheDocument();
   });
 
   it('strips the popover max-width cap for the two-month calendar layout', async () => {
@@ -120,7 +134,9 @@ describe('DateRangePicker', () => {
 
   it('does not open when disabled', async () => {
     const user = userEvent.setup();
-    render(<DateRangePicker label="Period" disabled onValueChange={() => {}} />);
+    render(
+      <DateRangePicker label="Period" disabled onValueChange={() => {}} />
+    );
 
     await user.click(screen.getByRole('button', { name: 'Period' }));
 
@@ -129,26 +145,84 @@ describe('DateRangePicker', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('updates the draft when a valid date is typed into a field', async () => {
+  it('forwards localization labels to the calendar popup', async () => {
     const user = userEvent.setup();
-    const onValueChange = vi.fn();
     render(
       <DateRangePicker
         label="Period"
-        defaultValue={{ from: JULY_2026 }}
-        onValueChange={onValueChange}
+        monthLabel="Mes"
+        yearLabel="Año"
+        cancelLabel="Cancelar"
+        applyLabel="Aplicar"
+        onValueChange={() => {}}
       />
     );
 
     await user.click(screen.getByRole('button', { name: 'Period' }));
-    const endField = screen.getByLabelText('End date');
-    await user.clear(endField);
-    await user.type(endField, 'Jul 20, 2026');
-    await user.click(screen.getByRole('button', { name: 'Apply' }));
 
-    const range = onValueChange.mock.calls[0][0];
-    expect(range.to).toBeInstanceOf(Date);
-    expect((range.to as Date).getDate()).toBe(20);
+    expect(screen.getByRole('button', { name: 'Aplicar' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Cancelar' })
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole('combobox', { name: 'Mes' })).toHaveLength(2);
+    expect(screen.getAllByRole('combobox', { name: 'Año' })).toHaveLength(2);
+  });
+
+  describe('RTL', () => {
+    afterEach(() => {
+      document.documentElement.dir = '';
+    });
+
+    it('forwards the ambient text direction to the calendar popup', async () => {
+      document.documentElement.dir = 'rtl';
+      const user = userEvent.setup();
+      const { container } = render(
+        <DateRangePicker label="Period" onValueChange={() => {}} />
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Period' }));
+
+      const panel = container.ownerDocument.querySelector(
+        '[data-slot="calendar-panel"]'
+      );
+      expect(panel).toHaveAttribute('dir', 'rtl');
+    });
+
+    it('forwards ambient direction when nested inside another portaled popover', async () => {
+      document.documentElement.dir = 'rtl';
+      const user = userEvent.setup();
+      const { container } = render(
+        <Popover defaultOpen>
+          <PopoverTrigger>Open filters</PopoverTrigger>
+          <PopoverContent>
+            <DateRangePicker label="Period" onValueChange={() => {}} />
+          </PopoverContent>
+        </Popover>
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Period' }));
+
+      const panel = container.ownerDocument.querySelector(
+        '[data-slot="calendar-panel"]'
+      );
+      expect(panel).toHaveAttribute('dir', 'rtl');
+    });
+  });
+
+  it('forwards disabledDays to the calendar popup', async () => {
+    const user = userEvent.setup();
+    render(
+      <DateRangePicker
+        label="Period"
+        defaultValue={{ from: JULY_2026 }}
+        disabledDays={{ before: new Date(2026, 6, 10) }}
+        onValueChange={() => {}}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Period' }));
+
+    expect(screen.getAllByText('5')[0].closest('button')).toBeDisabled();
   });
 
   // A common consumer pattern is `value={filters.period ?? {}}`, which hands the
@@ -187,29 +261,5 @@ describe('DateRangePicker', () => {
     // spuriously committed a value in response to the identity churn.
     expect(screen.getByRole('button', { name: 'Period' })).toBeInTheDocument();
     expect(onValueChange).not.toHaveBeenCalled();
-  });
-
-  it('normalizes a typed end-before-start range on Apply', async () => {
-    const user = userEvent.setup();
-    const onValueChange = vi.fn();
-    render(
-      <DateRangePicker
-        label="Period"
-        defaultValue={{ from: new Date(2026, 6, 20) }}
-        onValueChange={onValueChange}
-      />
-    );
-
-    await user.click(screen.getByRole('button', { name: 'Period' }));
-    const endField = screen.getByLabelText('End date');
-    // Type an end date earlier than the start (Jul 20).
-    await user.clear(endField);
-    await user.type(endField, 'Jul 5, 2026');
-    await user.click(screen.getByRole('button', { name: 'Apply' }));
-
-    const range = onValueChange.mock.calls[0][0];
-    // Committed chronologically ordered: from <= to.
-    expect((range.from as Date).getDate()).toBe(5);
-    expect((range.to as Date).getDate()).toBe(20);
   });
 });

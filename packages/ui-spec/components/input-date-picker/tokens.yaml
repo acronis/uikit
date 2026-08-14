@@ -14,6 +14,7 @@ tokens:
   - { name: --ui-input-date-picker-global-container-gap, affects: root }
   - { name: --ui-input-date-picker-global-container-label-gap, affects: label }
   - { name: --ui-input-date-picker-global-label-color-idle, affects: label }
+  - { name: --ui-input-date-picker-global-label-color-hover, affects: label }
   - { name: --ui-input-date-picker-global-label-color-disabled, affects: label }
   - { name: --ui-input-date-picker-global-required-color, affects: required }
 
@@ -61,9 +62,14 @@ tokens:
 
   # ── Value / placeholder / separator ──
   - { name: --ui-input-date-picker-global-value-color-idle, affects: value }
+  - { name: --ui-input-date-picker-global-value-color-hover, affects: value }
   - { name: --ui-input-date-picker-global-value-color-disabled, affects: value }
   - {
       name: --ui-input-date-picker-global-placeholder-color-idle,
+      affects: value,
+    }
+  - {
+      name: --ui-input-date-picker-global-placeholder-color-hover,
       affects: value,
     }
   - {
@@ -75,18 +81,29 @@ tokens:
       affects: separator,
     }
   - {
+      name: --ui-input-date-picker-global-separator-color-hover,
+      affects: separator,
+    }
+  - {
       name: --ui-input-date-picker-global-separator-color-disabled,
       affects: separator,
     }
 
   # ── Calendar icon ──
+  - { name: --ui-input-date-picker-global-icon-box-size, affects: icon }
   - { name: --ui-input-date-picker-normal-icon-color-idle, affects: icon }
+  - { name: --ui-input-date-picker-normal-icon-color-hover, affects: icon }
   - { name: --ui-input-date-picker-normal-icon-color-disabled, affects: icon }
   - { name: --ui-input-date-picker-error-icon-color-idle, affects: icon }
+  - { name: --ui-input-date-picker-error-icon-color-hover, affects: icon }
 
   # ── Description / error message ──
   - {
       name: --ui-input-date-picker-normal-description-color-idle,
+      affects: description,
+    }
+  - {
+      name: --ui-input-date-picker-normal-description-color-hover,
       affects: description,
     }
   - {

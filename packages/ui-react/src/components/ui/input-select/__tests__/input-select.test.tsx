@@ -88,6 +88,14 @@ describe('InputSelect', () => {
     );
   });
 
+  it('sizes the trigger chevron icon box to the icon-box-size token', () => {
+    render(<Field />);
+    const trigger = screen.getByRole('combobox', { name: 'Fruit' });
+    expect(trigger.querySelector('svg')?.parentElement).toHaveClass(
+      'size-[var(--ui-input-select-global-icon-box-size)]'
+    );
+  });
+
   it('takes the error treatment when the trigger is aria-invalid', () => {
     render(
       <InputSelect>

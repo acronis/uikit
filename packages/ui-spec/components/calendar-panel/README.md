@@ -26,8 +26,11 @@ There are no prev/next chevrons: that is the design, not an omission.
   radius and shadow; use a plain calendar grid for that (see `Calendar`).
 - **A text-entry date field.** Use `InputDatePicker`, which owns the field, the
   trigger and its popover.
-- **A preset-driven range filter** ("Last 7 days", "This month", …). Use
-  `DateRangePicker`, which pairs the presets with a range grid.
+- **A range date field.** Use `DateRangePicker`, which owns the trigger, the
+  popover and the draft/commit/revert cycle around this panel. (A preset list —
+  "Last 7 days", "This month", … — is not currently implemented by any
+  component in this repo; neither this panel nor `DateRangePicker` renders
+  presets.)
 - **Modal semantics** (focus trap, Escape to close, `role="dialog"`). This is a
   plain panel — wrap it in `Dialog`/`Popover` and let the wrapper own them.
 

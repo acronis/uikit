@@ -235,9 +235,9 @@ interface CalendarPanelSharedProps
   onMonthChange?: (month: Date) => void;
   /** Days that cannot be selected. */
   disabled?: Matcher | Matcher[];
-  /** Minimum number of selectable days (`multiple` / `range`; ignored for `single`). */
+  /** Minimum count (`multiple` / `range`; ignored for `single`): for `multiple`, the number of selected dates; for `range`, the number of nights between start and end. */
   min?: number;
-  /** Maximum number of selectable days (`multiple` / `range`; ignored for `single`). */
+  /** Maximum count (`multiple` / `range`; ignored for `single`): for `multiple`, the number of selected dates; for `range`, the number of nights between start and end. */
   max?: number;
   /** Render the leading/trailing days of the adjacent months. */
   showOutsideDays?: boolean;

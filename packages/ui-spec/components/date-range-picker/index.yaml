@@ -5,14 +5,12 @@ status: draft
 category: forms
 description: >-
   A range date field: an `InputDatePicker` trigger opens a popover with a
-  dual-month range `Calendar`, editable start/end date fields, and a Reset / Apply
-  footer. Edits stay in a draft until Apply commits them (dismissing reverts).
-  Design-pending v1 ported from ui-legacy.
+  dual-month range `CalendarPanel`, whose own Cancel/Apply footer commits or
+  reverts the draft. Edits stay in a draft until Apply commits them (Cancel or
+  dismissing reverts).
 since: 0.56.0
 dependencies:
   components:
     - InputDatePicker
-    - Calendar
+    - CalendarPanel
     - Popover
-    - Button
-    - InputText

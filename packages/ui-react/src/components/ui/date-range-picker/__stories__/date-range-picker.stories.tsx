@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { format, isValid, parseISO } from 'date-fns';
+import { userEvent, within } from 'storybook/test';
 
 import { DateRangePicker, type DateRange } from '../date-range-picker';
 
@@ -51,8 +52,7 @@ const meta = {
     },
     defaultValue: {
       control: false,
-      description:
-        'The initial applied range (uncontrolled) and the target of "Reset to default".',
+      description: 'The initial applied range (uncontrolled).',
       table: {
         type: { summary: '{ from?: Date; to?: Date }' },
         category: 'Behavior',
@@ -62,6 +62,84 @@ const meta = {
       control: false,
       description: 'Called with the committed range when Apply is pressed.',
       table: { type: { summary: '(range) => void' }, category: 'Events' },
+    },
+    monthLabel: {
+      control: 'text',
+      description: "Accessible name of the calendar's month dropdown.",
+      table: { type: { summary: 'string' }, category: 'Localization' },
+    },
+    yearLabel: {
+      control: 'text',
+      description: "Accessible name of the calendar's year dropdown.",
+      table: { type: { summary: 'string' }, category: 'Localization' },
+    },
+    cancelLabel: {
+      control: 'text',
+      description: 'Popup footer\'s "Cancel" button label.',
+      table: { type: { summary: 'string' }, category: 'Localization' },
+    },
+    applyLabel: {
+      control: 'text',
+      description: 'Popup footer\'s "Apply" button label.',
+      table: { type: { summary: 'string' }, category: 'Localization' },
+    },
+    locale: {
+      control: false,
+      description:
+        "Localizes weekday names, the calendar's default accessible labels, and the trigger's formatted month name (e.g. `react-day-picker/locale`).",
+      table: { type: { summary: 'DayPickerLocale' }, category: 'Localization' },
+    },
+    formatMonthLabel: {
+      control: false,
+      description:
+        "Formats a month's name for the month dropdown. Defaults to `locale`-aware `date-fns` formatting.",
+      table: {
+        type: { summary: '(date: Date) => string' },
+        category: 'Localization',
+      },
+    },
+    disabledDays: {
+      control: false,
+      description: 'Days that cannot be selected in the calendar.',
+      table: { type: { summary: 'Matcher | Matcher[]' }, category: 'Behavior' },
+    },
+    min: {
+      control: 'number',
+      description:
+        "Minimum number of nights between the range's start and end (not selectable days).",
+      table: { type: { summary: 'number' }, category: 'Behavior' },
+    },
+    max: {
+      control: 'number',
+      description:
+        "Maximum number of nights between the range's start and end (not selectable days).",
+      table: { type: { summary: 'number' }, category: 'Behavior' },
+    },
+    showOutsideDays: {
+      control: 'boolean',
+      description: 'Render the leading/trailing days of the adjacent months.',
+      table: { type: { summary: 'boolean' }, category: 'Behavior' },
+    },
+    weekStartsOn: {
+      control: false,
+      description:
+        "First day of the week (0 = Sunday). Defaults to `locale`'s own week start, falling back to Monday.",
+      table: {
+        type: { summary: '0 | 1 | 2 | 3 | 4 | 5 | 6' },
+        category: 'Behavior',
+      },
+    },
+    fromYear: {
+      control: 'number',
+      description:
+        'First year offered by the year dropdown and the earliest navigable month.',
+      table: { type: { summary: 'number' }, category: 'Behavior' },
+    },
+    toYear: {
+      control: 'number',
+      description:
+        'Last year offered by the year dropdown and the latest navigable month.',
+      table: { type: { summary: 'number' }, category: 'Behavior' },
     },
   },
   args: {
@@ -120,13 +198,77 @@ export const Disabled: Story = {
 
 /**
  * Right-to-left. The trigger's `startDate – endDate` reads right-to-left in
- * chronological order. Pinned to `rtl` via the Direction toolbar global. (The
- * dual-month calendar's RTL treatment is covered by `Calendar`'s `Rtl` story.)
+ * chronological order. Pinned to `rtl` via the Direction toolbar global,
+ * which sets `html[dir]`. The popup calendar reads that ambient direction via
+ * `useDocDir()` and forwards it to `CalendarPanel`, so Arrow-Left/Right
+ * day-grid roaming mirrors too (verified in `date-range-picker.test.tsx`,
+ * not just visually here — this story only covers the visual/layout
+ * mirroring).
  */
 export const Rtl: Story = {
   globals: { direction: 'rtl', locale: 'ar' },
   args: {
     defaultValue: { from: new Date(2026, 6, 1), to: new Date(2026, 6, 15) },
+  },
+};
+
+// Fallback range for stories that need a deterministic range — keeps the
+// trigger (and the VR snapshot) time-independent rather than floating on
+// today's month.
+const DEFAULT_RANGE: DateRange = {
+  from: new Date(2026, 6, 1),
+  to: new Date(2026, 6, 15),
+};
+
+/**
+ * Localized trigger copy (`label`/`placeholder`) with the popup's
+ * component-owned strings (`monthLabel`/`yearLabel`/`cancelLabel`/
+ * `applyLabel`) also set to their Spanish equivalents. This story has no
+ * `play` function and never opens the popup, so its VR baselines only cover
+ * the closed trigger's visual/layout — see `LocalizedOpen` below for the
+ * popup itself. Weekday names, the day cells' own accessible labels and the
+ * month-dropdown names come from `locale` / `formatMonthLabel` instead — left
+ * at the `enUS` default here so the visual baseline stays stable.
+ */
+export const Localized: Story = {
+  args: {
+    label: 'Período',
+    placeholder: 'Selecciona un rango de fechas',
+    monthLabel: 'Mes',
+    yearLabel: 'Año',
+    cancelLabel: 'Cancelar',
+    applyLabel: 'Aplicar',
+  },
+};
+
+/**
+ * Same localized config as `Localized`, opened via a `play` function so the
+ * VR baseline actually covers the popup's own visible strings (`cancelLabel`/
+ * `applyLabel`) rather than only the closed trigger. `monthLabel`/`yearLabel`
+ * are `aria-label`-only and aren't visible in either baseline. `defaultValue`
+ * is pinned to `DEFAULT_RANGE` so the calendar's month grid stays
+ * time-independent — otherwise it defaults to the current month, which would
+ * float the VR baseline. The popover portals outside `#storybook-root`, but
+ * it renders `role="dialog"`, which the test runner's default crop already
+ * unions into frame, so no `fullPage` override is needed.
+ */
+export const LocalizedOpen: Story = {
+  name: 'Localized (open)',
+  args: {
+    label: 'Período',
+    placeholder: 'Selecciona un rango de fechas',
+    monthLabel: 'Mes',
+    yearLabel: 'Año',
+    cancelLabel: 'Cancelar',
+    applyLabel: 'Aplicar',
+    defaultValue: DEFAULT_RANGE,
+  },
+  play: async () => {
+    const body = within(document.body);
+    await userEvent.click(
+      await body.findByRole('button', { name: 'Período' })
+    );
+    await body.findAllByRole('grid');
   },
 };
 
@@ -136,12 +278,6 @@ const ISO_DAY = 'yyyy-MM-dd';
 // `path`/`args`/`globals` params on the shared preview-iframe URL.
 const DRP_FROM = 'drp_from';
 const DRP_TO = 'drp_to';
-// Fallback range when the URL carries no params — keeps the trigger (and the VR
-// snapshot) deterministic while still round-tripping through the URL.
-const DEFAULT_RANGE: DateRange = {
-  from: new Date(2026, 6, 1),
-  to: new Date(2026, 6, 15),
-};
 
 // A story renders inside Storybook's preview iframe. A param pasted directly onto
 // a story URL is carried by whichever frame the user navigated — the iframe's own

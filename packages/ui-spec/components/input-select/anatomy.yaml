@@ -11,10 +11,11 @@ schematic: |
   +-----------------------------------------+
             (open) popup: <div role=listbox>
             +-----------------------------+
-            | [search]                    |   search: in-dropdown filter row
+            | [search]                    |   search: in-dropdown search row (drives item filtering)
             | section-label               |   section + section-label (group)
             |   item            indicator |   item (option) + indicator (check / checkbox)
             |   item            indicator |
+            | > expander                  |   expander: tree expand/collapse toggle (non-selectable)
             | status (loading/empty/error)|   status: shown instead of items
             +-----------------------------+
 
@@ -47,7 +48,9 @@ parts:
     element: span
   - id: icon
     description: >-
-      Trailing chevron (ChevronDownIcon) that rotates 180° while open.
+      Trailing chevron (ChevronDownIcon) that rotates 180° while open,
+      centered in a fixed 20px box (`--ui-input-select-global-icon-box-size`)
+      rather than hugging the glyph.
       `--ui-input-select-normal-icon-expand-color-{idle,disabled}`.
     element: span
   - id: description
@@ -60,13 +63,17 @@ parts:
     optional: true
   - id: popup
     description: >-
-      The floating listbox panel (`role="listbox"`), portaled below the trigger.
+      The floating listbox panel (`role="listbox"`), portaled below the trigger
+      (defaults to `document.body`; overridable via `portalContainer`).
       `--ui-input-select-dropdown-container-*`.
     element: div
   - id: search
     description: >-
-      Optional in-dropdown search row (magnifier + input) the consumer wires to
-      filter items. `--ui-input-select-dropdown-dropdown-search-*`.
+      Optional in-dropdown search row (magnifier + input). Uncontrolled, it
+      drives an internal filter query that `InputSelectItem` uses to
+      auto-hide non-matching rows, and that `useInputSelectFilter` exposes to
+      custom (e.g. tree) item renderers; pass `value`/`onChange` to control the
+      query externally instead. `--ui-input-select-dropdown-dropdown-search-*`.
     element: div
     optional: true
   - id: section
@@ -81,7 +88,18 @@ parts:
     description: >-
       A single option (`role="option"`). Single-select rows tint when selected;
       highlighted rows use the hover container color; disabled rows are inert.
+      Accepts an optional leading `icon`, a 1-based `indent` level (reserves
+      16/40/64px for tree nesting), and a `textValue` override for the
+      accessible/typeahead label when `children` isn't a plain string.
     element: div
+  - id: expander
+    description: >-
+      A non-selectable row that toggles an `aria-expanded` state for a tree
+      group (`expanded` + `onToggle`); visually matches `item` (chevron, an
+      optional leading `icon`, `indent`) but is a plain `<button>`, not a
+      `SelectPrimitive.Item` — clicking it never sets the select value.
+    element: button
+    optional: true
   - id: indicator
     description: >-
       Selection indicator on the item — a trailing check (single) or a leading

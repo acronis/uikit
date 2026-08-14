@@ -1,9 +1,23 @@
 spec_version: '1.0'
 component: DateRangePicker
 
-# Framework-agnostic contract. The trigger, calendar, fields, and footer are
-# composed internally — the consumer only supplies the range value(s) and the
-# trigger's field furniture. See `adapters` for per-framework syntax.
+# Framework-agnostic contract. The trigger and the `CalendarPanel` popup (with
+# its own Cancel/Apply footer) are composed internally — the consumer supplies
+# the range value(s), the trigger's field furniture, and the calendar
+# constraints/labels forwarded to the popup. See `adapters` for per-framework
+# syntax.
+#
+# The properties from `disabled-days` down are pass-throughs to the composed
+# `CalendarPanel`; their semantics and defaults are that component's — see
+# `components/calendar-panel/api.yaml`. `disabled-days` is the only rename
+# (`CalendarPanel`'s `disabled`), because `disabled` here already means "disable
+# the trigger".
+#
+# There is deliberately **no** `dir` property: the ambient text direction is
+# read from the document (`useDocDir()`) and forwarded to `CalendarPanel`'s
+# own `dir` (which it needs directly for the day grid's Arrow Left/Right
+# roaming). An ancestor sets `dir` on the document; this component does not
+# take it as input.
 contract:
   properties:
     - name: value
@@ -13,7 +27,7 @@ contract:
     - name: default-value
       type: '{ from?: Date; to?: Date }'
       required: false
-      description: The initial applied range (uncontrolled) and the target of "Reset to default".
+      description: The initial applied range (uncontrolled).
     - name: label
       type: ReactNode
       required: false
@@ -40,13 +54,105 @@ contract:
       required: false
       default: false
       description: Disables the trigger and prevents opening the popover.
+    - name: disabled-days
+      type: 'Matcher | Matcher[]'
+      required: false
+      default: undefined
+      description: >-
+        Days that cannot be selected in the calendar, as a react-day-picker
+        matcher (or array of them). Named `disabled-days` rather than
+        `CalendarPanel`'s `disabled` because `disabled` here disables the
+        trigger.
+    - name: min
+      type: number
+      required: false
+      default: undefined
+      description: Minimum number of nights between the range's start and end (`differenceInCalendarDays(to, from)`) — e.g. `min={7}` requires at least 8 selectable days.
+    - name: max
+      type: number
+      required: false
+      default: undefined
+      description: Maximum number of nights between the range's start and end (`differenceInCalendarDays(to, from)`) — e.g. `max={31}` admits up to 32 selectable days.
+    - name: show-outside-days
+      type: boolean
+      required: false
+      default: true
+      description: >-
+        Render the leading/trailing days of the adjacent months to fill the
+        first and last week rows.
+    - name: week-starts-on
+      type: '0 | 1 | 2 | 3 | 4 | 5 | 6'
+      required: false
+      default: "the `locale`'s week start, else 1"
+      description: >-
+        First day of the week (0 = Sunday). Defaults to `locale`'s own week
+        start, falling back to Monday when no `locale` is given.
+    - name: from-year
+      type: number
+      required: false
+      default: 'the current year − 50'
+      description: >-
+        First year offered by the year dropdown (inclusive) and the earliest
+        month the grid can navigate to.
+    - name: to-year
+      type: number
+      required: false
+      default: 'the current year + 50'
+      description: >-
+        Last year offered by the year dropdown (inclusive) and the latest month
+        the grid can navigate to.
+    - name: locale
+      type: Locale
+      required: false
+      default: 'date-fns `enUS`'
+      description: >-
+        Localizes the calendar's weekday names and its default day-cell/caption
+        accessible labels, and translates the trigger's month name. Also
+        supplies the fallback week start. The trigger's day/year order stays
+        fixed (`MMM d, yyyy`) — only the month name translates, not the
+        ordering. Does not translate `month-label`/`year-label`/`cancel-label`/
+        `apply-label`/`format-month-label` — those are separate properties.
+    - name: month-label
+      type: string
+      required: false
+      default: "'Month'"
+      description: >-
+        Accessible name of the calendar's month dropdown, which has no visible
+        label in the design — override it to localize.
+    - name: year-label
+      type: string
+      required: false
+      default: "'Year'"
+      description: >-
+        Accessible name of the calendar's year dropdown, which has no visible
+        label in the design — override it to localize.
+    - name: format-month-label
+      type: '(date: Date) => string'
+      required: false
+      default: "`locale`-aware date-fns `format(date, 'MMMM')`"
+      description: >-
+        Formats a month's name for the month dropdown's items and value — the
+        hook for localized or abbreviated month names.
+    - name: cancel-label
+      type: string
+      required: false
+      default: "'Cancel'"
+      description: Popup footer's "Cancel" button label.
+    - name: apply-label
+      type: string
+      required: false
+      default: "'Apply'"
+      description: Popup footer's "Apply" button label.
 
   events:
     - name: value-change
       payload: '{ from?: Date; to?: Date }'
       description: >-
         Fired with the committed range when Apply is pressed (React:
-        `onValueChange`). Not fired on dismiss (the draft is reverted).
+        `onValueChange`). Not fired on Cancel or dismiss (the draft is
+        reverted). Apply is never disabled, so this can fire with an empty
+        (`{ from: undefined, to: undefined }`) or half-open (`{ from, to:
+        undefined }`) range if Apply is pressed before a full range is picked.
 
   content: []
 
@@ -72,6 +178,25 @@ adapters:
         label="Period"
         defaultValue={{ from: new Date(2026, 6, 1), to: new Date(2026, 6, 15) }}
         onValueChange={(next) => console.log(next)}
+      />
+
+      {/* Localized popup strings + calendar constraints (forwarded to CalendarPanel).
+          `es` comes from `import { es } from 'react-day-picker/locale'`.
+          React names the calendar pass-throughs in camelCase: `disabledDays`,
+          `showOutsideDays`, `weekStartsOn`, `fromYear`, `toYear`, `monthLabel`,
+          `yearLabel`, `formatMonthLabel`, `cancelLabel`, `applyLabel`. */}
+      <DateRangePicker
+        label="Período"
+        locale={es}
+        monthLabel="Mes"
+        yearLabel="Año"
+        cancelLabel="Cancelar"
+        applyLabel="Aplicar"
+        disabledDays={{ after: new Date() }}
+        max={31}
+        fromYear={2020}
+        toYear={2030}
+        onValueChange={setRange}
       />
   vue:
     component: AvDateRangePicker

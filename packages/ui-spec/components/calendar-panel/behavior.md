@@ -223,6 +223,16 @@ decides what "cancel" means
 **And** the panel stays mounted and keeps its selection — the caller commits and
 dismisses the surrounding surface
 
+### Apply is never disabled
+
+**Given** `variant="multiple"` or `"range"` with an empty or partial selection
+(e.g. `range` with only `from` set, or nothing selected at all)
+**When** the Apply button is pressed
+**Then** the apply event still fires — the panel does not gate Apply on
+selection completeness or on the selection having changed
+**And** it is the caller's responsibility to disable/hide Apply or otherwise
+guard `onApply` if committing an empty or half-open selection is undesirable
+
 ### No footer events for `single`
 
 **Given** `variant="single"` with cancel and apply handlers supplied

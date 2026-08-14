@@ -27,12 +27,23 @@ the range `placeholder`.
 **Then** `click` fires — the consumer opens its calendar.
 
 **Given** `open` is true (the consumer-owned calendar is shown)
-**Then** the box paints the active border and the trigger sets `aria-expanded="true"`.
+**Then** the box paints the active border, the trigger sets `aria-expanded="true"`,
+and the label / value / placeholder / separator / description / icon colors
+switch to their `-hover` token — the Figma design groups hover and the open
+(active) state under one visual treatment for these parts.
 
 **Given** the trigger
-**When** the pointer hovers / it receives keyboard focus
-**Then** the border shifts to its hover / active token; keyboard focus paints a 3px
-ring — `--ui-focus-primary` normally, `--ui-focus-error` while in the error state.
+**When** the pointer hovers
+**Then** the border shifts to its hover token and the label / value /
+placeholder / separator / description / icon colors switch to their `-hover`
+token too.
+
+**Given** the trigger
+**When** it receives keyboard focus
+**Then** the border shifts to its active token and a 3px ring is painted —
+`--ui-focus-primary` normally, `--ui-focus-error` while in the error state; the
+label / value / placeholder / separator / description / icon colors are
+**not** affected by focus alone.
 
 **Given** the field is `disabled`
 **Then** the trigger is inert (does not open) and uses the disabled token set.

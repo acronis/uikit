@@ -77,15 +77,19 @@ contract:
       required: false
       default: undefined
       description: >-
-        Minimum number of selectable days. Applies to `multiple` and `range`
-        only; ignored for `single`.
+        Minimum count, semantics depending on `variant`: for `multiple`, the
+        number of selected dates; for `range`, the number of nights between
+        the range's start and end (`differenceInCalendarDays(to, from)`).
+        Applies to `multiple` and `range` only; ignored for `single`.
     - name: max
       type: number
       required: false
       default: undefined
       description: >-
-        Maximum number of selectable days. Applies to `multiple` and `range`
-        only; ignored for `single`.
+        Maximum count, semantics depending on `variant`: for `multiple`, the
+        number of selected dates; for `range`, the number of nights between
+        the range's start and end (`differenceInCalendarDays(to, from)`).
+        Applies to `multiple` and `range` only; ignored for `single`.
     - name: showOutsideDays
       type: boolean
       required: false
@@ -186,7 +190,10 @@ contract:
       description: >-
         Called when the footer's Apply button is pressed. The panel does not
         close itself — the caller commits the selection and dismisses whatever
-        surface holds the panel. Neutral event name: `apply`.
+        surface holds the panel. Neutral event name: `apply`. Apply is never
+        disabled by the panel, so this can fire with an empty or partial
+        selection (e.g. a `range` with only `from` set) — gate on selection
+        completeness in the handler if that matters to the consumer.
     - name: className
       type: string
       required: false
@@ -215,7 +222,8 @@ contract:
       payload: void
       description: >-
         Fired when the footer's Apply button is pressed (React: `onApply`). Never
-        fired for `single`, which has no footer.
+        fired for `single`, which has no footer. Not gated on selection
+        completeness — can fire with an empty or partial selection.
 
   content: []
 
