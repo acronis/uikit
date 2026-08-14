@@ -69,7 +69,7 @@ part of `generate`/`build`); it's deterministic and committed.
      `TARGET`, import it per-icon from the listed pack, or pick a TARGET-pack
      alternative.
    - **UNRESOLVED**: hold on the legacy package, or add the asset upstream
-     (`icons-svg-next` → re-sync `icons-react`).
+     (`design-assets` → re-sync `icons-react`).
 4. **Low-confidence 1:1 maps** — a few authoritative maps still warrant a visual
    check (e.g. no plain `Shield` in stroke-mono → `ShieldCheckIcon`;
    `FilterIcon → NodeSlidersIcon`). List them in your summary.

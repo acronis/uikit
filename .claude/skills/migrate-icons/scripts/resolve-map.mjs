@@ -102,5 +102,5 @@ dump(
 dump(
   'UNRESOLVED',
   unresolved,
-  'logos/illustrations or genuinely absent. Hold on the legacy package, or add the asset upstream (icons-svg-next).'
+  'logos/illustrations or genuinely absent. Hold on the legacy package, or add the asset upstream (design-assets).'
 );

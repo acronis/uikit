@@ -21,7 +21,6 @@ jobs:
         @acronis-platform/icons-react
         @acronis-platform/icons-sprite
         @acronis-platform/icons-svg
-        @acronis-platform/icons-svg-next
         @acronis-platform/tokens-pd
         @acronis-platform/shadcn-uikit
         @acronis-platform/ui-react

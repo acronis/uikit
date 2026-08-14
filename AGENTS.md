@@ -39,7 +39,6 @@ distinct role:
 | `packages/ui-react/`              | `@acronis-platform/ui-react`                 | **yes**    | Base UI library, Vite, Storybook 10, Vitest + RTL, Tailwind v4                                                   | [AGENTS.md](packages/ui-react/AGENTS.md)              |
 | `packages/icons-react/`           | `@acronis-platform/icons-react`              | **yes**    | React icons generated from `design-assets`, Vite, Storybook, Vitest                                              | [AGENTS.md](packages/icons-react/AGENTS.md)           |
 | `packages/icons-svg/`             | `@acronis-platform/icons-svg`                | no         | Committed raw SVG icon sources (mono/multicolor) + per-page manifests                                            | [AGENTS.md](packages/icons-svg/AGENTS.md)             |
-| `packages/icons-svg-next/`        | `@acronis-platform/icons-svg-next`           | no         | Committed raw SVG sources for the **next-gen** icon set                                                          | [AGENTS.md](packages/icons-svg-next/AGENTS.md)        |
 | `packages/icons-sprite/`          | `@acronis-platform/icons-sprite`             | **yes**    | Generated (committed) SVG sprites built from `icons-svg` (tsx + SVGO)                                            | [AGENTS.md](packages/icons-sprite/AGENTS.md)          |
 | `apps/demo/`                      | `@acronis-platform/shadcn-uikit-demo`        | no         | Vite SPA, React Router v7, Zustand                                                                               | [AGENTS.md](apps/demo/AGENTS.md)                      |
 | `apps/docs/`                      | `@acronis-platform/uikit-docs`               | no         | Next.js 15 + Fumadocs                                                                                            | [AGENTS.md](apps/docs/AGENTS.md)                      |
@@ -63,8 +62,6 @@ distinct role:
   (monocolor + multicolor), plus per-page JSON manifests. The SVGs are
   committed and maintained in-repo; there is no automated Figma pull. No
   build; consumed in-repo from `src/`.
-- `packages/icons-svg-next/` — sibling of `icons-svg` for the **next-gen** icon
-  set: same private, source-only, committed model.
 - `packages/icons-sprite/` — published SVG sprites (combined / monocolor /
   multicolor) **generated and committed** from `icons-svg` (same model as
   `tokens-pd`). Its `build` runs `scripts/generate-sprite.ts`; re-run it after
