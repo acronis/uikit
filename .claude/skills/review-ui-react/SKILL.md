@@ -75,13 +75,13 @@ it — a design-token value change, an icon rename, a demo story whose props
 no longer match. Every changed file is classified into one of five tiers,
 never a binary in/out split:
 
-| Tier                                | Paths                                                                                                                                                                | Treatment                                                                                                                                                                                     |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **(a) Primary**                     | `packages/ui-react/**`, `packages/ui-spec/**`                                                                                                                        | Full review: every check below, unabridged. `ui-spec` is the framework-agnostic spec companion to a ui-react component and is reviewed at the same depth, not as an afterthought.             |
-| **(b) Generated-artifact pipeline** | `packages/design-tokens/**`, `tools/style-dictionary/**`, `packages/tokens-pd/**`, `packages/icons-svg/**`, `packages/icons-svg-next/**`, `packages/icons-sprite/**` | Impact review: does this change break or silently drift something ui-react relies on? Includes the freshness table below.                                                                     |
-| **(c) Declared dependency**         | Resolved dynamically from `packages/ui-react/package.json`'s `@acronis-platform/*` deps (see script)                                                                 | Impact review, same lens as (b).                                                                                                                                                              |
-| **(d) Consumer**                    | `apps/docs/**`, `apps/demo/**`, `apps/demos/**`                                                                                                                      | Impact review: per the `qa`/`devil-advocate` "wide-view mandate," does this PR's ui-react change still render/import correctly here (prop renames, the `"use client"`/RSC-manifest landmine)? |
-| **(e) Out-of-scope**                | Everything else                                                                                                                                                      | Listed in the report for context only. Never reviewed.                                                                                                                                        |
+| Tier                                | Paths                                                                                                                                  | Treatment                                                                                                                                                                                     |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **(a) Primary**                     | `packages/ui-react/**`, `packages/ui-spec/**`                                                                                          | Full review: every check below, unabridged. `ui-spec` is the framework-agnostic spec companion to a ui-react component and is reviewed at the same depth, not as an afterthought.             |
+| **(b) Generated-artifact pipeline** | `packages/design-tokens/**`, `tools/style-dictionary/**`, `packages/tokens-pd/**`, `packages/icons-svg/**`, `packages/icons-sprite/**` | Impact review: does this change break or silently drift something ui-react relies on? Includes the freshness table below.                                                                     |
+| **(c) Declared dependency**         | Resolved dynamically from `packages/ui-react/package.json`'s `@acronis-platform/*` deps (see script)                                   | Impact review, same lens as (b).                                                                                                                                                              |
+| **(d) Consumer**                    | `apps/docs/**`, `apps/demo/**`, `apps/demos/**`                                                                                        | Impact review: per the `qa`/`devil-advocate` "wide-view mandate," does this PR's ui-react change still render/import correctly here (prop renames, the `"use client"`/RSC-manifest landmine)? |
+| **(e) Out-of-scope**                | Everything else                                                                                                                        | Listed in the report for context only. Never reviewed.                                                                                                                                        |
 
 If tiers (a)–(d) are **all** empty, stop after the scope step: this PR
 doesn't touch ui-react or anything that affects it. Report what tier (e)
@@ -345,22 +345,22 @@ generated-artifact-pipeline dependencies, and its direct consumers
 
 ## Token / Convention / Generated-Artifact Verdict
 
-| Check                                                                             | Result                      |
-| --------------------------------------------------------------------------------- | --------------------------- |
-| Dangling `--ui-*` tokens (at PR head)                                             | PASS/FAIL (list)            |
-| Legacy `--av-*` references introduced                                             | PASS/FAIL (list)            |
-| Hardcoded hex/hsl/oklch on added lines                                            | PASS/FAIL (list)            |
-| Tier `@import` present in styles/index.css                                        | PASS/FAIL (list)            |
-| Changeset present (published package)                                             | PASS/FAIL                   |
-| Hardcoded label introduced (advisory — confirm it's a prop default)               | none / flagged (list)       |
-| Physical directional utility introduced (advisory — RTL risk)                     | none / flagged (list)       |
-| Visual snapshot PNGs changed                                                      | N/A / flagged               |
-| `tokens-pd` regenerated after `design-tokens` change                              | PASS/FAIL/N/A               |
-| `icons-sprite` regenerated after `icons-svg` change                               | PASS/FAIL/N/A               |
-| `icons-react` icon names still referenced correctly after `icons-svg-next` change | PASS/FLAGGED/N/A            |
-| VR baselines look current for changed components                                  | PASS/FLAGGED/N/A            |
-| Component spec/story completeness (component-readiness)                           | READY/DRIFT/INCOMPLETE/N/A  |
-| CI checks (`gh pr checks`)                                                        | pass/fail/pending breakdown |
+| Check                                                                            | Result                      |
+| -------------------------------------------------------------------------------- | --------------------------- |
+| Dangling `--ui-*` tokens (at PR head)                                            | PASS/FAIL (list)            |
+| Legacy `--av-*` references introduced                                            | PASS/FAIL (list)            |
+| Hardcoded hex/hsl/oklch on added lines                                           | PASS/FAIL (list)            |
+| Tier `@import` present in styles/index.css                                       | PASS/FAIL (list)            |
+| Changeset present (published package)                                            | PASS/FAIL                   |
+| Hardcoded label introduced (advisory — confirm it's a prop default)              | none / flagged (list)       |
+| Physical directional utility introduced (advisory — RTL risk)                    | none / flagged (list)       |
+| Visual snapshot PNGs changed                                                     | N/A / flagged               |
+| `tokens-pd` regenerated after `design-tokens` change                             | PASS/FAIL/N/A               |
+| `icons-sprite` regenerated after `icons-svg` change                              | PASS/FAIL/N/A               |
+| `icons-react` icon names still referenced correctly after `design-assets` change | PASS/FLAGGED/N/A            |
+| VR baselines look current for changed components                                 | PASS/FLAGGED/N/A            |
+| Component spec/story completeness (component-readiness)                          | READY/DRIFT/INCOMPLETE/N/A  |
+| CI checks (`gh pr checks`)                                                       | pass/fail/pending breakdown |
 
 ## Findings (Critical first, then Important, then Nit)
 

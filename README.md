@@ -23,7 +23,6 @@ The repo is organized into four top-level directories: `context/` (shared docs),
 | `packages/icons-react/`           | `@acronis-platform/icons-react`              | **yes**   | React icon components generated from `design-assets` (tree-shakeable).       |
 | `packages/icons-sprite/`          | `@acronis-platform/icons-sprite`             | **yes**   | Generated SVG sprites built from `icons-svg`.                                |
 | `packages/icons-svg/`             | `@acronis-platform/icons-svg`                | no        | Committed raw SVG icon sources + manifests (source-only).                    |
-| `packages/icons-svg-next/`        | `@acronis-platform/icons-svg-next`           | no        | Committed raw SVG sources for the next-gen icon set (source-only).           |
 | `packages/design-tokens/`         | `@acronis-platform/design-tokens`            | **yes**   | DTCG-2025.10 design tokens (primitives / semantics / components). Data only. |
 | `packages/design-assets/`         | `@acronis-platform/design-assets`            | **yes**   | Icon/illustration manifests + bundled binaries. Data only.                   |
 | `packages/tokens-pd/`             | `@acronis-platform/tokens-pd`                | **yes**   | Generated per-brand CSS vars, per-component CSS, Tailwind presets, DTCG.     |
@@ -330,7 +329,6 @@ uikit/
 │   ├── icons-react/            # React icons        (@acronis-platform/icons-react)
 │   ├── icons-sprite/           # SVG sprites        (@acronis-platform/icons-sprite)
 │   ├── icons-svg/              # Raw SVG sources    (@acronis-platform/icons-svg)
-│   ├── icons-svg-next/         # Next-gen SVG sources
 │   ├── design-tokens/          # DTCG tokens (data) (@acronis-platform/design-tokens)
 │   ├── design-assets/          # Asset manifests    (@acronis-platform/design-assets)
 │   └── tokens-pd/              # Generated CSS/Tailwind (@acronis-platform/tokens-pd)

@@ -33,7 +33,7 @@ WANT_CI=0
 TOKENS_DIR=packages/tokens-pd/css
 STYLES=packages/ui-react/src/styles/index.css
 
-TIER_B_RE='^packages/design-tokens/|^tools/style-dictionary/|^packages/tokens-pd/|^packages/icons-svg/|^packages/icons-svg-next/|^packages/icons-sprite/'
+TIER_B_RE='^packages/design-tokens/|^tools/style-dictionary/|^packages/tokens-pd/|^packages/icons-svg/|^packages/icons-sprite/'
 TIER_D_RE='^apps/docs/|^apps/demo/|^apps/demos/'
 
 echo "=== PREFLIGHT ==="
@@ -271,13 +271,13 @@ else
   echo "ICONS_SVG_TO_ICONS_SPRITE: n/a (icons-svg unchanged)"
 fi
 
-svgnext_changed="$(printf '%s\n' "$ALL_FILES" | grep -c '^packages/icons-svg-next/' || true)"
-if [ "$svgnext_changed" -gt 0 ]; then
-  echo "ICONS_SVG_NEXT_CHANGED: yes — advisory only (icons-react's \`generate\` auto-runs before its"
+assets_changed="$(printf '%s\n' "$ALL_FILES" | grep -c '^packages/design-assets/packs/' || true)"
+if [ "$assets_changed" -gt 0 ]; then
+  echo "DESIGN_ASSETS_CHANGED: yes — advisory only (icons-react's \`generate\` auto-runs before its"
   echo "  build/test/typecheck/storybook, output is gitignored). If an icon was renamed/removed,"
   echo "  manually confirm no tier A/D file still references the old name."
 else
-  echo "ICONS_SVG_NEXT_CHANGED: n/a"
+  echo "DESIGN_ASSETS_CHANGED: n/a"
 fi
 
 if [ -s "$TIER_A_FILE" ]; then
