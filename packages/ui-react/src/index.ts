@@ -115,6 +115,7 @@ export * from './components/ui/toast';
 export * from './components/ui/toggle-group';
 export * from './components/ui/toolbar';
 export * from './components/ui/tooltip';
+export * from './components/ui/truncate-text';
 export * from './components/ui/tag';
 export * from './components/ui/timeline';
 // `Badge` is an alias of `Tag`. The legacy generic shadcn Badge is replaced by

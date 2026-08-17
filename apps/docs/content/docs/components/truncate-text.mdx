@@ -1,0 +1,74 @@
+---
+title: TruncateText
+description: Text that truncates with an ellipsis and reveals its full value in a tooltip only when actually clipped.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+## Usage
+
+```tsx
+import { TruncateText } from '@acronis-platform/ui-react';
+```
+
+`TruncateText` clips overflowing text with an ellipsis and reveals the full
+value in a **Tooltip** — but only when the text is _actually_ clipped, so
+short labels don't get a pointless hover target. It defaults to a single-line
+ellipsis (`mode="end"`) and switches to a multi-line clamp when you pass
+`lines`. Truncation is measured from the element's overflow (scroll vs. client
+size) and re-checked on resize via `ResizeObserver`, so it stays correct as
+columns and the viewport change. Ideal for table cells and other
+width-constrained labels.
+
+`children` must be a plain string — the same value is displayed (possibly
+clipped) and used verbatim as the tooltip body. The tooltip portals into
+`portalContainer` (pass a shadow-root mount in a micro-frontend so the popup
+inherits the kit's styles).
+
+`mode="middle"` preserves both the start and end of the string — useful for
+URLs, file paths, and hashes — while still truncating in the center.
+
+<Callout type="info">
+  Design-pending v1 — built from requirements, no Figma mockup yet. Will be
+  reconciled with the design once one lands.
+</Callout>
+
+## Examples
+
+Single-line ellipsis — the tooltip appears on hover/focus only when the text
+overflows its container:
+
+```tsx
+<TruncateText>
+  Acme Corporation International Holdings & Subsidiaries
+</TruncateText>
+```
+
+Multi-line clamp — truncate after two lines, open the tooltip below:
+
+```tsx
+<TruncateText lines={2} side="bottom">
+  A long description that clamps after two lines and reveals the rest on hover.
+</TruncateText>
+```
+
+Middle truncation — preserves both ends, useful for paths and hashes:
+
+```tsx
+<TruncateText mode="middle">
+  /very/long/file/system/path/to/some/important/file.tar.gz
+</TruncateText>
+```
+
+In a micro-frontend, portal the tooltip into the shadow-root mount:
+
+```tsx
+<TruncateText portalContainer={mount}>{customer.name}</TruncateText>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/truncate-text/truncate-text.docs.ts"
+  name="TruncateTextProps"
+/>
