@@ -2,49 +2,92 @@ spec_version: '1.0'
 component: Alert
 
 schematic: |
-  alert: <div role="alert"> — rounded, full status border, pale status surface
-    alert-icon:     leading status-tinted icon
-    alert-content:  text column
-      alert-title:        short heading
-      alert-description:  supporting text
-      alert-actions:      (optional) action buttons under the description
-    alert-actions:  (optional) action buttons at the right edge
+  alert: <div role="alert"> — neutral surface, status-colored border, radius 8
+    alert-status-line:  ::before — 6px status bar down the leading edge
+    alert-icon:         the severity's own icon (multicolor, untinted)
+    alert-content:      the column beside the icon
+      alert-text:           title + description block (its padding aligns the
+                            first text line with the icon)
+        alert-title:            short heading
+        alert-description:      (optional) supporting text
+      alert-actions:        (optional) wrapping row of action buttons
+    alert-close:        (optional) trailing dismiss ButtonIcon
 
 root:
   element: div
   role: alert
   description: >-
-    The banner container — rounded, with a full border in the saturated status
-    color and a pale status surface; the text is the normal foreground and only
-    the icon is tinted with the status color. role="alert" so assistive tech
-    announces it.
+    The banner container. The surface is neutral
+    (--ui-alert-global-container-background) in every severity; the severity
+    itself is carried by a 1px border in the status color plus a 6px status line
+    down the leading edge. role="alert" so assistive tech announces it.
 
 parts:
   - id: alert
     element: div
-    description: The banner root (role=alert); the variant drives its colors.
+    description: The banner root (role=alert); the variant drives its border and status line.
+  - id: alert-status-line
+    element: '::before'
+    description: >-
+      The 6px status bar on the leading (inline-start) edge, colored by the
+      variant. A pseudo-element, not a slot — it is always present and has no
+      content. Bled 1px outwards so it paints over the border it overlaps; the
+      root's overflow-clip rounds its corners to the container radius.
   - id: alert-icon
     element: div
-    description: Leading slot for a status icon.
+    description: >-
+      The leading status icon. Defaults to the variant's own multicolor glyph
+      (info → CircleInfoBlue, success → CircleCheckGreen, warning →
+      TriangleWarningYellow, critical → CircleWarningOrange, danger →
+      DiamondWarningRed); children override it.
   - id: alert-content
     element: div
-    description: The text column beside the icon (title + description).
+    description: The flexible column beside the icon, holding the text and any actions.
+  - id: alert-text
+    element: div
+    description: >-
+      Wraps the title and description. Its vertical padding is what aligns the
+      first line of text with the icon box, so the title/description belong here
+      rather than directly under alert-content.
   - id: alert-title
     element: h5
     description: A short heading for the alert.
   - id: alert-description
-    element: div
-    description: Supporting text under the title.
+    element: p
+    description: Optional supporting text under the title.
   - id: alert-actions
     element: div
     description: >-
-      Optional action buttons. Placed as a direct child of the alert (after the
-      content) they sit at the right edge; placed inside the content they flow
-      under the description.
+      Optional action buttons, placed inside alert-content after alert-text so
+      they flow below the text. The row wraps when it runs out of width.
+  - id: alert-close
+    element: button
+    description: >-
+      Optional trailing dismiss control (a ghost ButtonIcon with a times glyph).
+      Rendering it is what makes the alert dismissable.
+
+# A row of icon / content / close, with the content column taking the remaining
+# width. The status line is absolutely positioned on the leading edge and mirrors
+# under dir="rtl"; the status icons are direction-agnostic and never mirror.
+layout:
+  type: flex
+  direction: row
+  align: start
+  order: [alert-icon, alert-content, alert-close]
 
 states:
   - id: variant
     trigger: variant selects the severity
     kind: prop
     prop: variant
-    affects: [alert]
+    affects: [alert, alert-status-line, alert-icon]
+  - id: close-hover
+    trigger: pointer over the dismiss control
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [alert-close]
+  - id: close-focus-visible
+    trigger: the dismiss control receives keyboard focus
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [alert-close]

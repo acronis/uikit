@@ -490,9 +490,11 @@ const RENDER: Record<string, RenderHint> = {
     skip: true,
   },
   alert: {
-    // A composition needing AlertIcon/AlertContent/AlertTitle/AlertDescription
-    // children to render meaningfully. VR is covered by the hand-written stories
-    // (Default / Destructive / AllVariants).
+    // A composition needing AlertIcon/AlertContent/AlertText/AlertTitle children
+    // to render meaningfully, and the banner has a 384px min-width — the
+    // generator's flex-row variant grid would lay five of them side by side.
+    // VR is covered by the hand-written stories (Default / AllVariants /
+    // TitleOnly / WithActions / NotDismissable / Localized).
     skip: true,
   },
   skeleton: {
@@ -652,7 +654,7 @@ const RENDER: Record<string, RenderHint> = {
       '        timestamp="Dec 22, 08:30 AM"',
       '        description="Description"',
       '      >',
-      '        <div style={{ display: \'grid\', gridTemplateColumns: \'1fr 2fr\', gap: 24, padding: \'8px 16px\' }}>',
+      "        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 24, padding: '8px 16px' }}>",
       '          <span>Section title</span>',
       '          <span style={{ fontWeight: 500 }}>Section description</span>',
       '        </div>',
