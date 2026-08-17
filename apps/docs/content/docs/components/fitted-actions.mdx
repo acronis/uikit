@@ -1,0 +1,83 @@
+---
+title: FittedActions
+description: A responsive action row that collapses overflowing actions into a "More" dropdown menu.
+---
+
+## Usage
+
+```tsx
+import { FittedActions } from '@acronis-platform/ui-react';
+import type { FittedAction } from '@acronis-platform/ui-react';
+```
+
+`FittedActions` renders a row of actions in priority order and measures its own
+width on each render and resize. When the actions don't all fit, the trailing
+ones collapse into a "More" dropdown menu — it recomputes whenever the container
+resizes. Pass an `actions` array of `FittedAction` objects; the component is
+config-driven and themed from the Button `ghost` tokens. Set
+`showDropdown={false}` to keep every action inline regardless of available
+width. Customize individual action rendering with `renderAction`, or the
+overflow trigger with `renderTrigger` — the way `Toolbar` plugs in its roving
+`ToolbarButton`s.
+
+> Design-pending v1 — a React reimplementation of the ui-kit Vue `AvFittedActions`.
+
+## Examples
+
+A basic action row with a divider before a destructive action:
+
+```tsx
+<FittedActions
+  actions={[
+    { id: 'edit', label: 'Edit', onSelect: onEdit },
+    { id: 'tag', label: 'Tag', onSelect: onTag },
+    { id: 'export', label: 'Export', onSelect: onExport },
+    { id: 'delete', label: 'Delete', divided: true, onSelect: onDelete },
+  ]}
+  onAction={(action) => console.log('chose', action.id)}
+/>
+```
+
+Prevent overflow collapse — all actions always inline:
+
+```tsx
+<FittedActions showDropdown={false} actions={actions} />
+```
+
+Custom overflow trigger:
+
+```tsx
+<FittedActions
+  actions={actions}
+  renderTrigger={({ label }) => (
+    <Button variant="secondary">{label}</Button>
+  )}
+/>
+```
+
+Hide an action without removing it from the array:
+
+```tsx
+<FittedActions
+  actions={[
+    { id: 'edit', label: 'Edit', onSelect: onEdit },
+    { id: 'delete', label: 'Delete', isDisplayed: canDelete, onSelect: onDelete },
+  ]}
+/>
+```
+
+## API Reference
+
+### FittedActionsProps
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/fitted-actions/fitted-actions.docs.ts"
+  name="FittedActionsProps"
+/>
+
+### FittedAction
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/fitted-actions/fitted-actions.docs.ts"
+  name="FittedAction"
+/>
