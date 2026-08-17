@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { ScrollArea } from '../scroll-area';
@@ -95,4 +96,27 @@ export const Both: Story = {
       </div>
     </ScrollArea>
   ),
+};
+
+/** `viewportRef` reaches the element that actually scrolls — needed by virtualizers, `IntersectionObserver`, and programmatic `scrollTo`. The root is `overflow: hidden` and always reports `scrollTop: 0`. */
+export const WithViewportRef: Story = {
+  render: () => {
+    const viewportRef = React.useRef<HTMLDivElement>(null);
+    return (
+      <div className="flex flex-col gap-3">
+        <ScrollArea
+          viewportRef={viewportRef}
+          className="h-40 w-72 rounded-md border border-border"
+        >
+          <Rows />
+        </ScrollArea>
+        <button
+          className="self-start text-sm underline"
+          onClick={() => viewportRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
+        >
+          Scroll to top via viewportRef
+        </button>
+      </div>
+    );
+  },
 };
