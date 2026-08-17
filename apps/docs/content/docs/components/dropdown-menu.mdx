@@ -92,12 +92,14 @@ siblings:
 `dir="rtl"`) and opens the submenu on hover or **ArrowRight**.
 
 `DropdownMenuLabel` and `DropdownMenuSeparator` annotate sections within a group.
-Checkbox and radio items let the consumer own the state:
+Checkbox and radio items let the consumer own the state. A checkbox/radio item
+reserves a leading indicator slot, so give a label sitting above one `inset` to
+line its text up with the item labels:
 
 ```tsx
 <DropdownMenuContent>
   <DropdownMenuGroup>
-    <DropdownMenuLabel>View options</DropdownMenuLabel>
+    <DropdownMenuLabel inset>View options</DropdownMenuLabel>
     <DropdownMenuSeparator />
     <DropdownMenuCheckboxItem checked={showGrid} onCheckedChange={setShowGrid}>
       Show grid
@@ -115,7 +117,7 @@ pattern — the consumer supplies `value` / `onValueChange`:
 ```tsx
 <DropdownMenuContent>
   <DropdownMenuGroup>
-    <DropdownMenuLabel>Panel position</DropdownMenuLabel>
+    <DropdownMenuLabel inset>Panel position</DropdownMenuLabel>
     <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
       <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>
       <DropdownMenuRadioItem value="bottom">Bottom</DropdownMenuRadioItem>

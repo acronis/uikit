@@ -8,14 +8,19 @@ schematic: |
   root: <div role="menu"> (popup)
   +-----------------------------------------------+
   | group (section, firstSection=true)            |
+  |   label: My Account                           |
   |   item: Profile            shortcut ⇧⌘P      |
   |   item: Settings                    shortcut  |
+  |   ─── separator (explicit rule) ───           |
+  |   checkbox-item: [indicator ✓] Status Bar     |
+  |   radio-item:    [indicator •] Bottom         |
   | ────── border-top (section separator) ──────  |
   | group (section, firstSection=false)           |
   |   submenu-trigger: Share               ›      |
   |     └ submenu-content: <div role=menu>        |
   |   item: Log out                               |
   +-----------------------------------------------+
+     indicator slot -> container-padding-x + 16px glyph + item gap
      popup -> --ui-button-menu-dropdown-container-*
      item highlight -> --ui-button-menu-dropdown-item-container-color-hover
      item active    -> --ui-button-menu-dropdown-item-container-color-active
@@ -47,6 +52,27 @@ parts:
       (pointer or keyboard); `inset` aligns it with items that have an indicator.
       Focus ring is visible only on keyboard navigation (focus-visible:not(:hover)).
     element: div
+  - id: checkbox-item
+    description: >-
+      A toggle row (`role="menuitemcheckbox"`, `aria-checked`). Same styling as
+      `item` plus a leading `indicator` slot holding a check glyph when checked.
+    element: div
+    optional: true
+  - id: radio-item
+    description: >-
+      A single-select row inside a radio group (`role="menuitemradio"`,
+      `aria-checked`). Same styling as `item` plus a leading `indicator` slot
+      holding a dot when selected.
+    element: div
+    optional: true
+  - id: indicator
+    description: >-
+      The leading slot of a checkbox/radio item. Always reserved (so labels align
+      whether or not the row is checked) and sized like a menu-item icon, with the
+      item gap between it and the label; the glyph inside centers on the label's
+      first line. A plain `item` or `label` matches this indent via `inset`.
+    element: span
+    optional: true
   - id: shortcut
     description: >-
       Right-aligned keyboard-shortcut hint inside an item
@@ -58,6 +84,18 @@ parts:
       An item that opens a nested submenu (trailing chevron, Figma `ItemExtras`
       variant=cascade); highlighted on `data-[highlighted]` and filled on
       `data-[popup-open]`.
+    element: div
+    optional: true
+  - id: label
+    description: >-
+      A non-interactive section heading above a run of items; shares the item's
+      padding and label color. Takes `inset` to align with checkbox/radio labels.
+    element: div
+    optional: true
+  - id: separator
+    description: >-
+      An explicit `role="separator"` rule between items, drawn with the section
+      border tokens (a `group` boundary draws its own top border instead).
     element: div
     optional: true
   - id: submenu-content

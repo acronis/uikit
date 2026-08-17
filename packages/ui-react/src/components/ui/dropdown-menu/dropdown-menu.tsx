@@ -36,7 +36,17 @@ const popupClassName =
 const itemClassName =
   'relative flex w-full shrink-0 cursor-default select-none items-start gap-[var(--ui-button-menu-dropdown-item-container-gap)] min-h-[var(--ui-button-menu-dropdown-item-container-height)] px-[var(--ui-button-menu-dropdown-item-container-padding-x)] py-[var(--ui-button-menu-dropdown-item-container-padding-y)] text-sm font-semibold leading-6 outline-none transition-colors bg-[var(--ui-button-menu-dropdown-item-container-color-idle)] text-[var(--ui-button-menu-dropdown-item-label-color)] [&_svg]:text-[var(--ui-button-menu-dropdown-item-icon-color)] data-[highlighted]:bg-[var(--ui-button-menu-dropdown-item-container-color-hover)] data-[highlighted]:active:bg-[var(--ui-button-menu-dropdown-item-container-color-active)] [&:focus-visible:not(:hover)]:rounded-[3px] [&:focus-visible:not(:hover)]:ring-[3px] [&:focus-visible:not(:hover)]:ring-inset [&:focus-visible:not(:hover)]:ring-[var(--ui-focus-primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0';
 
-const indicatorItemClassName = cn(itemClassName, 'ps-8');
+// A checkbox/radio indicator lives in the same in-flow leading slot a menu-item
+// icon would occupy, so its label lands on the item gap grid (padding-x + 16px
+// glyph + gap) instead of a hardcoded indent. `h-6` matches the item's
+// line-height so the glyph centers on the first line of a wrapping label.
+const indicatorSlotClassName =
+  'flex h-6 w-4 shrink-0 items-center justify-center text-[var(--ui-button-menu-dropdown-item-icon-color)]';
+
+// Indent for plain items/labels that must line up with the labels of sibling
+// checkbox/radio items.
+const indicatorInsetClassName =
+  'ps-[calc(var(--ui-button-menu-dropdown-item-container-padding-x)+1rem+var(--ui-button-menu-dropdown-item-container-gap))]';
 
 export interface DropdownMenuContentProps
   extends React.ComponentPropsWithoutRef<typeof MenuPrimitive.Popup> {
@@ -117,7 +127,7 @@ const DropdownMenuItem = React.forwardRef<
 >(({ className, inset, ...props }, ref) => (
   <MenuPrimitive.Item
     ref={ref}
-    className={cn(itemClassName, inset && 'ps-8', className)}
+    className={cn(itemClassName, inset && indicatorInsetClassName, className)}
     {...props}
   />
 ));
@@ -134,7 +144,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
     className={cn(
       itemClassName,
       'data-[popup-open]:bg-[var(--ui-button-menu-dropdown-item-container-color-active)]',
-      inset && 'ps-8',
+      inset && indicatorInsetClassName,
       className
     )}
     {...props}
@@ -165,11 +175,11 @@ const DropdownMenuCheckboxItem = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <MenuPrimitive.CheckboxItem
     ref={ref}
-    className={cn(indicatorItemClassName, className)}
+    className={cn(itemClassName, className)}
     {...props}
   >
-    <span className="absolute start-2 flex size-3.5 items-center justify-center text-[var(--ui-button-menu-dropdown-item-icon-color)]">
-      <MenuPrimitive.CheckboxItemIndicator>
+    <span className={indicatorSlotClassName}>
+      <MenuPrimitive.CheckboxItemIndicator className="flex">
         <CheckIcon className="size-4" />
       </MenuPrimitive.CheckboxItemIndicator>
     </span>
@@ -186,13 +196,13 @@ const DropdownMenuRadioItem = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <MenuPrimitive.RadioItem
     ref={ref}
-    className={cn(indicatorItemClassName, className)}
+    className={cn(itemClassName, className)}
     {...props}
   >
-    <span className="absolute start-2 flex size-3.5 items-center justify-center text-[var(--ui-button-menu-dropdown-item-icon-color)]">
-      <MenuPrimitive.RadioItemIndicator>
-        <span className="size-2 rounded-full bg-current" />
-      </MenuPrimitive.RadioItemIndicator>
+    <span className={indicatorSlotClassName}>
+      {/* The dot is the indicator element itself — Base UI renders it as a
+          `<span>`, and an inline wrapper would collapse a sized child to 0. */}
+      <MenuPrimitive.RadioItemIndicator className="block size-2 rounded-full bg-current" />
     </span>
     {children}
   </MenuPrimitive.RadioItem>
@@ -207,7 +217,7 @@ const DropdownMenuLabel = React.forwardRef<
     ref={ref}
     className={cn(
       'px-[var(--ui-button-menu-dropdown-item-container-padding-x)] py-[var(--ui-button-menu-dropdown-item-container-padding-y)] text-sm font-semibold leading-6 text-[var(--ui-button-menu-dropdown-item-label-color)]',
-      inset && 'ps-8',
+      inset && indicatorInsetClassName,
       className
     )}
     {...props}

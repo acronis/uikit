@@ -127,7 +127,11 @@ export const WithSubmenu: Story = {
   ),
 };
 
-/** Checkbox items — toggled state tracked locally; CheckIcon appears when checked. */
+/**
+ * Checkbox items — toggled state tracked locally; CheckIcon appears when checked.
+ * The section label is `inset` so its text aligns with the item labels, which sit
+ * after the indicator slot.
+ */
 export const WithCheckboxItems: Story = {
   render: () => {
     const [showStatusBar, setShowStatusBar] = React.useState(true);
@@ -138,7 +142,7 @@ export const WithCheckboxItems: Story = {
         <DropdownMenuTrigger render={<ButtonMenu variant="secondary">View</ButtonMenu>} />
         <DropdownMenuContent>
           <DropdownMenuGroup>
-            <DropdownMenuLabel>Panels</DropdownMenuLabel>
+            <DropdownMenuLabel inset>Panels</DropdownMenuLabel>
             <DropdownMenuCheckboxItem
               checked={showStatusBar}
               onCheckedChange={setShowStatusBar}
@@ -164,7 +168,10 @@ export const WithCheckboxItems: Story = {
   },
 };
 
-/** Radio group — only one item selected at a time; dot indicator on the active item. */
+/**
+ * Radio group — only one item selected at a time; dot indicator on the active item.
+ * Label is `inset` to align with the radio item labels.
+ */
 export const WithRadioItems: Story = {
   render: () => {
     const [position, setPosition] = React.useState('bottom');
@@ -173,7 +180,7 @@ export const WithRadioItems: Story = {
         <DropdownMenuTrigger render={<ButtonMenu variant="secondary">Position</ButtonMenu>} />
         <DropdownMenuContent>
           <DropdownMenuGroup>
-            <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
+            <DropdownMenuLabel inset>Panel Position</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
               <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>

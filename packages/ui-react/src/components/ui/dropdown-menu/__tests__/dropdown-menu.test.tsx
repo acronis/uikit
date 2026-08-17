@@ -150,18 +150,40 @@ describe('DropdownMenu', () => {
 });
 
 describe('DropdownMenuCheckboxItem', () => {
-  it('renders with indicator indent class', () => {
+  it('reserves an in-flow indicator slot so labels align with icon items', () => {
     render(
       <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>Open</DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuGroup>
-            <DropdownMenuCheckboxItem checked>Show toolbar</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem checked={false}>Show toolbar</DropdownMenuCheckboxItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     );
-    expect(screen.getByRole('menuitemcheckbox', { name: /Show toolbar/ })).toHaveClass('ps-8');
+    const item = screen.getByRole('menuitemcheckbox', { name: /Show toolbar/ });
+    expect(item).not.toHaveClass('ps-8');
+    expect(item.firstElementChild).toHaveClass('h-6', 'w-4', 'shrink-0');
+  });
+
+  it('renders the check glyph only when checked', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuCheckboxItem checked>On</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem checked={false}>Off</DropdownMenuCheckboxItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'On' }).querySelector('svg')
+    ).not.toBeNull();
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'Off' }).querySelector('svg')
+    ).toBeNull();
   });
 
   it('reflects checked state via aria-checked', () => {
@@ -200,7 +222,31 @@ describe('DropdownMenuRadioGroup / DropdownMenuRadioItem', () => {
     expect(screen.getByRole('menuitemradio', { name: 'Descending' })).toHaveAttribute('aria-checked', 'false');
   });
 
-  it('applies indicator indent class to radio items', () => {
+  it('renders a sized dot indicator on the selected item only', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuRadioGroup value="a">
+              <DropdownMenuRadioItem value="a">Option A</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="b">Option B</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    const selected = screen.getByRole('menuitemradio', { name: 'Option A' });
+    const dot = selected.querySelector('.rounded-full');
+    // `block` is what makes the dot's size apply — Base UI renders the
+    // indicator as an inline `<span>`, which would ignore width/height.
+    expect(dot).toHaveClass('block', 'size-2');
+    expect(
+      screen.getByRole('menuitemradio', { name: 'Option B' }).querySelector('.rounded-full')
+    ).toBeNull();
+  });
+
+  it('reserves an in-flow indicator slot instead of a hardcoded indent', () => {
     render(
       <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>Open</DropdownMenuTrigger>
@@ -213,7 +259,9 @@ describe('DropdownMenuRadioGroup / DropdownMenuRadioItem', () => {
         </DropdownMenuContent>
       </DropdownMenu>
     );
-    expect(screen.getByRole('menuitemradio', { name: 'Option A' })).toHaveClass('ps-8');
+    const item = screen.getByRole('menuitemradio', { name: 'Option A' });
+    expect(item).not.toHaveClass('ps-8');
+    expect(item.firstElementChild).toHaveClass('h-6', 'w-4', 'shrink-0');
   });
 });
 
@@ -236,7 +284,7 @@ describe('DropdownMenuLabel', () => {
     );
   });
 
-  it('applies ps-8 when inset=true', () => {
+  it('indents to the indicator slot when inset=true', () => {
     render(
       <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>Open</DropdownMenuTrigger>
@@ -247,7 +295,9 @@ describe('DropdownMenuLabel', () => {
         </DropdownMenuContent>
       </DropdownMenu>
     );
-    expect(screen.getByText('Indented')).toHaveClass('ps-8');
+    expect(screen.getByText('Indented')).toHaveClass(
+      'ps-[calc(var(--ui-button-menu-dropdown-item-container-padding-x)+1rem+var(--ui-button-menu-dropdown-item-container-gap))]'
+    );
   });
 });
 
