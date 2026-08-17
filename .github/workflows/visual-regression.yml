@@ -21,6 +21,48 @@ jobs:
             filter: '@acronis-platform/ui-react'
             dir: packages/ui-react
             color_mode: dark
+          # ── The four profiles that own no baselines ──────────────────────────
+          # `[data-theme]` and the OS `prefers-color-scheme` are two independent
+          # inputs; the two legs above pin the attribute and leave the OS at light,
+          # covering two of the six states the pair can be in. These four are the
+          # rest of the cross product, and each re-renders an EXISTING baseline
+          # under a different theme input rather than recording its own:
+          #
+          #   system-dark   no attribute, OS dark   -> must equal `--dark` PNGs
+          #   system-light  no attribute, OS light  -> must equal light PNGs
+          #   forced-light  attr light,  OS dark    -> must equal light PNGs
+          #   forced-dark   attr dark,   OS dark    -> must equal `--dark` PNGs
+          #
+          # Any diff is styling that keyed off the attribute instead of resolving
+          # through a token (chart.tsx's `THEMES` block is the known instance), or
+          # a `prefers-color-scheme` fallback firing where it should not. See
+          # packages/ui-react/.storybook/visual-regression.ts.
+          #
+          # `subset: true` routes a leg to the capture script instead of `docker
+          # compose`, and it is a matrix field rather than a `color_mode !=` list
+          # in the step conditions so that adding a profile cannot silently run it
+          # as a baseline-owning leg. Each runs a curated ~15% sample, so a leg
+          # costs a fraction of a full one.
+          - name: ui-react
+            filter: '@acronis-platform/ui-react'
+            dir: packages/ui-react
+            color_mode: system-dark
+            subset: true
+          - name: ui-react
+            filter: '@acronis-platform/ui-react'
+            dir: packages/ui-react
+            color_mode: system-light
+            subset: true
+          - name: ui-react
+            filter: '@acronis-platform/ui-react'
+            dir: packages/ui-react
+            color_mode: forced-light
+            subset: true
+          - name: ui-react
+            filter: '@acronis-platform/ui-react'
+            dir: packages/ui-react
+            color_mode: forced-dark
+            subset: true
           # icons-react renders currentColor icons whose color is story-fixed,
           # not theme-driven — a single (light) pass, like ui-legacy.
           - name: icons-react
@@ -124,10 +166,21 @@ jobs:
       # Docker only serves the pre-built static output and runs Playwright.
       # --build rebuilds the image when Dockerfile or .storybook config changes.
       - name: Run visual regression tests
-        if: steps.changes.outputs[matrix.name] == 'true'
+        if: steps.changes.outputs[matrix.name] == 'true' && !matrix.subset
         env:
           STORYBOOK_COLOR_MODE: ${{ matrix.color_mode || 'light' }}
         run: docker compose -f ${{ matrix.dir }}/docker-compose.storybook.yml up --build --abort-on-container-exit --exit-code-from test-runner
+
+      # `--skip-build` because the cached "Build Storybook" step above already
+      # produced storybook-static. These legs go THROUGH the capture script rather
+      # than calling `docker compose` directly, because the script supplies the
+      # subset test-path pattern, refuses to run if a subset title no longer
+      # exists, and fails the job if jest ran a different number of stories than
+      # the subset defines — a filtered run that silently matched fewer files would
+      # otherwise pass green.
+      - name: Run visual regression tests (system-theme subset)
+        if: steps.changes.outputs[matrix.name] == 'true' && matrix.subset
+        run: node ${{ matrix.dir }}/scripts/visual-capture.mjs --skip-build --mode ${{ matrix.color_mode }}
 
       - name: Upload diff artifacts on failure
         if: failure() && steps.changes.outputs[matrix.name] == 'true'
