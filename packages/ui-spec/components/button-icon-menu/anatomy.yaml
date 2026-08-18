@@ -1,0 +1,60 @@
+spec_version: '1.0'
+component: ButtonIconMenu
+
+schematic: |
+  +----------+
+  |   ...    |   root: <button> 32x32, 1px border
+  +----------+
+  icon: fixed ellipsis glyph, 16px, centered
+
+root:
+  element: button
+  role: button
+  description: >-
+    32×32 square icon-only surface (background, 1px border, radius). Advertises
+    itself as a menu trigger (`aria-haspopup="menu"`) and reflects
+    `aria-expanded` while open.
+
+parts:
+  - id: icon
+    description: >-
+      The fixed ellipsis ("more options") glyph, sized to 16px and tinted via
+      currentColor. Not swappable — the design pins this glyph.
+    element: svg
+
+states:
+  - {
+      id: hover,
+      trigger: pointer hover,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [root, icon],
+    }
+  - {
+      id: pressed,
+      trigger: pointer or keyboard activation,
+      kind: pseudo,
+      pseudo: ':active',
+      affects: [root, icon],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [root],
+    }
+  - {
+      id: open,
+      trigger: 'open === true',
+      kind: prop,
+      prop: open,
+      affects: [root, icon],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true',
+      kind: prop,
+      prop: disabled,
+      affects: [root, icon],
+    }

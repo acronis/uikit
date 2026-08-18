@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: ButtonIconMenu
+name: button-icon-menu
+status: ready
+category: actions
+description: >-
+  The kebab ("more options") trigger: a 32×32 bordered icon-only button holding a
+  fixed 16px ellipsis glyph, across idle, hover, open, disabled, and focus
+  states. Opens a menu of actions where there is no room for a label.
+since: 0.63.0
+figma:
+  node: '3116-62813'
+  codeConnect: packages/ui-react/src/components/ui/button-icon-menu/button-icon-menu.figma.tsx

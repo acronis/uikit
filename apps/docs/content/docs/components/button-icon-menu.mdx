@@ -1,0 +1,81 @@
+---
+title: ButtonIconMenu
+description: The kebab ("more options") trigger — an icon-only button that opens a menu.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { ButtonIconMenuDemo } from "@/components/demos-react/button-icon-menu";
+
+## Usage
+
+```tsx
+import { ButtonIconMenu } from '@acronis-platform/ui-react';
+```
+
+`ButtonIconMenu` is the kebab / "more options" trigger: a 32×32 bordered
+icon-only button holding a fixed 16px ellipsis glyph. Use it where a row, card,
+or toolbar needs a menu of secondary actions and there is no room for a label —
+when there is room, use [ButtonMenu](/components/button-menu) instead.
+
+The glyph is **fixed on purpose** so every kebab in the product looks the same;
+if you need a different icon, use [ButtonIcon](/components/button-icon). The
+design draws this component from the same `--ui-button-icon-*` token tier
+(always with the `secondary` 1px border), so it re-themes together with
+`ButtonIcon`.
+
+Because the button is icon-only it has no text to name it: pass a localized
+`ariaLabel`. It advertises itself as a menu trigger via `aria-haspopup="menu"`,
+and `open` applies the active treatment plus `aria-expanded`. It is polymorphic
+via Base UI's `useRender` (the `render` prop).
+
+## Examples
+
+<DemoReact>
+  <ButtonIconMenuDemo />
+</DemoReact>
+
+Always name the trigger — especially when several sit on one screen:
+
+```tsx
+<ButtonIconMenu ariaLabel="Row actions" />
+```
+
+Wire `open` to the controlled menu state:
+
+```tsx
+const [open, setOpen] = React.useState(false);
+
+<ButtonIconMenu
+  ariaLabel="Backup plan actions"
+  open={open}
+  onClick={() => setOpen((v) => !v)}
+/>
+```
+
+Compose it as a real Base UI menu trigger with the `render` prop — Base UI then
+manages `aria-expanded` and `aria-controls` for you:
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger render={<ButtonIconMenu ariaLabel="Row actions" />} />
+  <DropdownMenuContent>
+    <DropdownMenuItem>Rename</DropdownMenuItem>
+    <DropdownMenuItem>Duplicate</DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem>Delete</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+Disabled state:
+
+```tsx
+<ButtonIconMenu ariaLabel="Row actions" disabled />
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/button-icon-menu/button-icon-menu.tsx"
+  name="ButtonIconMenuProps"
+/>
