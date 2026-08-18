@@ -34,7 +34,10 @@ export type MessageKey =
   | 'loading'
   | 'close'
   | 'alertTitle'
-  | 'alertDescription';
+  | 'alertDescription'
+  | 'resetFilters'
+  | 'filterType'
+  | 'filterStatus';
 
 export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
   en: {
@@ -48,6 +51,9 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     close: 'Close',
     alertTitle: 'Session expired',
     alertDescription: 'Sign in again to keep working.',
+    resetFilters: 'Reset filters',
+    filterType: 'Type: Server',
+    filterStatus: 'Status: Active',
   },
   de: {
     submit: 'Absenden',
@@ -60,6 +66,9 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     close: 'Schließen',
     alertTitle: 'Sitzung abgelaufen',
     alertDescription: 'Melden Sie sich erneut an, um weiterzuarbeiten.',
+    resetFilters: 'Filter zurücksetzen',
+    filterType: 'Typ: Server',
+    filterStatus: 'Status: Aktiv',
   },
   fr: {
     submit: 'Envoyer',
@@ -72,6 +81,9 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     close: 'Fermer',
     alertTitle: 'Session expirée',
     alertDescription: 'Reconnectez-vous pour continuer à travailler.',
+    resetFilters: 'Réinitialiser les filtres',
+    filterType: 'Type : Serveur',
+    filterStatus: 'Statut : Actif',
   },
   ja: {
     submit: '送信',
@@ -84,6 +96,9 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     close: '閉じる',
     alertTitle: 'セッションの有効期限が切れました',
     alertDescription: '作業を続けるには再度サインインしてください。',
+    resetFilters: 'フィルターをリセット',
+    filterType: '種類: サーバー',
+    filterStatus: 'ステータス: 有効',
   },
   ar: {
     submit: 'إرسال',
@@ -96,6 +111,9 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     close: 'إغلاق',
     alertTitle: 'انتهت صلاحية الجلسة',
     alertDescription: 'سجّل الدخول مرة أخرى لمتابعة العمل.',
+    resetFilters: 'إعادة تعيين عوامل التصفية',
+    filterType: 'النوع: خادم',
+    filterStatus: 'الحالة: نشط',
   },
   he: {
     submit: 'שליחה',
@@ -108,6 +126,9 @@ export const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     close: 'סגירה',
     alertTitle: 'פג תוקף ההפעלה',
     alertDescription: 'היכנס מחדש כדי להמשיך לעבוד.',
+    resetFilters: 'איפוס מסננים',
+    filterType: 'סוג: שרת',
+    filterStatus: 'סטטוס: פעיל',
   },
 };
 

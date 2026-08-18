@@ -5,6 +5,12 @@ import { cn } from '@/lib/utils';
 import { deepEqual } from '@/lib/deep-equal';
 import { Button } from '../button';
 import { Chip } from '../chip';
+import {
+  FilterChips,
+  FilterChipsList,
+  FilterChipsReset,
+  type FilterChipsProps,
+} from '../filter-chips';
 import { Popover, PopoverContent, PopoverTrigger } from '../popover';
 
 // A composable toolbar for data tables: arranges a search field, optional
@@ -18,14 +24,18 @@ import { Popover, PopoverContent, PopoverTrigger } from '../popover';
 // (16px), and each child (Search, ButtonMenu, Select) brings its own
 // `--ui-*` tier.
 //
-// `FilterSearchFilters` and `FilterSearchAppliedFilters` are design-pending
-// additions (no Figma node yet, unlike the FilterSearch node itself): the
-// filter popover (trigger + form + Reset/Cancel/Apply) and the applied-filter
-// chip row + top-level "Reset filters" affordance. Compose `FilterSearchFilters`
-// as a child of `<FilterSearch>` in place of a plain filter trigger, and render
-// `<FilterSearchAppliedFilters>` as a sibling row below it. Reconcile against
-// the real design with `/figma-component FilterSearchFilters <url> --update`
-// once a mockup lands.
+// `FilterSearchFilters` is still design-pending (no Figma node yet, unlike the
+// FilterSearch node itself): the filter popover — trigger + form +
+// Reset/Cancel/Apply. Compose it as a child of `<FilterSearch>` in place of a
+// plain filter trigger, and reconcile against the real design with
+// `/figma-component FilterSearchFilters <url> --update` once a mockup lands.
+//
+// `FilterSearchAppliedFilters` is no longer design-pending: its chip row landed
+// in Figma as its own "FilterChips" component, so it renders through
+// `FilterChips`/`FilterChipsList`/`FilterChipsReset` rather than repeating that
+// layout. It keeps its data-driven API (a `filters` record) as the convenience
+// wrapper over those slot-based parts; render it as a sibling row below
+// `<FilterSearch>`.
 
 export type FilterSearchProps = React.ComponentPropsWithoutRef<'div'>;
 
@@ -296,10 +306,8 @@ function defaultFilterChipLabel(key: string, value: unknown): string {
   return `${key}: ${text}`;
 }
 
-export interface FilterSearchAppliedFiltersProps extends Omit<
-  React.ComponentPropsWithoutRef<'div'>,
-  'children'
-> {
+export interface FilterSearchAppliedFiltersProps
+  extends Omit<FilterChipsProps, 'children'> {
   /** The currently applied filter values, keyed by an arbitrary consumer-chosen id. */
   filters: Record<string, unknown>;
   /** Called with the remaining filters when a chip is removed or "Reset filters" clears all. */
@@ -343,27 +351,25 @@ const FilterSearchAppliedFilters = React.forwardRef<
     };
 
     return (
-      <div
-        ref={ref}
-        className={cn('flex flex-wrap items-center gap-3', className)}
-        {...props}
-      >
-        {keys.map((key) => (
-          <Chip
-            key={key}
-            variant="removable"
-            onRemove={() => handleRemove(key)}
-            removeLabel={getRemoveFilterLabel(key)}
-          >
-            {getFilterChipLabel
-              ? getFilterChipLabel(key, filters[key])
-              : defaultFilterChipLabel(key, filters[key])}
-          </Chip>
-        ))}
-        <Button type="button" variant="ghost" onClick={() => onValueChange({})}>
-          {resetFiltersLabel}
-        </Button>
-      </div>
+      <FilterChips ref={ref} className={className} {...props}>
+        <FilterChipsList>
+          {keys.map((key) => (
+            <Chip
+              key={key}
+              variant="removable"
+              onRemove={() => handleRemove(key)}
+              removeLabel={getRemoveFilterLabel(key)}
+            >
+              {getFilterChipLabel
+                ? getFilterChipLabel(key, filters[key])
+                : defaultFilterChipLabel(key, filters[key])}
+            </Chip>
+          ))}
+          <FilterChipsReset onClick={() => onValueChange({})}>
+            {resetFiltersLabel}
+          </FilterChipsReset>
+        </FilterChipsList>
+      </FilterChips>
     );
   }
 );
