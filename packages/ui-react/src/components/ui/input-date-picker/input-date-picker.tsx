@@ -82,7 +82,12 @@ const InputDatePicker = React.forwardRef<HTMLButtonElement, InputDatePickerProps
       : value != null && value !== '';
 
     return (
-      <div className="group/field flex w-full min-w-[var(--ui-input-date-picker-global-container-width-min)] flex-col gap-[var(--ui-input-date-picker-global-container-gap)]">
+      <div
+        className={cn(
+          'group/field flex min-w-[var(--ui-input-date-picker-global-container-width-min)] flex-col gap-[var(--ui-input-date-picker-global-container-gap)]',
+          className
+        )}
+      >
         {label != null && label !== '' && (
           <label
             htmlFor={inputId}
@@ -122,8 +127,7 @@ const InputDatePicker = React.forwardRef<HTMLButtonElement, InputDatePickerProps
             'not-aria-[invalid=true]:data-[open]:border-[var(--ui-input-date-picker-normal-box-border-color-active)] not-aria-[invalid=true]:data-[open]:text-[var(--ui-input-date-picker-global-value-color-hover)]',
             'not-aria-[invalid=true]:focus-visible:border-[var(--ui-input-date-picker-normal-box-border-color-active)] not-aria-[invalid=true]:focus-visible:ring-[3px] not-aria-[invalid=true]:focus-visible:ring-[var(--ui-focus-primary)]',
             'aria-[invalid=true]:border-[var(--ui-input-date-picker-error-box-border-color-idle)] enabled:aria-[invalid=true]:hover:border-[var(--ui-input-date-picker-error-box-border-color-hover)] enabled:aria-[invalid=true]:hover:text-[var(--ui-input-date-picker-global-value-color-hover)] aria-[invalid=true]:data-[open]:border-[var(--ui-input-date-picker-error-box-border-color-active)] aria-[invalid=true]:data-[open]:text-[var(--ui-input-date-picker-global-value-color-hover)] aria-[invalid=true]:focus-visible:border-[var(--ui-input-date-picker-error-box-border-color-active)] aria-[invalid=true]:focus-visible:ring-[3px] aria-[invalid=true]:focus-visible:ring-[var(--ui-focus-error)]',
-            'disabled:cursor-not-allowed disabled:border-[var(--ui-input-date-picker-normal-box-border-color-disabled)] disabled:bg-[var(--ui-input-date-picker-global-box-color-disabled)] disabled:text-[var(--ui-input-date-picker-global-value-color-disabled)]',
-            className
+            'disabled:cursor-not-allowed disabled:border-[var(--ui-input-date-picker-normal-box-border-color-disabled)] disabled:bg-[var(--ui-input-date-picker-global-box-color-disabled)] disabled:text-[var(--ui-input-date-picker-global-value-color-disabled)]'
           )}
           {...props}
         >
