@@ -31,8 +31,11 @@ parts:
     description: >-
       The 6px status bar on the leading (inline-start) edge, colored by the
       variant. A pseudo-element, not a slot — it is always present and has no
-      content. Bled 1px outwards so it paints over the border it overlaps; the
-      root's overflow-clip rounds its corners to the container radius.
+      content. Bled 1px outwards so it paints over the border it overlaps, which
+      requires the root's clip edge to be the border box rather than the default
+      padding box; the clip still rounds its corners to the container radius.
+      Without that, the line is shaved to 5px and reads as a second stripe beside
+      the border instead of covering it.
   - id: alert-icon
     element: div
     description: >-

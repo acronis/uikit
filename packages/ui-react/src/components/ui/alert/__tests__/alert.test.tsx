@@ -12,6 +12,7 @@ import {
   AlertIcon,
   AlertText,
   AlertTitle,
+  type AlertCloseProps,
 } from '../index';
 
 describe('Alert', () => {
@@ -67,6 +68,12 @@ describe('Alert', () => {
     );
     // The line must stay on the leading edge under dir="rtl".
     expect(className).toContain('before:start-[-1px]');
+    // The 1px outward bleed is what makes the line cover the border rather than
+    // sit beside it, and it only survives if the clip edge is the border box —
+    // plain `overflow-clip` clips at the padding box and shaves it to 5px.
+    expect(className).toContain('before:-inset-y-px');
+    expect(className).toContain('overflow-clip');
+    expect(className).toContain('[overflow-clip-margin:border-box]');
   });
 
   it('renders the icon / content / text / title / description parts', () => {
@@ -160,6 +167,41 @@ describe('Alert', () => {
       </Alert>
     );
     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
+  });
+
+  // The spec pins the dismiss control to a ghost ButtonIcon. `variant` and
+  // `render` are omitted from AlertCloseProps so a consumer cannot silently
+  // override that; this guards the appearance those omissions protect.
+  it('pins AlertClose to the ghost ButtonIcon appearance', () => {
+    render(
+      <Alert>
+        <AlertClose />
+      </Alert>
+    );
+    const { className } = screen.getByRole('button', { name: 'Close' });
+    // ghost has no container border; secondary would add one.
+    expect(className).toContain(
+      'bg-[var(--ui-button-icon-global-container-color-idle)]'
+    );
+    expect(className).not.toContain(
+      '--ui-button-icon-secondary-container-border-color-idle'
+    );
+  });
+
+  // Omitting `aria-label` from the type cannot stop this on its own: TypeScript
+  // skips checking hyphenated JSX attributes, so it still compiles. `ariaLabel`
+  // stays authoritative because it is pinned after the spread.
+  it('keeps ariaLabel authoritative over a native aria-label', () => {
+    const sneaky = { 'aria-label': 'Native' } as unknown as AlertCloseProps;
+    render(
+      <Alert>
+        <AlertClose {...sneaky} ariaLabel="Cerrar" />
+      </Alert>
+    );
+    expect(screen.getByRole('button', { name: 'Cerrar' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Native' })
+    ).not.toBeInTheDocument();
   });
 
   it('forwards refs on the root and the close button', () => {
