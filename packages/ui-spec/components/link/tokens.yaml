@@ -2,19 +2,27 @@ spec_version: '1.0'
 component: Link
 
 # References only — values live in @acronis-platform/tokens-pd. The `--ui-link-*`
-# tier wires text color, text decoration, and the external-icon color per state; the
-# focus ring uses the shared `--ui-focus-primary` token.
+# tier wires text color and the external-icon color per surface (`normal` / `inverse`,
+# the `variant` prop) and per state; text decoration is shared across surfaces
+# (`--ui-link-global-*`) and the focus ring uses the shared `--ui-focus-primary` token.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
   # ── Layout ──
   - { name: --ui-link-global-container-gap, affects: root }
 
-  # ── Text color ──
+  # ── Text color — normal surface (variant="normal") ──
   - { name: --ui-link-normal-text-color-idle, affects: label }
   - { name: --ui-link-normal-text-color-hover, affects: label }
   - { name: --ui-link-normal-text-color-active, affects: label }
   - { name: --ui-link-normal-text-color-disabled, affects: label }
+
+  # ── Text color — inverse surface (variant="inverse") ──
+  # No `-disabled` counterpart: the design does not support a disabled appearance on
+  # a backdrop, so tokens-pd ships no `--ui-link-inverse-*-disabled`.
+  - { name: --ui-link-inverse-text-color-idle, affects: label }
+  - { name: --ui-link-inverse-text-color-hover, affects: label }
+  - { name: --ui-link-inverse-text-color-active, affects: label }
 
   # ── Text decoration (underline on hover) ──
   - { name: --ui-link-global-text-decoration-idle, affects: label }
@@ -22,11 +30,16 @@ tokens:
   - { name: --ui-link-global-text-decoration-active, affects: label }
   - { name: --ui-link-global-text-decoration-disabled, affects: label }
 
-  # ── External icon color ──
+  # ── External icon color — normal surface ──
   - { name: --ui-link-normal-external-icon-color-idle, affects: icon }
   - { name: --ui-link-normal-external-icon-color-hover, affects: icon }
   - { name: --ui-link-normal-external-icon-color-active, affects: icon }
   - { name: --ui-link-normal-external-icon-color-disabled, affects: icon }
+
+  # The inverse surface has no external icon (the design defines the icon layer only on
+  # `normal`), so the `--ui-link-inverse-external-icon-color-*` tokens tokens-pd emits
+  # are intentionally NOT consumed — listing them here would imply a part that the
+  # component never renders.
 
   # ── Focus ring ──
   - { name: --ui-focus-primary, affects: root, description: Focus ring }

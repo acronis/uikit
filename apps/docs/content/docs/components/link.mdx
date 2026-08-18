@@ -16,6 +16,10 @@ import { Link } from '@acronis-platform/ui-react';
 (underline appears on hover). It is polymorphic via Base UI's `useRender` — pass
 the `render` prop to render a router `Link` instead of the default `<a>`.
 
+The token tier carries one set per surface, selected with `variant`: `normal` (the
+default) for ordinary surfaces, and `inverse` for links over a backdrop, scrim, or
+dark brand surface.
+
 ## Examples
 
 
@@ -37,6 +41,17 @@ Append a trailing external-link icon for links that leave the app:
 </Link>
 ```
 
+Use `variant="inverse"` for a link sitting on a backdrop or dark brand surface — it
+resolves its text color against the `--ui-link-inverse-*` tokens instead. This surface is
+text-only and always enabled: the design defines neither an external icon nor a disabled
+state for it, so `external` and `disabled` are both ignored there.
+
+```tsx
+<Link href="/" variant="inverse">
+  Documentation
+</Link>
+```
+
 `disabled` makes the link inert — disabled color, removed from the tab order, no
 navigation:
 
@@ -45,6 +60,11 @@ navigation:
   Documentation
 </Link>
 ```
+
+`disabled` applies to `variant="normal"` only. The design defines no disabled state on a
+backdrop, so on `variant="inverse"` the prop is **ignored entirely** — the link keeps its
+`href` and stays navigable, focusable and hoverable. When a link on a backdrop needs to
+be inert, omit it from the UI rather than disabling it.
 
 Render as a router link with `render` (Base UI composition):
 
