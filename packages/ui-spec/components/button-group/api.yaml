@@ -1,0 +1,129 @@
+spec_version: '1.0'
+component: ButtonGroup
+
+# Framework-agnostic contract for a *composable* button group: a container part
+# plus a variadic list of item parts (see anatomy.yaml). Property names are
+# neutral; see `adapters` for the per-framework syntax. Native element
+# attributes pass through on the relevant part — notably `disabled` and
+# `aria-label` on an item, and `aria-label` / `aria-labelledby` on the
+# container.
+#
+# Figma's `order` (first / middle / last) item variant is an *optional* property
+# only: it selects whether the trailing separator is drawn, which the
+# implementation normally derives from the item's position (`:last-child`).
+# Requiring it would make callers restate the DOM order by hand, so it exists
+# purely as an escape hatch for compositions that defeat the derivation.
+contract:
+  properties:
+    - name: variant
+      type: "'outlined' | 'inlined'"
+      required: false
+      default: "'outlined'"
+      description: >-
+        Container style, on the container part. `outlined` draws the 1px border
+        and 4px radius around the cluster; `inlined` draws neither, for a group
+        sitting inside a surface that already provides its own chrome. Items are
+        unaffected — including their separators.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Disables interaction. On an item it disables that action; on the
+        container it disables every item in the group. A disabled item keeps its
+        idle fill and dims its glyph to the shared disabled glyph token. Per the
+        WAI-ARIA toolbar pattern it stays focusable (exposed as
+        `aria-disabled`, not the native disabled attribute) so it remains
+        discoverable, while click and Enter/Space activation are suppressed.
+    - name: order
+      type: "'first' | 'middle' | 'last'"
+      required: false
+      default: undefined
+      description: >-
+        On an item: its position in the group, mirroring the Figma `order`
+        variant. Controls exactly one thing — whether the trailing separator is
+        drawn (`last` omits it). Leave it unset in normal use; position is
+        derived from the item's own position in the DOM. Pass it only when each
+        item is wrapped in another element, which defeats that derivation and
+        would otherwise erase every separator.
+    - name: loop-focus
+      type: boolean
+      required: false
+      default: true
+      description: >-
+        On the container: whether arrow-key navigation wraps from the last item
+        back to the first (and vice versa) instead of stopping at the ends.
+    - name: render
+      type: 'RenderProp'
+      required: false
+      default: undefined
+      description: >-
+        Base UI composition prop on the container and the item — replaces the
+        rendered element with another component while merging props and classes.
+        Pass `native-button: false` alongside it when the item renders something
+        other than a real `<button>`, so the button semantics are supplied by
+        the component. React-only; other frameworks use their own polymorphism.
+
+  events:
+    - name: click
+      payload: MouseEvent
+      description: >-
+        Fired on activation of an item (pointer or keyboard). Not fired while
+        that item or the group is disabled.
+
+  content:
+    - name: default
+      description: >-
+        On the container: the items, in visual order. On an item: its glyph —
+        an SVG, auto-sized to 16px and tinted via `currentColor`. Items are
+        icon-only in the design, and each one needs its own accessible name.
+
+  methods: []
+
+adapters:
+  react:
+    component: ButtonGroup
+    status: implemented
+    import: "import { ButtonGroup, ButtonGroupItem } from '@acronis-platform/ui-react'"
+    example: |
+      <ButtonGroup aria-label="View mode">
+        <ButtonGroupItem aria-label="List view" onClick={showList}>
+          <ListIcon size={16} />
+        </ButtonGroupItem>
+        <ButtonGroupItem aria-label="Grid view" onClick={showGrid}>
+          <GridIcon size={16} />
+        </ButtonGroupItem>
+        <ButtonGroupItem aria-label="Table view" disabled>
+          <TableIcon size={16} />
+        </ButtonGroupItem>
+      </ButtonGroup>
+
+      {/* Borderless, for a surface that already has its own chrome */}
+      <ButtonGroup aria-label="Zoom" variant="inlined">
+        <ButtonGroupItem aria-label="Zoom out"><MinusIcon size={16} /></ButtonGroupItem>
+        <ButtonGroupItem aria-label="Zoom in"><PlusIcon size={16} /></ButtonGroupItem>
+      </ButtonGroup>
+
+  vue:
+    component: AvButtonGroup
+    status: planned
+    import: "import { AvButtonGroup, AvButtonGroupItem } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvButtonGroup aria-label="View mode">
+        <AvButtonGroupItem aria-label="List view" @click="showList">
+          <ListIcon />
+        </AvButtonGroupItem>
+        <AvButtonGroupItem aria-label="Grid view" @click="showGrid">
+          <GridIcon />
+        </AvButtonGroupItem>
+      </AvButtonGroup>
+
+  web-components:
+    element: ui-button-group
+    status: planned
+    import: "import '@acronis-platform/ui-wc/button-group'"
+    example: |
+      <ui-button-group aria-label="View mode">
+        <ui-button-group-item aria-label="List view"></ui-button-group-item>
+        <ui-button-group-item aria-label="Grid view"></ui-button-group-item>
+      </ui-button-group>

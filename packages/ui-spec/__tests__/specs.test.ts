@@ -215,6 +215,24 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
   });
 
+  it('ButtonGroup: api.yaml variant enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/button-group/button-group.tsx'
+      ),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('button-group').api;
+
+    // `variant` (outlined / inlined) is the container's only cva axis. The item's
+    // own cva declares no variants at all — Figma's `order` is derived from
+    // `:last-child` and its `state`s are CSS pseudo-classes.
+    expect(Object.keys(groups)).toEqual(['variant']);
+    expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
+  });
+
   it('PieChart: api.yaml shape enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/pie-chart/pie-chart.tsx'),

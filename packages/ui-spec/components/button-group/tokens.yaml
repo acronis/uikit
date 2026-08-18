@@ -1,0 +1,54 @@
+spec_version: '1.0'
+component: ButtonGroup
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+# Names mirror the `components/ButtonGroup/_global/*` Figma variables: the
+# container border/radius under `-container-*`, the item box under `-box-*`
+# (with per-state `-color-*`), and the divider under `-separator-*`.
+#
+# Two colors come from the shared semantic tier rather than a
+# `--ui-button-group-*` token, because the design references them that way:
+# the item glyph (`semantics/colors/glyph/onSurface/primary`) and the focus
+# ring (`semantics/colors/focus/primary`). The disabled glyph has no Figma
+# counterpart at all — the design defines no disabled state for this component
+# — so it falls back to the shared disabled glyph token.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Container (root); border + radius are drawn by `outlined` only ──
+  - name: --ui-button-group-global-container-border-color
+    affects: root
+  - name: --ui-button-group-global-container-border-radius
+    affects: root
+  - name: --ui-button-group-global-container-border-width
+    affects: root
+
+  # ── Item box geometry + per-state fill ──
+  - name: --ui-button-group-global-box-height
+    affects: item
+  - name: --ui-button-group-global-box-padding-x
+    affects: item
+  - name: --ui-button-group-global-box-padding-y
+    affects: item
+  - name: --ui-button-group-global-box-color-idle
+    affects: item
+  - name: --ui-button-group-global-box-color-hover
+    affects: item
+  - name: --ui-button-group-global-box-color-active
+    affects: item
+
+  # ── Separator (the item's inline-end border) ──
+  - name: --ui-button-group-global-separator-border-width
+    affects: separator
+  - name: --ui-button-group-global-separator-color
+    affects: separator
+
+  # ── Shared semantic tokens ──
+  - name: --ui-glyph-on-surface-primary
+    affects: icon
+  - name: --ui-glyph-on-surface-disabled
+    affects: icon
+  - name: --ui-focus-primary
+    affects: item

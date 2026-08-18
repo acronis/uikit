@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: ButtonGroup
+name: button-group
+status: ready
+category: actions
+description: >-
+  A compact cluster of related icon-only actions sharing a single box,
+  hairline-separated. Two container styles (outlined, inlined) around a
+  variadic list of 32px-tall items.
+since: 0.63.0
+figma:
+  node: '7975-3479'
+  codeConnect: packages/ui-react/src/components/ui/button-group/button-group.figma.tsx
