@@ -378,7 +378,8 @@ const RENDER: Record<string, RenderHint> = {
   toast: {
     // Imperative: the region is empty until `toast()` is called, so a generated
     // "All States" story would be a blank snapshot. VR is covered by the
-    // hand-written stories (Default / Variants / WithAction).
+    // hand-written stories (Default / Variants / WithActions / TitleOnly /
+    // Loading / Localized).
     skip: true,
   },
   'data-table': {

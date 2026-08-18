@@ -1,11 +1,19 @@
 spec_version: '1.0'
 component: Toast
 name: toast
-status: draft
+status: stable
 category: feedback
 description: >-
-  A transient notification shown in a corner stack — title, optional description,
-  status icon, optional action, and a close button. Triggered imperatively via
-  the `toast(...)` API and rendered by a single `<Toaster>` region. Ported from
-  the legacy shadcn-uikit `sonner` wrapper; rebuilt on the Base UI toast manager.
+  A transient notification in a corner stack: a neutral card carrying its severity
+  through a status-colored border and a status line down the leading edge, with a
+  fixed status icon per severity, an optional description, and optional action
+  buttons. Triggered imperatively via the `toast(...)` API and rendered by a single
+  `<Toaster>` region.
 since: 0.41.0
+dependencies:
+  components:
+    - Button
+    - ButtonIcon
+figma:
+  node: '7421:126262'
+  codeConnect: packages/ui-react/src/components/ui/toast/toast.figma.tsx

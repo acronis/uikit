@@ -417,6 +417,28 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
   });
 
+  // Toast's severity is not a prop — it is picked by which `toast.*` method
+  // queued the notification — so the cva keys are compared against the method
+  // list instead of a `variant` enum. `toast.loading` has no cva key: it has no
+  // Figma variant and borrows info's chrome.
+  it('Toast: api.yaml toast.* severity methods match the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(HERE, '../../ui-react/src/components/ui/toast/toast.tsx'),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('toast').api;
+    const severityMethods = (api.contract.methods ?? [])
+      .map((m) => m.name)
+      .filter((name) => name.startsWith('toast.'))
+      .map((name) => name.slice('toast.'.length))
+      .filter((name) => !['loading', 'dismiss', 'promise'].includes(name))
+      .sort();
+
+    expect(Object.keys(groups)).toEqual(['variant']);
+    expect(groups.variant.sort()).toEqual(severityMethods);
+  });
+
   it('BarChart: api.yaml orientation/layout enums match the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/bar-chart/bar-chart.tsx'),

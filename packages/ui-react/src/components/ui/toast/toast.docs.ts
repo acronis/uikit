@@ -9,6 +9,10 @@ export interface ToasterProps {
   timeout?: number;
   /** Max toasts shown at once; the oldest is dropped past the limit (default 3). */
   limit?: number;
+  /** Accessible name for the toast region (default `'Notifications'`). */
+  label?: string;
+  /** Accessible name for each toast's dismiss control (default `'Close'`). */
+  closeAriaLabel?: string;
   /**
    * Portal container for the toast stack. Pass a shadow-root mount for
    * isolated-style previews (the docs demos do this via `useShadowMount`).
