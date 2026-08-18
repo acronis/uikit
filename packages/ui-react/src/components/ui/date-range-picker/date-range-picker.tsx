@@ -58,7 +58,7 @@ export interface DateRangePickerProps {
   disabled?: boolean;
   /** Marks the trigger required. */
   required?: boolean;
-  /** Extra classes merged onto the trigger. */
+  /** Extra classes merged onto the trigger's field wrapper (label + box + message). */
   className?: string;
   /** Days that cannot be selected in the calendar. */
   disabledDays?: Matcher | Matcher[];

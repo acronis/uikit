@@ -19,6 +19,8 @@ instead of always stretching to fill their container.
   passing `className` to style the input/textarea/trigger directly (e.g. a
   custom border or background) need to re-target those styles — width
   utilities are the common case and now work as expected on the wrapper.
+  `DateRangePicker` forwards its own `className` straight into
+  `InputDatePicker`, so this retargeting applies to it too.
 - `Tooltip`'s popup content now has an explicit `w-max` utility so a
   consumer-supplied width class on `TooltipContent` takes effect instead of
   being overridden by the default sizing.
