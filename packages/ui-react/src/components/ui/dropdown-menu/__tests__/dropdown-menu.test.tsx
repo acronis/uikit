@@ -5,9 +5,14 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
@@ -141,5 +146,180 @@ describe('DropdownMenu', () => {
       </DropdownMenu>
     );
     expect(ref.current).toBeInstanceOf(HTMLElement);
+  });
+});
+
+describe('DropdownMenuCheckboxItem', () => {
+  it('reserves an in-flow indicator slot so labels align with icon items', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuCheckboxItem checked={false}>Show toolbar</DropdownMenuCheckboxItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    const item = screen.getByRole('menuitemcheckbox', { name: /Show toolbar/ });
+    expect(item).not.toHaveClass('ps-8');
+    expect(item.firstElementChild).toHaveClass('h-6', 'w-4', 'shrink-0');
+  });
+
+  it('renders the check glyph only when checked', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuCheckboxItem checked>On</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem checked={false}>Off</DropdownMenuCheckboxItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'On' }).querySelector('svg')
+    ).not.toBeNull();
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'Off' }).querySelector('svg')
+    ).toBeNull();
+  });
+
+  it('reflects checked state via aria-checked', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuCheckboxItem checked>Enabled</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem checked={false}>Disabled</DropdownMenuCheckboxItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    expect(screen.getByRole('menuitemcheckbox', { name: 'Enabled' })).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByRole('menuitemcheckbox', { name: 'Disabled' })).toHaveAttribute('aria-checked', 'false');
+  });
+});
+
+describe('DropdownMenuRadioGroup / DropdownMenuRadioItem', () => {
+  it('marks only the selected value as checked', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuRadioGroup value="asc">
+              <DropdownMenuRadioItem value="asc">Ascending</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="desc">Descending</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    expect(screen.getByRole('menuitemradio', { name: 'Ascending' })).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByRole('menuitemradio', { name: 'Descending' })).toHaveAttribute('aria-checked', 'false');
+  });
+
+  it('renders a sized dot indicator on the selected item only', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuRadioGroup value="a">
+              <DropdownMenuRadioItem value="a">Option A</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="b">Option B</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    const selected = screen.getByRole('menuitemradio', { name: 'Option A' });
+    const dot = selected.querySelector('.rounded-full');
+    // `block` is what makes the dot's size apply — Base UI renders the
+    // indicator as an inline `<span>`, which would ignore width/height.
+    expect(dot).toHaveClass('block', 'size-2');
+    expect(
+      screen.getByRole('menuitemradio', { name: 'Option B' }).querySelector('.rounded-full')
+    ).toBeNull();
+  });
+
+  it('reserves an in-flow indicator slot instead of a hardcoded indent', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuRadioGroup value="a">
+              <DropdownMenuRadioItem value="a">Option A</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    const item = screen.getByRole('menuitemradio', { name: 'Option A' });
+    expect(item).not.toHaveClass('ps-8');
+    expect(item.firstElementChild).toHaveClass('h-6', 'w-4', 'shrink-0');
+  });
+});
+
+describe('DropdownMenuLabel', () => {
+  it('renders label text with token classes', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    const label = screen.getByText('My Account');
+    expect(label).toHaveClass(
+      'px-[var(--ui-button-menu-dropdown-item-container-padding-x)]',
+      'text-[var(--ui-button-menu-dropdown-item-label-color)]'
+    );
+  });
+
+  it('indents to the indicator slot when inset=true', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel inset>Indented</DropdownMenuLabel>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    expect(screen.getByText('Indented')).toHaveClass(
+      'ps-[calc(var(--ui-button-menu-dropdown-item-container-padding-x)+1rem+var(--ui-button-menu-dropdown-item-container-gap))]'
+    );
+  });
+});
+
+describe('DropdownMenuSeparator', () => {
+  it('renders with role=separator and token classes', () => {
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuItem>Above</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Below</DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+    const sep = screen.getByRole('separator');
+    expect(sep).toBeInTheDocument();
+    expect(sep).toHaveClass(
+      'bg-[var(--ui-button-menu-dropdown-section-container-border-color)]',
+      'h-[var(--ui-button-menu-dropdown-section-container-border-width)]'
+    );
   });
 });
