@@ -1,0 +1,112 @@
+spec_version: '1.0'
+component: StepperItem
+
+# `variant` and `state` are the two cva axes in the ui-react source, and these
+# enums must stay equal to those keys (conformance test). They are deliberately
+# independent even though the design only draws five of their nine combinations:
+# `variant` is the step's role in the sequence, `state` is the interaction look,
+# and only a completed step reacts to the second. The marker is a required slot
+# the caller owns completely; the component contributes no content of its own, so
+# it ships no strings to localize.
+contract:
+  properties:
+    - name: variant
+      type: "'current' | 'completed' | 'future'"
+      required: false
+      default: current
+      description: >-
+        The step's structural role in the sequence. `current` is where the user
+        is and always renders highlighted; `completed` is already passed and is
+        the only variant whose look responds to `state`; `future` is not reachable
+        yet and always renders disabled and non-interactive. Defaults to `current`
+        for prop ergonomics — in a real sequence every step declares its own.
+    - name: state
+      type: "'idle' | 'hover' | 'active'"
+      required: false
+      default: idle
+      description: >-
+        The interaction look. Only observable when `variant` is `completed`
+        (`idle` has no fill, `hover` and `active` paint one). Ignored for
+        `current`, which is always highlighted, and for `future`, which is always
+        disabled. It is a declarative prop, not a CSS pseudo-state, because the
+        design models it as a Figma variant and a consumer may need to force it.
+    - name: avatar
+      type: Element
+      required: true
+      description: >-
+        The step's marker — an avatar element supplied and styled entirely by the
+        caller (color scheme, initials / icon / image, size overrides). The step
+        renders it verbatim and never restyles it.
+    - name: label
+      type: ReactNode
+      required: false
+      description: The step name. Truncates rather than wrapping.
+    - name: connectingLine
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Draw a decorative connector trailing this step so a row of steps chains
+        together. Not a Figma variant — a product requirement. Omit it on the last
+        step, or the line dangles.
+    - name: render
+      type: RenderProp
+      required: false
+      description: >-
+        Base UI composition prop — replaces the rendered `<div>` with another
+        element or component while merging props and classes. Use it to make a
+        completed step a real `<button>` (or a router link) that jumps back.
+        React-only; other frameworks use their own polymorphism.
+
+  events:
+    - name: onClick
+      payload: '(event: MouseEvent) => void'
+      description: >-
+        Fired on activation. Only meaningful once the step is rendered as a real
+        control via `render` — the default `<div>` is not focusable, and a future
+        step does not receive pointer events at all.
+
+  content:
+    - name: default
+      description: >-
+        Optional trailing content rendered after the label (e.g. a status tag).
+        The marker and the step name come from `avatar` and `label`, not children.
+
+  methods: []
+
+adapters:
+  react:
+    component: StepperItem
+    status: implemented
+    import: "import { StepperItem } from '@acronis-platform/ui-react'"
+    example: |
+      <StepperItem
+        variant="completed"
+        label="Create an account"
+        avatar={<Avatar color="green"><CheckIcon size={16} /></Avatar>}
+        connectingLine
+        render={<button type="button" onClick={goToStep(1)} />}
+      />
+      <StepperItem
+        variant="current"
+        label="Choose a plan"
+        avatar={<Avatar color="blue"><AvatarFallback>2</AvatarFallback></Avatar>}
+      />
+
+  vue:
+    component: AvStepperItem
+    status: planned
+    import: "import { AvStepperItem } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvStepperItem variant="current" label="Choose a plan">
+        <template #avatar><AvAvatar color="blue">2</AvAvatar></template>
+      </AvStepperItem>
+
+  web-components:
+    element: ui-stepper-item
+    status: planned
+    import: "import '@acronis-platform/ui-wc/stepper-item'"
+    example: |
+      <ui-stepper-item variant="current" label="Choose a plan">
+        <ui-avatar slot="avatar" color="blue">2</ui-avatar>
+      </ui-stepper-item>

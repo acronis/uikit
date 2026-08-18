@@ -1,0 +1,112 @@
+---
+title: StepperItem
+description: One step in a stepper — an avatar marker plus the step name, keyed to its role in the sequence.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DemoReact } from "@/components/DemoReact";
+import { StepperItemDemo } from "@/components/demos-react/stepper-item";
+
+## Usage
+
+```tsx
+import { StepperItem } from '@acronis-platform/ui-react';
+```
+
+`StepperItem` is a single step: the marker you pass as `avatar`, followed by the
+step name. `variant` says where the step sits in the sequence — `current` (where
+the user is), `completed` (already passed), `future` (not reachable yet) — and
+drives the container fill and the label color. `state` is the interaction look,
+and it only changes anything on a `completed` step: `current` is always
+highlighted and `future` is always disabled, which is exactly the five
+combinations the Figma component set draws.
+
+The marker is a **required slot you own completely**. Pass any `Avatar`
+composition — color scheme, initials, an icon, an image, size overrides — and the
+step renders it verbatim without sizing, tinting, or recoloring it.
+
+There is no `Stepper` root yet: lay the steps out yourself, decide each step's
+`variant`, and set `connectingLine` on every step but the last so the row chains
+together. The step is polymorphic via Base UI's `useRender` (the `render` prop) —
+a completed step is usually a real `<button>` that jumps back.
+
+<Callout>
+  The Figma component has no `--ui-stepper-item-*` token tier yet. This v1
+  consumes the semantic tokens whose resolved values match the design variables
+  exactly (`--ui-background-surface-{active,hover}`,
+  `--ui-text-on-surface-{primary,disabled}`, `--ui-gap-{8,16}`), and will be
+  re-pointed at the dedicated tier once design ships it.
+</Callout>
+
+## Examples
+
+<DemoReact>
+  <StepperItemDemo />
+</DemoReact>
+
+A full sequence:
+
+```tsx
+<div className="flex items-center gap-4">
+  <StepperItem
+    render={<button type="button" onClick={() => goToStep(1)} />}
+    variant="completed"
+    label="Create an account"
+    avatar={
+      <Avatar color="green">
+        <CheckIcon size={16} />
+      </Avatar>
+    }
+    connectingLine
+  />
+  <StepperItem
+    variant="current"
+    label="Choose a plan"
+    avatar={
+      <Avatar color="blue">
+        <AvatarFallback>2</AvatarFallback>
+      </Avatar>
+    }
+    connectingLine
+  />
+  <StepperItem
+    variant="future"
+    label="Confirm and pay"
+    avatar={
+      <Avatar color="gray">
+        <AvatarFallback>3</AvatarFallback>
+      </Avatar>
+    }
+  />
+</div>
+```
+
+Force a completed step's interaction look — useful when a parent owns hover and
+press detection:
+
+```tsx
+<StepperItem
+  variant="completed"
+  state="hover"
+  label="Create an account"
+  avatar={<Avatar color="green"><CheckIcon size={16} /></Avatar>}
+/>
+```
+
+A future step is marked `aria-disabled` and receives no pointer events, so it
+stays in the reading order but cannot be activated:
+
+```tsx
+<StepperItem
+  variant="future"
+  label="Confirm and pay"
+  avatar={<Avatar color="gray"><AvatarFallback>3</AvatarFallback></Avatar>}
+/>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/stepper-item/stepper-item.tsx"
+  name="StepperItemProps"
+/>

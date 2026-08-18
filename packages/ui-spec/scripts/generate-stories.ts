@@ -41,6 +41,11 @@ interface RenderHint {
    *  exists under one variant (e.g. Timeline's disclosure control is `tree`-only,
    *  so the hover / focus-visible stories have nothing to paint in `default`). */
   baseProps?: string;
+  /** Object-literal body emitted as `meta.args`. Needed when the component has a
+   *  *required* prop: `StoryObj<typeof meta>` then demands `args` on every
+   *  `render`-only story, which none of the generated ones supply. The stories
+   *  all use `render`, so this only satisfies the type — it changes no snapshot. */
+  metaArgs?: string;
   /** Root component/import to render when it differs from `index.component`
    *  (e.g. Resizable's root export is `ResizablePanelGroup`). */
   root?: string;
@@ -762,6 +767,17 @@ const RENDER: Record<string, RenderHint> = {
       '      </BreadcrumbList>',
       '    ',
     ].join('\n'),
+  },
+  'stepper-item': {
+    // `avatar` is a required element slot, and `label` is a prop rather than
+    // children — the generator can only drive root props, so both are fixed here
+    // or every generated instance renders an empty, unlabelled box.
+    extraImports: ["import { Avatar, AvatarFallback } from '../../avatar';"],
+    props:
+      'label="Step name" avatar={<Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar>}',
+    // `avatar` is required, so the meta has to carry it for the type to check.
+    metaArgs:
+      '{ avatar: <Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar> }',
   },
   'dialog-welcome': {
     // A portaled, focus-trapping modal, like `Dialog` — an auto "All variants"

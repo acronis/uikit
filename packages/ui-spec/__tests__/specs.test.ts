@@ -524,4 +524,23 @@ describe('cva ↔ contract conformance', () => {
     expect(Object.keys(groups)).toEqual(['color']);
     expect(groups.color.sort()).toEqual(enumMembers(api, 'color'));
   });
+
+  it('StepperItem: api.yaml variant/state enums match the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/stepper-item/stepper-item.tsx'
+      ),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('stepper-item').api;
+
+    // Two axes: the step's role in the sequence, and its interaction look. Only
+    // five of their nine combinations are drawn in Figma, but both are real
+    // props, so both enums are pinned here.
+    expect(Object.keys(groups)).toEqual(['variant', 'state']);
+    expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
+    expect(groups.state.sort()).toEqual(enumMembers(api, 'state'));
+  });
 });

@@ -1,0 +1,74 @@
+spec_version: '1.0'
+component: StepperItem
+
+# References only. Values live in @acronis-platform/tokens-pd and resolve per
+# brand/theme at paint time; never restate values here.
+#
+# ── Placeholder substitution — re-point once design ships the tier ──
+# The Figma component references `components/Stepper/Item/*`, which is not yet
+# "ready for dev": there is no `--ui-stepper-item-*` tier in tokens-pd (a grep
+# for `Stepper` across tokens-pd and the design-tokens source returns nothing).
+# Rather than hand-author values, the implementation consumes the semantic /
+# generic tokens whose resolved value in `packages/tokens-pd/css/default.css`
+# matches the Figma variable exactly — verified value-by-value:
+#
+#   components/Stepper/Item/_global/container/gap          (8px)     -> --ui-gap-8
+#   components/Stepper/Item/_global/container/paddingY     (8px)     -> --ui-gap-8
+#   (padding-x came through Figma as the generic `gap/gap-16`)       -> --ui-gap-16
+#   components/Stepper/Item/_global/container/borderRadius (8px)     -> `rounded-lg`
+#   components/Stepper/Item/_global/container/color/active (#e2ebf5) -> --ui-background-surface-active
+#   components/Stepper/Item/_global/container/color/hover  (#eef2f7) -> --ui-background-surface-hover
+#   semantics/colors/text/onSurface/primary                (#18191b) -> --ui-text-on-surface-primary
+#   semantics/colors/text/onSurface/disabled               (#afb2b6) -> --ui-text-on-surface-disabled
+#
+# The container radius is the one exception left as a static utility: tokens-pd
+# has no generic radius scale — every `*border-radius*` token is component-owned
+# — so there is nothing honest to reference, and a fabricated `--ui-stepper-*`
+# name would be a lie in this file. It is therefore absent from the list below.
+# Figma also defines three `completed/label/color/{idle,hover,active}` variables,
+# but all three carry the identical `#18191b`, so one semantic token covers them
+# faithfully. The variables that color the digit *inside* the avatar circle
+# (`components/Stepper/Item/{current,future}/label/color/*`) are intentionally not
+# consumed: the marker is supplied and styled by the caller, so those belong to
+# whatever Avatar composition is passed in.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-gap-8
+    affects: container
+    description: >-
+      Marker-to-label gap and the container's vertical padding (Figma
+      `components/Stepper/Item/_global/container/{gap,paddingY}`).
+  - name: --ui-gap-16
+    affects: container
+    description: >-
+      The container's horizontal padding, and the length of the connecting line
+      (Figma used the generic `gap/gap-16` here, not a Stepper-owned token).
+  - name: --ui-background-surface-active
+    affects: container
+    description: >-
+      Container fill for the current step, and for a completed step in its
+      `active` state (Figma
+      `components/Stepper/Item/_global/container/color/active`).
+  - name: --ui-background-surface-hover
+    affects: container
+    description: >-
+      Container fill for a completed step in its `hover` state (Figma
+      `components/Stepper/Item/_global/container/color/hover`).
+  - name: --ui-text-on-surface-primary
+    affects: label
+    description: >-
+      Step-name color for every non-disabled step — the current step and all three
+      completed sub-states (Figma
+      `semantics/colors/text/onSurface/primary`).
+  - name: --ui-text-on-surface-disabled
+    affects: label
+    description: >-
+      Step-name color for a future step (Figma
+      `semantics/colors/text/onSurface/disabled`).
+  - name: --ui-border-on-surface-border
+    affects: connecting-line
+    description: >-
+      The connecting line. The line is not modelled in Figma at all, so this
+      reuses Timeline's documented substitute for its own un-shipped
+      `components/Timeline/connectorColor` — one connector treatment across the kit.
