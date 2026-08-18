@@ -2,45 +2,109 @@ spec_version: '1.0'
 component: Toast
 
 schematic: |
-  root: <div role="region" aria-label="Notifications"> fixed bottom-right stack
-    toast: <div> card (border, surface, shadow), one per notification
-      icon:        leading status glyph (success/info/warning/error) or spinner
-      title:       bold first line
-      description: muted secondary line
-      action:      optional inline button (e.g. Undo)
-      close:       trailing dismiss (✕) button
+  root: <div role="region" aria-label="Notifications"> fixed bottom-end stack
+    toast: <div> — neutral card, status-colored border, radius 8, drop shadow
+      toast-status-line:  ::before — 6px status bar down the leading edge
+      toast-icon:         the severity's own icon, or a spinner while loading
+      toast-content:      the column beside the icon
+        toast-text:           title + description block (its padding aligns the
+                              first text line with the icon)
+          toast-title:            short heading
+          toast-description:      (optional) supporting text, clamped to 3 lines
+        toast-actions:        (optional) wrapping row of action buttons
+      toast-close:        (optional) trailing dismiss ButtonIcon
 
 root:
   element: div
   role: region
   description: >-
-    The toast viewport — a live region (`aria-label="Notifications"`,
-    `aria-live="polite"`) that portals to the bottom-right of the page and
-    renders the queued toasts as a vertical stack. Rendered once via `<Toaster>`.
+    The toast viewport — a live region (`aria-label` defaults to
+    `"Notifications"`, `aria-live="polite"`) that portals to the page's
+    inline-end bottom corner and renders the queued toasts as a vertical stack.
+    Rendered once via `<Toaster>`. The viewport, not the card, carries the
+    design's 384px width so it can be clamped on a narrow screen.
 
 parts:
   - id: toast
     element: div
-    description: A single notification card (border + surface + shadow).
-  - id: icon
-    element: span
     description: >-
-      Leading status glyph — check (success), info, warning triangle, or error
-      (✕) tinted by `--ui-text-on-status-*`; a Spinner for the loading type.
-  - id: title
+      A single notification card. The surface is neutral
+      (--ui-toast-global-container-background) in every severity; the severity
+      itself is carried by a 1px border in the status color plus a 6px status
+      line down the leading edge, over a drop shadow that lifts the card off the
+      page.
+  - id: toast-status-line
+    element: '::before'
+    description: >-
+      The 6px status bar on the leading (inline-start) edge, colored by the
+      severity. A pseudo-element, not a slot — it is always present and has no
+      content. Bled 1px outwards so it paints over the border it overlaps, which
+      requires the card's clip edge to be the border box rather than the default
+      padding box; the clip still rounds its corners to the container radius.
+      Without that, the line is shaved to 5px and reads as a second stripe beside
+      the border instead of covering it.
+  - id: toast-icon
     element: div
-    description: The bold first line.
-  - id: description
+    description: >-
+      The leading status icon — the severity's own multicolor glyph (info →
+      CircleInfoBlue, success → CircleCheckGreen, warning →
+      TriangleWarningYellow, critical → CircleWarningOrange, danger →
+      DiamondWarningRed). A `loading` toast shows a spinner here instead.
+  - id: toast-content
     element: div
-    description: Optional muted secondary line.
-  - id: action
+    description: The flexible column beside the icon, holding the text and any actions.
+  - id: toast-text
+    element: div
+    description: >-
+      Wraps the title and description. Its vertical padding is what aligns the
+      first line of text with the icon box.
+  - id: toast-title
+    element: h5
+    description: >-
+      A short heading for the notification; also the card's accessible name. Typed
+      like Alert's title (Inter Medium 16 / 24) and rendered as an `h5` rather than
+      Base UI's `h2` default — a toast is not a page-level heading.
+  - id: toast-description
+    element: div
+    description: >-
+      Optional supporting text under the title, clamped to three lines with an
+      ellipsis (the Figma text node's truncation).
+  - id: toast-actions
+    element: div
+    description: >-
+      Optional action buttons, placed inside toast-content after toast-text so
+      they flow below the text. The row wraps when it runs out of width. The
+      first action renders as a secondary Button and the rest as ghost.
+  - id: toast-close
     element: button
-    description: Optional inline action button (e.g. Undo).
-  - id: close
-    element: button
-    description: Trailing dismiss (✕) button.
+    description: >-
+      The trailing dismiss control (a ghost ButtonIcon with a times glyph),
+      rendered unless the toast was queued with `dismissable: false` — the Figma
+      binds its visibility to a `dismissable` boolean that defaults to true.
+      Omitting it also revokes swipe-to-dismiss, so the control and the capability
+      never disagree.
 
-# A toast's `type` (default / success / info / warning / error / loading) and its
-# enter/auto-dismiss/exit lifecycle are runtime facets of the imperative API, not
-# props on a rendered component — see behavior.md.
-states: []
+# A row of icon / content / close, with the content column taking the remaining
+# width. The status line is absolutely positioned on the leading edge and mirrors
+# under dir="rtl", as does the stack's corner and the enter/exit slide; the status
+# icons are direction-agnostic and never mirror.
+layout:
+  type: flex
+  direction: row
+  align: start
+  order: [toast-icon, toast-content, toast-close]
+
+# A toast's severity is chosen by which `toast.*` method queued it, not by a prop
+# on a rendered component, so it is not a `kind: prop` state — see behavior.md for
+# the enter / auto-dismiss / exit lifecycle.
+states:
+  - id: close-hover
+    trigger: pointer over the dismiss control
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [toast-close]
+  - id: close-focus-visible
+    trigger: the dismiss control receives keyboard focus
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [toast-close]

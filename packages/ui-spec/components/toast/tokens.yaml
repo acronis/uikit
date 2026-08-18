@@ -1,40 +1,158 @@
 spec_version: '1.0'
 component: Toast
 
-# References only. Values live in @acronis-platform/tokens-pd. No `--ui-toast-*`
-# tier yet; this design-pending v1 uses a neutral card surface
-# (bg-background + border-border + shadow) with the status conveyed by a colored
-# leading icon. Per-status surface tinting is design-pending.
+# References only. Values live in @acronis-platform/tokens-pd (tier: Toast).
+# The severity is carried by exactly two colors per variant — the container
+# border and the leading status line — over a neutral surface shared by all of
+# them. Geometry comes from the _global group.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - name: --ui-background-surface-primary
+  # Container
+  - name: --ui-toast-global-container-background
     affects: toast
-    description: Toast card background (bg-background).
-  - name: --ui-border-on-surface-border
+    description: The neutral card surface, shared by every severity.
+  - name: --ui-toast-global-container-border-width
     affects: toast
-    description: Toast card border (border-border).
-  - name: --ui-text-on-surface-primary
-    affects: title
-    description: Title color (text-foreground).
-  - name: --ui-text-on-surface-secondary
-    affects: description
-    description: Description + close-icon color (text-muted-foreground).
-  - name: --ui-text-on-status-success
-    affects: icon
-    description: Success icon color.
-  - name: --ui-text-on-status-info
-    affects: icon
-    description: Info icon color.
-  - name: --ui-text-on-status-warning
-    affects: icon
-    description: Warning icon color.
-  - name: --ui-text-on-status-danger
-    affects: icon
-    description: Error icon color.
-  - name: --ui-background-brand-secondary
-    affects: action
-    description: Action button label, the brand action blue (text-secondary).
+    description: Card border width.
+  - name: --ui-toast-global-container-border-radius
+    affects: toast
+    description: Card corner radius; also clips the status line's corners.
+  - name: --ui-toast-global-container-padding-x
+    affects: toast
+    description: Card inline padding.
+  - name: --ui-toast-global-container-padding-y
+    affects: toast
+    description: Card block padding.
+  - name: --ui-toast-global-container-gap
+    affects: toast
+    description: Gap between the icon, content column, and dismiss control.
+  - name: --ui-toast-global-container-shadow
+    affects: toast
+    description: Drop shadow lifting the card off the page.
+  - name: --ui-toast-global-container-width-min
+    affects: root
+    description: >-
+      The stack's width. Applied to the viewport rather than the card so a narrow
+      viewport can clamp it — a fixed-position card with this as a min-width
+      would overflow the screen.
+  - name: --ui-toast-global-container-status-width
+    affects: toast-status-line
+    description: Width of the leading status line.
+
+  # Per-variant severity colors
+  - name: --ui-toast-info-border-color
+    affects: toast
+    description: Card border for the info severity.
+  - name: --ui-toast-info-left-line
+    affects: toast-status-line
+    description: Status line for the info severity (also used by `loading`).
+  - name: --ui-toast-success-border-color
+    affects: toast
+    description: Card border for the success severity.
+  - name: --ui-toast-success-left-line
+    affects: toast-status-line
+    description: Status line for the success severity.
+  - name: --ui-toast-warning-border-color
+    affects: toast
+    description: Card border for the warning severity.
+  - name: --ui-toast-warning-left-line
+    affects: toast-status-line
+    description: Status line for the warning severity.
+  - name: --ui-toast-critical-border-color
+    affects: toast
+    description: Card border for the critical severity.
+  - name: --ui-toast-critical-left-line
+    affects: toast-status-line
+    description: Status line for the critical severity.
+  - name: --ui-toast-danger-border-color
+    affects: toast
+    description: Card border for the danger severity.
+  - name: --ui-toast-danger-left-line
+    affects: toast-status-line
+    description: Status line for the danger severity.
+
+  # Icon box
+  - name: --ui-toast-global-icon-size
+    affects: toast-icon
+    description: Status-icon glyph size; also the spinner's size.
+  - name: --ui-toast-global-icon-padding-x
+    affects: toast-icon
+    description: Icon box inline padding.
+  - name: --ui-toast-global-icon-padding-y
+    affects: toast-icon
+    description: >-
+      Icon box block padding — what aligns the glyph with the first line of the
+      title.
+
+  # Content column
+  - name: --ui-toast-global-content-gap
+    affects: toast-content
+    description: Gap between the text block and the actions row.
+  - name: --ui-toast-global-content-padding-x
+    affects: toast-content
+    description: Content column inline padding.
+  - name: --ui-toast-global-content-padding-y
+    affects: toast-content
+    description: Content column block padding.
+
+  # Text block
+  - name: --ui-toast-global-content-text-container-gap
+    affects: toast-text
+    description: Gap between the title and the description.
+  - name: --ui-toast-global-content-text-container-padding-x
+    affects: toast-text
+    description: Text block inline padding.
+  - name: --ui-toast-global-content-text-container-padding-y
+    affects: toast-text
+    description: >-
+      Text block block padding — the counterpart to the icon box's padding for
+      first-line alignment.
+  - name: --ui-toast-global-content-text-container-title-color
+    affects: toast-title
+    description: Title text color (identical across severities).
+  - name: --ui-toast-global-content-text-container-description-color
+    affects: toast-description
+    description: Description text color (identical across severities).
+
+  # Actions row
+  - name: --ui-toast-global-content-actions-container-gap-x
+    affects: toast-actions
+    description: Horizontal gap between action buttons.
+  - name: --ui-toast-global-content-actions-container-gap-y
+    affects: toast-actions
+    description: Vertical gap between wrapped rows of action buttons.
+  - name: --ui-toast-global-content-actions-container-padding-x
+    affects: toast-actions
+    description: Actions row inline padding.
+  - name: --ui-toast-global-content-actions-container-padding-y
+    affects: toast-actions
+    description: Actions row block padding.
+
+  # Action buttons — inherited from Button's own tier
+  - name: --ui-button-secondary-container-border-color-idle
+    affects: toast-actions
+    description: First action's border at rest (via Button `secondary`).
+  - name: --ui-button-secondary-label-color-idle
+    affects: toast-actions
+    description: First action's label at rest (via Button `secondary`).
+  - name: --ui-button-ghost-label-color-idle
+    affects: toast-actions
+    description: Subsequent actions' label at rest (via Button `ghost`).
+
+  # Dismiss control — inherited from ButtonIcon's own tier
+  - name: --ui-button-icon-global-container-height
+    affects: toast-close
+    description: Dismiss control box size (via ButtonIcon).
+  - name: --ui-button-icon-global-icon-size
+    affects: toast-close
+    description: Dismiss glyph size (via ButtonIcon).
+  - name: --ui-button-icon-global-icon-color-idle
+    affects: toast-close
+    description: Dismiss glyph color at rest (via ButtonIcon).
+  - name: --ui-button-icon-global-container-color-hover
+    affects: toast-close
+    description: Dismiss control fill on hover (via ButtonIcon).
   - name: --ui-focus-primary
-    affects: close
-    description: Close-button keyboard focus ring.
+    affects: toast-close
+    description: Focus ring on the dismiss control (via ButtonIcon).

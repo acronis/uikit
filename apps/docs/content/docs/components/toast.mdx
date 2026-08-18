@@ -3,8 +3,8 @@ title: Toast
 description: A transient notification shown in a corner stack, triggered with the imperative toast() API.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { ToastDemo } from "@/components/demos-react/toast";
+import { DemoReact } from '@/components/DemoReact';
+import { ToastDemo } from '@/components/demos-react/toast';
 
 ## Usage
 
@@ -14,14 +14,17 @@ import { Toaster, toast } from '@acronis-platform/ui-react';
 
 Render a single `<Toaster />` near the app root, then call the imperative
 `toast(...)` API from anywhere — including outside React, since the manager is
-module-level. Rebuilt on the Base UI toast primitive (no Sonner dependency). This
-is a design-pending v1 on semantic tokens: a neutral card surface with the status
-conveyed by a colored leading icon; a `--ui-toast-*` tier and per-status tinting
-are pending a Figma pass.
+module-level. Built on the Base UI toast primitive (no Sonner dependency).
+
+Visually a toast is [Alert](/components/alert) plus a drop shadow: a neutral
+card whose severity is carried by a 1px status-colored border, a 6px status line
+down the leading edge, and a fixed status icon. Every value comes from the
+`--ui-toast-*` token tier, so a brand override re-themes it without touching the
+component.
 
 ```tsx
 // once, near the app root
-<Toaster />
+<Toaster />;
 
 // anywhere
 toast.success('Profile saved', { description: 'Your changes were saved.' });
@@ -36,25 +39,113 @@ toast.success('Profile saved', { description: 'Your changes were saved.' });
 ```tsx
 toast('Event created', { description: 'Monday, January 3rd at 6:00 PM' });
 toast.success('Profile saved');
-toast.error('Delete failed', { description: 'Please try again.' });
+toast.warning('Disk space low', { description: 'Less than 10% remaining.' });
+toast.critical('Backup incomplete', {
+  description: 'Three workloads were skipped.',
+});
+toast.danger('Delete failed', { description: 'Please try again.' });
+
 toast.info('Event created', {
   description: 'Monday at 6:00 PM',
-  action: { label: 'Undo', onClick: undo },
+  actions: [
+    { label: 'View', onClick: view },
+    { label: 'Undo', onClick: undo },
+  ],
 });
 ```
 
+## Severities
+
+The severity comes from the method you call, matching the Figma variants. A bare
+`toast(...)` is `info`.
+
+| Method           | Border / status line | Icon                  |
+| ---------------- | -------------------- | --------------------- |
+| `toast.info`     | blue                 | CircleInfoBlue        |
+| `toast.success`  | green                | CircleCheckGreen      |
+| `toast.warning`  | yellow               | TriangleWarningYellow |
+| `toast.critical` | orange               | CircleWarningOrange   |
+| `toast.danger`   | red                  | DiamondWarningRed     |
+
+`toast.loading` has no Figma variant of its own: it swaps the status glyph for a
+spinner, borrows the info border and status line, and never auto-dismisses.
+
 ## The `toast` API
 
-| Method                                  | Description                                            |
-| --------------------------------------- | ------------------------------------------------------ |
-| `toast(title, options?)`                | A neutral toast. Returns the toast id.                 |
-| `toast.success / info / warning / error`| Status variants (sets the icon).                       |
-| `toast.loading(title, options?)`        | A persistent spinner toast (no auto-dismiss).          |
-| `toast.dismiss(id?)`                    | Dismiss one toast, or all when `id` is omitted.        |
-| `toast.promise(promise, { loading, success, error })` | Tie a toast to a promise's lifecycle.    |
+| Method                                                | Description                                     |
+| ----------------------------------------------------- | ----------------------------------------------- |
+| `toast(title, options?)`                              | An `info` toast. Returns the toast id.          |
+| `toast.info / success / warning / critical / danger`  | The five Figma severities.                      |
+| `toast.loading(title, options?)`                      | A persistent spinner toast (no auto-dismiss).   |
+| `toast.dismiss(id?)`                                  | Dismiss one toast, or all when `id` is omitted. |
+| `toast.promise(promise, { loading, success, error })` | Tie a toast to a promise's lifecycle.           |
 
-`options`: `description`, `timeout` (ms; `0` = persist), `action` (`{ label,
-onClick }`), and `id` (re-adding the same id updates the toast in place).
+`options`: `description` (clamped to three lines), `timeout` (ms; `0` = persist),
+`actions`, `dismissable`, and `id` (re-adding the same id updates the toast in
+place).
+
+`dismissable` defaults to `true`. Setting it `false` drops the close control **and**
+revokes swipe-to-dismiss, so the control and the capability never disagree — the
+toast then leaves only on its timeout, or via `toast.dismiss(id)`.
+
+```tsx
+toast.warning('Maintenance in progress', {
+  description: 'This banner clears itself when the job finishes.',
+  dismissable: false,
+});
+```
+
+`actions` takes `ToastAction` descriptors — `{ label, onClick?, variant? }`. They
+render in a wrapping row under the text; the first defaults to the `secondary`
+button style and the rest to `ghost`, matching the Figma. Clicking an action runs
+its handler and leaves the toast open — call `toast.dismiss(id)` from the handler
+if it should close.
+
+```tsx
+const id = toast.danger('Delete failed', {
+  actions: [{ label: 'Dismiss', onClick: () => toast.dismiss(id) }],
+});
+```
+
+## The `<Toaster>` region
+
+One `<Toaster />` serves the whole app. `timeout` sets the default auto-dismiss
+delay for toasts that don't set their own, and `limit` caps how many are on screen
+at once — past it the oldest is dropped. The two accessible names it renders are
+props so they can be localized: `label` names the live region (default
+`"Notifications"`) and `closeAriaLabel` names each toast's dismiss control (default
+`"Close"`).
+
+```tsx
+<Toaster
+  timeout={8000}
+  limit={5}
+  label="Notificaciones"
+  closeAriaLabel="Cerrar"
+/>
+```
+
+### One region per page (micro-frontends)
+
+The `toast(...)` queue is a **module-level singleton**, which is what lets you call
+it from outside React. The consequence is that it is scoped to the _package
+instance_, so in a micro-frontend host you must mount exactly one `<Toaster />`
+for the whole page — normally in the shell — and make sure every MFE resolves the
+**same** `@acronis-platform/ui-react` instance (bundler dedupe, or
+`shared: { '@acronis-platform/ui-react': { singleton: true } }` under Module
+Federation).
+
+If two copies of the package end up loaded:
+
+- `toast(...)` called through one copy is invisible to the `<Toaster />` rendered
+  by the other — the toast is queued and **never appears**, with no error.
+- If each MFE mounts its own `<Toaster />`, both pin to the same bottom-end corner
+  and the stacks overlap.
+- `timeout` and `limit` are per-region props, so they drift independently.
+
+When the single region has to live inside a shadow root, wrap it in
+`PortalContainerProvider` rather than adding a second one — see
+[Shadow DOM Integration](/shadow-dom).
 
 ## Portaling
 
