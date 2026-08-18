@@ -211,6 +211,42 @@ describe('InputSelect', () => {
     );
     expect(ref.current).toBeInstanceOf(HTMLButtonElement);
   });
+
+  it('does not force the field wrapper to full width, so it can shrink in a constrained flex/grid ancestor', () => {
+    render(
+      <InputSelect items={{ apple: 'Apple' }}>
+        <InputSelectField data-testid="field">
+          <InputSelectTrigger aria-label="Fruit">
+            <InputSelectValue placeholder="Select an option" />
+          </InputSelectTrigger>
+        </InputSelectField>
+        <InputSelectContent>
+          <InputSelectItem value="apple">Apple</InputSelectItem>
+        </InputSelectContent>
+      </InputSelect>
+    );
+    const wrapper = screen.getByTestId('field');
+    expect(wrapper).not.toHaveClass('w-full');
+    expect(wrapper).toHaveClass(
+      'min-w-[var(--ui-input-select-global-container-width-min)]'
+    );
+  });
+
+  it('forwards className to the field wrapper', () => {
+    render(
+      <InputSelect items={{ apple: 'Apple' }}>
+        <InputSelectField className="w-24" data-testid="field">
+          <InputSelectTrigger aria-label="Fruit">
+            <InputSelectValue placeholder="Select an option" />
+          </InputSelectTrigger>
+        </InputSelectField>
+        <InputSelectContent>
+          <InputSelectItem value="apple">Apple</InputSelectItem>
+        </InputSelectContent>
+      </InputSelect>
+    );
+    expect(screen.getByTestId('field')).toHaveClass('w-24');
+  });
 });
 
 describe('InputSelectExpander', () => {

@@ -88,7 +88,7 @@ const InputSelectField = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'flex w-full min-w-[var(--ui-input-select-global-container-width-min)] flex-col gap-[var(--ui-input-select-global-container-gap)]',
+      'flex min-w-[var(--ui-input-select-global-container-width-min)] flex-col gap-[var(--ui-input-select-global-container-gap)]',
       className
     )}
     {...props}

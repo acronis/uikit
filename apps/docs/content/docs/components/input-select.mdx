@@ -35,6 +35,9 @@ keyboard navigation, typeahead, focus management, and ARIA come from Base UI.
 description/error furniture, and `InputSelectContent` holds the
 `InputSelectItem` options (optionally grouped into `InputSelectSection`s, with an
 `InputSelectSearch` filter). Themed by the `--ui-input-select-*` tokens.
+`InputSelectField`'s `className` targets that wrapper and has no `w-full`, so it
+shrinks to its min-width inside a constrained flex/grid ancestor instead of
+being force-stretched.
 
 ## Examples
 

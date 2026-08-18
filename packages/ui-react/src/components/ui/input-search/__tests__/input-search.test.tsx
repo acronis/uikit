@@ -84,4 +84,20 @@ describe('InputSearch', () => {
     );
     expect(screen.getByText('*')).toHaveClass('text-[var(--ui-input-search-required-color)]');
   });
+
+  it('does not force the field wrapper to full width, so it can shrink in a constrained flex/grid ancestor', () => {
+    const { container } = render(<InputSearch label="Find" />);
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper).not.toHaveClass('w-full');
+    expect(wrapper).toHaveClass(
+      'min-w-[var(--ui-input-search-container-width-min)]'
+    );
+  });
+
+  it('forwards className to the field wrapper, not the search box', () => {
+    const { container } = render(<InputSearch label="Find" className="w-24" />);
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper).toHaveClass('w-24');
+    expect(screen.getByLabelText('Find')).not.toHaveClass('w-24');
+  });
 });

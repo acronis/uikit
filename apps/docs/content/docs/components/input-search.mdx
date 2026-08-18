@@ -23,7 +23,8 @@ input. A visible label names the field automatically. Themed by the
 you the same component.
 
 `className` is merged onto the **outer wrapper**, not the input — use it to size
-the whole field:
+the whole field. The wrapper has no `w-full`, so it shrinks to its min-width
+inside a constrained flex/grid ancestor instead of being force-stretched:
 
 ```tsx
 <InputSearch aria-label="Search" placeholder="Search table" className="w-56" />
