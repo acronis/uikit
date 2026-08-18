@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  EyeIcon,
-  EyeCrossedIcon,
-} from '@acronis-platform/icons-react/stroke-mono';
+import { EyeIcon, EyeOffIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
 import { ButtonIconInput } from '../button-icon-input';
@@ -184,7 +181,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
             aria-pressed={visible}
             className="shrink-0"
           >
-            {visible ? <EyeIcon /> : <EyeCrossedIcon />}
+            {visible ? <EyeIcon /> : <EyeOffIcon />}
           </ButtonIconInput>
         </div>
 
