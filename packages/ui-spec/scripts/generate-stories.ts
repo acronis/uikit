@@ -779,6 +779,28 @@ const RENDER: Record<string, RenderHint> = {
     metaArgs:
       '{ avatar: <Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar> }',
   },
+  stepper: {
+    // Three required content props feed the compact summary, and the wide row is
+    // driven by children — the generator can supply neither on its own, so a
+    // representative sequence is fixed here. Both layouts are always rendered
+    // (the switch is a CSS media query), so this one instance covers both.
+    extraImports: [
+      "import { Avatar, AvatarFallback } from '../../avatar';",
+      "import { StepperItem } from '../../stepper-item';",
+    ],
+    props:
+      'currentStep={2} totalSteps={3} current="Choose a plan" next="Confirm and pay"',
+    sample: [
+      '',
+      '      <StepperItem variant="completed" label="Create an account" avatar={<Avatar color="green"><AvatarFallback>1</AvatarFallback></Avatar>} />',
+      '      <StepperItem variant="current" label="Choose a plan" avatar={<Avatar color="blue"><AvatarFallback>2</AvatarFallback></Avatar>} />',
+      '      <StepperItem variant="future" label="Confirm and pay" avatar={<Avatar color="gray"><AvatarFallback>3</AvatarFallback></Avatar>} />',
+      '    ',
+    ].join('\n'),
+    // `currentStep`/`totalSteps`/`current` are required, so the meta has to carry
+    // them for `StoryObj<typeof meta>` to type-check on the render-only stories.
+    metaArgs: "{ currentStep: 2, totalSteps: 3, current: 'Choose a plan' }",
+  },
   'dialog-welcome': {
     // A portaled, focus-trapping modal, like `Dialog` — an auto "All variants"
     // grid would stack two stacked modals at screen center. VR is covered by

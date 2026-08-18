@@ -77,6 +77,7 @@
     "---Navigation & Layout---",
     "accordion",
     "breadcrumb",
+    "stepper",
     "stepper-item",
     "pagination",
     "card",

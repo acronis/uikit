@@ -1,0 +1,55 @@
+spec_version: '1.0'
+component: Stepper
+
+# References only. Values live in @acronis-platform/tokens-pd and resolve per
+# brand/theme at paint time; never restate values here.
+#
+# ── Placeholder substitution — re-point once design ships the tier ──
+# Same situation as StepperItem. The Figma component references
+# `components/Stepper/*` variables, but there is no `--ui-stepper-*` tier in
+# tokens-pd (a grep for `Stepper` across tokens-pd and the design-tokens source
+# returns nothing). Rather than hand-author values, the implementation consumes
+# the semantic / generic tokens whose resolved value in
+# `packages/tokens-pd/css/default.css` matches the Figma variable exactly —
+# verified value-by-value:
+#
+#   components/Stepper/_global/list/gap     (4px)     -> --ui-gap-4
+#   (the item row's gap came through Figma as the generic `gap/gap-8`, the same
+#    8px token StepperItem already uses internally)             -> --ui-gap-8
+#   components/Stepper/_global/prefix/color (#61656b) -> --ui-text-on-surface-secondary
+#   components/Stepper/current/label/color  (#18191b) -> --ui-text-on-surface-primary
+#   components/Stepper/next/label/color     (#18191b) -> --ui-text-on-surface-primary
+#
+# The last two are separate Figma variables carrying an identical value, so one
+# semantic token covers both faithfully — and it is the token StepperItem already
+# uses for its own label, which keeps the two components in step.
+#
+# The breakpoint itself is not a token in this list: `--ui-breakpoint-lg` exists
+# in ui-react's own stylesheet, but a `@media` condition cannot read a custom
+# property, so the switch is written with Tailwind's compile-time `lg:` variant
+# instead. See the comment block in `stepper.tsx`.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-gap-4
+    affects: summary
+    description: >-
+      Vertical gap between the two summary lines (Figma
+      `components/Stepper/_global/list/gap`).
+  - name: --ui-gap-8
+    affects: items-row
+    description: >-
+      Gap between `StepperItem` children in the wide row (Figma used the generic
+      `gap/gap-8` here, not a Stepper-owned token).
+  - name: --ui-text-on-surface-secondary
+    affects: current-line
+    description: >-
+      The generated prefix copy — "Step", "of", the counter digits, and "Next:"
+      — on both summary lines (Figma
+      `components/Stepper/_global/prefix/color`).
+  - name: --ui-text-on-surface-primary
+    affects: next-line
+    description: >-
+      The step names themselves on both summary lines (Figma
+      `components/Stepper/{current,next}/label/color`, two variables with an
+      identical value).

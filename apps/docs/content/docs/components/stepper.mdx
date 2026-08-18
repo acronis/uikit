@@ -1,0 +1,134 @@
+---
+title: Stepper
+description: The root of a step sequence — a row of steps on wide viewports, a two-line text summary on narrow ones.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DemoReact } from '@/components/DemoReact';
+import { StepperDemo } from '@/components/demos-react/stepper';
+
+## Usage
+
+```tsx
+import { Stepper, StepperItem } from '@acronis-platform/ui-react';
+```
+
+`Stepper` renders a sequence **two ways** and lets CSS pick one:
+
+- **At 1024px and above** — the `StepperItem` children you pass, in a
+  start-aligned row that wraps.
+- **Below 1024px** — a two-line text summary instead: `Step 3 of 5: Choose a
+plan`, then `Next: Confirm and pay`. No step items at all.
+
+Both subtrees are always in the DOM and a real viewport media query (Tailwind's
+`lg:`) displays one and hides the other — there is no `ResizeObserver`, no
+measuring pass, and nothing mounts or unmounts as the window resizes. Because the
+component cannot see which layout is live, you supply **both**: the children for
+the row, and `currentStep` / `totalSteps` / `current` / `next` for the summary.
+
+On the last step, omit `next` and the whole `Next: …` line is left out rather
+than rendered empty.
+
+The three words the component generates itself — `stepLabel` (`"Step"`),
+`ofLabel` (`"of"`), `nextLabel` (`"Next:"`) — are props so they can be
+translated. Everything else it renders is yours.
+
+<Callout>
+  Figma names the two variants `0-1024` and `>1025`. The implementation uses the
+  kit's pinned `lg` breakpoint — exactly 1024px — so **1024px renders the wide
+  row**, one pixel lower than the Figma label implies. That keeps the component
+  on the shared breakpoint scale rather than minting a bespoke `1025px` query.
+</Callout>
+
+<Callout>
+  The Figma component has no `--ui-stepper-*` token tier yet. This v1 consumes
+  the semantic tokens whose resolved values match the design variables exactly
+  (`--ui-gap-4`, `--ui-gap-8`, `--ui-text-on-surface-secondary`,
+  `--ui-text-on-surface-primary`), and will be re-pointed at the dedicated tier
+  once design ships it — the same treatment `StepperItem` carries.
+</Callout>
+
+## Examples
+
+<DemoReact>
+  <StepperDemo />
+</DemoReact>
+
+A full sequence:
+
+```tsx
+<Stepper
+  currentStep={2}
+  totalSteps={3}
+  current="Choose a plan"
+  next="Confirm and pay"
+>
+  <StepperItem
+    variant="completed"
+    label="Create an account"
+    avatar={
+      <Avatar color="green">
+        <CheckIcon size={16} />
+      </Avatar>
+    }
+  />
+  <StepperItem
+    variant="current"
+    label="Choose a plan"
+    avatar={
+      <Avatar color="blue">
+        <AvatarFallback>2</AvatarFallback>
+      </Avatar>
+    }
+  />
+  <StepperItem
+    variant="future"
+    label="Confirm and pay"
+    avatar={
+      <Avatar color="gray">
+        <AvatarFallback>3</AvatarFallback>
+      </Avatar>
+    }
+  />
+</Stepper>
+```
+
+The last step — no `next`, so the compact layout shows a single line:
+
+```tsx
+<Stepper currentStep={3} totalSteps={3} current="Confirm and pay">
+  {/* … */}
+</Stepper>
+```
+
+Translated summary copy:
+
+```tsx
+<Stepper
+  currentStep={2}
+  totalSteps={3}
+  current="Choisissez une formule"
+  next="Confirmer et payer"
+  stepLabel="Étape"
+  ofLabel="sur"
+  nextLabel="Suivante :"
+>
+  {/* … */}
+</Stepper>
+```
+
+## Accessibility
+
+Only one layout is ever announced: the hidden one is `display: none`, which
+removes it from the accessibility tree, so a screen-reader user hears the text
+summary below 1024px and the step items above it — never both. The root is a
+plain `<div>` with no `role` and no tab stops of its own; if the sequence should
+announce as an ordered list, or the current step as `aria-current="step"`,
+compose that on the `StepperItem` children via their `render` prop.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/stepper/stepper.tsx"
+  name="StepperProps"
+/>
