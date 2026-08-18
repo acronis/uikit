@@ -106,6 +106,14 @@ describe('DialogRoot', () => {
     expect(ref.current).toBeInstanceOf(HTMLElement);
   });
 
+  it('clamps the popup to the viewport-margin bound and lets it scroll internally', () => {
+    render(<OpenDialog />);
+    expect(screen.getByRole('dialog')).toHaveClass(
+      'max-h-[calc(100dvh-96px)]',
+      'overflow-hidden'
+    );
+  });
+
   it('opens from the trigger and closes via onOpenChange', async () => {
     const user = userEvent.setup();
     const onOpenChange = vi.fn();
@@ -286,6 +294,23 @@ describe('Dialog', () => {
   it('marks the popup aria-busy while hasLoading', () => {
     render(<Dialog open hasLoading />);
     expect(screen.getByRole('dialog')).toHaveAttribute('aria-busy', 'true');
+  });
+
+  it('keeps the header and footer from shrinking so the body absorbs overflow', () => {
+    render(<Dialog open />);
+    const closeButton = screen.getByRole('button', { name: 'Close' });
+    const header = closeButton.parentElement;
+    expect(header).toHaveClass('shrink-0');
+
+    const cancelButton = screen.getByRole('button', { name: 'Cancel' });
+    const footer = cancelButton.parentElement;
+    expect(footer).toHaveClass('shrink-0');
+  });
+
+  it('makes the body its own scroll container', () => {
+    render(<Dialog open />);
+    const body = screen.getByText('Drop any content into this slot.').closest('div');
+    expect(body).toHaveClass('overflow-y-auto');
   });
 
   it('renders the header and footer by default', () => {
