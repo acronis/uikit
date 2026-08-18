@@ -95,14 +95,42 @@ Disable a single action, or the whole group:
 </ButtonGroup>
 ```
 
-A disabled item is a real native `disabled` button: it is skipped by both Tab and
-the arrow keys, matching every other disabled control in the library.
+A disabled item behaves differently here than elsewhere in the library: it stays
+focusable and is marked `aria-disabled` rather than natively disabled, so the
+arrow keys land on it (click and Enter/Space are still suppressed). That is
+required rather than a preference — the roving tabindex parks the group's single
+`tabindex="0"` on the first item, and browsers skip a natively disabled button,
+so a natively disabled _first_ item would take the **whole group** out of the tab
+order.
 
-Separators need no configuration. Figma models item position as an `order`
-variant (first / middle / last), but it only selects whether the trailing
+Separators normally need no configuration. Figma models item position as an
+`order` variant (first / middle / last), but it only selects whether the trailing
 separator is drawn — the component derives that from the item's position, so the
 group stays variadic and you never restate the DOM order. Being an inline-end
 border, the separator also mirrors correctly under `dir="rtl"`.
+
+There is one composition that derivation cannot survive: if you wrap each item in
+another element, every button becomes a `:last-child` of its own wrapper and all
+the separators vanish. `order` is the escape hatch for exactly that case — it
+replaces the derivation instead of layering on top of it:
+
+```tsx
+<ButtonGroup aria-label="View mode">
+  <Wrapper>
+    <ButtonGroupItem aria-label="List view" order="first">
+      <ListIcon size={16} />
+    </ButtonGroupItem>
+  </Wrapper>
+  <Wrapper>
+    <ButtonGroupItem aria-label="Grid view" order="last">
+      <LayoutGridIcon size={16} />
+    </ButtonGroupItem>
+  </Wrapper>
+</ButtonGroup>
+```
+
+Leave `order` unset in normal use — items as direct children is the intended
+composition, and the one Figma's slot models.
 
 ## API Reference
 

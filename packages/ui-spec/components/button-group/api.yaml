@@ -8,10 +8,11 @@ component: ButtonGroup
 # `aria-label` on an item, and `aria-label` / `aria-labelledby` on the
 # container.
 #
-# Figma's `order` (first / middle / last) item variant is deliberately NOT a
-# property: it only selects whether the trailing separator is drawn, which the
-# implementation derives from the item's position (`:last-child`). Exposing it
-# would make callers restate the DOM order by hand.
+# Figma's `order` (first / middle / last) item variant is an *optional* property
+# only: it selects whether the trailing separator is drawn, which the
+# implementation normally derives from the item's position (`:last-child`).
+# Requiring it would make callers restate the DOM order by hand, so it exists
+# purely as an escape hatch for compositions that defeat the derivation.
 contract:
   properties:
     - name: variant
@@ -30,8 +31,21 @@ contract:
       description: >-
         Disables interaction. On an item it disables that action; on the
         container it disables every item in the group. A disabled item keeps its
-        idle fill, dims its glyph to the shared disabled glyph token, and is
-        skipped by both Tab and the arrow keys.
+        idle fill and dims its glyph to the shared disabled glyph token. Per the
+        WAI-ARIA toolbar pattern it stays focusable (exposed as
+        `aria-disabled`, not the native disabled attribute) so it remains
+        discoverable, while click and Enter/Space activation are suppressed.
+    - name: order
+      type: "'first' | 'middle' | 'last'"
+      required: false
+      default: undefined
+      description: >-
+        On an item: its position in the group, mirroring the Figma `order`
+        variant. Controls exactly one thing — whether the trailing separator is
+        drawn (`last` omits it). Leave it unset in normal use; position is
+        derived from the item's own position in the DOM. Pass it only when each
+        item is wrapped in another element, which defeats that derivation and
+        would otherwise erase every separator.
     - name: loop-focus
       type: boolean
       required: false

@@ -63,10 +63,13 @@ contract — see `api.yaml` `adapters`.
 - **Accessible names are on you.** The container takes no default `aria-label`
   (a generic one would be unlocalizable noise), and icon-only items have no text
   to name them. Label both. See `accessibility.md`.
-- **Position is not a prop.** Figma models item position as an `order` variant
-  (first / middle / last), but it only selects whether the trailing separator is
-  drawn — derived here from `:last-child`, so the group stays variadic and you
-  never restate the DOM order.
+- **Position is normally not a prop.** Figma models item position as an `order`
+  variant (first / middle / last), but it only selects whether the trailing
+  separator is drawn — derived here from `:last-child`, so the group stays
+  variadic and you never restate the DOM order. `order` exists as an **optional
+  escape hatch** for the one case that derivation cannot survive: wrapping each
+  item in another element makes every button a `:last-child` and erases every
+  separator. Pass it there, and nowhere else.
 - **One Tab stop.** The group follows the WAI-ARIA toolbar pattern: Tab enters
   and leaves, the arrow keys move between items. Home/End are unsupported (a
   Base UI limitation).
@@ -76,3 +79,10 @@ contract — see `api.yaml` `adapters`.
   so a disabled item dims its glyph to the shared
   `--ui-glyph-on-surface-disabled` semantic token. Worth revisiting if design
   ships a dedicated token.
+- **Disabled items stay focusable**, unlike elsewhere in this library — the arrow
+  keys land on them and they are marked `aria-disabled` rather than natively
+  disabled. That is required, not preference: a natively disabled _first_ item
+  would take the whole group out of the tab order. See `accessibility.md`.
+- **Not a segmented control.** The `active` fill is transient activation
+  feedback, not selection, and Figma defines no selected state. For one option
+  that stays visibly chosen, use a toggle group.

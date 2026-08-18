@@ -45,29 +45,46 @@ const buttonGroupVariants = cva(
   }
 );
 
-// The separator is the item's own inline-end border (dropped on the last item),
-// mirroring how Figma hangs it off `ButtonGroupItem` rather than the container.
-// `border-e-*` (not `border-r-*`) so it flips under `dir="rtl"`.
-//
 // The focus ring is `ring-inset`: an outer ring would be clipped away by the
 // container's `overflow-hidden`. An inset box-shadow is clipped to the padding
 // edge, so the ring stops short of the 1px separator instead of painting over
 // it — which is exactly the 1px inset Figma's FocusRing layer draws by hand.
 //
-// Disabled is keyed off `data-[disabled]` rather than `:disabled` so it covers
-// both a disabled item and a disabled *group* (`ButtonGroup disabled`, which
-// Base UI propagates via context as `aria-disabled`, not the native attribute).
-// The design has no disabled state for this component, so the glyph falls back
-// to the shared `--ui-glyph-on-surface-disabled` semantic token.
+// Disabled is keyed off `data-[disabled]` rather than `:disabled` because the
+// item is never natively disabled (see `focusableWhenDisabled` below) — Base UI
+// exposes the state as `aria-disabled` + `data-disabled`, for a disabled item
+// and a disabled *group* alike. The design has no disabled state for this
+// component, so the glyph falls back to the shared
+// `--ui-glyph-on-surface-disabled` semantic token.
 const buttonGroupItemVariants = cva(
   'inline-flex h-[var(--ui-button-group-global-box-height)] shrink-0 cursor-pointer items-center justify-center px-[var(--ui-button-group-global-box-padding-x)] py-[var(--ui-button-group-global-box-padding-y)] transition-colors ' +
     'bg-[var(--ui-button-group-global-box-color-idle)] text-[var(--ui-glyph-on-surface-primary)] ' +
-    'border-e-[length:var(--ui-button-group-global-separator-border-width)] border-solid border-[color:var(--ui-button-group-global-separator-color)] last:border-e-0 ' +
+    'border-solid border-[color:var(--ui-button-group-global-separator-color)] ' +
     'hover:bg-[var(--ui-button-group-global-box-color-hover)] active:bg-[var(--ui-button-group-global-box-color-active)] ' +
     'focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-[var(--ui-focus-primary)] ' +
-    'data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed data-[disabled]:bg-[var(--ui-button-group-global-box-color-idle)] data-[disabled]:text-[var(--ui-glyph-on-surface-disabled)] ' +
+    'data-[disabled]:pointer-events-none data-[disabled]:bg-[var(--ui-button-group-global-box-color-idle)] data-[disabled]:text-[var(--ui-glyph-on-surface-disabled)] ' +
     '[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0'
 );
+
+const SEPARATOR_WIDTH =
+  'border-e-[length:var(--ui-button-group-global-separator-border-width)]';
+
+// The separator is the item's own inline-end border, mirroring how Figma hangs
+// it off `ButtonGroupItem` rather than the container. `border-e-*` (not
+// `border-r-*`) so it flips under `dir="rtl"`.
+//
+// By default the trailing separator is dropped via `:last-child`, which keeps
+// the group variadic (Figma's `ListItem` slot) instead of making callers restate
+// their own ordering. That derivation is resolved against the button's *real*
+// parent, though, so interposing a wrapper around each item would make every
+// button a `:last-child` and erase every separator. `order` is the escape hatch
+// for those compositions: given explicitly, it replaces the derivation outright
+// rather than layering on top of it — no `:last-child` rule is emitted at all,
+// so there is no specificity fight to reason about.
+function separatorClass(order: ButtonGroupItemOrder | undefined): string {
+  if (order === undefined) return `${SEPARATOR_WIDTH} last:border-e-0`;
+  return order === 'last' ? '' : SEPARATOR_WIDTH;
+}
 
 export interface ButtonGroupProps
   // Base UI types `className` as `string | ((state) => string)`, but the value
@@ -98,9 +115,20 @@ const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
 );
 ButtonGroup.displayName = 'ButtonGroup';
 
+/** Mirrors the Figma `ButtonGroupItem` `order` variant. */
+export type ButtonGroupItemOrder = 'first' | 'middle' | 'last';
+
 export interface ButtonGroupItemProps
   extends Omit<ToolbarButtonProps, 'className'> {
   className?: string;
+  /**
+   * Position within the group, mirroring the Figma `order` variant. Controls
+   * one thing: whether the trailing separator is drawn (`last` omits it).
+   *
+   * Leave it unset — position is derived from the DOM. Only pass it when each
+   * item is wrapped in another element, which defeats that derivation.
+   */
+  order?: ButtonGroupItemOrder;
 }
 
 /**
@@ -111,19 +139,23 @@ export interface ButtonGroupItemProps
 const ButtonGroupItem = React.forwardRef<
   HTMLButtonElement,
   ButtonGroupItemProps
->(({ className, disabled, ...props }, ref) => (
+>(({ className, order, ...props }, ref) => (
   <ToolbarPrimitive.Button
     ref={ref}
-    disabled={disabled}
-    // Opts a disabled item out of Base UI's default APG treatment (disabled
-    // toolbar items stay focusable via `aria-disabled`) so it matches every
-    // other disabled control in this library: a real native `disabled` button,
-    // unreachable by Tab or the arrow keys. This MUST stay conditional —
-    // `Toolbar.Root` builds its `disabledIndices` from `focusableWhenDisabled`
-    // alone, ignoring the item's actual disabled state, so a bare `false` here
-    // would mark every index disabled and silently kill arrow-key navigation.
-    focusableWhenDisabled={!disabled}
-    className={cn(buttonGroupItemVariants({ className }))}
+    // `focusableWhenDisabled` is deliberately left at Base UI's default
+    // (`true`), so a disabled item is `aria-disabled` rather than natively
+    // disabled. Forcing the native attribute instead — to match how every other
+    // disabled control in this library drops out of the tab order — breaks the
+    // group outright when the FIRST item is disabled: the composite still parks
+    // its single `tabIndex=0` on index 0, but the browser skips a natively
+    // disabled button, so every item ends up unreachable and Tab never enters
+    // the group at all. `Toolbar.Root` exposes no way to relocate that initial
+    // tab stop, so the APG behaviour is the only correct option here. The item
+    // is still inert: Base UI suppresses click and Enter/Space activation.
+    className={cn(
+      buttonGroupItemVariants({ className: separatorClass(order) }),
+      className
+    )}
     {...props}
   />
 ));

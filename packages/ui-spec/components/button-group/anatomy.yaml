@@ -55,10 +55,12 @@ layout:
   order: [item, separator]
 
 # Figma models item position as an `order` variant (first / middle / last), but
-# it only ever controls whether the trailing separator is drawn — that is
-# derivable from the DOM (`:last-child`), so it is a layout rule, not a state or
-# a prop. Everything below is either a container prop or a CSS pseudo-class on
-# an item; the group owns no internal state.
+# it only ever controls whether the trailing separator is drawn — normally
+# derived from the DOM (`:last-child`), so it is a layout rule rather than a
+# state. It is surfaced as an optional prop for compositions that defeat that
+# derivation (see api.yaml), which is why no `order` state appears below.
+# Everything below is either a prop or a CSS pseudo-class on an item; the group
+# owns no internal state.
 states:
   - id: outlined
     trigger: "variant === 'outlined'"

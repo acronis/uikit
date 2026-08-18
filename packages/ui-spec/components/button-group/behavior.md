@@ -25,6 +25,13 @@ on the outer edges.
 **When** it renders
 **Then** no divider is drawn — the only item is also the last item.
 
+**Given** items that are each wrapped in another element
+**When** they render without an explicit `order`
+**Then** every divider disappears, because each item is the last child of its
+own wrapper. Passing `order` on each item restores them: `first` and `middle`
+draw a divider unconditionally and `last` draws none, replacing the positional
+derivation rather than layering on top of it.
+
 **Given** a group rendered under `dir="rtl"`
 **When** it renders
 **Then** the dividers move to the items' left edges and the item order mirrors,
@@ -71,8 +78,22 @@ deliberate choice.
 **Given** an item with `disabled`
 **When** the group renders
 **Then** that item keeps its idle fill, dims its glyph to the disabled glyph
-token, ignores clicks, and is skipped by both Tab and the arrow keys — arrow
-navigation jumps over it to the next enabled item.
+token, and ignores both clicks and Enter/Space activation.
+
+**Given** focus on the item before a disabled one
+**When** Right Arrow is pressed
+**Then** focus lands **on** the disabled item rather than skipping it. Per the
+WAI-ARIA toolbar pattern a disabled item stays focusable (it is exposed as
+`aria-disabled`, not the native disabled attribute) so a keyboard user can still
+discover that the action exists and is unavailable.
+
+**Given** a group whose **first** item is disabled
+**When** Tab moves focus into it
+**Then** focus lands on that first, disabled item and the group is reachable as
+normal. This is the reason the item is never natively disabled: the roving
+tabindex parks its single `tabindex="0"` on the first item, and a browser skips
+a natively disabled button — which would leave every item unreachable and drop
+the entire group out of the tab order.
 
 **Given** the container with `disabled`
 **When** the group renders

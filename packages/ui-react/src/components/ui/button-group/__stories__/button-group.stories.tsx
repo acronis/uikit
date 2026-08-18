@@ -97,8 +97,11 @@ export const Inlined: Story = {
   args: { variant: 'inlined' },
 };
 
-// `inlined` exists for exactly this: the surrounding surface already draws a
-// border, so an `outlined` group would double up on chrome.
+// The sanctioned use of `inlined`, and the only place the Figma file actually
+// composes a ButtonGroup: inside the `Timer` component (node 7975:23766), which
+// already draws its own 1px border and 4px radius, so an `outlined` group would
+// double up on chrome. `Timer` has no ui-react implementation yet, so this
+// stands in for it with an equivalently bordered container.
 export const InlinedOnSurface: Story = {
   render: (args) => (
     <div className="inline-flex items-center rounded border border-[color:var(--ui-button-group-global-container-border-color)] p-1">

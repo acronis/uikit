@@ -29,12 +29,17 @@
   shadow, it is clipped to the padding edge and so stops short of the
   separator instead of painting over it.
 
-- **Disabled:** a disabled item is a real native `disabled` button — removed
-  from the tab order and skipped by the arrow keys, matching every other
-  disabled control in this library. This deliberately departs from the ARIA
-  Authoring Practices' toolbar advice (keep disabled items focusable via
-  `aria-disabled`) in favor of library-wide consistency. A disabled _group_
-  propagates the state to every item.
+- **Disabled:** a disabled item follows the ARIA Authoring Practices' toolbar
+  advice — it stays focusable and is exposed as `aria-disabled="true"`, **not**
+  with the native `disabled` attribute. So the arrow keys land on it and it keeps
+  its place in the roving sequence, while click and Enter/Space activation are
+  suppressed. This differs from the rest of the library, where a disabled control
+  drops out of the tab order, and the difference is load-bearing rather than
+  stylistic: a roving tabindex parks the group's single `tabindex="0"` on the
+  first item, and a browser skips a natively disabled button — so a natively
+  disabled _first_ item would leave every item unreachable and strand the whole
+  group outside the tab order. Base UI's `Toolbar.Root` offers no way to relocate
+  that initial tab stop. A disabled _group_ propagates the state to every item.
 
 - **State is not conveyed by color alone:** hover and active are transient
   pointer/activation feedback, not information. The group carries no selected
