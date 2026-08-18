@@ -127,4 +127,14 @@ describe('InputText', () => {
     expect(wrapper).toHaveClass('w-24');
     expect(screen.getByLabelText('Email')).not.toHaveClass('w-24');
   });
+
+  it('applies style to the same field wrapper className targets, not the input box', () => {
+    const { container } = render(
+      <InputText label="Email" className="test-class" style={{ width: 100 }} />
+    );
+    const wrapper = container.querySelector('.test-class') as HTMLElement;
+    expect(wrapper).toBe(container.firstChild);
+    expect(wrapper).toHaveStyle({ width: '100px' });
+    expect(screen.getByLabelText('Email')).not.toHaveAttribute('style');
+  });
 });

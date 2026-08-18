@@ -176,4 +176,16 @@ describe('InputDatePicker', () => {
       'custom-class'
     );
   });
+
+  it('applies style to the same field wrapper className targets, not the trigger button', () => {
+    const { container } = render(
+      <InputDatePicker label="Due" className="test-class" style={{ width: 100 }} />
+    );
+    const wrapper = container.querySelector('.test-class') as HTMLElement;
+    expect(wrapper).toBe(container.firstChild);
+    expect(wrapper).toHaveStyle({ width: '100px' });
+    expect(screen.getByRole('button', { name: 'Due' })).not.toHaveAttribute(
+      'style'
+    );
+  });
 });

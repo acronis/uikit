@@ -14,7 +14,9 @@ import { ButtonIconInput } from '../button-icon-input';
 // absolutely-positioned overlay). The toggle is the Figma "ButtonIconInput"
 // instance, rendered here via the `ButtonIconInput` component. Visibility is
 // fully internal state; nothing in the design calls for a consumer-controlled
-// mode.
+// mode. `ref` targets the underlying `<input>`; `className` and `style` both
+// target the field wrapper (label + box + message), so sizing the field works
+// the same way whichever one a consumer reaches for.
 export interface InputPasswordProps
   extends Omit<React.ComponentPropsWithoutRef<'input'>, 'children' | 'type'> {
   /** Field label, rendered above the input. */
@@ -126,6 +128,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
   (
     {
       className,
+      style,
       id,
       label,
       required,
@@ -153,6 +156,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
           'flex min-w-[var(--ui-input-password-global-container-width-min)] flex-col gap-[var(--ui-input-password-global-container-gap)]',
           className
         )}
+        style={style}
       >
         {label != null && label !== '' && (
           <InputPasswordLabel htmlFor={inputId} disabled={disabled} required={required}>

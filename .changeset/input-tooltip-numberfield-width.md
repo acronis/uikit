@@ -21,6 +21,14 @@ instead of always stretching to fill their container.
   utilities are the common case and now work as expected on the wrapper.
   `DateRangePicker` forwards its own `className` straight into
   `InputDatePicker`, so this retargeting applies to it too.
+- **`style` on `InputText`, `InputPassword`, `InputTextArea`, and
+  `InputDatePicker` now targets the field wrapper too — the same DOM node as
+  `className` — instead of the inner `<input>` / `<textarea>` / trigger
+  button.** Previously the two props landed on different elements, so
+  `<InputText className="w-24" style={{ width: 100 }} />` sized two nodes at
+  once. Consumers using inline `style` to paint the control itself (border,
+  background, height) need to re-target it; sizing works as expected on the
+  wrapper.
 - `Tooltip`'s popup content now has an explicit `w-max` utility so a
   consumer-supplied width class on `TooltipContent` takes effect instead of
   being overridden by the default sizing.

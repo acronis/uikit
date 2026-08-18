@@ -174,4 +174,18 @@ describe('getInputPasswordBoxClassName', () => {
     expect(wrapper).toHaveClass('custom-class');
     expect(screen.getByLabelText('Password')).not.toHaveClass('custom-class');
   });
+
+  it('applies style to the same field wrapper className targets, not the input', () => {
+    const { container } = render(
+      <InputPassword
+        label="Password"
+        className="test-class"
+        style={{ width: 100 }}
+      />
+    );
+    const wrapper = container.querySelector('.test-class') as HTMLElement;
+    expect(wrapper).toBe(container.firstChild);
+    expect(wrapper).toHaveStyle({ width: '100px' });
+    expect(screen.getByLabelText('Password')).not.toHaveAttribute('style');
+  });
 });

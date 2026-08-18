@@ -15,6 +15,10 @@ import { cn } from '@/lib/utils';
 // to their `-hover` token on trigger hover **or** `open` — the Figma design groups
 // hover and the open (active) state under one visual treatment for these parts.
 //
+// `ref` targets the trigger `<button>`; `className` and `style` both target the field
+// wrapper (label + box + message), so sizing the field works the same way whichever
+// one a consumer reaches for.
+//
 // This is the trigger only — the calendar popup is NOT in the Figma design or the
 // token tier yet, so the consumer renders the date `value`/range as formatted
 // strings and wires their own calendar to `open` / `onClick`.
@@ -48,6 +52,7 @@ const InputDatePicker = React.forwardRef<HTMLButtonElement, InputDatePickerProps
   (
     {
       className,
+      style,
       id,
       label,
       required,
@@ -87,6 +92,7 @@ const InputDatePicker = React.forwardRef<HTMLButtonElement, InputDatePickerProps
           'group/field flex min-w-[var(--ui-input-date-picker-global-container-width-min)] flex-col gap-[var(--ui-input-date-picker-global-container-gap)]',
           className
         )}
+        style={style}
       >
         {label != null && label !== '' && (
           <label

@@ -16,6 +16,9 @@ import { InputBox } from '../input';
 // overrides are honored; the clear button is a ghost ButtonIcon (glyph
 // `--ui-button-icon-global-icon-color-idle`, since the input-text tier dropped its
 // own clear-icon token in the Figma sync) with a 3px `--ui-focus-primary` ring.
+// `ref` targets the underlying `<input>`; `className` and `style` both target the
+// field wrapper (label + box + message), so sizing the field works the same way
+// whichever one a consumer reaches for.
 export interface InputTextProps
   extends Omit<React.ComponentPropsWithoutRef<'input'>, 'children'> {
   /** Field label, rendered above the input. */
@@ -39,6 +42,7 @@ const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
   (
     {
       className,
+      style,
       id,
       label,
       required,
@@ -68,6 +72,7 @@ const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
           'flex min-w-[var(--ui-input-text-global-container-width-min)] flex-col gap-[var(--ui-input-text-global-container-gap)]',
           className
         )}
+        style={style}
       >
         {label != null && label !== '' && (
           <label

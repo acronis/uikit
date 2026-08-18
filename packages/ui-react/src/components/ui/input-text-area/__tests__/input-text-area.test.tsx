@@ -109,6 +109,22 @@ describe('InputTextArea', () => {
     );
   });
 
+  it('applies style to the same field wrapper className targets, not the textarea', () => {
+    const { container } = render(
+      <InputTextArea
+        aria-label="Notes"
+        className="test-class"
+        style={{ width: 100 }}
+      />
+    );
+    const wrapper = container.querySelector('.test-class') as HTMLElement;
+    expect(wrapper).toBe(container.firstChild);
+    expect(wrapper).toHaveStyle({ width: '100px' });
+    expect(
+      screen.getByRole('textbox', { name: 'Notes' })
+    ).not.toHaveAttribute('style');
+  });
+
   it('forwards the ref to the underlying textarea', () => {
     const ref = createRef<HTMLTextAreaElement>();
     render(<InputTextArea aria-label="Notes" ref={ref} />);

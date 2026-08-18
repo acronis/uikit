@@ -15,7 +15,8 @@ import { cn } from '@/lib/utils';
 // Box geometry (96px min-height, 4px radius, 12px padding-x, 8px padding-y) comes
 // from `--ui-input-text-area-box-*`; it grows with vertical resize. `ref` targets
 // the underlying `<textarea>`; `className` targets the field wrapper (label + box
-// + message), so a consumer can size the whole field from a flex/grid ancestor.
+// + message), as does `style`, so a consumer can size the whole field from a flex/grid
+// ancestor whichever one they reach for.
 // The bare usage (`<InputTextArea placeholder=… />`, no label) renders just the box.
 export interface InputTextAreaProps
   extends Omit<React.ComponentPropsWithoutRef<'textarea'>, 'children'> {
@@ -36,6 +37,7 @@ const InputTextArea = React.forwardRef<HTMLTextAreaElement, InputTextAreaProps>(
   (
     {
       className,
+      style,
       id,
       label,
       required,
@@ -62,6 +64,7 @@ const InputTextArea = React.forwardRef<HTMLTextAreaElement, InputTextAreaProps>(
           'flex min-w-[var(--ui-input-text-area-container-width-min)] flex-col gap-[var(--ui-input-text-area-container-gap)]',
           className
         )}
+        style={style}
       >
         {label != null && label !== '' && (
           <label
