@@ -70,4 +70,7 @@ import { PopoverFooter } from '@acronis-platform/ui-react';
 ```
 
 For an isolated container (e.g. a shadow root), pass `portalContainer` so the
-popup inherits that scope's styles.
+popup inherits that scope's styles. When portaled into a resolved
+`portalContainer`, `PopoverContent` also defaults `positionMethod` to `'fixed'`
+so the popup escapes a plain overflow-clipping ancestor (e.g. a Shadow DOM host
+with `overflow: hidden`) instead of being clipped at the container's edge.

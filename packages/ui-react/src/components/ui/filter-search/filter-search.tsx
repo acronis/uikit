@@ -48,7 +48,10 @@ const FilterSearchActions = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('flex h-8 min-w-px flex-1 items-center justify-end gap-4', className)}
+    className={cn(
+      'flex h-8 min-w-px flex-1 items-center justify-end gap-4',
+      className
+    )}
     {...props}
   />
 ));
@@ -80,8 +83,10 @@ export function useFilterSearchFilters(): FilterSearchFiltersContextValue {
   return context;
 }
 
-export interface FilterSearchFiltersProps
-  extends Omit<React.ComponentPropsWithoutRef<'button'>, 'value' | 'onValueChange'> {
+export interface FilterSearchFiltersProps extends Omit<
+  React.ComponentPropsWithoutRef<'button'>,
+  'value' | 'onValueChange'
+> {
   /** The applied filter values, keyed by an arbitrary consumer-chosen id. */
   value: Record<string, unknown>;
   /** Called with the committed filters when Apply is pressed. */
@@ -90,6 +95,12 @@ export interface FilterSearchFiltersProps
   onApply?: (filters: Record<string, unknown>) => void;
   /** Label for the filter trigger button. */
   label?: React.ReactNode;
+  /** Label for the "Reset filters" action inside the popover. */
+  resetFiltersLabel?: React.ReactNode;
+  /** Label for the "Cancel" action inside the popover. */
+  cancelLabel?: React.ReactNode;
+  /** Label for the "Apply" action inside the popover. */
+  applyLabel?: React.ReactNode;
   /**
    * Filter field children rendered inside the popover form. Plain children —
    * wire each field to the draft via `useFilterSearchFilters`. Group fields with
@@ -98,111 +109,182 @@ export interface FilterSearchFiltersProps
   children?: React.ReactNode;
   /** Additional classes merged onto the trigger button. */
   className?: string;
+  /** Additional classes merged onto the popover content. */
+  contentClassName?: string;
+  /** Which side of the trigger to render the popover on. Defaults to `'bottom'`. */
+  side?: React.ComponentProps<typeof PopoverContent>['side'];
+  /** Alignment of the popover along the chosen side. Defaults to `'start'`. */
+  align?: React.ComponentProps<typeof PopoverContent>['align'];
+  /** Distance in px between the trigger and the popover. */
+  sideOffset?: React.ComponentProps<typeof PopoverContent>['sideOffset'];
+  /**
+   * Portal container the popover mounts into. Defaults to the nearest
+   * `PortalContainerProvider`, or `document.body` if none is set — see
+   * `PopoverContent`'s `portalContainer` prop.
+   */
+  portalContainer?: React.ComponentProps<
+    typeof PopoverContent
+  >['portalContainer'];
+  /**
+   * Element/rect the popover is confined to when avoiding collisions. See
+   * `PopoverContent`'s `collisionBoundary` prop for the default behavior
+   * inside a constrained portal container.
+   */
+  collisionBoundary?: React.ComponentProps<
+    typeof PopoverContent
+  >['collisionBoundary'];
+  /**
+   * Which CSS `position` the popover uses. See `PopoverContent`'s
+   * `positionMethod` prop for the default behavior inside a constrained
+   * portal container.
+   */
+  positionMethod?: React.ComponentProps<
+    typeof PopoverContent
+  >['positionMethod'];
 }
 
 const FilterSearchFilters = React.forwardRef<
   HTMLButtonElement,
   FilterSearchFiltersProps
->(({ value, onValueChange, onApply, label = 'Filters', children, className, ...rest }, ref) => {
-  const [open, setOpen] = React.useState(false);
-  const [draft, setDraft] = React.useState<Record<string, unknown>>(value);
+>(
+  (
+    {
+      value,
+      onValueChange,
+      onApply,
+      label = 'Filters',
+      resetFiltersLabel = 'Reset filters',
+      cancelLabel = 'Cancel',
+      applyLabel = 'Apply',
+      children,
+      className,
+      contentClassName,
+      side,
+      align = 'start',
+      sideOffset,
+      portalContainer,
+      collisionBoundary,
+      positionMethod,
+      ...rest
+    },
+    ref
+  ) => {
+    const [open, setOpen] = React.useState(false);
+    const [draft, setDraft] = React.useState<Record<string, unknown>>(value);
 
-  const handleOpenChange = (nextOpen: boolean) => {
-    // Snapshot the applied filters on open; revert the draft on any dismiss
-    // (outside press / Escape) so an un-applied edit never leaks out.
-    setDraft(value);
-    setOpen(nextOpen);
-  };
+    const handleOpenChange = (nextOpen: boolean) => {
+      // Snapshot the applied filters on open; revert the draft on any dismiss
+      // (outside press / Escape) so an un-applied edit never leaks out.
+      setDraft(value);
+      setOpen(nextOpen);
+    };
 
-  const setFilter = React.useCallback((key: string, filterValue: unknown) => {
-    setDraft((previous) => {
-      if (filterValue === undefined) {
-        if (!(key in previous)) return previous;
-        const next = { ...previous };
-        delete next[key];
-        return next;
-      }
-      return { ...previous, [key]: filterValue };
-    });
-  }, []);
-
-  const filterContext = React.useMemo<FilterSearchFiltersContextValue>(
-    () => ({ filters: draft, setFilter }),
-    [draft, setFilter]
-  );
-
-  const handleReset = () => setDraft({});
-
-  const handleCancel = () => {
-    setDraft(value);
-    setOpen(false);
-  };
-
-  const handleApply = () => {
-    onValueChange(draft);
-    onApply?.(draft);
-    setOpen(false);
-  };
-
-  const resetDisabled = Object.keys(draft).length === 0;
-  const applyDisabled = deepEqual(draft, value);
-
-  return (
-    <Popover open={open} onOpenChange={handleOpenChange}>
-      <PopoverTrigger
-        ref={ref}
-        render={
-          <Button
-            variant="secondary"
-            className={cn(
-              'group data-[popup-open]:border-[var(--ui-button-secondary-container-border-color-active)] data-[popup-open]:bg-[var(--ui-button-secondary-container-color-active)] data-[popup-open]:text-[var(--ui-button-secondary-label-color-active)]',
-              className
-            )}
-            {...rest}
-          />
+    const setFilter = React.useCallback((key: string, filterValue: unknown) => {
+      setDraft((previous) => {
+        if (filterValue === undefined) {
+          if (!(key in previous)) return previous;
+          const next = { ...previous };
+          delete next[key];
+          return next;
         }
-      >
-        {label}
-        <ChevronDownIcon
-          size={16}
-          className="transition-transform group-data-[popup-open]:rotate-180"
-        />
-      </PopoverTrigger>
-      <PopoverContent align="start" className="w-96 p-0">
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            handleApply();
-          }}
-        >
-          <div className="flex max-h-80 flex-col gap-4 overflow-y-auto p-4">
-            <FilterSearchFiltersContext.Provider value={filterContext}>
-              {children}
-            </FilterSearchFiltersContext.Provider>
-          </div>
-          <div className="flex items-center gap-2 border-t border-border p-4">
+        return { ...previous, [key]: filterValue };
+      });
+    }, []);
+
+    const filterContext = React.useMemo<FilterSearchFiltersContextValue>(
+      () => ({ filters: draft, setFilter }),
+      [draft, setFilter]
+    );
+
+    const handleReset = () => setDraft({});
+
+    const handleCancel = () => {
+      setDraft(value);
+      setOpen(false);
+    };
+
+    const handleApply = () => {
+      onValueChange(draft);
+      onApply?.(draft);
+      setOpen(false);
+    };
+
+    const resetDisabled = Object.keys(draft).length === 0;
+    const applyDisabled = deepEqual(draft, value);
+
+    return (
+      <Popover open={open} onOpenChange={handleOpenChange}>
+        <PopoverTrigger
+          ref={ref}
+          render={
             <Button
-              type="button"
-              variant="ghost"
-              disabled={resetDisabled}
-              onClick={handleReset}
-            >
-              Reset filters
-            </Button>
-            <div className="ms-auto flex items-center gap-2">
-              <Button type="button" variant="secondary" onClick={handleCancel}>
-                Cancel
-              </Button>
-              <Button type="submit" variant="default" disabled={applyDisabled}>
-                Apply
-              </Button>
+              variant="secondary"
+              className={cn(
+                'group data-[popup-open]:border-[var(--ui-button-secondary-container-border-color-active)] data-[popup-open]:bg-[var(--ui-button-secondary-container-color-active)] data-[popup-open]:text-[var(--ui-button-secondary-label-color-active)]',
+                className
+              )}
+              {...rest}
+            />
+          }
+        >
+          {label}
+          <ChevronDownIcon
+            size={16}
+            className="transition-transform group-data-[popup-open]:rotate-180"
+          />
+        </PopoverTrigger>
+        <PopoverContent
+          side={side}
+          align={align}
+          sideOffset={sideOffset}
+          portalContainer={portalContainer}
+          collisionBoundary={collisionBoundary}
+          positionMethod={positionMethod}
+          className={cn('w-96 p-0', contentClassName)}
+        >
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              handleApply();
+            }}
+          >
+            <div className="flex max-h-80 flex-col gap-4 overflow-y-auto p-4">
+              <FilterSearchFiltersContext.Provider value={filterContext}>
+                {children}
+              </FilterSearchFiltersContext.Provider>
             </div>
-          </div>
-        </form>
-      </PopoverContent>
-    </Popover>
-  );
-});
+            <div className="flex items-center gap-2 border-t border-border p-4">
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={resetDisabled}
+                onClick={handleReset}
+              >
+                {resetFiltersLabel}
+              </Button>
+              <div className="ms-auto flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleCancel}
+                >
+                  {cancelLabel}
+                </Button>
+                <Button
+                  type="submit"
+                  variant="default"
+                  disabled={applyDisabled}
+                >
+                  {applyLabel}
+                </Button>
+              </div>
+            </div>
+          </form>
+        </PopoverContent>
+      </Popover>
+    );
+  }
+);
 FilterSearchFilters.displayName = 'FilterSearchFilters';
 
 function defaultFilterChipLabel(key: string, value: unknown): string {
@@ -214,14 +296,20 @@ function defaultFilterChipLabel(key: string, value: unknown): string {
   return `${key}: ${text}`;
 }
 
-export interface FilterSearchAppliedFiltersProps
-  extends Omit<React.ComponentPropsWithoutRef<'div'>, 'children'> {
+export interface FilterSearchAppliedFiltersProps extends Omit<
+  React.ComponentPropsWithoutRef<'div'>,
+  'children'
+> {
   /** The currently applied filter values, keyed by an arbitrary consumer-chosen id. */
   filters: Record<string, unknown>;
   /** Called with the remaining filters when a chip is removed or "Reset filters" clears all. */
   onValueChange: (next: Record<string, unknown>) => void;
   /** Format an applied-filter chip's label. Defaults to `"<key>: <value>"`. */
   getFilterChipLabel?: (key: string, value: unknown) => React.ReactNode;
+  /** Format a filter chip's remove-button accessible label. Defaults to `"Remove <key> filter"`. */
+  getRemoveFilterLabel?: (key: string) => string;
+  /** Label for the "Reset filters" action. */
+  resetFiltersLabel?: React.ReactNode;
 }
 
 /**
@@ -232,44 +320,53 @@ export interface FilterSearchAppliedFiltersProps
 const FilterSearchAppliedFilters = React.forwardRef<
   HTMLDivElement,
   FilterSearchAppliedFiltersProps
->(({ className, filters, onValueChange, getFilterChipLabel, ...props }, ref) => {
-  const keys = Object.keys(filters);
-  if (keys.length === 0) return null;
+>(
+  (
+    {
+      className,
+      filters,
+      onValueChange,
+      getFilterChipLabel,
+      getRemoveFilterLabel = (key) => `Remove ${key} filter`,
+      resetFiltersLabel = 'Reset filters',
+      ...props
+    },
+    ref
+  ) => {
+    const keys = Object.keys(filters);
+    if (keys.length === 0) return null;
 
-  const handleRemove = (key: string) => {
-    const next = { ...filters };
-    delete next[key];
-    onValueChange(next);
-  };
+    const handleRemove = (key: string) => {
+      const next = { ...filters };
+      delete next[key];
+      onValueChange(next);
+    };
 
-  return (
-    <div
-      ref={ref}
-      className={cn('flex flex-wrap items-center gap-3', className)}
-      {...props}
-    >
-      {keys.map((key) => (
-        <Chip
-          key={key}
-          variant="removable"
-          onRemove={() => handleRemove(key)}
-          removeLabel={`Remove ${key} filter`}
-        >
-          {getFilterChipLabel
-            ? getFilterChipLabel(key, filters[key])
-            : defaultFilterChipLabel(key, filters[key])}
-        </Chip>
-      ))}
-      <Button
-        type="button"
-        variant="ghost"
-        onClick={() => onValueChange({})}
+    return (
+      <div
+        ref={ref}
+        className={cn('flex flex-wrap items-center gap-3', className)}
+        {...props}
       >
-        Reset filters
-      </Button>
-    </div>
-  );
-});
+        {keys.map((key) => (
+          <Chip
+            key={key}
+            variant="removable"
+            onRemove={() => handleRemove(key)}
+            removeLabel={getRemoveFilterLabel(key)}
+          >
+            {getFilterChipLabel
+              ? getFilterChipLabel(key, filters[key])
+              : defaultFilterChipLabel(key, filters[key])}
+          </Chip>
+        ))}
+        <Button type="button" variant="ghost" onClick={() => onValueChange({})}>
+          {resetFiltersLabel}
+        </Button>
+      </div>
+    );
+  }
+);
 FilterSearchAppliedFilters.displayName = 'FilterSearchAppliedFilters';
 
 export {

@@ -3,8 +3,8 @@ title: FilterSearch
 description: A composable data-table toolbar — search, a tenant switcher, a filter popover, and applied-filter chips.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { FilterSearchDemo } from "@/components/demos-react/filter-search";
+import { DemoReact } from '@/components/DemoReact';
+import { FilterSearchDemo } from '@/components/demos-react/filter-search';
 
 ## Usage
 
@@ -36,7 +36,14 @@ Fields that don't fit the popover's height scroll internally.
 
 Any prop it doesn't consume itself is forwarded to the trigger button, so
 `data-testid`, `id`, `disabled`, and `aria-*` land on the real `<button>`
-(`className` is merged onto it too).
+(`className` is merged onto it too). The footer labels (`resetFiltersLabel`,
+`cancelLabel`, `applyLabel`) and the trigger `label` are overridable for
+localization. `side`, `align`, `sideOffset`, `contentClassName`,
+`portalContainer`, `collisionBoundary`, and `positionMethod` are forwarded to
+the underlying `PopoverContent` for consumers who need to configure the
+popover directly — `portalContainer`/`positionMethod` matter mainly when the
+toolbar renders inside a constrained MFE/Shadow DOM mount (see the `Popover`
+docs).
 
 `FilterSearchAppliedFilters` renders the currently applied filters as
 removable chips, plus a top-level **Reset filters** action that clears
@@ -46,6 +53,10 @@ there are no applied filters. Chip labels default to `"<key>: <value>"` —
 array values are joined with `", "` and object values are JSON-stringified.
 Pass `getFilterChipLabel(key, value)` whenever the raw key or a stringified
 object isn't presentable (a localized field name, a formatted date range).
+Each chip's remove-control accessible label defaults to `"Remove <key>
+filter"` — override via `getRemoveFilterLabel(key)` to localize it. Its
+`resetFiltersLabel` is independent from `FilterSearchFilters`'s own prop of
+the same name — set both if you localize.
 
 Filter fields are supplied as plain `children` inside `FilterSearchFilters`.
 Each field wires itself to the draft with the `useFilterSearchFilters()`
@@ -76,6 +87,10 @@ chip that can't be cleared.
 
 Group fields with a `Separator` as a layout convention if desired. Calling
 `useFilterSearchFilters()` outside a `<FilterSearchFilters>` popover throws.
+
+Need a filter popover **outside** a `FilterSearch` toolbar? See the
+[Filter popover](/components/filter-popover) pattern for the hand-rolled
+`Button` + `Popover` + `InputSelect` composition.
 
 > **Design-pending.** `FilterSearch`/`FilterSearchActions` have a real Figma
 > node (see the API reference below). `FilterSearchFilters` and
@@ -117,12 +132,23 @@ function Toolbar() {
           </SelectTrigger>
           <SelectContent>{/* … */}</SelectContent>
         </Select>
-        <InputSearch placeholder="Enter text to filter" aria-label="Search" className="w-56" />
-        <FilterSearchFilters value={filters} onValueChange={setFilters} label="Table filters">
+        <InputSearch
+          placeholder="Enter text to filter"
+          aria-label="Search"
+          className="w-56"
+        />
+        <FilterSearchFilters
+          value={filters}
+          onValueChange={setFilters}
+          label="Table filters"
+        >
           <DeviceFilterFields />
         </FilterSearchFilters>
       </FilterSearch>
-      <FilterSearchAppliedFilters filters={filters} onValueChange={setFilters} />
+      <FilterSearchAppliedFilters
+        filters={filters}
+        onValueChange={setFilters}
+      />
     </div>
   );
 }
@@ -132,7 +158,11 @@ Search-only, no tenant switcher or filters:
 
 ```tsx
 <FilterSearch>
-  <InputSearch placeholder="Search table" aria-label="Search" className="w-56" />
+  <InputSearch
+    placeholder="Search table"
+    aria-label="Search"
+    className="w-56"
+  />
 </FilterSearch>
 ```
 
@@ -140,7 +170,11 @@ With trailing action buttons:
 
 ```tsx
 <FilterSearch>
-  <InputSearch placeholder="Search table" aria-label="Search" className="w-56" />
+  <InputSearch
+    placeholder="Search table"
+    aria-label="Search"
+    className="w-56"
+  />
   <FilterSearchFilters value={filters} onValueChange={setFilters} />
   <FilterSearchActions>
     <Button>Export</Button>

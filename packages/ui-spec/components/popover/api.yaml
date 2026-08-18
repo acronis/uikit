@@ -30,6 +30,58 @@ contract:
       required: false
       default: 4
       description: On the content — distance in px from the trigger.
+    - name: portal
+      type: boolean
+      required: false
+      default: true
+      description: >-
+        On the content — render inside a portal. Set to false for inline
+        usage; requires a consumer-supplied ancestor Portal. When false, none
+        of portal-container/collision-boundary/position-method's
+        portal-dependent defaults apply — even if that ancestor Portal
+        targets a constrained container, so pass position-method explicitly
+        in that case.
+    - name: portal-container
+      type: Element | ShadowRoot | null | RefObject<Element | ShadowRoot | null>
+      required: false
+      default: 'nearest PortalContainerProvider, or document.body'
+      description: >-
+        On the content — portal mount point. Pass a shadow-root mount for
+        isolated-style previews, or a constrained MFE/Shadow DOM mount point.
+    - name: collision-boundary
+      type: Element | Element[] | Rect | 'clipping-ancestors'
+      required: false
+      default: the platform default (clipping ancestors)
+      description: >-
+        On the content — element/rect the popup is confined to when avoiding
+        collisions. Left at the platform default — paired with
+        position-method's default, that default already avoids clipping
+        inside a constrained portal-container without needing an explicit
+        override (see position-method).
+    - name: position-method
+      type: "'absolute' | 'fixed'"
+      required: false
+      default: >-
+        'fixed' whenever the popup is portaled into a resolved
+        portal-container; otherwise the platform default ('absolute')
+      description: >-
+        On the content — which CSS position the popup uses. An
+        'absolute'-positioned popup that IS portaled into a custom
+        portal-container is still clipped by it when it constrains overflow
+        (e.g. a Shadow DOM host with overflow: hidden) regardless of the
+        collision boundary, since it shares that ancestor's containing block.
+        'fixed' escapes a plain overflow-clipping ancestor: collision
+        detection drops an overflow ancestor that doesn't establish its own
+        containing block from a fixed element's clipping chain, resolving to
+        the real, scroll-independent viewport — not one whose chain also has
+        a transform/filter/will-change/etc. that establishes its own
+        containing block for fixed descendants. Has no effect when not
+        portaled.
+    - name: keep-mounted
+      type: boolean
+      required: false
+      default: false
+      description: On the content — keep the popup mounted in the DOM while closed.
 
   events:
     - name: open-change

@@ -52,8 +52,9 @@ trigger on close (Apply, Cancel, outside-press, or Escape).
 4. `FilterSearchFilters`'s trigger announces its expanded state
    (`aria-haspopup`/`aria-expanded`, from Base UI's `PopoverTrigger`).
 5. Each removable chip's remove control has an explicit `aria-label`
-   (`"Remove <key> filter"`, or the `removeLabel` the field supplies), so a
-   screen reader announces which filter a given remove button drops.
+   (`"Remove <key> filter"` by default, overridable via
+   `getRemoveFilterLabel(key)`), so a screen reader announces which filter a
+   given remove button drops.
 
 ---
 
