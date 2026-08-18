@@ -1,0 +1,92 @@
+spec_version: '1.0'
+component: ButtonGroup
+
+schematic: |
+  root: <div role="toolbar" aria-label="…">
+  +-------------------------------------------------+
+  |  +---------+ | +---------+ | +---------+        |
+  |  | item    | | | item    | | | item    |        |
+  |  | [icon]  | | | [icon]  | | | [icon]  |        |
+  |  +---------+ | +---------+ | +---------+        |
+  +-------------------------------------------------+
+                 ^             ^
+                 separator     separator (dropped on the last item)
+
+     root      -> --ui-button-group-global-container-* (border + radius; outlined only)
+     item      -> --ui-button-group-global-box-* (height, padding, idle/hover/active fill)
+     separator -> --ui-button-group-global-separator-* (item's inline-end border)
+     icon      -> --ui-glyph-on-surface-primary (16px, currentColor)
+
+root:
+  element: div
+  role: toolbar
+  description: >-
+    Toolbar container (`<div role="toolbar">`) laying the items out in a
+    horizontal row. Clips its children to its own radius, so the first and last
+    item's fill and focus ring follow the rounded corners. Owns the container
+    border and radius, which only the `outlined` variant draws. One Tab stop;
+    the arrow keys rove between items.
+
+parts:
+  - id: item
+    description: >-
+      A single action (`<button>`). Icon-only: 32px tall with 12px inline
+      padding, transparent when idle, filling on hover and activation. Requires
+      its own accessible name. Polymorphic via the `render` prop.
+    element: button
+  - id: icon
+    description: >-
+      The action's glyph, passed as the item's content. Any SVG child is sized
+      to 16px and inherits `--ui-glyph-on-surface-primary` through
+      `currentColor`.
+    element: svg
+  - id: separator
+    description: >-
+      Hairline divider between adjacent items, drawn as the item's own
+      inline-end border and dropped on the last item via `:last-child`. Purely
+      decorative — it is a border, not an element, so it has no tag of its own
+      and is absent from the accessibility tree. Mirrors Figma, which hangs the
+      separator off `ButtonGroupItem` rather than the container.
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [item, separator]
+
+# Figma models item position as an `order` variant (first / middle / last), but
+# it only ever controls whether the trailing separator is drawn — that is
+# derivable from the DOM (`:last-child`), so it is a layout rule, not a state or
+# a prop. Everything below is either a container prop or a CSS pseudo-class on
+# an item; the group owns no internal state.
+states:
+  - id: outlined
+    trigger: "variant === 'outlined'"
+    kind: prop
+    prop: variant
+    affects: [root]
+  - id: inlined
+    trigger: "variant === 'inlined'"
+    kind: prop
+    prop: variant
+    affects: [root]
+  - id: hover
+    trigger: pointer hover over an item
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [item]
+  - id: active
+    trigger: pointer or keyboard activation of an item
+    kind: pseudo
+    pseudo: ':active'
+    affects: [item]
+  - id: focus-visible
+    trigger: keyboard focus on an item
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [item]
+  - id: disabled
+    trigger: 'disabled === true, on a single item or on the whole group'
+    kind: prop
+    prop: disabled
+    affects: [item, icon]

@@ -693,6 +693,30 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  // Icon-only items carry the whole visual: with no children the group renders
+  // as an empty 4px-tall box, so the sample composes three real actions. The
+  // container needs an accessible name of its own (the component ships no
+  // default `aria-label` — see its accessibility.md).
+  'button-group': {
+    ariaLabel: 'View mode',
+    extraImports: [
+      "import { ButtonGroupItem } from '../button-group';",
+      "import { LayoutGridIcon, LayoutTableIcon, ListIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    sample: [
+      '',
+      '      <ButtonGroupItem aria-label="List view">',
+      '        <ListIcon size={16} />',
+      '      </ButtonGroupItem>',
+      '      <ButtonGroupItem aria-label="Grid view">',
+      '        <LayoutGridIcon size={16} />',
+      '      </ButtonGroupItem>',
+      '      <ButtonGroupItem aria-label="Table view">',
+      '        <LayoutTableIcon size={16} />',
+      '      </ButtonGroupItem>',
+      '    ',
+    ].join('\n'),
+  },
   breadcrumb: {
     ariaLabel: 'breadcrumb',
     extraImports: [
