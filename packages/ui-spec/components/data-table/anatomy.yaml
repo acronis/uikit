@@ -2,18 +2,22 @@ spec_version: '1.0'
 component: DataTable
 
 schematic: |
+  bulk-actions-bar: [ Delete ] [ … ]        "N items selected:" [ Deselect ]
   toolbar:   [ search input ] [ filters ▾ ] [ Reset ✕ ]   [ ⚙ View ▾ ]   (view-options)
   applied-filters: ( status: Success ✕ ) ( … )        (chip row, when filtering)
   table: <div> rounded border wrapper
     column-header: per-column header — title + single-click sort toggle (↑/↓/↕)
+    header-hint:   hover/focus tooltip listing that column's gestures        ⚙
     resize-handle: drag handle at a resizable header's trailing edge (opt-in)
     pinned column: meta.pin left/right → position: sticky cell
-    row:           data row (selectable; selected → tinted)
+    row:           data row (selectable; selected → tinted; roving Tab stop)  ⋯
     expand-trigger: chevron toggle inside a cell → toggles the row's expansion
     expanded-row:  optional detail row under an expanded row
     empty-state:   "No results." row when there is no data
     sentinel:      aria-hidden row that triggers onLoadMore on scroll (infinite mode)
     loading-row:   trailing "loading more" row (role=status) while isLoadingMore
+    action-column: trailing sticky 48px column — settings cog (⚙) in the header,
+                   per-row overflow-actions ellipsis (⋯) in each row
   pagination: "N of M selected"   [Rows per page ▾]  Page X of Y   ⏮ ◀ ▶ ⏭
 
 root:
@@ -36,6 +40,16 @@ parts:
       title plus a trailing arrow (up = ascending, down = descending, both in the
       active blue; a muted up/down arrow when unsorted). One click cycles the sort
       direction. Column hiding lives in the toolbar's view-options menu, not here.
+  - id: header-hint
+    element: div
+    description: >-
+      A `Tooltip` on the whole header cell (not just its sort button) listing one
+      line per gesture that column actually supports — "Sort column: Click",
+      "Reorder column: Drag", "Resize column: Drag border" (copy overridable per
+      capability via `headerHints`). A column with no capability renders no
+      tooltip, and the hint is suppressed while any column is being resized or
+      dragged so it can't pop up over a neighboring cell.
+    optional: true
   - id: resize-handle
     element: div
     description: >-
@@ -50,6 +64,33 @@ parts:
       A data row; selectable, tinted when selected. A column with `meta.pin`
       renders as sticky cells with an opaque row background so scrolled cells
       don't show through.
+  - id: action-column
+    element: td/th
+    description: >-
+      The built-in trailing action column (shown unless `hideActionColumn`; a
+      no-op with an external `table`). A real `ColumnDef` (`id: '__actions'`,
+      48px, `meta.pin: 'right'`) so TanStack's own pinning geometry measures and
+      offsets it: its header cell is a `TableSettingsCell` holding the
+      column-visibility cog (`DataTableViewOptions` with `iconOnly`, labelled by
+      `columnSettingsLabel`), and each row's cell is a `TableActionsCell` holding
+      the overflow-actions trigger (an ellipsis `ButtonIcon` labelled by
+      `rowActionsLabel`, opening a `DropdownMenu` whose content comes from
+      `renderRowActions`). Without `renderRowActions` the column is still
+      reserved but the row renders no trigger; while a bulk selection is active
+      (`isBulkSelectionActive(table)`) the row cell renders empty and untinted.
+    optional: true
+  - id: bulk-actions-bar
+    element: div
+    description: >-
+      DataTableBulkActionsBar — a selection-aware bar rendered above the grid
+      over the same `table` instance the selection column feeds. The consumer's
+      bulk actions (`children`) sit leading inside a native `<fieldset>` whose
+      `disabled` state follows `isBulkSelectionActive(table)`, so every nested
+      control picks the state up for free; the trailing side shows the selection
+      summary (`selectedLabel`) plus a Deselect control wired to
+      `table.resetRowSelection()`, or `loadedLabel` when there is no selection to
+      summarize.
+    optional: true
   - id: expand-trigger
     element: button
     description: >-
@@ -152,6 +193,32 @@ states:
     kind: prop
     prop: enableColumnResizing
     affects: [column-header, resize-handle]
+  - id: reorderable
+    trigger: enableColumnReordering is set
+    kind: prop
+    prop: enableColumnReordering
+    affects: [column-header, header-hint]
+  - id: column-dragging
+    trigger: a draggable header cell is being dragged (pointer only)
+    kind: internal
+    affects: [column-header, header-hint]
+  - id: action-column-hidden
+    trigger: hideActionColumn is set (or an external table is passed)
+    kind: prop
+    prop: hideActionColumn
+    affects: [action-column]
+  - id: bulk-selection-active
+    trigger: >-
+      a bulk selection is in play — isBulkSelectionActive(table); see api.yaml
+      for the threshold
+    kind: internal
+    affects: [action-column, bulk-actions-bar]
+  - id: row-focused
+    trigger: >-
+      a data row is the current roving Tab stop (focused by Tab, a click, or
+      Arrow Up/Down)
+    kind: internal
+    affects: [row]
   - id: pinned
     trigger: "a column's meta.pin is 'left' or 'right'"
     kind: prop
@@ -193,3 +260,34 @@ states:
     kind: prop
     prop: renderEmptyState
     affects: [empty-state]
+
+internal_state:
+  - id: row-selection
+    type: 'Record<rowId, boolean>'
+    initial: '{}'
+    controllable_via: [rowSelection]
+    emits: onRowSelectionChange
+    changed_by: toggling a row's / the header's selection checkbox
+    description: >-
+      Which rows are selected. `isBulkSelectionActive(table)` derives the
+      bulk-selection state from it (see api.yaml), which in turn blanks each
+      row's action cell and enables the bulk-actions bar's actions.
+  - id: dragged-column
+    type: 'string | undefined'
+    initial: undefined
+    changed_by: >-
+      dragstart on a draggable header cell sets it; drop / dragend clears it
+      (pointer only — there is no keyboard path, see accessibility.md)
+    description: >-
+      The header cell currently being dragged (`enableColumnReordering`). Dims
+      that cell and suppresses the header hints while the gesture is in flight;
+      the resulting order goes through TanStack's `columnOrder`.
+  - id: focused-row-index
+    type: number
+    initial: 0
+    changed_by: >-
+      Arrow Up / Arrow Down on a row, or focusing a row (Tab or a click)
+    description: >-
+      The roving-tabindex cursor — the one data row that is a Tab stop. Clamped
+      against the live row count, so shrinking `rows` can't leave it past the
+      end.

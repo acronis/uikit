@@ -17,6 +17,9 @@ import {
   TableRow,
   TableHead,
   TableCell,
+  TableSelectCell,
+  TableActionsCell,
+  TableSettingsCell,
   TableCaption,
   TablePagination,
   TableViewOptions,
@@ -28,9 +31,14 @@ import {
 column-header rows of `TableHead`; `TableBody` holds data rows of `TableCell`;
 `TableFooter` and `TableCaption` are optional. `TableHead` can be `sortable`
 (renders a sort button + `aria-sort`), `TableRow` takes a `selected` flag, and
-both `TableHead` and `TableCell` take `wrap` for multi-line content. Themed by
-the `--ui-table-*` token tier. Cell content — checkboxes, tags, links, numbers —
-is your own composition. This is a design-pending v1.
+both `TableHead` and `TableCell` take `wrap` for multi-line content. Three
+fixed-width structural cells complete the design's anatomy: `TableSelectCell`
+(the 32px row-selection column), `TableActionsCell` (the 48px trailing
+row-actions column) and `TableSettingsCell` (the 48px trailing header column for
+a column-settings trigger). Themed by the `--ui-table-*` token tier — every
+interaction state resolves to its own token, and per the design a sortable
+header tints the whole cell and owns the focus ring. Other cell content — tags,
+links, status dots, numbers — is your own composition.
 
 The primitives hold no sorting or selection **logic** — you own the state and
 drive the props. Two companion parts (`TablePagination`, `TableViewOptions`) and
@@ -52,6 +60,9 @@ built on these same primitives.
 | `TableRow`         | `<tr>`. `selected` applies the active row token + `data-state="selected"`.               |
 | `TableHead`        | `<th>`. `sortable` / `sortDirection` / `onSort` render the sort button; `wrap` as below. |
 | `TableCell`        | `<td>`. `wrap` lets the content run onto multiple lines.                                 |
+| `TableSelectCell`  | 32px selection column holding a `Checkbox`. `header` renders the select-all `<th>`.      |
+| `TableActionsCell` | 48px trailing `<td>` for a row's overflow trigger; tints on hover/press.                 |
+| `TableSettingsCell`| 48px trailing `<th>` for a column-settings trigger; tints on hover/press.                |
 | `TableCaption`     | `<caption>` — muted, below the table.                                                    |
 | `TablePagination`  | Controlled pagination bar: row summary, rows-per-page select, first/prev/next/last.      |
 | `TableViewOptions` | Show/hide-columns dropdown driven by a plain `{ id, label, hidden }[]`.                  |
@@ -144,24 +155,67 @@ useSortState({
 
 ### Selectable rows
 
-Mark the row `selected` and render a `Checkbox` in a leading cell:
+Mark the row `selected` and render the `Checkbox` in a `TableSelectCell` — the
+fixed 32px selection column from the design. Pass `header` for the select-all
+cell in `TableHeader`:
 
 ```tsx
 <TableRow selected={checked}>
-  <TableCell>
+  <TableSelectCell>
     <Checkbox
       checked={checked}
       onCheckedChange={setChecked}
       aria-label="Select row"
     />
-  </TableCell>
+  </TableSelectCell>
   <TableCell>web-server-01</TableCell>
 </TableRow>
 ```
 
+### Row actions and column settings
+
+`TableActionsCell` is the trailing 48px column for a row's overflow trigger;
+`TableSettingsCell` is its header counterpart for a column-settings trigger.
+Both tint on hover/press and draw the focus ring on the cell, so the trigger
+inside stays a plain `ButtonIcon`:
+
+```tsx
+<TableHeader>
+  <TableRow>
+    <TableSelectCell header>
+      <Checkbox aria-label="Select all rows" />
+    </TableSelectCell>
+    <TableHead sortable>Name</TableHead>
+    <TableSettingsCell>
+      <ButtonIcon aria-label="Column settings">
+        <CogIcon />
+      </ButtonIcon>
+    </TableSettingsCell>
+  </TableRow>
+</TableHeader>
+<TableBody>
+  <TableRow>
+    <TableSelectCell>
+      <Checkbox aria-label="Select web-server-01" />
+    </TableSelectCell>
+    <TableCell>web-server-01</TableCell>
+    <TableActionsCell>
+      <ButtonIcon aria-label="Actions for web-server-01">
+        <EllipsisIcon />
+      </ButtonIcon>
+    </TableActionsCell>
+  </TableRow>
+</TableBody>
+```
+
+What the settings trigger opens is your choice — `TableViewOptions` with
+`iconOnly` is the ready-made column-visibility menu, and renders exactly this
+cog trigger itself.
+
 ### Wrapping cells
 
-Cells and headers are a fixed row height (`h-10`) and stay on one line by
+Cells and headers are a fixed row height (`--ui-table-global-cell-min-height`,
+40px) and stay on one line by
 default. `wrap` drops that height and switches the cell to `whitespace-normal`,
 so the row grows to fit multi-line content instead of truncating it:
 
@@ -203,11 +257,27 @@ when neither is passed. The indicator reads `Page {pageIndex + 1} of {pageCount}
 — or **"No pages"** when `pageCount` is `0`, so an empty filtered result never
 shows "Page 1 of 0".
 
+Every string the bar renders itself is a prop, so it can be localized:
+`rowsPerPageLabel`, `firstPageLabel`, `previousPageLabel`, `nextPageLabel`,
+`lastPageLabel`, and the `pageLabel(page, pageCount)` / `summaryLabel(selected,
+total)` formatters:
+
+```tsx
+<TablePagination
+  {...paginationProps}
+  rowsPerPageLabel="Zeilen pro Seite"
+  pageLabel={(page, count) => `Seite ${page} von ${count}`}
+  summaryLabel={(selected, total) => `${selected} von ${total} ausgewählt.`}
+/>
+```
+
 ### Column visibility
 
 `TableViewOptions` is a "View" dropdown of checkbox items, driven by a plain
 column list and an `onToggle` that hands you the toggled column's id. The menu
-stays open across toggles:
+stays open across toggles. Pass `iconOnly` for the cog-only trigger that fits a
+`TableSettingsCell` (its accessible name comes from `triggerAriaLabel`, default
+`'Column settings'`):
 
 ```tsx
 const [hidden, setHidden] = useState<string[]>([]);
@@ -281,9 +351,17 @@ encoding and a wiring example.
   name="TableCellProps"
 />
 
+### TableSelectCell
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/table/table.tsx"
+  name="TableSelectCellProps"
+/>
+
 `Table`, `TableHeader`, `TableBody`, `TableFooter`, and `TableCaption` accept the
 standard attributes of the element they render (`<table>`, `<thead>`, `<tbody>`,
-`<tfoot>`, `<caption>`).
+`<tfoot>`, `<caption>`). `TableActionsCell` and `TableSettingsCell` accept the
+standard `<td>` / `<th>` attributes.
 
 ### TablePagination
 

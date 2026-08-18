@@ -37,6 +37,25 @@ contract:
         On a cell or column header — allow the content to wrap onto multiple
         lines (`whitespace-normal`) and drop the fixed row height so the cell
         grows to fit multi-line content instead of truncating.
+    - name: header
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        On the select-cell — render the header's select-all cell (`<th>`) instead
+        of a row's selection cell (`<td>`).
+    - name: bulk-selection-active
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        On the actions-cell — suppress this row's actions because a *bulk*
+        selection is in play: the cell keeps its 48px column (so the grid doesn't
+        reflow) but renders no children and no hover/press tint. The threshold is
+        one or more rows being selected — a single selected row is already a bulk
+        selection and loses its row actions. With a TanStack table,
+        pass `isBulkSelectionActive(table)` (from the data-table part) instead of
+        re-deriving it.
     - name: page-index
       type: number
       required: true
@@ -75,11 +94,74 @@ contract:
       description: >-
         On the view-options part — the toggleable columns and their current
         visibility.
+    - name: rows-per-page-label
+      type: string
+      required: false
+      default: "'Rows per page'"
+      description: >-
+        On the pagination part — label of the rows-per-page select (also its
+        accessible name). Override to localize.
+    - name: first-page-label
+      type: string
+      required: false
+      default: "'Go to first page'"
+      description: >-
+        On the pagination part — accessible name of the first-page control.
+    - name: previous-page-label
+      type: string
+      required: false
+      default: "'Go to previous page'"
+      description: >-
+        On the pagination part — accessible name of the previous-page control.
+    - name: next-page-label
+      type: string
+      required: false
+      default: "'Go to next page'"
+      description: >-
+        On the pagination part — accessible name of the next-page control.
+    - name: last-page-label
+      type: string
+      required: false
+      default: "'Go to last page'"
+      description: >-
+        On the pagination part — accessible name of the last-page control.
+    - name: page-label
+      type: '(page: number, pageCount: number) => string'
+      required: false
+      default: "(page, count) => count === 0 ? 'No pages' : `Page ${page} of ${count}`"
+      description: >-
+        On the pagination part — builds the page indicator from the 1-based page
+        number and the total page count.
+    - name: summary-label
+      type: >-
+        (selectedRows: number | undefined, totalRows: number) => string | null
+      required: false
+      default: '(selected, total) => selected != null ? `${selected} of ${total} row(s) selected.` : `${total} row(s).`'
+      description: >-
+        On the pagination part — builds the leading row summary. Return `null`
+        for no summary.
     - name: trigger-label
       type: ReactNode
       required: false
       default: "'View'"
-      description: On the view-options part — the trigger button label.
+      description: >-
+        On the view-options part — the trigger button label. Ignored when
+        `icon-only` is set.
+    - name: icon-only
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        On the view-options part — render the trigger as a cog-only icon button
+        instead of a labelled button: the shape that fits the 48px
+        `TableSettingsCell` column.
+    - name: trigger-aria-label
+      type: string
+      required: false
+      default: "'Column settings'"
+      description: >-
+        On the view-options part — accessible name of the `icon-only` trigger.
+        Override to localize.
     - name: menu-label
       type: ReactNode
       required: false
@@ -149,7 +231,8 @@ adapters:
     status: implemented
     import: >-
       import { Table, TableHeader, TableBody, TableFooter, TableRow, TableHead,
-      TableCell, TableCaption, TablePagination, TableViewOptions, useSortState,
+      TableCell, TableSelectCell, TableActionsCell, TableSettingsCell,
+      TableCaption, TablePagination, TableViewOptions, useSortState,
       useTableUrlState } from '@acronis-platform/ui-react'
     example: |
       <Table>

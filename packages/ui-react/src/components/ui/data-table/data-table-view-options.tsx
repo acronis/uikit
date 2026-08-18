@@ -1,8 +1,12 @@
 import type { Table } from '@tanstack/react-table';
 
-import { TableViewOptions } from '../table';
+import { TableViewOptions, type TableViewOptionsProps } from '../table';
 
-interface DataTableViewOptionsProps<TData> {
+interface DataTableViewOptionsProps<TData>
+  extends Pick<
+    TableViewOptionsProps,
+    'triggerLabel' | 'iconOnly' | 'triggerAriaLabel'
+  > {
   table: Table<TData>;
 }
 
@@ -11,6 +15,7 @@ interface DataTableViewOptionsProps<TData> {
 // routes `onToggle` back through `column.toggleVisibility()`.
 export function DataTableViewOptions<TData>({
   table,
+  ...triggerProps
 }: DataTableViewOptionsProps<TData>) {
   const columns = table
     .getAllColumns()
@@ -31,6 +36,7 @@ export function DataTableViewOptions<TData>({
         const column = table.getColumn(id);
         column?.toggleVisibility(!column.getIsVisible());
       }}
+      {...triggerProps}
     />
   );
 }

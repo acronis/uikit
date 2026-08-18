@@ -7,8 +7,23 @@ import { DemoReact } from "@/components/DemoReact";
 import { DataTableBulkActionsDemo } from "@/components/demos-react/patterns/data-table-bulk-actions";
 
 The approved way to offer row selection with bulk actions. A checkbox selection
-column drives a contextual bar that replaces the toolbar while rows are selected,
-showing the count and the available actions (**Export**, **Delete**, **Clear**).
+column drives **`DataTableBulkActionsBar`** — a persistent bar above the grid
+whose `children` are your bulk actions (**Export**, **Delete**, …), with a
+trailing selection summary and a **Deselect** control.
+
+The activation threshold belongs to the components, not to you:
+**`isBulkSelectionActive(table)`** — **one or more rows selected**, including
+exactly one. The bar is **always mounted**; rather than appearing and
+disappearing, it switches between two states on that predicate:
+
+- **Idle** (nothing selected) — the actions are disabled through a native
+  `<fieldset disabled>`, and the trailing side shows your `loadedLabel` (e.g.
+  "25 of 1250 items loaded") instead of a selection summary.
+- **Active** (one or more rows selected) — the actions enable and the trailing
+  side shows the selection summary plus **Deselect**.
+
+`TableActionsCell` takes the same flag as `bulkSelectionActive` to blank out each
+row's trigger while the bulk scope is active.
 
 Because the bulk bar and the row checkboxes must read the **same** selection
 state, this composes the **`Table`** primitives + **`DataTablePagination`** over a
@@ -33,8 +48,17 @@ owns its own internal state and can't share selection with external chrome.
 
 - Using the self-contained `DataTable` **and** a separate `useReactTable` for the
   bar — their selection states diverge. Build one table instance and feed both.
-- Leaving the bulk bar always visible — show it only while rows are selected.
-- Hiding the selection count — always show "N selected" so the scope is clear.
+- Mounting the bar conditionally so it appears and disappears — it is built to
+  stay put and toggle its own state. A mount/unmount reflows the page on every
+  first and last selection.
+- Omitting `loadedLabel` when the idle state has something useful to say (e.g.
+  "25 of 1250 items loaded") — the trailing area then sits empty until the first
+  selection.
+- Re-deriving the condition in your own code instead of calling
+  `isBulkSelectionActive(table)` — the predicate is exported so the bar and every
+  `TableActionsCell` can't drift apart.
+- Hiding the selection count — always show "N items selected" so the scope is
+  clear.
 
 ## How it works
 
@@ -49,9 +73,25 @@ const table = useReactTable({
   onRowSelectionChange: setRowSelection,
   state: { rowSelection },
 });
-const selected = table.getSelectedRowModel().rows;
+const bulkSelectionActive = isBulkSelectionActive(table);
+
+<DataTableBulkActionsBar
+  table={table}
+  loadedLabel={`${data.length} items total`}
+>
+  <Button variant="secondary">Export</Button>
+  <Button variant="destructive">Delete</Button>
+</DataTableBulkActionsBar>
 ```
 
-Render the bulk bar only while `selected.length > 0`, wire **Clear** to
-`table.resetRowSelection()`, render the grid from `table.getHeaderGroups()` /
-`getRowModel()`, and pass the same `table` to `DataTablePagination`.
+Mount the bar unconditionally, then render the grid from
+`table.getHeaderGroups()` / `getRowModel()` — passing `bulkSelectionActive` to
+each row's `TableActionsCell` — and pass the same `table` to
+`DataTablePagination`. The bar reads the count off `table.getSelectedRowModel()`,
+disables its own actions while nothing is selected, and wires **Deselect** to
+`table.resetRowSelection()` itself — it owns no state.
+
+Its strings are localizable: `selectedLabel` (a `(count: number) => string`,
+default ``(count) => `${count} item${count === 1 ? '' : 's'} selected:` ``),
+`clearLabel` (default `"Deselect"`), and `loadedLabel` (no default — omit it and
+the idle state's trailing area stays empty).

@@ -45,9 +45,18 @@ tokens:
     description: Current (last-clicked) row highlight — the active-row color.
   - name: --ui-table-header-cell-color-hover
     affects: column-header
+    description: Hover background of the single-click sort toggle.
+  - name: --ui-table-header-cell-color-active
+    affects: column-header
+    description: Pressed background of the single-click sort toggle.
+  - name: --ui-table-data-cell-color-hover
+    affects: expand-trigger
     description: >-
-      Hover background of the single-click sort toggle; also the hover
-      background of the in-cell expand trigger.
+      Hover background of the in-cell expand trigger — a data-area control, so
+      it tints from the data-cell tier rather than the header tier.
+  - name: --ui-table-data-cell-color-active
+    affects: expand-trigger
+    description: Pressed background of the in-cell expand trigger.
   - name: --ui-table-header-sort-icon-size
     affects: column-header
     description: Size of the sort-direction arrow in the column header.

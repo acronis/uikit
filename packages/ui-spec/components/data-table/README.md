@@ -12,14 +12,16 @@ optional row expansion, column resizing, and sticky (pinned) columns.
 ## When to use
 
 - Tabular data that needs interaction — sorting, filtering, selection, paging,
-  column resizing, or a few columns pinned while the rest scroll horizontally.
+  column resizing, drag-to-reorder columns, or a few columns pinned while the
+  rest scroll horizontally.
 
 ## When not to use
 
 - A simple static table — use the `Table` primitives directly.
 - A key/value list or cards layout — a table is the wrong shape.
-- Drag-to-reorder columns or grouped/aggregated rows — **not available yet**
-  (deferred to a future revision); do not rely on them.
+- Grouped/aggregated rows — **not available yet** (deferred to a future
+  revision); do not rely on them. (Drag-to-reorder columns _is_ supported now,
+  via `enableColumnReordering`.)
 
 ## Parts
 
@@ -27,9 +29,9 @@ optional row expansion, column resizing, and sticky (pinned) columns.
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `DataTable`              | The grid. Owns table state by default (`columns` / `data`), or renders a caller-built `table` instance. Supports resizing, pinned columns, server-driven sorting/pagination, and custom row/empty-state rendering. |
 | `DataTableColumnHeader`  | A sortable column header — single-click toggle (↑/↓/↕). Use in a column's `header`.                                                                                                                                |
-| `DataTableToolbar`       | Search box + per-column filters + applied-filter chips + view options. Takes a `table` instance.                                                                                                                   |
+| `DataTableToolbar`       | Search box + per-column filters + applied-filter chips. Takes a `table` instance.                                                                                                                                  |
 | `DataTablePagination`    | Selection count, rows-per-page, page controls. Takes a `table`.                                                                                                                                                    |
-| `DataTableViewOptions`   | Column-visibility menu (a thin TanStack adapter over the `TableViewOptions` primitive).                                                                                                                            |
+| `DataTableViewOptions`   | Column-visibility menu (a thin TanStack adapter over the `TableViewOptions` primitive). Pass `iconOnly` for the cog trigger that belongs in the trailing settings column.                                          |
 | `DataTableExpandTrigger` | A chevron toggle wired to a row's expansion state, placed inside a column's `cell` render function.                                                                                                                |
 
 `DataTable` manages its own table state by default. The companion parts
@@ -60,8 +62,8 @@ from it too (see **Server-driven usage** below).
   the user's scroll — tune it relative to your page size, since a large
   margin with small pages can trigger several `onLoadMore` calls back-to-back
   as the user scrolls normally. Does not compose with virtualization — for a
-  very large accumulated list use the `VirtualScrolling` recipe over the raw
-  `Table` primitives instead.
+  very large accumulated list, virtualize the raw `Table` primitives yourself
+  (e.g. `useVirtualizer` from `@tanstack/react-virtual`) instead.
 - **Custom rows** — `renderRow` swaps in a fully custom row, bypassing
   DataTable's per-cell `flexRender` path (and, as a result, its own row
   expansion — a row rendered via `renderRow` must implement any expanded

@@ -12,6 +12,7 @@ import {
 import {
   Button,
   Checkbox,
+  DataTableBulkActionsBar,
   DataTablePagination,
   Table,
   TableBody,
@@ -81,10 +82,10 @@ const columns: ColumnDef<Payment>[] = [
 ];
 
 export function DataTableBulkActionsDemo() {
-  // Pre-select two rows so the bulk bar is visible in the preview.
+  // Pre-select a single row: one selected row is already a bulk selection, so
+  // the preview opens with the bar in its active state.
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({
     '0': true,
-    '3': true,
   });
 
   const table = useReactTable({
@@ -97,24 +98,18 @@ export function DataTableBulkActionsDemo() {
     state: { rowSelection },
   });
 
-  const selected = table.getSelectedRowModel().rows;
-
   return (
     <div className="flex w-full flex-col gap-4">
-      {selected.length > 0 ? (
-        <div className="flex items-center justify-between rounded-md border border-border bg-muted px-4 py-2">
-          <span className="text-sm font-medium">{selected.length} selected</span>
-          <div className="flex gap-2">
-            <Button variant="ghost" onClick={() => table.resetRowSelection()}>
-              Clear
-            </Button>
-            <Button variant="secondary">Export</Button>
-            <Button variant="destructive">Delete</Button>
-          </div>
-        </div>
-      ) : (
-        <p className="text-sm text-muted-foreground">Select rows to act on them.</p>
-      )}
+      {/* Always mounted: the bar owns its own threshold (one or more rows
+          selected) and switches between a disabled idle state showing
+          `loadedLabel` and the active selection summary. */}
+      <DataTableBulkActionsBar
+        table={table}
+        loadedLabel={`${payments.length} items total`}
+      >
+        <Button variant="secondary">Export</Button>
+        <Button variant="destructive">Delete</Button>
+      </DataTableBulkActionsBar>
 
       <div className="rounded-md border border-[var(--ui-table-global-cell-border-color)]">
         <Table>

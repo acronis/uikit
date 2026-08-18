@@ -27,3 +27,6 @@ dependencies:
     - ButtonIcon
     - Select
     - DropdownMenu
+figma:
+  node: '4567-6801'
+  codeConnect: packages/ui-react/src/components/ui/table/table.figma.tsx

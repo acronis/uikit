@@ -35,7 +35,10 @@ headers natively. Use the parts as their elements intend.
   rows-per-page control is a labelled `Select` ("Rows per page"). Disabled
   buttons at the range ends carry the native `disabled` state.
 - `TableViewOptions` is a Base UI dropdown menu (keyboard-navigable) of checkbox
-  items; the trigger has a visible "View" label.
+  items; each row shows a presentational checkbox box beside the column name and
+  the row itself carries `role="menuitemcheckbox"` + `aria-checked`. The trigger
+  has a visible "View" label, or — with `iconOnly` — is a cog-only icon button
+  named by `triggerAriaLabel` (default "Column settings").
 
 ## Contrast
 

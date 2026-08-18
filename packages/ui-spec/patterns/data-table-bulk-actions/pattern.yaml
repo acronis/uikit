@@ -1,14 +1,23 @@
 spec_version: '1.0'
 pattern: DataTableBulkActions
 name: data-table-bulk-actions
-status: draft
+status: ready
 category: data-display
 since: 0.42.0
 intent: Select rows in a data table and act on the selection via a contextual bulk-action bar.
 description: >-
   The sanctioned way to offer row selection with bulk actions (delete, export,
-  …): a checkbox selection column drives a contextual bar that replaces the
-  toolbar while rows are selected, showing the count and the available actions.
+  …): a checkbox selection column drives `DataTableBulkActionsBar`, a persistent
+  bar mounted above the grid that shows the consumer's actions as children plus a
+  trailing selection summary and Deselect control.
+  The threshold is owned by the components, not the consumer:
+  `isBulkSelectionActive(table)` — **one or more rows selected**, including
+  exactly one. The bar is always mounted and switches state on that predicate:
+  idle (actions disabled via a native `<fieldset disabled>`, trailing
+  `loadedLabel`) while nothing is selected, active (actions enabled, selection
+  summary + Deselect) from the first selected row on. `TableActionsCell` takes
+  the same predicate as `bulkSelectionActive` to blank out each row's trigger
+  while the bulk scope is active.
   Because the bulk bar and the row checkboxes must read the SAME selection state,
   this composes the Table primitives + DataTablePagination over a single
   `useReactTable` instance — not the self-contained `DataTable` (which owns its
@@ -23,21 +32,28 @@ when_not_to_use:
 
 anti_patterns:
   - Using the self-contained `DataTable` and a separate `useReactTable` for the bar — their selection states diverge.
-  - Leaving the bulk bar always visible — show it only while rows are selected.
-  - Hiding the selection count — always show "N selected" so the scope is clear.
+  - Mounting the bar conditionally so the row of actions appears and disappears — it is designed to stay put and toggle between its idle and active states; a mount/unmount reflows the layout on every first/last selection.
+  - Omitting `loadedLabel` when there is something useful to say in the idle state (e.g. "25 of 1250 items loaded") — the trailing area then sits empty until the first selection.
+  - Re-deriving the activation condition in consumer code instead of calling `isBulkSelectionActive(table)` — the predicate is exported so the bar and every `TableActionsCell` cannot drift apart.
+  - Hiding the selection count — always show "N items selected" so the scope is clear.
 
 components:
   - Table
   - Checkbox
   - Button
+  # The bar/toolbar/pagination parts all ship from the `data-table` component
+  # directory, so `DataTable` is the entry that resolves for them.
   - DataTable
 
 demo: apps/docs/src/components/demos-react/patterns/data-table-bulk-actions.tsx
 docs: apps/docs/content/docs/components/data-table-bulk-actions.mdx
 
 # Approved starting point. One `useReactTable` instance feeds the checkbox column,
-# the bulk bar (via getSelectedRowModel), and DataTablePagination. The bar swaps
-# in only while a row is selected; Clear calls table.resetRowSelection().
+# the bulk bar (via getSelectedRowModel), and DataTablePagination. The bar is
+# mounted unconditionally and gates its own state on `isBulkSelectionActive`,
+# rendering the selection summary and a Deselect control (table.resetRowSelection())
+# and taking the actions as children. The same predicate feeds each row's
+# `TableActionsCell`.
 example: |
   const table = useReactTable({
     data,
@@ -48,19 +64,19 @@ example: |
     onRowSelectionChange: setRowSelection,
     state: { rowSelection },
   });
-  const selected = table.getSelectedRowModel().rows;
+  const bulkSelectionActive = isBulkSelectionActive(table);
 
-  {selected.length > 0 ? (
-    <div className="flex items-center justify-between rounded-md border border-border bg-muted px-4 py-2">
-      <span className="text-sm font-medium">{selected.length} selected</span>
-      <div className="flex gap-2">
-        <Button variant="ghost" onClick={() => table.resetRowSelection()}>Clear</Button>
-        <Button variant="secondary">Export</Button>
-        <Button variant="destructive">Delete</Button>
-      </div>
-    </div>
-  ) : (
-    <DataTableToolbar table={table} searchKey="email" />
-  )}
-  <Table>{/* render table.getHeaderGroups() / getRowModel() */}</Table>
+  <DataTableBulkActionsBar
+    table={table}
+    loadedLabel={`${data.length} items total`}
+  >
+    <Button variant="secondary">Export</Button>
+    <Button variant="destructive">Delete</Button>
+  </DataTableBulkActionsBar>
+  <Table>
+    {/* render table.getHeaderGroups() / getRowModel(); each row ends with */}
+    <TableActionsCell bulkSelectionActive={bulkSelectionActive}>
+      {/* the row's overflow trigger */}
+    </TableActionsCell>
+  </Table>
   <DataTablePagination table={table} />

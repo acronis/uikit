@@ -5,12 +5,10 @@ import { TimesIcon } from '@acronis-platform/icons-react/stroke-mono';
 import { Button } from '../button';
 import {
   FilterSearch,
-  FilterSearchActions,
   FilterSearchAppliedFilters,
   FilterSearchFilters,
 } from '../filter-search';
 import { InputSearch } from '../input-search';
-import { DataTableViewOptions } from './data-table-view-options';
 
 // Convert between TanStack's `ColumnFiltersState` (an array of `{ id, value }`,
 // keyed by column id) and `FilterSearchFilters`'s `Record<string, unknown>`
@@ -117,9 +115,6 @@ export function DataTableToolbar<TData>({
             <TimesIcon />
           </Button>
         )}
-        <FilterSearchActions>
-          <DataTableViewOptions table={table} />
-        </FilterSearchActions>
       </FilterSearch>
       {hasFilterFields && (
         <FilterSearchAppliedFilters

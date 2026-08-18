@@ -6,10 +6,15 @@ export {
   TableHead,
   TableRow,
   TableCell,
+  TableSelectCell,
+  TableActionsCell,
+  TableSettingsCell,
   TableCaption,
   type TableRowProps,
   type TableHeadProps,
   type TableCellProps,
+  type TableSelectCellProps,
+  type TableActionsCellProps,
 } from './table';
 export {
   TablePagination,
