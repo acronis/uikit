@@ -3,9 +3,8 @@
 ---
 
 **Breaking:** let `InputText`, `InputPassword`, `InputTextArea`,
-`InputDatePicker`, `InputSearch`, `InputSelectField`, `NumberFieldGroup`, and
-`Tooltip` follow consumer sizing instead of always stretching to fill their
-container.
+`InputDatePicker`, `InputSearch`, `InputSelectField`, and `NumberFieldGroup`
+follow consumer sizing instead of always stretching to fill their container.
 
 - `InputText`, `InputPassword`, `InputTextArea`, `InputDatePicker`,
   `InputSearch`, `InputSelectField`, and `NumberFieldGroup` no longer hardcode
@@ -31,6 +30,3 @@ container.
   once. Consumers using inline `style` to paint the control itself (border,
   background, height) need to re-target it; sizing works as expected on the
   wrapper.
-- `Tooltip`'s popup content now has an explicit `w-max` utility so a
-  consumer-supplied width class on `TooltipContent` takes effect instead of
-  being overridden by the default sizing.

@@ -44,6 +44,10 @@ portaling and dismissal — its own container chrome (border, radius, shadow,
 background) is neutralized so `CalendarPanel`'s own chrome shows through
 instead (presets are intentionally out of scope for v1).
 
+`className` is forwarded straight into `InputDatePicker`'s trigger field, so it
+targets the field as a whole (label, box, and message together) — not the
+popover or calendar panel — and sizes correctly in a flex/grid ancestor.
+
 ## Examples
 
 <DemoReact>

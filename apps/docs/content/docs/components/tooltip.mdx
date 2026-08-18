@@ -87,6 +87,14 @@ styles — see [Shadow DOM Integration](/shadow-dom). An explicit
 `portalContainer` on `TooltipContent` overrides the context for a single
 tooltip.
 
+## Sizing
+
+`TooltipContent`'s popup sizes to its content by default, bounded by the
+`--ui-tooltip-container-width-min` (48px) and `--ui-tooltip-container-width-max`
+(256px) tokens — long text wraps once it hits the 256px cap. Pass a width
+utility via `className` (e.g. `className="w-64"`) to override the default
+sizing; it still respects the token-driven `max-w`/`min-w` bounds.
+
 ## API Reference
 
 These parts re-export Base UI's `Tooltip` primitives and do not define their own

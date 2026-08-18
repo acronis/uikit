@@ -23,7 +23,9 @@ keyboard stepping (↑/↓, PageUp/PageDown), built on
 [Base UI's NumberField](https://base-ui.com/react/components/number-field). The box
 reuses the InputText token tier, so it matches the other inputs. Compose the parts
 in any order inside `NumberFieldGroup`; give the steppers and input accessible
-names (or pair the field with a [`Field`](/components/field)).
+names (or pair the field with a [`Field`](/components/field)). `NumberFieldGroup`
+sizes to its content rather than stretching to fill its container, so it sizes
+correctly in a flex/grid ancestor.
 
 > Design-pending v1, ported from the legacy `shadcn-uikit` number-field.
 
@@ -52,3 +54,9 @@ free text use [`InputText`](/components/input-text).
 `defaultValue` / `min` / `max` / `step` / `disabled` / `onValueChange`.
 `NumberFieldGroup`, `NumberFieldInput`, `NumberFieldDecrement`, and
 `NumberFieldIncrement` accept their Base UI part props plus `className`.
+
+`NumberFieldGroup` doesn't force itself to fill its container — it shrinks to
+its content's `min-w` inside a constrained flex/grid ancestor instead of being
+stretched to evenly split the row. Pass a width utility via `className` (e.g.
+`className="w-48"`) to size it explicitly, or `className="w-full"` to restore
+the old full-width behavior.

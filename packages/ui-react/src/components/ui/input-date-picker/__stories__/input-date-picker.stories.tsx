@@ -79,7 +79,7 @@ const meta = {
     // The ConstrainedWidth story sets up its own flex layout wider than this
     // fixed 256px demo box, so it opts out of the shared decorator.
     (Story, context) =>
-      context.name === 'ConstrainedWidth' ? (
+      context.id.endsWith('--constrained-width') ? (
         <Story />
       ) : (
         <div className="w-64">

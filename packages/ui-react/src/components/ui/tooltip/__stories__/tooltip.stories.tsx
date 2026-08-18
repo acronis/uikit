@@ -172,10 +172,9 @@ export const CustomPortalContainer: Story = {
   },
 };
 
-// The popup now sizes to its content by default (`w-max`) instead of relying
-// on the positioner's implicit shrink-to-fit, so a consumer's own width
-// className visibly takes effect while the min/max tokens keep bounding it
-// (PLTFRM-93291).
+// The popup already shrinks to its content by default; this story documents
+// that a consumer's own width className still takes effect while the
+// min/max tokens keep bounding it (PLTFRM-93291).
 export const ConstrainedWidth: Story = {
   parameters: { snapshot: { fullPage: true, animationDelay: 400 } },
   render: () => (

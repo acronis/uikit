@@ -105,7 +105,7 @@ const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
             aria-invalid={hasError || undefined}
             aria-required={required || undefined}
             aria-describedby={hasMessage ? messageId : undefined}
-            className={cn(showClear && 'pe-9')}
+            className={showClear ? 'pe-9' : undefined}
             {...props}
           />
           {showClear && (

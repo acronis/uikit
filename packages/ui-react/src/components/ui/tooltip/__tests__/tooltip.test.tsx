@@ -165,7 +165,6 @@ describe('Tooltip', () => {
   it('sizes the popup to its content by default, bounded by the width tokens', () => {
     render(<Example defaultOpen />);
     const popup = screen.getByText('Helpful hint');
-    expect(popup).toHaveClass('w-max');
     expect(popup).toHaveClass('max-w-[var(--ui-tooltip-container-width-max)]');
     expect(popup).toHaveClass('min-w-[var(--ui-tooltip-container-width-min)]');
   });
@@ -179,7 +178,6 @@ describe('Tooltip', () => {
     );
     const popup = screen.getByText('Helpful hint');
     expect(popup).toHaveClass('w-64');
-    expect(popup).not.toHaveClass('w-max');
     expect(popup).toHaveClass('max-w-[var(--ui-tooltip-container-width-max)]');
   });
 });
