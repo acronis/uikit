@@ -31,6 +31,25 @@
   **When** it renders
   **Then** the container uses the active fill + border and `aria-pressed="true"`.
 
+## Operational
+
+- **Given** an `operational` chip
+  **When** it renders
+  **Then** it is exposed as a button (`role="button"`) with an optional leading
+  icon, no ×, and a label in the strong-link style (semibold,
+  `--ui-chip-operational-label-color`).
+
+- **Given** an `operational` chip
+  **When** the user activates it (click, Enter, or Space)
+  **Then** its `onClick` fires. It has no selected state — unlike `selectable`
+  it does not report `aria-pressed`, because it triggers an operation rather
+  than toggling one.
+
+- **Given** an `operational` chip
+  **When** the user hovers or presses the chip
+  **Then** the container shows the hover / active fill + border, the same as
+  `removable`.
+
 ## Content
 
 - **Given** a label longer than the chip's width

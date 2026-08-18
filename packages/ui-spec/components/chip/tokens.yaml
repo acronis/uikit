@@ -6,6 +6,15 @@ component: Chip
 # Chip binds the dedicated `--ui-chip-*` tier: box geometry, the
 # idle/hover/active box fill + border colors, the per-variant label color, and
 # the icon color/size. The focus ring reuses the shared `--ui-focus-primary`.
+#
+# The `operational` label's semibold weight comes from the same tier's generated
+# `.ui-chip-operational-label-text-style` utility class (typography is emitted as
+# a class, not a custom property, so it has no `--ui-*` name to list here).
+#
+# `--ui-chip-global-box-margin-y` is intentionally absent: in Figma it is a 4px
+# bleed *outside* the 24px component footprint that reserves canvas room for the
+# focus ring. A CSS ring paints outside the border box without affecting layout,
+# so there is nothing to bind.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
@@ -43,6 +52,8 @@ tokens:
   - name: --ui-chip-removable-label-color
     affects: label
   - name: --ui-chip-selectable-label-color
+    affects: label
+  - name: --ui-chip-operational-label-color
     affects: label
 
   # ── Icon (leading icon + remove glyph) ──

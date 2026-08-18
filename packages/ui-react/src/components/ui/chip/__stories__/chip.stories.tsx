@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CircleInfoIcon } from '@acronis-platform/icons-react/stroke-mono';
 
+import { Button } from '../../button/button';
 import { Chip } from '../chip';
 
 const meta = {
@@ -12,11 +13,11 @@ const meta = {
   argTypes: {
     variant: {
       control: 'inline-radio',
-      options: ['removable', 'selectable'],
+      options: ['removable', 'selectable', 'operational'],
       description:
-        '`removable` carries a trailing × remove button; `selectable` is a toggle that shows the active styling when `selected`.',
+        '`removable` carries a trailing × remove button; `selectable` is a toggle that shows the active styling when `selected`; `operational` is a plain action chip with a strong-link label.',
       table: {
-        type: { summary: "'removable' | 'selectable'" },
+        type: { summary: "'removable' | 'selectable' | 'operational'" },
         defaultValue: { summary: 'removable' },
         category: 'Appearance',
       },
@@ -64,8 +65,23 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
+// Removal is controlled — Chip emits `onRemove` and the consumer drops it. The
+// story owns that state so clicking × actually makes the chip disappear (a
+// no-op `onRemove` reads as "the × is broken"). The restore affordance only
+// appears after removal, so the story's initial render is unchanged.
 export const Removable: Story = {
-  args: { variant: 'removable', onRemove: () => {} },
+  args: { variant: 'removable' },
+  render: (args) => {
+    const [removed, setRemoved] = React.useState(false);
+    if (removed) {
+      return (
+        <Button variant="ghost" onClick={() => setRemoved(false)}>
+          Restore chip
+        </Button>
+      );
+    }
+    return <Chip {...args} variant="removable" onRemove={() => setRemoved(true)} />;
+  },
 };
 
 export const Selectable: Story = {
@@ -83,8 +99,24 @@ export const Selectable: Story = {
   },
 };
 
+export const Operational: Story = {
+  args: { variant: 'operational', children: 'Add filter' },
+};
+
 export const WithIcon: Story = {
-  args: { variant: 'selectable', icon: <CircleInfoIcon /> },
+  args: { variant: 'selectable', icon: <CircleInfoIcon size={16} /> },
+  // Selectable, so it toggles on click like the Selectable story — an inert
+  // selectable chip looks broken even when the icon is the point of the story.
+  render: (args) => {
+    const [selected, setSelected] = React.useState(false);
+    return (
+      <Chip
+        {...args}
+        selected={selected}
+        onClick={() => setSelected((prev) => !prev)}
+      />
+    );
+  },
 };
 
 export const Overview: Story = {
@@ -94,7 +126,7 @@ export const Overview: Story = {
         <Chip variant="removable" onRemove={() => {}}>
           Removable
         </Chip>
-        <Chip variant="removable" icon={<CircleInfoIcon />} onRemove={() => {}}>
+        <Chip variant="removable" icon={<CircleInfoIcon size={16} />} onRemove={() => {}}>
           With icon
         </Chip>
       </div>
@@ -103,8 +135,14 @@ export const Overview: Story = {
         <Chip variant="selectable" selected>
           Selected
         </Chip>
-        <Chip variant="selectable" icon={<CircleInfoIcon />} selected>
+        <Chip variant="selectable" icon={<CircleInfoIcon size={16} />} selected>
           Selected · icon
+        </Chip>
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <Chip variant="operational">Add filter</Chip>
+        <Chip variant="operational" icon={<CircleInfoIcon size={16} />}>
+          Operational · icon
         </Chip>
       </div>
     </div>

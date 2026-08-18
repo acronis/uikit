@@ -1,6 +1,7 @@
 # Chip
 
-A compact, interactive label — a removable token or a selectable toggle.
+A compact, interactive label — a removable token, a selectable toggle, or an
+operational action.
 
 ## When to use
 
@@ -8,6 +9,9 @@ A compact, interactive label — a removable token or a selectable toggle.
   uploaded files, entered tags. The × lets the user drop one.
 - **Selectable:** offer a small, toggleable choice — filter/quick-pick chips,
   multi-select option pills.
+- **Operational:** offer a small inline action that sits in a row of chips —
+  "Add filter", "Clear all", "Show 3 more". Its strong-link label marks it as
+  the actionable one among neighbouring chips.
 
 ## When not to use
 
@@ -18,12 +22,12 @@ A compact, interactive label — a removable token or a selectable toggle.
 
 ## Parts
 
-| Part     | Element  | Notes                                                       |
-| -------- | -------- | ----------------------------------------------------------- |
-| `root`   | `div`    | The pill. `selectable` becomes a `role="button"` toggle.    |
-| `icon`   | `svg`    | Optional leading icon (16px), tinted by the icon token.     |
-| `label`  | text     | Children; truncates with an ellipsis.                       |
-| `remove` | `button` | Trailing × (`removable` only); emits `remove` / `onRemove`. |
+| Part     | Element  | Notes                                                                                  |
+| -------- | -------- | -------------------------------------------------------------------------------------- |
+| `root`   | `div`    | The pill. `selectable` becomes a `role="button"` toggle, `operational` a plain button. |
+| `icon`   | `svg`    | Optional leading icon (16px), tinted by the icon token.                                |
+| `label`  | text     | Children; truncates with an ellipsis. Semibold + blue for `operational`.               |
+| `remove` | `button` | Trailing × (`removable` only); emits `remove` / `onRemove`.                            |
 
 ## Examples
 
@@ -41,6 +45,9 @@ import { CircleInfoIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 // With a leading icon
 <Chip variant="selectable" icon={<CircleInfoIcon />}>Info</Chip>
+
+// Operational — an inline action among the chips
+<Chip variant="operational" onClick={addFilter}>Add filter</Chip>
 ```
 
 ## Notes
