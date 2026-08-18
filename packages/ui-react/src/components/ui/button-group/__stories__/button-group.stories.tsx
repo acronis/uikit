@@ -100,8 +100,9 @@ export const Inlined: Story = {
 // The sanctioned use of `inlined`, and the only place the Figma file actually
 // composes a ButtonGroup: inside the `Timer` component (node 7975:23766), which
 // already draws its own 1px border and 4px radius, so an `outlined` group would
-// double up on chrome. `Timer` has no ui-react implementation yet, so this
-// stands in for it with an equivalently bordered container.
+// double up on chrome. `Timer` now ships (and always renders its group this
+// way); this keeps a ButtonGroup-owned case of the same composition, with an
+// equivalently bordered stand-in container.
 export const InlinedOnSurface: Story = {
   render: (args) => (
     <div className="inline-flex items-center rounded border border-[color:var(--ui-button-group-global-container-border-color)] p-1">

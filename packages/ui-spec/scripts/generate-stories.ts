@@ -49,6 +49,12 @@ interface RenderHint {
    *  called, so a generated "All States" story is a blank snapshot). Such
    *  components rely on their hand-written stories for VR. */
   skip?: boolean;
+  /** Object-literal body for `meta.args`, for a component with a **required**
+   *  prop (e.g. Timer's `value`). Every generated story supplies its own props
+   *  through `render`, so these args are never read — but Storybook's types
+   *  demand that a required prop be satisfiable from `meta.args`, and without
+   *  them `satisfies Meta<typeof X>` fails typecheck. */
+  metaArgs?: string;
 }
 
 const RENDER: Record<string, RenderHint> = {
@@ -759,6 +765,34 @@ const RENDER: Record<string, RenderHint> = {
     // renders a real dot indicator instead of a single dot.
     props: 'slideCount={3} selectedIndex={0}',
   },
+  // `value` is required and the actions are children, so an undriven `<Timer />`
+  // would snapshot as an empty box. The sample is the design's own composition
+  // (pause / rename / add), which also paints the divider — that only exists
+  // when the timer has actions.
+  timer: {
+    extraImports: [
+      // Relative to the generated file's `__stories__/` directory.
+      "import { ButtonGroupItem } from '../../button-group';",
+      "import { CirclePauseIcon, PencilIcon, PlusIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    props: 'value="12:01:45"',
+    // `value` is required, so Storybook's types need it satisfiable from
+    // `meta.args` even though the story sets it in `render`.
+    metaArgs: "value: '12:01:45'",
+    sample: [
+      '',
+      '      <ButtonGroupItem aria-label="Pause">',
+      '        <CirclePauseIcon size={16} />',
+      '      </ButtonGroupItem>',
+      '      <ButtonGroupItem aria-label="Rename">',
+      '        <PencilIcon size={16} />',
+      '      </ButtonGroupItem>',
+      '      <ButtonGroupItem aria-label="Add entry">',
+      '        <PlusIcon size={16} />',
+      '      </ButtonGroupItem>',
+      '    ',
+    ].join('\n'),
+  },
 };
 
 const HEADER =
@@ -958,7 +992,7 @@ ${imports}
 
 const meta = {
   title: 'UI/${index.component}/All States (generated)',
-  component: ${comp},
+  component: ${comp},${hint.metaArgs ? `\n  args: { ${hint.metaArgs} },` : ''}
 } satisfies Meta<typeof ${comp}>;
 
 export default meta;

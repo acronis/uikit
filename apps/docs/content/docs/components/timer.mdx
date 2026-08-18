@@ -1,0 +1,129 @@
+---
+title: Timer
+description: An elapsed-time readout paired with a hairline-separated cluster of icon-only actions.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { TimerDemo } from '@/components/demos-react/timer';
+
+## Usage
+
+```tsx
+import { Timer, ButtonGroupItem } from '@acronis-platform/ui-react';
+```
+
+`Timer` is a bordered 32px box holding an elapsed-time readout next to a cluster
+of icon-only actions. The readout is a `role="timer"` live region rendered with
+tabular figures, so the box keeps its width as the digits change. Themed by the
+`--ui-timer-*` tokens.
+
+**It holds no clock.** `Timer` renders whatever `value` you hand it — the
+interval, the format, and the state the actions mutate are all yours. That's
+what lets the same component serve a stopwatch, a countdown, and a static
+duration.
+
+The actions are `ButtonGroupItem` children. `Timer` renders the `ButtonGroup`
+itself, always in its `inlined` style, because its own box already draws the
+border and radius an `outlined` group would duplicate — so the separators, the
+single Tab stop, and the arrow-key roving all come from `ButtonGroup` unchanged.
+Each action is icon-only and needs its own `aria-label`; the toolbar as a whole
+is named by `actionsLabel`, whose default (`"Timer actions"`) is untranslated
+English.
+
+## Examples
+
+<DemoReact>
+  <TimerDemo />
+</DemoReact>
+
+The design's composition — pause, rename, add an entry:
+
+```tsx
+import {
+  CirclePauseIcon,
+  PencilIcon,
+  PlusIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
+
+<Timer value={formatDuration(elapsed)} actionsLabel="Time tracking">
+  <ButtonGroupItem aria-label="Pause" onClick={pause}>
+    <CirclePauseIcon size={16} />
+  </ButtonGroupItem>
+  <ButtonGroupItem aria-label="Rename" onClick={rename}>
+    <PencilIcon size={16} />
+  </ButtonGroupItem>
+  <ButtonGroupItem aria-label="Add entry" onClick={addEntry}>
+    <PlusIcon size={16} />
+  </ButtonGroupItem>
+</Timer>;
+```
+
+Read-only — with no actions the toolbar is not rendered at all, and the divider
+goes with it:
+
+```tsx
+<Timer value="00:12:30" />
+```
+
+A stopwatch. The interval belongs to the caller, and a play/pause control's
+accessible name must track its current function rather than its icon:
+
+```tsx
+const [seconds, setSeconds] = useState(0);
+const [running, setRunning] = useState(false);
+
+useEffect(() => {
+  if (!running) return;
+  const id = setInterval(() => setSeconds((s) => s + 1), 1000);
+  return () => clearInterval(id);
+}, [running]);
+
+<Timer value={format(seconds)} actionsLabel="Stopwatch">
+  <ButtonGroupItem
+    aria-label={running ? 'Pause' : 'Resume'}
+    onClick={() => setRunning((r) => !r)}
+  >
+    {running ? <CirclePauseIcon size={16} /> : <CirclePlayIcon size={16} />}
+  </ButtonGroupItem>
+  <ButtonGroupItem
+    aria-label="Stop"
+    onClick={() => {
+      setRunning(false);
+      setSeconds(0);
+    }}
+  >
+    <CircleStopIcon size={16} />
+  </ButtonGroupItem>
+</Timer>;
+```
+
+An action can be disabled like any other `ButtonGroupItem` — it stays focusable
+and is marked `aria-disabled`, per the WAI-ARIA toolbar pattern:
+
+```tsx
+<Timer value="01:20:00">
+  <ButtonGroupItem aria-label="Pause">
+    <CirclePauseIcon size={16} />
+  </ButtonGroupItem>
+  <ButtonGroupItem aria-label="Discard" disabled>
+    <BinIcon size={16} />
+  </ButtonGroupItem>
+</Timer>
+```
+
+## Accessibility
+
+`role="timer"` is implicitly `aria-live="off"`, which is deliberate: announcing
+a ticking clock once a second would drown out everything else on the page. Don't
+raise it to `polite`. If a milestone matters — a limit reached, a session about
+to expire — announce that event from a separate status region.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/timer/timer.tsx"
+  name="TimerProps"
+/>
+
+The actions accept the full `ButtonGroupItem` API — see
+[`ButtonGroup`](/components/button-group).
