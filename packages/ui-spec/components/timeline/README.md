@@ -105,10 +105,11 @@ a tree row can carry the branch button and the card chevron at once:
   values, and keep them distinct.
 - The marker takes an `icon` or `initials` (icon wins). Avatar's outset ring is
   switched off here, matching the design's strokeless marker.
-- The Figma variables `components/Timeline/{connectorColor,gap}` are not yet
-  "ready for dev" and have no `--ui-timeline-*` tier. Both are pure aliases,
-  identical across all six brands, so the implementation consumes the alias
-  targets (`--ui-border-on-surface-border`, `--ui-gap-16`) directly.
+- The Figma variables `components/Timeline/{connectorColor,gap}` ship as the
+  `--ui-timeline-*` tier and are consumed directly. `Timeline/gap` covers the
+  horizontal marker-to-card gap and the indent step derived from it; the
+  vertical rhythm between rows is unbound in the design and stays on
+  `--ui-gap-16`.
 - Composes `Avatar` (marker), `Card` (container), and `ButtonIcon` (disclosure);
   compose `Tag` into `tag` and anything you like into `children`. The kit ships no
   domain event types or icons.

@@ -5,10 +5,11 @@ component: Timeline
 # brand/theme at paint time; never restate values here.
 #
 # The Figma widget references `components/Timeline/{connectorColor,gap}`, which
-# are not yet "ready for dev" and have no `--ui-timeline-*` tier. Both are pure
-# aliases in Figma, identical across all six brand modes, so this consumes the
-# alias targets directly: `--ui-border-on-surface-border` (connectorColor) and
-# `--ui-gap-16` (gap). Re-point them at `--ui-timeline-*` once that tier ships.
+# ship as the `--ui-timeline-*` tier and are consumed directly.
+#
+# `Timeline/gap` covers only the horizontal marker-to-card gap and the indent
+# step derived from it. The vertical rhythm between rows is an unbound 16px
+# literal in the design, so it stays on `--ui-gap-16` and is listed separately.
 #
 # The marker, disclosure button, and card come from Avatar / ButtonIcon / Card, so
 # their own tiers theme those parts; only the tokens Timeline references directly
@@ -16,16 +17,26 @@ component: Timeline
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - name: --ui-border-on-surface-border
+  - name: --ui-timeline-connector-color
     affects: connector
     description: >-
-      The connector line and the elbow (Figma `components/Timeline/connectorColor`),
-      and the divider above the card body.
+      The connector line and the elbow (Figma
+      `components/Timeline/connectorColor`).
+  - name: --ui-border-on-surface-border
+    affects: item
+    description: >-
+      The divider above the card body, via the bridged `border-border` name.
+      Not the connector — that has its own Timeline token.
+  - name: --ui-timeline-gap
+    affects: item
+    description: >-
+      Marker-to-card gap and the indent step's spacing term (Figma
+      `components/Timeline/gap`).
   - name: --ui-gap-16
     affects: item
     description: >-
-      Row gap, marker-to-card gap, and the indent step's spacing term (Figma
-      `components/Timeline/gap`).
+      Vertical gap between rows, and the distance the connector descends into
+      it. Unbound in the design, so deliberately not the Timeline token.
   - name: --ui-gap-8
     affects: toggle
     description: Gap between the disclosure button and the marker in tree mode.
