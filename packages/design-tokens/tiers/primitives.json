@@ -4769,7 +4769,7 @@
     "lg": {
       "blur": {
         "$extensions": {
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": ["EFFECT_FLOAT"],
           "com.figma.variableId": "VariableID:7653:30708"
         },
         "$type": "dimension",
@@ -4801,7 +4801,7 @@
       },
       "positionX": {
         "$extensions": {
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": ["EFFECT_FLOAT"],
           "com.figma.variableId": "VariableID:7653:30706"
         },
         "$type": "dimension",
@@ -4813,7 +4813,7 @@
       },
       "positionY": {
         "$extensions": {
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": ["EFFECT_FLOAT"],
           "com.figma.variableId": "VariableID:7653:30707"
         },
         "$type": "dimension",
@@ -4825,7 +4825,7 @@
       },
       "spread": {
         "$extensions": {
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": ["EFFECT_FLOAT"],
           "com.figma.variableId": "VariableID:7653:30709"
         },
         "$type": "dimension",
@@ -4839,7 +4839,7 @@
     "md": {
       "blur": {
         "$extensions": {
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": ["EFFECT_FLOAT"],
           "com.figma.variableId": "VariableID:7653:30703"
         },
         "$type": "dimension",
@@ -4867,7 +4867,7 @@
       },
       "positionX": {
         "$extensions": {
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": ["EFFECT_FLOAT"],
           "com.figma.variableId": "VariableID:7653:30701"
         },
         "$type": "dimension",
@@ -4879,7 +4879,7 @@
       },
       "positionY": {
         "$extensions": {
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": ["EFFECT_FLOAT"],
           "com.figma.variableId": "VariableID:7653:30702"
         },
         "$type": "dimension",
@@ -4891,7 +4891,7 @@
       },
       "spread": {
         "$extensions": {
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": ["EFFECT_FLOAT"],
           "com.figma.variableId": "VariableID:7653:30704"
         },
         "$type": "dimension",
@@ -4905,7 +4905,7 @@
     "sm": {
       "blur": {
         "$extensions": {
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": ["EFFECT_FLOAT"],
           "com.figma.variableId": "VariableID:7653:30698"
         },
         "$type": "dimension",
@@ -4937,7 +4937,7 @@
       },
       "positionX": {
         "$extensions": {
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": ["EFFECT_FLOAT"],
           "com.figma.variableId": "VariableID:7653:30694"
         },
         "$type": "dimension",
@@ -4949,7 +4949,7 @@
       },
       "positionY": {
         "$extensions": {
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": ["EFFECT_FLOAT"],
           "com.figma.variableId": "VariableID:7653:30697"
         },
         "$type": "dimension",
@@ -4961,7 +4961,7 @@
       },
       "spread": {
         "$extensions": {
-          "com.figma.scopes": ["ALL_SCOPES"],
+          "com.figma.scopes": ["EFFECT_FLOAT"],
           "com.figma.variableId": "VariableID:7653:30700"
         },
         "$type": "dimension",
