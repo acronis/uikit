@@ -52,11 +52,13 @@ import { Spinner } from '../spinner';
 // clip edge out to the border box lets the bleed survive while still rounding the
 // corners.
 //
-// Typography comes from the generated classes rather than hand-written utilities:
-// `ui-typography-headings-lead` is the title's Figma text style (Inter Regular
-// 18 / 24 — the same treatment Alert's title uses) and the Toast tier emits its
-// own class for the description (Inter Regular 14 / 24). Only the *colors* are
-// separate token references.
+// Typography comes from the Toast tier's own emitted classes rather than
+// hand-written utilities: one for the title (Inter Regular 18 / 24 — the same
+// treatment Alert's title uses) and one for the description (Inter Regular
+// 14 / 24). The title previously borrowed the semantic
+// `ui-typography-headings-lead` because the tier emitted no title class; it does
+// now, and the two resolve identically today. Only the *colors* are separate
+// token references.
 //
 // One deliberate deviation from the Figma: `container/widthMin` (384px) is applied
 // to the viewport, not to the card. A fixed-position stack with a 384px
@@ -272,7 +274,7 @@ function ToastList({ closeAriaLabel }: { closeAriaLabel: string }) {
               // `h5` overrides Base UI's `h2` default to match Alert — a toast
               // is not a page-level heading.
               render={<h5 />}
-              className="ui-typography-headings-lead mb-0 w-full text-[var(--ui-toast-global-content-text-container-title-color)]"
+              className="ui-toast-global-content-text-container-title-text-style mb-0 w-full text-[var(--ui-toast-global-content-text-container-title-color)]"
             />
             {item.description ? (
               <ToastPrimitive.Description
