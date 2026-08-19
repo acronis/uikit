@@ -8,7 +8,7 @@ export default {
       "backgroundColor": {
         "backdrop-element-primary": "light-dark(rgb(255 255 255 / 0.949), rgb(48 50 54 / 0.949))",
         "backdrop-element-secondary": "light-dark(rgb(248 250 252 / 0.949), rgb(24 25 27 / 0.949))",
-        "backdrop-screen": "light-dark(rgb(25 27 35 / 0.898), rgb(109 114 120 / 0.898))",
+        "backdrop-screen": "light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898))",
         "brand-primary": "light-dark(rgb(0 105 142), rgb(12 12 14))",
         "brand-primary-active": "light-dark(rgb(0 173 247), rgb(81 157 246))",
         "brand-primary-disabled": "light-dark(rgb(194 237 255), rgb(85 89 94))",
@@ -181,7 +181,6 @@ export default {
         "typography-body-default": "Inter, system-ui, sans-serif",
         "typography-body-default-numeric": "Inter, system-ui, sans-serif",
         "typography-body-form-label": "Inter, system-ui, sans-serif",
-        "typography-body-heading": "Inter, system-ui, sans-serif",
         "typography-body-strong": "Inter, system-ui, sans-serif",
         "typography-caption-accent": "Inter, system-ui, sans-serif",
         "typography-caption-default": "Inter, system-ui, sans-serif",
@@ -191,14 +190,14 @@ export default {
         "typography-headings-display-numeric": "Inter, system-ui, sans-serif",
         "typography-headings-lead": "Inter, system-ui, sans-serif",
         "typography-headings-lead-numeric": "Inter, system-ui, sans-serif",
+        "typography-headings-section": "Inter, system-ui, sans-serif",
         "typography-headings-title": "Inter, system-ui, sans-serif",
         "typography-headings-title-accent": "Inter, system-ui, sans-serif",
         "typography-link-default": "Inter, system-ui, sans-serif",
         "typography-link-default-underline": "Inter, system-ui, sans-serif",
         "typography-link-strong": "Inter, system-ui, sans-serif",
         "typography-link-strong-underline": "Inter, system-ui, sans-serif",
-        "typography-note-default": "Inter, system-ui, sans-serif",
-        "typography-note-heading": "Inter, system-ui, sans-serif"
+        "typography-note-default": "Inter, system-ui, sans-serif"
       },
       "fontSize": {
         "typography-body-accent": [
@@ -231,14 +230,6 @@ export default {
             "lineHeight": "16px",
             "letterSpacing": "0px",
             "fontWeight": "400"
-          }
-        ],
-        "typography-body-heading": [
-          "14px",
-          {
-            "lineHeight": "24px",
-            "letterSpacing": "0.3px",
-            "fontWeight": "600"
           }
         ],
         "typography-body-strong": [
@@ -313,6 +304,14 @@ export default {
             "fontWeight": "400"
           }
         ],
+        "typography-headings-section": [
+          "20px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "0px",
+            "fontWeight": "500"
+          }
+        ],
         "typography-headings-title": [
           "24px",
           {
@@ -367,14 +366,6 @@ export default {
             "lineHeight": "16px",
             "letterSpacing": "1px",
             "fontWeight": "600"
-          }
-        ],
-        "typography-note-heading": [
-          "11px",
-          {
-            "lineHeight": "16px",
-            "letterSpacing": "1px",
-            "fontWeight": "700"
           }
         ]
       },
