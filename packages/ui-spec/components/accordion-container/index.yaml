@@ -12,4 +12,4 @@ description: >-
   chevron uses, is the one exception). Every other visual decision (header
   layout, spacing, background, borders) stays owned by the component
   composing it.
-since: 0.63.0
+since: 1.1.0
