@@ -8,7 +8,7 @@ export default {
       "backgroundColor": {
         "loading-element-container-primary": "light-dark(rgb(255 255 255 / 0.949), rgb(48 50 54 / 0.949))",
         "loading-element-container-secondary": "light-dark(rgb(248 250 252 / 0.949), rgb(24 25 27 / 0.949))",
-        "loading-screen-container": "light-dark(rgb(25 27 35 / 0.898), rgb(109 114 120 / 0.898))"
+        "loading-screen-container": "light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898))"
       },
       "textColor": {
         "loading-element-label": "light-dark(rgb(25 27 35), rgb(255 255 255))",

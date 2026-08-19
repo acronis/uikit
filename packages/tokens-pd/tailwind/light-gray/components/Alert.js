@@ -20,11 +20,20 @@ export default {
         "alert-warning-border-color": "light-dark(rgb(229 164 0), rgb(255 196 0))"
       },
       "fontFamily": {
-        "alert-global-content-text-container-description-text-style": "Inter, system-ui, sans-serif"
+        "alert-global-content-text-container-description-text-style": "Inter, system-ui, sans-serif",
+        "alert-global-content-text-container-title-text-style": "Inter, system-ui, sans-serif"
       },
       "fontSize": {
         "alert-global-content-text-container-description-text-style": [
           "14px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "0px",
+            "fontWeight": "400"
+          }
+        ],
+        "alert-global-content-text-container-title-text-style": [
+          "18px",
           {
             "lineHeight": "24px",
             "letterSpacing": "0px",
