@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 import { Collapsible as CollapsiblePrimitive } from '@base-ui/react/collapsible';
+import { useRender } from '@base-ui/react/use-render';
+import { mergeProps } from '@base-ui/react/merge-props';
 import { ChevronRightIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
@@ -13,10 +15,10 @@ import { cn } from '@/lib/utils';
 // and the `collapsible=false` bypass. It never imposes visual styling beyond
 // what the disclosure mechanic itself requires: no padding/background/border on
 // Root or Content, no position/hover opinion on Trigger beyond its chevron's
-// glyph color (--ui-glyph-on-surface-primary, matching the Figma ButtonCollapse
-// reference exactly). Every other visual decision (header layout, spacing,
-// background, borders) stays owned by the consumer composing this primitive
-// into their own component (Card, Section, ...).
+// glyph color (--ui-glyph-on-surface-neutral-dark, the same neutral treatment
+// Accordion's chevron uses). Every other visual decision (header layout,
+// spacing, background, borders) stays owned by the consumer composing this
+// primitive into their own component (Card, Section, ...).
 
 interface AccordionContainerState {
   open: boolean;
@@ -67,6 +69,7 @@ const AccordionContainer = React.forwardRef<HTMLDivElement, AccordionContainerPr
       onOpenChange,
       disabled,
       className,
+      style,
       render,
       children,
       ...props
@@ -89,18 +92,46 @@ const AccordionContainer = React.forwardRef<HTMLDivElement, AccordionContainerPr
       [isControlled, onOpenChange]
     );
 
+    const collapsibleState = React.useMemo(
+      () => ({ open, disabled: disabled ?? false }),
+      [open, disabled]
+    );
+
     const resolvedChildren =
       typeof children === 'function' ? children({ open }) : children;
+    const resolvedClassName =
+      typeof className === 'function' ? className(collapsibleState) : className;
+    const resolvedStyle =
+      typeof style === 'function' ? style(collapsibleState) : style;
 
     const contextValue = React.useMemo<AccordionContainerContextValue>(
       () => ({ collapsible }),
       [collapsible]
     );
 
+    const bypassRendered = useRender({
+      render,
+      ref,
+      defaultTagName: 'div',
+      props: mergeProps<'div'>({ className: resolvedClassName, style: resolvedStyle }, props, {
+        children: resolvedChildren,
+      }),
+    });
+
     if (!collapsible) {
+      // No wrapper is imposed for the common case (no ref/className/style/render/
+      // extra DOM props) so this bypass stays style-isolation-neutral; a consumer
+      // that does pass any of those gets a `div` so they aren't silently dropped.
+      const needsWrapper =
+        ref != null ||
+        resolvedClassName != null ||
+        resolvedStyle != null ||
+        render != null ||
+        Object.keys(props).length > 0;
+
       return (
         <AccordionContainerContext.Provider value={contextValue}>
-          {resolvedChildren}
+          {needsWrapper ? bypassRendered : resolvedChildren}
         </AccordionContainerContext.Provider>
       );
     }
@@ -110,7 +141,7 @@ const AccordionContainer = React.forwardRef<HTMLDivElement, AccordionContainerPr
         <CollapsiblePrimitive.Root
           ref={ref}
           render={render}
-          className={className}
+          className={resolvedClassName}
           open={open}
           onOpenChange={handleOpenChange}
           disabled={disabled}
@@ -131,7 +162,7 @@ type AccordionContainerTriggerProps = React.ComponentPropsWithoutRef<
 const AccordionContainerTrigger = React.forwardRef<
   HTMLButtonElement,
   AccordionContainerTriggerProps
->(({ className, children, ...props }, ref) => {
+>(({ className, children, 'aria-label': ariaLabel, ...props }, ref) => {
   const { collapsible } = useAccordionContainerContext();
 
   if (!collapsible) {
@@ -141,8 +172,9 @@ const AccordionContainerTrigger = React.forwardRef<
   return (
     <CollapsiblePrimitive.Trigger
       ref={ref}
+      aria-label={props['aria-labelledby'] ? undefined : ariaLabel ?? 'Toggle'}
       className={cn(
-        'inline-flex size-8 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--ui-glyph-on-surface-primary)]',
+        'inline-flex size-8 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--ui-glyph-on-surface-neutral-dark)]',
         '[&[data-panel-open]>svg]:rotate-90 [&:not([data-panel-open])>svg]:rtl:rotate-180',
         className
       )}
@@ -159,18 +191,42 @@ type AccordionContainerContentProps = React.ComponentPropsWithoutRef<
 >;
 
 const AccordionContainerContent = React.forwardRef<
-  React.ElementRef<typeof CollapsiblePrimitive.Panel>,
+  React.ComponentRef<typeof CollapsiblePrimitive.Panel>,
   AccordionContainerContentProps
->(({ className, children, ...props }, ref) => {
+>(({ className, style, children, render, ...props }, ref) => {
   const { collapsible } = useAccordionContainerContext();
 
+  const resolvedClassName = typeof className === 'function' ? undefined : className;
+  const resolvedStyle = typeof style === 'function' ? undefined : style;
+
+  const bypassRendered = useRender({
+    render: render as useRender.RenderProp<Record<string, unknown>> | undefined,
+    ref,
+    defaultTagName: 'div',
+    props: mergeProps<'div'>(
+      { className: resolvedClassName, style: resolvedStyle },
+      props,
+      { children }
+    ),
+  });
+
   if (!collapsible) {
-    return <>{children}</>;
+    // Same style-isolation-neutral bypass as the Root: no wrapper unless the
+    // consumer actually passed something that would otherwise be dropped.
+    const needsWrapper =
+      ref != null ||
+      resolvedClassName != null ||
+      resolvedStyle != null ||
+      render != null ||
+      Object.keys(props).length > 0;
+
+    return needsWrapper ? bypassRendered : <>{children}</>;
   }
 
   return (
     <CollapsiblePrimitive.Panel
       ref={ref}
+      style={style}
       className={cn(
         'overflow-hidden transition-[height] duration-200 ease-out data-[ending-style]:h-0 data-[starting-style]:h-0',
         className

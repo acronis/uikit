@@ -2,39 +2,45 @@ spec_version: '1.0'
 component: AccordionContainer
 
 schematic: |
-  accordion-container: Root (open state; renders no wrapping element when collapsible=false)
+  accordion-container: Root (open state; renders no wrapping element when collapsible=false, unless a ref/className/style/render/DOM prop is supplied)
     accordion-container-trigger: toggles the panel; rotates its chevron; absent when collapsible=false
-    accordion-container-content: the height-animating panel; renders children directly, unwrapped, when collapsible=false
+    accordion-container-content: the height-animating panel; renders children directly, unwrapped, when collapsible=false (same wrapper exception as Root)
 
 root:
   element: div
   description: >-
     Holds the open state and coordinates the trigger and panel (Base UI
-    Collapsible.Root) when `collapsible` is true. Renders no wrapping element
-    at all when `collapsible` is false — children render directly. Ships no
-    visual classes in either case; it is layout-neutral inside whatever
-    container the consumer renders it in.
+    Collapsible.Root) when `collapsible` is true. When `collapsible` is false,
+    renders no wrapping element — children render directly — unless a ref,
+    className, style, render, or other DOM prop is supplied, in which case it
+    wraps children in a plain `div` so those aren't silently dropped. Ships no
+    visual classes in any case; it is layout-neutral inside whatever container
+    the consumer renders it in.
 
 parts:
   - id: accordion-container-trigger
     element: button
     description: >-
       A 32×32px hit target containing a 16px chevron icon that rotates 90°
-      between the closed (pointing toward reading-direction start) and open
+      between the closed (pointing toward reading-direction end) and open
       (pointing down) states, wired off Base UI's `data-panel-open`. Carries
       only its own hit-target sizing, a button-reset, and the chevron's glyph
-      color (matching the Figma `ButtonCollapse` reference) — no position,
-      margin, background, or hover styling relative to its siblings; the
-      consumer places and styles those within their own header layout.
-      Renders nothing when `collapsible` is false.
+      color (the same neutral treatment Accordion's chevron uses) — no
+      position, margin, background, or hover styling relative to its
+      siblings; the consumer places and styles those within their own header
+      layout. Falls back to an `aria-label="Toggle"` when the consumer
+      supplies neither `aria-label` nor `aria-labelledby`, so the default
+      rendering always has an accessible name. Renders nothing when
+      `collapsible` is false.
   - id: accordion-container-content
     element: div
     description: >-
       The panel; animates its height open/closed and hides when closed.
       Carries only the height-animation classes — no padding or background —
       so the consumer's own padded content wrapper renders inside it without
-      double-padding. Renders its children directly, unwrapped, when
-      `collapsible` is false.
+      double-padding. When `collapsible` is false, renders its children
+      directly, unwrapped, unless a ref/className/style/render/DOM prop is
+      supplied (same wrapper exception as Root).
 
 states:
   - id: open

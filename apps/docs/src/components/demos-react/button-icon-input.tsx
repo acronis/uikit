@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ButtonIconInput } from '@acronis-platform/ui-react';
-import { EyeIcon, EyeCrossedIcon, TimesIcon } from '@acronis-platform/icons-react/stroke-mono';
+import { EyeIcon, EyeOffIcon, TimesIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 export function ButtonIconInputDemo() {
   const [visible, setVisible] = useState(false);
@@ -14,7 +14,7 @@ export function ButtonIconInputDemo() {
         aria-pressed={visible}
         onClick={() => setVisible((prev) => !prev)}
       >
-        {visible ? <EyeIcon /> : <EyeCrossedIcon />}
+        {visible ? <EyeIcon /> : <EyeOffIcon />}
       </ButtonIconInput>
       <ButtonIconInput aria-label="Clear">
         <TimesIcon />

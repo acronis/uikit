@@ -13,12 +13,19 @@ contract:
     - name: open
       type: boolean
       required: false
-      description: Whether the panel is open (controlled). Ignored when collapsible is false.
+      description: >-
+        Whether the panel is open (controlled). No trigger or panel renders when
+        collapsible is false, but the value is still tracked internally and
+        exposed via the `children` render-prop's `{ open }` state.
     - name: defaultOpen
       type: boolean
       required: false
       default: 'false'
-      description: Whether the panel is initially open (uncontrolled). Ignored when collapsible is false.
+      description: >-
+        Whether the panel is initially open (uncontrolled). No trigger or panel
+        renders when collapsible is false, but the value still seeds the
+        internal state exposed via the `children` render-prop's `{ open }`
+        state.
     - name: disabled
       type: boolean
       required: false
@@ -30,9 +37,11 @@ contract:
       default: undefined
       description: >-
         Base UI composition prop on the root — replaces the rendered element
-        while merging props and classes. Only meaningful when collapsible is
-        true (the root renders no element at all otherwise). React-only;
-        other frameworks use their own polymorphism.
+        while merging props and classes. When collapsible is false the root
+        renders no wrapping element unless a ref, className, style, render,
+        or other DOM prop is supplied — in which case it wraps children in a
+        plain `div` so none of those are silently dropped. React-only; other
+        frameworks use their own polymorphism.
     - name: children
       type: 'ReactNode | ((state: { open: boolean }) => ReactNode)'
       required: false

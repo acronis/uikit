@@ -20,12 +20,15 @@ owns only the disclosure mechanics — open state, the trigger button, chevron
 rotation, and panel height animation. It never imposes visual styling beyond
 what that mechanic itself requires: `Root` and `Content` carry no
 padding/background/border, and `Trigger` carries no position or hover opinion
-beyond its own 32×32 hit target and chevron color (matching the Figma
-reference). Every other visual decision — header layout, spacing, background,
-borders — stays owned by whichever component composes it.
+beyond its own 32×32 hit target and chevron color (the same neutral treatment
+Accordion's chevron uses). Every other visual decision — header layout,
+spacing, background, borders — stays owned by whichever component composes
+it.
 
-When `collapsible` is `false`, `children` render directly with no trigger and
-no panel wrapper, matching the Figma `isCollapsable=false` state.
+When `collapsible` is `false`, `children` render directly with no wrapping
+element — matching the Figma `isCollapsable=false` state — unless a
+ref/className/style/render/DOM prop is supplied, in which case `Root` and
+`Content` wrap children in a plain `div` so those aren't silently dropped.
 
 `children` also accepts a render-prop function receiving the current
 `{ open }` state, so content placed outside `AccordionContainer.Content` (e.g.

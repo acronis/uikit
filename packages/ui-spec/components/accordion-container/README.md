@@ -5,9 +5,9 @@ variant. Owns open state, the trigger button, chevron rotation, and panel
 animation — nothing else. It never imposes visual styling beyond what the
 disclosure mechanic itself requires: no padding/background/border on `Root` or
 `Content`, no position/hover opinion on `Trigger` beyond the chevron's glyph
-color (matching the Figma reference). Every other visual decision (header
-layout, spacing, background, borders) stays owned by the component composing
-it.
+color (the same neutral treatment Accordion's chevron uses). Every other
+visual decision (header layout, spacing, background, borders) stays owned by
+the component composing it.
 
 > **Status: draft.** No single Figma node maps 1:1 to this component — it's a
 > generic primitive factored out of Card's and Section's confirmed
@@ -29,11 +29,11 @@ it.
 
 ## Parts
 
-| Export                       | Purpose                                                                              |
-| ---------------------------- | ------------------------------------------------------------------------------------ |
-| `AccordionContainer`         | Root — holds the open state. Renders no element when `collapsible` is false.         |
-| `AccordionContainer.Trigger` | Toggles the panel; renders a rotating chevron. Renders nothing when not collapsible. |
-| `AccordionContainer.Content` | The height-animating panel. Renders children unwrapped when not collapsible.         |
+| Export                       | Purpose                                                                                                                                       |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AccordionContainer`         | Root — holds the open state. Renders no wrapping element when `collapsible` is false, unless a ref/className/style/render/DOM prop is passed. |
+| `AccordionContainer.Trigger` | Toggles the panel; renders a rotating chevron with a default `aria-label`. Renders nothing when not collapsible.                              |
+| `AccordionContainer.Content` | The height-animating panel. Renders children unwrapped when not collapsible, with the same wrapper exception as Root.                         |
 
 ## Example
 

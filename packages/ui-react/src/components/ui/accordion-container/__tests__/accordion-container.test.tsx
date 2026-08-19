@@ -203,4 +203,63 @@ describe('AccordionContainer', () => {
 
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
+
+  describe('collapsible=false — bypass forwarding', () => {
+    it('forwards a ref to a wrapper element on Root when collapsible=false', () => {
+      const ref = React.createRef<HTMLDivElement>();
+      render(
+        <AccordionContainer collapsible={false} ref={ref}>
+          <p>content</p>
+        </AccordionContainer>
+      );
+
+      expect(ref.current).toBeInstanceOf(HTMLDivElement);
+    });
+
+    it('forwards className and arbitrary DOM props on Root when collapsible=false', () => {
+      render(
+        <AccordionContainer collapsible={false} className="custom-root" data-testid="root">
+          <p>content</p>
+        </AccordionContainer>
+      );
+
+      const root = screen.getByTestId('root');
+      expect(root).toHaveClass('custom-root');
+    });
+
+    it('forwards className and arbitrary DOM props on Content when collapsible=false', () => {
+      render(
+        <AccordionContainer collapsible={false}>
+          <AccordionContainer.Content className="custom-content" data-testid="content">
+            Body content
+          </AccordionContainer.Content>
+        </AccordionContainer>
+      );
+
+      const content = screen.getByTestId('content');
+      expect(content).toHaveClass('custom-content');
+    });
+  });
+
+  describe('Trigger accessible name', () => {
+    it('has a default accessible name when no aria-label is provided', () => {
+      render(
+        <AccordionContainer collapsible>
+          <AccordionContainer.Trigger />
+        </AccordionContainer>
+      );
+
+      expect(screen.getByRole('button')).toHaveAccessibleName();
+    });
+
+    it('honors a consumer-supplied aria-label', () => {
+      render(
+        <AccordionContainer collapsible>
+          <AccordionContainer.Trigger aria-label="Toggle section" />
+        </AccordionContainer>
+      );
+
+      expect(screen.getByRole('button', { name: 'Toggle section' })).toBeInTheDocument();
+    });
+  });
 });
