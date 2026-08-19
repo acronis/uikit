@@ -1,7 +1,9 @@
+import type { ComponentProps } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
 
+import { AccordionContainer } from '../../accordion-container';
 import { Button } from '../../button';
 import { ButtonIcon } from '../../button-icon';
 import { Card, CardContent, CardFooter, CardHeader } from '../card';
@@ -156,6 +158,25 @@ const meta = {
       description: 'Additional classes merged onto the header.',
       table: { type: { summary: 'string' }, category: 'Appearance' },
     },
+    isCollapsible: {
+      control: 'boolean',
+      description:
+        'Shows a disclosure trigger at the end of the header. Only has an effect inside a collapsible AccordionContainer.',
+      table: {
+        type: { summary: 'boolean' },
+        category: 'Appearance',
+        defaultValue: { summary: 'false' },
+      },
+    },
+    collapseLabel: {
+      control: 'text',
+      description: 'Accessible label for the collapse trigger.',
+      table: {
+        type: { summary: 'string' },
+        category: 'Content',
+        defaultValue: { summary: 'Toggle card' },
+      },
+    },
   },
 } satisfies Meta<typeof CardHeader>;
 
@@ -286,37 +307,142 @@ export const WithExtrasAndActions: Story = {
   ),
 };
 
+// Shared header args + a state-dependent description for the collapsible
+// stories below. The header's title/controls stay put, but the description
+// swaps to a denser one-line summary while collapsed — since the panel
+// content is hidden in that state, the header is where that context has to
+// live. This is the same pattern AccordionContainer's own docs use (see
+// `accordion-container.stories.tsx`'s `DemoHeader`), applied through the
+// `AccordionContainer` render-prop's `{ open }` state.
+const collapsibleHeaderArgs = {
+  title: 'Backup policy',
+  isCollapsible: true,
+  collapseLabel: 'Toggle backup policy',
+};
+
+function collapsibleDescription(open: boolean) {
+  return open
+    ? 'Applies to 12 workloads.'
+    : '12 workloads · last run 5 minutes ago';
+}
+
+function CollapsibleCardDemo({
+  args,
+  defaultOpen,
+}: {
+  args: ComponentProps<typeof CardHeader>;
+  defaultOpen: boolean;
+}) {
+  return (
+    <Card className="w-[420px]">
+      <AccordionContainer collapsible defaultOpen={defaultOpen}>
+        {({ open }) => (
+          <>
+            <CardHeader
+              {...args}
+              hasDescription
+              description={collapsibleDescription(open)}
+            />
+            <AccordionContainer.Content>
+              <CardContent>
+                <p className="text-sm">
+                  Collapse the card to hide the content and footer while
+                  keeping the header visible.
+                </p>
+              </CardContent>
+              <CardFooter className="gap-2">
+                <Button>Save</Button>
+                <Button variant="secondary">Cancel</Button>
+              </CardFooter>
+            </AccordionContainer.Content>
+          </>
+        )}
+      </AccordionContainer>
+    </Card>
+  );
+}
+
+export const Expanded: Story = {
+  args: collapsibleHeaderArgs,
+  render: (args) => <CollapsibleCardDemo args={args} defaultOpen />,
+};
+
+export const Collapsed: Story = {
+  args: collapsibleHeaderArgs,
+  render: (args) => <CollapsibleCardDemo args={args} defaultOpen={false} />,
+};
+
+// Side by side so the header difference between the two states is visible at
+// a glance: the trigger's chevron points down when expanded and toward the
+// reading-direction end when collapsed, and the description text itself
+// changes (full sentence when expanded vs. a dense summary when collapsed,
+// since the content/footer region only renders while expanded).
+export const ExpandedVsCollapsed: Story = {
+  render: () => (
+    <div className="flex items-start gap-6">
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-xs text-[var(--ui-text-on-surface-secondary)]">
+          Expanded
+        </span>
+        <CollapsibleCardDemo args={collapsibleHeaderArgs} defaultOpen />
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-xs text-[var(--ui-text-on-surface-secondary)]">
+          Collapsed
+        </span>
+        <CollapsibleCardDemo args={collapsibleHeaderArgs} defaultOpen={false} />
+      </div>
+    </div>
+  ),
+};
+
+// FullFeatured is collapsible: every header feature (drag, switch, avatar,
+// rename, actions) combines with the collapse trigger, and the description
+// swaps between a full sentence (expanded) and a dense status summary
+// (collapsed) — the same header-changes-with-state pattern as the stories
+// above, exercised together with the rest of the header's interactive
+// surface.
 export const FullFeatured: Story = {
   args: {
     title: 'Backup policy',
-    description: 'Applies to 12 workloads.',
-    hasDescription: true,
     isDraggable: true,
     isSwitchable: true,
     defaultSwitchChecked: true,
     hasAvatar: true,
     avatarLabel: 'SB',
     hasRename: true,
+    isCollapsible: true,
   },
   render: (args) => (
     <Card className="w-[420px]">
-      <CardHeader
-        {...args}
-        actions={
-          <ButtonIcon aria-label="More actions">
-            <EllipsisIcon size={24} />
-          </ButtonIcon>
-        }
-      />
-      <CardContent>
-        <p className="text-sm">
-          Every header feature combined: drag, switch, avatar, rename.
-        </p>
-      </CardContent>
-      <CardFooter className="gap-2">
-        <Button>Save</Button>
-        <Button variant="secondary">Cancel</Button>
-      </CardFooter>
+      <AccordionContainer collapsible defaultOpen>
+        {({ open }) => (
+          <>
+            <CardHeader
+              {...args}
+              hasDescription
+              description={collapsibleDescription(open)}
+              actions={
+                <ButtonIcon aria-label="More actions">
+                  <EllipsisIcon size={24} />
+                </ButtonIcon>
+              }
+            />
+            <AccordionContainer.Content>
+              <CardContent>
+                <p className="text-sm">
+                  Every header feature combined: drag, switch, avatar,
+                  rename, collapse.
+                </p>
+              </CardContent>
+              <CardFooter className="gap-2">
+                <Button>Save</Button>
+                <Button variant="secondary">Cancel</Button>
+              </CardFooter>
+            </AccordionContainer.Content>
+          </>
+        )}
+      </AccordionContainer>
     </Card>
   ),
 };

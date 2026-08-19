@@ -9,10 +9,20 @@ import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ButtonIconInput } from '@/components/ui/button-icon-input';
 import { Switch } from '@/components/ui/switch';
+import { buttonIconVariants } from '@/components/ui/button-icon';
+import { AccordionContainer } from '@/components/ui/accordion-container';
 
-// Figma node 10012:195993 ("Card"). The design also defines an `isCollapsable`
-// variant (`false` / `true-expanded` / `true-collapsed`) — deliberately not
-// implemented yet, so this component only covers the non-collapsible shape.
+// Figma node 10012:195993 ("Card"). The design's `isCollapsable` variant
+// (`false` / `true-expanded` / `true-collapsed`) is implemented by composing
+// `Card` with `AccordionContainer` (the shared disclosure primitive) rather
+// than a bespoke chevron/animation: wrap `CardContent`/`CardFooter` in
+// `AccordionContainer.Content` and set `CardHeader`'s `isCollapsible` to
+// render the trigger. The trigger is restyled with `buttonIconVariants({
+// variant: 'ghost' })` instead of `AccordionContainer.Trigger`'s own neutral
+// default — Figma's `ButtonCollapse` is a real ghost `ButtonIcon` instance
+// (confirmed via Code Connect metadata + its idle icon color resolving to
+// `--ui-button-icon-global-icon-color-idle`), not the accordion's plain
+// neutral chevron.
 // No dedicated `--ui-card-*` token tier exists for the root chrome (only the
 // unrelated `CardFilter` tier does) — the design references plain semantic
 // tokens for the surface/border/divider/text colors, so this stays on the
@@ -109,6 +119,14 @@ export interface CardHeaderProps extends Omit<
   extras?: React.ReactNode;
   /** Actions rendered at the end of the header (e.g. a menu button). */
   actions?: React.ReactNode;
+  /**
+   * Shows a disclosure trigger at the end of the header. Only has an effect
+   * when this header renders inside a collapsible `AccordionContainer` —
+   * see the collapsible composition example.
+   */
+  isCollapsible?: boolean;
+  /** Accessible label for the collapse trigger. */
+  collapseLabel?: string;
 }
 
 const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
@@ -134,6 +152,8 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
       renameLabel = 'Rename',
       extras,
       actions,
+      isCollapsible = false,
+      collapseLabel = 'Toggle card',
       children,
       ...props
     },
@@ -194,6 +214,15 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
       </div>
       {children}
       {actions}
+      {isCollapsible && (
+        <AccordionContainer.Trigger
+          aria-label={collapseLabel}
+          className={cn(
+            buttonIconVariants({ variant: 'ghost' }),
+            '[&[data-panel-open]>svg]:rotate-90 [&:not([data-panel-open])>svg]:rtl:rotate-180'
+          )}
+        />
+      )}
     </div>
   )
 );

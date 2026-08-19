@@ -4,9 +4,9 @@ A surface that groups related content and actions into a bordered, rounded
 container. Composable from parts (`Card`, `CardHeader`, `CardContent`,
 `CardFooter`); the header carries a rich, Figma-driven feature set.
 
-> Figma node: `10012-195993`. The design also defines an `isCollapsable`
-> variant (expanded/collapsed) that is **not implemented yet** — this
-> component only covers the non-collapsible shape.
+> Figma node: `10012-195993`. The design's `isCollapsable` variant
+> (expanded/collapsed) is implemented by composing `Card` with
+> `AccordionContainer` — see "Collapsible" below.
 
 ## When to use
 
@@ -26,7 +26,6 @@ container. Composable from parts (`Card`, `CardHeader`, `CardContent`,
 - As a generic layout `<div>` with no visual surface — just use a styled
   element.
 - For modal/overlay surfaces — use the dialog/popover components.
-- For a collapsible card — not implemented yet.
 
 ## Parts
 
@@ -95,3 +94,46 @@ import {
   rename UI (an inline input, a dialog, …) — Card does not manage rename
   state itself.
 - `hasError` (on `Card`, not `CardHeader`) only swaps the root border color.
+
+## Collapsible
+
+Compose `Card` with `AccordionContainer` (the shared disclosure primitive):
+wrap `CardContent`/`CardFooter` in `AccordionContainer.Content` and set
+`CardHeader`'s `isCollapsible` to render the trigger — restyled to match the
+Figma design's ghost `ButtonIcon` chrome rather than `AccordionContainer`'s
+own neutral default.
+
+```tsx
+import {
+  AccordionContainer,
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from '@acronis-platform/ui-react';
+
+<Card className="w-[420px]">
+  <AccordionContainer collapsible defaultOpen>
+    <CardHeader
+      title="Backup policy"
+      description="Applies to 12 workloads."
+      hasDescription
+      isCollapsible
+      collapseLabel="Toggle backup policy"
+    />
+    <AccordionContainer.Content>
+      <CardContent>All 24 workloads are protected and up to date.</CardContent>
+      <CardFooter className="gap-2">
+        <Button>Save</Button>
+        <Button variant="secondary">Cancel</Button>
+      </CardFooter>
+    </AccordionContainer.Content>
+  </AccordionContainer>
+</Card>;
+```
+
+- `isCollapsible` on `CardHeader` only has an effect when the header renders
+  inside a collapsible `AccordionContainer` — it's a no-op otherwise.
+- The header itself (title, drag handle, switch, avatar, actions, …) stays
+  visible in both the open and closed state; only content wrapped in
+  `AccordionContainer.Content` is hidden when closed.

@@ -1,6 +1,13 @@
 'use client';
 
-import { Button, Card, CardContent, CardFooter, CardHeader } from '@acronis-platform/ui-react';
+import {
+  AccordionContainer,
+  Button,
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from '@acronis-platform/ui-react';
 
 export function CardDemo() {
   return (
@@ -21,6 +28,38 @@ export function CardDemo() {
         <Button>View report</Button>
         <Button variant="secondary">Run now</Button>
       </CardFooter>
+    </Card>
+  );
+}
+
+export function CardCollapsibleDemo() {
+  return (
+    <Card className="w-[350px]">
+      <AccordionContainer collapsible defaultOpen>
+        {({ open }) => (
+          <>
+            <CardHeader
+              title="Backup policy"
+              description={
+                open
+                  ? 'Applies to 12 workloads.'
+                  : '12 workloads · last run 5 minutes ago'
+              }
+              hasDescription
+              isCollapsible
+              collapseLabel="Toggle backup policy"
+            />
+            <AccordionContainer.Content>
+              <CardContent>
+                <p className="text-sm">
+                  Collapse the card to hide the content while keeping the
+                  header visible.
+                </p>
+              </CardContent>
+            </AccordionContainer.Content>
+          </>
+        )}
+      </AccordionContainer>
     </Card>
   );
 }

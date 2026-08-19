@@ -117,6 +117,31 @@ Scenario: Actions render at the end of the header
   Then the actions node appears at the end of the header row
 ```
 
+## Header — collapsible
+
+```gherkin
+Scenario: Collapse trigger hidden by default
+  Given a CardHeader with isCollapsible unset
+  When the header renders
+  Then no collapse trigger appears
+
+Scenario: Collapse trigger has no effect outside a collapsible AccordionContainer
+  Given a CardHeader with isCollapsible set to true, rendered with no
+    ancestor AccordionContainer
+  When the header renders
+  Then no collapse trigger appears
+
+Scenario: Collapse trigger shown and operated inside a collapsible AccordionContainer
+  Given a Card composed as: AccordionContainer(collapsible) wrapping a
+    CardHeader with isCollapsible set to true, and an AccordionContainer.Content
+    wrapping CardContent/CardFooter
+  When the user activates the collapse trigger
+  Then the AccordionContainer's onOpenChange fires with the new open value
+  And AccordionContainer.Content's children (CardContent, CardFooter) are
+    hidden when closed and shown when open
+  And the header itself remains visible in both states
+```
+
 ## Pass-through
 
 ```gherkin

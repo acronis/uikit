@@ -4,7 +4,7 @@ description: A surface that groups related content and actions.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
-import { CardDemo } from '@/components/demos-react/card';
+import { CardDemo, CardCollapsibleDemo } from '@/components/demos-react/card';
 
 ## Usage
 
@@ -82,6 +82,46 @@ Just content, no header or footer:
   <CardContent className="pt-4">
     <p>A bare card with content and no header or footer.</p>
   </CardContent>
+</Card>
+```
+
+## Collapsible
+
+Compose `Card` with `AccordionContainer` (the shared disclosure primitive):
+wrap `CardContent`/`CardFooter` in `AccordionContainer.Content` and set
+`CardHeader`'s `isCollapsible` to render the trigger — restyled to match this
+design's ghost `ButtonIcon` chrome rather than `AccordionContainer`'s own
+neutral default. `isCollapsible` only has an effect when the header renders
+inside a collapsible `AccordionContainer`; it's a no-op otherwise. The header
+itself stays visible in both states — only the content wrapped in
+`AccordionContainer.Content` is hidden while collapsed.
+
+<DemoReact>
+  <CardCollapsibleDemo />
+</DemoReact>
+
+```tsx
+import { AccordionContainer, Card, CardContent, CardHeader } from '@acronis-platform/ui-react';
+
+<Card className="w-[350px]">
+  <AccordionContainer collapsible defaultOpen>
+    {({ open }) => (
+      <>
+        <CardHeader
+          title="Backup policy"
+          description={open ? 'Applies to 12 workloads.' : '12 workloads · last run 5 minutes ago'}
+          hasDescription
+          isCollapsible
+          collapseLabel="Toggle backup policy"
+        />
+        <AccordionContainer.Content>
+          <CardContent>
+            <p>Collapse the card to hide the content while keeping the header visible.</p>
+          </CardContent>
+        </AccordionContainer.Content>
+      </>
+    )}
+  </AccordionContainer>
 </Card>
 ```
 

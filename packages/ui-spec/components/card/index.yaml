@@ -7,7 +7,9 @@ description: >-
   A surface that groups related content and actions. A set of composable parts
   (header, content, footer) on a bordered, rounded container. The header
   carries the interactive surface: an optional drag handle, toggle switch,
-  avatar, rename button, extras, and end-aligned actions.
+  avatar, rename button, extras, end-aligned actions, and an optional
+  collapse trigger. Collapsibility is composed by wrapping the header and
+  content/footer in `AccordionContainer`.
 since: 0.8.0
 dependencies:
   components:
@@ -17,6 +19,8 @@ dependencies:
     - AvatarFallback
     - ButtonIconInput
     - Switch
+    - AccordionContainer
+    - ButtonIcon
 figma:
   node: '10012-195993'
   codeConnect: packages/ui-react/src/components/ui/card/card.figma.tsx

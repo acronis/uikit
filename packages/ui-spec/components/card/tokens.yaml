@@ -41,3 +41,33 @@ tokens:
       affects: description,
       description: Description text color and drag-handle icon color,
     }
+  - {
+      name: --ui-button-icon-global-icon-color-idle,
+      affects: collapse-trigger,
+      description: Collapse trigger chevron color (idle) — reused from ButtonIcon,
+    }
+  - {
+      name: --ui-button-icon-global-icon-color-hover,
+      affects: collapse-trigger,
+      description: Collapse trigger chevron color (hover) — reused from ButtonIcon,
+    }
+  - {
+      name: --ui-button-icon-global-icon-color-active,
+      affects: collapse-trigger,
+      description: Collapse trigger chevron color (active) — reused from ButtonIcon,
+    }
+  - {
+      name: --ui-button-icon-global-container-color-idle,
+      affects: collapse-trigger,
+      description: Collapse trigger background (idle) — reused from ButtonIcon,
+    }
+  - {
+      name: --ui-button-icon-global-container-color-hover,
+      affects: collapse-trigger,
+      description: Collapse trigger background (hover) — reused from ButtonIcon,
+    }
+  - {
+      name: --ui-button-icon-global-container-color-active,
+      affects: collapse-trigger,
+      description: Collapse trigger background (active) — reused from ButtonIcon,
+    }

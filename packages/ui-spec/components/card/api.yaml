@@ -128,6 +128,21 @@ contract:
       default: undefined
       description: Actions rendered at the end of the header (e.g. a menu button).
 
+    - name: header.isCollapsible
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Shows a disclosure trigger at the end of the header. Only has an
+        effect when the header renders inside a collapsible
+        `AccordionContainer` — see the collapsible composition example.
+
+    - name: header.collapseLabel
+      type: string
+      required: false
+      default: 'Toggle card'
+      description: Accessible label for the collapse trigger.
+
   events:
     - name: header.onSwitchCheckedChange
       description: Fires when the header switch is toggled.
@@ -158,6 +173,20 @@ adapters:
         <CardFooter>
           <Button>View report</Button>
         </CardFooter>
+      </Card>
+
+      // Collapsible: compose with AccordionContainer, and set
+      // CardHeader's isCollapsible to render the trigger.
+      <Card>
+        <AccordionContainer collapsible defaultOpen>
+          <CardHeader title="Backup policy" isCollapsible />
+          <AccordionContainer.Content>
+            <CardContent>Applies to 12 workloads.</CardContent>
+            <CardFooter>
+              <Button>Save</Button>
+            </CardFooter>
+          </AccordionContainer.Content>
+        </AccordionContainer>
       </Card>
 
   vue:
