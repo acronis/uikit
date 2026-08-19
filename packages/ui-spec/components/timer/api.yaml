@@ -1,0 +1,89 @@
+spec_version: '1.0'
+component: Timer
+
+# Framework-agnostic contract. Figma models the Timer with exactly two knobs — a
+# `value` TEXT property and the nested ButtonGroup's `ListItem` slot — and no
+# variant axis, so the contract is deliberately this small.
+#
+# The actions are ButtonGroup *items*, not a Timer-specific part type: the Timer
+# renders the group itself (always in its `inlined` style) and the caller fills
+# it. Everything about an action — its accessible name, disabled state, click
+# event, separators, roving tabindex — is specified by ButtonGroup and is not
+# restated here.
+contract:
+  properties:
+    - name: value
+      type: 'string | Node'
+      required: true
+      description: >-
+        The formatted time to display, e.g. `12:01:45`. The component holds no
+        clock: it neither ticks nor formats, so the caller owns the interval and
+        the format (including whether hours are shown and how a locale renders
+        the separators). Rendered with tabular figures so the readout keeps its
+        width as the digits change.
+    - name: actions-label
+      type: string
+      required: false
+      default: "'Timer actions'"
+      description: >-
+        Accessible name for the action cluster's toolbar. Exists because the
+        caller cannot reach that element directly — the Timer renders it — and
+        the default is an unlocalized English string, so translate it.
+
+  events: []
+
+  content:
+    - name: default
+      description: >-
+        The actions, as ButtonGroup items in visual order. Each is icon-only and
+        needs its own accessible name. Omit them for a read-only readout: the
+        toolbar is then not rendered at all and the divider goes with it.
+
+  methods: []
+
+adapters:
+  react:
+    component: Timer
+    status: implemented
+    import: "import { Timer, ButtonGroupItem } from '@acronis-platform/ui-react'"
+    example: |
+      const [elapsed, setElapsed] = useState(0);
+
+      <Timer value={formatDuration(elapsed)} actionsLabel="Time tracking">
+        <ButtonGroupItem aria-label="Pause" onClick={pause}>
+          <CirclePauseIcon size={16} />
+        </ButtonGroupItem>
+        <ButtonGroupItem aria-label="Rename" onClick={rename}>
+          <PencilIcon size={16} />
+        </ButtonGroupItem>
+        <ButtonGroupItem aria-label="Add entry" onClick={addEntry}>
+          <PlusIcon size={16} />
+        </ButtonGroupItem>
+      </Timer>
+
+      {/* Read-only: no actions, so no toolbar and no divider */}
+      <Timer value="00:12:30" />
+
+  vue:
+    component: AvTimer
+    status: planned
+    import: "import { AvTimer, AvButtonGroupItem } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvTimer :value="formatDuration(elapsed)" actions-label="Time tracking">
+        <AvButtonGroupItem aria-label="Pause" @click="pause">
+          <CirclePauseIcon />
+        </AvButtonGroupItem>
+        <AvButtonGroupItem aria-label="Rename" @click="rename">
+          <PencilIcon />
+        </AvButtonGroupItem>
+      </AvTimer>
+
+  web-components:
+    element: ui-timer
+    status: planned
+    import: "import '@acronis-platform/ui-wc/timer'"
+    example: |
+      <ui-timer value="12:01:45" actions-label="Time tracking">
+        <ui-button-group-item aria-label="Pause"></ui-button-group-item>
+        <ui-button-group-item aria-label="Rename"></ui-button-group-item>
+      </ui-timer>

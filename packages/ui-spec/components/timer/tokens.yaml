@@ -1,0 +1,53 @@
+spec_version: '1.0'
+component: Timer
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+#
+# Names mirror the `components/Timer/*` Figma variables: the box under
+# `-container-*`, the readout's padding and divider under `-content-box-*`, and
+# the readout's own type/color under `-value-*`.
+#
+# The readout's typography is not a `--ui-*` custom property but the generated
+# utility class `.ui-timer-value-text-style` (family / size / weight /
+# line-height), which tokens-pd emits alongside the Timer tier from the same
+# Figma text style (`headings/lead-numeric`).
+#
+# The action cluster contributes no tokens of its own: it is a ButtonGroup in
+# its `inlined` style, so it is themed entirely by
+# `--ui-button-group-global-*` and the shared glyph/focus semantics — all
+# specified in the ButtonGroup spec, not restated here.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── The box (root) ──
+  - name: --ui-timer-container-color
+    affects: root
+  - name: --ui-timer-container-border-color
+    affects: root
+  - name: --ui-timer-container-border-style
+    affects: root
+  - name: --ui-timer-container-border-width
+    affects: root
+  - name: --ui-timer-container-radius
+    affects: root
+  - name: --ui-timer-container-height
+    affects: root
+
+  # ── The elapsed-time readout ──
+  - name: --ui-timer-content-box-padding-x
+    affects: readout
+  - name: --ui-timer-value-color
+    affects: readout
+  # Tabular figures, so the box does not reflow as the digits change.
+  - name: --ui-timer-value-font-variant-numeric
+    affects: readout
+
+  # ── The divider (the readout's inline-end border) ──
+  - name: --ui-timer-content-box-divider-color
+    affects: divider
+  - name: --ui-timer-content-box-divider-style
+    affects: divider
+  - name: --ui-timer-content-box-divider-width
+    affects: divider

@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: Timer
+name: timer
+status: ready
+category: data-display
+description: >-
+  An elapsed-time readout paired with a hairline-separated cluster of icon-only
+  actions, in a single bordered 32px box. Displays a caller-formatted value; it
+  does not tick.
+since: 0.63.0
+figma:
+  node: '7987-25477'
+  codeConnect: packages/ui-react/src/components/ui/timer/timer.figma.tsx
