@@ -46,19 +46,25 @@ import { Card } from '../card';
 // design primitives, not iconography, and CSS borders mirror correctly under
 // `dir="rtl"` where a baked-in asset cannot.
 //
-// The design references `components/Timeline/{connectorColor,gap}`, which are
-// not "ready for dev" and have no `--ui-timeline-*` tier. Both are pure aliases
-// in Figma — identical across all six brand modes — so this consumes the alias
-// targets directly: `--ui-border-on-surface-border` (connector) and
-// `--ui-gap-16` (gap). Re-point them at `--ui-timeline-*` once that tier ships.
+// The design references `components/Timeline/{connectorColor,gap}`, which now
+// ship as a `--ui-timeline-*` tier (imported in `src/styles/index.css`), so this
+// consumes them directly rather than the alias targets it used while the tier
+// was missing.
+//
+// Figma binds `Timeline/gap` to exactly one thing: the row's *horizontal* gap
+// between the marker column and the card (and, through it, the indent step).
+// The vertical rhythm between rows and the card header's own spacing are
+// unbound 16px literals in the design, so they stay on `--ui-gap-16` — do not
+// "tidy" them onto the Timeline token, or a future change to `Timeline/gap`
+// would silently retune the vertical layout the design never tied to it.
 
-const CONNECTOR_COLOR = 'var(--ui-border-on-surface-border)';
+const CONNECTOR_COLOR = 'var(--ui-timeline-connector-color)';
 // Load-bearing invariant: the elbow's vertical lands on the parent's connector
 // only while GAP === MARKER / 2 (16 === 32 / 2 today). The elbow is offset from the
 // child's indent while the connector is offset from the parent's marker centre, and
 // those two coincide at exactly that ratio. If either token moves, every elbow
 // detaches — re-derive the elbow's `insetInlineStart` rather than nudging it.
-const GAP = 'var(--ui-gap-16)';
+const GAP = 'var(--ui-timeline-gap)';
 /** The Avatar marker's own width — also the elbow's horizontal reach. */
 const MARKER = 'var(--ui-avatar-global-avatar-size)';
 /** Disclosure button + its gap, present only on a `tree` row with descendants. */
@@ -461,7 +467,7 @@ const TimelineItem = React.forwardRef<HTMLLIElement, TimelineItemProps>(
           } as React.CSSProperties
         }
         className={cn(
-          'relative flex items-start gap-[var(--ui-gap-16)]',
+          'relative flex items-start gap-[var(--ui-timeline-gap)]',
           'ps-[var(--timeline-indent)]',
           className
         )}
