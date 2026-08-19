@@ -3158,6 +3158,19 @@
         },
         "platforms": ["PD"]
       },
+      "section": {
+        "$extensions": {
+          "com.figma.styleId": "S:b0946353329db6551ff98ae3eb6865ea13e79877,"
+        },
+        "$value": {
+          "fontFamily": "{font.font-family.default}",
+          "fontSize": "{font.font-size.20}",
+          "fontWeight": "{font.font-weight.medium}",
+          "letterSpacing": "{font.letter-spacing.0}",
+          "lineHeight": "{font.line-height.24}"
+        },
+        "platforms": ["PD"]
+      },
       "title": {
         "$extensions": {
           "com.figma.styleId": "S:c8729f852bce2bc940f7fd82b2b059e63a8e716e,"

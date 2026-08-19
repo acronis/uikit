@@ -2694,6 +2694,15 @@
         "$value": { "unit": "px", "value": 18 },
         "platforms": ["PD"]
       },
+      "20": {
+        "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": ["FONT_SIZE"],
+          "com.figma.variableId": "VariableID:10012:196027"
+        },
+        "$value": { "unit": "px", "value": 20 },
+        "platforms": ["PD"]
+      },
       "24": {
         "$extensions": {
           "com.figma.hiddenFromPublishing": true,
