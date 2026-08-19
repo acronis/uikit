@@ -1,0 +1,137 @@
+---
+title: FilterChips
+description: A wrapping row of removable chips summarising the filters currently applied, with a clear-all action.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { FilterChipsDemo } from "@/components/demos-react/filter-chips";
+
+## Usage
+
+```tsx
+import {
+  Chip,
+  FilterChips,
+  FilterChipsList,
+  FilterChipsReset,
+} from '@acronis-platform/ui-react';
+```
+
+`FilterChips` summarises the filters currently narrowing a data set: one
+removable `Chip` per filter, closed by a ghost "Reset filters" action that
+clears them all at once. It maps to the Figma `FilterChips` component, whose
+nested `ListChips` slot becomes `FilterChipsList`'s children.
+
+Three parts:
+
+| Part               | Element                   | Notes                                                                                                     |
+| ------------------ | ------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `FilterChips`      | `div` (`role="group"`)    | The root row. Owns the 16px gap between its children and the region's accessible name (`ariaLabel`).       |
+| `FilterChipsList`  | `div`                     | The wrapping chip container — 8px gap in both axes, wrapped lines centered.                                |
+| `FilterChipsReset` | `button` (ghost `Button`) | The clear-all action. Its label is `children`, defaulting to `Reset filters`.                              |
+
+The chips themselves are **your** children, not parts of this component — pass
+`Chip`s (`variant="removable"`, the default) and give each a `removeLabel` that
+names the filter it drops. `FilterChipsReset` belongs **inside**
+`FilterChipsList`, not beside it: the design measures 8px between the last chip
+and the button, which is the list's gap rather than the root's 16px.
+
+This is pure layout. The only tokens it consumes are `--ui-gap-16` and
+`--ui-gap-8`; everything visible comes from `Chip`'s `--ui-chip-*` tier and
+`Button`'s `--ui-button-ghost-*` tier, so there is no `--ui-filter-chips-*` tier
+to theme. The root is polymorphic via Base UI's `useRender` (the `render` prop),
+as is the reset action.
+
+Looking for the same row wired straight to a filter object?
+[`FilterSearchAppliedFilters`](/docs/components/filter-search) renders through
+these parts and derives the chips from a `filters` record, including hiding
+itself when nothing is applied.
+
+## Examples
+
+<DemoReact>
+  <FilterChipsDemo />
+</DemoReact>
+
+Applied filters with a clear-all:
+
+```tsx
+<FilterChips>
+  <FilterChipsList>
+    {applied.map((filter) => (
+      <Chip
+        key={filter.id}
+        removeLabel={`Remove ${filter.id} filter`}
+        onRemove={() => removeFilter(filter.id)}
+      >
+        {filter.label}
+      </Chip>
+    ))}
+    <FilterChipsReset onClick={resetFilters} />
+  </FilterChipsList>
+</FilterChips>
+```
+
+Chips with a leading icon:
+
+```tsx
+<FilterChips>
+  <FilterChipsList>
+    <Chip icon={<TagIcon size={16} />} removeLabel="Remove type filter">
+      Type: Server
+    </Chip>
+    <Chip icon={<TagIcon size={16} />} removeLabel="Remove OS filter">
+      OS: Linux
+    </Chip>
+    <FilterChipsReset />
+  </FilterChipsList>
+</FilterChips>
+```
+
+No reset action — omit it when the surrounding UI already offers a way to clear
+the filters, and name the region for what it filters:
+
+```tsx
+<FilterChips ariaLabel="Applied workload filters">
+  <FilterChipsList>
+    <Chip removeLabel="Remove type filter">Type: Server</Chip>
+    <Chip removeLabel="Remove OS filter">OS: Linux</Chip>
+  </FilterChipsList>
+</FilterChips>
+```
+
+Localized: every string is consumer-supplied, so `Reset filters` is only a
+default — pass your own translated label as `FilterChipsReset`'s children. The
+row also mirrors correctly under `dir="rtl"` with no extra props.
+
+```tsx
+<FilterChips ariaLabel={t('appliedFilters')}>
+  <FilterChipsList>
+    <Chip removeLabel={t('removeTypeFilter')}>{t('filterType')}</Chip>
+    <FilterChipsReset>{t('resetFilters')}</FilterChipsReset>
+  </FilterChipsList>
+</FilterChips>
+```
+
+## Wrapping and overflow
+
+`FilterChipsList` wraps onto as many lines as it needs, keeping the same 8px gap
+between lines and centering the wrapped lines against the row. It never clips a
+chip and never scrolls — the row grows taller instead. A chip whose label is
+wider than the space available truncates that label with an ellipsis rather than
+pushing the row wider.
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/filter-chips/filter-chips.tsx"
+  name="FilterChipsProps"
+/>
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/filter-chips/filter-chips.tsx"
+  name="FilterChipsResetProps"
+/>
+
+`FilterChipsList` takes only native `<div>` attributes (`FilterChipsListProps`
+is an alias for them).

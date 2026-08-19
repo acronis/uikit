@@ -1,0 +1,23 @@
+spec_version: '1.0'
+component: FilterChips
+
+# References only — values live in @acronis-platform/tokens-pd. FilterChips has
+# no dedicated `--ui-filter-chips-*` tier: it is pure layout, so it consumes the
+# two generic gap primitives the design references and nothing else. Every
+# visual token in the Figma node belongs to a composed child — the chip fill,
+# border, label and icon colors to Chip (`--ui-chip-*`), the reset action's
+# label color and geometry to Button (`--ui-button-ghost-*`,
+# `--ui-button-global-*`).
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-gap-16,
+      affects: root,
+      description: Gap between the root's children (16px),
+    }
+  - {
+      name: --ui-gap-8,
+      affects: list,
+      description: 'Gap between chips inside the list, in both axes (8px)',
+    }

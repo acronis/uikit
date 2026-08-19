@@ -93,11 +93,13 @@ Need a filter popover **outside** a `FilterSearch` toolbar? See the
 `Button` + `Popover` + `InputSelect` composition.
 
 > **Design-pending.** `FilterSearch`/`FilterSearchActions` have a real Figma
-> node (see the API reference below). `FilterSearchFilters` and
-> `FilterSearchAppliedFilters` don't yet — they theme entirely from shared
-> semantic tokens plus their composed components' own tiers (`Button`,
-> `Chip`, `Popover`). They'll be reconciled against the real design once a
-> mockup lands.
+> node (see the API reference below), and `FilterSearchAppliedFilters`'s chip row
+> now does too — it landed as its own
+> [`FilterChips`](/docs/components/filter-chips) component, which
+> `FilterSearchAppliedFilters` renders through. `FilterSearchFilters` still has
+> no node: it themes entirely from shared semantic tokens plus its composed
+> components' own tiers (`Button`, `Popover`), and will be reconciled against
+> the real design once a mockup lands.
 
 ## Examples
 

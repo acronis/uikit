@@ -1,6 +1,6 @@
 ---
 title: Chip
-description: A compact, interactive label — a removable token or a selectable toggle.
+description: A compact, interactive label — a removable token, a selectable toggle, or an operational action.
 ---
 
 import { DemoReact } from "@/components/DemoReact";
@@ -15,16 +15,17 @@ import { Chip } from '@acronis-platform/ui-react';
 `Chip` renders a `<div>` pill styled by the `--ui-chip-*` tokens — the box
 fill/border carry their own idle, hover, and active values, the label color is
 per variant (`--ui-chip-removable-label-color` /
-`--ui-chip-selectable-label-color`), and geometry (height, gap, padding,
-min-width, radius, border width, icon size) is tokenized too. The focus ring
-reuses the shared `--ui-focus-primary`. An optional leading `icon` is rendered
-at 16px before the label, and the label truncates with an ellipsis when it
-overflows.
+`--ui-chip-selectable-label-color` / `--ui-chip-operational-label-color`), and
+geometry (height, gap, padding, min-width, radius, border width, icon size) is
+tokenized too. The focus ring reuses the shared `--ui-focus-primary`. An
+optional leading `icon` is rendered at 16px before the label, and the label
+truncates with an ellipsis when it overflows.
 
 > **`Chip` is interactive; [`Tag`](/components/tag) is not.** Use `Tag` for a
 > static status, category, or keyword label. Reach for `Chip` when the label
 > itself carries an action — `removable` adds a trailing × button, `selectable`
-> turns the pill into a toggle (`role="button"` + `aria-pressed`). Both are
+> turns the pill into a toggle (`role="button"` + `aria-pressed`), and
+> `operational` makes the whole pill a plain action button. All three are
 > **controlled**: `Chip` renders the visual state and emits intent, the consumer
 > owns the data.
 
@@ -35,11 +36,12 @@ overflows.
   <ChipDemo />
 </DemoReact>
 
-Two variants (default is `removable`):
+Three variants (default is `removable`):
 
 ```tsx
 <Chip variant="removable" onRemove={() => removeFilter(id)}>Status: Active</Chip>
 <Chip variant="selectable" selected={on} onClick={() => setOn(!on)}>Only my devices</Chip>
+<Chip variant="operational" onClick={addFilter}>Add filter</Chip>
 ```
 
 `removable` — the trailing × is a real `<button>`. Name it with `removeLabel`
@@ -66,12 +68,23 @@ const [selected, setSelected] = useState(false);
 </Chip>
 ```
 
-With a leading icon:
+`operational` — a plain action chip that sits inline among the others. Its label
+uses the strong-link style (semibold, `--ui-chip-operational-label-color`) to mark
+it as the actionable one in the row. There is no × and no pressed state, so it
+reports `role="button"` without `aria-pressed`:
+
+```tsx
+<Chip variant="operational" onClick={() => addFilter()}>
+  Add filter
+</Chip>
+```
+
+With a leading icon — pass `size={16}` so the icon uses its 16px stroke spec:
 
 ```tsx
 import { CircleInfoIcon } from '@acronis-platform/icons-react/stroke-mono';
 
-<Chip variant="selectable" icon={<CircleInfoIcon />}>
+<Chip variant="selectable" icon={<CircleInfoIcon size={16} />}>
   Needs attention
 </Chip>
 ```

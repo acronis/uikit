@@ -9,10 +9,11 @@ description: >-
   in a single horizontal row. Pure layout — no dedicated token tier; child
   components (Search, ButtonMenu, Select) bring their own tokens.
   `FilterSearchFilters` (the filter popover: trigger + form + Reset/Cancel/
-  Apply) and `FilterSearchAppliedFilters` (the removable-chip row + top-level
-  "Reset filters") are design-pending additions — no Figma node yet, unlike
-  the FilterSearch node itself (see `figma:` below, which covers only the
-  root toolbar layout).
+  Apply) is still a design-pending addition — no Figma node yet, unlike the
+  FilterSearch node itself (see `figma:` below, which covers only the root
+  toolbar layout). `FilterSearchAppliedFilters` (the removable-chip row +
+  top-level "Reset filters") is the data-driven wrapper over `FilterChips`,
+  which owns that row's design — see the FilterChips spec.
 since: 0.55.0
 dependencies:
   components:
@@ -21,6 +22,7 @@ dependencies:
     - Select
     - Button
     - Chip
+    - FilterChips
     - Popover
     - DataTableToolbar
 figma:

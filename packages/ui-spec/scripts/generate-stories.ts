@@ -89,6 +89,23 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  'filter-chips': {
+    extraImports: [
+      "import { FilterChipsList, FilterChipsReset } from '../filter-chips';",
+      "import { Chip } from '../../chip/chip';",
+      "import { SquareDashedIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    sample: [
+      '',
+      '      <FilterChipsList>',
+      '        <Chip icon={<SquareDashedIcon size={16} />}>Label</Chip>',
+      '        <Chip icon={<SquareDashedIcon size={16} />}>Label</Chip>',
+      '        <Chip icon={<SquareDashedIcon size={16} />}>Label</Chip>',
+      '        <FilterChipsReset />',
+      '      </FilterChipsList>',
+      '    ',
+    ].join('\n'),
+  },
   sheet: {
     props: 'defaultOpen',
     extraImports: [

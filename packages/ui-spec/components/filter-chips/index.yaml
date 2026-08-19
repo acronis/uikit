@@ -1,0 +1,17 @@
+spec_version: '1.0'
+component: FilterChips
+name: filter-chips
+status: ready
+category: data-display
+description: >-
+  A wrapping row that summarises the filters currently applied to a data set
+  (the Figma `FilterChips` component): one removable `Chip` per filter, closed
+  by a ghost "Reset filters" action that clears them all at once. Pure layout —
+  it owns no visual styling of its own besides the two gaps. Figma's nested
+  `ListChips` slot maps to `FilterChipsList`'s children.
+since: 0.63.0
+dependencies:
+  components: [Chip, Button]
+figma:
+  node: '3897-7039'
+  codeConnect: packages/ui-react/src/components/ui/filter-chips/filter-chips.figma.tsx

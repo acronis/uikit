@@ -1,0 +1,102 @@
+spec_version: '1.0'
+component: FilterChips
+
+# Three composable parts: FilterChips (root), FilterChipsList (the wrapping chip
+# container) and FilterChipsReset (the ghost clear-all action). The properties
+# below are grouped by the part that owns them; parts not listed take only their
+# native element attributes. Native pass-throughs are not restated as contract
+# properties — notably `FilterChipsReset` forwards every `<button>` attribute,
+# so `disabled` (used while a filter change is in flight) reaches the underlying
+# ghost Button without needing an entry here.
+
+contract:
+  properties:
+    - name: ariaLabel
+      type: string
+      required: false
+      default: Applied filters
+      description: >-
+        `FilterChips` (root) only. Accessible name for the applied-filter
+        region, which the root exposes as `role="group"`. Override to localize.
+
+    - name: render
+      type: 'RenderProp'
+      required: false
+      default: undefined
+      description: >-
+        Base UI composition prop on `FilterChips` (root, replaces the `<div>`)
+        and on `FilterChipsReset` (replaces the `<button>`) — merges props and
+        classes onto the supplied element or component. React-only; other
+        frameworks use their own polymorphism.
+
+  events:
+    - name: click
+      payload: MouseEvent
+      description: >-
+        `FilterChipsReset` only. Emitted when the clear-all action is pressed.
+        Removing an individual filter is the chip's own `remove` event — see
+        Chip's spec.
+
+  content:
+    - name: default
+      description: >-
+        On `FilterChips`, the `FilterChipsList` (plus anything a consumer places
+        beside the whole list, separated by the root's 16px gap). On
+        `FilterChipsList`, one removable `Chip` per applied filter followed by an
+        optional `FilterChipsReset`. On `FilterChipsReset`, the action's label,
+        defaulting to "Reset filters".
+
+  methods: []
+
+adapters:
+  react:
+    component: FilterChips
+    status: implemented
+    import: "import { FilterChips, FilterChipsList, FilterChipsReset, Chip } from '@acronis-platform/ui-react'"
+    example: |
+      <FilterChips>
+        <FilterChipsList>
+          {applied.map((filter) => (
+            <Chip
+              key={filter.id}
+              removeLabel={`Remove ${filter.id} filter`}
+              onRemove={() => removeFilter(filter.id)}
+            >
+              {filter.label}
+            </Chip>
+          ))}
+          <FilterChipsReset onClick={resetFilters} />
+        </FilterChipsList>
+      </FilterChips>
+
+  vue:
+    component: AvFilterChips
+    status: planned
+    import: "import { AvFilterChips, AvFilterChipsList, AvFilterChipsReset, AvChip } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvFilterChips>
+        <AvFilterChipsList>
+          <AvChip
+            v-for="filter in applied"
+            :key="filter.id"
+            :remove-label="`Remove ${filter.id} filter`"
+            @remove="removeFilter(filter.id)"
+          >
+            {{ filter.label }}
+          </AvChip>
+          <AvFilterChipsReset @click="resetFilters" />
+        </AvFilterChipsList>
+      </AvFilterChips>
+
+  web-components:
+    element: ui-filter-chips
+    status: planned
+    import: "import '@acronis-platform/ui-wc/filter-chips'"
+    example: |
+      <ui-filter-chips>
+        <ui-filter-chips-list>
+          <ui-chip remove-label="Remove type filter">Type: Server</ui-chip>
+          <ui-chip remove-label="Remove OS filter">OS: Linux</ui-chip>
+          <ui-filter-chips-reset></ui-filter-chips-reset>
+        </ui-filter-chips-list>
+      </ui-filter-chips>

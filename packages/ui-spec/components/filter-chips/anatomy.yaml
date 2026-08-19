@@ -1,0 +1,71 @@
+spec_version: '1.0'
+component: FilterChips
+
+schematic: |
+  root: <div role="group"> (the Figma "FilterChips" component)
+  +----------------------------------------------------------------------+
+  |  list                                                                |
+  |  +----------------------------------------------------------------+  |
+  |  | (o Label x)  (o Label x)  (o Label x)   Reset filters          |  |
+  |  +----------------------------------------------------------------+  |
+  +----------------------------------------------------------------------+
+        ^            ^                          ^
+        chip         chip (8px apart)           reset
+
+  root  -> flex row, --ui-gap-16 between its children; 32px tall (the reset
+           button's height) with the 24px chips centered in it.
+  list  -> the wrapping chip container (--ui-gap-8 in both axes). Maps to the
+           Figma "ListChips" slot.
+  chip  -> a consumer-supplied removable Chip; not rendered by FilterChips.
+  reset -> the ghost "Reset filters" button. It lives INSIDE `list`, not beside
+           it: the design measures 8px between the last chip and the button.
+
+  Wrapped onto two lines (narrow container):
+  +----------------------------------------+
+  | (o Label x)  (o Longer label x)        |
+  | (o Label x)   Reset filters            |
+  +----------------------------------------+
+
+root:
+  element: div
+  role: group
+  description: >-
+    Flex row carrying the region's accessible name (`ariaLabel`, default
+    "Applied filters") and the 16px gap between its children. Holds `list` plus
+    anything else a consumer places beside the whole list. Polymorphic via the
+    `render` prop.
+
+parts:
+  - id: list
+    description: >-
+      The wrapping chip container (`FilterChipsList`) — a flex-wrap row with an
+      8px gap in both axes and `content-center`, so wrapped lines stay centered
+      against the row. Maps to the Figma "ListChips" slot.
+    element: div
+    optional: false
+  - id: chip
+    description: >-
+      One consumer-supplied removable `Chip` per applied filter, rendered as a
+      child of `list`. Truncates its own label with an ellipsis when it
+      overflows. Not owned/rendered by FilterChips — passed in as children.
+    optional: false
+  - id: reset
+    description: >-
+      The ghost "Reset filters" button (`FilterChipsReset`), composed as the
+      last child of `list`. Its label is `children`, defaulting to
+      "Reset filters". Optional — omit it when the surrounding UI already offers
+      a way to clear the filters.
+    element: button
+    optional: true
+    visible_when: a `FilterChipsReset` is composed into the list
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [list, chip, reset]
+
+# Pure layout composition — a function of its children, with no own visual
+# states. The chips' interaction states live in Chip's spec and the reset
+# button's in Button's.
+states: []

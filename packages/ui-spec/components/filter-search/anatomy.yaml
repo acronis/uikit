@@ -97,7 +97,9 @@ parts:
       `chip`s (one per applied filter) plus a "Reset filters" action that
       clears all filters immediately (no popover involved). A sibling of
       `FilterSearch`'s root, rendered below it, not a child. Renders nothing
-      when there are no applied filters. Design-pending — no Figma node yet.
+      when there are no applied filters. The row itself is `FilterChips`,
+      which owns its design and layout — see that component's spec; this part
+      only adds the data-driven derivation from the `filters` record.
     element: div
     optional: true
     visible_when: '`filters` (its own prop) has one or more keys'

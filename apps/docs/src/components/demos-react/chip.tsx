@@ -44,6 +44,18 @@ export function ChipDemo() {
         )}
       </div>
 
+      {/* operational — an inline action sitting among the chips */}
+      <div style={row}>
+        {filters.map((filter) => (
+          <Chip key={filter.id} variant="selectable">
+            {filter.label}
+          </Chip>
+        ))}
+        <Chip variant="operational" onClick={() => setFilters(APPLIED_FILTERS)}>
+          Reset all
+        </Chip>
+      </div>
+
       {/* selectable — small toggles that own their pressed state */}
       <div style={row}>
         <Chip
@@ -56,7 +68,7 @@ export function ChipDemo() {
         <Chip
           variant="selectable"
           selected={needsAttention}
-          icon={<CircleInfoIcon />}
+          icon={<CircleInfoIcon size={16} />}
           onClick={() => setNeedsAttention((prev) => !prev)}
         >
           Needs attention
