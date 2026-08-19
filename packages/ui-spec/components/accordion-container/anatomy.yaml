@@ -1,0 +1,60 @@
+spec_version: '1.0'
+component: AccordionContainer
+
+schematic: |
+  accordion-container: Root (open state; renders no wrapping element when collapsible=false)
+    accordion-container-trigger: toggles the panel; rotates its chevron; absent when collapsible=false
+    accordion-container-content: the height-animating panel; renders children directly, unwrapped, when collapsible=false
+
+root:
+  element: div
+  description: >-
+    Holds the open state and coordinates the trigger and panel (Base UI
+    Collapsible.Root) when `collapsible` is true. Renders no wrapping element
+    at all when `collapsible` is false — children render directly. Ships no
+    visual classes in either case; it is layout-neutral inside whatever
+    container the consumer renders it in.
+
+parts:
+  - id: accordion-container-trigger
+    element: button
+    description: >-
+      A 32×32px hit target containing a 16px chevron icon that rotates 90°
+      between the closed (pointing toward reading-direction start) and open
+      (pointing down) states, wired off Base UI's `data-panel-open`. Carries
+      only its own hit-target sizing, a button-reset, and the chevron's glyph
+      color (matching the Figma `ButtonCollapse` reference) — no position,
+      margin, background, or hover styling relative to its siblings; the
+      consumer places and styles those within their own header layout.
+      Renders nothing when `collapsible` is false.
+  - id: accordion-container-content
+    element: div
+    description: >-
+      The panel; animates its height open/closed and hides when closed.
+      Carries only the height-animation classes — no padding or background —
+      so the consumer's own padded content wrapper renders inside it without
+      double-padding. Renders its children directly, unwrapped, when
+      `collapsible` is false.
+
+states:
+  - id: open
+    trigger: the panel is open
+    kind: internal
+  - id: collapsible
+    trigger: the `collapsible` prop is true
+    kind: prop
+    prop: collapsible
+
+internal_state:
+  - id: open
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [open]
+    controlled_default: defaultOpen
+    changed_by: clicking the trigger (when uncontrolled)
+    description: >-
+      Whether the panel is open. Exposed back to the consumer via the
+      `children` render-prop signature `(state: { open: boolean }) => ReactNode`,
+      so content outside `Content` (e.g. a header) can vary by state even when
+      this component owns the value itself (uncontrolled).

@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: AccordionContainer
+
+# AccordionContainer ships no backgrounds, borders, or padding of its own — those
+# stay owned by the caller (Card, Section, ...). The one color it does carry is
+# the trigger's chevron glyph, matching the Figma reference (ButtonCollapse,
+# file lrU3ydIyvPYQNE6ixdsKtJ) exactly. Values live in @acronis-platform/tokens-pd.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-glyph-on-surface-primary,
+      affects: accordion-container-trigger,
+      description: 'Chevron icon color, matching the Figma ButtonCollapse reference',
+    }

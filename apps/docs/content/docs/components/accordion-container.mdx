@@ -1,0 +1,85 @@
+---
+title: AccordionContainer
+description: The shared disclosure primitive behind Card's and Section's isCollapsable variant.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { AccordionContainerDemo } from "@/components/demos-react/accordion-container";
+
+## Usage
+
+```tsx
+import { AccordionContainer } from '@acronis-platform/ui-react';
+```
+
+`AccordionContainer` is the shared disclosure primitive behind
+[`Card`](/components/card)'s and [`Section`](/components/section)'s
+`isCollapsable` variant. It's built directly on
+[Base UI's Collapsible](https://base-ui.com/react/components/collapsible) and
+owns only the disclosure mechanics — open state, the trigger button, chevron
+rotation, and panel height animation. It never imposes visual styling beyond
+what that mechanic itself requires: `Root` and `Content` carry no
+padding/background/border, and `Trigger` carries no position or hover opinion
+beyond its own 32×32 hit target and chevron color (matching the Figma
+reference). Every other visual decision — header layout, spacing, background,
+borders — stays owned by whichever component composes it.
+
+When `collapsible` is `false`, `children` render directly with no trigger and
+no panel wrapper, matching the Figma `isCollapsable=false` state.
+
+`children` also accepts a render-prop function receiving the current
+`{ open }` state, so content placed outside `AccordionContainer.Content` (e.g.
+a header) can vary by state even when `AccordionContainer` owns the open state
+itself (uncontrolled).
+
+> **Status: draft.** No single Figma node maps 1:1 to this component — it's a
+> generic primitive factored out of Card's and Section's confirmed
+> `isCollapsable` contract. No Figma Code Connect file exists for this reason.
+
+## Examples
+
+<DemoReact>
+  <AccordionContainerDemo />
+</DemoReact>
+
+```tsx
+function CollapsibleCard({ collapsible, title, children }) {
+  return (
+    <AccordionContainer collapsible={collapsible} defaultOpen>
+      {({ open }) => (
+        <>
+          <div className="flex items-center justify-between border-b p-4">
+            <span className="font-medium">{title}</span>
+            <AccordionContainer.Trigger
+              aria-label={open ? 'Collapse' : 'Expand'}
+              className="size-8 rounded-md hover:bg-[var(--ui-background-surface-hover)]"
+            />
+          </div>
+          <AccordionContainer.Content>
+            <div className="p-4">{children}</div>
+          </AccordionContainer.Content>
+        </>
+      )}
+    </AccordionContainer>
+  );
+}
+```
+
+Not collapsible — no trigger, no panel wrapper:
+
+```tsx
+<AccordionContainer collapsible={false}>
+  <div className="p-4">Always-visible content.</div>
+</AccordionContainer>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/accordion-container/accordion-container.tsx"
+  name="AccordionContainerProps"
+/>
+
+`AccordionContainer.Trigger` and `AccordionContainer.Content` accept their
+underlying Base UI part props (`Collapsible.Trigger` / `Collapsible.Panel`)
+plus `className`.

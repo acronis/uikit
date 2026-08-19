@@ -536,6 +536,12 @@ const RENDER: Record<string, RenderHint> = {
     // hand-written story (Default).
     skip: true,
   },
+  'accordion-container': {
+    // A disclosure primitive needing a trigger + panel composition to render
+    // meaningfully. VR is covered by the hand-written stories (the three
+    // isCollapsable states: false / true-expanded / true-collapsed).
+    skip: true,
+  },
   slider: {
     // Needs a bounded-width wrapper to render meaningfully. VR is covered by the
     // hand-written stories (Default / Range / Disabled).
