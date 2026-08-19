@@ -1,5 +1,15 @@
 # @acronis-platform/design-assets
 
+## 1.0.0
+
+### Major Changes
+
+- [#552](https://github.com/acronis/uikit/pull/552) [`ea4cd0d`](https://github.com/acronis/uikit/commit/ea4cd0d705ea9958303483defb3b7b0e27e8e992) Thanks [@ivangarbev](https://github.com/ivangarbev)! - Resync the `icons` pack from Figma into a single `packs/icons.json` organized by `assetsGroups` (stroke-mono, stroke-multi, solid-mono, solid-multi), 487 assets total.
+
+  Breaking: renames asset ids (`BoxLogo`→`BoxCom`, `BulbCrossed`→`BulbOff`, `EyeCrossed`→`EyeOff`, `PinDisabled`→`PinOff`) and removes stale assets (`CircleLock`, `Circles`, `EllipsisMoving`, `InboxFull`, `Progress`), so the pack version goes to `2.0.0`.
+
+  Adds 15 new icons (e.g. `CheckSmall`, `MinusSmall`, `PlusSmall`, `TimesSmall`, `CirclePauseGray`, `CirclePlayGreen`, `CircleStopRed`, `MicrosoftIntune`, `CircleArrowsCircle`, `CircleReply`, `CircleSmallSolid`, `Commvault`, `Veeam`). Refreshes SVGO output for the rest and sets the pack `name` to `icons`.
+
 ## 0.4.1
 
 ### Patch Changes
