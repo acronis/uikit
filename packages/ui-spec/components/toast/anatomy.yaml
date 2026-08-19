@@ -62,7 +62,7 @@ parts:
     element: h5
     description: >-
       A short heading for the notification; also the card's accessible name. Typed
-      like Alert's title (Inter Medium 16 / 24) and rendered as an `h5` rather than
+      like Alert's title (Inter Regular 18 / 24) and rendered as an `h5` rather than
       Base UI's `h2` default — a toast is not a page-level heading.
   - id: toast-description
     element: div
