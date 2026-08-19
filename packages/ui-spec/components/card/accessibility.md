@@ -29,16 +29,22 @@ own controls.
   Tab and toggled with Space, per its own component contract.
 - The rename button (`hasRename`) is a real `ButtonIconInput` — reachable by
   Tab and activated with Enter/Space.
+- The collapse trigger (`isCollapsible`, composed with `AccordionContainer`)
+  is a real Base UI `Collapsible.Trigger` — reachable by Tab and activated
+  with Enter/Space; ARIA `aria-expanded`/`aria-controls` wiring is owned by
+  `AccordionContainer`, not Card.
 - Interactive children placed in `content` or `footer` retain their own
   keyboard behavior and focus order — Card does not trap, reorder, or
   intercept focus.
 
 ## Screen reader
 
-- The switch and rename button each require an accessible name: `switchLabel`
-  (default `"Toggle card"`) and `renameLabel` (default `"Rename"`) — override
-  both with copy specific to what the card represents (e.g. `"Enable policy"`,
-  `"Rename policy"`).
+- The switch, rename button, and collapse trigger each require an accessible
+  name: `switchLabel` (default `"Toggle card"`), `renameLabel` (default
+  `"Rename"`), and `collapseLabel` (default `"Toggle card"`) — override all
+  three with copy specific to what the card represents (e.g. `"Enable
+policy"`, `"Rename policy"`, `"Toggle backup policy"`) so they read
+  distinctly when more than one appears in the same header.
 - The default avatar (`hasAvatar`) renders initials as visible text
   (`avatarLabel`); provide a full-word label via a wrapping `aria-label` if
   the initials alone aren't a sufficient description.

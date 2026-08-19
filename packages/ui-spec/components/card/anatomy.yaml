@@ -5,9 +5,9 @@ schematic: |
   root: <div> (rounded border + surface, red border when hasError)
   +-----------------------------------------------------------------+
   |  header (border-bottom divider)                                 |
-  |   [drag-handle] [switch] [avatar] title [rename] [extras]  [actions]
+  |   [drag-handle] [switch] [avatar] title [rename] [extras]  [actions] [collapse-trigger]
   |                          description                              |
-  |  content                                                         |
+  |  content (wrap with AccordionContainer.Content to make collapsible) |
   |   +-------------------------------------------------------------+ |
   |   | arbitrary children                                          | |
   |   +-------------------------------------------------------------+ |
@@ -20,7 +20,8 @@ schematic: |
                   border switches to the error token when hasError is set
      header    -> single row: optional drag-handle, optional switch,
                   optional avatar, title + optional rename + extras (start),
-                  optional description below the title, actions (end)
+                  optional description below the title, actions, then
+                  collapse-trigger (end)
      content   -> arbitrary children, no built-in layout
      footer    -> horizontal row of actions
 
@@ -79,6 +80,15 @@ parts:
   - id: actions
     description: Arbitrary content slot rendered at the end of the header.
     element: slot
+    optional: true
+  - id: collapse-trigger
+    description: >-
+      Disclosure trigger rendered at the very end of the header when
+      `isCollapsible` is set. Only has an effect when the header renders
+      inside a collapsible `AccordionContainer` — composes
+      `AccordionContainer.Trigger`, restyled to match the ghost `ButtonIcon`
+      chrome.
+    element: button
     optional: true
   - id: content
     description: Primary body region (`<div>`) holding arbitrary children.

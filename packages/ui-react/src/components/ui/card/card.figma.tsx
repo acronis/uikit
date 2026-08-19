@@ -1,9 +1,11 @@
 // Figma Code Connect — status: COMPLETE
-// Node 10012:195993 ("Card"). Only the `isCollapsable=false` shape is mapped —
-// the collapsible variant (`true-expanded` / `true-collapsed`) isn't
-// implemented yet.
+// Node 10012:195993 ("Card"). `isCollapsable` (`false` / `true-expanded` /
+// `true-collapsed`) maps to composing `AccordionContainer` around the header
+// and content/footer, with `collapsible`/`defaultOpen` derived from the
+// variant.
 import figma from '@figma/code-connect';
 
+import { AccordionContainer } from '../accordion-container';
 import { Card, CardContent, CardFooter, CardHeader } from './card';
 
 figma.connect(
@@ -23,6 +25,16 @@ figma.connect(
       actions: figma.instance('↳actions'),
       content: figma.instance('↳content'),
       footer: figma.instance('↳footer'),
+      collapsible: figma.enum('isCollapsable', {
+        false: false,
+        'true-expanded': true,
+        'true-collapsed': true,
+      }),
+      defaultOpen: figma.enum('isCollapsable', {
+        false: false,
+        'true-expanded': true,
+        'true-collapsed': false,
+      }),
     },
     example: ({
       hasError,
@@ -37,21 +49,28 @@ figma.connect(
       actions,
       content,
       footer,
+      collapsible,
+      defaultOpen,
     }) => (
       <Card hasError={hasError}>
-        <CardHeader
-          title={title}
-          description={description}
-          hasDescription={hasDescription}
-          isDraggable={isDraggable}
-          isSwitchable={isSwitchable}
-          hasAvatar={hasAvatar}
-          hasRename={hasRename}
-          extras={extras}
-          actions={actions}
-        />
-        <CardContent>{content}</CardContent>
-        <CardFooter>{footer}</CardFooter>
+        <AccordionContainer collapsible={collapsible} defaultOpen={defaultOpen}>
+          <CardHeader
+            title={title}
+            description={description}
+            hasDescription={hasDescription}
+            isDraggable={isDraggable}
+            isSwitchable={isSwitchable}
+            hasAvatar={hasAvatar}
+            hasRename={hasRename}
+            extras={extras}
+            actions={actions}
+            isCollapsible={collapsible}
+          />
+          <AccordionContainer.Content>
+            <CardContent>{content}</CardContent>
+            <CardFooter>{footer}</CardFooter>
+          </AccordionContainer.Content>
+        </AccordionContainer>
       </Card>
     ),
   }

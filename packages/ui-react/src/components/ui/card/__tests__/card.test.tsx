@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
+import { AccordionContainer } from '../../accordion-container';
 import { Card, CardContent, CardFooter, CardHeader } from '../card';
 
 describe('Card', () => {
@@ -135,6 +136,34 @@ describe('CardHeader', () => {
     );
     expect(screen.getByText('Beta')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Menu' })).toBeInTheDocument();
+  });
+
+  it('does not render a collapse trigger by default', () => {
+    render(<CardHeader />);
+    expect(
+      screen.queryByRole('button', { name: 'Toggle card' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('does not render a collapse trigger outside a collapsible AccordionContainer', () => {
+    render(<CardHeader isCollapsible />);
+    expect(
+      screen.queryByRole('button', { name: 'Toggle card' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders and operates a collapse trigger inside a collapsible AccordionContainer', async () => {
+    const user = userEvent.setup();
+    const onOpenChange = vi.fn();
+    render(
+      <AccordionContainer collapsible defaultOpen onOpenChange={onOpenChange}>
+        <CardHeader isCollapsible collapseLabel="Toggle policy" />
+        <AccordionContainer.Content>Body</AccordionContainer.Content>
+      </AccordionContainer>
+    );
+    const trigger = screen.getByRole('button', { name: 'Toggle policy' });
+    await user.click(trigger);
+    expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
   });
 });
 
