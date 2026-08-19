@@ -173,7 +173,9 @@ const AccordionContainerTrigger = React.forwardRef<
   return (
     <CollapsiblePrimitive.Trigger
       ref={ref}
-      aria-label={props['aria-labelledby'] ? undefined : ariaLabel ?? 'Toggle'}
+      aria-label={
+        props['aria-labelledby'] || children != null ? ariaLabel : (ariaLabel ?? 'Toggle')
+      }
       className={cn(
         'inline-flex size-8 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--ui-glyph-on-surface-neutral-dark)]',
         'outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)]',

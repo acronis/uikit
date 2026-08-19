@@ -277,6 +277,16 @@ describe('AccordionContainer', () => {
       expect(screen.getByRole('button')).toHaveAccessibleName();
     });
 
+    it('uses the visible children text as the accessible name instead of the "Toggle" default', () => {
+      render(
+        <AccordionContainer collapsible>
+          <AccordionContainer.Trigger>Details</AccordionContainer.Trigger>
+        </AccordionContainer>
+      );
+
+      expect(screen.getByRole('button', { name: 'Details' })).toBeInTheDocument();
+    });
+
     it('honors a consumer-supplied aria-label', () => {
       render(
         <AccordionContainer collapsible>
