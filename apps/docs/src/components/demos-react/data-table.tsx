@@ -22,6 +22,7 @@ import {
   DataTableExpandTrigger,
   DataTablePagination,
   DataTableToolbar,
+  DataTableViewOptions,
   Tag,
 } from '@acronis-platform/ui-react';
 
@@ -139,11 +140,19 @@ function PagedGridDemo() {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <DataTableToolbar
-        table={table}
-        searchKey="email"
-        searchPlaceholder="Filter emails…"
-      />
+      <div className="flex items-start gap-2">
+        <div className="flex-1">
+          <DataTableToolbar
+            table={table}
+            searchKey="email"
+            searchPlaceholder="Filter emails…"
+          />
+        </div>
+        {/* With an external `table`, DataTable suppresses its built-in
+            settings column — so the column-visibility cog is rendered here,
+            next to the toolbar, driven by the same instance. */}
+        <DataTableViewOptions table={table} iconOnly />
+      </div>
       <DataTable
         table={table}
         renderExpandedRow={(row) => (

@@ -19,9 +19,13 @@ description: >-
   the same predicate as `bulkSelectionActive` to blank out each row's trigger
   while the bulk scope is active.
   Because the bulk bar and the row checkboxes must read the SAME selection state,
-  this composes the Table primitives + DataTablePagination over a single
-  `useReactTable` instance — not the self-contained `DataTable` (which owns its
-  own internal state and can't share selection with external chrome).
+  that state needs one source of truth. The reference composition uses the Table
+  primitives + DataTablePagination over a single `useReactTable` instance. The
+  self-contained `DataTable` is equally valid: it keeps its own internal
+  instance, but its controlled `rowSelection` / `onRowSelectionChange` props let
+  the consumer lift the selection and drive a minimal second instance for the bar
+  off the same state (the `CoreCapabilities` /
+  `CoreCapabilitiesWithPagination` stories).
 
 when_to_use:
   - A table where users pick several rows and apply one action to all of them.
@@ -31,7 +35,7 @@ when_not_to_use:
   - One action per row — put a row action (menu / button) in a cell instead.
 
 anti_patterns:
-  - Using the self-contained `DataTable` and a separate `useReactTable` for the bar — their selection states diverge.
+  - Leaving `DataTable`'s selection uncontrolled while a separate `useReactTable` drives the bar — two independent `rowSelection` states that diverge. Either share one table instance, or lift a single `rowSelection` state and feed both (`DataTable`'s `rowSelection` / `onRowSelectionChange` plus the bar's instance).
   - Mounting the bar conditionally so the row of actions appears and disappears — it is designed to stay put and toggle between its idle and active states; a mount/unmount reflows the layout on every first/last selection.
   - Omitting `loadedLabel` when there is something useful to say in the idle state (e.g. "25 of 1250 items loaded") — the trailing area then sits empty until the first selection.
   - Re-deriving the activation condition in consumer code instead of calling `isBulkSelectionActive(table)` — the predicate is exported so the bar and every `TableActionsCell` cannot drift apart.

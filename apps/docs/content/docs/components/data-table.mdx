@@ -36,7 +36,10 @@ A `DataTableColumnHeader` sorts in a **single click**: the trailing arrow toggle
 ascending → descending and shows the direction with an up/down arrow in the brand
 blue, or a muted up/down arrow when the column is unsorted. Column hiding lives
 behind the cog in the trailing settings column (`DataTableViewOptions` with
-`iconOnly`), not in the toolbar, keeping sorting to one click.
+`iconOnly`), not in the toolbar, keeping sorting to one click. That settings
+column is only rendered for `DataTable`'s **own** instance — with an external
+`table`, render `DataTableViewOptions` yourself next to the toolbar (see
+[Toolbar and pagination](#toolbar-and-pagination)).
 
 ## Parts
 
@@ -95,7 +98,13 @@ const table = useReactTable({
   state: { sorting, columnFilters, rowSelection },
 });
 
-<DataTableToolbar table={table} searchKey="email" />
+<div className="flex items-start gap-2">
+  <div className="flex-1">
+    <DataTableToolbar table={table} searchKey="email" />
+  </div>
+  {/* External `table` ⇒ no built-in settings column, so render the cog here */}
+  <DataTableViewOptions table={table} iconOnly />
+</div>
 <DataTable table={table} />
 <DataTablePagination table={table} pageSizeOptions={[5, 10, 20]} />
 ```
@@ -106,7 +115,9 @@ props it would otherwise use to configure its own become no-ops
 `onSortingChange`, `columnVisibility`, `onColumnVisibilityChange`,
 `onColumnSizingChange`, `paginationMode`, `onLoadMore`, `loadMoreRootMargin`,
 `hasNextPage`, `isLoadingMore`), and `meta.pin` pinning is skipped too — set the
-equivalents on your own instance (pin via TanStack's `column.pin()`).
+equivalents on your own instance (pin via TanStack's `column.pin()`). The
+trailing settings column is dropped as well, which is why the cog above is
+rendered next to the toolbar instead.
 
 If you'd rather keep `DataTable`'s own state and only *share* a slice of it with
 a toolbar, pass `columns`/`data` plus the controlled state you need in both

@@ -26,9 +26,13 @@ disappearing, it switches between two states on that predicate:
 row's trigger while the bulk scope is active.
 
 Because the bulk bar and the row checkboxes must read the **same** selection
-state, this composes the **`Table`** primitives + **`DataTablePagination`** over a
-single `useReactTable` instance — *not* the self-contained **`DataTable`**, which
-owns its own internal state and can't share selection with external chrome.
+state, that state needs **one source of truth**. This page composes the
+**`Table`** primitives + **`DataTablePagination`** over a single `useReactTable`
+instance. The self-contained **`DataTable`** is equally valid: it keeps its own
+internal instance, but its controlled `rowSelection` / `onRowSelectionChange`
+props let you lift the selection into your own state and drive a minimal second
+instance for the bar off the same state — the shape of the `CoreCapabilities` /
+`CoreCapabilitiesWithPagination` stories.
 
 <DemoReact>
   <DataTableBulkActionsDemo />
@@ -46,8 +50,11 @@ owns its own internal state and can't share selection with external chrome.
 
 ## Anti-patterns
 
-- Using the self-contained `DataTable` **and** a separate `useReactTable` for the
-  bar — their selection states diverge. Build one table instance and feed both.
+- Leaving `DataTable`'s selection **uncontrolled** while a separate
+  `useReactTable` drives the bar — two independent `rowSelection` states that
+  diverge. Either build one shared instance, or lift a single `rowSelection`
+  state and pass it to both (`DataTable`'s `rowSelection` /
+  `onRowSelectionChange` plus the bar's instance).
 - Mounting the bar conditionally so it appears and disappears — it is built to
   stay put and toggle its own state. A mount/unmount reflows the page on every
   first and last selection.
