@@ -37,12 +37,14 @@ import { ButtonIcon, type ButtonIconProps } from '../button-icon';
 // clip edge out to the border box lets the bleed survive while still rounding the
 // corners.
 //
-// Typography comes from the generated classes: `ui-typography-headings-lead` for
-// the title (Inter Regular 18 / 24) and the Alert tier's own emitted class for the
-// description (Inter Regular 14 / 24) — the same pair Toast uses, since the two are
-// the same card. Only the *colors* are separate token references. Every other value
-// is a `var(--ui-alert-*)` reference, so a brand override is honored without
-// touching this file.
+// Typography comes from the Alert tier's own emitted classes — the title (Inter
+// Regular 18 / 24) and the description (Inter Regular 14 / 24) — the same pair
+// Toast uses, since the two are the same card. The title previously borrowed the
+// semantic `ui-typography-headings-lead` because the tier emitted no title class;
+// it does now, and the two resolve identically today, so a brand that re-styles
+// only Alert's title is honored. Only the *colors* are separate token references.
+// Every other value is a `var(--ui-alert-*)` reference, so a brand override is
+// honored without touching this file.
 const alertVariants = cva(
   'relative flex w-full items-start overflow-clip [overflow-clip-margin:border-box] border-solid ' +
     'min-w-[var(--ui-alert-global-container-width-min)] ' +
@@ -191,7 +193,7 @@ const AlertTitle = React.forwardRef<
     ref={ref}
     data-slot="alert-title"
     className={cn(
-      'ui-typography-headings-lead mb-0 w-full text-[var(--ui-alert-global-content-text-container-title-color)]',
+      'ui-alert-global-content-text-container-title-text-style mb-0 w-full text-[var(--ui-alert-global-content-text-container-title-color)]',
       className
     )}
     {...props}
