@@ -52,6 +52,87 @@ describe('Link', () => {
     expect(link).toHaveAttribute('tabindex', '-1');
   });
 
+  it('wires the inverse surface tokens when variant="inverse"', () => {
+    render(
+      <Link href="/docs" variant="inverse">
+        Docs
+      </Link>
+    );
+    const link = screen.getByRole('link', { name: 'Docs' });
+    expect(link).toHaveClass('text-[var(--ui-link-inverse-text-color-idle)]');
+    expect(link.className).toContain(
+      'hover:text-[var(--ui-link-inverse-text-color-hover)]'
+    );
+    expect(link.className).toContain(
+      'active:text-[var(--ui-link-inverse-text-color-active)]'
+    );
+  });
+
+  // The Figma set carries the `SquareArrowUpRight` layer only in its five
+  // `background=normal` variants, so `external` is a no-op on the inverse surface —
+  // exactly as toggling Figma's `External` on an inverse instance is.
+  it('ignores external on the inverse surface', () => {
+    const { container } = render(
+      <Link href="/docs" variant="inverse" external>
+        Docs
+      </Link>
+    );
+    expect(container.querySelector('svg')).not.toBeInTheDocument();
+  });
+
+  it('still renders the external icon on the normal surface', () => {
+    const { container } = render(
+      <Link href="/docs" variant="normal" external>
+        Docs
+      </Link>
+    );
+    expect(container.querySelector('svg')).toBeInTheDocument();
+  });
+
+  it('does not reference the normal tokens on the inverse surface', () => {
+    render(
+      <Link href="/docs" variant="inverse">
+        Docs
+      </Link>
+    );
+    expect(screen.getByRole('link', { name: 'Docs' }).className).not.toMatch(
+      /--ui-link-normal-/
+    );
+  });
+
+  // The Figma set has only four enabled inverse variants and marks the fifth
+  // unsupported ("disable state not supported onBackdrop"), so `disabled` does nothing
+  // at all here rather than being applied without its color.
+  it('ignores disabled entirely on the inverse surface', () => {
+    render(
+      <Link href="/docs" variant="inverse" disabled>
+        Docs
+      </Link>
+    );
+    const link = screen.getByRole('link', { name: 'Docs' });
+    expect(link).toHaveAttribute('href', '/docs');
+    expect(link).not.toHaveAttribute('aria-disabled');
+    expect(link).not.toHaveAttribute('tabindex');
+  });
+
+  it('still navigates and fires onClick when disabled on the inverse surface', async () => {
+    const onClick = vi.fn();
+    render(
+      <Link href="#" variant="inverse" disabled onClick={onClick}>
+        Docs
+      </Link>
+    );
+    await userEvent.click(screen.getByRole('link', { name: 'Docs' }));
+    expect(onClick).toHaveBeenCalledOnce();
+  });
+
+  it('defaults to the normal surface', () => {
+    render(<Link href="/docs">Docs</Link>);
+    expect(screen.getByRole('link', { name: 'Docs' })).toHaveClass(
+      'text-[var(--ui-link-normal-text-color-idle)]'
+    );
+  });
+
   it('fires onClick when activated', async () => {
     const onClick = vi.fn();
     render(
