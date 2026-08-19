@@ -238,14 +238,11 @@ const RENDER: Record<string, RenderHint> = {
   },
   card: {
     extraImports: [
-      "import { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../card';",
+      "import { CardHeader, CardContent, CardFooter } from '../card';",
     ],
     sample: [
       '',
-      '      <CardHeader>',
-      '        <CardTitle>Backup status</CardTitle>',
-      '        <CardDescription>Last run 5 minutes ago.</CardDescription>',
-      '      </CardHeader>',
+      '      <CardHeader title="Backup status" description="Last run 5 minutes ago." hasDescription />',
       '      <CardContent>All workloads protected.</CardContent>',
       '      <CardFooter>Footer</CardFooter>',
       '    ',

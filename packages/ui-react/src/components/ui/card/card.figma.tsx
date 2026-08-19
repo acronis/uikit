@@ -1,20 +1,58 @@
-// Figma Code Connect — status: NEEDS_FIGMA_URL
-// Ported from ui-legacy without a "ready for dev" Figma node. Card is a
-// compositional component (no variant/size props), so there are no property
-// mappings to verify — only the node URL is missing. Replace 'FIGMA_NODE_URL'
-// with the component-set link and flip the status to COMPLETE via
-// `/figma-component Card <url> --update`, then validate with `figma:connect`.
+// Figma Code Connect — status: COMPLETE
+// Node 10012:195993 ("Card"). Only the `isCollapsable=false` shape is mapped —
+// the collapsible variant (`true-expanded` / `true-collapsed`) isn't
+// implemented yet.
 import figma from '@figma/code-connect';
 
-import { Card, CardContent, CardHeader, CardTitle } from './card';
+import { Card, CardContent, CardFooter, CardHeader } from './card';
 
-figma.connect(Card, 'FIGMA_NODE_URL', {
-  example: () => (
-    <Card>
-      <CardHeader>
-        <CardTitle>Title</CardTitle>
-      </CardHeader>
-      <CardContent>Content</CardContent>
-    </Card>
-  ),
-});
+figma.connect(
+  Card,
+  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=10012-195993',
+  {
+    props: {
+      hasError: figma.enum('hasError', { true: true, false: false }),
+      title: figma.string('↳title'),
+      description: figma.string('↳description'),
+      hasDescription: figma.boolean('↳hasDescription'),
+      isDraggable: figma.boolean('↳isDraggable'),
+      isSwitchable: figma.boolean('↳isSwitchable'),
+      hasAvatar: figma.boolean('↳hasAvatar'),
+      hasRename: figma.boolean('↳hasRename'),
+      extras: figma.instance('↳extras'),
+      actions: figma.instance('↳actions'),
+      content: figma.instance('↳content'),
+      footer: figma.instance('↳footer'),
+    },
+    example: ({
+      hasError,
+      title,
+      description,
+      hasDescription,
+      isDraggable,
+      isSwitchable,
+      hasAvatar,
+      hasRename,
+      extras,
+      actions,
+      content,
+      footer,
+    }) => (
+      <Card hasError={hasError}>
+        <CardHeader
+          title={title}
+          description={description}
+          hasDescription={hasDescription}
+          isDraggable={isDraggable}
+          isSwitchable={isSwitchable}
+          hasAvatar={hasAvatar}
+          hasRename={hasRename}
+          extras={extras}
+          actions={actions}
+        />
+        <CardContent>{content}</CardContent>
+        <CardFooter>{footer}</CardFooter>
+      </Card>
+    ),
+  }
+);

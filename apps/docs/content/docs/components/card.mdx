@@ -9,24 +9,19 @@ import { CardDemo } from '@/components/demos-react/card';
 ## Usage
 
 ```tsx
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from '@acronis-platform/ui-react';
+import { Card, CardHeader, CardContent, CardFooter } from '@acronis-platform/ui-react';
 ```
 
 `Card` is a compound component: a bordered, rounded surface assembled from parts.
-`CardHeader` stacks a `CardTitle` and `CardDescription`; `CardContent` holds the
-body; `CardFooter` lays out actions in a row. All parts are optional and
-polymorphic via Base UI's `useRender` (the `render` prop) — render `CardTitle` as
-a real heading, or the root as an `<article>`. This is a design-pending v1: with
-no `--ui-card-*` token tier yet, the surface, text, and border resolve to the
-shared semantic tokens (`--ui-background-surface-primary`,
-`--ui-text-on-surface-primary`, `--ui-border-on-surface-border`).
+`CardHeader` owns the title, an optional description, and most of the design's
+interactive surface — a drag handle, a toggle switch, an avatar, a rename
+button, inline extras, and end-aligned actions. `CardContent` holds the body;
+`CardFooter` lays out actions in a row. All parts are optional; `Card` and
+`CardContent` are polymorphic via Base UI's `useRender` (the `render` prop).
+There is no `--ui-card-*` token tier — the surface, text, and border resolve to
+the shared semantic tokens (`--ui-background-surface-primary`,
+`--ui-text-on-surface-primary`, `--ui-border-on-surface-border`, swapping to
+`--ui-border-on-surface-border-error` when `hasError` is set).
 
 ## Examples
 
@@ -38,10 +33,7 @@ A card with a header, body, and footer actions:
 
 ```tsx
 <Card className="w-[350px]">
-  <CardHeader>
-    <CardTitle>Backup status</CardTitle>
-    <CardDescription>Last successful run 5 minutes ago.</CardDescription>
-  </CardHeader>
+  <CardHeader title="Backup status" description="Last successful run 5 minutes ago." hasDescription />
   <CardContent>
     <p>All 24 workloads are protected and up to date.</p>
   </CardContent>
@@ -52,31 +44,67 @@ A card with a header, body, and footer actions:
 </Card>
 ```
 
-Just a header and content:
+An error state — only the root border color changes:
 
 ```tsx
-<Card className="w-[350px]">
-  <CardHeader>
-    <CardTitle>Storage usage</CardTitle>
-    <CardDescription>3.2 TB of 5 TB used.</CardDescription>
-  </CardHeader>
+<Card hasError className="w-[350px]">
+  <CardHeader title="Backup status" description="Last run failed." hasDescription />
   <CardContent>
-    <p>64% of your quota is currently consumed.</p>
+    <p>Retry the job or check the agent logs.</p>
   </CardContent>
 </Card>
 ```
 
-Render the title as a real heading for a correct document outline:
+A reorderable, switchable card with an avatar and rename:
 
 ```tsx
-<CardTitle render={<h2 />}>Section title</CardTitle>
+<Card className="w-[420px]">
+  <CardHeader
+    title="Backup policy"
+    isDraggable
+    isSwitchable
+    defaultSwitchChecked
+    hasAvatar
+    avatarLabel="SB"
+    hasRename
+    onRename={() => setRenaming(true)}
+  />
+  <CardContent>
+    <p>Every header feature combined: drag, switch, avatar, rename.</p>
+  </CardContent>
+</Card>
+```
+
+Just content, no header or footer:
+
+```tsx
+<Card className="w-[350px]">
+  <CardContent className="pt-4">
+    <p>A bare card with content and no header or footer.</p>
+  </CardContent>
+</Card>
 ```
 
 ## API Reference
 
-Every part (`Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`,
-`CardFooter`) shares the same props — the standard `<div>` attributes plus a
-`render` prop for Base UI composition.
+`Card` (the root) and `CardHeader` are the two parts with their own props;
+`CardContent` and `CardFooter` share a plain `div` + `render` prop contract.
+
+### Card
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/card/card.tsx"
+  name="CardProps"
+/>
+
+### CardHeader
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/card/card.tsx"
+  name="CardHeaderProps"
+/>
+
+### CardContent / CardFooter
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/card/card.tsx"
