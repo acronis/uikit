@@ -156,6 +156,40 @@ Scenario: Resize a column
 ```
 
 ```gherkin
+Scenario: Reorder a column by dragging its header
+  Given a DataTable with enableColumnReordering
+  Then every non-pinned header cell is draggable and shows the grab cursor
+      (--ui-draggable-cursor; --ui-draggable-cursor-active while pressed)
+  When the user drags one header and drops it on another
+  Then the dragged column moves to the drop target's position (headers and body cells alike)
+  And onColumnOrderChange fires with the new order so a consumer can persist it
+  And a pinned column is never draggable — it is anchored to a table edge
+  # Pointer-only: there is no keyboard equivalent for the gesture yet.
+```
+
+```gherkin
+Scenario: Row actions vs. bulk actions — the selection threshold
+  Given a table with a selection column, per-row TableActionsCell actions, and a
+      DataTableBulkActionsBar over the same table instance
+  When nothing is selected
+  Then every row shows its own actions
+  And the bulk-actions bar is mounted in its idle state — the bulk actions are
+      disabled (a native <fieldset disabled>) and the trailing side shows
+      `loadedLabel` instead of a selection summary
+  When exactly one row is selected
+  Then the bulk scope is active: the bar's actions enable and its trailing side
+      shows the selection summary plus the clear control
+  And the per-row actions are suppressed on every row — the cell keeps its 48px
+      column but renders no trigger and no hover/press tint
+  When further rows are selected, or the header select-all checkbox is checked
+  Then nothing changes but the count in the selection summary
+  # One predicate owns this: isBulkSelectionActive(table) = one or more rows
+  # selected. TableActionsCell takes it as its `bulkSelectionActive` prop; the bar
+  # derives it internally. Consumers do not re-derive the threshold.
+  # The bar is always mounted — it never renders nothing, it only switches state.
+```
+
+```gherkin
 Scenario: Sticky (pinned) columns
   Given columns with meta.pin = "left" and/or "right"
   When the grid scrolls horizontally
@@ -174,4 +208,19 @@ Scenario: Select rows
   Given a selection column with checkboxes
   When rows are checked
   Then they are tinted and the pagination shows "N of M row(s) selected"
+```
+
+```gherkin
+Scenario: Selection counts under an active filter — two deliberate scopes
+  Given rows are selected and a column filter is then applied that hides some of them
+  Then DataTableBulkActionsBar's selection summary still counts the *whole*
+      selection, filtered-out rows included (table.getSelectedRowModel())
+  And isBulkSelectionActive(table) reads that same unfiltered selection, so the
+      per-row actions stay suppressed even if every selected row is filtered out of view
+  But DataTablePagination's summary counts only the *currently filtered*
+      selection (table.getFilteredSelectedRowModel())
+  So the two counts can legitimately disagree while a filter is active
+  # By design, not a bug: a bulk action applies to everything the user has
+  # selected, not just to what the current filter leaves visible, while the
+  # pagination summary describes the page/filter the user is looking at.
 ```

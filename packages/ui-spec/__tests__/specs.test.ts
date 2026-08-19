@@ -154,6 +154,21 @@ function tokenSetFromCssDefinitions(absCssDir: string): Set<string> {
   return tokens;
 }
 
+/**
+ * Both forms a component can reference a token by: the CSS `var(--ui-x)` inside
+ * an arbitrary value, and Tailwind v4's shorthand arbitrary value
+ * (`outline-(--ui-x)`, `cursor-(--ui-x)`), which compiles to the same `var()`.
+ */
+const TOKEN_REF_RE = /(?:var\(\s*|-\()(--ui-[a-z0-9-]+)\s*\)/g;
+
+// Deliberate, tracked exception: no Figma variable exists for a grab cursor yet,
+// so these two are hand-authored in ui-react's styles/index.css (see the comment
+// there) instead of being emitted into tokens-pd. Remove once they move upstream.
+const LOCALLY_AUTHORED_TOKENS = new Set([
+  '--ui-draggable-cursor',
+  '--ui-draggable-cursor-active',
+]);
+
 function tokenSetFromVarRefs(absDir: string): Set<string> {
   const files = listFiles(
     absDir,
@@ -163,7 +178,7 @@ function tokenSetFromVarRefs(absDir: string): Set<string> {
   const tokens = new Set<string>();
   for (const absPath of files) {
     const source = readFileSync(absPath, 'utf8');
-    for (const match of source.matchAll(/var\(\s*(--ui-[a-z0-9-]+)\s*\)/g)) {
+    for (const match of source.matchAll(TOKEN_REF_RE)) {
       tokens.add(match[1]);
     }
   }
@@ -191,11 +206,11 @@ describe('token references resolve in tokens-pd', () => {
 
       const sourceTokenNames = [...tokenSetFromVarRefs(sourceDir)];
       const missingSourceNames = sourceTokenNames.filter(
-        (token) => !definedTokens.has(token)
+        (token) => !definedTokens.has(token) && !LOCALLY_AUTHORED_TOKENS.has(token)
       );
       expect(
         missingSourceNames,
-        `${name}: ui-react source has undefined var(--ui-*) tokens:\n${missingSourceNames.join('\n')}`
+        `${name}: ui-react source has undefined --ui-* tokens:\n${missingSourceNames.join('\n')}`
       ).toEqual([]);
     });
   }

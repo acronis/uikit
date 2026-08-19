@@ -82,7 +82,11 @@ const Checkbox = React.forwardRef<
       {...props}
     >
       <CheckboxPrimitive.Indicator className="flex items-center justify-center text-current">
-        {indeterminate ? <MinusIcon size={16} /> : <CheckIcon size={16} />}
+        {indeterminate ? (
+          <MinusIcon size={16} className="text-current!" />
+        ) : (
+          <CheckIcon size={16} className="text-current!" />
+        )}
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );

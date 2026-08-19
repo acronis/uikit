@@ -8,6 +8,10 @@ interface DataTableExpandTriggerProps<TData>
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   /** The row this trigger toggles. */
   row: Row<TData>;
+  /** Accessible name while the row is expanded. Override to localize. */
+  collapseLabel?: string;
+  /** Accessible name while the row is collapsed. Override to localize. */
+  expandLabel?: string;
 }
 
 // A chevron toggle button wired to a row's expansion state, meant to live inside
@@ -17,7 +21,13 @@ interface DataTableExpandTriggerProps<TData>
 // `toggleExpanded()` — the underlying expand state model is unchanged. Renders
 // nothing when the row can't expand.
 function DataTableExpandTriggerImpl<TData>(
-  { row, className, ...props }: DataTableExpandTriggerProps<TData>,
+  {
+    row,
+    collapseLabel = 'Collapse row',
+    expandLabel = 'Expand row',
+    className,
+    ...props
+  }: DataTableExpandTriggerProps<TData>,
   ref: React.Ref<HTMLButtonElement>
 ) {
   if (!row.getCanExpand()) return null;
@@ -29,10 +39,12 @@ function DataTableExpandTriggerImpl<TData>(
       ref={ref}
       type="button"
       onClick={row.getToggleExpandedHandler()}
-      aria-label={expanded ? 'Collapse row' : 'Expand row'}
+      aria-label={expanded ? collapseLabel : expandLabel}
       aria-expanded={expanded}
       className={cn(
-        'inline-flex size-6 cursor-pointer items-center justify-center rounded text-[var(--ui-table-data-value-color-idle)] transition-colors hover:bg-[var(--ui-table-header-cell-color-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)] [&_svg]:size-4 [&_svg]:shrink-0',
+        // Lives in a data cell, so it tints from the data-cell tokens; the focus
+        // ring matches the kit-wide 3px treatment (Figma stroke/width-3).
+        'inline-flex size-6 cursor-pointer items-center justify-center rounded-sm text-[var(--ui-table-data-value-color-idle)] transition-colors hover:bg-[var(--ui-table-data-cell-color-hover)] active:bg-[var(--ui-table-data-cell-color-active)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)] [&_svg]:size-4 [&_svg]:shrink-0',
         className
       )}
       {...props}

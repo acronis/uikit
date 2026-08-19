@@ -7,21 +7,29 @@ schematic: |
   +-----------------------------------------------------------------+
   | header: <thead>                                                 |
   |   row: <tr>                                                     |
-  |     head: <th> Name ⇅   | head: <th> Status | head ▸ sortable  |
+  |     select-cell ☐ | head: <th> Name ⇅ | head: <th> Status |     |
+  |                                            settings-cell ⚙      |
   +-----------------------------------------------------------------+
   | body: <tbody>                                                   |
   |   row: <tr> (idle / hover / selected)                           |
-  |     cell: <td> John Smith | cell: <td> Active | cell ▸ wrap     |
+  |     select-cell ☐ | cell: <td> John Smith | cell ▸ wrap |       |
+  |                                            actions-cell ⋯       |
   +-----------------------------------------------------------------+
   | footer: <tfoot>                                                 |
   |   row > cell: Total ............................. $750.00       |
   +-----------------------------------------------------------------+
   caption: <caption> (optional, below the table)
   pagination:  "N of M selected"  [Rows per page ▾]  Page X of Y  ⏮ ◀ ▶ ⏭
-     head    -> --ui-table-header-label-color, hover --ui-table-header-cell-color-hover
-     sortable head -> sort icon (--ui-table-header-sort-icon-color-*) + aria-sort
-     row     -> idle/hover/active (selected) via --ui-table-data-row-color-*
-     cell    -> --ui-table-global-cell-{padding-x,padding-y,border-color}; wrap grows height
+     head    -> --ui-table-header-label-color; idle/hover/active via --ui-table-header-cell-color-*
+     sortable head -> sort icon (--ui-table-header-sort-icon-color-*) + aria-sort;
+                      the whole cell tints on hover/press and owns the focus ring
+     row     -> idle/hover/active (selected) via --ui-table-data-row-color-*;
+                divider via --ui-table-global-row-border-{color,width,style}
+     cell    -> --ui-table-global-cell-{padding-x,padding-y,min-height},
+                idle/hover/active via --ui-table-data-cell-color-*; wrap grows height
+     select-cell   -> 32px leading column (padding-start only), holds a Checkbox
+     actions-cell  -> 48px trailing column, end-aligned overflow trigger
+     settings-cell -> 48px trailing header column, end-aligned settings trigger
 
 root:
   element: table
@@ -60,6 +68,31 @@ parts:
       the fixed row height (`h-10`) by default; `wrap` switches it to
       `whitespace-normal` and lets the row grow to fit multi-line content.
     element: td
+  - id: select-cell
+    description: >-
+      The row-selection cell (Figma part `TableCheckbox`) — a fixed 32px leading
+      column holding a label-less Checkbox. Only the inline-start padding is
+      applied so the box sits flush against the first data cell. Renders `<th>`
+      for the header's select-all cell, `<td>` for a row's.
+    element: td/th
+    optional: true
+  - id: actions-cell
+    description: >-
+      The trailing row-actions cell (Figma part `TableActions`) — a fixed 48px
+      end-aligned column holding the consumer's overflow trigger. The cell
+      carries the hover/press tint and the focus ring. While a bulk selection is
+      active (`bulk-selection-active`: one or more rows selected)
+      it renders as an empty, untinted cell of the same width.
+    element: td
+    optional: true
+  - id: settings-cell
+    description: >-
+      The trailing header cell holding the column-settings trigger (Figma part
+      `TableSettings`) — a fixed 48px end-aligned column. Visual states only;
+      what the trigger opens is the consumer's choice (TableViewOptions is the
+      ready-made column-visibility menu).
+    element: th
+    optional: true
   - id: caption
     description: Optional table caption (`<caption>`), muted, below the table.
     element: caption
@@ -109,12 +142,40 @@ states:
       trigger: pointer hover over a sortable header,
       kind: pseudo,
       pseudo: ':hover',
-      affects: [head],
+      affects: [head, settings-cell],
+    }
+  - {
+      id: header-press,
+      trigger: pointer press on a sortable header or the settings cell,
+      kind: pseudo,
+      pseudo: ':active',
+      affects: [head, settings-cell],
     }
   - {
       id: header-focus,
       trigger: keyboard focus on a sortable header,
       kind: pseudo,
       pseudo: ':focus-visible',
-      affects: [head],
+      affects: [head, settings-cell],
+    }
+  - {
+      id: row-focus,
+      trigger: keyboard focus on a focusable row,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [row],
+    }
+  - {
+      id: cell-hover,
+      trigger: pointer hover over the row-actions cell,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [actions-cell],
+    }
+  - {
+      id: cell-press,
+      trigger: pointer press on the row-actions cell,
+      kind: pseudo,
+      pseudo: ':active',
+      affects: [actions-cell],
     }

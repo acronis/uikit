@@ -3,7 +3,8 @@ component: DataTable
 
 # DataTable takes columns/data and owns table state by default. The companion
 # parts (DataTableToolbar / DataTablePagination / DataTableColumnHeader /
-# DataTableViewOptions) take a TanStack `table` instance — see README. As of
+# DataTableViewOptions / DataTableBulkActionsBar) take a TanStack `table`
+# instance — see README. As of
 # this revision, DataTable itself can also take a `table` instance (below) —
 # when passed, DataTable owns no state and several props become no-ops (see
 # each property's description).
@@ -19,6 +20,54 @@ contract:
       type: 'TData[]'
       required: false
       description: The row data. Required unless `table` is passed.
+    - name: resize-column-label
+      type: string
+      required: false
+      default: "'Resize column'"
+      description: >-
+        Accessible name of a column's resize handle (`enableColumnResizing`
+        only). Override to localize.
+    - name: empty-label
+      type: string
+      required: false
+      default: "'No results.'"
+      description: >-
+        Text of the default empty-state row; ignored when `renderEmptyState` is
+        given. Override to localize.
+    - name: rows-per-page-label
+      type: string
+      required: false
+      default: "'Rows per page'"
+      description: >-
+        On the pagination part — label of the rows-per-page select (also its
+        accessible name). Override to localize. The pagination part also takes
+        `first-page-label`, `previous-page-label`, `next-page-label`,
+        `last-page-label`, `page-label` and `summary-label`. `summary-label` is
+        `(selected: number, total: number) => string`, always called with
+        concrete counts — unlike `TablePagination`'s
+        `(selectedRows: number | undefined, totalRows: number) => string |
+        null`, it never receives `undefined`/`null`.
+    - name: expand-label
+      type: string
+      required: false
+      default: "'Expand row'"
+      description: >-
+        On the expand-trigger part — accessible name while the row is collapsed.
+        Override to localize.
+    - name: collapse-label
+      type: string
+      required: false
+      default: "'Collapse row'"
+      description: >-
+        On the expand-trigger part — accessible name while the row is expanded.
+        Override to localize.
+    - name: sort-label
+      type: '(title: string) => string'
+      required: false
+      default: '(title) => `Sort by ${title}`'
+      description: >-
+        On the column-header part — builds the accessible label of the sort
+        toggle from the column title. Override to localize.
     - name: table
       type: 'Table<TData>'
       required: false
@@ -73,6 +122,84 @@ contract:
         Opt in to interactive column resizing — renders a drag handle at the
         trailing edge of each resizable header (TanStack's native
         `columnResizing`, `columnResizeMode: 'onChange'`).
+    - name: enableColumnReordering
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Opt in to column reordering by dragging a header cell onto another one
+        (native HTML5 drag-and-drop driving TanStack's `columnOrder`; the dragged
+        header dims while the gesture is in flight). Pinned columns are excluded
+        — they're anchored to a table edge by definition. Pointer-only: there is
+        no keyboard equivalent yet. No-op when `table` is passed.
+    - name: columnOrder
+      type: ColumnOrderState
+      required: false
+      description: >-
+        Controlled column-order state; pairs with `onColumnOrderChange` (e.g. to
+        persist the user's order). Uncontrolled (internal state) when omitted.
+        No-op when `table` is passed.
+    - name: rowSelection
+      type: RowSelectionState
+      required: false
+      description: >-
+        Controlled row-selection state; pairs with `onRowSelectionChange` (e.g.
+        to share one selection state with an external `useReactTable` instance
+        that feeds a composed toolbar/bulk-actions bar). Uncontrolled (internal
+        state) when omitted.
+    - name: hideActionColumn
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Hide the trailing sticky action column — the column-visibility cog in
+        the header and each row's overflow-actions ellipsis. Shown by default.
+        No-op when `table` is passed (build the column into that instance's own
+        `columns` instead).
+    - name: renderRowActions
+      type: '(row: Row<TData>) => ReactNode'
+      required: false
+      description: >-
+        Renders the content of a row's overflow-actions menu (e.g. Edit/Delete
+        items), opened from the ellipsis trigger in the trailing action column.
+        Omit to render that row without a trigger — the 48px column is still
+        reserved. Suppressed (like the trigger itself) while a bulk selection is
+        active, per `TableActionsCell`.
+    - name: rowActionsLabel
+      type: string
+      required: false
+      default: "'Row actions'"
+      description: >-
+        Accessible name of a row's overflow-actions trigger. Override to
+        localize.
+    - name: columnSettingsLabel
+      type: string
+      required: false
+      description: >-
+        Accessible name of the action column's column-visibility trigger.
+        Override to localize; falls through to the view-options part's own
+        default ("Column settings") when omitted.
+    - name: headerHints
+      type: 'Partial<DataTableHeaderHints>'
+      required: false
+      default: "{ sort: { label: 'Sort column', action: 'Click' }, reorder: { label: 'Reorder column', action: 'Drag' }, resize: { label: 'Resize column', action: 'Drag border' } }"
+      description: >-
+        Copy of the tooltip shown while a header cell is hovered/focused — one
+        `{ label, action }` line per capability that column actually has
+        (`sort` / `reorder` / `resize`). Merged over the defaults, so any subset
+        can be overridden to localize; a column with no capability shows no
+        tooltip at all.
+    - name: bulkSelectionActive
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        On the `TableActionsCell` part — suppress this row's actions because a
+        *bulk* selection is in play. The cell still reserves its 48px column but
+        renders no children and no hover/press tint. Pass
+        `isBulkSelectionActive(table)` (exported alongside DataTable) rather than
+        re-deriving the threshold: **one or more rows selected**, including
+        exactly one.
     - name: meta.pin
       type: "'left' | 'right'"
       required: false
@@ -107,6 +234,34 @@ contract:
       description: >-
         On DataTableToolbar — formats an applied-filter chip's label (defaults to
         "<id>: <value>").
+    - name: selectedLabel
+      type: '(count: number) => string'
+      required: false
+      default: "(count) => `${count} item${count === 1 ? '' : 's'} selected:`"
+      description: >-
+        On DataTableBulkActionsBar — builds the trailing selection summary from
+        `table.getSelectedRowModel().rows.length`. Override to localize. The bar
+        also takes `clear-label` (default "Deselect"), the trailing control that
+        calls `table.resetRowSelection()`, and `children` — the bulk actions,
+        rendered *leading* (ahead of the trailing summary/Deselect group, which
+        is pushed to the far edge with `ms-auto`) and wrapped in a native
+        `<fieldset disabled>` while nothing is selected, so every nested control
+        picks up the disabled state without per-action wiring. The bar is not
+        rendered by DataTable: the consumer mounts it over the same external
+        `table` instance that feeds the checkbox column (see the
+        `data-table-bulk-actions` pattern). It is **always mounted** — it never
+        renders nothing. Instead it toggles between two states on
+        `isBulkSelectionActive(table)` (one or more rows selected): with nothing
+        selected the actions are disabled and the trailing side shows
+        `loadedLabel`; from the first selected row on, the actions enable and the
+        trailing side shows the selection summary plus the clear control.
+    - name: loadedLabel
+      type: ReactNode
+      required: false
+      description: >-
+        On DataTableBulkActionsBar — trailing text shown in place of the
+        selection summary while nothing is selected (e.g. "25 of 1250 items
+        loaded"). Omit to render nothing in that state. Override to localize.
     - name: manualSorting
       type: boolean
       required: false
@@ -156,8 +311,8 @@ contract:
         empty table's very first fetch — seed the first page yourself (e.g.
         on mount) and use `onLoadMore` for subsequent pages. No-op when
         `table` is passed. Does not compose with virtualization; for a large
-        accumulated list, use the `VirtualScrolling` recipe over the raw
-        `Table` primitives instead.
+        accumulated list, virtualize the raw `Table` primitives yourself
+        instead.
     - name: loadMoreRootMargin
       type: string
       required: false
@@ -185,6 +340,16 @@ contract:
         Whether a load is in flight — suppresses further `onLoadMore` calls
         and renders a trailing loading row. `paginationMode="infinite"` only.
   events:
+    - name: onColumnOrderChange
+      payload: 'ColumnOrderState (TanStack OnChangeFn)'
+      description: >-
+        Passthrough for the `columnOrder` state; pairs with `columnOrder`. Fires
+        with the new order after a header drop when `enableColumnReordering` is
+        set. No-op when `table` is passed.
+    - name: onRowSelectionChange
+      payload: 'RowSelectionState (TanStack OnChangeFn)'
+      description: >-
+        Passthrough for the `rowSelection` state; pairs with `rowSelection`.
     - name: onColumnSizingChange
       payload: 'ColumnSizingState (TanStack OnChangeFn)'
       description: >-

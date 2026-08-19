@@ -48,4 +48,27 @@ describe('TableViewOptions', () => {
     await user.click(screen.getByRole('button', { name: /Columns/ }));
     expect(screen.getByRole('menu')).toBeInTheDocument();
   });
+
+  it('renders a cog-only trigger with `iconOnly`', async () => {
+    const user = userEvent.setup();
+    render(<TableViewOptions columns={columns} onToggle={vi.fn()} iconOnly />);
+    const trigger = screen.getByRole('button', { name: 'Column settings' });
+    expect(trigger).not.toHaveTextContent('View');
+    await user.click(trigger);
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: /Name/ })
+    ).toBeInTheDocument();
+  });
+
+  it('names the `iconOnly` trigger from `triggerAriaLabel`', () => {
+    render(
+      <TableViewOptions
+        columns={columns}
+        onToggle={vi.fn()}
+        iconOnly
+        triggerAriaLabel="Spalten"
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Spalten' })).toBeInTheDocument();
+  });
 });
