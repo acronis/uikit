@@ -264,6 +264,20 @@ describe('AccordionContainer', () => {
       const content = screen.getByTestId('content');
       expect(content).toHaveClass('custom-content');
     });
+
+    it('does not leak hiddenUntilFound/keepMounted onto the DOM when collapsible=false', () => {
+      render(
+        <AccordionContainer collapsible={false}>
+          <AccordionContainer.Content data-testid="content" hiddenUntilFound keepMounted>
+            Body content
+          </AccordionContainer.Content>
+        </AccordionContainer>
+      );
+
+      const content = screen.getByTestId('content');
+      expect(content).not.toHaveAttribute('hiddenuntilfound');
+      expect(content).not.toHaveAttribute('keepmounted');
+    });
   });
 
   describe('Trigger accessible name', () => {

@@ -197,18 +197,18 @@ type AccordionContainerContentProps = React.ComponentPropsWithoutRef<
 const AccordionContainerContent = React.forwardRef<
   React.ComponentRef<typeof CollapsiblePrimitive.Panel>,
   AccordionContainerContentProps
->(({ className, style, children, render, ...props }, ref) => {
+>(({ className, style, children, render, hiddenUntilFound, keepMounted, ...props }, ref) => {
   const { collapsible } = useAccordionContainerContext();
 
-  const resolvedClassName = typeof className === 'function' ? undefined : className;
-  const resolvedStyle = typeof style === 'function' ? undefined : style;
-
+  // Unlike Root, Content doesn't support the render-prop `(state) => value`
+  // form for className/style, so the bypass div below only ever sees plain
+  // values.
   const bypassRendered = useRender({
     render: render as useRender.RenderProp<Record<string, unknown>> | undefined,
     ref,
     defaultTagName: 'div',
     props: mergeProps<'div'>(
-      { className: resolvedClassName, style: resolvedStyle },
+      { className: className as string | undefined, style: style as React.CSSProperties | undefined },
       props,
       { children }
     ),
@@ -217,10 +217,12 @@ const AccordionContainerContent = React.forwardRef<
   if (!collapsible) {
     // Same style-isolation-neutral bypass as the Root: no wrapper unless the
     // consumer actually passed something that would otherwise be dropped.
+    // hiddenUntilFound/keepMounted are Panel-only props, destructured above
+    // so they never leak onto this plain div.
     const needsWrapper =
       ref != null ||
-      resolvedClassName != null ||
-      resolvedStyle != null ||
+      className != null ||
+      style != null ||
       render != null ||
       Object.keys(props).length > 0;
 
@@ -235,6 +237,8 @@ const AccordionContainerContent = React.forwardRef<
         'overflow-hidden transition-[height] duration-200 ease-out data-[ending-style]:h-0 data-[starting-style]:h-0',
         className
       )}
+      hiddenUntilFound={hiddenUntilFound}
+      keepMounted={keepMounted}
       {...props}
     >
       {children}
