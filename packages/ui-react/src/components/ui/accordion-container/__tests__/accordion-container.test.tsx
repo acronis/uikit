@@ -180,6 +180,21 @@ describe('AccordionContainer', () => {
       expect(disallowed).toEqual([]);
     });
 
+    it('Trigger has a visible keyboard focus indicator', () => {
+      render(
+        <AccordionContainer collapsible>
+          <AccordionContainer.Trigger />
+        </AccordionContainer>
+      );
+
+      const trigger = screen.getByRole('button');
+      expect(trigger).toHaveClass(
+        'outline-none',
+        'focus-visible:ring-2',
+        'focus-visible:ring-[var(--ui-focus-primary)]'
+      );
+    });
+
     it('Content className carries only height-animation classes, no padding/background', () => {
       render(
         <AccordionContainer collapsible defaultOpen>

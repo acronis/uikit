@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { within } from 'storybook/test';
 
 import { AccordionContainer } from '../accordion-container';
 
@@ -149,4 +150,35 @@ export const Collapsed: Story = {
       </AccordionContainer>
     </div>
   ),
+};
+
+// Keyboard-focus state on the trigger — the play function tabs to it so the
+// `focus-visible:ring-2` treatment is captured for VR (keyboard users need a
+// visible indicator; there was previously none).
+export const Focused: Story = {
+  args: {
+    collapsible: true,
+    defaultOpen: false,
+  },
+  render: (args) => (
+    <div className="w-[320px] rounded-md border border-border p-4">
+      <AccordionContainer {...args}>
+        {({ open }) => (
+          <>
+            <DemoHeader open={open} />
+            <AccordionContainer.Content>
+              <p className="mt-2 text-sm text-[var(--ui-text-on-surface-secondary)]">
+                Runs every night at 2:00 AM. Retains the last 30 backups and
+                verifies each one automatically after completion.
+              </p>
+            </AccordionContainer.Content>
+          </>
+        )}
+      </AccordionContainer>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    canvas.getByRole('button').focus();
+  },
 };

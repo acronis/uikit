@@ -175,6 +175,7 @@ const AccordionContainerTrigger = React.forwardRef<
       aria-label={props['aria-labelledby'] ? undefined : ariaLabel ?? 'Toggle'}
       className={cn(
         'inline-flex size-8 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--ui-glyph-on-surface-neutral-dark)]',
+        'outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)]',
         '[&[data-panel-open]>svg]:rotate-90 [&:not([data-panel-open])>svg]:rtl:rotate-180',
         className
       )}
