@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { waitFor, within } from 'storybook/test';
 import {
   type ColumnDef,
   type RowSelectionState,
@@ -301,7 +302,7 @@ function CoreCapabilitiesDemo() {
       {/* Fixed height + overflow-auto gives the sentinel row somewhere to
           scroll within — the IntersectionObserver still measures against the
           viewport, but the row only reaches it once this pane is scrolled. */}
-      <div className="max-h-96 overflow-auto">
+      <div className="max-h-96 overflow-auto" data-testid="infinite-scroll-pane">
         <DataTable
           columns={workloadColumns}
           data={items}
@@ -327,6 +328,26 @@ function CoreCapabilitiesDemo() {
 
 export const CoreCapabilities: Story = {
   render: () => <CoreCapabilitiesDemo />,
+  // Visual regression needs a fixed frame, and this demo's height changes on
+  // every 600ms infinite-load round. `play` drives it to its terminal state
+  // (every page loaded, sentinel unmounted, no spinner row) and scrolls back to
+  // the top; `animationDelay` leaves margin for that last render to paint.
+  parameters: { snapshot: { animationDelay: 600 } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const pane = await canvas.findByTestId('infinite-scroll-pane');
+    // The sentinel only intersects once the pane is scrolled to the bottom, and
+    // it moves down again after each appended page — so re-scroll on every poll
+    // until the bulk-actions bar reports the full dataset as loaded.
+    await waitFor(
+      () => {
+        pane.scrollTop = pane.scrollHeight;
+        canvas.getByText(`${TOTAL_WORKLOADS} of ${TOTAL_WORKLOADS} items loaded`);
+      },
+      { timeout: 15000 }
+    );
+    pane.scrollTop = 0;
+  },
 };
 
 /* -------------------------------------------- Core capabilities + pagination */

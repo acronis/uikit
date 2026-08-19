@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { userEvent, within } from 'storybook/test';
 
 import {
   CogIcon,
@@ -358,7 +357,9 @@ export const WithSelectionAndActions: Story = {
 // one screenshot, so the *matrix* stories depict each state by applying that
 // state's own `--ui-*` token to a static cell — the same token the live
 // `hover:` / `active:` / `has-[:focus-visible]:` utility resolves to. The
-// behavioural stories further down drive real hover via a `play` function.
+// checkbox hover stories further down capture the live `:hover` state instead,
+// via the test runner's `parameters.snapshot.hoverSelector` (a real
+// Playwright mouse move — synthetic pointer events can't set `:hover`).
 // ---------------------------------------------------------------------------
 
 const STATE_LABEL = 'text-xs text-muted-foreground';
@@ -650,21 +651,23 @@ export const WithCheckboxIdleState: Story = {
   render: () => <CheckboxTable />,
 };
 
-/** Figma: "Table with Checkbox / Hover on Row (Outside checkbox cell)". */
+/**
+ * Figma: "Table with Checkbox / Hover on Row (Outside checkbox cell)".
+ *
+ * The hover is driven by the test runner at the Playwright level
+ * (`parameters.snapshot.hoverSelector`) — only a real mouse move puts the
+ * browser into the `:hover` pseudo-class the `hover:` utilities key off.
+ */
 export const WithCheckboxHoverOnRow: Story = {
   render: () => <CheckboxTable />,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await userEvent.hover(canvas.getByTestId('cell-db-primary'));
-  },
+  parameters: { snapshot: { hoverSelector: '[data-testid="cell-db-primary"]' } },
 };
 
 /** Figma: "Table with Checkbox / Hover on Checkbox". */
 export const WithCheckboxHoverOnCheckbox: Story = {
   render: () => <CheckboxTable />,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await userEvent.hover(canvas.getByLabelText('Select db-primary'));
+  parameters: {
+    snapshot: { hoverSelector: '[aria-label="Select db-primary"]' },
   },
 };
 

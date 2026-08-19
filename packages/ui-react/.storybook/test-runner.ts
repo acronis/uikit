@@ -44,6 +44,18 @@ const config: TestRunnerConfig = {
     }, colorMode);
     await page.waitForTimeout(50);
 
+    // Real CSS `:hover` can only be produced by moving the actual mouse, which
+    // is a Playwright-level capability — `userEvent.hover()` inside a `play`
+    // function dispatches synthetic pointer events and never activates a
+    // `hover:` utility. Stories that need a hovered state captured opt in with
+    // parameters.snapshot.hoverSelector.
+    const hoverSelector = storyContext.parameters?.snapshot?.hoverSelector;
+    if (typeof hoverSelector === 'string') {
+      await page.hover(hoverSelector);
+      // Let the hover colour transition finish before the screenshot.
+      await page.waitForTimeout(200);
+    }
+
     let image: Buffer;
     if (snapshotFullPage) {
       // Some stories are too tall for the default viewport — capture the full
