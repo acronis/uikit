@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: AccordionContainer
+name: accordion-container
+status: draft
+category: layout
+description: >-
+  The shared disclosure primitive behind Card's and Section's `isCollapsable`
+  variant. Built directly on Base UI's Collapsible — owns open state, the
+  trigger button, chevron rotation, and panel animation — while imposing no
+  visual styling beyond what the disclosure mechanic itself requires (its
+  trigger's chevron glyph color, the same neutral treatment Accordion's
+  chevron uses, is the one exception). Every other visual decision (header
+  layout, spacing, background, borders) stays owned by the component
+  composing it.
+since: 1.1.0
