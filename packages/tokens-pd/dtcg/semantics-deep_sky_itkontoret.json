@@ -1605,6 +1605,691 @@
       }
     }
   },
+  "dataviz": {
+    "$type": "color",
+    "categorical": {
+      "1": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2566"
+        },
+        "$type": "color",
+        "$value": "{palette.blue.7}"
+      },
+      "2": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2567"
+        },
+        "$type": "color",
+        "$value": "{palette.orange.9}"
+      },
+      "3": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2568"
+        },
+        "$type": "color",
+        "$value": "{palette.teal.7}"
+      },
+      "4": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2569"
+        },
+        "$type": "color",
+        "$value": "{palette.violet.7}"
+      },
+      "5": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2570"
+        },
+        "$type": "color",
+        "$value": "{palette.yellow.10}"
+      },
+      "6": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2571"
+        },
+        "$type": "color",
+        "$value": "{palette.red.7}"
+      },
+      "7": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2572"
+        },
+        "$type": "color",
+        "$value": "{palette.green.8}"
+      },
+      "8": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2573"
+        },
+        "$type": "color",
+        "$value": "{palette.electricblue.5}"
+      },
+      "9": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2574"
+        },
+        "$type": "color",
+        "$value": "{palette.yellow.7}"
+      },
+      "10": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2575"
+        },
+        "$type": "color",
+        "$value": "{palette.violet.10}"
+      },
+      "11": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2576"
+        },
+        "$type": "color",
+        "$value": "{palette.teal.10}"
+      },
+      "12": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2577"
+        },
+        "$type": "color",
+        "$value": "{palette.red.10}"
+      },
+      "13": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2578"
+        },
+        "$type": "color",
+        "$value": "{palette.blue.10}"
+      },
+      "14": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2579"
+        },
+        "$type": "color",
+        "$value": "{palette.yellow.12}"
+      },
+      "15": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2580"
+        },
+        "$type": "color",
+        "$value": "{palette.green.11}"
+      },
+      "16": {
+        "$extensions": {
+          "com.figma.scopes": [
+            "SHAPE_FILL"
+          ],
+          "com.figma.variableId": "VariableID:9701:2581"
+        },
+        "$type": "color",
+        "$value": "{palette.electricblue.3}"
+      }
+    },
+    "diverging": {
+      "blueOrange": {
+        "a1": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2616"
+          },
+          "$type": "color",
+          "$value": "{palette.electricblue.4}"
+        },
+        "a2": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2615"
+          },
+          "$type": "color",
+          "$value": "{palette.electricblue.5}"
+        },
+        "a3": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2614"
+          },
+          "$type": "color",
+          "$value": "{palette.electricblue.7}"
+        },
+        "b1": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2618"
+          },
+          "$type": "color",
+          "$value": "{palette.orange.4}"
+        },
+        "b2": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2619"
+          },
+          "$type": "color",
+          "$value": "{palette.orange.7}"
+        },
+        "b3": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2620"
+          },
+          "$type": "color",
+          "$value": "{palette.orange.9}"
+        }
+      },
+      "tealViolet": {
+        "a1": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2623"
+          },
+          "$type": "color",
+          "$value": "{palette.teal.4}"
+        },
+        "a2": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2622"
+          },
+          "$type": "color",
+          "$value": "{palette.teal.5}"
+        },
+        "a3": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2621"
+          },
+          "$type": "color",
+          "$value": "{palette.teal.7}"
+        },
+        "b1": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2625"
+          },
+          "$type": "color",
+          "$value": "{palette.violet.4}"
+        },
+        "b2": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2626"
+          },
+          "$type": "color",
+          "$value": "{palette.violet.7}"
+        },
+        "b3": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2627"
+          },
+          "$type": "color",
+          "$value": "{palette.violet.9}"
+        }
+      }
+    },
+    "meaningful": {
+      "status": {
+        "critical": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2629"
+          },
+          "$type": "color",
+          "$value": "{colors.background.statusStrong.critical}"
+        },
+        "danger": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2628"
+          },
+          "$type": "color",
+          "$value": "{colors.background.statusStrong.danger}"
+        },
+        "info": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2632"
+          },
+          "$type": "color",
+          "$value": "{colors.background.statusStrong.info}"
+        },
+        "neutral": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2633"
+          },
+          "$type": "color",
+          "$value": "{colors.background.statusStrong.neutral}"
+        },
+        "success": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2631"
+          },
+          "$type": "color",
+          "$value": "{colors.background.statusStrong.success}"
+        },
+        "warning": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2630"
+          },
+          "$type": "color",
+          "$value": "{colors.background.statusStrong.warning}"
+        }
+      }
+    },
+    "sequential": {
+      "blue": {
+        "1": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2582"
+          },
+          "$type": "color",
+          "$value": "{palette.electricblue.2}"
+        },
+        "2": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2583"
+          },
+          "$type": "color",
+          "$value": "{palette.electricblue.4}"
+        },
+        "3": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2584"
+          },
+          "$type": "color",
+          "$value": "{palette.electricblue.5}"
+        },
+        "4": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2585"
+          },
+          "$type": "color",
+          "$value": "{palette.electricblue.6}"
+        },
+        "5": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2586"
+          },
+          "$type": "color",
+          "$value": "{palette.electricblue.7}"
+        },
+        "6": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2587"
+          },
+          "$type": "color",
+          "$value": "{palette.electricblue.9}"
+        },
+        "7": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2588"
+          },
+          "$type": "color",
+          "$value": "{palette.electricblue.11}"
+        },
+        "8": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2589"
+          },
+          "$type": "color",
+          "$value": "{palette.electricblue.12}"
+        }
+      },
+      "orange": {
+        "1": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2598"
+          },
+          "$type": "color",
+          "$value": "{palette.orange.2}"
+        },
+        "2": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2599"
+          },
+          "$type": "color",
+          "$value": "{palette.orange.4}"
+        },
+        "3": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2600"
+          },
+          "$type": "color",
+          "$value": "{palette.orange.5}"
+        },
+        "4": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2601"
+          },
+          "$type": "color",
+          "$value": "{palette.orange.6}"
+        },
+        "5": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2602"
+          },
+          "$type": "color",
+          "$value": "{palette.orange.7}"
+        },
+        "6": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2603"
+          },
+          "$type": "color",
+          "$value": "{palette.orange.9}"
+        },
+        "7": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2604"
+          },
+          "$type": "color",
+          "$value": "{palette.orange.11}"
+        },
+        "8": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2605"
+          },
+          "$type": "color",
+          "$value": "{palette.orange.12}"
+        }
+      },
+      "teal": {
+        "1": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2590"
+          },
+          "$type": "color",
+          "$value": "{palette.teal.2}"
+        },
+        "2": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2591"
+          },
+          "$type": "color",
+          "$value": "{palette.teal.4}"
+        },
+        "3": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2592"
+          },
+          "$type": "color",
+          "$value": "{palette.teal.5}"
+        },
+        "4": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2593"
+          },
+          "$type": "color",
+          "$value": "{palette.teal.6}"
+        },
+        "5": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2594"
+          },
+          "$type": "color",
+          "$value": "{palette.teal.7}"
+        },
+        "6": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2595"
+          },
+          "$type": "color",
+          "$value": "{palette.teal.9}"
+        },
+        "7": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2596"
+          },
+          "$type": "color",
+          "$value": "{palette.teal.11}"
+        },
+        "8": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2597"
+          },
+          "$type": "color",
+          "$value": "{palette.teal.12}"
+        }
+      },
+      "violet": {
+        "1": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2606"
+          },
+          "$type": "color",
+          "$value": "{palette.violet.2}"
+        },
+        "2": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2607"
+          },
+          "$type": "color",
+          "$value": "{palette.violet.4}"
+        },
+        "3": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2608"
+          },
+          "$type": "color",
+          "$value": "{palette.violet.5}"
+        },
+        "4": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2609"
+          },
+          "$type": "color",
+          "$value": "{palette.violet.6}"
+        },
+        "5": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2610"
+          },
+          "$type": "color",
+          "$value": "{palette.violet.7}"
+        },
+        "6": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2611"
+          },
+          "$type": "color",
+          "$value": "{palette.violet.9}"
+        },
+        "7": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2612"
+          },
+          "$type": "color",
+          "$value": "{palette.violet.11}"
+        },
+        "8": {
+          "$extensions": {
+            "com.figma.scopes": [
+              "SHAPE_FILL"
+            ],
+            "com.figma.variableId": "VariableID:9701:2613"
+          },
+          "$type": "color",
+          "$value": "{palette.violet.12}"
+        }
+      }
+    }
+  },
   "gradients": {
     "$type": "gradient",
     "ai": {
