@@ -3,7 +3,7 @@ component: DataTable
 
 schematic: |
   bulk-actions-bar: [ Delete ] [ … ]        "N items selected:" [ Deselect ]
-  toolbar:   [ search input ] [ filters ▾ ] [ Reset ✕ ]   [ ⚙ View ▾ ]   (view-options)
+  toolbar:   [ search input ] [ filters ▾ ] [ Reset ✕ ]
   applied-filters: ( status: Success ✕ ) ( … )        (chip row, when filtering)
   table: <div> rounded border wrapper
     column-header: per-column header — title + single-click sort toggle (↑/↓/↕)
@@ -18,6 +18,7 @@ schematic: |
     loading-row:   trailing "loading more" row (role=status) while isLoadingMore
     action-column: trailing sticky 48px column — settings cog (⚙) in the header,
                    per-row overflow-actions ellipsis (⋯) in each row
+      view-options: [ ⚙ ] ▾ column-visibility menu opened from that header cog
   pagination: "N of M selected"   [Rows per page ▾]  Page X of Y   ⏮ ◀ ▶ ⏭
 
 root:
@@ -39,7 +40,8 @@ parts:
       Sortable column header (DataTableColumnHeader) — a single-click toggle: the
       title plus a trailing arrow (up = ascending, down = descending, both in the
       active blue; a muted up/down arrow when unsorted). One click cycles the sort
-      direction. Column hiding lives in the toolbar's view-options menu, not here.
+      direction. Column hiding lives behind the settings cog in the trailing
+      action column's header cell (the `view-options` menu), not here.
   - id: header-hint
     element: div
     description: >-
@@ -78,6 +80,16 @@ parts:
       `renderRowActions`). Without `renderRowActions` the column is still
       reserved but the row renders no trigger; while a bulk selection is active
       (`isBulkSelectionActive(table)`) the row cell renders empty and untinted.
+    optional: true
+  - id: view-options
+    element: div
+    description: >-
+      DataTableViewOptions — the column-visibility menu opened from the settings
+      cog in the action column's header cell (`iconOnly`, inside a
+      `TableSettingsCell`); it is not part of the toolbar. A thin TanStack
+      adapter over the `TableViewOptions` primitive: it maps
+      `table.getAllColumns()` onto the plain `{ id, label, hidden }[]` shape and
+      routes `onToggle` back through `column.toggleVisibility()`.
     optional: true
   - id: bulk-actions-bar
     element: div
@@ -123,8 +135,9 @@ parts:
     element: div
     description: >-
       DataTableToolbar — a column search box, an optional per-column filters
-      popover (its `children`), a Reset button (when filtered and no filter
-      fields), and the view-options menu.
+      popover (its `children`), and a Reset button (when filtered and no filter
+      fields). Column visibility is not here: it lives behind the settings cog
+      in the action column's header cell.
   - id: filters
     element: div
     description: >-
@@ -139,13 +152,6 @@ parts:
       when filtering; each chip removes its column's filter. Labels come from
       `getFilterChipLabel`.
     optional: true
-  - id: view-options
-    element: div
-    description: >-
-      DataTableViewOptions — a menu of checkboxes toggling column visibility. A
-      thin TanStack adapter over the `TableViewOptions` primitive: it maps
-      `table.getAllColumns()` onto the plain `{ id, label, hidden }[]` shape and
-      routes `onToggle` back through `column.toggleVisibility()`.
   - id: pagination
     element: div
     description: >-
@@ -206,7 +212,7 @@ states:
     trigger: hideActionColumn is set (or an external table is passed)
     kind: prop
     prop: hideActionColumn
-    affects: [action-column]
+    affects: [action-column, view-options]
   - id: bulk-selection-active
     trigger: >-
       a bulk selection is in play — isBulkSelectionActive(table); see api.yaml

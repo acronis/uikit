@@ -66,6 +66,24 @@ tokens:
   - name: --ui-table-header-sort-icon-color-inactive
     affects: column-header
     description: Muted up/down arrow shown when the column is unsorted.
+  - name: --ui-table-data-row-color-hover
+    affects: row
+    description: >-
+      Hover background mirrored onto a pinned (sticky) cell via the row's
+      `group`, since the row's own `hover:` can't reach a cell that needs its
+      own opaque background.
+  - name: --ui-table-global-cell-min-height
+    affects: row
+    description: Single-line row height — dropped by a column with meta.wrap set.
+  - name: --ui-table-header-gap
+    affects: column-header
+    description: Gap between the header title and its sort-direction arrow.
+  - name: --ui-resizable-border-color-hover
+    affects: resize-handle
+    description: Resize-handle bar color on hover / keyboard focus.
+  - name: --ui-resizable-border-color-active
+    affects: resize-handle
+    description: Resize-handle bar color while that column is being resized.
   - name: --ui-focus-primary
     affects: column-header
     description: >-

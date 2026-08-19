@@ -25,14 +25,16 @@ optional row expansion, column resizing, and sticky (pinned) columns.
 
 ## Parts
 
-| Export                   | Purpose                                                                                                                                                                                                            |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `DataTable`              | The grid. Owns table state by default (`columns` / `data`), or renders a caller-built `table` instance. Supports resizing, pinned columns, server-driven sorting/pagination, and custom row/empty-state rendering. |
-| `DataTableColumnHeader`  | A sortable column header — single-click toggle (↑/↓/↕). Use in a column's `header`.                                                                                                                                |
-| `DataTableToolbar`       | Search box + per-column filters + applied-filter chips. Takes a `table` instance.                                                                                                                                  |
-| `DataTablePagination`    | Selection count, rows-per-page, page controls. Takes a `table`.                                                                                                                                                    |
-| `DataTableViewOptions`   | Column-visibility menu (a thin TanStack adapter over the `TableViewOptions` primitive). Pass `iconOnly` for the cog trigger that belongs in the trailing settings column.                                          |
-| `DataTableExpandTrigger` | A chevron toggle wired to a row's expansion state, placed inside a column's `cell` render function.                                                                                                                |
+| Export                    | Purpose                                                                                                                                                                                                                                   |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DataTable`               | The grid. Owns table state by default (`columns` / `data`), or renders a caller-built `table` instance. Supports resizing, pinned columns, server-driven sorting/pagination, and custom row/empty-state rendering.                        |
+| `DataTableColumnHeader`   | A sortable column header — single-click toggle (↑/↓/↕). Use in a column's `header`.                                                                                                                                                       |
+| `DataTableToolbar`        | Search box + per-column filters + applied-filter chips. Takes a `table` instance.                                                                                                                                                         |
+| `DataTablePagination`     | Selection count, rows-per-page, page controls. Takes a `table`.                                                                                                                                                                           |
+| `DataTableViewOptions`    | Column-visibility menu (a thin TanStack adapter over the `TableViewOptions` primitive). Pass `iconOnly` for the cog trigger that belongs in the trailing settings column.                                                                 |
+| `DataTableExpandTrigger`  | A chevron toggle wired to a row's expansion state, placed inside a column's `cell` render function.                                                                                                                                       |
+| `DataTableBulkActionsBar` | A selection-aware bar above the grid: the consumer's bulk actions in a `<fieldset>` disabled until a selection is active, plus the selection summary and a Deselect control (or `loadedLabel` when nothing is selected). Takes a `table`. |
+| `isBulkSelectionActive`   | The single predicate for the bulk-selection threshold (one or more rows selected). Pass it to `TableActionsCell`'s `bulkSelectionActive` rather than re-deriving it.                                                                      |
 
 `DataTable` manages its own table state by default. The companion parts
 operate on a TanStack `table` instance you build with `useReactTable` — render

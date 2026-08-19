@@ -209,3 +209,18 @@ Scenario: Select rows
   When rows are checked
   Then they are tinted and the pagination shows "N of M row(s) selected"
 ```
+
+```gherkin
+Scenario: Selection counts under an active filter — two deliberate scopes
+  Given rows are selected and a column filter is then applied that hides some of them
+  Then DataTableBulkActionsBar's selection summary still counts the *whole*
+      selection, filtered-out rows included (table.getSelectedRowModel())
+  And isBulkSelectionActive(table) reads that same unfiltered selection, so the
+      per-row actions stay suppressed even if every selected row is filtered out of view
+  But DataTablePagination's summary counts only the *currently filtered*
+      selection (table.getFilteredSelectedRowModel())
+  So the two counts can legitimately disagree while a filter is active
+  # By design, not a bug: a bulk action applies to everything the user has
+  # selected, not just to what the current filter leaves visible, while the
+  # pagination summary describes the page/filter the user is looking at.
+```

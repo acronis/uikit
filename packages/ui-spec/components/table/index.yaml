@@ -25,6 +25,7 @@ dependencies:
     - CogIcon
     - Button
     - ButtonIcon
+    - Checkbox
     - Select
     - DropdownMenu
 figma:
