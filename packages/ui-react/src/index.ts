@@ -105,6 +105,8 @@ export * from './components/ui/sheet';
 export * from './components/ui/skeleton';
 export * from './components/ui/slider';
 export * from './components/ui/stack';
+export * from './components/ui/stepper';
+export * from './components/ui/stepper-item';
 export * from './components/ui/resizable';
 export * from './components/ui/sidebar-primary';
 export * from './components/ui/sidebar-secondary';

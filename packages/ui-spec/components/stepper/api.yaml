@@ -1,0 +1,113 @@
+spec_version: '1.0'
+component: Stepper
+
+# There is no `variant`/`size` axis and no `cva` in the ui-react source: the only
+# axis the design has is the viewport width, and that is a media query rather
+# than a prop (see anatomy.yaml's closing note). The content props below feed the
+# compact summary; `children` feeds the wide row. Both are always rendered, so a
+# consumer must supply both — the component cannot tell which one the browser
+# will display.
+contract:
+  properties:
+    - name: currentStep
+      type: ReactNode
+      required: true
+      description: >-
+        1-based index of the step the user is on, e.g. `3`. Appears in the
+        compact summary only; above the breakpoint the highlighted `StepperItem`
+        carries the same information.
+    - name: totalSteps
+      type: ReactNode
+      required: true
+      description: How many steps the sequence has, e.g. `5`. Compact summary only.
+    - name: current
+      type: ReactNode
+      required: true
+      description: The current step's name. Compact summary only.
+    - name: next
+      type: ReactNode
+      required: false
+      description: >-
+        The next step's name. Omit it — on the last step — and the whole
+        "Next: …" line is left out rather than rendered empty. Compact summary
+        only.
+    - name: stepLabel
+      type: string
+      required: false
+      default: Step
+      description: >-
+        The word introducing the step counter. A prop rather than an inlined
+        literal so the component ships no untranslatable copy; the default is
+        English, and a localized application overrides it.
+    - name: ofLabel
+      type: string
+      required: false
+      default: of
+      description: >-
+        The word joining the current step number to the total. Translatable — see
+        `stepLabel`.
+    - name: nextLabel
+      type: string
+      required: false
+      default: 'Next:'
+      description: >-
+        The label introducing the next step's name. Translatable — see
+        `stepLabel`.
+    - name: separatorLabel
+      type: string
+      required: false
+      default: ': '
+      description: >-
+        The punctuation joining the step counter to the current step's name.
+        Translatable — see `stepLabel`; not every locale writes it as `": "`
+        (French spaces before the colon, CJK uses a full-width one).
+
+  events: []
+
+  content:
+    - name: default
+      description: >-
+        The `StepperItem` elements making up the sequence, laid out in the wide
+        row. They are not rendered in the compact summary, which replaces the row
+        with text.
+
+  methods: []
+
+adapters:
+  react:
+    component: Stepper
+    status: implemented
+    import: "import { Stepper } from '@acronis-platform/ui-react'"
+    example: |
+      <Stepper
+        currentStep={2}
+        totalSteps={3}
+        current="Choose a plan"
+        next="Confirm and pay"
+      >
+        <StepperItem variant="completed" label="Create an account" avatar={…} />
+        <StepperItem variant="current" label="Choose a plan" avatar={…} />
+        <StepperItem variant="future" label="Confirm and pay" avatar={…} />
+      </Stepper>
+
+  vue:
+    component: AvStepper
+    status: planned
+    import: "import { AvStepper } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvStepper :current-step="2" :total-steps="3" current="Choose a plan" next="Confirm and pay">
+        <AvStepperItem variant="completed" label="Create an account" />
+        <AvStepperItem variant="current" label="Choose a plan" />
+        <AvStepperItem variant="future" label="Confirm and pay" />
+      </AvStepper>
+
+  web-components:
+    element: ui-stepper
+    status: planned
+    import: "import '@acronis-platform/ui-wc/stepper'"
+    example: |
+      <ui-stepper current-step="2" total-steps="3" current="Choose a plan" next="Confirm and pay">
+        <ui-stepper-item variant="completed" label="Create an account"></ui-stepper-item>
+        <ui-stepper-item variant="current" label="Choose a plan"></ui-stepper-item>
+        <ui-stepper-item variant="future" label="Confirm and pay"></ui-stepper-item>
+      </ui-stepper>

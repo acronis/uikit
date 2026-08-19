@@ -1,0 +1,20 @@
+spec_version: '1.0'
+component: StepperItem
+name: stepper-item
+status: ready
+category: navigation
+description: >-
+  One step in a stepper — a consumer-composed avatar marker followed by the step
+  name. `variant` is the step's structural role in the sequence (`current`,
+  `completed`, `future`) and drives the container background and label color;
+  `state` is the interaction look and only changes anything on a completed step.
+  The component owns the container and the label only: the marker is supplied and
+  styled entirely by the caller, and the row layout, the step sequence, its
+  ordering, and navigation belong to `Stepper` and the application.
+since: 0.63.0
+dependencies:
+  components:
+    - avatar
+figma:
+  node: 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=10345-23659'
+  codeConnect: packages/ui-react/src/components/ui/stepper-item/stepper-item.figma.tsx
