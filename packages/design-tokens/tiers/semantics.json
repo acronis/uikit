@@ -22,12 +22,12 @@
             },
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{palette.transparent.white.inverse-95}",
-              "default": "{palette.transparent.white.inverse-95}",
-              "light-gray": "{palette.transparent.white.inverse-95}",
-              "telstra": "{palette.transparent.white.inverse-95}",
-              "virtuozzo": "{palette.transparent.white.inverse-95}",
-              "yellow-1c": "{palette.transparent.white.inverse-95}"
+              "deep_sky_itkontoret": "{palette.transparent.white.inverse.95}",
+              "default": "{palette.transparent.white.inverse.95}",
+              "light-gray": "{palette.transparent.white.inverse.95}",
+              "telstra": "{palette.transparent.white.inverse.95}",
+              "virtuozzo": "{palette.transparent.white.inverse.95}",
+              "yellow-1c": "{palette.transparent.white.inverse.95}"
             }
           },
           "secondary": {
@@ -37,12 +37,12 @@
             },
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{palette.transparent.blue.inverse-95}",
-              "default": "{palette.transparent.blue.inverse-95}",
-              "light-gray": "{palette.transparent.blue.inverse-95}",
-              "telstra": "{palette.transparent.blue.inverse-95}",
-              "virtuozzo": "{palette.transparent.blue.inverse-95}",
-              "yellow-1c": "{palette.transparent.blue.inverse-95}"
+              "deep_sky_itkontoret": "{palette.transparent.blue.inverse.95}",
+              "default": "{palette.transparent.blue.inverse.95}",
+              "light-gray": "{palette.transparent.blue.inverse.95}",
+              "telstra": "{palette.transparent.blue.inverse.95}",
+              "virtuozzo": "{palette.transparent.blue.inverse.95}",
+              "yellow-1c": "{palette.transparent.blue.inverse.95}"
             }
           }
         },
@@ -53,12 +53,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.dark.fixed-90}",
-            "default": "{palette.transparent.dark.fixed-90}",
-            "light-gray": "{palette.transparent.dark.fixed-90}",
-            "telstra": "{palette.transparent.dark.fixed-90}",
-            "virtuozzo": "{palette.transparent.dark.fixed-90}",
-            "yellow-1c": "{palette.transparent.dark.fixed-90}"
+            "deep_sky_itkontoret": "{palette.transparent.dark.fixed.90}",
+            "default": "{palette.transparent.dark.fixed.90}",
+            "light-gray": "{palette.transparent.dark.fixed.90}",
+            "telstra": "{palette.transparent.dark.fixed.90}",
+            "virtuozzo": "{palette.transparent.dark.fixed.90}",
+            "yellow-1c": "{palette.transparent.dark.fixed.90}"
           }
         }
       },
@@ -192,12 +192,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.dark.inverse-100}",
-            "default": "{palette.transparent.dark.inverse-100}",
-            "light-gray": "{palette.transparent.dark.inverse-100}",
-            "telstra": "{palette.transparent.dark.inverse-100}",
-            "virtuozzo": "{palette.transparent.dark.inverse-100}",
-            "yellow-1c": "{palette.transparent.dark.inverse-100}"
+            "deep_sky_itkontoret": "{palette.transparent.dark.inverse.100}",
+            "default": "{palette.transparent.dark.inverse.100}",
+            "light-gray": "{palette.transparent.dark.inverse.100}",
+            "telstra": "{palette.transparent.dark.inverse.100}",
+            "virtuozzo": "{palette.transparent.dark.inverse.100}",
+            "yellow-1c": "{palette.transparent.dark.inverse.100}"
           }
         }
       },
@@ -907,12 +907,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-10}",
-            "default": "{palette.transparent.white.fixed-10}",
-            "light-gray": "{palette.transparent.white.fixed-10}",
-            "telstra": "{palette.transparent.white.fixed-10}",
-            "virtuozzo": "{palette.transparent.white.fixed-10}",
-            "yellow-1c": "{palette.transparent.white.fixed-10}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.10}",
+            "default": "{palette.transparent.white.fixed.10}",
+            "light-gray": "{palette.transparent.white.fixed.10}",
+            "telstra": "{palette.transparent.white.fixed.10}",
+            "virtuozzo": "{palette.transparent.white.fixed.10}",
+            "yellow-1c": "{palette.transparent.white.fixed.10}"
           }
         },
         "border-active": {
@@ -937,12 +937,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-10}",
-            "default": "{palette.transparent.white.fixed-10}",
-            "light-gray": "{palette.transparent.white.fixed-10}",
-            "telstra": "{palette.transparent.white.fixed-10}",
-            "virtuozzo": "{palette.transparent.white.fixed-10}",
-            "yellow-1c": "{palette.transparent.white.fixed-10}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.10}",
+            "default": "{palette.transparent.white.fixed.10}",
+            "light-gray": "{palette.transparent.white.fixed.10}",
+            "telstra": "{palette.transparent.white.fixed.10}",
+            "virtuozzo": "{palette.transparent.white.fixed.10}",
+            "yellow-1c": "{palette.transparent.white.fixed.10}"
           }
         }
       },
@@ -1323,12 +1323,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -1340,12 +1340,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-10}",
-            "default": "{palette.transparent.white.fixed-10}",
-            "light-gray": "{palette.transparent.white.fixed-10}",
-            "telstra": "{palette.transparent.white.fixed-10}",
-            "virtuozzo": "{palette.transparent.white.fixed-10}",
-            "yellow-1c": "{palette.transparent.white.fixed-10}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.10}",
+            "default": "{palette.transparent.white.fixed.10}",
+            "light-gray": "{palette.transparent.white.fixed.10}",
+            "telstra": "{palette.transparent.white.fixed.10}",
+            "virtuozzo": "{palette.transparent.white.fixed.10}",
+            "yellow-1c": "{palette.transparent.white.fixed.10}"
           }
         },
         "primary": {
@@ -1355,12 +1355,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "secondary": {
@@ -1370,12 +1370,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
-            "default": "{palette.transparent.white.fixed-60}",
-            "light-gray": "{palette.transparent.white.fixed-60}",
-            "telstra": "{palette.transparent.white.fixed-60}",
-            "virtuozzo": "{palette.transparent.white.fixed-60}",
-            "yellow-1c": "{palette.transparent.white.fixed-60}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.60}",
+            "default": "{palette.transparent.white.fixed.60}",
+            "light-gray": "{palette.transparent.white.fixed.60}",
+            "telstra": "{palette.transparent.white.fixed.60}",
+            "virtuozzo": "{palette.transparent.white.fixed.60}",
+            "yellow-1c": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -1387,12 +1387,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -1541,12 +1541,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -1697,12 +1697,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.dark.inverse-100}",
-            "default": "{palette.transparent.dark.inverse-100}",
-            "light-gray": "{palette.transparent.dark.inverse-100}",
-            "telstra": "{palette.transparent.dark.inverse-100}",
-            "virtuozzo": "{palette.transparent.dark.inverse-100}",
-            "yellow-1c": "{palette.transparent.dark.inverse-100}"
+            "deep_sky_itkontoret": "{palette.transparent.dark.inverse.100}",
+            "default": "{palette.transparent.dark.inverse.100}",
+            "light-gray": "{palette.transparent.dark.inverse.100}",
+            "telstra": "{palette.transparent.dark.inverse.100}",
+            "virtuozzo": "{palette.transparent.dark.inverse.100}",
+            "yellow-1c": "{palette.transparent.dark.inverse.100}"
           }
         },
         "screenLink-active": {
@@ -1757,12 +1757,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "screenSecondary": {
@@ -1772,12 +1772,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
-            "default": "{palette.transparent.white.fixed-60}",
-            "light-gray": "{palette.transparent.white.fixed-60}",
-            "telstra": "{palette.transparent.white.fixed-60}",
-            "virtuozzo": "{palette.transparent.white.fixed-60}",
-            "yellow-1c": "{palette.transparent.white.fixed-60}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.60}",
+            "default": "{palette.transparent.white.fixed.60}",
+            "light-gray": "{palette.transparent.white.fixed.60}",
+            "telstra": "{palette.transparent.white.fixed.60}",
+            "virtuozzo": "{palette.transparent.white.fixed.60}",
+            "yellow-1c": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -1789,12 +1789,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-30}",
-            "default": "{palette.transparent.white.fixed-30}",
-            "light-gray": "{palette.transparent.white.fixed-30}",
-            "telstra": "{palette.transparent.white.fixed-30}",
-            "virtuozzo": "{palette.transparent.white.fixed-30}",
-            "yellow-1c": "{palette.transparent.white.fixed-30}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.30}",
+            "default": "{palette.transparent.white.fixed.30}",
+            "light-gray": "{palette.transparent.white.fixed.30}",
+            "telstra": "{palette.transparent.white.fixed.30}",
+            "virtuozzo": "{palette.transparent.white.fixed.30}",
+            "yellow-1c": "{palette.transparent.white.fixed.30}"
           }
         },
         "link-disabled": {
@@ -1804,12 +1804,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-30}",
-            "default": "{palette.transparent.white.fixed-30}",
-            "light-gray": "{palette.transparent.white.fixed-30}",
-            "telstra": "{palette.transparent.white.fixed-30}",
-            "virtuozzo": "{palette.transparent.white.fixed-30}",
-            "yellow-1c": "{palette.transparent.white.fixed-30}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.30}",
+            "default": "{palette.transparent.white.fixed.30}",
+            "light-gray": "{palette.transparent.white.fixed.30}",
+            "telstra": "{palette.transparent.white.fixed.30}",
+            "virtuozzo": "{palette.transparent.white.fixed.30}",
+            "yellow-1c": "{palette.transparent.white.fixed.30}"
           }
         },
         "link-hover": {
@@ -1864,12 +1864,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "secondary": {
@@ -1879,12 +1879,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
-            "default": "{palette.transparent.white.fixed-60}",
-            "light-gray": "{palette.transparent.white.fixed-60}",
-            "telstra": "{palette.transparent.white.fixed-60}",
-            "virtuozzo": "{palette.transparent.white.fixed-60}",
-            "yellow-1c": "{palette.transparent.white.fixed-60}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.60}",
+            "default": "{palette.transparent.white.fixed.60}",
+            "light-gray": "{palette.transparent.white.fixed.60}",
+            "telstra": "{palette.transparent.white.fixed.60}",
+            "virtuozzo": "{palette.transparent.white.fixed.60}",
+            "yellow-1c": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -1896,12 +1896,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.inverse-100}",
-            "default": "{palette.transparent.white.inverse-100}",
-            "light-gray": "{palette.transparent.white.inverse-100}",
-            "telstra": "{palette.transparent.white.inverse-100}",
-            "virtuozzo": "{palette.transparent.white.inverse-100}",
-            "yellow-1c": "{palette.transparent.white.inverse-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.inverse.100}",
+            "default": "{palette.transparent.white.inverse.100}",
+            "light-gray": "{palette.transparent.white.inverse.100}",
+            "telstra": "{palette.transparent.white.inverse.100}",
+            "virtuozzo": "{palette.transparent.white.inverse.100}",
+            "yellow-1c": "{palette.transparent.white.inverse.100}"
           }
         },
         "secondary": {
@@ -1911,12 +1911,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
-            "default": "{palette.transparent.white.fixed-60}",
-            "light-gray": "{palette.transparent.white.fixed-60}",
-            "telstra": "{palette.transparent.white.fixed-60}",
-            "virtuozzo": "{palette.transparent.white.fixed-60}",
-            "yellow-1c": "{palette.transparent.white.fixed-60}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.60}",
+            "default": "{palette.transparent.white.fixed.60}",
+            "light-gray": "{palette.transparent.white.fixed.60}",
+            "telstra": "{palette.transparent.white.fixed.60}",
+            "virtuozzo": "{palette.transparent.white.fixed.60}",
+            "yellow-1c": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -2125,12 +2125,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "critical": {
@@ -2140,12 +2140,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "danger": {
@@ -2155,12 +2155,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "info": {
@@ -2170,12 +2170,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "link": {
@@ -2200,12 +2200,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "primary": {
@@ -2245,12 +2245,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "warning": {
@@ -2260,12 +2260,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         }
       },
