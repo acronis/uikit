@@ -1,5 +1,180 @@
 # @acronis-platform/ui-react
 
+## 2.0.0
+
+### Major Changes
+
+- [#655](https://github.com/acronis/uikit/pull/655) [`41f4f2e`](https://github.com/acronis/uikit/commit/41f4f2effcfd6680f2d8ac9d2a5b455d82bb3090) Thanks [@madjorr](https://github.com/madjorr)! - `DataTable`: the trailing sticky action column (column-visibility cog in the header, per-row overflow ellipsis) is now built in rather than something every consumer had to assemble by hand as an extra `ColumnDef` plus `DataTableViewOptions`/`DropdownMenu` wiring.
+  - Shown by default. Set `hideActionColumn` to omit it entirely.
+  - `renderRowActions={(row) => <DropdownMenuGroup>…</DropdownMenuGroup>}` supplies the ellipsis menu's content — the trigger, `DropdownMenu` wrapper, and bulk-selection suppression (`isBulkSelectionActive`) are `DataTable`'s own. Omit it to render the row without a trigger; the 48px column is still reserved.
+  - `rowActionsLabel` / `columnSettingsLabel` localize the two triggers' accessible names.
+  - A no-op when an external `table` is passed — build the column into that instance's own `columns` instead, as before.
+  - The pinned action cell now mirrors the row's hover tint instead of staying visually idle, and hovering the cell's own trigger no longer bleeds a hover tint onto the rest of the row.
+
+  **Breaking**: a consumer that already built its own trailing `settings`/`id` column with `DataTableViewOptions` (iconOnly) in the header now gets two cog triggers. Drop the hand-rolled column and either rely on the new default, or pass `hideActionColumn` to opt out.
+
+- [#655](https://github.com/acronis/uikit/pull/655) [`41f4f2e`](https://github.com/acronis/uikit/commit/41f4f2effcfd6680f2d8ac9d2a5b455d82bb3090) Thanks [@madjorr](https://github.com/madjorr)! - Move column visibility out of the DataTable toolbar and onto the settings-column
+  cog, per the Figma design.
+  - **Breaking:** `DataTableToolbar` no longer renders `DataTableViewOptions`.
+    With the `Table` primitives, compose the menu into your own trailing
+    settings column instead — put `<TableViewOptions iconOnly />` inside a
+    `TableSettingsCell`. `DataTable` consumers don't need to do this by hand:
+    its built-in trailing action column (see the built-in-action-column
+    changeset) already renders `DataTableViewOptions iconOnly` for you. A
+    consumer using an _external_ `table` with `DataTableToolbar` and no
+    built-in action column (it's suppressed for external tables) loses the
+    column-visibility control entirely unless they add `<DataTableViewOptions
+table={table} iconOnly />` next to the toolbar themselves.
+  - `TableViewOptions`/`DataTableViewOptions` gain `iconOnly` (cog-only trigger
+    sized for the 48px settings cell) and `triggerAriaLabel` (default
+    `'Column settings'`); `DataTableViewOptions` also forwards `triggerLabel`.
+    The default labelled "View" trigger is unchanged.
+  - `TableViewOptions` menu rows now render a real `Checkbox` box beside the
+    column name instead of a trailing checkmark shown only when checked. The
+    accessible contract is unchanged: each row is a `menuitemcheckbox` with
+    `aria-checked`.
+
+### Minor Changes
+
+- [#655](https://github.com/acronis/uikit/pull/655) [`41f4f2e`](https://github.com/acronis/uikit/commit/41f4f2effcfd6680f2d8ac9d2a5b455d82bb3090) Thanks [@madjorr](https://github.com/madjorr)! - `DataTableBulkActionsBar`: new selection-aware bulk-actions bar for `DataTable` — a thin TanStack adapter that renders the selected-row count (`table.getSelectedRowModel()`), a Deselect control wired to `table.resetRowSelection()`, and the consumer's bulk actions as `children`.
+
+  It is a separate part rather than an extension of `DataTableToolbar`, and it is **always mounted** rather than swapped in for the toolbar — see `isBulkSelectionActive` below for its two-state behavior. Drive it off its own minimal `useReactTable` instance (just the columns needed for selection) and share state with the grid via `DataTable`'s new `rowSelection` / `onRowSelectionChange` props, so both read one lifted selection state without requiring a single shared `table` instance. Both labels are localizable (`selectedLabel`, `clearLabel`).
+
+  The approved composition is captured in the `data-table-bulk-actions` usage pattern (now `ready`), and demonstrated by the `CoreCapabilities` / `CoreCapabilitiesWithPagination` stories under `UI/DataTable`.
+
+- [#655](https://github.com/acronis/uikit/pull/655) [`41f4f2e`](https://github.com/acronis/uikit/commit/41f4f2effcfd6680f2d8ac9d2a5b455d82bb3090) Thanks [@madjorr](https://github.com/madjorr)! - `DataTableBulkActionsBar` / `TableActionsCell`: move the row-actions ↔ bulk-actions switch point into the components.
+
+  The threshold is now a single shipped predicate, `isBulkSelectionActive(table)` — **one or more rows selected**, including exactly one. It was previously left to each consumer to re-derive.
+  - `DataTableBulkActionsBar` is **always mounted** — it doesn't appear and disappear with the selection. It switches between two states on the predicate: with nothing selected its actions are disabled (a native `<fieldset disabled>`) and the trailing side shows the new `loadedLabel` (e.g. `"25 of 1250 items loaded"`); from the first selected row on, the actions enable and the trailing side shows the selection summary plus **Deselect**.
+  - `TableActionsCell` takes a `bulkSelectionActive` prop: it keeps its 48px column (no grid reflow) but renders no children and no hover/press tint. Consumers no longer swap in a blank `TableCell` themselves.
+
+  The 32px checkbox column (`TableSelectCell`) is untouched.
+
+  `DataTable` also gains controlled `rowSelection` / `onRowSelectionChange` props (uncontrolled internal state when omitted), the mechanism for lifting selection out to a separately-mounted `DataTableBulkActionsBar`'s own `useReactTable` instance.
+
+- [#655](https://github.com/acronis/uikit/pull/655) [`41f4f2e`](https://github.com/acronis/uikit/commit/41f4f2effcfd6680f2d8ac9d2a5b455d82bb3090) Thanks [@madjorr](https://github.com/madjorr)! - `DataTable`: built-in column drag-to-reorder (`enableColumnReordering`), promoted from a story-only recipe.
+
+  Every non-pinned header cell becomes draggable; dropping it on another header moves that column into the target's position (native HTML5 drag-and-drop over TanStack's `columnOrder` — no new dependency). Pinned columns are excluded, since they're anchored to a table edge by definition, and the resize handle is explicitly non-draggable so both features can be enabled together. The order can be left internal or controlled via `columnOrder` + `onColumnOrderChange` (e.g. to persist the user's order); both are no-ops with an external `table` instance, like `enableColumnResizing`. The reorder helper `reorderColumn(order, from, to)` is exported for callers driving their own order state.
+
+  The grab/grabbing cursors come from new `--ui-draggable-cursor` / `--ui-draggable-cursor-active` custom properties, mirroring how the resize handle uses the generated `--ui-resizable-cursor`. They're hand-authored in `src/styles/index.css` (like `--ui-breakpoint-*`) because the design system has no Figma variable for a grab cursor yet — no component hardcodes `cursor-grab`.
+
+  Resizing a column also sets a `data-ui-column-resizing` attribute on `<html>` for the duration of the drag; a new global rule (`html[data-ui-column-resizing] * { cursor: var(--ui-resizable-cursor) !important; }`) keeps the resize cursor stable over every element the pointer crosses, instead of flickering back to a neighboring header's own `cursor-pointer`.
+
+  The gesture is pointer-only; there is no keyboard equivalent yet (the resize handle's Arrow-key path has no analogue here).
+
+- [#655](https://github.com/acronis/uikit/pull/655) [`41f4f2e`](https://github.com/acronis/uikit/commit/41f4f2effcfd6680f2d8ac9d2a5b455d82bb3090) Thanks [@madjorr](https://github.com/madjorr)! - `DataTable`: header cells now explain their own gestures, and the resize handle highlights while it is grabbed.
+  - Hovering (or focusing) a header cell opens a tooltip listing one line per capability that column actually has — `Sort column: Click`, `Reorder column: Drag`, `Resize column: Drag border`. A column with none of the three (e.g. a pinned, non-sortable, non-resizable select column) shows no tooltip.
+  - `headerHints` localizes the copy per capability, e.g. `headerHints={{ sort: { label: 'Spalte sortieren', action: 'Klick' } }}`.
+  - The column-resize handle now switches from the plain row-border color to `--ui-resizable-border-color-hover` on hover/focus and `--ui-resizable-border-color-active` while resizing, instead of only fading in.
+  - While a resize or a column drag is in progress, the capability tooltip is suppressed for the column being interacted with, and a header's own sort hover/press tint no longer fires — the two gestures no longer visually fight each other.
+
+- [#655](https://github.com/acronis/uikit/pull/655) [`41f4f2e`](https://github.com/acronis/uikit/commit/41f4f2effcfd6680f2d8ac9d2a5b455d82bb3090) Thanks [@madjorr](https://github.com/madjorr)! - `DataTable`: rows are now keyboard-focusable via a roving tabindex — exactly one row is a Tab stop at a time (the rest are `tabIndex={-1}` but still focusable by click), so Tab moves into and out of the row group once instead of skipping it. Arrow Up/Down move focus between rows and clamp at the first/last row. Applies to DataTable's default row-rendering path only (skeleton and empty-state rows, and rows rendered via `renderRow`, are unaffected); composes with `highlightCurrentRow`, `selected`, and pinned/sticky columns.
+
+- [#659](https://github.com/acronis/uikit/pull/659) [`2130f76`](https://github.com/acronis/uikit/commit/2130f767f7da334a89edb9a18d6216838d5735aa) Thanks [@madjorr](https://github.com/madjorr)! - Add `Stepper`: the root of a step sequence, composing `StepperItem`. It renders
+  both of the design's layouts and lets a real viewport media query pick one — a
+  start-aligned, wrapping row of steps at 1024px and above, and a two-line text summary
+  ("Step 3 of 5: …" / "Next: …") below it. No `ResizeObserver` and no measuring
+  pass: both subtrees stay in the DOM and only one is ever displayed, so exactly
+  one is announced to assistive tech. Wrapped lines pack to the top of the row
+  rather than being distributed across any leftover container height, so a second
+  line sits flush under the first. The "Next: …" line is omitted entirely when
+  no `next` step is supplied, and every string the component generates itself
+  (`stepLabel`, `ofLabel`, `nextLabel`, `separatorLabel`) is a prop so it can be
+  translated.
+
+- [#659](https://github.com/acronis/uikit/pull/659) [`e1a7d61`](https://github.com/acronis/uikit/commit/e1a7d612396e0ef755e112845bcafdb7707d8883) Thanks [@madjorr](https://github.com/madjorr)! - Add `StepperItem`: one step in a stepper — a consumer-composed `Avatar` marker
+  plus the step name, with a `variant` for the step's role in the sequence
+  (`current` / `completed` / `future`), a `state` for the interaction look (only
+  meaningful on a completed step), and Base UI `render`-prop composition so a
+  completed step can be a real `<button>` — which then carries the library's
+  standard 3px `--ui-focus-primary` focus ring. A future step is `aria-disabled`,
+  takes no pointer events, and is removed from the tab order, and on the default
+  `<div>` it gets an explicit `role="link"` so `aria-disabled` is actually
+  announced.
+
+  The Figma component set has no `--ui-stepper-item-*` token tier yet, so this
+  consumes the semantic/generic tokens whose resolved values match the design
+  variables exactly (documented in the component source and its ui-spec
+  `tokens.yaml`); re-point them once the dedicated tier ships.
+
+### Patch Changes
+
+- [#667](https://github.com/acronis/uikit/pull/667) [`ddd7025`](https://github.com/acronis/uikit/commit/ddd70256a7f9d644caf8af8851dbf65b64d8c883) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Drive `Alert` and `Toast` titles from their own component token tier.
+
+  Both titles borrowed the semantic `ui-typography-headings-lead` class because
+  their tiers emitted one only for the description. The tiers now emit a title
+  text style too, so each component reads its own — matching what the description
+  already did, and letting a brand re-style just the Alert or Toast title. The two
+  classes resolve identically today (Inter Regular 18 / 24), so nothing renders
+  differently.
+
+- [#655](https://github.com/acronis/uikit/pull/655) [`41f4f2e`](https://github.com/acronis/uikit/commit/41f4f2effcfd6680f2d8ac9d2a5b455d82bb3090) Thanks [@madjorr](https://github.com/madjorr)! - `Checkbox`: fix the checkmark/dash disappearing when a checked box is nested inside an ancestor that sets its own SVG color — e.g. `TableViewOptions`' menu rows, which now put a `Checkbox` inside a `DropdownMenuItem` whose `[&_svg]:text-…` styling was out-specifying the indicator's `text-current`. The indicator icon now forces `text-current` with `!important` so it always tracks the checkbox's own state color regardless of ancestor SVG color rules.
+
+- [#655](https://github.com/acronis/uikit/pull/655) [`41f4f2e`](https://github.com/acronis/uikit/commit/41f4f2effcfd6680f2d8ac9d2a5b455d82bb3090) Thanks [@madjorr](https://github.com/madjorr)! - `DataTable`: Storybook/VR coverage note — `data-table.stories.tsx` was consolidated from ~20 single-variant exports down to `Default`/`CoreCapabilities`/`CoreCapabilitiesWithPagination`, which together exercise sorting, resizing, reordering, selection, the bulk-actions bar, infinite loading, and row actions in composition. `data-table-recipes.stories.tsx` was deleted outright. Its `ColumnReorder` export is not lost but reshaped: reordering is now exercised through the new built-in `enableColumnReordering` prop in the consolidated stories.
+
+  Two coverage gaps result:
+  - Five still-public props currently have **no dedicated visual regression coverage**: `striped`, `bordered`, `skeleton`, `emptyLabel`, and `expandable` rows.
+  - The deleted recipes file's other patterns — `TreeMode`, `RowGroups`, `VirtualScrolling`, and `ServerDriven` — now have **no** Storybook/VR coverage in `ui-react` at all. (`WithDateRangeFilter`/`WithDateRangeFilterOpen` are unaffected: equivalent stories, with their committed baselines, still live in `table/__stories__/table-full-demo.stories.tsx`.)
+
+  A future change should add targeted stories (+ VR baselines, light/dark) for these before relying on Storybook to catch a visual regression in them.
+
+- [#655](https://github.com/acronis/uikit/pull/655) [`eddc8cc`](https://github.com/acronis/uikit/commit/eddc8cc7d837ae47156139166311e24112aef0ac) Thanks [@madjorr](https://github.com/madjorr)! - fix(data-table): stop row arrow-key navigation from hijacking arrow keys pressed inside a cell's interactive control (number spinner, textarea, native select)
+
+- [#655](https://github.com/acronis/uikit/pull/655) [`41f4f2e`](https://github.com/acronis/uikit/commit/41f4f2effcfd6680f2d8ac9d2a5b455d82bb3090) Thanks [@madjorr](https://github.com/madjorr)! - Reconcile `Table` with its Figma design and complete the Code Connect link.
+  - Header cells now theme every interaction state from
+    `--ui-table-header-cell-color-{idle,hover,active}`; a sortable `<th>` tints
+    the whole cell and owns the focus ring (in the `Table` primitives), rather
+    than an inner button doing it. Data cells pick up `--ui-table-data-cell-color-idle`
+    (previously unused); the `hover`/`active` pair of that same tier is consumed
+    by `TableActionsCell` and `DataTableExpandTrigger` — plain `TableCell` still
+    gets its hover tint from the row's `--ui-table-data-row-color-hover`.
+  - Replaced the hard-coded `h-10` row height with
+    `--ui-table-global-cell-min-height`, added the missing header
+    `--ui-table-global-cell-padding-y`, and drove the row divider from
+    `--ui-table-global-row-border-{width,style}` instead of a literal `1px`.
+  - Added three structural cells the design documents but the library lacked:
+    `TableSelectCell` (32px row-selection column, `header` prop for the
+    select-all cell), `TableActionsCell` (48px trailing row-actions column) and
+    `TableSettingsCell` (48px trailing header column for a column-settings
+    trigger).
+  - `DataTableColumnHeader`: aligned the focus ring with the kit-wide 3px
+    treatment, and made the sort toggle's accessible label localizable via a
+    new `sortLabel` prop (was a hard-coded string). The pressed state itself is
+    wired on the enclosing `<th>`/header cell, not on this button.
+  - `TableRow` now wires the keyboard focus state the design documents on the row
+    itself (a full-row 3px ring). Rows aren't focusable by default, so this only
+    paints once a consumer sets `tabIndex` on them. Header rows opt out of the
+    row-level hover tint, since it doesn't apply to `<thead>`.
+  - `DataTableExpandTrigger` lives in a data cell, so it now tints from
+    `--ui-table-data-cell-color-{hover,active}` instead of the header tier, uses
+    the kit-wide 3px focus ring, and takes `expandLabel` / `collapseLabel` so its
+    accessible name can be localized (was hard-coded).
+  - Localization: every string `TablePagination` / `DataTablePagination` rendered
+    itself is now a prop with the English text as its default —
+    `rowsPerPageLabel`, `firstPageLabel`, `previousPageLabel`, `nextPageLabel`,
+    `lastPageLabel`, plus the `pageLabel` / `summaryLabel` formatters. `DataTable`
+    gains `resizeColumnLabel` and `emptyLabel` for the same reason. Defaults
+    reproduce the previous output exactly, so this is not a visual change. A
+    custom `summaryLabel` is now also invoked when `selectedRows` is
+    `undefined` (previously skipped in that case), per its existing tsdoc.
+
+- [#668](https://github.com/acronis/uikit/pull/668) [`73fe571`](https://github.com/acronis/uikit/commit/73fe571eb6ef9ba54e4e1c261e57b6a01ee71ebd) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Theme `Timeline`'s connector and gap from the `--ui-timeline-*` tier.
+
+  The component consumed the alias targets `--ui-border-on-surface-border` and
+  `--ui-gap-16` because the Figma variables it references had no tier of their
+  own. That tier now ships, so the connector, the elbow and the marker-to-card
+  gap read `--ui-timeline-connector-color` and `--ui-timeline-gap` directly, and
+  `src/styles/index.css` imports the tier.
+
+  Figma binds `Timeline/gap` only to the horizontal marker-to-card gap and the
+  indent step derived from it; the vertical rhythm between rows and the card
+  header's spacing are unbound literals in the design and stay on `--ui-gap-16`.
+  Every value resolves the same today, so nothing renders differently — but a
+  brand override of the Timeline tokens is now honored.
+
+- Updated dependencies [[`ab6c61e`](https://github.com/acronis/uikit/commit/ab6c61e24998c58472fdab37f5ccdb06be4056bb)]:
+  - @acronis-platform/tokens-pd@2.7.0
+
 ## 1.0.0
 
 ### Major Changes
