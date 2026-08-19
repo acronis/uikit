@@ -1254,6 +1254,80 @@ describe('DataTable keyboard-focusable rows', () => {
     expect(rowsEls[2]).toHaveAttribute('tabIndex', '0');
     expect(rowsEls[0]).toHaveAttribute('tabIndex', '-1');
   });
+
+  describe('arrow keys from a control inside a cell', () => {
+    const withInput: ColumnDef<Row>[] = [
+      { accessorKey: 'email', header: 'Email' },
+      {
+        accessorKey: 'amount',
+        header: 'Amount',
+        cell: ({ row }) => (
+          <input
+            aria-label={`amount-${row.original.id}`}
+            defaultValue={row.original.amount}
+            type="number"
+          />
+        ),
+      },
+    ];
+
+    it('does not steal focus from an inner input on ArrowDown', async () => {
+      const user = userEvent.setup();
+      render(
+        <DataTable
+          columns={withInput}
+          data={data.slice(0, 3)}
+          hideActionColumn
+        />
+      );
+      const rowsEls = screen.getAllByRole('row').slice(1);
+      const input = screen.getByLabelText('amount-r2');
+      await user.click(input);
+      expect(input).toHaveFocus();
+
+      await user.keyboard('{ArrowDown}');
+      expect(input).toHaveFocus();
+      expect(rowsEls[2]).not.toHaveFocus();
+      expect(rowsEls[2]).toHaveAttribute('tabIndex', '-1');
+      // The clicked row stayed the roving row — focus never roamed.
+      expect(rowsEls[1]).toHaveAttribute('tabIndex', '0');
+    });
+
+    it('does not steal focus from an inner input on ArrowUp', async () => {
+      const user = userEvent.setup();
+      render(
+        <DataTable
+          columns={withInput}
+          data={data.slice(0, 3)}
+          hideActionColumn
+        />
+      );
+      const rowsEls = screen.getAllByRole('row').slice(1);
+      const input = screen.getByLabelText('amount-r2');
+      await user.click(input);
+
+      await user.keyboard('{ArrowUp}');
+      expect(input).toHaveFocus();
+      expect(rowsEls[0]).not.toHaveFocus();
+      expect(rowsEls[0]).toHaveAttribute('tabIndex', '-1');
+    });
+
+    it('still roams when the row itself is focused in a table with inner controls', async () => {
+      const user = userEvent.setup();
+      render(
+        <DataTable
+          columns={withInput}
+          data={data.slice(0, 3)}
+          hideActionColumn
+        />
+      );
+      const rowsEls = screen.getAllByRole('row').slice(1);
+      rowsEls[0].focus();
+
+      await user.keyboard('{ArrowDown}');
+      expect(rowsEls[1]).toHaveFocus();
+    });
+  });
 });
 
 function Harness() {

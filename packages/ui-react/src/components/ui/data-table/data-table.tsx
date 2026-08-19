@@ -746,6 +746,10 @@ export function DataTable<TData, TValue = unknown>({
     event: KeyboardEvent<HTMLTableRowElement>,
     rowIndex: number
   ) => {
+    // Keydown bubbles, so arrow keys from an interactive control inside a cell
+    // (number spinner, textarea caret, native select) would otherwise be
+    // hijacked to move row focus. Only roam when the row itself is focused.
+    if (event.target !== event.currentTarget) return;
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
     const nextIndex =
       event.key === 'ArrowDown'
