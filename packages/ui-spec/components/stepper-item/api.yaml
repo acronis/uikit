@@ -41,14 +41,6 @@ contract:
       type: ReactNode
       required: false
       description: The step name. Truncates rather than wrapping.
-    - name: connectingLine
-      type: boolean
-      required: false
-      default: 'false'
-      description: >-
-        Draw a decorative connector trailing this step so a row of steps chains
-        together. Not a Figma variant — a product requirement. Omit it on the last
-        step, or the line dangles.
     - name: render
       type: RenderProp
       required: false
@@ -84,7 +76,6 @@ adapters:
         variant="completed"
         label="Create an account"
         avatar={<Avatar color="green"><CheckIcon size={16} /></Avatar>}
-        connectingLine
         render={<button type="button" onClick={goToStep(1)} />}
       />
       <StepperItem

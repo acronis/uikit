@@ -33,10 +33,12 @@
 - **Given** no `next`
   **Then** the second line is **not rendered at all** — no empty paragraph, no
   dangling "Next:". This is how the last step in a sequence renders.
-- **Given** `stepLabel`, `ofLabel`, or `nextLabel`
-  **Then** the corresponding generated word is replaced. The component ships
+- **Given** `stepLabel`, `ofLabel`, `nextLabel`, or `separatorLabel`
+  **Then** the corresponding generated string is replaced. The component ships
   English defaults and no other copy of its own, so a localized application
-  overrides exactly these three.
+  overrides exactly these four. `separatorLabel` (default `": "`) is the
+  punctuation joining the counter to the step name — a prop rather than an inlined
+  literal because not every locale writes it that way.
 
 ## The wide row
 

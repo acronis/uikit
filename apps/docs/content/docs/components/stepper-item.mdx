@@ -4,8 +4,8 @@ description: One step in a stepper — an avatar marker plus the step name, keye
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
-import { DemoReact } from "@/components/DemoReact";
-import { StepperItemDemo } from "@/components/demos-react/stepper-item";
+import { DemoReact } from '@/components/DemoReact';
+import { StepperItemDemo } from '@/components/demos-react/stepper-item';
 
 ## Usage
 
@@ -25,10 +25,11 @@ The marker is a **required slot you own completely**. Pass any `Avatar`
 composition — color scheme, initials, an icon, an image, size overrides — and the
 step renders it verbatim without sizing, tinting, or recoloring it.
 
-There is no `Stepper` root yet: lay the steps out yourself, decide each step's
-`variant`, and set `connectingLine` on every step but the last so the row chains
-together. The step is polymorphic via Base UI's `useRender` (the `render` prop) —
-a completed step is usually a real `<button>` that jumps back.
+Compose the steps inside [`Stepper`](/components/stepper), which lays them out in
+a row and adds the compact narrow-viewport summary — don't hand-roll that row. You
+still decide each step's `variant`. The step is polymorphic via Base UI's
+`useRender` (the `render` prop) — a completed step is usually a real `<button>`
+that jumps back, and it then gets the library's standard 3px focus ring.
 
 <Callout>
   The Figma component has no `--ui-stepper-item-*` token tier yet. This v1
@@ -47,7 +48,12 @@ a completed step is usually a real `<button>` that jumps back.
 A full sequence:
 
 ```tsx
-<div className="flex items-center gap-4">
+<Stepper
+  currentStep={2}
+  totalSteps={3}
+  current="Choose a plan"
+  next="Confirm and pay"
+>
   <StepperItem
     render={<button type="button" onClick={() => goToStep(1)} />}
     variant="completed"
@@ -57,7 +63,6 @@ A full sequence:
         <CheckIcon size={16} />
       </Avatar>
     }
-    connectingLine
   />
   <StepperItem
     variant="current"
@@ -67,7 +72,6 @@ A full sequence:
         <AvatarFallback>2</AvatarFallback>
       </Avatar>
     }
-    connectingLine
   />
   <StepperItem
     variant="future"
@@ -78,7 +82,7 @@ A full sequence:
       </Avatar>
     }
   />
-</div>
+</Stepper>
 ```
 
 Force a completed step's interaction look — useful when a parent owns hover and
@@ -89,18 +93,31 @@ press detection:
   variant="completed"
   state="hover"
   label="Create an account"
-  avatar={<Avatar color="green"><CheckIcon size={16} /></Avatar>}
+  avatar={
+    <Avatar color="green">
+      <CheckIcon size={16} />
+    </Avatar>
+  }
 />
 ```
 
-A future step is marked `aria-disabled` and receives no pointer events, so it
-stays in the reading order but cannot be activated:
+A future step stays in the reading order but is not reachable: it is marked
+`aria-disabled`, takes no pointer events, and is dropped from the tab order
+(`tabindex="-1"`), so it cannot be clicked or tabbed to and activated with
+Enter/Space. On the default `<div>` it also carries `role="link"` — without a
+widget role, `aria-disabled` is not announced at all. It is not the native
+`disabled` attribute, though, so a programmatic `.click()` on a composed control
+still fires; skip future steps in your own navigation logic too.
 
 ```tsx
 <StepperItem
   variant="future"
   label="Confirm and pay"
-  avatar={<Avatar color="gray"><AvatarFallback>3</AvatarFallback></Avatar>}
+  avatar={
+    <Avatar color="gray">
+      <AvatarFallback>3</AvatarFallback>
+    </Avatar>
+  }
 />
 ```
 

@@ -4,6 +4,7 @@ import { CheckIcon } from '@acronis-platform/icons-react/stroke-mono';
 import {
   Avatar,
   AvatarFallback,
+  Stepper,
   StepperItem,
 } from '@acronis-platform/ui-react';
 
@@ -16,14 +17,18 @@ const completedAvatar = (
 export function StepperItemDemo() {
   return (
     <div className="flex flex-col gap-8">
-      {/* A real sequence: the completed step is a control, the last has no line. */}
-      <div className="flex flex-wrap items-center gap-4">
+      {/* A real sequence, laid out by `Stepper`: the completed step is a control. */}
+      <Stepper
+        currentStep={2}
+        totalSteps={3}
+        current="Choose a plan"
+        next="Confirm and pay"
+      >
         <StepperItem
           render={<button type="button" />}
           variant="completed"
           label="Create an account"
           avatar={completedAvatar}
-          connectingLine
         />
         <StepperItem
           variant="current"
@@ -33,7 +38,6 @@ export function StepperItemDemo() {
               <AvatarFallback>2</AvatarFallback>
             </Avatar>
           }
-          connectingLine
         />
         <StepperItem
           variant="future"
@@ -44,7 +48,7 @@ export function StepperItemDemo() {
             </Avatar>
           }
         />
-      </div>
+      </Stepper>
 
       {/* The five combinations the Figma component set actually draws. */}
       <div className="flex flex-wrap items-center gap-4">

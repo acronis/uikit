@@ -49,15 +49,12 @@ import { cn } from '@/lib/utils';
 // `completed/label/color/{idle,hover,active}` variables, but all three carry the
 // identical `#18191b`, so the single semantic token covers them faithfully.
 //
-// `connectingLine` is *not* a Figma variant on this node — the component set has
-// only the five combos above. It is a net-new product requirement, so it follows
-// Timeline's precedent: a logical-CSS 1px border (never a baked SVG, which cannot
-// mirror under `dir="rtl"`) themed with `--ui-border-on-surface-border`, which is
-// Timeline's own documented substitute for its equally un-shipped
-// `components/Timeline/connectorColor`. Same situation, same substitute, so one
-// connector still looks like one thing across the kit.
+// `focus-visible` lives on the base class rather than a variant: the default
+// `<div>` is never focusable, so the ring only ever appears on a step composed
+// as a real control via `render` — the same 3px `--ui-focus-primary` ring
+// `CardFilter` and `BreadcrumbLink` use.
 const stepperItemVariants = cva(
-  'relative inline-flex items-center gap-[var(--ui-gap-8)] rounded-lg px-[var(--ui-gap-16)] py-[var(--ui-gap-8)] text-sm leading-6',
+  'inline-flex items-center gap-[var(--ui-gap-8)] rounded-lg px-[var(--ui-gap-16)] py-[var(--ui-gap-8)] text-sm leading-6 outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
   {
     variants: {
       variant: {
@@ -126,12 +123,6 @@ export interface StepperItemProps
   /** The step name. */
   label?: React.ReactNode;
   /**
-   * Draw a connector trailing this step, so a row of steps visually chains
-   * together. Not a Figma variant — a product requirement, rendered as a 1px
-   * logical border matching Timeline's connector treatment.
-   */
-  connectingLine?: boolean;
-  /**
    * Replace the rendered `<div>` with another element or component (Base UI
    * composition) — e.g. a `<button>`, since a completed step is usually a way
    * back to an earlier step.
@@ -147,7 +138,6 @@ const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(
       state = 'idle',
       avatar,
       label,
-      connectingLine = false,
       render,
       children,
       ...props
@@ -161,9 +151,24 @@ const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(
       'data-slot': 'stepper-item',
       'data-variant': variant,
       'data-state': state,
-      // Meaningful when the consumer renders this as a real control; inert
-      // (but still honest to assistive tech) on the default `<div>`.
-      ...(variant === 'future' ? { 'aria-disabled': true } : {}),
+      ...(variant === 'future'
+        ? {
+            'aria-disabled': true,
+            // `pointer-events-none` only stops the mouse. Without this, a step
+            // composed as a real control (`render={<button />}`) would still be
+            // reachable by Tab and activatable by Enter/Space, which contradicts
+            // what `aria-disabled` promises. A consumer prop still wins — `props`
+            // is merged after these.
+            tabIndex: -1,
+            // ARIA 1.2: `aria-disabled` on an element with no widget role is not
+            // announced, and the default rendering here is a plain `<div>`. Give
+            // it an explicit role so "unavailable" actually reaches assistive
+            // tech — the same fix `BreadcrumbPage` applies to the current-page
+            // `<span>`. Skipped when the consumer composes a real element via
+            // `render`, which brings its own (correct) role.
+            ...(render ? {} : { role: 'link' }),
+          }
+        : {}),
     };
 
     return useRender({
@@ -181,13 +186,6 @@ const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(
                 <span className="min-w-0 truncate">{label}</span>
               )}
               {children}
-              {connectingLine && (
-                <span
-                  data-slot="stepper-item-connecting-line"
-                  aria-hidden
-                  className="absolute top-1/2 start-full w-[var(--ui-gap-16)] border-t border-[var(--ui-border-on-surface-border)]"
-                />
-              )}
             </>
           ),
         },

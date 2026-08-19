@@ -10,7 +10,7 @@
 - **Given** no `label`
   **Then** only the marker renders; the container keeps its padding.
 - **Given** `children`
-  **Then** they render after the label, before the connecting line.
+  **Then** they render last, after the label.
 
 ## Variant drives the step's role
 
@@ -23,8 +23,10 @@
   according to `state`.
 - **Given** `variant="future"`
   **Then** the name uses the disabled surface text, the container has no fill, the
-  element is marked `aria-disabled`, and it receives no pointer events — again
-  regardless of `state`.
+  element is marked `aria-disabled`, it is removed from the tab order
+  (`tabindex="-1"`), and it receives no pointer events — again regardless of
+  `state`. On the default `<div>` it also carries `role="link"`, without which
+  `aria-disabled` would not be announced at all (see `accessibility.md`).
 
 ## State is only observable on a completed step
 
@@ -39,30 +41,33 @@
   **Then** nothing changes. `state` is not silently dropped from the contract: it
   still appears as a data attribute, so a consumer can key off it.
 
-## Connecting line
+## RTL
 
-- **Given** `connectingLine`
-  **Then** a decorative 1px line is drawn trailing the container's inline-end
-  edge, spanning the gap to the next step.
-- **Given** `connectingLine` on the last step in a row
-  **Then** the line dangles — omit it there; the component cannot see its siblings.
 - **Given** `dir="rtl"`
-  **Then** the line mirrors to the other edge, because it is positioned with
-  logical properties rather than a baked asset.
+  **Then** the whole step mirrors: the marker/label order, the container padding,
+  and the gap are all logical, with no physical directional utility to correct.
 
 ## Composition
 
 - **Given** a `render` prop
   **Then** the rendered element is replaced (e.g. by a `<button>`) and the step's
   props, classes, and data attributes merge onto it.
+- **Given** a `render` of a focusable control
+  **Then** focusing it by keyboard shows the library's 3px `--ui-focus-primary`
+  ring. The default `<div>` never focuses, so the ring never appears on it.
 - **Given** `variant="future"` **and** a `render` of a real control
-  **Then** the control still renders, but it is `aria-disabled` and inert to
-  pointer input — the application should also skip it in its own navigation.
+  **Then** the control still renders, but it is `aria-disabled`, inert to pointer
+  input, and removed from the tab order — so it cannot be tabbed to or activated
+  from the keyboard. It is **not** the native `disabled` attribute, so a
+  programmatic `.focus()` + `.click()` still works; the application should also
+  skip the step in its own navigation.
 
 ## Not owned here
 
+- The row layout and the narrow-viewport summary — that is `Stepper`, which these
+  steps are meant to be composed inside.
 - The step sequence, its order, numbering, and which step is current — the
   application decides and passes `variant` per step.
 - The marker's content and appearance — the caller composes the avatar.
-- Hover and press detection: `state` is declarative, so the consumer (or a future
-  `Stepper` root) decides when a step looks hovered or pressed.
+- Hover and press detection: `state` is declarative, so the consumer decides when
+  a step looks hovered or pressed (`Stepper` does not — it owns no step state).

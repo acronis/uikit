@@ -39,8 +39,10 @@ tokens:
   - name: --ui-gap-8
     affects: items-row
     description: >-
-      Gap between `StepperItem` children in the wide row (Figma used the generic
-      `gap/gap-8` here, not a Stepper-owned token).
+      Gap between `StepperItem` children in the wide row, both between columns and
+      between wrapped lines (Figma used the generic `gap/gap-8` here, not a
+      Stepper-owned token). It is the only spacing the row owns — a step's own
+      padding comes from `StepperItem`'s tokens.
   - name: --ui-text-on-surface-secondary
     affects: current-line
     description: >-

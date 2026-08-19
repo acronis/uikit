@@ -67,9 +67,10 @@ the summary props — the component cannot derive one from the other.
 On the **last** step, omit `next` — the whole "Next: …" line is then left out
 rather than rendered empty.
 
-The three generated words (`stepLabel` = "Step", `ofLabel` = "of",
-`nextLabel` = "Next:") are props so they can be translated; everything else the
-component renders is yours.
+Every string the component generates itself is a prop so it can be translated —
+`stepLabel` ("Step"), `ofLabel` ("of"), `nextLabel` ("Next:"), and
+`separatorLabel` (": ", the punctuation before the step's name). Everything else
+it renders is yours.
 
 ## Parts
 

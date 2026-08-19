@@ -41,11 +41,6 @@ interface RenderHint {
    *  exists under one variant (e.g. Timeline's disclosure control is `tree`-only,
    *  so the hover / focus-visible stories have nothing to paint in `default`). */
   baseProps?: string;
-  /** Object-literal body emitted as `meta.args`. Needed when the component has a
-   *  *required* prop: `StoryObj<typeof meta>` then demands `args` on every
-   *  `render`-only story, which none of the generated ones supply. The stories
-   *  all use `render`, so this only satisfies the type — it changes no snapshot. */
-  metaArgs?: string;
   /** Root component/import to render when it differs from `index.component`
    *  (e.g. Resizable's root export is `ResizablePanelGroup`). */
   root?: string;
@@ -776,8 +771,7 @@ const RENDER: Record<string, RenderHint> = {
     props:
       'label="Step name" avatar={<Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar>}',
     // `avatar` is required, so the meta has to carry it for the type to check.
-    metaArgs:
-      '{ avatar: <Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar> }',
+    metaArgs: 'avatar: <Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar>',
   },
   stepper: {
     // Three required content props feed the compact summary, and the wide row is
@@ -799,7 +793,7 @@ const RENDER: Record<string, RenderHint> = {
     ].join('\n'),
     // `currentStep`/`totalSteps`/`current` are required, so the meta has to carry
     // them for `StoryObj<typeof meta>` to type-check on the render-only stories.
-    metaArgs: "{ currentStep: 2, totalSteps: 3, current: 'Choose a plan' }",
+    metaArgs: "currentStep: 2, totalSteps: 3, current: 'Choose a plan'",
   },
   'dialog-welcome': {
     // A portaled, focus-trapping modal, like `Dialog` — an auto "All variants"

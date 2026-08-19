@@ -53,6 +53,14 @@ contract:
       description: >-
         The label introducing the next step's name. Translatable — see
         `stepLabel`.
+    - name: separatorLabel
+      type: string
+      required: false
+      default: ': '
+      description: >-
+        The punctuation joining the step counter to the current step's name.
+        Translatable — see `stepLabel`; not every locale writes it as `": "`
+        (French spaces before the colon, CJK uses a full-width one).
 
   events: []
 

@@ -4,7 +4,7 @@ One step in a stepper: a consumer-composed avatar marker followed by the step
 name. `variant` says where the step sits in the sequence (`current`,
 `completed`, `future`) and drives the container fill and the label color;
 `state` is the interaction look, and it only changes anything on a completed
-step. An optional trailing connecting line chains a row of steps together.
+step. Compose the steps inside `Stepper`, which lays them out.
 
 ## When to use
 
@@ -16,13 +16,19 @@ step. An optional trailing connecting line chains a row of steps together.
 
 - To show progress as a single quantity — use `Progress` or `ProgressCircle`.
 - For a chronological log of things that already happened — use `Timeline`.
-- As the whole stepper: there is no `Stepper` root yet. The application lays the
-  steps out in a row, decides each step's `variant`, and owns the navigation.
+- As the whole stepper — that is `Stepper`, which lays the steps out in a row and
+  adds the compact, narrow-viewport summary. Don't hand-roll that row. The
+  application still decides each step's `variant` and owns the navigation.
 
 ## Usage
 
 ```tsx
-<div className="flex items-center gap-4">
+<Stepper
+  currentStep={2}
+  totalSteps={3}
+  current="Choose a plan"
+  next="Confirm and pay"
+>
   <StepperItem
     variant="completed"
     label="Create an account"
@@ -31,7 +37,6 @@ step. An optional trailing connecting line chains a row of steps together.
         <CheckIcon size={16} />
       </Avatar>
     }
-    connectingLine
     render={<button type="button" onClick={() => goToStep(1)} />}
   />
   <StepperItem
@@ -42,7 +47,6 @@ step. An optional trailing connecting line chains a row of steps together.
         <AvatarFallback>2</AvatarFallback>
       </Avatar>
     }
-    connectingLine
   />
   <StepperItem
     variant="future"
@@ -53,7 +57,7 @@ step. An optional trailing connecting line chains a row of steps together.
       </Avatar>
     }
   />
-</div>
+</Stepper>
 ```
 
 The marker is entirely yours: color scheme, initials vs. icon vs. image, size
@@ -65,12 +69,11 @@ disabled, and only `completed` reads `state`.
 
 ## Parts
 
-| Part              | Element | Notes                                                                   |
-| ----------------- | ------- | ----------------------------------------------------------------------- |
-| container (root)  | `div`   | Polymorphic via `render`; carries the fill and the `aria-disabled` flag |
-| `avatar-slot`     | —       | Required; the caller's `Avatar`, rendered verbatim                      |
-| `label`           | `span`  | The step name; truncates                                                |
-| `connecting-line` | `span`  | Decorative, opt-in via `connectingLine`; mirrors under RTL              |
+| Part             | Element | Notes                                                                                                             |
+| ---------------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
+| container (root) | `div`   | Polymorphic via `render`; carries the fill, the focus ring, and a future step's `aria-disabled` / `tabindex="-1"` |
+| `avatar-slot`    | —       | Required; the caller's `Avatar`, rendered verbatim                                                                |
+| `label`          | `span`  | The step name; truncates                                                                                          |
 
 ## Design status
 

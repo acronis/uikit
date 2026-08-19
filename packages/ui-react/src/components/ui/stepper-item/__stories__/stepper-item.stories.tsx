@@ -54,16 +54,6 @@ const meta = {
       description: 'The step name.',
       table: { type: { summary: 'ReactNode' }, category: 'Content' },
     },
-    connectingLine: {
-      control: 'boolean',
-      description:
-        'Draw a connector trailing this step so a row of steps chains together. Not a Figma variant — a product requirement.',
-      table: {
-        type: { summary: 'boolean' },
-        defaultValue: { summary: 'false' },
-        category: 'Appearance',
-      },
-    },
     children: {
       control: false,
       description: 'Extra trailing content, rendered after the label.',
@@ -140,31 +130,6 @@ export const FutureDisabled: Story = {
     label: 'Confirm and pay',
     avatar: numberAvatar(3, 'gray'),
   },
-};
-
-/** A real sequence: connectors chain the steps, the last one has none. */
-export const WithConnectingLine: Story = {
-  render: () => (
-    <div className="flex items-center gap-[var(--ui-gap-16)]">
-      <StepperItem
-        variant="completed"
-        label="Create an account"
-        avatar={checkAvatar}
-        connectingLine
-      />
-      <StepperItem
-        variant="current"
-        label="Choose a plan"
-        avatar={numberAvatar(2)}
-        connectingLine
-      />
-      <StepperItem
-        variant="future"
-        label="Confirm and pay"
-        avatar={numberAvatar(3, 'gray')}
-      />
-    </div>
-  ),
 };
 
 /** A completed step is a way back — compose it as a real `<button>`. */

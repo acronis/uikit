@@ -99,14 +99,39 @@ describe('Stepper', () => {
         stepLabel="Étape"
         ofLabel="sur"
         nextLabel="Suivante :"
+        separatorLabel=" : "
       />
     );
 
     expect(summaryLine(container, 'current')).toHaveTextContent(
-      'Étape 3 sur 5: name of the current step'
+      'Étape 3 sur 5 : name of the current step'
     );
     expect(summaryLine(container, 'next')).toHaveTextContent(
       'Suivante : name of the next step'
+    );
+  });
+
+  it('lets the counter/name separator be overridden on its own', () => {
+    const { container: byDefault } = render(<Stepper {...base} />);
+    expect(
+      summaryLine(byDefault, 'current')!.firstElementChild
+    ).toHaveTextContent(/5:$/);
+
+    const { container: overridden } = render(
+      <Stepper {...base} separatorLabel=" — " />
+    );
+    expect(summaryLine(overridden, 'current')).toHaveTextContent(
+      'Step 3 of 5 — name of the current step'
+    );
+  });
+
+  it('lays the item row out as a wrapping, top-packed row with the design gap', () => {
+    const { container } = render(<Stepper {...base}>{items}</Stepper>);
+    expect(container.querySelector('[data-slot="stepper-items"]')).toHaveClass(
+      'gap-[var(--ui-gap-8)]',
+      'flex-wrap',
+      'content-start',
+      'items-start'
     );
   });
 

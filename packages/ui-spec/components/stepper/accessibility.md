@@ -16,8 +16,8 @@
   `StepperItem` children — which are polymorphic via their own `render` prop.
 - **No tab stops of its own.** The root and both layouts are non-interactive.
   Focusability comes only from whatever a `StepperItem` child is rendered as.
-- **Ships three English strings** — `stepLabel`, `ofLabel`, `nextLabel` — and
-  nothing else. They are props, so a localized application replaces them; the
+- **Ships four English strings** — `stepLabel`, `ofLabel`, `nextLabel`,
+  `separatorLabel` — and nothing else. They are props, so a localized application replaces them; the
   step names themselves are always consumer-supplied.
 - **RTL**: the summary is a plain block flow and the row uses logical flex
   layout with a gap, so both mirror under `dir="rtl"` with no extra work and no

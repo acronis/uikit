@@ -29,9 +29,10 @@ the row, and `currentStep` / `totalSteps` / `current` / `next` for the summary.
 On the last step, omit `next` and the whole `Next: …` line is left out rather
 than rendered empty.
 
-The three words the component generates itself — `stepLabel` (`"Step"`),
-`ofLabel` (`"of"`), `nextLabel` (`"Next:"`) — are props so they can be
-translated. Everything else it renders is yours.
+Every string the component generates itself — `stepLabel` (`"Step"`), `ofLabel`
+(`"of"`), `nextLabel` (`"Next:"`), and `separatorLabel` (`": "`, the punctuation
+before the step's name) — is a prop so it can be translated. Everything else it
+renders is yours.
 
 <Callout>
   Figma names the two variants `0-1024` and `>1025`. The implementation uses the
@@ -112,6 +113,7 @@ Translated summary copy:
   stepLabel="Étape"
   ofLabel="sur"
   nextLabel="Suivante :"
+  separatorLabel=" : "
 >
   {/* … */}
 </Stepper>

@@ -42,8 +42,8 @@ tokens:
   - name: --ui-gap-16
     affects: container
     description: >-
-      The container's horizontal padding, and the length of the connecting line
-      (Figma used the generic `gap/gap-16` here, not a Stepper-owned token).
+      The container's horizontal padding (Figma used the generic `gap/gap-16`
+      here, not a Stepper-owned token).
   - name: --ui-background-surface-active
     affects: container
     description: >-
@@ -66,9 +66,10 @@ tokens:
     description: >-
       Step-name color for a future step (Figma
       `semantics/colors/text/onSurface/disabled`).
-  - name: --ui-border-on-surface-border
-    affects: connecting-line
+  - name: --ui-focus-primary
+    affects: container
     description: >-
-      The connecting line. The line is not modelled in Figma at all, so this
-      reuses Timeline's documented substitute for its own un-shipped
-      `components/Timeline/connectorColor` — one connector treatment across the kit.
+      The 3px `focus-visible` ring, which only ever shows on a step composed as a
+      real control via `render`. Not a Figma variable on this node — it is the
+      library-wide focus token (`CardFilter`, `BreadcrumbLink`), so a composed
+      step focuses like every other control in the kit.

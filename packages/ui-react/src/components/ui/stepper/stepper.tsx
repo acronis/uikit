@@ -89,6 +89,13 @@ export interface StepperProps extends React.HTMLAttributes<HTMLDivElement> {
   ofLabel?: string;
   /** The label introducing the next step's name. Translatable — see `stepLabel`. */
   nextLabel?: string;
+  /**
+   * The punctuation joining the step counter to the current step's name. A prop
+   * for the same reason as `stepLabel`: the component generates it, and not every
+   * locale writes it as `": "` (French, say, spaces before the colon; CJK uses a
+   * full-width one).
+   */
+  separatorLabel?: string;
 }
 
 const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
@@ -103,6 +110,7 @@ const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
       stepLabel = 'Step',
       ofLabel = 'of',
       nextLabel = 'Next:',
+      separatorLabel = ': ',
       ...props
     },
     ref
@@ -121,9 +129,7 @@ const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
         <p data-slot="stepper-current-line">
           <span className="text-[var(--ui-text-on-surface-secondary)]">
             {stepLabel} {currentStep} {ofLabel} {totalSteps}
-            {/* Punctuation joining the counter to the step name, not copy: it is
-                part of the Figma string and has no separate variable. */}
-            {': '}
+            {separatorLabel}
           </span>
           <span className="text-[var(--ui-text-on-surface-primary)]">
             {current}

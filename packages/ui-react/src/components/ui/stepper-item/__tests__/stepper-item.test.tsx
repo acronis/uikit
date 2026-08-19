@@ -1,6 +1,7 @@
 import { createRef } from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 
 import { Avatar, AvatarFallback } from '../../avatar';
 import { StepperItem } from '../stepper-item';
@@ -106,6 +107,10 @@ describe('StepperItem', () => {
     const root = container.firstElementChild!;
 
     expect(root).toHaveAttribute('aria-disabled', 'true');
+    // `aria-disabled` on a role-less <div> is not announced (ARIA 1.2), so the
+    // default rendering carries an explicit role — as BreadcrumbPage does.
+    expect(root).toHaveAttribute('role', 'link');
+    expect(root).toHaveAttribute('tabindex', '-1');
     expect(root).toHaveClass(
       'text-[var(--ui-text-on-surface-disabled)]',
       'pointer-events-none'
@@ -113,34 +118,93 @@ describe('StepperItem', () => {
     expect(root).not.toHaveClass('bg-[var(--ui-background-surface-hover)]');
   });
 
+  it('still reports the state it was given on a future step', () => {
+    // `state` is never dropped from the contract, even where it paints nothing,
+    // so a consumer can key off the data attribute.
+    for (const state of ['idle', 'hover', 'active'] as const) {
+      const { container } = render(
+        <StepperItem
+          avatar={avatar}
+          label="Step"
+          variant="future"
+          state={state}
+        />
+      );
+      const root = container.firstElementChild!;
+      expect(root).toHaveAttribute('data-state', state);
+      expect(root).toHaveAttribute('data-variant', 'future');
+    }
+  });
+
+  it('keeps a future step out of the tab order even when composed as a button', async () => {
+    const onClick = vi.fn();
+    render(
+      <>
+        <button type="button">before</button>
+        <StepperItem
+          render={<button type="button" onClick={onClick} />}
+          avatar={avatar}
+          label="Confirm and pay"
+          variant="future"
+        />
+      </>
+    );
+
+    const step = screen.getByRole('button', { name: /confirm and pay/i });
+    expect(step).toHaveAttribute('tabindex', '-1');
+    // The composed element brings its own role, so the `role="link"` the default
+    // <div> needs is deliberately not forced onto it.
+    expect(step).not.toHaveAttribute('role');
+    expect(step).toHaveAttribute('aria-disabled', 'true');
+    // The pointer guarantee is CSS; no stylesheet is applied in this environment,
+    // so it is asserted as the class that produces it.
+    expect(step).toHaveClass('pointer-events-none');
+
+    // Tab cannot reach it, so Enter/Space can never activate it either.
+    await userEvent.tab();
+    expect(screen.getByRole('button', { name: 'before' })).toHaveFocus();
+    await userEvent.tab();
+    expect(step).not.toHaveFocus();
+
+    await userEvent.keyboard('{Enter}');
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('carries the library focus ring so a composed control is never focused invisibly', () => {
+    render(
+      <StepperItem
+        render={<button type="button" />}
+        avatar={avatar}
+        label="Back to step 1"
+        variant="completed"
+      />
+    );
+    expect(screen.getByRole('button')).toHaveClass(
+      'outline-none',
+      'focus-visible:ring-[3px]',
+      'focus-visible:ring-[var(--ui-focus-primary)]'
+    );
+  });
+
+  it('renders children last, after the label', () => {
+    const { container } = render(
+      <StepperItem avatar={avatar} label="Choose a plan">
+        <span data-testid="extra">extra</span>
+      </StepperItem>
+    );
+
+    const slots = Array.from(container.firstElementChild!.children);
+    expect(slots).toHaveLength(3);
+    expect(slots[0]).toBe(screen.getByTestId('avatar'));
+    expect(slots[1]).toHaveTextContent('Choose a plan');
+    expect(slots[2]).toBe(screen.getByTestId('extra'));
+  });
+
   it('omits aria-disabled unless the step is in the future', () => {
     const { container } = render(
       <StepperItem avatar={avatar} label="Step" variant="completed" />
     );
     expect(container.firstElementChild).not.toHaveAttribute('aria-disabled');
-  });
-
-  it('draws the connecting line only when asked, as a decorative element', () => {
-    const { container: without } = render(
-      <StepperItem avatar={avatar} label="Step" />
-    );
-    expect(
-      without.querySelector('[data-slot="stepper-item-connecting-line"]')
-    ).toBeNull();
-
-    const { container: with_ } = render(
-      <StepperItem avatar={avatar} label="Step" connectingLine />
-    );
-    const line = with_.querySelector(
-      '[data-slot="stepper-item-connecting-line"]'
-    );
-    expect(line).toBeInTheDocument();
-    expect(line).toHaveAttribute('aria-hidden');
-    // Logical, so it mirrors under dir="rtl".
-    expect(line).toHaveClass(
-      'start-full',
-      'border-[var(--ui-border-on-surface-border)]'
-    );
   });
 
   it('composes into another element through the render prop', () => {

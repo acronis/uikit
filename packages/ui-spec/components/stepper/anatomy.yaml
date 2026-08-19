@@ -52,12 +52,13 @@ parts:
       that wraps, shown at 1024px and above. Displayed as `none` below that.
     element: div
 
-layout:
-  type: flex
-  direction: row
-  align: start
-  order: [summary, items-row]
-
+# No `layout` block. The root has no layout of its own — it is a plain
+# full-width block wrapper, and its two children are mutually exclusive (each is
+# `display: none` at the other's viewport range), so there is no row, column,
+# alignment, or gap to describe at this level. The layout that does exist belongs
+# to the parts: `summary` is a column with a gap and `items-row` is a wrapping,
+# start-aligned flex row, both documented in the schematic above.
+#
 # No `states[]`. The component's only axis is the viewport width, and none of
 # the schema's three `kind` values honestly describes it: it is not driven by a
 # prop (`kind: prop`), it is not a CSS pseudo-class on the element
