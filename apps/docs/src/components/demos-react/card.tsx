@@ -1,22 +1,17 @@
 'use client';
 
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@acronis-platform/ui-react';
+import { Button, Card, CardContent, CardFooter, CardHeader } from '@acronis-platform/ui-react';
 
 export function CardDemo() {
   return (
     <Card className="w-[350px]">
-      <CardHeader>
-        <CardTitle>Backup status</CardTitle>
-        <CardDescription>Last successful run 5 minutes ago.</CardDescription>
-      </CardHeader>
+      <CardHeader
+        title="Backup status"
+        description="Last successful run 5 minutes ago."
+        hasDescription
+        isSwitchable
+        defaultSwitchChecked
+      />
       <CardContent>
         <p className="text-sm">
           All 24 workloads are protected and up to date.

@@ -2,29 +2,145 @@ spec_version: '1.0'
 component: Card
 
 # Framework-agnostic contract for a *composable* card: the surface is assembled
-# from parts (see anatomy.yaml). Card has no variant/size props — every part is a
-# styled container that passes native attributes through. Property names are
-# neutral; see `adapters` for per-framework syntax.
+# from parts (see anatomy.yaml). `Card` (root) only carries `hasError`; the
+# header's rich feature set (drag handle, switch, avatar, rename, extras,
+# actions, description) lives on `CardHeader`. Property names are neutral;
+# see `adapters` for per-framework syntax.
 contract:
   properties:
+    - name: hasError
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Switches the root border to the error token. Set on the root (`Card`),
+        not the header.
+
     - name: render
       type: 'RenderProp'
       required: false
       default: undefined
       description: >-
-        Base UI composition prop available on the root and every part — replaces
-        the rendered element with another component (e.g. render the root as
-        `<article>` or the title as `<h2>`) while merging props and classes.
-        React-only; other frameworks use their own polymorphism.
+        Base UI composition prop available on the root and every part —
+        replaces the rendered element with another component (e.g. render the
+        root as `<article>`) while merging props and classes. React-only;
+        other frameworks use their own polymorphism.
 
-  events: []
+    - name: header.title
+      type: string
+      required: false
+      default: 'Title'
+      description: The card's title text.
+
+    - name: header.description
+      type: string
+      required: false
+      default: undefined
+      description: Helper text shown under the title; only rendered when `header.hasDescription` is set.
+
+    - name: header.hasDescription
+      type: boolean
+      required: false
+      default: false
+      description: Shows `header.description` below the title.
+
+    - name: header.isDraggable
+      type: boolean
+      required: false
+      default: false
+      description: Shows a drag handle at the start of the header, for reorderable lists.
+
+    - name: header.dragHandleLabel
+      type: string
+      required: false
+      default: 'Reorder'
+      description: Accessible label for the drag handle.
+
+    - name: header.isSwitchable
+      type: boolean
+      required: false
+      default: false
+      description: Shows a toggle switch at the start of the header.
+
+    - name: header.switchChecked
+      type: boolean
+      required: false
+      default: undefined
+      description: Controlled checked state of the header switch.
+
+    - name: header.defaultSwitchChecked
+      type: boolean
+      required: false
+      default: undefined
+      description: Uncontrolled initial checked state of the header switch.
+
+    - name: header.switchDisabled
+      type: boolean
+      required: false
+      default: undefined
+      description: Disables the header switch.
+
+    - name: header.switchLabel
+      type: string
+      required: false
+      default: 'Toggle card'
+      description: Accessible label for the header switch.
+
+    - name: header.hasAvatar
+      type: boolean
+      required: false
+      default: false
+      description: Shows an avatar before the title.
+
+    - name: header.avatarLabel
+      type: string
+      required: false
+      default: undefined
+      description: Initials shown in the default avatar; ignored if `header.avatar` is provided.
+
+    - name: header.avatar
+      type: 'ReactNode'
+      required: false
+      default: undefined
+      description: Replaces the default initials avatar with custom content.
+
+    - name: header.hasRename
+      type: boolean
+      required: false
+      default: false
+      description: Shows a rename button next to the title.
+
+    - name: header.renameLabel
+      type: string
+      required: false
+      default: 'Rename'
+      description: Accessible label for the rename button.
+
+    - name: header.extras
+      type: 'ReactNode'
+      required: false
+      default: undefined
+      description: Extra content rendered inline next to the title (e.g. a tag or badge).
+
+    - name: header.actions
+      type: 'ReactNode'
+      required: false
+      default: undefined
+      description: Actions rendered at the end of the header (e.g. a menu button).
+
+  events:
+    - name: header.onSwitchCheckedChange
+      description: Fires when the header switch is toggled.
+    - name: header.onRename
+      description: Fires when the rename button is activated.
 
   content:
     - name: default
       description: >-
-        The composed card. Author it from the parts: an optional header (holding
-        a title and description), a content region, and an optional footer for
-        actions. All parts are optional and may be used in any combination.
+        The composed card. Author it from the parts: an optional header
+        (title, description, drag handle, switch, avatar, rename, extras,
+        actions), a content region, and an optional footer for actions. All
+        parts are optional and may be used in any combination.
 
   methods: []
 
@@ -33,14 +149,11 @@ adapters:
     component: Card
     status: implemented
     import: >-
-      import { Card, CardHeader, CardTitle, CardDescription, CardContent,
-      CardFooter } from '@acronis-platform/ui-react'
+      import { Card, CardHeader, CardContent, CardFooter } from
+      '@acronis-platform/ui-react'
     example: |
       <Card>
-        <CardHeader>
-          <CardTitle>Backup status</CardTitle>
-          <CardDescription>Last run 5 minutes ago</CardDescription>
-        </CardHeader>
+        <CardHeader title="Backup status" description="Last run 5 minutes ago" hasDescription />
         <CardContent>All workloads protected.</CardContent>
         <CardFooter>
           <Button>View report</Button>
@@ -53,9 +166,7 @@ adapters:
     import: "import { AvCard, AvCardHeader, AvCardContent } from '@acronis-platform/ui-vue'"
     example: |
       <AvCard>
-        <AvCardHeader>
-          <AvCardTitle>Backup status</AvCardTitle>
-        </AvCardHeader>
+        <AvCardHeader title="Backup status" />
         <AvCardContent>All workloads protected.</AvCardContent>
       </AvCard>
 
@@ -65,8 +176,6 @@ adapters:
     import: "import '@acronis-platform/ui-wc/card'"
     example: |
       <ui-card>
-        <ui-card-header>
-          <ui-card-title>Backup status</ui-card-title>
-        </ui-card-header>
+        <ui-card-header title="Backup status"></ui-card-header>
         <ui-card-content>All workloads protected.</ui-card-content>
       </ui-card>
