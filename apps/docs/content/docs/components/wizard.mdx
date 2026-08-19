@@ -1,0 +1,189 @@
+---
+title: Wizard
+description: The full-page wizard page template — a sticky header band above a capped content column.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { WizardDemo } from '@/components/demos-react/wizard';
+
+## Usage
+
+```tsx
+import {
+  Wizard,
+  WizardHeader,
+  WizardSubtitle,
+  WizardBody,
+} from '@acronis-platform/ui-react';
+```
+
+`Wizard` is the page template for a full-page, multi-step flow — Create
+dashboard, Create protection plan, and the like. It renders a sticky header band
+(`WizardHeader`) above a content column capped at 1024px (`WizardBody`).
+
+It is a **composition, not a new primitive**: everything you see inside it
+already exists in the kit and `Wizard` reimplements none of it. The trail is a
+[`Breadcrumb`](/components/breadcrumb). The title row is
+[`PageHeader`](/components/page-header)'s — `PageHeaderRow`, `PageHeaderTitle`
+and `PageHeaderActions`, reused rather than duplicated as `WizardTitle` /
+`WizardActions`. The step indicator is a [`Stepper`](/components/stepper) with
+[`StepperItem`](/components/stepper-item) children. The step's fields live in a
+[`Section`](/components/section). `Wizard`'s own contribution is the skeleton:
+the band's surface, divider, padding, and inter-row gap, plus the content
+column's cap.
+
+`PageHeader`'s **root** is deliberately not reused for the band — it carries
+`role="banner"`, and a wizard's header band is not the page banner. Composing the
+row parts alone keeps the landmark structure honest inside an
+[`AppShell`](/components/app-shell) that already has one.
+
+### What Wizard deliberately does not do
+
+`Wizard` holds **no step index, fires no navigation events, and renders no
+buttons**. Which of Cancel / Back / Next / Submit appears on a given step, and
+what each does, is a per-flow product decision owned by the consuming UI block —
+`PageHeaderActions` is a slot you fill. This is the same boundary `PageHeader`
+draws around its own actions slot. Likewise the `Stepper` is optional: a two- or
+three-step flow may drop it, and `Wizard` neither requires one nor substitutes a
+fallback.
+
+The band's chrome comes from `--ui-background-surface-secondary`,
+`--ui-border-on-surface-divider`, `--ui-gap-16` and `--ui-gap-12`; the subtitle
+uses the muted `--ui-text-on-surface-secondary`. There is no `--ui-wizard-*`
+token tier and none is needed — every themed surface inside belongs to a composed
+component that owns its own.
+
+## Examples
+
+<DemoReact>
+  <WizardDemo />
+</DemoReact>
+
+```tsx
+<Wizard>
+  <WizardHeader>
+    <Breadcrumb>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">Dashboards</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>Create dashboard</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+
+    <PageHeaderRow>
+      <PageHeaderTitle>Create dashboard</PageHeaderTitle>
+      <PageHeaderActions>
+        <Button variant="secondary">Cancel</Button>
+        <Button variant="secondary">Back</Button>
+        <Button>Next</Button>
+      </PageHeaderActions>
+    </PageHeaderRow>
+
+    <WizardSubtitle>
+      Name the dashboard, pick its widgets, and choose who can see it.
+    </WizardSubtitle>
+
+    <Stepper
+      currentStep={2}
+      totalSteps={3}
+      current="Choose widgets"
+      next="Set permissions"
+    >
+      <StepperItem
+        variant="completed"
+        label="Name the dashboard"
+        avatar={
+          <Avatar color="green">
+            <AvatarFallback>1</AvatarFallback>
+          </Avatar>
+        }
+      />
+      <StepperItem
+        variant="current"
+        label="Choose widgets"
+        avatar={
+          <Avatar color="blue">
+            <AvatarFallback>2</AvatarFallback>
+          </Avatar>
+        }
+      />
+      <StepperItem
+        variant="future"
+        label="Set permissions"
+        avatar={
+          <Avatar color="gray">
+            <AvatarFallback>3</AvatarFallback>
+          </Avatar>
+        }
+      />
+    </Stepper>
+  </WizardHeader>
+
+  <WizardBody>
+    <Section>
+      <SectionHeader>
+        <SectionTitle>Choose widgets</SectionTitle>
+      </SectionHeader>
+      <SectionContent>{/* step fields */}</SectionContent>
+    </Section>
+  </WizardBody>
+</Wizard>
+```
+
+### Short flow — no stepper
+
+A wizard of two or three steps may omit the step indicator entirely; the subtitle
+then carries the context.
+
+```tsx
+<Wizard>
+  <WizardHeader>
+    <PageHeaderRow>
+      <PageHeaderTitle>Create dashboard</PageHeaderTitle>
+      <PageHeaderActions>
+        <Button variant="secondary">Cancel</Button>
+        <Button>Submit</Button>
+      </PageHeaderActions>
+    </PageHeaderRow>
+    <WizardSubtitle>Name it and choose who can see it.</WizardSubtitle>
+  </WizardHeader>
+  <WizardBody>
+    <Section>{/* … */}</Section>
+  </WizardBody>
+</Wizard>
+```
+
+### A wider step
+
+There is no width variant — Figma defines one content width. A step that needs
+more room (a data table, say) overrides the cap through `className`, the same way
+[`Dialog`](/components/dialog) takes a per-instance width.
+
+```tsx
+<WizardBody className="max-w-[1280px]">
+  <Section>{/* a data-table step */}</Section>
+</WizardBody>
+```
+
+## API Reference
+
+`Wizard` is markup-only: it exposes no component-specific props, and in
+particular no `step` / `currentStep` / `onNext` / `onBack` — see
+[What Wizard deliberately does not do](#what-wizard-deliberately-does-not-do).
+The step indicator's own `currentStep` / `totalSteps` props belong to
+[`Stepper`](/components/stepper).
+
+## Parts
+
+| Export           | Element | Purpose                                                                                                                                   |
+| ---------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `Wizard`         | `div`   | The template root — a full-height flex column.                                                                                            |
+| `WizardHeader`   | `div`   | The sticky header band: breadcrumb, title row, optional subtitle, optional stepper. Owns the surface, divider, padding and inter-row gap. |
+| `WizardSubtitle` | `p`     | Optional muted supporting line under the title row (the same treatment as `PageHeaderDescription`; there is no separate `Subtitle`).      |
+| `WizardBody`     | `div`   | The step's content column, capped at 1024px. Always wraps a `Section`.                                                                    |
+
+All parts accept their native element attributes plus `className`.

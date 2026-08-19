@@ -633,6 +633,17 @@ const RENDER: Record<string, RenderHint> = {
     // covered by the hand-written story (Default).
     skip: true,
   },
+  wizard: {
+    // A page-template scaffold, like `page-header` / `app-shell` /
+    // `auth-layout` above: no props, no `cva` variants, and `states: []`, so the
+    // generated "All States" story has literally no axis to enumerate — it would
+    // emit the hand-written `Default` story a second time, inside a centered
+    // `display: flex` row that squashes a full-height sticky-header template.
+    // That is a duplicate VR baseline, not extra coverage. VR is covered by the
+    // hand-written stories (Default / WithoutSubtitle / WithoutStepper /
+    // LastStep).
+    skip: true,
+  },
   'auth-layout': {
     // A centered-card layout needing a card + form children. VR is covered by the
     // hand-written story (SignIn).
