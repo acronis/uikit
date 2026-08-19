@@ -15,7 +15,9 @@ import { InputTextArea } from '@acronis-platform/ui-react';
 `InputTextArea` wraps a native `<textarea>` and adds the field furniture — an
 optional label (with a `required` marker), helper description, and error
 message. Without a label it renders just the box. Themed by the
-`--ui-input-text-area-*` tokens.
+`--ui-input-text-area-*` tokens. `className` targets the field as a whole
+(label, box, and message together), so it sizes correctly in a flex/grid
+ancestor — use `ref` to reach the underlying `<textarea>` directly.
 
 > **`Textarea` is an alias of `InputTextArea`.** The legacy bare `Textarea` box
 > is replaced by this design-system-native field; `import { Textarea } from

@@ -17,7 +17,8 @@ the full field furniture — an optional label (with a `required` marker), helpe
 description, error message, and an optional clear button. Without a label it
 renders just the box. Themed by the `--ui-input-text-*` tokens; the clear button
 reuses the ghost `--ui-button-icon-*` tokens for its glyph and its hover/active
-background.
+background. `className` targets the field as a whole (label, box, and message
+together), so it sizes correctly in a flex/grid ancestor.
 
 > **Naming.** The `Input` export of `@acronis-platform/ui-react` is an alias of
 > `InputText` (and `InputProps` of `InputTextProps`), so importing `Input` gives

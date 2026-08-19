@@ -156,4 +156,36 @@ describe('getInputPasswordBoxClassName', () => {
       'has-[:focus-visible]:ring-[var(--ui-focus-error)]'
     );
   });
+
+  it('does not force the field wrapper to full width, so it can shrink in a constrained flex/grid ancestor', () => {
+    const { container } = render(<InputPassword label="Password" />);
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper).not.toHaveClass('w-full');
+    expect(wrapper).toHaveClass(
+      'min-w-[var(--ui-input-password-global-container-width-min)]'
+    );
+  });
+
+  it('forwards a custom className to the field wrapper, not the input', () => {
+    const { container } = render(
+      <InputPassword label="Password" className="custom-class" />
+    );
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper).toHaveClass('custom-class');
+    expect(screen.getByLabelText('Password')).not.toHaveClass('custom-class');
+  });
+
+  it('applies style to the same field wrapper className targets, not the input', () => {
+    const { container } = render(
+      <InputPassword
+        label="Password"
+        className="test-class"
+        style={{ width: 100 }}
+      />
+    );
+    const wrapper = container.querySelector('.test-class') as HTMLElement;
+    expect(wrapper).toBe(container.firstChild);
+    expect(wrapper).toHaveStyle({ width: '100px' });
+    expect(screen.getByLabelText('Password')).not.toHaveAttribute('style');
+  });
 });

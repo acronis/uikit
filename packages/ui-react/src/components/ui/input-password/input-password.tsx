@@ -14,7 +14,9 @@ import { ButtonIconInput } from '../button-icon-input';
 // absolutely-positioned overlay). The toggle is the Figma "ButtonIconInput"
 // instance, rendered here via the `ButtonIconInput` component. Visibility is
 // fully internal state; nothing in the design calls for a consumer-controlled
-// mode.
+// mode. `ref` targets the underlying `<input>`; `className` and `style` both
+// target the field wrapper (label + box + message), so sizing the field works
+// the same way whichever one a consumer reaches for.
 export interface InputPasswordProps
   extends Omit<React.ComponentPropsWithoutRef<'input'>, 'children' | 'type'> {
   /** Field label, rendered above the input. */
@@ -126,6 +128,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
   (
     {
       className,
+      style,
       id,
       label,
       required,
@@ -148,7 +151,13 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
     const hasMessage = message != null && message !== '';
 
     return (
-      <div className="flex w-full min-w-[var(--ui-input-password-global-container-width-min)] flex-col gap-[var(--ui-input-password-global-container-gap)]">
+      <div
+        className={cn(
+          'flex min-w-[var(--ui-input-password-global-container-width-min)] flex-col gap-[var(--ui-input-password-global-container-gap)]',
+          className
+        )}
+        style={style}
+      >
         {label != null && label !== '' && (
           <InputPasswordLabel htmlFor={inputId} disabled={disabled} required={required}>
             {label}
@@ -168,8 +177,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
               'min-w-0 flex-1 bg-transparent text-sm leading-6 outline-none',
               disabled
                 ? 'text-[var(--ui-input-password-global-value-color-disabled)] placeholder:text-[var(--ui-input-password-global-placeholder-color-disabled)]'
-                : 'text-[var(--ui-input-password-global-value-color-idle)] placeholder:text-[var(--ui-input-password-global-placeholder-color-idle)]',
-              className
+                : 'text-[var(--ui-input-password-global-value-color-idle)] placeholder:text-[var(--ui-input-password-global-placeholder-color-idle)]'
             )}
             {...props}
           />
