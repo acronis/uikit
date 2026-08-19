@@ -208,6 +208,16 @@ describe('AccordionContainer', () => {
     });
   });
 
+  it('forwards inline style to the underlying element when collapsible', () => {
+    render(
+      <AccordionContainer collapsible defaultOpen style={{ minHeight: 200 }} data-testid="root">
+        <AccordionContainer.Content>content</AccordionContainer.Content>
+      </AccordionContainer>
+    );
+
+    expect(screen.getByTestId('root')).toHaveStyle({ minHeight: '200px' });
+  });
+
   it('forwards a ref to the underlying element when collapsible', () => {
     const ref = React.createRef<HTMLDivElement>();
     render(

@@ -142,6 +142,7 @@ const AccordionContainer = React.forwardRef<HTMLDivElement, AccordionContainerPr
           ref={ref}
           render={render}
           className={resolvedClassName}
+          style={resolvedStyle}
           open={open}
           onOpenChange={handleOpenChange}
           disabled={disabled}
