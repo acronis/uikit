@@ -140,7 +140,7 @@ contract:
     - name: header.collapseLabel
       type: string
       required: false
-      default: 'Toggle card'
+      default: 'Collapse card'
       description: Accessible label for the collapse trigger.
 
   events:

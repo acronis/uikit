@@ -41,7 +41,7 @@ own controls.
 
 - The switch, rename button, and collapse trigger each require an accessible
   name: `switchLabel` (default `"Toggle card"`), `renameLabel` (default
-  `"Rename"`), and `collapseLabel` (default `"Toggle card"`) — override all
+  `"Rename"`), and `collapseLabel` (default `"Collapse card"`) — override all
   three with copy specific to what the card represents (e.g. `"Enable
 policy"`, `"Rename policy"`, `"Toggle backup policy"`) so they read
   distinctly when more than one appears in the same header.
