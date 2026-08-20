@@ -475,7 +475,8 @@ export const ContentOnly: Story = {
 // scrolling or growing the card. This story visualizes that current
 // behavior on both axes at once (a long unbroken line for x, a tall list for
 // y) so any future change to how Card handles overflow has a baseline to
-// compare against.
+// compare against. This matches shadcn/ui and MUI, which clip by default too
+// — see `ScrollableContent` below for how a consumer opts into scrolling.
 export const OverflowingContent: Story = {
   render: () => (
     <Card className="h-55 w-70">
@@ -485,6 +486,25 @@ export const OverflowingContent: Story = {
           This line of text is intentionally far too long to fit inside the
           card without wrapping, to visualize horizontal overflow.
         </p>
+        <ul className="text-sm">
+          {Array.from({ length: 20 }, (_, i) => (
+            <li key={i}>Workload {i + 1} — 12.4 GB</li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
+  ),
+};
+
+// CardContent has no built-in scroll behavior (see OverflowingContent above)
+// — a scrollable body is a consumer composition: give CardContent its own
+// height constraint and `overflow-y-auto`, same as shadcn's ScrollArea-in-
+// CardContent pattern or MUI's `sx={{ overflowY: 'auto' }}` recipe.
+export const ScrollableContent: Story = {
+  render: () => (
+    <Card className="flex h-55 w-70 flex-col">
+      <CardHeader title="Storage usage" />
+      <CardContent className="min-h-0 flex-1 overflow-y-auto pt-4">
         <ul className="text-sm">
           {Array.from({ length: 20 }, (_, i) => (
             <li key={i}>Workload {i + 1} — 12.4 GB</li>
