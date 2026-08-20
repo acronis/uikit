@@ -362,13 +362,21 @@ function CollapsibleCardDemo({
   );
 }
 
+// The default `centered` layout re-centers the whole canvas as the story's
+// content height changes, so toggling the trigger visibly shifts the entire
+// card instead of only the panel growing/shrinking in place. `padded`
+// top-anchors the canvas so expand/collapse only moves the content below the
+// header, matching the collapsible AccordionContainer.Content's own height
+// animation.
 export const Expanded: Story = {
   args: collapsibleHeaderArgs,
+  parameters: { layout: 'padded' },
   render: (args) => <CollapsibleCardDemo args={args} defaultOpen />,
 };
 
 export const Collapsed: Story = {
   args: collapsibleHeaderArgs,
+  parameters: { layout: 'padded' },
   render: (args) => <CollapsibleCardDemo args={args} defaultOpen={false} />,
 };
 
@@ -378,6 +386,7 @@ export const Collapsed: Story = {
 // changes (full sentence when expanded vs. a dense summary when collapsed,
 // since the content/footer region only renders while expanded).
 export const ExpandedVsCollapsed: Story = {
+  parameters: { layout: 'padded' },
   render: () => (
     <div className="flex items-start gap-6">
       <div className="flex flex-col items-center gap-2">
@@ -413,6 +422,7 @@ export const FullFeatured: Story = {
     hasRename: true,
     isCollapsible: true,
   },
+  parameters: { layout: 'padded' },
   render: (args) => (
     <Card className="w-[420px]">
       <AccordionContainer collapsible defaultOpen>
