@@ -5776,6 +5776,7 @@
     "lg": {
       "blur": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [
             "EFFECT_FLOAT"
           ],
@@ -5789,9 +5790,8 @@
       },
       "color": {
         "$extensions": {
-          "com.figma.scopes": [
-            "ALL_SCOPES"
-          ],
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [],
           "com.figma.variableId": "VariableID:7653:30710"
         },
         "$type": "color",
@@ -5807,6 +5807,7 @@
       },
       "positionX": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [
             "EFFECT_FLOAT"
           ],
@@ -5820,6 +5821,7 @@
       },
       "positionY": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [
             "EFFECT_FLOAT"
           ],
@@ -5833,6 +5835,7 @@
       },
       "spread": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [
             "EFFECT_FLOAT"
           ],
@@ -5848,6 +5851,7 @@
     "md": {
       "blur": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [
             "EFFECT_FLOAT"
           ],
@@ -5861,9 +5865,8 @@
       },
       "color": {
         "$extensions": {
-          "com.figma.scopes": [
-            "ALL_SCOPES"
-          ],
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [],
           "com.figma.variableId": "VariableID:7653:30705"
         },
         "$type": "color",
@@ -5879,6 +5882,7 @@
       },
       "positionX": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [
             "EFFECT_FLOAT"
           ],
@@ -5892,6 +5896,7 @@
       },
       "positionY": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [
             "EFFECT_FLOAT"
           ],
@@ -5905,6 +5910,7 @@
       },
       "spread": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [
             "EFFECT_FLOAT"
           ],
@@ -5920,6 +5926,7 @@
     "sm": {
       "blur": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [
             "EFFECT_FLOAT"
           ],
@@ -5933,9 +5940,8 @@
       },
       "color": {
         "$extensions": {
-          "com.figma.scopes": [
-            "ALL_SCOPES"
-          ],
+          "com.figma.hiddenFromPublishing": true,
+          "com.figma.scopes": [],
           "com.figma.variableId": "VariableID:7653:30690"
         },
         "$type": "color",
@@ -5951,6 +5957,7 @@
       },
       "positionX": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [
             "EFFECT_FLOAT"
           ],
@@ -5964,6 +5971,7 @@
       },
       "positionY": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [
             "EFFECT_FLOAT"
           ],
@@ -5977,6 +5985,7 @@
       },
       "spread": {
         "$extensions": {
+          "com.figma.hiddenFromPublishing": true,
           "com.figma.scopes": [
             "EFFECT_FLOAT"
           ],
