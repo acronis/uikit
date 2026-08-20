@@ -1,35 +1,207 @@
 spec_version: '1.0'
 component: Section
 
-# Section and its parts take only native element attributes; no component-specific
-# props.
+# Framework-agnostic contract for a *composable* section: the band is
+# assembled from parts (see anatomy.yaml). `Section` (root) only carries
+# `variant`/`hasBottomBorder`; the header's feature set (switch, icon, title,
+# description, extras, actions, collapse trigger) lives on `SectionHeader`.
+# Property names are neutral; see `adapters` for per-framework syntax.
 contract:
-  properties: []
-  events: []
+  properties:
+    - name: variant
+      type: "'column1' | 'column2-70-30' | 'grid3' | 'table'"
+      required: false
+      default: column1
+      description: >-
+        Which layout shape the section renders. `column1` is a plain block
+        stack; `column2-70-30` a 3-column grid whose first child spans two
+        columns (~67/33 — the name is approximate, not a literal 70/30
+        split); `grid3` a plain 3-column grid; `table` drops the root's own
+        padding so content (typically a `Table`) bleeds edge-to-edge, and the
+        header re-applies its own inset instead. Threaded to `SectionHeader`
+        and `SectionContent` via context, so they adapt without repeating it.
+
+    - name: hasBottomBorder
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Adds a bottom divider, plus the matching 16px bottom padding on the
+        three padded variants (`table` has no root padding to extend, so it
+        gains the border alone).
+
+    - name: render
+      type: 'RenderProp'
+      required: false
+      default: undefined
+      description: >-
+        Base UI composition prop available on the root (`Section`) and
+        `SectionContent` — replaces the rendered element with another
+        component (e.g. render the root as a `<section>`) while merging
+        props and classes. React-only; other frameworks use their own
+        polymorphism.
+
+    - name: header.title
+      type: string
+      required: false
+      default: 'Section Title'
+      description: The section's title text. Always rendered when the header is present.
+
+    - name: header.description
+      type: string
+      required: false
+      default: undefined
+      description: Helper text shown under the title; only rendered when `header.hasDescription` is set.
+
+    - name: header.hasDescription
+      type: boolean
+      required: false
+      default: false
+      description: Shows `header.description` below the title row.
+
+    - name: header.isSwitchable
+      type: boolean
+      required: false
+      default: false
+      description: Shows a toggle switch at the start of the header.
+
+    - name: header.switchChecked
+      type: boolean
+      required: false
+      default: undefined
+      description: Controlled checked state of the header switch.
+
+    - name: header.defaultSwitchChecked
+      type: boolean
+      required: false
+      default: undefined
+      description: Uncontrolled initial checked state of the header switch.
+
+    - name: header.switchDisabled
+      type: boolean
+      required: false
+      default: undefined
+      description: Disables the header switch.
+
+    - name: header.switchLabel
+      type: string
+      required: false
+      default: 'Toggle section'
+      description: Accessible label for the header switch.
+
+    - name: header.icon
+      type: 'ReactNode'
+      required: false
+      default: undefined
+      description: >-
+        Icon rendered at the start of the header, after the switch when both
+        are present. Additive: the Figma component set exposes no icon slot,
+        so this has no design counterpart to mirror and is not mapped in
+        Code Connect.
+
+    - name: header.extras
+      type: 'ReactNode'
+      required: false
+      default: undefined
+      description: Extra content rendered inline next to the title (e.g. a tag or badge).
+
+    - name: header.actions
+      type: 'ReactNode'
+      required: false
+      default: undefined
+      description: Actions rendered at the end of the header row (e.g. a menu button).
+
+    - name: header.isCollapsible
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Shows a disclosure trigger at the end of the header. Only has an
+        effect when the header renders inside a collapsible
+        `AccordionContainer` — see the collapsible composition example.
+
+    - name: header.collapseLabel
+      type: string
+      required: false
+      default: 'Collapse section'
+      description: Accessible label for the collapse trigger.
+
+  events:
+    - name: header.onSwitchCheckedChange
+      description: Fires when the header switch is toggled.
+
+  content:
+    - name: default
+      description: >-
+        The composed section. Author it from the parts: an optional header
+        (title, description, switch, icon, extras, actions) and a content
+        region whose layout follows `variant`. Both parts are optional and
+        may be used in any combination.
+
   methods: []
 
 adapters:
   react:
     component: Section
     status: implemented
-    import: "import { Section, SectionHeader, SectionTitle, SectionDescription, SectionContent } from '@acronis-platform/ui-react'"
+    import: >-
+      import { Section, SectionHeader, SectionContent } from
+      '@acronis-platform/ui-react'
     example: |
-      <Section>
-        <SectionHeader>
-          <SectionTitle>Backups</SectionTitle>
-          <SectionDescription>Manage your backup plans.</SectionDescription>
-        </SectionHeader>
-        <SectionContent>{children}</SectionContent>
+      <Section variant="column1">
+        <SectionHeader title="Backup plans" description="Manage how your workloads are backed up." hasDescription />
+        <SectionContent>
+          <Card>…</Card>
+        </SectionContent>
       </Section>
+
+      // grid3 / column2-70-30: children lay out as a grid; column2-70-30's
+      // first child spans two of the three columns.
+      <Section variant="grid3">
+        <SectionHeader title="Widgets" />
+        <SectionContent>
+          <Card>…</Card>
+          <Card>…</Card>
+          <Card>…</Card>
+        </SectionContent>
+      </Section>
+
+      // table: the root sits flush so rows bleed edge-to-edge; the header
+      // re-applies its own inset.
+      <Section variant="table">
+        <SectionHeader title="Workloads" />
+        <SectionContent>
+          <Table>…</Table>
+        </SectionContent>
+      </Section>
+
+      // Collapsible: compose with AccordionContainer, and set
+      // SectionHeader's isCollapsible to render the trigger.
+      <Section>
+        <AccordionContainer collapsible defaultOpen>
+          <SectionHeader title="Backup policy" isCollapsible />
+          <AccordionContainer.Content>
+            <SectionContent>Applies to 12 workloads.</SectionContent>
+          </AccordionContainer.Content>
+        </AccordionContainer>
+      </Section>
+
   vue:
     component: AvSection
     status: planned
-    import: "import { AvSection } from '@acronis-platform/ui-vue'"
+    import: "import { AvSection, AvSectionHeader, AvSectionContent } from '@acronis-platform/ui-vue'"
     example: |
-      <AvSection />
+      <AvSection>
+        <AvSectionHeader title="Backup plans" />
+        <AvSectionContent>…</AvSectionContent>
+      </AvSection>
+
   web-components:
     element: ui-section
     status: planned
     import: "import '@acronis-platform/ui-wc/section'"
     example: |
-      <ui-section></ui-section>
+      <ui-section>
+        <ui-section-header title="Backup plans"></ui-section-header>
+        <ui-section-content>…</ui-section-content>
+      </ui-section>

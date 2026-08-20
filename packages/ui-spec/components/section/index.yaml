@@ -1,10 +1,21 @@
 spec_version: '1.0'
 component: Section
 name: section
-status: draft
+status: ready
 category: layout
 description: >-
-  A titled content block — a <section> with an optional header (title +
-  description) and a content area. Ported 1:1 from the legacy shadcn-uikit
-  `section`.
-since: 0.51.0
+  A titled band that groups `Card`s (or a table) on a page. A compound
+  component — `Section` (root) + `SectionHeader` + `SectionContent` — whose
+  root `variant` threads through context so the header and content adapt
+  their layout/padding without repeating it. Collapsibility is composed by
+  wrapping the header and content in `AccordionContainer`, the same shared
+  disclosure primitive `Card` uses.
+since: 2.1.0
+dependencies:
+  components:
+    - Switch
+    - AccordionContainer
+    - ButtonIcon
+figma:
+  node: '8262:6179'
+  codeConnect: packages/ui-react/src/components/ui/section/section.figma.tsx

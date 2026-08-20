@@ -558,4 +558,22 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
     expect(groups.state.sort()).toEqual(enumMembers(api, 'state'));
   });
+
+  it('Section: api.yaml variant enum matches the sectionVariants cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(HERE, '../../ui-react/src/components/ui/section/section.tsx'),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('section').api;
+
+    // extractCvaGroups returns only the first cva() call in source order —
+    // `sectionVariants` (the root). `sectionContentVariants` declares the same
+    // four-value `variant` enum, so pinning the root's is enough to keep both
+    // in sync with api.yaml. `hasBottomBorder` is a boolean axis (no
+    // string-literal enum on the api side), so — like Stack's `wrap` — it's
+    // confirmed present but excluded from the enum comparison.
+    expect(Object.keys(groups).sort()).toEqual(['hasBottomBorder', 'variant']);
+    expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant').sort());
+  });
 });

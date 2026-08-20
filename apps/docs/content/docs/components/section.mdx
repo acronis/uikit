@@ -1,28 +1,48 @@
 ---
 title: Section
-description: A titled content block with header, description, and content.
+description: A titled band that groups Cards (or a table) on a page.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { SectionDemo } from "@/components/demos-react/section";
+import { DemoReact } from '@/components/DemoReact';
+import { SectionDemo } from '@/components/demos-react/section';
 
 ## Usage
 
 ```tsx
-import {
-  Section,
-  SectionHeader,
-  SectionTitle,
-  SectionDescription,
-  SectionContent,
-} from '@acronis-platform/ui-react';
+import { Section, SectionHeader, SectionContent } from '@acronis-platform/ui-react';
 ```
 
-`Section` is a titled content block — a `<section>` with an optional header
-(`SectionTitle` + `SectionDescription`) and a `SectionContent` body. The title is
-an `<h2>`; the description is muted.
+`Section` is a compound component: a titled band that groups `Card`s (or a
+table) on a page. `Section` is the root and owns the `variant`, which its
+children read from context so you don't repeat it on every part.
+`SectionHeader` carries the title, an optional description, an optional
+leading icon, a toggle switch, inline `extras`, end-aligned `actions`, and a
+disclosure trigger. `SectionContent` is the variant-aware body:
 
-> Design-pending v1, ported 1:1 from the legacy `shadcn-uikit` section.
+| `variant`         | Body                                                                          |
+| ------------------ | ------------------------------------------------------------------------------ |
+| `column1`           | Plain, full-width (the default).                                             |
+| `column2-70-30`     | A 3-column grid whose first child spans two columns (~70/30 split).          |
+| `grid3`             | A 3-column grid; give a child `className="col-span-2"` to span two columns.  |
+| `table`             | Flush (no root padding), so table rows bleed edge-to-edge.                    |
+
+`hasBottomBorder` adds the divider that separates a section from the next one,
+plus the matching bottom padding — except on `table`, which has no root
+padding to extend and so gains the border alone. `table`'s `SectionHeader`
+re-applies its own `px-4 pt-4 pb-3` inset to stay aligned above the flush rows
+below it.
+
+`Section` and `SectionContent` are polymorphic via Base UI's `useRender` (the
+`render` prop) — use it to promote the root to a real `<section>` landmark, for
+example. There is no `--ui-section-*` token tier: the title, description, and
+divider resolve to the shared semantic tokens
+(`--ui-text-on-surface-primary`, `--ui-text-on-surface-secondary`,
+`--ui-border-on-surface-divider`).
+
+Collapsing is not a built-in boolean — like `Card`, it's composed from the
+shared `AccordionContainer` primitive: wrap `SectionHeader` and
+`SectionContent` in `AccordionContainer`, set `isCollapsible` on the header,
+and put the content in `AccordionContainer.Content`.
 
 ## Examples
 
@@ -30,17 +50,126 @@ an `<h2>`; the description is muted.
   <SectionDemo />
 </DemoReact>
 
+A `column1` section grouping a single `Card`:
+
 ```tsx
-<Section>
-  <SectionHeader>
-    <SectionTitle>Backup plans</SectionTitle>
-    <SectionDescription>Manage how your workloads are backed up.</SectionDescription>
-  </SectionHeader>
-  <SectionContent>{children}</SectionContent>
+<Section hasBottomBorder>
+  <SectionHeader
+    title="Protected workloads"
+    description="Everything backed up in the last 24 hours."
+    hasDescription
+    icon={<DatabaseIcon size={20} />}
+  />
+  <SectionContent>
+    <Card className="w-full">
+      <CardHeader title="Backup status" description="Last successful run 5 minutes ago." hasDescription />
+      <CardContent>
+        <p>All 24 workloads are protected and up to date.</p>
+      </CardContent>
+    </Card>
+  </SectionContent>
+</Section>
+```
+
+A `column2-70-30` split — the first child spans two of the three columns:
+
+```tsx
+<Section variant="column2-70-30" hasBottomBorder>
+  <SectionHeader title="Storage overview" />
+  <SectionContent>
+    <Card>
+      <CardContent className="pt-4">
+        <p>Main content spans two of the three columns.</p>
+      </CardContent>
+    </Card>
+    <Card>
+      <CardContent className="pt-4">
+        <p>Side column.</p>
+      </CardContent>
+    </Card>
+  </SectionContent>
+</Section>
+```
+
+A `grid3` section with a spanning card:
+
+```tsx
+<Section variant="grid3" hasBottomBorder>
+  <SectionHeader title="Agents" />
+  <SectionContent>
+    <Card className="col-span-2">
+      <CardContent className="pt-4">
+        <p>This card spans two of the three columns.</p>
+      </CardContent>
+    </Card>
+    <Card>
+      <CardContent className="pt-4">
+        <p>Single column.</p>
+      </CardContent>
+    </Card>
+  </SectionContent>
+</Section>
+```
+
+A collapsible `table` section — composed with `AccordionContainer`:
+
+```tsx
+import { AccordionContainer, Section, SectionContent, SectionHeader, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@acronis-platform/ui-react';
+
+<Section variant="table" hasBottomBorder>
+  <AccordionContainer collapsible defaultOpen>
+    {({ open }) => (
+      <>
+        <SectionHeader
+          title="Recent jobs"
+          description={open ? 'Showing 3 jobs.' : 'Collapsed'}
+          hasDescription
+          isCollapsible
+          collapseLabel="Toggle recent jobs"
+        />
+        <AccordionContainer.Content>
+          <SectionContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Job</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Daily backup</TableCell>
+                  <TableCell>Completed</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </SectionContent>
+        </AccordionContainer.Content>
+      </>
+    )}
+  </AccordionContainer>
 </Section>
 ```
 
 ## API Reference
 
-`Section`, `SectionHeader`, `SectionTitle`, `SectionDescription`, and
-`SectionContent` accept their native element attributes plus `className`.
+### Section
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/section/section.tsx"
+  name="SectionProps"
+/>
+
+### SectionHeader
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/section/section.tsx"
+  name="SectionHeaderProps"
+/>
+
+### SectionContent
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/section/section.tsx"
+  name="SectionContentProps"
+/>

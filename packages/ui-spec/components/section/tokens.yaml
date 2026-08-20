@@ -1,11 +1,34 @@
 spec_version: '1.0'
 component: Section
 
-# References only. Values live in @acronis-platform/tokens-pd. Only the description
-# carries color (muted secondary text); the title inherits the foreground.
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# No dedicated `--ui-section-*` tier exists in tokens-pd — the title and
+# description are plain typography against the shared semantic text tokens,
+# and the divider is the shared semantic border token, the same treatment
+# `card.tsx`'s root/header chrome uses. Token consumption for the composed
+# sub-components (Switch, the collapse trigger's ButtonIcon ghost styling,
+# AccordionContainer) is documented in their own specs, not repeated here.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - name: --ui-text-on-surface-secondary
-    affects: section-description
-    description: Muted description text (text-muted-foreground).
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: title,
+      description: Section title text color,
+    }
+  - {
+      name: --ui-text-on-surface-secondary,
+      affects: description,
+      description: Description text color,
+    }
+  - {
+      name: --ui-text-on-surface-secondary,
+      affects: icon,
+      description: Icon slot color,
+    }
+  - {
+      name: --ui-border-on-surface-divider,
+      affects: root,
+      description: Bottom divider drawn when hasBottomBorder is set,
+    }

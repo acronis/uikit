@@ -2,28 +2,114 @@ spec_version: '1.0'
 component: Section
 
 schematic: |
-  section: <section> vertical block
-    section-header: title + description group
-      section-title:       <h2> heading
-      section-description: <p> muted supporting text
-    section-content: the body
+  root: <div> (inset + gap-3 for column1/column2-70-30/grid3; flush for table;
+               border-b when hasBottomBorder)
+  +-----------------------------------------------------------------+
+  |  header (SectionHeader, optional)                                |
+  |   [switch] [icon] title [extras] ...  [actions] [collapse-trigger]|
+  |                          description                              |
+  |  content (SectionContent)                                        |
+  |   +-------------------------------------------------------------+ |
+  |   | column1/table: block stack                                  | |
+  |   | column2-70-30: 3-col grid, first child spans 2 cols          | |
+  |   | grid3: 3-col grid                                            | |
+  |   +-------------------------------------------------------------+ |
+  +-------------------------------------------------------------------+
+     root      -> `variant` selects the root's own inset+gap (column1 /
+                  column2-70-30 / grid3) vs. flush with no gap (table, so its
+                  rows can bleed edge-to-edge); `hasBottomBorder` adds the
+                  divider, plus the matching bottom padding on the three
+                  padded variants (table has no root padding to extend)
+     header    -> single row, in order: optional switch, optional icon,
+                  title + extras (start), actions, then collapse-trigger
+                  (end); an optional description renders below the row.
+                  Under `table` the header re-applies `px-4 pt-4 pb-3` since
+                  the root itself is flush.
+     content   -> the layout is entirely variant-driven (see above); the
+                  same `SectionContent` element just changes its own classes
+                  based on the `Section` ancestor's `variant`, read via
+                  context
 
 root:
-  element: section
-  description: A vertical content block with an optional header and a body.
+  element: div
+  description: >-
+    The section band: a full-width flex column with no border or background
+    of its own (it inherits the surrounding page/card surface), except for
+    the bottom divider drawn when `hasBottomBorder` is set. Polymorphic via
+    the `render` prop (e.g. render as `<section>`).
 
 parts:
-  - id: section-header
+  - id: header
+    description: >-
+      Optional top region (`<div>`) laying out the switch, icon, title
+      block, and actions in a single row, with an optional description
+      below. Reads the ancestor `Section`'s `variant` from context to
+      re-apply its own padding under `table`.
     element: div
-    description: Groups the title + description.
-  - id: section-title
-    element: h2
-    description: The section heading.
-  - id: section-description
+    optional: true
+  - id: switch
+    description: Toggle shown at the start of the header when `isSwitchable` is set.
+    element: button
+    optional: true
+  - id: icon
+    description: >-
+      Icon shown at the start of the header (after the switch, if both are
+      present), tinted with the secondary text color. Additive: the Figma
+      component set exposes no icon slot, so this has no design counterpart.
+    element: span
+    optional: true
+  - id: title
+    description: >-
+      The section's title text, truncated with an ellipsis if it overflows.
+      Always rendered inside the header, which is why it is not itself
+      optional even though the header is.
     element: p
-    description: Muted supporting text under the title.
-  - id: section-content
+    optional: false
+  - id: extras
+    description: Arbitrary content slot rendered inline after the title.
+    element: slot
+    optional: true
+  - id: description
+    description: >-
+      Secondary supporting copy below the title row, shown when
+      `hasDescription` is set.
+    element: p
+    optional: true
+  - id: actions
+    description: Arbitrary content slot rendered at the end of the header row.
+    element: slot
+    optional: true
+  - id: collapse-trigger
+    description: >-
+      Disclosure trigger rendered at the very end of the header when
+      `isCollapsible` is set. Only has an effect when the header renders
+      inside a collapsible `AccordionContainer` — composes
+      `AccordionContainer.Trigger`, restyled with the ghost `ButtonIcon`
+      chrome (the same treatment `card.tsx` uses).
+    element: button
+    optional: true
+  - id: content
+    description: >-
+      Primary body region (`<div>`) holding arbitrary children. Its layout
+      (plain stack, or one of two 3-column grids) is derived from the
+      ancestor `Section`'s `variant`, read via context, so consumers don't
+      repeat it.
     element: div
-    description: The section body.
+    optional: true
 
-states: []
+layout:
+  type: flex
+  direction: column
+  order: [header, content]
+
+states:
+  - id: variant
+    trigger: 'variant selects the layout shape'
+    kind: prop
+    prop: variant
+    affects: [root, content]
+  - id: has-bottom-border
+    trigger: 'hasBottomBorder=true'
+    kind: prop
+    prop: hasBottomBorder
+    affects: [root]

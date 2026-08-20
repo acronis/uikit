@@ -577,10 +577,25 @@ const RENDER: Record<string, RenderHint> = {
     // by the hand-written story (Default).
     skip: true,
   },
+  // Compound: an empty `<Section />` renders no header and an empty content
+  // region, so the `variant` matrix needs a real header + content composed —
+  // `SectionContent`'s own grid classes come from context (the ancestor
+  // `Section`'s `variant`), so the same children demonstrate the block stack
+  // (column1/table) and both grids (column2-70-30/grid3) as `variant` cycles.
   section: {
-    // A composition needing header/title/content children. VR is covered by the
-    // hand-written story (Default).
-    skip: true,
+    extraImports: [
+      "import { SectionHeader, SectionContent } from '../section';",
+    ],
+    sample: [
+      '',
+      '      <SectionHeader title="Section title" description="Supporting description text." hasDescription />',
+      '      <SectionContent>',
+      '        <div className="rounded-md bg-[var(--ui-background-surface-secondary)] px-3 py-2 text-sm">Card A</div>',
+      '        <div className="rounded-md bg-[var(--ui-background-surface-secondary)] px-3 py-2 text-sm">Card B</div>',
+      '        <div className="rounded-md bg-[var(--ui-background-surface-secondary)] px-3 py-2 text-sm">Card C</div>',
+      '      </SectionContent>',
+      '    ',
+    ].join('\n'),
   },
   'app-shell': {
     // A full-page layout scaffold needing slotted children. VR is covered by the
