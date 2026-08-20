@@ -165,6 +165,36 @@ describe('CardHeader', () => {
     await user.click(trigger);
     expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
   });
+
+  it('keeps the bottom divider when not collapsible', () => {
+    render(<CardHeader data-testid="header" />);
+    expect(screen.getByTestId('header')).toHaveClass('border-b');
+  });
+
+  it('keeps the bottom divider when the accordion is expanded', () => {
+    render(
+      <AccordionContainer collapsible defaultOpen>
+        <CardHeader isCollapsible data-testid="header" />
+        <AccordionContainer.Content>Body</AccordionContainer.Content>
+      </AccordionContainer>
+    );
+    expect(screen.getByTestId('header')).toHaveClass('border-b');
+  });
+
+  it('drops the bottom divider when the accordion is collapsed', () => {
+    render(
+      <AccordionContainer collapsible defaultOpen={false}>
+        <CardHeader isCollapsible data-testid="header" />
+        <AccordionContainer.Content>Body</AccordionContainer.Content>
+      </AccordionContainer>
+    );
+    expect(screen.getByTestId('header')).not.toHaveClass('border-b');
+  });
+
+  it('keeps the bottom divider when isCollapsible is set but there is no collapsible AccordionContainer ancestor', () => {
+    render(<CardHeader isCollapsible data-testid="header" />);
+    expect(screen.getByTestId('header')).toHaveClass('border-b');
+  });
 });
 
 describe('CardContent', () => {

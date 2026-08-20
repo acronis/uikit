@@ -52,15 +52,29 @@ interface AccordionContainerProps extends AccordionContainerBaseProps {
 
 interface AccordionContainerContextValue {
   collapsible: boolean;
+  open: boolean;
 }
 
-const AccordionContainerContext = React.createContext<AccordionContainerContextValue>({
-  collapsible: false,
-});
+const AccordionContainerContext =
+  React.createContext<AccordionContainerContextValue>({
+    collapsible: false,
+    open: false,
+  });
 
-const useAccordionContainerContext = () => React.useContext(AccordionContainerContext);
+/**
+ * Reads whether the nearest `AccordionContainer` ancestor is `collapsible`
+ * and, if so, its current `open` state — for content outside
+ * `AccordionContainer.Content` (e.g. a header) that needs to react to the
+ * panel's state without a dedicated prop, such as `CardHeader` dropping its
+ * bottom divider while collapsed.
+ */
+const useAccordionContainerContext = () =>
+  React.useContext(AccordionContainerContext);
 
-const AccordionContainer = React.forwardRef<HTMLDivElement, AccordionContainerProps>(
+const AccordionContainer = React.forwardRef<
+  HTMLDivElement,
+  AccordionContainerProps
+>(
   (
     {
       collapsible = false,
@@ -105,17 +119,21 @@ const AccordionContainer = React.forwardRef<HTMLDivElement, AccordionContainerPr
       typeof style === 'function' ? style(collapsibleState) : style;
 
     const contextValue = React.useMemo<AccordionContainerContextValue>(
-      () => ({ collapsible }),
-      [collapsible]
+      () => ({ collapsible, open }),
+      [collapsible, open]
     );
 
     const bypassRendered = useRender({
       render,
       ref,
       defaultTagName: 'div',
-      props: mergeProps<'div'>({ className: resolvedClassName, style: resolvedStyle }, props, {
-        children: resolvedChildren,
-      }),
+      props: mergeProps<'div'>(
+        { className: resolvedClassName, style: resolvedStyle },
+        props,
+        {
+          children: resolvedChildren,
+        }
+      ),
     });
 
     if (!collapsible) {
@@ -174,7 +192,9 @@ const AccordionContainerTrigger = React.forwardRef<
     <CollapsiblePrimitive.Trigger
       ref={ref}
       aria-label={
-        props['aria-labelledby'] || children != null ? ariaLabel : (ariaLabel ?? 'Toggle')
+        props['aria-labelledby'] || children != null
+          ? ariaLabel
+          : (ariaLabel ?? 'Toggle')
       }
       className={cn(
         'inline-flex size-8 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--ui-glyph-on-surface-neutral-dark)]',
@@ -184,7 +204,12 @@ const AccordionContainerTrigger = React.forwardRef<
       )}
       {...props}
     >
-      {children ?? <ChevronRightIcon size={16} className="transition-transform duration-200" />}
+      {children ?? (
+        <ChevronRightIcon
+          size={16}
+          className="transition-transform duration-200"
+        />
+      )}
     </CollapsiblePrimitive.Trigger>
   );
 });
@@ -197,54 +222,72 @@ type AccordionContainerContentProps = React.ComponentPropsWithoutRef<
 const AccordionContainerContent = React.forwardRef<
   React.ComponentRef<typeof CollapsiblePrimitive.Panel>,
   AccordionContainerContentProps
->(({ className, style, children, render, hiddenUntilFound, keepMounted, ...props }, ref) => {
-  const { collapsible } = useAccordionContainerContext();
+>(
+  (
+    {
+      className,
+      style,
+      children,
+      render,
+      hiddenUntilFound,
+      keepMounted,
+      ...props
+    },
+    ref
+  ) => {
+    const { collapsible } = useAccordionContainerContext();
 
-  // Unlike Root, Content doesn't support the render-prop `(state) => value`
-  // form for className/style, so the bypass div below only ever sees plain
-  // values.
-  const bypassRendered = useRender({
-    render: render as useRender.RenderProp<Record<string, unknown>> | undefined,
-    ref,
-    defaultTagName: 'div',
-    props: mergeProps<'div'>(
-      { className: className as string | undefined, style: style as React.CSSProperties | undefined },
-      props,
-      { children }
-    ),
-  });
+    // Unlike Root, Content doesn't support the render-prop `(state) => value`
+    // form for className/style, so the bypass div below only ever sees plain
+    // values.
+    const bypassRendered = useRender({
+      render: render as
+        | useRender.RenderProp<Record<string, unknown>>
+        | undefined,
+      ref,
+      defaultTagName: 'div',
+      props: mergeProps<'div'>(
+        {
+          className: className as string | undefined,
+          style: style as React.CSSProperties | undefined,
+        },
+        props,
+        { children }
+      ),
+    });
 
-  if (!collapsible) {
-    // Same style-isolation-neutral bypass as the Root: no wrapper unless the
-    // consumer actually passed something that would otherwise be dropped.
-    // hiddenUntilFound/keepMounted are Panel-only props, destructured above
-    // so they never leak onto this plain div.
-    const needsWrapper =
-      ref != null ||
-      className != null ||
-      style != null ||
-      render != null ||
-      Object.keys(props).length > 0;
+    if (!collapsible) {
+      // Same style-isolation-neutral bypass as the Root: no wrapper unless the
+      // consumer actually passed something that would otherwise be dropped.
+      // hiddenUntilFound/keepMounted are Panel-only props, destructured above
+      // so they never leak onto this plain div.
+      const needsWrapper =
+        ref != null ||
+        className != null ||
+        style != null ||
+        render != null ||
+        Object.keys(props).length > 0;
 
-    return needsWrapper ? bypassRendered : <>{children}</>;
+      return needsWrapper ? bypassRendered : <>{children}</>;
+    }
+
+    return (
+      <CollapsiblePrimitive.Panel
+        ref={ref}
+        style={style}
+        className={cn(
+          'overflow-hidden transition-[height] duration-200 ease-out data-[ending-style]:h-0 data-[starting-style]:h-0',
+          className
+        )}
+        hiddenUntilFound={hiddenUntilFound}
+        keepMounted={keepMounted}
+        {...props}
+      >
+        {children}
+      </CollapsiblePrimitive.Panel>
+    );
   }
-
-  return (
-    <CollapsiblePrimitive.Panel
-      ref={ref}
-      style={style}
-      className={cn(
-        'overflow-hidden transition-[height] duration-200 ease-out data-[ending-style]:h-0 data-[starting-style]:h-0',
-        className
-      )}
-      hiddenUntilFound={hiddenUntilFound}
-      keepMounted={keepMounted}
-      {...props}
-    >
-      {children}
-    </CollapsiblePrimitive.Panel>
-  );
-});
+);
 AccordionContainerContent.displayName = 'AccordionContainerContent';
 
 const AccordionContainerRoot = Object.assign(AccordionContainer, {
@@ -256,8 +299,10 @@ export {
   AccordionContainerRoot as AccordionContainer,
   AccordionContainerTrigger,
   AccordionContainerContent,
+  useAccordionContainerContext,
   type AccordionContainerProps,
   type AccordionContainerTriggerProps,
   type AccordionContainerContentProps,
   type AccordionContainerState,
+  type AccordionContainerContextValue,
 };
