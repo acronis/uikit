@@ -52,10 +52,20 @@ import { AccordionContainer } from '@/components/ui/accordion-container';
 //
 // No `--ui-section-*` tier exists in tokens-pd, so — like `card.tsx` — the
 // colors stay on the shared semantic tier rather than a component-local one.
+//
+// The root deliberately leaves `align-items` at its `flex` default (`stretch`)
+// rather than `items-start`: the collapsible composition puts a bare
+// `AccordionContainer` — which sets no width of its own — directly under
+// `Section`, not `SectionHeader`/`SectionContent` (which each force their own
+// `w-full`). Under `items-start` that wrapper shrink-wraps to whichever
+// children are currently visible, so it measures narrower once the (often
+// wider) content collapses out — the header visibly shrinks on toggle.
+// `stretch` pins every direct child, collapsible wrapper included, to
+// `Section`'s own width regardless of what's currently rendered inside it.
 
 type SectionVariant = 'column1' | 'column2-70-30' | 'grid3' | 'table';
 
-const sectionVariants = cva('flex w-full flex-col items-start', {
+const sectionVariants = cva('flex w-full flex-col', {
   variants: {
     variant: {
       column1: 'gap-3 px-4 pt-4',
