@@ -76,6 +76,14 @@ const RENDER: Record<string, RenderHint> = {
     ],
     props: 'label="Active filters" value="125" icon={<CircleInfoIcon />}',
   },
+  // Each variant reads a different content slot, so supply all of them at once
+  // and let the variant pick. `children` is deliberately omitted: only the
+  // `card-*` variants consume it (as the nested card's parts), and a shared
+  // sample would leak that markup into the other four variants.
+  'card-section': {
+    props:
+      'content="Arbitrary section content." contentList={<div className="py-2 text-sm leading-6">Title — Description</div>} contentTable={<div className="px-4 py-2 text-sm leading-6">Table row</div>}',
+  },
   'filter-cards': {
     extraImports: [
       "import { CardFilter } from '../../card-filter/card-filter';",
