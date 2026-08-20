@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import {
@@ -535,4 +537,128 @@ export const IntegrationStackedSectionsWithBottomBorder: Story = {
       </Section>
     </div>
   ),
+};
+
+// 7. Kitchen-sink: every `Section`/`SectionHeader` prop exercised at once
+// (collapsible root, switch, icon, extras, actions, description,
+// hasBottomBorder) around a single `column1` Card, whose own header exercises
+// every `CardHeader` prop too. The Card body nests `CardSection`
+// `card-primary`, which — per the compound pattern in `card-section.tsx` —
+// wraps its `children` in a fresh `Card`; that nested Card's body in turn
+// nests a `card-secondary` `CardSection`, giving a real
+// Section > Card > CardSection(primary) > Card > CardSection(secondary)
+// chain rather than the two variants merely sitting as siblings.
+function FullFeaturedSection() {
+  const [sectionSwitchOn, setSectionSwitchOn] = React.useState(true);
+  const [cardSwitchOn, setCardSwitchOn] = React.useState(true);
+
+  return (
+    <Section variant="column1" hasBottomBorder className="w-[560px]">
+      <AccordionContainer collapsible defaultOpen>
+        <SectionHeader
+          title="Backup policy"
+          description="Applies to 12 workloads across 2 sites"
+          hasDescription
+          isSwitchable
+          switchChecked={sectionSwitchOn}
+          onSwitchCheckedChange={setSectionSwitchOn}
+          switchLabel="Enable backup policy"
+          icon={<ServerIcon size={16} />}
+          extras={<Tag variant="info">Beta</Tag>}
+          actions={
+            <ButtonIcon variant="ghost" aria-label="Section actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          }
+          isCollapsible
+          collapseLabel="Toggle backup policy"
+        />
+        <AccordionContainer.Content>
+          <SectionContent>
+            <Card className="w-full">
+              <AccordionContainer collapsible defaultOpen>
+                <CardHeader
+                  title="Daily schedule"
+                  description="Runs every day at 02:00 UTC"
+                  hasDescription
+                  isDraggable
+                  dragHandleLabel="Reorder daily schedule"
+                  isSwitchable
+                  switchChecked={cardSwitchOn}
+                  onSwitchCheckedChange={setCardSwitchOn}
+                  switchLabel="Enable daily schedule"
+                  hasAvatar
+                  avatarLabel="DS"
+                  hasRename
+                  onRename={() => {}}
+                  renameLabel="Rename schedule"
+                  extras={<Tag variant="success">Active</Tag>}
+                  actions={
+                    <ButtonIcon variant="ghost" aria-label="Card actions">
+                      <CogIcon size={16} />
+                    </ButtonIcon>
+                  }
+                  isCollapsible
+                  collapseLabel="Toggle daily schedule"
+                />
+                <AccordionContainer.Content>
+                  <CardContent className="p-0 pb-4">
+                    <CardSection
+                      variant="card-primary"
+                      hasHeader
+                      title="Primary target"
+                      extras={<Tag variant="neutral">On-site</Tag>}
+                      actions={
+                        <ButtonIcon
+                          variant="ghost"
+                          aria-label="Primary target actions"
+                        >
+                          <EllipsisIcon size={16} />
+                        </ButtonIcon>
+                      }
+                    >
+                      <CardHeader
+                        title="Local NAS"
+                        description="192.168.1.20"
+                        hasDescription
+                      />
+                      <CardContent className="p-0 pb-4">
+                        <CardSection
+                          variant="card-secondary"
+                          hasHeader
+                          title="Secondary target"
+                          extras={<Tag variant="neutral">Off-site</Tag>}
+                          actions={
+                            <ButtonIcon
+                              variant="ghost"
+                              aria-label="Secondary target actions"
+                            >
+                              <EllipsisIcon size={16} />
+                            </ButtonIcon>
+                          }
+                        >
+                          <CardHeader
+                            title="Cloud storage"
+                            description="Acronis Cloud, EU-West"
+                            hasDescription
+                          />
+                          <CardContent className="p-0 pb-4">
+                            <CardSection variant="list" contentList={ScheduleList} />
+                          </CardContent>
+                        </CardSection>
+                      </CardContent>
+                    </CardSection>
+                  </CardContent>
+                </AccordionContainer.Content>
+              </AccordionContainer>
+            </Card>
+          </SectionContent>
+        </AccordionContainer.Content>
+      </AccordionContainer>
+    </Section>
+  );
+}
+
+export const IntegrationFullFeaturedWithNestedCards: Story = {
+  render: () => <FullFeaturedSection />,
 };
