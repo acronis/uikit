@@ -320,9 +320,28 @@ function acquireLock() {
   return release;
 }
 
+/**
+ * The accepted-deviation registry, read from the JSON both sides share.
+ *
+ * `.storybook/theme-deviations.ts` is the typed reader for the test-runner; this
+ * script runs under bare Node with no TS loader, so it reads the same JSON rather
+ * than keeping a second copy of the list — the drift this repo already guards
+ * against for the profile names.
+ */
+function readDeviations() {
+  const path = join(PACKAGE_DIR, '.storybook/theme-deviations.json');
+  try {
+    return JSON.parse(readFileSync(path, 'utf8')).deviations ?? [];
+  } catch (error) {
+    console.error(`Cannot read ${path}: ${error.message}`);
+    process.exit(2);
+  }
+}
+
 async function main() {
   const argv = process.argv.slice(2);
   const update = argv.includes('--update');
+  const full = argv.includes('--full');
 
   let modes;
   try {
@@ -395,17 +414,59 @@ async function main() {
         readFileSync(join(PACKAGE_DIR, 'storybook-static/index.json'), 'utf8')
       ).entries
     );
-    subset = {
-      // One pattern per title — jest ORs its positional path patterns, and a
-      // single `(a|b)` alternation does not survive the shells in between.
-      // See buildTestPathPatterns.
-      patterns: buildTestPathPatterns(resolveTitleIds(entries, SUBSET_TITLES)),
-      expected: subsetStoryIds(entries).length,
-    };
-    console.log(
-      `\nsystem-theme subset: ${SUBSET_TITLES.length} titles, ` +
-        `${subset.expected} stories.`
+
+    if (full) {
+      // `--full` drops the sample: the non-owning profiles re-render the WHOLE
+      // corpus. Nothing else changes — they still own no baselines and still
+      // compare against the light/dark PNGs — so this is purely coverage, and it
+      // is what the scheduled workflow runs. No `expected` count is set: the
+      // story-count assertion exists to prove a FILTER reached jest intact, and
+      // there is no filter here.
+      console.log(
+        `\n--full: the subset is disabled; the non-baseline profiles will run ` +
+          `all ${entries.filter((e) => e.type === 'story').length} stories.`
+      );
+      subset = { patterns: [], expected: undefined };
+    } else {
+      subset = {
+        // One pattern per title — jest ORs its positional path patterns, and a
+        // single `(a|b)` alternation does not survive the shells in between.
+        // See buildTestPathPatterns.
+        patterns: buildTestPathPatterns(resolveTitleIds(entries, SUBSET_TITLES)),
+        expected: subsetStoryIds(entries).length,
+      };
+      console.log(
+        `\nsystem-theme subset: ${SUBSET_TITLES.length} titles, ` +
+          `${subset.expected} stories.`
+      );
+    }
+
+    // **A waiver that can never run is a waiver nobody will ever delete.**
+    // `.storybook/theme-deviations.json` inverts the assertion for the stories it
+    // lists — they MUST differ from their baseline — which only happens if the
+    // story is actually captured by this run. An entry naming a story outside the
+    // sample (or a story that no longer exists) sits there looking like coverage
+    // and asserting nothing, so it is refused here, before Docker.
+    const covered = new Set(
+      full
+        ? entries.filter((e) => e.type === 'story').map((e) => e.id)
+        : subsetStoryIds(entries)
     );
+    const dead = readDeviations().filter((d) => !covered.has(d.story));
+    if (dead.length) {
+      console.error(
+        `\nREFUSING TO START: ${dead.length} theme-deviation entr` +
+          `${dead.length === 1 ? 'y names a story' : 'ies name stories'} this run ` +
+          `never captures:\n` +
+          dead.map((d) => `  - ${d.story} (${d.profiles.join(', ')})`).join('\n') +
+          `\n\nAn entry inverts the assertion for its story, so one that is not ` +
+          `run\nasserts nothing while looking like an accepted, tracked ` +
+          `deviation.\nEither add the story's title to SUBSET_GROUPS in ` +
+          `scripts/system-theme-subset.mjs,\nrun with --full, or delete the ` +
+          `entry from .storybook/theme-deviations.json.\n`
+      );
+      process.exit(2);
+    }
   }
 
   const composeFiles = update
@@ -426,7 +487,7 @@ async function main() {
     const isSubset = SUBSET_MODES.includes(mode);
     console.log(
       `\n=== Capture: ${mode}${update ? ' (--updateSnapshot)' : ''}` +
-        `${isSubset ? ` (subset: ${subset.expected} stories)` : ''} ===`
+        `${isSubset ? (full ? ' (FULL corpus)' : ` (subset: ${subset.expected} stories)`) : ''} ===`
     );
     const logFile = join(LOG_DIR, `capture-${mode}.log`);
     // jest ORs its positional test-path patterns, so appending the subset pattern

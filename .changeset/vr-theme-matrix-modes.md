@@ -50,3 +50,21 @@ New/changed scripts: `…:docker:system-dark`, `…:docker:system-light`,
 run). `--mode all` runs all six; `--mode both` still means light + dark. Anything
 after `--` is forwarded to `test-storybook`, so a single-story check is
 `…:docker -- ui-avatar`.
+
+Coverage is tuned in two places rather than by minting more PNGs. The curated
+sample is the **PR** default (latency, not compute: 112 stories are ~12 s of jest
+against the ~5 min of install + Storybook build a leg pays anyway), and
+`.github/workflows/visual-regression-themes-full.yml` runs the same four profiles
+over the **full corpus** weekly and on `workflow_dispatch` — one job, one Storybook
+build, all four profiles — which is what catches a component that keys off
+`[data-theme]` and is not in the sample. Locally: `--full`.
+
+A story that is knowingly different under one of these profiles goes in
+`.storybook/theme-deviations.json`, never into a new baseline. The entry **inverts**
+the assertion — the story MUST differ, and the run fails the moment it stops
+differing, so the waiver cannot outlive its cause (a profile-owned PNG does the
+opposite: freezes the deviation as ground truth and passes forever, including on the
+run where it gets worse). Entries carry a reason, an approver, a date and an optional
+expiry; the capture script also refuses to start when an entry names a story the run
+never captures, since a waiver that cannot execute looks like tracked coverage and
+asserts nothing. The registry ships empty.

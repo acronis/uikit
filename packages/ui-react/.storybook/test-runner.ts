@@ -9,6 +9,11 @@ import {
   rootThemeState,
   type RootThemeState,
 } from './visual-regression';
+import {
+  findThemeDeviation,
+  THEME_DEVIATIONS,
+  validateThemeDeviations,
+} from './theme-deviations';
 
 /**
  * Resolved ONCE at module load, not per story.
@@ -20,6 +25,24 @@ import {
  * first.
  */
 const PROFILE = resolveVisualProfile(process.env.STORYBOOK_COLOR_MODE);
+
+/**
+ * Validated once, here, for the same reason the profile is: a malformed or expired
+ * waiver must stop the run before the first screenshot, not read as one failure per
+ * story. `toISOString().slice(0, 10)` is the capture date — an entry with `expires`
+ * in the past is refused rather than silently honoured, which is the only thing
+ * that keeps a temporary waiver temporary.
+ */
+const DEVIATION_PROBLEMS = validateThemeDeviations(
+  THEME_DEVIATIONS,
+  new Date().toISOString().slice(0, 10)
+);
+if (DEVIATION_PROBLEMS.length) {
+  throw new Error(
+    `.storybook/theme-deviations.json is not usable:\n` +
+      DEVIATION_PROBLEMS.map((p) => `  - ${p}`).join('\n')
+  );
+}
 
 const config: TestRunnerConfig = {
   setup() {
@@ -155,12 +178,56 @@ const config: TestRunnerConfig = {
       );
     }
 
-    expect(image).toMatchImageSnapshot({
-      customSnapshotsDir: snapshotsDir,
-      customSnapshotIdentifier: snapshotIdentifier,
-      failureThreshold: 0.005,
-      failureThresholdType: 'percent',
-    });
+    const compare = () =>
+      expect(image).toMatchImageSnapshot({
+        customSnapshotsDir: snapshotsDir,
+        customSnapshotIdentifier: snapshotIdentifier,
+        failureThreshold: 0.005,
+        failureThresholdType: 'percent',
+      });
+
+    /**
+     * An accepted deviation INVERTS the assertion: this story is known to render
+     * differently under this profile, so matching the baseline means the
+     * underlying styling was fixed and the waiver is now a lie.
+     *
+     * Failing on the fix is the point. The alternative — letting the profile write
+     * its own PNG — freezes the deviation as ground truth and goes green forever,
+     * including on the run where it gets worse. Here the waiver has a shelf life
+     * enforced by the same suite it exempts.
+     */
+    const deviation = findThemeDeviation(
+      THEME_DEVIATIONS,
+      PROFILE.name,
+      context.id
+    );
+    if (deviation) {
+      let matched = true;
+      try {
+        compare();
+      } catch {
+        // Expected: the deviation is still there. jest-image-snapshot has written
+        // a diff into __diff_output__ (gitignored) — useful for reviewing whether
+        // the difference is still the one that was approved.
+        matched = false;
+      }
+      if (matched) {
+        throw new Error(
+          `Visual regression aborted: '${context.id}' now MATCHES its ` +
+            `'${snapshotIdentifier}.png' baseline under the '${PROFILE.name}' ` +
+            'profile, but theme-deviations.json still lists it as a known ' +
+            `deviation (approved by ${deviation.approvedBy} on ${deviation.date}` +
+            `${deviation.issue ? `, ${deviation.issue}` : ''}).\n` +
+            `Recorded reason: ${deviation.reason}\n` +
+            'This is the good outcome — the styling was fixed. Delete the entry ' +
+            'from .storybook/theme-deviations.json so the story is guarded ' +
+            'normally again.'
+        );
+      }
+      return;
+    }
+
+    compare();
   },
 };
 

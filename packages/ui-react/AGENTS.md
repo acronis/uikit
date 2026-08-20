@@ -123,6 +123,17 @@ Hence no `:update` variant, and adding a story means running `…:docker:update:
 _before_ them. Details in `.storybook/visual-regression.ts` and
 `scripts/system-theme-subset.mjs`.
 
+The sample is the **PR** default, for latency: `.github/workflows/visual-regression-themes-full.yml`
+runs the same four profiles over the **whole corpus** weekly (and on
+`workflow_dispatch`), which is what catches a component outside the sample. Locally,
+`node scripts/visual-capture.mjs --full --mode themes`.
+
+A story that is knowingly different under one of these profiles goes in
+`.storybook/theme-deviations.json`, **not** into a new baseline. The entry inverts
+the assertion — the story must differ, and the run fails once it stops differing, so
+the waiver cannot outlive its cause. Registry ships empty; fixing the component is
+the default response.
+
 ## When you add or change anything in `src/`
 
 1. Add a Vitest test under the component's `__tests__/`.

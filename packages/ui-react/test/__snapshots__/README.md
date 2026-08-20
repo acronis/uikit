@@ -69,6 +69,47 @@ light/dark corpus with renders taken under a different theme input — silently
 baking in the exact difference the profiles exist to catch. Add a story, run
 `…:docker:update:all` first, then these.
 
+### The sample on PRs, the whole corpus on a schedule
+
+The ~15% sample is what runs per PR. `.github/workflows/visual-regression-themes-full.yml`
+runs the same four profiles over the **full corpus** every Monday 03:00 UTC (and on
+`workflow_dispatch`), which is what catches a component that keys off `[data-theme]`
+and is not in the sample. Locally that is `--full`:
+
+```bash
+node scripts/visual-capture.mjs --full --mode themes
+```
+
+The cost sits almost entirely in setup, not in the extra stories: 112 stories take
+~12 s of jest, 761 take ~68 s, against ~5 min of install + Storybook build per CI
+leg. Latency, not compute, is why the sample is the PR default.
+
+### Accepted deviations
+
+A story that is **known** to render differently under one of these profiles goes in
+`../../.storybook/theme-deviations.json` — never into a new baseline. The entry
+**inverts** the assertion: that story MUST differ, and the run FAILS the moment it
+stops differing, telling you to delete the row. A profile-owned PNG would do the
+opposite — freeze the deviation as ground truth and pass forever, including on the
+run where it gets worse.
+
+```jsonc
+{
+  "story": "widgets-chart--default",
+  "profiles": ["system-dark"],
+  "reason": "why this is accepted rather than fixed",
+  "approvedBy": "name",
+  "date": "2026-08-20",
+  "expires": "2026-11-01", // optional; past this date the run refuses the entry
+}
+```
+
+The registry ships **empty** and should stay that way — a failing profile means a
+component resolved a colour through `[data-theme]` instead of a token, and the
+default response is to fix it. The capture script also refuses to start when an
+entry names a story the run does not capture, because a waiver that never executes
+looks like tracked coverage and asserts nothing.
+
 ## Generate / update baselines
 
 ```bash
