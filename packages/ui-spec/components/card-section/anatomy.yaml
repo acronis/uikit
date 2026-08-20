@@ -1,0 +1,103 @@
+spec_version: '1.0'
+component: CardSection
+
+schematic: |
+  root: <div> (column stack, inset except for the table-actions variant)
+  +-------------------------------------------------------------------+
+  |  header (optional, 14px title row)                                |
+  |    title  [extras]                                    [actions]   |
+  |                                                                   |
+  |  body — exactly one of:                                           |
+  |    content        (variant=slot)          arbitrary passthrough    |
+  |    content-tag    (variant=tag)           wrapping row of tags     |
+  |    content-list   (variant=list)          title/description rows   |
+  |    content-table  (variant=table-actions) flush table + actions    |
+  |    nested-card    (variant=card-primary | card-secondary)          |
+  |      +-----------------------------------------------------------+ |
+  |      | a nested Card, composed from CardHeader / CardContent     | |
+  |      +-----------------------------------------------------------+ |
+  |                                                                   |
+  +-------------------------------------------------------------------+
+     ^ bottom divider drawn here when hasBottomBorder is set
+     root         -> flex column, 12px gap; `px-4 pt-4` for every variant
+                     except table-actions, which sits flush so its rows can
+                     run edge-to-edge inside the card
+     header       -> single row: title + extras (start, flexible), actions
+                     (end). Under table-actions it re-applies the 16px
+                     horizontal inset the root drops.
+     nested-card  -> only the surface token differs between card-primary
+                     (primary surface, Card's own default) and
+                     card-secondary (secondary surface)
+
+root:
+  element: div
+  description: >-
+    The section band: a full-width flex column. Polymorphic via the `render`
+    prop (e.g. render as `<section>`). Draws no background of its own — it
+    inherits the surrounding `Card` surface — and only paints a border when
+    `hasBottomBorder` is set.
+
+parts:
+  - id: header
+    description: >-
+      Optional mini-header row shown when `hasHeader` is set. Smaller than
+      `CardHeader` (14px medium vs. 18px regular) and scoped to this section.
+    element: div
+    optional: true
+  - id: title
+    description: >-
+      The section title, truncated with an ellipsis if it overflows. Always
+      rendered inside the header, which is why `title` is required whenever
+      `hasHeader` is set.
+    element: p
+    optional: true
+  - id: extras
+    description: Arbitrary content slot rendered inline after the title.
+    element: slot
+    optional: true
+  - id: actions
+    description: Arbitrary content slot rendered at the end of the header row.
+    element: slot
+    optional: true
+  - id: content
+    description: Body of the `slot` variant — arbitrary passthrough content.
+    element: div
+    optional: true
+  - id: content-tag
+    description: >-
+      Body of the `tag` variant — a wrapping row of tags. Defaults to a short
+      example row when the slot is left empty.
+    element: div
+    optional: true
+  - id: content-list
+    description: >-
+      Body of the `list` variant — a column of title/description key-value
+      rows supplied by the consumer.
+    element: div
+    optional: true
+  - id: content-table
+    description: >-
+      Body of the `table-actions` variant — a table with per-row actions,
+      rendered flush to the card's edges.
+    element: div
+    optional: true
+  - id: nested-card
+    description: >-
+      Body of the `card-primary` / `card-secondary` variants — a nested `Card`
+      composed from the consumer's `CardHeader` / `CardContent` children. The
+      variant only changes the nested card's surface token.
+    element: div
+    optional: true
+
+layout:
+  type: flex
+  direction: column
+  order:
+    [header, content, content-tag, content-list, content-table, nested-card]
+
+states:
+  - id: has-bottom-border
+    trigger: 'hasBottomBorder=true'
+    kind: prop
+    prop: hasBottomBorder
+    affects: [root]

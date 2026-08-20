@@ -107,7 +107,6 @@ import {
   Button,
   Card,
   CardHeader,
-  CardTitle,
   CardContent,
   CardFooter,
   Input,
@@ -121,9 +120,7 @@ import {
 function MyComponent() {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Welcome</CardTitle>
-      </CardHeader>
+      <CardHeader title="Welcome" />
       <CardContent className="space-y-4">
         <div>
           <Label htmlFor="email">Email</Label>
@@ -401,16 +398,13 @@ import {
   Button,
   Card,
   CardHeader,
-  CardTitle,
   CardContent,
 } from '@acronis-platform/ui-react';
 
 export function App() {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>My App</CardTitle>
-      </CardHeader>
+      <CardHeader title="My App" />
       <CardContent>
         <Button>Click me</Button>
       </CardContent>

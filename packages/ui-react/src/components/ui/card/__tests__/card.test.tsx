@@ -1,24 +1,20 @@
 import { createRef } from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { userEvent } from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '../card';
+import { AccordionContainer } from '../../accordion-container';
+import { Card, CardContent, CardFooter, CardHeader } from '../card';
 
 describe('Card', () => {
   it('renders a composed card with all parts', () => {
     render(
       <Card data-testid="card">
-        <CardHeader>
-          <CardTitle>Backup status</CardTitle>
-          <CardDescription>Last run 5 minutes ago</CardDescription>
-        </CardHeader>
+        <CardHeader
+          title="Backup status"
+          description="Last run 5 minutes ago"
+          hasDescription
+        />
         <CardContent>All workloads protected.</CardContent>
         <CardFooter>Footer</CardFooter>
       </Card>
@@ -30,20 +26,29 @@ describe('Card', () => {
     expect(screen.getByText('Footer')).toBeInTheDocument();
   });
 
-  it('drives the surface, text, and border from the bridged semantic tokens', () => {
+  it('drives the surface, text, and border from the shared semantic tokens', () => {
     render(<Card data-testid="card">body</Card>);
-    // No `--ui-card-*` tier exists yet — the card surface/text/border resolve to
-    // the shared semantic tokens via the bridged Tailwind names.
-    expect(screen.getByTestId('card')).toHaveClass(
-      'bg-background',
-      'text-foreground',
-      'border-border'
+    const card = screen.getByTestId('card');
+    expect(card.className).toContain(
+      'bg-[var(--ui-background-surface-primary)]'
+    );
+    expect(card.className).toContain(
+      'text-[var(--ui-text-on-surface-primary)]'
+    );
+    expect(card.className).toContain(
+      'border-[var(--ui-border-on-surface-border)]'
     );
   });
 
-  it('renders the description with the muted-foreground token', () => {
-    render(<CardDescription>helper</CardDescription>);
-    expect(screen.getByText('helper')).toHaveClass('text-muted-foreground');
+  it('switches the border token when hasError is set', () => {
+    render(
+      <Card data-testid="card" hasError>
+        body
+      </Card>
+    );
+    expect(screen.getByTestId('card').className).toContain(
+      'border-[var(--ui-border-on-surface-border-error)]'
+    );
   });
 
   it('merges a custom className without dropping the base classes', () => {
@@ -62,11 +67,146 @@ describe('Card', () => {
     render(<Card ref={ref}>body</Card>);
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
+});
 
-  it('composes onto a custom element via the render prop', () => {
-    render(<CardTitle render={<h2 />}>Section title</CardTitle>);
-    const heading = screen.getByRole('heading', { level: 2 });
-    expect(heading).toHaveTextContent('Section title');
-    expect(heading).toHaveClass('text-2xl');
+describe('CardHeader', () => {
+  it('renders the title by default', () => {
+    render(<CardHeader />);
+    expect(screen.getByText('Title')).toBeInTheDocument();
+  });
+
+  it('hides the description unless hasDescription is set', () => {
+    render(<CardHeader description="Hidden" />);
+    expect(screen.queryByText('Hidden')).not.toBeInTheDocument();
+  });
+
+  it('shows the description when hasDescription is set', () => {
+    render(<CardHeader description="Visible" hasDescription />);
+    expect(screen.getByText('Visible')).toBeInTheDocument();
+  });
+
+  it('does not render a drag handle by default', () => {
+    render(<CardHeader />);
+    expect(
+      screen.queryByRole('img', { name: 'Reorder' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders a drag handle when isDraggable is set', () => {
+    render(<CardHeader isDraggable dragHandleLabel="Drag" />);
+    expect(screen.getByRole('img', { name: 'Drag' })).toBeInTheDocument();
+  });
+
+  it('renders a toggle switch when isSwitchable is set', async () => {
+    const user = userEvent.setup();
+    const onSwitchCheckedChange = vi.fn();
+    render(
+      <CardHeader
+        isSwitchable
+        switchLabel="Enable"
+        onSwitchCheckedChange={onSwitchCheckedChange}
+      />
+    );
+    const toggle = screen.getByRole('switch', { name: 'Enable' });
+    await user.click(toggle);
+    expect(onSwitchCheckedChange).toHaveBeenCalledWith(true, expect.anything());
+  });
+
+  it('renders an avatar with initials when hasAvatar is set', () => {
+    render(<CardHeader hasAvatar avatarLabel="SB" />);
+    expect(screen.getByText('SB')).toBeInTheDocument();
+  });
+
+  it('renders a rename button and fires onRename when hasRename is set', async () => {
+    const user = userEvent.setup();
+    const onRename = vi.fn();
+    render(
+      <CardHeader hasRename onRename={onRename} renameLabel="Rename card" />
+    );
+    await user.click(screen.getByRole('button', { name: 'Rename card' }));
+    expect(onRename).toHaveBeenCalledOnce();
+  });
+
+  it('renders extras next to the title and actions at the end', () => {
+    render(
+      <CardHeader
+        extras={<span>Beta</span>}
+        actions={<button type="button">Menu</button>}
+      />
+    );
+    expect(screen.getByText('Beta')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Menu' })).toBeInTheDocument();
+  });
+
+  it('does not render a collapse trigger by default', () => {
+    render(<CardHeader />);
+    expect(
+      screen.queryByRole('button', { name: 'Collapse card' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('does not render a collapse trigger outside a collapsible AccordionContainer', () => {
+    render(<CardHeader isCollapsible />);
+    expect(
+      screen.queryByRole('button', { name: 'Collapse card' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders and operates a collapse trigger inside a collapsible AccordionContainer', async () => {
+    const user = userEvent.setup();
+    const onOpenChange = vi.fn();
+    render(
+      <AccordionContainer collapsible defaultOpen onOpenChange={onOpenChange}>
+        <CardHeader isCollapsible collapseLabel="Toggle policy" />
+        <AccordionContainer.Content>Body</AccordionContainer.Content>
+      </AccordionContainer>
+    );
+    const trigger = screen.getByRole('button', { name: 'Toggle policy' });
+    await user.click(trigger);
+    expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
+  });
+
+  it('keeps the bottom divider when not collapsible', () => {
+    render(<CardHeader data-testid="header" />);
+    expect(screen.getByTestId('header')).toHaveClass('border-b');
+  });
+
+  it('keeps the bottom divider when the accordion is expanded', () => {
+    render(
+      <AccordionContainer collapsible defaultOpen>
+        <CardHeader isCollapsible data-testid="header" />
+        <AccordionContainer.Content>Body</AccordionContainer.Content>
+      </AccordionContainer>
+    );
+    expect(screen.getByTestId('header')).toHaveClass('border-b');
+  });
+
+  it('drops the bottom divider when the accordion is collapsed', () => {
+    render(
+      <AccordionContainer collapsible defaultOpen={false}>
+        <CardHeader isCollapsible data-testid="header" />
+        <AccordionContainer.Content>Body</AccordionContainer.Content>
+      </AccordionContainer>
+    );
+    expect(screen.getByTestId('header')).not.toHaveClass('border-b');
+  });
+
+  it('keeps the bottom divider when isCollapsible is set but there is no collapsible AccordionContainer ancestor', () => {
+    render(<CardHeader isCollapsible data-testid="header" />);
+    expect(screen.getByTestId('header')).toHaveClass('border-b');
+  });
+});
+
+describe('CardContent', () => {
+  it('renders children', () => {
+    render(<CardContent>Body content</CardContent>);
+    expect(screen.getByText('Body content')).toBeInTheDocument();
+  });
+});
+
+describe('CardFooter', () => {
+  it('renders children', () => {
+    render(<CardFooter>Footer content</CardFooter>);
+    expect(screen.getByText('Footer content')).toBeInTheDocument();
   });
 });

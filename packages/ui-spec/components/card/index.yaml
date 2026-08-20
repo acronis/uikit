@@ -1,11 +1,26 @@
 spec_version: '1.0'
 component: Card
 name: card
-status: draft
+status: ready
 category: layout
 description: >-
   A surface that groups related content and actions. A set of composable parts
-  (header, title, description, content, footer) on a bordered, rounded container
-  with a subtle shadow. Initial version ported from the legacy shadcn-uikit
-  `Card`; design reconciliation against Figma is pending.
+  (header, content, footer) on a bordered, rounded container. The header
+  carries the interactive surface: an optional drag handle, toggle switch,
+  avatar, rename button, extras, end-aligned actions, and an optional
+  collapse trigger. Collapsibility is composed by wrapping the header and
+  content/footer in `AccordionContainer`.
 since: 0.8.0
+dependencies:
+  components:
+    - HandleGripIcon
+    - PencilIcon
+    - Avatar
+    - AvatarFallback
+    - ButtonIconInput
+    - Switch
+    - AccordionContainer
+    - ButtonIcon
+figma:
+  node: '10012-195993'
+  codeConnect: packages/ui-react/src/components/ui/card/card.figma.tsx

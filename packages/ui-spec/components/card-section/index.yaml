@@ -1,0 +1,20 @@
+spec_version: '1.0'
+component: CardSection
+name: card-section
+status: ready
+category: layout
+description: >-
+  A band of content stacked inside a `Card`'s body, below `CardHeader`. Six
+  variants pick the body shape — an arbitrary slot, a wrapping tag row, a
+  title/description list, a flush table with row actions, or a nested `Card`
+  on the primary or secondary surface. An optional 14px mini-header (distinct
+  from `CardHeader`) carries a title, inline extras, and end-aligned actions;
+  an optional bottom divider separates one section from the next.
+since: 2.1.0
+dependencies:
+  components:
+    - Card
+    - Tag
+figma:
+  node: '7662-8727'
+  codeConnect: packages/ui-react/src/components/ui/card-section/card-section.figma.tsx
