@@ -131,8 +131,9 @@ runs the same four profiles over the **whole corpus** weekly (and on
 A story that is knowingly different under one of these profiles goes in
 `.storybook/theme-deviations.json`, **not** into a new baseline. The entry inverts
 the assertion — the story must differ, and the run fails once it stops differing, so
-the waiver cannot outlive its cause. Registry ships empty; fixing the component is
-the default response.
+the waiver cannot outlive its cause. One entry today — the shadow-DOM popover story,
+which the token bundle's `:host { color-scheme: light dark }` makes follow the OS
+(acronis/uikit#674). Fixing the component is otherwise the default response.
 
 ## When you add or change anything in `src/`
 

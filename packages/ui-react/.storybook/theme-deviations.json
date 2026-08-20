@@ -1,4 +1,13 @@
 {
   "$schema": "./theme-deviations.schema.json",
-  "deviations": []
+  "deviations": [
+    {
+      "story": "ui-popover--in-shadow-dom-portal-container",
+      "profiles": ["system-dark", "forced-light", "forced-dark"],
+      "reason": "The tokens-pd bundle declares `color-scheme: light dark` on `:host` as well as `:root`. Adopted into a real ShadowRoot that rule lands on the shadow HOST and overrides what it would inherit from <html>, and the host carries no [data-theme] — so everything inside the shadow root resolves light-dark() from the OS instead of the app's theme. The committed --dark baseline for this story was captured under `dark` (attribute dark, OS light) and therefore shows a LIGHT popover inside a dark dialog; every OS-dark profile renders it dark and differs. Fixing it means dropping `:host` from the color-scheme declaration in tools/style-dictionary and regenerating tokens-pd, which also affects ui-legacy — tracked separately rather than folded into the visual-regression change.",
+      "approvedBy": "Leonid.Romanov",
+      "date": "2026-08-20",
+      "issue": "https://github.com/acronis/uikit/issues/674"
+    }
+  ]
 }

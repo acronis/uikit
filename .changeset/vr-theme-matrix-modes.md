@@ -67,4 +67,11 @@ opposite: freezes the deviation as ground truth and passes forever, including on
 run where it gets worse). Entries carry a reason, an approver, a date and an optional
 expiry; the capture script also refuses to start when an entry names a story the run
 never captures, since a waiver that cannot execute looks like tracked coverage and
-asserts nothing. The registry ships empty.
+asserts nothing.
+
+The registry holds one entry, which is also the first finding of the new profiles:
+the shadow-DOM popover story renders from the OS preference rather than the app's
+`[data-theme]`, because the token bundle declares `color-scheme: light dark` on
+`:host` as well as `:root` and that lands on the shadow host (acronis/uikit#674).
+The fix belongs in `tools/style-dictionary` + regenerated `tokens-pd` and affects
+`ui-legacy` too, so it is tracked separately.

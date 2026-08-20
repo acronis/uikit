@@ -1,7 +1,7 @@
 import type { TestRunnerConfig } from '@storybook/test-runner';
 import { getStoryContext } from '@storybook/test-runner';
 import * as process from 'node:process';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 import {
   getSnapshotIdentifier,
@@ -14,6 +14,7 @@ import {
   THEME_DEVIATIONS,
   validateThemeDeviations,
 } from './theme-deviations';
+import { compareToBaseline } from './image-diff';
 
 /**
  * Resolved ONCE at module load, not per story.
@@ -214,21 +215,21 @@ const config: TestRunnerConfig = {
       context.id
     );
     if (deviation) {
-      let matched = true;
-      try {
-        compare();
-      } catch {
-        // Expected: the deviation is still there. jest-image-snapshot has written
-        // a diff into __diff_output__ (gitignored) — useful for reviewing whether
-        // the difference is still the one that was approved.
-        matched = false;
-      }
-      if (matched) {
+      // Compared by hand rather than through `toMatchImageSnapshot` in a
+      // try/catch: that matcher records the comparison in jest's snapshot state
+      // before throwing, so a caught failure still leaves `1 snapshot failed` in
+      // the summary and jest still exits non-zero. See `image-diff.ts`.
+      const comparison = compareToBaseline(
+        image,
+        readFileSync(`${snapshotsDir}/${snapshotIdentifier}.png`)
+      );
+      if (comparison.matches) {
         throw new Error(
           `Visual regression aborted: '${context.id}' now MATCHES its ` +
             `'${snapshotIdentifier}.png' baseline under the '${PROFILE.name}' ` +
-            'profile, but theme-deviations.json still lists it as a known ' +
-            `deviation (approved by ${deviation.approvedBy} on ${deviation.date}` +
+            `profile (${(comparison.ratio * 100).toFixed(3)}% differing pixels), ` +
+            'but theme-deviations.json still lists it as a known deviation ' +
+            `(approved by ${deviation.approvedBy} on ${deviation.date}` +
             `${deviation.issue ? `, ${deviation.issue}` : ''}).\n` +
             `Recorded reason: ${deviation.reason}\n` +
             'This is the good outcome — the styling was fixed. Delete the entry ' +

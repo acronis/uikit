@@ -17,15 +17,26 @@ const entry = (over: Partial<ThemeDeviation> = {}): ThemeDeviation => ({
 });
 
 describe('THEME_DEVIATIONS (the committed registry)', () => {
-  it('is empty, and should stay that way', () => {
-    // Every story in the sample currently reproduces its baseline under all four
-    // profiles. A row here is an accepted defect — the default response to a
-    // failing profile is to fix the component, not to waive it.
-    expect(THEME_DEVIATIONS).toEqual([]);
-  });
-
   it('validates', () => {
     expect(validateThemeDeviations(THEME_DEVIATIONS, TODAY)).toEqual([]);
+  });
+
+  it('justifies and tracks every entry', () => {
+    // A row here is an accepted defect, so it has to survive being read months
+    // later by someone deciding whether it still applies: what the mechanism is,
+    // and where the fix is being tracked. `validateThemeDeviations` enforces that a
+    // reason exists at all; this enforces that it is worth reading.
+    for (const entry of THEME_DEVIATIONS) {
+      expect(entry.reason.length).toBeGreaterThan(80);
+      expect(entry.issue, `${entry.story} has no tracking issue`).toBeTruthy();
+    }
+  });
+
+  it('stays small', () => {
+    // Not a hard limit — a tripwire. The default response to a failing profile is
+    // to fix the component; a registry that grows is the suite quietly turning into
+    // a list of things it no longer checks.
+    expect(THEME_DEVIATIONS.length).toBeLessThanOrEqual(3);
   });
 });
 

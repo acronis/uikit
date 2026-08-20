@@ -104,11 +104,18 @@ run where it gets worse.
 }
 ```
 
-The registry ships **empty** and should stay that way — a failing profile means a
-component resolved a colour through `[data-theme]` instead of a token, and the
-default response is to fix it. The capture script also refuses to start when an
-entry names a story the run does not capture, because a waiver that never executes
-looks like tracked coverage and asserts nothing.
+It holds **one** entry today: `ui-popover--in-shadow-dom-portal-container`, whose
+shadow root adopts the token bundle and so picks up `:host { color-scheme: light
+dark }` — making everything inside it follow the OS rather than the app's
+`[data-theme]` (acronis/uikit#674). That row disappears when the token bundle is
+fixed, and the suite will demand it: the run fails as soon as the story stops
+differing.
+
+Keep the registry small — a failing profile usually means a component resolved a
+colour through `[data-theme]` instead of a token, and the default response is to
+fix it. The capture script also refuses to start when an entry names a story the run
+does not capture, because a waiver that never executes looks like tracked coverage
+and asserts nothing.
 
 ## Generate / update baselines
 
