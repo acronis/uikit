@@ -1,0 +1,38 @@
+spec_version: '1.0'
+component: CardSection
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+#
+# Like `Card`, no dedicated `--ui-card-*` component tier exists, so the section
+# chrome rides on the shared *semantic* tier. Figma's default `contentList`
+# rows additionally reference `components/Card/body/section/item/*`
+# (text/title, text/description, background/idle, container/paddingY,
+# container/itemGap, container/heightMin) — none of which exist in
+# `@acronis-platform/design-tokens`, so those are omitted here and the `list`
+# variant ships without a built-in row fallback rather than hardcoding values.
+# Tokens consumed by the composed `Tag` and `Card` are documented in their own
+# specs, not repeated here.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: title,
+      description: Section header title color,
+    }
+  - {
+      name: --ui-border-on-surface-divider,
+      affects: root,
+      description: Bottom divider drawn when hasBottomBorder is set,
+    }
+  - {
+      name: --ui-background-surface-primary,
+      affects: nested-card,
+      description: Nested card surface for the card-primary variant,
+    }
+  - {
+      name: --ui-background-surface-secondary,
+      affects: nested-card,
+      description: Nested card surface for the card-secondary variant,
+    }
