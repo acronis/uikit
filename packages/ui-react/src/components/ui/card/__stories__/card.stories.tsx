@@ -174,7 +174,7 @@ const meta = {
       table: {
         type: { summary: 'string' },
         category: 'Content',
-        defaultValue: { summary: 'Toggle card' },
+        defaultValue: { summary: 'Collapse card' },
       },
     },
   },

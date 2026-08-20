@@ -141,14 +141,14 @@ describe('CardHeader', () => {
   it('does not render a collapse trigger by default', () => {
     render(<CardHeader />);
     expect(
-      screen.queryByRole('button', { name: 'Toggle card' })
+      screen.queryByRole('button', { name: 'Collapse card' })
     ).not.toBeInTheDocument();
   });
 
   it('does not render a collapse trigger outside a collapsible AccordionContainer', () => {
     render(<CardHeader isCollapsible />);
     expect(
-      screen.queryByRole('button', { name: 'Toggle card' })
+      screen.queryByRole('button', { name: 'Collapse card' })
     ).not.toBeInTheDocument();
   });
 

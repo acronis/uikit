@@ -156,7 +156,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
       extras,
       actions,
       isCollapsible = false,
-      collapseLabel = 'Toggle card',
+      collapseLabel = 'Collapse card',
       children,
       ...props
     },
