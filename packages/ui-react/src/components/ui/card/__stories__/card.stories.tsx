@@ -468,3 +468,29 @@ export const ContentOnly: Story = {
     </Card>
   ),
 };
+
+// Card's root keeps `overflow-hidden` (see cardVariants), and CardContent
+// itself imposes no scroll/clip behavior of its own — a fixed-size Card with
+// content wider and taller than it fits is clipped by the root rather than
+// scrolling or growing the card. This story visualizes that current
+// behavior on both axes at once (a long unbroken line for x, a tall list for
+// y) so any future change to how Card handles overflow has a baseline to
+// compare against.
+export const OverflowingContent: Story = {
+  render: () => (
+    <Card className="h-55 w-70">
+      <CardHeader title="Storage usage" />
+      <CardContent className="pt-4">
+        <p className="mb-2 text-sm whitespace-nowrap">
+          This line of text is intentionally far too long to fit inside the
+          card without wrapping, to visualize horizontal overflow.
+        </p>
+        <ul className="text-sm">
+          {Array.from({ length: 20 }, (_, i) => (
+            <li key={i}>Workload {i + 1} — 12.4 GB</li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
+  ),
+};
