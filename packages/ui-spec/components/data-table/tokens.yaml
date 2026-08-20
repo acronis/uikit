@@ -45,9 +45,18 @@ tokens:
     description: Current (last-clicked) row highlight — the active-row color.
   - name: --ui-table-header-cell-color-hover
     affects: column-header
+    description: Hover background of the single-click sort toggle.
+  - name: --ui-table-header-cell-color-active
+    affects: column-header
+    description: Pressed background of the single-click sort toggle.
+  - name: --ui-table-data-cell-color-hover
+    affects: expand-trigger
     description: >-
-      Hover background of the single-click sort toggle; also the hover
-      background of the in-cell expand trigger.
+      Hover background of the in-cell expand trigger — a data-area control, so
+      it tints from the data-cell tier rather than the header tier.
+  - name: --ui-table-data-cell-color-active
+    affects: expand-trigger
+    description: Pressed background of the in-cell expand trigger.
   - name: --ui-table-header-sort-icon-size
     affects: column-header
     description: Size of the sort-direction arrow in the column header.
@@ -57,6 +66,24 @@ tokens:
   - name: --ui-table-header-sort-icon-color-inactive
     affects: column-header
     description: Muted up/down arrow shown when the column is unsorted.
+  - name: --ui-table-data-row-color-hover
+    affects: row
+    description: >-
+      Hover background mirrored onto a pinned (sticky) cell via the row's
+      `group`, since the row's own `hover:` can't reach a cell that needs its
+      own opaque background.
+  - name: --ui-table-global-cell-min-height
+    affects: row
+    description: Single-line row height — dropped by a column with meta.wrap set.
+  - name: --ui-table-header-gap
+    affects: column-header
+    description: Gap between the header title and its sort-direction arrow.
+  - name: --ui-resizable-border-color-hover
+    affects: resize-handle
+    description: Resize-handle bar color on hover / keyboard focus.
+  - name: --ui-resizable-border-color-active
+    affects: resize-handle
+    description: Resize-handle bar color while that column is being resized.
   - name: --ui-focus-primary
     affects: column-header
     description: >-

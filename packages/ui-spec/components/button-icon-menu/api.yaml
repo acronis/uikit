@@ -1,0 +1,72 @@
+spec_version: '1.0'
+component: ButtonIconMenu
+
+contract:
+  properties:
+    - name: open
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Whether the associated menu is open. Applies the open (`*-active`)
+        treatment to the container fill, glyph, and border, and reflects
+        `aria-expanded`. Keep it in sync with the menu the button controls.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Disables interaction. Applies the explicit disabled tokens (not opacity)
+        and suppresses click.
+    - name: ariaLabel
+      type: string
+      required: false
+      default: "'More options'"
+      description: >-
+        Accessible name. The control is icon-only and has no text to name it, so
+        the default is only a fallback — pass a localized string.
+    - name: type
+      type: "'button' | 'submit' | 'reset'"
+      required: false
+      default: "'button'"
+      description: Native HTML button type.
+
+  events:
+    - name: click
+      payload: MouseEvent
+      description: >-
+        Fired on activation (pointer or keyboard). Typically toggles the
+        associated menu. Not fired while disabled.
+
+  content:
+    - name: none
+      description: >-
+        Takes no content — the ellipsis glyph is fixed by the design. Use
+        ButtonIcon when the glyph has to change.
+
+adapters:
+  react:
+    component: ButtonIconMenu
+    status: implemented
+    import: "import { ButtonIconMenu } from '@acronis-platform/ui-react'"
+    example: |
+      <ButtonIconMenu
+        ariaLabel="Row actions"
+        open={open}
+        onClick={toggle}
+      />
+
+      {/* Polymorphic: render as a menu trigger via the `render` prop */}
+      <ButtonIconMenu render={<Menu.Trigger />} ariaLabel="Row actions" />
+  vue:
+    element: AvButtonIconMenu
+    status: planned
+    import: "import { AvButtonIconMenu } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvButtonIconMenu aria-label="Row actions" :open="open" @click="toggle" />
+  web-components:
+    element: ui-button-icon-menu
+    status: planned
+    import: "import '@acronis-platform/ui-wc/button-icon-menu'"
+    example: |
+      <ui-button-icon-menu aria-label="Row actions" open></ui-button-icon-menu>

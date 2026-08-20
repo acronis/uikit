@@ -13,7 +13,7 @@ export function ToastDemo() {
           })
         }
       >
-        Default
+        Info
       </Button>
       <Button
         variant="secondary"
@@ -28,25 +28,48 @@ export function ToastDemo() {
       <Button
         variant="secondary"
         onClick={() =>
-          toast.error('Delete failed', {
+          toast.warning('Disk space low', {
+            description: 'Less than 10% remaining.',
+          })
+        }
+      >
+        Warning
+      </Button>
+      <Button
+        variant="secondary"
+        onClick={() =>
+          toast.critical('Backup incomplete', {
+            description: 'Three workloads were skipped.',
+          })
+        }
+      >
+        Critical
+      </Button>
+      <Button
+        variant="secondary"
+        onClick={() =>
+          toast.danger('Delete failed', {
             description: 'Please try again or contact support.',
           })
         }
       >
-        Error
+        Danger
       </Button>
       <Button
         variant="secondary"
         onClick={() =>
           toast.info('Event created', {
             description: 'Monday, January 3rd at 6:00 PM',
-            action: { label: 'Undo', onClick: () => {} },
+            actions: [
+              { label: 'View', onClick: () => {} },
+              { label: 'Undo', onClick: () => {} },
+            ],
           })
         }
       >
-        With action
+        With actions
       </Button>
-      <Toaster />
+      <Toaster limit={5} />
     </div>
   );
 }

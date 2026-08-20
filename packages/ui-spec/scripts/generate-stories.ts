@@ -49,6 +49,12 @@ interface RenderHint {
    *  called, so a generated "All States" story is a blank snapshot). Such
    *  components rely on their hand-written stories for VR. */
   skip?: boolean;
+  /** Object-literal body for `meta.args`, for a component with a **required**
+   *  prop (e.g. Timer's `value`). Every generated story supplies its own props
+   *  through `render`, so these args are never read — but Storybook's types
+   *  demand that a required prop be satisfiable from `meta.args`, and without
+   *  them `satisfies Meta<typeof X>` fails typecheck. */
+  metaArgs?: string;
 }
 
 const RENDER: Record<string, RenderHint> = {
@@ -80,6 +86,23 @@ const RENDER: Record<string, RenderHint> = {
       '      <CardFilter label="Total assets" value="125" icon={<SquareDashedIcon />} />',
       '      <CardFilter label="Active filters" value="3" icon={<SquareDashedIcon />} />',
       '      <CardFilter label="Pending" variant="static-empty" />',
+      '    ',
+    ].join('\n'),
+  },
+  'filter-chips': {
+    extraImports: [
+      "import { FilterChipsList, FilterChipsReset } from '../filter-chips';",
+      "import { Chip } from '../../chip/chip';",
+      "import { SquareDashedIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    sample: [
+      '',
+      '      <FilterChipsList>',
+      '        <Chip icon={<SquareDashedIcon size={16} />}>Label</Chip>',
+      '        <Chip icon={<SquareDashedIcon size={16} />}>Label</Chip>',
+      '        <Chip icon={<SquareDashedIcon size={16} />}>Label</Chip>',
+      '        <FilterChipsReset />',
+      '      </FilterChipsList>',
       '    ',
     ].join('\n'),
   },
@@ -378,7 +401,8 @@ const RENDER: Record<string, RenderHint> = {
   toast: {
     // Imperative: the region is empty until `toast()` is called, so a generated
     // "All States" story would be a blank snapshot. VR is covered by the
-    // hand-written stories (Default / Variants / WithAction).
+    // hand-written stories (Default / Variants / WithActions / TitleOnly /
+    // Loading / Localized).
     skip: true,
   },
   'data-table': {
@@ -510,6 +534,12 @@ const RENDER: Record<string, RenderHint> = {
   collapsible: {
     // A disclosure needing a trigger + panel children. VR is covered by the
     // hand-written story (Default).
+    skip: true,
+  },
+  'accordion-container': {
+    // A disclosure primitive needing a trigger + panel composition to render
+    // meaningfully. VR is covered by the hand-written stories (the three
+    // isCollapsable states: false / true-expanded / true-collapsed).
     skip: true,
   },
   slider: {
@@ -692,6 +722,30 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  // Icon-only items carry the whole visual: with no children the group renders
+  // as an empty 4px-tall box, so the sample composes three real actions. The
+  // container needs an accessible name of its own (the component ships no
+  // default `aria-label` — see its accessibility.md).
+  'button-group': {
+    ariaLabel: 'View mode',
+    extraImports: [
+      "import { ButtonGroupItem } from '../button-group';",
+      "import { LayoutGridIcon, LayoutTableIcon, ListIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    sample: [
+      '',
+      '      <ButtonGroupItem aria-label="List view">',
+      '        <ListIcon size={16} />',
+      '      </ButtonGroupItem>',
+      '      <ButtonGroupItem aria-label="Grid view">',
+      '        <LayoutGridIcon size={16} />',
+      '      </ButtonGroupItem>',
+      '      <ButtonGroupItem aria-label="Table view">',
+      '        <LayoutTableIcon size={16} />',
+      '      </ButtonGroupItem>',
+      '    ',
+    ].join('\n'),
+  },
   breadcrumb: {
     ariaLabel: 'breadcrumb',
     extraImports: [
@@ -715,6 +769,38 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  'stepper-item': {
+    // `avatar` is a required element slot, and `label` is a prop rather than
+    // children — the generator can only drive root props, so both are fixed here
+    // or every generated instance renders an empty, unlabelled box.
+    extraImports: ["import { Avatar, AvatarFallback } from '../../avatar';"],
+    props:
+      'label="Step name" avatar={<Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar>}',
+    // `avatar` is required, so the meta has to carry it for the type to check.
+    metaArgs: 'avatar: <Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar>',
+  },
+  stepper: {
+    // Three required content props feed the compact summary, and the wide row is
+    // driven by children — the generator can supply neither on its own, so a
+    // representative sequence is fixed here. Both layouts are always rendered
+    // (the switch is a CSS media query), so this one instance covers both.
+    extraImports: [
+      "import { Avatar, AvatarFallback } from '../../avatar';",
+      "import { StepperItem } from '../../stepper-item';",
+    ],
+    props:
+      'currentStep={2} totalSteps={3} current="Choose a plan" next="Confirm and pay"',
+    sample: [
+      '',
+      '      <StepperItem variant="completed" label="Create an account" avatar={<Avatar color="green"><AvatarFallback>1</AvatarFallback></Avatar>} />',
+      '      <StepperItem variant="current" label="Choose a plan" avatar={<Avatar color="blue"><AvatarFallback>2</AvatarFallback></Avatar>} />',
+      '      <StepperItem variant="future" label="Confirm and pay" avatar={<Avatar color="gray"><AvatarFallback>3</AvatarFallback></Avatar>} />',
+      '    ',
+    ].join('\n'),
+    // `currentStep`/`totalSteps`/`current` are required, so the meta has to carry
+    // them for `StoryObj<typeof meta>` to type-check on the render-only stories.
+    metaArgs: "currentStep: 2, totalSteps: 3, current: 'Choose a plan'",
+  },
   'dialog-welcome': {
     // A portaled, focus-trapping modal, like `Dialog` — an auto "All variants"
     // grid would stack two stacked modals at screen center. VR is covered by
@@ -733,6 +819,34 @@ const RENDER: Record<string, RenderHint> = {
     // representative 3-slide carousel so the generated `variant` matrix
     // renders a real dot indicator instead of a single dot.
     props: 'slideCount={3} selectedIndex={0}',
+  },
+  // `value` is required and the actions are children, so an undriven `<Timer />`
+  // would snapshot as an empty box. The sample is the design's own composition
+  // (pause / rename / add), which also paints the divider — that only exists
+  // when the timer has actions.
+  timer: {
+    extraImports: [
+      // Relative to the generated file's `__stories__/` directory.
+      "import { ButtonGroupItem } from '../../button-group';",
+      "import { CirclePauseIcon, PencilIcon, PlusIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    props: 'value="12:01:45"',
+    // `value` is required, so Storybook's types need it satisfiable from
+    // `meta.args` even though the story sets it in `render`.
+    metaArgs: "value: '12:01:45'",
+    sample: [
+      '',
+      '      <ButtonGroupItem aria-label="Pause">',
+      '        <CirclePauseIcon size={16} />',
+      '      </ButtonGroupItem>',
+      '      <ButtonGroupItem aria-label="Rename">',
+      '        <PencilIcon size={16} />',
+      '      </ButtonGroupItem>',
+      '      <ButtonGroupItem aria-label="Add entry">',
+      '        <PlusIcon size={16} />',
+      '      </ButtonGroupItem>',
+      '    ',
+    ].join('\n'),
   },
 };
 
@@ -933,7 +1047,7 @@ ${imports}
 
 const meta = {
   title: 'UI/${index.component}/All States (generated)',
-  component: ${comp},
+  component: ${comp},${hint.metaArgs ? `\n  args: { ${hint.metaArgs} },` : ''}
 } satisfies Meta<typeof ${comp}>;
 
 export default meta;

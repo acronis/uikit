@@ -12,10 +12,13 @@ root:
   element: a
   role: link
   description: >-
-    The inline anchor. Semibold 14/24 text in `--ui-link-normal-text-color-idle`; hover adds the
+    The inline anchor. Semibold 14/24 text in `--ui-link-<surface>-text-color-idle`,
+    where `<surface>` is the `variant` prop (`normal` / `inverse`); hover adds the
     `--ui-link-global-text-decoration-hover` underline + `-color-hover`; `:active` uses
     `-color-active`. Polymorphic via `render` (e.g. a router link). When `disabled`,
-    it is inert: `--ui-link-normal-text-color-disabled`, removed from the tab order, no href.
+    it is inert — removed from the tab order, no href — and on the `normal` surface also
+    recolored to `--ui-link-normal-text-color-disabled`; the `inverse` surface has no
+    disabled color (none is authored for a backdrop).
 
 parts:
   - id: label
@@ -24,7 +27,9 @@ parts:
   - id: icon
     description: >-
       Optional trailing external-link icon (SquareArrowUpRightIcon), shown when
-      `external`. `--ui-link-normal-external-icon-color-*`.
+      `external` **and** `variant="normal"` — the design defines this part only on the
+      normal surface. `--ui-link-normal-external-icon-color-*`, wired separately from
+      the label color.
     element: svg
     optional: true
 
@@ -58,7 +63,7 @@ states:
     }
   - {
       id: disabled,
-      trigger: 'disabled === true',
+      trigger: 'disabled === true (variant="normal" only — ignored on "inverse")',
       kind: prop,
       prop: disabled,
       affects: [label, icon],

@@ -7,21 +7,27 @@ import {
 
 import { cn } from '@/lib/utils';
 
-// Composable table primitives ported from `@acronis-platform/shadcn-uikit`'s
-// `table` (packages/ui-legacy/src/components/ui/table.tsx) and informed by the
-// "pre-release" Table design in the shadcn-uikit Figma (node 2948-2416). Unlike
-// Card/Dialog, a `--ui-table-*` token tier already exists, so these parts theme
+// Composable table primitives, reconciled against the Table design in the
+// ui-react Figma (canvas 2948-2416; assembled example 4567-6801, part state
+// matrices TableHeaderCell 3427-207 / TableDataCell 4536-97 / TableDataRow
+// 4536-699 / TableSettings 3698-497 / TableActions 4536-414 / TableCheckbox
+// 3698-746). A `--ui-table-*` token tier already exists, so these parts theme
 // directly from it (imported in styles/index.css):
-//   • cell   -> --ui-table-global-cell-{padding-x,padding-y,min-height}
-//   • row    -> --ui-table-global-row-border-color, --ui-table-data-row-color-{idle,hover,active}  (active = selected)
-//   • header -> --ui-table-header-{label-color,cell-color-hover,gap}
-//   • sort   -> --ui-table-header-sort-icon-{color-active,color-inactive,size}
-//   • data   -> --ui-table-data-value-color-{idle,disabled}
-// The design's row checkboxes, tags, links and the column-settings button are
-// consumer composition (use Checkbox / Tag / Link / ButtonIcon in cells). A
-// TanStack-backed `DataTable` (sorting/selection logic over these primitives) is
-// a planned follow-up, mirroring legacy's separate `data-table`. Reconcile with
-// `/figma-component Table <url> --update` once the design is ready for dev.
+//   • cell     -> --ui-table-global-cell-{padding-x,padding-y,min-height}
+//   • row      -> --ui-table-global-row-{border-color,border-width,border-style},
+//                 --ui-table-data-row-color-{idle,hover,active}  (active = selected)
+//   • head     -> --ui-table-header-{label-color,gap}, --ui-table-header-cell-color-{idle,hover,active}
+//   • data     -> --ui-table-data-cell-color-{idle,hover,active}, --ui-table-data-value-color-{idle,disabled}
+//   • sort     -> --ui-table-header-sort-icon-{color-active,color-inactive,size}
+//   • focus    -> --ui-focus-primary (the kit-wide 3px focus ring, radius/radius-4)
+// Per the design, the header/settings/actions cells tint on hover and press at
+// the *cell* level (not on an inner control), so the interaction tokens sit on
+// the `<th>`/`<td>` and the focus ring is drawn on the cell via `has-[…]`.
+//
+// The design's cell content (tags, status dots, links) stays consumer
+// composition — `--ui-table-global-cell-{tag,icon}-margin-y` and
+// --ui-table-data-gap describe that content's own insets, not a part contract,
+// so no wrapper part is invented for them here.
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -67,7 +73,7 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      'border-t border-[color:var(--ui-table-global-row-border-color)] font-medium [&>tr]:last:border-b-0',
+      'border-t-[length:var(--ui-table-global-row-border-width)] [border-top-style:var(--ui-table-global-row-border-style)] border-[color:var(--ui-table-global-row-border-color)] font-medium [&>tr]:last:border-b-0',
       className
     )}
     {...props}
@@ -87,7 +93,11 @@ const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
       ref={ref}
       data-state={selected ? 'selected' : undefined}
       className={cn(
-        'border-b border-[color:var(--ui-table-global-row-border-color)] bg-[var(--ui-table-data-row-color-idle)] transition-colors hover:bg-[var(--ui-table-data-row-color-hover)] data-[state=selected]:bg-[var(--ui-table-data-row-color-active)]',
+        'border-b-[length:var(--ui-table-global-row-border-width)] [border-bottom-style:var(--ui-table-global-row-border-style)] border-[color:var(--ui-table-global-row-border-color)] bg-[var(--ui-table-data-row-color-idle)] transition-colors hover:bg-[var(--ui-table-data-row-color-hover)] data-[state=selected]:bg-[var(--ui-table-data-row-color-active)]',
+        // The design documents a keyboard-nav focus state on the row itself
+        // (a ring spanning the full row). Rows aren't focusable by default, so
+        // this only paints once a consumer makes them focusable (`tabIndex`).
+        'focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-[var(--ui-focus-primary)]',
         className
       )}
       {...props}
@@ -149,8 +159,14 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
               : undefined
       }
       className={cn(
-        'px-[var(--ui-table-global-cell-padding-x)] text-start align-middle text-sm font-semibold text-[var(--ui-table-header-label-color)] [&:has([role=checkbox])]:pe-0',
-        wrap ? 'whitespace-normal' : 'h-10',
+        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] text-start align-middle text-sm font-semibold leading-6 text-[var(--ui-table-header-label-color)] bg-[var(--ui-table-header-cell-color-idle)] [&:has([role=checkbox])]:pe-0',
+        wrap
+          ? 'whitespace-normal'
+          : 'h-[var(--ui-table-global-cell-min-height)]',
+        // Per the design, a sortable header tints the whole cell on hover/press
+        // and draws the focus ring on the cell, not on the inner control.
+        sortable &&
+          'cursor-pointer rounded-sm transition-colors hover:bg-[var(--ui-table-header-cell-color-hover)] active:bg-[var(--ui-table-header-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
         className
       )}
       {...props}
@@ -159,7 +175,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
         <button
           type="button"
           onClick={onSort}
-          className="-mx-1 inline-flex cursor-pointer items-center gap-[var(--ui-table-header-gap)] rounded-sm px-1 outline-none transition-colors hover:bg-[var(--ui-table-header-cell-color-hover)] focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)]"
+          className="flex w-full cursor-pointer items-center gap-[var(--ui-table-header-gap)] text-start outline-none"
         >
           {children}
           <SortIcon direction={sortDirection} />
@@ -186,8 +202,10 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
     <td
       ref={ref}
       className={cn(
-        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm [&:has([role=checkbox])]:pe-0',
-        wrap ? 'whitespace-normal' : 'h-10',
+        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm leading-6 bg-[var(--ui-table-data-cell-color-idle)] [&:has([role=checkbox])]:pe-0',
+        wrap
+          ? 'whitespace-normal'
+          : 'h-[var(--ui-table-global-cell-min-height)]',
         className
       )}
       {...props}
@@ -195,6 +213,101 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
   )
 );
 TableCell.displayName = 'TableCell';
+
+export interface TableSelectCellProps
+  extends React.ThHTMLAttributes<HTMLTableCellElement> {
+  /**
+   * Render the select-all cell of the header row (`<th>`) instead of a row's
+   * selection cell (`<td>`).
+   */
+  header?: boolean;
+}
+
+/**
+ * The row-selection cell (design part `TableCheckbox`) — a fixed 32px column
+ * holding a label-less `Checkbox`. Only the leading padding is applied, matching
+ * the design (16px padding + a 16px box), so the checkbox sits flush against the
+ * first data cell.
+ */
+const TableSelectCell = React.forwardRef<
+  HTMLTableCellElement,
+  TableSelectCellProps
+>(({ className, header, ...props }, ref) => {
+  const Comp = header ? 'th' : 'td';
+  return (
+    <Comp
+      ref={ref}
+      className={cn(
+        'w-8 h-[var(--ui-table-global-cell-min-height)] ps-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle',
+        header
+          ? 'bg-[var(--ui-table-header-cell-color-idle)]'
+          : 'bg-[var(--ui-table-data-cell-color-idle)]',
+        className
+      )}
+      {...props}
+    />
+  );
+});
+TableSelectCell.displayName = 'TableSelectCell';
+
+export interface TableActionsCellProps
+  extends React.TdHTMLAttributes<HTMLTableCellElement> {
+  /**
+   * Suppress this row's actions because a selection is in play — the cell
+   * still reserves its 48px column (so the grid doesn't reflow) but renders no
+   * children and no hover/press tint. Per the design, that means any row is
+   * selected, including exactly one. Pass `isBulkSelectionActive(table)` (from
+   * the data-table part) rather than re-deriving the threshold.
+   */
+  bulkSelectionActive?: boolean;
+}
+
+/**
+ * The trailing row-actions cell (design part `TableActions`) — a fixed 48px
+ * column, end-aligned, holding the consumer's overflow trigger (e.g. a
+ * `ButtonIcon` with `EllipsisIcon` opening a `DropdownMenu`). The cell itself
+ * carries the hover/press tint and the focus ring, per the design.
+ */
+const TableActionsCell = React.forwardRef<
+  HTMLTableCellElement,
+  TableActionsCellProps
+>(({ className, bulkSelectionActive, children, ...props }, ref) => (
+  <td
+    ref={ref}
+    className={cn(
+      'w-12 h-[var(--ui-table-global-cell-min-height)] px-[var(--ui-table-global-cell-padding-x)] text-end align-middle bg-[var(--ui-table-data-cell-color-idle)]',
+      !bulkSelectionActive &&
+        'rounded-sm transition-colors hover:bg-[var(--ui-table-data-cell-color-hover)] active:bg-[var(--ui-table-data-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
+      className
+    )}
+    {...props}
+  >
+    {bulkSelectionActive ? null : children}
+  </td>
+));
+TableActionsCell.displayName = 'TableActionsCell';
+
+/**
+ * The trailing header cell holding the column-settings trigger (design part
+ * `TableSettings`) — a fixed 48px column, end-aligned, holding the consumer's
+ * gear trigger (e.g. a `ButtonIcon` with `CogIcon`). Visual states only; what
+ * the trigger opens (a column-visibility menu) is the consumer's choice —
+ * `TableViewOptions` is the ready-made one.
+ */
+const TableSettingsCell = React.forwardRef<
+  HTMLTableCellElement,
+  React.ThHTMLAttributes<HTMLTableCellElement>
+>(({ className, ...props }, ref) => (
+  <th
+    ref={ref}
+    className={cn(
+      'w-12 h-[var(--ui-table-global-cell-min-height)] px-[var(--ui-table-global-cell-padding-x)] text-end align-middle rounded-sm transition-colors bg-[var(--ui-table-header-cell-color-idle)] hover:bg-[var(--ui-table-header-cell-color-hover)] active:bg-[var(--ui-table-header-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
+      className
+    )}
+    {...props}
+  />
+));
+TableSettingsCell.displayName = 'TableSettingsCell';
 
 const TableCaption = React.forwardRef<
   HTMLTableCaptionElement,
@@ -216,5 +329,8 @@ export {
   TableHead,
   TableRow,
   TableCell,
+  TableSelectCell,
+  TableActionsCell,
+  TableSettingsCell,
   TableCaption,
 };

@@ -8,7 +8,7 @@ export default {
       "backgroundColor": {
         "backdrop-element-primary": "light-dark(rgb(255 255 255 / 0.949), rgb(48 50 54 / 0.949))",
         "backdrop-element-secondary": "light-dark(rgb(248 250 252 / 0.949), rgb(24 25 27 / 0.949))",
-        "backdrop-screen": "light-dark(rgb(25 27 35 / 0.898), rgb(109 114 120 / 0.898))",
+        "backdrop-screen": "light-dark(rgb(25 27 35 / 0.898), rgb(25 27 35 / 0.898))",
         "brand-primary": "light-dark(rgb(0 32 77), rgb(12 12 14))",
         "brand-primary-active": "light-dark(rgb(23 99 207), rgb(81 157 246))",
         "brand-primary-disabled": "light-dark(rgb(117 174 240), rgb(85 89 94))",
@@ -161,7 +161,73 @@ export default {
         "on-surface-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
         "on-surface-neutral": "light-dark(rgb(201 204 207), rgb(73 76 80))",
         "on-surface-neutral-dark": "light-dark(rgb(73 76 80), rgb(201 204 207))",
-        "on-surface-primary": "light-dark(rgb(23 99 207), rgb(81 157 246))"
+        "on-surface-primary": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "dataviz-categorical-1": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "dataviz-categorical-2": "light-dark(rgb(214 96 0), rgb(255 178 102))",
+        "dataviz-categorical-3": "light-dark(rgb(51 153 145), rgb(51 153 145))",
+        "dataviz-categorical-4": "light-dark(rgb(221 60 221), rgb(221 60 221))",
+        "dataviz-categorical-5": "light-dark(rgb(178 128 0), rgb(255 227 128))",
+        "dataviz-categorical-6": "light-dark(rgb(226 54 54), rgb(229 77 77))",
+        "dataviz-categorical-7": "light-dark(rgb(36 143 54), rgb(107 199 122))",
+        "dataviz-categorical-8": "light-dark(rgb(117 174 240), rgb(48 89 145))",
+        "dataviz-categorical-9": "light-dark(rgb(245 184 0), rgb(245 184 0))",
+        "dataviz-categorical-10": "light-dark(rgb(152 27 152), rgb(247 186 247))",
+        "dataviz-categorical-11": "light-dark(rgb(10 92 85), rgb(178 230 225))",
+        "dataviz-categorical-12": "light-dark(rgb(173 31 31), rgb(248 195 195))",
+        "dataviz-categorical-13": "light-dark(rgb(11 66 142), rgb(117 174 240))",
+        "dataviz-categorical-14": "light-dark(rgb(102 73 0), rgb(255 244 204))",
+        "dataviz-categorical-15": "light-dark(rgb(15 87 33), rgb(209 240 214))",
+        "dataviz-categorical-16": "light-dark(rgb(214 228 245), rgb(38 70 115))",
+        "dataviz-diverging-blue-orange-a1": "light-dark(rgb(190 215 244), rgb(41 81 122))",
+        "dataviz-diverging-blue-orange-a2": "light-dark(rgb(117 174 240), rgb(48 89 145))",
+        "dataviz-diverging-blue-orange-a3": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "dataviz-diverging-blue-orange-b1": "light-dark(rgb(255 204 153), rgb(153 69 0))",
+        "dataviz-diverging-blue-orange-b2": "light-dark(rgb(255 128 0), rgb(255 128 0))",
+        "dataviz-diverging-blue-orange-b3": "light-dark(rgb(214 96 0), rgb(255 178 102))",
+        "dataviz-diverging-teal-violet-a1": "light-dark(rgb(178 230 225), rgb(10 92 85))",
+        "dataviz-diverging-teal-violet-a2": "light-dark(rgb(121 210 203), rgb(26 102 94))",
+        "dataviz-diverging-teal-violet-a3": "light-dark(rgb(51 153 145), rgb(51 153 145))",
+        "dataviz-diverging-teal-violet-b1": "light-dark(rgb(228 204 237), rgb(130 23 130))",
+        "dataviz-diverging-teal-violet-b2": "light-dark(rgb(221 60 221), rgb(221 60 221))",
+        "dataviz-diverging-teal-violet-b3": "light-dark(rgb(173 31 173), rgb(242 140 242))",
+        "dataviz-meaningful-status-critical": "light-dark(rgb(255 128 0), rgb(255 128 0))",
+        "dataviz-meaningful-status-danger": "light-dark(rgb(226 54 54), rgb(229 77 77))",
+        "dataviz-meaningful-status-info": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "dataviz-meaningful-status-neutral": "light-dark(rgb(109 114 120), rgb(109 114 120))",
+        "dataviz-meaningful-status-success": "light-dark(rgb(41 163 61), rgb(72 209 94))",
+        "dataviz-meaningful-status-warning": "light-dark(rgb(245 184 0), rgb(245 184 0))",
+        "dataviz-sequential-blue-1": "light-dark(rgb(226 235 245), rgb(32 58 95))",
+        "dataviz-sequential-blue-2": "light-dark(rgb(214 228 245), rgb(38 70 115))",
+        "dataviz-sequential-blue-3": "light-dark(rgb(117 174 240), rgb(48 89 145))",
+        "dataviz-sequential-blue-4": "light-dark(rgb(48 125 232), rgb(83 131 197))",
+        "dataviz-sequential-blue-5": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "dataviz-sequential-blue-6": "light-dark(rgb(13 77 165), rgb(140 176 217))",
+        "dataviz-sequential-blue-7": "light-dark(rgb(6 54 121), rgb(214 228 245))",
+        "dataviz-sequential-blue-8": "light-dark(rgb(3 43 99), rgb(226 235 245))",
+        "dataviz-sequential-orange-1": "light-dark(rgb(255 231 214), rgb(102 45 0))",
+        "dataviz-sequential-orange-2": "light-dark(rgb(255 204 153), rgb(153 69 0))",
+        "dataviz-sequential-orange-3": "light-dark(rgb(255 178 102), rgb(214 96 0))",
+        "dataviz-sequential-orange-4": "light-dark(rgb(255 153 51), rgb(240 112 0))",
+        "dataviz-sequential-orange-5": "light-dark(rgb(255 128 0), rgb(255 128 0))",
+        "dataviz-sequential-orange-6": "light-dark(rgb(214 96 0), rgb(255 178 102))",
+        "dataviz-sequential-orange-7": "light-dark(rgb(153 69 0), rgb(255 222 194))",
+        "dataviz-sequential-orange-8": "light-dark(rgb(128 57 0), rgb(255 231 214))",
+        "dataviz-sequential-teal-1": "light-dark(rgb(226 245 244), rgb(3 58 54))",
+        "dataviz-sequential-teal-2": "light-dark(rgb(178 230 225), rgb(10 92 85))",
+        "dataviz-sequential-teal-3": "light-dark(rgb(121 210 203), rgb(26 102 94))",
+        "dataviz-sequential-teal-4": "light-dark(rgb(70 185 175), rgb(31 122 115))",
+        "dataviz-sequential-teal-5": "light-dark(rgb(51 153 145), rgb(51 153 145))",
+        "dataviz-sequential-teal-6": "light-dark(rgb(26 102 94), rgb(121 210 203))",
+        "dataviz-sequential-teal-7": "light-dark(rgb(4 73 67), rgb(209 240 237))",
+        "dataviz-sequential-teal-8": "light-dark(rgb(3 58 54), rgb(226 245 244))",
+        "dataviz-sequential-violet-1": "light-dark(rgb(245 238 248), rgb(87 15 87))",
+        "dataviz-sequential-violet-2": "light-dark(rgb(228 204 237), rgb(130 23 130))",
+        "dataviz-sequential-violet-3": "light-dark(rgb(222 186 235), rgb(173 31 173))",
+        "dataviz-sequential-violet-4": "light-dark(rgb(214 164 231), rgb(195 34 195))",
+        "dataviz-sequential-violet-5": "light-dark(rgb(221 60 221), rgb(221 60 221))",
+        "dataviz-sequential-violet-6": "light-dark(rgb(173 31 173), rgb(242 140 242))",
+        "dataviz-sequential-violet-7": "light-dark(rgb(130 23 130), rgb(250 209 250))",
+        "dataviz-sequential-violet-8": "light-dark(rgb(108 19 108), rgb(252 227 252))"
       },
       "ringColor": {
         "brand": "light-dark(rgb(190 215 244), rgb(81 157 246))",
@@ -181,7 +247,6 @@ export default {
         "typography-body-default": "Inter, system-ui, sans-serif",
         "typography-body-default-numeric": "Inter, system-ui, sans-serif",
         "typography-body-form-label": "Inter, system-ui, sans-serif",
-        "typography-body-heading": "Inter, system-ui, sans-serif",
         "typography-body-strong": "Inter, system-ui, sans-serif",
         "typography-caption-accent": "Inter, system-ui, sans-serif",
         "typography-caption-default": "Inter, system-ui, sans-serif",
@@ -191,14 +256,14 @@ export default {
         "typography-headings-display-numeric": "Inter, system-ui, sans-serif",
         "typography-headings-lead": "Inter, system-ui, sans-serif",
         "typography-headings-lead-numeric": "Inter, system-ui, sans-serif",
+        "typography-headings-section": "Inter, system-ui, sans-serif",
         "typography-headings-title": "Inter, system-ui, sans-serif",
         "typography-headings-title-accent": "Inter, system-ui, sans-serif",
         "typography-link-default": "Inter, system-ui, sans-serif",
         "typography-link-default-underline": "Inter, system-ui, sans-serif",
         "typography-link-strong": "Inter, system-ui, sans-serif",
         "typography-link-strong-underline": "Inter, system-ui, sans-serif",
-        "typography-note-default": "Inter, system-ui, sans-serif",
-        "typography-note-heading": "Inter, system-ui, sans-serif"
+        "typography-note-default": "Inter, system-ui, sans-serif"
       },
       "fontSize": {
         "typography-body-accent": [
@@ -231,14 +296,6 @@ export default {
             "lineHeight": "16px",
             "letterSpacing": "0px",
             "fontWeight": "400"
-          }
-        ],
-        "typography-body-heading": [
-          "14px",
-          {
-            "lineHeight": "24px",
-            "letterSpacing": "0.3px",
-            "fontWeight": "600"
           }
         ],
         "typography-body-strong": [
@@ -313,6 +370,14 @@ export default {
             "fontWeight": "400"
           }
         ],
+        "typography-headings-section": [
+          "20px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "0px",
+            "fontWeight": "500"
+          }
+        ],
         "typography-headings-title": [
           "24px",
           {
@@ -367,14 +432,6 @@ export default {
             "lineHeight": "16px",
             "letterSpacing": "1px",
             "fontWeight": "600"
-          }
-        ],
-        "typography-note-heading": [
-          "11px",
-          {
-            "lineHeight": "16px",
-            "letterSpacing": "1px",
-            "fontWeight": "700"
           }
         ]
       },

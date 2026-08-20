@@ -25,16 +25,28 @@ import { ButtonIcon, type ButtonIconProps } from '../button-icon';
 // never optional and never a slot, so a real element would only add markup for
 // consumers to get wrong. It is bled 1px outwards on three sides so it paints
 // *over* the border it sits on (matching the Figma, where the line covers the
-// leading border), and `overflow-clip` on the root clips its square corners to
-// the container radius. `start-` keeps it on the leading edge under `dir="rtl"`.
+// leading border), and the root's clip rounds its square corners to the
+// container radius. `start-` keeps it on the leading edge under `dir="rtl"`.
 //
-// Typography is Tailwind-side (`text-base font-medium leading-6` for the title,
-// `text-sm leading-6` for the description) because tokens-pd exposes no class or
-// primitive matching the title's Figma text style (Inter Medium 16 / 24); only
-// the *colors* are tokens. Every other value is a `var(--ui-alert-*)` reference,
-// so a brand override is honored without touching this file.
+// `overflow-clip-margin: border-box` is load-bearing, not decoration. `overflow:
+// clip` alone clips at the *padding* box, which is exactly where the bleed has to
+// reach — and an absolutely positioned pseudo-element's containing block is that
+// same padding box — so the outward 1px gets shaved off and the line renders 5px
+// wide starting *inside* the border. Since the border and the line are different
+// tokens, that reads as two adjacent stripes rather than one 6px line. Moving the
+// clip edge out to the border box lets the bleed survive while still rounding the
+// corners.
+//
+// Typography comes from the Alert tier's own emitted classes — the title (Inter
+// Regular 18 / 24) and the description (Inter Regular 14 / 24) — the same pair
+// Toast uses, since the two are the same card. The title previously borrowed the
+// semantic `ui-typography-headings-lead` because the tier emitted no title class;
+// it does now, and the two resolve identically today, so a brand that re-styles
+// only Alert's title is honored. Only the *colors* are separate token references.
+// Every other value is a `var(--ui-alert-*)` reference, so a brand override is
+// honored without touching this file.
 const alertVariants = cva(
-  'relative flex w-full items-start overflow-clip border-solid ' +
+  'relative flex w-full items-start overflow-clip [overflow-clip-margin:border-box] border-solid ' +
     'min-w-[var(--ui-alert-global-container-width-min)] ' +
     'gap-[var(--ui-alert-global-container-gap)] ' +
     'px-[var(--ui-alert-global-container-padding-x)] py-[var(--ui-alert-global-container-padding-y)] ' +
@@ -181,7 +193,7 @@ const AlertTitle = React.forwardRef<
     ref={ref}
     data-slot="alert-title"
     className={cn(
-      'mb-0 w-full text-base font-medium leading-6 text-[var(--ui-alert-global-content-text-container-title-color)]',
+      'ui-alert-global-content-text-container-title-text-style mb-0 w-full text-[var(--ui-alert-global-content-text-container-title-color)]',
       className
     )}
     {...props}
@@ -197,7 +209,7 @@ const AlertDescription = React.forwardRef<
     ref={ref}
     data-slot="alert-description"
     className={cn(
-      'w-full text-sm font-normal leading-6 text-[var(--ui-alert-global-content-text-container-description-color)]',
+      'ui-alert-global-content-text-container-description-text-style w-full text-[var(--ui-alert-global-content-text-container-description-color)]',
       className
     )}
     {...props}
@@ -225,24 +237,35 @@ const AlertActions = React.forwardRef<
 ));
 AlertActions.displayName = 'AlertActions';
 
-export interface AlertCloseProps extends Omit<ButtonIconProps, 'children'> {
+// The spec pins this control to a ghost ButtonIcon with a times glyph, so the
+// props that would change that are omitted from the type instead of merely being
+// defaulted — `...props` spreads after them, so keeping them would let
+// `<AlertClose variant="secondary" />` silently win over the documented behavior.
+//
+// `aria-label` needs the belt *and* braces. Omitting it from the type is not
+// enough: TypeScript deliberately skips checking hyphenated JSX attributes (the
+// same rule that lets `data-*` through), so `<AlertClose aria-label="X" />` still
+// compiles. Pinning `aria-label` after the spread is what actually makes
+// `ariaLabel` authoritative.
+export interface AlertCloseProps
+  extends Omit<ButtonIconProps, 'children' | 'variant' | 'render' | 'aria-label'> {
   /** Accessible name for the dismiss control. */
   ariaLabel?: string;
 }
 
 /**
  * The trailing dismiss control. Rendering it is what makes an alert
- * dismissable — wire `onClick` to remove the alert.
+ * dismissable — wire `onClick` to remove the alert. Name it with `ariaLabel`.
  */
 const AlertClose = React.forwardRef<HTMLButtonElement, AlertCloseProps>(
   ({ className, ariaLabel = 'Close', ...props }, ref) => (
     <ButtonIcon
       ref={ref}
-      variant="ghost"
       data-slot="alert-close"
-      aria-label={ariaLabel}
       className={cn('shrink-0', className)}
       {...props}
+      variant="ghost"
+      aria-label={ariaLabel}
     >
       <TimesIcon />
     </ButtonIcon>

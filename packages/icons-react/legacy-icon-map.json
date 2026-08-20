@@ -10,9 +10,9 @@
     ],
     "counts": {
       "total": 1144,
-      "mapped": 1080,
-      "colored": 49,
-      "unresolved": 15
+      "mapped": 1078,
+      "colored": 52,
+      "unresolved": 14
     }
   },
   "icons": {
@@ -1227,11 +1227,11 @@
       }
     },
     "BoxIcon": {
-      "asset": "BoxLogo",
+      "asset": "BoxCom",
       "source": "box",
       "variants": {
         "stroke-mono": null,
-        "solid-mono": "BoxLogoIcon",
+        "solid-mono": "BoxComIcon",
         "stroke-multi": null,
         "solid-multi": null
       }
@@ -3187,10 +3187,10 @@
       }
     },
     "DisableAbIcon": {
-      "asset": "BulbCrossed",
+      "asset": "BulbOff",
       "source": "disable-ab--32",
       "variants": {
-        "stroke-mono": "BulbCrossedIcon",
+        "stroke-mono": "BulbOffIcon",
         "solid-mono": null,
         "stroke-multi": null,
         "solid-multi": null
@@ -4847,10 +4847,10 @@
       }
     },
     "HideCoordinateIcon": {
-      "asset": "EyeCrossed",
+      "asset": "EyeOff",
       "source": "hide-coordinate--16",
       "variants": {
-        "stroke-mono": "EyeCrossedIcon",
+        "stroke-mono": "EyeOffIcon",
         "solid-mono": null,
         "stroke-multi": null,
         "solid-multi": null
@@ -4877,10 +4877,10 @@
       }
     },
     "HideWayIcon": {
-      "asset": "EyeCrossed",
+      "asset": "EyeOff",
       "source": "hide-way--16",
       "variants": {
-        "stroke-mono": "EyeCrossedIcon",
+        "stroke-mono": "EyeOffIcon",
         "solid-mono": null,
         "stroke-multi": null,
         "solid-multi": null
@@ -5497,10 +5497,10 @@
       }
     },
     "LightDisableIcon": {
-      "asset": "BulbCrossed",
+      "asset": "BulbOff",
       "source": "light-disable--24",
       "variants": {
-        "stroke-mono": "BulbCrossedIcon",
+        "stroke-mono": "BulbOffIcon",
         "solid-mono": null,
         "stroke-multi": null,
         "solid-multi": null
@@ -5596,16 +5596,6 @@
         "solid-multi": null
       }
     },
-    "LoadingIcon": {
-      "asset": "Progress",
-      "source": "loading",
-      "variants": {
-        "stroke-mono": "ProgressIcon",
-        "solid-mono": null,
-        "stroke-multi": null,
-        "solid-multi": null
-      }
-    },
     "LocalBackupOIcon": {
       "asset": "Drive",
       "source": "local-backup-o",
@@ -5617,10 +5607,10 @@
       }
     },
     "LockedIcon": {
-      "asset": "CircleLock",
+      "asset": "Lock",
       "source": "locked",
       "variants": {
-        "stroke-mono": "CircleLockIcon",
+        "stroke-mono": "LockIcon",
         "solid-mono": null,
         "stroke-multi": null,
         "solid-multi": null
@@ -9816,16 +9806,6 @@
         "solid-multi": null
       }
     },
-    "TypingIcon": {
-      "asset": "EllipsisMoving",
-      "source": "typing--16",
-      "variants": {
-        "stroke-mono": "EllipsisMovingIcon",
-        "solid-mono": null,
-        "stroke-multi": null,
-        "solid-multi": null
-      }
-    },
     "UniversalQuotaIcon": {
       "asset": "NodeWeb",
       "source": "universal-quota",
@@ -9877,10 +9857,10 @@
       }
     },
     "UnpinIcon": {
-      "asset": "PinDisabled",
+      "asset": "PinOff",
       "source": "unpin--16",
       "variants": {
-        "stroke-mono": "PinDisabledIcon",
+        "stroke-mono": "PinOffIcon",
         "solid-mono": null,
         "stroke-multi": null,
         "solid-multi": null
@@ -10922,6 +10902,22 @@
       },
       "note": "colored glyph — no monochrome equivalent; keep multicolor or pick a mono base + a color className. Do not silently flatten status color."
     },
+    "DotChartNeutralIcon": {
+      "asset": "DotGray",
+      "source": "dot-chart-neutral--16",
+      "multi": {
+        "stroke-multi": "DotGrayIcon"
+      },
+      "note": "colored glyph — no monochrome equivalent; keep multicolor or pick a mono base + a color className. Do not silently flatten status color."
+    },
+    "DotChartRedIcon": {
+      "asset": "DotRed",
+      "source": "dot-chart-red--16",
+      "multi": {
+        "stroke-multi": "DotRedIcon"
+      },
+      "note": "colored glyph — no monochrome equivalent; keep multicolor or pick a mono base + a color className. Do not silently flatten status color."
+    },
     "DotChartSuccessIcon": {
       "asset": "DotGreen",
       "source": "dot-chart-success--16",
@@ -10933,6 +10929,14 @@
     "DotChartWarningIcon": {
       "asset": "DotYellow",
       "source": "dot-chart-warning--16",
+      "multi": {
+        "stroke-multi": "DotYellowIcon"
+      },
+      "note": "colored glyph — no monochrome equivalent; keep multicolor or pick a mono base + a color className. Do not silently flatten status color."
+    },
+    "DotChartYellowIcon": {
+      "asset": "DotYellow",
+      "source": "dot-chart-yellow--16",
       "multi": {
         "stroke-multi": "DotYellowIcon"
       },
@@ -11217,15 +11221,14 @@
     "DotChartBrownIcon": "NO_LEGACY_NAME_MATCH",
     "DotChartGreenIcon": "NO_LEGACY_NAME_MATCH",
     "DotChartLightBlueIcon": "NO_LEGACY_NAME_MATCH",
-    "DotChartNeutralIcon": "NO_LEGACY_NAME_MATCH",
     "DotChartPurpleIcon": "NO_LEGACY_NAME_MATCH",
-    "DotChartRedIcon": "NO_LEGACY_NAME_MATCH",
     "DotChartTransparentIcon": "NO_LEGACY_NAME_MATCH",
     "DotChartTurquoiseIcon": "NO_LEGACY_NAME_MATCH",
     "DotChartVioletIcon": "NO_LEGACY_NAME_MATCH",
-    "DotChartYellowIcon": "NO_LEGACY_NAME_MATCH",
+    "LoadingIcon": "NO_LEGACY_NAME_MATCH",
     "ProductTrayIcon": "NO_LEGACY_NAME_MATCH",
     "TwitterIcon": "NOT_IN_ANY_PACK(XIcon)",
+    "TypingIcon": "NO_LEGACY_NAME_MATCH",
     "XTwitterIcon": "NOT_IN_ANY_PACK(XIcon)"
   }
 }

@@ -17,6 +17,7 @@
   --ui-border-on-surface-border: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-border-on-surface-border-active: light-dark(rgb(109 114 120), rgb(109 114 120));
   --ui-border-on-surface-divider: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-dataviz-sequential-blue-2: light-dark(rgb(190 215 244), rgb(41 81 122));
   --ui-glyph-on-backdrop-element-primary: light-dark(rgb(109 114 120), rgb(109 114 120));
   --ui-glyph-on-status-disabled: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-glyph-on-surface-disabled: light-dark(rgb(175 178 182), rgb(85 89 94));

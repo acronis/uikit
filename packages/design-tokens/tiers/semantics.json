@@ -22,12 +22,12 @@
             },
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{palette.transparent.white.inverse-95}",
-              "default": "{palette.transparent.white.inverse-95}",
-              "light-gray": "{palette.transparent.white.inverse-95}",
-              "telstra": "{palette.transparent.white.inverse-95}",
-              "virtuozzo": "{palette.transparent.white.inverse-95}",
-              "yellow-1c": "{palette.transparent.white.inverse-95}"
+              "deep_sky_itkontoret": "{palette.transparent.white.inverse.95}",
+              "default": "{palette.transparent.white.inverse.95}",
+              "light-gray": "{palette.transparent.white.inverse.95}",
+              "telstra": "{palette.transparent.white.inverse.95}",
+              "virtuozzo": "{palette.transparent.white.inverse.95}",
+              "yellow-1c": "{palette.transparent.white.inverse.95}"
             }
           },
           "secondary": {
@@ -37,12 +37,12 @@
             },
             "platforms": ["PD"],
             "values": {
-              "deep_sky_itkontoret": "{palette.transparent.blue.inverse-95}",
-              "default": "{palette.transparent.blue.inverse-95}",
-              "light-gray": "{palette.transparent.blue.inverse-95}",
-              "telstra": "{palette.transparent.blue.inverse-95}",
-              "virtuozzo": "{palette.transparent.blue.inverse-95}",
-              "yellow-1c": "{palette.transparent.blue.inverse-95}"
+              "deep_sky_itkontoret": "{palette.transparent.blue.inverse.95}",
+              "default": "{palette.transparent.blue.inverse.95}",
+              "light-gray": "{palette.transparent.blue.inverse.95}",
+              "telstra": "{palette.transparent.blue.inverse.95}",
+              "virtuozzo": "{palette.transparent.blue.inverse.95}",
+              "yellow-1c": "{palette.transparent.blue.inverse.95}"
             }
           }
         },
@@ -53,12 +53,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.dark.fixed-90}",
-            "default": "{palette.transparent.dark.fixed-90}",
-            "light-gray": "{palette.transparent.dark.fixed-90}",
-            "telstra": "{palette.transparent.dark.fixed-90}",
-            "virtuozzo": "{palette.transparent.dark.fixed-90}",
-            "yellow-1c": "{palette.transparent.dark.fixed-90}"
+            "deep_sky_itkontoret": "{palette.transparent.dark.fixed.90}",
+            "default": "{palette.transparent.dark.fixed.90}",
+            "light-gray": "{palette.transparent.dark.fixed.90}",
+            "telstra": "{palette.transparent.dark.fixed.90}",
+            "virtuozzo": "{palette.transparent.dark.fixed.90}",
+            "yellow-1c": "{palette.transparent.dark.fixed.90}"
           }
         }
       },
@@ -192,12 +192,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.dark.inverse-100}",
-            "default": "{palette.transparent.dark.inverse-100}",
-            "light-gray": "{palette.transparent.dark.inverse-100}",
-            "telstra": "{palette.transparent.dark.inverse-100}",
-            "virtuozzo": "{palette.transparent.dark.inverse-100}",
-            "yellow-1c": "{palette.transparent.dark.inverse-100}"
+            "deep_sky_itkontoret": "{palette.transparent.dark.inverse.100}",
+            "default": "{palette.transparent.dark.inverse.100}",
+            "light-gray": "{palette.transparent.dark.inverse.100}",
+            "telstra": "{palette.transparent.dark.inverse.100}",
+            "virtuozzo": "{palette.transparent.dark.inverse.100}",
+            "yellow-1c": "{palette.transparent.dark.inverse.100}"
           }
         }
       },
@@ -907,12 +907,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-10}",
-            "default": "{palette.transparent.white.fixed-10}",
-            "light-gray": "{palette.transparent.white.fixed-10}",
-            "telstra": "{palette.transparent.white.fixed-10}",
-            "virtuozzo": "{palette.transparent.white.fixed-10}",
-            "yellow-1c": "{palette.transparent.white.fixed-10}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.10}",
+            "default": "{palette.transparent.white.fixed.10}",
+            "light-gray": "{palette.transparent.white.fixed.10}",
+            "telstra": "{palette.transparent.white.fixed.10}",
+            "virtuozzo": "{palette.transparent.white.fixed.10}",
+            "yellow-1c": "{palette.transparent.white.fixed.10}"
           }
         },
         "border-active": {
@@ -937,12 +937,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-10}",
-            "default": "{palette.transparent.white.fixed-10}",
-            "light-gray": "{palette.transparent.white.fixed-10}",
-            "telstra": "{palette.transparent.white.fixed-10}",
-            "virtuozzo": "{palette.transparent.white.fixed-10}",
-            "yellow-1c": "{palette.transparent.white.fixed-10}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.10}",
+            "default": "{palette.transparent.white.fixed.10}",
+            "light-gray": "{palette.transparent.white.fixed.10}",
+            "telstra": "{palette.transparent.white.fixed.10}",
+            "virtuozzo": "{palette.transparent.white.fixed.10}",
+            "yellow-1c": "{palette.transparent.white.fixed.10}"
           }
         }
       },
@@ -1323,12 +1323,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -1340,12 +1340,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-10}",
-            "default": "{palette.transparent.white.fixed-10}",
-            "light-gray": "{palette.transparent.white.fixed-10}",
-            "telstra": "{palette.transparent.white.fixed-10}",
-            "virtuozzo": "{palette.transparent.white.fixed-10}",
-            "yellow-1c": "{palette.transparent.white.fixed-10}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.10}",
+            "default": "{palette.transparent.white.fixed.10}",
+            "light-gray": "{palette.transparent.white.fixed.10}",
+            "telstra": "{palette.transparent.white.fixed.10}",
+            "virtuozzo": "{palette.transparent.white.fixed.10}",
+            "yellow-1c": "{palette.transparent.white.fixed.10}"
           }
         },
         "primary": {
@@ -1355,12 +1355,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "secondary": {
@@ -1370,12 +1370,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
-            "default": "{palette.transparent.white.fixed-60}",
-            "light-gray": "{palette.transparent.white.fixed-60}",
-            "telstra": "{palette.transparent.white.fixed-60}",
-            "virtuozzo": "{palette.transparent.white.fixed-60}",
-            "yellow-1c": "{palette.transparent.white.fixed-60}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.60}",
+            "default": "{palette.transparent.white.fixed.60}",
+            "light-gray": "{palette.transparent.white.fixed.60}",
+            "telstra": "{palette.transparent.white.fixed.60}",
+            "virtuozzo": "{palette.transparent.white.fixed.60}",
+            "yellow-1c": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -1387,12 +1387,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -1541,12 +1541,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -1697,12 +1697,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.dark.inverse-100}",
-            "default": "{palette.transparent.dark.inverse-100}",
-            "light-gray": "{palette.transparent.dark.inverse-100}",
-            "telstra": "{palette.transparent.dark.inverse-100}",
-            "virtuozzo": "{palette.transparent.dark.inverse-100}",
-            "yellow-1c": "{palette.transparent.dark.inverse-100}"
+            "deep_sky_itkontoret": "{palette.transparent.dark.inverse.100}",
+            "default": "{palette.transparent.dark.inverse.100}",
+            "light-gray": "{palette.transparent.dark.inverse.100}",
+            "telstra": "{palette.transparent.dark.inverse.100}",
+            "virtuozzo": "{palette.transparent.dark.inverse.100}",
+            "yellow-1c": "{palette.transparent.dark.inverse.100}"
           }
         },
         "screenLink-active": {
@@ -1757,12 +1757,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "screenSecondary": {
@@ -1772,12 +1772,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
-            "default": "{palette.transparent.white.fixed-60}",
-            "light-gray": "{palette.transparent.white.fixed-60}",
-            "telstra": "{palette.transparent.white.fixed-60}",
-            "virtuozzo": "{palette.transparent.white.fixed-60}",
-            "yellow-1c": "{palette.transparent.white.fixed-60}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.60}",
+            "default": "{palette.transparent.white.fixed.60}",
+            "light-gray": "{palette.transparent.white.fixed.60}",
+            "telstra": "{palette.transparent.white.fixed.60}",
+            "virtuozzo": "{palette.transparent.white.fixed.60}",
+            "yellow-1c": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -1789,12 +1789,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-30}",
-            "default": "{palette.transparent.white.fixed-30}",
-            "light-gray": "{palette.transparent.white.fixed-30}",
-            "telstra": "{palette.transparent.white.fixed-30}",
-            "virtuozzo": "{palette.transparent.white.fixed-30}",
-            "yellow-1c": "{palette.transparent.white.fixed-30}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.30}",
+            "default": "{palette.transparent.white.fixed.30}",
+            "light-gray": "{palette.transparent.white.fixed.30}",
+            "telstra": "{palette.transparent.white.fixed.30}",
+            "virtuozzo": "{palette.transparent.white.fixed.30}",
+            "yellow-1c": "{palette.transparent.white.fixed.30}"
           }
         },
         "link-disabled": {
@@ -1804,12 +1804,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-30}",
-            "default": "{palette.transparent.white.fixed-30}",
-            "light-gray": "{palette.transparent.white.fixed-30}",
-            "telstra": "{palette.transparent.white.fixed-30}",
-            "virtuozzo": "{palette.transparent.white.fixed-30}",
-            "yellow-1c": "{palette.transparent.white.fixed-30}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.30}",
+            "default": "{palette.transparent.white.fixed.30}",
+            "light-gray": "{palette.transparent.white.fixed.30}",
+            "telstra": "{palette.transparent.white.fixed.30}",
+            "virtuozzo": "{palette.transparent.white.fixed.30}",
+            "yellow-1c": "{palette.transparent.white.fixed.30}"
           }
         },
         "link-hover": {
@@ -1864,12 +1864,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "secondary": {
@@ -1879,12 +1879,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
-            "default": "{palette.transparent.white.fixed-60}",
-            "light-gray": "{palette.transparent.white.fixed-60}",
-            "telstra": "{palette.transparent.white.fixed-60}",
-            "virtuozzo": "{palette.transparent.white.fixed-60}",
-            "yellow-1c": "{palette.transparent.white.fixed-60}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.60}",
+            "default": "{palette.transparent.white.fixed.60}",
+            "light-gray": "{palette.transparent.white.fixed.60}",
+            "telstra": "{palette.transparent.white.fixed.60}",
+            "virtuozzo": "{palette.transparent.white.fixed.60}",
+            "yellow-1c": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -1896,12 +1896,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.inverse-100}",
-            "default": "{palette.transparent.white.inverse-100}",
-            "light-gray": "{palette.transparent.white.inverse-100}",
-            "telstra": "{palette.transparent.white.inverse-100}",
-            "virtuozzo": "{palette.transparent.white.inverse-100}",
-            "yellow-1c": "{palette.transparent.white.inverse-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.inverse.100}",
+            "default": "{palette.transparent.white.inverse.100}",
+            "light-gray": "{palette.transparent.white.inverse.100}",
+            "telstra": "{palette.transparent.white.inverse.100}",
+            "virtuozzo": "{palette.transparent.white.inverse.100}",
+            "yellow-1c": "{palette.transparent.white.inverse.100}"
           }
         },
         "secondary": {
@@ -1911,12 +1911,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-60}",
-            "default": "{palette.transparent.white.fixed-60}",
-            "light-gray": "{palette.transparent.white.fixed-60}",
-            "telstra": "{palette.transparent.white.fixed-60}",
-            "virtuozzo": "{palette.transparent.white.fixed-60}",
-            "yellow-1c": "{palette.transparent.white.fixed-60}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.60}",
+            "default": "{palette.transparent.white.fixed.60}",
+            "light-gray": "{palette.transparent.white.fixed.60}",
+            "telstra": "{palette.transparent.white.fixed.60}",
+            "virtuozzo": "{palette.transparent.white.fixed.60}",
+            "yellow-1c": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -2125,12 +2125,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "critical": {
@@ -2140,12 +2140,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "danger": {
@@ -2155,12 +2155,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "info": {
@@ -2170,12 +2170,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "link": {
@@ -2200,12 +2200,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "primary": {
@@ -2245,12 +2245,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "warning": {
@@ -2260,12 +2260,12 @@
           },
           "platforms": ["PD"],
           "values": {
-            "deep_sky_itkontoret": "{palette.transparent.white.fixed-100}",
-            "default": "{palette.transparent.white.fixed-100}",
-            "light-gray": "{palette.transparent.white.fixed-100}",
-            "telstra": "{palette.transparent.white.fixed-100}",
-            "virtuozzo": "{palette.transparent.white.fixed-100}",
-            "yellow-1c": "{palette.transparent.white.fixed-100}"
+            "deep_sky_itkontoret": "{palette.transparent.white.fixed.100}",
+            "default": "{palette.transparent.white.fixed.100}",
+            "light-gray": "{palette.transparent.white.fixed.100}",
+            "telstra": "{palette.transparent.white.fixed.100}",
+            "virtuozzo": "{palette.transparent.white.fixed.100}",
+            "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -2388,6 +2388,1021 @@
             "telstra": "{palette.grayscale.8}",
             "virtuozzo": "{palette.grayscale.8}",
             "yellow-1c": "{palette.grayscale.8}"
+          }
+        }
+      }
+    }
+  },
+  "dataviz": {
+    "$type": "color",
+    "categorical": {
+      "1": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2566"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.blue.7}",
+          "default": "{palette.blue.7}",
+          "light-gray": "{palette.blue.7}",
+          "telstra": "{palette.blue.7}",
+          "virtuozzo": "{palette.blue.7}",
+          "yellow-1c": "{palette.blue.7}"
+        }
+      },
+      "2": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2567"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.orange.9}",
+          "default": "{palette.orange.9}",
+          "light-gray": "{palette.orange.9}",
+          "telstra": "{palette.orange.9}",
+          "virtuozzo": "{palette.orange.9}",
+          "yellow-1c": "{palette.orange.9}"
+        }
+      },
+      "3": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2568"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.teal.7}",
+          "default": "{palette.teal.7}",
+          "light-gray": "{palette.teal.7}",
+          "telstra": "{palette.teal.7}",
+          "virtuozzo": "{palette.teal.7}",
+          "yellow-1c": "{palette.teal.7}"
+        }
+      },
+      "4": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2569"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.violet.7}",
+          "default": "{palette.violet.7}",
+          "light-gray": "{palette.violet.7}",
+          "telstra": "{palette.violet.7}",
+          "virtuozzo": "{palette.violet.7}",
+          "yellow-1c": "{palette.violet.7}"
+        }
+      },
+      "5": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2570"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.yellow.10}",
+          "default": "{palette.yellow.10}",
+          "light-gray": "{palette.yellow.10}",
+          "telstra": "{palette.yellow.10}",
+          "virtuozzo": "{palette.yellow.10}",
+          "yellow-1c": "{palette.yellow.10}"
+        }
+      },
+      "6": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2571"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.red.7}",
+          "default": "{palette.red.7}",
+          "light-gray": "{palette.red.7}",
+          "telstra": "{palette.red.7}",
+          "virtuozzo": "{palette.red.7}",
+          "yellow-1c": "{palette.red.7}"
+        }
+      },
+      "7": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2572"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.green.8}",
+          "default": "{palette.green.8}",
+          "light-gray": "{palette.green.8}",
+          "telstra": "{palette.green.8}",
+          "virtuozzo": "{palette.green.8}",
+          "yellow-1c": "{palette.green.8}"
+        }
+      },
+      "8": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2573"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.electricblue.5}",
+          "default": "{palette.electricblue.5}",
+          "light-gray": "{palette.electricblue.5}",
+          "telstra": "{palette.electricblue.5}",
+          "virtuozzo": "{palette.electricblue.5}",
+          "yellow-1c": "{palette.electricblue.5}"
+        }
+      },
+      "9": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2574"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.yellow.7}",
+          "default": "{palette.yellow.7}",
+          "light-gray": "{palette.yellow.7}",
+          "telstra": "{palette.yellow.7}",
+          "virtuozzo": "{palette.yellow.7}",
+          "yellow-1c": "{palette.yellow.7}"
+        }
+      },
+      "10": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2575"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.violet.10}",
+          "default": "{palette.violet.10}",
+          "light-gray": "{palette.violet.10}",
+          "telstra": "{palette.violet.10}",
+          "virtuozzo": "{palette.violet.10}",
+          "yellow-1c": "{palette.violet.10}"
+        }
+      },
+      "11": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2576"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.teal.10}",
+          "default": "{palette.teal.10}",
+          "light-gray": "{palette.teal.10}",
+          "telstra": "{palette.teal.10}",
+          "virtuozzo": "{palette.teal.10}",
+          "yellow-1c": "{palette.teal.10}"
+        }
+      },
+      "12": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2577"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.red.10}",
+          "default": "{palette.red.10}",
+          "light-gray": "{palette.red.10}",
+          "telstra": "{palette.red.10}",
+          "virtuozzo": "{palette.red.10}",
+          "yellow-1c": "{palette.red.10}"
+        }
+      },
+      "13": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2578"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.blue.10}",
+          "default": "{palette.blue.10}",
+          "light-gray": "{palette.blue.10}",
+          "telstra": "{palette.blue.10}",
+          "virtuozzo": "{palette.blue.10}",
+          "yellow-1c": "{palette.blue.10}"
+        }
+      },
+      "14": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2579"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.yellow.12}",
+          "default": "{palette.yellow.12}",
+          "light-gray": "{palette.yellow.12}",
+          "telstra": "{palette.yellow.12}",
+          "virtuozzo": "{palette.yellow.12}",
+          "yellow-1c": "{palette.yellow.12}"
+        }
+      },
+      "15": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2580"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.green.11}",
+          "default": "{palette.green.11}",
+          "light-gray": "{palette.green.11}",
+          "telstra": "{palette.green.11}",
+          "virtuozzo": "{palette.green.11}",
+          "yellow-1c": "{palette.green.11}"
+        }
+      },
+      "16": {
+        "$extensions": {
+          "com.figma.scopes": ["SHAPE_FILL"],
+          "com.figma.variableId": "VariableID:9701:2581"
+        },
+        "platforms": ["PD"],
+        "values": {
+          "deep_sky_itkontoret": "{palette.electricblue.3}",
+          "default": "{palette.electricblue.3}",
+          "light-gray": "{palette.electricblue.3}",
+          "telstra": "{palette.electricblue.3}",
+          "virtuozzo": "{palette.electricblue.3}",
+          "yellow-1c": "{palette.electricblue.3}"
+        }
+      }
+    },
+    "diverging": {
+      "blueOrange": {
+        "a1": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2616"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.4}",
+            "default": "{palette.electricblue.4}",
+            "light-gray": "{palette.electricblue.4}",
+            "telstra": "{palette.electricblue.4}",
+            "virtuozzo": "{palette.electricblue.4}",
+            "yellow-1c": "{palette.electricblue.4}"
+          }
+        },
+        "a2": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2615"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.5}",
+            "default": "{palette.electricblue.5}",
+            "light-gray": "{palette.electricblue.5}",
+            "telstra": "{palette.electricblue.5}",
+            "virtuozzo": "{palette.electricblue.5}",
+            "yellow-1c": "{palette.electricblue.5}"
+          }
+        },
+        "a3": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2614"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.7}",
+            "default": "{palette.electricblue.7}",
+            "light-gray": "{palette.electricblue.7}",
+            "telstra": "{palette.electricblue.7}",
+            "virtuozzo": "{palette.electricblue.7}",
+            "yellow-1c": "{palette.electricblue.7}"
+          }
+        },
+        "b1": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2618"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.orange.4}",
+            "default": "{palette.orange.4}",
+            "light-gray": "{palette.orange.4}",
+            "telstra": "{palette.orange.4}",
+            "virtuozzo": "{palette.orange.4}",
+            "yellow-1c": "{palette.orange.4}"
+          }
+        },
+        "b2": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2619"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.orange.7}",
+            "default": "{palette.orange.7}",
+            "light-gray": "{palette.orange.7}",
+            "telstra": "{palette.orange.7}",
+            "virtuozzo": "{palette.orange.7}",
+            "yellow-1c": "{palette.orange.7}"
+          }
+        },
+        "b3": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2620"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.orange.9}",
+            "default": "{palette.orange.9}",
+            "light-gray": "{palette.orange.9}",
+            "telstra": "{palette.orange.9}",
+            "virtuozzo": "{palette.orange.9}",
+            "yellow-1c": "{palette.orange.9}"
+          }
+        }
+      },
+      "tealViolet": {
+        "a1": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2623"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.teal.4}",
+            "default": "{palette.teal.4}",
+            "light-gray": "{palette.teal.4}",
+            "telstra": "{palette.teal.4}",
+            "virtuozzo": "{palette.teal.4}",
+            "yellow-1c": "{palette.teal.4}"
+          }
+        },
+        "a2": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2622"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.teal.5}",
+            "default": "{palette.teal.5}",
+            "light-gray": "{palette.teal.5}",
+            "telstra": "{palette.teal.5}",
+            "virtuozzo": "{palette.teal.5}",
+            "yellow-1c": "{palette.teal.5}"
+          }
+        },
+        "a3": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2621"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.teal.7}",
+            "default": "{palette.teal.7}",
+            "light-gray": "{palette.teal.7}",
+            "telstra": "{palette.teal.7}",
+            "virtuozzo": "{palette.teal.7}",
+            "yellow-1c": "{palette.teal.7}"
+          }
+        },
+        "b1": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2625"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.violet.4}",
+            "default": "{palette.violet.4}",
+            "light-gray": "{palette.violet.4}",
+            "telstra": "{palette.violet.4}",
+            "virtuozzo": "{palette.violet.4}",
+            "yellow-1c": "{palette.violet.4}"
+          }
+        },
+        "b2": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2626"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.violet.7}",
+            "default": "{palette.violet.7}",
+            "light-gray": "{palette.violet.7}",
+            "telstra": "{palette.violet.7}",
+            "virtuozzo": "{palette.violet.7}",
+            "yellow-1c": "{palette.violet.7}"
+          }
+        },
+        "b3": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2627"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.violet.9}",
+            "default": "{palette.violet.9}",
+            "light-gray": "{palette.violet.9}",
+            "telstra": "{palette.violet.9}",
+            "virtuozzo": "{palette.violet.9}",
+            "yellow-1c": "{palette.violet.9}"
+          }
+        }
+      }
+    },
+    "meaningful": {
+      "status": {
+        "critical": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2629"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{colors.background.statusStrong.critical}",
+            "default": "{colors.background.statusStrong.critical}",
+            "light-gray": "{colors.background.statusStrong.critical}",
+            "telstra": "{colors.background.statusStrong.critical}",
+            "virtuozzo": "{colors.background.statusStrong.critical}",
+            "yellow-1c": "{colors.background.statusStrong.critical}"
+          }
+        },
+        "danger": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2628"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{colors.background.statusStrong.danger}",
+            "default": "{colors.background.statusStrong.danger}",
+            "light-gray": "{colors.background.statusStrong.danger}",
+            "telstra": "{colors.background.statusStrong.danger}",
+            "virtuozzo": "{colors.background.statusStrong.danger}",
+            "yellow-1c": "{colors.background.statusStrong.danger}"
+          }
+        },
+        "info": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2632"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{colors.background.statusStrong.info}",
+            "default": "{colors.background.statusStrong.info}",
+            "light-gray": "{colors.background.statusStrong.info}",
+            "telstra": "{colors.background.statusStrong.info}",
+            "virtuozzo": "{colors.background.statusStrong.info}",
+            "yellow-1c": "{colors.background.statusStrong.info}"
+          }
+        },
+        "neutral": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2633"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{colors.background.statusStrong.neutral}",
+            "default": "{colors.background.statusStrong.neutral}",
+            "light-gray": "{colors.background.statusStrong.neutral}",
+            "telstra": "{colors.background.statusStrong.neutral}",
+            "virtuozzo": "{colors.background.statusStrong.neutral}",
+            "yellow-1c": "{colors.background.statusStrong.neutral}"
+          }
+        },
+        "success": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2631"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{colors.background.statusStrong.success}",
+            "default": "{colors.background.statusStrong.success}",
+            "light-gray": "{colors.background.statusStrong.success}",
+            "telstra": "{colors.background.statusStrong.success}",
+            "virtuozzo": "{colors.background.statusStrong.success}",
+            "yellow-1c": "{colors.background.statusStrong.success}"
+          }
+        },
+        "warning": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2630"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{colors.background.statusStrong.warning}",
+            "default": "{colors.background.statusStrong.warning}",
+            "light-gray": "{colors.background.statusStrong.warning}",
+            "telstra": "{colors.background.statusStrong.warning}",
+            "virtuozzo": "{colors.background.statusStrong.warning}",
+            "yellow-1c": "{colors.background.statusStrong.warning}"
+          }
+        }
+      }
+    },
+    "sequential": {
+      "blue": {
+        "1": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2582"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.2}",
+            "default": "{palette.electricblue.2}",
+            "light-gray": "{palette.electricblue.2}",
+            "telstra": "{palette.electricblue.2}",
+            "virtuozzo": "{palette.electricblue.2}",
+            "yellow-1c": "{palette.electricblue.2}"
+          }
+        },
+        "2": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2583"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.4}",
+            "default": "{palette.electricblue.3}",
+            "light-gray": "{palette.electricblue.4}",
+            "telstra": "{palette.electricblue.4}",
+            "virtuozzo": "{palette.electricblue.4}",
+            "yellow-1c": "{palette.electricblue.4}"
+          }
+        },
+        "3": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2584"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.5}",
+            "default": "{palette.electricblue.5}",
+            "light-gray": "{palette.electricblue.5}",
+            "telstra": "{palette.electricblue.5}",
+            "virtuozzo": "{palette.electricblue.5}",
+            "yellow-1c": "{palette.electricblue.5}"
+          }
+        },
+        "4": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2585"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.6}",
+            "default": "{palette.electricblue.6}",
+            "light-gray": "{palette.electricblue.6}",
+            "telstra": "{palette.electricblue.6}",
+            "virtuozzo": "{palette.electricblue.6}",
+            "yellow-1c": "{palette.electricblue.6}"
+          }
+        },
+        "5": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2586"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.7}",
+            "default": "{palette.electricblue.7}",
+            "light-gray": "{palette.electricblue.7}",
+            "telstra": "{palette.electricblue.7}",
+            "virtuozzo": "{palette.electricblue.7}",
+            "yellow-1c": "{palette.electricblue.7}"
+          }
+        },
+        "6": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2587"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.9}",
+            "default": "{palette.electricblue.9}",
+            "light-gray": "{palette.electricblue.9}",
+            "telstra": "{palette.electricblue.9}",
+            "virtuozzo": "{palette.electricblue.9}",
+            "yellow-1c": "{palette.electricblue.9}"
+          }
+        },
+        "7": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2588"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.11}",
+            "default": "{palette.electricblue.11}",
+            "light-gray": "{palette.electricblue.11}",
+            "telstra": "{palette.electricblue.11}",
+            "virtuozzo": "{palette.electricblue.11}",
+            "yellow-1c": "{palette.electricblue.11}"
+          }
+        },
+        "8": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2589"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.electricblue.12}",
+            "default": "{palette.electricblue.12}",
+            "light-gray": "{palette.electricblue.12}",
+            "telstra": "{palette.electricblue.12}",
+            "virtuozzo": "{palette.electricblue.12}",
+            "yellow-1c": "{palette.electricblue.12}"
+          }
+        }
+      },
+      "orange": {
+        "1": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2598"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.orange.2}",
+            "default": "{palette.orange.2}",
+            "light-gray": "{palette.orange.2}",
+            "telstra": "{palette.orange.2}",
+            "virtuozzo": "{palette.orange.2}",
+            "yellow-1c": "{palette.orange.2}"
+          }
+        },
+        "2": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2599"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.orange.4}",
+            "default": "{palette.orange.4}",
+            "light-gray": "{palette.orange.4}",
+            "telstra": "{palette.orange.4}",
+            "virtuozzo": "{palette.orange.4}",
+            "yellow-1c": "{palette.orange.4}"
+          }
+        },
+        "3": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2600"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.orange.5}",
+            "default": "{palette.orange.5}",
+            "light-gray": "{palette.orange.5}",
+            "telstra": "{palette.orange.5}",
+            "virtuozzo": "{palette.orange.5}",
+            "yellow-1c": "{palette.orange.5}"
+          }
+        },
+        "4": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2601"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.orange.6}",
+            "default": "{palette.orange.6}",
+            "light-gray": "{palette.orange.6}",
+            "telstra": "{palette.orange.6}",
+            "virtuozzo": "{palette.orange.6}",
+            "yellow-1c": "{palette.orange.6}"
+          }
+        },
+        "5": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2602"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.orange.7}",
+            "default": "{palette.orange.7}",
+            "light-gray": "{palette.orange.7}",
+            "telstra": "{palette.orange.7}",
+            "virtuozzo": "{palette.orange.7}",
+            "yellow-1c": "{palette.orange.7}"
+          }
+        },
+        "6": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2603"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.orange.9}",
+            "default": "{palette.orange.9}",
+            "light-gray": "{palette.orange.9}",
+            "telstra": "{palette.orange.9}",
+            "virtuozzo": "{palette.orange.9}",
+            "yellow-1c": "{palette.orange.9}"
+          }
+        },
+        "7": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2604"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.orange.11}",
+            "default": "{palette.orange.11}",
+            "light-gray": "{palette.orange.11}",
+            "telstra": "{palette.orange.11}",
+            "virtuozzo": "{palette.orange.11}",
+            "yellow-1c": "{palette.orange.11}"
+          }
+        },
+        "8": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2605"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.orange.12}",
+            "default": "{palette.orange.12}",
+            "light-gray": "{palette.orange.12}",
+            "telstra": "{palette.orange.12}",
+            "virtuozzo": "{palette.orange.12}",
+            "yellow-1c": "{palette.orange.12}"
+          }
+        }
+      },
+      "teal": {
+        "1": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2590"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.teal.2}",
+            "default": "{palette.teal.2}",
+            "light-gray": "{palette.teal.2}",
+            "telstra": "{palette.teal.2}",
+            "virtuozzo": "{palette.teal.2}",
+            "yellow-1c": "{palette.teal.2}"
+          }
+        },
+        "2": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2591"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.teal.4}",
+            "default": "{palette.teal.4}",
+            "light-gray": "{palette.teal.4}",
+            "telstra": "{palette.teal.4}",
+            "virtuozzo": "{palette.teal.4}",
+            "yellow-1c": "{palette.teal.4}"
+          }
+        },
+        "3": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2592"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.teal.5}",
+            "default": "{palette.teal.5}",
+            "light-gray": "{palette.teal.5}",
+            "telstra": "{palette.teal.5}",
+            "virtuozzo": "{palette.teal.5}",
+            "yellow-1c": "{palette.teal.5}"
+          }
+        },
+        "4": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2593"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.teal.6}",
+            "default": "{palette.teal.6}",
+            "light-gray": "{palette.teal.6}",
+            "telstra": "{palette.teal.6}",
+            "virtuozzo": "{palette.teal.6}",
+            "yellow-1c": "{palette.teal.6}"
+          }
+        },
+        "5": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2594"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.teal.7}",
+            "default": "{palette.teal.7}",
+            "light-gray": "{palette.teal.7}",
+            "telstra": "{palette.teal.7}",
+            "virtuozzo": "{palette.teal.7}",
+            "yellow-1c": "{palette.teal.7}"
+          }
+        },
+        "6": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2595"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.teal.9}",
+            "default": "{palette.teal.9}",
+            "light-gray": "{palette.teal.9}",
+            "telstra": "{palette.teal.9}",
+            "virtuozzo": "{palette.teal.9}",
+            "yellow-1c": "{palette.teal.9}"
+          }
+        },
+        "7": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2596"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.teal.11}",
+            "default": "{palette.teal.11}",
+            "light-gray": "{palette.teal.11}",
+            "telstra": "{palette.teal.11}",
+            "virtuozzo": "{palette.teal.11}",
+            "yellow-1c": "{palette.teal.11}"
+          }
+        },
+        "8": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2597"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.teal.12}",
+            "default": "{palette.teal.12}",
+            "light-gray": "{palette.teal.12}",
+            "telstra": "{palette.teal.12}",
+            "virtuozzo": "{palette.teal.12}",
+            "yellow-1c": "{palette.teal.12}"
+          }
+        }
+      },
+      "violet": {
+        "1": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2606"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.violet.2}",
+            "default": "{palette.violet.2}",
+            "light-gray": "{palette.violet.2}",
+            "telstra": "{palette.violet.2}",
+            "virtuozzo": "{palette.violet.2}",
+            "yellow-1c": "{palette.violet.2}"
+          }
+        },
+        "2": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2607"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.violet.4}",
+            "default": "{palette.violet.4}",
+            "light-gray": "{palette.violet.4}",
+            "telstra": "{palette.violet.4}",
+            "virtuozzo": "{palette.violet.4}",
+            "yellow-1c": "{palette.violet.4}"
+          }
+        },
+        "3": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2608"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.violet.5}",
+            "default": "{palette.violet.5}",
+            "light-gray": "{palette.violet.5}",
+            "telstra": "{palette.violet.5}",
+            "virtuozzo": "{palette.violet.5}",
+            "yellow-1c": "{palette.violet.5}"
+          }
+        },
+        "4": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2609"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.violet.6}",
+            "default": "{palette.violet.6}",
+            "light-gray": "{palette.violet.6}",
+            "telstra": "{palette.violet.6}",
+            "virtuozzo": "{palette.violet.6}",
+            "yellow-1c": "{palette.violet.6}"
+          }
+        },
+        "5": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2610"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.violet.7}",
+            "default": "{palette.violet.7}",
+            "light-gray": "{palette.violet.7}",
+            "telstra": "{palette.violet.7}",
+            "virtuozzo": "{palette.violet.7}",
+            "yellow-1c": "{palette.violet.7}"
+          }
+        },
+        "6": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2611"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.violet.9}",
+            "default": "{palette.violet.9}",
+            "light-gray": "{palette.violet.9}",
+            "telstra": "{palette.violet.9}",
+            "virtuozzo": "{palette.violet.9}",
+            "yellow-1c": "{palette.violet.9}"
+          }
+        },
+        "7": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2612"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.violet.11}",
+            "default": "{palette.violet.11}",
+            "light-gray": "{palette.violet.11}",
+            "telstra": "{palette.violet.11}",
+            "virtuozzo": "{palette.violet.11}",
+            "yellow-1c": "{palette.violet.11}"
+          }
+        },
+        "8": {
+          "$extensions": {
+            "com.figma.scopes": ["SHAPE_FILL"],
+            "com.figma.variableId": "VariableID:9701:2613"
+          },
+          "platforms": ["PD"],
+          "values": {
+            "deep_sky_itkontoret": "{palette.violet.12}",
+            "default": "{palette.violet.12}",
+            "light-gray": "{palette.violet.12}",
+            "telstra": "{palette.violet.12}",
+            "virtuozzo": "{palette.violet.12}",
+            "yellow-1c": "{palette.violet.12}"
           }
         }
       }
@@ -3021,20 +4036,6 @@
         },
         "platforms": ["PD"]
       },
-      "heading": {
-        "$extensions": {
-          "com.acronis.textCase": "UPPER",
-          "com.figma.styleId": "S:1e6512f2be4fe613c7f0c8fb905f2e865fd310cb,"
-        },
-        "$value": {
-          "fontFamily": "{font.font-family.default}",
-          "fontSize": "{font.font-size.14}",
-          "fontWeight": "{font.font-weight.semibold}",
-          "letterSpacing": "{font.letter-spacing.0-3}",
-          "lineHeight": "{font.line-height.24}"
-        },
-        "platforms": ["PD"]
-      },
       "strong": {
         "$extensions": {
           "com.figma.styleId": "S:370e51bf0854d130794d30019cf2ecba966d8264,"
@@ -3158,6 +4159,19 @@
         },
         "platforms": ["PD"]
       },
+      "section": {
+        "$extensions": {
+          "com.figma.styleId": "S:b0946353329db6551ff98ae3eb6865ea13e79877,"
+        },
+        "$value": {
+          "fontFamily": "{font.font-family.default}",
+          "fontSize": "{font.font-size.20}",
+          "fontWeight": "{font.font-weight.medium}",
+          "letterSpacing": "{font.letter-spacing.0}",
+          "lineHeight": "{font.line-height.24}"
+        },
+        "platforms": ["PD"]
+      },
       "title": {
         "$extensions": {
           "com.figma.styleId": "S:c8729f852bce2bc940f7fd82b2b059e63a8e716e,"
@@ -3250,20 +4264,6 @@
           "fontFamily": "{font.font-family.default}",
           "fontSize": "{font.font-size.11}",
           "fontWeight": "{font.font-weight.semibold}",
-          "letterSpacing": "{font.letter-spacing.1}",
-          "lineHeight": "{font.line-height.16}"
-        },
-        "platforms": ["PD"]
-      },
-      "heading": {
-        "$extensions": {
-          "com.acronis.textCase": "UPPER",
-          "com.figma.styleId": "S:0cc89ed9662a7c4d561d6f16066b03e36a70fb71,"
-        },
-        "$value": {
-          "fontFamily": "{font.font-family.default}",
-          "fontSize": "{font.font-size.11}",
-          "fontWeight": "{font.font-weight.bold}",
           "letterSpacing": "{font.letter-spacing.1}",
           "lineHeight": "{font.line-height.16}"
         },

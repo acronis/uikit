@@ -61,4 +61,28 @@ describe('NumberField', () => {
     expect(input()).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Increase' })).toBeDisabled();
   });
+
+  it('does not force the group to full width, so it can shrink in a constrained flex/grid ancestor', () => {
+    render(<Field />);
+    const group = input().closest('div');
+    expect(group).not.toHaveClass('w-full');
+    expect(group).toHaveClass('min-w-0');
+  });
+
+  it('lets a consumer shrink the group via className inside a narrow flex cell', () => {
+    render(
+      <div style={{ display: 'flex', width: 200 }}>
+        <NumberField defaultValue={5}>
+          <NumberFieldGroup className="w-24">
+            <NumberFieldDecrement aria-label="Decrease" />
+            <NumberFieldInput aria-label="Quantity" />
+            <NumberFieldIncrement aria-label="Increase" />
+          </NumberFieldGroup>
+        </NumberField>
+      </div>
+    );
+    const group = input().closest('div');
+    expect(group).toHaveClass('w-24');
+    expect(group).not.toHaveClass('w-full');
+  });
 });

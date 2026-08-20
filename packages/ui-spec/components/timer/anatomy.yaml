@@ -1,0 +1,72 @@
+spec_version: '1.0'
+component: Timer
+
+schematic: |
+  root: <div>
+  +---------------------------------------------------------+
+  |                    |  +--------+ | +--------+ | +------+ |
+  |  readout           |  | action | | | action | | |action| |
+  |  12:01:45          |  | [icon] | | | [icon] | | |[icon]| |
+  |                    |  +--------+ | +--------+ | +------+ |
+  +---------------------------------------------------------+
+                       ^             ^            ^
+                       divider       actions: <div role="toolbar">
+                                     (ButtonGroup, variant="inlined")
+
+     root    -> --ui-timer-container-* (bg, border, radius, height)
+     readout -> --ui-timer-value-* + --ui-timer-content-box-padding-x
+                (role="timer"; .ui-timer-value-text-style; tabular figures)
+     divider -> --ui-timer-content-box-divider-* (readout's inline-end border,
+                dropped when there are no actions)
+     actions -> --ui-button-group-global-* (the shared ButtonGroup tokens)
+
+root:
+  element: div
+  description: >-
+    The bordered box. Lays the readout and the action cluster out in a single
+    horizontal row at a fixed 32px height, and clips them to its own radius so
+    the trailing action's fill and inset focus ring follow the rounded corner.
+    Owns the border, radius, background, and height; it is not itself
+    interactive and carries no role.
+
+parts:
+  - id: readout
+    description: >-
+      The elapsed-time display (`role="timer"`, an implicitly `aria-live="off"`
+      live region). Renders a caller-formatted value with tabular figures, so
+      the box does not reflow as the digits change. The component neither ticks
+      nor formats — it holds no clock of its own.
+    element: div
+  - id: divider
+    description: >-
+      Hairline separating the readout from the action cluster, drawn as the
+      readout's own inline-end border rather than an element — so it is
+      decorative and absent from the accessibility tree. Mirrors Figma, which
+      hangs it off the contentBox. Dropped via `:last-child` when the timer
+      has no actions.
+    optional: true
+    visible_when: the timer has at least one action
+  - id: actions
+    description: >-
+      The cluster of icon-only actions (`role="toolbar"`), rendered as a
+      `ButtonGroup` in its `inlined` style because the root already draws the
+      border and radius an outlined group would duplicate. Variadic — it holds
+      whatever items the caller supplies, each with its own accessible name —
+      and omitted entirely when there are none.
+    element: div
+    optional: true
+    visible_when: the timer has at least one action
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [readout, divider, actions]
+
+# The component has no variant axis and no state of its own: Figma models it as
+# a single component with one TEXT property and a slot, not a component set.
+# Every interaction state (hover / active / focus-visible / disabled) belongs to
+# the individual actions and is specified by ButtonGroup, so nothing is restated
+# here. The one prop-driven structural difference — actions present or absent —
+# is a part being rendered or not, not a state.
+states: []

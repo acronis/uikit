@@ -82,6 +82,12 @@ Group fields with a `Separator` between them as a layout convention.
 - The footer's **Reset filters** clears the draft to empty (disabled when already empty).
 - `FilterSearchAppliedFilters` renders nothing when `filters` is empty; its own
   **Reset filters** clears all filters immediately (no popover involved).
+- `FilterSearchFilters`'s popover is a `Popover`/`PopoverContent` under the
+  hood, so it inherits that component's constrained-container behavior: for
+  an isolated portal container (e.g. a shadow root), pass `portalContainer`
+  so the popup inherits that scope's styles and switches to `fixed`
+  positioning so it isn't clipped at the container's own edge. See
+  `Popover`'s own spec for details.
 
 ## Quick Examples
 

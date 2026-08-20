@@ -4,7 +4,7 @@ component: Table
 # References only. Values live in @acronis-platform/tokens-pd (generated from
 # @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
 # Table has its own `--ui-table-*` component tier (opt-in via an @import in
-# ui-react's styles/index.css); the sort-button focus ring reuses the shared
+# ui-react's styles/index.css); the cell/row focus ring reuses the shared
 # semantic `--ui-focus-primary`.
 source: '@acronis-platform/tokens-pd'
 
@@ -45,14 +45,54 @@ tokens:
       description: Row background — selected/active,
     }
   - {
+      name: --ui-table-global-row-border-width,
+      affects: row,
+      description: Row / cell divider width,
+    }
+  - {
+      name: --ui-table-global-row-border-style,
+      affects: row,
+      description: Row / cell divider style,
+    }
+  - {
+      name: --ui-table-global-cell-min-height,
+      affects: cell,
+      description: Minimum cell height (40px) — the default single-line row height,
+    }
+  - {
+      name: --ui-table-data-cell-color-idle,
+      affects: cell,
+      description: Data cell background — idle,
+    }
+  - {
+      name: --ui-table-data-cell-color-hover,
+      affects: actions-cell,
+      description: Data cell background — hover (the row-actions cell),
+    }
+  - {
+      name: --ui-table-data-cell-color-active,
+      affects: actions-cell,
+      description: Data cell background — pressed (the row-actions cell),
+    }
+  - {
       name: --ui-table-global-cell-padding-x,
       affects: head,
       description: Header cell horizontal padding,
     }
   - {
+      name: --ui-table-header-cell-color-idle,
+      affects: head,
+      description: Header cell background — idle,
+    }
+  - {
       name: --ui-table-header-cell-color-hover,
       affects: head,
       description: Sortable header background — hover,
+    }
+  - {
+      name: --ui-table-header-cell-color-active,
+      affects: head,
+      description: Sortable header background — pressed,
     }
   - {
       name: --ui-table-header-label-color,
@@ -79,8 +119,9 @@ tokens:
       affects: head,
       description: Sort icon color when unsorted,
     }
-  - {
-      name: --ui-focus-primary,
-      affects: head,
-      description: Focus-visible ring on the sort button,
-    }
+  - name: --ui-focus-primary
+    affects: row
+    description: >-
+      Focus-visible ring, drawn on the enclosing cell or row rather than on the
+      inner control — a sortable `head`, the `actions-cell` and `settings-cell`
+      (all three via has-[:focus-visible]), and a focusable `row` itself.

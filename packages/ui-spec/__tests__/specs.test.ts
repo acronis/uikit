@@ -154,6 +154,21 @@ function tokenSetFromCssDefinitions(absCssDir: string): Set<string> {
   return tokens;
 }
 
+/**
+ * Both forms a component can reference a token by: the CSS `var(--ui-x)` inside
+ * an arbitrary value, and Tailwind v4's shorthand arbitrary value
+ * (`outline-(--ui-x)`, `cursor-(--ui-x)`), which compiles to the same `var()`.
+ */
+const TOKEN_REF_RE = /(?:var\(\s*|-\()(--ui-[a-z0-9-]+)\s*\)/g;
+
+// Deliberate, tracked exception: no Figma variable exists for a grab cursor yet,
+// so these two are hand-authored in ui-react's styles/index.css (see the comment
+// there) instead of being emitted into tokens-pd. Remove once they move upstream.
+const LOCALLY_AUTHORED_TOKENS = new Set([
+  '--ui-draggable-cursor',
+  '--ui-draggable-cursor-active',
+]);
+
 function tokenSetFromVarRefs(absDir: string): Set<string> {
   const files = listFiles(
     absDir,
@@ -163,7 +178,7 @@ function tokenSetFromVarRefs(absDir: string): Set<string> {
   const tokens = new Set<string>();
   for (const absPath of files) {
     const source = readFileSync(absPath, 'utf8');
-    for (const match of source.matchAll(/var\(\s*(--ui-[a-z0-9-]+)\s*\)/g)) {
+    for (const match of source.matchAll(TOKEN_REF_RE)) {
       tokens.add(match[1]);
     }
   }
@@ -191,11 +206,11 @@ describe('token references resolve in tokens-pd', () => {
 
       const sourceTokenNames = [...tokenSetFromVarRefs(sourceDir)];
       const missingSourceNames = sourceTokenNames.filter(
-        (token) => !definedTokens.has(token)
+        (token) => !definedTokens.has(token) && !LOCALLY_AUTHORED_TOKENS.has(token)
       );
       expect(
         missingSourceNames,
-        `${name}: ui-react source has undefined var(--ui-*) tokens:\n${missingSourceNames.join('\n')}`
+        `${name}: ui-react source has undefined --ui-* tokens:\n${missingSourceNames.join('\n')}`
       ).toEqual([]);
     });
   }
@@ -211,6 +226,24 @@ describe('cva ↔ contract conformance', () => {
     const api = loadSpec('button').api;
 
     // The Figma button has a single size, so `variant` is the only cva axis.
+    expect(Object.keys(groups)).toEqual(['variant']);
+    expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
+  });
+
+  it('ButtonGroup: api.yaml variant enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/button-group/button-group.tsx'
+      ),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('button-group').api;
+
+    // `variant` (outlined / inlined) is the container's only cva axis. The item's
+    // own cva declares no variants at all — Figma's `order` is derived from
+    // `:last-child` and its `state`s are CSS pseudo-classes.
     expect(Object.keys(groups)).toEqual(['variant']);
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
   });
@@ -295,6 +328,20 @@ describe('cva ↔ contract conformance', () => {
     const api = loadSpec('button-icon').api;
 
     // `variant` (ghost / secondary) is the only cva axis.
+    expect(Object.keys(groups)).toEqual(['variant']);
+    expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
+  });
+
+  it('Link: api.yaml variant enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(HERE, '../../ui-react/src/components/ui/link/link.tsx'),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('link').api;
+
+    // `variant` (normal / inverse — Figma's `background`) is the only cva axis; the
+    // Figma component has a single size.
     expect(Object.keys(groups)).toEqual(['variant']);
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
   });
@@ -417,6 +464,28 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
   });
 
+  // Toast's severity is not a prop — it is picked by which `toast.*` method
+  // queued the notification — so the cva keys are compared against the method
+  // list instead of a `variant` enum. `toast.loading` has no cva key: it has no
+  // Figma variant and borrows info's chrome.
+  it('Toast: api.yaml toast.* severity methods match the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(HERE, '../../ui-react/src/components/ui/toast/toast.tsx'),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('toast').api;
+    const severityMethods = (api.contract.methods ?? [])
+      .map((m) => m.name)
+      .filter((name) => name.startsWith('toast.'))
+      .map((name) => name.slice('toast.'.length))
+      .filter((name) => !['loading', 'dismiss', 'promise'].includes(name))
+      .sort();
+
+    expect(Object.keys(groups)).toEqual(['variant']);
+    expect(groups.variant.sort()).toEqual(severityMethods);
+  });
+
   it('BarChart: api.yaml orientation/layout enums match the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/bar-chart/bar-chart.tsx'),
@@ -469,5 +538,24 @@ describe('cva ↔ contract conformance', () => {
     // `color` (the eight Figma color schemes) is the only cva axis.
     expect(Object.keys(groups)).toEqual(['color']);
     expect(groups.color.sort()).toEqual(enumMembers(api, 'color'));
+  });
+
+  it('StepperItem: api.yaml variant/state enums match the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/stepper-item/stepper-item.tsx'
+      ),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('stepper-item').api;
+
+    // Two axes: the step's role in the sequence, and its interaction look. Only
+    // five of their nine combinations are drawn in Figma, but both are real
+    // props, so both enums are pinned here.
+    expect(Object.keys(groups)).toEqual(['variant', 'state']);
+    expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
+    expect(groups.state.sort()).toEqual(enumMembers(api, 'state'));
   });
 });

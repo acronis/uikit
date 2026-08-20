@@ -1,0 +1,149 @@
+---
+title: ButtonGroup
+description: A compact cluster of related icon-only actions sharing a single box, hairline-separated.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DemoReact } from '@/components/DemoReact';
+import { ButtonGroupDemo } from '@/components/demos-react/button-group';
+
+## Usage
+
+```tsx
+import { ButtonGroup, ButtonGroupItem } from '@acronis-platform/ui-react';
+```
+
+`ButtonGroup` joins two to about five **related** icon actions into one control:
+a view switcher, zoom in / out, text alignment. The shared box and separators are
+the claim that the actions belong together — for unrelated actions side by side,
+use separate `ButtonIcon`s instead.
+
+Two container styles: `outlined` (the default — 1px border, 4px radius) and
+`inlined`, which draws no chrome of its own, for a group sitting inside a surface
+that already has a border.
+
+The group follows the WAI-ARIA **toolbar** pattern: it is a single Tab stop and
+the arrow keys move between items, wrapping at the ends unless you set
+`loopFocus={false}`. (Home/End are not supported — a limitation of the underlying
+Base UI toolbar primitive.) `ButtonGroup` and `ButtonGroupItem` are both
+polymorphic via Base UI's `render` prop.
+
+Both parts are themed by the `--ui-button-group-*` tokens; the item glyph and the
+focus ring come from the shared `--ui-glyph-on-surface-primary` and
+`--ui-focus-primary` semantic tokens. Pass `className` on either part to layer
+extra utilities on top — it is merged with the component's own classes, so
+Tailwind conflicts resolve in your favour.
+
+<Callout title="Label both levels">
+  Items are icon-only, so they have no text to name them — give each an
+  `aria-label`. Give the container one too, describing what the actions have in
+  common. `ButtonGroup` intentionally ships no default: a generic fallback would
+  be unlocalizable and tell a screen reader user nothing.
+</Callout>
+
+<Callout type="warn" title="Not a segmented control">
+  The `active` fill is transient activation feedback and releases on mouse-up.
+  This component has no persistent selected state — for one option staying
+  visibly chosen, use [ToggleGroup](/docs/components/toggle-group), whose items
+  expose `aria-pressed`.
+</Callout>
+
+## Examples
+
+<DemoReact>
+  <ButtonGroupDemo />
+</DemoReact>
+
+A view switcher:
+
+```tsx
+<ButtonGroup aria-label="View mode">
+  <ButtonGroupItem aria-label="List view" onClick={showList}>
+    <ListIcon size={16} />
+  </ButtonGroupItem>
+  <ButtonGroupItem aria-label="Grid view" onClick={showGrid}>
+    <LayoutGridIcon size={16} />
+  </ButtonGroupItem>
+  <ButtonGroupItem aria-label="Table view" onClick={showTable}>
+    <LayoutTableIcon size={16} />
+  </ButtonGroupItem>
+</ButtonGroup>
+```
+
+Borderless, for a surface that already draws its own chrome:
+
+```tsx
+<ButtonGroup aria-label="Zoom" variant="inlined">
+  <ButtonGroupItem aria-label="Zoom out" onClick={zoomOut}>
+    <MagnifierMinusIcon size={16} />
+  </ButtonGroupItem>
+  <ButtonGroupItem aria-label="Zoom in" onClick={zoomIn}>
+    <MagnifierPlusIcon size={16} />
+  </ButtonGroupItem>
+</ButtonGroup>
+```
+
+Disable a single action, or the whole group:
+
+```tsx
+<ButtonGroupItem aria-label="Table view" disabled>
+  <LayoutTableIcon size={16} />
+</ButtonGroupItem>
+
+<ButtonGroup aria-label="View mode" disabled>
+  {/* every item is disabled */}
+</ButtonGroup>
+```
+
+A disabled item behaves differently here than elsewhere in the library: it stays
+focusable and is marked `aria-disabled` rather than natively disabled, so the
+arrow keys land on it (click and Enter/Space are still suppressed). That is
+required rather than a preference — the roving tabindex parks the group's single
+`tabindex="0"` on the first item, and browsers skip a natively disabled button,
+so a natively disabled _first_ item would take the **whole group** out of the tab
+order.
+
+Separators normally need no configuration. Figma models item position as an
+`order` variant (first / middle / last), but it only selects whether the trailing
+separator is drawn — the component derives that from the item's position, so the
+group stays variadic and you never restate the DOM order. Being an inline-end
+border, the separator also mirrors correctly under `dir="rtl"`.
+
+There is one composition that derivation cannot survive: if you wrap each item in
+another element, every button becomes a `:last-child` of its own wrapper and all
+the separators vanish. `order` is the escape hatch for exactly that case — it
+replaces the derivation instead of layering on top of it:
+
+```tsx
+<ButtonGroup aria-label="View mode">
+  <Wrapper>
+    <ButtonGroupItem aria-label="List view" order="first">
+      <ListIcon size={16} />
+    </ButtonGroupItem>
+  </Wrapper>
+  <Wrapper>
+    <ButtonGroupItem aria-label="Grid view" order="last">
+      <LayoutGridIcon size={16} />
+    </ButtonGroupItem>
+  </Wrapper>
+</ButtonGroup>
+```
+
+Leave `order` unset in normal use — items as direct children is the intended
+composition, and the one Figma's slot models.
+
+## API Reference
+
+### ButtonGroup
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/button-group/button-group.tsx"
+  name="ButtonGroupProps"
+/>
+
+### ButtonGroupItem
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/button-group/button-group.tsx"
+  name="ButtonGroupItemProps"
+/>

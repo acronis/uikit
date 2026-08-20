@@ -173,16 +173,16 @@ renders in the card below a divider (and is hidden while the row is collapsed).
 
 ## Theming
 
-The connector and elbow use `--ui-border-on-surface-border`; spacing and the
-indent step derive from `--ui-gap-16`, `--ui-gap-8`,
+The connector and elbow use `--ui-timeline-connector-color`; spacing and the
+indent step derive from `--ui-timeline-gap`, `--ui-gap-16`, `--ui-gap-8`,
 `--ui-avatar-global-avatar-size`, and
 `--ui-button-icon-global-container-height`. The marker, disclosure button, and
 card are themed by `Avatar`'s, `ButtonIcon`'s, and `Card`'s own token tiers.
 
-The Figma variables `components/Timeline/{connectorColor,gap}` are not yet "ready
-for dev" and have no `--ui-timeline-*` tier. Both are pure aliases in Figma,
-identical across all six brands, so the implementation consumes their alias
-targets directly.
+The Figma variables `components/Timeline/{connectorColor,gap}` ship as the
+`--ui-timeline-*` tier and are consumed directly. `Timeline/gap` covers the
+horizontal marker-to-card gap and the indent step derived from it; the vertical
+rhythm between rows is unbound in the design, so it stays on `--ui-gap-16`.
 
 ## API Reference
 

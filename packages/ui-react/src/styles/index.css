@@ -11,6 +11,7 @@
 @import '@acronis-platform/tokens-pd/css/Alert/default.css';
 @import '@acronis-platform/tokens-pd/css/Avatar/default.css';
 @import '@acronis-platform/tokens-pd/css/Button/default.css';
+@import '@acronis-platform/tokens-pd/css/ButtonGroup/default.css';
 @import '@acronis-platform/tokens-pd/css/ButtonMenu/default.css';
 @import '@acronis-platform/tokens-pd/css/ButtonIcon/default.css';
 @import '@acronis-platform/tokens-pd/css/ButtonIconInput/default.css';
@@ -32,6 +33,7 @@
 @import '@acronis-platform/tokens-pd/css/Calendar/default.css';
 @import '@acronis-platform/tokens-pd/css/Resizable/default.css';
 @import '@acronis-platform/tokens-pd/css/Tag/default.css';
+@import '@acronis-platform/tokens-pd/css/Toast/default.css';
 @import '@acronis-platform/tokens-pd/css/Tooltip/default.css';
 @import '@acronis-platform/tokens-pd/css/SidebarPrimary/default.css';
 @import '@acronis-platform/tokens-pd/css/SidebarSecondary/default.css';
@@ -40,6 +42,8 @@
 @import '@acronis-platform/tokens-pd/css/Footer/default.css';
 @import '@acronis-platform/tokens-pd/css/Popover/default.css';
 @import '@acronis-platform/tokens-pd/css/Carousel/default.css';
+@import '@acronis-platform/tokens-pd/css/Timeline/default.css';
+@import '@acronis-platform/tokens-pd/css/Timer/default.css';
 
 @layer base {
   *,
@@ -116,6 +120,30 @@
   --ui-breakpoint-3xl: 1680px;
   --ui-breakpoint-4xl: 1920px;
 }
+
+/* Drag-to-reorder cursors, the counterpart of the generated
+   `--ui-resizable-cursor` (tokens-pd `Resizable` tier, imported above) that the
+   column-resize handle uses. Hand-authored for the same reason as the
+   breakpoints above: the design system has no `Draggable` group / Figma
+   variable for a grab cursor yet, so style-dictionary emits nothing to
+   reference. Named after the gesture, not the component, so any future
+   drag-reorder affordance reuses these instead of raw `cursor-grab`. Move them
+   into `design-tokens` (and drop this block) once a Figma variable exists. */
+:root,
+:host {
+  --ui-draggable-cursor: grab;
+  --ui-draggable-cursor-active: grabbing;
+}
+
+/* While a DataTable column resize is in progress, force the resize cursor
+   over every element the pointer crosses — a plain inline `cursor` on
+   `<body>` loses to any element underneath that sets its own `cursor`
+   (e.g. a sortable header's `cursor-pointer` button), so the cursor would
+   flicker back to `pointer` while dragging over a neighboring header. */
+html[data-ui-column-resizing] * {
+  cursor: var(--ui-resizable-cursor) !important;
+}
+
 @keyframes indeterminate-progress {
   0% {
     transform: translateX(-100%);

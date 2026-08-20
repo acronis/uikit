@@ -7,6 +7,7 @@ export {
   type PortalContainerProviderProps,
 } from './lib/portal-container';
 export * from './components/ui/accordion';
+export * from './components/ui/accordion-container';
 export * from './components/ui/alert';
 export * from './components/ui/app-shell';
 export * from './components/ui/app-shell-chat';
@@ -16,6 +17,7 @@ export * from './components/ui/avatar';
 export * from './components/ui/bar-chart';
 export * from './components/ui/breadcrumb';
 export * from './components/ui/button';
+export * from './components/ui/button-group';
 export * from './components/ui/button-menu';
 export * from './components/ui/calendar';
 export * from './components/ui/calendar-panel';
@@ -47,6 +49,7 @@ export * from './components/ui/empty';
 export * from './components/ui/field';
 export * from './components/ui/fitted-actions';
 export * from './components/ui/filter-cards';
+export * from './components/ui/filter-chips';
 export * from './components/ui/funnel-chart';
 export * from './components/ui/grid';
 export * from './components/ui/histogram';
@@ -103,11 +106,14 @@ export * from './components/ui/sheet';
 export * from './components/ui/skeleton';
 export * from './components/ui/slider';
 export * from './components/ui/stack';
+export * from './components/ui/stepper';
+export * from './components/ui/stepper-item';
 export * from './components/ui/resizable';
 export * from './components/ui/sidebar-primary';
 export * from './components/ui/sidebar-secondary';
 export * from './components/ui/button-icon';
 export * from './components/ui/button-icon-input';
+export * from './components/ui/button-icon-menu';
 export * from './components/ui/filter-search';
 export * from './components/ui/switch';
 export * from './components/ui/table';
@@ -119,6 +125,7 @@ export * from './components/ui/tooltip';
 export * from './components/ui/truncate-text';
 export * from './components/ui/tag';
 export * from './components/ui/timeline';
+export * from './components/ui/timer';
 // `Badge` is an alias of `Tag`. The legacy generic shadcn Badge is replaced by
 // the design-system-native Tag (its own `--ui-tag-*` token tier, icon slot, and
 // sizes); Tag's variants are exactly Badge's status set. No separate component.

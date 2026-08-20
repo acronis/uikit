@@ -7,12 +7,15 @@ description: >-
   A data grid built on TanStack react-table v8, composed over the Table
   primitives — sorting, filtering (text + per-column), column visibility, row
   selection, pagination, optional row expansion (row-level or an in-cell expand
-  trigger), column resizing, and sticky (pinned) columns. Ships with companion
-  parts (column header, toolbar, pagination, view options, expand trigger).
-  Also supports server-driven usage: rendering from an externally-built
-  TanStack `table` instance, manual (server-driven) sorting, infinite-scroll
-  pagination, and custom row/empty-state rendering. Ported from the legacy
-  shadcn-uikit `data-table`.
+  trigger), column resizing, drag-to-reorder columns, and sticky (pinned)
+  columns. Renders a built-in trailing action column (the column-settings cog
+  in the header, a per-row overflow-actions trigger in each row) and per-header
+  capability-hint tooltips, and navigates rows with a roving tabindex. Ships
+  with companion parts (column header, toolbar, pagination, view options,
+  expand trigger, bulk-actions bar). Also supports server-driven usage:
+  rendering from an externally-built TanStack `table` instance, manual
+  (server-driven) sorting, infinite-scroll pagination, and custom
+  row/empty-state rendering. Ported from the legacy shadcn-uikit `data-table`.
 since: 0.42.0
 dependencies:
   components:
@@ -24,6 +27,11 @@ dependencies:
     - FilterSearch
     - InputSearch
     - Select
+    - Tooltip
     - ChevronDownIcon
     - ChevronRightIcon
+    - EllipsisIcon
     - TimesIcon
+figma:
+  node: '4567-6801'
+  codeConnect: packages/ui-react/src/components/ui/data-table/data-table.figma.tsx

@@ -209,6 +209,20 @@ describe('DateRangePicker', () => {
     });
   });
 
+  it('applies className to the field wrapper, not the trigger button', () => {
+    render(
+      <DateRangePicker
+        label="Period"
+        className="custom-width"
+        onValueChange={() => {}}
+      />
+    );
+
+    const button = screen.getByRole('button', { name: 'Period' });
+    expect(button).not.toHaveClass('custom-width');
+    expect(button.closest('.group\\/field')).toHaveClass('custom-width');
+  });
+
   it('forwards disabledDays to the calendar popup', async () => {
     const user = userEvent.setup();
     render(

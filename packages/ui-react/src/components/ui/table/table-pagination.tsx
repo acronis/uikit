@@ -35,6 +35,30 @@ export interface TablePaginationProps
   onPageIndexChange: (pageIndex: number) => void;
   /** Invoked with the next page size. */
   onPageSizeChange: (pageSize: number) => void;
+  /** Label of the rows-per-page select (also its accessible name). */
+  rowsPerPageLabel?: string;
+  /** Accessible name of the first-page control. */
+  firstPageLabel?: string;
+  /** Accessible name of the previous-page control. */
+  previousPageLabel?: string;
+  /** Accessible name of the next-page control. */
+  nextPageLabel?: string;
+  /** Accessible name of the last-page control. */
+  lastPageLabel?: string;
+  /**
+   * Builds the page indicator. Receives the 1-based page number and the total
+   * page count; `pageCount === 0` means there are no pages.
+   */
+  pageLabel?: (page: number, pageCount: number) => string;
+  /**
+   * Builds the leading row summary. Receives the selected-row count (or
+   * `undefined` when selection isn't tracked) and the total row count. Return
+   * `null` for no summary.
+   */
+  summaryLabel?: (
+    selectedRows: number | undefined,
+    totalRows: number
+  ) => string | null;
 }
 
 // TanStack-independent twin of `DataTablePagination` — same visual design
@@ -53,6 +77,17 @@ const TablePagination = React.forwardRef<HTMLDivElement, TablePaginationProps>(
       selectedRows,
       onPageIndexChange,
       onPageSizeChange,
+      rowsPerPageLabel = 'Rows per page',
+      firstPageLabel = 'Go to first page',
+      previousPageLabel = 'Go to previous page',
+      nextPageLabel = 'Go to next page',
+      lastPageLabel = 'Go to last page',
+      pageLabel = (page, count) =>
+        count === 0 ? 'No pages' : `Page ${page} of ${count}`,
+      summaryLabel = (selected, total) =>
+        selected != null
+          ? `${selected} of ${total} row(s) selected.`
+          : `${total} row(s).`,
       ...props
     },
     ref
@@ -61,11 +96,7 @@ const TablePagination = React.forwardRef<HTMLDivElement, TablePaginationProps>(
     const canNext = pageIndex < pageCount - 1;
 
     const summary =
-      selectedRows != null && totalRows != null
-        ? `${selectedRows} of ${totalRows} row(s) selected.`
-        : totalRows != null
-          ? `${totalRows} row(s).`
-          : null;
+      totalRows != null ? summaryLabel(selectedRows, totalRows) : null;
 
     return (
       <div
@@ -76,12 +107,12 @@ const TablePagination = React.forwardRef<HTMLDivElement, TablePaginationProps>(
         <div className="flex-1 text-sm text-muted-foreground">{summary}</div>
         <div className="flex items-center gap-6 lg:gap-8">
           <div className="flex items-center gap-2">
-            <p className="text-sm font-medium">Rows per page</p>
+            <p className="text-sm font-medium">{rowsPerPageLabel}</p>
             <Select
               value={`${pageSize}`}
               onValueChange={(value) => onPageSizeChange(Number(value))}
             >
-              <SelectTrigger aria-label="Rows per page" className="h-8 w-[70px]">
+              <SelectTrigger aria-label={rowsPerPageLabel} className="h-8 w-[70px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -94,12 +125,12 @@ const TablePagination = React.forwardRef<HTMLDivElement, TablePaginationProps>(
             </Select>
           </div>
           <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-            {pageCount === 0 ? 'No pages' : `Page ${pageIndex + 1} of ${pageCount}`}
+            {pageLabel(pageIndex + 1, pageCount)}
           </div>
           <div className="flex items-center gap-2">
             <ButtonIcon
               variant="secondary"
-              aria-label="Go to first page"
+              aria-label={firstPageLabel}
               className="hidden lg:inline-flex"
               onClick={() => onPageIndexChange(0)}
               disabled={!canPrevious}
@@ -108,7 +139,7 @@ const TablePagination = React.forwardRef<HTMLDivElement, TablePaginationProps>(
             </ButtonIcon>
             <ButtonIcon
               variant="secondary"
-              aria-label="Go to previous page"
+              aria-label={previousPageLabel}
               onClick={() => onPageIndexChange(pageIndex - 1)}
               disabled={!canPrevious}
             >
@@ -116,7 +147,7 @@ const TablePagination = React.forwardRef<HTMLDivElement, TablePaginationProps>(
             </ButtonIcon>
             <ButtonIcon
               variant="secondary"
-              aria-label="Go to next page"
+              aria-label={nextPageLabel}
               onClick={() => onPageIndexChange(pageIndex + 1)}
               disabled={!canNext}
             >
@@ -124,7 +155,7 @@ const TablePagination = React.forwardRef<HTMLDivElement, TablePaginationProps>(
             </ButtonIcon>
             <ButtonIcon
               variant="secondary"
-              aria-label="Go to last page"
+              aria-label={lastPageLabel}
               className="hidden lg:inline-flex"
               onClick={() => onPageIndexChange(pageCount - 1)}
               disabled={!canNext}

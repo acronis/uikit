@@ -1,0 +1,21 @@
+spec_version: '1.0'
+component: Stepper
+name: stepper
+status: ready
+category: navigation
+description: >-
+  The root of a step sequence. It renders the sequence two ways and lets CSS pick
+  one: on wide viewports a start-aligned, wrapping row of `StepperItem` children; on
+  narrow ones a two-line text summary — "Step 3 of 5: <current step>" and
+  "Next: <next step>" — with no items at all. The switch is a real viewport media
+  query (Tailwind's `lg:`, `min-width: 1024px`), not a JS measurement, so both
+  subtrees are always in the DOM and only one is ever displayed. It owns that
+  layout switch and the summary copy only: the steps, their order, which one is
+  current, and all navigation belong to the application.
+since: 0.63.0
+dependencies:
+  components:
+    - stepper-item
+figma:
+  node: 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=10364-64390'
+  codeConnect: packages/ui-react/src/components/ui/stepper/stepper.figma.tsx

@@ -31,9 +31,48 @@ Scenario: A selected row
 
 ```gherkin
 Scenario: Row selection is consumer-driven
-  Given a checkbox rendered inside a leading cell
+  Given a checkbox rendered inside a leading TableSelectCell
   When the user toggles it
   Then the consumer updates the row's selected prop (Table does not manage it)
+```
+
+```gherkin
+Scenario: The select cell renders for a header or a row
+  Given a TableSelectCell
+  When header = true
+  Then it renders a <th> (the select-all cell) with the header cell background
+  When header is omitted
+  Then it renders a <td> with the data cell background
+  And either way it keeps its fixed 32px width and inline-start-only padding, so
+  the checkbox sits flush against the first data cell
+```
+
+## Row actions and column settings
+
+```gherkin
+Scenario: The row-actions cell owns the interaction feedback
+  Given a TableActionsCell holding an overflow trigger
+  When the pointer is over it
+  Then the cell itself takes the hover tint (and the press tint on :active)
+  And a focus-visible trigger inside it draws the cell's inset focus ring
+```
+
+```gherkin
+Scenario: Row actions step aside for bulk actions
+  Given a TableActionsCell with bulk-selection-active = true
+  Then it renders no children and no hover/press tint
+  And it still reserves its 48px column, so the grid does not reflow
+  # The threshold itself is the consumer's call — with a TanStack table, pass
+  # isBulkSelectionActive(table) rather than re-deriving it (see api.yaml).
+```
+
+```gherkin
+Scenario: The settings cell holds the column-settings trigger
+  Given a TableSettingsCell in the header row
+  Then it renders a 48px end-aligned <th> that tints on hover/press and draws
+  the inset focus ring for a focus-visible trigger inside it
+  And what the trigger opens is the consumer's choice — TableViewOptions with
+  iconOnly is the ready-made cog + column-visibility menu
 ```
 
 ## Layout
@@ -95,6 +134,14 @@ Scenario: Toggling column visibility
   When the user toggles a column's checkbox in the dropdown
   Then the toggle event fires with that column's id
   And the consumer updates the column's hidden flag
+```
+
+```gherkin
+Scenario: The icon-only trigger fits the settings cell
+  Given a TableViewOptions with icon-only = true
+  Then its trigger is a cog-only icon button named by trigger-aria-label
+  ("Column settings" by default), the shape that fits the 48px settings cell
+  And the trigger-label is ignored in that form
 ```
 
 ## Headless state hooks

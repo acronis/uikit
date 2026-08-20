@@ -77,11 +77,16 @@ const meta = {
     },
   },
   decorators: [
-    (Story) => (
-      <div className="w-64">
+    // The ConstrainedWidth story sets up its own flex layout wider than this
+    // fixed 256px demo box, so it opts out of the shared decorator.
+    (Story, context) =>
+      context.id.endsWith('--constrained-width') ? (
         <Story />
-      </div>
-    ),
+      ) : (
+        <div className="w-64">
+          <Story />
+        </div>
+      ),
   ],
 } satisfies Meta<typeof InputSelect>;
 
@@ -461,6 +466,34 @@ export const StatusesWithSearch: Story = {
           </InputSelectStatus>
         </div>
       ))}
+    </div>
+  ),
+};
+
+// The field wrapper no longer hardcodes `w-full`, so two fields in the same
+// flex row size to their own min-width instead of being force-stretched to
+// evenly split the row.
+export const ConstrainedWidth: Story = {
+  render: () => (
+    <div style={{ display: 'flex', gap: 16, width: 400 }}>
+      <InputSelect items={fruitItems}>
+        <InputSelectField>
+          <InputSelectLabel>Narrow</InputSelectLabel>
+          <InputSelectTrigger>
+            <InputSelectValue placeholder="Select an option" />
+          </InputSelectTrigger>
+        </InputSelectField>
+        <InputSelectContent>{fruits}</InputSelectContent>
+      </InputSelect>
+      <InputSelect items={fruitItems}>
+        <InputSelectField>
+          <InputSelectLabel>Also narrow</InputSelectLabel>
+          <InputSelectTrigger>
+            <InputSelectValue placeholder="Select an option" />
+          </InputSelectTrigger>
+        </InputSelectField>
+        <InputSelectContent>{fruits}</InputSelectContent>
+      </InputSelect>
     </div>
   ),
 };

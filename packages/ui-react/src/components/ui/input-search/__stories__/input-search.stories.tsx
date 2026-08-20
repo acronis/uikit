@@ -48,11 +48,16 @@ const meta = {
     placeholder: 'Placeholder',
   },
   decorators: [
-    (Story) => (
-      <div className="w-64">
+    // The ConstrainedWidth story sets up its own flex layout wider than this
+    // fixed 256px demo box, so it opts out of the shared decorator.
+    (Story, context) =>
+      context.id.endsWith('--constrained-width') ? (
         <Story />
-      </div>
-    ),
+      ) : (
+        <div className="w-64">
+          <Story />
+        </div>
+      ),
   ],
 } satisfies Meta<typeof InputSearch>;
 
@@ -75,4 +80,16 @@ export const NoLabel: Story = {
 
 export const Disabled: Story = {
   args: { disabled: true, defaultValue: 'Value' },
+};
+
+// The field wrapper no longer hardcodes `w-full`, so two fields in the same
+// flex row size to their own min-width instead of being force-stretched to
+// evenly split the row.
+export const ConstrainedWidth: Story = {
+  render: (args) => (
+    <div style={{ display: 'flex', gap: 16, width: 400 }}>
+      <InputSearch {...args} label="Narrow" />
+      <InputSearch {...args} label="Also narrow" />
+    </div>
+  ),
 };

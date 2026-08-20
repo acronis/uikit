@@ -6,12 +6,15 @@ import { describe, expect, it, vi } from 'vitest';
 import { Checkbox } from '../../checkbox';
 import {
   Table,
+  TableActionsCell,
   TableBody,
   TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
+  TableSelectCell,
+  TableSettingsCell,
 } from '../table';
 
 function InvoiceTable() {
@@ -138,7 +141,7 @@ describe('Table', () => {
       </Table>
     );
     const cell = screen.getByTestId('cell');
-    expect(cell).toHaveClass('h-10');
+    expect(cell).toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
     expect(cell).not.toHaveClass('whitespace-normal');
   });
 
@@ -156,7 +159,7 @@ describe('Table', () => {
     );
     const cell = screen.getByTestId('cell');
     expect(cell).toHaveClass('whitespace-normal');
-    expect(cell).not.toHaveClass('h-10');
+    expect(cell).not.toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
   });
 
   it('wraps a header when TableHead sets wrap', () => {
@@ -171,7 +174,7 @@ describe('Table', () => {
     );
     const header = screen.getByRole('columnheader', { name: /Very long/ });
     expect(header).toHaveClass('whitespace-normal');
-    expect(header).not.toHaveClass('h-10');
+    expect(header).not.toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
   });
 
   it('drives a tri-state header checkbox across none/some/all row selection', async () => {
@@ -256,5 +259,206 @@ describe('Table', () => {
       </Table>
     );
     expect(ref.current).toBeInstanceOf(HTMLTableElement);
+  });
+});
+
+describe('Table structural cells', () => {
+  it('renders the selection cell as a td by default and a th in the header', () => {
+    render(
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableSelectCell header data-testid="select-head">
+              <Checkbox aria-label="Select all" />
+            </TableSelectCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableSelectCell data-testid="select-cell">
+              <Checkbox aria-label="Select row" />
+            </TableSelectCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    );
+
+    expect(screen.getByTestId('select-head').tagName).toBe('TH');
+    expect(screen.getByTestId('select-cell').tagName).toBe('TD');
+    expect(screen.getByLabelText('Select all')).toBeInTheDocument();
+    expect(screen.getByLabelText('Select row')).toBeInTheDocument();
+  });
+
+  it('pads the selection cell only at the inline start so it stays RTL-safe', () => {
+    render(
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableSelectCell data-testid="select-cell" />
+          </TableRow>
+        </TableBody>
+      </Table>
+    );
+
+    const cell = screen.getByTestId('select-cell');
+    expect(cell).toHaveClass('ps-[var(--ui-table-global-cell-padding-x)]');
+    expect(cell.className).not.toMatch(/\b(pl-|pr-)/);
+  });
+
+  it('wires the actions cell to the data-cell interaction tokens', () => {
+    render(
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableActionsCell data-testid="actions">
+              <button type="button">More</button>
+            </TableActionsCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    );
+
+    const cell = screen.getByTestId('actions');
+    expect(cell.tagName).toBe('TD');
+    expect(cell).toHaveClass('hover:bg-[var(--ui-table-data-cell-color-hover)]');
+    expect(cell).toHaveClass(
+      'active:bg-[var(--ui-table-data-cell-color-active)]'
+    );
+    expect(screen.getByRole('button', { name: 'More' })).toBeInTheDocument();
+  });
+
+  it('suppresses the actions cell content (keeping its column) while a bulk selection is active', () => {
+    render(
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableActionsCell data-testid="actions" bulkSelectionActive>
+              <button type="button">More</button>
+            </TableActionsCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    );
+
+    const cell = screen.getByTestId('actions');
+    expect(screen.queryByRole('button', { name: 'More' })).toBeNull();
+    // The 48px column is still reserved, but the cell no longer reads as
+    // interactive.
+    expect(cell).toHaveClass('w-12');
+    expect(cell).not.toHaveClass(
+      'hover:bg-[var(--ui-table-data-cell-color-hover)]'
+    );
+  });
+
+  it('wires the settings cell to the header-cell interaction tokens', () => {
+    render(
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableSettingsCell data-testid="settings">
+              <button type="button">Columns</button>
+            </TableSettingsCell>
+          </TableRow>
+        </TableHeader>
+      </Table>
+    );
+
+    const cell = screen.getByTestId('settings');
+    expect(cell.tagName).toBe('TH');
+    expect(cell).toHaveClass(
+      'hover:bg-[var(--ui-table-header-cell-color-hover)]'
+    );
+    expect(cell).toHaveClass(
+      'active:bg-[var(--ui-table-header-cell-color-active)]'
+    );
+  });
+
+  it('wires a keyboard focus ring on the row itself', () => {
+    render(
+      <Table>
+        <TableBody>
+          <TableRow data-testid="row" tabIndex={0} />
+        </TableBody>
+      </Table>
+    );
+    const row = screen.getByTestId('row');
+    expect(row).toHaveClass('focus-visible:ring-[3px]');
+    expect(row).toHaveClass('focus-visible:ring-[var(--ui-focus-primary)]');
+  });
+
+  it('tints a sortable header at the cell level, not on the inner control', () => {
+    render(
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead sortable data-testid="head">
+              Name
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+      </Table>
+    );
+
+    const head = screen.getByTestId('head');
+    expect(head).toHaveClass(
+      'hover:bg-[var(--ui-table-header-cell-color-hover)]'
+    );
+    expect(head).toHaveClass('has-[:focus-visible]:ring-[3px]');
+    // The inner button carries no background of its own.
+    expect(screen.getByRole('button').className).not.toMatch(/bg-/);
+  });
+});
+
+// The Figma "Basic table behavior" section states that once a row is checked,
+// that row's single-row actions disappear. The Table primitives don't own that
+// rule (there is no actions-column concept) — it's a composition rule, so this
+// pins the composition the stories/docs demonstrate.
+describe('row selection hides that row\'s actions', () => {
+  function Grid({ selected }: { selected: string[] }) {
+    return (
+      <Table>
+        <TableBody>
+          {['alpha', 'beta'].map((name) => {
+            const isSelected = selected.includes(name);
+            return (
+              <TableRow key={name} selected={isSelected}>
+                <TableSelectCell>
+                  <Checkbox checked={isSelected} aria-label={`Select ${name}`} />
+                </TableSelectCell>
+                <TableCell>{name}</TableCell>
+                <TableActionsCell>
+                  {!isSelected && (
+                    <button type="button">{`Actions for ${name}`}</button>
+                  )}
+                </TableActionsCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    );
+  }
+
+  it('shows every row action while nothing is selected', () => {
+    render(<Grid selected={[]} />);
+    expect(
+      screen.getByRole('button', { name: 'Actions for alpha' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Actions for beta' })
+    ).toBeInTheDocument();
+  });
+
+  it('hides only the selected row\'s actions, keeping the cell in place', () => {
+    render(<Grid selected={['alpha']} />);
+    expect(
+      screen.queryByRole('button', { name: 'Actions for alpha' })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Actions for beta' })
+    ).toBeInTheDocument();
+    // The row keeps its 4 cells so columns stay aligned across rows.
+    const selectedRow = screen.getByLabelText('Select alpha').closest('tr');
+    expect(selectedRow?.querySelectorAll('td')).toHaveLength(3);
   });
 });

@@ -4,10 +4,11 @@ name: chip
 status: ready
 category: data-display
 description: >-
-  A compact, interactive label for a selection or a removable token. The
-  `removable` variant carries a trailing × button; the `selectable` variant is a
-  toggle that shows an active style when selected. Both accept an optional
-  leading icon.
+  A compact, interactive label for a selection, a removable token, or an inline
+  action. The `removable` variant carries a trailing × button; `selectable` is a
+  toggle that shows an active style when selected; `operational` is a plain
+  action chip with a strong-link label. All three accept an optional leading
+  icon.
 since: 0.36.0
 dependencies:
   components: []

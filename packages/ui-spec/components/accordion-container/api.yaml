@@ -1,0 +1,91 @@
+spec_version: '1.0'
+component: AccordionContainer
+
+contract:
+  properties:
+    - name: collapsible
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Whether the disclosure exists at all. When false, `children` render
+        directly with no trigger and no panel wrapper.
+    - name: open
+      type: boolean
+      required: false
+      description: >-
+        Whether the panel is open (controlled). No trigger or panel renders when
+        collapsible is false, but the value is still tracked internally and
+        exposed via the `children` render-prop's `{ open }` state.
+    - name: defaultOpen
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Whether the panel is initially open (uncontrolled). No trigger or panel
+        renders when collapsible is false, but the value still seeds the
+        internal state exposed via the `children` render-prop's `{ open }`
+        state.
+    - name: disabled
+      type: boolean
+      required: false
+      default: 'false'
+      description: Disables the trigger. Ignored when collapsible is false.
+    - name: render
+      type: 'RenderProp'
+      required: false
+      default: undefined
+      description: >-
+        Base UI composition prop on the root — replaces the rendered element
+        while merging props and classes. When collapsible is false the root
+        renders no wrapping element unless a ref, className, style, render,
+        or other DOM prop is supplied — in which case it wraps children in a
+        plain `div` so none of those are silently dropped. React-only; other
+        frameworks use their own polymorphism.
+    - name: children
+      type: 'ReactNode | ((state: { open: boolean }) => ReactNode)'
+      required: false
+      description: >-
+        The composed content — typically a trigger placed by the consumer's
+        own header layout plus a `Content` panel. May also be a function
+        receiving the current `{ open }` state, for content outside `Content`
+        that needs to vary by state even when this component owns the open
+        state itself (uncontrolled). Not needed when the consumer already
+        controls `open` — it already has the value in scope.
+  events:
+    - name: onOpenChange
+      payload: '(open: boolean, eventDetails) => void'
+      description: Fired when the open state changes. Ignored when collapsible is false.
+  methods: []
+
+adapters:
+  react:
+    component: AccordionContainer
+    status: implemented
+    import: "import { AccordionContainer } from '@acronis-platform/ui-react'"
+    example: |
+      <AccordionContainer collapsible defaultOpen>
+        {({ open }) => (
+          <>
+            <div className="flex items-center justify-between">
+              <span>Title</span>
+              <AccordionContainer.Trigger />
+            </div>
+            <AccordionContainer.Content>
+              {open && <p>Body content</p>}
+            </AccordionContainer.Content>
+          </>
+        )}
+      </AccordionContainer>
+  vue:
+    component: AvAccordionContainer
+    status: planned
+    import: "import { AvAccordionContainer } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvAccordionContainer />
+  web-components:
+    element: ui-accordion-container
+    status: planned
+    import: "import '@acronis-platform/ui-wc/accordion-container'"
+    example: |
+      <ui-accordion-container></ui-accordion-container>

@@ -5,6 +5,17 @@ component: Link
 # through. See `adapters` for per-framework syntax.
 contract:
   properties:
+    - name: variant
+      type: "'normal' | 'inverse'"
+      required: false
+      default: "'normal'"
+      description: >-
+        Which surface the link sits on (Figma's `background` property). `normal`
+        targets ordinary surfaces via the `--ui-link-normal-*` tokens; `inverse`
+        targets a backdrop/scrim or other dark brand surface via
+        `--ui-link-inverse-*`. `inverse` is text-only and always enabled: it supports
+        neither the external icon (see `external`) nor the disabled state (see
+        `disabled`), and both props are ignored there.
     - name: href
       type: string
       required: false
@@ -13,14 +24,21 @@ contract:
       type: boolean
       required: false
       default: false
-      description: Append a trailing external-link icon (for links that leave the app).
+      description: >-
+        Append a trailing external-link icon (for links that leave the app). Ignored on
+        `variant="inverse"`: the design carries the icon layer only on the `normal`
+        surface, so no icon is rendered there.
     - name: disabled
       type: boolean
       required: false
       default: false
       description: >-
         Render the link inert — disabled color, removed from the tab order
-        (`tabindex=-1`), `aria-disabled`, and no navigation (href dropped).
+        (`tabindex=-1`), `aria-disabled`, and no navigation (href dropped). Ignored
+        entirely on `variant="inverse"`: the design defines no disabled state on a
+        backdrop, so the link renders exactly as an enabled one — still navigable,
+        focusable and hoverable, with no `aria-disabled`. Omit the link when it must be
+        inert on that surface.
 
   events:
     - name: click
@@ -45,6 +63,9 @@ adapters:
       <Link href="https://acronis.com" external target="_blank" rel="noreferrer">
         Acronis
       </Link>
+
+      {/* On a backdrop / dark brand surface */}
+      <Link href="/docs" variant="inverse">Documentation</Link>
 
       {/* Polymorphic — render a router link */}
       <Link render={<RouterLink to="/settings" />}>Settings</Link>

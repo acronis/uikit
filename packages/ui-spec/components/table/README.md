@@ -1,7 +1,8 @@
 # Table
 
 Displays rows and columns of data. Composable from native table parts, with
-sortable column headers, a selected row state, wrappable cells, and — as
+sortable column headers, a selected row state, wrappable cells, fixed-width
+leading selection and trailing actions/settings cells, and — as
 TanStack-independent companions — a pagination bar and a show/hide-columns
 menu. Two headless hooks (`useSortState`, `useTableUrlState`) supply optional
 sort and URL-synced state.
@@ -33,18 +34,21 @@ sort and URL-synced state.
 
 ## Parts
 
-| Part               | Element   | Purpose                                                         |
-| ------------------ | --------- | --------------------------------------------------------------- |
-| `Table`            | `table`   | The table, in a horizontally scrollable container.              |
-| `TableHeader`      | `thead`   | Column-header section.                                          |
-| `TableBody`        | `tbody`   | Data rows section.                                              |
-| `TableFooter`      | `tfoot`   | Summary section with a top divider.                             |
-| `TableRow`         | `tr`      | A row; `selected` applies the active state.                     |
-| `TableHead`        | `th`      | Column header; `sortable` + `sortDirection` + `onSort`; `wrap`. |
-| `TableCell`        | `td`      | A data cell; `wrap` lets it grow to fit multi-line content.     |
-| `TableCaption`     | `caption` | Optional caption below the table.                               |
-| `TablePagination`  | `div`     | Plain-prop pagination bar (no TanStack dependency).             |
-| `TableViewOptions` | `div`     | Show/hide-columns dropdown driven by a plain columns array.     |
+| Part                | Element   | Purpose                                                                                                                     |
+| ------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `Table`             | `table`   | The table, in a horizontally scrollable container.                                                                          |
+| `TableHeader`       | `thead`   | Column-header section.                                                                                                      |
+| `TableBody`         | `tbody`   | Data rows section.                                                                                                          |
+| `TableFooter`       | `tfoot`   | Summary section with a top divider.                                                                                         |
+| `TableRow`          | `tr`      | A row; `selected` applies the active state.                                                                                 |
+| `TableHead`         | `th`      | Column header; `sortable` + `sortDirection` + `onSort`; `wrap`.                                                             |
+| `TableCell`         | `td`      | A data cell; `wrap` lets it grow to fit multi-line content.                                                                 |
+| `TableSelectCell`   | `td`/`th` | 32px leading selection cell for a `Checkbox`; `header` renders the select-all `th`.                                         |
+| `TableActionsCell`  | `td`      | 48px trailing cell for a row's overflow trigger; owns the hover/press tint and focus ring.                                  |
+| `TableSettingsCell` | `th`      | 48px trailing header cell for the column-settings trigger.                                                                  |
+| `TableCaption`      | `caption` | Optional caption below the table.                                                                                           |
+| `TablePagination`   | `div`     | Plain-prop pagination bar (no TanStack dependency).                                                                         |
+| `TableViewOptions`  | `div`     | Show/hide-columns dropdown driven by a plain columns array. `iconOnly` gives the cog trigger that fits `TableSettingsCell`. |
 
 ## Hooks
 
@@ -66,11 +70,17 @@ import {
   TableRow,
   TableHead,
   TableCell,
+  TableSelectCell,
+  TableActionsCell,
+  TableSettingsCell,
   TablePagination,
+  TableViewOptions,
+  ButtonIcon,
   Checkbox,
   Tag,
 } from '@acronis-platform/ui-react';
 import { useSortState } from '@acronis-platform/ui-react'; // headless hook
+import { EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 // Sortable header driven by the headless sort hook
 const { sortedData, getSortDirection, toggleSort } = useSortState({ data });
@@ -86,13 +96,27 @@ const { sortedData, getSortDirection, toggleSort } = useSortState({ data });
 // Wrappable cell — grows to fit multi-line content instead of truncating
 <TableCell wrap>{longDescription}</TableCell>
 
-// Selectable row
+// Header row — select-all cell leading, column-settings cell trailing
+<TableRow>
+  <TableSelectCell header>
+    <Checkbox checked={allChecked} onCheckedChange={toggleAll} aria-label="Select all" />
+  </TableSelectCell>
+  <TableHead>Name</TableHead>
+  <TableSettingsCell>
+    <TableViewOptions iconOnly columns={columns} onToggle={toggleColumn} />
+  </TableSettingsCell>
+</TableRow>
+
+// Selectable row, with the trailing overflow-actions cell
 <TableRow selected={checked}>
-  <TableCell>
+  <TableSelectCell>
     <Checkbox checked={checked} onCheckedChange={setChecked} aria-label="Select row" />
-  </TableCell>
+  </TableSelectCell>
   <TableCell>web-server-01</TableCell>
   <TableCell><Tag>Protected</Tag></TableCell>
+  <TableActionsCell bulkSelectionActive={bulkSelectionActive}>
+    <ButtonIcon aria-label="Row actions"><EllipsisIcon /></ButtonIcon>
+  </TableActionsCell>
 </TableRow>
 
 // Pagination bar — plain props, no TanStack

@@ -14,7 +14,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const VARIANTS = ['removable', 'selectable'] as const;
+const VARIANTS = ['removable', 'selectable', 'operational'] as const;
 
 export const Variants: Story = {
   render: () => (

@@ -1,7 +1,8 @@
-import { createRef } from 'react';
+import { createRef, useRef } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 
 import {
   Popover,
@@ -10,6 +11,21 @@ import {
   PopoverFooter,
   PopoverTrigger,
 } from '../popover';
+import { PortalContainerProvider } from '@/lib/portal-container';
+
+const positionerSpy = vi.spyOn(
+  PopoverPrimitive.Positioner as unknown as {
+    render: (...args: unknown[]) => unknown;
+  },
+  'render'
+);
+
+// The spy is created once at module scope, so its call history accumulates
+// across tests unless cleared — otherwise a `toHaveBeenCalledWith` assertion
+// can pass on a call made by an earlier test, not the one under test.
+beforeEach(() => {
+  positionerSpy.mockClear();
+});
 
 function DemoPopover(props: {
   defaultOpen?: boolean;
@@ -121,5 +137,168 @@ describe('Popover', () => {
       </Popover>
     );
     expect(ref.current).toBeInstanceOf(HTMLElement);
+  });
+});
+
+// Regression coverage for PLTFRM-92756: a Popover portaled into a constrained
+// PortalContainerProvider container (the MFE/Shadow DOM pattern) was clipped
+// at the container's own edge instead of the viewport. Base UI's default
+// 'absolute' positioning shares its portal container's containing block, so
+// switching only the collision math isn't enough — the positioner must also
+// switch to 'fixed' so it escapes an overflow-constrained container.
+describe('Popover positioning inside a constrained portal container', () => {
+  it('uses absolute positioning and no explicit collision boundary by default', () => {
+    render(
+      <Popover defaultOpen>
+        <PopoverTrigger>Open</PopoverTrigger>
+        <PopoverContent data-testid="popup">content</PopoverContent>
+      </Popover>
+    );
+    const positioner = screen.getByTestId('popup').parentElement;
+    expect(positioner).toHaveStyle({ position: 'absolute' });
+    expect(positionerSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ collisionBoundary: undefined }),
+      null
+    );
+  });
+
+  it('switches to fixed positioning when a PortalContainerProvider container is resolved', () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    render(
+      <PortalContainerProvider container={container}>
+        <Popover defaultOpen>
+          <PopoverTrigger>Open</PopoverTrigger>
+          <PopoverContent data-testid="popup">content</PopoverContent>
+        </Popover>
+      </PortalContainerProvider>
+    );
+
+    const positioner = screen.getByTestId('popup').parentElement;
+    expect(positioner).toHaveStyle({ position: 'fixed' });
+    // The collision boundary is left at the platform default (undefined
+    // here) — it's the 'fixed' positioning above that keeps collision
+    // detection resolved against the real viewport instead of the
+    // container's edge, not an explicit collisionBoundary override.
+    expect(positionerSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ collisionBoundary: undefined }),
+      null
+    );
+
+    document.body.removeChild(container);
+  });
+
+  it('keeps the platform default when portalContainer is a ref whose current is null', () => {
+    const containerRef = createRef<HTMLDivElement>();
+
+    render(
+      <Popover defaultOpen>
+        <PopoverTrigger>Open</PopoverTrigger>
+        <PopoverContent data-testid="popup" portalContainer={containerRef}>
+          content
+        </PopoverContent>
+      </Popover>
+    );
+
+    // A ref object is always truthy, but `current === null` means Base UI
+    // itself falls back to `document.body` — the container defaults must not
+    // fire for a case with no resolved container at all.
+    const positioner = screen.getByTestId('popup').parentElement;
+    expect(positioner).toHaveStyle({ position: 'absolute' });
+  });
+
+  it('switches to fixed positioning when portalContainer is a ref attached in the same commit', () => {
+    // Regression coverage: the ref's target mounts in the same commit as the
+    // Popover, so `current` is null during render and only populated once
+    // React attaches refs during that commit — before the container
+    // resolution's layout effect runs, but after render. A resolution that
+    // ran inline during render (instead of in a layout effect) would still
+    // see `current: null` here and wrongly default to 'absolute'.
+    function Wrapper() {
+      const containerRef = useRef<HTMLDivElement>(null);
+      return (
+        <>
+          <div ref={containerRef} />
+          <Popover defaultOpen>
+            <PopoverTrigger>Open</PopoverTrigger>
+            <PopoverContent data-testid="popup" portalContainer={containerRef}>
+              content
+            </PopoverContent>
+          </Popover>
+        </>
+      );
+    }
+
+    render(<Wrapper />);
+
+    const positioner = screen.getByTestId('popup').parentElement;
+    expect(positioner).toHaveStyle({ position: 'fixed' });
+  });
+
+  it('switches to fixed positioning when an explicit portalContainer prop is used', () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    render(
+      <Popover defaultOpen>
+        <PopoverTrigger>Open</PopoverTrigger>
+        <PopoverContent data-testid="popup" portalContainer={container}>
+          content
+        </PopoverContent>
+      </Popover>
+    );
+
+    const positioner = screen.getByTestId('popup').parentElement;
+    expect(positioner).toHaveStyle({ position: 'fixed' });
+
+    document.body.removeChild(container);
+  });
+
+  it('lets an explicit positionMethod override the computed default', () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    render(
+      <PortalContainerProvider container={container}>
+        <Popover defaultOpen>
+          <PopoverTrigger>Open</PopoverTrigger>
+          <PopoverContent data-testid="popup" positionMethod="absolute">
+            content
+          </PopoverContent>
+        </Popover>
+      </PortalContainerProvider>
+    );
+
+    const positioner = screen.getByTestId('popup').parentElement;
+    expect(positioner).toHaveStyle({ position: 'absolute' });
+
+    document.body.removeChild(container);
+  });
+
+  it('lets an explicit collisionBoundary override the platform default', () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    const boundary = document.createElement('div');
+    document.body.appendChild(boundary);
+
+    render(
+      <PortalContainerProvider container={container}>
+        <Popover defaultOpen>
+          <PopoverTrigger>Open</PopoverTrigger>
+          <PopoverContent data-testid="popup" collisionBoundary={boundary}>
+            content
+          </PopoverContent>
+        </Popover>
+      </PortalContainerProvider>
+    );
+
+    expect(positionerSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ collisionBoundary: boundary }),
+      null
+    );
+
+    document.body.removeChild(container);
+    document.body.removeChild(boundary);
   });
 });

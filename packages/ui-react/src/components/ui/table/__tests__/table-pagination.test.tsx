@@ -80,3 +80,47 @@ describe('TablePagination', () => {
     ).toBeEnabled();
   });
 });
+
+describe('TablePagination localization', () => {
+  it('renders the default English labels', () => {
+    setup({ pageIndex: 0, pageCount: 5, totalRows: 42, selectedRows: 3 });
+    expect(screen.getByText('Rows per page')).toBeInTheDocument();
+    expect(screen.getByText('Page 1 of 5')).toBeInTheDocument();
+    expect(screen.getByText('3 of 42 row(s) selected.')).toBeInTheDocument();
+  });
+
+  it('lets every self-rendered string be overridden', () => {
+    setup({
+      pageIndex: 0,
+      pageCount: 5,
+      totalRows: 42,
+      selectedRows: 3,
+      rowsPerPageLabel: 'Zeilen pro Seite',
+      firstPageLabel: 'Erste Seite',
+      previousPageLabel: 'Vorherige Seite',
+      nextPageLabel: 'Nächste Seite',
+      lastPageLabel: 'Letzte Seite',
+      pageLabel: (page: number, count: number) => `Seite ${page} von ${count}`,
+      summaryLabel: (selected: number | undefined, total: number) =>
+        `${selected} von ${total} ausgewählt.`,
+    });
+
+    expect(screen.getByText('Zeilen pro Seite')).toBeInTheDocument();
+    expect(screen.getByText('Seite 1 von 5')).toBeInTheDocument();
+    expect(screen.getByText('3 von 42 ausgewählt.')).toBeInTheDocument();
+    for (const name of [
+      'Erste Seite',
+      'Vorherige Seite',
+      'Nächste Seite',
+      'Letzte Seite',
+    ]) {
+      expect(screen.getByRole('button', { name })).toBeInTheDocument();
+    }
+    expect(screen.queryByText('Rows per page')).not.toBeInTheDocument();
+  });
+
+  it('shows "No pages" when there are none', () => {
+    setup({ pageIndex: 0, pageCount: 0 });
+    expect(screen.getByText('No pages')).toBeInTheDocument();
+  });
+});

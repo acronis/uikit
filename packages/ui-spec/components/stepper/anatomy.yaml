@@ -1,0 +1,70 @@
+spec_version: '1.0'
+component: Stepper
+
+schematic: |
+  root (div)
+  +-----------------------------------------------------------------------+
+  |  summary            (visible below 1024px, display:none at/above)      |
+  |    current-line   "Step {currentStep} of {totalSteps}: {current}"      |
+  |    next-line      "Next: {next}"        (omitted when `next` is unset) |
+  |                                                                        |
+  |  items-row          (display:none below 1024px, visible at/above)      |
+  |    [ StepperItem ] [ StepperItem ] [ StepperItem ] ...  start-aligned, wraps|
+  +-----------------------------------------------------------------------+
+
+  summary       -> column, gap --ui-gap-4
+  current-line  -> prefix "Step N of M:" in --ui-text-on-surface-secondary,
+                   the step name in --ui-text-on-surface-primary
+  next-line     -> prefix "Next:"        in --ui-text-on-surface-secondary,
+                   the step name in --ui-text-on-surface-primary
+  items-row     -> flex, wrap, start-aligned, gap --ui-gap-8
+
+root:
+  element: div
+  description: >-
+    Wrapper spanning the available width. It holds both layouts at once and
+    carries no styling of its own beyond that width — which of the two children
+    is displayed is decided entirely by a CSS media query.
+
+parts:
+  - id: summary
+    description: >-
+      The compact layout: a stacked, two-line text summary of where the user is,
+      shown below 1024px. It never renders the step items — the whole point of
+      the compact design is that the row does not fit.
+    element: div
+  - id: current-line
+    description: >-
+      "Step {currentStep} of {totalSteps}: {current}" — the generated counter and
+      its punctuation in the secondary surface text, the current step's name in
+      the primary surface text.
+    element: p
+  - id: next-line
+    description: >-
+      "Next: {next}" — same two-tone treatment. Omitted entirely when no `next`
+      is supplied, which is how the last step in a sequence renders.
+    element: p
+    optional: true
+    visible_when: a `next` step name is provided
+  - id: items-row
+    description: >-
+      The wide layout: the `StepperItem` children laid out in a start-aligned row
+      that wraps, shown at 1024px and above. Displayed as `none` below that.
+    element: div
+
+# No `layout` block. The root has no layout of its own — it is a plain
+# full-width block wrapper, and its two children are mutually exclusive (each is
+# `display: none` at the other's viewport range), so there is no row, column,
+# alignment, or gap to describe at this level. The layout that does exist belongs
+# to the parts: `summary` is a column with a gap and `items-row` is a wrapping,
+# start-aligned flex row, both documented in the schematic above.
+#
+# No `states[]`. The component's only axis is the viewport width, and none of
+# the schema's three `kind` values honestly describes it: it is not driven by a
+# prop (`kind: prop`), it is not a CSS pseudo-class on the element
+# (`kind: pseudo`), and the component owns no internal state (`kind: internal`)
+# — it is a media query the browser evaluates. Rather than mis-file it under an
+# ill-fitting kind, the breakpoint behaviour is specified in prose in
+# `behavior.md` and `README.md`. `next-line`'s presence is a structural
+# distinction (a part that may be absent), which the schema models as
+# `optional` / `visible_when` on the part, not as a state.

@@ -18,14 +18,11 @@ describe('Chip', () => {
     ).toBeInTheDocument();
   });
 
-  it('shows a pointer cursor on both variants', () => {
-    const { container: removableContainer } = render(<Chip>Label</Chip>);
-    expect(removableContainer.firstElementChild).toHaveClass('cursor-pointer');
-
-    const { container: selectableContainer } = render(
-      <Chip variant="selectable">Label</Chip>
-    );
-    expect(selectableContainer.firstElementChild).toHaveClass('cursor-pointer');
+  it('shows a pointer cursor on every variant', () => {
+    for (const variant of ['removable', 'selectable', 'operational'] as const) {
+      const { container } = render(<Chip variant={variant}>Label</Chip>);
+      expect(container.firstElementChild).toHaveClass('cursor-pointer');
+    }
   });
 
   it('calls onRemove when the remove button is pressed', async () => {
@@ -79,6 +76,52 @@ describe('Chip', () => {
     await user.keyboard('{Enter}');
     await user.keyboard(' ');
     expect(onClick).toHaveBeenCalledTimes(2);
+  });
+
+  it('exposes the operational variant as a plain button', () => {
+    const { container } = render(
+      <Chip variant="operational">Add filter</Chip>
+    );
+    const root = container.firstElementChild as HTMLElement;
+    expect(root).toHaveAttribute('role', 'button');
+    expect(root).toHaveAttribute('tabindex', '0');
+    // An operation is triggered, not toggled — nothing to report as pressed.
+    expect(root).not.toHaveAttribute('aria-pressed');
+    expect(root).not.toHaveAttribute('data-selected');
+    // No remove button on an operational chip.
+    expect(screen.queryByRole('button', { name: 'Remove' })).toBeNull();
+  });
+
+  it('styles the operational label with the strong-link token + text style', () => {
+    const { container } = render(
+      <Chip variant="operational">Add filter</Chip>
+    );
+    const root = container.firstElementChild as HTMLElement;
+    expect(root).toHaveClass('ui-chip-operational-label-text-style');
+    expect(root).toHaveClass(
+      'text-[var(--ui-chip-operational-label-color)]'
+    );
+  });
+
+  it('activates an operational chip with the keyboard', async () => {
+    const onClick = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Chip variant="operational" onClick={onClick}>
+        Add filter
+      </Chip>
+    );
+    await user.tab();
+    await user.keyboard('{Enter}');
+    await user.keyboard(' ');
+    expect(onClick).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps the removable container presentational', () => {
+    const { container } = render(<Chip>Label</Chip>);
+    const root = container.firstElementChild as HTMLElement;
+    expect(root).not.toHaveAttribute('role');
+    expect(root).not.toHaveAttribute('tabindex');
   });
 
   it('renders an optional leading icon before the label', () => {

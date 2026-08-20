@@ -3,8 +3,8 @@ title: Popover
 description: A floating panel anchored to a trigger, for secondary content or quick actions.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { PopoverDemo } from "@/components/demos-react/popover";
+import { DemoReact } from '@/components/DemoReact';
+import { PopoverDemo } from '@/components/demos-react/popover';
 
 ## Usage
 
@@ -28,7 +28,6 @@ default action-row footer recipe shown in Figma — themed by
 `--ui-popover-body-*` and the shared `--ui-footer-*` tier respectively.
 
 ## Examples
-
 
 <DemoReact>
   <PopoverDemo />
@@ -84,7 +83,23 @@ const [open, setOpen] = useState(false);
 ```
 
 When the popover renders inside an isolated container (e.g. a shadow root), pass
-a `portalContainer` so the popup inherits that scope's styles.
+a `portalContainer` so the popup inherits that scope's styles. Whenever a
+`portalContainer` is resolved (explicit prop, or the nearest
+`PortalContainerProvider`), `PopoverContent` defaults to `fixed` positioning
+instead of the platform default (`absolute`) — otherwise a constrained
+container (e.g. a Shadow DOM host with `overflow: hidden`) would clip the
+popup at its own edge, since an `absolute` popup shares that ancestor's
+containing block. `fixed` escapes a plain overflow-clipping ancestor: for a
+`fixed`-positioned popup, collision detection drops an overflow ancestor that
+doesn't establish its own containing block, so the platform's default
+collision boundary already resolves to the real viewport — no explicit
+`collisionBoundary` override is needed for this case. Note `fixed` isn't an
+absolute guarantee, though: an ancestor with a `transform`, `filter`,
+`will-change`, `backdrop-filter`, `perspective`, or `contain: paint`/`layout`
+_does_ establish its own containing block, so a `fixed` popup can still be
+clipped inside one. Override via `positionMethod` / `collisionBoundary` for
+either case. This only applies to portaled content — `portal={false}` keeps
+the platform default.
 
 ## API Reference
 

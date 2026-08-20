@@ -10,13 +10,23 @@ schematic: |
      icon    label      remove        icon    label
   hover / :active / focus-within     hover / selected / focus-visible
 
+  operational:
+  +-------------------------+
+  | [icon]  label           |   label in the strong-link style (semibold,
+  +-------------------------+   --ui-chip-operational-label-color)
+     ^       ^
+     icon    label
+  hover / :active / focus-visible
+
 root:
   element: div
   description: >-
     The pill — a flex row with a 1px border and 12px radius. `variant` decides
     its contents and behavior: `removable` renders a `remove` button and is a
     plain container; `selectable` becomes a toggle (`role="button"`,
-    `aria-pressed`) that applies the active style when `selected`.
+    `aria-pressed`) that applies the active style when `selected`;
+    `operational` becomes a plain action button (`role="button"`, no `remove`,
+    no pressed state).
 
 parts:
   - id: icon
@@ -58,6 +68,13 @@ states:
       affects: [root],
     }
   - {
+      id: operational,
+      trigger: "variant === 'operational'",
+      kind: prop,
+      prop: variant,
+      affects: [root, label],
+    }
+  - {
       id: selected,
       trigger: 'selected (selectable)',
       kind: prop,
@@ -73,7 +90,7 @@ states:
     }
   - {
       id: pressed,
-      trigger: pressed (removable),
+      trigger: pressed (removable / operational),
       kind: pseudo,
       pseudo: ':active',
       affects: [root],

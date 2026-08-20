@@ -76,11 +76,16 @@ const meta = {
     description: 'Description message',
   },
   decorators: [
-    (Story) => (
-      <div className="w-64">
+    // The ConstrainedWidth story sets up its own flex layout wider than this
+    // fixed 256px demo box, so it opts out of the shared decorator.
+    (Story, context) =>
+      context.id.endsWith('--constrained-width') ? (
         <Story />
-      </div>
-    ),
+      ) : (
+        <div className="w-64">
+          <Story />
+        </div>
+      ),
   ],
 } satisfies Meta<typeof InputDatePicker>;
 
@@ -117,4 +122,18 @@ export const Error: Story = {
 
 export const Disabled: Story = {
   args: { disabled: true, value: 'Jun 15, 2026' },
+};
+
+// The field wrapper no longer hardcodes `w-full`, and `className` now targets
+// that wrapper directly, so two fields in the same flex row size to their own
+// min-width instead of being force-stretched to evenly split the row
+// (PLTFRM-93291).
+export const ConstrainedWidth: Story = {
+  args: { description: undefined },
+  render: (args) => (
+    <div style={{ display: 'flex', gap: 16, width: 400 }}>
+      <InputDatePicker {...args} label="Narrow" />
+      <InputDatePicker {...args} label="Also narrow" />
+    </div>
+  ),
 };

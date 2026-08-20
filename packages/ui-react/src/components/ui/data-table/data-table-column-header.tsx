@@ -12,6 +12,11 @@ interface DataTableColumnHeaderProps<TData, TValue>
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   column: Column<TData, TValue>;
   title: string;
+  /**
+   * Builds the accessible label of the sort toggle from the column title.
+   * Override to localize.
+   */
+  sortLabel?: (title: string) => string;
 }
 
 // Single-click sortable column header — matches the Table primitive's sortable
@@ -19,11 +24,13 @@ interface DataTableColumnHeaderProps<TData, TValue>
 // TanStack's `column.toggleSorting()`. The trailing icon shows the state with the
 // same `--ui-table-header-sort-icon-*` tokens — an up arrow (ascending) or down
 // arrow (descending) in the active blue, or the muted up/down arrows when
-// unsorted. (Column hiding lives in the toolbar's `DataTableViewOptions`, not a
-// per-header menu, so sorting is a single click.)
+// unsorted. (Column hiding lives behind the settings column's cog trigger —
+// `DataTableViewOptions` inside a `TableSettingsCell` — not a per-header menu,
+// so sorting is a single click.)
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
+  sortLabel = (t) => `Sort by ${t}`,
   className,
   ...props
 }: DataTableColumnHeaderProps<TData, TValue>) {
@@ -37,11 +44,13 @@ export function DataTableColumnHeader<TData, TValue>({
     <button
       type="button"
       onClick={() => column.toggleSorting()}
-      aria-label={`Sort by ${title}`}
+      aria-label={sortLabel(title)}
       className={cn(
         // -ms-2 px-2 keeps the label flush at the cell padding while giving the
-        // toggle a comfortable click/hover target.
-        '-ms-2 inline-flex h-8 cursor-pointer select-none items-center gap-2 rounded px-2 text-sm font-semibold transition-colors hover:bg-[var(--ui-table-header-cell-color-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)] [&_svg]:size-[var(--ui-table-header-sort-icon-size)] [&_svg]:shrink-0',
+        // toggle a comfortable click target; the hover/press tint lives on the
+        // `<th>` itself (see data-table.tsx), not this inner button, and uses
+        // the kit-wide 3px focus ring (Figma stroke/width-3 + radius/radius-4).
+        '-ms-2 inline-flex h-8 cursor-pointer select-none items-center gap-[var(--ui-table-header-gap)] rounded-sm px-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)] [&_svg]:size-[var(--ui-table-header-sort-icon-size)] [&_svg]:shrink-0',
         className
       )}
       {...props}

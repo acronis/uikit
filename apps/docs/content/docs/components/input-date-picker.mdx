@@ -15,7 +15,9 @@ import { InputDatePicker } from '@acronis-platform/ui-react';
 `InputDatePicker` is the field trigger for a date picker — a labeled box with a
 trailing calendar icon that displays the formatted selection and opens a
 consumer-owned calendar popup. It supports a single date or a start–end range
-via `pickerType`. Themed by the `--ui-input-date-picker-*` tokens.
+via `pickerType`. Themed by the `--ui-input-date-picker-*` tokens. `className`
+targets the field as a whole (label, box, and message together), so it sizes
+correctly in a flex/grid ancestor.
 
 This component renders the *field*; wiring it to an actual calendar popup and
 formatting the dates is the consumer's responsibility (pass formatted strings as

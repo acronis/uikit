@@ -14,7 +14,10 @@ contract:
       type: string
       required: false
       default: undefined
-      description: Additional CSS classes for the root container.
+      description: >-
+        Additional CSS classes. On `FilterSearch` and
+        `FilterSearchAppliedFilters`, the root container; on
+        `FilterSearchFilters`, the trigger button.
     - name: value
       type: 'Record<string, unknown>'
       required: true
@@ -42,6 +45,77 @@ contract:
       required: false
       default: "'Filters'"
       description: '`FilterSearchFilters` only. Label for the filter trigger button.'
+    - name: resetFiltersLabel
+      type: ReactNode
+      required: false
+      default: "'Reset filters'"
+      description: >-
+        `FilterSearchFilters` and `FilterSearchAppliedFilters`. Label for the
+        "Reset filters" action (the popover footer action on
+        `FilterSearchFilters`; the top-level clear-all action on
+        `FilterSearchAppliedFilters`). Override to localize.
+    - name: cancelLabel
+      type: ReactNode
+      required: false
+      default: "'Cancel'"
+      description: >-
+        `FilterSearchFilters` only. Label for the popover footer's "Cancel"
+        action. Override to localize.
+    - name: applyLabel
+      type: ReactNode
+      required: false
+      default: "'Apply'"
+      description: >-
+        `FilterSearchFilters` only. Label for the popover footer's "Apply"
+        action. Override to localize.
+    - name: contentClassName
+      type: string
+      required: false
+      default: undefined
+      description: '`FilterSearchFilters` only. Additional CSS classes for the popover content.'
+    - name: side
+      type: "'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end'"
+      required: false
+      default: "'bottom'"
+      description: '`FilterSearchFilters` only. Which side of the trigger to render the popover on.'
+    - name: align
+      type: "'start' | 'center' | 'end'"
+      required: false
+      default: "'start'"
+      description: '`FilterSearchFilters` only. Alignment of the popover along the chosen side.'
+    - name: sideOffset
+      type: number
+      required: false
+      default: 4
+      description: '`FilterSearchFilters` only. Distance in px between the trigger and the popover.'
+    - name: portalContainer
+      type: 'Element | ShadowRoot | null | RefObject<Element | ShadowRoot | null>'
+      required: false
+      default: undefined
+      description: >-
+        `FilterSearchFilters` only. React/DOM escape hatch, not part of the
+        framework-agnostic contract (see the `react` adapter below). Forwarded
+        to the underlying `Popover`'s `PopoverContent`; defaults to the
+        nearest `PortalContainerProvider`, or `document.body` if none is set.
+    - name: collisionBoundary
+      type: "Element | Element[] | Rect | 'clipping-ancestors'"
+      required: false
+      default: undefined
+      description: >-
+        `FilterSearchFilters` only. React/DOM escape hatch, not part of the
+        framework-agnostic contract (see the `react` adapter below). Forwarded
+        to `PopoverContent`; left at the platform default (clipping
+        ancestors) unless overridden.
+    - name: positionMethod
+      type: "'absolute' | 'fixed'"
+      required: false
+      default: undefined
+      description: >-
+        `FilterSearchFilters` only. React/DOM escape hatch, not part of the
+        framework-agnostic contract (see the `react` adapter below). Forwarded
+        to `PopoverContent`; defaults to `'fixed'` whenever a custom
+        `portalContainer` is resolved, so the popover isn't clipped at a
+        constrained MFE/Shadow DOM container's own edge.
     - name: filters
       type: 'Record<string, unknown>'
       required: true
@@ -56,6 +130,13 @@ contract:
       description: >-
         `FilterSearchAppliedFilters` only. Format an applied-filter chip's
         label. Defaults to `"<key>: <value>"` (array values joined with ", ").
+    - name: getRemoveFilterLabel
+      type: '(key: string) => string'
+      required: false
+      default: 'defaults to "Remove <key> filter"'
+      description: >-
+        `FilterSearchAppliedFilters` only. Format a filter chip's
+        remove-button accessible label. Override to localize.
 
   events: []
 

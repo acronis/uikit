@@ -133,10 +133,19 @@ that must overlay the entire viewport), pass `portalContainer` directly:
 
 ## Known caveats
 
-- **Positioning**: Base UI uses `position: fixed` for positioners. This works
-  inside shadow roots, but breaks if an ancestor has `transform`, `contain`, or
-  `will-change` set — those create a new containing block for fixed positioning.
-  Avoid these CSS properties on shadow-root ancestors.
+- **Positioning**: Base UI's own default positioner is `position: absolute`,
+  which shares its portal container's containing block — inside a
+  `overflow: hidden` shadow-root host, that clips the popup at the host's own
+  edge. `PopoverContent` accounts for this: when portaled into a resolved
+  `portalContainer`, it defaults `positionMethod` to `'fixed'` instead, which
+  escapes a plain overflow-clipping ancestor. `'fixed'` still breaks if an
+  ancestor has `transform`, `contain`, `will-change`, `filter`, or
+  `backdrop-filter` set — those create a new containing block for fixed
+  positioning too. Avoid these CSS properties on shadow-root ancestors. The
+  other portaling components (Tooltip, Toast, DropdownMenu, InputSelect,
+  Combobox, Dialog, Sheet) don't yet default `positionMethod` this way, so
+  the example above — a `Dialog` inside a `PortalContainerProvider` — can
+  still clip at the shadow host's edge.
 - **z-index**: Portaled content inside a shadow root participates in the shadow
   root's stacking context, not the document's. This is usually desirable (popups
   stay inside the MFE), but means a shadow-hosted popup cannot overlay content

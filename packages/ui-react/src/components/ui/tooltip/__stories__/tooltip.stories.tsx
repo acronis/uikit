@@ -172,6 +172,28 @@ export const CustomPortalContainer: Story = {
   },
 };
 
+// The popup already shrinks to its content by default; this story documents
+// that a consumer's own width className still takes effect while the
+// min/max tokens keep bounding it (PLTFRM-93291).
+export const ConstrainedWidth: Story = {
+  parameters: { snapshot: { fullPage: true, animationDelay: 400 } },
+  render: () => (
+    <div style={{ display: 'flex', gap: 48 }}>
+      <Tooltip defaultOpen>
+        <TooltipTrigger render={<Button variant="secondary">Default width</Button>} />
+        <TooltipContent>Hi</TooltipContent>
+      </Tooltip>
+      <Tooltip defaultOpen>
+        <TooltipTrigger render={<Button variant="secondary">Custom width</Button>} />
+        <TooltipContent className="w-64">
+          A wider tooltip via a consumer-supplied width class, still bounded by
+          the max-width token.
+        </TooltipContent>
+      </Tooltip>
+    </div>
+  ),
+};
+
 export const LightAndDark: Story = {
   parameters: { snapshot: { fullPage: true, animationDelay: 400 } },
   render: () => (

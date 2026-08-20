@@ -46,7 +46,7 @@ const InputSearch = React.forwardRef<HTMLInputElement, InputSearchProps>(
         : {};
 
     return (
-      <div className={cn('flex w-full min-w-[var(--ui-input-search-container-width-min)] flex-col gap-[var(--ui-input-search-container-gap)]', className)}>
+      <div className={cn('flex min-w-[var(--ui-input-search-container-width-min)] flex-col gap-[var(--ui-input-search-container-gap)]', className)}>
         {hasLabel && (
           <label
             htmlFor={inputId}

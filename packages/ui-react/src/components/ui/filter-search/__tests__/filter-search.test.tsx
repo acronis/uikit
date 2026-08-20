@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 
 import {
   FilterSearch,
@@ -14,6 +15,21 @@ import {
   DateRangePicker,
   type DateRange,
 } from '../../date-range-picker/date-range-picker';
+import { PortalContainerProvider } from '@/lib/portal-container';
+
+const positionerSpy = vi.spyOn(
+  PopoverPrimitive.Positioner as unknown as {
+    render: (...args: unknown[]) => unknown;
+  },
+  'render'
+);
+
+// The spy is created once at module scope, so its call history accumulates
+// across tests unless cleared — otherwise a `toHaveBeenCalledWith` assertion
+// can pass on a call made by an earlier test, not the one under test.
+beforeEach(() => {
+  positionerSpy.mockClear();
+});
 
 describe('FilterSearch', () => {
   it('renders a div with default flex layout', () => {
@@ -187,7 +203,10 @@ describe('FilterSearchFilters', () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();
     render(
-      <FiltersHarness initial={{ status: 'active' }} onValueChange={onValueChange} />
+      <FiltersHarness
+        initial={{ status: 'active' }}
+        onValueChange={onValueChange}
+      />
     );
 
     await user.click(screen.getByRole('button', { name: 'Filters' }));
@@ -265,6 +284,139 @@ describe('FilterSearchFilters', () => {
 
     await user.click(screen.getByRole('button', { name: 'Reset filters' }));
     expect(screen.getByRole('button', { name: 'Apply' })).toBeEnabled();
+  });
+
+  it('overrides the footer action labels', async () => {
+    const user = userEvent.setup();
+    render(
+      <FilterSearchFilters
+        value={{}}
+        onValueChange={() => {}}
+        resetFiltersLabel="Effacer"
+        cancelLabel="Annuler"
+        applyLabel="Appliquer"
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Filters' }));
+    expect(screen.getByRole('button', { name: 'Effacer' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Annuler' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Appliquer' })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Reset filters' })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Cancel' })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Apply' })
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe('FilterSearchFilters popover configuration', () => {
+  it('mounts the popover inside a constrained PortalContainerProvider container', async () => {
+    const user = userEvent.setup();
+    const container = document.createElement('div');
+    container.setAttribute('data-testid', 'constrained-mount');
+    // Simulate a small/offset MFE host container, the reproduction shape for
+    // PLTFRM-92756.
+    container.style.position = 'absolute';
+    container.style.width = '200px';
+    container.style.height = '100px';
+    document.body.appendChild(container);
+
+    render(
+      <PortalContainerProvider container={container}>
+        <FilterSearchFilters value={{}} onValueChange={() => {}}>
+          <span>Field</span>
+        </FilterSearchFilters>
+      </PortalContainerProvider>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Filters' }));
+    expect(container.textContent).toContain('Field');
+
+    // PLTFRM-92756: an 'absolute'-positioned popup shares its constrained
+    // portal container's containing block and gets clipped at the
+    // container's own edge. The fix defaults to 'fixed' whenever a custom
+    // portal container is resolved, so it escapes the constraint.
+    const positioner = screen.getByText('Field').closest('form')
+      ?.parentElement?.parentElement;
+    expect(positioner).toHaveStyle({ position: 'fixed' });
+    expect(positionerSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ positionMethod: 'fixed' }),
+      null
+    );
+
+    document.body.removeChild(container);
+  });
+
+  it('lets an explicit portalContainer prop override the context container', async () => {
+    const user = userEvent.setup();
+    const contextContainer = document.createElement('div');
+    document.body.appendChild(contextContainer);
+    const propContainer = document.createElement('div');
+    document.body.appendChild(propContainer);
+
+    render(
+      <PortalContainerProvider container={contextContainer}>
+        <FilterSearchFilters
+          value={{}}
+          onValueChange={() => {}}
+          portalContainer={propContainer}
+        >
+          <span>Field</span>
+        </FilterSearchFilters>
+      </PortalContainerProvider>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Filters' }));
+    expect(propContainer.textContent).toContain('Field');
+    expect(contextContainer.textContent).not.toContain('Field');
+
+    document.body.removeChild(contextContainer);
+    document.body.removeChild(propContainer);
+  });
+
+  it('accepts side, align, sideOffset, collisionBoundary, positionMethod, and contentClassName overrides', async () => {
+    const user = userEvent.setup();
+    const boundary = document.createElement('div');
+    document.body.appendChild(boundary);
+
+    render(
+      <FilterSearchFilters
+        value={{}}
+        onValueChange={() => {}}
+        side="top"
+        align="end"
+        sideOffset={12}
+        collisionBoundary={boundary}
+        positionMethod="fixed"
+        contentClassName="my-popover-class"
+      >
+        <span>Field</span>
+      </FilterSearchFilters>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Filters' }));
+    expect(
+      screen.getByText('Field').closest('.my-popover-class')
+    ).not.toBeNull();
+    expect(positionerSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        side: 'top',
+        align: 'end',
+        sideOffset: 12,
+        collisionBoundary: boundary,
+        positionMethod: 'fixed',
+      }),
+      null
+    );
+
+    document.body.removeChild(boundary);
   });
 });
 
@@ -377,7 +529,9 @@ describe('FilterSearchFilters nested popover (DateRangePicker field)', () => {
     // disabled until its draft changes). Applying commits the range and closes
     // only the inner popup; the outer Filters popup stays open.
     const applyButtons = screen.getAllByRole('button', { name: 'Apply' });
-    const innerApply = applyButtons.find((button) => !button.hasAttribute('disabled'));
+    const innerApply = applyButtons.find(
+      (button) => !button.hasAttribute('disabled')
+    );
     await user.click(innerApply!);
 
     expect(innerOpen()).toBe(false);
@@ -415,7 +569,9 @@ describe('FilterSearchAppliedFilters', () => {
     );
     expect(screen.getByText('status: active')).toBeInTheDocument();
     expect(screen.getByText('type: server')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Reset filters' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Reset filters' })
+    ).toBeInTheDocument();
   });
 
   it('removes a single filter when its chip is removed', async () => {
@@ -428,7 +584,9 @@ describe('FilterSearchAppliedFilters', () => {
       />
     );
 
-    await user.click(screen.getByRole('button', { name: 'Remove status filter' }));
+    await user.click(
+      screen.getByRole('button', { name: 'Remove status filter' })
+    );
     expect(onValueChange).toHaveBeenCalledWith({ type: 'server' });
   });
 
@@ -446,6 +604,36 @@ describe('FilterSearchAppliedFilters', () => {
     expect(onValueChange).toHaveBeenCalledWith({});
   });
 
+  it('overrides the remove-filter chip label', () => {
+    render(
+      <FilterSearchAppliedFilters
+        filters={{ status: 'active' }}
+        onValueChange={() => {}}
+        getRemoveFilterLabel={(key) => `Clear ${key}`}
+      />
+    );
+    expect(
+      screen.getByRole('button', { name: 'Clear status' })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Remove status filter' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('overrides the Reset filters label', () => {
+    render(
+      <FilterSearchAppliedFilters
+        filters={{ status: 'active' }}
+        onValueChange={() => {}}
+        resetFiltersLabel="Effacer"
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Effacer' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Reset filters' })
+    ).not.toBeInTheDocument();
+  });
+
   it('formats an object filter value as JSON instead of [object Object]', () => {
     render(
       <FilterSearchAppliedFilters
@@ -453,9 +641,7 @@ describe('FilterSearchAppliedFilters', () => {
         onValueChange={() => {}}
       />
     );
-    expect(
-      screen.getByText('range: {"min":1,"max":10}')
-    ).toBeInTheDocument();
+    expect(screen.getByText('range: {"min":1,"max":10}')).toBeInTheDocument();
   });
 
   it('formats an array filter value as a comma-separated list', () => {

@@ -3,9 +3,10 @@ component: FilterSearch
 
 # FilterSearch itself has no dedicated token tier — it's a pure layout
 # wrapper (16px gap between children); child components (Search, ButtonMenu,
-# Select) each bring their own --ui-* token tiers. FilterSearchFilters and
-# FilterSearchAppliedFilters compose Button/Chip/Popover, each with its own
-# spec/tokens — the only tokens referenced directly here are the
+# Select) each bring their own --ui-* token tiers. FilterSearchFilters composes
+# Button/Popover and FilterSearchAppliedFilters composes FilterChips (itself
+# Chip + Button), each with its own spec/tokens — the only tokens referenced
+# directly here are the
 # button-secondary *-active tokens that highlight the filters-trigger while
 # its popover is open, plus the shared border token on the popover footer
 # divider (via the bridged `border-border` name).

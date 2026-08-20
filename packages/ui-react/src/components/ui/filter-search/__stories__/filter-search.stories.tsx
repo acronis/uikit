@@ -36,6 +36,7 @@ import {
   SelectContent,
   SelectItem,
 } from '../../select/select';
+import { PortalContainerProvider } from '@/lib/portal-container';
 
 const meta = {
   title: 'UI/FilterSearch',
@@ -394,6 +395,60 @@ export const WithDateRangeFilterOpen: Story = {
     await userEvent.click(await body.findByRole('button', { name: 'Period' }));
     // Wait for the dual-month calendar (two grids) to paint inside the nested popover.
     await body.findAllByRole('grid');
+  },
+};
+
+// Regression coverage for PLTFRM-92756: reproduces a constrained MFE/Shadow
+// DOM host (a small, overflow-hidden mount point) via PortalContainerProvider.
+// The Filters popover must still render fully visible against the viewport
+// instead of being clipped at the mount's own edge — resize the canvas/mount
+// to confirm the popup never gets cut off.
+function ConstrainedPortalContainerExample() {
+  const [mount, setMount] = React.useState<HTMLDivElement | null>(null);
+  const [filters, setFilters] = React.useState<Record<string, unknown>>({});
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="text-sm text-muted-foreground">
+        The dashed box simulates a constrained MFE/Shadow DOM host container
+        (small, offset, <code>overflow: hidden</code>). The popover portals
+        inside it but must stay fully visible against the viewport.
+      </p>
+      <div
+        ref={setMount}
+        className="relative h-40 w-72 overflow-hidden rounded border border-dashed border-border"
+      >
+        {mount && (
+          <PortalContainerProvider container={mount}>
+            <div className="absolute inset-0 flex items-start justify-end p-2">
+              <FilterSearchFilters
+                value={filters}
+                onValueChange={setFilters}
+                label="Table filters"
+              >
+                <SelectField
+                  filterKey="status"
+                  label="Status"
+                  items={STATUS_ITEMS}
+                />
+              </FilterSearchFilters>
+            </div>
+          </PortalContainerProvider>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export const InConstrainedPortalContainer: Story = {
+  name: 'Inside a constrained portal container (regression)',
+  parameters: { snapshot: { fullPage: true, animationDelay: 400 } },
+  render: () => <ConstrainedPortalContainerExample />,
+  play: async () => {
+    const body = within(document.body);
+    await userEvent.click(
+      await body.findByRole('button', { name: 'Table filters' })
+    );
+    await body.findByText('Status');
   },
 };
 
