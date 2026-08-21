@@ -123,6 +123,27 @@ decide the pipeline advances. If a step surfaces a blocker (Step 0's hard
 stops, a `devil-advocate` BLOCKED, a `qa` `FIX-FIRST`), stop and resolve it —
 send back to the owning step — before continuing.
 
+**Never let a spawned agent re-invoke this skill.** Skill availability is
+session-wide — every subagent you spawn sees the same `/component-change`
+listing you do, not just you. If a step's prompt describes the task in terms
+that echo this skill's own description (a bug fix, a named component, "no
+API change"), a spawned agent can pattern-match its own assignment back onto
+the tool meant to orchestrate _it_ and call `Skill({skill:
+"component-change", ...})` instead of just doing the work — re-running Step
+0's audit, spawning its own nested `context`/`analyst` agents, and abandoning
+the actual edit mid-pipeline once it fires off its own async agent call and
+treats that as "done for now." This happened in practice: a `developer-react`
+Step 4 call re-entered the skill this way and returned a "waiting on my own
+context agent" placeholder with zero files touched, reported as a normal
+completion — the only tell was `git diff --stat` coming back empty. Every
+agent prompt in Steps 1–9 must include an explicit instruction not to invoke
+the `Skill` tool or re-enter `/component-change` — the spawned agent is
+already executing one step of it; it should read as the literal,
+already-decomposed task, not a re-description of the overall change to solve
+from scratch. After any Step 4 (or other code-writing step) call returns,
+verify with `git diff --stat` before trusting a "done" report — a clean/empty
+diff after a source-change step is itself a signal something went wrong.
+
 ---
 
 ## Step 0 — Classify & scope (mechanical, no agent call)
@@ -215,6 +236,12 @@ new physical-directional utility, localization — and to update
 `__tests__/<name>.test.tsx` and `__stories__/<name>.stories.tsx` for the
 change. This is the baseline every change already gets today; read back its
 list of changed files before Step 5 — you need it to classify the change type.
+Tell it explicitly not to invoke the `Skill` tool or re-enter
+`/component-change` — hand it the already-decomposed edit to make, not a
+re-description of the change for it to re-plan (see "Never let a spawned
+agent re-invoke this skill" above). After it returns, run `git diff --stat`
+before trusting its report — this is the step where a silent no-op is most
+costly and least visible.
 
 ---
 
