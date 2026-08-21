@@ -4,10 +4,11 @@ component: Avatar
 schematic: |
   +----------+
   |  image   |   root: <span> (32px circle, 2px ring outside)
-  |  /  SN   |        image (cover) on top of fallback
+  |  /  SN   |        image (cover) on top of fallback/icon
+  |  /  (i)  |
   +----------+
        ^
-       fallback (initials) shows until the image loads / if it fails
+       fallback (initials, `label`) or icon shows when there's no children/image
   color -> background + initials color
 
   AvatarGroup (overlapping row):
@@ -33,8 +34,15 @@ parts:
   - id: fallback
     description: >-
       Shown when there is no image (or it failed to load) — typically the
-      entity's initials, in the variant's label color.
+      entity's initials, in the variant's label color. With no `children`
+      composed, defaults to the `label` prop (`'SB'`) when `variant` is `text`.
     optional: true
+  - id: icon
+    description: >-
+      A consumer-supplied icon, centered in the circle. Shown with no
+      `children` composed when `variant` is `icon`.
+    optional: true
+    visible_when: no `children` are composed and `variant` is `'icon'`
   - id: group
     description: >-
       AvatarGroup — an optional wrapper that lays out several avatars in an
@@ -42,11 +50,12 @@ parts:
     element: div
     optional: true
 
-# Image and fallback occupy the same circular box (image painted over the
-# fallback); AvatarGroup is a horizontal flex row with a negative inter-item offset.
+# Image and fallback/icon occupy the same circular box (image painted over
+# the fallback/icon); AvatarGroup is a horizontal flex row with a negative
+# inter-item offset.
 layout:
   type: stack
-  order: [image, fallback]
+  order: [image, fallback, icon]
 
 # Avatar is a pure function of its props — no internal interaction state. The
 # only visual axis is the `color` scheme (non-interactive, so no pseudo-states).

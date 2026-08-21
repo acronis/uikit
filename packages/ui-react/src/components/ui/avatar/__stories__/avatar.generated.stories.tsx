@@ -3,7 +3,7 @@
 // `:hover` / `:active` stories require a Storybook pseudo-states addon to paint.
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { AvatarFallback } from '../avatar';
+import { UserIcon } from '@acronis-platform/icons-react/stroke-mono';
 import { Avatar } from '../avatar';
 
 const meta = {
@@ -14,12 +14,21 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const States: Story = {
+const VARIANTS = ['text', 'icon'] as const;
+
+export const Variants: Story = {
   render: () => (
-    <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-      <Avatar>
-        <AvatarFallback>SN</AvatarFallback>
-      </Avatar>
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 12,
+        alignItems: 'center',
+      }}
+    >
+      {VARIANTS.map((v) => (
+        <Avatar icon={<UserIcon size={16} />} key={v} variant={v} />
+      ))}
     </div>
   ),
 };

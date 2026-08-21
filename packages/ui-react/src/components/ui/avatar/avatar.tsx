@@ -11,6 +11,12 @@ import { cn } from '@/lib/utils';
 // separates avatars when they overlap in an `AvatarGroup`. When no image is set
 // (or it fails to load) the `AvatarFallback` shows initials.
 //
+// `variant`/`label`/`icon` are a convenience for the common no-photo case (the
+// Figma component has no "image" variant at all — just Text/Icon): with no
+// `children` composed, Avatar auto-renders either `label` (Text) or `icon`
+// (Icon). Composing `AvatarImage`/`AvatarFallback` as `children` — for the real
+// photo-with-fallback case — always takes precedence over both.
+//
 // The ring is a `box-shadow`, not a CSS `border`: Figma draws the 2px stroke
 // with `strokeAlign: OUTSIDE`, so the 32px is the *colored circle* and the ring
 // sits outside it. A CSS border would be drawn inside the border-box, shrinking
@@ -56,27 +62,6 @@ const avatarVariants = cva(
   }
 );
 
-export interface AvatarProps
-  extends
-    React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>,
-    VariantProps<typeof avatarVariants> {}
-
-/**
- * A user/entity avatar: a colored circle showing an image or initials. Compose
- * `AvatarImage` and/or `AvatarFallback` inside; stack several in `AvatarGroup`.
- */
-const Avatar = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Root>,
-  AvatarProps
->(({ className, color, ...props }, ref) => (
-  <AvatarPrimitive.Root
-    ref={ref}
-    className={cn(avatarVariants({ color }), className)}
-    {...props}
-  />
-));
-Avatar.displayName = 'Avatar';
-
 export type AvatarImageProps = React.ComponentPropsWithoutRef<
   typeof AvatarPrimitive.Image
 >;
@@ -110,6 +95,56 @@ const AvatarFallback = React.forwardRef<
   />
 ));
 AvatarFallback.displayName = 'AvatarFallback';
+
+export interface AvatarProps
+  extends
+    React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>,
+    VariantProps<typeof avatarVariants> {
+  /**
+   * Selects the auto-rendered fallback content when no `children` are
+   * composed: initials (`label`) or an `icon`. Ignored once `children` (e.g.
+   * `AvatarImage`/`AvatarFallback`) are composed directly.
+   */
+  variant?: 'text' | 'icon';
+  /** Initials shown for the `text` variant when no `children` are composed. */
+  label?: string;
+  /** Icon shown for the `icon` variant when no `children` are composed. */
+  icon?: React.ReactNode;
+}
+
+/**
+ * A user/entity avatar: a colored circle showing an image, initials, or an
+ * icon. Compose `AvatarImage`/`AvatarFallback` for the photo-with-fallback
+ * case, or use `variant`/`label`/`icon` for a quick text or icon badge; stack
+ * several in `AvatarGroup`.
+ */
+const Avatar = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Root>,
+  AvatarProps
+>(
+  (
+    {
+      className,
+      color,
+      variant = 'text',
+      label = 'SB',
+      icon,
+      children,
+      ...props
+    },
+    ref
+  ) => (
+    <AvatarPrimitive.Root
+      ref={ref}
+      className={cn(avatarVariants({ color }), className)}
+      {...props}
+    >
+      {children ??
+        (variant === 'icon' ? icon : <AvatarFallback>{label}</AvatarFallback>)}
+    </AvatarPrimitive.Root>
+  )
+);
+Avatar.displayName = 'Avatar';
 
 export type AvatarGroupProps = React.HTMLAttributes<HTMLDivElement>;
 

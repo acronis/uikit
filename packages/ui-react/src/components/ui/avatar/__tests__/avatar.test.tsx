@@ -34,7 +34,9 @@ describe('Avatar', () => {
     );
     const root = container.firstElementChild as HTMLElement;
     expect(root.className).toContain('bg-[var(--ui-avatar-color-teal)]');
-    expect(root.className).toContain('text-[var(--ui-avatar-label-color-teal)]');
+    expect(root.className).toContain(
+      'text-[var(--ui-avatar-label-color-teal)]'
+    );
   });
 
   it('draws the 2px ring outside the 32px circle (box-shadow, not an inset border)', () => {
@@ -47,7 +49,9 @@ describe('Avatar', () => {
       </Avatar>
     );
     const root = container.firstElementChild as HTMLElement;
-    expect(root.className).toContain('size-[var(--ui-avatar-global-avatar-size)]');
+    expect(root.className).toContain(
+      'size-[var(--ui-avatar-global-avatar-size)]'
+    );
     expect(root.className).toContain(
       '[box-shadow:0_0_0_var(--ui-avatar-global-avatar-border-border-width)_var(--ui-avatar-global-avatar-border-color)]'
     );
@@ -62,7 +66,9 @@ describe('Avatar', () => {
     );
     const root = container.firstElementChild as HTMLElement;
     expect(root.className).toContain('bg-[var(--ui-avatar-color-violet)]');
-    expect(root.className).toContain('text-[var(--ui-avatar-label-color-violet)]');
+    expect(root.className).toContain(
+      'text-[var(--ui-avatar-label-color-violet)]'
+    );
   });
 
   it('merges a custom className', () => {
@@ -95,6 +101,32 @@ describe('Avatar', () => {
     );
     // The fallback renders while the image is still loading (jsdom never fires load).
     expect(screen.getByText('SN')).toBeInTheDocument();
+  });
+
+  it('renders the default label ("SB") when no children are composed', () => {
+    render(<Avatar />);
+    expect(screen.getByText('SB')).toBeInTheDocument();
+  });
+
+  it('renders a custom label when no children are composed', () => {
+    render(<Avatar label="GA" />);
+    expect(screen.getByText('GA')).toBeInTheDocument();
+  });
+
+  it('renders the icon for variant="icon" when no children are composed', () => {
+    render(<Avatar variant="icon" icon={<svg data-testid="avatar-icon" />} />);
+    expect(screen.getByTestId('avatar-icon')).toBeInTheDocument();
+    expect(screen.queryByText('SB')).not.toBeInTheDocument();
+  });
+
+  it('prefers children over variant/label/icon', () => {
+    render(
+      <Avatar variant="icon" icon={<svg data-testid="avatar-icon" />}>
+        <AvatarFallback>SN</AvatarFallback>
+      </Avatar>
+    );
+    expect(screen.getByText('SN')).toBeInTheDocument();
+    expect(screen.queryByTestId('avatar-icon')).not.toBeInTheDocument();
   });
 });
 

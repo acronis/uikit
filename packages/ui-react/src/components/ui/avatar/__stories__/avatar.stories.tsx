@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { UserIcon } from '@acronis-platform/icons-react/stroke-mono';
+
 import { Avatar, AvatarFallback, AvatarGroup, AvatarImage } from '../avatar';
 
 const meta = {
@@ -10,19 +12,58 @@ const meta = {
   argTypes: {
     color: {
       control: 'select',
-      options: ['teal', 'violet', 'red', 'yellow', 'orange'],
+      options: [
+        'teal',
+        'violet',
+        'red',
+        'yellow',
+        'orange',
+        'blue',
+        'gray',
+        'green',
+      ],
       description:
         'Color scheme that tints the fallback background and the initials. Maps to the `--ui-avatar-color-<scheme>` / `--ui-avatar-label-color-<scheme>` token pair.',
       table: {
-        type: { summary: "'teal' | 'violet' | 'red' | 'yellow' | 'orange'" },
+        type: {
+          summary:
+            "'teal' | 'violet' | 'red' | 'yellow' | 'orange' | 'blue' | 'gray' | 'green'",
+        },
         defaultValue: { summary: 'teal' },
         category: 'Appearance',
       },
     },
+    variant: {
+      control: 'select',
+      options: ['text', 'icon'],
+      description:
+        'Selects the auto-rendered content when no `children` are composed: `label` (initials) or `icon`. Ignored once `children` are composed.',
+      table: {
+        type: { summary: "'text' | 'icon'" },
+        defaultValue: { summary: 'text' },
+        category: 'Appearance',
+      },
+    },
+    label: {
+      control: 'text',
+      description:
+        'Initials shown for the `text` variant when no `children` are composed.',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'SB' },
+        category: 'Content',
+      },
+    },
+    icon: {
+      control: false,
+      description:
+        'Icon shown for the `icon` variant when no `children` are composed — typically a 16px icon from `@acronis-platform/icons-react`.',
+      table: { type: { summary: 'ReactNode' }, category: 'Content' },
+    },
     children: {
       control: false,
       description:
-        'Avatar content — compose `AvatarImage` and/or `AvatarFallback` here.',
+        'Avatar content — compose `AvatarImage` and/or `AvatarFallback` here. Takes precedence over `variant`/`label`/`icon`.',
       table: { type: { summary: 'ReactNode' }, category: 'Content' },
     },
     className: {
@@ -48,21 +89,28 @@ const COLORS = [
 ] as const;
 
 export const Default: Story = {
-  render: (args) => (
-    <Avatar {...args}>
-      <AvatarFallback>SN</AvatarFallback>
-    </Avatar>
-  ),
+  render: (args) => <Avatar {...args} />,
 };
 
 export const Colors: Story = {
   render: () => (
     <div className="flex items-center gap-3">
       {COLORS.map((color) => (
-        <Avatar key={color} color={color}>
-          <AvatarFallback>{color.slice(0, 2).toUpperCase()}</AvatarFallback>
-        </Avatar>
+        <Avatar
+          key={color}
+          color={color}
+          label={color.slice(0, 2).toUpperCase()}
+        />
       ))}
+    </div>
+  ),
+};
+
+export const Variants: Story = {
+  render: () => (
+    <div className="flex items-center gap-3">
+      <Avatar color="blue" variant="text" label="SB" />
+      <Avatar color="blue" variant="icon" icon={<UserIcon size={16} />} />
     </div>
   ),
 };
@@ -111,6 +159,53 @@ export const GroupWithText: Story = {
         <Avatar color="violet">
           <AvatarFallback>GA</AvatarFallback>
         </Avatar>
+      </AvatarGroup>
+      <span className="text-sm leading-6 text-[var(--ui-avatar-global-text-color)]">
+        On this ticket
+      </span>
+    </div>
+  ),
+};
+
+// Figma's AvatarGroup ships four fixed sizes (one/two/three/four avatars),
+// each optionally paired with a trailing label — this demonstrates the full
+// range via the same flexible, children-driven `AvatarGroup` composition.
+const GROUP_MEMBERS = [
+  { color: 'teal', label: 'SN' },
+  { color: 'violet', label: 'GA' },
+  { color: 'red', label: 'DR' },
+  { color: 'yellow', label: 'FW' },
+] as const;
+
+export const GroupSizes: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4">
+      {[1, 2, 3, 4].map((count) => (
+        <div
+          key={count}
+          className="flex items-center gap-[var(--ui-avatar-global-container-gap)]"
+        >
+          <AvatarGroup>
+            {GROUP_MEMBERS.slice(0, count).map(({ color, label }) => (
+              <Avatar key={label} color={color} label={label} />
+            ))}
+          </AvatarGroup>
+          <span className="text-sm leading-6 text-[var(--ui-avatar-global-text-color)]">
+            On this ticket
+          </span>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const GroupWithIconAvatars: Story = {
+  render: () => (
+    <div className="flex items-center gap-[var(--ui-avatar-global-container-gap)]">
+      <AvatarGroup>
+        <Avatar color="teal" variant="icon" icon={<UserIcon size={16} />} />
+        <Avatar color="violet" variant="icon" icon={<UserIcon size={16} />} />
+        <Avatar color="gray" variant="icon" icon={<UserIcon size={16} />} />
       </AvatarGroup>
       <span className="text-sm leading-6 text-[var(--ui-avatar-global-text-color)]">
         On this ticket

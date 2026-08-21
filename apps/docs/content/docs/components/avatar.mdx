@@ -1,10 +1,10 @@
 ---
 title: Avatar
-description: Represents a user or entity with an image or initials.
+description: Represents a user or entity with an image, initials, or an icon.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { AvatarDemo } from "@/components/demos-react/avatar";
+import { DemoReact } from '@/components/DemoReact';
+import { AvatarDemo } from '@/components/demos-react/avatar';
 
 ## Usage
 
@@ -22,6 +22,11 @@ image loads, revealing `AvatarFallback` (typically initials). Stack several in
 `AvatarGroup` for an overlapping cluster. The fallback color is set by the
 `color` prop and themed by the `--ui-avatar-*` tokens.
 
+For the common no-photo case, `variant`/`label`/`icon` are a shortcut so you
+don't have to compose `AvatarFallback` by hand: `variant="text"` (the default)
+shows `label` (defaults to `'SB'`); `variant="icon"` shows `icon`. Composing
+`AvatarImage`/`AvatarFallback` as children always takes precedence over both.
+
 There is no `size` prop: the avatar is a fixed 32px circle
 (`--ui-avatar-global-avatar-size`). The 2px separator ring
 (`--ui-avatar-global-avatar-border-border-width` /
@@ -31,7 +36,6 @@ layout box stays 32px. Don't swap it for a `border-*` utility: a CSS border is
 drawn inside the border-box and would shrink the visible circle to 28px.
 
 ## Examples
-
 
 <DemoReact>
   <AvatarDemo />
@@ -55,6 +59,15 @@ Initials only, with a color (default is `teal`):
 <Avatar color="orange">
   <AvatarFallback>CD</AvatarFallback>
 </Avatar>
+
+// Equivalent, via the `label` convenience prop:
+<Avatar color="violet" label="AB" />
+```
+
+An icon avatar, for a non-personal entity (a team, a bot, a system actor):
+
+```tsx
+<Avatar color="gray" variant="icon" icon={<UserIcon size={16} />} />
 ```
 
 An overlapping group:
@@ -77,6 +90,26 @@ Every avatar after the first is offset by the negative
 `--ui-avatar-global-avatar-group-gap`, so the rings form the layered look and
 later avatars paint above earlier ones. The offset is logical, so the stack
 mirrors automatically under `dir="rtl"`.
+
+`AvatarGroup` composes any number of avatars — pair it with a trailing label
+(e.g. "On this ticket") using `--ui-avatar-global-container-gap` for the
+spacing and `--ui-avatar-global-text-color` for the label color:
+
+```tsx
+<div className="flex items-center gap-[var(--ui-avatar-global-container-gap)]">
+  <AvatarGroup>
+    <Avatar color="teal">
+      <AvatarFallback>SN</AvatarFallback>
+    </Avatar>
+    <Avatar color="violet">
+      <AvatarFallback>GA</AvatarFallback>
+    </Avatar>
+  </AvatarGroup>
+  <span className="text-sm leading-6 text-[var(--ui-avatar-global-text-color)]">
+    On this ticket
+  </span>
+</div>
+```
 
 ## API Reference
 
