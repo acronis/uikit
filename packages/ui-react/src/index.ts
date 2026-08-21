@@ -46,6 +46,7 @@ export * from './components/ui/dialog-footer-default';
 export * from './components/ui/dialog-welcome';
 export * from './components/ui/dropdown-menu';
 export * from './components/ui/empty';
+export * from './components/ui/empty-overlay';
 export * from './components/ui/field';
 export * from './components/ui/fitted-actions';
 export * from './components/ui/filter-cards';

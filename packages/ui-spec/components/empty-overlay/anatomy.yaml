@@ -1,0 +1,103 @@
+spec_version: '1.0'
+component: EmptyOverlay
+
+schematic: |
+  +---------------------------------------+
+  |                                       |
+  |              ( icon )                 |   root: <div> (fills parent, fade backdrop)
+  |               title                   |
+  |            description                |
+  |                                       |
+  +---------------------------------------+
+        ^          ^          ^
+      icon        title    description
+   color -> badge tint
+
+root:
+  element: div
+  description: >-
+    Fills its parent (`size-full`) and centers its content. Backdrop is a
+    top-to-bottom fade from transparent to the shared `bg-muted` surface,
+    so it can sit over other content without a hard edge.
+
+parts:
+  - id: icon
+    description: >-
+      Optional 24px glyph inside a 64px colored badge; `color` selects the
+      badge's tint from the shared avatar palette (8 colors).
+    element: svg
+    optional: true
+    visible_when: an `icon` is provided
+  - id: title
+    description: The empty-state headline (children of an `<h3>`).
+    element: h3
+  - id: description
+    description: Optional supporting copy under the title.
+    element: p
+    optional: true
+    visible_when: a `description` is provided
+
+layout:
+  type: flex
+  direction: column
+  align: center
+  order: [icon, title, description]
+
+# Pure function of props — no internal state, no pseudo-states (non-interactive).
+states:
+  - {
+      id: teal,
+      trigger: "color === 'teal'",
+      kind: prop,
+      prop: color,
+      affects: [icon],
+    }
+  - {
+      id: violet,
+      trigger: "color === 'violet'",
+      kind: prop,
+      prop: color,
+      affects: [icon],
+    }
+  - {
+      id: red,
+      trigger: "color === 'red'",
+      kind: prop,
+      prop: color,
+      affects: [icon],
+    }
+  - {
+      id: yellow,
+      trigger: "color === 'yellow'",
+      kind: prop,
+      prop: color,
+      affects: [icon],
+    }
+  - {
+      id: orange,
+      trigger: "color === 'orange'",
+      kind: prop,
+      prop: color,
+      affects: [icon],
+    }
+  - {
+      id: blue,
+      trigger: "color === 'blue'",
+      kind: prop,
+      prop: color,
+      affects: [icon],
+    }
+  - {
+      id: gray,
+      trigger: "color === 'gray'",
+      kind: prop,
+      prop: color,
+      affects: [icon],
+    }
+  - {
+      id: green,
+      trigger: "color === 'green'",
+      kind: prop,
+      prop: color,
+      affects: [icon],
+    }

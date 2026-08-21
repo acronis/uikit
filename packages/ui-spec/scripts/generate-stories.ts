@@ -241,6 +241,16 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  'empty-overlay': {
+    extraImports: [
+      "import { InboxIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    props:
+      'icon={<InboxIcon />} title="No object yet" description="Short description."',
+    // `title` is required, so Storybook's types need it satisfiable from
+    // `meta.args` even though the story sets it in `render`.
+    metaArgs: "title: 'No object yet'",
+  },
   card: {
     extraImports: [
       "import { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../card';",

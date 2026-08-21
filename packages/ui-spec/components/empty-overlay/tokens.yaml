@@ -1,0 +1,54 @@
+spec_version: '1.0'
+component: EmptyOverlay
+
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+# The token schema forbids a value/default key here — never restate values.
+# No dedicated `--ui-empty-overlay-*` tier exists: the icon badge reuses
+# Avatar's 8-color tier directly, and the backdrop/title/description reuse the
+# shared semantic text/background tokens (bridged to Tailwind's
+# foreground/muted-foreground/muted names in src/styles/index.css).
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Icon badge (per color) ──
+  - name: --ui-avatar-color-teal
+    affects: icon
+  - name: --ui-avatar-label-color-teal
+    affects: icon
+  - name: --ui-avatar-color-violet
+    affects: icon
+  - name: --ui-avatar-label-color-violet
+    affects: icon
+  - name: --ui-avatar-color-red
+    affects: icon
+  - name: --ui-avatar-label-color-red
+    affects: icon
+  - name: --ui-avatar-color-yellow
+    affects: icon
+  - name: --ui-avatar-label-color-yellow
+    affects: icon
+  - name: --ui-avatar-color-orange
+    affects: icon
+  - name: --ui-avatar-label-color-orange
+    affects: icon
+  - name: --ui-avatar-color-blue
+    affects: icon
+  - name: --ui-avatar-label-color-blue
+    affects: icon
+  - name: --ui-avatar-color-gray
+    affects: icon
+  - name: --ui-avatar-label-color-gray
+    affects: icon
+  - name: --ui-avatar-color-green
+    affects: icon
+  - name: --ui-avatar-label-color-green
+    affects: icon
+
+  # ── Backdrop, title, description (shared semantic tier) ──
+  - name: --ui-background-surface-secondary
+    affects: root
+  - name: --ui-text-on-surface-primary
+    affects: title
+  - name: --ui-text-on-surface-secondary
+    affects: description

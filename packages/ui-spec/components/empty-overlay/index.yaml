@@ -1,0 +1,14 @@
+spec_version: '1.0'
+component: EmptyOverlay
+name: empty-overlay
+status: ready
+category: data-display
+description: >-
+  A full-bleed empty-state overlay — a colored icon badge over a centered
+  title/description, on a fade-to-solid backdrop. Meant to sit over other
+  content (e.g. a frozen/blurred widget preview); the developer sizes it
+  (typically `absolute inset-0` over a positioned parent).
+since: 2.1.0
+figma:
+  node: '7461-40875'
+  codeConnect: packages/ui-react/src/components/ui/empty-overlay/empty-overlay.figma.tsx

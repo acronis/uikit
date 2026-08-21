@@ -1,0 +1,63 @@
+spec_version: '1.0'
+component: EmptyOverlay
+
+# `color` is the only cva axis (its enum matches the cva keys in the ui-react
+# source) — it reuses Avatar's 8-color palette for the icon badge, not a
+# dedicated tier. `icon`/`title`/`description` are plain content props (no
+# variant/instance-swap exposed on the Figma component itself).
+contract:
+  properties:
+    - name: icon
+      type: ReactNode
+      required: false
+      description: >-
+        Icon rendered in the colored badge (e.g. an `icons-react` glyph at
+        24px). Omitting it omits the badge entirely.
+    - name: title
+      type: ReactNode
+      required: true
+      description: The empty-state headline, rendered as an `<h3>`.
+    - name: description
+      type: ReactNode
+      required: false
+      description: Optional supporting copy shown under the title.
+    - name: color
+      type: "'teal' | 'violet' | 'red' | 'yellow' | 'orange' | 'blue' | 'gray' | 'green'"
+      required: false
+      default: green
+      description: >-
+        Icon badge color scheme, from the shared avatar palette. Maps to
+        `--ui-avatar-color-<scheme>` (badge fill) and
+        `--ui-avatar-label-color-<scheme>` (icon color).
+
+  events: []
+
+  content: []
+
+  methods: []
+
+adapters:
+  react:
+    component: EmptyOverlay
+    status: implemented
+    import: "import { EmptyOverlay } from '@acronis-platform/ui-react'"
+    example: |
+      <div className="relative h-96">
+        <EmptyOverlay
+          icon={<InboxIcon />}
+          title="No object yet"
+          description="Short description."
+        />
+      </div>
+  vue:
+    component: AvEmptyOverlay
+    status: planned
+    import: "import { AvEmptyOverlay } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvEmptyOverlay title="No object yet" description="Short description." />
+  web-components:
+    element: ui-empty-overlay
+    status: planned
+    import: "import '@acronis-platform/ui-wc/empty-overlay'"
+    example: |
+      <ui-empty-overlay title="No object yet"></ui-empty-overlay>
