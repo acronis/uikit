@@ -128,6 +128,13 @@ describe('Avatar', () => {
     expect(screen.getByText('SN')).toBeInTheDocument();
     expect(screen.queryByTestId('avatar-icon')).not.toBeInTheDocument();
   });
+
+  it('renders empty for an explicit null child, without falling back to the default label', () => {
+    const { container } = render(<Avatar>{null}</Avatar>);
+    const root = container.firstElementChild as HTMLElement;
+    expect(root).toBeEmptyDOMElement();
+    expect(screen.queryByText('SB')).not.toBeInTheDocument();
+  });
 });
 
 describe('AvatarGroup', () => {

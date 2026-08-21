@@ -27,6 +27,12 @@ don't have to compose `AvatarFallback` by hand: `variant="text"` (the default)
 shows `label` (defaults to `'SB'`); `variant="icon"` shows `icon`. Composing
 `AvatarImage`/`AvatarFallback` as children always takes precedence over both.
 
+The shortcut only applies when you pass **no** children. An explicit `null`
+child is treated as a deliberate "render nothing" and leaves the circle empty
+rather than falling back to `'SB'` — which is what lets a conditional child
+(`{icon ?? (initials ? <AvatarFallback>{initials}</AvatarFallback> : null)}`)
+render a blank avatar.
+
 There is no `size` prop: the avatar is a fixed 32px circle
 (`--ui-avatar-global-avatar-size`). The 2px separator ring
 (`--ui-avatar-global-avatar-border-border-width` /
@@ -67,7 +73,9 @@ Initials only, with a color (default is `teal`):
 An icon avatar, for a non-personal entity (a team, a bot, a system actor):
 
 ```tsx
-<Avatar color="gray" variant="icon" icon={<UserIcon size={16} />} />
+import { UserIcon } from '@acronis-platform/icons-react/stroke-mono';
+
+<Avatar color="gray" variant="icon" icon={<UserIcon size={16} />} />;
 ```
 
 An overlapping group:

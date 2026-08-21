@@ -17,6 +17,13 @@ import { cn } from '@/lib/utils';
 // (Icon). Composing `AvatarImage`/`AvatarFallback` as `children` — for the real
 // photo-with-fallback case — always takes precedence over both.
 //
+// "No `children` composed" means `children === undefined` specifically, not
+// merely falsy. An explicit `null` child is a deliberate "render nothing" and
+// has to stay empty: `timeline.tsx`'s marker passes
+// `icon ?? (initials ? <AvatarFallback/> : null)`, so a blank marker resolves to
+// `null`, and a `children ?? …` check would paint the default 'SB' label over
+// what should be an empty dot.
+//
 // The ring is a `box-shadow`, not a CSS `border`: Figma draws the 2px stroke
 // with `strokeAlign: OUTSIDE`, so the 32px is the *colored circle* and the ring
 // sits outside it. A CSS border would be drawn inside the border-box, shrinking
@@ -103,12 +110,19 @@ export interface AvatarProps
   /**
    * Selects the auto-rendered fallback content when no `children` are
    * composed: initials (`label`) or an `icon`. Ignored once `children` (e.g.
-   * `AvatarImage`/`AvatarFallback`) are composed directly.
+   * `AvatarImage`/`AvatarFallback`) are composed directly — including an
+   * explicit `null`, which renders an empty circle.
    */
   variant?: 'text' | 'icon';
-  /** Initials shown for the `text` variant when no `children` are composed. */
+  /**
+   * Initials shown for the `text` variant when no `children` are composed
+   * (i.e. `children` is `undefined`).
+   */
   label?: string;
-  /** Icon shown for the `icon` variant when no `children` are composed. */
+  /**
+   * Icon shown for the `icon` variant when no `children` are composed
+   * (i.e. `children` is `undefined`).
+   */
   icon?: React.ReactNode;
 }
 

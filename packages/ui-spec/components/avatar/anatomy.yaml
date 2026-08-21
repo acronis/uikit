@@ -37,12 +37,15 @@ parts:
       entity's initials, in the variant's label color. With no `children`
       composed, defaults to the `label` prop (`'SB'`) when `variant` is `text`.
     optional: true
+    visible_when: >-
+      no image is shown, and either an `AvatarFallback` is composed or the
+      children slot is unset (an explicitly empty `null` slot renders nothing)
   - id: icon
     description: >-
       A consumer-supplied icon, centered in the circle. Shown with no
       `children` composed when `variant` is `icon`.
     optional: true
-    visible_when: no `children` are composed and `variant` is `'icon'`
+    visible_when: the children slot is unset and `variant` is `'icon'`
   - id: group
     description: >-
       AvatarGroup — an optional wrapper that lays out several avatars in an

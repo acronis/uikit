@@ -70,3 +70,7 @@ Each pairs a tinted background with a matching initials color from the
 `text` (default) shows `label` (initials); `icon` shows a consumer-supplied
 `icon`. Both are ignored once `children` (`AvatarImage`/`AvatarFallback`) are
 composed directly — `variant`/`label`/`icon` only drive the no-children case.
+
+"No children" means the slot is left unset. Passing an explicit `null` child is
+a deliberate "render nothing" and yields an empty circle rather than the default
+`'SB'` label — that's how `Timeline` renders a blank marker.

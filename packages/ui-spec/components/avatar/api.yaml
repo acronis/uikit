@@ -7,6 +7,11 @@ component: Avatar
 # any class. Image and fallback are also composable as child parts
 # (AvatarImage / AvatarFallback), which always take precedence over them.
 # AvatarGroup is a sibling layout component.
+#
+# "No children composed" throughout this spec means the content slot is
+# `undefined` specifically, not merely empty: an explicit `null` child is a
+# deliberate "render nothing" and leaves the circle empty rather than falling
+# back to `label`/`icon`.
 contract:
   properties:
     - name: color
@@ -24,7 +29,8 @@ contract:
       description: >-
         Selects the auto-rendered fallback content when no `children` are
         composed: initials (`label`) or an `icon`. Ignored once `children`
-        (e.g. `AvatarImage`/`AvatarFallback`) are composed directly.
+        (e.g. `AvatarImage`/`AvatarFallback`) are composed directly — including
+        an explicit `null`, which renders an empty circle.
     - name: label
       type: string
       required: false
@@ -45,8 +51,9 @@ contract:
     - name: default
       description: >-
         The avatar's children — an `AvatarImage` and/or an `AvatarFallback`
-        (the initials). With no children, `variant`/`label`/`icon` drive the
-        content instead.
+        (the initials). When the slot is left unset, `variant`/`label`/`icon`
+        drive the content instead; an explicitly empty (`null`) slot renders an
+        empty circle and does not fall back to them.
 
   methods: []
 
