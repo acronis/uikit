@@ -118,6 +118,21 @@ one with a self-contained, repo-specific prompt instead (concrete instructions
 below per step) and read its **returned text**, not a state file, as the
 actual handoff.
 
+**`context` and `integrator` need an explicit `model` override on every call.**
+Both `~/.claude/agents/context.md` and `~/.claude/agents/integrator.md`
+hardcode `model: claude-3-5-haiku-latest` in frontmatter — a model id that has
+errored out immediately (`API error: ... may not exist or you may not have
+access to it`) in this environment. `analyst`/`architect`/`developer-react`/
+`tech-writer`/`qa`/`devil-advocate` don't have this problem (they're this
+repo's own agent definitions, pinned to models that resolve). Pass
+`model: sonnet` (or whatever the session's resolved model is) explicitly in
+the `Agent` tool call whenever spawning `context` (Step 1) or `integrator`
+(Step 9) — don't rely on their frontmatter default. This is a one-line
+addition to the tool call, not a workaround worth engineering around; if a
+future session finds `claude-3-5-haiku-latest` resolves fine again, the
+override is harmless (an explicit `model` always takes precedence over the
+agent's own frontmatter, whether or not the default would have worked).
+
 **Only you open gates.** An agent reports a finding or a result; it doesn't
 decide the pipeline advances. If a step surfaces a blocker (Step 0's hard
 stops, a `devil-advocate` BLOCKED, a `qa` `FIX-FIRST`), stop and resolve it —
@@ -184,7 +199,9 @@ diff after a source-change step is itself a signal something went wrong.
 
 ## Step 1 — `context` (always on)
 
-Spawn `context` with a self-contained prompt: the raw change request, the
+Spawn with an explicit `model` override (see "generic, not repo-aware" note
+above — `context`'s own frontmatter model has been erroring out in this
+environment). Spawn `context` with a self-contained prompt: the raw change request, the
 resolved target component's path(s), and what to gather — `git log`/`git
 blame` on the target file(s), any Jira ticket the request references (skip
 gracefully if none, or if the Jira MCP isn't authorized in this session — see
@@ -243,6 +260,20 @@ agent re-invoke this skill" above). After it returns, run `git diff --stat`
 before trusting its report — this is the step where a silent no-op is most
 costly and least visible.
 
+**Tell it explicitly not to touch tech-writer-owned prose.** `developer-react`
+iterates until its own tests/conformance checks pass, and a token/prop rename
+can leave `packages/ui-spec/components/<name>/{behavior.md,accessibility.md,README.md}`
+or `apps/docs/**/*.mdx` referencing the old name — that's real breakage from
+`developer-react`'s point of view, so left unguided it will "fix" the prose
+itself to get green, the same way it's expected to fix a failing conformance
+test. Instruct it explicitly: touching `.yaml`/`.ts`/`.tsx` conformance data is
+fine (that's its lane), but if a change makes prose in those `.md`/`.mdx` files
+stale, **do not edit it** — list the exact file(s) and what's now stale in its
+final report instead, so Step 6 (`tech-writer`) fixes it. This happened for
+real once already: `developer-react` silently rewrote
+`packages/ui-spec/components/data-table/behavior.md`'s cursor-token prose
+while chasing a `specs.test.ts` failure it had itself introduced.
+
 ---
 
 ## Step 5 — Propagate through the shipped contract (the point of this skill)
@@ -279,12 +310,26 @@ implementation than documentation. The **prose** columns are Step 6's job.
 
 ---
 
-## Step 6 — `tech-writer` (when any prose column above is non-`—`)
+## Step 6 — `tech-writer` (always on — do not pre-judge and skip)
+
+**Always spawn this step; never decide on your own that "no prose column
+applies" and skip it.** Step 5's table is a guide for what to hand
+`tech-writer`, not a gate you evaluate yourself to decide whether to call it —
+that distinction matters because you (the orchestrator) are the one party
+forbidden from editing prose directly, so you can't also be the one who
+silently rules prose out of scope. This is not hypothetical: on a "bug fix, no
+API/visual change" run that looked prose-irrelevant by this table, `qa` (Step 7) still caught a stale docs claim the orchestrator's own "probably not,
+spot-check" guess had missed — the actual check has to happen inside
+`tech-writer`, which can grep/read the real files, not in the orchestrator's
+head. Spawning it costs one agent call; skipping it costs a silent gap this
+skill exists to prevent.
 
 Prompt `tech-writer` with the concrete, already-true facts — the diff
-summary, the new/changed prop signatures, the bug description — and an
-explicit instruction to **update prose to match, and flag what it can't
-verify, never invent** (its own stated rule). Split by artifact:
+summary, the new/changed prop signatures, the bug description, Step 5's
+table row for this change type, and **any stale-prose file list
+`developer-react` flagged in Step 4** — and an explicit instruction to
+**update prose to match, and flag what it can't verify, never invent** (its
+own stated rule). Split by artifact:
 
 - `apps/docs/content/docs/components/<name>.mdx` + the live demo + nav entry —
   explicitly owned per its `agent.md`.
@@ -295,7 +340,20 @@ verify, never invent** (its own stated rule). Split by artifact:
 If a docs page is **missing** rather than stale, `tech-writer` will notice
 there's nothing to update — surface that to the user as a scope decision
 ("create one now" is new scope beyond propagating this change), don't
-silently skip it and don't silently create it either.
+silently skip it and don't silently create it either. If `tech-writer`
+genuinely finds nothing to change (a real refactor with zero renamed
+identifiers, no behavior change), that's a valid outcome — but it must be
+`tech-writer` reporting "nothing to update" after checking, not the
+orchestrator assuming it upfront.
+
+**Any prose blocker `qa` (Step 7) or `devil-advocate` (Step 8) surfaces later
+routes back to this step — spawn `tech-writer` again, don't `Edit` it
+yourself.** This applies even to a one-line fix; "it's tiny" is exactly the
+reasoning that broke this rule once already (a stale token-name reference in
+`data-table.mdx`, fixed directly by the orchestrator instead of being sent
+back to `tech-writer`). The orchestrator edits `.claude/skills/component-change/SKILL.md`
+itself when asked to fix the skill — never `packages/ui-spec/**` or
+`apps/docs/**` prose as part of executing the skill.
 
 ---
 
@@ -338,7 +396,9 @@ owning step; it does not open the gate itself.
 ## Step 9 — `integrator` (opt-in only, `--pr`)
 
 Runs **only** when the user passed `--pr`. Commits, opens the PR, updates the
-linked Jira ticket (if Step 1 found one), writes a delivery report.
+linked Jira ticket (if Step 1 found one), writes a delivery report. Spawn
+with an explicit `model` override, same reason and same fix as Step 1's
+`context` call — see the "generic, not repo-aware" note above.
 
 **This environment's standing confirmation rule still applies even with
 `--pr` passed.** `integrator`'s own `agent.md` defaults to auto-commit +
@@ -386,9 +446,12 @@ usages (e.g. "does this bug pattern exist elsewhere too").
       (Step 4) — no new hardcoded label, no new physical directional utility.
 - [ ] Step 5's table walked for the actual change type: every non-`—` cell
       addressed, everything else left untouched.
-- [ ] `tech-writer` pass complete wherever a prose column was implicated
-      (`apps/docs` MDX/demo/nav, and/or `behavior.md`/`accessibility.md`/
-      `README.md`) — updates match the actual diff, or flagged as unverifiable.
+- [ ] `tech-writer` spawned (Step 6 always runs — never skipped on the
+      orchestrator's own guess) and its pass is complete: `apps/docs`
+      MDX/demo/nav and/or `behavior.md`/`accessibility.md`/`README.md` updates
+      match the actual diff, or `tech-writer` itself reported nothing to
+      update. Any prose blocker `qa`/`devil-advocate` found was fixed by a
+      `tech-writer` call, not a direct orchestrator edit.
 - [ ] `pre-push-audit.sh` `RESULT` is clean (or explicitly triaged and
       resolved) — includes the `uikit-docs` build if `apps/docs` changed.
 - [ ] `devil-advocate` raised no unresolved blocker.
