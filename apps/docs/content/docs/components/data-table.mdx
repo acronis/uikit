@@ -266,10 +266,11 @@ step 10px, or <kbd>Shift</kbd> + arrow for 50px, clamped to the column's
 
 `enableColumnReordering` makes every non-pinned header cell draggable: grab one
 and drop it on another header to move that column into its place (native HTML5
-drag-and-drop over TanStack's `columnOrder`; the grab/grabbing cursors come from
-the `--ui-draggable-cursor[-active]` tokens, the counterpart of the resize
-handle's `--ui-resizable-cursor`). Pinned columns are excluded — they're anchored
-to a table edge by definition.
+drag-and-drop over TanStack's `columnOrder`; the grab/grabbing cursors use the
+literal `cursor-grab`/`cursor-grabbing` utilities — there's no dedicated Figma
+"Draggable" token yet, unlike the resize handle's generated
+`--ui-resizable-cursor`). Pinned columns are excluded — they're anchored to a
+table edge by definition.
 
 ```tsx
 <DataTable

@@ -168,11 +168,9 @@ const workloadColumns: ColumnDef<Workload>[] = [
   // that leaves no capability, and the header shows no tooltip at all.
   {
     id: 'select',
-    size: 48,
     meta: { pin: 'left' },
     enableSorting: false,
     enableHiding: false,
-    enableResizing: false,
     header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
