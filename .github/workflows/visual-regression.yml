@@ -110,6 +110,13 @@ jobs:
               - 'packages/design-tokens/**'
               - 'packages/icons-react/**'
               - 'packages/design-assets/**'
+              # A dependency bump renders too: Base UI, recharts, react-day-picker
+              # and friends all put pixels on screen, and a lockfile-only PR would
+              # otherwise ship a rendering change with the gate skipped. The cost is
+              # that every dependency PR now pays the ui-react legs — accepted
+              # deliberately, because a missed render regression is dearer than the
+              # runner minutes.
+              - 'pnpm-lock.yaml'
               - '.github/workflows/visual-regression.yml'
             icons-react:
               - 'packages/icons-react/**'
