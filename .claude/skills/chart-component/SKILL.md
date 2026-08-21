@@ -55,8 +55,10 @@ Read the workspace contracts first — they override anything here on conflict:
 - The shared primitives you consume: `packages/ui-react/src/components/ui/chart/chart.tsx`
   and its spec `packages/ui-spec/components/chart/`.
 - The recharts source you port from: `apps/demo/src/components/<X>ChartPlayground.tsx`,
-  **archived** — `apps/demo` was removed from the repo; read it from the
-  `ui-legacy-final` tag (`git show ui-legacy-final:apps/demo/src/components/<X>ChartPlayground.tsx`).
+  **archived** — `apps/demo` was removed from the repo. Read it out of the last
+  commit before removal, `2e257c95` (also tagged `ui-legacy-final`, if that tag
+  has been mirrored to your remote):
+  `git show 2e257c95:apps/demo/src/components/<X>ChartPlayground.tsx`.
 - General ui-react component shape (forwardRef, CVA, index, tests, stories):
   `packages/ui-react/src/components/ui/button/`.
 
@@ -115,11 +117,11 @@ not this component's job).
 ## Phase 1 — Read the playground (instead of a Figma node)
 
 The `apps/demo` playground is the canonical inventory of what this chart type
-does. It is archived (see above), so read it from the tag, plus the shared
-primitives' story:
+does. It is archived (see above), so read it out of that commit, plus the
+shared primitives' story:
 
 ```bash
-git show ui-legacy-final:apps/demo/src/components/<ChartName>Playground.tsx   # or the name from the table
+git show 2e257c95:apps/demo/src/components/<ChartName>Playground.tsx   # or the name from the table
 cat packages/ui-react/src/components/ui/chart/__stories__/chart.stories.tsx   # how the primitives compose
 ```
 
