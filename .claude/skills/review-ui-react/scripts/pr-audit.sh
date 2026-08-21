@@ -34,7 +34,7 @@ TOKENS_DIR=packages/tokens-pd/css
 STYLES=packages/ui-react/src/styles/index.css
 
 TIER_B_RE='^packages/design-tokens/|^tools/style-dictionary/|^packages/tokens-pd/'
-TIER_D_RE='^apps/docs/|^apps/demo/|^apps/demos/'
+TIER_D_RE='^apps/docs/'
 
 echo "=== PREFLIGHT ==="
 if ! gh auth status >/dev/null 2>&1; then

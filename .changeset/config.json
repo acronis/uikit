@@ -7,9 +7,5 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": [
-    "@acronis-platform/shadcn-uikit-demo",
-    "@acronis-platform/shadcn-uikit-demos",
-    "@acronis-platform/uikit-docs"
-  ]
+  "ignore": ["@acronis-platform/uikit-docs"]
 }

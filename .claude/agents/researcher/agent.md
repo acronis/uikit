@@ -24,8 +24,8 @@ Tailwind v4. pnpm monorepo; Changesets; Next.js + Fumadocs docs. No Vue.
 - Base UI primitive capabilities and composition (`useRender`/`mergeProps`).
 - The token pipeline: `design-tokens` → `design-theme` → library `@theme`
   bridge → utilities.
-- Cross-workspace mechanics: the shared `apps/demos` Storybook alias, peer-dep
-  layouts, the RSC `"use client"` manifest constraint in `apps/docs`.
+- Cross-workspace mechanics: peer-dep layouts, the RSC `"use client"`
+  manifest constraint in `apps/docs`.
 
 ## Search patterns
 

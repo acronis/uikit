@@ -29,7 +29,7 @@ The repo is organized into four top-level directories: `context/` (shared docs),
 | `tools/figma-design-assets-sync/` | `@acronis-platform/figma-design-assets-sync` | no        | Syncs icon SVGs from Figma into `design-assets` and regenerates the pack.    |
 
 This table covers the workspaces relevant to consuming the kit. It omits the
-demo apps, the `ui-spec` spike, and `packages/ui-legacy/`
+`ui-spec` spike and `packages/ui-legacy/`
 (`@acronis-platform/shadcn-uikit`) — still published, but in
 maintenance/freeze and available only while consumers migrate, per its
 [deprecation notice](./packages/ui-legacy/README.md). See
@@ -341,7 +341,7 @@ uikit/
 ```
 
 > Abridged: this tree leaves out the workspaces you don't need in order to
-> consume the library — the demo apps, the `ui-spec` spike, the deprecated
+> consume the library — the `ui-spec` spike, the deprecated
 > `packages/ui-legacy/`, and some internal tooling. See
 > [`AGENTS.md`](./AGENTS.md) for the full map.
 
@@ -353,7 +353,7 @@ exposes the same vocabulary, so `pnpm -r <name>` is reliable.
 | Script                                     | What it does                                                |
 | ------------------------------------------ | ----------------------------------------------------------- |
 | `pnpm -r dev` / `pnpm --filter <name> dev` | Run the dev server / watcher for one or all workspaces      |
-| `pnpm -r build`                            | Build every package in topological order (ui → demo/docs)   |
+| `pnpm -r build`                            | Build every package in topological order (libs → docs)      |
 | `pnpm -r test`                             | Run the test suite once across all workspaces               |
 | `pnpm -r test:watch`                       | Run tests in watch mode                                     |
 | `pnpm -r lint` / `pnpm -r lint:fix`        | ESLint across all workspaces                                |

@@ -13,11 +13,10 @@ RUN npm install -g pnpm@10.27.0
 # Copy workspace manifests only — invalidated on lockfile/manifest changes (rare).
 # pnpm install --frozen-lockfile resolves the dependency graph for every importer
 # present on disk, so ui-react's full `workspace:*` closure must be copied:
-#   ui-react → design-assets, icons-react, tokens-pd, shadcn-uikit-demos
+#   ui-react → design-assets, icons-react, tokens-pd
 #   icons-react → design-assets
 #   tokens-pd → design-tokens, style-dictionary
 #   style-dictionary → design-assets, design-tokens
-#   shadcn-uikit-demos → ui-legacy (shadcn-uikit)
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY packages/ui-react/package.json ./packages/ui-react/
 COPY packages/design-assets/package.json ./packages/design-assets/
@@ -26,7 +25,6 @@ COPY packages/tokens-pd/package.json ./packages/tokens-pd/
 COPY packages/design-tokens/package.json ./packages/design-tokens/
 COPY packages/ui-legacy/package.json ./packages/ui-legacy/
 COPY tools/style-dictionary/package.json ./tools/style-dictionary/
-COPY apps/demos/package.json ./apps/demos/
 
 # Install deps — pnpm content-addressable store is cached between builds
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \

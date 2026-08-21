@@ -1,5 +1,6 @@
-# Builds the demo + Storybook (ui-legacy and ui-react) + docs
-# into a single GitHub Pages artefact and deploys it.
+# Builds the docs site + Storybook (ui-legacy and ui-react) into a single
+# GitHub Pages artefact and deploys it. The docs site is the Pages root;
+# the Storybooks are nested under it.
 #
 # All sub-sites must ship in ONE artefact: GitHub Pages serves a single artefact
 # per deployment, so each deploy replaces the whole site. A separate per-app
@@ -10,7 +11,7 @@
 # and manual workflow_dispatch. Push-triggered runs are best-effort: build
 # and deploy failures are logged but do not fail the job, so a broken Pages
 # deploy never blocks or shows as a failing check on the commit.
-name: Demo & Storybook - Deploy to Pages
+name: Docs & Storybook - Deploy to Pages
 
 on:
   push:
@@ -64,18 +65,10 @@ jobs:
       - name: Build UI Component Library
         run: pnpm --filter ./packages/ui-legacy run build
 
-      - name: Build demo
-        run: VITE_BASE_PATH=/uikit/ pnpm --filter ./apps/demo run build
-
       - name: Build storybook
         run: STORYBOOK_DISABLE_ADDON_VITEST=true pnpm --filter ./packages/ui-legacy run storybook:build
 
-      - name: Copy storybook to demo dist
-        run: |
-          rm -rf apps/demo/dist/storybook
-          cp -r packages/ui-legacy/storybook-static apps/demo/dist/storybook
-
-      # ui-react Storybook, served alongside the legacy one at /uikit/storybook-react.
+      # ui-react Storybook, served alongside the legacy one under the docs root.
       # ui-react consumes its generated deps (icons-react, which pulls in
       # tokens-pd/design-assets/style-dictionary) from dist, so build those first;
       # ui-react's own source is bundled by Storybook via the .storybook alias.
@@ -87,11 +80,6 @@ jobs:
       - name: Build ui-react storybook
         run: pnpm --filter ./packages/ui-react run storybook:build
 
-      - name: Copy ui-react storybook to demo dist
-        run: |
-          rm -rf apps/demo/dist/storybook-react
-          cp -r packages/ui-react/storybook-static apps/demo/dist/storybook-react
-
       # The docs import @acronis-platform/ui-react (and icons-react) from their
       # built dist — the ui-react Storybook build above only bundles src, it does
       # not emit the library dist — so build the ui-react library (+ its deps)
@@ -99,16 +87,35 @@ jobs:
       - name: Build docs dependencies
         run: pnpm --filter "@acronis-platform/ui-react..." run build
 
+      # The docs site is now the Pages root (it replaced the demo SPA), so it
+      # builds at /uikit rather than /uikit/docs.
       - name: Build docs
-        run: DOCS_STATIC_EXPORT=true DOCS_BASE_PATH=/uikit/docs pnpm --filter ./apps/docs run build
+        run: DOCS_STATIC_EXPORT=true DOCS_BASE_PATH=/uikit pnpm --filter ./apps/docs run build
 
-      - name: Copy docs to demo dist
-        run: cp -r apps/docs/out apps/demo/dist/docs
+      - name: Copy storybooks into the docs output
+        run: |
+          rm -rf apps/docs/out/storybook apps/docs/out/storybook-react
+          cp -r packages/ui-legacy/storybook-static apps/docs/out/storybook
+          cp -r packages/ui-react/storybook-static apps/docs/out/storybook-react
+
+      # /uikit/docs was the docs root until the demo SPA was removed. GitHub
+      # Pages can't redirect, so leave a meta-refresh at the old entry point.
+      - name: Leave a redirect at the previous docs URL
+        run: |
+          mkdir -p apps/docs/out/docs
+          cat > apps/docs/out/docs/index.html <<'HTML'
+          <!doctype html>
+          <meta charset="utf-8">
+          <title>Redirecting…</title>
+          <meta http-equiv="refresh" content="0; url=/uikit/">
+          <link rel="canonical" href="/uikit/">
+          <p>The docs moved to <a href="/uikit/">/uikit/</a>.</p>
+          HTML
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: apps/demo/dist
+          path: apps/docs/out
 
       - name: Log build failure
         if: failure() && github.event_name == 'push'

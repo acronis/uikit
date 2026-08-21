@@ -21,14 +21,6 @@ const config: StorybookConfig = {
     viteConfig.resolve.alias = {
       ...viteConfig.resolve.alias,
       '@': src,
-      // Render the shared demos (@acronis-platform/shadcn-uikit-demos)
-      // against THIS library: the demos import from the legacy package, so
-      // alias that specifier at ui-react's own source. Storybook is a Vite
-      // build (no RSC), so aliasing client components here is safe — unlike
-      // the Next docs app, which can't alias them. /react before the bare
-      // specifier so the more specific match wins.
-      '@acronis-platform/shadcn-uikit/react': resolve(src, 'react.ts'),
-      '@acronis-platform/shadcn-uikit': resolve(src, 'index.ts'),
     };
     return viteConfig;
   },

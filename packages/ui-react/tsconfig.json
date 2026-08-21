@@ -12,9 +12,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "@acronis-platform/shadcn-uikit": ["./src/index.ts"],
-      "@acronis-platform/shadcn-uikit/react": ["./src/react.ts"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src", ".storybook", "vitest.shims.d.ts"],
