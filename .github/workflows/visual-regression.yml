@@ -85,11 +85,17 @@ jobs:
             ui-legacy:
               - 'packages/ui-legacy/src/**'
               - 'packages/ui-legacy/.storybook/**'
+              # Not load-bearing at build time (`storybook:build` is plain
+              # `storybook build`), but these scripts generate committed render
+              # inputs — the white-label themes, the full CSS, the icon stories.
+              - 'packages/ui-legacy/scripts/**'
+              - 'packages/ui-legacy/test/__snapshots__/**'
               - 'packages/ui-legacy/package.json'
               - 'packages/ui-legacy/Dockerfile.storybook'
               - 'packages/ui-legacy/docker-compose.storybook*.yml'
               - 'packages/tokens-pd/**'
               - 'packages/design-tokens/**'
+              - 'pnpm-lock.yaml'
               - '.github/workflows/visual-regression.yml'
             ui-react:
               - 'packages/ui-react/src/**'
@@ -119,9 +125,14 @@ jobs:
               - 'pnpm-lock.yaml'
               - '.github/workflows/visual-regression.yml'
             icons-react:
+              # Whole-package glob: unlike the two above this one already covers
+              # its own scripts/ and test/__snapshots__ — and its scripts ARE
+              # load-bearing, since `storybook:build` runs `pnpm run generate`
+              # first.
               - 'packages/icons-react/**'
               - 'packages/design-assets/**'
               - 'tools/style-dictionary/**'
+              - 'pnpm-lock.yaml'
               - '.github/workflows/visual-regression.yml'
 
       - name: Setup PNPM
