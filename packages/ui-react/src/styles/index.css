@@ -121,20 +121,6 @@
   --ui-breakpoint-4xl: 1920px;
 }
 
-/* Drag-to-reorder cursors, the counterpart of the generated
-   `--ui-resizable-cursor` (tokens-pd `Resizable` tier, imported above) that the
-   column-resize handle uses. Hand-authored for the same reason as the
-   breakpoints above: the design system has no `Draggable` group / Figma
-   variable for a grab cursor yet, so style-dictionary emits nothing to
-   reference. Named after the gesture, not the component, so any future
-   drag-reorder affordance reuses these instead of raw `cursor-grab`. Move them
-   into `design-tokens` (and drop this block) once a Figma variable exists. */
-:root,
-:host {
-  --ui-draggable-cursor: grab;
-  --ui-draggable-cursor-active: grabbing;
-}
-
 /* While a DataTable column resize is in progress, force the resize cursor
    over every element the pointer crosses — a plain inline `cursor` on
    `<body>` loses to any element underneath that sets its own `cursor`

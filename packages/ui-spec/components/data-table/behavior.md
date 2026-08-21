@@ -159,7 +159,7 @@ Scenario: Resize a column
 Scenario: Reorder a column by dragging its header
   Given a DataTable with enableColumnReordering
   Then every non-pinned header cell is draggable and shows the grab cursor
-      (--ui-draggable-cursor; --ui-draggable-cursor-active while pressed)
+      (cursor-grab; cursor-grabbing while pressed)
   When the user drags one header and drops it on another
   Then the dragged column moves to the drop target's position (headers and body cells alike)
   And onColumnOrderChange fires with the new order so a consumer can persist it

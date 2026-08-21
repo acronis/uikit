@@ -80,9 +80,10 @@ import { DataTableViewOptions } from './data-table-view-options';
 //     native column-pinning API (`column.pin()` / `getStart()` / `getAfter()`),
 //     surfaced as `position: sticky` cells with an opaque row-token background.
 //   • Column reorder   -> `enableColumnReordering` + `columnOrder` state, with
-//     native HTML5 drag-and-drop on the header cells (the grab/grabbing cursors
-//     come from `--ui-draggable-cursor[-active]`, the counterpart of the resize
-//     handle's `--ui-resizable-cursor`).
+//     native HTML5 drag-and-drop on the header cells (plain `cursor-grab`/
+//     `active:cursor-grabbing` utilities, since there's no dedicated Figma
+//     "Draggable" token yet, unlike the resize handle's generated
+//     `--ui-resizable-cursor`).
 
 // Extend TanStack's per-column `meta` with the flags DataTable reads. Augmenting
 // the module keeps `ColumnDef.meta.pin` type-safe at the call site.
@@ -135,6 +136,9 @@ export function getColumnWidth<TData>(
   column: Column<TData, unknown>,
   enableColumnResizing: boolean
 ): number | undefined {
+  if (column.id === 'select') {
+    return 32;
+  }
   if (enableColumnResizing || column.columnDef.size !== undefined) {
     return column.getSize();
   }
@@ -797,7 +801,9 @@ export function DataTable<TData, TValue = unknown>({
                 {headerGroup.headers.map((header) => {
                   const isPinned = header.column.getIsPinned();
                   const canResize =
-                    resizingEnabled && header.column.getCanResize();
+                    resizingEnabled &&
+                    header.column.getCanResize() &&
+                    header.column.id !== 'select';
                   // A pinned column is anchored to a table edge, so dragging it
                   // out of that edge would contradict its own pinning.
                   const canReorder =
@@ -865,7 +871,7 @@ export function DataTable<TData, TValue = unknown>({
                           'transition-colors hover:bg-[var(--ui-table-header-cell-color-hover)] active:bg-[var(--ui-table-header-cell-color-active)]',
                         canReorder &&
                           !isAnyColumnResizing &&
-                          'cursor-(--ui-draggable-cursor) select-none active:cursor-(--ui-draggable-cursor-active)',
+                          'cursor-grab select-none active:cursor-grabbing',
                         canReorder &&
                           draggedColumnId === header.column.id &&
                           'opacity-50',
