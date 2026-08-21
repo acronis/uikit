@@ -10,9 +10,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: ui-legacy
-            filter: '@acronis-platform/shadcn-uikit'
-            dir: packages/ui-legacy
           - name: ui-react
             filter: '@acronis-platform/ui-react'
             dir: packages/ui-react
@@ -22,7 +19,7 @@ jobs:
             dir: packages/ui-react
             color_mode: dark
           # icons-react renders currentColor icons whose color is story-fixed,
-          # not theme-driven — a single (light) pass, like ui-legacy.
+          # not theme-driven — a single (light) pass.
           - name: icons-react
             filter: '@acronis-platform/icons-react'
             dir: packages/icons-react
@@ -40,15 +37,6 @@ jobs:
         id: changes
         with:
           filters: |
-            ui-legacy:
-              - 'packages/ui-legacy/src/**'
-              - 'packages/ui-legacy/.storybook/**'
-              - 'packages/ui-legacy/package.json'
-              - 'packages/ui-legacy/Dockerfile.storybook'
-              - 'packages/ui-legacy/docker-compose.storybook*.yml'
-              - 'packages/tokens-pd/**'
-              - 'packages/design-tokens/**'
-              - '.github/workflows/visual-regression.yml'
             ui-react:
               - 'packages/ui-react/src/**'
               - 'packages/ui-react/.storybook/**'

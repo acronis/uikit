@@ -8,8 +8,11 @@
  *
  * The map is built from three sources in this monorepo (never by guessing /
  * SVG-path matching — the legacy and next-gen art grids differ):
- *   1. ui-legacy `auto-generated.tsx` — legacy React name → source svg name
- *      (e.g. `EditIcon` ← `edit--16.svg`).
+ *   1. `scripts/legacy-icon-sources.json` — legacy React name → source svg
+ *      name (e.g. `EditIcon` ← `edit--16.svg`). A frozen snapshot of
+ *      ui-legacy's `auto-generated.tsx`; that package was removed from the
+ *      repo (archived at the `ui-legacy-final` tag) and its icon roster can
+ *      never change again.
  *   2. design-assets `packs/icons.json` — `metadata.legacyNames` → canonical
  *      asset key (e.g. `edit--16` → `Pencil`).
  *   3. the four icons-react packs — which `<Asset>Icon` actually exist per variant.
@@ -33,17 +36,11 @@ const VARIANTS = ['stroke-mono', 'solid-mono', 'stroke-multi', 'solid-multi'] as
 type Variant = (typeof VARIANTS)[number];
 const MONO: Variant[] = ['stroke-mono', 'solid-mono'];
 
-// 1. legacy React name -> source svg name (strip extension)
-const autoGen = readFileSync(
-  join(MONOREPO, 'packages/ui-legacy/src/components/icons/auto-generated.tsx'),
-  'utf8'
-);
-const legacyToSource = new Map<string, string>();
-for (const m of autoGen.matchAll(
-  /\* ([A-Z][A-Za-z0-9]*Icon) - Auto-generated from ([^\s*]+)/g
-)) {
-  legacyToSource.set(m[1], m[2].replace(/\.svg$/, ''));
-}
+// 1. legacy React name -> source svg name (frozen snapshot; see header)
+const legacySources = JSON.parse(
+  readFileSync(join(HERE, 'legacy-icon-sources.json'), 'utf8')
+) as { icons: Record<string, string> };
+const legacyToSource = new Map<string, string>(Object.entries(legacySources.icons));
 
 // 2. source/legacy name -> canonical asset key (via design-assets legacyNames)
 const pack = JSON.parse(

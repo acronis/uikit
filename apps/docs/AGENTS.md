@@ -22,12 +22,10 @@ pnpm --filter @acronis-platform/uikit-docs dev
 
 ## What this site documents
 
-The site is **focused on `@acronis-platform/ui-react`** (the next-gen Base UI
-library) and its ecosystem packages. There is no legacy `@acronis-platform/shadcn-uikit`
-section — that library's docs were removed; layouts and usage patterns are
-documented as **Layout** / **Patterns** subsections of the Components page
-instead of their own top-level sections. See `context/e1-theme-delivery.md`
-and `context/roadmap.md` if any of that needs restoring later.
+The site documents **`@acronis-platform/ui-react`** (the Base UI library) and
+its ecosystem packages. Layouts and usage patterns are documented as
+**Layout** / **Patterns** subsections of the Components page rather than as
+their own top-level sections.
 
 ## Content structure
 
@@ -45,8 +43,7 @@ and `context/roadmap.md` if any of that needs restoring later.
   code-snippet examples + `<AutoTypeTable>` with a **live `<DemoReact>`**
   preview (shadow-root isolated) — see "ui-react live demos" below.
 - `content/docs/packages/` — the published-package inventory (`ui-react`,
-  `tokens-pd`, `icons-react`, `design-tokens`, `design-assets`). `ui-legacy` is
-  published too but frozen and intentionally left out (see below).
+  `tokens-pd`, `icons-react`, `design-tokens`, `design-assets`).
 - `src/components/demos-react/` — `'use client'` demos for the **ui-react**
   pages, importing straight from `@acronis-platform/ui-react`. One
   `<Name>Demo` per component, rendered through `<DemoReact>` (see below).

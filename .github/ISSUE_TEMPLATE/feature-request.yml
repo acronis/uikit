@@ -15,7 +15,6 @@ body:
       description: Which package would benefit from this feature?
       options:
         - '@acronis-platform/ui-react'
-        - '@acronis-platform/shadcn-uikit (ui-legacy)'
         - '@acronis-platform/icons-react'
         - '@acronis-platform/tokens-pd'
         - New package / unsure

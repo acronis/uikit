@@ -34,7 +34,6 @@ distinct role:
 
 | Path                              | Package                                      | Published? | Stack                                                                                                            | Workspace docs                                        |
 | --------------------------------- | -------------------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| `packages/ui-legacy/`             | `@acronis-platform/shadcn-uikit`             | **yes**    | Vite library, Storybook 10, Vitest + RTL                                                                         | [AGENTS.md](packages/ui-legacy/AGENTS.md)             |
 | `packages/ui-react/`              | `@acronis-platform/ui-react`                 | **yes**    | Base UI library, Vite, Storybook 10, Vitest + RTL, Tailwind v4                                                   | [AGENTS.md](packages/ui-react/AGENTS.md)              |
 | `packages/icons-react/`           | `@acronis-platform/icons-react`              | **yes**    | React icons generated from `design-assets`, Vite, Storybook, Vitest                                              | [AGENTS.md](packages/icons-react/AGENTS.md)           |
 | `apps/docs/`                      | `@acronis-platform/uikit-docs`               | no         | Next.js 15 + Fumadocs                                                                                            | [AGENTS.md](apps/docs/AGENTS.md)                      |
@@ -46,10 +45,9 @@ distinct role:
 
 `packages/` holds the published workspaces:
 
-- `packages/ui-legacy/` — the published shadcn-based UI library.
-- `packages/ui-react/` houses the published next-generation **Base UI**
-  library (`@base-ui/react` as a direct dep), themed by
-  `@acronis-platform/tokens-pd`. New component work goes here.
+- `packages/ui-react/` houses the published **Base UI** library
+  (`@base-ui/react` as a direct dep), themed by
+  `@acronis-platform/tokens-pd`. All component work goes here.
 - `packages/icons-react/` — published React icon components, **generated**
   from `@acronis-platform/design-assets` (24px masters + scale/stroke rules
   baked into a `size` prop). Per-pack subpath exports, tree-shakeable.

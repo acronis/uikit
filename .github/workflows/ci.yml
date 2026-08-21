@@ -18,7 +18,6 @@ jobs:
         @acronis-platform/design-tokens
         @acronis-platform/icons-react
         @acronis-platform/tokens-pd
-        @acronis-platform/shadcn-uikit
         @acronis-platform/ui-react
         @acronis-platform/ui-spec
         @acronis-platform/figma-design-assets-sync
@@ -38,7 +37,6 @@ jobs:
           list-files: shell
           filters: |
             published:
-              - 'packages/ui-legacy/**'
               - 'packages/ui-react/**'
               - 'packages/icons-react/**'
               - 'packages/tokens-pd/**'
@@ -120,9 +118,6 @@ jobs:
       # tree a contributor saw locally.
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Build Acronis UI Component Library
-        run: pnpm --filter ./packages/ui-legacy run build
 
       # Apps import the libraries by package name, so their dist (incl. types)
       # must exist before `pnpm -r typecheck`. Building ui-react's graph covers

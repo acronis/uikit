@@ -25,9 +25,11 @@ export default tseslint.config(
       '**/*.config.ts',
       'vite.config.*.ts',
       '**/next-env.d.ts',
-      // Next.js build output and Fumadocs generated source (apps/docs).
+      // Next.js build output, static export and Fumadocs generated source
+      // (apps/docs).
       '**/.next/**',
       '**/.source/**',
+      'apps/docs/out/**',
       // Generated, committed token artifacts (built by tools/style-dictionary).
       'packages/tokens-pd/**',
     ],

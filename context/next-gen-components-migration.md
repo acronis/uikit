@@ -508,7 +508,7 @@ component PR is independent. Phase 5 can begin per-component.
    empty)? (§2 Modes.)
 6. **Dropped components (`chip`, `form`, `menubar`):** confirm no live consumer
    binds `--ui-chip-*`/`--ui-form-*`/`--ui-menubar-*` (grep `apps/*` +
-   `ui-legacy`). The contract treats removal as breaking — need the consumer
+   `packages/ui-react`). The contract treats removal as breaking — need the consumer
    inventory before deleting.
 7. **Tag indirection:** re-theme Tag onto `--ui-tag-*` component tokens, or keep
    it binding semantic `--ui-background-status-*` directly (the cheaper status

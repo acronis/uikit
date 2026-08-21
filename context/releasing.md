@@ -3,8 +3,8 @@
 Releases are automated via
 [Changesets](https://github.com/changesets/changesets). The flow below
 applies to **any** published workspace in this monorepo. The published
-packages are `@acronis-platform/shadcn-uikit` (ui-legacy), `ui-react`,
-`icons-react`, `tokens-pd`, `design-tokens`, and `design-assets`; the
+packages are `@acronis-platform/ui-react`, `icons-react`, `tokens-pd`,
+`design-tokens`, and `design-assets`; the
 `apps/` and `tools/` workspaces are private (listed in
 `.changeset/config.json`'s `ignore` list).
 
@@ -77,8 +77,7 @@ write`, npm is upgraded to a Trusted-Publishing-capable version, and each
   per-package skip-if-already-published guard, so it is safe to re-run. Use it
   for a package's **first-ever publish** — OIDC Trusted Publishing cannot
   bootstrap a package that doesn't exist on npm yet — or if OIDC config is
-  missing. It deliberately does **not** publish `shadcn-uikit` (ui-legacy),
-  which stays on the OIDC path.
+  missing.
 
 ### Putting a new package on the OIDC path (one-time)
 

@@ -1,6 +1,6 @@
 ---
 name: developer-react
-description: React component developer for the Acronis UI Kit (packages/ui-react, ui-legacy, icons-react). Implements Base-UI/shadcn React components, CVA variants, Tailwind v4 styling against generated --av-* tokens, Vitest + RTL tests and Storybook stories. Use for any React source change in this repo. Does NOT make architecture decisions, write docs pages, or produce EXPLORATION artifacts.
+description: React component developer for the Acronis UI Kit (packages/ui-react, icons-react). Implements Base UI React components, CVA variants, Tailwind v4 styling against generated --ui-* tokens, Vitest + RTL tests and Storybook stories. Use for any React source change in this repo. Does NOT make architecture decisions, write docs pages, or produce EXPLORATION artifacts.
 model: opus
 ---
 
@@ -21,7 +21,6 @@ This is a React-only monorepo (no Vue). Your code lives in:
 | Workspace              | What it is                                                              |
 | ---------------------- | ----------------------------------------------------------------------- |
 | `packages/ui-react`    | Next-gen library — **Base UI** implementation. New component work here. |
-| `packages/ui-legacy`   | Published shadcn-style library (`@acronis-platform/shadcn-uikit`).      |
 | `packages/icons-react` | **Generated** icons — edit the generator scripts, never the output.     |
 | `apps/*`               | Demo SPA, Fumadocs site, shared demos.                                  |
 
@@ -35,8 +34,7 @@ This is a React-only monorepo (no Vue). Your code lives in:
 - **`packages/ui-react` is Base UI first.** Wrap `@base-ui/react` primitives for
   anything stateful/interactive. For polymorphism use Base UI's `useRender` +
   `mergeProps` (the `render` prop). **Do not add Radix or `asChild`/`Slot`** in
-  ui-react — that's the legacy pattern. (`ui-legacy` does use a couple of Radix
-  primitives; respect each workspace's existing approach.)
+  ui-react — that's the legacy pattern.
 - **Variants via `class-variance-authority`**, exposed through
   `VariantProps<typeof xxxVariants>`. Merge classes with `cn()` from
   `src/lib/utils.ts`.
