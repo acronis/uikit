@@ -3,9 +3,25 @@ name: Visual Regression
 
 on: [pull_request]
 
+# One live run per pull request. Without this every push leaves the previous
+# push's eight legs running to completion against a commit nobody will merge —
+# and because a leg is mostly Docker + Playwright, that is the most expensive
+# thing in this repo to leave orphaned. It also gives a hung run a way out: the
+# next push cancels it instead of waiting for the timeout below.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   visual-regression:
     runs-on: ubuntu-latest
+    # A leg is ~2.5 min (icons-react) to ~11.5 min (ui-legacy, full corpus),
+    # install and Storybook build included. 30 gives real headroom while still
+    # killing a hang in minutes rather than at GitHub's 6-hour default — one
+    # `ui-react, light` leg sat in its Docker step for 28 minutes with the same
+    # commit's `dark` leg green in 5m50s, and would otherwise have held the PR's
+    # status for hours.
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
