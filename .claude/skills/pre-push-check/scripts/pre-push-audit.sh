@@ -19,7 +19,7 @@
 #   COMPONENT_AUDIT   per touched component: component-readiness's audit.sh
 #                     (TOKENS/IMPORTS/IMPL/SPEC/TESTS/FIGMA + i18n/RTL/docs advisories)
 #   DYNAMIC           vitest (scoped to touched components) / typecheck / lint /
-#                     ui-spec test
+#                     ui-spec test / uikit-docs typecheck+build (if apps/docs changed)
 #   CHANGESET         presence check for a published-package change
 #
 # What this does NOT check — same gap as component-readiness, and worse here
@@ -65,10 +65,11 @@ printf '%s\n' "$all_changed" | sed 's/^/  /'
 
 ui_react_changed="$(printf '%s\n' "$all_changed" | grep -E '^packages/ui-react/' || true)"
 ui_spec_changed="$(printf '%s\n' "$all_changed" | grep -E '^packages/ui-spec/' || true)"
+docs_changed="$(printf '%s\n' "$all_changed" | grep -E '^apps/docs/' || true)"
 
-if [ -z "$ui_react_changed" ] && [ -z "$ui_spec_changed" ]; then
+if [ -z "$ui_react_changed" ] && [ -z "$ui_spec_changed" ] && [ -z "$docs_changed" ]; then
   echo
-  echo "RESULT: PUSH-READY — no packages/ui-react or packages/ui-spec changes; nothing for this gate to check."
+  echo "RESULT: PUSH-READY — no packages/ui-react, packages/ui-spec, or apps/docs changes; nothing for this gate to check."
   exit 0
 fi
 
@@ -112,6 +113,12 @@ fi
 if [ -n "$ui_spec_changed" ]; then
   echo "--- ui-spec test ---"
   pnpm --filter @acronis-platform/ui-spec test || dyn_fail=1
+fi
+if [ -n "$docs_changed" ]; then
+  echo "--- uikit-docs typecheck (demo .tsx compiles) ---"
+  pnpm --filter @acronis-platform/uikit-docs typecheck || dyn_fail=1
+  echo "--- uikit-docs build (MDX + AutoTypeTable resolve, page renders) ---"
+  pnpm --filter @acronis-platform/uikit-docs build || dyn_fail=1
 fi
 
 echo
