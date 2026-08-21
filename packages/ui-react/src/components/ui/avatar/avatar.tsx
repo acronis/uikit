@@ -139,8 +139,13 @@ const Avatar = React.forwardRef<
       className={cn(avatarVariants({ color }), className)}
       {...props}
     >
-      {children ??
-        (variant === 'icon' ? icon : <AvatarFallback>{label}</AvatarFallback>)}
+      {children !== undefined ? (
+        children
+      ) : variant === 'icon' ? (
+        icon
+      ) : (
+        <AvatarFallback>{label}</AvatarFallback>
+      )}
     </AvatarPrimitive.Root>
   )
 );

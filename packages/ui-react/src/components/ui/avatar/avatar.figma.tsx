@@ -1,6 +1,8 @@
 // Figma Code Connect — status: COMPLETE
 import figma from '@figma/code-connect';
 
+import { UserIcon } from '@acronis-platform/icons-react/stroke-mono';
+
 import { Avatar, AvatarFallback, AvatarGroup } from './avatar';
 
 figma.connect(
@@ -24,9 +26,15 @@ figma.connect(
       }),
       label: figma.string('Label#7423:11'),
     },
-    example: ({ color, variant, label }) => (
-      <Avatar color={color} variant={variant} label={label} />
-    ),
+    // The Icon variant's glyph is a fixed vector baked per color in Figma, not
+    // an instance-swap property — there's nothing to bind `icon` to. Emit a
+    // representative icon for that variant instead of an unusable empty prop.
+    example: ({ color, variant, label }) =>
+      variant === 'icon' ? (
+        <Avatar color={color} variant={variant} icon={<UserIcon size={16} />} />
+      ) : (
+        <Avatar color={color} variant={variant} label={label} />
+      ),
   }
 );
 

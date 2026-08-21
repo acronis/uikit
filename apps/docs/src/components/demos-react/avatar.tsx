@@ -28,7 +28,7 @@ export function AvatarDemo() {
         </Avatar>
         <Avatar color="gray" variant="icon" icon={<UserIcon size={16} />} />
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div className="flex items-center gap-[var(--ui-avatar-global-container-gap)]">
         <AvatarGroup>
           <Avatar color="teal">
             <AvatarFallback>SN</AvatarFallback>
@@ -40,7 +40,9 @@ export function AvatarDemo() {
             <AvatarFallback>SI</AvatarFallback>
           </Avatar>
         </AvatarGroup>
-        <span style={{ fontSize: 14 }}>On this ticket</span>
+        <span className="text-sm leading-6 text-[var(--ui-avatar-global-text-color)]">
+          On this ticket
+        </span>
       </div>
     </div>
   );
