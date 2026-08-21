@@ -94,6 +94,15 @@ jobs:
             ui-react:
               - 'packages/ui-react/src/**'
               - 'packages/ui-react/.storybook/**'
+              # The capture runner and the subset definition are what CI executes
+              # for the theme legs (`node …/scripts/visual-capture.mjs`), so a PR
+              # that edits only SUBSET_GROUPS — dropping a mechanism, or leaving a
+              # stale title — would otherwise match no filter path, skip every
+              # ui-react leg, and merge green having run no visual test at all.
+              - 'packages/ui-react/scripts/**'
+              # Baselines themselves: a PR that only commits regenerated PNGs has
+              # to be the PR that proves they reproduce.
+              - 'packages/ui-react/test/__snapshots__/**'
               - 'packages/ui-react/package.json'
               - 'packages/ui-react/Dockerfile.storybook'
               - 'packages/ui-react/docker-compose.storybook*.yml'
