@@ -36,6 +36,18 @@ STYLES=packages/ui-react/src/styles/index.css
 TIER_B_RE='^packages/design-tokens/|^tools/style-dictionary/|^packages/tokens-pd/'
 TIER_D_RE='^apps/docs/|^apps/demo/|^apps/demos/'
 
+# Statelessness contract: this script must behave identically whether this is
+# the first time <NUM> has ever been reviewed or the tenth time in a row. The
+# forced refspec used below (+pull/$NUM/head:$PR_REF) already guarantees that
+# on its own — it overwrites $PR_REF regardless of what it pointed to before.
+# We additionally wipe any leftover $PR_REF from a prior run (interrupted,
+# killed, or simply never cleaned up) once we know this run will actually
+# fetch — i.e. after AUTH/FORK_CHECK pass, not before — so a run that aborts
+# early never destroys a pre-existing ref for no benefit. $PR_REF is left in
+# place when this script exits: the calling skill's steps 4/5 read it after
+# the script returns, so it must survive until the whole review is done. The
+# skill deletes it as its own final step once nothing else needs it.
+
 echo "=== PREFLIGHT ==="
 if ! gh auth status >/dev/null 2>&1; then
   echo "AUTH: FAIL — run: gh auth login"
@@ -46,9 +58,95 @@ echo "AUTH: OK"
 REPO="$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null)"
 echo "REPO: ${REPO:-unknown}"
 
+# Fork guard — this skill's fetch/diff logic hardcodes the "origin" remote,
+# but every gh command below (pr view/diff/checks) resolves independently
+# against whatever repo `gh` considers current (it prefers an "upstream"
+# remote over "origin" when both exist, e.g. a fork checkout with origin =
+# your fork and upstream = the base repo). If those two disagree, `git fetch
+# origin +pull/<n>/head:...` fetches PR refs from the WRONG repository — at
+# best it fails outright (no such ref), at worst (if the fork happens to
+# have its own same-numbered PR) it fetches an unrelated PR's commits while
+# FETCH_VERIFY is the only thing standing between that and a silently wrong
+# review. Check this explicitly, up front, instead of relying on that as an
+# incidental safety net.
+ORIGIN_URL="$(git remote get-url origin 2>/dev/null)"
+if [ -z "$ORIGIN_URL" ]; then
+  echo "FORK_CHECK: FAIL — no 'origin' remote configured; this skill requires origin to be the base repo."
+  exit 1
+fi
+# Parse owner/repo out of the URL text as a fallback source of truth, but
+# note this does NOT make an SSH config host alias for origin (e.g.
+# origin = git@github-work:owner/repo, common when juggling multiple GitHub
+# identities) safe end-to-end: `gh repo view` above resolves the "current
+# repo" by matching remote hosts against its own known-hosts list, and it
+# does not consult ~/.ssh/config to translate an alias back to github.com —
+# so with an aliased origin, REPO comes back empty and every gh command in
+# this skill (not just this check) would fail the same way. There is no
+# workaround here short of pointing origin at the literal host gh knows
+# (github.com, or a configured GH_HOST) — see the FAIL message below.
+ORIGIN_REPO="$(echo "$ORIGIN_URL" | sed -E 's#\.git$##' | sed -E 's#^.*[:/]([^/:]+/[^/:]+)$#\1#')"
+if [ -z "$REPO" ] || [ -z "$ORIGIN_REPO" ]; then
+  echo "FORK_CHECK: FAIL — could not resolve the repo for 'origin' ($ORIGIN_URL) and/or gh's current repo."
+  echo "  If 'origin' uses an SSH config host alias (e.g. git@github-work:owner/repo),"
+  echo "  gh cannot resolve it — every gh command in this skill needs 'origin' to use"
+  echo "  a host gh recognizes (github.com, or your configured GH_HOST). Point 'origin'"
+  echo "  at that literal host and re-run."
+  exit 1
+elif [ "$(echo "$ORIGIN_REPO" | tr '[:upper:]' '[:lower:]')" != "$(echo "$REPO" | tr '[:upper:]' '[:lower:]')" ]; then
+  echo "FORK_CHECK: FAIL — 'origin' is $ORIGIN_REPO but gh resolves the base repo as $REPO."
+  echo "  This is a fork checkout (origin = your fork, a separate remote = the base repo)."
+  echo "  This skill assumes 'origin' IS the base repo it reviews PRs against — fetching PR refs"
+  echo "  from the wrong repo can silently review the wrong commits. Re-run this from a checkout"
+  echo "  where 'origin' points at $REPO (e.g. swap remotes, or reclone non-forked)."
+  exit 1
+fi
+echo "FORK_CHECK: OK — origin matches $REPO"
+
+# Concurrency guard — $PR_REF is a single ref name keyed only on the PR
+# number, and this script both deletes and (re)fetches it. Two overlapping
+# runs for the same PR number would race on that ref (one run's delete or
+# fetch landing mid-way through another run's fetch/verify/read), so refuse
+# to proceed if another run for this PR number is already in flight rather
+# than corrupt or invalidate it silently. A lock left behind by a run that
+# was killed (not a clean exit) is detected and reclaimed by checking
+# whether its owning pid is still alive.
+LOCK_DIR="$(git rev-parse --git-dir)/uikit-review-lock-$NUM"
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+  LOCK_PID="$(cat "$LOCK_DIR/pid" 2>/dev/null || true)"
+  if [ -n "$LOCK_PID" ] && kill -0 "$LOCK_PID" 2>/dev/null; then
+    echo "LOCK: FAIL — another review of PR $NUM is already running (pid $LOCK_PID). Wait for it to finish, then re-run."
+    exit 1
+  fi
+  rm -rf "$LOCK_DIR"
+  if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+    echo "LOCK: FAIL — could not create the lock directory for PR $NUM."
+    exit 1
+  fi
+fi
+echo $$ >"$LOCK_DIR/pid"
+trap 'rm -rf "$LOCK_DIR"' EXIT
+echo "LOCK: OK"
+
+# Now that we know this run will actually fetch, wipe any leftover $PR_REF
+# from a prior run (interrupted, killed, or simply never cleaned up) —
+# never trust that a previous invocation left things tidy.
+git update-ref -d "$PR_REF" >/dev/null 2>&1 || true
+
 echo
 echo "=== FETCH ==="
-git fetch origin main >/dev/null 2>&1 && echo "origin/main: updated" || echo "origin/main: FETCH FAILED"
+# Forced, same reasoning as the PR fetch below: origin/main may have been
+# rewritten (rare, but possible), and a non-force fetch would then either no-op
+# or fail while leaving the OLD local origin/main in place. Unlike before, a
+# failed main fetch is now a hard abort (exit 1) rather than a printed warning
+# the rest of the script silently ignores — every downstream diff/scope/token
+# check is computed against origin/main, so a stale main means every result
+# in this run is wrong, not just one section of it.
+if git fetch origin +main:refs/remotes/origin/main >/dev/null 2>&1; then
+  echo "origin/main: updated"
+else
+  echo "origin/main: FETCH FAILED — aborting rather than diffing against a stale local origin/main."
+  exit 1
+fi
 # The leading "+" forces the update even when the PR's history diverged from
 # what refs/pr/$NUM already points to locally (rebase/amend/force-push) — a
 # plain refspec only allows a fast-forward and would silently leave the old,

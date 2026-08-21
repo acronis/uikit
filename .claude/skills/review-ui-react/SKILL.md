@@ -89,6 +89,35 @@ contains and exit — don't run devil-advocate on nothing.
 
 ---
 
+## Statelessness contract
+
+This skill must behave identically on the first review of a PR and the
+tenth re-review of the same PR after it changed — it must never be aware it
+ran before. Two layers enforce that:
+
+- **On disk / in git**: no local ref, worktree, or temp file this skill
+  creates is allowed to outlive or influence a later invocation.
+  `pr-audit.sh` defensively wipes a leftover `refs/pr/<num>` from a prior
+  run on entry (step 2), but leaves the ref it fetches in place on exit,
+  since steps 4 and 5 still need to read it after the script returns; step
+  12 of this skill deletes it explicitly once the report is written.
+  `pr-audit.sh` also refuses to run at all if another invocation for the
+  same PR number is already in flight (`LOCK: FAIL`, see step 2) rather than
+  race it on the shared `refs/pr/<num>` ref. That lock only spans the
+  script's own runtime, though — don't start a second review of the same PR
+  number while an earlier one is still mid-flow (steps 3–12 not yet done),
+  since those steps read and finally delete that ref outside the script.
+- **In the conversation**: if this skill is invoked again for a PR number
+  already discussed earlier in this session, treat it as a cold start
+  anyway. Re-run `pr-audit.sh`, re-run `gh pr diff`, re-read `git show`
+  content — do not answer from an earlier turn's tool output, findings, or
+  report content still sitting in context. The PR may have gained commits,
+  lost commits, or been rebased since that earlier turn; the only source of
+  truth is what this run's fetch actually returns. If a finding from a
+  previous run of this skill on the same PR still applies, it will show up
+  again on its own because the underlying code is still there — it should
+  never be asserted from memory of the earlier run.
+
 ## Steps
 
 1. **Parse the argument** — a bare PR number, a full GitHub URL, or a number
@@ -107,6 +136,29 @@ contains and exit — don't run devil-advocate on nothing.
    anything else — most of the mechanical work is already done for you.
    - If it prints `AUTH: FAIL`, stop and tell the developer to run
      `gh auth login`, then retry.
+   - If it prints `FORK_CHECK: FAIL`, **stop — this is a hard, by-design
+     block, not a bug to work around.** It means the checkout's `origin`
+     remote doesn't match the repo `gh` resolves as the PR's home (a fork
+     checkout: `origin` = the developer's fork, some other remote = the base
+     repo). This skill only runs when `origin` IS the base repo, because
+     every fetch is hardcoded against `origin` — in a fork checkout that
+     would fetch PR refs from the wrong repository, at best failing outright
+     and at worst (if the fork happens to have its own same-numbered PR)
+     silently reviewing unrelated commits. Tell the developer exactly what
+     the script reported (which repo `origin` points at vs. which repo `gh`
+     resolved) and that they need to run this from a checkout where `origin`
+     is the base repo — do not attempt to fetch from the other remote
+     yourself as a workaround.
+   - If it prints `LOCK: FAIL`, another review of the same PR number is
+     already running (a concurrent invocation, not this run). Wait for it to
+     finish and re-run — do not delete the lock directory or retry
+     immediately; that's exactly the race this check exists to prevent.
+   - If it prints `origin/main: FETCH FAILED`, this is a **hard abort** —
+     every downstream check in this run diffs against `origin/main`, so a
+     stale fetch there makes the whole run's output untrustworthy, not just
+     one section. Report the git error the script printed to the developer
+     instead of retrying blind or falling back to whatever `origin/main` was
+     fetched last time.
    - If it fails to fetch `refs/pr/<num>`, or `FETCH_VERIFY` reports a
      mismatch, this is a **hard abort** — do not retry silently. Read the git
      error the script printed: only if it names a shallow clone should you
@@ -287,26 +339,24 @@ contains and exit — don't run devil-advocate on nothing.
     Important → Nit.
 
 11. **Write the report** to the repo root as `uikit-pr-<number>-review.md`
-    (see structure below). If it already exists, ask: overwrite, or write a
-    `-<timestamp>` suffixed copy — never silently clobber.
+    (see structure below), **always overwriting** any existing file with that
+    name unconditionally — no ask, no `-<timestamp>` suffixed copy. A prior
+    run's report for the same PR number is stale by definition once the PR
+    has moved; keeping it around (under this name or a suffixed one) only
+    risks the developer reading old findings by mistake. The report is the
+    one piece of this skill's output that's meant to persist — but each write
+    replaces the last, it never accumulates.
 
-12. **Clean up local state** — now that the report file is fully written,
-    remove the local ref this run created so a fresh invocation always
-    starts clean and repeated reviews of the same PR don't accumulate
-    `refs/pr/*` clutter:
-
-    ```bash
-    git update-ref -d refs/pr/<num>
-    ```
-
-    This deletes only that one local ref (a no-op if it's already gone) and
-    must run **only after** step 11 has finished writing the report. It must
-    never touch the report file, the developer's working tree, or their
-    checked-out branch. This is a hygiene safety net, not the fix for stale
-    reviews — the forced fetch in the script (`+pull/<num>/head:refs/pr/<num>`)
-    is what actually keeps a single run correct; this step just guarantees a
-    leftover ref from an interrupted or earlier run can't confuse the next
-    one.
+12. **Delete `refs/pr/<num>` now that nothing else needs it.** Steps 4 and 5
+    read this ref after `pr-audit.sh` has already returned, so the script
+    itself cannot safely delete it on exit — it defensively wipes a leftover
+    ref from a prior run on entry (see `pr-audit.sh`), but leaves the ref it
+    just fetched in place when it exits. Once the report is written (step 11)
+    and nothing in this skill needs the ref anymore, run
+    `git update-ref -d refs/pr/<num>` yourself as this step. The forced fetch
+    (`+pull/<num>/head:refs/pr/<num>`) is what keeps a single run correct even
+    if this delete is ever skipped; this step is what keeps no ref surviving
+    _between_ runs.
 
 13. **Print a short terminal summary** (verdict, top findings, report path)
     so the developer doesn't have to open the file for the headline.
@@ -396,17 +446,45 @@ that this PR doesn't touch `packages/ui-react` or anything that affects it.
   (`git fetch origin +pull/<num>/head:refs/pr/<num>`) so the ref always
   reflects the PR's real current head even after a rebase/amend/force-push —
   this works for fork PRs too, since GitHub mirrors them into the base
-  repo's `refs/pull/*` namespace. `main` freshness comes from
-  `git fetch origin main` only; the developer's checked-out branch (even if
-  it happens to be `main`) is never fast-forwarded or switched. A hard
-  `FETCH_VERIFY` check in the script cross-checks the fetched local SHA
-  against `gh pr view`'s `headRefOid` and aborts on any mismatch, so a stale
-  fetch can never silently drive the rest of the review.
-- **No lingering local git state.** The one local ref this skill creates
-  (`refs/pr/<num>`) is deleted once the report is fully written (step 12) —
-  a fresh invocation, or a re-review of the same PR after it changes, never
-  starts from a leftover ref. The report file is the only thing that
-  persists after a run.
+  repo's `refs/pull/*` namespace. `main` freshness comes from a forced
+  `git fetch origin +main:refs/remotes/origin/main`, which hard-aborts the
+  whole script on failure (every downstream check diffs against
+  `origin/main`, so a stale fetch there would make every result wrong, not
+  just one section); the developer's checked-out branch (even if it happens
+  to be `main`) is never fast-forwarded or switched. A hard `FETCH_VERIFY`
+  check in the script cross-checks the fetched local SHA against `gh pr
+view`'s `headRefOid` and aborts on any mismatch, so a stale fetch can never
+  silently drive the rest of the review.
+- **Base-repo checkouts only.** `pr-audit.sh` hard-aborts (`FORK_CHECK: FAIL`)
+  before fetching anything if `origin` doesn't match the repo `gh` resolves
+  as current — i.e. a fork checkout (`origin` = your fork, some other remote
+  = the base repo). Every fetch in this skill targets `origin` by name; in a
+  fork checkout that silently targets the wrong repository. There is no
+  workaround mode — point `origin` at the base repo and re-run. Note this
+  check itself first asks `gh repo view` to resolve the current repo, which
+  needs `origin`'s host to be one `gh` recognizes (github.com, or a
+  configured `GH_HOST`); an SSH config host alias for `origin` (e.g.
+  `git@github-work:owner/repo`) makes that resolution fail too, so it is
+  **not** a safe setup — every `gh` command in this skill would fail the
+  same way, not just this check.
+- **One review of a given PR number at a time.** `pr-audit.sh` takes an
+  exclusive lock (`LOCK: FAIL` if held) before touching `refs/pr/<num>`,
+  since a second concurrent run would race the first on that shared ref's
+  delete/fetch. Don't start a second invocation for the same PR number until
+  the first has finished through step 12.
+- **No lingering local git state, once the whole review is done.**
+  `pr-audit.sh` defensively deletes a leftover `refs/pr/<num>` from a prior
+  run on entry (after AUTH/FORK_CHECK pass), but leaves the ref it fetches in
+  place on exit — steps 4 and 5 still need it after the script returns. Step
+  12 of this skill deletes it explicitly once the report is written, so a
+  killed/interrupted run can't poison the next one and a completed run never
+  leaves the ref behind either. `component-readiness/audit.sh`'s worktree
+  (used in step 5) is the same story: pruned defensively before creation,
+  removed via an `EXIT` trap after (that trap intentionally does not add
+  `INT`/`TERM` — `EXIT` already fires for those signals, and a non-terminating
+  handler for them would let the script resume against a worktree it just
+  deleted). The report file (always overwritten, never suffixed) is the only
+  thing that persists after a run.
 - **Local-only token/style truth.** All `--ui-*` resolution and
   generated-artifact freshness checks read `packages/tokens-pd`,
   `packages/design-tokens` at the PR's own head commit. Figma is never queried
