@@ -18,7 +18,8 @@ defined deprecation path.
 > **Status 2026-08-21:** reached. `packages/ui-legacy` and the `apps/demo` /
 > `apps/demos` showcases were removed from the repository. Versions up to
 > `0.36.3` stay installable from npm and are deprecated there; the final source
-> is archived at the `ui-legacy-final` tag. The decisions recorded below are
+> is in this repo's history at commit `2e257c95` (also tagged
+> `ui-legacy-final`). The decisions recorded below are
 > kept as-dated.
 
 ## Decisions locked (2026-06-05)

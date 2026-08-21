@@ -1,5 +1,5 @@
 {
-  "$comment": "Frozen snapshot of the legacy @acronis-platform/shadcn-uikit icon roster: legacy React component name -> source SVG basename, extracted from that package's src/components/icons/auto-generated.tsx. The package was removed from the repo (archived at the ui-legacy-final tag) and its icon set can never change again, so this is a static input to generate-legacy-map.ts rather than a cross-workspace read. Do not hand-edit.",
+  "$comment": "Frozen snapshot of the legacy @acronis-platform/shadcn-uikit icon roster: legacy React component name -> source SVG basename, extracted from that package's src/components/icons/auto-generated.tsx. The package was removed from the repo (archived at commit 2e257c95) and its icon set can never change again, so this is a static input to generate-legacy-map.ts rather than a cross-workspace read. Do not hand-edit.",
   "icons": {
     "ALogoIcon": "a-logo--32",
     "AccountIcon": "account--32",

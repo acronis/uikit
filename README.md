@@ -35,7 +35,8 @@ the per-workspace `AGENTS.md` files for area-specific conventions.
 > **`@acronis-platform/shadcn-uikit` (`ui-legacy`) has been removed from this
 > repository.** It is superseded by `@acronis-platform/ui-react`. Previously
 > published versions (up to `0.36.3`) remain installable from npm and are
-> deprecated there; the final source is archived at the `ui-legacy-final` tag.
+> deprecated there; the final source is in this repo's history at commit
+> `2e257c95` (also tagged `ui-legacy-final`).
 
 ## 🚀 Getting Started
 

@@ -11,7 +11,7 @@
  *   1. `scripts/legacy-icon-sources.json` — legacy React name → source svg
  *      name (e.g. `EditIcon` ← `edit--16.svg`). A frozen snapshot of
  *      ui-legacy's `auto-generated.tsx`; that package was removed from the
- *      repo (archived at the `ui-legacy-final` tag) and its icon roster can
+ *      repo (archived at commit `2e257c95`) and its icon roster can
  *      never change again.
  *   2. design-assets `packs/icons.json` — `metadata.legacyNames` → canonical
  *      asset key (e.g. `edit--16` → `Pencil`).

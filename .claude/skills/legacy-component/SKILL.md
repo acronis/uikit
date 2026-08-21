@@ -25,7 +25,8 @@ differences from [`/figma-component`](../figma-component/SKILL.md):
 1. **Source is legacy code, not a Figma node.** Variants, parts, props, and a11y
    come from reading `packages/ui-legacy/src/components/ui/<legacy-name>/`.
    `packages/ui-legacy` has been **removed from the working tree** — read it
-   out of the `ui-legacy-final` git tag (see "Locate the source" below).
+   out of commit `2e257c95`, the last one before removal (see "Locate the
+   source" below).
 2. **The Figma link is deferred.** With no "ready for dev" node, the
    `.figma.tsx` Code Connect is a `NEEDS_FIGMA_URL` skeleton (not `COMPLETE`)
    and the spec `index.yaml` ships `status: draft` with **no** `figma:` block.
@@ -42,8 +43,9 @@ Read the workspace contracts first — they override anything here on conflict:
 - Root: [AGENTS.md](../../../AGENTS.md), [context/conventions.md](../../../context/conventions.md)
 - ui-react: [packages/ui-react/AGENTS.md](../../../packages/ui-react/AGENTS.md),
   [packages/ui-react/context/conventions.md](../../../packages/ui-react/context/conventions.md)
-- ui-legacy (the source, archived at the `ui-legacy-final` tag):
-  `git show ui-legacy-final:packages/ui-legacy/AGENTS.md`,
+- ui-legacy (the source, archived at commit `2e257c95` — also tagged
+  `ui-legacy-final` if that tag has been mirrored to your remote):
+  `git show 2e257c95:packages/ui-legacy/AGENTS.md`,
   `…/context/conventions.md`, `…/context/theming.md`
 - ui-spec: [packages/ui-spec/AGENTS.md](../../../packages/ui-spec/AGENTS.md)
 
@@ -52,7 +54,7 @@ Read the workspace contracts first — they override anything here on conflict:
 `packages/ui-spec/components/button/`. For a composable, multi-part component,
 `…/breadcrumb/` is the worked example. The **legacy** source you port from lived
 under `packages/ui-legacy/src/components/ui/<legacy-name>/` and is now read from
-the `ui-legacy-final` tag.
+commit `2e257c95`.
 
 ---
 
@@ -106,11 +108,11 @@ filesystem:
 ```bash
 # the component (flat file OR folder), its story / test (shared dir OR
 # co-located), and an optional docs companion
-git ls-tree -r --name-only ui-legacy-final -- packages/ui-legacy/src/components/ui \
+git ls-tree -r --name-only 2e257c95 -- packages/ui-legacy/src/components/ui \
   | grep -iE "/<legacy-name>(\.tsx|/|\.stories\.tsx|\.test\.tsx|\.docs\.ts)"
 
 # read one
-git show ui-legacy-final:packages/ui-legacy/src/components/ui/<legacy-name>.tsx
+git show 2e257c95:packages/ui-legacy/src/components/ui/<legacy-name>.tsx
 ```
 
 (A component may have **no** test in legacy — `card` has only a story. That's
@@ -569,7 +571,7 @@ the `/figma-component` Phase 5 notes for the single-mode variants and the
 
 Suppose `<Name>` has no Figma node and no `--ui-<name>-*` tier yet:
 
-1. **Read** `ui-legacy-final:…/ui-legacy/src/components/ui/<name>/<name>.tsx`: `cva` with
+1. **Read** `2e257c95:…/ui-legacy/src/components/ui/<name>/<name>.tsx`: `cva` with
    `variant: { default, outline, ghost }`, `size: { sm, default, lg }`, uses
    `asChild` via Radix `Slot`, classes like
    `bg-primary text-primary-foreground hover:bg-primary/90` and
