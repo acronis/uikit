@@ -39,6 +39,20 @@ functionally identical to a page header's, so it is `PageHeaderRow` and friends,
 reused. And there is no `WizardStepper` wrapper — the consumer places a plain
 `Stepper` in the header, or omits it.
 
+The design brief's own reference pairing for which buttons to place in
+`PageHeaderActions`:
+
+| Flow                     | Buttons                  |
+| ------------------------ | ------------------------ |
+| Single-step              | `[Cancel] [CTA]`         |
+| Multi-step — first step  | `[Cancel] [Next]`        |
+| Multi-step — middle step | `[Cancel] [Back] [Next]` |
+| Multi-step — final step  | `[Cancel] [CTA]`         |
+
+"CTA" is the flow's submit action (e.g. "Install agent", "Create migration"),
+never a generic "Submit" label. The final step drops `Back` along with `Next` —
+it is not a three-button state.
+
 ## Parts
 
 | Export           | Element | Purpose                                                                                                                                    |

@@ -39,6 +39,21 @@ Scenario: Which actions show on a step
   buttons — it provides only the slot
 ```
 
+The design brief's own reference pairing (Figma's "Wizard" documentation page,
+`node-id=11098-18`) for that per-step decision:
+
+| Flow                     | Buttons                  |
+| ------------------------ | ------------------------ |
+| Single-step              | `[Cancel] [CTA]`         |
+| Multi-step — first step  | `[Cancel] [Next]`        |
+| Multi-step — middle step | `[Cancel] [Back] [Next]` |
+| Multi-step — final step  | `[Cancel] [CTA]`         |
+
+"CTA" is the flow's submit action (e.g. "Install agent", "Create migration",
+"Delete device") — its label is never "Submit" generically. Note the final step
+drops `Back` along with `Next`, matching the single-step pairing exactly; only
+the middle steps carry three buttons.
+
 ```gherkin
 Scenario: Optional subtitle
   Given a flow that needs a supporting line under its title

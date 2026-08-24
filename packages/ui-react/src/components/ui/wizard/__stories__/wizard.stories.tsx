@@ -130,7 +130,8 @@ function StepContent() {
       <SectionHeader>
         <SectionTitle>Choose widgets</SectionTitle>
         <SectionDescription>
-          Widgets you add here appear on the dashboard in the order you pick them.
+          Widgets you add here appear on the dashboard in the order you pick
+          them.
         </SectionDescription>
       </SectionHeader>
       <SectionContent>
@@ -162,6 +163,63 @@ export const Default: Story = {
   ),
 };
 
+// The first step has nothing to go Back to, so per the design brief its
+// pairing is [Cancel][Next] — no Back, unlike the middle steps in `Default`.
+export const FirstStep: Story = {
+  render: () => (
+    <Wizard>
+      <WizardHeader>
+        <WizardBreadcrumb />
+        <PageHeaderRow>
+          <PageHeaderTitle>Create dashboard</PageHeaderTitle>
+          <PageHeaderActions>
+            <Button variant="secondary">Cancel</Button>
+            <Button>Next</Button>
+          </PageHeaderActions>
+        </PageHeaderRow>
+        <WizardSubtitle>{SUBTITLE}</WizardSubtitle>
+        <Stepper
+          currentStep={1}
+          totalSteps={3}
+          current="Name the dashboard"
+          next="Choose widgets"
+        >
+          <StepperItem
+            variant="current"
+            label="Name the dashboard"
+            avatar={
+              <Avatar color="blue">
+                <AvatarFallback>1</AvatarFallback>
+              </Avatar>
+            }
+          />
+          <StepperItem
+            variant="future"
+            label="Choose widgets"
+            avatar={
+              <Avatar color="gray">
+                <AvatarFallback>2</AvatarFallback>
+              </Avatar>
+            }
+          />
+          <StepperItem
+            variant="future"
+            label="Set permissions"
+            avatar={
+              <Avatar color="gray">
+                <AvatarFallback>3</AvatarFallback>
+              </Avatar>
+            }
+          />
+        </Stepper>
+      </WizardHeader>
+      <WizardBody>
+        <StepContent />
+      </WizardBody>
+    </Wizard>
+  ),
+};
+
 export const WithoutSubtitle: Story = {
   render: () => (
     <Wizard>
@@ -180,8 +238,10 @@ export const WithoutSubtitle: Story = {
   ),
 };
 
-// A two- or three-step flow may drop the stepper entirely — the design leaves
-// that to the flow, so `Wizard` never forces one.
+// A single-step flow drops the stepper entirely and pairs [Cancel][CTA] — the
+// same two-button pairing the final step of a multi-step flow uses (see
+// LastStep). `Wizard` never forces a stepper; a short multi-step flow can
+// choose to omit it too, but this story is the canonical single-step case.
 export const WithoutStepper: Story = {
   render: () => (
     <Wizard>
@@ -203,8 +263,12 @@ export const WithoutStepper: Story = {
   ),
 };
 
-// The last step swaps Next for Submit. Which buttons show on which step is the
-// consuming UI block's decision, not the kit's — this story just shows the slot.
+// The final step swaps Next for the flow's CTA (its label is the flow's
+// action, e.g. "Create dashboard" — never a generic "Submit") and drops Back:
+// per the design brief the final step is a two-button [Cancel][CTA] pairing,
+// the same as the single-step flow (see WithoutStepper), not a three-button
+// state. Which buttons show on which step is the consuming UI block's
+// decision, not the kit's — this story just shows the slot.
 export const LastStep: Story = {
   render: () => (
     <Wizard>
@@ -214,16 +278,11 @@ export const LastStep: Story = {
           <PageHeaderTitle>Create dashboard</PageHeaderTitle>
           <PageHeaderActions>
             <Button variant="secondary">Cancel</Button>
-            <Button variant="secondary">Back</Button>
-            <Button>Submit</Button>
+            <Button>Create dashboard</Button>
           </PageHeaderActions>
         </PageHeaderRow>
         <WizardSubtitle>{SUBTITLE}</WizardSubtitle>
-        <Stepper
-          currentStep={3}
-          totalSteps={3}
-          current="Set permissions"
-        >
+        <Stepper currentStep={3} totalSteps={3} current="Set permissions">
           <StepperItem
             variant="completed"
             label="Name the dashboard"
@@ -255,6 +314,106 @@ export const LastStep: Story = {
       </WizardHeader>
       <WizardBody>
         <StepContent />
+      </WizardBody>
+    </Wizard>
+  ),
+};
+
+// Enough fields to push the body well past the viewport height, so scrolling
+// this story demonstrates the one behavior a single short step can't: the
+// header staying pinned while the body scrolls underneath it. Three sections,
+// per the Figma body-content note (node 11105-6210) — the body's container
+// always wraps `Section`s, one per logical group of fields, not a flat field
+// list.
+function LongStepContent() {
+  return (
+    <>
+      <Section>
+        <SectionHeader>
+          <SectionTitle>Dashboard details</SectionTitle>
+          <SectionDescription>
+            Name the dashboard and describe its purpose.
+          </SectionDescription>
+        </SectionHeader>
+        <SectionContent>
+          <InputText
+            label="Dashboard name"
+            defaultValue="Workload protection"
+          />
+          <InputText
+            label="Description"
+            defaultValue="Endpoint coverage across the fleet"
+          />
+          <InputText label="Owner" defaultValue="Security operations" />
+          <InputText label="Tags" defaultValue="protection, endpoints, fleet" />
+        </SectionContent>
+      </Section>
+      <Section>
+        <SectionHeader>
+          <SectionTitle>Data sources</SectionTitle>
+          <SectionDescription>
+            Pick where the widgets on this dashboard pull their data from.
+          </SectionDescription>
+        </SectionHeader>
+        <SectionContent>
+          <InputText label="Primary source" defaultValue="Cyber Protection" />
+          <InputText
+            label="Secondary source"
+            defaultValue="Advanced Automation"
+          />
+          <InputText label="Refresh interval" defaultValue="15 minutes" />
+          <InputText label="Time zone" defaultValue="UTC" />
+          <InputText label="Retention window" defaultValue="90 days" />
+        </SectionContent>
+      </Section>
+      <Section>
+        <SectionHeader>
+          <SectionTitle>Notifications</SectionTitle>
+          <SectionDescription>
+            Choose who gets notified when a widget on this dashboard alerts.
+          </SectionDescription>
+        </SectionHeader>
+        <SectionContent>
+          <InputText
+            label="Notification channel"
+            defaultValue="#security-alerts"
+          />
+          <InputText
+            label="Escalation contact"
+            defaultValue="oncall@acronis.com"
+          />
+          <InputText label="Digest frequency" defaultValue="Daily" />
+          <InputText label="Quiet hours" defaultValue="22:00–07:00" />
+        </SectionContent>
+      </Section>
+    </>
+  );
+}
+
+// Confirms the mapping this whole component is built on: Figma's
+// "TemplateEntity" (node 11098-5825) wraps `RegionNavs` (the app shell's
+// sidebar — outside Wizard's scope), `RegionMain`, and `RegionChat`.
+// `RegionMain` is exactly `Wizard` — its `containerHeader` slot is
+// `WizardHeader` (breadcrumb, title row, stepper) and its `containerBody`
+// slot is `WizardBody`. Per the accompanying notes, the header is always
+// sticky (node 11101-6205) and the body is a centered, narrower column that
+// always wraps a `Section` per content group (node 11105-6210) — this story
+// gives the body enough content to prove the header really does stay pinned
+// while it scrolls, which a short step's worth of fields can't demonstrate.
+export const LongBody: Story = {
+  render: () => (
+    <Wizard>
+      <WizardHeader>
+        <WizardBreadcrumb />
+        <PageHeaderRow>
+          <PageHeaderTitle>Create dashboard</PageHeaderTitle>
+          <WizardActions />
+        </PageHeaderRow>
+        <WizardSubtitle>{SUBTITLE}</WizardSubtitle>
+        <WizardSteps />
+      </WizardHeader>
+      <WizardBody>
+        <LongStepContent />
       </WizardBody>
     </Wizard>
   ),
