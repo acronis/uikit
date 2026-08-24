@@ -29,8 +29,8 @@ contract:
     - name: header.title
       type: string
       required: false
-      default: 'Title'
-      description: The card's title text.
+      default: undefined
+      description: The card's title text. Renders nothing when omitted.
 
     - name: header.description
       type: string

@@ -84,7 +84,7 @@ export interface CardHeaderProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'title'
 > {
-  /** The card's title. */
+  /** The card's title. Renders nothing when omitted. */
   title?: string;
   /** Helper text shown under the title; only rendered when `hasDescription`. */
   description?: string;
@@ -136,7 +136,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
   (
     {
       className,
-      title = 'Title',
+      title,
       description,
       hasDescription = false,
       isDraggable = false,
@@ -203,9 +203,11 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
           ))}
         <div className="flex min-w-0 flex-1 flex-col items-start justify-center gap-0.5">
           <div className="flex items-center gap-2">
-            <p className="truncate text-lg leading-6 font-normal text-[var(--ui-text-on-surface-primary)]">
-              {title}
-            </p>
+            {title && (
+              <p className="truncate text-lg leading-6 font-normal text-[var(--ui-text-on-surface-primary)]">
+                {title}
+              </p>
+            )}
             {hasRename && (
               <ButtonIconInput
                 variant="normal"

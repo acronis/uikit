@@ -70,9 +70,14 @@ describe('Card', () => {
 });
 
 describe('CardHeader', () => {
-  it('renders the title by default', () => {
-    render(<CardHeader />);
-    expect(screen.getByText('Title')).toBeInTheDocument();
+  it('renders no title by default', () => {
+    render(<CardHeader data-testid="header" />);
+    expect(screen.getByTestId('header').querySelector('p')).not.toBeInTheDocument();
+  });
+
+  it('renders the title when provided', () => {
+    render(<CardHeader title="Backup status" />);
+    expect(screen.getByText('Backup status')).toBeInTheDocument();
   });
 
   it('hides the description unless hasDescription is set', () => {
