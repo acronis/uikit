@@ -42,6 +42,6 @@ import { InboxIcon } from '@acronis-platform/icons-react/stroke-mono';
 | Part          | Element | Purpose                                      |
 | ------------- | ------- | -------------------------------------------- |
 | root          | `div`   | Fills the parent; fade-to-solid backdrop.    |
-| `icon`        | `svg`   | Optional 24px glyph in a 64px colored badge. |
+| `icon`        | `div`   | Optional 24px glyph in a 64px colored badge. |
 | `title`       | `h3`    | The empty-state headline.                    |
 | `description` | `p`     | Optional supporting copy under the title.    |

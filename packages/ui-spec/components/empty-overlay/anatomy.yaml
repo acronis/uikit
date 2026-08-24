@@ -25,7 +25,7 @@ parts:
     description: >-
       Optional 24px glyph inside a 64px colored badge; `color` selects the
       badge's tint from the shared avatar palette (8 colors).
-    element: svg
+    element: div
     optional: true
     visible_when: an `icon` is provided
   - id: title
