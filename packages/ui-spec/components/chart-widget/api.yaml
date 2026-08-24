@@ -45,6 +45,14 @@ contract:
       type: ReactNode
       required: false
       description: The chart. Replaced by the placeholder while `state` is set.
+    - name: render
+      type: useRender.RenderProp
+      required: false
+      description: >-
+        Replace the rendered `<div>` with another element or component (Base UI
+        composition), forwarded to `Card`. How a dashboard gives each widget a
+        landmark role — `render={<section aria-label="Sessions" />}` — which is
+        the one thing the widget can't infer for itself.
   events: []
   methods: []
 

@@ -191,6 +191,20 @@ describe('ChartWidget', () => {
     expect(root?.className).toContain('rounded-lg');
   });
 
+  it('renders as another element through `render`, for a landmark', () => {
+    // The a11y docs point at this as the way to give a widget a landmark role,
+    // so it has to actually work — not just type-check.
+    render(
+      <ChartWidget render={<section aria-label="Sessions" />}>
+        {plot}
+      </ChartWidget>
+    );
+
+    const region = screen.getByRole('region', { name: 'Sessions' });
+    expect(region).toHaveAttribute('data-slot', 'chart-widget');
+    expect(region).toContainElement(screen.getByTestId('plot'));
+  });
+
   it('forwards a ref to the card', () => {
     const ref = { current: null as HTMLDivElement | null };
     render(<ChartWidget ref={ref}>{plot}</ChartWidget>);

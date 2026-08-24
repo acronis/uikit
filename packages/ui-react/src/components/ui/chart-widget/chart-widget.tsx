@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRender } from '@base-ui/react/use-render';
 
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, type CardHeaderProps } from '../card';
@@ -33,8 +34,17 @@ import { ChartState, type ChartStateProps } from '../chart-state';
 // Figma: every chart set wraps the `Card` set (`10012:195993`) — ChartArea
 // `8174:22232`, ChartBar `8700:55606`, ChartDonut `8811:172438`, and so on.
 
-export interface ChartWidgetProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
+export interface ChartWidgetProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'title'
+> {
+  /**
+   * Replace the rendered `<div>` with another element or component (Base UI
+   * composition), forwarded to `Card`. This is how a dashboard gives each
+   * widget a landmark role — `render={<section aria-label="Sessions" />}` — the
+   * one thing the widget can't infer for itself.
+   */
+  render?: useRender.RenderProp;
   /**
    * The card header, forwarded verbatim to `CardHeader`. Everything that
    * component takes works here — `title`, `actions` (the ⋯ menu), `extras` (a

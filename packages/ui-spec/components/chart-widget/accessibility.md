@@ -3,9 +3,23 @@
 ## Roles and structure
 
 The widget itself is a plain `div` (a `Card`) and adds no role: it is a grouping
-surface, and the meaning lives in what it holds. `Card` exposes a `render` prop,
-so a dashboard that wants each widget to be a landmark can render it as a
-`<section>` with its own accessible name.
+surface, and the meaning lives in what it holds.
+
+A dashboard that wants each widget to be a landmark uses `render`, which the
+widget forwards to `Card`:
+
+```tsx
+<ChartWidget
+  render={<section aria-label="Sessions" />}
+  header={{ title: 'Sessions' }}
+>
+  {chart}
+</ChartWidget>
+```
+
+The accessible name has to come from the caller: the header's `title` is visible
+text inside the region, not a name for it, so a landmark without an
+`aria-label` (or `aria-labelledby` pointing at the title) is an unnamed region.
 
 The heading text comes from `CardHeader`'s `title`. It is the widget's visible
 name, so a chart inside should not repeat it in its own accessible name.

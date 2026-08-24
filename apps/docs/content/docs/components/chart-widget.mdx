@@ -117,8 +117,18 @@ sized cell, where neither the grid nor the content can give a height.
 ## Accessibility
 
 The widget adds no role of its own — it's a grouping surface, and the meaning
-lives in what it holds. `Card` exposes a `render` prop, so a dashboard that
-wants each widget to be a landmark can render it as a `<section>`.
+lives in what it holds. To make each widget a landmark, use `render`, which is
+forwarded to `Card`:
+
+```tsx
+<ChartWidget render={<section aria-label="Sessions" />} header={{ title: 'Sessions' }}>
+  {chart}
+</ChartWidget>
+```
+
+The accessible name has to come from you: the header's `title` is visible text
+*inside* the region, not a name for it, so a landmark without an `aria-label`
+(or an `aria-labelledby` pointing at the title) is an unnamed region.
 
 The header's `title` is the widget's visible name, so a chart inside shouldn't
 repeat it in its own accessible name. While `state` is set, `ChartState` is the
