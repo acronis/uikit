@@ -543,7 +543,7 @@ describe('DataTable column resizing', () => {
     expect(Number(handle.getAttribute('aria-valuenow'))).toBe(initialSize);
   });
 
-  it('forces a select-id column to a fixed 32px width and never gives it a resize handle', () => {
+  it('forces a select-id column to a fixed 48px width and never gives it a resize handle', () => {
     const selectColumns: ColumnDef<Row>[] = [
       {
         id: 'select',
@@ -563,7 +563,7 @@ describe('DataTable column resizing', () => {
     );
 
     const selectHeader = screen.getByLabelText('Select all').closest('th')!;
-    expect(selectHeader.style.width).toBe('32px');
+    expect(selectHeader.style.width).toBe('48px');
     expect(
       within(selectHeader).queryByRole('separator')
     ).not.toBeInTheDocument();

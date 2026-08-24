@@ -137,7 +137,8 @@ export function getColumnWidth<TData>(
   enableColumnResizing: boolean
 ): number | undefined {
   if (column.id === 'select') {
-    return 32;
+    // Matches the trailing `__actions` column's fixed 48px: symmetric gutters.
+    return 48;
   }
   if (enableColumnResizing || column.columnDef.size !== undefined) {
     return column.getSize();
