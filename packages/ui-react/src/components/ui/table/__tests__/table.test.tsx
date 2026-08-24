@@ -145,6 +145,23 @@ describe('Table', () => {
     expect(cell).not.toHaveClass('whitespace-normal');
   });
 
+  it('transitions its background so hover fades in sync with the row', () => {
+    // The pinned selection column renders through this generic cell (see
+    // data-table.tsx's `select` column), mirroring TableRow's hover via a
+    // `group-hover:bg-*` class — without its own `transition-colors` that
+    // background snaps instead of fading with the row.
+    render(
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableCell data-testid="cell">value</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    );
+    expect(screen.getByTestId('cell')).toHaveClass('transition-colors');
+  });
+
   it('drops the fixed height and wraps when a cell sets wrap', () => {
     render(
       <Table>
@@ -303,6 +320,19 @@ describe('Table structural cells', () => {
     const cell = screen.getByTestId('select-cell');
     expect(cell).toHaveClass('ps-[var(--ui-table-global-cell-padding-x)]');
     expect(cell.className).not.toMatch(/\b(pl-|pr-)/);
+  });
+
+  it('transitions the selection cell background for parity with the actions cell', () => {
+    render(
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableSelectCell data-testid="select-cell" />
+          </TableRow>
+        </TableBody>
+      </Table>
+    );
+    expect(screen.getByTestId('select-cell')).toHaveClass('transition-colors');
   });
 
   it('wires the actions cell to the data-cell interaction tokens', () => {
