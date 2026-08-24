@@ -239,10 +239,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
               {isCollapsible && (
                 <AccordionContainer.Trigger
                   aria-label={collapseLabel}
-                  className={cn(
-                    buttonIconVariants({ variant: 'ghost' }),
-                    '[&[data-panel-open]>svg]:rotate-90 [&:not([data-panel-open])>svg]:rtl:rotate-180'
-                  )}
+                  className={buttonIconVariants({ variant: 'ghost' })}
                 />
               )}
             </>
