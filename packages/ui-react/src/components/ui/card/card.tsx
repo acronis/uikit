@@ -41,7 +41,7 @@ import {
 // payloads (a callback, a slot, a label), not a structural part swap.
 
 const cardVariants = cva(
-  'overflow-hidden rounded-lg border bg-[var(--ui-background-surface-primary)] text-[var(--ui-text-on-surface-primary)]',
+  'overflow-hidden rounded-lg border bg-[var(--ui-background-surface-primary)] text-[var(--ui-text-on-surface-primary)] shadow-xs',
   {
     variants: {
       hasError: {
