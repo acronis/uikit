@@ -200,6 +200,12 @@ describe('CardHeader', () => {
     render(<CardHeader isCollapsible data-testid="header" />);
     expect(screen.getByTestId('header')).toHaveClass('border-b');
   });
+
+  it('renders as another element via the render prop', () => {
+    render(<CardHeader title="Backup status" render={<header />} />);
+    const header = screen.getByText('Backup status').closest('header');
+    expect(header).toBeInTheDocument();
+  });
 });
 
 describe('CardContent', () => {

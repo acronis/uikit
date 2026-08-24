@@ -130,6 +130,11 @@ export interface CardHeaderProps extends Omit<
   isCollapsible?: boolean;
   /** Accessible label for the collapse trigger. */
   collapseLabel?: string;
+  /**
+   * Replace the rendered `<div>` with another element or component (Base UI
+   * composition).
+   */
+  render?: useRender.RenderProp;
 }
 
 const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
@@ -157,6 +162,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
       actions,
       isCollapsible = false,
       collapseLabel = 'Collapse card',
+      render,
       children,
       ...props
     },
@@ -168,76 +174,83 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
     // border once there's no content below to separate it from.
     const hideDivider = isCollapsible && inAccordion && !open;
 
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          'flex w-full shrink-0 items-center gap-2 overflow-hidden border-[var(--ui-border-on-surface-divider)] px-4 py-2',
-          !hideDivider && 'border-b',
-          className
-        )}
-        {...props}
-      >
-        {isDraggable && (
-          <HandleGripIcon
-            size={16}
-            className="shrink-0 cursor-grab text-[var(--ui-text-on-surface-secondary)]"
-            title={dragHandleLabel}
-          />
-        )}
-        {isSwitchable && (
-          <Switch
-            checked={switchChecked}
-            defaultChecked={defaultSwitchChecked}
-            onCheckedChange={onSwitchCheckedChange}
-            disabled={switchDisabled}
-            aria-label={switchLabel}
-            className="shrink-0"
-          />
-        )}
-        {hasAvatar &&
-          (avatar ?? (
-            <Avatar color="blue" className="shrink-0">
-              <AvatarFallback>{avatarLabel}</AvatarFallback>
-            </Avatar>
-          ))}
-        <div className="flex min-w-0 flex-1 flex-col items-start justify-center gap-0.5">
-          <div className="flex items-center gap-2">
-            {title && (
-              <p className="truncate text-lg leading-6 font-normal text-[var(--ui-text-on-surface-primary)]">
-                {title}
-              </p>
-            )}
-            {hasRename && (
-              <ButtonIconInput
-                variant="normal"
-                onClick={onRename}
-                aria-label={renameLabel}
-              >
-                <PencilIcon size={16} />
-              </ButtonIconInput>
-            )}
-            {extras}
-          </div>
-          {hasDescription && (
-            <p className="w-full truncate text-xs leading-4 text-[var(--ui-text-on-surface-secondary)]">
-              {description}
-            </p>
-          )}
-        </div>
-        {children}
-        {actions}
-        {isCollapsible && (
-          <AccordionContainer.Trigger
-            aria-label={collapseLabel}
-            className={cn(
-              buttonIconVariants({ variant: 'ghost' }),
-              '[&[data-panel-open]>svg]:rotate-90 [&:not([data-panel-open])>svg]:rtl:rotate-180'
-            )}
-          />
-        )}
-      </div>
-    );
+    return useRender({
+      render,
+      ref,
+      defaultTagName: 'div',
+      props: mergeProps<'div'>(
+        {
+          className: cn(
+            'flex w-full shrink-0 items-center gap-2 overflow-hidden border-[var(--ui-border-on-surface-divider)] px-4 py-2',
+            !hideDivider && 'border-b',
+            className
+          ),
+          children: (
+            <>
+              {isDraggable && (
+                <HandleGripIcon
+                  size={16}
+                  className="shrink-0 cursor-grab text-[var(--ui-text-on-surface-secondary)]"
+                  title={dragHandleLabel}
+                />
+              )}
+              {isSwitchable && (
+                <Switch
+                  checked={switchChecked}
+                  defaultChecked={defaultSwitchChecked}
+                  onCheckedChange={onSwitchCheckedChange}
+                  disabled={switchDisabled}
+                  aria-label={switchLabel}
+                  className="shrink-0"
+                />
+              )}
+              {hasAvatar &&
+                (avatar ?? (
+                  <Avatar color="blue" className="shrink-0">
+                    <AvatarFallback>{avatarLabel}</AvatarFallback>
+                  </Avatar>
+                ))}
+              <div className="flex min-w-0 flex-1 flex-col items-start justify-center gap-0.5">
+                <div className="flex items-center gap-2">
+                  {title && (
+                    <p className="truncate text-lg leading-6 font-normal text-[var(--ui-text-on-surface-primary)]">
+                      {title}
+                    </p>
+                  )}
+                  {hasRename && (
+                    <ButtonIconInput
+                      variant="normal"
+                      onClick={onRename}
+                      aria-label={renameLabel}
+                    >
+                      <PencilIcon size={16} />
+                    </ButtonIconInput>
+                  )}
+                  {extras}
+                </div>
+                {hasDescription && (
+                  <p className="w-full truncate text-xs leading-4 text-[var(--ui-text-on-surface-secondary)]">
+                    {description}
+                  </p>
+                )}
+              </div>
+              {children}
+              {actions}
+              {isCollapsible && (
+                <AccordionContainer.Trigger
+                  aria-label={collapseLabel}
+                  className={cn(
+                    buttonIconVariants({ variant: 'ghost' }),
+                    '[&[data-panel-open]>svg]:rotate-90 [&:not([data-panel-open])>svg]:rtl:rotate-180'
+                  )}
+                />
+              )}
+            </>
+          ),
+        },
+        props
+      ),
+    });
   }
 );
 CardHeader.displayName = 'CardHeader';
