@@ -17,6 +17,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { Checkbox } from '../../checkbox';
 import { useFilterSearchFilters } from '../../filter-search';
 import { getResizeKeyboardStep, reorderColumn } from '../data-table';
 import {
@@ -540,6 +541,37 @@ describe('DataTable column resizing', () => {
     await user.keyboard('{Alt>}{ArrowRight}{/Alt}');
     await user.keyboard('{Meta>}{ArrowRight}{/Meta}');
     expect(Number(handle.getAttribute('aria-valuenow'))).toBe(initialSize);
+  });
+
+  it('forces a select-id column to a fixed 48px width and never gives it a resize handle', () => {
+    const selectColumns: ColumnDef<Row>[] = [
+      {
+        id: 'select',
+        header: () => <Checkbox aria-label="Select all" />,
+        cell: () => <Checkbox aria-label="Select row" />,
+        enableSorting: false,
+        enableHiding: false,
+      },
+      ...columns,
+    ];
+    render(
+      <DataTable
+        columns={selectColumns}
+        data={data.slice(0, 2)}
+        enableColumnResizing
+      />
+    );
+
+    const selectHeader = screen.getByLabelText('Select all').closest('th')!;
+    expect(selectHeader.style.width).toBe('48px');
+    expect(
+      within(selectHeader).queryByRole('separator')
+    ).not.toBeInTheDocument();
+
+    // The other columns are unaffected and still get their resize handles.
+    expect(
+      screen.getAllByRole('separator', { name: 'Resize column' })
+    ).toHaveLength(columns.length);
   });
 });
 

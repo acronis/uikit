@@ -168,11 +168,9 @@ const workloadColumns: ColumnDef<Workload>[] = [
   // that leaves no capability, and the header shows no tooltip at all.
   {
     id: 'select',
-    size: 48,
     meta: { pin: 'left' },
     enableSorting: false,
     enableHiding: false,
-    enableResizing: false,
     header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
@@ -334,6 +332,12 @@ export const CoreCapabilities: Story = {
   // the top; `animationDelay` leaves margin for that last render to paint.
   parameters: { snapshot: { animationDelay: 600 } },
   play: async ({ canvasElement }) => {
+    // `play` runs on every Storybook visit, including a human just opening
+    // this story in the manager UI — not only under the VR test-runner. The
+    // stabilization loop below is VR-only, so gate it to automated browsers
+    // (Playwright sets `navigator.webdriver`); otherwise the story would
+    // auto-load every page the moment it's opened.
+    if (!navigator.webdriver) return;
     const canvas = within(canvasElement);
     const pane = await canvas.findByTestId('infinite-scroll-pane');
     // The sentinel only intersects once the pane is scrolled to the bottom, and

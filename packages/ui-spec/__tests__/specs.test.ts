@@ -161,14 +161,6 @@ function tokenSetFromCssDefinitions(absCssDir: string): Set<string> {
  */
 const TOKEN_REF_RE = /(?:var\(\s*|-\()(--ui-[a-z0-9-]+)\s*\)/g;
 
-// Deliberate, tracked exception: no Figma variable exists for a grab cursor yet,
-// so these two are hand-authored in ui-react's styles/index.css (see the comment
-// there) instead of being emitted into tokens-pd. Remove once they move upstream.
-const LOCALLY_AUTHORED_TOKENS = new Set([
-  '--ui-draggable-cursor',
-  '--ui-draggable-cursor-active',
-]);
-
 function tokenSetFromVarRefs(absDir: string): Set<string> {
   const files = listFiles(
     absDir,
@@ -206,7 +198,7 @@ describe('token references resolve in tokens-pd', () => {
 
       const sourceTokenNames = [...tokenSetFromVarRefs(sourceDir)];
       const missingSourceNames = sourceTokenNames.filter(
-        (token) => !definedTokens.has(token) && !LOCALLY_AUTHORED_TOKENS.has(token)
+        (token) => !definedTokens.has(token)
       );
       expect(
         missingSourceNames,
