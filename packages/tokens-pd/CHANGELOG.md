@@ -1,5 +1,33 @@
 # @acronis-platform/tokens-pd
 
+## 2.8.0
+
+### Minor Changes
+
+- aa75f63: Sync design tokens with Figma.
+
+  Adds the `dataviz` colour palettes to the semantics tier — 66 tokens across
+  `categorical` (16), `sequential` (4 ramps × 8), `diverging` (2 pairs × 6) and
+  `meaningful.status` (6), each resolved for all six brands. They surface as
+  `--ui-dataviz-*` custom properties in CSS and in the Tailwind presets' `fill`
+  namespace. No existing token changed value; the Stepper component tokens present
+  in Figma were reviewed and deliberately left out of this sync.
+
+- 4d82064: Sync design tokens with Figma.
+
+  Adds the Stepper component tier — 22 new tokens covering `Stepper.Item` container
+  metrics and its completed/current/future states, plus the `breakpoint-default` and
+  `breakpoint-lg` label, value, line and gap roles — generated for all six brands.
+  Also records the shadow primitives (`shadows.sm`, `shadows.md`, `shadows.lg`) as
+  hidden from publishing in Figma and clears their colour scopes; this is metadata
+  only and leaves the emitted shadow values unchanged.
+
+### Patch Changes
+
+- Updated dependencies [aa75f63]
+- Updated dependencies [4d82064]
+  - @acronis-platform/design-tokens@2.7.0
+
 ## 2.7.0
 
 ### Minor Changes
