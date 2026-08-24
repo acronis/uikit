@@ -19,10 +19,17 @@ import { cn } from '@/lib/utils';
 //
 // The Avatar is fully consumer-supplied and consumer-styled: this component
 // renders the element it is given verbatim and never sizes, tints, or recolors
-// it. That is why the Figma variables that color the digit *inside* the circle
-// (`components/Stepper/Item/{current,future}/label/color/*`) are deliberately
-// not consumed here — they belong to whatever the caller puts in the `avatar`
-// slot.
+// it. Figma's `current`/`future` avatars DO recolor the digit *inside* the
+// circle to `--ui-stepper-item-{current,future}-label-color` — the exact same
+// token this component uses for the step name — overriding Avatar's own
+// per-scheme label color (verified directly in the Figma reference markup: the
+// digit's `text-[color:…]` references `components/Stepper/Item/{current,
+// future}/label/color`, not `components/Avatar/label/color/*`). Because the
+// marker is a caller-owned slot, that override is the caller's job, not this
+// component's — compose it as
+// `<Avatar className="text-[var(--ui-stepper-item-current-label-color)]" …>`
+// (see the stories/demo for the current and future variants). `completed`'s
+// checkmark is a fixed icon asset, not text, so it needs no such override.
 //
 // ── Tokens — dedicated `--ui-stepper-item-*` tier (2026-08-24) ──
 // Re-synced from Figma: @acronis-platform/tokens-pd now ships a `Stepper` tier
@@ -64,10 +71,14 @@ const stepperItemVariants = cva(
         class: 'bg-[var(--ui-stepper-item-completed-container-color-active)]',
       },
       {
+        // `-focus-ring` resolves to the exact same value as `--ui-focus-primary`
+        // (verified in tokens-pd) — it names a ring color, not a fill, so this
+        // renders the same 3px ring `focus-visible` already draws automatically
+        // on a composed control, rather than a solid background.
         variant: 'completed',
         state: 'focus',
         class:
-          'bg-[var(--ui-stepper-item-completed-container-color-focus-ring)]',
+          'ring-[3px] ring-[var(--ui-stepper-item-completed-container-color-focus-ring)]',
       },
     ],
     defaultVariants: {

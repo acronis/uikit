@@ -34,7 +34,10 @@ export function StepperItemDemo() {
           variant="current"
           label="Choose a plan"
           avatar={
-            <Avatar color="blue">
+            <Avatar
+              color="blue"
+              className="text-[var(--ui-stepper-item-current-label-color)]"
+            >
               <AvatarFallback>2</AvatarFallback>
             </Avatar>
           }
@@ -43,7 +46,10 @@ export function StepperItemDemo() {
           variant="future"
           label="Confirm and pay"
           avatar={
-            <Avatar color="gray">
+            <Avatar
+              color="gray"
+              className="text-[var(--ui-stepper-item-future-label-color)]"
+            >
               <AvatarFallback>3</AvatarFallback>
             </Avatar>
           }
@@ -57,7 +63,10 @@ export function StepperItemDemo() {
           state="active"
           label="Current"
           avatar={
-            <Avatar color="blue">
+            <Avatar
+              color="blue"
+              className="text-[var(--ui-stepper-item-current-label-color)]"
+            >
               <AvatarFallback>1</AvatarFallback>
             </Avatar>
           }
@@ -90,7 +99,10 @@ export function StepperItemDemo() {
           variant="future"
           label="Future"
           avatar={
-            <Avatar color="gray">
+            <Avatar
+              color="gray"
+              className="text-[var(--ui-stepper-item-future-label-color)]"
+            >
               <AvatarFallback>5</AvatarFallback>
             </Avatar>
           }

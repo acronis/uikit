@@ -43,7 +43,10 @@ completed step. Compose the steps inside `Stepper`, which lays them out.
     variant="current"
     label="Choose a plan"
     avatar={
-      <Avatar color="blue">
+      <Avatar
+        color="blue"
+        className="text-[var(--ui-stepper-item-current-label-color)]"
+      >
         <AvatarFallback>2</AvatarFallback>
       </Avatar>
     }
@@ -52,7 +55,10 @@ completed step. Compose the steps inside `Stepper`, which lays them out.
     variant="future"
     label="Confirm and pay"
     avatar={
-      <Avatar color="gray">
+      <Avatar
+        color="gray"
+        className="text-[var(--ui-stepper-item-future-label-color)]"
+      >
         <AvatarFallback>3</AvatarFallback>
       </Avatar>
     }
@@ -61,7 +67,11 @@ completed step. Compose the steps inside `Stepper`, which lays them out.
 ```
 
 The marker is entirely yours: color scheme, initials vs. icon vs. image, size
-overrides. The step renders the element verbatim and never restyles it.
+overrides. The step renders the element verbatim and never restyles it — with
+one caveat: Figma recolors the digit inside a `current`/`future` avatar to
+that step's own label-color token, overriding `Avatar`'s usual per-scheme
+color, so pass that override yourself as shown above (`completed`'s checkmark
+is a fixed icon, so it needs none).
 
 Only six `variant` x `state` combinations exist in the design, and the
 component reproduces exactly that: `current` is always highlighted with a
@@ -80,3 +90,17 @@ border, `future` is always disabled, and only `completed` reads `state`
 
 The Figma component has a dedicated `--ui-stepper-item-*` token tier as of the
 2026-08-24 sync — see `tokens.yaml` for the full list.
+
+**Known quirk — `Avatar`'s 2px ring shows on colored step backgrounds.**
+`Avatar` always paints a 2px `--ui-avatar-global-avatar-border-color` ring
+(white in light mode), meant to separate overlapping avatars in an
+`AvatarGroup`. Figma's own `StepperItem` composition never draws this ring
+(verified in the raw reference markup — none of the `current`/`completed`/
+`future` avatar instances carry a border/box-shadow class), so it's invisible
+where a step's container has no fill but becomes a visible halo on `current`'s
+blue background and on `completed`'s hover/active fills. This is a pre-existing
+`Avatar`-wide behavior (present anywhere an avatar sits on a colored surface,
+e.g. `Timeline`'s marker), not something `StepperItem` introduces or can fix by
+itself — `StepperItem` is documented to render the marker verbatim. Fixing it
+would mean making `Avatar`'s ring conditional on being inside an `AvatarGroup`,
+which is out of scope here; tracked as a follow-up against `Avatar`.

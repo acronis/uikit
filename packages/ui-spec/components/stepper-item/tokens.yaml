@@ -57,7 +57,9 @@ tokens:
     description: Container fill for a completed step in its `active` state.
   - name: --ui-stepper-item-completed-container-color-focus-ring
     affects: container
-    description: Container fill for a completed step in its `focus` state.
+    description: >-
+      Container ring color for a completed step in its `focus` state.
+      Byte-identical to `--ui-focus-primary` — it names a ring, not a fill.
   - name: --ui-stepper-item-completed-label-color
     affects: label
     description: Step-name color for a completed step (all interaction states).

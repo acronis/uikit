@@ -10,19 +10,22 @@ schematic: |
   avatar-slot -> the caller's Avatar, rendered verbatim (never restyled here)
   label       -> --ui-stepper-item-{current,completed}-label-color, or -future-label-color
   container   -> --ui-stepper-item-current-container-color + border (current)
-                 --ui-stepper-item-completed-container-color-{hover,active,focus-ring} (completed+state)
+                 --ui-stepper-item-completed-container-color-{hover,active} fill (completed+state)
+                 --ui-stepper-item-completed-container-color-focus-ring 3px ring (completed+focus)
                  no fill                        (completed+idle, future)
 
 root:
   element: div
   description: >-
     The step's container. Lays the marker and the label out in a row and carries
-    the background for the current step and for a completed step's hover/active/
-    focus look. Polymorphic via the `render` prop — a completed step is usually a
-    real `<button>` that jumps back, and it then carries the library's 3px
-    `focus-visible` ring. A future step is marked `aria-disabled`, dropped from
-    the tab order (`tabindex="-1"`), and takes no pointer events; on the default
-    `<div>` it also gets an explicit `role="link"` so `aria-disabled` is actually
+    the background for the current step and for a completed step's hover/active
+    fill or focus ring. Polymorphic via the `render` prop — a completed step is
+    usually a real `<button>` that jumps back, and it then carries the library's
+    3px `focus-visible` ring (the same color as the declarative `focus` state's
+    ring, since the two tokens are identical). A future step is marked
+    `aria-disabled`, dropped from the tab order (`tabindex="-1"`), and takes no
+    pointer events; on the default `<div>` it also gets an explicit `role="link"`
+    so `aria-disabled` is actually
     announced.
 
 parts:

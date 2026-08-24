@@ -25,6 +25,15 @@ The marker is a **required slot you own completely**. Pass any `Avatar`
 composition — color scheme, initials, an icon, an image, size overrides — and the
 step renders it verbatim without sizing, tinting, or recoloring it.
 
+<Callout type="warn">
+  Figma recolors the digit inside a `current`/`future` step's avatar to that
+  step's own label-color token, overriding `Avatar`'s usual per-scheme color.
+  Since the step never touches the marker, pass that override yourself —
+  `<Avatar className="text-[var(--ui-stepper-item-current-label-color)]" …>`
+  (or `-future-label-color`) — as the examples below do. `completed` uses a
+  fixed checkmark icon, so it needs no such override.
+</Callout>
+
 Compose the steps inside [`Stepper`](/components/stepper), which lays them out in
 a row and adds the compact narrow-viewport summary — don't hand-roll that row. You
 still decide each step's `variant`. The step is polymorphic via Base UI's
@@ -67,7 +76,10 @@ A full sequence:
     variant="current"
     label="Choose a plan"
     avatar={
-      <Avatar color="blue">
+      <Avatar
+        color="blue"
+        className="text-[var(--ui-stepper-item-current-label-color)]"
+      >
         <AvatarFallback>2</AvatarFallback>
       </Avatar>
     }
@@ -76,7 +88,10 @@ A full sequence:
     variant="future"
     label="Confirm and pay"
     avatar={
-      <Avatar color="gray">
+      <Avatar
+        color="gray"
+        className="text-[var(--ui-stepper-item-future-label-color)]"
+      >
         <AvatarFallback>3</AvatarFallback>
       </Avatar>
     }
@@ -113,7 +128,10 @@ still fires; skip future steps in your own navigation logic too.
   variant="future"
   label="Confirm and pay"
   avatar={
-    <Avatar color="gray">
+    <Avatar
+      color="gray"
+      className="text-[var(--ui-stepper-item-future-label-color)]"
+    >
       <AvatarFallback>3</AvatarFallback>
     </Avatar>
   }

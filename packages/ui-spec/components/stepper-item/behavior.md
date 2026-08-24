@@ -37,7 +37,9 @@
 - **Given** `variant="completed"` **and** `state="active"`
   **Then** the container is filled with the active token.
 - **Given** `variant="completed"` **and** `state="focus"`
-  **Then** the container is filled with the focus-ring token.
+  **Then** the container shows a 3px ring in the focus-ring token — the same
+  look `focus-visible` already draws automatically on a composed control, since
+  the two share the identical color value.
 - **Given** any `state` **and** `variant` of `current` or `future`
   **Then** nothing changes. `state` is not silently dropped from the contract: it
   still appears as a data attribute, so a consumer can key off it.

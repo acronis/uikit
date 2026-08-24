@@ -71,7 +71,7 @@ describe('StepperItem', () => {
     expect(idle.firstElementChild).not.toHaveClass(
       'bg-[var(--ui-stepper-item-completed-container-color-hover)]',
       'bg-[var(--ui-stepper-item-completed-container-color-active)]',
-      'bg-[var(--ui-stepper-item-completed-container-color-focus-ring)]'
+      'ring-[var(--ui-stepper-item-completed-container-color-focus-ring)]'
     );
 
     const { container: hover } = render(
@@ -107,7 +107,8 @@ describe('StepperItem', () => {
       />
     );
     expect(focus.firstElementChild).toHaveClass(
-      'bg-[var(--ui-stepper-item-completed-container-color-focus-ring)]'
+      'ring-[3px]',
+      'ring-[var(--ui-stepper-item-completed-container-color-focus-ring)]'
     );
   });
 

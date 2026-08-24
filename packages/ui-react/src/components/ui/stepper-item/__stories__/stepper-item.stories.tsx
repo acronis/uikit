@@ -4,8 +4,19 @@ import { CheckIcon } from '@acronis-platform/icons-react/stroke-mono';
 import { Avatar, AvatarFallback } from '../../avatar';
 import { StepperItem } from '../stepper-item';
 
-const numberAvatar = (n: number, color: 'blue' | 'gray' | 'green' = 'blue') => (
-  <Avatar color={color}>
+// Figma recolors the digit inside a `current`/`future` avatar to that step's
+// own label-color token (overriding Avatar's own per-scheme color) — see the
+// comment in stepper-item.tsx. `completed` uses a fixed checkmark icon, so it
+// needs no such override.
+const numberAvatar = (
+  n: number,
+  color: 'blue' | 'gray' | 'green' = 'blue',
+  digitVariant: 'current' | 'future' = 'current'
+) => (
+  <Avatar
+    color={color}
+    className={`text-[var(--ui-stepper-item-${digitVariant}-label-color)]`}
+  >
     <AvatarFallback>{n}</AvatarFallback>
   </Avatar>
 );
@@ -138,7 +149,7 @@ export const FutureDisabled: Story = {
     variant: 'future',
     state: 'idle',
     label: 'Confirm and pay',
-    avatar: numberAvatar(3, 'gray'),
+    avatar: numberAvatar(3, 'gray', 'future'),
   },
 };
 

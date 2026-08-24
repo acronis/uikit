@@ -11,8 +11,18 @@ const checkAvatar = (
   </Avatar>
 );
 
-const numberAvatar = (n: number, color: 'blue' | 'gray' = 'blue') => (
-  <Avatar color={color}>
+// Figma recolors the digit inside a `current`/`future` avatar to that step's
+// own label-color token (overriding Avatar's own per-scheme color) — see the
+// comment in stepper-item.tsx.
+const numberAvatar = (
+  n: number,
+  color: 'blue' | 'gray' = 'blue',
+  digitVariant: 'current' | 'future' = 'current'
+) => (
+  <Avatar
+    color={color}
+    className={`text-[var(--ui-stepper-item-${digitVariant}-label-color)]`}
+  >
     <AvatarFallback>{n}</AvatarFallback>
   </Avatar>
 );
@@ -33,22 +43,22 @@ const steps = (
     <StepperItem
       variant="future"
       label="Add your team"
-      avatar={numberAvatar(3, 'gray')}
+      avatar={numberAvatar(3, 'gray', 'future')}
     />
     <StepperItem
       variant="future"
       label="Connect a workload"
-      avatar={numberAvatar(4, 'gray')}
+      avatar={numberAvatar(4, 'gray', 'future')}
     />
     <StepperItem
       variant="future"
       label="Set a protection plan"
-      avatar={numberAvatar(5, 'gray')}
+      avatar={numberAvatar(5, 'gray', 'future')}
     />
     <StepperItem
       variant="future"
       label="Confirm and pay"
-      avatar={numberAvatar(6, 'gray')}
+      avatar={numberAvatar(6, 'gray', 'future')}
     />
   </>
 );
