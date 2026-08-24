@@ -252,7 +252,7 @@ own `agent.md` rules — `forwardRef`, `cva`/`cn()`, no new hardcoded label, no
 new physical-directional utility, localization — and to update
 `__tests__/<name>.test.tsx` and `__stories__/<name>.stories.tsx` for the
 change. This is the baseline every change already gets today; read back its
-list of changed files before Step 5 — you need it to classify the change type.
+list of changed files before Step 5 — you need it to walk the artifacts.
 Tell it explicitly not to invoke the `Skill` tool or re-enter
 `/component-change` — hand it the already-decomposed edit to make, not a
 re-description of the change for it to re-plan (see "Never let a spawned
@@ -278,21 +278,72 @@ while chasing a `specs.test.ts` failure it had itself introduced.
 
 ## Step 5 — Propagate through the shipped contract (the point of this skill)
 
-Classify the actual diff against this table (the same decision
-`/figma-component` Phase 4 makes, just triggered by a prose diff instead of a
-Figma diff) and touch **only** what it implicates — not a blanket
-regenerate-everything:
+**Don't classify the diff into a named change type and look up a fixed
+action list — walk the artifacts instead.** A closed set of category labels
+("bug fix," "new prop," "refactor," …) can never cover every shape a real
+change takes, and whatever doesn't fit a label quietly falls into the
+emptiest one by elimination — which is another way of saying "silently out of
+scope" without anyone deciding that on purpose. The question that actually
+determines whether an artifact needs touching isn't "what kind of change is
+this," it's:
 
-| Change type                      | `api.yaml`                                                                                                                       | `tokens.yaml`/`anatomy.yaml` | Code Connect                | Generated stories          | VR baselines                     | docs MDX                                       | `behavior.md`/`accessibility.md` | changeset                                                                            |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------- | -------------------------- | -------------------------------- | ---------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------ |
-| Bug fix, no API/visual change    | —                                                                                                                                | —                            | confirm example still valid | —                          | only if rendered output changed  | only if an example demonstrates the fixed path | add/update scenario              | `patch`                                                                              |
-| New/changed prop (non-visual)    | update + conformance                                                                                                             | if new token refs            | update mapping/example      | regen (`generate:stories`) | regen if story changed           | update Usage/Examples; confirm `AutoTypeTable` | update if behavior changes       | `minor`                                                                              |
-| Refactor, no behavior/API change | —                                                                                                                                | —                            | —                           | —                          | re-run check, no change expected | —                                              | —                                | usually none — confirm against [context/releasing.md](../../../context/releasing.md) |
-| a11y / i18n / RTL fix            | —                                                                                                                                | —                            | —                           | —                          | only if visible output changed   | maybe                                          | update `accessibility.md`        | `patch`                                                                              |
-| Token rewire / drift fix         | —                                                                                                                                | update refs                  | —                           | —                          | regen if colors visibly changed  | —                                              | —                                | `patch`                                                                              |
-| Visual/style change              | 🛑 out of scope — this should have hit Step 0's design-relevance boundary; stop and hand off to `--update` instead of proceeding |                              |                             |                            |                                  |                                                |                                  |                                                                                      |
+> **Does this diff make anything this artifact currently asserts false,
+> incomplete, or now-misleading?**
 
-Reuse existing tooling for the cells that need regeneration — no new scripts:
+That question is diff-shaped, not category-shaped — ask it identically
+whether the change reads like a bug fix, a new prop, a refactor, or something
+that doesn't have a good name yet. This is a general failure mode, not a
+one-component quirk: a past change happened to be a `DataTable` column
+gaining a fixed-width/non-resizable contract that nothing told `tech-writer`
+to document, because "no new prop was added" made it look like nothing to
+check — but the same trap can happen to any component, in any package, on any
+kind of change.
+
+Walk every artifact below, every time, regardless of what label you'd put on
+the change:
+
+- `api.yaml` — assertions about props, signatures, defaults.
+- `tokens.yaml` / `anatomy.yaml` — assertions about structure, sizing,
+  reserved ids/names and the behavior tied to them.
+- Code Connect mapping/example.
+- Generated stories.
+- VR baselines.
+- docs MDX (`apps/docs`).
+- `behavior.md` / `accessibility.md`.
+- The changeset (see Step 6 — its own separate accuracy check, not just
+  presence).
+
+For each one: **read its current content** (not just the diff's own lines —
+an artifact can go stale from a change that never touches it directly),
+decide yes/no whether the diff invalidates something in it, and if yes, what
+needs to change. Execute only what's actually in scope — not a blanket
+regenerate-everything, and not a blanket skip either.
+
+**Bump type is the one place a category genuinely is load-bearing** — semver
+doesn't care which files changed, only what's now true about the public
+contract:
+
+| Category                                                                                        | Bump                                                                                                                                |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Pure bug fix, no observable change to the public contract                                       | `patch`                                                                                                                             |
+| New/changed prop, or a behavior change that narrows what an existing config could previously do | `minor` (or `patch` if strictly corrective, per [context/releasing.md](../../../context/releasing.md))                              |
+| Refactor, zero observable behavior change                                                       | usually none — confirm against [context/releasing.md](../../../context/releasing.md)                                                |
+| Breaking change to the public contract                                                          | `major` — rare for this skill's scope; should typically have already hit Step 0's design-relevance boundary or Step 3 (`architect`) |
+
+**Calibration examples, not a lookup table** — useful for guessing where to
+look first, never a substitute for actually reading each artifact above:
+
+- Renaming an internal token usually only touches `tokens.yaml` and maybe one
+  docs mention — but check, don't assume "usually."
+- A bug fix with a demonstrable before/after often earns a new/updated VR
+  baseline and a `behavior.md` scenario even though the public API is
+  unchanged.
+- An existing convention (a reserved id, a special-cased prop value) becoming
+  newly load-bearing usually needs `anatomy.yaml` and docs updates even
+  though no new prop was added — the DataTable case above is one instance of
+  this general shape, not the only one it can take.
+
+Reuse existing tooling for the artifacts that need regeneration — no new scripts:
 
 ```bash
 pnpm --filter @acronis-platform/ui-spec generate:stories     # regenerated stories
@@ -312,21 +363,21 @@ implementation than documentation. The **prose** columns are Step 6's job.
 
 ## Step 6 — `tech-writer` (always on — do not pre-judge and skip)
 
-**Always spawn this step; never decide on your own that "no prose column
-applies" and skip it.** Step 5's table is a guide for what to hand
+**Always spawn this step; never decide on your own that "no prose artifact
+applies" and skip it.** Step 5's artifact walk is a guide for what to hand
 `tech-writer`, not a gate you evaluate yourself to decide whether to call it —
 that distinction matters because you (the orchestrator) are the one party
 forbidden from editing prose directly, so you can't also be the one who
-silently rules prose out of scope. This is not hypothetical: on a "bug fix, no
-API/visual change" run that looked prose-irrelevant by this table, `qa` (Step 7) still caught a stale docs claim the orchestrator's own "probably not,
-spot-check" guess had missed — the actual check has to happen inside
-`tech-writer`, which can grep/read the real files, not in the orchestrator's
-head. Spawning it costs one agent call; skipping it costs a silent gap this
-skill exists to prevent.
+silently rules prose out of scope. This is not hypothetical: on a run that
+looked prose-irrelevant on a quick guess, `qa` (Step 7) still caught a stale
+docs claim the orchestrator's own "probably not, spot-check" guess had
+missed — the actual check has to happen inside `tech-writer`, which can
+grep/read the real files, not in the orchestrator's head. Spawning it costs
+one agent call; skipping it costs a silent gap this skill exists to prevent.
 
 Prompt `tech-writer` with the concrete, already-true facts — the diff
 summary, the new/changed prop signatures, the bug description, Step 5's
-table row for this change type, and **any stale-prose file list
+per-artifact in-scope/out-of-scope calls, and **any stale-prose file list
 `developer-react` flagged in Step 4** — and an explicit instruction to
 **update prose to match, and flag what it can't verify, never invent** (its
 own stated rule). Split by artifact:
@@ -336,6 +387,37 @@ own stated rule). Split by artifact:
 - `packages/ui-spec/components/<name>/{behavior.md,accessibility.md,README.md}`
   — owned per the addition made to its `agent.md`'s "What you own" alongside
   this skill (prose only; the YAML stays with `developer-react`).
+- **The changeset itself (`.changeset/*.md`).** `developer-react` drafts it as
+  part of its own Step 4 checklist, but nobody else reads it for consumer-facing
+  accuracy — `qa` (Step 7) only checks that a changeset file _exists_. Have
+  `tech-writer` read the changeset against the actual diff and verify every
+  factual claim it makes: does the described root cause actually match what
+  changed, does it correctly scope _which_ component/prop/rendering path is
+  affected (not a broader or narrower one), and does it avoid attributing the
+  fix to a component that doesn't render the changed code path. Fix it here if
+  wrong — a changeset is prose, not `developer-react`'s lane once drafted.
+
+**Don't scope the read to the diff's own lines — re-read the whole affected
+section.** A prompt built only from "here's what changed" invites a
+line-for-line patch that leaves an adjacent, now-inaccurate sentence in the
+same section untouched — this happened for real: fixing `data-table.mdx`'s
+"Column reordering" section left the neighboring "Column resizing" section's
+"noticeable on narrow checkbox/chevron columns" line stale, because that
+sentence wasn't itself part of the diff being described. Instruct `tech-writer`
+to open each doc/spec file it touches and read the **entire surrounding
+section** (not just the paragraph the diff summary points at) for other
+sentences the change quietly invalidates.
+
+**Check sibling components for a terminology collision.** If the change
+introduces or changes a name/measurement tied to a UI concept that other
+components already document under a similar name (e.g. a "selection
+column"/"select column" width, a shared cursor/token name), grep
+`apps/docs/content/docs/components/**/*.mdx` and `packages/ui-spec/components/**`
+for that term across _other_ components too — not just the target component's
+own files — and flag (don't silently fix) any place the same term now means
+something different than what this change just shipped. This is how a
+`DataTable` fix can leave `table.mdx` describing a same-named but
+differently-sized concept without anyone noticing.
 
 If a docs page is **missing** rather than stale, `tech-writer` will notice
 there's nothing to update — surface that to the user as a scope decision
@@ -381,11 +463,14 @@ a docs build failure) before Step 8.
 ## Step 8 — `devil-advocate` (always on)
 
 Adversarial final pass over the **whole** diff — code, spec, docs, VR
-baselines. Spawn it with the full list of changed files and Step 7's report;
-ask it to hunt specifically for what a passing script can't see: a story that
-should demonstrate the fixed behavior but wasn't added, a docs example that's
-technically unchanged but now misleading, a VR baseline that regenerated
-cleanly but no longer represents the case it's named for. This is the step
+baselines, **and the changeset**. Spawn it with the full list of changed files
+and Step 7's report; ask it to hunt specifically for what a passing script
+can't see: a story that should demonstrate the fixed behavior but wasn't
+added, a docs example that's technically unchanged but now misleading, a VR
+baseline that regenerated cleanly but no longer represents the case it's
+named for, or a changeset that overstates/misattributes scope (claims a fix
+applies to a component or rendering path the diff doesn't actually touch).
+This is the step
 that most directly targets the failure mode this skill exists for — Step 7
 answers "did the scripts pass," Step 8 answers "did we forget something the
 scripts can't see." A BLOCKED verdict sends the specific item back to the
@@ -444,18 +529,27 @@ usages (e.g. "does this bug pattern exist elsewhere too").
       public contract; skipped otherwise.
 - [ ] Source, `__tests__/`, `__stories__/` updated for the target component(s)
       (Step 4) — no new hardcoded label, no new physical directional utility.
-- [ ] Step 5's table walked for the actual change type: every non-`—` cell
-      addressed, everything else left untouched.
+- [ ] Step 5's artifact walk done for every artifact (each one read, not
+      assumed, for whether the diff invalidates it) — in-scope ones addressed,
+      everything else left untouched.
 - [ ] `tech-writer` spawned (Step 6 always runs — never skipped on the
       orchestrator's own guess) and its pass is complete: `apps/docs`
       MDX/demo/nav and/or `behavior.md`/`accessibility.md`/`README.md` updates
       match the actual diff, or `tech-writer` itself reported nothing to
       update. Any prose blocker `qa`/`devil-advocate` found was fixed by a
       `tech-writer` call, not a direct orchestrator edit.
+- [ ] Changeset content checked against the diff for accuracy (right
+      component, right rendering path, right scope) — not just checked for
+      _existing_.
+- [ ] Every doc/spec section `tech-writer` touched was re-read whole, not just
+      the diff-adjacent line, for other sentences the change invalidates.
+- [ ] A term/measurement this change ties to a UI concept (e.g. a named column,
+      shared cursor/token name) was grepped across sibling components' docs
+      for a same-name-different-meaning collision.
 - [ ] `pre-push-audit.sh` `RESULT` is clean (or explicitly triaged and
       resolved) — includes the `uikit-docs` build if `apps/docs` changed.
 - [ ] `devil-advocate` raised no unresolved blocker.
-- [ ] Changeset added per Step 5's bump-type column (or explicitly "none" for
+- [ ] Changeset added per Step 5's bump-type table (or explicitly "none" for
       a pure refactor, per `context/releasing.md`).
 - [ ] User told what was inferred (target component, change type) wherever
       Step 0 didn't have an explicit `ComponentName`/unambiguous request.
