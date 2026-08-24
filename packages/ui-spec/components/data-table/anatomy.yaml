@@ -11,6 +11,7 @@ schematic: |
     resize-handle: drag handle at a resizable header's trailing edge (opt-in)
     pinned column: meta.pin left/right → position: sticky cell
     row:           data row (selectable; selected → tinted; roving Tab stop)  ⋯
+    select-column: leading fixed 48px column (consumer's id: 'select') → Checkbox
     expand-trigger: chevron toggle inside a cell → toggles the row's expansion
     expanded-row:  optional detail row under an expanded row
     empty-state:   "No results." row when there is no data
@@ -66,6 +67,20 @@ parts:
       A data row; selectable, tinted when selected. A column with `meta.pin`
       renders as sticky cells with an opaque row background so scrolled cells
       don't show through.
+  - id: select-column
+    element: td/th
+    description: >-
+      The leading row-selection column, when the consumer's own `ColumnDef`
+      array declares one with the reserved `id: 'select'` — DataTable
+      recognizes that id and forces a fixed 48px width with no resize handle,
+      the same way the built-in trailing `__actions` column is always 48px.
+      Unlike `action-column`, this column is not built in: the consumer still
+      supplies its own `header`/`cell` render functions (typically a
+      `Checkbox` bound to `table.toggleAllPageRowsSelected` /
+      `row.toggleSelected`). Rendered with the plain `TableCell`/`TableHead`
+      primitives, not `Table`'s hand-authored `TableSelectCell` (which is a
+      different, 32px column used only in standalone `Table` compositions).
+    optional: true
   - id: action-column
     element: td/th
     description: >-

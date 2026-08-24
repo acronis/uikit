@@ -254,9 +254,16 @@ with `enableResizing: false`:
 
 Resizing makes every column's width deterministic, so give each column an
 explicit `size` (otherwise TanStack's 150px default applies to columns you never
-touched — noticeable on narrow checkbox/chevron columns). Without
-`enableColumnResizing`, a column only gets a fixed width if its `ColumnDef` sets
-`size`; the rest stay in native table auto-layout.
+touched — noticeable on narrow chevron columns). Without `enableColumnResizing`,
+a column only gets a fixed width if its `ColumnDef` sets `size`; the rest stay
+in native table auto-layout.
+
+`id: 'select'` is a reserved column id: a selection `ColumnDef` with that id
+always renders at a fixed 48px and never gets a resize handle, the same way the
+built-in trailing `__actions` column is always 48px — no `size` or
+`enableResizing: false` needed, and neither can override it. This is a
+different column from `Table`'s hand-authored `TableSelectCell`, which is a
+fixed 32px — the two share a role but not a width.
 
 The handle is keyboard-operable: focus it and use <kbd>←</kbd>/<kbd>→</kbd> to
 step 10px, or <kbd>Shift</kbd> + arrow for 50px, clamped to the column's

@@ -1,5 +1,0 @@
-data-table-sticky-column-hover-transition.md changeset is misattributed — DataTable never renders TableSelectCell (that fix only affects standalone Table compositions); and transition-colors on TableCell affects every table cell, not just the pinned selection column. Both are consumer-visible facts the changeset should state.
-No doc anywhere states id: 'select' is now a reserved column id forcing a fixed 48px non-resizable column — a new API contract. Should be added to data-table.mdx (Column resizing section) and ui-spec/components/data-table/anatomy.yaml, mirroring how the trailing \_\_actions column is already documented there.
-data-table.mdx:257 still says "checkbox/chevron columns" as needing explicit size — checkbox is no longer in that category since it's now hardcoded.
-Minor: data-table.mdx:243 could note the select column needs no enableResizing: false opt-out.
-Flagged (not a bug, worth a note): Table's hand-authored TableSelectCell is documented as 32px elsewhere (table.mdx, anatomy.yaml) while DataTable's select column is 48px — two different things with similar names, could confuse readers.
