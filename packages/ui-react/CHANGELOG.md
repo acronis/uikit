@@ -1,5 +1,100 @@
 # @acronis-platform/ui-react
 
+## 3.0.0
+
+### Major Changes
+
+- 7197836: Reconcile `Card` against its Figma design (node `10012-195993`).
+
+  `CardHeader` now owns the title and description directly (`title`/`description`/
+  `hasDescription` props) plus the design's full header feature set: a drag
+  handle (`isDraggable`), a toggle switch (`isSwitchable` + `switchChecked`/
+  `defaultSwitchChecked`/`onSwitchCheckedChange`/`switchDisabled`/`switchLabel`),
+  an avatar (`hasAvatar`/`avatarLabel`/`avatar`), a rename button (`hasRename`/
+  `onRename`/`renameLabel`), and `extras`/`actions` content slots. `Card` (the
+  root) gained `hasError`, which swaps the border to the error token.
+
+  **Breaking:** `CardTitle` and `CardDescription` are removed — their content is
+  now `CardHeader`'s `title`/`description` props.
+
+### Minor Changes
+
+- a333f8b: Add `AccordionContainer`: the shared disclosure primitive behind `Card`'s and
+  `Section`'s upcoming `isCollapsable` variant. Built directly on Base UI's
+  Collapsible — owns open state, the trigger button, chevron rotation, and panel
+  animation — while imposing no visual styling beyond what the disclosure
+  mechanic itself requires (no padding/background/border on `Root`/`Content`, no
+  position/hover opinion on `Trigger` beyond its chevron color). `children`
+  accepts a render-prop function receiving the current `{ open }` state, so a
+  header rendered outside `Content` can vary by state even when the component
+  owns it uncontrolled.
+- 18a32a9: Add `variant` (`'text'` / `'icon'`), `label`, and `icon` props to `Avatar` for
+  the no-photo case, matching the current Figma component — with no `children`
+  composed, `variant="text"` (default) shows `label` (default `'SB'`) and
+  `variant="icon"` shows a consumer-supplied `icon`. Composing
+  `AvatarImage`/`AvatarFallback` as children still takes precedence over both,
+  so existing usage is unaffected — including an explicit `null` child, which
+  renders an empty circle rather than falling back to `'SB'`. Also adds the
+  missing Figma Code Connect
+  mapping for `Avatar` itself (previously only `AvatarGroup` was mapped) and
+  fixes its `ui-spec` Figma node reference, which pointed at the group node.
+- 4e06c56: Fix two visual bugs in `Card`'s collapsible composition: `CardHeader` no
+  longer doubles up its bottom divider against `Card`'s own outer border once
+  the panel is collapsed (it now reads the accordion's `open` state via
+  `AccordionContainer`'s context instead of a new prop), and the collapsible
+  Storybook stories no longer re-center the whole card when the panel's height
+  changes. Also exports `useAccordionContainerContext` and
+  `AccordionContainerContextValue` from `AccordionContainer`.
+- ee6e51d: Add `CardSection`: a band of content that stacks inside a `Card`'s body, below
+  `CardHeader`.
+
+  Six variants pick the body shape — `slot` (arbitrary passthrough), `tag` (a
+  wrapping tag row, with an example row as its default), `list`
+  (title/description key-value rows), `table-actions` (a table rendered flush so
+  its rows run edge-to-edge inside the card), and `card-primary` /
+  `card-secondary` (a nested `Card` on the primary or secondary surface).
+
+  `hasHeader` adds the section's own 14px mini-header — distinct from
+  `CardHeader` — with a title, inline `extras`, and end-aligned `actions`;
+  `hasHeader` and `title` form a discriminated union, so turning the header on
+  without a title fails to compile. `hasBottomBorder` adds a divider and matching
+  bottom padding for stacking several sections in one card body. The root is
+  polymorphic via the Base UI `render` prop.
+
+- e624af6: Add `EmptyOverlay`: a full-bleed empty-state overlay — a colored icon badge
+  (reusing `Avatar`'s 8-color palette) over a centered title/description, on a
+  fade-to-solid backdrop. The developer sizes/positions it (e.g. `absolute
+inset-0` over a positioned parent); the component fills whatever box it's
+  given.
+
+### Patch Changes
+
+- 010c1f7: Fix `AccordionContainer.Trigger` missing a visible keyboard focus indicator.
+  The trigger now gets the same `focus-visible:ring-2` treatment as
+  `AccordionTrigger` in the plain `Accordion` component.
+- 7f8eea5: Add a `Card` Storybook story showing content that overflows both axes, to
+  document the current clip-not-scroll behavior coming from `Card`'s root
+  `overflow-hidden`.
+- cdc0328: Add a `Card` Storybook story showing how a consumer opts into a scrollable
+  body — a bounded, `overflow-y-auto` `CardContent` inside a flex-column
+  `Card` — as the counterpart to `OverflowingContent`'s default clip behavior.
+- 6404e45: Fix `DataTable`'s `id: 'select'` selection column: it now always renders at a
+  fixed 48px width and is never resizable, regardless of `enableColumnResizing`
+  or a caller-supplied `size`. Also replaces the drag-reorder cursor's
+  hand-authored `--ui-draggable-cursor[-active]` custom properties (now removed
+  from `styles/index.css`) with literal `cursor-grab`/`cursor-grabbing`
+  Tailwind utilities.
+- 603a81a: Fix `DataTable`'s pinned/sticky columns: the leading selection (checkbox)
+  column's row-hover background now fades in sync with the row, matching the
+  trailing pinned actions column, instead of snapping in abruptly. Adds
+  `transition-colors` to the `TableCell` primitive — used by every table cell,
+  not just the pinned selection column — and to the `TableSelectCell` primitive
+  used by standalone `Table` compositions (`DataTable` itself never renders
+  `TableSelectCell`).
+- Updated dependencies [aa75f63]
+- Updated dependencies [4d82064]
+  - @acronis-platform/tokens-pd@2.8.0
+
 ## 2.0.0
 
 ### Major Changes
