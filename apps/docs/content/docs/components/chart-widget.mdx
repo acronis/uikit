@@ -1,0 +1,128 @@
+---
+title: ChartWidget
+description: The dashboard card a chart sits in — header, optional metric readout, and the body's empty/loading/error state.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { ChartWidgetDemo } from '@/components/demos-react/chart-widget';
+
+## Usage
+
+```tsx
+import { ChartWidget } from '@acronis-platform/ui-react';
+
+<ChartWidget header={{ title: 'Sessions', actions: <WidgetMenu /> }} className="h-[300px] w-[592px]">
+  <AreaChart config={config} data={data} dataKeys={['sessions']} xKey="month" className="size-full" />
+</ChartWidget>;
+```
+
+Every chart in the design is drawn inside the same card: a header with a title,
+an optional filter chip and the ⋯ actions menu, then an optional metric readout,
+then the plot. `ChartWidget` is that composition — and only that.
+
+> The `metric` slot takes any node, but it is not demoed with
+> [`Metric`](/docs/components/metric) yet: that component still renders its own
+> card, so nesting it here would draw a card inside a card. It is being
+> reconciled against the same mockups.
+
+<DemoReact>
+  <ChartWidgetDemo />
+</DemoReact>
+
+## What it adds
+
+One thing a [`Card`](/docs/components/card) legitimately doesn't know about:
+**what the body shows while there's no plot.** `state` renders a placeholder in
+place of the chart.
+
+Everything else is `Card`'s.
+
+## The header is Card's
+
+`header` is typed `CardHeaderProps` and spread straight onto `CardHeader`, so
+the whole header surface works — including the parts this component never
+mentions.
+
+```tsx
+<ChartWidget
+  header={{
+    title: 'Active alerts by severity',
+    description: 'Grouped by severity',
+    hasDescription: true,
+    extras: <Tag variant="info">Last 6 months</Tag>,
+    actions: <WidgetMenu />,
+    isDraggable: true,
+    hasRename: true,
+    onRename: rename,
+  }}
+>
+  {chart}
+</ChartWidget>
+```
+
+Omit `header` for a header-less widget — a dashboard tile whose heading lives
+outside the card, or a chart embedded in a larger panel.
+
+The per-type chart components stay **card-less**, so a chart is still usable
+outside a widget: inside a table cell, a popover, or a
+[`Metric`](/docs/components/metric)'s sparkline slot.
+
+## State
+
+`state` swaps the plot for [`ChartState`](/docs/components/chart-state), keeping
+the header. The placeholder fills the same body the plot would, so the card keeps
+its size.
+
+```tsx
+<ChartWidget header={{ title: 'Severity' }} state="loading" />
+
+<ChartWidget
+  header={{ title: 'Sessions' }}
+  state="error"
+  stateAction={<Button variant="ghost" onClick={refetch}>Try again</Button>}
+/>
+```
+
+`state="error"` also gives the card its error border, so the border and the
+placeholder come from one prop rather than two. `stateMessage` overrides the
+placeholder's default label.
+
+## It takes no `size` — the grid does
+
+The Figma sets carry a `size` axis of `sm` / `md` / `lg`, but it only changes the
+frame **width** — 288 / 592 / 896. The height is the dashboard's business.
+
+So the widget declares no size; it *passes one down*. The card is a full-height
+flex column, the header takes what it needs, and the body takes the rest — so a
+chart given `size-full` fills the whole remaining card.
+
+```tsx
+<div className="grid grid-cols-2 gap-4 [grid-auto-rows:300px]">
+  <ChartWidget header={{ title: 'Sessions' }}>
+    <AreaChart … className="size-full" />
+  </ChartWidget>
+</div>
+```
+
+Dropped into a parent with no definite height, the card hugs its content instead
+— so a standalone widget still works, with the chart bringing its own height.
+
+`bodyClassName` covers the one remaining gap: a placeholder-only widget outside a
+sized cell, where neither the grid nor the content can give a height.
+
+```tsx
+<ChartWidget header={{ title: 'Severity' }} state="empty" bodyClassName="h-[252px]" />
+```
+
+## Accessibility
+
+The widget adds no role of its own — it's a grouping surface, and the meaning
+lives in what it holds. `Card` exposes a `render` prop, so a dashboard that
+wants each widget to be a landmark can render it as a `<section>`.
+
+The header's `title` is the widget's visible name, so a chart inside shouldn't
+repeat it in its own accessible name. While `state` is set, `ChartState` is the
+live region (`role="status"`, or `role="alert"` for errors).
+
+An icon-only control in `actions` needs its own `aria-label` — the ⋯ menu has no
+visible text.

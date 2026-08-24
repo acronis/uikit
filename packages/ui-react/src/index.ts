@@ -27,6 +27,7 @@ export * from './components/ui/card-section';
 export * from './components/ui/category-bar';
 export * from './components/ui/chart';
 export * from './components/ui/chart-state';
+export * from './components/ui/chart-widget';
 export * from './components/ui/checkbox';
 export * from './components/ui/chip';
 export * from './components/ui/collapsible';

@@ -1,0 +1,27 @@
+spec_version: '1.0'
+component: ChartWidget
+
+# References only. Values live in @acronis-platform/tokens-pd. ChartWidget owns
+# no colour of its own: the surface, border and header divider all come from
+# `Card`, which themes off the shared semantic tier. The tokens below are listed
+# because the widget's own markup references them — everything else is inherited
+# by composition, not restated here.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-background-surface-primary
+    affects: root
+    description: The card surface, from `Card`.
+  - name: --ui-border-on-surface-border
+    affects: root
+    description: The card border, from `Card`.
+  - name: --ui-border-on-surface-border-error
+    affects: root
+    description: >-
+      The card border while `state="error"` — mapped from that one prop onto
+      Card's `hasError`.
+  - name: --ui-border-on-surface-divider
+    affects: header
+    description: >-
+      The divider under the header, drawn by `CardHeader` itself (and dropped by
+      it when the header sits in a collapsed accordion).

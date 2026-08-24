@@ -1,0 +1,69 @@
+spec_version: '1.0'
+component: ChartWidget
+
+schematic: |
+  root: Card (surface, radius, border — error border when state="error")
+    header: CardHeader — title · description · extras (filter chip) · actions (⋯)
+            [drag handle · switch · avatar · rename · collapse trigger, all Card's]
+            draws its own bottom divider
+    body: CardContent — flex-1 min-h-0; 16px padding, 16px gap
+      metric: optional readout row (shrink-0) — typically a `Metric`
+      plot:   flex-1 min-h-0 — the chart, or the placeholder while `state` is set
+
+root:
+  element: div
+  description: >-
+    A `Card`, laid out as a full-height flex column so the height the grid gives
+    it reaches the plot. `state="error"` maps to Card's `hasError`, so the error
+    border and the error placeholder come from one prop rather than two. Carries
+    `data-slot="chart-widget"`.
+
+parts:
+  - id: header
+    element: slot
+    description: >-
+      A `CardHeader`, receiving the `header` object verbatim. Not re-declared
+      here: a header feature added to `Card` reaches this component without a
+      change. Omitted entirely when `header` is absent.
+  - id: body
+    element: div
+    description: >-
+      A `CardContent` carrying the 16px padding and 16px gap the design draws.
+      `flex-1 min-h-0`, so it takes whatever height the header leaves of the
+      card — which is how a `size-full` chart ends up filling the widget.
+  - id: metric
+    element: slot
+    description: >-
+      Optional readout row above the plot. Two chart types (radar, treemap) are
+      designed without one.
+  - id: plot
+    element: div
+    description: >-
+      The chart, or `ChartState` while `state` is set. `flex-1 min-h-0`, so it
+      takes the height the metric row leaves — and so a tall chart shrinks into
+      the card instead of pushing past it.
+
+states:
+  - id: default
+    trigger: '`state` is unset — the plot renders'
+    kind: prop
+    prop: state
+    exclusive_with: [loading, empty, error]
+  - id: loading
+    trigger: 'state="loading"'
+    kind: prop
+    prop: state
+    affects: [plot]
+    exclusive_with: [default, empty, error]
+  - id: empty
+    trigger: 'state="empty"'
+    kind: prop
+    prop: state
+    affects: [plot]
+    exclusive_with: [default, loading, error]
+  - id: error
+    trigger: 'state="error" — also gives the root Card its error border'
+    kind: prop
+    prop: state
+    affects: [root, plot]
+    exclusive_with: [default, loading, empty]

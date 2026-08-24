@@ -1,0 +1,80 @@
+spec_version: '1.0'
+component: ChartWidget
+
+# Deliberately small. The header surface is `Card`'s, reached by spreading
+# `header` onto `CardHeader` — listing those props again here would be a second
+# source of truth that drifts the moment Card gains one.
+contract:
+  properties:
+    - name: header
+      type: CardHeaderProps
+      required: false
+      description: >-
+        The card header, forwarded verbatim to `CardHeader` — `title`,
+        `description`, `extras` (a filter chip), `actions` (the ⋯ menu),
+        `isDraggable`, `isSwitchable`, `hasAvatar`, `hasRename`,
+        `isCollapsible`. Omit for a header-less widget.
+    - name: metric
+      type: ReactNode
+      required: false
+      description: >-
+        The readout above the plot, typically a `Metric`. Sits in its own row at
+        its natural height.
+    - name: state
+      type: "'loading' | 'empty' | 'error'"
+      required: false
+      description: >-
+        Renders `ChartState` in place of the plot, keeping the header. `error`
+        additionally gives the Card its error border.
+    - name: stateMessage
+      type: string
+      required: false
+      description: Overrides the placeholder's default label.
+    - name: stateAction
+      type: ReactNode
+      required: false
+      description: Trailing action on the `error` placeholder — e.g. a retry button.
+    - name: bodyClassName
+      type: string
+      required: false
+      description: >-
+        Class for the card body. Rarely needed — the body already fills the
+        card. For the case where neither the grid nor the content gives a
+        height, e.g. a placeholder-only widget outside a sized cell.
+    - name: children
+      type: ReactNode
+      required: false
+      description: The chart. Replaced by the placeholder while `state` is set.
+  events: []
+  methods: []
+
+adapters:
+  react:
+    component: ChartWidget
+    status: implemented
+    import: "import { ChartWidget } from '@acronis-platform/ui-react'"
+    example: |
+      <ChartWidget
+        header={{
+          title: 'Active alerts by severity',
+          extras: <Tag variant="info">Last 6 months</Tag>,
+          actions: <ButtonIcon aria-label="Widget actions"><EllipsisIcon size={16} /></ButtonIcon>,
+        }}
+        className="h-[300px] w-[592px]"
+      >
+        <AreaChart config={config} data={data} dataKeys={['sessions']} xKey="month" className="size-full" />
+      </ChartWidget>
+
+      <ChartWidget header={{ title: 'Severity' }} state="empty" bodyClassName="h-[252px]" />
+  vue:
+    component: AvChartWidget
+    status: planned
+    import: "import { AvChartWidget } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvChartWidget state="empty" />
+  web-components:
+    element: ui-chart-widget
+    status: planned
+    import: "import '@acronis-platform/ui-wc/chart-widget'"
+    example: |
+      <ui-chart-widget state="empty"></ui-chart-widget>
