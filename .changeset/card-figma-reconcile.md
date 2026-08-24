@@ -1,5 +1,5 @@
 ---
-'@acronis-platform/ui-react': minor
+'@acronis-platform/ui-react': major
 ---
 
 Reconcile `Card` against its Figma design (node `10012-195993`).
@@ -13,5 +13,4 @@ an avatar (`hasAvatar`/`avatarLabel`/`avatar`), a rename button (`hasRename`/
 root) gained `hasError`, which swaps the border to the error token.
 
 **Breaking:** `CardTitle` and `CardDescription` are removed — their content is
-now `CardHeader`'s `title`/`description` props. The collapsible variant
-(`isCollapsable`) from the Figma design is not implemented yet.
+now `CardHeader`'s `title`/`description` props.
