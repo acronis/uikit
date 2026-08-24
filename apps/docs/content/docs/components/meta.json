@@ -63,6 +63,7 @@
     "truncate-text",
     "alert",
     "empty",
+    "empty-overlay",
     "widget-placeholder",
     "skeleton",
     "spinner",

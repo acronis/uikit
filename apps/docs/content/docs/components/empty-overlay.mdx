@@ -1,0 +1,63 @@
+---
+title: EmptyOverlay
+description: A full-bleed empty-state overlay — a colored icon badge over a centered title/description, on a fade-to-solid backdrop.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { EmptyOverlayDemo } from "@/components/demos-react/empty-overlay";
+
+## Usage
+
+```tsx
+import { EmptyOverlay } from '@acronis-platform/ui-react';
+```
+
+`EmptyOverlay` is a single, non-composable component — pass `icon`, `title`,
+and `description` as props. It always fills its parent (`size-full`) and
+centers its content on a fade-to-solid backdrop, so it's meant to sit over
+other content (e.g. a frozen/blurred widget preview): give the parent
+`relative` and the overlay `absolute inset-0`, or otherwise size the parent
+directly. The icon badge reuses `Avatar`'s 8-color palette via the `color`
+prop rather than a dedicated token tier.
+
+## Examples
+
+<DemoReact>
+  <EmptyOverlayDemo />
+</DemoReact>
+
+Icon, title, and description:
+
+```tsx
+<div className="relative h-72">
+  <EmptyOverlay
+    icon={<InboxIcon />}
+    title="No object yet"
+    description="Short description."
+  />
+</div>
+```
+
+Title only, no icon:
+
+```tsx
+<EmptyOverlay title="No data to display" />
+```
+
+A different badge color:
+
+```tsx
+<EmptyOverlay
+  icon={<TriangleWarningIcon />}
+  title="Something went wrong"
+  description="Try again in a few minutes."
+  color="red"
+/>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/empty-overlay/empty-overlay.tsx"
+  name="EmptyOverlayProps"
+/>

@@ -532,6 +532,23 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.color.sort()).toEqual(enumMembers(api, 'color'));
   });
 
+  it('EmptyOverlay: api.yaml color enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/empty-overlay/empty-overlay.tsx'
+      ),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('empty-overlay').api;
+
+    // `color` (the icon badge, reusing Avatar's eight color schemes) is the
+    // only cva axis.
+    expect(Object.keys(groups)).toEqual(['color']);
+    expect(groups.color.sort()).toEqual(enumMembers(api, 'color'));
+  });
+
   it('StepperItem: api.yaml variant/state enums match the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(
