@@ -17,6 +17,23 @@
   **Then** the initials render on the `color` scheme's tinted background, using
   that scheme's label color.
 
+## `variant` / `label` / `icon` (no children composed)
+
+- **Given** an `Avatar` with no `children`
+  **Then** `variant` (default `'text'`) selects the auto-rendered content:
+  `label` (default `'SB'`) for `'text'`, or `icon` for `'icon'`.
+
+- **Given** an `Avatar` with `children` composed (e.g. `AvatarImage`/
+  `AvatarFallback`)
+  **Then** `variant`/`label`/`icon` have no effect — `children` always takes
+  precedence.
+
+- **Given** an `Avatar` whose children slot is explicitly empty (`null`) — e.g.
+  `Timeline`'s marker with neither an `icon` nor `initials`
+  **Then** the circle renders empty. An explicit `null` is a deliberate "render
+  nothing", so it does **not** fall back to the default `label` (`'SB'`); only
+  an unset (`undefined`) slot does.
+
 ## Color scheme
 
 - **Given** `color="violet"`

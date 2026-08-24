@@ -64,8 +64,13 @@ const RENDER: Record<string, RenderHint> = {
   // stories cover each variant in its own story (one clean modal per snapshot).
   dialog: { skip: true },
   avatar: {
-    extraImports: ["import { AvatarFallback } from '../avatar';"],
-    sample: '\n      <AvatarFallback>SN</AvatarFallback>\n    ',
+    // No fixed `sample` (children) — letting `variant` drive the no-children
+    // path is the point: `text` shows the default `label` ('SB'), `icon`
+    // shows this fixed icon, so the grid actually demonstrates both.
+    extraImports: [
+      "import { UserIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    props: 'icon={<UserIcon size={16} />}',
   },
   button: { sample: 'Label' },
   'button-menu': { sample: 'Label' },
@@ -777,7 +782,8 @@ const RENDER: Record<string, RenderHint> = {
     props:
       'label="Step name" avatar={<Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar>}',
     // `avatar` is required, so the meta has to carry it for the type to check.
-    metaArgs: 'avatar: <Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar>',
+    metaArgs:
+      'avatar: <Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar>',
   },
   stepper: {
     // Three required content props feed the compact summary, and the wide row is

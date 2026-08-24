@@ -10,6 +10,9 @@
 - The `AvatarFallback` initials are text and are read as-is. Initials alone are a
   weak label — prefer an adjacent visible name, or set `alt` on the image, so the
   entity is identifiable by more than two letters.
+- For `variant="icon"`, the icon alone conveys no name — always pair it with a
+  visible label in the surrounding context (the icon is presentational, not an
+  accessible name by itself).
 
 ## Keyboard & focus
 

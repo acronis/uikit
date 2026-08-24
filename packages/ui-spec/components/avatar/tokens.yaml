@@ -5,24 +5,33 @@ component: Avatar
 # @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
 # The token schema forbids a value/default key here — never restate values.
 # Avatar binds the dedicated `--ui-avatar-*` tier: shared geometry + a 2px
-# border under `--ui-avatar-global-*`, a per-scheme background
-# (`--ui-avatar-color-<scheme>`) and initials color (`--ui-avatar-label-color-<scheme>`).
+# ring under `--ui-avatar-global-*`, a per-scheme background
+# (`--ui-avatar-color-<scheme>`) and label color (`--ui-avatar-label-color-<scheme>`).
+#
+# The label color is set on the **root** (as the text color), so it tints both
+# the initials and — via `currentColor` — the `icon` part's glyph. Hence
+# `affects: root` rather than a single child part.
+#
+# `--ui-avatar-global-avatar-border-border-style` is intentionally absent: the
+# ring is drawn as a `box-shadow` (Figma's `strokeAlign: OUTSIDE`), not a CSS
+# border, so no border-style is consumed.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  # ── Shared geometry / border (root) ──
+  # ── Shared geometry / ring (root) ──
   - name: --ui-avatar-global-avatar-size
     affects: root
   - name: --ui-avatar-global-avatar-border-border-radius
     affects: root
   - name: --ui-avatar-global-avatar-border-border-width
     affects: root
-  - name: --ui-avatar-global-avatar-border-border-style
-    affects: root
   - name: --ui-avatar-global-avatar-border-color
     affects: root
   - name: --ui-avatar-global-avatar-group-gap
     affects: group
+
+  # ── Consumer-applied, not set by AvatarGroup itself: the gap between the
+  #    group and a trailing text label, and that label's color.
   - name: --ui-avatar-global-container-gap
     affects: group
   - name: --ui-avatar-global-text-color
@@ -32,46 +41,46 @@ tokens:
   - name: --ui-avatar-color-teal
     affects: root
   - name: --ui-avatar-label-color-teal
-    affects: fallback
+    affects: root
 
   # ── violet ──
   - name: --ui-avatar-color-violet
     affects: root
   - name: --ui-avatar-label-color-violet
-    affects: fallback
+    affects: root
 
   # ── red ──
   - name: --ui-avatar-color-red
     affects: root
   - name: --ui-avatar-label-color-red
-    affects: fallback
+    affects: root
 
   # ── yellow ──
   - name: --ui-avatar-color-yellow
     affects: root
   - name: --ui-avatar-label-color-yellow
-    affects: fallback
+    affects: root
 
   # ── orange ──
   - name: --ui-avatar-color-orange
     affects: root
   - name: --ui-avatar-label-color-orange
-    affects: fallback
+    affects: root
 
   # ── blue ──
   - name: --ui-avatar-color-blue
     affects: root
   - name: --ui-avatar-label-color-blue
-    affects: fallback
+    affects: root
 
   # ── gray ──
   - name: --ui-avatar-color-gray
     affects: root
   - name: --ui-avatar-label-color-gray
-    affects: fallback
+    affects: root
 
   # ── green ──
   - name: --ui-avatar-color-green
     affects: root
   - name: --ui-avatar-label-color-green
-    affects: fallback
+    affects: root

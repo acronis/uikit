@@ -2,8 +2,16 @@ spec_version: '1.0'
 component: Avatar
 
 # `color` is the only cva axis (its enum matches the cva keys in the ui-react
-# source). Image and fallback are composed as child parts (AvatarImage /
-# AvatarFallback); AvatarGroup is a sibling layout component.
+# source). `variant`/`label`/`icon` are plain (non-cva) content props — they
+# select what auto-renders when no `children` are composed; they don't change
+# any class. Image and fallback are also composable as child parts
+# (AvatarImage / AvatarFallback), which always take precedence over them.
+# AvatarGroup is a sibling layout component.
+#
+# "No children composed" throughout this spec means the content slot is
+# `undefined` specifically, not merely empty: an explicit `null` child is a
+# deliberate "render nothing" and leaves the circle empty rather than falling
+# back to `label`/`icon`.
 contract:
   properties:
     - name: color
@@ -14,6 +22,28 @@ contract:
         Color scheme for the fallback. Maps to `--ui-avatar-color-<scheme>`
         (background) and `--ui-avatar-label-color-<scheme>` (initials). Ignored
         once an image is shown.
+    - name: variant
+      type: "'text' | 'icon'"
+      required: false
+      default: text
+      description: >-
+        Selects the auto-rendered fallback content when no `children` are
+        composed: initials (`label`) or an `icon`. Ignored once `children`
+        (e.g. `AvatarImage`/`AvatarFallback`) are composed directly — including
+        an explicit `null`, which renders an empty circle.
+    - name: label
+      type: string
+      required: false
+      default: SB
+      description: >-
+        Initials shown for the `text` variant when no `children` are
+        composed.
+    - name: icon
+      type: ReactNode
+      required: false
+      description: >-
+        Icon shown for the `icon` variant when no `children` are composed —
+        typically a 16px icon from `@acronis-platform/icons-react`.
 
   events: []
 
@@ -21,7 +51,9 @@ contract:
     - name: default
       description: >-
         The avatar's children — an `AvatarImage` and/or an `AvatarFallback`
-        (the initials). With no image the fallback always shows.
+        (the initials). When the slot is left unset, `variant`/`label`/`icon`
+        drive the content instead; an explicitly empty (`null`) slot renders an
+        empty circle and does not fall back to them.
 
   methods: []
 
@@ -35,6 +67,9 @@ adapters:
         <AvatarImage src="/me.png" alt="Sam N." />
         <AvatarFallback>SN</AvatarFallback>
       </Avatar>
+
+      <Avatar color="blue" label="SB" />
+      <Avatar color="blue" variant="icon" icon={<UserIcon size={16} />} />
 
       <AvatarGroup>
         <Avatar color="teal"><AvatarFallback>SN</AvatarFallback></Avatar>
