@@ -50,7 +50,7 @@ export function StepperItemDemo() {
         />
       </Stepper>
 
-      {/* The five combinations the Figma component set actually draws. */}
+      {/* The six variant/state combinations the Figma component set draws. */}
       <div className="flex flex-wrap items-center gap-4">
         <StepperItem
           variant="current"
@@ -78,6 +78,12 @@ export function StepperItemDemo() {
           variant="completed"
           state="active"
           label="Completed / active"
+          avatar={completedAvatar}
+        />
+        <StepperItem
+          variant="completed"
+          state="focus"
+          label="Completed / focus"
           avatar={completedAvatar}
         />
         <StepperItem

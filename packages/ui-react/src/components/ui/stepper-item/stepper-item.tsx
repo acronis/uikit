@@ -9,13 +9,13 @@ import { cn } from '@/lib/utils';
 
 // One step in a stepper: an Avatar marker (the step's number, icon, or image)
 // followed by the step name. `variant` is the step's structural role in the
-// sequence — `current` (where the user is), `completed` (already passed, and so
-// realistically clickable to jump back), `future` (not reachable yet). `state`
-// is the interaction state, and it only produces a different look on a
-// `completed` step: `current` is always painted in its highlighted look and
-// `future` is always painted disabled, which is exactly what the Figma component
-// set models — only five state x variant combos exist there
-// (active+current, idle/hover/active+completed, disabled+future).
+// sequence — `current` (where the user is, highlighted with a fill and border),
+// `completed` (already passed, and so realistically clickable to jump back —
+// its container reacts to `state`), `future` (not reachable yet, always
+// disabled). `state` is the interaction look and only paints anything on a
+// `completed` step: `current` is always rendered highlighted and `future` is
+// always rendered disabled, which is exactly what the Figma component set
+// models.
 //
 // The Avatar is fully consumer-supplied and consumer-styled: this component
 // renders the element it is given verbatim and never sizes, tints, or recolors
@@ -24,45 +24,24 @@ import { cn } from '@/lib/utils';
 // not consumed here — they belong to whatever the caller puts in the `avatar`
 // slot.
 //
-// ── Token substitution (placeholder — re-point once design ships the tier) ──
-// The design references `components/Stepper/Item/*`, which is not "ready for
-// dev": there is no `--ui-stepper-item-*` tier in @acronis-platform/tokens-pd
-// (a grep for `Stepper` across tokens-pd and the design-tokens source returns
-// nothing). Rather than hand-author values, this consumes the semantic/generic
-// tokens whose *resolved* value in `packages/tokens-pd/css/default.css` matches
-// the Figma variable exactly — verified value-by-value:
-//
-//   components/Stepper/Item/_global/container/gap          (8px)     -> --ui-gap-8
-//   components/Stepper/Item/_global/container/paddingY      (8px)     -> --ui-gap-8
-//   (padding-x came through Figma as the generic `gap/gap-16`)        -> --ui-gap-16
-//   components/Stepper/Item/_global/container/borderRadius  (8px)     -> `rounded-lg`
-//   components/Stepper/Item/_global/container/color/active  (#e2ebf5) -> --ui-background-surface-active
-//   components/Stepper/Item/_global/container/color/hover   (#eef2f7) -> --ui-background-surface-hover
-//   semantics/colors/text/onSurface/primary                 (#18191b) -> --ui-text-on-surface-primary
-//   semantics/colors/text/onSurface/disabled                (#afb2b6) -> --ui-text-on-surface-disabled
-//
-// The radius is the one exception that stays a static Tailwind utility: tokens-pd
-// has no generic radius scale at all — every `*border-radius*` token is
-// component-owned (e.g. `--ui-card-filter-global-container-border-radius`) — so
-// there is nothing honest to point at, and inventing a token name would be worse
-// than an 8px utility. Figma also defines three separate
-// `completed/label/color/{idle,hover,active}` variables, but all three carry the
-// identical `#18191b`, so the single semantic token covers them faithfully.
-//
-// `focus-visible` lives on the base class rather than a variant: the default
-// `<div>` is never focusable, so the ring only ever appears on a step composed
-// as a real control via `render` — the same 3px `--ui-focus-primary` ring
-// `CardFilter` and `BreadcrumbLink` use.
+// ── Tokens — dedicated `--ui-stepper-item-*` tier (2026-08-24) ──
+// Re-synced from Figma: @acronis-platform/tokens-pd now ships a `Stepper` tier
+// (see `packages/tokens-pd/css/Stepper/default.css`), which replaces the
+// semantic/generic placeholder tokens (`--ui-background-surface-*`,
+// `--ui-text-on-surface-*`) this component used before that tier existed. The
+// tier's `global-container-padding-{l,r}` are asymmetric (8px / 16px) — the
+// left side sits closer to the avatar, the right side gives the label room —
+// so padding is split rather than a single `px-*` utility.
 const stepperItemVariants = cva(
-  'inline-flex items-center gap-[var(--ui-gap-8)] rounded-lg px-[var(--ui-gap-16)] py-[var(--ui-gap-8)] text-sm leading-6 outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
+  'inline-flex items-center gap-[var(--ui-stepper-item-global-container-gap)] rounded-[var(--ui-stepper-item-global-container-border-radius)] pl-[var(--ui-stepper-item-global-container-padding-l)] pr-[var(--ui-stepper-item-global-container-padding-r)] py-[var(--ui-stepper-item-global-container-padding-y)] text-sm leading-6 outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
   {
     variants: {
       variant: {
         current:
-          'bg-[var(--ui-background-surface-active)] text-[var(--ui-text-on-surface-primary)]',
-        completed: 'text-[var(--ui-text-on-surface-primary)]',
+          'border-[length:var(--ui-stepper-item-current-container-border-width)] border-[var(--ui-stepper-item-current-container-border-color)] border-solid bg-[var(--ui-stepper-item-current-container-color)] text-[var(--ui-stepper-item-current-label-color)]',
+        completed: 'text-[var(--ui-stepper-item-completed-label-color)]',
         future:
-          'pointer-events-none text-[var(--ui-text-on-surface-disabled)]',
+          'pointer-events-none text-[var(--ui-stepper-item-future-label-color)]',
       },
       // Declared as an axis so the variant x state matrix below can key off it;
       // on its own it paints nothing, because only `completed` reacts to it.
@@ -70,18 +49,25 @@ const stepperItemVariants = cva(
         idle: '',
         hover: '',
         active: '',
+        focus: '',
       },
     },
     compoundVariants: [
       {
         variant: 'completed',
         state: 'hover',
-        class: 'bg-[var(--ui-background-surface-hover)]',
+        class: 'bg-[var(--ui-stepper-item-completed-container-color-hover)]',
       },
       {
         variant: 'completed',
         state: 'active',
-        class: 'bg-[var(--ui-background-surface-active)]',
+        class: 'bg-[var(--ui-stepper-item-completed-container-color-active)]',
+      },
+      {
+        variant: 'completed',
+        state: 'focus',
+        class:
+          'bg-[var(--ui-stepper-item-completed-container-color-focus-ring)]',
       },
     ],
     defaultVariants: {
@@ -99,8 +85,7 @@ export type StepperItemState = NonNullable<
   VariantProps<typeof stepperItemVariants>['state']
 >;
 
-export interface StepperItemProps
-  extends React.ComponentPropsWithoutRef<'div'> {
+export interface StepperItemProps extends React.ComponentPropsWithoutRef<'div'> {
   /**
    * The step's structural role in the sequence. Drives the container background
    * and the label color. Defaults to `current` for prop ergonomics — in a real
@@ -109,9 +94,10 @@ export interface StepperItemProps
   variant?: StepperItemVariant;
   /**
    * Interaction state. Only produces a different look when `variant` is
-   * `completed` (`idle` has no background, `hover` and `active` paint one).
-   * Ignored for `current`, which always renders in its highlighted look, and for
-   * `future`, which always renders disabled and non-interactive.
+   * `completed` (`idle` has no background; `hover`, `active`, and `focus` each
+   * paint their own). Ignored for `current`, which always renders in its
+   * highlighted look, and for `future`, which always renders disabled and
+   * non-interactive.
    */
   state?: StepperItemState;
   /**

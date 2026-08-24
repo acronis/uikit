@@ -128,7 +128,7 @@ describe('Stepper', () => {
   it('lays the item row out as a wrapping, top-packed row with the design gap', () => {
     const { container } = render(<Stepper {...base}>{items}</Stepper>);
     expect(container.querySelector('[data-slot="stepper-items"]')).toHaveClass(
-      'gap-[var(--ui-gap-8)]',
+      'gap-[var(--ui-stepper-breakpoint-lg-container-gap)]',
       'flex-wrap',
       'content-start',
       'items-start'
@@ -141,8 +141,12 @@ describe('Stepper', () => {
     const [prefix, name] = Array.from(
       summaryLine(container, 'current')!.children
     );
-    expect(prefix).toHaveClass('text-[var(--ui-text-on-surface-secondary)]');
-    expect(name).toHaveClass('text-[var(--ui-text-on-surface-primary)]');
+    expect(prefix).toHaveClass(
+      'text-[var(--ui-stepper-breakpoint-default-label-color)]'
+    );
+    expect(name).toHaveClass(
+      'text-[var(--ui-stepper-breakpoint-default-value-color)]'
+    );
   });
 
   it('merges a consumer className and forwards the ref', () => {

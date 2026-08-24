@@ -16,10 +16,10 @@ import { StepperItem } from '@acronis-platform/ui-react';
 `StepperItem` is a single step: the marker you pass as `avatar`, followed by the
 step name. `variant` says where the step sits in the sequence — `current` (where
 the user is), `completed` (already passed), `future` (not reachable yet) — and
-drives the container fill and the label color. `state` is the interaction look,
-and it only changes anything on a `completed` step: `current` is always
-highlighted and `future` is always disabled, which is exactly the five
-combinations the Figma component set draws.
+drives the container fill, border, and the label color. `state` is the
+interaction look, and it only changes anything on a `completed` step: `current`
+is always highlighted with a border and `future` is always disabled, which is
+exactly the six `variant`/`state` combinations the Figma component set draws.
 
 The marker is a **required slot you own completely**. Pass any `Avatar`
 composition — color scheme, initials, an icon, an image, size overrides — and the
@@ -32,11 +32,10 @@ still decide each step's `variant`. The step is polymorphic via Base UI's
 that jumps back, and it then gets the library's standard 3px focus ring.
 
 <Callout>
-  The Figma component has no `--ui-stepper-item-*` token tier yet. This v1
-  consumes the semantic tokens whose resolved values match the design variables
-  exactly (`--ui-background-surface-{active,hover}`,
-  `--ui-text-on-surface-{primary,disabled}`, `--ui-gap-{8,16}`), and will be
-  re-pointed at the dedicated tier once design ships it.
+  As of the 2026-08-24 Figma sync, this component consumes a dedicated
+  `--ui-stepper-item-*` token tier from `@acronis-platform/tokens-pd` — the
+  container fill/border, all four `completed` interaction states, and both label
+  colors are Stepper-owned tokens rather than borrowed from the semantic scale.
 </Callout>
 
 ## Examples

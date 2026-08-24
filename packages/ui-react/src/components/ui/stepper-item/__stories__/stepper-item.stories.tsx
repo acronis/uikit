@@ -25,7 +25,7 @@ const meta = {
       control: 'select',
       options: ['current', 'completed', 'future'],
       description:
-        "The step's structural role in the sequence — mirrors the Figma `variant` property. Drives the container background and the label color.",
+        "The step's structural role in the sequence — mirrors the Figma `type` property. Drives the container background, border, and the label color.",
       table: {
         type: { summary: "'current' | 'completed' | 'future'" },
         defaultValue: { summary: 'current' },
@@ -34,11 +34,11 @@ const meta = {
     },
     state: {
       control: 'select',
-      options: ['idle', 'hover', 'active'],
+      options: ['idle', 'hover', 'active', 'focus'],
       description:
-        "Interaction state — mirrors the Figma `state` property. Only changes the look when `variant` is `completed`; `current` always renders highlighted and `future` always renders disabled.",
+        "Interaction state — mirrors the tokens-pd `Stepper` tier's completed-container color roles. Only changes the look when `variant` is `completed`; `current` always renders highlighted and `future` always renders disabled.",
       table: {
-        type: { summary: "'idle' | 'hover' | 'active'" },
+        type: { summary: "'idle' | 'hover' | 'active' | 'focus'" },
         defaultValue: { summary: 'idle' },
         category: 'State',
       },
@@ -116,6 +116,16 @@ export const CompletedActive: Story = {
   args: {
     variant: 'completed',
     state: 'active',
+    label: 'Create an account',
+    avatar: checkAvatar,
+  },
+};
+
+export const CompletedFocus: Story = {
+  name: 'Completed / focus',
+  args: {
+    variant: 'completed',
+    state: 'focus',
     label: 'Create an account',
     avatar: checkAvatar,
   },

@@ -2,9 +2,9 @@
 
 One step in a stepper: a consumer-composed avatar marker followed by the step
 name. `variant` says where the step sits in the sequence (`current`,
-`completed`, `future`) and drives the container fill and the label color;
-`state` is the interaction look, and it only changes anything on a completed
-step. Compose the steps inside `Stepper`, which lays them out.
+`completed`, `future`) and drives the container fill, border, and the label
+color; `state` is the interaction look, and it only changes anything on a
+completed step. Compose the steps inside `Stepper`, which lays them out.
 
 ## When to use
 
@@ -63,9 +63,10 @@ step. Compose the steps inside `Stepper`, which lays them out.
 The marker is entirely yours: color scheme, initials vs. icon vs. image, size
 overrides. The step renders the element verbatim and never restyles it.
 
-Only five `variant` x `state` combinations exist in the design, and the component
-reproduces exactly that: `current` is always highlighted, `future` is always
-disabled, and only `completed` reads `state`.
+Only six `variant` x `state` combinations exist in the design, and the
+component reproduces exactly that: `current` is always highlighted with a
+border, `future` is always disabled, and only `completed` reads `state`
+(`idle`, `hover`, `active`, `focus`).
 
 ## Parts
 
@@ -77,8 +78,5 @@ disabled, and only `completed` reads `state`.
 
 ## Design status
 
-The Figma component has no `--ui-stepper-item-*` token tier yet. The
-implementation consumes semantic/generic tokens whose resolved values match the
-design variables exactly — see `tokens.yaml` for the mapping and the one value
-(the 8px container radius) left as a static utility because tokens-pd has no
-generic radius scale to point at.
+The Figma component has a dedicated `--ui-stepper-item-*` token tier as of the
+2026-08-24 sync — see `tokens.yaml` for the full list.

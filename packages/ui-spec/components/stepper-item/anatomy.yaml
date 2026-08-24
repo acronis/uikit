@@ -3,23 +3,23 @@ component: StepperItem
 
 schematic: |
   container (div by default, polymorphic)      variant: current | completed | future
-  +---------------------------------------+                state: idle | hover | active
+  +---------------------------------------+                state: idle | hover | active | focus
   |  ( avatar-slot )   label              |
   +---------------------------------------+
 
   avatar-slot -> the caller's Avatar, rendered verbatim (never restyled here)
-  label       -> --ui-text-on-surface-primary, or --ui-text-on-surface-disabled when future
-  container   -> --ui-background-surface-active (current, and completed+active)
-                 --ui-background-surface-hover  (completed+hover)
+  label       -> --ui-stepper-item-{current,completed}-label-color, or -future-label-color
+  container   -> --ui-stepper-item-current-container-color + border (current)
+                 --ui-stepper-item-completed-container-color-{hover,active,focus-ring} (completed+state)
                  no fill                        (completed+idle, future)
 
 root:
   element: div
   description: >-
     The step's container. Lays the marker and the label out in a row and carries
-    the background for the current step and for a completed step's hover/active
-    look. Polymorphic via the `render` prop — a completed step is usually a real
-    `<button>` that jumps back, and it then carries the library's 3px
+    the background for the current step and for a completed step's hover/active/
+    focus look. Polymorphic via the `render` prop — a completed step is usually a
+    real `<button>` that jumps back, and it then carries the library's 3px
     `focus-visible` ring. A future step is marked `aria-disabled`, dropped from
     the tab order (`tabindex="-1"`), and takes no pointer events; on the default
     `<div>` it also gets an explicit `role="link"` so `aria-disabled` is actually
@@ -46,9 +46,9 @@ layout:
   align: center
   order: [avatar-slot, label]
 
-# Only five of the nine variant x state combinations exist in the design, and
-# that asymmetry is the component's contract: `state` is a real axis, but it is
-# only observable on a completed step.
+# `state` gained a fourth value (`focus`) with the dedicated `--ui-stepper-item-*`
+# token tier (re-synced 2026-08-24, see tokens.yaml) — it is a real axis, but it
+# is only observable on a completed step.
 states:
   - id: current
     trigger: "variant === 'current'"
@@ -77,6 +77,11 @@ states:
     affects: [container]
   - id: active
     trigger: "state === 'active' (visible only when variant === 'completed')"
+    kind: prop
+    prop: state
+    affects: [container]
+  - id: focus
+    trigger: "state === 'focus' (visible only when variant === 'completed')"
     kind: prop
     prop: state
     affects: [container]

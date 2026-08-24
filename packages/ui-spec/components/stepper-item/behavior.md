@@ -15,15 +15,15 @@
 ## Variant drives the step's role
 
 - **Given** `variant="current"`
-  **Then** the container is filled with the active surface and the name uses the
-  primary surface text — regardless of `state`, because the design draws the
-  current step in exactly one look.
+  **Then** the container is filled and bordered with the current-step tokens
+  and the name uses the current-step label color — regardless of `state`,
+  because the design draws the current step in exactly one look.
 - **Given** `variant="completed"`
-  **Then** the name uses the primary surface text and the container is filled only
-  according to `state`.
+  **Then** the name uses the completed-step label color and the container is
+  filled only according to `state`.
 - **Given** `variant="future"`
-  **Then** the name uses the disabled surface text, the container has no fill, the
-  element is marked `aria-disabled`, it is removed from the tab order
+  **Then** the name uses the future-step label color, the container has no
+  fill, the element is marked `aria-disabled`, it is removed from the tab order
   (`tabindex="-1"`), and it receives no pointer events — again regardless of
   `state`. On the default `<div>` it also carries `role="link"`, without which
   `aria-disabled` would not be announced at all (see `accessibility.md`).
@@ -33,10 +33,11 @@
 - **Given** `variant="completed"` **and** `state="idle"`
   **Then** the container has no fill.
 - **Given** `variant="completed"` **and** `state="hover"`
-  **Then** the container is filled with the hover surface.
+  **Then** the container is filled with the hover token.
 - **Given** `variant="completed"` **and** `state="active"`
-  **Then** the container is filled with the active surface — the same fill the
-  current step carries.
+  **Then** the container is filled with the active token.
+- **Given** `variant="completed"` **and** `state="focus"`
+  **Then** the container is filled with the focus-ring token.
 - **Given** any `state` **and** `variant` of `current` or `future`
   **Then** nothing changes. `state` is not silently dropped from the contract: it
   still appears as a data attribute, so a consumer can key off it.
@@ -70,4 +71,5 @@
   application decides and passes `variant` per step.
 - The marker's content and appearance — the caller composes the avatar.
 - Hover and press detection: `state` is declarative, so the consumer decides when
-  a step looks hovered or pressed (`Stepper` does not — it owns no step state).
+  a step looks hovered, pressed, or focused (`Stepper` does not — it owns no
+  step state).

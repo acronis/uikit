@@ -40,25 +40,19 @@ import { cn } from '@/lib/utils';
 // inventing a bespoke breakpoint for one component would put it out of step
 // with every other responsive surface in the kit.
 //
-// ── Token substitution (placeholder — re-point once design ships the tier) ──
-// Same situation as `StepperItem`: the design references `components/Stepper/*`
-// variables, but there is no `--ui-stepper-*` tier in
-// @acronis-platform/tokens-pd (a grep for `Stepper` across tokens-pd and the
-// design-tokens source returns nothing). Rather than hand-author values, this
-// consumes the semantic/generic tokens whose *resolved* value in
-// `packages/tokens-pd/css/default.css` matches the Figma variable exactly —
-// verified value-by-value:
+// ── Tokens — dedicated `--ui-stepper-*` tier (2026-08-24) ──
+// Re-synced from Figma: @acronis-platform/tokens-pd now ships a `Stepper` tier
+// (see `packages/tokens-pd/css/Stepper/default.css`), which replaces the
+// semantic/generic placeholder tokens (`--ui-gap-4`, `--ui-text-on-surface-*`)
+// this component used before that tier existed:
 //
-//   components/Stepper/_global/list/gap      (4px)     -> --ui-gap-4
-//   (the item row's gap came through Figma as the generic `gap/gap-8`,
-//    the same 8px token StepperItem already uses internally)   -> --ui-gap-8
-//   components/Stepper/_global/prefix/color  (#61656b) -> --ui-text-on-surface-secondary
-//   components/Stepper/current/label/color   (#18191b) -> --ui-text-on-surface-primary
-//   components/Stepper/next/label/color      (#18191b) -> --ui-text-on-surface-primary
+//   --ui-stepper-breakpoint-default-line-gap   -> the summary's two-line gap
+//   --ui-stepper-breakpoint-default-label-color -> the "Step X of Y:" / "Next:" prefix
+//   --ui-stepper-breakpoint-default-value-color -> the current/next step name
+//   --ui-stepper-breakpoint-lg-container-gap    -> the wide item row's gap
 //
-// The last two are separate Figma variables carrying an identical value, so one
-// semantic token covers both faithfully — and it is the same token StepperItem
-// already uses for its own label, which is the point.
+// The tier defines one shared `value-color`/`label-color` pair for both the
+// current-step line and the next-step line, so a single token covers both.
 
 export interface StepperProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -124,23 +118,23 @@ const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
       {/* Compact summary — the only thing visible below the `lg` breakpoint. */}
       <div
         data-slot="stepper-summary"
-        className="flex flex-col gap-[var(--ui-gap-4)] text-sm leading-6 lg:hidden"
+        className="flex flex-col gap-[var(--ui-stepper-breakpoint-default-line-gap)] text-sm leading-6 lg:hidden"
       >
         <p data-slot="stepper-current-line">
-          <span className="text-[var(--ui-text-on-surface-secondary)]">
+          <span className="text-[var(--ui-stepper-breakpoint-default-label-color)]">
             {stepLabel} {currentStep} {ofLabel} {totalSteps}
             {separatorLabel}
           </span>
-          <span className="text-[var(--ui-text-on-surface-primary)]">
+          <span className="text-[var(--ui-stepper-breakpoint-default-value-color)]">
             {current}
           </span>
         </p>
         {next != null && (
           <p data-slot="stepper-next-line">
-            <span className="text-[var(--ui-text-on-surface-secondary)]">
+            <span className="text-[var(--ui-stepper-breakpoint-default-label-color)]">
               {nextLabel}{' '}
             </span>
-            <span className="text-[var(--ui-text-on-surface-primary)]">
+            <span className="text-[var(--ui-stepper-breakpoint-default-value-color)]">
               {next}
             </span>
           </p>
@@ -150,7 +144,7 @@ const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
       {/* The item row — hidden below `lg`, where the summary replaces it. */}
       <div
         data-slot="stepper-items"
-        className="hidden flex-wrap content-start items-start justify-start gap-[var(--ui-gap-8)] lg:flex"
+        className="hidden flex-wrap content-start items-start justify-start gap-[var(--ui-stepper-breakpoint-lg-container-gap)] lg:flex"
       >
         {children}
       </div>

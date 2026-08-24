@@ -38,22 +38,25 @@ describe('StepperItem', () => {
     expect(root).toHaveAttribute('data-variant', 'current');
     expect(root).toHaveAttribute('data-state', 'idle');
     expect(root).toHaveClass(
-      'bg-[var(--ui-background-surface-active)]',
-      'text-[var(--ui-text-on-surface-primary)]',
-      'gap-[var(--ui-gap-8)]',
-      'px-[var(--ui-gap-16)]',
-      'py-[var(--ui-gap-8)]',
-      'rounded-lg'
+      'border-[length:var(--ui-stepper-item-current-container-border-width)]',
+      'border-[var(--ui-stepper-item-current-container-border-color)]',
+      'bg-[var(--ui-stepper-item-current-container-color)]',
+      'text-[var(--ui-stepper-item-current-label-color)]',
+      'gap-[var(--ui-stepper-item-global-container-gap)]',
+      'pl-[var(--ui-stepper-item-global-container-padding-l)]',
+      'pr-[var(--ui-stepper-item-global-container-padding-r)]',
+      'py-[var(--ui-stepper-item-global-container-padding-y)]',
+      'rounded-[var(--ui-stepper-item-global-container-border-radius)]'
     );
   });
 
   it('keeps the current variant highlighted regardless of state', () => {
-    for (const state of ['idle', 'hover', 'active'] as const) {
+    for (const state of ['idle', 'hover', 'active', 'focus'] as const) {
       const { container } = render(
         <StepperItem avatar={avatar} label="Step" state={state} />
       );
       expect(container.firstElementChild).toHaveClass(
-        'bg-[var(--ui-background-surface-active)]'
+        'bg-[var(--ui-stepper-item-current-container-color)]'
       );
     }
   });
@@ -63,11 +66,12 @@ describe('StepperItem', () => {
       <StepperItem avatar={avatar} label="Step" variant="completed" />
     );
     expect(idle.firstElementChild).toHaveClass(
-      'text-[var(--ui-text-on-surface-primary)]'
+      'text-[var(--ui-stepper-item-completed-label-color)]'
     );
     expect(idle.firstElementChild).not.toHaveClass(
-      'bg-[var(--ui-background-surface-hover)]',
-      'bg-[var(--ui-background-surface-active)]'
+      'bg-[var(--ui-stepper-item-completed-container-color-hover)]',
+      'bg-[var(--ui-stepper-item-completed-container-color-active)]',
+      'bg-[var(--ui-stepper-item-completed-container-color-focus-ring)]'
     );
 
     const { container: hover } = render(
@@ -79,7 +83,7 @@ describe('StepperItem', () => {
       />
     );
     expect(hover.firstElementChild).toHaveClass(
-      'bg-[var(--ui-background-surface-hover)]'
+      'bg-[var(--ui-stepper-item-completed-container-color-hover)]'
     );
 
     const { container: active } = render(
@@ -91,7 +95,19 @@ describe('StepperItem', () => {
       />
     );
     expect(active.firstElementChild).toHaveClass(
-      'bg-[var(--ui-background-surface-active)]'
+      'bg-[var(--ui-stepper-item-completed-container-color-active)]'
+    );
+
+    const { container: focus } = render(
+      <StepperItem
+        avatar={avatar}
+        label="Step"
+        variant="completed"
+        state="focus"
+      />
+    );
+    expect(focus.firstElementChild).toHaveClass(
+      'bg-[var(--ui-stepper-item-completed-container-color-focus-ring)]'
     );
   });
 
@@ -112,16 +128,18 @@ describe('StepperItem', () => {
     expect(root).toHaveAttribute('role', 'link');
     expect(root).toHaveAttribute('tabindex', '-1');
     expect(root).toHaveClass(
-      'text-[var(--ui-text-on-surface-disabled)]',
+      'text-[var(--ui-stepper-item-future-label-color)]',
       'pointer-events-none'
     );
-    expect(root).not.toHaveClass('bg-[var(--ui-background-surface-hover)]');
+    expect(root).not.toHaveClass(
+      'bg-[var(--ui-stepper-item-completed-container-color-hover)]'
+    );
   });
 
   it('still reports the state it was given on a future step', () => {
     // `state` is never dropped from the contract, even where it paints nothing,
     // so a consumer can key off the data attribute.
-    for (const state of ['idle', 'hover', 'active'] as const) {
+    for (const state of ['idle', 'hover', 'active', 'focus'] as const) {
       const { container } = render(
         <StepperItem
           avatar={avatar}
@@ -218,7 +236,9 @@ describe('StepperItem', () => {
     );
     const button = screen.getByRole('button', { name: /back to step 1/i });
     expect(button.tagName).toBe('BUTTON');
-    expect(button).toHaveClass('text-[var(--ui-text-on-surface-primary)]');
+    expect(button).toHaveClass(
+      'text-[var(--ui-stepper-item-completed-label-color)]'
+    );
   });
 
   it('merges a consumer className and forwards the ref', () => {
