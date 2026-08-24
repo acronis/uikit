@@ -21,8 +21,9 @@ import { Card } from '@/components/ui/card';
 // `card-primary` / `card-secondary` differ in exactly one thing: the nested
 // `Card`'s surface token. Everything else — border, radius, composition — is
 // identical, so the two are a single cva branch pair rather than a separate
-// prop. `Card`'s own default is the primary surface, so `card-primary` only
-// needs the width override.
+// prop. Both branches set their surface token explicitly (rather than
+// relying on `Card`'s own primary default) so the pair stays correct even
+// if that default ever changes.
 //
 // No `--ui-card-*` component tier exists in tokens-pd, so — like `card.tsx` —
 // this stays on the shared semantic tier. Figma's default `contentList`

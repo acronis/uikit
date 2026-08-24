@@ -169,9 +169,12 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
     ref
   ) => {
     const { collapsible: inAccordion, open } = useAccordionContainerContext();
-    // Drop the divider when this header is the last visible element of a
-    // collapsed panel — otherwise it doubles up against Card's own outer
-    // border once there's no content below to separate it from.
+    // Drop the divider whenever this header sits in a collapsed accordion
+    // panel — it otherwise doubles up against Card's own outer border once
+    // there's nothing visible below to separate it from. This doesn't check
+    // whether the panel actually has no visible content below (a sibling
+    // outside AccordionContainer.Content, or a CardFooter with its own
+    // border-t, can still mask a doubled divider in those cases).
     const hideDivider = isCollapsible && inAccordion && !open;
 
     return useRender({

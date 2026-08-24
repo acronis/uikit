@@ -2,8 +2,9 @@
 // Node 7662:8727 ("CardSection"). Figma's PascalCase `variant` options map to
 // the kebab-case cva keys; `hasBottomBorder` is a Figma *variant* (string
 // "false"/"true"), not a boolean property, so it maps through `figma.enum`.
-// The header's `↳title` / `↳extras` / `↳actions` and the per-variant content
-// slots keep Figma's arrow-prefixed property names.
+// The header's `↳title` / `↳extras` / `↳actions` keep Figma's arrow-prefixed
+// property names; the per-variant content slots (`content`, `contentTag`,
+// `contentList`, `contentTable`) don't carry the prefix in Figma.
 //
 // `hasHeader` is deliberately NOT mapped. In code it forms a discriminated
 // union with `title` (header on ⇒ title required), so it can only ever be the

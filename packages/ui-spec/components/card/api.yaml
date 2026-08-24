@@ -95,7 +95,7 @@ contract:
     - name: header.avatarLabel
       type: string
       required: false
-      default: undefined
+      default: ''
       description: Initials shown in the default avatar; ignored if `header.avatar` is provided.
 
     - name: header.avatar
