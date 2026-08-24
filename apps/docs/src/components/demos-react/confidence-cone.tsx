@@ -6,7 +6,7 @@ import {
 } from '@acronis-platform/ui-react';
 
 // Actuals to the hand-off point (Jun), then a forecast with a widening cone.
-// Series colors are caller-supplied via `config` (no chart token tier yet).
+// Series colors come from the chart's default categorical palette.
 const data = [
   { month: 'Jan', actual: 100 },
   { month: 'Feb', actual: 118 },

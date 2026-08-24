@@ -15,9 +15,10 @@ contract:
       type: ChartConfig
       required: true
       description: >-
-        Per-leaf map of label / color, keyed by the leaf's `nameKey` value (from
-        the shared Chart primitives). Turned into `--color-<name>` custom
-        properties. Colors are caller-supplied.
+        Leaves take their colour from the container's `palette`; each entry,
+        keyed by the leaf's `nameKey` value, maps that leaf to a `label` and an
+        optional `tone`. Resolved into the `--color-<name>` custom properties the
+        cells fill from.
     - name: dataKey
       type: string
       required: true

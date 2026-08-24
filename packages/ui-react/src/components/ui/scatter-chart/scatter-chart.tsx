@@ -65,10 +65,10 @@ export interface ScatterChartProps
   /** One `<Scatter>` per entry — each with its own point array. Use a single entry for an ungrouped scatter. */
   series: ScatterSeries[];
   /**
-   * Per-series map of `label` / `color`, keyed by `series[].key` (imported from
-   * the shared `Chart` primitives). Turned into `--color-<key>` custom
-   * properties. Colors are caller-supplied — reference an existing semantic
-   * `--ui-*` token; there is no chart palette tier yet.
+   * Per-series map of `label` / `icon` / `tone`, keyed by `series[].key`
+   * (imported from the shared `Chart` primitives). Turned into `--color-<key>`
+   * custom properties. Series take their colour from the container's `palette`;
+   * each entry maps a key to a `label` and an optional `tone`.
    */
   config: ChartConfig;
   /** Numeric field for the horizontal axis. */

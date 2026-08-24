@@ -2,12 +2,12 @@ spec_version: '1.0'
 component: RadarChart
 
 # References only. Values live in @acronis-platform/tokens-pd. RadarChart has no
-# token tier of its own — series colors are supplied by the caller via `config`
-# (a dedicated `--ui-chart-*` data-viz palette is pending an upstream design
-# pass). The chrome (tooltip, legend, polar grid) is inherited from the shared
-# Chart primitives; the component adds a local override so the polar angle-axis
-# labels resolve the muted-foreground token (the shared container themes only
-# cartesian ticks).
+# token tier of its own, and needs none: series colours come from the shared
+# `--ui-dataviz-*` palettes on the semantic tier, resolved by ChartContainer out
+# of the `palette` prop. The chrome (tooltip, legend, polar grid) is inherited
+# from the shared Chart primitives; the component adds a local override so the
+# polar angle-axis labels resolve the muted-foreground token (the shared
+# container themes only cartesian ticks).
 source: '@acronis-platform/tokens-pd'
 
 tokens:

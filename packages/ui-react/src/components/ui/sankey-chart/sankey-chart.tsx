@@ -61,10 +61,10 @@ export interface SankeyChartProps extends Omit<
     links: ReadonlyArray<SankeyChartLink>;
   };
   /**
-   * Per-node map of `label` / `color`, keyed by the node's `name` (imported from
-   * the shared `Chart` primitives). Turned into `--color-<name>` custom
-   * properties. Colors are caller-supplied — reference an existing semantic
-   * `--ui-*` token; there is no chart palette tier yet.
+   * Per-node map of `label` / `icon` / `tone`, keyed by the node's `name`
+   * (imported from the shared `Chart` primitives). Turned into `--color-<name>`
+   * custom properties. Series take their colour from the container's `palette`;
+   * each entry maps a key to a `label` and an optional `tone`.
    */
   config: ChartConfig;
   /** Vertical gap between nodes in the same column. */
@@ -217,7 +217,7 @@ export function makeSankeyTooltip(
   const labelFor = (key: string): React.ReactNode => config[key]?.label ?? key;
   // Resolve each link's dot color by its "source - target" name (which is the
   // tooltip item's name): the link's own color if set, else the target's, via
-  // the `--color-<name>` bridge so a per-theme config resolves too.
+  // the `--color-<name>` bridge.
   const styleByName = new Map<string, { color: string; opacity: number }>();
   for (const link of links) {
     const source = nodes[link.source]?.name ?? '';

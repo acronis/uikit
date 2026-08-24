@@ -6,11 +6,13 @@ it renders a themed recharts `FunnelChart` — on-chart stage labels and a toolt
 included — so you don't hand-compose recharts children. (There's no legend: the
 inline labels already name every stage.)
 
-> **Design-pending v1.** Ported from the apps/demo `FunnelChartPlayground`. There
-> is no chart token tier yet, so **stage colors are supplied by the caller** via
-> `config` — a dedicated `--ui-chart-*` data-viz palette is a pending upstream
-> design deliverable. The chrome is reconciled with Figma later; Code Connect is
-> deferred.
+Stage colors come from the `palette` prop — a dataviz palette resolving to the
+`--ui-dataviz-*` tokens — not from `config`. Stages are an ordered progression,
+so `{ type: 'sequential', ramp }` usually reads better than the default
+`categorical`.
+
+> **Design-pending v1.** Ported from the apps/demo `FunnelChartPlayground`. The
+> chrome is reconciled with Figma later; Code Connect is deferred.
 
 ## When to use
 

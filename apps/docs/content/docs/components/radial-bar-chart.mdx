@@ -20,16 +20,11 @@ the label field (`nameKey`) — it renders a themed recharts radial bar chart
 don't hand-compose recharts children.
 
 Each data row becomes a concentric arc (like a pie's slices unrolled into rings).
-Arc colors are supplied by the caller through `config`, **keyed by each `nameKey`
-value**: `RadialBarChart` turns those into the `--color-<name>` custom properties
-its arcs fill from.
-
-> **Design-pending v1**, ported from the demo `RadialChartPlayground`. There is no
-> chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands.
+Arc colors come from the `palette` prop, not from `config` — see
+[Palettes](/components/chart#palettes). Each `config` entry, **keyed by a
+`nameKey` value**, maps that arc to a `label` and an optional `tone` that
+re-points it within the palette. `RadialBarChart` resolves them into the
+`--color-<name>` custom properties its arcs fill from.
 
 ## Examples
 

@@ -176,10 +176,10 @@ export interface RadarChartProps
    */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
-   * Per-series map of `label` / `color` (imported from the shared `Chart`
-   * primitives). Turned into `--color-<key>` custom properties. Series colors
-   * are caller-supplied — reference an existing semantic `--ui-*` token; there is
-   * no chart palette tier yet.
+   * Per-series map of `label` / `icon` / `tone` (imported from the shared
+   * `Chart` primitives). Turned into `--color-<key>` custom properties. Series
+   * take their colour from the container's `palette`; each entry maps a key to a
+   * `label` and an optional `tone`.
    */
   config: ChartConfig;
   /** Series to plot — one `<Radar>` per key. Each must exist in `config` and in every data row. */

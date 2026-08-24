@@ -269,13 +269,21 @@ export function resolveSeriesColor(
  *
  * Only series that named a `tone` can collide: automatic assignment is
  * injective by construction (up to `categorical`'s 16-series wrap).
+ *
+ * Pass the chart's `config` to exclude intentional aliases: a series with
+ * `tone: { sameAs }` shares its target's colour on purpose, so it is not a
+ * collision. Without the config every alias reads as a duplicate.
  */
 export function findDuplicateTones(
-  colors: Readonly<Record<string, string>>
+  colors: Readonly<Record<string, string>>,
+  config?: Readonly<Record<string, { tone?: { sameAs?: string } }>>
 ): string[][] {
   const byColor = new Map<string, string[]>();
 
   for (const [key, color] of Object.entries(colors)) {
+    if (config?.[key]?.tone?.sameAs) {
+      continue;
+    }
     const group = byColor.get(color);
     if (group) {
       group.push(key);

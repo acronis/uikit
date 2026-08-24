@@ -9,9 +9,7 @@ const data = [
   { browser: 'Edge', value: 173 },
 ];
 
-// Slice colors are caller-supplied via `config`, keyed by each slice's nameKey
-// value (no chart token tier yet) — here referencing the shared semantic
-// brand/status tokens.
+// Slice colors come from the chart's default categorical palette.
 const config = {
   Chrome: { label: 'Chrome' },
   Safari: { label: 'Safari' },

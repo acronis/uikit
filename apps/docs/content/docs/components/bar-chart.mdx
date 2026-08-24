@@ -19,16 +19,11 @@ primitives. Give it `data`, a per-series `config`, the series to plot
 chart (tooltip, legend, axes, grid included), so you don't hand-compose recharts
 children.
 
-Series colors are supplied by the caller through `config`: each entry maps a data
-key to a `label` and a `color`. `BarChart` turns those into the `--color-<key>`
-custom properties its bars fill from.
-
-> **Design-pending v1**, ported from the demo `BarChartPlayground`. There is no
-> chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands.
+Series colors come from the `palette` prop, not from `config` — see
+[Palettes](/components/chart#palettes). Each `config` entry maps a data key to a
+`label` and an optional `tone` that re-points that one series within the palette.
+`BarChart` resolves them into the `--color-<key>` custom properties its bars fill
+from.
 
 ## Examples
 

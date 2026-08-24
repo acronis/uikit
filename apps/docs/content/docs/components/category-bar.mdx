@@ -15,18 +15,15 @@ import type { ChartConfig } from '@acronis-platform/ui-react';
 
 `CategoryBar` renders a single horizontal bar split into proportional colored
 segments — a part-to-whole across a handful of categories, in one row. Give it a
-`data` array (`key` + `value`) and a per-segment `config` (label + color); each
-segment's width is its value over the total. It's a plain flex composition, not a
-recharts chart, so there are no axes or grid.
+`data` array (`key` + `value`) and a per-segment `config`; each segment's width is
+its value over the total. It's a plain flex composition, not a recharts chart, so
+there are no axes or grid.
 
-Segment `key`s are the color keys, **keyed into `config`**; they must be unique
-and CSS-safe. `config[key].label` carries the human-readable text.
-
-> **Design-pending v1.** There is no chart token tier yet, so the example colors
-> reference the shared status tokens; a dedicated `--ui-chart-*` data-viz palette
-> is pending an upstream design pass. Hues absent from the semantic palette (a
-> light blue, a purple) borrow the nearest existing token, and borrowed
-> brand/status tokens are brand-dependent.
+Segment colors come from the `palette` prop, not from `config` — see
+[Palettes](/components/chart#palettes). Segment `key`s are the color keys,
+**keyed into `config`**: each entry maps a segment to a `label` and an optional
+`tone` that re-points it within the palette, resolved into the `--color-<key>`
+custom properties the segments fill from. Keys must be unique and CSS-safe.
 
 ## Examples
 
@@ -45,6 +42,7 @@ const config = {
 
 <CategoryBar
   config={config}
+  palette={{ type: 'status' }}
   data={[
     { key: 'passed', value: 68 },
     { key: 'warnings', value: 22 },

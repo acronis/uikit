@@ -2,11 +2,11 @@ spec_version: '1.0'
 component: ConfidenceCone
 
 # References only. Values live in @acronis-platform/tokens-pd. ConfidenceCone has
-# no token tier of its own — the metric colors are supplied by the caller via
-# `config` (a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-# design pass). Each metric uses one color: its actual area, forecast line, and
-# cone band all reuse its actual series' color (the cone/area fills at low
-# opacity), and so do its dots and the styled forecast ticks. The chrome,
+# no token tier of its own, and needs none: metric colours come from the shared
+# `--ui-dataviz-*` palettes on the semantic tier, resolved by ChartContainer out
+# of the `palette` prop. Each metric uses one colour: its actual area, forecast
+# line, and cone band all reuse its actual series' colour (the cone/area fills at
+# low opacity), and so do its dots and the styled forecast ticks. The chrome,
 # forecast-region marker and thresholds resolve the semantic tokens below.
 source: '@acronis-platform/tokens-pd'
 

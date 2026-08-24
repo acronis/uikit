@@ -76,28 +76,42 @@ export function resolveChartColors(
     };
   }
 
+  // An alias may point at another alias, in any order, so a single pass over
+  // the aliases can miss a chain that is fully resolvable. Keep sweeping the
+  // pending set until nothing more resolves; what is left is a cycle or a
+  // target that isn't in this config at all.
+  const pending = new Map<string, string>();
   for (const [key, item] of entries) {
-    if (!isAlias(item)) {
-      continue;
+    if (isAlias(item)) {
+      pending.set(key, item.tone!.sameAs as string);
     }
-    const target = item.tone?.sameAs as string;
-    const targetColor = resolved[target]?.color;
+  }
 
-    if (!targetColor && process.env.NODE_ENV !== 'production') {
+  let changed = true;
+  while (changed && pending.size > 0) {
+    changed = false;
+    for (const [key, target] of pending) {
+      const targetColor = resolved[target]?.color;
+      if (targetColor !== undefined) {
+        resolved[key] = { ...config[key], color: targetColor };
+        pending.delete(key);
+        changed = true;
+      }
+    }
+  }
+
+  for (const [key, target] of pending) {
+    if (process.env.NODE_ENV !== 'production') {
       console.warn(
         `[ui-react] Chart series "${key}" aliases "${target}", which is not a palette-assigned series in this config. Falling back to neutral.`
       );
     }
-
-    resolved[key] = {
-      ...item,
-      color: targetColor ?? CHART_STATUS_TOKENS.neutral,
-    };
+    resolved[key] = { ...config[key], color: CHART_STATUS_TOKENS.neutral };
   }
 
-  // Rebuilt in the config's own order: the two passes above visit
-  // non-aliases first, and callers (legend order, `Object.entries` consumers)
-  // rely on the order they wrote.
+  // Rebuilt in the config's own order: the passes above visit non-aliases
+  // first, and callers (legend order, `Object.entries` consumers) rely on the
+  // order they wrote.
   return Object.fromEntries(entries.map(([key]) => [key, resolved[key]]));
 }
 

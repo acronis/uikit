@@ -25,14 +25,15 @@ recharts series are one metric, the legend names it once — a single swatch und
 the actual series' label — and the forecast key's color is re-pointed at the
 actual series' color, so `config` can't paint the metric in two hues.
 
+Metric colors come from the `palette` prop, not from `config` — see
+[Palettes](/components/chart#palettes). Each `config` entry maps a key to a
+`label` and an optional `tone` that re-points it within the palette, resolved
+into the `--color-<key>` custom properties the lines and areas paint from. The
+actual area and the cone band reuse the metric's color at low opacity.
+
 Pass `series` to plot several metrics against one shared axis, omit the bound
 keys for a projection with no cone, and layer on `referenceLine` thresholds,
 `showDots` and `styleForecastTicks` — each covered below.
-
-> **Design-pending v1**, built net-new (no demo playground). There is no chart
-> token tier yet, so the metric color references a shared brand token — a
-> dedicated `--ui-chart-*` data-viz palette is pending an upstream design pass.
-> The actual area and cone band reuse that color at low opacity.
 
 ## Examples
 

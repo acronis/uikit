@@ -221,10 +221,10 @@ export interface ConfidenceConeBaseProps
    */
   data: ReadonlyArray<Record<string, string | number | null | undefined>>;
   /**
-   * Per-series map of `label` / `color` for the actual + forecast lines
-   * (imported from the shared `Chart` primitives). Colors are caller-supplied —
-   * reference an existing semantic `--ui-*` token; there is no chart palette tier
-   * yet. Each metric renders in one hue: its cone band and forecast line both
+   * Per-series map of `label` / `icon` / `tone` for the actual + forecast lines
+   * (imported from the shared `Chart` primitives). Series take their colour from
+   * the container's `palette`; each entry maps a key to a `label` and an optional
+   * `tone`. Each metric renders in one hue: its cone band and forecast line both
    * reuse its actual series' color — actual and forecast differ by line style,
    * not hue.
    */

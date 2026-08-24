@@ -26,16 +26,6 @@ contract:
         or `status` (6 semantic tones). Series walk it in its defined order.
         There is no free-form colour and no "no palette" state, so a chart
         cannot paint a hue outside the design system.
-    - name: tone
-      type: ChartSeriesTone
-      required: false
-      description: >-
-        Per-entry override inside `config`. `{ slot }` picks another categorical
-        hue; `{ status }` names a tone under the status palette; `{ sameAs }`
-        paints whatever another series paints, for a twin series (a forecast
-        tail, a projection band) that must not read as a second metric.
-        `sequential` and `diverging` take no override — their stops are a ramp,
-        meaningful only in relation to each other.
     - name: active
       type: boolean
       required: false

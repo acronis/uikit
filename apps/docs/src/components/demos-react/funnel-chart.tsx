@@ -9,9 +9,7 @@ const data = [
   { stage: 'Purchases', value: 620 },
 ];
 
-// Stage colors are caller-supplied via `config`, keyed by each stage's nameKey
-// value (no chart token tier yet) — here referencing the shared semantic
-// brand/status tokens.
+// Stage colors come from the chart's default categorical palette.
 const config = {
   Visits: { label: 'Visits' },
   Signups: {

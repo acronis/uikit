@@ -4,8 +4,8 @@ import { SankeyChart, type ChartConfig } from '@acronis-platform/ui-react';
 
 // A certification-compliance flow: all tenants split into certified / uncertified,
 // then certified by validity. Node `name`s are CSS-safe color keys; the display
-// text + color come from `config` (no chart token tier yet, so colors reference
-// shared semantic status tokens — chromatic in every brand).
+// text + color come from `config`; pass `palette={{ type: 'status' }}` to route
+// the `tone: { status }` entries through the status palette.
 const data = {
   nodes: [
     { name: 'all' },

@@ -11,8 +11,7 @@ const data = [
   { subject: 'History', alice: 65, bob: 85 },
 ];
 
-// Series colors are caller-supplied via `config` (no chart token tier yet) —
-// here referencing the shared semantic brand/status tokens.
+// Series colors come from the chart's default categorical palette.
 const config = {
   alice: { label: 'Alice' },
   bob: { label: 'Bob' },

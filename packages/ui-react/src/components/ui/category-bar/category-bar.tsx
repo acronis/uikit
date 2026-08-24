@@ -64,8 +64,8 @@ export interface CategoryBarTooltipContext extends CategoryBarSegment {
   percent: number;
   /**
    * CSS color reference for the segment — the `var(--color-<key>)` bridge, which
-   * resolves the config entry's `color` or its per-theme `theme` value. Usable
-   * anywhere a CSS color is (e.g. a `style` background); not a literal value.
+   * resolves the palette stop assigned to this segment. Usable anywhere a CSS
+   * color is (e.g. a `style` background); not a literal value.
    */
   color: string;
 }

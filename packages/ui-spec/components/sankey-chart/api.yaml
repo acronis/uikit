@@ -18,9 +18,10 @@ contract:
       type: ChartConfig
       required: true
       description: >-
-        Per-node map of label / color, keyed by the node's `name` (from the shared
-        Chart primitives). Turned into `--color-<name>` custom properties. Colors
-        are caller-supplied.
+        Nodes take their colour from the container's `palette`; each entry, keyed
+        by the node's `name`, maps that node to a `label` and an optional `tone`.
+        Resolved into the `--color-<name>` custom properties the node bars fill
+        from (and the link ribbons tint from).
     - name: nodePadding
       type: number
       required: false

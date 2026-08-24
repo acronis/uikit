@@ -497,11 +497,11 @@ export interface RadialBarChartProps
   /** Row-per-arc data. Each object holds the arc's `nameKey` label + its `dataKey` numeric value. */
   data: ReadonlyArray<RadialBarChartDatum>;
   /**
-   * Per-arc map of `label` / `color`, keyed by the arc's `nameKey` value — or, in
-   * multi-metric mode, by each `dataKeys` entry (imported from the shared `Chart`
-   * primitives). Turned into `--color-<name>` custom properties. Colors are
-   * caller-supplied — reference an existing semantic `--ui-*` token; there is no
-   * chart palette tier yet.
+   * Per-arc map of `label` / `icon` / `tone`, keyed by the arc's `nameKey` value
+   * — or, in multi-metric mode, by each `dataKeys` entry (imported from the
+   * shared `Chart` primitives). Turned into `--color-<name>` custom properties.
+   * Series take their colour from the container's `palette`; each entry maps a
+   * key to a `label` and an optional `tone`.
    */
   config: ChartConfig;
   /** Numeric field that sizes each arc. Ignored when `dataKeys` is set. */

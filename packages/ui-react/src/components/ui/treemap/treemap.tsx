@@ -233,10 +233,11 @@ export interface TreemapProps
    */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
-   * Per-leaf map of `label` / `color`, keyed by the leaf's `nameKey` value
-   * (imported from the shared `Chart` primitives). Turned into `--color-<name>`
-   * custom properties. Colors are caller-supplied — reference an existing
-   * semantic `--ui-*` token; there is no chart palette tier yet.
+   * Per-leaf map of `label` / `icon` / `tone`, keyed by the leaf's `nameKey`
+   * value (imported from the shared `Chart` primitives). Turned into
+   * `--color-<name>` custom properties. Series take their colour from the
+   * container's `palette`; each entry maps a key to a `label` and an optional
+   * `tone`.
    */
   config: ChartConfig;
   /** Numeric field that sizes each leaf's rectangle. */

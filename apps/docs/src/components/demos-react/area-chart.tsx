@@ -11,8 +11,7 @@ const data = [
   { month: 'Jun', desktop: 214, mobile: 140 },
 ];
 
-// Series colors are caller-supplied via `config` (no chart token tier yet) —
-// here referencing the shared semantic brand/status tokens.
+// Series colors come from the chart's default categorical palette.
 const config = {
   desktop: { label: 'Desktop' },
   mobile: { label: 'Mobile' },

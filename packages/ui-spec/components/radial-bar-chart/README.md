@@ -6,11 +6,11 @@ it renders a themed recharts `RadialBarChart` — concentric arcs, an optional
 background track, tooltip, and legend included — so you don't hand-compose
 recharts children.
 
-> **Design-pending v1.** Ported from the apps/demo `RadialChartPlayground`. There
-> is no chart token tier yet, so **arc colors are supplied by the caller** via
-> `config` — a dedicated `--ui-chart-*` data-viz palette is a pending upstream
-> design deliverable. The chrome is reconciled with Figma later; Code Connect is
-> deferred.
+Arc colors come from the `palette` prop — a dataviz palette resolving to the
+`--ui-dataviz-*` tokens, `categorical` by default — not from `config`.
+
+> **Design-pending v1.** Ported from the apps/demo `RadialChartPlayground`. The
+> chrome is reconciled with Figma later; Code Connect is deferred.
 
 ## When to use
 

@@ -4,10 +4,11 @@ A frequency histogram built on the shared `Chart` primitives. Give it raw
 `values` and a per-series `config`; it bins the samples into equal-width ranges
 and plots the count of each as contiguous bars — you don't pre-aggregate.
 
-> **Design-pending v1.** There is no chart token tier yet, so the bar color is
-> **caller-supplied** via `config` (a dedicated `--ui-chart-*` data-viz palette
-> is a pending upstream design deliverable). No `apps/demo` playground — built
-> net-new. Code Connect is deferred.
+The bar color comes from the `palette` prop — a dataviz palette resolving to the
+`--ui-dataviz-*` tokens, `categorical` by default — not from `config`.
+
+> **Design-pending v1.** No `apps/demo` playground — built net-new. Code Connect
+> is deferred.
 
 ## When to use
 

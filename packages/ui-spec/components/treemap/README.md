@@ -5,13 +5,14 @@ per-leaf `config`, the size field (`dataKey`), and the label field (`nameKey`);
 it renders a themed recharts `Treemap` — cells sized by value, colored + labelled
 per name, with a tooltip — so you don't hand-compose recharts children.
 
-> **Design-pending v1.** Ported from the apps/demo `TreemapChartPlayground`. There
-> is no chart token tier yet, so **cell colors are supplied by the caller** via
-> `config` — a dedicated `--ui-chart-*` data-viz palette is a pending upstream
-> design deliverable. On-cell labels use the `--ui-text-on-status-strong-neutral`
-> token (a light "text on a colored surface" color) over the saturated series
-> colors (pending matched label colors in the real palette). The chrome is
-> reconciled with Figma later; Code Connect is deferred.
+Cell colors come from the `palette` prop — a dataviz palette resolving to the
+`--ui-dataviz-*` tokens, `categorical` by default — not from `config`.
+
+> **Design-pending v1.** Ported from the apps/demo `TreemapChartPlayground`.
+> On-cell labels still use `--ui-text-on-status-strong-neutral` — a generic
+> "text on a colored surface" color — over the palette's cell fills, so the
+> palette owes matched per-stop label colors. The chrome is reconciled with Figma
+> later; Code Connect is deferred.
 
 ## When to use
 

@@ -17,9 +17,10 @@ contract:
       type: ChartConfig
       required: true
       description: >-
-        Per-segment map of label / color, keyed by the segment's `key` (from the
-        shared Chart primitives). Colors are caller-supplied (existing `--ui-*`
-        tokens).
+        Segments take their colour from the container's `palette`; each entry,
+        keyed by the segment's `key`, maps that segment to a `label` and an
+        optional `tone`. Resolved into the `--color-<key>` custom properties the
+        segments fill from.
     - name: size
       type: "'sm' | 'md' | 'lg'"
       required: false
@@ -45,8 +46,8 @@ contract:
         Custom tooltip content per segment — replaces the default (dot + label +
         `value · %`) inside the same card. Ignored when showTooltip is false.
         `label` is the resolved config label (any node, not just a string) and
-        `color` is the segment's `var(--color-<key>)` reference, so it resolves a
-        flat `color` and a per-theme `theme` config alike.
+        `color` is the segment's `var(--color-<key>)` reference, so it follows
+        whichever palette colour the container resolved for that segment.
     - name: valueFormatter
       type: '(value: number) => string'
       required: false

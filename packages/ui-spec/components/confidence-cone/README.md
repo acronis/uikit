@@ -17,11 +17,12 @@ interval. `referenceLine` adds dashed value-axis thresholds, `showDots` marks
 points (filled on the actuals, hollow on the projection), and
 `styleForecastTicks` italicizes and accents the projected period's X ticks.
 
-> **Design-pending v1.** No chart token tier yet, so the metric color is
-> **caller-supplied** via `config` (a dedicated `--ui-chart-*` data-viz palette
-> is a pending upstream design deliverable). The actual area and cone band reuse
-> the actual series' color at low opacity. Built net-new (no `apps/demo`
-> playground); Code Connect deferred.
+Metric colors come from the `palette` prop — a dataviz palette resolving to the
+`--ui-dataviz-*` tokens, `categorical` by default — not from `config`. The actual
+area and the cone band reuse the actual series' color at low opacity.
+
+> **Design-pending v1.** Built net-new (no `apps/demo` playground); Code Connect
+> deferred.
 
 ## When to use
 

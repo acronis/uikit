@@ -2,9 +2,10 @@ spec_version: '1.0'
 component: CategoryBar
 
 # References only. Values live in @acronis-platform/tokens-pd. CategoryBar has no
-# token tier of its own — segment fills are supplied by the caller via `config`
-# (a dedicated `--ui-chart-*` data-viz palette is pending an upstream design
-# pass). Only the track background and the legend/tooltip chrome use tokens.
+# token tier of its own, and needs none: segment fills come from the shared
+# `--ui-dataviz-*` palettes on the semantic tier, resolved by ChartContainer out
+# of the `palette` prop. Only the track background and the legend/tooltip chrome
+# use the tokens below.
 source: '@acronis-platform/tokens-pd'
 
 tokens:

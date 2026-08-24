@@ -27,9 +27,10 @@ import { CategoryBar } from '../../category-bar';
 // autodocs documents that primitive API. Its one visual story is an Overview
 // gallery: one compact example of every per-type chart component in the suite,
 // each built from the REAL component (no hand-wired recharts) with the minimal,
-// valid prop set from that component's own story. Its series still reference
-// the shared semantic status/brand tokens directly; the four palette stories
-// below are the ones that show the `--ui-dataviz-*` palettes.
+// valid prop set from that component's own story. Its series use the default
+// categorical palette — the same as any other chart with no explicit palette;
+// the four palette stories below contrast the four palette types
+// side-by-side.
 const meta = {
   title: 'Widgets/Chart',
   component: ChartContainer,

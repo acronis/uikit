@@ -13,9 +13,9 @@ contract:
       type: ChartConfig
       required: true
       description: >-
-        Single-series map of label / color (from the shared Chart primitives),
-        keyed by `dataKey`. Turned into the `--color-<dataKey>` custom property.
-        Color is caller-supplied.
+        The single series takes its colour from the container's `palette`; the
+        entry, keyed by `dataKey`, maps it to a `label` and an optional `tone`.
+        Resolved into the `--color-<dataKey>` custom property the bars fill from.
     - name: dataKey
       type: string
       required: false

@@ -319,10 +319,11 @@ export interface FunnelChartProps
   /** Row-per-stage data. Each object holds the stage's `nameKey` label + its `dataKey` numeric value. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
-   * Per-stage map of `label` / `color`, keyed by the stage's `nameKey` value
-   * (imported from the shared `Chart` primitives). Turned into `--color-<name>`
-   * custom properties. Colors are caller-supplied — reference an existing
-   * semantic `--ui-*` token; there is no chart palette tier yet.
+   * Per-stage map of `label` / `icon` / `tone`, keyed by the stage's `nameKey`
+   * value (imported from the shared `Chart` primitives). Turned into
+   * `--color-<name>` custom properties. Series take their colour from the
+   * container's `palette`; each entry maps a key to a `label` and an optional
+   * `tone`.
    */
   config: ChartConfig;
   /** Numeric field that sizes each stage (the funnel narrows as it drops). */
@@ -482,8 +483,8 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
         (row) => !stageSettings?.[String(row[nameKey])]?.hidden
       );
       // The ramp's default hue is the first visible stage's own colour — its
-      // `stageSettings` override if it has one, otherwise `--color-*` rather than
-      // `config[name].color` so a per-theme `theme` entry resolves too. Reading
+      // `stageSettings` override if it has one, otherwise the `--color-*`
+      // custom property that ChartStyle emits for this series. Reading
       // the override matters because that stage paints with it, so ramping from
       // the config colour would start the ramp on a hue nothing on screen shows.
       const firstName = visible.length ? String(visible[0][nameKey]) : undefined;

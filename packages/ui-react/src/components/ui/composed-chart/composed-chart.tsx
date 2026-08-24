@@ -144,8 +144,8 @@ export interface ComposedSeries {
    */
   yAxis?: ChartYAxisTarget;
   /**
-   * Paint for this series, overriding its `config` color. Reference an existing
-   * semantic `--ui-*` token; there is no chart palette tier yet.
+   * Paint for this series, overriding the stop of the container's `palette` it
+   * would otherwise take. Reference an existing semantic `--ui-*` token.
    */
   color?: string;
   /**
@@ -235,10 +235,10 @@ export interface ComposedChartProps
   /** Row-per-category data. Each object holds `xKey` + one numeric field per series (`null` breaks a line/area unless `connectNulls`). */
   data: ReadonlyArray<Record<string, string | number | null>>;
   /**
-   * Per-series map of `label` / `color`, keyed by `series[].key` (imported from
-   * the shared `Chart` primitives). Turned into `--color-<key>` custom
-   * properties. Colors are caller-supplied — reference an existing semantic
-   * `--ui-*` token; there is no chart palette tier yet.
+   * Per-series map of `label` / `icon` / `tone`, keyed by `series[].key`
+   * (imported from the shared `Chart` primitives). Turned into `--color-<key>`
+   * custom properties. Series take their colour from the container's `palette`;
+   * each entry maps a key to a `label` and an optional `tone`.
    */
   config: ChartConfig;
   /**

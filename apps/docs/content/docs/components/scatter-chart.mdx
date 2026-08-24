@@ -22,16 +22,13 @@ field (a bubble chart).
 
 Each series carries its **own** point array (points aren't columns of a shared
 row the way bar/line/area series are), so the API takes a `series` list rather
-than `dataKeys`. Series colors are supplied by the caller through `config`, keyed
-by each `series[].key`: `ScatterChart` turns those into the `--color-<key>`
-custom properties its points fill from.
+than `dataKeys`.
 
-> **Design-pending v1**, ported from the demo `ScatterChartPlayground`. There is
-> no chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands.
+Series colors come from the `palette` prop, not from `config` — see
+[Palettes](/components/chart#palettes). Each `config` entry, keyed by a
+`series[].key`, maps that series to a `label` and an optional `tone` that
+re-points it within the palette. `ScatterChart` resolves them into the
+`--color-<key>` custom properties its points fill from.
 
 ## Examples
 

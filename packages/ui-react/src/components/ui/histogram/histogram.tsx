@@ -99,9 +99,10 @@ export interface HistogramProps
   /** Raw continuous samples to bin (non-finite values are ignored). */
   values: ReadonlyArray<number>;
   /**
-   * Single-series map of `label` / `color`, keyed by `dataKey` (imported from
-   * the shared `Chart` primitives). Color is caller-supplied — reference an
-   * existing semantic `--ui-*` token; there is no chart palette tier yet.
+   * Single-series map of `label` / `icon` / `tone`, keyed by `dataKey` (imported
+   * from the shared `Chart` primitives). Series take their colour from the
+   * container's `palette`; each entry maps a key to a `label` and an optional
+   * `tone`.
    */
   config: ChartConfig;
   /** `config` key that colors + labels the frequency bars. */

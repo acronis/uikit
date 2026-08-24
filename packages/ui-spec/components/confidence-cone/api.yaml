@@ -17,11 +17,11 @@ contract:
       type: ChartConfig
       required: true
       description: >-
-        Per-series map of label / color for the actual + forecast lines (from the
-        shared Chart primitives). Turned into `--color-<key>` custom properties.
-        Each metric renders in one hue: its cone band and forecast line both reuse
-        its actual series' color — actual and forecast differ by line style, not
-        hue. Caller-supplied.
+        Series take their colour from the container's `palette`; each entry maps
+        a data key to a `label` and an optional `tone`. Resolved into the
+        `--color-<key>` custom properties the lines and areas paint from. Each
+        metric renders in one hue: its cone band and forecast line both reuse its
+        actual series' color — actual and forecast differ by line style, not hue.
     - name: xKey
       type: string
       required: true

@@ -239,10 +239,11 @@ export interface PieChartProps
   /** Row-per-slice data. Each object holds the slice's `nameKey` label + its `dataKey` numeric value. */
   data: ReadonlyArray<PieChartDatum>;
   /**
-   * Per-slice map of `label` / `color`, keyed by the slice's `nameKey` value
-   * (imported from the shared `Chart` primitives). Turned into `--color-<name>`
-   * custom properties. Colors are caller-supplied — reference an existing
-   * semantic `--ui-*` token; there is no chart palette tier yet.
+   * Per-slice map of `label` / `icon` / `tone`, keyed by the slice's `nameKey`
+   * value (imported from the shared `Chart` primitives). Turned into
+   * `--color-<name>` custom properties. Series take their colour from the
+   * container's `palette`; each entry maps a key to a `label` and an optional
+   * `tone`.
    */
   config: ChartConfig;
   /** Numeric field that sizes each slice. */

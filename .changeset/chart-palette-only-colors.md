@@ -5,8 +5,15 @@
 feat(chart)!: series colours come from the palette, and only from the palette
 
 **Breaking.** `ChartConfig` no longer accepts a free-form `color` or a
-`theme: { light, dark }` pair. A chart cannot paint a hue the design system
-doesn't define.
+`theme: { light, dark }` pair. A chart's **series** cannot paint a hue the
+design system doesn't define.
+
+Note: certain chart types (`FunnelChart` `stageSettings[].color`, `PieChart`
+per-slice `color`, `ComposedChart` per-bar `color`, `SankeyChart`
+`data.links[].color`) still expose per-element free-form color overrides
+outside of `ChartConfig`. Those are intentional escape hatches for edge cases
+like custom gradient ramps or explicit link tints; they are not controlled by
+`palette` and are not part of this breaking change.
 
 `ChartContainer`'s `palette` now defaults to `{ type: 'categorical' }` — there
 is no "no palette" state. Series walk the chosen palette in its defined order.
