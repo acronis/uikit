@@ -209,6 +209,16 @@ describe('SectionHeader', () => {
     render(<SectionHeader ref={ref} title="Backup plans" />);
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
+
+  it('replaces the header element via the render prop', () => {
+    render(
+      <SectionHeader
+        title="Backup plans"
+        render={<header data-testid="header" />}
+      />
+    );
+    expect(screen.getByTestId('header').tagName).toBe('HEADER');
+  });
 });
 
 describe('SectionContent', () => {
@@ -296,6 +306,15 @@ describe('SectionContent', () => {
     render(<SectionContent ref={ref}>Body</SectionContent>);
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
+
+  it('replaces the content element via the render prop', () => {
+    render(
+      <SectionContent render={<ul data-testid="content" />}>
+        Body
+      </SectionContent>
+    );
+    expect(screen.getByTestId('content').tagName).toBe('UL');
+  });
 });
 
 describe('Section collapse composition', () => {
@@ -303,6 +322,16 @@ describe('Section collapse composition', () => {
     render(
       <Section>
         <SectionHeader title="Backup plans" />
+        <SectionContent>Body</SectionContent>
+      </Section>
+    );
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('renders no trigger when isCollapsible is set outside an AccordionContainer', () => {
+    render(
+      <Section>
+        <SectionHeader title="Backup plans" isCollapsible />
         <SectionContent>Body</SectionContent>
       </Section>
     );
