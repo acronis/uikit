@@ -1,11 +1,28 @@
 spec_version: '1.0'
 component: Section
 
-# References only. Values live in @acronis-platform/tokens-pd. Only the description
-# carries color (muted secondary text); the title inherits the foreground.
+# References only. Values live in @acronis-platform/tokens-pd (generated from
+# @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
+#
+# Like `Card` and `CardSection`, no dedicated `--ui-section-*` component tier
+# exists, so the band's chrome rides on the shared *semantic* tier. Tokens
+# consumed by the composed `Switch`, `ButtonIcon` (the collapse trigger) and
+# `AccordionContainer` are documented in their own specs, not repeated here.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - name: --ui-text-on-surface-secondary
-    affects: section-description
-    description: Muted description text (text-muted-foreground).
+  - {
+      name: --ui-text-on-surface-primary,
+      affects: title,
+      description: Section header title color,
+    }
+  - {
+      name: --ui-text-on-surface-secondary,
+      affects: description,
+      description: Supporting description text under the title,
+    }
+  - {
+      name: --ui-border-on-surface-divider,
+      affects: root,
+      description: Bottom divider drawn when hasBottomBorder is set,
+    }

@@ -1,7 +1,11 @@
 export {
   Section,
   SectionHeader,
-  SectionTitle,
-  SectionDescription,
   SectionContent,
+  sectionVariants,
+  useSectionContext,
+  type SectionVariant,
+  type SectionProps,
+  type SectionHeaderProps,
+  type SectionContentProps,
 } from './section';

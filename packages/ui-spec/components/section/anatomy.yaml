@@ -2,28 +2,109 @@ spec_version: '1.0'
 component: Section
 
 schematic: |
-  section: <section> vertical block
-    section-header: title + description group
-      section-title:       <h2> heading
-      section-description: <p> muted supporting text
-    section-content: the body
+  root: <section> (column stack, inset except for the table variant)
+  +---------------------------------------------------------------------+
+  |  header (optional)                                                  |
+  |    [switch] title [extras]      [actions] [collapse-trigger]        |
+  |             description                                             |
+  |                                                                     |
+  |  content — laid out by the root's variant:                          |
+  |    column1        one full-width area                               |
+  |    column2-70-30  +------------------------+  +------------------+  |
+  |                   | children (col-span-2)  |  | secondary-content|  |
+  |                   +------------------------+  +------------------+  |
+  |    grid3          +---------+ +---------+ +---------+              |
+  |                   | child   | | child   | | child   |              |
+  |                   +---------+ +---------+ +---------+              |
+  |    table          a table, flush to the page edges                  |
+  +---------------------------------------------------------------------+
+     ^ bottom divider drawn here when hasBottomBorder is set
+     root     -> flex column, 12px gap. `px-4 pt-4` for column1 /
+                 column2-70-30 / grid3, and no padding at all for `table` so
+                 its rows can bleed edge-to-edge. No bottom padding is
+                 reserved unless hasBottomBorder is set — the next stacked
+                 section already opens with its own top inset.
+     header   -> single row: switch (start), title + description (flexible),
+                 extras inline after the title, actions (end), collapse
+                 trigger (end-most). Under the `table` variant it re-applies
+                 the inset the root drops.
+     content  -> column2-70-30 and grid3 share one 3-column grid track; the
+                 70/30 split is a 2:1 span of it.
 
 root:
   element: section
-  description: A vertical content block with an optional header and a body.
+  description: >-
+    The page-level band. Polymorphic via the `render` prop. Draws no background
+    of its own — it inherits the page surface — and only paints a border when
+    `hasBottomBorder` is set. Publishes its `variant` to the header and content
+    parts so the consumer never repeats it.
 
 parts:
-  - id: section-header
+  - id: header
+    description: >-
+      Optional header row. Omitted simply by not rendering `SectionHeader` —
+      there is no `hasHeader` flag.
     element: div
-    description: Groups the title + description.
-  - id: section-title
-    element: h2
-    description: The section heading.
-  - id: section-description
+    optional: true
+  - id: switch
+    description: >-
+      Optional toggle at the start of the header, shown by `isSwitchable`, for
+      turning the whole grouping on or off.
+    element: switch
+    optional: true
+  - id: title
+    description: >-
+      The section title at the 20px medium "headings/section" scale, truncated
+      with an ellipsis if it overflows.
     element: p
-    description: Muted supporting text under the title.
-  - id: section-content
+    optional: true
+  - id: description
+    description: >-
+      Supporting text under the title, shown only when `hasDescription` is set.
+    element: p
+    optional: true
+  - id: extras
+    description: Arbitrary content slot rendered inline after the title.
+    element: slot
+    optional: true
+  - id: actions
+    description: Arbitrary content slot rendered at the end of the header row.
+    element: slot
+    optional: true
+  - id: collapse-trigger
+    description: >-
+      Disclosure trigger at the end of the header, shown by `isCollapsible`.
+      Rendered by the enclosing `AccordionContainer` and styled as a ghost
+      `ButtonIcon`; it does nothing unless that container is collapsible.
+    element: button
+    optional: true
+  - id: content
+    description: >-
+      The section body. Its layout comes from the root's `variant`: a plain
+      full-width area (`column1`, `table`) or a 3-column grid
+      (`column2-70-30`, `grid3`).
     element: div
-    description: The section body.
+    optional: true
+  - id: secondary-content
+    description: >-
+      The narrow (~30%) second column of the `column2-70-30` layout. Ignored by
+      every other variant.
+    element: div
+    optional: true
 
-states: []
+layout:
+  type: flex
+  direction: column
+  order: [header, content]
+
+states:
+  - id: has-bottom-border
+    trigger: 'hasBottomBorder=true'
+    kind: prop
+    prop: hasBottomBorder
+    affects: [root]
+  - id: collapsed
+    trigger: 'the enclosing AccordionContainer is closed'
+    kind: prop
+    prop: isCollapsible
+    affects: [content, collapse-trigger]

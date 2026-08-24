@@ -1,10 +1,22 @@
 spec_version: '1.0'
 component: Section
 name: section
-status: draft
+status: ready
 category: layout
 description: >-
-  A titled content block — a <section> with an optional header (title +
-  description) and a content area. Ported 1:1 from the legacy shadcn-uikit
-  `section`.
-since: 0.51.0
+  A titled band that groups cards — or a table — on a page. Four content
+  layouts pick the body shape: one full-width column, a 70/30 split, a
+  three-column card grid, or a flush table that bleeds to the page edges. The
+  header carries a title, optional description, an optional toggle switch,
+  inline extras, and end-aligned actions; an optional bottom divider separates
+  one band from the next. Collapsing is a composition with
+  `AccordionContainer`, the same as `Card`.
+since: 2.1.0
+dependencies:
+  components:
+    - AccordionContainer
+    - ButtonIcon
+    - Switch
+figma:
+  node: '8262-6179'
+  codeConnect: packages/ui-react/src/components/ui/section/section.figma.tsx
