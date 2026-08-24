@@ -5,7 +5,7 @@ schematic: |
   root: <section> (column stack, inset except for the table variant)
   +---------------------------------------------------------------------+
   |  header (optional)                                                  |
-  |    [switch] title [extras]      [actions] [collapse-trigger]        |
+  |    [switch] title [extras] [header-content] [actions] [collapse-trigger] |
   |             description                                             |
   |                                                                     |
   |  content — laid out by the root's variant:                          |
@@ -65,6 +65,13 @@ parts:
     optional: true
   - id: extras
     description: Arbitrary content slot rendered inline after the title.
+    element: slot
+    optional: true
+  - id: header-content
+    description: >-
+      Arbitrary content slot rendered after the title/description block and
+      before `actions` — commonly used to supply a custom heading element via
+      `render`/`children` when the section is a genuine navigable region.
     element: slot
     optional: true
   - id: actions

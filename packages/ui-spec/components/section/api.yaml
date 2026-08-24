@@ -136,9 +136,12 @@ contract:
   content:
     - name: default
       description: >-
-        On the root, the section's parts (header, content). On the content
-        part, the body itself — the wide column under `column2-70-30`, the grid
-        items under `grid3`, and everything under `column1` / `table`.
+        On the root, the section's parts (header, content). On the header,
+        an additional slot rendered after the title/description block and
+        before `actions` — used to supply a custom heading element (see
+        accessibility.md). On the content part, the body itself — the wide
+        column under `column2-70-30`, the grid items under `grid3`, and
+        everything under `column1` / `table`.
 
   methods: []
 

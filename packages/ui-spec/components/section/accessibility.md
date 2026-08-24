@@ -28,8 +28,9 @@
 
 - The section itself is not focusable and imposes no keyboard behavior.
 - Focus order follows DOM order: the header switch, then anything focusable in
-  `extras`, then `actions`, then the collapse trigger, then the content.
-  Nothing is trapped or re-ordered.
+  `extras`, then anything in the header's `children` slot, then `actions`,
+  then the collapse trigger, then the content. Nothing is trapped or
+  re-ordered.
 - The collapse trigger is a real `<button>` supplied by `AccordionContainer`
   (Base UI Collapsible): `Tab` reaches it and `Enter` / `Space` toggle the
   panel. Its `aria-expanded` and `aria-controls` are managed by the primitive.
