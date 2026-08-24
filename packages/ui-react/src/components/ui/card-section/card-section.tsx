@@ -169,21 +169,23 @@ const CardSection = React.forwardRef<HTMLDivElement, CardSectionProps>(
         </Card>
       );
     } else if (variant === 'tag') {
-      body = (
+      body = contentTag ? (
         <div className="flex w-full flex-wrap items-start gap-x-4 gap-y-2">
           {contentTag}
         </div>
-      );
+      ) : null;
     } else if (variant === 'list') {
-      body = <div className="flex w-full flex-col">{contentList}</div>;
+      body = contentList ? (
+        <div className="flex w-full flex-col">{contentList}</div>
+      ) : null;
     } else if (isTable) {
-      body = (
+      body = contentTable ? (
         <div className="flex w-full flex-col overflow-hidden rounded">
           {contentTable}
         </div>
-      );
+      ) : null;
     } else {
-      body = <div className="w-full">{content}</div>;
+      body = content ? <div className="w-full">{content}</div> : null;
     }
 
     return useRender({

@@ -12,6 +12,12 @@ describe('CardSection', () => {
     expect(screen.getByText('Slot body')).toBeInTheDocument();
   });
 
+  it('renders no body wrapper when the slot variant has no content', () => {
+    const { container } = render(<CardSection data-testid="section" />);
+
+    expect(container.firstElementChild?.children.length).toBe(0);
+  });
+
   it('forwards a ref to the root element', () => {
     const ref = React.createRef<HTMLDivElement>();
     render(<CardSection ref={ref} content="Body" />);
