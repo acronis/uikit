@@ -3,31 +3,71 @@ component: Card
 
 # References only. Values live in @acronis-platform/tokens-pd (generated from
 # @acronis-platform/design-tokens) and resolve per brand/theme at paint time.
-# This is a design-pending v1: no `--ui-card-*` component tier exists yet, so the
-# card consumes the shared *semantic* tokens (via the bridged Tailwind names
-# bg-background / text-foreground / border-border / text-muted-foreground in
-# ui-react's styles/index.css). Replace these with a `--ui-card-*` tier if/when a
-# Figma pass introduces one.
+# No dedicated `--ui-card-*` component tier exists (only the unrelated
+# `CardFilter` tier does) — the design references the shared *semantic*
+# tokens directly for the root/header/footer chrome. Token consumption for the
+# composed sub-components (Avatar, Switch, ButtonIconInput) is documented in
+# their own specs, not repeated here.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
   - {
       name: --ui-background-surface-primary,
       affects: root,
-      description: Card surface background (bridged as `bg-background`),
+      description: Card surface background,
     }
   - {
       name: --ui-text-on-surface-primary,
       affects: root,
-      description: Default card text color (bridged as `text-foreground`),
+      description: Default card text color and the title,
     }
   - {
       name: --ui-border-on-surface-border,
       affects: root,
-      description: Card border color (bridged as `border-border`),
+      description: Card border color when hasError is false,
+    }
+  - {
+      name: --ui-border-on-surface-border-error,
+      affects: root,
+      description: Card border color when hasError is true,
+    }
+  - {
+      name: --ui-border-on-surface-divider,
+      affects: header,
+      description: Header bottom divider and footer top divider,
     }
   - {
       name: --ui-text-on-surface-secondary,
       affects: description,
-      description: Description text color (bridged as `text-muted-foreground`),
+      description: Description text color and drag-handle icon color,
+    }
+  - {
+      name: --ui-button-icon-global-icon-color-idle,
+      affects: collapse-trigger,
+      description: Collapse trigger chevron color (idle) — reused from ButtonIcon,
+    }
+  - {
+      name: --ui-button-icon-global-icon-color-hover,
+      affects: collapse-trigger,
+      description: Collapse trigger chevron color (hover) — reused from ButtonIcon,
+    }
+  - {
+      name: --ui-button-icon-global-icon-color-active,
+      affects: collapse-trigger,
+      description: Collapse trigger chevron color (active) — reused from ButtonIcon,
+    }
+  - {
+      name: --ui-button-icon-global-container-color-idle,
+      affects: collapse-trigger,
+      description: Collapse trigger background (idle) — reused from ButtonIcon,
+    }
+  - {
+      name: --ui-button-icon-global-container-color-hover,
+      affects: collapse-trigger,
+      description: Collapse trigger background (hover) — reused from ButtonIcon,
+    }
+  - {
+      name: --ui-button-icon-global-container-color-active,
+      affects: collapse-trigger,
+      description: Collapse trigger background (active) — reused from ButtonIcon,
     }

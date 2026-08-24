@@ -1,0 +1,135 @@
+---
+title: CardSection
+description: A band of content stacked inside a Card's body, below CardHeader.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import {
+  CardSectionDemo,
+  CardSectionNestedCardDemo,
+} from '@/components/demos-react/card-section';
+
+## Usage
+
+```tsx
+import { CardSection } from '@acronis-platform/ui-react';
+```
+
+`CardSection` divides a `Card` body into labelled bands. Where `Card` owns the
+surface and the card-level header/footer, each section is a self-contained
+grouping: an optional 14px mini-header (distinct from `CardHeader`'s 18px title)
+carrying a title, inline `extras`, and end-aligned `actions`, followed by a body
+whose shape is picked by `variant`.
+
+| `variant`        | Body                                                                          |
+| ---------------- | ----------------------------------------------------------------------------- |
+| `slot`           | `content` — arbitrary passthrough, no built-in layout.                        |
+| `tag`            | `contentTag` — a wrapping tag row; no built-in default.                       |
+| `list`           | `contentList` — title/description key-value rows.                             |
+| `table-actions`  | `contentTable` — rendered **flush**, so table rows run edge-to-edge.          |
+| `card-primary`   | `children` composed into a nested `Card` on the card surface.                 |
+| `card-secondary` | The same, on the secondary surface. This is the only difference between them. |
+
+Two details are worth knowing up front:
+
+- **`hasHeader` requires `title`.** The props are a discriminated union, so
+  turning the header on without a title — or passing a title with no header —
+  fails to compile rather than rendering a blank row.
+- **`hasBottomBorder`** adds a divider plus the matching bottom padding. Set it
+  on every section but the last so the stack reads as a set of bands and the
+  final one closes flush against the card's edge.
+
+The section paints no background of its own; it inherits the enclosing card
+surface. Its chrome resolves to the shared semantic tokens
+(`--ui-text-on-surface-primary` for the title,
+`--ui-border-on-surface-divider` for the divider,
+`--ui-background-surface-primary` / `--ui-background-surface-secondary` for the
+nested card) — there is no `--ui-card-*` component tier. The root is polymorphic
+via Base UI's `useRender` (the `render` prop), which is how you promote a section
+to a real `<section>` landmark when the grouping warrants one.
+
+## Examples
+
+<DemoReact>
+  <CardSectionDemo />
+</DemoReact>
+
+Stack sections in a `CardContent` with its own padding removed — each section
+brings its own inset:
+
+```tsx
+<Card>
+  <CardHeader title="Workload" />
+  <CardContent className="p-0 pb-4">
+    <CardSection
+      variant="list"
+      hasHeader
+      title="Network details"
+      hasBottomBorder
+      contentList={rows}
+    />
+    <CardSection
+      variant="tag"
+      hasHeader
+      title="Labels"
+      hasBottomBorder
+      contentTag={tags}
+    />
+    <CardSection
+      variant="table-actions"
+      hasHeader
+      title="Subnets"
+      actions={
+        <ButtonIcon variant="ghost" aria-label="More">
+          <EllipsisIcon size={16} />
+        </ButtonIcon>
+      }
+      contentTable={<SubnetTable />}
+    />
+  </CardContent>
+</Card>
+```
+
+### Nested cards
+
+`card-primary` and `card-secondary` compose `children` into a nested `Card`.
+Author the nested card from `Card`'s own parts — the section only supplies the
+surface:
+
+<DemoReact>
+  <CardSectionNestedCardDemo />
+</DemoReact>
+
+```tsx
+<CardSection variant="card-secondary" hasHeader title="Retention">
+  <CardHeader title="30 days" />
+  <CardContent>Older recovery points are pruned nightly.</CardContent>
+</CardSection>
+```
+
+### As a semantic region
+
+```tsx
+<CardSection
+  render={<section aria-label="Network details" />}
+  variant="list"
+  contentList={rows}
+/>
+```
+
+The header title renders as a `<p>`, not a heading — a section sits below the
+card's own title, and guessing a heading level would break the document outline.
+Pair `render` with `aria-labelledby` and your own heading when the grouping is
+genuinely navigable content.
+
+## API Reference
+
+`CardSection` also accepts every native `<div>` attribute except `title` and
+`content`, which it repurposes. `hasHeader` and `title` are additionally
+constrained by a discriminated union on top of the props below: `hasHeader: true`
+requires `title: string`, and omitting `hasHeader` forbids `title`.
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/card-section/card-section.tsx"
+  name="CardSectionBaseProps"
+/>

@@ -2,51 +2,93 @@ spec_version: '1.0'
 component: Card
 
 schematic: |
-  root: <div> (rounded border + surface + shadow)
-  +-----------------------------------------------+
-  |  header                                       |
-  |   +-----------------------------------------+ |
-  |   | title                                   | |
-  |   | description                             | |
-  |   +-----------------------------------------+ |
-  |  content                                      |
-  |   +-----------------------------------------+ |
-  |   | arbitrary children                      | |
-  |   +-----------------------------------------+ |
-  |  footer                                       |
-  |   +-----------------------------------------+ |
-  |   | actions                                 | |
-  |   +-----------------------------------------+ |
-  +-----------------------------------------------+
-     root   -> bg-background / text-foreground / border-border (semantic tokens)
-     header -> top padding + vertical stack for title + description
-     footer -> bottom padding + horizontal action row
+  root: <div> (rounded border + surface, red border when hasError)
+  +-----------------------------------------------------------------+
+  |  header (border-bottom divider)                                 |
+  |   [drag-handle] [switch] [avatar] title [rename] [extras]  [actions] [collapse-trigger]
+  |                          description                              |
+  |  content (wrap with AccordionContainer.Content to make collapsible) |
+  |   +-------------------------------------------------------------+ |
+  |   | arbitrary children                                          | |
+  |   +-------------------------------------------------------------+ |
+  |  footer (border-top divider)                                    |
+  |   +-------------------------------------------------------------+ |
+  |   | actions                                                     | |
+  |   +-------------------------------------------------------------+ |
+  +-------------------------------------------------------------------+
+     root      -> background/text/border resolve to shared semantic tokens;
+                  border switches to the error token when hasError is set
+     header    -> single row: optional drag-handle, optional switch,
+                  optional avatar, title + optional rename + extras (start),
+                  optional description below the title, actions, then
+                  collapse-trigger (end)
+     content   -> arbitrary children, no built-in layout
+     footer    -> horizontal row of actions
 
 root:
   element: div
   description: >-
-    The card surface: a rounded, 1px-bordered container with a subtle shadow.
-    Polymorphic via the `render` prop (e.g. render as `<article>`/`<section>`).
-    Background, text, and border resolve to the shared semantic tokens (no
-    `--ui-card-*` tier exists yet).
+    The card surface: a rounded, 1px-bordered container. Polymorphic via the
+    `render` prop (e.g. render as `<article>`/`<section>`). Background and
+    text resolve to the shared semantic tokens; the border color depends on
+    the `hasError` variant.
 
 parts:
   - id: header
     description: >-
-      Top region (`<div>`) that vertically stacks the title and description with
-      a small gap. Owns the top/side padding.
+      Top region (`<div>`) laying out the drag handle, switch, avatar, title
+      block, and actions in a single row. Owns the divider and padding.
+    element: div
+    optional: true
+  - id: drag-handle
+    description: >-
+      Grip icon shown at the start of the header when `isDraggable` is set,
+      signaling the card can be reordered.
+    element: svg
+    optional: true
+  - id: switch
+    description: >-
+      Toggle shown at the start of the header when `isSwitchable` is set.
+    element: button
+    optional: true
+  - id: avatar
+    description: >-
+      Avatar shown before the title when `hasAvatar` is set. Defaults to an
+      initials avatar (`avatarLabel`); replaceable via the `avatar` slot.
     element: div
     optional: true
   - id: title
+    description: The card's title text, truncated with an ellipsis if it overflows.
+    element: p
+    optional: false
+  - id: rename
     description: >-
-      The card's prominent heading text. A `<div>` by default; render as a real
-      heading (`<h2>`/`<h3>`) via the `render` prop for correct document outline.
-    element: div
+      Icon button shown next to the title when `hasRename` is set; fires
+      `onRename`.
+    element: button
+    optional: true
+  - id: extras
+    description: Arbitrary content slot rendered inline after the title/rename.
+    element: slot
     optional: true
   - id: description
     description: >-
-      Secondary supporting copy below the title, in the muted-foreground color.
-    element: div
+      Secondary supporting copy below the title, shown when `hasDescription`
+      is set.
+    element: p
+    optional: true
+  - id: actions
+    description: Arbitrary content slot rendered at the end of the header.
+    element: slot
+    optional: true
+  - id: collapse-trigger
+    description: >-
+      Disclosure trigger rendered at the very end of the header when
+      `isCollapsible` is set. Only has an effect when the header renders
+      inside a collapsible `AccordionContainer` — composes
+      `AccordionContainer.Trigger`, restyled to match the ghost `ButtonIcon`
+      chrome.
+    element: button
     optional: true
   - id: content
     description: Primary body region (`<div>`) holding arbitrary children.
@@ -55,7 +97,7 @@ parts:
   - id: footer
     description: >-
       Bottom region (`<div>`) laying actions out in a horizontal row. Owns the
-      bottom/side padding.
+      divider and padding.
     element: div
     optional: true
 
@@ -64,5 +106,9 @@ layout:
   direction: column
   order: [header, content, footer]
 
-# Card is a pure presentational container — a function of its composition. It has
-# no variant props and no interaction states of its own.
+states:
+  - id: has-error
+    trigger: 'hasError=true'
+    kind: prop
+    prop: hasError
+    affects: [root]
