@@ -28,6 +28,7 @@ import {
   resolveYAxisTitle,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartPalette,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
   type CartesianChartProps,
@@ -198,6 +199,11 @@ export interface ConfidenceConeBaseProps
     CartesianChartProps,
     ChartAnimationProps {
   /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
+  /**
    * Row-per-point data — the shared x dimension plus each series' actual /
    * forecast / bound fields. Rows are naturally sparse (a point has either an
    * actual or a forecast + bounds), so missing fields are allowed. Avoid fields
@@ -292,6 +298,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
     {
       className,
       config,
+      palette,
       data,
       xKey,
       series,
@@ -652,6 +659,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       <div ref={ref} className={cn(className)} {...props}>
         <ChartContainer
           config={seriesConfig}
+          palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <ComposedChart data={chartData as readonly unknown[]}>

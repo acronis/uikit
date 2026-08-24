@@ -24,6 +24,7 @@ import {
   resolveXAxisTitle,
   resolveYAxisTitle,
   type ChartConfig,
+  type ChartPalette,
   type CartesianChartProps,
   type ChartAnimationProps,
 } from '../chart';
@@ -56,6 +57,11 @@ export interface ScatterChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     CartesianChartProps,
     ChartAnimationProps {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /** One `<Scatter>` per entry — each with its own point array. Use a single entry for an ungrouped scatter. */
   series: ScatterSeries[];
   /**
@@ -85,6 +91,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
     {
       className,
       config,
+      palette,
       series,
       xKey,
       yKey,
@@ -142,6 +149,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
       <div ref={ref} className={cn(className)} {...props}>
         <ChartContainer
           config={config}
+          palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RechartsScatterChart

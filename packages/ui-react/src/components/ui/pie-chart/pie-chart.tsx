@@ -25,6 +25,7 @@ import {
   CHART_LABEL_FILL_CLASS,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartPalette,
   type ChartTooltipContentProps,
   type ChartAnimationProps,
   type ChartDataLabelProps,
@@ -230,6 +231,11 @@ export interface PieChartProps
     VariantProps<typeof pieChartVariants>,
     ChartAnimationProps,
     ChartDataLabelProps {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /** Row-per-slice data. Each object holds the slice's `nameKey` label + its `dataKey` numeric value. */
   data: ReadonlyArray<PieChartDatum>;
   /**
@@ -409,6 +415,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
     {
       className,
       config,
+      palette,
       data,
       dataKey,
       nameKey,
@@ -525,7 +532,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
         className={cn(pieChartVariants({ shape }), className)}
         {...props}
       >
-        <ChartContainer config={config} className="size-full">
+        <ChartContainer config={config} palette={palette} className="size-full">
           <RechartsPieChart margin={margin}>
             {showTooltip && (
               <ChartTooltip

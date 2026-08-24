@@ -24,6 +24,7 @@ import {
   resolveLabelFillClass,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartPalette,
   type ChartAnimationProps,
   type ChartDataLabelProps,
   type CartesianLabelPosition,
@@ -163,6 +164,11 @@ export interface RadarChartProps
     VariantProps<typeof radarChartVariants>,
     ChartAnimationProps,
     ChartDataLabelProps {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /**
    * Row-per-axis data. Each object holds the `angleKey` label + one numeric field
    * per series. Every plotted series needs a value in every row: recharts places a
@@ -395,6 +401,7 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
     {
       className,
       config,
+      palette,
       data,
       dataKeys,
       angleKey,
@@ -477,6 +484,7 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       >
         <ChartContainer
           config={config}
+          palette={palette}
           // The shared container themes cartesian axis ticks but not polar ones,
           // so scope the angle-axis (spoke) labels and the radius-axis scale to
           // the muted-foreground / border tokens here — otherwise they render

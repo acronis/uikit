@@ -9,6 +9,7 @@ import {
   ChartStyle,
   ChartTooltip,
   type ChartConfig,
+  type ChartPalette,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives — a flow
@@ -45,6 +46,11 @@ export interface SankeyChartLink {
 
 export interface SankeyChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'> {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /** The graph: `nodes` (color keys) + `links` (source/target indices + value). */
   data: {
     nodes: ReadonlyArray<SankeyChartNode>;
@@ -282,6 +288,7 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
     {
       className,
       config,
+      palette,
       data,
       nodePadding = 24,
       nodeWidth = 12,
@@ -346,7 +353,7 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
         {...props}
       >
         <ChartStyle id={chartId} config={config} />
-        <ChartContainer config={config} className="min-h-0 flex-1">
+        <ChartContainer config={config} palette={palette} className="min-h-0 flex-1">
           <RechartsSankey
             data={data as { nodes: SankeyChartNode[]; links: SankeyChartLink[] }}
             node={nodeRenderer}

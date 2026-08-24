@@ -12,6 +12,11 @@ import type { Props as LegendProps } from 'recharts/types/component/Legend';
 import { TooltipContentProps } from 'recharts/types/component/Tooltip';
 
 import { cn } from '@/lib/utils';
+import {
+  resolveSeriesColor,
+  type ChartPalette,
+  type ChartSeriesTone,
+} from './chart-palette';
 
 // Format: { THEME_NAME: CSS_SELECTOR }. ui-react flips light/dark via the
 // `[data-theme]` attribute (the tokens resolve `light-dark()` through
@@ -23,11 +28,48 @@ export type ChartConfig = {
   [k in string]: {
     label?: React.ReactNode;
     icon?: React.ComponentType;
+    /**
+     * Which stop of the container's `palette` this series paints with. Left
+     * unset, it is assigned from the series' position. See `ChartSeriesTone`.
+     */
+    tone?: ChartSeriesTone;
   } & (
     | { color?: string; theme?: never }
     | { color?: never; theme: Record<keyof typeof THEMES, string> }
   );
 };
+
+/**
+ * Fill in each series' color from `palette`, leaving any series that already
+ * states its own `color`/`theme` untouched.
+ *
+ * Exported for tests and for the widget editor, which needs the same resolved
+ * map to detect duplicate colors (`findDuplicateTones`) without re-deriving it.
+ */
+export function resolveChartColors(
+  config: ChartConfig,
+  palette: ChartPalette
+): ChartConfig {
+  // A series that pins its own color doesn't consume a palette stop, so the
+  // rest keep walking the palette in order instead of leaving a gap where it
+  // sat.
+  let index = 0;
+
+  return Object.fromEntries(
+    Object.entries(config).map(([key, item]) => {
+      if (item.color || item.theme) {
+        return [key, item];
+      }
+
+      const color = resolveSeriesColor(palette, {
+        index: index++,
+        tone: item.tone,
+      });
+
+      return [key, { ...item, color }];
+    })
+  );
+}
 
 type ChartContextProps = {
   config: ChartConfig;
@@ -92,6 +134,12 @@ function useChart() {
 
 export interface ChartContainerProps extends React.ComponentProps<'div'> {
   config: ChartConfig;
+  /**
+   * The dataviz palette this chart's series are painted from. Each series
+   * without its own `color` takes a stop of this palette — automatically from
+   * its position, or the one its `tone` names.
+   */
+  palette?: ChartPalette;
   children: React.ComponentProps<
     typeof RechartsPrimitive.ResponsiveContainer
   >['children'];
@@ -102,13 +150,20 @@ function ChartContainer({
   className,
   children,
   config,
+  palette,
   ...props
 }: ChartContainerProps) {
   const uniqueId = React.useId();
   const chartId = `chart-${id || uniqueId.replace(/:/g, '')}`;
+  // Resolved once and shared with the context, so the tooltip rows and legend
+  // markers read the same colors the plot paints with.
+  const resolvedConfig = React.useMemo(
+    () => (palette ? resolveChartColors(config, palette) : config),
+    [config, palette]
+  );
 
   return (
-    <ChartContext.Provider value={{ config }}>
+    <ChartContext.Provider value={{ config: resolvedConfig }}>
       <div
         id={id}
         data-slot="chart"
@@ -148,7 +203,7 @@ function ChartContainer({
         )}
         {...props}
       >
-        <ChartStyle id={chartId} config={config} />
+        <ChartStyle id={chartId} config={resolvedConfig} />
         <RechartsPrimitive.ResponsiveContainer>
           {children}
         </RechartsPrimitive.ResponsiveContainer>

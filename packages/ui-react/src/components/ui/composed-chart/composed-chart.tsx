@@ -39,6 +39,7 @@ import {
   resolveYAxisTitle,
   toLabelFormatter,
   type ChartConfig,
+  type ChartPalette,
   type ChartLegendContentProps,
   type CartesianChartProps,
   type ChartAnimationProps,
@@ -226,6 +227,11 @@ export interface ComposedChartProps
     ChartAnimationProps,
     ChartBrushProps,
     ChartDataLabelProps {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /** Row-per-category data. Each object holds `xKey` + one numeric field per series (`null` breaks a line/area unless `connectNulls`). */
   data: ReadonlyArray<Record<string, string | number | null>>;
   /**
@@ -309,6 +315,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
     {
       className,
       config,
+      palette,
       data,
       series,
       xKey,
@@ -913,6 +920,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       >
         <ChartContainer
           config={config}
+          palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RechartsComposedChart

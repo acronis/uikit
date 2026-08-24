@@ -42,6 +42,7 @@ import {
   toLabelFormatter,
   toReferenceLineList,
   type ChartConfig,
+  type ChartPalette,
   type ChartReferenceLine,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
@@ -608,6 +609,11 @@ export interface BarChartProps
     ChartAnimationProps,
     ChartBrushProps,
     ChartDataLabelProps {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /** Row-per-category data. Each object holds the category key + one numeric field per series. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -683,6 +689,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
     {
       className,
       config,
+      palette,
       data,
       dataKeys,
       xKey,
@@ -1140,6 +1147,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       >
         <ChartContainer
           config={config}
+          palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RechartsBarChart

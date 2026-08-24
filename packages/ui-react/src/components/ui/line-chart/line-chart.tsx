@@ -37,6 +37,7 @@ import {
   toLabelFormatter,
   toReferenceLineList,
   type ChartConfig,
+  type ChartPalette,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
   type CartesianChartProps,
@@ -171,6 +172,11 @@ export interface LineChartProps
     ChartAnimationProps,
     ChartBrushProps,
     ChartDataLabelProps {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /** Row-per-point data. Each object holds the category key + one numeric field per series (`null` breaks the line unless `connectNulls`). */
   data: ReadonlyArray<Record<string, string | number | null>>;
   /**
@@ -234,6 +240,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
     {
       className,
       config,
+      palette,
       data,
       dataKeys,
       comparisonKeys,
@@ -393,6 +400,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       >
         <ChartContainer
           config={config}
+          palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RootChart

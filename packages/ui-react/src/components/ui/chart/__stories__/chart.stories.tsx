@@ -1,6 +1,13 @@
+import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { ChartContainer, type ChartConfig } from '../chart';
+import {
+  CHART_CATEGORICAL_TOKENS,
+  CHART_DIVERGING_TOKENS,
+  CHART_SEQUENTIAL_TOKENS,
+  CHART_STATUS_TOKENS,
+} from '../chart-palette';
 import { AreaChart } from '../../area-chart';
 import { BarChart } from '../../bar-chart';
 import { LineChart } from '../../line-chart';
@@ -20,8 +27,9 @@ import { CategoryBar } from '../../category-bar';
 // autodocs documents that primitive API. Its one visual story is an Overview
 // gallery: one compact example of every per-type chart component in the suite,
 // each built from the REAL component (no hand-wired recharts) with the minimal,
-// valid prop set from that component's own story. Series colors reference the
-// shared semantic status/brand tokens (no chart token tier yet).
+// valid prop set from that component's own story. Its series still reference
+// the shared semantic status/brand tokens directly; the four palette stories
+// below are the ones that show the `--ui-dataviz-*` palettes.
 const meta = {
   title: 'Widgets/Chart',
   component: ChartContainer,
@@ -55,7 +63,10 @@ const cartesianData = [
 
 const cartesianConfig = {
   desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
-  mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
+  mobile: {
+    label: 'Mobile',
+    color: 'var(--ui-background-status-strong-danger)',
+  },
 } satisfies ChartConfig;
 
 // Shared name-keyed data for the part-to-whole components (Pie/RadialBar/Funnel/Treemap).
@@ -68,7 +79,10 @@ const partData = [
 
 const partConfig = {
   Chrome: { label: 'Chrome', color: 'var(--ui-background-brand-secondary)' },
-  Safari: { label: 'Safari', color: 'var(--ui-background-status-strong-danger)' },
+  Safari: {
+    label: 'Safari',
+    color: 'var(--ui-background-status-strong-danger)',
+  },
   Firefox: {
     label: 'Firefox',
     color: 'var(--ui-background-status-strong-success)',
@@ -99,7 +113,10 @@ const scatterSeries = [
 
 const scatterConfig = {
   classA: { label: 'Class A', color: 'var(--ui-background-brand-secondary)' },
-  classB: { label: 'Class B', color: 'var(--ui-background-status-strong-danger)' },
+  classB: {
+    label: 'Class B',
+    color: 'var(--ui-background-status-strong-danger)',
+  },
 } satisfies ChartConfig;
 
 const radarData = [
@@ -134,7 +151,10 @@ const coneData = [
 
 const coneConfig = {
   actual: { label: 'Actual', color: 'var(--ui-background-brand-secondary)' },
-  forecast: { label: 'Forecast', color: 'var(--ui-background-brand-secondary)' },
+  forecast: {
+    label: 'Forecast',
+    color: 'var(--ui-background-brand-secondary)',
+  },
 } satisfies ChartConfig;
 
 const sankeyData = {
@@ -181,56 +201,6 @@ const categoryBarConfig = {
   },
 } satisfies ChartConfig;
 
-/**
- * Right-to-left. The one story that renders the direction rules `ChartContainer`
- * carries, so the VR baseline is what guards them — the unit tests can only assert
- * the rules are present, not how Tailwind compiles them.
- *
- * Three behaviours in one frame, deliberately: the bar plot keeps its LTR geometry
- * (categories read Jan→Apr, the value axis stays on the left, the rotated ticks and
- * both axis titles sit where recharts computed them); the legend row above it
- * mirrors, because it is HTML outside the surface; and the treemap's cell labels
- * mirror to their tiles' bottom-right, because they are HTML in a `<foreignObject>`
- * that the pin deliberately exempts. A regression in either rule moves this
- * baseline. Pinned to `rtl` via the Direction toolbar global.
- */
-export const Rtl: Story = {
-  globals: { direction: 'rtl' },
-  args: { config: cartesianConfig, children: <span /> },
-  render: () => (
-    <div className="grid w-[720px] grid-cols-2 gap-6">
-      <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
-          Bar chart — plot stays LTR
-        </h3>
-        <BarChart
-          config={cartesianConfig}
-          data={cartesianData}
-          dataKeys={['desktop', 'mobile']}
-          xKey="month"
-          xAxisLabel="Month"
-          yAxisLabel="Sessions"
-          xAxisAngle={-45}
-          className="h-[260px] w-full"
-        />
-      </div>
-      <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
-          Treemap — cell labels mirror
-        </h3>
-        <Treemap
-          config={partConfig}
-          data={partData}
-          dataKey="value"
-          nameKey="name"
-          secondaryKeys={['value']}
-          className="h-[260px] w-full"
-        />
-      </div>
-    </div>
-  ),
-};
-
 // Every per-type chart component in the suite, one compact example each.
 // The gallery is taller than the default viewport, so capture the full page
 // (otherwise the lower rows are clipped from the VR baseline).
@@ -240,7 +210,9 @@ export const Overview: Story = {
   render: () => (
     <div className="grid w-[960px] grid-cols-2 gap-6">
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Area chart</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Area chart
+        </h3>
         <AreaChart
           config={cartesianConfig}
           data={cartesianData}
@@ -251,7 +223,9 @@ export const Overview: Story = {
         />
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Bar chart</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Bar chart
+        </h3>
         <BarChart
           config={cartesianConfig}
           data={cartesianData}
@@ -262,7 +236,9 @@ export const Overview: Story = {
         />
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Line chart</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Line chart
+        </h3>
         <LineChart
           config={cartesianConfig}
           data={cartesianData}
@@ -273,7 +249,9 @@ export const Overview: Story = {
         />
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Pie chart</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Pie chart
+        </h3>
         <PieChart
           config={partConfig}
           data={partData}
@@ -285,7 +263,9 @@ export const Overview: Story = {
         />
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Scatter chart</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Scatter chart
+        </h3>
         <ScatterChart
           config={scatterConfig}
           series={scatterSeries}
@@ -296,7 +276,9 @@ export const Overview: Story = {
         />
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Composed chart</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Composed chart
+        </h3>
         <ComposedChart
           config={cartesianConfig}
           data={cartesianData}
@@ -310,7 +292,9 @@ export const Overview: Story = {
         />
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Radar chart</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Radar chart
+        </h3>
         <RadarChart
           config={radarConfig}
           data={radarData}
@@ -321,7 +305,9 @@ export const Overview: Story = {
         />
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Radial bar chart</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Radial bar chart
+        </h3>
         <RadialBarChart
           config={partConfig}
           data={partData}
@@ -334,7 +320,9 @@ export const Overview: Story = {
         />
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Funnel chart</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Funnel chart
+        </h3>
         <FunnelChart
           config={partConfig}
           data={partData}
@@ -344,7 +332,9 @@ export const Overview: Story = {
         />
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Treemap</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Treemap
+        </h3>
         <Treemap
           config={partConfig}
           data={partData}
@@ -354,7 +344,9 @@ export const Overview: Story = {
         />
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Histogram</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Histogram
+        </h3>
         <Histogram
           config={histogramConfig}
           values={histogramValues}
@@ -363,7 +355,9 @@ export const Overview: Story = {
         />
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Confidence cone</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Confidence cone
+        </h3>
         <ConfidenceCone
           config={coneConfig}
           data={coneData}
@@ -377,7 +371,9 @@ export const Overview: Story = {
         />
       </div>
       <div className="col-span-2">
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Sankey chart</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Sankey chart
+        </h3>
         <SankeyChart
           config={sankeyConfig}
           data={sankeyData}
@@ -385,7 +381,9 @@ export const Overview: Story = {
         />
       </div>
       <div className="col-span-2">
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Category bar</h3>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+          Category bar
+        </h3>
         <CategoryBar
           config={categoryBarConfig}
           data={categoryBarData}
@@ -394,5 +392,256 @@ export const Overview: Story = {
         />
       </div>
     </div>
+  ),
+};
+
+// ---------------------------------------------------------------------------
+// Palettes — one story each, so a reader lands on the palette they need rather
+// than scrolling a combined sheet. Every story shows the palette's stops above
+// a chart that actually calls for it: the question these answer is *when* to
+// reach for a palette, not that colors can be swapped.
+//
+// Series state no `color`. They walk the palette in its defined order — series
+// 1 takes stop 1, and so on. `Status` is the exception: its tones carry meaning
+// rather than a position, so each series names one with `tone`.
+//
+// Note the slug keys (`signedUp`, not `Signed up`). A config key becomes part
+// of a `--color-<key>` custom property, so it has to be CSS-safe; the display
+// name goes in `label`. A key with a space yields an invalid property and the
+// series paints SVG-default black.
+
+function PaletteFrame({
+  when,
+  stops,
+  children,
+}: {
+  when: string;
+  stops: readonly string[];
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="w-[860px] space-y-3">
+      <p className="text-sm text-muted-foreground">{when}</p>
+      <div className="flex flex-wrap gap-1">
+        {stops.map((color) => (
+          <div
+            key={color}
+            className="h-5 w-5 rounded-sm border border-border"
+            style={{ backgroundColor: color }}
+          />
+        ))}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+/** A labelled cell inside a story that shows several variants side by side. */
+function Variant({
+  name,
+  children,
+}: {
+  name: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-1">
+      <h4 className="text-xs font-medium text-muted-foreground">{name}</h4>
+      {children}
+    </div>
+  );
+}
+
+const browserData = [
+  { name: 'chrome', value: 275 },
+  { name: 'safari', value: 200 },
+  { name: 'firefox', value: 187 },
+  { name: 'edge', value: 120 },
+  { name: 'opera', value: 90 },
+  { name: 'brave', value: 64 },
+  { name: 'vivaldi', value: 41 },
+  { name: 'other', value: 28 },
+];
+
+const browserConfig = {
+  chrome: { label: 'Chrome' },
+  safari: { label: 'Safari' },
+  firefox: { label: 'Firefox' },
+  edge: { label: 'Edge' },
+  opera: { label: 'Opera' },
+  brave: { label: 'Brave' },
+  vivaldi: { label: 'Vivaldi' },
+  other: { label: 'Other' },
+} satisfies ChartConfig;
+
+/**
+ * Unrelated categories with no order between them — browsers, teams, products,
+ * regions. Sixteen distinct hues, assigned in order and wrapping past the last.
+ * The only thing a reader should take from two colors here is "different
+ * thing", never "more" or "worse".
+ */
+export const CategoricalPalette: Story = {
+  name: 'Palette — categorical',
+  args: { config: browserConfig, children: <span /> },
+  render: () => (
+    <PaletteFrame
+      when="Unrelated categories with no order between them. Colour carries identity, not magnitude."
+      stops={CHART_CATEGORICAL_TOKENS}
+    >
+      <PieChart
+        config={browserConfig}
+        palette={{ type: 'categorical' }}
+        data={browserData}
+        dataKey="value"
+        nameKey="name"
+        shape="donut"
+        className="h-[240px] w-full"
+      />
+    </PaletteFrame>
+  ),
+};
+
+const funnelData = [
+  { name: 'Visited', value: 1200 },
+  { name: 'Signup', value: 760 },
+  { name: 'Activated', value: 410 },
+  { name: 'Subscribed', value: 180 },
+];
+
+// Keys double as the on-chart stage labels: `FunnelChart` composes its label
+// from the raw `nameKey` value rather than from `config[].label` (unlike
+// `Treemap`), and that value has to be CSS-safe for `--color-<name>`. So the
+// display names here are deliberately space-free.
+const funnelConfig = {
+  Visited: { label: 'Visited' },
+  Signup: { label: 'Signup' },
+  Activated: { label: 'Activated' },
+  Subscribed: { label: 'Subscribed' },
+} satisfies ChartConfig;
+
+const SEQUENTIAL_RAMPS = ['blue', 'teal', 'orange', 'violet'] as const;
+
+/**
+ * One quantity along an ordered scale, where darker reads as further along —
+ * funnel stages, heat, tiers, recency. Four ramps ship; all four are here,
+ * because the choice between them is brand/context, not meaning.
+ */
+export const SequentialPalette: Story = {
+  name: 'Palette — sequential',
+  parameters: { snapshot: { fullPage: true } },
+  args: { config: funnelConfig, children: <span /> },
+  render: () => (
+    <PaletteFrame
+      when="One quantity along an ordered scale. Darker reads as further along; the hue itself means nothing."
+      stops={CHART_SEQUENTIAL_TOKENS.blue}
+    >
+      <div className="grid grid-cols-2 gap-6">
+        {SEQUENTIAL_RAMPS.map((ramp) => (
+          <Variant key={ramp} name={ramp}>
+            <FunnelChart
+              config={funnelConfig}
+              palette={{ type: 'sequential', ramp }}
+              data={funnelData}
+              dataKey="value"
+              nameKey="name"
+              className="h-[200px] w-full"
+            />
+          </Variant>
+        ))}
+      </div>
+    </PaletteFrame>
+  ),
+};
+
+const storageData = [
+  { name: 'archive', value: 420 },
+  { name: 'backups', value: 300 },
+  { name: 'snapshots', value: 180 },
+  { name: 'logs', value: 120 },
+  { name: 'temp', value: 80 },
+  { name: 'other', value: 40 },
+];
+
+const storageConfig = {
+  archive: { label: 'Archive' },
+  backups: { label: 'Backups' },
+  snapshots: { label: 'Snapshots' },
+  logs: { label: 'Logs' },
+  temp: { label: 'Temp' },
+  other: { label: 'Other' },
+} satisfies ChartConfig;
+
+const DIVERGING_PAIRS = ['blue-orange', 'teal-violet'] as const;
+
+/**
+ * Two directions away from a midpoint — over/under budget, gain/loss,
+ * hot/cold. The pale middle is the neutral point, so a reader can tell which
+ * side of it a value falls on at a glance. Both shipped pairs are here.
+ */
+export const DivergingPalette: Story = {
+  name: 'Palette — diverging',
+  args: { config: storageConfig, children: <span /> },
+  render: () => (
+    <PaletteFrame
+      when="Two directions away from a midpoint. The pale centre is the neutral point."
+      stops={CHART_DIVERGING_TOKENS['blue-orange']}
+    >
+      <div className="grid grid-cols-2 gap-6">
+        {DIVERGING_PAIRS.map((pair) => (
+          <Variant key={pair} name={pair}>
+            <Treemap
+              config={storageConfig}
+              palette={{ type: 'diverging', pair }}
+              data={storageData}
+              dataKey="value"
+              nameKey="name"
+              className="h-[220px] w-full"
+            />
+          </Variant>
+        ))}
+      </div>
+    </PaletteFrame>
+  ),
+};
+
+const alertData = [
+  { month: 'Jan', danger: 12, warning: 30, success: 210 },
+  { month: 'Feb', danger: 18, warning: 24, success: 240 },
+  { month: 'Mar', danger: 7, warning: 33, success: 265 },
+  { month: 'Apr', danger: 21, warning: 19, success: 250 },
+];
+
+// The one palette whose colors are chosen rather than walked — a series is red
+// because it *is* the critical one, not because it comes third.
+const alertConfig = {
+  danger: { label: 'Critical', tone: { status: 'danger' } },
+  warning: { label: 'Warning', tone: { status: 'warning' } },
+  success: { label: 'Healthy', tone: { status: 'success' } },
+} satisfies ChartConfig;
+
+/**
+ * The value *means* a severity. Never decorative: red has to mean bad, and a
+ * series names its tone instead of taking a position. Six tones, ordered by
+ * severity — danger, critical, warning, success, info, neutral. (`critical` is
+ * the orange one and ranks below `danger`; that is what the tokens say.)
+ */
+export const StatusPalette: Story = {
+  name: 'Palette — status',
+  args: { config: alertConfig, children: <span /> },
+  render: () => (
+    <PaletteFrame
+      when="The value means a severity. Each series names its tone rather than taking a position."
+      stops={Object.values(CHART_STATUS_TOKENS)}
+    >
+      <BarChart
+        config={alertConfig}
+        palette={{ type: 'status' }}
+        data={alertData}
+        dataKeys={['danger', 'warning', 'success']}
+        xKey="month"
+        layout="stacked"
+        className="h-[240px] w-full"
+      />
+    </PaletteFrame>
   ),
 };

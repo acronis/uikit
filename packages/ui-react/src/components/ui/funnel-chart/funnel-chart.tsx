@@ -21,6 +21,7 @@ import {
   resolveLabelFillClass,
   type ChartAnimationProps,
   type ChartConfig,
+  type ChartPalette,
   type TickFormatter,
 } from '../chart';
 
@@ -310,6 +311,11 @@ export interface FunnelChartProps
     Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof funnelChartVariants>,
     ChartAnimationProps {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /** Row-per-stage data. Each object holds the stage's `nameKey` label + its `dataKey` numeric value. */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
@@ -424,6 +430,7 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
     {
       className,
       config,
+      palette,
       data,
       dataKey,
       nameKey,
@@ -598,7 +605,7 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
         className={cn(funnelChartVariants({ lastShape }), className)}
         {...props}
       >
-        <ChartContainer config={config} className="size-full">
+        <ChartContainer config={config} palette={palette} className="size-full">
           <RechartsFunnelChart margin={plotMargin}>
             {showTooltip && (
               <ChartTooltip

@@ -14,6 +14,7 @@ import {
   resolveAnimation,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartPalette,
   type ChartAnimationProps,
   type TickFormatter,
 } from '../chart';
@@ -214,6 +215,11 @@ export function TreemapCell({
 export interface TreemapProps
   extends Omit<React.ComponentProps<'div'>, 'children'>, ChartAnimationProps {
   /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
+  /**
    * Row-per-leaf data. Each object holds the leaf's `nameKey` label + its
    * `dataKey` numeric size.
    *
@@ -286,6 +292,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
     {
       className,
       config,
+      palette,
       data,
       dataKey,
       nameKey,
@@ -426,6 +433,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
         {legendPos === 'top' && legendRow}
         <ChartContainer
           config={config}
+          palette={palette}
           // `size-full` fills the caller's box; with a legend row beside it the
           // height comes from the flex line instead, so the tiles give up exactly
           // the room the legend takes.
