@@ -95,6 +95,46 @@ The `storybook:test:visual[:update]` scripts run the same thing without Docker
 be committed. See `test/__snapshots__/README.md`. CI:
 `.github/workflows/visual-regression.yml` (matrix over `ui-legacy` + `ui-react`).
 
+Every Docker capture goes through `scripts/visual-capture.mjs`: it builds
+Storybook once for all profiles, takes an exclusive lock (two captures in one
+checkout interleave writes into `test/__snapshots__`), runs **every** requested
+profile even if an earlier one fails, logs each to `.visual-capture/`, and reads
+its verdict from jest's summary lines rather than an exit code — a profile that
+printed no `Tests:` line is reported as DID NOT RUN and fails the result.
+
+**Four further profiles cover the OS `prefers-color-scheme` axis** — the states
+where `[data-theme]` is absent (so the OS decides) or disagrees with the OS, none
+of which light/dark can reach because they pin the attribute and leave the OS at
+light. With light/dark they are the full `[data-theme]` × OS cross product:
+
+```bash
+pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker:system-dark
+pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker:system-light
+pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker:forced-light
+pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker:forced-dark
+# all four in one run (the capture script's `--mode themes`)
+pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker:themes
+```
+
+They **write no baselines** — each re-renders a curated ~15% story sample under a
+different theme input and must reproduce the committed light/dark PNGs exactly; a
+diff means styling keyed on `[data-theme]` rather than resolved through a token.
+Hence no `:update` variant, and adding a story means running `…:docker:update:all`
+_before_ them. Details in `.storybook/visual-regression.ts` and
+`scripts/system-theme-subset.mjs`.
+
+The sample is the **PR** default, for latency: `.github/workflows/visual-regression-themes-full.yml`
+runs the same four profiles over the **whole corpus** weekly (and on
+`workflow_dispatch`), which is what catches a component outside the sample. Locally,
+`node scripts/visual-capture.mjs --full --mode themes`.
+
+A story that is knowingly different under one of these profiles goes in
+`.storybook/theme-deviations.json`, **not** into a new baseline. The entry inverts
+the assertion — the story must differ, and the run fails once it stops differing, so
+the waiver cannot outlive its cause. One entry today — the shadow-DOM popover story,
+which the token bundle's `:host { color-scheme: light dark }` makes follow the OS
+(acronis/uikit#674). Fixing the component is otherwise the default response.
+
 ## When you add or change anything in `src/`
 
 1. Add a Vitest test under the component's `__tests__/`.

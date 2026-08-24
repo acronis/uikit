@@ -31,9 +31,22 @@ services:
       context: ../..
       dockerfile: packages/ui-react/Dockerfile.storybook
     image: ui-react-storybook
-    command: pnpm exec test-storybook --url http://storybook:6006 --maxWorkers=4
+    # Run through `sh -c` so `$$VISUAL_TEST_ARGS` expands *inside* the container.
+    # The `$$` escapes Compose's own interpolation, leaving a literal `$` for the
+    # container's shell — Compose would otherwise substitute the host value and
+    # bake it into the command. Unquoted on purpose: the value is a
+    # space-separated list of jest test-path patterns and must undergo field
+    # splitting. Only characters that are inert to a shell are ever put in it —
+    # see `assertShellInert` in scripts/system-theme-subset.mjs.
+    command:
+      - sh
+      - -c
+      - pnpm exec test-storybook --url http://storybook:6006 --maxWorkers=4 $$VISUAL_TEST_ARGS
     environment:
       - STORYBOOK_COLOR_MODE=${STORYBOOK_COLOR_MODE:-light}
+      # Extra `test-storybook` arguments, e.g. the curated test-path patterns the
+      # subset profiles run. Empty when nobody asked.
+      - VISUAL_TEST_ARGS=${VISUAL_TEST_ARGS:-}
     depends_on:
       storybook:
         condition: service_healthy

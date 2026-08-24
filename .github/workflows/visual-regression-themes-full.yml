@@ -1,0 +1,106 @@
+# .github/workflows/visual-regression-themes-full.yml
+#
+# The four non-baseline theme profiles (system-dark, system-light, forced-light,
+# forced-dark) over the FULL ui-react corpus, on a schedule.
+#
+# ── WHY THIS EXISTS SEPARATELY FROM THE PR MATRIX ────────────────────────────
+# On a PR those profiles run a curated ~15% sample — one title per rendering
+# mechanism (see packages/ui-react/scripts/system-theme-subset.mjs). The sample is
+# sound for the property being asserted, which holds per story independently, but
+# it is still a sample: a component that keys off `[data-theme]` and is NOT in the
+# sample goes unnoticed until someone adds its title.
+#
+# Running the whole corpus closes that gap, and it is cheap in the only place it
+# is paid: ~56 s more jest time per profile (112 stories take ~12 s, 761 take
+# ~68 s), against the ~5 min of install + Storybook build every leg pays anyway.
+# The reason it is not simply switched on for PRs is latency, not cost — four
+# extra minutes on every pull request buys a rerun of stories whose colours all
+# resolve through tokens.
+#
+# ── WHY ONE JOB AND NOT A MATRIX ─────────────────────────────────────────────
+# The capture script builds Storybook once and runs every requested profile in
+# sequence, so a single job pays the install + build + Docker image cost ONCE for
+# all four. A four-leg matrix would pay it four times to save ~3 minutes of
+# wall clock on a run nobody is waiting for.
+#
+# **Nothing here writes a baseline.** `--mode themes` covers only profiles that own
+# none; the capture script refuses `--update` for them and the test-runner refuses
+# to create a missing PNG. So this workflow can fail, but it cannot rewrite the
+# corpus.
+name: Visual Regression (themes, full corpus)
+
+on:
+  schedule:
+    # 03:00 UTC every Monday — after the week's merges, before anyone is waiting.
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  themes-full:
+    runs-on: ubuntu-latest
+    # Four full-corpus profiles in one job. The default 360 min is far more than
+    # this needs; a run that hangs should be killed, not left to burn an hour.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # ui-react imports generated @acronis-platform/icons-react output, whose
+      # sources and dist/ are gitignored — build it (and its prerequisites) before
+      # Storybook so the imports resolve.
+      - name: Build workspace dependencies
+        run: pnpm --filter @acronis-platform/icons-react... run build
+
+      - name: Build Storybook
+        run: pnpm --filter @acronis-platform/ui-react storybook:build
+
+      # `--skip-build` because the step above already produced storybook-static.
+      # `--full` drops the curated sample: every profile re-renders the whole
+      # corpus against the committed light/dark baselines.
+      - name: Run the theme profiles over the full corpus
+        run: node packages/ui-react/scripts/visual-capture.mjs --skip-build --full --mode themes
+
+      # The diffs ARE the finding here: a failure means some story renders
+      # differently when the theme arrives via the OS, and the diff image is what
+      # says which part of it.
+      - name: Upload diff artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-diffs-ui-react-themes-full
+          path: packages/ui-react/test/__snapshots__/__diff_output__/
+
+      # Per-profile capture logs, including the verdict block the script prints.
+      # Uploaded on failure only — on success the verdict is already in the job log.
+      - name: Upload capture logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-capture-logs-themes-full
+          path: packages/ui-react/.visual-capture/

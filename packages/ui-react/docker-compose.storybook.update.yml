@@ -7,4 +7,10 @@
 #     up --abort-on-container-exit --exit-code-from test-runner
 services:
   test-runner:
-    command: pnpm exec test-storybook --url http://storybook:6006 --updateSnapshot --maxWorkers=4
+    # Same `sh -c` + `$$VISUAL_TEST_ARGS` shape as the base file — an override that
+    # dropped it would silently ignore a test-path pattern and update the WHOLE
+    # corpus instead of the stories asked for.
+    command:
+      - sh
+      - -c
+      - pnpm exec test-storybook --url http://storybook:6006 --updateSnapshot --maxWorkers=4 $$VISUAL_TEST_ARGS
