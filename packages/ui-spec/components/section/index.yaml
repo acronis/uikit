@@ -11,7 +11,7 @@ description: >-
   inline extras, and end-aligned actions; an optional bottom divider separates
   one band from the next. Collapsing is a composition with
   `AccordionContainer`, the same as `Card`.
-since: 2.1.0
+since: 3.0.0
 dependencies:
   components:
     - AccordionContainer

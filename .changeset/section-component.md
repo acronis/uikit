@@ -1,5 +1,5 @@
 ---
-'@acronis-platform/ui-react': minor
+'@acronis-platform/ui-react': major
 ---
 
 Rebuild `Section` from its Figma design (node `8262:6179`), replacing the
