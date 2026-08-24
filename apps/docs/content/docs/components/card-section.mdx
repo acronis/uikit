@@ -24,7 +24,7 @@ whose shape is picked by `variant`.
 | `variant`        | Body                                                                          |
 | ---------------- | ----------------------------------------------------------------------------- |
 | `slot`           | `content` — arbitrary passthrough, no built-in layout.                        |
-| `tag`            | `contentTag` — a wrapping tag row; defaults to a short example row.           |
+| `tag`            | `contentTag` — a wrapping tag row; no built-in default.                       |
 | `list`           | `contentList` — title/description key-value rows.                             |
 | `table-actions`  | `contentTable` — rendered **flush**, so table rows run edge-to-edge.          |
 | `card-primary`   | `children` composed into a nested `Card` on the card surface.                 |
@@ -68,7 +68,13 @@ brings its own inset:
       hasBottomBorder
       contentList={rows}
     />
-    <CardSection variant="tag" hasHeader title="Labels" hasBottomBorder />
+    <CardSection
+      variant="tag"
+      hasHeader
+      title="Labels"
+      hasBottomBorder
+      contentTag={tags}
+    />
     <CardSection
       variant="table-actions"
       hasHeader

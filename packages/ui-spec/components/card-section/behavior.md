@@ -9,12 +9,12 @@ built-in layout.
 
 **Given** `variant="tag"` and no `contentTag`
 **When** it renders
-**Then** a short example tag row is shown (the Figma fallback), wrapping onto
-further lines when the section is too narrow.
+**Then** the body is empty — this variant has no built-in fallback.
 
 **Given** `variant="tag"` and a `contentTag` slot
 **When** it renders
-**Then** the supplied content replaces the example row entirely.
+**Then** the supplied tags are shown, wrapping onto further lines when the
+section is too narrow.
 
 **Given** `variant="list"` and a `contentList` slot
 **When** it renders

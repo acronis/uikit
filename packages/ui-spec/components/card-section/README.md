@@ -33,7 +33,7 @@ table below — each with an optional 14px mini-header and an optional divider.
 | `extras`        | slot    | Inline after the title.                                                               |
 | `actions`       | slot    | End of the header row.                                                                |
 | `content`       | `div`   | Body of `variant="slot"` — arbitrary passthrough.                                     |
-| `content-tag`   | `div`   | Body of `variant="tag"` — wrapping tag row; defaults to an example row.               |
+| `content-tag`   | `div`   | Body of `variant="tag"` — wrapping tag row; no built-in default.                      |
 | `content-list`  | `div`   | Body of `variant="list"` — title/description rows; no built-in default.               |
 | `content-table` | `div`   | Body of `variant="table-actions"` — flush table with row actions.                     |
 | `nested-card`   | `div`   | Body of `card-primary` / `card-secondary` — a nested `Card` composed from `children`. |
@@ -53,7 +53,7 @@ Stacked sections in one card body — every section but the last draws a divider
       hasBottomBorder
       contentList={rows}
     />
-    <CardSection variant="tag" hasHeader title="Labels" />
+    <CardSection variant="tag" hasHeader title="Labels" contentTag={tags} />
   </CardContent>
 </Card>
 ```

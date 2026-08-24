@@ -66,10 +66,10 @@ contract:
     - name: contentTag
       type: 'ReactNode'
       required: false
-      default: 'an example tag row'
+      default: undefined
       description: >-
-        Body of the `tag` variant. Defaults to a short example tag row so the
-        variant is never empty, mirroring the Figma fallback.
+        Body of the `tag` variant. Has no built-in default: like
+        `contentList`, the consumer supplies the tags.
 
     - name: contentList
       type: 'ReactNode'
@@ -122,7 +122,7 @@ adapters:
             hasBottomBorder
             contentList={rows}
           />
-          <CardSection variant="tag" hasHeader title="Labels" />
+          <CardSection variant="tag" hasHeader title="Labels" contentTag={tags} />
         </CardContent>
       </Card>
 

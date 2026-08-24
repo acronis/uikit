@@ -75,6 +75,13 @@ export function CardSectionDemo() {
           title="Labels"
           extras={<Tag variant="info">3</Tag>}
           hasBottomBorder
+          contentTag={
+            <>
+              <Tag variant="neutral">Production</Tag>
+              <Tag variant="neutral">EU-West</Tag>
+              <Tag variant="neutral">Tier 1</Tag>
+            </>
+          }
         />
         <CardSection
           variant="table-actions"

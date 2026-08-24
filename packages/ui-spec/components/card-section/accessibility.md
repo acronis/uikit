@@ -41,9 +41,8 @@
   visual only, the full string stays in the accessible name/text.
 - Icon-only controls placed in `actions` must supply their own accessible name
   (`aria-label` on the button); the section adds none.
-- The default tag row for `variant="tag"` is placeholder example content. Ship
-  real, localized tags via `contentTag` — the defaults are English literals and
-  are not meant for production copy.
+- `variant="tag"` has no built-in default content — the consumer always
+  supplies real, localized tags via `contentTag`.
 
 ## Contrast
 

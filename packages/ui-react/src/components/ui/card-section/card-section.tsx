@@ -2,11 +2,9 @@ import * as React from 'react';
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { CheckIcon, MinusIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui/card';
-import { Tag } from '@/components/ui/tag';
 
 // Figma node 7662:8727 ("CardSection"). A band of content that stacks inside a
 // `Card`'s body, below `CardHeader`. Figma's PascalCase variant names map to
@@ -80,8 +78,8 @@ export interface CardSectionBaseProps
   /** Body of the `slot` variant — arbitrary passthrough content. */
   content?: React.ReactNode;
   /**
-   * Body of the `tag` variant — a wrapping row of tags. Defaults to a short
-   * example row so the variant is never empty (mirrors the Figma fallback).
+   * Body of the `tag` variant — a wrapping row of tags. Has no built-in
+   * default: like `contentList`, the consumer supplies the tags.
    */
   contentTag?: React.ReactNode;
   /**
@@ -127,19 +125,7 @@ const CardSection = React.forwardRef<HTMLDivElement, CardSectionProps>(
       extras,
       actions,
       content,
-      contentTag = (
-        <>
-          <Tag variant="neutral" icon={<MinusIcon />}>
-            Tag 1
-          </Tag>
-          <Tag variant="success" icon={<CheckIcon />}>
-            Tag 2
-          </Tag>
-          <Tag variant="success" icon={<CheckIcon />}>
-            Tag 3
-          </Tag>
-        </>
-      ),
+      contentTag,
       contentList,
       contentTable,
       render,

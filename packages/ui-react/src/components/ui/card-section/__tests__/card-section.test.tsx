@@ -99,18 +99,10 @@ describe('CardSection', () => {
       expect(table.firstElementChild?.className).not.toContain('px-4');
     });
 
-    it('renders a default tag row for the tag variant', () => {
-      render(<CardSection variant="tag" />);
-
-      expect(screen.getByText('Tag 1')).toBeInTheDocument();
-      expect(screen.getByText('Tag 3')).toBeInTheDocument();
-    });
-
-    it('lets contentTag replace the default tag row', () => {
+    it('renders contentTag for the tag variant', () => {
       render(<CardSection variant="tag" contentTag={<span>Only mine</span>} />);
 
       expect(screen.getByText('Only mine')).toBeInTheDocument();
-      expect(screen.queryByText('Tag 1')).not.toBeInTheDocument();
     });
 
     it('renders contentList for the list variant', () => {
