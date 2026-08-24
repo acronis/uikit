@@ -6,7 +6,7 @@ import { EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
 import { AccordionContainer } from '../../accordion-container';
 import { Button } from '../../button';
 import { ButtonIcon } from '../../button-icon';
-import { Card, CardContent, CardHeader } from '../../card';
+import { Card, CardContent, CardFooter, CardHeader } from '../../card';
 import {
   Table,
   TableBody,
@@ -222,7 +222,7 @@ export const WithBottomBorder: Story = {
 
 // Stacked sections on one page: every section but the last draws a divider, so
 // the page reads as a sequence of separated bands.
-export const StackedSections: Story = {
+export const IntegrationStackedSectionsWithBottomBorder: Story = {
   render: () => (
     <div className="flex flex-col">
       <Section hasBottomBorder>
@@ -348,4 +348,109 @@ export const CollapsibleExpanded: Story = {
 export const CollapsibleCollapsed: Story = {
   args: { variant: 'grid3' },
   render: (args) => <CollapsibleSectionDemo args={args} defaultOpen={false} />,
+};
+
+// Nested disclosures: the `Section` and the `Card` inside it each own their
+// own independent `AccordionContainer` — collapsing one has no effect on the
+// other.
+export const IntegrationCollapsibleSectionWithCollapsibleCard: Story = {
+  render: () => (
+    <Section variant="column1">
+      <AccordionContainer collapsible defaultOpen>
+        <SectionHeader
+          title="Protection"
+          description="3 plans applied to 24 workloads."
+          hasDescription
+          isCollapsible
+          collapseLabel="Toggle protection section"
+        />
+        <AccordionContainer.Content>
+          <SectionContent>
+            <Card>
+              <AccordionContainer collapsible defaultOpen>
+                <CardHeader title="Daily backup plan" isCollapsible />
+                <AccordionContainer.Content>
+                  <CardContent>
+                    <p className="text-sm">
+                      Runs every night at 02:00 and keeps 30 restore points.
+                    </p>
+                  </CardContent>
+                </AccordionContainer.Content>
+              </AccordionContainer>
+            </Card>
+          </SectionContent>
+        </AccordionContainer.Content>
+      </AccordionContainer>
+    </Section>
+  ),
+};
+
+// Every `Section` feature and every `CardHeader` feature combined in one
+// composition: switch, extras, end actions, a bottom divider, and a
+// collapsible section wrapping a nested card that is itself draggable,
+// switchable, has an avatar and a rename control, and is independently
+// collapsible.
+export const IntegrationFullFeaturedWithNestedCards: Story = {
+  render: () => (
+    <Section variant="column1" hasBottomBorder className="w-120">
+      <AccordionContainer collapsible defaultOpen>
+        <SectionHeader
+          title="Cyber Protection"
+          description="Every section feature combined: switch, extras, actions, divider, collapse."
+          hasDescription
+          isSwitchable
+          defaultSwitchChecked
+          switchLabel="Toggle Cyber Protection"
+          extras={
+            <span className="rounded-sm bg-[var(--ui-background-surface-secondary)] px-1.5 py-0.5 text-xs text-[var(--ui-text-on-surface-secondary)]">
+              Beta
+            </span>
+          }
+          actions={
+            <ButtonIcon aria-label="More actions">
+              <EllipsisIcon size={24} />
+            </ButtonIcon>
+          }
+          isCollapsible
+          collapseLabel="Toggle Cyber Protection section"
+        />
+        <AccordionContainer.Content>
+          <SectionContent>
+            <Card>
+              <AccordionContainer collapsible defaultOpen>
+                <CardHeader
+                  title="Backup policy"
+                  description="Every card header feature combined: drag, switch, avatar, rename, collapse."
+                  hasDescription
+                  isDraggable
+                  isSwitchable
+                  defaultSwitchChecked
+                  hasAvatar
+                  avatarLabel="SB"
+                  hasRename
+                  actions={
+                    <ButtonIcon aria-label="More actions">
+                      <EllipsisIcon size={24} />
+                    </ButtonIcon>
+                  }
+                  isCollapsible
+                />
+                <AccordionContainer.Content>
+                  <CardContent>
+                    <p className="text-sm">
+                      Runs every night at 02:00 and keeps 30 restore points.
+                    </p>
+                  </CardContent>
+                  <CardFooter className="gap-2">
+                    <Button>Save</Button>
+                    <Button variant="secondary">Cancel</Button>
+                  </CardFooter>
+                </AccordionContainer.Content>
+              </AccordionContainer>
+            </Card>
+          </SectionContent>
+        </AccordionContainer.Content>
+      </AccordionContainer>
+    </Section>
+  ),
 };
