@@ -38,9 +38,9 @@ A three-part split that sums to 100, with the count/% legend:
 
 ```tsx
 const config = {
-  passed: { label: 'Passed', color: 'var(--ui-background-status-strong-success)' },
-  warnings: { label: 'Warnings', color: 'var(--ui-background-status-strong-warning)' },
-  failed: { label: 'Failed', color: 'var(--ui-background-status-strong-danger)' },
+  passed: { label: 'Passed', tone: { status: 'success' } },
+  warnings: { label: 'Warnings', tone: { status: 'warning' } },
+  failed: { label: 'Failed', tone: { status: 'danger' } },
 } satisfies ChartConfig;
 
 <CategoryBar
@@ -83,9 +83,8 @@ share without recomputing them:
 ```
 
 `color` there is the segment's `var(--color-<key>)` reference rather than a
-literal, so it resolves both a flat `color` and a per-theme
-`theme: { light, dark }` config entry. `label` is whatever the config carries —
-a string or any node.
+literal, so it resolves whatever stop of the `palette` the segment took.
+`label` is whatever the config carries — a string or any node.
 
 The tooltip is pointer-driven: the segments sit inside a `role="img"` bar, so
 they are deliberately not separate focusable controls. The bar's `aria-label`

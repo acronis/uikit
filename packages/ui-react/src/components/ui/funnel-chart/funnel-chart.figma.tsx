@@ -21,10 +21,9 @@ figma.connect(FunnelChart, 'FIGMA_NODE_URL', {
       dataKey="value"
       nameKey="stage"
       config={{
-        Visits: { label: 'Visits', color: 'var(--ui-background-brand-secondary)' },
+        Visits: { label: 'Visits' },
         Signups: {
           label: 'Signups',
-          color: 'var(--ui-background-status-strong-success)',
         },
       }}
       data={[

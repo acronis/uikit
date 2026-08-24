@@ -62,10 +62,9 @@ const cartesianData = [
 ];
 
 const cartesianConfig = {
-  desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
+  desktop: { label: 'Desktop' },
   mobile: {
     label: 'Mobile',
-    color: 'var(--ui-background-status-strong-danger)',
   },
 } satisfies ChartConfig;
 
@@ -78,16 +77,14 @@ const partData = [
 ];
 
 const partConfig = {
-  Chrome: { label: 'Chrome', color: 'var(--ui-background-brand-secondary)' },
+  Chrome: { label: 'Chrome' },
   Safari: {
     label: 'Safari',
-    color: 'var(--ui-background-status-strong-danger)',
   },
   Firefox: {
     label: 'Firefox',
-    color: 'var(--ui-background-status-strong-success)',
   },
-  Edge: { label: 'Edge', color: 'var(--ui-background-status-strong-warning)' },
+  Edge: { label: 'Edge' },
 } satisfies ChartConfig;
 
 const scatterSeries = [
@@ -112,10 +109,9 @@ const scatterSeries = [
 ];
 
 const scatterConfig = {
-  classA: { label: 'Class A', color: 'var(--ui-background-brand-secondary)' },
+  classA: { label: 'Class A' },
   classB: {
     label: 'Class B',
-    color: 'var(--ui-background-status-strong-danger)',
   },
 } satisfies ChartConfig;
 
@@ -128,8 +124,8 @@ const radarData = [
 ];
 
 const radarConfig = {
-  alice: { label: 'Alice', color: 'var(--ui-background-brand-secondary)' },
-  bob: { label: 'Bob', color: 'var(--ui-background-status-strong-danger)' },
+  alice: { label: 'Alice' },
+  bob: { label: 'Bob' },
 } satisfies ChartConfig;
 
 const histogramValues = [
@@ -137,7 +133,7 @@ const histogramValues = [
 ];
 
 const histogramConfig = {
-  count: { label: 'Frequency', color: 'var(--ui-background-brand-secondary)' },
+  count: { label: 'Frequency' },
 } satisfies ChartConfig;
 
 const coneData = [
@@ -150,10 +146,9 @@ const coneData = [
 ];
 
 const coneConfig = {
-  actual: { label: 'Actual', color: 'var(--ui-background-brand-secondary)' },
+  actual: { label: 'Actual' },
   forecast: {
     label: 'Forecast',
-    color: 'var(--ui-background-brand-secondary)',
   },
 } satisfies ChartConfig;
 
@@ -168,15 +163,12 @@ const sankeyData = {
 const sankeyConfig = {
   signups: {
     label: 'Sign-ups',
-    color: 'var(--ui-background-status-strong-info)',
   },
   active: {
     label: 'Active',
-    color: 'var(--ui-background-status-strong-success)',
   },
   churned: {
     label: 'Churned',
-    color: 'var(--ui-background-status-strong-danger)',
   },
 } satisfies ChartConfig;
 
@@ -189,15 +181,12 @@ const categoryBarData = [
 const categoryBarConfig = {
   passed: {
     label: 'Passed',
-    color: 'var(--ui-background-status-strong-success)',
   },
   warnings: {
     label: 'Warnings',
-    color: 'var(--ui-background-status-strong-warning)',
   },
   failed: {
     label: 'Failed',
-    color: 'var(--ui-background-status-strong-danger)',
   },
 } satisfies ChartConfig;
 

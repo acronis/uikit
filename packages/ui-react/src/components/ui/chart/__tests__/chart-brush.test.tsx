@@ -26,8 +26,8 @@ const data = Array.from({ length: 12 }, (_, index) => ({
 }));
 
 const config = {
-  desktop: { label: 'Desktop', color: 'rgb(23 99 207)' },
-  mobile: { label: 'Mobile', color: 'rgb(220 53 69)' },
+  desktop: { label: 'Desktop' },
+  mobile: { label: 'Mobile' },
 } satisfies ChartConfig;
 
 type BrushProps = {

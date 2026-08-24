@@ -21,30 +21,25 @@ const data = {
     { source: 1, target: 3, value: 174 },
     { source: 1, target: 4, value: 21 },
     { source: 1, target: 5, value: 14 },
-  ],
+  ]
 };
 
 const config = {
-  all: { label: 'All tenants', color: 'var(--ui-background-status-strong-info)' },
+  all: { label: 'All tenants' },
   certified: {
-    label: 'Certified',
-    color: 'var(--ui-background-status-strong-info)',
+    label: 'Certified'
   },
   noCert: {
-    label: 'No certification',
-    color: 'var(--ui-background-status-strong-neutral)',
+    label: 'No certification'
   },
   valid: {
-    label: 'Valid',
-    color: 'var(--ui-background-status-strong-success)',
+    label: 'Valid'
   },
   expiring: {
-    label: 'Expiring',
-    color: 'var(--ui-background-status-strong-warning)',
+    label: 'Expiring'
   },
   expired: {
-    label: 'Expired',
-    color: 'var(--ui-background-status-strong-danger)',
+    label: 'Expired'
   },
 } satisfies ChartConfig;
 

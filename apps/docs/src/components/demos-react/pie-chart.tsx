@@ -13,13 +13,12 @@ const data = [
 // value (no chart token tier yet) — here referencing the shared semantic
 // brand/status tokens.
 const config = {
-  Chrome: { label: 'Chrome', color: 'var(--ui-background-brand-secondary)' },
-  Safari: { label: 'Safari', color: 'var(--ui-background-status-strong-danger)' },
+  Chrome: { label: 'Chrome' },
+  Safari: { label: 'Safari' },
   Firefox: {
-    label: 'Firefox',
-    color: 'var(--ui-background-status-strong-success)',
+    label: 'Firefox'
   },
-  Edge: { label: 'Edge', color: 'var(--ui-background-status-strong-warning)' },
+  Edge: { label: 'Edge' },
 } satisfies ChartConfig;
 
 export function PieChartDemo() {

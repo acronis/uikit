@@ -15,10 +15,9 @@ const data = [
 // chart token tier yet) — here referencing the shared semantic brand/status
 // tokens.
 const config = {
-  revenue: { label: 'Revenue', color: 'var(--ui-background-brand-secondary)' },
+  revenue: { label: 'Revenue' },
   profit: {
-    label: 'Profit',
-    color: 'var(--ui-background-status-strong-success)',
+    label: 'Profit'
   },
 } satisfies ChartConfig;
 

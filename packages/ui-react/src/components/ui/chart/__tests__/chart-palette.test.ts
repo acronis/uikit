@@ -13,6 +13,7 @@ import {
   resolveSeriesColor,
   type ChartConfig,
   type ChartPalette,
+  type ResolvedChartConfig,
 } from '../index';
 
 const CATEGORICAL: ChartPalette = { type: 'categorical' };
@@ -230,31 +231,58 @@ describe('resolveChartColors', () => {
     });
   });
 
-  it('leaves a series that states its own color untouched', () => {
+  it('paints an aliased series with its target’s colour', () => {
     const config = {
-      pinned: { label: 'Pinned', color: 'var(--ui-background-brand-primary)' },
-      auto: { label: 'Auto' },
+      actual: { label: 'Actual' },
+      forecast: { label: 'Forecast', tone: { sameAs: 'actual' } },
     } satisfies ChartConfig;
 
     const resolved = resolveChartColors(config, CATEGORICAL);
 
-    expect(resolved.pinned.color).toBe('var(--ui-background-brand-primary)');
-    // The pinned series doesn't consume a slot, so `auto` still gets the first.
-    expect(resolved.auto.color).toBe(CHART_CATEGORICAL_TOKENS[0]);
+    expect(resolved.actual.color).toBe(CHART_CATEGORICAL_TOKENS[0]);
+    expect(resolved.forecast.color).toBe(CHART_CATEGORICAL_TOKENS[0]);
   });
 
-  it('does not let a pinned series consume a ramp stop', () => {
+  it('does not let an aliased series consume a stop', () => {
     const config = {
-      pinned: { label: 'Pinned', color: 'red' },
-      a: { label: 'A' },
-      b: { label: 'B' },
+      actual: { label: 'Actual' },
+      forecast: { label: 'Forecast', tone: { sameAs: 'actual' } },
+      other: { label: 'Other' },
     } satisfies ChartConfig;
 
     const resolved = resolveChartColors(config, SEQUENTIAL);
 
-    // The two assignable series take stops 1 and 2, not 2 and 3.
-    expect(resolved.a.color).toBe(CHART_SEQUENTIAL_TOKENS.blue[0]);
-    expect(resolved.b.color).toBe(CHART_SEQUENTIAL_TOKENS.blue[1]);
+    // `other` takes stop 2, not 3 — the alias is the same metric, not a series
+    // of its own.
+    expect(resolved.actual.color).toBe(CHART_SEQUENTIAL_TOKENS.blue[0]);
+    expect(resolved.other.color).toBe(CHART_SEQUENTIAL_TOKENS.blue[1]);
+    expect(resolved.forecast.color).toBe(CHART_SEQUENTIAL_TOKENS.blue[0]);
+  });
+
+  it('warns and falls back when an alias points nowhere', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const config = {
+      forecast: { label: 'Forecast', tone: { sameAs: 'missing' } },
+    } satisfies ChartConfig;
+
+    expect(resolveChartColors(config, CATEGORICAL).forecast.color).toBe(
+      CHART_STATUS_TOKENS.neutral
+    );
+    expect(warn).toHaveBeenCalledOnce();
+  });
+
+  it('keeps the config’s own key order', () => {
+    const config = {
+      first: {},
+      alias: { tone: { sameAs: 'first' } },
+      second: {},
+    } satisfies ChartConfig;
+
+    expect(Object.keys(resolveChartColors(config, CATEGORICAL))).toEqual([
+      'first',
+      'alias',
+      'second',
+    ]);
   });
 
   it('honors a per-series tone', () => {
@@ -311,10 +339,8 @@ describe('findDuplicateTones', () => {
 });
 
 /** The `key -> color` map the duplicate check runs over. */
-function colorsOf(config: ChartConfig): Record<string, string> {
+function colorsOf(config: ResolvedChartConfig): Record<string, string> {
   return Object.fromEntries(
-    Object.entries(config)
-      .filter(([, item]) => item.color)
-      .map(([key, item]) => [key, item.color as string])
+    Object.entries(config).map(([key, item]) => [key, item.color])
   );
 }

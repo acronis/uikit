@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Cell, Funnel, FunnelChart as RechartsFunnelChart } from 'recharts';
 
 import { FunnelChart } from '../funnel-chart';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -22,18 +23,15 @@ const data = [
 ];
 
 const config = {
-  Visits: { label: 'Visits', color: 'var(--ui-background-brand-secondary)' },
+  Visits: { label: 'Visits' },
   Signups: {
     label: 'Signups',
-    color: 'var(--ui-background-status-strong-success)',
   },
   Trials: {
     label: 'Trials',
-    color: 'var(--ui-background-status-strong-warning)',
   },
   Purchases: {
     label: 'Purchases',
-    color: 'var(--ui-background-status-strong-danger)',
   },
 } satisfies ChartConfig;
 
@@ -64,6 +62,7 @@ const meta = {
     className: 'h-[380px] w-[460px]',
   },
   argTypes: {
+    ...paletteArgTypes,
     lastShape: { control: 'inline-radio', options: ['triangle', 'rectangle'] },
     reversed: { control: 'boolean' },
     showLabels: { control: 'boolean' },

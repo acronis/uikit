@@ -17,8 +17,8 @@ import { CHART_HEIGHT, CHART_WIDTH, giveEveryChartASize } from './chart-layout';
 giveEveryChartASize();
 
 const config = {
-  desktop: { label: 'Desktop', color: 'rgb(23 99 207)' },
-  mobile: { label: 'Mobile', color: 'rgb(220 53 69)' },
+  desktop: { label: 'Desktop' },
+  mobile: { label: 'Mobile' },
 } satisfies ChartConfig;
 
 // The fields recharts always puts on a tooltip row; the content reads
@@ -94,34 +94,50 @@ describe('Chart', () => {
     );
   });
 
-  it('injects per-series --color-* custom properties from the config', () => {
+  it('injects a --color-* custom property per series, from the palette', () => {
     const { container } = render(
       <ChartContainer config={config} id="usage">
         <BarChart data={[]} />
       </ChartContainer>
     );
-    const style = container.querySelector('style');
-    expect(style?.innerHTML).toContain('--color-desktop: rgb(23 99 207)');
-    expect(style?.innerHTML).toContain('--color-mobile: rgb(220 53 69)');
+    const css = container.querySelector('style')?.innerHTML ?? '';
+    expect(css).toContain('[data-chart=chart-usage]');
+    expect(css).toContain('--color-desktop: var(--ui-dataviz-categorical-1)');
+    expect(css).toContain('--color-mobile: var(--ui-dataviz-categorical-2)');
   });
 
-  it('scopes a per-series theme color under [data-theme="dark"]', () => {
-    const themed = {
-      desktop: { label: 'Desktop', theme: { light: '#aaa', dark: '#222' } },
-    } satisfies ChartConfig;
+  it('emits one block, not a light/dark pair', () => {
+    // Every palette colour is a `light-dark()` token that follows
+    // `color-scheme` on its own, so the old `[data-theme='dark']` duplication
+    // that hand-written `theme: { light, dark }` entries needed is gone.
     const { container } = render(
-      <ChartContainer config={themed} id="usage">
+      <ChartContainer config={config} id="usage">
         <BarChart data={[]} />
       </ChartContainer>
     );
     const css = container.querySelector('style')?.innerHTML ?? '';
-    expect(css).toContain("[data-theme='dark'] [data-chart=chart-usage]");
-    expect(css).toContain('--color-desktop: #222');
+    expect(css).not.toContain("[data-theme='dark']");
+    expect(css.match(/\[data-chart=chart-usage\]/g)).toHaveLength(1);
   });
 
-  it('renders no <style> when the config carries no colors', () => {
+  it('follows the palette a caller picks', () => {
     const { container } = render(
-      <ChartContainer config={{ desktop: { label: 'Desktop' } }}>
+      <ChartContainer
+        config={{ ok: { label: 'OK', tone: { status: 'success' } } }}
+        palette={{ type: 'status' }}
+        id="usage"
+      >
+        <BarChart data={[]} />
+      </ChartContainer>
+    );
+    expect(container.querySelector('style')?.innerHTML).toContain(
+      '--color-ok: var(--ui-dataviz-meaningful-status-success)'
+    );
+  });
+
+  it('renders no <style> for an empty config', () => {
+    const { container } = render(
+      <ChartContainer config={{}}>
         <BarChart data={[]} />
       </ChartContainer>
     );
@@ -188,7 +204,7 @@ describe('Chart', () => {
   // the entry falls back to the series key rather than rendering a bare marker.
   it('falls back to the series key when the config entry has no label', () => {
     const { container } = render(
-      <ChartContainer config={{ desktop: { color: 'rgb(23 99 207)' } }} id="nl">
+      <ChartContainer config={{ desktop: {} }} id="nl">
         <ChartLegendContent
           payload={[
             { value: 'desktop', dataKey: 'desktop', color: 'rgb(23 99 207)' },

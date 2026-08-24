@@ -23,8 +23,8 @@ const data = [
 ];
 
 const config = {
-  desktop: { label: 'Desktop', color: 'rgb(23 99 207)' },
-  mobile: { label: 'Mobile', color: 'rgb(220 53 69)' },
+  desktop: { label: 'Desktop' },
+  mobile: { label: 'Mobile' },
 } satisfies ChartConfig;
 
 function renderChart(
@@ -144,8 +144,8 @@ describe('AreaChart', () => {
   it('wires each series color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-desktop: rgb(23 99 207)');
-    expect(style).toContain('--color-mobile: rgb(220 53 69)');
+    expect(style).toContain('--color-desktop: var(--ui-dataviz-categorical-1)');
+    expect(style).toContain('--color-mobile: var(--ui-dataviz-categorical-2)');
   });
 
   it('defaults to a single layout with a gradient fill', () => {

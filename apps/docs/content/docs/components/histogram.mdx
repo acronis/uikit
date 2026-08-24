@@ -37,7 +37,7 @@ A distribution binned into 10 equal-width ranges:
 const values = [12, 15, 18, 20, 22, 22, 25, 28, 30, 35, 42, 48, 60];
 
 const config = {
-  count: { label: 'Frequency', color: 'var(--ui-background-brand-secondary)' },
+  count: { label: 'Frequency' },
 } satisfies ChartConfig;
 
 <Histogram config={config} values={values} binCount={10} className="h-[320px] w-[560px]" />;

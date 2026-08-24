@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   Area,
   CartesianGrid,
@@ -40,10 +41,9 @@ const data = [
 ];
 
 const config = {
-  actual: { label: 'Actual', color: 'var(--ui-background-brand-secondary)' },
+  actual: { label: 'Actual' },
   forecast: {
     label: 'Forecast',
-    color: 'var(--ui-background-brand-secondary)',
   },
 } satisfies ChartConfig;
 
@@ -77,6 +77,7 @@ const meta = {
     className: 'h-[320px] w-[560px]',
   },
   argTypes: {
+    ...paletteArgTypes,
     strokeWidth: { control: { type: 'number', min: 1, max: 6 } },
     xAxisLabel: { control: 'text' },
     yAxisLabel: { control: 'text' },
@@ -252,11 +253,10 @@ const multiData = [
 ];
 
 const multiConfig = {
-  storage: { label: 'Storage', color: 'var(--ui-background-brand-secondary)' },
+  storage: { label: 'Storage' },
   storageForecast: { label: 'Storage forecast' },
   backups: {
     label: 'Backups',
-    color: 'var(--ui-background-status-strong-success)',
   },
   backupsForecast: { label: 'Backups forecast' },
 } satisfies ChartConfig;

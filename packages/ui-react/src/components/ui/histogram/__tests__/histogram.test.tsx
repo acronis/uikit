@@ -17,7 +17,7 @@ import {
 giveEveryChartASize();
 
 const config = {
-  count: { label: 'Frequency', color: 'rgb(23 99 207)' },
+  count: { label: 'Frequency' },
 } satisfies ChartConfig;
 
 function renderChart(
@@ -51,7 +51,7 @@ describe('Histogram', () => {
   it('wires the series color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-count: rgb(23 99 207)');
+    expect(style).toContain('--color-count: var(--ui-dataviz-categorical-1)');
   });
 
   it('draws one bar per bin and re-bins when binCount changes', () => {

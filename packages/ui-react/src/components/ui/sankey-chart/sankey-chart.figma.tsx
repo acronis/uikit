@@ -12,14 +12,12 @@ figma.connect(SankeyChart, 'FIGMA_NODE_URL', {
   example: () => (
     <SankeyChart
       config={{
-        all: { label: 'All tenants', color: 'var(--ui-background-status-strong-info)' },
+        all: { label: 'All tenants' },
         certified: {
           label: 'Certified',
-          color: 'var(--ui-background-status-strong-info)',
         },
         expired: {
           label: 'Expired',
-          color: 'var(--ui-background-status-strong-danger)',
         },
       }}
       data={{

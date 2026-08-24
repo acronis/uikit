@@ -16,24 +16,19 @@ const data = [
 
 const config = {
   registered: {
-    label: 'Registered',
-    color: 'var(--ui-background-status-strong-neutral)',
+    label: 'Registered'
   },
   trained: {
-    label: 'Trained',
-    color: 'var(--ui-background-brand-primary-disabled)',
+    label: 'Trained'
   },
   firstDeal: {
-    label: 'First deal',
-    color: 'var(--ui-background-status-strong-info)',
+    label: 'First deal'
   },
   certified: {
-    label: 'Certified',
-    color: 'var(--ui-background-status-strong-critical)',
+    label: 'Certified'
   },
   fullyActive: {
-    label: 'Fully active',
-    color: 'var(--ui-background-status-strong-success)',
+    label: 'Fully active'
   },
 } satisfies ChartConfig;
 

@@ -27,11 +27,11 @@ const data = {
 };
 
 const config = {
-  all: { label: 'All tenants', color: 'rgb(23 99 207)' },
-  certified: { label: 'Certified', color: 'rgb(40 167 69)' },
-  noCert: { label: 'No certification', color: 'rgb(108 117 125)' },
-  valid: { label: 'Valid', color: 'rgb(52 199 89)' },
-  expired: { label: 'Expired', color: 'rgb(220 53 69)' },
+  all: { label: 'All tenants' },
+  certified: { label: 'Certified' },
+  noCert: { label: 'No certification' },
+  valid: { label: 'Valid' },
+  expired: { label: 'Expired' },
 } satisfies ChartConfig;
 
 function renderChart(
@@ -73,21 +73,21 @@ describe('SankeyChart', () => {
   it('wires each node color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-all: rgb(23 99 207)');
-    expect(style).toContain('--color-expired: rgb(220 53 69)');
+    expect(style).toContain('--color-all: var(--ui-dataviz-categorical-1)');
+    expect(style).toContain('--color-expired: var(--ui-dataviz-categorical-5)');
   });
 
-  it('draws one bar per node, filled from that node\'s config color', () => {
+  it("draws one bar per node, filled from that node's config color", () => {
     const { container } = renderChart();
-    expect(nodeBarsOf(container).map((bar) => bar.getAttribute('fill'))).toEqual(
-      [
-        'var(--color-all)',
-        'var(--color-certified)',
-        'var(--color-noCert)',
-        'var(--color-valid)',
-        'var(--color-expired)',
-      ]
-    );
+    expect(
+      nodeBarsOf(container).map((bar) => bar.getAttribute('fill'))
+    ).toEqual([
+      'var(--color-all)',
+      'var(--color-certified)',
+      'var(--color-noCert)',
+      'var(--color-valid)',
+      'var(--color-expired)',
+    ]);
   });
 
   // A flow reads as "where it goes", so a ribbon takes its *target*'s color,
@@ -140,7 +140,10 @@ describe('SankeyChart', () => {
   });
 
   it('drops the node labels when showLabels is off', () => {
-    const { container } = renderChart({ showLabels: false, showTooltip: false });
+    const { container } = renderChart({
+      showLabels: false,
+      showTooltip: false,
+    });
     expect(nodeLabelsOf(container)).toHaveLength(0);
     expect(nodeBarsOf(container)).toHaveLength(5);
   });
@@ -235,10 +238,10 @@ describe('SankeyChart', () => {
     expect(container.firstElementChild).toHaveClass('h-[300px]', 'w-[500px]');
   });
 
-  it('resolves node colors through the --color-* bridge for a per-theme config', () => {
+  it('resolves node colors through the --color-* bridge from the palette', () => {
     const themed = {
-      all: { label: 'All tenants', theme: { light: '#aaa', dark: '#222' } },
-      certified: { label: 'Certified', theme: { light: '#0a0', dark: '#3f3' } },
+      all: { label: 'All tenants' },
+      certified: { label: 'Certified' },
     } satisfies ChartConfig;
     const { container } = render(
       <SankeyChart
@@ -251,10 +254,10 @@ describe('SankeyChart', () => {
       />
     );
     const css = container.querySelector('style')?.innerHTML ?? '';
-    expect(css).toContain('--color-all: #aaa');
-    expect(css).toContain('--color-certified: #3f3');
-    // The legend swatch references the bridge, so it is colored even though the
-    // config carries no flat `color`.
+    expect(css).toContain('--color-all: var(--ui-dataviz-categorical-1)');
+    expect(css).toContain('--color-certified: var(--ui-dataviz-categorical-2)');
+    // The legend swatch references the bridge, so it is colored without the
+    // config naming a colour itself.
     const swatch = container.querySelector<HTMLElement>('.rounded-sm');
     expect(swatch?.style.backgroundColor).toBe('var(--color-all)');
   });
@@ -267,7 +270,10 @@ describe('SankeyChart default tooltip', () => {
 
   it('renders nothing while inactive or without a payload', () => {
     const { container: inactive } = render(
-      <Tooltip active={false} payload={[{ name: 'all - certified', value: 209 }]} />
+      <Tooltip
+        active={false}
+        payload={[{ name: 'all - certified', value: 209 }]}
+      />
     );
     expect(inactive).toBeEmptyDOMElement();
     const { container: empty } = render(<Tooltip active payload={[]} />);
@@ -325,7 +331,7 @@ describe('SankeyChart default tooltip', () => {
 
   it('renders a ReactNode config label instead of stringifying it', () => {
     const Rich = makeSankeyTooltip(
-      { all: { label: <em>All tenants</em>, color: 'rgb(0 0 0)' } },
+      { all: { label: <em>All tenants</em> } },
       [],
       []
     );
@@ -336,7 +342,10 @@ describe('SankeyChart default tooltip', () => {
 
   it('formats a range-tuple value instead of printing a comma-joined array', () => {
     const { container } = render(
-      <Tooltip active payload={[{ name: 'all - certified', value: [1000, 2000] }]} />
+      <Tooltip
+        active
+        payload={[{ name: 'all - certified', value: [1000, 2000] }]}
+      />
     );
     // the tooltip localises each part, so derive the expectation from the same
     // locale the test process runs under instead of hardcoding en-US grouping

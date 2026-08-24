@@ -30,8 +30,8 @@ const data = [
 ];
 
 const config = {
-  alice: { label: 'Alice', color: 'rgb(23 99 207)' },
-  bob: { label: 'Bob', color: 'rgb(220 53 69)' },
+  alice: { label: 'Alice' },
+  bob: { label: 'Bob' },
 } satisfies ChartConfig;
 
 function renderChart(
@@ -115,8 +115,8 @@ describe('RadarChart', () => {
   it('wires each series color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-alice: rgb(23 99 207)');
-    expect(style).toContain('--color-bob: rgb(220 53 69)');
+    expect(style).toContain('--color-alice: var(--ui-dataviz-categorical-1)');
+    expect(style).toContain('--color-bob: var(--ui-dataviz-categorical-2)');
   });
 
   it('defaults to a polygon grid', () => {
@@ -647,8 +647,8 @@ describe('RadarChart per-series styling', () => {
     // A per-series color styles the series, it doesn't rewrite the
     // `--color-<key>` custom properties `config` injects.
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-alice: rgb(23 99 207)');
-    expect(style).toContain('--color-bob: rgb(220 53 69)');
+    expect(style).toContain('--color-alice: var(--ui-dataviz-categorical-1)');
+    expect(style).toContain('--color-bob: var(--ui-dataviz-categorical-2)');
   });
 
   // `fillOpacity: 0` is "outline only" and `strokeWidth: 0` is "fill only", so a

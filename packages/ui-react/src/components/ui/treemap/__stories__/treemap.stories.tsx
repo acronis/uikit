@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Treemap } from '../treemap';
 import { type ChartConfig } from '../../chart';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 
 // NOTE: no `TooltipOpen` story here (unlike the other chart types). recharts'
 // Treemap tooltip is purely hover-driven and does not honor `defaultIndex`/
@@ -23,19 +24,16 @@ const data = [
 ];
 
 const config = {
-  React: { label: 'React', color: 'var(--ui-background-brand-secondary)' },
-  Vue: { label: 'Vue', color: 'var(--ui-background-status-strong-success)' },
+  React: { label: 'React' },
+  Vue: { label: 'Vue' },
   Angular: {
     label: 'Angular',
-    color: 'var(--ui-background-status-strong-danger)',
   },
   Svelte: {
     label: 'Svelte',
-    color: 'var(--ui-background-status-strong-warning)',
   },
   Solid: {
     label: 'Solid',
-    color: 'var(--ui-background-status-strong-critical)',
   },
 } satisfies ChartConfig;
 
@@ -66,6 +64,7 @@ const meta = {
     className: 'h-[320px] w-[520px]',
   },
   argTypes: {
+    ...paletteArgTypes,
     aspectRatio: { control: { type: 'number', min: 0.5, max: 4, step: 0.1 } },
     showLabels: { control: 'boolean' },
     labelAlign: {
@@ -169,31 +168,24 @@ export const SmallTiles: Story = {
     config: {
       won: {
         label: 'Won',
-        color: 'var(--ui-background-status-strong-success)',
       },
       approved: {
         label: 'Approved',
-        color: 'var(--ui-background-brand-secondary)',
       },
       'awaiting-approval': {
         label: 'Awaiting approval',
-        color: 'var(--ui-background-status-strong-warning)',
       },
       'final-review': {
         label: 'Final review',
-        color: 'var(--ui-background-status-strong-info)',
       },
       draft: {
         label: 'Draft',
-        color: 'var(--ui-background-status-strong-neutral)',
       },
       lost: {
         label: 'Lost',
-        color: 'var(--ui-background-status-strong-danger)',
       },
       disqualified: {
         label: 'Disqualified',
-        color: 'var(--ui-background-status-strong-critical)',
       },
     },
     dataKey: 'amount',

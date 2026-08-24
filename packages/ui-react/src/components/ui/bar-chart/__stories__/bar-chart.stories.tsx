@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Bar, BarChart as RechartsBarChart, CartesianGrid, Cell, XAxis } from 'recharts';
 
 import { BarChart, dropHeadroomSeries } from '../bar-chart';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -25,9 +26,9 @@ const data = [
 ];
 
 const config = {
-  desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
-  mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
-  tablet: { label: 'Tablet', color: 'var(--ui-background-status-strong-success)' },
+  desktop: { label: 'Desktop' },
+  mobile: { label: 'Mobile' },
+  tablet: { label: 'Tablet' },
 } satisfies ChartConfig;
 
 const meta = {
@@ -58,6 +59,7 @@ const meta = {
     className: 'h-[320px] w-[560px]',
   },
   argTypes: {
+    ...paletteArgTypes,
     orientation: {
       control: 'inline-radio',
       options: ['vertical', 'horizontal'],
@@ -188,7 +190,7 @@ const latencyData = [
 ];
 
 const latencyConfig = {
-  p95: { label: 'p95 latency', color: 'var(--ui-background-brand-secondary)' },
+  p95: { label: 'p95 latency' },
 } satisfies ChartConfig;
 
 // Axis titles + a Y-axis unit suffix, forwarded to recharts' native
@@ -325,7 +327,7 @@ const revenueData = [
 ];
 
 const revenueConfig = {
-  revenue: { label: 'Revenue', color: 'var(--ui-background-brand-secondary)' },
+  revenue: { label: 'Revenue' },
 } satisfies ChartConfig;
 
 export const CompactValueAxis: Story = {
@@ -528,8 +530,8 @@ const churnData: Array<Record<string, string | number>> = churnRows.map(
 );
 
 const churnConfig = {
-  new: { label: 'New', color: 'var(--ui-background-status-strong-success)' },
-  churned: { label: 'Churned', color: 'var(--ui-background-status-strong-danger)' },
+  new: { label: 'New' },
+  churned: { label: 'Churned' },
 } satisfies ChartConfig;
 
 // The forecast months read as estimates in the tooltip too: the header says so

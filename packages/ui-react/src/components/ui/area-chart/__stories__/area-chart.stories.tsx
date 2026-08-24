@@ -7,6 +7,7 @@ import {
 } from 'recharts';
 
 import { AreaChart } from '../area-chart';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -29,11 +30,10 @@ const data = [
 ];
 
 const config = {
-  desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
-  mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
+  desktop: { label: 'Desktop' },
+  mobile: { label: 'Mobile' },
   tablet: {
     label: 'Tablet',
-    color: 'var(--ui-background-status-strong-success)',
   },
 } satisfies ChartConfig;
 
@@ -69,6 +69,7 @@ const meta = {
     className: 'h-[320px] w-[560px]',
   },
   argTypes: {
+    ...paletteArgTypes,
     layout: { control: 'inline-radio', options: ['single', 'stacked'] },
     fill: { control: 'inline-radio', options: ['solid', 'gradient'] },
     curve: {
@@ -225,7 +226,7 @@ const latencyData = [
 ];
 
 const latencyConfig = {
-  p95: { label: 'p95 latency', color: 'var(--ui-background-brand-secondary)' },
+  p95: { label: 'p95 latency' },
 } satisfies ChartConfig;
 
 // Axis titles + a Y-axis unit suffix, forwarded to recharts' native
@@ -375,7 +376,7 @@ const revenueData = [
 ];
 
 const revenueConfig = {
-  revenue: { label: 'Revenue', color: 'var(--ui-background-brand-secondary)' },
+  revenue: { label: 'Revenue' },
 } satisfies ChartConfig;
 
 export const CompactValueAxis: Story = {

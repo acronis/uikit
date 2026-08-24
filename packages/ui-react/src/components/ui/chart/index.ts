@@ -9,6 +9,7 @@ export {
 } from './chart';
 export type {
   ChartConfig,
+  ResolvedChartConfig,
   ChartContainerProps,
   ChartTooltipContentProps,
   ChartLegendContentProps,

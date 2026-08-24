@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { CategoryBar } from '../category-bar';
 import { type ChartConfig } from '../../chart';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 
 // Default: a simple three-part status split (passed / warnings / failed) that
 // sums to 100, so the base stories read cleanly. Segment `key`s are CSS-safe;
@@ -16,15 +17,12 @@ const data = [
 const config = {
   passed: {
     label: 'Passed',
-    color: 'var(--ui-background-status-strong-success)',
   },
   warnings: {
     label: 'Warnings',
-    color: 'var(--ui-background-status-strong-warning)',
   },
   failed: {
     label: 'Failed',
-    color: 'var(--ui-background-status-strong-danger)',
   },
 } satisfies ChartConfig;
 
@@ -50,6 +48,7 @@ const meta = {
     showTooltip: true,
   },
   argTypes: {
+    ...paletteArgTypes,
     size: { control: 'radio', options: ['sm', 'md', 'lg'] },
     showLegend: { control: 'boolean' },
     showTooltip: { control: 'boolean' },
@@ -79,23 +78,18 @@ const onboardingData = [
 const onboardingConfig = {
   registered: {
     label: 'Registered',
-    color: 'var(--ui-background-status-strong-neutral)',
   },
   trained: {
     label: 'Trained',
-    color: 'var(--ui-background-brand-primary-disabled)',
   },
   firstDeal: {
     label: 'First deal',
-    color: 'var(--ui-background-status-strong-info)',
   },
   certified: {
     label: 'Certified',
-    color: 'var(--ui-background-status-strong-critical)',
   },
   fullyActive: {
     label: 'Fully active',
-    color: 'var(--ui-background-status-strong-success)',
   },
 } satisfies ChartConfig;
 

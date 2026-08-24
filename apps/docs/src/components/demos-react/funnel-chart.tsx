@@ -13,15 +13,13 @@ const data = [
 // value (no chart token tier yet) — here referencing the shared semantic
 // brand/status tokens.
 const config = {
-  Visits: { label: 'Visits', color: 'var(--ui-background-brand-secondary)' },
+  Visits: { label: 'Visits' },
   Signups: {
-    label: 'Signups',
-    color: 'var(--ui-background-status-strong-success)',
+    label: 'Signups'
   },
-  Trials: { label: 'Trials', color: 'var(--ui-background-status-strong-warning)' },
+  Trials: { label: 'Trials' },
   Purchases: {
-    label: 'Purchases',
-    color: 'var(--ui-background-status-strong-danger)',
+    label: 'Purchases'
   },
 } satisfies ChartConfig;
 

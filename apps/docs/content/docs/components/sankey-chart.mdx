@@ -49,9 +49,9 @@ const data = {
 };
 
 const config = {
-  all: { label: 'All tenants', color: 'var(--ui-background-status-strong-info)' },
-  certified: { label: 'Certified', color: 'var(--ui-background-status-strong-info)' },
-  expired: { label: 'Expired', color: 'var(--ui-background-status-strong-danger)' },
+  all: { label: 'All tenants', tone: { status: 'info' } },
+  certified: { label: 'Certified', tone: { status: 'info' } },
+  expired: { label: 'Expired', tone: { status: 'danger' } },
 } satisfies ChartConfig;
 
 <SankeyChart config={config} data={data} className="h-[360px] w-[620px]" />;

@@ -7,6 +7,7 @@ import {
 } from 'recharts';
 
 import { Histogram, computeHistogramBins } from '../histogram';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -25,7 +26,6 @@ const values = [
 const config = {
   count: {
     label: 'Frequency',
-    color: 'var(--ui-background-brand-secondary)',
   },
 } satisfies ChartConfig;
 
@@ -55,6 +55,7 @@ const meta = {
     className: 'h-[320px] w-[560px]',
   },
   argTypes: {
+    ...paletteArgTypes,
     binCount: { control: { type: 'number', min: 1, max: 30 } },
     barRadius: { control: { type: 'number', min: 0, max: 12 } },
     showGrid: { control: 'boolean' },

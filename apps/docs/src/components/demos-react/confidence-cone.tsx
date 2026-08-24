@@ -21,10 +21,9 @@ const data = [
 ];
 
 const config = {
-  actual: { label: 'Actual', color: 'var(--ui-background-brand-secondary)' },
+  actual: { label: 'Actual' },
   forecast: {
-    label: 'Forecast',
-    color: 'var(--ui-background-brand-secondary)',
+    label: 'Forecast'
   },
 } satisfies ChartConfig;
 

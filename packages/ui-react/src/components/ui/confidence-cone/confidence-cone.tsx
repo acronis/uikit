@@ -61,7 +61,9 @@ export function dropConeBand<T extends { dataKey?: unknown }>(
 ): T[] | undefined {
   return payload?.filter(
     (item) =>
-      !(typeof item.dataKey === 'string' && item.dataKey.startsWith(BAND_PREFIX))
+      !(
+        typeof item.dataKey === 'string' && item.dataKey.startsWith(BAND_PREFIX)
+      )
   );
 }
 
@@ -76,7 +78,8 @@ export function keepMetricSeries<T extends { dataKey?: unknown }>(
   actualKeys: readonly string[]
 ): T[] | undefined {
   return payload?.filter(
-    (item) => typeof item.dataKey === 'string' && actualKeys.includes(item.dataKey)
+    (item) =>
+      typeof item.dataKey === 'string' && actualKeys.includes(item.dataKey)
   );
 }
 
@@ -92,7 +95,10 @@ export function keepMetricSeries<T extends { dataKey?: unknown }>(
 type TooltipContentType = NonNullable<
   React.ComponentProps<typeof ChartTooltip>['content']
 >;
-type TooltipContentFn = Extract<TooltipContentType, (...args: never[]) => unknown>;
+type TooltipContentFn = Extract<
+  TooltipContentType,
+  (...args: never[]) => unknown
+>;
 type TooltipRenderProps = Parameters<TooltipContentFn>[0];
 
 export function createConeTooltip(tooltipContent: TooltipContentType) {
@@ -139,7 +145,9 @@ export function forecastPeriodX(
   xKey: string
 ): Array<string | number | null | undefined> {
   return data
-    .filter((row) => series.some(({ forecastKey }) => typeof row[forecastKey] === 'number'))
+    .filter((row) =>
+      series.some(({ forecastKey }) => typeof row[forecastKey] === 'number')
+    )
     .map((row) => row[xKey]);
 }
 
@@ -195,7 +203,8 @@ export interface ConfidenceConeReferenceLine {
  * and a story's. Not re-exported from `index.ts`; not part of the public API.
  */
 export interface ConfidenceConeBaseProps
-  extends Omit<React.ComponentProps<'div'>, 'children'>,
+  extends
+    Omit<React.ComponentProps<'div'>, 'children'>,
     CartesianChartProps,
     ChartAnimationProps {
   /**
@@ -377,7 +386,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
         next[fKey] = {
           label: forecast.label,
           icon: forecast.icon,
-          ...(actual.theme ? { theme: actual.theme } : { color: actual.color }),
+          tone: { sameAs: aKey },
         };
       }
       return next ?? config;
@@ -390,7 +399,11 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
     // band breaks there); a series without bounds gets no band at all.
     const chartData = data.map((row) => {
       const next: Record<string, unknown> = { ...row };
-      for (const { actualKey: aKey, lowerKey: lKey, upperKey: uKey } of plotted) {
+      for (const {
+        actualKey: aKey,
+        lowerKey: lKey,
+        upperKey: uKey,
+      } of plotted) {
         if (!lKey || !uKey) continue;
         const lower = row[lKey];
         const upper = row[uKey];

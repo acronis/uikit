@@ -23,9 +23,9 @@ const data = [
 ];
 
 const config = {
-  Chrome: { label: 'Chrome', color: 'rgb(23 99 207)' },
-  Safari: { label: 'Safari', color: 'rgb(220 53 69)' },
-  Firefox: { label: 'Firefox', color: 'rgb(34 139 79)' },
+  Chrome: { label: 'Chrome' },
+  Safari: { label: 'Safari' },
+  Firefox: { label: 'Firefox' },
 } satisfies ChartConfig;
 
 function renderChart(props: Partial<React.ComponentProps<typeof PieChart>> = {}) {
@@ -84,8 +84,8 @@ describe('PieChart', () => {
   it('wires each slice color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-Chrome: rgb(23 99 207)');
-    expect(style).toContain('--color-Safari: rgb(220 53 69)');
+    expect(style).toContain('--color-Chrome: var(--ui-dataviz-categorical-1)');
+    expect(style).toContain('--color-Safari: var(--ui-dataviz-categorical-2)');
   });
 
   it('defaults to a pie shape', () => {
@@ -384,7 +384,6 @@ describe('pieChartValuePercentRow', () => {
     const { container } = renderRow(275, 'Chrome', {
       Chrome: {
         label: 'Chrome',
-        color: 'rgb(23 99 207)',
         icon: () => <svg data-testid="slice-icon" />,
       },
     });

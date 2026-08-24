@@ -21,10 +21,9 @@ figma.connect(PieChart, 'FIGMA_NODE_URL', {
       dataKey="value"
       nameKey="browser"
       config={{
-        Chrome: { label: 'Chrome', color: 'var(--ui-background-brand-secondary)' },
+        Chrome: { label: 'Chrome' },
         Safari: {
           label: 'Safari',
-          color: 'var(--ui-background-status-strong-danger)',
         },
       }}
       data={[

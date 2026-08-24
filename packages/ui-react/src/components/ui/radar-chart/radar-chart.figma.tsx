@@ -21,8 +21,8 @@ figma.connect(RadarChart, 'FIGMA_NODE_URL', {
       angleKey="subject"
       dataKeys={['alice', 'bob']}
       config={{
-        alice: { label: 'Alice', color: 'var(--ui-background-brand-secondary)' },
-        bob: { label: 'Bob', color: 'var(--ui-background-status-strong-danger)' },
+        alice: { label: 'Alice' },
+        bob: { label: 'Bob' },
       }}
       data={[{ subject: 'Math', alice: 120, bob: 110 }]}
     />

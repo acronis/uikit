@@ -14,8 +14,8 @@ figma.connect(Treemap, 'FIGMA_NODE_URL', {
       dataKey="size"
       nameKey="name"
       config={{
-        React: { label: 'React', color: 'var(--ui-background-brand-secondary)' },
-        Vue: { label: 'Vue', color: 'var(--ui-background-status-strong-success)' },
+        React: { label: 'React' },
+        Vue: { label: 'Vue' },
       }}
       data={[
         { name: 'React', size: 2400 },

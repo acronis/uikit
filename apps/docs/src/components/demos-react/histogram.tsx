@@ -10,7 +10,7 @@ const values = [
 ];
 
 const config = {
-  count: { label: 'Frequency', color: 'var(--ui-background-brand-secondary)' },
+  count: { label: 'Frequency' },
 } satisfies ChartConfig;
 
 export function HistogramDemo() {

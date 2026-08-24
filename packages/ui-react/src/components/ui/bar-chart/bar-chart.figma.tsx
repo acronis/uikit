@@ -26,8 +26,8 @@ figma.connect(BarChart, 'FIGMA_NODE_URL', {
       xKey="month"
       dataKeys={['desktop', 'mobile']}
       config={{
-        desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
-        mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
+        desktop: { label: 'Desktop' },
+        mobile: { label: 'Mobile' },
       }}
       data={[{ month: 'Jan', desktop: 186, mobile: 80 }]}
     />

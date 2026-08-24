@@ -14,8 +14,8 @@ const data = [
 // Series colors are caller-supplied via `config` (no chart token tier yet) —
 // here referencing the shared semantic brand/status tokens.
 const config = {
-  alice: { label: 'Alice', color: 'var(--ui-background-brand-secondary)' },
-  bob: { label: 'Bob', color: 'var(--ui-background-status-strong-danger)' },
+  alice: { label: 'Alice' },
+  bob: { label: 'Bob' },
 } satisfies ChartConfig;
 
 export function RadarChartDemo() {

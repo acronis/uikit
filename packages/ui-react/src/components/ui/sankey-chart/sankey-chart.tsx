@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils';
 import {
   ChartContainer,
   ChartStyle,
+  resolveChartColors,
+  CHART_DEFAULT_PALETTE,
   ChartTooltip,
   type ChartConfig,
   type ChartPalette,
@@ -44,8 +46,10 @@ export interface SankeyChartLink {
   color?: string;
 }
 
-export interface SankeyChartProps
-  extends Omit<React.ComponentProps<'div'>, 'children'> {
+export interface SankeyChartProps extends Omit<
+  React.ComponentProps<'div'>,
+  'children'
+> {
   /**
    * The dataviz palette this chart's series are painted from. Series that
    * state no `color` of their own take a stop of it. See `ChartPalette`.
@@ -328,8 +332,14 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
       const incoming = new Map<number, number>();
       const outgoing = new Map<number, number>();
       for (const link of data.links) {
-        outgoing.set(link.source, (outgoing.get(link.source) ?? 0) + link.value);
-        incoming.set(link.target, (incoming.get(link.target) ?? 0) + link.value);
+        outgoing.set(
+          link.source,
+          (outgoing.get(link.source) ?? 0) + link.value
+        );
+        incoming.set(
+          link.target,
+          (incoming.get(link.target) ?? 0) + link.value
+        );
       }
       const values = data.nodes.map(
         (_, i) => incoming.get(i) ?? outgoing.get(i) ?? 0
@@ -352,10 +362,19 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
         className={cn('flex flex-col', className)}
         {...props}
       >
-        <ChartStyle id={chartId} config={config} />
-        <ChartContainer config={config} palette={palette} className="min-h-0 flex-1">
+        <ChartStyle
+          id={chartId}
+          config={resolveChartColors(config, palette ?? CHART_DEFAULT_PALETTE)}
+        />
+        <ChartContainer
+          config={config}
+          palette={palette}
+          className="min-h-0 flex-1"
+        >
           <RechartsSankey
-            data={data as { nodes: SankeyChartNode[]; links: SankeyChartLink[] }}
+            data={
+              data as { nodes: SankeyChartNode[]; links: SankeyChartLink[] }
+            }
             node={nodeRenderer}
             link={SankeyLinkShape}
             nodePadding={nodePadding}

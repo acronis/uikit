@@ -13,16 +13,12 @@ import { TooltipContentProps } from 'recharts/types/component/Tooltip';
 
 import { cn } from '@/lib/utils';
 import {
+  CHART_DEFAULT_PALETTE,
+  CHART_STATUS_TOKENS,
   resolveSeriesColor,
   type ChartPalette,
   type ChartSeriesTone,
 } from './chart-palette';
-
-// Format: { THEME_NAME: CSS_SELECTOR }. ui-react flips light/dark via the
-// `[data-theme]` attribute (the tokens resolve `light-dark()` through
-// `color-scheme`), not the legacy `.dark` class — so per-series `theme` colors
-// scope their dark value under `[data-theme='dark']`.
-const THEMES = { light: '', dark: "[data-theme='dark']" } as const;
 
 export type ChartConfig = {
   [k in string]: {
@@ -31,48 +27,82 @@ export type ChartConfig = {
     /**
      * Which stop of the container's `palette` this series paints with. Left
      * unset, it is assigned from the series' position. See `ChartSeriesTone`.
+     *
+     * There is deliberately no free-form `color` here: every series colour
+     * comes from the chart's palette, so a chart cannot paint a hue the design
+     * system does not define. Pick a different palette on `ChartContainer`, or
+     * a different stop of it with this.
      */
     tone?: ChartSeriesTone;
-  } & (
-    | { color?: string; theme?: never }
-    | { color?: never; theme: Record<keyof typeof THEMES, string> }
-  );
+  };
 };
 
 /**
- * Fill in each series' color from `palette`, leaving any series that already
- * states its own `color`/`theme` untouched.
+ * A `ChartConfig` with every series' palette colour filled in. This is what the
+ * container puts on the context, so the plot, the tooltip rows and the legend
+ * markers all read the same resolved colour.
+ */
+export type ResolvedChartConfig = {
+  [k in string]: ChartConfig[string] & { color: string };
+};
+
+/**
+ * Resolve each series' colour out of `palette` — in the palette's defined
+ * order, honouring any `tone` a series named.
  *
  * Exported for tests and for the widget editor, which needs the same resolved
- * map to detect duplicate colors (`findDuplicateTones`) without re-deriving it.
+ * map to detect duplicate colours (`findDuplicateTones`) without re-deriving it.
  */
 export function resolveChartColors(
   config: ChartConfig,
   palette: ChartPalette
-): ChartConfig {
-  // A series that pins its own color doesn't consume a palette stop, so the
-  // rest keep walking the palette in order instead of leaving a gap where it
-  // sat.
+): ResolvedChartConfig {
+  const entries = Object.entries(config);
+
+  // An aliased series (`tone: { sameAs }`) doesn't take a stop of its own — it
+  // is the same metric drawn a second way, so it must not consume a colour or
+  // shift the series after it along the palette.
+  const isAlias = (item: ChartConfig[string]) => Boolean(item.tone?.sameAs);
   let index = 0;
+  const resolved: Record<string, ChartConfig[string] & { color: string }> = {};
 
-  return Object.fromEntries(
-    Object.entries(config).map(([key, item]) => {
-      if (item.color || item.theme) {
-        return [key, item];
-      }
+  for (const [key, item] of entries) {
+    if (isAlias(item)) {
+      continue;
+    }
+    resolved[key] = {
+      ...item,
+      color: resolveSeriesColor(palette, { index: index++, tone: item.tone }),
+    };
+  }
 
-      const color = resolveSeriesColor(palette, {
-        index: index++,
-        tone: item.tone,
-      });
+  for (const [key, item] of entries) {
+    if (!isAlias(item)) {
+      continue;
+    }
+    const target = item.tone?.sameAs as string;
+    const targetColor = resolved[target]?.color;
 
-      return [key, { ...item, color }];
-    })
-  );
+    if (!targetColor && process.env.NODE_ENV !== 'production') {
+      console.warn(
+        `[ui-react] Chart series "${key}" aliases "${target}", which is not a palette-assigned series in this config. Falling back to neutral.`
+      );
+    }
+
+    resolved[key] = {
+      ...item,
+      color: targetColor ?? CHART_STATUS_TOKENS.neutral,
+    };
+  }
+
+  // Rebuilt in the config's own order: the two passes above visit
+  // non-aliases first, and callers (legend order, `Object.entries` consumers)
+  // rely on the order they wrote.
+  return Object.fromEntries(entries.map(([key]) => [key, resolved[key]]));
 }
 
 type ChartContextProps = {
-  config: ChartConfig;
+  config: ResolvedChartConfig;
 };
 
 /**
@@ -133,11 +163,20 @@ function useChart() {
 }
 
 export interface ChartContainerProps extends React.ComponentProps<'div'> {
+  /**
+   * The series this chart draws, keyed by data field.
+   *
+   * Declare exactly what the chart plots. A stop is assigned by an entry's
+   * position here, not by which series end up rendered, so an entry for a
+   * series the chart doesn't draw still consumes a colour and shifts the ones
+   * that follow it. (That is deliberate: a series then keeps its colour when a
+   * sibling is toggled off, instead of the whole chart recolouring.)
+   */
   config: ChartConfig;
   /**
-   * The dataviz palette this chart's series are painted from. Each series
-   * without its own `color` takes a stop of this palette — automatically from
-   * its position, or the one its `tone` names.
+   * The dataviz palette this chart's series are painted from. Series take a
+   * stop of it in the palette's defined order, or the one their `tone` names.
+   * Defaults to `categorical` — there is no "no palette" state.
    */
   palette?: ChartPalette;
   children: React.ComponentProps<
@@ -150,7 +189,7 @@ function ChartContainer({
   className,
   children,
   config,
-  palette,
+  palette = CHART_DEFAULT_PALETTE,
   ...props
 }: ChartContainerProps) {
   const uniqueId = React.useId();
@@ -158,7 +197,7 @@ function ChartContainer({
   // Resolved once and shared with the context, so the tooltip rows and legend
   // markers read the same colors the plot paints with.
   const resolvedConfig = React.useMemo(
-    () => (palette ? resolveChartColors(config, palette) : config),
+    () => resolveChartColors(config, palette),
     [config, palette]
   );
 
@@ -212,36 +251,33 @@ function ChartContainer({
   );
 }
 
-const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
-  const colorConfig = Object.entries(config).filter(
-    ([, config]) => config.theme || config.color
-  );
+const ChartStyle = ({
+  id,
+  config,
+}: {
+  id: string;
+  config: ResolvedChartConfig;
+}) => {
+  const entries = Object.entries(config);
 
-  if (!colorConfig.length) {
+  if (!entries.length) {
     return null;
   }
 
+  // One block, no light/dark split: every colour is now a `--ui-dataviz-*`
+  // token, and those are `light-dark()` pairs that follow `color-scheme`
+  // themselves. The old per-theme `[data-theme='dark']` duplication existed
+  // only for hand-written `theme: { light, dark }` config entries, which the
+  // palette replaced.
+  //
   // Rendered as a text child (not dangerouslySetInnerHTML): React sets it via
   // textContent, which the browser does not HTML-parse, so a `</style>` in a
-  // config color can't break out of the tag.
+  // colour can't break out of the tag.
   return (
     <style>
-      {Object.entries(THEMES)
-        .map(
-          ([theme, prefix]) => `
-            ${prefix} [data-chart=${id}] {
-            ${colorConfig
-              .map(([key, itemConfig]) => {
-                const color =
-                  itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
-                  itemConfig.color;
-                return color ? `  --color-${key}: ${color};` : null;
-              })
-              .join('\n')}
-            }
-            `
-        )
-        .join('\n')}
+      {`[data-chart=${id}] {\n${entries
+        .map(([key, itemConfig]) => `  --color-${key}: ${itemConfig.color};`)
+        .join('\n')}\n}`}
     </style>
   );
 };

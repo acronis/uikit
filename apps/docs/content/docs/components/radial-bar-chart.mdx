@@ -49,10 +49,10 @@ const data = [
 ];
 
 const config = {
-  Chrome: { label: 'Chrome', color: 'var(--ui-background-brand-secondary)' },
-  Safari: { label: 'Safari', color: 'var(--ui-background-status-strong-danger)' },
-  Firefox: { label: 'Firefox', color: 'var(--ui-background-status-strong-success)' },
-  Edge: { label: 'Edge', color: 'var(--ui-background-status-strong-warning)' },
+  Chrome: { label: 'Chrome' },
+  Safari: { label: 'Safari' },
+  Firefox: { label: 'Firefox' },
+  Edge: { label: 'Edge' },
 } satisfies ChartConfig;
 
 <RadialBarChart
@@ -87,7 +87,7 @@ becomes that fraction of the sweep, over the `showBackground` track:
 
 ```tsx
 <RadialBarChart
-  config={{ Used: { label: 'Used', color: 'var(--ui-background-brand-secondary)' } }}
+  config={{ Used: { label: 'Used' } }}
   data={[{ metric: 'Used', value: 65 }]}
   dataKey="value"
   nameKey="metric"
@@ -119,7 +119,7 @@ unset when a metric can legitimately be zero.
 
 ```tsx
 <RadialBarChart
-  config={{ criteria: { label: 'Criteria met', color: 'var(--ui-background-brand-secondary)' } }}
+  config={{ criteria: { label: 'Criteria met' } }}
   data={[{ criteria: 'criteria', value: 29 }]}
   dataKey="value"
   nameKey="criteria"
@@ -159,8 +159,8 @@ the cartesian charts — while `nameKey` names the band they share:
 ```tsx
 <RadialBarChart
   config={{
-    used: { label: 'Used', color: 'var(--ui-background-brand-secondary)' },
-    quota: { label: 'Quota', color: 'var(--ui-background-status-strong-warning)' },
+    used: { label: 'Used' },
+    quota: { label: 'Quota' },
   }}
   data={[{ tier: 'Production', used: 72, quota: 90 }]}
   dataKeys={['used', 'quota']}

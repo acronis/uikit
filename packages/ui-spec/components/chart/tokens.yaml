@@ -2,8 +2,9 @@ spec_version: '1.0'
 component: Chart
 
 # References only. Values live in @acronis-platform/tokens-pd. Chart has no token
-# tier of its own — series colors are supplied by the caller via `config` (a
-# dedicated data-viz palette is pending an upstream design pass). The chrome
+# tier of its own, and needs none: series colours come from the shared
+# `--ui-dataviz-*` palettes on the semantic tier (see the `palette` prop), so a
+# per-component alias layer would be pure indirection. The chrome
 # (container, tooltip, legend) and the recharts grid/axis overrides use the
 # shared semantic vocabulary via the bridged Tailwind names that resolve to these
 # `--ui-*` tokens. The tooltip surface additionally borrows the shape tokens from
@@ -42,3 +43,207 @@ tokens:
   - name: --ui-tooltip-container-padding-y
     affects: tooltip-content
     description: Tooltip vertical padding, borrowed from the Tooltip tier.
+
+  # The dataviz palettes a series paints from (see the `palette` prop).
+  # Emitted by `chart-style` as one `--color-<key>` per series; listed
+  # exhaustively so the palette is auditable. The assignment rule lives in
+  # chart-palette.ts, not here.
+
+  - name: --ui-dataviz-categorical-1
+    affects: chart-style
+    description: 'categorical stop 1 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-2
+    affects: chart-style
+    description: 'categorical stop 2 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-3
+    affects: chart-style
+    description: 'categorical stop 3 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-4
+    affects: chart-style
+    description: 'categorical stop 4 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-5
+    affects: chart-style
+    description: 'categorical stop 5 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-6
+    affects: chart-style
+    description: 'categorical stop 6 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-7
+    affects: chart-style
+    description: 'categorical stop 7 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-8
+    affects: chart-style
+    description: 'categorical stop 8 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-9
+    affects: chart-style
+    description: 'categorical stop 9 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-10
+    affects: chart-style
+    description: 'categorical stop 10 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-11
+    affects: chart-style
+    description: 'categorical stop 11 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-12
+    affects: chart-style
+    description: 'categorical stop 12 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-13
+    affects: chart-style
+    description: 'categorical stop 13 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-14
+    affects: chart-style
+    description: 'categorical stop 14 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-15
+    affects: chart-style
+    description: 'categorical stop 15 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-categorical-16
+    affects: chart-style
+    description: 'categorical stop 16 of 16 — a distinct hue for an unrelated category.'
+  - name: --ui-dataviz-sequential-blue-1
+    affects: chart-style
+    description: 'sequential ramp blue, stop 1 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-blue-2
+    affects: chart-style
+    description: 'sequential ramp blue, stop 2 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-blue-3
+    affects: chart-style
+    description: 'sequential ramp blue, stop 3 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-blue-4
+    affects: chart-style
+    description: 'sequential ramp blue, stop 4 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-blue-5
+    affects: chart-style
+    description: 'sequential ramp blue, stop 5 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-blue-6
+    affects: chart-style
+    description: 'sequential ramp blue, stop 6 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-blue-7
+    affects: chart-style
+    description: 'sequential ramp blue, stop 7 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-blue-8
+    affects: chart-style
+    description: 'sequential ramp blue, stop 8 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-teal-1
+    affects: chart-style
+    description: 'sequential ramp teal, stop 1 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-teal-2
+    affects: chart-style
+    description: 'sequential ramp teal, stop 2 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-teal-3
+    affects: chart-style
+    description: 'sequential ramp teal, stop 3 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-teal-4
+    affects: chart-style
+    description: 'sequential ramp teal, stop 4 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-teal-5
+    affects: chart-style
+    description: 'sequential ramp teal, stop 5 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-teal-6
+    affects: chart-style
+    description: 'sequential ramp teal, stop 6 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-teal-7
+    affects: chart-style
+    description: 'sequential ramp teal, stop 7 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-teal-8
+    affects: chart-style
+    description: 'sequential ramp teal, stop 8 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-orange-1
+    affects: chart-style
+    description: 'sequential ramp orange, stop 1 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-orange-2
+    affects: chart-style
+    description: 'sequential ramp orange, stop 2 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-orange-3
+    affects: chart-style
+    description: 'sequential ramp orange, stop 3 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-orange-4
+    affects: chart-style
+    description: 'sequential ramp orange, stop 4 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-orange-5
+    affects: chart-style
+    description: 'sequential ramp orange, stop 5 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-orange-6
+    affects: chart-style
+    description: 'sequential ramp orange, stop 6 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-orange-7
+    affects: chart-style
+    description: 'sequential ramp orange, stop 7 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-orange-8
+    affects: chart-style
+    description: 'sequential ramp orange, stop 8 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-violet-1
+    affects: chart-style
+    description: 'sequential ramp violet, stop 1 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-violet-2
+    affects: chart-style
+    description: 'sequential ramp violet, stop 2 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-violet-3
+    affects: chart-style
+    description: 'sequential ramp violet, stop 3 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-violet-4
+    affects: chart-style
+    description: 'sequential ramp violet, stop 4 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-violet-5
+    affects: chart-style
+    description: 'sequential ramp violet, stop 5 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-violet-6
+    affects: chart-style
+    description: 'sequential ramp violet, stop 6 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-violet-7
+    affects: chart-style
+    description: 'sequential ramp violet, stop 7 of 8 (light to dark).'
+  - name: --ui-dataviz-sequential-violet-8
+    affects: chart-style
+    description: 'sequential ramp violet, stop 8 of 8 (light to dark).'
+  - name: --ui-dataviz-diverging-blue-orange-a3
+    affects: chart-style
+    description: 'diverging pair blue-orange, stop a3 — walked a3 to a1 then b1 to b3.'
+  - name: --ui-dataviz-diverging-blue-orange-a2
+    affects: chart-style
+    description: 'diverging pair blue-orange, stop a2 — walked a3 to a1 then b1 to b3.'
+  - name: --ui-dataviz-diverging-blue-orange-a1
+    affects: chart-style
+    description: 'diverging pair blue-orange, stop a1 — walked a3 to a1 then b1 to b3.'
+  - name: --ui-dataviz-diverging-blue-orange-b1
+    affects: chart-style
+    description: 'diverging pair blue-orange, stop b1 — walked a3 to a1 then b1 to b3.'
+  - name: --ui-dataviz-diverging-blue-orange-b2
+    affects: chart-style
+    description: 'diverging pair blue-orange, stop b2 — walked a3 to a1 then b1 to b3.'
+  - name: --ui-dataviz-diverging-blue-orange-b3
+    affects: chart-style
+    description: 'diverging pair blue-orange, stop b3 — walked a3 to a1 then b1 to b3.'
+  - name: --ui-dataviz-diverging-teal-violet-a3
+    affects: chart-style
+    description: 'diverging pair teal-violet, stop a3 — walked a3 to a1 then b1 to b3.'
+  - name: --ui-dataviz-diverging-teal-violet-a2
+    affects: chart-style
+    description: 'diverging pair teal-violet, stop a2 — walked a3 to a1 then b1 to b3.'
+  - name: --ui-dataviz-diverging-teal-violet-a1
+    affects: chart-style
+    description: 'diverging pair teal-violet, stop a1 — walked a3 to a1 then b1 to b3.'
+  - name: --ui-dataviz-diverging-teal-violet-b1
+    affects: chart-style
+    description: 'diverging pair teal-violet, stop b1 — walked a3 to a1 then b1 to b3.'
+  - name: --ui-dataviz-diverging-teal-violet-b2
+    affects: chart-style
+    description: 'diverging pair teal-violet, stop b2 — walked a3 to a1 then b1 to b3.'
+  - name: --ui-dataviz-diverging-teal-violet-b3
+    affects: chart-style
+    description: 'diverging pair teal-violet, stop b3 — walked a3 to a1 then b1 to b3.'
+  - name: --ui-dataviz-meaningful-status-danger
+    affects: chart-style
+    description: 'status tone danger (red), named per series via tone.'
+  - name: --ui-dataviz-meaningful-status-critical
+    affects: chart-style
+    description: 'status tone critical (orange), named per series via tone.'
+  - name: --ui-dataviz-meaningful-status-warning
+    affects: chart-style
+    description: 'status tone warning (yellow), named per series via tone.'
+  - name: --ui-dataviz-meaningful-status-success
+    affects: chart-style
+    description: 'status tone success (green), named per series via tone.'
+  - name: --ui-dataviz-meaningful-status-info
+    affects: chart-style
+    description: 'status tone info (blue), named per series via tone.'
+  - name: --ui-dataviz-meaningful-status-neutral
+    affects: chart-style
+    description: 'status tone neutral (gray), named per series via tone.'

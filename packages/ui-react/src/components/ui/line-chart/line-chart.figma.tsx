@@ -29,11 +29,9 @@ figma.connect(LineChart, 'FIGMA_NODE_URL', {
       config={{
         desktop: {
           label: 'Desktop',
-          color: 'var(--ui-background-brand-secondary)',
         },
         mobile: {
           label: 'Mobile',
-          color: 'var(--ui-background-status-strong-danger)',
         },
       }}
       data={[{ month: 'Jan', desktop: 186, mobile: 80 }]}

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Cell, Pie, PieChart as RechartsPieChart } from 'recharts';
 
 import { PieChart, pieChartValuePercentTooltip } from '../pie-chart';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -22,13 +23,12 @@ const data = [
 ];
 
 const config = {
-  Chrome: { label: 'Chrome', color: 'var(--ui-background-brand-secondary)' },
-  Safari: { label: 'Safari', color: 'var(--ui-background-status-strong-danger)' },
+  Chrome: { label: 'Chrome' },
+  Safari: { label: 'Safari' },
   Firefox: {
     label: 'Firefox',
-    color: 'var(--ui-background-status-strong-success)',
   },
-  Edge: { label: 'Edge', color: 'var(--ui-background-status-strong-warning)' },
+  Edge: { label: 'Edge' },
 } satisfies ChartConfig;
 
 const meta = {
@@ -59,6 +59,7 @@ const meta = {
     className: 'h-[360px] w-[360px]',
   },
   argTypes: {
+    ...paletteArgTypes,
     shape: { control: 'inline-radio', options: ['pie', 'donut'] },
     centerLabel: {
       control: 'object',

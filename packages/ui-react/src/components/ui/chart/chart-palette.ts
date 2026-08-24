@@ -61,8 +61,16 @@ export type ChartPalette =
  * Neither form can express a color from outside the palette — that is the point.
  */
 export type ChartSeriesTone =
-  | { slot: number; status?: never }
-  | { slot?: never; status: ChartStatusTone };
+  | { slot: number; status?: never; sameAs?: never }
+  | { slot?: never; status: ChartStatusTone; sameAs?: never }
+  /**
+   * Paint whatever the series under this key paints, under any palette. For a
+   * twin series that is the *same* metric drawn differently — a forecast tail
+   * continuing its actuals, a projection band behind its bars — where two hues
+   * would read as two metrics. Resolved by `resolveChartColors`, which is the
+   * only place the whole config is in view.
+   */
+  | { slot?: never; status?: never; sameAs: string };
 
 const token = (name: string) => `var(--ui-dataviz-${name})`;
 

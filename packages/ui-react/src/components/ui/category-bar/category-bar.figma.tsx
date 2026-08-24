@@ -22,11 +22,9 @@ figma.connect(CategoryBar, 'FIGMA_NODE_URL', {
       config={{
         registered: {
           label: 'Registered',
-          color: 'var(--ui-background-status-strong-info)',
         },
         certified: {
           label: 'Certified',
-          color: 'var(--ui-background-status-strong-success)',
         },
       }}
     />

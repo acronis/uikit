@@ -53,8 +53,8 @@ const data = [
 ];
 
 const config = {
-  actual: { label: 'Actual', color: 'var(--ui-background-brand-secondary)' },
-  forecast: { label: 'Forecast', color: 'var(--ui-background-brand-secondary)' },
+  actual: { label: 'Actual' },
+  forecast: { label: 'Forecast' },
 } satisfies ChartConfig;
 
 <ConfidenceCone
@@ -97,9 +97,9 @@ drawn behind every line, and the legend names each metric once:
 ```tsx
 <ConfidenceCone
   config={{
-    storage: { label: 'Storage', color: 'var(--ui-background-brand-secondary)' },
+    storage: { label: 'Storage' },
     storageForecast: { label: 'Storage forecast' },
-    backups: { label: 'Backups', color: 'var(--ui-background-status-strong-success)' },
+    backups: { label: 'Backups' },
     backupsForecast: { label: 'Backups forecast' },
   }}
   data={data}

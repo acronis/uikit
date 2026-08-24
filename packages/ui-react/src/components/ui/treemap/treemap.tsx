@@ -9,6 +9,8 @@ import {
   ChartContainer,
   ChartLegendContent,
   ChartStyle,
+  resolveChartColors,
+  CHART_DEFAULT_PALETTE,
   ChartTooltip,
   ChartTooltipContent,
   resolveAnimation,
@@ -414,7 +416,10 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
     const legendChartId = `chart-${React.useId().replace(/:/g, '')}`;
     const legendRow = showLegend ? (
       <div data-chart={legendChartId} className="text-xs">
-        <ChartStyle id={legendChartId} config={config} />
+        <ChartStyle
+          id={legendChartId}
+          config={resolveChartColors(config, palette ?? CHART_DEFAULT_PALETTE)}
+        />
         <ChartLegendContent
           config={config}
           payload={legendPayload}
