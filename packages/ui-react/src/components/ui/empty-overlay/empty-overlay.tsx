@@ -49,7 +49,7 @@ const emptyOverlayIconVariants = cva(
 
 export interface EmptyOverlayProps
   extends
-    Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'color'>,
+    Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'color' | 'children'>,
     VariantProps<typeof emptyOverlayIconVariants> {
   /** Icon rendered in the colored badge (e.g. an `icons-react` glyph at 24px). */
   icon?: React.ReactNode;

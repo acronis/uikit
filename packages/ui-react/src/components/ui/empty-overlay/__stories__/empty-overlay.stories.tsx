@@ -85,8 +85,7 @@ export const TitleOnly: Story = {
 
 export const Colors: Story = {
   args: { title: 'No object yet' },
-  parameters: { layout: 'padded' },
-  decorators: [],
+  parameters: { layout: 'padded', snapshot: { fullPage: true } },
   render: () => (
     <div className="grid grid-cols-2 gap-4">
       {(
