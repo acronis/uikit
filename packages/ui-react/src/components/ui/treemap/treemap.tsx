@@ -9,11 +9,14 @@ import {
   ChartContainer,
   ChartLegendContent,
   ChartStyle,
+  resolveChartColors,
+  CHART_DEFAULT_PALETTE,
   ChartTooltip,
   ChartTooltipContent,
   resolveAnimation,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartPalette,
   type ChartAnimationProps,
   type TickFormatter,
 } from '../chart';
@@ -214,6 +217,11 @@ export function TreemapCell({
 export interface TreemapProps
   extends Omit<React.ComponentProps<'div'>, 'children'>, ChartAnimationProps {
   /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
+  /**
    * Row-per-leaf data. Each object holds the leaf's `nameKey` label + its
    * `dataKey` numeric size.
    *
@@ -225,10 +233,11 @@ export interface TreemapProps
    */
   data: ReadonlyArray<Record<string, string | number>>;
   /**
-   * Per-leaf map of `label` / `color`, keyed by the leaf's `nameKey` value
-   * (imported from the shared `Chart` primitives). Turned into `--color-<name>`
-   * custom properties. Colors are caller-supplied — reference an existing
-   * semantic `--ui-*` token; there is no chart palette tier yet.
+   * Per-leaf map of `label` / `icon` / `tone`, keyed by the leaf's `nameKey`
+   * value (imported from the shared `Chart` primitives). Turned into
+   * `--color-<name>` custom properties. Series take their colour from the
+   * container's `palette`; each entry maps a key to a `label` and an optional
+   * `tone`.
    */
   config: ChartConfig;
   /** Numeric field that sizes each leaf's rectangle. */
@@ -286,6 +295,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
     {
       className,
       config,
+      palette,
       data,
       dataKey,
       nameKey,
@@ -407,7 +417,10 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
     const legendChartId = `chart-${React.useId().replace(/:/g, '')}`;
     const legendRow = showLegend ? (
       <div data-chart={legendChartId} className="text-xs">
-        <ChartStyle id={legendChartId} config={config} />
+        <ChartStyle
+          id={legendChartId}
+          config={resolveChartColors(config, palette ?? CHART_DEFAULT_PALETTE)}
+        />
         <ChartLegendContent
           config={config}
           payload={legendPayload}
@@ -426,6 +439,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
         {legendPos === 'top' && legendRow}
         <ChartContainer
           config={config}
+          palette={palette}
           // `size-full` fills the caller's box; with a legend row beside it the
           // height comes from the flex line instead, so the tiles give up exactly
           // the room the legend takes.

@@ -19,11 +19,9 @@ figma.connect(ComposedChart, 'FIGMA_NODE_URL', {
       config={{
         revenue: {
           label: 'Revenue',
-          color: 'var(--ui-background-brand-secondary)',
         },
         profit: {
           label: 'Profit',
-          color: 'var(--ui-background-status-strong-success)',
         },
       }}
       data={[{ month: 'Jan', revenue: 2400, profit: 1600 }]}

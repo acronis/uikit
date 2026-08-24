@@ -17,10 +17,9 @@ figma.connect(ConfidenceCone, 'FIGMA_NODE_URL', {
         { month: 'Jul', forecast: 162, lower: 150, upper: 176 },
       ]}
       config={{
-        actual: { label: 'Actual', color: 'var(--ui-background-brand-secondary)' },
+        actual: { label: 'Actual' },
         forecast: {
           label: 'Forecast',
-          color: 'var(--ui-background-brand-secondary)',
         },
       }}
       xKey="month"

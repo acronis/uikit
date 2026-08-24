@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { SankeyChart } from '../sankey-chart';
 import { type ChartConfig } from '../../chart';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 
 // Default: a small, simple flow (sign-ups → active / churned) so the base stories
 // stay legible and don't all look like the same big graph. Node `name`s are
@@ -19,15 +20,12 @@ const data = {
 const config = {
   signups: {
     label: 'Sign-ups',
-    color: 'var(--ui-background-status-strong-info)',
   },
   active: {
     label: 'Active',
-    color: 'var(--ui-background-status-strong-success)',
   },
   churned: {
     label: 'Churned',
-    color: 'var(--ui-background-status-strong-danger)',
   },
 } satisfies ChartConfig;
 
@@ -58,6 +56,7 @@ const meta = {
     className: 'h-[280px] w-[520px]',
   },
   argTypes: {
+    ...paletteArgTypes,
     nodePadding: { control: { type: 'number', min: 0, max: 48 } },
     nodeWidth: { control: { type: 'number', min: 4, max: 24 } },
     linkCurvature: { control: { type: 'number', min: 0, max: 1, step: 0.1 } },
@@ -120,25 +119,20 @@ const trafficData = {
 const trafficConfig = {
   visits: {
     label: 'Visits',
-    color: 'var(--ui-background-status-strong-neutral)',
   },
   signup: {
     label: 'Sign-ups',
-    color: 'var(--ui-background-status-strong-info)',
   },
   bounce: {
     label: 'Bounced',
-    color: 'var(--ui-background-status-strong-danger)',
   },
   trial: {
     label: 'Trials',
-    color: 'var(--ui-background-status-strong-warning)',
   },
   churn: {
     label: 'Churned',
-    color: 'var(--ui-background-status-strong-critical)',
   },
-  paid: { label: 'Paid', color: 'var(--ui-background-status-strong-success)' },
+  paid: { label: 'Paid' },
 } satisfies ChartConfig;
 
 export const MultiLevelFlow: Story = {
@@ -219,7 +213,7 @@ export const CustomTooltip: Story = {
         <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs shadow-md">
           <span
             className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
-            style={{ backgroundColor: (config as ChartConfig)[targetKey]?.color }}
+            style={{ backgroundColor: `var(--color-${targetKey})` }}
           />
           <span className="font-medium">
             {Number(payload[0]?.value).toLocaleString()} users
@@ -262,27 +256,21 @@ const certData = {
 const certConfig = {
   all: {
     label: 'All tenants',
-    color: 'var(--ui-background-brand-primary-disabled)',
   },
   certified: {
     label: 'Certified',
-    color: 'var(--ui-background-status-strong-info)',
   },
   noCert: {
     label: 'No certification',
-    color: 'var(--ui-background-status-strong-neutral)',
   },
   valid: {
     label: 'Valid certifications',
-    color: 'var(--ui-background-status-strong-success)',
   },
   expiring: {
     label: 'Expiring ≤ 90 days',
-    color: 'var(--ui-background-status-strong-warning)',
   },
   expired: {
     label: 'Expired',
-    color: 'var(--ui-background-status-strong-danger)',
   },
 } satisfies ChartConfig;
 

@@ -20,16 +20,12 @@ each link's width is proportional to its value and each ribbon is tinted by its
 **target** node, so you don't hand-compose recharts children. There are no axes
 or grid; a count/% legend is opt-in via `showLegend` (see below).
 
-Node `name`s are the color keys, **keyed into `config`**: `SankeyChart` turns them
-into the `--color-<name>` custom properties the node bars fill from. They must be
-unique and CSS-safe; `config[name].label` carries the human-readable text.
-
-> **Design-pending v1.** Built on recharts' `Sankey` (no demo playground existed).
-> There is no chart token tier yet, so the example colors reference the shared
-> status tokens; a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-> design pass. `--ui-background-status-strong-*` is chromatic in every brand. A
-> light "total"/parent shade (e.g. a periwinkle "All tenants") isn't in the
-> semantic palette yet, so such nodes borrow the strong hue for now.
+Node colors come from the `palette` prop, not from `config` — see
+[Palettes](/components/chart#palettes). Node `name`s are the color keys, **keyed
+into `config`**: each entry maps a node to a `label` and an optional `tone` that
+re-points it within the palette, and `SankeyChart` resolves them into the
+`--color-<name>` custom properties the node bars fill from. Names must be unique
+and CSS-safe.
 
 ## Examples
 
@@ -49,12 +45,17 @@ const data = {
 };
 
 const config = {
-  all: { label: 'All tenants', color: 'var(--ui-background-status-strong-info)' },
-  certified: { label: 'Certified', color: 'var(--ui-background-status-strong-info)' },
-  expired: { label: 'Expired', color: 'var(--ui-background-status-strong-danger)' },
+  all: { label: 'All tenants', tone: { status: 'info' } },
+  certified: { label: 'Certified', tone: { status: 'info' } },
+  expired: { label: 'Expired', tone: { status: 'danger' } },
 } satisfies ChartConfig;
 
-<SankeyChart config={config} data={data} className="h-[360px] w-[620px]" />;
+<SankeyChart
+  config={config}
+  palette={{ type: 'status' }}
+  data={data}
+  className="h-[360px] w-[620px]"
+/>;
 ```
 
 Tune the geometry with `nodePadding` / `nodeWidth` / `linkCurvature`, auto-order
@@ -112,10 +113,6 @@ behavior:
 The tooltip is pointer-only: recharts' `Sankey` has no accessibility layer (no
 keyboard focus), so keep the values reachable in text — `showLegend`, a caption,
 or an adjacent table — rather than only on hover.
-
-`config` colors can also be per-theme (`theme: { light, dark }`) instead of a
-flat `color`; both node bars and the legend swatch / tooltip dots resolve either
-form.
 
 ## Accessibility
 

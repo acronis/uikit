@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   Cell,
   PolarAngleAxis,
@@ -34,13 +35,12 @@ const data = [
 ];
 
 const config = {
-  Chrome: { label: 'Chrome', color: 'var(--ui-background-brand-secondary)' },
-  Safari: { label: 'Safari', color: 'var(--ui-background-status-strong-danger)' },
+  Chrome: { label: 'Chrome' },
+  Safari: { label: 'Safari' },
   Firefox: {
     label: 'Firefox',
-    color: 'var(--ui-background-status-strong-success)',
   },
-  Edge: { label: 'Edge', color: 'var(--ui-background-status-strong-warning)' },
+  Edge: { label: 'Edge' },
 } satisfies ChartConfig;
 
 const meta = {
@@ -75,6 +75,7 @@ const meta = {
     className: 'h-[360px] w-[360px]',
   },
   argTypes: {
+    ...paletteArgTypes,
     innerRadius: { control: { type: 'number', min: 0, max: 120 } },
     outerRadius: { control: { type: 'number', min: 40, max: 160 } },
     startAngle: { control: { type: 'number', min: -360, max: 360 } },
@@ -280,8 +281,8 @@ export const CenterLabel: Story = {
 const metricData = [{ tier: 'Production', used: 72, quota: 90 }];
 
 const metricConfig = {
-  used: { label: 'Used', color: 'var(--ui-background-brand-secondary)' },
-  quota: { label: 'Quota', color: 'var(--ui-background-status-strong-warning)' },
+  used: { label: 'Used' },
+  quota: { label: 'Quota' },
 } satisfies ChartConfig;
 
 // Labels are intentionally off here: recharts rotates an arc label to follow its
@@ -369,7 +370,6 @@ const segmentedRow = { criteria: 'criteria', value: 29 };
 const segmentedConfig = {
   criteria: {
     label: 'Criteria met',
-    color: 'var(--ui-background-brand-secondary)',
   },
 } satisfies ChartConfig;
 

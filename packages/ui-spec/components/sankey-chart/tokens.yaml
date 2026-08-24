@@ -2,10 +2,10 @@ spec_version: '1.0'
 component: SankeyChart
 
 # References only. Values live in @acronis-platform/tokens-pd. SankeyChart has no
-# token tier of its own — node bar fills and link ribbon tints are supplied by
-# the caller via `config` (a dedicated `--ui-chart-*` data-viz palette is pending
-# an upstream design pass). The tooltip chrome is inherited from the shared Chart
-# primitives.
+# token tier of its own, and needs none: node bar fills — and the link ribbon
+# tints derived from them — come from the shared `--ui-dataviz-*` palettes on the
+# semantic tier, resolved by ChartContainer out of the `palette` prop. The tooltip
+# chrome is inherited from the shared Chart primitives.
 source: '@acronis-platform/tokens-pd'
 
 tokens:

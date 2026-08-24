@@ -16,7 +16,6 @@ figma.connect(Histogram, 'FIGMA_NODE_URL', {
       config={{
         count: {
           label: 'Frequency',
-          color: 'var(--ui-background-brand-secondary)',
         },
       }}
     />

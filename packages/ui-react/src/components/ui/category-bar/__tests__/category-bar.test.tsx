@@ -12,9 +12,9 @@ const data = [
 ];
 
 const config = {
-  registered: { label: 'Registered', color: 'rgb(23 99 207)' },
-  trained: { label: 'Trained', color: 'rgb(255 149 0)' },
-  certified: { label: 'Certified', color: 'rgb(40 167 69)' },
+  registered: { label: 'Registered' },
+  trained: { label: 'Trained' },
+  certified: { label: 'Certified' },
 } satisfies ChartConfig;
 
 function renderBar(
@@ -43,19 +43,19 @@ describe('CategoryBar', () => {
     );
     // ChartStyle resolves the bridge to the config's own value.
     expect(container.querySelector('style')?.innerHTML ?? '').toContain(
-      '--color-registered: rgb(23 99 207)'
+      '--color-registered: var(--ui-dataviz-categorical-1)'
     );
   });
 
-  it('colors segments from a per-theme config, which has no flat color', () => {
-    const themed = {
-      registered: { label: 'Registered', theme: { light: '#aaa', dark: '#222' } },
-      trained: { label: 'Trained', theme: { light: '#0a0', dark: '#3f3' } },
-    } satisfies ChartConfig;
+  it('colors segments from the palette, through the --color-* bridge', () => {
     const { container } = render(
       <CategoryBar
         showTooltip={false}
-        config={themed}
+        palette={{ type: 'status' }}
+        config={{
+          registered: { label: 'Registered', tone: { status: 'info' } },
+          trained: { label: 'Trained', tone: { status: 'success' } },
+        }}
         data={[
           { key: 'registered', value: 42 },
           { key: 'trained', value: 32 },
@@ -63,8 +63,12 @@ describe('CategoryBar', () => {
       />
     );
     const css = container.querySelector('style')?.innerHTML ?? '';
-    expect(css).toContain('--color-registered: #aaa');
-    expect(css).toContain('--color-trained: #3f3');
+    expect(css).toContain(
+      '--color-registered: var(--ui-dataviz-meaningful-status-info)'
+    );
+    expect(css).toContain(
+      '--color-trained: var(--ui-dataviz-meaningful-status-success)'
+    );
     const segments = screen.getByRole('img').children;
     expect((segments[0] as HTMLElement).style.backgroundColor).toBe(
       'var(--color-registered)'
@@ -87,7 +91,6 @@ describe('CategoryBar', () => {
     const richConfig = {
       registered: {
         label: <em>Registered</em>,
-        color: 'rgb(23 99 207)',
       },
     } satisfies ChartConfig;
     const { container } = render(

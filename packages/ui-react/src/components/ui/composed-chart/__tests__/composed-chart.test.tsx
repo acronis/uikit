@@ -24,9 +24,9 @@ const data = [
 ];
 
 const config = {
-  revenue: { label: 'Revenue', color: 'rgb(23 99 207)' },
-  profit: { label: 'Profit', color: 'rgb(34 139 79)' },
-  orders: { label: 'Orders', color: 'rgb(220 53 69)' },
+  revenue: { label: 'Revenue' },
+  profit: { label: 'Profit' },
+  orders: { label: 'Orders' },
 } satisfies ChartConfig;
 
 const series = [
@@ -158,9 +158,9 @@ describe('ComposedChart', () => {
   it('wires each series color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-revenue: rgb(23 99 207)');
-    expect(style).toContain('--color-profit: rgb(34 139 79)');
-    expect(style).toContain('--color-orders: rgb(220 53 69)');
+    expect(style).toContain('--color-revenue: var(--ui-dataviz-categorical-1)');
+    expect(style).toContain('--color-profit: var(--ui-dataviz-categorical-2)');
+    expect(style).toContain('--color-orders: var(--ui-dataviz-categorical-3)');
   });
 
   // The whole point of the composition: one element per declared series type,

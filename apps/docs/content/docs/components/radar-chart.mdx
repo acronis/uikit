@@ -20,16 +20,13 @@ radar (polar grid, spoke labels, tooltip, legend included), so you don't
 hand-compose recharts children.
 
 Series are columns of a shared row (like a bar or line chart), plotted over one
-polar angular axis. Series colors are supplied by the caller through `config`:
-each entry maps a data key to a `label` and a `color`, turned into the
-`--color-<key>` custom properties the areas stroke and fill from.
+polar angular axis.
 
-> **Design-pending v1**, ported from the demo `RadarChartPlayground`. There is no
-> chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands.
+Series colors come from the `palette` prop, not from `config` — see
+[Palettes](/components/chart#palettes). Each `config` entry maps a data key to a
+`label` and an optional `tone` that re-points that one series within the palette,
+resolved into the `--color-<key>` custom properties the areas stroke and fill
+from.
 
 ## Examples
 
@@ -48,8 +45,8 @@ const data = [
 ];
 
 const config = {
-  alice: { label: 'Alice', color: 'var(--ui-background-brand-secondary)' },
-  bob: { label: 'Bob', color: 'var(--ui-background-status-strong-danger)' },
+  alice: { label: 'Alice' },
+  bob: { label: 'Bob' },
 } satisfies ChartConfig;
 
 <RadarChart

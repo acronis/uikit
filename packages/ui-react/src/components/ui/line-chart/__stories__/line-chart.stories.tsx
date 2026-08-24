@@ -9,6 +9,7 @@ import {
 } from 'recharts';
 
 import { LineChart, createBandStrippedTooltip } from '../line-chart';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -32,11 +33,10 @@ const data = [
 ];
 
 const config = {
-  desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
-  mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
+  desktop: { label: 'Desktop' },
+  mobile: { label: 'Mobile' },
   tablet: {
     label: 'Tablet',
-    color: 'var(--ui-background-status-strong-success)',
   },
 } satisfies ChartConfig;
 
@@ -70,6 +70,7 @@ const meta = {
     className: 'h-[320px] w-[560px]',
   },
   argTypes: {
+    ...paletteArgTypes,
     curve: {
       control: 'select',
       options: [
@@ -249,10 +250,9 @@ const trendData = [
 ];
 
 const trendConfig = {
-  thisYear: { label: 'This year', color: 'var(--ui-background-brand-secondary)' },
+  thisYear: { label: 'This year' },
   lastYear: {
     label: 'Last year',
-    color: 'var(--ui-background-status-strong-danger)',
   },
 } satisfies ChartConfig;
 
@@ -290,7 +290,7 @@ const latencyData = [
 ];
 
 const latencyConfig = {
-  p95: { label: 'p95 latency', color: 'var(--ui-background-brand-secondary)' },
+  p95: { label: 'p95 latency' },
 } satisfies ChartConfig;
 
 // Axis titles + a Y-axis unit suffix, forwarded to recharts' native
@@ -457,7 +457,7 @@ const mrrData = [
 ];
 
 const mrrConfig = {
-  mrr: { label: 'MRR', color: 'var(--ui-background-brand-secondary)' },
+  mrr: { label: 'MRR' },
 } satisfies ChartConfig;
 
 // Compact currency on the value axis — `146500 → "$146.5K"`. A `unit` suffix

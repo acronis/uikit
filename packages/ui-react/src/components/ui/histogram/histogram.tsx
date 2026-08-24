@@ -21,6 +21,7 @@ import {
   resolveXAxisTitle,
   resolveYAxisTitle,
   type ChartConfig,
+  type ChartPalette,
   type CartesianChartProps,
   type ChartAnimationProps,
 } from '../chart';
@@ -90,12 +91,18 @@ export interface HistogramProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     CartesianChartProps,
     ChartAnimationProps {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /** Raw continuous samples to bin (non-finite values are ignored). */
   values: ReadonlyArray<number>;
   /**
-   * Single-series map of `label` / `color`, keyed by `dataKey` (imported from
-   * the shared `Chart` primitives). Color is caller-supplied — reference an
-   * existing semantic `--ui-*` token; there is no chart palette tier yet.
+   * Single-series map of `label` / `icon` / `tone`, keyed by `dataKey` (imported
+   * from the shared `Chart` primitives). Series take their colour from the
+   * container's `palette`; each entry maps a key to a `label` and an optional
+   * `tone`.
    */
   config: ChartConfig;
   /** `config` key that colors + labels the frequency bars. */
@@ -113,6 +120,7 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
     {
       className,
       config,
+      palette,
       values,
       dataKey = 'count',
       binCount = 10,
@@ -172,6 +180,7 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
       >
         <ChartContainer
           config={config}
+          palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RechartsBarChart data={data} barCategoryGap={0}>

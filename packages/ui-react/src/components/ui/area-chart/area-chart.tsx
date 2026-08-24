@@ -36,6 +36,7 @@ import {
   toLabelFormatter,
   toReferenceLineList,
   type ChartConfig,
+  type ChartPalette,
   type CartesianChartProps,
   type ChartAnimationProps,
   type ChartBrushProps,
@@ -107,12 +108,17 @@ export interface AreaChartProps
     ChartAnimationProps,
     ChartBrushProps,
     ChartDataLabelProps {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /** Row-per-point data. Each object holds the category key + one numeric field per series (`null` breaks the area unless `connectNulls`). */
   data: ReadonlyArray<Record<string, string | number | null>>;
   /**
-   * Per-series map of `label` / `color` (imported from the shared `Chart`
-   * primitives). Series colors are caller-supplied — reference an existing
-   * semantic `--ui-*` token; there is no chart palette tier yet.
+   * Per-series map of `label` / `icon` / `tone` (from the shared `Chart`
+   * primitives). Series take their colour from the container's `palette`; each
+   * entry maps a key to a `label` and an optional `tone`.
    */
   config: ChartConfig;
   /** Series to plot — one `<Area>` per key. Each must exist in `config` and in every data row. */
@@ -194,6 +200,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
     {
       className,
       config,
+      palette,
       data,
       dataKeys,
       xKey,
@@ -291,6 +298,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       >
         <ChartContainer
           config={config}
+          palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RechartsAreaChart

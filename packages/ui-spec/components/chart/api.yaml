@@ -11,8 +11,21 @@ contract:
       type: ChartConfig
       required: true
       description: >-
-        Per-series map of label / icon / color (or per-theme light+dark colors).
-        ChartContainer turns each entry into a `--color-<key>` custom property.
+        Per-series map of label / icon / tone. ChartContainer resolves each
+        entry's colour out of `palette` and emits it as a `--color-<key>` custom
+        property. Declare exactly the series the chart plots: a stop is assigned
+        by an entry's position here, so an entry for a series that isn't drawn
+        still consumes a colour and shifts the ones that follow.
+    - name: palette
+      type: ChartPalette
+      required: false
+      default: "{ type: 'categorical' }"
+      description: >-
+        The dataviz palette the series are painted from — `categorical` (16
+        hues), `sequential` (a `ramp` of 8 stops), `diverging` (a `pair` of 6),
+        or `status` (6 semantic tones). Series walk it in its defined order.
+        There is no free-form colour and no "no palette" state, so a chart
+        cannot paint a hue outside the design system.
     - name: active
       type: boolean
       required: false

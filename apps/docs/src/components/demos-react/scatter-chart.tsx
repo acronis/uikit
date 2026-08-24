@@ -27,12 +27,10 @@ const series = [
   },
 ];
 
-// Series colors are caller-supplied via `config`, keyed by each series' key (no
-// chart token tier yet) — here referencing the shared semantic brand/status
-// tokens.
+// Series colors come from the chart's default categorical palette.
 const config = {
-  classA: { label: 'Class A', color: 'var(--ui-background-brand-secondary)' },
-  classB: { label: 'Class B', color: 'var(--ui-background-status-strong-danger)' },
+  classA: { label: 'Class A' },
+  classB: { label: 'Class B' },
 } satisfies ChartConfig;
 
 export function ScatterChartDemo() {

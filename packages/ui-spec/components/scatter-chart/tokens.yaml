@@ -2,10 +2,10 @@ spec_version: '1.0'
 component: ScatterChart
 
 # References only. Values live in @acronis-platform/tokens-pd. ScatterChart has no
-# token tier of its own — series colors are supplied by the caller via `config`
-# (a dedicated `--ui-chart-*` data-viz palette is pending an upstream design
-# pass). The chrome (tooltip, legend, axes, grid) is inherited from the shared
-# Chart primitives, which resolve the semantic tokens below.
+# token tier of its own, and needs none: series colours come from the shared
+# `--ui-dataviz-*` palettes on the semantic tier, resolved by ChartContainer out
+# of the `palette` prop. The chrome (tooltip, legend, axes, grid) is inherited
+# from the shared Chart primitives, which resolve the semantic tokens below.
 source: '@acronis-platform/tokens-pd'
 
 tokens:

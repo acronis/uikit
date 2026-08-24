@@ -7,6 +7,7 @@ import {
 } from 'recharts';
 
 import { RadarChart } from '../radar-chart';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -29,9 +30,9 @@ const data = [
 ];
 
 const config = {
-  alice: { label: 'Alice', color: 'var(--ui-background-brand-secondary)' },
-  bob: { label: 'Bob', color: 'var(--ui-background-status-strong-danger)' },
-  carol: { label: 'Carol', color: 'var(--ui-background-status-strong-success)' },
+  alice: { label: 'Alice' },
+  bob: { label: 'Bob' },
+  carol: { label: 'Carol' },
 } satisfies ChartConfig;
 
 const meta = {
@@ -64,6 +65,7 @@ const meta = {
     className: 'h-[380px] w-[420px]',
   },
   argTypes: {
+    ...paletteArgTypes,
     gridType: { control: 'inline-radio', options: ['polygon', 'circle'] },
     fillOpacity: { control: { type: 'number', min: 0, max: 1, step: 0.1 } },
     strokeWidth: { control: { type: 'number', min: 0, max: 6 } },

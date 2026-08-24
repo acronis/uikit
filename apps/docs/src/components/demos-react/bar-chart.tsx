@@ -11,11 +11,10 @@ const data = [
   { month: 'Jun', desktop: 214, mobile: 140 },
 ];
 
-// Series colors are caller-supplied via `config` (no chart token tier yet) —
-// here referencing the shared semantic brand/status tokens.
+// Series colors come from the chart's default categorical palette.
 const config = {
-  desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
-  mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
+  desktop: { label: 'Desktop' },
+  mobile: { label: 'Mobile' },
 } satisfies ChartConfig;
 
 export function BarChartDemo() {

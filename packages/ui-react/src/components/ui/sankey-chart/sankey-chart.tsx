@@ -7,8 +7,11 @@ import { cn } from '@/lib/utils';
 import {
   ChartContainer,
   ChartStyle,
+  resolveChartColors,
+  CHART_DEFAULT_PALETTE,
   ChartTooltip,
   type ChartConfig,
+  type ChartPalette,
 } from '../chart';
 
 // A typed recharts composition over the shared `Chart` primitives — a flow
@@ -43,18 +46,25 @@ export interface SankeyChartLink {
   color?: string;
 }
 
-export interface SankeyChartProps
-  extends Omit<React.ComponentProps<'div'>, 'children'> {
+export interface SankeyChartProps extends Omit<
+  React.ComponentProps<'div'>,
+  'children'
+> {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /** The graph: `nodes` (color keys) + `links` (source/target indices + value). */
   data: {
     nodes: ReadonlyArray<SankeyChartNode>;
     links: ReadonlyArray<SankeyChartLink>;
   };
   /**
-   * Per-node map of `label` / `color`, keyed by the node's `name` (imported from
-   * the shared `Chart` primitives). Turned into `--color-<name>` custom
-   * properties. Colors are caller-supplied — reference an existing semantic
-   * `--ui-*` token; there is no chart palette tier yet.
+   * Per-node map of `label` / `icon` / `tone`, keyed by the node's `name`
+   * (imported from the shared `Chart` primitives). Turned into `--color-<name>`
+   * custom properties. Series take their colour from the container's `palette`;
+   * each entry maps a key to a `label` and an optional `tone`.
    */
   config: ChartConfig;
   /** Vertical gap between nodes in the same column. */
@@ -207,7 +217,7 @@ export function makeSankeyTooltip(
   const labelFor = (key: string): React.ReactNode => config[key]?.label ?? key;
   // Resolve each link's dot color by its "source - target" name (which is the
   // tooltip item's name): the link's own color if set, else the target's, via
-  // the `--color-<name>` bridge so a per-theme config resolves too.
+  // the `--color-<name>` bridge.
   const styleByName = new Map<string, { color: string; opacity: number }>();
   for (const link of links) {
     const source = nodes[link.source]?.name ?? '';
@@ -282,6 +292,7 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
     {
       className,
       config,
+      palette,
       data,
       nodePadding = 24,
       nodeWidth = 12,
@@ -321,8 +332,14 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
       const incoming = new Map<number, number>();
       const outgoing = new Map<number, number>();
       for (const link of data.links) {
-        outgoing.set(link.source, (outgoing.get(link.source) ?? 0) + link.value);
-        incoming.set(link.target, (incoming.get(link.target) ?? 0) + link.value);
+        outgoing.set(
+          link.source,
+          (outgoing.get(link.source) ?? 0) + link.value
+        );
+        incoming.set(
+          link.target,
+          (incoming.get(link.target) ?? 0) + link.value
+        );
       }
       const values = data.nodes.map(
         (_, i) => incoming.get(i) ?? outgoing.get(i) ?? 0
@@ -345,10 +362,19 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
         className={cn('flex flex-col', className)}
         {...props}
       >
-        <ChartStyle id={chartId} config={config} />
-        <ChartContainer config={config} className="min-h-0 flex-1">
+        <ChartStyle
+          id={chartId}
+          config={resolveChartColors(config, palette ?? CHART_DEFAULT_PALETTE)}
+        />
+        <ChartContainer
+          config={config}
+          palette={palette}
+          className="min-h-0 flex-1"
+        >
           <RechartsSankey
-            data={data as { nodes: SankeyChartNode[]; links: SankeyChartLink[] }}
+            data={
+              data as { nodes: SankeyChartNode[]; links: SankeyChartLink[] }
+            }
             node={nodeRenderer}
             link={SankeyLinkShape}
             nodePadding={nodePadding}

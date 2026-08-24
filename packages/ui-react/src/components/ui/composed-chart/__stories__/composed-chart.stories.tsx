@@ -9,6 +9,7 @@ import {
 } from 'recharts';
 
 import { ComposedChart } from '../composed-chart';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -35,15 +36,18 @@ const data = [
 ];
 
 const config = {
-  revenue: { label: 'Revenue', color: 'var(--ui-background-brand-secondary)' },
-  forecast: {
-    label: 'Forecast',
-    color: 'var(--ui-background-status-strong-danger)',
-  },
-  profit: {
-    label: 'Profit',
-    color: 'var(--ui-background-status-strong-success)',
-  },
+  revenue: { label: 'Revenue' },
+  profit: { label: 'Profit' },
+} satisfies ChartConfig;
+
+// A series takes its palette stop from its position in `config`, so a config
+// must declare exactly what its story plots: an entry for a series that isn't
+// drawn still consumes a stop and shifts the ones that are. Hence a second
+// config for the stories that add the forecast series.
+const forecastConfig = {
+  revenue: { label: 'Revenue' },
+  forecast: { label: 'Forecast' },
+  profit: { label: 'Profit' },
 } satisfies ChartConfig;
 
 const meta = {
@@ -79,6 +83,7 @@ const meta = {
     className: 'h-[320px] w-[560px]',
   },
   argTypes: {
+    ...paletteArgTypes,
     orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
     curve: { control: 'inline-radio', options: ['linear', 'monotone', 'step'] },
     barRadius: { control: { type: 'number', min: 0, max: 20 } },
@@ -161,6 +166,7 @@ export const BarPlusLine: Story = {
 // All three render types on one chart — bars behind, area over them, line on top.
 export const BarAreaLine: Story = {
   args: {
+    config: forecastConfig,
     series: [
       { key: 'revenue', type: 'bar' },
       { key: 'forecast', type: 'area' },
@@ -200,7 +206,7 @@ export const NoChrome: Story = {
 // statically for the visual-regression baseline (see the skill's VR note).
 export const TooltipOpen: Story = {
   render: () => (
-    <ChartContainer config={config} className="h-[320px] w-[560px]">
+    <ChartContainer config={forecastConfig} className="h-[320px] w-[560px]">
       <RechartsComposedChart data={data}>
         <CartesianGrid vertical={false} />
         <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
@@ -262,7 +268,7 @@ export const CustomTooltip: Story = {
 // statically otherwise) with the shared custom content wired in.
 export const CustomTooltipOpen: Story = {
   render: () => (
-    <ChartContainer config={config} className="h-[320px] w-[560px]">
+    <ChartContainer config={forecastConfig} className="h-[320px] w-[560px]">
       <RechartsComposedChart data={data}>
         <CartesianGrid vertical={false} />
         <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
@@ -325,6 +331,7 @@ const labelData = [
 
 export const Labels: Story = {
   args: {
+    config: forecastConfig,
     data: labelData,
     series: [
       { key: 'revenue', type: 'bar' },
@@ -350,10 +357,9 @@ const dualAxisData = [
 ];
 
 const dualAxisConfig = {
-  revenue: { label: 'Revenue', color: 'var(--ui-background-brand-secondary)' },
+  revenue: { label: 'Revenue' },
   conversion: {
     label: 'Conversion',
-    color: 'var(--ui-background-status-strong-success)',
   },
 } satisfies ChartConfig;
 
@@ -502,6 +508,7 @@ export const HorizontalSecondaryAxis: Story = {
 // the top segment of a stack rounds its corners; the line rides over the total.
 export const StackedBars: Story = {
   args: {
+    config: forecastConfig,
     series: [
       { key: 'revenue', type: 'bar', stackId: 'total' },
       { key: 'forecast', type: 'bar', stackId: 'total' },
@@ -514,6 +521,7 @@ export const StackedBars: Story = {
 // type, so a bar can't be pulled into an area's stack by reusing its id.
 export const StackedAreas: Story = {
   args: {
+    config: forecastConfig,
     series: [
       { key: 'revenue', type: 'area', stackId: 'mix' },
       { key: 'forecast', type: 'area', stackId: 'mix' },
@@ -526,6 +534,7 @@ export const StackedAreas: Story = {
 // actuals, and the bar series takes a fixed thickness of its own.
 export const PerSeriesStyling: Story = {
   args: {
+    config: forecastConfig,
     series: [
       { key: 'revenue', type: 'bar', barSize: 18, barRadius: 2 },
       {
@@ -554,6 +563,7 @@ const gappedData = [
 
 export const SeriesDefaults: Story = {
   args: {
+    config: forecastConfig,
     data: gappedData,
     strokeWidth: 3,
     showDots: true,
@@ -570,6 +580,7 @@ export const SeriesDefaults: Story = {
 // (between bars of one category, and between the category groups).
 export const BarGeometry: Story = {
   args: {
+    config: forecastConfig,
     series: [
       { key: 'revenue', type: 'bar' },
       { key: 'forecast', type: 'bar' },

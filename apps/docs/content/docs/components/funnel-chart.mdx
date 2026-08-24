@@ -23,16 +23,12 @@ recharts children. The legend is opt-in (`showLegend`) — the on-chart labels
 already name every stage, so it earns its space only when those labels carry
 values or conversions instead.
 
-Stage colors are supplied by the caller through `config`, **keyed by each
-`nameKey` value**: `FunnelChart` turns those into the `--color-<name>` custom
-properties its segments fill from.
-
-> **Design-pending v1**, ported from the demo `FunnelChartPlayground`. There is no
-> chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands.
+Stage colors come from the `palette` prop, not from `config` — see
+[Palettes](/components/chart#palettes). A funnel's stages are an ordered
+progression, so `{ type: 'sequential', ramp }` usually reads better than the
+default `categorical`. Each `config` entry, **keyed by a `nameKey` value**, maps
+that stage to a `label` and an optional `tone`; `FunnelChart` resolves them into
+the `--color-<name>` custom properties its segments fill from.
 
 ## Examples
 
@@ -51,18 +47,15 @@ const data = [
 ];
 
 const config = {
-  Visits: { label: 'Visits', color: 'var(--ui-background-brand-secondary)' },
+  Visits: { label: 'Visits' },
   Signups: {
-    label: 'Signups',
-    color: 'var(--ui-background-status-strong-success)',
+    label: 'Signups'
   },
   Trials: {
-    label: 'Trials',
-    color: 'var(--ui-background-status-strong-warning)',
+    label: 'Trials'
   },
   Purchases: {
-    label: 'Purchases',
-    color: 'var(--ui-background-status-strong-danger)',
+    label: 'Purchases'
   },
 } satisfies ChartConfig;
 

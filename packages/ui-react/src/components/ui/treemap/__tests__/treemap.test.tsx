@@ -23,10 +23,10 @@ const data = [
 ];
 
 const config = {
-  React: { label: 'React', color: 'rgb(23 99 207)' },
-  Vue: { label: 'Vue', color: 'rgb(34 139 79)' },
-  Svelte: { label: 'Svelte', color: 'rgb(212 149 42)' },
-  Angular: { label: 'Angular', color: 'rgb(220 53 69)' },
+  React: { label: 'React' },
+  Vue: { label: 'Vue' },
+  Svelte: { label: 'Svelte' },
+  Angular: { label: 'Angular' },
 } satisfies ChartConfig;
 
 function renderChart(
@@ -75,8 +75,8 @@ describe('Treemap', () => {
   it('wires each leaf color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-React: rgb(23 99 207)');
-    expect(style).toContain('--color-Angular: rgb(220 53 69)');
+    expect(style).toContain('--color-React: var(--ui-dataviz-categorical-1)');
+    expect(style).toContain('--color-Angular: var(--ui-dataviz-categorical-4)');
   });
 
   it('labels every leaf with its name', () => {
@@ -192,9 +192,8 @@ describe('Treemap cell labels', () => {
         config={{
           'awaiting-approval': {
             label: 'Awaiting approval',
-            color: 'rgb(23 99 207)',
           },
-          won: { label: 'Won', color: 'rgb(34 139 79)' },
+          won: { label: 'Won' },
         }}
         data={[
           { name: 'awaiting-approval', size: 2400 },
@@ -210,7 +209,7 @@ describe('Treemap cell labels', () => {
   it('falls back to the leaf key when its config label is not a string', () => {
     const { container } = render(
       <Treemap
-        config={{ won: { label: <span>Won</span>, color: 'rgb(34 139 79)' } }}
+        config={{ won: { label: <span>Won</span> } }}
         data={[{ name: 'won', size: 2400 }]}
         dataKey="size"
         nameKey="name"
@@ -356,7 +355,7 @@ describe('Treemap legend', () => {
       `[data-chart=${chartId}]`
     );
     expect(row?.querySelector('style')?.innerHTML).toContain(
-      '--color-React: rgb(23 99 207)'
+      '--color-React: var(--ui-dataviz-categorical-1)'
     );
   });
 

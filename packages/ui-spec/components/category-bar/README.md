@@ -2,17 +2,14 @@
 
 A single horizontal bar split into proportional colored segments — a
 part-to-whole across a handful of categories, in one row. Give it a `data` array
-(`key` + `value`) and a per-segment `config` (label + color); each segment's
-width is its value over the total.
+(`key` + `value`) and a per-segment `config`; each segment's width is its value
+over the total.
+
+Segment colors come from the `palette` prop — a dataviz palette resolving to the
+`--ui-dataviz-*` tokens, `categorical` by default — not from `config`.
 
 > **Design-pending v1.** A plain flex composition (no recharts, no demo
-> playground). There is no chart token tier yet, so **segment colors are supplied
-> by the caller** via `config` — a dedicated `--ui-chart-*` data-viz palette is a
-> pending upstream design deliverable. Borrowed brand/status tokens are
-> brand-dependent (e.g. the periwinkle brand-disabled tint is grey in some
-> brands), and hues absent from the semantic palette (a light blue, a purple)
-> borrow the nearest existing token for now. Chrome is reconciled with Figma
-> later; Code Connect is deferred.
+> playground). Chrome is reconciled with Figma later; Code Connect is deferred.
 
 ## When to use
 

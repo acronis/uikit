@@ -4,8 +4,8 @@ import { CategoryBar, type ChartConfig } from '@acronis-platform/ui-react';
 
 // The onboarding-stages breakdown: partners split across five funnel stages, with
 // the built-in count/% legend. Segment `key`s are CSS-safe color keys; the display
-// text + color come from `config`. There's no chart token tier yet, so the light
-// blue / purple mockup hues borrow the nearest semantic tokens (brand-dependent).
+// text + color come from `config`; pass `palette={{ type: 'status' }}` to route
+// the `tone: { status }` entries through the status palette.
 const data = [
   { key: 'registered', value: 42 },
   { key: 'trained', value: 32 },
@@ -16,24 +16,19 @@ const data = [
 
 const config = {
   registered: {
-    label: 'Registered',
-    color: 'var(--ui-background-status-strong-neutral)',
+    label: 'Registered'
   },
   trained: {
-    label: 'Trained',
-    color: 'var(--ui-background-brand-primary-disabled)',
+    label: 'Trained'
   },
   firstDeal: {
-    label: 'First deal',
-    color: 'var(--ui-background-status-strong-info)',
+    label: 'First deal'
   },
   certified: {
-    label: 'Certified',
-    color: 'var(--ui-background-status-strong-critical)',
+    label: 'Certified'
   },
   fullyActive: {
-    label: 'Fully active',
-    color: 'var(--ui-background-status-strong-success)',
+    label: 'Fully active'
   },
 } satisfies ChartConfig;
 

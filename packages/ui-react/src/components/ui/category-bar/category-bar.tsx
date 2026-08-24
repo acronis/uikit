@@ -4,7 +4,14 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { ChartStyle, type ChartConfig } from '../chart';
+import {
+  CHART_DEFAULT_PALETTE,
+  ChartStyle,
+  resolveChartColors,
+  type ChartConfig,
+  type ChartPalette,
+  type ResolvedChartConfig,
+} from '../chart';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 
 // A category bar: a single horizontal bar split into proportional colored
@@ -13,8 +20,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 // (one value per row, stacked into a bar list), all segments share the same bar.
 // It's a plain flex composition, not a recharts chart: each segment's width is
 // `value / total`, so exact proportions and the count/% legend are direct DOM,
-// with no axes/grid to hide. Segment colors are caller-supplied via `config`
-// (existing semantic `--ui-*` tokens); there is no chart palette tier yet.
+// with no axes/grid to hide. Segment colors come from the `palette` prop, the
+// same dataviz palettes the recharts charts use.
 //
 // Colors are consumed through the same `--color-<key>` bridge the recharts
 // charts use: `ChartStyle` emits one custom property per config entry, so a
@@ -26,18 +33,21 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 const defaultFormat = (value: number) => value.toLocaleString();
 
 // Track height only — the flex/rounded/overflow chrome is static.
-const categoryBarVariants = cva('flex w-full overflow-hidden rounded-full bg-input', {
-  variants: {
-    size: {
-      sm: 'h-1.5',
-      md: 'h-2.5',
-      lg: 'h-4',
+const categoryBarVariants = cva(
+  'flex w-full overflow-hidden rounded-full bg-input',
+  {
+    variants: {
+      size: {
+        sm: 'h-1.5',
+        md: 'h-2.5',
+        lg: 'h-4',
+      },
     },
-  },
-  defaultVariants: {
-    size: 'md',
-  },
-});
+    defaultVariants: {
+      size: 'md',
+    },
+  }
+);
 
 export interface CategoryBarSegment {
   /** Key into `config` for this segment's label + color. */
@@ -54,19 +64,26 @@ export interface CategoryBarTooltipContext extends CategoryBarSegment {
   percent: number;
   /**
    * CSS color reference for the segment — the `var(--color-<key>)` bridge, which
-   * resolves the config entry's `color` or its per-theme `theme` value. Usable
-   * anywhere a CSS color is (e.g. a `style` background); not a literal value.
+   * resolves the palette stop assigned to this segment. Usable anywhere a CSS
+   * color is (e.g. a `style` background); not a literal value.
    */
   color: string;
 }
 
 export interface CategoryBarProps
-  extends Omit<React.ComponentProps<'div'>, 'children'>,
+  extends
+    Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof categoryBarVariants> {
   /** Ordered segments (left → right). Widths are proportional to `value`. */
   data: ReadonlyArray<CategoryBarSegment>;
-  /** Maps each segment `key` to a `label` and `color` (an existing `--ui-*` token). */
+  /** Maps each segment `key` to a `label` and, optionally, a palette `tone`. */
   config: ChartConfig;
+  /**
+   * The dataviz palette the segments are painted from. Segments take a stop of
+   * it in the palette's defined order, or the one their `tone` names. Defaults
+   * to `categorical`.
+   */
+  palette?: ChartPalette;
   /** Show the legend below the bar (color dot + label + value + %). */
   showLegend?: boolean;
   /** Show a hover tooltip per segment (dot + label + value + %). */
@@ -106,7 +123,7 @@ function CategoryBarSegmentTooltip({
   renderContent,
 }: {
   chartId: string;
-  config: ChartConfig;
+  config: ResolvedChartConfig;
   color: string;
   label: React.ReactNode;
   percent: number;
@@ -150,6 +167,7 @@ const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
       className,
       data,
       config,
+      palette = CHART_DEFAULT_PALETTE,
       size,
       showLegend = false,
       showTooltip = true,
@@ -163,9 +181,17 @@ const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
   ) => {
     const uniqueId = React.useId();
     const chartId = `chart-${uniqueId.replace(/:/g, '')}`;
+    // Resolved here rather than by a `ChartContainer`: this component paints
+    // plain divs, not a recharts plot, so it owns the `--color-*` emission for
+    // both the bar and its portaled per-segment tooltip.
+    const resolvedConfig = React.useMemo(
+      () => resolveChartColors(config, palette),
+      [config, palette]
+    );
 
     const total = data.reduce((sum, seg) => sum + seg.value, 0);
-    const labelFor = (key: string): React.ReactNode => config[key]?.label ?? key;
+    const labelFor = (key: string): React.ReactNode =>
+      config[key]?.label ?? key;
     // The aria-label has to be a plain string, so a rich (element) label can't
     // be used there — fall back to the key rather than stringifying it into
     // "[object Object]".
@@ -194,8 +220,12 @@ const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
         className={cn('flex w-full flex-col gap-3', className)}
         {...props}
       >
-        <ChartStyle id={chartId} config={config} />
-        <div className={categoryBarVariants({ size })} role="img" aria-label={summary}>
+        <ChartStyle id={chartId} config={resolvedConfig} />
+        <div
+          className={categoryBarVariants({ size })}
+          role="img"
+          aria-label={summary}
+        >
           {data.map((seg, index) => {
             const color = colorOf(seg.key);
             // flex-grow proportional to value with a zero basis → widths are
@@ -215,7 +245,7 @@ const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
                 <TooltipTrigger render={segment} />
                 <CategoryBarSegmentTooltip
                   chartId={chartId}
-                  config={config}
+                  config={resolvedConfig}
                   color={color}
                   label={labelFor(seg.key)}
                   percent={pctOf(seg.value)}

@@ -25,6 +25,7 @@ import {
   CHART_LABEL_FILL_CLASS,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartPalette,
   type ChartTooltipContentProps,
   type ChartAnimationProps,
   type ChartDataLabelProps,
@@ -230,13 +231,19 @@ export interface PieChartProps
     VariantProps<typeof pieChartVariants>,
     ChartAnimationProps,
     ChartDataLabelProps {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /** Row-per-slice data. Each object holds the slice's `nameKey` label + its `dataKey` numeric value. */
   data: ReadonlyArray<PieChartDatum>;
   /**
-   * Per-slice map of `label` / `color`, keyed by the slice's `nameKey` value
-   * (imported from the shared `Chart` primitives). Turned into `--color-<name>`
-   * custom properties. Colors are caller-supplied — reference an existing
-   * semantic `--ui-*` token; there is no chart palette tier yet.
+   * Per-slice map of `label` / `icon` / `tone`, keyed by the slice's `nameKey`
+   * value (imported from the shared `Chart` primitives). Turned into
+   * `--color-<name>` custom properties. Series take their colour from the
+   * container's `palette`; each entry maps a key to a `label` and an optional
+   * `tone`.
    */
   config: ChartConfig;
   /** Numeric field that sizes each slice. */
@@ -409,6 +416,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
     {
       className,
       config,
+      palette,
       data,
       dataKey,
       nameKey,
@@ -525,7 +533,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
         className={cn(pieChartVariants({ shape }), className)}
         {...props}
       >
-        <ChartContainer config={config} className="size-full">
+        <ChartContainer config={config} palette={palette} className="size-full">
           <RechartsPieChart margin={margin}>
             {showTooltip && (
               <ChartTooltip

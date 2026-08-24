@@ -5,11 +5,11 @@ per-slice `config`, the value field (`dataKey`), and the label field (`nameKey`)
 it renders a themed recharts `PieChart` — tooltip and legend included — so you
 don't hand-compose recharts children.
 
-> **Design-pending v1.** Ported from the apps/demo `PieChartPlayground`. There is
-> no chart token tier yet, so **slice colors are supplied by the caller** via
-> `config` — a dedicated `--ui-chart-*` data-viz palette is a pending upstream
-> design deliverable. The chrome is reconciled with Figma later; Code Connect is
-> deferred.
+Slice colors come from the `palette` prop — a dataviz palette resolving to the
+`--ui-dataviz-*` tokens, `categorical` by default — not from `config`.
+
+> **Design-pending v1.** Ported from the apps/demo `PieChartPlayground`. The
+> chrome is reconciled with Figma later; Code Connect is deferred.
 
 ## When to use
 

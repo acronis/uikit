@@ -1,15 +1,15 @@
 # Chart
 
-A theming layer over [recharts](https://recharts.org). `ChartContainer` supplies
-per-series colors and themes recharts' internals with the semantic token
-vocabulary; `ChartTooltipContent` and `ChartLegendContent` give the tooltip and
-legend the library's look. The chart type itself (bar / line / area / pie / …) is
-composed by the caller from recharts primitives.
+A theming layer over [recharts](https://recharts.org). `ChartContainer` resolves
+each series' color from a **dataviz palette** and themes recharts' internals with
+the semantic token vocabulary; `ChartTooltipContent` and `ChartLegendContent` give
+the tooltip and legend the library's look. The chart type itself (bar / line /
+area / pie / …) is composed by the caller from recharts primitives.
 
-> **Design-pending v1.** Ported from the legacy shadcn-uikit `chart`. There is no
-> chart token tier yet, so **series colors are supplied by the caller** via
-> `config` — a dedicated data-viz palette is pending an upstream design pass. The
-> chrome is reconciled with Figma later.
+Series colors are never hand-written. `config` names the series, the `palette`
+prop says which palette they are painted from, and `ChartContainer` resolves each
+one into a `--color-<key>` custom property the recharts marks reference. Every
+palette resolves to `--ui-dataviz-*` tokens on the semantic tier.
 
 ## When to use
 
@@ -24,17 +24,19 @@ composed by the caller from recharts primitives.
 
 ## Parts
 
-| Export                | Purpose                                                                              |
-| --------------------- | ------------------------------------------------------------------------------------ |
-| `ChartContainer`      | The wrapper. Takes `config` + the recharts plot as children; injects series colors.  |
-| `ChartTooltip`        | Re-export of recharts' `Tooltip`. Pass `ChartTooltipContent` as its `content`.       |
-| `ChartTooltipContent` | Themed tooltip body — label + per-series indicator/value.                            |
-| `ChartLegend`         | Re-export of recharts' `Legend`. Pass `ChartLegendContent` as its `content`.         |
-| `ChartLegendContent`  | Themed legend body — swatch + label per series.                                      |
-| `ChartStyle`          | Injects the `--color-<key>` custom properties (used internally by `ChartContainer`). |
+| Export                | Purpose                                                                                                      |
+| --------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `ChartContainer`      | The wrapper. Takes `config` + `palette` + the recharts plot as children; resolves and injects series colors. |
+| `ChartTooltip`        | Re-export of recharts' `Tooltip`. Pass `ChartTooltipContent` as its `content`.                               |
+| `ChartTooltipContent` | Themed tooltip body — label + per-series indicator/value.                                                    |
+| `ChartLegend`         | Re-export of recharts' `Legend`. Pass `ChartLegendContent` as its `content`.                                 |
+| `ChartLegendContent`  | Themed legend body — swatch + label per series.                                                              |
+| `ChartStyle`          | Injects the `--color-<key>` custom properties (used internally by `ChartContainer`).                         |
 
-`ChartConfig` is the per-series map of `label` / `icon` / `color` (or per-theme
-`{ light, dark }` colors).
+`ChartConfig` is the per-series map of `label` / `icon` / `tone`. It carries no
+color: `tone` only re-points a series **within** the palette — `{ slot: n }` for
+another categorical hue, `{ status: '…' }` under the `status` palette, or
+`{ sameAs: 'key' }` to share another series' color.
 
 ## Example
 
@@ -49,9 +51,11 @@ import {
 } from '@acronis-platform/ui-react';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
+// No colors here — the default `categorical` palette paints the series in the
+// order they are declared.
 const config = {
-  desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
-  mobile: { label: 'Mobile', color: 'var(--ui-background-status-danger)' },
+  desktop: { label: 'Desktop' },
+  mobile: { label: 'Mobile' },
 } satisfies ChartConfig;
 
 <ChartContainer config={config} className="h-[300px] w-[500px]">

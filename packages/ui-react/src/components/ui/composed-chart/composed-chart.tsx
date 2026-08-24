@@ -39,6 +39,7 @@ import {
   resolveYAxisTitle,
   toLabelFormatter,
   type ChartConfig,
+  type ChartPalette,
   type ChartLegendContentProps,
   type CartesianChartProps,
   type ChartAnimationProps,
@@ -143,8 +144,8 @@ export interface ComposedSeries {
    */
   yAxis?: ChartYAxisTarget;
   /**
-   * Paint for this series, overriding its `config` color. Reference an existing
-   * semantic `--ui-*` token; there is no chart palette tier yet.
+   * Paint for this series, overriding the stop of the container's `palette` it
+   * would otherwise take. Reference an existing semantic `--ui-*` token.
    */
   color?: string;
   /**
@@ -226,13 +227,18 @@ export interface ComposedChartProps
     ChartAnimationProps,
     ChartBrushProps,
     ChartDataLabelProps {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /** Row-per-category data. Each object holds `xKey` + one numeric field per series (`null` breaks a line/area unless `connectNulls`). */
   data: ReadonlyArray<Record<string, string | number | null>>;
   /**
-   * Per-series map of `label` / `color`, keyed by `series[].key` (imported from
-   * the shared `Chart` primitives). Turned into `--color-<key>` custom
-   * properties. Colors are caller-supplied — reference an existing semantic
-   * `--ui-*` token; there is no chart palette tier yet.
+   * Per-series map of `label` / `icon` / `tone`, keyed by `series[].key`
+   * (imported from the shared `Chart` primitives). Turned into `--color-<key>`
+   * custom properties. Series take their colour from the container's `palette`;
+   * each entry maps a key to a `label` and an optional `tone`.
    */
   config: ChartConfig;
   /**
@@ -309,6 +315,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
     {
       className,
       config,
+      palette,
       data,
       series,
       xKey,
@@ -913,6 +920,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       >
         <ChartContainer
           config={config}
+          palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RechartsComposedChart

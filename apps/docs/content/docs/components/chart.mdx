@@ -27,16 +27,43 @@ axis, cursor) with the semantic token vocabulary; `ChartTooltipContent` and
 chart type itself — `BarChart`, `LineChart`, `AreaChart`, `PieChart`, … — from
 recharts primitives.
 
-Series colors are supplied by the caller through `config`: each entry maps a data
-key to a `label` and a `color` (or a per-theme `{ light, dark }` pair).
-`ChartContainer` turns those into `--color-<key>` custom properties you reference
-from the recharts `fill` / `stroke` props.
+Series colors come from a **dataviz palette**, never from a hand-written value:
+`config` names the series, `palette` says which palette they're painted from, and
+`ChartContainer` resolves each one into a `--color-<key>` custom property you
+reference from the recharts `fill` / `stroke` props.
 
-> **Design-pending v1**, ported from the legacy `shadcn-uikit` chart. There is no
-> chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated data-viz palette is pending an upstream design pass.
 > `recharts` resolves as a dependency of `@acronis-platform/ui-react`; import the
 > chart primitives directly from `recharts`.
+
+### Palettes
+
+Four palettes, all resolving to the `--ui-dataviz-*` tokens. Pick by what the
+color has to communicate:
+
+| `palette` | Use it when | Stops |
+| --- | --- | --- |
+| `{ type: 'categorical' }` *(default)* | Unrelated categories with no order between them. Color carries identity, not magnitude. | 16 hues |
+| `{ type: 'sequential', ramp }` | One quantity along an ordered scale — funnel stages, tiers, recency. `ramp`: `blue` · `teal` · `orange` · `violet`. | 8 stops, light → dark |
+| `{ type: 'diverging', pair }` | Two directions away from a midpoint — over/under, gain/loss. `pair`: `blue-orange` · `teal-violet`. | 6 stops |
+| `{ type: 'status' }` | The value *means* a severity. Never decorative. | `danger` · `critical` · `warning` · `success` · `info` · `neutral` |
+
+Series walk the palette **in its defined order** — the first entry in `config`
+takes the first stop, and so on. So declare exactly the series the chart plots:
+an entry for one it doesn't draw still consumes a color and shifts the rest.
+(That's deliberate — a series then keeps its color when a sibling is toggled off.)
+
+A series can be re-pointed with `tone`:
+
+- `{ slot: 7 }` — another hue of the categorical palette.
+- `{ status: 'danger' }` — required under the `status` palette, whose colors are
+  chosen rather than walked.
+- `{ sameAs: 'actual' }` — paint whatever another series paints. For a twin
+  series that is the *same* metric drawn differently (a forecast tail, a
+  projection band), where two hues would read as two metrics. An aliased series
+  doesn't consume a stop.
+
+`sequential` and `diverging` take no per-series override: their stops are a ramp,
+meaningful only in relation to each other.
 
 ## Examples
 
@@ -48,8 +75,8 @@ A bar chart with a themed tooltip and legend:
 
 ```tsx
 const config = {
-  desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
-  mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
+  desktop: { label: 'Desktop' },
+  mobile: { label: 'Mobile' },
 } satisfies ChartConfig;
 
 <ChartContainer config={config} className="h-[300px] w-[500px]">
@@ -64,15 +91,19 @@ const config = {
 </ChartContainer>;
 ```
 
-Per-theme colors switch with the active theme:
+Light and dark need no work: every palette token is a `light-dark()` pair that
+follows the active theme on its own.
+
+A chart whose colors carry meaning names the palette and the tone per series:
 
 ```tsx
 const config = {
-  desktop: {
-    label: 'Desktop',
-    theme: { light: 'rgb(23 99 207)', dark: 'rgb(71 152 245)' },
-  },
+  failed: { label: 'Failed', tone: { status: 'danger' } },
+  degraded: { label: 'Degraded', tone: { status: 'warning' } },
+  healthy: { label: 'Healthy', tone: { status: 'success' } },
 } satisfies ChartConfig;
+
+<BarChart config={config} palette={{ type: 'status' }} … />;
 ```
 
 ## Formatting and hiding axes

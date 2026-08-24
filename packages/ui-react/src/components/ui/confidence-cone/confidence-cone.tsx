@@ -28,6 +28,7 @@ import {
   resolveYAxisTitle,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartPalette,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
   type CartesianChartProps,
@@ -60,7 +61,9 @@ export function dropConeBand<T extends { dataKey?: unknown }>(
 ): T[] | undefined {
   return payload?.filter(
     (item) =>
-      !(typeof item.dataKey === 'string' && item.dataKey.startsWith(BAND_PREFIX))
+      !(
+        typeof item.dataKey === 'string' && item.dataKey.startsWith(BAND_PREFIX)
+      )
   );
 }
 
@@ -75,7 +78,8 @@ export function keepMetricSeries<T extends { dataKey?: unknown }>(
   actualKeys: readonly string[]
 ): T[] | undefined {
   return payload?.filter(
-    (item) => typeof item.dataKey === 'string' && actualKeys.includes(item.dataKey)
+    (item) =>
+      typeof item.dataKey === 'string' && actualKeys.includes(item.dataKey)
   );
 }
 
@@ -91,7 +95,10 @@ export function keepMetricSeries<T extends { dataKey?: unknown }>(
 type TooltipContentType = NonNullable<
   React.ComponentProps<typeof ChartTooltip>['content']
 >;
-type TooltipContentFn = Extract<TooltipContentType, (...args: never[]) => unknown>;
+type TooltipContentFn = Extract<
+  TooltipContentType,
+  (...args: never[]) => unknown
+>;
 type TooltipRenderProps = Parameters<TooltipContentFn>[0];
 
 export function createConeTooltip(tooltipContent: TooltipContentType) {
@@ -138,7 +145,9 @@ export function forecastPeriodX(
   xKey: string
 ): Array<string | number | null | undefined> {
   return data
-    .filter((row) => series.some(({ forecastKey }) => typeof row[forecastKey] === 'number'))
+    .filter((row) =>
+      series.some(({ forecastKey }) => typeof row[forecastKey] === 'number')
+    )
     .map((row) => row[xKey]);
 }
 
@@ -194,9 +203,15 @@ export interface ConfidenceConeReferenceLine {
  * and a story's. Not re-exported from `index.ts`; not part of the public API.
  */
 export interface ConfidenceConeBaseProps
-  extends Omit<React.ComponentProps<'div'>, 'children'>,
+  extends
+    Omit<React.ComponentProps<'div'>, 'children'>,
     CartesianChartProps,
     ChartAnimationProps {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /**
    * Row-per-point data — the shared x dimension plus each series' actual /
    * forecast / bound fields. Rows are naturally sparse (a point has either an
@@ -206,10 +221,10 @@ export interface ConfidenceConeBaseProps
    */
   data: ReadonlyArray<Record<string, string | number | null | undefined>>;
   /**
-   * Per-series map of `label` / `color` for the actual + forecast lines
-   * (imported from the shared `Chart` primitives). Colors are caller-supplied —
-   * reference an existing semantic `--ui-*` token; there is no chart palette tier
-   * yet. Each metric renders in one hue: its cone band and forecast line both
+   * Per-series map of `label` / `icon` / `tone` for the actual + forecast lines
+   * (imported from the shared `Chart` primitives). Series take their colour from
+   * the container's `palette`; each entry maps a key to a `label` and an optional
+   * `tone`. Each metric renders in one hue: its cone band and forecast line both
    * reuse its actual series' color — actual and forecast differ by line style,
    * not hue.
    */
@@ -292,6 +307,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
     {
       className,
       config,
+      palette,
       data,
       xKey,
       series,
@@ -370,7 +386,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
         next[fKey] = {
           label: forecast.label,
           icon: forecast.icon,
-          ...(actual.theme ? { theme: actual.theme } : { color: actual.color }),
+          tone: { sameAs: aKey },
         };
       }
       return next ?? config;
@@ -383,7 +399,11 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
     // band breaks there); a series without bounds gets no band at all.
     const chartData = data.map((row) => {
       const next: Record<string, unknown> = { ...row };
-      for (const { actualKey: aKey, lowerKey: lKey, upperKey: uKey } of plotted) {
+      for (const {
+        actualKey: aKey,
+        lowerKey: lKey,
+        upperKey: uKey,
+      } of plotted) {
         if (!lKey || !uKey) continue;
         const lower = row[lKey];
         const upper = row[uKey];
@@ -652,6 +672,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       <div ref={ref} className={cn(className)} {...props}>
         <ChartContainer
           config={seriesConfig}
+          palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <ComposedChart data={chartData as readonly unknown[]}>

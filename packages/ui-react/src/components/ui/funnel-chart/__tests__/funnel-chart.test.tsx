@@ -31,10 +31,10 @@ const data = [
 ];
 
 const config = {
-  Visits: { label: 'Visits', color: 'rgb(23 99 207)' },
-  Signups: { label: 'Signups', color: 'rgb(34 139 79)' },
-  Trials: { label: 'Trials', color: 'rgb(212 149 42)' },
-  Purchases: { label: 'Purchases', color: 'rgb(220 53 69)' },
+  Visits: { label: 'Visits' },
+  Signups: { label: 'Signups' },
+  Trials: { label: 'Trials' },
+  Purchases: { label: 'Purchases' },
 } satisfies ChartConfig;
 
 function renderChart(
@@ -72,8 +72,8 @@ describe('FunnelChart', () => {
   it('wires each stage color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-Visits: rgb(23 99 207)');
-    expect(style).toContain('--color-Purchases: rgb(220 53 69)');
+    expect(style).toContain('--color-Visits: var(--ui-dataviz-categorical-1)');
+    expect(style).toContain('--color-Purchases: var(--ui-dataviz-categorical-4)');
   });
 
   it('defaults to a triangle last shape', () => {

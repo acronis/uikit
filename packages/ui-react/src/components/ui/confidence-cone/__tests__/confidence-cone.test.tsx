@@ -10,7 +10,9 @@ import {
   forecastPeriodX,
   keepMetricSeries,
 } from '../confidence-cone';
-import { ChartTooltipContent, type ChartConfig,
+import {
+  ChartTooltipContent,
+  type ChartConfig,
   resolveAnimation,
 } from '../../chart';
 
@@ -33,8 +35,8 @@ const data = [
 ];
 
 const config = {
-  actual: { label: 'Actual', color: 'rgb(23 99 207)' },
-  forecast: { label: 'Forecast', color: 'rgb(240 160 30)' },
+  actual: { label: 'Actual' },
+  forecast: { label: 'Forecast' },
 } satisfies ChartConfig;
 
 function renderChart(
@@ -206,7 +208,9 @@ describe('ConfidenceCone', () => {
   it('accepts a custom tooltipContent', () => {
     const { container } = renderChart({
       tooltipContent: (
-        <ChartTooltipContent formatter={(value) => <span>{String(value)}</span>} />
+        <ChartTooltipContent
+          formatter={(value) => <span>{String(value)}</span>}
+        />
       ),
     });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
@@ -234,21 +238,29 @@ describe('ConfidenceCone', () => {
   it('wires config colors into --color-*, forecast included, from one hue', () => {
     const { container } = renderChart();
     const css = container.querySelector('style')?.innerHTML ?? '';
-    expect(css).toContain('--color-actual: rgb(23 99 207)');
-    expect(css).toContain('--color-forecast: rgb(23 99 207)');
-    expect(css).not.toContain('rgb(240 160 30)');
+    // One hue per metric: the forecast aliases the actual instead of taking a
+    // stop of its own.
+    expect(css).toContain('--color-actual: var(--ui-dataviz-categorical-1)');
+    expect(css).toContain('--color-forecast: var(--ui-dataviz-categorical-1)');
   });
 
-  it('keeps a per-theme actual color when re-pointing the forecast', () => {
+  it('re-points the forecast at whichever stop the actual took', () => {
+    // The forecast aliases the actual rather than taking a stop of its own, so
+    // the metric reads in one hue however the palette is configured.
     const { container } = renderChart({
+      palette: { type: 'status' },
       config: {
-        actual: { label: 'Actual', theme: { light: '#aaa', dark: '#222' } },
-        forecast: { label: 'Forecast', color: 'rgb(240 160 30)' },
+        actual: { label: 'Actual', tone: { status: 'warning' } },
+        forecast: { label: 'Forecast' },
       },
     });
     const css = container.querySelector('style')?.innerHTML ?? '';
-    expect(css).toContain('--color-forecast: #aaa');
-    expect(css).toContain('--color-forecast: #222');
+    expect(css).toContain(
+      '--color-actual: var(--ui-dataviz-meaningful-status-warning)'
+    );
+    expect(css).toContain(
+      '--color-forecast: var(--ui-dataviz-meaningful-status-warning)'
+    );
   });
 
   // The default tooltip and any caller-supplied `tooltipContent` both route
@@ -370,11 +382,17 @@ describe('ConfidenceCone', () => {
   // Unbound, the band's <Area> is never composed at all — unlike the bound-but-
   // empty case above, where it mounts and shades nothing.
   it('renders a band-less series when the bound fields are omitted', () => {
-    const { container } = renderChart({ lowerKey: undefined, upperKey: undefined });
+    const { container } = renderChart({
+      lowerKey: undefined,
+      upperKey: undefined,
+    });
     expect(bandsOf(container)).toHaveLength(0);
     // Still a full metric: a solid actual handing off to a dashed projection.
     expect(areaCurvesOf(container)).toHaveLength(1);
-    expect(lineCurvesOf(container)[0]).toHaveAttribute('stroke-dasharray', '5 5');
+    expect(lineCurvesOf(container)[0]).toHaveAttribute(
+      'stroke-dasharray',
+      '5 5'
+    );
   });
 
   // With the actual drawn as a <Line>, the cone is the only shaded region left
@@ -432,7 +450,9 @@ describe('ConfidenceCone', () => {
       );
       expect(observed.length).toBeGreaterThan(0);
       expect(projected.length).toBeGreaterThan(0);
-      observed.forEach((dot) => expect(dot).toHaveAttribute('fill-opacity', '1'));
+      observed.forEach((dot) =>
+        expect(dot).toHaveAttribute('fill-opacity', '1')
+      );
       projected.forEach((dot) =>
         expect(dot).toHaveAttribute('stroke-dasharray', 'none')
       );
@@ -453,7 +473,9 @@ describe('ConfidenceCone', () => {
       styleForecastTicks: true,
       referenceLine: [{ value: 160, label: 'Target' }, { value: 190 }],
     });
-    expect(container.querySelectorAll('.recharts-dot').length).toBeGreaterThan(0);
+    expect(container.querySelectorAll('.recharts-dot').length).toBeGreaterThan(
+      0
+    );
 
     // The projection starts at Mar, so the last three columns carry the accent.
     const accent = 'font-style: italic; fill: var(--color-actual);';
@@ -558,10 +580,10 @@ describe('ConfidenceCone multi-series', () => {
   ];
 
   const multiConfig = {
-    storage: { label: 'Storage', color: 'rgb(23 99 207)' },
-    storageForecast: { label: 'Storage forecast', color: 'rgb(240 160 30)' },
-    backups: { label: 'Backups', color: 'rgb(0 150 100)' },
-    backupsForecast: { label: 'Backups forecast', color: 'rgb(200 30 30)' },
+    storage: { label: 'Storage' },
+    storageForecast: { label: 'Storage forecast' },
+    backups: { label: 'Backups' },
+    backupsForecast: { label: 'Backups forecast' },
   } satisfies ChartConfig;
 
   const series = [
@@ -615,12 +637,14 @@ describe('ConfidenceCone multi-series', () => {
   it('re-points each series forecast color at its own actual color', () => {
     const { container } = renderMulti();
     const css = container.querySelector('style')?.innerHTML ?? '';
-    expect(css).toContain('--color-storage: rgb(23 99 207)');
-    expect(css).toContain('--color-storageForecast: rgb(23 99 207)');
-    expect(css).toContain('--color-backups: rgb(0 150 100)');
-    expect(css).toContain('--color-backupsForecast: rgb(0 150 100)');
-    expect(css).not.toContain('rgb(240 160 30)');
-    expect(css).not.toContain('rgb(200 30 30)');
+    expect(css).toContain('--color-storage: var(--ui-dataviz-categorical-1)');
+    expect(css).toContain(
+      '--color-storageForecast: var(--ui-dataviz-categorical-1)'
+    );
+    expect(css).toContain('--color-backups: var(--ui-dataviz-categorical-2)');
+    expect(css).toContain(
+      '--color-backupsForecast: var(--ui-dataviz-categorical-2)'
+    );
   });
 
   // `series` is the general form; the flat *Key props are its single-series
@@ -631,7 +655,7 @@ describe('ConfidenceCone multi-series', () => {
       forecastKey: 'alsoIgnored',
     });
     const css = container.querySelector('style')?.innerHTML ?? '';
-    expect(css).toContain('--color-storage: rgb(23 99 207)');
+    expect(css).toContain('--color-storage: var(--ui-dataviz-categorical-1)');
     expect(css).not.toContain('--color-ignored');
   });
 
@@ -639,7 +663,10 @@ describe('ConfidenceCone multi-series', () => {
   // rows where *any* series has started projecting.
   describe('forecastPeriodX', () => {
     it('collects the x values of every projected row, in data order', () => {
-      expect(forecastPeriodX(multiData, series, 'month')).toEqual(['Mar', 'Apr']);
+      expect(forecastPeriodX(multiData, series, 'month')).toEqual([
+        'Mar',
+        'Apr',
+      ]);
     });
 
     it('starts at the earliest series hand-off, not the last', () => {

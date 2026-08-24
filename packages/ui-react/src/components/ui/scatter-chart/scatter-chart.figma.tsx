@@ -14,7 +14,7 @@ figma.connect(ScatterChart, 'FIGMA_NODE_URL', {
       xKey="x"
       yKey="y"
       config={{
-        a: { label: 'Group A', color: 'var(--ui-background-brand-secondary)' },
+        a: { label: 'Group A' },
       }}
       series={[
         {

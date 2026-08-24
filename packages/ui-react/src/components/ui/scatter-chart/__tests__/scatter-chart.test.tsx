@@ -34,8 +34,8 @@ const series = [
 ];
 
 const config = {
-  classA: { label: 'Class A', color: 'rgb(23 99 207)' },
-  classB: { label: 'Class B', color: 'rgb(220 53 69)' },
+  classA: { label: 'Class A' },
+  classB: { label: 'Class B' },
 } satisfies ChartConfig;
 
 function renderChart(
@@ -65,8 +65,8 @@ describe('ScatterChart', () => {
   it('wires each series color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-classA: rgb(23 99 207)');
-    expect(style).toContain('--color-classB: rgb(220 53 69)');
+    expect(style).toContain('--color-classA: var(--ui-dataviz-categorical-1)');
+    expect(style).toContain('--color-classB: var(--ui-dataviz-categorical-2)');
   });
 
   it('draws one point per row of every series, filled from its config color', () => {

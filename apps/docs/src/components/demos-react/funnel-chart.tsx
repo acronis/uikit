@@ -9,19 +9,15 @@ const data = [
   { stage: 'Purchases', value: 620 },
 ];
 
-// Stage colors are caller-supplied via `config`, keyed by each stage's nameKey
-// value (no chart token tier yet) — here referencing the shared semantic
-// brand/status tokens.
+// Stage colors come from the chart's default categorical palette.
 const config = {
-  Visits: { label: 'Visits', color: 'var(--ui-background-brand-secondary)' },
+  Visits: { label: 'Visits' },
   Signups: {
-    label: 'Signups',
-    color: 'var(--ui-background-status-strong-success)',
+    label: 'Signups'
   },
-  Trials: { label: 'Trials', color: 'var(--ui-background-status-strong-warning)' },
+  Trials: { label: 'Trials' },
   Purchases: {
-    label: 'Purchases',
-    color: 'var(--ui-background-status-strong-danger)',
+    label: 'Purchases'
   },
 } satisfies ChartConfig;
 

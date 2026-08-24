@@ -23,9 +23,10 @@ contract:
       type: ChartConfig
       required: true
       description: >-
-        Per-slice map of label / color, keyed by the slice's `nameKey` value
-        (from the shared Chart primitives). Turned into `--color-<name>` custom
-        properties. Colors are caller-supplied.
+        Slices take their colour from the container's `palette`; each entry,
+        keyed by the slice's `nameKey` value, maps that slice to a `label` and an
+        optional `tone`. Resolved into the `--color-<name>` custom properties the
+        slices fill from.
     - name: dataKey
       type: string
       required: true
@@ -152,8 +153,8 @@ contract:
       default: "'outside'"
       description: >-
         Where the value labels sit. Defaults to outside the arc, on the chart
-        surface — the only placement guaranteed to have contrast against
-        caller-supplied slice colors. Inside placements switch the label to the
+        surface — the only placement guaranteed to have contrast against any
+        palette's slice colors. Inside placements switch the label to the
         on-fill token. Ignored when labelLine is on — a leader line only ever
         ends outside the arc.
     - name: labelFormat

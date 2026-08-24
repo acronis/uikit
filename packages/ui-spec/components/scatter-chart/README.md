@@ -6,11 +6,11 @@ list (each `{ key, data }`), a per-series `config`, and the numeric axis fields
 axes, and grid included — so you don't hand-compose recharts children. Add a
 `zKey` to size points by a third field (a bubble chart).
 
-> **Design-pending v1.** Ported from the apps/demo `ScatterChartPlayground`. There
-> is no chart token tier yet, so **series colors are supplied by the caller** via
-> `config` — a dedicated `--ui-chart-*` data-viz palette is a pending upstream
-> design deliverable. The chrome is reconciled with Figma later; Code Connect is
-> deferred.
+Series colors come from the `palette` prop — a dataviz palette resolving to the
+`--ui-dataviz-*` tokens, `categorical` by default — not from `config`.
+
+> **Design-pending v1.** Ported from the apps/demo `ScatterChartPlayground`. The
+> chrome is reconciled with Figma later; Code Connect is deferred.
 
 ## When to use
 

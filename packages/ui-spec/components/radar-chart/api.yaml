@@ -26,8 +26,9 @@ contract:
       type: ChartConfig
       required: true
       description: >-
-        Per-series map of label / color (from the shared Chart primitives).
-        Turned into `--color-<key>` custom properties. Colors are caller-supplied.
+        Series take their colour from the container's `palette`; each entry maps
+        a data key to a `label` and an optional `tone`. Resolved into the
+        `--color-<key>` custom properties the areas stroke and fill from.
     - name: dataKeys
       type: string[]
       required: true

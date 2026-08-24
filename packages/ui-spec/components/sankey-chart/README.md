@@ -6,14 +6,13 @@ recharts `Sankey` — node bars colored per name, link ribbons whose width is
 proportional to the flow value and tinted by their target node — so you don't
 hand-compose recharts children.
 
+Node colors come from the `palette` prop — a dataviz palette resolving to the
+`--ui-dataviz-*` tokens, `categorical` by default — not from `config`. Link
+ribbons tint from their target node unless a link sets its own `color`.
+
 > **Design-pending v1.** Built on recharts' `Sankey` primitive (no apps/demo
-> playground existed). There is no chart token tier yet, so **node/link colors
-> are supplied by the caller** via `config` — a dedicated `--ui-chart-*` data-viz
-> palette is a pending upstream design deliverable. Borrowed brand/status tokens
-> are brand-dependent, and a light "total"/parent shade (e.g. the periwinkle
-> "All tenants" node in the reference card) isn't in the semantic palette yet, so
-> such nodes borrow the strong hue. The chrome is reconciled with Figma later;
-> Code Connect is deferred.
+> playground existed). The chrome is reconciled with Figma later; Code Connect is
+> deferred.
 
 ## When to use
 

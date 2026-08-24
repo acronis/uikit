@@ -19,11 +19,10 @@ ranges and plots the count of each as contiguous bars. Unlike
 [`BarChart`](/components/bar-chart) — which plots pre-categorized rows — the
 binning is the component's own job, so you don't pre-aggregate.
 
-> **Design-pending v1**, built net-new (no demo playground). There is no chart
-> token tier yet, so the bar color references a shared brand/status token — a
-> dedicated `--ui-chart-*` data-viz palette is pending an upstream design pass.
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands.
+The bar color comes from the `palette` prop, not from `config` — see
+[Palettes](/components/chart#palettes). The single `config` entry maps the count
+key to a `label` and an optional `tone` that re-points it within the palette,
+resolved into the `--color-<key>` custom property the bars fill from.
 
 ## Examples
 
@@ -37,7 +36,7 @@ A distribution binned into 10 equal-width ranges:
 const values = [12, 15, 18, 20, 22, 22, 25, 28, 30, 35, 42, 48, 60];
 
 const config = {
-  count: { label: 'Frequency', color: 'var(--ui-background-brand-secondary)' },
+  count: { label: 'Frequency' },
 } satisfies ChartConfig;
 
 <Histogram config={config} values={values} binCount={10} className="h-[320px] w-[560px]" />;

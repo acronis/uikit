@@ -19,16 +19,13 @@ and the label field (`nameKey`) — it renders a themed recharts pie chart (tool
 and legend included), so you don't hand-compose recharts children.
 
 Unlike the cartesian charts, a pie plots a **single** `dataKey` across rows and
-names each slice by `nameKey`. Slice colors are supplied by the caller through
-`config`, **keyed by each slice's `nameKey` value**: `PieChart` turns those into
-the `--color-<name>` custom properties its slices fill from.
+names each slice by `nameKey`.
 
-> **Design-pending v1**, ported from the demo `PieChartPlayground`. There is no
-> chart token tier yet, so the example colors reference the shared brand/status
-> tokens — a dedicated `--ui-chart-*` data-viz palette is pending an upstream
-> design pass. `--ui-background-status-strong-*` is chromatic in every brand;
-> `--ui-background-brand-secondary` is brand-dependent, so it is not color-stable
-> across brands until the real palette lands.
+Slice colors come from the `palette` prop, not from `config` — see
+[Palettes](/components/chart#palettes). Each `config` entry, **keyed by a slice's
+`nameKey` value**, maps that slice to a `label` and an optional `tone` that
+re-points it within the palette. `PieChart` resolves them into the
+`--color-<name>` custom properties its slices fill from.
 
 ## Examples
 
@@ -47,10 +44,10 @@ const data = [
 ];
 
 const config = {
-  Chrome: { label: 'Chrome', color: 'var(--ui-background-brand-secondary)' },
-  Safari: { label: 'Safari', color: 'var(--ui-background-status-strong-danger)' },
-  Firefox: { label: 'Firefox', color: 'var(--ui-background-status-strong-success)' },
-  Edge: { label: 'Edge', color: 'var(--ui-background-status-strong-warning)' },
+  Chrome: { label: 'Chrome' },
+  Safari: { label: 'Safari' },
+  Firefox: { label: 'Firefox' },
+  Edge: { label: 'Edge' },
 } satisfies ChartConfig;
 
 <PieChart

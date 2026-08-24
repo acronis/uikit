@@ -33,10 +33,10 @@ const data = [
 ];
 
 const config = {
-  Chrome: { label: 'Chrome', color: 'rgb(23 99 207)' },
-  Safari: { label: 'Safari', color: 'rgb(220 53 69)' },
-  Firefox: { label: 'Firefox', color: 'rgb(34 139 79)' },
-  Edge: { label: 'Edge', color: 'rgb(212 149 42)' },
+  Chrome: { label: 'Chrome' },
+  Safari: { label: 'Safari' },
+  Firefox: { label: 'Firefox' },
+  Edge: { label: 'Edge' },
 } satisfies ChartConfig;
 
 function renderChart(
@@ -117,8 +117,8 @@ describe('RadialBarChart', () => {
   it('wires each arc color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-Chrome: rgb(23 99 207)');
-    expect(style).toContain('--color-Edge: rgb(212 149 42)');
+    expect(style).toContain('--color-Chrome: var(--ui-dataviz-categorical-1)');
+    expect(style).toContain('--color-Edge: var(--ui-dataviz-categorical-4)');
   });
 
   it('draws one arc per row, filled from its config color', () => {
@@ -628,8 +628,8 @@ describe('RadialBarChart gauge, multi-metric and geometry props', () => {
   it('accepts multi-metric dataKeys', () => {
     const { container } = renderChart({
       config: {
-        used: { label: 'Used', color: 'rgb(23 99 207)' },
-        quota: { label: 'Quota', color: 'rgb(212 149 42)' },
+        used: { label: 'Used' },
+        quota: { label: 'Quota' },
       },
       data: [{ tier: 'Production', used: 72, quota: 90 }],
       dataKeys: ['used', 'quota'],
@@ -638,8 +638,8 @@ describe('RadialBarChart gauge, multi-metric and geometry props', () => {
       valueDomain: [0, 100],
     });
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-used: rgb(23 99 207)');
-    expect(style).toContain('--color-quota: rgb(212 149 42)');
+    expect(style).toContain('--color-used: var(--ui-dataviz-categorical-1)');
+    expect(style).toContain('--color-quota: var(--ui-dataviz-categorical-2)');
   });
 
   it('sizes each arc from barSize and spaces the bands with barCategoryGap', () => {
@@ -672,8 +672,8 @@ describe('RadialBarChart gauge, multi-metric and geometry props', () => {
     const between = (barGap?: number) => {
       const { container, unmount } = renderChart({
         config: {
-          used: { label: 'Used', color: 'rgb(23 99 207)' },
-          quota: { label: 'Quota', color: 'rgb(212 149 42)' },
+          used: { label: 'Used' },
+          quota: { label: 'Quota' },
         },
         data: [{ tier: 'Production', used: 72, quota: 90 }],
         dataKeys: ['used', 'quota'],

@@ -8,6 +8,7 @@ import {
 } from 'recharts';
 
 import { ScatterChart } from '../scatter-chart';
+import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -46,8 +47,8 @@ const series = [
 ];
 
 const config = {
-  classA: { label: 'Class A', color: 'var(--ui-background-brand-secondary)' },
-  classB: { label: 'Class B', color: 'var(--ui-background-status-strong-danger)' },
+  classA: { label: 'Class A' },
+  classB: { label: 'Class B' },
 } satisfies ChartConfig;
 
 const meta = {
@@ -78,6 +79,7 @@ const meta = {
     className: 'h-[360px] w-[520px]',
   },
   argTypes: {
+    ...paletteArgTypes,
     shape: {
       control: 'inline-radio',
       options: ['circle', 'square', 'triangle', 'diamond', 'star', 'cross', 'wye'],

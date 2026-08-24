@@ -14,17 +14,17 @@ Scenario: Render a chart
 ```
 
 ```gherkin
-Scenario: Series colors from config
-  Given a config entry { desktop: { color: 'var(--ui-background-brand-secondary)' } }
+Scenario: Series colors from palette
+  Given a config entry { desktop: { label: 'Desktop' } } and palette={ type: 'categorical' }
   Then a `--color-desktop` custom property is injected scoped to this chart
+  And the value is the first stop of the categorical palette
   And series referencing fill="var(--color-desktop)" paint with that color
 ```
 
 ```gherkin
-Scenario: Per-theme series colors
-  Given a config entry with { theme: { light, dark } } instead of a single color
-  Then the light value applies by default
-  And the dark value applies under [data-theme='dark']
+Scenario: Series tone override
+  Given a config entry with { failed: { tone: { status: 'danger' } } } and palette={ type: 'status' }
+  Then the `--color-failed` custom property resolves to the danger status token
 ```
 
 ```gherkin
@@ -43,7 +43,8 @@ Scenario: Legend
 ```
 
 ```gherkin
-Scenario: Config without colors
-  Given a config whose entries have only labels (no color / theme)
-  Then no <style> is injected and series fall back to recharts defaults
+Scenario: Default palette
+  Given a ChartContainer with no explicit palette prop
+  Then the categorical palette is used
+  And each series takes the next categorical stop in config-declaration order
 ```

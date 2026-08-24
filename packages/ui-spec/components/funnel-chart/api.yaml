@@ -22,9 +22,10 @@ contract:
       type: ChartConfig
       required: true
       description: >-
-        Per-stage map of label / color, keyed by the stage's `nameKey` value
-        (from the shared Chart primitives). Turned into `--color-<name>` custom
-        properties. Colors are caller-supplied.
+        Stages take their colour from the container's `palette`; each entry,
+        keyed by the stage's `nameKey` value, maps that stage to a `label` and an
+        optional `tone`. Resolved into the `--color-<name>` custom properties the
+        segments fill from.
     - name: dataKey
       type: string
       required: true

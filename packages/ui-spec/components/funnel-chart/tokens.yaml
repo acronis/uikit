@@ -2,10 +2,11 @@ spec_version: '1.0'
 component: FunnelChart
 
 # References only. Values live in @acronis-platform/tokens-pd. FunnelChart has no
-# token tier of its own — stage colors are supplied by the caller via `config`
-# (a dedicated `--ui-chart-*` data-viz palette is pending an upstream design
-# pass). The tooltip chrome is inherited from the shared Chart primitives; the
-# labels use the shared chart label tokens, picked by where each label sits.
+# token tier of its own, and needs none: stage colours come from the shared
+# `--ui-dataviz-*` palettes on the semantic tier, resolved by ChartContainer out
+# of the `palette` prop. The tooltip chrome is inherited from the shared Chart
+# primitives; the labels use the shared chart label tokens, picked by where each
+# label sits.
 source: '@acronis-platform/tokens-pd'
 
 tokens:

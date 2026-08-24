@@ -2,10 +2,10 @@ spec_version: '1.0'
 component: PieChart
 
 # References only. Values live in @acronis-platform/tokens-pd. PieChart has no
-# token tier of its own — slice colors are supplied by the caller via `config`
-# (a dedicated `--ui-chart-*` data-viz palette is pending an upstream design
-# pass). The chrome (tooltip, legend) is inherited from the shared Chart
-# primitives, which resolve the semantic tokens below.
+# token tier of its own, and needs none: slice colours come from the shared
+# `--ui-dataviz-*` palettes on the semantic tier, resolved by ChartContainer out
+# of the `palette` prop. The chrome (tooltip, legend) is inherited from the
+# shared Chart primitives, which resolve the semantic tokens below.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
@@ -25,7 +25,7 @@ tokens:
     description: >-
       Fill of a data label placed on the slice itself (any on-arc
       `labelPosition`) — white in both themes, so it survives a saturated
-      caller-supplied slice colour.
+      palette slice colour.
   - name: --ui-text-on-surface-secondary
     affects: legend-content
     description: >-

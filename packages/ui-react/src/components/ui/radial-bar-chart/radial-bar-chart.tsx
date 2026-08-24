@@ -22,6 +22,7 @@ import {
   resolveLabelFillClass,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartPalette,
   type ChartAnimationProps,
   type ChartDataLabelProps,
   type ChartTooltipContentProps,
@@ -488,14 +489,19 @@ export interface RadialBarChartProps
     Omit<React.ComponentProps<'div'>, 'children'>,
     ChartAnimationProps,
     ChartDataLabelProps {
+  /**
+   * The dataviz palette this chart's series are painted from. Series that
+   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   */
+  palette?: ChartPalette;
   /** Row-per-arc data. Each object holds the arc's `nameKey` label + its `dataKey` numeric value. */
   data: ReadonlyArray<RadialBarChartDatum>;
   /**
-   * Per-arc map of `label` / `color`, keyed by the arc's `nameKey` value — or, in
-   * multi-metric mode, by each `dataKeys` entry (imported from the shared `Chart`
-   * primitives). Turned into `--color-<name>` custom properties. Colors are
-   * caller-supplied — reference an existing semantic `--ui-*` token; there is no
-   * chart palette tier yet.
+   * Per-arc map of `label` / `icon` / `tone`, keyed by the arc's `nameKey` value
+   * — or, in multi-metric mode, by each `dataKeys` entry (imported from the
+   * shared `Chart` primitives). Turned into `--color-<name>` custom properties.
+   * Series take their colour from the container's `palette`; each entry maps a
+   * key to a `label` and an optional `tone`.
    */
   config: ChartConfig;
   /** Numeric field that sizes each arc. Ignored when `dataKeys` is set. */
@@ -619,6 +625,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
     {
       className,
       config,
+      palette,
       data,
       dataKey,
       dataKeys,
@@ -793,7 +800,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
 
     return (
       <div ref={ref} className={cn(className)} {...props}>
-        <ChartContainer config={config} className="size-full">
+        <ChartContainer config={config} palette={palette} className="size-full">
           <RechartsRadialBarChart
             data={plotData}
             // Only meaningful for the single-metric mapping; in multi-metric and

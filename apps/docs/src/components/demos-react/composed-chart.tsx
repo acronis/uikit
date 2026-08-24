@@ -11,14 +11,11 @@ const data = [
   { month: 'Jun', revenue: 4800, profit: 2410 },
 ];
 
-// Series colors are caller-supplied via `config`, keyed by each series' key (no
-// chart token tier yet) — here referencing the shared semantic brand/status
-// tokens.
+// Series colors come from the chart's default categorical palette.
 const config = {
-  revenue: { label: 'Revenue', color: 'var(--ui-background-brand-secondary)' },
+  revenue: { label: 'Revenue' },
   profit: {
-    label: 'Profit',
-    color: 'var(--ui-background-status-strong-success)',
+    label: 'Profit'
   },
 } satisfies ChartConfig;
 

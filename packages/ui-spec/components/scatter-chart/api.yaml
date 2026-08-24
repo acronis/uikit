@@ -19,9 +19,10 @@ contract:
       type: ChartConfig
       required: true
       description: >-
-        Per-series map of label / color, keyed by `series[].key` (from the shared
-        Chart primitives). Turned into `--color-<key>` custom properties. Colors
-        are caller-supplied.
+        Series take their colour from the container's `palette`; each entry,
+        keyed by a `series[].key`, maps that series to a `label` and an optional
+        `tone`. Resolved into the `--color-<key>` custom properties the points
+        fill from.
     - name: xKey
       type: string
       required: true

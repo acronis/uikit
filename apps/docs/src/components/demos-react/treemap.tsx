@@ -10,15 +10,13 @@ const data = [
   { name: 'Solid', size: 500, count: 5 },
 ];
 
-// Cell colors are caller-supplied via `config`, keyed by each leaf's nameKey
-// value (no chart token tier yet) — here referencing the shared semantic
-// brand/status tokens.
+// Cell colors come from the chart's default categorical palette.
 const config = {
-  React: { label: 'React', color: 'var(--ui-background-brand-secondary)' },
-  Vue: { label: 'Vue', color: 'var(--ui-background-status-strong-success)' },
-  Angular: { label: 'Angular', color: 'var(--ui-background-status-strong-danger)' },
-  Svelte: { label: 'Svelte', color: 'var(--ui-background-status-strong-warning)' },
-  Solid: { label: 'Solid', color: 'var(--ui-background-status-strong-critical)' },
+  React: { label: 'React' },
+  Vue: { label: 'Vue' },
+  Angular: { label: 'Angular' },
+  Svelte: { label: 'Svelte' },
+  Solid: { label: 'Solid' },
 } satisfies ChartConfig;
 
 export function TreemapDemo() {

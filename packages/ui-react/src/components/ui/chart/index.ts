@@ -5,14 +5,35 @@ export {
   ChartLegend,
   ChartLegendContent,
   ChartStyle,
+  resolveChartColors,
 } from './chart';
 export type {
   ChartConfig,
+  ResolvedChartConfig,
   ChartContainerProps,
   ChartTooltipContentProps,
   ChartLegendContentProps,
   ChartTooltipContentType,
 } from './chart';
+export {
+  CHART_CATEGORICAL_TOKENS,
+  CHART_SEQUENTIAL_TOKENS,
+  CHART_DIVERGING_TOKENS,
+  CHART_STATUS_TOKENS,
+  CHART_DEFAULT_PALETTE,
+  listPaletteStops,
+  listPaletteChoices,
+  resolveSeriesColor,
+  findDuplicateTones,
+} from './chart-palette';
+export type {
+  ChartPalette,
+  ChartSeriesTone,
+  ChartSequentialRamp,
+  ChartDivergingPair,
+  ChartStatusTone,
+  ResolveSeriesColorOptions,
+} from './chart-palette';
 export {
   formatCompactNumber,
   formatPercent,

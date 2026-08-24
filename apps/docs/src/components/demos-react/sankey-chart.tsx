@@ -4,8 +4,8 @@ import { SankeyChart, type ChartConfig } from '@acronis-platform/ui-react';
 
 // A certification-compliance flow: all tenants split into certified / uncertified,
 // then certified by validity. Node `name`s are CSS-safe color keys; the display
-// text + color come from `config` (no chart token tier yet, so colors reference
-// shared semantic status tokens — chromatic in every brand).
+// text + color come from `config`; pass `palette={{ type: 'status' }}` to route
+// the `tone: { status }` entries through the status palette.
 const data = {
   nodes: [
     { name: 'all' },
@@ -21,30 +21,25 @@ const data = {
     { source: 1, target: 3, value: 174 },
     { source: 1, target: 4, value: 21 },
     { source: 1, target: 5, value: 14 },
-  ],
+  ]
 };
 
 const config = {
-  all: { label: 'All tenants', color: 'var(--ui-background-status-strong-info)' },
+  all: { label: 'All tenants' },
   certified: {
-    label: 'Certified',
-    color: 'var(--ui-background-status-strong-info)',
+    label: 'Certified'
   },
   noCert: {
-    label: 'No certification',
-    color: 'var(--ui-background-status-strong-neutral)',
+    label: 'No certification'
   },
   valid: {
-    label: 'Valid',
-    color: 'var(--ui-background-status-strong-success)',
+    label: 'Valid'
   },
   expiring: {
-    label: 'Expiring',
-    color: 'var(--ui-background-status-strong-warning)',
+    label: 'Expiring'
   },
   expired: {
-    label: 'Expired',
-    color: 'var(--ui-background-status-strong-danger)',
+    label: 'Expired'
   },
 } satisfies ChartConfig;
 
