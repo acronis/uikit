@@ -202,7 +202,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
     <td
       ref={ref}
       className={cn(
-        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm leading-6 bg-[var(--ui-table-data-cell-color-idle)] [&:has([role=checkbox])]:pe-0',
+        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm leading-6 bg-[var(--ui-table-data-cell-color-idle)] transition-colors [&:has([role=checkbox])]:pe-0',
         wrap
           ? 'whitespace-normal'
           : 'h-[var(--ui-table-global-cell-min-height)]',
@@ -238,7 +238,7 @@ const TableSelectCell = React.forwardRef<
     <Comp
       ref={ref}
       className={cn(
-        'w-8 h-[var(--ui-table-global-cell-min-height)] ps-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle',
+        'w-8 h-[var(--ui-table-global-cell-min-height)] ps-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle transition-colors',
         header
           ? 'bg-[var(--ui-table-header-cell-color-idle)]'
           : 'bg-[var(--ui-table-data-cell-color-idle)]',
