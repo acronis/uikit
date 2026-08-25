@@ -22,3 +22,12 @@ tokens:
     description: >-
       Loading-state spinner ring color — inherited from the shared `Spinner`
       (via `text-secondary`), listed here for completeness.
+  - name: --ui-background-status-off
+    affects: glyph
+    description: >-
+      The per-type empty-state artwork. Set once on the illustration's container
+      and inherited through `currentColor`, so brand and theme overrides reach
+      every path. Figma binds the artwork to `components/Avatar/color/blue`; this
+      is the semantic token with the identical light/dark pair, and "status off"
+      is what an empty widget is — a chart referencing Avatar's component tier
+      would be a coupling with nothing behind it.

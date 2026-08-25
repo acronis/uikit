@@ -202,6 +202,7 @@ export const States: Story = {
           {...args}
           key={state}
           state={state}
+          variant="area"
           header={{ title: state, actions: <MoreActions /> }}
           stateAction={
             state === 'error' ? (

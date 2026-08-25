@@ -19,7 +19,8 @@ plot, or when the fetch failed. It's a compact status block: a leading glyph
 chart would occupy.
 
 Drive it with the required `state` prop (`loading` | `empty` | `error`). Each
-state carries a default label; override it with `message`. The error state also
+state carries a default description (`"Data is loading…"` / `"No data found"` /
+`"Something went wrong"`); pass `description` to override it. The error state also
 takes an optional `action` (e.g. a retry button).
 
 > **Design-pending v1**, ported from the Figma InputSelect dropdown states and
@@ -56,10 +57,10 @@ function Sales({ status, data, config, refetch }) {
 }
 ```
 
-Override a state's default label with `message`:
+Override the default description:
 
 ```tsx
-<ChartState state="empty" message="No results for the selected range" />
+<ChartState state="empty" variant="bar" description="No results for the selected range" />
 ```
 
 ## Accessibility
@@ -100,3 +101,47 @@ inbox, warning) carry a direction, so none of them flip.
   path="../../packages/ui-react/src/components/ui/chart-state/chart-state.tsx"
   name="ChartStateProps"
 />
+
+## Per-type empty states
+
+`empty` is the one state the design draws per chart type. Pass `variant` and the
+placeholder shows that type's silhouette instead of a generic glyph, so an empty
+widget still says what it *would* have shown:
+
+```tsx
+<ChartState state="empty" variant="donut" />
+<ChartState state="empty" variant="funnel" description="Conversion by stage" />
+```
+
+Twelve variants — `area` · `bar` · `line` · `donut` · `radial` · `funnel` ·
+`radar` · `sankey` · `scatter` · `treemap` · `table` · `text`. `donut` and
+`radial` share a ring: a radial-bar widget with no data has nothing to tell it
+apart.
+
+The caption is one line in one style for all states — `body/default`,
+`text/onSurface/primary`, not muted. For the `empty` state the mockups place it
+under the silhouette as "Widget description": the artwork already says "no data",
+so the useful sentence is what the widget would show once it has data. Without a
+`description` it defaults to `"No data found"`, identical to `loading` and `error`
+falling back to their own defaults.
+
+Without a `variant` the `empty` state shows no artwork — just the text.
+`loading` and `error` share one treatment and ignore `variant`.
+
+The artwork is one colour, set on its container and inherited through
+`currentColor`, so brand and theme overrides reach every path.
+
+## Not `WidgetPlaceholder`
+
+Two components, two jobs:
+
+- **`ChartState`** goes *inside* a chart's slot — it fills the slot and renders
+  one of three states. This is what [`ChartWidget`](/components/chart-widget)
+  swaps in for its plot.
+- **[`WidgetPlaceholder`](/components/widget-placeholder)** is a composable
+  skeleton for a whole tile: its own header, footer and action parts, plus an
+  `interactive` affordance. For a dashboard widget that isn't a chart, or one
+  still being set up.
+
+Reach for `ChartState` when a chart has no data; for `WidgetPlaceholder` when the
+widget itself isn't there yet.

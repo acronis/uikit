@@ -6,8 +6,10 @@ category: data-display
 description: >-
   A shared loading / empty / error placeholder for the chart types, rendered in
   place of the chart inside the same sized slot. A compact status block — a
-  leading glyph (spinner / inbox / warning) over a centered label, with an
-  optional retry action for the error state. Ported from the Figma InputSelect
-  dropdown states; kept visually in step with the shipped `InputSelectStatus`.
-  Design-pending v1 (no `--ui-chart-*` tier yet).
+  leading glyph over a centered label, with an optional retry action for the
+  error state. The `empty` state draws the silhouette the design defines for
+  each chart type (`variant`), plus an optional "Widget description" line;
+  `loading` and `error` share one treatment. Distinct from
+  `WidgetPlaceholder`, which is the composable skeleton for a widget that isn't
+  a chart — see behavior.md.
 since: 0.58.0

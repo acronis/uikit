@@ -5,7 +5,11 @@ import { useRender } from '@base-ui/react/use-render';
 
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, type CardHeaderProps } from '../card';
-import { ChartState, type ChartStateProps } from '../chart-state';
+import {
+  ChartState,
+  type ChartStateProps,
+  type ChartStateVariant,
+} from '../chart-state';
 
 // A dashboard chart widget: the Card every chart mockup is wrapped in, plus the
 // one thing a Card doesn't know about — what the body shows while there is no
@@ -46,6 +50,12 @@ export interface ChartWidgetProps extends Omit<
    */
   render?: useRender.RenderProp;
   /**
+   * Which chart the widget holds. Only used while `state="empty"`, to pick the
+   * silhouette the design draws for that chart type — the widget itself needs
+   * no size, so this carries nothing else.
+   */
+  variant?: ChartStateVariant;
+  /**
    * The card header, forwarded verbatim to `CardHeader`. Everything that
    * component takes works here — `title`, `actions` (the ⋯ menu), `extras` (a
    * filter chip), `isDraggable`, `hasRename`, … Omit it for a header-less
@@ -62,8 +72,11 @@ export interface ChartWidgetProps extends Omit<
    * yet. `error` also gives the card its error border.
    */
   state?: ChartStateProps['state'];
-  /** Overrides the placeholder's default label. */
-  stateMessage?: ChartStateProps['message'];
+  /**
+   * Text below the placeholder illustration or glyph — defaults to
+   * `"Data is loading…"` / `"No data found"` / `"Something went wrong"`.
+   */
+  stateDescription?: ChartStateProps['description'];
   /** Trailing action on the `error` placeholder — e.g. a "Try again" button. */
   stateAction?: ChartStateProps['action'];
   /**
@@ -80,10 +93,11 @@ const ChartWidget = React.forwardRef<HTMLDivElement, ChartWidgetProps>(
   (
     {
       className,
+      variant,
       header,
       metric,
       state,
-      stateMessage,
+      stateDescription,
       stateAction,
       bodyClassName,
       children,
@@ -118,7 +132,8 @@ const ChartWidget = React.forwardRef<HTMLDivElement, ChartWidgetProps>(
           {state ? (
             <ChartState
               state={state}
-              message={stateMessage}
+              variant={variant}
+              description={stateDescription}
               action={stateAction}
             />
           ) : (
