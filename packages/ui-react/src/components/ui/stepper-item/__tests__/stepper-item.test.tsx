@@ -50,6 +50,17 @@ describe('StepperItem', () => {
     );
   });
 
+  // The tier's typography (family / 14px / 500 / 24px / letter-spacing) is a
+  // generated class, applied by name so nothing is dropped in transcription —
+  // hand-written utilities previously left the weight at the default 400.
+  it("applies the tier's generated text-style class", () => {
+    const { container } = render(<StepperItem avatar={avatar} label="Step" />);
+
+    expect(container.firstElementChild).toHaveClass(
+      'ui-stepper-item-global-container-text-style'
+    );
+  });
+
   it('keeps the current variant highlighted regardless of state', () => {
     for (const state of ['idle', 'hover', 'active', 'focus'] as const) {
       const { container } = render(

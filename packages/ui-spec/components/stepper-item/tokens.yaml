@@ -15,6 +15,13 @@ component: StepperItem
 #     `padding-r` (16px) are separate tokens, not one shared value;
 #   - the completed step's interaction states gained a fourth role,
 #     `container-color-focus-ring`, alongside `-hover` and `-active`.
+# The label's typography ships as the generated class
+# `.ui-stepper-item-global-container-text-style` (family / size / weight 500 /
+# line-height / letter-spacing), which tokens-pd emits alongside the Stepper
+# tier, rather than as individual `--ui-*` custom properties — so it is not
+# listed below. The implementation consumes it by applying that class name
+# verbatim.
+#
 # The variables that color the digit *inside* the avatar circle
 # (`components/Stepper/Item/{current,future}/label/color/*`) are intentionally
 # not consumed: the marker is supplied and styled by the caller, so those

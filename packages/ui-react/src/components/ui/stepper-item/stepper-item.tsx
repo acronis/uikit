@@ -42,8 +42,16 @@ import { cn } from '@/lib/utils';
 // `ps-`/`pe-` so the asymmetry mirrors with the flex order under `dir="rtl"`
 // (Figma's `paddingLeft/Right` naming describes its LTR frame, not a physical
 // side).
+//
+// The label's typography comes from the same tier as a generated *class*
+// (`.ui-stepper-item-global-container-text-style` — family / 14px / 500 / 24px /
+// letter-spacing) rather than as `--ui-*` custom properties, so it is applied
+// verbatim by name, the way `Alert`, `InputOTP`, and the sidebars apply theirs.
+// Transcribing it into discrete utilities would silently drop the properties
+// that have no utility here (family, letter-spacing) and drift when the tier
+// changes.
 const stepperItemVariants = cva(
-  'inline-flex items-center gap-[var(--ui-stepper-item-global-container-gap)] rounded-[var(--ui-stepper-item-global-container-border-radius)] ps-[var(--ui-stepper-item-global-container-padding-l)] pe-[var(--ui-stepper-item-global-container-padding-r)] py-[var(--ui-stepper-item-global-container-padding-y)] text-sm leading-6 outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
+  'ui-stepper-item-global-container-text-style inline-flex items-center gap-[var(--ui-stepper-item-global-container-gap)] rounded-[var(--ui-stepper-item-global-container-border-radius)] ps-[var(--ui-stepper-item-global-container-padding-l)] pe-[var(--ui-stepper-item-global-container-padding-r)] py-[var(--ui-stepper-item-global-container-padding-y)] outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
   {
     variants: {
       variant: {
