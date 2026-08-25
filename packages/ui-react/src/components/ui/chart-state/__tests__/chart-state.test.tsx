@@ -83,11 +83,10 @@ describe('ChartState', () => {
       ).toBeGreaterThan(0);
     });
 
-    it('keeps the generic glyph when no variant is given', () => {
+    it('shows only text when no variant is given', () => {
       const { container } = render(<ChartState state="empty" />);
 
-      // The inbox glyph is an icon component, so still an <svg> — what
-      // distinguishes them is that the illustration is coloured by its parent.
+      // No illustration is mounted when there is no variant — just the label.
       expect(
         container.querySelector('[class*="ui-background-status-off"]')
       ).toBeNull();
@@ -104,6 +103,7 @@ describe('ChartState', () => {
         'radial',
         'funnel',
         'radar',
+        'sankey',
         'scatter',
         'treemap',
         'table',
@@ -118,9 +118,9 @@ describe('ChartState', () => {
         seen.set(key, (seen.get(key) ?? 0) + 1);
       }
 
-      // 11 variants, 10 distinct silhouettes: the design draws one ring for both
+      // 12 variants, 11 distinct silhouettes: the design draws one ring for both
       // donut and radial.
-      expect(seen.size).toBe(10);
+      expect(seen.size).toBe(11);
       expect([...seen.values()].filter((n) => n === 2)).toHaveLength(1);
     });
 

@@ -58,5 +58,5 @@ than being re-declared on the widget.
 ## Localization
 
 Every string is the caller's: the header's `title` / `description`, the metric's
-own labels, `stateMessage`, and the label inside `stateAction`. The only
-literals are `ChartState`'s per-state defaults, which `stateMessage` overrides.
+own labels, `stateDescription`, and the label inside `stateAction`. The only
+literals are `ChartState`'s per-state defaults, which `stateDescription` overrides.

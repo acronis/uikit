@@ -11,9 +11,6 @@ tokens:
   - name: --ui-text-on-surface-primary
     affects: label
     description: The state label text (bridged as `text-foreground`).
-  - name: --ui-glyph-on-status-info
-    affects: glyph
-    description: Empty-state inbox glyph color.
   - name: --ui-glyph-on-status-warning
     affects: glyph
     description: Error-state warning glyph color.

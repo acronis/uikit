@@ -1,5 +1,5 @@
 ---
-'@acronis-platform/ui-react': minor
+'@acronis-platform/ui-react': major
 ---
 
 feat(chart-state): draw the empty state per chart type
