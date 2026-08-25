@@ -1,27 +1,44 @@
 'use client';
 
 import {
+  Card,
+  CardContent,
+  CardHeader,
   Section,
   SectionContent,
-  SectionDescription,
   SectionHeader,
-  SectionTitle,
 } from '@acronis-platform/ui-react';
+
+function DemoCard({ title, body }: { title: string; body: string }) {
+  return (
+    <Card>
+      <CardHeader title={title} />
+      <CardContent className="pt-4">
+        <p className="text-sm">{body}</p>
+      </CardContent>
+    </Card>
+  );
+}
 
 export function SectionDemo() {
   return (
-    <div style={{ width: 480 }}>
-      <Section>
-        <SectionHeader>
-          <SectionTitle>Backup plans</SectionTitle>
-          <SectionDescription>
-            Manage how your workloads are backed up and retained.
-          </SectionDescription>
-        </SectionHeader>
+    <div style={{ width: 720 }}>
+      <Section hasBottomBorder>
+        <SectionHeader
+          title="General"
+          description="Region, tenant, and naming."
+          hasDescription
+        />
         <SectionContent>
-          <div className="rounded-md bg-[var(--ui-background-surface-secondary)] px-4 py-6 text-sm">
-            Section content
-          </div>
+          <DemoCard title="Region" body="Frankfurt (eu-central-1)." />
+        </SectionContent>
+      </Section>
+      <Section variant="grid3">
+        <SectionHeader title="Protection" />
+        <SectionContent>
+          <DemoCard title="Backup" body="Nightly at 02:00." />
+          <DemoCard title="Replication" body="Every 4 hours." />
+          <DemoCard title="Archive" body="Monthly to cold storage." />
         </SectionContent>
       </Section>
     </div>

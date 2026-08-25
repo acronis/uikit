@@ -25,6 +25,16 @@ Accordion's chevron uses). Every other visual decision — header layout,
 spacing, background, borders — stays owned by whichever component composes
 it.
 
+When `collapsible` is `true`, `Root` also defaults to `display: contents`
+(applied as `contents!`, so it wins over a `render`-prop element's own
+conflicting display class), so it never becomes a box in the consumer's
+flex/grid layout — this is what lets `Section`'s root `gap` apply directly
+across its header and content instead of being silently dropped by the
+wrapper. Pass an important-modified display utility (e.g.
+`className="flex!"`) if you rely on `Root` being a real box —
+`tailwind-merge` resolves the conflict in your favor; a non-important utility
+(`flex`) won't be deduped against `contents!` and loses the cascade to it.
+
 When `collapsible` is `false`, `children` render directly with no wrapping
 element — matching the Figma `isCollapsable=false` state — unless a
 ref/className/style/render/DOM prop is supplied, in which case `Root` and

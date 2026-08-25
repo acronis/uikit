@@ -1,0 +1,29 @@
+---
+'@acronis-platform/ui-react': major
+---
+
+Rebuild `Section` from its Figma design (node `8262:6179`), replacing the
+draft layout primitive ported from `ui-legacy`. It is now a page-level titled
+band that groups cards — or a table — with four content layouts on the root
+(`column1`, `column2-70-30`, `grid3`, `table`), an optional bottom divider
+(`hasBottomBorder`), and a header carrying the 20px title, an optional
+description, an optional toggle switch, inline extras, and end-aligned
+actions. The root publishes its `variant` through context, so `SectionHeader`
+and `SectionContent` never repeat it, and the `table` variant sits completely
+flush so its rows bleed to the page edges. Collapsing is a composition with
+the shared `AccordionContainer` primitive, the same as `Card`.
+
+**Breaking:** `SectionTitle` and `SectionDescription` are removed — the title
+and description are now `SectionHeader` props (`title`, `description`,
+`hasDescription`), matching `CardHeader`. Replace
+`<SectionHeader><SectionTitle>…</SectionTitle><SectionDescription>…</SectionDescription></SectionHeader>`
+with `<SectionHeader title="…" description="…" hasDescription />`.
+
+Note the element also changes: `SectionTitle` rendered an `<h2>`; the `title`
+prop renders a `<p>` instead, since a section's place in the document outline
+depends on the page around it (see the Accessibility section of the
+[`Section` docs](https://acronis.github.io/uikit/docs/components/section)). If you
+relied on the heading for document-outline structure or an `aria-labelledby`
+target, supply your own heading via `SectionHeader`'s `children` slot (not
+`render`, which replaces the entire header row), omit `title`, and point the
+root's `aria-labelledby` at it.

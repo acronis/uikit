@@ -1,35 +1,197 @@
 spec_version: '1.0'
 component: Section
 
-# Section and its parts take only native element attributes; no component-specific
-# props.
+# Framework-agnostic contract for the compound `Section` family. `variant` and
+# `hasBottomBorder` live on the root; every other property belongs to a part
+# (marked in its description). Collapsing is deliberately NOT a property: the
+# design's `isCollapsable` variant is expressed by composing the root with the
+# shared `AccordionContainer` disclosure primitive, the same as `Card`.
 contract:
-  properties: []
-  events: []
+  properties:
+    - name: variant
+      type: "'column1' | 'column2-70-30' | 'grid3' | 'table'"
+      required: false
+      default: column1
+      description: >-
+        Root. Which content layout the section uses. `column1` is one
+        full-width area; `column2-70-30` splits the body into a wide and a
+        narrow column; `grid3` flows children into a three-column card grid;
+        `table` drops the root inset entirely so a table's rows run
+        edge-to-edge. The root publishes this to its header and content parts,
+        so the consumer sets it in exactly one place.
+
+    - name: hasBottomBorder
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Root. Draws a bottom divider plus the matching bottom padding,
+        separating this band from the next one stacked below it. Without it the
+        root reserves no bottom padding at all, because the next section opens
+        with its own top inset. The `table` variant stays flush either way and
+        only gains the divider.
+
+    - name: title
+      type: string
+      required: false
+      default: undefined
+      description: >-
+        Header. The section title, at the 20px medium "headings/section" scale.
+        Renders nothing when omitted.
+
+    - name: description
+      type: string
+      required: false
+      default: undefined
+      description: Header. Supporting text under the title; shown only with `hasDescription`.
+
+    - name: hasDescription
+      type: boolean
+      required: false
+      default: false
+      description: Header. Shows `description` below the title.
+
+    - name: isSwitchable
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Header. Shows a toggle switch at the start of the header, for turning
+        the whole grouping on or off.
+
+    - name: switchChecked
+      type: boolean
+      required: false
+      default: undefined
+      description: Header. Controlled checked state of the header switch.
+
+    - name: defaultSwitchChecked
+      type: boolean
+      required: false
+      default: undefined
+      description: Header. Uncontrolled initial checked state of the header switch.
+
+    - name: switchDisabled
+      type: boolean
+      required: false
+      default: undefined
+      description: Header. Disables the header switch.
+
+    - name: switchLabel
+      type: string
+      required: false
+      default: Toggle section
+      description: Header. Accessible label for the header switch.
+
+    - name: extras
+      type: 'ReactNode'
+      required: false
+      default: undefined
+      description: Header. Content rendered inline next to the title (e.g. a tag).
+
+    - name: actions
+      type: 'ReactNode'
+      required: false
+      default: undefined
+      description: Header. Actions rendered at the end of the header row.
+
+    - name: isCollapsible
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Header. Renders the disclosure trigger at the end of the header. Only
+        has an effect inside a collapsible `AccordionContainer`, which owns the
+        open/closed state.
+
+    - name: collapseLabel
+      type: string
+      required: false
+      default: Collapse section
+      description: Header. Accessible label for the collapse trigger.
+
+    - name: secondaryContent
+      type: 'ReactNode'
+      required: false
+      default: undefined
+      description: >-
+        Content. The narrow (~30%) second column of the `column2-70-30`
+        layout. Ignored by every other variant, which has a single content
+        area.
+
+    - name: render
+      type: 'RenderProp'
+      required: false
+      default: undefined
+      description: >-
+        Base UI composition prop — replaces the rendered element with another
+        component while merging props and classes. Available on every part.
+        React-only; other frameworks use their own polymorphism.
+
+  events:
+    - name: switch-checked-change
+      payload: boolean
+      description: Header. Fires when the header switch is toggled.
+
+  content:
+    - name: default
+      description: >-
+        On the root, the section's parts (header, content). On the header,
+        an additional slot rendered after the title/description block and
+        before `actions` — used to supply a custom heading element (see
+        accessibility.md). On the content part, the body itself — the wide
+        column under `column2-70-30`, the grid items under `grid3`, and
+        everything under `column1` / `table`.
+
   methods: []
 
 adapters:
   react:
     component: Section
     status: implemented
-    import: "import { Section, SectionHeader, SectionTitle, SectionDescription, SectionContent } from '@acronis-platform/ui-react'"
+    import: "import { Section, SectionHeader, SectionContent } from '@acronis-platform/ui-react'"
     example: |
-      <Section>
-        <SectionHeader>
-          <SectionTitle>Backups</SectionTitle>
-          <SectionDescription>Manage your backup plans.</SectionDescription>
-        </SectionHeader>
-        <SectionContent>{children}</SectionContent>
+      <Section variant="grid3" hasBottomBorder>
+        <SectionHeader
+          title="Protection"
+          description="3 plans applied to 24 workloads."
+          hasDescription
+        />
+        <SectionContent>
+          <Card>…</Card>
+          <Card>…</Card>
+          <Card>…</Card>
+        </SectionContent>
       </Section>
+
+      // A 70/30 split.
+      <Section variant="column2-70-30">
+        <SectionHeader title="Storage" />
+        <SectionContent secondaryContent={<Card>…</Card>}>
+          <Card>…</Card>
+        </SectionContent>
+      </Section>
+
+      // Collapsible — a composition, not a prop.
+      <Section>
+        <AccordionContainer collapsible defaultOpen>
+          <SectionHeader title="Protection" isCollapsible />
+          <AccordionContainer.Content>
+            <SectionContent>…</SectionContent>
+          </AccordionContainer.Content>
+        </AccordionContainer>
+      </Section>
+
   vue:
     component: AvSection
     status: planned
     import: "import { AvSection } from '@acronis-platform/ui-vue'"
     example: |
-      <AvSection />
+      <AvSection variant="grid3" has-bottom-border />
+
   web-components:
     element: ui-section
     status: planned
     import: "import '@acronis-platform/ui-wc/section'"
     example: |
-      <ui-section></ui-section>
+      <ui-section variant="grid3" has-bottom-border></ui-section>

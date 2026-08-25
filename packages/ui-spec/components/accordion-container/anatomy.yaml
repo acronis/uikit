@@ -14,8 +14,16 @@ root:
     renders no wrapping element — children render directly — unless a ref,
     className, style, render, or other DOM prop is supplied, in which case it
     wraps children in a plain `div` so those aren't silently dropped. Ships no
-    visual classes in any case; it is layout-neutral inside whatever container
-    the consumer renders it in.
+    padding/background/border classes. When `collapsible` is true it defaults
+    to `display: contents` applied as `contents!` (Tailwind's important
+    modifier), so the Base UI `Collapsible.Root` it renders never becomes a
+    box in the consumer's flex/grid flow — a layout-transparency default, not
+    a styling opinion — and always wins over a `render`-prop element's own
+    conflicting display class regardless of stylesheet order. A consumer that
+    needs Root to be a real box passes an important-modified display utility
+    via `className` (e.g. `flex!`; merged with `tailwind-merge`, so it
+    replaces `contents!` — a non-important utility isn't deduped against it
+    and loses the cascade).
 
 parts:
   - id: accordion-container-trigger

@@ -271,6 +271,25 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  // The variant axis only changes the *content* layout, so the sample has to
+  // supply real body children (and, for `column2-70-30`, the second column)
+  // or three of the four snapshots would look identical.
+  section: {
+    extraImports: [
+      "import { SectionHeader, SectionContent } from '../section';",
+      "import { Card, CardHeader, CardContent } from '../../card';",
+    ],
+    sample: [
+      '',
+      '      <SectionHeader title="Protection" description="3 plans applied to 24 workloads." hasDescription />',
+      '      <SectionContent secondaryContent={<Card><CardHeader title="Quota" /><CardContent className="pt-4">1.2 TB of 2 TB used.</CardContent></Card>}>',
+      '        <Card><CardHeader title="Backup" /><CardContent className="pt-4">Nightly at 02:00.</CardContent></Card>',
+      '        <Card><CardHeader title="Replication" /><CardContent className="pt-4">Every 4 hours.</CardContent></Card>',
+      '        <Card><CardHeader title="Archive" /><CardContent className="pt-4">Monthly to cold storage.</CardContent></Card>',
+      '      </SectionContent>',
+      '    ',
+    ].join('\n'),
+  },
   'scroll-area': {
     props:
       'className="h-48 w-64 rounded-md border border-border [&_[data-slot=scroll-area-scrollbar]]:opacity-100"',
@@ -590,11 +609,6 @@ const RENDER: Record<string, RenderHint> = {
   grid: {
     // A layout primitive — needs child cells to render meaningfully. VR is covered
     // by the hand-written story (Default).
-    skip: true,
-  },
-  section: {
-    // A composition needing header/title/content children. VR is covered by the
-    // hand-written story (Default).
     skip: true,
   },
   'app-shell': {
