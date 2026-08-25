@@ -18,6 +18,14 @@ import { cn } from '@/lib/utils';
 // So there is no `step`/`currentStep`/`onNext` prop here by omission, not
 // oversight.
 //
+// That boundary is about these *components*, not about the package: a consumer
+// that would rather not hand-maintain one `StepperItem` block per step can opt
+// into `useWizard` (`src/hooks/use-wizard.ts`), a headless hook that holds the
+// step index and derives the `Stepper` summary props plus each step's
+// `variant` + avatar presentation. It is separate and optional — it renders
+// nothing, decides no button visibility, and `Wizard` neither knows nor
+// requires it.
+//
 // ── Reuse over new parts ──
 // The title row is functionally identical to `PageHeader`'s, so consumers place
 // `PageHeaderRow` / `PageHeaderTitle` / `PageHeaderActions` directly inside
@@ -39,8 +47,8 @@ import { cn } from '@/lib/utils';
 //
 // The body's 1024px cap is the one hardcoded number, and it is a plain layout
 // constant rather than a themed value — the same call `dialog.tsx` makes for its
-// `large` size's 832px. It is deliberately *not* written as
-// `var(--ui-breakpoint-lg)` even though that hand-authored bridge var also
+// `large` size's 832px. It deliberately does *not* read from the
+// `--ui-breakpoint-lg` bridge var even though that hand-authored var also
 // resolves to 1024px: a content column's max width and a viewport breakpoint are
 // independent facts that happen to coincide today, and tying them would make a
 // future change to either silently move the other. No `cva` variant either —

@@ -34,6 +34,15 @@ navigation events, and renders no buttons; `PageHeaderActions` is a slot the
 consumer fills. This is the same boundary `PageHeader` draws around its own
 actions slot.
 
+That is a statement about these components, not about the implementation
+package: the React adapter also ships an opt-in headless hook (`useWizard`,
+`packages/ui-react/src/hooks/use-wizard.ts`) that holds the step index and
+derives the `Stepper` summary props plus each step's `variant` and avatar
+treatment, so a consumer needn't hand-maintain one `StepperItem` block per step.
+It sits outside this spec's contract — it renders nothing, still leaves button
+visibility to the consumer, and does no validation, branching, skipping or
+persistence.
+
 Likewise there is no `WizardTitle` or `WizardActions`: the title row is
 functionally identical to a page header's, so it is `PageHeaderRow` and friends,
 reused. And there is no `WizardStepper` wrapper — the consumer places a plain

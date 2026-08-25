@@ -5,8 +5,14 @@ component: Wizard
 # component-specific props, and in particular no `step` / `currentStep` /
 # `onNext` / `onBack`: step state, navigation, and which of Cancel / Back /
 # Next / Submit shows on a given step are the consuming UI block's concern per
-# the design brief, not the kit's. The step indicator is a composed `Stepper`,
-# which takes its own `currentStep` / `totalSteps` props.
+# the design brief, not this component's. The step indicator is a composed
+# `Stepper`, which takes its own `currentStep` / `totalSteps` props.
+#
+# The React adapter additionally ships an opt-in headless hook (`useWizard`)
+# that holds the step index and derives the `Stepper`/`StepperItem` props from a
+# declared step list. It is not part of this contract: it renders nothing,
+# decides no button visibility, and `Wizard` neither knows nor requires it — a
+# non-React implementation is free to offer its own equivalent or none.
 contract:
   properties: []
   events: []

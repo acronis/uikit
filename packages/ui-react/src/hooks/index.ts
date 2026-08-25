@@ -24,3 +24,12 @@ export {
   type UseTableUrlStateOptions,
   type UseTableUrlStateResult,
 } from './use-table-url-state';
+export {
+  useWizard,
+  type WizardStep,
+  type WizardStepAvatarColor,
+  type WizardStepVariant,
+  type WizardStepState,
+  type UseWizardOptions,
+  type UseWizardResult,
+} from './use-wizard';

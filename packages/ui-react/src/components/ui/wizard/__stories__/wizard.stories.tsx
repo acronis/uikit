@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { useWizard, type WizardStep } from '@/hooks';
+
 import { Avatar, AvatarFallback } from '../../avatar';
 import {
   Breadcrumb,
@@ -47,6 +49,12 @@ type Story = StoryObj<typeof meta>;
 const SUBTITLE =
   'Name the dashboard, pick the widgets it shows, and choose who can see it.';
 
+const DASHBOARD_WIZARD_STEPS: WizardStep[] = [
+  { id: 'name', label: 'Name the dashboard' },
+  { id: 'widgets', label: 'Choose widgets' },
+  { id: 'permissions', label: 'Set permissions' },
+];
+
 function WizardBreadcrumb() {
   return (
     <Breadcrumb>
@@ -68,7 +76,9 @@ function WizardBreadcrumb() {
 }
 
 // Cancel / Back / Next are plain `Button`s the consumer places and wires — the
-// kit deliberately owns no step state or navigation logic (see wizard.tsx).
+// `Wizard` components deliberately own no step state or navigation logic (see
+// wizard.tsx); `useWizard` is an opt-in hook, and which buttons a step shows
+// stays the consuming UI block's decision.
 function WizardActions() {
   return (
     <PageHeaderActions>
@@ -79,47 +89,33 @@ function WizardActions() {
   );
 }
 
-function WizardSteps() {
+// `useWizard` (`@/hooks`) is the opt-in headless companion to these
+// presentational components: it owns the step index and derives the `Stepper`
+// summary props plus each `StepperItem`'s `variant` and avatar colour/classes,
+// so a consumer never hand-maintains three near-identical item blocks per step.
+function WizardSteps({ initialStep = 1 }: { initialStep?: number | string }) {
+  const wizard = useWizard({ steps: DASHBOARD_WIZARD_STEPS, initialStep });
+
   return (
     <Stepper
-      currentStep={2}
-      totalSteps={3}
-      current="Choose widgets"
-      next="Set permissions"
+      currentStep={wizard.currentStepNumber}
+      totalSteps={wizard.stepCount}
+      current={wizard.currentStepLabel}
+      // `undefined` on the last step, so the "Next: …" line is left out.
+      next={wizard.nextStepLabel}
     >
-      <StepperItem
-        variant="completed"
-        label="Name the dashboard"
-        avatar={
-          <Avatar color="green" className="[box-shadow:none]">
-            <AvatarFallback>1</AvatarFallback>
-          </Avatar>
-        }
-      />
-      <StepperItem
-        variant="current"
-        label="Choose widgets"
-        avatar={
-          <Avatar
-            color="blue"
-            className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
-          >
-            <AvatarFallback>2</AvatarFallback>
-          </Avatar>
-        }
-      />
-      <StepperItem
-        variant="future"
-        label="Set permissions"
-        avatar={
-          <Avatar
-            color="gray"
-            className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
-          >
-            <AvatarFallback>3</AvatarFallback>
-          </Avatar>
-        }
-      />
+      {wizard.steps.map((step) => (
+        <StepperItem
+          key={step.id}
+          variant={step.variant}
+          label={step.label}
+          avatar={
+            <Avatar color={step.avatarColor} className={step.avatarClassName}>
+              <AvatarFallback>{step.stepNumber}</AvatarFallback>
+            </Avatar>
+          }
+        />
+      ))}
     </Stepper>
   );
 }
@@ -176,49 +172,7 @@ export const FirstStep: Story = {
           </PageHeaderActions>
         </PageHeaderRow>
         <WizardSubtitle>{SUBTITLE}</WizardSubtitle>
-        <Stepper
-          currentStep={1}
-          totalSteps={3}
-          current="Name the dashboard"
-          next="Choose widgets"
-        >
-          <StepperItem
-            variant="current"
-            label="Name the dashboard"
-            avatar={
-              <Avatar
-                color="blue"
-                className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
-              >
-                <AvatarFallback>1</AvatarFallback>
-              </Avatar>
-            }
-          />
-          <StepperItem
-            variant="future"
-            label="Choose widgets"
-            avatar={
-              <Avatar
-                color="gray"
-                className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
-              >
-                <AvatarFallback>2</AvatarFallback>
-              </Avatar>
-            }
-          />
-          <StepperItem
-            variant="future"
-            label="Set permissions"
-            avatar={
-              <Avatar
-                color="gray"
-                className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
-              >
-                <AvatarFallback>3</AvatarFallback>
-              </Avatar>
-            }
-          />
-        </Stepper>
+        <WizardSteps initialStep={0} />
       </WizardHeader>
       <WizardBody>
         <StepContent />
@@ -289,38 +243,7 @@ export const LastStep: Story = {
           </PageHeaderActions>
         </PageHeaderRow>
         <WizardSubtitle>{SUBTITLE}</WizardSubtitle>
-        <Stepper currentStep={3} totalSteps={3} current="Set permissions">
-          <StepperItem
-            variant="completed"
-            label="Name the dashboard"
-            avatar={
-              <Avatar color="green" className="[box-shadow:none]">
-                <AvatarFallback>1</AvatarFallback>
-              </Avatar>
-            }
-          />
-          <StepperItem
-            variant="completed"
-            label="Choose widgets"
-            avatar={
-              <Avatar color="green" className="[box-shadow:none]">
-                <AvatarFallback>2</AvatarFallback>
-              </Avatar>
-            }
-          />
-          <StepperItem
-            variant="current"
-            label="Set permissions"
-            avatar={
-              <Avatar
-                color="blue"
-                className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
-              >
-                <AvatarFallback>3</AvatarFallback>
-              </Avatar>
-            }
-          />
-        </Stepper>
+        <WizardSteps initialStep={2} />
       </WizardHeader>
       <WizardBody>
         <StepContent />

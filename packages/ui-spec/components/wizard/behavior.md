@@ -54,6 +54,11 @@ The design brief's own reference pairing (Figma's "Wizard" documentation page,
 drops `Back` along with `Next`, matching the single-step pairing exactly; only
 the middle steps carry three buttons.
 
+Knowing _where in the flow_ you are is a separate concern from deciding which
+buttons that position shows. The React adapter's opt-in `useWizard` hook answers
+the first (`isFirstStep` / `isLastStep`, plus the `Stepper` props); the pairing
+above stays the consumer's, on every implementation.
+
 ```gherkin
 Scenario: Optional subtitle
   Given a flow that needs a supporting line under its title

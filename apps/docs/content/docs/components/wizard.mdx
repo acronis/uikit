@@ -47,6 +47,12 @@ draws around its own actions slot. Likewise the `Stepper` is optional: a two- or
 three-step flow may drop it, and `Wizard` neither requires one nor substitutes a
 fallback.
 
+That boundary is about the _components_, not the package: if you'd rather not
+hand-maintain one `StepperItem` block per step, opt into the
+[`useWizard`](#driving-the-steps-with-usewizard) hook, which holds the step index
+for you. It is separate and optional — it renders nothing and still leaves button
+visibility to you.
+
 The band's chrome comes from `--ui-background-surface-secondary`,
 `--ui-border-on-surface-divider`, `--ui-gap-16` and `--ui-gap-12`; the subtitle
 uses the muted `--ui-text-on-surface-secondary`. There is no `--ui-wizard-*`
@@ -142,6 +148,93 @@ component that owns its own.
 </Wizard>
 ```
 
+The example above writes each `StepperItem` out by hand to show the full markup.
+In a real flow you'd derive them — see the next section.
+
+### Driving the steps with useWizard
+
+`useWizard` is the opt-in headless companion to these presentational components.
+Declare the steps once and it owns the step index, returning the `Stepper` summary
+props, a derived `steps` array carrying each step's `variant` and `Avatar`
+colour/classes, and the navigation callbacks you wire to Back/Next.
+
+```tsx
+import { useWizard, type WizardStep } from '@acronis-platform/ui-react';
+
+const STEPS: WizardStep[] = [
+  { id: 'name', label: 'Name the dashboard' },
+  { id: 'widgets', label: 'Choose widgets' },
+  { id: 'permissions', label: 'Set permissions' },
+];
+
+function CreateDashboard() {
+  const wizard = useWizard({ steps: STEPS });
+
+  return (
+    <Wizard>
+      <WizardHeader>
+        <PageHeaderRow>
+          <PageHeaderTitle>Create dashboard</PageHeaderTitle>
+          <PageHeaderActions>
+            <Button variant="secondary">Cancel</Button>
+            {!wizard.isFirstStep && !wizard.isLastStep && (
+              <Button variant="secondary" onClick={wizard.goToPreviousStep}>
+                Back
+              </Button>
+            )}
+            {wizard.isLastStep ? (
+              <Button>Create dashboard</Button>
+            ) : (
+              <Button onClick={wizard.goToNextStep}>Next</Button>
+            )}
+          </PageHeaderActions>
+        </PageHeaderRow>
+
+        <Stepper
+          currentStep={wizard.currentStepNumber}
+          totalSteps={wizard.stepCount}
+          current={wizard.currentStepLabel}
+          // undefined on the last step, so the "Next: …" line is left out
+          next={wizard.nextStepLabel}
+        >
+          {wizard.steps.map((step) => (
+            <StepperItem
+              key={step.id}
+              variant={step.variant}
+              label={step.label}
+              avatar={
+                <Avatar
+                  color={step.avatarColor}
+                  className={step.avatarClassName}
+                >
+                  <AvatarFallback>{step.stepNumber}</AvatarFallback>
+                </Avatar>
+              }
+            />
+          ))}
+        </Stepper>
+      </WizardHeader>
+
+      <WizardBody>{/* the current step's Section */}</WizardBody>
+    </Wizard>
+  );
+}
+```
+
+Which buttons a step shows is still yours to decide — the hook only tells you
+_where_ you are (`isFirstStep` / `isLastStep`); the pairing above follows the
+design brief (`[Cancel] [CTA]` on the first and last steps, `[Cancel] [Back]
+[Next]` in the middle). The hook also does **no** validation, branching, skipping
+or persistence: gate `goToNextStep` behind your own form validation if a step
+must be valid before advancing.
+
+`initialStep` is a seed, not a controlled input — pass a zero-based index
+(truncated toward zero and clamped into range) or a step `id`; later changes to
+it are ignored. `steps` itself may change between renders: if it shrinks past
+the active step, the active index clamps to the last remaining step. If you
+already own your step state, keep driving `Stepper` / `StepperItem` by hand: the
+hook is additive and nothing requires it.
+
 ### Short flow — no stepper
 
 A wizard of two or three steps may omit the step indicator entirely; the subtitle
@@ -184,6 +277,36 @@ particular no `step` / `currentStep` / `onNext` / `onBack` — see
 [What Wizard deliberately does not do](#what-wizard-deliberately-does-not-do).
 The step indicator's own `currentStep` / `totalSteps` props belong to
 [`Stepper`](/components/stepper).
+
+### useWizard
+
+```tsx
+useWizard<TStep extends WizardStep>(options): UseWizardResult<TStep>
+```
+
+| Option        | Type               | Description                                                                                             |
+| ------------- | ------------------ | ------------------------------------------------------------------------------------------------------- |
+| `steps`       | `TStep[]`          | The flow's steps in order, each `{ id, label }` plus any extra fields of your own. Must not be empty.   |
+| `initialStep` | `number \| string` | Where the flow starts — a zero-based index (truncated, then clamped) or a step `id`. `NaN` or an unknown `id` falls back to the first step. A seed; later changes are ignored. |
+
+| Returns             | Type                                 | Description                                                                               |
+| ------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------- |
+| `steps`             | `WizardStepState<TStep>[]`           | Your steps, each with `index`, `stepNumber`, `variant`, `avatarColor`, `avatarClassName`. |
+| `currentIndex`      | `number`                             | Zero-based index of the active step; always a valid index into the current `steps`.        |
+| `currentStepNumber` | `number`                             | One-based active step, for `Stepper`'s `currentStep`.                                     |
+| `stepCount`         | `number`                             | Total steps, for `Stepper`'s `totalSteps`.                                                |
+| `currentStepLabel`  | `string`                             | The active step's label, for `Stepper`'s `current`.                                       |
+| `nextStepLabel`     | `string \| undefined`                | The following step's label; `undefined` on the last step.                                 |
+| `isFirstStep`       | `boolean`                            | Whether the active step is the first.                                                     |
+| `isLastStep`        | `boolean`                            | Whether the active step is the last.                                                      |
+| `goToNextStep`      | `() => void`                         | Advance one step; a no-op on the last step (never wraps).                                 |
+| `goToPreviousStep`  | `() => void`                         | Go back one step; a no-op on the first step (never wraps).                                |
+| `goToStep`          | `(target: number \| string) => void` | Jump to a zero-based index (truncated toward zero, then clamped) or a step `id`. `NaN` or an unknown `id` is a no-op. |
+
+Each derived step's `variant` is `completed` before the active index, `current`
+at it, and `future` after it; `avatarColor` / `avatarClassName` are the matching
+[`StepperItem`](/components/stepper-item) avatar treatment, ready to spread onto
+an `Avatar`. An empty `steps` array throws.
 
 ## Parts
 
