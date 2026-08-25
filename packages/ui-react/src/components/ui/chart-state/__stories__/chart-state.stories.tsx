@@ -74,6 +74,13 @@ export const ErrorWithRetry: Story = {
   },
 };
 
+// Empty state with no variant: no silhouette, just the default label.
+// Covers the path a caller that hasn't migrated to per-type empties still hits.
+export const EmptyNoVariant: Story = {
+  decorators: [slot],
+  args: { state: 'empty' },
+};
+
 // A consumer-supplied description overrides the default "No data found".
 export const CustomDescription: Story = {
   decorators: [slot],

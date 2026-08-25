@@ -4,9 +4,9 @@ component: ChartState
 schematic: |
   root: <div role="status|alert"> (centered column, fills the chart slot)
     glyph: loading -> Spinner (lg) · empty -> the `variant`'s silhouette, or
-           InboxIcon when no variant · error -> CircleWarningIcon
-    label: <p> one line — the `description` for a per-type empty state, else the
-           per-state message (overridable via `message`)
+           nothing when no variant · error -> CircleWarningIcon
+    label: <p> one line — the `description` if supplied, else the per-state
+           default (overridable via `description` for all states)
     action: error only — optional trailing node (e.g. a "Try again" button)
 
 root:
@@ -25,14 +25,15 @@ parts:
       The leading state glyph — the shared `Spinner` (lg) for loading, the
       `CircleWarningIcon` for error, and for empty either the `variant`'s
       silhouette (geometry exported from the Figma empty-state instances, every
-      path `currentColor`) or the `InboxIcon` when no variant is given.
+      path `currentColor`) or nothing when no variant is given.
   - id: label
     element: p
     description: >-
       One line of text, in one style whichever it is — Figma's `body/default` on
-      `text/onSurface/primary` (14/24, centred), which the root already sets. For
-      an `empty` state with a `description` that is the description; otherwise
-      the per-state message, overridable via `message`.
+      `text/onSurface/primary` (14/24, centred), which the root already sets. The
+      `description` prop overrides the default for any state; otherwise the
+      per-state default is used ("Data is loading…" / "No data found" /
+      "Something went wrong").
 
   - id: action
     element: slot

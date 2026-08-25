@@ -20,16 +20,27 @@ contract:
       description: >-
         The readout above the plot, typically a `Metric`. Sits in its own row at
         its natural height.
+    - name: variant
+      type: >-
+        'area' | 'bar' | 'line' | 'donut' | 'radial' | 'funnel' | 'radar' |
+        'sankey' | 'scatter' | 'treemap' | 'table' | 'text'
+      required: false
+      description: >-
+        Which chart the widget holds. Only used while `state="empty"`, to pick
+        the silhouette for that chart type. Forwarded to `ChartState`.
     - name: state
       type: "'loading' | 'empty' | 'error'"
       required: false
       description: >-
         Renders `ChartState` in place of the plot, keeping the header. `error`
         additionally gives the Card its error border.
-    - name: stateMessage
-      type: string
+    - name: stateDescription
+      type: ReactNode
       required: false
-      description: Overrides the placeholder's default label.
+      description: >-
+        Text below the placeholder illustration or glyph. Forwarded to
+        `ChartState` as `description`. Defaults to the per-state built-in
+        ("Data is loading…" / "No data found" / "Something went wrong").
     - name: stateAction
       type: ReactNode
       required: false

@@ -6,14 +6,14 @@
   `Spinner` (lg) above the label "Data is loading…" and announces the label via
   its `role="status"` live region (no `aria-busy`, which could defer that
   announcement).
-- **Given** `state="empty"`, **when** rendered, **then** it shows the inbox glyph
-  above the label "No data found".
+- **Given** `state="empty"`, **when** rendered, **then** it shows the label
+  "No data found" (no artwork unless a `variant` is passed).
 - **Given** `state="error"`, **when** rendered, **then** it shows the warning
   glyph above the label "Something went wrong" and announces as an alert.
 
 ## Label override
 
-- **Given** a `message` prop, **when** rendered in any state, **then** the
+- **Given** a `description` prop, **when** rendered in any state, **then** the
   supplied text replaces that state's default label.
 
 ## Action
@@ -36,8 +36,8 @@ an area chart, a ring for a donut, a funnel for a funnel. An empty widget then
 still says what it _would_ have shown, which a single generic glyph can't.
 
 `variant` selects it. `donut` and `radial` share one ring — a radial-bar widget
-with no data has nothing to tell it apart. Without a `variant` the state falls
-back to the generic inbox glyph, so an existing caller keeps working.
+with no data has nothing to tell it apart. Without a `variant` the empty state
+shows no artwork — just the text.
 
 The geometry is exported from the Figma instances rather than redrawn, and every
 path is `currentColor`: the tone is set once on the container, so brand and theme

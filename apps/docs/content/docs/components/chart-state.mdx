@@ -14,9 +14,8 @@ import { ChartState } from '@acronis-platform/ui-react';
 
 `ChartState` is the shared placeholder the [chart](/components/chart) types show
 in place of the chart itself — while data is loading, when there is nothing to
-plot, or when the fetch failed. It's a compact status block: a leading glyph
-(spinner / inbox / warning) over a centered label, sized to fill the same slot a
-chart would occupy.
+plot, or when the fetch failed. It's a compact status block: a leading glyph or silhouette over a centered
+label, sized to fill the same slot a chart would occupy.
 
 Drive it with the required `state` prop (`loading` | `empty` | `error`). Each
 state carries a default description (`"Data is loading…"` / `"No data found"` /
@@ -92,8 +91,7 @@ own.
 
 A centered column of a glyph and text, with no physical directional utilities,
 so it mirrors under `dir="rtl"` with nothing to configure. The message and the
-`action` follow the text direction, and none of the three glyphs (spinner,
-inbox, warning) carry a direction, so none of them flip.
+`action` follow the text direction, and neither glyph (spinner, warning) carries a direction, so neither flips.
 
 ## API Reference
 
