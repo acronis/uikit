@@ -1,6 +1,6 @@
 ---
 title: TrendIndicator
-description: A direction + sentiment change indicator, inline or as a compact badge.
+description: A direction + sentiment change indicator shown inline next to a metric value.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
@@ -12,17 +12,17 @@ import { TrendIndicatorDemo } from '@/components/demos-react/trend-indicator';
 import { TrendIndicator } from '@acronis-platform/ui-react';
 ```
 
-`TrendIndicator` shows **how a metric changed** versus a reference — a direction
-glyph, an already-formatted change value, and an optional comparison label. It is
-purely presentational: the consumer computes the trend and passes a ready value;
-the component never diffs numbers, rounds, or interprets domain rules.
+`TrendIndicator` shows **how a metric changed** — a direction glyph and an
+already-formatted change value. It is purely presentational: the consumer
+computes the trend and passes a ready value; the component never diffs numbers,
+rounds, or interprets domain rules.
 
 ### Direction is not sentiment
 
-The key design decision: `direction` is the maths (up / down / flat), `sentiment`
-is whether that change is good (positive / negative / neutral). The kit can't
-assume up = good — revenue ↑ is positive, threats ↑ is negative, MTTR ↓ is
-positive. Always pass both.
+The key design decision: `direction` is the maths (`up` / `down` / `flat`),
+`sentiment` is whether that change is good (`positive` / `negative` / `neutral`).
+The kit can't assume up = good — revenue ↑ is positive, threats ↑ is negative,
+MTTR ↓ is positive. Always pass both.
 
 ## Examples
 
@@ -30,33 +30,22 @@ positive. Always pass both.
   <TrendIndicatorDemo />
 </DemoReact>
 
-Inline, next to a metric:
+Inline, next to a metric value:
 
 ```tsx
-<TrendIndicator
-  direction="up"
-  sentiment="positive"
-  value="12%"
-  comparisonLabel="vs previous quarter"
-/>
+<TrendIndicator direction="up" sentiment="positive" value="12%" />
 ```
 
-The same arrow, opposite sentiment (an increase that's bad):
+The same arrow, opposite sentiment (an increase that is bad):
 
 ```tsx
-<TrendIndicator direction="up" sentiment="negative" value="35%" comparisonLabel="threats" />
+<TrendIndicator direction="up" sentiment="negative" value="35%" />
 ```
 
-A qualitative change (no number):
+A qualitative change with no number:
 
 ```tsx
 <TrendIndicator direction="up" sentiment="positive" value="Improving" />
-```
-
-A compact tinted badge for tables and dense headers:
-
-```tsx
-<TrendIndicator variant="badge" direction="down" sentiment="negative" value="8%" />
 ```
 
 Provide a full accessible sentence with `ariaLabel` (the glyph is decorative):
@@ -80,9 +69,9 @@ reader as text. Which text depends on `ariaLabel`:
   direction itself is conveyed, and the kit never synthesizes it — "up" plus
   "12%" is not a correct, localized statement in every domain.
 - **Without it**, the root takes no role and assistive tech reads the visible
-  `value` and `comparisonLabel` you supplied. That's enough when the value says
-  it on its own ("Improving", "4.2 h → 2.8 h") and thin when it doesn't: a bare
-  "12%" tells a screen-reader user nothing about the direction.
+  `value` you supplied. That is enough when the value says it on its own
+  ("Improving", "4.2 h → 2.8 h") and thin when it doesn't: a bare "12%" tells
+  a screen-reader user nothing about the direction.
 
 `sentiment` is color and nothing else — no attribute announces whether a change
 is good or bad, so keep that in the surrounding copy. Leave `showIcon` on so the

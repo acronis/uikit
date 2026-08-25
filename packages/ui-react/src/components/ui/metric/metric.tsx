@@ -1,114 +1,32 @@
 'use client';
 
 import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
 import { CircleInfoIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
-import { Card } from '../card';
 import { Skeleton } from '../skeleton';
+import { TrendIndicator } from '../trend-indicator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 
-// A presentational metric / statistic, laid out after the Figma MetricCard node:
-// a label row (label + an optional top-right caption) over a value row (an
-// optional status-tinted icon badge + the value + unit on the left, an optional
-// trend on the right), with optional supporting text below. It owns visual
-// hierarchy and layout only — it never computes or formats the value, converts
-// units, or decides whether a value is good or bad; the consumer passes
-// ready-to-render nodes and a resolved `status`, and composes a `TrendIndicator`
-// into the trend slot. `status` tints the icon badge (a subtle cue, not a full
-// color fill). No dedicated token tier — colors are semantic `--ui-*` tokens and
-// geometry uses the Tailwind scale.
-const metricVariants = cva('flex flex-col', {
-  variants: {
-    size: {
-      small: 'gap-1',
-      medium: 'gap-1.5',
-      large: 'gap-2',
-    },
-    // Semantic status — drives the icon badge tint (see STATUS_BADGE). Kept as a
-    // cva axis so the enum is spec-conformant; the tint is applied on the badge.
-    status: {
-      neutral: '',
-      info: '',
-      success: '',
-      warning: '',
-      danger: '',
-      critical: '',
-    },
-  },
-  defaultVariants: {
-    size: 'medium',
-    status: 'neutral',
-  },
-});
+// A presentational metric stats strip: a single row with an optional status-info
+// icon badge + value + unit on the left and an optional caption on the right, with
+// an optional trend row below and a composable body. No Card wrapper, no size or
+// status axes — nest it inside ChartWidget or a Card when you need card chrome.
+// Colors are semantic `--ui-*` tokens; the badge always uses the info tint per Figma.
 
-const LABEL_SIZE = {
-  small: 'text-[10px]',
-  medium: 'text-[11px]',
-  large: 'text-xs',
-} as const;
+const TREND_DIRECTION = {
+  up: 'up',
+  down: 'down',
+  stable: 'flat',
+} as const satisfies Record<string, 'up' | 'down' | 'flat'>;
 
-const VALUE_SIZE = {
-  small: 'text-2xl',
-  medium: 'text-3xl',
-  large: 'text-4xl',
-} as const;
+const TREND_SENTIMENT = {
+  up: 'positive',
+  down: 'negative',
+  stable: 'neutral',
+} as const satisfies Record<string, 'positive' | 'negative' | 'neutral'>;
 
-const UNIT_SIZE = {
-  small: 'text-sm',
-  medium: 'text-base',
-  large: 'text-lg',
-} as const;
-
-const SUPPORTING_SIZE = {
-  small: 'text-xs',
-  medium: 'text-xs',
-  large: 'text-sm',
-} as const;
-
-const BADGE_SIZE = {
-  small: 'size-7',
-  medium: 'size-8',
-  large: 'size-10',
-} as const;
-
-// icons-react icons size themselves from a `size` prop (which also picks the
-// designed stroke weight) — CSS can't do that reliably — so the badge icon is
-// cloned to the right px for the Metric size.
-const BADGE_ICON_PX = {
-  small: 14,
-  medium: 16,
-  large: 20,
-} as const;
-
-const SKELETON_SIZE = {
-  small: 'h-6 w-16',
-  medium: 'h-8 w-20',
-  large: 'h-10 w-28',
-} as const;
-
-// The badge pairs the status "pressed" background tint with its matching icon
-// color (the same pairing the design uses for status icon chips).
-const STATUS_BADGE = {
-  neutral:
-    'bg-[var(--ui-background-status-neutral-pressed)] text-[var(--ui-text-on-status-neutral)]',
-  info: 'bg-[var(--ui-background-status-info-pressed)] text-[var(--ui-text-on-status-info)]',
-  success:
-    'bg-[var(--ui-background-status-success-pressed)] text-[var(--ui-text-on-status-success)]',
-  warning:
-    'bg-[var(--ui-background-status-warning-pressed)] text-[var(--ui-text-on-status-warning)]',
-  danger:
-    'bg-[var(--ui-background-status-danger-pressed)] text-[var(--ui-text-on-status-danger)]',
-  critical:
-    'bg-[var(--ui-background-status-critical-pressed)] text-[var(--ui-text-on-status-critical)]',
-} as const;
-
-export interface MetricProps
-  extends React.ComponentProps<'div'>,
-    VariantProps<typeof metricVariants> {
-  /** What the value measures — e.g. "Gross margin". Rendered as an uppercase note heading. */
-  label: React.ReactNode;
+export interface MetricProps extends React.ComponentProps<'div'> {
   /**
    * The primary value, already formatted (`73`, `"94%"`, `"$72K"`, `"2.8"`).
    * The kit does not format currency, units, or decimals.
@@ -116,15 +34,21 @@ export interface MetricProps
   value: React.ReactNode;
   /** Unit shown next to the value at a smaller, muted size — e.g. `"%"`, `"hours"`. */
   unit?: React.ReactNode;
-  /** A top-right caption aligned with the label — e.g. a timeframe `Tag` ("Last 30 days"). */
+  /** Caption at the right end of the stats row — e.g. a timeframe `Tag`. */
   caption?: React.ReactNode;
-  /** A trend slot on the right of the value — typically a `TrendIndicator`. */
-  trend?: React.ReactNode;
-  /** Secondary line below the value — e.g. "Target: 99%". */
+  /**
+   * Trend direction — renders a `TrendIndicator` on its own row below the value.
+   * Sentiment follows direction: `up` → positive, `down` → negative, `stable` → neutral.
+   * Pair with `trendValue` for the change text.
+   */
+  trend?: 'up' | 'down' | 'stable';
+  /** Change text shown next to the trend arrow — e.g. `"20%"`, `"+3"`. Requires `trend`. */
+  trendValue?: React.ReactNode;
+  /** Secondary line below the trend — e.g. "Target: 99%". */
   supportingText?: React.ReactNode;
   /** A small badge / metadata slot beside the value — e.g. a `Tag`. */
   badge?: React.ReactNode;
-  /** Icon rendered in a status-tinted badge before the value. */
+  /** Icon rendered in a status-info-tinted badge before the value. */
   icon?: React.ReactNode;
   /** Contextual hint on an info affordance next to the label (Base UI Tooltip). */
   tooltip?: React.ReactNode;
@@ -132,44 +56,22 @@ export interface MetricProps
   tooltipLabel?: string;
   /** Show a skeleton in place of the value, preserving its space. */
   loading?: boolean;
-  /** Card body below the header — e.g. a chart, a Separator, an insight line. */
+  /** Content below the stats strip — e.g. a chart, a `Separator`, an insight line. */
   children?: React.ReactNode;
 }
 
-// Every size-keyed lookup above (LABEL/VALUE/UNIT/SUPPORTING/BADGE/SKELETON) is
-// keyed by the `size` cva axis, so the vocabulary is derived from that axis
-// rather than from whichever one map a given helper happens to index.
-type MetricSize = NonNullable<VariantProps<typeof metricVariants>['size']>;
-type MetricStatus = keyof typeof STATUS_BADGE;
-
-/**
- * The status-tinted icon chip beside the value.
- *
- * The icon is cloned rather than sized in CSS because icons-react icons pick
- * their designed stroke weight from the `size` prop — scaling them with CSS
- * would thin or thicken the stroke off-design.
- */
-function MetricIconBadge({
-  icon,
-  size,
-  status,
-}: {
-  icon: React.ReactNode;
-  size: MetricSize;
-  status: MetricStatus;
-}) {
+// The status-info-tinted icon chip. The icon is cloned to a fixed 16 px rather
+// than sized in CSS because icons-react icons pick their stroke weight from the
+// `size` prop — CSS alone can't replicate that.
+function MetricIconBadge({ icon }: { icon: React.ReactNode }) {
   return (
     <span
       aria-hidden
-      className={cn(
-        'flex shrink-0 items-center justify-center rounded-lg [&_svg]:shrink-0',
-        BADGE_SIZE[size],
-        STATUS_BADGE[status]
-      )}
+      className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[var(--ui-background-status-info)] text-[var(--ui-glyph-on-surface-neutral-dark)] [&_svg]:shrink-0"
     >
       {React.isValidElement(icon)
         ? React.cloneElement(icon as React.ReactElement<{ size?: number }>, {
-            size: BADGE_ICON_PX[size],
+            size: 16,
           })
         : icon}
     </span>
@@ -180,28 +82,17 @@ function MetricIconBadge({
 function MetricValue({
   value,
   unit,
-  size,
 }: {
   value: React.ReactNode;
   unit?: React.ReactNode;
-  size: MetricSize;
 }) {
   return (
     <>
-      <span
-        className={cn(
-          'font-bold leading-none tabular-nums text-foreground',
-          VALUE_SIZE[size]
-        )}
-      >
+      <span className="text-2xl font-semibold leading-8 tabular-nums text-foreground">
         {value}
       </span>
       {unit != null && (
-        <span
-          className={cn('font-medium text-muted-foreground', UNIT_SIZE[size])}
-        >
-          {unit}
-        </span>
+        <span className="text-xs text-muted-foreground">{unit}</span>
       )}
     </>
   );
@@ -211,47 +102,38 @@ const Metric = React.forwardRef<HTMLDivElement, MetricProps>(
   (
     {
       className,
-      label,
       value,
       unit,
       caption,
       trend,
+      trendValue,
       supportingText,
       badge,
       icon,
       tooltip,
       tooltipLabel = 'More information',
       loading = false,
-      size,
-      status,
       children,
       ...props
     },
     ref
   ) => {
-    const resolvedSize = size ?? 'medium';
-    const resolvedStatus = status ?? 'neutral';
-
     return (
-      <Card
-        ref={ref}
-        data-size={resolvedSize}
-        data-status={resolvedStatus}
-        className={cn('flex flex-col p-4', className)}
-        {...props}
-      >
-        <div className={cn(metricVariants({ size, status }))}>
-        {/* Label row: label (+ optional info) on the left, caption on the right. */}
+      <div ref={ref} className={cn('flex flex-col gap-2', className)} {...props}>
+        {/* Stats row: icon badge + value + unit on the left, caption on the right. */}
         <div className="flex items-center justify-between gap-2">
-          <div className="flex min-w-0 items-center gap-1.5">
-            <span
-              className={cn(
-                'min-w-0 truncate font-bold uppercase leading-none tracking-wide text-muted-foreground',
-                LABEL_SIZE[resolvedSize]
+          <div className="flex items-center gap-2">
+            {icon != null && <MetricIconBadge icon={icon} />}
+            <div className="flex items-baseline gap-1">
+              {loading ? (
+                <Skeleton className="h-8 w-20" />
+              ) : (
+                <MetricValue value={value} unit={unit} />
               )}
-            >
-              {label}
-            </span>
+              {badge != null && (
+                <span className="ms-1 self-center">{badge}</span>
+              )}
+            </div>
             {tooltip != null && (
               <Tooltip>
                 <TooltipTrigger
@@ -267,38 +149,23 @@ const Metric = React.forwardRef<HTMLDivElement, MetricProps>(
           {caption != null && <div className="shrink-0">{caption}</div>}
         </div>
 
-        {/* Value row: badge + value + unit on the left, trend on the right. */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-2">
-            {icon != null && (
-              <MetricIconBadge
-                icon={icon}
-                size={resolvedSize}
-                status={resolvedStatus}
-              />
-            )}
-            <div className="flex min-w-0 items-baseline gap-1">
-              {loading ? (
-                <Skeleton className={SKELETON_SIZE[resolvedSize]} />
-              ) : (
-                <MetricValue value={value} unit={unit} size={resolvedSize} />
-              )}
-              {badge != null && <span className="ms-1 self-center">{badge}</span>}
-            </div>
-          </div>
-          {trend != null && <div className="shrink-0">{trend}</div>}
-        </div>
-
-        {supportingText != null && (
-          <div
-            className={cn('text-muted-foreground', SUPPORTING_SIZE[resolvedSize])}
-          >
-            {supportingText}
+        {/* Trend row: renders TrendIndicator from the first-class trend prop. */}
+        {trend != null && (
+          <div>
+            <TrendIndicator
+              direction={TREND_DIRECTION[trend]}
+              sentiment={TREND_SENTIMENT[trend]}
+              value={trendValue}
+            />
           </div>
         )}
-        </div>
+
+        {supportingText != null && (
+          <div className="text-xs text-muted-foreground">{supportingText}</div>
+        )}
+
         {children}
-      </Card>
+      </div>
     );
   }
 );

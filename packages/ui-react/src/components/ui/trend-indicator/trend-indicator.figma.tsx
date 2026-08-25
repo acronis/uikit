@@ -13,11 +13,6 @@ figma.connect(TrendIndicator, 'FIGMA_NODE_URL', {
     value: figma.string('Value'),
   },
   example: ({ value }) => (
-    <TrendIndicator
-      direction="up"
-      sentiment="positive"
-      value={value}
-      comparisonLabel="vs previous quarter"
-    />
+    <TrendIndicator direction="up" sentiment="positive" value={value} />
   ),
 });

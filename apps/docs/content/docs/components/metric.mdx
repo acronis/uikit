@@ -1,6 +1,6 @@
 ---
 title: Metric
-description: A dashboard metric card — value, trend, status, and a composable body.
+description: A dashboard stats strip — value, trend, and a composable body.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
@@ -12,12 +12,11 @@ import { MetricDemo } from '@/components/demos-react/metric';
 import { Metric } from '@acronis-platform/ui-react';
 ```
 
-`Metric` is a presentational metric card modelled on the dashboard MetricCard
-design: a label (+ optional caption) over a primary value — with an optional
-status-tinted icon badge, unit, and trend — plus an optional body for a chart,
-breakdown, or insight. It is purely presentational: the consumer passes a
-ready-formatted `value` and a resolved `status`; the kit never computes or
-formats the value, converts units, or decides whether a value is good or bad.
+`Metric` is a presentational stats strip for dashboard widgets: a primary value
+row (status-info-tinted icon badge + value + unit + optional right-aligned
+caption), an optional trend row below the value, and a composable body for
+charts, breakdowns, or insights. It is not a card — nest it inside `ChartWidget`
+or a `Card` to get card chrome and padding.
 
 ## Examples
 
@@ -25,56 +24,51 @@ formats the value, converts units, or decides whether a value is good or bad.
   <MetricDemo />
 </DemoReact>
 
-A simple metric with a unit, status, and a composed `TrendIndicator`:
+A metric with an icon badge, value, unit, trend, and a supporting note:
 
 ```tsx
 <Metric
-  label="Endpoint coverage"
-  value="94"
+  value="95"
   unit="%"
-  status="success"
   icon={<ChartPieIcon />}
-  supportingText="Target: 98%"
-  trend={<TrendIndicator direction="up" sentiment="positive" value="2%" size="small" />}
+  trend="up"
+  trendValue="20%"
+  supportingText="over 6 months"
 />
 ```
 
-Metric is a Card, so drop a chart, a `Meter` breakdown, a `Separator`, or an
-insight line into its `children` to build a full dashboard tile:
+Use `trend` to render a `TrendIndicator` automatically. Sentiment follows
+direction: `up` → positive (green), `down` → negative (red), `stable` → neutral.
+
+Compose with `Card` for a standalone dashboard tile; drop a chart, `Meter`
+breakdown, `Separator`, or insight line into `children` to build the body:
 
 ```tsx
-<Metric
-  label="At-risk customers"
-  status="critical"
-  icon={<ChartPieIcon />}
-  caption={<Tag>Now</Tag>}
-  value="3"
-  trend={<TrendIndicator direction="up" sentiment="negative" value="1" size="small" />}
->
-  <Meter label="Healthy" value={46} max={54} color="var(--ui-background-status-strong-success)" showTooltip={false} />
-  <Meter label="At risk" value={3} max={54} color="var(--ui-background-status-strong-critical)" showTooltip={false} />
-  <Separator className="my-3" />
-  <p>+3 customers predicted at-risk within 30 days.</p>
-</Metric>
+<Card className="p-4">
+  <Metric
+    icon={<ChartPieIcon />}
+    caption={<Tag>Now</Tag>}
+    value="3"
+    trend="down"
+    trendValue="1 this week"
+  >
+    <Meter label="Healthy" value={46} max={54} color="..." showTooltip={false} />
+    <Separator className="my-3" />
+    <p>+3 customers predicted at-risk within 30 days.</p>
+  </Metric>
+</Card>
 ```
 
-`status` (`neutral`, `info`, `success`, `warning`, `danger`, `critical`) tints
-the **icon badge** only — the `--ui-background-status-<status>-pressed` fill with
-the `--ui-text-on-status-<status>` icon color — a subtle cue, never a full color
-fill, so many metrics read calmly together. No data is `value="—"`, not `0`.
+No data is `value="—"`, not `0`.
 
 ## Accessibility
 
-`Metric` imposes no roles and sets no accessible name on itself: it is a `Card`
-of ordinary text read in DOM order — label, the `tooltip` trigger, caption,
-value, unit, badge, trend, supporting text, then whatever the body holds (the
-`icon` badge sits between the caption and the value in the DOM but is
-`aria-hidden`, so nothing announces it). That order is the reading order, and it
-is not the visual one: `caption` and `trend` are painted at the far end of their
-rows but are read straight after the label and the value respectively. The unit
-sits next to the value, so those two are announced together. If a tile
-needs a name of its own (as a link target, or as a labelled region), pass
-`aria-label` / `role` yourself — they are spread onto the card.
+`Metric` imposes no roles and sets no accessible name on itself: it is a `<div>`
+of ordinary text read in DOM order — the `tooltip` trigger, caption, value,
+unit, badge, trend, supporting text, then whatever the body holds (the `icon`
+badge is `aria-hidden`, so nothing announces it). If a tile needs a name of its
+own (as a link target or a labelled region), pass `aria-label` / `role` yourself
+— they are spread onto the root.
 
 The one label the component owns is on the info affordance: when `tooltip` is
 set, its trigger is a real `<button>` named by `tooltipLabel`, which defaults to
@@ -82,21 +76,17 @@ set, its trigger is a real `<button>` named by `tooltipLabel`, which defaults to
 is keyboard reachable, but it must not be the only place essential information
 lives.
 
-`status` is a visual cue only. It tints the icon badge, and that badge is
-`aria-hidden` — the icon is decorative and the status itself is never announced
-— so the meaning has to sit in the `value`, the `trend`, or the
-`supportingText`. `loading` swaps the value for a `Skeleton` with no live region
-of its own: the value simply leaves the accessible tree and returns, so wrap the
-tile yourself if an update needs announcing.
+`loading` swaps the value for a `Skeleton` with no live region of its own: the
+value simply leaves the accessible tree and returns, so wrap the tile yourself
+if an update needs announcing.
 
 ## Direction (RTL)
 
 Every row is a flex pair separated by `justify-between`, and the only
 directional spacing in the component is logical (`ms-` on the badge slot), so
-the card mirrors fully under `dir="rtl"` — label and value to the inline start,
-caption and trend to the inline end. The slots hold your own nodes, so
-directional artwork inside them is yours to flip; a composed `TrendIndicator`
-already does.
+the component mirrors fully under `dir="rtl"` — value to the inline start,
+caption to the inline end. The slots hold your own nodes, so directional
+artwork inside them is yours to flip; a composed `TrendIndicator` already does.
 
 ## API Reference
 
