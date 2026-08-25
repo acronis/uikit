@@ -25,9 +25,10 @@
 
 ## Contrast
 
-The generated prefix uses the secondary surface-text token and the step names
-the primary one; both are semantic tokens carried over from `StepperItem`, so
-contrast is inherited from the semantic scale and holds in light and dark.
-Re-check it when the dedicated `--ui-stepper-*` tier ships (see `tokens.yaml`),
-since a brand may then define distinct values — the secondary/prefix pairing is
-the one to watch, as it is the lowest-contrast text the component renders.
+The generated prefix uses `--ui-stepper-breakpoint-default-label-color` and the
+step names use `--ui-stepper-breakpoint-default-value-color` (see
+`tokens.yaml`) — both Stepper-owned tokens as of the 2026-08-24 tier sync.
+Contrast has been verified against the tier's resolved values in light and
+dark; the label-color/prefix pairing is the one to re-check first if a brand
+later defines a distinct value for it, as it is the lowest-contrast text the
+component renders.

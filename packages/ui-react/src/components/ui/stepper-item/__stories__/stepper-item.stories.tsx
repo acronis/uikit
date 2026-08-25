@@ -4,14 +4,41 @@ import { CheckIcon } from '@acronis-platform/icons-react/stroke-mono';
 import { Avatar, AvatarFallback } from '../../avatar';
 import { StepperItem } from '../stepper-item';
 
-const numberAvatar = (n: number, color: 'blue' | 'gray' | 'green' = 'blue') => (
-  <Avatar color={color}>
+// Figma recolors the digit inside a `current`/`future` avatar to that step's
+// own label-color token (overriding Avatar's own per-scheme color) — see the
+// comment in stepper-item.tsx. `completed` uses a fixed checkmark icon, so it
+// needs no such override.
+//
+// `[box-shadow:none]` switches off Avatar's 2px outset ring (meant to
+// separate overlapping avatars in an `AvatarGroup`), the same way
+// `Timeline`'s marker does — Figma's Stepper avatars carry no stroke, and the
+// ring otherwise shows as an unwanted halo on the `current`/`completed`
+// step's filled container. See the "Resolved quirk — Avatar's 2px ring on
+// colored step backgrounds" note in this component's spec `README.md`.
+//
+// Written as complete literals, not built by interpolation, so Tailwind's
+// scanner picks them up here rather than relying on the identical strings
+// staying anchored in stepper-item.tsx's own cva variants.
+const digitColorClass = {
+  current: 'text-[var(--ui-stepper-item-current-label-color)]',
+  future: 'text-[var(--ui-stepper-item-future-label-color)]',
+} as const;
+
+const numberAvatar = (
+  n: number,
+  color: 'blue' | 'gray' | 'green' = 'blue',
+  digitVariant: 'current' | 'future' = 'current'
+) => (
+  <Avatar
+    color={color}
+    className={`[box-shadow:none] ${digitColorClass[digitVariant]}`}
+  >
     <AvatarFallback>{n}</AvatarFallback>
   </Avatar>
 );
 
 const checkAvatar = (
-  <Avatar color="green">
+  <Avatar color="green" className="[box-shadow:none]">
     <CheckIcon size={16} />
   </Avatar>
 );
@@ -25,7 +52,7 @@ const meta = {
       control: 'select',
       options: ['current', 'completed', 'future'],
       description:
-        "The step's structural role in the sequence — mirrors the Figma `variant` property. Drives the container background and the label color.",
+        "The step's structural role in the sequence — mirrors the Figma `type` property. Drives the container background, border, and the label color.",
       table: {
         type: { summary: "'current' | 'completed' | 'future'" },
         defaultValue: { summary: 'current' },
@@ -34,11 +61,11 @@ const meta = {
     },
     state: {
       control: 'select',
-      options: ['idle', 'hover', 'active'],
+      options: ['idle', 'hover', 'active', 'focus'],
       description:
-        "Interaction state — mirrors the Figma `state` property. Only changes the look when `variant` is `completed`; `current` always renders highlighted and `future` always renders disabled.",
+        "Interaction state — mirrors the tokens-pd `Stepper` tier's completed-container color roles. Only changes the look when `variant` is `completed`; `current` always renders highlighted and `future` always renders disabled.",
       table: {
-        type: { summary: "'idle' | 'hover' | 'active'" },
+        type: { summary: "'idle' | 'hover' | 'active' | 'focus'" },
         defaultValue: { summary: 'idle' },
         category: 'State',
       },
@@ -121,6 +148,16 @@ export const CompletedActive: Story = {
   },
 };
 
+export const CompletedFocus: Story = {
+  name: 'Completed / focus',
+  args: {
+    variant: 'completed',
+    state: 'focus',
+    label: 'Create an account',
+    avatar: checkAvatar,
+  },
+};
+
 /** The only combo Figma draws for `variant="future"` — always disabled. */
 export const FutureDisabled: Story = {
   name: 'Future / disabled',
@@ -128,7 +165,7 @@ export const FutureDisabled: Story = {
     variant: 'future',
     state: 'idle',
     label: 'Confirm and pay',
-    avatar: numberAvatar(3, 'gray'),
+    avatar: numberAvatar(3, 'gray', 'future'),
   },
 };
 

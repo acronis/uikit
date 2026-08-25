@@ -26,8 +26,8 @@
 
 - **Given** `currentStep`, `totalSteps`, and `current`
   **Then** the first line reads "Step {currentStep} of {totalSteps}: {current}",
-  with the generated prefix in the secondary surface text and the step's name in
-  the primary surface text.
+  with the generated prefix in `--ui-stepper-breakpoint-default-label-color` and
+  the step's name in `--ui-stepper-breakpoint-default-value-color`.
 - **Given** a `next` step name
   **Then** a second line reads "Next: {next}", with the same two-tone treatment.
 - **Given** no `next`

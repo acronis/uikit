@@ -15,28 +15,40 @@
 ## Variant drives the step's role
 
 - **Given** `variant="current"`
-  **Then** the container is filled with the active surface and the name uses the
-  primary surface text — regardless of `state`, because the design draws the
-  current step in exactly one look.
+  **Then** the container is filled and bordered with the current-step tokens
+  and the name uses the current-step label color — regardless of `state`,
+  because the design draws the current step in exactly one look.
 - **Given** `variant="completed"`
-  **Then** the name uses the primary surface text and the container is filled only
-  according to `state`.
+  **Then** the name uses the completed-step label color and the container takes
+  the fill token for its `state`.
 - **Given** `variant="future"`
-  **Then** the name uses the disabled surface text, the container has no fill, the
-  element is marked `aria-disabled`, it is removed from the tab order
-  (`tabindex="-1"`), and it receives no pointer events — again regardless of
-  `state`. On the default `<div>` it also carries `role="link"`, without which
+  **Then** the name uses the future-step label color, the container takes the
+  future-step container fill — `transparent` in every shipped brand, so nothing
+  paints today, but a brand that overrides it is honored — the element is marked
+  `aria-disabled`, it is removed from the tab order (`tabindex="-1"`), and it
+  receives no pointer events — again regardless of `state`. On the default
+  `<div>` it also carries `role="link"`, without which
   `aria-disabled` would not be announced at all (see `accessibility.md`).
+- **Given** any `variant`
+  **Then** the container reserves the same border box, so all three variants
+  measure the same and a row of steps keeps its markers and names aligned. Only
+  `current` paints a visible border color; on `completed` and `future` the
+  reserved border is transparent.
 
 ## State is only observable on a completed step
 
 - **Given** `variant="completed"` **and** `state="idle"`
-  **Then** the container has no fill.
+  **Then** the container is filled with the idle token, which resolves to
+  `transparent` in every shipped brand — so it reads as no fill today, but a
+  brand that overrides it is honored.
 - **Given** `variant="completed"` **and** `state="hover"`
-  **Then** the container is filled with the hover surface.
+  **Then** the container is filled with the hover token.
 - **Given** `variant="completed"` **and** `state="active"`
-  **Then** the container is filled with the active surface — the same fill the
-  current step carries.
+  **Then** the container is filled with the active token.
+- **Given** `variant="completed"` **and** `state="focus"`
+  **Then** the container shows a 3px ring in the focus-ring token — the same
+  look `focus-visible` already draws automatically on a composed control, since
+  the two share the identical color value.
 - **Given** any `state` **and** `variant` of `current` or `future`
   **Then** nothing changes. `state` is not silently dropped from the contract: it
   still appears as a data attribute, so a consumer can key off it.
@@ -70,4 +82,5 @@
   application decides and passes `variant` per step.
 - The marker's content and appearance — the caller composes the avatar.
 - Hover and press detection: `state` is declarative, so the consumer decides when
-  a step looks hovered or pressed (`Stepper` does not — it owns no step state).
+  a step looks hovered, pressed, or focused (`Stepper` does not — it owns no
+  step state).

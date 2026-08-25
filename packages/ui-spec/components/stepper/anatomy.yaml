@@ -12,12 +12,12 @@ schematic: |
   |    [ StepperItem ] [ StepperItem ] [ StepperItem ] ...  start-aligned, wraps|
   +-----------------------------------------------------------------------+
 
-  summary       -> column, gap --ui-gap-4
-  current-line  -> prefix "Step N of M:" in --ui-text-on-surface-secondary,
-                   the step name in --ui-text-on-surface-primary
-  next-line     -> prefix "Next:"        in --ui-text-on-surface-secondary,
-                   the step name in --ui-text-on-surface-primary
-  items-row     -> flex, wrap, start-aligned, gap --ui-gap-8
+  summary       -> column, gap --ui-stepper-breakpoint-default-line-gap
+  current-line  -> prefix "Step N of M:" in --ui-stepper-breakpoint-default-label-color,
+                   the step name in --ui-stepper-breakpoint-default-value-color
+  next-line     -> prefix "Next:"        in --ui-stepper-breakpoint-default-label-color,
+                   the step name in --ui-stepper-breakpoint-default-value-color
+  items-row     -> flex, wrap, start-aligned, gap --ui-stepper-breakpoint-lg-container-gap
 
 root:
   element: div
@@ -36,8 +36,8 @@ parts:
   - id: current-line
     description: >-
       "Step {currentStep} of {totalSteps}: {current}" — the generated counter and
-      its punctuation in the secondary surface text, the current step's name in
-      the primary surface text.
+      its punctuation in the Stepper-owned label color, the current step's name
+      in the Stepper-owned value color.
     element: p
   - id: next-line
     description: >-

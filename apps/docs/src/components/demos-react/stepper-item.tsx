@@ -9,7 +9,7 @@ import {
 } from '@acronis-platform/ui-react';
 
 const completedAvatar = (
-  <Avatar color="green">
+  <Avatar color="green" className="[box-shadow:none]">
     <CheckIcon size={16} />
   </Avatar>
 );
@@ -34,7 +34,10 @@ export function StepperItemDemo() {
           variant="current"
           label="Choose a plan"
           avatar={
-            <Avatar color="blue">
+            <Avatar
+              color="blue"
+              className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
+            >
               <AvatarFallback>2</AvatarFallback>
             </Avatar>
           }
@@ -43,21 +46,27 @@ export function StepperItemDemo() {
           variant="future"
           label="Confirm and pay"
           avatar={
-            <Avatar color="gray">
+            <Avatar
+              color="gray"
+              className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
+            >
               <AvatarFallback>3</AvatarFallback>
             </Avatar>
           }
         />
       </Stepper>
 
-      {/* The five combinations the Figma component set actually draws. */}
+      {/* The six variant/state combinations the Figma component set draws. */}
       <div className="flex flex-wrap items-center gap-4">
         <StepperItem
           variant="current"
           state="active"
           label="Current"
           avatar={
-            <Avatar color="blue">
+            <Avatar
+              color="blue"
+              className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
+            >
               <AvatarFallback>1</AvatarFallback>
             </Avatar>
           }
@@ -81,10 +90,19 @@ export function StepperItemDemo() {
           avatar={completedAvatar}
         />
         <StepperItem
+          variant="completed"
+          state="focus"
+          label="Completed / focus"
+          avatar={completedAvatar}
+        />
+        <StepperItem
           variant="future"
           label="Future"
           avatar={
-            <Avatar color="gray">
+            <Avatar
+              color="gray"
+              className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
+            >
               <AvatarFallback>5</AvatarFallback>
             </Avatar>
           }

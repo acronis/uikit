@@ -3,11 +3,12 @@ component: StepperItem
 
 # `variant` and `state` are the two cva axes in the ui-react source, and these
 # enums must stay equal to those keys (conformance test). They are deliberately
-# independent even though the design only draws five of their nine combinations:
-# `variant` is the step's role in the sequence, `state` is the interaction look,
-# and only a completed step reacts to the second. The marker is a required slot
-# the caller owns completely; the component contributes no content of its own, so
-# it ships no strings to localize.
+# independent: `variant` is the step's role in the sequence, `state` is the
+# interaction look, and only a completed step reacts to the second. `state`
+# gained a fourth value, `focus`, with the dedicated `--ui-stepper-item-*` token
+# tier (re-synced 2026-08-24, see tokens.yaml). The marker is a required slot
+# the caller owns completely; the component contributes no content of its own,
+# so it ships no strings to localize.
 contract:
   properties:
     - name: variant
@@ -16,20 +17,26 @@ contract:
       default: current
       description: >-
         The step's structural role in the sequence. `current` is where the user
-        is and always renders highlighted; `completed` is already passed and is
-        the only variant whose look responds to `state`; `future` is not reachable
-        yet and always renders disabled and non-interactive. Defaults to `current`
-        for prop ergonomics — in a real sequence every step declares its own.
+        is and always renders highlighted with a border; `completed` is already
+        passed and is the only variant whose look responds to `state`; `future`
+        is not reachable yet and always renders disabled and non-interactive.
+        Defaults to `current` for prop ergonomics — in a real sequence every
+        step declares its own.
     - name: state
-      type: "'idle' | 'hover' | 'active'"
+      type: "'idle' | 'hover' | 'active' | 'focus'"
       required: false
       default: idle
       description: >-
         The interaction look. Only observable when `variant` is `completed`
-        (`idle` has no fill, `hover` and `active` paint one). Ignored for
-        `current`, which is always highlighted, and for `future`, which is always
-        disabled. It is a declarative prop, not a CSS pseudo-state, because the
-        design models it as a Figma variant and a consumer may need to force it.
+        (`idle`, `hover`, and `active` each paint their own fill token — `idle`'s
+        resolves to `transparent` in the shipped brands, so it reads as no fill;
+        `focus` draws a 3px ring — its token is byte-identical to
+        `--ui-focus-primary`, i.e. the same look `focus-visible` already draws
+        automatically on a composed control). Ignored for `current`, which is
+        always highlighted, and for `future`, which is always disabled. It is
+        a declarative prop,
+        not a CSS pseudo-state, because the design models it as distinct token
+        roles and a consumer may need to force it.
     - name: avatar
       type: Element
       required: true

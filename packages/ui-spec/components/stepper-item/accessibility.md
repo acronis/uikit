@@ -36,9 +36,10 @@
   avatar's content), so there is nothing to localize inside the component and no
   default English copy to override.
 - **`state` is not a live interaction state.** It is a declarative look, so a
-  step forced to `hover` or `active` conveys nothing to assistive tech. Never use
-  it as the only signal of the step a user is on — that is `variant="current"`,
-  and the application should also expose the position in text ("Step 2 of 3").
+  step forced to `hover`, `active`, or `focus` conveys nothing to assistive
+  tech. Never use it as the only signal of the step a user is on — that is
+  `variant="current"`, and the application should also expose the position in
+  text ("Step 2 of 3").
 - **Sequence semantics belong to the container.** A single step is not a list. If
   the whole stepper should announce as an ordered sequence, wrap the steps in an
   `<ol>`/`<li>` (or a `role="list"`) at the application layer, and mark the
@@ -48,8 +49,8 @@
 
 ## Contrast
 
-The step name uses the primary surface-text token on the light surface fills, and
-the disabled surface-text token when the step is in the future. Because neither is
-a Stepper-owned token yet (see `tokens.yaml`), contrast is inherited from the semantic scale and holds
-in both light and dark. Re-check it when the dedicated `--ui-stepper-item-*` tier
-ships, since a brand may then define distinct values.
+The step name uses the current/completed/future label-color tokens from the
+dedicated `--ui-stepper-item-*` tier (see `tokens.yaml`), each defined per brand
+and light/dark mode via `light-dark()`. Re-check contrast per brand when this
+tier changes, since a brand may define distinct values now that it is
+component-owned rather than borrowed from the semantic scale.

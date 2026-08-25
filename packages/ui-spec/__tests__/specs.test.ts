@@ -24,7 +24,10 @@ const validators = Object.fromEntries(
 const componentNames = listComponentNames();
 const HERE = dirname(fileURLToPath(import.meta.url));
 const TOKENS_PD_CSS_DIR = resolve(HERE, '../../tokens-pd/css');
-const UI_REACT_COMPONENTS_DIR = resolve(HERE, '../../ui-react/src/components/ui');
+const UI_REACT_COMPONENTS_DIR = resolve(
+  HERE,
+  '../../ui-react/src/components/ui'
+);
 
 describe('every component spec validates against its schema', () => {
   for (const name of componentNames) {
@@ -64,10 +67,16 @@ describe('state classification is coherent', () => {
       const propNames = new Set(api.contract.properties.map((p) => p.name));
       for (const s of anatomy.states ?? []) {
         if (s.kind === 'pseudo') {
-          expect(s.pseudo, `${name}/${s.id} (pseudo) needs a pseudo selector`).toBeTruthy();
+          expect(
+            s.pseudo,
+            `${name}/${s.id} (pseudo) needs a pseudo selector`
+          ).toBeTruthy();
         }
         if (s.kind === 'prop') {
-          expect(s.prop, `${name}/${s.id} (prop) needs a prop name`).toBeTruthy();
+          expect(
+            s.prop,
+            `${name}/${s.id} (prop) needs a prop name`
+          ).toBeTruthy();
           expect(
             propNames.has(s.prop ?? ''),
             `${name}/${s.id} references unknown prop "${s.prop}"`
@@ -82,8 +91,12 @@ describe('state classification is coherent', () => {
       }
       // Internal state must be wired to the real API: its controlling prop, its
       // uncontrolled-default prop, and its change event must all exist.
-      const eventNames = new Set((api.contract.events ?? []).map((e) => e.name));
-      const internalIds = new Set((anatomy.internal_state ?? []).map((s) => s.id));
+      const eventNames = new Set(
+        (api.contract.events ?? []).map((e) => e.name)
+      );
+      const internalIds = new Set(
+        (anatomy.internal_state ?? []).map((s) => s.id)
+      );
       for (const st of anatomy.internal_state ?? []) {
         for (const prop of st.controllable_via ?? []) {
           expect(
@@ -182,8 +195,12 @@ describe('token references resolve in tokens-pd', () => {
 
   for (const name of componentNames) {
     it(`${name}: tokens.yaml names and ui-react var(--ui-*) refs are defined`, () => {
-      const specTokenNames = loadSpec(name).tokens.tokens.map((token) => token.name);
-      const missingSpecNames = specTokenNames.filter((token) => !definedTokens.has(token));
+      const specTokenNames = loadSpec(name).tokens.tokens.map(
+        (token) => token.name
+      );
+      const missingSpecNames = specTokenNames.filter(
+        (token) => !definedTokens.has(token)
+      );
       expect(
         missingSpecNames,
         `${name}: tokens.yaml contains undefined tokens:\n${missingSpecNames.join('\n')}`
@@ -193,7 +210,10 @@ describe('token references resolve in tokens-pd', () => {
         UI_REACT_COMPONENTS_DIR,
         loadSpec(name).index.sourceDir ?? name
       );
-      expect(existsSync(sourceDir), `${name}: missing ui-react component dir`).toBe(true);
+      expect(
+        existsSync(sourceDir),
+        `${name}: missing ui-react component dir`
+      ).toBe(true);
       if (!existsSync(sourceDir)) return;
 
       const sourceTokenNames = [...tokenSetFromVarRefs(sourceDir)];
@@ -254,7 +274,10 @@ describe('cva ↔ contract conformance', () => {
 
   it('RadarChart: api.yaml gridType enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
-      resolve(HERE, '../../ui-react/src/components/ui/radar-chart/radar-chart.tsx'),
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/radar-chart/radar-chart.tsx'
+      ),
       'utf8'
     );
     const groups = extractCvaGroups(source);
@@ -266,7 +289,10 @@ describe('cva ↔ contract conformance', () => {
 
   it('AreaChart: api.yaml layout/fill enums match the cva keys in ui-react', () => {
     const source = readFileSync(
-      resolve(HERE, '../../ui-react/src/components/ui/area-chart/area-chart.tsx'),
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/area-chart/area-chart.tsx'
+      ),
       'utf8'
     );
     const groups = extractCvaGroups(source);
@@ -280,7 +306,10 @@ describe('cva ↔ contract conformance', () => {
 
   it('LineChart: api.yaml curve/lineStyle enums match the cva keys in ui-react', () => {
     const source = readFileSync(
-      resolve(HERE, '../../ui-react/src/components/ui/line-chart/line-chart.tsx'),
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/line-chart/line-chart.tsx'
+      ),
       'utf8'
     );
     const groups = extractCvaGroups(source);
@@ -340,7 +369,10 @@ describe('cva ↔ contract conformance', () => {
 
   it('ButtonMenu: api.yaml variant enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
-      resolve(HERE, '../../ui-react/src/components/ui/button-menu/button-menu.tsx'),
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/button-menu/button-menu.tsx'
+      ),
       'utf8'
     );
     const groups = extractCvaGroups(source);
@@ -560,9 +592,10 @@ describe('cva ↔ contract conformance', () => {
     const groups = extractCvaGroups(source);
     const api = loadSpec('stepper-item').api;
 
-    // Two axes: the step's role in the sequence, and its interaction look. Only
-    // five of their nine combinations are drawn in Figma, but both are real
-    // props, so both enums are pinned here.
+    // Two axes: the step's role in the sequence, and its interaction look
+    // (idle/hover/active/focus, per the dedicated `--ui-stepper-item-*` tier).
+    // Only six of their twelve combinations are drawn in Figma, but both are
+    // real props, so both enums are pinned here.
     expect(Object.keys(groups)).toEqual(['variant', 'state']);
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
     expect(groups.state.sort()).toEqual(enumMembers(api, 'state'));

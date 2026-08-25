@@ -35,6 +35,13 @@ interface RenderHint {
   /** Fixed prop string applied to every generated instance, for components
    *  driven by props rather than children (e.g. CardFilter's `label`/`value`). */
   props?: string;
+  /** Per-variant prop-string builder, used **instead of** the static `props`
+   *  field in the plain Variants-loop branch (variants without a size axis).
+   *  Called once per variant at generation time, so whatever it returns is
+   *  written to the output file as literal text (Tailwind-scannable). Use it
+   *  when an instance has to reference a variant-specific token (e.g.
+   *  StepperItem's avatar label color). */
+  variantProps?: (variant: string) => string;
   /** Extra props for the single-instance stories only (pseudo-states and
    *  transitions), never the variant matrix — which sets `variant` itself and
    *  would end up with a duplicate attribute. Use it when a pseudo-state only
@@ -810,9 +817,15 @@ const RENDER: Record<string, RenderHint> = {
     extraImports: ["import { Avatar, AvatarFallback } from '../../avatar';"],
     props:
       'label="Step name" avatar={<Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar>}',
+    // The avatar is a filled container inside the step, so its own ring is
+    // suppressed; `current`/`future` additionally inherit the step's label color
+    // so the fallback initial matches the variant. Built per variant so the
+    // token name lands in the output as a literal Tailwind can scan.
+    variantProps: (v) =>
+      `label="Step name" avatar={<Avatar color="blue" className="[box-shadow:none]${v === 'completed' ? '' : ` text-[var(--ui-stepper-item-${v}-label-color)]`}"><AvatarFallback>1</AvatarFallback></Avatar>}`,
     // `avatar` is required, so the meta has to carry it for the type to check.
     metaArgs:
-      'avatar: <Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar>',
+      'avatar: <Avatar color="blue" className="[box-shadow:none]"><AvatarFallback>1</AvatarFallback></Avatar>',
   },
   stepper: {
     // Three required content props feed the compact summary, and the wide row is
@@ -827,9 +840,9 @@ const RENDER: Record<string, RenderHint> = {
       'currentStep={2} totalSteps={3} current="Choose a plan" next="Confirm and pay"',
     sample: [
       '',
-      '      <StepperItem variant="completed" label="Create an account" avatar={<Avatar color="green"><AvatarFallback>1</AvatarFallback></Avatar>} />',
-      '      <StepperItem variant="current" label="Choose a plan" avatar={<Avatar color="blue"><AvatarFallback>2</AvatarFallback></Avatar>} />',
-      '      <StepperItem variant="future" label="Confirm and pay" avatar={<Avatar color="gray"><AvatarFallback>3</AvatarFallback></Avatar>} />',
+      '      <StepperItem variant="completed" label="Create an account" avatar={<Avatar color="green" className="[box-shadow:none]"><AvatarFallback>1</AvatarFallback></Avatar>} />',
+      '      <StepperItem variant="current" label="Choose a plan" avatar={<Avatar color="blue" className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"><AvatarFallback>2</AvatarFallback></Avatar>} />',
+      '      <StepperItem variant="future" label="Confirm and pay" avatar={<Avatar color="gray" className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"><AvatarFallback>3</AvatarFallback></Avatar>} />',
       '    ',
     ].join('\n'),
     // `currentStep`/`totalSteps`/`current` are required, so the meta has to carry
@@ -971,20 +984,45 @@ export const Matrix: Story = {
     }
   } else if (variants.length) {
     // Variants but no size axis (e.g. Button has a single size): list each variant.
-    parts.push(`const VARIANTS = ${arr(variants)};
-
-export const Variants: Story = {
+    // With a `variantProps` hint the loop is unrolled at generation time: each
+    // variant's prop string differs, and unrolling is what keeps any Tailwind
+    // class it emits a literal in the output file (a runtime `VARIANTS.map`
+    // would leave a template literal Tailwind cannot scan).
+    const { variantProps } = hint;
+    // Per-variant prop string: the aria-label is prepended exactly as the shared
+    // `label` does, so a hint carrying both `ariaLabel` and `variantProps` keeps
+    // its label instead of silently dropping it.
+    const variantLabel = (build: (v: string) => string, v: string) =>
+      (hint.ariaLabel ? ` aria-label="${hint.ariaLabel}"` : '') + ` ${build(v)}`;
+    const variantItems = variantProps
+      ? variants
+          .map((v) => inst(`${variantLabel(variantProps, v)} variant="${v}"`))
+          .join('\n      ')
+      : `{VARIANTS.map((v) => ${inst(label + ' key={v} variant={v}')})}`;
+    // The const is only referenced by the runtime maps; when every story is
+    // unrolled per variant, emitting it unused would fail lint.
+    const variantsConst = !variantProps
+      ? `const VARIANTS = ${arr(variants)};\n\n`
+      : '';
+    parts.push(`${variantsConst}export const Variants: Story = {
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
-      {VARIANTS.map((v) => ${inst(label + ' key={v} variant={v}')})}
+      ${variantItems}
     </div>
   ),
 };`);
     if (hasProp(api, 'disabled')) {
+      const disabledItems = variantProps
+        ? variants
+            .map((v) =>
+              inst(`${variantLabel(variantProps, v)} variant="${v}" disabled`)
+            )
+            .join('\n      ')
+        : `{VARIANTS.map((v) => ${inst(label + ' key={v} variant={v} disabled')})}`;
       parts.push(`export const Disabled: Story = {
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
-      {VARIANTS.map((v) => ${inst(label + ' key={v} variant={v} disabled')})}
+      ${disabledItems}
     </div>
   ),
 };`);
