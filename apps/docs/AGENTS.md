@@ -61,13 +61,7 @@ and `context/roadmap.md` if any of that needs restoring later.
 ## ui-react live demos (shadow-root isolated)
 
 ui-react component pages render **live `<DemoReact>` previews**, not just static
-code blocks. This took a workaround: the shared
-`@acronis-platform/shadcn-uikit-demos` package imports the **legacy** specifier,
-and the alias trick that lets ui-react's Storybook swap the library at build time
-**does not work in the Next/RSC docs build** — bundler-aliasing a `"use client"`
-component drops it from Next's client manifest, so it renders as `undefined`
-(see `packages/ui-react/AGENTS.md`). So ui-react demos **don't** go through the
-shared demos package at all. Instead:
+code blocks. Demos live in this workspace and import the library directly:
 
 - write a `'use client'` demo in `src/components/demos-react/<name>.tsx` that
   imports directly from `@acronis-platform/ui-react`, and

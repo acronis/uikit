@@ -24,9 +24,9 @@ For the complicated scenario, you can also create an example in the [Sandbox](ht
 
 ## Working in the monorepo
 
-This repo is a pnpm workspace with four packages: the published UI library
-(`packages/ui-legacy`), a Vite demo (`apps/demo`), a shared demo components
-package (`apps/demos`), and a Fumadocs site (`apps/docs`).
+This repo is a pnpm workspace whose main surfaces are the published UI
+library (`packages/ui-react`), the published design-data and token packages
+under `packages/`, and a Fumadocs site (`apps/docs`).
 
 Every workspace exposes the same script vocabulary, so you have two equally
 valid styles for any task:
@@ -114,7 +114,7 @@ You can find more information about performance tests in the [Performance tests 
 ### Component documentation
 
 The documentation for each component is located at [`apps/docs`](https://github.com/acronis/uikit/tree/main/apps/docs) using Markdown/MDX format.
-The implementation examples are located at [`apps/demos`](https://github.com/acronis/uikit/tree/main/apps/demos).
+The live implementation examples live alongside it in `apps/docs/src/components/demos-react/`.
 For internal documentation we use Next.js with Fumadocs; see the [Fumadocs documentation](https://fumadocs.dev/docs/ui) for more information.
 
 Each document consists of highlights of the API(props, slots, events) with examples and complete details of these components.
@@ -152,9 +152,8 @@ pnpm changeset
 Answer the prompts (patch / minor / major + a one-line summary). A new
 markdown file is written under `.changeset/`. Commit it as part of your PR.
 
-You don't need a changeset for changes scoped to the apps (`apps/demo`,
-`apps/demos`, `apps/docs`) — they are private and listed as ignored in
-`.changeset/config.json`.
+You don't need a changeset for changes scoped to `apps/docs` — it is private
+and listed as ignored in `.changeset/config.json`.
 
 On merge to `main`, the `Release` workflow opens (or updates) a single
 "Version Packages" PR aggregating all pending changesets. Merging that PR

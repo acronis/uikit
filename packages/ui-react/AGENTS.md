@@ -33,23 +33,6 @@ top of this file.
   `VariantProps`. Merge classes with `cn()` (`src/lib/utils.ts`).
 - **Tailwind CSS v4** utilities. PascalCase component names; kebab-case files.
 
-## Reusing the shared demos
-
-The `@acronis-platform/shadcn-uikit-demos` workspace (used by `apps/demo`
-and `apps/docs` for the legacy library) is reused here. The demos import
-the legacy package specifier; `.storybook/main.ts` aliases
-`@acronis-platform/shadcn-uikit[/react]` to this library's `src`, so the
-**same demo source** renders against ui-react's components (see
-`button/__stories__/button-demos.stories.tsx`). Only add demo-backed
-stories for components ui-react actually exports, or the Storybook build
-will fail to resolve the missing ones.
-
-> A neutral import token (aliased per consumer) was tried so apps/demo,
-> apps/docs, and this Storybook could all switch libraries. It works for
-> Vite consumers but breaks the Next/RSC docs build — bundler-aliasing a
-> `"use client"` component drops it from Next's client manifest, so it
-> renders as `undefined`. Hence the alias lives only here (Vite, no RSC).
-
 ## File layout per component
 
 ```

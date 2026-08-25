@@ -1,8 +1,0 @@
-export { BasicSelect } from './BasicSelect';
-export { ControlledSelect } from './ControlledSelect';
-export { GroupedSelect } from './GroupedSelect';
-export { MultipleSelect } from './MultipleSelect';
-export { ObjectValuesSelect } from './ObjectValuesSelect';
-export { DisabledSelect } from './DisabledSelect';
-export { FormattedValueSelect } from './FormattedValueSelect';
-export { ScrollableSelect } from './ScrollableSelect';

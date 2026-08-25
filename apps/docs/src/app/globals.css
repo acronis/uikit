@@ -7,9 +7,6 @@
 /* Scan landing page source so spacing utilities are generated */
 @source "./page.tsx";
 
-/* UIKit pre-built CSS (themes, tokens, components, base) */
-@import '@acronis-platform/shadcn-uikit/styles';
-
 /* ─── Fumadocs color overrides to match Acronis brand ─────────────────────── */
 :root {
   /* Acronis primary blue (213 94% 51%) */
@@ -29,33 +26,33 @@ html.dark {
 
 /* ─── Demo preview panel ───────────────────────────────────────────────────── */
 .demo-preview {
-  background: var(--av-background-primary, #fff);
-  border-color: var(--av-border-secondary, #e2e8f0);
+  background: var(--color-fd-card);
+  border-color: var(--color-fd-border);
 }
 
 .demo-preview__canvas {
-  background: var(--av-background-secondary, #f8fafc);
+  background: var(--color-fd-secondary);
   /* subtle dot grid */
   background-image: radial-gradient(
     circle,
-    var(--av-border-secondary, #e2e8f0) 1px,
+    var(--color-fd-border) 1px,
     transparent 1px
   );
   background-size: 20px 20px;
 }
 
 .demo-preview__footer {
-  background: var(--av-background-primary, #fff);
-  border-color: var(--av-border-secondary, #e2e8f0);
-  color: var(--av-text-secondary, #64748b);
-  font-family: var(--av-font-mono, ui-monospace, monospace);
+  background: var(--color-fd-card);
+  border-color: var(--color-fd-border);
+  color: var(--color-fd-muted-foreground);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 .demo-preview__source {
-  background: var(--av-background-tertiary, #f1f5f9);
-  border-color: var(--av-border-secondary, #e2e8f0);
-  color: var(--av-text-primary, #0f172a);
-  font-family: var(--av-font-mono, ui-monospace, monospace);
+  background: var(--color-fd-muted);
+  border-color: var(--color-fd-border);
+  color: var(--color-fd-foreground);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.8125rem;
   line-height: 1.6;
 }
@@ -63,10 +60,11 @@ html.dark {
 /* ─── Fix Fumadocs layout: mobile nav overrides ────────────────────────────── */
 /*
  * The md:hidden class on #nd-subnav is compiled in @layer utilities inside
- * fumadocs-ui/style.css. When the uikit pre-built CSS also produces @layer
- * utilities rules (e.g. .flex), CSS layer ordering can let a later-declared
- * .flex rule win over md:hidden at desktop widths. Work around it by hiding
- * the mobile nav with an unlayered rule (unlayered always beats @layer).
+ * fumadocs-ui/style.css. Any other stylesheet that also emits @layer utilities
+ * rules (e.g. `tailwindcss/utilities` imported at the top of this file) can
+ * reorder the layers so a later-declared .flex rule wins over md:hidden at
+ * desktop widths. Work around it by hiding the mobile nav with an unlayered
+ * rule (unlayered always beats @layer).
  */
 @media (width >= 48rem) {
   #nd-subnav {
@@ -78,11 +76,11 @@ html.dark {
  * Same @layer-ordering hazard as #nd-subnav above. Fumadocs sizes the docs
  * grid with `--fd-sidebar-width` / `--fd-toc-width`: a `0px` default plus a
  * responsive `:has(...)` override that bumps them to 268px at md / xl. The
- * uikit pre-built CSS emits @layer rules that reorder layers, so the 268px
- * overrides lose to the 0px defaults — collapsing the sidebar and the
- * "On this page" TOC to zero-width columns (links overflow off-screen).
- * Re-assert the overrides unlayered (unlayered always beats @layer) at the
- * same breakpoints + marker selectors Fumadocs uses.
+ * competing @layer rules reorder layers, so the 268px overrides lose to the
+ * 0px defaults — collapsing the sidebar and the "On this page" TOC to
+ * zero-width columns (links overflow off-screen). Re-assert the overrides
+ * unlayered (unlayered always beats @layer) at the same breakpoints + marker
+ * selectors Fumadocs uses.
  */
 @media (width >= 48rem) {
   #nd-docs-layout:has(.md\:layout\:\[--fd-sidebar-width\:268px\]) {

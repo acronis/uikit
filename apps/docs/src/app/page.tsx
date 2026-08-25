@@ -170,15 +170,11 @@ const mono: React.CSSProperties = { fontFamily: 'ui-monospace, monospace' };
 const muted = 'var(--color-fd-muted-foreground, #64748b)';
 const primary = 'var(--color-fd-primary)';
 
-// Storybook and the demo SPA are sibling apps deployed alongside the docs (one
-// level up from the docs basePath: /uikit/docs -> /uikit). They are NOT under
-// the docs basePath, so link to them as external — otherwise Fumadocs prefixes
-// the basePath and produces /uikit/docs/storybook-react instead of
-// /uikit/storybook-react.
-const siteRoot = (process.env.NEXT_PUBLIC_DOCS_BASE_PATH ?? '').replace(
-  /\/[^/]+$/,
-  ''
-);
+// The Storybook builds are copied into the docs output at deploy time, so they
+// sit under the docs basePath (/uikit -> /uikit/storybook-react) but are NOT
+// Next routes. Link to them as external — otherwise Fumadocs prefixes the
+// basePath a second time.
+const siteRoot = process.env.NEXT_PUBLIC_DOCS_BASE_PATH ?? '';
 
 export default function HomePage() {
   return (
@@ -194,7 +190,6 @@ export default function HomePage() {
           url: `${siteRoot}/storybook-react`,
           external: true,
         },
-        // { type: 'main', text: 'Demo', url: `${siteRoot}/`, external: true },
       ]}
     >
       {/* ── Hero ─────────────────────────────────────────────────────────── */}

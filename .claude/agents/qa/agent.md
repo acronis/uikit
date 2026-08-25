@@ -84,9 +84,8 @@ screenshot, check the console for errors, and exercise interaction states
 ## Wide-view mandate
 
 When a component changes, also check: components that import or compose it;
-shared `src/lib/utils.ts` helpers; the shared `apps/demos` stories that render
-against both libraries via the Storybook alias; and whether the `apps/docs`
-build still resolves it (watch the RSC `"use client"` manifest landmine).
+shared `src/lib/utils.ts` helpers; and whether the `apps/docs` build still
+resolves it (watch the RSC `"use client"` manifest landmine).
 
 ## QA report
 

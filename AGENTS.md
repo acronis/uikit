@@ -15,18 +15,17 @@ workspace's context when you work inside that subtree.
 ## Repository overview
 
 `acronis/uikit` is a pnpm monorepo containing a React component
-library, a demo SPA, a documentation site, a shared demos package, two
-design-data packages (assets and tokens), and a build-tooling tier. The
-library and the two design-data packages are published; the apps and the
-tools are private.
+library, a documentation site, two design-data packages (assets and
+tokens), and a build-tooling tier. The library and the two design-data
+packages are published; the docs app and the tools are private.
 
 The repo is organized into four top-level directories, each with a
 distinct role:
 
 - **`context/`** — Markdown instructions read by both LLMs and humans
   (cross-workspace conventions; each workspace also has its own).
-- **`apps/`** — applications that get deployed (e.g. the demo and docs
-  sites). Private.
+- **`apps/`** — applications that get deployed (the docs site).
+  Private.
 - **`packages/`** — packages published to the npm registry.
 - **`tools/`** — scripts that automate, translate, or execute operations
   (e.g. token→CSS builds). Private; never published.
@@ -38,9 +37,7 @@ distinct role:
 | `packages/ui-legacy/`             | `@acronis-platform/shadcn-uikit`             | **yes**    | Vite library, Storybook 10, Vitest + RTL                                                                         | [AGENTS.md](packages/ui-legacy/AGENTS.md)             |
 | `packages/ui-react/`              | `@acronis-platform/ui-react`                 | **yes**    | Base UI library, Vite, Storybook 10, Vitest + RTL, Tailwind v4                                                   | [AGENTS.md](packages/ui-react/AGENTS.md)              |
 | `packages/icons-react/`           | `@acronis-platform/icons-react`              | **yes**    | React icons generated from `design-assets`, Vite, Storybook, Vitest                                              | [AGENTS.md](packages/icons-react/AGENTS.md)           |
-| `apps/demo/`                      | `@acronis-platform/shadcn-uikit-demo`        | no         | Vite SPA, React Router v7, Zustand                                                                               | [AGENTS.md](apps/demo/AGENTS.md)                      |
 | `apps/docs/`                      | `@acronis-platform/uikit-docs`               | no         | Next.js 15 + Fumadocs                                                                                            | [AGENTS.md](apps/docs/AGENTS.md)                      |
-| `apps/demos/`                     | `@acronis-platform/shadcn-uikit-demos`       | no         | source-only (no build, no dev server)                                                                            | [AGENTS.md](apps/demos/AGENTS.md)                     |
 | `packages/design-tokens/`         | `@acronis-platform/design-tokens`            | **yes**    | JSON data only (DTCG-2025.10 design tokens), ajv-validated                                                       | [AGENTS.md](packages/design-tokens/AGENTS.md)         |
 | `packages/design-assets/`         | `@acronis-platform/design-assets`            | **yes**    | JSON data only (icon/illustration manifests + binaries), ajv-validated                                           | [AGENTS.md](packages/design-assets/AGENTS.md)         |
 | `packages/tokens-pd/`             | `@acronis-platform/tokens-pd`                | **yes**    | Generated (committed) CSS + Tailwind presets + DTCG, built by the tool                                           | [AGENTS.md](packages/tokens-pd/AGENTS.md)             |
@@ -100,9 +97,7 @@ Root-only scripts (from the repo root):
 - `changeset`, `version`, `release` — Changesets CLI passthroughs
 - `husky` — runs lint-staged + typecheck (used by the pre-commit hook)
 
-`apps/demos` is intentionally source-only: its `dev`/`build` scripts are
-no-ops because the package is consumed via source-file exports. Tools
-follow the same vocabulary too: `tools/style-dictionary`'s real work is
+Tools follow the same vocabulary: `tools/style-dictionary`'s real work is
 `build` (with `test`/`test:watch` running vitest); only `dev` is a no-op.
 
 ## How agents should navigate this repo

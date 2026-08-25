@@ -13,8 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       WORKSPACES: >-
-        @acronis-platform/shadcn-uikit-demo
-        @acronis-platform/shadcn-uikit-demos
         @acronis-platform/uikit-docs
         @acronis-platform/design-assets
         @acronis-platform/design-tokens
