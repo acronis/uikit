@@ -1,21 +1,25 @@
 # Metric — behavior
 
-## Renders the value hierarchy
+## Renders the value
 
-- **Given** `label`, `value`, `unit`
-  **Then** the value is the highest-hierarchy element with the unit beside it at a
-  smaller muted size, and the label sits above as an uppercase note heading.
+- **Given** `value`, `unit`
+  **Then** the value is the highest-hierarchy element (`text-2xl font-semibold`)
+  with the unit beside it at a smaller muted size — both share one baseline row.
 
-## Card + body
+## Stats row layout
 
-- Metric renders as a Card. **Given** `children` (a chart, a Separator, an
-  insight line), **then** they render as the card body below the header.
+- **Given** any combination of `icon`, `value`, `unit`, `badge`, `tooltip`, `caption`
+  **Then** the left side of the stats row holds icon badge → value → unit → badge
+  → tooltip affordance (in that order); the right side holds the optional caption.
+  The row is `justify-between`, so left and right sit at the ends.
 
 ## Composes a trend
 
-- **Given** a `trend` (typically a `TrendIndicator`)
-  **Then** it renders on the right of the value row; Metric never computes or
-  interprets it.
+- **Given** `trend="up"` (or `"down"` or `"stable"`)
+  **Then** a `TrendIndicator` renders on its own row below the stats row.
+  Direction and sentiment are derived automatically: `up` → positive,
+  `down` → negative, `stable` → neutral. Pair with `trendValue` for the change
+  text. Metric never computes or interprets the values.
 
 ## Value is caller-formatted
 
@@ -23,24 +27,28 @@
   **Then** it renders verbatim — the kit never formats currency, units, or
   decimals, and never decides whether the value is good or bad.
 
-## Status is subtle
+## Icon badge is always info-tinted
 
-- `status` is one of `neutral | info | success | warning | danger | critical`.
-- **Given** a non-neutral `status` (e.g. `danger`)
-  **Then** the icon badge is tinted with that status family — its
-  `--ui-background-status-<status>-pressed` fill + `--ui-text-on-status-<status>`
-  icon color — never a full color fill of the whole metric.
+- **Given** an `icon`
+  **Then** it renders in a fixed `size-9` rounded badge using the info status
+  tint (`--ui-background-status-info` fill, `--ui-glyph-on-surface-neutral-dark`
+  icon color) unconditionally — the badge is a contextual slot, not a status
+  signal.
 
-## Loading and no-data
+## Loading
 
 - **Given** `loading`
-  **Then** a skeleton renders in place of the value, preserving its space.
+  **Then** a `Skeleton` renders in place of the value, preserving its space.
 - No data: the consumer passes `value="—"` — never `0`, which is a real value.
 
-## Caption and tooltip
+## Tooltip
 
-- **Given** a `caption` (e.g. a timeframe Tag), **then** it renders top-right,
-  aligned with the label.
-- **Given** a `tooltip`, **then** an info affordance (named by `tooltipLabel`)
-  appears next to the label and reveals the hint on hover/focus; it is
-  keyboard-reachable.
+- **Given** a `tooltip`, **then** an info affordance (`CircleInfoIcon`, 16 px,
+  named by `tooltipLabel`) appears next to the value and reveals the hint on
+  hover/focus; it is keyboard-reachable via Base UI `Tooltip`.
+
+## Body
+
+- **Given** `children` (a chart, a `Separator`, an insight line)
+  **Then** they render below the stats strip. No card chrome wraps them — Metric
+  is a plain `<div>`.

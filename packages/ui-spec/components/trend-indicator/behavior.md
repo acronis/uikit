@@ -24,11 +24,7 @@
   **Then** the text is rendered verbatim — the kit never diffs numbers, rounds,
   adds a sign, or converts units.
 
-## Variants
-
-- **Given** `variant="badge"`
-  **Then** the glyph + value sit in a compact pill tinted with the matching
-  status background.
+## Icon visibility
 
 - **Given** `showIcon={false}`
   **Then** no glyph renders (use sparingly — color alone should not carry

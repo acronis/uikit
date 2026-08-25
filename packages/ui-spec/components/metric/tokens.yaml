@@ -1,62 +1,34 @@
 spec_version: '1.0'
 component: Metric
 
-# References only. Values live in @acronis-platform/tokens-pd and resolve per
-# brand/theme at paint time; never restate values here. Metric has no dedicated
-# token tier — the Card surface + the semantic status/text tokens below do the
-# work, and geometry (typography scale, spacing, radius) uses the Tailwind scale
-# (there is no --ui-* type/space tier).
+# References only. Values live in @acronis-platform/tokens-pd. No dedicated
+# Metric token tier — Metric uses existing semantic tokens directly. Geometry
+# (typography scale, spacing, radius) uses the Tailwind scale; no --ui-* type/
+# space tier exists. The icon badge is always info-tinted (no status axis).
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - name: --ui-background-surface-primary
-    affects: root
-    description: Card surface (bg-background) via the composed Card.
-  - name: --ui-border-on-surface-border
-    affects: root
-    description: Card border (border-border) via the composed Card.
   - name: --ui-text-on-surface-primary
     affects: value
-    description: The primary value color (text-foreground).
+    description: Primary value color (text-foreground).
   - name: --ui-text-on-surface-secondary
-    affects: label
-    description: Label, unit, supporting text, and the info icon (text-muted-foreground).
-  - name: --ui-background-status-neutral-pressed
+    affects: unit, supporting-text, tooltip-info
+    description: Unit, supporting text, and the info icon color (text-muted-foreground).
+  - name: --ui-background-status-info
     affects: icon-badge
-    description: Icon badge fill for status="neutral".
-  - name: --ui-text-on-status-neutral
+    description: Icon badge background — always the info tint, regardless of context.
+  - name: --ui-glyph-on-surface-neutral-dark
     affects: icon-badge
-    description: Icon color for status="neutral".
-  - name: --ui-background-status-info-pressed
-    affects: icon-badge
-    description: Icon badge fill for status="info".
-  - name: --ui-text-on-status-info
-    affects: icon-badge
-    description: Icon color for status="info".
-  - name: --ui-background-status-success-pressed
-    affects: icon-badge
-    description: Icon badge fill for status="success".
-  - name: --ui-text-on-status-success
-    affects: icon-badge
-    description: Icon color for status="success".
-  - name: --ui-background-status-warning-pressed
-    affects: icon-badge
-    description: Icon badge fill for status="warning".
-  - name: --ui-text-on-status-warning
-    affects: icon-badge
-    description: Icon color for status="warning".
-  - name: --ui-background-status-danger-pressed
-    affects: icon-badge
-    description: Icon badge fill for status="danger".
-  - name: --ui-text-on-status-danger
-    affects: icon-badge
-    description: Icon color for status="danger".
-  - name: --ui-background-status-critical-pressed
-    affects: icon-badge
-    description: Icon badge fill for status="critical".
-  - name: --ui-text-on-status-critical
-    affects: icon-badge
-    description: Icon color for status="critical".
+    description: Icon color inside the badge.
   - name: --ui-background-surface-active
     affects: value
-    description: Skeleton fill shown in place of the value while loading.
+    description: Skeleton fill shown in place of the value while `loading` is true.
+  - name: --ui-text-on-status-success
+    affects: trend-row
+    description: TrendIndicator color when `trend="up"` (positive sentiment).
+  - name: --ui-text-on-status-danger
+    affects: trend-row
+    description: TrendIndicator color when `trend="down"` (negative sentiment).
+  - name: --ui-text-on-status-neutral
+    affects: trend-row
+    description: TrendIndicator color when `trend="stable"` (neutral sentiment).
