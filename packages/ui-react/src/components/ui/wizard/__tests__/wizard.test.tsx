@@ -11,7 +11,7 @@ import {
   PageHeaderRow,
   PageHeaderTitle,
 } from '../../page-header';
-import { Section, SectionContent, SectionTitle } from '../../section';
+import { Section, SectionContent, SectionHeader } from '../../section';
 import { Stepper } from '../../stepper';
 import { StepperItem } from '../../stepper-item';
 import { Wizard, WizardBody, WizardHeader, WizardSubtitle } from '../index';
@@ -108,15 +108,13 @@ describe('Wizard', () => {
       render(
         <WizardBody>
           <Section>
-            <SectionTitle>General</SectionTitle>
+            <SectionHeader title="General" />
             <SectionContent>Fields</SectionContent>
           </Section>
         </WizardBody>
       );
 
-      expect(
-        screen.getByRole('heading', { name: 'General' })
-      ).toBeInTheDocument();
+      expect(screen.getByText('General')).toBeInTheDocument();
       expect(screen.getByText('Fields')).toBeInTheDocument();
     });
 
@@ -170,7 +168,10 @@ describe('Wizard', () => {
               variant="current"
               label="Details"
               avatar={
-                <Avatar color="blue">
+                <Avatar
+                  color="blue"
+                  className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
+                >
                   <AvatarFallback>1</AvatarFallback>
                 </Avatar>
               }
@@ -179,7 +180,7 @@ describe('Wizard', () => {
         </WizardHeader>
         <WizardBody>
           <Section>
-            <SectionTitle>Details</SectionTitle>
+            <SectionHeader title="Details" />
           </Section>
         </WizardBody>
       </Wizard>
@@ -213,7 +214,7 @@ describe('Wizard', () => {
         </WizardHeader>
         <WizardBody>
           <Section>
-            <SectionTitle>Details</SectionTitle>
+            <SectionHeader title="Details" />
           </Section>
         </WizardBody>
       </Wizard>

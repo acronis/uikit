@@ -37,14 +37,14 @@ adapters:
           </PageHeaderRow>
           <WizardSubtitle>Name it, pick its widgets, choose who can see it.</WizardSubtitle>
           <Stepper currentStep={2} totalSteps={3} current="Choose widgets" next="Set permissions">
-            <StepperItem variant="completed" label="Name the dashboard" avatar={<Avatar color="green"><AvatarFallback>1</AvatarFallback></Avatar>} />
-            <StepperItem variant="current" label="Choose widgets" avatar={<Avatar color="blue"><AvatarFallback>2</AvatarFallback></Avatar>} />
-            <StepperItem variant="future" label="Set permissions" avatar={<Avatar color="gray"><AvatarFallback>3</AvatarFallback></Avatar>} />
+            <StepperItem variant="completed" label="Name the dashboard" avatar={<Avatar color="green" className="[box-shadow:none]"><AvatarFallback>1</AvatarFallback></Avatar>} />
+            <StepperItem variant="current" label="Choose widgets" avatar={<Avatar color="blue" className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"><AvatarFallback>2</AvatarFallback></Avatar>} />
+            <StepperItem variant="future" label="Set permissions" avatar={<Avatar color="gray" className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"><AvatarFallback>3</AvatarFallback></Avatar>} />
           </Stepper>
         </WizardHeader>
         <WizardBody>
           <Section>
-            <SectionHeader><SectionTitle>Choose widgets</SectionTitle></SectionHeader>
+            <SectionHeader title="Choose widgets" />
             <SectionContent>{/* step fields */}</SectionContent>
           </Section>
         </WizardBody>

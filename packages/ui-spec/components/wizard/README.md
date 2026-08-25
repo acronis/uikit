@@ -104,7 +104,7 @@ All parts accept their native element attributes plus `className`.
         variant="completed"
         label="Name the dashboard"
         avatar={
-          <Avatar color="green">
+          <Avatar color="green" className="[box-shadow:none]">
             <AvatarFallback>1</AvatarFallback>
           </Avatar>
         }
@@ -113,7 +113,10 @@ All parts accept their native element attributes plus `className`.
         variant="current"
         label="Choose widgets"
         avatar={
-          <Avatar color="blue">
+          <Avatar
+            color="blue"
+            className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
+          >
             <AvatarFallback>2</AvatarFallback>
           </Avatar>
         }
@@ -122,7 +125,10 @@ All parts accept their native element attributes plus `className`.
         variant="future"
         label="Set permissions"
         avatar={
-          <Avatar color="gray">
+          <Avatar
+            color="gray"
+            className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
+          >
             <AvatarFallback>3</AvatarFallback>
           </Avatar>
         }
@@ -132,14 +138,27 @@ All parts accept their native element attributes plus `className`.
 
   <WizardBody>
     <Section>
-      <SectionHeader>
-        <SectionTitle>Choose widgets</SectionTitle>
-      </SectionHeader>
+      <SectionHeader
+        title="Choose widgets"
+        description="Widgets you add here appear on the dashboard in the order you pick them."
+        hasDescription
+      />
       <SectionContent>{/* step fields */}</SectionContent>
     </Section>
   </WizardBody>
 </Wizard>
 ```
+
+The step markers follow `StepperItem`'s composed-`Avatar` conventions: `Avatar`'s
+2px outset ring is switched off with `[box-shadow:none]` (it would otherwise show
+as a halo on the filled step container), and the `current`/`future` digits are
+recolored to the step's own `--ui-stepper-item-{current,future}-label-color`.
+Wizard's `completed` marker is a digit on a green `Avatar` and carries no digit
+color override, so the digit keeps `Avatar`'s own green-scheme foreground; the
+reference pattern in `StepperItem`'s stories instead puts a fixed checkmark icon
+in the `completed` avatar, where the question doesn't arise. See
+[`stepper-item/README.md`](../stepper-item/README.md) for what each override
+does.
 
 ### Short flow — no stepper
 

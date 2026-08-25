@@ -97,7 +97,7 @@ component that owns its own.
         variant="completed"
         label="Name the dashboard"
         avatar={
-          <Avatar color="green">
+          <Avatar color="green" className="[box-shadow:none]">
             <AvatarFallback>1</AvatarFallback>
           </Avatar>
         }
@@ -106,7 +106,10 @@ component that owns its own.
         variant="current"
         label="Choose widgets"
         avatar={
-          <Avatar color="blue">
+          <Avatar
+            color="blue"
+            className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
+          >
             <AvatarFallback>2</AvatarFallback>
           </Avatar>
         }
@@ -115,7 +118,10 @@ component that owns its own.
         variant="future"
         label="Set permissions"
         avatar={
-          <Avatar color="gray">
+          <Avatar
+            color="gray"
+            className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
+          >
             <AvatarFallback>3</AvatarFallback>
           </Avatar>
         }
@@ -125,9 +131,11 @@ component that owns its own.
 
   <WizardBody>
     <Section>
-      <SectionHeader>
-        <SectionTitle>Choose widgets</SectionTitle>
-      </SectionHeader>
+      <SectionHeader
+        title="Choose widgets"
+        description="Widgets you add here appear on the dashboard in the order you pick them."
+        hasDescription
+      />
       <SectionContent>{/* step fields */}</SectionContent>
     </Section>
   </WizardBody>

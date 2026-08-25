@@ -11,9 +11,20 @@ their way.
   Composing `PageHeaderRow` / `PageHeaderTitle` / `PageHeaderActions` directly
   keeps the landmark structure honest and avoids a second `banner` on a page that
   already has one (e.g. inside `AppShell`).
-- **Heading outline.** `PageHeaderTitle` is an `<h1>` — one per page. Section
-  titles inside `WizardBody` are `<h2>` (`SectionTitle`), so the outline reads
-  h1 → h2 without a gap.
+- **Heading outline.** `PageHeaderTitle` is an `<h1>` — one per page, and the
+  only heading the wizard template contributes on its own. `SectionHeader`'s
+  `title` prop renders a `<p>`, not a heading, so a step's `Section` adds
+  nothing to the document outline: an `<h1>` alone is the whole outline. That's
+  fine for a single-section step, where the `<h1>` already names the flow. If a
+  step's body needs navigable structure — several `Section`s, or one a
+  screen-reader user should be able to jump to — `Section` offers an escape
+  hatch: pass a real heading (`h2`, to sit directly under the wizard's `<h1>`)
+  through `SectionHeader`'s `children` slot and omit `title` so the section
+  isn't titled twice; see
+  [`section/accessibility.md`](../section/accessibility.md) for the markup and
+  the styling you have to supply yourself. Wizard's own stories don't use that
+  escape hatch — the multi-`Section` story titles each section with `title`, so
+  those steps contribute no headings beyond the `<h1>`.
 - **The subtitle is a plain `<p>`**, not a heading and not the title's accessible
   description. If the flow needs it announced with the title, associate it
   explicitly (`aria-describedby` on the relevant control), since proximity alone

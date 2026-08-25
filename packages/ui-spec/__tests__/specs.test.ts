@@ -174,27 +174,6 @@ function tokenSetFromCssDefinitions(absCssDir: string): Set<string> {
  */
 const TOKEN_REF_RE = /(?:var\(\s*|-\()(--ui-[a-z0-9-]+)\s*\)/g;
 
-// Deliberate, tracked exceptions: custom properties that are genuinely DEFINED —
-// just in ui-react's own `src/styles/index.css` rather than in a tokens-pd tier,
-// because the design system has no Figma variable to generate them from (a grab
-// cursor; the breakpoint values as plain vars, for sizing an element to a
-// breakpoint outside a `@media` condition). Each is documented in place in that
-// stylesheet. They resolve at paint time exactly like a generated token, so a
-// reference to one is not dangling — this list is not a loophole for
-// hand-authoring theme values, which the no-hex convention still forbids.
-// Mirrors the same allowance in
-// `.claude/skills/component-readiness/scripts/audit.sh`. Remove entries as they
-// move upstream into design-tokens.
-const LOCALLY_AUTHORED_TOKENS = new Set([
-  '--ui-draggable-cursor',
-  '--ui-draggable-cursor-active',
-  '--ui-breakpoint-lg',
-  '--ui-breakpoint-xl',
-  '--ui-breakpoint-2xl',
-  '--ui-breakpoint-3xl',
-  '--ui-breakpoint-4xl',
-]);
-
 function tokenSetFromVarRefs(absDir: string): Set<string> {
   const files = listFiles(
     absDir,

@@ -16,9 +16,7 @@ import {
   PageHeaderTitle,
   Section,
   SectionContent,
-  SectionDescription,
   SectionHeader,
-  SectionTitle,
   Stepper,
   StepperItem,
   Wizard,
@@ -73,7 +71,7 @@ export function WizardDemo() {
             variant="completed"
             label="Name the dashboard"
             avatar={
-              <Avatar color="green">
+              <Avatar color="green" className="[box-shadow:none]">
                 <AvatarFallback>1</AvatarFallback>
               </Avatar>
             }
@@ -82,7 +80,10 @@ export function WizardDemo() {
             variant="current"
             label="Choose widgets"
             avatar={
-              <Avatar color="blue">
+              <Avatar
+                color="blue"
+                className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
+              >
                 <AvatarFallback>2</AvatarFallback>
               </Avatar>
             }
@@ -91,7 +92,10 @@ export function WizardDemo() {
             variant="future"
             label="Set permissions"
             avatar={
-              <Avatar color="gray">
+              <Avatar
+                color="gray"
+                className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
+              >
                 <AvatarFallback>3</AvatarFallback>
               </Avatar>
             }
@@ -101,13 +105,11 @@ export function WizardDemo() {
 
       <WizardBody>
         <Section>
-          <SectionHeader>
-            <SectionTitle>Choose widgets</SectionTitle>
-            <SectionDescription>
-              Widgets you add here appear on the dashboard in the order you pick
-              them.
-            </SectionDescription>
-          </SectionHeader>
+          <SectionHeader
+            title="Choose widgets"
+            description="Widgets you add here appear on the dashboard in the order you pick them."
+            hasDescription
+          />
           <SectionContent>
             {/* `InputText` labels itself — no surrounding Field/FieldLabel,
                 which would leave the label unassociated. */}

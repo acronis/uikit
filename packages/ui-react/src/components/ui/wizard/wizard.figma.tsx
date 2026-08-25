@@ -22,7 +22,7 @@ import {
 } from '../breadcrumb';
 import { Button } from '../button';
 import { PageHeaderActions, PageHeaderRow, PageHeaderTitle } from '../page-header';
-import { Section, SectionContent, SectionTitle } from '../section';
+import { Section, SectionContent, SectionHeader } from '../section';
 import { Stepper } from '../stepper';
 import { StepperItem } from '../stepper-item';
 import { Wizard, WizardBody, WizardHeader, WizardSubtitle } from './wizard';
@@ -68,7 +68,7 @@ figma.connect(
               variant="completed"
               label="Name the dashboard"
               avatar={
-                <Avatar color="green">
+                <Avatar color="green" className="[box-shadow:none]">
                   <AvatarFallback>1</AvatarFallback>
                 </Avatar>
               }
@@ -77,7 +77,10 @@ figma.connect(
               variant="current"
               label="Choose widgets"
               avatar={
-                <Avatar color="blue">
+                <Avatar
+                  color="blue"
+                  className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
+                >
                   <AvatarFallback>2</AvatarFallback>
                 </Avatar>
               }
@@ -86,7 +89,10 @@ figma.connect(
               variant="future"
               label="Set permissions"
               avatar={
-                <Avatar color="gray">
+                <Avatar
+                  color="gray"
+                  className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
+                >
                   <AvatarFallback>3</AvatarFallback>
                 </Avatar>
               }
@@ -95,7 +101,7 @@ figma.connect(
         </WizardHeader>
         <WizardBody>
           <Section>
-            <SectionTitle>Choose widgets</SectionTitle>
+            <SectionHeader title="Choose widgets" />
             <SectionContent>{/* step fields */}</SectionContent>
           </Section>
         </WizardBody>

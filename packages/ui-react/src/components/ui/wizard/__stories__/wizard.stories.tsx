@@ -16,13 +16,7 @@ import {
   PageHeaderRow,
   PageHeaderTitle,
 } from '../../page-header';
-import {
-  Section,
-  SectionContent,
-  SectionDescription,
-  SectionHeader,
-  SectionTitle,
-} from '../../section';
+import { Section, SectionContent, SectionHeader } from '../../section';
 import { Stepper } from '../../stepper';
 import { StepperItem } from '../../stepper-item';
 import { Wizard, WizardBody, WizardHeader, WizardSubtitle } from '../wizard';
@@ -97,7 +91,7 @@ function WizardSteps() {
         variant="completed"
         label="Name the dashboard"
         avatar={
-          <Avatar color="green">
+          <Avatar color="green" className="[box-shadow:none]">
             <AvatarFallback>1</AvatarFallback>
           </Avatar>
         }
@@ -106,7 +100,10 @@ function WizardSteps() {
         variant="current"
         label="Choose widgets"
         avatar={
-          <Avatar color="blue">
+          <Avatar
+            color="blue"
+            className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
+          >
             <AvatarFallback>2</AvatarFallback>
           </Avatar>
         }
@@ -115,7 +112,10 @@ function WizardSteps() {
         variant="future"
         label="Set permissions"
         avatar={
-          <Avatar color="gray">
+          <Avatar
+            color="gray"
+            className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
+          >
             <AvatarFallback>3</AvatarFallback>
           </Avatar>
         }
@@ -127,13 +127,11 @@ function WizardSteps() {
 function StepContent() {
   return (
     <Section>
-      <SectionHeader>
-        <SectionTitle>Choose widgets</SectionTitle>
-        <SectionDescription>
-          Widgets you add here appear on the dashboard in the order you pick
-          them.
-        </SectionDescription>
-      </SectionHeader>
+      <SectionHeader
+        title="Choose widgets"
+        description="Widgets you add here appear on the dashboard in the order you pick them."
+        hasDescription
+      />
       <SectionContent>
         {/* `InputText` labels itself (it wires the label's `htmlFor` to the
             input's id), so it needs no surrounding Field/FieldLabel — a bare
@@ -188,7 +186,10 @@ export const FirstStep: Story = {
             variant="current"
             label="Name the dashboard"
             avatar={
-              <Avatar color="blue">
+              <Avatar
+                color="blue"
+                className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
+              >
                 <AvatarFallback>1</AvatarFallback>
               </Avatar>
             }
@@ -197,7 +198,10 @@ export const FirstStep: Story = {
             variant="future"
             label="Choose widgets"
             avatar={
-              <Avatar color="gray">
+              <Avatar
+                color="gray"
+                className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
+              >
                 <AvatarFallback>2</AvatarFallback>
               </Avatar>
             }
@@ -206,7 +210,10 @@ export const FirstStep: Story = {
             variant="future"
             label="Set permissions"
             avatar={
-              <Avatar color="gray">
+              <Avatar
+                color="gray"
+                className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
+              >
                 <AvatarFallback>3</AvatarFallback>
               </Avatar>
             }
@@ -287,7 +294,7 @@ export const LastStep: Story = {
             variant="completed"
             label="Name the dashboard"
             avatar={
-              <Avatar color="green">
+              <Avatar color="green" className="[box-shadow:none]">
                 <AvatarFallback>1</AvatarFallback>
               </Avatar>
             }
@@ -296,7 +303,7 @@ export const LastStep: Story = {
             variant="completed"
             label="Choose widgets"
             avatar={
-              <Avatar color="green">
+              <Avatar color="green" className="[box-shadow:none]">
                 <AvatarFallback>2</AvatarFallback>
               </Avatar>
             }
@@ -305,7 +312,10 @@ export const LastStep: Story = {
             variant="current"
             label="Set permissions"
             avatar={
-              <Avatar color="blue">
+              <Avatar
+                color="blue"
+                className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
+              >
                 <AvatarFallback>3</AvatarFallback>
               </Avatar>
             }
@@ -329,12 +339,11 @@ function LongStepContent() {
   return (
     <>
       <Section>
-        <SectionHeader>
-          <SectionTitle>Dashboard details</SectionTitle>
-          <SectionDescription>
-            Name the dashboard and describe its purpose.
-          </SectionDescription>
-        </SectionHeader>
+        <SectionHeader
+          title="Dashboard details"
+          description="Name the dashboard and describe its purpose."
+          hasDescription
+        />
         <SectionContent>
           <InputText
             label="Dashboard name"
@@ -349,12 +358,11 @@ function LongStepContent() {
         </SectionContent>
       </Section>
       <Section>
-        <SectionHeader>
-          <SectionTitle>Data sources</SectionTitle>
-          <SectionDescription>
-            Pick where the widgets on this dashboard pull their data from.
-          </SectionDescription>
-        </SectionHeader>
+        <SectionHeader
+          title="Data sources"
+          description="Pick where the widgets on this dashboard pull their data from."
+          hasDescription
+        />
         <SectionContent>
           <InputText label="Primary source" defaultValue="Cyber Protection" />
           <InputText
@@ -367,12 +375,11 @@ function LongStepContent() {
         </SectionContent>
       </Section>
       <Section>
-        <SectionHeader>
-          <SectionTitle>Notifications</SectionTitle>
-          <SectionDescription>
-            Choose who gets notified when a widget on this dashboard alerts.
-          </SectionDescription>
-        </SectionHeader>
+        <SectionHeader
+          title="Notifications"
+          description="Choose who gets notified when a widget on this dashboard alerts."
+          hasDescription
+        />
         <SectionContent>
           <InputText
             label="Notification channel"
