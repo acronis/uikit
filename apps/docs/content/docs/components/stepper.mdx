@@ -68,7 +68,7 @@ A full sequence:
     variant="completed"
     label="Create an account"
     avatar={
-      <Avatar color="green">
+      <Avatar color="green" className="[box-shadow:none]">
         <CheckIcon size={16} />
       </Avatar>
     }
@@ -79,7 +79,7 @@ A full sequence:
     avatar={
       <Avatar
         color="blue"
-        className="text-[var(--ui-stepper-item-current-label-color)]"
+        className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
       >
         <AvatarFallback>2</AvatarFallback>
       </Avatar>
@@ -91,7 +91,7 @@ A full sequence:
     avatar={
       <Avatar
         color="gray"
-        className="text-[var(--ui-stepper-item-future-label-color)]"
+        className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
       >
         <AvatarFallback>3</AvatarFallback>
       </Avatar>
@@ -99,6 +99,15 @@ A full sequence:
   />
 </Stepper>
 ```
+
+<Callout type="warn">
+  `Avatar` always paints a 2px outset ring meant to separate overlapping
+  avatars in an `AvatarGroup`. Figma's Stepper avatars carry no such stroke,
+  so left on, the ring shows as an unwanted halo on a filled step container.
+  Switch it off with `className="[box-shadow:none]"` on each composed
+  `Avatar`, as shown above — see [`StepperItem`](/components/stepper-item)
+  for the full note.
+</Callout>
 
 The last step — no `next`, so the compact layout shows a single line:
 

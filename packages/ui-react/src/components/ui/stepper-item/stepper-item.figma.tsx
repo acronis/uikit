@@ -31,7 +31,7 @@ figma.connect(
         variant={variant}
         label={label}
         avatar={
-          <Avatar color="blue">
+          <Avatar color="blue" className="[box-shadow:none]">
             <AvatarFallback>1</AvatarFallback>
           </Avatar>
         }

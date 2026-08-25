@@ -9,13 +9,13 @@ import {
 } from '@acronis-platform/ui-react';
 
 const checkAvatar = (
-  <Avatar color="green">
+  <Avatar color="green" className="[box-shadow:none]">
     <CheckIcon size={16} />
   </Avatar>
 );
 
 const numberAvatar = (n: number, color: 'blue' | 'gray' = 'blue') => (
-  <Avatar color={color}>
+  <Avatar color={color} className="[box-shadow:none]">
     <AvatarFallback>{n}</AvatarFallback>
   </Avatar>
 );

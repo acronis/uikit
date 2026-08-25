@@ -8,6 +8,13 @@ import { StepperItem } from '../stepper-item';
 // own label-color token (overriding Avatar's own per-scheme color) — see the
 // comment in stepper-item.tsx. `completed` uses a fixed checkmark icon, so it
 // needs no such override.
+//
+// `[box-shadow:none]` switches off Avatar's 2px outset ring (meant to
+// separate overlapping avatars in an `AvatarGroup`), the same way
+// `Timeline`'s marker does — Figma's Stepper avatars carry no stroke, and the
+// ring otherwise shows as an unwanted halo on the `current`/`completed`
+// step's filled container. See the "Known quirk" note in this component's
+// spec `README.md`.
 const numberAvatar = (
   n: number,
   color: 'blue' | 'gray' | 'green' = 'blue',
@@ -15,14 +22,14 @@ const numberAvatar = (
 ) => (
   <Avatar
     color={color}
-    className={`text-[var(--ui-stepper-item-${digitVariant}-label-color)]`}
+    className={`[box-shadow:none] text-[var(--ui-stepper-item-${digitVariant}-label-color)]`}
   >
     <AvatarFallback>{n}</AvatarFallback>
   </Avatar>
 );
 
 const checkAvatar = (
-  <Avatar color="green">
+  <Avatar color="green" className="[box-shadow:none]">
     <CheckIcon size={16} />
   </Avatar>
 );

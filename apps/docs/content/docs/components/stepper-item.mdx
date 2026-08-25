@@ -34,6 +34,15 @@ step renders it verbatim without sizing, tinting, or recoloring it.
   fixed checkmark icon, so it needs no such override.
 </Callout>
 
+<Callout type="warn">
+  `Avatar` always paints a 2px outset ring meant to separate overlapping
+  avatars in an `AvatarGroup`. Figma's `StepperItem` avatars carry no such
+  stroke, so left on, the ring shows as an unwanted halo on `current`'s blue
+  fill and on `completed`'s hover/active fills. Switch it off yourself with
+  `className="[box-shadow:none]"` on the composed `Avatar`, as the examples
+  below do.
+</Callout>
+
 Compose the steps inside [`Stepper`](/components/stepper), which lays them out in
 a row and adds the compact narrow-viewport summary — don't hand-roll that row. You
 still decide each step's `variant`. The step is polymorphic via Base UI's
@@ -67,7 +76,7 @@ A full sequence:
     variant="completed"
     label="Create an account"
     avatar={
-      <Avatar color="green">
+      <Avatar color="green" className="[box-shadow:none]">
         <CheckIcon size={16} />
       </Avatar>
     }
@@ -78,7 +87,7 @@ A full sequence:
     avatar={
       <Avatar
         color="blue"
-        className="text-[var(--ui-stepper-item-current-label-color)]"
+        className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
       >
         <AvatarFallback>2</AvatarFallback>
       </Avatar>
@@ -90,7 +99,7 @@ A full sequence:
     avatar={
       <Avatar
         color="gray"
-        className="text-[var(--ui-stepper-item-future-label-color)]"
+        className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
       >
         <AvatarFallback>3</AvatarFallback>
       </Avatar>
@@ -108,7 +117,7 @@ press detection:
   state="hover"
   label="Create an account"
   avatar={
-    <Avatar color="green">
+    <Avatar color="green" className="[box-shadow:none]">
       <CheckIcon size={16} />
     </Avatar>
   }
@@ -130,7 +139,7 @@ still fires; skip future steps in your own navigation logic too.
   avatar={
     <Avatar
       color="gray"
-      className="text-[var(--ui-stepper-item-future-label-color)]"
+      className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
     >
       <AvatarFallback>3</AvatarFallback>
     </Avatar>

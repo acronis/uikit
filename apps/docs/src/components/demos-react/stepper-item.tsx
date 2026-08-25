@@ -9,7 +9,7 @@ import {
 } from '@acronis-platform/ui-react';
 
 const completedAvatar = (
-  <Avatar color="green">
+  <Avatar color="green" className="[box-shadow:none]">
     <CheckIcon size={16} />
   </Avatar>
 );
@@ -36,7 +36,7 @@ export function StepperItemDemo() {
           avatar={
             <Avatar
               color="blue"
-              className="text-[var(--ui-stepper-item-current-label-color)]"
+              className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
             >
               <AvatarFallback>2</AvatarFallback>
             </Avatar>
@@ -48,7 +48,7 @@ export function StepperItemDemo() {
           avatar={
             <Avatar
               color="gray"
-              className="text-[var(--ui-stepper-item-future-label-color)]"
+              className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
             >
               <AvatarFallback>3</AvatarFallback>
             </Avatar>
@@ -65,7 +65,7 @@ export function StepperItemDemo() {
           avatar={
             <Avatar
               color="blue"
-              className="text-[var(--ui-stepper-item-current-label-color)]"
+              className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
             >
               <AvatarFallback>1</AvatarFallback>
             </Avatar>
@@ -101,7 +101,7 @@ export function StepperItemDemo() {
           avatar={
             <Avatar
               color="gray"
-              className="text-[var(--ui-stepper-item-future-label-color)]"
+              className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
             >
               <AvatarFallback>5</AvatarFallback>
             </Avatar>

@@ -38,7 +38,7 @@ the summary props — the component cannot derive one from the other.
     variant="completed"
     label="Create an account"
     avatar={
-      <Avatar color="green">
+      <Avatar color="green" className="[box-shadow:none]">
         <CheckIcon size={16} />
       </Avatar>
     }
@@ -47,7 +47,7 @@ the summary props — the component cannot derive one from the other.
     variant="current"
     label="Choose a plan"
     avatar={
-      <Avatar color="blue">
+      <Avatar color="blue" className="[box-shadow:none]">
         <AvatarFallback>2</AvatarFallback>
       </Avatar>
     }
@@ -56,13 +56,19 @@ the summary props — the component cannot derive one from the other.
     variant="future"
     label="Confirm and pay"
     avatar={
-      <Avatar color="gray">
+      <Avatar color="gray" className="[box-shadow:none]">
         <AvatarFallback>3</AvatarFallback>
       </Avatar>
     }
   />
 </Stepper>
 ```
+
+`Avatar`'s 2px outset ring (meant to separate overlapping avatars in an
+`AvatarGroup`) is switched off with `className="[box-shadow:none]"` on each
+composed avatar — Figma's Stepper avatars carry no stroke, and left on, the
+ring shows as an unwanted halo on a filled step container. See `StepperItem`'s
+own spec `README.md` for the full note.
 
 On the **last** step, omit `next` — the whole "Next: …" line is then left out
 rather than rendered empty.

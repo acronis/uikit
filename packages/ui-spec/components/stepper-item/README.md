@@ -33,7 +33,7 @@ completed step. Compose the steps inside `Stepper`, which lays them out.
     variant="completed"
     label="Create an account"
     avatar={
-      <Avatar color="green">
+      <Avatar color="green" className="[box-shadow:none]">
         <CheckIcon size={16} />
       </Avatar>
     }
@@ -45,7 +45,7 @@ completed step. Compose the steps inside `Stepper`, which lays them out.
     avatar={
       <Avatar
         color="blue"
-        className="text-[var(--ui-stepper-item-current-label-color)]"
+        className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
       >
         <AvatarFallback>2</AvatarFallback>
       </Avatar>
@@ -57,7 +57,7 @@ completed step. Compose the steps inside `Stepper`, which lays them out.
     avatar={
       <Avatar
         color="gray"
-        className="text-[var(--ui-stepper-item-future-label-color)]"
+        className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
       >
         <AvatarFallback>3</AvatarFallback>
       </Avatar>
@@ -68,10 +68,16 @@ completed step. Compose the steps inside `Stepper`, which lays them out.
 
 The marker is entirely yours: color scheme, initials vs. icon vs. image, size
 overrides. The step renders the element verbatim and never restyles it — with
-one caveat: Figma recolors the digit inside a `current`/`future` avatar to
-that step's own label-color token, overriding `Avatar`'s usual per-scheme
-color, so pass that override yourself as shown above (`completed`'s checkmark
-is a fixed icon, so it needs none).
+two caveats the caller applies via `className`, both shown above:
+
+- Figma recolors the digit inside a `current`/`future` avatar to that step's
+  own label-color token, overriding `Avatar`'s usual per-scheme color
+  (`completed`'s checkmark is a fixed icon, so it needs none).
+- `Avatar`'s 2px outset ring (`box-shadow`, meant to separate overlapping
+  avatars in an `AvatarGroup`) is switched off with `[box-shadow:none]` —
+  Figma's `StepperItem` avatars carry no stroke, and left on, the ring shows
+  as an unwanted halo on `current`'s blue fill and on `completed`'s
+  hover/active fills. See "Design status" below.
 
 Only six `variant` x `state` combinations exist in the design, and the
 component reproduces exactly that: `current` is always highlighted with a
@@ -91,7 +97,7 @@ border, `future` is always disabled, and only `completed` reads `state`
 The Figma component has a dedicated `--ui-stepper-item-*` token tier as of the
 2026-08-24 sync — see `tokens.yaml` for the full list.
 
-**Known quirk — `Avatar`'s 2px ring shows on colored step backgrounds.**
+**Resolved quirk — `Avatar`'s 2px ring on colored step backgrounds.**
 `Avatar` always paints a 2px `--ui-avatar-global-avatar-border-color` ring
 (white in light mode), meant to separate overlapping avatars in an
 `AvatarGroup`. Figma's own `StepperItem` composition never draws this ring
@@ -101,6 +107,7 @@ where a step's container has no fill but becomes a visible halo on `current`'s
 blue background and on `completed`'s hover/active fills. This is a pre-existing
 `Avatar`-wide behavior (present anywhere an avatar sits on a colored surface,
 e.g. `Timeline`'s marker), not something `StepperItem` introduces or can fix by
-itself — `StepperItem` is documented to render the marker verbatim. Fixing it
-would mean making `Avatar`'s ring conditional on being inside an `AvatarGroup`,
-which is out of scope here; tracked as a follow-up against `Avatar`.
+itself — `StepperItem` is documented to render the marker verbatim, so the
+caller switches the ring off with `className="[box-shadow:none]"` on the
+composed `Avatar`, as shown in Usage above (the same pattern `Timeline`'s
+marker already used).
