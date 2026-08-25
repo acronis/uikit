@@ -16,7 +16,7 @@ description: >
 # Vue 2 → ui-react component plan (research + PRD, no code)
 
 **Target is always `packages/ui-react`.** This skill and its follow-up build
-never read from, write to, or plan for `packages/ui-legacy` — that package is
+never read from, write to, or plan for the archived `packages/ui-legacy` — that package is
 a separate, already-mature, independently-maintained workspace with its own
 recipe (`/legacy-component` reads _from_ it as a source, it doesn't build
 _into_ it). The overlap here is coincidental naming: this skill's source is

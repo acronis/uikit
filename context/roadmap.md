@@ -15,6 +15,13 @@ icons/assets** form one pipeline, Figma is the upstream source of truth, and
 build on.** `ui-legacy` (`shadcn-uikit`) moves to **maintenance/freeze** with a
 defined deprecation path.
 
+> **Status 2026-08-21:** reached. `packages/ui-legacy` and the `apps/demo` /
+> `apps/demos` showcases were removed from the repository. Versions up to
+> `0.36.3` stay installable from npm and are deprecated there; the final source
+> is in this repo's history at commit `2e257c95` (also tagged
+> `ui-legacy-final`). The decisions recorded below are
+> kept as-dated.
+
 ## Decisions locked (2026-06-05)
 
 1. **`ui-react` replaces `ui-legacy`.** Legacy → maintenance/freeze; no new
@@ -56,7 +63,7 @@ defined deprecation path.
 
 | Area             | Package                                         | Version | Maturity                               |
 | ---------------- | ----------------------------------------------- | ------- | -------------------------------------- |
-| Legacy lib       | `shadcn-uikit` (`ui-legacy`)                    | 0.36.3  | Mature — 82 components → **freeze**    |
+| Legacy lib       | `shadcn-uikit` (`ui-legacy`)                    | 0.36.3  | **Removed from repo** (2026-08-21)     |
 | **Next-gen lib** | `ui-react`                                      | 0.3.0   | **2/82 components** (Button, Switch)   |
 | Tokens           | `design-tokens`                                 | 0.4.0   | DTCG JSON, Figma-synced, ajv-validated |
 | Token artifacts  | `tokens-pd` (built by `tools/style-dictionary`) | 0.6.0   | Per-brand CSS + Tailwind presets       |
@@ -166,6 +173,7 @@ Depends on Tier 1–2 primitives (Tooltip, Dropdown, Checkbox, Scroll Area).
 
 - [ ] **Migration guide: legacy → ui-react** (component mapping + manual flow; optional codemod recipes where viable)
 - [x] Deprecation notice + timeline published on `ui-legacy` (issue #185)
+- [x] `ui-legacy` source removed from the repo + npm-deprecated (2026-08-21)
 - [ ] Docs site (apps/docs) coverage tracks ui-react component ladder
       (including the token reference, typography, and icon catalog pages)
 

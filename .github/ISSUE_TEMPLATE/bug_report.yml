@@ -14,7 +14,6 @@ body:
       label: Affected package
       options:
         - '@acronis-platform/ui-react'
-        - '@acronis-platform/shadcn-uikit (ui-legacy)'
         - '@acronis-platform/icons-react'
         - '@acronis-platform/tokens-pd'
         - '@acronis-platform/design-tokens'

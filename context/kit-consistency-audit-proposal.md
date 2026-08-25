@@ -323,7 +323,8 @@ the others". AI proposes; findings are filed, not auto-applied.
 
 A `kit-diff` report (skill-driven) compares our specs/grammar/screens against:
 
-- **`ui-legacy`** — variant/prop coverage parity (X1, X3).
+- **`ui-legacy`** — variant/prop coverage parity (X1, X3). Removed from the
+  repo; read it from commit `2e257c95` if this comparison is revived.
 - **Figma** (Code Connect nodes + `get_variable_defs`) — token **value** drift
   (X2) and variant parity (X1/C4). Uses the same Figma MCP we already use.
 - **The Vue `@uikit/ui-kit`** specs/grammar — missing rules or components (X3).

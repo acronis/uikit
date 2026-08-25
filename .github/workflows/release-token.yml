@@ -8,8 +8,6 @@
 #   - Authenticates with a static Automation token (NPM_PUBLISH_TOKEN_2).
 #   - Publishes an explicit, fixed list of packages — safe to re-run because
 #     each package is skipped when its current version is already on npm.
-#   - Does NOT publish @acronis-platform/shadcn-uikit (ui-legacy) — that
-#     package is handled exclusively by release.yml (OIDC path).
 #
 # Packages published by this workflow:
 #   @acronis-platform/design-assets

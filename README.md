@@ -29,12 +29,14 @@ The repo is organized into four top-level directories: `context/` (shared docs),
 | `tools/figma-design-assets-sync/` | `@acronis-platform/figma-design-assets-sync` | no        | Syncs icon SVGs from Figma into `design-assets` and regenerates the pack.    |
 
 This table covers the workspaces relevant to consuming the kit. It omits the
-`ui-spec` spike and `packages/ui-legacy/`
-(`@acronis-platform/shadcn-uikit`) — still published, but in
-maintenance/freeze and available only while consumers migrate, per its
-[deprecation notice](./packages/ui-legacy/README.md). See
-[`AGENTS.md`](./AGENTS.md) for the full workspace map and the per-workspace
-`AGENTS.md` files for area-specific conventions.
+`ui-spec` spike. See [`AGENTS.md`](./AGENTS.md) for the full workspace map and
+the per-workspace `AGENTS.md` files for area-specific conventions.
+
+> **`@acronis-platform/shadcn-uikit` (`ui-legacy`) has been removed from this
+> repository.** It is superseded by `@acronis-platform/ui-react`. Previously
+> published versions (up to `0.36.3`) remain installable from npm and are
+> deprecated there; the final source is in this repo's history at commit
+> `2e257c95` (also tagged `ui-legacy-final`).
 
 ## 🚀 Getting Started
 
@@ -338,8 +340,7 @@ uikit/
 ```
 
 > Abridged: this tree leaves out the workspaces you don't need in order to
-> consume the library — the `ui-spec` spike, the deprecated
-> `packages/ui-legacy/`, and some internal tooling. See
+> consume the library — the `ui-spec` spike and some internal tooling. See
 > [`AGENTS.md`](./AGENTS.md) for the full map.
 
 ## 🛠️ Scripts

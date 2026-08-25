@@ -39,7 +39,7 @@ This file adds the repo-specific map. Read [CLAUDE.md](../../../CLAUDE.md) first
   **Keep specifics in the workspace, not in the root** — that's the established
   pattern; don't centralize what belongs local.
 - **Generated content is off-limits to hand-edits:** `packages/icons-react`
-  sources, `ui-legacy` `src/components/icons/`, and `llms.txt` are produced by
+  sources and `llms.txt` are produced by
   scripts — document/fix the generator, never the output.
 
 ## Key terminology (use consistently)

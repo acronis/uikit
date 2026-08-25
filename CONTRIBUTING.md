@@ -39,7 +39,7 @@ pnpm -r lint
 
 # Or run it for a single workspace
 pnpm --filter @acronis-platform/uikit-docs dev
-pnpm --filter @acronis-platform/shadcn-uikit storybook
+pnpm --filter @acronis-platform/ui-react storybook
 ```
 
 Shared dependency versions (React, TypeScript, ESLint, Vite, react-hook-form,
@@ -136,7 +136,6 @@ bump.
 
 Published workspaces are:
 
-- `@acronis-platform/shadcn-uikit` (`packages/ui-legacy`)
 - `@acronis-platform/ui-react`
 - `@acronis-platform/icons-react`
 - `@acronis-platform/tokens-pd`

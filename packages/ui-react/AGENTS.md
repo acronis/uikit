@@ -12,12 +12,12 @@ top of this file.
 
 @context/conventions.md
 
-## How this differs from `packages/ui-legacy`
+## Ground rules
 
 - **Base UI first.** Primitives come from `@base-ui/react`, a **direct
-  dependency** (legacy treats it as an optional peer and mixes in Radix).
-  Don't add Radix here. For element composition use Base UI's `useRender`
-  - `mergeProps` (the `render` prop), not Radix `Slot` / `asChild`.
+  dependency**. Don't add Radix here. For element composition use Base UI's
+  `useRender` + `mergeProps` (the `render` prop), not Radix `Slot` /
+  `asChild`.
 - **Theming via generated tokens.** Color comes from
   `@acronis-platform/tokens-pd` (`--ui-*` CSS custom properties; light/dark via
   `light-dark()` + the `[data-theme]` attribute). `src/styles/index.css` imports
@@ -25,7 +25,7 @@ top of this file.
   names via `@theme inline`. Don't hand-author theme values here — change them in
   `@acronis-platform/design-tokens` and rebuild `@acronis-platform/tokens-pd`.
 
-## Shared conventions kept from legacy
+## Component conventions
 
 - React **functional components**; `React.forwardRef` for ref-accepting
   primitives.
@@ -76,7 +76,8 @@ pnpm --filter @acronis-platform/ui-react storybook:test:visual:docker
 The `storybook:test:visual[:update]` scripts run the same thing without Docker
 (host renderer) — useful for a quick local look, but their output must **not**
 be committed. See `test/__snapshots__/README.md`. CI:
-`.github/workflows/visual-regression.yml` (matrix over `ui-legacy` + `ui-react`).
+`.github/workflows/visual-regression.yml` (matrix over `ui-react` light +
+dark, and `icons-react`).
 
 ## When you add or change anything in `src/`
 

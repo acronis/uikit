@@ -19,8 +19,7 @@ Tailwind v4. pnpm monorepo; Changesets; Next.js + Fumadocs docs. No Vue.
 
 **Common research surfaces:**
 
-- Component APIs and variant sets across `packages/ui-react` and
-  `packages/ui-legacy` (and the differences between the two).
+- Component APIs and variant sets across `packages/ui-react`.
 - Base UI primitive capabilities and composition (`useRender`/`mergeProps`).
 - The token pipeline: `design-tokens` → `design-theme` → library `@theme`
   bridge → utilities.
@@ -52,7 +51,6 @@ grep -rn "@radix-ui" packages/*/src
 - Variant axes (`cva` config) and exposed `VariantProps`.
 - Which color tokens / Tailwind names it depends on.
 - Test coverage (cases vs props/variants) and Storybook variant coverage.
-- Cross-workspace differences (ui-react vs ui-legacy) for the same component.
 
 ## Artifact locations
 

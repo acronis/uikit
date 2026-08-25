@@ -21,7 +21,6 @@ Merging that PR triggers the actual publish to npm and GitHub Packages.
 
 Published workspaces are:
 
-- `@acronis-platform/shadcn-uikit` (`packages/ui-legacy`)
 - `@acronis-platform/ui-react`
 - `@acronis-platform/icons-react`
 - `@acronis-platform/tokens-pd`

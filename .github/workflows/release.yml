@@ -62,10 +62,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build UI library
-        run: pnpm --filter @acronis-platform/shadcn-uikit build
+        run: pnpm --filter "@acronis-platform/ui-react..." build
 
       - name: Run tests
-        run: pnpm --filter @acronis-platform/shadcn-uikit test
+        run: pnpm --filter @acronis-platform/ui-react test
 
       - name: Validate design packages
         run: pnpm --filter "./packages/design-*" test

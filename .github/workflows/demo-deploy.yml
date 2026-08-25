@@ -1,6 +1,6 @@
-# Builds the docs site + Storybook (ui-legacy and ui-react) into a single
-# GitHub Pages artefact and deploys it. The docs site is the Pages root;
-# the Storybooks are nested under it.
+# Builds the docs site + the ui-react Storybook into a single GitHub Pages
+# artefact and deploys it. The docs site is the Pages root; the Storybook is
+# nested under it.
 #
 # All sub-sites must ship in ONE artefact: GitHub Pages serves a single artefact
 # per deployment, so each deploy replaces the whole site. A separate per-app
@@ -62,18 +62,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build UI Component Library
-        run: pnpm --filter ./packages/ui-legacy run build
-
-      - name: Build storybook
-        run: STORYBOOK_DISABLE_ADDON_VITEST=true pnpm --filter ./packages/ui-legacy run storybook:build
-
-      # ui-react Storybook, served alongside the legacy one under the docs root.
+      # ui-react Storybook, served under the docs root.
       # ui-react consumes its generated deps (icons-react, which pulls in
       # tokens-pd/design-assets/style-dictionary) from dist, so build those first;
       # ui-react's own source is bundled by Storybook via the .storybook alias.
       # Storybook's static build uses relative asset paths, so it works under the
-      # subpath with no base flag (same as the legacy build above).
+      # subpath with no base flag.
       - name: Build ui-react storybook dependencies
         run: pnpm --filter @acronis-platform/icons-react... run build
 
@@ -92,10 +86,9 @@ jobs:
       - name: Build docs
         run: DOCS_STATIC_EXPORT=true DOCS_BASE_PATH=/uikit pnpm --filter ./apps/docs run build
 
-      - name: Copy storybooks into the docs output
+      - name: Copy the Storybook into the docs output
         run: |
-          rm -rf apps/docs/out/storybook apps/docs/out/storybook-react
-          cp -r packages/ui-legacy/storybook-static apps/docs/out/storybook
+          rm -rf apps/docs/out/storybook-react
           cp -r packages/ui-react/storybook-static apps/docs/out/storybook-react
 
       # /uikit/docs was the docs root until the demo SPA was removed. GitHub
