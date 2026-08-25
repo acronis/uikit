@@ -27,10 +27,13 @@ tokens:
     description: Marker-to-label gap.
   - name: --ui-stepper-item-global-container-padding-l
     affects: container
-    description: Container's left padding (closer to the avatar than the right).
+    description:
+      Container's inline-start padding (closer to the avatar than the end side);
+      Figma's `l` names its LTR frame, so it maps to `padding-inline-start`.
   - name: --ui-stepper-item-global-container-padding-r
     affects: container
-    description: Container's right padding (gives the label room).
+    description: Container's inline-end padding (gives the label room); maps to
+      `padding-inline-end`.
   - name: --ui-stepper-item-global-container-padding-y
     affects: container
     description: Container's vertical padding.

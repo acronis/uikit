@@ -43,8 +43,8 @@ describe('StepperItem', () => {
       'bg-[var(--ui-stepper-item-current-container-color)]',
       'text-[var(--ui-stepper-item-current-label-color)]',
       'gap-[var(--ui-stepper-item-global-container-gap)]',
-      'pl-[var(--ui-stepper-item-global-container-padding-l)]',
-      'pr-[var(--ui-stepper-item-global-container-padding-r)]',
+      'ps-[var(--ui-stepper-item-global-container-padding-l)]',
+      'pe-[var(--ui-stepper-item-global-container-padding-r)]',
       'py-[var(--ui-stepper-item-global-container-padding-y)]',
       'rounded-[var(--ui-stepper-item-global-container-border-radius)]'
     );

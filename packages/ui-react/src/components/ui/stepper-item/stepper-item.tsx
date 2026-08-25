@@ -37,10 +37,13 @@ import { cn } from '@/lib/utils';
 // semantic/generic placeholder tokens (`--ui-background-surface-*`,
 // `--ui-text-on-surface-*`) this component used before that tier existed. The
 // tier's `global-container-padding-{l,r}` are asymmetric (8px / 16px) — the
-// left side sits closer to the avatar, the right side gives the label room —
-// so padding is split rather than a single `px-*` utility.
+// start side sits closer to the avatar, the end side gives the label room — so
+// padding is split rather than a single `px-*` utility. Mapped with logical
+// `ps-`/`pe-` so the asymmetry mirrors with the flex order under `dir="rtl"`
+// (Figma's `paddingLeft/Right` naming describes its LTR frame, not a physical
+// side).
 const stepperItemVariants = cva(
-  'inline-flex items-center gap-[var(--ui-stepper-item-global-container-gap)] rounded-[var(--ui-stepper-item-global-container-border-radius)] pl-[var(--ui-stepper-item-global-container-padding-l)] pr-[var(--ui-stepper-item-global-container-padding-r)] py-[var(--ui-stepper-item-global-container-padding-y)] text-sm leading-6 outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
+  'inline-flex items-center gap-[var(--ui-stepper-item-global-container-gap)] rounded-[var(--ui-stepper-item-global-container-border-radius)] ps-[var(--ui-stepper-item-global-container-padding-l)] pe-[var(--ui-stepper-item-global-container-padding-r)] py-[var(--ui-stepper-item-global-container-padding-y)] text-sm leading-6 outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
   {
     variants: {
       variant: {
