@@ -635,3 +635,37 @@ export const StatusPalette: Story = {
     </PaletteFrame>
   ),
 };
+
+const legendData = [
+  { month: 'Jan', desktop: 186, mobile: 80 },
+  { month: 'Feb', desktop: 305, mobile: 200 },
+  { month: 'Mar', desktop: 237, mobile: 120 },
+  { month: 'Apr', desktop: 173, mobile: 190 },
+  { month: 'May', desktop: 209, mobile: 130 },
+  { month: 'Jun', desktop: 214, mobile: 140 },
+];
+
+const legendConfig = {
+  desktop: { label: 'Desktop' },
+  mobile: { label: 'Mobile' },
+} satisfies ChartConfig;
+
+/**
+ * The legend is centered (`justify-center`) with a 24 px column gap
+ * (`gap-x-6`) and a 8 px row gap (`gap-y-2`) when entries wrap. This mirrors
+ * the Figma spec for every cartesian chart that uses `showLegend`.
+ */
+export const Legend: Story = {
+  name: 'Legend — centered layout',
+  args: { config: legendConfig, children: <span /> },
+  render: () => (
+    <LineChart
+      config={legendConfig}
+      data={legendData}
+      dataKeys={['desktop', 'mobile']}
+      xKey="month"
+      showLegend
+      className="h-[260px] w-[560px]"
+    />
+  ),
+};

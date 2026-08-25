@@ -293,12 +293,8 @@ data, not about the page: reverse the category axis with recharts' own
   name="ChartContainerProps"
 />
 
-`ChartLegendContent` picks its marker from the series' recharts legend type:
-stroke-drawn series (`<Line>` and `<Area>`) get a line marker — dashed when the
-series sets a `strokeDasharray` — and everything else gets a square swatch. A
-series that paints a stroke but should read as one swatch (as in
-`ConfidenceCone`) sets `legendType="rect"`. Tooltip rows keep their round dot
-either way.
+`ChartLegendContent` renders a circular dot marker for every series, matching
+the indicator used in tooltip rows. Tooltip rows also use the same dot.
 
 `ChartTooltipContent` and `ChartLegendContent` are passed to recharts' `Tooltip` /
 `Legend` via their `content` prop. They accept the display options

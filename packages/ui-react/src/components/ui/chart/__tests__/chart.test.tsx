@@ -144,7 +144,7 @@ describe('Chart', () => {
     expect(container.querySelector('style')).not.toBeInTheDocument();
   });
 
-  it('renders a start-aligned legend with 10px rounded-sm swatches', () => {
+  it('renders a centered legend with 10px circular dot markers', () => {
     const { container } = render(
       <ChartContainer config={config} id="usage">
         <ChartLegendContent
@@ -155,15 +155,13 @@ describe('Chart', () => {
         />
       </ChartContainer>
     );
-    const swatches = container.querySelectorAll('.rounded-sm');
-    expect(swatches).toHaveLength(2);
-    swatches.forEach((swatch) => {
-      expect(swatch).toHaveClass('h-2.5', 'w-2.5');
+    const dots = container.querySelectorAll('.rounded-full');
+    expect(dots).toHaveLength(2);
+    dots.forEach((dot) => {
+      expect(dot).toHaveClass('h-2.5', 'w-2.5');
     });
-    expect(container.querySelector('.rounded-full')).not.toBeInTheDocument();
-    expect(swatches[0]?.parentElement?.parentElement).toHaveClass(
-      'justify-start'
-    );
+    expect(container.querySelector('.rounded-sm')).not.toBeInTheDocument();
+    expect(dots[0]?.parentElement?.parentElement).toHaveClass('justify-center');
   });
 
   // A chart type whose renderer can't lay a legend out inside the plot (Treemap)
@@ -179,7 +177,7 @@ describe('Chart', () => {
       />
     );
     expect(container).toHaveTextContent('Desktop');
-    expect(container.querySelector('.rounded-sm')).toBeInTheDocument();
+    expect(container.querySelector('.rounded-full')).toBeInTheDocument();
   });
 
   // Passing a `config` is the *only* sanctioned way to render outside the
@@ -215,7 +213,7 @@ describe('Chart', () => {
     expect(container).toHaveTextContent('desktop');
   });
 
-  it('renders a line marker for stroke series and dashes it from strokeDasharray', () => {
+  it('renders dot markers for stroke series regardless of dashArray', () => {
     const { container } = render(
       <ChartContainer config={config} id="usage">
         <ChartLegendContent
@@ -237,20 +235,15 @@ describe('Chart', () => {
         />
       </ChartContainer>
     );
-    const markers =
-      container.querySelectorAll<HTMLElement>('.rounded-full.w-4');
-    expect(markers).toHaveLength(2);
-    expect(markers[0]?.style.backgroundColor).toBe('var(--color-desktop)');
-    expect(markers[0]?.style.backgroundImage).toBe('');
-    expect(markers[1]?.style.backgroundColor).toBe('');
-    expect(markers[1]?.style.backgroundImage).toBe(
-      'repeating-linear-gradient(90deg, var(--color-mobile) 0 4px, transparent 4px 7px)'
-    );
-    // A stroke series never falls back to the square swatch.
+    const dots =
+      container.querySelectorAll<HTMLElement>('.rounded-full.h-2\\.5.w-2\\.5');
+    expect(dots).toHaveLength(2);
+    expect(dots[0]?.style.backgroundColor).toBe('var(--color-desktop)');
+    expect(dots[1]?.style.backgroundColor).toBe('var(--color-mobile)');
     expect(container.querySelector('.rounded-sm')).not.toBeInTheDocument();
   });
 
-  it('dots every tooltip row, whatever marker the legend gives the series', () => {
+  it('dots every tooltip row', () => {
     const { container } = render(
       <ChartContainer config={config} id="usage">
         <ChartTooltipContent
@@ -265,7 +258,7 @@ describe('Chart', () => {
     const dots = container.querySelectorAll('.rounded-full');
     expect(dots).toHaveLength(2);
     dots.forEach((dot) => expect(dot).toHaveClass('h-2.5', 'w-2.5'));
-    // The legend's square swatch never leaks into the tooltip.
+    // Tooltip never renders a square swatch.
     expect(container.querySelector('.rounded-sm')).not.toBeInTheDocument();
   });
 
