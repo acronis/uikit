@@ -159,14 +159,14 @@ describe('ChartState', () => {
       expect(screen.getByText('No data found')).toBeInTheDocument();
     });
 
-    it('ignores the description for loading and error', () => {
+    it('allows description to override the label for loading and error', () => {
       for (const state of ['loading', 'error'] as const) {
-        render(<ChartState state={state} description="Not here" />);
+        const { unmount } = render(
+          <ChartState state={state} description="Custom text" />
+        );
+        expect(screen.getByText('Custom text')).toBeInTheDocument();
+        unmount();
       }
-
-      expect(screen.queryByText('Not here')).not.toBeInTheDocument();
-      expect(screen.getByText('Data is loading…')).toBeInTheDocument();
-      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
     });
   });
 
