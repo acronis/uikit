@@ -28,11 +28,13 @@ contract:
       default: idle
       description: >-
         The interaction look. Only observable when `variant` is `completed`
-        (`idle` has no fill; `hover` and `active` each paint a fill; `focus`
-        draws a 3px ring — its token is byte-identical to `--ui-focus-primary`,
-        i.e. the same look `focus-visible` already draws automatically on a
-        composed control). Ignored for `current`, which is always highlighted,
-        and for `future`, which is always disabled. It is a declarative prop,
+        (`idle`, `hover`, and `active` each paint their own fill token — `idle`'s
+        resolves to `transparent` in the shipped brands, so it reads as no fill;
+        `focus` draws a 3px ring — its token is byte-identical to
+        `--ui-focus-primary`, i.e. the same look `focus-visible` already draws
+        automatically on a composed control). Ignored for `current`, which is
+        always highlighted, and for `future`, which is always disabled. It is
+        a declarative prop,
         not a CSS pseudo-state, because the design models it as distinct token
         roles and a consumer may need to force it.
     - name: avatar

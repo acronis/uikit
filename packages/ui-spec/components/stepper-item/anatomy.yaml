@@ -11,16 +11,23 @@ schematic: |
   label       -> --ui-stepper-item-{current,completed}-label-color, or -future-label-color
   container   -> border box reserved on every variant (transparent unless current)
                  --ui-stepper-item-current-container-color + border (current)
-                 --ui-stepper-item-completed-container-color-{hover,active} fill (completed+state)
+                 --ui-stepper-item-completed-container-color-{idle,hover,active} fill (completed+state)
                  --ui-stepper-item-completed-container-color-focus-ring 3px ring (completed+focus)
-                 no fill                        (completed+idle, future)
+                 --ui-stepper-item-future-container-color fill (future)
+                 the completed `idle` and `future` fills are wired to their own
+                 tokens, transparent in the shipped brands — nothing paints today,
+                 but a brand override is honored
 
 root:
   element: div
   description: >-
     The step's container. Lays the marker and the label out in a row and carries
-    the background for the current step and for a completed step's hover/active
-    fill or focus ring. Polymorphic via the `render` prop — a completed step is
+    the background for every variant: the current step's fill and border, a
+    completed step's per-state fill (`idle`, `hover`, `active`) or focus ring, and
+    the future step's own fill. The completed `idle` and future fills are wired to
+    their own tokens but resolve to `transparent` in the shipped brands, so they
+    read as no fill today while a brand override is still honored.
+    Polymorphic via the `render` prop — a completed step is
     usually a real `<button>` that jumps back, and it then carries the library's
     3px `focus-visible` ring (the same color as the declarative `focus` state's
     ring, since the two tokens are identical). A future step is marked

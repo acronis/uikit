@@ -107,11 +107,11 @@ The Figma component has a dedicated `--ui-stepper-item-*` token tier as of the
 `AvatarGroup`. Figma's own `StepperItem` composition never draws this ring
 (verified in the raw reference markup — none of the `current`/`completed`/
 `future` avatar instances carry a border/box-shadow class), so it's invisible
-where a step's container has no fill but becomes a visible halo on `current`'s
-blue background and on `completed`'s hover/active fills. This is a pre-existing
-`Avatar`-wide behavior (present anywhere an avatar sits on a colored surface,
-e.g. `Timeline`'s marker), not something `StepperItem` introduces or can fix by
-itself — `StepperItem` is documented to render the marker verbatim, so the
-caller switches the ring off with `className="[box-shadow:none]"` on the
-composed `Avatar`, as shown in Usage above (the same pattern `Timeline`'s
-marker already used).
+where a step's container fill is transparent but becomes a visible halo on
+`current`'s blue background and on `completed`'s hover/active fills. This is a
+pre-existing `Avatar`-wide behavior (present anywhere an avatar sits on a
+colored surface, e.g. `Timeline`'s marker), not something `StepperItem`
+introduces or can fix by itself — `StepperItem` is documented to render the
+marker verbatim, so the caller switches the ring off with
+`className="[box-shadow:none]"` on the composed `Avatar`, as shown in Usage
+above (the same pattern `Timeline`'s marker already used).

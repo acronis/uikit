@@ -38,10 +38,11 @@ import { cn } from '@/lib/utils';
 // `--ui-text-on-surface-*`) this component used before that tier existed. The
 // tier's `global-container-padding-{l,r}` are asymmetric (8px / 16px) — the
 // start side sits closer to the avatar, the end side gives the label room — so
-// padding is split rather than a single `px-*` utility. Mapped with logical
-// `ps-`/`pe-` so the asymmetry mirrors with the flex order under `dir="rtl"`
-// (Figma's `paddingLeft/Right` naming describes its LTR frame, not a physical
-// side).
+// padding is split rather than collapsed into the tier's single
+// `global-container-padding-x` token (8px, matching only the start side) or a
+// `px-*` utility. Mapped with logical `ps-`/`pe-` so the asymmetry mirrors
+// with the flex order under `dir="rtl"` (Figma's `paddingLeft/Right` naming
+// describes its LTR frame, not a physical side).
 //
 // The label's typography comes from the same tier as a generated *class*
 // (`.ui-stepper-item-global-container-text-style` — family / 14px / 500 / 24px /
@@ -68,10 +69,14 @@ const stepperItemVariants = cva(
           'border-[var(--ui-stepper-item-current-container-border-color)] bg-[var(--ui-stepper-item-current-container-color)] text-[var(--ui-stepper-item-current-label-color)]',
         completed: 'text-[var(--ui-stepper-item-completed-label-color)]',
         future:
-          'pointer-events-none text-[var(--ui-stepper-item-future-label-color)]',
+          'pointer-events-none bg-[var(--ui-stepper-item-future-container-color)] text-[var(--ui-stepper-item-future-label-color)]',
       },
       // Declared as an axis so the variant x state matrix below can key off it;
       // on its own it paints nothing, because only `completed` reacts to it.
+      // Every state — `idle` included — gets its own token in that matrix, so a
+      // brand override on any one of them is honored (the convention in
+      // `context/conventions.md`: wire each state to its own token even when the
+      // default brand's value happens to match another's).
       state: {
         idle: '',
         hover: '',
@@ -80,6 +85,11 @@ const stepperItemVariants = cva(
       },
     },
     compoundVariants: [
+      {
+        variant: 'completed',
+        state: 'idle',
+        class: 'bg-[var(--ui-stepper-item-completed-container-color-idle)]',
+      },
       {
         variant: 'completed',
         state: 'hover',
@@ -125,10 +135,10 @@ export interface StepperItemProps extends React.ComponentPropsWithoutRef<'div'> 
   variant?: StepperItemVariant;
   /**
    * Interaction state. Only produces a different look when `variant` is
-   * `completed` (`idle` has no background; `hover`, `active`, and `focus` each
-   * paint their own). Ignored for `current`, which always renders in its
-   * highlighted look, and for `future`, which always renders disabled and
-   * non-interactive.
+   * `completed` — each of `idle`, `hover`, `active`, and `focus` is wired to its
+   * own token, so a brand can style any of them independently. Ignored for
+   * `current`, which always renders in its highlighted look, and for `future`,
+   * which always renders disabled and non-interactive.
    */
   state?: StepperItemState;
   /**

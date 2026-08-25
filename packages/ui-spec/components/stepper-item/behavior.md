@@ -19,13 +19,15 @@
   and the name uses the current-step label color — regardless of `state`,
   because the design draws the current step in exactly one look.
 - **Given** `variant="completed"`
-  **Then** the name uses the completed-step label color and the container is
-  filled only according to `state`.
+  **Then** the name uses the completed-step label color and the container takes
+  the fill token for its `state`.
 - **Given** `variant="future"`
-  **Then** the name uses the future-step label color, the container has no
-  fill, the element is marked `aria-disabled`, it is removed from the tab order
-  (`tabindex="-1"`), and it receives no pointer events — again regardless of
-  `state`. On the default `<div>` it also carries `role="link"`, without which
+  **Then** the name uses the future-step label color, the container takes the
+  future-step container fill — `transparent` in every shipped brand, so nothing
+  paints today, but a brand that overrides it is honored — the element is marked
+  `aria-disabled`, it is removed from the tab order (`tabindex="-1"`), and it
+  receives no pointer events — again regardless of `state`. On the default
+  `<div>` it also carries `role="link"`, without which
   `aria-disabled` would not be announced at all (see `accessibility.md`).
 - **Given** any `variant`
   **Then** the container reserves the same border box, so all three variants
@@ -36,7 +38,9 @@
 ## State is only observable on a completed step
 
 - **Given** `variant="completed"` **and** `state="idle"`
-  **Then** the container has no fill.
+  **Then** the container is filled with the idle token, which resolves to
+  `transparent` in every shipped brand — so it reads as no fill today, but a
+  brand that overrides it is honored.
 - **Given** `variant="completed"` **and** `state="hover"`
   **Then** the container is filled with the hover token.
 - **Given** `variant="completed"` **and** `state="active"`

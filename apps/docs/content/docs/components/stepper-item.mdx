@@ -54,9 +54,12 @@ that jumps back, and it then gets the library's standard 3px focus ring.
 
 <Callout>
   As of the 2026-08-24 Figma sync, this component consumes a dedicated
-  `--ui-stepper-item-*` token tier from `@acronis-platform/tokens-pd` — the
-  container fill/border, all four `completed` interaction states, and both label
-  colors are Stepper-owned tokens rather than borrowed from the semantic scale.
+  `--ui-stepper-item-*` token tier from `@acronis-platform/tokens-pd` — every
+  variant's container fill, the current step's border, all four `completed`
+  interaction states, and the three per-variant label colors are Stepper-owned
+  tokens rather than borrowed from the semantic scale. `completed`/`idle` and
+  `future` resolve to `transparent` in the shipped brands, but they are wired to
+  their own tokens, so a brand that gives either one a fill is honored.
 </Callout>
 
 ## Examples

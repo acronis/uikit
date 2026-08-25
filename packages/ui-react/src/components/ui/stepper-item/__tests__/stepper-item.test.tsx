@@ -111,7 +111,8 @@ describe('StepperItem', () => {
       <StepperItem avatar={avatar} label="Step" variant="completed" />
     );
     expect(idle.firstElementChild).toHaveClass(
-      'text-[var(--ui-stepper-item-completed-label-color)]'
+      'text-[var(--ui-stepper-item-completed-label-color)]',
+      'bg-[var(--ui-stepper-item-completed-container-color-idle)]'
     );
     expect(idle.firstElementChild).not.toHaveClass(
       'bg-[var(--ui-stepper-item-completed-container-color-hover)]',
@@ -175,6 +176,7 @@ describe('StepperItem', () => {
     expect(root).toHaveAttribute('tabindex', '-1');
     expect(root).toHaveClass(
       'text-[var(--ui-stepper-item-future-label-color)]',
+      'bg-[var(--ui-stepper-item-future-container-color)]',
       'pointer-events-none'
     );
     expect(root).not.toHaveClass(

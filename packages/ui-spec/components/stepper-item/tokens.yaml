@@ -26,6 +26,13 @@ component: StepperItem
 # (`components/Stepper/Item/{current,future}/label/color/*`) are intentionally
 # not consumed: the marker is supplied and styled by the caller, so those
 # belong to whatever Avatar composition is passed in.
+#
+# `--ui-stepper-item-global-container-padding-x` is likewise intentionally not
+# consumed: it is superseded by the finer-grained `padding-l` / `padding-r`
+# pair the same sync shipped. Its value matches `padding-l` (8px) but not
+# `padding-r` (16px), so it cannot express the asymmetry Figma specifies —
+# using it would silently collapse the container back to symmetric padding and
+# lose the wider label-side spacing.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
@@ -65,6 +72,13 @@ tokens:
   - name: --ui-stepper-item-current-label-color
     affects: label
     description: Step-name color for the current step.
+  - name: --ui-stepper-item-completed-container-color-idle
+    affects: container
+    description: >-
+      Container fill for a completed step in its resting `idle` state. Wired
+      like every other state on the axis even though the shipped brands resolve
+      it to `transparent`, so a brand that gives the resting step a fill is
+      honored.
   - name: --ui-stepper-item-completed-container-color-hover
     affects: container
     description: Container fill for a completed step in its `hover` state.
@@ -79,6 +93,12 @@ tokens:
   - name: --ui-stepper-item-completed-label-color
     affects: label
     description: Step-name color for a completed step (all interaction states).
+  - name: --ui-stepper-item-future-container-color
+    affects: container
+    description: >-
+      Container fill for a future step. Not keyed to a state — a future step
+      always renders disabled — so the tier ships a single value; `transparent`
+      in the shipped brands.
   - name: --ui-stepper-item-future-label-color
     affects: label
     description: Step-name color for a future step.
