@@ -7,8 +7,9 @@ schematic: |
             [drag handle · switch · avatar · rename · collapse trigger, all Card's]
             draws its own bottom divider
     body: CardContent — flex-1 min-h-0; 16px padding, 16px gap
-      metric: optional readout row (shrink-0) — typically a `Metric`
-      plot:   flex-1 min-h-0 — the chart, or the placeholder while `state` is set
+      [vertical]   metric: shrink-0 full-width row above plot
+                   plot:   flex-1 min-h-0 — the chart, or the placeholder while `state` is set
+      [horizontal] metric: flex-[1_0_0] min-w-0 — metric and plot side by side, equal halves
 
 root:
   element: div
@@ -34,16 +35,34 @@ parts:
   - id: metric
     element: slot
     description: >-
-      Optional readout row above the plot. Two chart types (radar, treemap) are
-      designed without one.
+      Optional readout — a `Metric` or any node. Layout depends on
+      `orientation`: `vertical` (default) renders it as a `shrink-0` row above
+      the plot at its natural height; `horizontal` gives it `flex-[1_0_0]
+      min-w-0` so it shares the body width equally with the plot side by side.
+    optional: true
+    visible_when: a `metric` is provided
   - id: plot
     element: div
     description: >-
-      The chart, or `ChartState` while `state` is set. `flex-1 min-h-0`, so it
-      takes the height the metric row leaves — and so a tall chart shrinks into
-      the card instead of pushing past it.
+      The chart, or `ChartState` while `state` is set. In `vertical` mode:
+      `flex-1 min-h-0`, so it fills the height the metric row leaves. In
+      `horizontal` mode: `flex-[1_0_0] min-w-0`, so it shares width equally with
+      the metric slot. Either way a tall or wide chart shrinks inside the card
+      instead of pushing past it.
 
 states:
+  - id: vertical
+    trigger: "orientation === 'vertical' (default)"
+    kind: prop
+    prop: orientation
+    affects: [body, metric, plot]
+    exclusive_with: [horizontal]
+  - id: horizontal
+    trigger: "orientation === 'horizontal'"
+    kind: prop
+    prop: orientation
+    affects: [body, metric, plot]
+    exclusive_with: [vertical]
   - id: default
     trigger: '`state` is unset — the plot renders'
     kind: prop

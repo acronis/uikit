@@ -2,54 +2,45 @@ spec_version: '1.0'
 component: TrendIndicator
 
 schematic: |
-  +-------------------------------------+
-  |  [icon]  value   comparison-label   |   root: <span>
-  +-------------------------------------+
-     ^        ^       ^
-     icon     value   comparison-label
+  +-------------------+
+  |  [icon]  value    |   root: <span>
+  +-------------------+
+     ^        ^
+     icon     value
   direction -> icon glyph
-  sentiment -> color (+ badge tint)
-  size      -> text + icon size
-  variant   -> inline | badge
+  sentiment -> color
 
 root:
   element: span
   description: >-
     An inline `<span>`. `sentiment` drives the text color (the glyph inherits it
-    via currentColor); `variant="badge"` adds a matching status tint; `size` sets
-    the text/icon size. With an `ariaLabel` it becomes `role="img"` with that
-    label; as a tooltip trigger it is focusable.
+    via `currentColor`). With an `ariaLabel` it becomes `role="img"` with that
+    label; as a tooltip trigger it is focusable (`tabIndex={0}`).
 
 parts:
   - id: icon
     description: >-
       Decorative direction glyph (`aria-hidden`) chosen from `direction` —
-      up/down trend arrows, or a horizontal arrow for `flat`. Hidden when
-      `showIcon` is false.
+      up/down trend arrows, or a horizontal arrow for `flat`. Mirrors under
+      `dir="rtl"` via `rtl:-scale-x-100`. Hidden when `showIcon` is false.
     element: svg
     optional: true
     visible_when: showIcon is true (default)
   - id: value
     description: >-
       The already-formatted change (`value`) — numeric (`12%`, `3.5 h`) or
-      qualitative (`Improving`). Rendered with tabular figures.
+      qualitative (`Improving`). Rendered with `tabular-nums`.
     optional: true
     visible_when: a `value` is provided
-  - id: comparison-label
-    description: >-
-      Secondary comparison caption (`comparisonLabel`), e.g. "vs previous
-      quarter", in the muted secondary text color.
-    optional: true
-    visible_when: a `comparisonLabel` is provided
 
 layout:
   type: flex
   direction: row
   align: center
-  order: [icon, value, comparison-label]
+  order: [icon, value]
 
-# A pure function of its props. Sentiment/size/variant are the cva axes;
-# direction selects the glyph.
+# A pure function of its props. `sentiment` is the only cva axis;
+# direction selects the glyph and does not change any styles itself.
 states:
   - {
       id: positive,
@@ -70,33 +61,5 @@ states:
       trigger: "sentiment === 'neutral'",
       kind: prop,
       prop: sentiment,
-      affects: [root, icon, value],
-    }
-  - {
-      id: inline,
-      trigger: "variant === 'inline'",
-      kind: prop,
-      prop: variant,
-      affects: [root],
-    }
-  - {
-      id: badge,
-      trigger: "variant === 'badge'",
-      kind: prop,
-      prop: variant,
-      affects: [root],
-    }
-  - {
-      id: small,
-      trigger: "size === 'small'",
-      kind: prop,
-      prop: size,
-      affects: [root, icon, value],
-    }
-  - {
-      id: medium,
-      trigger: "size === 'medium'",
-      kind: prop,
-      prop: size,
       affects: [root, icon, value],
     }

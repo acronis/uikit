@@ -4,17 +4,16 @@ name: metric
 status: draft
 category: data-display
 description: >-
-  A presentational metric / statistic card modelled on the Figma MetricCard node:
-  a Card containing a label row (label + optional caption) over a value row (an
-  optional status-tinted icon badge + value + unit on the left, an optional trend
-  on the right), optional supporting text, and an optional `children` body (a
-  chart, Separator, insight line, …). It owns visual hierarchy and layout only;
-  it never computes or formats the value or decides whether it is good or bad.
-  Composes TrendIndicator for the trend slot. Design-pending v1 (Figma node is a
-  reference, not a published component).
+  A presentational stats strip: an optional info-tinted icon badge + primary
+  value + unit on the left, an optional caption on the right, an optional trend
+  row (auto-composed from `trend` + `trendValue` as a `TrendIndicator`), optional
+  supporting text, and an optional `children` body (a chart, Separator, insight
+  line, …). No Card wrapper, no size or status axes — nest inside `ChartWidget`
+  or a `Card` when card chrome is needed. It owns visual hierarchy and layout
+  only; it never computes or formats the value or decides whether a change is
+  good or bad. Design-pending v1.
 dependencies:
   components:
-    - Card
     - TrendIndicator
     - Skeleton
     - Tooltip

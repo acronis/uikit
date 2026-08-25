@@ -2,69 +2,79 @@ spec_version: '1.0'
 component: Metric
 
 schematic: |
-  ┌────────────────────────────────────────────┐
-  │ GROSS MARGIN  (ⓘ tooltip-info)  [Last 30 days]│  label-row: label + caption
-  │ [◐ icon-badge] 73 %      ↘ 5% vs prev quarter │  value-row: value + unit + badge · trend
-  │ supporting-text                              │
-  │ … body …                                     │
-  └────────────────────────────────────────────┘
-  parts: label-row (label + tooltip-info + caption)
-       · value-row (icon-badge + value + unit + badge + trend)
-       · supporting-text · body
-  status -> icon-badge tint · size -> value / icon-badge / label sizing
+  root: <div> (flex-col gap-2 — no Card wrapper)
+    stats-row: <div> (justify-between gap-2)
+      left:  [icon-badge?] value [unit?] [badge?] [tooltip-info?]
+      right: [caption?]
+    trend-row: TrendIndicator (from `trend` + `trendValue`) — optional
+    supporting-text — optional
+    body (children) — optional
 
 root:
-  element: Card
+  element: div
   description: >-
-    A Card (border, radius, subtle shadow, padding) holding a label row
-    (space-between) over a value row (space-between), then optional supporting
-    text and an optional `children` body. `size` scales the value/badge/label;
-    `status` tints the icon badge (a subtle cue, not a full color fill).
+    A plain `<div className="flex flex-col gap-2">`. No Card wrapper, no
+    padding, no border — nest inside `ChartWidget` or a `Card` when card chrome
+    is needed. The consumer controls outer sizing and spacing.
 
 parts:
-  - id: label-row
-    description: The label and an optional info tooltip on the left; an optional caption on the right.
-  - id: label
-    description: What the value measures — an uppercase note heading. Truncates when narrow.
-  - id: tooltip-info
-    description: Optional info button (named by `tooltipLabel`) revealing `tooltip` on hover/focus.
-    optional: true
-    visible_when: a `tooltip` is provided
-  - id: caption
-    description: Optional top-right caption aligned with the label — e.g. a timeframe Tag.
-    optional: true
-    visible_when: a `caption` is provided
-  - id: value-row
-    description: The icon badge, value + unit, and optional metadata badge on the left; the trend on the right.
-  - id: icon-badge
+  - id: stats-row
+    element: div
     description: >-
-      Optional status-tinted rounded badge holding a contextual icon
-      (`aria-hidden`), before the value.
+      A `justify-between` flex row. Left side: optional icon badge, value + unit
+      sharing one baseline, optional metadata badge, optional tooltip affordance.
+      Right side: optional caption.
+  - id: icon-badge
     element: span
+    description: >-
+      Optional rounded badge (`size-9`) holding a contextual icon (`aria-hidden`),
+      always tinted with the info status (`--ui-background-status-info` fill,
+      `--ui-glyph-on-surface-neutral-dark` icon color). Icon is cloned to 16 px.
     optional: true
     visible_when: an `icon` is provided
   - id: value
-    description: The primary value — the highest-hierarchy element. Skeleton when `loading`.
+    description: >-
+      The primary value — highest hierarchy, `text-2xl font-semibold`. Rendered
+      as a `<Skeleton>` while `loading` is true.
   - id: unit
-    description: Optional unit beside the value at a smaller, muted size.
+    description: Optional unit beside the value at `text-xs text-muted-foreground`.
     optional: true
     visible_when: a `unit` is provided
   - id: badge
-    description: Optional small metadata slot beside the value (e.g. a Tag).
+    description: Optional small metadata slot beside the value (e.g. a `Tag`).
     optional: true
     visible_when: a `badge` is provided
-  - id: trend
-    description: Optional trend slot on the right — typically a TrendIndicator.
+  - id: tooltip-info
+    description: >-
+      Optional info affordance (`CircleInfoIcon`, 16 px) next to the value,
+      named by `tooltipLabel`. Reveals `tooltip` on hover/focus via Base UI
+      Tooltip.
     optional: true
-    visible_when: a `trend` is provided
+    visible_when: a `tooltip` is provided
+  - id: caption
+    element: div
+    description: Optional right-aligned caption at the end of the stats row — e.g. a timeframe `Tag`.
+    optional: true
+    visible_when: a `caption` is provided
+  - id: trend-row
+    element: div
+    description: >-
+      Auto-rendered `TrendIndicator` from the first-class `trend` prop. Direction
+      and sentiment are derived (`up`→positive, `down`→negative, `stable`→neutral);
+      `trendValue` is forwarded as TrendIndicator's `value`.
+    optional: true
+    visible_when: '`trend` is provided'
   - id: supporting-text
-    description: Optional secondary line under the value.
+    element: div
+    description: >-
+      Optional secondary line at text-xs text-muted-foreground — e.g. a target
+      or note.
     optional: true
     visible_when: a `supportingText` is provided
   - id: body
     description: >-
-      Optional card body below the header (`children`) — e.g. a chart, a
-      Separator, an AI-insight line. Composed by the consumer.
+      Optional content below the stats strip (`children`) — e.g. a chart, a
+      `Separator`, an AI-insight line. Composed by the consumer.
     optional: true
     visible_when: '`children` are provided'
 
@@ -72,72 +82,9 @@ layout:
   type: flex
   direction: column
   align: stretch
-  order: [label-row, value-row, supporting-text, body]
+  order: [stats-row, trend-row, supporting-text, body]
 
 states:
-  - {
-      id: neutral,
-      trigger: "status === 'neutral'",
-      kind: prop,
-      prop: status,
-      affects: [icon-badge],
-    }
-  - {
-      id: info,
-      trigger: "status === 'info'",
-      kind: prop,
-      prop: status,
-      affects: [icon-badge],
-    }
-  - {
-      id: success,
-      trigger: "status === 'success'",
-      kind: prop,
-      prop: status,
-      affects: [icon-badge],
-    }
-  - {
-      id: warning,
-      trigger: "status === 'warning'",
-      kind: prop,
-      prop: status,
-      affects: [icon-badge],
-    }
-  - {
-      id: danger,
-      trigger: "status === 'danger'",
-      kind: prop,
-      prop: status,
-      affects: [icon-badge],
-    }
-  - {
-      id: critical,
-      trigger: "status === 'critical'",
-      kind: prop,
-      prop: status,
-      affects: [icon-badge],
-    }
-  - {
-      id: small,
-      trigger: "size === 'small'",
-      kind: prop,
-      prop: size,
-      affects: [root, value, icon-badge],
-    }
-  - {
-      id: medium,
-      trigger: "size === 'medium'",
-      kind: prop,
-      prop: size,
-      affects: [root, value, icon-badge],
-    }
-  - {
-      id: large,
-      trigger: "size === 'large'",
-      kind: prop,
-      prop: size,
-      affects: [root, value, icon-badge],
-    }
   - {
       id: loading,
       trigger: 'loading is true',

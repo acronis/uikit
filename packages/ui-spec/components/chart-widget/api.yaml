@@ -14,12 +14,22 @@ contract:
         `description`, `extras` (a filter chip), `actions` (the ⋯ menu),
         `isDraggable`, `isSwitchable`, `hasAvatar`, `hasRename`,
         `isCollapsible`. Omit for a header-less widget.
+    - name: orientation
+      type: "'vertical' | 'horizontal'"
+      required: false
+      default: vertical
+      description: >-
+        How the `metric` and plot are arranged inside the card body.
+        `vertical` (default) — metric above the plot, full width; the metric
+        takes its natural height and the plot fills the rest.
+        `horizontal` — metric and plot side by side, each `flex-1`; use for
+        compact (sm/288px) widgets where vertical space is at a premium.
     - name: metric
       type: ReactNode
       required: false
       description: >-
-        The readout above the plot, typically a `Metric`. Sits in its own row at
-        its natural height.
+        The readout beside or above the plot (depending on `orientation`),
+        typically a `Metric`.
     - name: variant
       type: >-
         'area' | 'bar' | 'line' | 'donut' | 'radial' | 'funnel' | 'radar' |
