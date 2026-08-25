@@ -119,13 +119,6 @@ type ChartContextProps = {
   config: ResolvedChartConfig;
 };
 
-/**
- * How a series is marked in the legend. A filled series reads as a square
- * swatch; a stroke-drawn one (line, area) as the line it paints — dashed when
- * the stroke is. The tooltip always dots its rows instead.
- */
-type ChartSeriesMarker = 'swatch' | 'line' | 'dashed';
-
 export type ChartTooltipContentProps = Partial<
   TooltipContentProps<ValueType, NameType>
 > & {
@@ -295,38 +288,6 @@ const ChartStyle = ({
     </style>
   );
 };
-
-/** The marker drawn next to a series' name in the legend. */
-function SeriesMarker({
-  marker,
-  color,
-  className,
-}: {
-  marker: ChartSeriesMarker;
-  color?: string;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        'shrink-0',
-        marker === 'swatch'
-          ? 'h-2.5 w-2.5 rounded-sm'
-          : 'h-[3px] w-4 rounded-full',
-        className
-      )}
-      style={
-        marker === 'dashed'
-          ? {
-              // A dashed stroke can't be drawn with a background color, so the
-              // dash pattern is painted as a gradient.
-              backgroundImage: `repeating-linear-gradient(90deg, ${color} 0 4px, transparent 4px 7px)`,
-            }
-          : { backgroundColor: color }
-      }
-    />
-  );
-}
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
@@ -506,8 +467,7 @@ function ChartTooltipContent({
 const ChartLegend = RechartsPrimitive.Legend;
 
 /**
- * One legend entry. Split out so the marker it has to derive from the payload
- * sits next to the markup that uses it, instead of above a nested map body.
+ * One legend entry. Split out so the markup stays flat in `ChartLegendContent`.
  */
 function ChartLegendEntry({
   item,
@@ -518,14 +478,6 @@ function ChartLegendEntry({
   itemConfig: ChartItemConfig;
   hideIcon: boolean;
 }) {
-  // recharts types stroke-drawn series (<Line>, <Area>) as `line`; a chart
-  // that wants a swatch instead sets the series' `legendType="rect"`.
-  const dashArray = (
-    item.payload as { strokeDasharray?: string | number } | undefined
-  )?.strokeDasharray;
-  const marker: ChartSeriesMarker =
-    item.type !== 'line' ? 'swatch' : dashArray ? 'dashed' : 'line';
-
   return (
     <div
       className={cn(
@@ -535,7 +487,10 @@ function ChartLegendEntry({
       {itemConfig?.icon && !hideIcon ? (
         <itemConfig.icon />
       ) : (
-        <SeriesMarker marker={marker} color={item.color} />
+        <div
+          className="h-2.5 w-2.5 shrink-0 rounded-full"
+          style={{ backgroundColor: item.color }}
+        />
       )}
       {/*
        * Falls back to the series key, the way the tooltip row and the
@@ -584,7 +539,7 @@ function ChartLegendContent({
         // surface, and a row that can't wrap paints past the chart's edge. The
         // column gap is unchanged, so a legend that already fits on one row keeps
         // its exact layout.
-        'flex flex-wrap items-center justify-start gap-x-4 gap-y-2',
+        'flex flex-wrap items-center justify-center gap-x-6 gap-y-2',
         verticalAlign === 'top' ? 'pb-3' : 'pt-3',
         className
       )}
