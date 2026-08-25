@@ -59,6 +59,7 @@
     "sankey-chart",
     "category-bar",
     "chart-state",
+    "chart-widget",
     "description-list",
     "truncate-text",
     "alert",

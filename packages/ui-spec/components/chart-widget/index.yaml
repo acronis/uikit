@@ -1,0 +1,16 @@
+spec_version: '1.0'
+component: ChartWidget
+name: chart-widget
+status: draft
+category: data-display
+description: >-
+  The dashboard card a chart sits in: a `Card` with the standard widget header
+  (title, optional filter chip and the ⋯ actions menu) and an optional metric
+  readout above the plot. Adds the one thing a `Card` doesn't know about — the
+  body's loading / empty / error placeholder — and re-implements nothing else:
+  its `header` is `CardHeaderProps`, spread. It declares no size: the grid sizes
+  the card and the widget passes that height down, so a `size-full` chart fills
+  whatever the header leaves.
+  The per-type chart components stay card-less, so a chart is still usable
+  outside a widget.
+since: 2.1.0
