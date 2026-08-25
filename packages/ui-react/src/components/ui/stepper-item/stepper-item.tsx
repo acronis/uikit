@@ -50,13 +50,22 @@ import { cn } from '@/lib/utils';
 // Transcribing it into discrete utilities would silently drop the properties
 // that have no utility here (family, letter-spacing) and drift when the tier
 // changes.
+//
+// The border width is reserved on the *base* class with a transparent color, not
+// declared only on `current`: the container is an inline-flex box with auto
+// width/height, so a border that exists on one variant and not the others makes
+// the current step render ~2px larger than its siblings and knocks the row's
+// avatars and labels out of alignment. Every variant therefore reserves the same
+// box, and only `current` paints the border color (the same shape `tag.tsx`
+// uses). `current`'s width token is the shared one because it's the only width
+// the tier ships.
 const stepperItemVariants = cva(
-  'ui-stepper-item-global-container-text-style inline-flex items-center gap-[var(--ui-stepper-item-global-container-gap)] rounded-[var(--ui-stepper-item-global-container-border-radius)] ps-[var(--ui-stepper-item-global-container-padding-l)] pe-[var(--ui-stepper-item-global-container-padding-r)] py-[var(--ui-stepper-item-global-container-padding-y)] outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
+  'ui-stepper-item-global-container-text-style inline-flex items-center gap-[var(--ui-stepper-item-global-container-gap)] rounded-[var(--ui-stepper-item-global-container-border-radius)] border-[length:var(--ui-stepper-item-current-container-border-width)] border-solid border-transparent ps-[var(--ui-stepper-item-global-container-padding-l)] pe-[var(--ui-stepper-item-global-container-padding-r)] py-[var(--ui-stepper-item-global-container-padding-y)] outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
   {
     variants: {
       variant: {
         current:
-          'border-[length:var(--ui-stepper-item-current-container-border-width)] border-[var(--ui-stepper-item-current-container-border-color)] border-solid bg-[var(--ui-stepper-item-current-container-color)] text-[var(--ui-stepper-item-current-label-color)]',
+          'border-[var(--ui-stepper-item-current-container-border-color)] bg-[var(--ui-stepper-item-current-container-color)] text-[var(--ui-stepper-item-current-label-color)]',
         completed: 'text-[var(--ui-stepper-item-completed-label-color)]',
         future:
           'pointer-events-none text-[var(--ui-stepper-item-future-label-color)]',

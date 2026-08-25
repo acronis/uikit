@@ -20,6 +20,9 @@ drives the container fill, border, and the label color. `state` is the
 interaction look, and it only changes anything on a `completed` step: `current`
 is always highlighted with a border and `future` is always disabled, which is
 exactly the six `variant`/`state` combinations the Figma component set draws.
+Only `current` paints a visible border, but every variant reserves the same
+border box, so all three measure the same and a row of steps keeps its markers
+and names aligned.
 
 The marker is a **required slot you own completely**. Pass any `Avatar`
 composition — color scheme, initials, an icon, an image, size overrides — and the
@@ -35,10 +38,10 @@ step renders it verbatim without sizing, tinting, or recoloring it.
 </Callout>
 
 <Callout type="warn">
-  `Avatar` always paints a 2px outset ring meant to separate overlapping
-  avatars in an `AvatarGroup`. Figma's `StepperItem` avatars carry no such
-  stroke, so left on, the ring shows as an unwanted halo on `current`'s blue
-  fill and on `completed`'s hover/active fills. Switch it off yourself with
+  `Avatar` always paints a 2px outset ring meant to separate overlapping avatars
+  in an `AvatarGroup`. Figma's `StepperItem` avatars carry no such stroke, so
+  left on, the ring shows as an unwanted halo on `current`'s blue fill and on
+  `completed`'s hover/active fills. Switch it off yourself with
   `className="[box-shadow:none]"` on the composed `Avatar`, as the examples
   below do.
 </Callout>

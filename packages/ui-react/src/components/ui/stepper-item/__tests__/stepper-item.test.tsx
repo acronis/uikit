@@ -50,6 +50,40 @@ describe('StepperItem', () => {
     );
   });
 
+  // The border box is reserved on every variant so a `current` step is not ~2px
+  // larger than its siblings; only `current` paints the border color.
+  it('reserves the same border box on every variant', () => {
+    for (const variant of ['current', 'completed', 'future'] as const) {
+      const { container } = render(
+        <StepperItem avatar={avatar} label="Step" variant={variant} />
+      );
+      expect(container.firstElementChild).toHaveClass(
+        'border-[length:var(--ui-stepper-item-current-container-border-width)]',
+        'border-solid'
+      );
+    }
+  });
+
+  it('paints the border color only on the current step', () => {
+    const { container: current } = render(
+      <StepperItem avatar={avatar} label="Step" variant="current" />
+    );
+    expect(current.firstElementChild).toHaveClass(
+      'border-[var(--ui-stepper-item-current-container-border-color)]'
+    );
+    expect(current.firstElementChild).not.toHaveClass('border-transparent');
+
+    for (const variant of ['completed', 'future'] as const) {
+      const { container } = render(
+        <StepperItem avatar={avatar} label="Step" variant={variant} />
+      );
+      expect(container.firstElementChild).toHaveClass('border-transparent');
+      expect(container.firstElementChild).not.toHaveClass(
+        'border-[var(--ui-stepper-item-current-container-border-color)]'
+      );
+    }
+  });
+
   // The tier's typography (family / 14px / 500 / 24px / letter-spacing) is a
   // generated class, applied by name so nothing is dropped in transcription —
   // hand-written utilities previously left the weight at the default 400.

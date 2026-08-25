@@ -52,10 +52,16 @@ tokens:
     description: Container fill for the current step.
   - name: --ui-stepper-item-current-container-border-color
     affects: container
-    description: Container border color for the current step.
+    description:
+      Container border color for the current step. Other variants keep
+      the same border box with a transparent color, so no variant is sized
+      differently from its siblings.
   - name: --ui-stepper-item-current-container-border-width
     affects: container
-    description: Container border width for the current step.
+    description:
+      Container border width. Reserved on every variant (the tier ships
+      only this one width) so the current step is not larger than its siblings;
+      only the current step paints a visible color.
   - name: --ui-stepper-item-current-label-color
     affects: label
     description: Step-name color for the current step.

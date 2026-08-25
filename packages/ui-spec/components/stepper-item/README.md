@@ -84,6 +84,10 @@ component reproduces exactly that: `current` is always highlighted with a
 border, `future` is always disabled, and only `completed` reads `state`
 (`idle`, `hover`, `active`, `focus`).
 
+`current` is the only variant that paints a visible border, but every variant
+reserves the same border box (transparent on `completed` and `future`), so the
+three render at the same size and a row of steps stays aligned.
+
 ## Parts
 
 | Part             | Element | Notes                                                                                                             |

@@ -9,7 +9,8 @@ schematic: |
 
   avatar-slot -> the caller's Avatar, rendered verbatim (never restyled here)
   label       -> --ui-stepper-item-{current,completed}-label-color, or -future-label-color
-  container   -> --ui-stepper-item-current-container-color + border (current)
+  container   -> border box reserved on every variant (transparent unless current)
+                 --ui-stepper-item-current-container-color + border (current)
                  --ui-stepper-item-completed-container-color-{hover,active} fill (completed+state)
                  --ui-stepper-item-completed-container-color-focus-ring 3px ring (completed+focus)
                  no fill                        (completed+idle, future)

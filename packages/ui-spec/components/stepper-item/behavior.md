@@ -27,6 +27,11 @@
   (`tabindex="-1"`), and it receives no pointer events — again regardless of
   `state`. On the default `<div>` it also carries `role="link"`, without which
   `aria-disabled` would not be announced at all (see `accessibility.md`).
+- **Given** any `variant`
+  **Then** the container reserves the same border box, so all three variants
+  measure the same and a row of steps keeps its markers and names aligned. Only
+  `current` paints a visible border color; on `completed` and `future` the
+  reserved border is transparent.
 
 ## State is only observable on a completed step
 
