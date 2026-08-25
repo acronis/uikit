@@ -380,4 +380,25 @@ describe('Section collapse composition', () => {
       screen.getByRole('button', { name: 'Collapse section' })
     ).toHaveAttribute('aria-expanded', 'false');
   });
+
+  it('keeps header and content as the root gap-3 flex children through the AccordionContainer wrapper', () => {
+    const { container } = render(
+      <Section>
+        <AccordionContainer collapsible defaultOpen>
+          <SectionHeader title="Backup plans" isCollapsible />
+          <AccordionContainer.Content>
+            <SectionContent>Body</SectionContent>
+          </AccordionContainer.Content>
+        </AccordionContainer>
+      </Section>
+    );
+
+    const root = container.firstElementChild as HTMLElement;
+    // AccordionContainer's Root renders as `display: contents`, so it never
+    // becomes a box the root's `gap-3` has to space around — the header and
+    // the accordion's content panel remain the root's effective flex children.
+    expect(root.children).toHaveLength(1);
+    expect(root.firstElementChild).toHaveClass('contents');
+    expect(root.className).toContain('gap-3');
+  });
 });

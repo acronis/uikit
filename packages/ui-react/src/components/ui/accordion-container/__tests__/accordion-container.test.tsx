@@ -155,7 +155,7 @@ describe('AccordionContainer', () => {
       expect(container.querySelector('div')).not.toBeInTheDocument();
     });
 
-    it('Root applies no default className when collapsible=true', () => {
+    it('Root applies only `contents` by default when collapsible=true, no other styling opinion', () => {
       const { container } = render(
         <AccordionContainer collapsible defaultOpen>
           <AccordionContainer.Content>content</AccordionContainer.Content>
@@ -163,7 +163,7 @@ describe('AccordionContainer', () => {
       );
 
       const root = container.firstElementChild as HTMLElement;
-      expect(root.className).toBe('');
+      expect(root.className).toBe('contents');
     });
 
     it('Trigger className carries only hit-target sizing and reset, no color/spacing opinion', () => {

@@ -18,7 +18,11 @@ import { cn } from '@/lib/utils';
 // glyph color (--ui-glyph-on-surface-neutral-dark, the same neutral treatment
 // Accordion's chevron uses). Every other visual decision (header layout,
 // spacing, background, borders) stays owned by the consumer composing this
-// primitive into their own component (Card, Section, ...).
+// primitive into their own component (Card, Section, ...). The Root it
+// renders when collapsible defaults to `display: contents` so it never
+// becomes a box in the consumer's flex/grid flow — Section relies on its own
+// root `gap` applying directly to header/content, which only works if this
+// wrapper doesn't count as an intervening flex child.
 
 interface AccordionContainerState {
   open: boolean;
@@ -159,7 +163,7 @@ const AccordionContainer = React.forwardRef<
         <CollapsiblePrimitive.Root
           ref={ref}
           render={render}
-          className={resolvedClassName}
+          className={cn('contents', resolvedClassName)}
           style={resolvedStyle}
           open={open}
           onOpenChange={handleOpenChange}
