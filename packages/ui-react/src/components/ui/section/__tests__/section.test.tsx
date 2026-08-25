@@ -398,7 +398,7 @@ describe('Section collapse composition', () => {
     // becomes a box the root's `gap-3` has to space around — the header and
     // the accordion's content panel remain the root's effective flex children.
     expect(root.children).toHaveLength(1);
-    expect(root.firstElementChild).toHaveClass('contents');
+    expect(root.firstElementChild).toHaveClass('contents!');
     expect(root.className).toContain('gap-3');
   });
 });

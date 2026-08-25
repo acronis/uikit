@@ -163,7 +163,34 @@ describe('AccordionContainer', () => {
       );
 
       const root = container.firstElementChild as HTMLElement;
-      expect(root.className).toBe('contents');
+      expect(root.className).toBe('contents!');
+    });
+
+    it('keeps `display: contents` on the render-prop element even when it carries its own conflicting display class', () => {
+      render(
+        <AccordionContainer
+          collapsible
+          defaultOpen
+          render={<div className="flex" data-testid="root" />}
+        >
+          <AccordionContainer.Content>content</AccordionContainer.Content>
+        </AccordionContainer>
+      );
+
+      const root = screen.getByTestId('root');
+      expect(root.className.split(/\s+/)).toContain('contents!');
+    });
+
+    it('lets a consumer opt out of `contents!` via an important-modified className, resolved by tailwind-merge', () => {
+      render(
+        <AccordionContainer collapsible defaultOpen className="flex!" data-testid="root">
+          <AccordionContainer.Content>content</AccordionContainer.Content>
+        </AccordionContainer>
+      );
+
+      const root = screen.getByTestId('root');
+      expect(root.className.split(/\s+/)).not.toContain('contents!');
+      expect(root).toHaveClass('flex!');
     });
 
     it('Trigger className carries only hit-target sizing and reset, no color/spacing opinion', () => {

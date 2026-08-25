@@ -163,7 +163,7 @@ const AccordionContainer = React.forwardRef<
         <CollapsiblePrimitive.Root
           ref={ref}
           render={render}
-          className={cn('contents', resolvedClassName)}
+          className={cn('contents!', resolvedClassName)}
           style={resolvedStyle}
           open={open}
           onOpenChange={handleOpenChange}
