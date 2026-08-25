@@ -105,9 +105,9 @@ describe('ChartWidget', () => {
       ).toContain('flex-1');
     });
 
-    it('overrides the placeholder label', () => {
+    it('overrides the placeholder description', () => {
       render(
-        <ChartWidget state="empty" stateMessage="Nothing to plot yet">
+        <ChartWidget state="empty" stateDescription="Nothing to plot yet">
           {plot}
         </ChartWidget>
       );

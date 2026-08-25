@@ -30,3 +30,15 @@ Scenario: Optional footer
   Given a WidgetPlaceholder with a WidgetPlaceholderFooter
   Then a muted metadata line renders below the content
 ```
+
+## Not `ChartState`
+
+`ChartState` is the placeholder that goes _inside_ a chart's slot: it fills the
+slot, renders `loading` / `empty` / `error`, and for `empty` draws the silhouette
+the design defines for that chart type. `WidgetPlaceholder` is the composable
+skeleton for a whole tile — its own header, footer and action parts, and an
+`interactive` affordance — for a widget that isn't a chart, or one still being
+set up.
+
+Reach for `ChartState` when a chart has no data; for this when the widget itself
+isn't there yet.

@@ -39,8 +39,8 @@ describe('ChartState', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('Something went wrong');
   });
 
-  it('overrides the default label with `message`', () => {
-    render(<ChartState state="empty" message="Nothing to plot" />);
+  it('overrides the default description', () => {
+    render(<ChartState state="empty" description="Nothing to plot" />);
     expect(screen.getByText('Nothing to plot')).toBeInTheDocument();
   });
 
@@ -52,9 +52,7 @@ describe('ChartState', () => {
       screen.queryByRole('button', { name: 'Try again' })
     ).not.toBeInTheDocument();
 
-    rerender(
-      <ChartState state="error" action={<button>Try again</button>} />
-    );
+    rerender(<ChartState state="error" action={<button>Try again</button>} />);
     expect(
       screen.getByRole('button', { name: 'Try again' })
     ).toBeInTheDocument();
@@ -66,6 +64,110 @@ describe('ChartState', () => {
     expect(el).toHaveAttribute('role', 'status');
     expect(el).toHaveAttribute('aria-live', 'polite');
     expect(el).not.toHaveAttribute('aria-busy');
+  });
+
+  describe('per-type empty states', () => {
+    it('draws the type silhouette instead of the generic glyph', () => {
+      const { container } = render(
+        <ChartState state="empty" variant="donut" />
+      );
+
+      const svg = container.querySelector('svg');
+      expect(svg).toBeInTheDocument();
+      // Decorative: the label carries the meaning, so the artwork is hidden.
+      expect(svg).toHaveAttribute('aria-hidden', 'true');
+      // One tone, set on the container — every path inside inherits it, which is
+      // what lets brand/theme overrides reach the artwork.
+      expect(
+        svg?.querySelectorAll('[fill="currentColor"]').length
+      ).toBeGreaterThan(0);
+    });
+
+    it('keeps the generic glyph when no variant is given', () => {
+      const { container } = render(<ChartState state="empty" />);
+
+      // The inbox glyph is an icon component, so still an <svg> — what
+      // distinguishes them is that the illustration is coloured by its parent.
+      expect(
+        container.querySelector('[class*="ui-background-status-off"]')
+      ).toBeNull();
+    });
+
+    it('gives every variant its own artwork, with donut and radial sharing one', () => {
+      const seen = new Map<string, number>();
+
+      for (const variant of [
+        'area',
+        'bar',
+        'line',
+        'donut',
+        'radial',
+        'funnel',
+        'radar',
+        'scatter',
+        'treemap',
+        'table',
+        'text',
+      ] as const) {
+        const { container } = render(
+          <ChartState state="empty" variant={variant} />
+        );
+        const svg = container.querySelector('svg');
+        expect(svg, variant).toBeInTheDocument();
+        const key = svg?.outerHTML ?? '';
+        seen.set(key, (seen.get(key) ?? 0) + 1);
+      }
+
+      // 11 variants, 10 distinct silhouettes: the design draws one ring for both
+      // donut and radial.
+      expect(seen.size).toBe(10);
+      expect([...seen.values()].filter((n) => n === 2)).toHaveLength(1);
+    });
+
+    it('ignores the variant for loading and error, which share one treatment', () => {
+      for (const state of ['loading', 'error'] as const) {
+        const { container } = render(
+          <ChartState state={state} variant="treemap" />
+        );
+        expect(
+          container.querySelector('[class*="ui-background-status-off"]')
+        ).toBeNull();
+      }
+    });
+
+    it('makes the description the caption, replacing the status label', () => {
+      // The mockups draw the silhouette over "Widget description" and no status
+      // line: the artwork already says "no data", so the one useful sentence is
+      // what the widget would show.
+      render(
+        <ChartState
+          state="empty"
+          variant="area"
+          description="Sessions over the selected range"
+        />
+      );
+
+      expect(
+        screen.getByText('Sessions over the selected range')
+      ).toBeInTheDocument();
+      expect(screen.queryByText('No data found')).not.toBeInTheDocument();
+    });
+
+    it('falls back to the status label when there is no description', () => {
+      render(<ChartState state="empty" variant="area" />);
+
+      expect(screen.getByText('No data found')).toBeInTheDocument();
+    });
+
+    it('ignores the description for loading and error', () => {
+      for (const state of ['loading', 'error'] as const) {
+        render(<ChartState state={state} description="Not here" />);
+      }
+
+      expect(screen.queryByText('Not here')).not.toBeInTheDocument();
+      expect(screen.getByText('Data is loading…')).toBeInTheDocument();
+      expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+    });
   });
 
   it('forwards the ref', () => {

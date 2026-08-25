@@ -81,3 +81,13 @@ If the whole card must be the only control, also give it `role="button"`, an
   path="../../packages/ui-react/src/components/ui/widget-placeholder/widget-placeholder.docs.ts"
   name="WidgetPlaceholderProps"
 />
+
+## Not `ChartState`
+
+[`ChartState`](/components/chart-state) is the placeholder that goes *inside* a
+chart's slot: it fills the slot, renders `loading` / `empty` / `error`, and for
+`empty` draws the silhouette the design defines for that chart type.
+`WidgetPlaceholder` is the composable skeleton for a whole tile.
+
+Reach for `ChartState` when a chart has no data; for this when the widget itself
+isn't there yet.

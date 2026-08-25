@@ -76,6 +76,8 @@ its size.
 ```tsx
 <ChartWidget header={{ title: 'Severity' }} state="loading" />
 
+<ChartWidget header={{ title: 'Sessions' }} state="empty" variant="area" />
+
 <ChartWidget
   header={{ title: 'Sessions' }}
   state="error"
@@ -84,8 +86,8 @@ its size.
 ```
 
 `state="error"` also gives the card its error border, so the border and the
-placeholder come from one prop rather than two. `stateMessage` overrides the
-placeholder's default label.
+placeholder come from one prop rather than two. `stateDescription` overrides the
+default text.
 
 ## It takes no `size` — the grid does
 
@@ -111,7 +113,7 @@ Dropped into a parent with no definite height, the card hugs its content instead
 sized cell, where neither the grid nor the content can give a height.
 
 ```tsx
-<ChartWidget header={{ title: 'Severity' }} state="empty" bodyClassName="h-[252px]" />
+<ChartWidget header={{ title: 'Severity' }} state="empty" variant="bar" bodyClassName="h-[252px]" />
 ```
 
 ## Accessibility

@@ -12,6 +12,24 @@ contract:
         Which placeholder to show. Drives the leading glyph and the default
         label (loading → spinner + "Data is loading…"; empty → inbox + "No data
         found"; error → warning + "Something went wrong").
+    - name: variant
+      type: >-
+        'area' | 'bar' | 'line' | 'donut' | 'radial' | 'funnel' | 'radar' |
+        'scatter' | 'treemap' | 'table' | 'text'
+      required: false
+      description: >-
+        Which chart the slot holds. The `empty` state then draws that type's
+        silhouette instead of the generic inbox glyph — the design defines one
+        per chart type. `donut` and `radial` share a ring. Ignored by `loading`
+        and `error`, which share one treatment.
+    - name: description
+      type: ReactNode
+      required: false
+      description: >-
+        The `empty` state's caption — the mockups' "Widget description". It
+        replaces the status label rather than sitting under it: the silhouette
+        already says "no data", so the one line of text is what the widget would
+        show. Falls back to the status label when absent.
     - name: message
       type: string
       required: false
