@@ -25,7 +25,10 @@ content parts through context, so you set it in exactly one place.
 `SectionHeader` carries the title (20px medium), an optional description, an
 optional toggle switch, inline extras, and end-aligned actions. All parts are
 optional — there is no `hasHeader` flag, you simply omit `SectionHeader` — and
-every part is polymorphic via Base UI's `useRender` (the `render` prop).
+every part is polymorphic via Base UI's `useRender` (the `render` prop). Its
+`children` slot takes anything extra the row needs between the title and the
+actions; that's also where a
+[custom heading](#supplying-your-own-heading) goes.
 
 There is no `--ui-section-*` token tier: the title, description, and divider
 resolve to the shared semantic tokens (`--ui-text-on-surface-primary`,
@@ -154,13 +157,56 @@ import { AccordionContainer, Section, SectionContent, SectionHeader } from '@acr
 The root renders a real `<section>`, which only becomes a `region` landmark
 once it has an accessible name — add `aria-label` / `aria-labelledby` when the
 band is genuinely navigable content, and leave it off otherwise so the landmark
-list stays useful. The header title is a `<p>`, not a heading: a section's place
-in the document outline depends on the page around it, so supply your own
-heading when you need one.
+list stays useful.
 
 `collapseLabel` and `switchLabel` are the only strings the component renders on
 its own; override them per section when a page stacks several collapsible or
 switchable bands.
+
+### Supplying your own heading
+
+The `title` prop renders a `<p>`, not a heading. A section's place in the
+document outline depends on the page around it, so guessing a level (`h2`?
+`h3`?) would produce a broken hierarchy in most compositions.
+
+When the band really is a document section, put your own heading in
+`SectionHeader`'s `children` slot instead: omit `title` so you don't render two
+titles, match the title's text scale yourself, and point the root's
+`aria-labelledby` at your heading.
+
+```tsx
+<Section aria-labelledby="protection-heading">
+  <SectionHeader actions={<Button variant="secondary">Manage</Button>}>
+    <h2
+      id="protection-heading"
+      className="min-w-0 flex-1 truncate text-xl leading-6 font-medium text-[var(--ui-text-on-surface-primary)]"
+    >
+      Protection
+    </h2>
+  </SectionHeader>
+  <SectionContent>…</SectionContent>
+</Section>
+```
+
+Three things to know about this recipe:
+
+- **Use `children`, not `render`.** `render` replaces the entire header row, so
+  a heading passed that way would wrap the switch, description, extras,
+  actions, and collapse trigger inside the heading element.
+- **There is no exported class for the title's scale** — copy
+  `text-xl leading-6 font-medium text-[var(--ui-text-on-surface-primary)]`
+  (plus `truncate` if long titles should clip rather than wrap) so your heading
+  matches a `title` visually. `<h2>` also carries a browser default size,
+  weight, and margin; those utilities override the first two and ui-react's
+  Tailwind preflight zeroes the margin.
+- **Add `min-w-0 flex-1` if you also use `actions`.** The header row is a plain
+  flex row; the wrapper around `title` / `description` / `extras` is what
+  normally claims its free space, and it isn't rendered when you omit all
+  three. Without a flex-grow child of your own, the heading and `actions` sit
+  side by side at the inline start instead of splitting across the row.
+
+`children` render after that wrapper and before `actions`, so a heading in the
+slot lands at the inline start of the row — the same place `title` would have.
 
 ## API Reference
 

@@ -67,7 +67,16 @@ carrying `switchLabel` as its accessible name. Toggling it emits
 **Given** `extras` and `actions`
 **When** it renders
 **Then** `extras` sit inline immediately after the title and `actions` are
-pushed to the inline end of the row, before the collapse trigger.
+pushed to the inline end of the row, before the collapse trigger. The push
+comes from the flex-grow wrapper around `title` / `description` / `extras`.
+
+**Given** a header with `children` but no `title`, `description`, or `extras`
+**When** it renders
+**Then** that wrapper is not rendered at all, so `children` start at the inline
+start of the row — this is what lets a consumer-supplied heading take the
+title's place (see accessibility). Because nothing then grows, `actions`
+follow `children` immediately rather than sitting at the inline end, unless the
+consumer's own content grows (`flex-1`).
 
 ## Collapsing
 

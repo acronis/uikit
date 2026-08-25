@@ -23,7 +23,10 @@
   the heading element), omit `title` so you don't render two titles, match the
   title's text scale yourself (`text-xl leading-6 font-medium
 text-[var(--ui-text-on-surface-primary)]` — no exported class), and point
-  the root's `aria-labelledby` at it.
+  the root's `aria-labelledby` at it. With `title`, `description`, and `extras`
+  all omitted, the header renders no flex-grow wrapper at all, so give the
+  heading `min-w-0 flex-1` if the header also carries `actions` and they should
+  stay at the inline end.
 
 - The `description` is ordinary text, not a description role. If it should name
   or describe the region for assistive technology, wire it up explicitly with

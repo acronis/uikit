@@ -25,11 +25,11 @@ labels a run of cards — or a table — and separates it from the next run.
 
 ## Parts
 
-| Part             | Element   | Notes                                                                     |
-| ---------------- | --------- | ------------------------------------------------------------------------- |
-| `Section`        | `section` | Owns `variant` + `hasBottomBorder` and publishes the layout to its parts. |
-| `SectionHeader`  | `div`     | Optional. Switch, title, description, extras, actions, collapse trigger.  |
-| `SectionContent` | `div`     | The body. Its layout comes from the root's `variant`.                     |
+| Part             | Element   | Notes                                                                       |
+| ---------------- | --------- | --------------------------------------------------------------------------- |
+| `Section`        | `section` | Owns `variant` + `hasBottomBorder` and publishes the layout to its parts.   |
+| `SectionHeader`  | `div`     | Optional. Switch, title, description, extras, `children`, actions, trigger. |
+| `SectionContent` | `div`     | The body. Its layout comes from the root's `variant`.                       |
 
 ## Layouts
 

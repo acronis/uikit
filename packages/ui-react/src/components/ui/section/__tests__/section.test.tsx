@@ -148,6 +148,34 @@ describe('SectionHeader', () => {
     );
   });
 
+  it('omits the title wrapper entirely so a children-only custom heading leads the row', () => {
+    render(
+      <SectionHeader data-testid="header">
+        <h2 data-testid="custom-heading">Custom</h2>
+      </SectionHeader>
+    );
+
+    const header = screen.getByTestId('header');
+    // An always-rendered `flex-1` wrapper would swallow the row's free space
+    // and shove the consumer's heading to the end.
+    expect(header.querySelector('.flex-1')).toBeNull();
+    expect(header.firstElementChild).toBe(screen.getByTestId('custom-heading'));
+  });
+
+  it('keeps the title wrapper when only extras are supplied', () => {
+    render(
+      <SectionHeader data-testid="header" extras={<span>Beta</span>}>
+        <h2 data-testid="custom-heading">Custom</h2>
+      </SectionHeader>
+    );
+
+    const header = screen.getByTestId('header');
+    expect(header.querySelector('.flex-1')).not.toBeNull();
+    expect(header.firstElementChild).not.toBe(
+      screen.getByTestId('custom-heading')
+    );
+  });
+
   it('renders extras next to the title and actions at the end', () => {
     render(
       <SectionHeader

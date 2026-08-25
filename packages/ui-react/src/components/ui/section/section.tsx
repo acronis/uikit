@@ -224,21 +224,26 @@ const SectionHeader = React.forwardRef<HTMLDivElement, SectionHeaderProps>(
                   className="shrink-0"
                 />
               )}
-              <div className="flex min-w-0 flex-1 flex-col items-start justify-center gap-0.5">
-                <div className="flex min-w-0 items-center gap-2">
-                  {title && (
-                    <p className="truncate text-xl leading-6 font-medium text-[var(--ui-text-on-surface-primary)]">
-                      {title}
+              {/* Gated as a whole: an empty wrapper would still claim the
+                  header row's free space through `flex-1` and push a
+                  consumer-supplied heading (`children`) to the end. */}
+              {(title || extras || hasDescription) && (
+                <div className="flex min-w-0 flex-1 flex-col items-start justify-center gap-0.5">
+                  <div className="flex min-w-0 items-center gap-2">
+                    {title && (
+                      <p className="truncate text-xl leading-6 font-medium text-[var(--ui-text-on-surface-primary)]">
+                        {title}
+                      </p>
+                    )}
+                    {extras}
+                  </div>
+                  {hasDescription && (
+                    <p className="w-full truncate text-sm leading-6 text-[var(--ui-text-on-surface-secondary)]">
+                      {description}
                     </p>
                   )}
-                  {extras}
                 </div>
-                {hasDescription && (
-                  <p className="w-full truncate text-sm leading-6 text-[var(--ui-text-on-surface-secondary)]">
-                    {description}
-                  </p>
-                )}
-              </div>
+              )}
               {children}
               {actions}
               {isCollapsible && (

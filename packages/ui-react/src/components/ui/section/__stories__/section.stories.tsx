@@ -278,6 +278,31 @@ export const Switchable: Story = {
   ),
 };
 
+// `title` renders as a `<p>`, so a section that needs a real document heading
+// supplies its own through `children` and leaves `title` unset. With no title,
+// no extras, and no description, the header renders no title wrapper at all —
+// the custom heading is the first thing in the row.
+export const WithCustomHeading: Story = {
+  args: { variant: 'column1' },
+  render: (args) => (
+    <Section {...args}>
+      <SectionHeader
+        actions={<Button variant="secondary">Configure</Button>}
+      >
+        <h2 className="min-w-0 flex-1 truncate text-xl leading-6 font-medium text-[var(--ui-text-on-surface-primary)]">
+          Backup plans
+        </h2>
+      </SectionHeader>
+      <SectionContent>
+        <DemoCard
+          title="Daily backup"
+          body="The heading is a real h2 supplied by the consumer, not the title prop."
+        />
+      </SectionContent>
+    </Section>
+  ),
+};
+
 export const WithExtrasAndActions: Story = {
   args: { variant: 'column1' },
   render: (args) => (
