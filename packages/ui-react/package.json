@@ -24,7 +24,9 @@
       "import": "./dist/react.js",
       "types": "./dist/react.d.ts"
     },
-    "./styles": "./dist/ui-react.css"
+    "./styles": "./dist/ui-react.css",
+    "./llms.txt": "./dist/llms.txt",
+    "./llms/*": "./dist/llms/*"
   },
   "files": [
     "dist",
@@ -32,7 +34,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "vite build -c vite.lib.config.ts",
+    "build": "vite build -c vite.lib.config.ts && tsx scripts/generate-llms.ts",
+    "build:llms": "tsx scripts/generate-llms.ts",
     "dev": "vite build -c vite.lib.config.ts --watch",
     "clean": "rm -rf dist storybook-static node_modules/.vite *.tsbuildinfo",
     "typecheck": "tsc --noEmit",
@@ -85,6 +88,9 @@
   },
   "devDependencies": {
     "@figma/code-connect": "1.4.8",
+    "@types/js-yaml": "4.0.9",
+    "js-yaml": "4.1.1",
+    "tsx": "^4.20.0",
     "@playwright/test": "1.60.0",
     "@tanstack/react-virtual": "catalog:",
     "react": "catalog:",
