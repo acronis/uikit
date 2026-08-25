@@ -40,12 +40,12 @@ contract:
     - name: innerRadius
       type: number
       required: false
-      default: '30'
+      default: '20'
       description: Inner radius of the innermost arc.
     - name: outerRadius
       type: number
       required: false
-      default: '110'
+      default: '60'
       description: Outer radius of the outermost arc.
     - name: startAngle
       type: number
@@ -151,6 +151,12 @@ contract:
       required: false
       default: 'true'
       description: Render the legend.
+    - name: legendValueFormatter
+      type: '(value: string | number) => string'
+      required: false
+      description: >-
+        Format each arc's value in the list legend. Ignored in multi-metric mode
+        (values are per-row, not per-series).
     - name: tooltipContent
       type: 'ReactElement | ((props) => ReactNode)'
       required: false

@@ -11,15 +11,18 @@ import {
   RadialBarChart as RechartsRadialBarChart,
 } from 'recharts';
 
+import type { LegendPayload } from 'recharts/types/component/DefaultLegendContent';
+
 import { cn } from '@/lib/utils';
 import {
   ChartContainer,
-  ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
   resolveAnimation,
+  resolveChartColors,
   resolveLabelFillClass,
+  CHART_DEFAULT_PALETTE,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartPalette,
@@ -222,7 +225,7 @@ export function radialBarChartSegmentFill(
   // The unreached remainder plays the part `showBackground`'s track plays on a
   // continuous arc, so it takes the same muted surface.
   return kind === 'track'
-    ? 'var(--ui-background-surface-secondary)'
+    ? 'var(--ui-border-on-status-neutral)'
     : `var(--color-${colorName})`;
 }
 
@@ -400,7 +403,7 @@ function RadialBarChartSeries({
       key={key}
       dataKey={key}
       fill={isMultiMetric ? `var(--color-${key})` : undefined}
-      background={showBackground}
+      background={showBackground ? { fill: 'var(--ui-border-on-status-neutral)' } : false}
       cornerRadius={cornerRadius}
       minPointSize={minPointSize}
       {...animation}
@@ -596,6 +599,12 @@ export interface RadialBarChartProps
   showTooltip?: boolean;
   showLegend?: boolean;
   /**
+   * Format each arc's value in the list legend. In single-metric mode each arc
+   * row gets its formatted value next to its label; in multi-metric mode values
+   * are per-row (not per-series) so this is ignored.
+   */
+  legendValueFormatter?: (value: string | number) => string;
+  /**
    * Replace the default tooltip. Pass a configured `ChartTooltipContent`
    * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
    * to customize formatting, per-arc rows, or extra fields without composing
@@ -630,8 +639,8 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
       dataKey,
       dataKeys,
       nameKey,
-      innerRadius = 30,
-      outerRadius = 110,
+      innerRadius = 20,
+      outerRadius = 60,
       startAngle = 90,
       endAngle = -270,
       valueDomain,
@@ -650,6 +659,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
       centerLabel,
       showTooltip = true,
       showLegend = true,
+      legendValueFormatter,
       tooltipContent,
       animate,
       animationDuration,
@@ -737,34 +747,36 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
           ? -minAngle
           : minAngle;
 
-    // recharts derives a radial legend from the data *rows* — one entry per row,
-    // named and colored from the row itself (hence the stamped `fill`). That is
-    // the single-metric mapping; it cannot name one arc per metric. So the
-    // multi-metric payload is composed here, and passed as a content *function*:
-    // recharts clones a content *element* with its own row-derived payload, which
-    // would overwrite ours.
-    //
-    // Memoized because recharts `createElement`s a function content — a new
-    // closure each render is a new element *type*, which would remount the whole
-    // legend on every parent render instead of updating it.
-    const multiMetricLegendContent = React.useCallback(
-      () => (
-        <ChartLegendContent
-          payload={legendKeys.map((key) => ({
-            value: key,
-            dataKey: key,
-            color: `var(--color-${key})`,
-            type: 'rect' as const,
-          }))}
-        />
-      ),
-      [legendKeys]
+    // Resolve colors so the external list legend has the same values as the chart
+    // plot without needing to be inside ChartContainer's context.
+    const resolvedConfigForLegend = React.useMemo(
+      () => (showLegend ? resolveChartColors(config, palette ?? CHART_DEFAULT_PALETTE) : null),
+      [showLegend, config, palette]
     );
-    const legendContent = isMultiMetric ? (
-      multiMetricLegendContent
-    ) : (
-      <ChartLegendContent nameKey={nameKey} />
-    );
+    const rightLegendPayload: LegendPayload[] = React.useMemo(() => {
+      if (!resolvedConfigForLegend) return [];
+      if (isMultiMetric) {
+        // Multi-metric: one entry per dataKey. No per-series row value is
+        // meaningful (each metric spans multiple rows), so values are omitted.
+        return legendKeys.map((key) => ({
+          value: key,
+          dataKey: key,
+          color: resolvedConfigForLegend[key]?.color ?? `var(--color-${key})`,
+          type: 'rect' as const,
+          payload: {} as Record<string, unknown>,
+        }));
+      }
+      // Single-metric: one entry per data row.
+      return data.map((row) => ({
+        value: String(row[nameKey]),
+        dataKey: nameKey,
+        color:
+          resolvedConfigForLegend[String(row[nameKey])]?.color ??
+          `var(--color-${String(row[nameKey])})`,
+        type: 'rect' as const,
+        payload: row as Record<string, unknown>,
+      }));
+    }, [resolvedConfigForLegend, isMultiMetric, legendKeys, data, nameKey]);
 
     // The built-in tooltip reading, which each mapping composes differently: a
     // segmented ring rebuilds it from the data row, multi-metric renames the
@@ -798,82 +810,106 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
       return <ChartTooltipContent nameKey={nameKey} hideLabel />;
     };
 
+    // Shared recharts chart composition (used in both layout modes).
+    const radialChartContent = (
+      <RechartsRadialBarChart
+        data={plotData}
+        // Only meaningful for the single-metric mapping; in multi-metric and
+        // segmented mode each <RadialBar> carries its own key and the scale
+        // spans them all.
+        dataKey={isMultiMetric || isSegmented ? undefined : dataKey}
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        barSize={barSize}
+        barGap={barGap}
+        barCategoryGap={barCategoryGap}
+        margin={margin ?? { top: 0, right: 0, bottom: 0, left: 0 }}
+      >
+        {showPolarGrid && (
+          <PolarGrid gridType="circle" radialLines={false} />
+        )}
+        {(valueDomain || isSegmented) && (
+          // The angular scale itself, not chrome: it maps a value onto a
+          // fraction of the sweep. Ticks/axis line stay off — the arcs and
+          // the optional center readout are the readout. A segmented ring is
+          // already measured in degrees, so its scale *is* the sweep.
+          <PolarAngleAxis
+            type="number"
+            domain={isSegmented ? [0, sweep] : valueDomain}
+            tick={false}
+            axisLine={false}
+          />
+        )}
+        {showTooltip && (
+          <ChartTooltip
+            // The hover cursor marks which band of the angular axis is
+            // active, which on a segmented ring is one metric either way —
+            // it just draws a hairline across the gauge.
+            cursor={isSegmented ? false : undefined}
+            content={tooltipContent ?? getDefaultTooltipContent()}
+          />
+        )}
+        {isSegmented ? (
+          <RadialBarChartSegmentedSeries
+            ringSegments={ringSegments}
+            row={data[0]}
+            nameKey={nameKey}
+            cornerRadius={cornerRadius}
+            animation={animation}
+            centerLabel={centerLabel}
+          />
+        ) : (
+          <RadialBarChartSeries
+            seriesKeys={seriesKeys}
+            seriesData={seriesData}
+            isMultiMetric={isMultiMetric}
+            config={config}
+            nameKey={nameKey}
+            showBackground={showBackground}
+            cornerRadius={cornerRadius}
+            minPointSize={minPointSize}
+            animation={animation}
+            centerLabel={centerLabel}
+            showLabels={showLabels}
+            labelPosition={arcLabelPosition}
+            labelFormat={labelFormat}
+            labelFormatter={labelFormatter}
+          />
+        )}
+      </RechartsRadialBarChart>
+    );
+
+    const chartDivSize =
+      showLabels && (arcLabelPosition === 'outside' || arcLabelPosition === 'end')
+        ? 'size-[200px]'
+        : 'size-[120px]';
+
     return (
-      <div ref={ref} className={cn(className)} {...props}>
-        <ChartContainer config={config} palette={palette} className="size-full">
-          <RechartsRadialBarChart
-            data={plotData}
-            // Only meaningful for the single-metric mapping; in multi-metric and
-            // segmented mode each <RadialBar> carries its own key and the scale
-            // spans them all.
-            dataKey={isMultiMetric || isSegmented ? undefined : dataKey}
-            cx={cx}
-            cy={cy}
-            innerRadius={innerRadius}
-            outerRadius={outerRadius}
-            startAngle={startAngle}
-            endAngle={endAngle}
-            barSize={barSize}
-            barGap={barGap}
-            barCategoryGap={barCategoryGap}
-            margin={margin}
-          >
-            {showPolarGrid && (
-              <PolarGrid gridType="circle" radialLines={false} />
-            )}
-            {(valueDomain || isSegmented) && (
-              // The angular scale itself, not chrome: it maps a value onto a
-              // fraction of the sweep. Ticks/axis line stay off — the arcs and
-              // the optional center readout are the readout. A segmented ring is
-              // already measured in degrees, so its scale *is* the sweep.
-              <PolarAngleAxis
-                type="number"
-                domain={isSegmented ? [0, sweep] : valueDomain}
-                tick={false}
-                axisLine={false}
-              />
-            )}
-            {showTooltip && (
-              <ChartTooltip
-                // The hover cursor marks which band of the angular axis is
-                // active, which on a segmented ring is one metric either way —
-                // it just draws a hairline across the gauge.
-                cursor={isSegmented ? false : undefined}
-                content={tooltipContent ?? getDefaultTooltipContent()}
-              />
-            )}
-            {isSegmented ? (
-              <RadialBarChartSegmentedSeries
-                ringSegments={ringSegments}
-                row={data[0]}
-                nameKey={nameKey}
-                cornerRadius={cornerRadius}
-                animation={animation}
-                centerLabel={centerLabel}
-              />
-            ) : (
-              <RadialBarChartSeries
-                seriesKeys={seriesKeys}
-                seriesData={seriesData}
-                isMultiMetric={isMultiMetric}
-                config={config}
-                nameKey={nameKey}
-                showBackground={showBackground}
-                cornerRadius={cornerRadius}
-                minPointSize={minPointSize}
-                animation={animation}
-                centerLabel={centerLabel}
-                showLabels={showLabels}
-                labelPosition={arcLabelPosition}
-                labelFormat={labelFormat}
-                labelFormatter={labelFormatter}
-              />
-            )}
-            {showLegend && !isSegmented && (
-              <ChartLegend content={legendContent} />
-            )}
-          </RechartsRadialBarChart>
-        </ChartContainer>
+      <div
+        ref={ref}
+        className={cn('flex flex-row items-center gap-4', className)}
+        {...props}
+      >
+        <div className={cn(chartDivSize, 'shrink-0')}>
+          <ChartContainer config={config} palette={palette} className="size-full">
+            {radialChartContent}
+          </ChartContainer>
+        </div>
+        {showLegend && !isSegmented && resolvedConfigForLegend && (
+          <ChartLegendContent
+            variant="list"
+            payload={rightLegendPayload}
+            config={resolvedConfigForLegend}
+            nameKey={nameKey}
+            valueKey={isMultiMetric ? undefined : dataKey}
+            valueFormatter={isMultiMetric ? undefined : legendValueFormatter}
+            className="min-w-0 flex-1"
+          />
+        )}
       </div>
     );
   }

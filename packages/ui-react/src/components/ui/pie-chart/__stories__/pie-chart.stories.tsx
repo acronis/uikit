@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Cell, Pie, PieChart as RechartsPieChart } from 'recharts';
+import { ChartPieIcon, EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { PieChart, pieChartValuePercentTooltip } from '../pie-chart';
 import { paletteArgTypes } from '../../chart/__stories__/palette-control';
@@ -9,6 +10,9 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '../../chart';
+import { ButtonIcon } from '../../button-icon';
+import { ChartWidget } from '../../chart-widget';
+import { Metric } from '../../metric';
 
 // Slice colors are supplied by the caller via `config`, keyed by the slice's
 // nameKey value. There is no chart token tier yet, so these reference the shared
@@ -36,27 +40,16 @@ const meta = {
   component: PieChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  // The ChartContainer is transparent by design (it inherits the surface it sits
-  // on — usually a Card). Render the stories on a themed surface so the chart is
-  // legible in both light and dark; without it, dark mode flips the token-driven
-  // text/legend but leaves the backdrop unthemed.
-  decorators: [
-    (Story) => (
-      <div className="rounded-lg border border-border bg-background p-6 text-foreground">
-        <Story />
-      </div>
-    ),
-  ],
   args: {
     config,
     data,
     dataKey: 'value',
     nameKey: 'browser',
-    innerRadius: 60,
-    paddingAngle: 0,
+    innerRadius: 48,
+    paddingAngle: 2,
     showTooltip: true,
     showLegend: true,
-    className: 'h-[360px] w-[360px]',
+    className: 'w-[256px]',
   },
   argTypes: {
     ...paletteArgTypes,
@@ -66,8 +59,8 @@ const meta = {
       description:
         'Donut-only center content: `{ value, label }`. The object editor needs strict JSON — e.g. `{ "value": "835", "label": "Visitors" }`.',
     },
-    innerRadius: { control: { type: 'number', min: 0, max: 120 } },
-    outerRadius: { control: { type: 'number', min: 40, max: 160 } },
+    innerRadius: { control: { type: 'number', min: 0, max: 60 } },
+    outerRadius: { control: { type: 'number', min: 0, max: 60 } },
     paddingAngle: { control: { type: 'number', min: 0, max: 10 } },
     cornerRadius: { control: { type: 'number', min: 0, max: 24 } },
     startAngle: { control: { type: 'number', min: -360, max: 360 } },
@@ -84,7 +77,6 @@ const meta = {
       options: ['value', 'value-percent'],
     },
     showLegend: { control: 'boolean' },
-    legendPosition: { control: 'inline-radio', options: ['top', 'bottom'] },
     showLabels: { control: 'boolean' },
     labelFormat: {
       control: 'select',
@@ -116,19 +108,66 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Default: hollow-centre donut with legend — what you get with no extra props.
+export const Donut: Story = {
+  args: { shape: 'donut' },
+};
+
+// Replication of the Figma design mockup: the chart widget inside a card with
+// a metric readout above the donut + legend. Rendered with a fixed composition
+// so it shows real consumer usage rather than the meta args playground.
+export const WidgetExample: Story = {
+  render: () => (
+    <div className="w-[480px]">
+      <ChartWidget
+        header={{
+          title: 'Title',
+          actions: (
+            <ButtonIcon variant="ghost" aria-label="Widget actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          ),
+        }}
+        metric={<Metric icon={<ChartPieIcon />} value="125" unit="Label" />}
+      >
+        <PieChart
+          data={[
+            { item: 'first', value: 10 },
+            { item: 'second', value: 10 },
+            { item: 'third', value: 10 },
+            { item: 'fourth', value: 10 },
+            { item: 'fifth', value: 10 },
+            { item: 'sixth', value: 10 },
+            { item: 'seventh', value: 10 },
+            { item: 'eighth', value: 10 },
+          ]}
+          config={{
+            first: { label: 'First Lorem ipsum dolor sit amet' },
+            second: { label: 'Second Lorem ipsum dolor sit:' },
+            third: { label: 'Third:' },
+            fourth: { label: 'Fourth:' },
+            fifth: { label: 'Fifth:' },
+            sixth: { label: 'Sixth:' },
+            seventh: { label: 'Seventh:' },
+            eighth: { label: 'Eighth:' },
+          }}
+          nameKey="item"
+          dataKey="value"
+          shape="donut"
+        />
+      </ChartWidget>
+    </div>
+  ),
+};
+
 // A filled pie.
 export const Pie_: Story = {
   args: { shape: 'pie' },
 };
 
-// A hollow-centre donut.
-export const Donut: Story = {
-  args: { shape: 'donut' },
-};
-
 // Data labels (T15): each slice's value drawn on the arc.
 export const Labels: Story = {
-  args: { shape: 'pie', showLabels: true },
+  args: { shape: 'pie', showLabels: true, className: 'w-[380px]' },
 };
 
 // A donut with a custom center metric (here the total) + a caption.
@@ -139,9 +178,7 @@ export const DonutWithCenterLabel: Story = {
   },
 };
 
-// Center label with the legend hidden — exercises the `showLegend: false` branch
-// of the center nudge (raw cy, no legend-row offset), which the legend-on
-// DonutWithCenterLabel baseline can't cover.
+// Center label with the legend hidden — exercises the center-only render path.
 export const DonutWithCenterLabelNoLegend: Story = {
   args: {
     shape: 'donut',
@@ -258,7 +295,6 @@ export const Semicircle: Story = {
     shape: 'donut',
     startAngle: 180,
     endAngle: 0,
-    className: 'h-[240px] w-[360px]',
   },
 };
 
@@ -274,7 +310,7 @@ export const LabelsNamePercent: Story = {
     shape: 'pie',
     showLabels: true,
     labelFormat: 'name-percent',
-    className: 'h-[360px] w-[520px]',
+    className: 'w-[380px]',
   },
 };
 
@@ -288,7 +324,7 @@ export const LabelsWithLeaderLines: Story = {
     showLabels: true,
     labelLine: true,
     labelFormat: 'name-percent',
-    className: 'h-[360px] w-[520px]',
+    className: 'w-[500px]',
   },
 };
 
@@ -301,23 +337,12 @@ export const SliceOverrides: Story = {
     showLabels: true,
     labelLine: true,
     labelFormat: 'percent',
-    className: 'h-[360px] w-[520px]',
+    className: 'w-[500px]',
     sliceSettings: {
       Firefox: { color: 'var(--ui-background-status-strong-neutral)' },
       Edge: { hideLabel: true },
       Chrome: { labelFormat: 'name-value' },
     },
-  },
-};
-
-// The legend above the chart. For a donut this also flips the centre-label
-// nudge: recharts reserves the legend row at the top, so the arc centre moves
-// down rather than up.
-export const LegendTop: Story = {
-  args: {
-    shape: 'donut',
-    legendPosition: 'top',
-    centerLabel: { value: '835', label: 'Visitors' },
   },
 };
 
@@ -366,3 +391,4 @@ export const TooltipValuePercentOpen: Story = {
     </ChartContainer>
   ),
 };
+

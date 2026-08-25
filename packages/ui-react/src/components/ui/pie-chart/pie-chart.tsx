@@ -13,15 +13,18 @@ import {
   type PieLabelRenderProps,
 } from 'recharts';
 
+import type { LegendPayload } from 'recharts/types/component/DefaultLegendContent';
+
 import { cn } from '@/lib/utils';
 import {
   ChartContainer,
-  ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
   resolveAnimation,
+  resolveChartColors,
   resolveLabelFillClass,
+  CHART_DEFAULT_PALETTE,
   CHART_LABEL_FILL_CLASS,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
@@ -292,8 +295,11 @@ export interface PieChartProps
   sliceSettings?: Record<string, PieChartSliceSettings>;
   showTooltip?: boolean;
   showLegend?: boolean;
-  /** Which edge the legend sits on. Defaults to `bottom`. */
-  legendPosition?: 'top' | 'bottom';
+  /**
+   * Format each slice's value in the list legend. When omitted the raw value is
+   * stringified with `String()`.
+   */
+  legendValueFormatter?: (value: string | number) => string;
   /** Plot-area margin, in px. Omit to use recharts' default (5 on every side). */
   margin?: { top?: number; right?: number; bottom?: number; left?: number };
   /**
@@ -343,51 +349,19 @@ export interface PieChartProps
   labelLine?: boolean;
 }
 
-// Reserved height (px) of the shared single-row `ChartLegendContent` on
-// whichever edge `legendPosition` puts it — the same on both, since the legend's
-// own padding is symmetric (`pt-3` / `pb-3`). recharts shifts the donut centre
-// away from that edge by half of this to make room, but a Pie <Label>'s viewBox
-// does not reflect it — so the centre label is nudged by the same amount, in the
-// same direction. VR baselines guard this value if the legend's height changes.
-const LEGEND_ROW_RESERVE = 28;
-
-/**
- * Content for the donut hole's centre readout, bound to the legend layout it has
- * to compensate for.
- *
- * recharts centres the pie in the plot area (surface minus the legend), but a
- * Pie `<Label>`'s viewBox reports the full surface centre — so a bottom legend
- * leaves `cy` half a legend row too low, and a top legend half a row too high.
- * The nudge puts the text back on the real donut centre, in whichever direction
- * the legend row was reserved.
- */
-function renderCenterLabel({
-  centerLabel,
-  showLegend,
-  legendPosition,
-}: {
-  centerLabel: PieChartCenterLabel;
-  showLegend: boolean;
-  legendPosition: 'top' | 'bottom';
-}) {
+function renderCenterLabel({ centerLabel }: { centerLabel: PieChartCenterLabel }) {
   return function CenterLabelContent({ viewBox }: { viewBox?: object }) {
     if (!viewBox || !('cx' in viewBox)) return null;
     const { cx = 0, cy = 0 } = viewBox as { cx?: number; cy?: number };
-
-    const legendNudge = showLegend ? LEGEND_ROW_RESERVE / 2 : 0;
-    const centerY = cy + (legendPosition === 'top' ? legendNudge : -legendNudge);
     const hasValue = centerLabel.value != null;
     const hasLabel = centerLabel.label != null;
-    // Straddle centerY when both lines show, so the value + label block is
-    // centered as a whole (not just the value).
     const both = hasValue && hasLabel;
-
     return (
       <g>
         {hasValue && (
           <text
             x={cx}
-            y={both ? centerY - 10 : centerY}
+            y={both ? cy - 10 : cy}
             textAnchor="middle"
             dominantBaseline="central"
             className="fill-foreground text-2xl font-semibold"
@@ -398,7 +372,7 @@ function renderCenterLabel({
         {hasLabel && (
           <text
             x={cx}
-            y={both ? centerY + 13 : centerY}
+            y={both ? cy + 13 : cy}
             textAnchor="middle"
             dominantBaseline="central"
             className="fill-muted-foreground text-sm"
@@ -420,19 +394,19 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       data,
       dataKey,
       nameKey,
-      shape = 'pie',
+      shape = 'donut',
       centerLabel,
-      innerRadius = 60,
+      innerRadius = 48,
       outerRadius,
-      paddingAngle = 0,
+      paddingAngle = 2,
       cornerRadius,
-      startAngle,
-      endAngle,
+      startAngle = 90,
+      endAngle = -270,
       minAngle,
       sliceSettings,
       showTooltip = true,
       showLegend = true,
-      legendPosition = 'bottom',
+      legendValueFormatter,
       margin,
       tooltipContent,
       tooltipFormat = 'value',
@@ -457,6 +431,25 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
     });
     const pieLabelPosition = labelPosition ?? 'outside';
     const resolvedInnerRadius = shape === 'donut' ? innerRadius : 0;
+
+    // Resolve colors so the external list legend has the same values as the chart
+    // plot without needing to be inside ChartContainer's context.
+    const resolvedConfigForLegend = React.useMemo(
+      () => (showLegend ? resolveChartColors(config, palette ?? CHART_DEFAULT_PALETTE) : null),
+      [showLegend, config, palette]
+    );
+    const rightLegendPayload: LegendPayload[] = React.useMemo(() => {
+      if (!resolvedConfigForLegend) return [];
+      return data.map((row) => ({
+        value: String(row[nameKey]),
+        dataKey: nameKey,
+        color:
+          resolvedConfigForLegend[String(row[nameKey])]?.color ??
+          `var(--color-${String(row[nameKey])})`,
+        type: 'rect' as const,
+        payload: row as Record<string, unknown>,
+      }));
+    }, [resolvedConfigForLegend, data, nameKey]);
 
     // The denominator behind every percent — the labels' and the tooltip's — so
     // the two always agree. Non-numeric cells count as nothing rather than NaN.
@@ -526,94 +519,109 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       );
     };
 
+    // Shared recharts chart composition (used in both layout modes).
+    const pieChartContent = (
+      <RechartsPieChart margin={margin ?? { top: 0, right: 0, bottom: 0, left: 0 }}>
+        {showTooltip && (
+          <ChartTooltip
+            content={
+              tooltipContent ??
+              (tooltipFormat === 'value-percent' ? (
+                pieChartValuePercentTooltip({ nameKey, config, total })
+              ) : (
+                <ChartTooltipContent nameKey={nameKey} hideLabel />
+              ))
+            }
+          />
+        )}
+        <Pie
+          data={data as unknown[]}
+          dataKey={dataKey}
+          nameKey={nameKey}
+          innerRadius={resolvedInnerRadius}
+          outerRadius={outerRadius ?? 60}
+          paddingAngle={paddingAngle}
+          cornerRadius={cornerRadius}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          minAngle={minAngle}
+          label={showLeaderLines ? renderLeaderLabel : false}
+          labelLine={showLeaderLines ? renderLeaderLine : false}
+          {...animation}
+        >
+          {data.map((entry, index) => (
+            // Keyed by index, not the name: two rows may share a nameKey
+            // value, which would collide as a React key. Same-named rows
+            // intentionally share a color/config entry via `--color-<name>`.
+            <Cell
+              key={index}
+              fill={
+                sliceSettings?.[String(entry[nameKey])]?.color ??
+                `var(--color-${entry[nameKey]})`
+              }
+            />
+          ))}
+          {shape === 'donut' && centerLabel && (
+            <Label content={renderCenterLabel({ centerLabel })} />
+          )}
+          {showLabels && !showLeaderLines && (
+            <LabelList
+              // `valueAccessor` rather than `dataKey`: the label text can
+              // carry the slice's name and share, which only the whole row
+              // (and the chart's total) can compose. recharts ignores the
+              // accessor when a dataKey is set, so the two can't be combined.
+              valueAccessor={(entry) =>
+                resolveSliceLabel(entry.payload as PieChartDatum)
+              }
+              // Always explicit: recharts' polar fallback for an unset
+              // position is the sector centroid — inside the fill — which
+              // is exactly the placement the on-surface token can't survive.
+              position={pieLabelPosition}
+              className={resolveLabelFillClass(pieLabelPosition)}
+              fontSize={CHART_LABEL_FONT_SIZE}
+            />
+          )}
+        </Pie>
+      </RechartsPieChart>
+    );
+
+    // Grow the SVG container when labels need space outside the arc so they
+    // stay within the chart boundary instead of escaping into the layout.
+    const chartDivSize = showLabels
+      ? showLeaderLines
+        ? 'size-[320px]'
+        : pieLabelPosition === 'outside' || pieLabelPosition === 'end'
+          ? 'size-[200px]'
+          : 'size-[120px]'
+      : 'size-[120px]';
+
     return (
       <div
         ref={ref}
         data-shape={shape}
-        className={cn(pieChartVariants({ shape }), className)}
+        className={cn(
+          'flex flex-row items-center gap-4',
+          pieChartVariants({ shape }),
+          className
+        )}
         {...props}
       >
-        <ChartContainer config={config} palette={palette} className="size-full">
-          <RechartsPieChart margin={margin}>
-            {showTooltip && (
-              <ChartTooltip
-                content={
-                  tooltipContent ??
-                  (tooltipFormat === 'value-percent' ? (
-                    pieChartValuePercentTooltip({ nameKey, config, total })
-                  ) : (
-                    <ChartTooltipContent nameKey={nameKey} hideLabel />
-                  ))
-                }
-              />
-            )}
-            <Pie
-              data={data as unknown[]}
-              dataKey={dataKey}
-              nameKey={nameKey}
-              innerRadius={resolvedInnerRadius}
-              outerRadius={outerRadius}
-              paddingAngle={paddingAngle}
-              cornerRadius={cornerRadius}
-              startAngle={startAngle}
-              endAngle={endAngle}
-              minAngle={minAngle}
-              label={showLeaderLines ? renderLeaderLabel : false}
-              labelLine={showLeaderLines ? renderLeaderLine : false}
-              {...animation}
-            >
-              {data.map((entry, index) => (
-                // Keyed by index, not the name: two rows may share a nameKey
-                // value, which would collide as a React key. Same-named rows
-                // intentionally share a color/config entry via `--color-<name>`.
-                <Cell
-                  key={index}
-                  fill={
-                    sliceSettings?.[String(entry[nameKey])]?.color ??
-                    `var(--color-${entry[nameKey]})`
-                  }
-                />
-              ))}
-              {shape === 'donut' && centerLabel && (
-                <Label
-                  content={renderCenterLabel({
-                    centerLabel,
-                    showLegend,
-                    legendPosition,
-                  })}
-                />
-              )}
-              {showLabels && !showLeaderLines && (
-                <LabelList
-                  // `valueAccessor` rather than `dataKey`: the label text can
-                  // carry the slice's name and share, which only the whole row
-                  // (and the chart's total) can compose. recharts ignores the
-                  // accessor when a dataKey is set, so the two can't be combined.
-                  valueAccessor={(entry) =>
-                    resolveSliceLabel(entry.payload as PieChartDatum)
-                  }
-                  // Always explicit: recharts' polar fallback for an unset
-                  // position is the sector centroid — inside the fill — which
-                  // is exactly the placement the on-surface token can't survive.
-                  position={pieLabelPosition}
-                  className={resolveLabelFillClass(pieLabelPosition)}
-                  fontSize={CHART_LABEL_FONT_SIZE}
-                />
-              )}
-            </Pie>
-            {showLegend && (
-              <ChartLegend
-                verticalAlign={legendPosition}
-                content={
-                  <ChartLegendContent
-                    nameKey={nameKey}
-                    verticalAlign={legendPosition}
-                  />
-                }
-              />
-            )}
-          </RechartsPieChart>
-        </ChartContainer>
+        <div className={cn(chartDivSize, 'shrink-0')}>
+          <ChartContainer config={config} palette={palette} className="size-full">
+            {pieChartContent}
+          </ChartContainer>
+        </div>
+        {showLegend && resolvedConfigForLegend && (
+          <ChartLegendContent
+            variant="list"
+            payload={rightLegendPayload}
+            config={resolvedConfigForLegend}
+            nameKey={nameKey}
+            valueKey={dataKey}
+            valueFormatter={legendValueFormatter}
+            className="min-w-0 flex-1"
+          />
+        )}
       </div>
     );
   }

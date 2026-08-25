@@ -155,6 +155,23 @@ export type ChartLegendContentProps = {
    * legend out inside its plot (see `Treemap`).
    */
   config?: ChartConfig;
+  /**
+   * `default` — the current horizontal wrap layout (one row of chips).
+   * `list` — a vertical list where each entry is `[dot] [label flex-1] [value]`,
+   * matching the Figma donut/radial widget legend. Use alongside a manually-built
+   * `payload` passed from outside the chart's recharts composition.
+   */
+  variant?: 'default' | 'list';
+  /**
+   * When `variant="list"`, the field on `payload[i].payload` to display as the
+   * right-hand value. Typically the chart's `dataKey` (the numeric series field).
+   */
+  valueKey?: string;
+  /**
+   * Format the value shown in each list entry. When omitted the raw value is
+   * stringified with `String()`.
+   */
+  valueFormatter?: (value: string | number) => string;
 };
 
 const ChartContext = React.createContext<ChartContextProps | null>(null);
@@ -467,7 +484,60 @@ function ChartTooltipContent({
 const ChartLegend = RechartsPrimitive.Legend;
 
 /**
- * One legend entry. Split out so the markup stays flat in `ChartLegendContent`.
+ * One entry in the `variant="list"` legend: `[dot] [label flex-1] [value]`.
+ *
+ * The dot is always a circle, regardless of the series' recharts type — the
+ * list layout is only used for polar charts (donut, radial) where the fill
+ * marker matches the slice/arc color.
+ */
+function ChartLegendListEntry({
+  item,
+  itemConfig,
+  valueKey,
+  valueFormatter,
+}: {
+  item: LegendPayload;
+  itemConfig: ChartItemConfig;
+  valueKey?: string;
+  valueFormatter?: (value: string | number) => string;
+}) {
+  const raw = valueKey
+    ? (item.payload as Record<string, unknown> | undefined)?.[valueKey]
+    : undefined;
+  const displayValue =
+    raw != null
+      ? valueFormatter
+        ? valueFormatter(raw as string | number)
+        : String(raw)
+      : undefined;
+
+  return (
+    <div className="flex w-full items-start gap-2 overflow-hidden">
+      <div className="flex min-w-0 flex-1 items-center gap-2">
+        {itemConfig?.icon ? (
+          <itemConfig.icon />
+        ) : (
+          <div
+            className="h-2.5 w-2.5 shrink-0 rounded-full"
+            style={{ backgroundColor: item.color }}
+          />
+        )}
+        <span className="min-w-0 flex-1 truncate text-xs text-foreground">
+          {itemConfig?.label ?? item.value}
+        </span>
+      </div>
+      {displayValue != null && (
+        <span className="shrink-0 text-xs font-semibold text-[var(--ui-text-on-surface-link-idle)]">
+          {displayValue}
+        </span>
+      )}
+    </div>
+  );
+}
+
+/**
+ * One legend entry. Split out so the marker it has to derive from the payload
+ * sits next to the markup that uses it, instead of above a nested map body.
  */
 function ChartLegendEntry({
   item,
@@ -512,6 +582,9 @@ function ChartLegendContent({
   verticalAlign = 'bottom',
   nameKey,
   config: configFromProps,
+  variant = 'default',
+  valueKey,
+  valueFormatter,
 }: ChartLegendContentProps) {
   // The context read directly rather than through `useChart()`: a caller that
   // passes its own `config` is rendering the legend outside the container, where
@@ -529,6 +602,25 @@ function ChartLegendContent({
 
   if (!payload?.length) {
     return null;
+  }
+
+  if (variant === 'list') {
+    return (
+      <div className={cn('flex flex-col', className)}>
+        {payload.map((item) => {
+          const key = `${nameKey || item.dataKey || 'value'}`;
+          return (
+            <ChartLegendListEntry
+              key={item.value}
+              item={item}
+              itemConfig={getPayloadConfigFromPayload(config, item, key)}
+              valueKey={valueKey}
+              valueFormatter={valueFormatter}
+            />
+          );
+        })}
+      </div>
+    );
   }
 
   return (
