@@ -8,14 +8,33 @@ import {
   StepperItem,
 } from '@acronis-platform/ui-react';
 
+// `[box-shadow:none]` switches off Avatar's 2px outset ring (meant to separate
+// overlapping avatars in an `AvatarGroup`), which Figma's Stepper avatars don't
+// carry and which shows as a halo on a filled step container.
 const checkAvatar = (
   <Avatar color="green" className="[box-shadow:none]">
     <CheckIcon size={16} />
   </Avatar>
 );
 
-const numberAvatar = (n: number, color: 'blue' | 'gray' = 'blue') => (
-  <Avatar color={color} className="[box-shadow:none]">
+// Figma recolors the digit inside a `current`/`future` avatar to that step's own
+// label-color token, overriding Avatar's per-scheme color. The marker is the
+// caller's, so the caller applies it — written as whole class strings in a
+// lookup so Tailwind can see them.
+const digitColorClass = {
+  current: 'text-[var(--ui-stepper-item-current-label-color)]',
+  future: 'text-[var(--ui-stepper-item-future-label-color)]',
+} as const;
+
+const numberAvatar = (
+  n: number,
+  color: 'blue' | 'gray' = 'blue',
+  digitVariant: keyof typeof digitColorClass = 'current'
+) => (
+  <Avatar
+    color={color}
+    className={`[box-shadow:none] ${digitColorClass[digitVariant]}`}
+  >
     <AvatarFallback>{n}</AvatarFallback>
   </Avatar>
 );
@@ -44,22 +63,22 @@ export function StepperDemo() {
         <StepperItem
           variant="future"
           label="Add your team"
-          avatar={numberAvatar(3, 'gray')}
+          avatar={numberAvatar(3, 'gray', 'future')}
         />
         <StepperItem
           variant="future"
           label="Connect a workload"
-          avatar={numberAvatar(4, 'gray')}
+          avatar={numberAvatar(4, 'gray', 'future')}
         />
         <StepperItem
           variant="future"
           label="Set a protection plan"
-          avatar={numberAvatar(5, 'gray')}
+          avatar={numberAvatar(5, 'gray', 'future')}
         />
         <StepperItem
           variant="future"
           label="Confirm and pay"
-          avatar={numberAvatar(6, 'gray')}
+          avatar={numberAvatar(6, 'gray', 'future')}
         />
       </Stepper>
 

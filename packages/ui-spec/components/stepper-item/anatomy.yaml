@@ -38,8 +38,11 @@ parts:
       variables that color the digit inside the circle are not consumed here.
   - id: label
     description: >-
-      The step name. Truncates rather than wrapping. Primary surface text, or the
-      disabled surface text on a future step.
+      The step name. Truncates rather than wrapping. Colored by the current /
+      completed / future label-color token of the step's own variant, and typed
+      by the tier's generated `.ui-stepper-item-global-container-text-style`
+      class (applied on the container and inherited here), so the name keeps its
+      500 weight in every variant.
     element: span
     optional: true
     visible_when: a `label` is provided
