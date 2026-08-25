@@ -20,11 +20,6 @@ Every chart in the design is drawn inside the same card: a header with a title,
 an optional filter chip and the ⋯ actions menu, then an optional metric readout,
 then the plot. `ChartWidget` is that composition — and only that.
 
-> The `metric` slot takes any node, but it is not demoed with
-> [`Metric`](/docs/components/metric) yet: that component still renders its own
-> card, so nesting it here would draw a card inside a card. It is being
-> reconciled against the same mockups.
-
 <DemoReact>
   <ChartWidgetDemo />
 </DemoReact>
@@ -66,6 +61,46 @@ outside the card, or a chart embedded in a larger panel.
 The per-type chart components stay **card-less**, so a chart is still usable
 outside a widget: inside a table cell, a popover, or a
 [`Metric`](/docs/components/metric)'s sparkline slot.
+
+## Metric readout
+
+Pass a [`Metric`](/components/metric) to the `metric` slot to add a stats strip
+to the widget. The `orientation` prop controls how metric and chart are arranged:
+
+- **`vertical`** (default) — metric above the chart, full width. The metric
+  takes its natural height; the chart fills the rest of the card body. Best for
+  md/lg widths (592px, 896px).
+- **`horizontal`** — metric and chart side by side, each `flex-[1_0_0]` (equal
+  halves). Best for sm width (288px) where stacking would leave too little height
+  for the chart.
+
+```tsx
+// vertical (default) — metric above the chart
+<ChartWidget
+  header={{ title: 'Backup success rate' }}
+  metric={<Metric icon={<ChartPieIcon />} value="95" unit="%" />}
+>
+  <AreaChart config={config} data={data} dataKeys={['rate']} xKey="month" className="size-full" />
+</ChartWidget>
+
+// horizontal — metric left, chart right
+<ChartWidget
+  header={{ title: 'Backup success rate' }}
+  orientation="horizontal"
+  metric={
+    <Metric
+      icon={<ChartPieIcon />}
+      value="95"
+      unit="%"
+      trend="up"
+      trendValue="20%"
+      supportingText="over 6 months"
+    />
+  }
+>
+  <AreaChart config={config} data={data} dataKeys={['rate']} xKey="month" className="size-full" />
+</ChartWidget>
+```
 
 ## State
 

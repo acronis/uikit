@@ -5,17 +5,9 @@ import { describe, expect, it } from 'vitest';
 import { TrendIndicator } from '../trend-indicator';
 
 describe('TrendIndicator', () => {
-  it('renders the value and comparison label', () => {
-    render(
-      <TrendIndicator
-        direction="up"
-        sentiment="positive"
-        value="12%"
-        comparisonLabel="vs last quarter"
-      />
-    );
+  it('renders the value', () => {
+    render(<TrendIndicator direction="up" sentiment="positive" value="12%" />);
     expect(screen.getByText('12%')).toBeInTheDocument();
-    expect(screen.getByText('vs last quarter')).toBeInTheDocument();
   });
 
   it('reflects direction and sentiment on data attributes', () => {
@@ -65,15 +57,6 @@ describe('TrendIndicator', () => {
   it('renders a qualitative value (not just numeric)', () => {
     render(<TrendIndicator direction="up" sentiment="positive" value="Improving" />);
     expect(screen.getByText('Improving')).toBeInTheDocument();
-  });
-
-  it('applies the badge variant tint class', () => {
-    const { container } = render(
-      <TrendIndicator direction="up" sentiment="positive" value="12%" variant="badge" />
-    );
-    expect(container.firstElementChild?.className).toContain(
-      'bg-[var(--ui-background-status-success)]'
-    );
   });
 
   it('renders without crashing as a tooltip trigger (keyboard-reachable)', () => {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
+import { ChartPieIcon, EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { ChartWidget } from '../chart-widget';
 import { AreaChart } from '../../area-chart';
@@ -9,6 +9,7 @@ import { ButtonIcon } from '../../button-icon';
 import { FunnelChart } from '../../funnel-chart';
 import { PieChart } from '../../pie-chart';
 import { Tag } from '../../tag';
+import { Metric } from '../../metric';
 import { type ChartConfig } from '../../chart';
 
 // `ChartWidget` is the Card every chart mockup is wrapped in.
@@ -279,6 +280,79 @@ export const NoHeader: Story = {
   render: (args) => (
     <Dashboard className="w-[288px]">
       <ChartWidget {...args} />
+    </Dashboard>
+  ),
+};
+
+const successRateData = [
+  { month: 'Jan', rate: 78 },
+  { month: 'Feb', rate: 82 },
+  { month: 'Mar', rate: 88 },
+  { month: 'Apr', rate: 84 },
+  { month: 'Jun', rate: 90 },
+  { month: 'Dec', rate: 95 },
+];
+const successRateConfig = { rate: { label: 'Success rate' } } satisfies ChartConfig;
+
+/**
+ * `orientation="vertical"` (default): metric above the plot, full width. Use
+ * at md/lg widths. Figma: node 8174:22335.
+ */
+export const MetricVertical: Story = {
+  render: () => (
+    <Dashboard className="w-[592px]">
+      <ChartWidget
+        header={{ title: 'Backup success rate', actions: <MoreActions /> }}
+        metric={
+          <Metric
+            icon={<ChartPieIcon />}
+            value="95"
+            unit="%"
+          />
+        }
+      >
+        <AreaChart
+          data={successRateData}
+          config={successRateConfig}
+          dataKeys={['rate']}
+          xKey="month"
+          className="size-full"
+        />
+      </ChartWidget>
+    </Dashboard>
+  ),
+};
+
+/**
+ * `orientation="horizontal"`: metric left, chart right, each `flex-1`. Use at
+ * sm (288px) where stacking would leave too little height for the chart.
+ * Figma: node 8982:31681.
+ */
+export const MetricHorizontal: Story = {
+  render: () => (
+    <Dashboard className="w-[592px]">
+      <ChartWidget
+        header={{ title: 'Backup success rate', actions: <MoreActions /> }}
+        orientation="horizontal"
+        metric={
+          <Metric
+            icon={<ChartPieIcon />}
+            value="95"
+            unit="%"
+            trend="up"
+            trendValue="20%"
+            supportingText="over 6 months"
+          />
+        }
+      >
+        <AreaChart
+          data={successRateData}
+          config={successRateConfig}
+          dataKeys={['rate']}
+          xKey="month"
+          className="size-full"
+        />
+      </ChartWidget>
     </Dashboard>
   ),
 };

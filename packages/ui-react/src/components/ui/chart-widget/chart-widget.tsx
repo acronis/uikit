@@ -63,8 +63,19 @@ export interface ChartWidgetProps extends Omit<
    */
   header?: CardHeaderProps;
   /**
-   * The readout above the plot — typically a `Metric`. Takes its natural height;
-   * the plot gets the rest.
+   * The readout beside or above the plot — typically a `Metric`.
+   *
+   * - `'vertical'` (default) — metric above the plot, full width. The metric
+   *   takes its natural height; the plot fills the rest of the card body.
+   * - `'horizontal'` — metric and plot side by side, each `flex-1`. Use for
+   *   compact widgets (sm/288px) where vertical space is at a premium.
+   *
+   * Figma: vertical → `8174:22335`, horizontal → `8982:31681`.
+   */
+  orientation?: 'vertical' | 'horizontal';
+  /**
+   * The readout beside or above the plot — typically a `Metric`. Layout is
+   * controlled by `orientation`.
    */
   metric?: React.ReactNode;
   /**
@@ -95,6 +106,7 @@ const ChartWidget = React.forwardRef<HTMLDivElement, ChartWidgetProps>(
       className,
       variant,
       header,
+      orientation = 'vertical',
       metric,
       state,
       stateDescription,
@@ -104,45 +116,71 @@ const ChartWidget = React.forwardRef<HTMLDivElement, ChartWidgetProps>(
       ...props
     },
     ref
-  ) => (
-    <Card
-      ref={ref}
-      // The error border belongs to Card, so a caller sets `state="error"` once
-      // rather than wiring the placeholder and the border separately.
-      hasError={state === 'error'}
-      data-slot="chart-widget"
-      // `h-full` + a flex column is what lets the plot fill the card: the grid
-      // sizes this, the header is `shrink-0`, and the body takes the rest.
-      className={cn('flex h-full w-full flex-col', className)}
-      {...props}
-    >
-      {header ? <CardHeader {...header} /> : null}
-      {/* `CardContent` brings `px-4 pb-4`; the design's body is padded on all
-          four sides with a 16px gap between the metric row and the plot. */}
-      <CardContent className={cn('min-h-0 flex-1 gap-4 pt-4', bodyClassName)}>
-        {metric ? (
-          <div className="shrink-0" data-slot="chart-widget-metric">
-            {metric}
-          </div>
-        ) : null}
-        {/* `min-h-0` matters: without it a flex child refuses to shrink below
-            its content's height, so a chart would push the card past the height
-            the grid gave it instead of fitting inside. */}
-        <div className="min-h-0 flex-1" data-slot="chart-widget-body">
-          {state ? (
-            <ChartState
-              state={state}
-              variant={variant}
-              description={stateDescription}
-              action={stateAction}
-            />
-          ) : (
-            children
+  ) => {
+    const isHorizontal = orientation === 'horizontal';
+    return (
+      <Card
+        ref={ref}
+        // The error border belongs to Card, so a caller sets `state="error"` once
+        // rather than wiring the placeholder and the border separately.
+        hasError={state === 'error'}
+        data-slot="chart-widget"
+        data-orientation={orientation}
+        // `h-full` + a flex column is what lets the plot fill the card: the grid
+        // sizes this, the header is `shrink-0`, and the body takes the rest.
+        className={cn('flex h-full w-full flex-col', className)}
+        {...props}
+      >
+        {header ? <CardHeader {...header} /> : null}
+        {/* `CardContent` brings `px-4 pb-4`; the design's body is padded on all
+            four sides with a 16px gap between the metric row and the plot. */}
+        <CardContent
+          className={cn(
+            'min-h-0 flex-1 gap-4 pt-4',
+            // In horizontal mode override the default flex-col with flex-row so
+            // the metric and the chart sit side by side, each taking half the body.
+            isHorizontal && 'flex-row items-stretch',
+            bodyClassName
           )}
-        </div>
-      </CardContent>
-    </Card>
-  )
+        >
+          {metric ? (
+            <div
+              className={cn(
+                // Vertical: takes natural height, full width.
+                // Horizontal: flex-[1_0_0] matches Figma — equal half-width,
+                // no shrink (flex: 1 0 0), min-w-0 allows text to truncate.
+                isHorizontal ? 'min-w-0 flex-[1_0_0]' : 'shrink-0'
+              )}
+              data-slot="chart-widget-metric"
+            >
+              {metric}
+            </div>
+          ) : null}
+          {/* `min-h-0` matters: without it a flex child refuses to shrink below
+              its content's height, so a chart would push the card past the height
+              the grid gave it instead of fitting inside. */}
+          <div
+            className={cn(
+              'min-h-0',
+              isHorizontal ? 'min-w-0 flex-[1_0_0]' : 'flex-1'
+            )}
+            data-slot="chart-widget-body"
+          >
+            {state ? (
+              <ChartState
+                state={state}
+                variant={variant}
+                description={stateDescription}
+                action={stateAction}
+              />
+            ) : (
+              children
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 );
 ChartWidget.displayName = 'ChartWidget';
 
