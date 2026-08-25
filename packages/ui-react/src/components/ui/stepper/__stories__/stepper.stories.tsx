@@ -9,8 +9,8 @@ import { Stepper } from '../stepper';
 // separate overlapping avatars in an `AvatarGroup`), the same way
 // `Timeline`'s marker does — Figma's Stepper avatars carry no stroke, and the
 // ring otherwise shows as an unwanted halo on the `current`/`completed`
-// step's filled container. See the "Known quirk" note in `stepper-item`'s
-// spec `README.md`.
+// step's filled container. See the "Resolved quirk — Avatar's 2px ring on
+// colored step backgrounds" note in `stepper-item`'s spec `README.md`.
 const checkAvatar = (
   <Avatar color="green" className="[box-shadow:none]">
     <CheckIcon size={16} />
@@ -20,6 +20,15 @@ const checkAvatar = (
 // Figma recolors the digit inside a `current`/`future` avatar to that step's
 // own label-color token (overriding Avatar's own per-scheme color) — see the
 // comment in stepper-item.tsx.
+//
+// Written as complete literals, not built by interpolation, so Tailwind's
+// scanner picks them up here rather than relying on the identical strings
+// staying anchored in stepper-item.tsx's own cva variants.
+const digitColorClass = {
+  current: 'text-[var(--ui-stepper-item-current-label-color)]',
+  future: 'text-[var(--ui-stepper-item-future-label-color)]',
+} as const;
+
 const numberAvatar = (
   n: number,
   color: 'blue' | 'gray' = 'blue',
@@ -27,7 +36,7 @@ const numberAvatar = (
 ) => (
   <Avatar
     color={color}
-    className={`[box-shadow:none] text-[var(--ui-stepper-item-${digitVariant}-label-color)]`}
+    className={`[box-shadow:none] ${digitColorClass[digitVariant]}`}
   >
     <AvatarFallback>{n}</AvatarFallback>
   </Avatar>
