@@ -11,7 +11,7 @@ const meta = {
   component: StepperItem,
   args: {
     avatar: (
-      <Avatar color="blue" className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]">
+      <Avatar color="blue" className="[box-shadow:none]">
         <AvatarFallback>1</AvatarFallback>
       </Avatar>
     ),
@@ -20,8 +20,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-const VARIANTS = ['current', 'completed', 'future'] as const;
 
 export const Variants: Story = {
   render: () => (
@@ -33,21 +31,39 @@ export const Variants: Story = {
         alignItems: 'center',
       }}
     >
-      {VARIANTS.map((v) => (
-        <StepperItem
-          label="Step name"
-          avatar={
-            <Avatar
-              color="blue"
-              className={`[box-shadow:none] text-[var(--ui-stepper-item-${v === 'future' ? 'future' : 'current'}-label-color)]`}
-            >
-              <AvatarFallback>1</AvatarFallback>
-            </Avatar>
-          }
-          key={v}
-          variant={v}
-        />
-      ))}
+      <StepperItem
+        label="Step name"
+        avatar={
+          <Avatar
+            color="blue"
+            className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
+          >
+            <AvatarFallback>1</AvatarFallback>
+          </Avatar>
+        }
+        variant="current"
+      />
+      <StepperItem
+        label="Step name"
+        avatar={
+          <Avatar color="blue" className="[box-shadow:none]">
+            <AvatarFallback>1</AvatarFallback>
+          </Avatar>
+        }
+        variant="completed"
+      />
+      <StepperItem
+        label="Step name"
+        avatar={
+          <Avatar
+            color="blue"
+            className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
+          >
+            <AvatarFallback>1</AvatarFallback>
+          </Avatar>
+        }
+        variant="future"
+      />
     </div>
   ),
 };
