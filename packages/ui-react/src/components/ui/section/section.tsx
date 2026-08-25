@@ -227,7 +227,7 @@ const SectionHeader = React.forwardRef<HTMLDivElement, SectionHeaderProps>(
               <div className="flex min-w-0 flex-1 flex-col items-start justify-center gap-0.5">
                 <div className="flex min-w-0 items-center gap-2">
                   {title && (
-                    <p className="truncate text-[20px] leading-6 font-medium text-[var(--ui-text-on-surface-primary)]">
+                    <p className="truncate text-xl leading-6 font-medium text-[var(--ui-text-on-surface-primary)]">
                       {title}
                     </p>
                   )}

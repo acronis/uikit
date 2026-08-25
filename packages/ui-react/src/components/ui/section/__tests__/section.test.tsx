@@ -122,7 +122,7 @@ describe('SectionHeader', () => {
   it('renders the title at the section heading scale', () => {
     render(<SectionHeader title="Backup plans" />);
     const title = screen.getByText('Backup plans');
-    expect(title.className).toContain('text-[20px]');
+    expect(title.className).toContain('text-xl');
     expect(title.className).toContain('font-medium');
     expect(title.className).toContain(
       'text-[var(--ui-text-on-surface-primary)]'
