@@ -71,7 +71,8 @@ parts:
     description: >-
       Arbitrary content slot rendered after the title/description block and
       before `actions` — commonly used to supply a custom heading element via
-      `render`/`children` when the section is a genuine navigable region.
+      `children` (not `render`, which replaces the whole header row) when the
+      section is a genuine navigable region.
     element: slot
     optional: true
   - id: actions

@@ -17,8 +17,13 @@
 - The header title is a `<p>`, not a heading. A section's place in the document
   outline depends on the page around it, so guessing a level (`h2`? `h3`?)
   would produce a broken hierarchy in most compositions. When the band really
-  is a document section, supply your own heading through the header's `render`
-  prop or its `children`, and point the root's `aria-labelledby` at it.
+  is a document section, supply your own heading through the header's
+  `children` slot (not `render` — that replaces the entire header row,
+  wrapping the switch, title, description, actions, and collapse trigger in
+  the heading element), omit `title` so you don't render two titles, match the
+  title's text scale yourself (`text-xl leading-6 font-medium
+text-[var(--ui-text-on-surface-primary)]` — no exported class), and point
+  the root's `aria-labelledby` at it.
 
 - The `description` is ordinary text, not a description role. If it should name
   or describe the region for assistive technology, wire it up explicitly with

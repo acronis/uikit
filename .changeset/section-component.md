@@ -21,7 +21,9 @@ with `<SectionHeader title="…" description="…" hasDescription />`.
 
 Note the element also changes: `SectionTitle` rendered an `<h2>`; the `title`
 prop renders a `<p>` instead, since a section's place in the document outline
-depends on the page around it (see `accessibility.md`). If you relied on the
-heading for document-outline structure or an `aria-labelledby` target, supply
-your own heading via `SectionHeader`'s `render` prop or its `children`, and
-point the root's `aria-labelledby` at it.
+depends on the page around it (see the Accessibility section of the
+[`Section` docs](https://acronis.github.io/uikit/docs/components/section)). If you
+relied on the heading for document-outline structure or an `aria-labelledby`
+target, supply your own heading via `SectionHeader`'s `children` slot (not
+`render`, which replaces the entire header row), omit `title`, and point the
+root's `aria-labelledby` at it.
