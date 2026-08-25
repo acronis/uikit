@@ -29,7 +29,7 @@ export const States: Story = {
           variant="completed"
           label="Create an account"
           avatar={
-            <Avatar color="green">
+            <Avatar color="green" className="[box-shadow:none]">
               <AvatarFallback>1</AvatarFallback>
             </Avatar>
           }
@@ -38,7 +38,10 @@ export const States: Story = {
           variant="current"
           label="Choose a plan"
           avatar={
-            <Avatar color="blue">
+            <Avatar
+              color="blue"
+              className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"
+            >
               <AvatarFallback>2</AvatarFallback>
             </Avatar>
           }
@@ -47,7 +50,10 @@ export const States: Story = {
           variant="future"
           label="Confirm and pay"
           avatar={
-            <Avatar color="gray">
+            <Avatar
+              color="gray"
+              className="[box-shadow:none] text-[var(--ui-stepper-item-future-label-color)]"
+            >
               <AvatarFallback>3</AvatarFallback>
             </Avatar>
           }

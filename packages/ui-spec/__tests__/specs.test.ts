@@ -218,8 +218,7 @@ describe('token references resolve in tokens-pd', () => {
 
       const sourceTokenNames = [...tokenSetFromVarRefs(sourceDir)];
       const missingSourceNames = sourceTokenNames.filter(
-        (token) =>
-          !definedTokens.has(token) && !LOCALLY_AUTHORED_TOKENS.has(token)
+        (token) => !definedTokens.has(token)
       );
       expect(
         missingSourceNames,

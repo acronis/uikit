@@ -11,7 +11,7 @@ const meta = {
   component: StepperItem,
   args: {
     avatar: (
-      <Avatar color="blue">
+      <Avatar color="blue" className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]">
         <AvatarFallback>1</AvatarFallback>
       </Avatar>
     ),
@@ -37,7 +37,10 @@ export const Variants: Story = {
         <StepperItem
           label="Step name"
           avatar={
-            <Avatar color="blue">
+            <Avatar
+              color="blue"
+              className={`[box-shadow:none] text-[var(--ui-stepper-item-${v === 'future' ? 'future' : 'current'}-label-color)]`}
+            >
               <AvatarFallback>1</AvatarFallback>
             </Avatar>
           }

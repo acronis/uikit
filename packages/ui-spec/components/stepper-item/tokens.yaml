@@ -63,9 +63,6 @@ tokens:
   - name: --ui-stepper-item-completed-label-color
     affects: label
     description: Step-name color for a completed step (all interaction states).
-  - name: --ui-stepper-item-future-container-color
-    affects: container
-    description: Container fill for a future step (transparent).
   - name: --ui-stepper-item-future-label-color
     affects: label
     description: Step-name color for a future step.

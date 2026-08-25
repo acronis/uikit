@@ -124,6 +124,22 @@ press detection:
 />
 ```
 
+`state="focus"` renders the same 3px ring a real `<button>` gets automatically
+via `render` — useful to force the look without focusing the element:
+
+```tsx
+<StepperItem
+  variant="completed"
+  state="focus"
+  label="Create an account"
+  avatar={
+    <Avatar color="green" className="[box-shadow:none]">
+      <CheckIcon size={16} />
+    </Avatar>
+  }
+/>
+```
+
 A future step stays in the reading order but is not reachable: it is marked
 `aria-disabled`, takes no pointer events, and is dropped from the tab order
 (`tabindex="-1"`), so it cannot be clicked or tabbed to and activated with

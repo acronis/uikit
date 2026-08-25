@@ -100,8 +100,8 @@ the repo documents equivalent roundings elsewhere (see
 
 ## Design status
 
-The Figma component has no `--ui-stepper-*` token tier yet. This v1 consumes the
-semantic tokens whose resolved values match the design variables exactly
-(`--ui-gap-4`, `--ui-gap-8`, `--ui-text-on-surface-{secondary,primary}`) and will
-be re-pointed at the dedicated tier once design ships it — the same treatment
+As of the 2026-08-24 Figma sync, this component consumes a dedicated
+`--ui-stepper-breakpoint-*` token tier (see `tokens.yaml`) — the summary's line
+gap, the item row's gap, and both summary text colors are Stepper-owned
+tokens rather than borrowed from the semantic scale, the same treatment
 `StepperItem` already carries.
