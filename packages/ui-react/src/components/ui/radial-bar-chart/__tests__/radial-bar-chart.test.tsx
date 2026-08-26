@@ -641,6 +641,9 @@ describe('RadialBarChart gauge, multi-metric and geometry props', () => {
     const style = container.querySelector('style')?.innerHTML ?? '';
     expect(style).toContain('--color-used: var(--ui-dataviz-categorical-1)');
     expect(style).toContain('--color-quota: var(--ui-dataviz-categorical-2)');
+    expect(
+      [...container.querySelectorAll('span.truncate')].map((label) => label.textContent)
+    ).toEqual(['Used', 'Quota']);
   });
 
   it('sizes each arc from barSize and spaces the bands with barCategoryGap', () => {
