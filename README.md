@@ -148,7 +148,7 @@ function MyComponent() {
 
 ### Available Components
 
-The library covers layout (`AppShell`, `AppShellChat`, `AuthLayout`, `Card`,
+The library covers layout (`AppShellChat`, `Card`,
 `CardFilter`, `FilterCards`, `Grid`, `Section`, `PageHeader`,
 `ScrollArea`, `Resizable`, `Toolbar`), navigation (`Breadcrumb`,
 `Pagination`, `SidebarPrimary`, `SidebarSecondary`, `Link`), forms
@@ -160,7 +160,7 @@ The library covers layout (`AppShell`, `AppShellChat`, `AuthLayout`, `Card`,
 `DropdownMenu`), feedback (`Alert`, `Tag`/`Badge`, `Chip`, `Loading`,
 `Skeleton`, `Toast`, `Empty`), data display
 (`Table`, `DataTable`, `Avatar`, `DescriptionList`, `AccordionContainer`,
-`Collapsible`, `Timeline`), and data visualization (`Chart` and
+`Timeline`), and data visualization (`Chart` and
 per-type charts — `AreaChart`, `BarChart`, `LineChart`, `PieChart`,
 `ComposedChart`, `RadarChart`, `RadialBarChart`, `ScatterChart`,
 `FunnelChart`, `SankeyChart`, `Histogram`, `Treemap` — plus dashboard

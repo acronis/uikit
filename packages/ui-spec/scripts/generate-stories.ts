@@ -582,11 +582,6 @@ const RENDER: Record<string, RenderHint> = {
     // hand-written stories (Default / WithBreadcrumbAndDescription).
     skip: true,
   },
-  'page-content': {
-    // A padded content region — needs children to render meaningfully. VR is
-    // covered by the hand-written story (Default).
-    skip: true,
-  },
   wizard: {
     // A page-template scaffold, like `page-header` / `app-shell` /
     // `auth-layout` above: no props, no `cva` variants, and `states: []`, so the
