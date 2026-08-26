@@ -100,6 +100,7 @@
     "dialog-welcome",
     "dropdown-menu",
     "popover",
+    "tenant-search-popover",
     "tooltip",
     "toast",
     "sheet",

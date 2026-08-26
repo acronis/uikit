@@ -1,0 +1,18 @@
+spec_version: '1.0'
+component: TenantSearchPopover
+name: tenant-search-popover
+status: draft
+category: overlays
+description: >-
+  A tenant picker in a popover: an in-panel search row, an optional "Recent"
+  section, and a "Browse" section holding a nested tenant tree whose rows carry a
+  tenant-type icon, an indent spacer and (for leaves) a selected checkmark. The
+  list region is replaced by a centered loading / empty / error block. Hosted in
+  the generic `Popover` shell and built from the presentational list parts shared
+  with `InputSelect`; themed by the `--ui-popover-*` and
+  `--ui-input-select-dropdown-*` tiers.
+dependencies:
+  components: [Popover, InputSelect, Avatar, Loading, Link]
+figma:
+  node: '3064-21461'
+  codeConnect: packages/ui-react/src/components/ui/tenant-search-popover/tenant-search-popover.figma.tsx

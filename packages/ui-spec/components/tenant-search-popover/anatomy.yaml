@@ -1,0 +1,252 @@
+spec_version: '1.0'
+component: TenantSearchPopover
+
+schematic: |
+  [ trigger ]                                    trigger: the anchor that opens the panel
+        |
+        v  (open) root: 256px popover panel
+  +---------------------------------------------+
+  | (Q) search                                  |  search: in-panel query row
+  +---------------------------------------------+
+  | section-label  "Recent"                     |  section (optional, when recentItems is non-empty)
+  |  tree                                       |  tree: one role=tree per section
+  |    indent icon item                   (v)   |  item (treeitem, leaf) + indicator (check when selected)
+  +---------------------------------------------+
+  | section-label  "Browse"                     |  section
+  |  tree                                       |
+  |    > icon expander                          |  expander: treeitem that toggles its subtree
+  |    group                                    |  group: the expanded node's owned children
+  |      indent icon item                       |
+  |    indent icon item                   (v)   |
+  +---------------------------------------------+
+            (status !== idle) replaces the sections
+  +---------------------------------------------+
+  |            (spinner | badge)                |  status: centered loading / empty / error block
+  |               status text                   |
+  |                 retry                       |  retry: the error block's "Try again" action
+  +---------------------------------------------+
+
+root:
+  element: div
+  role: dialog
+  description: >-
+    The floating panel — a `Popover` popup positioned against the trigger by the
+    Base UI positioner (which resolves logical sides, so it flips under
+    `dir="rtl"`). 256px wide per the Figma node, with the popover tier's chrome
+    (`--ui-popover-container-*`) and clipped overflow so the section list scrolls
+    inside it.
+
+parts:
+  - id: trigger
+    description: >-
+      The anchor that opens the panel; a plain `Popover` trigger, so any element
+      (typically a Button) can be composed into it.
+    element: button
+  - id: search
+    description: >-
+      The query row (magnifier + text input). Reuses `InputSelect`'s search-field
+      view, so it is themed by `--ui-input-select-dropdown-dropdown-search-*`. The
+      only content state the design draws is the placeholder. Arrow Down moves
+      focus from here into the first row.
+    element: div
+  - id: section
+    description: >-
+      A labelled section — "Recent" (rendered only when `recentItems` is
+      non-empty, matching Figma's `hasRecent` gate) or "Browse". Divided from its
+      predecessor by a top border.
+    element: div
+  - id: section-label
+    description: The section heading. `--ui-input-select-dropdown-section-label-group-color`.
+    element: div
+  - id: tree
+    description: >-
+      One `role="tree"` per section, named by its `section-label`. Two sibling
+      trees rather than one, because "Recent" and "Browse" are independent
+      hierarchies; keyboard roving spans both.
+    element: div
+  - id: item
+    description: >-
+      A selectable leaf row (`role="treeitem"`, `aria-selected`). Carries the
+      `group/item` class and a `data-selected` attribute so the shared row-content
+      view can style its selected state, and tints via
+      `--ui-input-select-dropdown-item-selected-container-color-*`.
+    element: div
+  - id: indent
+    description: >-
+      The leading nesting spacer. Level 1 (16px) is the chevron slot, so a leaf
+      reserves it too and every row's tenant icon starts at the same x-position;
+      deeper levels add 24px each.
+    element: span
+  - id: icon
+    description: >-
+      The 16px leading glyph keyed to the row's `tenantType` — Briefcase
+      (client / all-clients), Building (partner), Folder (folder), NodeTree
+      (unit). `--ui-input-select-dropdown-item-global-icon-tenant`.
+    element: span
+  - id: indicator
+    description: >-
+      Trailing checkmark shown only on the selected leaf row.
+      `--ui-input-select-dropdown-item-global-icon-checked`.
+    element: span
+    optional: true
+  - id: expander
+    description: >-
+      A row for a node with children (`role="treeitem"`, `aria-expanded`), whose
+      whole surface toggles the subtree — it never changes the selection. Reuses
+      `InputSelect`'s expander view; the chevron sits right-aligned inside the
+      reserved indent space.
+    element: button
+    optional: true
+  - id: group
+    description: >-
+      The child rows of an expanded node, wired to their parent row via
+      `aria-owns` (the parent is a `<button>`, so the group cannot be a DOM
+      descendant of it).
+    element: div
+    optional: true
+  - id: status
+    description: >-
+      Centered block that replaces the sections: a spinner + label (loading), a
+      blue Avatar badge with an Inbox glyph + label (empty), or a yellow Avatar
+      badge with a warning glyph + message + retry action (error). Also shown, as
+      the empty variant, when the active query matches nothing.
+      `--ui-input-select-dropdown-container-status-*`.
+    element: div
+    optional: true
+  - id: retry
+    description: The error block's action, rendered as a `Link` over a button element.
+    element: button
+    optional: true
+
+layout:
+  type: stack
+  direction: vertical
+  align: stretch
+  order: [search, section, status]
+
+internal_state:
+  - id: open
+    type: boolean
+    values: [false, true]
+    initial: false
+    controllable_via: [open]
+    controlled_default: default-open
+    emits: open-change
+    changed_by: trigger press, Escape, or outside press
+    description: Whether the panel is shown. Owned by the Popover root.
+  - id: query
+    type: string
+    initial: ''
+    controllable_via: [query]
+    emits: query-change
+    changed_by: typing in the search row
+    description: >-
+      The search query. Filtering keeps every node that matches plus every
+      ancestor of a match, and force-expands the whole visible tree so matches
+      are reachable.
+  - id: value
+    type: string
+    controllable_via: [value]
+    emits: value-change
+    changed_by: click or Enter on a leaf row
+    description: The selected tenant id; drives the row tint and the trailing checkmark.
+  - id: expanded
+    type: Set<string>
+    changed_by: click / Arrow Right / Arrow Left on a row with children
+    description: >-
+      Ids of the expanded nodes. Not exposed as a prop — the panel owns it, and an
+      active query overrides it so every match stays visible.
+  - id: active-row
+    type: string | null
+    initial: null
+    changed_by: arrow-key navigation or focusing a row
+    description: >-
+      The roving-tabindex target: exactly one row is tabbable, falling back to the
+      first visible row whenever the remembered one is filtered or collapsed away.
+
+transitions:
+  - id: openPanel
+    state: open
+    from: false
+    on: trigger press / Space / Enter
+    to: true
+    effect: emits open-change(true)
+    interactive: true
+  - id: closePanel
+    state: open
+    from: true
+    on: Escape / outside press
+    to: false
+    effect: emits open-change(false)
+    interactive: true
+  - id: typeQuery
+    state: query
+    on: input in the search row
+    to: the typed text
+    effect: emits query-change(next); re-filters both sections
+    when_controlled: the panel renders the `query` prop verbatim and only emits
+    interactive: true
+  - id: selectItem
+    state: value
+    on: click / Enter / Space on a leaf row
+    to: the row's tenant id
+    effect: emits value-change(id)
+    interactive: true
+  - id: toggleNode
+    state: expanded
+    on: click on a row with children, or Arrow Right / Arrow Left
+    to: toggle the row's id
+    guard: the row has children
+    effect: mounts or unmounts the child group
+    interactive: true
+  - id: moveActiveRow
+    state: active-row
+    on: Arrow Up / Arrow Down / Home / End, or focusing a row
+    to: the target row's id
+    effect: moves DOM focus and the single tabbable row
+    interactive: true
+
+states:
+  - {
+      id: hover,
+      trigger: pointer hover over a row,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [item, expander],
+    }
+  - {
+      id: selected,
+      trigger: 'internal value === the row id (data-selected)',
+      kind: internal,
+      affects: [item, indicator],
+    }
+  - {
+      id: expanded,
+      trigger: 'the row id is in the internal expanded set (aria-expanded)',
+      kind: internal,
+      affects: [expander, group],
+    }
+  - {
+      id: loading,
+      trigger: "status === 'loading'",
+      kind: prop,
+      prop: status,
+      affects: [status],
+      exclusive_with: [empty, error],
+    }
+  - {
+      id: empty,
+      trigger: "status === 'empty', or the query matches nothing",
+      kind: prop,
+      prop: status,
+      affects: [status],
+      exclusive_with: [loading, error],
+    }
+  - {
+      id: error,
+      trigger: "status === 'error'",
+      kind: prop,
+      prop: status,
+      affects: [status, retry],
+      exclusive_with: [loading, empty],
+    }

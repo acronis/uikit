@@ -1,0 +1,195 @@
+spec_version: '1.0'
+component: TenantSearchPopover
+
+# References only — values live in @acronis-platform/tokens-pd. Three groups:
+# the popover shell chrome (`--ui-popover-*`, applied by the reused
+# `PopoverContent`), the dropdown list (`--ui-input-select-dropdown-*`, applied by
+# the presentational list parts shared with InputSelect), and the status block,
+# which composes Loading / Avatar / Link and therefore consumes their tiers.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Panel shell ──
+  - { name: --ui-popover-container-color, affects: root }
+  - { name: --ui-popover-container-border-color, affects: root }
+  - { name: --ui-popover-container-border-width, affects: root }
+  - { name: --ui-popover-container-border-radius, affects: root }
+  - { name: --ui-popover-container-min-width, affects: root }
+  - { name: --ui-popover-container-max-width, affects: root }
+  - { name: --ui-input-select-dropdown-container-padding-y, affects: root }
+
+  # ── Search row ──
+  - { name: --ui-input-select-dropdown-dropdown-search-gap, affects: search }
+  - {
+      name: --ui-input-select-dropdown-dropdown-search-padding-x,
+      affects: search,
+    }
+  - {
+      name: --ui-input-select-dropdown-dropdown-search-padding-y,
+      affects: search,
+    }
+  - {
+      name: --ui-input-select-dropdown-dropdown-search-label-color-value,
+      affects: search,
+    }
+  - {
+      name: --ui-input-select-dropdown-dropdown-search-label-color-placeholder,
+      affects: search,
+    }
+  - {
+      name: --ui-glyph-on-surface-primary,
+      affects: search,
+      description: Search magnifier icon color,
+    }
+
+  # ── Section + heading ──
+  - {
+      name: --ui-input-select-dropdown-section-container-border-color,
+      affects: section,
+    }
+  - {
+      name: --ui-input-select-dropdown-section-container-padding-y,
+      affects: section,
+    }
+  - {
+      name: --ui-input-select-dropdown-section-container-header-padding-x,
+      affects: section-label,
+    }
+  - {
+      name: --ui-input-select-dropdown-section-container-header-padding-y,
+      affects: section-label,
+    }
+  - {
+      name: --ui-input-select-dropdown-section-label-group-color,
+      affects: section-label,
+    }
+
+  # ── Rows (leaf items + expanders) ──
+  - {
+      name: --ui-input-select-dropdown-item-global-container-gap,
+      affects: item,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-global-container-padding-x,
+      affects: item,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-global-container-padding-y,
+      affects: item,
+    }
+  - { name: --ui-input-select-dropdown-item-global-label-color, affects: item }
+  - {
+      name: --ui-input-select-dropdown-item-unselected-container-color-idle,
+      affects: item,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-unselected-container-color-hover,
+      affects: item,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-selected-container-color-idle,
+      affects: item,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-selected-container-color-hover,
+      affects: item,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-global-icon-tenant,
+      affects: icon,
+      description: Leading tenant-type glyph color (leaf rows and expanders),
+    }
+  - {
+      name: --ui-input-select-dropdown-item-global-icon-checked,
+      affects: indicator,
+      description: Trailing selected-checkmark color,
+    }
+  - {
+      name: --ui-input-select-dropdown-item-global-icon-collapse,
+      affects: expander,
+      description: Expand/collapse chevron color,
+    }
+
+  # ── Status block (loading / empty / error) ──
+  - {
+      name: --ui-input-select-dropdown-container-status-width-min,
+      affects: status,
+    }
+  - { name: --ui-input-select-dropdown-container-status-gap, affects: status }
+  - {
+      name: --ui-input-select-dropdown-container-status-padding-x,
+      affects: status,
+    }
+  - {
+      name: --ui-input-select-dropdown-container-status-padding-y,
+      affects: status,
+    }
+  - {
+      name: --ui-loading-inline-container-gap,
+      affects: status,
+      description: Loading state — spinner/label gap (via Loading),
+    }
+  - {
+      name: --ui-loading-inline-icon-color,
+      affects: status,
+      description: Loading state — spinner color (via Loading),
+    }
+  - {
+      name: --ui-loading-inline-label-color,
+      affects: status,
+      description: Loading state — label color (via Loading),
+    }
+  - {
+      name: --ui-avatar-global-avatar-size,
+      affects: status,
+      description: Empty/error state — icon badge size (via Avatar),
+    }
+  - {
+      name: --ui-avatar-global-avatar-border-border-radius,
+      affects: status,
+      description: Empty/error state — icon badge radius (via Avatar),
+    }
+  - {
+      name: --ui-avatar-global-avatar-border-border-width,
+      affects: status,
+      description: Empty/error state — icon badge ring width (via Avatar),
+    }
+  - {
+      name: --ui-avatar-global-avatar-border-color,
+      affects: status,
+      description: Empty/error state — icon badge ring color (via Avatar),
+    }
+  - {
+      name: --ui-avatar-color-blue,
+      affects: status,
+      description: Empty state — icon badge fill,
+    }
+  - {
+      name: --ui-avatar-label-color-blue,
+      affects: status,
+      description: Empty state — icon badge glyph color,
+    }
+  - {
+      name: --ui-avatar-color-yellow,
+      affects: status,
+      description: Error state — icon badge fill,
+    }
+  - {
+      name: --ui-avatar-label-color-yellow,
+      affects: status,
+      description: Error state — icon badge glyph color,
+    }
+
+  # ── Retry action (Link over a button) ──
+  - { name: --ui-link-global-container-gap, affects: retry }
+  - { name: --ui-link-global-text-decoration-idle, affects: retry }
+  - { name: --ui-link-global-text-decoration-hover, affects: retry }
+  - { name: --ui-link-global-text-decoration-active, affects: retry }
+  - { name: --ui-link-normal-text-color-idle, affects: retry }
+  - { name: --ui-link-normal-text-color-hover, affects: retry }
+  - { name: --ui-link-normal-text-color-active, affects: retry }
+  - {
+      name: --ui-focus-primary,
+      affects: retry,
+      description: Focus ring on the retry action,
+    }

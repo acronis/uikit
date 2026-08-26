@@ -1,0 +1,163 @@
+---
+title: TenantSearchPopover
+description: A tenant picker in a popover — in-panel search, a Recent section, and a browsable tenant tree.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { TenantSearchPopoverDemo } from '@/components/demos-react/tenant-search-popover';
+
+## Usage
+
+```tsx
+import {
+  TenantSearchPopover,
+  TenantSearchPopoverTrigger,
+  TenantSearchPopoverContent,
+  type TenantSearchItem,
+} from '@acronis-platform/ui-react';
+```
+
+`TenantSearchPopover` is a compound component for picking one tenant out of a
+hierarchy. `TenantSearchPopover` is the popover root and owns the open state
+(`open` / `defaultOpen` / `onOpenChange`); `TenantSearchPopoverTrigger` anchors and
+toggles the panel; `TenantSearchPopoverContent` is the panel itself — an in-panel
+search row, an optional "Recent" section, and a "Browse" section holding the tenant
+tree, with loading / empty / error blocks replacing the list.
+
+It is deliberately **not** built on Base UI `Select`: the tenant picker is a tree of
+expand/collapse toggles plus selectable leaves, not a listbox. Positioning, dismissal
+and focus return come from [`Popover`](/components/popover), and everything below the
+popup chrome reuses the presentational list parts shared with
+[`InputSelect`](/components/input-select) — so it is themed by the `--ui-popover-*`
+and `--ui-input-select-dropdown-*` tiers.
+
+Items are data, not children:
+
+```tsx
+const tenants: TenantSearchItem[] = [
+  { id: 'all', label: 'All clients', tenantType: 'all-clients' },
+  {
+    id: 'northwind',
+    label: 'Northwind Traders',
+    tenantType: 'partner',
+    children: [
+      { id: 'emea', label: 'EMEA', tenantType: 'folder' },
+      { id: 'emea-ops', label: 'EMEA Operations', tenantType: 'unit' },
+    ],
+  },
+  { id: 'contoso', label: 'Contoso Ltd', tenantType: 'client' },
+];
+```
+
+`tenantType` picks the row's 16px leading glyph — Briefcase (`client`,
+`all-clients`), Building (`partner`), Folder (`folder`), NodeTree (`unit`). A node
+with a non-empty `children` array renders as an expand/collapse row and is **not
+selectable**; only leaves are.
+
+## Examples
+
+<DemoReact>
+  <TenantSearchPopoverDemo />
+</DemoReact>
+
+Basic composition — the panel owns the search query, the consumer owns the
+selection:
+
+```tsx
+const [tenantId, setTenantId] = useState<string>();
+
+<TenantSearchPopover>
+  <TenantSearchPopoverTrigger render={<Button variant="secondary" />}>
+    Select tenant
+  </TenantSearchPopoverTrigger>
+  <TenantSearchPopoverContent
+    items={tenants}
+    recentItems={[{ id: 'contoso', label: 'Contoso Ltd', tenantType: 'client' }]}
+    value={tenantId}
+    onValueChange={setTenantId}
+  />
+</TenantSearchPopover>;
+```
+
+The "Recent" section is omitted entirely when `recentItems` is absent or empty.
+
+Controlled query with a remote data source — drive `status` from the request:
+
+```tsx
+const [query, setQuery] = useState('');
+const { data, isLoading, isError, refetch } = useTenants(query);
+
+<TenantSearchPopoverContent
+  items={data ?? []}
+  query={query}
+  onQueryChange={setQuery}
+  status={isLoading ? 'loading' : isError ? 'error' : 'idle'}
+  onRetry={refetch}
+/>;
+```
+
+`status` mirrors the Figma `variant` axis (`data` → `idle`). A non-`idle` value
+replaces both sections with the centered status block; the search row stays. When
+`status` is `idle` but the active query matches nothing, the panel shows the **empty**
+block using `emptyLabel` — an explicit `loading` or `error` is never overridden by the
+filter result.
+
+Every string the panel renders on its own is a prop, so it localizes without
+re-implementation:
+
+```tsx
+<TenantSearchPopoverContent
+  items={tenants}
+  searchPlaceholder={t('tenant.search.placeholder')}
+  searchLabel={t('tenant.search.label')}
+  recentLabel={t('tenant.recent')}
+  browseLabel={t('tenant.browse')}
+  loadingLabel={t('common.loading')}
+  emptyLabel={t('tenant.empty')}
+  errorLabel={t('common.error')}
+  retryLabel={t('common.retry')}
+/>
+```
+
+Position it like any popover — `side` / `align` / `sideOffset` are forwarded to
+`PopoverContent` (defaults: `bottom` / `start` / `4`), and logical sides flip under
+`dir="rtl"`:
+
+```tsx
+<TenantSearchPopoverContent items={tenants} side="right" align="end" sideOffset={8} />
+```
+
+## Accessibility
+
+Each section renders its own `role="tree"` named by its heading, with
+`role="treeitem"` rows and a roving tabindex. Arrow Up / Down move between visible
+rows across both trees, Home / End jump to the ends, Arrow Right expands then
+descends, Arrow Left collapses then ascends (the horizontal pair swaps under
+`dir="rtl"`), Enter / Space selects a leaf, and Arrow Down from the search input
+enters the list.
+
+Two known limitations: a node with `children` is a toggle only — it can never be
+selected — and the expander chevron does not visually flip under `dir="rtl"` (an
+existing limitation of the shared `InputSelect` expander; the keyboard direction does
+mirror correctly).
+
+## API Reference
+
+### TenantSearchPopoverContent
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/tenant-search-popover/tenant-search-popover.tsx"
+  name="TenantSearchPopoverContentProps"
+/>
+
+### TenantSearchItem
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/tenant-search-popover/tenant-search-popover.tsx"
+  name="TenantSearchItem"
+/>
+
+`TenantSearchPopover` (root) accepts the Base UI Popover root props — `open` /
+`defaultOpen`, `onOpenChange`. `TenantSearchPopoverTrigger` wraps the matching Base UI
+part. See [`Popover`](/components/popover) for the shared popup behavior and the
+`portalContainer` / `positionMethod` notes.

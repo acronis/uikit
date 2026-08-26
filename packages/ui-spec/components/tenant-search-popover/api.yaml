@@ -1,0 +1,201 @@
+spec_version: '1.0'
+component: TenantSearchPopover
+
+# Framework-agnostic contract. The panel is composed from a root (open state), a
+# trigger, and a content part that takes the data and all the copy. Selection,
+# open state and the search query are each controllable or uncontrolled; the
+# expanded-node set and the roving focus are always panel-owned. Every string the
+# panel renders on its own is a property with the Figma copy as its default, so a
+# consumer localizes without re-implementing anything.
+contract:
+  properties:
+    - name: items
+      type: TenantSearchItem[]
+      required: true
+      description: >-
+        The tenant tree rendered under the browse section. `TenantSearchItem` is
+        `{ id, label, tenantType, children? }`; a node with a non-empty
+        `children` array renders as an expand/collapse row instead of a
+        selectable one.
+    - name: recent-items
+      type: TenantSearchItem[]
+      required: false
+      description: >-
+        Tenants rendered under the recent section. The section is omitted
+        entirely when this is absent or empty (Figma's `hasRecent` gate).
+    - name: value
+      type: string
+      required: false
+      description: Controlled selected tenant id. Pair with the change event.
+    - name: open
+      type: boolean
+      required: false
+      description: Controlled open state of the panel.
+    - name: default-open
+      type: boolean
+      required: false
+      default: false
+      description: Whether the panel is initially open when uncontrolled.
+    - name: query
+      type: string
+      required: false
+      description: >-
+        Controlled search query. Omit to let the panel own it; the filter always
+        matches case-insensitively against each item's label.
+    - name: status
+      type: "'idle' | 'loading' | 'empty' | 'error'"
+      required: false
+      default: idle
+      description: >-
+        Which region the panel shows below the search row — mirrors the Figma
+        `variant` axis (`data` → `idle`, i.e. render the sections). A non-`idle`
+        value replaces the sections with the centered status block.
+    - name: tenant-type
+      type: "'all-clients' | 'client' | 'partner' | 'folder' | 'unit'"
+      required: true
+      description: >-
+        Per-item (not per-panel) property on each `TenantSearchItem`; selects the
+        row's leading 16px glyph — Briefcase for client / all-clients, Building
+        for partner, Folder for folder, NodeTree for unit.
+    - name: search-placeholder
+      type: string
+      required: false
+      default: Search
+      description: >-
+        Placeholder for the search input. The Figma node's literal "Placeholder"
+        text is a design stand-in, not shipping copy, so the default is the
+        generic verb instead.
+    - name: search-label
+      type: string
+      required: false
+      default: Search tenants
+      description: Accessible name for the search input, which has no visible label.
+    - name: recent-label
+      type: string
+      required: false
+      default: Recent
+      description: Heading of the recent section; also names its tree.
+    - name: browse-label
+      type: string
+      required: false
+      default: Browse
+      description: >-
+        Heading of the browse section; also names its tree. The Figma layer is
+        named "Browser" but its visible text is "Browse", which is what ships.
+    - name: loading-label
+      type: string
+      required: false
+      default: Data is loading…
+      description: Copy shown in the loading status block.
+    - name: empty-label
+      type: string
+      required: false
+      default: No data found
+      description: >-
+        Copy shown in the empty status block, and whenever the active query
+        matches nothing.
+    - name: error-label
+      type: string
+      required: false
+      default: Something went wrong.
+      description: Copy shown in the error status block.
+    - name: retry-label
+      type: string
+      required: false
+      default: Try again
+      description: Label of the error block's retry action.
+    - name: side
+      type: "'top' | 'right' | 'bottom' | 'left'"
+      required: false
+      default: bottom
+      description: >-
+        Which side of the trigger the panel opens on. Resolved by the popover
+        positioner, which reads the ambient text direction, so logical sides flip
+        under `dir="rtl"`.
+    - name: align
+      type: "'start' | 'center' | 'end'"
+      required: false
+      default: start
+      description: Alignment along the chosen side.
+    - name: side-offset
+      type: number
+      required: false
+      default: 4
+      description: Distance in px between the trigger and the panel.
+    - name: portal
+      type: boolean
+      required: false
+      default: true
+      description: Whether the panel renders in a portal.
+
+  events:
+    - name: value-change
+      payload: string
+      description: >-
+        Fired with the tenant id when a selectable (leaf) row is activated by
+        click, Enter or Space (React: `onValueChange`). Rows with children never
+        fire it — they toggle their subtree instead.
+    - name: open-change
+      payload: boolean
+      description: >-
+        Fired when the panel opens or closes (React: `onOpenChange`).
+    - name: query-change
+      payload: string
+      description: >-
+        Fired when the user types in the search row (React: `onQueryChange`).
+    - name: retry
+      payload: void
+      description: >-
+        Fired by the error block's retry action (React: `onRetry`).
+
+  content:
+    - name: trigger
+      description: >-
+        The anchor element that opens the panel. Everything below it is
+        data-driven, so the panel itself takes no children.
+
+adapters:
+  react:
+    component: TenantSearchPopover
+    status: implemented
+    import: >-
+      import { TenantSearchPopover, TenantSearchPopoverTrigger,
+      TenantSearchPopoverContent, type TenantSearchItem } from
+      '@acronis-platform/ui-react'
+    example: |
+      const tenants: TenantSearchItem[] = [
+        { id: 'all', label: 'All clients', tenantType: 'all-clients' },
+        {
+          id: 'northwind',
+          label: 'Northwind Traders',
+          tenantType: 'partner',
+          children: [{ id: 'emea', label: 'EMEA', tenantType: 'folder' }],
+        },
+      ];
+
+      <TenantSearchPopover>
+        <TenantSearchPopoverTrigger render={<Button variant="secondary" />}>
+          Select tenant
+        </TenantSearchPopoverTrigger>
+        <TenantSearchPopoverContent
+          items={tenants}
+          recentItems={recent}
+          value={tenantId}
+          onValueChange={setTenantId}
+        />
+      </TenantSearchPopover>
+
+      {/* Status (instead of the sections) */}
+      <TenantSearchPopoverContent items={[]} status="error" onRetry={reload} />
+  vue:
+    component: AvTenantSearchPopover
+    status: planned
+    import: "import { AvTenantSearchPopover } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvTenantSearchPopover v-model="tenantId" :items="tenants" :recent-items="recent" />
+  web-components:
+    element: ui-tenant-search-popover
+    status: planned
+    import: "import '@acronis-platform/ui-wc/tenant-search-popover'"
+    example: |
+      <ui-tenant-search-popover status="loading"></ui-tenant-search-popover>
