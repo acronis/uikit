@@ -1,0 +1,49 @@
+spec_version: '1.0'
+component: Wizard
+
+schematic: |
+  wizard: <div> full-height vertical column
+    wizard-header:                sticky header band (surface-secondary + bottom divider)
+      (Breadcrumb)                  consumer-composed trail, first child
+      (PageHeaderRow)               title row — PageHeaderTitle + PageHeaderActions
+                                    (Cancel / Back / Next-or-Submit), reused from PageHeader
+      wizard-subtitle:              optional supporting line under the title row
+      (Stepper)                     optional StepperItem sequence; short flows omit it
+    wizard-body:                  content column, capped at 1024px
+      (Section)                     the step's own fields live here
+
+root:
+  element: div
+  description: >-
+    The wizard page template. A full-height flex column holding the sticky
+    header band and the capped content column. Layout only — it holds no step
+    index and no navigation state.
+
+parts:
+  - id: wizard-header
+    element: div
+    description: >-
+      The sticky header band. A vertical stack of the consumer's `Breadcrumb`,
+      a `PageHeaderRow` (title + actions), an optional `wizard-subtitle`, and an
+      optional `Stepper`, in that order. Carries the secondary surface, the
+      bottom divider, the band padding, and the inter-row gap. Not a `banner`
+      landmark — `PageHeader`'s root is intentionally not reused here, so the
+      band can nest inside a page that already has one.
+  - id: wizard-subtitle
+    element: p
+    optional: true
+    visible_when: the flow supplies a supporting line under the title
+    description: >-
+      Optional supporting text under the title row. Body size in the secondary
+      (muted) on-surface color — the same treatment as `PageHeaderDescription`.
+      A dedicated `Subtitle` component was considered and rejected upstream, so
+      this reuses the existing text tokens rather than introducing a scale.
+  - id: wizard-body
+    element: div
+    description: >-
+      The step's content column, capped at 1024px and bottom-padded. Always
+      wraps a `Section` (or several); the step's fields belong inside that, not
+      here. The cap is a plain layout constant, overridden per step through
+      `className` rather than a variant — Figma shows exactly one width.
+
+states: []

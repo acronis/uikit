@@ -136,3 +136,4 @@ export {
 export * from './components/ui/treemap';
 export * from './components/ui/trend-indicator';
 export * from './components/ui/widget-placeholder';
+export * from './components/ui/wizard';

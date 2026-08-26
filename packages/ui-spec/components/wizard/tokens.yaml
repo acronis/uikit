@@ -1,0 +1,49 @@
+spec_version: '1.0'
+component: Wizard
+
+# References only. Values live in @acronis-platform/tokens-pd and resolve per
+# brand/theme at paint time; never restate values here.
+#
+# Wizard has no `--ui-wizard-*` tier and needs none: Figma's "RegionMain" frame
+# references no `components/Wizard/*` variables, and every themed surface inside
+# the wizard belongs to a composed component that owns its own tier (Button,
+# Stepper/StepperItem, Breadcrumb, Section, Tag). What Wizard itself owns is the
+# header band's chrome and the two containers' spacing, which come from the
+# generic semantic tiers listed below.
+#
+# The subtitle's color is not listed as a raw token because it is consumed via
+# its Tailwind bridge (`text-muted-foreground` in ui-react's
+# `src/styles/index.css`), exactly as `PageHeaderDescription` does — the bridge
+# resolves to `--ui-text-on-surface-secondary`, which is named here so the
+# dependency is still recorded.
+#
+# The body's 1024px cap is deliberately absent: it is a plain layout constant,
+# not a token. It is also intentionally NOT written as `var(--ui-breakpoint-lg)`
+# (the hand-authored bridge var in ui-react's own stylesheet, which happens to
+# hold the same 1024px) — a content column's max width and a viewport breakpoint
+# are independent facts, and coupling them would make a future change to either
+# silently move the other. Same call `dialog.tsx` makes for its `large` size.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-background-surface-secondary
+    affects: wizard-header
+    description: The sticky header band's surface fill.
+  - name: --ui-border-on-surface-divider
+    affects: wizard-header
+    description: The 1px rule separating the header band from the content column.
+  - name: --ui-gap-16
+    affects: wizard-header
+    description: >-
+      The header band's padding on all four sides, and the content column's
+      bottom padding (`wizard-body`).
+  - name: --ui-gap-12
+    affects: wizard-header
+    description: >-
+      Vertical gap between the header band's rows — breadcrumb, title row,
+      subtitle, and stepper.
+  - name: --ui-text-on-surface-secondary
+    affects: wizard-subtitle
+    description: >-
+      The optional subtitle's muted text color, consumed through the
+      `text-muted-foreground` Tailwind bridge.

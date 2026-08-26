@@ -1,0 +1,17 @@
+spec_version: '1.0'
+component: Wizard
+name: wizard
+status: ready
+category: layout
+description: >-
+  The full-page wizard page template — a sticky header band (breadcrumb, title
+  row with the flow's Cancel/Back/Next actions, an optional subtitle, an
+  optional stepper) above a content column capped at 1024px. Layout and slots
+  only: it owns no step index, no navigation, and no button wiring — which
+  actions show on which step is the consuming UI block's decision, the same
+  boundary PageHeader draws around its own actions slot. Mapped to the ui-react
+  Figma "RegionMain" frame (node 10511-61418).
+since: 1.1.0
+figma:
+  node: 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=10511-61418'
+  codeConnect: packages/ui-react/src/components/ui/wizard/wizard.figma.tsx

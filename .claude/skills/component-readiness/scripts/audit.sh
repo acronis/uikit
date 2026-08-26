@@ -16,7 +16,8 @@
 # working tree or a ref — same logic, different ROOT.
 #
 # Columns:
-#   TOKENS    every --ui-* ref (.tsx + tests + stories + spec) resolves in tokens-pd
+#   TOKENS    every --ui-* ref (.tsx + tests + stories + spec) resolves — in tokens-pd,
+#             or among the hand-authored layout vars in ui-react styles/index.css
 #   IMPORTS   every referenced component tier is @import-ed in ui-react styles/index.css
 #   IMPL      no @radix-ui import / asChild prop in the component's own .tsx — ui-react
 #             is Base UI only, this is a hard repo rule, not a style preference
@@ -85,9 +86,20 @@ else
   comps=$(to_kebab "$arg")
 fi
 
-# Every --ui-* token DEFINED in tokens-pd (union across tiers + brands).
+# Every --ui-* custom property a component can legitimately reference:
+#   1. everything DEFINED in tokens-pd (union across tiers + brands), and
+#   2. the few hand-authored ones DEFINED in ui-react's own styles/index.css.
+# (2) is not a loophole for hand-authoring theme values — it only matches
+# `--ui-x: <value>;` *declarations* in that one stylesheet, which exist solely
+# for non-color layout facts the design system has no Figma variable for
+# (`--ui-breakpoint-*`, `--ui-draggable-cursor*`; each is documented in place).
+# They resolve at paint time exactly like a generated token, so a reference to
+# one is not dangling. Colors still must come from tokens-pd — that rule is
+# enforced by the no-hex convention, not by this list.
 defined="$(mktemp)"
-grep -rho -- '--ui-[a-z0-9-]*' "$TOKENS" | sort -u > "$defined"
+{ grep -rho -- '--ui-[a-z0-9-]*' "$TOKENS"
+  grep -hoE '^\s*--ui-[a-z0-9-]+:' "$STYLES" | tr -d ' :'
+} | sort -u > "$defined"
 
 fail=0
 printf '%-22s %-7s %-8s %-6s %-8s %-6s %-8s %s\n' COMPONENT TOKENS IMPORTS IMPL SPEC TESTS FIGMA VERDICT

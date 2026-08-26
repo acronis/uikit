@@ -13,10 +13,15 @@ component: Stepper
 # `label-color` pair for both the current-step line and the next-step line, so
 # a single token covers both.
 #
-# The breakpoint itself is not a token in this list: `--ui-breakpoint-lg` exists
-# in ui-react's own stylesheet, but a `@media` condition cannot read a custom
-# property, so the switch is written with Tailwind's compile-time `lg:` variant
-# instead. See the comment block in `stepper.tsx`.
+# The breakpoint itself is deliberately absent from this list, for two separate
+# reasons. First, it is not a design token at all: `--ui-breakpoint-lg` is a
+# hand-authored layout bridge var declared in ui-react's own
+# `src/styles/index.css` (there is no Figma source for it, so style-dictionary
+# emits nothing), not an entry in any `tokens-pd` tier — listing it here would
+# claim a generated token that does not exist. Second, the layout switch does
+# not read it anyway: a `@media` condition cannot read a custom property, so it
+# is written with Tailwind's compile-time `lg:` variant. See the comment block
+# in `stepper.tsx`.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
