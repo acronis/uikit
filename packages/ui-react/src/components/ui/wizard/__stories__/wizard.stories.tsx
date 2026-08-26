@@ -55,6 +55,57 @@ const DASHBOARD_WIZARD_STEPS: WizardStep[] = [
   { id: 'permissions', label: 'Set permissions' },
 ];
 
+const HOOK_DEMO_STEPS = [
+  {
+    id: 'name',
+    label: 'Name the integration',
+    title: 'Name the integration',
+    description: 'Give this integration a name your team will recognize.',
+  },
+  {
+    id: 'source',
+    label: 'Pick a source',
+    title: 'Pick a source',
+    description: 'Choose the workload this integration reads its data from.',
+  },
+  {
+    id: 'schedule',
+    label: 'Set a schedule',
+    title: 'Set a schedule',
+    description: 'Decide how often the integration runs and in which window.',
+  },
+  {
+    id: 'filters',
+    label: 'Configure filters',
+    title: 'Configure filters',
+    description: 'Narrow down which records the integration picks up.',
+  },
+  {
+    id: 'destination',
+    label: 'Choose a destination',
+    title: 'Choose a destination',
+    description: 'Point the processed records at a destination system.',
+  },
+  {
+    id: 'notifications',
+    label: 'Set notifications',
+    title: 'Set notifications',
+    description: 'Pick who hears about a failed or delayed run.',
+  },
+  {
+    id: 'review',
+    label: 'Review',
+    title: 'Review the integration',
+    description: 'Check every choice above before the integration goes live.',
+  },
+  {
+    id: 'confirm',
+    label: 'Confirm',
+    title: 'Confirm and finish',
+    description: 'Confirm to create the integration and start the first run.',
+  },
+] satisfies (WizardStep & { title: string; description: string })[];
+
 function WizardBreadcrumb() {
   return (
     <Breadcrumb>
@@ -319,6 +370,95 @@ function LongStepContent() {
     </>
   );
 }
+
+// One `useWizard` instance drives the whole page: the `Stepper` markup is
+// inlined here rather than reusing `WizardSteps`, because that component owns
+// its own hook instance and so would desync from these buttons.
+function WizardHookDemo() {
+  const wizard = useWizard({ steps: HOOK_DEMO_STEPS });
+  const activeStep = HOOK_DEMO_STEPS[wizard.currentIndex];
+
+  return (
+    <Wizard>
+      <WizardHeader>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="#">Monitoring</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="#">Integrations</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Configure integration</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <PageHeaderRow>
+          <PageHeaderTitle>Configure integration</PageHeaderTitle>
+          <PageHeaderActions>
+            <Button
+              variant="secondary"
+              disabled={wizard.isFirstStep}
+              onClick={wizard.goToPreviousStep}
+            >
+              Back
+            </Button>
+            {/* `goToNextStep` is already a no-op past the last step, so the
+                CTA stays clickable rather than needing its own guard. */}
+            <Button onClick={wizard.goToNextStep}>
+              {wizard.isLastStep ? 'Finish' : 'Next'}
+            </Button>
+          </PageHeaderActions>
+        </PageHeaderRow>
+        <Stepper
+          currentStep={wizard.currentStepNumber}
+          totalSteps={wizard.stepCount}
+          current={wizard.currentStepLabel}
+          next={wizard.nextStepLabel}
+        >
+          {wizard.steps.map((step) => (
+            <StepperItem
+              key={step.id}
+              variant={step.variant}
+              label={step.label}
+              avatar={
+                <Avatar
+                  color={step.avatarColor}
+                  className={step.avatarClassName}
+                >
+                  <AvatarFallback>{step.stepNumber}</AvatarFallback>
+                </Avatar>
+              }
+            />
+          ))}
+        </Stepper>
+      </WizardHeader>
+      <WizardBody>
+        <Section>
+          <SectionHeader
+            title={activeStep.title}
+            description={activeStep.description}
+            hasDescription
+          />
+          <SectionContent>
+            <InputText label="Integration name" defaultValue="Nightly export" />
+          </SectionContent>
+        </Section>
+      </WizardBody>
+    </Wizard>
+  );
+}
+
+// The only interactive story here: unlike the static ones above, Back/Next are
+// wired to a real `useWizard` instance, so clicking them visibly moves the
+// stepper, swaps the body `Section`, and flips Back's disabled state and the
+// CTA's label ("Next" → "Finish" on the last of the eight steps).
+export const UseWizardHookDemo: Story = {
+  render: () => <WizardHookDemo />,
+};
 
 // Confirms the mapping this whole component is built on: Figma's
 // "TemplateEntity" (node 11098-5825) wraps `RegionNavs` (the app shell's
