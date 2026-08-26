@@ -4,8 +4,8 @@
 // component itself is real and shipped (searchable single/multi-select on Base
 // UI's Combobox); what's missing is the design, which UX still has to formally
 // spec (the searchable select field + its dropdown, with variants and states).
-// Once that node exists, replace 'FIGMA_NODE_URL' and flip to COMPLETE via
-// `/figma-component Combobox <url> --update`.
+// Once that node exists, replace 'FIGMA_NODE_URL' and mark this connection
+// done via `/figma-component Combobox <url> --update`.
 import figma from '@figma/code-connect';
 
 import {

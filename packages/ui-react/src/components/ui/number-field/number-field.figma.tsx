@@ -6,7 +6,7 @@
 // InputText box + ButtonIcon-style steppers (which carry their own designs and
 // Code Connect entries), and there is no active effort to have UX draw a
 // dedicated node. The placeholder URL below exists only so the example mapping is
-// recorded; if UX ever specs a real node, flip this to COMPLETE via
+// recorded; if UX ever specs a real node, mark this connection done via
 // `/figma-component NumberField <url> --update`.
 import figma from '@figma/code-connect';
 

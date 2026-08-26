@@ -12,7 +12,9 @@ feat(ui-react)!: remove AppShell, AuthLayout, Collapsible and Label
   screen. Migrate: `AppShell` → `AppShellChat`, `AppShellSidebar` →
   `AppShellChatSidebar`, `AppShellBody` → `AppShellChatContent`,
   `AppShellHeader` → `AppShellChatContentHeader`, `AppShellMain` →
-  `AppShellChatContentBody`. There is no `AppShellFooter` equivalent.
+  `AppShellChatContentBody`. There is no `AppShellFooter` equivalent. Note
+  `AppShellMain` rendered a `<main>` landmark; `AppShellChatContentBody` is a
+  plain `<div>`, so wrap it in your own `<main>` if you relied on that.
 - `AuthLayout` / `AuthLayoutCard` / `AuthLayoutLogo` / `AuthLayoutFooter` — the
   chrome was product-specific, not a design-system component. Compose it in the
   product from `Card` / `Stack`.

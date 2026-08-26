@@ -6,7 +6,7 @@
 // component is the pattern backing that one list; whether it gets formalized as
 // a generic kit component (with its own shared-file design, variants and states)
 // is still an open decision. Until it does, treat the node URL as informational
-// and don't read this as a COMPLETE design-system connection.
+// and don't read this as a fully-connected design-system mapping.
 import figma from '@figma/code-connect';
 
 import {
