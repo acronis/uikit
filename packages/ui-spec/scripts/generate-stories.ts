@@ -158,6 +158,29 @@ const RENDER: Record<string, RenderHint> = {
     // story if the generator is ever taught to resolve `sourceDir`.
     skip: true,
   },
+  'tenant-search-popover': {
+    // `TenantSearchPopoverContent` requires `items`, and the panel only
+    // renders real rows once open — without a sample tree + `defaultOpen`,
+    // the generated instance is an empty, contentless popup.
+    props: 'defaultOpen',
+    extraImports: [
+      "import { TenantSearchPopoverTrigger, TenantSearchPopoverContent } from '../tenant-search-popover';",
+      "import { Button } from '../../button';",
+    ],
+    sample: [
+      '',
+      '      <TenantSearchPopoverTrigger render={<Button variant="secondary" />}>Select tenant</TenantSearchPopoverTrigger>',
+      '      <TenantSearchPopoverContent',
+      '        items={[',
+      "          { id: 'all', label: 'All clients', tenantType: 'all-clients' },",
+      "          { id: 'contoso', label: 'Contoso Ltd', tenantType: 'partner', children: [{ id: 'contoso-hq', label: 'Headquarters', tenantType: 'unit' }] },",
+      "          { id: 'fabrikam', label: 'Fabrikam Inc', tenantType: 'client' },",
+      '        ]}',
+      "        recentItems={[{ id: 'fabrikam', label: 'Fabrikam Inc', tenantType: 'client' }]}",
+      '      />',
+      '    ',
+    ].join('\n'),
+  },
   popover: {
     props: 'defaultOpen',
     extraImports: [
@@ -1005,7 +1028,8 @@ export const Matrix: Story = {
     // `label` does, so a hint carrying both `ariaLabel` and `variantProps` keeps
     // its label instead of silently dropping it.
     const variantLabel = (build: (v: string) => string, v: string) =>
-      (hint.ariaLabel ? ` aria-label="${hint.ariaLabel}"` : '') + ` ${build(v)}`;
+      (hint.ariaLabel ? ` aria-label="${hint.ariaLabel}"` : '') +
+      ` ${build(v)}`;
     const variantItems = variantProps
       ? variants
           .map((v) => inst(`${variantLabel(variantProps, v)} variant="${v}"`))
