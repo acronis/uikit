@@ -21,6 +21,7 @@
     "input-select",
     "combobox",
     "input-date-picker",
+    "input-num-picker",
     "calendar",
     "calendar-panel",
     "date-range-picker",

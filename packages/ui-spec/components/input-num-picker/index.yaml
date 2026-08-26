@@ -1,0 +1,16 @@
+spec_version: '1.0'
+component: InputNumPicker
+name: input-num-picker
+status: ready
+category: forms
+description: >-
+  A numeric stepper field: an optional label (with an optional required
+  marker), and a bordered box with decrement/increment buttons around the
+  numeric value. Built on Base UI's NumberField and its own
+  `--ui-input-num-picker-*` token tier; the steppers reuse `ButtonIconInput`.
+since: 3.0.0
+dependencies:
+  components: [ButtonIconInput]
+figma:
+  node: '8523-5382'
+  codeConnect: packages/ui-react/src/components/ui/input-num-picker/input-num-picker.figma.tsx

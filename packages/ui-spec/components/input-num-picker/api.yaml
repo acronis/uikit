@@ -1,0 +1,90 @@
+spec_version: '1.0'
+component: InputNumPicker
+
+contract:
+  properties:
+    - name: label
+      type: ReactNode
+      required: false
+      description: Field label rendered above the box, associated via `htmlFor`/`id`.
+    - name: required
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Appends a required marker (`*`) after the label and sets `required` on
+        the field.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: Disables the field and both steppers (native `disabled`).
+    - name: min
+      type: number
+      required: false
+      description: The minimum value of the field.
+    - name: max
+      type: number
+      required: false
+      description: The maximum value of the field.
+    - name: step
+      type: 'number | "any"'
+      required: false
+      default: 1
+      description: Amount to increment/decrement with the steppers or arrow keys.
+    - name: value
+      type: 'number | null'
+      required: false
+      description: Controlled numeric value.
+    - name: defaultValue
+      type: number
+      required: false
+      description: Uncontrolled initial numeric value.
+    - name: decrementLabel
+      type: string
+      required: false
+      default: Decrease
+      description: Accessible label for the decrement button.
+    - name: incrementLabel
+      type: string
+      required: false
+      default: Increase
+      description: Accessible label for the increment button.
+
+  events:
+    - name: onValueChange
+      payload: 'value: number | null, eventDetails'
+      description: Fired when the numeric value changes (typing, steppers, keyboard).
+    - name: onValueCommitted
+      payload: 'value: number | null, eventDetails'
+      description: Fired when a value change is committed (blur, pointer release).
+
+  content:
+    - name: label
+      description: The label content.
+
+adapters:
+  react:
+    component: InputNumPicker
+    status: implemented
+    import: "import { InputNumPicker } from '@acronis-platform/ui-react'"
+    example: |
+      <InputNumPicker label="Quantity" defaultValue={1} min={0} max={10} />
+
+      {/* Required */}
+      <InputNumPicker label="Quantity" required />
+
+      {/* Controlled */}
+      <InputNumPicker label="Quantity" value={value} onValueChange={setValue} />
+  vue:
+    element: AvInputNumPicker
+    status: planned
+    import: "import { AvInputNumPicker } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvInputNumPicker label="Quantity" v-model="quantity" />
+  web-components:
+    element: ui-input-num-picker
+    status: planned
+    import: "import '@acronis-platform/ui-wc/input-num-picker'"
+    example: |
+      <ui-input-num-picker label="Quantity"></ui-input-num-picker>
