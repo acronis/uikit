@@ -1,0 +1,60 @@
+---
+title: InputNumPicker
+description: A numeric stepper field with label, required marker, and decrement/increment buttons.
+---
+
+import { DemoReact } from "@/components/DemoReact";
+import { InputNumPickerDemo } from "@/components/demos-react/input-num-picker";
+
+## Usage
+
+```tsx
+import { InputNumPicker } from '@acronis-platform/ui-react';
+```
+
+`InputNumPicker` is a numeric stepper field built on Base UI's `NumberField`. It
+adds an optional label (with a `required` marker) above a bordered box holding a
+decrement button, the numeric value, and an increment button. The steppers reuse
+the already-themed `ButtonIconInput` rather than duplicating its idle/hover/
+active/disabled token wiring. Themed by the `--ui-input-num-picker-*` tokens.
+This is a distinct component from `NumberField` (the bare, unlabelled
+steppers-only primitive) — use `InputNumPicker` whenever the field needs a label.
+
+## Examples
+
+<DemoReact>
+  <InputNumPickerDemo />
+</DemoReact>
+
+A basic field with bounds:
+
+```tsx
+<InputNumPicker label="Quantity" defaultValue={1} min={0} max={10} />
+```
+
+Required:
+
+```tsx
+<InputNumPicker label="Quantity" required />
+```
+
+Controlled:
+
+```tsx
+const [value, setValue] = React.useState<number | null>(3);
+
+<InputNumPicker label="Seats" value={value} onValueChange={setValue} />;
+```
+
+Disabled:
+
+```tsx
+<InputNumPicker label="Quantity" disabled defaultValue={5} />
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/input-num-picker/input-num-picker.tsx"
+  name="InputNumPickerProps"
+/>

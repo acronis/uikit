@@ -59,6 +59,7 @@ export * from './components/ui/radial-bar-chart';
 export * from './components/ui/radio';
 export * from './components/ui/input';
 export * from './components/ui/input-date-picker';
+export * from './components/ui/input-num-picker';
 export * from './components/ui/input-otp';
 export * from './components/ui/input-password';
 export * from './components/ui/input-search';

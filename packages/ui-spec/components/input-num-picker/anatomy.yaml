@@ -1,0 +1,69 @@
+spec_version: '1.0'
+component: InputNumPicker
+
+schematic: |
+  +-------------------------------+
+  |  label  required              |   root: <div> (field, vertical stack)
+  +-------------------------------+
+  |  [ decrement  value  increment ]| box: the bordered box
+  +-------------------------------+
+
+root:
+  element: div
+  description: >-
+    The field container (Base UI `NumberField.Root`) — a vertical stack of the
+    label and the stepper box. Width is fluid with a minimum from
+    `--ui-input-num-picker-global-container-width-min`.
+
+parts:
+  - id: label
+    description: The field label, rendered above the box (`<label htmlFor>`).
+    element: label
+  - id: required
+    description: The required marker (`*`) after the label; shown when `required`.
+    element: span
+  - id: box
+    description: >-
+      The bordered box (Base UI `NumberField.Group`) wrapping the steppers and
+      the value — border, fill, and per-state treatment. It also paints the
+      focus ring when the value input has keyboard focus.
+    element: div
+    role: group
+  - id: decrement
+    description: Decrement (−) stepper button; a themed `ButtonIconInput`.
+    element: button
+  - id: value
+    description: The numeric value (Base UI `NumberField.Input`), centered.
+    element: input
+  - id: increment
+    description: Increment (+) stepper button; a themed `ButtonIconInput`.
+    element: button
+
+layout:
+  type: stack
+  direction: vertical
+  align: center
+  order: [label, box]
+
+states:
+  - {
+      id: hover,
+      trigger: pointer hover over the box,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [box],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on the value input,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [box],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true',
+      kind: prop,
+      prop: disabled,
+      affects: [label, box, value, decrement, increment],
+    }

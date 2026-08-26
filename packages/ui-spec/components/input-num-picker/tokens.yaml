@@ -1,0 +1,102 @@
+spec_version: '1.0'
+component: InputNumPicker
+
+# References only — values live in @acronis-platform/tokens-pd. The field
+# container/label/box/value tokens come from the component's own
+# `--ui-input-num-picker-*` tier; the decrement/increment buttons reuse the
+# already-themed `ButtonIconInput` (`--ui-button-icon-input-*`) instead of
+# duplicating their own idle/hover/active/disabled set.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # ── Field container ──
+  - { name: --ui-input-num-picker-global-container-gap, affects: root }
+  - { name: --ui-input-num-picker-global-container-width-min, affects: root }
+  - { name: --ui-input-num-picker-global-container-label-gap, affects: label }
+
+  # ── Label + required marker ──
+  - { name: --ui-input-num-picker-global-label-color-idle, affects: label }
+  - { name: --ui-input-num-picker-global-label-color-hover, affects: label }
+  - { name: --ui-input-num-picker-global-label-color-disabled, affects: label }
+  - { name: --ui-input-num-picker-global-required-color, affects: required }
+
+  # ── Box geometry ──
+  - { name: --ui-input-num-picker-global-box-height, affects: box }
+  - { name: --ui-input-num-picker-global-box-border-radius, affects: box }
+  - { name: --ui-input-num-picker-global-box-border-width, affects: box }
+  - { name: --ui-input-num-picker-global-box-gap, affects: box }
+  - { name: --ui-input-num-picker-global-box-padding-x, affects: box }
+  - { name: --ui-input-num-picker-global-box-padding-y, affects: box }
+
+  # ── Box fill + value text ──
+  - { name: --ui-input-num-picker-global-box-color-idle, affects: box }
+  - { name: --ui-input-num-picker-global-box-color-hover, affects: box }
+  - { name: --ui-input-num-picker-global-box-color-disabled, affects: box }
+  - { name: --ui-input-num-picker-global-value-color-idle, affects: value }
+  - { name: --ui-input-num-picker-global-value-color-hover, affects: value }
+  - { name: --ui-input-num-picker-global-value-color-disabled, affects: value }
+
+  # ── Box border ──
+  - { name: --ui-input-num-picker-normal-box-border-color-idle, affects: box }
+  - { name: --ui-input-num-picker-normal-box-border-color-hover, affects: box }
+  - {
+      name: --ui-input-num-picker-normal-box-border-color-disabled,
+      affects: box,
+    }
+
+  # ── Steppers (ButtonIconInput tier — reused, not duplicated) ──
+  - { name: --ui-button-icon-input-global-container-width, affects: decrement }
+  - { name: --ui-button-icon-input-global-container-width, affects: increment }
+  - { name: --ui-button-icon-input-global-container-height, affects: decrement }
+  - { name: --ui-button-icon-input-global-container-height, affects: increment }
+  - {
+      name: --ui-button-icon-input-global-container-border-radius,
+      affects: decrement,
+    }
+  - {
+      name: --ui-button-icon-input-global-container-border-radius,
+      affects: increment,
+    }
+  - { name: --ui-button-icon-input-normal-icon-color-idle, affects: decrement }
+  - { name: --ui-button-icon-input-normal-icon-color-idle, affects: increment }
+  - { name: --ui-button-icon-input-normal-icon-color-hover, affects: decrement }
+  - { name: --ui-button-icon-input-normal-icon-color-hover, affects: increment }
+  - {
+      name: --ui-button-icon-input-normal-icon-color-active,
+      affects: decrement,
+    }
+  - {
+      name: --ui-button-icon-input-normal-icon-color-active,
+      affects: increment,
+    }
+  - {
+      name: --ui-button-icon-input-normal-icon-color-disabled,
+      affects: decrement,
+    }
+  - {
+      name: --ui-button-icon-input-normal-icon-color-disabled,
+      affects: increment,
+    }
+  - {
+      name: --ui-button-icon-input-normal-container-color-hover,
+      affects: decrement,
+    }
+  - {
+      name: --ui-button-icon-input-normal-container-color-hover,
+      affects: increment,
+    }
+  - {
+      name: --ui-button-icon-input-normal-container-color-active,
+      affects: decrement,
+    }
+  - {
+      name: --ui-button-icon-input-normal-container-color-active,
+      affects: increment,
+    }
+
+  # ── Focus ring ──
+  - {
+      name: --ui-focus-primary,
+      affects: box,
+      description: Box focus ring (on value input keyboard focus),
+    }

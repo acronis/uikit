@@ -32,6 +32,7 @@
           "id": { "type": "string" },
           "description": { "type": "string" },
           "element": { "type": "string" },
+          "role": { "type": "string" },
           "optional": { "type": "boolean" },
           "visible_when": { "type": "string" }
         }
