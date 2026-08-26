@@ -23,6 +23,9 @@ tokens:
   - name: --ui-text-on-surface-primary
     affects: tooltip-content
     description: Tooltip value text (text-foreground).
+  - name: --ui-border-on-surface-border
+    affects: tooltip-content
+    description: Tooltip border (border-border via the shared ChartTooltipContent).
   - name: --ui-border-on-surface-divider
     affects: grid
     description: >-

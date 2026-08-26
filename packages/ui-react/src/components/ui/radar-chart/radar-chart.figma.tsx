@@ -9,8 +9,15 @@ figma.connect(
   RadarChart,
   'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=9005-73086',
   {
-    example: () => (
+    props: {
+      gridType: figma.enum('Grid type', {
+        Polygon: 'polygon',
+        Circle: 'circle',
+      }),
+    },
+    example: ({ gridType }) => (
       <RadarChart
+        gridType={gridType}
         showDots
         angleKey="subject"
         dataKeys={['alice', 'bob']}
