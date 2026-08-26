@@ -69,9 +69,14 @@ describe('InputNumPicker', () => {
     expect(onValueChange).toHaveBeenCalledWith(2, expect.anything());
   });
 
-  it('forwards the ref to the underlying input element', () => {
+  // Base UI's NumberField.Root also renders a hidden `<input type="number"
+  // aria-hidden tabIndex={-1}>` form-submission shim, so asserting only
+  // `instanceof HTMLInputElement` would pass for the wrong element.
+  it('forwards the ref to the visible input element', () => {
     const ref = { current: null as HTMLInputElement | null };
-    render(<InputNumPicker label="Quantity" ref={ref} />);
-    expect(ref.current).toBeInstanceOf(HTMLInputElement);
+    render(<InputNumPicker label="Quantity" defaultValue={5} ref={ref} />);
+    expect(ref.current).toBe(screen.getByLabelText('Quantity'));
+    expect(ref.current).not.toHaveAttribute('aria-hidden', 'true');
+    expect(ref.current?.tabIndex).not.toBe(-1);
   });
 });

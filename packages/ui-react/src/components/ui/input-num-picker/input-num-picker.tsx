@@ -51,7 +51,6 @@ const InputNumPicker = React.forwardRef<HTMLInputElement, InputNumPickerProps>(
         id={inputId}
         disabled={disabled}
         required={required}
-        inputRef={ref}
         className={cn(
           'flex min-w-[var(--ui-input-num-picker-global-container-width-min)] flex-col items-center gap-[var(--ui-input-num-picker-global-container-gap)]',
           className
@@ -97,6 +96,7 @@ const InputNumPicker = React.forwardRef<HTMLInputElement, InputNumPickerProps>(
           />
 
           <NumberFieldPrimitive.Input
+            ref={ref}
             className={cn(
               'min-w-0 flex-1 bg-transparent text-center text-sm leading-6 outline-none',
               disabled

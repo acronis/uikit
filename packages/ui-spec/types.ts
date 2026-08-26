@@ -20,6 +20,7 @@ export interface AnatomyPart {
   id: string;
   description: string;
   element?: string;
+  role?: string;
   optional?: boolean;
   visible_when?: string;
 }

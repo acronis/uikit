@@ -10,7 +10,6 @@ schematic: |
 
 root:
   element: div
-  role: group
   description: >-
     The field container (Base UI `NumberField.Root`) — a vertical stack of the
     label and the stepper box. Width is fluid with a minimum from
@@ -26,8 +25,10 @@ parts:
   - id: box
     description: >-
       The bordered box (Base UI `NumberField.Group`) wrapping the steppers and
-      the value — border, fill, and per-state treatment.
+      the value — border, fill, and per-state treatment. It also paints the
+      focus ring when the value input has keyboard focus.
     element: div
+    role: group
   - id: decrement
     description: Decrement (−) stepper button; a themed `ButtonIconInput`.
     element: button
