@@ -17,10 +17,13 @@ import type { ChartConfig } from '@acronis-platform/ui-react';
 primitives. Give it `data`, a per-series `config`, the series to plot
 (`dataKeys`), and the angular axis key (`angleKey`) — it renders a themed recharts
 radar (polar grid, spoke labels, tooltip, legend included), so you don't
-hand-compose recharts children.
+hand-compose recharts children. Its default web uses `outerRadius={78}` to match
+the Figma geometry. The legend and value labels do not change the polygon radius;
+outer labels stay 4px from the polygon vertices.
 
 Series are columns of a shared row (like a bar or line chart), plotted over one
-polar angular axis.
+polar angular axis. The plot surface is `187px` high by default; the internal
+legend keeps its existing padding and is laid out below it without overlap.
 
 Series colors come from the `palette` prop, not from `config` — see
 [Palettes](/components/chart#palettes). Each `config` entry maps a data key to a
@@ -73,8 +76,8 @@ Draw the web as smooth circles instead of straight polygon rings with
 
 The chart shows data-point dots by default, matching the Figma design. Tune the
 areas with `fillOpacity` / `strokeWidth` / `showDots` (sized by `dotRadius`), and
-toggle the chrome with `showGrid` / `showTooltip` / `showLegend`.
-`legendPosition="top"` moves the legend row above the chart.
+toggle the chrome with `showGrid` / `showTooltip` / `showLegend`. The legend is
+always rendered below the chart.
 
 ## The value scale
 
