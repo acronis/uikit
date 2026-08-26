@@ -23,8 +23,8 @@ tokens:
   - name: --ui-text-on-surface-primary
     affects: tooltip-content
     description: Tooltip value text (text-foreground).
-  - name: --ui-border-on-surface-border
+  - name: --ui-border-on-surface-divider
     affects: grid
     description: >-
-      Tooltip border, the recharts polar-grid web lines, and the radius-axis
-      scale line (border-border / stroke-border).
+      Polar-grid web lines and the radius-axis scale line, matching the Figma
+      divider token.

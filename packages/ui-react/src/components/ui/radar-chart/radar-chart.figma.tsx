@@ -1,30 +1,25 @@
-// Figma Code Connect — status: NEEDS_FIGMA_URL
-// Ported from the apps/demo RadarChartPlayground without a "ready for dev" Figma
-// node (design-pending v1). RadarChart is a recharts composition over the shared
-// Chart primitives; a Figma node would map a representative radar frame with its
-// gridType variant. Replace 'FIGMA_NODE_URL' and flip to COMPLETE via
-// `/figma-component RadarChart <url> --update` once mockups land.
+// Figma Code Connect — status: COMPLETE
+// The Figma node is the ChartRadar widget frame; this connection maps the chart
+// content only. Card chrome and width variants belong to the consuming widget.
 import figma from '@figma/code-connect';
 
 import { RadarChart } from './radar-chart';
 
-figma.connect(RadarChart, 'FIGMA_NODE_URL', {
-  props: {
-    gridType: figma.enum('Grid type', {
-      Polygon: 'polygon',
-      Circle: 'circle',
-    }),
-  },
-  example: ({ gridType }) => (
-    <RadarChart
-      gridType={gridType}
-      angleKey="subject"
-      dataKeys={['alice', 'bob']}
-      config={{
-        alice: { label: 'Alice' },
-        bob: { label: 'Bob' },
-      }}
-      data={[{ subject: 'Math', alice: 120, bob: 110 }]}
-    />
-  ),
-});
+figma.connect(
+  RadarChart,
+  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=9005-73086',
+  {
+    example: () => (
+      <RadarChart
+        showDots
+        angleKey="subject"
+        dataKeys={['alice', 'bob']}
+        config={{
+          alice: { label: 'Alice' },
+          bob: { label: 'Bob' },
+        }}
+        data={[{ subject: 'Math', alice: 120, bob: 110 }]}
+      />
+    ),
+  }
+);

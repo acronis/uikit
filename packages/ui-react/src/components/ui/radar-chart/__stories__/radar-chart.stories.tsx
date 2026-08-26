@@ -58,7 +58,7 @@ const meta = {
     angleKey: 'subject',
     fillOpacity: 0.3,
     strokeWidth: 2,
-    showDots: false,
+    showDots: true,
     showGrid: true,
     showTooltip: true,
     showLegend: true,

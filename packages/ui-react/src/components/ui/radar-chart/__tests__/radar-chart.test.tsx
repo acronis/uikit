@@ -667,8 +667,13 @@ describe('RadarChart per-series styling', () => {
     expect(bob).toHaveAttribute('stroke-width', '4');
   });
 
-  it('renders no dots unless asked', () => {
+  it('renders data-point dots by default', () => {
     const { container } = renderSized();
+    expect(container.querySelectorAll('.recharts-radar-dot')).toHaveLength(8);
+  });
+
+  it('renders no dots when disabled', () => {
+    const { container } = renderSized({ showDots: false });
     expect(container.querySelectorAll('.recharts-radar-dot')).toHaveLength(0);
   });
 
@@ -686,15 +691,15 @@ describe('RadarChart per-series styling', () => {
     ).toEqual(['5', '5', '5', '5', '3', '3', '3', '3']);
   });
 
-  it('opts one series into dots while the chart-level default is off', () => {
+  it('opts one series out of dots while the chart-level default is on', () => {
     const { container } = renderSized({
-      seriesSettings: { alice: { dot: true, dotRadius: 4 } },
+      seriesSettings: { alice: { dot: false } },
     });
     expect(
       [...container.querySelectorAll('.recharts-radar-dot')].map((dot) =>
         dot.getAttribute('r')
       )
-    ).toEqual(['4', '4', '4', '4']);
+    ).toEqual(['2', '2', '2', '2']);
   });
 
   it('ignores seriesSettings keys that are not plotted', () => {

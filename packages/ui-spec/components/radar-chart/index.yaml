@@ -10,3 +10,6 @@ description: >-
   legend. One variant axis: `gridType` (the web drawn as straight-edged `polygon`
   rings or smooth `circle` rings). Ported from the apps/demo `RadarChartPlayground`.
 since: 0.58.0
+figma:
+  node: '9005-73086'
+  codeConnect: packages/ui-react/src/components/ui/radar-chart/radar-chart.figma.tsx
