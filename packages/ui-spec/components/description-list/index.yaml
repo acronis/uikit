@@ -6,9 +6,15 @@ category: data-display
 description: >-
   A key/value data list — rows of label → value, where the value can be plain
   text, a status (leading icon + value + a muted description), or action links.
-  Composable, semantic `<dl>`. Built from the Cyber-Compliance "Service status"
-  design.
+  Composable, semantic `<dl>`. NOT backed by a shared design-system design: it is
+  the pattern extracted from the "Service status" list in the product-specific
+  Cyber-Compliance Figma file (hc8FRfvlHBqZwNYUsD0DaX), not from the shared
+  ui-react file, so the `figma.node` below is a product mapping rather than a
+  design-system source of truth. Whether to formalize this as a generic kit
+  component is still an open decision.
 since: 0.43.0
+# Product-specific node — Cyber-Compliance file hc8FRfvlHBqZwNYUsD0DaX, not the
+# shared ui-react design system file. See the note in the description above.
 figma:
   node: '3001-20448'
   codeConnect: packages/ui-react/src/components/ui/description-list/description-list.figma.tsx

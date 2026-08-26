@@ -15,7 +15,9 @@ import { Grid } from '@acronis-platform/ui-react';
 `Grid` lays children into a `cols` column count that steps down at smaller
 breakpoints, with a configurable `gap`.
 
-> Design-pending v1, ported 1:1 from the legacy `shadcn-uikit` grid.
+> Intentionally undesigned — no Figma design is expected. Grid renders no
+> visuals, only column/gap structure, so there is nothing for a designer to
+> draw as a component. Ported 1:1 from the legacy `shadcn-uikit` grid.
 
 ## Examples
 
@@ -33,7 +35,8 @@ For one-dimensional rows/columns use [`Stack`](/components/stack); for tabular d
 use [`Table`](/components/table).
 
 With `container`, columns respond to the grid's **own width** (container queries)
-instead of the viewport — ideal for widget grids inside [App Shell](/components/app-shell),
+instead of the viewport — ideal for widget grids inside the
+[App Shell](/components/app-shell-chat),
 whose width changes as the sidebar expands:
 
 ```tsx

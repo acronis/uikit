@@ -13,9 +13,9 @@ import { PageContent } from '@acronis-platform/ui-react';
 ```
 
 `PageContent` is the padded gutter for a page's body. It renders a `<div>` (not
-`<main>`) so it nests inside [`AppShellMain`](/components/app-shell) without
-duplicating the `main` landmark; if you use it without the App Shell, wrap it in
-your own `<main>`.
+`<main>`) so it nests inside the App Shell's
+[content body](/components/app-shell-chat) without duplicating the `main`
+landmark; if you use it without the App Shell, wrap it in your own `<main>`.
 
 ## Examples
 
@@ -24,12 +24,12 @@ your own `<main>`.
 </DemoReact>
 
 ```tsx
-<AppShellMain>
+<AppShellChatContentBody>
   <PageContent>
     <PageHeader>…</PageHeader>
     {children}
   </PageContent>
-</AppShellMain>
+</AppShellChatContentBody>
 ```
 
 ## API Reference

@@ -1,17 +1,17 @@
 # PageContent
 
 The page content region — the padded gutter for a page's body. A `<div>` meant to
-nest inside `AppShellMain` (so it doesn't duplicate the `main` landmark).
+nest inside `AppShellChatContentBody` (so it doesn't duplicate the `main` landmark).
 
 > Design-pending v1, ported from the legacy shadcn-uikit `page-content`.
 
 ## When to use
 
-- Wrapping a page's body inside `AppShellMain` to get the standard page padding.
+- Wrapping a page's body inside `AppShellChatContentBody` to get the standard page padding.
 
 ## When not to use
 
-- As the scroll container / main landmark — that's `AppShellMain`.
+- As the scroll container / main landmark — that's `AppShellChatContentBody`.
 
 ## Parts
 
@@ -21,15 +21,15 @@ nest inside `AppShellMain` (so it doesn't duplicate the `main` landmark).
 
 ```tsx
 import {
-  AppShellMain,
+  AppShellChatContentBody,
   PageContent,
   PageHeader,
 } from '@acronis-platform/ui-react';
 
-<AppShellMain>
+<AppShellChatContentBody>
   <PageContent>
     <PageHeader>…</PageHeader>
     {children}
   </PageContent>
-</AppShellMain>;
+</AppShellChatContentBody>;
 ```

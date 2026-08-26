@@ -1,11 +1,11 @@
 'use client';
 
 import {
-  AppShell,
-  AppShellBody,
-  AppShellHeader,
-  AppShellMain,
-  AppShellSidebar,
+  AppShellChat,
+  AppShellChatContent,
+  AppShellChatContentBody,
+  AppShellChatContentHeader,
+  AppShellChatSidebar,
   Grid,
   PageHeader,
   PageHeaderRow,
@@ -25,8 +25,10 @@ const Widget = ({ title }: { title: string }) => (
 export function DashboardDemo() {
   return (
     <div className="h-[480px] overflow-hidden rounded-md border border-border">
-      <AppShell className="h-full min-h-0">
-        <AppShellSidebar className="w-52 flex-col gap-1 bg-[var(--ui-background-brand-primary)] p-3 text-[var(--ui-glyph-on-brand-primary)]">
+      {/* No chat panel here — the App Shell's Chat slot is optional, so the
+          same scaffold serves an ordinary two-column console screen. */}
+      <AppShellChat className="h-full">
+        <AppShellChatSidebar className="w-52 flex-col gap-1 bg-[var(--ui-background-brand-primary)] p-3 text-[var(--ui-glyph-on-brand-primary)]">
           <div className="px-2 pb-3 text-sm font-semibold">Acronis</div>
           {nav.map((item, i) => (
             <div
@@ -39,12 +41,12 @@ export function DashboardDemo() {
               {item}
             </div>
           ))}
-        </AppShellSidebar>
-        <AppShellBody>
-          <AppShellHeader>
+        </AppShellChatSidebar>
+        <AppShellChatContent>
+          <AppShellChatContentHeader>
             <span className="text-sm font-semibold">Dashboard</span>
-          </AppShellHeader>
-          <AppShellMain className="p-6">
+          </AppShellChatContentHeader>
+          <AppShellChatContentBody>
             <PageHeader>
               <PageHeaderRow>
                 <PageHeaderTitle>Overview</PageHeaderTitle>
@@ -55,9 +57,9 @@ export function DashboardDemo() {
                 <Widget key={w} title={w} />
               ))}
             </Grid>
-          </AppShellMain>
-        </AppShellBody>
-      </AppShell>
+          </AppShellChatContentBody>
+        </AppShellChatContent>
+      </AppShellChat>
     </div>
   );
 }

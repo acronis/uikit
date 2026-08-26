@@ -59,6 +59,27 @@ Each `.figma.tsx` carries a status comment in its header:
 | `NEEDS_FIGMA_URL` | Props are mapped correctly; the Figma node URL is a placeholder.   |
 | `COMPLETE`        | Fully connected — node URL and all property mappings are verified. |
 
+There is deliberately **no separate status for "no design is expected"**. Two
+cases fall outside the table above, and both are recorded in prose rather than
+by inventing a marker:
+
+- **Intentionally undesigned primitives** (`field`, `form`, `number-field`,
+  `grid`) keep `NEEDS_FIGMA_URL` as the closest available marker, but their
+  header comment must state explicitly that no Figma node exists, none is
+  expected, and the placeholder is not a TODO. Don't read `NEEDS_FIGMA_URL` on
+  these as pending work.
+- **No `.figma.tsx` file at all** is the correct state for an inner primitive
+  whose design lives on its public wrapper's node — e.g. `input`'s `InputBox`
+  is the bare box inside `InputText`, and `InputText` carries the design, the
+  spec, and the Code Connect entry. Adding a second connection for the inner
+  primitive would point two entries at one Figma node. Note the reason in the
+  component's own source comment instead.
+
+A `COMPLETE` status also asserts the node lives in the **shared** ui-react
+design-system file. A mapping to a product-specific file (e.g.
+`description-list` → the Cyber-Compliance "Service status" list) is not a
+design-system connection and must not be marked `COMPLETE`.
+
 ## Completing a connection
 
 1. **Get the Figma node URL.** Open the Acronis Design System in Figma,

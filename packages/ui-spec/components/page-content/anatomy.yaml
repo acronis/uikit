@@ -8,7 +8,7 @@ root:
   element: div
   description: >-
     The padded content region for a page body. Renders a <div> (not <main>) so it
-    nests inside AppShellMain without a duplicate landmark.
+    nests inside AppShellChatContentBody without a duplicate landmark.
 
 parts:
   - id: page-content

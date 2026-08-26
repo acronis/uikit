@@ -130,7 +130,7 @@ a `stateMachine`, and a `figma` node. Validated by `__tests__/screens.test.ts`
 against `schema/screen.schema.json`: schema, component refs resolve in ui-react,
 grammar-rule refs resolve, the `pattern` slug exists, and the state machine has
 one initial + all-reachable states. First example: `screens/protection-dashboard`
-(the App Shell with-secondary screen, captured via its `story` id). **Phase 2** of
+(the App Shell Chat default screen, captured via its `story` id). **Phase 2** of
 the kit-consistency proposal. See [`screens/README.md`](./screens/README.md).
 
 **Phase 3 — the rendered screen audit** (`screens/audit/`,

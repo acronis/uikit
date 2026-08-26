@@ -9,10 +9,8 @@ export {
 export * from './components/ui/accordion';
 export * from './components/ui/accordion-container';
 export * from './components/ui/alert';
-export * from './components/ui/app-shell';
 export * from './components/ui/app-shell-chat';
 export * from './components/ui/area-chart';
-export * from './components/ui/auth-layout';
 export * from './components/ui/avatar';
 export * from './components/ui/bar-chart';
 export * from './components/ui/breadcrumb';
@@ -30,7 +28,6 @@ export * from './components/ui/chart-state';
 export * from './components/ui/chart-widget';
 export * from './components/ui/checkbox';
 export * from './components/ui/chip';
-export * from './components/ui/collapsible';
 export * from './components/ui/combobox';
 export * from './components/ui/composed-chart';
 export * from './components/ui/confidence-cone';

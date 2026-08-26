@@ -18,7 +18,8 @@ export const Default: Story = {
       <PageContent className="bg-background">
         <h1 className="text-lg font-semibold">Page content</h1>
         <p className="mt-2 text-sm text-[var(--ui-text-on-surface-secondary)]">
-          The padded gutter region for a page body — sits inside AppShellMain.
+          The padded gutter region for a page body — sits inside the App Shell
+          content body.
         </p>
       </PageContent>
     </div>
