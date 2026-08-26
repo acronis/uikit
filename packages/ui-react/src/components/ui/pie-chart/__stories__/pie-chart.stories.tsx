@@ -328,9 +328,9 @@ export const LabelsWithLeaderLines: Story = {
   },
 };
 
-// Per-slice overrides: one slice recoloured, one with its label dropped, one
-// reading its raw value while the rest show a percentage. The hidden slice
-// loses its leader line too, rather than keeping a line that points at nothing.
+// Per-slice overrides: one slice's label hidden, one reading its raw value
+// while the rest show a percentage. The hidden slice loses its leader line too,
+// rather than keeping a line that points at nothing.
 export const SliceOverrides: Story = {
   args: {
     shape: 'pie',
@@ -339,7 +339,6 @@ export const SliceOverrides: Story = {
     labelFormat: 'percent',
     className: 'w-[500px]',
     sliceSettings: {
-      Firefox: { color: 'var(--ui-background-status-strong-neutral)' },
       Edge: { hideLabel: true },
       Chrome: { labelFormat: 'name-value' },
     },

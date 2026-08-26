@@ -601,6 +601,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
         data-shape={shape}
         className={cn(
           'flex flex-row items-center gap-4',
+          !showLegend && 'justify-center',
           pieChartVariants({ shape }),
           className
         )}

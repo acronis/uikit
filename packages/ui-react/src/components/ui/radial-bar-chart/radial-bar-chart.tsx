@@ -778,6 +778,8 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
       }));
     }, [resolvedConfigForLegend, isMultiMetric, legendKeys, data, nameKey]);
 
+    const hasLegend = showLegend && !isSegmented && !!resolvedConfigForLegend;
+
     // The built-in tooltip reading, which each mapping composes differently: a
     // segmented ring rebuilds it from the data row, multi-metric renames the
     // header after the band, and the default mapping reads the hovered arc.
@@ -891,7 +893,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
     return (
       <div
         ref={ref}
-        className={cn('flex flex-row items-center gap-4', className)}
+        className={cn('flex flex-row items-center gap-4', !hasLegend && 'justify-center', className)}
         {...props}
       >
         <div className={cn(chartDivSize, 'shrink-0')}>
