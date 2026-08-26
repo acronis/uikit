@@ -175,22 +175,6 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
-  tabs: {
-    props: 'defaultValue="account"',
-    extraImports: [
-      "import { TabsList, TabsTrigger, TabsContent } from '../tabs';",
-    ],
-    sample: [
-      '',
-      '      <TabsList className="grid w-[400px] grid-cols-2">',
-      '        <TabsTrigger value="account">Account</TabsTrigger>',
-      '        <TabsTrigger value="password">Password</TabsTrigger>',
-      '      </TabsList>',
-      '      <TabsContent value="account">Account settings</TabsContent>',
-      '      <TabsContent value="password">Password settings</TabsContent>',
-      '    ',
-    ].join('\n'),
-  },
   table: {
     extraImports: [
       "import { TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption } from '../table';",
@@ -578,24 +562,9 @@ const RENDER: Record<string, RenderHint> = {
     // isCollapsable states: false / true-expanded / true-collapsed).
     skip: true,
   },
-  slider: {
-    // Needs a bounded-width wrapper to render meaningfully. VR is covered by the
-    // hand-written stories (Default / Range / Disabled).
-    skip: true,
-  },
-  'toggle-group': {
-    // A composition needing ToggleGroupItem children. VR is covered by the
-    // hand-written stories (Default / StandaloneToggle / Disabled).
-    skip: true,
-  },
   pagination: {
     // A composition needing content/item/link children. VR is covered by the
     // hand-written story (Default).
-    skip: true,
-  },
-  stack: {
-    // A layout primitive — needs child boxes to render meaningfully. VR is covered
-    // by the hand-written stories (Vertical / Horizontal).
     skip: true,
   },
   grid: {

@@ -8,7 +8,7 @@
   `goToSlideLabel`) — dots are never bare, unlabeled `<div>`s. The active dot
   carries `aria-current="true"`. Dots have their own `focus-visible` ring
   (`--ui-focus-primary`), matching the kit's other raw-`<button>` controls
-  (e.g. `Pagination`, `Tabs`).
+  (e.g. `Pagination`).
 - CarouselDialog is a plain layout container — no landmark role of its own.
   It's meant to live inside `DialogFooterCarousel` inside a dialog (e.g.
   `DialogWelcome`), which owns the `role="dialog"` / focus-trap semantics.

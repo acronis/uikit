@@ -1,7 +1,0 @@
-spec_version: '1.0'
-component: Stack
-
-# Stack has no tokens — it's a layout-only primitive (flex utilities, no color).
-source: '@acronis-platform/tokens-pd'
-
-tokens: []
