@@ -21,7 +21,6 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Separator,
   useFilterSearchFilters,
 } from '@acronis-platform/ui-react';
 
@@ -74,7 +73,7 @@ function DeviceFilterFields() {
     <>
       <SelectField filterKey="type" label="Type" items={TYPE_ITEMS} />
       <SelectField filterKey="pricingMode" label="Pricing mode" items={PRICING_ITEMS} />
-      <Separator />
+      <div role="separator" className="h-px w-full shrink-0 bg-border" />
       <SelectField filterKey="status" label="Status" items={STATUS_ITEMS} />
     </>
   );

@@ -62,7 +62,7 @@ function StatusField() {
 }
 ```
 
-Group fields with a `Separator` between them as a layout convention.
+Group fields with a divider between them as a layout convention.
 
 ## Parts
 

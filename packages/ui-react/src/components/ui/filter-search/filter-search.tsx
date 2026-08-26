@@ -114,7 +114,7 @@ export interface FilterSearchFiltersProps extends Omit<
   /**
    * Filter field children rendered inside the popover form. Plain children —
    * wire each field to the draft via `useFilterSearchFilters`. Group fields with
-   * a `Separator` as a layout convention if desired.
+   * a divider as a layout convention if desired.
    */
   children?: React.ReactNode;
   /** Additional classes merged onto the trigger button. */

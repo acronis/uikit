@@ -583,11 +583,6 @@ const RENDER: Record<string, RenderHint> = {
     // hand-written stories (Default / Range / Disabled).
     skip: true,
   },
-  'number-field': {
-    // A composition needing Group/Input/stepper children. VR is covered by the
-    // hand-written stories (Default / Disabled).
-    skip: true,
-  },
   'toggle-group': {
     // A composition needing ToggleGroupItem children. VR is covered by the
     // hand-written stories (Default / StandaloneToggle / Disabled).
@@ -650,10 +645,6 @@ const RENDER: Record<string, RenderHint> = {
     // anatomy.yaml). VR is covered by the hand-written stories (Default /
     // WithDescription / WithLink).
     skip: true,
-  },
-  'progress-circle': {
-    // Driven by `value`; render a representative filled ring (per size grid).
-    props: 'value={75} showValue',
   },
   'description-list': {
     extraImports: [

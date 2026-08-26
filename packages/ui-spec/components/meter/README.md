@@ -2,8 +2,7 @@
 
 A labelled proportional bar for a value within a known range — a fractional
 value / share. Built on Base UI's `Meter` (`role="meter"`, like the HTML
-`<meter>` element), as opposed to `Progress` / `ProgressCircle`, which track a
-task over time. One row: label + `value · %` over a track bar, with a hover
+`<meter>` element) — a share, not task progress over time. One row: label + `value · %` over a track bar, with a hover
 tooltip; stack several to build a ranked breakdown (a "bar list").
 
 > **Design-pending v1.** No chart token tier yet, so the fill color is
@@ -19,8 +18,7 @@ tooltip; stack several to build a ranked breakdown (a "bar list").
 
 ## When not to use
 
-- Task progress over time (uploads, loading) — use
-  [`Progress`](/components/progress) / `ProgressCircle`.
+- Task progress over time (uploads, loading).
 - Many categories compared without a part-to-whole reading — a bar chart.
 
 ## Example

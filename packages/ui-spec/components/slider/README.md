@@ -11,7 +11,7 @@ dragging. Built on Base UI's Slider.
 
 ## When not to use
 
-- Precise numeric entry — use a `NumberField` / `InputText`.
+- Precise numeric entry — use an `InputText`.
 - A small set of discrete choices — use `RadioGroup` or `ToggleGroup`.
 
 ## Parts

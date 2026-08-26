@@ -21,7 +21,6 @@ An indeterminate loading indicator — a spinning ring in four sizes.
 ## When not to use
 
 - For an app-facing standalone loading state — use `Loading`.
-- For determinate progress — use `Progress`.
 - For content placeholders — use a skeleton.
 
 ## Example

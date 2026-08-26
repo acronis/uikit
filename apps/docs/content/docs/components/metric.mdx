@@ -41,7 +41,7 @@ Use `trend` to render a `TrendIndicator` automatically. Sentiment follows
 direction: `up` → positive (green), `down` → negative (red), `stable` → neutral.
 
 Compose with `Card` for a standalone dashboard tile; drop a chart, `Meter`
-breakdown, `Separator`, or insight line into `children` to build the body:
+breakdown, a divider, or an insight line into `children` to build the body:
 
 ```tsx
 <Card className="p-4">
@@ -53,7 +53,6 @@ breakdown, `Separator`, or insight line into `children` to build the body:
     trendValue="1 this week"
   >
     <Meter label="Healthy" value={46} max={54} color="..." showTooltip={false} />
-    <Separator className="my-3" />
     <p>+3 customers predicted at-risk within 30 days.</p>
   </Metric>
 </Card>

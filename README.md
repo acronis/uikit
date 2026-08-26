@@ -154,11 +154,11 @@ The library covers layout (`AppShellChat`, `Card`,
 `Tabs`, `Pagination`, `SidebarPrimary`, `SidebarSecondary`, `Link`), forms
 (`InputText`, `InputSearch`, `InputTextArea`, `InputSelect`,
 `InputDatePicker`, `InputPassword`, `InputOTP`, `Select`,
-`Checkbox`, `Radio`, `Switch`, `Slider`, `NumberField`, `CalendarPanel`,
+`Checkbox`, `Radio`, `Switch`, `Slider`, `CalendarPanel`,
 `DateRangePicker`, `Field`, `Label`), buttons (`Button`, `ButtonIcon`,
 `ButtonMenu`), overlays (`Dialog`, `Sheet`, `Popover`, `Tooltip`,
-`DropdownMenu`), feedback (`Alert`, `Tag`/`Badge`, `Chip`, `Progress`,
-`ProgressCircle`, `Loading`, `Skeleton`, `Toast`, `Empty`), data display
+`DropdownMenu`), feedback (`Alert`, `Tag`/`Badge`, `Chip`, `Loading`,
+`Skeleton`, `Toast`, `Empty`), data display
 (`Table`, `DataTable`, `Avatar`, `DescriptionList`, `AccordionContainer`,
 `Collapsible`, `Timeline`, `ToggleGroup`), and data visualization (`Chart` and
 per-type charts — `AreaChart`, `BarChart`, `LineChart`, `PieChart`,

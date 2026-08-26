@@ -22,7 +22,6 @@ the summary props — the component cannot derive one from the other.
 ## When not to use
 
 - For a single step in isolation — that is `StepperItem`.
-- To show progress as one quantity — use `Progress` or `ProgressCircle`.
 - For a chronological log of things that already happened — use `Timeline`.
 
 ## Usage

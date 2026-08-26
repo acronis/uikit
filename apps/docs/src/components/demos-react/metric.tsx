@@ -5,7 +5,6 @@ import {
   Metric,
   Tag,
   Meter,
-  Separator,
 } from '@acronis-platform/ui-react';
 import { ChartPieIcon } from '@acronis-platform/icons-react/stroke-mono';
 import { AcronisAiMultiIcon } from '@acronis-platform/icons-react/solid-multi';
@@ -66,7 +65,7 @@ export function MetricDemo() {
               showTooltip={false}
             />
           </div>
-          <Separator className="my-3" />
+          <div role="separator" className="my-3 h-px w-full shrink-0 bg-border" />
           <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
             <AcronisAiMultiIcon size={16} aria-hidden className="mt-0.5 shrink-0" />
             +3 customers predicted at-risk within 30 days — act before renewal.

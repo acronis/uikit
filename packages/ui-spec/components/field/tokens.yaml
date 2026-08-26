@@ -20,7 +20,7 @@ tokens:
     description: Background of the centered separator label (bg-background).
   - name: --ui-border-on-surface-border
     affects: field-separator
-    description: The separator rule (via the Separator component).
+    description: The separator rule.
   - name: --ui-background-brand-secondary
     affects: field-description
     description: Hover color for links inside a description.

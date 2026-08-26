@@ -18,8 +18,8 @@ table below — each with an optional 14px mini-header and an optional divider.
 
 - A card with a single, undifferentiated body. Put the content straight in
   `CardContent` — a lone section adds a wrapper and no meaning.
-- As a page-level section. This is card chrome; use `PageContent` / `Section`
-  for page structure.
+- As a page-level section. This is card chrome; use `Section` for page
+  structure.
 - As a standalone surface. `CardSection` paints no background of its own and
   relies on the enclosing card's surface and inset rhythm.
 

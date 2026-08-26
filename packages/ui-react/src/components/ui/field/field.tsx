@@ -6,7 +6,6 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 import { labelClassName } from '../label';
-import { Separator } from '../separator';
 
 // Ported from `@acronis-platform/shadcn-uikit`'s `field`
 // (packages/ui-legacy/src/components/ui/field.tsx), rebuilt on Base UI's `Field`
@@ -216,7 +215,11 @@ function FieldSeparator({ children, className, ...props }: FieldSeparatorProps) 
       className={cn('relative -my-2 h-5 text-sm', className)}
       {...props}
     >
-      <Separator className="absolute inset-0 top-1/2" />
+      <div
+        role="separator"
+        aria-orientation="horizontal"
+        className="absolute inset-0 top-1/2 h-px w-full shrink-0 bg-border"
+      />
       {children && (
         <span
           data-slot="field-separator-content"
