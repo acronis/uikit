@@ -138,6 +138,42 @@ describe('InputSelect', () => {
     );
   });
 
+  // The other half of `InputSelectRowContent`'s contract (see
+  // input-select-list.test.tsx): its checkbox glyph only renders as checked when
+  // the host row carries `group/item` *and* `data-selected`. `InputSelectItem` is
+  // the in-repo host, so assert it supplies both — and only `group/item` while
+  // unselected.
+  it('scopes the multiple-mode checkbox glyph with group/item + data-selected', async () => {
+    render(
+      <InputSelect multiple>
+        <InputSelectTrigger aria-label="Fruit">
+          <InputSelectValue placeholder="Select options" />
+        </InputSelectTrigger>
+        <InputSelectContent>
+          <InputSelectItem value="apple">Apple</InputSelectItem>
+          <InputSelectItem value="banana">Banana</InputSelectItem>
+        </InputSelectContent>
+      </InputSelect>
+    );
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    await userEvent.click(screen.getByRole('option', { name: 'Apple' }));
+
+    const selected = screen.getByRole('option', { name: 'Apple' });
+    const unselected = screen.getByRole('option', { name: 'Banana' });
+    expect(selected).toHaveClass('group/item');
+    expect(unselected).toHaveClass('group/item');
+    expect(
+      selected.querySelector('span[aria-hidden="true"]')?.closest(
+        '.group\\/item[data-selected]'
+      )
+    ).toBe(selected);
+    expect(
+      unselected
+        .querySelector('span[aria-hidden="true"]')
+        ?.closest('.group\\/item[data-selected]')
+    ).toBeNull();
+  });
+
   it('renders a section with a group label and an in-dropdown search', async () => {
     render(
       <InputSelect>

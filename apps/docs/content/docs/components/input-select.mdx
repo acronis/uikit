@@ -147,7 +147,10 @@ The other parts (`InputSelect`, `InputSelectField`, `InputSelectLabel`,
 `InputSelectTrigger`, `InputSelectValue`, `InputSelectContent`,
 `InputSelectSearch`, `InputSelectGroup`, `InputSelectSection`,
 `InputSelectSectionLabel`, `InputSelectDescription`, `InputSelectError`) extend
-the corresponding Base UI `Select` primitive props. `InputSelect` accepts
+the corresponding Base UI `Select` primitive props — except that
+`InputSelectSection` and `InputSelectSectionLabel` omit `render`, since
+overriding it would silently drop the section's base styling. `InputSelect`
+accepts
 `items`, `defaultValue` / `value`, and Base UI `Select` root props;
 `InputSelectContent` adds `side` / `align` for positioning. See the
 [Base UI Select docs](https://base-ui.com/react/components/select) for the full

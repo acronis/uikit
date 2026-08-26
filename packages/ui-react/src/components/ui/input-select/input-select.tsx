@@ -3,14 +3,19 @@ import { Select as SelectPrimitive } from '@base-ui/react/select';
 import {
   CheckIcon,
   ChevronDownIcon,
-  ChevronRightIcon,
   CircleWarningIcon,
   InboxIcon,
-  MagnifierIcon,
 } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
 import { usePortalContainer } from '@/lib/portal-container';
+import {
+  InputSelectExpander,
+  InputSelectRowContent,
+  InputSelectSearchField,
+  InputSelectSectionLabelView,
+  InputSelectSectionView,
+} from './input-select-list';
 
 // The next-gen select, themed by the dedicated `--ui-input-select-*` tier (global /
 // normal / error / dropdown). It composes Base UI `Select` and adds the field
@@ -253,90 +258,66 @@ const InputSelectSearch = React.forwardRef<
   }, [controlled, value, setQuery]);
 
   return (
-    <div className="flex items-center gap-[var(--ui-input-select-dropdown-dropdown-search-gap)] px-[var(--ui-input-select-dropdown-dropdown-search-padding-x)] py-[var(--ui-input-select-dropdown-dropdown-search-padding-y)]">
-      <MagnifierIcon
-        size={16}
-        className="shrink-0 text-[var(--ui-glyph-on-surface-primary)]"
-      />
-      <input
-        ref={ref}
-        type="search"
-        value={value ?? filter?.query ?? ''}
-        onChange={(event) => {
-          onChange?.(event);
-          // Uncontrolled: the input's value *is* the filter query, so write it
-          // straight through. Controlled: the effect above syncs the filter to
-          // the consumer's `value` once it re-renders, avoiding a flash of raw
-          // typed text when the consumer debounces or transforms the value.
-          if (!controlled) {
-            filter?.setQuery(event.currentTarget.value);
-          }
-        }}
-        // Base UI Select's typeahead would consume printable keys before they
-        // reach this input, so stop those from bubbling — but let navigation and
-        // selection keys (Arrow*/Home/End/Enter/Escape, all multi-char `key`
-        // names) through so the user can move from the search box into the
-        // filtered list and pick a result with the keyboard.
-        onKeyDown={(event) => {
-          onKeyDown?.(event);
-          if (event.key.length === 1) {
-            event.stopPropagation();
-          }
-        }}
-        className={cn(
-          'min-w-0 flex-1 border-0 bg-transparent p-0 text-sm leading-6 text-[var(--ui-input-select-dropdown-dropdown-search-label-color-value)] outline-none placeholder:text-[var(--ui-input-select-dropdown-dropdown-search-label-color-placeholder)] [&::-webkit-search-cancel-button]:appearance-none',
-          className
-        )}
-        {...props}
-      />
-    </div>
+    <InputSelectSearchField
+      ref={ref}
+      value={value ?? filter?.query ?? ''}
+      onChange={(event) => {
+        onChange?.(event);
+        // Uncontrolled: the input's value *is* the filter query, so write it
+        // straight through. Controlled: the effect above syncs the filter to
+        // the consumer's `value` once it re-renders, avoiding a flash of raw
+        // typed text when the consumer debounces or transforms the value.
+        if (!controlled) {
+          filter?.setQuery(event.currentTarget.value);
+        }
+      }}
+      // Base UI Select's typeahead would consume printable keys before they
+      // reach this input, so stop those from bubbling — but let navigation and
+      // selection keys (Arrow*/Home/End/Enter/Escape, all multi-char `key`
+      // names) through so the user can move from the search box into the
+      // filtered list and pick a result with the keyboard.
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        if (event.key.length === 1) {
+          event.stopPropagation();
+        }
+      }}
+      className={className}
+      {...props}
+    />
   );
 });
 InputSelectSearch.displayName = 'InputSelectSearch';
 
-/** A section (group) of items with an optional header. Divided by a top border. */
+/**
+ * A section (group) of items with an optional header. Divided by a top border.
+ *
+ * `render` is not part of the public surface: the section's base classes live on
+ * the view this renders, so letting a caller replace it would silently drop them.
+ * The type omits `render` and the prop spread cannot overwrite it.
+ */
 const InputSelectSection = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Group>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Group>
->(({ className, ...props }, ref) => (
-  <SelectPrimitive.Group
-    ref={ref}
-    className={cn(
-      'flex flex-col border-t border-[var(--ui-input-select-dropdown-section-container-border-color)] py-[var(--ui-input-select-dropdown-section-container-padding-y)] first:border-t-0',
-      className
-    )}
-    {...props}
-  />
+  Omit<React.ComponentPropsWithoutRef<typeof SelectPrimitive.Group>, 'render'>
+>((props, ref) => (
+  // Base UI resolves its own `className` prop (including the function form) and
+  // merges it onto the rendered view, which owns the section's base classes.
+  <SelectPrimitive.Group ref={ref} {...props} render={<InputSelectSectionView />} />
 ));
 InputSelectSection.displayName = 'InputSelectSection';
 
+/** The section header. `render` is omitted for the same reason as on `InputSelectSection`. */
 const InputSelectSectionLabel = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.GroupLabel>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.GroupLabel>
->(({ className, ...props }, ref) => (
+  Omit<React.ComponentPropsWithoutRef<typeof SelectPrimitive.GroupLabel>, 'render'>
+>((props, ref) => (
   <SelectPrimitive.GroupLabel
     ref={ref}
-    className={cn(
-      'px-[var(--ui-input-select-dropdown-section-container-header-padding-x)] py-[var(--ui-input-select-dropdown-section-container-header-padding-y)] text-sm font-semibold leading-6 text-[var(--ui-input-select-dropdown-section-label-group-color)]',
-      className
-    )}
     {...props}
+    render={<InputSelectSectionLabelView />}
   />
 ));
 InputSelectSectionLabel.displayName = 'InputSelectSectionLabel';
-
-/**
- * Width (px) of the leading nesting spacer for a 1-based tree `indent` level, per
- * the Figma "InputSelectDropdownTenants" spec: level 1 reserves 16 px (enough for a
- * single chevron) and each deeper level adds 24 px — 16 / 40 / 64 for levels 1–3.
- * The tenant icon therefore starts at the same x-position whether or not the row is
- * expandable, because the chevron lives right-aligned inside this reserved space.
- */
-const NESTING_BASE = 16;
-const NESTING_STEP = 24;
-function nestingWidth(indent: number): number {
-  return NESTING_BASE + (indent - 1) * NESTING_STEP;
-}
 
 export interface InputSelectItemProps
   extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> {
@@ -380,97 +361,27 @@ const InputSelectItem = React.forwardRef<
       )}
       {...props}
     >
-      {multiple && (
-        <span
-          aria-hidden="true"
-          className="flex size-[var(--ui-checkbox-global-box-size)] shrink-0 items-center justify-center rounded-[var(--ui-checkbox-global-box-border-radius)] border-[length:var(--ui-checkbox-global-box-border-width)] border-[var(--ui-checkbox-unchecked-box-border-color-idle)] bg-[var(--ui-checkbox-unchecked-box-color-idle)] text-transparent group-data-[selected]/item:border-[var(--ui-checkbox-checked-box-border-color-idle)] group-data-[selected]/item:bg-[var(--ui-checkbox-checked-box-color-idle)] group-data-[selected]/item:text-[var(--ui-checkbox-checked-icon-color-idle)]"
-        >
-          <CheckIcon size={16} />
-        </span>
-      )}
-      {typeof indent === 'number' && indent > 0 && (
-        <span
-          aria-hidden="true"
-          className="size-4 shrink-0"
-          style={{ minWidth: nestingWidth(indent) }}
-        />
-      )}
-      {icon && (
-        <span className="flex shrink-0 items-center text-[var(--ui-input-select-dropdown-item-global-icon-tenant)]">
-          {icon}
-        </span>
-      )}
-      <SelectPrimitive.ItemText className="min-w-0 flex-1 truncate">
-        {children}
-      </SelectPrimitive.ItemText>
-      {!multiple && (
-        <SelectPrimitive.ItemIndicator className="flex shrink-0 items-center text-[var(--ui-input-select-dropdown-item-global-icon-checked)]">
-          <CheckIcon size={16} />
-        </SelectPrimitive.ItemIndicator>
-      )}
+      <InputSelectRowContent
+        multiple={multiple}
+        indent={indent}
+        icon={icon}
+        labelSlot={
+          <SelectPrimitive.ItemText className="min-w-0 flex-1 truncate">
+            {children}
+          </SelectPrimitive.ItemText>
+        }
+        trailingSlot={
+          !multiple && (
+            <SelectPrimitive.ItemIndicator className="flex shrink-0 items-center text-[var(--ui-input-select-dropdown-item-global-icon-checked)]">
+              <CheckIcon size={16} />
+            </SelectPrimitive.ItemIndicator>
+          )
+        }
+      />
     </SelectPrimitive.Item>
   );
 });
 InputSelectItem.displayName = 'InputSelectItem';
-
-export interface InputSelectExpanderProps
-  extends React.ComponentPropsWithoutRef<'button'> {
-  /** Whether the group is currently expanded. */
-  expanded: boolean;
-  /** Called when the user clicks the row to toggle expand/collapse. */
-  onToggle: () => void;
-  /** Optional leading icon rendered after the chevron. */
-  icon?: React.ReactNode;
-  /** 1-based nesting level (0 / omitted = level 1). Levels 1–3 reserve 16 / 40 / 64 px; the chevron sits right-aligned inside. */
-  indent?: number;
-}
-
-/**
- * A non-selectable row that acts as an expand/collapse toggle for a tree group.
- * Visually identical to `InputSelectItem` but is **not** a `SelectPrimitive.Item`,
- * so clicking it won't set the select value.
- *
- * When collapsing a group, keep its child `InputSelectItem`s mounted and toggle
- * their `hidden` prop rather than unmounting them: Base UI's Select tracks the
- * selection by list index, so removing the selected row from the DOM makes a
- * sibling inherit its index and render a phantom check. `hidden` rows keep the
- * indices stable and are skipped by keyboard navigation.
- */
-const InputSelectExpander = React.forwardRef<
-  HTMLButtonElement,
-  InputSelectExpanderProps
->(({ className, children, expanded, onToggle, icon, indent, ...props }, ref) => (
-  <button
-    ref={ref}
-    type="button"
-    onClick={onToggle}
-    aria-expanded={expanded}
-    className={cn(
-      'group/item relative flex w-full cursor-default items-center gap-[var(--ui-input-select-dropdown-item-global-container-gap)] px-[var(--ui-input-select-dropdown-item-global-container-padding-x)] py-[var(--ui-input-select-dropdown-item-global-container-padding-y)] text-start leading-6 text-[var(--ui-input-select-dropdown-item-global-label-color)] outline-none select-none',
-      'bg-[var(--ui-input-select-dropdown-item-unselected-container-color-idle)] hover:bg-[var(--ui-input-select-dropdown-item-unselected-container-color-hover)]',
-      className
-    )}
-    {...props}
-  >
-    <span
-      aria-hidden="true"
-      className="flex shrink-0 items-center justify-end text-[var(--ui-input-select-dropdown-item-global-icon-collapse)]"
-      style={{
-        minWidth:
-          typeof indent === 'number' && indent > 0 ? nestingWidth(indent) : NESTING_BASE,
-      }}
-    >
-      {expanded ? <ChevronDownIcon size={16} /> : <ChevronRightIcon size={16} />}
-    </span>
-    {icon && (
-      <span className="flex shrink-0 items-center text-[var(--ui-input-select-dropdown-item-global-icon-tenant)]">
-        {icon}
-      </span>
-    )}
-    <span className="min-w-0 flex-1 truncate">{children}</span>
-  </button>
-));
-InputSelectExpander.displayName = 'InputSelectExpander';
 
 const InputSelectDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -554,3 +465,4 @@ export {
   InputSelectStatus,
   useInputSelectFilter,
 };
+export type { InputSelectExpanderProps } from './input-select-list';
