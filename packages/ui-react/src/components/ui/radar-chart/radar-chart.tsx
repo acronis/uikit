@@ -11,7 +11,6 @@ import {
   RadarChart as RechartsRadarChart,
   type AxisDomainItem,
 } from 'recharts';
-
 import { cn } from '@/lib/utils';
 import {
   ChartContainer,
@@ -232,11 +231,7 @@ export interface RadarChartProps
   angleAxisLineType?: 'polygon' | 'circle';
   /** Draw a tick line from the axis line to each spoke label. Defaults to `true`. */
   angleTickLine?: boolean;
-  /**
-   * Distance from the web to the spoke labels, in px (recharts' default is 8).
-   * Left alone, `showLabels` widens it so a vertex's value can't land on its own
-   * category label.
-   */
+  /** Distance from each polygon vertex to its outer category label, in px. Defaults to `4`. */
   angleTickSize?: number;
   /**
    * Render the value scale — a radial axis of ticks from the centre outward, so
@@ -312,7 +307,11 @@ export interface RadarChartProps
    * which separates the series where they all bottom out.
    */
   innerRadius?: number | string;
-  /** Outer radius of the web, in px or a percentage of the available radius. Defaults to `80%`. */
+  /**
+   * Outer radius of the web, in px or a percentage of the available radius.
+   * Defaults to `78px`, matching the Figma radar geometry. The legend and labels
+   * do not change the radius.
+   */
   outerRadius?: number | string;
   /**
    * Plot-area margin, in px. Omit it entirely to use recharts' default (5 on
@@ -322,8 +321,6 @@ export interface RadarChartProps
   margin?: { top?: number; right?: number; bottom?: number; left?: number };
   showTooltip?: boolean;
   showLegend?: boolean;
-  /** Which side of the chart the legend sits on. Defaults to `bottom`. */
-  legendPosition?: 'top' | 'bottom';
   /**
    * Replace the default tooltip. Pass a configured `ChartTooltipContent`
    * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
@@ -334,11 +331,6 @@ export interface RadarChartProps
   /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
   labelPosition?: CartesianLabelPosition;
 }
-
-// Distance from the polygon to the category tick text when value labels are on
-// (recharts' default is 8). Has to clear a CHART_LABEL_FONT_SIZE line plus the
-// LabelList's own 5px offset, or the topmost vertex's value overlaps its tick.
-const RADAR_LABEL_TICK_SIZE = 30;
 
 /**
  * One series' `<Radar>` (and its value labels).
@@ -432,11 +424,10 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       startAngle,
       endAngle,
       innerRadius,
-      outerRadius,
+      outerRadius: outerRadiusProp,
       margin,
       showTooltip = true,
       showLegend = true,
-      legendPosition = 'bottom',
       tooltipContent,
       animate,
       animationDuration,
@@ -474,7 +465,7 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       dotRadius,
       activeDot,
     };
-
+    const outerRadius = outerRadiusProp ?? 78;
     return (
       <div
         ref={ref}
@@ -491,7 +482,12 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
           // near-black (or recharts' raw `#ccc`) and vanish in dark mode. This
           // is a shared-primitives gap (a Chart task); worked around locally, not
           // by editing chart.tsx.
-          className="size-full [&_.recharts-polar-angle-axis-tick_text]:fill-[var(--ui-text-on-surface-secondary)]! [&_.recharts-polar-angle-axis-tick_text]:text-xs [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-[var(--ui-border-on-surface-divider)]! [&_.recharts-polar-radius-axis-line]:stroke-[var(--ui-border-on-surface-divider)]! [&_.recharts-polar-radius-axis-tick_text]:fill-[var(--ui-text-on-surface-secondary)]! [&_.recharts-polar-radius-axis-tick_text]:text-xs"
+          className={cn(
+            showLegend ? 'h-[219px]' : 'h-[187px]',
+            showLegend && '[&_.recharts-surface]:!h-[187px]',
+            'w-full',
+            "[&_.recharts-polar-angle-axis-tick_text]:fill-[var(--ui-text-on-surface-secondary)]! [&_.recharts-polar-angle-axis-tick_text]:text-xs [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-[var(--ui-border-on-surface-divider)]! [&_.recharts-polar-radius-axis-line]:stroke-[var(--ui-border-on-surface-divider)]! [&_.recharts-polar-radius-axis-tick_text]:fill-[var(--ui-text-on-surface-secondary)]! [&_.recharts-polar-radius-axis-tick_text]:text-xs"
+          )}
         >
           <RechartsRadarChart
             data={data as readonly unknown[]}
@@ -513,22 +509,11 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
               dataKey={angleKey}
               orientation={angleAxisOrientation}
               axisLineType={angleAxisLineType}
-              // `showAngleAxis` hides the chrome rather than dropping the axis:
-              // the angle axis is also what maps a row to its category name, so
-              // removing it would leave the tooltip labelling rows by index.
               tick={showAngleAxis}
               axisLine={showAngleAxis && angleAxisLine}
               tickLine={showAngleAxis && angleTickLine}
-              // Push the category ticks out when value labels are on. recharts
-              // gives a Radar's label list a *cartesian* viewBox (width/height 0
-              // at the vertex), so `top` offsets straight up in screen space —
-              // at the topmost vertex the value lands on its own category tick.
-              // The tick text is drawn at `outerRadius + tickSize`, so this is
-              // the only lever that adds *absolute* clearance: shrinking
-              // outerRadius scales the tick ring down with the polygon and keeps
-              // the overlap.
               tickSize={
-                angleTickSize ?? (showLabels ? RADAR_LABEL_TICK_SIZE : undefined)
+                angleTickSize ?? 4
               }
             />
             {hasRadiusAxis && (
@@ -544,8 +529,8 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
             )}
             {showLegend && (
               <ChartLegend
-                verticalAlign={legendPosition}
-                content={<ChartLegendContent verticalAlign={legendPosition} />}
+                verticalAlign="bottom"
+                content={<ChartLegendContent verticalAlign="bottom" />}
               />
             )}
             {dataKeys.map((key) =>

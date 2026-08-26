@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
 import {
   PolarAngleAxis,
   PolarGrid,
@@ -7,6 +8,8 @@ import {
 } from 'recharts';
 
 import { RadarChart } from '../radar-chart';
+import { ButtonIcon } from '../../button-icon';
+import { ChartWidget } from '../../chart-widget';
 import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
@@ -35,22 +38,25 @@ const config = {
   carol: { label: 'Carol' },
 } satisfies ChartConfig;
 
+const widgetData = [
+  { subject: 'Math', desktop: 120, mobile: 110 },
+  { subject: 'Chinese', desktop: 98, mobile: 130 },
+  { subject: 'English', desktop: 86, mobile: 140 },
+  { subject: 'Geography', desktop: 99, mobile: 100 },
+  { subject: 'Physics', desktop: 85, mobile: 90 },
+  { subject: 'History', desktop: 65, mobile: 110 },
+];
+
+const widgetConfig = {
+  desktop: { label: 'Desktop' },
+  mobile: { label: 'Mobile' },
+} satisfies ChartConfig;
+
 const meta = {
   title: 'Widgets/RadarChart',
   component: RadarChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  // The ChartContainer is transparent by design (it inherits the surface it sits
-  // on — usually a Card). Render the stories on a themed surface so the chart is
-  // legible in both light and dark; without it, dark mode flips the token-driven
-  // web/labels but leaves the backdrop unthemed.
-  decorators: [
-    (Story) => (
-      <div className="rounded-lg border border-border bg-background p-6 text-foreground">
-        <Story />
-      </div>
-    ),
-  ],
   args: {
     config,
     data,
@@ -62,7 +68,6 @@ const meta = {
     showGrid: true,
     showTooltip: true,
     showLegend: true,
-    className: 'h-[380px] w-[420px]',
   },
   argTypes: {
     ...paletteArgTypes,
@@ -124,7 +129,6 @@ const meta = {
     radiusAxisReversed: { control: 'boolean' },
     startAngle: { control: { type: 'number', min: -360, max: 360 } },
     endAngle: { control: { type: 'number', min: -360, max: 360 } },
-    legendPosition: { control: 'inline-radio', options: ['top', 'bottom'] },
   },
 } satisfies Meta<typeof RadarChart>;
 
@@ -133,18 +137,60 @@ type Story = StoryObj<typeof meta>;
 
 // The default polygon (straight-edged) web.
 export const Polygon: Story = {
-  args: { gridType: 'polygon' },
+  args: {
+    gridType: 'polygon',
+    className: 'w-[420px]',
+  },
+};
+
+// The Figma ChartRadar md variant (node 9005:73390), composed with the shared
+// ChartWidget card. The widget owns the card chrome; RadarChart owns the plot.
+export const WidgetExample: Story = {
+  args: {
+    config: widgetConfig,
+    data: widgetData,
+    dataKeys: ['desktop', 'mobile'],
+    outerRadius: 78,
+    dotRadius: 2,
+  },
+  render: () => (
+    <ChartWidget
+      className="w-[592px]"
+      header={{
+        title: 'Title',
+        actions: (
+          <ButtonIcon variant="ghost" aria-label="Widget actions">
+            <EllipsisIcon size={16} />
+          </ButtonIcon>
+        ),
+      }}
+    >
+      <RadarChart
+        config={widgetConfig}
+        data={widgetData}
+        dataKeys={['desktop', 'mobile']}
+        angleKey="subject"
+        dotRadius={2}
+        className="size-full"
+      />
+    </ChartWidget>
+  ),
 };
 
 // A circular web instead of straight polygon rings.
 export const Circle: Story = {
-  args: { gridType: 'circle' },
+  args: { gridType: 'circle', outerRadius: 80 },
 };
 
 // Grid + tooltip + legend toggled off — the baseline that would catch a toggle
 // silently becoming a no-op (the unit env can't paint recharts chrome).
 export const NoChrome: Story = {
-  args: { showGrid: false, showTooltip: false, showLegend: false },
+  args: {
+    showGrid: false,
+    showTooltip: false,
+    showLegend: false,
+    className: 'w-[420px]',
+  },
 };
 
 // The tooltip is hover-only, so a normal story never snapshots it. This renders
@@ -342,9 +388,4 @@ export const SeriesStyling: Story = {
       },
     },
   },
-};
-
-// The legend above the chart instead of below it.
-export const LegendTop: Story = {
-  args: { legendPosition: 'top' },
 };

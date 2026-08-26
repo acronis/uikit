@@ -63,7 +63,12 @@ const OUTER_RADIUS = 0.8 * ((Math.min(CHART_WIDTH, CHART_HEIGHT) - 10) / 2);
 function renderSized(
   props: Partial<React.ComponentProps<typeof RadarChart>> = {}
 ) {
-  return renderChart({ showLegend: false, showTooltip: false, ...props });
+  return renderChart({
+    showLegend: false,
+    showTooltip: false,
+    outerRadius: '80%',
+    ...props,
+  });
 }
 
 /** The value-scale ticks, with each one's distance from the centre. */
@@ -274,20 +279,13 @@ describe('RadarChart data labels', () => {
     return CENTRE_Y - Number(tick!.getAttribute('y')) - OUTER_RADIUS;
   }
 
-  // recharts gives a Radar's label list a cartesian viewBox, so `top` offsets
-  // straight up in screen space — at the topmost vertex the value would land on
-  // that category's own tick. Widening the tick gap is the only lever that adds
-  // absolute clearance, so `showLabels` does it on the caller's behalf.
-  it('pushes the category labels out to clear the value labels', () => {
-    const withLabels = renderSized({ showLabels: true });
-    const withoutLabels = renderSized();
-    expect(categoryTickClearance(withLabels.container)).toBeGreaterThan(
-      categoryTickClearance(withoutLabels.container)
-    );
+  it('keeps category labels four pixels beyond the outer ring', () => {
+    const { container } = renderSized();
+    expect(categoryTickClearance(container)).toBeCloseTo(4, 1);
   });
 
-  it('lets an explicit angleTickSize win over that widening', () => {
-    const { container } = renderSized({ showLabels: true, angleTickSize: 16 });
+  it('lets an explicit angleTickSize override the default clearance', () => {
+    const { container } = renderSized({ angleTickSize: 16 });
     expect(categoryTickClearance(container)).toBeCloseTo(16, 1);
   });
 });
@@ -748,11 +746,21 @@ describe('RadarChart geometry and legend', () => {
   });
 
   it('renders a legend entry per series, labelled from config', () => {
-    const { container } = renderChart({ legendPosition: 'top' });
+    const { container } = renderChart();
+    expect(container.textContent).toContain('Alice');
+    expect(container.textContent).toContain('Bob');
+  });
+
+  it('reserves the plot height with and without the internal legend', () => {
+    const withLegend = renderChart();
+    expect(withLegend.container.querySelector('[data-slot="chart"]')).toHaveClass(
+      'h-[219px]'
+    );
+    withLegend.unmount();
+
+    const withoutLegend = renderChart({ showLegend: false });
     expect(
-      [...container.querySelectorAll('.recharts-legend-wrapper div div')].map(
-        (item) => item.textContent
-      )
-    ).toEqual(expect.arrayContaining(['Alice', 'Bob']));
+      withoutLegend.container.querySelector('[data-slot="chart"]')
+    ).toHaveClass('h-[187px]');
   });
 });

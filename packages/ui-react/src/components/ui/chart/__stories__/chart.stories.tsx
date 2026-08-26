@@ -290,7 +290,7 @@ export const Overview: Story = {
           dataKeys={['alice', 'bob']}
           angleKey="subject"
           showLegend={false}
-          className="h-[180px] w-full"
+          className="w-full"
         />
       </div>
       <div>

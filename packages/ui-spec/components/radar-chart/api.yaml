@@ -207,8 +207,8 @@ contract:
     - name: outerRadius
       type: number | string
       required: false
-      default: "'80%'"
-      description: Outer radius of the web, in px or a percentage of the available radius.
+      default: '78'
+      description: Outer radius of the web, in px or a percentage of the available radius. Defaults to 78px to match the Figma geometry; the legend and labels do not change the radius.
     - name: margin
       type: '{ top?: number; right?: number; bottom?: number; left?: number }'
       required: false
@@ -225,11 +225,6 @@ contract:
       required: false
       default: 'true'
       description: Render the legend.
-    - name: legendPosition
-      type: "'top' | 'bottom'"
-      required: false
-      default: "'bottom'"
-      description: Which side of the chart the legend sits on.
     - name: tooltipContent
       type: 'ReactElement | ((props) => ReactNode)'
       required: false
