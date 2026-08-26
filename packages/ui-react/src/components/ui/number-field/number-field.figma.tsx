@@ -1,7 +1,13 @@
-// Figma Code Connect — status: NEEDS_FIGMA_URL
-// Ported from ui-legacy without a "ready for dev" Figma node. A Figma node would
-// map the number field (steppers + input box). Replace 'FIGMA_NODE_URL' and flip
-// to COMPLETE via `/figma-component NumberField <url> --update`.
+// Figma Code Connect — status: NEEDS_FIGMA_URL (closest existing marker; the
+// status enum has no "intentionally undesigned" value — see
+// context/figma-code-connect.md)
+// **No design is expected — this is not a TODO.** No Figma design exists for
+// NumberField anywhere: it was ported from ui-legacy, its visuals reuse the
+// InputText box + ButtonIcon-style steppers (which carry their own designs and
+// Code Connect entries), and there is no active effort to have UX draw a
+// dedicated node. The placeholder URL below exists only so the example mapping is
+// recorded; if UX ever specs a real node, flip this to COMPLETE via
+// `/figma-component NumberField <url> --update`.
 import figma from '@figma/code-connect';
 
 import {

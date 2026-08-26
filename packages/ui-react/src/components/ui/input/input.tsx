@@ -17,6 +17,10 @@ import { cn } from '@/lib/utils';
 // geometry (32px height, 4px radius, 12px padding-x) comes from
 // `--ui-input-text-global-box-*`. Label, description, and error message are
 // composed by the consumer (a Field component is future work).
+// No `input.figma.tsx` on purpose: the designed component is `InputText`, which
+// owns the Figma node, the ui-spec entry and the Code Connect mapping. InputBox
+// is its inner box, not a separately designed component — see
+// context/figma-code-connect.md §Status markers.
 export type InputBoxProps = React.ComponentPropsWithoutRef<'input'>;
 
 const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
