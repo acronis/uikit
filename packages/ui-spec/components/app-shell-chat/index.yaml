@@ -11,7 +11,8 @@ description: >-
   width). Chat is resize-only: dragging down to its floor width shows an
   icon-only rail, and dragging up can take it to full width (Content shrinks to
   0) since the resize ceiling is measured from the actual available row space.
-  Distinct from AppShell (a simpler sidebar + sticky-header + main shell).
+  The Chat slot is optional, so the same scaffold also serves an ordinary
+  two-column console screen.
 since: 0.57.0
 dependencies:
   components:

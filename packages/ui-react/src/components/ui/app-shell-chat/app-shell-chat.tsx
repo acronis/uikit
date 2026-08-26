@@ -18,9 +18,10 @@ import {
 //
 //   SidebarRail (SidebarPrimary [+ SidebarSecondary]) | Content | Chat
 //
-// It is DISTINCT from `../app-shell` (a simpler sidebar + sticky-header + main
-// shell). The rich sidebars are reused verbatim from `../sidebar-primary` /
-// `../sidebar-secondary`; this component owns only the Content ↔ Chat split.
+// The Chat slot is optional — omit `AppShellChatChat` and the same scaffold
+// serves an ordinary two-column console screen. The rich sidebars are reused
+// verbatim from `../sidebar-primary` / `../sidebar-secondary`; this component
+// owns only the Content ↔ Chat split.
 //
 // Sizing model (requirement: sidebar interactions never resize Chat):
 //   • Content is `flex-1 min-w-0` — it absorbs every width change from the

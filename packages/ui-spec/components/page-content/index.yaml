@@ -5,6 +5,6 @@ status: draft
 category: layout
 description: >-
   The page content region — the padded gutter for a page's body. A <div> meant to
-  nest inside AppShellMain (so it doesn't duplicate the main landmark). Ported from
+  nest inside AppShellChatContentBody (so it doesn't duplicate the main landmark). Ported from
   the legacy shadcn-uikit `page-content`.
 since: 0.52.0

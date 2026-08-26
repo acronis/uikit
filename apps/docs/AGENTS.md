@@ -34,9 +34,9 @@ their own top-level sections.
   `styling-utilities`, `token-reference`, `components`, `icons`, `packages`,
   `shadow-dom`.
 - `content/docs/components/` — one MDX file per **ui-react** component, plus a
-  `---Layout---` subsection (app-shell, auth-layout, page-header,
-  page-content, stack, grid, section — layout primitives, not one-off pages)
-  and a `---Patterns---` subsection (dashboard, app-shell-pattern,
+  `---Layout---` subsection (app-shell-chat, page-header, page-content, stack,
+  grid, section — layout primitives, not one-off pages)
+  and a `---Patterns---` subsection (dashboard,
   filter-popover, data-table-bulk-actions, sheet-detail-panel, empty-screen —
   approved multi-component compositions, backed by
   `packages/ui-spec/patterns/<name>/pattern.yaml`). Each page pairs usage +

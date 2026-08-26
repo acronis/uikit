@@ -6,8 +6,9 @@ category: layout
 since: 0.52.0
 intent: Show a full-screen zero state inside the App Shell when a page has no content yet.
 description: >-
-  The sanctioned full-screen empty state: an `AppShell` (primary nav + header) whose
-  main centers an `Empty` (icon + title + description + optional action). Use it for
+  The sanctioned full-screen empty state: an `AppShellChat` (primary nav + header)
+  whose content body centers an `Empty` (icon + title + description + optional
+  action). The Chat slot is optional. Use it for
   first-run / no-data screens so the chrome stays consistent while the content area
   communicates the empty state. The sidebar configuration (expanded / collapsed /
   with a secondary nav) is independent — see the App Shell stories.
@@ -20,10 +21,10 @@ when_not_to_use:
 
 anti_patterns:
   - Replacing the whole shell with a bare centered message (loses the nav/header chrome and the user's place in the app).
-  - Using `Empty` without centering it in the main area — it should sit in the optical center of the content region.
+  - Using `Empty` without centering it in the content body — it should sit in the optical center of the content region.
 
 components:
-  - AppShell
+  - AppShellChat
   - Empty
   - SidebarPrimary
 

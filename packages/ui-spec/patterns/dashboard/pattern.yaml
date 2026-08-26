@@ -4,11 +4,12 @@ name: dashboard
 status: draft
 category: layout
 since: 0.52.0
-intent: Build a dashboard screen by laying widgets into a container-query Grid inside the App Shell's main content.
+intent: Build a dashboard screen by laying widgets into a container-query Grid inside the App Shell's content body.
 description: >-
-  The sanctioned way to build a dashboard: an `AppShell` (primary nav + header)
-  whose main holds a `PageHeader` and a `Grid` of widgets. The Grid uses
-  `container` so the widget columns respond to the main content's width — which
+  The sanctioned way to build a dashboard: an `AppShellChat` (primary nav +
+  header, no Chat slot) whose content body holds a `PageHeader` and a `Grid` of
+  widgets. The Grid uses
+  `container` so the widget columns respond to the content body's width — which
   shrinks as the sidebar expands — rather than the viewport. There is no dedicated
   "DashboardLayout" component: a dashboard is App Shell + a container Grid of
   widgets (e.g. WidgetPlaceholder / Card), which is this composition.
@@ -21,10 +22,10 @@ when_not_to_use:
 
 anti_patterns:
   - Reaching for a bespoke "dashboard layout" component — it's just App Shell + a container Grid (this pattern).
-  - Using a viewport-breakpoint Grid inside App Shell main — the columns won't account for the sidebar width; use `<Grid container>`.
+  - Using a viewport-breakpoint Grid inside the App Shell's content body — the columns won't account for the sidebar width; use `<Grid container>`.
 
 components:
-  - AppShell
+  - AppShellChat
   - Grid
   - WidgetPlaceholder
 

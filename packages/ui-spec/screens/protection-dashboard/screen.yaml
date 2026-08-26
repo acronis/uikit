@@ -7,14 +7,14 @@ description: >-
   The Protection console dashboard: a full App Shell with a collapsed primary
   rail, an expanded secondary section nav (Overview + Configuration with a
   third-level Policies sub-menu), a top bar, and the main content area. Worked
-  example for the screen-spec format; mirrors the App Shell
-  "WithSecondary" story.
+  example for the screen-spec format; mirrors the App Shell Chat
+  "Default" story.
 route: /protection/dashboard
-# The assembled-screen render the screen audit captures (App Shell with-secondary
-# is the de-facto Protection dashboard). See screens/audit + the /screen-audit skill.
-story: ui-appshell--with-secondary
+# The assembled-screen render the screen audit captures (App Shell Chat's default
+# story is the de-facto Protection dashboard). See screens/audit + the
+# /screen-audit skill.
+story: ui-appshellchat--default
 permissions: [protection.view]
-pattern: app-shell
 figma:
   file: lrU3ydIyvPYQNE6ixdsKtJ
   node: 2782-1495

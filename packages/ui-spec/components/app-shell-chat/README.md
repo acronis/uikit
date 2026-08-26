@@ -2,8 +2,9 @@
 
 A 3-section, horizontally resizable application scaffold: a sidebar rail beside a
 Content page column and a Chat panel. Content and Chat resize against each other;
-Chat is resize-only — drag it down to an icon-only rail or up to full width. It is
-**distinct** from `AppShell` (a simpler sidebar + sticky-header + main shell).
+Chat is resize-only — drag it down to an icon-only rail or up to full width. The
+Chat slot is optional, so the same scaffold also serves an ordinary two-column
+console screen.
 
 ## When to Use
 
@@ -14,7 +15,6 @@ Chat is resize-only — drag it down to an icon-only rail or up to full width. I
 
 ## When NOT to Use
 
-- A plain page with no chat panel — use **AppShell**.
 - A transient chat overlay — use a Sheet or Popover.
 - Content that should resize proportionally in percentages — use **Resizable**
   (this component deliberately uses fixed pixel sizing so sidebar changes never

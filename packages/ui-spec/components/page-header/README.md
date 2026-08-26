@@ -11,7 +11,8 @@ a tags slot, an actions slot) and an optional description row, capped at
 
 ## When not to use
 
-- The app-wide top bar — that's `AppShellHeader` (global search + account).
+- The app-wide top bar — that's `AppShellChatContentHeader` (global search +
+  account).
 - A breadcrumb trail — that's a separate `Breadcrumb` rendered as a sibling
   above PageHeader, not one of its parts.
 

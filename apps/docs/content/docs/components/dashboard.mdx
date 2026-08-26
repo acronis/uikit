@@ -1,13 +1,15 @@
 ---
 title: Dashboard
-description: A dashboard screen — App Shell + a container-query Grid of widgets.
+description: A dashboard screen — the App Shell + a container-query Grid of widgets.
 ---
 
 import { DemoReact } from "@/components/DemoReact";
 import { DashboardDemo } from "@/components/demos-react/dashboard";
 
-A **dashboard** is not a dedicated component — it's [App Shell](/components/app-shell)
-with a [`Grid`](/components/grid) of widgets in its main content. Use the Grid's
+A **dashboard** is not a dedicated component — it's the
+[App Shell](/components/app-shell-chat) with a [`Grid`](/components/grid) of
+widgets in its content body (the Chat slot is optional, so the same scaffold
+serves an ordinary two-column console screen). Use the Grid's
 `container` mode so the widget columns respond to the **main content's width**
 (which shrinks as the sidebar expands), not the viewport.
 
@@ -18,20 +20,20 @@ with a [`Grid`](/components/grid) of widgets in its main content. Use the Grid's
 ## Assembly
 
 ```tsx
-<AppShell>
-  <AppShellSidebar><SidebarPrimary … /></AppShellSidebar>
-  <AppShellBody>
-    <AppShellHeader>{/* account menu / actions */}</AppShellHeader>
-    <AppShellMain className="p-6">
+<AppShellChat>
+  <AppShellChatSidebar><SidebarPrimary … /></AppShellChatSidebar>
+  <AppShellChatContent>
+    <AppShellChatContentHeader>{/* account menu / actions */}</AppShellChatContentHeader>
+    <AppShellChatContentBody>
       <PageHeader>
         <PageHeaderRow><PageHeaderTitle>Overview</PageHeaderTitle></PageHeaderRow>
       </PageHeader>
       <Grid container cols={3}>
         {widgets.map((w) => <WidgetPlaceholder key={w.id} {...w} />)}
       </Grid>
-    </AppShellMain>
-  </AppShellBody>
-</AppShell>
+    </AppShellChatContentBody>
+  </AppShellChatContent>
+</AppShellChat>
 ```
 
 ## When to use
@@ -40,5 +42,5 @@ with a [`Grid`](/components/grid) of widgets in its main content. Use the Grid's
 
 ## Anti-patterns
 
-- Reaching for a bespoke "dashboard layout" component — it's just App Shell + a container `Grid`.
-- A viewport-breakpoint `Grid` inside App Shell main — the columns won't account for the sidebar width; use `<Grid container>`.
+- Reaching for a bespoke "dashboard layout" component — it's just the App Shell + a container `Grid`.
+- A viewport-breakpoint `Grid` inside the App Shell's content body — the columns won't account for the sidebar width; use `<Grid container>`.

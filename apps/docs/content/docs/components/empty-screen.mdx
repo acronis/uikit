@@ -1,15 +1,15 @@
 ---
 title: Empty Screen
-description: A full-screen zero state — App Shell with a centered Empty in the main area.
+description: A full-screen zero state — the App Shell with a centered Empty in the content body.
 ---
 
 import { DemoReact } from "@/components/DemoReact";
 import { EmptyScreenDemo } from "@/components/demos-react/empty-screen";
 
-A **full-screen empty state** keeps the [App Shell](/components/app-shell) chrome (nav
-+ header) and centers an [`Empty`](/components/empty) in the main content area — for
-first-run / no-data screens. The sidebar configuration is independent (see the
-App Shell stories).
+A **full-screen empty state** keeps the [App Shell](/components/app-shell-chat)
+chrome (nav + header) and centers an [`Empty`](/components/empty) in the content
+body — for first-run / no-data screens. The sidebar configuration is independent
+(see the App Shell stories), and the Chat slot is optional.
 
 <DemoReact>
   <EmptyScreenDemo />
@@ -18,11 +18,11 @@ App Shell stories).
 ## Assembly
 
 ```tsx
-<AppShell>
-  <AppShellSidebar><SidebarPrimary … /></AppShellSidebar>
-  <AppShellBody>
-    <AppShellHeader />
-    <AppShellMain className="grid place-items-center p-6">
+<AppShellChat>
+  <AppShellChatSidebar><SidebarPrimary … /></AppShellChatSidebar>
+  <AppShellChatContent>
+    <AppShellChatContentHeader />
+    <AppShellChatContentBody className="grid place-items-center">
       <Empty>
         <EmptyHeader>
           <EmptyIcon><InboxIcon /></EmptyIcon>
@@ -31,12 +31,12 @@ App Shell stories).
         </EmptyHeader>
         <EmptyActions><Button>Add workload</Button></EmptyActions>
       </Empty>
-    </AppShellMain>
-  </AppShellBody>
-</AppShell>
+    </AppShellChatContentBody>
+  </AppShellChatContent>
+</AppShellChat>
 ```
 
 ## Anti-patterns
 
 - Replacing the whole shell with a bare centered message — keeps neither the nav/header nor the user's place in the app.
-- Using `Empty` without centering it in the main area.
+- Using `Empty` without centering it in the content body.

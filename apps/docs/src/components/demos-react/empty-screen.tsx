@@ -1,11 +1,11 @@
 'use client';
 
 import {
-  AppShell,
-  AppShellBody,
-  AppShellHeader,
-  AppShellMain,
-  AppShellSidebar,
+  AppShellChat,
+  AppShellChatContent,
+  AppShellChatContentBody,
+  AppShellChatContentHeader,
+  AppShellChatSidebar,
   Button,
   Empty,
   EmptyActions,
@@ -21,8 +21,10 @@ const nav = ['Dashboard', 'Workloads', 'Protection', 'Reports', 'Settings'];
 export function EmptyScreenDemo() {
   return (
     <div className="h-[440px] overflow-hidden rounded-md border border-border">
-      <AppShell className="h-full min-h-0">
-        <AppShellSidebar className="w-52 flex-col gap-1 bg-[var(--ui-background-brand-primary)] p-3 text-[var(--ui-glyph-on-brand-primary)]">
+      {/* No chat panel here — the App Shell's Chat slot is optional, so the
+          same scaffold serves an ordinary two-column console screen. */}
+      <AppShellChat className="h-full">
+        <AppShellChatSidebar className="w-52 flex-col gap-1 bg-[var(--ui-background-brand-primary)] p-3 text-[var(--ui-glyph-on-brand-primary)]">
           <div className="px-2 pb-3 text-sm font-semibold">Acronis</div>
           {nav.map((item, i) => (
             <div
@@ -35,10 +37,10 @@ export function EmptyScreenDemo() {
               {item}
             </div>
           ))}
-        </AppShellSidebar>
-        <AppShellBody>
-          <AppShellHeader />
-          <AppShellMain className="grid place-items-center p-6">
+        </AppShellChatSidebar>
+        <AppShellChatContent>
+          <AppShellChatContentHeader />
+          <AppShellChatContentBody className="grid place-items-center">
             <Empty>
               <EmptyHeader>
                 <EmptyIcon>
@@ -53,9 +55,9 @@ export function EmptyScreenDemo() {
                 <Button>Add workload</Button>
               </EmptyActions>
             </Empty>
-          </AppShellMain>
-        </AppShellBody>
-      </AppShell>
+          </AppShellChatContentBody>
+        </AppShellChatContent>
+      </AppShellChat>
     </div>
   );
 }

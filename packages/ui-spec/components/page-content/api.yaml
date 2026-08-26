@@ -12,7 +12,7 @@ adapters:
     status: implemented
     import: "import { PageContent } from '@acronis-platform/ui-react'"
     example: |
-      <AppShellMain><PageContent>{children}</PageContent></AppShellMain>
+      <AppShellChatContentBody><PageContent>{children}</PageContent></AppShellChatContentBody>
   vue:
     component: AvPageContent
     status: planned

@@ -148,7 +148,7 @@ function MyComponent() {
 
 ### Available Components
 
-The library covers layout (`AppShell`, `AppShellChat`, `AuthLayout`, `Card`,
+The library covers layout (`AppShellChat`, `Card`,
 `CardFilter`, `FilterCards`, `Grid`, `Stack`, `Section`, `PageContent`, `PageHeader`,
 `Separator`, `ScrollArea`, `Resizable`, `Toolbar`), navigation (`Breadcrumb`,
 `Tabs`, `Pagination`, `SidebarPrimary`, `SidebarSecondary`, `Link`), forms

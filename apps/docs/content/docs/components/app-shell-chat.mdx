@@ -29,8 +29,8 @@ columns: a sidebar rail, the Content column, and the Chat panel. Drop
 [`SidebarPrimary`](/components/sidebar-primary) (and optionally
 [`SidebarSecondary`](/components/sidebar-secondary)) into the sidebar slot; the
 scaffold only paints surfaces and the column dividers, and the slotted
-components bring their own styling. For a screen with no chat panel, use
-[`AppShell`](/components/app-shell) instead.
+components bring their own styling. The Chat slot is optional — omit
+`AppShellChatChat` and the same scaffold serves an ordinary two-column screen.
 
 **Sizing.** Content is `flex-1` and can shrink to `0`; Chat carries an explicit
 pixel width. Because Chat is never sized as a percentage, expanding, collapsing,
