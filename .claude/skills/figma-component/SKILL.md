@@ -284,6 +284,47 @@ just need polymorphism (render as `<a>`, a router `Link`, etc.) use Base UI's
 `asChild`/`Slot`. If Base UI has no primitive (e.g. breadcrumb), build semantic
 HTML (`<nav><ol><li>`) + `useRender` for the polymorphic parts.
 
+### Primitive behavior audit (mandatory before Phase 3)
+
+Once the primitive (or hand-rolled HTML approach) is chosen, and **before
+writing any code, test, or spec prose**, resolve how it actually behaves and
+write it down in a scratch note (not a committed file). In this priority order:
+
+- **Repo precedent.** Grep for an existing component composing the same
+  primitive:
+  `grep -rl "<PrimitiveName>" packages/ui-react/src/components/ui/`.
+  If one exists, its behavior is ground truth for this primitive **in this
+  repo** — read it and diff your intended usage against it.
+- **Primitive source / `.d.ts`.** If there's no precedent, read the primitive's
+  own implementation (`node_modules/@base-ui/react/`) for: which sub-element
+  each forwarded prop (`ref`, `inputRef`, …) actually reaches; which parts are
+  focusable/tabbable and with what `tabindex`; which parts carry which ARIA
+  roles/attributes by default.
+- **Live render.** If still ambiguous — or the approach is hand-rolled HTML
+  with no third party to consult — render it (Storybook or a scratch test) and
+  observe directly: Tab through it, inspect the DOM (devtools or
+  `screen.debug()`).
+
+The output is a map: **part → actual DOM element → ref target → focusability →
+role**. Every downstream phase consults that map instead of re-deriving its own
+assumption.
+
+> **Worked example.** `InputNumPicker` wraps Base UI's `NumberField`. Its `ref`
+> was forwarded to `NumberField.Root`'s `inputRef`, which Base UI merges into a
+> hidden, `aria-hidden`, `tabindex="-1"` `<input type="number">` form shim —
+> not the visible `<input type="text">`. The precedent was already in the repo
+> (`packages/ui-react/src/components/ui/number-field/number-field.tsx` composes
+> the same primitive correctly); nobody grepped for it. The ref test asserted
+> only `toBeInstanceOf(HTMLInputElement)`, which the hidden shim also satisfies,
+> so it passed. In the spec files the same root cause surfaced three more times:
+> `accessibility.md` claimed the stepper buttons are Tab-reachable (Base UI
+> hardcodes `tabindex="-1"` on them), `anatomy.yaml` attributed `role: group` to
+> the root `div` instead of the element that actually carries it, and
+> `tokens.yaml` described focus-ring tokens on parts that structurally can never
+> receive focus. Each was written from a generic assumption about what that
+> element type "usually" does, because nothing required inspecting the rendered
+> DOM first.
+
 **Icons.** Use `@acronis-platform/icons-react/<pack>` (usually `stroke-mono`).
 Confirm the icon exists before importing it:
 
@@ -312,7 +353,10 @@ __stories__/<name>.generated.stories.tsx   # produced in Phase 4
 
 Conventions (mirror Button):
 
-- `React.forwardRef`; `displayName` on every component.
+- `React.forwardRef`; `displayName` on every component. Place the ref **per the
+  Phase 2 behavior-audit map**, not on whichever sub-element seems most obvious
+  — multi-part primitives often expose a `ref`/`inputRef` prop that lands on a
+  non-visible internal node (see the audit).
 - Prop interface extends the right HTML attrs (or `ComponentPropsWithoutRef`),
   plus `VariantProps<typeof xVariants>` when using `cva`.
 - `cva` for `variant`/`size`; merge with `cn()` from `@/lib/utils`.
@@ -363,6 +407,14 @@ reality** — the legacy specs describe the Vue API).
 | `behavior.md`      | Given/When/Then scenarios.                                                                                       |
 | `accessibility.md` | ARIA, keyboard, screen reader, contrast.                                                                         |
 | `README.md`        | When to use / not use, examples, parts table.                                                                    |
+
+> **Transcribe the Phase 2 audit map — don't restate conventions.** Keyboard
+> claims in `accessibility.md`, part→role mappings in `anatomy.yaml`, and token
+> `affects` targets in `tokens.yaml` must come from what the audit observed in
+> the real DOM, **not** from what a `<button>`/`<div>`/wrapper "usually" does. A
+> stepper button that Base UI hardcodes to `tabindex="-1"` is not Tab-reachable;
+> a `role` belongs to whichever element actually carries it; a focus-ring token
+> can't `affect` a part that can never receive focus.
 
 Hard rules enforced by `__tests__/specs.test.ts`:
 
@@ -601,7 +653,16 @@ not typecheck — so run the build.
       verified against the shared primitive's actual implementation, not just
       token resolution.
 - [ ] `__tests__/<name>.test.tsx` — render, variants/states, a11y roles, ref,
-      `render`-prop composition.
+      `render`-prop composition. The **ref test must assert against the audited
+      target specifically** (e.g. that it is not `aria-hidden`, or that it is
+      the visible element the Phase 2 audit identified) — not merely
+      `toBeInstanceOf(HTMLInputElement)`, which a hidden form shim also
+      satisfies.
+- [ ] Primitive behavior audit done (repo precedent checked, or primitive
+      source/live render inspected) before writing ref placement, tests, or
+      spec prose.
+- [ ] ref/focus/role claims in code, tests, and
+      `accessibility.md`/`anatomy.yaml`/`tokens.yaml` trace to that audit.
 - [ ] `__stories__/<name>.stories.tsx` (hand) + `<name>.generated.stories.tsx`.
 - [ ] VR baselines regenerated in Docker for **both** light and dark
       (`storybook:test:visual:docker:update:all`) and reviewed; both `<id>.png` and
