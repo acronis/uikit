@@ -198,9 +198,9 @@ export interface RadarChartProps
   fillOpacity?: number;
   /** Stroke width of each radar outline. */
   strokeWidth?: number;
-  /** Render a dot at each axis point. */
+  /** Render a dot at each axis point. Defaults to `true`. */
   showDots?: boolean;
-  /** Radius of the per-point dots when `showDots` is on. */
+  /** Radius of the per-point dots when `showDots` is on. Defaults to `2`. */
   dotRadius?: number;
   /**
    * Enlarge the hovered point's dot. On by default (recharts' behavior) — pass
@@ -409,8 +409,8 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       gridType = 'polygon',
       fillOpacity = 0.3,
       strokeWidth = 2,
-      showDots = false,
-      dotRadius = 3,
+      showDots = true,
+      dotRadius = 2,
       activeDot,
       showGrid = true,
       radialLines = true,
@@ -491,7 +491,7 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
           // near-black (or recharts' raw `#ccc`) and vanish in dark mode. This
           // is a shared-primitives gap (a Chart task); worked around locally, not
           // by editing chart.tsx.
-          className="size-full [&_.recharts-polar-angle-axis-tick_text]:fill-muted-foreground [&_.recharts-polar-radius-axis-line]:stroke-border [&_.recharts-polar-radius-axis-tick_text]:fill-muted-foreground"
+          className="size-full [&_.recharts-polar-angle-axis-tick_text]:fill-[var(--ui-text-on-surface-secondary)]! [&_.recharts-polar-angle-axis-tick_text]:text-xs [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-[var(--ui-border-on-surface-divider)]! [&_.recharts-polar-radius-axis-line]:stroke-[var(--ui-border-on-surface-divider)]! [&_.recharts-polar-radius-axis-tick_text]:fill-[var(--ui-text-on-surface-secondary)]! [&_.recharts-polar-radius-axis-tick_text]:text-xs"
         >
           <RechartsRadarChart
             data={data as readonly unknown[]}

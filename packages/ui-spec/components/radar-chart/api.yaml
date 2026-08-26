@@ -59,12 +59,12 @@ contract:
     - name: showDots
       type: boolean
       required: false
-      default: 'false'
-      description: Render a dot at each axis point.
+      default: 'true'
+      description: Render a dot at each axis point. Visible by default to match the Figma chart.
     - name: dotRadius
       type: number
       required: false
-      default: '3'
+      default: '2'
       description: Radius of the per-point dots when `showDots` is on.
     - name: activeDot
       type: boolean
