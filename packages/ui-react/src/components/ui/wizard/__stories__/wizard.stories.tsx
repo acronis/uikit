@@ -263,7 +263,7 @@ export const WithoutStepper: Story = {
           <PageHeaderTitle>Create dashboard</PageHeaderTitle>
           <PageHeaderActions>
             <Button variant="secondary">Cancel</Button>
-            <Button>Submit</Button>
+            <Button>Create dashboard</Button>
           </PageHeaderActions>
         </PageHeaderRow>
         <WizardSubtitle>{SUBTITLE}</WizardSubtitle>
@@ -399,17 +399,18 @@ function WizardHookDemo() {
         <PageHeaderRow>
           <PageHeaderTitle>Configure integration</PageHeaderTitle>
           <PageHeaderActions>
-            <Button
-              variant="secondary"
-              disabled={wizard.isFirstStep}
-              onClick={wizard.goToPreviousStep}
-            >
-              Back
-            </Button>
+            <Button variant="secondary">Cancel</Button>
+            {/* Per the design brief Back belongs to middle steps only — it is
+                absent on the first and final steps, not disabled. */}
+            {!wizard.isFirstStep && !wizard.isLastStep && (
+              <Button variant="secondary" onClick={wizard.goToPreviousStep}>
+                Back
+              </Button>
+            )}
             {/* `goToNextStep` is already a no-op past the last step, so the
                 CTA stays clickable rather than needing its own guard. */}
             <Button onClick={wizard.goToNextStep}>
-              {wizard.isLastStep ? 'Finish' : 'Next'}
+              {wizard.isLastStep ? 'Save integration' : 'Next'}
             </Button>
           </PageHeaderActions>
         </PageHeaderRow>
@@ -454,8 +455,9 @@ function WizardHookDemo() {
 
 // The only interactive story here: unlike the static ones above, Back/Next are
 // wired to a real `useWizard` instance, so clicking them visibly moves the
-// stepper, swaps the body `Section`, and flips Back's disabled state and the
-// CTA's label ("Next" → "Finish" on the last of the eight steps).
+// stepper, swaps the body `Section`, adds Back once past the first of the eight
+// steps, and on the last one drops Back again and swaps the CTA's label
+// ("Next" → "Save integration").
 export const UseWizardHookDemo: Story = {
   render: () => <WizardHookDemo />,
 };

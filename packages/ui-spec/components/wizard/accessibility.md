@@ -35,8 +35,17 @@ their way.
   flows a title or subtitle that makes the position obvious.
 - **Navigation actions** are plain `Button`s the consumer supplies, so their
   accessible names come from their own children. Keep them as real buttons in DOM
-  order (Cancel, Back, Next/Submit) rather than reordering visually, and disable
-  rather than remove `Back` on the first step so focus doesn't jump between steps.
+  order — Cancel, then `Back` on middle steps only, then Next/CTA — matching the
+  per-step pairing in [`behavior.md`](./behavior.md), rather than reordering
+  visually. Because that pairing genuinely adds and removes `Back` between steps
+  (it is absent, not disabled, on the first and final steps), the action row's
+  composition changes as the flow advances. Wizard tracks no step index and moves
+  no focus, so the consumer owns the transition: after navigating, move focus
+  deliberately — to the new step's first focusable field, since (per the
+  heading-outline bullet above) a step's `Section` title is a `<p>` and
+  contributes no heading to land on by default — so it never lands on a
+  button that has just been removed or shifted position, and never silently
+  falls back to the document body.
 - **Sticky header and focus.** The header band is `position: sticky`, so it can
   overlay content scrolled under it. Give focusable content inside `WizardBody`
   enough scroll margin that keyboard focus never lands underneath the band.

@@ -178,7 +178,7 @@ does.
       <PageHeaderTitle>Create dashboard</PageHeaderTitle>
       <PageHeaderActions>
         <Button variant="secondary">Cancel</Button>
-        <Button>Submit</Button>
+        <Button>Create dashboard</Button>
       </PageHeaderActions>
     </PageHeaderRow>
   </WizardHeader>
