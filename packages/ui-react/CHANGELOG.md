@@ -1,5 +1,389 @@
 # @acronis-platform/ui-react
 
+## 4.0.0
+
+### Major Changes
+
+- [#685](https://github.com/acronis/uikit/pull/685) [`c3135ef`](https://github.com/acronis/uikit/commit/c3135ef130c881cee1d1ed305eed34262487e633) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - feat(chart)!: series colours come from the palette, and only from the palette
+
+  **Breaking.** `ChartConfig` no longer accepts a free-form `color` or a
+  `theme: { light, dark }` pair. A chart's **series** cannot paint a hue the
+  design system doesn't define.
+
+  Note: certain chart types (`FunnelChart` `stageSettings[].color`, `PieChart`
+  per-slice `color`, `ComposedChart` per-bar `color`, `SankeyChart`
+  `data.links[].color`) still expose per-element free-form color overrides
+  outside of `ChartConfig`. Those are intentional escape hatches for edge cases
+  like custom gradient ramps or explicit link tints; they are not controlled by
+  `palette` and are not part of this breaking change.
+
+  `ChartContainer`'s `palette` now defaults to `{ type: 'categorical' }` — there
+  is no "no palette" state. Series walk the chosen palette in its defined order.
+
+  Migrating: **delete the `color` from each `config` entry.** Most charts used
+  those tokens as "some distinct colour per series", which is exactly what the
+  default categorical palette does — so deleting is usually the whole migration.
+
+  ```diff
+    const config = {
+  -   desktop: { label: 'Desktop', color: 'var(--ui-background-brand-secondary)' },
+  -   mobile: { label: 'Mobile', color: 'var(--ui-background-status-strong-danger)' },
+  +   desktop: { label: 'Desktop' },
+  +   mobile: { label: 'Mobile' },
+    } satisfies ChartConfig;
+  ```
+
+  Where the colour carried meaning, pick the palette and name the tone:
+
+  ```diff
+  - const config = {
+  -   failed: { label: 'Failed', color: 'var(--ui-background-status-strong-danger)' },
+  - } satisfies ChartConfig;
+  + const config = {
+  +   failed: { label: 'Failed', tone: { status: 'danger' } },
+  + } satisfies ChartConfig;
+    …
+  - <BarChart config={config} … />
+  + <BarChart config={config} palette={{ type: 'status' }} … />
+  ```
+
+  Other `tone` forms: `{ slot: 7 }` picks another categorical hue, and
+  `{ sameAs: 'actual' }` paints whatever another series paints — for a twin
+  series (a forecast tail, a projection band) that must not read as a second
+  metric. An aliased series doesn't consume a palette stop.
+
+  **Watch out for entries you don't plot.** A stop is assigned by an entry's
+  position in `config`, not by which series get drawn, so a config declaring a
+  series the chart doesn't render still consumes a colour and shifts the ones
+  that follow. That is deliberate — a series keeps its colour when a sibling is
+  toggled off — but it means each config should declare exactly what its chart
+  plots.
+
+  Also in this change:
+  - `CategoryBar` gains the same `palette` prop. It paints plain elements rather
+    than a recharts plot, so it resolves the palette itself.
+  - `ChartStyle` emits one CSS block instead of a light/dark pair: every palette
+    colour is a `light-dark()` token that follows `color-scheme` on its own.
+  - New exported type `ResolvedChartConfig` — a `ChartConfig` with every colour
+    filled in, which is what `ChartStyle` takes and what the context carries.
+  - Every chart's Storybook meta exposes a `palette` select, so the palettes can
+    be compared on a real chart from the Controls panel.
+
+- [#689](https://github.com/acronis/uikit/pull/689) [`237efe8`](https://github.com/acronis/uikit/commit/237efe8e1fc5800ffde940f6540bb68874bf54e1) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - feat(chart-state): draw the empty state per chart type
+
+  `empty` is the one state the design draws per chart type — an area silhouette for
+  an area chart, a ring for a donut, a funnel for a funnel — so an empty widget
+  still says what it _would_ have shown, which a single generic glyph can't.
+
+  ```tsx
+  <ChartState state="empty" variant="donut" />
+  <ChartWidget header={{ title: 'Conversion' }} variant="funnel" state="empty" />
+  ```
+
+  `ChartState` gains:
+  - `variant` — `area` · `bar` · `line` · `donut` · `radial` · `funnel` · `radar` ·
+    `sankey` · `scatter` · `treemap` · `table` · `text`. `donut` and `radial` share
+    one ring: a radial-bar widget with no data has nothing to tell it apart.
+  - `description` replaces the previous `message` prop and is now the single text
+    control for every state. Each state has a built-in default (`"Data is loading…"` /
+    `"No data found"` / `"Something went wrong"`); pass `description` to override.
+
+  `ChartWidget` forwards both (`variant`, `stateDescription`). The previous
+  `stateMessage` prop is removed.
+
+  The twelve silhouettes are derived from the Figma empty-state instances rather
+  than redrawn, so a curve is the curve the design draws. Every path is
+  `currentColor`, with the tone set once on the container, so brand and theme
+  overrides reach the artwork.
+
+  Without a `variant` the `empty` state shows no artwork — just the text.
+  `loading` and `error` share one treatment and ignore `variant`.
+
+  `WidgetPlaceholder` stays. It is a different job — the composable skeleton for a
+  whole tile, with its own header/footer parts and an `interactive` affordance,
+  for a widget that isn't a chart. Both docs pages now say which is which.
+
+- [#694](https://github.com/acronis/uikit/pull/694) [`62962b7`](https://github.com/acronis/uikit/commit/62962b7905981f58aacdbd5d1cb4887b15a8be7b) Thanks [@madjorr](https://github.com/madjorr)! - feat(ui-react)!: remove AppShell, AuthLayout, Collapsible and Label
+
+  **Breaking.** Four exports are gone from `@acronis-platform/ui-react`:
+  - `AppShell` / `AppShellSidebar` / `AppShellBody` / `AppShellHeader` /
+    `AppShellMain` / `AppShellFooter` — superseded by `AppShellChat`, whose Chat
+    slot is optional, so the same scaffold serves an ordinary two-column console
+    screen. Migrate: `AppShell` → `AppShellChat`, `AppShellSidebar` →
+    `AppShellChatSidebar`, `AppShellBody` → `AppShellChatContent`,
+    `AppShellHeader` → `AppShellChatContentHeader`, `AppShellMain` →
+    `AppShellChatContentBody`. There is no `AppShellFooter` equivalent. Note
+    `AppShellMain` rendered a `<main>` landmark; `AppShellChatContentBody` is a
+    plain `<div>`, so wrap it in your own `<main>` if you relied on that.
+  - `AuthLayout` / `AuthLayoutCard` / `AuthLayoutLogo` / `AuthLayoutFooter` — the
+    chrome was product-specific, not a design-system component. Compose it in the
+    product from `Card` / `Stack`.
+  - `Collapsible` / `CollapsibleTrigger` / `CollapsibleContent` — a thin wrapper
+    over Base UI's Collapsible with no consumers. Use `AccordionContainer`, or
+    Base UI's `Collapsible` directly.
+  - `Label` (and `LabelProps`) — nothing rendered it. Use `Field`'s label part.
+    The `labelClassName` constant `Field` consumes is unchanged.
+
+- [#690](https://github.com/acronis/uikit/pull/690) [`054f89d`](https://github.com/acronis/uikit/commit/054f89d06d3fb1f68a71745f09133663253604f7) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - **Breaking changes** — `Metric` and `TrendIndicator`; new `orientation` prop on `ChartWidget`
+
+  ### `Metric`
+  - **Card removal.** `Metric` no longer renders its own `Card` wrapper. It is now a plain stats strip (`<div>`). For a standalone card tile, wrap it: `<Card className="p-4"><Metric .../></Card>`. When used inside `ChartWidget`, the card chrome comes from the widget.
+  - **Removed props:** `size`, `status`, `label`, `trendSlot`.
+  - **New first-class `trend` prop.** `trend?: 'up' | 'down' | 'stable'` renders a `TrendIndicator` automatically below the value. Sentiment follows direction: `up` → positive, `down` → negative, `stable` → neutral. Pair with `trendValue?: ReactNode` for the change text.
+  - **Icon badge color fix.** The icon inside the badge now uses `--ui-glyph-on-surface-neutral-dark` (neutral dark gray) instead of `--ui-text-on-status-info`.
+
+  ### `TrendIndicator`
+  - **Removed props:** `size`, `variant` (the `badge` variant), `comparisonLabel`.
+
+  ### `ChartWidget`
+  - **New `orientation` prop.** `orientation?: 'vertical' | 'horizontal'` (default `'vertical'`). Vertical keeps the existing layout — metric strip above the chart, full width. Horizontal places metric and chart side by side (`flex-1` each), intended for the sm (288px) widget width. Figma: vertical → node 8174:22335, horizontal → node 8982:31681.
+
+- [#688](https://github.com/acronis/uikit/pull/688) [`c0948ee`](https://github.com/acronis/uikit/commit/c0948eeeb17e03292edc744e7fa371b2a21739fa) Thanks [@madjorr](https://github.com/madjorr)! - Rebuild `Section` from its Figma design (node `8262:6179`), replacing the
+  draft layout primitive ported from `ui-legacy`. It is now a page-level titled
+  band that groups cards — or a table — with four content layouts on the root
+  (`column1`, `column2-70-30`, `grid3`, `table`), an optional bottom divider
+  (`hasBottomBorder`), and a header carrying the 20px title, an optional
+  description, an optional toggle switch, inline extras, and end-aligned
+  actions. The root publishes its `variant` through context, so `SectionHeader`
+  and `SectionContent` never repeat it, and the `table` variant sits completely
+  flush so its rows bleed to the page edges. Collapsing is a composition with
+  the shared `AccordionContainer` primitive, the same as `Card`.
+
+  **Breaking:** `SectionTitle` and `SectionDescription` are removed — the title
+  and description are now `SectionHeader` props (`title`, `description`,
+  `hasDescription`), matching `CardHeader`. Replace
+  `<SectionHeader><SectionTitle>…</SectionTitle><SectionDescription>…</SectionDescription></SectionHeader>`
+  with `<SectionHeader title="…" description="…" hasDescription />`.
+
+  Note the element also changes: `SectionTitle` rendered an `<h2>`; the `title`
+  prop renders a `<p>` instead, since a section's place in the document outline
+  depends on the page around it (see the Accessibility section of the
+  [`Section` docs](https://acronis.github.io/uikit/docs/components/section)). If you
+  relied on the heading for document-outline structure or an `aria-labelledby`
+  target, supply your own heading via `SectionHeader`'s `children` slot (not
+  `render`, which replaces the entire header row), omit `title`, and point the
+  root's `aria-labelledby` at it.
+
+### Minor Changes
+
+- [#688](https://github.com/acronis/uikit/pull/688) [`bb19e2e`](https://github.com/acronis/uikit/commit/bb19e2efed4ed8c0dc9fbb60824354a84e64cd34) Thanks [@madjorr](https://github.com/madjorr)! - `AccordionContainer`'s `Root` now defaults to `display: contents` when
+  `collapsible` is true, so it never becomes a box in the consumer's flex/grid
+  layout (this is what lets `Section`'s root `gap` apply directly across its
+  header and content instead of being silently dropped by the wrapper). The
+  default is applied as `contents!` so it also wins over a `render`-prop
+  element's own conflicting display class regardless of stylesheet order. Pass
+  an important-modified display utility (e.g. `className="flex!"`) if you rely
+  on `Root` being a real box — `tailwind-merge` resolves the conflict in your
+  favor; a non-important utility (`flex`) won't be deduped against `contents!`
+  and loses the cascade to it.
+
+- [#693](https://github.com/acronis/uikit/pull/693) [`6c60156`](https://github.com/acronis/uikit/commit/6c601567ea897e9afc075c2fd6cab006f4195db1) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - feat(charts): Figma-align PieChart & RadialBarChart — list legend always-right
+  - Add `variant="list"` to `ChartLegendContent` for the vertical dot-label-value layout; accepts `valueKey` and `valueFormatter` to show per-item values
+  - PieChart and RadialBarChart now **always** render as `flex-row`: chart square on the left, list legend on the right — matching the Figma donut/radial widget layout. The `legendPosition` prop is removed; configuring legend position is no longer supported on these charts (cartesian charts keep their bottom legend unchanged)
+  - Center-label nudge logic removed from `PieChart` (was compensating for recharts' built-in legend, which is now always external)
+
+- [#687](https://github.com/acronis/uikit/pull/687) [`bed1ddc`](https://github.com/acronis/uikit/commit/bed1ddc7a914732a832c628dd7cf0aee331ea07e) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - feat(chart-widget): add the dashboard card a chart sits in
+
+  Every chart in the design is drawn inside the same card — a header with a title,
+  an optional filter chip and the ⋯ actions menu, then an optional metric readout,
+  then the plot. `ChartWidget` is that composition.
+
+  ```tsx
+  <ChartWidget
+    header={{
+      title: 'Sessions',
+      extras: <Tag variant="info">Last 6 months</Tag>,
+      actions: <WidgetMenu />,
+    }}
+    className="h-[300px] w-[592px]"
+  >
+    <AreaChart
+      config={config}
+      data={data}
+      dataKeys={['sessions']}
+      xKey="month"
+      className="size-full"
+    />
+  </ChartWidget>
+  ```
+
+  It adds only the one thing a `Card` doesn't know about: **what the body shows
+  while there is no plot.** `state="loading" | "empty" | "error"` renders
+  `ChartState` in place of the chart, and `error` also gives the card its error
+  border — one prop, not two.
+
+  The header is `Card`'s: `header` is typed `CardHeaderProps` and spread onto
+  `CardHeader`, so everything that component takes works here — including the
+  parts `ChartWidget` never mentions (`isDraggable`, `hasRename`,
+  `isCollapsible`, …). Nothing to keep in sync.
+
+  There is no `size` prop. The Figma `size` axis (`sm`/`md`/`lg`) only changes the
+  frame width (288/592/896); the height is the dashboard grid's. So the widget
+  declares no size and _passes one down_ — the card is a full-height flex column,
+  the header takes what it needs, and the body takes the rest, so a chart given
+  `size-full` fills the whole remaining card. In a parent with no definite height
+  the card hugs its content instead. `bodyClassName` covers the one remaining gap:
+  a placeholder-only widget outside a sized cell.
+
+  The per-type chart components stay card-less, so a chart is still usable outside
+  a widget — in a table cell, a popover, or a `Metric`'s sparkline slot.
+
+- [#684](https://github.com/acronis/uikit/pull/684) [`2c2fc01`](https://github.com/acronis/uikit/commit/2c2fc01bdd89e910d2c0f31adccce3ba1f7b4408) Thanks [@madjorr](https://github.com/madjorr)! - feat(stepper): sync with the dedicated `--ui-stepper-*` token tier
+
+  Re-point `Stepper`/`StepperItem` at the dedicated `--ui-stepper-*` token tier shipped by `@acronis-platform/tokens-pd` (superseding the semantic-token placeholders used before that tier existed), add the current step's border, split its container padding into the design's asymmetric left/right values, and add a fourth `state="focus"` look for a completed step.
+
+  **Migrating:** consumers composing their own `Avatar` as a step's marker should now add `className="[box-shadow:none]"` to it — Avatar's default outset ring otherwise shows as an unwanted halo on a filled step container.
+
+- [#671](https://github.com/acronis/uikit/pull/671) [`348b267`](https://github.com/acronis/uikit/commit/348b267c8bd3947f3268e482efd81b5b0ee8452b) Thanks [@madjorr](https://github.com/madjorr)! - Add `useWizard`: an opt-in headless hook that owns a wizard's step index so a
+  consumer no longer hand-maintains one `StepperItem` block per step.
+
+  Given `steps` (`{ id, label }`, plus any extra fields of your own, which survive
+  on the derived step) and an optional `initialStep` seed (a zero-based index,
+  clamped, or a step `id`), it returns the `Stepper` summary props
+  (`currentStepNumber` / `stepCount` / `currentStepLabel` / `nextStepLabel` —
+  `undefined` on the last step, so the "Next: …" line is dropped rather than
+  rendered empty), a derived `steps` array carrying each step's `variant` and
+  `Avatar` colour/classes, `isFirstStep` / `isLastStep`, and
+  `goToNextStep` / `goToPreviousStep` / `goToStep` (neither boundary wraps; an
+  unknown `id` is a no-op).
+
+  Purely additive: `Wizard`, `Stepper` and `StepperItem` are unchanged and still
+  own no state, so a consumer already driving them by hand keeps working.
+
+- [#671](https://github.com/acronis/uikit/pull/671) [`3c9ef5b`](https://github.com/acronis/uikit/commit/3c9ef5b4944d96e61c99a8ea01ec490dc2b3629d) Thanks [@madjorr](https://github.com/madjorr)! - Add `Wizard`: the full-page wizard page template, from the Figma "RegionMain"
+  frame (node `10511-61418`).
+
+  Four composable parts — `Wizard` (full-height column), `WizardHeader` (the
+  sticky header band, on `--ui-background-surface-secondary` with a
+  `--ui-border-on-surface-divider` bottom rule, `--ui-gap-16` padding and a
+  `--ui-gap-12` inter-row gap), `WizardSubtitle` (optional muted supporting line)
+  and `WizardBody` (the step's content column, capped at 1024px).
+
+  It is a composition, not a new primitive: the breadcrumb, the title row
+  (`PageHeaderRow` / `PageHeaderTitle` / `PageHeaderActions`, reused from
+  `PageHeader`), the step indicator (`Stepper` + `StepperItem`) and the step
+  content (`Section`) are all existing components the consumer places as children.
+  `Wizard` owns layout and slots only — no step index, no navigation, and no
+  button wiring: which of Cancel / Back / Next / Submit shows on a given step is
+  the consuming UI block's decision, the same boundary `PageHeader` draws around
+  its own actions slot.
+
+### Patch Changes
+
+- [#692](https://github.com/acronis/uikit/pull/692) [`009196c`](https://github.com/acronis/uikit/commit/009196cb49dabe438a0db0100dbd1c75f6e99ef4) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - fix(charts): center legend + gap-24 across all cartesian charts
+
+  `ChartLegendContent` now uses `justify-center gap-x-6` (24 px column gap,
+  centred) instead of `justify-start gap-x-4`, matching the Figma spec
+  (nodes 8700:55607, 8174:22232, 8811:175677, 9005:73829).
+  Row wrap gap (`gap-y-2`) is unchanged.
+
+  Legend markers are now always circular dots, consistent with tooltip row
+  indicators. The previous per-series marker logic (square swatch for filled
+  series, line/dashed line for stroke series) is removed.
+
+- [#687](https://github.com/acronis/uikit/pull/687) [`07f8c08`](https://github.com/acronis/uikit/commit/07f8c08fbefcd68f3bc80d80f78769f37787b586) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - fix(chart-widget): expose the `render` prop the a11y docs already promised
+
+  `ChartWidget`'s accessibility notes pointed at `render` as the way to give a
+  widget a landmark role, but the prop was never on `ChartWidgetProps` — so
+  `<ChartWidget render={<section aria-label="Sessions" />}>` failed to type-check
+  and there was no supported way to make a widget a landmark.
+
+  The prop is now declared and forwarded to `Card`, with a test that renders the
+  documented recipe and asserts the region is really there. The docs also now say
+  the part they left out: the accessible name has to come from the caller, because
+  the header's `title` is visible text _inside_ the region rather than a name
+  for it.
+
+- [#691](https://github.com/acronis/uikit/pull/691) [`ce8ce16`](https://github.com/acronis/uikit/commit/ce8ce162d3bf2f0fbe85be8d6b2e9dca53d7fbda) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add LLM-friendly component reference docs to the published package.
+
+  A new `build:llms` script (also hooked into `build`) reads the framework-agnostic
+  specs from `packages/ui-spec` and emits:
+  - `dist/llms.txt` — index of all components grouped by category
+  - `dist/llms/<name>.md` — self-contained doc per component (props, events, content
+    slots, behavior, accessibility, usage examples)
+
+  Consumers can reference these from a project's `CLAUDE.md`:
+
+  ```
+  @node_modules/@acronis-platform/ui-react/dist/llms.txt
+  @node_modules/@acronis-platform/ui-react/dist/llms/button.md
+  ```
+
+  Both entry points are exposed via the package `exports` field.
+
+- [#684](https://github.com/acronis/uikit/pull/684) [`60833a8`](https://github.com/acronis/uikit/commit/60833a863ff509d0b084d3008745398682320c40) Thanks [@madjorr](https://github.com/madjorr)! - fix(stepper-item): show the right avatar per variant in the Code Connect example
+
+  `stepper-item.figma.tsx` composed a single blue numbered `Avatar` for all three
+  `type` values, so Figma's Code Connect snippet suggested that markup for
+  `completed` (which uses a green `CheckIcon`) and `future` (gray) too, and omitted
+  the `text-[var(--ui-stepper-item-*-label-color)]` digit override the stories and
+  docs demo rely on. The avatar is now mapped per variant via `figma.enum('type',
+…)` with literal JSX values — Code Connect serializes the example body
+  statically, so the branching has to live in the props mapping rather than in a
+  helper the example calls. The three snippets match `stepper-item.stories.tsx` and
+  the docs demo, and the `Avatar`/`AvatarFallback`/`CheckIcon` imports are pinned
+  so the published snippet compiles. Code Connect fixtures are excluded from the
+  published bundle, so there is no runtime or API change.
+
+- [#684](https://github.com/acronis/uikit/pull/684) [`eb2cc70`](https://github.com/acronis/uikit/commit/eb2cc70225dd157ed9030c18d155ec6ba58681b7) Thanks [@madjorr](https://github.com/madjorr)! - `StepperItem` now references its dedicated container-color tokens for the
+  `completed` variant's `idle` state and for the `future` variant, instead of
+  implicitly rendering no background. `completed`/`idle` gets a
+  `compoundVariants` entry wired to
+  `--ui-stepper-item-completed-container-color-idle`, and `future` picks up
+  `--ui-stepper-item-future-container-color`.
+
+  No visual change in the shipped brands — both tokens currently resolve to
+  `transparent` — but a brand that overrides either one is now honored, matching
+  the convention that every variant/state combination is wired to its own token.
+
+- [#684](https://github.com/acronis/uikit/pull/684) [`40fcfa8`](https://github.com/acronis/uikit/commit/40fcfa8b4bcb96a162a24b29b6c4f66389f60a6d) Thanks [@madjorr](https://github.com/madjorr)! - fix(stepper-item): apply the tier's generated text-style class to the step label
+
+  `StepperItem` hand-transcribed part of its
+  `.ui-stepper-item-global-container-text-style` tier into utilities (`text-sm
+leading-6`) and dropped the tier's `font-weight: 500`, so the step name rendered
+  at the inherited default weight of 400 — visibly lighter than the design. The
+  base class now applies the generated class by name instead, the way `Alert`,
+  `InputOTP`, and the sidebars apply theirs, so the family, size, weight,
+  line-height, and letter-spacing all follow the tier and cannot drift out of it.
+
+- [#684](https://github.com/acronis/uikit/pull/684) [`47773ec`](https://github.com/acronis/uikit/commit/47773ec8b9c3e86ab10199185964b55caf36a16b) Thanks [@madjorr](https://github.com/madjorr)! - fix(stepper-item): reserve the container border box on every variant
+
+  `StepperItem` only declared a border on its `current` variant, so — the
+  container being an inline-flex box with auto width/height — the current step
+  rendered ~2px larger than its `completed`/`future` siblings and pushed the row's
+  avatars and labels out of alignment. The border width is now reserved on the
+  shared base class with a transparent color (the same shape `Tag` uses), and
+  `current` only overrides the border color. No token or public API change.
+
+- [#684](https://github.com/acronis/uikit/pull/684) [`3a216ac`](https://github.com/acronis/uikit/commit/3a216ac55025c4a24bb51e5da8cd107ff46fefbe) Thanks [@madjorr](https://github.com/madjorr)! - fix(stepper-item): mirror the asymmetric container padding under RTL
+
+  `StepperItem` mapped its asymmetric container padding tokens
+  (`--ui-stepper-item-global-container-padding-{l,r}`, 8px/16px) with physical
+  `pl-`/`pr-` utilities. Because the avatar and label mirror with the flex order
+  under `dir="rtl"`, the tighter padding stayed pinned to the visual left, so the
+  spacing was inverted relative to the marker. They now use the logical `ps-`/`pe-`
+  utilities, so the 8px side always sits next to the avatar in both directions.
+
+- [#671](https://github.com/acronis/uikit/pull/671) [`98fecc7`](https://github.com/acronis/uikit/commit/98fecc76e16ae60ee158b8cbcd94695295e2dd37) Thanks [@madjorr](https://github.com/madjorr)! - Two fixes to `Wizard`'s examples and fixtures. No public API change to
+  `Wizard`, `Stepper`, `StepperItem`, or `Section`.
+
+  **Stepper avatar alignment.** `Wizard`'s Stepper examples (stories, Code
+  Connect fixture, test composition) now compose their `Avatar` step markers
+  the same way `StepperItem` documents: `[box-shadow:none]` switches off
+  Avatar's 2px outset ring — built for `AvatarGroup` separation, it otherwise
+  shows as a halo on a step's filled container — and the `current`/`future`
+  markers recolor their digit to the matching
+  `--ui-stepper-item-{current,future}-label-color` token.
+
+  **Section API migration.** The same examples had been left behind by an
+  already-released breaking change in `Section`: `SectionTitle` and
+  `SectionDescription` no longer exist in this package. Wizard's stories, docs
+  demo, and test fixtures now pass `SectionHeader`'s `title` / `description` /
+  `hasDescription` props instead. This changes rendered output inside Wizard's
+  own examples: the step-body section title is now a styled paragraph rather
+  than an `<h2>`, and each example grows roughly 12–14px taller. Copy the
+  updated examples if you were mirroring the old composition.
+
 ## 3.0.0
 
 ### Major Changes
