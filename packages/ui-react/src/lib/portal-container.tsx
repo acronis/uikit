@@ -9,7 +9,7 @@ export interface PortalContainerProviderProps {
    * The DOM element portaled content should render into (e.g. a `<div>` inside
    * a shadow root). When set, every ui-react portaling component
    * (`Popover`, `DropdownMenu`, `Tooltip`, `Dialog`, `Sheet`, `Select`,
-   * `Combobox`, `Toast`) will mount its popup inside this element instead of
+   * `Toast`) will mount its popup inside this element instead of
    * `document.body`.
    */
   container: HTMLElement | null;

@@ -153,13 +153,13 @@ The library covers layout (`AppShellChat`, `Card`,
 `Separator`, `ScrollArea`, `Resizable`, `Toolbar`), navigation (`Breadcrumb`,
 `Tabs`, `Pagination`, `SidebarPrimary`, `SidebarSecondary`, `Link`), forms
 (`InputText`, `InputSearch`, `InputTextArea`, `InputSelect`,
-`InputDatePicker`, `InputPassword`, `InputOTP`, `Combobox`, `Select`,
-`Checkbox`, `Radio`, `Switch`, `Slider`, `NumberField`, `Calendar`,
-`DateRangePicker`, `Field`, `Form`, `Label`), buttons (`Button`, `ButtonIcon`,
+`InputDatePicker`, `InputPassword`, `InputOTP`, `Select`,
+`Checkbox`, `Radio`, `Switch`, `Slider`, `NumberField`, `CalendarPanel`,
+`DateRangePicker`, `Field`, `Label`), buttons (`Button`, `ButtonIcon`,
 `ButtonMenu`), overlays (`Dialog`, `Sheet`, `Popover`, `Tooltip`,
 `DropdownMenu`), feedback (`Alert`, `Tag`/`Badge`, `Chip`, `Progress`,
 `ProgressCircle`, `Loading`, `Skeleton`, `Toast`, `Empty`), data display
-(`Table`, `DataTable`, `Avatar`, `DescriptionList`, `Accordion`,
+(`Table`, `DataTable`, `Avatar`, `DescriptionList`, `AccordionContainer`,
 `Collapsible`, `Timeline`, `ToggleGroup`), and data visualization (`Chart` and
 per-type charts — `AreaChart`, `BarChart`, `LineChart`, `PieChart`,
 `ComposedChart`, `RadarChart`, `RadialBarChart`, `ScatterChart`,

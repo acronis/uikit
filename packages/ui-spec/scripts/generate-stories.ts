@@ -554,12 +554,6 @@ const RENDER: Record<string, RenderHint> = {
     // (Default / WithError / Disabled / Horizontal / CheckboxGroup / Grouped).
     skip: true,
   },
-  form: {
-    // A <form> that needs Field children + a submit control to render anything
-    // meaningful. VR is covered by the hand-written stories (Default /
-    // WithServerErrors).
-    skip: true,
-  },
   alert: {
     // A composition needing AlertIcon/AlertContent/AlertText/AlertTitle children
     // to render meaningfully, and the banner has a 384px min-width — the
@@ -571,11 +565,6 @@ const RENDER: Record<string, RenderHint> = {
   skeleton: {
     // A bare sized box — meaningful only with a caller-supplied size className.
     // VR is covered by the hand-written stories (Default / Card).
-    skip: true,
-  },
-  combobox: {
-    // A multi-part composition needing items + input + list children to render
-    // meaningfully. VR is covered by the hand-written stories (Default / Open).
     skip: true,
   },
   collapsible: {
@@ -648,11 +637,6 @@ const RENDER: Record<string, RenderHint> = {
   'auth-layout': {
     // A centered-card layout needing a card + form children. VR is covered by the
     // hand-written story (SignIn).
-    skip: true,
-  },
-  accordion: {
-    // A composition needing item/trigger/panel children. VR is covered by the
-    // hand-written stories (Default / Multiple).
     skip: true,
   },
   toolbar: {

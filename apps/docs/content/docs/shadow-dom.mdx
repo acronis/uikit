@@ -5,7 +5,7 @@ description: How to render @acronis-platform/ui-react inside a shadow-DOM micro-
 
 When `@acronis-platform/ui-react` runs inside a **shadow-DOM micro-frontend**
 (MFE), portaled components — Popover, DropdownMenu, Tooltip, Dialog, Sheet,
-Select, Combobox, and Toaster — mount their popups into `document.body` by
+Select, and Toaster — mount their popups into `document.body` by
 default. This means the popup escapes the shadow boundary and loses access to
 the adopted stylesheets, rendering **unstyled**.
 
@@ -143,7 +143,7 @@ that must overlay the entire viewport), pass `portalContainer` directly:
   `backdrop-filter` set — those create a new containing block for fixed
   positioning too. Avoid these CSS properties on shadow-root ancestors. The
   other portaling components (Tooltip, Toast, DropdownMenu, InputSelect,
-  Combobox, Dialog, Sheet) don't yet default `positionMethod` this way, so
+  Dialog, Sheet) don't yet default `positionMethod` this way, so
   the example above — a `Dialog` inside a `PortalContainerProvider` — can
   still clip at the shadow host's edge.
 - **z-index**: Portaled content inside a shadow root participates in the shadow
