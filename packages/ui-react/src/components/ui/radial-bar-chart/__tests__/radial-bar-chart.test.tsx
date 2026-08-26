@@ -162,9 +162,10 @@ describe('RadialBarChart', () => {
 
   it('labels the legend from config', () => {
     const { container } = renderChart({ showLegend: true });
-    const legend = container.querySelector('.recharts-legend-wrapper');
-    expect(legend).toHaveTextContent('Chrome');
-    expect(legend).toHaveTextContent('Edge');
+    // Legend is rendered externally (not inside recharts chrome).
+    expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
+    expect(container.textContent).toContain('Chrome');
+    expect(container.textContent).toContain('Edge');
   });
 
   it('draws no arcs but still mounts on empty data', () => {
@@ -342,7 +343,7 @@ describe('radialBarChartSegmentFill', () => {
   // The unreached remainder stands in for the `showBackground` track.
   it('paints the unreached remainder in the track surface', () => {
     expect(radialBarChartSegmentFill('track', 'Chrome')).toBe(
-      'var(--ui-background-surface-secondary)'
+      'var(--ui-border-on-status-neutral)'
     );
   });
 
@@ -616,7 +617,7 @@ describe('RadialBarChart gauge, multi-metric and geometry props', () => {
       7
     );
     expect(
-      fills.filter((fill) => fill === 'var(--ui-background-surface-secondary)')
+      fills.filter((fill) => fill === 'var(--ui-border-on-status-neutral)')
     ).toHaveLength(2);
     // The unreached segments *are* the track, so `showBackground`'s own one would
     // double it, and a legend here would name synthetic pieces instead of data.
@@ -640,6 +641,9 @@ describe('RadialBarChart gauge, multi-metric and geometry props', () => {
     const style = container.querySelector('style')?.innerHTML ?? '';
     expect(style).toContain('--color-used: var(--ui-dataviz-categorical-1)');
     expect(style).toContain('--color-quota: var(--ui-dataviz-categorical-2)');
+    expect(
+      [...container.querySelectorAll('span.truncate')].map((label) => label.textContent)
+    ).toEqual(['Used', 'Quota']);
   });
 
   it('sizes each arc from barSize and spaces the bands with barCategoryGap', () => {
@@ -648,6 +652,9 @@ describe('RadialBarChart gauge, multi-metric and geometry props', () => {
     ) => {
       const { container, unmount } = renderChart({
         cornerRadius: 0,
+        showBackground: false,
+        innerRadius: 30,
+        outerRadius: 110,
         ...props,
       });
       const [inner, next] = arcsOf(container).map(radiiOf);
@@ -701,7 +708,7 @@ describe('RadialBarChart gauge, multi-metric and geometry props', () => {
       { browser: 'Safari', value: 0.2 },
     ];
     const span = (minAngle?: number) => {
-      const { container, unmount } = renderChart({ data: tiny, minAngle });
+      const { container, unmount } = renderChart({ data: tiny, minAngle, showBackground: false, innerRadius: 30, outerRadius: 110 });
       const width = arcSpanX(arcsOf(container)[1]);
       unmount();
       return width;

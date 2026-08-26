@@ -11,10 +11,10 @@ contract:
     - name: shape
       type: "'pie' | 'donut'"
       required: false
-      default: "'pie'"
+      default: "'donut'"
       description: >-
-        Arc shape. `pie` fills to the centre; `donut` leaves a hollow centre
-        (`innerRadius`).
+        Arc shape. `donut` leaves a hollow centre (`innerRadius`); `pie` fills
+        to the centre.
     - name: data
       type: ReadonlyArray<Record<string, string | number>>
       required: true
@@ -41,7 +41,7 @@ contract:
     - name: innerRadius
       type: number
       required: false
-      default: '60'
+      default: '48'
       description: Inner radius of the arc when `shape="donut"` (ignored for `shape="pie"`).
     - name: centerLabel
       type: '{ value?: string | number; label?: string | number }'
@@ -52,11 +52,12 @@ contract:
     - name: outerRadius
       type: number
       required: false
-      description: Outer radius of the arc. Omit to use recharts' responsive default.
+      default: '60'
+      description: Outer radius of the arc.
     - name: paddingAngle
       type: number
       required: false
-      default: '0'
+      default: '2'
       description: Gap between slices, in degrees.
     - name: cornerRadius
       type: number
@@ -65,15 +66,19 @@ contract:
     - name: startAngle
       type: number
       required: false
+      default: '90'
       description: >-
-        Angle the sweep starts at, in degrees (0 is 3 o'clock, counter-clockwise).
-        Pair with endAngle for a semicircle (180 → 0) or an arc. A partial sweep
-        still centres on the full plot area, so a half turn fills only half its
-        box — give it a short, wide one.
+        Angle the sweep starts at, in degrees (90 is 12 o'clock). Defaults to
+        the top of the clock face. Pair with endAngle for a semicircle (180 → 0)
+        or an arc. A partial sweep still centres on the full plot area, so a half
+        turn fills only half its box — give it a short, wide one.
     - name: endAngle
       type: number
       required: false
-      description: Angle the sweep ends at, in degrees. Defaults to a full 360 circle.
+      default: '-270'
+      description: >-
+        Angle the sweep ends at, in degrees. Defaults to a full clockwise circle
+        from the startAngle (startAngle − 360).
     - name: minAngle
       type: number
       required: false
@@ -98,11 +103,12 @@ contract:
       required: false
       default: 'true'
       description: Render the legend.
-    - name: legendPosition
-      type: "'top' | 'bottom'"
+    - name: legendValueFormatter
+      type: '(value: string | number) => string'
       required: false
-      default: "'bottom'"
-      description: Which edge the legend sits on.
+      description: >-
+        Format each slice's value in the list legend. Omit to stringify the raw
+        value.
     - name: margin
       type: '{ top?: number; right?: number; bottom?: number; left?: number }'
       required: false

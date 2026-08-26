@@ -247,7 +247,6 @@ export const Overview: Story = {
           data={partData}
           dataKey="value"
           nameKey="name"
-          shape="pie"
           showLegend={false}
           className="h-[180px] w-full"
         />
@@ -303,10 +302,7 @@ export const Overview: Story = {
           data={partData}
           dataKey="value"
           nameKey="name"
-          innerRadius={20}
-          outerRadius={80}
           showLegend={false}
-          className="h-[180px] w-full"
         />
       </div>
       <div>

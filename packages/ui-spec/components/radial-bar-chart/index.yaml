@@ -14,3 +14,6 @@ description: >-
   notched pieces and `centerLabel` puts the reading in the hole. Ported from the
   apps/demo `RadialChartPlayground`.
 since: 0.58.0
+figma:
+  node: '8811-172438'
+  codeConnect: packages/ui-react/src/components/ui/radial-bar-chart/radial-bar-chart.figma.tsx

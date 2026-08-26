@@ -1,35 +1,31 @@
-// Figma Code Connect — status: NEEDS_FIGMA_URL
-// Ported from the apps/demo PieChartPlayground without a "ready for dev" Figma
-// node (design-pending v1). PieChart is a recharts composition over the shared
-// Chart primitives; a Figma node would map a representative pie/donut frame with
-// its shape variant. Replace 'FIGMA_NODE_URL' and flip to COMPLETE via
-// `/figma-component PieChart <url> --update` once mockups land.
+// Figma Code Connect — status: COMPLETE
+// ChartDonut component (node 8811:172438, type=donut variant).
+// `type` in Figma discriminates donut vs. radial; the variant filter below
+// restricts this connection to donut instances only. RadialBarChart owns
+// the `type=radial` half in its own .figma.tsx.
 import figma from '@figma/code-connect';
 
 import { PieChart } from './pie-chart';
 
-figma.connect(PieChart, 'FIGMA_NODE_URL', {
-  props: {
-    shape: figma.enum('Shape', {
-      Pie: 'pie',
-      Donut: 'donut',
-    }),
-  },
-  example: ({ shape }) => (
-    <PieChart
-      shape={shape}
-      dataKey="value"
-      nameKey="browser"
-      config={{
-        Chrome: { label: 'Chrome' },
-        Safari: {
-          label: 'Safari',
-        },
-      }}
-      data={[
-        { browser: 'Chrome', value: 275 },
-        { browser: 'Safari', value: 200 },
-      ]}
-    />
-  ),
-});
+figma.connect(
+  PieChart,
+  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=8811-172438',
+  {
+    variant: { type: 'donut' },
+    example: () => (
+      <PieChart
+        shape="donut"
+        dataKey="value"
+        nameKey="browser"
+        config={{
+          Chrome: { label: 'Chrome' },
+          Safari: { label: 'Safari' },
+        }}
+        data={[
+          { browser: 'Chrome', value: 275 },
+          { browser: 'Safari', value: 200 },
+        ]}
+      />
+    ),
+  }
+);

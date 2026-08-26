@@ -88,14 +88,14 @@ describe('PieChart', () => {
     expect(style).toContain('--color-Safari: var(--ui-dataviz-categorical-2)');
   });
 
-  it('defaults to a pie shape', () => {
+  it('defaults to a donut shape', () => {
     const { container } = renderChart();
-    expect(container.firstElementChild).toHaveAttribute('data-shape', 'pie');
+    expect(container.firstElementChild).toHaveAttribute('data-shape', 'donut');
   });
 
-  it('reflects the donut shape variant on the root', () => {
-    const { container } = renderChart({ shape: 'donut' });
-    expect(container.firstElementChild).toHaveAttribute('data-shape', 'donut');
+  it('renders a filled pie when shape="pie"', () => {
+    const { container } = renderChart({ shape: 'pie' });
+    expect(container.firstElementChild).toHaveAttribute('data-shape', 'pie');
   });
 
   it('draws one slice per row, filled from its config color', () => {
@@ -122,10 +122,11 @@ describe('PieChart', () => {
 
   it('labels the legend from config', () => {
     const { container } = renderChart();
-    const legend = container.querySelector('.recharts-legend-wrapper');
-    expect(legend).toHaveTextContent('Chrome');
-    expect(legend).toHaveTextContent('Safari');
-    expect(legend).toHaveTextContent('Firefox');
+    // Legend is rendered externally (not inside recharts chrome).
+    expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
+    expect(container.textContent).toContain('Chrome');
+    expect(container.textContent).toContain('Safari');
+    expect(container.textContent).toContain('Firefox');
   });
 
   it('draws no slices but still mounts on empty data', () => {
@@ -419,30 +420,24 @@ describe('PieChart geometry, slices and chrome', () => {
   it('widens a hairline slice to the minAngle floor', () => {
     const lopsided = [...data.slice(0, 2), { browser: 'Firefox', value: 1 }];
 
-    const unfloored = renderChart({ data: lopsided });
+    const unfloored = renderChart({ data: lopsided, paddingAngle: 0, startAngle: 0, endAngle: 360, shape: 'pie' });
     expect(sweepOf(slicesOf(unfloored.container)[2])).toBeLessThan(1);
     unfloored.unmount();
 
-    const floored = renderChart({ data: lopsided, minAngle: 30 });
+    const floored = renderChart({ data: lopsided, minAngle: 30, paddingAngle: 0, startAngle: 0, endAngle: 360, shape: 'pie' });
     expect(sweepOf(slicesOf(floored.container)[2])).toBeGreaterThanOrEqual(30);
   });
 
-  // recharts sizes the default arc off the plot box — 80% of half its shorter
-  // side — and reserves 5px a side when no margin is given. The faked layout is
-  // 400px tall, so height is what binds: 60px of margin costs 0.8 × (60 − 5) of
-  // radius.
-  it('shrinks the arc by the margin the caller reserves', () => {
-    const tight = renderChart();
-    const tightRadius = arcOf(slicesOf(tight.container)[0]).radius;
-    tight.unmount();
-
-    const roomy = renderChart({
-      margin: { top: 60, right: 60, bottom: 60, left: 60 },
+  // The component uses a fixed outerRadius default, so margin no longer affects
+  // the arc radius. It still insets the recharts plot area, which is observable
+  // as the clip rect's offset and dimensions.
+  it('insets the plot area by the margin the caller reserves', () => {
+    const { container } = renderChart({
+      margin: { top: 40, right: 40, bottom: 40, left: 40 },
     });
-    expect(arcOf(slicesOf(roomy.container)[0]).radius).toBeCloseTo(
-      tightRadius - 0.8 * (60 - 5),
-      1
-    );
+    const plotArea = container.querySelector('clipPath rect');
+    expect(plotArea).toHaveAttribute('x', '40');
+    expect(plotArea).toHaveAttribute('y', '40');
   });
 
   // `cornerRadius` rounds each slice tip, which recharts draws as extra arc
@@ -507,18 +502,12 @@ describe('PieChart geometry, slices and chrome', () => {
     ).toHaveLength(2);
   });
 
-  it('moves the legend to the top edge on request', () => {
-    const bottom = renderChart({ shape: 'donut' });
-    const bottomStyle = bottom.container
-      .querySelector<HTMLElement>('.recharts-legend-wrapper')!
-      .getAttribute('style')!;
-    expect(bottomStyle).toContain('bottom:');
-    bottom.unmount();
-
-    const top = renderChart({ shape: 'donut', legendPosition: 'top' });
-    const topStyle = top.container
-      .querySelector<HTMLElement>('.recharts-legend-wrapper')!
-      .getAttribute('style')!;
-    expect(topStyle).toContain('top:');
+  it('always renders the legend as an external list beside the chart', () => {
+    const { container } = renderChart({ shape: 'donut', showLegend: true });
+    // Legend is external — no recharts built-in legend wrapper in the SVG.
+    expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
+    // Slice labels from config appear in the external panel.
+    expect(container.textContent).toContain('Chrome');
+    expect(container.textContent).toContain('Safari');
   });
 });

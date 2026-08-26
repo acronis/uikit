@@ -10,3 +10,6 @@ description: >-
   and legend chrome. One variant axis: `shape` (filled pie / hollow-centre
   donut). Ported from the apps/demo `PieChartPlayground`.
 since: 0.58.0
+figma:
+  node: '8811-172438'
+  codeConnect: packages/ui-react/src/components/ui/pie-chart/pie-chart.figma.tsx

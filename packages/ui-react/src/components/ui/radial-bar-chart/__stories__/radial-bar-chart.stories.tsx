@@ -6,7 +6,11 @@ import {
   RadialBar,
   RadialBarChart as RechartsRadialBarChart,
 } from 'recharts';
+import { ChartPieIcon, EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
 
+import { ButtonIcon } from '../../button-icon';
+import { ChartWidget } from '../../chart-widget';
+import { Metric } from '../../metric';
 import {
   RadialBarChart,
   RadialBarChartSegmentedTooltipContent,
@@ -48,36 +52,25 @@ const meta = {
   component: RadialBarChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  // The ChartContainer is transparent by design (it inherits the surface it sits
-  // on — usually a Card). Render the stories on a themed surface so the chart is
-  // legible in both light and dark; without it, dark mode flips the token-driven
-  // arcs/track but leaves the backdrop unthemed.
-  decorators: [
-    (Story) => (
-      <div className="rounded-lg border border-border bg-background p-6 text-foreground">
-        <Story />
-      </div>
-    ),
-  ],
   args: {
     config,
     data,
     dataKey: 'value',
     nameKey: 'browser',
-    innerRadius: 30,
-    outerRadius: 110,
+    innerRadius: 20,
+    outerRadius: 60,
     startAngle: 90,
     endAngle: -270,
     cornerRadius: 4,
     showBackground: true,
     showTooltip: true,
     showLegend: true,
-    className: 'h-[360px] w-[360px]',
+    className: 'w-[256px]',
   },
   argTypes: {
     ...paletteArgTypes,
-    innerRadius: { control: { type: 'number', min: 0, max: 120 } },
-    outerRadius: { control: { type: 'number', min: 40, max: 160 } },
+    innerRadius: { control: { type: 'number', min: 0, max: 60 } },
+    outerRadius: { control: { type: 'number', min: 0, max: 60 } },
     startAngle: { control: { type: 'number', min: -360, max: 360 } },
     endAngle: { control: { type: 'number', min: -360, max: 360 } },
     cornerRadius: { control: { type: 'number', min: 0, max: 20 } },
@@ -119,9 +112,48 @@ type Story = StoryObj<typeof meta>;
 // Concentric arcs sweeping a full circle (default).
 export const FullCircle: Story = {};
 
+// Replication of the Figma design mockup: the chart widget inside a card with
+// a metric readout above the concentric arcs + legend. Rendered with a fixed
+// composition so it shows real consumer usage rather than the meta args playground.
+export const WidgetExample: Story = {
+  render: () => (
+    <div className="w-[480px]">
+      <ChartWidget
+        header={{
+          title: 'Title',
+          actions: (
+            <ButtonIcon variant="ghost" aria-label="Widget actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          ),
+        }}
+        metric={<Metric icon={<ChartPieIcon />} value="125" unit="Label" />}
+      >
+        <RadialBarChart
+          data={[
+            { item: 'first', value: 10 },
+            { item: 'second', value: 10 },
+            { item: 'third', value: 10 },
+            { item: 'fourth', value: 10 },
+          ]}
+          config={{
+            first: { label: 'First Lorem ipsum dolor sit' },
+            second: { label: 'Second Lorem ipsum dolor sit' },
+            third: { label: 'Third:' },
+            fourth: { label: 'Fourth:' },
+          }}
+          nameKey="item"
+          dataKey="value"
+          valueDomain={[0, 12]}
+        />
+      </ChartWidget>
+    </div>
+  ),
+};
+
 // A half-circle gauge (startAngle 180 → endAngle 0).
 export const Gauge: Story = {
-  args: { startAngle: 180, endAngle: 0, innerRadius: 40, outerRadius: 130 },
+  args: { startAngle: 180, endAngle: 0 },
 };
 
 // Background track + tooltip + legend toggled off — the baseline that would catch
@@ -236,8 +268,6 @@ export const LabelsNameValue: Story = {
   args: {
     showLabels: true,
     labelFormat: 'name-value',
-    innerRadius: 70,
-    outerRadius: 145,
   },
 };
 
@@ -252,25 +282,16 @@ export const SingleValueGauge: Story = {
     valueDomain: [0, 100],
     startAngle: 180,
     endAngle: 0,
-    innerRadius: 80,
-    outerRadius: 130,
-    // Half a ring only needs half the height; `cy` puts the baseline near the
-    // bottom of that box so the drawn half fills it.
-    cy: 190,
-    barSize: 22,
-    centerLabel: { value: '65%', label: 'of quota used' },
-    // One arc names itself through the readout, so the legend would only repeat
-    // it. The tooltip stays — it's the only way to read the exact value.
+    innerRadius: 48,
+    centerLabel: { value: '65%', label: '' },
     showLegend: false,
-    className: 'h-[240px] w-[360px]',
   },
 };
 
 // The same readout in a full ring of concentric arcs.
 export const CenterLabel: Story = {
   args: {
-    innerRadius: 60,
-    outerRadius: 130,
+    innerRadius: 48,
     centerLabel: { value: '175', label: 'sessions' },
   },
 };
@@ -298,11 +319,7 @@ export const MultiMetric: Story = {
     valueDomain: [0, 100],
     startAngle: 180,
     endAngle: 0,
-    innerRadius: 70,
-    outerRadius: 140,
-    cy: 190,
-    barSize: 20,
-    className: 'h-[260px] w-[380px]',
+    innerRadius: 40,
   },
 };
 
@@ -311,15 +328,15 @@ export const MultiMetric: Story = {
 // story's baseline. Same raw-composition trick as `TooltipOpen`.
 export const MultiMetricTooltipOpen: Story = {
   render: () => (
-    <ChartContainer config={metricConfig} className="h-[260px] w-[380px]">
+    <ChartContainer config={metricConfig} className="size-[360px]">
       <RechartsRadialBarChart
         data={metricData}
-        innerRadius={70}
-        outerRadius={140}
+        innerRadius={73}
+        outerRadius={110}
         startAngle={180}
         endAngle={0}
-        cy={190}
-        barSize={20}
+        cy="65%"
+        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
       >
         <PolarAngleAxis
           type="number"
@@ -377,8 +394,8 @@ const SEGMENTED_GEOMETRY = {
   valueDomain: [0, 38] as [number, number],
   segments: 8,
   segmentGap: 4,
-  innerRadius: 88,
-  outerRadius: 120,
+  innerRadius: 48,
+  outerRadius: 60,
 };
 
 export const SegmentedGauge: Story = {
@@ -481,3 +498,4 @@ export const MinAngle: Story = {
     minAngle: 12,
   },
 };
+
