@@ -67,6 +67,7 @@ catalog:
 # Pin transitive deps that we don't want pnpm to bump.
 overrides:
   axios: 1.18.0
+  immutable: 5.1.8
   prismjs: 1.30.0
   postcss: 8.5.25
   fast-json-patch: 3.1.0
