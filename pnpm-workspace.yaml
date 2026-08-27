@@ -29,7 +29,7 @@ catalog:
   # @vitejs/plugin-react is correspondingly held at 5.x (6.x requires
   # vite ^8). Revisit once rolldown's CJS interop is fixed.
   vite: 6.4.3
-  vitest: 4.1.7
+  vitest: 4.1.10
 
   # Cross-workspace runtime deps. Versions are anchored on
   # packages/ui-react (the published library) so its typecheck stays
