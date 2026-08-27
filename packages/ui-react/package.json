@@ -89,7 +89,7 @@
   "devDependencies": {
     "@figma/code-connect": "1.4.8",
     "@types/js-yaml": "4.0.9",
-    "js-yaml": "4.3.0",
+    "js-yaml": "4.3.1",
     "tsx": "^4.20.0",
     "@playwright/test": "1.60.0",
     "@tanstack/react-virtual": "catalog:",
