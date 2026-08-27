@@ -73,7 +73,7 @@ overrides:
   sharp: 0.35.0
   prismjs: 1.30.0
   postcss: 8.5.25
-  fast-json-patch: 3.1.0
+  fast-json-patch: 3.1.1
   form-data: 4.0.6
   'brace-expansion@<3.0.0': 2.1.4
   'brace-expansion@>=5.0.0 <6.0.0': 5.0.9
@@ -81,3 +81,6 @@ overrides:
   nanoid: 3.3.18
   undici: 7.29.0
   uuid: 14.0.1 # transitive-only (no direct usage); mirror caps here, exceeds the 11.1.1 advisory fix
+  'js-yaml@>=3.0.0 <4.0.0': 3.15.1
+  'js-yaml@>=4.0.0 <5.0.0': 4.3.1
+  esbuild: 0.28.1
