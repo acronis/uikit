@@ -44,7 +44,9 @@ parts:
       i.e. lines and areas) get a line marker — dashed via a repeating gradient
       when the series carries a `strokeDasharray`; every other series gets a
       square swatch. Passed to recharts' Legend via its `content` prop
-      (ChartLegend).
+      (ChartLegend). Both the `default` and `list` variants emit
+      `data-slot="chart-legend"` on their root `<div>`, which is a stable
+      selector for tests and host-side styling.
 
 states:
   - id: tooltip-active

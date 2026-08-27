@@ -1,6 +1,13 @@
 'use client';
 
-import { FunnelChart, type ChartConfig } from '@acronis-platform/ui-react';
+import {
+  ButtonIcon,
+  ChartWidget,
+  FunnelChart,
+  Grid,
+  type ChartConfig,
+} from '@acronis-platform/ui-react';
+import { EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 const data = [
   { stage: 'Visits', value: 5000 },
@@ -9,26 +16,47 @@ const data = [
   { stage: 'Purchases', value: 620 },
 ];
 
-// Stage colors come from the chart's default categorical palette.
+// Stage colors come from the chart's default palette — the sequential blue ramp.
 const config = {
   Visits: { label: 'Visits' },
   Signups: {
-    label: 'Signups'
+    label: 'Signups',
   },
   Trials: { label: 'Trials' },
   Purchases: {
-    label: 'Purchases'
+    label: 'Purchases',
   },
 } satisfies ChartConfig;
 
+const actions = (
+  <ButtonIcon variant="ghost" aria-label="Widget actions">
+    <EllipsisIcon size={16} />
+  </ButtonIcon>
+);
+
 export function FunnelChartDemo() {
   return (
-    <FunnelChart
-      config={config}
-      data={data}
-      dataKey="value"
-      nameKey="stage"
-      style={{ height: 380, width: 460 }}
-    />
+    <Grid container cols={2}>
+      <ChartWidget header={{ title: 'Conversion', actions }}>
+        <FunnelChart
+          config={config}
+          data={data}
+          dataKey="value"
+          nameKey="stage"
+          className="size-full"
+        />
+      </ChartWidget>
+      <ChartWidget header={{ title: 'Conversion', actions }}>
+        <FunnelChart
+          config={config}
+          data={data}
+          dataKey="value"
+          nameKey="stage"
+          lastShape="rectangle"
+          legendValueFormatter={(value) => Number(value).toLocaleString()}
+          className="size-full"
+        />
+      </ChartWidget>
+    </Grid>
   );
 }

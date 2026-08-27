@@ -172,6 +172,13 @@ export type ChartLegendContentProps = {
    * stringified with `String()`.
    */
   valueFormatter?: (value: string | number) => string;
+  /**
+   * Extra Tailwind class(es) applied to the right-hand value in a list entry,
+   * merged on top of the default colour (`text-[var(--ui-text-on-surface-link-idle)]`).
+   * Pass a replacement colour class to override the default; other utilities
+   * (e.g. `tabular-nums`) are additive and leave the default colour in place.
+   */
+  valueClassName?: string;
 };
 
 const ChartContext = React.createContext<ChartContextProps | null>(null);
@@ -495,11 +502,13 @@ function ChartLegendListEntry({
   itemConfig,
   valueKey,
   valueFormatter,
+  valueClassName,
 }: {
   item: LegendPayload;
   itemConfig: ChartItemConfig;
   valueKey?: string;
   valueFormatter?: (value: string | number) => string;
+  valueClassName?: string;
 }) {
   const raw = valueKey
     ? (item.payload as Record<string, unknown> | undefined)?.[valueKey]
@@ -527,7 +536,12 @@ function ChartLegendListEntry({
         </span>
       </div>
       {displayValue != null && (
-        <span className="shrink-0 text-xs font-semibold text-[var(--ui-text-on-surface-link-idle)]">
+        <span
+          className={cn(
+            'shrink-0 text-xs font-semibold text-[var(--ui-text-on-surface-link-idle)]',
+            valueClassName
+          )}
+        >
           {displayValue}
         </span>
       )}
@@ -585,6 +599,7 @@ function ChartLegendContent({
   variant = 'default',
   valueKey,
   valueFormatter,
+  valueClassName,
 }: ChartLegendContentProps) {
   // The context read directly rather than through `useChart()`: a caller that
   // passes its own `config` is rendering the legend outside the container, where
@@ -606,7 +621,7 @@ function ChartLegendContent({
 
   if (variant === 'list') {
     return (
-      <div className={cn('flex flex-col', className)}>
+      <div data-slot="chart-legend" className={cn('flex flex-col', className)}>
         {payload.map((item) => {
           const key = `${nameKey || item.dataKey || 'value'}`;
           return (
@@ -616,6 +631,7 @@ function ChartLegendContent({
               itemConfig={getPayloadConfigFromPayload(config, item, key)}
               valueKey={valueKey}
               valueFormatter={valueFormatter}
+              valueClassName={valueClassName}
             />
           );
         })}
@@ -625,6 +641,7 @@ function ChartLegendContent({
 
   return (
     <div
+      data-slot="chart-legend"
       className={cn(
         // Wraps rather than overflowing: a legend with many entries (a treemap's
         // one-per-tile, a pie's one-per-slice) is wider than the chart on a narrow

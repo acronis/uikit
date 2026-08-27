@@ -2,52 +2,89 @@ spec_version: '1.0'
 component: FunnelChart
 
 schematic: |
-  root: <div data-last-shape>                       (variant wrapper)
-    container: <ChartContainer>                     (themed, sized, responsive)
-      plot: recharts <FunnelChart>
-        series:  <Funnel> with one <Cell> per visible stage row (stacked segments)
-        labels:  <LabelList> per-stage label beside or on the segment (when showLabels)
-        value-labels: second <LabelList> carrying the value (when showValueLabels)
-        tooltip: <ChartTooltip> → tooltip-content   (hover card)
-        legend:  <ChartLegend> → legend-content     (optional, showLegend)
+  root: <div data-last-shape>                     flex row · items-center · 16px gutter
+    plot-frame: <div>                             120×120 fixed square (no outside labels)
+                                                  OR h-[120px] flex-1 (labels beside funnel)
+      container: <ChartContainer>                 (themed, fills the frame)
+        plot: recharts <FunnelChart>
+          series:  <Funnel> with one <Cell> per visible stage row —
+                   2px rounded corners, 2px of surface between stages
+          labels:  <LabelList> stage label beside or on its segment (showLabels)
+          value-labels: second <LabelList> carrying the value (showValueLabels)
+          tooltip: <ChartTooltip> → tooltip-content    (hover card)
+    legend-content: <ChartLegendContent variant="list">  sibling of plot-frame,
+                    outside the SVG, takes all remaining width (showLegend)
 
 root:
   element: div
   description: >-
-    The variant wrapper. Carries the CVA `lastShape` class and mirrors the
-    resolved value onto `data-last-shape`, then renders the shared
-    `ChartContainer` (sized to fill the wrapper) around the recharts
-    `FunnelChart`.
+    The variant wrapper and the layout row. Carries the CVA `lastShape` class and
+    mirrors the resolved value onto `data-last-shape`, then lays out two children
+    in a row with a 16px gutter: the fixed 120×120 `plot-frame` and the
+    `legend-content` column, which absorbs whatever width is left. The component
+    declares **no width and no height of its own** — it fills the width its
+    parent gives it, and the 120px figure is the plot square Figma specifies, not
+    a widget width. With `showLegend` false the row centres its lone plot. The
+    card, header and metric row Figma draws around the funnel belong to
+    `ChartWidget`; `FunnelChart` is card-less.
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [plot-frame, legend-content]
 
 parts:
+  - id: plot-frame
+    element: div
+    description: >-
+      The frame that holds the plot. Its sizing has two modes: when nothing sits
+      beside the funnel — no label list on the right or left (the default) — it is
+      a fixed 120×120 square (`size-[120px] shrink-0`), matching the Figma
+      geometry and keeping the legend column from shrinking. When a label list
+      sits beside the funnel (`showLabels` with `labelPosition` of `right` or
+      `left`, or `showValueLabels` with `valuePosition` of `right` or `left`),
+      the label margins would otherwise consume the entire 120px, leaving no room
+      for the funnel itself; in this case the frame becomes `h-[120px] flex-1`,
+      growing to fill the available width while keeping the 120px height.
   - id: container
     element: div
     description: >-
-      The shared `ChartContainer` — supplies the per-stage `--color-<name>`
-      custom properties from `config` and themes recharts' internals.
+      The shared `ChartContainer`, filling the `plot-frame`. It resolves the
+      `palette` into the per-stage `--color-<name>` custom properties the
+      segments fill from, and themes recharts' internals.
   - id: plot
     element: svg
-    description: The recharts `FunnelChart` holding the funnel and its chrome.
+    description: >-
+      The recharts `FunnelChart` holding the funnel and its in-SVG chrome. Its
+      plot area is inset by 4 top, 8 right, 4 bottom, 8 left when nothing sits
+      beside the funnel — just the room the rounded corners and the apex need.
+      The insets widen on whichever side a label list sits.
   - id: series
     element: g
     description: >-
       The `Funnel` — one `Cell` per visible data row, each a segment sized by
-      `dataKey`. In `palette` colour mode a segment fills from its
-      `--color-<name>` var; in `gradient` mode every segment fills from one hue
-      mixed progressively toward the surface, so the funnel reads as a ramp. A
-      `stageSettings` entry overrides one segment's colour or drops it from the
-      funnel. `stroke` / `strokeWidth` outline the segments and `funnelWidth`
-      narrows them. `lastShape=triangle` narrows the final segment to a point;
-      `rectangle` ends it flat. `reversed` flips the direction.
+      `dataKey` and painted from its `palette` stop (a `stageSettings.color`
+      overrides one stage; `stageSettings.hidden` drops it). Stages are drawn by
+      the component's own shape renderer rather than recharts' `Trapezoid`,
+      because the design's stage needs two things `Funnel`/`Trapezoid` cannot
+      express: 2px of surface showing between stages and 2px rounded corners on
+      every stage, apex included. The gap is taken off each stage's **top** edge,
+      so n stages produce exactly n-1 gaps and the topmost stage stays flush with
+      the top of the plot area. `lastShape=triangle` narrows the final stage to a
+      point; `rectangle` keeps a flat lower edge. `reversed` flips the stack so
+      the funnel widens downward — and moves the gap-free stage to the last row.
+      `stroke` / `strokeWidth` outline the stages and `funnelWidth` narrows them.
   - id: labels
     element: g
     description: >-
       `LabelList` — one label per visible stage, carrying its name, its value, its
       conversion from the widest stage, or a pair of those (`labelFormat`); a pair
-      narrows the funnel to leave itself room to wrap into.
-      `labelPosition` puts it beside the segment (`right` / `left`) or on it
-      (`inside`); the fill follows, so an on-segment label keeps its contrast over
-      a saturated fill. Rendered when `showLabels`.
+      narrows the funnel to leave itself room to wrap into. `labelPosition` puts
+      it beside the segment (`right` / `left`) or on it (`inside`); the fill
+      follows, so an on-segment label keeps its contrast over a saturated fill.
+      Rendered when `showLabels`, which is **off** by default — the design's
+      funnel names its stages in the legend instead.
   - id: value-labels
     element: g
     description: >-
@@ -64,10 +101,20 @@ parts:
   - id: legend-content
     element: div
     description: >-
-      `ChartLegendContent` — one marker + label per visible stage, on the edge
-      given by `legendPos`. The renderer builds no legend payload for a funnel
-      series, so the component synthesizes one from the visible stages; a hidden
-      stage has no entry. Rendered when `showLegend`.
+      `ChartLegendContent` with `variant="list"` — the stage list, a **sibling of
+      the plot** rendered outside the recharts SVG (never a recharts legend, and
+      never below the funnel). One two-column row per distinct visible stage: a
+      round marker and the `config` label on the inline start, the stage's
+      `dataKey` value on the inline end. Both the label and the value use the
+      primary on-surface text token and the value is semibold — deliberately not
+      the link token the donut and radial list legends use for their values.
+      Because the block sits outside `ChartContainer` it cannot read the
+      `--color-<name>` custom properties scoped to the chart container, so its
+      markers carry each stage's resolved palette token instead. recharts builds
+      no legend payload for a funnel series, so the component synthesizes one
+      from the visible stages; a hidden stage has no entry, and two stages
+      sharing a name share the one entry they share a colour with. Rendered when
+      `showLegend`, which is **on** by default.
 
 states:
   - id: last-shape-variant
@@ -80,6 +127,11 @@ states:
     kind: prop
     prop: reversed
     affects: [series]
+  - id: legend-hidden
+    trigger: showLegend is false, so the row holds only the plot and centres it
+    kind: prop
+    prop: showLegend
+    affects: [legend-content]
   - id: stage-hidden
     trigger: a stageSettings entry hides its stage
     kind: prop

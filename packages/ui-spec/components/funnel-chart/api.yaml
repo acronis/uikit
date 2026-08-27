@@ -3,8 +3,10 @@ component: FunnelChart
 
 # Framework-agnostic contract. `lastShape` is the CVA variant axis
 # (conformance-checked against the ui-react cva keys). `data` / `config` /
-# `dataKey` / `nameKey` are the data contract; the rest toggle direction and
-# chrome. A funnel plots a single series of stages (rows).
+# `dataKey` / `nameKey` are the data contract; `palette` is the only source of a
+# stage's colour; the rest toggle direction, geometry and chrome. A funnel plots
+# a single series of stages (rows). There is no legend-placement prop and no
+# gradient colour mode: the legend is always the column beside the plot.
 contract:
   properties:
     - name: lastShape
@@ -12,8 +14,8 @@ contract:
       required: false
       default: "'triangle'"
       description: >-
-        How the funnel ends. `triangle` narrows the final segment to a point;
-        `rectangle` ends it flat (a stack of trapezoids).
+        How the funnel ends. `triangle` narrows the final stage to a point;
+        `rectangle` keeps a flat lower edge (a stack of trapezoids).
     - name: data
       type: ReadonlyArray<Record<string, string | number>>
       required: true
@@ -22,31 +24,50 @@ contract:
       type: ChartConfig
       required: true
       description: >-
-        Stages take their colour from the container's `palette`; each entry,
-        keyed by the stage's `nameKey` value, maps that stage to a `label` and an
-        optional `tone`. Resolved into the `--color-<name>` custom properties the
-        segments fill from.
+        Stages take their colour from `palette`; each entry, keyed by the stage's
+        `nameKey` value, maps that stage to a `label` and an optional `tone`. The
+        labels are what the legend and the tooltip read. Resolved into the
+        `--color-<name>` custom properties the segments fill from.
     - name: dataKey
       type: string
       required: true
-      description: The numeric field that sizes each stage.
+      description: >-
+        The numeric field that sizes each stage — and the value each legend row
+        shows on its inline end.
     - name: nameKey
       type: string
       required: true
       description: >-
-        The label field that names each stage (drives the tooltip, on-chart
-        labels, and the `--color-<name>` lookup). Values should be unique per
-        chart — stages sharing a name share one config/color entry.
+        The label field that names each stage (drives the legend, the tooltip,
+        the on-plot labels, and the `--color-<name>` lookup). Values should be
+        unique per chart — stages sharing a name share one config/color entry
+        and one legend row.
+    - name: palette
+      type: ChartPalette
+      required: false
+      default: "{ type: 'sequential', ramp: 'blue' }"
+      description: >-
+        The dataviz palette the stages are painted from — the only source of a
+        stage's colour, bar a per-stage `stageSettings.color`. Unlike every other
+        chart, which takes the shared categorical default, a funnel defaults to
+        the sequential blue ramp: its stages are an ordered series, which is what
+        a ramp is for. Exported as FUNNEL_CHART_DEFAULT_PALETTE.
     - name: reversed
       type: boolean
       required: false
       default: 'false'
-      description: Flip the funnel so it widens toward the bottom instead of narrowing.
+      description: >-
+        Flip the stack so the funnel widens toward the bottom instead of
+        narrowing. The gap-free stage — the one flush with the top of the plot
+        area — becomes the last row rather than the first.
     - name: showLabels
       type: boolean
       required: false
-      default: 'true'
-      description: Render a label for each stage — see labelFormat and labelPosition.
+      default: 'false'
+      description: >-
+        Render a label for each stage — see labelFormat and labelPosition. Off by
+        default: the design's funnel carries no on-plot labels, because the legend
+        beside it already names every stage.
     - name: labelFormat
       type: "'name' | 'value' | 'percent' | 'name-value' | 'name-percent' | 'value-percent'"
       required: false
@@ -105,37 +126,26 @@ contract:
     - name: showLegend
       type: boolean
       required: false
-      default: 'false'
+      default: 'true'
       description: >-
-        Render the legend — one entry per visible stage. Off by default because a
-        funnel labels its stages on the chart.
-    - name: legendPos
-      type: "'top' | 'bottom'"
-      required: false
-      default: "'bottom'"
-      description: Which edge the legend sits on.
-    - name: colorMode
-      type: "'palette' | 'gradient'"
-      required: false
-      default: "'palette'"
-      description: >-
-        How the stages are colored. `palette` gives each stage its own config
-        color; `gradient` ramps one hue from the widest stage down to the
-        narrowest, mixing it toward the surface so every segment stays opaque.
-    - name: gradientColor
-      type: string
+        Render the stage list beside the plot — one two-column row per visible
+        stage, a sibling of the plot rather than a renderer legend. On by default,
+        because it is where the design's funnel names its stages. With it off the
+        row centres its lone plot.
+    - name: legendValueFormatter
+      type: '(value: string | number) => string'
       required: false
       description: >-
-        The hue gradient mode ramps. Defaults to the first visible stage's own
-        color — including a stageSettings color set on it, since that is what the
-        stage actually paints with. Ignored when colorMode is palette.
+        Format the value in each legend row — the stage's dataKey number. Omit to
+        stringify the raw value.
     - name: stageSettings
       type: 'Record<string, { color?: string; hidden?: boolean }>'
       required: false
       description: >-
-        Per-stage overrides keyed by the stage's nameKey value. `color` wins over
-        both config and colorMode; `hidden` drops the stage from the funnel, its
-        labels, the legend, and the conversion percentages.
+        Per-stage overrides keyed by the stage's nameKey value. `color` replaces
+        that stage's palette stop, in the funnel and in its legend marker;
+        `hidden` drops the stage from the funnel, its labels, the legend, and the
+        conversion percentages.
     - name: showActiveShape
       type: boolean
       required: false
@@ -149,7 +159,7 @@ contract:
       description: >-
         Segment border color — reference an existing --ui-* token. Defaults to the
         border token when strokeWidth is set on its own, because the renderer's own
-        default is a hardcoded white the container neutralizes.
+        default there is a hardcoded white the container neutralizes.
     - name: strokeWidth
       type: number
       required: false
@@ -166,11 +176,14 @@ contract:
     - name: margin
       type: '{ top?: number; right?: number; bottom?: number; left?: number }'
       required: false
+      default: '{ top: 4, right: 8, bottom: 4, left: 8 }'
       description: >-
-        Plot-area margin, in px, merged over the defaults per side so passing one
-        side keeps the others. It reserves the side a label list sits on so
-        unwrappable text isn't clipped at the SVG edge — see funnelWidth for the
-        label's wrap room.
+        Plot-area inset, in px, merged over the defaults per side so passing one
+        side keeps the others. The default is the design's own tight inset — the
+        room the rounded corners and the apex need — and applies whenever nothing
+        sits beside the funnel. As soon as a label list does, the side it sits on
+        widens so unwrappable text isn't clipped at the SVG edge; see funnelWidth
+        for the label's wrap room.
     - name: showTooltip
       type: boolean
       required: false
@@ -218,7 +231,6 @@ adapters:
         dataKey="value"
         nameKey="stage"
         lastShape="triangle"
-        className="h-[380px] w-[460px]"
       />
   vue:
     component: AvFunnelChart

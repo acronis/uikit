@@ -1,35 +1,39 @@
-// Figma Code Connect — status: NEEDS_FIGMA_URL
-// Ported from the apps/demo FunnelChartPlayground without a "ready for dev" Figma
-// node (design-pending v1). FunnelChart is a recharts composition over the shared
-// Chart primitives; a Figma node would map a representative funnel frame with its
-// lastShape variant. Replace 'FIGMA_NODE_URL' and flip to COMPLETE via
-// `/figma-component FunnelChart <url> --update` once mockups land.
+// Figma Code Connect — status: COMPLETE
+// The connected node is `ChartFunnel` (8811:175245). Its one Figma property is
+// `size` (sm/md/lg), which sets the width of the *widget card* wrapping the
+// plot — 288/592/896 — not anything about the chart. FunnelChart is card-less
+// and parent-responsive by design, so `size` is deliberately neither mapped nor
+// mirrored as a prop: the card belongs to `ChartWidget`, and the width belongs
+// to the dashboard grid.
+//
+// The mockup's header, ⋯ menu and metric row are likewise part of the widget
+// composition. See the `WidgetExample` story for the whole assembly.
 import figma from '@figma/code-connect';
 
 import { FunnelChart } from './funnel-chart';
 
-figma.connect(FunnelChart, 'FIGMA_NODE_URL', {
-  props: {
-    lastShape: figma.enum('Last shape', {
-      Triangle: 'triangle',
-      Rectangle: 'rectangle',
-    }),
-  },
-  example: ({ lastShape }) => (
-    <FunnelChart
-      lastShape={lastShape}
-      dataKey="value"
-      nameKey="stage"
-      config={{
-        Visits: { label: 'Visits' },
-        Signups: {
-          label: 'Signups',
-        },
-      }}
-      data={[
-        { stage: 'Visits', value: 5000 },
-        { stage: 'Signups', value: 2600 },
-      ]}
-    />
-  ),
-});
+figma.connect(
+  FunnelChart,
+  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=8811-175245',
+  {
+    example: () => (
+      <FunnelChart
+        dataKey="value"
+        nameKey="stage"
+        config={{
+          Visits: { label: 'Visits' },
+          Signups: { label: 'Signups' },
+          Trials: { label: 'Trials' },
+          Purchases: { label: 'Purchases' },
+        }}
+        data={[
+          { stage: 'Visits', value: 5000 },
+          { stage: 'Signups', value: 2600 },
+          { stage: 'Trials', value: 1400 },
+          { stage: 'Purchases', value: 620 },
+        ]}
+        className="size-full"
+      />
+    ),
+  }
+);
