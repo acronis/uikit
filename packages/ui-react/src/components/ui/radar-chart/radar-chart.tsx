@@ -231,7 +231,11 @@ export interface RadarChartProps
   angleAxisLineType?: 'polygon' | 'circle';
   /** Draw a tick line from the axis line to each spoke label. Defaults to `true`. */
   angleTickLine?: boolean;
-  /** Distance from each polygon vertex to its outer category label, in px. Defaults to `4`. */
+  /**
+   * Distance from each polygon vertex to its outer category label, in px.
+   * Defaults to `4` (Figma geometry). When `showLabels` is on and no explicit
+   * value is given, widens automatically to clear the value labels.
+   */
   angleTickSize?: number;
   /**
    * Render the value scale — a radial axis of ticks from the centre outward, so
@@ -331,6 +335,11 @@ export interface RadarChartProps
   /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
   labelPosition?: CartesianLabelPosition;
 }
+
+// Distance from the polygon to the category tick text when value labels are on
+// (recharts' default is 8). Has to clear a CHART_LABEL_FONT_SIZE line plus the
+// LabelList's own 5px offset, or the topmost vertex's value overlaps its tick.
+const RADAR_LABEL_TICK_SIZE = 30;
 
 /**
  * One series' `<Radar>` (and its value labels).
@@ -470,7 +479,15 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       <div
         ref={ref}
         data-grid-type={gridType}
-        className={cn(radarChartVariants({ gridType }), className)}
+        // Default height matches the Figma geometry (187px plot + 32px legend).
+        // The consumer's `className` is merged after the default, so a
+        // caller-supplied height (e.g. `h-[380px]`) wins via Tailwind's
+        // last-class-wins rule.
+        className={cn(
+          radarChartVariants({ gridType }),
+          showLegend ? 'h-[219px]' : 'h-[187px]',
+          className,
+        )}
         {...props}
       >
         <ChartContainer
@@ -483,9 +500,7 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
           // is a shared-primitives gap (a Chart task); worked around locally, not
           // by editing chart.tsx.
           className={cn(
-            showLegend ? 'h-[219px]' : 'h-[187px]',
-            showLegend && '[&_.recharts-surface]:!h-[187px]',
-            'w-full',
+            'size-full',
             "[&_.recharts-polar-angle-axis-tick_text]:fill-[var(--ui-text-on-surface-secondary)]! [&_.recharts-polar-angle-axis-tick_text]:text-xs [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-[var(--ui-border-on-surface-divider)]! [&_.recharts-polar-radius-axis-line]:stroke-[var(--ui-border-on-surface-divider)]! [&_.recharts-polar-radius-axis-tick_text]:fill-[var(--ui-text-on-surface-secondary)]! [&_.recharts-polar-radius-axis-tick_text]:text-xs"
           )}
         >
@@ -509,11 +524,23 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
               dataKey={angleKey}
               orientation={angleAxisOrientation}
               axisLineType={angleAxisLineType}
+              // `showAngleAxis` hides the chrome rather than dropping the axis:
+              // the angle axis is also what maps a row to its category name, so
+              // removing it would leave the tooltip labelling rows by index.
               tick={showAngleAxis}
               axisLine={showAngleAxis && angleAxisLine}
               tickLine={showAngleAxis && angleTickLine}
+              // Push the category ticks out when value labels are on. recharts
+              // gives a Radar's label list a *cartesian* viewBox (width/height 0
+              // at the vertex), so `top` offsets straight up in screen space —
+              // at the topmost vertex the value lands on its own category tick.
+              // The tick text is drawn at `outerRadius + tickSize`, so this is
+              // the only lever that adds *absolute* clearance: shrinking
+              // outerRadius scales the tick ring down with the polygon and keeps
+              // the overlap. Default 4px matches the Figma geometry when labels
+              // are off.
               tickSize={
-                angleTickSize ?? 4
+                angleTickSize ?? (showLabels ? RADAR_LABEL_TICK_SIZE : 4)
               }
             />
             {hasRadiusAxis && (
