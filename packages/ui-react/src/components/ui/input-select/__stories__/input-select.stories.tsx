@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   BriefcaseIcon,
@@ -7,6 +7,7 @@ import {
   NodeTreeIcon,
 } from '@acronis-platform/icons-react/stroke-mono';
 
+import { Button } from '../../button/button';
 import {
   InputSelect,
   InputSelectContent,
@@ -433,6 +434,54 @@ export const TenantSelector: Story = {
   ),
 };
 
+// Same tenant tree as `TenantSelector`, but the popup is fully controlled (`open` /
+// `onOpenChange`) and opened by an external button instead of the field's own
+// trigger. The trigger still has to exist — Base UI needs it internally — but it
+// stays mounted `sr-only` rather than being removed. Its layout position isn't
+// where the popup should visually align, though (it sits below the button in
+// flow), so `InputSelectContent`'s `anchor` prop points the popup at the visible
+// button instead of the hidden trigger.
+function ControlledTenantSelector() {
+  const [open, setOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  return (
+    <div className="flex flex-col gap-3">
+      <Button ref={buttonRef} className="self-start" onClick={() => setOpen(true)}>
+        Select a tenant
+      </Button>
+      <InputSelect
+        items={tenantItems}
+        defaultValue="all-clients"
+        open={open}
+        onOpenChange={setOpen}
+      >
+        <InputSelectField className="sr-only">
+          <InputSelectLabel>Tenant</InputSelectLabel>
+          <InputSelectTrigger>
+            <InputSelectValue placeholder="Select a tenant" />
+          </InputSelectTrigger>
+        </InputSelectField>
+        <InputSelectContent
+          side="right"
+          sideOffset={60}
+          anchor={buttonRef}
+          collisionAvoidance={{ side: 'none', fallbackAxisSide: 'none' }}
+          isPopoverStyled
+        >
+          <InputSelectSearch aria-label="Search tenants" placeholder="Search…" />
+          <TenantTree />
+        </InputSelectContent>
+      </InputSelect>
+    </div>
+  );
+}
+
+export const ControlledOffsetWithDirectionPopoverStyled: Story = {
+  name: 'Controlled, Offset, With Direction, Popover styled',
+  render: () => <ControlledTenantSelector />,
+};
+
 // The tenant dropdown's loading / empty / error variants, each with the in-dropdown
 // search on top — mirrors the Figma "InputSelectDropdownTenants" status variants
 // (nodes 3064-21462 / 21467 / 21472).
@@ -495,5 +544,47 @@ export const ConstrainedWidth: Story = {
         <InputSelectContent>{fruits}</InputSelectContent>
       </InputSelect>
     </div>
+  ),
+};
+
+// Enforced placement: `collisionAvoidance` disables Base UI's auto-flip/shift, so
+// the dropdown stays pinned to the right of the trigger with a 20px offset —
+// unlike every other story, which lets Base UI pick the side that fits.
+export const EnforcedPlacement: Story = {
+  args: { defaultOpen: true },
+  render: (args) => (
+    <InputSelect {...args} items={fruitItems}>
+      <InputSelectField>
+        <InputSelectLabel>Fruit</InputSelectLabel>
+        <InputSelectTrigger>
+          <InputSelectValue placeholder="Select an option" />
+        </InputSelectTrigger>
+      </InputSelectField>
+      <InputSelectContent
+        side="right"
+        sideOffset={20}
+        collisionAvoidance={{ side: 'none', fallbackAxisSide: 'none' }}
+      >
+        {fruits}
+      </InputSelectContent>
+    </InputSelect>
+  ),
+};
+
+// Renders the dropdown with `PopoverContent`'s chrome (`--ui-popover-container-*`
+// tokens, no shadow, fade/zoom/slide animation) instead of the default
+// `--ui-input-select-dropdown-container-*` tokens + static `shadow-md`.
+export const PopoverStyled: Story = {
+  args: { defaultOpen: true },
+  render: (args) => (
+    <InputSelect {...args} items={fruitItems}>
+      <InputSelectField>
+        <InputSelectLabel>Fruit</InputSelectLabel>
+        <InputSelectTrigger>
+          <InputSelectValue placeholder="Select an option" />
+        </InputSelectTrigger>
+      </InputSelectField>
+      <InputSelectContent isPopoverStyled>{fruits}</InputSelectContent>
+    </InputSelect>
   ),
 };

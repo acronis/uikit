@@ -148,10 +148,36 @@ The other parts (`InputSelect`, `InputSelectField`, `InputSelectLabel`,
 `InputSelectSearch`, `InputSelectGroup`, `InputSelectSection`,
 `InputSelectSectionLabel`, `InputSelectDescription`, `InputSelectError`) extend
 the corresponding Base UI `Select` primitive props. `InputSelect` accepts
-`items`, `defaultValue` / `value`, and Base UI `Select` root props;
-`InputSelectContent` adds `side` / `align` for positioning. See the
+`items`, `defaultValue` / `value`, and Base UI `Select` root props. See the
 [Base UI Select docs](https://base-ui.com/react/components/select) for the full
 prop surface.
+
+`InputSelectContent` forwards `side`, `align`, `sideOffset`, `alignOffset`,
+`collisionAvoidance`, and `portalContainer` to the underlying Base UI
+`Select.Positioner`, for consumers who need to place the dropdown themselves.
+By default the popup opens below the trigger (`side="bottom"`,
+`align="start"`, `sideOffset={4}`) and Base UI flips or shifts it to stay in
+view when space is tight. To pin it to one placement instead — "always to the
+right, no matter what" — pass an explicit `side`/`align` together with
+`collisionAvoidance`:
+
+```tsx
+<InputSelectContent
+  side="right"
+  sideOffset={20}
+  collisionAvoidance={{ side: 'none', fallbackAxisSide: 'none' }}
+>
+  {/* …items… */}
+</InputSelectContent>
+```
+
+`side: 'none'` stops the popup flipping to the opposite side and
+`fallbackAxisSide: 'none'` stops it falling back to the perpendicular axis, so
+it stays to the right even when it overflows the viewport — make sure the
+surrounding layout actually has room. `alignOffset` nudges the popup along the
+alignment axis (perpendicular to `side`) without changing `align`.
+`portalContainer` scopes the portal, which matters when the field renders
+inside a shadow root — see [Shadow DOM Integration](/shadow-dom).
 
 `InputSelectItem` extends the Base UI `Select.Item` props and adds `icon`,
 `indent`, and `textValue`. `InputSelectExpander` is a plain button (not a

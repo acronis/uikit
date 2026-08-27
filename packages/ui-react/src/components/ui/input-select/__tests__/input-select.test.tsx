@@ -1,7 +1,7 @@
 import { createRef } from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   InputSelect,
@@ -232,6 +232,36 @@ describe('InputSelect', () => {
     );
   });
 
+  it('renders the dropdown with input-select tokens by default', async () => {
+    render(<Field />);
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    const popup = screen.getByRole('listbox');
+    expect(popup).toHaveClass(
+      'bg-[var(--ui-input-select-dropdown-container-color)]',
+      'shadow-md'
+    );
+  });
+
+  it('renders the dropdown with popover tokens and no shadow when isPopoverStyled', async () => {
+    render(
+      <InputSelect items={{ apple: 'Apple' }}>
+        <InputSelectTrigger aria-label="Fruit">
+          <InputSelectValue placeholder="Select an option" />
+        </InputSelectTrigger>
+        <InputSelectContent isPopoverStyled>
+          <InputSelectItem value="apple">Apple</InputSelectItem>
+        </InputSelectContent>
+      </InputSelect>
+    );
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    const popup = screen.getByRole('listbox');
+    expect(popup).toHaveClass('bg-[var(--ui-popover-container-color)]');
+    expect(popup).not.toHaveClass(
+      'bg-[var(--ui-input-select-dropdown-container-color)]',
+      'shadow-md'
+    );
+  });
+
   it('forwards className to the field wrapper', () => {
     render(
       <InputSelect items={{ apple: 'Apple' }}>
@@ -246,6 +276,81 @@ describe('InputSelect', () => {
       </InputSelect>
     );
     expect(screen.getByTestId('field')).toHaveClass('w-24');
+  });
+});
+
+describe('InputSelectContent positioning', () => {
+  // happy-dom reports every element as a zero-sized rect at the origin, so
+  // floating-ui resolves every placement to translate(0, 0) and no offset is
+  // observable. Give the anchor/popup a real box so the computed transform
+  // actually reflects the offsets under test.
+  function mockLayout() {
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(
+      () =>
+        ({
+          width: 200,
+          height: 32,
+          x: 100,
+          y: 100,
+          top: 100,
+          left: 100,
+          right: 300,
+          bottom: 132,
+          toJSON() {},
+        }) as DOMRect
+    );
+  }
+
+  function open(content: React.ReactNode) {
+    render(
+      <InputSelect defaultOpen items={{ apple: 'Apple' }}>
+        <InputSelectTrigger aria-label="Fruit">
+          <InputSelectValue placeholder="Select an option" />
+        </InputSelectTrigger>
+        {content}
+      </InputSelect>
+    );
+    return screen.getByRole('listbox').parentElement as HTMLElement;
+  }
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('forwards alignOffset and collisionAvoidance to the positioner', async () => {
+    mockLayout();
+    const positioner = open(
+      <InputSelectContent
+        side="right"
+        sideOffset={20}
+        alignOffset={24}
+        collisionAvoidance={{ side: 'none', align: 'none', fallbackAxisSide: 'none' }}
+      >
+        <InputSelectItem value="apple">Apple</InputSelectItem>
+      </InputSelectContent>
+    );
+    // `side` sticks (no flip), the popup clears the 200px-wide anchor by
+    // `sideOffset`, and `alignOffset` shifts it down the alignment axis.
+    expect(positioner).toHaveAttribute('data-side', 'right');
+    await waitFor(() => {
+      expect(positioner.style.transform).toBe('translate(220px, 24px)');
+    });
+  });
+
+  it('keeps Base UI collision avoidance when collisionAvoidance is omitted', async () => {
+    mockLayout();
+    const positioner = open(
+      <InputSelectContent side="right" sideOffset={20} alignOffset={24}>
+        <InputSelectItem value="apple">Apple</InputSelectItem>
+      </InputSelectContent>
+    );
+    // Same offsets, but Base UI's default avoidance flips the popup off the
+    // requested side and shifts away the alignOffset — the contrast that proves
+    // the previous test's placement came from `collisionAvoidance`.
+    await waitFor(() => {
+      expect(positioner.style.transform).toBe('translate(-20px, 0px)');
+    });
+    expect(positioner).toHaveAttribute('data-side', 'left');
   });
 });
 
