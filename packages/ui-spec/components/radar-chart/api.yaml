@@ -183,8 +183,12 @@ contract:
     - name: cy
       type: number | string
       required: false
-      default: "'50%'"
-      description: Vertical centre of the web, in px or a percentage of the height.
+      default: 'the middle of the plot band'
+      description: >-
+        Vertical centre of the web, in px or a percentage of the height. Defaults
+        to the middle of the plot band — 50% of what the legend leaves, not of
+        the whole box — because the underlying chart centres a polar plot on the
+        whole surface and takes no account of the legend band beneath it.
     - name: startAngle
       type: number
       required: false

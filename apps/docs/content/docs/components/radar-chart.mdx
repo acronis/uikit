@@ -23,8 +23,11 @@ outer labels stay 4px from the polygon vertices.
 
 Series are columns of a shared row (like a bar or line chart), plotted over one
 polar angular axis. The plot surface is `187px` high by default (`219px` with the
-legend); pass a height class via `className` to override it (e.g.
-`className="h-[380px]"`).
+legend), and the web is centred on that plot band rather than on the whole box —
+so the bottom category label clears the legend instead of disappearing behind it.
+Turning on `showLabels` widens the gap between the polygon and the category
+labels, and the box grows with it (`240px`, or `272px` with the legend). Pass a
+height class via `className` to override any of it (e.g. `className="h-[380px]"`).
 
 Series colors come from the `palette` prop, not from `config` — see
 [Palettes](/components/chart#palettes). Each `config` entry maps a data key to a

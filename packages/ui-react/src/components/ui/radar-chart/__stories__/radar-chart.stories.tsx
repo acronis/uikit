@@ -155,7 +155,7 @@ export const WidgetExample: Story = {
   },
   render: () => (
     <ChartWidget
-      className="w-[592px]"
+      className="h-[320px] w-[592px]"
       header={{
         title: 'Title',
         actions: (

@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   RadarChart,
+  radarPlotBox,
   radarRadiusAxisDomain,
   radarSeriesStyle,
 } from '../radar-chart';
@@ -775,6 +776,108 @@ describe('RadarChart geometry and legend', () => {
 
     const withoutLegend = renderChart({ showLegend: false });
     expect(withoutLegend.container.firstElementChild).toHaveClass('h-[187px]');
+  });
+
+  // The Figma band holds the 78px web and its 4px tick ring, but not the 30px
+  // ring `showLabels` needs — at 187 the top and bottom category labels ran off
+  // the box. The box grows with the ring rather than the ring shrinking to it.
+  it('grows the box when the category ring outgrows the Figma band', () => {
+    const withLegend = renderChart({ showLabels: true });
+    expect(withLegend.container.firstElementChild).toHaveClass('h-[272px]');
+    withLegend.unmount();
+
+    const withoutLegend = renderChart({ showLabels: true, showLegend: false });
+    expect(withoutLegend.container.firstElementChild).toHaveClass('h-[240px]');
+  });
+
+  // A percentage radius is fitted to the plot area by recharts — legend
+  // included — so it never needs a taller box, however wide the tick ring is.
+  it('keeps the Figma band for a percentage outerRadius', () => {
+    const { container } = renderChart({
+      showLabels: true,
+      outerRadius: '80%',
+    });
+    expect(container.firstElementChild).toHaveClass('h-[219px]');
+  });
+
+  describe('radarPlotBox', () => {
+    /** The box height and resolved polar centre, in px. */
+    function resolve(ringRadius: number | undefined, showLegend: boolean) {
+      const { heightClass, cy } = radarPlotBox(ringRadius, showLegend);
+      const height = Number(heightClass.match(/h-\[(\d+)px\]/)![1]);
+      return {
+        height,
+        centre: cy === undefined ? height / 2 : (parseFloat(cy) / 100) * height,
+      };
+    }
+
+    it('pins the Figma box and the centre of its plot band', () => {
+      expect(radarPlotBox(90, true)).toEqual({
+        heightClass: 'h-[219px]',
+        cy: '42.694%',
+      });
+      expect(radarPlotBox(90, false)).toEqual({
+        heightClass: 'h-[187px]',
+        cy: undefined,
+      });
+    });
+
+    it('pins the widened box for a labelled tick ring', () => {
+      expect(radarPlotBox(116, true)).toEqual({
+        heightClass: 'h-[272px]',
+        cy: '44.117%',
+      });
+      expect(radarPlotBox(116, false)).toEqual({
+        heightClass: 'h-[240px]',
+        cy: undefined,
+      });
+    });
+
+    // The regression this exists for: recharts centres a polar chart on the
+    // whole SVG, so with the legend on, the ring the category labels sit on used
+    // to overrun the top edge and disappear behind the legend at the bottom.
+    it('fits the whole category ring above the legend band', () => {
+      for (const showLegend of [true, false]) {
+        const legendBand = showLegend ? 32 : 0;
+        // 90 is the Figma default's ring; 120 exactly fills the widened band, so
+        // it is the case with no slack left to absorb an error.
+        for (const ringRadius of [90, 92, 116, 120]) {
+          const { height, centre } = resolve(ringRadius, showLegend);
+          // The truncated percentage spends its leftover fraction upwards, so
+          // the legend side is exact and the top can be a hundredth of a pixel
+          // short of the edge.
+          expect(centre - ringRadius).toBeGreaterThan(-0.01);
+          expect(centre + ringRadius).toBeLessThanOrEqual(height - legendBand);
+        }
+      }
+    });
+  });
+
+  /** Centre the web is drawn on, read back off the topmost category tick. */
+  function webCentreY(container: HTMLElement, ringRadius: number) {
+    const ys = [
+      ...container.querySelectorAll('.recharts-polar-angle-axis-tick-value'),
+    ].map((tick) => Number(tick.getAttribute('y')));
+    return Math.min(...ys) + ringRadius;
+  }
+
+  it('centres the web on the plot band rather than on the whole box', () => {
+    const { container } = renderChart();
+    const expected =
+      (parseFloat(radarPlotBox(90, true).cy!) / 100) * CHART_HEIGHT;
+    expect(webCentreY(container, 78 + 4)).toBeCloseTo(expected, 1);
+    // Which is above where recharts would have put it on its own.
+    expect(webCentreY(container, 78 + 4)).toBeLessThan(CENTRE_Y);
+  });
+
+  it('leaves the centre to recharts when there is no legend to clear', () => {
+    const { container } = renderChart({ showLegend: false });
+    expect(webCentreY(container, 78 + 4)).toBeCloseTo(CENTRE_Y, 1);
+  });
+
+  it('lets an explicit cy override the reserved legend band', () => {
+    const { container } = renderChart({ cy: '25%' });
+    expect(webCentreY(container, 78 + 4)).toBeCloseTo(CHART_HEIGHT * 0.25, 1);
   });
 
   it('lets a consumer className override the default height', () => {

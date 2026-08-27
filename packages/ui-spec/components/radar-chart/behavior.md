@@ -95,6 +95,17 @@ Scenario: Geometry
 ```
 
 ```gherkin
+Scenario: The box holds the category labels
+  Given a fixed outerRadius
+  Then the chart reserves a plot band tall enough for the outer category labels
+    — the outer radius, the tick size, and half a line of tick text on each side
+  And showLabels, which widens the tick gap, widens that band with it
+  And the web is centred on the plot band rather than on the whole box, so the
+    bottom label clears the legend and the top one clears the upper edge
+  And a caller-supplied height or cy wins over both
+```
+
+```gherkin
 Scenario: Tooltip on hover
   Given showTooltip is true
   When the user hovers near a spoke

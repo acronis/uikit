@@ -295,7 +295,11 @@ export interface RadarChartProps
   radiusAxisReversed?: boolean;
   /** Horizontal centre of the web, in px or a percentage of the width. Defaults to `50%`. */
   cx?: number | string;
-  /** Vertical centre of the web, in px or a percentage of the height. Defaults to `50%`. */
+  /**
+   * Vertical centre of the web, in px or a percentage of the height. Defaults to
+   * the middle of the plot band — i.e. `50%` of what the legend leaves, not of
+   * the whole box (see `radarPlotBox`).
+   */
   cy?: number | string;
   /** Angle the first category sits at, in degrees. Defaults to `90` (12 o'clock). */
   startAngle?: number;
@@ -314,7 +318,8 @@ export interface RadarChartProps
   /**
    * Outer radius of the web, in px or a percentage of the available radius.
    * Defaults to `78px`, matching the Figma radar geometry. The legend and labels
-   * do not change the radius.
+   * do not change the radius — they change the box it is drawn in (see
+   * `radarPlotBox`).
    */
   outerRadius?: number | string;
   /**
@@ -340,6 +345,80 @@ export interface RadarChartProps
 // (recharts' default is 8). Has to clear a CHART_LABEL_FONT_SIZE line plus the
 // LabelList's own 5px offset, or the topmost vertex's value overlaps its tick.
 const RADAR_LABEL_TICK_SIZE = 30;
+
+// Vertical geometry of the chart's own box, in px.
+//
+// recharts centres a polar chart on the *whole* SVG: `cy` falls back to
+// `height / 2` and — unlike a percentage `outerRadius`, which it does fit to the
+// plot area — takes no account of the legend band it reserves at the bottom.
+// With the fixed-px `outerRadius` the Figma geometry asks for, that leaves the
+// ring the category labels are drawn on centred over rows the legend has
+// already claimed: the bottom label lands behind the legend and the top one runs
+// off the edge. `radarPlotBox` derives the box height and `cy` together so the
+// ring always has somewhere to go.
+
+// Half a `text-xs` line (16px). recharts anchors the top and bottom category
+// ticks' text *on* their point (`verticalAnchor: 'middle'`), so this much of the
+// text falls beyond the ring on each side.
+const RADAR_TICK_TEXT_HALF_LINE = 8;
+// Figma's plot band. Holds the 78px web plus its 4px tick ring and that half
+// line (90px each side of the centre) with a little to spare.
+const RADAR_PLOT_BAND = 187;
+// What a chart whose category ring outgrows RADAR_PLOT_BAND gets instead:
+// 2 × (78 + RADAR_LABEL_TICK_SIZE + RADAR_TICK_TEXT_HALF_LINE) — the cost of
+// `showLabels` at the Figma radius — rounded up to keep the same few px of slack
+// Figma's 187 leaves around the 4px ring.
+const RADAR_LABELLED_PLOT_BAND = 240;
+// Figma's legend row, and what recharts' wrapper occupies too: it parks the
+// wrapper at `margin.bottom` (5) and `ChartLegendContent` is a `pt-3` above a
+// 16px line.
+const RADAR_LEGEND_BAND = 32;
+
+/** The chart's own box: the height it reserves, and the polar centre inside it. */
+export interface RadarPlotBox {
+  /**
+   * Tailwind height for the outer element. Merged *before* the consumer's
+   * `className`, so a caller-supplied height still wins.
+   */
+  heightClass: string;
+  /** `cy` for recharts, or `undefined` to keep its own `height / 2` default. */
+  cy: string | undefined;
+}
+
+/**
+ * Size the chart's box around its category ring, and centre the web in the part
+ * of that box the legend does not take. Exported for unit tests; not part of the
+ * package's public API.
+ *
+ * `ringRadius` is how far the category labels reach from the centre —
+ * `outerRadius + angleTickSize + RADAR_TICK_TEXT_HALF_LINE` — or `undefined`
+ * when `outerRadius` is a percentage, which recharts already fits to the plot
+ * area (legend included) on its own.
+ *
+ * `cy` comes back as a percentage rather than the px it resolves to at the
+ * default height, so a caller-supplied height keeps the proportion instead of
+ * pinning the web to an absolute offset. On a taller box that lifts the web a
+ * little further than the legend alone needs — towards the side with the slack.
+ */
+export function radarPlotBox(
+  ringRadius: number | undefined,
+  showLegend: boolean
+): RadarPlotBox {
+  const tall = ringRadius !== undefined && ringRadius > RADAR_PLOT_BAND / 2;
+  const plotBand = tall ? RADAR_LABELLED_PLOT_BAND : RADAR_PLOT_BAND;
+  if (!showLegend) {
+    // 240 / 187 — the plot band on its own.
+    return { heightClass: tall ? 'h-[240px]' : 'h-[187px]', cy: undefined };
+  }
+  return {
+    // 240 + 32 / 187 + 32 — the plot band above the legend band. Tailwind only
+    // sees classes it can read in the source, so these stay literal.
+    heightClass: tall ? 'h-[272px]' : 'h-[219px]',
+    // Truncated rather than rounded: the leftover fraction has to come off the
+    // top, the side with the slack, and never off the legend's.
+    cy: `${Math.floor((plotBand / 2 / (plotBand + RADAR_LEGEND_BAND)) * 1e5) / 1e3}%`,
+  };
+}
 
 /**
  * One series' `<Radar>` (and its value labels).
@@ -475,18 +554,37 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       activeDot,
     };
     const outerRadius = outerRadiusProp ?? 78;
+    const resolvedTickSize =
+      angleTickSize ?? (showLabels ? RADAR_LABEL_TICK_SIZE : 4);
+    // A percentage `outerRadius` is already fitted to the plot area by recharts,
+    // so only a fixed radius has a ring whose reach the box has to be sized to.
+    const plotBox = radarPlotBox(
+      typeof outerRadius === 'number'
+        ? outerRadius + resolvedTickSize + RADAR_TICK_TEXT_HALF_LINE
+        : undefined,
+      showLegend
+    );
+    // When the consumer supplies their own height (size-*, h-*, min-h-*, max-h-*)
+    // the plotBox.cy percentage — calibrated for the compact default heights — would
+    // shift the web too far up in a taller box. Fall back to recharts' default
+    // cy = height/2 in that case; a large container has room for ring + legend
+    // without the legend-band compensation radarPlotBox does.
+    const consumerOwnsHeight = /(?:^|\s)(?:h-|size-|min-h-|max-h-)/.test(
+      className ?? ''
+    );
     return (
       <div
         ref={ref}
         data-grid-type={gridType}
-        // Default height matches the Figma geometry (187px plot + 32px legend).
+        // Default height matches the Figma geometry (187px plot + 32px legend),
+        // widening only when the category ring outgrows it (see `radarPlotBox`).
         // The consumer's `className` is merged after the default, so a
         // caller-supplied height (e.g. `h-[380px]`) wins via Tailwind's
         // last-class-wins rule.
         className={cn(
           radarChartVariants({ gridType }),
-          showLegend ? 'h-[219px]' : 'h-[187px]',
-          className,
+          plotBox.heightClass,
+          className
         )}
         {...props}
       >
@@ -507,7 +605,7 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
           <RechartsRadarChart
             data={data as readonly unknown[]}
             cx={cx}
-            cy={cy}
+            cy={cy ?? (consumerOwnsHeight ? undefined : plotBox.cy)}
             startAngle={startAngle}
             endAngle={endAngle}
             innerRadius={innerRadius}
@@ -538,10 +636,9 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
               // the only lever that adds *absolute* clearance: shrinking
               // outerRadius scales the tick ring down with the polygon and keeps
               // the overlap. Default 4px matches the Figma geometry when labels
-              // are off.
-              tickSize={
-                angleTickSize ?? (showLabels ? RADAR_LABEL_TICK_SIZE : 4)
-              }
+              // are off. The box grows to fit whatever this resolves to — see
+              // `radarPlotBox`.
+              tickSize={resolvedTickSize}
             />
             {hasRadiusAxis && (
               <PolarRadiusAxis
