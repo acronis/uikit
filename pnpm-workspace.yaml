@@ -68,11 +68,7 @@ catalog:
 overrides:
   prismjs: 1.30.0
   postcss: 8.5.25
-
-  # Security bumps to versions available on the corp Artifactory mirror
-  # (global-npm-prod-virtual) — see vulnerabilities.md. Some only get a
-  # partial fix because the mirror doesn't yet cache the fully-patched
-  # version; revisit once it does.
+  fast-json-patch: 3.1.0
   form-data: 4.0.6
   'brace-expansion@^1.0.0': 1.1.16
   'brace-expansion@^2.0.0': 2.1.2 # partial: advisory needs 2.1.4, mirror caps at 2.1.2
