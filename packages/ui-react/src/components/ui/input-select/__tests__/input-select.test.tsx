@@ -452,6 +452,7 @@ describe('InputSelect driven by an external button', () => {
             <InputSelectValue placeholder="Select an option" />
           </InputSelectTrigger>
           <InputSelectContent anchor={buttonRef}>
+            <InputSelectSearch aria-label="Filter" placeholder="Search" />
             <InputSelectItem value="apple">Apple</InputSelectItem>
           </InputSelectContent>
         </InputSelect>
@@ -487,6 +488,58 @@ describe('InputSelect driven by an external button', () => {
     await waitFor(() => {
       expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
     });
+  });
+
+  it('preserves the query on a cancelled close and keeps the popup open', async () => {
+    render(<ExternalButtonSelect />);
+    const button = screen.getByRole('button', { name: 'Open' });
+
+    await userEvent.click(button);
+    await userEvent.type(screen.getByLabelText('Filter'), 'app');
+    expect(screen.getByLabelText('Filter')).toHaveValue('app');
+
+    // The button's pointerdown makes Base UI attempt an outside-press close, which
+    // the fixture cancels; the popup stays open and the query must survive.
+    fireEvent.pointerDown(button);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    expect(screen.getByLabelText('Filter')).toHaveValue('app');
+  });
+
+  // The button's own `onClick` flips the controlled `open` to `false` directly,
+  // after the fixture cancelled Base UI's outside-press close — so `onOpenChange`
+  // never reports this transition and the reset has to key off `open` itself.
+  it('resets the query after a real close and reopen', async () => {
+    render(<ExternalButtonSelect />);
+    const button = screen.getByRole('button', { name: 'Open' });
+
+    await userEvent.click(button);
+    await userEvent.type(screen.getByLabelText('Filter'), 'app');
+    expect(screen.getByLabelText('Filter')).toHaveValue('app');
+
+    await userEvent.click(button);
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(button);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    expect(screen.getByLabelText('Filter')).toHaveValue('');
+  });
+
+  it('resets the query after an outside-press close and reopen', async () => {
+    render(<ExternalButtonSelect />);
+    const button = screen.getByRole('button', { name: 'Open' });
+
+    await userEvent.click(button);
+    await userEvent.type(screen.getByLabelText('Filter'), 'app');
+
+    await userEvent.click(document.body);
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(button);
+    expect(screen.getByLabelText('Filter')).toHaveValue('');
   });
 });
 
@@ -556,6 +609,26 @@ describe('InputSelect in-dropdown search', () => {
     expect(screen.getByRole('option', { name: 'Banana' })).toBeVisible();
     // Apple hides (kept mounted, so still queryable by text) instead of unmounting.
     expect(screen.getByText('Apple').closest('[role="option"]')).not.toBeVisible();
+  });
+
+  // No `open`/`onOpenChange` props: Base UI owns the open state, so the reset can
+  // only come from the `onOpenChange` path (the `open`-prop effect stays inert
+  // because `props.open` is `undefined` for the whole lifecycle).
+  it('resets the query on an uncontrolled close, so the popup reopens unfiltered', async () => {
+    render(<SearchableSelect />);
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Filter' }), 'ban');
+    expect(screen.getByRole('searchbox', { name: 'Filter' })).toHaveValue('ban');
+    expect(screen.getByText('Apple').closest('[role="option"]')).not.toBeVisible();
+
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    expect(screen.getByRole('searchbox', { name: 'Filter' })).toHaveValue('');
+    expect(screen.getByRole('option', { name: 'Apple' })).toBeVisible();
   });
 
   it('follows an externally controlled value and re-syncs when it changes outside onChange', async () => {

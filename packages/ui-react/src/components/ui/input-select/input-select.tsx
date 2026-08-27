@@ -55,9 +55,16 @@ function InputSelect<Value, Multiple extends boolean | undefined = false>(
   const [query, setQuery] = React.useState('');
   const filter = React.useMemo(() => ({ query, setQuery }), [query]);
 
-  // Reset the query when the popup closes so it reopens unfiltered. A consumer
-  // that calls `eventDetails.cancel()` keeps the popup open (Base UI skips its own
-  // state update too), so the query must survive that.
+  // Reset the query when the popup closes so it reopens unfiltered, via two paths.
+  // 1. `onOpenChange` — the only path in uncontrolled mode, where Base UI owns the
+  //    open state and reports every real transition. A consumer that calls
+  //    `eventDetails.cancel()` keeps the popup open (Base UI skips its own state
+  //    update too), so the query must survive that.
+  // 2. The `open` prop transitioning true -> false — needed in controlled mode,
+  //    where a consumer can flip its own state directly (e.g. an external toggle
+  //    button whose click handler runs after it cancelled Base UI's outside-press
+  //    close) without `onOpenChange` ever firing for that transition. A cancelled
+  //    close leaves `open` at `true`, so this path preserves the query too.
   const handleOpenChange = React.useCallback<
     NonNullable<SelectPrimitive.Root.Props<Value, Multiple>['onOpenChange']>
   >(
@@ -69,6 +76,15 @@ function InputSelect<Value, Multiple extends boolean | undefined = false>(
     },
     [onOpenChange]
   );
+
+  const controlledOpen = props.open;
+  const previousOpenRef = React.useRef(controlledOpen);
+  React.useEffect(() => {
+    if (previousOpenRef.current && controlledOpen === false) {
+      setQuery('');
+    }
+    previousOpenRef.current = controlledOpen;
+  }, [controlledOpen]);
 
   return (
     <InputSelectModeContext.Provider value={Boolean(props.multiple)}>

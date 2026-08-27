@@ -95,9 +95,18 @@ button. A press outside both the button and the popup still closes it.
 
 **Given** a cancelled close (the consumer called `cancel()` on `open-change`)
 **When** the popup therefore stays open
-**Then** the in-dropdown search query is **preserved** — the query is only reset
-on a close that actually took effect, so a cancelled close does not silently
-clear what the user typed.
+**Then** the in-dropdown search query is **preserved** — a cancelled close does
+not silently clear what the user typed. (A consumer that leaves the close
+un-cancelled but simply doesn't act on it still gets the query reset; cancelling
+is what marks the close as not taking effect.)
+
+**Given** an external button that drives a controlled `open` and closes the
+popup directly (its own handler sets `open = false`, so the platform never
+reports the transition through `open-change`)
+**When** the popup is reopened
+**Then** the in-dropdown search query is **empty** — the reset follows the
+`open` prop's `true → false` transition as well as `open-change`, so a
+button-driven close cannot carry a stale query into the next open.
 
 **Given** `is-popover-styled`
 **When** the popup opens
