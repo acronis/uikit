@@ -28,7 +28,7 @@ catalog:
   # "t is not a function" at runtime in SSR consumers (apps/docs prerender).
   # @vitejs/plugin-react is correspondingly held at 5.x (6.x requires
   # vite ^8). Revisit once rolldown's CJS interop is fixed.
-  vite: 6.4.2
+  vite: 6.4.3
   vitest: 4.1.7
 
   # Cross-workspace runtime deps. Versions are anchored on
@@ -51,7 +51,7 @@ catalog:
   # JSON-schema validation — shared by the data packages
   # (packages/design-assets, packages/design-tokens), which validate their manifests
   # against ajv-compiled schemas. No runtime deps; ajv is dev-only.
-  ajv: 8.17.1
+  ajv: 8.18.0
   ajv-cli: 5.0.0
   ajv-formats: 3.0.1
 
@@ -67,4 +67,16 @@ catalog:
 # Pin transitive deps that we don't want pnpm to bump.
 overrides:
   prismjs: 1.30.0
-  postcss: 8.5.10
+  postcss: 8.5.25
+
+  # Security bumps to versions available on the corp Artifactory mirror
+  # (global-npm-prod-virtual) — see vulnerabilities.md. Some only get a
+  # partial fix because the mirror doesn't yet cache the fully-patched
+  # version; revisit once it does.
+  form-data: 4.0.6
+  'brace-expansion@^1.0.0': 1.1.16
+  'brace-expansion@^2.0.0': 2.1.2 # partial: advisory needs 2.1.4, mirror caps at 2.1.2
+  'brace-expansion@>=5.0.0 <6.0.0': 5.0.7
+  fast-uri: 3.1.3 # partial: advisory needs 3.1.5, mirror caps at 3.1.3
+  nanoid: 3.3.16 # partial: advisory needs 3.3.18, mirror caps at 3.3.16
+  undici: 7.28.0 # partial: advisory needs 7.29.0, mirror caps at 7.28.0
