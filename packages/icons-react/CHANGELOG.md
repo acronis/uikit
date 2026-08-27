@@ -1,5 +1,20 @@
 # @acronis-platform/icons-react
 
+## 1.0.1
+
+### Patch Changes
+
+- [#701](https://github.com/acronis/uikit/pull/701) [`668d2b9`](https://github.com/acronis/uikit/commit/668d2b9bb85b2230673a13dbe6ad6c19f76f1132) Thanks [@madjorr](https://github.com/madjorr)! - chore(deps): bump dependencies
+
+  Bumps `vite` (6→8), `vitest` (4.1.7→4.1.10), and `@vitejs/plugin-react`
+  (5→6), plus `js-yaml`, `ajv`, `style-dictionary`, `svgo`, and `next`
+  (apps/docs). Pins remaining vulnerable transitive deps (`form-data`,
+  `postcss`, `brace-expansion`, `fast-uri`, `nanoid`, `undici`, `axios`,
+  `immutable`, `joi`, `react-router`, `sharp`, `esbuild`, `fast-json-patch`,
+  `uuid`) via `pnpm-workspace.yaml` overrides. No published-surface behavior
+  change — build output is unaffected (verified with `pnpm -r
+{build,typecheck,test}` and VR baselines).
+
 ## 1.0.0
 
 ### Major Changes
