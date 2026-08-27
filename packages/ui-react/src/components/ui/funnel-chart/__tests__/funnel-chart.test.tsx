@@ -9,6 +9,8 @@ import {
   funnelChartLabelText,
   funnelChartOppositeSide,
   funnelChartPercent,
+  funnelChartStageInset,
+  funnelChartStagePath,
 } from '../funnel-chart';
 import {
   ChartTooltipContent,
@@ -59,9 +61,40 @@ const labelTexts = (container: HTMLElement) =>
     (node) => node.textContent
   );
 
+/**
+ * The bounding box a stage's path actually covers.
+ *
+ * The stages are drawn by the component's own `shape` (recharts' `Trapezoid`
+ * can express neither the design's 2px gap nor its rounded corners), so there is
+ * no `x`/`y`/`width` attribute to read — the geometry lives in the `d`. Every
+ * coordinate in the path is an absolute `x,y` pair, so the extremes of those are
+ * the box.
+ */
+const stageBox = (path: Element) => {
+  const pairs = (path.getAttribute('d') ?? '').match(
+    /-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?/g
+  );
+  if (!pairs?.length) return null;
+  const xs = pairs.map((pair) => Number(pair.split(',')[0]));
+  const ys = pairs.map((pair) => Number(pair.split(',')[1]));
+  return {
+    left: Math.min(...xs),
+    right: Math.max(...xs),
+    top: Math.min(...ys),
+    bottom: Math.max(...ys),
+    width: Math.max(...xs) - Math.min(...xs),
+  };
+};
+
+const stageBoxes = (container: HTMLElement) =>
+  segments(container).map((path) => stageBox(path)!);
+
 /** Top edge of each stage's trapezoid, in data order. */
 const stageTops = (container: HTMLElement) =>
-  segments(container).map((path) => Number(path.getAttribute('y')));
+  stageBoxes(container).map((box) => box.top);
+
+const legendOf = (container: HTMLElement) =>
+  container.querySelector<HTMLElement>('[data-slot="chart-legend"]');
 
 describe('FunnelChart', () => {
   it('renders the shared chart wrapper', () => {
@@ -72,8 +105,12 @@ describe('FunnelChart', () => {
   it('wires each stage color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-Visits: var(--ui-dataviz-categorical-1)');
-    expect(style).toContain('--color-Purchases: var(--ui-dataviz-categorical-4)');
+    expect(style).toContain(
+      '--color-Visits: var(--ui-dataviz-sequential-blue-1)'
+    );
+    expect(style).toContain(
+      '--color-Purchases: var(--ui-dataviz-sequential-blue-4)'
+    );
   });
 
   it('defaults to a triangle last shape', () => {
@@ -278,7 +315,9 @@ describe('funnelChartLabelText', () => {
     );
     const spaces = (text: string) => text.replace(/\s/g, ' ');
     expect(
-      spaces(funnelChartLabelText({ ...base, format: 'percent', percentFormatter }))
+      spaces(
+        funnelChartLabelText({ ...base, format: 'percent', percentFormatter })
+      )
     ).toBe('52,0 %');
     expect(
       spaces(
@@ -342,18 +381,19 @@ describe('funnelChartLabelMargin', () => {
     ).toMatchObject({ right: 96, left: 96 });
   });
 
-  // Labels off, or centred on the segments, still keep the right inset: it is the
-  // geometry every existing funnel was drawn with.
-  it('keeps the reserved right inset when nothing sits beside the funnel', () => {
-    expect(
-      funnelChartLabelMargin({ ...base, showLabels: false })
-    ).toMatchObject({
-      right: 96,
-      left: 24,
+  // Labels off — the default — or centred on the segments means nothing needs
+  // room beside the funnel, so the plot drops to the design's own tight inset
+  // instead of reserving 96px of empty strip the funnel could be filling.
+  it('drops to the design inset when nothing sits beside the funnel', () => {
+    expect(funnelChartLabelMargin({ ...base, showLabels: false })).toEqual({
+      top: 4,
+      right: 8,
+      bottom: 4,
+      left: 8,
     });
     expect(
       funnelChartLabelMargin({ ...base, labelPosition: 'inside' })
-    ).toMatchObject({ right: 96, left: 24 });
+    ).toEqual({ top: 4, right: 8, bottom: 4, left: 8 });
   });
 });
 
@@ -420,6 +460,99 @@ describe('funnelChartLabelReserve', () => {
 
 // A static `valuePosition` default would stack both lists on the same edge when
 // the names are moved there.
+describe('funnelChartStagePath', () => {
+  const base = { x: 0, y: 0, upperWidth: 100, lowerWidth: 60, height: 40 };
+
+  it('rounds all four corners of a trapezoid', () => {
+    const d = funnelChartStagePath({ ...base, radius: 2 });
+    expect(d.match(/Q/g)).toHaveLength(4);
+    expect(d.startsWith('M ')).toBe(true);
+    expect(d.endsWith(' Z')).toBe(true);
+  });
+
+  it('centres the lower edge on the upper edge', () => {
+    // upper 0→100, lower 60 wide ⇒ 20→80, both centred on 50.
+    const d = funnelChartStagePath({ ...base, radius: 0 });
+    expect(d).toContain('20,40');
+    expect(d).toContain('80,40');
+  });
+
+  // The `triangle` last shape, and the same triangle upside down under
+  // `reversed` — a zero-width edge is one apex, not a degenerate corner pair.
+  it('collapses a zero-width lower edge into a single apex', () => {
+    const d = funnelChartStagePath({ ...base, lowerWidth: 0, radius: 0 });
+    expect(d.match(/Q/g)).toHaveLength(3);
+    expect(d).toContain('50,40');
+  });
+
+  it('collapses a zero-width upper edge into a single apex', () => {
+    const d = funnelChartStagePath({
+      ...base,
+      upperWidth: 0,
+      lowerWidth: 60,
+      radius: 0,
+    });
+    expect(d.match(/Q/g)).toHaveLength(3);
+    expect(d).toContain('0,0');
+  });
+
+  // Two corners sharing a short edge must not eat past each other — the bottom
+  // stages of a funnel are only a few px wide.
+  it('clamps the radius to half of the shortest adjacent edge', () => {
+    const d = funnelChartStagePath({
+      x: 0,
+      y: 0,
+      upperWidth: 4,
+      lowerWidth: 2,
+      height: 4,
+      radius: 20,
+    });
+    // Still a closed, four-cornered path rather than an inverted one.
+    expect(d.match(/Q/g)).toHaveLength(4);
+    expect(d).not.toContain('NaN');
+  });
+
+  it('draws nothing for a stage with no area', () => {
+    expect(funnelChartStagePath({ ...base, height: 0 })).toBe('');
+    expect(
+      funnelChartStagePath({ ...base, upperWidth: 0, lowerWidth: 0 })
+    ).toBe('');
+  });
+});
+
+describe('funnelChartStageInset', () => {
+  const base = { x: 0, y: 0, upperWidth: 100, lowerWidth: 60, height: 40 };
+
+  // The upper edge slides down the funnel's *own* slope, so insetting the top
+  // narrows it by exactly as much as the taper would have at that height —
+  // shortening the stage without steepening it.
+  it('slides the top edge down the funnel slope', () => {
+    const inset = funnelChartStageInset({ ...base, gap: 4 });
+    expect(inset.y).toBe(4);
+    expect(inset.height).toBe(36);
+    // 100 → 60 over 40px, so 4px in the width is 96.
+    expect(inset.upperWidth).toBe(96);
+    // Still centred on 50.
+    expect(inset.x + inset.upperWidth / 2).toBe(50);
+  });
+
+  // The bottom edge is what `lastShapeType` defines — move it and a triangle
+  // funnel ends in a blunt edge instead of a point.
+  it('leaves the lower edge exactly where recharts put it', () => {
+    const inset = funnelChartStageInset({ ...base, gap: 4 });
+    expect(inset.lowerWidth).toBe(base.lowerWidth);
+    expect(inset.y + inset.height).toBe(base.y + base.height);
+  });
+
+  it('returns the stage untouched when there is no room for the gap', () => {
+    expect(funnelChartStageInset({ ...base, height: 2, gap: 2 })).toEqual({
+      ...base,
+      height: 2,
+    });
+    expect(funnelChartStageInset({ ...base, gap: 0 })).toEqual(base);
+  });
+});
+
 describe('funnelChartOppositeSide', () => {
   it('puts the values opposite the names', () => {
     expect(funnelChartOppositeSide('right')).toBe('left');
@@ -456,6 +589,7 @@ describe('FunnelChart stages and colors', () => {
 
   it('drops a hidden stage from the funnel and its labels', () => {
     const { container } = renderChart({
+      showLabels: true,
       stageSettings: { Trials: { hidden: true } },
     });
     expect(segments(container)).toHaveLength(3);
@@ -466,6 +600,7 @@ describe('FunnelChart stages and colors', () => {
   // over what is still on screen — 620/5000, not 620/1400.
   it('measures conversions over the visible stages only', () => {
     const { container } = renderChart({
+      showLabels: true,
       stageSettings: { Signups: { hidden: true } },
       labelFormat: 'percent',
     });
@@ -477,6 +612,7 @@ describe('FunnelChart stages and colors', () => {
   // share above 100% for a funnel whose data isn't sorted descending.
   it('measures conversions against the widest stage, not the first row', () => {
     const { container } = renderChart({
+      showLabels: true,
       data: [
         { stage: 'Trials', value: 1400 },
         { stage: 'Visits', value: 5000 },
@@ -489,6 +625,7 @@ describe('FunnelChart stages and colors', () => {
 
   it('formats the conversion with a caller-supplied percentFormatter', () => {
     const { container } = renderChart({
+      showLabels: true,
       labelFormat: 'percent',
       percentFormatter: createTickFormatter(
         { style: 'percent', maximumFractionDigits: 0 },
@@ -498,62 +635,24 @@ describe('FunnelChart stages and colors', () => {
     expect(labelTexts(container)).toEqual(['100%', '52%', '28%', '12%']);
   });
 
-  it('ramps one hue down the funnel in gradient mode', () => {
-    const { container } = renderChart({ colorMode: 'gradient' });
-    const paths = segments(container);
-    // The widest stage keeps the base hue at full strength; each stage below it
-    // is mixed further toward the surface.
-    expect(paths[0]).toHaveAttribute(
-      'fill',
-      'color-mix(in oklab, var(--color-Visits) 100.0%, var(--ui-background-surface-primary))'
+  // `palette` is the only source of a stage's colour. The default is the
+  // sequential blue ramp Figma paints the funnel with, not the shared
+  // categorical default every other chart takes.
+  it('defaults to the sequential blue ramp rather than the categorical palette', () => {
+    const { container } = renderChart();
+    const style = container.querySelector('style')?.innerHTML ?? '';
+    expect(style).toContain(
+      '--color-Visits: var(--ui-dataviz-sequential-blue-1)'
     );
-    expect(paths[3]).toHaveAttribute(
-      'fill',
-      'color-mix(in oklab, var(--color-Visits) 45.0%, var(--ui-background-surface-primary))'
-    );
+    expect(style).not.toContain('--ui-dataviz-categorical-1)');
   });
 
-  it('ramps a caller-supplied hue when gradientColor is set', () => {
-    const { container } = renderChart({
-      colorMode: 'gradient',
-      gradientColor: 'var(--ui-background-brand-primary)',
-    });
-    expect(segments(container)[0]).toHaveAttribute(
-      'fill',
-      'color-mix(in oklab, var(--ui-background-brand-primary) 100.0%, var(--ui-background-surface-primary))'
-    );
-  });
-
-  it('lets a stageSettings color win over the gradient ramp', () => {
-    const { container } = renderChart({
-      colorMode: 'gradient',
-      stageSettings: {
-        Trials: { color: 'var(--ui-background-status-strong-info)' },
-      },
-    });
-    expect(segments(container)[2]).toHaveAttribute(
-      'fill',
-      'var(--ui-background-status-strong-info)'
-    );
-  });
-
-  // The first stage paints with its override, so the ramp has to start from that
-  // colour — starting from its `config` colour would ramp a hue no segment shows.
-  it('ramps from the first stage override rather than its config color', () => {
-    const { container } = renderChart({
-      colorMode: 'gradient',
-      stageSettings: {
-        Visits: { color: 'var(--ui-background-status-strong-info)' },
-      },
-    });
-    const paths = segments(container);
-    expect(paths[0]).toHaveAttribute(
-      'fill',
-      'var(--ui-background-status-strong-info)'
-    );
-    expect(paths[3]).toHaveAttribute(
-      'fill',
-      'color-mix(in oklab, var(--ui-background-status-strong-info) 45.0%, var(--ui-background-surface-primary))'
+  it('paints the stages from an explicit palette override', () => {
+    const { container } = renderChart({ palette: { type: 'categorical' } });
+    const style = container.querySelector('style')?.innerHTML ?? '';
+    expect(style).toContain('--color-Visits: var(--ui-dataviz-categorical-1)');
+    expect(style).toContain(
+      '--color-Purchases: var(--ui-dataviz-categorical-4)'
     );
   });
 
@@ -588,27 +687,27 @@ describe('FunnelChart stages and colors', () => {
   });
 
   it('narrows the funnel to funnelWidth', () => {
-    const { container } = renderChart({ funnelWidth: 200 });
+    const narrow = renderChart({ funnelWidth: 200 }).container;
     const wide = renderChart().container;
-    const width = (node: Element | undefined) =>
-      Number(node?.getAttribute('width'));
-    expect(width(segments(container)[0])).toBeLessThan(
-      width(segments(wide)[0])
+    expect(stageBoxes(narrow)[0].width).toBeLessThan(
+      stageBoxes(wide)[0].width
     );
   });
 
   // The reserve is a default, so an explicit funnelWidth has to survive a
   // composite label asking for one of its own.
   it('lets a caller-supplied funnelWidth win over the composite reserve', () => {
-    const reserved = renderChart({ labelFormat: 'name-percent' }).container;
+    const reserved = renderChart({
+      showLabels: true,
+      labelFormat: 'name-percent',
+    }).container;
     const explicit = renderChart({
+      showLabels: true,
       labelFormat: 'name-percent',
       funnelWidth: '100%',
     }).container;
-    const width = (node: Element | undefined) =>
-      Number(node?.getAttribute('width'));
-    expect(width(segments(reserved)[0])).toBeLessThan(
-      width(segments(explicit)[0])
+    expect(stageBoxes(reserved)[0].width).toBeLessThan(
+      stageBoxes(explicit)[0].width
     );
   });
 
@@ -648,8 +747,13 @@ describe('FunnelChart stages and colors', () => {
 });
 
 describe('FunnelChart labels', () => {
-  it('names each stage beside its segment by default', () => {
+  it('hides stage labels by default to match the Figma widget', () => {
     const { container } = renderChart();
+    expect(labelTexts(container)).toEqual([]);
+  });
+
+  it('renders stage labels when showLabels is enabled', () => {
+    const { container } = renderChart({ showLabels: true });
     expect(labelTexts(container)).toEqual([
       'Visits',
       'Signups',
@@ -659,7 +763,10 @@ describe('FunnelChart labels', () => {
   });
 
   it('renders the requested labelFormat', () => {
-    const { container } = renderChart({ labelFormat: 'name-percent' });
+    const { container } = renderChart({
+      showLabels: true,
+      labelFormat: 'name-percent',
+    });
     expect(labelTexts(container)).toEqual([
       'Visits: 100.0%',
       'Signups: 52.0%',
@@ -670,6 +777,7 @@ describe('FunnelChart labels', () => {
 
   it('formats the numeric part of a label', () => {
     const { container } = renderChart({
+      showLabels: true,
       labelFormat: 'value',
       labelFormatter: (value) => `${Number(value) / 1000}k`,
     });
@@ -677,7 +785,10 @@ describe('FunnelChart labels', () => {
   });
 
   it('adds a second label carrying the value', () => {
-    const { container } = renderChart({ showValueLabels: true });
+    const { container } = renderChart({
+      showLabels: true,
+      showValueLabels: true,
+    });
     expect(labelTexts(container)).toEqual([
       'Visits',
       'Signups',
@@ -695,7 +806,10 @@ describe('FunnelChart labels', () => {
   // which disappears in light mode. The values default to the side opposite the
   // names instead, where every stage has room.
   it('puts the value labels opposite the names, not on the segments', () => {
-    const { container } = renderChart({ showValueLabels: true });
+    const { container } = renderChart({
+      showLabels: true,
+      showValueLabels: true,
+    });
     const lists = container.querySelectorAll('.recharts-label-list');
     expect(lists).toHaveLength(2);
     const values = Array.from(lists[1].querySelectorAll('text'));
@@ -716,6 +830,7 @@ describe('FunnelChart labels', () => {
   // its own value.
   it('follows the names to the other side when they move left', () => {
     const { container } = renderChart({
+      showLabels: true,
       labelPosition: 'left',
       showValueLabels: true,
     });
@@ -729,6 +844,7 @@ describe('FunnelChart labels', () => {
 
   it('honors an explicit valuePosition over the opposite-side default', () => {
     const { container } = renderChart({
+      showLabels: true,
       labelPosition: 'left',
       showValueLabels: true,
       valuePosition: 'inside',
@@ -743,12 +859,15 @@ describe('FunnelChart labels', () => {
   // Beside the funnel the label sits on the card surface; on the segment it sits
   // on a saturated fill, which needs the on-fill token to keep its contrast.
   it('picks the label fill that has contrast at each position', () => {
-    const outside = renderChart().container;
+    const outside = renderChart({ showLabels: true }).container;
     expect(
       outside.querySelector('.recharts-label-list text')?.getAttribute('class')
     ).toContain('fill-[var(--ui-text-on-surface-primary)]!');
 
-    const inside = renderChart({ labelPosition: 'inside' }).container;
+    const inside = renderChart({
+      showLabels: true,
+      labelPosition: 'inside',
+    }).container;
     expect(
       inside.querySelector('.recharts-label-list text')?.getAttribute('class')
     ).toContain('fill-[var(--ui-text-on-status-strong-neutral)]!');
@@ -756,6 +875,7 @@ describe('FunnelChart labels', () => {
 
   it('lets labelFill override the contrast-matched default', () => {
     const { container } = renderChart({
+      showLabels: true,
       labelFill: 'var(--ui-text-on-surface-secondary)',
     });
     const label = container.querySelector('.recharts-label-list text');
@@ -763,7 +883,12 @@ describe('FunnelChart labels', () => {
       'fill',
       'var(--ui-text-on-surface-secondary)'
     );
-    expect(label?.getAttribute('class')).not.toContain('fill-[var(--ui-text');
+    expect(label?.getAttribute('class')).not.toContain(
+      'fill-[var(--ui-text-on-surface-primary)]!'
+    );
+    expect(label?.getAttribute('class')).not.toContain(
+      'fill-[var(--ui-text-on-status-strong-neutral)]!'
+    );
   });
 });
 
@@ -772,14 +897,17 @@ describe('FunnelChart labels', () => {
 // `ChartLegendContent`. These guard that wiring: without it the legend renders
 // empty, which is exactly what it did before this existed.
 describe('FunnelChart legend', () => {
+  const legend = (container: HTMLElement) =>
+    container.querySelector('[data-slot="chart-legend"]');
+
   const legendLabels = (container: HTMLElement) =>
     Array.from(
-      container.querySelectorAll('.recharts-legend-wrapper > div > div')
+      legend(container)?.querySelectorAll(':scope > div > div > span') ?? []
     ).map((node) => node.textContent);
 
-  it('has no legend unless asked', () => {
-    const { container } = renderChart();
-    expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
+  it('can hide the default legend', () => {
+    const { container } = renderChart({ showLegend: false });
+    expect(legend(container)).toBeNull();
   });
 
   it('renders one entry per stage, labelled from config', () => {
@@ -792,12 +920,57 @@ describe('FunnelChart legend', () => {
     ]);
   });
 
-  it('colors each entry with its stage color', () => {
+  // The legend sits outside `ChartContainer`, so it cannot use the
+  // `--color-<name>` custom properties `ChartStyle` scopes to `[data-chart=…]` —
+  // those resolve to nothing out here and the marker would paint transparent.
+  // Each entry carries its resolved palette token instead.
+  it('colors each entry with its resolved palette token, not a scoped --color-*', () => {
     const { container } = renderChart({ showLegend: true });
-    const swatch = container.querySelector<HTMLElement>(
-      '.recharts-legend-wrapper [style*="background-color"]'
+    const swatches = Array.from(
+      container.querySelectorAll<HTMLElement>(
+        '[data-slot="chart-legend"] [style*="background-color"]'
+      )
+    ).map((node) => node.style.backgroundColor);
+    expect(swatches).toEqual([
+      'var(--ui-dataviz-sequential-blue-1)',
+      'var(--ui-dataviz-sequential-blue-2)',
+      'var(--ui-dataviz-sequential-blue-3)',
+      'var(--ui-dataviz-sequential-blue-4)',
+    ]);
+    expect(swatches).not.toContain('var(--color-Visits)');
+  });
+
+  it('paints a stageSettings color on that stage’s legend marker too', () => {
+    const { container } = renderChart({
+      showLegend: true,
+      stageSettings: {
+        Trials: { color: 'var(--ui-background-status-strong-info)' },
+      },
+    });
+    const swatches = Array.from(
+      container.querySelectorAll<HTMLElement>(
+        '[data-slot="chart-legend"] [style*="background-color"]'
+      )
+    ).map((node) => node.style.backgroundColor);
+    expect(swatches[2]).toBe('var(--ui-background-status-strong-info)');
+  });
+
+  it('renders a two-column list with config labels and primary text values', () => {
+    const { container } = renderChart({ showLegend: true });
+    const legendElement = legend(container);
+    expect(legendElement).toHaveTextContent('Visits5000');
+    expect(legendElement).toHaveTextContent('Purchases620');
+    expect(
+      legendElement?.querySelectorAll('[style*="background-color"]')
+    ).toHaveLength(4);
+
+    const values = legendElement?.querySelectorAll(
+      'span.text-\\[var\\(--ui-text-on-surface-primary\\)\\]'
     );
-    expect(swatch?.style.backgroundColor).toBe('var(--color-Visits)');
+    expect(values).toHaveLength(4);
+    expect(legendElement?.innerHTML).not.toContain(
+      '--ui-text-on-surface-link-idle'
+    );
   });
 
   it('leaves a hidden stage out of the legend', () => {
@@ -808,13 +981,37 @@ describe('FunnelChart legend', () => {
     expect(legendLabels(container)).toEqual(['Visits', 'Signups', 'Purchases']);
   });
 
-  it('moves the legend to the top edge', () => {
-    const { container } = renderChart({ showLegend: true, legendPos: 'top' });
-    // ChartLegendContent pads the side facing the plot, so the edge it sits on is
-    // observable without measuring the wrapper.
-    expect(
-      container.querySelector('.recharts-legend-wrapper > div')?.className
-    ).toContain('pb-3');
+  // The legend is a sibling of the plot, never a recharts `<Legend>` inside it —
+  // that is what puts it beside the funnel rather than under it, and it is the
+  // same composition `PieChart`/`RadialBarChart` use.
+  it('renders the legend beside the plot, outside the recharts SVG', () => {
+    const { container } = renderChart({ showLegend: true });
+    const root = container.firstElementChild!;
+    const plot = root.querySelector('[data-slot="chart"]')!;
+    const legendElement = legend(container)!;
+
+    expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
+    expect(plot.contains(legendElement)).toBe(false);
+    expect(legendElement.parentElement).toBe(root);
+    // Plot first, legend second — the legend is to the funnel's inline end.
+    expect(Array.from(root.children).indexOf(legendElement)).toBe(1);
+    expect(root.className).toContain('flex-row');
+    expect(root.className).toContain('gap-4');
+  });
+
+  // A funnel with no legend has nothing to sit beside, so the plot centres
+  // instead of being pinned to the inline start of a half-empty row.
+  it('centres the plot when the legend is off', () => {
+    const { container } = renderChart({ showLegend: false });
+    expect(container.firstElementChild?.className).toContain('justify-center');
+  });
+
+  it('formats the legend values with legendValueFormatter', () => {
+    const { container } = renderChart({
+      showLegend: true,
+      legendValueFormatter: (value) => `${Number(value) / 1000}k`,
+    });
+    expect(legend(container)).toHaveTextContent('Visits5k');
   });
 
   // Same-named stages share one `--color-<name>`/`config` entry, so a second
@@ -836,31 +1033,144 @@ describe('FunnelChart legend', () => {
 });
 
 describe('FunnelChart margin', () => {
-  const plotWidth = (container: HTMLElement) =>
-    Number(
-      container
-        .querySelector('.recharts-funnel-trapezoid path')
-        ?.getAttribute('width')
-    );
-
   // The margin type is all-optional, so a caller passing one side must keep the
   // defaults on the others rather than collapsing them to zero.
   it('merges a partial margin over the defaults per side', () => {
     const { container } = renderChart({ margin: { right: 160 } });
-    const trapezoid = container.querySelector('.recharts-funnel-trapezoid path');
-    // left stays at the default 24 rather than dropping to 0.
-    expect(Number(trapezoid?.getAttribute('x'))).toBe(24);
-    // top stays at the default 8 rather than dropping to 0.
-    expect(Number(trapezoid?.getAttribute('y'))).toBe(8);
+    const first = stageBoxes(container)[0];
+    // left stays at the design default 8 rather than dropping to 0.
+    expect(first.left).toBe(8);
+    // top stays at the design default 4 rather than dropping to 0.
+    expect(first.top).toBe(4);
+    // right is the one side the caller moved.
+    expect(first.right).toBe(600 - 160);
   });
 
   it('lets a full margin replace every side', () => {
     const { container } = renderChart({
       margin: { top: 0, right: 0, bottom: 0, left: 0 },
     });
-    const trapezoid = container.querySelector('.recharts-funnel-trapezoid path');
-    expect(Number(trapezoid?.getAttribute('x'))).toBe(0);
-    expect(Number(trapezoid?.getAttribute('y'))).toBe(0);
-    expect(plotWidth(container)).toBe(600);
+    const first = stageBoxes(container)[0];
+    expect(first.left).toBe(0);
+    expect(first.top).toBe(0);
+    expect(first.width).toBe(600);
+  });
+});
+
+// The design draws the funnel with a 2px band of surface between stages and 2px
+// rounded corners. recharts can express neither — `Funnel` has no gap prop and
+// `Trapezoid` no radius — so both come from the component's own `shape`, and
+// these are what stop that quietly regressing to flush, square-cornered stages.
+describe('FunnelChart stage geometry', () => {
+  it('leaves a 2px gap between every pair of stages', () => {
+    const { container } = renderChart();
+    const boxes = stageBoxes(container);
+    expect(boxes).toHaveLength(4);
+
+    const gaps = boxes
+      .slice(1)
+      .map((box, index) => box.top - boxes[index].bottom);
+    // Three gaps for four stages: the funnel's own top edge is not a seam.
+    expect(gaps).toEqual([2, 2, 2]);
+  });
+
+  // The first stage must stay flush with the top of the plot area — inset it too
+  // and the funnel drifts down, losing 2px off the bottom of a 120px plot.
+  it('keeps the first stage flush with the top of the plot area', () => {
+    const { container } = renderChart();
+    expect(stageBoxes(container)[0].top).toBe(4);
+  });
+
+  it('rounds the stage corners rather than drawing a bare polygon', () => {
+    const { container } = renderChart();
+    const d = segments(container)[0].getAttribute('d') ?? '';
+    // A quadratic per corner, and no straight-line-only path.
+    expect(d.match(/Q/g)).toHaveLength(4);
+    expect(d).toMatch(/^M /);
+    expect(d).toMatch(/Z$/);
+  });
+
+  // `lastShape` is the one CVA axis, and the gap must not blunt the apex: the
+  // triangle's point is the bottom edge, which the inset deliberately leaves be.
+  it('narrows the last stage to a point for the triangle last shape', () => {
+    const { container } = renderChart({ lastShape: 'triangle' });
+    const d = segments(container)[3].getAttribute('d') ?? '';
+    // Three corners, not four — the lower edge collapsed into the apex.
+    expect(d.match(/Q/g)).toHaveLength(3);
+  });
+
+  it('keeps a flat lower edge for the rectangle last shape', () => {
+    const { container } = renderChart({ lastShape: 'rectangle' });
+    const d = segments(container)[3].getAttribute('d') ?? '';
+    expect(d.match(/Q/g)).toHaveLength(4);
+  });
+
+  // The stages narrow downward and stay centred on one axis, so the funnel reads
+  // as a funnel rather than a staircase.
+  it('narrows each stage and keeps them centred on one axis', () => {
+    const { container } = renderChart();
+    const boxes = stageBoxes(container);
+    const centres = boxes.map((box) => (box.left + box.right) / 2);
+    centres.forEach((centre) => expect(centre).toBeCloseTo(centres[0], 1));
+
+    const widths = boxes.map((box) => box.width);
+    widths.slice(1).forEach((width, index) => {
+      expect(width).toBeLessThan(widths[index]);
+    });
+  });
+});
+
+// The plot is the design's 120px square and the legend takes the rest, so the
+// component fills its parent's width without the funnel stretching into a tall,
+// narrow wedge — the failure mode a `flex-1` plot produced.
+describe('FunnelChart layout', () => {
+  it('sizes the plot as the design square and lets the legend take the rest', () => {
+    const { container } = renderChart({ showLegend: true });
+    const plotBox = container.querySelector('[data-slot="chart"]')
+      ?.parentElement;
+    expect(plotBox?.className).toContain('size-[120px]');
+    expect(plotBox?.className).toContain('shrink-0');
+    expect(legendOf(container)?.className).toContain('flex-1');
+    expect(legendOf(container)?.className).toContain('min-w-0');
+  });
+
+  // No fixed width, and no height of its own: a widget sizes the row, and the
+  // legend column absorbs whatever width is left.
+  it('carries no fixed width or height of its own', () => {
+    const { container } = renderChart();
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.className).not.toMatch(/\bw-\[/);
+    expect(root.className).not.toMatch(/\bh-\[/);
+    expect(root.style.width).toBe('');
+    expect(root.style.height).toBe('');
+  });
+
+  it('keeps a caller className alongside the layout classes', () => {
+    const { container } = renderChart({ className: 'size-full' });
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.className).toContain('size-full');
+    expect(root.className).toContain('flex-row');
+  });
+
+  // When a label list sits beside the funnel, the 120px fixed width would leave
+  // 0px for the funnel itself (label margins consume the entire fixed width).
+  // The plot-frame must grow to fill the available width in that case.
+  it('switches the plot-frame to flex-1 when labels sit beside the funnel', () => {
+    const { container } = renderChart({ showLabels: true, labelPosition: 'right' });
+    const plotFrame = container.querySelector('[data-slot="chart"]')?.parentElement;
+    expect(plotFrame?.className).toContain('flex-1');
+    expect(plotFrame?.className).toContain('h-[120px]');
+    expect(plotFrame?.className).not.toContain('size-[120px]');
+    expect(plotFrame?.className).not.toContain('shrink-0');
+  });
+
+  it('keeps the plot-frame fixed at 120px when labels are inside or off', () => {
+    const inside = renderChart({ showLabels: true, labelPosition: 'inside' });
+    const insideFrame = inside.container.querySelector('[data-slot="chart"]')?.parentElement;
+    expect(insideFrame?.className).toContain('size-[120px]');
+
+    const off = renderChart({ showLabels: false });
+    const offFrame = off.container.querySelector('[data-slot="chart"]')?.parentElement;
+    expect(offFrame?.className).toContain('size-[120px]');
   });
 });

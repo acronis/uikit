@@ -4,10 +4,19 @@ name: funnel-chart
 status: draft
 category: data-display
 description: >-
-  A typed funnel-chart composition over the shared `Chart` primitives. Plots a
-  single series of stages (rows) as stacked, narrowing segments inside a
-  `ChartContainer`, with a tooltip and on-chart stage labels (no legend — the
-  inline labels name every stage). One variant axis: `lastShape` (the funnel
-  narrows to a `triangle` point or ends `rectangle` flat). Ported from the
-  apps/demo `FunnelChartPlayground`.
+  A typed funnel-chart composition over the shared `Chart` primitives. The root
+  is a row: a 120×120 square plot, a 16px gutter, then a stage-list legend
+  taking every remaining pixel — the same composition `PieChart` and
+  `RadialBarChart` use. The plot stacks one series of stages (`data` rows) as
+  narrowing, 2px-gapped, 2px-rounded segments inside a `ChartContainer`, with a
+  tooltip and optional on-plot labels. One variant axis: `lastShape` (the funnel
+  narrows to a `triangle` point or ends `rectangle` flat). Stages are painted
+  from the sequential blue ramp by default, because a funnel's stages are an
+  ordered series rather than unrelated categories. Card-less by design: Figma's
+  card, header and metric row are `ChartWidget`'s.
 since: 0.58.0
+figma:
+  # File key `lrU3ydIyvPYQNE6ixdsKtJ` (ui-react) — node 8811:175245 is the
+  # `ChartFunnel` widget assembly at `size=md`.
+  node: '8811:175245'
+  codeConnect: packages/ui-react/src/components/ui/funnel-chart/funnel-chart.figma.tsx

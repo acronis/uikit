@@ -1,27 +1,41 @@
 # FunnelChart — accessibility
 
-- recharts' `accessibilityLayer` is **on by default** (recharts v3), giving the
-  chart keyboard focus and an accessible description of the plotted stages.
-- A funnel chart is inherently visual. **Pair it with a text alternative** — a
-  caption, a summary sentence, or an adjacent data table carrying the same
-  numbers (including the drop-off between stages, which the funnel only implies) —
-  and give the chart an accessible name (`aria-label` / `aria-labelledby`
-  referencing a visible heading). The wrapper forwards native `div` attributes,
-  so `aria-*` pass through.
-- Do **not** rely on color alone to distinguish stages. Keep `showLabels` (or the
-  tooltip) visible so each color is paired with a text label — the on-chart labels
-  are the funnel's naming channel (there is no legend).
-- The tooltip chrome resolves to semantic `--ui-*` tokens, and on-chart labels use
-  the foreground text token — both meet contrast in light and dark.
-  **Stage colors are caller-supplied** via `config` — pick values that meet 3:1
-  against the surface and are distinguishable for color-vision deficiencies. The
-  borrowed semantic tokens are a design-pending stopgap until the `--ui-chart-*`
-  palette lands.
-- Watch recharts issue [#4809](https://github.com/recharts/recharts/issues/4809)
-  on the a11y layer for heavily-customized charts.
+- **No name of its own.** `FunnelChart` sets no `role` and no `aria-*`, and it
+  passes nothing down to the plot, so the `<title>`/`<desc>` pair the renderer
+  emits stays empty. Put the name on the root, which spreads the props you give
+  it: `aria-label` or `aria-labelledby` referencing a visible heading. Choose the
+  role deliberately — `role="img"` names the chart but makes its subtree
+  presentational, so a `<figure>` with a `<figcaption>` is often the better fit.
+- recharts' `accessibilityLayer` is **on by default** (recharts v3) and is not
+  switched off here, so the plot is a tab stop carrying `role="application"`.
+  Until the chart is named, that focus stop announces neither a name nor any
+  data. Watch recharts issue
+  [#4809](https://github.com/recharts/recharts/issues/4809) on the a11y layer for
+  heavily-customized charts.
+- **A name is not a text alternative.** A funnel encodes numbers as geometry, so
+  the numbers themselves have to be reachable as text — a caption, a summary
+  sentence, or an adjacent table carrying the same values (including the
+  drop-off between stages, which the funnel only implies).
+- **The legend is the reliable text.** It is on by default and is ordinary HTML
+  laid out beside the plot, so it reads in the accessibility tree: one row per
+  stage, the marker and label on the inline start, the value on the inline end.
+  The on-plot labels (`showLabels`, off by default) and value labels
+  (`showValueLabels`) are real `<text>` rather than pixels, but they sit inside
+  the SVG with no structural role, and a stage's name and its value are two
+  separate lists on opposite sides with nothing tying them together.
+- Do **not** rely on colour alone to distinguish stages. Keep the legend, the
+  on-plot labels, or the tooltip visible so every colour is paired with a text
+  label. A sequential ramp — the funnel's default palette — makes this stricter
+  than a categorical one: adjacent stops are neighbouring shades of one hue, not
+  distinct colours.
 
 ## Contrast
 
-Chart chrome and the on-chart stage labels meet contrast in both themes via the
-semantic tokens. Segment fills come from `config` and are the caller's
-responsibility — keep adjacent segments distinguishable from each other.
+Chart chrome, the legend and the on-plot labels resolve to semantic `--ui-*`
+tokens and meet contrast in light and dark: a label beside the funnel uses the
+primary on-surface token, a label on a segment switches to the on-fill token
+(white in both themes) so it survives a saturated stage fill. Stage fills come
+from the `--ui-dataviz-*` palettes rather than from caller-supplied colours, so
+their contrast against the surface is the design data's responsibility — but
+picking a ramp still trades stage-to-stage distinguishability for its ordered
+reading, so keep the stage count low.

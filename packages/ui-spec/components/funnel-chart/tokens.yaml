@@ -4,17 +4,31 @@ component: FunnelChart
 # References only. Values live in @acronis-platform/tokens-pd. FunnelChart has no
 # token tier of its own, and needs none: stage colours come from the shared
 # `--ui-dataviz-*` palettes on the semantic tier, resolved by ChartContainer out
-# of the `palette` prop. The tooltip chrome is inherited from the shared Chart
-# primitives; the labels use the shared chart label tokens, picked by where each
-# label sits.
+# of the `palette` prop (sequential blue by default). The tooltip chrome is
+# inherited from the shared Chart primitives; the on-plot labels use the shared
+# chart label tokens, picked by where each label sits.
+#
+# Note what is *not* here: `--ui-text-on-surface-link-idle`, the shared list
+# legend's default value colour. Figma paints the funnel legend's values in the
+# primary on-surface token instead, so the component overrides that default.
+#
+# The 2px band between stages is unpainted — whatever surface the parent puts
+# behind the plot shows through — so it references no token of its own.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
   - name: --ui-text-on-surface-primary
     affects: labels
     description: >-
-      Labels sitting beside the funnel, on the card surface, and tooltip value
-      text (text-foreground).
+      Labels sitting beside the funnel, on the card surface (text-foreground).
+  - name: --ui-text-on-surface-primary
+    affects: legend-content
+    description: >-
+      Both columns of a legend row — the stage label and, overriding the shared
+      list legend's link-coloured default, its value (which is also semibold).
+  - name: --ui-text-on-surface-primary
+    affects: tooltip-content
+    description: Tooltip value text (text-foreground).
   - name: --ui-text-on-status-strong-neutral
     affects: labels
     description: >-
@@ -29,10 +43,8 @@ tokens:
       Default segment border when strokeWidth is set without a stroke — the
       renderer's own default there is a hardcoded white the container neutralizes.
   - name: --ui-background-surface-primary
-    affects: series, tooltip-content
-    description: >-
-      Tooltip surface (bg-background), and what gradient color mode mixes each
-      stage's hue toward so the ramp stays opaque against the card.
+    affects: tooltip-content
+    description: Tooltip surface (bg-background).
   - name: --ui-text-on-surface-secondary
     affects: tooltip-content
     description: Muted tooltip label text (text-muted-foreground).

@@ -13,11 +13,11 @@ import type { LegendPayload } from 'recharts/types/component/DefaultLegendConten
 import { cn } from '@/lib/utils';
 import {
   ChartContainer,
-  ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
   resolveAnimation,
+  resolveChartColors,
   resolveLabelFillClass,
   type ChartAnimationProps,
   type ChartConfig,
@@ -57,14 +57,12 @@ export type FunnelChartLabelFormat =
   | 'name-percent'
   | 'value-percent';
 
-/** How the stages are coloured: one `config` entry each, or one shared ramp. */
-export type FunnelChartColorMode = 'palette' | 'gradient';
-
 /** Override for a single stage, keyed by its `nameKey` value. */
 export interface FunnelChartStageSettings {
   /**
-   * Paint this stage with a colour of its own, overriding both `config` and
-   * `colorMode`. Reference an existing semantic `--ui-*` token.
+   * Paint this stage with a colour of its own instead of its `palette` stop —
+   * the same per-item escape hatch `PieChart`'s `sliceSettings` offers.
+   * Reference an existing semantic `--ui-*` token.
    */
   color?: string;
   /**
@@ -117,16 +115,237 @@ export function funnelChartOppositeSide(
 const STAGE_LABEL_KEY = '__stageLabel';
 const STAGE_VALUE_LABEL_KEY = '__stageValueLabel';
 
-// How far the gradient ramp fades by the last stage: the final segment is mixed
-// down to this share of the base colour, the first stays at full strength.
-const GRADIENT_MIN_MIX = 45;
+// Which stage this row is. recharts hands a custom `shape` the data row as
+// `payload` but no index, and the first stage is the one that must *not* be
+// pushed down — its top edge is the top of the funnel.
+const STAGE_INDEX_KEY = '__stageIndex';
 
 // Hover highlight for `showActiveShape` — an outline rather than a fill change,
 // so the segment keeps the colour that ties it to its legend entry and label.
-const ACTIVE_SHAPE = {
-  stroke: 'var(--ui-border-on-surface-border-active)',
-  strokeWidth: 2,
-} as const;
+const ACTIVE_STROKE = 'var(--ui-border-on-surface-border-active)';
+const ACTIVE_STROKE_WIDTH = 2;
+
+/**
+ * The design's funnel plot: a 120×120 square beside its legend — the same
+ * geometry `ChartDonut` uses in Figma, which is why `PieChart` and
+ * `RadialBarChart` size their plot exactly this way too.
+ *
+ * The *component* is still parent-responsive: the root is a flex row whose
+ * legend column takes every pixel the plot doesn't, so a funnel widens with its
+ * widget instead of the plot growing into a tall, narrow wedge.
+ *
+ * Figma: `8811:175245` → `Chart` is `size-[120px]`, `gap-[16px]`, legend
+ * `flex-[1_0_0]`.
+ */
+const PLOT_SIZE_CLASS = 'size-[120px]';
+
+/**
+ * Surface showing between two stages, in px. recharts draws the stages flush —
+ * `Funnel` has no gap prop and `Trapezoid` no radius — so both come from the
+ * custom `shape` below.
+ *
+ * Figma `8811:175245` stacks the stages at y = 4 / 34 / 64 / 94 with shapes 28
+ * tall: a 2px gap, three times over for four stages.
+ */
+const STAGE_GAP = 2;
+
+/** Corner rounding on the two upper edges of each stage (Figma: ~2px clip along the top edge). */
+const STAGE_RADIUS = 2;
+
+/**
+ * Corner rounding on the two lower edges of each stage.
+ *
+ * Figma's bottom corners clip ~0.85px — significantly less than the upper
+ * corners. The asymmetry is intentional: the diagonal-meets-flat-bottom
+ * transition is shallow, so a smaller radius keeps it from looking over-rounded
+ * at the narrow tail of the funnel. 1px is the nearest integer match.
+ */
+const STAGE_BOTTOM_RADIUS = 1;
+
+/**
+ * The plot-area inset when nothing sits beside the funnel. Figma's widest stage
+ * spans 102.67 of the 120px box and the stack runs y=4 → ~115.7, i.e. ~8px of
+ * horizontal and 4px of vertical breathing room.
+ */
+const PLOT_MARGIN = { top: 4, right: 8, bottom: 4, left: 8 };
+
+/**
+ * The palette Figma paints the funnel from: the sequential blue ramp, whose
+ * stops read as one quantity falling down the funnel. Every other chart keeps
+ * the shared categorical default — a funnel's stages are an *ordered* series,
+ * which is what a sequential ramp is for.
+ *
+ * Figma `8811:175245` uses `dataviz/sequential/blue/{2,4,6,8}`.
+ */
+export const FUNNEL_CHART_DEFAULT_PALETTE: ChartPalette = Object.freeze({
+  type: 'sequential',
+  ramp: 'blue',
+});
+
+type StagePoint = readonly [number, number];
+
+const distance = (a: StagePoint, b: StagePoint) =>
+  Math.hypot(b[0] - a[0], b[1] - a[1]);
+
+/** A point `d` px from `from` along the segment toward `to`. */
+function along(from: StagePoint, to: StagePoint, d: number): StagePoint {
+  const length = distance(from, to);
+  if (length === 0) return from;
+  return [
+    from[0] + ((to[0] - from[0]) * d) / length,
+    from[1] + ((to[1] - from[1]) * d) / length,
+  ];
+}
+
+// Trimmed to 3dp so the emitted `d` is stable across platforms — a raw float
+// makes every visual-regression baseline and DOM assertion renderer-dependent.
+const coord = ([x, y]: StagePoint) =>
+  `${Number(x.toFixed(3))},${Number(y.toFixed(3))}`;
+
+/**
+ * A closed polygon with rounded corners, as an SVG path.
+ *
+ * Each corner is trimmed back along both of its edges and bridged with a
+ * quadratic curve through the original vertex. The radius is clamped to half of
+ * either adjacent edge, so two corners can never overrun each other on a short
+ * edge — which is the normal case at the bottom of a funnel, where the last
+ * stages are only a few px wide.
+ */
+function roundedPolygonPath(
+  points: readonly StagePoint[],
+  radius: number | readonly number[]
+): string {
+  const count = points.length;
+  if (count < 3) return '';
+
+  let path = '';
+  for (let i = 0; i < count; i++) {
+    const r = typeof radius === 'number' ? radius : radius[i];
+    const previous = points[(i - 1 + count) % count];
+    const current = points[i];
+    const next = points[(i + 1) % count];
+    const corner = Math.max(
+      0,
+      Math.min(
+        r,
+        distance(previous, current) / 2,
+        distance(current, next) / 2
+      )
+    );
+    const entry = along(current, previous, corner);
+    const exit = along(current, next, corner);
+    path += `${i === 0 ? 'M' : ' L'} ${coord(entry)}`;
+    path += ` Q ${coord(current)} ${coord(exit)}`;
+  }
+  return `${path} Z`;
+}
+
+/**
+ * The `d` for one funnel stage — recharts' trapezoid geometry with the design's
+ * rounded corners.
+ *
+ * `x`/`y` is the top-left of the *upper* edge and the shape is centred on
+ * `x + upperWidth / 2`, matching recharts' own `getTrapezoidPath`.
+ *
+ * Either edge can collapse to a single rounded apex rather than a zero-length
+ * one — the `triangle` last shape narrows to a point at the bottom, and a
+ * `reversed` funnel stands that same triangle on its head at the top.
+ */
+export function funnelChartStagePath(options: {
+  x: number;
+  y: number;
+  upperWidth: number;
+  lowerWidth: number;
+  height: number;
+  /**
+   * Uniform corner radius — applies to all four corners. Overridden per-side
+   * by `topRadius` / `bottomRadius`. When absent, defaults to
+   * `STAGE_RADIUS` (top) and `STAGE_BOTTOM_RADIUS` (bottom).
+   */
+  radius?: number;
+  /** Radius for the two upper corners (default: `STAGE_RADIUS = 2`). */
+  topRadius?: number;
+  /**
+   * Radius for the two lower corners (default: `STAGE_BOTTOM_RADIUS = 1`).
+   *
+   * Figma's bottom corners clip ~0.85px — much smaller than the upper ones —
+   * so the default is intentionally lower than `topRadius`.
+   */
+  bottomRadius?: number;
+}): string {
+  const { x, y, upperWidth, lowerWidth, height } = options;
+  // `radius` is a backward-compat shorthand for all corners.
+  // Per-side props win; if only `radius` is given it applies to both sides.
+  // If nothing is given, use the asymmetric Figma defaults.
+  const uniformRadius = options.radius;
+  const topRadius = options.topRadius ?? uniformRadius ?? STAGE_RADIUS;
+  const bottomRadius =
+    options.bottomRadius ?? uniformRadius ?? STAGE_BOTTOM_RADIUS;
+
+  if (height <= 0 || (upperWidth <= 0 && lowerWidth <= 0)) return '';
+
+  const centre = x + upperWidth / 2;
+  const upper: StagePoint[] =
+    upperWidth <= 0
+      ? [[centre, y]]
+      : [
+          [x, y],
+          [x + upperWidth, y],
+        ];
+  const lower: StagePoint[] =
+    lowerWidth <= 0
+      ? [[centre, y + height]]
+      : [
+          [centre + lowerWidth / 2, y + height],
+          [centre - lowerWidth / 2, y + height],
+        ];
+
+  // Upper points get topRadius, lower points get bottomRadius — matching
+  // Figma's intentional asymmetry (the diagonal-meets-bottom transition
+  // uses a much smaller clip than the diagonal-meets-top one).
+  const radii: number[] = [
+    ...upper.map(() => topRadius),
+    ...lower.map(() => bottomRadius),
+  ];
+  return roundedPolygonPath([...upper, ...lower], radii);
+}
+
+/**
+ * Pull a stage's **top** edge down by `gap`, so surface shows between it and the
+ * stage above.
+ *
+ * The top rather than the bottom on purpose: the bottom edge is what
+ * `lastShapeType` defines — the triangle's apex — so leaving it exactly where
+ * recharts put it keeps a `triangle` funnel ending in a real point instead of a
+ * blunt 2px edge. The upper edge slides down the funnel's own slope, so the
+ * taper is unchanged rather than steepened.
+ *
+ * A stage with no room for the gap is returned untouched: better a missing gap
+ * than an inverted shape.
+ */
+export function funnelChartStageInset(options: {
+  x: number;
+  y: number;
+  upperWidth: number;
+  lowerWidth: number;
+  height: number;
+  gap: number;
+}) {
+  const { x, y, upperWidth, lowerWidth, height, gap } = options;
+  if (gap <= 0 || height <= gap) {
+    return { x, y, upperWidth, lowerWidth, height };
+  }
+
+  const insetUpperWidth =
+    upperWidth + ((lowerWidth - upperWidth) * gap) / height;
+  return {
+    x: x + upperWidth / 2 - insetUpperWidth / 2,
+    y: y + gap,
+    upperWidth: insetUpperWidth,
+    lowerWidth,
+    height: height - gap,
+  };
+}
 
 // The inset reserved on whichever side a label list sits. It is *not* label
 // room — see `funnelChartLabelReserve` for why — but a label whose text can't
@@ -203,11 +422,15 @@ export function funnelChartLabelReserve(options: {
 }
 
 /**
- * The plot-area margin. Reserves the left inset when a label list sits there, so
- * a left-hand label isn't clipped at the SVG edge; the right inset is always
- * reserved, since that is the geometry every existing funnel was drawn with.
+ * The plot-area margin.
  *
- * This is overflow protection, not label room — the wrap width comes from
+ * With nothing beside the funnel — the default, and what Figma draws — the plot
+ * is the design's own inset (`PLOT_MARGIN`): just the few px the rounded corners
+ * and the apex need, so the funnel fills its 120px square instead of being
+ * squeezed into the middle by label room it isn't using.
+ *
+ * As soon as a label list *does* sit beside the funnel, the side insets come
+ * back: this is overflow protection, not label room — the wrap width comes from
  * `funnelChartLabelReserve`. A caller-supplied `margin` is merged over these
  * defaults per side, so `margin={{ right: 160 }}` keeps the default top, bottom
  * and left rather than collapsing them to zero.
@@ -221,13 +444,18 @@ export function funnelChartLabelMargin(options: {
   const { showLabels, labelPosition, showValueLabels, valuePosition } = options;
   const stageLabelAt = showLabels ? labelPosition : undefined;
   const valueLabelAt = showValueLabels ? valuePosition : undefined;
+  const besideOnLeft = stageLabelAt === 'left' || valueLabelAt === 'left';
+  const besideOnRight = stageLabelAt === 'right' || valueLabelAt === 'right';
+
+  // `inside` labels sit on the segments, so they count as "nothing beside the
+  // funnel" and keep the tight design margin too.
+  if (!besideOnLeft && !besideOnRight) {
+    return { ...PLOT_MARGIN };
+  }
 
   return {
     ...BASE_MARGIN,
-    left:
-      stageLabelAt === 'left' || valueLabelAt === 'left'
-        ? LABEL_SIDE_INSET
-        : BASE_MARGIN.left,
+    left: besideOnLeft ? LABEL_SIDE_INSET : BASE_MARGIN.left,
   };
 }
 
@@ -295,15 +523,78 @@ export function funnelChartLabelText(options: {
   }
 }
 
+// What recharts hands a custom `Funnel` `shape`: the trapezoid box it measured,
+// the presentation props it resolved (`fill` from the `Cell`, `stroke`), the
+// data row, and whether this stage is the hovered one.
+type FunnelStageShapeProps = {
+  x?: number;
+  y?: number;
+  upperWidth?: number;
+  lowerWidth?: number;
+  height?: number;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: string | number;
+  className?: string;
+  isActive?: boolean;
+  payload?: Record<string, unknown>;
+  showActiveShape?: boolean;
+  /**
+   * Which stage sits at the top of the plot area, and so takes no gap above it.
+   * Not always the first row: `reversed` flips the stack, which puts the *last*
+   * stage at the top.
+   */
+  topStageIndex?: number;
+};
+
 /**
- * Mix one stage of the gradient ramp. Mixing toward the surface (rather than
- * lowering alpha) keeps every stage opaque, so an on-segment label keeps its
- * contrast and the ramp reads the same over any card background.
+ * One funnel stage. Replaces recharts' `Trapezoid` because the design's stage
+ * has two things it can't express: a 2px gap to the stage above and 2px rounded
+ * corners.
+ *
+ * Safe to substitute — recharts puts the tooltip/click handlers on the `<g
+ * className="recharts-funnel-trapezoid">` that wraps this, not on the shape, so
+ * hover and the tooltip keep working without any event plumbing here.
  */
-function gradientStageFill(base: string, index: number, count: number): string {
-  if (count <= 1) return base;
-  const strength = 100 - ((100 - GRADIENT_MIN_MIX) * index) / (count - 1);
-  return `color-mix(in oklab, ${base} ${strength.toFixed(1)}%, var(--ui-background-surface-primary))`;
+function FunnelStageShape({
+  x = 0,
+  y = 0,
+  upperWidth = 0,
+  lowerWidth = 0,
+  height = 0,
+  fill,
+  stroke,
+  strokeWidth,
+  className,
+  isActive,
+  payload,
+  showActiveShape,
+  topStageIndex = 0,
+}: FunnelStageShapeProps) {
+  const isTopStage = payload?.[STAGE_INDEX_KEY] === topStageIndex;
+  const inset = funnelChartStageInset({
+    x,
+    y,
+    upperWidth,
+    lowerWidth,
+    height,
+    // The funnel's own top edge is not a seam, so only the stages below the
+    // topmost one are pushed down: n stages give exactly n-1 gaps.
+    gap: isTopStage ? 0 : STAGE_GAP,
+  });
+  const d = funnelChartStagePath(inset);
+  if (!d) return null;
+
+  const outlined = Boolean(isActive && showActiveShape);
+  return (
+    <path
+      className={cn('recharts-funnel-stage', className)}
+      d={d}
+      fill={fill}
+      stroke={outlined ? ACTIVE_STROKE : stroke}
+      strokeWidth={outlined ? ACTIVE_STROKE_WIDTH : strokeWidth}
+    />
+  );
 }
 
 export interface FunnelChartProps
@@ -312,8 +603,12 @@ export interface FunnelChartProps
     VariantProps<typeof funnelChartVariants>,
     ChartAnimationProps {
   /**
-   * The dataviz palette this chart's series are painted from. Series that
-   * state no `color` of their own take a stop of it. See `ChartPalette`.
+   * The dataviz palette the stages are painted from — the only source of a
+   * stage's colour, bar a per-stage `stageSettings.color`. Defaults to
+   * `FUNNEL_CHART_DEFAULT_PALETTE` (the sequential blue ramp), which is what
+   * Figma paints the funnel with; a funnel's stages are an ordered series, so a
+   * ramp reads them better than the shared categorical default.
+   * See `ChartPalette`.
    */
   palette?: ChartPalette;
   /** Row-per-stage data. Each object holds the stage's `nameKey` label + its `dataKey` numeric value. */
@@ -377,23 +672,13 @@ export interface FunnelChartProps
    * for a locale that doesn't write a bare `%`.
    */
   percentFormatter?: TickFormatter;
-  /** Render the legend. Off by default: a funnel labels its stages on the chart. */
+  /**
+   * Render the stage list beside the funnel. On by default: the design's funnel
+   * carries no on-plot labels, so the legend is where the stages are named.
+   */
   showLegend?: boolean;
-  /** Which edge the legend sits on. */
-  legendPos?: 'top' | 'bottom';
-  /**
-   * How the stages are coloured. `palette` (the default) gives each stage its own
-   * `config` colour; `gradient` ramps one hue — `gradientColor` — from the widest
-   * stage down to the narrowest.
-   */
-  colorMode?: FunnelChartColorMode;
-  /**
-   * The hue `colorMode="gradient"` ramps. Defaults to the first visible stage's
-   * own colour — including a `stageSettings` colour set on it — so a palette
-   * config becomes a ramp without a second colour decision. Ignored when
-   * `colorMode` is `palette`.
-   */
-  gradientColor?: string;
+  /** Format the value in each legend row — the stage's `dataKey` number. */
+  legendValueFormatter?: (value: string | number) => string;
   /** Per-stage `color` / `hidden` overrides, keyed by the stage's `nameKey` value. */
   stageSettings?: Record<string, FunnelChartStageSettings>;
   /** Outline the hovered segment. */
@@ -437,7 +722,7 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
       nameKey,
       lastShape = 'triangle',
       reversed = false,
-      showLabels = true,
+      showLabels = false,
       labelFormat = 'name',
       labelPosition = 'right',
       showValueLabels = false,
@@ -445,10 +730,8 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
       labelFill,
       labelFormatter,
       percentFormatter,
-      showLegend = false,
-      legendPos = 'bottom',
-      colorMode = 'palette',
-      gradientColor,
+      showLegend = true,
+      legendValueFormatter,
       stageSettings,
       showActiveShape = false,
       stroke,
@@ -482,17 +765,6 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
       const visible = data.filter(
         (row) => !stageSettings?.[String(row[nameKey])]?.hidden
       );
-      // The ramp's default hue is the first visible stage's own colour — its
-      // `stageSettings` override if it has one, otherwise the `--color-*`
-      // custom property that ChartStyle emits for this series. Reading
-      // the override matters because that stage paints with it, so ramping from
-      // the config colour would start the ramp on a hue nothing on screen shows.
-      const firstName = visible.length ? String(visible[0][nameKey]) : undefined;
-      const base =
-        gradientColor ??
-        (firstName === undefined
-          ? undefined
-          : (stageSettings?.[firstName]?.color ?? `var(--color-${firstName})`));
       // The percentages are conversions from the funnel's widest stage, and
       // recharts sizes the trapezoids off `Math.max` of the values — so the base
       // is the largest visible value, not the first row. Taking the first row
@@ -505,12 +777,8 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
 
       return visible.map((row, index) => {
         const name = String(row[nameKey]);
-        const override = stageSettings?.[name]?.color;
         const fill =
-          override ??
-          (colorMode === 'gradient' && base
-            ? gradientStageFill(base, index, visible.length)
-            : `var(--color-${name})`);
+          stageSettings?.[name]?.color ?? `var(--color-${name})`;
         const labelArgs = {
           name,
           value: row[dataKey],
@@ -522,6 +790,7 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
         return {
           ...row,
           fill,
+          [STAGE_INDEX_KEY]: index,
           [STAGE_LABEL_KEY]: funnelChartLabelText({
             ...labelArgs,
             format: labelFormat,
@@ -533,16 +802,27 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
         } as Record<string, string | number>;
       });
     }, [
-      colorMode,
       data,
       dataKey,
-      gradientColor,
       labelFormat,
       labelFormatter,
       nameKey,
       percentFormatter,
       stageSettings,
     ]);
+
+    // The legend sits *outside* `ChartContainer`, beside the plot — so it can't
+    // read the `--color-<name>` custom properties `ChartStyle` scopes to
+    // `[data-chart=…]`. Resolving the palette here is what gives its markers the
+    // same colours the stages paint with, the way `PieChart` and
+    // `RadialBarChart` already do for their side legends.
+    const resolvedConfigForLegend = React.useMemo(
+      () =>
+        showLegend
+          ? resolveChartColors(config, palette ?? FUNNEL_CHART_DEFAULT_PALETTE)
+          : null,
+      [showLegend, config, palette]
+    );
 
     // recharts 3 builds the legend payload from the graphical item, and `Funnel`
     // — unlike Bar/Line/Area/Pie/Radar/RadialBar/Scatter — never registers one,
@@ -553,10 +833,11 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
     // so each entry resolves its own `config` entry via `nameKey`.
     //
     // One entry per *distinct* stage name: same-named stages deliberately share a
-    // `--color-<name>`/`config` entry, so a second entry would repeat the first
-    // verbatim — and `ChartLegendContent` keys its entries on `value`, so it would
-    // also be a duplicate React key.
+    // `config` entry, so a second entry would repeat the first verbatim — and
+    // `ChartLegendContent` keys its entries on `value`, so it would also be a
+    // duplicate React key.
     const legendPayload = React.useMemo<LegendPayload[]>(() => {
+      if (!resolvedConfigForLegend) return [];
       const seen = new Set<string>();
       return seriesData.flatMap((row) => {
         const value = String(row[nameKey]);
@@ -567,15 +848,29 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
             value,
             dataKey: nameKey,
             type: 'rect' as const,
-            color: String(row.fill),
+            // A `stageSettings` colour is a real colour and paints as-is; every
+            // other stage takes its resolved palette stop.
+            color:
+              stageSettings?.[value]?.color ??
+              resolvedConfigForLegend[value]?.color ??
+              String(row.fill),
             payload: row,
           },
         ];
       });
-    }, [nameKey, seriesData]);
+    }, [nameKey, seriesData, resolvedConfigForLegend, stageSettings]);
 
     const resolvedValuePosition =
       valuePosition ?? funnelChartOppositeSide(labelPosition);
+
+    // When labels sit beside the funnel (not on the segments), the 120px plot
+    // is too narrow: the label margins eat the whole width and leave 0px for the
+    // funnel. Make the plot grow to fill available width in that case; the fixed
+    // 120px square is only for the default "no outside labels" layout.
+    const hasOutsideLabels =
+      (showLabels && labelPosition !== 'inside') ||
+      (showValueLabels && resolvedValuePosition !== 'inside');
+
     const stagePosition = LABEL_POSITION[labelPosition];
     const valueLabelPosition = LABEL_POSITION[resolvedValuePosition];
     const plotMargin = {
@@ -598,82 +893,119 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
     const resolvedStroke =
       stroke ??
       (strokeWidth != null ? 'var(--ui-border-on-surface-border)' : undefined);
+    // One renderer for both slots: recharts swaps in `activeShape` for the
+    // hovered stage, so leaving it unset would drop back to its own square-
+    // cornered, gapless `Trapezoid` on hover.
+    const renderStage = (stageProps: FunnelStageShapeProps) => (
+      <FunnelStageShape
+        {...stageProps}
+        showActiveShape={showActiveShape}
+        // `reversed` stacks the funnel the other way up, so the stage with no
+        // gap above it is the last row rather than the first.
+        topStageIndex={reversed ? seriesData.length - 1 : 0}
+      />
+    );
 
     return (
       <div
         ref={ref}
         data-last-shape={lastShape}
-        className={cn(funnelChartVariants({ lastShape }), className)}
+        className={cn(
+          // The design's funnel is a row: a square plot, a 16px gutter, then the
+          // legend taking whatever is left — so the component fills its parent's
+          // width without the plot stretching into a tall, narrow wedge.
+          'flex flex-row items-center gap-4',
+          !showLegend && 'justify-center',
+          funnelChartVariants({ lastShape }),
+          className
+        )}
         {...props}
       >
-        <ChartContainer config={config} palette={palette} className="size-full">
-          <RechartsFunnelChart margin={plotMargin}>
-            {showTooltip && (
-              <ChartTooltip
-                content={
-                  tooltipContent ?? (
-                    <ChartTooltipContent nameKey={nameKey} hideLabel />
-                  )
-                }
-              />
-            )}
-            {showLegend && (
-              <ChartLegend
-                verticalAlign={legendPos}
-                content={() => (
-                  <ChartLegendContent
-                    payload={legendPayload}
-                    verticalAlign={legendPos}
-                    nameKey={nameKey}
+        <div
+          className={
+            hasOutsideLabels
+              ? 'h-[120px] flex-1'
+              : cn(PLOT_SIZE_CLASS, 'shrink-0')
+          }
+        >
+          <ChartContainer
+            config={config}
+            palette={palette ?? FUNNEL_CHART_DEFAULT_PALETTE}
+            className="size-full"
+          >
+            <RechartsFunnelChart margin={plotMargin}>
+              {showTooltip && (
+                <ChartTooltip
+                  content={
+                    tooltipContent ?? (
+                      <ChartTooltipContent nameKey={nameKey} hideLabel />
+                    )
+                  }
+                />
+              )}
+              <Funnel
+                dataKey={dataKey}
+                nameKey={nameKey}
+                data={seriesData}
+                lastShapeType={lastShape ?? 'triangle'}
+                reversed={reversed}
+                width={resolvedFunnelWidth}
+                stroke={resolvedStroke}
+                strokeWidth={strokeWidth}
+                shape={renderStage}
+                activeShape={renderStage}
+                {...animation}
+              >
+                {seriesData.map((entry, index) => (
+                  // Keyed by index, not the name: two stages could share a nameKey
+                  // value, which would collide as a React key. Same-named stages
+                  // intentionally share a color/config entry via `--color-<name>`.
+                  <Cell key={index} fill={String(entry.fill)} />
+                ))}
+                {showLabels && (
+                  <LabelList
+                    position={stagePosition}
+                    dataKey={STAGE_LABEL_KEY}
+                    className={
+                      labelFill
+                        ? undefined
+                        : resolveLabelFillClass(stagePosition)
+                    }
+                    fill={labelFill}
+                    stroke="none"
                   />
                 )}
-              />
-            )}
-            <Funnel
-              dataKey={dataKey}
-              nameKey={nameKey}
-              data={seriesData}
-              lastShapeType={lastShape ?? 'triangle'}
-              reversed={reversed}
-              width={resolvedFunnelWidth}
-              stroke={resolvedStroke}
-              strokeWidth={strokeWidth}
-              activeShape={showActiveShape ? ACTIVE_SHAPE : undefined}
-              {...animation}
-            >
-              {seriesData.map((entry, index) => (
-                // Keyed by index, not the name: two stages could share a nameKey
-                // value, which would collide as a React key. Same-named stages
-                // intentionally share a color/config entry via `--color-<name>`.
-                <Cell key={index} fill={String(entry.fill)} />
-              ))}
-              {showLabels && (
-                <LabelList
-                  position={stagePosition}
-                  dataKey={STAGE_LABEL_KEY}
-                  className={
-                    labelFill ? undefined : resolveLabelFillClass(stagePosition)
-                  }
-                  fill={labelFill}
-                  stroke="none"
-                />
-              )}
-              {showValueLabels && (
-                <LabelList
-                  position={valueLabelPosition}
-                  dataKey={STAGE_VALUE_LABEL_KEY}
-                  className={
-                    labelFill
-                      ? undefined
-                      : resolveLabelFillClass(valueLabelPosition)
-                  }
-                  fill={labelFill}
-                  stroke="none"
-                />
-              )}
-            </Funnel>
-          </RechartsFunnelChart>
-        </ChartContainer>
+                {showValueLabels && (
+                  <LabelList
+                    position={valueLabelPosition}
+                    dataKey={STAGE_VALUE_LABEL_KEY}
+                    className={
+                      labelFill
+                        ? undefined
+                        : resolveLabelFillClass(valueLabelPosition)
+                    }
+                    fill={labelFill}
+                    stroke="none"
+                  />
+                )}
+              </Funnel>
+            </RechartsFunnelChart>
+          </ChartContainer>
+        </div>
+        {showLegend && resolvedConfigForLegend && (
+          <ChartLegendContent
+            variant="list"
+            payload={legendPayload}
+            config={resolvedConfigForLegend}
+            nameKey={nameKey}
+            valueKey={dataKey}
+            valueFormatter={legendValueFormatter}
+            // Figma paints the funnel legend's value in the primary text token,
+            // not the link token the donut/radial legends use for theirs.
+            valueClassName="text-[var(--ui-text-on-surface-primary)]"
+            className="min-w-0 flex-1"
+          />
+        )}
       </div>
     );
   }

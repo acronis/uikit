@@ -167,6 +167,31 @@ describe('Chart', () => {
   // A chart type whose renderer can't lay a legend out inside the plot (Treemap)
   // renders the shared legend beside it, outside the container — so the config has
   // to be passable as a prop rather than only through the container's context.
+  it('uses an explicit value class for list legend values without changing the default', () => {
+    const { container } = render(
+      <ChartLegendContent
+        variant="list"
+        valueKey="value"
+        valueClassName="text-[var(--ui-text-on-surface-primary)]"
+        config={config}
+        payload={[
+          {
+            value: 'Desktop',
+            dataKey: 'desktop',
+            color: 'rgb(23 99 207)',
+            payload: { value: 125 },
+          },
+        ]}
+      />
+    );
+    const value = Array.from(container.querySelectorAll('span')).find((span) =>
+      span.className.includes('text-[var(--ui-text-on-surface-primary)]')
+    );
+    expect(value).toHaveTextContent('125');
+    expect(value).toHaveClass('text-[var(--ui-text-on-surface-primary)]');
+    expect(value).not.toHaveClass('text-[var(--ui-text-on-surface-link-idle)]');
+  });
+
   it('renders outside a ChartContainer when handed the config', () => {
     const { container } = render(
       <ChartLegendContent
@@ -235,8 +260,9 @@ describe('Chart', () => {
         />
       </ChartContainer>
     );
-    const dots =
-      container.querySelectorAll<HTMLElement>('.rounded-full.h-2\\.5.w-2\\.5');
+    const dots = container.querySelectorAll<HTMLElement>(
+      '.rounded-full.h-2\\.5.w-2\\.5'
+    );
     expect(dots).toHaveLength(2);
     expect(dots[0]?.style.backgroundColor).toBe('var(--color-desktop)');
     expect(dots[1]?.style.backgroundColor).toBe('var(--color-mobile)');

@@ -1,20 +1,32 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import {
+  EllipsisIcon,
+  SquareDashedIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
 import { Cell, Funnel, FunnelChart as RechartsFunnelChart } from 'recharts';
 
-import { FunnelChart } from '../funnel-chart';
+import {
+  FUNNEL_CHART_DEFAULT_PALETTE,
+  FunnelChart,
+  funnelChartStageInset,
+  funnelChartStagePath,
+} from '../funnel-chart';
 import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
+  type ChartPalette,
 } from '../../chart';
+import { ChartWidget } from '../../chart-widget';
+import { ButtonIcon } from '../../button-icon';
+import { Metric } from '../../metric';
+import { Tag } from '../../tag';
 
-// Stage colors are supplied by the caller via `config`, keyed by each stage's
-// nameKey value. There is no chart token tier yet, so these reference the shared
-// semantic brand/status tokens (a dedicated data-viz palette is pending an
-// upstream design pass). The status tokens are chromatic in every brand;
-// `brand-secondary` is brand-dependent.
+// Stage colours come from `palette` and nothing else. FunnelChart's default is
+// the sequential blue ramp — the palette Figma paints the funnel with, and the
+// one that reads an ordered set of stages as an ordered set.
 const data = [
   { stage: 'Visits', value: 5000 },
   { stage: 'Signups', value: 2600 },
@@ -35,34 +47,69 @@ const config = {
   },
 } satisfies ChartConfig;
 
+// The widget mockup's own copy — a long first label, so the legend's truncation
+// and its two-column alignment are both visible.
+//
+// The long text is each stage's `label`, never its `nameKey` value: a stage's
+// name becomes a `--color-<name>` custom property, and prose with spaces and
+// commas in it is not a valid CSS identifier — the stage would paint black. Same
+// short-key/long-label split the `PieChart` widget story uses.
+const widgetData = [
+  { stage: 'first', value: 100 },
+  { stage: 'second', value: 55 },
+  { stage: 'third', value: 35 },
+  { stage: 'fourth', value: 15 },
+];
+
+const widgetConfig = {
+  first: {
+    label:
+      'First Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod incididunt ut labore et dolore magna aliqua',
+  },
+  second: { label: 'Second Lorem ipsum dolor sit amet, consectetur:' },
+  third: { label: 'Third:' },
+  fourth: { label: 'Fourth:' },
+} satisfies ChartConfig;
+
 const meta = {
   title: 'Widgets/FunnelChart',
   component: FunnelChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  // The ChartContainer is transparent by design (it inherits the surface it sits
-  // on — usually a Card). Render the stories on a themed surface so the chart is
-  // legible in both light and dark; without it, dark mode flips the token-driven
-  // text/labels but leaves the backdrop unthemed.
-  decorators: [
-    (Story) => (
-      <div className="rounded-lg border border-border bg-background p-6 text-foreground">
-        <Story />
-      </div>
-    ),
-  ],
   args: {
     config,
     data,
     dataKey: 'value',
     nameKey: 'stage',
+    // `palette` uses a string key so the mapping in `paletteArgTypes` correctly
+    // reflects the selection in the Controls panel. FunnelChart's default is
+    // `sequential-blue`, not the shared `categorical` every other chart uses.
+    palette: 'sequential-blue' as unknown as ChartPalette,
+    lastShape: 'triangle',
     reversed: false,
-    showLabels: true,
+    showLabels: false,
+    labelFormat: 'name',
+    labelPosition: 'right',
+    showValueLabels: false,
+    showLegend: true,
+    showActiveShape: false,
     showTooltip: true,
-    className: 'h-[380px] w-[460px]',
+    // A width only, never a height: the plot is a square and the legend column
+    // takes the rest, so the row sizes itself. A story still pins the width so
+    // the visual-regression baselines don't move with the viewport.
+    className: 'w-[320px]',
   },
   argTypes: {
+    // Override the shared default-value label: FunnelChart's palette default is
+    // `sequential-blue`, not the `categorical` every other chart uses.
     ...paletteArgTypes,
+    palette: {
+      ...paletteArgTypes.palette,
+      table: {
+        ...paletteArgTypes.palette.table,
+        defaultValue: { summary: 'sequential-blue' },
+      },
+    },
     lastShape: { control: 'inline-radio', options: ['triangle', 'rectangle'] },
     reversed: { control: 'boolean' },
     showLabels: { control: 'boolean' },
@@ -87,8 +134,6 @@ const meta = {
       options: ['right', 'left', 'inside'],
     },
     showLegend: { control: 'boolean' },
-    legendPos: { control: 'inline-radio', options: ['top', 'bottom'] },
-    colorMode: { control: 'inline-radio', options: ['palette', 'gradient'] },
     showActiveShape: { control: 'boolean' },
     funnelWidth: { control: { type: 'number' } },
     showTooltip: { control: 'boolean' },
@@ -105,7 +150,49 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// The classic funnel narrowing to a point.
+// No props beyond the data: four stages off the sequential blue ramp, no on-plot
+// text, and the stage list beside the funnel. This is what the design draws.
+export const Default: Story = {};
+
+// The design's `ChartFunnel` in full: the card, its header and ⋯ menu, and the
+// metric row all belong to `ChartWidget` — FunnelChart is only the plot and its
+// legend, and fills the widget body responsively.
+//
+// Figma `8811:175245` (size=md, 592px wide).
+export const WidgetExample: Story = {
+  render: () => (
+    <div className="w-[592px]">
+      <ChartWidget
+        header={{
+          title: 'Title',
+          actions: (
+            <ButtonIcon variant="ghost" aria-label="Widget actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          ),
+        }}
+        metric={
+          <Metric
+            icon={<SquareDashedIcon />}
+            value="125"
+            unit="Label"
+            caption={<Tag variant="neutral">Last 6 months</Tag>}
+          />
+        }
+      >
+        <FunnelChart
+          config={widgetConfig}
+          data={widgetData}
+          dataKey="value"
+          nameKey="stage"
+          className="size-full"
+        />
+      </ChartWidget>
+    </div>
+  ),
+};
+
+// The classic funnel narrowing to a point (the default `lastShape`).
 export const Triangle: Story = {
   args: { lastShape: 'triangle' },
 };
@@ -115,19 +202,86 @@ export const Rectangle: Story = {
   args: { lastShape: 'rectangle' },
 };
 
-// Labels + tooltip toggled off — the baseline that would catch a toggle silently
-// becoming a no-op (the unit env can't paint recharts chrome).
-export const NoChrome: Story = {
-  args: { showLabels: false, showTooltip: false },
+// The funnel widening downward instead. The gap-free stage follows the flip, so
+// the stack still starts flush at the top of the plot.
+export const Reversed: Story = {
+  args: { reversed: true },
 };
+
+// Legend + tooltip off — the bare plot, and the baseline that would catch a
+// toggle silently becoming a no-op.
+export const NoChrome: Story = {
+  args: { showLabels: false, showLegend: false, showTooltip: false },
+};
+
+// Every stage painted from a different palette than the default ramp.
+export const CategoricalPalette: Story = {
+  args: { palette: { type: 'categorical' } },
+};
+
+// The stage list is the default, so this is the same as `Default` — kept as the
+// explicit case, and to show a formatted legend value.
+export const WithLegend: Story = {
+  args: {
+    showLegend: true,
+    legendValueFormatter: (value) => `${Number(value) / 1000}k`,
+  },
+};
+
+// The stage geometry the component draws — the 2px gap between stages and the
+// 2px rounded corners — so the raw recharts compositions below match what
+// `FunnelChart` itself paints instead of recharts' flush, square-cornered
+// `Trapezoid`.
+type RawStageProps = {
+  x?: number;
+  y?: number;
+  upperWidth?: number;
+  lowerWidth?: number;
+  height?: number;
+  fill?: string;
+  payload?: Record<string, unknown>;
+};
+
+const renderRawStage = ({
+  x = 0,
+  y = 0,
+  upperWidth = 0,
+  lowerWidth = 0,
+  height = 0,
+  fill,
+  payload,
+}: RawStageProps) => (
+  <path
+    d={funnelChartStagePath(
+      funnelChartStageInset({
+        x,
+        y,
+        upperWidth,
+        lowerWidth,
+        height,
+        gap: payload?.stage === data[0].stage ? 0 : 2,
+      })
+    )}
+    fill={fill}
+  />
+);
+
+const rawFunnelData = data.map((d) => ({
+  ...d,
+  fill: `var(--color-${d.stage})`,
+}));
 
 // The tooltip is hover-only, so a normal story never snapshots it. This renders
 // the raw composition so recharts' `defaultIndex` can open the tooltip
 // statically for the visual-regression baseline (see the skill's VR note).
 export const TooltipOpen: Story = {
   render: () => (
-    <ChartContainer config={config} className="h-[380px] w-[460px]">
-      <RechartsFunnelChart margin={{ top: 8, right: 96, bottom: 8, left: 24 }}>
+    <ChartContainer
+      config={config}
+      palette={FUNNEL_CHART_DEFAULT_PALETTE}
+      className="size-[200px]"
+    >
+      <RechartsFunnelChart margin={{ top: 4, right: 8, bottom: 4, left: 8 }}>
         <ChartTooltip
           defaultIndex={1}
           active
@@ -136,7 +290,8 @@ export const TooltipOpen: Story = {
         <Funnel
           dataKey="value"
           nameKey="stage"
-          data={data.map((d) => ({ ...d, fill: `var(--color-${d.stage})` }))}
+          data={rawFunnelData}
+          shape={renderRawStage}
           isAnimationActive={false}
         >
           {data.map((entry) => (
@@ -158,7 +313,10 @@ const customTooltipContent = (
       <div className="flex w-full items-center gap-2">
         <span
           className="size-2.5 shrink-0 rounded-[2px]"
-          style={{ backgroundColor: item.color }}
+          style={{
+            backgroundColor:
+              (item.payload as Record<string, string>).fill ?? item.color,
+          }}
         />
         <span className="text-muted-foreground">
           {config[name as keyof typeof config]?.label ?? name}
@@ -183,13 +341,18 @@ export const CustomTooltip: Story = {
 // statically otherwise) with the shared custom content wired in.
 export const CustomTooltipOpen: Story = {
   render: () => (
-    <ChartContainer config={config} className="h-[380px] w-[460px]">
-      <RechartsFunnelChart margin={{ top: 8, right: 96, bottom: 8, left: 24 }}>
+    <ChartContainer
+      config={config}
+      palette={FUNNEL_CHART_DEFAULT_PALETTE}
+      className="size-[200px]"
+    >
+      <RechartsFunnelChart margin={{ top: 4, right: 8, bottom: 4, left: 8 }}>
         <ChartTooltip defaultIndex={1} active content={customTooltipContent} />
         <Funnel
           dataKey="value"
           nameKey="stage"
-          data={data.map((d) => ({ ...d, fill: `var(--color-${d.stage})` }))}
+          data={rawFunnelData}
+          shape={renderRawStage}
           isAnimationActive={false}
         >
           {data.map((entry) => (
@@ -201,44 +364,9 @@ export const CustomTooltipOpen: Story = {
   ),
 };
 
-// The legend names the stages below the funnel. Off by default — a funnel
-// already labels its stages on the chart — so it's opt-in for the cases where
-// the on-chart labels carry values instead of names.
-export const WithLegend: Story = {
-  args: { showLegend: true, labelFormat: 'value', labelPosition: 'right' },
-};
-
-// The same legend on the top edge.
-export const LegendTop: Story = {
-  args: {
-    showLegend: true,
-    legendPos: 'top',
-    labelFormat: 'value',
-  },
-};
-
-// One hue ramped from the widest stage to the narrowest, instead of a colour per
-// stage. The ramp's base is the first stage's own `config` colour unless
-// `gradientColor` names another.
-export const GradientColors: Story = {
-  args: {
-    colorMode: 'gradient',
-    showLegend: true,
-    labelFormat: 'name-percent',
-  },
-};
-
-// A ramp off a caller-supplied hue.
-export const GradientBrandHue: Story = {
-  args: {
-    colorMode: 'gradient',
-    gradientColor: 'var(--ui-background-brand-primary)',
-    labelFormat: 'name-percent',
-  },
-};
-
 // `stageSettings` recolours one stage and drops another. A hidden stage leaves
-// the funnel entirely, so the conversions are measured over what's left.
+// the funnel entirely, so the conversions are measured over what's left — and
+// the recoloured stage's legend marker follows it.
 export const PerStage: Story = {
   args: {
     stageSettings: {
@@ -247,21 +375,28 @@ export const PerStage: Story = {
       Trials: { color: 'var(--ui-background-status-strong-info)' },
       Purchases: { hidden: true },
     },
-    labelFormat: 'name-percent',
   },
+};
+
+// On-plot labels are off by default. Turning them on puts each stage's name
+// beside its segment, which needs room the design's tight plot doesn't reserve —
+// so these label stories give the chart a wider box.
+export const WithLabels: Story = {
+  args: { showLabels: true, className: 'w-[520px]' },
 };
 
 // Both label lists at once: the name on one side of the funnel, its value on the
 // other. The default `valuePosition`, so the last stage's number stays legible —
 // a funnel narrows, so its tail segments can't hold a label.
 export const ValueLabels: Story = {
-  args: { showValueLabels: true },
+  args: { showLabels: true, showValueLabels: true, className: 'w-[520px]' },
 };
 
 // Labels on the segments. Only the short formats fit down there, so this pairs an
 // `inside` conversion with the legend carrying the names.
 export const InsideLabels: Story = {
   args: {
+    showLabels: true,
     labelPosition: 'inside',
     labelFormat: 'percent',
     showLegend: true,
@@ -272,9 +407,11 @@ export const InsideLabels: Story = {
 // default to the side opposite the names, so they follow them to the right.
 export const LeftLabels: Story = {
   args: {
+    showLabels: true,
     labelPosition: 'left',
     labelFormat: 'name-percent',
     showValueLabels: true,
+    className: 'w-[520px]',
   },
 };
 
@@ -282,18 +419,17 @@ export const LeftLabels: Story = {
 // hover itself is not deterministic, so this is excluded from VR (it exists for
 // the docs/controls); the outline is asserted in the unit tests.
 export const ActiveShape: Story = {
-  args: { showActiveShape: true, labelFormat: 'name-percent' },
+  args: { showActiveShape: true },
   parameters: { snapshot: { skip: true } },
 };
 
-// Segment borders + a narrowed funnel: `stroke` / `strokeWidth` separate the
-// stages, `funnelWidth` keeps the shape off the labels.
+// Segment borders + a narrowed funnel: `stroke` / `strokeWidth` outline the
+// stages on top of the gap they already have, `funnelWidth` narrows the shape.
 export const SegmentBorders: Story = {
   args: {
     stroke: 'var(--ui-border-on-surface-border)',
     strokeWidth: 2,
     funnelWidth: '65%',
-    showValueLabels: true,
   },
 };
 
