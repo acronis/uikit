@@ -21,9 +21,9 @@ export default defineConfig({
     cssCodeSplit: true,
     lib: {
       entry: {
-        index: resolve(__dirname, 'src/index.ts'),
-        react: resolve(__dirname, 'src/react.ts'),
-        styles: resolve(__dirname, 'src/styles/index.css'),
+        index: resolve(import.meta.dirname, 'src/index.ts'),
+        react: resolve(import.meta.dirname, 'src/react.ts'),
+        styles: resolve(import.meta.dirname, 'src/styles/index.css'),
       },
       formats: ['es'],
       fileName: (_format, entryName) => `${entryName}.js`,
@@ -55,12 +55,12 @@ export default defineConfig({
         },
         assetFileNames: (assetInfo) => {
           if (
-            assetInfo.name === 'style.css' ||
-            assetInfo.name === 'styles.css'
+            assetInfo.names.includes('style.css') ||
+            assetInfo.names.includes('styles.css')
           ) {
             return 'ui-react.css';
           }
-          return assetInfo.name || 'assets/[name]-[hash][extname]';
+          return assetInfo.names[0] || 'assets/[name]-[hash][extname]';
         },
       },
     },
@@ -69,7 +69,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'),
+      '@': resolve(import.meta.dirname, './src'),
     },
   },
 });

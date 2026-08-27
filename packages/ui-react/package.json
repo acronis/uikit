@@ -89,7 +89,7 @@
   "devDependencies": {
     "@figma/code-connect": "1.4.8",
     "@types/js-yaml": "4.0.9",
-    "js-yaml": "4.1.1",
+    "js-yaml": "4.3.1",
     "tsx": "^4.20.0",
     "@playwright/test": "1.60.0",
     "@tanstack/react-virtual": "catalog:",
@@ -107,7 +107,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/plugin-react": "5.1.1",
+    "@vitejs/plugin-react": "6.1.0",
     "@tailwindcss/postcss": "catalog:",
     "eslint": "catalog:",
     "happy-dom": "20.9.0",

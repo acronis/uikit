@@ -21,15 +21,15 @@ catalog:
   # Toolchain
   typescript: 6.0.3
   eslint: 9.39.4
-  # Held on the Rollup-based Vite 6 line. Vite 8 defaults to the rolldown
-  # bundler (rolldown@1.x), which miscompiles es-toolkit's CommonJS compat
-  # modules (pulled in transitively via recharts) when bundled into the
-  # published UI library, producing a dist that builds but throws
-  # "t is not a function" at runtime in SSR consumers (apps/docs prerender).
-  # @vitejs/plugin-react is correspondingly held at 5.x (6.x requires
-  # vite ^8). Revisit once rolldown's CJS interop is fixed.
-  vite: 6.4.2
-  vitest: 4.1.7
+  # Previously held on Vite 6 (Rollup-based) — Vite 8's default rolldown
+  # bundler (rolldown@1.x) used to miscompile es-toolkit's CommonJS compat
+  # modules pulled in transitively via recharts, producing a dist that built
+  # but threw "t is not a function" at runtime in SSR consumers (apps/docs
+  # prerender). Verified fixed with rolldown@1.2.x — apps/docs prerenders all
+  # chart pages with real recharts SVG output. @vitejs/plugin-react bumped to
+  # 6.x alongside this (6.x requires vite ^8).
+  vite: 8.2.0
+  vitest: 4.1.10
 
   # Cross-workspace runtime deps. Versions are anchored on
   # packages/ui-react (the published library) so its typecheck stays
@@ -51,20 +51,36 @@ catalog:
   # JSON-schema validation — shared by the data packages
   # (packages/design-assets, packages/design-tokens), which validate their manifests
   # against ajv-compiled schemas. No runtime deps; ajv is dev-only.
-  ajv: 8.17.1
+  ajv: 8.18.0
   ajv-cli: 5.0.0
   ajv-formats: 3.0.1
 
   # Style Dictionary v5 — used by tools/style-dictionary, which builds
   # design-tokens → packages/tokens-pd (per-brand CSS, per-component CSS,
   # Tailwind presets, DTCG) and design-assets → SVG/React.
-  style-dictionary: 5.4.3
+  style-dictionary: 5.4.4
 
   # SVGO v4 — SVG optimizer shared by the icon tooling:
   # tools/style-dictionary, tools/figma-design-assets-sync.
-  svgo: 4.0.1
+  svgo: 4.0.2
 
 # Pin transitive deps that we don't want pnpm to bump.
 overrides:
+  axios: 1.18.0
+  immutable: 5.1.8
+  joi: 17.13.4
+  react-router: 7.18.2
+  sharp: 0.35.0
   prismjs: 1.30.0
-  postcss: 8.5.10
+  postcss: 8.5.25
+  fast-json-patch: 3.1.1
+  form-data: 4.0.6
+  'brace-expansion@<3.0.0': 2.1.4
+  'brace-expansion@>=5.0.0 <6.0.0': 5.0.9
+  fast-uri: 3.1.5
+  nanoid: 3.3.18
+  undici: 7.29.0
+  uuid: 14.0.1 # transitive-only (no direct usage); mirror caps here, exceeds the 11.1.1 advisory fix
+  'js-yaml@>=3.0.0 <4.0.0': 3.15.1
+  'js-yaml@>=4.0.0 <5.0.0': 4.3.1
+  esbuild: 0.28.1

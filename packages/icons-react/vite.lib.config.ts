@@ -3,14 +3,14 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-import { PACKS } from './scripts/packs';
+import { PACKS } from './scripts/packs.ts';
 
 const entries: Record<string, string> = {
-  index: resolve(__dirname, 'src/index.ts'),
+  index: resolve(import.meta.dirname, 'src/index.ts'),
 };
 for (const pack of PACKS) {
   entries[`${pack.name}/index`] = resolve(
-    __dirname,
+    import.meta.dirname,
     `src/packs/${pack.name}/index.ts`
   );
 }
@@ -50,6 +50,6 @@ export default defineConfig({
     emptyOutDir: true,
   },
   resolve: {
-    alias: { '@': resolve(__dirname, './src') },
+    alias: { '@': resolve(import.meta.dirname, './src') },
   },
 });
