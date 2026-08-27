@@ -1,5 +1,41 @@
 # @acronis-platform/ui-react
 
+## 4.1.0
+
+### Minor Changes
+
+- [#695](https://github.com/acronis/uikit/pull/695) [`084e384`](https://github.com/acronis/uikit/commit/084e384901586898e95c9e6ee7a1d9b50d784741) Thanks [@madjorr](https://github.com/madjorr)! - feat(input-num-picker): add `InputNumPicker`
+
+  A numeric stepper field (label + required marker, decrement/increment
+  buttons around the value) built on Base UI's `NumberField`, themed by its own
+  `--ui-input-num-picker-*` token tier and reusing `ButtonIconInput` for the
+  steppers. Ported from Figma node `8523:5382`. This is a new component,
+  independent of the existing `NumberField` (which remains unchanged).
+
+### Patch Changes
+
+- [#701](https://github.com/acronis/uikit/pull/701) [`668d2b9`](https://github.com/acronis/uikit/commit/668d2b9bb85b2230673a13dbe6ad6c19f76f1132) Thanks [@madjorr](https://github.com/madjorr)! - chore(deps): bump dependencies
+
+  Bumps `vite` (6→8), `vitest` (4.1.7→4.1.10), and `@vitejs/plugin-react`
+  (5→6), plus `js-yaml`, `ajv`, `style-dictionary`, `svgo`, and `next`
+  (apps/docs). Pins remaining vulnerable transitive deps (`form-data`,
+  `postcss`, `brace-expansion`, `fast-uri`, `nanoid`, `undici`, `axios`,
+  `immutable`, `joi`, `react-router`, `sharp`, `esbuild`, `fast-json-patch`,
+  `uuid`) via `pnpm-workspace.yaml` overrides. No published-surface behavior
+  change — build output is unaffected (verified with `pnpm -r
+{build,typecheck,test}` and VR baselines).
+
+- [#695](https://github.com/acronis/uikit/pull/695) [`bbaf756`](https://github.com/acronis/uikit/commit/bbaf756ab7ea7f41bc7e155c1eaa69daf3a59e3f) Thanks [@madjorr](https://github.com/madjorr)! - fix(input-num-picker): forward the ref to the visible input
+
+  `InputNumPicker` passed its forwarded ref to `NumberField.Root`'s `inputRef`,
+  which targets Base UI's hidden `aria-hidden` form-submission `<input
+type="number">` shim rather than the visible text input. The ref is now
+  attached to `NumberField.Input`, so consumers get the element the user
+  actually interacts with (focus, selection, formatted value).
+
+- Updated dependencies [[`668d2b9`](https://github.com/acronis/uikit/commit/668d2b9bb85b2230673a13dbe6ad6c19f76f1132)]:
+  - @acronis-platform/icons-react@1.0.1
+
 ## 4.0.0
 
 ### Major Changes
