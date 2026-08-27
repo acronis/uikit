@@ -192,6 +192,8 @@ appear, so pass the visible element's ref instead:
 function TenantPicker() {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
@@ -218,12 +220,37 @@ function TenantPicker() {
             return;
           }
           setOpen(nextOpen);
+          if (!nextOpen) {
+            // The Select's own trigger is `sr-only`, so focus must never be left
+            // on it. At close time focus is either still inside the popup that's
+            // going away (Escape / item selection — Base UI moves it to the
+            // hidden trigger asynchronously, after this handler returns), already
+            // on that hidden trigger, lost to `document.body` (an outside press
+            // onto nothing focusable — Base UI doesn't move focus on this path),
+            // or on another element the press legitimately focused. Reclaim it
+            // for the visible button in the first three cases only.
+            const reclaimIfUnclaimed = () => {
+              const active = document.activeElement;
+              if (
+                active === triggerRef.current ||
+                active === document.body ||
+                (active !== null && popupRef.current?.contains(active))
+              ) {
+                buttonRef.current?.focus();
+              }
+            };
+            reclaimIfUnclaimed();
+            requestAnimationFrame(reclaimIfUnclaimed);
+          }
         }}
       >
         <InputSelectField className="sr-only">
-          {/* …label + trigger… */}
+          <InputSelectLabel>Tenant</InputSelectLabel>
+          <InputSelectTrigger ref={triggerRef} tabIndex={-1}>
+            <InputSelectValue placeholder="Select a tenant" />
+          </InputSelectTrigger>
         </InputSelectField>
-        <InputSelectContent anchor={buttonRef} isPopoverStyled>
+        <InputSelectContent ref={popupRef} anchor={buttonRef} isPopoverStyled>
           {/* …items… */}
         </InputSelectContent>
       </InputSelect>
@@ -241,13 +268,77 @@ the button — leaves the button's `onClick` as the single source of truth for
 `open`; a press anywhere else still dismisses the popup normally.
 
 Keep the hidden trigger in the DOM (`sr-only`, not `display: none`): Base UI
-needs it for the combobox semantics and returns focus to it on Escape. Base UI
-keeps `aria-expanded`, `aria-controls`, and the listbox relationship on that
-trigger and cannot move them, so give the external button its own accessible
-name (visible text or `aria-label`) and its own `aria-expanded={open}` — it's
-the control the user operates, and it already owns the `open` state. If you also
-want `aria-controls` on the button, pass an explicit `id` to
-`InputSelectContent` and reference it while the popup is open.
+needs it for the combobox semantics. Base UI keeps `aria-expanded`,
+`aria-controls`, and the listbox relationship on that trigger and cannot move
+them, so give the external button its own accessible name (visible text or
+`aria-label`) and its own `aria-expanded={open}` — it's the control the user
+operates, and it already owns the `open` state. If you also want
+`aria-controls` on the button, pass an explicit `id` to `InputSelectContent`
+and reference it while the popup is open.
+
+Because that trigger stays focusable while being visually hidden, focus
+management is on you — and both halves of it are required:
+
+- **`tabIndex={-1}` on `InputSelectTrigger`** (not on the `InputSelectField`
+  wrapper — that's a plain `div`; the focusable node is the trigger button)
+  takes the invisible trigger out of the natural Tab sequence, so tabbing
+  through the page can't land on a control the user can't see.
+- **Reclaiming focus for the external button on close** — the guarded
+  `reclaimIfUnclaimed` above, run twice. `tabIndex={-1}` does not block a
+  programmatic `.focus()`, so on the paths where Base UI focuses the hidden
+  trigger, closing the popup would otherwise park keyboard focus on an
+  invisible node — a
+  [WCAG 2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html)
+  failure. But the reclaim must be _conditional_: an unconditional
+  `buttonRef.current?.focus()` steals focus from an element the user
+  deliberately clicked.
+
+Why the guard, and why two calls. When `onOpenChange` reports the close, focus
+is in one of four places:
+
+1. **Still inside the popup that's about to unmount.** This is the case for
+   **both Escape and item selection**. Base UI moves focus from there to its own
+   hidden trigger, but it does so _asynchronously_ — after your handler has
+   returned. Escape is not an exception; at synchronous handler time focus is
+   still on the search input or the option row.
+2. **Already on the hidden trigger** — the transitional state once that async
+   move has landed.
+3. **Lost to `document.body`** — an outside press onto nothing focusable, e.g.
+   a blank area of the page. Base UI does _not_ move focus to its own trigger on
+   this path at all, so nothing will fix it for you.
+4. **On another element the press legitimately focused** — an outside press onto
+   a different focusable control, e.g. an input elsewhere on the page. Base UI
+   reports this as a single close, `reason: 'outside-press'`, while focus is
+   still inside the popup.
+
+Cases 1–3 all mean "no one else has claimed focus" — the visible button should
+take it. Case 4 means the user chose where focus goes, and the end state must be
+the element they pressed. That's why the guard tests three conditions rather than
+just "trigger or body": checking only the trigger and `document.body` would miss
+case 1, where focus is still inside the closing popup. That `popupRef.current?.contains`
+branch is what carries **Escape** (it matches on the synchronous call, and the
+`requestAnimationFrame` call then finds the button already focused and no-ops)
+and **item selection** (focus is still on the option row at both the synchronous
+and the `requestAnimationFrame` call, so both match — but on this path the
+platform's own move to the hidden trigger can still land between the two calls,
+so it's the deferred reclaim that actually delivers the final focus, not a
+redundant no-op).
+
+Case 4 is worth being precise about, because the guard does not detect it. At
+synchronous handler time focus is still on the popup's search input, so the
+`contains` branch matches and `buttonRef.current?.focus()` **does** fire. The
+end state is still correct — focus lands on the element the user pressed —
+because the browser's own native focus shift to the pressed element happens
+_after_ that synchronous call and overrides it; the
+`requestAnimationFrame` call then sees the pressed element focused and no-ops.
+So the guard's role on this path is to stay out of the way on the deferred pass,
+not to recognize and skip the case up front.
+
+So `tabIndex={-1}` fixes the Tab-order case and the guarded reclaim fixes the
+close-return case; neither half alone is sufficient. Put the reclaim after
+`setOpen(nextOpen)` in the same `onOpenChange` handler — the cancelled
+outside-press branch returns early and never reaches it, which is correct: that
+close never happens, so focus shouldn't move.
 
 `isPopoverStyled` renders the dropdown with `Popover`'s chrome instead of the
 default dropdown chrome: the `--ui-popover-container-*` fill / border / radius,

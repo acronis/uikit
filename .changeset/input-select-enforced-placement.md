@@ -25,6 +25,21 @@ the popup open (the pattern an external `anchor` button needs, so its own
 pointerdown isn't treated as a dismissing outside press) — that still keeps the
 user's typed query.
 
+One consumer-side requirement comes with the external-button `anchor` pattern:
+the trigger stays mounted but visually hidden (`sr-only`), and focus is left
+somewhere invisible on close (WCAG 2.4.7) — on Escape and item selection Base UI
+moves focus to that hidden trigger _asynchronously_, after `onOpenChange`
+returns; on an outside press onto nothing focusable it does not restore focus at
+all and it is lost to `document.body`. Pass `tabIndex={-1}` to
+`InputSelectTrigger` to keep it out of the Tab sequence **and** reclaim focus for
+your own visible button from `onOpenChange` when `nextOpen` is `false` —
+`tabIndex={-1}` does not block Base UI's programmatic focus call, so both are
+needed. The reclaim must be **guarded** (only when focus is still inside the
+closing popup, on the hidden trigger, or on `document.body`) and re-asserted in a
+`requestAnimationFrame`, so the deferred pass cannot pull focus off another
+element the user legitimately pressed. See the `InputSelect` docs page for the
+full example.
+
 A new `isPopoverStyled` boolean draws the dropdown's container chrome like
 `PopoverContent` — `--ui-popover-container-*` fill / border / radius, no shadow,
 and a fade/zoom/slide enter-exit animation — instead of the default

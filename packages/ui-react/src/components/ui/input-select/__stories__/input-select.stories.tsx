@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within } from 'storybook/test';
 import {
   BriefcaseIcon,
   BuildingIcon,
@@ -452,6 +453,8 @@ export const TenantSelector: Story = {
 function ControlledTenantSelector() {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="flex flex-col gap-3">
@@ -477,15 +480,40 @@ function ControlledTenantSelector() {
             return;
           }
           setOpen(nextOpen);
+          if (!nextOpen) {
+            // The Select's own trigger is `sr-only`, so focus must never be left
+            // on it (WCAG 2.4.7) — and `tabIndex={-1}` doesn't block programmatic
+            // focus. At close time focus is in one of four places: still inside
+            // the popup that's going away (Escape and item selection — Base UI
+            // moves it to the hidden trigger *asynchronously*, after this handler
+            // returns), already on that hidden trigger, lost to `document.body`
+            // (an outside press onto nothing focusable — Base UI does not move
+            // focus on this path), or on another element the press legitimately
+            // focused. Reclaim it for the visible button in the first three cases
+            // only; never steal focus from an element the user interacted with.
+            const reclaimIfUnclaimed = () => {
+              const active = document.activeElement;
+              if (
+                active === triggerRef.current ||
+                active === document.body ||
+                (active !== null && popupRef.current?.contains(active))
+              ) {
+                buttonRef.current?.focus();
+              }
+            };
+            reclaimIfUnclaimed();
+            requestAnimationFrame(reclaimIfUnclaimed);
+          }
         }}
       >
         <InputSelectField className="sr-only">
           <InputSelectLabel>Tenant</InputSelectLabel>
-          <InputSelectTrigger>
+          <InputSelectTrigger ref={triggerRef} tabIndex={-1}>
             <InputSelectValue placeholder="Select a tenant" />
           </InputSelectTrigger>
         </InputSelectField>
         <InputSelectContent
+          ref={popupRef}
           side="right"
           sideOffset={60}
           anchor={buttonRef}
@@ -500,9 +528,18 @@ function ControlledTenantSelector() {
   );
 }
 
+// The popup is controlled by internal state with no `defaultOpen` lever, so the
+// story opens it in `play` — otherwise the VR baseline would only ever capture the
+// closed button. animationDelay lets the fade/zoom/slide settle before the shot.
 export const ControlledOffsetWithDirectionPopoverStyled: Story = {
   name: 'Controlled, Offset, With Direction, Popover styled',
+  parameters: { snapshot: { animationDelay: 400 } },
   render: () => <ControlledTenantSelector />,
+  play: async ({ canvasElement }) => {
+    await userEvent.click(
+      within(canvasElement).getByRole('button', { name: /select a tenant/i })
+    );
+  },
 };
 
 // The tenant dropdown's loading / empty / error variants, each with the in-dropdown
