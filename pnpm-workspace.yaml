@@ -58,7 +58,7 @@ catalog:
   # Style Dictionary v5 — used by tools/style-dictionary, which builds
   # design-tokens → packages/tokens-pd (per-brand CSS, per-component CSS,
   # Tailwind presets, DTCG) and design-assets → SVG/React.
-  style-dictionary: 5.4.3
+  style-dictionary: 5.4.4
 
   # SVGO v4 — SVG optimizer shared by the icon tooling:
   # tools/style-dictionary, tools/figma-design-assets-sync.
