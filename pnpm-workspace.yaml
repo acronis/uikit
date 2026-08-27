@@ -68,6 +68,7 @@ catalog:
 overrides:
   axios: 1.18.0
   immutable: 5.1.8
+  joi: 17.13.4
   prismjs: 1.30.0
   postcss: 8.5.25
   fast-json-patch: 3.1.0
