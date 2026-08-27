@@ -98,8 +98,8 @@ Dash the strokes with `lineStyle="dashed"`:
 />
 ```
 
-Toggle the chrome and per-point dots with `showGrid` / `showTooltip` /
-`showLegend` / `showDots`, and bridge `null` gaps with `connectNulls`:
+Toggle the chrome with `showGrid` / `showTooltip` / `showLegend`, enable
+per-point dots with `showDots`, and bridge `null` gaps with `connectNulls`:
 
 ```tsx
 <LineChart
@@ -107,15 +107,15 @@ Toggle the chrome and per-point dots with `showGrid` / `showTooltip` /
   data={data}
   dataKeys={['desktop', 'mobile']}
   xKey="month"
-  showDots={false}
+  showDots
   connectNulls
 />
 ```
 
 `dotSize` sets the dot radius (3px by default; the hover dot is always 2px
 larger). `showActiveDot` decides the hover dot on its own — unset it follows
-`showDots`, so pass it to get a bare line that still emphasizes the hovered
-point, or static dots with no hover emphasis:
+`showDots`. Pass `showDots` to show static dots, `showActiveDot` for a
+hover-only emphasis on a dot-less line, or both for the full treatment:
 
 ```tsx
 <LineChart
@@ -123,9 +123,8 @@ point, or static dots with no hover emphasis:
   data={data}
   dataKeys={['desktop']}
   xKey="month"
+  showDots
   dotSize={6}
-  showDots={false}
-  showActiveDot
 />
 ```
 
@@ -175,6 +174,27 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
   yUnit="ms"
 />
 ```
+
+## Projections
+
+Mark a boundary at which the data transitions from actuals to forecast with
+`projectionStart`. Pass the `xKey` value where the projection zone begins — from
+that point onward, x-axis tick labels render in the disabled text color and series
+strokes switch to a dashed pattern:
+
+```tsx
+<LineChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  projectionStart="Apr"
+/>
+```
+
+The boundary point is included in both the solid and dashed segments so they
+connect visually. When `projectionStart` doesn't match any value in the data the
+chart renders normally.
 
 ## Per-series overrides
 

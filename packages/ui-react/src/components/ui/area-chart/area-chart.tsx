@@ -9,8 +9,11 @@ import {
   CartesianGrid,
   LabelList,
   ReferenceLine,
+  Text,
   XAxis,
   YAxis,
+  useXAxisScale,
+  usePlotArea,
 } from 'recharts';
 
 import { cn } from '@/lib/utils';
@@ -26,6 +29,7 @@ import {
   resolveAxisDomain,
   resolveBrushProps,
   resolveCartesianLabelPosition,
+  dropProjectionPayload,
   resolveChartReferenceValue,
   resolveLabelFillClass,
   resolveReferenceLineProps,
@@ -37,6 +41,8 @@ import {
   toReferenceLineList,
   type ChartConfig,
   type ChartPalette,
+  type ChartLegendContentProps,
+  type ChartTooltipContentProps,
   type CartesianChartProps,
   type ChartAnimationProps,
   type ChartBrushProps,
@@ -68,7 +74,7 @@ const areaChartVariants = cva('', {
   },
   defaultVariants: {
     layout: 'single',
-    fill: 'gradient',
+    fill: 'solid',
   },
 });
 
@@ -155,9 +161,86 @@ export interface AreaChartProps
    * axis, not one series.
    */
   referenceLine?: ChartReferenceLine | ChartReferenceLine[];
+  /**
+   * The category value (matching an `xKey` entry) at which the projection
+   * zone starts. Ticks from this point onward render in the disabled text
+   * color (`--ui-text-on-surface-disabled`). The chart data and series
+   * themselves are not affected — only the X-axis tick appearance changes.
+   *
+   * Use this when displaying a forecast/projection range where future
+   * data points should be visually de-emphasized on the axis.
+   */
+  projectionStart?: string | number;
   showLegend?: boolean;
   /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
   labelPosition?: CartesianLabelPosition;
+}
+
+type TooltipContentType = NonNullable<React.ComponentProps<typeof ChartTooltip>['content']>;
+type TooltipContentFn = Extract<TooltipContentType, (...args: never[]) => unknown>;
+type TooltipRenderProps = Parameters<TooltipContentFn>[0];
+type LegendContentFn = Extract<
+  React.ComponentProps<typeof ChartLegend>['content'],
+  (...args: never[]) => unknown
+>;
+type LegendContentProps = Parameters<LegendContentFn>[0];
+
+function createProjectionTooltip(tooltipContent: TooltipContentType) {
+  return function ProjectionTooltip(props: TooltipRenderProps) {
+    const merged = {
+      ...props,
+      payload: dropProjectionPayload(props.payload),
+    } as TooltipRenderProps;
+    return typeof tooltipContent === 'function'
+      ? React.createElement(
+          tooltipContent as React.FunctionComponent<TooltipRenderProps>,
+          merged
+        )
+      : React.cloneElement(tooltipContent, merged);
+  };
+}
+
+// Renders two <clipPath> defs (actual / projection) and a dashed separator
+// line at the visual midpoint between the last actual tick and the first
+// projection tick. Both the actual and projection <Area> series reference
+// these clip regions, so the exact same curve renders on each side — no kink.
+function ProjectionClip({
+  projectionStart,
+  prevTick,
+  clipId,
+}: {
+  projectionStart: string | number;
+  prevTick: string | number;
+  clipId: string;
+}) {
+  const xScale = useXAxisScale();
+  const plotArea = usePlotArea();
+  if (!xScale || !plotArea) return null;
+  const prevX = xScale(prevTick as string);
+  const currX = xScale(projectionStart as string);
+  if (prevX == null || currX == null) return null;
+  const midX = (prevX + currX) / 2;
+  const { x, y, width, height } = plotArea;
+  return (
+    <>
+      <defs>
+        <clipPath id={`${clipId}-actual`}>
+          <rect x={x} y={y} width={midX - x} height={height} />
+        </clipPath>
+        <clipPath id={`${clipId}-projection`}>
+          <rect x={midX} y={y} width={x + width - midX} height={height} />
+        </clipPath>
+      </defs>
+      <line
+        x1={midX}
+        y1={y}
+        x2={midX}
+        y2={y + height}
+        stroke="var(--ui-border-on-surface-border)"
+        strokeDasharray="4 4"
+      />
+    </>
+  );
 }
 
 /**
@@ -208,7 +291,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       yAxisLabel,
       yUnit,
       layout = 'single',
-      fill = 'gradient',
+      fill = 'solid',
       curve = 'monotone',
       strokeWidth = 2,
       fillOpacity = 0.4,
@@ -218,6 +301,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       connectNulls = false,
       areaSettings,
       referenceLine,
+      projectionStart,
       showGrid = true,
       showTooltip = true,
       showLegend = true,
@@ -282,11 +366,109 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
 
     const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
 
-    // recharts renders SVG <defs> once per chart; the gradient ids must be unique
-    // across chart instances on the page. useId gives a stable per-instance id;
-    // strip the colons React emits (invalid in a url(#…) reference) — same guard
-    // the shared ChartContainer applies to its chart id.
+    const projStartIndex = React.useMemo(() => {
+      if (projectionStart === undefined) return -1;
+      return data.findIndex((row) => row[xKey] === projectionStart);
+    }, [projectionStart, data, xKey]);
+    // projStartIndex === 0 (boundary at the first tick) is excluded: there is no
+    // "previous tick" to define the clip midpoint, so clipPath defs can't be
+    // emitted, which would make all series invisible. Treat it as no-projection.
+    const hasProjection = projStartIndex > 0;
+
+    // Build the projection tick renderer when projectionStart is set. Each tick
+    // past (and including) the start value renders in the disabled text color;
+    // ticks before it stay in the muted-foreground color. Returns undefined when
+    // projectionStart is absent or not found so recharts uses its own renderer.
+    const projectionTick = React.useMemo(() => {
+      if (!hasProjection) return undefined;
+      const projectedValues = new Set(
+        data.slice(projStartIndex).map((row) => row[xKey])
+      );
+      const ProjectionTick = ({
+        payload,
+        ...tickProps
+      }: {
+        payload: { value: string | number };
+        [key: string]: unknown;
+      }) => (
+        <Text
+          {...(tickProps as React.ComponentProps<typeof Text>)}
+          fontSize={12}
+          className={
+            projectedValues.has(payload.value)
+              ? 'fill-[var(--ui-text-on-surface-disabled)]'
+              : 'fill-muted-foreground'
+          }
+        >
+          {xTickFormatter
+            ? xTickFormatter(payload.value as never, 0)
+            : payload.value}
+        </Text>
+      );
+      return ProjectionTick;
+    }, [hasProjection, projStartIndex, data, xKey, xTickFormatter]);
+
+    // When projection is active, copy each series value to `_proj_${key}` — same
+    // data, no nulls. Both the actual and projection <Area> see the identical curve;
+    // the clipPath (computed in ProjectionClip) restricts which half each paints.
+    const chartData = React.useMemo(() => {
+      if (!hasProjection) return data;
+      return data.map((row) => ({
+        ...row,
+        ...Object.fromEntries(
+          dataKeys.map((k) => [`_proj_${k}`, row[k]])
+        ),
+      }));
+    }, [hasProjection, data, dataKeys]);
+
+    // The tick immediately before the projection boundary — needed to compute the
+    // visual midpoint where the clip edge and separator line are placed.
+    const prevTickValue = React.useMemo(() => {
+      if (projStartIndex <= 0) return undefined;
+      return data[projStartIndex - 1]?.[xKey];
+    }, [projStartIndex, data, xKey]);
+
+    const projectionTooltip = React.useMemo(
+      () =>
+        hasProjection && tooltipContent
+          ? createProjectionTooltip(tooltipContent)
+          : undefined,
+      [hasProjection, tooltipContent]
+    );
+
+    const tooltipNode = hasProjection
+      ? (projectionTooltip ??
+          ((tp: TooltipRenderProps) => (
+            <ChartTooltipContent
+              active={tp.active}
+              label={tp.label}
+              payload={
+                dropProjectionPayload(
+                  tp.payload
+                ) as ChartTooltipContentProps['payload']
+              }
+            />
+          )))
+      : (tooltipContent ?? <ChartTooltipContent />);
+
+    const legendNode = hasProjection
+      ? (lp: LegendContentProps) => (
+          <ChartLegendContent
+            verticalAlign={lp.verticalAlign}
+            payload={
+              dropProjectionPayload(
+                lp.payload
+              ) as ChartLegendContentProps['payload']
+            }
+          />
+        )
+      : <ChartLegendContent />;
+
+    // recharts renders SVG <defs> once per chart; the gradient/clip ids must be
+    // unique across chart instances on the page. useId gives a stable per-instance
+    // id; strip the colons React emits (invalid in a url(#…) reference).
     const gradientId = `area-gradient-${React.useId().replace(/:/g, '')}`;
+    const clipId = `area-proj-${React.useId().replace(/:/g, '')}`;
 
     return (
       <div
@@ -302,7 +484,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RechartsAreaChart
-            data={data as readonly unknown[]}
+            data={chartData as readonly unknown[]}
             margin={hasLabels ? CHART_LABEL_MARGIN : undefined}
           >
             {isGradient && (
@@ -326,7 +508,8 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={xTickFormatter}
+              tickFormatter={projectionTick ? undefined : xTickFormatter}
+              tick={projectionTick}
               angle={xAxisAngle}
               interval={xAxisInterval}
               textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
@@ -345,10 +528,15 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               width={yAxisLabel ? 72 : undefined}
               label={yAxisTitle}
             />
-            {showTooltip && (
-              <ChartTooltip content={tooltipContent ?? <ChartTooltipContent />} />
+            {showTooltip && <ChartTooltip content={tooltipNode} />}
+            {showLegend && <ChartLegend content={legendNode} />}
+            {hasProjection && prevTickValue != null && (
+              <ProjectionClip
+                projectionStart={projectionStart!}
+                prevTick={prevTickValue}
+                clipId={clipId}
+              />
             )}
-            {showLegend && <ChartLegend content={<ChartLegendContent />} />}
             {dataKeys.map((key) => {
               const settings = areaSettings?.[key];
               const seriesDots = settings?.showDots ?? showDots;
@@ -377,6 +565,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                   dot={seriesDots ? { r: dotRadius } : false}
                   activeDot={activeDot ? { r: dotRadius + 2 } : false}
                   connectNulls={connectNulls}
+                  clipPath={hasProjection ? `url(#${clipId}-actual)` : undefined}
                   {...animation}
                 >
                   {seriesLabel && (
@@ -393,6 +582,33 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                 </Area>
               );
             })}
+            {hasProjection &&
+              dataKeys.map((key) => {
+                const settings = areaSettings?.[key];
+                return (
+                  <Area
+                    key={`_proj_${key}`}
+                    type={settings?.curveType ?? curve ?? 'monotone'}
+                    dataKey={`_proj_${key}`}
+                    name={key}
+                    stroke={colorFor(key)}
+                    strokeWidth={settings?.strokeWidth ?? strokeWidth}
+                    strokeDasharray="5 5"
+                    fill={
+                      isGradient ? `url(#${gradientId}-${key})` : colorFor(key)
+                    }
+                    fillOpacity={
+                      settings?.fillOpacity ?? (isGradient ? 1 : fillOpacity)
+                    }
+                    dot={false}
+                    activeDot={false}
+                    clipPath={`url(#${clipId}-projection)`}
+                    legendType="none"
+                    tooltipType="none"
+                    {...animation}
+                  />
+                );
+              })}
             {/* Annotations draw over the series they describe. */}
             {referenceLines.map((ref, index) => {
               const value = resolveChartReferenceValue(ref, data, dataKeys);

@@ -7,6 +7,10 @@ import {
   LineChart as RechartsLineChart,
   XAxis,
 } from 'recharts';
+import {
+  EllipsisIcon,
+  SquareDashedIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
 
 import { LineChart, createBandStrippedTooltip } from '../line-chart';
 import { paletteArgTypes } from '../../chart/__stories__/palette-control';
@@ -18,6 +22,10 @@ import {
   formatCompactNumber,
   type ChartConfig,
 } from '../../chart';
+import { ChartWidget } from '../../chart-widget';
+import { ButtonIcon } from '../../button-icon';
+import { Metric } from '../../metric';
+import { Tag } from '../../tag';
 
 // Series colors are supplied by the caller via `config`. There is no chart token
 // tier yet, so these reference the shared semantic brand/status tokens (a
@@ -45,28 +53,11 @@ const meta = {
   component: LineChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  // The ChartContainer is transparent by design (it inherits the surface it sits
-  // on — usually a Card). Render the stories on a themed surface so the chart is
-  // legible in both light and dark; without it, dark mode flips the token-driven
-  // text/grid but leaves the backdrop unthemed.
-  decorators: [
-    (Story) => (
-      <div className="rounded-lg border border-border bg-background p-6 text-foreground">
-        <Story />
-      </div>
-    ),
-  ],
   args: {
     config,
     data,
     dataKeys: ['desktop', 'mobile', 'tablet'],
     xKey: 'month',
-    strokeWidth: 2,
-    showDots: true,
-    connectNulls: false,
-    showGrid: true,
-    showTooltip: true,
-    showLegend: true,
     className: 'h-[320px] w-[560px]',
   },
   argTypes: {
@@ -148,6 +139,97 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// The chart rendered with all default props — matches the Figma design node.
+// Any visual delta here means the component defaults are wrong.
+export const Default: Story = {};
+
+const widgetData = [
+  { month: 'Jan', desktop: 186, mobile: 80 },
+  { month: 'Feb', desktop: 305, mobile: 200 },
+  { month: 'Mar', desktop: 237, mobile: 120 },
+  { month: 'Apr', desktop: 273, mobile: 190 },
+  { month: 'May', desktop: 209, mobile: 130 },
+  { month: 'Jun', desktop: 214, mobile: 140 },
+];
+
+const widgetConfig = {
+  desktop: { label: 'Desktop' },
+  mobile: { label: 'Mobile' },
+} satisfies ChartConfig;
+
+// The design's `ChartLine` in full: the card, its header and ⋯ menu, and the
+// metric row all belong to `ChartWidget` — LineChart is only the plot and its
+// legend, and fills the widget body responsively.
+//
+// Figma `8811:175678` (size=md, 592px wide).
+export const WidgetExample: Story = {
+  render: () => (
+    <div className="h-[300px] w-[592px]">
+      <ChartWidget
+        header={{
+          title: 'Title',
+          actions: (
+            <ButtonIcon variant="ghost" aria-label="Widget actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          ),
+        }}
+        metric={
+          <Metric
+            icon={<SquareDashedIcon />}
+            value="125"
+            unit="Label"
+            caption={<Tag variant="neutral">Last 6 months</Tag>}
+          />
+        }
+      >
+        <LineChart
+          config={widgetConfig}
+          data={widgetData}
+          dataKeys={['desktop', 'mobile']}
+          xKey="month"
+          className="size-full"
+        />
+      </ChartWidget>
+    </div>
+  ),
+};
+
+// Figma `8982:27957` — projection zone starts at Apr.
+export const WithProjections: Story = {
+  render: () => (
+    <div className="h-[300px] w-[592px]">
+      <ChartWidget
+        header={{
+          title: 'Title',
+          actions: (
+            <ButtonIcon variant="ghost" aria-label="Widget actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          ),
+        }}
+        metric={
+          <Metric
+            icon={<SquareDashedIcon />}
+            value="125"
+            unit="Label"
+            caption={<Tag variant="neutral">Last 3 months</Tag>}
+          />
+        }
+      >
+        <LineChart
+          config={widgetConfig}
+          data={widgetData}
+          dataKeys={['desktop', 'mobile']}
+          xKey="month"
+          projectionStart="Apr"
+          className="size-full"
+        />
+      </ChartWidget>
+    </div>
+  ),
+};
+
 // New shared axis/grid knobs: rotated X ticks, a zero-anchored Y domain, a
 // fixed Y tick count, and a dashed grid. See "Formatting and hiding axes".
 export const AxisAndGridConfig: Story = {
@@ -162,11 +244,6 @@ export const AxisAndGridConfig: Story = {
 // A single series.
 export const SingleLine: Story = {
   args: { dataKeys: ['desktop'] },
-};
-
-// Several series on the same axes (default monotone curve).
-export const MultiLine: Story = {
-  args: { dataKeys: ['desktop', 'mobile', 'tablet'] },
 };
 
 // Straight segments between points.
@@ -207,11 +284,11 @@ export const ExtendedCurves: Story = {
   ),
 };
 
-// Bigger dots for a sparse series. The hover dot follows them at +2px unless
-// `showActiveDot` is set, which decouples the two (not shown — a hover state
-// isn't captured in a static story).
+// Data-point dots with a custom radius — dots are off by default; enable them
+// with `showDots`. The hover dot is always 2px larger unless `showActiveDot`
+// overrides it.
 export const DotSizing: Story = {
-  args: { dataKeys: ['desktop'], dotSize: 6 },
+  args: { dataKeys: ['desktop'], showDots: true, dotSize: 6 },
 };
 
 // Per-series overrides: the target line reads thicker and dashed in its own

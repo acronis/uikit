@@ -8,7 +8,7 @@ import figma from '@figma/code-connect';
 
 import { AreaChart } from './area-chart';
 
-figma.connect(AreaChart, 'FIGMA_NODE_URL', {
+figma.connect(AreaChart, 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=8174-22336&m=dev', {
   props: {
     layout: figma.enum('Layout', {
       Single: 'single',

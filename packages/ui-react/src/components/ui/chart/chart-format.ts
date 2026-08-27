@@ -378,6 +378,20 @@ export function resolveAnimation(props: ChartAnimationProps): ResolvedAnimation 
   };
 }
 
+/**
+ * Remove synthetic `_proj_*` series entries from a recharts payload array so
+ * they don't appear in custom tooltip or legend content. Safe to call with
+ * `undefined` — returns `undefined` unchanged.
+ */
+export function dropProjectionPayload<T extends { dataKey?: unknown }>(
+  payload: readonly T[] | undefined
+): T[] | undefined {
+  return payload?.filter(
+    (item) =>
+      !(typeof item.dataKey === 'string' && item.dataKey.startsWith('_proj_'))
+  );
+}
+
 /** Where a data label sits on a cartesian series (recharts `LabelList` position). */
 export type CartesianLabelPosition =
   | 'top'
