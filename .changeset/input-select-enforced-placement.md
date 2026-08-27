@@ -15,8 +15,17 @@ fallbackAxisSide: 'none' }}` keeps the popup to the right of the trigger.
 All three props are optional; omitting them keeps today's behavior (Base UI's
 own flip/shift collision handling, anchored to the trigger).
 
-A new `isPopoverStyled` boolean renders the dropdown chrome like
-`PopoverContent` (`--ui-popover-container-*` tokens, no shadow, fade/zoom/slide
-enter-exit animation) instead of the default
-`--ui-input-select-dropdown-container-*` tokens + static `shadow-md`. Defaults
-to `false`, keeping the existing look.
+`InputSelect`'s internal `onOpenChange` wrapper now only resets the in-dropdown
+search query on a close that actually took effect: a consumer that calls
+`eventDetails.cancel()` to keep the popup open (the pattern an external
+`anchor` button needs, so its own pointerdown isn't treated as a dismissing
+outside press) no longer has the user's typed query cleared underneath it.
+
+A new `isPopoverStyled` boolean draws the dropdown's container chrome like
+`PopoverContent` — `--ui-popover-container-*` fill / border / radius, no shadow,
+and a fade/zoom/slide enter-exit animation — instead of the default
+`--ui-input-select-dropdown-container-*` tokens + static `shadow-md`. Only the
+container chrome and the transition change: the popup keeps the dropdown's
+anchor-width sizing and vertical padding, and every row inside it (search,
+sections, items, status) is untouched. Defaults to `false`, keeping the existing
+look.

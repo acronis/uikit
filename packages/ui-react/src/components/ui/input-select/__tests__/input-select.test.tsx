@@ -1,4 +1,4 @@
-import { createRef } from 'react';
+import { createRef, useRef, useState } from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -351,6 +351,142 @@ describe('InputSelectContent positioning', () => {
       expect(positioner.style.transform).toBe('translate(-20px, 0px)');
     });
     expect(positioner).toHaveAttribute('data-side', 'left');
+  });
+
+  // `anchor` swaps the element the popup measures itself against, so give the
+  // external anchor a box distinct from every other element's and read the
+  // resulting transform: it can only come from the element actually measured.
+  function mockLayoutWithAnchor() {
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(
+      function (this: Element) {
+        const isAnchor = this.getAttribute('data-testid') === 'external-anchor';
+        const x = isAnchor ? 400 : 100;
+        const y = isAnchor ? 300 : 100;
+        return {
+          width: 200,
+          height: 32,
+          x,
+          y,
+          top: y,
+          left: x,
+          right: x + 200,
+          bottom: y + 32,
+          toJSON() {},
+        } as DOMRect;
+      }
+    );
+  }
+
+  const anchorRef = createRef<HTMLDivElement>();
+
+  function Anchored({ anchored }: { anchored: boolean }) {
+    return (
+      <>
+        <div ref={anchorRef} data-testid="external-anchor" />
+        <InputSelect defaultOpen items={{ apple: 'Apple' }}>
+          <InputSelectTrigger aria-label="Fruit">
+            <InputSelectValue placeholder="Select an option" />
+          </InputSelectTrigger>
+          <InputSelectContent
+            anchor={anchored ? anchorRef : undefined}
+            collisionAvoidance={{ side: 'none', align: 'none', fallbackAxisSide: 'none' }}
+          >
+            <InputSelectItem value="apple">Apple</InputSelectItem>
+          </InputSelectContent>
+        </InputSelect>
+      </>
+    );
+  }
+
+  it('positions the popup against the trigger when anchor is omitted', async () => {
+    mockLayoutWithAnchor();
+    render(<Anchored anchored={false} />);
+    const positioner = screen.getByRole('listbox').parentElement as HTMLElement;
+    // Trigger box: left 100, bottom 132, plus the default 4px sideOffset.
+    await waitFor(() => {
+      expect(positioner.style.transform).toBe('translate(0px, 36px)');
+    });
+  });
+
+  it('positions the popup against a custom anchor element', async () => {
+    mockLayoutWithAnchor();
+    render(<Anchored anchored />);
+    const positioner = screen.getByRole('listbox').parentElement as HTMLElement;
+    // Anchor box: left 400, bottom 332, plus the default 4px sideOffset — i.e.
+    // 300px further right and 200px further down than the trigger.
+    await waitFor(() => {
+      expect(positioner.style.transform).toBe('translate(300px, 236px)');
+    });
+  });
+});
+
+// The pattern the `ControlledOffsetWithDirectionPopoverStyled` story documents: an
+// external button drives a controlled popup that anchors to the button while the
+// Select's own trigger stays `sr-only`.
+describe('InputSelect driven by an external button', () => {
+  function ExternalButtonSelect() {
+    const [open, setOpen] = useState(false);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+
+    return (
+      <>
+        <button ref={buttonRef} type="button" onClick={() => setOpen((v) => !v)}>
+          Open
+        </button>
+        <InputSelect
+          items={{ apple: 'Apple' }}
+          open={open}
+          onOpenChange={(nextOpen, eventDetails) => {
+            if (
+              !nextOpen &&
+              eventDetails.reason === 'outside-press' &&
+              buttonRef.current?.contains(eventDetails.event.target as Node)
+            ) {
+              eventDetails.cancel();
+              return;
+            }
+            setOpen(nextOpen);
+          }}
+        >
+          <InputSelectTrigger aria-label="Fruit" className="sr-only">
+            <InputSelectValue placeholder="Select an option" />
+          </InputSelectTrigger>
+          <InputSelectContent anchor={buttonRef}>
+            <InputSelectItem value="apple">Apple</InputSelectItem>
+          </InputSelectContent>
+        </InputSelect>
+      </>
+    );
+  }
+
+  // Without the cancel, Base UI's outside-press close on `pointerdown` and the
+  // button's `click` handler fight: the button can open the popup but never close
+  // it.
+  it('opens on the first click and closes on the second', async () => {
+    render(<ExternalButtonSelect />);
+    const button = screen.getByRole('button', { name: 'Open' });
+
+    await userEvent.click(button);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+    await userEvent.click(button);
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(button);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+  });
+
+  it('still closes on an outside press away from the button', async () => {
+    render(<ExternalButtonSelect />);
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+    await userEvent.click(document.body);
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
   });
 });
 

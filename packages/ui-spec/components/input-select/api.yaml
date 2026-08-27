@@ -58,6 +58,63 @@ contract:
         Map of value → label for every selectable option, so the value part
         can render a selected option's label while the popup is closed
         without inspecting the rendered items.
+    - name: side
+      type: "'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end'"
+      required: false
+      default: "'bottom'"
+      description: On the content — which side of the trigger the popup renders on.
+    - name: align
+      type: "'start' | 'center' | 'end'"
+      required: false
+      default: "'start'"
+      description: On the content — alignment along the chosen side.
+    - name: side-offset
+      type: number
+      required: false
+      default: 4
+      description: On the content — distance in px from the trigger.
+    - name: align-offset
+      type: number
+      required: false
+      default: 0
+      description: >-
+        On the content — offset in px along the alignment axis (perpendicular
+        to `side`), to nudge the popup along the trigger's edge without
+        changing its alignment.
+    - name: collision-avoidance
+      type: "{ side?: 'flip' | 'shift' | 'none'; align?: 'flip' | 'shift' | 'none'; fallbackAxisSide?: 'start' | 'end' | 'none' }"
+      required: false
+      default: the platform default (flip/shift)
+      description: >-
+        On the content — collision-avoidance strategy. Pass `{ side: 'none',
+        fallbackAxisSide: 'none' }` alongside an explicit `side`/`align` to
+        lock the popup to that placement with no auto-flip fallback.
+    - name: anchor
+      type: Element | VirtualElement | RefObject<Element | null> | (() => Element | VirtualElement | null) | null
+      required: false
+      default: the trigger element
+      description: >-
+        On the content — element (or ref/getter) the popup positions itself
+        against, overriding the default of anchoring to the trigger. Use when
+        the visible trigger isn't the element tracked internally — e.g. an
+        external button drives a hidden trigger, and the popup should align
+        with the button instead.
+    - name: portal-container
+      type: Element | ShadowRoot | null | RefObject<Element | ShadowRoot | null>
+      required: false
+      default: 'nearest PortalContainerProvider, or document.body'
+      description: >-
+        On the content — container to portal the dropdown into. Pass an
+        element to scope the portal (e.g. a shadow root, so the popup
+        inherits styles defined there).
+    - name: is-popover-styled
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        On the content — render the dropdown chrome like `PopoverContent`
+        (fade/zoom/slide animation, no shadow) instead of the default
+        static-shadow dropdown chrome.
 
   events:
     - name: value-change

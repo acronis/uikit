@@ -441,20 +441,43 @@ export const TenantSelector: Story = {
 // where the popup should visually align, though (it sits below the button in
 // flow), so `InputSelectContent`'s `anchor` prop points the popup at the visible
 // button instead of the hidden trigger.
+//
+// Because the button isn't the Select's own trigger, Base UI classifies a press on
+// it as an *outside press* and closes the popup on `pointerdown` — before the
+// button's `click` handler runs. A plain `onClick={() => setOpen(true)}` would
+// therefore reopen what the outside press just closed, so the button could open the
+// popup but never close it. `onOpenChange` cancels that one outside press (Base UI
+// then skips its own state update as well) and leaves the button's click handler as
+// the single source of truth for the toggle.
 function ControlledTenantSelector() {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <div className="flex flex-col gap-3">
-      <Button ref={buttonRef} className="self-start" onClick={() => setOpen(true)}>
+      <Button
+        ref={buttonRef}
+        className="self-start"
+        aria-expanded={open}
+        onClick={() => setOpen((isOpen) => !isOpen)}
+      >
         Select a tenant
       </Button>
       <InputSelect
         items={tenantItems}
         defaultValue="all-clients"
         open={open}
-        onOpenChange={setOpen}
+        onOpenChange={(nextOpen, eventDetails) => {
+          if (
+            !nextOpen &&
+            eventDetails.reason === 'outside-press' &&
+            buttonRef.current?.contains(eventDetails.event.target as Node)
+          ) {
+            eventDetails.cancel();
+            return;
+          }
+          setOpen(nextOpen);
+        }}
       >
         <InputSelectField className="sr-only">
           <InputSelectLabel>Tenant</InputSelectLabel>
@@ -574,8 +597,10 @@ export const EnforcedPlacement: Story = {
 // Renders the dropdown with `PopoverContent`'s chrome (`--ui-popover-container-*`
 // tokens, no shadow, fade/zoom/slide animation) instead of the default
 // `--ui-input-select-dropdown-container-*` tokens + static `shadow-md`.
+// animationDelay lets the open transition settle before the screenshot.
 export const PopoverStyled: Story = {
   args: { defaultOpen: true },
+  parameters: { snapshot: { animationDelay: 400 } },
   render: (args) => (
     <InputSelect {...args} items={fruitItems}>
       <InputSelectField>

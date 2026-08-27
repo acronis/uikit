@@ -23,6 +23,24 @@
   Arrow-key roaming inside the listbox skips it entirely — it cannot be
   reached with the keyboard once the popup is open, only by pointer. It
   remains a normal native tab stop outside that roving focus order.
+- **Decoupled anchor:** `anchor` moves only where the popup is _drawn_ — the
+  combobox semantics (`aria-expanded`, `aria-controls`, the accessible name) and
+  focus return on Escape stay on the **trigger**, and cannot be relocated. So if
+  the visible control is a separate element (an external button opening a
+  visually hidden trigger), that button needs its own accessible name (visible
+  text or `aria-label`) and, because it is the control the user actually
+  operates, its own `aria-expanded` bound to the same controlled `open` state
+  that drives the popup. `aria-controls` on the button is optional and only
+  wirable by giving `InputSelectContent` an explicit `id` and referencing it
+  while the popup is open. Keep the trigger reachable — do not `display: none`
+  it, or closing returns focus to nothing. Prefer opening from the real trigger
+  whenever the design allows it.
+- **External-button toggle:** an external button must also cancel the
+  `outside-press` close that its own pointerdown triggers (`onOpenChange` →
+  `eventDetails.reason === 'outside-press'` and the event target inside the
+  button → `eventDetails.cancel()`), otherwise the popup cannot be dismissed
+  from the button at all — a keyboard/AT user who activates the button a second
+  time gets a popup that reopens instead of closing. Escape still closes it.
 - **Selection indicator:** single-select shows a trailing check on the selected item;
   multiple-select shows a leading checkbox per item (not focusable — the row is the
   control).

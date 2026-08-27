@@ -55,13 +55,15 @@ function InputSelect<Value, Multiple extends boolean | undefined = false>(
   const [query, setQuery] = React.useState('');
   const filter = React.useMemo(() => ({ query, setQuery }), [query]);
 
-  // Reset the query when the popup closes so it reopens unfiltered.
+  // Reset the query when the popup closes so it reopens unfiltered. A consumer
+  // that calls `eventDetails.cancel()` keeps the popup open (Base UI skips its own
+  // state update too), so the query must survive that.
   const handleOpenChange = React.useCallback<
     NonNullable<SelectPrimitive.Root.Props<Value, Multiple>['onOpenChange']>
   >(
     (open, eventDetails) => {
       onOpenChange?.(open, eventDetails);
-      if (!open) {
+      if (!open && !eventDetails.isCanceled) {
         setQuery('');
       }
     },
@@ -200,8 +202,9 @@ const InputSelectContent = React.forwardRef<
      */
     anchor?: SelectPrimitive.Positioner.Props['anchor'];
     /**
-     * Container to portal the dropdown into. Defaults to the document body;
-     * pass an element to scope the portal (e.g. a shadow root, so the popup
+     * Container to portal the dropdown into. Defaults to the nearest
+     * `PortalContainerProvider`, or `document.body` when there is none; pass an
+     * element to scope the portal explicitly (e.g. a shadow root, so the popup
      * inherits styles defined there).
      */
     portalContainer?: SelectPrimitive.Portal.Props['container'];
@@ -249,6 +252,11 @@ const InputSelectContent = React.forwardRef<
           ref={ref}
           className={cn(
             'max-h-[var(--available-height)] min-w-[var(--anchor-width)] overflow-y-auto py-[var(--ui-input-select-dropdown-container-padding-y)] text-sm outline-none',
+            // Keep the border/radius/background token references and the animation
+            // classes below in sync with PopoverContent's container in popover.tsx —
+            // but deliberately NOT its sizing (`min-w`/`max-w`) or `text-foreground`:
+            // the dropdown keeps its own `--anchor-width`/`--available-height` sizing
+            // and default text color whether or not `isPopoverStyled` is set.
             isPopoverStyled
               ? [
                   'rounded-[var(--ui-popover-container-border-radius)] border-[length:var(--ui-popover-container-border-width)] border-solid border-[var(--ui-popover-container-border-color)] bg-[var(--ui-popover-container-color)]',

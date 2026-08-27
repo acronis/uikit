@@ -3,8 +3,8 @@ title: InputSelect
 description: A select field with label, options, sections, search, and status states.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { InputSelectDemo } from "@/components/demos-react/input-select";
+import { DemoReact } from '@/components/DemoReact';
+import { InputSelectDemo } from '@/components/demos-react/input-select';
 
 ## Usage
 
@@ -34,13 +34,14 @@ keyboard navigation, typeahead, focus management, and ARIA come from Base UI.
 `InputSelect` owns the value; `InputSelectField` wraps the label/trigger/
 description/error furniture, and `InputSelectContent` holds the
 `InputSelectItem` options (optionally grouped into `InputSelectSection`s, with an
-`InputSelectSearch` filter). Themed by the `--ui-input-select-*` tokens.
+`InputSelectSearch` filter). Themed by the `--ui-input-select-*` tokens (the
+dropdown container also has an opt-in popover-styled look — see
+`isPopoverStyled` below).
 `InputSelectField`'s `className` targets that wrapper and has no `w-full`, so it
 shrinks to its min-width inside a constrained flex/grid ancestor instead of
 being force-stretched.
 
 ## Examples
-
 
 <DemoReact>
   <InputSelectDemo />
@@ -153,8 +154,9 @@ the corresponding Base UI `Select` primitive props. `InputSelect` accepts
 prop surface.
 
 `InputSelectContent` forwards `side`, `align`, `sideOffset`, `alignOffset`,
-`collisionAvoidance`, and `portalContainer` to the underlying Base UI
-`Select.Positioner`, for consumers who need to place the dropdown themselves.
+`collisionAvoidance`, and `anchor` to the underlying Base UI
+`Select.Positioner` (and `portalContainer` to `Select.Portal`), for consumers
+who need to place the dropdown themselves.
 By default the popup opens below the trigger (`side="bottom"`,
 `align="start"`, `sideOffset={4}`) and Base UI flips or shifts it to stay in
 view when space is tight. To pin it to one placement instead — "always to the
@@ -178,6 +180,82 @@ surrounding layout actually has room. `alignOffset` nudges the popup along the
 alignment axis (perpendicular to `side`) without changing `align`.
 `portalContainer` scopes the portal, which matters when the field renders
 inside a shadow root — see [Shadow DOM Integration](/shadow-dom).
+
+`anchor` points the popup at a different element than the trigger. The popup
+normally tracks `InputSelectTrigger`, which is what you want for a form field.
+When the control the user actually clicks is somewhere else — an external
+button driving a controlled `open`, with the trigger kept mounted but visually
+hidden — the trigger's position in flow is no longer where the popup should
+appear, so pass the visible element's ref instead:
+
+```tsx
+function TenantPicker() {
+  const [open, setOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  return (
+    <>
+      <Button
+        ref={buttonRef}
+        aria-expanded={open}
+        onClick={() => setOpen((isOpen) => !isOpen)}
+      >
+        Select a tenant
+      </Button>
+      <InputSelect
+        items={tenantItems}
+        open={open}
+        onOpenChange={(nextOpen, eventDetails) => {
+          // Base UI reads the button's own pointerdown as an outside press and
+          // closes the popup, which the button's onClick would then reopen.
+          // Cancel that one close so the button stays the single toggle.
+          if (
+            !nextOpen &&
+            eventDetails.reason === 'outside-press' &&
+            buttonRef.current?.contains(eventDetails.event.target as Node)
+          ) {
+            eventDetails.cancel();
+            return;
+          }
+          setOpen(nextOpen);
+        }}
+      >
+        <InputSelectField className="sr-only">
+          {/* …label + trigger… */}
+        </InputSelectField>
+        <InputSelectContent anchor={buttonRef} isPopoverStyled>
+          {/* …items… */}
+        </InputSelectContent>
+      </InputSelect>
+    </>
+  );
+}
+```
+
+The `onOpenChange` guard is what makes the external button work as a toggle.
+Without it, pressing the button while the popup is open closes it (Base UI sees
+the press as an outside press) and the button's `onClick` immediately reopens
+it, so the popup can never be dismissed from the button. Cancelling only that
+specific close — `reason === 'outside-press'` **and** the press landed inside
+the button — leaves the button's `onClick` as the single source of truth for
+`open`; a press anywhere else still dismisses the popup normally.
+
+Keep the hidden trigger in the DOM (`sr-only`, not `display: none`): Base UI
+needs it for the combobox semantics and returns focus to it on Escape. Base UI
+keeps `aria-expanded`, `aria-controls`, and the listbox relationship on that
+trigger and cannot move them, so give the external button its own accessible
+name (visible text or `aria-label`) and its own `aria-expanded={open}` — it's
+the control the user operates, and it already owns the `open` state. If you also
+want `aria-controls` on the button, pass an explicit `id` to
+`InputSelectContent` and reference it while the popup is open.
+
+`isPopoverStyled` renders the dropdown with `Popover`'s chrome instead of the
+default dropdown chrome: the `--ui-popover-container-*` fill / border / radius,
+no drop shadow, and a fade-zoom-slide animation on open and close. Everything
+inside the popup (search, sections, items, status rows, the anchor-width sizing)
+is unchanged. Use it when the dropdown reads as a floating menu opened from a
+page control rather than as a form field's option list, so it matches the
+surrounding [Popover](/components/popover) surfaces.
 
 `InputSelectItem` extends the Base UI `Select.Item` props and adds `icon`,
 `indent`, and `textValue`. `InputSelectExpander` is a plain button (not a

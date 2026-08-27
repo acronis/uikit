@@ -62,6 +62,55 @@ border.
 **Then** it shows the matching icon and message (and, for `error`, an optional retry
 action).
 
+## Popup placement and chrome
+
+**Given** no positioning props on the content
+**When** the popup opens
+**Then** it is placed against the **trigger**, below it and aligned to its start
+edge, and the platform's own collision handling may flip or shift it to keep it in
+view. `side` / `align` / `side-offset` / `align-offset` / `collision-avoidance`
+each override one part of that; passing `collision-avoidance` with no fallbacks
+alongside an explicit `side` pins the popup to that placement even when it
+overflows.
+
+**Given** an `anchor` on the content
+**When** the popup opens
+**Then** it positions itself against **that** element instead of the trigger,
+decoupling where the popup appears from where the trigger sits in layout. This is
+for the case where the element the user actually operates is not the trigger — an
+external button drives the open state and the trigger stays mounted but visually
+hidden — so the popup should align with the button, not with the hidden trigger's
+position in flow. The trigger still owns the combobox semantics either way (see
+`accessibility.md`).
+
+**Given** an external button that drives a controlled `open` and is the popup's
+`anchor`
+**When** the user presses that button while the popup is open
+**Then** the platform reports the press as an **outside press** close before the
+button's own activation handler runs, so the consumer must cancel that specific
+close (`open-change` with `reason = outside-press` and the event target inside
+the button → `cancel()`) for the button to act as a toggle; otherwise the
+activation handler reopens the popup and it can never be dismissed from the
+button. A press outside both the button and the popup still closes it.
+
+**Given** a cancelled close (the consumer called `cancel()` on `open-change`)
+**When** the popup therefore stays open
+**Then** the in-dropdown search query is **preserved** — the query is only reset
+on a close that actually took effect, so a cancelled close does not silently
+clear what the user typed.
+
+**Given** `is-popover-styled`
+**When** the popup opens
+**Then** its container chrome is drawn from the **popover** tokens rather than the
+dropdown ones (fill / border / corner radius), the dropdown's static shadow is
+dropped, and open/close is animated (fade + zoom, sliding in from the resolved
+`side`) instead of appearing instantly. Reach for it when the dropdown is acting
+as a floating menu that should read in the same visual language as `Popover` —
+a tenant/entity picker opened from a page control, not a plain form field's
+option list. It changes only the container chrome and the enter/exit transition:
+the popup still sizes to the anchor width, keeps the dropdown's vertical padding,
+and every row inside (search, sections, items, status) is unchanged.
+
 ## Interaction
 
 **Given** the trigger
