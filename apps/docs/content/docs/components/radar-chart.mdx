@@ -22,8 +22,9 @@ the Figma geometry. The legend and value labels do not change the polygon radius
 outer labels stay 4px from the polygon vertices.
 
 Series are columns of a shared row (like a bar or line chart), plotted over one
-polar angular axis. The plot surface is `187px` high by default; the internal
-legend keeps its existing padding and is laid out below it without overlap.
+polar angular axis. The plot surface is `187px` high by default (`219px` with the
+legend); pass a height class via `className` to override it (e.g.
+`className="h-[380px]"`).
 
 Series colors come from the `palette` prop, not from `config` — see
 [Palettes](/components/chart#palettes). Each `config` entry maps a data key to a
@@ -262,6 +263,10 @@ same formatters as the axes, so a label and its axis read alike:
   labelFormatter={formatCompactNumber}
 />
 ```
+
+When value labels are on, the category labels around the web are automatically
+pushed further out so the two don't overlap at the top vertex. Pass an explicit
+`angleTickSize` to override.
 
 `labelPosition` moves them; the default is `top`, which sits each value above its
 vertex on the chart surface. An `inside*` position draws it over the area

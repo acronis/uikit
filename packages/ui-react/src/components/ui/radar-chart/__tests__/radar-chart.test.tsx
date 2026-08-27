@@ -284,6 +284,23 @@ describe('RadarChart data labels', () => {
     expect(categoryTickClearance(container)).toBeCloseTo(4, 1);
   });
 
+  // recharts gives a Radar's label list a cartesian viewBox, so `top` offsets
+  // straight up in screen space — at the topmost vertex the value would land on
+  // that category's own tick. Widening the tick gap is the only lever that adds
+  // absolute clearance, so `showLabels` does it on the caller's behalf.
+  it('pushes the category labels out to clear the value labels', () => {
+    const withLabels = renderSized({ showLabels: true });
+    const withoutLabels = renderSized();
+    expect(categoryTickClearance(withLabels.container)).toBeGreaterThan(
+      categoryTickClearance(withoutLabels.container)
+    );
+  });
+
+  it('lets an explicit angleTickSize win over the label widening', () => {
+    const { container } = renderSized({ showLabels: true, angleTickSize: 16 });
+    expect(categoryTickClearance(container)).toBeCloseTo(16, 1);
+  });
+
   it('lets an explicit angleTickSize override the default clearance', () => {
     const { container } = renderSized({ angleTickSize: 16 });
     expect(categoryTickClearance(container)).toBeCloseTo(16, 1);
@@ -751,16 +768,17 @@ describe('RadarChart geometry and legend', () => {
     expect(container.textContent).toContain('Bob');
   });
 
-  it('reserves the plot height with and without the internal legend', () => {
+  it('defaults to the Figma plot height, adjusting for the legend', () => {
     const withLegend = renderChart();
-    expect(withLegend.container.querySelector('[data-slot="chart"]')).toHaveClass(
-      'h-[219px]'
-    );
+    expect(withLegend.container.firstElementChild).toHaveClass('h-[219px]');
     withLegend.unmount();
 
     const withoutLegend = renderChart({ showLegend: false });
-    expect(
-      withoutLegend.container.querySelector('[data-slot="chart"]')
-    ).toHaveClass('h-[187px]');
+    expect(withoutLegend.container.firstElementChild).toHaveClass('h-[187px]');
+  });
+
+  it('lets a consumer className override the default height', () => {
+    const { container } = renderChart({ className: 'h-[380px] w-[420px]' });
+    expect(container.firstElementChild).toHaveClass('h-[380px]', 'w-[420px]');
   });
 });
