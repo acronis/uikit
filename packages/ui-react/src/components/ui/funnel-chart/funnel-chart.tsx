@@ -887,12 +887,15 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
     const resolvedFunnelWidth =
       funnelWidth ??
       funnelChartLabelReserve({ showLabels, labelPosition, labelFormat });
-    // recharts defaults a Funnel's stroke to a hardcoded `#fff` that
-    // `ChartContainer` neutralizes, so a bare `strokeWidth` would widen an
-    // invisible border. Pair it with the border token instead.
+    // recharts defaults a Funnel's stroke to a hardcoded `#fff`.
+    // ChartContainer's CSS neutralizer targets `.recharts-trapezoid`, but our
+    // custom shape renders as `.recharts-funnel-stage`, so the neutralizer
+    // never matches. Explicitly default to `'none'` to suppress the white
+    // outline — and pair a bare `strokeWidth` with the border token so it
+    // doesn't widen an invisible border.
     const resolvedStroke =
       stroke ??
-      (strokeWidth != null ? 'var(--ui-border-on-surface-border)' : undefined);
+      (strokeWidth != null ? 'var(--ui-border-on-surface-border)' : 'none');
     // One renderer for both slots: recharts swaps in `activeShape` for the
     // hovered stage, so leaving it unset would drop back to its own square-
     // cornered, gapless `Trapezoid` on hover.

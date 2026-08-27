@@ -669,8 +669,10 @@ describe('FunnelChart stages and colors', () => {
     expect(paths[0]).toHaveAttribute('stroke-width', '2');
   });
 
-  // recharts defaults the stroke to a hardcoded `#fff` that ChartContainer
-  // neutralizes, so a bare strokeWidth would widen an invisible border.
+  // recharts defaults the stroke to a hardcoded `#fff`. Our custom shape
+  // class doesn't match ChartContainer's neutralizer, so the component
+  // resolves to `'none'` itself. A bare strokeWidth would widen an invisible
+  // border — pair it with the border token instead.
   it('pairs a bare strokeWidth with the border token', () => {
     const { container } = renderChart({ strokeWidth: 2 });
     const paths = segments(container);
@@ -681,9 +683,9 @@ describe('FunnelChart stages and colors', () => {
     expect(paths[0]).toHaveAttribute('stroke-width', '2');
   });
 
-  it('leaves the recharts stroke default alone when neither is given', () => {
+  it('suppresses the recharts #fff stroke default when neither prop is given', () => {
     const { container } = renderChart();
-    expect(segments(container)[0]).toHaveAttribute('stroke', '#fff');
+    expect(segments(container)[0]).toHaveAttribute('stroke', 'none');
   });
 
   it('narrows the funnel to funnelWidth', () => {
